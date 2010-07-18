@@ -8,7 +8,8 @@ target_link_libraries(endoscope ${KDE4_KDECORE_LIBRARY})
 
 set(endoscope_srcs
   mainwindow.cpp
-  startup-hook.cpp
+  probe.cpp
+  objectlistmodel.cpp
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui
