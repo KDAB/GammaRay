@@ -64,7 +64,11 @@
         <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="sceneTreeView"/>
+        <widget class="QTreeView" name="sceneTreeView">
+         <attribute name="headerShowSortIndicator" stdset="0">
+          <bool>true</bool>
+         </attribute>
+        </widget>
        </item>
       </layout>
      </widget>

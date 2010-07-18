@@ -7,6 +7,7 @@
 #include <QCoreApplication>
 #include <qgraphicsscene.h>
 #include <qdebug.h>
+#include "scenemodel.h"
 
 using namespace Endoscope;
 
@@ -30,7 +31,12 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy = new ObjectTypeFilterProxyModel<QGraphicsScene>( this );
   sceneFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
   ui.sceneComboBox->setModel( sceneFilterProxy );
-  connect( ui.sceneComboBox, SIGNAL(currentIndexChanged(int)), SLOT(sceneSelected(int)) );
+  connect( ui.sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)) );
+  m_sceneModel = new SceneModel( this );
+  QSortFilterProxyModel *sceneFilter = new QSortFilterProxyModel( this );
+  sceneFilter->setSourceModel( m_sceneModel );
+  ui.sceneTreeView->setModel( sceneFilter );
+  ui.screneTreeSearchLine->setProxy( sceneFilter );
 
   setWindowTitle( i18n( "Endoscope (%1)", qApp->applicationName() ) );
 }
@@ -44,9 +50,11 @@ void MainWindow::modelSelected( int index )
 
 void MainWindow::sceneSelected(int index)
 {
-  QObject* obj = ui.modelComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
+  QObject* obj = ui.sceneComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
   QGraphicsScene* scene = qobject_cast<QGraphicsScene*>( obj );
-  qDebug() << scene;
+  qDebug() << Q_FUNC_INFO << scene << obj;
+
+  m_sceneModel->setScene( scene );
 }
 
 #include "mainwindow.moc"

@@ -7,6 +7,8 @@
 
 namespace Endoscope {
 
+class SceneModel;
+
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -19,6 +21,7 @@ class MainWindow : public QMainWindow
 
   private:
     Ui::MainWindow ui;
+    SceneModel *m_sceneModel;
 };
 
 }
