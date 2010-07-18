@@ -79,7 +79,7 @@ QModelIndex SceneModel::index(int row, int column, const QModelIndex& parent) co
   if ( !parent.isValid() && row >= 0 && row < topLevelItems().size() )
     return createIndex( row, column, topLevelItems().at( row ) );
   QGraphicsItem* parentItem = static_cast<QGraphicsItem*>( parent.internalPointer() );
-  if ( !parentItem || parent.row() < 0 || parent.row() >= parentItem->childItems().size() )
+  if ( !parentItem || row < 0 || row >= parentItem->childItems().size() )
     return QModelIndex();
   return createIndex( row, column, parentItem->childItems().at( row ) );
 }
