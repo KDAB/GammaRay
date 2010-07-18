@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
-    <height>536</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,6 +56,17 @@
       <attribute name="title">
        <string>Graphics Scenes</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QComboBox" name="sceneComboBox"/>
+       </item>
+       <item>
+        <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="sceneTreeView"/>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>

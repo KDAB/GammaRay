@@ -5,6 +5,8 @@
 
 #include <KLocalizedString>
 #include <QCoreApplication>
+#include <qgraphicsscene.h>
+#include <qdebug.h>
 
 using namespace Endoscope;
 
@@ -25,6 +27,11 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.modelComboBox->setModel( modelFilterProxy );
   connect( ui.modelComboBox, SIGNAL(currentIndexChanged(int)), SLOT(modelSelected(int)) );
 
+  ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy = new ObjectTypeFilterProxyModel<QGraphicsScene>( this );
+  sceneFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
+  ui.sceneComboBox->setModel( sceneFilterProxy );
+  connect( ui.sceneComboBox, SIGNAL(currentIndexChanged(int)), SLOT(sceneSelected(int)) );
+
   setWindowTitle( i18n( "Endoscope (%1)", qApp->applicationName() ) );
 }
 
@@ -35,5 +42,11 @@ void MainWindow::modelSelected( int index )
   ui.modelContentView->setModel( model );
 }
 
+void MainWindow::sceneSelected(int index)
+{
+  QObject* obj = ui.modelComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
+  QGraphicsScene* scene = qobject_cast<QGraphicsScene*>( obj );
+  qDebug() << scene;
+}
 
 #include "mainwindow.moc"

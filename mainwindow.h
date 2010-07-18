@@ -15,6 +15,7 @@ class MainWindow : public QMainWindow
 
   private slots:
     void modelSelected(int index);
+    void sceneSelected(int index);
 
   private:
     Ui::MainWindow ui;
