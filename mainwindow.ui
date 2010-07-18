@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>727</width>
+    <height>536</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,6 +43,14 @@
       <attribute name="title">
        <string>Models</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QComboBox" name="modelComboBox"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="modelContentView"/>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">

@@ -15,6 +15,8 @@ QVariant ObjectListModel::data(const QModelIndex& index, int role) const
 	return obj->objectName().isEmpty() ? QString::number( reinterpret_cast<qlonglong>( obj ), 16 ) : obj->objectName();
       else if ( index.column() == 1 )
 	return obj->metaObject()->className();
+    } else if ( role == ObjectRole ) {
+      return QVariant::fromValue( obj );
     }
   }
   return QVariant();
@@ -22,6 +24,8 @@ QVariant ObjectListModel::data(const QModelIndex& index, int role) const
 
 int ObjectListModel::columnCount(const QModelIndex& parent) const
 {
+  if ( parent.isValid() )
+    return 0;
   return 2;
 }
 
@@ -34,7 +38,9 @@ int ObjectListModel::rowCount(const QModelIndex& parent) const
 
 void Endoscope::ObjectListModel::objectAdded(QObject* obj)
 {
+  beginInsertRows( QModelIndex(), m_objects.size(), m_objects.size() );
   m_objects.push_back( obj );
+  endInsertRows();
 }
 
 void Endoscope::ObjectListModel::objectRemoved(QObject* obj)
