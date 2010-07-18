@@ -12,7 +12,7 @@ QVariant ObjectListModel::data(const QModelIndex& index, int role) const
     QObject *obj = m_objects.at( index.row() );
     if ( role == Qt::DisplayRole ) {
       if ( index.column() == 0 )
-	return obj->objectName().isEmpty() ? QString::number( reinterpret_cast<qlonglong>( obj ), 16 ) : obj->objectName();
+	return obj->objectName().isEmpty() ? (QLatin1String( "0x" ) + QString::number( reinterpret_cast<qlonglong>( obj ), 16 )) : obj->objectName();
       else if ( index.column() == 1 )
 	return obj->metaObject()->className();
     } else if ( role == ObjectRole ) {

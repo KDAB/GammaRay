@@ -14,7 +14,11 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   setCentralWidget( center );
   ui.setupUi( centralWidget() );
 
-  ui.objectTreeView->setModel( Probe::instance()->objectListModel() );
+  QSortFilterProxyModel *objectFilter = new QSortFilterProxyModel( this );
+  objectFilter->setSourceModel( Probe::instance()->objectListModel() );
+  objectFilter->setDynamicSortFilter( true );
+  ui.objectTreeView->setModel( objectFilter );
+  ui.objectSearchLine->setProxy( objectFilter );
 
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
