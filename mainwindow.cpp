@@ -19,8 +19,16 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
   ui.modelComboBox->setModel( modelFilterProxy );
+  connect( ui.modelComboBox, SIGNAL(currentIndexChanged(int)), SLOT(modelSelected(int)) );
 
   setWindowTitle( i18n( "Endoscope (%1)", qApp->applicationName() ) );
+}
+
+void MainWindow::modelSelected( int index )
+{
+  QObject* obj = ui.modelComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
+  QAbstractItemModel* model = qobject_cast<QAbstractItemModel*>( obj );
+  ui.modelContentView->setModel( model );
 }
 
 

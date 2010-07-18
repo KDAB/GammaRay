@@ -13,6 +13,9 @@ class MainWindow : public QMainWindow
   public:
     MainWindow( QWidget *parent = 0 );
 
+  private slots:
+    void modelSelected(int index);
+
   private:
     Ui::MainWindow ui;
 };
