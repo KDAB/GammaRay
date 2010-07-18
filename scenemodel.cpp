@@ -2,6 +2,10 @@
 
 #include <qgraphicsitem.h>
 #include <qgraphicsscene.h>
+#include <qdebug.h>
+
+#include <boost/bind.hpp>
+#include <algorithm>
 
 using namespace Endoscope;
 
@@ -14,6 +18,7 @@ SceneModel::SceneModel(QObject* parent):
 void SceneModel::setScene(QGraphicsScene* scene)
 {
   m_scene = scene;
+  qDebug() << "total amount of graphics items:" << m_scene->items().size();
   reset();
 }
 
@@ -24,10 +29,12 @@ QVariant SceneModel::data(const QModelIndex& index, int role) const
   QGraphicsItem *item = static_cast<QGraphicsItem*>( index.internalPointer() );
 
   if ( item && role == Qt::DisplayRole ) {
-    if ( index.column() == 0 )
+    QGraphicsObject *obj = item->toGraphicsObject();
+    if ( index.column() == 0 ) {
+      if ( obj && !obj->objectName().isEmpty() )
+	return obj->objectName();
       return QLatin1String( "0x" ) + QString::number( reinterpret_cast<qlonglong>( item ), 16 );
-    else if ( index.column() == 1 ) {
-      QGraphicsObject *obj = item->toGraphicsObject();
+    } else if ( index.column() == 1 ) {
       if ( obj )
 	return obj->metaObject()->className();
       return QString::number( item->type() );
@@ -53,7 +60,7 @@ int SceneModel::rowCount(const QModelIndex& parent) const
     else
       return 0;
   }
-  return m_scene->items().size();
+  return topLevelItems().size();
 }
 
 QModelIndex SceneModel::parent(const QModelIndex& child) const
@@ -69,12 +76,23 @@ QModelIndex SceneModel::parent(const QModelIndex& child) const
 
 QModelIndex SceneModel::index(int row, int column, const QModelIndex& parent) const
 {
-  if ( !parent.isValid() && row >= 0 && row < m_scene->items().size() )
-    return createIndex( row, column, m_scene->items().at( row ) );
+  if ( !parent.isValid() && row >= 0 && row < topLevelItems().size() )
+    return createIndex( row, column, topLevelItems().at( row ) );
   QGraphicsItem* parentItem = static_cast<QGraphicsItem*>( parent.internalPointer() );
   if ( !parentItem || parent.row() < 0 || parent.row() >= parentItem->childItems().size() )
     return QModelIndex();
   return createIndex( row, column, parentItem->childItems().at( row ) );
+}
+
+QList<QGraphicsItem*> SceneModel::topLevelItems() const
+{
+  QList<QGraphicsItem*> topLevel;
+  if ( !m_scene )
+    return topLevel;
+  const QList<QGraphicsItem*> allItems = m_scene->items();
+  std::remove_copy_if( allItems.begin(), allItems.end(), std::back_inserter( topLevel ),
+		       boost::bind( &QGraphicsItem::parentItem, _1 ) != (QGraphicsItem*)(0) );
+  return topLevel;
 }
 
 #include "scenemodel.moc"
