@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "probe.h"
 #include "objectlistmodel.h"
+#include "objecttreemodel.h"
 #include "objecttypefilterproxymodel.h"
 #include "objectpropertymodel.h"
 #include "scenemodel.h"
@@ -19,7 +20,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.setupUi( centralWidget() );
 
   QSortFilterProxyModel *objectFilter = new QSortFilterProxyModel( this );
-  objectFilter->setSourceModel( Probe::instance()->objectListModel() );
+  objectFilter->setSourceModel( Probe::instance()->objectTreeModel() );
   objectFilter->setDynamicSortFilter( true );
   ui.objectTreeView->setModel( objectFilter );
   ui.objectSearchLine->setProxy( objectFilter );

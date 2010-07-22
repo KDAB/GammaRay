@@ -7,7 +7,7 @@
 namespace Endoscope {
 
 class ObjectListModel;
-
+class ObjectTreeModel;
 
 class Probe : public QObject
 {
@@ -17,6 +17,7 @@ class Probe : public QObject
     static bool isInitialized();
 
     ObjectListModel *objectListModel() const;
+    ObjectTreeModel *objectTreeModel() const;
 
   private slots:
     void delayedInit();
@@ -26,6 +27,7 @@ class Probe : public QObject
     static Probe* s_instance;
 
     ObjectListModel *m_objectListModel;
+    ObjectTreeModel *m_objectTreeModel;
 };
 
 }
