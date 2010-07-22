@@ -34,6 +34,12 @@ QVariant ObjectPropertyModel::data(const QModelIndex& index, int role) const
       return prop.read( m_obj );
     else if ( index.column() == 2 )
       return prop.typeName();
+    else if ( index.column() == 3 ) {
+      const QMetaObject* mo = m_obj->metaObject();
+      while ( mo->propertyOffset() > index.row() )
+        mo = mo->superClass();
+      return mo->className();
+    }
   } else if ( role == Qt::ToolTipRole ) {
     const QString toolTip = i18n( "Constant: %1\nDesignable: %2\nFinal: %3\nResetable: %4\n"
       "Has notification: %5\nScriptable: %6\nStored: %7\nUser: %8\nWritable: %9",
@@ -70,6 +76,7 @@ QVariant ObjectPropertyModel::headerData(int section, Qt::Orientation orientatio
       case 0: return i18n( "Property" );
       case 1: return i18n( "Value" );
       case 2: return i18n( "Type" );
+      case 3: return i18n( "Class" );
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
@@ -95,7 +102,7 @@ int ObjectPropertyModel::columnCount(const QModelIndex& parent) const
 {
   if ( parent.isValid() )
     return 0;
-  return 3;
+  return 4;
 }
 
 int ObjectPropertyModel::rowCount(const QModelIndex& parent) const
