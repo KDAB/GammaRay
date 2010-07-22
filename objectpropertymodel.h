@@ -2,7 +2,9 @@
 #define ENDOSCOPE_OBJECTPROPERTYMODEL_H
 
 #include <qabstractitemmodel.h>
+#include <QWeakPointer>
 
+class QTimer;
 
 namespace Endoscope {
 
@@ -20,8 +22,14 @@ class ObjectPropertyModel : public QAbstractTableModel
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
+  private slots:
+    void slotReset() { reset(); }
+    void updateAll();
+    void doEmitChanged();
+
   private:
-    QObject *m_obj;
+    QWeakPointer<QObject> m_obj;
+    QTimer *m_updateTimer;
 };
 
 }

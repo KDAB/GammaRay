@@ -1,18 +1,33 @@
 #include "objectpropertymodel.h"
-#include <QtCore/QMetaProperty>
+
+#include <KDebug>
 #include <KLocalizedString>
+#include <QtCore/QMetaProperty>
+#include <QtCore/QTimer>
 
 using namespace Endoscope;
 
 ObjectPropertyModel::ObjectPropertyModel(QObject* parent) :
   QAbstractTableModel(parent),
-  m_obj( 0 )
+  m_updateTimer( new QTimer( this ) )
 {
+  connect( m_updateTimer, SIGNAL(timeout()), SLOT(doEmitChanged()) );
+  m_updateTimer->setSingleShot( true );
 }
 
 void ObjectPropertyModel::setObject(QObject* object)
 {
+  disconnect( this, SLOT(updateAll()) );
+  disconnect( this, SLOT(slotReset()) );
   m_obj = object;
+  if ( object ) {
+    connect( object, SIGNAL(destroyed(QObject*)), SLOT(slotReset()) );
+    for ( int i = 0; i < object->metaObject()->propertyCount(); ++i ) {
+      const QMetaProperty prop = object->metaObject()->property( i );
+      if ( prop.hasNotifySignal() )
+        connect( object, QByteArray( "2" ) + prop.notifySignal().signature(), SLOT(updateAll()) );
+    }
+  }
   reset();
 }
 
@@ -23,19 +38,19 @@ static QString translateBool( bool value )
 
 QVariant ObjectPropertyModel::data(const QModelIndex& index, int role) const
 {
-  if ( !index.isValid() || !m_obj || index.row() < 0 || index.row() >= m_obj->metaObject()->propertyCount() )
+  if ( !index.isValid() || !m_obj || index.row() < 0 || index.row() >= m_obj.data()->metaObject()->propertyCount() )
     return QVariant();
 
-  const QMetaProperty prop = m_obj->metaObject()->property( index.row() );
+  const QMetaProperty prop = m_obj.data()->metaObject()->property( index.row() );
   if ( role == Qt::DisplayRole || role == Qt::EditRole ) {
     if ( index.column() == 0 )
       return prop.name();
     else if ( index.column() == 1 )
-      return prop.read( m_obj );
+      return prop.read( m_obj.data() );
     else if ( index.column() == 2 )
       return prop.typeName();
     else if ( index.column() == 3 ) {
-      const QMetaObject* mo = m_obj->metaObject();
+      const QMetaObject* mo = m_obj.data()->metaObject();
       while ( mo->propertyOffset() > index.row() )
         mo = mo->superClass();
       return mo->className();
@@ -44,13 +59,13 @@ QVariant ObjectPropertyModel::data(const QModelIndex& index, int role) const
     const QString toolTip = i18n( "Constant: %1\nDesignable: %2\nFinal: %3\nResetable: %4\n"
       "Has notification: %5\nScriptable: %6\nStored: %7\nUser: %8\nWritable: %9",
       translateBool( prop.isConstant() ),
-      translateBool( prop.isDesignable( m_obj ) ),
+      translateBool( prop.isDesignable( m_obj.data() ) ),
       translateBool( prop.isFinal() ),
       translateBool( prop.isResettable() ),
       translateBool( prop.hasNotifySignal() ),
-      translateBool( prop.isScriptable( m_obj ) ),
-      translateBool( prop.isStored( m_obj ) ),
-      translateBool( prop.isUser( m_obj ) ),
+      translateBool( prop.isScriptable( m_obj.data() ) ),
+      translateBool( prop.isStored( m_obj.data() ) ),
+      translateBool( prop.isUser( m_obj.data() ) ),
       translateBool( prop.isWritable() ) );
     return toolTip;
   }
@@ -61,10 +76,10 @@ QVariant ObjectPropertyModel::data(const QModelIndex& index, int role) const
 bool ObjectPropertyModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   if ( index.isValid() && m_obj && index.column() == 1 && index.row() >= 0
-    && index.row() < m_obj->metaObject()->propertyCount() && role == Qt::EditRole )
+    && index.row() < m_obj.data()->metaObject()->propertyCount() && role == Qt::EditRole )
   {
-    const QMetaProperty prop = m_obj->metaObject()->property( index.row() );
-    return prop.write( m_obj, value );
+    const QMetaProperty prop = m_obj.data()->metaObject()->property( index.row() );
+    return prop.write( m_obj.data(), value );
   }
   return QAbstractItemModel::setData(index, value, role);
 }
@@ -87,12 +102,12 @@ Qt::ItemFlags ObjectPropertyModel::flags(const QModelIndex& index) const
   const Qt::ItemFlags flags = QAbstractItemModel::flags(index);
 
   if ( !index.isValid() || !m_obj || index.column() != 1 || index.row() < 0
-    || index.row() >= m_obj->metaObject()->propertyCount() )
+    || index.row() >= m_obj.data()->metaObject()->propertyCount() )
   {
     return flags;
   }
 
-  const QMetaProperty prop = m_obj->metaObject()->property( index.row() );
+  const QMetaProperty prop = m_obj.data()->metaObject()->property( index.row() );
   if ( prop.isWritable() )
     return flags | Qt::ItemIsEditable;
   return flags;
@@ -109,7 +124,20 @@ int ObjectPropertyModel::rowCount(const QModelIndex& parent) const
 {
   if ( !m_obj || parent.isValid() )
     return 0;
-  return m_obj->metaObject()->propertyCount();
+  return m_obj.data()->metaObject()->propertyCount();
 }
+
+void ObjectPropertyModel::updateAll()
+{
+  if ( m_updateTimer->isActive() )
+    return;
+  m_updateTimer->start( 100 );
+}
+
+void ObjectPropertyModel::doEmitChanged()
+{
+  emit dataChanged( index( 0, 0 ), index( rowCount() - 1, columnCount() - 1 ) );
+}
+
 
 #include "objectpropertymodel.h"
