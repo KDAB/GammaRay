@@ -22,6 +22,9 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
     void objectAdded( QObject *obj );
     void objectRemoved( QObject *obj );
 
+  protected:
+    bool eventFilter(QObject *receiver, QEvent *event);
+
   private:
     QModelIndex indexForObject( QObject* object ) const;
 
