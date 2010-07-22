@@ -53,6 +53,9 @@
            </item>
            <item>
             <widget class="QTreeView" name="objectPropertyView">
+             <property name="editTriggers">
+              <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+             </property>
              <property name="allColumnsShowFocus">
               <bool>true</bool>
              </property>
