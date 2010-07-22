@@ -10,6 +10,7 @@ set(endoscope_srcs
   mainwindow.cpp
   probe.cpp
   objectlistmodel.cpp
+  objectpropertymodel.cpp
   scenemodel.cpp
 )
 kde4_add_ui_files(endoscope_srcs

@@ -2,12 +2,13 @@
 #include "probe.h"
 #include "objectlistmodel.h"
 #include "objecttypefilterproxymodel.h"
+#include "objectpropertymodel.h"
+#include "scenemodel.h"
 
 #include <KLocalizedString>
 #include <QCoreApplication>
 #include <qgraphicsscene.h>
 #include <qdebug.h>
-#include "scenemodel.h"
 
 using namespace Endoscope;
 
@@ -22,6 +23,14 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   objectFilter->setDynamicSortFilter( true );
   ui.objectTreeView->setModel( objectFilter );
   ui.objectSearchLine->setProxy( objectFilter );
+  connect( ui.objectTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+	   SLOT(objectSelected(QModelIndex)) );
+
+  m_objectPropertyModel = new ObjectPropertyModel( this );
+  QSortFilterProxyModel *objectPropertyFilter = new QSortFilterProxyModel( this );
+  objectPropertyFilter->setSourceModel( m_objectPropertyModel );
+  ui.objectPropertyView->setModel( objectPropertyFilter );
+  ui.objectPropertySearchLine->setProxy( objectPropertyFilter );
 
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
@@ -39,6 +48,16 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.screneTreeSearchLine->setProxy( sceneFilter );
 
   setWindowTitle( i18n( "Endoscope (%1)", qApp->applicationName() ) );
+}
+
+void MainWindow::objectSelected( const QModelIndex &index )
+{
+  if ( index.isValid() ) {
+    QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
+    m_objectPropertyModel->setObject( obj );
+  } else {
+    m_objectPropertyModel->setObject( 0 );
+  }
 }
 
 void MainWindow::modelSelected( int index )

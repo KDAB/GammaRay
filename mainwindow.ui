@@ -23,18 +23,43 @@
       <attribute name="title">
        <string>Objects</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
-       </item>
-       <item>
-        <widget class="QTreeView" name="objectTreeView">
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
+        <widget class="QSplitter" name="splitter">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <attribute name="headerShowSortIndicator" stdset="0">
-          <bool>true</bool>
-         </attribute>
+         <widget class="QWidget" name="">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
+           </item>
+           <item>
+            <widget class="QTreeView" name="objectTreeView">
+             <property name="allColumnsShowFocus">
+              <bool>true</bool>
+             </property>
+             <attribute name="headerShowSortIndicator" stdset="0">
+              <bool>true</bool>
+             </attribute>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="">
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="KFilterProxySearchLine" name="objectPropertySearchLine"/>
+           </item>
+           <item>
+            <widget class="QTreeView" name="objectPropertyView">
+             <property name="allColumnsShowFocus">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
