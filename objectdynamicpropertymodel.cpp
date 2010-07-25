@@ -31,6 +31,34 @@ QVariant ObjectDynamicPropertyModel::data(const QModelIndex& index, int role) co
   return QVariant();
 }
 
+bool ObjectDynamicPropertyModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  if ( !m_obj )
+    return false;
+
+  const QList<QByteArray> propNames = m_obj.data()->dynamicPropertyNames();
+  if ( index.row() < 0 || index.row() >= propNames.size() )
+    return false;
+
+  if ( role == Qt::EditRole ) {
+    const QByteArray propName = propNames.at( index.row() );
+    m_obj.data()->setProperty( propName, value );
+    return true;
+  }
+  
+  return QAbstractItemModel::setData(index, value, role);
+}
+
+Qt::ItemFlags ObjectDynamicPropertyModel::flags(const QModelIndex& index) const
+{
+  const Qt::ItemFlags flags = ObjectPropertyModel::flags(index);
+
+  if ( !index.isValid() || !m_obj || index.column() != 1 )
+    return flags;
+
+  return flags | Qt::ItemIsEditable;
+}
+
 int ObjectDynamicPropertyModel::columnCount(const QModelIndex& parent) const
 {
   if ( parent.isValid() )
