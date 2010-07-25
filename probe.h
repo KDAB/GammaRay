@@ -22,6 +22,9 @@ class Probe : public QObject
     ObjectListModel *objectListModel() const;
     ObjectTreeModel *objectTreeModel() const;
 
+  protected:
+    bool eventFilter(QObject *receiver, QEvent *event );
+
   private slots:
     void delayedInit();
 

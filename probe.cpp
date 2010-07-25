@@ -3,6 +3,7 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 
 #include <dlfcn.h>
@@ -25,6 +26,7 @@ Probe* Endoscope::Probe::instance()
 {
   if ( !s_instance ) {
     s_instance = new Probe;
+    QCoreApplication::instance()->installEventFilter( s_instance );
     QMetaObject::invokeMethod( s_instance, "delayedInit", Qt::QueuedConnection );
   }
   return s_instance;
@@ -81,6 +83,18 @@ void Probe::objectRemoved(QObject* obj)
     }
   }
 }
+
+bool Probe::eventFilter(QObject *receiver, QEvent *event )
+{
+  if ( event->type() == QEvent::ChildAdded || event->type() == QEvent::ChildRemoved ) {
+    QChildEvent *childEvent = static_cast<QChildEvent*>( event );
+    objectTreeModel()->objectRemoved( childEvent->child() );
+    if ( event->type() == QEvent::ChildAdded )
+      objectTreeModel()->objectAdded( childEvent->child() );
+  }
+  return QObject::eventFilter(receiver, event);
+}
+
 
 
 extern "C" Q_DECL_EXPORT void qt_startup_hook()

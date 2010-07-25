@@ -17,13 +17,13 @@ void ObjectTreeModel::objectAdded(QObject* obj)
   beginInsertRows( indexForObject( obj->parent() ), children.size(), children.size() );
   children.push_back( obj );
   m_childParentMap.insert( obj, obj->parent() );
-  obj->installEventFilter( this );
   endInsertRows();
 }
 
 void ObjectTreeModel::objectRemoved(QObject* obj)
 {
-  obj->removeEventFilter( this );
+  if ( !m_childParentMap.contains( obj ) )
+    return;
   QObject *parentObj = m_childParentMap[ obj ];
   const QModelIndex parentIndex = indexForObject( parentObj );
   QVector<QObject*> &children = m_parentChildMap[ parentObj ];
@@ -75,18 +75,6 @@ QModelIndex ObjectTreeModel::indexForObject( QObject* object ) const
   const QModelIndex parentIndex = indexForObject( parent );
   int row = m_parentChildMap[ parent ].indexOf( object );
   return index( row, 0, parentIndex );
-}
-
-bool ObjectTreeModel::eventFilter(QObject* receiver, QEvent* event)
-{
-  if ( event->type() == QEvent::ChildAdded || event->type() == QEvent::ChildRemoved ) {
-    QChildEvent *childEvent = static_cast<QChildEvent*>( event );
-    if ( m_childParentMap.contains( childEvent->child() ) )
-      objectRemoved( childEvent->child() );
-    if ( event->type() == QEvent::ChildAdded )
-      objectAdded( childEvent->child() );
-  }
-  return QObject::eventFilter(receiver, event);
 }
 
 #include "objecttreemodel.moc"
