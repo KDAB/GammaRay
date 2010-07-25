@@ -31,6 +31,9 @@ int ObjectListModel::rowCount(const QModelIndex& parent) const
 
 void Endoscope::ObjectListModel::objectAdded(QObject* obj)
 {
+  const int index = m_objects.indexOf( obj );
+  if ( index > 0 )
+    return;
   beginInsertRows( QModelIndex(), m_objects.size(), m_objects.size() );
   m_objects.push_back( obj );
   endInsertRows();
