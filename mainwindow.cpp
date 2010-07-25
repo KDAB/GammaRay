@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <qgraphicsscene.h>
 #include <qdebug.h>
+#include <qgraphicsitem.h>
 
 using namespace Endoscope;
 
@@ -47,6 +48,8 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   sceneFilter->setSourceModel( m_sceneModel );
   ui.sceneTreeView->setModel( sceneFilter );
   ui.screneTreeSearchLine->setProxy( sceneFilter );
+  connect( ui.sceneTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           SLOT(sceneItemSelected(QModelIndex)) );
 
   setWindowTitle( i18n( "Endoscope (%1)", qApp->applicationName() ) );
 }
@@ -85,6 +88,16 @@ void MainWindow::sceneSelected(int index)
   qDebug() << Q_FUNC_INFO << scene << obj;
 
   m_sceneModel->setScene( scene );
+}
+
+void MainWindow::sceneItemSelected(const QModelIndex& index)
+{
+  if ( index.isValid() ) {
+    QGraphicsItem* item = index.data( SceneModel::SceneItemRole ).value<QGraphicsItem*>();
+    ui.scenePropertyWidget->setObject( item->toGraphicsObject() );
+  } else {
+    ui.scenePropertyWidget->setObject( 0 );
+  }
 }
 
 #include "mainwindow.moc"

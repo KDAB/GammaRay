@@ -12,6 +12,9 @@ class SceneModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
+    enum Role {
+      SceneItemRole = Qt::UserRole + 1
+    };
     SceneModel(QObject* parent = 0);
     void setScene( QGraphicsScene* scene );
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
   private slots:
     void objectSelected(const QModelIndex &index);
     void widgetSelected( const QModelIndex &index );
+    void sceneItemSelected( const QModelIndex &index );
     void modelSelected(int index);
     void sceneSelected(int index);
 

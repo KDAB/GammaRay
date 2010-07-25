@@ -39,6 +39,8 @@ QVariant SceneModel::data(const QModelIndex& index, int role) const
 	return obj->metaObject()->className();
       return QString::number( item->type() );
     }
+  } else if ( role == SceneItemRole ) {
+    return QVariant::fromValue( item );
   }
   return QVariant();
 }
