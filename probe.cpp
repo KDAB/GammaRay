@@ -11,6 +11,8 @@ using namespace Endoscope;
 
 Probe* Probe::s_instance = 0;
 
+Q_GLOBAL_STATIC( QVector<QObject*>, s_addedBeforeProbeInsertion )
+
 Probe::Probe(QObject* parent):
   QObject(parent),
   m_objectListModel( new ObjectListModel( this ) ),
@@ -35,6 +37,10 @@ bool Probe::isInitialized()
 
 void Probe::delayedInit()
 {
+  foreach ( QObject *obj, *(s_addedBeforeProbeInsertion()) )
+    objectAdded( obj );
+  s_addedBeforeProbeInsertion()->clear();
+
   Endoscope::MainWindow *window = new Endoscope::MainWindow;
   window->show();
 }
@@ -49,6 +55,32 @@ ObjectTreeModel* Probe::objectTreeModel() const
   return m_objectTreeModel;
 }
 
+void Probe::objectAdded(QObject* obj)
+{
+  if ( isInitialized() ) {
+    instance()->objectListModel()->objectAdded( obj );
+    instance()->objectTreeModel()->objectAdded( obj );
+  } else {
+    s_addedBeforeProbeInsertion()->push_back( obj );
+  }
+}
+
+void Probe::objectRemoved(QObject* obj)
+{
+  if ( isInitialized() ) {
+    instance()->objectListModel()->objectRemoved( obj );
+    instance()->objectTreeModel()->objectRemoved( obj );
+  } else {
+    for ( QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
+         it != s_addedBeforeProbeInsertion()->end(); )
+    {
+      if ( *it == obj )
+        it = s_addedBeforeProbeInsertion()->erase( it );
+      else
+        ++it;
+    }
+  }
+}
 
 
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
@@ -62,20 +94,14 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 extern "C" Q_DECL_EXPORT void qt_addObject( QObject *obj )
 {
   static void (*next_qt_addObject)(QObject* obj) = (void (*)(QObject *obj)) dlsym( RTLD_NEXT, "qt_addObject" );
-  if ( Probe::isInitialized() ) {
-    Probe::instance()->objectListModel()->objectAdded( obj );
-    Probe::instance()->objectTreeModel()->objectAdded( obj );
-  }
+  Probe::objectAdded( obj );
   next_qt_addObject( obj );
 }
 
 extern "C" Q_DECL_EXPORT void qt_removeObject( QObject *obj )
 {
   static void (*next_qt_removeObject)(QObject* obj) = (void (*)(QObject *obj)) dlsym( RTLD_NEXT, "qt_removeObject" );
-  if ( Probe::isInitialized() ) {
-    Probe::instance()->objectListModel()->objectRemoved( obj );
-    Probe::instance()->objectTreeModel()->objectRemoved( obj );
-  }
+  Probe::objectRemoved( obj );
   next_qt_removeObject( obj );
 }
 

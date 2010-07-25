@@ -16,6 +16,9 @@ class Probe : public QObject
     static Probe* instance();
     static bool isInitialized();
 
+    static void objectAdded( QObject *obj );
+    static void objectRemoved( QObject *obj );
+
     ObjectListModel *objectListModel() const;
     ObjectTreeModel *objectTreeModel() const;
 
