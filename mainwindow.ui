@@ -29,7 +29,7 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
             <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
@@ -46,7 +46,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="KFilterProxySearchLine" name="objectPropertySearchLine"/>
@@ -64,6 +64,19 @@
           </layout>
          </widget>
         </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Widgets</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="widgetTreeView"/>
        </item>
       </layout>
      </widget>

@@ -33,6 +33,11 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.objectPropertyView->setModel( objectPropertyFilter );
   ui.objectPropertySearchLine->setProxy( objectPropertyFilter );
 
+  ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy = new ObjectTypeFilterProxyModel<QWidget>( this );
+  widgetFilterProxy->setSourceModel( Probe::instance()->objectTreeModel() );
+  ui.widgetTreeView->setModel( widgetFilterProxy );
+  ui.widgetSearchLine->setProxy( widgetFilterProxy );
+
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
   ui.modelComboBox->setModel( modelFilterProxy );

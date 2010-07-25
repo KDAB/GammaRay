@@ -23,7 +23,9 @@ class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
       if ( !source_index.isValid() )
 	return false;
       QObject *obj = source_index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-      return qobject_cast<T*>( obj ) != 0;
+      if ( !qobject_cast<T*>( obj ) )
+        return false;
+      return QSortFilterProxyModel::filterAcceptsRow( source_row, source_parent );
     }
 };
 
