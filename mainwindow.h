@@ -7,7 +7,6 @@
 
 namespace Endoscope {
 
-class ObjectPropertyModel;
 class SceneModel;
 
 class MainWindow : public QMainWindow
@@ -17,14 +16,14 @@ class MainWindow : public QMainWindow
     MainWindow( QWidget *parent = 0 );
 
   private slots:
+    void objectSelected(const QModelIndex &index);
+    void widgetSelected( const QModelIndex &index );
     void modelSelected(int index);
     void sceneSelected(int index);
-    void objectSelected(const QModelIndex &index);
 
   private:
     Ui::MainWindow ui;
     SceneModel *m_sceneModel;
-    ObjectPropertyModel *m_objectPropertyModel;
 };
 
 }

@@ -23,7 +23,7 @@
       <attribute name="title">
        <string>Objects</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_6">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <widget class="QSplitter" name="splitter">
          <property name="orientation">
@@ -46,23 +46,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="KFilterProxySearchLine" name="objectPropertySearchLine"/>
-           </item>
-           <item>
-            <widget class="QTreeView" name="objectPropertyView">
-             <property name="editTriggers">
-              <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
-             </property>
-             <property name="allColumnsShowFocus">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+         <widget class="Endoscope::PropertyWidget" name="objectPropertyWidget" native="true"/>
         </widget>
        </item>
       </layout>
@@ -71,12 +55,24 @@
       <attribute name="title">
        <string>Widgets</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_7">
+      <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
-        <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
-       </item>
-       <item>
-        <widget class="QTreeView" name="widgetTreeView"/>
+        <widget class="QSplitter" name="splitter_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QWidget" name="">
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
+           </item>
+           <item>
+            <widget class="QTreeView" name="widgetTreeView"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="Endoscope::PropertyWidget" name="widgetPropertyWidget" native="true"/>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -122,6 +118,12 @@
    <class>KFilterProxySearchLine</class>
    <extends>QWidget</extends>
    <header>kfilterproxysearchline.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Endoscope::PropertyWidget</class>
+   <extends>QWidget</extends>
+   <header>propertywidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -3,7 +3,6 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "objecttypefilterproxymodel.h"
-#include "objectpropertymodel.h"
 #include "scenemodel.h"
 
 #include <KLocalizedString>
@@ -27,16 +26,12 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.objectTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
 	   SLOT(objectSelected(QModelIndex)) );
 
-  m_objectPropertyModel = new ObjectPropertyModel( this );
-  QSortFilterProxyModel *objectPropertyFilter = new QSortFilterProxyModel( this );
-  objectPropertyFilter->setSourceModel( m_objectPropertyModel );
-  ui.objectPropertyView->setModel( objectPropertyFilter );
-  ui.objectPropertySearchLine->setProxy( objectPropertyFilter );
-
   ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy = new ObjectTypeFilterProxyModel<QWidget>( this );
   widgetFilterProxy->setSourceModel( Probe::instance()->objectTreeModel() );
   ui.widgetTreeView->setModel( widgetFilterProxy );
   ui.widgetSearchLine->setProxy( widgetFilterProxy );
+  connect( ui.widgetTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           SLOT(widgetSelected(QModelIndex)) );
 
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
@@ -60,9 +55,19 @@ void MainWindow::objectSelected( const QModelIndex &index )
 {
   if ( index.isValid() ) {
     QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-    m_objectPropertyModel->setObject( obj );
+    ui.objectPropertyWidget->setObject( obj );
   } else {
-    m_objectPropertyModel->setObject( 0 );
+    ui.objectPropertyWidget->setObject( 0 );
+  }
+}
+
+void MainWindow::widgetSelected(const QModelIndex& index)
+{
+  if ( index.isValid() ) {
+    QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
+    ui.widgetPropertyWidget->setObject( obj );
+  } else {
+    ui.widgetPropertyWidget->setObject( 0 );
   }
 }
 

@@ -9,6 +9,7 @@ target_link_libraries(endoscope ${KDE4_KDECORE_LIBRARY})
 set(endoscope_srcs
   mainwindow.cpp
   probe.cpp
+  propertywidget.cpp
   objectlistmodel.cpp
   objectpropertymodel.cpp
   objecttreemodel.cpp
@@ -16,6 +17,7 @@ set(endoscope_srcs
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui
+  propertywidget.ui
 )
 kde4_add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
