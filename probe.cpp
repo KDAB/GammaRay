@@ -12,6 +12,32 @@ using namespace Endoscope;
 
 Probe* Probe::s_instance = 0;
 
+namespace Endoscope
+{
+
+static bool probeConnectCallback( void ** args )
+{
+  const QObject *sender = reinterpret_cast<QObject*>( args[0] );
+  const char *signal = reinterpret_cast<const char*>( args[1] );
+  const QObject *receiver = reinterpret_cast<QObject*>( args[2] );
+  const char *method = reinterpret_cast<const char*>( args[3] );
+  const Qt::ConnectionType *type = reinterpret_cast<Qt::ConnectionType*>( args[4] );
+  Probe::connectionAdded( sender, signal, receiver, method, *type );
+  return false;
+}
+
+static bool probeDisconnectCallback( void ** args )
+{
+  const QObject *sender = reinterpret_cast<QObject*>( args[0] );
+  const char *signal = reinterpret_cast<const char*>( args[1] );
+  const QObject *receiver = reinterpret_cast<QObject*>( args[2] );
+  const char *method = reinterpret_cast<const char*>( args[3] );
+  Probe::connectionRemoved( sender, signal, receiver, method );
+  return false;
+}
+
+}
+
 Q_GLOBAL_STATIC( QVector<QObject*>, s_addedBeforeProbeInsertion )
 
 Probe::Probe(QObject* parent):
@@ -20,6 +46,9 @@ Probe::Probe(QObject* parent):
   m_objectTreeModel( new ObjectTreeModel( this ) )
 {
   qDebug() << Q_FUNC_INFO;
+
+  QInternal::registerCallback( QInternal::ConnectCallback, &Endoscope::probeConnectCallback );
+  QInternal::registerCallback( QInternal::DisconnectCallback, &Endoscope::probeDisconnectCallback );
 }
 
 Probe* Endoscope::Probe::instance()
@@ -82,6 +111,20 @@ void Probe::objectRemoved(QObject* obj)
         ++it;
     }
   }
+}
+
+void Probe::connectionAdded(const QObject* sender, const char* signal, const QObject* receiver, const char* method, Qt::ConnectionType type)
+{
+  if ( !isInitialized() )
+    return;
+//   qDebug() << Q_FUNC_INFO << sender << signal << receiver << method << type;
+}
+
+void Probe::connectionRemoved(const QObject* sender, const char* signal, const QObject* receiver, const char* method)
+{
+  if ( !isInitialized() )
+    return;
+//   qDebug() << Q_FUNC_INFO << sender << signal << receiver << method;
 }
 
 bool Probe::eventFilter(QObject *receiver, QEvent *event )

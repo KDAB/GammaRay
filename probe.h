@@ -18,6 +18,8 @@ class Probe : public QObject
 
     static void objectAdded( QObject *obj );
     static void objectRemoved( QObject *obj );
+    static void connectionAdded( const QObject *sender, const char* signal, const QObject *receiver, const char *method, Qt::ConnectionType type );
+    static void connectionRemoved( const QObject *sender, const char *signal, const QObject *receiver, const char *method );
 
     ObjectListModel *objectListModel() const;
     ObjectTreeModel *objectTreeModel() const;
