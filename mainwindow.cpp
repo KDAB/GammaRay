@@ -75,8 +75,10 @@ void MainWindow::widgetSelected(const QModelIndex& index)
   if ( index.isValid() ) {
     QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
     ui.widgetPropertyWidget->setObject( obj );
+    ui.widgetPreviewWidget->setWidget( qobject_cast<QWidget*>( obj ) );
   } else {
     ui.widgetPropertyWidget->setObject( 0 );
+    ui.widgetPreviewWidget->setWidget( 0 );
   }
 }
 

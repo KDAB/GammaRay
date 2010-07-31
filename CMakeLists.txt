@@ -20,6 +20,7 @@ set(endoscope_srcs
   connectionmodel.cpp
   scenemodel.cpp
   util.cpp
+  widgetpreviewwidget.cpp
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui
