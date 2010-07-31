@@ -8,6 +8,7 @@ namespace Endoscope {
 class ObjectDynamicPropertyModel;
 class ObjectStaticPropertyModel;
 class ObjectClassInfoModel;
+class ObjectMethodModel;
 
 class PropertyWidget : public QWidget
 {
@@ -22,6 +23,7 @@ class PropertyWidget : public QWidget
     ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
     ObjectClassInfoModel *m_classInfoModel;
+    ObjectMethodModel *m_methodModel;
 };
 
 }

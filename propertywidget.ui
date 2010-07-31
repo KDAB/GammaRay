@@ -45,6 +45,19 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Methods</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="KFilterProxySearchLine" name="methodSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="methodView"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>Class Info</string>

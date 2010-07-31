@@ -15,6 +15,7 @@ set(endoscope_srcs
   objectdynamicpropertymodel.cpp
   objectstaticpropertymodel.cpp
   objectclassinfomodel.cpp
+  objectmethodmodel.cpp
   objecttreemodel.cpp
   scenemodel.cpp
 )
