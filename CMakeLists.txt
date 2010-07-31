@@ -17,7 +17,9 @@ set(endoscope_srcs
   objectclassinfomodel.cpp
   objectmethodmodel.cpp
   objecttreemodel.cpp
+  connectionmodel.cpp
   scenemodel.cpp
+  util.cpp
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui

@@ -61,7 +61,7 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
@@ -102,7 +102,7 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
@@ -117,6 +117,23 @@
           </layout>
          </widget>
          <widget class="Endoscope::PropertyWidget" name="scenePropertyWidget" native="true"/>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>Connections</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <widget class="KFilterProxySearchLine" name="connectionSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="connectionView">
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>

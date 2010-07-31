@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
+#include "connectionmodel.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -17,9 +18,9 @@ namespace Endoscope
 
 static bool probeConnectCallback( void ** args )
 {
-  const QObject *sender = reinterpret_cast<QObject*>( args[0] );
+  QObject *sender = reinterpret_cast<QObject*>( args[0] );
   const char *signal = reinterpret_cast<const char*>( args[1] );
-  const QObject *receiver = reinterpret_cast<QObject*>( args[2] );
+  QObject *receiver = reinterpret_cast<QObject*>( args[2] );
   const char *method = reinterpret_cast<const char*>( args[3] );
   const Qt::ConnectionType *type = reinterpret_cast<Qt::ConnectionType*>( args[4] );
   Probe::connectionAdded( sender, signal, receiver, method, *type );
@@ -28,9 +29,9 @@ static bool probeConnectCallback( void ** args )
 
 static bool probeDisconnectCallback( void ** args )
 {
-  const QObject *sender = reinterpret_cast<QObject*>( args[0] );
+  QObject *sender = reinterpret_cast<QObject*>( args[0] );
   const char *signal = reinterpret_cast<const char*>( args[1] );
-  const QObject *receiver = reinterpret_cast<QObject*>( args[2] );
+  QObject *receiver = reinterpret_cast<QObject*>( args[2] );
   const char *method = reinterpret_cast<const char*>( args[3] );
   Probe::connectionRemoved( sender, signal, receiver, method );
   return false;
@@ -43,7 +44,8 @@ Q_GLOBAL_STATIC( QVector<QObject*>, s_addedBeforeProbeInsertion )
 Probe::Probe(QObject* parent):
   QObject(parent),
   m_objectListModel( new ObjectListModel( this ) ),
-  m_objectTreeModel( new ObjectTreeModel( this ) )
+  m_objectTreeModel( new ObjectTreeModel( this ) ),
+  m_connectionModel( new ConnectionModel( this ) )
 {
   qDebug() << Q_FUNC_INFO;
 
@@ -86,6 +88,11 @@ ObjectTreeModel* Probe::objectTreeModel() const
   return m_objectTreeModel;
 }
 
+ConnectionModel* Probe::connectionModel() const
+{
+  return m_connectionModel;
+}
+
 void Probe::objectAdded(QObject* obj)
 {
   if ( isInitialized() ) {
@@ -113,18 +120,18 @@ void Probe::objectRemoved(QObject* obj)
   }
 }
 
-void Probe::connectionAdded(const QObject* sender, const char* signal, const QObject* receiver, const char* method, Qt::ConnectionType type)
+void Probe::connectionAdded(QObject* sender, const char* signal, QObject* receiver, const char* method, Qt::ConnectionType type)
 {
   if ( !isInitialized() )
     return;
-//   qDebug() << Q_FUNC_INFO << sender << signal << receiver << method << type;
+  instance()->m_connectionModel->connectionAdded( sender, signal, receiver, method, type );
 }
 
-void Probe::connectionRemoved(const QObject* sender, const char* signal, const QObject* receiver, const char* method)
+void Probe::connectionRemoved(QObject* sender, const char* signal, QObject* receiver, const char* method)
 {
   if ( !isInitialized() )
     return;
-//   qDebug() << Q_FUNC_INFO << sender << signal << receiver << method;
+  instance()->m_connectionModel->connectionRemoved( sender, signal, receiver, method );
 }
 
 bool Probe::eventFilter(QObject *receiver, QEvent *event )

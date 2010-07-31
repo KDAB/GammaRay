@@ -4,6 +4,7 @@
 #include "objecttreemodel.h"
 #include "objecttypefilterproxymodel.h"
 #include "scenemodel.h"
+#include "connectionmodel.h"
 
 #include <KLocalizedString>
 #include <QCoreApplication>
@@ -50,6 +51,11 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.screneTreeSearchLine->setProxy( sceneFilter );
   connect( ui.sceneTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(sceneItemSelected(QModelIndex)) );
+
+  QSortFilterProxyModel *connectionFilterProxy = new QSortFilterProxyModel( this );
+  connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
+  ui.connectionSearchLine->setProxy( connectionFilterProxy );
+  ui.connectionView->setModel( connectionFilterProxy );
 
   setWindowTitle( i18n( "Endoscope (%1)", qApp->applicationName() ) );
 }
