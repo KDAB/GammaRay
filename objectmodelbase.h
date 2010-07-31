@@ -15,7 +15,7 @@ class ObjectModelBase : public Base
       ObjectRole = Qt::UserRole +1
     };
 
-    ObjectModelBase<Base>( QObject * parent ) : Base( parent ) {}
+    explicit ObjectModelBase<Base>( QObject * parent ) : Base( parent ) {}
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const
     {

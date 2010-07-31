@@ -33,7 +33,7 @@ class Probe : public QObject
     void delayedInit();
 
   private:
-    Probe( QObject* parent = 0 );
+    explicit Probe( QObject* parent = 0 );
     static Probe* s_instance;
 
     ObjectListModel *m_objectListModel;

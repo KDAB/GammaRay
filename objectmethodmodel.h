@@ -10,7 +10,7 @@ namespace Endoscope {
 class ObjectMethodModel : public MetaObjectModel<QMetaMethod, &QMetaObject::method, &QMetaObject::methodCount, &QMetaObject::methodOffset>
 {
   public:
-    ObjectMethodModel(QObject* parent = 0);
+    explicit ObjectMethodModel(QObject* parent = 0);
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
   protected:

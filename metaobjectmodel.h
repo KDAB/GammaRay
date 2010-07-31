@@ -13,7 +13,8 @@ template <typename MetaThing, MetaThing (QMetaObject::*MetaAccessor)(int) const,
 class MetaObjectModel : public QAbstractTableModel
 {
   public:
-    MetaObjectModel(QObject* parent = 0) : QAbstractTableModel( parent ) {}
+    explicit MetaObjectModel(QObject* parent = 0) : QAbstractTableModel( parent ) {}
+
     virtual void setObject( QObject *object )
     {
       m_object = object;

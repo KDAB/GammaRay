@@ -14,7 +14,7 @@ class PropertyWidget : public QWidget
 {
   Q_OBJECT
   public:
-    PropertyWidget( QWidget *parent = 0 );
+    explicit PropertyWidget( QWidget *parent = 0 );
 
     void setObject( QObject *object );
 

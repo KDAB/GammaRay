@@ -10,7 +10,7 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
 {
   Q_OBJECT
   public:
-    ObjectStaticPropertyModel(QObject* parent = 0);
+    explicit ObjectStaticPropertyModel(QObject* parent = 0);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);

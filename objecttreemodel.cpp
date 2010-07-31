@@ -78,3 +78,4 @@ QModelIndex ObjectTreeModel::indexForObject( QObject* object ) const
 }
 
 #include "objecttreemodel.moc"
+

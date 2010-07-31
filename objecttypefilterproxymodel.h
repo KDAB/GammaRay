@@ -11,7 +11,7 @@ template <typename T>
 class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
 {
   public:
-    ObjectTypeFilterProxyModel(QObject* parent = 0) : QSortFilterProxyModel( parent )
+    explicit ObjectTypeFilterProxyModel(QObject* parent = 0) : QSortFilterProxyModel( parent )
     {
       setDynamicSortFilter( true );
     }

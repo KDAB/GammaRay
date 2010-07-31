@@ -12,7 +12,7 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
 {
   Q_OBJECT
   public:
-    ObjectTreeModel(QObject* parent = 0);
+    explicit ObjectTreeModel(QObject* parent = 0);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
