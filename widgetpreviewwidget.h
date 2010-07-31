@@ -15,9 +15,11 @@ class WidgetPreviewWidget : public QWidget
 
   protected:
     virtual void paintEvent(QPaintEvent* event );
+    virtual bool eventFilter( QObject *receiver, QEvent *event );
 
   private:
     QWeakPointer<QWidget> m_widget;
+    bool m_grabbingWidget;
 };
 
 }
