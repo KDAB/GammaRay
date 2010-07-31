@@ -24,26 +24,18 @@ void ConnectionModel::connectionAdded(QObject* sender, const char* signal, QObje
   endInsertRows();
 }
 
-bool ConnectionModel::match(const Connection& con, const Connection& discon)
-{
-  return (discon.sender == 0 || con.sender == discon.sender)
-      && (discon.signal.isEmpty() || con.signal == discon.signal)
-      && (discon.receiver == 0 || con.receiver == discon.receiver)
-      && (discon.method.isEmpty() || con.method == discon.method);
-}
-
 void ConnectionModel::connectionRemoved(QObject* sender, const char* signal, QObject* receiver, const char* method)
 {
   if ( sender == this || receiver == this )
     return;
-  Connection discon;
-  discon.sender = sender;
-  discon.signal = QByteArray( signal );
-  discon.receiver = receiver;
-  discon.method = QByteArray( method );
 
   for ( int i = 0; i < m_connections.size(); ) {
-    if ( match( m_connections.at( i ), discon ) ) {
+    const Connection &con = m_connections.at( i );
+    if ( (sender == 0 || con.sender.data() == sender)
+      && (signal == 0 || con.signal == signal)
+      && (receiver == 0 || con.receiver.data() == receiver)
+      && (method == 0 || con.method == method) )
+    {
       beginRemoveRows( QModelIndex(), i, i );
       m_connections.remove( i );
       endRemoveRows();

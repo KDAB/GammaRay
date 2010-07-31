@@ -108,6 +108,8 @@ void Probe::objectRemoved(QObject* obj)
   if ( isInitialized() ) {
     instance()->objectListModel()->objectRemoved( obj );
     instance()->objectTreeModel()->objectRemoved( obj );
+    instance()->connectionRemoved( obj, 0, 0, 0 );
+    instance()->connectionRemoved( 0, 0, obj, 0 );
   } else {
     for ( QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
          it != s_addedBeforeProbeInsertion()->end(); )

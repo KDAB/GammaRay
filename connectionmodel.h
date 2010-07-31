@@ -30,7 +30,6 @@ class ConnectionModel : public QAbstractTableModel
       QByteArray method;
       Qt::ConnectionType type;
     };
-    static bool match( const Connection &con, const Connection &discon );
     QVector<Connection> m_connections;
 };
 
