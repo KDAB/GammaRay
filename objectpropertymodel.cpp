@@ -17,8 +17,10 @@ ObjectPropertyModel::ObjectPropertyModel(QObject* parent) :
 
 void ObjectPropertyModel::setObject(QObject* object)
 {
-  disconnect( this, SLOT(updateAll()) );
-  disconnect( this, SLOT(slotReset()) );
+  if ( m_obj ) {
+    disconnect( m_obj.data(), 0, this, SLOT(updateAll()) );
+    disconnect( m_obj.data(), 0, this, SLOT(slotReset()) );
+  }
   m_obj = object;
   if ( object ) {
     connect( object, SIGNAL(destroyed(QObject*)), SLOT(slotReset()) );
