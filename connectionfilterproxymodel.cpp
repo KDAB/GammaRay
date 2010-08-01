@@ -32,4 +32,13 @@ bool ConnectionFilterProxyModel::filterAcceptsRow(int source_row, const QModelIn
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
+bool ConnectionFilterProxyModel::filterAcceptsColumn(int source_column, const QModelIndex& source_parent) const
+{
+  if ( m_sender && source_column == 0 )
+    return false;
+  if ( m_receiver && source_column == 2 )
+    return false;
+  return QSortFilterProxyModel::filterAcceptsColumn(source_column, source_parent);
+}
+
 #include "connectionfilterproxymodel.moc"
