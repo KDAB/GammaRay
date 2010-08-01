@@ -16,9 +16,9 @@ void ConnectionModel::connectionAdded(QObject* sender, const char* signal, QObje
   beginInsertRows( QModelIndex(), m_connections.size(), m_connections.size() );
   Connection c;
   c.sender = sender;
-  c.signal = QByteArray( signal );
+  c.signal = QMetaObject::normalizedSignature( signal );
   c.receiver = receiver;
-  c.method = QByteArray( method );
+  c.method = QMetaObject::normalizedSignature( method );
   c.type = type;
   m_connections.push_back( c );
   endInsertRows();
@@ -29,12 +29,18 @@ void ConnectionModel::connectionRemoved(QObject* sender, const char* signal, QOb
   if ( sender == this || receiver == this )
     return;
 
+  QByteArray normalizedSignal, normalizedMethod;
+  if ( signal )
+    normalizedSignal = QMetaObject::normalizedSignature( signal );
+  if ( method )
+    normalizedMethod = QMetaObject::normalizedSignature( method );
+
   for ( int i = 0; i < m_connections.size(); ) {
     const Connection &con = m_connections.at( i );
     if ( (sender == 0 || con.sender.data() == sender)
-      && (signal == 0 || con.signal == signal)
+      && (signal == 0 || con.signal == normalizedSignal)
       && (receiver == 0 || con.receiver.data() == receiver)
-      && (method == 0 || con.method == method) )
+      && (method == 0 || con.method == normalizedMethod) )
     {
       beginRemoveRows( QModelIndex(), i, i );
       m_connections.remove( i );
@@ -59,7 +65,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
         return i18n( "<destroyed>" );
     }
     if ( index.column() == 1 )
-      return con.signal;
+      return con.signal.mid( 1 );
     if ( index.column() == 2 ) {
       if ( con.receiver )
         return Util::displayString( con.receiver.data() );
@@ -67,7 +73,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
         return i18n( "<destroyed>" );
     }
     if ( index.column() == 3 )
-      return con.method;
+      return con.method.mid( 1 );
     if ( index.column() == 4 ) {
       switch ( con.type ) {
         case Qt::AutoCompatConnection: return QLatin1String( "AutoCompatConnection" );
