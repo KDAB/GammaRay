@@ -4,9 +4,17 @@
 #include <QtCore/qabstractitemmodel.h>
 #include <qmetaobject.h>
 #include <QVector>
+#include <QtCore/qsharedpointer.h>
 
 
 namespace Endoscope {
+
+class GenericSafeArgument
+{
+  public:
+    virtual ~GenericSafeArgument() {}
+    virtual operator QGenericArgument() const { return QGenericArgument(); }
+};
 
 class MethodArgumentModel : public QAbstractTableModel
 {
@@ -14,7 +22,7 @@ class MethodArgumentModel : public QAbstractTableModel
   public:
     MethodArgumentModel(QObject* parent = 0);
     void setMethod( const QMetaMethod &method );
-    QVector<QGenericArgument> arguments() const;
+    QVector<QSharedPointer<GenericSafeArgument> > arguments() const;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
