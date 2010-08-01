@@ -58,6 +58,10 @@ int MethodArgumentModel::rowCount(const QModelIndex& parent) const
 
 bool MethodArgumentModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
+  if ( index.row() >= 0 && index.row() < m_arguments.size() && role == Qt::EditRole ) {
+    m_arguments[index.row()] = value;
+    return true;
+  }
   return QAbstractItemModel::setData(index, value, role);
 }
 
