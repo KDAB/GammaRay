@@ -79,6 +79,10 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
         default: return i18n( "Unknown connection type" );
       }
     }
+  } else if ( role == SenderRole ) {
+    return QVariant::fromValue( con.sender.data() );
+  } else if ( role == ReceiverRole ) {
+    return QVariant::fromValue( con.receiver.data() );
   }
   return QVariant();
 }

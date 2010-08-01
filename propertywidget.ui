@@ -28,7 +28,14 @@
         <widget class="KFilterProxySearchLine" name="staticPropertySearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="staticPropertyView"/>
+        <widget class="QTreeView" name="staticPropertyView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -41,7 +48,14 @@
         <widget class="KFilterProxySearchLine" name="dynamicPropertySearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="dynamicPropertyView"/>
+        <widget class="QTreeView" name="dynamicPropertyView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -54,7 +68,54 @@
         <widget class="KFilterProxySearchLine" name="methodSearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="methodView"/>
+        <widget class="QTreeView" name="methodView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>Inbound Connections</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="KFilterProxySearchLine" name="inboundConnectionSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="inboundConnectionView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>Outbound Connections</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="KFilterProxySearchLine" name="outboundConnectionSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="outboundConnectionView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -68,6 +129,9 @@
        </item>
        <item>
         <widget class="QTreeView" name="classInfoView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>

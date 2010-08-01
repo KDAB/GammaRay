@@ -18,6 +18,7 @@ set(endoscope_srcs
   objectmethodmodel.cpp
   objecttreemodel.cpp
   connectionmodel.cpp
+  connectionfilterproxymodel.cpp
   scenemodel.cpp
   util.cpp
   widgetpreviewwidget.cpp

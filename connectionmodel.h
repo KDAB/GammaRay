@@ -11,6 +11,10 @@ class ConnectionModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
+    enum Role {
+      SenderRole = Qt::UserRole + 1,
+      ReceiverRole
+    };
     explicit ConnectionModel(QObject* parent = 0);
 
     void connectionAdded( QObject* sender, const char* signal, QObject* receiver, const char* method, Qt::ConnectionType type );

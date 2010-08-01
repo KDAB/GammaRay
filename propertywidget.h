@@ -5,6 +5,7 @@
 
 namespace Endoscope {
 
+class ConnectionFilterProxyModel;
 class ObjectDynamicPropertyModel;
 class ObjectStaticPropertyModel;
 class ObjectClassInfoModel;
@@ -24,6 +25,8 @@ class PropertyWidget : public QWidget
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
     ObjectClassInfoModel *m_classInfoModel;
     ObjectMethodModel *m_methodModel;
+    ConnectionFilterProxyModel *m_inboundConnectionModel;
+    ConnectionFilterProxyModel *m_outboundConnectionModel;
 };
 
 }
