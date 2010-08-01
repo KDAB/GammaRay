@@ -1,8 +1,11 @@
 #include "methodinvocationdialog.h"
 #include "methodargumentmodel.h"
 #include <KLocalizedString>
+#include <KMessageBox>
 
 using namespace Endoscope;
+
+Q_DECLARE_METATYPE( Qt::ConnectionType )
 
 MethodInvocationDialog::MethodInvocationDialog(QWidget* parent) :
   KDialog(parent),
@@ -31,6 +34,24 @@ void MethodInvocationDialog::setMethod( QObject *object, const QMetaMethod& meth
 
 void MethodInvocationDialog::accept()
 {
+  if ( !m_object ) {
+    KMessageBox::error( this, i18n( "Invalid object, probably got deleted in the meantime." ),
+                        i18n( "Invocation Failed" ) );
+    QDialog::reject();
+    return;
+  }
+
+  const Qt::ConnectionType connectionType = ui.connectionTypeComboBox->itemData( ui.connectionTypeComboBox->currentIndex() ).value<Qt::ConnectionType>();
+  QVector<QGenericArgument> args( 10 );
+
+  const bool result = m_method.invoke( m_object.data(), connectionType,
+    args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9] );
+
+  if ( !result ) {
+    KMessageBox::error( this, i18n( "Invocation failed, possibly due to mismatching/invalid arguments." ),
+                        i18n( "Invocation Failed" ) );
+  }
+
   QDialog::accept();
 }
 
