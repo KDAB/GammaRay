@@ -1,5 +1,6 @@
 #include "methodargumentmodel.h"
 #include <KLocalizedString>
+#include <KDebug>
 
 using namespace Endoscope;
 
@@ -83,6 +84,30 @@ Qt::ItemFlags MethodArgumentModel::flags(const QModelIndex& index) const
   if ( index.column() == 1 )
     return flags | Qt::ItemIsEditable;
   return flags;
+}
+
+QVector< QGenericArgument > MethodArgumentModel::arguments() const
+{
+  QVector<QGenericArgument> args( 10 );
+  for ( int i = 0; i < rowCount() && i < 10; ++i ) {
+    const QVariant value = m_arguments.at( i );
+    // TODO: handle remaining variant types, handle QVariant itself
+    switch ( value.type() ) {
+      case QVariant::Bool: args[i] = Q_ARG( bool, value.toBool() ); break;
+      case QVariant::Int: args[i] = Q_ARG( int, value.toInt() ); break;
+      case QVariant::UInt: args[i] = Q_ARG( uint, value.toUInt() ); break;
+      case QVariant::LongLong: args[i] = Q_ARG( qlonglong, value.toLongLong() ); break;
+      case QVariant::ULongLong: args[i] = Q_ARG( qulonglong, value.toULongLong() ); break;
+      case QVariant::Double: args[i] = Q_ARG( double, value.toDouble() ); break;
+      case QVariant::Char: args[i] = Q_ARG( QChar, value.toChar() ); break;
+      case QVariant::String: args[i] = Q_ARG( QString, value.toString() ); break;
+      case QVariant::StringList: args[i] = Q_ARG( QStringList, value.toStringList() ); break;
+      case QVariant::ByteArray: args[i] = Q_ARG( QByteArray, value.toByteArray() ); break;
+      default:
+        kWarning() << "Unsupported argument type:" << value;
+    }
+  }
+  return args;
 }
 
 #include "methodargumentmodel.moc"

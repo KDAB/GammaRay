@@ -14,6 +14,7 @@ class MethodArgumentModel : public QAbstractTableModel
   public:
     MethodArgumentModel(QObject* parent = 0);
     void setMethod( const QMetaMethod &method );
+    QVector<QGenericArgument> arguments() const;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;

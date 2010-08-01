@@ -42,7 +42,7 @@ void MethodInvocationDialog::accept()
   }
 
   const Qt::ConnectionType connectionType = ui.connectionTypeComboBox->itemData( ui.connectionTypeComboBox->currentIndex() ).value<Qt::ConnectionType>();
-  QVector<QGenericArgument> args( 10 );
+  QVector<QGenericArgument> args = m_argumentModel->arguments();
 
   const bool result = m_method.invoke( m_object.data(), connectionType,
     args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9] );
