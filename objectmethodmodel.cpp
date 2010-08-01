@@ -37,6 +37,8 @@ QVariant ObjectMethodModel::data(const QModelIndex& index, const QMetaMethod& me
         default: return i18n( "Unknown" );
       }
     }
+  } else if ( role == MetaMethodRole ) {
+    return QVariant::fromValue( method );
   }
   return QVariant();
 }

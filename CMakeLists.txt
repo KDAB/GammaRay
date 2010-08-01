@@ -22,10 +22,13 @@ set(endoscope_srcs
   scenemodel.cpp
   util.cpp
   widgetpreviewwidget.cpp
+  methodinvocationdialog.cpp
+  methodargumentmodel.cpp
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui
   propertywidget.ui
+  methodinvocationdialog.ui
 )
 kde4_add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe

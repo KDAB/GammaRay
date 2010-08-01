@@ -19,8 +19,12 @@ class PropertyWidget : public QWidget
 
     void setObject( QObject *object );
 
+  private slots:
+    void methodActivated( const QModelIndex &index );
+
   private:
     Ui::PropertyWidget ui;
+    QWeakPointer<QObject> m_object;
     ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
     ObjectClassInfoModel *m_classInfoModel;

@@ -1,0 +1,31 @@
+#ifndef ENDOSCOPE_METHODINVOCATIONDIALOG_H
+#define ENDOSCOPE_METHODINVOCATIONDIALOG_H
+
+#include "ui_methodinvocationdialog.h"
+#include <kdialog.h>
+#include <qmetaobject.h>
+
+
+namespace Endoscope {
+
+class MethodArgumentModel;
+
+
+class MethodInvocationDialog : public KDialog
+{
+  Q_OBJECT
+  public:
+    MethodInvocationDialog( QWidget* parent = 0 );
+    void setMethod( QObject* object, const QMetaMethod &method );
+    void accept();
+
+  private:
+    QMetaMethod m_method;
+    QWeakPointer<QObject> m_object;
+    Ui::MethodInvocationDialog ui;
+    MethodArgumentModel *m_argumentModel;
+};
+
+}
+
+#endif // ENDOSCOPE_METHODINVOCATIONDIALOG_H

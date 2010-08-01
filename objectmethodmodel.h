@@ -10,6 +10,10 @@ namespace Endoscope {
 class ObjectMethodModel : public MetaObjectModel<QMetaMethod, &QMetaObject::method, &QMetaObject::methodCount, &QMetaObject::methodOffset>
 {
   public:
+    enum Role {
+      MetaMethodRole = Qt::UserRole + 1
+    };
+
     explicit ObjectMethodModel(QObject* parent = 0);
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
@@ -19,5 +23,7 @@ class ObjectMethodModel : public MetaObjectModel<QMetaMethod, &QMetaObject::meth
 };
 
 }
+
+Q_DECLARE_METATYPE( QMetaMethod )
 
 #endif // ENDOSCOPE_OBJECTMETHODMODEL_H
