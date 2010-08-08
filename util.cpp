@@ -5,6 +5,8 @@
 #include <qsize.h>
 #include <qpoint.h>
 #include <qrect.h>
+#include <qsizepolicy.h>
+#include <qmetaobject.h>
 
 using namespace Endoscope;
 
@@ -16,6 +18,13 @@ QString Util::displayString(const QObject* object)
       .arg( object->metaObject()->className() );
   }
   return object->objectName();
+}
+
+static QString sizePolicyToString( QSizePolicy::Policy policy )
+{
+  const int index = QSizePolicy::staticMetaObject.indexOfEnumerator( "Policy" );
+  const QMetaEnum metaEnum = QSizePolicy::staticMetaObject.enumerator( index );
+  return QString::fromLatin1( metaEnum.valueToKey( policy ) );
 }
 
 QString Endoscope::Util::variantToString(const QVariant& value)
@@ -41,6 +50,10 @@ QString Endoscope::Util::variantToString(const QVariant& value)
       return QString::fromLatin1( "%1x%2" ).arg( value.toSize().width() ).arg( value.toSize().height() );
     case QVariant::SizeF:
       return QString::fromLatin1( "%1x%2" ).arg( value.toSizeF().width() ).arg( value.toSizeF().height() );
+    case QVariant::SizePolicy:
+      return QString::fromLatin1( "%1 x %2" )
+        .arg( sizePolicyToString( value.value<QSizePolicy>().horizontalPolicy() ) )
+        .arg( sizePolicyToString( value.value<QSizePolicy>().verticalPolicy() ) );
     case QVariant::StringList:
       return value.toStringList().join( ", " );
   }
