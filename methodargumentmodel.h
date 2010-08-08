@@ -9,11 +9,18 @@
 
 namespace Endoscope {
 
-class GenericSafeArgument
+class SafeArgument
 {
   public:
-    virtual ~GenericSafeArgument() {}
-    virtual operator QGenericArgument() const { return QGenericArgument(); }
+    SafeArgument();
+    SafeArgument( const QVariant &v );
+    ~SafeArgument();
+    operator QGenericArgument () const;
+
+  private:
+    QVariant m_value;
+    QByteArray m_name;
+    mutable void *m_data;
 };
 
 class MethodArgumentModel : public QAbstractTableModel
@@ -22,7 +29,7 @@ class MethodArgumentModel : public QAbstractTableModel
   public:
     MethodArgumentModel(QObject* parent = 0);
     void setMethod( const QMetaMethod &method );
-    QVector<QSharedPointer<GenericSafeArgument> > arguments() const;
+    QVector<SafeArgument> arguments() const;
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;

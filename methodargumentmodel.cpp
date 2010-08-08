@@ -3,32 +3,33 @@
 #include <KDebug>
 #include <QtCore/qsharedpointer.h>
 
-#define ARG(type, data) QSharedPointer<Endoscope::GenericSafeArgument>( new Endoscope::SafeArgument<type >( #type, data ) )
+using namespace Endoscope;
 
-namespace Endoscope {
-
-template <typename T>
-class SafeArgument : public GenericSafeArgument
+// TODO: this should be implicitly shared to avoid m_data double deletion
+SafeArgument::SafeArgument() : m_data( 0 )
 {
-  public:
-    SafeArgument( const char *aName, const T &aData ) :
-      name( aName ),
-      value( aData )
-    {}
-
-    operator QGenericArgument () const
-    {
-      return QGenericArgument( name.data(), static_cast<const void *>(&value) );
-    }
-
-  private:
-    QByteArray name;
-    T value;
-};
-
 }
 
-using namespace Endoscope;
+SafeArgument::SafeArgument(const QVariant& v) : m_value( v ), m_name( v.typeName() ), m_data( 0 )
+{
+}
+
+SafeArgument::~SafeArgument()
+{
+  if ( m_data )
+    QMetaType::destroy( m_value.type(), m_data );
+}
+
+
+SafeArgument::operator QGenericArgument() const
+{
+  if ( m_value.isValid() ) {
+    m_data = QMetaType::construct( m_value.type(), m_value.constData() );
+    return QGenericArgument( m_name.data(), m_data );
+  }
+  return QGenericArgument();
+}
+
 
 MethodArgumentModel::MethodArgumentModel(QObject* parent): QAbstractTableModel(parent)
 {
@@ -112,33 +113,12 @@ Qt::ItemFlags MethodArgumentModel::flags(const QModelIndex& index) const
   return flags;
 }
 
-QVector< QSharedPointer<GenericSafeArgument> > MethodArgumentModel::arguments() const
+QVector<SafeArgument> MethodArgumentModel::arguments() const
 {
-  QVector<QSharedPointer<GenericSafeArgument> > args( 10 );
-  for ( int i = 0; i < rowCount(); ++i ) {
-    const QVariant value = m_arguments.at( i );
-    // TODO: handle remaining variant types, handle QVariant itself
-    switch ( value.type() ) {
-      case QVariant::Bool: args[i] = ARG( bool, value.toBool() ); break;
-      case QVariant::Int: args[i] = ARG( int, value.toInt() ); break;
-      case QVariant::UInt: args[i] = ARG( uint, value.toUInt() ); break;
-      case QVariant::LongLong: args[i] = ARG( qlonglong, value.toLongLong() ); break;
-      case QVariant::ULongLong: args[i] = ARG( qulonglong, value.toULongLong() ); break;
-      case QVariant::Double: args[i] = ARG( double, value.toDouble() ); break;
-      case QVariant::Char: args[i] = ARG( QChar, value.toChar() ); break;
-      case QVariant::String: args[i] = ARG( QString, value.toString() ); break;
-      case QVariant::StringList: args[i] = ARG( QStringList, value.toStringList() ); break;
-      case QVariant::ByteArray: args[i] = ARG( QByteArray, value.toByteArray() ); break;
-      default:
-        kWarning() << "Unsupported argument type:" << value;
-    }
-  }
-  for ( int i = rowCount(); i < 10; ++i ) {
-    args[i] = QSharedPointer<GenericSafeArgument>( new GenericSafeArgument );
-  }
+  QVector<SafeArgument> args( 10 );
+  for ( int i = 0; i < rowCount(); ++i )
+    args[ i ] = SafeArgument( m_arguments.at( i ) );
   return args;
 }
-
-#undef ARG
 
 #include "methodargumentmodel.moc"
