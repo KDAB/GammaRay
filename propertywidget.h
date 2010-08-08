@@ -10,6 +10,7 @@ class ObjectDynamicPropertyModel;
 class ObjectStaticPropertyModel;
 class ObjectClassInfoModel;
 class ObjectMethodModel;
+class ObjectEnumModel;
 
 class PropertyWidget : public QWidget
 {
@@ -31,6 +32,7 @@ class PropertyWidget : public QWidget
     ObjectMethodModel *m_methodModel;
     ConnectionFilterProxyModel *m_inboundConnectionModel;
     ConnectionFilterProxyModel *m_outboundConnectionModel;
+    ObjectEnumModel *m_enumModel;
 };
 
 }

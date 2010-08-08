@@ -18,6 +18,7 @@ set(endoscope_srcs
   objectstaticpropertymodel.cpp
   objectclassinfomodel.cpp
   objectmethodmodel.cpp
+  objectenummodel.cpp
   objecttreemodel.cpp
   connectionmodel.cpp
   connectionfilterproxymodel.cpp

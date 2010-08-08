@@ -119,6 +119,19 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_7">
+      <attribute name="title">
+       <string>Enums</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="KFilterProxySearchLine" name="enumSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="enumView"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>Class Info</string>

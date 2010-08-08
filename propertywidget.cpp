@@ -3,6 +3,7 @@
 #include "objectdynamicpropertymodel.h"
 #include "objectclassinfomodel.h"
 #include "objectmethodmodel.h"
+#include "objectenummodel.h"
 #include "connectionmodel.h"
 #include "connectionfilterproxymodel.h"
 #include "probe.h"
@@ -19,7 +20,8 @@ PropertyWidget::PropertyWidget(QWidget* parent) :
   m_classInfoModel( new ObjectClassInfoModel( this ) ),
   m_methodModel( new ObjectMethodModel( this ) ),
   m_inboundConnectionModel( new ConnectionFilterProxyModel( this ) ),
-  m_outboundConnectionModel( new ConnectionFilterProxyModel( this ) )
+  m_outboundConnectionModel( new ConnectionFilterProxyModel( this ) ),
+  m_enumModel( new ObjectEnumModel( this ) )
 {
   ui.setupUi( this );
 
@@ -51,6 +53,11 @@ PropertyWidget::PropertyWidget(QWidget* parent) :
   m_outboundConnectionModel->setSourceModel( Probe::instance()->connectionModel() );
   ui.outboundConnectionView->setModel( m_outboundConnectionModel );
   ui.outboundConnectionSearchLine->setProxy( m_outboundConnectionModel );
+
+  proxy = new QSortFilterProxyModel( this );
+  proxy->setSourceModel( m_enumModel );
+  ui.enumView->setModel( proxy );
+  ui.enumSearchLine->setProxy( proxy );
 }
 
 void Endoscope::PropertyWidget::setObject(QObject* object)
@@ -62,6 +69,7 @@ void Endoscope::PropertyWidget::setObject(QObject* object)
   m_methodModel->setObject( object );
   m_inboundConnectionModel->filterReceiver( object );
   m_outboundConnectionModel->filterSender( object );
+  m_enumModel->setObject( object );
 }
 
 void PropertyWidget::methodActivated(const QModelIndex& index)
