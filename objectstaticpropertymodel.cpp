@@ -1,4 +1,5 @@
 #include "objectstaticpropertymodel.h"
+#include "util.h"
 
 #include <KLocalizedString>
 #include <QtCore/QMetaProperty>
@@ -25,7 +26,7 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex& index, int role) con
     if ( index.column() == 0 )
       return prop.name();
     else if ( index.column() == 1 )
-      return prop.read( m_obj.data() );
+      return Util::variantToString( prop.read( m_obj.data() ) );
     else if ( index.column() == 2 )
       return prop.typeName();
     else if ( index.column() == 3 ) {
@@ -34,6 +35,9 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex& index, int role) con
         mo = mo->superClass();
       return mo->className();
     }
+  } else if ( role == Qt::EditRole ) {
+    if ( index.column() == 1 )
+      return prop.read( m_obj.data() );
   } else if ( role == Qt::ToolTipRole ) {
     const QString toolTip = i18n( "Constant: %1\nDesignable: %2\nFinal: %3\nResetable: %4\n"
       "Has notification: %5\nScriptable: %6\nStored: %7\nUser: %8\nWritable: %9",
