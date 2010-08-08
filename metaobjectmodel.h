@@ -10,10 +10,10 @@
 namespace Endoscope {
 
 template <typename MetaThing, MetaThing (QMetaObject::*MetaAccessor)(int) const, int (QMetaObject::*MetaCount)() const, int (QMetaObject::*MetaOffset)() const>
-class MetaObjectModel : public QAbstractTableModel
+class MetaObjectModel : public QAbstractItemModel
 {
   public:
-    explicit MetaObjectModel(QObject* parent = 0) : QAbstractTableModel( parent ) {}
+    explicit MetaObjectModel(QObject* parent = 0) : QAbstractItemModel( parent ) {}
 
     virtual void setObject( QObject *object )
     {
@@ -43,7 +43,7 @@ class MetaObjectModel : public QAbstractTableModel
           return i18n( "Class" );
         return columnHeader( section );
       }
-      return QAbstractTableModel::headerData( section, orientation, role );
+      return QAbstractItemModel::headerData( section, orientation, role );
     }
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const
@@ -51,6 +51,18 @@ class MetaObjectModel : public QAbstractTableModel
       if ( !m_object || parent.isValid() )
         return 0;
       return (m_object.data()->metaObject()->*MetaCount)();
+    }
+
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const
+    {
+      if ( row >= 0 && row < rowCount( parent ) && column >= 0 && column < columnCount( parent ) && !parent.isValid() )
+        return createIndex( row, column, -1 );
+      return QModelIndex();
+    }
+
+    QModelIndex parent(const QModelIndex& child) const
+    {
+      return QModelIndex();
     }
 
   protected:
