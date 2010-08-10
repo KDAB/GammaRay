@@ -22,7 +22,7 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex& index, int role) con
     return QVariant();
 
   const QMetaProperty prop = m_obj.data()->metaObject()->property( index.row() );
-  if ( role == Qt::DisplayRole || role == Qt::EditRole ) {
+  if ( role == Qt::DisplayRole ) {
     if ( index.column() == 0 )
       return prop.name();
     else if ( index.column() == 1 )
