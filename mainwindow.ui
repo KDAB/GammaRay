@@ -156,6 +156,19 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="webPageTab">
+      <attribute name="title">
+       <string>Web Pages</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <widget class="QComboBox" name="webPageComboBox"/>
+       </item>
+       <item>
+        <widget class="QWebInspector" name="webInspector" native="true"/>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
        <string>Connections</string>
@@ -193,6 +206,12 @@
    <class>Endoscope::WidgetPreviewWidget</class>
    <extends>QWidget</extends>
    <header>widgetpreviewwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QWebInspector</class>
+   <extends>QWidget</extends>
+   <header location="global">qwebinspector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

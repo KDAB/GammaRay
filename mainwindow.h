@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
     void modelSelected(int index);
     void sceneSelected(int index);
     void scriptEngineSelected(int index);
+    void webPageSelected(int index);
 
   private:
     Ui::MainWindow ui;

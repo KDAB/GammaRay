@@ -62,6 +62,7 @@ class MetaObjectModel : public QAbstractItemModel
 
     QModelIndex parent(const QModelIndex& child) const
     {
+      Q_UNUSED( child );
       return QModelIndex();
     }
 

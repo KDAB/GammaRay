@@ -15,6 +15,7 @@
 #include <krecursivefilterproxymodel.h>
 #include <QtScript/qscriptengine.h>
 #include <QtScriptTools/QScriptEngineDebugger>
+#include <qwebpage.h>
 
 using namespace Endoscope;
 
@@ -68,6 +69,13 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   singleColumnProxy->setSourceModel( scriptEngineFilter );
   ui.scriptEngineComboBox->setModel( singleColumnProxy );
   connect( ui.scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
+  
+  ObjectTypeFilterProxyModel<QWebPage> *webPageFilter = new ObjectTypeFilterProxyModel<QWebPage>( this );
+  webPageFilter->setSourceModel( Probe::instance()->objectListModel() );
+  singleColumnProxy = new SingleColumnObjectProxyModel( this );
+  singleColumnProxy->setSourceModel( webPageFilter );
+  ui.webPageComboBox->setModel( singleColumnProxy );
+  connect( ui.webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)) );
 
   QSortFilterProxyModel *connectionFilterProxy = new QSortFilterProxyModel( this );
   connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
@@ -134,6 +142,16 @@ void MainWindow::scriptEngineSelected(int index)
     qDebug() << "Attaching debugger" << engine;
     debugger->attachTo( engine );
     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
+  }
+}
+
+void MainWindow::webPageSelected(int index)
+{
+  QObject* obj = ui.webPageComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
+  QWebPage *page = qobject_cast<QWebPage*>( obj );
+  if ( page ) {
+    page->settings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
+    ui.webInspector->setPage( page );
   }
 }
 
