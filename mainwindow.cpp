@@ -12,6 +12,7 @@
 #include <qdebug.h>
 #include <qgraphicsitem.h>
 #include <krecursivefilterproxymodel.h>
+#include "singlecolumnobjectproxymodel.h"
 
 using namespace Endoscope;
 
@@ -40,12 +41,16 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
-  ui.modelComboBox->setModel( modelFilterProxy );
+  SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel( this );
+  singleColumnProxy->setSourceModel( modelFilterProxy );
+  ui.modelComboBox->setModel( singleColumnProxy );
   connect( ui.modelComboBox, SIGNAL(currentIndexChanged(int)), SLOT(modelSelected(int)) );
 
   ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy = new ObjectTypeFilterProxyModel<QGraphicsScene>( this );
   sceneFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
-  ui.sceneComboBox->setModel( sceneFilterProxy );
+  singleColumnProxy = new SingleColumnObjectProxyModel( this ),
+  singleColumnProxy->setSourceModel( sceneFilterProxy );
+  ui.sceneComboBox->setModel( singleColumnProxy );
   connect( ui.sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)) );
   m_sceneModel = new SceneModel( this );
   QSortFilterProxyModel *sceneFilter = new KRecursiveFilterProxyModel( this );

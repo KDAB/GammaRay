@@ -2,7 +2,7 @@ project(endoscope)
 
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
-include_directories(${KDE4_INCLUDES})
+include_directories(${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR}/3rdparty)
 
 set(endoscope_runner_srcs main.cpp)
 kde4_add_executable(endoscope ${endoscope_runner_srcs})
@@ -27,6 +27,9 @@ set(endoscope_srcs
   widgetpreviewwidget.cpp
   methodinvocationdialog.cpp
   methodargumentmodel.cpp
+  singlecolumnobjectproxymodel.cpp
+
+  3rdparty/kde/kidentityproxymodel.cpp
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui
