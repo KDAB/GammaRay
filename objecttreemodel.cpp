@@ -61,7 +61,7 @@ QModelIndex ObjectTreeModel::index(int row, int column, const QModelIndex& paren
 {
   QObject *parentObj = reinterpret_cast<QObject*>( parent.internalPointer() );
   const QVector<QObject*> children = m_parentChildMap.value( parentObj );
-  if ( row < 0 || row >= children.size() )
+  if ( row < 0 || column < 0 || row >= children.size()  || column >= columnCount() )
     return QModelIndex();
   return createIndex( row, column, children.at( row ) );
 }
