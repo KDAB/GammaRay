@@ -22,6 +22,7 @@ class SceneModel : public QAbstractItemModel
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex& child) const;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   private:
     QList<QGraphicsItem*> topLevelItems() const;
   private:

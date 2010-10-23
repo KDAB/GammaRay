@@ -1,5 +1,6 @@
 #include "scenemodel.h"
 
+#include <KLocalizedString>
 #include <qgraphicsitem.h>
 #include <qgraphicsscene.h>
 #include <qdebug.h>
@@ -41,6 +42,9 @@ QVariant SceneModel::data(const QModelIndex& index, int role) const
     }
   } else if ( role == SceneItemRole ) {
     return QVariant::fromValue( item );
+  } else if ( item && role == Qt::ForegroundRole ) {
+    if ( !item->isVisible() )
+      return Qt::gray;
   }
   return QVariant();
 }
@@ -96,5 +100,17 @@ QList<QGraphicsItem*> SceneModel::topLevelItems() const
 		       boost::bind( &QGraphicsItem::parentItem, _1 ) != (QGraphicsItem*)(0) );
   return topLevel;
 }
+
+QVariant SceneModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if ( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
+    switch ( section ) {
+      case 0: return i18n( "Item" );
+      case 1: return i18n( "Type" );
+    }
+  }
+  return QAbstractItemModel::headerData(section, orientation, role);
+}
+
 
 #include "scenemodel.moc"
