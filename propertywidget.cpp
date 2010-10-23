@@ -10,6 +10,7 @@
 #include "methodinvocationdialog.h"
 
 #include <QDebug>
+#include <krecursivefilterproxymodel.h>
 
 using namespace Endoscope;
 
@@ -54,7 +55,7 @@ PropertyWidget::PropertyWidget(QWidget* parent) :
   ui.outboundConnectionView->setModel( m_outboundConnectionModel );
   ui.outboundConnectionSearchLine->setProxy( m_outboundConnectionModel );
 
-  proxy = new QSortFilterProxyModel( this );
+  proxy = new KRecursiveFilterProxyModel( this );
   proxy->setSourceModel( m_enumModel );
   ui.enumView->setModel( proxy );
   ui.enumSearchLine->setProxy( proxy );

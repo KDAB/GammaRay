@@ -11,6 +11,7 @@
 #include <qgraphicsscene.h>
 #include <qdebug.h>
 #include <qgraphicsitem.h>
+#include <krecursivefilterproxymodel.h>
 
 using namespace Endoscope;
 
@@ -20,7 +21,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   setCentralWidget( center );
   ui.setupUi( centralWidget() );
 
-  QSortFilterProxyModel *objectFilter = new QSortFilterProxyModel( this );
+  QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel( this );
   objectFilter->setSourceModel( Probe::instance()->objectTreeModel() );
   objectFilter->setDynamicSortFilter( true );
   ui.objectTreeView->setModel( objectFilter );
@@ -30,8 +31,10 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy = new ObjectTypeFilterProxyModel<QWidget>( this );
   widgetFilterProxy->setSourceModel( Probe::instance()->objectTreeModel() );
-  ui.widgetTreeView->setModel( widgetFilterProxy );
-  ui.widgetSearchLine->setProxy( widgetFilterProxy );
+  KRecursiveFilterProxyModel* widgetSearchProxy = new KRecursiveFilterProxyModel( this );
+  widgetSearchProxy->setSourceModel( widgetFilterProxy );
+  ui.widgetTreeView->setModel( widgetSearchProxy );
+  ui.widgetSearchLine->setProxy( widgetSearchProxy );
   connect( ui.widgetTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(widgetSelected(QModelIndex)) );
 
@@ -45,7 +48,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.sceneComboBox->setModel( sceneFilterProxy );
   connect( ui.sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)) );
   m_sceneModel = new SceneModel( this );
-  QSortFilterProxyModel *sceneFilter = new QSortFilterProxyModel( this );
+  QSortFilterProxyModel *sceneFilter = new KRecursiveFilterProxyModel( this );
   sceneFilter->setSourceModel( m_sceneModel );
   ui.sceneTreeView->setModel( sceneFilter );
   ui.screneTreeSearchLine->setProxy( sceneFilter );
