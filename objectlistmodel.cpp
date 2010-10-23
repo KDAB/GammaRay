@@ -29,8 +29,11 @@ int ObjectListModel::rowCount(const QModelIndex& parent) const
   return m_objects.size();
 }
 
-void Endoscope::ObjectListModel::objectAdded(QObject* obj)
+void Endoscope::ObjectListModel::objectAdded( const QWeakPointer<QObject> &objPtr )
 {
+  if ( !objPtr )
+    return;
+  QObject *obj = objPtr.data();
   const int index = m_objects.indexOf( obj );
   if ( index > 0 )
     return;

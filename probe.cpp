@@ -107,10 +107,13 @@ ModelTester* Probe::modelTester() const
 void Probe::objectAdded(QObject* obj)
 {
   if ( isInitialized() ) {
-    instance()->objectListModel()->objectAdded( obj );
-    instance()->objectTreeModel()->objectAdded( obj );
     // use queued connection so object is fully constructed when we check if it's a model
-    QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QWeakPointer<QObject>, QWeakPointer<QObject>( obj ) ) );
+    const QWeakPointer<QObject> objPtr( obj );
+    QMetaObject::invokeMethod( instance()->objectListModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QWeakPointer<QObject>, objPtr ) );
+    // ### queued connection here crashes the sort filter proxy, need to investigate that
+    // might be due to children inserted before the parents
+    instance()->objectTreeModel()->objectAdded( obj );
+    QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QWeakPointer<QObject>, objPtr ) );
   } else {
     s_addedBeforeProbeInsertion()->push_back( obj );
   }
