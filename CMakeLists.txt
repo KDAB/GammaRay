@@ -39,6 +39,8 @@ kde4_add_ui_files(endoscope_srcs
 kde4_add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
   dl
+  ${QT_QTSCRIPT_LIBRARY}
+  ${QT_QTSCRIPTTOOLS_LIBRARY}
   ${KDE4_KDECORE_LIBRARY}
   ${KDE4_KDEUI_LIBRARY}
 )

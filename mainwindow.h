@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow
     void sceneItemSelected( const QModelIndex &index );
     void modelSelected(int index);
     void sceneSelected(int index);
+    void scriptEngineSelected(int index);
 
   private:
     Ui::MainWindow ui;

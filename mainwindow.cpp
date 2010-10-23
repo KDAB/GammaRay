@@ -5,6 +5,7 @@
 #include "objecttypefilterproxymodel.h"
 #include "scenemodel.h"
 #include "connectionmodel.h"
+#include "singlecolumnobjectproxymodel.h"
 
 #include <KLocalizedString>
 #include <QCoreApplication>
@@ -12,7 +13,8 @@
 #include <qdebug.h>
 #include <qgraphicsitem.h>
 #include <krecursivefilterproxymodel.h>
-#include "singlecolumnobjectproxymodel.h"
+#include <QtScript/qscriptengine.h>
+#include <QtScriptTools/QScriptEngineDebugger>
 
 using namespace Endoscope;
 
@@ -59,6 +61,13 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.screneTreeSearchLine->setProxy( sceneFilter );
   connect( ui.sceneTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(sceneItemSelected(QModelIndex)) );
+  
+  ObjectTypeFilterProxyModel<QScriptEngine> *scriptEngineFilter = new ObjectTypeFilterProxyModel<QScriptEngine>( this );
+  scriptEngineFilter->setSourceModel( Probe::instance()->objectListModel() );
+  singleColumnProxy = new SingleColumnObjectProxyModel( this );
+  singleColumnProxy->setSourceModel( scriptEngineFilter );
+  ui.scriptEngineComboBox->setModel( singleColumnProxy );
+  connect( ui.scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
 
   QSortFilterProxyModel *connectionFilterProxy = new QSortFilterProxyModel( this );
   connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
@@ -113,6 +122,18 @@ void MainWindow::sceneItemSelected(const QModelIndex& index)
     ui.scenePropertyWidget->setObject( item->toGraphicsObject() );
   } else {
     ui.scenePropertyWidget->setObject( 0 );
+  }
+}
+
+void MainWindow::scriptEngineSelected(int index)
+{
+  QObject* obj = ui.scriptEngineComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
+  QScriptEngine *engine = qobject_cast<QScriptEngine*>( obj );
+  if ( engine ) {
+    QScriptEngineDebugger *debugger = new QScriptEngineDebugger( this );
+    qDebug() << "Attaching debugger" << engine;
+    debugger->attachTo( engine );
+    debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
   }
 }
 

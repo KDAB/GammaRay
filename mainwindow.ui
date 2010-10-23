@@ -32,13 +32,16 @@
          <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
+            <widget class="KFilterProxySearchLine" name="objectSearchLine" native="true"/>
            </item>
            <item>
             <widget class="QTreeView" name="objectTreeView">
              <property name="allColumnsShowFocus">
               <bool>true</bool>
              </property>
+             <attribute name="headerShowSortIndicator" stdset="0">
+              <bool>true</bool>
+             </attribute>
              <attribute name="headerShowSortIndicator" stdset="0">
               <bool>true</bool>
              </attribute>
@@ -65,10 +68,10 @@
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
+             <widget class="KFilterProxySearchLine" name="widgetSearchLine" native="true"/>
             </item>
             <item>
              <widget class="QTreeView" name="widgetTreeView"/>
@@ -111,10 +114,13 @@
          <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
+            <widget class="KFilterProxySearchLine" name="screneTreeSearchLine" native="true"/>
            </item>
            <item>
             <widget class="QTreeView" name="sceneTreeView">
+             <attribute name="headerShowSortIndicator" stdset="0">
+              <bool>true</bool>
+             </attribute>
              <attribute name="headerShowSortIndicator" stdset="0">
               <bool>true</bool>
              </attribute>
@@ -127,13 +133,36 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>Script Engines</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <item>
+        <widget class="QComboBox" name="scriptEngineComboBox"/>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>510</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
        <string>Connections</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="KFilterProxySearchLine" name="connectionSearchLine"/>
+        <widget class="KFilterProxySearchLine" name="connectionSearchLine" native="true"/>
        </item>
        <item>
         <widget class="QTreeView" name="connectionView">
