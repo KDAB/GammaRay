@@ -1,6 +1,5 @@
 #include "objectpropertymodel.h"
 
-#include <KDebug>
 #include <KLocalizedString>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QTimer>

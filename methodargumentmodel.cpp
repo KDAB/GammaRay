@@ -1,6 +1,5 @@
 #include "methodargumentmodel.h"
 #include <KLocalizedString>
-#include <KDebug>
 #include <QtCore/qsharedpointer.h>
 
 using namespace Endoscope;

@@ -1,11 +1,10 @@
 
 
-#include <KDE/KProcess>
 #include <KDE/KStandardDirs>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-
+#include <QtCore/QProcess>
 
 int main( int argc, char** argv )
 {
@@ -18,8 +17,13 @@ int main( int argc, char** argv )
   args.takeFirst(); // that's us
   if ( args.isEmpty() )
     qFatal( "Nothing to probe." );
-  KProcess proc;
-  proc.setEnv( "LD_PRELOAD", probe );
-  proc.setProgram( args );
-  return proc.execute();
+  
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  env.insert( "LD_PRELOAD", probe );
+  QProcess proc;
+  proc.setProcessEnvironment( env );
+  const QString program = args.takeFirst();
+  proc.start( program, args );
+  proc.waitForFinished( -1 );
+  return proc.exitCode();
 }

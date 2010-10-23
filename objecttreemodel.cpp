@@ -1,6 +1,5 @@
 #include "objecttreemodel.h"
 
-#include <kdebug.h>
 #include <QtCore/QEvent>
 
 using namespace Endoscope;

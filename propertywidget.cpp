@@ -9,7 +9,7 @@
 #include "probe.h"
 #include "methodinvocationdialog.h"
 
-#include <KDebug>
+#include <QDebug>
 
 using namespace Endoscope;
 
@@ -76,12 +76,12 @@ void PropertyWidget::methodActivated(const QModelIndex& index)
 {
   const QMetaMethod method = index.data( ObjectMethodModel::MetaMethodRole ).value<QMetaMethod>();
   if ( method.methodType() == QMetaMethod::Slot ) {
-    kDebug() << "invoking" << method.signature();
+    qDebug() << "invoking" << method.signature();
     MethodInvocationDialog *dlg = new MethodInvocationDialog( this );
     dlg->setMethod( m_object.data(), method );
     dlg->show();
   } else if ( method.methodType() == QMetaMethod::Signal ) {
-    kDebug() << "connecting to" << method.signature();
+    qDebug() << "connecting to" << method.signature();
   }
 }
 
