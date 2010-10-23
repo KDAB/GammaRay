@@ -28,6 +28,7 @@ set(endoscope_srcs
   methodinvocationdialog.cpp
   methodargumentmodel.cpp
   singlecolumnobjectproxymodel.cpp
+  modeltester.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
 )

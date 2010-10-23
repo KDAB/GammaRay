@@ -6,6 +6,7 @@
 
 namespace Endoscope {
 
+class ModelTester;
 class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
@@ -25,6 +26,7 @@ class Probe : public QObject
     ObjectListModel *objectListModel() const;
     ObjectTreeModel *objectTreeModel() const;
     ConnectionModel *connectionModel() const;
+    ModelTester *modelTester() const;
 
   protected:
     bool eventFilter(QObject *receiver, QEvent *event );
@@ -39,6 +41,7 @@ class Probe : public QObject
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
     ConnectionModel *m_connectionModel;
+    ModelTester *m_modelTester;
 };
 
 }

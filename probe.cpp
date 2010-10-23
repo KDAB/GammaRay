@@ -3,6 +3,7 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "connectionmodel.h"
+#include "modeltester.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -12,6 +13,8 @@
 using namespace Endoscope;
 
 Probe* Probe::s_instance = 0;
+
+Q_DECLARE_METATYPE( QWeakPointer<QObject> )
 
 namespace Endoscope
 {
@@ -45,9 +48,12 @@ Probe::Probe(QObject* parent):
   QObject(parent),
   m_objectListModel( new ObjectListModel( this ) ),
   m_objectTreeModel( new ObjectTreeModel( this ) ),
-  m_connectionModel( new ConnectionModel( this ) )
+  m_connectionModel( new ConnectionModel( this ) ),
+  m_modelTester( new ModelTester( this ) )
 {
   qDebug() << Q_FUNC_INFO;
+  
+  qRegisterMetaType<QWeakPointer<QObject> >();
 
   QInternal::registerCallback( QInternal::ConnectCallback, &Endoscope::probeConnectCallback );
   QInternal::registerCallback( QInternal::DisconnectCallback, &Endoscope::probeDisconnectCallback );
@@ -93,11 +99,18 @@ ConnectionModel* Probe::connectionModel() const
   return m_connectionModel;
 }
 
+ModelTester* Probe::modelTester() const
+{
+  return m_modelTester;
+}
+
 void Probe::objectAdded(QObject* obj)
 {
   if ( isInitialized() ) {
     instance()->objectListModel()->objectAdded( obj );
     instance()->objectTreeModel()->objectAdded( obj );
+    // use queued connection so object is fully constructed when we check if it's a model
+    QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QWeakPointer<QObject>, QWeakPointer<QObject>( obj ) ) );
   } else {
     s_addedBeforeProbeInsertion()->push_back( obj );
   }

@@ -1,0 +1,66 @@
+#include "modeltester.h"
+
+#include <QtCore/QAbstractListModel>
+#include <QtCore/QDebug>
+
+#include "modeltest/modeltest.h"
+#include "util.h"
+
+#include <iostream>
+
+using namespace Endoscope;
+
+namespace Endoscope {
+  struct ModelTester::ModelTestResult {
+    ~ModelTestResult() { delete modelTest; }
+    ModelTest* modelTest;
+    QHash<int, QString> failures;
+  };
+}
+
+ModelTester::ModelTester(QObject* parent) : QObject( parent )
+{
+}
+
+void ModelTester::objectAdded(const QWeakPointer< QObject >& obj)
+{
+  QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>( obj.data() );
+  if ( model ) {
+    qDebug() << "Attaching model test to" << model;
+    // TODO filter out our own models, way too slow otherwise
+    // or even better allow to specify somehow to witch models we want to attach
+    connect( model, SIGNAL(destroyed(QObject*)), SLOT(modelDestroyed(QObject*)) );
+    ModelTestResult *result = new ModelTestResult;
+    m_modelTestMap.insert( model, result ); // needs to be available for the initial calls to failure() already
+    // FIXME too slow!
+//     result->modelTest = new ModelTest( model, this );
+  }
+}
+
+void ModelTester::modelDestroyed(QObject* model)
+{
+  if ( m_modelTestMap.contains( static_cast<QAbstractItemModel*>( model ) ) )
+    delete m_modelTestMap.take( static_cast<QAbstractItemModel*>( model ) );
+}
+
+void ModelTester::failure(QAbstractItemModel* model, int line, const char* message)
+{
+  ModelTestResult* result = m_modelTestMap.value( model );
+  Q_ASSERT( result );
+  if ( !result->failures.contains( line ) ) {
+    std::cout << qPrintable( Util::displayString( model ) ) << " " << line << " " << message << std::endl;
+    result->failures.insert( line, QString::fromLatin1( message ) );
+  }
+}
+
+#include "modeltester.moc"
+
+// inplace build of modeltest, with some slight modificatins:
+// - change Q_ASSERT to non-fatal reporting
+// - supress qDebug etc, since those trigger qobject creating and thus infinite loops when model-testing the object model
+#include <QtGui/QtGui> // avoid interference with any include used by modeltest
+#undef Q_ASSERT
+#define Q_ASSERT( x ) (!( x ) ? static_cast<Endoscope::ModelTester*>( static_cast<QObject*>( this )->parent() )->failure( this->model, __LINE__, #x ) : qt_noop())
+#define qDebug() QNoDebug()
+#include "modeltest/modeltest.cpp"
+#include "3rdparty/modeltest/modeltest.moc"
