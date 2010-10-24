@@ -31,6 +31,7 @@ set(endoscope_srcs
   modeltester.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
+  3rdparty/kde/krecursivefilterproxymodel.cpp
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui
