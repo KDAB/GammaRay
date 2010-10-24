@@ -28,8 +28,10 @@ class ConnectionModel : public QAbstractTableModel
   private:
     struct Connection
     {
+      QObject *rawSender;
       QWeakPointer<QObject> sender;
       QByteArray signal;
+      QObject *rawReceiver;
       QWeakPointer<QObject> receiver;
       QByteArray method;
       Qt::ConnectionType type;
