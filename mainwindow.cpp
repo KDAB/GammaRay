@@ -7,11 +7,12 @@
 #include "connectionmodel.h"
 #include "singlecolumnobjectproxymodel.h"
 
+#include "kde/krecursivefilterproxymodel.h"
+
 #include <QCoreApplication>
 #include <qgraphicsscene.h>
 #include <qdebug.h>
 #include <qgraphicsitem.h>
-#include <krecursivefilterproxymodel.h>
 #include <QtScript/qscriptengine.h>
 #include <QtScriptTools/QScriptEngineDebugger>
 #include <qwebpage.h>

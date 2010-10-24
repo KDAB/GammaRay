@@ -37,7 +37,6 @@ void MethodInvocationDialog::accept()
     QMessageBox::warning( this,
                           tr( "Invocation Failed" ),
                           tr( "Invalid object, probably got deleted in the meantime." ) );
-
     QDialog::reject();
     return;
   }

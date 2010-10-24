@@ -9,8 +9,9 @@
 #include "probe.h"
 #include "methodinvocationdialog.h"
 
+#include "kde/krecursivefilterproxymodel.h"
+
 #include <QDebug>
-#include <krecursivefilterproxymodel.h>
 
 using namespace Endoscope;
 
