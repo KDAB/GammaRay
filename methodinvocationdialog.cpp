@@ -1,6 +1,6 @@
 #include "methodinvocationdialog.h"
 #include "methodargumentmodel.h"
-#include <KMessageBox>
+#include <QMessageBox>
 
 using namespace Endoscope;
 
@@ -34,9 +34,10 @@ void MethodInvocationDialog::setMethod( QObject *object, const QMetaMethod& meth
 void MethodInvocationDialog::accept()
 {
   if ( !m_object ) {
-    KMessageBox::error( this,
-                        tr( "Invalid object, probably got deleted in the meantime." ),
-                        tr( "Invocation Failed" ) );
+    QMessageBox::warning( this,
+                          tr( "Invocation Failed" ),
+                          tr( "Invalid object, probably got deleted in the meantime." ) );
+
     QDialog::reject();
     return;
   }
@@ -48,9 +49,9 @@ void MethodInvocationDialog::accept()
     args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9] );
 
   if ( !result ) {
-    KMessageBox::error( this,
-                        tr( "Invocation failed, possibly due to mismatching/invalid arguments." ),
-                        tr( "Invocation Failed" ) );
+    QMessageBox::warning( this,
+                          tr( "Invocation Failed" ),
+                          tr( "Invocation failed, possibly due to mismatching/invalid arguments." ) );
   }
 
   QDialog::accept();
