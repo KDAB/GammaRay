@@ -1,7 +1,6 @@
 #include "objectstaticpropertymodel.h"
 #include "util.h"
 
-#include <KLocalizedString>
 #include <QtCore/QMetaProperty>
 
 using namespace Endoscope;
@@ -13,7 +12,7 @@ ObjectStaticPropertyModel::ObjectStaticPropertyModel(QObject* parent):
 
 static QString translateBool( bool value )
 {
-  return value ? i18n( "yes" ) : i18n( "no" );
+  return value ? QObject::tr( "yes" ) : QObject::tr( "no" );
 }
 
 QVariant ObjectStaticPropertyModel::data(const QModelIndex& index, int role) const
@@ -39,17 +38,17 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex& index, int role) con
     if ( index.column() == 1 )
       return prop.read( m_obj.data() );
   } else if ( role == Qt::ToolTipRole ) {
-    const QString toolTip = i18n( "Constant: %1\nDesignable: %2\nFinal: %3\nResetable: %4\n"
-      "Has notification: %5\nScriptable: %6\nStored: %7\nUser: %8\nWritable: %9",
-      translateBool( prop.isConstant() ),
-      translateBool( prop.isDesignable( m_obj.data() ) ),
-      translateBool( prop.isFinal() ),
-      translateBool( prop.isResettable() ),
-      translateBool( prop.hasNotifySignal() ),
-      translateBool( prop.isScriptable( m_obj.data() ) ),
-      translateBool( prop.isStored( m_obj.data() ) ),
-      translateBool( prop.isUser( m_obj.data() ) ),
-      translateBool( prop.isWritable() ) );
+    const QString toolTip = tr( "Constant: %1\nDesignable: %2\nFinal: %3\nResetable: %4\n"
+      "Has notification: %5\nScriptable: %6\nStored: %7\nUser: %8\nWritable: %9" ).
+      arg( translateBool( prop.isConstant() ) ).
+      arg( translateBool( prop.isDesignable( m_obj.data() ) ) ).
+      arg( translateBool( prop.isFinal() ) ).
+      arg( translateBool( prop.isResettable() ) ).
+      arg( translateBool( prop.hasNotifySignal() ) ).
+      arg( translateBool( prop.isScriptable( m_obj.data() ) ) ).
+      arg( translateBool( prop.isStored( m_obj.data() ) ) ).
+      arg( translateBool( prop.isUser( m_obj.data() ) ) ).
+      arg( translateBool( prop.isWritable() ) );
     return toolTip;
   }
 

@@ -1,7 +1,5 @@
 #include "objectmethodmodel.h"
 
-#include <KLocalizedString>
-
 using namespace Endoscope;
 
 ObjectMethodModel::ObjectMethodModel(QObject* parent) :
@@ -22,19 +20,19 @@ QVariant ObjectMethodModel::data(const QModelIndex& index, const QMetaMethod& me
       return method.signature();
     if ( index.column() == 1 ) {
       switch ( method.methodType() ) {
-        case QMetaMethod::Method: return i18n( "Method" );
-        case QMetaMethod::Constructor: return i18n( "Constructor" );
-        case QMetaMethod::Slot: return i18n( "Slot" );
-        case QMetaMethod::Signal: return i18n( "Signal" );
-        default: return i18n( "Unknown" );
+        case QMetaMethod::Method: return tr( "Method" );
+        case QMetaMethod::Constructor: return tr( "Constructor" );
+        case QMetaMethod::Slot: return tr( "Slot" );
+        case QMetaMethod::Signal: return tr( "Signal" );
+        default: return tr( "Unknown" );
       }
     }
     if ( index.column() == 2 ) {
       switch ( method.access() ) {
-        case QMetaMethod::Public: return i18n( "Public" );
-        case QMetaMethod::Protected: return i18n( "Protected" );
-        case QMetaMethod::Private: return i18n( "Private" );
-        default: return i18n( "Unknown" );
+        case QMetaMethod::Public: return tr( "Public" );
+        case QMetaMethod::Protected: return tr( "Protected" );
+        case QMetaMethod::Private: return tr( "Private" );
+        default: return tr( "Unknown" );
       }
     }
   } else if ( role == MetaMethodRole ) {
@@ -46,9 +44,9 @@ QVariant ObjectMethodModel::data(const QModelIndex& index, const QMetaMethod& me
 QString Endoscope::ObjectMethodModel::columnHeader(int index) const
 {
   switch ( index ) {
-    case 0: return i18n( "Signature" );
-    case 1: return i18n( "Type" );
-    case 2: return i18n( "Access" );
+    case 0: return tr( "Signature" );
+    case 1: return tr( "Type" );
+    case 2: return tr( "Access" );
   }
   return QString();
 }

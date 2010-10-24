@@ -1,5 +1,4 @@
 #include "methodargumentmodel.h"
-#include <KLocalizedString>
 #include <QtCore/qsharedpointer.h>
 
 using namespace Endoscope;
@@ -59,7 +58,7 @@ QVariant MethodArgumentModel::data(const QModelIndex& index, int role) const
     switch ( index.column() ) {
       case 0:
         if ( parameterName.isEmpty() )
-          return i18n( "<unnamed> (%1)", QString::fromLatin1( parameterType ) );
+          return tr( "<unnamed> (%1)" ).arg( QString::fromLatin1( parameterType ) );
         return parameterName;
       case 1:
         return value;
@@ -96,9 +95,9 @@ QVariant MethodArgumentModel::headerData(int section, Qt::Orientation orientatio
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
-      case 0: return i18n( "Argument" );
-      case 1: return i18n( "Value" );
-      case 2: return i18n( "Type" );
+      case 0: return tr( "Argument" );
+      case 1: return tr( "Value" );
+      case 2: return tr( "Type" );
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);

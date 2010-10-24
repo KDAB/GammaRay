@@ -1,7 +1,5 @@
 #include "objectclassinfomodel.h"
 
-#include <KLocalizedString>
-
 using namespace Endoscope;
 
 ObjectClassInfoModel::ObjectClassInfoModel(QObject* parent) :
@@ -29,8 +27,8 @@ int ObjectClassInfoModel::columnCount(const QModelIndex& parent) const
 QString Endoscope::ObjectClassInfoModel::columnHeader(int index) const
 {
   switch ( index ) {
-    case 0: return i18n( "Name" );
-    case 1: return i18n( "Value" );
+    case 0: return tr( "Name" );
+    case 1: return tr( "Value" );
   }
   return QString();
 }

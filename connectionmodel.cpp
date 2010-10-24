@@ -1,8 +1,6 @@
 #include "connectionmodel.h"
 #include "util.h"
 
-#include <KLocalizedString>
-
 using namespace Endoscope;
 
 ConnectionModel::ConnectionModel(QObject* parent): QAbstractTableModel(parent)
@@ -47,7 +45,7 @@ void ConnectionModel::connectionRemoved(QObject* sender, const char* signal, QOb
       beginRemoveRows( QModelIndex(), i, i );
       m_connections.remove( i );
       endRemoveRows();
-    } else { 
+    } else {
       ++i;
     }
   }
@@ -84,7 +82,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
         case Qt::DirectConnection: return QLatin1String( "DirectConnection" );
         case Qt::QueuedConnection: return QLatin1String( "QueuedConnection" );
         case Qt::UniqueConnection: return QLatin1String( "UniqueConnection" );
-	default: return i18n( "Unknown connection type: %1", con.type );
+        default: return tr( "Unknown connection type: %1" ).arg( con.type );
       }
     }
   } else if ( role == SenderRole ) {
@@ -99,11 +97,11 @@ QVariant ConnectionModel::headerData(int section, Qt::Orientation orientation, i
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
-      case 0: return i18n( "Sender" );
-      case 1: return i18n( "Signal" );
-      case 2: return i18n( "Receiver" );
-      case 3: return i18n( "Method" );
-      case 4: return i18n( "Connection Type" );
+      case 0: return tr( "Sender" );
+      case 1: return tr( "Signal" );
+      case 2: return tr( "Receiver" );
+      case 3: return tr( "Method" );
+      case 4: return tr( "Connection Type" );
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);

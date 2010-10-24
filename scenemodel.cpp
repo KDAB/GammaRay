@@ -1,6 +1,5 @@
 #include "scenemodel.h"
 
-#include <KLocalizedString>
 #include <qgraphicsitem.h>
 #include <qgraphicsscene.h>
 #include <qdebug.h>
@@ -33,11 +32,11 @@ QVariant SceneModel::data(const QModelIndex& index, int role) const
     QGraphicsObject *obj = item->toGraphicsObject();
     if ( index.column() == 0 ) {
       if ( obj && !obj->objectName().isEmpty() )
-	return obj->objectName();
+        return obj->objectName();
       return QLatin1String( "0x" ) + QString::number( reinterpret_cast<qlonglong>( item ), 16 );
     } else if ( index.column() == 1 ) {
       if ( obj )
-	return obj->metaObject()->className();
+        return obj->metaObject()->className();
       return QString::number( item->type() );
     }
   } else if ( role == SceneItemRole ) {
@@ -105,8 +104,8 @@ QVariant SceneModel::headerData(int section, Qt::Orientation orientation, int ro
 {
   if ( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
     switch ( section ) {
-      case 0: return i18n( "Item" );
-      case 1: return i18n( "Type" );
+      case 0: return tr( "Item" );
+      case 1: return tr( "Type" );
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);

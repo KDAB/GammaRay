@@ -1,7 +1,6 @@
 #ifndef ENDOSCOPE_OBJECTMODELBASE_H
 #define ENDOSCOPE_OBJECTMODELBASE_H
 
-#include <KLocalizedString>
 #include <QObject>
 #include <QModelIndex>
 
@@ -40,8 +39,8 @@ class ObjectModelBase : public Base
     {
       if ( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
         switch ( section ) {
-          case 0: return i18n( "Object" );
-          case 1: return i18n( "Type" );
+          case 0: return QObject::tr( "Object" );
+          case 1: return QObject::tr( "Type" );
         }
       }
       return Base::headerData( section, orientation, role );

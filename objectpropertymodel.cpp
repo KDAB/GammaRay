@@ -1,6 +1,5 @@
 #include "objectpropertymodel.h"
 
-#include <KLocalizedString>
 #include <QtCore/QMetaProperty>
 #include <QtCore/QTimer>
 
@@ -36,10 +35,10 @@ QVariant ObjectPropertyModel::headerData(int section, Qt::Orientation orientatio
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
-      case 0: return i18n( "Property" );
-      case 1: return i18n( "Value" );
-      case 2: return i18n( "Type" );
-      case 3: return i18n( "Class" );
+      case 0: return tr( "Property" );
+      case 1: return tr( "Value" );
+      case 2: return tr( "Type" );
+      case 3: return tr( "Class" );
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);

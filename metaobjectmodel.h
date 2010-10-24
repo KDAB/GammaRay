@@ -1,7 +1,6 @@
 #ifndef ENDOSCOPE_METAOBJECTMODEL_H
 #define ENDOSCOPE_METAOBJECTMODEL_H
 
-#include <KLocalizedString>
 #include <qabstractitemmodel.h>
 #include <QtCore/qsharedpointer.h>
 #include <QMetaObject>
@@ -40,7 +39,7 @@ class MetaObjectModel : public QAbstractItemModel
     {
       if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
         if ( section == columnCount() - 1 )
-          return i18n( "Class" );
+          return tr( "Class" );
         return columnHeader( section );
       }
       return QAbstractItemModel::headerData( section, orientation, role );

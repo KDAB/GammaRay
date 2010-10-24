@@ -7,7 +7,6 @@
 #include "connectionmodel.h"
 #include "singlecolumnobjectproxymodel.h"
 
-#include <KLocalizedString>
 #include <QCoreApplication>
 #include <qgraphicsscene.h>
 #include <qdebug.h>
@@ -62,14 +61,14 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.screneTreeSearchLine->setProxy( sceneFilter );
   connect( ui.sceneTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(sceneItemSelected(QModelIndex)) );
-  
+
   ObjectTypeFilterProxyModel<QScriptEngine> *scriptEngineFilter = new ObjectTypeFilterProxyModel<QScriptEngine>( this );
   scriptEngineFilter->setSourceModel( Probe::instance()->objectListModel() );
   singleColumnProxy = new SingleColumnObjectProxyModel( this );
   singleColumnProxy->setSourceModel( scriptEngineFilter );
   ui.scriptEngineComboBox->setModel( singleColumnProxy );
   connect( ui.scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
-  
+
   ObjectTypeFilterProxyModel<QWebPage> *webPageFilter = new ObjectTypeFilterProxyModel<QWebPage>( this );
   webPageFilter->setSourceModel( Probe::instance()->objectListModel() );
   singleColumnProxy = new SingleColumnObjectProxyModel( this );
@@ -82,7 +81,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.connectionSearchLine->setProxy( connectionFilterProxy );
   ui.connectionView->setModel( connectionFilterProxy );
 
-  setWindowTitle( i18n( "Endoscope (%1)", qApp->applicationName() ) );
+  setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
 
 void MainWindow::objectSelected( const QModelIndex &index )

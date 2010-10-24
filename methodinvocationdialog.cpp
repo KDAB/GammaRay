@@ -1,6 +1,5 @@
 #include "methodinvocationdialog.h"
 #include "methodargumentmodel.h"
-#include <KLocalizedString>
 #include <KMessageBox>
 
 using namespace Endoscope;
@@ -14,13 +13,13 @@ MethodInvocationDialog::MethodInvocationDialog(QWidget* parent) :
   setAttribute( Qt::WA_DeleteOnClose );
 
   setButtons( Ok | Cancel );
-  setButtonGuiItem( Ok, KGuiItem( i18n( "Invoke" ), KIcon( "system-run" ) ) );
+  setButtonGuiItem( Ok, KGuiItem( tr( "Invoke" ), KIcon( "system-run" ) ) );
 
   ui.setupUi( mainWidget() );
 
-  ui.connectionTypeComboBox->addItem( i18n( "Auto" ), Qt::AutoConnection );
-  ui.connectionTypeComboBox->addItem( i18n( "Direct" ), Qt::DirectConnection );
-  ui.connectionTypeComboBox->addItem( i18n( "Queued" ), Qt::QueuedConnection );
+  ui.connectionTypeComboBox->addItem( tr( "Auto" ), Qt::AutoConnection );
+  ui.connectionTypeComboBox->addItem( tr( "Direct" ), Qt::DirectConnection );
+  ui.connectionTypeComboBox->addItem( tr( "Queued" ), Qt::QueuedConnection );
 
   ui.argumentView->setModel( m_argumentModel );
 }
@@ -35,8 +34,9 @@ void MethodInvocationDialog::setMethod( QObject *object, const QMetaMethod& meth
 void MethodInvocationDialog::accept()
 {
   if ( !m_object ) {
-    KMessageBox::error( this, i18n( "Invalid object, probably got deleted in the meantime." ),
-                        i18n( "Invocation Failed" ) );
+    KMessageBox::error( this,
+                        tr( "Invalid object, probably got deleted in the meantime." ),
+                        tr( "Invocation Failed" ) );
     QDialog::reject();
     return;
   }
@@ -48,8 +48,9 @@ void MethodInvocationDialog::accept()
     args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9] );
 
   if ( !result ) {
-    KMessageBox::error( this, i18n( "Invocation failed, possibly due to mismatching/invalid arguments." ),
-                        i18n( "Invocation Failed" ) );
+    KMessageBox::error( this,
+                        tr( "Invocation failed, possibly due to mismatching/invalid arguments." ),
+                        tr( "Invocation Failed" ) );
   }
 
   QDialog::accept();

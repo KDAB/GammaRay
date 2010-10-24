@@ -47,7 +47,7 @@ QVariant ObjectEnumModel::data(const QModelIndex& index, const QMetaEnum& enumer
     if ( index.column() == 0 )
       return QString::fromLatin1( enumerator.name() );
     if ( index.column() == 1 )
-      return i18np( "1 element", "%1 elements", enumerator.keyCount() );
+      return tr( "%n element(s)", "", enumerator.keyCount() );
   }
   return QVariant();
 }
@@ -55,8 +55,8 @@ QVariant ObjectEnumModel::data(const QModelIndex& index, const QMetaEnum& enumer
 QString ObjectEnumModel::columnHeader(int index) const
 {
   switch ( index ) {
-    case 0: return i18n( "Name" );
-    case 1: return i18n( "Value" );
+    case 0: return tr( "Name" );
+    case 1: return tr( "Value" );
   }
   return QString();
 }
