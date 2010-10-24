@@ -2,7 +2,7 @@ project(endoscope)
 
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
-include_directories(${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR}/3rdparty)
+include_directories(${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR}/3rdparty ${CMAKE_SOURCE_DIR}/3rdparty/kde)
 
 set(endoscope_runner_srcs main.cpp)
 kde4_add_executable(endoscope ${endoscope_runner_srcs})
