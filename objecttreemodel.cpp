@@ -8,15 +8,18 @@ ObjectTreeModel::ObjectTreeModel(QObject* parent): ObjectModelBase< QAbstractIte
 {
 }
 
-void ObjectTreeModel::objectAdded(QObject* obj)
+void ObjectTreeModel::objectAdded(QObject *obj)
 {
   if ( m_childParentMap.contains( obj ) )
     return;
   QVector<QObject*> &children = m_parentChildMap[ obj->parent() ];
-  beginInsertRows( indexForObject( obj->parent() ), children.size(), children.size() );
+  const QModelIndex index = indexForObject( obj->parent() );
+  if ( index.isValid() || !obj->parent() )
+    beginInsertRows( index, children.size(), children.size() );
   children.push_back( obj );
   m_childParentMap.insert( obj, obj->parent() );
-  endInsertRows();
+  if ( index.isValid() || !obj->parent() )
+    endInsertRows();
 }
 
 void ObjectTreeModel::objectRemoved(QObject* obj)
@@ -25,6 +28,8 @@ void ObjectTreeModel::objectRemoved(QObject* obj)
     return;
   QObject *parentObj = m_childParentMap[ obj ];
   const QModelIndex parentIndex = indexForObject( parentObj );
+  if ( parentObj && !parentIndex.isValid() )
+    return;
   QVector<QObject*> &children = m_parentChildMap[ parentObj ];
   const int index = children.indexOf( obj );
   if ( index < 0 || index >= children.size() )
@@ -73,6 +78,8 @@ QModelIndex ObjectTreeModel::indexForObject( QObject* object ) const
   QObject *parent = m_childParentMap.value( object );
   const QModelIndex parentIndex = indexForObject( parent );
   int row = m_parentChildMap[ parent ].indexOf( object );
+  if ( row < 0 )
+    return QModelIndex();
   return index( row, 0, parentIndex );
 }
 
