@@ -10,14 +10,16 @@ int main( int argc, char** argv )
 {
   QCoreApplication app( argc, argv );
   const QString probe = KStandardDirs::locate( "lib", "libendoscope_probe.so" );
-  qDebug() << probe;
+  //qDebug() << probe;
   if ( probe.isEmpty() )
     qFatal( "Endoscope probe not found." );
   QStringList args = app.arguments();
   args.takeFirst(); // that's us
-  if ( args.isEmpty() )
-    qFatal( "Nothing to probe." );
-  
+  if ( args.isEmpty() ) {
+    qWarning( "Nothing to probe. Syntax: endoscope <application> <args>." );
+    return 1;
+  }
+
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
   env.insert( "LD_PRELOAD", probe );
   QProcess proc;
