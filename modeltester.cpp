@@ -12,6 +12,7 @@ using namespace Endoscope;
 
 namespace Endoscope {
   struct ModelTester::ModelTestResult {
+    ModelTestResult() : modelTest( 0 ) {}
     ~ModelTestResult() { delete modelTest; }
     ModelTest* modelTest;
     QHash<int, QString> failures;
