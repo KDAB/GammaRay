@@ -2,7 +2,7 @@
 #define ENDOSCOPE_WIDGETPREVIEWWIDGET_H
 
 #include <qwidget.h>
-
+#include <QPointer>
 
 namespace Endoscope {
 
@@ -18,7 +18,7 @@ class WidgetPreviewWidget : public QWidget
     virtual bool eventFilter( QObject *receiver, QEvent *event );
 
   private:
-    QWeakPointer<QWidget> m_widget;
+    QPointer<QWidget> m_widget;
     bool m_grabbingWidget;
 };
 

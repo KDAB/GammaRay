@@ -18,7 +18,7 @@ void WidgetPreviewWidget::setWidget(QWidget* widget)
   if ( widget != this )
     m_widget = widget;
   else
-    m_widget.clear();
+    m_widget = 0;
   if ( widget )
     widget->installEventFilter( this );
   update();

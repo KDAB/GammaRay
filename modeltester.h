@@ -3,7 +3,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
-#include <QtCore/QWeakPointer>
+#include <QtCore/QPointer>
 
 class QAbstractItemModel;
 class ModelTest;
@@ -19,7 +19,7 @@ class ModelTester : public QObject
     void failure( QAbstractItemModel* model, int line, const char *message );
     
   public slots:
-    void objectAdded( const QWeakPointer<QObject> &obj );
+    void objectAdded( const QPointer<QObject> &obj );
     
   private slots:
     void modelDestroyed( QObject *model );

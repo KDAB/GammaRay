@@ -14,7 +14,7 @@ using namespace Endoscope;
 
 Probe* Probe::s_instance = 0;
 
-Q_DECLARE_METATYPE( QWeakPointer<QObject> )
+Q_DECLARE_METATYPE( QPointer<QObject> )
 
 namespace Endoscope
 {
@@ -53,7 +53,7 @@ Probe::Probe(QObject* parent):
 {
   qDebug() << Q_FUNC_INFO;
   
-  qRegisterMetaType<QWeakPointer<QObject> >();
+  qRegisterMetaType<QPointer<QObject> >();
 
   QInternal::registerCallback( QInternal::ConnectCallback, &Endoscope::probeConnectCallback );
   QInternal::registerCallback( QInternal::DisconnectCallback, &Endoscope::probeDisconnectCallback );
@@ -108,12 +108,12 @@ void Probe::objectAdded(QObject* obj)
 {
   if ( isInitialized() ) {
     // use queued connection so object is fully constructed when we check if it's a model
-    const QWeakPointer<QObject> objPtr( obj );
-    QMetaObject::invokeMethod( instance()->objectListModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QWeakPointer<QObject>, objPtr ) );
+    const QPointer<QObject> objPtr( obj );
+    QMetaObject::invokeMethod( instance()->objectListModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
     // ### queued connection here crashes the sort filter proxy, need to investigate that
     // might be due to children inserted before the parents
     instance()->objectTreeModel()->objectAdded( obj );
-    QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QWeakPointer<QObject>, objPtr ) );
+    QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
   } else {
     s_addedBeforeProbeInsertion()->push_back( obj );
   }

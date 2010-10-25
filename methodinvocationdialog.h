@@ -4,7 +4,7 @@
 #include "ui_methodinvocationdialog.h"
 #include <kdialog.h>
 #include <qmetaobject.h>
-
+#include <QPointer>
 
 namespace Endoscope {
 
@@ -21,7 +21,7 @@ class MethodInvocationDialog : public KDialog
 
   private:
     QMetaMethod m_method;
-    QWeakPointer<QObject> m_object;
+    QPointer<QObject> m_object;
     Ui::MethodInvocationDialog ui;
     MethodArgumentModel *m_argumentModel;
 };

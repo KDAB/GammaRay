@@ -3,7 +3,7 @@
 
 #include "objectmodelbase.h"
 #include <qvector.h>
-#include <QWeakPointer>
+#include <QPointer>
 
 namespace Endoscope {
 
@@ -19,7 +19,7 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
     void objectRemoved( QObject *obj );
 
   public slots:
-    void objectAdded( const QWeakPointer<QObject> &objPtr );
+    void objectAdded( const QPointer<QObject> &objPtr );
 
   private:
     QVector<QObject*> m_objects;

@@ -22,7 +22,7 @@ ModelTester::ModelTester(QObject* parent) : QObject( parent )
 {
 }
 
-void ModelTester::objectAdded(const QWeakPointer< QObject >& obj)
+void ModelTester::objectAdded(const QPointer< QObject >& obj)
 {
   QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>( obj.data() );
   if ( model ) {

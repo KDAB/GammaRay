@@ -2,7 +2,7 @@
 #define ENDOSCOPE_OBJECTPROPERTYMODEL_H
 
 #include <qabstractitemmodel.h>
-#include <QWeakPointer>
+#include <QPointer>
 
 class QTimer;
 
@@ -18,7 +18,7 @@ class ObjectPropertyModel : public QAbstractTableModel
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
   protected:
-    QWeakPointer<QObject> m_obj;
+    QPointer<QObject> m_obj;
 
   private slots:
     void slotReset() { reset(); }

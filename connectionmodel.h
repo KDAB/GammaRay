@@ -4,6 +4,7 @@
 #include <QtCore/qabstractitemmodel.h>
 #include <QVector>
 #include <QtCore/qsharedpointer.h>
+#include <QPointer>
 
 namespace Endoscope {
 
@@ -29,10 +30,10 @@ class ConnectionModel : public QAbstractTableModel
     struct Connection
     {
       QObject *rawSender;
-      QWeakPointer<QObject> sender;
+      QPointer<QObject> sender;
       QByteArray signal;
       QObject *rawReceiver;
-      QWeakPointer<QObject> receiver;
+      QPointer<QObject> receiver;
       QByteArray method;
       Qt::ConnectionType type;
     };

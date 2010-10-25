@@ -4,6 +4,7 @@
 #include <qabstractitemmodel.h>
 #include <QtCore/qsharedpointer.h>
 #include <QMetaObject>
+#include <QPointer>
 
 
 namespace Endoscope {
@@ -70,7 +71,7 @@ class MetaObjectModel : public QAbstractItemModel
     virtual QString columnHeader( int index ) const = 0;
 
   protected:
-    QWeakPointer<QObject> m_object;
+    QPointer<QObject> m_object;
 };
 
 }

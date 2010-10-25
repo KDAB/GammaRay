@@ -2,6 +2,7 @@
 #define ENDOSCOPE_PROPERTYWIDGET_H
 
 #include "ui_propertywidget.h"
+#include <QPointer>
 
 namespace Endoscope {
 
@@ -25,7 +26,7 @@ class PropertyWidget : public QWidget
 
   private:
     Ui::PropertyWidget ui;
-    QWeakPointer<QObject> m_object;
+    QPointer<QObject> m_object;
     ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
     ObjectClassInfoModel *m_classInfoModel;
