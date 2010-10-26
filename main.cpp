@@ -11,7 +11,7 @@ int main( int argc, char** argv )
   QStringList args = app.arguments();
   args.takeFirst(); // that's us
   if ( args.isEmpty() ) {
-    qWarning( "Nothing to probe. Syntax: endoscope <application> <args>." );
+    qWarning( "Nothing to probe. Usage: endoscope <application> <args>" );
     return 1;
   }
 
