@@ -1,21 +1,23 @@
 #include "methodinvocationdialog.h"
 #include "methodargumentmodel.h"
 #include <QMessageBox>
+#include <QPushButton>
 
 using namespace Endoscope;
 
 Q_DECLARE_METATYPE( Qt::ConnectionType )
 
 MethodInvocationDialog::MethodInvocationDialog(QWidget* parent) :
-  KDialog(parent),
+  QDialog(parent),
   m_argumentModel( new MethodArgumentModel( this ) )
 {
   setAttribute( Qt::WA_DeleteOnClose );
 
-  setButtons( Ok | Cancel );
-  setButtonGuiItem( Ok, KGuiItem( tr( "Invoke" ), KIcon( "system-run" ) ) );
+  ui.setupUi( this );
 
-  ui.setupUi( mainWidget() );
+  ui.buttonBox->button( QDialogButtonBox::Ok )->setText( tr( "Invoke" ) );
+  connect( ui.buttonBox, SIGNAL(accepted()), SLOT(accept()) );
+  connect( ui.buttonBox, SIGNAL(rejected()), SLOT(reject()) );
 
   ui.connectionTypeComboBox->addItem( tr( "Auto" ), Qt::AutoConnection );
   ui.connectionTypeComboBox->addItem( tr( "Direct" ), Qt::DirectConnection );

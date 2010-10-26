@@ -2,8 +2,8 @@
 #define ENDOSCOPE_METHODINVOCATIONDIALOG_H
 
 #include "ui_methodinvocationdialog.h"
-#include <kdialog.h>
 #include <qmetaobject.h>
+#include <QDialog>
 #include <QPointer>
 
 namespace Endoscope {
@@ -11,7 +11,7 @@ namespace Endoscope {
 class MethodArgumentModel;
 
 
-class MethodInvocationDialog : public KDialog
+class MethodInvocationDialog : public QDialog
 {
   Q_OBJECT
   public:
