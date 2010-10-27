@@ -6,7 +6,7 @@ include_directories(${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR}/3rdparty)
 
 set(endoscope_runner_srcs main.cpp)
 kde4_add_executable(endoscope ${endoscope_runner_srcs})
-target_link_libraries(endoscope ${KDE4_KDECORE_LIBRARY})
+target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
 
 set(endoscope_srcs
   mainwindow.cpp
