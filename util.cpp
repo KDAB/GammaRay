@@ -56,9 +56,9 @@ QString Endoscope::Util::variantToString(const QVariant& value)
         .arg( sizePolicyToString( value.value<QSizePolicy>().verticalPolicy() ) );
     case QVariant::StringList:
       return value.toStringList().join( ", " );
+    default:
+      return value.toString();
   }
-
-  return value.toString();
 }
 
 QString Util::addressToString( const void* p )
