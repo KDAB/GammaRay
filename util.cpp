@@ -13,8 +13,8 @@ using namespace Endoscope;
 QString Util::displayString(const QObject* object)
 {
   if ( object->objectName().isEmpty() ) {
-    return QString::fromLatin1( "0x%1 (%2)" )
-      .arg( QString::number( reinterpret_cast<qulonglong>( object ), 16 ) )
+    return QString::fromLatin1( "%1 (%2)" )
+      .arg( addressToString( object ) )
       .arg( object->metaObject()->className() );
   }
   return object->objectName();
@@ -59,4 +59,9 @@ QString Endoscope::Util::variantToString(const QVariant& value)
   }
 
   return value.toString();
+}
+
+QString Util::addressToString( const void* p )
+{
+    return (QLatin1String( "0x" ) + QString::number( reinterpret_cast<qlonglong>( p ), 16 ));
 }

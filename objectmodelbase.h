@@ -1,6 +1,8 @@
 #ifndef ENDOSCOPE_OBJECTMODELBASE_H
 #define ENDOSCOPE_OBJECTMODELBASE_H
 
+#include "util.h"
+
 #include <QObject>
 #include <QModelIndex>
 
@@ -26,12 +28,20 @@ class ObjectModelBase : public Base
     {
       if ( role == Qt::DisplayRole ) {
         if ( index.column() == 0 )
-          return obj->objectName().isEmpty() ? (QLatin1String( "0x" ) + QString::number( reinterpret_cast<qlonglong>( obj ), 16 )) : obj->objectName();
-        else if ( index.column() == 1 )
+          return obj->objectName().isEmpty() ? Util::addressToString( obj ) : obj->objectName();
+        else if ( index.column() == 1 ) {
           return obj->metaObject()->className();
+        }
       } else if ( role == ObjectRole ) {
         return QVariant::fromValue( obj );
+      } else if ( role == Qt::ToolTipRole ) {
+          return QString("Object name: %1\nParent: %2 (Address: %3)\nNumber of children: %4").
+            arg( obj->objectName().isEmpty() ? "<Not set>" : obj->objectName() ).
+            arg( obj->parent() ? obj->parent()->metaObject()->className() : "<No parent>" ).
+            arg( Util::addressToString( obj->parent() ) ).
+            arg( obj->children().size() );
       }
+
       return QVariant();
     }
 
