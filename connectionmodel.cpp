@@ -7,15 +7,22 @@
 
 using namespace Endoscope;
 
-static QMetaMethod methodForObject( QObject *obj, const QByteArray &signature ) 
+static bool checkMethodForObject( QObject *obj, const QByteArray &signature, bool isSender ) 
 {
   if ( !obj || signature.isEmpty() )
-    return QMetaMethod();
+    return false;
   const QMetaObject *mo = obj->metaObject();
   const int methodIndex = mo->indexOfMethod( signature.mid( 1 ) );
   if ( methodIndex < 0 )
-    return QMetaMethod();
-  return mo->method( methodIndex );
+    return false;
+  const QMetaMethod method = mo->method( methodIndex );
+  if (method.methodType() != QMetaMethod::Signal && (isSender || method.methodType() != QMetaMethod::Slot))
+    return false;
+  const int methodCode = signature.at( 0 ) - '0';
+  if ( methodCode == QSLOT_CODE && method.methodType() != QMetaMethod::Slot 
+    || methodCode == QSIGNAL_CODE && method.methodType() != QMetaMethod::Signal )
+    return false;
+  return true;
 }
 
 ConnectionModel::ConnectionModel(QObject* parent): QAbstractTableModel(parent)
@@ -37,15 +44,13 @@ void ConnectionModel::connectionAdded(QObject* sender, const char* signal, QObje
   c.type = type;
   
   // check if that's actually a valid connection
-  const QMetaMethod signalMethod = methodForObject( sender, c.signal );
-  const QMetaMethod receiverMethod = methodForObject( receiver, c.method );
-  if ( signalMethod.methodType() == QMetaMethod::Signal && 
-    ( receiverMethod.methodType() == QMetaMethod::Slot || receiverMethod.methodType() == QMetaMethod::Signal ) ) 
-  {
+  if ( checkMethodForObject( sender, c.signal, true ) && checkMethodForObject( receiver, c.method, false ) ) {
     c.valid = QMetaObject::checkConnectArgs( c.signal, c.method );
   } else {
     c.valid = false;
   }
+  // TODO: we could check more stuff here  eg. if queued connection is possible etc. and use verktygs heuristics to detect likely misconnects
+  // TODO connect location is encoded somehow, in debug builds
   
   m_connections.push_back( c );
   endInsertRows();
