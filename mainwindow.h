@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow
     void objectSelected(const QModelIndex &index);
     void widgetSelected( const QModelIndex &index );
     void sceneItemSelected( const QModelIndex &index );
-    void modelSelected(int index);
+    void modelSelected(const QModelIndex &index);
     void sceneSelected(int index);
     void scriptEngineSelected(int index);
     void webPageSelected(int index);

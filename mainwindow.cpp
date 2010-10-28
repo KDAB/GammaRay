@@ -45,14 +45,13 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
-  SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel( this );
-  singleColumnProxy->setSourceModel( modelFilterProxy );
-  ui.modelComboBox->setModel( singleColumnProxy );
-  connect( ui.modelComboBox, SIGNAL(currentIndexChanged(int)), SLOT(modelSelected(int)) );
+  ui.modelView->setModel( modelFilterProxy );
+  connect( ui.modelView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           SLOT(modelSelected(QModelIndex)) );
 
   ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy = new ObjectTypeFilterProxyModel<QGraphicsScene>( this );
   sceneFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
-  singleColumnProxy = new SingleColumnObjectProxyModel( this ),
+  SingleColumnObjectProxyModel* singleColumnProxy = new SingleColumnObjectProxyModel( this );
   singleColumnProxy->setSourceModel( sceneFilterProxy );
   ui.sceneComboBox->setModel( singleColumnProxy );
   connect( ui.sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)) );
@@ -108,11 +107,15 @@ void MainWindow::widgetSelected(const QModelIndex& index)
   }
 }
 
-void MainWindow::modelSelected( int index )
+void MainWindow::modelSelected( const QModelIndex &index )
 {
-  QObject* obj = ui.modelComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
-  QAbstractItemModel* model = qobject_cast<QAbstractItemModel*>( obj );
-  ui.modelContentView->setModel( model );
+  if ( index.isValid() ) {
+    QObject* obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
+    QAbstractItemModel* model = qobject_cast<QAbstractItemModel*>( obj );
+    ui.modelContentView->setModel( model );
+  } else {
+    ui.modelContentView->setModel( 0 );
+  }
 }
 
 void MainWindow::sceneSelected(int index)
