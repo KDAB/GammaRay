@@ -124,6 +124,8 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
   } else if ( role == Qt::ForegroundRole ) {
     if ( !con.valid )
       return Qt::red;
+  } else if ( role == ConnectionValidRole ) {
+    return con.valid;
   }
   return QVariant();
 }

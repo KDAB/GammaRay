@@ -5,6 +5,7 @@
 #include "objecttypefilterproxymodel.h"
 #include "scenemodel.h"
 #include "connectionmodel.h"
+#include "connectionfilterproxymodel.h"
 #include "singlecolumnobjectproxymodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
@@ -77,7 +78,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.webPageComboBox->setModel( singleColumnProxy );
   connect( ui.webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)) );
 
-  QSortFilterProxyModel *connectionFilterProxy = new QSortFilterProxyModel( this );
+  QSortFilterProxyModel *connectionFilterProxy = new ConnectionFilterProxyModel( this );
   connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
   ui.connectionSearchLine->setProxy( connectionFilterProxy );
   ui.connectionView->setModel( connectionFilterProxy );

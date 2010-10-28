@@ -8,6 +8,8 @@ ConnectionFilterProxyModel::ConnectionFilterProxyModel(QObject* parent) :
   m_receiver( 0 ),
   m_sender( 0 )
 {
+  setDynamicSortFilter( true );
+  sort( Qt::AscendingOrder );
 }
 
 void ConnectionFilterProxyModel::filterReceiver(QObject* receiver)
@@ -39,6 +41,16 @@ bool ConnectionFilterProxyModel::filterAcceptsColumn(int source_column, const QM
   if ( m_receiver && source_column == 2 )
     return false;
   return QSortFilterProxyModel::filterAcceptsColumn(source_column, source_parent);
+}
+
+bool ConnectionFilterProxyModel::lessThan(const QModelIndex& left, const QModelIndex& right) const
+{
+  const bool leftValid = left.data( ConnectionModel::ConnectionValidRole ).toBool();
+  const bool rightValid = right.data( ConnectionModel::ConnectionValidRole ).toBool();
+  if ( leftValid == rightValid )
+    return QSortFilterProxyModel::lessThan(left, right);
+  else
+    return rightValid;
 }
 
 #include "connectionfilterproxymodel.moc"
