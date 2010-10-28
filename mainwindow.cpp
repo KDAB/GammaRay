@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
   modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
   ui.modelView->setModel( modelFilterProxy );
+  ui.modelSearchLine->setProxy( modelFilterProxy );
   connect( ui.modelView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(modelSelected(QModelIndex)) );
 
