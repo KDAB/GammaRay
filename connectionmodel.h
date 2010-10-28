@@ -36,6 +36,7 @@ class ConnectionModel : public QAbstractTableModel
       QPointer<QObject> receiver;
       QByteArray method;
       Qt::ConnectionType type;
+      bool valid;
     };
     QVector<Connection> m_connections;
 };

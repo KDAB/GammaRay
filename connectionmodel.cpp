@@ -1,7 +1,22 @@
 #include "connectionmodel.h"
 #include "util.h"
 
+#include <QDebug>
+#include <QMetaMethod>
+#include <QMetaObject>
+
 using namespace Endoscope;
+
+static QMetaMethod methodForObject( QObject *obj, const QByteArray &signature ) 
+{
+  if ( !obj || signature.isEmpty() )
+    return QMetaMethod();
+  const QMetaObject *mo = obj->metaObject();
+  const int methodIndex = mo->indexOfMethod( signature.mid( 1 ) );
+  if ( methodIndex < 0 )
+    return QMetaMethod();
+  return mo->method( methodIndex );
+}
 
 ConnectionModel::ConnectionModel(QObject* parent): QAbstractTableModel(parent)
 {
@@ -20,6 +35,18 @@ void ConnectionModel::connectionAdded(QObject* sender, const char* signal, QObje
   c.rawReceiver = receiver;
   c.method = QMetaObject::normalizedSignature( method );
   c.type = type;
+  
+  // check if that's actually a valid connection
+  const QMetaMethod signalMethod = methodForObject( sender, c.signal );
+  const QMetaMethod receiverMethod = methodForObject( receiver, c.method );
+  if ( signalMethod.methodType() == QMetaMethod::Signal && 
+    ( receiverMethod.methodType() == QMetaMethod::Slot || receiverMethod.methodType() == QMetaMethod::Signal ) ) 
+  {
+    c.valid = QMetaObject::checkConnectArgs( c.signal, c.method );
+  } else {
+    c.valid = false;
+  }
+  
   m_connections.push_back( c );
   endInsertRows();
 }
@@ -89,6 +116,9 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
     return QVariant::fromValue( con.sender.data() );
   } else if ( role == ReceiverRole ) {
     return QVariant::fromValue( con.receiver.data() );
+  } else if ( role == Qt::ForegroundRole ) {
+    if ( !con.valid )
+      return Qt::red;
   }
   return QVariant();
 }
