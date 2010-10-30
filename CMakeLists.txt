@@ -4,6 +4,12 @@ find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include_directories(${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR}/3rdparty)
 
+# TODO find a nicer way for all this, ideally auto-detect the name mangling format, but at least guess a default based on OS + compiler
+option(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES FALSE "Enable if your compiler uses an unsupported C++ name mangling scheme")
+if (ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
+  add_definitions(-DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
+endif ()
+
 set(endoscope_runner_srcs main.cpp)
 kde4_add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})

@@ -28,6 +28,8 @@ class Probe : public QObject
     ConnectionModel *connectionModel() const;
     ModelTester *modelTester() const;
 
+    static const char* connectLocation( const char *member );
+
   protected:
     bool eventFilter(QObject *receiver, QEvent *event );
 

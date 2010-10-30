@@ -163,6 +163,23 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event )
   return QObject::eventFilter(receiver, event);
 }
 
+// taken from qobject.cpp
+const int endoscope_flagged_locations_count = 2;
+static const char* endoscope_flagged_locations[endoscope_flagged_locations_count] = {0};
+
+const char* Probe::connectLocation(const char* member)
+{
+  for (int i = 0; i < endoscope_flagged_locations_count; ++i) {
+    if (member == endoscope_flagged_locations[i]) {
+      // signature includes location information after the first null-terminator
+      const char *location = member + qstrlen(member) + 1;
+      if (*location != '\0')
+        return location;
+      return 0;
+    }
+  }
+  return 0;
+}
 
 
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
@@ -186,5 +203,18 @@ extern "C" Q_DECL_EXPORT void qt_removeObject( QObject *obj )
   Probe::objectRemoved( obj );
   next_qt_removeObject( obj );
 }
+
+#ifndef ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES
+Q_DECL_EXPORT const char* qFlagLocation( const char* method )
+{
+  static int endoscope_idx = 0;
+  endoscope_flagged_locations[endoscope_idx] = method;
+  endoscope_idx = (endoscope_idx+1) % endoscope_flagged_locations_count;
+
+  static const char* (*next_qFlagLocation)(const char* method) = (const char* (*)(const char* method)) dlsym( RTLD_NEXT, "_Z13qFlagLocationPKc" );
+  Q_ASSERT_X( next_qFlagLocation, "", "Recompile with ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES enabled, your compiler uses an unsupported C++ name mangling scheme" );
+  return next_qFlagLocation( method );
+}
+#endif
 
 #include "probe.moc"

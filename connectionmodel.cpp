@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QMetaMethod>
 #include <QMetaObject>
+#include "probe.h"
 
 using namespace Endoscope;
 
@@ -42,6 +43,7 @@ void ConnectionModel::connectionAdded(QObject* sender, const char* signal, QObje
   c.rawReceiver = receiver;
   c.method = QMetaObject::normalizedSignature( method );
   c.type = type;
+  c.location = Probe::connectLocation( signal );
   
   // check if that's actually a valid connection
   if ( checkMethodForObject( sender, c.signal, true ) && checkMethodForObject( receiver, c.method, false ) ) {
@@ -50,8 +52,7 @@ void ConnectionModel::connectionAdded(QObject* sender, const char* signal, QObje
     c.valid = false;
   }
   // TODO: we could check more stuff here  eg. if queued connection is possible etc. and use verktygs heuristics to detect likely misconnects
-  // TODO connect location is encoded somehow, in debug builds
-  
+
   m_connections.push_back( c );
   endInsertRows();
 }
@@ -117,6 +118,9 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
         default: return tr( "Unknown connection type: %1" ).arg( con.type );
       }
     }
+    if ( index.column() == 5 ) {
+      return con.location;
+    }
   } else if ( role == SenderRole ) {
     return QVariant::fromValue( con.sender.data() );
   } else if ( role == ReceiverRole ) {
@@ -139,6 +143,7 @@ QVariant ConnectionModel::headerData(int section, Qt::Orientation orientation, i
       case 2: return tr( "Receiver" );
       case 3: return tr( "Method" );
       case 4: return tr( "Connection Type" );
+      case 5: return tr( "Location" );
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
@@ -147,7 +152,7 @@ QVariant ConnectionModel::headerData(int section, Qt::Orientation orientation, i
 int ConnectionModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED( parent );
-  return 5;
+  return 6;
 }
 
 int ConnectionModel::rowCount(const QModelIndex& parent) const
