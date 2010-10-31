@@ -1,8 +1,13 @@
 project(endoscope)
 
+set (QT_MIN_VERSION "4.7.0")
+
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
-include_directories(${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR}/3rdparty)
+include_directories(
+  ${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/3rdparty
+)
 
 # TODO find a nicer way for all this, ideally auto-detect the name mangling format, but at least guess a default based on OS + compiler
 option(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES FALSE "Enable if your compiler uses an unsupported C++ name mangling scheme")
@@ -40,7 +45,7 @@ set(endoscope_srcs
   3rdparty/kde/krecursivefilterproxymodel.cpp
   3rdparty/kde/kfilterproxysearchline.cpp
 )
-kde4_add_ui_files(endoscope_srcs
+qt4_wrap_ui(endoscope_srcs
   mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
@@ -53,7 +58,6 @@ target_link_libraries(endoscope_probe
   ${QT_QTSCRIPT_LIBRARY}
   ${QT_QTSCRIPTTOOLS_LIBRARY}
   ${QT_QTWEBKIT_LIBRARY}
-  ${KDE4_KDECORE_LIBRARY}
 )
 set_target_properties(endoscope_probe PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
