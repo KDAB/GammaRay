@@ -7,6 +7,7 @@
 #include "connectionmodel.h"
 #include "connectionfilterproxymodel.h"
 #include "singlecolumnobjectproxymodel.h"
+#include "modelmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -43,8 +44,8 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.widgetTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(widgetSelected(QModelIndex)) );
 
-  ObjectTypeFilterProxyModel<QAbstractItemModel> *modelFilterProxy = new ObjectTypeFilterProxyModel<QAbstractItemModel>( this );
-  modelFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
+  KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel( this );
+  modelFilterProxy->setSourceModel( Probe::instance()->modelModel() );
   ui.modelView->setModel( modelFilterProxy );
   ui.modelSearchLine->setProxy( modelFilterProxy );
   connect( ui.modelView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),

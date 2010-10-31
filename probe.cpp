@@ -4,6 +4,7 @@
 #include "objecttreemodel.h"
 #include "connectionmodel.h"
 #include "modeltester.h"
+#include "modelmodel.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -49,7 +50,8 @@ Probe::Probe(QObject* parent):
   m_objectListModel( new ObjectListModel( this ) ),
   m_objectTreeModel( new ObjectTreeModel( this ) ),
   m_connectionModel( new ConnectionModel( this ) ),
-  m_modelTester( new ModelTester( this ) )
+  m_modelTester( new ModelTester( this ) ),
+  m_modelModel( new ModelModel( this ) )
 {
   qDebug() << Q_FUNC_INFO;
   
@@ -104,6 +106,11 @@ ModelTester* Probe::modelTester() const
   return m_modelTester;
 }
 
+ModelModel* Probe::modelModel() const
+{
+  return m_modelModel;
+}
+
 void Probe::objectAdded(QObject* obj)
 {
   if ( isInitialized() ) {
@@ -114,6 +121,7 @@ void Probe::objectAdded(QObject* obj)
     // might be due to children inserted before the parents
     instance()->objectTreeModel()->objectAdded( obj );
     QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
+    QMetaObject::invokeMethod( instance()->modelModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
   } else {
     s_addedBeforeProbeInsertion()->push_back( obj );
   }
@@ -126,6 +134,7 @@ void Probe::objectRemoved(QObject* obj)
     instance()->objectTreeModel()->objectRemoved( obj );
     instance()->connectionRemoved( obj, 0, 0, 0 );
     instance()->connectionRemoved( 0, 0, obj, 0 );
+    instance()->modelModel()->objectRemoved( obj );
   } else {
     for ( QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
          it != s_addedBeforeProbeInsertion()->end(); )

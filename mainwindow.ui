@@ -32,16 +32,13 @@
          <widget class="QWidget" name="layoutWidget_1">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="KFilterProxySearchLine" name="objectSearchLine" native="true"/>
+            <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
            </item>
            <item>
             <widget class="QTreeView" name="objectTreeView">
              <property name="allColumnsShowFocus">
               <bool>true</bool>
              </property>
-             <attribute name="headerShowSortIndicator" stdset="0">
-              <bool>true</bool>
-             </attribute>
              <attribute name="headerShowSortIndicator" stdset="0">
               <bool>true</bool>
              </attribute>
@@ -71,7 +68,7 @@
           <widget class="QWidget" name="layoutWidget_2">
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="KFilterProxySearchLine" name="widgetSearchLine" native="true"/>
+             <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
             </item>
             <item>
              <widget class="QTreeView" name="widgetTreeView"/>
@@ -95,16 +92,13 @@
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="KFilterProxySearchLine" name="modelSearchLine" native="true"/>
+            <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
            </item>
            <item>
             <widget class="QTreeView" name="modelView">
-             <property name="rootIsDecorated">
-              <bool>false</bool>
-             </property>
              <property name="uniformRowHeights">
               <bool>true</bool>
              </property>
@@ -136,13 +130,10 @@
          <widget class="QWidget" name="layoutWidget_3">
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="KFilterProxySearchLine" name="screneTreeSearchLine" native="true"/>
+            <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
            </item>
            <item>
             <widget class="QTreeView" name="sceneTreeView">
-             <attribute name="headerShowSortIndicator" stdset="0">
-              <bool>true</bool>
-             </attribute>
              <attribute name="headerShowSortIndicator" stdset="0">
               <bool>true</bool>
              </attribute>
@@ -197,7 +188,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="KFilterProxySearchLine" name="connectionSearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="connectionSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="connectionView">

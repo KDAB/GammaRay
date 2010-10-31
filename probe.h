@@ -3,9 +3,9 @@
 
 #include <qobject.h>
 
-
 namespace Endoscope {
 
+class ModelModel;
 class ModelTester;
 class ConnectionModel;
 class ObjectListModel;
@@ -27,6 +27,7 @@ class Probe : public QObject
     ObjectTreeModel *objectTreeModel() const;
     ConnectionModel *connectionModel() const;
     ModelTester *modelTester() const;
+    ModelModel *modelModel() const;
 
     static const char* connectLocation( const char *member );
 
@@ -44,6 +45,7 @@ class Probe : public QObject
     ObjectTreeModel *m_objectTreeModel;
     ConnectionModel *m_connectionModel;
     ModelTester *m_modelTester;
+    ModelModel *m_modelModel;
 };
 
 }
