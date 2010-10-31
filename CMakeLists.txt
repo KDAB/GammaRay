@@ -1,6 +1,6 @@
 project(endoscope)
 
-set (QT_MIN_VERSION "4.7.0")
+set (QT_MIN_VERSION "4.6.0")
 
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
