@@ -1,20 +1,36 @@
 project(endoscope)
+cmake_minimum_required(VERSION 2.6)
 
-set (QT_MIN_VERSION "4.6.0")
+# library versioning
+set(GENERIC_LIB_VERSION "1.0.0")
+set(GENERIC_LIB_SOVERSION "1")
 
-find_package(KDE4 REQUIRED)
-include (KDE4Defaults)
+set(QT_MIN_VERSION "4.6.0")
+find_package(Qt4 REQUIRED)
+
 include_directories(
   ${QT_INCLUDES}
-  ${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR}
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_BINARY_DIR}/3rdparty
 )
+
+set(INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION bin
+                                 LIBRARY DESTINATION lib
+                                 ARCHIVE DESTINATION lib COMPONENT Devel)
+if(APPLE)
+  # on the Mac support an extra install directory for application bundles
+  set(INSTALL_TARGETS_DEFAULT_ARGS ${INSTALL_TARGETS_DEFAULT_ARGS}
+                                     BUNDLE DESTINATION "/Applications/Qt4")
+endif(APPLE)
+
 
 # TODO find a nicer way for all this, ideally auto-detect the name mangling format, but at least guess a default based on OS + compiler
 option(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES FALSE "Enable if your compiler uses an unsupported C++ name mangling scheme")
-if (ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
+if(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
   add_definitions(-DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
-endif ()
+endif()
 
 set(endoscope_runner_srcs main.cpp)
 add_executable(endoscope ${endoscope_runner_srcs})
@@ -48,12 +64,13 @@ set(endoscope_srcs
   3rdparty/kde/krecursivefilterproxymodel.cpp
   3rdparty/kde/kfilterproxysearchline.cpp
 )
+qt4_automoc(${endoscope_srcs})
 qt4_wrap_ui(endoscope_srcs
   mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
 )
-kde4_add_library(endoscope_probe SHARED ${endoscope_srcs})
+add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
   dl
   ${QT_QTCORE_LIBRARY}

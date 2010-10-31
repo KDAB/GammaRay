@@ -3,7 +3,7 @@
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QDebug>
 
-#include "modeltest/modeltest.h"
+#include "modeltest.h"
 #include "util.h"
 
 #include <iostream>
@@ -63,5 +63,5 @@ void ModelTester::failure(QAbstractItemModel* model, int line, const char* messa
 #undef Q_ASSERT
 #define Q_ASSERT( x ) (!( x ) ? static_cast<Endoscope::ModelTester*>( static_cast<QObject*>( this )->parent() )->failure( this->model, __LINE__, #x ) : qt_noop())
 #define qDebug() QNoDebug()
-#include "modeltest/modeltest.cpp"
-#include "3rdparty/modeltest/modeltest.moc"
+#include "modeltest.cpp"
+#include "modeltest.moc"
