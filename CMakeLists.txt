@@ -5,6 +5,7 @@ set (QT_MIN_VERSION "4.7.0")
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 include_directories(
+  ${QT_INCLUDES}
   ${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
 )
