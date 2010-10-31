@@ -20,24 +20,6 @@
 #ifndef KDEUI_EXPORT_H
 #define KDEUI_EXPORT_H
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
-#include "kdemacros.h"
-
-#ifndef KDEUI_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KDEUI_EXPORT
-# elif defined(MAKE_KDEUI_LIB)
-   /* We are building this library */ 
-#  define KDEUI_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */ 
-#  define KDEUI_EXPORT KDE_IMPORT
-# endif
-#endif
-
-# ifndef KDEUI_EXPORT_DEPRECATED
-#  define KDEUI_EXPORT_DEPRECATED KDE_DEPRECATED KDEUI_EXPORT
-# endif
+#define KDEUI_EXPORT
 
 #endif
