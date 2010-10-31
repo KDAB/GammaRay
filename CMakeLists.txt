@@ -11,7 +11,7 @@ if (ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
 endif ()
 
 set(endoscope_runner_srcs main.cpp)
-kde4_add_executable(endoscope ${endoscope_runner_srcs})
+add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
 
 set(endoscope_srcs
@@ -38,6 +38,7 @@ set(endoscope_srcs
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
+  3rdparty/kde/kfilterproxysearchline.cpp
 )
 kde4_add_ui_files(endoscope_srcs
   mainwindow.ui
@@ -47,11 +48,12 @@ kde4_add_ui_files(endoscope_srcs
 kde4_add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
   dl
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
   ${QT_QTSCRIPT_LIBRARY}
   ${QT_QTSCRIPTTOOLS_LIBRARY}
   ${QT_QTWEBKIT_LIBRARY}
   ${KDE4_KDECORE_LIBRARY}
-  ${KDE4_KDEUI_LIBRARY}
 )
 set_target_properties(endoscope_probe PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
