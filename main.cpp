@@ -23,14 +23,16 @@ int main( int argc, char** argv )
            << "/usr/lib64" << "/usr/lib";
     QDir::setSearchPaths( "preloads", pldirs );
     QFile plfile( "preloads:libendoscope_probe.so");
-    if ( !plfile.exists() ) {
+    if ( plfile.exists() ) {
+      env.insert( "LD_PRELOAD", plfile.fileName() );
+    } else {
       qWarning( "Cannot locate libendoscope_probe.so in the typical places.\n"
                 "Try setting the $LD_PRELOAD environment variable to the fullpath,\n"
-                "For example:"
-                "  export LD_PRELOAD=/opt/lib64/libendoscope_probe.so");
-      return 1;
+                "For example:\n"
+                "  export LD_PRELOAD=/opt/lib64/libendoscope_probe.so\n"
+                "Continuing nevertheless, some systems can also preload from just the library name...");
+      env.insert("LD_PRELOAD", "libendoscope_probe.so" );
     }
-    env.insert( "LD_PRELOAD", plfile.fileName() );
   }
   QProcess proc;
   proc.setProcessEnvironment( env );
