@@ -56,6 +56,26 @@ QVariant ModelCellModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
+bool ModelCellModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  if ( index.isValid() && m_index.isValid() && (m_index.flags() & Qt::ItemIsEditable) && role == Qt::EditRole && index.column() == 1 ) {
+    Qt::ItemDataRole sourceRole = static_cast<Qt::ItemDataRole>( index.row() );
+    QAbstractItemModel *sourceModel = const_cast<QAbstractItemModel*>( m_index.model() );
+    return sourceModel->setData( m_index, value, sourceRole );
+  }
+  return QAbstractItemModel::setData(index, value, role);
+}
+
+Qt::ItemFlags ModelCellModel::flags(const QModelIndex& index) const
+{
+  Qt::ItemFlags flags = QAbstractTableModel::flags( index );
+  if ( index.isValid() && m_index.isValid() && index.column() == 1 ) {
+    if ( m_index.flags() & Qt::ItemIsEditable )
+      return flags | Qt::ItemIsEditable;
+  }
+  return flags;
+}
+
 int ModelCellModel::columnCount(const QModelIndex& parent) const
 {
   if ( parent.isValid() )
