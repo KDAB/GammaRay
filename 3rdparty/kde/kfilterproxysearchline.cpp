@@ -70,7 +70,9 @@ KFilterProxySearchLine::KFilterProxySearchLine( QWidget* parent )
 {
     d->searchLine = new QLineEdit( this );
 //    d->searchLine->setClearButtonShown( true );
+#if QT_VERSION >= 0x040700
     d->searchLine->setPlaceholderText(tr("Search"));
+#endif
 
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->setMargin( 0 );
