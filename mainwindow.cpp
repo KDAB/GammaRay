@@ -147,6 +147,7 @@ void MainWindow::scriptEngineSelected(int index)
     qDebug() << "Attaching debugger" << engine;
     debugger->attachTo( engine );
     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
+    debugger->standardWindow()->show();
   }
 }
 
