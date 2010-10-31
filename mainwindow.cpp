@@ -8,6 +8,7 @@
 #include "connectionfilterproxymodel.h"
 #include "singlecolumnobjectproxymodel.h"
 #include "modelmodel.h"
+#include "modelcellmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -50,6 +51,8 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.modelSearchLine->setProxy( modelFilterProxy );
   connect( ui.modelView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(modelSelected(QModelIndex)) );
+  m_cellModel = new ModelCellModel( this );
+  ui.modelCellView->setModel( m_cellModel );
 
   ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy = new ObjectTypeFilterProxyModel<QGraphicsScene>( this );
   sceneFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
@@ -115,9 +118,17 @@ void MainWindow::modelSelected( const QModelIndex &index )
     QObject* obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
     QAbstractItemModel* model = qobject_cast<QAbstractItemModel*>( obj );
     ui.modelContentView->setModel( model );
+    connect( ui.modelContentView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+             SLOT(modelCellSelected(QModelIndex)) );
   } else {
     ui.modelContentView->setModel( 0 );
   }
+  m_cellModel->setModelIndex( QModelIndex() );
+}
+
+void MainWindow::modelCellSelected(const QModelIndex& index)
+{
+  m_cellModel->setModelIndex( index );
 }
 
 void MainWindow::sceneSelected(int index)

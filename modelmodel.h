@@ -13,7 +13,7 @@ class ModelModel : public ObjectModelBase<QAbstractItemModel>
 {
   Q_OBJECT
   public:
-    ModelModel( QObject *parent );
+    explicit ModelModel( QObject *parent );
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex& child) const;

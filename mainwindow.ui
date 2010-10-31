@@ -86,7 +86,7 @@
       <attribute name="title">
        <string>Models</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_12">
+      <layout class="QVBoxLayout" name="verticalLayout_14">
        <item>
         <widget class="QSplitter" name="splitter_5">
          <property name="orientation">
@@ -109,7 +109,44 @@
            </item>
           </layout>
          </widget>
-         <widget class="QTreeView" name="modelContentView"/>
+         <widget class="QWidget" name="">
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Model Content:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTreeView" name="modelContentView"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="">
+          <layout class="QVBoxLayout" name="verticalLayout_13">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Cell Content:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTreeView" name="modelCellView">
+             <property name="rootIsDecorated">
+              <bool>false</bool>
+             </property>
+             <property name="uniformRowHeights">
+              <bool>true</bool>
+             </property>
+             <property name="allColumnsShowFocus">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>

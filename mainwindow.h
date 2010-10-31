@@ -7,6 +7,7 @@
 
 namespace Endoscope {
 
+class ModelCellModel;
 class SceneModel;
 
 class MainWindow : public QMainWindow
@@ -20,6 +21,7 @@ class MainWindow : public QMainWindow
     void widgetSelected( const QModelIndex &index );
     void sceneItemSelected( const QModelIndex &index );
     void modelSelected(const QModelIndex &index);
+    void modelCellSelected(const QModelIndex &index);
     void sceneSelected(int index);
     void scriptEngineSelected(int index);
     void webPageSelected(int index);
@@ -27,6 +29,7 @@ class MainWindow : public QMainWindow
   private:
     Ui::MainWindow ui;
     SceneModel *m_sceneModel;
+    ModelCellModel *m_cellModel;
 };
 
 }
