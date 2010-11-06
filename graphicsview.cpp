@@ -53,6 +53,10 @@ void GraphicsView::drawForeground(QPainter* painter, const QRectF& rect)
     painter->setPen( Qt::green );
     const QPainterPath shape = m_currentItem->mapToScene( m_currentItem->shape() );
     painter->drawPath( shape );
+
+    painter->setPen( Qt::red );
+    const QPointF transformOrigin = m_currentItem->mapToScene( m_currentItem->transformOriginPoint() );
+    painter->drawEllipse( transformOrigin, 5.0/transform().m11(), 5.0/transform().m22() );
   }
 }
 
