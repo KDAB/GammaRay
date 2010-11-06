@@ -1,16 +1,19 @@
 #include "graphicsview.h"
 
 #include <QKeyEvent>
+#include <qgraphicsitem.h>
 
 using namespace Endoscope;
 
-GraphicsView::GraphicsView(QWidget* parent): QGraphicsView(parent)
+GraphicsView::GraphicsView(QWidget* parent): QGraphicsView(parent),
+  m_currentItem( 0 )
 {
   setDragMode( ScrollHandDrag );
 }
 
 void GraphicsView::showItem(QGraphicsItem* item)
 {
+  m_currentItem = item;
   fitInView( item, Qt::KeepAspectRatio );
 }
 
@@ -38,6 +41,21 @@ void GraphicsView::keyPressEvent(QKeyEvent* event)
   }
   QGraphicsView::keyPressEvent(event);
 }
+
+void GraphicsView::drawForeground(QPainter* painter, const QRectF& rect)
+{
+  QGraphicsView::drawForeground(painter, rect);
+  if ( m_currentItem ) {
+    painter->setPen( Qt::blue );
+    const QPolygonF boundingBox = m_currentItem->mapToScene( m_currentItem->boundingRect() );
+    painter->drawPolygon( boundingBox );
+
+    painter->setPen( Qt::green );
+    const QPainterPath shape = m_currentItem->mapToScene( m_currentItem->shape() );
+    painter->drawPath( shape );
+  }
+}
+
 
 
 #include "graphicsview.moc"

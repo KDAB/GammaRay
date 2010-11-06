@@ -15,6 +15,10 @@ class GraphicsView : public QGraphicsView
 
   protected:
     void keyPressEvent(QKeyEvent* event);
+    void drawForeground(QPainter* painter, const QRectF& rect);
+
+  private:
+    QGraphicsItem *m_currentItem;
 };
 
 }
