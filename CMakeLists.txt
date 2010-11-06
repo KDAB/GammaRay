@@ -59,6 +59,7 @@ set(endoscope_srcs
   modeltester.cpp
   modelmodel.cpp
   modelcellmodel.cpp
+  graphicsview.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp

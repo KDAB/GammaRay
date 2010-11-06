@@ -32,13 +32,16 @@
          <widget class="QWidget" name="layoutWidget_1">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
+            <widget class="KFilterProxySearchLine" name="objectSearchLine" native="true"/>
            </item>
            <item>
             <widget class="QTreeView" name="objectTreeView">
              <property name="allColumnsShowFocus">
               <bool>true</bool>
              </property>
+             <attribute name="headerShowSortIndicator" stdset="0">
+              <bool>true</bool>
+             </attribute>
              <attribute name="headerShowSortIndicator" stdset="0">
               <bool>true</bool>
              </attribute>
@@ -68,7 +71,7 @@
           <widget class="QWidget" name="layoutWidget_2">
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
+             <widget class="KFilterProxySearchLine" name="widgetSearchLine" native="true"/>
             </item>
             <item>
              <widget class="QTreeView" name="widgetTreeView"/>
@@ -95,7 +98,7 @@
          <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
+            <widget class="KFilterProxySearchLine" name="modelSearchLine" native="true"/>
            </item>
            <item>
             <widget class="QTreeView" name="modelView">
@@ -109,7 +112,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_12">
            <item>
             <widget class="QLabel" name="label">
@@ -123,7 +126,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <layout class="QVBoxLayout" name="verticalLayout_13">
            <item>
             <widget class="QLabel" name="label_2">
@@ -160,23 +163,32 @@
         <widget class="QComboBox" name="sceneComboBox"/>
        </item>
        <item>
-        <widget class="QSplitter" name="splitter_3">
+        <widget class="QSplitter" name="splitter_6">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QWidget" name="layoutWidget_3">
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
-           </item>
-           <item>
-            <widget class="QTreeView" name="sceneTreeView">
-             <attribute name="headerShowSortIndicator" stdset="0">
-              <bool>true</bool>
-             </attribute>
-            </widget>
-           </item>
-          </layout>
+         <widget class="QSplitter" name="splitter_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QWidget" name="layoutWidget_3">
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="KFilterProxySearchLine" name="screneTreeSearchLine" native="true"/>
+            </item>
+            <item>
+             <widget class="QTreeView" name="sceneTreeView">
+              <attribute name="headerShowSortIndicator" stdset="0">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="headerShowSortIndicator" stdset="0">
+               <bool>true</bool>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="Endoscope::GraphicsView" name="graphicsView"/>
          </widget>
          <widget class="Endoscope::PropertyWidget" name="scenePropertyWidget" native="true"/>
         </widget>
@@ -225,7 +237,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="KFilterProxySearchLine" name="connectionSearchLine"/>
+        <widget class="KFilterProxySearchLine" name="connectionSearchLine" native="true"/>
        </item>
        <item>
         <widget class="QTreeView" name="connectionView">
@@ -263,6 +275,11 @@
    <extends>QWidget</extends>
    <header location="global">qwebinspector.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Endoscope::GraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>graphicsview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
