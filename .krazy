@@ -1,1 +1,2 @@
-CHECKSETS qt4
+CHECKSETS qt4,c++
+SKIP /3rdparty/
