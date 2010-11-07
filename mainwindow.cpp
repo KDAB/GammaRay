@@ -138,7 +138,7 @@ void MainWindow::sceneSelected(int index)
   qDebug() << Q_FUNC_INFO << scene << obj;
 
   m_sceneModel->setScene( scene );
-  ui.graphicsView->setScene( scene );
+  ui.graphicsSceneView->setGraphicsScene( scene );
 }
 
 void MainWindow::sceneItemSelected(const QModelIndex& index)
@@ -146,7 +146,7 @@ void MainWindow::sceneItemSelected(const QModelIndex& index)
   if ( index.isValid() ) {
     QGraphicsItem* item = index.data( SceneModel::SceneItemRole ).value<QGraphicsItem*>();
     ui.scenePropertyWidget->setObject( item->toGraphicsObject() );
-    ui.graphicsView->showItem( item );
+    ui.graphicsSceneView->showGraphicsItem( item );
   } else {
     ui.scenePropertyWidget->setObject( 0 );
   }

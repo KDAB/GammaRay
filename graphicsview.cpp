@@ -8,7 +8,7 @@ using namespace Endoscope;
 GraphicsView::GraphicsView(QWidget* parent): QGraphicsView(parent),
   m_currentItem( 0 )
 {
-  setDragMode( ScrollHandDrag );
+  setMouseTracking( true );
 }
 
 void GraphicsView::showItem(QGraphicsItem* item)
@@ -41,6 +41,15 @@ void GraphicsView::keyPressEvent(QKeyEvent* event)
   }
   QGraphicsView::keyPressEvent(event);
 }
+
+void GraphicsView::mouseMoveEvent(QMouseEvent* event)
+{
+  emit sceneCoordinatesChanged( mapToScene( event->pos() ) );
+  if ( m_currentItem )
+    emit itemCoordinatesChanged( m_currentItem->mapFromScene( mapToScene( event->pos() ) ) );
+  QGraphicsView::mouseMoveEvent(event);
+}
+
 
 void GraphicsView::drawForeground(QPainter* painter, const QRectF& rect)
 {

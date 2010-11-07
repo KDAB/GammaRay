@@ -13,8 +13,13 @@ class GraphicsView : public QGraphicsView
 
     void showItem( QGraphicsItem* item );
 
+  signals:
+    void sceneCoordinatesChanged( const QPointF &sceneCoord );
+    void itemCoordinatesChanged( const QPointF &itemCoord );
+
   protected:
     void keyPressEvent(QKeyEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
     void drawForeground(QPainter* painter, const QRectF& rect);
 
   private:

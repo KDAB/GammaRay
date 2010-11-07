@@ -60,6 +60,7 @@ set(endoscope_srcs
   modelmodel.cpp
   modelcellmodel.cpp
   graphicsview.cpp
+  graphicssceneview.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -70,6 +71,7 @@ qt4_wrap_ui(endoscope_srcs
   mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
+  graphicssceneview.ui
 )
 add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
