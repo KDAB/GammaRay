@@ -15,6 +15,7 @@ void GraphicsView::showItem(QGraphicsItem* item)
 {
   m_currentItem = item;
   fitInView( item, Qt::KeepAspectRatio );
+  scale( 0.8f, 0.8f );
 }
 
 void GraphicsView::keyPressEvent(QKeyEvent* event)
@@ -55,8 +56,17 @@ void GraphicsView::drawForeground(QPainter* painter, const QRectF& rect)
 {
   QGraphicsView::drawForeground(painter, rect);
   if ( m_currentItem ) {
+    const QRectF itemBoundingRect = m_currentItem->boundingRect();
+    // coord system, TODO: nicer axis with arrows, tics, markers for current mouse position etc.
+    painter->setPen( Qt::black );
+    const qreal maxX = qMax( qAbs(itemBoundingRect.left()), qAbs(itemBoundingRect.right()) );
+    const qreal maxY = qMax( qAbs(itemBoundingRect.top()), qAbs(itemBoundingRect.bottom()) );
+    const qreal maxXY = qMax( maxX, maxY ) * 1.5f;
+    painter->drawLine( m_currentItem->mapToScene( -maxXY, 0 ), m_currentItem->mapToScene( maxXY, 0 ) );
+    painter->drawLine( m_currentItem->mapToScene( 0, -maxXY ), m_currentItem->mapToScene( 0, maxXY ) );
+    
     painter->setPen( Qt::blue );
-    const QPolygonF boundingBox = m_currentItem->mapToScene( m_currentItem->boundingRect() );
+    const QPolygonF boundingBox = m_currentItem->mapToScene( itemBoundingRect );
     painter->drawPolygon( boundingBox );
 
     painter->setPen( Qt::green );
