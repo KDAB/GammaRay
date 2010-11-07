@@ -3,6 +3,8 @@
 
 #include <qobject.h>
 
+class QGraphicsItem;
+
 namespace Endoscope {
 
 class ModelModel;
@@ -30,6 +32,10 @@ class Probe : public QObject
     ModelModel *modelModel() const;
 
     static const char* connectLocation( const char *member );
+
+  signals:
+    void widgetSelected( QWidget* widget );
+    void graphicsItemSelected( QGraphicsItem* item );
 
   protected:
     bool eventFilter(QObject *receiver, QEvent *event );

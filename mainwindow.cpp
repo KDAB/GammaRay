@@ -28,6 +28,9 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   setCentralWidget( center );
   ui.setupUi( centralWidget() );
 
+  connect( Probe::instance(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)) );
+  connect( Probe::instance(), SIGNAL(graphicsItemSelected(QGraphicsItem*)), SLOT(sceneItemSelected(QGraphicsItem*)) );
+
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel( this );
   objectFilter->setSourceModel( Probe::instance()->objectTreeModel() );
   objectFilter->setDynamicSortFilter( true );
@@ -112,6 +115,18 @@ void MainWindow::widgetSelected(const QModelIndex& index)
   }
 }
 
+void MainWindow::widgetSelected(QWidget* widget)
+{
+  QAbstractItemModel *model = ui.widgetTreeView->model();
+  const QModelIndexList indexList = model->match( model->index( 0, 0 ), ObjectTreeModel::ObjectRole, QVariant::fromValue<QObject*>( widget ), 1, Qt::MatchExactly | Qt::MatchRecursive );
+  if ( indexList.isEmpty() )
+    return;
+  const QModelIndex index = indexList.first();
+  ui.widgetTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
+  ui.widgetTreeView->scrollTo( index );
+  widgetSelected( index );
+}
+
 void MainWindow::modelSelected( const QModelIndex &index )
 {
   if ( index.isValid() ) {
@@ -150,6 +165,18 @@ void MainWindow::sceneItemSelected(const QModelIndex& index)
   } else {
     ui.scenePropertyWidget->setObject( 0 );
   }
+}
+
+void MainWindow::sceneItemSelected(QGraphicsItem* item)
+{
+  QAbstractItemModel *model = ui.sceneTreeView->model();
+  const QModelIndexList indexList = model->match( model->index( 0, 0 ), SceneModel::SceneItemRole, QVariant::fromValue<QGraphicsItem*>( item ), 1, Qt::MatchExactly | Qt::MatchRecursive );
+  if ( indexList.isEmpty() )
+    return;
+  const QModelIndex index = indexList.first();
+  ui.sceneTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
+  ui.sceneTreeView->scrollTo( index );
+  sceneItemSelected( index );
 }
 
 void MainWindow::scriptEngineSelected(int index)

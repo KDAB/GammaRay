@@ -8,6 +8,8 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include <qevent.h>
+#include <qgraphicsview.h>
 
 #include <dlfcn.h>
 
@@ -168,6 +170,21 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event )
     objectTreeModel()->objectRemoved( childEvent->child() );
     if ( event->type() == QEvent::ChildAdded )
       objectTreeModel()->objectAdded( childEvent->child() );
+  }
+  if ( event->type() == QEvent::MouseButtonRelease ) {
+    QMouseEvent *mouseEv = static_cast<QMouseEvent*>( event );
+    if ( mouseEv->button() == Qt::LeftButton && mouseEv->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier) ) {
+      QWidget *widget = QApplication::widgetAt( mouseEv->globalPos() );
+      if ( widget ) {
+        emit widgetSelected( widget );
+        QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>( widget );
+        if ( qgv ) {
+          QGraphicsItem* item = qgv->itemAt( qgv->mapFromGlobal( mouseEv->globalPos() ) );
+          if ( item )
+            emit graphicsItemSelected( item );
+        }
+      }
+    }
   }
   return QObject::eventFilter(receiver, event);
 }
