@@ -54,7 +54,6 @@
 #include <qlocale.h>
 #include <qstyle.h>
 #include <qapplication.h>
-#include <private/qabstractitemmodel_p.h>
 #include <qdebug.h>
 
 /*!
@@ -66,9 +65,10 @@
 
 QT_BEGIN_NAMESPACE
 
-class QDirModelPrivate : public QAbstractItemModelPrivate
+class QDirModelPrivate
 {
     Q_DECLARE_PUBLIC(QDirModel)
+    QDirModel * const q_ptr;
 
 public:
     struct QDirNode
@@ -83,14 +83,17 @@ public:
         mutable bool stat;
     };
 
-    QDirModelPrivate()
+    QDirModelPrivate(QDirModel *qq)
         : resolveSymlinks(true),
           readOnly(true),
           lazyChildCount(false),
           allowAppendChild(true),
           iconProvider(&defaultProvider),
-          shouldStat(true) // ### This is set to false by QFileDialog
+          shouldStat(true), // ### This is set to false by QFileDialog
+          q_ptr(qq)
     { }
+
+    bool indexValid(const QModelIndex &index) const { return index.isValid(); }
 
     void init();
     QDirNode *node(int row, QDirNode *parent) const;
@@ -227,7 +230,7 @@ QDirModel::QDirModel(const QStringList &nameFilters,
                      QDir::Filters filters,
                      QDir::SortFlags sort,
                      QObject *parent)
-    : QAbstractItemModel(*new QDirModelPrivate, parent)
+    : QAbstractItemModel(parent), d_ptr(new QDirModelPrivate(this))
 {
     Q_D(QDirModel);
     // we always start with QDir::drives()
@@ -244,17 +247,7 @@ QDirModel::QDirModel(const QStringList &nameFilters,
 */
 
 QDirModel::QDirModel(QObject *parent)
-    : QAbstractItemModel(*new QDirModelPrivate, parent)
-{
-    Q_D(QDirModel);
-    d->init();
-}
-
-/*!
-    \internal
-*/
-QDirModel::QDirModel(QDirModelPrivate &dd, QObject *parent)
-    : QAbstractItemModel(dd, parent)
+    : QAbstractItemModel(parent), d_ptr(new QDirModelPrivate(this))
 {
     Q_D(QDirModel);
     d->init();
@@ -829,14 +822,16 @@ void QDirModel::refresh(const QModelIndex &parent)
         return;
     }
 
-    emit layoutAboutToBeChanged();
+    beginResetModel();
+//     emit layoutAboutToBeChanged();
     d->savePersistentIndexes();
-    d->rowsAboutToBeRemoved(parent, 0, rows - 1);
+//     d->rowsAboutToBeRemoved(parent, 0, rows - 1);
     n->stat = true; // make sure that next time we read all the info
     d->clear(n);
-    d->rowsRemoved(parent, 0, rows - 1);
+//     d->rowsRemoved(parent, 0, rows - 1);
     d->restorePersistentIndexes();
-    emit layoutChanged();
+//     emit layoutChanged();
+    endResetModel();
 }
 
 /*!
@@ -1243,38 +1238,38 @@ void QDirModelPrivate::savePersistentIndexes()
 {
     Q_Q(QDirModel);
     savedPersistent.clear();
-    foreach (QPersistentModelIndexData *data, persistent.indexes) {
-        SavedPersistent saved;
-        QModelIndex index = data->index;
-        saved.path = q->filePath(index);
-        saved.column = index.column();
-        saved.data = data;
-        saved.index = index;
-        savedPersistent.append(saved);
-    }
+//     foreach (QPersistentModelIndexData *data, q->persistentIndexes()) {
+//         SavedPersistent saved;
+//         QModelIndex index = data->index;
+//         saved.path = q->filePath(index);
+//         saved.column = index.column();
+//         saved.data = data;
+//         saved.index = index;
+//         savedPersistent.append(saved);
+//     }
 }
 
 void QDirModelPrivate::restorePersistentIndexes()
 {
     Q_Q(QDirModel);
-    bool allow = allowAppendChild;
-    allowAppendChild = false;
-    for (int i = 0; i < savedPersistent.count(); ++i) {
-        QPersistentModelIndexData *data = savedPersistent.at(i).data;
-        QString path = savedPersistent.at(i).path;
-        int column = savedPersistent.at(i).column;
-        QModelIndex idx = q->index(path, column);
-        if (idx != data->index || data->model == 0) {
-            //data->model may be equal to 0 if the model is getting destroyed
-            persistent.indexes.remove(data->index);
-            data->index = idx;
-            data->model = q;
-            if (idx.isValid())
-                persistent.indexes.insert(idx, data);
-        }
-    }
+//     bool allow = allowAppendChild;
+//     allowAppendChild = false;
+//     for (int i = 0; i < savedPersistent.count(); ++i) {
+//         QPersistentModelIndexData *data = savedPersistent.at(i).data;
+//         QString path = savedPersistent.at(i).path;
+//         int column = savedPersistent.at(i).column;
+//         QModelIndex idx = q->index(path, column);
+//         if (idx != data->index || data->model == 0) {
+//             //data->model may be equal to 0 if the model is getting destroyed
+//             persistent.indexes.remove(data->index);
+//             data->index = idx;
+//             data->model = q;
+//             if (idx.isValid())
+//                 persistent.indexes.insert(idx, data);
+//         }
+//     }
     savedPersistent.clear();
-    allowAppendChild = allow;
+//     allowAppendChild = allow;
 }
 
 QFileInfoList QDirModelPrivate::entryInfoList(const QString &path) const
@@ -1401,6 +1396,6 @@ QFileInfo QDirModelPrivate::resolvedInfo(QFileInfo info)
 
 QT_END_NAMESPACE
 
-#include "moc_qdirmodel.cpp"
+// #include "qdirmodel.moc"
 
 #endif // QT_NO_DIRMODEL

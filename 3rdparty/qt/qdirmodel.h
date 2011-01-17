@@ -147,6 +147,7 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(QDirModel)
+    QDirModelPrivate * const d_ptr;
     Q_DISABLE_COPY(QDirModel)
     Q_PRIVATE_SLOT(d_func(), void _q_refresh())
 };
