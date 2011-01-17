@@ -20,6 +20,9 @@
 #include <QtScriptTools/QScriptEngineDebugger>
 #include <qwebpage.h>
 
+#include <qt/resourcemodel.h>
+
+
 using namespace Endoscope;
 
 MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
@@ -89,6 +92,9 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
   ui.connectionSearchLine->setProxy( connectionFilterProxy );
   ui.connectionView->setModel( connectionFilterProxy );
+
+  ResourceModel *resourceModel = new ResourceModel(this);
+  ui.treeView->setModel(resourceModel);
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
