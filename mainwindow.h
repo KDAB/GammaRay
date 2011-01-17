@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow
     void sceneSelected(int index);
     void scriptEngineSelected(int index);
     void webPageSelected(int index);
+    void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
     Ui::MainWindow ui;
