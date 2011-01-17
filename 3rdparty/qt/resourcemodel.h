@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QDIRMODEL_H
-#define QDIRMODEL_H
+#ifndef RESOURCEMODELMODEL_H
+#define RESOURCEMODELMODEL_H
 
 #include <QtCore/qabstractitemmodel.h>
 #include <QtCore/qdir.h>
@@ -52,11 +52,9 @@ QT_BEGIN_NAMESPACE
 
 QT_MODULE(Gui)
 
-#ifndef QT_NO_DIRMODEL
+class ResourceModelPrivate;
 
-class QDirModelPrivate;
-
-class Q_GUI_EXPORT QDirModel : public QAbstractItemModel
+class Q_GUI_EXPORT ResourceModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(bool resolveSymlinks READ resolveSymlinks WRITE setResolveSymlinks)
@@ -70,10 +68,10 @@ public:
         FileNameRole
     };
 
-    QDirModel(const QStringList &nameFilters, QDir::Filters filters,
+    ResourceModel(const QStringList &nameFilters, QDir::Filters filters,
               QDir::SortFlags sort, QObject *parent = 0);
-    explicit QDirModel(QObject *parent = 0);
-    ~QDirModel();
+    explicit ResourceModel(QObject *parent = 0);
+    ~ResourceModel();
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -97,7 +95,7 @@ public:
                       int row, int column, const QModelIndex &parent);
     Qt::DropActions supportedDropActions() const;
 
-    // QDirModel specific API
+    // ResourceModel specific API
 
     void setIconProvider(QFileIconProvider *provider);
     QFileIconProvider *iconProvider() const;
@@ -142,17 +140,15 @@ public Q_SLOTS:
     void refresh(const QModelIndex &parent = QModelIndex());
 
 protected:
-    QDirModel(QDirModelPrivate &, QObject *parent = 0);
+    ResourceModel(ResourceModelPrivate &, QObject *parent = 0);
     friend class QFileDialogPrivate;
 
 private:
-    Q_DECLARE_PRIVATE(QDirModel)
-    QDirModelPrivate * const d_ptr;
-    Q_DISABLE_COPY(QDirModel)
+    Q_DECLARE_PRIVATE(ResourceModel)
+    ResourceModelPrivate * const d_ptr;
+    Q_DISABLE_COPY(ResourceModel)
     Q_PRIVATE_SLOT(d_func(), void _q_refresh())
 };
-
-#endif // QT_NO_DIRMODEL
 
 QT_END_NAMESPACE
 

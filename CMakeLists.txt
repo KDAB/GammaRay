@@ -65,7 +65,7 @@ set(endoscope_srcs
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
   3rdparty/kde/kfilterproxysearchline.cpp
-  3rdparty/qt/qdirmodel.cpp
+  3rdparty/qt/resourcemodel.cpp
 )
 qt4_automoc(${endoscope_srcs})
 qt4_wrap_ui(endoscope_srcs

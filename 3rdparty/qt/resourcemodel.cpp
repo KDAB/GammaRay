@@ -39,9 +39,8 @@
 **
 ****************************************************************************/
 
-#include "qdirmodel.h"
+#include "resourcemodel.h"
 
-#ifndef QT_NO_DIRMODEL
 #include <qstack.h>
 #include <qfile.h>
 #include <qfilesystemmodel.h>
@@ -57,7 +56,7 @@
 #include <qdebug.h>
 
 /*!
-    \enum QDirModel::Roles
+    \enum ResourceModel::Roles
     \value FileIconRole
     \value FilePathRole
     \value FileNameRole
@@ -65,10 +64,10 @@
 
 QT_BEGIN_NAMESPACE
 
-class QDirModelPrivate
+class ResourceModelPrivate
 {
-    Q_DECLARE_PUBLIC(QDirModel)
-    QDirModel * const q_ptr;
+    Q_DECLARE_PUBLIC(ResourceModel)
+    ResourceModel * const q_ptr;
 
 public:
     struct QDirNode
@@ -83,7 +82,7 @@ public:
         mutable bool stat;
     };
 
-    QDirModelPrivate(QDirModel *qq)
+    ResourceModelPrivate(ResourceModel *qq)
         : resolveSymlinks(true),
           readOnly(true),
           lazyChildCount(false),
@@ -112,7 +111,7 @@ public:
     QString type(const QModelIndex &index) const;
     QString time(const QModelIndex &index) const;
 
-    void appendChild(QDirModelPrivate::QDirNode *parent, const QString &path) const;
+    void appendChild(ResourceModelPrivate::QDirNode *parent, const QString &path) const;
     static QFileInfo resolvedInfo(QFileInfo info);
 
     inline QDirNode *node(const QModelIndex &index) const;
@@ -146,34 +145,34 @@ public:
     bool shouldStat; // use the "carefull not to stat directories" mode
 };
 
-void qt_setDirModelShouldNotStat(QDirModelPrivate *modelPrivate)
+void qt_setDirModelShouldNotStat(ResourceModelPrivate *modelPrivate)
 {
     modelPrivate->shouldStat = false;
 }
 
-QDirModelPrivate::QDirNode *QDirModelPrivate::node(const QModelIndex &index) const
+ResourceModelPrivate::QDirNode *ResourceModelPrivate::node(const QModelIndex &index) const
 {
-    QDirModelPrivate::QDirNode *n =
-        static_cast<QDirModelPrivate::QDirNode*>(index.internalPointer());
+    ResourceModelPrivate::QDirNode *n =
+        static_cast<ResourceModelPrivate::QDirNode*>(index.internalPointer());
     Q_ASSERT(n);
     return n;
 }
 
-void QDirModelPrivate::populate(QDirNode *parent) const
+void ResourceModelPrivate::populate(QDirNode *parent) const
 {
     Q_ASSERT(parent);
     parent->children = children(parent, parent->stat);
     parent->populated = true;
 }
 
-void QDirModelPrivate::clear(QDirNode *parent) const
+void ResourceModelPrivate::clear(QDirNode *parent) const
 {
      Q_ASSERT(parent);
      parent->children.clear();
      parent->populated = false;
 }
 
-void QDirModelPrivate::invalidate()
+void ResourceModelPrivate::invalidate()
 {
     QStack<const QDirNode*> nodes;
     nodes.push(&root);
@@ -187,13 +186,13 @@ void QDirModelPrivate::invalidate()
 }
 
 /*!
-    \class QDirModel
+    \class ResourceModel
     \obsolete
-    \brief The QDirModel class provides a data model for the local filesystem.
+    \brief The ResourceModel class provides a data model for the local filesystem.
 
     \ingroup model-view
 
-    The usage of QDirModel is not recommended anymore. The
+    The usage of ResourceModel is not recommended anymore. The
     QFileSystemModel class is a more performant alternative.
 
     This class provides access to the local filesystem, providing functions
@@ -201,10 +200,10 @@ void QDirModelPrivate::invalidate()
     directories. In the simplest case, it can be used with a suitable display
     widget as part of a browser or filer.
 
-    QDirModel keeps a cache with file information. The cache needs to be
+    ResourceModel keeps a cache with file information. The cache needs to be
     updated with refresh().
 
-    QDirModel can be accessed using the standard interface provided by
+    ResourceModel can be accessed using the standard interface provided by
     QAbstractItemModel, but it also provides some convenience functions
     that are specific to a directory model. The fileInfo() and isDir()
     functions provide information about the underlying files and directories
@@ -213,7 +212,7 @@ void QDirModelPrivate::invalidate()
     Directories can be created and removed using mkdir(), rmdir(), and the
     model will be automatically updated to take the changes into account.
 
-    \note QDirModel requires an instance of a GUI application.
+    \note ResourceModel requires an instance of a GUI application.
 
     \sa nameFilters(), setFilter(), filter(), QListView, QTreeView, QFileSystemModel,
     {Dir View Example}, {Model Classes}
@@ -226,13 +225,13 @@ void QDirModelPrivate::invalidate()
     \a sort flags.
 */
 
-QDirModel::QDirModel(const QStringList &nameFilters,
+ResourceModel::ResourceModel(const QStringList &nameFilters,
                      QDir::Filters filters,
                      QDir::SortFlags sort,
                      QObject *parent)
-    : QAbstractItemModel(parent), d_ptr(new QDirModelPrivate(this))
+    : QAbstractItemModel(parent), d_ptr(new ResourceModelPrivate(this))
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     // we always start with QDir::drives()
     d->nameFilters = nameFilters.isEmpty() ? QStringList(QLatin1String("*")) : nameFilters;
     d->filters = filters;
@@ -246,10 +245,10 @@ QDirModel::QDirModel(const QStringList &nameFilters,
   Constructs a directory model with the given \a parent.
 */
 
-QDirModel::QDirModel(QObject *parent)
-    : QAbstractItemModel(parent), d_ptr(new QDirModelPrivate(this))
+ResourceModel::ResourceModel(QObject *parent)
+    : QAbstractItemModel(parent), d_ptr(new ResourceModelPrivate(this))
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->init();
 }
 
@@ -257,7 +256,7 @@ QDirModel::QDirModel(QObject *parent)
   Destroys this directory model.
 */
 
-QDirModel::~QDirModel()
+ResourceModel::~ResourceModel()
 {
 
 }
@@ -268,21 +267,21 @@ QDirModel::~QDirModel()
 
 */
 
-QModelIndex QDirModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex ResourceModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     // note that rowCount does lazy population
     if (column < 0 || column >= columnCount(parent) || row < 0 || parent.column() > 0)
         return QModelIndex();
     // make sure the list of children is up to date
-    QDirModelPrivate::QDirNode *p = (d->indexValid(parent) ? d->node(parent) : &d->root);
+    ResourceModelPrivate::QDirNode *p = (d->indexValid(parent) ? d->node(parent) : &d->root);
     Q_ASSERT(p);
     if (!p->populated)
         d->populate(p); // populate without stat'ing
     if (row >= p->children.count())
         return QModelIndex();
     // now get the internal pointer for the index
-    QDirModelPrivate::QDirNode *n = d->node(row, d->indexValid(parent) ? p : 0);
+    ResourceModelPrivate::QDirNode *n = d->node(row, d->indexValid(parent) ? p : 0);
     Q_ASSERT(n);
 
     return createIndex(row, column, n);
@@ -292,19 +291,19 @@ QModelIndex QDirModel::index(int row, int column, const QModelIndex &parent) con
   Return the parent of the given \a child model item.
 */
 
-QModelIndex QDirModel::parent(const QModelIndex &child) const
+QModelIndex ResourceModel::parent(const QModelIndex &child) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
 
     if (!d->indexValid(child))
 	return QModelIndex();
-    QDirModelPrivate::QDirNode *node = d->node(child);
-    QDirModelPrivate::QDirNode *par = (node ? node->parent : 0);
+    ResourceModelPrivate::QDirNode *node = d->node(child);
+    ResourceModelPrivate::QDirNode *par = (node ? node->parent : 0);
     if (par == 0) // parent is the root node
 	return QModelIndex();
 
     // get the parent's row
-    const QVector<QDirModelPrivate::QDirNode> children =
+    const QVector<ResourceModelPrivate::QDirNode> children =
         par->parent ? par->parent->children : d->root.children;
     Q_ASSERT(children.count() > 0);
     int row = (par - &(children.at(0)));
@@ -318,20 +317,21 @@ QModelIndex QDirModel::parent(const QModelIndex &child) const
 
 */
 
-int QDirModel::rowCount(const QModelIndex &parent) const
+int ResourceModel::rowCount(const QModelIndex &parent) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     if (parent.column() > 0)
         return 0;
 
     if (!parent.isValid()) {
+//       qDebug() << "Root" << d->root;
         if (!d->root.populated) // lazy population
             d->populate(&d->root);
         return d->root.children.count();
     }
     if (parent.model() != this)
         return 0;
-    QDirModelPrivate::QDirNode *p = d->node(parent);
+    ResourceModelPrivate::QDirNode *p = d->node(parent);
     if (p->info.isDir() && !p->populated) // lazy population
         d->populate(p);
     return p->children.count();
@@ -342,7 +342,7 @@ int QDirModel::rowCount(const QModelIndex &parent) const
 
 */
 
-int QDirModel::columnCount(const QModelIndex &parent) const
+int ResourceModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.column() > 0)
         return 0;
@@ -352,9 +352,9 @@ int QDirModel::columnCount(const QModelIndex &parent) const
 /*!
   Returns the data for the model item \a index with the given \a role.
 */
-QVariant QDirModel::data(const QModelIndex &index, int role) const
+QVariant ResourceModel::data(const QModelIndex &index, int role) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     if (!d->indexValid(index))
         return QVariant();
 
@@ -393,14 +393,14 @@ QVariant QDirModel::data(const QModelIndex &index, int role) const
   \sa Qt::ItemDataRole
 */
 
-bool QDirModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool ResourceModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     if (!d->indexValid(index) || index.column() != 0
         || (flags(index) & Qt::ItemIsEditable) == 0 || role != Qt::EditRole)
         return false;
 
-    QDirModelPrivate::QDirNode *node = d->node(index);
+    ResourceModelPrivate::QDirNode *node = d->node(index);
     QDir dir = node->info.dir();
     QString name = value.toString();
     if (dir.rename(node->info.fileName(), name)) {
@@ -422,7 +422,7 @@ bool QDirModel::setData(const QModelIndex &index, const QVariant &value, int rol
   of the header with the given \a orientation.
 */
 
-QVariant QDirModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant ResourceModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal) {
         if (role != Qt::DisplayRole)
@@ -452,15 +452,15 @@ QVariant QDirModel::headerData(int section, Qt::Orientation orientation, int rol
   returns false.
 */
 
-bool QDirModel::hasChildren(const QModelIndex &parent) const
+bool ResourceModel::hasChildren(const QModelIndex &parent) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     if (parent.column() > 0)
         return false;
 
     if (!parent.isValid()) // the invalid index is the "My Computer" item
         return true; // the drives
-    QDirModelPrivate::QDirNode *p = d->node(parent);
+    ResourceModelPrivate::QDirNode *p = d->node(parent);
     Q_ASSERT(p);
 
     if (d->lazyChildCount) // optimization that only checks for children if the node has been populated
@@ -473,16 +473,16 @@ bool QDirModel::hasChildren(const QModelIndex &parent) const
 
   \sa Qt::ItemFlags
 */
-Qt::ItemFlags QDirModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ResourceModel::flags(const QModelIndex &index) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     if (!d->indexValid(index))
         return flags;
     flags |= Qt::ItemIsDragEnabled;
     if (d->readOnly)
         return flags;
-    QDirModelPrivate::QDirNode *node = d->node(index);
+    ResourceModelPrivate::QDirNode *node = d->node(index);
     if ((index.column() == 0) && node->info.isWritable()) {
         flags |= Qt::ItemIsEditable;
         if (fileInfo(index).isDir()) // is directory and is editable
@@ -496,7 +496,7 @@ Qt::ItemFlags QDirModel::flags(const QModelIndex &index) const
   The order is a value defined in \l Qt::SortOrder.
 */
 
-void QDirModel::sort(int column, Qt::SortOrder order)
+void ResourceModel::sort(int column, Qt::SortOrder order)
 {
     QDir::SortFlags sort = QDir::DirsFirst | QDir::IgnoreCase;
     if (order == Qt::DescendingOrder)
@@ -527,7 +527,7 @@ void QDirModel::sort(int column, Qt::SortOrder order)
     in the model.
 */
 
-QStringList QDirModel::mimeTypes() const
+QStringList ResourceModel::mimeTypes() const
 {
     return QStringList(QLatin1String("text/uri-list"));
 }
@@ -541,7 +541,7 @@ QStringList QDirModel::mimeTypes() const
     empty list.
 */
 
-QMimeData *QDirModel::mimeData(const QModelIndexList &indexes) const
+QMimeData *ResourceModel::mimeData(const QModelIndexList &indexes) const
 {
     QList<QUrl> urls;
     QList<QModelIndex>::const_iterator it = indexes.begin();
@@ -561,10 +561,10 @@ QMimeData *QDirModel::mimeData(const QModelIndexList &indexes) const
     \sa supportedDropActions()
 */
 
-bool QDirModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
+bool ResourceModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                              int /* row */, int /* column */, const QModelIndex &parent)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     if (!d->indexValid(parent) || isReadOnly())
         return false;
 
@@ -620,7 +620,7 @@ bool QDirModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
   \sa Qt::DropActions
 */
 
-Qt::DropActions QDirModel::supportedDropActions() const
+Qt::DropActions ResourceModel::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction; // FIXME: LinkAction is not supported yet
 }
@@ -630,9 +630,9 @@ Qt::DropActions QDirModel::supportedDropActions() const
 
 */
 
-void QDirModel::setIconProvider(QFileIconProvider *provider)
+void ResourceModel::setIconProvider(QFileIconProvider *provider)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->iconProvider = provider;
 }
 
@@ -640,9 +640,9 @@ void QDirModel::setIconProvider(QFileIconProvider *provider)
   Returns the file icon provider for this directory model.
 */
 
-QFileIconProvider *QDirModel::iconProvider() const
+QFileIconProvider *ResourceModel::iconProvider() const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     return d->iconProvider;
 }
 
@@ -650,9 +650,9 @@ QFileIconProvider *QDirModel::iconProvider() const
   Sets the name \a filters for the directory model.
 */
 
-void QDirModel::setNameFilters(const QStringList &filters)
+void ResourceModel::setNameFilters(const QStringList &filters)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->nameFilters = filters;
     emit layoutAboutToBeChanged();
     if (d->shouldStat)
@@ -666,9 +666,9 @@ void QDirModel::setNameFilters(const QStringList &filters)
   Returns a list of filters applied to the names in the model.
 */
 
-QStringList QDirModel::nameFilters() const
+QStringList ResourceModel::nameFilters() const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     return d->nameFilters;
 }
 
@@ -676,14 +676,14 @@ QStringList QDirModel::nameFilters() const
   Sets the directory model's filter to that specified by \a filters.
 
   Note that the filter you set should always include the QDir::AllDirs enum value,
-  otherwise QDirModel won't be able to read the directory structure.
+  otherwise ResourceModel won't be able to read the directory structure.
 
   \sa QDir::Filters
 */
 
-void QDirModel::setFilter(QDir::Filters filters)
+void ResourceModel::setFilter(QDir::Filters filters)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->filters = filters;
     emit layoutAboutToBeChanged();
     if (d->shouldStat)
@@ -699,9 +699,9 @@ void QDirModel::setFilter(QDir::Filters filters)
   \sa QDir::Filters
 */
 
-QDir::Filters QDirModel::filter() const
+QDir::Filters ResourceModel::filter() const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     return d->filters;
 }
 
@@ -711,9 +711,9 @@ QDir::Filters QDirModel::filter() const
   \sa QDir::SortFlags
 */
 
-void QDirModel::setSorting(QDir::SortFlags sort)
+void ResourceModel::setSorting(QDir::SortFlags sort)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->sort = sort;
     emit layoutAboutToBeChanged();
     if (d->shouldStat)
@@ -728,33 +728,33 @@ void QDirModel::setSorting(QDir::SortFlags sort)
 
   \sa QDir::SortFlags */
 
-QDir::SortFlags QDirModel::sorting() const
+QDir::SortFlags ResourceModel::sorting() const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     return d->sort;
 }
 
 /*!
-    \property QDirModel::resolveSymlinks
+    \property ResourceModel::resolveSymlinks
     \brief Whether the directory model should resolve symbolic links
 
     This is only relevant on operating systems that support symbolic
     links.
 */
-void QDirModel::setResolveSymlinks(bool enable)
+void ResourceModel::setResolveSymlinks(bool enable)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->resolveSymlinks = enable;
 }
 
-bool QDirModel::resolveSymlinks() const
+bool ResourceModel::resolveSymlinks() const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     return d->resolveSymlinks;
 }
 
 /*!
-  \property QDirModel::readOnly
+  \property ResourceModel::readOnly
   \brief Whether the directory model allows writing to the file system
 
   If this property is set to false, the directory model will allow renaming, copying
@@ -763,20 +763,20 @@ bool QDirModel::resolveSymlinks() const
   This property is true by default
 */
 
-void QDirModel::setReadOnly(bool enable)
+void ResourceModel::setReadOnly(bool enable)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->readOnly = enable;
 }
 
-bool QDirModel::isReadOnly() const
+bool ResourceModel::isReadOnly() const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     return d->readOnly;
 }
 
 /*!
-  \property QDirModel::lazyChildCount
+  \property ResourceModel::lazyChildCount
   \brief Whether the directory model optimizes the hasChildren function
   to only check if the item is a directory.
 
@@ -788,30 +788,30 @@ bool QDirModel::isReadOnly() const
   This property is false by default
 */
 
-void QDirModel::setLazyChildCount(bool enable)
+void ResourceModel::setLazyChildCount(bool enable)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     d->lazyChildCount = enable;
 }
 
-bool QDirModel::lazyChildCount() const
+bool ResourceModel::lazyChildCount() const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     return d->lazyChildCount;
 }
 
 /*!
-  QDirModel caches file information. This function updates the
+  ResourceModel caches file information. This function updates the
   cache. The \a parent parameter is the directory from which the
   model is updated; the default value will update the model from
   root directory of the file system (the entire model).
 */
 
-void QDirModel::refresh(const QModelIndex &parent)
+void ResourceModel::refresh(const QModelIndex &parent)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
 
-    QDirModelPrivate::QDirNode *n = d->indexValid(parent) ? d->node(parent) : &(d->root);
+    ResourceModelPrivate::QDirNode *n = d->indexValid(parent) ? d->node(parent) : &(d->root);
 
     int rows = n->children.count();
     if (rows == 0) {
@@ -840,9 +840,9 @@ void QDirModel::refresh(const QModelIndex &parent)
     Returns the model item index for the given \a path.
 */
 
-QModelIndex QDirModel::index(const QString &path, int column) const
+QModelIndex ResourceModel::index(const QString &path, int column) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
 
     if (path.isEmpty() || path == QCoreApplication::translate("QFileDialog", "My Computer"))
         return QModelIndex();
@@ -890,7 +890,7 @@ QModelIndex QDirModel::index(const QString &path, int column) const
         idx = index(r, 0, QModelIndex());
         pathElements.pop_front();
         if (childAppended)
-            emit const_cast<QDirModel*>(this)->layoutChanged();
+            emit const_cast<ResourceModel*>(this)->layoutChanged();
     } else
 #endif
 #if (defined(Q_OS_WIN) && !defined(Q_OS_WINCE)) || defined(Q_OS_SYMBIAN)
@@ -905,7 +905,7 @@ QModelIndex QDirModel::index(const QString &path, int column) const
     for (int i = 0; i < pathElements.count(); ++i) {
         Q_ASSERT(!pathElements.at(i).isEmpty());
         QString element = pathElements.at(i);
-        QDirModelPrivate::QDirNode *parent = (idx.isValid() ? d->node(idx) : &d->root);
+        ResourceModelPrivate::QDirNode *parent = (idx.isValid() ? d->node(idx) : &d->root);
 
         Q_ASSERT(parent);
         if (!parent->populated)
@@ -945,7 +945,7 @@ QModelIndex QDirModel::index(const QString &path, int column) const
             row = parent->children.count() - 1;
             if (i == pathElements.count() - 1) // always stat children of  the last element
                 parent->children[row].stat = true;
-            emit const_cast<QDirModel*>(this)->layoutChanged();
+            emit const_cast<ResourceModel*>(this)->layoutChanged();
         }
 
         Q_ASSERT(row >= 0);
@@ -963,11 +963,11 @@ QModelIndex QDirModel::index(const QString &path, int column) const
   otherwise returns false.
 */
 
-bool QDirModel::isDir(const QModelIndex &index) const
+bool ResourceModel::isDir(const QModelIndex &index) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     Q_ASSERT(d->indexValid(index));
-    QDirModelPrivate::QDirNode *node = d->node(index);
+    ResourceModelPrivate::QDirNode *node = d->node(index);
     return node->info.isDir();
 }
 
@@ -975,13 +975,13 @@ bool QDirModel::isDir(const QModelIndex &index) const
   Create a directory with the \a name in the \a parent model item.
 */
 
-QModelIndex QDirModel::mkdir(const QModelIndex &parent, const QString &name)
+QModelIndex ResourceModel::mkdir(const QModelIndex &parent, const QString &name)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     if (!d->indexValid(parent) || isReadOnly())
         return QModelIndex();
 
-    QDirModelPrivate::QDirNode *p = d->node(parent);
+    ResourceModelPrivate::QDirNode *p = d->node(parent);
     QString path = p->info.absoluteFilePath();
     // For the indexOf() method to work, the new directory has to be a direct child of
     // the parent directory.
@@ -1017,20 +1017,20 @@ QModelIndex QDirModel::mkdir(const QModelIndex &parent, const QString &name)
   \sa remove()
 */
 
-bool QDirModel::rmdir(const QModelIndex &index)
+bool ResourceModel::rmdir(const QModelIndex &index)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     if (!d->indexValid(index) || isReadOnly())
         return false;
 
-    QDirModelPrivate::QDirNode *n = d_func()->node(index);
+    ResourceModelPrivate::QDirNode *n = d_func()->node(index);
     if (!n->info.isDir()) {
         qWarning("rmdir: the node is not a directory");
         return false;
     }
 
     QModelIndex par = parent(index);
-    QDirModelPrivate::QDirNode *p = d_func()->node(par);
+    ResourceModelPrivate::QDirNode *p = d_func()->node(par);
     QDir dir = p->info.dir(); // parent dir
     QString path = n->info.absoluteFilePath();
     if (!dir.rmdir(path))
@@ -1052,18 +1052,18 @@ bool QDirModel::rmdir(const QModelIndex &index)
   \sa rmdir()
 */
 
-bool QDirModel::remove(const QModelIndex &index)
+bool ResourceModel::remove(const QModelIndex &index)
 {
-    Q_D(QDirModel);
+    Q_D(ResourceModel);
     if (!d->indexValid(index) || isReadOnly())
         return false;
 
-    QDirModelPrivate::QDirNode *n = d_func()->node(index);
+    ResourceModelPrivate::QDirNode *n = d_func()->node(index);
     if (n->info.isDir())
         return false;
 
     QModelIndex par = parent(index);
-    QDirModelPrivate::QDirNode *p = d_func()->node(par);
+    ResourceModelPrivate::QDirNode *p = d_func()->node(par);
     QDir dir = p->info.dir(); // parent dir
     QString path = n->info.absoluteFilePath();
     if (!dir.remove(path))
@@ -1080,9 +1080,9 @@ bool QDirModel::remove(const QModelIndex &index)
 
 */
 
-QString QDirModel::filePath(const QModelIndex &index) const
+QString ResourceModel::filePath(const QModelIndex &index) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     if (d->indexValid(index)) {
         QFileInfo fi = fileInfo(index);
         if (d->resolveSymlinks && fi.isSymLink())
@@ -1098,9 +1098,9 @@ QString QDirModel::filePath(const QModelIndex &index) const
 
 */
 
-QString QDirModel::fileName(const QModelIndex &index) const
+QString ResourceModel::fileName(const QModelIndex &index) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     if (!d->indexValid(index))
         return QString();
     QFileInfo info = fileInfo(index);
@@ -1116,12 +1116,12 @@ QString QDirModel::fileName(const QModelIndex &index) const
   \a index.
 */
 
-QIcon QDirModel::fileIcon(const QModelIndex &index) const
+QIcon ResourceModel::fileIcon(const QModelIndex &index) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     if (!d->indexValid(index))
         return d->iconProvider->icon(QFileIconProvider::Computer);
-    QDirModelPrivate::QDirNode *node = d->node(index);
+    ResourceModelPrivate::QDirNode *node = d->node(index);
     if (node->icon.isNull())
         node->icon = d->iconProvider->icon(node->info);
     return node->icon;
@@ -1138,17 +1138,17 @@ QIcon QDirModel::fileIcon(const QModelIndex &index) const
   \sa QFileInfo::symLinkTarget()
 */
 
-QFileInfo QDirModel::fileInfo(const QModelIndex &index) const
+QFileInfo ResourceModel::fileInfo(const QModelIndex &index) const
 {
-    Q_D(const QDirModel);
+    Q_D(const ResourceModel);
     Q_ASSERT(d->indexValid(index));
 
-    QDirModelPrivate::QDirNode *node = d->node(index);
+    ResourceModelPrivate::QDirNode *node = d->node(index);
     return node->info;
 }
 
 /*!
-  \fn QObject *QDirModel::parent() const
+  \fn QObject *ResourceModel::parent() const
   \internal
 */
 
@@ -1156,23 +1156,23 @@ QFileInfo QDirModel::fileInfo(const QModelIndex &index) const
   The root node is never seen outside the model.
 */
 
-void QDirModelPrivate::init()
+void ResourceModelPrivate::init()
 {
-    Q_Q(QDirModel);
+    Q_Q(ResourceModel);
     filters = QDir::AllEntries | QDir::NoDotAndDotDot;
     sort = QDir::Name;
     nameFilters << QLatin1String("*");
     root.parent = 0;
-    root.info = QFileInfo();
+    root.info = QFileInfo(":");
     clear(&root);
     QHash<int, QByteArray> roles = q->roleNames();
-    roles.insertMulti(QDirModel::FileIconRole, "fileIcon"); // == Qt::decoration
-    roles.insert(QDirModel::FilePathRole, "filePath");
-    roles.insert(QDirModel::FileNameRole, "fileName");
+    roles.insertMulti(ResourceModel::FileIconRole, "fileIcon"); // == Qt::decoration
+    roles.insert(ResourceModel::FilePathRole, "filePath");
+    roles.insert(ResourceModel::FileNameRole, "fileName");
     q->setRoleNames(roles);
 }
 
-QDirModelPrivate::QDirNode *QDirModelPrivate::node(int row, QDirNode *parent) const
+ResourceModelPrivate::QDirNode *ResourceModelPrivate::node(int row, QDirNode *parent) const
 {
     if (row < 0)
 	return 0;
@@ -1190,13 +1190,14 @@ QDirModelPrivate::QDirNode *QDirModelPrivate::node(int row, QDirNode *parent) co
     return const_cast<QDirNode*>(&p->children.at(row));
 }
 
-QVector<QDirModelPrivate::QDirNode> QDirModelPrivate::children(QDirNode *parent, bool stat) const
+QVector<ResourceModelPrivate::QDirNode> ResourceModelPrivate::children(QDirNode *parent, bool stat) const
 {
     Q_ASSERT(parent);
     QFileInfoList infoList;
     if (parent == &root) {
+      qDebug() << "HERE";
         parent = 0;
-        infoList = QDir::drives();
+        infoList.append(root.info);
     } else if (parent->info.isDir()) {
         //resolve directory links only if requested.
         if (parent->info.isSymLink() && resolveSymlinks) {
@@ -1227,16 +1228,16 @@ QVector<QDirModelPrivate::QDirNode> QDirModelPrivate::children(QDirNode *parent,
     return nodes;
 }
 
-void QDirModelPrivate::_q_refresh()
+void ResourceModelPrivate::_q_refresh()
 {
-    Q_Q(QDirModel);
+    Q_Q(ResourceModel);
     q->refresh(toBeRefreshed);
     toBeRefreshed = QModelIndex();
 }
 
-void QDirModelPrivate::savePersistentIndexes()
+void ResourceModelPrivate::savePersistentIndexes()
 {
-    Q_Q(QDirModel);
+    Q_Q(ResourceModel);
     savedPersistent.clear();
 //     foreach (QPersistentModelIndexData *data, q->persistentIndexes()) {
 //         SavedPersistent saved;
@@ -1249,9 +1250,9 @@ void QDirModelPrivate::savePersistentIndexes()
 //     }
 }
 
-void QDirModelPrivate::restorePersistentIndexes()
+void ResourceModelPrivate::restorePersistentIndexes()
 {
-    Q_Q(QDirModel);
+    Q_Q(ResourceModel);
 //     bool allow = allowAppendChild;
 //     allowAppendChild = false;
 //     for (int i = 0; i < savedPersistent.count(); ++i) {
@@ -1272,19 +1273,19 @@ void QDirModelPrivate::restorePersistentIndexes()
 //     allowAppendChild = allow;
 }
 
-QFileInfoList QDirModelPrivate::entryInfoList(const QString &path) const
+QFileInfoList ResourceModelPrivate::entryInfoList(const QString &path) const
 {
     const QDir dir(path);
     return dir.entryInfoList(nameFilters, filters, sort);
 }
 
-QStringList QDirModelPrivate::entryList(const QString &path) const
+QStringList ResourceModelPrivate::entryList(const QString &path) const
 {
     const QDir dir(path);
     return dir.entryList(nameFilters, filters, sort);
 }
 
-QString QDirModelPrivate::name(const QModelIndex &index) const
+QString ResourceModelPrivate::name(const QModelIndex &index) const
 {
     const QDirNode *n = node(index);
     const QFileInfo info = n->info;
@@ -1303,7 +1304,7 @@ QString QDirModelPrivate::name(const QModelIndex &index) const
     return info.fileName();
 }
 
-QString QDirModelPrivate::size(const QModelIndex &index) const
+QString ResourceModelPrivate::size(const QModelIndex &index) const
 {
     const QDirNode *n = node(index);
     if (n->info.isDir()) {
@@ -1336,12 +1337,12 @@ QString QDirModelPrivate::size(const QModelIndex &index) const
     return QFileSystemModel::tr("%1 byte(s)").arg(QLocale().toString(bytes));
 }
 
-QString QDirModelPrivate::type(const QModelIndex &index) const
+QString ResourceModelPrivate::type(const QModelIndex &index) const
 {
     return iconProvider->type(node(index)->info);
 }
 
-QString QDirModelPrivate::time(const QModelIndex &index) const
+QString ResourceModelPrivate::time(const QModelIndex &index) const
 {
 #ifndef QT_NO_DATESTRING
     return node(index)->info.lastModified().toString(Qt::LocalDate);
@@ -1351,9 +1352,9 @@ QString QDirModelPrivate::time(const QModelIndex &index) const
 #endif
 }
 
-void QDirModelPrivate::appendChild(QDirModelPrivate::QDirNode *parent, const QString &path) const
+void ResourceModelPrivate::appendChild(ResourceModelPrivate::QDirNode *parent, const QString &path) const
 {
-    QDirModelPrivate::QDirNode node;
+    ResourceModelPrivate::QDirNode node;
     node.populated = false;
     node.stat = shouldStat;
     node.parent = (parent == &root ? 0 : parent);
@@ -1362,7 +1363,7 @@ void QDirModelPrivate::appendChild(QDirModelPrivate::QDirNode *parent, const QSt
 
     // The following append(node) may reallocate the vector, thus
     // we need to update the pointers to the childnodes parent.
-    QDirModelPrivate *that = const_cast<QDirModelPrivate *>(this);
+    ResourceModelPrivate *that = const_cast<ResourceModelPrivate *>(this);
     that->savePersistentIndexes();
     parent->children.append(node);
     for (int i = 0; i < parent->children.count(); ++i) {
@@ -1373,7 +1374,7 @@ void QDirModelPrivate::appendChild(QDirModelPrivate::QDirNode *parent, const QSt
     that->restorePersistentIndexes();
 }
 
-QFileInfo QDirModelPrivate::resolvedInfo(QFileInfo info)
+QFileInfo ResourceModelPrivate::resolvedInfo(QFileInfo info)
 {
 #ifdef Q_OS_WIN
     // On windows, we cannot create a shortcut to a shortcut.
@@ -1396,6 +1397,4 @@ QFileInfo QDirModelPrivate::resolvedInfo(QFileInfo info)
 
 QT_END_NAMESPACE
 
-// #include "qdirmodel.moc"
-
-#endif // QT_NO_DIRMODEL
+#include "resourcemodel.moc"
