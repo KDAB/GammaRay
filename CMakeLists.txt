@@ -52,6 +52,7 @@ set(endoscope_srcs
   connectionfilterproxymodel.cpp
   scenemodel.cpp
   statemodel.cpp
+  transitionmodel.cpp
   util.cpp
   widgetpreviewwidget.cpp
   methodinvocationdialog.cpp
