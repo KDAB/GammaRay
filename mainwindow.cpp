@@ -98,6 +98,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   ResourceModel *resourceModel = new ResourceModel(this);
   ui.treeView->setModel(resourceModel);
+  ui.treeView->expandAll();
   connect( ui.treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(resourceSelected(QItemSelection,QItemSelection)));
 
   ObjectTypeFilterProxyModel<QStateMachine> *stateMachineFilter = new ObjectTypeFilterProxyModel<QStateMachine>( this );
@@ -248,6 +249,7 @@ void MainWindow::stateMachineSelected(const QItemSelection &selected, const QIte
     delete m_stateModel;
     m_stateModel = new StateModel( machine, this );
     ui.singleStateMachineView->setModel(m_stateModel);
+    ui.singleStateMachineView->expandAll();
   }
 }
 
