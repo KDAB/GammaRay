@@ -12,6 +12,8 @@ using namespace Endoscope;
 
 QString Util::displayString(const QObject* object)
 {
+  if ( !object )
+    return "QObject(0x0)";
   if ( object->objectName().isEmpty() ) {
     return QString::fromLatin1( "%1 (%2)" )
       .arg( addressToString( object ) )
