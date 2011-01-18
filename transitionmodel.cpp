@@ -69,7 +69,6 @@ void TransitionModel::setState(QState* state)
 {
   Q_D(TransitionModel);
   beginResetModel();
-  qDebug() << state;
   d->m_state = state;
   endResetModel();
 }
@@ -93,19 +92,18 @@ QVariant TransitionModel::data( const QModelIndex& index, int role ) const
 
     QObject* obj = d->mapModelIndex2QObject(index);
 
-    if (index.column() == 2 && role == Qt::DisplayRole) {
-      QSignalTransition *sigTransition = qobject_cast<QSignalTransition*>(obj);
-      if (sigTransition)
-        return sigTransition->signal();
-    } else if (index.column() == 3 && role == Qt::DisplayRole) {
-      QAbstractTransition *transition = qobject_cast<QAbstractTransition*>(obj);
-      if (transition)
-        return Util::displayString(transition->targetState());
-    }
-
-
-    if ( obj )
+    if ( obj ) {
+      if (index.column() == 2 && role == Qt::DisplayRole) {
+        QSignalTransition *sigTransition = qobject_cast<QSignalTransition*>(obj);
+        if (sigTransition)
+          return sigTransition->signal();
+      } else if (index.column() == 3 && role == Qt::DisplayRole) {
+        QAbstractTransition *transition = qobject_cast<QAbstractTransition*>(obj);
+        if (transition)
+          return Util::displayString(transition->targetState());
+      }
       return dataForObject( obj, index, role );
+    }
     return QVariant();
 }
 
