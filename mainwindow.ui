@@ -292,6 +292,7 @@
          </property>
          <widget class="QTreeView" name="stateMachinesView"/>
          <widget class="QTreeView" name="singleStateMachineView"/>
+         <widget class="QTreeView" name="transitionView"/>
         </widget>
        </item>
       </layout>

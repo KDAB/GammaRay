@@ -10,6 +10,7 @@ namespace Endoscope {
 class ModelCellModel;
 class SceneModel;
 class StateModel;
+class TransitionModel;
 
 class MainWindow : public QMainWindow
 {
@@ -30,12 +31,14 @@ class MainWindow : public QMainWindow
     void webPageSelected(int index);
     void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void stateMachineSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void stateSelected(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
     Ui::MainWindow ui;
     SceneModel *m_sceneModel;
     StateModel *m_stateModel;
     ModelCellModel *m_cellModel;
+    TransitionModel *m_transitionModel;
 };
 
 }

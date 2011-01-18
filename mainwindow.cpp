@@ -10,6 +10,7 @@
 #include "modelmodel.h"
 #include "modelcellmodel.h"
 #include "statemodel.h"
+#include "transitionmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -106,6 +107,9 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.stateMachinesView->setModel(stateMachineFilter);
   connect( ui.stateMachinesView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(stateMachineSelected(QItemSelection,QItemSelection)));
   m_stateModel = 0;
+
+  m_transitionModel = new TransitionModel(this);
+  ui.transitionView->setModel(m_transitionModel);
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
@@ -250,6 +254,18 @@ void MainWindow::stateMachineSelected(const QItemSelection &selected, const QIte
     m_stateModel = new StateModel( machine, this );
     ui.singleStateMachineView->setModel(m_stateModel);
     ui.singleStateMachineView->expandAll();
+    connect(ui.singleStateMachineView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                                                         SLOT(stateSelected(QItemSelection,QItemSelection)));
+  }
+}
+
+void MainWindow::stateSelected(const QItemSelection &selected, const QItemSelection &deselected)
+{
+  const QModelIndex selectedRow = selected.first().topLeft();
+  QObject *stateObject = selectedRow.data( StateModel::StateObjectRole ).value<QObject*>();
+  QState *state = qobject_cast<QState*>(stateObject);
+  if (state) {
+    m_transitionModel->setState(state);
   }
 }
 
