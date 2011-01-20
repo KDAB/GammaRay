@@ -297,6 +297,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_9">
+      <attribute name="title">
+       <string>MetaTypes</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QTreeView" name="metaTypeView"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
