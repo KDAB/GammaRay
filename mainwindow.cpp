@@ -114,7 +114,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   MetaTypesModel *mtm = new MetaTypesModel(this);
 
-  ui.metaTypesView->setModel(mtm);
+  ui.metaTypeView->setModel(mtm);
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
