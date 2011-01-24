@@ -307,6 +307,22 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_10">
+      <attribute name="title">
+       <string>SelectionModels</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QSplitter" name="splitter_9">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QTreeView" name="selectionModelView"/>
+         <widget class="QTreeView" name="selectionModelVisualizer"/>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
