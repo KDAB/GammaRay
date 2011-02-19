@@ -13,6 +13,7 @@
 #include "transitionmodel.h"
 #include "metatypesmodel.h"
 #include "fontmodel.h"
+#include "codecmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -28,6 +29,8 @@
 #include <QtGui/QItemSelection>
 #include <QtCore/QStateMachine>
 #include <QFontDatabase>
+#include <QtGui/QStringListModel>
+#include <QtCore/qtextcodec.h>
 
 using namespace Endoscope;
 
@@ -147,6 +150,15 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   }
   connect(ui.fontTree->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateFonts(QItemSelection,QItemSelection)));
   connect(ui.fontText, SIGNAL(textChanged(QString)), m_selectedFontModel, SLOT(updateText(QString)));
+
+  ui.codecList->setModel(new AllCodecsModel(this));
+  ui.codecList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+  m_selectedCodecsModel = new SelectedCodecsModel(this);
+  ui.selectedCodecs->setModel(m_selectedCodecsModel);
+
+  connect(ui.codecList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCodecs(QItemSelection,QItemSelection)));
+  connect(ui.codecText, SIGNAL(textChanged(QString)), m_selectedCodecsModel, SLOT(updateText(QString)));
+
 }
 
 void MainWindow::objectSelected( const QModelIndex &index )
@@ -348,5 +360,23 @@ void MainWindow::updateFonts(const QItemSelection& selected, const QItemSelectio
   currentFonts << previousFonts;
   m_selectedFontModel->updateFonts(currentFonts);
 }
+
+void MainWindow::updateCodecs(const QItemSelection& selected, const QItemSelection& deselected)
+{
+  QStringList previousCodecs = m_selectedCodecsModel->currentCodecs();
+
+  QStringList currentCodecNames;
+  foreach(const QModelIndex &index, ui.codecList->selectionModel()->selectedRows()) {
+    const QString codecName = index.data().toString();
+    if (previousCodecs.contains(codecName)) {
+      continue;
+    }
+    currentCodecNames.append(codecName);
+  }
+
+  currentCodecNames << previousCodecs;
+  m_selectedCodecsModel->setCodecs(currentCodecNames);
+}
+
 
 #include "mainwindow.moc"
