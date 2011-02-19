@@ -64,6 +64,7 @@ set(endoscope_srcs
   graphicsview.cpp
   graphicssceneview.cpp
   metatypesmodel.cpp
+  fontmodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
