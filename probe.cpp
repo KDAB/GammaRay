@@ -8,6 +8,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include <QtCore/QThread>
 #include <qevent.h>
 #include <qgraphicsview.h>
 
@@ -45,6 +46,16 @@ static bool probeDisconnectCallback( void ** args )
 
 }
 
+struct Listener
+{
+  Listener()
+    : active(true)
+  { }
+
+  bool active;
+};
+
+Q_GLOBAL_STATIC( Listener, s_listener )
 Q_GLOBAL_STATIC( QVector<QObject*>, s_addedBeforeProbeInsertion )
 
 Probe::Probe(QObject* parent):
@@ -53,22 +64,35 @@ Probe::Probe(QObject* parent):
   m_objectTreeModel( new ObjectTreeModel( this ) ),
   m_connectionModel( new ConnectionModel( this ) ),
   m_modelTester( new ModelTester( this ) ),
-  m_modelModel( new ModelModel( this ) )
+  m_modelModel( new ModelModel( this ) ),
+  m_window(0)
 {
   qDebug() << Q_FUNC_INFO;
-  
+
   qRegisterMetaType<QPointer<QObject> >();
 
   QInternal::registerCallback( QInternal::ConnectCallback, &Endoscope::probeConnectCallback );
   QInternal::registerCallback( QInternal::DisconnectCallback, &Endoscope::probeDisconnectCallback );
 }
 
+void Probe::setWindow(Endoscope::MainWindow* window)
+{
+  m_window = window;
+}
+
+Endoscope::MainWindow* Probe::window() const
+{
+  return m_window;
+}
+
 Probe* Endoscope::Probe::instance()
 {
   if ( !s_instance ) {
+    s_listener()->active = false;
     s_instance = new Probe;
     QCoreApplication::instance()->installEventFilter( s_instance );
     QMetaObject::invokeMethod( s_instance, "delayedInit", Qt::QueuedConnection );
+    s_listener()->active = true;
   }
   return s_instance;
 }
@@ -84,8 +108,21 @@ void Probe::delayedInit()
     objectAdded( obj );
   s_addedBeforeProbeInsertion()->clear();
 
+  s_listener()->active = false;
   Endoscope::MainWindow *window = new Endoscope::MainWindow;
+  instance()->setWindow(window);
   window->show();
+  s_listener()->active = true;
+}
+
+static bool descendantOf(QObject *ascendant, QObject *obj)
+{
+  QObject *parent = obj->parent();
+  if (!parent)
+    return false;
+  if (parent == ascendant)
+    return true;
+  return descendantOf(ascendant, parent);
 }
 
 ObjectListModel* Probe::objectListModel() const
@@ -115,7 +152,12 @@ ModelModel* Probe::modelModel() const
 
 void Probe::objectAdded(QObject* obj)
 {
-  if ( isInitialized() ) {
+  if ( !s_listener()->active && obj->thread() == QThread::currentThread() ) {
+    // Ignore
+      return;
+  } else if ( isInitialized() ) {
+    if (obj == instance()->window() || descendantOf(instance()->window(), obj))
+      return;
     // use queued connection so object is fully constructed when we check if it's a model
     const QPointer<QObject> objPtr( obj );
     QMetaObject::invokeMethod( instance()->objectListModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
@@ -151,15 +193,16 @@ void Probe::objectRemoved(QObject* obj)
 
 void Probe::connectionAdded(QObject* sender, const char* signal, QObject* receiver, const char* method, Qt::ConnectionType type)
 {
-  if ( !isInitialized() )
+  if ( !isInitialized() || !s_listener()->active || descendantOf(instance()->window(), sender) || descendantOf(instance()->window(), receiver))
     return;
   instance()->m_connectionModel->connectionAdded( sender, signal, receiver, method, type );
 }
 
 void Probe::connectionRemoved(QObject* sender, const char* signal, QObject* receiver, const char* method)
 {
-  if ( !isInitialized() )
+  if ( !isInitialized() || !s_listener()->active || (sender && descendantOf(instance()->window(), sender)) || (receiver && descendantOf(instance()->window(), receiver)))
     return;
+
   instance()->m_connectionModel->connectionRemoved( sender, signal, receiver, method );
 }
 

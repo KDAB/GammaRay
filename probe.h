@@ -13,6 +13,8 @@ class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
 
+class MainWindow;
+
 class Probe : public QObject
 {
   Q_OBJECT
@@ -33,6 +35,9 @@ class Probe : public QObject
 
     static const char* connectLocation( const char *member );
 
+    Endoscope::MainWindow *window() const;
+    void setWindow(Endoscope::MainWindow *window);
+
   signals:
     void widgetSelected( QWidget* widget );
     void graphicsItemSelected( QGraphicsItem* item );
@@ -52,6 +57,7 @@ class Probe : public QObject
     ConnectionModel *m_connectionModel;
     ModelTester *m_modelTester;
     ModelModel *m_modelModel;
+    Endoscope::MainWindow *m_window;
 };
 
 }
