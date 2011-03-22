@@ -66,6 +66,7 @@ set(endoscope_srcs
   metatypesmodel.cpp
   fontmodel.cpp
   codecmodel.cpp
+  textdocumentmodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp

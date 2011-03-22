@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1049</width>
     <height>600</height>
    </rect>
   </property>
@@ -39,6 +39,9 @@
              <property name="allColumnsShowFocus">
               <bool>true</bool>
              </property>
+             <attribute name="headerShowSortIndicator" stdset="0">
+              <bool>true</bool>
+             </attribute>
              <attribute name="headerShowSortIndicator" stdset="0">
               <bool>true</bool>
              </attribute>
@@ -175,6 +178,9 @@
             </item>
             <item>
              <widget class="QTreeView" name="sceneTreeView">
+              <attribute name="headerShowSortIndicator" stdset="0">
+               <bool>true</bool>
+              </attribute>
               <attribute name="headerShowSortIndicator" stdset="0">
                <bool>true</bool>
               </attribute>
@@ -383,6 +389,23 @@
            </item>
           </layout>
          </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_13">
+      <attribute name="title">
+       <string>Documents</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_17">
+       <item>
+        <widget class="QSplitter" name="splitter_12">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <widget class="QTreeView" name="documentList"/>
+         <widget class="QTreeView" name="documentTree"/>
+         <widget class="QTextEdit" name="documentView"/>
         </widget>
        </item>
       </layout>

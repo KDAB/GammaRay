@@ -14,6 +14,7 @@
 #include "metatypesmodel.h"
 #include "fontmodel.h"
 #include "codecmodel.h"
+#include "textdocumentmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -159,6 +160,12 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect(ui.codecList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCodecs(QItemSelection,QItemSelection)));
   connect(ui.codecText, SIGNAL(textChanged(QString)), m_selectedCodecsModel, SLOT(updateText(QString)));
 
+  ObjectTypeFilterProxyModel<QTextDocument> *documentFilter = new ObjectTypeFilterProxyModel<QTextDocument>( this );
+  documentFilter->setSourceModel( Probe::instance()->objectListModel() );
+  ui.documentList->setModel( documentFilter );
+  connect( ui.documentList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(documentSelected(QItemSelection,QItemSelection)) );
+  m_textDocumentModel = new TextDocumentModel( this );
+  ui.documentTree->setModel( m_textDocumentModel );
 }
 
 void MainWindow::objectSelected( const QModelIndex &index )
@@ -378,5 +385,14 @@ void MainWindow::updateCodecs(const QItemSelection& selected, const QItemSelecti
   m_selectedCodecsModel->setCodecs(currentCodecNames);
 }
 
+void MainWindow::documentSelected(const QItemSelection& selected, const QItemSelection& deselected)
+{
+  const QModelIndex selectedRow = selected.first().topLeft();
+  QObject *selectedObj = selectedRow.data( ObjectListModel::ObjectRole ).value<QObject*>();
+  QTextDocument *doc = qobject_cast<QTextDocument*>( selectedObj );
+  if ( doc )
+    ui.documentView->setDocument( doc );
+  m_textDocumentModel->setDocument( doc );
+}
 
 #include "mainwindow.moc"
