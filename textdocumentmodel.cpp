@@ -31,23 +31,24 @@ void TextDocumentModel::fillModel()
     return;
 
   QStandardItem* item = new QStandardItem( tr("Root Frame" ) );
-  appendRow( item );
+  appendRow( QList<QStandardItem*>() << item << formatItem( m_document->rootFrame()->frameFormat() ) );
   fillFrame( m_document->rootFrame(), item );
+  setHorizontalHeaderLabels( QStringList() << tr("Element") << tr("Format") );
 }
 
 void TextDocumentModel::fillFrame(QTextFrame* frame, QStandardItem* parent)
 {
   for ( QTextFrame::iterator it = frame->begin(); it != frame->end(); ++it ) {
     QStandardItem *item = new QStandardItem;
-    if ( it.currentFrame() ) {
+    if ( QTextFrame *frame = it.currentFrame() ) {
       item->setText( tr( "Frame" ) );
-      parent->appendRow( item );
-      fillFrame( it.currentFrame(), item );
+      parent->appendRow( QList<QStandardItem*>() << item << formatItem( frame->frameFormat() ) );
+      fillFrame( frame, item );
     }
     const QTextBlock block = it.currentBlock();
     if ( block.isValid() ) {
       item->setText( tr( "Block: %1" ).arg( block.text() ) );
-      parent->appendRow( item );
+      parent->appendRow( QList<QStandardItem*>() << item << formatItem( block.blockFormat() )  );
       fillBlock( block, item );
     }
   } 
@@ -57,8 +58,22 @@ void TextDocumentModel::fillBlock(const QTextBlock& block, QStandardItem* parent
 {
   for ( QTextBlock::iterator it = block.begin(); it != block.end(); ++it ) {
     QStandardItem *item = new QStandardItem( tr( "Fragment: %1" ).arg( it.fragment().text() ) );
-    parent->appendRow( item );
+    parent->appendRow( QList<QStandardItem*>() << item << formatItem( it.fragment().charFormat() ) );
   }
+}
+
+QStandardItem* TextDocumentModel::formatItem(const QTextFormat& format)
+{
+  QStandardItem *item = new QStandardItem;
+  if ( !format.isValid() ) {
+    item->setText( tr( "no format" ) );
+  } else if ( format.isImageFormat() ) {
+    const QTextImageFormat imgformat = format.toImageFormat();
+    item->setText( tr("Image: %1").arg( imgformat.name() ) );
+  } else {
+    item->setText( tr("Format type: %1").arg( format.type() ) );
+  }
+  return item;
 }
 
 #include "textdocumentmodel.moc"

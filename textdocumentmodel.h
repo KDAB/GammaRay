@@ -21,6 +21,7 @@ class TextDocumentModel : public QStandardItemModel
     void fillModel();
     void fillFrame( QTextFrame *frame, QStandardItem* parent );
     void fillBlock( const QTextBlock &block, QStandardItem *parent );
+    QStandardItem *formatItem( const QTextFormat &format );
 
   private slots:
     void documentChanged();
