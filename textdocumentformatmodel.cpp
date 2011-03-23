@@ -1,5 +1,6 @@
 #include "textdocumentformatmodel.h"
 #include <qmetaobject.h>
+#include "util.h"
 
 using namespace Endoscope;
 
@@ -39,7 +40,7 @@ QVariant TextDocumentFormatModel::data(const QModelIndex& index, int role) const
     const int enumValue = propertyEnum().value( index.row() );
     switch ( index.column() ) {
       case 0: return QString::fromLatin1( propertyEnum().key( index.row() ) );
-      case 1: return m_format.property( enumValue );
+      case 1: return Util::variantToString( m_format.property( enumValue ) );
       case 2: return QString::fromLatin1( m_format.property( enumValue ).typeName() );
     }
   }

@@ -7,6 +7,7 @@
 #include <qrect.h>
 #include <qsizepolicy.h>
 #include <qmetaobject.h>
+#include <QtGui/qtextformat.h>
 
 using namespace Endoscope;
 
@@ -58,9 +59,21 @@ QString Endoscope::Util::variantToString(const QVariant& value)
         .arg( sizePolicyToString( value.value<QSizePolicy>().verticalPolicy() ) );
     case QVariant::StringList:
       return value.toStringList().join( ", " );
-    default:
-      return value.toString();
   }
+
+  // types with dynamic type ids
+  if ( value.type() == qMetaTypeId<QTextLength>() ) {
+    const QTextLength l = value.value<QTextLength>();
+    QString typeStr;
+    switch ( l.type() ) {
+      case QTextLength::VariableLength: typeStr = QObject::tr( "variable" ); break;
+      case QTextLength::FixedLength: typeStr = QObject::tr( "fixed" ); break;
+      case QTextLength::PercentageLength: typeStr = QObject::tr( "percentage" ); break;
+    }
+    return QString::fromLatin1( "%1 (%2)" ).arg( l.rawValue() ).arg( typeStr );
+  }
+
+  return value.toString();
 }
 
 QString Util::addressToString( const void* p )
