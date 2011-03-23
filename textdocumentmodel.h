@@ -2,7 +2,9 @@
 #define ENDOSCOPE_TEXTDOCUMENTMODEL_H
 
 #include <QStandardItemModel>
+#include <qtextobject.h>
 
+class QTextTable;
 class QTextBlock;
 class QTextFrame;
 class QTextDocument;
@@ -20,6 +22,8 @@ class TextDocumentModel : public QStandardItemModel
   private:
     void fillModel();
     void fillFrame( QTextFrame *frame, QStandardItem* parent );
+    void fillFrameIterator( const QTextFrame::iterator &it, QStandardItem *parent );
+    void fillTable( QTextTable *table, QStandardItem* parent );
     void fillBlock( const QTextBlock &block, QStandardItem *parent );
     QStandardItem *formatItem( const QTextFormat &format );
 
