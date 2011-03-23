@@ -17,6 +17,10 @@ class TextDocumentModel : public QStandardItemModel
   public:
     explicit TextDocumentModel( QObject * parent = 0 );
 
+    enum Roles {
+      FormatRole = Qt::UserRole
+    };
+
     void setDocument( QTextDocument *doc );
 
   private:
@@ -26,6 +30,7 @@ class TextDocumentModel : public QStandardItemModel
     void fillTable( QTextTable *table, QStandardItem* parent );
     void fillBlock( const QTextBlock &block, QStandardItem *parent );
     QStandardItem *formatItem( const QTextFormat &format );
+    void appendRow( QStandardItem *parent, QStandardItem *item, const QTextFormat &format );
 
   private slots:
     void documentChanged();

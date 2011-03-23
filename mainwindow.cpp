@@ -15,6 +15,7 @@
 #include "fontmodel.h"
 #include "codecmodel.h"
 #include "textdocumentmodel.h"
+#include "textdocumentformatmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -166,6 +167,9 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.documentList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(documentSelected(QItemSelection,QItemSelection)) );
   m_textDocumentModel = new TextDocumentModel( this );
   ui.documentTree->setModel( m_textDocumentModel );
+  connect( ui.documentTree->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(documentElementSelected(QItemSelection,QItemSelection)) );
+  m_textDocumentFormatModel = new TextDocumentFormatModel( this );
+  ui.documentFormatView->setModel( m_textDocumentFormatModel );
 }
 
 void MainWindow::objectSelected( const QModelIndex &index )
@@ -394,5 +398,13 @@ void MainWindow::documentSelected(const QItemSelection& selected, const QItemSel
     ui.documentView->setDocument( doc );
   m_textDocumentModel->setDocument( doc );
 }
+
+void MainWindow::documentElementSelected(const QItemSelection& selected, const QItemSelection& deselected)
+{
+  const QModelIndex selectedRow = selected.first().topLeft();
+  const QTextFormat f = selectedRow.data( TextDocumentModel::FormatRole ).value<QTextFormat>();
+  m_textDocumentFormatModel->setFormat( f );
+}
+
 
 #include "mainwindow.moc"

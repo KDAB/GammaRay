@@ -14,6 +14,7 @@ class TransitionModel;
 class FontModel;
 class SelectedCodecsModel;
 class TextDocumentModel;
+class TextDocumentFormatModel;
 
 class MainWindow : public QMainWindow
 {
@@ -39,6 +40,7 @@ class MainWindow : public QMainWindow
     void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
     Ui::MainWindow ui;
@@ -49,6 +51,7 @@ class MainWindow : public QMainWindow
     FontModel *m_selectedFontModel;
     SelectedCodecsModel *m_selectedCodecsModel;
     TextDocumentModel *m_textDocumentModel;
+    TextDocumentFormatModel *m_textDocumentFormatModel;
 };
 
 }

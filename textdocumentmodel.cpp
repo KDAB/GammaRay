@@ -31,7 +31,9 @@ void TextDocumentModel::fillModel()
     return;
 
   QStandardItem* item = new QStandardItem( tr("Root Frame" ) );
-  appendRow( QList<QStandardItem*>() << item << formatItem( m_document->rootFrame()->frameFormat() ) );
+  const QTextFormat f = m_document->rootFrame()->frameFormat();
+  item->setData( QVariant::fromValue( f ), FormatRole );
+  QStandardItemModel::appendRow( QList<QStandardItem*>() << item << formatItem( m_document->rootFrame()->frameFormat() ) );
   fillFrame( m_document->rootFrame(), item );
   setHorizontalHeaderLabels( QStringList() << tr("Element") << tr("Format") );
 }
@@ -49,18 +51,18 @@ void TextDocumentModel::fillFrameIterator(const QTextFrame::iterator& it, QStand
     QTextTable *table = qobject_cast<QTextTable*>( frame );
     if ( table ) {
       item->setText( tr( "Table" ) );
-      parent->appendRow( QList<QStandardItem*>() << item << formatItem( table->format() ) );
+      appendRow( parent, item, table->format() );
       fillTable( table, item );
     } else {
       item->setText( tr( "Frame" ) );
-      parent->appendRow( QList<QStandardItem*>() << item << formatItem( frame->frameFormat() ) );
+      appendRow( parent, item, frame->frameFormat() );
       fillFrame( frame, item );
     }
   }
   const QTextBlock block = it.currentBlock();
   if ( block.isValid() ) {
     item->setText( tr( "Block: %1" ).arg( block.text() ) );
-    parent->appendRow( QList<QStandardItem*>() << item << formatItem( block.blockFormat() )  );
+    appendRow( parent, item, block.blockFormat() );
     fillBlock( block, item );
   }
 }
@@ -73,7 +75,7 @@ void TextDocumentModel::fillTable(QTextTable* table, QStandardItem* parent)
       QTextTableCell cell = table->cellAt( row, col );
       QStandardItem *item = new QStandardItem;
       item->setText( tr( "Cell %1x%2" ).arg( row ).arg( col ) );
-      parent->appendRow( QList<QStandardItem*>() << item << formatItem( cell.format() ) );
+      appendRow( parent, item, cell.format() );
       for ( QTextFrame::iterator it = cell.begin(); it != cell.end(); ++it )
         fillFrameIterator( it, item );
     }
@@ -84,7 +86,7 @@ void TextDocumentModel::fillBlock(const QTextBlock& block, QStandardItem* parent
 {
   for ( QTextBlock::iterator it = block.begin(); it != block.end(); ++it ) {
     QStandardItem *item = new QStandardItem( tr( "Fragment: %1" ).arg( it.fragment().text() ) );
-    parent->appendRow( QList<QStandardItem*>() << item << formatItem( it.fragment().charFormat() ) );
+    appendRow( parent, item, it.fragment().charFormat() );
   }
 }
 
@@ -101,5 +103,12 @@ QStandardItem* TextDocumentModel::formatItem(const QTextFormat& format)
   }
   return item;
 }
+
+void TextDocumentModel::appendRow(QStandardItem* parent, QStandardItem* item, const QTextFormat& format)
+{
+  item->setData( QVariant::fromValue( format ), FormatRole );
+  parent->appendRow( QList<QStandardItem*>() << item << formatItem( format ) );
+}
+
 
 #include "textdocumentmodel.moc"
