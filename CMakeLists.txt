@@ -19,6 +19,10 @@ include_directories(
 set(INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION bin
                                  LIBRARY DESTINATION lib
                                  ARCHIVE DESTINATION lib COMPONENT Devel)
+if(WIN32)
+    add_definitions(-DUNICODE)
+endif(WIN32)
+
 if(APPLE)
   # on the Mac support an extra install directory for application bundles
   set(INSTALL_TARGETS_DEFAULT_ARGS ${INSTALL_TARGETS_DEFAULT_ARGS}
@@ -27,12 +31,15 @@ endif(APPLE)
 
 
 # TODO find a nicer way for all this, ideally auto-detect the name mangling format, but at least guess a default based on OS + compiler
-option(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES FALSE "Enable if your compiler uses an unsupported C++ name mangling scheme")
+option(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES "Enable if your compiler uses an unsupported C++ name mangling scheme" OFF)
 if(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
   add_definitions(-DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
 endif()
 
 set(endoscope_runner_srcs main.cpp)
+if(WIN32)
+    set(endoscope_runner_srcs ${endoscope_runner_srcs} windllinjection.cpp)
+endif(WIN32)
 add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
 
@@ -83,13 +90,17 @@ qt4_wrap_ui(endoscope_srcs
 )
 add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
-  dl
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${QT_QTSCRIPT_LIBRARY}
   ${QT_QTSCRIPTTOOLS_LIBRARY}
   ${QT_QTWEBKIT_LIBRARY}
 )
+if(NOT WIN32)
+    target_link_libraries(endoscope_probe
+      dl
+    )
+endif(NOT WIN32)
 set_target_properties(endoscope_probe PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})

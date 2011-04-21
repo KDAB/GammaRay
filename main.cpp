@@ -5,6 +5,12 @@
 #include <QFile>
 #include <QProcess>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include "windllinjection.h"
+#endif
+
+
 int main( int argc, char** argv )
 {
   QCoreApplication app( argc, argv );
@@ -16,6 +22,7 @@ int main( int argc, char** argv )
   }
 
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+#ifndef Q_OS_WIN
   if ( env.value( "LD_PRELOAD").isEmpty() ) {
     QStringList pldirs;
     pldirs << "/usr/local/lib64" << "/usr/local/lib"
@@ -41,4 +48,33 @@ int main( int argc, char** argv )
   proc.start( program, args );
   proc.waitForFinished( -1 );
   return proc.exitCode();
+#else
+  DWORD dwCreationFlags = CREATE_NO_WINDOW;
+  dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
+  dwCreationFlags |= CREATE_SUSPENDED;
+  STARTUPINFOW startupInfo = { sizeof( STARTUPINFO ), 0, 0, 0,
+                               (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
+                               (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
+                               0, 0, 0, STARTF_USESTDHANDLES, 0, 0, 0, 
+                               GetStdHandle(STD_INPUT_HANDLE), GetStdHandle(STD_OUTPUT_HANDLE), GetStdHandle(STD_ERROR_HANDLE)
+  };
+  PROCESS_INFORMATION pid;
+  memset(&pid, 0, sizeof(PROCESS_INFORMATION));
+
+  BOOL success = CreateProcess(0, (wchar_t*)args.join(" ").utf16(),
+                               0, 0, TRUE, dwCreationFlags,
+                               0, 0,
+                               &startupInfo, &pid);
+  Endoscope::WinDllInjection in;
+  in.setDestinationProcess(pid.hProcess, pid.hThread);
+  QString dllPath = QCoreApplication::applicationDirPath() + "/endoscope_probe.dll";
+  dllPath.replace("/", "\\");
+  in.setInjectionDll(dllPath);
+  in.inject();
+  ResumeThread(pid.hThread);
+  WaitForSingleObject(pid.hProcess, INFINITE);
+  DWORD exitCode;
+  GetExitCodeProcess(pid.hProcess, &exitCode);
+  return exitCode;
+#endif
 }

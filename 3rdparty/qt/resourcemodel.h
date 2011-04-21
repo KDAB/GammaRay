@@ -54,7 +54,7 @@ QT_MODULE(Gui)
 
 class ResourceModelPrivate;
 
-class Q_GUI_EXPORT ResourceModel : public QAbstractItemModel
+class ResourceModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(bool resolveSymlinks READ resolveSymlinks WRITE setResolveSymlinks)

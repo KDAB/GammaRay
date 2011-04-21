@@ -12,7 +12,11 @@
 #include <qevent.h>
 #include <qgraphicsview.h>
 
+#ifndef Q_OS_WIN
 #include <dlfcn.h>
+#else
+#include <windows.h>
+#endif
 
 using namespace Endoscope;
 
@@ -253,34 +257,71 @@ const char* Probe::connectLocation(const char* member)
 
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
+#ifndef Q_OS_WIN
   static void (*next_qt_startup_hook)() = (void (*)()) dlsym( RTLD_NEXT, "qt_startup_hook" );
+#endif
   qDebug() << Q_FUNC_INFO;
   Probe::instance();
+#ifndef Q_OS_WIN
   next_qt_startup_hook();
+#endif
 }
 
 extern "C" Q_DECL_EXPORT void qt_addObject( QObject *obj )
 {
+#ifndef Q_OS_WIN
   static void (*next_qt_addObject)(QObject* obj) = (void (*)(QObject *obj)) dlsym( RTLD_NEXT, "qt_addObject" );
+#else
+  static void (*next_qt_addObject)(QObject* obj);
+#endif
   Probe::objectAdded( obj );
   next_qt_addObject( obj );
 }
 
 extern "C" Q_DECL_EXPORT void qt_removeObject( QObject *obj )
 {
+#ifndef Q_OS_WIN
   static void (*next_qt_removeObject)(QObject* obj) = (void (*)(QObject *obj)) dlsym( RTLD_NEXT, "qt_removeObject" );
+#else
+  static void (*next_qt_removeObject)(QObject* obj);
+#endif
   Probe::objectRemoved( obj );
   next_qt_removeObject( obj );
 }
 
+#ifdef Q_OS_WIN
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /* lpvReserved */ ) {
+    switch(dwReason) {
+        case DLL_PROCESS_ATTACH:
+        {
+            qt_startup_hook();
+            break;
+        }
+        case DLL_PROCESS_DETACH:
+        {
+            break;
+        }
+    };
+    return TRUE;
+}
+#endif
+
 #ifndef ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES
+#ifndef Q_OS_WIN
 Q_DECL_EXPORT const char* qFlagLocation( const char* method )
+#else
+Q_DECL_EXPORT const char* myFlagLocation( const char* method )
+#endif
 {
   static int endoscope_idx = 0;
   endoscope_flagged_locations[endoscope_idx] = method;
   endoscope_idx = (endoscope_idx+1) % endoscope_flagged_locations_count;
 
+#ifndef Q_OS_WIN
   static const char* (*next_qFlagLocation)(const char* method) = (const char* (*)(const char* method)) dlsym( RTLD_NEXT, "_Z13qFlagLocationPKc" );
+#else
+  static const char* (*next_qFlagLocation)(const char* method);
+#endif
   Q_ASSERT_X( next_qFlagLocation, "", "Recompile with ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES enabled, your compiler uses an unsupported C++ name mangling scheme" );
   return next_qFlagLocation( method );
 }
