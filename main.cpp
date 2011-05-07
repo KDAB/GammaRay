@@ -1,4 +1,6 @@
 
+#include "config-endoscope.h"
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -29,7 +31,8 @@ int main( int argc, char** argv )
 #ifndef Q_OS_WIN
   if ( env.value( "LD_PRELOAD").isEmpty() ) {
     QStringList pldirs;
-    pldirs << "/usr/local/lib64" << "/usr/local/lib"
+    pldirs << ENDOSCOPE_LIB_INSTALL_DIR
+           << "/usr/local/lib64" << "/usr/local/lib"
            << "/opt/lib64" << "/opt/lib"
            << "/usr/lib64" << "/usr/lib";
     QDir::setSearchPaths( "preloads", pldirs );

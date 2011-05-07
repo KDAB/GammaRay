@@ -24,9 +24,12 @@ if(USE_DETOURS)
   add_definitions(-DUSE_DETOURS)
 endif(USE_DETOURS)
 
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
+set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
+
 set(INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION bin
-                                 LIBRARY DESTINATION lib
-                                 ARCHIVE DESTINATION lib COMPONENT Devel)
+                                 LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+                                 ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel)
 if(WIN32)
   add_definitions(-DUNICODE)
 endif(WIN32)
@@ -43,6 +46,8 @@ option(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES "Enable if your compiler uses an unsup
 if(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
   add_definitions(-DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
 endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h)
 
 set(endoscope_runner_srcs main.cpp)
 if(WIN32 AND NOT USE_DETOURS)
