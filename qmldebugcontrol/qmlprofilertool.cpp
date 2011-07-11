@@ -94,8 +94,8 @@ public:
     QString m_ostDevice;
 };
 
-QmlProfilerTool::QmlProfilerTool(QObject *parent)
-    : QObject(parent), d(new QmlProfilerToolPrivate(this))
+QmlProfilerTool::QmlProfilerTool(QWidget *parent)
+    : QWidget(parent), d(new QmlProfilerToolPrivate(this))
 {
     setObjectName("QmlProfilerTool");
     d->m_client = 0;

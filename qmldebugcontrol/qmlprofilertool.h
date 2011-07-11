@@ -39,12 +39,12 @@
 namespace QmlProfiler {
 namespace Internal {
 
-class QmlProfilerTool : public QObject // Analyzer::IAnalyzerTool
+class QmlProfilerTool : public QWidget // Analyzer::IAnalyzerTool
 {
     Q_OBJECT
 
 public:
-    explicit QmlProfilerTool(QObject *parent);
+    explicit QmlProfilerTool(QWidget *parent);
     ~QmlProfilerTool();
 
     QByteArray id() const;

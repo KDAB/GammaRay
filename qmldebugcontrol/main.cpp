@@ -18,5 +18,7 @@ int main(int argc, char **argv)
 
     tool.connectClient(3768);
 
+    tool.show();
+
     return app.exec();
 }
