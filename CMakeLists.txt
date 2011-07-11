@@ -127,3 +127,6 @@ endif(NOT WIN32)
 set_target_properties(endoscope_probe PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_subdirectory(qmldebugcontrol)
+

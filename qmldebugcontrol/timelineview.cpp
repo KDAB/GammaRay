@@ -238,3 +238,5 @@ void TimelineView::updateTimeline(bool updateStartX)
     prevMin = minsample;
     prevMax = maxsample;
 }
+
+#include "timelineview.moc"

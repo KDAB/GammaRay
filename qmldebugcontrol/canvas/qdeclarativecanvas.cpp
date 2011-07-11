@@ -30,9 +30,9 @@
 **
 **************************************************************************/
 
-#include "qdeclarativecanvas_p.h"
-#include "qdeclarativecanvastimer_p.h"
-#include "qdeclarativecontext2d_p.h"
+#include "qdeclarativecanvas.h"
+#include "qdeclarativecanvastimer.h"
+#include "qdeclarativecontext2d.h"
 
 #include <QtGui/qpainter.h>
 
@@ -244,5 +244,7 @@ void Canvas::clearInterval(const QScriptValue &handler)
 {
     CanvasTimer::removeTimer(handler);
 }
+
+#include "qdeclarativecanvas.moc"
 
 QT_END_NAMESPACE

@@ -32,11 +32,9 @@
 
 #include "tracewindow.h"
 
-#include "qmlprofilerplugin.h"
 #include "qmlprofilertraceclient.h"
 
-#include <qmljsdebugclient/qdeclarativedebugclient_p.h>
-#include <utils/styledbar.h>
+#include <qmljsdebugclient/qdeclarativedebugclient.h>
 
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
@@ -58,15 +56,15 @@ TraceWindow::TraceWindow(QWidget *parent)
 
     m_view = new QDeclarativeView(this);
 
-    if (QmlProfilerPlugin::debugOutput) {
+//     if (QmlProfilerPlugin::debugOutput) {
         //new QmlJSDebugger::JSDebuggerAgent(m_view->engine());
         //new QmlJSDebugger::QDeclarativeViewObserver(m_view, m_view);
-    }
+//     }
 
-    Utils::StyledBar *bar = new Utils::StyledBar(this);
-    bar->setSingleRow(true);
-    bar->setMinimumWidth(150);
-    QHBoxLayout *toolBarLayout = new QHBoxLayout(bar);
+//     Utils::StyledBar *bar = new Utils::StyledBar(this);
+//     bar->setSingleRow(true);
+//     bar->setMinimumWidth(150);
+    QHBoxLayout *toolBarLayout = new QHBoxLayout(this);
     toolBarLayout->setMargin(0);
     toolBarLayout->setSpacing(0);
     QToolButton *buttonPrev= new QToolButton;
@@ -176,3 +174,5 @@ bool TraceWindow::isRecording() const
 
 } // namespace Internal
 } // namespace QmlProfiler
+
+#include "tracewindow.moc"

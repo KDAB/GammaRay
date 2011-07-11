@@ -30,9 +30,9 @@
 **
 **************************************************************************/
 
-#include "qdeclarativecontext2d_p.h"
+#include "qdeclarativecontext2d.h"
 
-#include "qdeclarativecanvas_p.h"
+#include "qdeclarativecanvas.h"
 
 #include <QtCore/qdebug.h>
 #include <math.h>
@@ -1126,5 +1126,7 @@ QMatrix Context2D::worldMatrix() const
     mat *= m_state.matrix;
     return mat;
 }
+
+#include "qdeclarativecontext2d.moc"
 
 QT_END_NAMESPACE

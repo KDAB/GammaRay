@@ -37,9 +37,9 @@
 **
 ****************************************************************************/
 
-#include "qdeclarativetiledcanvas_p.h"
+#include "qdeclarativetiledcanvas.h"
 
-#include "qdeclarativecontext2d_p.h"
+#include "qdeclarativecontext2d.h"
 
 #include <QtGui/qpixmap.h>
 #include <QtGui/qpainter.h>
@@ -162,3 +162,5 @@ QPixmap TiledCanvas::getTile(int xx, int yy)
     return pix;
 }
 
+
+#include "qdeclarativetiledcanvas.moc"

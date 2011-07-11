@@ -541,3 +541,5 @@ void QmlProfilerEventsView::jumpToItem(const QModelIndex &index)
 
 } // namespace Internal
 } // namespace QmlProfiler
+
+#include "qmlprofilereventview.moc"

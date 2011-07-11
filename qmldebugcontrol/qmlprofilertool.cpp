@@ -31,42 +31,21 @@
 **************************************************************************/
 
 #include "qmlprofilertool.h"
-#include "qmlprofilerengine.h"
-#include "qmlprofilerplugin.h"
 #include "qmlprofilerconstants.h"
-#include "qmlprofilerattachdialog.h"
 #include "qmlprofilereventview.h"
 
 #include "tracewindow.h"
 #include "timelineview.h"
 
-#include <qmljsdebugclient/qdeclarativedebugclient_p.h>
+#include <qmljsdebugclient/qdeclarativedebugclient.h>
 
-#include <analyzerbase/analyzermanager.h>
-#include <analyzerbase/analyzerconstants.h>
 
-#include "canvas/qdeclarativecanvas_p.h"
-#include "canvas/qdeclarativecontext2d_p.h"
-#include "canvas/qdeclarativetiledcanvas_p.h"
+#include "canvas/qdeclarativecanvas.h"
+#include "canvas/qdeclarativecontext2d.h"
+#include "canvas/qdeclarativetiledcanvas.h"
 
-#include <qmlprojectmanager/qmlprojectrunconfiguration.h>
-#include <utils/fancymainwindow.h>
-#include <utils/fileinprojectfinder.h>
-#include <utils/qtcassert.h>
-#include <projectexplorer/projectexplorer.h>
-#include <projectexplorer/projectexplorerconstants.h>
-#include <projectexplorer/project.h>
-#include <projectexplorer/target.h>
 
-#include <texteditor/itexteditor.h>
-#include <coreplugin/actionmanager/actioncontainer.h>
-#include <coreplugin/actionmanager/actionmanager.h>
-#include <coreplugin/coreconstants.h>
-#include <coreplugin/editormanager/editormanager.h>
-#include <coreplugin/icore.h>
 
-#include <qt4projectmanager/qt4buildconfiguration.h>
-#include <qt4projectmanager/qt-s60/s60deployconfiguration.h>
 
 #include <QtCore/QFile>
 
@@ -77,7 +56,6 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QMessageBox>
 
-using namespace Analyzer;
 using namespace QmlProfiler::Internal;
 using namespace QmlJsDebugClient;
 
@@ -97,9 +75,9 @@ public:
     QmlProfilerEventsView *m_eventsView;
     QmlProfilerEventsView *m_calleeView;
     QmlProfilerEventsView *m_callerView;
-    ProjectExplorer::Project *m_project;
-    Utils::FileInProjectFinder m_projectFinder;
-    ProjectExplorer::RunConfiguration *m_runConfiguration;
+//     ProjectExplorer::Project *m_project;
+//     Utils::FileInProjectFinder m_projectFinder;
+//     ProjectExplorer::RunConfiguration *m_runConfiguration;
     bool m_isAttached;
     QAction *m_attachAction;
     QToolButton *m_recordButton;
@@ -117,14 +95,12 @@ public:
 };
 
 QmlProfilerTool::QmlProfilerTool(QObject *parent)
-    : IAnalyzerTool(parent), d(new QmlProfilerToolPrivate(this))
+    : QObject(parent), d(new QmlProfilerToolPrivate(this))
 {
     setObjectName("QmlProfilerTool");
     d->m_client = 0;
     d->m_connectionAttempts = 0;
     d->m_traceWindow = 0;
-    d->m_project = 0;
-    d->m_runConfiguration = 0;
     d->m_isAttached = false;
     d->m_attachAction = 0;
     d->m_recordingEnabled = true;
@@ -162,11 +138,8 @@ QString QmlProfilerTool::description() const
               "applications using QML.");
 }
 
-IAnalyzerTool::ToolMode QmlProfilerTool::toolMode() const
-{
-    return AnyMode;
-}
 
+#if 0
 IAnalyzerEngine *QmlProfilerTool::createEngine(const AnalyzerStartParameters &sp,
     ProjectExplorer::RunConfiguration *runConfiguration)
 {
@@ -224,6 +197,7 @@ IAnalyzerEngine *QmlProfilerTool::createEngine(const AnalyzerStartParameters &sp
 
     return engine;
 }
+#endif
 
 void QmlProfilerTool::toolSelected()
 {
@@ -237,14 +211,10 @@ void QmlProfilerTool::toolDeselected()
 
 QWidget *QmlProfilerTool::createWidgets()
 {
-    QTC_ASSERT(!d->m_traceWindow, return 0);
+//     Analyzer::AnalyzerManager *analyzerMgr = Analyzer::AnalyzerManager::instance();
+//     Utils::FancyMainWindow *mw = analyzerMgr->mainWindow();
 
-    //
-    // DockWidgets
-    //
-
-    Utils::FancyMainWindow *mw = AnalyzerManager::mainWindow();
-
+    QWidget *mw = 0;
     d->m_traceWindow = new TraceWindow(mw);
     d->m_traceWindow->reset(d->m_client);
 
@@ -272,6 +242,7 @@ QWidget *QmlProfilerTool::createWidgets()
     connect(d->m_callerView, SIGNAL(gotoSourceLocation(QString,int)),
             this, SLOT(gotoSourceLocation(QString,int)));
 
+#if 0
     Core::ICore *core = Core::ICore::instance();
     Core::ActionManager *am = core->actionManager();
     Core::ActionContainer *manalyzer = am->actionContainer(Analyzer::Constants::M_DEBUG_ANALYZER);
@@ -299,6 +270,7 @@ QWidget *QmlProfilerTool::createWidgets()
     mw->tabifyDockWidget(eventsDock, timelineDock);
     mw->tabifyDockWidget(timelineDock, calleeDock);
     mw->tabifyDockWidget(calleeDock, callerDock);
+#endif
 
     //
     // Toolbar
@@ -340,13 +312,14 @@ QWidget *QmlProfilerTool::createWidgets()
 
 void QmlProfilerTool::connectClient(int port)
 {
-    QTC_ASSERT(!d->m_client, return;)
+//     QTC_ASSERT(!d->m_client, return;)
     d->m_client = new QDeclarativeDebugConnection;
     d->m_traceWindow->reset(d->m_client);
     connect(d->m_client, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
             this, SLOT(connectionStateChanged()));
     d->m_connectionTimer.start();
     d->m_tcpPort = port;
+    d->m_tcpHost = "localhost";
 }
 
 void QmlProfilerTool::connectToClient()
@@ -355,13 +328,13 @@ void QmlProfilerTool::connectToClient()
         return;
 
     if (d->m_connectMode == QmlProfilerToolPrivate::TcpConnection) {
-        if (QmlProfilerPlugin::debugOutput)
-            qWarning("QML Profiler: Connecting to %s:%lld ...", qPrintable(d->m_tcpHost), d->m_tcpPort);
+//         if (QmlProfilerPlugin::debugOutput)
+//             qWarning("QML Profiler: Connecting to %s:%lld ...", qPrintable(d->m_tcpHost), d->m_tcpPort);
 
         d->m_client->connectToHost(d->m_tcpHost, d->m_tcpPort);
     } else {
-        if (QmlProfilerPlugin::debugOutput)
-            qWarning("QML Profiler: Connecting to ost device %s...", qPrintable(d->m_ostDevice));
+//         if (QmlProfilerPlugin::debugOutput)
+//             qWarning("QML Profiler: Connecting to ost device %s...", qPrintable(d->m_ostDevice));
 
         d->m_client->connectToOst(d->m_ostDevice);
     }
@@ -412,6 +385,7 @@ void QmlProfilerTool::gotoSourceLocation(const QString &fileUrl, int lineNumber)
     if (lineNumber < 0 || fileUrl.isEmpty())
         return;
 
+#if 0
     const QString fileName = QUrl(fileUrl).toLocalFile();
     const QString projectFileName = d->m_projectFinder.findFile(fileName);
 
@@ -424,6 +398,7 @@ void QmlProfilerTool::gotoSourceLocation(const QString &fileUrl, int lineNumber)
         textEditor->gotoLine(lineNumber);
         textEditor->widget()->setFocus();
     }
+#endif
 }
 
 void QmlProfilerTool::updateTimer(qreal elapsedSeconds)
@@ -435,8 +410,10 @@ void QmlProfilerTool::updateTimer(qreal elapsedSeconds)
 
 void QmlProfilerTool::updateProjectFileList()
 {
+#if 0
     d->m_projectFinder.setProjectFiles(
                 d->m_project->files(ProjectExplorer::Project::ExcludeGeneratedFiles));
+#endif
 }
 
 void QmlProfilerTool::clearDisplay()
@@ -451,17 +428,18 @@ void QmlProfilerTool::clearDisplay()
 void QmlProfilerTool::attach()
 {
     if (!d->m_isAttached) {
-        QmlProfilerAttachDialog dialog;
-        int result = dialog.exec();
+//         QmlProfilerAttachDialog dialog;
+//         int result = dialog.exec();
 
-        if (result == QDialog::Rejected)
-            return;
+//         if (result == QDialog::Rejected)
+//             return;
 
-        d->m_tcpPort = dialog.port();
-        d->m_tcpHost = dialog.address();
+// TODO
+//         d->m_tcpPort = dialog.port();
+//         d->m_tcpHost = dialog.address();
 
         connectClient(d->m_tcpPort);
-        AnalyzerManager::showMode();
+//         AnalyzerManager::showMode();
     } else {
         stopRecording();
     }
@@ -489,13 +467,13 @@ void QmlProfilerTool::tryToConnect()
     } else if (d->m_connectionAttempts == 50) {
         d->m_connectionTimer.stop();
         d->m_connectionAttempts = 0;
-        if (QmlProfilerPlugin::debugOutput) {
-            if (d->m_client) {
-                qWarning("QML Profiler: Failed to connect: %s", qPrintable(d->m_client->errorString()));
-            } else {
-                qWarning("QML Profiler: Failed to connect.");
-            }
-        }
+//         if (QmlProfilerPlugin::debugOutput) {
+//             if (d->m_client) {
+//                 qWarning("QML Profiler: Failed to connect: %s", qPrintable(d->m_client->errorString()));
+// //             } else {
+//                 qWarning("QML Profiler: Failed to connect.");
+//             }
+//         }
         emit connectionFailed();
     } else {
         connectToClient();
@@ -509,27 +487,27 @@ void QmlProfilerTool::connectionStateChanged()
     switch (d->m_client->state()) {
     case QAbstractSocket::UnconnectedState:
     {
-        if (QmlProfilerPlugin::debugOutput)
-            qWarning("QML Profiler: disconnected");
+//         if (QmlProfilerPlugin::debugOutput)
+//             qWarning("QML Profiler: disconnected");
         break;
     }
     case QAbstractSocket::HostLookupState:
         break;
     case QAbstractSocket::ConnectingState: {
-        if (QmlProfilerPlugin::debugOutput)
-            qWarning("QML Profiler: Connecting to debug server ...");
+//         if (QmlProfilerPlugin::debugOutput)
+//             qWarning("QML Profiler: Connecting to debug server ...");
         break;
     }
     case QAbstractSocket::ConnectedState:
     {
-        if (QmlProfilerPlugin::debugOutput)
-            qWarning("QML Profiler: connected and running");
+//         if (QmlProfilerPlugin::debugOutput)
+//             qWarning("QML Profiler: connected and running");
         updateRecordingState();
         break;
     }
     case QAbstractSocket::ClosingState:
-        if (QmlProfilerPlugin::debugOutput)
-            qWarning("QML Profiler: closing ...");
+//         if (QmlProfilerPlugin::debugOutput)
+//             qWarning("QML Profiler: closing ...");
         break;
     case QAbstractSocket::BoundState:
     case QAbstractSocket::ListeningState:
@@ -549,6 +527,7 @@ void QmlProfilerTool::updateRecordingState()
         clearDisplay();
 }
 
+#if 0
 void QmlProfilerTool::startTool(StartMode mode)
 {
     Q_UNUSED(mode);
@@ -563,3 +542,6 @@ void QmlProfilerTool::startTool(StartMode mode)
     Project *pro = pe->startupProject();
     pe->runProject(pro, id());
 }
+#endif
+
+#include "qmlprofilertool.moc"

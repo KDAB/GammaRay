@@ -34,7 +34,7 @@
 #include <QtScript/qscriptvalue.h>
 #include <QtCore/qtimer.h>
 
-#include "qdeclarativecanvastimer_p.h"
+#include "qdeclarativecanvastimer.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -87,3 +87,4 @@ void CanvasTimer::removeTimer(const QScriptValue &val)
 
 QT_END_NAMESPACE
 
+#include "qdeclarativecanvastimer.moc"

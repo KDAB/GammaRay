@@ -33,13 +33,13 @@
 #ifndef QMLPROFILERTOOL_H
 #define QMLPROFILERTOOL_H
 
-#include <analyzerbase/ianalyzertool.h>
-#include <analyzerbase/ianalyzerengine.h>
+#include <QWidget>
+
 
 namespace QmlProfiler {
 namespace Internal {
 
-class QmlProfilerTool : public Analyzer::IAnalyzerTool
+class QmlProfilerTool : public QObject // Analyzer::IAnalyzerTool
 {
     Q_OBJECT
 
@@ -50,17 +50,16 @@ public:
     QByteArray id() const;
     QString displayName() const;
     QString description() const;
-    ToolMode toolMode() const;
 
     void extensionsInitialized() {}
     void toolSelected();
     void toolDeselected();
 
-    Analyzer::IAnalyzerEngine *createEngine(const Analyzer::AnalyzerStartParameters &sp,
-        ProjectExplorer::RunConfiguration *runConfiguration = 0);
+//     Analyzer::IAnalyzerEngine *createEngine(const Analyzer::AnalyzerStartParameters &sp,
+//         ProjectExplorer::RunConfiguration *runConfiguration = 0);
 
     QWidget *createWidgets();
-    void startTool(Analyzer::StartMode mode);
+//     void startTool(Analyzer::StartMode mode);
 
 public slots:
     void connectClient(int port);

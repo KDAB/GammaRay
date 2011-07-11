@@ -33,7 +33,7 @@
 #ifndef QMLPROFILERTRACECLIENT_H
 #define QMLPROFILERTRACECLIENT_H
 
-#include <qmljsdebugclient/qdeclarativedebugclient_p.h>
+#include <qmljsdebugclient/qdeclarativedebugclient.h>
 #include <QtCore/QStack>
 #include <QtCore/QStringList>
 
@@ -75,6 +75,16 @@ public:
         Complete,
 
         MaximumMessage
+    };
+
+    enum RangeType {
+        Painting,
+        Compiling,
+        Creating,
+        Binding,
+        HandlingSignal,
+
+        MaximumRangeType
     };
 
     bool isRecording() const { return m_recording; }

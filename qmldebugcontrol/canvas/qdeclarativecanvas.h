@@ -35,8 +35,8 @@
 
 #include <QtDeclarative/qdeclarativeitem.h>
 
-#include "qdeclarativecontext2d_p.h"
-#include "qdeclarativecanvastimer_p.h"
+#include "qdeclarativecontext2d.h"
+#include "qdeclarativecanvastimer.h"
 
 QT_BEGIN_HEADER
 
