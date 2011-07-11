@@ -7,6 +7,7 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 
 add_subdirectory(qmljsdebugclient)
 add_subdirectory(canvas)
+add_subdirectory(qmljsdebugger)
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
