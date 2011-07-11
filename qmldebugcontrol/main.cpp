@@ -14,6 +14,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     QmlProfilerTool tool(0);
+    tool.createWidgets();
 
     tool.connectClient(3768);
 
