@@ -105,6 +105,8 @@ QmlProfilerTool::QmlProfilerTool(QObject *parent)
     d->m_attachAction = 0;
     d->m_recordingEnabled = true;
 
+    d->m_connectMode = QmlProfilerToolPrivate::TcpConnection;
+
     d->m_connectionTimer.setInterval(200);
     connect(&d->m_connectionTimer, SIGNAL(timeout()), SLOT(tryToConnect()));
 
