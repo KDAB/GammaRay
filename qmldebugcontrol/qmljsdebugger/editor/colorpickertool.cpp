@@ -119,3 +119,5 @@ void ColorPickerTool::pickColor(const QPoint &pos)
 }
 
 } // namespace QmlJSDebugger
+
+#include "colorpickertool.moc"

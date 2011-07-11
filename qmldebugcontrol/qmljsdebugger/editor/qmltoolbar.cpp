@@ -317,3 +317,5 @@ void QmlToolBar::activateToQml()
 }
 
 } // namespace QmlJSDebugger
+
+#include "qmltoolbar.moc"

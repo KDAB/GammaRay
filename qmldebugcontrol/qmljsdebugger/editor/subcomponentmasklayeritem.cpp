@@ -117,3 +117,5 @@ QGraphicsItem *SubcomponentMaskLayerItem::currentItem() const
 }
 
 } // namespace QmlJSDebugger
+
+#include "subcomponentmasklayeritem.moc"

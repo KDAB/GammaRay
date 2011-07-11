@@ -228,3 +228,5 @@ void BoundingRectHighlighter::refresh()
 
 
 } // namespace QmlJSDebugger
+
+#include "boundingrecthighlighter.moc"

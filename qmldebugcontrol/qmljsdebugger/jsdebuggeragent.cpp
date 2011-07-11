@@ -665,3 +665,5 @@ void JSDebuggerAgent::baseMessageReceived(const QByteArray &message)
 }
 
 } // namespace QmlJSDebugger
+
+#include "jsdebuggeragent.moc"

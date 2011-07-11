@@ -80,3 +80,5 @@ QList<QGraphicsItem*> LiveLayerItem::findAllChildItems(const QGraphicsItem *item
 }
 
 } // namespace QmlJSDebugger
+
+#include "livelayeritem.moc"

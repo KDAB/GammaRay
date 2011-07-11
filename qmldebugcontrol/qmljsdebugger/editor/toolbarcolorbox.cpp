@@ -122,3 +122,5 @@ void ToolBarColorBox::copyColorToClipboard()
 }
 
 } // namespace QmlJSDebugger
+
+#include "toolbarcolorbox.moc"

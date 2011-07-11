@@ -101,3 +101,5 @@ void LiveSelectionRectangle::setRect(const QPointF &firstPoint,
 }
 
 }
+
+#include "liveselectionrectangle.moc"

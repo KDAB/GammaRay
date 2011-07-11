@@ -427,3 +427,5 @@ void LiveSelectionTool::selectUnderPoint(QMouseEvent *event)
 }
 
 } // namespace QmlJSDebugger
+
+#include "liveselectiontool.moc"

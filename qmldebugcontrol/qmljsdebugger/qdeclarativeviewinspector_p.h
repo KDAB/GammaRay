@@ -35,6 +35,7 @@
 
 #include <QtCore/QWeakPointer>
 #include <QtCore/QPointF>
+#include <QtCore/QSettings>
 
 #include "qdeclarativeviewinspector.h"
 #include "qdeclarativeinspectorservice.h"
@@ -131,6 +132,23 @@ public slots:
 
 public:
     static QDeclarativeViewInspectorPrivate *get(QDeclarativeViewInspector *v) { return v->d_func(); }
+};
+
+class QmlToolBar;
+
+class ToolBox : public QWidget
+{
+    Q_OBJECT
+
+public:
+    ToolBox(QWidget *parent = 0);
+    ~ToolBox();
+
+    QmlToolBar *toolBar() const { return m_toolBar; }
+
+private:
+    QSettings m_settings;
+    QmlToolBar *m_toolBar;
 };
 
 } // namespace QmlJSDebugger

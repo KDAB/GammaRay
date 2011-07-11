@@ -186,3 +186,5 @@ QString AbstractLiveEditTool::titleForItem(QGraphicsItem *item)
 
 
 } // namespace QmlJSDebugger
+
+#include "abstractliveedittool.moc"
