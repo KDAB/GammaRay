@@ -273,6 +273,11 @@ QWidget *QmlProfilerTool::createWidgets()
     mw->tabifyDockWidget(timelineDock, calleeDock);
     mw->tabifyDockWidget(calleeDock, callerDock);
 #endif
+    QTabWidget *tabWidget = new QTabWidget;
+    tabWidget->addTab(d->m_eventsView, tr("Events"));
+    tabWidget->addTab(d->m_traceWindow, tr("Timeline"));
+    tabWidget->addTab(d->m_calleeView, tr("Callees"));
+    tabWidget->addTab(d->m_callerView, tr("Callers"));
 
     //
     // Toolbar
@@ -309,9 +314,9 @@ QWidget *QmlProfilerTool::createWidgets()
 
     toolbarWidget->setLayout(layout);
 
-    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(toolbarWidget);
-    mainLayout->addWidget(d->m_traceWindow);
+    mainLayout->addWidget(tabWidget);
 
     return toolbarWidget;
 }

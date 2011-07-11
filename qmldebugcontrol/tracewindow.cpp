@@ -64,7 +64,8 @@ TraceWindow::TraceWindow(QWidget *parent)
 //     Utils::StyledBar *bar = new Utils::StyledBar(this);
 //     bar->setSingleRow(true);
 //     bar->setMinimumWidth(150);
-    QHBoxLayout *toolBarLayout = new QHBoxLayout(this);
+    QHBoxLayout *toolBarLayout = new QHBoxLayout();
+    groupLayout->addLayout(toolBarLayout);
     toolBarLayout->setMargin(0);
     toolBarLayout->setSpacing(0);
     QToolButton *buttonPrev= new QToolButton;
