@@ -216,7 +216,7 @@ QWidget *QmlProfilerTool::createWidgets()
 //     Analyzer::AnalyzerManager *analyzerMgr = Analyzer::AnalyzerManager::instance();
 //     Utils::FancyMainWindow *mw = analyzerMgr->mainWindow();
 
-    QWidget *mw = 0;
+    QWidget *mw = this;
     d->m_traceWindow = new TraceWindow(mw);
     d->m_traceWindow->reset(d->m_client);
 
@@ -308,6 +308,10 @@ QWidget *QmlProfilerTool::createWidgets()
     layout->addWidget(timeLabel);
 
     toolbarWidget->setLayout(layout);
+
+    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    mainLayout->addWidget(toolbarWidget);
+    mainLayout->addWidget(d->m_traceWindow);
 
     return toolbarWidget;
 }
