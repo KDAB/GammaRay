@@ -5,18 +5,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QDir>
-#include <QFile>
-#include <QProcess>
-
-#ifdef Q_OS_WIN
-#include <windows.h>
-#ifdef USE_DETOURS
-#include <detours.h>
-#else
-#include "windllinjection.h"
-#endif
-#endif
+#include <QStringList>
 
 using namespace Endoscope;
 
