@@ -77,6 +77,8 @@ QModelIndex ObjectTreeModel::indexForObject( QObject* object ) const
     return QModelIndex();
   QObject *parent = m_childParentMap.value( object );
   const QModelIndex parentIndex = indexForObject( parent );
+  if ( !parentIndex.isValid() && parent )
+    return QModelIndex();
   int row = m_parentChildMap[ parent ].indexOf( object );
   if ( row < 0 )
     return QModelIndex();
