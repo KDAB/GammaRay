@@ -257,6 +257,23 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event )
   return QObject::eventFilter(receiver, event);
 }
 
+void Probe::findExistingObjects()
+{
+  addObjectRecursive( QCoreApplication::instance() );
+  foreach ( QObject *obj, QApplication::topLevelWidgets() )
+    addObjectRecursive( obj );
+}
+
+void Probe::addObjectRecursive(QObject* obj)
+{
+  if ( !obj )
+    return;
+  objectRemoved( obj ); // in case we find it twice
+  objectAdded( obj );
+  foreach ( QObject *child, obj->children() )
+    addObjectRecursive( child );
+}
+
 // taken from qobject.cpp
 const int endoscope_flagged_locations_count = 2;
 static const char* endoscope_flagged_locations[endoscope_flagged_locations_count] = {0};
@@ -473,6 +490,7 @@ Q_DECL_EXPORT void endoscope_probe_inject()
 {
   printf( "endoscope_probe_inject()\n" );
   Endoscope::Probe::instance();
+  Endoscope::Probe::findExistingObjects();
 }
 
 #include "probe.moc"

@@ -27,6 +27,8 @@ class Q_DECL_EXPORT Probe : public QObject
     static void connectionAdded( QObject* sender, const char* signal, QObject* receiver, const char* method, Qt::ConnectionType type );
     static void connectionRemoved( QObject *sender, const char *signal, QObject *receiver, const char *method );
 
+    static void findExistingObjects();
+
     ObjectListModel *objectListModel() const;
     ObjectTreeModel *objectTreeModel() const;
     ConnectionModel *connectionModel() const;
@@ -50,6 +52,7 @@ class Q_DECL_EXPORT Probe : public QObject
 
   private:
     explicit Probe( QObject* parent = 0 );
+    static void addObjectRecursive( QObject *obj );
     static Probe* s_instance;
 
     ObjectListModel *m_objectListModel;
