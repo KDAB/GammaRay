@@ -24,7 +24,11 @@ QString findProbe( const QString& baseName )
          << "/opt/lib64" << "/opt/lib"
          << "/usr/lib64" << "/usr/lib";
   QDir::setSearchPaths( "preloads", pldirs );
+#ifdef Q_OS_MAC
+  QFile plfile( QLatin1Literal("preloads:") % baseName % QLatin1Literal(".dylib"));
+#else
   QFile plfile( QLatin1Literal("preloads:") % baseName % QLatin1Literal(".so"));
+#endif
   if ( plfile.exists() ) {
     return plfile.fileName();
   } else {
