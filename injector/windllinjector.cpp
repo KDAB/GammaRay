@@ -1,23 +1,50 @@
-#include "windllinjection.h"
+#include "windllinjector.h"
+
 #include <QtCore/QDebug>
+
+#ifdef Q_OS_WIN
+#include <windows.h>
 
 using namespace Endoscope;
 
-WinDllInjection::WinDllInjection()
- : m_destProcess(NULL),
-   m_destThread(NULL) {
+WinDllInjector::WinDllInjector() :
+  m_destProcess(NULL),
+  m_destThread(NULL)
+{
 }
 
-void WinDllInjection::setDestinationProcess(HANDLE proc, HANDLE thread) {
-    m_destProcess = proc;
-    m_destThread = thread;
+int WinDllInjector::launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc)
+{
+  DWORD dwCreationFlags = CREATE_NO_WINDOW;
+  dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
+  dwCreationFlags |= CREATE_SUSPENDED;
+  STARTUPINFOW startupInfo = { sizeof( STARTUPINFO ), 0, 0, 0,
+                               (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
+                               (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
+                               0, 0, 0, STARTF_USESTDHANDLES, 0, 0, 0,
+                               GetStdHandle(STD_INPUT_HANDLE), GetStdHandle(STD_OUTPUT_HANDLE), GetStdHandle(STD_ERROR_HANDLE)
+  };
+  PROCESS_INFORMATION pid;
+  memset(&pid, 0, sizeof(PROCESS_INFORMATION));
+
+  BOOL success = CreateProcess(0, (wchar_t*)programAndArgs.join(" ").utf16(),
+                               0, 0, TRUE, dwCreationFlags,
+                               0, 0,
+                               &startupInfo, &pid);
+  m_destProcess = pid.hProcess;
+  m_destThread = pid.hThread;
+  m_dllPath = probeDll;
+  m_dllPath.replace("/", "\\");
+  inject();
+  ResumeThread(pid.hThread);
+  WaitForSingleObject(pid.hProcess, INFINITE);
+  DWORD exitCode;
+  GetExitCodeProcess(pid.hProcess, &exitCode);
+  return exitCode == 0;
 }
 
-void WinDllInjection::setInjectionDll(QString dllPath) {
-    m_dllPath = dllPath;
-}
-
-bool WinDllInjection::inject() {
+bool WinDllInjection::inject()
+{
     CONTEXT     context;
 
     void*       mem             = NULL;
@@ -78,3 +105,5 @@ bool WinDllInjection::inject() {
     SetThreadContext(m_destThread, &context);
     return true;
 }
+
+#endif

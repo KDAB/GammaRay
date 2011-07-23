@@ -1,10 +1,6 @@
 project(endoscope)
 cmake_minimum_required(VERSION 2.6)
 
-# library versioning
-set(GENERIC_LIB_VERSION "1.0.0")
-set(GENERIC_LIB_SOVERSION "1")
-
 set(QT_MIN_VERSION "4.6.0")
 find_package(Qt4 REQUIRED)
 
@@ -49,10 +45,16 @@ endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h)
 
-set(endoscope_runner_srcs main.cpp)
-if(WIN32 AND NOT USE_DETOURS)
-  set(endoscope_runner_srcs ${endoscope_runner_srcs} windllinjection.cpp)
-endif(WIN32 AND NOT USE_DETOURS)
+set(endoscope_runner_srcs
+  injector/abstractinjector.cpp
+  injector/detourinjector.cpp
+  injector/injectorfactory.cpp
+  injector/preloadinjector.cpp
+  injector/windllinjector.cpp
+  probefinder.cpp
+  main.cpp
+)
+
 add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
 if(USE_DETOURS)
@@ -124,7 +126,7 @@ else(NOT WIN32)
     )
   endif(USE_DETOURS)
 endif(NOT WIN32)
-set_target_properties(endoscope_probe PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(endoscope_probe PROPERTIES PREFIX "")
 
 install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
