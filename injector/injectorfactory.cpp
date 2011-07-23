@@ -1,10 +1,12 @@
 #include "injectorfactory.h"
 
 #include "detourinjector.h"
+#include "gdbinjector.h"
 #include "preloadinjector.h"
 #include "windllinjector.h"
 
 #include <QtCore/QString>
+#include "gdbinjector.h"
 
 namespace Endoscope {
 
@@ -12,6 +14,8 @@ namespace InjectorFactory {
 
 AbstractInjector::Ptr createInjector( const QString &name )
 {
+  if ( name == QLatin1String("gdb") )
+    return AbstractInjector::Ptr( new GdbInjector );
 #ifndef Q_OS_WIN
   if ( name == QLatin1String("preload") )
     return AbstractInjector::Ptr( new PreloadInjector );

@@ -48,6 +48,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake ${CMAKE_CURR
 set(endoscope_runner_srcs
   injector/abstractinjector.cpp
   injector/detourinjector.cpp
+  injector/gdbinjector.cpp
   injector/injectorfactory.cpp
   injector/preloadinjector.cpp
   injector/windllinjector.cpp
