@@ -53,6 +53,7 @@ set(endoscope_runner_srcs
   injector/gdbinjector.cpp
   injector/injectorfactory.cpp
   injector/preloadinjector.cpp
+  injector/styleinjector.cpp
   injector/windllinjector.cpp
   probefinder.cpp
   main.cpp
