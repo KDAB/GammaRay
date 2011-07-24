@@ -491,6 +491,8 @@ Q_DECL_EXPORT void endoscope_probe_inject()
   printf( "endoscope_probe_inject()\n" );
   Endoscope::Probe::instance();
   Endoscope::Probe::findExistingObjects();
+  if ( Endoscope::Probe::instance()->window() )
+    Endoscope::Probe::instance()->window()->show();
 }
 
 #include "probe.moc"
