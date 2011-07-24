@@ -24,14 +24,22 @@ QStringList InjectorStylePlugin::keys() const
 
 void InjectorStylePlugin::inject()
 {
-  void* probeDllHandle = dlopen( "endoscope_probe.so", RTLD_NOW );
+  const QByteArray probeDll = qgetenv( "ENDOSCOPE_STYLEINJECTOR_PROBEDLL" );
+  if ( probeDll.isEmpty() ) {
+    qWarning("No probe DLL specified.");
+    return;
+  }
+
+  void* probeDllHandle = dlopen( probeDll, RTLD_NOW );
   if ( !probeDllHandle ) {
     qWarning() << dlerror();
     return;
   }
 
-  void* probeFuncHandle = dlsym( probeDllHandle, "endoscope_probe_inject" );
-  qDebug() << probeFuncHandle;
+  const QByteArray probeFunc = qgetenv( "ENDOSCOPE_STYLEINJECTOR_PROBEFUNC" );
+  if ( probeFunc.isEmpty() )
+    return;
+  void* probeFuncHandle = dlsym( probeDllHandle, probeFunc );
   if ( probeFuncHandle )
     reinterpret_cast<void(*)()>( probeFuncHandle )();
   else
