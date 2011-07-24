@@ -486,7 +486,7 @@ Q_DECL_EXPORT const char* myFlagLocation( const char* method )
 }
 #endif
 
-Q_DECL_EXPORT void endoscope_probe_inject()
+extern "C" Q_DECL_EXPORT void endoscope_probe_inject()
 {
   printf( "endoscope_probe_inject()\n" );
   Endoscope::Probe::instance();
