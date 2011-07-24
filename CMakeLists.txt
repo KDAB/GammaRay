@@ -45,6 +45,8 @@ endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h)
 
+add_subdirectory(injector)
+
 set(endoscope_runner_srcs
   injector/abstractinjector.cpp
   injector/detourinjector.cpp
