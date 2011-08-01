@@ -210,7 +210,7 @@ void Probe::objectRemoved(QObject* obj)
 
 void Probe::connectionAdded(QObject* sender, const char* signal, QObject* receiver, const char* method, Qt::ConnectionType type)
 {
-  if ( !isInitialized() || !s_listener()->active
+  if ( !isInitialized() || !s_listener()->active || !sender || !receiver
       || descendantOf(instance()->window(), sender)
       || descendantOf(instance()->window(), receiver)
       || descendantOf(instance(), sender)
