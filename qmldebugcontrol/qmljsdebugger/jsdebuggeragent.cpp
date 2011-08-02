@@ -132,7 +132,8 @@ public:
     int stepCount;
 
     QEventLoop loop;
-    QHash<qint64, QString> filenames;
+    typedef QHash<qint64, QString> FileNameHash;
+    FileNameHash filenames;
     JSAgentBreakpoints breakpoints;
     // breakpoints by filename (without path)
     QHash<QString, JSAgentBreakpointData> fileNameToBreakpoints;
@@ -370,7 +371,7 @@ void JSDebuggerAgentPrivate::positionChange(qint64 scriptId, int lineNumber, int
 
     // check breakpoints
     if (!breakpoints.isEmpty()) {
-        QHash<qint64, QString>::const_iterator it = filenames.constFind(scriptId);
+        FileNameHash::const_iterator it = filenames.constFind(scriptId);
         QScriptContext *ctx = engine()->currentContext();
         QScriptContextInfo info(ctx);
         if (it == filenames.constEnd()) {
@@ -381,7 +382,7 @@ void JSDebuggerAgentPrivate::positionChange(qint64 scriptId, int lineNumber, int
             frame.functionName = info.functionName().toUtf8();
 
             QPair<QString, qint32> key = qMakePair(filename, lineNumber);
-            it = filenames.insert(scriptId, filename);
+            it = FileNameHash::const_iterator(filenames.insert(scriptId, filename));
         }
 
         const QString filePath = it->toUtf8();
