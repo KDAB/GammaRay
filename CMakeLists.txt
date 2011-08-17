@@ -10,6 +10,7 @@ endif(WIN32)
 
 include_directories(
   ${QT_INCLUDES}
+  ${Boost_INCLUDE_DIRS}
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
