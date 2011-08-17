@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 
 set(QT_MIN_VERSION "4.6.0")
 find_package(Qt4 REQUIRED)
+find_package(Boost REQUIRED)
 
 if(WIN32)
   option(USE_DETOURS "use detours for in debugging" OFF)
