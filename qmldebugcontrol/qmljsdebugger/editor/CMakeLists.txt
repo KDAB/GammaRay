@@ -1,4 +1,3 @@
-
 project(editor)
 
 set(editor_SRCS
@@ -24,8 +23,12 @@ include_directories(
 
 qt4_automoc(${editor_SRCS})
 
-qt4_add_resources(_editor_rcc_src editor.qrc OPTIONS -root "/" )
+qt4_add_resources(_editor_rcc_src editor.qrc OPTIONS -root "/")
 
 add_library(editor ${editor_SRCS} ${_editor_rcc_src})
 
-target_link_libraries(editor ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTDECLARATIVE_LIBRARIES})
+target_link_libraries(editor
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTDECLARATIVE_LIBRARIES}
+)

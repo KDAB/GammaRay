@@ -26,11 +26,19 @@ set(qmldebugcontrol_SRCS
     main.cpp
 )
 
-qt4_add_resources(_testresource_rcc_src qml/qml.qrc OPTIONS -root "/" )
+qt4_add_resources(_testresource_rcc_src qml/qml.qrc OPTIONS -root "/")
 
 qt4_automoc(${qmldebugcontrol_SRCS})
 
 add_executable(qmldebugcontrol ${qmldebugcontrol_SRCS} ${_testresource_rcc_src})
 
-target_link_libraries(qmldebugcontrol ${QT_QTGUI_LIBRARIES} ${QT_QTDECLARATIVE_LIBRARIES} ${QT_QTCORE_LIBRARIES} ${QT_QTSCRIPT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} qmldebugclient canvas)
+target_link_libraries(qmldebugcontrol
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTDECLARATIVE_LIBRARIES}
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTSCRIPT_LIBRARIES}
+  ${QT_QTNETWORK_LIBRARIES}
+  qmldebugclient
+  canvas
+)
 

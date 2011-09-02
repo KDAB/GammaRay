@@ -17,4 +17,8 @@ add_library(canvas ${canvas_SRCS})
 
 qt4_automoc(${canvas_SRCS})
 
-target_link_libraries(canvas ${QT_QTGUI_LIBRARIES} ${QT_QTDECLARATIVE_LIBRARIES}  ${QT_QTCORE_LIBRARIES})
+target_link_libraries(canvas
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTDECLARATIVE_LIBRARIES}
+  ${QT_QTCORE_LIBRARIES}
+)

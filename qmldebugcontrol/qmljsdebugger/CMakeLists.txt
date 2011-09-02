@@ -1,6 +1,3 @@
-
-cmake_minimum_required(VERSION 2.8)
-
 project(qmljsdebugger)
 
 #find_package(Qt4 REQUIRED)
@@ -34,4 +31,9 @@ add_definitions(-DBUILD_QMLJSDEBUGGER_STATIC_LIB)
 
 add_library(QmlJSDebugger STATIC ${qmljsdebugger_SRCS})
 
-target_link_libraries(QmlJSDebugger ${QT_QTDECLARATIVE_LIBRARIES} ${QT_QTSCRIPT_LIBRARIES} editor protocol)
+target_link_libraries(QmlJSDebugger
+  ${QT_QTDECLARATIVE_LIBRARIES}
+  ${QT_QTSCRIPT_LIBRARIES}
+  editor
+  protocol
+)

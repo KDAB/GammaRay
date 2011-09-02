@@ -25,27 +25,42 @@ endif(USE_DETOURS)
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
 
-set(INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION bin
-                                 LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-                                 ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel)
+set(
+  INSTALL_TARGETS_DEFAULT_ARGS
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+  ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
+)
+
 if(WIN32)
   add_definitions(-DUNICODE)
 endif(WIN32)
 
 if(APPLE)
   # on the Mac support an extra install directory for application bundles
-  set(INSTALL_TARGETS_DEFAULT_ARGS ${INSTALL_TARGETS_DEFAULT_ARGS}
-                                     BUNDLE DESTINATION "/Applications/Qt4")
+  set(
+    INSTALL_TARGETS_DEFAULT_ARGS
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    BUNDLE DESTINATION "/Applications/Qt4"
+  )
 endif(APPLE)
 
 
-# TODO find a nicer way for all this, ideally auto-detect the name mangling format, but at least guess a default based on OS + compiler
-option(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES "Enable if your compiler uses an unsupported C++ name mangling scheme" OFF)
+# TODO: find a nicer way for all this. ideally auto-detect the name mangling
+# format, but at least guess a default based on OS + compiler.
+option(
+  ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES
+  "Enable if your compiler uses an unsupported C++ name mangling scheme"
+  OFF
+)
 if(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
   add_definitions(-DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
 endif()
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h)
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h
+)
 
 add_subdirectory(injector)
 
@@ -122,15 +137,10 @@ target_link_libraries(endoscope_probe
   ${QT_QTWEBKIT_LIBRARY}
 )
 if(NOT WIN32)
-    target_link_libraries(endoscope_probe
-      dl
-    )
+  target_link_libraries(endoscope_probe dl)
 else(NOT WIN32)
   if(USE_DETOURS)
-    target_link_libraries(endoscope_probe
-      detoured
-      detours
-    )
+    target_link_libraries(endoscope_probe detoured detours)
   endif(USE_DETOURS)
 endif(NOT WIN32)
 set_target_properties(endoscope_probe PROPERTIES PREFIX "")

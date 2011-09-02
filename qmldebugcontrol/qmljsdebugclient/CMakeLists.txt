@@ -19,4 +19,8 @@ qt4_automoc(${qmldebugclient_SRCS})
 
 add_library(qmldebugclient ${qmldebugclient_SRCS})
 
-target_link_libraries(qmldebugclient ${QT_QTGUI_LIBRARIES} ${QT_QTDECLARATIVE_LIBRARIES} ${QT_QTCORE_LIBRARIES})
+target_link_libraries(qmldebugclient
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTDECLARATIVE_LIBRARIES}
+  ${QT_QTCORE_LIBRARIES}
+)

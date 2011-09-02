@@ -1,4 +1,3 @@
-
 project(protocol)
 
 set(protocol_SRCS
@@ -13,4 +12,8 @@ include_directories(
 qt4_automoc(${protocol_SRCS})
 
 add_library(protocol ${protocol_SRCS})
-target_link_libraries(protocol ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTDECLARATIVE_LIBRARIES})
+target_link_libraries(protocol
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTDECLARATIVE_LIBRARIES}
+)
