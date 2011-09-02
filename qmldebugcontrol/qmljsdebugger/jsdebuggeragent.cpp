@@ -242,7 +242,7 @@ static QList<JSAgentWatchData> expandObject(const QScriptValue &object)
         JSAgentWatchData data;
         data.name = "<no initialized data>";
         data.hasChildren = false;
-        data.value = " ";
+        data.value = " "; //krazy:exclude=doublequote_chars
         data.objectId = 0;
         result.append(data);
     }
