@@ -34,7 +34,7 @@ int WinDllInjector::launch(const QStringList& programAndArgs, const QString& pro
   m_destProcess = pid.hProcess;
   m_destThread = pid.hThread;
   m_dllPath = probeDll;
-  m_dllPath.replace("/", "\\");
+  m_dllPath.replace('/', '\\');
   inject();
   ResumeThread(pid.hThread);
   WaitForSingleObject(pid.hProcess, INFINITE);
