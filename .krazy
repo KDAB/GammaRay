@@ -1,7 +1,8 @@
 CHECKSETS qt4,c++
 
 #additional checks
-EXTRA defines,null
+EXTRA defines,null,style
 
 #no need to check 3rdparty stuff
 SKIP /3rdparty/
+SKIP /build
