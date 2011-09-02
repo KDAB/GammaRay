@@ -17,10 +17,10 @@ int DetourInjector::launch(const QStringList& programAndArgs, const QString& pro
   DWORD dwFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_SUSPENDED;
 
   QString dllPath( probeDll );
-  dllPath.replace("/", "\\");
+  dllPath.replace('/', '\\');
 
   QString detourPath = QCoreApplication::applicationDirPath() + "/detoured.dll";
-  detourPath.replace("/", "\\");
+  detourPath.replace('/', '\\');
 
   if (!DetourCreateProcessWithDll(0, (wchar_t*)args.join(" ").utf16(),
                                   NULL, NULL, TRUE, dwFlags, NULL, NULL,
