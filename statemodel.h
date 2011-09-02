@@ -19,7 +19,7 @@ public:
       IsInitialStateRole,
       StateObjectRole = Qt::UserRole + 11
     };
-    StateModel(QStateMachine *stateMachine, QObject *parent = 0);
+    explicit StateModel(QStateMachine *stateMachine, QObject *parent = 0);
     int rowCount ( const QModelIndex& parent = QModelIndex() ) const;
     QVariant data ( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     QModelIndex index ( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
