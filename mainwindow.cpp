@@ -152,7 +152,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
           QString sizes;
           foreach (int points, database.smoothSizes(family, style))
-              sizes += QString::number(points) + " ";
+              sizes += QString::number(points) + ' ';
 
           styleItem->setText(1, sizes.trimmed());
       }
