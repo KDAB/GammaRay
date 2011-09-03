@@ -41,6 +41,7 @@ class MainWindow : public QMainWindow
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void about();
 
   private:
     Ui::MainWindow ui;

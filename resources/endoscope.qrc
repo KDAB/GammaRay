@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="endoscope">
+    <file>endoscope512.png</file>
+    <file>endoscope256.png</file>
+    <file>endoscope128.png</file>
+  </qresource>
+</RCC>

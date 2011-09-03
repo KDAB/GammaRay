@@ -494,7 +494,15 @@
     <addaction name="actionRetractProbe"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAboutEndoscope"/>
+    <addaction name="actionAboutQt"/>
+   </widget>
    <addaction name="menu_Endoscope"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionRetractProbe">
@@ -511,6 +519,16 @@
    </property>
    <property name="toolTip">
     <string>Quit probed application.</string>
+   </property>
+  </action>
+  <action name="actionAboutEndoscope">
+   <property name="text">
+    <string>About &amp;Endoscope</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About &amp;Qt</string>
    </property>
   </action>
  </widget>

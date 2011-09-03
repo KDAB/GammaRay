@@ -33,6 +33,7 @@
 #include <QFontDatabase>
 #include <QtGui/QStringListModel>
 #include <QtCore/qtextcodec.h>
+#include <QtGui/QMessageBox>
 
 using namespace Endoscope;
 
@@ -43,9 +44,13 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()) );
   connect( QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()) );
   connect( ui.actionQuit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()) );
+  connect( ui.actionAboutQt, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(aboutQt()) );
+  connect( ui.actionAboutEndoscope, SIGNAL(triggered(bool)), SLOT(about()) );
 
   connect( Probe::instance(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)) );
   connect( Probe::instance(), SIGNAL(graphicsItemSelected(QGraphicsItem*)), SLOT(sceneItemSelected(QGraphicsItem*)) );
+
+  setWindowIcon( QIcon(":endoscope/endoscope128.png") );
 
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel( this );
   objectFilter->setSourceModel( Probe::instance()->objectTreeModel() );
@@ -406,6 +411,16 @@ void MainWindow::documentElementSelected(const QItemSelection& selected, const Q
   const QModelIndex selectedRow = selected.first().topLeft();
   const QTextFormat f = selectedRow.data( TextDocumentModel::FormatRole ).value<QTextFormat>();
   m_textDocumentFormatModel->setFormat( f );
+}
+
+void MainWindow::about()
+{
+  QMessageBox mb( this );
+  mb.setText( tr("<b>Endoscope 1.0</b>") );
+  mb.setInformativeText( tr("<qt>(C)&nbsp;Copyright&nbsp;2010,&nbsp;2011,&nbsp;KDAB</qt>" ) );
+  mb.setIconPixmap( QPixmap( ":endoscope/endoscope128.png" ) );
+  mb.addButton( QMessageBox::Close );
+  mb.exec();
 }
 
 

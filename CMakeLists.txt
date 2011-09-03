@@ -112,6 +112,7 @@ qt4_wrap_ui(endoscope_srcs
   methodinvocationdialog.ui
   graphicssceneview.ui
 )
+qt4_add_resources(endoscope_srcs resources/endoscope.qrc)
 add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
   ${QT_QTCORE_LIBRARY}
