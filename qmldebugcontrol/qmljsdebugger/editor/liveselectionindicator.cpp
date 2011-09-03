@@ -105,6 +105,3 @@ void LiveSelectionIndicator::setItems(const QList<QWeakPointer<QGraphicsObject> 
 }
 
 } //namespace QmlJSDebugger
-
-
-#include "liveselectionindicator.moc"

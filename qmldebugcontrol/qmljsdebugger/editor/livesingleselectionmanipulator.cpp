@@ -139,5 +139,3 @@ QPointF LiveSingleSelectionManipulator::beginPoint() const
 }
 
 } // namespace QmlJSDebugger
-
-#include "livesingleselectionmanipulator.moc"

@@ -153,5 +153,3 @@ bool LiveRubberBandSelectionManipulator::isActive() const
 }
 
 } // namespace QmlJSDebugger
-
-#include "liverubberbandselectionmanipulator.moc"
