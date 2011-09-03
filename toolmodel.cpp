@@ -2,6 +2,7 @@
 #include "toolinterface.h"
 
 #include "tools/codecbrowser/codecbrowser.h"
+#include "tools/fontbrowser/fontbrowser.h"
 #include "tools/scriptenginedebugger/scriptenginedebugger.h"
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/webinspector/webinspector.h"
@@ -13,6 +14,7 @@ ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
   // built-in tools
   m_tools.push_back( new ScriptEngineDebuggerInterface );
   m_tools.push_back( new WebInspectorInterface );
+  m_tools.push_back( new FontBrowserInterface );
   m_tools.push_back( new CodecBrowserInterface );
   m_tools.push_back( new TextDocumentInspectorInterface );
 
