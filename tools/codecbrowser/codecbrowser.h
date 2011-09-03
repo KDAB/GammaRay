@@ -18,13 +18,12 @@ class CodecBrowser : public QWidget
   Q_OBJECT
   public:
     explicit CodecBrowser(ProbeInterface* probe, QWidget* parent = 0);
-    virtual ~CodecBrowser();
 
   private slots:
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
-    Ui::CodecBrowser* ui;
+    QScopedPointer<Ui::CodecBrowser> ui;
     SelectedCodecsModel *m_selectedCodecsModel;
 };
 

@@ -14,13 +14,12 @@ class ScriptEngineDebugger : public QWidget
   Q_OBJECT
   public:
     explicit ScriptEngineDebugger(ProbeInterface* probe, QWidget* parent = 0);
-    virtual ~ScriptEngineDebugger();
 
   private slots:
     void scriptEngineSelected(int index);
 
   private:
-    Ui::ScriptEngineDebugger* ui;
+    QScopedPointer<Ui::ScriptEngineDebugger> ui;
 };
 
 class ScriptEngineDebuggerInterface : public QObject, public StandardToolInterface<QScriptEngine, ScriptEngineDebugger>

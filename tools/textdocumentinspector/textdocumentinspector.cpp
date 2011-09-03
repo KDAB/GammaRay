@@ -28,11 +28,6 @@ TextDocumentInspector::TextDocumentInspector(ProbeInterface* probe, QWidget* par
   ui->documentFormatView->setModel( m_textDocumentFormatModel );
 }
 
-TextDocumentInspector::~TextDocumentInspector()
-{
-  delete ui;
-}
-
 void TextDocumentInspector::documentSelected(const QItemSelection& selected, const QItemSelection& deselected)
 {
   const QModelIndex selectedRow = selected.first().topLeft();

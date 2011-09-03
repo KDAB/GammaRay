@@ -37,11 +37,6 @@ FontBrowser::FontBrowser(ProbeInterface* probe, QWidget* parent):
   connect(ui->fontText, SIGNAL(textChanged(QString)), m_selectedFontModel, SLOT(updateText(QString)));
 }
 
-FontBrowser::~FontBrowser()
-{
-  delete ui;
-}
-
 void FontBrowser::updateFonts(const QItemSelection& selected, const QItemSelection& deselected)
 {
   Q_UNUSED(selected);

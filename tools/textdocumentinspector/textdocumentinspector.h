@@ -20,14 +20,13 @@ class TextDocumentInspector : public QWidget
   Q_OBJECT
   public:
     explicit TextDocumentInspector(ProbeInterface *probe, QWidget* parent = 0);
-    virtual ~TextDocumentInspector();
 
   private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
-    Ui::TextDocumentInspector* ui;
+    QScopedPointer<Ui::TextDocumentInspector> ui;
     TextDocumentModel *m_textDocumentModel;
     TextDocumentFormatModel *m_textDocumentFormatModel;
 };

@@ -21,11 +21,6 @@ WebInspector::WebInspector(ProbeInterface *probe, QWidget* parent):
   connect( ui->webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)) );
 }
 
-WebInspector::~WebInspector()
-{
-  delete ui;
-}
-
 void WebInspector::webPageSelected(int index)
 {
   QObject* obj = ui->webPageComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();

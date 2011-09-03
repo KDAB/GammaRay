@@ -15,13 +15,12 @@ class WebInspector : public QWidget
   Q_OBJECT
   public:
     explicit WebInspector(Endoscope::ProbeInterface* probe, QWidget* parent = 0);
-    virtual ~WebInspector();
 
   private slots:
     void webPageSelected(int index);
 
   private:
-    Ui::WebInspector* ui;
+    QScopedPointer<Ui::WebInspector> ui;
 };
 
 class WebInspectorInterface : public QObject, public StandardToolInterface<QWebPage, WebInspector>

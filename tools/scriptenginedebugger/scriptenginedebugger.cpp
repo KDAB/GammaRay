@@ -26,11 +26,6 @@ ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface* probe, QWidget* paren
   connect( ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
 }
 
-ScriptEngineDebugger::~ScriptEngineDebugger()
-{
-  delete ui;
-}
-
 void ScriptEngineDebugger::scriptEngineSelected(int index)
 {
   QObject* obj = ui->scriptEngineComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();

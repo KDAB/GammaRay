@@ -18,13 +18,12 @@ class FontBrowser : public QWidget
   Q_OBJECT
   public:
     explicit FontBrowser(ProbeInterface* probe, QWidget* parent = 0);
-    virtual ~FontBrowser();
 
   private slots:
     void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
-    Ui::FontBrowser* ui;
+    QScopedPointer<Ui::FontBrowser> ui;
     FontModel *m_selectedFontModel;
 };
 

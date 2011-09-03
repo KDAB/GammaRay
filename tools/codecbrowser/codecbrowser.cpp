@@ -20,11 +20,6 @@ CodecBrowser::CodecBrowser(ProbeInterface* probe, QWidget* parent):
   connect(ui->codecText, SIGNAL(textChanged(QString)), m_selectedCodecsModel, SLOT(updateText(QString)));
 }
 
-CodecBrowser::~CodecBrowser()
-{
-  delete ui;
-}
-
 void CodecBrowser::updateCodecs(const QItemSelection& selected, const QItemSelection& deselected)
 {
   QStringList previousCodecs = m_selectedCodecsModel->currentCodecs();
