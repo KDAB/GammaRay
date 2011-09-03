@@ -1,4 +1,4 @@
-CHECKSETS qt4,c++
+CHECKSETS qt4,c++,foss
 
 #additional checks
 EXTRA defines,null,style
