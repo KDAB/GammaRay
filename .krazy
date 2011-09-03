@@ -5,4 +5,7 @@ EXTRA defines,null,style
 
 #no need to check 3rdparty stuff
 SKIP /3rdparty/
+#nor Nokia's stuff
+SKIP /qmldebugcontrol/
+#if you have a build subdir, skip it
 SKIP /build
