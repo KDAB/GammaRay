@@ -16,6 +16,8 @@
 #include "codecmodel.h"
 #include "textdocumentmodel.h"
 #include "textdocumentformatmodel.h"
+#include "toolmodel.h"
+#include "toolinterface.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -51,6 +53,13 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( Probe::instance(), SIGNAL(graphicsItemSelected(QGraphicsItem*)), SLOT(sceneItemSelected(QGraphicsItem*)) );
 
   setWindowIcon( QIcon(":endoscope/endoscope128.png") );
+
+  m_toolSelector = new QComboBox;
+  m_toolSelector->setModel( Probe::instance()->toolModel() );
+  connect( m_toolSelector, SIGNAL(currentIndexChanged(int)), SLOT(toolSelected()) );
+  connect( m_toolSelector, SIGNAL(activated(int)), SLOT(toolSelected()) );
+  ui.mainToolBar->addWidget( new QLabel( tr("Select Probe:") ) );
+  ui.mainToolBar->addWidget( m_toolSelector );
 
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel( this );
   objectFilter->setSourceModel( Probe::instance()->objectTreeModel() );
@@ -421,6 +430,21 @@ void MainWindow::about()
   mb.setIconPixmap( QPixmap( ":endoscope/endoscope128.png" ) );
   mb.addButton( QMessageBox::Close );
   mb.exec();
+}
+
+void MainWindow::toolSelected()
+{
+  const QModelIndex mi = m_toolSelector->model()->index( m_toolSelector->currentIndex(), 0 );
+  QWidget *toolWidget = mi.data( ToolModel::ToolWidgetRole ).value<QWidget*>();
+  if ( !toolWidget ) {
+    ToolInterface *toolIface = mi.data( ToolModel::ToolInterfaceRole ).value<ToolInterface*>();
+    Q_ASSERT( toolIface );
+    qDebug() << Q_FUNC_INFO << "creating new probe: " << toolIface->name() << toolIface->supportedTypes();
+    toolWidget = toolIface->createInstance( Probe::instance(), 0 );
+    ui.toolStack->addWidget( toolWidget );
+    m_toolSelector->model()->setData( mi, QVariant::fromValue( toolWidget ) );
+  }
+  ui.toolStack->setCurrentIndex( ui.toolStack->indexOf( toolWidget ) );
 }
 
 

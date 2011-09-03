@@ -114,6 +114,9 @@ set(endoscope_srcs
   codecmodel.cpp
   textdocumentmodel.cpp
   textdocumentformatmodel.cpp
+  toolmodel.cpp
+
+  tools/webinspector/webinspector.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -126,6 +129,8 @@ qt4_wrap_ui(endoscope_srcs
   propertywidget.ui
   methodinvocationdialog.ui
   graphicssceneview.ui
+
+  tools/webinspector/webinspector.ui
 )
 qt4_add_resources(endoscope_srcs resources/endoscope.qrc)
 add_library(endoscope_probe SHARED ${endoscope_srcs})
@@ -148,4 +153,3 @@ set_target_properties(endoscope_probe PROPERTIES PREFIX "")
 install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(qmldebugcontrol)
-

@@ -42,9 +42,11 @@ class MainWindow : public QMainWindow
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void about();
+    void toolSelected();
 
   private:
     Ui::MainWindow ui;
+    QComboBox *m_toolSelector;
     SceneModel *m_sceneModel;
     StateModel *m_stateModel;
     ModelCellModel *m_cellModel;

@@ -5,6 +5,7 @@
 #include "connectionmodel.h"
 #include "modeltester.h"
 #include "modelmodel.h"
+#include "toolmodel.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -80,6 +81,7 @@ Probe::Probe(QObject* parent):
   m_connectionModel( new ConnectionModel( this ) ),
   m_modelTester( new ModelTester( this ) ),
   m_modelModel( new ModelModel( this ) ),
+  m_toolModel( new ToolModel( this ) ),
   m_window(0)
 {
   qDebug() << Q_FUNC_INFO;
@@ -142,12 +144,12 @@ static bool descendantOf(QObject *ascendant, QObject *obj)
   return descendantOf(ascendant, parent);
 }
 
-ObjectListModel* Probe::objectListModel() const
+QAbstractItemModel* Probe::objectListModel() const
 {
   return m_objectListModel;
 }
 
-ObjectTreeModel* Probe::objectTreeModel() const
+QAbstractItemModel* Probe::objectTreeModel() const
 {
   return m_objectTreeModel;
 }
@@ -167,6 +169,11 @@ ModelModel* Probe::modelModel() const
   return m_modelModel;
 }
 
+ToolModel* Probe::toolModel() const
+{
+  return m_toolModel;
+}
+
 void Probe::objectAdded(QObject* obj)
 {
   if ( !s_listener()->active && obj->thread() == QThread::currentThread() ) {
@@ -180,7 +187,7 @@ void Probe::objectAdded(QObject* obj)
     QMetaObject::invokeMethod( instance()->objectListModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
     // ### queued connection here crashes the sort filter proxy, need to investigate that
     // might be due to children inserted before the parents
-    instance()->objectTreeModel()->objectAdded( obj );
+    instance()->m_objectTreeModel->objectAdded( obj );
     QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
     QMetaObject::invokeMethod( instance()->modelModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
   } else {
@@ -191,8 +198,8 @@ void Probe::objectAdded(QObject* obj)
 void Probe::objectRemoved(QObject* obj)
 {
   if ( isInitialized() ) {
-    instance()->objectListModel()->objectRemoved( obj );
-    instance()->objectTreeModel()->objectRemoved( obj );
+    instance()->m_objectListModel->objectRemoved( obj );
+    instance()->m_objectTreeModel->objectRemoved( obj );
     instance()->connectionRemoved( obj, 0, 0, 0 );
     instance()->connectionRemoved( 0, 0, obj, 0 );
     instance()->modelModel()->objectRemoved( obj );
@@ -235,9 +242,9 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event )
 {
   if ( event->type() == QEvent::ChildAdded || event->type() == QEvent::ChildRemoved ) {
     QChildEvent *childEvent = static_cast<QChildEvent*>( event );
-    objectTreeModel()->objectRemoved( childEvent->child() );
+    m_objectTreeModel->objectRemoved( childEvent->child() );
     if ( event->type() == QEvent::ChildAdded )
-      objectTreeModel()->objectAdded( childEvent->child() );
+      m_objectTreeModel->objectAdded( childEvent->child() );
   }
   if ( event->type() == QEvent::MouseButtonRelease ) {
     QMouseEvent *mouseEv = static_cast<QMouseEvent*>( event );

@@ -2,6 +2,7 @@
 #define ENDOSCOPE_PROBE_H
 
 #include <qobject.h>
+#include "probeinterface.h"
 
 class QGraphicsItem;
 
@@ -12,10 +13,11 @@ class ModelTester;
 class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
+class ToolModel;
 
 class MainWindow;
 
-class Q_DECL_EXPORT Probe : public QObject
+class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 {
   Q_OBJECT
   public:
@@ -29,11 +31,12 @@ class Q_DECL_EXPORT Probe : public QObject
 
     static void findExistingObjects();
 
-    ObjectListModel *objectListModel() const;
-    ObjectTreeModel *objectTreeModel() const;
+    QAbstractItemModel *objectListModel() const;
+    QAbstractItemModel *objectTreeModel() const;
     ConnectionModel *connectionModel() const;
     ModelTester *modelTester() const;
     ModelModel *modelModel() const;
+    ToolModel *toolModel() const;
 
     static const char* connectLocation( const char *member );
 
@@ -60,6 +63,7 @@ class Q_DECL_EXPORT Probe : public QObject
     ConnectionModel *m_connectionModel;
     ModelTester *m_modelTester;
     ModelModel *m_modelModel;
+    ToolModel *m_toolModel;
     Endoscope::MainWindow *m_window;
 };
 
