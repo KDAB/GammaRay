@@ -46,7 +46,6 @@
 #include <qgraphicsitem.h>
 
 #include <qt/resourcemodel.h>
-#include <QtGui/QItemSelection>
 #include <QtCore/QStateMachine>
 #include <QtGui/QStringListModel>
 #include <QtCore/qtextcodec.h>
@@ -138,11 +137,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   MetaTypesModel *mtm = new MetaTypesModel(this);
 
   ui.metaTypeView->setModel(mtm);
-
-  ObjectTypeFilterProxyModel<QItemSelectionModel> *selectionModelProxy = new ObjectTypeFilterProxyModel<QItemSelectionModel>( this );
-  selectionModelProxy->setSourceModel( Probe::instance()->objectListModel() );
-  ui.selectionModelView->setModel(selectionModelProxy);
-  connect(ui.selectionModelView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionModelSelected(QItemSelection,QItemSelection)));
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
@@ -277,18 +271,6 @@ void MainWindow::stateSelected(const QItemSelection &selected, const QItemSelect
   if (state) {
     m_transitionModel->setState(state);
   }
-}
-
-void MainWindow::selectionModelSelected(const QItemSelection& selected, const QItemSelection& deselected)
-{
-  const QModelIndex selectedRow = selected.first().topLeft();
-  QObject *selectionModelObject = selectedRow.data( ObjectListModel::ObjectRole ).value<QObject*>();
-  QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel*>(selectionModelObject);
-  if (selectionModel && selectionModel->model()) {
-    ui.selectionModelVisualizer->setModel(const_cast<QAbstractItemModel*>(selectionModel->model()));
-    ui.selectionModelVisualizer->setSelectionModel(selectionModel);
-  }
-
 }
 
 void MainWindow::about()

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Endoscope::SelectionModelInspector</class>
+ <widget class="QWidget" name="Endoscope::SelectionModelInspector">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QSplitter" name="splitter_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QTreeView" name="selectionModelView"/>
+          <widget class="QTreeView" name="selectionModelVisualizer"/>
+         </widget>
+        </item>
+       </layout>
+  </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -53,7 +53,6 @@ class MainWindow : public QMainWindow
     void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void stateMachineSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void stateSelected(const QItemSelection &selected, const QItemSelection &deselected);
-    void selectionModelSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void about();
     void toolSelected();
 
