@@ -1,5 +1,5 @@
 #include "toolmodel.h"
-#include "toolinterface.h"
+#include "toolfactory.h"
 
 #include "tools/codecbrowser/codecbrowser.h"
 #include "tools/fontbrowser/fontbrowser.h"
@@ -12,11 +12,11 @@ using namespace Endoscope;
 ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
 {
   // built-in tools
-  m_tools.push_back( new ScriptEngineDebuggerInterface );
-  m_tools.push_back( new WebInspectorInterface );
-  m_tools.push_back( new FontBrowserInterface );
-  m_tools.push_back( new CodecBrowserInterface );
-  m_tools.push_back( new TextDocumentInspectorInterface );
+  m_tools.push_back( new ScriptEngineDebuggerFactory );
+  m_tools.push_back( new WebInspectorFactory );
+  m_tools.push_back( new FontBrowserFactory );
+  m_tools.push_back( new CodecBrowserFactory );
+  m_tools.push_back( new TextDocumentInspectorFactory );
 
   // tool plugins
 
@@ -28,10 +28,10 @@ QVariant ToolModel::data(const QModelIndex& index, int role) const
   if (!index.isValid())
     return QVariant();
 
-  ToolInterface *toolIface = m_tools.at( index.row() );
+  ToolFactory *toolIface = m_tools.at( index.row() );
   if ( role == Qt::DisplayRole )
     return toolIface->name();
-  else if ( role == ToolInterfaceRole )
+  else if ( role == ToolFactoryRole )
     return QVariant::fromValue( toolIface );
   else if ( role == ToolWidgetRole )
     return QVariant::fromValue( m_toolWidgets.value( toolIface ) );
@@ -42,7 +42,7 @@ QVariant ToolModel::data(const QModelIndex& index, int role) const
 bool ToolModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   if ( index.isValid() && role == Qt::EditRole ) {
-    ToolInterface *toolIface = m_tools.at( index.row() );
+    ToolFactory *toolIface = m_tools.at( index.row() );
     m_toolWidgets.insert( toolIface, value.value<QWidget*>() );
     return true;
   }

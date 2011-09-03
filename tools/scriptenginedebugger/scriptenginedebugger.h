@@ -1,7 +1,7 @@
 #ifndef ENDOSCOPE_SCRIPTENGINEDEBUGGER_H
 #define ENDOSCOPE_SCRIPTENGINEDEBUGGER_H
 
-#include <toolinterface.h>
+#include <toolfactory.h>
 #include <qwidget.h>
 #include <qscriptengine.h>
 
@@ -22,10 +22,10 @@ class ScriptEngineDebugger : public QWidget
     QScopedPointer<Ui::ScriptEngineDebugger> ui;
 };
 
-class ScriptEngineDebuggerInterface : public QObject, public StandardToolInterface<QScriptEngine, ScriptEngineDebugger>
+class ScriptEngineDebuggerFactory : public QObject, public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolInterface)
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
     inline QString name() const { return tr("Script Engines"); }
 };

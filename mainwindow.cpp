@@ -13,7 +13,7 @@
 #include "transitionmodel.h"
 #include "metatypesmodel.h"
 #include "toolmodel.h"
-#include "toolinterface.h"
+#include "toolfactory.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -283,7 +283,7 @@ void MainWindow::toolSelected()
   const QModelIndex mi = m_toolSelector->model()->index( m_toolSelector->currentIndex(), 0 );
   QWidget *toolWidget = mi.data( ToolModel::ToolWidgetRole ).value<QWidget*>();
   if ( !toolWidget ) {
-    ToolInterface *toolIface = mi.data( ToolModel::ToolInterfaceRole ).value<ToolInterface*>();
+    ToolFactory *toolIface = mi.data( ToolModel::ToolFactoryRole ).value<ToolFactory*>();
     Q_ASSERT( toolIface );
     qDebug() << Q_FUNC_INFO << "creating new probe: " << toolIface->name() << toolIface->supportedTypes();
     toolWidget = toolIface->createInstance( Probe::instance(), 0 );

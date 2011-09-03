@@ -3,13 +3,12 @@
 
 #include <qwidget.h>
 
-#include <toolinterface.h>
+#include <toolfactory.h>
 
 class QItemSelection;
 
 namespace Endoscope {
 
-class ProbeInterface;
 class SelectedCodecsModel;
 namespace Ui { class CodecBrowser; }
 
@@ -27,10 +26,10 @@ class CodecBrowser : public QWidget
     SelectedCodecsModel *m_selectedCodecsModel;
 };
 
-class CodecBrowserInterface : public QObject, public StandardToolInterface<QObject, CodecBrowser>
+class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, CodecBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolInterface)
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
     virtual inline QString name() const { return tr( "Text Codecs" ); }
 };

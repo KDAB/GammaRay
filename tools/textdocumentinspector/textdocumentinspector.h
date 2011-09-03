@@ -1,7 +1,7 @@
 #ifndef ENDOSCOPE_TEXTDOCUMENTINSPECTOR_H
 #define ENDOSCOPE_TEXTDOCUMENTINSPECTOR_H
 
-#include <toolinterface.h>
+#include <toolfactory.h>
 #include <qwidget.h>
 #include <qtextdocument.h>
 
@@ -9,7 +9,6 @@ class QItemSelection;
 
 namespace Endoscope {
 
-class ProbeInterface;
 class TextDocumentModel;
 class TextDocumentFormatModel;
 
@@ -31,10 +30,10 @@ class TextDocumentInspector : public QWidget
     TextDocumentFormatModel *m_textDocumentFormatModel;
 };
 
-class TextDocumentInspectorInterface : public QObject, public StandardToolInterface<QTextDocument, TextDocumentInspector>
+class TextDocumentInspectorFactory : public QObject, public StandardToolFactory<QTextDocument, TextDocumentInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolInterface)
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
     inline QString name() const { return tr("Text Documents"); }
 };

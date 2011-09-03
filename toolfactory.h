@@ -1,5 +1,5 @@
-#ifndef ENDOSCOPE_TOOLINTERFACE_H
-#define ENDOSCOPE_TOOLINTERFACE_H
+#ifndef ENDOSCOPE_TOOLFACTORY_H
+#define ENDOSCOPE_TOOLFACTORY_H
 
 #include <QtPlugin>
 #include <QtCore/QStringList>
@@ -12,10 +12,10 @@ class ProbeInterface;
 /**
  * Abstract interface for probe tools.
  */
-class ToolInterface
+class ToolFactory
 {
   public:
-    virtual inline ~ToolInterface() {}
+    virtual inline ~ToolFactory() {}
 
     /** Human readable name of this tool. */
     virtual QString name() const = 0;
@@ -35,7 +35,7 @@ class ToolInterface
 };
 
 template <typename Type, typename Tool>
-class StandardToolInterface : public ToolInterface
+class StandardToolFactory : public ToolFactory
 {
   public:
     virtual inline QStringList supportedTypes() const { return QStringList( Type::staticMetaObject.className() ); }
@@ -44,7 +44,7 @@ class StandardToolInterface : public ToolInterface
 
 }
 
-Q_DECLARE_INTERFACE(Endoscope::ToolInterface, "com.kdab.Endoscope.ToolInterface/1.0")
-Q_DECLARE_METATYPE(Endoscope::ToolInterface*)
+Q_DECLARE_INTERFACE(Endoscope::ToolFactory, "com.kdab.Endoscope.ToolFactory/1.0")
+Q_DECLARE_METATYPE(Endoscope::ToolFactory*)
 
 #endif

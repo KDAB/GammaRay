@@ -3,14 +3,13 @@
 
 #include <qwidget.h>
 #include <QFontDatabase>
-#include <toolinterface.h>
+#include <toolfactory.h>
 
 class QItemSelection;
 
 namespace Endoscope {
 
 class FontModel;
-class ProbeInterface;
 namespace Ui { class FontBrowser; }
 
 class FontBrowser : public QWidget
@@ -27,10 +26,10 @@ class FontBrowser : public QWidget
     FontModel *m_selectedFontModel;
 };
 
-class FontBrowserInterface : public QObject, public StandardToolInterface<QObject, FontBrowser>
+class FontBrowserFactory : public QObject, public StandardToolFactory<QObject, FontBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolInterface)
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
     virtual inline QString name() const { return tr( "Fonts" ); }
 };

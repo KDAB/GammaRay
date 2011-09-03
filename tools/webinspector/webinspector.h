@@ -1,13 +1,12 @@
 #ifndef ENDOSCOPE_WEBINSPECTOR_H
 #define ENDOSCOPE_WEBINSPECTOR_H
 
-#include <toolinterface.h>
+#include <toolfactory.h>
 #include <qwidget.h>
 #include <qwebpage.h>
 
 namespace Endoscope {
 
-class ProbeInterface;
 namespace Ui { class WebInspector; }
 
 class WebInspector : public QWidget
@@ -23,10 +22,10 @@ class WebInspector : public QWidget
     QScopedPointer<Ui::WebInspector> ui;
 };
 
-class WebInspectorInterface : public QObject, public StandardToolInterface<QWebPage, WebInspector>
+class WebInspectorFactory : public QObject, public StandardToolFactory<QWebPage, WebInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolInterface)
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
     inline QString name() const { return tr("Web Pages"); }
 };
