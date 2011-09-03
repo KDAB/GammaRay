@@ -12,7 +12,6 @@ class SceneModel;
 class StateModel;
 class TransitionModel;
 class FontModel;
-class SelectedCodecsModel;
 
 class MainWindow : public QMainWindow
 {
@@ -34,7 +33,6 @@ class MainWindow : public QMainWindow
     void stateSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void selectionModelSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
-    void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
     void about();
     void toolSelected();
 
@@ -46,7 +44,6 @@ class MainWindow : public QMainWindow
     ModelCellModel *m_cellModel;
     TransitionModel *m_transitionModel;
     FontModel *m_selectedFontModel;
-    SelectedCodecsModel *m_selectedCodecsModel;
 };
 
 }
