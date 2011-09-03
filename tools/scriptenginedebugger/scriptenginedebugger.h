@@ -23,14 +23,12 @@ class ScriptEngineDebugger : public QWidget
     Ui::ScriptEngineDebugger* ui;
 };
 
-class ScriptEngineDebuggerInterface : public QObject, public ToolInterface
+class ScriptEngineDebuggerInterface : public QObject, public StandardToolInterface<QScriptEngine, ScriptEngineDebugger>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolInterface)
   public:
     inline QString name() const { return tr("Script Engines"); }
-    inline QStringList supportedTypes() const { return QStringList( QScriptEngine::staticMetaObject.className() ); }
-    inline QWidget* createInstance( ProbeInterface *probeIface, QWidget *parent ) { return new ScriptEngineDebugger( probeIface, parent ); }
 };
 
 }

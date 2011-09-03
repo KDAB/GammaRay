@@ -24,14 +24,12 @@ class WebInspector : public QWidget
     Ui::WebInspector* ui;
 };
 
-class WebInspectorInterface : public QObject, public ToolInterface
+class WebInspectorInterface : public QObject, public StandardToolInterface<QWebPage, WebInspector>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolInterface)
   public:
     inline QString name() const { return tr("Web Pages"); }
-    inline QStringList supportedTypes() const { return QStringList( QWebPage::staticMetaObject.className() ); }
-    inline QWidget* createInstance( ProbeInterface *probeIface, QWidget *parent ) { return new WebInspector( probeIface, parent ); }
 };
 
 }

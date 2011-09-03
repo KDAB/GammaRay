@@ -32,14 +32,12 @@ class TextDocumentInspector : public QWidget
     TextDocumentFormatModel *m_textDocumentFormatModel;
 };
 
-class TextDocumentInspectorInterface : public QObject, public ToolInterface
+class TextDocumentInspectorInterface : public QObject, public StandardToolInterface<QTextDocument, TextDocumentInspector>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolInterface)
   public:
     inline QString name() const { return tr("Text Documents"); }
-    inline QStringList supportedTypes() const { return QStringList( QTextDocument::staticMetaObject.className() ); }
-    inline QWidget* createInstance( ProbeInterface *probeIface, QWidget *parent ) { return new TextDocumentInspector( probeIface, parent ); }
 };
 
 }

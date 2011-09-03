@@ -34,6 +34,14 @@ class ToolInterface
     virtual QWidget* createInstance( ProbeInterface *probeIface, QWidget *parentWidget ) = 0;
 };
 
+template <typename Type, typename Tool>
+class StandardToolInterface : public ToolInterface
+{
+  public:
+    virtual inline QStringList supportedTypes() const { return QStringList( Type::staticMetaObject.className() ); }
+    virtual inline QWidget* createInstance( ProbeInterface *probe, QWidget *parentWidget ) { return new Tool( probe, parentWidget ); }
+};
+
 }
 
 Q_DECLARE_INTERFACE(Endoscope::ToolInterface, "com.kdab.Endoscope.ToolInterface/1.0")
