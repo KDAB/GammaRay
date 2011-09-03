@@ -1,19 +1,19 @@
 project(editor)
 
 set(editor_SRCS
-    abstractliveedittool.cpp
-    liveselectiontool.cpp
-    livelayeritem.cpp
-    livesingleselectionmanipulator.cpp
-    liverubberbandselectionmanipulator.cpp
-    liveselectionrectangle.cpp
-    liveselectionindicator.cpp
-    boundingrecthighlighter.cpp
-    subcomponentmasklayeritem.cpp
-    zoomtool.cpp
-    colorpickertool.cpp
-    qmltoolbar.cpp
-    toolbarcolorbox.cpp
+  abstractliveedittool.cpp
+  liveselectiontool.cpp
+  livelayeritem.cpp
+  livesingleselectionmanipulator.cpp
+  liverubberbandselectionmanipulator.cpp
+  liveselectionrectangle.cpp
+  liveselectionindicator.cpp
+  boundingrecthighlighter.cpp
+  subcomponentmasklayeritem.cpp
+  zoomtool.cpp
+  colorpickertool.cpp
+  qmltoolbar.cpp
+  toolbarcolorbox.cpp
 )
 
 include_directories(
@@ -21,7 +21,16 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-qt4_automoc(${editor_SRCS})
+qt4_automoc(
+  abstractliveedittool.cpp
+  liveselectiontool.cpp
+  livelayeritem.cpp
+  boundingrecthighlighter.cpp
+  zoomtool.cpp
+  colorpickertool.cpp
+  qmltoolbar.cpp
+  toolbarcolorbox.cpp
+)
 
 qt4_add_resources(_editor_rcc_src editor.qrc OPTIONS -root "/")
 
