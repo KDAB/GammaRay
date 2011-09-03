@@ -27,7 +27,6 @@
 #include <qgraphicsitem.h>
 #include <QtScript/qscriptengine.h>
 #include <QtScriptTools/QScriptEngineDebugger>
-#include <qwebpage.h>
 
 #include <qt/resourcemodel.h>
 #include <QtGui/QItemSelection>
@@ -107,13 +106,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   singleColumnProxy->setSourceModel( scriptEngineFilter );
   ui.scriptEngineComboBox->setModel( singleColumnProxy );
   connect( ui.scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
-
-  ObjectTypeFilterProxyModel<QWebPage> *webPageFilter = new ObjectTypeFilterProxyModel<QWebPage>( this );
-  webPageFilter->setSourceModel( Probe::instance()->objectListModel() );
-  singleColumnProxy = new SingleColumnObjectProxyModel( this );
-  singleColumnProxy->setSourceModel( webPageFilter );
-  ui.webPageComboBox->setModel( singleColumnProxy );
-  connect( ui.webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)) );
 
   QSortFilterProxyModel *connectionFilterProxy = new ConnectionFilterProxyModel( this );
   connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
@@ -284,16 +276,6 @@ void MainWindow::scriptEngineSelected(int index)
     debugger->attachTo( engine );
     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
     debugger->standardWindow()->show();
-  }
-}
-
-void MainWindow::webPageSelected(int index)
-{
-  QObject* obj = ui.webPageComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
-  QWebPage *page = qobject_cast<QWebPage*>( obj );
-  if ( page ) {
-    page->settings()->setAttribute( QWebSettings::DeveloperExtrasEnabled, true );
-    ui.webInspector->setPage( page );
   }
 }
 
