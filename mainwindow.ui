@@ -1,186 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Endoscope::MainWindow</class>
- <widget class="QWidget" name="Endoscope::MainWindow">
+ <widget class="QMainWindow" name="Endoscope::MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1049</width>
+    <width>800</width>
     <height>600</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2">
-   <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
-       <string>Objects</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <item>
-        <widget class="QSplitter" name="splitter">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QWidget" name="layoutWidget_1">
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <item>
-            <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
-           </item>
-           <item>
-            <widget class="QTreeView" name="objectTreeView">
-             <property name="allColumnsShowFocus">
-              <bool>true</bool>
-             </property>
-             <attribute name="headerShowSortIndicator" stdset="0">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="headerShowSortIndicator" stdset="0">
-              <bool>true</bool>
-             </attribute>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="Endoscope::PropertyWidget" name="objectPropertyWidget" native="true"/>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_4">
-      <attribute name="title">
-       <string>Widgets</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
-       <item>
-        <widget class="QSplitter" name="splitter_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QSplitter" name="splitter_2">
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Objects</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QSplitter" name="splitter">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QWidget" name="layoutWidget_2">
-           <layout class="QVBoxLayout" name="verticalLayout_7">
+          <widget class="QWidget" name="layoutWidget_1">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
+             <widget class="KFilterProxySearchLine" name="objectSearchLine"/>
             </item>
             <item>
-             <widget class="QTreeView" name="widgetTreeView"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="Endoscope::WidgetPreviewWidget" name="widgetPreviewWidget" native="true"/>
-         </widget>
-         <widget class="Endoscope::PropertyWidget" name="widgetPropertyWidget" native="true"/>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_3">
-      <attribute name="title">
-       <string>Models</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_14">
-       <item>
-        <widget class="QSplitter" name="splitter_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
-           </item>
-           <item>
-            <widget class="QTreeView" name="modelView">
-             <property name="uniformRowHeights">
-              <bool>true</bool>
-             </property>
-             <property name="allColumnsShowFocus">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QVBoxLayout" name="verticalLayout_12">
-           <item>
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Model Content:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTreeView" name="modelContentView"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QVBoxLayout" name="verticalLayout_13">
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Cell Content:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTreeView" name="modelCellView">
-             <property name="rootIsDecorated">
-              <bool>false</bool>
-             </property>
-             <property name="uniformRowHeights">
-              <bool>true</bool>
-             </property>
-             <property name="allColumnsShowFocus">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Graphics Scenes</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_6">
-       <item>
-        <widget class="QComboBox" name="sceneComboBox"/>
-       </item>
-       <item>
-        <widget class="QSplitter" name="splitter_6">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QSplitter" name="splitter_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <widget class="QWidget" name="layoutWidget_3">
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
-            </item>
-            <item>
-             <widget class="QTreeView" name="sceneTreeView">
-              <attribute name="headerShowSortIndicator" stdset="0">
+             <widget class="QTreeView" name="objectTreeView">
+              <property name="allColumnsShowFocus">
                <bool>true</bool>
-              </attribute>
+              </property>
               <attribute name="headerShowSortIndicator" stdset="0">
                <bool>true</bool>
               </attribute>
@@ -188,260 +44,59 @@
             </item>
            </layout>
           </widget>
-          <widget class="Endoscope::GraphicsSceneView" name="graphicsSceneView" native="true"/>
+          <widget class="Endoscope::PropertyWidget" name="objectPropertyWidget" native="true"/>
          </widget>
-         <widget class="Endoscope::PropertyWidget" name="scenePropertyWidget" native="true"/>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_6">
-      <attribute name="title">
-       <string>Script Engines</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_10">
-       <item>
-        <widget class="QComboBox" name="scriptEngineComboBox"/>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>510</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="webPageTab">
-      <attribute name="title">
-       <string>Web Pages</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_11">
-       <item>
-        <widget class="QComboBox" name="webPageComboBox"/>
-       </item>
-       <item>
-        <widget class="QWebInspector" name="webInspector" native="true"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_5">
-      <attribute name="title">
-       <string>Connections</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_9">
-       <item>
-        <widget class="KFilterProxySearchLine" name="connectionSearchLine"/>
-       </item>
-       <item>
-        <widget class="QTreeView" name="connectionView">
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_7">
-      <attribute name="title">
-       <string>Resources</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QSplitter" name="splitter_7">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QTreeView" name="treeView"/>
-         <widget class="QStackedWidget" name="stackedWidget">
-          <property name="currentIndex">
-           <number>1</number>
-          </property>
-          <widget class="QWidget" name="page_3">
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QTextBrowser" name="textBrowser"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_4">
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_8">
-      <attribute name="title">
-       <string>State Machines</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <item>
-        <widget class="QSplitter" name="splitter_8">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QTreeView" name="stateMachinesView"/>
-         <widget class="QTreeView" name="singleStateMachineView"/>
-         <widget class="QTreeView" name="transitionView"/>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_9">
-      <attribute name="title">
-       <string>MetaTypes</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <item>
-        <widget class="QTreeView" name="metaTypeView"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_10">
-      <attribute name="title">
-       <string>SelectionModels</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_7">
-       <item>
-        <widget class="QSplitter" name="splitter_9">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QTreeView" name="selectionModelView"/>
-         <widget class="QTreeView" name="selectionModelVisualizer"/>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_11">
-      <attribute name="title">
-       <string>Fonts</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_15">
-       <item>
-        <widget class="QSplitter" name="splitter_10">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QTreeWidget" name="fontTree">
-          <property name="columnCount">
-           <number>2</number>
-          </property>
-          <column>
-           <property name="text">
-            <string>Fonts</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Smooth sizes</string>
-           </property>
-          </column>
-         </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="QTableView" name="selectedFontsView"/>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="fontText"/>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_12">
-      <attribute name="title">
-       <string>Codecs</string>
-      </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_8">
-       <item>
-        <widget class="QSplitter" name="splitter_11">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QTreeView" name="codecList"/>
-         <widget class="QWidget" name="layoutWidget">
-          <layout class="QVBoxLayout" name="verticalLayout_16">
-           <item>
-            <widget class="QTableView" name="selectedCodecs"/>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="codecText"/>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_13">
-      <attribute name="title">
-       <string>Documents</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_20">
-       <item>
-        <widget class="QSplitter" name="splitter_13">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <widget class="QWidget" name="">
-          <layout class="QVBoxLayout" name="verticalLayout_17">
-           <item>
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>All documents:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTreeView" name="documentList">
-             <property name="rootIsDecorated">
-              <bool>false</bool>
-             </property>
-             <property name="uniformRowHeights">
-              <bool>true</bool>
-             </property>
-             <property name="allColumnsShowFocus">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QSplitter" name="splitter_12">
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_4">
+       <attribute name="title">
+        <string>Widgets</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <item>
+         <widget class="QSplitter" name="splitter_4">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QWidget" name="">
-           <layout class="QVBoxLayout" name="verticalLayout_18">
+          <widget class="QSplitter" name="splitter_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="layoutWidget_2">
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
+             </item>
+             <item>
+              <widget class="QTreeView" name="widgetTreeView"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="Endoscope::WidgetPreviewWidget" name="widgetPreviewWidget" native="true"/>
+          </widget>
+          <widget class="Endoscope::PropertyWidget" name="widgetPropertyWidget" native="true"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Models</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_14">
+        <item>
+         <widget class="QSplitter" name="splitter_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>Document structure:</string>
-              </property>
-             </widget>
+             <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
             </item>
             <item>
-             <widget class="QTreeView" name="documentTree">
+             <widget class="QTreeView" name="modelView">
               <property name="uniformRowHeights">
                <bool>true</bool>
               </property>
@@ -452,17 +107,31 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="">
-           <layout class="QVBoxLayout" name="verticalLayout_19">
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayout_12">
             <item>
-             <widget class="QLabel" name="label_4">
+             <widget class="QLabel" name="label">
               <property name="text">
-               <string>Element format:</string>
+               <string>Model Content:</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QTreeView" name="documentFormatView">
+             <widget class="QTreeView" name="modelContentView"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayout_13">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Cell Content:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTreeView" name="modelCellView">
               <property name="rootIsDecorated">
                <bool>false</bool>
               </property>
@@ -477,14 +146,373 @@
            </layout>
           </widget>
          </widget>
-         <widget class="QTextEdit" name="documentView"/>
-        </widget>
-       </item>
-      </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Graphics Scenes</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QComboBox" name="sceneComboBox"/>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitter_6">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QSplitter" name="splitter_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="layoutWidget_3">
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
+             </item>
+             <item>
+              <widget class="QTreeView" name="sceneTreeView">
+               <attribute name="headerShowSortIndicator" stdset="0">
+                <bool>true</bool>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="Endoscope::GraphicsSceneView" name="graphicsSceneView" native="true"/>
+          </widget>
+          <widget class="Endoscope::PropertyWidget" name="scenePropertyWidget" native="true"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_6">
+       <attribute name="title">
+        <string>Script Engines</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_10">
+        <item>
+         <widget class="QComboBox" name="scriptEngineComboBox"/>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>510</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="webPageTab">
+       <attribute name="title">
+        <string>Web Pages</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <item>
+         <widget class="QComboBox" name="webPageComboBox"/>
+        </item>
+        <item>
+         <widget class="QWebInspector" name="webInspector" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_5">
+       <attribute name="title">
+        <string>Connections</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <item>
+         <widget class="KFilterProxySearchLine" name="connectionSearchLine"/>
+        </item>
+        <item>
+         <widget class="QTreeView" name="connectionView">
+          <property name="allColumnsShowFocus">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_7">
+       <attribute name="title">
+        <string>Resources</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QSplitter" name="splitter_7">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QTreeView" name="treeView"/>
+          <widget class="QStackedWidget" name="stackedWidget">
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <widget class="QWidget" name="page_3">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QTextBrowser" name="textBrowser"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_4">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_8">
+       <attribute name="title">
+        <string>State Machines</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QSplitter" name="splitter_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QTreeView" name="stateMachinesView"/>
+          <widget class="QTreeView" name="singleStateMachineView"/>
+          <widget class="QTreeView" name="transitionView"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_9">
+       <attribute name="title">
+        <string>MetaTypes</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QTreeView" name="metaTypeView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_10">
+       <attribute name="title">
+        <string>SelectionModels</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QSplitter" name="splitter_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QTreeView" name="selectionModelView"/>
+          <widget class="QTreeView" name="selectionModelVisualizer"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_11">
+       <attribute name="title">
+        <string>Fonts</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_15">
+        <item>
+         <widget class="QSplitter" name="splitter_10">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QTreeWidget" name="fontTree">
+           <property name="columnCount">
+            <number>2</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Fonts</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Smooth sizes</string>
+            </property>
+           </column>
+          </widget>
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QTableView" name="selectedFontsView"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="fontText"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_12">
+       <attribute name="title">
+        <string>Codecs</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <item>
+         <widget class="QSplitter" name="splitter_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QTreeView" name="codecList"/>
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayout_16">
+            <item>
+             <widget class="QTableView" name="selectedCodecs"/>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="codecText"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_13">
+       <attribute name="title">
+        <string>Documents</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_20">
+        <item>
+         <widget class="QSplitter" name="splitter_13">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayout_17">
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>All documents:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTreeView" name="documentList">
+              <property name="rootIsDecorated">
+               <bool>false</bool>
+              </property>
+              <property name="uniformRowHeights">
+               <bool>true</bool>
+              </property>
+              <property name="allColumnsShowFocus">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QSplitter" name="splitter_12">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="layoutWidget">
+            <layout class="QVBoxLayout" name="verticalLayout_18">
+             <item>
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>Document structure:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTreeView" name="documentTree">
+               <property name="uniformRowHeights">
+                <bool>true</bool>
+               </property>
+               <property name="allColumnsShowFocus">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="layoutWidget">
+            <layout class="QVBoxLayout" name="verticalLayout_19">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Element format:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTreeView" name="documentFormatView">
+               <property name="rootIsDecorated">
+                <bool>false</bool>
+               </property>
+               <property name="uniformRowHeights">
+                <bool>true</bool>
+               </property>
+               <property name="allColumnsShowFocus">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QTextEdit" name="documentView"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
-    </widget>
-   </item>
-  </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Endoscope">
+    <property name="title">
+     <string>&amp;Endoscope</string>
+    </property>
+    <addaction name="actionRetractProbe"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <addaction name="menu_Endoscope"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionRetractProbe">
+   <property name="text">
+    <string>&amp;Retract Probe</string>
+   </property>
+   <property name="toolTip">
+    <string>Retract probe from application.</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="toolTip">
+    <string>Quit probed application.</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

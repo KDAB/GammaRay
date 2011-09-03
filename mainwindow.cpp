@@ -38,9 +38,11 @@ using namespace Endoscope;
 
 MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 {
-  QWidget *center = new QWidget( this );
-  setCentralWidget( center );
-  ui.setupUi( centralWidget() );
+  ui.setupUi( this );
+
+  connect( ui.actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()) );
+  connect( QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()) );
+  connect( ui.actionQuit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()) );
 
   connect( Probe::instance(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)) );
   connect( Probe::instance(), SIGNAL(graphicsItemSelected(QGraphicsItem*)), SLOT(sceneItemSelected(QGraphicsItem*)) );
