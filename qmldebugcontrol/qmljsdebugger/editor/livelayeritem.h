@@ -39,6 +39,7 @@ namespace QmlJSDebugger {
 
 class LiveLayerItem : public QGraphicsObject
 {
+Q_OBJECT
 public:
     LiveLayerItem(QGraphicsScene *scene);
     ~LiveLayerItem();
