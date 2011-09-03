@@ -117,7 +117,7 @@ set(endoscope_srcs
   modelcellmodel.cpp
   graphicsview.cpp
   graphicssceneview.cpp
-  metatypesmodel.cpp
+  tools/metatypebrowser/metatypesmodel.cpp
   tools/fontbrowser/fontmodel.cpp
   tools/codecbrowser/codecmodel.cpp
   tools/textdocumentinspector/textdocumentmodel.cpp
@@ -126,7 +126,7 @@ set(endoscope_srcs
 
   tools/codecbrowser/codecbrowser.cpp
   tools/fontbrowser/fontbrowser.cpp
-  tools/scriptenginedebugger/scriptenginedebugger.cpp
+  tools/metatypebrowser/metatypebrowser.cpp  tools/scriptenginedebugger/scriptenginedebugger.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
   tools/webinspector/webinspector.cpp
@@ -145,6 +145,7 @@ qt4_wrap_ui(endoscope_srcs
 
   tools/codecbrowser/codecbrowser.ui
   tools/fontbrowser/fontbrowser.ui
+  tools/metatypebrowser/metatypebrowser.ui
   tools/scriptenginedebugger/scriptenginedebugger.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui

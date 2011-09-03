@@ -34,7 +34,6 @@
 #include "modelcellmodel.h"
 #include "statemodel.h"
 #include "transitionmodel.h"
-#include "metatypesmodel.h"
 #include "toolmodel.h"
 #include "toolfactory.h"
 
@@ -133,10 +132,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   m_transitionModel = new TransitionModel(this);
   ui.transitionView->setModel(m_transitionModel);
-
-  MetaTypesModel *mtm = new MetaTypesModel(this);
-
-  ui.metaTypeView->setModel(mtm);
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
