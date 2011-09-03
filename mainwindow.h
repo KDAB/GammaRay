@@ -13,8 +13,6 @@ class StateModel;
 class TransitionModel;
 class FontModel;
 class SelectedCodecsModel;
-class TextDocumentModel;
-class TextDocumentFormatModel;
 
 class MainWindow : public QMainWindow
 {
@@ -37,8 +35,6 @@ class MainWindow : public QMainWindow
     void selectionModelSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
-    void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
-    void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void about();
     void toolSelected();
 
@@ -51,8 +47,6 @@ class MainWindow : public QMainWindow
     TransitionModel *m_transitionModel;
     FontModel *m_selectedFontModel;
     SelectedCodecsModel *m_selectedCodecsModel;
-    TextDocumentModel *m_textDocumentModel;
-    TextDocumentFormatModel *m_textDocumentFormatModel;
 };
 
 }

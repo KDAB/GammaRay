@@ -14,8 +14,6 @@
 #include "metatypesmodel.h"
 #include "fontmodel.h"
 #include "codecmodel.h"
-#include "textdocumentmodel.h"
-#include "textdocumentformatmodel.h"
 #include "toolmodel.h"
 #include "toolinterface.h"
 
@@ -159,16 +157,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   connect(ui.codecList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCodecs(QItemSelection,QItemSelection)));
   connect(ui.codecText, SIGNAL(textChanged(QString)), m_selectedCodecsModel, SLOT(updateText(QString)));
-
-  ObjectTypeFilterProxyModel<QTextDocument> *documentFilter = new ObjectTypeFilterProxyModel<QTextDocument>( this );
-  documentFilter->setSourceModel( Probe::instance()->objectListModel() );
-  ui.documentList->setModel( documentFilter );
-  connect( ui.documentList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(documentSelected(QItemSelection,QItemSelection)) );
-  m_textDocumentModel = new TextDocumentModel( this );
-  ui.documentTree->setModel( m_textDocumentModel );
-  connect( ui.documentTree->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(documentElementSelected(QItemSelection,QItemSelection)) );
-  m_textDocumentFormatModel = new TextDocumentFormatModel( this );
-  ui.documentFormatView->setModel( m_textDocumentFormatModel );
 }
 
 void MainWindow::objectSelected( const QModelIndex &index )
@@ -363,23 +351,6 @@ void MainWindow::updateCodecs(const QItemSelection& selected, const QItemSelecti
 
   currentCodecNames << previousCodecs;
   m_selectedCodecsModel->setCodecs(currentCodecNames);
-}
-
-void MainWindow::documentSelected(const QItemSelection& selected, const QItemSelection& deselected)
-{
-  const QModelIndex selectedRow = selected.first().topLeft();
-  QObject *selectedObj = selectedRow.data( ObjectListModel::ObjectRole ).value<QObject*>();
-  QTextDocument *doc = qobject_cast<QTextDocument*>( selectedObj );
-  if ( doc )
-    ui.documentView->setDocument( doc );
-  m_textDocumentModel->setDocument( doc );
-}
-
-void MainWindow::documentElementSelected(const QItemSelection& selected, const QItemSelection& deselected)
-{
-  const QModelIndex selectedRow = selected.first().topLeft();
-  const QTextFormat f = selectedRow.data( TextDocumentModel::FormatRole ).value<QTextFormat>();
-  m_textDocumentFormatModel->setFormat( f );
 }
 
 void MainWindow::about()

@@ -112,11 +112,13 @@ set(endoscope_srcs
   metatypesmodel.cpp
   fontmodel.cpp
   codecmodel.cpp
-  textdocumentmodel.cpp
-  textdocumentformatmodel.cpp
+  tools/textdocumentinspector/textdocumentmodel.cpp
+  tools/textdocumentinspector/textdocumentformatmodel.cpp
   toolmodel.cpp
 
- tools/scriptenginedebugger/scriptenginedebugger.cpp  tools/webinspector/webinspector.cpp
+  tools/scriptenginedebugger/scriptenginedebugger.cpp
+  tools/textdocumentinspector/textdocumentinspector.cpp
+  tools/webinspector/webinspector.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -131,6 +133,7 @@ qt4_wrap_ui(endoscope_srcs
   graphicssceneview.ui
 
   tools/scriptenginedebugger/scriptenginedebugger.ui
+  tools/textdocumentinspector/textdocumentinspector.ui
   tools/webinspector/webinspector.ui
 )
 qt4_add_resources(endoscope_srcs resources/endoscope.qrc)
