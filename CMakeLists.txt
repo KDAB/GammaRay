@@ -15,7 +15,6 @@ include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
-  ${CMAKE_BINARY_DIR}/3rdparty
 )
 
 if(USE_DETOURS)
@@ -61,6 +60,10 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h
 )
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Wsign-promo -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wlogical-op -Wmissing-noreturn -Werror=return-type -Wunused-but-set-variable -Winline")
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 add_subdirectory(injector)
 
@@ -157,3 +160,4 @@ set_target_properties(endoscope_probe PROPERTIES PREFIX "")
 install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(qmldebugcontrol)
+
