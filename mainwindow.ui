@@ -93,7 +93,7 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="layoutWidget_3">
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
              <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
@@ -110,7 +110,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="layoutWidget_4">
            <layout class="QVBoxLayout" name="verticalLayout_12">
             <item>
              <widget class="QLabel" name="label">
@@ -124,7 +124,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="layoutWidget_5">
            <layout class="QVBoxLayout" name="verticalLayout_13">
             <item>
              <widget class="QLabel" name="label_2">
@@ -169,7 +169,7 @@
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <widget class="QWidget" name="layoutWidget_3">
+           <widget class="QWidget" name="layoutWidget_6">
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
               <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
@@ -313,7 +313,7 @@
             </property>
            </column>
           </widget>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="layoutWidget_7">
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
              <widget class="QTableView" name="selectedFontsView"/>
@@ -338,7 +338,7 @@
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QTreeView" name="codecList"/>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="layoutWidget_8">
            <layout class="QVBoxLayout" name="verticalLayout_16">
             <item>
              <widget class="QTableView" name="selectedCodecs"/>
