@@ -1,7 +1,7 @@
 #include "codecbrowser.h"
 #include "ui_codecbrowser.h"
 
-#include <codecmodel.h>
+#include "codecmodel.h"
 
 using namespace Endoscope;
 

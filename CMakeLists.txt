@@ -1,5 +1,6 @@
 project(endoscope)
 cmake_minimum_required(VERSION 2.6)
+include(CheckCXXCompilerFlag)
 
 set(QT_MIN_VERSION "4.6.0")
 find_package(Qt4 REQUIRED)
@@ -62,7 +63,11 @@ configure_file(
 )
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Wsign-promo -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wlogical-op -Wmissing-noreturn -Werror=return-type -Wunused-but-set-variable -Winline")
+  check_cxx_compiler_flag(-Wunused-but-set-variable HAVE_UNUSED_BUT_SET)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Wsign-promo -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wlogical-op -Wmissing-noreturn -Werror=return-type -Winline")
+  if (HAVE_UNUSED_BUT_SET)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-but-set-variable")
+  endif()
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 add_subdirectory(injector)
