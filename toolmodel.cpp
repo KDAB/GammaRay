@@ -1,6 +1,7 @@
 #include "toolmodel.h"
 #include "toolinterface.h"
 
+#include "tools/scriptenginedebugger/scriptenginedebugger.h"
 #include "tools/webinspector/webinspector.h"
 
 using namespace Endoscope;
@@ -8,6 +9,7 @@ using namespace Endoscope;
 ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
 {
   // built-in tools
+  m_tools.push_back( new ScriptEngineDebuggerInterface );
   m_tools.push_back( new WebInspectorInterface );
 
   // tool plugins

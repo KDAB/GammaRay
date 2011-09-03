@@ -27,6 +27,7 @@ class WebInspector : public QWidget
 class WebInspectorInterface : public QObject, public ToolInterface
 {
   Q_OBJECT
+  Q_INTERFACES(Endoscope::ToolInterface)
   public:
     inline QString name() const { return tr("Web Pages"); }
     inline QStringList supportedTypes() const { return QStringList( QWebPage::staticMetaObject.className() ); }

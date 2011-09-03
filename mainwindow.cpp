@@ -25,8 +25,6 @@
 #include <qgraphicsscene.h>
 #include <qdebug.h>
 #include <qgraphicsitem.h>
-#include <QtScript/qscriptengine.h>
-#include <QtScriptTools/QScriptEngineDebugger>
 
 #include <qt/resourcemodel.h>
 #include <QtGui/QItemSelection>
@@ -99,13 +97,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.screneTreeSearchLine->setProxy( sceneFilter );
   connect( ui.sceneTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(sceneItemSelected(QModelIndex)) );
-
-  ObjectTypeFilterProxyModel<QScriptEngine> *scriptEngineFilter = new ObjectTypeFilterProxyModel<QScriptEngine>( this );
-  scriptEngineFilter->setSourceModel( Probe::instance()->objectListModel() );
-  singleColumnProxy = new SingleColumnObjectProxyModel( this );
-  singleColumnProxy->setSourceModel( scriptEngineFilter );
-  ui.scriptEngineComboBox->setModel( singleColumnProxy );
-  connect( ui.scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
 
   QSortFilterProxyModel *connectionFilterProxy = new ConnectionFilterProxyModel( this );
   connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
@@ -264,19 +255,6 @@ void MainWindow::sceneItemSelected(QGraphicsItem* item)
   ui.sceneTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
   ui.sceneTreeView->scrollTo( index );
   sceneItemSelected( index );
-}
-
-void MainWindow::scriptEngineSelected(int index)
-{
-  QObject* obj = ui.scriptEngineComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
-  QScriptEngine *engine = qobject_cast<QScriptEngine*>( obj );
-  if ( engine ) {
-    QScriptEngineDebugger *debugger = new QScriptEngineDebugger( this );
-    qDebug() << "Attaching debugger" << engine;
-    debugger->attachTo( engine );
-    debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
-    debugger->standardWindow()->show();
-  }
 }
 
 void MainWindow::resourceSelected(const QItemSelection &selected, const QItemSelection &deselected)

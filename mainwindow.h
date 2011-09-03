@@ -31,7 +31,6 @@ class MainWindow : public QMainWindow
     void modelSelected(const QModelIndex &index);
     void modelCellSelected(const QModelIndex &index);
     void sceneSelected(int index);
-    void scriptEngineSelected(int index);
     void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void stateMachineSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void stateSelected(const QItemSelection &selected, const QItemSelection &deselected);
