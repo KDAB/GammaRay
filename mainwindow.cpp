@@ -32,8 +32,6 @@
 #include "singlecolumnobjectproxymodel.h"
 #include "modelmodel.h"
 #include "modelcellmodel.h"
-#include "statemodel.h"
-#include "transitionmodel.h"
 #include "toolmodel.h"
 #include "toolfactory.h"
 
@@ -45,7 +43,6 @@
 #include <qgraphicsitem.h>
 
 #include <qt/resourcemodel.h>
-#include <QtCore/QStateMachine>
 #include <QtGui/QStringListModel>
 #include <QtCore/qtextcodec.h>
 #include <QtGui/QMessageBox>
@@ -123,15 +120,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.treeView->setModel(resourceModel);
   ui.treeView->expandAll();
   connect( ui.treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(resourceSelected(QItemSelection,QItemSelection)));
-
-  ObjectTypeFilterProxyModel<QStateMachine> *stateMachineFilter = new ObjectTypeFilterProxyModel<QStateMachine>( this );
-  stateMachineFilter->setSourceModel( Probe::instance()->objectListModel() );
-  ui.stateMachinesView->setModel(stateMachineFilter);
-  connect( ui.stateMachinesView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(stateMachineSelected(QItemSelection,QItemSelection)));
-  m_stateModel = 0;
-
-  m_transitionModel = new TransitionModel(this);
-  ui.transitionView->setModel(m_transitionModel);
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
@@ -239,32 +227,6 @@ void MainWindow::resourceSelected(const QItemSelection &selected, const QItemSel
       ui.textBrowser->setText( f.readAll() );
       ui.stackedWidget->setCurrentWidget(ui.page_3);
     }
-  }
-}
-
-void MainWindow::stateMachineSelected(const QItemSelection &selected, const QItemSelection &deselected)
-{
-  Q_UNUSED(deselected)
-  const QModelIndex selectedRow = selected.first().topLeft();
-  QObject *machineObject = selectedRow.data( ObjectListModel::ObjectRole ).value<QObject*>();
-  QStateMachine *machine = qobject_cast<QStateMachine*>(machineObject);
-  if (machine) {
-    delete m_stateModel;
-    m_stateModel = new StateModel( machine, this );
-    ui.singleStateMachineView->setModel(m_stateModel);
-    ui.singleStateMachineView->expandAll();
-    connect(ui.singleStateMachineView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                                                         SLOT(stateSelected(QItemSelection,QItemSelection)));
-  }
-}
-
-void MainWindow::stateSelected(const QItemSelection &selected, const QItemSelection &deselected)
-{
-  const QModelIndex selectedRow = selected.first().topLeft();
-  QObject *stateObject = selectedRow.data( StateModel::StateObjectRole ).value<QObject*>();
-  QState *state = qobject_cast<QState*>(stateObject);
-  if (state) {
-    m_transitionModel->setState(state);
   }
 }
 

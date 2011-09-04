@@ -32,8 +32,6 @@ namespace Endoscope {
 
 class ModelCellModel;
 class SceneModel;
-class StateModel;
-class TransitionModel;
 
 class MainWindow : public QMainWindow
 {
@@ -51,8 +49,6 @@ class MainWindow : public QMainWindow
     void modelCellSelected(const QModelIndex &index);
     void sceneSelected(int index);
     void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
-    void stateMachineSelected(const QItemSelection &selected, const QItemSelection &deselected);
-    void stateSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void about();
     void toolSelected();
 
@@ -60,9 +56,7 @@ class MainWindow : public QMainWindow
     Ui::MainWindow ui;
     QComboBox *m_toolSelector;
     SceneModel *m_sceneModel;
-    StateModel *m_stateModel;
     ModelCellModel *m_cellModel;
-    TransitionModel *m_transitionModel;
 };
 
 }

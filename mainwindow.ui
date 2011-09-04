@@ -245,23 +245,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_8">
-       <attribute name="title">
-        <string>State Machines</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
-        <item>
-         <widget class="QSplitter" name="splitter_8">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QTreeView" name="stateMachinesView"/>
-          <widget class="QTreeView" name="singleStateMachineView"/>
-          <widget class="QTreeView" name="transitionView"/>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="widget">
        <attribute name="title">
         <string>New Tool View</string>

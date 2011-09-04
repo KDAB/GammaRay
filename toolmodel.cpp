@@ -29,6 +29,7 @@
 #include "tools/metatypebrowser/metatypebrowser.h"
 #include "tools/scriptenginedebugger/scriptenginedebugger.h"
 #include "tools/selectionmodelinspector/selectionmodelinspector.h"
+#include "tools/statemachineinspector/statemachineinspector.h"
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/webinspector/webinspector.h"
 
@@ -39,6 +40,7 @@ ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
   // built-in tools
   m_tools.push_back( new ScriptEngineDebuggerFactory );
   m_tools.push_back( new WebInspectorFactory );
+  m_tools.push_back( new StateMachineInspectorFactory );
   m_tools.push_back( new MetaTypeBrowserFactory );
   m_tools.push_back( new SelectionModelInspectorFactory );
   m_tools.push_back( new FontBrowserFactory );
