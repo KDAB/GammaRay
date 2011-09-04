@@ -31,6 +31,7 @@
 **************************************************************************/
 
 #include "qmlprofilertraceclient.h"
+#include <QDebug>
 
 using namespace QmlProfiler::Internal;
 using namespace QmlJsDebugClient;
