@@ -29,13 +29,11 @@
 MetaTypesModel::MetaTypesModel(QObject *parent)
   : QAbstractItemModel(parent), m_lastMetaType(0)
 {
-  qDebug() << "REG" << QMetaType::isRegistered(0);
   for (m_lastMetaType = 0; ; ++m_lastMetaType) {
     if (!QMetaType::isRegistered(m_lastMetaType)) {
       break;
     }
   }
-  qDebug() << "DONE" << m_lastMetaType;
 }
 
 QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
