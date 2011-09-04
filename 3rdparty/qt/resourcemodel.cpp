@@ -1236,7 +1236,7 @@ void ResourceModelPrivate::_q_refresh()
 
 void ResourceModelPrivate::savePersistentIndexes()
 {
-    Q_Q(ResourceModel);
+//    Q_Q(ResourceModel);
     savedPersistent.clear();
 //     foreach (QPersistentModelIndexData *data, q->persistentIndexes()) {
 //         SavedPersistent saved;
@@ -1251,7 +1251,7 @@ void ResourceModelPrivate::savePersistentIndexes()
 
 void ResourceModelPrivate::restorePersistentIndexes()
 {
-    Q_Q(ResourceModel);
+//    Q_Q(ResourceModel);
 //     bool allow = allowAppendChild;
 //     allowAppendChild = false;
 //     for (int i = 0; i < savedPersistent.count(); ++i) {
