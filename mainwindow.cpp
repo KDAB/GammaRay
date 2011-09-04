@@ -41,53 +41,80 @@
 
 using namespace Endoscope;
 
-MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
+static const char progName[] = "Endoscope";
+static const char progVersion[] = "1.0";
+static const char progDesc[] = "The Qt application inspection and manipulation tool";
+static const char progURL[] = "http://www.kdab.com/endoscope";
+
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
-  ui.setupUi( this );
+  ui.setupUi(this);
 
-  connect( ui.actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()) );
-  connect( QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()) );
-  connect( ui.actionQuit, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(quit()) );
-  connect( ui.actionAboutQt, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(aboutQt()) );
-  connect( ui.actionAboutEndoscope, SIGNAL(triggered(bool)), SLOT(about()) );
+  connect(ui.actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()));
+  connect(QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()));
+  connect(ui.actionQuit, SIGNAL(triggered(bool)),
+          QApplication::instance(), SLOT(quit()));
+  connect(ui.actionAboutQt, SIGNAL(triggered(bool)),
+          QApplication::instance(), SLOT(aboutQt()));
+  connect(ui.actionAboutEndoscope, SIGNAL(triggered(bool)), SLOT(about()));
+  connect(ui.actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
-  setWindowIcon( QIcon(":endoscope/endoscope128.png") );
+  setWindowIcon(QIcon(":endoscope/endoscope128.png"));
 
   m_toolSelector = new QComboBox;
-  m_toolSelector->setModel( Probe::instance()->toolModel() );
-  connect( m_toolSelector, SIGNAL(currentIndexChanged(int)), SLOT(toolSelected()) );
-  connect( m_toolSelector, SIGNAL(activated(int)), SLOT(toolSelected()) );
-  ui.mainToolBar->addWidget( new QLabel( tr("Select Probe:") ) );
-  ui.mainToolBar->addWidget( m_toolSelector );
+  m_toolSelector->setModel(Probe::instance()->toolModel());
+  connect(m_toolSelector, SIGNAL(currentIndexChanged(int)), SLOT(toolSelected()));
+  connect(m_toolSelector, SIGNAL(activated(int)), SLOT(toolSelected()));
+  ui.mainToolBar->addWidget(new QLabel(tr("Select Probe:")));
+  ui.mainToolBar->addWidget(m_toolSelector);
   toolSelected();
 
-  setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
+  setWindowTitle(tr("%1 (%2)").arg(progName).arg(qApp->applicationName()));
 }
 
 void MainWindow::about()
 {
-  QMessageBox mb( this );
-  mb.setText( tr("<b>Endoscope 1.0</b>") );
-  mb.setInformativeText( tr("<qt>(C)&nbsp;Copyright&nbsp;2010,&nbsp;2011,&nbsp;KDAB</qt>" ) );
-  mb.setIconPixmap( QPixmap( ":endoscope/endoscope128.png" ) );
-  mb.addButton( QMessageBox::Close );
+  QMessageBox mb(this);
+  mb.setWindowTitle(tr("About %1").arg(progName));
+  mb.setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
+  mb.setInformativeText(
+    tr("<qt>Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
+       "a KDAB Group company, info@kdab.com</qt>"));
+  mb.setIconPixmap(QPixmap(":endoscope/endoscope128.png"));
+  mb.addButton(QMessageBox::Close);
+  mb.exec();
+}
+
+void MainWindow::aboutKDAB()
+{
+  QMessageBox mb(this);
+  mb.setWindowTitle(tr("About KDAB"));
+  mb.setText(tr("Klaralvdalens Datakonsult AB (KDAB)"));
+  mb.setInformativeText(
+    tr("<qt>%1 is supported and maintained by KDAB "
+       "(please visit http://www.kdab.com to meet the people who write code like this). "
+       "We also do Qt training."
+       "<p>Head Engineer for Endoscope is<br>Volker Krause &lt;volker.krause@kdab.com&gt;</qt>").
+    arg(progName));
+  mb.setIconPixmap(QPixmap(":endoscope/kdabproducts.png"));
+  mb.addButton(QMessageBox::Close);
   mb.exec();
 }
 
 void MainWindow::toolSelected()
 {
-  const QModelIndex mi = m_toolSelector->model()->index( m_toolSelector->currentIndex(), 0 );
-  QWidget *toolWidget = mi.data( ToolModel::ToolWidgetRole ).value<QWidget*>();
-  if ( !toolWidget ) {
-    ToolFactory *toolIface = mi.data( ToolModel::ToolFactoryRole ).value<ToolFactory*>();
-    Q_ASSERT( toolIface );
-    qDebug() << Q_FUNC_INFO << "creating new probe: " << toolIface->name() << toolIface->supportedTypes();
-    toolWidget = toolIface->createInstance( Probe::instance(), 0 );
-    ui.toolStack->addWidget( toolWidget );
-    m_toolSelector->model()->setData( mi, QVariant::fromValue( toolWidget ) );
+  const QModelIndex mi = m_toolSelector->model()->index(m_toolSelector->currentIndex(), 0);
+  QWidget *toolWidget = mi.data(ToolModel::ToolWidgetRole).value<QWidget*>();
+  if (!toolWidget) {
+    ToolFactory *toolIface = mi.data(ToolModel::ToolFactoryRole).value<ToolFactory*>();
+    Q_ASSERT(toolIface);
+    qDebug() << Q_FUNC_INFO << "creating new probe: "
+             << toolIface->name() << toolIface->supportedTypes();
+    toolWidget = toolIface->createInstance(Probe::instance(), 0);
+    ui.toolStack->addWidget(toolWidget);
+    m_toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
   }
-  ui.toolStack->setCurrentIndex( ui.toolStack->indexOf( toolWidget ) );
+  ui.toolStack->setCurrentIndex(ui.toolStack->indexOf(toolWidget));
 }
-
 
 #include "mainwindow.moc"
