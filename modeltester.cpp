@@ -83,8 +83,9 @@ void ModelTester::failure(QAbstractItemModel* model, int line, const char* messa
 // - change Q_ASSERT to non-fatal reporting
 // - suppress qDebug etc, since those trigger qobject creating and thus infinite loops when model-testing the object model
 #include <QtGui/QtGui> // avoid interference with any include used by modeltest
+#include "modeltest.moc"
 #undef Q_ASSERT
 #define Q_ASSERT( x ) (!( x ) ? static_cast<Endoscope::ModelTester*>( static_cast<QObject*>( this )->parent() )->failure( this->model, __LINE__, #x ) : qt_noop())
 #define qDebug() QNoDebug()
 #include "modeltest.cpp"
-#include "modeltest.moc"
+
