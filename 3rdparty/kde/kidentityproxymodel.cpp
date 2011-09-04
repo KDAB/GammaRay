@@ -630,7 +630,7 @@ void KIdentityProxyModelPrivate::_k_sourceModelReset()
 
 void KIdentityProxyModelPrivate::_k_sourceModelDestroyed()
 {
-    Q_Q(KIdentityProxyModel);
+//    Q_Q(KIdentityProxyModel);
 //    q->endResetModel();
 }
 
