@@ -114,7 +114,7 @@ set(endoscope_srcs
   singlecolumnobjectproxymodel.cpp
   modeltester.cpp
   modelmodel.cpp
-  modelcellmodel.cpp
+  tools/modelinspector/modelcellmodel.cpp
   graphicsview.cpp
   graphicssceneview.cpp
   tools/metatypebrowser/metatypesmodel.cpp
