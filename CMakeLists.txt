@@ -1,5 +1,28 @@
 project(endoscope)
 cmake_minimum_required(VERSION 2.8)
+
+if(NOT Prog_NAME)
+  set(Prog_NAME "Endoscope")
+endif()
+if(NOT Prog_VERSION)
+  set(Prog_VERSION_MAJOR "1")
+  set(Prog_VERSION_MINOR "0")
+  set(Prog_VERSION_PATCH "0")
+  set(Prog_VERSION
+    "${Prog_VERSION_MAJOR}.${Prog_VERSION_MINOR}.${Prog_VERSION_PATCH}")
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
+endif()
+
+if(APPLE AND CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
+  set(CMAKE_INSTALL_PREFIX "/Applications")
+endif()
+
+message(STATUS "Building ${Prog_NAME} ${Prog_VERSION} in ${CMAKE_BUILD_TYPE} mode")
+add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\" -DPROGRAM_VERSION=\"${Prog_VERSION}\")
+
 include(CheckCXXCompilerFlag)
 
 set(QT_MIN_VERSION "4.6.0")
@@ -8,7 +31,11 @@ find_package(Boost REQUIRED)
 
 if(WIN32)
   option(USE_DETOURS "use detours for in debugging" OFF)
-endif(WIN32)
+endif()
+
+if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
+  add_definitions(-DQT_NO_DEBUG_OUTPUT)
+endif()
 
 include_directories(
   ${QT_INCLUDES}
@@ -20,7 +47,9 @@ include_directories(
 
 if(USE_DETOURS)
   add_definitions(-DUSE_DETOURS)
-endif(USE_DETOURS)
+  include_directories(${CMAKE_SOURCE_DIR}/3rdparty/detours)
+  add_subdirectory(3rdparty/detours)
+endif()
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
@@ -34,7 +63,7 @@ set(
 
 if(WIN32)
   add_definitions(-DUNICODE)
-endif(WIN32)
+endif()
 
 if(APPLE)
   # on the Mac support an extra install directory for application bundles
@@ -43,8 +72,13 @@ if(APPLE)
     ${INSTALL_TARGETS_DEFAULT_ARGS}
     BUNDLE DESTINATION "/Applications/Qt4"
   )
-endif(APPLE)
+endif()
 
+if(UNIX AND NOT APPLE)
+  set(DOC_INSTALL_DIR share/doc/endoscope/)
+else()
+  set(DOC_INSTALL_DIR .)
+endif()
 
 # TODO: find a nicer way for all this. ideally auto-detect the name mangling
 # format, but at least guess a default based on OS + compiler.
@@ -64,11 +98,11 @@ configure_file(
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   check_cxx_compiler_flag(-Wunused-but-set-variable HAVE_UNUSED_BUT_SET)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wlogical-op -Wmissing-noreturn -Werror=return-type -Winline")
-  if (HAVE_UNUSED_BUT_SET)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wlogical-op -Wmissing-noreturn -Werror=return-type")
+  if(HAVE_UNUSED_BUT_SET)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-but-set-variable")
   endif()
-endif(CMAKE_COMPILER_IS_GNUCXX)
+endif()
 
 add_subdirectory(injector)
 
@@ -88,7 +122,7 @@ add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
 if(USE_DETOURS)
   target_link_libraries(endoscope detours)
-endif(USE_DETOURS)
+endif()
 
 set(endoscope_srcs
   mainwindow.cpp
@@ -177,17 +211,22 @@ target_link_libraries(endoscope_probe
 )
 if(NOT WIN32)
   target_link_libraries(endoscope_probe dl)
-else(NOT WIN32)
+else()
   if(USE_DETOURS)
     target_link_libraries(endoscope_probe detoured detours)
-  endif(USE_DETOURS)
-endif(NOT WIN32)
+  endif()
+endif()
 set_target_properties(endoscope_probe PROPERTIES PREFIX "")
 
 install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(qmldebugcontrol)
+set(LICENSE_FILE "License.txt")
+set(README_FILE "ReadMe.txt")
+if(NOT APPLE)
+  install(FILES "${LICENSE_FILE}" "${README_FILE}" DESTINATION ${DOC_INSTALL_DIR})
+endif()
 
+add_subdirectory(qmldebugcontrol)
 
 find_program(CPPCHECK_EXECUTABLE cppcheck)
 if(CPPCHECK_EXECUTABLE)
@@ -197,7 +236,7 @@ if(CPPCHECK_EXECUTABLE)
     set(_cppcheck_flags ${_cppcheck_flags} "-I${_current}")
   endforeach()
   add_custom_target(cppcheck
-	  COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --quiet ${_cppcheck_flags} ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --quiet ${_cppcheck_flags} ${CMAKE_CURRENT_SOURCE_DIR}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Running the cppcheck static code checker"
   )
