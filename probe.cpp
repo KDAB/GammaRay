@@ -130,7 +130,7 @@ Probe* Endoscope::Probe::instance()
   if ( !s_instance ) {
     s_listener()->active = false;
     s_instance = new Probe;
-    void* ptr = QCoreApplication::instance();
+    //void* ptr = QCoreApplication::instance();
 
     QMetaObject::invokeMethod( s_instance, "delayedInit", Qt::QueuedConnection );
     s_listener()->active = true;
