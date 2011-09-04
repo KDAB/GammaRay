@@ -58,7 +58,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     QAbstractItemModel *objectTreeModel() const;
     QAbstractItemModel *connectionModel() const;
     ModelTester *modelTester() const;
-    ModelModel *modelModel() const;
+    QAbstractItemModel *modelModel() const;
     ToolModel *toolModel() const;
 
     static const char* connectLocation( const char *member );

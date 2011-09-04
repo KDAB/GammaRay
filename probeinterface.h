@@ -44,6 +44,8 @@ class ProbeInterface
     virtual QAbstractItemModel* objectTreeModel() const = 0;
     /** Returns the connection model. */
     virtual QAbstractItemModel* connectionModel() const = 0;
+    /** Returns the QAIM model. */
+    virtual QAbstractItemModel* modelModel() const = 0;
 
     /** Returns the probe QObject for connecting signals. */
     virtual QObject* probe() const = 0;

@@ -26,10 +26,6 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "objecttypefilterproxymodel.h"
-#include "connectionfilterproxymodel.h"
-#include "singlecolumnobjectproxymodel.h"
-#include "modelmodel.h"
-#include "modelcellmodel.h"
 #include "toolmodel.h"
 #include "toolfactory.h"
 
@@ -37,11 +33,11 @@
 
 #include <QCoreApplication>
 #include <qdebug.h>
-
 #include <QtGui/QStringListModel>
 #include <QtCore/qtextcodec.h>
 #include <QtGui/QMessageBox>
 #include <QtGui/QComboBox>
+#include <QtGui/QLabel>
 
 using namespace Endoscope;
 
@@ -83,15 +79,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.widgetTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(widgetSelected(QModelIndex)) );
 
-  KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel( this );
-  modelFilterProxy->setSourceModel( Probe::instance()->modelModel() );
-  ui.modelView->setModel( modelFilterProxy );
-  ui.modelSearchLine->setProxy( modelFilterProxy );
-  connect( ui.modelView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(modelSelected(QModelIndex)) );
-  m_cellModel = new ModelCellModel( this );
-  ui.modelCellView->setModel( m_cellModel );
-
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
 
@@ -127,25 +114,6 @@ void MainWindow::widgetSelected(QWidget* widget)
   ui.widgetTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
   ui.widgetTreeView->scrollTo( index );
   widgetSelected( index );
-}
-
-void MainWindow::modelSelected( const QModelIndex &index )
-{
-  if ( index.isValid() ) {
-    QObject* obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-    QAbstractItemModel* model = qobject_cast<QAbstractItemModel*>( obj );
-    ui.modelContentView->setModel( model );
-    connect( ui.modelContentView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-             SLOT(modelCellSelected(QModelIndex)) );
-  } else {
-    ui.modelContentView->setModel( 0 );
-  }
-  m_cellModel->setModelIndex( QModelIndex() );
-}
-
-void MainWindow::modelCellSelected(const QModelIndex& index)
-{
-  m_cellModel->setModelIndex( index );
 }
 
 void MainWindow::about()

@@ -32,8 +32,6 @@ class QComboBox;
 
 namespace Endoscope {
 
-class ModelCellModel;
-
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
@@ -44,15 +42,12 @@ class MainWindow : public QMainWindow
     void objectSelected(const QModelIndex &index);
     void widgetSelected( const QModelIndex &index );
     void widgetSelected( QWidget* widget );
-    void modelSelected(const QModelIndex &index);
-    void modelCellSelected(const QModelIndex &index);
     void about();
     void toolSelected();
 
   private:
     Ui::MainWindow ui;
     QComboBox *m_toolSelector;
-    ModelCellModel *m_cellModel;
 };
 
 }

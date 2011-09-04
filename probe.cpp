@@ -187,7 +187,7 @@ ModelTester* Probe::modelTester() const
   return m_modelTester;
 }
 
-ModelModel* Probe::modelModel() const
+QAbstractItemModel* Probe::modelModel() const
 {
   return m_modelModel;
 }
@@ -230,7 +230,7 @@ void Probe::objectRemoved(QObject* obj)
     instance()->m_objectTreeModel->objectRemoved( obj );
     instance()->connectionRemoved( obj, 0, 0, 0 );
     instance()->connectionRemoved( 0, 0, obj, 0 );
-    instance()->modelModel()->objectRemoved( obj );
+    instance()->m_modelModel->objectRemoved( obj );
   } else {
     for ( QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
          it != s_addedBeforeProbeInsertion()->end(); )
