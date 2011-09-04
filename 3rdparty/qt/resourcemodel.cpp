@@ -1195,7 +1195,6 @@ QVector<ResourceModelPrivate::QDirNode> ResourceModelPrivate::children(QDirNode 
     Q_ASSERT(parent);
     QFileInfoList infoList;
     if (parent == &root) {
-      qDebug() << "HERE";
         parent = 0;
         infoList.append(root.info);
     } else if (parent->info.isDir()) {
