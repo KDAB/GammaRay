@@ -39,6 +39,8 @@
 #include "tools/webinspector/webinspector.h"
 #include "tools/widgetinspector/widgetinspector.h"
 
+#include <QDebug>
+
 using namespace Endoscope;
 
 ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
@@ -60,8 +62,11 @@ ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
   m_tools.push_back( new TextDocumentInspectorFactory );
 
   // tool plugins
-
   // TODO
+
+  // everything but the object inspector is inactive initially
+  for ( int i = 1; i < m_tools.size(); ++i )
+    m_inactiveTools.insert( m_tools.at(i) );
 }
 
 QVariant ToolModel::data(const QModelIndex& index, int role) const
@@ -95,6 +100,36 @@ int ToolModel::rowCount(const QModelIndex& parent) const
   if ( parent.isValid() )
     return 0;
   return m_tools.size();
+}
+
+Qt::ItemFlags ToolModel::flags(const QModelIndex& index) const
+{
+  Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+  if (index.isValid()) {
+    ToolFactory *toolIface = m_tools.at( index.row() );
+    if ( m_inactiveTools.contains( toolIface ) )
+      flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+  }
+  return flags;
+}
+
+void ToolModel::objectAdded(const QPointer< QObject >& obj)
+{
+  if ( obj )
+    objectAdded(obj->metaObject());
+}
+
+void ToolModel::objectAdded(const QMetaObject* mo)
+{
+  foreach ( ToolFactory* factory, m_inactiveTools ) {
+    if ( factory->supportedTypes().contains( mo->className() ) ) {
+      qDebug() << "found instance of class" << mo->className() << "activating tool" << factory->name();
+      m_inactiveTools.remove( factory );
+      emit dataChanged( index( 0, 0 ), index( rowCount() - 1, 0 ) );
+    }
+  }
+  if ( mo->superClass() )
+    objectAdded( mo->superClass() );
 }
 
 #include "toolmodel.moc"

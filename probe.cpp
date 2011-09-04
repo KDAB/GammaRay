@@ -218,6 +218,7 @@ void Probe::objectAdded(QObject* obj)
     instance()->m_objectTreeModel->objectAdded( obj );
     QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
     QMetaObject::invokeMethod( instance()->modelModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
+    QMetaObject::invokeMethod( instance()->toolModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
   } else {
     s_addedBeforeProbeInsertion()->push_back( obj );
   }

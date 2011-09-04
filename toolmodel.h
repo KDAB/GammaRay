@@ -26,6 +26,8 @@
 
 #include <qabstractitemmodel.h>
 #include <qvector.h>
+#include <QSet>
+#include <QPointer>
 
 namespace Endoscope {
 
@@ -45,9 +47,20 @@ class ToolModel : public QAbstractListModel
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+
+  public slots:
+    /** Check if we have to activate tools for this type */
+    void objectAdded( const QPointer<QObject>& obj );
+
+  private:
+    /** Check if we have to activate tools for this type */
+    void objectAdded( const QMetaObject* mo );
+
   private:
     QVector<ToolFactory*> m_tools;
     QHash<ToolFactory*, QWidget*> m_toolWidgets;
+    QSet<ToolFactory*> m_inactiveTools;
 };
 
 }
