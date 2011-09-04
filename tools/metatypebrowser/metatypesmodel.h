@@ -21,7 +21,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef METATYPESMODEL_H
 #define METATYPESMODEL_H
 
@@ -30,19 +29,25 @@
 class MetaTypesModel : public QAbstractItemModel
 {
   Q_OBJECT
-public:
-  MetaTypesModel(QObject *parent = 0);
+  public:
+    MetaTypesModel(QObject *parent = 0);
 
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-  virtual QModelIndex parent(const QModelIndex& child) const;
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual QVariant headerData(int section,
+                                Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-private:
-  int m_lastMetaType;
+    virtual QModelIndex index(int row, int column,
+                              const QModelIndex &parent = QModelIndex()) const;
 
+    virtual QModelIndex parent(const QModelIndex &child) const;
+
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+  private:
+    int m_lastMetaType;
 };
 
 #endif

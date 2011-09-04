@@ -21,27 +21,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "metatypesmodel.h"
 
 #include <QtCore/QMetaType>
 #include <QtCore/QDebug>
 
-MetaTypesModel::MetaTypesModel(QObject* parent)
+MetaTypesModel::MetaTypesModel(QObject *parent)
   : QAbstractItemModel(parent), m_lastMetaType(0)
 {
   qDebug() << "REG" << QMetaType::isRegistered(0);
-  for (m_lastMetaType = 0; ; ++m_lastMetaType ) {
-    if (!QMetaType::isRegistered(m_lastMetaType))
+  for (m_lastMetaType = 0; ; ++m_lastMetaType) {
+    if (!QMetaType::isRegistered(m_lastMetaType)) {
       break;
+    }
   }
   qDebug() << "DONE" << m_lastMetaType;
 }
 
-QVariant MetaTypesModel::data(const QModelIndex& index, int role) const
+QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
 {
-  if (role != Qt::DisplayRole)
+  if (role != Qt::DisplayRole) {
     return QVariant();
+  }
 
   if (index.column() == 0) {
     return QMetaType::typeName(index.row());
@@ -51,41 +52,48 @@ QVariant MetaTypesModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
-int MetaTypesModel::rowCount(const QModelIndex& parent) const
+int MetaTypesModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return 0;
+  }
 
   return m_lastMetaType;
 }
 
-int MetaTypesModel::columnCount(const QModelIndex& parent) const
+int MetaTypesModel::columnCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return 0;
-
+  }
   return 2;
 }
 
-QModelIndex MetaTypesModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex MetaTypesModel::index(int row, int column, const QModelIndex &parent) const
 {
+  Q_UNUSED(parent);
   return createIndex(row, column);
 }
 
-QModelIndex MetaTypesModel::parent(const QModelIndex& child) const
+QModelIndex MetaTypesModel::parent(const QModelIndex &child) const
 {
+  Q_UNUSED(child);
   return QModelIndex();
 }
 
 QVariant MetaTypesModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (role != Qt::DisplayRole)
-    return QVariant();
+  Q_UNUSED(orientation);
 
-  if (section == 0)
+  if (role != Qt::DisplayRole) {
+    return QVariant();
+  }
+
+  if (section == 0) {
     return "typeName";
+  }
+
   return "MetaTypeId";
 }
-
 
 #include "metatypesmodel.moc"
