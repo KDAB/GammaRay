@@ -1,5 +1,5 @@
 project(endoscope)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 include(CheckCXXCompilerFlag)
 
 set(QT_MIN_VERSION "4.6.0")
