@@ -11,7 +11,7 @@ find "$@" -name '*.h' -o -name '*.cpp' | grep -v /3rdparty/ | grep -v /qmldebugc
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krauss@kdab.com>
+  Author: Volker Krause <volker.krause@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ find "$@" -name 'CMakeLists.txt' | while read FILE; do
 #  manipulation tool.
 #
 #  Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-#  Author: Volker Krause <volker.krauss@kdab.com>
+#  Author: Volker Krause <volker.krause@kdab.com>
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
