@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( m_toolSelector, SIGNAL(activated(int)), SLOT(toolSelected()) );
   ui.mainToolBar->addWidget( new QLabel( tr("Select Probe:") ) );
   ui.mainToolBar->addWidget( m_toolSelector );
+  toolSelected();
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
