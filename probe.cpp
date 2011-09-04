@@ -177,7 +177,7 @@ QAbstractItemModel* Probe::objectTreeModel() const
   return m_objectTreeModel;
 }
 
-ConnectionModel* Probe::connectionModel() const
+QAbstractItemModel* Probe::connectionModel() const
 {
   return m_connectionModel;
 }

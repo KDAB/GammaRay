@@ -190,23 +190,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_5">
-       <attribute name="title">
-        <string>Connections</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_9">
-        <item>
-         <widget class="KFilterProxySearchLine" name="connectionSearchLine"/>
-        </item>
-        <item>
-         <widget class="QTreeView" name="connectionView">
-          <property name="allColumnsShowFocus">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="widget">
        <attribute name="title">
         <string>New Tool View</string>

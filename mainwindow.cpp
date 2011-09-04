@@ -27,7 +27,6 @@
 #include "objecttreemodel.h"
 #include "objecttypefilterproxymodel.h"
 #include "scenemodel.h"
-#include "connectionmodel.h"
 #include "connectionfilterproxymodel.h"
 #include "singlecolumnobjectproxymodel.h"
 #include "modelmodel.h"
@@ -109,11 +108,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.screneTreeSearchLine->setProxy( sceneFilter );
   connect( ui.sceneTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(sceneItemSelected(QModelIndex)) );
-
-  QSortFilterProxyModel *connectionFilterProxy = new ConnectionFilterProxyModel( this );
-  connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
-  ui.connectionSearchLine->setProxy( connectionFilterProxy );
-  ui.connectionView->setModel( connectionFilterProxy );
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }

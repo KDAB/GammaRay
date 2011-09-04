@@ -125,6 +125,7 @@ set(endoscope_srcs
   toolmodel.cpp
 
   tools/codecbrowser/codecbrowser.cpp
+  tools/connectioninspector/connectioninspector.cpp
   tools/fontbrowser/fontbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/resourcebrowser/resourcebrowser.cpp
@@ -147,6 +148,7 @@ qt4_wrap_ui(endoscope_srcs
   graphicssceneview.ui
 
   tools/codecbrowser/codecbrowser.ui
+  tools/connectioninspector/connectioninspector.ui
   tools/fontbrowser/fontbrowser.ui
   tools/metatypebrowser/metatypebrowser.ui
   tools/resourcebrowser/resourcebrowser.ui
