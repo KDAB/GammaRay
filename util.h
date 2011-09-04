@@ -33,18 +33,19 @@ namespace Endoscope {
 
 namespace Util
 {
-  QString displayString( const QObject *object );
-  QString variantToString( const QVariant &value );
-  QString addressToString( const void* p );
+  QString displayString(const QObject *object);
+  QString variantToString(const QVariant &value);
+  QString addressToString(const void *p);
 
   template <typename T>
-  T* findParentOfType( QObject *object )
-  {
-    if ( !object )
+  T *findParentOfType(QObject *object) {
+    if (!object) {
       return 0;
-    if ( qobject_cast<T*>( object ) )
-      return qobject_cast<T*>( object );
-    return findParentOfType<T>( object->parent() );
+    }
+    if (qobject_cast<T*>(object)) {
+      return qobject_cast<T*>(object);
+    }
+    return findParentOfType<T>(object->parent());
   }
 }
 

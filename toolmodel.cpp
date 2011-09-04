@@ -43,93 +43,101 @@
 
 using namespace Endoscope;
 
-ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
+ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
 {
   // built-in tools
-  m_tools.push_back( new ObjectInspectorFactory );
-  m_tools.push_back( new WidgetInspectorFactory );
-  m_tools.push_back( new ModelInspectorFactory );
-  m_tools.push_back( new SceneInspectorFactory );
-  m_tools.push_back( new ScriptEngineDebuggerFactory );
-  m_tools.push_back( new WebInspectorFactory );
-  m_tools.push_back( new ConnectionInspectorFactory );
-  m_tools.push_back( new ResourceBrowserFactory );
-  m_tools.push_back( new StateMachineInspectorFactory );
-  m_tools.push_back( new MetaTypeBrowserFactory );
-  m_tools.push_back( new SelectionModelInspectorFactory );
-  m_tools.push_back( new FontBrowserFactory );
-  m_tools.push_back( new CodecBrowserFactory );
-  m_tools.push_back( new TextDocumentInspectorFactory );
+  m_tools.push_back(new ObjectInspectorFactory);
+  m_tools.push_back(new WidgetInspectorFactory);
+  m_tools.push_back(new ModelInspectorFactory);
+  m_tools.push_back(new SceneInspectorFactory);
+  m_tools.push_back(new ScriptEngineDebuggerFactory);
+  m_tools.push_back(new WebInspectorFactory);
+  m_tools.push_back(new ConnectionInspectorFactory);
+  m_tools.push_back(new ResourceBrowserFactory);
+  m_tools.push_back(new StateMachineInspectorFactory);
+  m_tools.push_back(new MetaTypeBrowserFactory);
+  m_tools.push_back(new SelectionModelInspectorFactory);
+  m_tools.push_back(new FontBrowserFactory);
+  m_tools.push_back(new CodecBrowserFactory);
+  m_tools.push_back(new TextDocumentInspectorFactory);
 
   // tool plugins
   // TODO
 
   // everything but the object inspector is inactive initially
-  for ( int i = 1; i < m_tools.size(); ++i )
-    m_inactiveTools.insert( m_tools.at(i) );
+  for (int i = 1; i < m_tools.size(); ++i) {
+    m_inactiveTools.insert(m_tools.at(i));
+  }
 }
 
-QVariant ToolModel::data(const QModelIndex& index, int role) const
+QVariant ToolModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
+  }
 
-  ToolFactory *toolIface = m_tools.at( index.row() );
-  if ( role == Qt::DisplayRole )
+  ToolFactory *toolIface = m_tools.at(index.row());
+  if (role == Qt::DisplayRole) {
     return toolIface->name();
-  else if ( role == ToolFactoryRole )
-    return QVariant::fromValue( toolIface );
-  else if ( role == ToolWidgetRole )
-    return QVariant::fromValue( m_toolWidgets.value( toolIface ) );
+  } else if (role == ToolFactoryRole) {
+    return QVariant::fromValue(toolIface);
+  } else if (role == ToolWidgetRole) {
+    return QVariant::fromValue(m_toolWidgets.value(toolIface));
+  }
 
   return QVariant();
 }
 
-bool ToolModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool ToolModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-  if ( index.isValid() && role == Qt::EditRole ) {
-    ToolFactory *toolIface = m_tools.at( index.row() );
-    m_toolWidgets.insert( toolIface, value.value<QWidget*>() );
+  if (index.isValid() && role == Qt::EditRole) {
+    ToolFactory *toolIface = m_tools.at(index.row());
+    m_toolWidgets.insert(toolIface, value.value<QWidget*>());
     return true;
   }
   return QAbstractItemModel::setData(index, value, role);
 }
 
-int ToolModel::rowCount(const QModelIndex& parent) const
+int ToolModel::rowCount(const QModelIndex &parent) const
 {
-  if ( parent.isValid() )
+  if (parent.isValid()) {
     return 0;
+  }
   return m_tools.size();
 }
 
-Qt::ItemFlags ToolModel::flags(const QModelIndex& index) const
+Qt::ItemFlags ToolModel::flags(const QModelIndex &index) const
 {
   Qt::ItemFlags flags = QAbstractItemModel::flags(index);
   if (index.isValid()) {
-    ToolFactory *toolIface = m_tools.at( index.row() );
-    if ( m_inactiveTools.contains( toolIface ) )
+    ToolFactory *toolIface = m_tools.at(index.row());
+    if (m_inactiveTools.contains(toolIface)) {
       flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    }
   }
   return flags;
 }
 
-void ToolModel::objectAdded(const QPointer< QObject >& obj)
+void ToolModel::objectAdded(const QPointer< QObject > &obj)
 {
-  if ( obj )
+  if (obj) {
     objectAdded(obj->metaObject());
+  }
 }
 
-void ToolModel::objectAdded(const QMetaObject* mo)
+void ToolModel::objectAdded(const QMetaObject *mo)
 {
-  foreach ( ToolFactory* factory, m_inactiveTools ) {
-    if ( factory->supportedTypes().contains( mo->className() ) ) {
-      qDebug() << "found instance of class" << mo->className() << "activating tool" << factory->name();
-      m_inactiveTools.remove( factory );
-      emit dataChanged( index( 0, 0 ), index( rowCount() - 1, 0 ) );
+  foreach (ToolFactory *factory, m_inactiveTools) {
+    if (factory->supportedTypes().contains(mo->className())) {
+      qDebug() << "found instance of class" << mo->className()
+               << "activating tool" << factory->name();
+      m_inactiveTools.remove(factory);
+      emit dataChanged(index(0, 0), index(rowCount() - 1, 0));
     }
   }
-  if ( mo->superClass() )
-    objectAdded( mo->superClass() );
+  if (mo->superClass()) {
+    objectAdded(mo->superClass());
+  }
 }
 
 #include "toolmodel.moc"
