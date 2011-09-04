@@ -173,3 +173,17 @@ install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(qmldebugcontrol)
 
+
+find_program(CPPCHECK_EXECUTABLE cppcheck)
+if(CPPCHECK_EXECUTABLE)
+  set(_cppcheck_flags "-I${CMAKE_CURRENT_BINARY_DIR}")
+  get_directory_property(_inc_dirs INCLUDE_DIRECTORIES)
+  foreach(_current ${_inc_dirs})
+    set(_cppcheck_flags ${_cppcheck_flags} "-I${_current}")
+  endforeach()
+  add_custom_target(cppcheck
+	  COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --quiet ${_cppcheck_flags} ${CMAKE_CURRENT_SOURCE_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Running the cppcheck static code checker"
+  )
+endif()
