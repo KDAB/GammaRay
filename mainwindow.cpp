@@ -60,25 +60,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   ui.mainToolBar->addWidget( new QLabel( tr("Select Probe:") ) );
   ui.mainToolBar->addWidget( m_toolSelector );
 
-  QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel( this );
-  objectFilter->setSourceModel( Probe::instance()->objectTreeModel() );
-  objectFilter->setDynamicSortFilter( true );
-  ui.objectTreeView->setModel( objectFilter );
-  ui.objectSearchLine->setProxy( objectFilter );
-  connect( ui.objectTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-	   SLOT(objectSelected(QModelIndex)) );
-
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
-}
-
-void MainWindow::objectSelected( const QModelIndex &index )
-{
-  if ( index.isValid() ) {
-    QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-    ui.objectPropertyWidget->setObject( obj );
-  } else {
-    ui.objectPropertyWidget->setObject( 0 );
-  }
 }
 
 void MainWindow::about()

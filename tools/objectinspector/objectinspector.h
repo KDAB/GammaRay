@@ -1,5 +1,5 @@
 /*
-  mainwindow.h
+  objectinspector.h
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
@@ -21,32 +21,39 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef ENDOSCOPE_OBJECTINSPECTOR_H
+#define ENDOSCOPE_OBJECTINSPECTOR_H
 
-#include <qmainwindow.h>
+#include <qwidget.h>
+#include <toolfactory.h>
 
-#include "ui_mainwindow.h"
-
-class QComboBox;
+class QModelIndex;
 
 namespace Endoscope {
 
-class MainWindow : public QMainWindow
+namespace Ui { class ObjectInspector; }
+
+class ObjectInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit MainWindow( QWidget *parent = 0 );
+    explicit ObjectInspector( ProbeInterface* probe, QWidget *parent = 0 );
 
   private slots:
-    void about();
-    void toolSelected();
+    void objectSelected(const QModelIndex &index);
 
   private:
-    Ui::MainWindow ui;
-    QComboBox *m_toolSelector;
+    QScopedPointer<Ui::ObjectInspector> ui;
+};
+
+class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObject, ObjectInspector>
+{
+  Q_OBJECT
+  Q_INTERFACES( Endoscope::ToolFactory )
+  public:
+    inline QString name() const { return tr("Objects"); }
 };
 
 }
 
-#endif // MAINWINDOW_H
+#endif // ENDOSCOPE_OBJECTINSPECTOR_H
