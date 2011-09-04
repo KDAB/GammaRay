@@ -53,18 +53,18 @@
   <customwidget>
    <class>KFilterProxySearchLine</class>
    <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
+   <header location="global">kde/kfilterproxysearchline.h</header>
   </customwidget>
   <customwidget>
    <class>Endoscope::PropertyWidget</class>
    <extends>QWidget</extends>
-   <header>propertywidget.h</header>
+   <header location="global">propertywidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Endoscope::GraphicsSceneView</class>
    <extends>QWidget</extends>
-   <header>graphicssceneview.h</header>
+   <header location="global">tools/sceneinspector/graphicssceneview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

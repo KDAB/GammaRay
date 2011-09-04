@@ -115,8 +115,8 @@ set(endoscope_srcs
   modeltester.cpp
   modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
-  graphicsview.cpp
-  graphicssceneview.cpp
+  tools/sceneinspector/graphicsview.cpp
+  tools/sceneinspector/graphicssceneview.cpp
   tools/metatypebrowser/metatypesmodel.cpp
   tools/fontbrowser/fontmodel.cpp
   tools/codecbrowser/codecmodel.cpp
@@ -147,7 +147,7 @@ qt4_wrap_ui(endoscope_srcs
   mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
-  graphicssceneview.ui
+  tools/sceneinspector/graphicssceneview.ui
 
   tools/codecbrowser/codecbrowser.ui
   tools/connectioninspector/connectioninspector.ui

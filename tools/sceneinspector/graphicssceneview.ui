@@ -62,7 +62,7 @@
   <customwidget>
    <class>Endoscope::GraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>graphicsview.h</header>
+   <header location="global">tools/sceneinspector/graphicsview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
