@@ -41,8 +41,8 @@
 
 using namespace Endoscope;
 
-static const char progName[] = "Endoscope";
-static const char progVersion[] = "1.0";
+static const char progName[] = PROGRAM_NAME;
+static const char progVersion[] = PROGRAM_VERSION;
 static const char progDesc[] = "The Qt application inspection and manipulation tool";
 static const char progURL[] = "http://www.kdab.com/endoscope";
 
