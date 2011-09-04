@@ -253,7 +253,8 @@ void QDeclarativeDebugConnection::connectToHost(const QString &hostName, quint16
 
 void QDeclarativeDebugConnection::connectToOst(const QString &port)
 {
-        emit error(QAbstractSocket::HostNotFoundError);
+    Q_UNUSED(port);
+    emit error(QAbstractSocket::HostNotFoundError);
 
 }
 
