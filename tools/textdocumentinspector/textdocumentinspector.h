@@ -41,7 +41,7 @@ class TextDocumentInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit TextDocumentInspector(ProbeInterface *probe, QWidget* parent = 0);
+    explicit TextDocumentInspector(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
@@ -53,7 +53,8 @@ class TextDocumentInspector : public QWidget
     TextDocumentFormatModel *m_textDocumentFormatModel;
 };
 
-class TextDocumentInspectorFactory : public QObject, public StandardToolFactory<QTextDocument, TextDocumentInspector>
+class TextDocumentInspectorFactory :
+    public QObject, public StandardToolFactory<QTextDocument,TextDocumentInspector>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
