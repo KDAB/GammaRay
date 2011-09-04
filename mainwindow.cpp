@@ -42,7 +42,6 @@
 #include <qdebug.h>
 #include <qgraphicsitem.h>
 
-#include <qt/resourcemodel.h>
 #include <QtGui/QStringListModel>
 #include <QtCore/qtextcodec.h>
 #include <QtGui/QMessageBox>
@@ -115,11 +114,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connectionFilterProxy->setSourceModel( Probe::instance()->connectionModel() );
   ui.connectionSearchLine->setProxy( connectionFilterProxy );
   ui.connectionView->setModel( connectionFilterProxy );
-
-  ResourceModel *resourceModel = new ResourceModel(this);
-  ui.treeView->setModel(resourceModel);
-  ui.treeView->expandAll();
-  connect( ui.treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(resourceSelected(QItemSelection,QItemSelection)));
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
@@ -208,26 +202,6 @@ void MainWindow::sceneItemSelected(QGraphicsItem* item)
   ui.sceneTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
   ui.sceneTreeView->scrollTo( index );
   sceneItemSelected( index );
-}
-
-void MainWindow::resourceSelected(const QItemSelection &selected, const QItemSelection &deselected)
-{
-  Q_UNUSED(deselected)
-  const QModelIndex selectedRow = selected.first().topLeft();
-  const QFileInfo fi(selectedRow.data( ResourceModel::FilePathRole ).toString());
-
-  if ( fi.isFile() ) {
-    const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
-    if ( l.contains( fi.suffix() ) ) {
-      ui.label_3->setPixmap( fi.absoluteFilePath() );
-      ui.stackedWidget->setCurrentWidget(ui.page_4);
-    } else {
-      QFile f( fi.absoluteFilePath() );
-      f.open(QFile::ReadOnly | QFile::Text);
-      ui.textBrowser->setText( f.readAll() );
-      ui.stackedWidget->setCurrentWidget(ui.page_3);
-    }
-  }
 }
 
 void MainWindow::about()

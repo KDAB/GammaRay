@@ -127,6 +127,7 @@ set(endoscope_srcs
   tools/codecbrowser/codecbrowser.cpp
   tools/fontbrowser/fontbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
+  tools/resourcebrowser/resourcebrowser.cpp
   tools/scriptenginedebugger/scriptenginedebugger.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/statemachineinspector/statemachineinspector.cpp
@@ -148,6 +149,7 @@ qt4_wrap_ui(endoscope_srcs
   tools/codecbrowser/codecbrowser.ui
   tools/fontbrowser/fontbrowser.ui
   tools/metatypebrowser/metatypebrowser.ui
+  tools/resourcebrowser/resourcebrowser.ui
   tools/scriptenginedebugger/scriptenginedebugger.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/statemachineinspector/statemachineinspector.ui

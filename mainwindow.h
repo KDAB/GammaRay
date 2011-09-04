@@ -48,7 +48,6 @@ class MainWindow : public QMainWindow
     void modelSelected(const QModelIndex &index);
     void modelCellSelected(const QModelIndex &index);
     void sceneSelected(int index);
-    void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void about();
     void toolSelected();
 
