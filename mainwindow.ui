@@ -152,44 +152,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Graphics Scenes</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <widget class="QComboBox" name="sceneComboBox"/>
-        </item>
-        <item>
-         <widget class="QSplitter" name="splitter_6">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QSplitter" name="splitter_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <widget class="QWidget" name="layoutWidget_6">
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <item>
-              <widget class="KFilterProxySearchLine" name="screneTreeSearchLine"/>
-             </item>
-             <item>
-              <widget class="QTreeView" name="sceneTreeView">
-               <attribute name="headerShowSortIndicator" stdset="0">
-                <bool>true</bool>
-               </attribute>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="Endoscope::GraphicsSceneView" name="graphicsSceneView" native="true"/>
-          </widget>
-          <widget class="Endoscope::PropertyWidget" name="scenePropertyWidget" native="true"/>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="widget">
        <attribute name="title">
         <string>New Tool View</string>
@@ -293,12 +255,6 @@
    <class>Endoscope::WidgetPreviewWidget</class>
    <extends>QWidget</extends>
    <header>widgetpreviewwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Endoscope::GraphicsSceneView</class>
-   <extends>QWidget</extends>
-   <header>graphicssceneview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -197,6 +197,11 @@ ToolModel* Probe::toolModel() const
   return m_toolModel;
 }
 
+QObject* Probe::probe() const
+{
+  return const_cast<Endoscope::Probe*>(this);
+}
+
 void Probe::objectAdded(QObject* obj)
 {
   if ( !s_listener()->active && obj->thread() == QThread::currentThread() ) {

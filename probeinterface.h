@@ -24,6 +24,7 @@
 #ifndef ENDOSCOPE_PROBEINTERFACE_H
 #define ENDOSCOPE_PROBEINTERFACE_H
 
+class QObject;
 class QAbstractItemModel;
 
 namespace Endoscope
@@ -43,6 +44,9 @@ class ProbeInterface
     virtual QAbstractItemModel* objectTreeModel() const = 0;
     /** Returns the connection model. */
     virtual QAbstractItemModel* connectionModel() const = 0;
+
+    /** Returns the probe QObject for connecting signals. */
+    virtual QObject* probe() const = 0;
 };
 
 }

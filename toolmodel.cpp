@@ -29,6 +29,7 @@
 #include "tools/fontbrowser/fontbrowser.h"
 #include "tools/metatypebrowser/metatypebrowser.h"
 #include "tools/resourcebrowser/resourcebrowser.h"
+#include "tools/sceneinspector/sceneinspector.h"
 #include "tools/scriptenginedebugger/scriptenginedebugger.h"
 #include "tools/selectionmodelinspector/selectionmodelinspector.h"
 #include "tools/statemachineinspector/statemachineinspector.h"
@@ -40,6 +41,7 @@ using namespace Endoscope;
 ToolModel::ToolModel(QObject* parent): QAbstractListModel(parent)
 {
   // built-in tools
+  m_tools.push_back( new SceneInspectorFactory );
   m_tools.push_back( new ScriptEngineDebuggerFactory );
   m_tools.push_back( new WebInspectorFactory );
   m_tools.push_back( new ConnectionInspectorFactory );

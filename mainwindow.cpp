@@ -26,7 +26,6 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "objecttypefilterproxymodel.h"
-#include "scenemodel.h"
 #include "connectionfilterproxymodel.h"
 #include "singlecolumnobjectproxymodel.h"
 #include "modelmodel.h"
@@ -37,13 +36,12 @@
 #include "kde/krecursivefilterproxymodel.h"
 
 #include <QCoreApplication>
-#include <qgraphicsscene.h>
 #include <qdebug.h>
-#include <qgraphicsitem.h>
 
 #include <QtGui/QStringListModel>
 #include <QtCore/qtextcodec.h>
 #include <QtGui/QMessageBox>
+#include <QtGui/QComboBox>
 
 using namespace Endoscope;
 
@@ -58,7 +56,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.actionAboutEndoscope, SIGNAL(triggered(bool)), SLOT(about()) );
 
   connect( Probe::instance(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)) );
-  connect( Probe::instance(), SIGNAL(graphicsItemSelected(QGraphicsItem*)), SLOT(sceneItemSelected(QGraphicsItem*)) );
 
   setWindowIcon( QIcon(":endoscope/endoscope128.png") );
 
@@ -94,20 +91,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
            SLOT(modelSelected(QModelIndex)) );
   m_cellModel = new ModelCellModel( this );
   ui.modelCellView->setModel( m_cellModel );
-
-  ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy = new ObjectTypeFilterProxyModel<QGraphicsScene>( this );
-  sceneFilterProxy->setSourceModel( Probe::instance()->objectListModel() );
-  SingleColumnObjectProxyModel* singleColumnProxy = new SingleColumnObjectProxyModel( this );
-  singleColumnProxy->setSourceModel( sceneFilterProxy );
-  ui.sceneComboBox->setModel( singleColumnProxy );
-  connect( ui.sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)) );
-  m_sceneModel = new SceneModel( this );
-  QSortFilterProxyModel *sceneFilter = new KRecursiveFilterProxyModel( this );
-  sceneFilter->setSourceModel( m_sceneModel );
-  ui.sceneTreeView->setModel( sceneFilter );
-  ui.screneTreeSearchLine->setProxy( sceneFilter );
-  connect( ui.sceneTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(sceneItemSelected(QModelIndex)) );
 
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
@@ -163,39 +146,6 @@ void MainWindow::modelSelected( const QModelIndex &index )
 void MainWindow::modelCellSelected(const QModelIndex& index)
 {
   m_cellModel->setModelIndex( index );
-}
-
-void MainWindow::sceneSelected(int index)
-{
-  QObject* obj = ui.sceneComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
-  QGraphicsScene* scene = qobject_cast<QGraphicsScene*>( obj );
-  qDebug() << Q_FUNC_INFO << scene << obj;
-
-  m_sceneModel->setScene( scene );
-  ui.graphicsSceneView->setGraphicsScene( scene );
-}
-
-void MainWindow::sceneItemSelected(const QModelIndex& index)
-{
-  if ( index.isValid() ) {
-    QGraphicsItem* item = index.data( SceneModel::SceneItemRole ).value<QGraphicsItem*>();
-    ui.scenePropertyWidget->setObject( item->toGraphicsObject() );
-    ui.graphicsSceneView->showGraphicsItem( item );
-  } else {
-    ui.scenePropertyWidget->setObject( 0 );
-  }
-}
-
-void MainWindow::sceneItemSelected(QGraphicsItem* item)
-{
-  QAbstractItemModel *model = ui.sceneTreeView->model();
-  const QModelIndexList indexList = model->match( model->index( 0, 0 ), SceneModel::SceneItemRole, QVariant::fromValue<QGraphicsItem*>( item ), 1, Qt::MatchExactly | Qt::MatchRecursive );
-  if ( indexList.isEmpty() )
-    return;
-  const QModelIndex index = indexList.first();
-  ui.sceneTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
-  ui.sceneTreeView->scrollTo( index );
-  sceneItemSelected( index );
 }
 
 void MainWindow::about()

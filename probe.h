@@ -66,6 +66,8 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     Endoscope::MainWindow *window() const;
     void setWindow(Endoscope::MainWindow *window);
 
+    QObject* probe() const;
+
   signals:
     void widgetSelected( QWidget* widget );
     void graphicsItemSelected( QGraphicsItem* item );

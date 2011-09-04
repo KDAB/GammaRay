@@ -104,7 +104,7 @@ set(endoscope_srcs
   objecttreemodel.cpp
   connectionmodel.cpp
   connectionfilterproxymodel.cpp
-  scenemodel.cpp
+  tools/sceneinspector/scenemodel.cpp
   tools/statemachineinspector/statemodel.cpp
   tools/statemachineinspector/transitionmodel.cpp
   util.cpp
@@ -129,6 +129,7 @@ set(endoscope_srcs
   tools/fontbrowser/fontbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/resourcebrowser/resourcebrowser.cpp
+  tools/sceneinspector/sceneinspector.cpp
   tools/scriptenginedebugger/scriptenginedebugger.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/statemachineinspector/statemachineinspector.cpp
@@ -152,6 +153,7 @@ qt4_wrap_ui(endoscope_srcs
   tools/fontbrowser/fontbrowser.ui
   tools/metatypebrowser/metatypebrowser.ui
   tools/resourcebrowser/resourcebrowser.ui
+  tools/sceneinspector/sceneinspector.ui
   tools/scriptenginedebugger/scriptenginedebugger.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/statemachineinspector/statemachineinspector.ui

@@ -1,5 +1,5 @@
 /*
-  mainwindow.h
+  sceneinspector.h
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
@@ -21,40 +21,44 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef ENDOSCOPE_SCENEINSPECTOR_H
+#define ENDOSCOPE_SCENEINSPECTOR_H
 
-#include <qmainwindow.h>
+#include <qwidget.h>
+#include <toolfactory.h>
+#include <qgraphicsscene.h>
 
-#include "ui_mainwindow.h"
-
-class QComboBox;
+class QModelIndex;
 
 namespace Endoscope {
 
-class ModelCellModel;
+class SceneModel;
+namespace Ui { class SceneInspector; }
 
-class MainWindow : public QMainWindow
+class SceneInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit MainWindow( QWidget *parent = 0 );
+    explicit SceneInspector( ProbeInterface *probe, QWidget *parent = 0 );
 
   private slots:
-    void objectSelected(const QModelIndex &index);
-    void widgetSelected( const QModelIndex &index );
-    void widgetSelected( QWidget* widget );
-    void modelSelected(const QModelIndex &index);
-    void modelCellSelected(const QModelIndex &index);
-    void about();
-    void toolSelected();
+    void sceneSelected(int index);
+    void sceneItemSelected( const QModelIndex &index );
+    void sceneItemSelected( QGraphicsItem* item );
 
   private:
-    Ui::MainWindow ui;
-    QComboBox *m_toolSelector;
-    ModelCellModel *m_cellModel;
+    QScopedPointer<Ui::SceneInspector> ui;
+    SceneModel *m_sceneModel;
+};
+
+class SceneInspectorFactory : public QObject, public StandardToolFactory<QGraphicsScene, SceneInspector>
+{
+  Q_OBJECT
+  Q_INTERFACES( Endoscope::ToolFactory )
+  public:
+    inline QString name() const { return tr( "Graphics Scenes" ); }
 };
 
 }
 
-#endif // MAINWINDOW_H
+#endif // ENDOSCOPE_SCENEINSPECTOR_H
