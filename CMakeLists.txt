@@ -64,7 +64,7 @@ configure_file(
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   check_cxx_compiler_flag(-Wunused-but-set-variable HAVE_UNUSED_BUT_SET)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Wsign-promo -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wlogical-op -Wmissing-noreturn -Werror=return-type -Winline")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wlogical-op -Wmissing-noreturn -Werror=return-type -Winline")
   if (HAVE_UNUSED_BUT_SET)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-but-set-variable")
   endif()
