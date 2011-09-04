@@ -1,5 +1,5 @@
 /*
-  mainwindow.h
+  widgetinspector.h
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
@@ -21,33 +21,40 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef ENDOSCOPE_WIDGETINSPECTOR_H
+#define ENDOSCOPE_WIDGETINSPECTOR_H
 
-#include <qmainwindow.h>
+#include <qwidget.h>
+#include <toolfactory.h>
 
-#include "ui_mainwindow.h"
-
-class QComboBox;
+class QModelIndex;
 
 namespace Endoscope {
 
-class MainWindow : public QMainWindow
+namespace Ui { class WidgetInspector; }
+
+class WidgetInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit MainWindow( QWidget *parent = 0 );
+    explicit WidgetInspector( ProbeInterface* probe, QWidget *parent = 0 );
 
   private slots:
-    void objectSelected(const QModelIndex &index);
-    void about();
-    void toolSelected();
+    void widgetSelected( const QModelIndex &index );
+    void widgetSelected( QWidget* widget );
 
   private:
-    Ui::MainWindow ui;
-    QComboBox *m_toolSelector;
+    QScopedPointer<Ui::WidgetInspector> ui;
+};
+
+class WidgetInspectorFactory : public QObject, public StandardToolFactory<QWidget, WidgetInspector>
+{
+  Q_OBJECT
+  Q_INTERFACES( Endoscope::ToolFactory )
+  public:
+    inline QString name() const { return tr("Widgets"); }
 };
 
 }
 
-#endif // MAINWINDOW_H
+#endif // ENDOSCOPE_WIDGETINSPECTOR_H

@@ -52,37 +52,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_4">
-       <attribute name="title">
-        <string>Widgets</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <item>
-         <widget class="QSplitter" name="splitter_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QSplitter" name="splitter_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <widget class="QWidget" name="layoutWidget_2">
-            <layout class="QVBoxLayout" name="verticalLayout_7">
-             <item>
-              <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
-             </item>
-             <item>
-              <widget class="QTreeView" name="widgetTreeView"/>
-             </item>
-            </layout>
-           </widget>
-           <widget class="Endoscope::WidgetPreviewWidget" name="widgetPreviewWidget" native="true"/>
-          </widget>
-          <widget class="Endoscope::PropertyWidget" name="widgetPropertyWidget" native="true"/>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="widget">
        <attribute name="title">
         <string>New Tool View</string>
@@ -180,12 +149,6 @@
    <class>Endoscope::PropertyWidget</class>
    <extends>QWidget</extends>
    <header>propertywidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Endoscope::WidgetPreviewWidget</class>
-   <extends>QWidget</extends>
-   <header>widgetpreviewwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

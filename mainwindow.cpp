@@ -51,8 +51,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.actionAboutQt, SIGNAL(triggered(bool)), QApplication::instance(), SLOT(aboutQt()) );
   connect( ui.actionAboutEndoscope, SIGNAL(triggered(bool)), SLOT(about()) );
 
-  connect( Probe::instance(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)) );
-
   setWindowIcon( QIcon(":endoscope/endoscope128.png") );
 
   m_toolSelector = new QComboBox;
@@ -70,15 +68,6 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   connect( ui.objectTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
 	   SLOT(objectSelected(QModelIndex)) );
 
-  ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy = new ObjectTypeFilterProxyModel<QWidget>( this );
-  widgetFilterProxy->setSourceModel( Probe::instance()->objectTreeModel() );
-  KRecursiveFilterProxyModel* widgetSearchProxy = new KRecursiveFilterProxyModel( this );
-  widgetSearchProxy->setSourceModel( widgetFilterProxy );
-  ui.widgetTreeView->setModel( widgetSearchProxy );
-  ui.widgetSearchLine->setProxy( widgetSearchProxy );
-  connect( ui.widgetTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(widgetSelected(QModelIndex)) );
-
   setWindowTitle( tr( "Endoscope (%1)" ).arg( qApp->applicationName() ) );
 }
 
@@ -90,30 +79,6 @@ void MainWindow::objectSelected( const QModelIndex &index )
   } else {
     ui.objectPropertyWidget->setObject( 0 );
   }
-}
-
-void MainWindow::widgetSelected(const QModelIndex& index)
-{
-  if ( index.isValid() ) {
-    QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-    ui.widgetPropertyWidget->setObject( obj );
-    ui.widgetPreviewWidget->setWidget( qobject_cast<QWidget*>( obj ) );
-  } else {
-    ui.widgetPropertyWidget->setObject( 0 );
-    ui.widgetPreviewWidget->setWidget( 0 );
-  }
-}
-
-void MainWindow::widgetSelected(QWidget* widget)
-{
-  QAbstractItemModel *model = ui.widgetTreeView->model();
-  const QModelIndexList indexList = model->match( model->index( 0, 0 ), ObjectTreeModel::ObjectRole, QVariant::fromValue<QObject*>( widget ), 1, Qt::MatchExactly | Qt::MatchRecursive );
-  if ( indexList.isEmpty() )
-    return;
-  const QModelIndex index = indexList.first();
-  ui.widgetTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
-  ui.widgetTreeView->scrollTo( index );
-  widgetSelected( index );
 }
 
 void MainWindow::about()

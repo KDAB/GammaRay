@@ -108,7 +108,7 @@ set(endoscope_srcs
   tools/statemachineinspector/statemodel.cpp
   tools/statemachineinspector/transitionmodel.cpp
   util.cpp
-  widgetpreviewwidget.cpp
+  tools/widgetinspector/widgetpreviewwidget.cpp
   methodinvocationdialog.cpp
   methodargumentmodel.cpp
   singlecolumnobjectproxymodel.cpp
@@ -136,6 +136,7 @@ set(endoscope_srcs
   tools/statemachineinspector/statemachineinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
   tools/webinspector/webinspector.cpp
+  tools/widgetinspector/widgetinspector.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -161,6 +162,7 @@ qt4_wrap_ui(endoscope_srcs
   tools/statemachineinspector/statemachineinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/webinspector/webinspector.ui
+  tools/widgetinspector/widgetinspector.ui
 )
 qt4_add_resources(endoscope_srcs resources/endoscope.qrc)
 add_library(endoscope_probe SHARED ${endoscope_srcs})
