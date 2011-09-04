@@ -21,41 +21,43 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "codecmodel.h"
 
 #include <QDebug>
 
 using namespace Endoscope;
 
-AllCodecsModel::AllCodecsModel(QObject* parent)
+AllCodecsModel::AllCodecsModel(QObject *parent)
   : QAbstractItemModel(parent)
 {
-
 }
 
-int AllCodecsModel::columnCount(const QModelIndex& parent) const
+int AllCodecsModel::columnCount(const QModelIndex &parent) const
 {
+  Q_UNUSED(parent);
   return 2;
 }
 
-QVariant AllCodecsModel::data(const QModelIndex& index, int role) const
+QVariant AllCodecsModel::data(const QModelIndex &index, int role) const
 {
   if (role == Qt::DisplayRole) {
-    if (index.column() == 0)
+    if (index.column() == 0) {
       return QTextCodec::availableCodecs().at(index.row());
+    }
     if (index.column() == 1) {
-      QList<QByteArray> aliases = QTextCodec::codecForName(QTextCodec::availableCodecs().at(index.row()))->aliases();
+      QList<QByteArray> aliases =
+        QTextCodec::codecForName(QTextCodec::availableCodecs().at(index.row()))->aliases();
 
       QString result;
       int size = aliases.size();
       int i = 0;
-      foreach(const QByteArray &ba, aliases) {
+      foreach (const QByteArray &ba, aliases) {
         result.append(ba);
 
         ++i;
-        if (i != size)
+        if (i != size) {
           result.append(", ");
+        }
       }
       return result;
     }
@@ -66,40 +68,43 @@ QVariant AllCodecsModel::data(const QModelIndex& index, int role) const
 QVariant AllCodecsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0)
+    if (section == 0) {
       return "Codec";
-    else if (section == 1)
+    } else if (section == 1) {
       return "Aliases";
+    }
   }
   return QVariant();
 }
 
-QModelIndex AllCodecsModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex AllCodecsModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return QModelIndex();
+  }
   if (!hasIndex(row, column, parent)) {
     return QModelIndex();
   }
   return createIndex(row, column);
 }
 
-QModelIndex AllCodecsModel::parent(const QModelIndex& child) const
+QModelIndex AllCodecsModel::parent(const QModelIndex &child) const
 {
+  Q_UNUSED(child);
   return QModelIndex();
 }
 
-int AllCodecsModel::rowCount(const QModelIndex& parent) const
+int AllCodecsModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return 0;
+  }
   return QTextCodec::availableCodecs().size();
 }
 
-SelectedCodecsModel::SelectedCodecsModel(QObject* parent)
+SelectedCodecsModel::SelectedCodecsModel(QObject *parent)
   : QAbstractItemModel(parent)
 {
-
 }
 
 void SelectedCodecsModel::setCodecs(const QStringList &codecs)
@@ -114,7 +119,7 @@ QStringList SelectedCodecsModel::currentCodecs() const
   return m_codecs;
 }
 
-void SelectedCodecsModel::updateText(const QString& text)
+void SelectedCodecsModel::updateText(const QString &text)
 {
   beginResetModel();
   m_text = text;
@@ -124,49 +129,57 @@ void SelectedCodecsModel::updateText(const QString& text)
 QVariant SelectedCodecsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0)
+    if (section == 0) {
       return "Codec";
-    if (section == 1)
+    }
+    if (section == 1) {
       return "Data";
+    }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-int SelectedCodecsModel::rowCount(const QModelIndex& parent) const
+int SelectedCodecsModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return 0;
+  }
   return m_codecs.size();
 }
 
-QModelIndex SelectedCodecsModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex SelectedCodecsModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return QModelIndex();
+  }
   if (!hasIndex(row, column, parent)) {
     return QModelIndex();
   }
   return createIndex(row, column);
 }
 
-QModelIndex SelectedCodecsModel::parent(const QModelIndex& child) const
+QModelIndex SelectedCodecsModel::parent(const QModelIndex &child) const
 {
+  Q_UNUSED(child);
   return QModelIndex();
 }
 
-int SelectedCodecsModel::columnCount(const QModelIndex& parent) const
+int SelectedCodecsModel::columnCount(const QModelIndex &parent) const
 {
+  Q_UNUSED(parent);
   return 2;
 }
 
-QVariant SelectedCodecsModel::data(const QModelIndex& index, int role) const
+QVariant SelectedCodecsModel::data(const QModelIndex &index, int role) const
 {
   if (index.column() == 0) {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole) {
       return m_codecs.at(index.row());
+    }
   } else if (index.column() == 1) {
     if (role == Qt::DisplayRole) {
-      const QByteArray ba = QTextCodec::codecForName(m_codecs.at(index.row()).toLatin1())->fromUnicode(m_text);
+      const QByteArray ba =
+        QTextCodec::codecForName(m_codecs.at(index.row()).toLatin1())->fromUnicode(m_text);
 //       QString result;
 //       foreach ()
       return ba.toHex();

@@ -39,7 +39,7 @@ class CodecBrowser : public QWidget
 {
   Q_OBJECT
   public:
-    explicit CodecBrowser(ProbeInterface* probe, QWidget* parent = 0);
+    explicit CodecBrowser(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
@@ -54,7 +54,7 @@ class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, 
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    virtual inline QString name() const { return tr( "Text Codecs" ); }
+    virtual inline QString name() const { return tr("Text Codecs"); }
 };
 
 }

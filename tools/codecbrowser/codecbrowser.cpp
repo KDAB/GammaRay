@@ -28,27 +28,34 @@
 
 using namespace Endoscope;
 
-CodecBrowser::CodecBrowser(ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui( new Ui::CodecBrowser )
+CodecBrowser::CodecBrowser(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::CodecBrowser)
 {
-  ui->setupUi( this );
+  Q_UNUSED(probe);
+  ui->setupUi(this);
 
   ui->codecList->setModel(new AllCodecsModel(this));
   ui->codecList->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_selectedCodecsModel = new SelectedCodecsModel(this);
   ui->selectedCodecs->setModel(m_selectedCodecsModel);
 
-  connect(ui->codecList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCodecs(QItemSelection,QItemSelection)));
-  connect(ui->codecText, SIGNAL(textChanged(QString)), m_selectedCodecsModel, SLOT(updateText(QString)));
+  connect(ui->codecList->selectionModel(),
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(updateCodecs(QItemSelection,QItemSelection)));
+  connect(ui->codecText, SIGNAL(textChanged(QString)),
+          m_selectedCodecsModel, SLOT(updateText(QString)));
 }
 
-void CodecBrowser::updateCodecs(const QItemSelection& selected, const QItemSelection& deselected)
+void CodecBrowser::updateCodecs(const QItemSelection &selected,
+                                const QItemSelection &deselected)
 {
+  Q_UNUSED(selected);
+  Q_UNUSED(deselected);
   QStringList previousCodecs = m_selectedCodecsModel->currentCodecs();
 
   QStringList currentCodecNames;
-  foreach(const QModelIndex &index, ui->codecList->selectionModel()->selectedRows()) {
+  foreach (const QModelIndex &index, ui->codecList->selectionModel()->selectedRows()) {
     const QString codecName = index.data().toString();
     if (previousCodecs.contains(codecName)) {
       continue;
