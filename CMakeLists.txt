@@ -25,7 +25,7 @@ add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\" -DPROGRAM_VERSION=\"${Prog_VERSI
 
 include(CheckCXXCompilerFlag)
 
-set(QT_MIN_VERSION "4.6.0")
+set(QT_MIN_VERSION "4.7.0")
 find_package(Qt4 REQUIRED)
 find_package(Boost REQUIRED)
 
