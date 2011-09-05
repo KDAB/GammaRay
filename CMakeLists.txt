@@ -6,7 +6,7 @@
 #  (Windows-only) Set to use detours if debugging
 #  Default=off
 #
-# -DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES=[on|off]
+# -DENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES=[on|off]
 #  Set this if your compiler uses an unsupported C++ name mangling scheme
 #  Default=off
 #
@@ -96,12 +96,12 @@ endif()
 # TODO: find a nicer way for all this. ideally auto-detect the name mangling
 # format, but at least guess a default based on OS + compiler.
 option(
-  ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES
+  ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES
   "Enable if your compiler uses an unsupported C++ name mangling scheme"
   OFF
 )
-if(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
-  add_definitions(-DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
+if(ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES)
+  add_definitions(-DENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES)
 endif()
 
 configure_file(

@@ -502,7 +502,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /* lpvReserved *
 }
 #endif
 
-#ifndef ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES
+#ifndef ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES
 #ifndef Q_OS_WIN
 Q_DECL_EXPORT const char* qFlagLocation( const char* method )
 #else
@@ -518,7 +518,7 @@ Q_DECL_EXPORT const char* myFlagLocation( const char* method )
 #else
   static const char* (*next_qFlagLocation)(const char* method);
 #endif
-  Q_ASSERT_X( next_qFlagLocation, "", "Recompile with ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES enabled, your compiler uses an unsupported C++ name mangling scheme" );
+  Q_ASSERT_X( next_qFlagLocation, "", "Recompile with ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES enabled, your compiler uses an unsupported C++ name mangling scheme" );
   return next_qFlagLocation( method );
 }
 #endif
