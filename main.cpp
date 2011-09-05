@@ -48,6 +48,25 @@ int main( int argc, char** argv )
     if ( (arg == QLatin1String("-p") || arg == QLatin1String("--pid")) && !args.isEmpty() ) {
       pid = args.takeFirst().toInt();
     }
+    if ( arg == QLatin1String("-h") || arg == QLatin1String("--help") ) {
+      QTextStream out(stdout);
+      out << "Usage: endoscope [--injector <injector>] --pid <pid> | <application> <args>" << endl;
+      out << "" << endl;
+      out << "Inspect runtime internals of a Qt-application, such as:" << endl;
+      out << "  QObject tree, properties, signal/slots, widgets, models," << endl;
+      out << "  graphics views, javascript debugger, resources," << endl;
+      out << "  state machines, meta types, fonts, codecs, text documents" << endl;
+      out << "" << endl;
+      out << "Options:" << endl;
+      out << " -i, --injector <injector>\tset injection type, possible values:" << endl;
+#ifndef Q_OS_WIN
+      out << "                          \tpreload, gdb, style" << endl;
+#else
+      out << "                          \twindll, gdb, style" << endl;
+#endif
+      out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
+      return 0;
+    }
   }
 
   if ( args.isEmpty() && pid <= 0 ) {
