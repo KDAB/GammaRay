@@ -18,7 +18,7 @@ Building on Unix with gcc or clang:
 % make
 % make install
 
-Building on Windows with MicroSoft Visual Studio:
+Building on Windows with Microsoft Visual Studio:
 % mkdir build
 % cd build
 % cmake -G "NMake Makefiles" ..
