@@ -29,7 +29,7 @@ Building on Windows with Microsoft Visual Studio:
 Building on Windows with mingw:
 % mkdir build
 % cd build
-% cmake -G "NMake Makefiles" ..
+% cmake -G "MinGW Makefiles" ..
 % mingw32-make
 % mingw32-make install
 
