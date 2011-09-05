@@ -1,3 +1,16 @@
+# This is the top-level CMakeLists.txt file for the Endoscope project.
+#
+# Pass the following variables to cmake to control the build:
+#
+# -DUSE_DETOURS=[on|off]
+#  (Windows-only) Set to use detours if debugging
+#  Default=off
+#
+# -DENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES=[on|off]
+#  Set this if your compiler uses an unsupported C++ name mangling scheme
+#  Default=off
+#
+
 project(endoscope)
 cmake_minimum_required(VERSION 2.8)
 
@@ -30,7 +43,7 @@ find_package(Qt4 REQUIRED)
 find_package(Boost REQUIRED)
 
 if(WIN32)
-  option(USE_DETOURS "use detours for in debugging" OFF)
+  option(USE_DETOURS "use detours in debugging" OFF)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
