@@ -36,7 +36,11 @@ int PreloadInjector::launch(const QStringList &programAndArgs,
   Q_UNUSED(probeFunc);
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 #ifdef Q_OS_MAC
+  env.insert("DYLD_FORCE_FLAT_NAMESPACE", QLatin1String("1"));
   env.insert("DYLD_INSERT_LIBRARIES", probeDll);
+  //env.insert("DYLD_PRINT_ENV", QLatin1String("1"));
+  //env.insert("DYLD_PRINT_LIBRARIES", QLatin1String("1"));
+  //env.insert("DYLD_PRINT_INITIALIZERS", QLatin1String("1"));
 #else
   env.insert("LD_PRELOAD", probeDll);
 #endif
