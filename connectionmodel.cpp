@@ -43,8 +43,8 @@ static bool checkMethodForObject( QObject *obj, const QByteArray &signature, boo
   if (method.methodType() != QMetaMethod::Signal && (isSender || method.methodType() != QMetaMethod::Slot))
     return false;
   const int methodCode = signature.at( 0 ) - '0';
-  if ( methodCode == QSLOT_CODE && method.methodType() != QMetaMethod::Slot 
-    || methodCode == QSIGNAL_CODE && method.methodType() != QMetaMethod::Signal )
+  if ( ( methodCode == QSLOT_CODE && method.methodType() != QMetaMethod::Slot )
+    || ( methodCode == QSIGNAL_CODE && method.methodType() != QMetaMethod::Signal ) )
     return false;
   return true;
 }
