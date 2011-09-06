@@ -1,0 +1,111 @@
+=head1 NAME
+
+endoscope - Qt-application inspection and manipulation tool.
+
+=head1 SYNOPSIS
+
+endoscope [--injector <injector>] [--pid <pid> | <application> <args>]
+
+
+=head1 DESCRIPTION
+
+Endoscope inspects runtime internals of a Qt-application, such as:
+    Object tree, properties, signal/slots, widgets, models,
+    graphics views, javascript debugger, resources,
+    state machines, meta types, fonts, codecs, text documents
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--help>
+
+Print help message and exit.
+
+=item B<--version>
+
+Print version information and exit.
+
+=item B<-p, --pid <pid>>
+
+Attach to running Qt application with the specified pid.
+
+=item B<-i, --injector <injector>> 
+
+Set the specified injection type.
+
+Supported injectors are:
+     preload
+     gdb
+     style
+
+=back
+
+=head1 EXAMPLES
+
+=over 4
+
+=item Run endoscope on the Qt-application C<qtfoo>
+
+ % endoscope /path/to/qtfoo
+
+=item Invoke endoscope on the Qt-application running with pid=1234
+
+ % endoscope --pid=1234
+
+=item Invoke endoscope on with injector gdb on Qt-application running with pid=1234
+
+ % endoscope --injector=gdb --pid=1234
+
+=back
+
+=head1 PLUGINS
+
+Todo
+
+=head1 ENVIRONMENT
+
+B<LD_PRELOAD> - Todo
+
+B<QT_PLUGIN_PATH> - Todo
+
+B<ENDOSCOPE_STYLEINJECTOR_PROBEDLL> - Todo
+
+B<ENDOSCOPE_STYLEINJECTOR_PROBEFUNC> - Todo
+
+B<DYLD_FORCE_FLAT_NAMESPACE> - Todo
+
+B<DYLD_INSERT_LIBRARIES> - Todo
+
+
+=head1 EXIT STATUS
+
+Todo
+
+=head1 COPYRIGHT
+
+Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+=head1 SEE ALSO
+
+Todo
+
+=head1 AUTHORS
+
+Volker Krause <volker.krause@kdab.com>
+
+=cut

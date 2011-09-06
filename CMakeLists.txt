@@ -10,6 +10,9 @@
 #  Set this if your compiler uses an unsupported C++ name mangling scheme
 #  Default=off
 #
+# To build the man page from POD, run 'make man' after CMake.
+# To install the resulting man page, run 'make install'
+#
 
 project(endoscope)
 cmake_minimum_required(VERSION 2.8)
@@ -253,4 +256,15 @@ if(CPPCHECK_EXECUTABLE)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Running the cppcheck static code checker"
   )
+endif()
+
+if(UNIX)
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/endoscope.1
+                     COMMAND pod2man -c "KDAB Products" -r ${Prog_VERSION} -s 1 ${CMAKE_SOURCE_DIR}/endoscope.pod ${CMAKE_BINARY_DIR}/endoscope.1
+                     DEPENDS ${CMAKE_SOURCE_DIR}/endoscope.pod
+                     )
+
+  add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/endoscope.1)
+
+  install(FILES ${CMAKE_BINARY_DIR}/endoscope.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
 endif()
