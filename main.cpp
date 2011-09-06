@@ -50,7 +50,8 @@ int main( int argc, char** argv )
     }
     if ( arg == QLatin1String("-h") || arg == QLatin1String("--help") ) {
       QTextStream out(stdout);
-      out << "Usage: endoscope [--injector <injector>] --pid <pid> | <application> <args>" << endl;
+      out << "Usage: " << PROGRAM_NAME
+          << " [--injector <injector>] --pid <pid> | <application> <args>" << endl;
       out << "" << endl;
       out << "Inspect runtime internals of a Qt-application, such as:" << endl;
       out << "  QObject tree, properties, signal/slots, widgets, models," << endl;
@@ -65,12 +66,20 @@ int main( int argc, char** argv )
       out << "                          \twindll, gdb, style" << endl;
 #endif
       out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
+      out << " -h, --help               \tprint program help and exit" << endl;
+      out << " -v, --version            \tprint program version and exit" << endl;
+      return 0;
+    }
+    if ( arg == QLatin1String("-v") || arg == QLatin1String("--version") ) {
+      QTextStream out(stdout);
+      out << PROGRAM_NAME << " version " << PROGRAM_VERSION << endl;
+      out << "Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.com" << endl;
       return 0;
     }
   }
 
   if ( args.isEmpty() && pid <= 0 ) {
-    qWarning( "Nothing to probe. Usage: endoscope [--injector <injector>] --pid <pid> | <application> <args>" );
+    qWarning( "Nothing to probe. Usage: " PROGRAM_NAME " [--injector <injector>] --pid <pid> | <application> <args>" );
     return 1;
   }
 
