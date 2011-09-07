@@ -21,7 +21,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "config-endoscope.h"
 #include "probefinder.h"
 #include "injector/injectorfactory.h"
@@ -30,25 +29,30 @@
 #include <QDebug>
 #include <QStringList>
 
+#include <iostream>
+using namespace std;
+
 using namespace Endoscope;
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-  QCoreApplication app( argc, argv );
+  QCoreApplication app(argc, argv);
   QStringList args = app.arguments();
   args.takeFirst(); // that's us
 
   QString injectorType;
   int pid = -1;
-  while ( !args.isEmpty() && args.first().startsWith('-') ) {
+  while (!args.isEmpty() && args.first().startsWith('-')) {
     const QString arg = args.takeFirst();
-    if ( (arg == QLatin1String("-i") || arg == QLatin1String("--injector")) && !args.isEmpty() ) {
+    if ((arg == QLatin1String("-i") || arg == QLatin1String("--injector")) && !args.isEmpty()) {
       injectorType = args.takeFirst();
+      continue;
     }
-    if ( (arg == QLatin1String("-p") || arg == QLatin1String("--pid")) && !args.isEmpty() ) {
+    if ((arg == QLatin1String("-p") || arg == QLatin1String("--pid")) && !args.isEmpty()) {
       pid = args.takeFirst().toInt();
+      continue;
     }
-    if ( arg == QLatin1String("-h") || arg == QLatin1String("--help") ) {
+    if (arg == QLatin1String("-h") || arg == QLatin1String("--help")) {
       QTextStream out(stdout);
       out << "Usage: " << PROGRAM_NAME
           << " [--injector <injector>] --pid <pid> | <application> <args>" << endl;
@@ -74,36 +78,57 @@ int main( int argc, char** argv )
       out << " -v, --version            \tprint program version and exit" << endl;
       return 0;
     }
-    if ( arg == QLatin1String("-v") || arg == QLatin1String("--version") ) {
+    if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
       QTextStream out(stdout);
       out << PROGRAM_NAME << " version " << PROGRAM_VERSION << endl;
-      out << "Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.com" << endl;
+      out << "Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
+          << "a KDAB Group company, info@kdab.com" << endl;
       return 0;
     }
   }
 
-  if ( args.isEmpty() && pid <= 0 ) {
-    qWarning( "Nothing to probe. Usage: " PROGRAM_NAME " [--injector <injector>] --pid <pid> | <application> <args>" );
+  if (args.isEmpty() && pid <= 0) {
+    qWarning() << "Nothing to probe. Usage:"
+               << PROGRAM_NAME
+               << "[--injector <injector>] --pid <pid> | <application> <args>";
     return 1;
   }
 
-  const QString probeDll = ProbeFinder::findProbe( QLatin1String("endoscope_probe") );
+  const QString probeDll = ProbeFinder::findProbe(QLatin1String("endoscope_probe"));
   AbstractInjector::Ptr injector;
-  if ( injectorType.isEmpty() ) {
-    if ( pid > 0 )
+  if (injectorType.isEmpty()) {
+    if (pid > 0) {
       injector = InjectorFactory::defaultInjectorForAttach();
-    else
+    } else {
       injector = InjectorFactory::defaultInjectorForLaunch();
+    }
   } else {
-    injector = InjectorFactory::createInjector( injectorType );
+    injector = InjectorFactory::createInjector(injectorType);
   }
 
-  if ( injector ) {
-    if ( pid > 0 )
-      return injector->attach( pid, probeDll, QLatin1String("endoscope_probe_inject") );
-    else
-      return injector->launch( args, probeDll, QLatin1String("endoscope_probe_inject") );
+  if (injector) {
+    if (pid > 0) {
+      if (!injector->attach(pid, probeDll, QLatin1String("endoscope_probe_inject"))) {
+        cout << "Unable to attach injector " << injector->name().toLatin1().data() << endl;
+        return 0;
+      } else {
+        if (!injector->launch(args, probeDll, QLatin1String("endoscope_probe_inject"))) {
+          cout << "Failed to launch injector " << injector->name().toLatin1().data() << endl;
+          return 0;
+        }
+      }
+    }
+    return 1;
   }
-  qWarning() << "Injector" << injectorType << "not found.";
-  return 1;
+
+  if (injectorType.isEmpty()) {
+    if (pid > 0) {
+      cout << "Uh-oh, there is no default attach injector" << endl;
+    } else {
+      cout << "Uh-oh, there is no default launch injector" << endl;
+    }
+  } else {
+    cout << "Injector " << injectorType.toLatin1().data() << " not found." << endl;
+  }
+  return 0;
 }

@@ -32,14 +32,25 @@ namespace Endoscope {
 class GdbInjector : public AbstractInjector
 {
   public:
-    virtual int launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc);
-    virtual bool attach(int pid, const QString& probeDll, const QString& probeFunc);
+    GdbInjector();
+    QString name() const {
+      return QString("gdb");
+    }
+    virtual int launch(const QStringList &programAndArgs,
+                       const QString &probeDll, const QString &probeFunc);
+    virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
+    virtual int exitCode();
+    virtual QProcess::ExitStatus exitStatus();
+    virtual QProcess::ProcessError processError();
 
   private:
-    bool startGdb( const QStringList &args );
-    int injectAndDetach( const QString &probeDll, const QString &probeFunc );
+    bool startGdb(const QStringList &args);
+    int injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
   private:
+    int mExitCode;
+    QProcess::ProcessError mProcessError;
+    QProcess::ExitStatus mExitStatus;
     QScopedPointer<QProcess> m_process;
 };
 

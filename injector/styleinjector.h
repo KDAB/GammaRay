@@ -26,14 +26,26 @@
 
 #include <injector/abstractinjector.h>
 
-
 namespace Endoscope {
 
 class StyleInjector : public Endoscope::AbstractInjector
 {
 
 public:
-    virtual int launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc);
+    StyleInjector();
+    QString name() const {
+      return QString("style");
+    }
+    virtual int launch(const QStringList &programAndArgs,
+                       const QString &probeDll, const QString &probeFunc);
+    virtual int exitCode();
+    virtual QProcess::ExitStatus exitStatus();
+    virtual QProcess::ProcessError processError();
+
+  private:
+    int mExitCode;
+    QProcess::ProcessError mProcessError;
+    QProcess::ExitStatus mExitStatus;
 };
 
 }

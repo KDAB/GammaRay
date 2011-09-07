@@ -34,7 +34,20 @@ namespace Endoscope {
 class DetourInjector : public AbstractInjector
 {
   public:
-    virtual int launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc);
+    DetourInjector();
+    QString name() const {
+      return QString("detour");
+    }
+    virtual int launch(const QStringList &programAndArgs,
+                       const QString &probeDll, const QString &probeFunc);
+    virtual QProcess::ExitCode exitCode();
+    virtual QProcess::ExitStatus exitStatus();
+    virtual QProcess::ProcessError processError();
+
+  private:
+    int mExitCode;
+    QProcess::ProcessError mProcessError;
+    QProcess::ExitStatus mExitStatus;
 };
 
 }

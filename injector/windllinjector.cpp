@@ -20,6 +20,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+//krazy:excludeall=null,captruefalse
 
 #include "windllinjector.h"
 
@@ -32,25 +33,31 @@ using namespace Endoscope;
 
 WinDllInjector::WinDllInjector() :
   m_destProcess(NULL),
-  m_destThread(NULL)
+  m_destThread(NULL),
+  mExitCode(-1),
+  mProcessError(QProcess::UnknownError),
+  mExitStatus(QProcess::NormalExit)
 {
 }
 
-int WinDllInjector::launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc)
+int WinDllInjector::launch(const QStringList &programAndArgs,
+                           const QString &probeDll, const QString &probeFunc)
 {
   DWORD dwCreationFlags = CREATE_NO_WINDOW;
   dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
   dwCreationFlags |= CREATE_SUSPENDED;
-  STARTUPINFOW startupInfo = { sizeof( STARTUPINFO ), 0, 0, 0,
+  STARTUPINFOW startupInfo = { sizeof(STARTUPINFO), 0, 0, 0,
                                (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
                                (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
                                0, 0, 0, STARTF_USESTDHANDLES, 0, 0, 0,
-                               GetStdHandle(STD_INPUT_HANDLE), GetStdHandle(STD_OUTPUT_HANDLE), GetStdHandle(STD_ERROR_HANDLE)
+                               GetStdHandle(STD_INPUT_HANDLE),
+                               GetStdHandle(STD_OUTPUT_HANDLE),
+                               GetStdHandle(STD_ERROR_HANDLE)
   };
   PROCESS_INFORMATION pid;
   memset(&pid, 0, sizeof(PROCESS_INFORMATION));
 
-  BOOL success = CreateProcess(0, (wchar_t*)programAndArgs.join(" ").utf16(),
+  BOOL success = CreateProcess(0, (wchar_t *)programAndArgs.join(" ").utf16(),
                                0, 0, TRUE, dwCreationFlags,
                                0, 0,
                                &startupInfo, &pid);
@@ -63,14 +70,19 @@ int WinDllInjector::launch(const QStringList& programAndArgs, const QString& pro
   WaitForSingleObject(pid.hProcess, INFINITE);
   DWORD exitCode;
   GetExitCodeProcess(pid.hProcess, &exitCode);
-  return exitCode == 0;
+
+  mExitCode = exitCode;
+  //TODO mProcessError = proc.error();
+  //TODO mExitStatus = proc.exitStatus();
+
+  return mExitCode;
 }
 
 bool WinDllInjector::inject()
 {
     CONTEXT     context;
 
-    void*       mem             = NULL;
+    void       *mem             = NULL;
     size_t      memLen          = 0;
     UINT_PTR    fnLoadLibrary   = NULL;
 
@@ -89,7 +101,7 @@ bool WinDllInjector::inject()
         return false;
     }
 
-    BYTE* code = new BYTE[codeSize + (m_dllPath.length() + 1) * sizeof(wchar_t)];
+    BYTE *code = new BYTE[codeSize + (m_dllPath.length() + 1) * sizeof(wchar_t)];
 
     memLen = (m_dllPath.length() + 1) * sizeof(wchar_t);
     CopyMemory(code + codeSize, m_dllPath.utf16(), memLen);
@@ -127,6 +139,21 @@ bool WinDllInjector::inject()
     context.Eip = (UINT_PTR)mem;
     SetThreadContext(m_destThread, &context);
     return true;
+}
+
+int WinDllInjector::exitCode()
+{
+  return mExitCode;
+}
+
+QProcess::ProcessError WinDllInjector::processError()
+{
+  return mProcessError;
+}
+
+QProcess::ExitStatus WinDllInjector::exitStatus()
+{
+  return mExitStatus;
 }
 
 #endif

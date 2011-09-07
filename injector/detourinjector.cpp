@@ -20,6 +20,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+//krazy:excludeall=null,captruefalse
 
 #include "detourinjector.h"
 
@@ -30,7 +31,15 @@
 
 using namespace Endoscope;
 
-int DetourInjector::launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc)
+DetourInjector::DetourInjector() :
+  mExitCode(-1),
+  mProcessError(QProcess::UnknownError),
+  mExitStatus(QProcess::NormalExit)
+{
+}
+
+int DetourInjector::launch(const QStringList &programAndArgs,
+                           const QString &probeDll, const QString &probeFunc)
 {
   STARTUPINFO si;
   PROCESS_INFORMATION pi;
@@ -39,15 +48,16 @@ int DetourInjector::launch(const QStringList& programAndArgs, const QString& pro
   si.cb = sizeof(si);
   DWORD dwFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_SUSPENDED;
 
-  QString dllPath( probeDll );
+  QString dllPath(probeDll);
   dllPath.replace('/', '\\');
 
   QString detourPath = QCoreApplication::applicationDirPath() + "/detoured.dll";
   detourPath.replace('/', '\\');
 
-  if (!DetourCreateProcessWithDll(0, (wchar_t*)args.join(" ").utf16(),
+  if (!DetourCreateProcessWithDll(0, (wchar_t *)args.join(" ").utf16(),
                                   NULL, NULL, TRUE, dwFlags, NULL, NULL,
-                                  &si, &pi, detourPath.toLatin1().data(), dllPath.toLatin1().data(), NULL)) {
+                                  &si, &pi, detourPath.toLatin1().data(),
+                                  dllPath.toLatin1().data(), NULL)) {
       printf("DetourCreateProcessWithDll failed: %d\n", GetLastError());
       ExitProcess(9007);
   }
@@ -57,7 +67,27 @@ int DetourInjector::launch(const QStringList& programAndArgs, const QString& pro
   WaitForSingleObject(pi.hProcess, INFINITE);
   DWORD exitCode;
   GetExitCodeProcess(pi.hProcess, &exitCode);
-  return exitCode;
+
+  mExitCode = exitCode;
+  //TODO mProcessError = proc.error();
+  //TODO mExitStatus = proc.exitStatus();
+
+  return mExitCode;
+}
+
+int DetourInjector::exitCode()
+{
+  return mExitCode;
+}
+
+QProcess::ProcessError DetourInjector::processError()
+{
+  return mProcessError;
+}
+
+QProcess::ExitStatus DetourInjector::exitStatus()
+{
+  return mExitStatus;
 }
 
 #endif

@@ -29,6 +29,13 @@
 
 using namespace Endoscope;
 
+PreloadInjector::PreloadInjector() :
+  mExitCode(-1),
+  mProcessError(QProcess::UnknownError),
+  mExitStatus(QProcess::NormalExit)
+{
+}
+
 int PreloadInjector::launch(const QStringList &programAndArgs,
                             const QString &probeDll,
                             const QString &probeFunc)
@@ -53,7 +60,26 @@ int PreloadInjector::launch(const QStringList &programAndArgs,
   proc.start(program, args);
   proc.waitForFinished(-1);
 
-  return proc.exitCode();
+  mExitCode = proc.exitCode();
+  mProcessError = proc.error();
+  mExitStatus = proc.exitStatus();
+
+  return mExitCode;
+}
+
+int PreloadInjector::exitCode()
+{
+  return mExitCode;
+}
+
+QProcess::ProcessError PreloadInjector::processError()
+{
+  return mProcessError;
+}
+
+QProcess::ExitStatus PreloadInjector::exitStatus()
+{
+  return mExitStatus;
 }
 
 #endif

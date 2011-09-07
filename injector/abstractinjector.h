@@ -23,7 +23,9 @@
 
 #ifndef ABSTRACTINJECTOR_H
 #define ABSTRACTINJECTOR_H
-#include <QtCore/qsharedpointer.h>
+
+#include <QProcess>
+#include <QSharedPointer>
 
 class QString;
 class QStringList;
@@ -37,14 +39,36 @@ class AbstractInjector
     virtual ~AbstractInjector();
 
     /**
-     * Launch the application @p program and inject @p probeDll and call @p probeFunc on it.
+     * Injector Name
      */
-    virtual int launch( const QStringList &programAndArgs, const QString &probeDll, const QString &probeFunc );
+    virtual QString name() const = 0;
 
     /**
-     * Attach to the running application with process id @p pid and inject @p probeDll and call @p probeFunc on it.
+     * Launch the application @p program and inject @p probeDll and call @p probeFunc on it.
      */
-    virtual bool attach( int pid, const QString &probeDll, const QString &probeFunc );
+    virtual int launch(const QStringList &programAndArgs,
+                       const QString &probeDll, const QString &probeFunc);
+
+    /**
+     * Attach to the running application with process id @p pid
+     * and inject @p probeDll and call @p probeFunc on it.
+     */
+    virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
+
+    /**
+     * Return the exit code from the application launch or attach.
+     */
+    virtual int exitCode() = 0;
+
+    /**
+     * Return the QProcess::ExitStatus from the application launch or attach.
+     */
+    virtual QProcess::ExitStatus exitStatus() = 0;
+
+    /**
+     * Return the QProcess::ProcessError from the application launch or attach.
+     */
+    virtual QProcess::ProcessError processError() = 0;
 };
 
 }
