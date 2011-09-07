@@ -66,7 +66,7 @@ int WinDllInjector::launch(const QStringList& programAndArgs, const QString& pro
   return exitCode == 0;
 }
 
-bool WinDllInjection::inject()
+bool WinDllInjector::inject()
 {
     CONTEXT     context;
 
