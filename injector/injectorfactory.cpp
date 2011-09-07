@@ -37,8 +37,10 @@ namespace InjectorFactory {
 
 AbstractInjector::Ptr createInjector( const QString &name )
 {
+#ifndef Q_OS_WIN
   if ( name == QLatin1String("gdb") )
     return AbstractInjector::Ptr( new GdbInjector );
+#endif
   if ( name == QLatin1String("style") )
     return AbstractInjector::Ptr( new StyleInjector );
 #ifndef Q_OS_WIN
@@ -47,8 +49,10 @@ AbstractInjector::Ptr createInjector( const QString &name )
 #else
   if ( name == QLatin1String("windll") )
     return AbstractInjector::Ptr( new WinDllInjector );
+#if defined(USE_DETOURS)
   if ( name == QLatin1String("detour") )
     return AbstractInjector::Ptr( new DetourInjector );
+#endif
 #endif
   return AbstractInjector::Ptr( 0 );
 }
@@ -64,7 +68,12 @@ AbstractInjector::Ptr defaultInjectorForLaunch()
 
 AbstractInjector::Ptr defaultInjectorForAttach()
 {
+#ifndef Q_OS_WIN
   return createInjector( QLatin1String("gdb") );
+#else
+  //TODO: what's the default attach injector on Windows?
+  return createInjector( QLatin1String("") );
+#endif
 }
 
 }
