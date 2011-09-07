@@ -49,13 +49,13 @@ Supported injectors are:
 
  % endoscope /path/to/qtfoo
 
-=item Invoke endoscope on the Qt-application running with pid=1234
+=item Invoke endoscope on the Qt-application running with pid 1234
 
- % endoscope --pid=1234
+ % endoscope --pid 1234
 
-=item Invoke endoscope on with injector gdb on Qt-application running with pid=1234
+=item Invoke endoscope on with injector gdb on Qt-application running with pid 1234
 
- % endoscope --injector=gdb --pid=1234
+ % endoscope --injector gdb --pid 1234
 
 =back
 
