@@ -128,7 +128,6 @@ add_subdirectory(injector)
 
 set(endoscope_runner_srcs
   injector/abstractinjector.cpp
-  injector/detourinjector.cpp
   injector/gdbinjector.cpp
   injector/injectorfactory.cpp
   injector/preloadinjector.cpp
@@ -137,6 +136,12 @@ set(endoscope_runner_srcs
   probefinder.cpp
   main.cpp
 )
+if(USE_DETOURS)
+  set(endoscope_runner_srcs
+    ${endoscope_runner_srcs}
+    injector/detourinjector.cpp
+  )
+endif()
 
 add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
