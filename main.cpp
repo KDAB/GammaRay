@@ -64,9 +64,9 @@ int main( int argc, char** argv )
       out << "                          \tpreload, gdb, style" << endl;
 #else
 #if defined(USE_DETOURS)
-      out << "                          \tdetours, windll, style" << endl;
+      out << "                          \tdetours, windll" << endl;
 #else
-      out << "                          \twindll, style" << endl;
+      out << "                          \twindll" << endl;
 #endif
 #endif
       out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
