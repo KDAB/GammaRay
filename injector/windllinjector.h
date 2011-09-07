@@ -29,6 +29,7 @@
 
 #ifdef Q_OS_WIN
 
+#include <QStringList>
 #include <windows.h>
 
 namespace Endoscope {
