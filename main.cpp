@@ -123,7 +123,12 @@ int main(int argc, char **argv)
 
   if (injectorType.isEmpty()) {
     if (pid > 0) {
+#if defined(Q_OS_WIN)
+      cout << "Sorry, but at this time there is no attach injector on the Windows platform" << endl;
+      cout << "Only the launch injector windll is available on Windows" << endl;
+#else
       cout << "Uh-oh, there is no default attach injector" << endl;
+#endif
     } else {
       cout << "Uh-oh, there is no default launch injector" << endl;
     }
