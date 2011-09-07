@@ -43,7 +43,7 @@ class WinDllInjector : public AbstractInjector
     }
     virtual int launch(const QStringList &programAndArgs,
                        const QString &probeDll, const QString &probeFunc);
-    virtual QProcess::ExitCode exitCode();
+    virtual int exitCode();
     virtual QProcess::ExitStatus exitStatus();
     virtual QProcess::ProcessError processError();
 
