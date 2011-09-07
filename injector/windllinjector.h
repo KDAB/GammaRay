@@ -29,6 +29,8 @@
 
 #ifdef Q_OS_WIN
 
+#include <windows.h>
+
 namespace Endoscope {
 
 class WinDllInjector : public AbstractInjector

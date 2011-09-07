@@ -24,6 +24,7 @@
 #include "abstractinjector.h"
 
 #include <QDebug>
+#include <QStringList>
 
 using namespace Endoscope;
 
