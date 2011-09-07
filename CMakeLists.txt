@@ -128,7 +128,6 @@ add_subdirectory(injector)
 
 set(endoscope_runner_srcs
   injector/abstractinjector.cpp
-  injector/gdbinjector.cpp
   injector/injectorfactory.cpp
   injector/preloadinjector.cpp
   injector/styleinjector.cpp
@@ -136,6 +135,12 @@ set(endoscope_runner_srcs
   probefinder.cpp
   main.cpp
 )
+if(NOT WIN32)
+  set(endoscope_runner_srcs
+    ${endoscope_runner_srcs}
+    injector/gdbinjector.cpp
+  )
+endif()
 if(USE_DETOURS)
   set(endoscope_runner_srcs
     ${endoscope_runner_srcs}
