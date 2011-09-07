@@ -63,7 +63,11 @@ int main( int argc, char** argv )
 #ifndef Q_OS_WIN
       out << "                          \tpreload, gdb, style" << endl;
 #else
-      out << "                          \twindll, gdb, style" << endl;
+#if defined(USE_DETOURS)
+      out << "                          \tdetours, windll, style" << endl;
+#else
+      out << "                          \twindll, style" << endl;
+#endif
 #endif
       out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
       out << " -h, --help               \tprint program help and exit" << endl;
