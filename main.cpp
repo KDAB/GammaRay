@@ -111,11 +111,11 @@ int main(int argc, char **argv)
       if (!injector->attach(pid, probeDll, QLatin1String("endoscope_probe_inject"))) {
         cout << "Unable to attach injector " << injector->name().toLatin1().data() << endl;
         return 0;
-      } else {
-        if (!injector->launch(args, probeDll, QLatin1String("endoscope_probe_inject"))) {
-          cout << "Failed to launch injector " << injector->name().toLatin1().data() << endl;
-          return 0;
-        }
+      } 
+    } else {
+      if (!injector->launch(args, probeDll, QLatin1String("endoscope_probe_inject"))) {
+        cout << "Failed to launch injector " << injector->name().toLatin1().data() << endl;
+        return 0;
       }
     }
     return 1;
