@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     }
     if (arg == QLatin1String("-h") || arg == QLatin1String("--help")) {
       QTextStream out(stdout);
-      out << "Usage: " << PROGRAM_NAME
+      out << "Usage: " << argv[0]
           << " [--injector <injector>] --pid <pid> | <application> <args>" << endl;
       out << "" << endl;
       out << "Inspect runtime internals of a Qt-application, such as:" << endl;
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 
   if (args.isEmpty() && pid <= 0) {
     qWarning() << "Nothing to probe. Usage:"
-               << PROGRAM_NAME
+               << argv[0]
                << "[--injector <injector>] --pid <pid> | <application> <args>";
     return 1;
   }
