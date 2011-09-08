@@ -504,7 +504,7 @@ void QmlProfilerEventsView::QmlProfilerEventsViewPrivate::buildModelFromList( co
 QString QmlProfilerEventsView::QmlProfilerEventsViewPrivate::displayTime(double time) const
 {
     if (time < 1e6)
-        return QString::number(time/1e3,'f',3) + QString::fromWCharArray(L" \u03BCs");
+        return QString::number(time/1e3,'f',3) + QLatin1String(" us");
     if (time < 1e9)
         return QString::number(time/1e6,'f',3) + QLatin1String(" ms");
 
