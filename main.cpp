@@ -35,6 +35,25 @@ using namespace std;
 
 using namespace Endoscope;
 
+static void usage(const char *argv0)
+{
+  QTextStream out(stdout);
+  out << "Usage: " << argv0
+      << " [--injector <injector>] --pid <pid> | <application> <args>" << endl;
+  out << "" << endl;
+  out << "Inspect runtime internals of a Qt-application, such as:" << endl;
+  out << "  QObject tree, properties, signal/slots, widgets, models," << endl;
+  out << "  graphics views, javascript debugger, resources," << endl;
+  out << "  state machines, meta types, fonts, codecs, text documents" << endl;
+  out << "" << endl;
+  out << "Options:" << endl;
+  out << " -i, --injector <injector>\tset injection type, possible values:" << endl;
+  out << "                          \t" << InjectorFactory::availableInjectors().join( ", " ) << endl;
+  out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
+  out << " -h, --help               \tprint program help and exit" << endl;
+  out << " -v, --version            \tprint program version and exit" << endl;
+}
+
 int main(int argc, char **argv)
 {
   QCoreApplication app(argc, argv);
@@ -54,21 +73,7 @@ int main(int argc, char **argv)
       continue;
     }
     if (arg == QLatin1String("-h") || arg == QLatin1String("--help")) {
-      QTextStream out(stdout);
-      out << "Usage: " << argv[0]
-          << " [--injector <injector>] --pid <pid> | <application> <args>" << endl;
-      out << "" << endl;
-      out << "Inspect runtime internals of a Qt-application, such as:" << endl;
-      out << "  QObject tree, properties, signal/slots, widgets, models," << endl;
-      out << "  graphics views, javascript debugger, resources," << endl;
-      out << "  state machines, meta types, fonts, codecs, text documents" << endl;
-      out << "" << endl;
-      out << "Options:" << endl;
-      out << " -i, --injector <injector>\tset injection type, possible values:" << endl;
-      out << "                          \t" << InjectorFactory::availableInjectors().join( ", " ) << endl;
-      out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
-      out << " -h, --help               \tprint program help and exit" << endl;
-      out << " -v, --version            \tprint program version and exit" << endl;
+      usage(argv[0]);
       return 0;
     }
     if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
@@ -81,9 +86,7 @@ int main(int argc, char **argv)
   }
 
   if (args.isEmpty() && pid <= 0) {
-    qWarning() << "Nothing to probe. Usage:"
-               << argv[0]
-               << "[--injector <injector>] --pid <pid> | <application> <args>";
+    usage(argv[0]);
     return 1;
   }
 
