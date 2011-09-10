@@ -28,7 +28,11 @@
 
 #include <3rdparty/qt/qguiplatformplugin_p.h>
 
+#ifdef _WIN32
+#include <Windows.h>
+#else
 #include <dlfcn.h>
+#endif
 
 using namespace Endoscope;
 
@@ -53,20 +57,38 @@ void InjectorStylePlugin::inject()
     return;
   }
 
+#ifdef _WIN32
+//TODO: GetLastError and so on for error string
+  HMODULE probeDllHandle = LoadLibrary( reinterpret_cast<LPCWSTR>(QString(probeDll).utf16()) );
+  if ( !probeDllHandle ) {
+    qWarning() << QLatin1String("Failed to load probe dll!");
+    return;
+  }
+#else
   void* probeDllHandle = dlopen( probeDll, RTLD_NOW );
   if ( !probeDllHandle ) {
     qWarning() << dlerror();
     return;
   }
+#endif
 
   const QByteArray probeFunc = qgetenv( "ENDOSCOPE_STYLEINJECTOR_PROBEFUNC" );
   if ( probeFunc.isEmpty() )
     return;
+#ifdef _WIN32
+//TODO: GetLastError and so on for error string
+  FARPROC probeFuncHandle = GetProcAddress( probeDllHandle, QString(probeFunc).toLatin1());
+  if ( probeFuncHandle )
+    reinterpret_cast<void(*)()>( probeFuncHandle )();
+  else
+    qWarning() << QLatin1String("Error finding probe function!");
+#else
   void* probeFuncHandle = dlsym( probeDllHandle, probeFunc );
   if ( probeFuncHandle )
     reinterpret_cast<void(*)()>( probeFuncHandle )();
   else
     qWarning() << dlerror();
+#endif
 }
 
 Q_EXPORT_PLUGIN2(endoscope_injector_style, Endoscope::InjectorStylePlugin)
