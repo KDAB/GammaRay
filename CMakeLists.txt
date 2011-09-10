@@ -20,12 +20,23 @@ cmake_minimum_required(VERSION 2.8)
 if(NOT Prog_NAME)
   set(Prog_NAME "Endoscope")
 endif()
-if(NOT Prog_VERSION)
-  set(Prog_VERSION_MAJOR "1")
-  set(Prog_VERSION_MINOR "0")
-  set(Prog_VERSION_PATCH "0")
-  set(Prog_VERSION
-    "${Prog_VERSION_MAJOR}.${Prog_VERSION_MINOR}.${Prog_VERSION_PATCH}")
+
+
+set(ENDOSCOPE_VERSION_MAJOR "1")
+set(ENDOSCOPE_VERSION_MINOR "0")
+set(ENDOSCOPE_VERSION_PATCH "0")
+set(ENDOSCOPE_VERSION "${ENDOSCOPE_VERSION_MAJOR}.${ENDOSCOPE_VERSION_MINOR}.${ENDOSCOPE_VERSION_PATCH}")
+set(ENDOSCOPE_VERSION_STRING "${ENDOSCOPE_VERSION}")
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
+  find_package(Git)
+  if(GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    OUTPUT_VARIABLE _git_revision)
+    string(REGEX REPLACE "\n" "" _git_revision "${_git_revision}")
+    set(ENDOSCOPE_VERSION_STRING "${ENDOSCOPE_VERSION_STRING} (revision: ${_git_revision})")
+  endif()
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -36,8 +47,8 @@ if(APPLE AND CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
   set(CMAKE_INSTALL_PREFIX "/Applications")
 endif()
 
-message(STATUS "Building ${Prog_NAME} ${Prog_VERSION} in ${CMAKE_BUILD_TYPE} mode")
-add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\" -DPROGRAM_VERSION=\"${Prog_VERSION}\")
+message(STATUS "Building ${Prog_NAME} ${ENDOSCOPE_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
+add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\")
 
 include(CheckCXXCompilerFlag)
 
@@ -110,6 +121,10 @@ endif()
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h
+)
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope-version.h.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope-version.h
 )
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -274,7 +289,7 @@ endif()
 
 if(UNIX)
   add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/endoscope.1
-                     COMMAND pod2man -c "KDAB Products" -r ${Prog_VERSION} -s 1 ${CMAKE_SOURCE_DIR}/endoscope.pod ${CMAKE_BINARY_DIR}/endoscope.1
+                     COMMAND pod2man -c "KDAB Products" -r "\"${ENDOSCOPE_VERSION_STRING}\"" -s 1 ${CMAKE_SOURCE_DIR}/endoscope.pod ${CMAKE_BINARY_DIR}/endoscope.1
                      DEPENDS ${CMAKE_SOURCE_DIR}/endoscope.pod
                      )
 

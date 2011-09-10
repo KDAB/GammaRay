@@ -21,6 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-endoscope-version.h"
 #include "mainwindow.h"
 #include "probe.h"
 #include "objectlistmodel.h"
@@ -42,7 +43,7 @@
 using namespace Endoscope;
 
 static const char progName[] = PROGRAM_NAME;
-static const char progVersion[] = PROGRAM_VERSION;
+static const char progVersion[] = ENDOSCOPE_VERSION_STRING;
 static const char progDesc[] = "The Qt application inspection and manipulation tool";
 static const char progURL[] = "http://www.kdab.com/endoscope";
 
