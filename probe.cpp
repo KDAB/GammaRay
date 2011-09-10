@@ -36,6 +36,7 @@
 #include <QtCore/QThread>
 #include <qevent.h>
 #include <qgraphicsview.h>
+#include <QtGui/QDialog>
 
 #ifndef Q_OS_WIN
 #include <dlfcn.h>
@@ -290,6 +291,11 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event )
         }
       }
     }
+  }
+  if ( event->type() == QEvent::Show ) {
+    QDialog* dlg = qobject_cast<QDialog*>( receiver );
+    if ( dlg )
+      dlg->setWindowModality( Qt::NonModal );
   }
   return QObject::eventFilter(receiver, event);
 }
