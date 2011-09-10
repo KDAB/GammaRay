@@ -26,6 +26,7 @@
 
 #include <qobject.h>
 #include "probeinterface.h"
+#include <QPointer>
 
 class QGraphicsItem;
 
@@ -77,6 +78,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
   private slots:
     void delayedInit();
+    void objectFullyConstructed( const QPointer<QObject> &obj );
 
   private:
     explicit Probe( QObject* parent = 0 );

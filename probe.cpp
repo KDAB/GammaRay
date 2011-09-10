@@ -212,18 +212,22 @@ void Probe::objectAdded(QObject* obj)
   } else if ( isInitialized() ) {
     if (obj == instance()->window() || descendantOf(instance()->window(), obj))
       return;
-    // use queued connection so object is fully constructed when we check if it's a model
     const QPointer<QObject> objPtr( obj );
-    QMetaObject::invokeMethod( instance()->objectListModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
-    // ### queued connection here crashes the sort filter proxy, need to investigate that
-    // might be due to children inserted before the parents
-    instance()->m_objectTreeModel->objectAdded( obj );
-    QMetaObject::invokeMethod( instance()->modelTester(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
-    QMetaObject::invokeMethod( instance()->modelModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
-    QMetaObject::invokeMethod( instance()->toolModel(), "objectAdded", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
+    QMetaObject::invokeMethod( instance(), "objectFullyConstructed", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
   } else {
     s_addedBeforeProbeInsertion()->push_back( obj );
   }
+}
+
+void Probe::objectFullyConstructed(const QPointer< QObject >& obj)
+{
+  if ( !obj )
+    return;
+  m_objectListModel->objectAdded( obj );
+  m_objectTreeModel->objectAdded( obj );
+  m_modelModel->objectAdded( obj );
+  m_modelTester->objectAdded( obj );
+  m_toolModel->objectAdded( obj );
 }
 
 void Probe::objectRemoved(QObject* obj)
