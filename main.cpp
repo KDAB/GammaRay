@@ -65,15 +65,7 @@ int main(int argc, char **argv)
       out << "" << endl;
       out << "Options:" << endl;
       out << " -i, --injector <injector>\tset injection type, possible values:" << endl;
-#ifndef Q_OS_WIN
-      out << "                          \tpreload, gdb, style" << endl;
-#else
-#if defined(USE_DETOURS)
-      out << "                          \tdetours, windll" << endl;
-#else
-      out << "                          \twindll" << endl;
-#endif
-#endif
+      out << "                          \t" << InjectorFactory::availableInjectors().join( ", " ) << endl;
       out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
       out << " -h, --help               \tprint program help and exit" << endl;
       out << " -v, --version            \tprint program version and exit" << endl;

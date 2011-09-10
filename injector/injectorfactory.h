@@ -35,6 +35,11 @@ namespace InjectorFactory
    AbstractInjector::Ptr defaultInjectorForLaunch();
 
    AbstractInjector::Ptr defaultInjectorForAttach();
+
+   /**
+    * Returns the list of available injector types.
+    */
+   QStringList availableInjectors();
 }
 
 }

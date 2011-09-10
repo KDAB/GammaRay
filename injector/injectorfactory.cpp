@@ -40,9 +40,9 @@ AbstractInjector::Ptr createInjector( const QString &name )
 #ifndef Q_OS_WIN
   if ( name == QLatin1String("gdb") )
     return AbstractInjector::Ptr( new GdbInjector );
+#endif
   if ( name == QLatin1String("style") )
     return AbstractInjector::Ptr( new StyleInjector );
-#endif
 #ifndef Q_OS_WIN
   if ( name == QLatin1String("preload") )
     return AbstractInjector::Ptr( new PreloadInjector );
@@ -74,6 +74,21 @@ AbstractInjector::Ptr defaultInjectorForAttach()
   //TODO: what's the default attach injector on Windows?
   return createInjector( QLatin1String("") );
 #endif
+}
+
+QStringList availableInjectors()
+{
+  QStringList types;
+#ifndef Q_OS_WIN
+  types << QLatin1String( "preload" ) << QLatin1String( "gdb" );
+#else
+  types << QLatin1String( "windll" );
+#ifdef USE_DETOURS
+  types << QLatin1String( "detours" );
+#endif
+#endif
+  types << QLatin1String( "style" );
+  return types;
 }
 
 }
