@@ -3,6 +3,9 @@
     <file>endoscope512.png</file>
     <file>endoscope256.png</file>
     <file>endoscope128.png</file>
+    <file>endoscope48.png</file>
+    <file>endoscope32.png</file>
+    <file>endoscope16.png</file>
     <file>kdabproducts.png</file>
   </qresource>
 </RCC>
