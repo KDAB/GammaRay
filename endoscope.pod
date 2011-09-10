@@ -1,6 +1,6 @@
 =head1 NAME
 
-endoscope - Qt-application inspection and manipulation tool.
+Endoscope - Qt-application inspection and manipulation tool.
 
 =head1 SYNOPSIS
 
@@ -35,9 +35,11 @@ Attach to running Qt application with the specified pid.
 Set the specified injection type.
 
 Supported injectors are:
-     preload
-     gdb
+     preload (Linux, Mac OS)
+     gdb (Linux)
      style
+     windll (Windows)
+     detours (Windows)
 
 =back
 
@@ -62,21 +64,6 @@ Supported injectors are:
 =head1 PLUGINS
 
 Todo
-
-=head1 ENVIRONMENT
-
-B<LD_PRELOAD> - Todo
-
-B<QT_PLUGIN_PATH> - Todo
-
-B<ENDOSCOPE_STYLEINJECTOR_PROBEDLL> - Todo
-
-B<ENDOSCOPE_STYLEINJECTOR_PROBEFUNC> - Todo
-
-B<DYLD_FORCE_FLAT_NAMESPACE> - Todo
-
-B<DYLD_INSERT_LIBRARIES> - Todo
-
 
 =head1 EXIT STATUS
 
@@ -106,6 +93,15 @@ Todo
 
 =head1 AUTHORS
 
-Volker Krause <volker.krause@kdab.com>
+ Allen Winter <allen.winter@kdab.com>
+ Andreas Holzammer <andreas.holzammer@kdab.com>
+ David Faure <faure@kde.org>
+ Kevin Funk <krf@electrostorm.net>
+ Milian Wolff <mail@milianw.de>
+ Patrick Spendrin <ps_ml@gmx.de>
+ Stephen Kelly <stephen.kelly@kdab.com>
+ Till Adam <till@kdab.com>
+ Tobias Koenig <tobias.koenig@kdab.com>
+ Volker Krause <vkrause@kde.org>
 
 =cut
