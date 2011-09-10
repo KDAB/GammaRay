@@ -48,7 +48,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     static Probe* instance();
     static bool isInitialized();
 
-    static void objectAdded( QObject *obj );
+    static void objectAdded( QObject *obj, bool fromCtor = false );
     static void objectRemoved( QObject *obj );
     static void connectionAdded( QObject* sender, const char* signal, QObject* receiver, const char* method, Qt::ConnectionType type );
     static void connectionRemoved( QObject *sender, const char *signal, QObject *receiver, const char *method );

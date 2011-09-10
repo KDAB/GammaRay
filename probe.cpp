@@ -204,7 +204,7 @@ QObject* Probe::probe() const
   return const_cast<Endoscope::Probe*>(this);
 }
 
-void Probe::objectAdded(QObject* obj)
+void Probe::objectAdded(QObject* obj, bool fromCtor )
 {
   if ( !s_listener()->active && obj->thread() == QThread::currentThread() ) {
     // Ignore
@@ -213,7 +213,11 @@ void Probe::objectAdded(QObject* obj)
     if (obj == instance()->window() || descendantOf(instance()->window(), obj))
       return;
     const QPointer<QObject> objPtr( obj );
-    QMetaObject::invokeMethod( instance(), "objectFullyConstructed", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
+    if ( fromCtor ) {
+      QMetaObject::invokeMethod( instance(), "objectFullyConstructed", Qt::QueuedConnection, Q_ARG( QPointer<QObject>, objPtr ) );
+    } else {
+      instance()->objectFullyConstructed(obj);
+    }
   } else {
     s_addedBeforeProbeInsertion()->push_back( obj );
   }
@@ -373,7 +377,7 @@ extern "C" Q_DECL_EXPORT void qt_addObject( QObject *obj )
 #ifndef Q_OS_WIN
   static void (*next_qt_addObject)(QObject* obj) = (void (*)(QObject *obj)) dlsym( RTLD_NEXT, "qt_addObject" );
 #endif
-  Probe::objectAdded( obj );
+  Probe::objectAdded( obj, true );
   next_qt_addObject( obj );
 }
 #else
