@@ -37,7 +37,7 @@ class ObjectInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ObjectInspector( ProbeInterface* probe, QWidget *parent = 0 );
+    explicit ObjectInspector(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void objectSelected(const QModelIndex &index);
@@ -49,9 +49,9 @@ class ObjectInspector : public QWidget
 class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObject, ObjectInspector>
 {
   Q_OBJECT
-  Q_INTERFACES( Endoscope::ToolFactory )
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit ObjectInspectorFactory( QObject *parent ) : QObject( parent ) {}
+    explicit ObjectInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Objects"); }
 };
 

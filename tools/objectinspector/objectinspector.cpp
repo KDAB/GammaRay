@@ -30,28 +30,29 @@
 
 using namespace Endoscope;
 
-ObjectInspector::ObjectInspector(ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui( new Ui::ObjectInspector )
+ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::ObjectInspector)
 {
-  ui->setupUi( this );
+  ui->setupUi(this);
 
-  QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel( this );
-  objectFilter->setSourceModel( probe->objectTreeModel() );
-  objectFilter->setDynamicSortFilter( true );
-  ui->objectTreeView->setModel( objectFilter );
-  ui->objectSearchLine->setProxy( objectFilter );
-  connect( ui->objectTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(objectSelected(QModelIndex)) );
+  QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
+  objectFilter->setSourceModel(probe->objectTreeModel());
+  objectFilter->setDynamicSortFilter(true);
+  ui->objectTreeView->setModel(objectFilter);
+  ui->objectSearchLine->setProxy(objectFilter);
+  connect(ui->objectTreeView->selectionModel(),
+          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          SLOT(objectSelected(QModelIndex)));
 }
 
-void ObjectInspector::objectSelected(const QModelIndex& index)
+void ObjectInspector::objectSelected(const QModelIndex &index)
 {
-  if ( index.isValid() ) {
-    QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-    ui->objectPropertyWidget->setObject( obj );
+  if (index.isValid()) {
+    QObject *obj = index.data(ObjectListModel::ObjectRole).value<QObject*>();
+    ui->objectPropertyWidget->setObject(obj);
   } else {
-    ui->objectPropertyWidget->setObject( 0 );
+    ui->objectPropertyWidget->setObject(0);
   }
 }
 
