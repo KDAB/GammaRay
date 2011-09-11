@@ -64,7 +64,7 @@ QString findProbe( const QString& baseName )
   }
 
 #else
-  return QCoreApplication::applicationDirPath() % baseName % QLatin1Literal( ".dll" );
+  return QCoreApplication::applicationDirPath() % QDir::separator() % baseName % QLatin1Literal( ".dll" );
 #endif
 
   Q_ASSERT( false );
