@@ -208,6 +208,7 @@ set(endoscope_srcs
   tools/fontbrowser/fontbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/modelinspector/modelinspector.cpp
+  tools/modelinspector/modelinspectorwidget.cpp
   tools/objectinspector/objectinspector.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/sceneinspector/sceneinspector.cpp
@@ -234,7 +235,7 @@ qt4_wrap_ui(endoscope_srcs
   tools/connectioninspector/connectioninspector.ui
   tools/fontbrowser/fontbrowser.ui
   tools/metatypebrowser/metatypebrowser.ui
-  tools/modelinspector/modelinspector.ui
+  tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspector.ui
   tools/resourcebrowser/resourcebrowser.ui
   tools/sceneinspector/sceneinspector.ui

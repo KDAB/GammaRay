@@ -49,7 +49,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   // built-in tools
   m_tools.push_back(new ObjectInspectorFactory);
   m_tools.push_back(new WidgetInspectorFactory);
-  m_tools.push_back(new ModelInspectorFactory);
+  m_tools.push_back(new ModelInspector);
   m_tools.push_back(new SceneInspectorFactory);
   m_tools.push_back(new ScriptEngineDebuggerFactory);
   m_tools.push_back(new WebInspectorFactory);

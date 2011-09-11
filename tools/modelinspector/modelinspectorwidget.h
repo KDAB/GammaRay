@@ -1,5 +1,5 @@
 /*
-  modelinspector.cpp
+  modelinspectorwidget.h
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
@@ -21,33 +21,34 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "modelinspector.h"
+#ifndef ENDOSCOPE_MODELINSPECTORWIDGET_H
+#define ENDOSCOPE_MODELINSPECTORWIDGET_H
 
-#include "modelmodel.h"
-#include "modelinspectorwidget.h"
+#include <QWidget>
 
-#include <probeinterface.h>
+class QModelIndex;
 
-using namespace Endoscope;
+namespace Endoscope {
 
-QString ModelInspector::name() const
+class ModelCellModel;
+class ProbeInterface;
+namespace Ui { class ModelInspectorWidget; }
+
+class ModelInspectorWidget : public QWidget
 {
- return tr( "Models" );
+  Q_OBJECT
+  public:
+    explicit ModelInspectorWidget( ProbeInterface *probe, QWidget *parent = 0 );
+
+  private slots:
+    void modelSelected(const QModelIndex &index);
+    void modelCellSelected(const QModelIndex &index);
+
+  private:
+    QScopedPointer<Ui::ModelInspectorWidget> ui;
+    ModelCellModel *m_cellModel;
+};
+
 }
 
-QStringList ModelInspector::supportedTypes() const
-{
-  return QStringList( QAbstractItemModel::staticMetaObject.className() );
-}
-
-void ModelInspector::init(ProbeInterface* probe)
-{
-
-}
-
-QWidget* ModelInspector::createWidget(ProbeInterface* probe, QWidget* parentWidget)
-{
-  return new ModelInspectorWidget( probe, parentWidget );
-}
-
-#include "modelinspector.moc"
+#endif // ENDOSCOPE_MODELINSPECTORWIDGET_H
