@@ -50,6 +50,7 @@ class WebInspectorFactory : public QObject, public StandardToolFactory<QWebPage,
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
+    explicit WebInspectorFactory( QObject *parent ) : QObject( parent ) {}
     inline QString name() const { return tr("Web Pages"); }
 };
 

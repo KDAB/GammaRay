@@ -47,6 +47,7 @@ class ConnectionInspectorFactory : public QObject, public StandardToolFactory<QO
   Q_OBJECT
   Q_INTERFACES( Endoscope::ToolFactory )
   public:
+    explicit ConnectionInspectorFactory( QObject *parent ) : QObject( parent ) {}
     inline QString name() const { return tr( "Connections" ); }
 };
 

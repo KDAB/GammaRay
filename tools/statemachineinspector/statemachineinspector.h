@@ -58,6 +58,7 @@ class StateMachineInspectorFactory : public QObject, public StandardToolFactory<
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
+    explicit StateMachineInspectorFactory( QObject *parent ) : QObject( parent ) {}
     inline QString name() const { return tr("State Machines"); }
 };
 

@@ -56,6 +56,7 @@ class SceneInspectorFactory : public QObject, public StandardToolFactory<QGraphi
   Q_OBJECT
   Q_INTERFACES( Endoscope::ToolFactory )
   public:
+    explicit SceneInspectorFactory( QObject *parent ) : QObject( parent ) {}
     inline QString name() const { return tr( "Graphics Scenes" ); }
 };
 

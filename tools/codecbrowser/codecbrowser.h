@@ -54,6 +54,7 @@ class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, 
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
+    explicit CodecBrowserFactory( QObject *parent ) : QObject( parent ) {}
     virtual inline QString name() const { return tr("Text Codecs"); }
 };
 

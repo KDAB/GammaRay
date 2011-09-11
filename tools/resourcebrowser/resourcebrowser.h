@@ -51,6 +51,7 @@ class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObjec
   Q_OBJECT
   Q_INTERFACES( Endoscope::ToolFactory )
   public:
+    explicit ResourceBrowserFactory( QObject *parent ) : QObject( parent ) {}
     inline QString name() const { return tr( "Resources" ); }
 };
 

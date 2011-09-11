@@ -50,6 +50,7 @@ class ScriptEngineDebuggerFactory : public QObject, public StandardToolFactory<Q
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
+    explicit ScriptEngineDebuggerFactory( QObject *parent) : QObject( parent ) {}
     inline QString name() const { return tr("Script Engines"); }
 };
 

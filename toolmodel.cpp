@@ -47,20 +47,20 @@ using namespace Endoscope;
 ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
 {
   // built-in tools
-  m_tools.push_back(new ObjectInspectorFactory);
-  m_tools.push_back(new WidgetInspectorFactory);
-  m_tools.push_back(new ModelInspector);
-  m_tools.push_back(new SceneInspectorFactory);
-  m_tools.push_back(new ScriptEngineDebuggerFactory);
-  m_tools.push_back(new WebInspectorFactory);
-  m_tools.push_back(new ConnectionInspectorFactory);
-  m_tools.push_back(new ResourceBrowserFactory);
-  m_tools.push_back(new StateMachineInspectorFactory);
-  m_tools.push_back(new MetaTypeBrowserFactory);
-  m_tools.push_back(new SelectionModelInspectorFactory);
-  m_tools.push_back(new FontBrowserFactory);
-  m_tools.push_back(new CodecBrowserFactory);
-  m_tools.push_back(new TextDocumentInspectorFactory);
+  m_tools.push_back(new ObjectInspectorFactory(this));
+  m_tools.push_back(new WidgetInspectorFactory(this));
+  m_tools.push_back(new ModelInspector(this));
+  m_tools.push_back(new SceneInspectorFactory(this));
+  m_tools.push_back(new ScriptEngineDebuggerFactory(this));
+  m_tools.push_back(new WebInspectorFactory(this));
+  m_tools.push_back(new ConnectionInspectorFactory(this));
+  m_tools.push_back(new ResourceBrowserFactory(this));
+  m_tools.push_back(new StateMachineInspectorFactory(this));
+  m_tools.push_back(new MetaTypeBrowserFactory(this));
+  m_tools.push_back(new SelectionModelInspectorFactory(this));
+  m_tools.push_back(new FontBrowserFactory(this));
+  m_tools.push_back(new CodecBrowserFactory(this));
+  m_tools.push_back(new TextDocumentInspectorFactory(this));
 
   // tool plugins
   // TODO

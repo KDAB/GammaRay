@@ -52,6 +52,7 @@ class WidgetInspectorFactory : public QObject, public StandardToolFactory<QWidge
   Q_OBJECT
   Q_INTERFACES( Endoscope::ToolFactory )
   public:
+    explicit WidgetInspectorFactory( QObject *parent ) : QObject( parent ) {}
     inline QString name() const { return tr("Widgets"); }
 };
 

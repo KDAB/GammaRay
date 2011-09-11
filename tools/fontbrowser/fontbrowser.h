@@ -54,6 +54,7 @@ class FontBrowserFactory : public QObject, public StandardToolFactory<QObject, F
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
+    explicit FontBrowserFactory( QObject *parent ) : QObject( parent ) {}
     virtual inline QString name() const { return tr( "Fonts" ); }
 };
 

@@ -51,6 +51,7 @@ class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObjec
   Q_OBJECT
   Q_INTERFACES( Endoscope::ToolFactory )
   public:
+    explicit ObjectInspectorFactory( QObject *parent ) : QObject( parent ) {}
     inline QString name() const { return tr("Objects"); }
 };
 

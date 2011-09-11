@@ -50,6 +50,7 @@ class SelectionModelInspectorFactory : public QObject, public StandardToolFactor
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
+    explicit SelectionModelInspectorFactory( QObject *parent ) : QObject( parent ) {}
     virtual inline QString name() const { return tr("Selection Models"); }
 };
 
