@@ -36,19 +36,20 @@ class ConnectionInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ConnectionInspector( ProbeInterface *probe, QWidget *parent = 0 );
+    explicit ConnectionInspector(ProbeInterface *probe, QWidget *parent = 0);
 
   private:
     QScopedPointer<Ui::ConnectionInspector> ui;
 };
 
-class ConnectionInspectorFactory : public QObject, public StandardToolFactory<QObject, ConnectionInspector>
+class ConnectionInspectorFactory : public QObject,
+                                   public StandardToolFactory<QObject, ConnectionInspector>
 {
   Q_OBJECT
-  Q_INTERFACES( Endoscope::ToolFactory )
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit ConnectionInspectorFactory( QObject *parent ) : QObject( parent ) {}
-    inline QString name() const { return tr( "Connections" ); }
+    explicit ConnectionInspectorFactory(QObject *parent) : QObject(parent) {}
+    inline QString name() const { return tr("Connections"); }
 };
 
 }

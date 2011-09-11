@@ -29,16 +29,16 @@
 
 using namespace Endoscope;
 
-ConnectionInspector::ConnectionInspector(ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui( new Ui::ConnectionInspector )
+ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::ConnectionInspector)
 {
-  ui->setupUi( this );
+  ui->setupUi(this);
 
-  QSortFilterProxyModel *connectionFilterProxy = new ConnectionFilterProxyModel( this );
-  connectionFilterProxy->setSourceModel( probe->connectionModel() );
-  ui->connectionSearchLine->setProxy( connectionFilterProxy );
-  ui->connectionView->setModel( connectionFilterProxy );
+  QSortFilterProxyModel *connectionFilterProxy = new ConnectionFilterProxyModel(this);
+  connectionFilterProxy->setSourceModel(probe->connectionModel());
+  ui->connectionSearchLine->setProxy(connectionFilterProxy);
+  ui->connectionView->setModel(connectionFilterProxy);
 }
 
 #include "connectioninspector.moc"
