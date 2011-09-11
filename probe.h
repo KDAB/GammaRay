@@ -73,6 +73,9 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     void widgetSelected( QWidget* widget );
     void graphicsItemSelected( QGraphicsItem* item );
 
+    void objectCreated( QObject *obj );
+    void objectDestroyed( QObject *obj );
+
   protected:
     bool eventFilter(QObject *receiver, QEvent *event );
 

@@ -232,6 +232,7 @@ void Probe::objectFullyConstructed(const QPointer< QObject >& obj)
   m_modelModel->objectAdded( obj );
   m_modelTester->objectAdded( obj );
   m_toolModel->objectAdded( obj );
+  emit objectCreated( obj );
 }
 
 void Probe::objectRemoved(QObject* obj)
@@ -242,6 +243,7 @@ void Probe::objectRemoved(QObject* obj)
     instance()->connectionRemoved( obj, 0, 0, 0 );
     instance()->connectionRemoved( 0, 0, obj, 0 );
     instance()->m_modelModel->objectRemoved( obj );
+    emit instance()->objectDestroyed( obj );
   } else {
     for ( QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
          it != s_addedBeforeProbeInsertion()->end(); )
