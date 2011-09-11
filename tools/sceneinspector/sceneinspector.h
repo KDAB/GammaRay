@@ -39,25 +39,26 @@ class SceneInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit SceneInspector( ProbeInterface *probe, QWidget *parent = 0 );
+    explicit SceneInspector(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void sceneSelected(int index);
-    void sceneItemSelected( const QModelIndex &index );
-    void sceneItemSelected( QGraphicsItem* item );
+    void sceneItemSelected(const QModelIndex &index);
+    void sceneItemSelected(QGraphicsItem *item);
 
   private:
     QScopedPointer<Ui::SceneInspector> ui;
     SceneModel *m_sceneModel;
 };
 
-class SceneInspectorFactory : public QObject, public StandardToolFactory<QGraphicsScene, SceneInspector>
+class SceneInspectorFactory : public QObject,
+                              public StandardToolFactory<QGraphicsScene, SceneInspector>
 {
   Q_OBJECT
-  Q_INTERFACES( Endoscope::ToolFactory )
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit SceneInspectorFactory( QObject *parent ) : QObject( parent ) {}
-    inline QString name() const { return tr( "Graphics Scenes" ); }
+    explicit SceneInspectorFactory(QObject *parent) : QObject(parent) {}
+    inline QString name() const { return tr("Graphics Scenes"); }
 };
 
 }

@@ -38,18 +38,18 @@ class SceneModel : public QAbstractItemModel
     enum Role {
       SceneItemRole = Qt::UserRole + 1
     };
-    explicit SceneModel(QObject* parent = 0);
-    void setScene( QGraphicsScene* scene );
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex& child) const;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    explicit SceneModel(QObject *parent = 0);
+    void setScene(QGraphicsScene *scene);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
   private:
     QList<QGraphicsItem*> topLevelItems() const;
-  private:
-    QGraphicsScene* m_scene;
+    QGraphicsScene *m_scene;
 };
 
 }

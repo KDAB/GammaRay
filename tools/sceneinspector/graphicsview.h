@@ -32,18 +32,18 @@ class GraphicsView : public QGraphicsView
 {
   Q_OBJECT
   public:
-    explicit GraphicsView( QWidget* parent = 0 );
+    explicit GraphicsView(QWidget *parent = 0);
 
-    void showItem( QGraphicsItem* item );
+    void showItem(QGraphicsItem *item);
 
   signals:
-    void sceneCoordinatesChanged( const QPointF &sceneCoord );
-    void itemCoordinatesChanged( const QPointF &itemCoord );
+    void sceneCoordinatesChanged(const QPointF &sceneCoord);
+    void itemCoordinatesChanged(const QPointF &itemCoord);
 
   protected:
-    void keyPressEvent(QKeyEvent* event);
-    void mouseMoveEvent(QMouseEvent* event);
-    void drawForeground(QPainter* painter, const QRectF& rect);
+    void keyPressEvent(QKeyEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void drawForeground(QPainter *painter, const QRectF &rect);
 
   private:
     QGraphicsItem *m_currentItem;
