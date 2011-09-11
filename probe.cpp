@@ -27,8 +27,6 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "connectionmodel.h"
-#include "modeltester.h"
-#include "modelmodel.h"
 #include "toolmodel.h"
 
 #include <QtCore/QCoreApplication>
@@ -104,8 +102,6 @@ Probe::Probe(QObject* parent):
   m_objectListModel( new ObjectListModel( this ) ),
   m_objectTreeModel( new ObjectTreeModel( this ) ),
   m_connectionModel( new ConnectionModel( this ) ),
-  m_modelTester( new ModelTester( this ) ),
-  m_modelModel( new ModelModel( this ) ),
   m_toolModel( new ToolModel( this ) ),
   m_window(0)
 {
@@ -184,16 +180,6 @@ QAbstractItemModel* Probe::connectionModel() const
   return m_connectionModel;
 }
 
-ModelTester* Probe::modelTester() const
-{
-  return m_modelTester;
-}
-
-QAbstractItemModel* Probe::modelModel() const
-{
-  return m_modelModel;
-}
-
 ToolModel* Probe::toolModel() const
 {
   return m_toolModel;
@@ -229,8 +215,6 @@ void Probe::objectFullyConstructed(const QPointer< QObject >& obj)
     return;
   m_objectListModel->objectAdded( obj );
   m_objectTreeModel->objectAdded( obj );
-  m_modelModel->objectAdded( obj );
-  m_modelTester->objectAdded( obj );
   m_toolModel->objectAdded( obj );
   emit objectCreated( obj );
 }
@@ -242,7 +226,6 @@ void Probe::objectRemoved(QObject* obj)
     instance()->m_objectTreeModel->objectRemoved( obj );
     instance()->connectionRemoved( obj, 0, 0, 0 );
     instance()->connectionRemoved( 0, 0, obj, 0 );
-    instance()->m_modelModel->objectRemoved( obj );
     emit instance()->objectDestroyed( obj );
   } else {
     for ( QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();

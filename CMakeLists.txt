@@ -191,8 +191,8 @@ set(endoscope_srcs
   methodinvocationdialog.cpp
   methodargumentmodel.cpp
   singlecolumnobjectproxymodel.cpp
-  modeltester.cpp
-  modelmodel.cpp
+  tools/modelinspector/modeltester.cpp
+  tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
   tools/sceneinspector/graphicsview.cpp
   tools/sceneinspector/graphicssceneview.cpp

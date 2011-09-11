@@ -29,15 +29,25 @@
 
 namespace Endoscope {
 
+class ModelModel;
+class ModelTester;
+
 class ModelInspector : public QObject, public ToolFactory
 {
   Q_OBJECT
   Q_INTERFACES( Endoscope::ToolFactory )
   public:
+    explicit ModelInspector(QObject* parent = 0);
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
     virtual void init(ProbeInterface* probe);
     virtual QWidget* createWidget(ProbeInterface* probe, QWidget* parentWidget);
+
+    ModelModel* modelModel() const;
+
+  private:
+    ModelModel* m_modelModel;
+    ModelTester* m_modelTester;
 };
 
 }

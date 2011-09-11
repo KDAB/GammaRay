@@ -26,6 +26,7 @@
 
 #include "modelmodel.h"
 #include "modelcellmodel.h"
+#include "modelinspector.h"
 
 #include <kde/krecursivefilterproxymodel.h>
 #include <objectlistmodel.h>
@@ -33,14 +34,15 @@
 
 using namespace Endoscope;
 
-ModelInspectorWidget::ModelInspectorWidget(ProbeInterface* probe, QWidget* parent):
+ModelInspectorWidget::ModelInspectorWidget(ModelInspector* modelInspector, ProbeInterface* probe, QWidget* parent):
   QWidget(parent),
   ui( new Ui::ModelInspectorWidget )
 {
+  Q_UNUSED( probe );
   ui->setupUi( this );
 
   KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel( this );
-  modelFilterProxy->setSourceModel( probe->modelModel() );
+  modelFilterProxy->setSourceModel( modelInspector->modelModel() );
   ui->modelView->setModel( modelFilterProxy );
   ui->modelSearchLine->setProxy( modelFilterProxy );
   connect( ui->modelView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),

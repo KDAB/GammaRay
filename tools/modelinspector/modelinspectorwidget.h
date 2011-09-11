@@ -31,6 +31,7 @@ class QModelIndex;
 namespace Endoscope {
 
 class ModelCellModel;
+class ModelInspector;
 class ProbeInterface;
 namespace Ui { class ModelInspectorWidget; }
 
@@ -38,7 +39,7 @@ class ModelInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ModelInspectorWidget( ProbeInterface *probe, QWidget *parent = 0 );
+    ModelInspectorWidget( ModelInspector* modelInspector, ProbeInterface *probe, QWidget *parent = 0 );
 
   private slots:
     void modelSelected(const QModelIndex &index);

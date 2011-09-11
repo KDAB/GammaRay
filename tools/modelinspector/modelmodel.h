@@ -42,10 +42,9 @@ class ModelModel : public ObjectModelBase<QAbstractItemModel>
     QModelIndex parent(const QModelIndex& child) const;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
 
-    void objectRemoved( QObject *obj );
-
   public slots:
-    void objectAdded( const QPointer<QObject> &obj );
+    void objectAdded( QObject *obj );
+    void objectRemoved( QObject *obj );
 
   private:
     QModelIndex indexForModel( QAbstractItemModel* model ) const;

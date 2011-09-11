@@ -32,8 +32,6 @@ class QGraphicsItem;
 
 namespace Endoscope {
 
-class ModelModel;
-class ModelTester;
 class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
@@ -58,8 +56,6 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     QAbstractItemModel *objectListModel() const;
     QAbstractItemModel *objectTreeModel() const;
     QAbstractItemModel *connectionModel() const;
-    ModelTester *modelTester() const;
-    QAbstractItemModel *modelModel() const;
     ToolModel *toolModel() const;
 
     static const char* connectLocation( const char *member );
@@ -91,8 +87,6 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
     ConnectionModel *m_connectionModel;
-    ModelTester *m_modelTester;
-    ModelModel *m_modelModel;
     ToolModel *m_toolModel;
     Endoscope::MainWindow *m_window;
 };

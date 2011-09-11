@@ -76,7 +76,7 @@ QModelIndex ModelModel::index(int row, int column, const QModelIndex& parent) co
   return createIndex( row, column, m_models.at( row ) );
 }
 
-void ModelModel::objectAdded(const QPointer< QObject >& obj)
+void ModelModel::objectAdded(QObject* obj)
 {
   QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>( obj );
   if ( proxy ) {

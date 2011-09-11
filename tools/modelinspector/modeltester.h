@@ -42,7 +42,7 @@ class ModelTester : public QObject
     void failure( QAbstractItemModel* model, int line, const char *message );
     
   public slots:
-    void objectAdded( const QPointer<QObject> &obj );
+    void objectAdded( QObject *obj );
     
   private slots:
     void modelDestroyed( QObject *model );

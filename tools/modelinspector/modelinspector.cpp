@@ -24,11 +24,19 @@
 #include "modelinspector.h"
 
 #include "modelmodel.h"
+#include "modeltester.h"
 #include "modelinspectorwidget.h"
 
 #include <probeinterface.h>
 
 using namespace Endoscope;
+
+ModelInspector::ModelInspector( QObject *parent ) :
+  QObject( parent ),
+  m_modelModel( 0 ),
+  m_modelTester( 0 )
+{
+}
 
 QString ModelInspector::name() const
 {
@@ -42,12 +50,21 @@ QStringList ModelInspector::supportedTypes() const
 
 void ModelInspector::init(ProbeInterface* probe)
 {
-
+  m_modelModel = new ModelModel( this );
+  connect( probe->probe(), SIGNAL(objectCreated(QObject*)), m_modelModel, SLOT(objectAdded(QObject*)) );
+  connect( probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_modelModel, SLOT(objectRemoved(QObject*)) );
+  m_modelTester = new ModelTester( this );
+  connect( probe->probe(), SIGNAL(objectCreated(QObject*)), m_modelTester, SLOT(objectAdded(QObject*)) );
 }
 
 QWidget* ModelInspector::createWidget(ProbeInterface* probe, QWidget* parentWidget)
 {
-  return new ModelInspectorWidget( probe, parentWidget );
+  return new ModelInspectorWidget( this, probe, parentWidget );
+}
+
+ModelModel* ModelInspector::modelModel() const
+{
+  return m_modelModel;
 }
 
 #include "modelinspector.moc"
