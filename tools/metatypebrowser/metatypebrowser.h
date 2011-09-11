@@ -35,7 +35,7 @@ class MetaTypeBrowser : public QWidget
 {
   Q_OBJECT
   public:
-    explicit MetaTypeBrowser( ProbeInterface *probe, QWidget *parent = 0 );
+    explicit MetaTypeBrowser(ProbeInterface *probe, QWidget *parent = 0);
 
   private:
     QScopedPointer<Ui::MetaTypeBrowser> ui;
@@ -46,7 +46,7 @@ class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObjec
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit MetaTypeBrowserFactory( QObject *parent ) : QObject( parent ) {}
+    explicit MetaTypeBrowserFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Meta Types"); }
 };
 

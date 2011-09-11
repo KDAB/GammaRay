@@ -28,12 +28,12 @@
 
 using namespace Endoscope;
 
-MetaTypeBrowser::MetaTypeBrowser(ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui( new Ui::MetaTypeBrowser )
+MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::MetaTypeBrowser)
 {
   Q_UNUSED(probe);
-  ui->setupUi( this );
+  ui->setupUi(this);
 
   MetaTypesModel *mtm = new MetaTypesModel(this);
   ui->metaTypeView->setModel(mtm);
