@@ -39,7 +39,7 @@ class FontBrowser : public QWidget
 {
   Q_OBJECT
   public:
-    explicit FontBrowser(ProbeInterface* probe, QWidget* parent = 0);
+    explicit FontBrowser(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
@@ -54,8 +54,8 @@ class FontBrowserFactory : public QObject, public StandardToolFactory<QObject, F
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit FontBrowserFactory( QObject *parent ) : QObject( parent ) {}
-    virtual inline QString name() const { return tr( "Fonts" ); }
+    explicit FontBrowserFactory(QObject *parent) : QObject(parent) {}
+    virtual inline QString name() const { return tr("Fonts"); }
 };
 
 }

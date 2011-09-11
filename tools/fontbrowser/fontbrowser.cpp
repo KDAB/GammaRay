@@ -28,9 +28,9 @@
 
 using namespace Endoscope;
 
-FontBrowser::FontBrowser(ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui(new Ui::FontBrowser)
+FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::FontBrowser)
 {
   Q_UNUSED(probe);
   ui->setupUi(this);
@@ -42,38 +42,43 @@ FontBrowser::FontBrowser(ProbeInterface* probe, QWidget* parent):
 
   ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
   foreach (const QString &family, database.families()) {
-      QTreeWidgetItem *familyItem = new QTreeWidgetItem(ui->fontTree);
-      familyItem->setText(0, family);
+    QTreeWidgetItem *familyItem = new QTreeWidgetItem(ui->fontTree);
+    familyItem->setText(0, family);
 
-      foreach (const QString &style, database.styles(family)) {
-          QTreeWidgetItem *styleItem = new QTreeWidgetItem(familyItem);
-          styleItem->setText(0, style);
+    foreach (const QString &style, database.styles(family)) {
+      QTreeWidgetItem *styleItem = new QTreeWidgetItem(familyItem);
+      styleItem->setText(0, style);
 
-          QString sizes;
-          foreach (int points, database.smoothSizes(family, style))
-              sizes += QString::number(points) + ' ';
-
-          styleItem->setText(1, sizes.trimmed());
+      QString sizes;
+      foreach (int points, database.smoothSizes(family, style)) {
+        sizes += QString::number(points) + ' ';
       }
+
+      styleItem->setText(1, sizes.trimmed());
+    }
   }
-  connect(ui->fontTree->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateFonts(QItemSelection,QItemSelection)));
-  connect(ui->fontText, SIGNAL(textChanged(QString)), m_selectedFontModel, SLOT(updateText(QString)));
+  connect(ui->fontTree->selectionModel(),
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(updateFonts(QItemSelection,QItemSelection)));
+  connect(ui->fontText, SIGNAL(textChanged(QString)),
+          m_selectedFontModel, SLOT(updateText(QString)));
 }
 
-void FontBrowser::updateFonts(const QItemSelection& selected, const QItemSelection& deselected)
+void FontBrowser::updateFonts(const QItemSelection &selected, const QItemSelection &deselected)
 {
   Q_UNUSED(selected);
   Q_UNUSED(deselected);
   QList<QFont> previousFonts = m_selectedFontModel->currentFonts();
   QStringList previousFontNames;
-  foreach(const QFont &f, previousFonts) {
+  foreach (const QFont &f, previousFonts) {
     previousFontNames.append(f.family());
   }
   QList<QFont> currentFonts;
   QStringList currentFontNames;
-  foreach(const QModelIndex &index, ui->fontTree->selectionModel()->selectedRows()) {
-    if (index.parent().isValid())
+  foreach (const QModelIndex &index, ui->fontTree->selectionModel()->selectedRows()) {
+    if (index.parent().isValid()) {
       continue;
+    }
     QFont font(index.data().toString());
     currentFontNames.append(font.family());
     if (previousFontNames.contains(font.family())) {
@@ -83,11 +88,12 @@ void FontBrowser::updateFonts(const QItemSelection& selected, const QItemSelecti
   }
   {
     QList<QFont>::iterator it = previousFonts.begin();
-    while ( it != previousFonts.end()) {
-      if (!currentFontNames.contains(it->family()))
+    while (it != previousFonts.end()) {
+      if (!currentFontNames.contains(it->family())) {
         it = previousFonts.erase(it);
-      else
+      } else {
         ++it;
+      }
     }
   }
 
