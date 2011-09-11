@@ -40,6 +40,7 @@
 #include "tools/widgetinspector/widgetinspector.h"
 
 #include <QDebug>
+#include "probe.h"
 
 using namespace Endoscope;
 
@@ -132,6 +133,7 @@ void ToolModel::objectAdded(const QMetaObject *mo)
       qDebug() << "found instance of class" << mo->className()
                << "activating tool" << factory->name();
       m_inactiveTools.remove(factory);
+      factory->init( Probe::instance() );
       emit dataChanged(index(0, 0), index(rowCount() - 1, 0));
     }
   }

@@ -50,11 +50,18 @@ class ToolFactory
     virtual QStringList supportedTypes() const = 0;
 
     /**
-     * Create an instance of this tool.
-     * @param probeIface The probe interface allowing access to the object models.
+     * Initialize the tool.
+     * Implement this method to do non-GUI initialization, such as creating object tracking models etc.
+     * @param probe The probe interface allowing access to the object models.
+     */
+    virtual void init( ProbeInterface *probe ) = 0;
+
+    /**
+     * Create the UI part of this tool.
+     * @param probe The probe interface allowing access to the object models.
      * @param parentWidget The parent widget for the visual elements of this tool.
      */
-    virtual QWidget* createInstance( ProbeInterface *probeIface, QWidget *parentWidget ) = 0;
+    virtual QWidget* createWidget( ProbeInterface *probe, QWidget *parentWidget ) = 0;
 };
 
 template <typename Type, typename Tool>
@@ -62,7 +69,8 @@ class StandardToolFactory : public ToolFactory
 {
   public:
     virtual inline QStringList supportedTypes() const { return QStringList( Type::staticMetaObject.className() ); }
-    virtual inline QWidget* createInstance( ProbeInterface *probe, QWidget *parentWidget ) { return new Tool( probe, parentWidget ); }
+    virtual inline void init( ProbeInterface* ) {}
+    virtual inline QWidget* createWidget( ProbeInterface *probe, QWidget *parentWidget ) { return new Tool( probe, parentWidget ); }
 };
 
 }
