@@ -37,7 +37,7 @@ class ResourceBrowser : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ResourceBrowser( ProbeInterface* probe, QWidget *parent = 0 );
+    explicit ResourceBrowser(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
@@ -49,10 +49,10 @@ class ResourceBrowser : public QWidget
 class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObject, ResourceBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES( Endoscope::ToolFactory )
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit ResourceBrowserFactory( QObject *parent ) : QObject( parent ) {}
-    inline QString name() const { return tr( "Resources" ); }
+    explicit ResourceBrowserFactory(QObject *parent) : QObject(parent) {}
+    inline QString name() const { return tr("Resources"); }
 };
 
 }
