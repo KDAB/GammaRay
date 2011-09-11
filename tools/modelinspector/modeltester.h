@@ -37,16 +37,16 @@ class ModelTester : public QObject
 {
   Q_OBJECT
   public:
-    explicit ModelTester(QObject* parent = 0);
-    
-    void failure( QAbstractItemModel* model, int line, const char *message );
-    
+    explicit ModelTester(QObject *parent = 0);
+
+    void failure(QAbstractItemModel *model, int line, const char *message);
+
   public slots:
-    void objectAdded( QObject *obj );
-    
+    void objectAdded(QObject *obj);
+
   private slots:
-    void modelDestroyed( QObject *model );
-    
+    void modelDestroyed(QObject *model);
+
   private:
     struct ModelTestResult;
     QHash<QAbstractItemModel*, ModelTestResult*> m_modelTestMap;

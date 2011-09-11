@@ -34,40 +34,44 @@
 
 using namespace Endoscope;
 
-ModelInspectorWidget::ModelInspectorWidget(ModelInspector* modelInspector, ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui( new Ui::ModelInspectorWidget )
+ModelInspectorWidget::ModelInspectorWidget(ModelInspector *modelInspector,
+                                           ProbeInterface *probe,
+                                           QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::ModelInspectorWidget)
 {
-  Q_UNUSED( probe );
-  ui->setupUi( this );
+  Q_UNUSED(probe);
+  ui->setupUi(this);
 
-  KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel( this );
-  modelFilterProxy->setSourceModel( modelInspector->modelModel() );
-  ui->modelView->setModel( modelFilterProxy );
-  ui->modelSearchLine->setProxy( modelFilterProxy );
-  connect( ui->modelView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(modelSelected(QModelIndex)) );
-  m_cellModel = new ModelCellModel( this );
-  ui->modelCellView->setModel( m_cellModel );
+  KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel(this);
+  modelFilterProxy->setSourceModel(modelInspector->modelModel());
+  ui->modelView->setModel(modelFilterProxy);
+  ui->modelSearchLine->setProxy(modelFilterProxy);
+  connect(ui->modelView->selectionModel(),
+          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          SLOT(modelSelected(QModelIndex)));
+  m_cellModel = new ModelCellModel(this);
+  ui->modelCellView->setModel(m_cellModel);
 }
 
-void ModelInspectorWidget::modelSelected(const QModelIndex& index)
+void ModelInspectorWidget::modelSelected(const QModelIndex &index)
 {
-  if ( index.isValid() ) {
-    QObject* obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-    QAbstractItemModel* model = qobject_cast<QAbstractItemModel*>( obj );
-    ui->modelContentView->setModel( model );
-    connect( ui->modelContentView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-             SLOT(modelCellSelected(QModelIndex)) );
+  if (index.isValid()) {
+    QObject *obj = index.data(ObjectListModel::ObjectRole).value<QObject*>();
+    QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
+    ui->modelContentView->setModel(model);
+    connect(ui->modelContentView->selectionModel(),
+            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            SLOT(modelCellSelected(QModelIndex)));
   } else {
-    ui->modelContentView->setModel( 0 );
+    ui->modelContentView->setModel(0);
   }
-  m_cellModel->setModelIndex( QModelIndex() );
+  m_cellModel->setModelIndex(QModelIndex());
 }
 
-void ModelInspectorWidget::modelCellSelected(const QModelIndex& index)
+void ModelInspectorWidget::modelCellSelected(const QModelIndex &index)
 {
-  m_cellModel->setModelIndex( index );
+  m_cellModel->setModelIndex(index);
 }
 
 #include "modelinspectorwidget.moc"

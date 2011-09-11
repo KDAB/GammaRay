@@ -39,7 +39,8 @@ class ModelInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    ModelInspectorWidget( ModelInspector* modelInspector, ProbeInterface *probe, QWidget *parent = 0 );
+    ModelInspectorWidget(ModelInspector *modelInspector, ProbeInterface *probe,
+                         QWidget *parent = 0);
 
   private slots:
     void modelSelected(const QModelIndex &index);

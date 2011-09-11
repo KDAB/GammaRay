@@ -20,6 +20,7 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
+//krazy:excludeall=style
 
 #ifndef MODELTEST_H
 #define MODELTEST_H

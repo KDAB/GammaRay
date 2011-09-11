@@ -36,19 +36,19 @@ class ModelModel : public ObjectModelBase<QAbstractItemModel>
 {
   Q_OBJECT
   public:
-    explicit ModelModel( QObject *parent );
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex& child) const;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    explicit ModelModel(QObject *parent);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
   public slots:
-    void objectAdded( QObject *obj );
-    void objectRemoved( QObject *obj );
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
 
   private:
-    QModelIndex indexForModel( QAbstractItemModel* model ) const;
-    QVector<QAbstractProxyModel*> proxiesForModel( QAbstractItemModel* model ) const;
+    QModelIndex indexForModel(QAbstractItemModel *model) const;
+    QVector<QAbstractProxyModel*> proxiesForModel(QAbstractItemModel *model) const;
 
   private:
     QVector<QAbstractItemModel*> m_models;
