@@ -36,12 +36,12 @@
 
 using namespace Endoscope;
 
-QStyle* InjectorStylePlugin::create(const QString& )
+QStyle *InjectorStylePlugin::create(const QString &)
 {
   qDebug() << Q_FUNC_INFO;
   inject();
   static QGuiPlatformPlugin defaultGuiPlatform;
-  return QStyleFactory::create( defaultGuiPlatform.styleName() );
+  return QStyleFactory::create(defaultGuiPlatform.styleName());
 }
 
 QStringList InjectorStylePlugin::keys() const
@@ -51,43 +51,46 @@ QStringList InjectorStylePlugin::keys() const
 
 void InjectorStylePlugin::inject()
 {
-  const QByteArray probeDll = qgetenv( "ENDOSCOPE_STYLEINJECTOR_PROBEDLL" );
-  if ( probeDll.isEmpty() ) {
+  const QByteArray probeDll = qgetenv("ENDOSCOPE_STYLEINJECTOR_PROBEDLL");
+  if (probeDll.isEmpty()) {
     qWarning("No probe DLL specified.");
     return;
   }
 
 #ifdef _WIN32
 //TODO: GetLastError and so on for error string
-  HMODULE probeDllHandle = LoadLibrary( reinterpret_cast<LPCWSTR>(QString(probeDll).utf16()) );
-  if ( !probeDllHandle ) {
+  HMODULE probeDllHandle = LoadLibrary(reinterpret_cast<LPCWSTR>(QString(probeDll).utf16()));
+  if (!probeDllHandle) {
     qWarning() << QLatin1String("Failed to load probe dll!");
     return;
   }
 #else
-  void* probeDllHandle = dlopen( probeDll, RTLD_NOW );
-  if ( !probeDllHandle ) {
+  void *probeDllHandle = dlopen(probeDll, RTLD_NOW);
+  if (!probeDllHandle) {
     qWarning() << dlerror();
     return;
   }
 #endif
 
-  const QByteArray probeFunc = qgetenv( "ENDOSCOPE_STYLEINJECTOR_PROBEFUNC" );
-  if ( probeFunc.isEmpty() )
+  const QByteArray probeFunc = qgetenv("ENDOSCOPE_STYLEINJECTOR_PROBEFUNC");
+  if (probeFunc.isEmpty()) {
     return;
+  }
 #ifdef _WIN32
 //TODO: GetLastError and so on for error string
-  FARPROC probeFuncHandle = GetProcAddress( probeDllHandle, QString(probeFunc).toLatin1());
-  if ( probeFuncHandle )
-    reinterpret_cast<void(*)()>( probeFuncHandle )();
-  else
+  FARPROC probeFuncHandle = GetProcAddress(probeDllHandle, QString(probeFunc).toLatin1());
+  if (probeFuncHandle) {
+    reinterpret_cast<void(*)()>(probeFuncHandle)();
+  } else {
     qWarning() << QLatin1String("Error finding probe function!");
+  }
 #else
-  void* probeFuncHandle = dlsym( probeDllHandle, probeFunc );
-  if ( probeFuncHandle )
-    reinterpret_cast<void(*)()>( probeFuncHandle )();
-  else
+  void *probeFuncHandle = dlsym(probeDllHandle, probeFunc);
+  if (probeFuncHandle) {
+    reinterpret_cast<void(*)()>(probeFuncHandle)();
+  } else {
     qWarning() << dlerror();
+  }
 #endif
 }
 

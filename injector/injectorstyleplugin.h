@@ -32,7 +32,7 @@ class InjectorStylePlugin : public QStylePlugin
 {
   Q_OBJECT
   public:
-    QStyle* create( const QString& );
+    QStyle *create(const QString &);
     QStringList keys() const;
 
   private:

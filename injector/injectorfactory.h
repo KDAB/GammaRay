@@ -30,7 +30,7 @@ namespace Endoscope {
 
 namespace InjectorFactory
 {
-   AbstractInjector::Ptr createInjector( const QString &name );
+   AbstractInjector::Ptr createInjector(const QString &name);
 
    AbstractInjector::Ptr defaultInjectorForLaunch();
 

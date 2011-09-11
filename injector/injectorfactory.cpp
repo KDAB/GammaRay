@@ -35,44 +35,49 @@ namespace Endoscope {
 
 namespace InjectorFactory {
 
-AbstractInjector::Ptr createInjector( const QString &name )
+AbstractInjector::Ptr createInjector(const QString &name)
 {
 #ifndef Q_OS_WIN
-  if ( name == QLatin1String("gdb") )
-    return AbstractInjector::Ptr( new GdbInjector );
+  if (name == QLatin1String("gdb")) {
+    return AbstractInjector::Ptr(new GdbInjector);
+  }
 #endif
-  if ( name == QLatin1String("style") )
-    return AbstractInjector::Ptr( new StyleInjector );
+  if (name == QLatin1String("style")) {
+    return AbstractInjector::Ptr(new StyleInjector);
+  }
 #ifndef Q_OS_WIN
-  if ( name == QLatin1String("preload") )
-    return AbstractInjector::Ptr( new PreloadInjector );
+  if (name == QLatin1String("preload")) {
+    return AbstractInjector::Ptr(new PreloadInjector);
+  }
 #else
-  if ( name == QLatin1String("windll") )
-    return AbstractInjector::Ptr( new WinDllInjector );
+  if (name == QLatin1String("windll")) {
+    return AbstractInjector::Ptr(new WinDllInjector);
+  }
 #if defined(USE_DETOURS)
-  if ( name == QLatin1String("detour") )
-    return AbstractInjector::Ptr( new DetourInjector );
+  if (name == QLatin1String("detour")) {
+    return AbstractInjector::Ptr(new DetourInjector);
+  }
 #endif
 #endif
-  return AbstractInjector::Ptr( 0 );
+  return AbstractInjector::Ptr(0);
 }
 
 AbstractInjector::Ptr defaultInjectorForLaunch()
 {
 #ifndef Q_OS_WIN
-  return createInjector( QLatin1String("preload") );
+  return createInjector(QLatin1String("preload"));
 #else
-  return createInjector( QLatin1String("windll") );
+  return createInjector(QLatin1String("windll"));
 #endif
 }
 
 AbstractInjector::Ptr defaultInjectorForAttach()
 {
 #ifndef Q_OS_WIN
-  return createInjector( QLatin1String("gdb") );
+  return createInjector(QLatin1String("gdb"));
 #else
   //TODO: what's the default attach injector on Windows?
-  return createInjector( QLatin1String("") );
+  return createInjector(QLatin1String(""));
 #endif
 }
 
@@ -80,14 +85,14 @@ QStringList availableInjectors()
 {
   QStringList types;
 #ifndef Q_OS_WIN
-  types << QLatin1String( "preload" ) << QLatin1String( "gdb" );
+  types << QLatin1String("preload") << QLatin1String("gdb");
 #else
-  types << QLatin1String( "windll" );
+  types << QLatin1String("windll");
 #ifdef USE_DETOURS
-  types << QLatin1String( "detours" );
+  types << QLatin1String("detours");
 #endif
 #endif
-  types << QLatin1String( "style" );
+  types << QLatin1String("style");
   return types;
 }
 
