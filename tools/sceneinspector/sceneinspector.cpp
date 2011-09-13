@@ -61,6 +61,10 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QWidget *parent)
   connect(ui->sceneTreeView->selectionModel(),
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(sceneItemSelected(QModelIndex)));
+
+  if (ui->sceneComboBox->count()) {
+    sceneSelected(0);
+  }
 }
 
 void SceneInspector::sceneSelected(int index)
