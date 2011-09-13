@@ -64,8 +64,9 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
   mExitCode = proc.exitCode();
   mProcessError = proc.error();
   mExitStatus = proc.exitStatus();
+  mErrorString = proc.errorString();
 
-  return mExitCode;
+  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
 }
 
 int StyleInjector::exitCode()
@@ -83,3 +84,7 @@ QProcess::ExitStatus StyleInjector::exitStatus()
   return mExitStatus;
 }
 
+QString StyleInjector::errorString()
+{
+  return mErrorString;
+}

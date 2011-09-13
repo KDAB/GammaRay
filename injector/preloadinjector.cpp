@@ -64,8 +64,9 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   mExitCode = proc.exitCode();
   mProcessError = proc.error();
   mExitStatus = proc.exitStatus();
+  mErrorString = proc.errorString();
 
-  return mExitCode == EXIT_SUCCESS;
+  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
 }
 
 int PreloadInjector::exitCode()
@@ -81,6 +82,11 @@ QProcess::ProcessError PreloadInjector::processError()
 QProcess::ExitStatus PreloadInjector::exitStatus()
 {
   return mExitStatus;
+}
+
+QString PreloadInjector::errorString()
+{
+  return mErrorString;
 }
 
 #endif

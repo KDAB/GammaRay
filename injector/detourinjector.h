@@ -43,11 +43,13 @@ class DetourInjector : public AbstractInjector
     virtual int exitCode();
     virtual QProcess::ExitStatus exitStatus();
     virtual QProcess::ProcessError processError();
+    virtual QString errorString();
 
   private:
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
+    QString mErrorString;
 };
 
 }

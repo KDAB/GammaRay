@@ -75,6 +75,7 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
   mExitCode = exitCode;
   //TODO mProcessError = proc.error();
   //TODO mExitStatus = proc.exitStatus();
+  //TODO mErrorString = proc.errorString();
 
   return mExitCode == EXIT_SUCCESS;
 }
@@ -155,6 +156,11 @@ QProcess::ProcessError WinDllInjector::processError()
 QProcess::ExitStatus WinDllInjector::exitStatus()
 {
   return mExitStatus;
+}
+
+QString WinDllInjector::errorString()
+{
+  return mErrorString;
 }
 
 #endif

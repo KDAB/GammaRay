@@ -77,6 +77,7 @@ bool GdbInjector::startGdb(const QStringList &args)
   mExitCode = m_process->exitCode();
   mProcessError = m_process->error();
   mExitStatus = m_process->exitStatus();
+  mErrorString = m_process->errorString();
 
   return status;
 }
@@ -98,8 +99,9 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
   mExitCode = m_process->exitCode();
   mProcessError = m_process->error();
   mExitStatus = m_process->exitStatus();
+  mErrorString = m_process->errorString();
 
-  return mExitCode == EXIT_SUCCESS;
+  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
 }
 
 int GdbInjector::exitCode()
@@ -115,4 +117,9 @@ QProcess::ProcessError GdbInjector::processError()
 QProcess::ExitStatus GdbInjector::exitStatus()
 {
   return mExitStatus;
+}
+
+QString GdbInjector::errorString()
+{
+  return mErrorString;
 }

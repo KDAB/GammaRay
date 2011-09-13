@@ -42,6 +42,7 @@ class GdbInjector : public AbstractInjector
     virtual int exitCode();
     virtual QProcess::ExitStatus exitStatus();
     virtual QProcess::ProcessError processError();
+    virtual QString errorString();
 
   private:
     bool startGdb(const QStringList &args);
@@ -51,6 +52,7 @@ class GdbInjector : public AbstractInjector
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
+    QString mErrorString;
     QScopedPointer<QProcess> m_process;
 };
 

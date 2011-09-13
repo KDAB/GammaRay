@@ -72,6 +72,7 @@ bool DetourInjector::launch(const QStringList &programAndArgs,
   mExitCode = exitCode;
   //TODO mProcessError = proc.error();
   //TODO mExitStatus = proc.exitStatus();
+  //TODO mErrorString = proc.errorString();
 
   return mExitCode == EXIT_SUCCESS;
 }
@@ -89,6 +90,11 @@ QProcess::ProcessError DetourInjector::processError()
 QProcess::ExitStatus DetourInjector::exitStatus()
 {
   return mExitStatus;
+}
+
+QString DetourInjector::errorString()
+{
+  return mErrorString;
 }
 
 #endif

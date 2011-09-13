@@ -73,6 +73,11 @@ class AbstractInjector
      * Return the QProcess::ProcessError from the application launch or attach.
      */
     virtual QProcess::ProcessError processError() = 0;
+
+    /**
+     * @return Descriptional error message when launch/attach failed.
+     */
+    virtual QString errorString() = 0;
 };
 
 }

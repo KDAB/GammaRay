@@ -30,14 +30,13 @@
 #include <QDebug>
 #include <QStringList>
 
-#include <iostream>
-using namespace std;
-
 using namespace Endoscope;
+
+QTextStream out(stdout);
+QTextStream err(stderr);
 
 static void usage(const char *argv0)
 {
-  QTextStream out(stdout);
   out << "Usage: " << argv0
       << " [--injector <injector>] --pid <pid> | <application> <args>" << endl;
   out << "" << endl;
@@ -77,7 +76,6 @@ int main(int argc, char **argv)
       return 0;
     }
     if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
-      QTextStream out(stdout);
       out << PROGRAM_NAME << " version " << ENDOSCOPE_VERSION_STRING << endl;
       out << "Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
           << "a KDAB Group company, info@kdab.com" << endl;
@@ -105,12 +103,16 @@ int main(int argc, char **argv)
   if (injector) {
     if (pid > 0) {
       if (!injector->attach(pid, probeDll, QLatin1String("endoscope_probe_inject"))) {
-        cout << "Unable to attach injector " << injector->name().toLatin1().data() << endl;
+        err << "Unable to attach injector " << injector->name() << endl;
         return 0;
       } 
     } else {
       if (!injector->launch(args, probeDll, QLatin1String("endoscope_probe_inject"))) {
-        cout << "Failed to launch injector " << injector->name().toLatin1().data() << endl;
+        err << "Failed to launch injector " << injector->name() << endl;
+        err << "Exit code: " << injector->exitCode() << endl;
+        if (!injector->errorString().isEmpty()) {
+          err << "Error: " << injector->errorString() << endl;
+        }
         return 0;
       }
     }
@@ -120,16 +122,16 @@ int main(int argc, char **argv)
   if (injectorType.isEmpty()) {
     if (pid > 0) {
 #if defined(Q_OS_WIN)
-      cout << "Sorry, but at this time there is no attach injector on the Windows platform" << endl;
-      cout << "Only the launch injector windll is available on Windows" << endl;
+      err << "Sorry, but at this time there is no attach injector on the Windows platform" << endl;
+      err << "Only the launch injector windll is available on Windows" << endl;
 #else
-      cout << "Uh-oh, there is no default attach injector" << endl;
+      err << "Uh-oh, there is no default attach injector" << endl;
 #endif
     } else {
-      cout << "Uh-oh, there is no default launch injector" << endl;
+      err << "Uh-oh, there is no default launch injector" << endl;
     }
   } else {
-    cout << "Injector " << injectorType.toLatin1().data() << " not found." << endl;
+    err << "Injector " << injectorType << " not found." << endl;
   }
   return 0;
 }
