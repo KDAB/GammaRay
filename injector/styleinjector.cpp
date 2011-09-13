@@ -26,6 +26,7 @@
 #include "styleinjector.h"
 
 #include <QProcess>
+#include <cstdlib>
 
 using namespace Endoscope;
 
@@ -36,7 +37,7 @@ StyleInjector::StyleInjector() :
 {
 }
 
-int StyleInjector::launch(const QStringList &programAndArgs,
+bool StyleInjector::launch(const QStringList &programAndArgs,
                           const QString &probeDll, const QString &probeFunc)
 {
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();

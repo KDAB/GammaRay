@@ -38,7 +38,7 @@ GdbInjector::GdbInjector() :
 {
 }
 
-int GdbInjector::launch(const QStringList &programAndArgs,
+bool GdbInjector::launch(const QStringList &programAndArgs,
                         const QString &probeDll, const QString &probeFunc)
 {
   QStringList gdbArgs;
@@ -81,7 +81,7 @@ bool GdbInjector::startGdb(const QStringList &args)
   return status;
 }
 
-int GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
+bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(m_process);
   m_process->write("sha dl\n");
@@ -99,7 +99,7 @@ int GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeFu
   mProcessError = m_process->error();
   mExitStatus = m_process->exitStatus();
 
-  return mExitCode;
+  return mExitCode == EXIT_SUCCESS;
 }
 
 int GdbInjector::exitCode()

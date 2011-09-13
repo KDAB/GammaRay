@@ -36,7 +36,7 @@ class GdbInjector : public AbstractInjector
     QString name() const {
       return QString("gdb");
     }
-    virtual int launch(const QStringList &programAndArgs,
+    virtual bool launch(const QStringList &programAndArgs,
                        const QString &probeDll, const QString &probeFunc);
     virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
     virtual int exitCode();
@@ -45,7 +45,7 @@ class GdbInjector : public AbstractInjector
 
   private:
     bool startGdb(const QStringList &args);
-    int injectAndDetach(const QString &probeDll, const QString &probeFunc);
+    bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
   private:
     int mExitCode;

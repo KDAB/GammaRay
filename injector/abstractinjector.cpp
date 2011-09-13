@@ -32,7 +32,7 @@ AbstractInjector::~AbstractInjector()
 {
 }
 
-int AbstractInjector::launch(const QStringList &programAndArgs,
+bool AbstractInjector::launch(const QStringList &programAndArgs,
                              const QString &probeDll,
                              const QString &probeFunc)
 {
@@ -40,7 +40,7 @@ int AbstractInjector::launch(const QStringList &programAndArgs,
   Q_UNUSED(probeDll);
   Q_UNUSED(probeFunc);
   qWarning() << "Injection on launch not supported by this injector.";
-  return -1;
+  return false;
 }
 
 bool AbstractInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)

@@ -26,6 +26,7 @@
 #ifndef Q_OS_WIN
 
 #include <QProcess>
+#include <cstdlib>
 
 using namespace Endoscope;
 
@@ -36,7 +37,7 @@ PreloadInjector::PreloadInjector() :
 {
 }
 
-int PreloadInjector::launch(const QStringList &programAndArgs,
+bool PreloadInjector::launch(const QStringList &programAndArgs,
                             const QString &probeDll,
                             const QString &probeFunc)
 {
@@ -64,7 +65,7 @@ int PreloadInjector::launch(const QStringList &programAndArgs,
   mProcessError = proc.error();
   mExitStatus = proc.exitStatus();
 
-  return mExitCode;
+  return mExitCode == EXIT_SUCCESS;
 }
 
 int PreloadInjector::exitCode()

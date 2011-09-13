@@ -28,6 +28,7 @@
 
 #include <windows.h>
 #include <detours.h>
+#include <cstdlib>
 
 using namespace Endoscope;
 
@@ -38,7 +39,7 @@ DetourInjector::DetourInjector() :
 {
 }
 
-int DetourInjector::launch(const QStringList &programAndArgs,
+bool DetourInjector::launch(const QStringList &programAndArgs,
                            const QString &probeDll, const QString &probeFunc)
 {
   STARTUPINFO si;
@@ -72,7 +73,7 @@ int DetourInjector::launch(const QStringList &programAndArgs,
   //TODO mProcessError = proc.error();
   //TODO mExitStatus = proc.exitStatus();
 
-  return mExitCode;
+  return mExitCode == EXIT_SUCCESS;
 }
 
 int DetourInjector::exitCode()

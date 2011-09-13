@@ -28,6 +28,7 @@
 
 #ifdef Q_OS_WIN
 #include <windows.h>
+#include <cstdlib>
 
 using namespace Endoscope;
 
@@ -40,7 +41,7 @@ WinDllInjector::WinDllInjector() :
 {
 }
 
-int WinDllInjector::launch(const QStringList &programAndArgs,
+bool WinDllInjector::launch(const QStringList &programAndArgs,
                            const QString &probeDll, const QString &probeFunc)
 {
   DWORD dwCreationFlags = CREATE_NO_WINDOW;
@@ -75,7 +76,7 @@ int WinDllInjector::launch(const QStringList &programAndArgs,
   //TODO mProcessError = proc.error();
   //TODO mExitStatus = proc.exitStatus();
 
-  return mExitCode;
+  return mExitCode == EXIT_SUCCESS;
 }
 
 bool WinDllInjector::inject()

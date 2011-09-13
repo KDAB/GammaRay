@@ -45,13 +45,17 @@ class AbstractInjector
 
     /**
      * Launch the application @p program and inject @p probeDll and call @p probeFunc on it.
+     *
+     * @return True if the launch succeeded, false otherwise.
      */
-    virtual int launch(const QStringList &programAndArgs,
+    virtual bool launch(const QStringList &programAndArgs,
                        const QString &probeDll, const QString &probeFunc);
 
     /**
      * Attach to the running application with process id @p pid
      * and inject @p probeDll and call @p probeFunc on it.
+     *
+     * @return True if attaching succeeded, false otherwise.
      */
     virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
 

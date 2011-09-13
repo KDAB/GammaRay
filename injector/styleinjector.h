@@ -36,7 +36,7 @@ public:
     QString name() const {
       return QString("style");
     }
-    virtual int launch(const QStringList &programAndArgs,
+    virtual bool launch(const QStringList &programAndArgs,
                        const QString &probeDll, const QString &probeFunc);
     virtual int exitCode();
     virtual QProcess::ExitStatus exitStatus();
