@@ -43,6 +43,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 {
   Q_OBJECT
   public:
+    virtual ~Probe();
     static Probe* instance();
     static bool isInitialized();
 

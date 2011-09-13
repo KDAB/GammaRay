@@ -114,6 +114,11 @@ Probe::Probe(QObject *parent):
   QInternal::registerCallback(QInternal::DisconnectCallback, &Endoscope::probeDisconnectCallback);
 }
 
+Probe::~Probe()
+{
+  s_instance = 0;
+}
+
 void Probe::setWindow(Endoscope::MainWindow *window)
 {
   m_window = window;
