@@ -147,6 +147,7 @@ set(endoscope_runner_srcs
   injector/preloadinjector.cpp
   injector/styleinjector.cpp
   injector/windllinjector.cpp
+  injector/interactiveprocess.cpp
   probefinder.cpp
   main.cpp
 )
@@ -224,7 +225,7 @@ set(endoscope_srcs
   3rdparty/kde/kfilterproxysearchline.cpp
   3rdparty/qt/resourcemodel.cpp
 )
-qt4_automoc(${endoscope_srcs})
+qt4_automoc(${endoscope_srcs} ${endoscope_runner_srcs})
 qt4_wrap_ui(endoscope_srcs
   mainwindow.ui
   propertywidget.ui

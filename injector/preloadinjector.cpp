@@ -23,6 +23,8 @@
 
 #include "preloadinjector.h"
 
+#include "interactiveprocess.h"
+
 #ifndef Q_OS_WIN
 
 #include <QProcess>
@@ -52,11 +54,19 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
 #else
   env.insert("LD_PRELOAD", probeDll);
 #endif
-  QProcess proc;
+  InteractiveProcess proc;
   proc.setProcessEnvironment(env);
   proc.setProcessChannelMode(QProcess::ForwardedChannels);
 
   QStringList args = programAndArgs;
+
+  if (env.value("ENDOSCOPE_DEBUG_GDB").toInt()) {
+    QStringList newArgs;
+    newArgs << "gdb" << "--eval-command" << "run" << "--args";
+    newArgs += args;
+    args = newArgs;
+  }
+
   const QString program = args.takeFirst();
   proc.start(program, args);
   proc.waitForFinished(-1);

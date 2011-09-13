@@ -24,6 +24,7 @@
 #include <config-endoscope.h>
 
 #include "styleinjector.h"
+#include "interactiveprocess.h"
 
 #include <QProcess>
 #include <cstdlib>
@@ -51,11 +52,19 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
   qtPluginPath.append(ENDOSCOPE_LIB_INSTALL_DIR "/qt4/plugins");
   env.insert("QT_PLUGIN_PATH", qtPluginPath);
 
-  QProcess proc;
+  InteractiveProcess proc;
   proc.setProcessEnvironment(env);
   proc.setProcessChannelMode(QProcess::ForwardedChannels);
 
   QStringList args = programAndArgs;
+
+  if (env.value("ENDOSCOPE_DEBUG_GDB").toInt()) {
+    QStringList newArgs;
+    newArgs << "gdb" << "--eval-command" << "run" << "--args";
+    newArgs += args;
+    args = newArgs;
+  }
+
   const QString program = args.takeFirst();
   args << QLatin1String("-style") << QLatin1String("endoscope-injector");
   proc.start(program, args);
