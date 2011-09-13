@@ -33,7 +33,7 @@ ObjectTreeModel::ObjectTreeModel(QObject* parent): ObjectModelBase< QAbstractIte
 
 void ObjectTreeModel::objectAdded(QObject *obj)
 {
-  if ( m_childParentMap.contains( obj ) )
+  if ( !obj || m_childParentMap.contains( obj ) )
     return;
   QVector<QObject*> &children = m_parentChildMap[ obj->parent() ];
   const QModelIndex index = indexForObject( obj->parent() );
