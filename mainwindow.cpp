@@ -111,7 +111,7 @@ void MainWindow::toolSelected()
     Q_ASSERT(toolIface);
     qDebug() << Q_FUNC_INFO << "creating new probe: "
              << toolIface->name() << toolIface->supportedTypes();
-    toolWidget = toolIface->createWidget(Probe::instance(), 0);
+    toolWidget = toolIface->createWidget(Probe::instance(), this);
     ui.toolStack->addWidget(toolWidget);
     m_toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
   }
