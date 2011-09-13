@@ -116,6 +116,7 @@ Probe::Probe(QObject *parent):
 
 Probe::~Probe()
 {
+  qDebug() << Q_FUNC_INFO;
   s_instance = 0;
 }
 
@@ -157,7 +158,9 @@ void Probe::delayedInit()
 
   s_listener()->active = false;
   Endoscope::MainWindow *window = new Endoscope::MainWindow;
+  window->setAttribute(Qt::WA_DeleteOnClose);
   instance()->setWindow(window);
+  instance()->setParent(window);
   window->show();
   s_listener()->active = true;
 }
