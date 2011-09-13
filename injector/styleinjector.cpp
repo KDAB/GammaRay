@@ -58,9 +58,15 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
 
   QStringList args = programAndArgs;
 
-  if (env.value("ENDOSCOPE_DEBUG_GDB").toInt()) {
+  if (env.value("ENDOSCOPE_GDB").toInt()) {
     QStringList newArgs;
     newArgs << "gdb" << "--eval-command" << "run" << "--args";
+    newArgs += args;
+    args = newArgs;
+  } else if (env.value("ENDOSCOPE_MEMCHECK").toInt()) {
+    const QString tool = env.value("ENDOSCOPE_MEMCHECK");
+    QStringList newArgs;
+    newArgs << "valgrind" << "--tool=memcheck" << "--track-origins=yes" << "--num-callers=25";
     newArgs += args;
     args = newArgs;
   }
