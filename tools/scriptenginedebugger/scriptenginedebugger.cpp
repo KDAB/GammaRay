@@ -47,6 +47,10 @@ ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface* probe, QWidget* paren
   singleColumnProxy->setSourceModel( scriptEngineFilter );
   ui->scriptEngineComboBox->setModel( singleColumnProxy );
   connect( ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
+
+  if (ui->scriptEngineComboBox->count()) {
+    scriptEngineSelected(0);
+  }
 }
 
 void ScriptEngineDebugger::scriptEngineSelected(int index)
