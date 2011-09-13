@@ -56,10 +56,12 @@ void Endoscope::ObjectListModel::objectAdded( const QPointer<QObject> &objPtr )
 {
   if ( !objPtr )
     return;
+
   QObject *obj = objPtr.data();
   const int index = m_objects.indexOf( obj );
-  if ( index > 0 )
+  if ( !objPtr || index > 0 )
     return;
+
   beginInsertRows( QModelIndex(), m_objects.size(), m_objects.size() );
   m_objects.push_back( obj );
   endInsertRows();
