@@ -44,7 +44,8 @@ class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
     {
       const QModelIndex source_index = sourceModel()->index( source_row, 0, source_parent );
       if ( !source_index.isValid() )
-	return false;
+        return false;
+
       QObject *obj = source_index.data( ObjectListModel::ObjectRole ).value<QObject*>();
       if ( !qobject_cast<T*>( obj ) )
         return false;
