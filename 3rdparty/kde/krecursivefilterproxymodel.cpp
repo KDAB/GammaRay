@@ -19,7 +19,7 @@
 
 #include "krecursivefilterproxymodel.h"
 
-//#include <kdebug.h>
+#include <kdebug.h>
 
 // Maintainability note:
 // This class invokes some Q_PRIVATE_SLOTs in QSortFilterProxyModel which are
@@ -291,6 +291,22 @@ bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelInd
       accepted = true; // Need to do this in a loop so that all siblings in a parent get processed, not just the first.
 
   return accepted;
+}
+
+QModelIndexList KRecursiveFilterProxyModel::match( const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
+{
+  if ( role < Qt::UserRole )
+    return QSortFilterProxyModel::match( start, role, value, hits, flags );
+
+  QModelIndexList list;
+  QModelIndex proxyIndex;
+  foreach ( const QModelIndex &idx, sourceModel()->match( mapToSource( start ), role, value, hits, flags ) ) {
+    proxyIndex = mapFromSource( idx );
+    if ( proxyIndex.isValid() )
+      list << proxyIndex;
+  }
+
+  return list;
 }
 
 bool KRecursiveFilterProxyModel::acceptRow(int sourceRow, const QModelIndex& sourceParent) const

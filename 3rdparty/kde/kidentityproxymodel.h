@@ -35,23 +35,29 @@ public:
   explicit KIdentityProxyModel(QObject* parent = 0);
   virtual ~KIdentityProxyModel();
 
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-  virtual QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
-  virtual QModelIndex mapToSource(const QModelIndex& proxyIndex) const;
-  virtual QModelIndex parent(const QModelIndex& child) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+  int columnCount(const QModelIndex& parent = QModelIndex()) const;
+  QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+  QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
+  QModelIndex mapToSource(const QModelIndex& proxyIndex) const;
+  QModelIndex parent(const QModelIndex& child) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const;
+  bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 
-  virtual QItemSelection mapSelectionFromSource(const QItemSelection& selection) const;
-  virtual QItemSelection mapSelectionToSource(const QItemSelection& selection) const;
-  virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith|Qt::MatchWrap)) const;
-  virtual void setSourceModel(QAbstractItemModel* sourceModel);
+  QItemSelection mapSelectionFromSource(const QItemSelection& selection) const;
+  QItemSelection mapSelectionToSource(const QItemSelection& selection) const;
+  QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith|Qt::MatchWrap)) const;
+  void setSourceModel(QAbstractItemModel* sourceModel);
 
-  virtual bool insertColumns(int column, int count, const QModelIndex& parent = QModelIndex());
-  virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
-  virtual bool removeColumns(int column, int count, const QModelIndex& parent = QModelIndex());
-  virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
+  bool insertColumns(int column, int count, const QModelIndex& parent = QModelIndex());
+  bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
+  bool removeColumns(int column, int count, const QModelIndex& parent = QModelIndex());
+  bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
+
+  virtual bool canFetchMore(const QModelIndex& parent) const;
+  virtual void fetchMore(const QModelIndex& parent);
+  virtual QStringList mimeTypes() const;
+  virtual QMimeData* mimeData(const QModelIndexList& indexes) const;
+  virtual Qt::DropActions supportedDropActions() const;
 
 protected:
   KIdentityProxyModel(KIdentityProxyModelPrivate *privateClass, QObject* parent);
@@ -62,6 +68,7 @@ protected Q_SLOTS:
 
 private:
   Q_DECLARE_PRIVATE(KIdentityProxyModel)
+  Q_DISABLE_COPY(KIdentityProxyModel)
 
   Q_PRIVATE_SLOT(d_func(), void _k_sourceRowsAboutToBeInserted(QModelIndex,int,int))
   Q_PRIVATE_SLOT(d_func(), void _k_sourceRowsInserted(QModelIndex,int,int))
