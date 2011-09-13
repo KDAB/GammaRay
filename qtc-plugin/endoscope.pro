@@ -3,8 +3,12 @@ TARGET = Endoscope
 
 # DEFINES += 
 
+PROVIDER = KDAB
+
 include($$QTC_SOURCE_DIR/src/qtcreatorplugin.pri)
 include(endoscope_dependencies.pri)
+
+LIBS += -L$$IDE_PLUGIN_PATH/Nokia
 
 # QT += 
 
