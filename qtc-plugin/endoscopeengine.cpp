@@ -47,6 +47,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QMainWindow>
+#include <QtGui/QAction>
 
 using namespace Analyzer;
 
@@ -81,6 +82,7 @@ EndoscopeEngine::EndoscopeEngine(IAnalyzerTool *tool,
     connect(&m_process, SIGNAL(error(QProcess::ProcessError)),
             SLOT(processError(QProcess::ProcessError)));
 
+    connect(AnalyzerManager::stopAction(), SIGNAL(triggered()), this, SLOT(stopIt()));
 }
 
 EndoscopeEngine::~EndoscopeEngine()
@@ -153,6 +155,11 @@ bool EndoscopeEngine::start()
 void EndoscopeEngine::stop()
 {
     m_process.terminate();
+}
+
+void EndoscopeEngine::stopIt()
+{
+    stop();
 }
 
 void EndoscopeEngine::receiveStandardOutput()

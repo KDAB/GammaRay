@@ -55,6 +55,7 @@ public:
     virtual void stop();
 
 private slots:
+    void stopIt();
     void handleProgressCanceled();
     void handleProgressFinished();
     void processFinished();
