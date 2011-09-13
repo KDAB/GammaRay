@@ -1,4 +1,4 @@
-<plugin name=\"Endoscope\" version=\"$$QTCREATOR_VERSION\" compatVersion=\"$$QTCREATOR_VERSION\">
+<plugin name="Endoscope" version="2.3.0" compatVersion="2.3.0">
     <vendor>KDAB</vendor>
     <copyright>(C) 2011 KDAB</copyright>
     <license>
@@ -14,7 +14,7 @@ Alternatively, this plugin may be used under the terms of the GNU Lesser General
     <description>Endoscope Plugin</description>
     <url>http://qt.nokia.com</url>
     <dependencyList>
-        <dependency name=\"Core\" version=\"$$QTCREATOR_VERSION\"/>
-        <dependency name=\"AnalyzerBase\" version=\"$$QTCREATOR_VERSION\"/>
+        <dependency name="Core" version="2.3.0"/>
+        <dependency name="AnalyzerBase" version="2.3.0"/>
     </dependencyList>
 </plugin>
