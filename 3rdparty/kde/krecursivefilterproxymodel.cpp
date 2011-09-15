@@ -285,7 +285,9 @@ bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelInd
   QModelIndex source_index = sourceModel()->index(sourceRow, 0, sourceParent);
   if (!source_index.isValid()) {
     ///FIXME: this needs a proper fix
+#ifndef QT_NO_DEBUG_STREAM // see https://bugreports.qt.nokia.com//browse/QTBUG-18418
     qWarning() << Q_FUNC_INFO << "invalid source index:" << sourceRow << sourceParent << sourceModel();
+#endif
     return false;
   }
   Q_ASSERT(source_index.isValid());
