@@ -35,18 +35,19 @@
 
 using namespace Endoscope;
 
-ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface* probe, QWidget* parent):
-  QWidget( parent ),
-  ui( new Ui::ScriptEngineDebugger )
+ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent), ui(new Ui::ScriptEngineDebugger)
 {
-  ui->setupUi( this );
+  ui->setupUi(this);
 
-  ObjectTypeFilterProxyModel<QScriptEngine> *scriptEngineFilter = new ObjectTypeFilterProxyModel<QScriptEngine>( this );
-  scriptEngineFilter->setSourceModel( probe->objectListModel() );
-  SingleColumnObjectProxyModel* singleColumnProxy = new SingleColumnObjectProxyModel( this );
-  singleColumnProxy->setSourceModel( scriptEngineFilter );
-  ui->scriptEngineComboBox->setModel( singleColumnProxy );
-  connect( ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)) );
+  ObjectTypeFilterProxyModel<QScriptEngine> *scriptEngineFilter =
+    new ObjectTypeFilterProxyModel<QScriptEngine>(this);
+  scriptEngineFilter->setSourceModel(probe->objectListModel());
+  SingleColumnObjectProxyModel *singleColumnProxy =
+    new SingleColumnObjectProxyModel(this);
+  singleColumnProxy->setSourceModel(scriptEngineFilter);
+  ui->scriptEngineComboBox->setModel(singleColumnProxy);
+  connect(ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)));
 
   if (ui->scriptEngineComboBox->count()) {
     scriptEngineSelected(0);
@@ -55,16 +56,16 @@ ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface* probe, QWidget* paren
 
 void ScriptEngineDebugger::scriptEngineSelected(int index)
 {
-  QObject* obj = ui->scriptEngineComboBox->itemData( index, ObjectListModel::ObjectRole ).value<QObject*>();
-  QScriptEngine *engine = qobject_cast<QScriptEngine*>( obj );
-  if ( engine ) {
-    QScriptEngineDebugger *debugger = new QScriptEngineDebugger( this );
+  QObject *obj =
+    ui->scriptEngineComboBox->itemData(index, ObjectListModel::ObjectRole).value<QObject*>();
+  QScriptEngine *engine = qobject_cast<QScriptEngine*>(obj);
+  if (engine) {
+    QScriptEngineDebugger *debugger = new QScriptEngineDebugger(this);
     qDebug() << "Attaching debugger" << engine;
-    debugger->attachTo( engine );
+    debugger->attachTo(engine);
     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
     debugger->standardWindow()->show();
   }
 }
-
 
 #include "scriptenginedebugger.moc"

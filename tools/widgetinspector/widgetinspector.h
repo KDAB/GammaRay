@@ -37,22 +37,23 @@ class WidgetInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit WidgetInspector( ProbeInterface* probe, QWidget *parent = 0 );
+    explicit WidgetInspector(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
-    void widgetSelected( const QModelIndex &index );
-    void widgetSelected( QWidget* widget );
+    void widgetSelected(const QModelIndex &index);
+    void widgetSelected(QWidget *widget);
 
   private:
     QScopedPointer<Ui::WidgetInspector> ui;
 };
 
-class WidgetInspectorFactory : public QObject, public StandardToolFactory<QWidget, WidgetInspector>
+class WidgetInspectorFactory
+  : public QObject, public StandardToolFactory<QWidget, WidgetInspector>
 {
   Q_OBJECT
-  Q_INTERFACES( Endoscope::ToolFactory )
+  Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit WidgetInspectorFactory( QObject *parent ) : QObject( parent ) {}
+    explicit WidgetInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Widgets"); }
 };
 

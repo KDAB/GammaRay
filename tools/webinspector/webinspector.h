@@ -36,7 +36,7 @@ class WebInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit WebInspector(Endoscope::ProbeInterface* probe, QWidget* parent = 0);
+    explicit WebInspector(Endoscope::ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void webPageSelected(int index);
@@ -45,12 +45,13 @@ class WebInspector : public QWidget
     QScopedPointer<Ui::WebInspector> ui;
 };
 
-class WebInspectorFactory : public QObject, public StandardToolFactory<QWebPage, WebInspector>
+class WebInspectorFactory
+  : public QObject, public StandardToolFactory<QWebPage, WebInspector>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit WebInspectorFactory( QObject *parent ) : QObject( parent ) {}
+    explicit WebInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Web Pages"); }
 };
 

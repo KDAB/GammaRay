@@ -38,22 +38,22 @@ class TextDocumentModel : public QStandardItemModel
 {
   Q_OBJECT
   public:
-    explicit TextDocumentModel( QObject * parent = 0 );
+    explicit TextDocumentModel(QObject *parent = 0);
 
     enum Roles {
       FormatRole = Qt::UserRole
     };
 
-    void setDocument( QTextDocument *doc );
+    void setDocument(QTextDocument *doc);
 
   private:
     void fillModel();
-    void fillFrame( QTextFrame *frame, QStandardItem* parent );
-    void fillFrameIterator( const QTextFrame::iterator &it, QStandardItem *parent );
-    void fillTable( QTextTable *table, QStandardItem* parent );
-    void fillBlock( const QTextBlock &block, QStandardItem *parent );
-    QStandardItem *formatItem( const QTextFormat &format );
-    void appendRow( QStandardItem *parent, QStandardItem *item, const QTextFormat &format );
+    void fillFrame(QTextFrame *frame, QStandardItem *parent);
+    void fillFrameIterator(const QTextFrame::iterator &it, QStandardItem *parent);
+    void fillTable(QTextTable *table, QStandardItem *parent);
+    void fillBlock(const QTextBlock &block, QStandardItem *parent);
+    QStandardItem *formatItem(const QTextFormat &format);
+    void appendRow(QStandardItem *parent, QStandardItem *item, const QTextFormat &format);
 
   private slots:
     void documentChanged();

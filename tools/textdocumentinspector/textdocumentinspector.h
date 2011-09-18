@@ -53,13 +53,13 @@ class TextDocumentInspector : public QWidget
     TextDocumentFormatModel *m_textDocumentFormatModel;
 };
 
-class TextDocumentInspectorFactory :
-    public QObject, public StandardToolFactory<QTextDocument,TextDocumentInspector>
+class TextDocumentInspectorFactory
+  : public QObject, public StandardToolFactory<QTextDocument,TextDocumentInspector>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit TextDocumentInspectorFactory( QObject *parent ) : QObject( parent ) {}
+    explicit TextDocumentInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Text Documents"); }
 };
 

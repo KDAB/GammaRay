@@ -36,7 +36,7 @@ class ScriptEngineDebugger : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ScriptEngineDebugger(ProbeInterface* probe, QWidget* parent = 0);
+    explicit ScriptEngineDebugger(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void scriptEngineSelected(int index);
@@ -45,12 +45,13 @@ class ScriptEngineDebugger : public QWidget
     QScopedPointer<Ui::ScriptEngineDebugger> ui;
 };
 
-class ScriptEngineDebuggerFactory : public QObject, public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
+class ScriptEngineDebuggerFactory
+  : public QObject, public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit ScriptEngineDebuggerFactory( QObject *parent) : QObject( parent ) {}
+    explicit ScriptEngineDebuggerFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Script Engines"); }
 };
 

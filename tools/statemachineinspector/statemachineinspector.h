@@ -41,7 +41,7 @@ class StateMachineInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit StateMachineInspector( ProbeInterface *probe, QWidget *parent = 0 );
+    explicit StateMachineInspector(ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void stateMachineSelected(const QItemSelection &selected, const QItemSelection &deselected);
@@ -53,12 +53,13 @@ class StateMachineInspector : public QWidget
     TransitionModel *m_transitionModel;
 };
 
-class StateMachineInspectorFactory : public QObject, public StandardToolFactory<QStateMachine, StateMachineInspector>
+class StateMachineInspectorFactory :
+    public QObject, public StandardToolFactory<QStateMachine, StateMachineInspector>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit StateMachineInspectorFactory( QObject *parent ) : QObject( parent ) {}
+    explicit StateMachineInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("State Machines"); }
 };
 

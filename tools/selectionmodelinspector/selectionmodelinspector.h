@@ -36,7 +36,7 @@ class SelectionModelInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit SelectionModelInspector( ProbeInterface *probe, QWidget *widget = 0 );
+    explicit SelectionModelInspector(ProbeInterface *probe, QWidget *widget = 0);
 
   private slots:
     void selectionModelSelected(const QItemSelection &selected, const QItemSelection &deselected);
@@ -45,12 +45,13 @@ class SelectionModelInspector : public QWidget
     QScopedPointer<Ui::SelectionModelInspector> ui;
 };
 
-class SelectionModelInspectorFactory : public QObject, public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
+class SelectionModelInspectorFactory :
+    public QObject, public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
 {
   Q_OBJECT
   Q_INTERFACES(Endoscope::ToolFactory)
   public:
-    explicit SelectionModelInspectorFactory( QObject *parent ) : QObject( parent ) {}
+    explicit SelectionModelInspectorFactory(QObject *parent) : QObject(parent) {}
     virtual inline QString name() const { return tr("Selection Models"); }
 };
 

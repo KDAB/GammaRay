@@ -31,46 +31,55 @@
 
 using namespace Endoscope;
 
-WidgetInspector::WidgetInspector(ProbeInterface* probe, QWidget* parent) :
-  QWidget(parent),
-  ui( new Ui::WidgetInspector )
+WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent), ui(new Ui::WidgetInspector)
 {
-  ui->setupUi( this );
+  ui->setupUi(this);
 
-  connect( probe->probe(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)) );
+  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)));
 
-  ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy = new ObjectTypeFilterProxyModel<QWidget>( this );
-  widgetFilterProxy->setSourceModel( probe->objectTreeModel() );
-  KRecursiveFilterProxyModel* widgetSearchProxy = new KRecursiveFilterProxyModel( this );
-  widgetSearchProxy->setSourceModel( widgetFilterProxy );
-  ui->widgetTreeView->setModel( widgetSearchProxy );
-  ui->widgetSearchLine->setProxy( widgetSearchProxy );
-  connect( ui->widgetTreeView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(widgetSelected(QModelIndex)) );
+  ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy =
+    new ObjectTypeFilterProxyModel<QWidget>(this);
+  widgetFilterProxy->setSourceModel(probe->objectTreeModel());
+  KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
+  widgetSearchProxy->setSourceModel(widgetFilterProxy);
+  ui->widgetTreeView->setModel(widgetSearchProxy);
+  ui->widgetSearchLine->setProxy(widgetSearchProxy);
+  connect(ui->widgetTreeView->selectionModel(),
+          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          SLOT(widgetSelected(QModelIndex)));
 }
 
-void WidgetInspector::widgetSelected(const QModelIndex& index)
+void WidgetInspector::widgetSelected(const QModelIndex &index)
 {
-  if ( index.isValid() ) {
-    QObject *obj = index.data( ObjectListModel::ObjectRole ).value<QObject*>();
-    ui->widgetPropertyWidget->setObject( obj );
-    ui->widgetPreviewWidget->setWidget( qobject_cast<QWidget*>( obj ) );
+  if (index.isValid()) {
+    QObject *obj = index.data(ObjectListModel::ObjectRole).value<QObject*>();
+    ui->widgetPropertyWidget->setObject(obj);
+    ui->widgetPreviewWidget->setWidget(qobject_cast<QWidget*>(obj));
   } else {
-    ui->widgetPropertyWidget->setObject( 0 );
-    ui->widgetPreviewWidget->setWidget( 0 );
+    ui->widgetPropertyWidget->setObject(0);
+    ui->widgetPreviewWidget->setWidget(0);
   }
 }
 
-void WidgetInspector::widgetSelected(QWidget* widget)
+void WidgetInspector::widgetSelected(QWidget *widget)
 {
   QAbstractItemModel *model = ui->widgetTreeView->model();
-  const QModelIndexList indexList = model->match( model->index( 0, 0 ), ObjectTreeModel::ObjectRole, QVariant::fromValue<QObject*>( widget ), 1, Qt::MatchExactly | Qt::MatchRecursive );
-  if ( indexList.isEmpty() )
+  const QModelIndexList indexList =
+    model->match(model->index(0, 0),
+                 ObjectTreeModel::ObjectRole,
+                 QVariant::fromValue<QObject*>(widget), 1,
+                 Qt::MatchExactly | Qt::MatchRecursive);
+  if (indexList.isEmpty()) {
     return;
+  }
   const QModelIndex index = indexList.first();
-  ui->widgetTreeView->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current );
-  ui->widgetTreeView->scrollTo( index );
-  widgetSelected( index );
+  ui->widgetTreeView->selectionModel()->select(
+    index,
+    QItemSelectionModel::Select | QItemSelectionModel::Clear |
+    QItemSelectionModel::Rows | QItemSelectionModel::Current);
+  ui->widgetTreeView->scrollTo(index);
+  widgetSelected(index);
 }
 
 #include "widgetinspector.moc"
