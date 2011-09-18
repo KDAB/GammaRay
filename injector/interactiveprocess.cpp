@@ -30,14 +30,18 @@ int InteractiveProcess::stdinClone = -1;
 InteractiveProcess::InteractiveProcess(QObject *parent)
   : QProcess(parent)
 {
+#if !defined(_WIN32)
   if (stdinClone == -1) {
     stdinClone = ::dup(fileno(stdin));
   }
+#endif
 }
 
 void InteractiveProcess::setupChildProcess()
 {
+#if !defined(_WIN32)
   ::dup2(stdinClone, fileno(stdin));
+#endif
 }
 
 #include "interactiveprocess.moc"
