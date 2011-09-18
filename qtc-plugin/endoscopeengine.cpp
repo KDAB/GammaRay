@@ -56,133 +56,137 @@ namespace Endoscope {
 EndoscopeEngine::EndoscopeEngine(IAnalyzerTool *tool,
                                  const AnalyzerStartParameters &sp,
                                  ProjectExplorer::RunConfiguration *runConfiguration)
-: IAnalyzerEngine(tool, sp, runConfiguration)
-, m_settings(0)
+: IAnalyzerEngine(tool, sp, runConfiguration), m_settings(0)
 {
-    AnalyzerSettings *settings = 0;
-    if (runConfiguration)
-        settings = runConfiguration->extraAspect<AnalyzerProjectSettings>();
-    if (!settings)
-        settings = AnalyzerGlobalSettings::instance();
+  AnalyzerSettings *settings = 0;
+  if (runConfiguration) {
+    settings = runConfiguration->extraAspect<AnalyzerProjectSettings>();
+  }
+  if (!settings) {
+    settings = AnalyzerGlobalSettings::instance();
+  }
 
-    m_settings = settings->subConfig<EndoscopeBaseSettings>();
-    QTC_CHECK(m_settings);
+  m_settings = settings->subConfig<EndoscopeBaseSettings>();
+  QTC_CHECK(m_settings);
 
-    connect(&m_progressWatcher, SIGNAL(canceled()),
-            this, SLOT(handleProgressCanceled()));
-    connect(&m_progressWatcher, SIGNAL(finished()),
-            this, SLOT(handleProgressFinished()));
+  connect(&m_progressWatcher, SIGNAL(canceled()),
+          this, SLOT(handleProgressCanceled()));
+  connect(&m_progressWatcher, SIGNAL(finished()),
+          this, SLOT(handleProgressFinished()));
 
-    connect(&m_process, SIGNAL(readyReadStandardOutput()),
-            SLOT(receiveStandardOutput()));
-    connect(&m_process, SIGNAL(readyReadStandardError()),
-            SLOT(receiveStandardError()));
-    connect(&m_process, SIGNAL(finished(int)),
-            SLOT(processFinished()));
-    connect(&m_process, SIGNAL(error(QProcess::ProcessError)),
-            SLOT(processError(QProcess::ProcessError)));
+  connect(&m_process, SIGNAL(readyReadStandardOutput()),
+          SLOT(receiveStandardOutput()));
+  connect(&m_process, SIGNAL(readyReadStandardError()),
+          SLOT(receiveStandardError()));
+  connect(&m_process, SIGNAL(finished(int)),
+          SLOT(processFinished()));
+  connect(&m_process, SIGNAL(error(QProcess::ProcessError)),
+          SLOT(processError(QProcess::ProcessError)));
 
-    connect(AnalyzerManager::stopAction(), SIGNAL(triggered()), this, SLOT(stopIt()));
+  connect(AnalyzerManager::stopAction(), SIGNAL(triggered()), this, SLOT(stopIt()));
 }
 
 EndoscopeEngine::~EndoscopeEngine()
 {
-
 }
 
 void EndoscopeEngine::handleProgressCanceled()
 {
-    AnalyzerManager::stopTool();
+  AnalyzerManager::stopTool();
 }
 
 void EndoscopeEngine::handleProgressFinished()
 {
-    QApplication::alert(Core::ICore::instance()->mainWindow(), 3000);
+  QApplication::alert(Core::ICore::instance()->mainWindow(), 3000);
 }
 
 bool EndoscopeEngine::start()
 {
-    emit starting(this);
+  emit starting(this);
 
-    Core::FutureProgress *fp = Core::ICore::instance()->progressManager()->addTask(m_progress.future(), tr("Investigating Application"), "endoscope");
-    fp->setKeepOnFinish(Core::FutureProgress::HideOnFinish);
-    m_progress.reportStarted();
-    m_progressWatcher.setFuture(m_progress.future());
+  Core::FutureProgress *fp =
+    Core::ICore::instance()->progressManager()->addTask(m_progress.future(),
+                                                        tr("Investigating Application"),
+                                                        "endoscope");
+  fp->setKeepOnFinish(Core::FutureProgress::HideOnFinish);
+  m_progress.reportStarted();
+  m_progressWatcher.setFuture(m_progress.future());
 
-    const AnalyzerStartParameters &sp = startParameters();
-    m_process.setWorkingDirectory(sp.workingDirectory);
+  const AnalyzerStartParameters &sp = startParameters();
+  m_process.setWorkingDirectory(sp.workingDirectory);
 
-    QString exe = m_settings->endoscopeExecutable();
-    if (!sp.analyzerCmdPrefix.isEmpty())
-        exe = sp.analyzerCmdPrefix + ' ' + exe;
+  QString exe = m_settings->endoscopeExecutable();
+  if (!sp.analyzerCmdPrefix.isEmpty()) {
+    exe = sp.analyzerCmdPrefix + ' ' + exe;
+  }
 
-    QString arguments;
-    switch(m_settings->injector()) {
-        case Constants::DefaultInjector:
-            // nothing
-            break;
-        case Constants::GDBInjector:
-            Utils::QtcProcess::addArg(&arguments, "-i gdb");
-        case Constants::StyleInjector:
-            Utils::QtcProcess::addArg(&arguments, "-i style");
-            break;
+  QString arguments;
+  switch(m_settings->injector()) {
+  case Constants::DefaultInjector:
+    // nothing
+    break;
+  case Constants::GDBInjector:
+    Utils::QtcProcess::addArg(&arguments, "-i gdb");
+  case Constants::StyleInjector:
+    Utils::QtcProcess::addArg(&arguments, "-i style");
+    break;
 #ifndef Q_OS_WIN
-        case Constants::PreloadInjector:
-            Utils::QtcProcess::addArg(&arguments, "-i preload");
-            break;
+  case Constants::PreloadInjector:
+    Utils::QtcProcess::addArg(&arguments, "-i preload");
+    break;
 #else
-        case Constants::WinDLLInjector:
-            Utils::QtcProcess::addArg(&arguments, "-i windll");
-            break;
-        case Constants::DetourInjector:
-            Utils::QtcProcess::addArg(&arguments, "-i detour");
-            break;
+  case Constants::WinDLLInjector:
+    Utils::QtcProcess::addArg(&arguments, "-i windll");
+    break;
+  case Constants::DetourInjector:
+    Utils::QtcProcess::addArg(&arguments, "-i detour");
+    break;
 #endif
-    }
+  }
 
-    Utils::QtcProcess::addArg(&arguments, sp.debuggee);
-    Utils::QtcProcess::addArgs(&arguments, sp.debuggeeArgs);
+  Utils::QtcProcess::addArg(&arguments, sp.debuggee);
+  Utils::QtcProcess::addArgs(&arguments, sp.debuggeeArgs);
 
-    m_process.setCommand(exe, arguments);
+  m_process.setCommand(exe, arguments);
 
-    m_process.setEnvironment(sp.environment);
+  m_process.setEnvironment(sp.environment);
 
-    m_process.start();
+  m_process.start();
 
-    return true;
+  return true;
 }
 
 void EndoscopeEngine::stop()
 {
-    m_process.terminate();
+  m_process.terminate();
 }
 
 void EndoscopeEngine::stopIt()
 {
-    stop();
+  stop();
 }
 
 void EndoscopeEngine::receiveStandardOutput()
 {
-    emit outputReceived(m_process.readAllStandardOutput(), Utils::StdOutFormat);
+  emit outputReceived(m_process.readAllStandardOutput(), Utils::StdOutFormat);
 }
 
 void EndoscopeEngine::receiveStandardError()
 {
-    emit outputReceived(m_process.readAllStandardError(), Utils::StdErrFormat);
+  emit outputReceived(m_process.readAllStandardError(), Utils::StdErrFormat);
 }
 
 void EndoscopeEngine::processFinished()
 {
-    emit outputReceived(tr("** Analyzing finished **\n"), Utils::NormalMessageFormat);
-    emit finished();
+  emit outputReceived(tr("** Analyzing finished **\n"), Utils::NormalMessageFormat);
+  emit finished();
 
-    m_progress.reportFinished();
+  m_progress.reportFinished();
 }
 
 void EndoscopeEngine::processError(QProcess::ProcessError error)
 {
-    emit outputReceived(m_process.errorString(), Utils::ErrorMessageFormat);
+  emit outputReceived(m_process.errorString(), Utils::ErrorMessageFormat);
 }
 
 }

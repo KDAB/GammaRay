@@ -48,56 +48,62 @@ using namespace ProjectExplorer;
 using namespace Analyzer;
 
 EndoscopeRunControlFactory::EndoscopeRunControlFactory(QObject *parent)
-: IRunControlFactory(parent)
+  : IRunControlFactory(parent)
 {
-    setObjectName(QLatin1String("EndoscopeRuncontrolFactory"));
+  setObjectName(QLatin1String("EndoscopeRuncontrolFactory"));
 }
 
 QString EndoscopeRunControlFactory::displayName() const
 {
-    return tr("Endoscope");
+  return tr("Endoscope");
 }
 
-bool EndoscopeRunControlFactory::canRun(RunConfiguration *runConfiguration, const QString &mode) const
+bool EndoscopeRunControlFactory::canRun(RunConfiguration *runConfiguration,
+                                        const QString &mode) const
 {
-    return mode == Constants::RUNMODE
-        && dynamic_cast<LocalApplicationRunConfiguration*>(runConfiguration);
+  return
+    mode == Constants::RUNMODE &&
+    dynamic_cast<LocalApplicationRunConfiguration*>(runConfiguration);
 }
 
-RunControl *EndoscopeRunControlFactory::create(RunConfiguration *runConfiguration, const QString &mode)
+RunControl *EndoscopeRunControlFactory::create(RunConfiguration *runConfiguration,
+                                               const QString &mode)
 {
-    QTC_ASSERT(canRun(runConfiguration, mode), return 0);
+  QTC_ASSERT(canRun(runConfiguration, mode), return 0);
 
-    AnalyzerStartParameters sp;
-    sp.toolId = Constants::TOOLID;
-    sp.startMode = StartLocal;
+  AnalyzerStartParameters sp;
+  sp.toolId = Constants::TOOLID;
+  sp.startMode = StartLocal;
 
-    LocalApplicationRunConfiguration *rc = dynamic_cast<LocalApplicationRunConfiguration*>(runConfiguration);
-    sp.environment = rc->environment();
-    sp.workingDirectory = rc->workingDirectory();
-    sp.debuggee = rc->executable();
-    sp.debuggeeArgs = rc->commandLineArguments();
-    sp.displayName = rc->displayName();
+  LocalApplicationRunConfiguration *rc =
+    dynamic_cast<LocalApplicationRunConfiguration*>(runConfiguration);
+  sp.environment = rc->environment();
+  sp.workingDirectory = rc->workingDirectory();
+  sp.debuggee = rc->executable();
+  sp.debuggeeArgs = rc->commandLineArguments();
+  sp.displayName = rc->displayName();
 
-    IAnalyzerTool *tool = AnalyzerManager::toolFromId(Constants::TOOLID);
-    AnalyzerRunControl *ret = new AnalyzerRunControl(tool, sp, runConfiguration);
-    /// TODO
+  IAnalyzerTool *tool = AnalyzerManager::toolFromId(Constants::TOOLID);
+  AnalyzerRunControl *ret = new AnalyzerRunControl(tool, sp, runConfiguration);
+  /// TODO
 //     QObject::connect(AnalyzerManager::stopAction(), SIGNAL(triggered()), rc, SLOT(stopIt()));
-    return ret;
+  return ret;
 }
 
-RunConfigWidget *EndoscopeRunControlFactory::createConfigurationWidget(RunConfiguration *runConfiguration)
+RunConfigWidget *
+EndoscopeRunControlFactory::createConfigurationWidget(RunConfiguration *runConfiguration)
 {
-    AnalyzerProjectSettings *settings = runConfiguration->extraAspect<AnalyzerProjectSettings>();
-    if (!settings)
-        return 0;
+  AnalyzerProjectSettings *settings = runConfiguration->extraAspect<AnalyzerProjectSettings>();
+  if (!settings) {
+    return 0;
+  }
 
-    AnalyzerRunConfigWidget *ret = new Analyzer::AnalyzerRunConfigWidget;
-    ret->setRunConfiguration(runConfiguration);
-    return ret;
+  AnalyzerRunConfigWidget *ret = new Analyzer::AnalyzerRunConfigWidget;
+  ret->setRunConfiguration(runConfiguration);
+  return ret;
 }
 
 IRunConfigurationAspect *EndoscopeRunControlFactory::createRunConfigurationAspect()
 {
-    return new AnalyzerProjectSettings;
+  return new AnalyzerProjectSettings;
 }

@@ -46,9 +46,9 @@ namespace Endoscope {
  */
 class EndoscopeBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
 {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
+  public:
     EndoscopeBaseSettings() {}
 
     virtual QVariantMap toMap() const;
@@ -58,32 +58,31 @@ public:
     virtual QString id() const;
     virtual QString displayName() const;
 
-    virtual QWidget* createConfigWidget(QWidget* parent);
+    virtual QWidget *createConfigWidget(QWidget *parent);
 
-signals:
+  signals:
     void changed(); // sent when multiple values have changed simulatenously (e.g. fromMap)
 
-/**
- * Base endoscope settings
- */
-public:
+  /**
+   * Base endoscope settings
+   */
+  public:
     QString endoscopeExecutable() const;
     Constants::InjectorType injector() const;
 
-public slots:
+  public slots:
     void setEndoscopeExecutable(const QString &);
     void setInjector(Constants::InjectorType);
 
-signals:
+  signals:
     void endoscopeExecutableChanged(const QString &);
     void injectorChanged(Constants::InjectorType);
 
-private:
+  private:
     QString m_endoscopeExecutable;
     Constants::InjectorType m_injector;
 
 };
-
 
 /**
  * Global endoscope settings

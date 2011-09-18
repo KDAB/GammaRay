@@ -63,42 +63,43 @@ EndoscopePlugin::~EndoscopePlugin()
 
 static AbstractAnalyzerSubConfig *globalEndoscopeFactory()
 {
-    return new EndoscopeGlobalSettings();
+  return new EndoscopeGlobalSettings();
 }
 
 static AbstractAnalyzerSubConfig *projectEndoscopeFactory()
 {
-    return new EndoscopeProjectSettings();
+  return new EndoscopeProjectSettings();
 }
 
 bool EndoscopePlugin::initialize(const QStringList &/*arguments*/, QString */*errorString*/)
 {
-    AnalyzerGlobalSettings::instance()->registerSubConfigs(&globalEndoscopeFactory, &projectEndoscopeFactory);
+  AnalyzerGlobalSettings::instance()->registerSubConfigs(&globalEndoscopeFactory,
+                                                         &projectEndoscopeFactory);
 
-    addAutoReleasedObject(new EndoscopeRunControlFactory());
+  addAutoReleasedObject(new EndoscopeRunControlFactory());
 
-    StartModes modes;
-    // They are handled the same actually.
-    //modes.append(StartMode(StartRemote));
-    modes.append(StartMode(StartLocal));
-    AnalyzerManager::addTool(new EndoscopeTool(this), modes);
+  StartModes modes;
+  // They are handled the same actually.
+  //modes.append(StartMode(StartRemote));
+  modes.append(StartMode(StartLocal));
+  AnalyzerManager::addTool(new EndoscopeTool(this), modes);
 
-    return true;
+  return true;
 }
 
 void EndoscopePlugin::extensionsInitialized()
 {
-    // Retrieve objects from the plugin manager's object pool.
-    // "In the extensionsInitialized method, a plugin can be sure that all
-    //  plugins that depend on it are completely initialized."
+  // Retrieve objects from the plugin manager's object pool.
+  // "In the extensionsInitialized method, a plugin can be sure that all
+  //  plugins that depend on it are completely initialized."
 }
 
 ExtensionSystem::IPlugin::ShutdownFlag EndoscopePlugin::aboutToShutdown()
 {
-    // Save settings.
-    // Disconnect from signals that are not needed during shutdown
-    // Hide UI (if you add UI that is not in the main window directly)
-    return SynchronousShutdown;
+  // Save settings.
+  // Disconnect from signals that are not needed during shutdown
+  // Hide UI (if you add UI that is not in the main window directly)
+  return SynchronousShutdown;
 }
 
 Q_EXPORT_PLUGIN(EndoscopePlugin)

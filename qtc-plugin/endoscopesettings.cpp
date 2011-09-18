@@ -35,7 +35,6 @@
 #include "endoscopesettings.h"
 #include "endoscopeconfigwidget.h"
 
-
 #include <coreplugin/icore.h>
 #include <utils/qtcassert.h>
 

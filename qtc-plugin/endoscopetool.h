@@ -35,14 +35,16 @@
 
 namespace Endoscope {
 
-class EndoscopeTool : public Analyzer::IAnalyzerTool {
-
-public:
+class EndoscopeTool : public Analyzer::IAnalyzerTool
+{
+  public:
     explicit EndoscopeTool(QObject *parent = 0);
 
     virtual void startTool(Analyzer::StartMode mode);
 
-    virtual Analyzer::IAnalyzerEngine *createEngine(const Analyzer::AnalyzerStartParameters &sp, ProjectExplorer::RunConfiguration *runConfiguration = 0);
+    virtual Analyzer::IAnalyzerEngine *createEngine(
+      const Analyzer::AnalyzerStartParameters &sp,
+      ProjectExplorer::RunConfiguration *runConfiguration = 0);
 
     virtual QWidget *createWidgets();
     virtual void extensionsInitialized();

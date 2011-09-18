@@ -37,17 +37,22 @@ namespace Endoscope {
 
 class EndoscopeRunControlFactory : public ProjectExplorer::IRunControlFactory
 {
-    Q_OBJECT
-
-public:
+  Q_OBJECT
+  public:
     EndoscopeRunControlFactory(QObject *parent = 0);
 
     virtual QString displayName() const;
 
-    virtual bool canRun(ProjectExplorer::RunConfiguration *runConfiguration, const QString &mode) const;
-    virtual ProjectExplorer::RunControl *create(ProjectExplorer::RunConfiguration *runConfiguration, const QString &mode);
-    virtual ProjectExplorer::RunConfigWidget *createConfigurationWidget(ProjectExplorer::RunConfiguration *runConfiguration);
-    virtual ProjectExplorer::IRunConfigurationAspect* createRunConfigurationAspect();
+    virtual bool canRun(ProjectExplorer::RunConfiguration *runConfiguration,
+                        const QString &mode) const;
+
+    virtual ProjectExplorer::RunControl *create(ProjectExplorer::RunConfiguration *runConfiguration,
+                                                const QString &mode);
+
+    virtual ProjectExplorer::RunConfigWidget *
+      createConfigurationWidget(ProjectExplorer::RunConfiguration *runConfiguration);
+
+    virtual ProjectExplorer::IRunConfigurationAspect *createRunConfigurationAspect();
 };
 
 }
