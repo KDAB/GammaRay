@@ -4,7 +4,7 @@
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2006 Bradley T. Hughes
+  Copyright (C) 2006 Bradley T. Hughes   //krazy:exclude=copyright
   http://labs.qt.nokia.com/2006/03/16/starting-interactive-processes-with-qprocess/
 
   This program is free software; you can redistribute it and/or modify
