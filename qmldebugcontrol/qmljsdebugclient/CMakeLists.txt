@@ -23,4 +23,5 @@ target_link_libraries(qmldebugclient
   ${QT_QTGUI_LIBRARIES}
   ${QT_QTDECLARATIVE_LIBRARIES}
   ${QT_QTCORE_LIBRARIES}
+  ${QT_QTNETWORK_LIBRARIES}
 )
