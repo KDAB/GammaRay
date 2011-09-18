@@ -32,8 +32,8 @@ class SingleColumnObjectProxyModel : public KIdentityProxyModel
 {
   Q_OBJECT
   public:
-    explicit SingleColumnObjectProxyModel(QObject* parent = 0);
-    QVariant data(const QModelIndex& proxyIndex, int role = Qt::DisplayRole) const;
+    explicit SingleColumnObjectProxyModel(QObject *parent = 0);
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const;
 };
 
 }

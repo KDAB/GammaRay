@@ -28,25 +28,24 @@
 #include <qabstractitemmodel.h>
 #include <qvector.h>
 
-
 namespace Endoscope {
 
 class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
 {
   Q_OBJECT
   public:
-    explicit ObjectTreeModel(QObject* parent = 0);
+    explicit ObjectTreeModel(QObject *parent = 0);
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex& child) const;
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-    void objectAdded( QObject *obj );
-    void objectRemoved( QObject *obj );
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
 
   private:
-    QModelIndex indexForObject( QObject* object ) const;
+    QModelIndex indexForObject(QObject *object) const;
 
   private:
     QMap<QObject*, QObject*> m_childParentMap;

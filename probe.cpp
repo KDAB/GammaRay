@@ -208,9 +208,9 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     // Ignore
     return;
   } else if (isInitialized()) {
-    if (obj == instance()->window() || obj == instance()
-        || descendantOf(instance()->window(), obj)
-        || descendantOf(instance(), obj)) {
+    if (obj == instance()->window() || obj == instance() ||
+        descendantOf(instance()->window(), obj) ||
+        descendantOf(instance(), obj)) {
       return;
     }
     const QPointer<QObject> objPtr(obj);

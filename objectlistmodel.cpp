@@ -25,55 +25,61 @@
 
 using namespace Endoscope;
 
-ObjectListModel::ObjectListModel(QObject* parent): ObjectModelBase< QAbstractTableModel >(parent)
+ObjectListModel::ObjectListModel(QObject *parent)
+  : ObjectModelBase< QAbstractTableModel >(parent)
 {
 }
 
-QVariant ObjectListModel::data(const QModelIndex& index, int role) const
+QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
-  if ( index.row() >= 0 && index.row() < m_objects.size() ) {
-    QObject *obj = m_objects.at( index.row() );
-    return dataForObject( obj, index, role );
+  if (index.row() >= 0 && index.row() < m_objects.size()) {
+    QObject *obj = m_objects.at(index.row());
+    return dataForObject(obj, index, role);
   }
   return QVariant();
 }
 
-int ObjectListModel::columnCount(const QModelIndex& parent) const
+int ObjectListModel::columnCount(const QModelIndex &parent) const
 {
-  if ( parent.isValid() )
+  if (parent.isValid()) {
     return 0;
-  return ObjectModelBase<QAbstractTableModel>::columnCount( parent );
+  }
+  return ObjectModelBase<QAbstractTableModel>::columnCount(parent);
 }
 
-int ObjectListModel::rowCount(const QModelIndex& parent) const
+int ObjectListModel::rowCount(const QModelIndex &parent) const
 {
-  if ( parent.isValid() )
+  if (parent.isValid()) {
     return 0;
+  }
   return m_objects.size();
 }
 
-void Endoscope::ObjectListModel::objectAdded( const QPointer<QObject> &objPtr )
+void Endoscope::ObjectListModel::objectAdded(const QPointer<QObject> &objPtr)
 {
-  if ( !objPtr )
+  if (!objPtr) {
     return;
+  }
 
   QObject *obj = objPtr.data();
-  const int index = m_objects.indexOf( obj );
-  if ( !objPtr || index > 0 )
+  const int index = m_objects.indexOf(obj);
+  if (!objPtr || index > 0) {
     return;
+  }
 
-  beginInsertRows( QModelIndex(), m_objects.size(), m_objects.size() );
-  m_objects.push_back( obj );
+  beginInsertRows(QModelIndex(), m_objects.size(), m_objects.size());
+  m_objects.push_back(obj);
   endInsertRows();
 }
 
-void Endoscope::ObjectListModel::objectRemoved(QObject* obj)
+void Endoscope::ObjectListModel::objectRemoved(QObject *obj)
 {
-  const int index = m_objects.indexOf( obj );
-  if ( index < 0 || index >= m_objects.size() )
+  const int index = m_objects.indexOf(obj);
+  if (index < 0 || index >= m_objects.size()) {
     return;
-  beginRemoveRows( QModelIndex(), index, index );
-  m_objects.remove( index );
+  }
+  beginRemoveRows(QModelIndex(), index, index);
+  m_objects.remove(index);
   endRemoveRows();
 }
 

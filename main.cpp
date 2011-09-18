@@ -47,7 +47,8 @@ static void usage(const char *argv0)
   out << "" << endl;
   out << "Options:" << endl;
   out << " -i, --injector <injector>\tset injection type, possible values:" << endl;
-  out << "                          \t" << InjectorFactory::availableInjectors().join( ", " ) << endl;
+  out << "                          \t" << InjectorFactory::availableInjectors().join(", ")
+      << endl;
   out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
   out << " -h, --help               \tprint program help and exit" << endl;
   out << " -v, --version            \tprint program version and exit" << endl;
@@ -105,7 +106,7 @@ int main(int argc, char **argv)
       if (!injector->attach(pid, probeDll, QLatin1String("endoscope_probe_inject"))) {
         err << "Unable to attach injector " << injector->name() << endl;
         return 0;
-      } 
+      }
     } else {
       if (!injector->launch(args, probeDll, QLatin1String("endoscope_probe_inject"))) {
         err << "Failed to launch injector " << injector->name() << endl;

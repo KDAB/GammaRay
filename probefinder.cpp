@@ -21,7 +21,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "config-endoscope.h"
 
 #include "probefinder.h"
@@ -38,7 +37,7 @@ namespace Endoscope {
 
 namespace ProbeFinder {
 
-QString findProbe( const QString& baseName )
+QString findProbe(const QString &baseName)
 {
 #ifndef Q_OS_WIN
   QStringList pldirs;
@@ -46,28 +45,34 @@ QString findProbe( const QString& baseName )
          << "/usr/local/lib64" << "/usr/local/lib"
          << "/opt/lib64" << "/opt/lib"
          << "/usr/lib64" << "/usr/lib";
-  QDir::setSearchPaths( "preloads", pldirs );
+  QDir::setSearchPaths("preloads", pldirs);
 #ifdef Q_OS_MAC
-  QFile plfile( QLatin1Literal("preloads:") % baseName % QLatin1Literal(".dylib"));
+  QFile plfile(QLatin1Literal("preloads:") % baseName % QLatin1Literal(".dylib"));
 #else
-  QFile plfile( QLatin1Literal("preloads:") % baseName % QLatin1Literal(".so"));
+  QFile plfile(QLatin1Literal("preloads:") % baseName % QLatin1Literal(".so"));
 #endif
-  if ( plfile.exists() ) {
+  if (plfile.exists()) {
     return plfile.fileName();
   } else {
-    qWarning() << "Cannot locate" << baseName << "in the typical places.\n"
-              "Try setting the $LD_PRELOAD environment variable to the fullpath,\n"
-              "For example:\n"
-              "  export LD_PRELOAD=/opt/lib64/libendoscope_probe.so\n"
-              "Continuing nevertheless, some systems can also preload from just the library name...";
+    qWarning()
+      << "Cannot locate" << baseName
+      << "in the typical places.\n"
+         "Try setting the $LD_PRELOAD environment variable to the fullpath,\n"
+         "For example:\n"
+         "  export LD_PRELOAD=/opt/lib64/libendoscope_probe.so\n"
+         "Continuing nevertheless, some systems can also preload from just the library name...";
     return baseName;
   }
 
 #else
-  return QCoreApplication::applicationDirPath() % QDir::separator() % baseName % QLatin1Literal( ".dll" );
+  return
+    QCoreApplication::applicationDirPath() %
+    QDir::separator() %
+    baseName %
+    QLatin1Literal(".dll");
 #endif
 
-  Q_ASSERT( false );
+  Q_ASSERT(false);
   return QString();
 }
 

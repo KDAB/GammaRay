@@ -28,27 +28,28 @@
 
 using namespace Endoscope;
 
-ObjectPropertyModel::ObjectPropertyModel(QObject* parent) :
-  QAbstractTableModel(parent),
-  m_updateTimer( new QTimer( this ) )
+ObjectPropertyModel::ObjectPropertyModel(QObject *parent)
+  : QAbstractTableModel(parent),
+    m_updateTimer(new QTimer(this))
 {
-  connect( m_updateTimer, SIGNAL(timeout()), SLOT(doEmitChanged()) );
-  m_updateTimer->setSingleShot( true );
+  connect(m_updateTimer, SIGNAL(timeout()), SLOT(doEmitChanged()));
+  m_updateTimer->setSingleShot(true);
 }
 
-void ObjectPropertyModel::setObject(QObject* object)
+void ObjectPropertyModel::setObject(QObject *object)
 {
-  if ( m_obj ) {
-    disconnect( m_obj.data(), 0, this, SLOT(updateAll()) );
-    disconnect( m_obj.data(), 0, this, SLOT(slotReset()) );
+  if (m_obj) {
+    disconnect(m_obj.data(), 0, this, SLOT(updateAll()));
+    disconnect(m_obj.data(), 0, this, SLOT(slotReset()));
   }
   m_obj = object;
-  if ( object ) {
-    connect( object, SIGNAL(destroyed(QObject*)), SLOT(slotReset()) );
-    for ( int i = 0; i < object->metaObject()->propertyCount(); ++i ) {
-      const QMetaProperty prop = object->metaObject()->property( i );
-      if ( prop.hasNotifySignal() )
-        connect( object, QByteArray( "2" ) + prop.notifySignal().signature(), SLOT(updateAll()) );
+  if (object) {
+    connect(object, SIGNAL(destroyed(QObject*)), SLOT(slotReset()));
+    for (int i = 0; i < object->metaObject()->propertyCount(); ++i) {
+      const QMetaProperty prop = object->metaObject()->property(i);
+      if (prop.hasNotifySignal()) {
+        connect(object, QByteArray("2") + prop.notifySignal().signature(), SLOT(updateAll()));
+      }
     }
   }
   reset();
@@ -56,12 +57,16 @@ void ObjectPropertyModel::setObject(QObject* object)
 
 QVariant ObjectPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
-    switch ( section ) {
-      case 0: return tr( "Property" );
-      case 1: return tr( "Value" );
-      case 2: return tr( "Type" );
-      case 3: return tr( "Class" );
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    switch (section) {
+    case 0:
+      return tr("Property");
+    case 1:
+      return tr("Value");
+    case 2:
+      return tr("Type");
+    case 3:
+      return tr("Class");
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
@@ -69,14 +74,15 @@ QVariant ObjectPropertyModel::headerData(int section, Qt::Orientation orientatio
 
 void ObjectPropertyModel::updateAll()
 {
-  if ( m_updateTimer->isActive() )
+  if (m_updateTimer->isActive()) {
     return;
-  m_updateTimer->start( 100 );
+  }
+  m_updateTimer->start(100);
 }
 
 void ObjectPropertyModel::doEmitChanged()
 {
-  emit dataChanged( index( 0, 0 ), index( rowCount() - 1, columnCount() - 1 ) );
+  emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
 #include "objectpropertymodel.moc"

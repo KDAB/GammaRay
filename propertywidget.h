@@ -40,12 +40,12 @@ class PropertyWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit PropertyWidget( QWidget *parent = 0 );
+    explicit PropertyWidget(QWidget *parent = 0);
 
-    void setObject( QObject *object );
+    void setObject(QObject *object);
 
   private slots:
-    void methodActivated( const QModelIndex &index );
+    void methodActivated(const QModelIndex &index);
 
   private:
     Ui::PropertyWidget ui;

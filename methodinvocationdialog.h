@@ -33,13 +33,12 @@ namespace Endoscope {
 
 class MethodArgumentModel;
 
-
 class MethodInvocationDialog : public QDialog
 {
   Q_OBJECT
   public:
-    MethodInvocationDialog( QWidget* parent = 0 );
-    void setMethod( QObject* object, const QMetaMethod &method );
+    MethodInvocationDialog(QWidget *parent = 0);
+    void setMethod(QObject *object, const QMetaMethod &method);
     void accept();
 
   private:

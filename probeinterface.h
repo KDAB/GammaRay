@@ -39,14 +39,14 @@ class ProbeInterface
     virtual inline ~ProbeInterface() {}
 
     /** Returns the object list model. */
-    virtual QAbstractItemModel* objectListModel() const = 0;
+    virtual QAbstractItemModel *objectListModel() const = 0;
     /** Returns the object tree model. */
-    virtual QAbstractItemModel* objectTreeModel() const = 0;
+    virtual QAbstractItemModel *objectTreeModel() const = 0;
     /** Returns the connection model. */
-    virtual QAbstractItemModel* connectionModel() const = 0;
+    virtual QAbstractItemModel *connectionModel() const = 0;
 
     /** Returns the probe QObject for connecting signals. */
-    virtual QObject* probe() const = 0;
+    virtual QObject *probe() const = 0;
 };
 
 }

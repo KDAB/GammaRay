@@ -25,33 +25,41 @@
 
 using namespace Endoscope;
 
-ObjectClassInfoModel::ObjectClassInfoModel(QObject* parent) :
-  MetaObjectModel<QMetaClassInfo, &QMetaObject::classInfo, &QMetaObject::classInfoCount, &QMetaObject::classInfoOffset>( parent )
+ObjectClassInfoModel::ObjectClassInfoModel(QObject *parent)
+  : MetaObjectModel<QMetaClassInfo,
+                    &QMetaObject::classInfo,
+                    &QMetaObject::classInfoCount,
+                    &QMetaObject::classInfoOffset>(parent)
 {
 }
 
-QVariant ObjectClassInfoModel::data(const QModelIndex& index, const QMetaClassInfo& classInfo, int role) const
+QVariant ObjectClassInfoModel::data(const QModelIndex &index,
+                                    const QMetaClassInfo &classInfo, int role) const
 {
-  if ( role == Qt::DisplayRole ) {
-    if ( index.column() == 0 )
+  if (role == Qt::DisplayRole) {
+    if (index.column() == 0) {
       return classInfo.name();
-    if ( index.column() == 1 )
+    }
+    if (index.column() == 1) {
       return classInfo.value();
+    }
   }
   return QVariant();
 }
 
-int ObjectClassInfoModel::columnCount(const QModelIndex& parent) const
+int ObjectClassInfoModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED( parent );
+  Q_UNUSED(parent);
   return 3;
 }
 
 QString Endoscope::ObjectClassInfoModel::columnHeader(int index) const
 {
-  switch ( index ) {
-    case 0: return tr( "Name" );
-    case 1: return tr( "Value" );
+  switch (index) {
+  case 0:
+    return tr("Name");
+  case 1:
+    return tr("Value");
   }
   return QString();
 }

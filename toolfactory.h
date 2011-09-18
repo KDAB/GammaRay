@@ -40,42 +40,50 @@ class ToolFactory
   public:
     virtual inline ~ToolFactory() {}
 
-    /** Human readable name of this tool. */
+    /**
+     * Human readable name of this tool.
+     */
     virtual QString name() const = 0;
 
     /**
      * Class names of types this tool can handle.
-     * The tool will only be activated if an object of one of these types is seen in the probed application.
+     * The tool will only be activated if an object of one of these types
+     * is seen in the probed application.
      */
     virtual QStringList supportedTypes() const = 0;
 
     /**
      * Initialize the tool.
-     * Implement this method to do non-GUI initialization, such as creating object tracking models etc.
+     * Implement this method to do non-GUI initialization, such as creating
+     * object tracking models etc.
      * @param probe The probe interface allowing access to the object models.
      */
-    virtual void init( ProbeInterface *probe ) = 0;
+    virtual void init(ProbeInterface *probe) = 0;
 
     /**
      * Create the UI part of this tool.
      * @param probe The probe interface allowing access to the object models.
      * @param parentWidget The parent widget for the visual elements of this tool.
      */
-    virtual QWidget* createWidget( ProbeInterface *probe, QWidget *parentWidget ) = 0;
+    virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget) = 0;
 };
 
 template <typename Type, typename Tool>
 class StandardToolFactory : public ToolFactory
 {
   public:
-    virtual inline QStringList supportedTypes() const { return QStringList( Type::staticMetaObject.className() ); }
-    virtual inline void init( ProbeInterface* ) {}
-    virtual inline QWidget* createWidget( ProbeInterface *probe, QWidget *parentWidget ) { return new Tool( probe, parentWidget ); }
+    virtual inline QStringList supportedTypes() const {
+      return QStringList(Type::staticMetaObject.className());
+    }
+    virtual inline void init(ProbeInterface *) {}
+    virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget) {
+      return new Tool(probe, parentWidget);
+    }
 };
 
 }
 
 Q_DECLARE_INTERFACE(Endoscope::ToolFactory, "com.kdab.Endoscope.ToolFactory/1.0")
-Q_DECLARE_METATYPE(Endoscope::ToolFactory*)
+Q_DECLARE_METATYPE(Endoscope::ToolFactory *)
 
 #endif

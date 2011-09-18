@@ -29,14 +29,13 @@
 #include <QVector>
 #include <QtCore/qsharedpointer.h>
 
-
 namespace Endoscope {
 
 class SafeArgument
 {
   public:
     SafeArgument();
-    SafeArgument( const QVariant &v );
+    SafeArgument(const QVariant &v);
     ~SafeArgument();
     operator QGenericArgument () const;
 
@@ -50,16 +49,16 @@ class MethodArgumentModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    MethodArgumentModel(QObject* parent = 0);
-    void setMethod( const QMetaMethod &method );
+    MethodArgumentModel(QObject *parent = 0);
+    void setMethod(const QMetaMethod &method);
     QVector<SafeArgument> arguments() const;
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    Qt::ItemFlags flags(const QModelIndex& index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
   private:
     QMetaMethod m_method;

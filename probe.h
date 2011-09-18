@@ -44,13 +44,16 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
   Q_OBJECT
   public:
     virtual ~Probe();
-    static Probe* instance();
+    static Probe *instance();
     static bool isInitialized();
 
-    static void objectAdded( QObject *obj, bool fromCtor = false );
-    static void objectRemoved( QObject *obj );
-    static void connectionAdded( QObject* sender, const char* signal, QObject* receiver, const char* method, Qt::ConnectionType type );
-    static void connectionRemoved( QObject *sender, const char *signal, QObject *receiver, const char *method );
+    static void objectAdded(QObject *obj, bool fromCtor = false);
+    static void objectRemoved(QObject *obj);
+    static void connectionAdded(QObject *sender, const char *signal,
+                                QObject *receiver, const char *method,
+                                Qt::ConnectionType type);
+    static void connectionRemoved(QObject *sender, const char *signal,
+                                  QObject *receiver, const char *method);
 
     static void findExistingObjects();
 
@@ -59,31 +62,31 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     QAbstractItemModel *connectionModel() const;
     ToolModel *toolModel() const;
 
-    static const char* connectLocation( const char *member );
+    static const char *connectLocation(const char *member);
 
     Endoscope::MainWindow *window() const;
     void setWindow(Endoscope::MainWindow *window);
 
-    QObject* probe() const;
+    QObject *probe() const;
 
   signals:
-    void widgetSelected( QWidget* widget );
-    void graphicsItemSelected( QGraphicsItem* item );
+    void widgetSelected(QWidget *widget);
+    void graphicsItemSelected(QGraphicsItem *item);
 
-    void objectCreated( QObject *obj );
-    void objectDestroyed( QObject *obj );
+    void objectCreated(QObject *obj);
+    void objectDestroyed(QObject *obj);
 
   protected:
-    bool eventFilter(QObject *receiver, QEvent *event );
+    bool eventFilter(QObject *receiver, QEvent *event);
 
   private slots:
     void delayedInit();
-    void objectFullyConstructed( const QPointer<QObject> &obj );
+    void objectFullyConstructed(const QPointer<QObject> &obj);
 
   private:
-    explicit Probe( QObject* parent = 0 );
-    static void addObjectRecursive( QObject *obj );
-    static Probe* s_instance;
+    explicit Probe(QObject *parent = 0);
+    static void addObjectRecursive(QObject *obj);
+    static Probe *s_instance;
 
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;

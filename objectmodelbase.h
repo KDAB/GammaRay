@@ -39,30 +39,30 @@ class ObjectModelBase : public Base
       ObjectRole = Qt::UserRole +1
     };
 
-    explicit ObjectModelBase<Base>( QObject * parent ) : Base( parent ) {}
+    explicit ObjectModelBase<Base>(QObject *parent) : Base(parent) {}
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const
+    int columnCount(const QModelIndex &parent = QModelIndex()) const
     {
-      Q_UNUSED( parent );
+      Q_UNUSED(parent);
       return 2;
     }
 
-    QVariant dataForObject(QObject* obj, const QModelIndex &index, int role) const
+    QVariant dataForObject(QObject *obj, const QModelIndex &index, int role) const
     {
-      if ( role == Qt::DisplayRole ) {
-        if ( index.column() == 0 )
-          return obj->objectName().isEmpty() ? Util::addressToString( obj ) : obj->objectName();
-        else if ( index.column() == 1 ) {
+      if (role == Qt::DisplayRole) {
+        if (index.column() == 0) {
+          return obj->objectName().isEmpty() ? Util::addressToString(obj) : obj->objectName();
+        } else if (index.column() == 1) {
           return obj->metaObject()->className();
         }
-      } else if ( role == ObjectRole ) {
-        return QVariant::fromValue( obj );
-      } else if ( role == Qt::ToolTipRole ) {
+      } else if (role == ObjectRole) {
+        return QVariant::fromValue(obj);
+      } else if (role == Qt::ToolTipRole) {
           return QString("Object name: %1\nParent: %2 (Address: %3)\nNumber of children: %4").
-            arg( obj->objectName().isEmpty() ? "<Not set>" : obj->objectName() ).
-            arg( obj->parent() ? obj->parent()->metaObject()->className() : "<No parent>" ).
-            arg( Util::addressToString( obj->parent() ) ).
-            arg( obj->children().size() );
+            arg(obj->objectName().isEmpty() ? "<Not set>" : obj->objectName()).
+            arg(obj->parent() ? obj->parent()->metaObject()->className() : "<No parent>").
+            arg(Util::addressToString(obj->parent())).
+            arg(obj->children().size());
       }
 
       return QVariant();
@@ -70,13 +70,15 @@ class ObjectModelBase : public Base
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
     {
-      if ( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
-        switch ( section ) {
-          case 0: return QObject::tr( "Object" );
-          case 1: return QObject::tr( "Type" );
+      if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+        case 0:
+          return QObject::tr("Object");
+        case 1:
+          return QObject::tr("Type");
         }
       }
-      return Base::headerData( section, orientation, role );
+      return Base::headerData(section, orientation, role);
     }
 };
 

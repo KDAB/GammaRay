@@ -35,8 +35,8 @@ class ObjectPropertyModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    explicit ObjectPropertyModel(QObject* parent = 0);
-    void setObject( QObject *object );
+    explicit ObjectPropertyModel(QObject *parent = 0);
+    void setObject(QObject *object);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 

@@ -26,23 +26,22 @@
 
 #include <QtGui/QSortFilterProxyModel>
 
-
 namespace Endoscope {
 
 class ConnectionFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
   public:
-    ConnectionFilterProxyModel(QObject* parent = 0);
+    ConnectionFilterProxyModel(QObject *parent = 0);
 
-    void filterReceiver( QObject * receiver );
-    void filterSender( QObject *sender );
+    void filterReceiver(QObject *receiver);
+    void filterSender(QObject *sender);
 
   protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
-    bool filterAcceptsColumn(int source_column, const QModelIndex& source_parent) const;
-    
-    bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const;
+
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
   private:
     QObject *m_receiver;
