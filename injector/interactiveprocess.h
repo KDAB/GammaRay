@@ -20,8 +20,6 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-
 #ifndef INTERACTIVEPROCESS_H
 #define INTERACTIVEPROCESS_H
 
@@ -30,16 +28,14 @@
 class InteractiveProcess : public QProcess
 {
   Q_OBJECT
+  public:
+    InteractiveProcess(QObject *parent = 0);
 
-public:
-  InteractiveProcess(QObject *parent = 0);
+  protected:
+    void setupChildProcess();
 
-protected:
-  void setupChildProcess();
-
-private:
-  static int stdinClone;
+  private:
+    static int stdinClone;
 };
-
 
 #endif // INTERACTIVEPROCESS_H

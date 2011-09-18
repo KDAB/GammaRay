@@ -28,10 +28,11 @@
 int InteractiveProcess::stdinClone = -1;
 
 InteractiveProcess::InteractiveProcess(QObject *parent)
-: QProcess(parent)
+  : QProcess(parent)
 {
-    if (stdinClone == -1)
-        stdinClone = ::dup(fileno(stdin));
+  if (stdinClone == -1) {
+    stdinClone = ::dup(fileno(stdin));
+  }
 }
 
 void InteractiveProcess::setupChildProcess()
