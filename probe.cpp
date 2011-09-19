@@ -244,7 +244,7 @@ void Probe::objectRemoved(QObject *obj)
     instance()->connectionRemoved(obj, 0, 0, 0);
     instance()->connectionRemoved(0, 0, obj, 0);
     emit instance()->objectDestroyed(obj);
-  } else {
+  } else if (s_addedBeforeProbeInsertion()) {
     for (QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
          it != s_addedBeforeProbeInsertion()->end();) {
       if (*it == obj) {
