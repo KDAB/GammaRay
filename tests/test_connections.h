@@ -9,7 +9,8 @@ public:
   enum Type {
     DeleteLater,
     Delete,
-    NoEventLoop
+    NoEventLoop,
+    Stack
   };
   TestConnections(Type type, int timeOuts);
   virtual ~TestConnections();

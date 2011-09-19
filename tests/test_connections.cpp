@@ -35,6 +35,10 @@ void TestConnections::timeout()
     QObject* obj = new QObject(this);
     connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
     delete obj;
+  } else if (m_type == Stack) {
+    QObject obj;
+    connect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
+    disconnect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
   } else {
     // delete last objects
     for(int i = 0; i < m_objects.count(); ++i) {
@@ -65,6 +69,7 @@ void TestMain::run_data()
   QTest::newRow("delete") << static_cast<int>(TestConnections::Delete);
   QTest::newRow("deleteLater") << static_cast<int>(TestConnections::DeleteLater);
   QTest::newRow("noEventLoop") << static_cast<int>(TestConnections::NoEventLoop);
+  QTest::newRow("stack") << static_cast<int>(TestConnections::Stack);
 }
 
 void TestMain::run()
