@@ -2,6 +2,7 @@
 #define TEST_CONNECTIONS_H
 
 #include <QtCore/QObject>
+#include <QtCore/QThread>
 
 class TestConnections : public QObject {
   Q_OBJECT
@@ -10,7 +11,8 @@ public:
     DeleteLater,
     Delete,
     NoEventLoop,
-    Stack
+    Stack,
+    Threaded
   };
   TestConnections(Type type, int timeOuts);
   virtual ~TestConnections();
@@ -24,6 +26,21 @@ private:
   const int m_timeOuts;
   int m_numTimeout;
   QList<QObject*> m_objects;
+  QList<QThread*> m_threads;
+};
+
+class TestThread : public QThread {
+  Q_OBJECT
+public:
+  TestThread(QObject* obj, QObject* parent);
+  virtual ~TestThread();
+  virtual void run();
+  // prevent deadlock...
+  bool isRunningNoLock() const;
+public slots:
+  void dummySlot(){}
+private:
+  QObject* m_obj;
 };
 
 class TestMain : public QObject {

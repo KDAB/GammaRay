@@ -25,6 +25,10 @@ TestConnections::~TestConnections()
 void TestConnections::timeout()
 {
   if (m_numTimeout == m_timeOuts) {
+    qDeleteAll(m_threads);
+    m_threads.clear();
+    qDeleteAll(m_objects);
+    m_objects.clear();
     emit done();
     return;
   }
@@ -39,6 +43,12 @@ void TestConnections::timeout()
     QObject obj;
     connect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
     disconnect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
+  } else if (m_type == Threaded) {
+    QObject* obj = new QObject(this);
+    connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
+    TestThread* thread = new TestThread(obj, this);
+    m_threads << thread;
+    thread->start();
   } else {
     // delete last objects
     for(int i = 0; i < m_objects.count(); ++i) {
@@ -63,6 +73,31 @@ void TestConnections::timeout()
   }
 }
 
+TestThread::TestThread(QObject *obj, QObject *parent)
+: QThread(parent), m_obj(obj)
+{
+  
+}
+
+TestThread::~TestThread()
+{
+
+}
+
+void TestThread::run()
+{
+  QObject stackObj;
+  connect(&stackObj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+
+  QObject* heapObj = new QObject;
+  connect(heapObj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+  delete heapObj;
+
+  connect(m_obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+  delete m_obj;
+}
+
+
 void TestMain::run_data()
 {
   QTest::addColumn<int>("type");
@@ -70,6 +105,7 @@ void TestMain::run_data()
   QTest::newRow("deleteLater") << static_cast<int>(TestConnections::DeleteLater);
   QTest::newRow("noEventLoop") << static_cast<int>(TestConnections::NoEventLoop);
   QTest::newRow("stack") << static_cast<int>(TestConnections::Stack);
+  QTest::newRow("threaded") << static_cast<int>(TestConnections::Threaded);
 }
 
 void TestMain::run()
