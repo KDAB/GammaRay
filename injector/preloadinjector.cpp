@@ -66,9 +66,13 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
     newArgs += args;
     args = newArgs;
   } else if (env.value("ENDOSCOPE_MEMCHECK").toInt()) {
-    const QString tool = env.value("ENDOSCOPE_MEMCHECK");
     QStringList newArgs;
     newArgs << "valgrind" << "--tool=memcheck" << "--track-origins=yes" << "--num-callers=25";
+    newArgs += args;
+    args = newArgs;
+  } else if (env.value("ENDOSCOPE_HELGRIND").toInt()) {
+    QStringList newArgs;
+    newArgs << "valgrind" << "--tool=helgrind";
     newArgs += args;
     args = newArgs;
   }
