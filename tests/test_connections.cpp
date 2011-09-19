@@ -30,24 +30,32 @@ void TestConnections::timeout()
   }
   m_numTimeout++;
 
-  for(int i = 0; i < m_objects.count(); ++i) {
-    QObject* obj = m_objects.at(i);
-    disconnect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
-    switch(m_type) {
-      case Delete:
-        delete obj;
-        break;
-      case DeleteLater:
-        obj->deleteLater();
-        break;
-    }
-  }
-  m_objects.clear();
-
-  for(int i = 0; i < OBJECTS; ++i) {
+  if (m_type == NoEventLoop) {
+    // directly create and delete objects without eventloop in between
     QObject* obj = new QObject(this);
-    m_objects << obj;
     connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
+    delete obj;
+  } else {
+    // delete last objects
+    for(int i = 0; i < m_objects.count(); ++i) {
+      QObject* obj = m_objects.at(i);
+      switch(m_type) {
+        case Delete:
+          delete obj;
+          break;
+        case DeleteLater:
+          obj->deleteLater();
+          break;
+      }
+    }
+    m_objects.clear();
+
+    // create some new objects
+    for(int i = 0; i < OBJECTS; ++i) {
+      QObject* obj = new QObject(this);
+      m_objects << obj;
+      connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
+    }
   }
 }
 
@@ -56,6 +64,7 @@ void TestMain::run_data()
   QTest::addColumn<int>("type");
   QTest::newRow("delete") << static_cast<int>(TestConnections::Delete);
   QTest::newRow("deleteLater") << static_cast<int>(TestConnections::DeleteLater);
+  QTest::newRow("noEventLoop") << static_cast<int>(TestConnections::NoEventLoop);
 }
 
 void TestMain::run()
