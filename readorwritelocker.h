@@ -1,11 +1,11 @@
 /*
-  objectlistmodel.h
+  connectionmodel.h
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,36 +21,40 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTLISTMODEL_H
-#define ENDOSCOPE_OBJECTLISTMODEL_H
+#ifndef ENDOSCOPE_READORWRITELOCKER_H
+#define ENDOSCOPE_READORWRITELOCKER_H
 
-#include "objectmodelbase.h"
-
-#include <QVector>
-#include <QPointer>
 #include <QReadWriteLock>
 
 namespace Endoscope {
 
-class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
+/**
+ * Lock that can/should be used instead of QReadLocker
+ * when we want to read or write lock and can have
+ * nested functions that first writelock and then readlock.
+ *
+ * Esp. required for the threadsafe models.
+ */
+class ReadOrWriteLocker
 {
-  Q_OBJECT
-  public:
-    explicit ObjectListModel(QObject *parent = 0);
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+public:
+  ReadOrWriteLocker(QReadWriteLock* lock)
+  : m_lock(lock)
+  {
+    if (!m_lock->tryLockForWrite(1)) {
+      m_lock->lockForRead();
+    }
+  }
 
-    void objectRemoved(QObject *obj);
+  ~ReadOrWriteLocker()
+  {
+    m_lock->unlock();
+  }
 
-  public slots:
-    void objectAdded(const QPointer<QObject> &objPtr);
-
-  private:
-    mutable QReadWriteLock m_lock;
-    QVector<QObject*> m_objects;
+private:
+  QReadWriteLock* m_lock;
 };
 
 }
 
-#endif // ENDOSCOPE_OBJECTLISTMODEL_H
+#endif // ENDOSCOPE_READORWRITELOCKER_H

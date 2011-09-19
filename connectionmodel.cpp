@@ -28,6 +28,7 @@
 #include <QMetaMethod>
 #include <QMetaObject>
 #include "probe.h"
+#include "readorwritelocker.h"
 
 using namespace Endoscope;
 
@@ -54,7 +55,9 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
   return true;
 }
 
-ConnectionModel::ConnectionModel(QObject *parent) : QAbstractTableModel(parent)
+ConnectionModel::ConnectionModel(QObject *parent)
+  : QAbstractTableModel(parent)
+  , m_lock(QReadWriteLock::Recursive)
 {
 }
 
@@ -65,6 +68,8 @@ void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
   if (sender == this || receiver == this) {
     return;
   }
+
+  QWriteLocker lock(&m_lock);
   beginInsertRows(QModelIndex(), m_connections.size(), m_connections.size());
   Connection c;
   c.sender = sender;
@@ -105,6 +110,7 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
     normalizedMethod = QMetaObject::normalizedSignature(method);
   }
 
+  QWriteLocker lock(&m_lock);
   for (int i = 0; i < m_connections.size();) {
     const Connection &con = m_connections.at(i);
     if ((sender == 0 || con.rawSender == sender) &&
@@ -122,6 +128,8 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
 
 QVariant ConnectionModel::data(const QModelIndex &index, int role) const
 {
+  ReadOrWriteLocker lock(&m_lock);
+
   if (!index.isValid() || index.row() < 0 || index.row() >= m_connections.size()) {
     return QVariant();
   }
@@ -215,6 +223,7 @@ int ConnectionModel::rowCount(const QModelIndex &parent) const
   if (parent.isValid()) {
     return 0;
   }
+  ReadOrWriteLocker lock(&m_lock);
   return m_connections.size();
 }
 

@@ -28,6 +28,7 @@
 #include <QVector>
 #include <QtCore/qsharedpointer.h>
 #include <QPointer>
+#include <QReadWriteLock>
 
 namespace Endoscope {
 
@@ -67,6 +68,7 @@ class ConnectionModel : public QAbstractTableModel
       bool valid;
     };
     QVector<Connection> m_connections;
+    mutable QReadWriteLock m_lock;
 };
 
 }

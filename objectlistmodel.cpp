@@ -23,15 +23,19 @@
 
 #include "objectlistmodel.h"
 
+#include "readorwritelocker.h"
+
 using namespace Endoscope;
 
 ObjectListModel::ObjectListModel(QObject *parent)
   : ObjectModelBase< QAbstractTableModel >(parent)
+  , m_lock(QReadWriteLock::Recursive)
 {
 }
 
 QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
+  ReadOrWriteLocker lock(&m_lock);
   if (index.row() >= 0 && index.row() < m_objects.size()) {
     QObject *obj = m_objects.at(index.row());
     return dataForObject(obj, index, role);
@@ -52,11 +56,15 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
   if (parent.isValid()) {
     return 0;
   }
+
+  ReadOrWriteLocker lock(&m_lock);
   return m_objects.size();
 }
 
-void Endoscope::ObjectListModel::objectAdded(const QPointer<QObject> &objPtr)
+void ObjectListModel::objectAdded(const QPointer<QObject> &objPtr)
 {
+  QWriteLocker lock(&m_lock);
+
   if (!objPtr) {
     return;
   }
@@ -72,8 +80,10 @@ void Endoscope::ObjectListModel::objectAdded(const QPointer<QObject> &objPtr)
   endInsertRows();
 }
 
-void Endoscope::ObjectListModel::objectRemoved(QObject *obj)
+void ObjectListModel::objectRemoved(QObject *obj)
 {
+  QWriteLocker lock(&m_lock);
+
   const int index = m_objects.indexOf(obj);
   if (index < 0 || index >= m_objects.size()) {
     return;

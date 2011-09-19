@@ -27,6 +27,7 @@
 #include "objectmodelbase.h"
 #include <qabstractitemmodel.h>
 #include <qvector.h>
+#include <QReadWriteLock>
 
 namespace Endoscope {
 
@@ -50,6 +51,7 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
   private:
     QMap<QObject*, QObject*> m_childParentMap;
     QMap<QObject*, QVector<QObject*> > m_parentChildMap;
+    mutable QReadWriteLock m_lock;
 };
 
 }

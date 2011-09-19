@@ -25,15 +25,19 @@
 
 #include <QtCore/QEvent>
 
+#include "readorwritelocker.h"
+
 using namespace Endoscope;
 
 ObjectTreeModel::ObjectTreeModel(QObject *parent)
   : ObjectModelBase< QAbstractItemModel >(parent)
+  , m_lock(QReadWriteLock::Recursive)
 {
 }
 
 void ObjectTreeModel::objectAdded(QObject *obj)
 {
+  QWriteLocker lock(&m_lock);
   if (!obj || m_childParentMap.contains(obj)) {
     return;
   }
@@ -51,6 +55,7 @@ void ObjectTreeModel::objectAdded(QObject *obj)
 
 void ObjectTreeModel::objectRemoved(QObject *obj)
 {
+  QWriteLocker lock(&m_lock);
   if (!m_childParentMap.contains(obj)) {
     return;
   }
@@ -64,6 +69,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
   if (index < 0 || index >= children.size()) {
     return;
   }
+
   beginRemoveRows(parentIndex, index, index);
   children.remove(index);
   m_childParentMap.remove(obj);
@@ -75,6 +81,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
 
 QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 {
+  ReadOrWriteLocker lock(&m_lock);
   QObject *obj = reinterpret_cast<QObject*>(index.internalPointer());
   if (obj) {
     return dataForObject(obj, index, role);
@@ -84,18 +91,21 @@ QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 
 int ObjectTreeModel::rowCount(const QModelIndex &parent) const
 {
+  ReadOrWriteLocker lock(&m_lock);
   QObject *parentObj = reinterpret_cast<QObject*>(parent.internalPointer());
   return m_parentChildMap.value(parentObj).size();
 }
 
 QModelIndex ObjectTreeModel::parent(const QModelIndex &child) const
 {
+  ReadOrWriteLocker lock(&m_lock);
   QObject *childObj = reinterpret_cast<QObject*>(child.internalPointer());
   return indexForObject(m_childParentMap.value(childObj));
 }
 
 QModelIndex ObjectTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
+  ReadOrWriteLocker lock(&m_lock);
   QObject *parentObj = reinterpret_cast<QObject*>(parent.internalPointer());
   const QVector<QObject*> children = m_parentChildMap.value(parentObj);
   if (row < 0 || column < 0 || row >= children.size()  || column >= columnCount()) {

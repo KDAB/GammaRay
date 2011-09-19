@@ -82,6 +82,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
   private slots:
     void delayedInit();
     void objectFullyConstructed(const QPointer<QObject> &obj);
+    void objectRemovedMainThread(const QPointer<QObject> &obj);
 
   private:
     explicit Probe(QObject *parent = 0);
