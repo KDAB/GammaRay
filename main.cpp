@@ -114,8 +114,8 @@ int main(int argc, char **argv)
         if (!injector->errorString().isEmpty()) {
           err << "Error: " << injector->errorString() << endl;
         }
-        return 0;
       }
+      return injector->exitCode();
     }
     return 1;
   }
