@@ -4,6 +4,7 @@
 #include <QtGui/QApplication>
 #include <QtCore/QTimer>
 #include <QtTest/QtTestGui>
+#include <QtCore/QProcessEnvironment>
 
 const int TIMEOUTINTERVAL = 10;
 const int OBJECTS = 50;
@@ -61,7 +62,9 @@ void TestMain::run()
 {
   QFETCH(int, type);
 
-  TestConnections* tester = new TestConnections(static_cast<TestConnections::Type>(type), TIMEOUTS);
+  bool manual = QProcessEnvironment::systemEnvironment().value("ENDOSCOPE_TEST_MANUAL").toInt();
+  TestConnections* tester = new TestConnections(static_cast<TestConnections::Type>(type),
+                                                manual ? -1 : TIMEOUTS);
 
   QEventLoop* loop = new QEventLoop;
   connect(tester, SIGNAL(done()), loop, SLOT(quit()));
