@@ -42,7 +42,8 @@ public:
   QString pid();
 
 private slots:
-   void selectionChanged();
+  void selectionChanged();
+  void linkActivated(const QString&);
 
 private:
   Ui::AttachDialog ui;

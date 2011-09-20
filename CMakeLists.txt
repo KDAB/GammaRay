@@ -176,9 +176,8 @@ if(USE_DETOURS)
   )
 endif()
 
-qt4_wrap_ui(endoscope_runner_srcs
-  attach/attachdialog.ui
-)
+qt4_wrap_ui(endoscope_runner_srcs attach/attachdialog.ui)
+qt4_add_resources(endoscope_runner_srcs resources/endoscope.qrc)
 
 add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
