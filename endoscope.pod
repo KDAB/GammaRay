@@ -36,10 +36,10 @@ Set the specified injection type.
 
 Supported injectors are:
      preload (Linux, Mac OS)
-     gdb (Linux)
+     gdb (Linux. requires gdb to be installed)
      style
      windll (Windows)
-     detours (Windows, optional. requires Microsoft's detours library)
+     detours (Windows. optional but requires Microsoft's detours library)
 
 =back
 
@@ -61,13 +61,10 @@ Supported injectors are:
 
 =back
 
-=head1 PLUGINS
-
-Todo
-
 =head1 EXIT STATUS
 
-Todo
+Exits with 0 under normal operation; otherwise, exists with a positive integer
+indicating a problem occurred while launching or attaching an injector.
 
 =head1 COPYRIGHT
 
@@ -86,10 +83,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-=head1 SEE ALSO
-
-Todo
 
 =head1 AUTHORS
 
