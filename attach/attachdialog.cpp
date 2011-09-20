@@ -28,8 +28,6 @@
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QListView>
-#include <QDesktopServices>
-#include <QUrl>
 
 using namespace Endoscope;
 
@@ -42,6 +40,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   model = new ProcessListFilterModel(this);
   model->populate(processList(), QString::number(qApp->applicationPid()));
   ui.view->setModel(model);
+  ui.view->resizeColumnsToContents();
 
   ui.view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -57,16 +56,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 
   setWindowTitle(tr("Endoscope - Attach to Process"));
   setWindowIcon(QIcon(":endoscope/endoscope128.png"));
-  QString promoLabelText = QLatin1String(
-      "<html>"
-        "<a href='http://www.kdab.com'>"
-          "<img src=':endoscope/kdabproducts.png' />"
-        "</a>"
-      "</html>");
-  ui.promoLabel->setToolTip(tr("Visit KDAB Website"));
-  ui.promoLabel->setText(promoLabelText);
-  connect(ui.promoLabel, SIGNAL(linkActivated(QString)),
-          this, SLOT(linkActivated(QString)));
 
   selectionChanged();
 }
@@ -79,11 +68,6 @@ void AttachDialog::selectionChanged()
 QString AttachDialog::pid() const
 {
   return model->processIdAt(ui.view->currentIndex());
-}
-
-void AttachDialog::linkActivated(const QString &link)
-{
-  QDesktopServices::openUrl(QUrl(link));
 }
 
 #include "attachdialog.moc"

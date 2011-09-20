@@ -149,6 +149,7 @@ set(endoscope_runner_srcs
   injector/interactiveprocess.cpp
   probefinder.cpp
   main.cpp
+  promolabel.cpp
 
   attach/attachdialog.cpp
   attach/processfiltermodel.cpp
@@ -218,6 +219,7 @@ set(endoscope_srcs
   tools/textdocumentinspector/textdocumentmodel.cpp
   tools/textdocumentinspector/textdocumentformatmodel.cpp
   toolmodel.cpp
+  promolabel.cpp
 
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp

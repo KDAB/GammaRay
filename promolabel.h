@@ -1,5 +1,5 @@
 /*
-  attachdialog.h
+  mainwindow.cpp
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
@@ -21,34 +21,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ATTACHDIALOG_H
-#define ATTACHDIALOG_H
+#ifndef PROMOLABEL_H
+#define PROMOLABEL_H
 
-#include <QDialog>
-
-#include "ui_attachdialog.h"
-
-class ProcessListFilterModel;
+#include <QLabel>
 
 namespace Endoscope {
 
-class AttachDialog : public QDialog
+class PromoLabel : public QLabel
 {
   Q_OBJECT
 
   public:
-    explicit AttachDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-
-    QString pid() const;
+    explicit PromoLabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
   private slots:
-    void selectionChanged();
-
-  private:
-    Ui::AttachDialog ui;
-    ProcessListFilterModel* model;
+    void openWebsite(const QString &link);
 };
 
-} // namespace Endoscope
+}
 
-#endif // ATTACHDIALOG_H
+#endif // PROMOLABEL_H

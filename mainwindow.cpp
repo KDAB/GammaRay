@@ -29,6 +29,7 @@
 #include "objecttypefilterproxymodel.h"
 #include "toolmodel.h"
 #include "toolfactory.h"
+#include "promolabel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -68,6 +69,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   connect(m_toolSelector, SIGNAL(activated(int)), SLOT(toolSelected()));
   ui.mainToolBar->addWidget(new QLabel(tr("Select Probe:")));
   ui.mainToolBar->addWidget(m_toolSelector);
+
+  QWidget* promo = new QWidget;
+  QHBoxLayout *promoLayout = new QHBoxLayout;
+  promoLayout->setContentsMargins(0, 0, 0, 0);
+  promoLayout->addStretch();
+  promoLayout->addWidget(new PromoLabel(this));
+  promo->setLayout(promoLayout);
+  ui.mainToolBar->addWidget(promo);
+
   toolSelected();
 
   setWindowTitle(tr("%1 (%2)").arg(progName).arg(qApp->applicationName()));

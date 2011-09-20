@@ -1,11 +1,11 @@
 /*
-  attachdialog.h
+  mainwindow.cpp
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Milian Wolff <milian.wolff@kdab.com>
+  Author: Volker Krause <volker.krause@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,34 +21,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ATTACHDIALOG_H
-#define ATTACHDIALOG_H
+#include "promolabel.h"
 
-#include <QDialog>
+#include <QDesktopServices>
+#include <QUrl>
 
-#include "ui_attachdialog.h"
+using namespace Endoscope;
 
-class ProcessListFilterModel;
-
-namespace Endoscope {
-
-class AttachDialog : public QDialog
+PromoLabel::PromoLabel(QWidget *parent, Qt::WindowFlags f)
+: QLabel(parent, f)
 {
-  Q_OBJECT
+  setText("<html>"
+            "<a href='http://www.kdab.com'>"
+              "<img src=':endoscope/kdabproducts.png' />"
+            "</a>"
+          "</html>");
+  setToolTip(tr("Visit KDAB Website"));
+  connect(this, SIGNAL(linkActivated(QString)),
+          this, SLOT(openWebsite(QString)));
+}
 
-  public:
-    explicit AttachDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+void PromoLabel::openWebsite(const QString &link)
+{
+  QDesktopServices::openUrl(QUrl(link));
+}
 
-    QString pid() const;
-
-  private slots:
-    void selectionChanged();
-
-  private:
-    Ui::AttachDialog ui;
-    ProcessListFilterModel* model;
-};
-
-} // namespace Endoscope
-
-#endif // ATTACHDIALOG_H
+#include "promolabel.moc"

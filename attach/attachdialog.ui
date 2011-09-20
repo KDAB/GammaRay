@@ -31,7 +31,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="promoLabel">
+       <widget class="Endoscope::PromoLabel" name="promoLabel">
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -58,6 +58,11 @@
    <extends>QWidget</extends>
    <header>kfilterproxysearchline.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Endoscope::PromoLabel</class>
+   <extends>QLabel</extends>
+   <header>promolabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>
