@@ -25,23 +25,25 @@
 
 #include <cstdio>
 
+#ifdef Q_WS_WIN
+#include <io.h>
+#define dup _dup
+#define dup2 _dup2
+#endif
+
 int InteractiveProcess::stdinClone = -1;
 
 InteractiveProcess::InteractiveProcess(QObject *parent)
   : QProcess(parent)
 {
-#if !defined(_WIN32)
   if (stdinClone == -1) {
     stdinClone = ::dup(fileno(stdin));
   }
-#endif
 }
 
 void InteractiveProcess::setupChildProcess()
 {
-#if !defined(_WIN32)
   ::dup2(stdinClone, fileno(stdin));
-#endif
 }
 
 #include "interactiveprocess.moc"
