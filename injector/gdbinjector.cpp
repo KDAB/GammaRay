@@ -134,8 +134,6 @@ void GdbInjector::readyReadStandardError()
 {
   const QString error = m_process->readAllStandardError();
 
-
-
   if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
     mManualError = true;
     mErrorString = tr("The debuggee application is missing debug symbols which are required\n"
