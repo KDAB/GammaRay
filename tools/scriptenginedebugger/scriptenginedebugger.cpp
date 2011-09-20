@@ -35,6 +35,9 @@
 
 using namespace Endoscope;
 
+///NOTE: for crashes related to script engine debugger on shutdown, see:
+///      https://bugreports.qt.nokia.com/browse/QTBUG-21548
+
 ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent), ui(new Ui::ScriptEngineDebugger)
 {
