@@ -39,7 +39,7 @@ Supported injectors are:
      gdb (Linux)
      style
      windll (Windows)
-     detours (Windows)
+     detours (Windows, optional. requires Microsoft's detours library)
 
 =back
 

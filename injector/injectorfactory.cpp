@@ -53,7 +53,7 @@ AbstractInjector::Ptr createInjector(const QString &name)
   if (name == QLatin1String("windll")) {
     return AbstractInjector::Ptr(new WinDllInjector);
   }
-#if defined(USE_DETOURS)
+#ifdef USE_DETOURS
   if (name == QLatin1String("detour")) {
     return AbstractInjector::Ptr(new DetourInjector);
   }

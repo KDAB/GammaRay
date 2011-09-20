@@ -75,8 +75,6 @@ include_directories(
 
 if(USE_DETOURS)
   add_definitions(-DUSE_DETOURS)
-  include_directories(${CMAKE_SOURCE_DIR}/3rdparty/detours)
-  add_subdirectory(3rdparty/detours)
 endif()
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
