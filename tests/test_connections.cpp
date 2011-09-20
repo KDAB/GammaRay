@@ -125,6 +125,6 @@ void TestMain::run()
 }
 
 
-QTEST_MAIN(TestMain);
+QTEST_MAIN(TestMain)
 
 #include "test_connections.moc"
