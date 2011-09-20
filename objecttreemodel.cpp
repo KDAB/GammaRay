@@ -30,8 +30,8 @@
 using namespace Endoscope;
 
 ObjectTreeModel::ObjectTreeModel(QObject *parent)
-  : ObjectModelBase< QAbstractItemModel >(parent)
-  , m_lock(QReadWriteLock::Recursive)
+  : ObjectModelBase< QAbstractItemModel >(parent),
+    m_lock(QReadWriteLock::Recursive)
 {
 }
 

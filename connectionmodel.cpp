@@ -56,8 +56,8 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
 }
 
 ConnectionModel::ConnectionModel(QObject *parent)
-  : QAbstractTableModel(parent)
-  , m_lock(QReadWriteLock::Recursive)
+  : QAbstractTableModel(parent),
+    m_lock(QReadWriteLock::Recursive)
 {
 }
 

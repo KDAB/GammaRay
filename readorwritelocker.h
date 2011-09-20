@@ -37,22 +37,22 @@ namespace Endoscope {
  */
 class ReadOrWriteLocker
 {
-public:
-  ReadOrWriteLocker(QReadWriteLock* lock)
-  : m_lock(lock)
-  {
-    if (!m_lock->tryLockForWrite()) {
-      m_lock->lockForRead();
+  public:
+    ReadOrWriteLocker(QReadWriteLock *lock)
+      : m_lock(lock)
+    {
+      if (!m_lock->tryLockForWrite()) {
+        m_lock->lockForRead();
+      }
     }
-  }
 
-  ~ReadOrWriteLocker()
-  {
-    m_lock->unlock();
-  }
+    ~ReadOrWriteLocker()
+    {
+      m_lock->unlock();
+    }
 
-private:
-  QReadWriteLock* m_lock;
+  private:
+    QReadWriteLock *m_lock;
 };
 
 }

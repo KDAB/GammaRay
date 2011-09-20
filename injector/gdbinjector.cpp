@@ -72,8 +72,10 @@ bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeF
 bool GdbInjector::startGdb(const QStringList &args)
 {
   m_process.reset(new QProcess);
-  connect(m_process.data(), SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
-  connect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
+  connect(m_process.data(), SIGNAL(readyReadStandardError()),
+          this, SLOT(readyReadStandardError()));
+  connect(m_process.data(), SIGNAL(readyReadStandardOutput()),
+          this, SLOT(readyReadStandardOutput()));
   m_process->setProcessChannelMode(QProcess::SeparateChannels);
   m_process->start(QLatin1String("gdb"), args);
   bool status = m_process->waitForStarted(-1);
