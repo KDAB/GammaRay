@@ -1,5 +1,5 @@
 /*
-  connectionmodel.h
+  readorwritelocker.h
 
   This file is part of Endoscope, the Qt application inspection and
   manipulation tool.
