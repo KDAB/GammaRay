@@ -149,11 +149,24 @@ set(endoscope_runner_srcs
   injector/interactiveprocess.cpp
   probefinder.cpp
   main.cpp
+
+  attach/attachdialog.cpp
+  attach/processfiltermodel.cpp
+
+  3rdparty/kde/kidentityproxymodel.cpp
+  3rdparty/kde/krecursivefilterproxymodel.cpp
+  3rdparty/kde/kfilterproxysearchline.cpp
 )
 if(NOT WIN32)
   set(endoscope_runner_srcs
     ${endoscope_runner_srcs}
     injector/gdbinjector.cpp
+    attach/processlist_unix.cpp
+  )
+else()
+  set(endoscope_runner_srcs
+    ${endoscope_runner_srcs}
+    attach/processlist_win.cpp
   )
 endif()
 if(USE_DETOURS)
@@ -163,8 +176,12 @@ if(USE_DETOURS)
   )
 endif()
 
+qt4_wrap_ui(endoscope_runner_srcs
+  attach/attachdialog.ui
+)
+
 add_executable(endoscope ${endoscope_runner_srcs})
-target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
+target_link_libraries(endoscope ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 if(USE_DETOURS)
   target_link_libraries(endoscope detours)
 endif()

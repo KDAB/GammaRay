@@ -25,8 +25,9 @@
 #include "config-endoscope-version.h"
 #include "probefinder.h"
 #include "injector/injectorfactory.h"
+#include "attach/attachdialog.h"
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDebug>
 #include <QStringList>
 
@@ -56,7 +57,7 @@ static void usage(const char *argv0)
 
 int main(int argc, char **argv)
 {
-  QCoreApplication app(argc, argv);
+  QApplication app(argc, argv);
   QStringList args = app.arguments();
   args.takeFirst(); // that's us
 
@@ -85,8 +86,16 @@ int main(int argc, char **argv)
   }
 
   if (args.isEmpty() && pid <= 0) {
-    usage(argv[0]);
-    return 1;
+    AttachDialog dialog;
+    if (dialog.exec() == QDialog::Accepted) {
+      bool ok;
+      pid = dialog.pid().toInt(&ok);
+      if (!ok) {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
   }
 
   const QString probeDll = ProbeFinder::findProbe(QLatin1String("endoscope_probe"));
