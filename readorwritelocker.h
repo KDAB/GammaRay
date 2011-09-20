@@ -41,7 +41,7 @@ public:
   ReadOrWriteLocker(QReadWriteLock* lock)
   : m_lock(lock)
   {
-    if (!m_lock->tryLockForWrite(1)) {
+    if (!m_lock->tryLockForWrite()) {
       m_lock->lockForRead();
     }
   }
