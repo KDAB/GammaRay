@@ -26,12 +26,14 @@
 #include <QDebug>
 #include <QProcess>
 #include <QStringList>
+#include <QCoreApplication>
 
 #include <dlfcn.h>
 
 using namespace Endoscope;
 
 GdbInjector::GdbInjector() :
+  mManualError(false),
   mExitCode(-1),
   mProcessError(QProcess::UnknownError),
   mExitStatus(QProcess::NormalExit)
@@ -70,7 +72,9 @@ bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeF
 bool GdbInjector::startGdb(const QStringList &args)
 {
   m_process.reset(new QProcess);
-//   m_process->setProcessChannelMode(QProcess::ForwardedChannels);
+  connect(m_process.data(), SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
+  connect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
+  m_process->setProcessChannelMode(QProcess::SeparateChannels);
   m_process->start(QLatin1String("gdb"), args);
   bool status = m_process->waitForStarted(-1);
 
@@ -97,9 +101,11 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
   m_process->waitForFinished(-1);
 
   mExitCode = m_process->exitCode();
-  mProcessError = m_process->error();
   mExitStatus = m_process->exitStatus();
-  mErrorString = m_process->errorString();
+  if (!mManualError) {
+    mProcessError = m_process->error();
+    mErrorString = m_process->errorString();
+  }
 
   return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
 }
@@ -123,3 +129,32 @@ QString GdbInjector::errorString()
 {
   return mErrorString;
 }
+
+void GdbInjector::readyReadStandardError()
+{
+  const QString error = m_process->readAllStandardError();
+
+  if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
+    m_process->kill();
+    disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, 0);
+    disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, 0);
+
+    mManualError = true;
+    mProcessError = QProcess::FailedToStart;
+    mErrorString = tr("The debuggee application is missing debug symbols which are required\n"
+                      "for Endoscope's GDB injector. Please recompile the debuggee.\n\n"
+                      "GDB error was: %1").arg(error);
+    return;
+  }
+
+  static QTextStream out(stderr);
+  out << "ERROR: " << error << flush;
+}
+
+void GdbInjector::readyReadStandardOutput()
+{
+//   static QTextStream out(stdout);
+//   out << m_process->readAllStandardOutput() << flush;
+}
+
+#include "gdbinjector.moc"

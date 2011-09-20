@@ -29,8 +29,9 @@
 
 namespace Endoscope {
 
-class GdbInjector : public AbstractInjector
+class GdbInjector : public QObject, public AbstractInjector
 {
+  Q_OBJECT
   public:
     GdbInjector();
     QString name() const {
@@ -48,7 +49,12 @@ class GdbInjector : public AbstractInjector
     bool startGdb(const QStringList &args);
     bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
+  private slots:
+    void readyReadStandardError();
+    void readyReadStandardOutput();
+
   private:
+    bool mManualError;
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
