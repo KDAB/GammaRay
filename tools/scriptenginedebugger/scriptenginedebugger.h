@@ -28,6 +28,8 @@
 #include <qwidget.h>
 #include <qscriptengine.h>
 
+class QScriptEngineDebugger;
+
 namespace Endoscope {
 
 namespace Ui { class ScriptEngineDebugger; }
@@ -37,12 +39,13 @@ class ScriptEngineDebugger : public QWidget
   Q_OBJECT
   public:
     explicit ScriptEngineDebugger(ProbeInterface *probe, QWidget *parent = 0);
-
+    virtual ~ScriptEngineDebugger();
   private slots:
     void scriptEngineSelected(int index);
 
   private:
     QScopedPointer<Ui::ScriptEngineDebugger> ui;
+    QScriptEngineDebugger *debugger;
 };
 
 class ScriptEngineDebuggerFactory

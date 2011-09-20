@@ -37,9 +37,11 @@ using namespace Endoscope;
 
 ///NOTE: for crashes related to script engine debugger on shutdown, see:
 ///      https://bugreports.qt.nokia.com/browse/QTBUG-21548
+///      Also it seems that we get another crash when the interrupt action
+///      was triggered and we close the mainwindow.
 
 ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::ScriptEngineDebugger)
+  : QWidget(parent), ui(new Ui::ScriptEngineDebugger), debugger(new QScriptEngineDebugger(this))
 {
   ui->setupUi(this);
 
@@ -52,9 +54,16 @@ ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface *probe, QWidget *paren
   ui->scriptEngineComboBox->setModel(singleColumnProxy);
   connect(ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)));
 
+  ui->verticalLayout_10->addWidget(debugger->standardWindow());
+
   if (ui->scriptEngineComboBox->count()) {
     scriptEngineSelected(0);
   }
+}
+
+ScriptEngineDebugger::~ScriptEngineDebugger()
+{
+  debugger->detach();
 }
 
 void ScriptEngineDebugger::scriptEngineSelected(int index)
@@ -63,11 +72,10 @@ void ScriptEngineDebugger::scriptEngineSelected(int index)
     ui->scriptEngineComboBox->itemData(index, ObjectListModel::ObjectRole).value<QObject*>();
   QScriptEngine *engine = qobject_cast<QScriptEngine*>(obj);
   if (engine) {
-    QScriptEngineDebugger *debugger = new QScriptEngineDebugger(this);
     qDebug() << "Attaching debugger" << engine;
     debugger->attachTo(engine);
-    debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
-    debugger->standardWindow()->show();
+// FIXME: if we'd do that, we'd get crashes on shutdown.
+//     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
   }
 }
 
