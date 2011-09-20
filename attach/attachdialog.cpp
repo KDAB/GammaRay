@@ -76,7 +76,7 @@ void AttachDialog::selectionChanged()
   ui.buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui.view->currentIndex().isValid());
 }
 
-QString AttachDialog::pid()
+QString AttachDialog::pid() const
 {
   return model->processIdAt(ui.view->currentIndex());
 }

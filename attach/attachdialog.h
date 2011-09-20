@@ -36,18 +36,18 @@ class AttachDialog : public QDialog
 {
   Q_OBJECT
 
-public:
-  explicit AttachDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+  public:
+    explicit AttachDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-  QString pid();
+    QString pid() const;
 
-private slots:
-  void selectionChanged();
-  void linkActivated(const QString&);
+  private slots:
+    void selectionChanged();
+    void linkActivated(const QString&);
 
-private:
-  Ui::AttachDialog ui;
-  ProcessListFilterModel* model;
+  private:
+    Ui::AttachDialog ui;
+    ProcessListFilterModel* model;
 };
 
 } // namespace Endoscope
