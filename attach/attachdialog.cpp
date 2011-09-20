@@ -40,7 +40,8 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   model = new ProcessListFilterModel(this);
   model->populate(processList(), QString::number(qApp->applicationPid()));
   ui.view->setModel(model);
-  ui.view->resizeColumnsToContents();
+  // hide state
+  ui.view->hideColumn(2);
 
   ui.view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 

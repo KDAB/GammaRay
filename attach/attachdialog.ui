@@ -22,7 +22,7 @@
     <widget class="KFilterProxySearchLine" name="filter" native="true"/>
    </item>
    <item>
-    <widget class="QTableView" name="view"/>
+    <widget class="QTreeView" name="view"/>
    </item>
    <item>
     <widget class="QWidget" name="widget" native="true">
