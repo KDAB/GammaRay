@@ -25,25 +25,38 @@
 
 #include <QDesktopServices>
 #include <QUrl>
+#include <QDebug>
+#include <QMouseEvent>
 
 using namespace Endoscope;
 
 PromoLabel::PromoLabel(QWidget *parent, Qt::WindowFlags f)
 : QLabel(parent, f)
 {
-  setText("<html>"
-            "<a href='http://www.kdab.com'>"
-              "<img src=':endoscope/kdabproducts.png' />"
-            "</a>"
-          "</html>");
+  // load image and adapt it to user's foreground color
+  QColor foreground = palette().foreground().color();
+  QImage img(QString(":endoscope/kdabproducts.png"));
+  img = img.alphaChannel();
+  for(int i = 0; i < img.colorCount(); ++i) {
+    foreground.setAlpha(qGray(img.color(i)));
+    img.setColor(i, foreground.rgba());
+  }
+  setPixmap(QPixmap::fromImage(img));
+  // done image
+
+  setCursor(QCursor(Qt::PointingHandCursor));
   setToolTip(tr("Visit KDAB Website"));
-  connect(this, SIGNAL(linkActivated(QString)),
-          this, SLOT(openWebsite(QString)));
 }
 
-void PromoLabel::openWebsite(const QString &link)
+void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
 {
-  QDesktopServices::openUrl(QUrl(link));
+  if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
+    QDesktopServices::openUrl(QUrl("http://www.kdab.com"));
+    ev->accept();
+    return;
+  }
+
+  QLabel::mouseReleaseEvent(ev);
 }
 
 #include "promolabel.moc"

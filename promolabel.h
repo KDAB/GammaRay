@@ -35,8 +35,8 @@ class PromoLabel : public QLabel
   public:
     explicit PromoLabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-  private slots:
-    void openWebsite(const QString &link);
+  protected:
+    virtual void mouseReleaseEvent(QMouseEvent* ev);
 };
 
 }
