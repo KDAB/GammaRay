@@ -23,6 +23,8 @@
 
 #include "gdbinjector.h"
 
+#include "splashscreen.h"
+
 #include <QDebug>
 #include <QProcess>
 #include <QStringList>
@@ -43,6 +45,8 @@ GdbInjector::GdbInjector() :
 bool GdbInjector::launch(const QStringList &programAndArgs,
                         const QString &probeDll, const QString &probeFunc)
 {
+  showSplashScreen();
+
   QStringList gdbArgs;
   gdbArgs.push_back(QLatin1String("--args"));
   gdbArgs.append(programAndArgs);
@@ -108,6 +112,8 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
     mProcessError = m_process->error();
     mErrorString = m_process->errorString();
   }
+
+  hideSplashScreen();
 
   return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
 }

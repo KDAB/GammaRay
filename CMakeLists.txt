@@ -150,6 +150,7 @@ set(endoscope_runner_srcs
   probefinder.cpp
   main.cpp
   promolabel.cpp
+  splashscreen.cpp
 
   attach/attachdialog.cpp
   attach/processmodel.cpp
