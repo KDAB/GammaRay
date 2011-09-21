@@ -38,10 +38,10 @@
 
 struct ProcData
 {
-    QString ppid;
-    QString name;
-    QString image;
-    QString state;
+  QString ppid;
+  QString name;
+  QString image;
+  QString state;
 };
 
 extern QList<ProcData> processList();
