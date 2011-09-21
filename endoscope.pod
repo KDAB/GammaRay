@@ -14,6 +14,12 @@ Endoscope inspects runtime internals of a Qt-application, such as:
     graphics views, javascript debugger, resources,
     state machines, meta types, fonts, codecs, text documents
 
+When run without any options, endoscope will present a list of running
+Qt-applications from which you can attach the selected injector.
+Else, you can attach to a running process by specifying its pid,
+or you can start a new Qt-application by specifying its name
+(and optional arguments).
+
 =head1 OPTIONS
 
 =over 4

@@ -39,7 +39,7 @@ QTextStream err(stderr);
 static void usage(const char *argv0)
 {
   out << "Usage: " << argv0
-      << " [--injector <injector>] --pid <pid> | <application> <args>" << endl;
+      << " [--injector <injector>] [--pid <pid> | <application> <args>]" << endl;
   out << "" << endl;
   out << "Inspect runtime internals of a Qt-application, such as:" << endl;
   out << "  QObject tree, properties, signal/slots, widgets, models," << endl;
@@ -53,6 +53,14 @@ static void usage(const char *argv0)
   out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
   out << " -h, --help               \tprint program help and exit" << endl;
   out << " -v, --version            \tprint program version and exit" << endl;
+  out << endl
+      << "When run without any options, " << argv0 << " will present a list of running\n"
+      << "Qt-applications from which you can attach the selected injector. Else,\n"
+      << "you can attach to a running process by specifying its pid, or you can\n"
+      << "start a new Qt-application by specifying its name (and optional arguments)."
+      << endl;
+
+
 }
 
 int main(int argc, char **argv)
