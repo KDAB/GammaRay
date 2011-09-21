@@ -43,6 +43,17 @@ struct ProcData
   QString image;
   QString state;
   QString user;
+  enum AppType {
+    Unknown,
+    QtApp,
+    NoQtApp
+  };
+  AppType type;
+
+  ProcData()
+  : type(Unknown)
+  {
+  }
 };
 
 extern QList<ProcData> processList();

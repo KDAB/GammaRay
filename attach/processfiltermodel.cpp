@@ -46,9 +46,6 @@ using namespace Endoscope;
 ProcessFilterModel::ProcessFilterModel(QObject *parent)
   : QSortFilterProxyModel(parent)
 {
-  setFilterCaseSensitivity(Qt::CaseInsensitive);
-  setFilterKeyColumn(1);
-
   m_currentProcId = QString::number(qApp->applicationPid());
   m_currentUser = getUser();
 #ifndef Q_WS_WIN
@@ -71,11 +68,25 @@ bool ProcessFilterModel::lessThan(const QModelIndex &left, const QModelIndex &ri
 
 bool ProcessFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-  if (!m_currentUser.isEmpty()) {
-    if (ProcessModel* source = dynamic_cast<ProcessModel*>(sourceModel())) {
-      return source->dataForRow(source_row).user == m_currentUser;
-    }
+  ProcessModel* source = dynamic_cast<ProcessModel*>(sourceModel());
+  if (!source) {
+    return true;
   }
+
+  const ProcData& data = source->dataForRow(source_row);
+
+  if (data.type == ProcData::NoQtApp) {
+    return false;
+  }
+
+  if (data.ppid == m_currentProcId) {
+    return false;
+  }
+
+  if (!m_currentUser.isEmpty() && data.user != m_currentUser) {
+    return false;
+  }
+
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
@@ -84,15 +95,4 @@ bool ProcessFilterModel::filterAcceptsColumn(int source_column,
 {
   // hide user row if current user was found
   return m_currentUser.isEmpty() || source_column != ProcessModel::UserColumn;
-}
-
-Qt::ItemFlags ProcessFilterModel::flags(const QModelIndex &index) const
-{
-  Qt::ItemFlags flags = QSortFilterProxyModel::flags(index);
-
-  if (index.data(ProcessModel::PIDRole).toString() == m_currentProcId) {
-    return (flags & (~Qt::ItemIsEnabled));
-  }
-
-  return flags;
 }

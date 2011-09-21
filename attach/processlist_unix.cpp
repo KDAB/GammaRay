@@ -112,6 +112,23 @@ QList<ProcData> processList()
         // PPID is element 3
 
         proc.user = QFileInfo(file).owner();
+        file.close();
+
+        QFile maps(QLatin1String("/proc/") + procId + QLatin1String("/maps"));
+        if (!maps.open(QIODevice::ReadOnly))
+          continue; // process may have exited
+
+        proc.type = ProcData::NoQtApp;
+        forever {
+          const QByteArray line = maps.readLine();
+          if (line.isEmpty()) {
+            break;
+          }
+          if (line.contains(QByteArray("/libQtCore.so"))) {
+            proc.type = ProcData::QtApp;
+            break;
+          }
+        }
 
         rc.push_back(proc);
     }
