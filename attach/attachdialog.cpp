@@ -24,6 +24,7 @@
 #include "attachdialog.h"
 
 #include "processfiltermodel.h"
+#include "processmodel.h"
 
 #include <QPushButton>
 #include <QStandardItemModel>
@@ -37,11 +38,15 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   ui.setupUi(this);
   ui.buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Attach"));
 
-  model = new ProcessListFilterModel(this);
-  model->populate(processList(), QString::number(qApp->applicationPid()));
-  ui.view->setModel(model);
+  m_model = new ProcessModel(this);
+  m_model->addProcesses(processList());
+
+  m_proxyModel = new ProcessFilterModel(this);
+  m_proxyModel->setSourceModel(m_model);
+
+  ui.view->setModel(m_proxyModel);
   // hide state
-  ui.view->hideColumn(2);
+  ui.view->hideColumn(ProcessModel::StateColumn);
 
   ui.view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -53,7 +58,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   connect(ui.view, SIGNAL(activated(QModelIndex)),
           ui.buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
 
-  ui.filter->setProxy(model);
+  ui.filter->setProxy(m_proxyModel);
 
   setWindowTitle(tr("Endoscope - Attach to Process"));
   setWindowIcon(QIcon(":endoscope/endoscope128.png"));
@@ -68,7 +73,7 @@ void AttachDialog::selectionChanged()
 
 QString AttachDialog::pid() const
 {
-  return model->processIdAt(ui.view->currentIndex());
+  return ui.view->currentIndex().data(ProcessModel::PIDRole).toString();
 }
 
 #include "attachdialog.moc"

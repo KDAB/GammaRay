@@ -152,6 +152,7 @@ set(endoscope_runner_srcs
   promolabel.cpp
 
   attach/attachdialog.cpp
+  attach/processmodel.cpp
   attach/processfiltermodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp

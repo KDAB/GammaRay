@@ -28,16 +28,17 @@
 
 #include "ui_attachdialog.h"
 
-class ProcessListFilterModel;
-
 namespace Endoscope {
+
+class ProcessModel;
+class ProcessFilterModel;
 
 class AttachDialog : public QDialog
 {
   Q_OBJECT
 
   public:
-    explicit AttachDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit AttachDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
     QString pid() const;
 
@@ -46,7 +47,8 @@ class AttachDialog : public QDialog
 
   private:
     Ui::AttachDialog ui;
-    ProcessListFilterModel* model;
+    ProcessModel *m_model;
+    ProcessFilterModel *m_proxyModel;
 };
 
 } // namespace Endoscope
