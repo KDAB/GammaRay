@@ -35,11 +35,13 @@ class ProcessFilterModel : public QSortFilterProxyModel
     explicit ProcessFilterModel(QObject *parent);
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool filterAcceptsColumn(int source_column, const QModelIndex& source_parent) const;
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
 
   private:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
     QString m_currentProcId;
+    QString m_currentUser;
 };
 
 }

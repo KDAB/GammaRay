@@ -26,6 +26,21 @@
 
 #include <QCoreApplication>
 
+#ifdef Q_WS_WIN
+QString getUser()
+{
+  ///FIXME: implement this properly
+  return QString();
+}
+#else
+#include <stdio.h>
+
+QString getUser()
+{
+  return QString::fromLocal8Bit(cuserid(0));
+}
+#endif
+
 using namespace Endoscope;
 
 ProcessFilterModel::ProcessFilterModel(QObject *parent)
@@ -35,6 +50,13 @@ ProcessFilterModel::ProcessFilterModel(QObject *parent)
   setFilterKeyColumn(1);
 
   m_currentProcId = QString::number(qApp->applicationPid());
+  m_currentUser = getUser();
+#ifndef Q_WS_WIN
+  if (m_currentUser == QLatin1String("root")) {
+    // empty current user == no filter. as root we want to show all
+    m_currentUser.clear();
+  }
+#endif
 }
 
 bool ProcessFilterModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
@@ -49,8 +71,19 @@ bool ProcessFilterModel::lessThan(const QModelIndex &left, const QModelIndex &ri
 
 bool ProcessFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-  ///TODO
+  if (!m_currentUser.isEmpty()) {
+    if (ProcessModel* source = dynamic_cast<ProcessModel*>(sourceModel())) {
+      return source->dataForRow(source_row).user == m_currentUser;
+    }
+  }
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+}
+
+bool ProcessFilterModel::filterAcceptsColumn(int source_column,
+                                             const QModelIndex &/*source_parent*/) const
+{
+  // hide user row if current user was found
+  return m_currentUser.isEmpty() || source_column != ProcessModel::UserColumn;
 }
 
 Qt::ItemFlags ProcessFilterModel::flags(const QModelIndex &index) const

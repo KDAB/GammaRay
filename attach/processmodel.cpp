@@ -66,6 +66,11 @@ ProcData ProcessModel::dataForIndex(const QModelIndex &index) const
   return m_data.at(index.row());
 }
 
+ProcData ProcessModel::dataForRow(int row) const
+{
+  return m_data.at(row);
+}
+
 QVariant ProcessModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (role != Qt::DisplayRole || orientation != Qt::Horizontal) {
