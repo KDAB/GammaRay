@@ -26,18 +26,18 @@
 
 #include <QCoreApplication>
 
-#ifdef Q_WS_WIN
-QString getUser()
-{
-  ///FIXME: implement this properly
-  return QString();
+#if defined(_WIN32)
+#include <windows.h>
+#include <lmcons.h>
+static QString qGetLogin() {
+  char winUserName[UNLEN + 1]; // UNLEN is defined in LMCONS.H
+  DWORD winUserNameSize = sizeof(winUserName);
+  GetUserNameA( winUserName, &winUserNameSize );
+  return QString::fromLocal8Bit( winUserName );
 }
 #else
-#include <stdio.h>
-
-QString getUser()
-{
-  return QString::fromLocal8Bit(cuserid(0));
+static QString qGetLogin(){
+  return QString::fromLocal8Bit( getlogin() );
 }
 #endif
 
@@ -47,7 +47,7 @@ ProcessFilterModel::ProcessFilterModel(QObject *parent)
   : QSortFilterProxyModel(parent)
 {
   m_currentProcId = QString::number(qApp->applicationPid());
-  m_currentUser = getUser();
+  m_currentUser = qGetLogin();
 #ifndef Q_WS_WIN
   if (m_currentUser == QLatin1String("root")) {
     // empty current user == no filter. as root we want to show all
