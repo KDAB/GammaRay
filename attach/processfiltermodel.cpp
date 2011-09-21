@@ -41,9 +41,10 @@ bool ProcessFilterModel::lessThan(const QModelIndex &left, const QModelIndex &ri
 {
   const QString l = sourceModel()->data(left).toString();
   const QString r = sourceModel()->data(right).toString();
-  if (left.column() == 0)
+  if (left.column() == ProcessModel::PIDColumn)
       return l.toInt() < r.toInt();
-  return l < r;
+
+  return l.compare(r, Qt::CaseInsensitive) <= 0;
 }
 
 bool ProcessFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
