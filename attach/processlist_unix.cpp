@@ -48,9 +48,9 @@ static bool isUnixProcessId(const QString &procname)
 static QList<ProcData> unixProcessListPS()
 {
 #ifdef Q_OS_MAC
-    static const char formatC[] = "pid state command";
+    static const char formatC[] = "pid state command user";
 #else
-    static const char formatC[] = "pid,state,cmd";
+    static const char formatC[] = "pid,state,cmd,user";
 #endif
     QList<ProcData> rc;
     QProcess psProcess;
@@ -66,14 +66,13 @@ static QList<ProcData> unixProcessListPS()
     const int lineCount = lines.size();
     const QChar blank = QLatin1Char(' ');
     for (int l = 1; l < lineCount; l++) { // Skip header
-        const QString line = lines.at(l).simplified();
-        const int pidSep = line.indexOf(blank);
-        const int cmdSep = pidSep != -1 ? line.indexOf(blank, pidSep + 1) : -1;
-        if (cmdSep > 0) {
+        const QStringList line = lines.at(l).simplified().split(blank);
+        if (line.count() == 4) {
             ProcData procData;
-            procData.ppid = line.left(pidSep);
-            procData.state = line.mid(pidSep + 1, cmdSep - pidSep - 1);
-            procData.name = line.mid(cmdSep + 1);
+            procData.ppid = line.at(0);
+            procData.state = line.at(1);
+            procData.name = line.at(2);
+            procData.user = line.at(3);
             rc.push_back(procData);
         }
     }
@@ -111,6 +110,9 @@ QList<ProcData> processList()
         }
         proc.state = data.at(2);
         // PPID is element 3
+
+        proc.user = QFileInfo(file).owner();
+
         rc.push_back(proc);
     }
     return rc;

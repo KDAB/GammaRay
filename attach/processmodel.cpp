@@ -78,6 +78,8 @@ QVariant ProcessModel::headerData(int section, Qt::Orientation orientation, int 
     return tr("Name");
   } else if (section == StateColumn) {
     return tr("State");
+  } else if (section == UserColumn) {
+    return tr("User");
   }
 
   return QVariant();
@@ -98,6 +100,8 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
       return data.image.isEmpty() ? data.name : data.image;
     } else if (index.column() == StateColumn) {
       return data.state;
+    } else if (index.column() == UserColumn) {
+      return data.user;
     }
   } else if (role == PIDRole) {
     return data.ppid;
@@ -105,6 +109,8 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
     return data.image.isEmpty() ? data.name : data.image;
   } else if (role == StateRole) {
     return data.state;
+  } else if (role == UserRole) {
+    return data.user;
   }
 
   return QVariant();

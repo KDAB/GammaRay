@@ -46,6 +46,7 @@ class ProcessModel : public QAbstractTableModel
       PIDColumn,
       NameColumn,
       StateColumn,
+      UserColumn,
       COLUMN_COUNT
     };
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -53,7 +54,8 @@ class ProcessModel : public QAbstractTableModel
     enum CustomRoles {
       PIDRole = Qt::UserRole,
       NameRole,
-      StateRole
+      StateRole,
+      UserRole
     };
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 

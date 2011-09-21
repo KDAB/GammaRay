@@ -42,6 +42,7 @@ struct ProcData
   QString name;
   QString image;
   QString state;
+  QString user;
 };
 
 extern QList<ProcData> processList();
