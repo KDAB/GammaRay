@@ -33,19 +33,18 @@ using namespace Endoscope;
 PromoLabel::PromoLabel(QWidget *parent, Qt::WindowFlags f)
 : QLabel(parent, f)
 {
-  // load image and adapt it to user's foreground color
-  QColor foreground = palette().foreground().color();
-  QImage img(QString(":endoscope/kdabproducts.png"));
-  img = img.alphaChannel();
-  for(int i = 0; i < img.colorCount(); ++i) {
-    foreground.setAlpha(qGray(img.color(i)));
-    img.setColor(i, foreground.rgba());
-  }
-  setPixmap(QPixmap::fromImage(img));
-  // done image
+  updatePixmap();
 
   setCursor(QCursor(Qt::PointingHandCursor));
   setToolTip(tr("Visit KDAB Website"));
+}
+
+bool PromoLabel::event(QEvent *e)
+{
+  if (e->type() == QEvent::PaletteChange) {
+    updatePixmap();
+  }
+  return QLabel::event(e);
 }
 
 void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
@@ -57,6 +56,25 @@ void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
   }
 
   QLabel::mouseReleaseEvent(ev);
+}
+
+QImage PromoLabel::tintedImage(const QString &image, const QColor &color)
+{
+  QImage img(image);
+  img = img.alphaChannel();
+  QColor newColor = color;
+  for(int i = 0; i < img.colorCount(); ++i) {
+    newColor.setAlpha(qGray(img.color(i)));
+    img.setColor(i, newColor.rgba());
+  }
+  return img;
+}
+
+void PromoLabel::updatePixmap()
+{
+  // load image and adapt it to user's foreground color
+  setPixmap(QPixmap::fromImage(tintedImage(QString(":endoscope/kdabproducts.png"),
+                                           palette().foreground().color())));
 }
 
 #include "promolabel.moc"

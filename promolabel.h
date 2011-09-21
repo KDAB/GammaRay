@@ -35,8 +35,14 @@ class PromoLabel : public QLabel
   public:
     explicit PromoLabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
+    static QImage tintedImage(const QString& image, const QColor& color);
+
   protected:
+    virtual bool event(QEvent* e);
     virtual void mouseReleaseEvent(QMouseEvent* ev);
+
+  private:
+    void updatePixmap();
 };
 
 }
