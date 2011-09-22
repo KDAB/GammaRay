@@ -27,6 +27,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QThread>
 
+class QTimer;
+class QEventLoop;
+
 class TestConnections : public QObject
 {
   Q_OBJECT
@@ -35,11 +38,10 @@ class TestConnections : public QObject
       DeleteLater,
       Delete,
       NoEventLoop,
-      Stack,
-      Threaded
+      Stack
     };
 
-    TestConnections(Type type, int timeOuts);
+    TestConnections(Type type, int timeOuts, int timeoutInterval = -1);
     virtual ~TestConnections();
 
   public slots:
@@ -54,22 +56,22 @@ class TestConnections : public QObject
     const int m_timeOuts;
     int m_numTimeout;
     QList<QObject*> m_objects;
-    QList<QThread*> m_threads;
+    QTimer* m_timer;
 };
 
 class TestThread : public QThread
 {
   Q_OBJECT
   public:
-    TestThread(QObject *obj, QObject *parent);
+    TestThread(TestConnections::Type type, int timeOuts, int timeoutInterval = -1,
+               QObject *parent = 0);
     virtual ~TestThread();
     virtual void run();
 
-  public slots:
-    void dummySlot(){}
-
   private:
-    QObject *m_obj;
+    TestConnections::Type m_type;
+    int m_timeOuts;
+    int m_timeoutInterval;
 };
 
 class TestMain : public QObject
@@ -80,6 +82,25 @@ class TestMain : public QObject
     void run();
 
     void threading();
+};
+
+class TestWaiter : public QObject
+{
+  Q_OBJECT
+  public:
+    void addThread(TestThread* thread);
+    void addTester(TestConnections* tester);
+    void startThreadsAndWaitForFinished();
+
+  private slots:
+    void testerDone();
+    void threadFinished();
+
+  private:
+    void checkFinished();
+    QList<TestThread*> m_threads;
+    QList<TestConnections*> m_tester;
+    QEventLoop* m_loop;
 };
 
 #endif // TEST_CONNECTIONS_H
