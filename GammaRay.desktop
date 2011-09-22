@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=GammaRay
+Name[x-test]=xxGammaRayxx
+Comment=Qt-application inspection and manipulation tool
+Comment[x-test]=xxQt-application inspection and manipulation toolxx
+GenericName=Qt Inspection Tool
+GenericName[x-test]=xxQt Inspection Toolxx
+Exec=gammaray
+Icon=gammaray128
+Type=Application
+Categories=Qt;Development;
+X-KDE-StartupNotify=true
