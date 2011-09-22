@@ -22,7 +22,7 @@ debug = Configuration( 'Debug', sharedDebug, )
 cmakeDebug = CMakeBuilder()
 cmakeDebug.addCMakeVariable( CMakeVariable( 'CMAKE_BUILD_TYPE', 'debug', 'STRING' ) )
 debug.addPlugin( cmakeDebug )
-#debug.addPlugin( CTest() )
+debug.addPlugin( CTest() )
 
 sharedRelease = Environments( [ 'Qt-4.7.?' ], 'Qt 4 Shared Release', project )
 #sharedRelease = Environments( [], 'Qt 4 Shared Release', project )
@@ -31,8 +31,8 @@ cmakeRelease = CMakeBuilder()
 cmakeRelease.addCMakeVariable( CMakeVariable( 'CMAKE_BUILD_TYPE', 'release', 'STRING' ) )
 
 release.addPlugin( cmakeRelease )
-#release.addPlugin( CTest() )
-#release.addPlugin( CPack() )
+release.addPlugin( CTest() )
+release.addPlugin( CPack() )
 
 # add external contributor
 #application = mApp()
