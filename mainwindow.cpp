@@ -102,12 +102,12 @@ void MainWindow::aboutKDAB()
   mb.setWindowTitle(tr("About KDAB"));
   mb.setText(tr("Klaralvdalens Datakonsult AB (KDAB)"));
   mb.setInformativeText(
-    tr("<qt>%1 is supported and maintained by KDAB "
-       "(please visit http://www.kdab.com to meet the people who write code like this). "
-       "We also do Qt training."
-       "<p>Head Engineer for Endoscope is<br>Volker Krause &lt;volker.krause@kdab.com&gt;</qt>").
+    tr("<qt><p>%1 is supported and maintained by KDAB</p>"
+       "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> to meet the people who write code like this."
+       "We also offer Qt training courses.</p>"
+       "<p>Head Engineer for Endoscope is<br>Volker Krause &lt;volker.krause@kdab.com&gt;</p></qt>").
     arg(progName));
-  mb.setIconPixmap(QPixmap(":endoscope/kdabproducts.png"));
+  mb.setIconPixmap(QPixmap(":endoscope/kdablogo160.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
 }
