@@ -33,8 +33,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QThread>
-#include <qevent.h>
-#include <qgraphicsview.h>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QGraphicsView>
 #include <QtGui/QDialog>
 
 #ifndef Q_OS_WIN
