@@ -117,7 +117,7 @@ void TestThread::run()
   delete heapObj;
 
   connect(m_obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
-  delete m_obj;
+  disconnect(m_obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
 }
 
 void TestMain::run_data()
