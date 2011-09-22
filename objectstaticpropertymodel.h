@@ -1,7 +1,7 @@
 /*
   objectstaticpropertymodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTSTATICPROPERTYMODEL_H
-#define ENDOSCOPE_OBJECTSTATICPROPERTYMODEL_H
+#ifndef GAMMARAY_OBJECTSTATICPROPERTYMODEL_H
+#define GAMMARAY_OBJECTSTATICPROPERTYMODEL_H
 
 #include <objectpropertymodel.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ObjectStaticPropertyModel : public ObjectPropertyModel
 {
@@ -43,4 +43,4 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
 
 }
 
-#endif // ENDOSCOPE_OBJECTSTATICPROPERTYMODEL_H
+#endif // GAMMARAY_OBJECTSTATICPROPERTYMODEL_H

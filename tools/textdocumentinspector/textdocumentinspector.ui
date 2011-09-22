@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::TextDocumentInspector</class>
- <widget class="QWidget" name="Endoscope::TextDocumentInspector">
+ <class>Gammaray::TextDocumentInspector</class>
+ <widget class="QWidget" name="Gammaray::TextDocumentInspector">
   <property name="geometry">
    <rect>
     <x>0</x>

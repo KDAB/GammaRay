@@ -1,7 +1,7 @@
 /*
   widgetinspector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_WIDGETINSPECTOR_H
-#define ENDOSCOPE_WIDGETINSPECTOR_H
+#ifndef GAMMARAY_WIDGETINSPECTOR_H
+#define GAMMARAY_WIDGETINSPECTOR_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
 
 class QModelIndex;
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Ui { class WidgetInspector; }
 
@@ -51,7 +51,7 @@ class WidgetInspectorFactory
   : public QObject, public StandardToolFactory<QWidget, WidgetInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit WidgetInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Widgets"); }
@@ -59,4 +59,4 @@ class WidgetInspectorFactory
 
 }
 
-#endif // ENDOSCOPE_WIDGETINSPECTOR_H
+#endif // GAMMARAY_WIDGETINSPECTOR_H

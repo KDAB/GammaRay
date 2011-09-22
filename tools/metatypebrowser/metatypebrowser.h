@@ -1,7 +1,7 @@
 /*
   metatypebrowser.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,13 +21,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_METATYPEBROWSER_H
-#define ENDOSCOPE_METATYPEBROWSER_H
+#ifndef GAMMARAY_METATYPEBROWSER_H
+#define GAMMARAY_METATYPEBROWSER_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Ui { class MetaTypeBrowser; }
 
@@ -44,7 +44,7 @@ class MetaTypeBrowser : public QWidget
 class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObject, MetaTypeBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit MetaTypeBrowserFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Meta Types"); }
@@ -52,4 +52,4 @@ class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObjec
 
 }
 
-#endif // ENDOSCOPE_METATYPEBROWSER_H
+#endif // GAMMARAY_METATYPEBROWSER_H

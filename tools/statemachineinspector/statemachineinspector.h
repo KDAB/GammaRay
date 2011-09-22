@@ -1,7 +1,7 @@
 /*
   statemachineinspector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_STATEMACHINEINSPECTOR_H
-#define ENDOSCOPE_STATEMACHINEINSPECTOR_H
+#ifndef GAMMARAY_STATEMACHINEINSPECTOR_H
+#define GAMMARAY_STATEMACHINEINSPECTOR_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
@@ -31,7 +31,7 @@
 
 class QItemSelection;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class StateModel;
 class TransitionModel;
@@ -57,7 +57,7 @@ class StateMachineInspectorFactory :
     public QObject, public StandardToolFactory<QStateMachine, StateMachineInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit StateMachineInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("State Machines"); }
@@ -65,4 +65,4 @@ class StateMachineInspectorFactory :
 
 }
 
-#endif // ENDOSCOPE_STATEMACHINEINSPECTOR_H
+#endif // GAMMARAY_STATEMACHINEINSPECTOR_H

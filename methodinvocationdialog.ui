@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::MethodInvocationDialog</class>
- <widget class="QWidget" name="Endoscope::MethodInvocationDialog">
+ <class>Gammaray::MethodInvocationDialog</class>
+ <widget class="QWidget" name="Gammaray::MethodInvocationDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -29,9 +29,9 @@
 **
 **************************************************************************/
 
-#include "endoscopeengine.h"
+#include "gammarayengine.h"
 
-#include "endoscopesettings.h"
+#include "gammaraysettings.h"
 
 #include <analyzerbase/analyzermanager.h>
 #include <analyzerbase/analyzerstartparameters.h>
@@ -51,9 +51,9 @@
 
 using namespace Analyzer;
 
-namespace Endoscope {
+namespace Gammaray {
 
-EndoscopeEngine::EndoscopeEngine(IAnalyzerTool *tool,
+GammarayEngine::GammarayEngine(IAnalyzerTool *tool,
                                  const AnalyzerStartParameters &sp,
                                  ProjectExplorer::RunConfiguration *runConfiguration)
 : IAnalyzerEngine(tool, sp, runConfiguration), m_settings(0)
@@ -66,7 +66,7 @@ EndoscopeEngine::EndoscopeEngine(IAnalyzerTool *tool,
     settings = AnalyzerGlobalSettings::instance();
   }
 
-  m_settings = settings->subConfig<EndoscopeBaseSettings>();
+  m_settings = settings->subConfig<GammarayBaseSettings>();
   QTC_CHECK(m_settings);
 
   connect(&m_progressWatcher, SIGNAL(canceled()),
@@ -86,28 +86,28 @@ EndoscopeEngine::EndoscopeEngine(IAnalyzerTool *tool,
   connect(AnalyzerManager::stopAction(), SIGNAL(triggered()), this, SLOT(stopIt()));
 }
 
-EndoscopeEngine::~EndoscopeEngine()
+GammarayEngine::~GammarayEngine()
 {
 }
 
-void EndoscopeEngine::handleProgressCanceled()
+void GammarayEngine::handleProgressCanceled()
 {
   AnalyzerManager::stopTool();
 }
 
-void EndoscopeEngine::handleProgressFinished()
+void GammarayEngine::handleProgressFinished()
 {
   QApplication::alert(Core::ICore::instance()->mainWindow(), 3000);
 }
 
-bool EndoscopeEngine::start()
+bool GammarayEngine::start()
 {
   emit starting(this);
 
   Core::FutureProgress *fp =
     Core::ICore::instance()->progressManager()->addTask(m_progress.future(),
                                                         tr("Investigating Application"),
-                                                        "endoscope");
+                                                        "gammaray");
   fp->setKeepOnFinish(Core::FutureProgress::HideOnFinish);
   m_progress.reportStarted();
   m_progressWatcher.setFuture(m_progress.future());
@@ -115,7 +115,7 @@ bool EndoscopeEngine::start()
   const AnalyzerStartParameters &sp = startParameters();
   m_process.setWorkingDirectory(sp.workingDirectory);
 
-  QString exe = m_settings->endoscopeExecutable();
+  QString exe = m_settings->gammarayExecutable();
   if (!sp.analyzerCmdPrefix.isEmpty()) {
     exe = sp.analyzerCmdPrefix + ' ' + exe;
   }
@@ -156,27 +156,27 @@ bool EndoscopeEngine::start()
   return true;
 }
 
-void EndoscopeEngine::stop()
+void GammarayEngine::stop()
 {
   m_process.terminate();
 }
 
-void EndoscopeEngine::stopIt()
+void GammarayEngine::stopIt()
 {
   stop();
 }
 
-void EndoscopeEngine::receiveStandardOutput()
+void GammarayEngine::receiveStandardOutput()
 {
   emit outputReceived(m_process.readAllStandardOutput(), Utils::StdOutFormat);
 }
 
-void EndoscopeEngine::receiveStandardError()
+void GammarayEngine::receiveStandardError()
 {
   emit outputReceived(m_process.readAllStandardError(), Utils::StdErrFormat);
 }
 
-void EndoscopeEngine::processFinished()
+void GammarayEngine::processFinished()
 {
   emit outputReceived(tr("** Analyzing finished **\n"), Utils::NormalMessageFormat);
   emit finished();
@@ -184,7 +184,7 @@ void EndoscopeEngine::processFinished()
   m_progress.reportFinished();
 }
 
-void EndoscopeEngine::processError(QProcess::ProcessError error)
+void GammarayEngine::processError(QProcess::ProcessError error)
 {
   emit outputReceived(m_process.errorString(), Utils::ErrorMessageFormat);
 }

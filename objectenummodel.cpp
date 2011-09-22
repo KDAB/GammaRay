@@ -1,7 +1,7 @@
 /*
   objectenummodel.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -24,14 +24,14 @@
 #include "objectenummodel.h"
 #include <qmetaobject.h>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 typedef MetaObjectModel<QMetaEnum,
                         &QMetaObject::enumerator,
                         &QMetaObject::enumeratorCount,
                         &QMetaObject::enumeratorOffset> SuperClass;
 
-Endoscope::ObjectEnumModel::ObjectEnumModel(QObject *parent) : SuperClass(parent)
+Gammaray::ObjectEnumModel::ObjectEnumModel(QObject *parent) : SuperClass(parent)
 {
 }
 
@@ -47,7 +47,7 @@ int ObjectEnumModel::rowCount(const QModelIndex &parent) const
   return e.keyCount();
 }
 
-int Endoscope::ObjectEnumModel::columnCount(const QModelIndex &parent) const
+int Gammaray::ObjectEnumModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 3;
@@ -97,7 +97,7 @@ QString ObjectEnumModel::columnHeader(int index) const
   return QString();
 }
 
-QModelIndex Endoscope::ObjectEnumModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex Gammaray::ObjectEnumModel::index(int row, int column, const QModelIndex &parent) const
 {
   if (!parent.isValid()) {
     return SuperClass::index(row, column, parent);
@@ -105,7 +105,7 @@ QModelIndex Endoscope::ObjectEnumModel::index(int row, int column, const QModelI
   return createIndex(row, column, parent.row());
 }
 
-QModelIndex Endoscope::ObjectEnumModel::parent(const QModelIndex &child) const
+QModelIndex Gammaray::ObjectEnumModel::parent(const QModelIndex &child) const
 {
   if (child.internalId() == -1) {
     return SuperClass::parent(child);

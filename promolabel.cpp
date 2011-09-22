@@ -1,7 +1,7 @@
 /*
   mainwindow.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -28,7 +28,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 PromoLabel::PromoLabel(QWidget *parent, Qt::WindowFlags f)
 : QLabel(parent, f)
@@ -73,7 +73,7 @@ QImage PromoLabel::tintedImage(const QString &image, const QColor &color)
 void PromoLabel::updatePixmap()
 {
   // load image and adapt it to user's foreground color
-  setPixmap(QPixmap::fromImage(tintedImage(QString(":endoscope/kdabproducts.png"),
+  setPixmap(QPixmap::fromImage(tintedImage(QString(":gammaray/kdabproducts.png"),
                                            palette().foreground().color())));
 }
 

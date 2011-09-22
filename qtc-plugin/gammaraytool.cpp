@@ -29,10 +29,10 @@
 **
 **************************************************************************/
 
-#include "endoscopetool.h"
+#include "gammaraytool.h"
 
-#include "endoscopeengine.h"
-#include "endoscopeconstants.h"
+#include "gammarayengine.h"
+#include "gammarayconstants.h"
 
 #include <analyzerbase/analyzermanager.h>
 
@@ -40,56 +40,56 @@
 
 using namespace Analyzer;
 
-namespace Endoscope {
+namespace Gammaray {
 
-EndoscopeTool::EndoscopeTool(QObject *parent)
+GammarayTool::GammarayTool(QObject *parent)
 : IAnalyzerTool(parent)
 {
-    setObjectName("EndoscopeTool");
+    setObjectName("GammarayTool");
 }
 
-void EndoscopeTool::startTool(StartMode mode)
+void GammarayTool::startTool(StartMode mode)
 {
     AnalyzerManager::startLocalTool(this, mode);
 }
 
-IAnalyzerEngine *EndoscopeTool::createEngine(const AnalyzerStartParameters &sp,
+IAnalyzerEngine *GammarayTool::createEngine(const AnalyzerStartParameters &sp,
                                              ProjectExplorer::RunConfiguration *runConfiguration)
 {
-    EndoscopeEngine *engine = new EndoscopeEngine(this, sp, runConfiguration);
+    GammarayEngine *engine = new GammarayEngine(this, sp, runConfiguration);
 
     AnalyzerManager::showStatusMessage(AnalyzerManager::msgToolStarted(displayName()));
     return engine;
 }
 
-QWidget *EndoscopeTool::createWidgets()
+QWidget *GammarayTool::createWidgets()
 {
     return new QWidget;
 }
 
-void EndoscopeTool::extensionsInitialized()
+void GammarayTool::extensionsInitialized()
 {
 
 }
 
-IAnalyzerTool::ToolMode EndoscopeTool::toolMode() const
+IAnalyzerTool::ToolMode GammarayTool::toolMode() const
 {
     return AnyMode;
 }
 
-QString EndoscopeTool::description() const
+QString GammarayTool::description() const
 {
     return tr("TODO");
 }
 
-QString EndoscopeTool::displayName() const
+QString GammarayTool::displayName() const
 {
-    return tr("Endoscope");
+    return tr("Gammaray");
 }
 
-QByteArray EndoscopeTool::id() const
+QByteArray GammarayTool::id() const
 {
     return Constants::TOOLID;
 }
 
-} // namespace Endoscope
+} // namespace Gammaray

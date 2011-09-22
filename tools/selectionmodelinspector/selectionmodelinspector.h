@@ -1,7 +1,7 @@
 /*
   selectionmodelinspector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,14 +21,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_SELECTIONMODELINSPECTOR_H
-#define ENDOSCOPE_SELECTIONMODELINSPECTOR_H
+#ifndef GAMMARAY_SELECTIONMODELINSPECTOR_H
+#define GAMMARAY_SELECTIONMODELINSPECTOR_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
 #include <QItemSelectionModel>
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Ui { class SelectionModelInspector; }
 
@@ -49,7 +49,7 @@ class SelectionModelInspectorFactory :
     public QObject, public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit SelectionModelInspectorFactory(QObject *parent) : QObject(parent) {}
     virtual inline QString name() const { return tr("Selection Models"); }
@@ -57,4 +57,4 @@ class SelectionModelInspectorFactory :
 
 }
 
-#endif // ENDOSCOPE_SELECTIONMODELINSPECTOR_H
+#endif // GAMMARAY_SELECTIONMODELINSPECTOR_H

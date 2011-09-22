@@ -1,7 +1,7 @@
 /*
   objectpropertymodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTPROPERTYMODEL_H
-#define ENDOSCOPE_OBJECTPROPERTYMODEL_H
+#ifndef GAMMARAY_OBJECTPROPERTYMODEL_H
+#define GAMMARAY_OBJECTPROPERTYMODEL_H
 
 #include <qabstractitemmodel.h>
 #include <QPointer>
 
 class QTimer;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ObjectPropertyModel : public QAbstractTableModel
 {
@@ -54,4 +54,4 @@ class ObjectPropertyModel : public QAbstractTableModel
 
 }
 
-#endif // ENDOSCOPE_OBJECTPROPERTYMODEL_H
+#endif // GAMMARAY_OBJECTPROPERTYMODEL_H

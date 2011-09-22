@@ -1,7 +1,7 @@
 /*
   objectinspector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTINSPECTOR_H
-#define ENDOSCOPE_OBJECTINSPECTOR_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_H
+#define GAMMARAY_OBJECTINSPECTOR_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
 
 class QModelIndex;
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Ui { class ObjectInspector; }
 
@@ -49,7 +49,7 @@ class ObjectInspector : public QWidget
 class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObject, ObjectInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit ObjectInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Objects"); }
@@ -57,4 +57,4 @@ class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObjec
 
 }
 
-#endif // ENDOSCOPE_OBJECTINSPECTOR_H
+#endif // GAMMARAY_OBJECTINSPECTOR_H

@@ -1,7 +1,7 @@
 /*
   objecttypefilterproxymodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,13 +21,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTTYPEFILTERPROXYMODEL_H
-#define ENDOSCOPE_OBJECTTYPEFILTERPROXYMODEL_H
+#ifndef GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
+#define GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 
 #include <qsortfilterproxymodel.h>
 #include "objectlistmodel.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 template <typename T>
 class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
@@ -56,4 +56,4 @@ class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
 
 }
 
-#endif // ENDOSCOPE_OBJECTTYPEFILTERPROXYMODEL_H
+#endif // GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H

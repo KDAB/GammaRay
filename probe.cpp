@@ -1,7 +1,7 @@
 /*
   probe.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -54,13 +54,13 @@ static QObjectFunc_t true_qt_addObject_Func;
 static QObjectFunc_t true_qt_removeObject_Func;
 #endif
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 Probe *Probe::s_instance = 0;
 
 Q_DECLARE_METATYPE(QPointer<QObject>)
 
-namespace Endoscope
+namespace Gammaray
 {
 
 static bool probeConnectCallback(void ** args)
@@ -111,8 +111,8 @@ Probe::Probe(QObject *parent):
 
   qRegisterMetaType<QPointer<QObject> >();
 
-  QInternal::registerCallback(QInternal::ConnectCallback, &Endoscope::probeConnectCallback);
-  QInternal::registerCallback(QInternal::DisconnectCallback, &Endoscope::probeDisconnectCallback);
+  QInternal::registerCallback(QInternal::ConnectCallback, &Gammaray::probeConnectCallback);
+  QInternal::registerCallback(QInternal::DisconnectCallback, &Gammaray::probeDisconnectCallback);
 }
 
 Probe::~Probe()
@@ -121,17 +121,17 @@ Probe::~Probe()
   s_instance = 0;
 }
 
-void Probe::setWindow(Endoscope::MainWindow *window)
+void Probe::setWindow(Gammaray::MainWindow *window)
 {
   m_window = window;
 }
 
-Endoscope::MainWindow *Probe::window() const
+Gammaray::MainWindow *Probe::window() const
 {
   return m_window;
 }
 
-Probe *Endoscope::Probe::instance()
+Probe *Gammaray::Probe::instance()
 {
   if (!s_instance) {
     s_listener()->active = false;
@@ -151,10 +151,10 @@ bool Probe::isInitialized()
 
 void Probe::delayedInit()
 {
-  if (qgetenv("ENDOSCOPE_UNSET_PRELOAD") == "1") {
+  if (qgetenv("GAMMARAY_UNSET_PRELOAD") == "1") {
     qputenv("LD_PRELOAD", "");
   }
-  if (qgetenv("ENDOSCOPE_UNSET_DYLD") == "1") {
+  if (qgetenv("GAMMARAY_UNSET_DYLD") == "1") {
     qputenv("DYLD_INSERT_LIBRARIES", "");
     qputenv("DYLD_FORCE_FLAT_NAMESPACE", "");
   }
@@ -166,7 +166,7 @@ void Probe::delayedInit()
   s_addedBeforeProbeInsertion()->clear();
 
   s_listener()->active = false;
-  Endoscope::MainWindow *window = new Endoscope::MainWindow;
+  Gammaray::MainWindow *window = new Gammaray::MainWindow;
   window->setAttribute(Qt::WA_DeleteOnClose);
   instance()->setWindow(window);
   instance()->setParent(window);
@@ -208,7 +208,7 @@ ToolModel *Probe::toolModel() const
 
 QObject *Probe::probe() const
 {
-  return const_cast<Endoscope::Probe*>(this);
+  return const_cast<Gammaray::Probe*>(this);
 }
 
 bool Probe::isValidObject(QObject* obj) const
@@ -357,13 +357,13 @@ void Probe::addObjectRecursive(QObject *obj)
 }
 
 // taken from qobject.cpp
-const int endoscope_flagged_locations_count = 2;
-static const char *endoscope_flagged_locations[endoscope_flagged_locations_count] = {0};
+const int gammaray_flagged_locations_count = 2;
+static const char *gammaray_flagged_locations[gammaray_flagged_locations_count] = {0};
 
 const char *Probe::connectLocation(const char *member)
 {
-  for (int i = 0; i < endoscope_flagged_locations_count; ++i) {
-    if (member == endoscope_flagged_locations[i]) {
+  for (int i = 0; i < gammaray_flagged_locations_count; ++i) {
+    if (member == gammaray_flagged_locations[i]) {
       // signature includes location information after the first null-terminator
       const char *location = member + qstrlen(member) + 1;
       if (*location != '\0') {
@@ -587,16 +587,16 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
 }
 #endif
 
-#ifndef ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES
+#ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
 #ifndef Q_OS_WIN
 Q_DECL_EXPORT const char *qFlagLocation(const char *method)
 #else
 Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 #endif
 {
-  static int endoscope_idx = 0;
-  endoscope_flagged_locations[endoscope_idx] = method;
-  endoscope_idx = (endoscope_idx+1) % endoscope_flagged_locations_count;
+  static int gammaray_idx = 0;
+  gammaray_flagged_locations[gammaray_idx] = method;
+  gammaray_idx = (gammaray_idx+1) % gammaray_flagged_locations_count;
 
 #ifndef Q_OS_WIN
   static const char *(*next_qFlagLocation)(const char *method) =
@@ -605,19 +605,19 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
   static const char *(*next_qFlagLocation)(const char *method);
 #endif
   Q_ASSERT_X(next_qFlagLocation, "",
-             "Recompile with ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES enabled, "
+             "Recompile with GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES enabled, "
              "your compiler uses an unsupported C++ name mangling scheme");
   return next_qFlagLocation(method);
 }
 #endif
 
-extern "C" Q_DECL_EXPORT void endoscope_probe_inject()
+extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 {
-  printf("endoscope_probe_inject()\n");
-  Endoscope::Probe::instance();
-  Endoscope::Probe::findExistingObjects();
-  if (Endoscope::Probe::instance()->window()) {
-    Endoscope::Probe::instance()->window()->show();
+  printf("gammaray_probe_inject()\n");
+  Gammaray::Probe::instance();
+  Gammaray::Probe::findExistingObjects();
+  if (Gammaray::Probe::instance()->window()) {
+    Gammaray::Probe::instance()->window()->show();
   }
 }
 

@@ -1,7 +1,7 @@
 /*
   main.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-endoscope.h"
-#include "config-endoscope-version.h"
+#include "config-gammaray.h"
+#include "config-gammaray-version.h"
 #include "probefinder.h"
 #include "injector/injectorfactory.h"
 #include "attach/attachdialog.h"
@@ -31,7 +31,7 @@
 #include <QDebug>
 #include <QStringList>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 QTextStream out(stdout);
 QTextStream err(stderr);
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
       return 0;
     }
     if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
-      out << PROGRAM_NAME << " version " << ENDOSCOPE_VERSION_STRING << endl;
+      out << PROGRAM_NAME << " version " << GAMMARAY_VERSION_STRING << endl;
       out << "Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
           << "a KDAB Group company, info@kdab.com" << endl;
       return 0;
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
   }
 #endif
 
-  const QString probeDll = ProbeFinder::findProbe(QLatin1String("endoscope_probe"));
+  const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
   AbstractInjector::Ptr injector;
   if (injectorType.isEmpty()) {
     if (pid > 0) {
@@ -128,12 +128,12 @@ int main(int argc, char **argv)
 
   if (injector) {
     if (pid > 0) {
-      if (!injector->attach(pid, probeDll, QLatin1String("endoscope_probe_inject"))) {
+      if (!injector->attach(pid, probeDll, QLatin1String("gammaray_probe_inject"))) {
         err << "Unable to attach injector " << injector->name() << endl;
         return 0;
       }
     } else {
-      if (!injector->launch(args, probeDll, QLatin1String("endoscope_probe_inject"))) {
+      if (!injector->launch(args, probeDll, QLatin1String("gammaray_probe_inject"))) {
         err << "Failed to launch injector " << injector->name() << endl;
         err << "Exit code: " << injector->exitCode() << endl;
         if (!injector->errorString().isEmpty()) {

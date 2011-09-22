@@ -1,7 +1,7 @@
 /*
   injectorfactory.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_INJECTORFACTORY_H
-#define ENDOSCOPE_INJECTORFACTORY_H
+#ifndef GAMMARAY_INJECTORFACTORY_H
+#define GAMMARAY_INJECTORFACTORY_H
 
 #include "abstractinjector.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace InjectorFactory
 {
@@ -44,4 +44,4 @@ namespace InjectorFactory
 
 }
 
-#endif // ENDOSCOPE_INJECTORFACTORY_H
+#endif // GAMMARAY_INJECTORFACTORY_H

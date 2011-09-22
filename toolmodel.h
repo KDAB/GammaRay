@@ -1,7 +1,7 @@
 /*
   toolmodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_TOOLMODEL_H
-#define ENDOSCOPE_TOOLMODEL_H
+#ifndef GAMMARAY_TOOLMODEL_H
+#define GAMMARAY_TOOLMODEL_H
 
 #include <qabstractitemmodel.h>
 #include <qvector.h>
 #include <QSet>
 #include <QPointer>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ToolFactory;
 
@@ -65,4 +65,4 @@ class ToolModel : public QAbstractListModel
 
 }
 
-#endif // ENDOSCOPE_TOOLMODEL_H
+#endif // GAMMARAY_TOOLMODEL_H

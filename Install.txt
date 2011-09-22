@@ -1,4 +1,4 @@
-Endoscope uses the CMake buildsystem.
+Gammaray uses the CMake buildsystem.
 You must have CMake version 2.8 or higher.
 
 Please see the comments at the top of CMakeLists.txt for

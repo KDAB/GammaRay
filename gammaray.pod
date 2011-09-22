@@ -1,20 +1,20 @@
 =head1 NAME
 
-Endoscope - Qt-application inspection and manipulation tool.
+Gammaray - Qt-application inspection and manipulation tool.
 
 =head1 SYNOPSIS
 
-endoscope [--injector <injector>] [--pid <pid> | <application> <args>]
+gammaray [--injector <injector>] [--pid <pid> | <application> <args>]
 
 
 =head1 DESCRIPTION
 
-Endoscope inspects runtime internals of a Qt-application, such as:
+Gammaray inspects runtime internals of a Qt-application, such as:
     Object tree, properties, signal/slots, widgets, models,
     graphics views, javascript debugger, resources,
     state machines, meta types, fonts, codecs, text documents
 
-When run without any options, endoscope will present a list of running
+When run without any options, gammaray will present a list of running
 Qt-applications from which you can attach the selected injector.
 Else, you can attach to a running process by specifying its pid,
 or you can start a new Qt-application by specifying its name
@@ -53,17 +53,17 @@ Supported injectors are:
 
 =over 4
 
-=item Run endoscope on the Qt-application C<qtfoo>
+=item Run gammaray on the Qt-application C<qtfoo>
 
- % endoscope /path/to/qtfoo
+ % gammaray /path/to/qtfoo
 
-=item Invoke endoscope on the Qt-application running with pid 1234
+=item Invoke gammaray on the Qt-application running with pid 1234
 
- % endoscope --pid 1234
+ % gammaray --pid 1234
 
-=item Invoke endoscope on with injector gdb on Qt-application running with pid 1234
+=item Invoke gammaray on with injector gdb on Qt-application running with pid 1234
 
- % endoscope --injector gdb --pid 1234
+ % gammaray --injector gdb --pid 1234
 
 =back
 

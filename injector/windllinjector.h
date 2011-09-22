@@ -1,7 +1,7 @@
 /*
   windllinjector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_WINDLLINJECTOR_H
-#define ENDOSCOPE_WINDLLINJECTOR_H
+#ifndef GAMMARAY_WINDLLINJECTOR_H
+#define GAMMARAY_WINDLLINJECTOR_H
 
 #include <injector/abstractinjector.h>
 #include <qglobal.h>
@@ -32,7 +32,7 @@
 #include <QStringList>
 #include <windows.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class WinDllInjector : public AbstractInjector
 {
@@ -64,4 +64,4 @@ class WinDllInjector : public AbstractInjector
 
 #endif
 
-#endif // ENDOSCOPE_WINDLLINJECTOR_H
+#endif // GAMMARAY_WINDLLINJECTOR_H

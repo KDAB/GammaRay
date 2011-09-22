@@ -1,7 +1,7 @@
 /*
   graphicssceneview.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_GRAPHICSSCENEVIEW_H
-#define ENDOSCOPE_GRAPHICSSCENEVIEW_H
+#ifndef GAMMARAY_GRAPHICSSCENEVIEW_H
+#define GAMMARAY_GRAPHICSSCENEVIEW_H
 
 #include <qwidget.h>
 
 class QGraphicsScene;
 class QGraphicsItem;
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Ui {
 class GraphicsSceneView;
@@ -55,4 +55,4 @@ class GraphicsSceneView : public QWidget
 
 }
 
-#endif // ENDOSCOPE_GRAPHICSSCENEVIEW_H
+#endif // GAMMARAY_GRAPHICSSCENEVIEW_H

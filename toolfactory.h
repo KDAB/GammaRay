@@ -1,7 +1,7 @@
 /*
   toolfactory.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,14 +21,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_TOOLFACTORY_H
-#define ENDOSCOPE_TOOLFACTORY_H
+#ifndef GAMMARAY_TOOLFACTORY_H
+#define GAMMARAY_TOOLFACTORY_H
 
 #include <QtPlugin>
 #include <QtCore/QStringList>
 #include <QMetaType>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ProbeInterface;
 
@@ -83,7 +83,7 @@ class StandardToolFactory : public ToolFactory
 
 }
 
-Q_DECLARE_INTERFACE(Endoscope::ToolFactory, "com.kdab.Endoscope.ToolFactory/1.0")
-Q_DECLARE_METATYPE(Endoscope::ToolFactory *)
+Q_DECLARE_INTERFACE(Gammaray::ToolFactory, "com.kdab.Gammaray.ToolFactory/1.0")
+Q_DECLARE_METATYPE(Gammaray::ToolFactory *)
 
 #endif

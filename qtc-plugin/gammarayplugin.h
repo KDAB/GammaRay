@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** This file is part of Qt Creator Instrumentation Tools
+** This file is part of Qt Creator
 **
 ** Copyright (c) 2011 Nokia Corporation and/or its subsidiary(-ies).
 **
@@ -32,41 +32,27 @@
 **
 **************************************************************************/
 
-#ifndef ENDOSCOPECONFIGWIDGET_H
-#define ENDOSCOPECONFIGWIDGET_H
+#ifndef GAMMARAYPLUGIN_H
+#define GAMMARAYPLUGIN_H
 
-#include <QtGui/QWidget>
+#include <extensionsystem/iplugin.h>
 
-#include "endoscopeconstants.h"
+namespace Gammaray {
 
-namespace Endoscope {
-
-namespace Ui {
-class EndoscopeConfigWidget;
-}
-
-class EndoscopeBaseSettings;
-
-class EndoscopeConfigWidget : public QWidget
+class GammarayPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
 
 public:
-    EndoscopeConfigWidget(EndoscopeBaseSettings *settings, QWidget *parent);
-    virtual ~EndoscopeConfigWidget();
+    GammarayPlugin();
+    virtual ~GammarayPlugin();
 
-private slots:
-    void updateUi();
+    bool initialize(const QStringList &arguments, QString *errorString);
+    void extensionsInitialized();
 
-private:
-    EndoscopeBaseSettings *m_settings;
-    Ui::EndoscopeConfigWidget *m_ui;
-
-public slots:
-    void injectorSelected(int);
-    void injectorChanged(Constants::InjectorType);
+    ShutdownFlag aboutToShutdown();
 };
 
-} // namespace Endoscope
+} // namespace Gammaray
 
-#endif // ENDOSCOPECONFIGWIDGET_H
+#endif // GAMMARAYPLUGIN_H

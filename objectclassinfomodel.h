@@ -1,7 +1,7 @@
 /*
   objectclassinfomodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,13 +21,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTCLASSINFOMODEL_H
-#define ENDOSCOPE_OBJECTCLASSINFOMODEL_H
+#ifndef GAMMARAY_OBJECTCLASSINFOMODEL_H
+#define GAMMARAY_OBJECTCLASSINFOMODEL_H
 
 #include "metaobjectmodel.h"
 #include <QMetaClassInfo>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ObjectClassInfoModel : public MetaObjectModel<QMetaClassInfo,
                                                     &QMetaObject::classInfo,
@@ -43,4 +43,4 @@ class ObjectClassInfoModel : public MetaObjectModel<QMetaClassInfo,
 
 }
 
-#endif // ENDOSCOPE_OBJECTCLASSINFOMODEL_H
+#endif // GAMMARAY_OBJECTCLASSINFOMODEL_H

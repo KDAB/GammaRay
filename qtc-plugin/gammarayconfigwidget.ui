@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::EndoscopeConfigWidget</class>
- <widget class="QWidget" name="Endoscope::EndoscopeConfigWidget">
+ <class>Gammaray::GammarayConfigWidget</class>
+ <widget class="QWidget" name="Gammaray::GammarayConfigWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="endoscopeOptions">
+    <widget class="QGroupBox" name="gammarayOptions">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -20,18 +20,18 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>Endoscope Settings</string>
+      <string>Gammaray Settings</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="endoscopeExeLabel">
+       <widget class="QLabel" name="gammarayExeLabel">
         <property name="text">
-         <string>Endoscope executable:</string>
+         <string>Gammaray executable:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="Utils::PathChooser" name="endoscopeExeChooser" native="true">
+       <widget class="Utils::PathChooser" name="gammarayExeChooser" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>1</horstretch>

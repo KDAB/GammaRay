@@ -1,7 +1,7 @@
 /*
   processfiltermodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_PROCESSFILTERMODEL_H
-#define ENDOSCOPE_PROCESSFILTERMODEL_H
+#ifndef GAMMARAY_PROCESSFILTERMODEL_H
+#define GAMMARAY_PROCESSFILTERMODEL_H
 
 #include <QSortFilterProxyModel>
 
-namespace Endoscope {
+namespace Gammaray {
 
 // A filterable and sortable process model
 class ProcessFilterModel : public QSortFilterProxyModel
@@ -45,4 +45,4 @@ class ProcessFilterModel : public QSortFilterProxyModel
 
 }
 
-#endif // ENDOSCOPE_PROCESSFILTERMODEL_H
+#endif // GAMMARAY_PROCESSFILTERMODEL_H

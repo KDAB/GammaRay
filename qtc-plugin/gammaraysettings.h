@@ -32,24 +32,24 @@
 **
 **************************************************************************/
 
-#ifndef ENDOSCOPESETTINGS_H
-#define ENDOSCOPESETTINGS_H
+#ifndef GAMMARAYSETTINGS_H
+#define GAMMARAYSETTINGS_H
 
 #include <analyzerbase/analyzersettings.h>
 
-#include "endoscopeconstants.h"
+#include "gammarayconstants.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 /**
- * Endoscope settings shared for global and per-project.
+ * Gammaray settings shared for global and per-project.
  */
-class EndoscopeBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
+class GammarayBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
 {
   Q_OBJECT
 
   public:
-    EndoscopeBaseSettings() {}
+    GammarayBaseSettings() {}
 
     virtual QVariantMap toMap() const;
     virtual QVariantMap defaults() const;
@@ -64,36 +64,36 @@ class EndoscopeBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
     void changed(); // sent when multiple values have changed simulatenously (e.g. fromMap)
 
   /**
-   * Base endoscope settings
+   * Base gammaray settings
    */
   public:
-    QString endoscopeExecutable() const;
+    QString gammarayExecutable() const;
     Constants::InjectorType injector() const;
 
   public slots:
-    void setEndoscopeExecutable(const QString &);
+    void setGammarayExecutable(const QString &);
     void setInjector(Constants::InjectorType);
 
   signals:
-    void endoscopeExecutableChanged(const QString &);
+    void gammarayExecutableChanged(const QString &);
     void injectorChanged(Constants::InjectorType);
 
   private:
-    QString m_endoscopeExecutable;
+    QString m_gammarayExecutable;
     Constants::InjectorType m_injector;
 
 };
 
 /**
- * Global endoscope settings
+ * Global gammaray settings
  */
-typedef EndoscopeBaseSettings EndoscopeGlobalSettings;
+typedef GammarayBaseSettings GammarayGlobalSettings;
 
 /**
- * Per-project endoscope settings.
+ * Per-project gammaray settings.
  */
-typedef EndoscopeBaseSettings EndoscopeProjectSettings;
+typedef GammarayBaseSettings GammarayProjectSettings;
 
-} // namespace Endoscope
+} // namespace Gammaray
 
-#endif // ENDOSCOPESETTINGS_H
+#endif // GAMMARAYSETTINGS_H

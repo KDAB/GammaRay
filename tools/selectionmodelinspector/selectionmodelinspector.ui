@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::SelectionModelInspector</class>
- <widget class="QWidget" name="Endoscope::SelectionModelInspector">
+ <class>Gammaray::SelectionModelInspector</class>
+ <widget class="QWidget" name="Gammaray::SelectionModelInspector">
   <property name="geometry">
    <rect>
     <x>0</x>

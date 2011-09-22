@@ -7,7 +7,7 @@ find "$@" -name '*.h' -o -name '*.cpp' | grep -v /3rdparty/ | grep -v /qmldebugc
 /*
   $thisfile
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -38,7 +38,7 @@ exit
 find "$@" -name 'CMakeLists.txt' | while read FILE; do
     if grep -qiE "Copyright \(C\) [0-9, -]{4,} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
     cat <<EOF > "$FILE".tmp
-#  This file is part of Endoscope, the Qt application inspection and
+#  This file is part of Gammaray, the Qt application inspection and
 #  manipulation tool.
 #
 #  Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com

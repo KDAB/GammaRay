@@ -1,7 +1,7 @@
 /*
   codecbrowser.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_CODECBROWSER_H
-#define ENDOSCOPE_CODECBROWSER_H
+#ifndef GAMMARAY_CODECBROWSER_H
+#define GAMMARAY_CODECBROWSER_H
 
 #include <qwidget.h>
 
@@ -30,7 +30,7 @@
 
 class QItemSelection;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class SelectedCodecsModel;
 namespace Ui { class CodecBrowser; }
@@ -52,7 +52,7 @@ class CodecBrowser : public QWidget
 class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, CodecBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit CodecBrowserFactory(QObject *parent) : QObject(parent) {}
     virtual inline QString name() const { return tr("Text Codecs"); }
@@ -60,4 +60,4 @@ class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, 
 
 }
 
-#endif // ENDOSCOPE_CODECBROWSER_H
+#endif // GAMMARAY_CODECBROWSER_H

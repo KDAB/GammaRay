@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::SceneInspector</class>
- <widget class="QWidget" name="Endoscope::SceneInspector">
+ <class>Gammaray::SceneInspector</class>
+ <widget class="QWidget" name="Gammaray::SceneInspector">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -40,9 +40,9 @@
              </item>
             </layout>
            </widget>
-           <widget class="Endoscope::GraphicsSceneView" name="graphicsSceneView" native="true"/>
+           <widget class="Gammaray::GraphicsSceneView" name="graphicsSceneView" native="true"/>
           </widget>
-          <widget class="Endoscope::PropertyWidget" name="scenePropertyWidget" native="true"/>
+          <widget class="Gammaray::PropertyWidget" name="scenePropertyWidget" native="true"/>
          </widget>
         </item>
        </layout>
@@ -56,13 +56,13 @@
    <header location="global">kde/kfilterproxysearchline.h</header>
   </customwidget>
   <customwidget>
-   <class>Endoscope::PropertyWidget</class>
+   <class>Gammaray::PropertyWidget</class>
    <extends>QWidget</extends>
    <header location="global">propertywidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Endoscope::GraphicsSceneView</class>
+   <class>Gammaray::GraphicsSceneView</class>
    <extends>QWidget</extends>
    <header location="global">tools/sceneinspector/graphicssceneview.h</header>
    <container>1</container>

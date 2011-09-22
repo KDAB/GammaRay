@@ -1,7 +1,7 @@
 /*
   propertywidget.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,13 +21,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_PROPERTYWIDGET_H
-#define ENDOSCOPE_PROPERTYWIDGET_H
+#ifndef GAMMARAY_PROPERTYWIDGET_H
+#define GAMMARAY_PROPERTYWIDGET_H
 
 #include "ui_propertywidget.h"
 #include <QPointer>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ConnectionFilterProxyModel;
 class ObjectDynamicPropertyModel;
@@ -61,4 +61,4 @@ class PropertyWidget : public QWidget
 
 }
 
-#endif // ENDOSCOPE_PROPERTYWIDGET_H
+#endif // GAMMARAY_PROPERTYWIDGET_H

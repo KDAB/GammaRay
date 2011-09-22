@@ -1,7 +1,7 @@
 /*
   injectorstyleplugin.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -34,7 +34,7 @@
 #include <dlfcn.h>
 #endif
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 QStyle *InjectorStylePlugin::create(const QString &)
 {
@@ -46,12 +46,12 @@ QStyle *InjectorStylePlugin::create(const QString &)
 
 QStringList InjectorStylePlugin::keys() const
 {
-  return QStringList() << QLatin1String("endoscope-injector");
+  return QStringList() << QLatin1String("gammaray-injector");
 }
 
 void InjectorStylePlugin::inject()
 {
-  const QByteArray probeDll = qgetenv("ENDOSCOPE_STYLEINJECTOR_PROBEDLL");
+  const QByteArray probeDll = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEDLL");
   if (probeDll.isEmpty()) {
     qWarning("No probe DLL specified.");
     return;
@@ -72,7 +72,7 @@ void InjectorStylePlugin::inject()
   }
 #endif
 
-  const QByteArray probeFunc = qgetenv("ENDOSCOPE_STYLEINJECTOR_PROBEFUNC");
+  const QByteArray probeFunc = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEFUNC");
   if (probeFunc.isEmpty()) {
     return;
   }
@@ -94,6 +94,6 @@ void InjectorStylePlugin::inject()
 #endif
 }
 
-Q_EXPORT_PLUGIN2(endoscope_injector_style, Endoscope::InjectorStylePlugin)
+Q_EXPORT_PLUGIN2(gammaray_injector_style, Gammaray::InjectorStylePlugin)
 
 #include "injectorstyleplugin.moc"

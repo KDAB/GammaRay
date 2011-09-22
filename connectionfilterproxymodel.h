@@ -1,7 +1,7 @@
 /*
   connectionfilterproxymodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_CONNECTIONFILTERPROXYMODEL_H
-#define ENDOSCOPE_CONNECTIONFILTERPROXYMODEL_H
+#ifndef GAMMARAY_CONNECTIONFILTERPROXYMODEL_H
+#define GAMMARAY_CONNECTIONFILTERPROXYMODEL_H
 
 #include <QtGui/QSortFilterProxyModel>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ConnectionFilterProxyModel : public QSortFilterProxyModel
 {
@@ -50,4 +50,4 @@ class ConnectionFilterProxyModel : public QSortFilterProxyModel
 
 }
 
-#endif // ENDOSCOPE_CONNECTIONFILTERPROXYMODEL_H
+#endif // GAMMARAY_CONNECTIONFILTERPROXYMODEL_H

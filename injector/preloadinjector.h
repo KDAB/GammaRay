@@ -1,7 +1,7 @@
 /*
   preloadinjector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_PRELOADINJECTOR_H
-#define ENDOSCOPE_PRELOADINJECTOR_H
+#ifndef GAMMARAY_PRELOADINJECTOR_H
+#define GAMMARAY_PRELOADINJECTOR_H
 
 #include "abstractinjector.h"
 #include <qglobal.h>
 
 #ifndef Q_OS_WIN
 
-namespace Endoscope {
+namespace Gammaray {
 
 class PreloadInjector : public AbstractInjector
 {
@@ -56,4 +56,4 @@ class PreloadInjector : public AbstractInjector
 
 #endif
 
-#endif // ENDOSCOPE_PRELOADINJECTOR_H
+#endif // GAMMARAY_PRELOADINJECTOR_H

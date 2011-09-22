@@ -1,7 +1,7 @@
 /*
   resourcebrowser.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_RESOURCEBROWSER_H
-#define ENDOSCOPE_RESOURCEBROWSER_H
+#ifndef GAMMARAY_RESOURCEBROWSER_H
+#define GAMMARAY_RESOURCEBROWSER_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
 
 class QItemSelection;
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Ui { class ResourceBrowser; }
 
@@ -49,7 +49,7 @@ class ResourceBrowser : public QWidget
 class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObject, ResourceBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit ResourceBrowserFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Resources"); }
@@ -57,4 +57,4 @@ class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObjec
 
 }
 
-#endif // ENDOSCOPE_RESOURCEBROWSER_H
+#endif // GAMMARAY_RESOURCEBROWSER_H

@@ -28,17 +28,17 @@
 ** contact the sales department at http://qt.nokia.com/contact.
 **
 **************************************************************************/
-#ifndef ENDOSCOPETOOL_H
-#define ENDOSCOPETOOL_H
+#ifndef GAMMARAYTOOL_H
+#define GAMMARAYTOOL_H
 
 #include <analyzerbase/ianalyzertool.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
-class EndoscopeTool : public Analyzer::IAnalyzerTool
+class GammarayTool : public Analyzer::IAnalyzerTool
 {
   public:
-    explicit EndoscopeTool(QObject *parent = 0);
+    explicit GammarayTool(QObject *parent = 0);
 
     virtual void startTool(Analyzer::StartMode mode);
 
@@ -56,6 +56,6 @@ class EndoscopeTool : public Analyzer::IAnalyzerTool
     virtual QByteArray id() const;
 };
 
-} // namespace Endoscope
+} // namespace Gammaray
 
-#endif // ENDOSCOPETOOL_H
+#endif // GAMMARAYTOOL_H

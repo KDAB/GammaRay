@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** This file is part of Qt Creator
+** This file is part of Qt Creator Instrumentation Tools
 **
 ** Copyright (c) 2011 Nokia Corporation and/or its subsidiary(-ies).
 **
@@ -32,34 +32,41 @@
 **
 **************************************************************************/
 
-#ifndef ENDOSCOPECONSTANTS_H
-#define ENDOSCOPECONSTANTS_H
+#ifndef GAMMARAYCONFIGWIDGET_H
+#define GAMMARAYCONFIGWIDGET_H
 
-#include <QtCore/QLatin1String>
-#include <QtCore/QMetaType>
+#include <QtGui/QWidget>
 
-namespace Endoscope {
-namespace Constants {
+#include "gammarayconstants.h"
 
-const QLatin1String RUNMODE("Endoscope");
-const char TOOLID[] = "Endoscope";
+namespace Gammaray {
 
-enum InjectorType {
-    DefaultInjector,
-    GDBInjector,
-    StyleInjector,
-#ifndef Q_OS_WIN
-    PreloadInjector,
-#else
-    WinDLLInjector,
-    DetourInjector,
-#endif
-    INJECTOR_COUNT
+namespace Ui {
+class GammarayConfigWidget;
+}
+
+class GammarayBaseSettings;
+
+class GammarayConfigWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    GammarayConfigWidget(GammarayBaseSettings *settings, QWidget *parent);
+    virtual ~GammarayConfigWidget();
+
+private slots:
+    void updateUi();
+
+private:
+    GammarayBaseSettings *m_settings;
+    Ui::GammarayConfigWidget *m_ui;
+
+public slots:
+    void injectorSelected(int);
+    void injectorChanged(Constants::InjectorType);
 };
 
-} // namespace Constants
-} // namespace Endoscope
+} // namespace Gammaray
 
-Q_DECLARE_METATYPE(Endoscope::Constants::InjectorType);
-
-#endif // ENDOSCOPECONSTANTS_H
+#endif // GAMMARAYCONFIGWIDGET_H

@@ -1,7 +1,7 @@
 /*
   detourinjector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_DETOURINJECTOR_H
-#define ENDOSCOPE_DETOURINJECTOR_H
+#ifndef GAMMARAY_DETOURINJECTOR_H
+#define GAMMARAY_DETOURINJECTOR_H
 
 #include <injector/abstractinjector.h>
 #include <qglobal.h>
 
 #ifdef Q_OS_WIN
 
-namespace Endoscope {
+namespace Gammaray {
 
 class DetourInjector : public AbstractInjector
 {
@@ -56,4 +56,4 @@ class DetourInjector : public AbstractInjector
 
 #endif
 
-#endif // ENDOSCOPE_DETOURINJECTOR_H
+#endif // GAMMARAY_DETOURINJECTOR_H

@@ -1,7 +1,7 @@
 /*
   scriptenginedebugger.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_SCRIPTENGINEDEBUGGER_H
-#define ENDOSCOPE_SCRIPTENGINEDEBUGGER_H
+#ifndef GAMMARAY_SCRIPTENGINEDEBUGGER_H
+#define GAMMARAY_SCRIPTENGINEDEBUGGER_H
 
 #include <toolfactory.h>
 #include <qwidget.h>
@@ -30,7 +30,7 @@
 
 class QScriptEngineDebugger;
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Ui { class ScriptEngineDebugger; }
 
@@ -52,7 +52,7 @@ class ScriptEngineDebuggerFactory
   : public QObject, public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit ScriptEngineDebuggerFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Script Engines"); }
@@ -60,4 +60,4 @@ class ScriptEngineDebuggerFactory
 
 }
 
-#endif // ENDOSCOPE_SCRIPTENGINEDEBUGGER_H
+#endif // GAMMARAY_SCRIPTENGINEDEBUGGER_H

@@ -1,7 +1,7 @@
 /*
   objectenummodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTENUMMODEL_H
-#define ENDOSCOPE_OBJECTENUMMODEL_H
+#ifndef GAMMARAY_OBJECTENUMMODEL_H
+#define GAMMARAY_OBJECTENUMMODEL_H
 
 #include "metaobjectmodel.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ObjectEnumModel : public MetaObjectModel<QMetaEnum, &QMetaObject::enumerator,
                                                &QMetaObject::enumeratorCount,
@@ -46,4 +46,4 @@ class ObjectEnumModel : public MetaObjectModel<QMetaEnum, &QMetaObject::enumerat
 
 }
 
-#endif // ENDOSCOPE_OBJECTENUMMODEL_H
+#endif // GAMMARAY_OBJECTENUMMODEL_H

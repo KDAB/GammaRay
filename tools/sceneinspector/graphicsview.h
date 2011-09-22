@@ -1,7 +1,7 @@
 /*
   graphicsview.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_GRAPHICSVIEW_H
-#define ENDOSCOPE_GRAPHICSVIEW_H
+#ifndef GAMMARAY_GRAPHICSVIEW_H
+#define GAMMARAY_GRAPHICSVIEW_H
 
 #include <QGraphicsView>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class GraphicsView : public QGraphicsView
 {
@@ -51,4 +51,4 @@ class GraphicsView : public QGraphicsView
 
 }
 
-#endif // ENDOSCOPE_GRAPHICSVIEW_H
+#endif // GAMMARAY_GRAPHICSVIEW_H

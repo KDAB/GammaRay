@@ -1,4 +1,4 @@
-# This is the top-level CMakeLists.txt file for the Endoscope project.
+# This is the top-level CMakeLists.txt file for the Gammaray project.
 #
 # Pass the following variables to cmake to control the build:
 #
@@ -6,7 +6,7 @@
 #  (Windows-only) Set to use detours if debugging
 #  Default=off
 #
-# -DENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES=[on|off]
+# -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[on|off]
 #  Set this if your compiler uses an unsupported C++ name mangling scheme
 #  Default=off
 #
@@ -14,18 +14,18 @@
 # To install the resulting man page, run 'make install'
 #
 
-project(endoscope)
+project(gammaray)
 cmake_minimum_required(VERSION 2.8)
 
 if(NOT Prog_NAME)
-  set(Prog_NAME "Endoscope")
+  set(Prog_NAME "Gammaray")
 endif()
 
-set(ENDOSCOPE_VERSION_MAJOR "1")
-set(ENDOSCOPE_VERSION_MINOR "0")
-set(ENDOSCOPE_VERSION_PATCH "0")
-set(ENDOSCOPE_VERSION "${ENDOSCOPE_VERSION_MAJOR}.${ENDOSCOPE_VERSION_MINOR}.${ENDOSCOPE_VERSION_PATCH}")
-set(ENDOSCOPE_VERSION_STRING "${ENDOSCOPE_VERSION}")
+set(GAMMARAY_VERSION_MAJOR "1")
+set(GAMMARAY_VERSION_MINOR "0")
+set(GAMMARAY_VERSION_PATCH "0")
+set(GAMMARAY_VERSION "${GAMMARAY_VERSION_MAJOR}.${GAMMARAY_VERSION_MINOR}.${GAMMARAY_VERSION_PATCH}")
+set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION}")
 
 enable_testing()
 
@@ -36,7 +36,7 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                     OUTPUT_VARIABLE _git_revision)
     string(REGEX REPLACE "\n" "" _git_revision "${_git_revision}")
-    set(ENDOSCOPE_VERSION_STRING "${ENDOSCOPE_VERSION_STRING} (revision: ${_git_revision})")
+    set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION_STRING} (revision: ${_git_revision})")
   endif()
 endif()
 
@@ -48,7 +48,7 @@ if(APPLE AND CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
   set(CMAKE_INSTALL_PREFIX "/Applications")
 endif()
 
-message(STATUS "Building ${Prog_NAME} ${ENDOSCOPE_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
+message(STATUS "Building ${Prog_NAME} ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
 add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\")
 
 include(CheckCXXCompilerFlag)
@@ -101,7 +101,7 @@ if(APPLE)
 endif()
 
 if(UNIX AND NOT APPLE)
-  set(DOC_INSTALL_DIR share/doc/endoscope/)
+  set(DOC_INSTALL_DIR share/doc/gammaray/)
 else()
   set(DOC_INSTALL_DIR .)
 endif()
@@ -109,21 +109,21 @@ endif()
 # TODO: find a nicer way for all this. ideally auto-detect the name mangling
 # format, but at least guess a default based on OS + compiler.
 option(
-  ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES
+  GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
   "Enable if your compiler uses an unsupported C++ name mangling scheme"
   OFF
 )
-if(ENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES)
-  add_definitions(-DENDOSCOPE_UNKNOWN_CXX_MANGLED_NAMES)
+if(GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES)
+  add_definitions(-DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES)
 endif()
 
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
 )
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config-endoscope-version.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/config-endoscope-version.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
 )
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -140,7 +140,7 @@ endif()
 
 add_subdirectory(injector)
 
-set(endoscope_runner_srcs
+set(gammaray_runner_srcs
   injector/abstractinjector.cpp
   injector/injectorfactory.cpp
   injector/preloadinjector.cpp
@@ -161,34 +161,34 @@ set(endoscope_runner_srcs
   3rdparty/kde/kfilterproxysearchline.cpp
 )
 if(NOT WIN32)
-  set(endoscope_runner_srcs
-    ${endoscope_runner_srcs}
+  set(gammaray_runner_srcs
+    ${gammaray_runner_srcs}
     injector/gdbinjector.cpp
     attach/processlist_unix.cpp
   )
 else()
-  set(endoscope_runner_srcs
-    ${endoscope_runner_srcs}
+  set(gammaray_runner_srcs
+    ${gammaray_runner_srcs}
     attach/processlist_win.cpp
   )
 endif()
 if(USE_DETOURS)
-  set(endoscope_runner_srcs
-    ${endoscope_runner_srcs}
+  set(gammaray_runner_srcs
+    ${gammaray_runner_srcs}
     injector/detourinjector.cpp
   )
 endif()
 
-qt4_wrap_ui(endoscope_runner_srcs attach/attachdialog.ui)
-qt4_add_resources(endoscope_runner_srcs resources/gammaray.qrc)
+qt4_wrap_ui(gammaray_runner_srcs attach/attachdialog.ui)
+qt4_add_resources(gammaray_runner_srcs resources/gammaray.qrc)
 
-add_executable(endoscope ${endoscope_runner_srcs})
-target_link_libraries(endoscope ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+add_executable(gammaray ${gammaray_runner_srcs})
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 if(USE_DETOURS)
-  target_link_libraries(endoscope detours)
+  target_link_libraries(gammaray detours)
 endif()
 
-set(endoscope_srcs
+set(gammaray_srcs
   mainwindow.cpp
   probe.cpp
   propertywidget.cpp
@@ -244,8 +244,8 @@ set(endoscope_srcs
   3rdparty/kde/kfilterproxysearchline.cpp
   3rdparty/qt/resourcemodel.cpp
 )
-qt4_automoc(${endoscope_srcs} ${endoscope_runner_srcs})
-qt4_wrap_ui(endoscope_srcs
+qt4_automoc(${gammaray_srcs} ${gammaray_runner_srcs})
+qt4_wrap_ui(gammaray_srcs
   mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
@@ -266,9 +266,9 @@ qt4_wrap_ui(endoscope_srcs
   tools/webinspector/webinspector.ui
   tools/widgetinspector/widgetinspector.ui
 )
-qt4_add_resources(endoscope_srcs resources/gammaray.qrc)
-add_library(endoscope_probe SHARED ${endoscope_srcs})
-target_link_libraries(endoscope_probe
+qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
+add_library(gammaray_probe SHARED ${gammaray_srcs})
+target_link_libraries(gammaray_probe
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${QT_QTSCRIPT_LIBRARY}
@@ -276,15 +276,15 @@ target_link_libraries(endoscope_probe
   ${QT_QTWEBKIT_LIBRARY}
 )
 if(NOT WIN32)
-  target_link_libraries(endoscope_probe dl)
+  target_link_libraries(gammaray_probe dl)
 else()
   if(USE_DETOURS)
-    target_link_libraries(endoscope_probe detoured detours)
+    target_link_libraries(gammaray_probe detoured detours)
   endif()
 endif()
-set_target_properties(endoscope_probe PROPERTIES PREFIX "")
+set_target_properties(gammaray_probe PROPERTIES PREFIX "")
 
-install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if(UNIX AND NOT APPLE)
   set(XDG_APPS_INSTALL_DIR share/applications)
@@ -314,14 +314,14 @@ if(CPPCHECK_EXECUTABLE)
 endif()
 
 if(UNIX)
-  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/endoscope.1
-                     COMMAND pod2man -c "KDAB Products" -r "\"${ENDOSCOPE_VERSION_STRING}\"" -s 1 ${CMAKE_SOURCE_DIR}/endoscope.pod ${CMAKE_BINARY_DIR}/endoscope.1
-                     DEPENDS ${CMAKE_SOURCE_DIR}/endoscope.pod
+  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
+                     COMMAND pod2man -c "KDAB Products" -r "\"${GAMMARAY_VERSION_STRING}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
+                     DEPENDS ${CMAKE_SOURCE_DIR}/gammaray.pod
                      )
 
-  add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/endoscope.1)
+  add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/gammaray.1)
 
-  install(FILES ${CMAKE_BINARY_DIR}/endoscope.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
+  install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
 endif()
 
 include(ExternalProject)
@@ -329,14 +329,14 @@ include(ExternalProject)
 set(QTC_SOURCE_DIR "" CACHE STRING "Path to Qt Creator sources")
 set(QTC_BUILD_DIR "" CACHE STRING "Path to Qt Creator build directory")
 if(QTC_SOURCE_DIR AND QTC_BUILD_DIR)
-  message(STATUS "building the Qt Creator Endoscope plugin")
+  message(STATUS "building the Qt Creator Gammaray plugin")
   externalproject_add(qtc-plugin
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qtc-plugin"
     CONFIGURE_COMMAND ${QT_QMAKE_EXECUTABLE} QTC_SOURCE_DIR="${QTC_SOURCE_DIR}" IDE_BUILD_TREE="${QTC_BUILD_DIR}" ${CMAKE_CURRENT_SOURCE_DIR}/qtc-plugin
     INSTALL_COMMAND ""
   )
 else()
-  message(STATUS "not building the Qt Creator Endoscope plugin, set QTC_SOURCE_DIR and QTC_BUILD_DIR if you want it")
+  message(STATUS "not building the Qt Creator Gammaray plugin, set QTC_SOURCE_DIR and QTC_BUILD_DIR if you want it")
 endif()
 
 add_subdirectory(tests)

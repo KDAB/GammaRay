@@ -1,7 +1,7 @@
 /*
   probefinder.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-endoscope.h"
+#include "config-gammaray.h"
 
 #include "probefinder.h"
 
@@ -33,7 +33,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringBuilder>
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace ProbeFinder {
 
@@ -41,7 +41,7 @@ QString findProbe(const QString &baseName)
 {
 #ifndef Q_OS_WIN
   QStringList pldirs;
-  pldirs << ENDOSCOPE_LIB_INSTALL_DIR
+  pldirs << GAMMARAY_LIB_INSTALL_DIR
          << "/usr/local/lib64" << "/usr/local/lib"
          << "/opt/lib64" << "/opt/lib"
          << "/usr/lib64" << "/usr/lib";
@@ -59,7 +59,7 @@ QString findProbe(const QString &baseName)
       << "in the typical places.\n"
          "Try setting the $LD_PRELOAD environment variable to the fullpath,\n"
          "For example:\n"
-         "  export LD_PRELOAD=/opt/lib64/libendoscope_probe.so\n"
+         "  export LD_PRELOAD=/opt/lib64/libgammaray_probe.so\n"
          "Continuing nevertheless, some systems can also preload from just the library name...";
     return baseName;
   }

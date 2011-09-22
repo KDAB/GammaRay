@@ -32,27 +32,27 @@
 **
 **************************************************************************/
 
-#include "endoscopeconfigwidget.h"
-#include "endoscopesettings.h"
+#include "gammarayconfigwidget.h"
+#include "gammaraysettings.h"
 
-#include "ui_endoscopeconfigwidget.h"
+#include "ui_gammarayconfigwidget.h"
 
 #include <utils/qtcassert.h>
 
 #include <QtGui/QFileDialog>
 
-namespace Endoscope {
+namespace Gammaray {
 
-EndoscopeConfigWidget::EndoscopeConfigWidget(EndoscopeBaseSettings *settings,
+GammarayConfigWidget::GammarayConfigWidget(GammarayBaseSettings *settings,
         QWidget *parent)
     : QWidget(parent),
       m_settings(settings),
-      m_ui(new Ui::EndoscopeConfigWidget)
+      m_ui(new Ui::GammarayConfigWidget)
 {
     m_ui->setupUi(this);
 
-    m_ui->endoscopeExeChooser->setExpectedKind(Utils::PathChooser::ExistingCommand);
-    m_ui->endoscopeExeChooser->setPromptDialogTitle(tr("Endoscope Command"));
+    m_ui->gammarayExeChooser->setExpectedKind(Utils::PathChooser::ExistingCommand);
+    m_ui->gammarayExeChooser->setPromptDialogTitle(tr("Gammaray Command"));
 
     m_ui->injectorCombo->addItem(tr("Default"), Constants::DefaultInjector);
 #ifndef Q_OS_WIN
@@ -69,10 +69,10 @@ EndoscopeConfigWidget::EndoscopeConfigWidget(EndoscopeBaseSettings *settings,
     connect(m_settings, SIGNAL(changed()),
             this, SLOT(updateUi()));
 
-    connect(m_ui->endoscopeExeChooser, SIGNAL(changed(QString)),
-            m_settings, SLOT(setEndoscopeExecutable(QString)));
-    connect(m_settings, SIGNAL(endoscopeExecutableChanged(QString)),
-            m_ui->endoscopeExeChooser, SLOT(setPath(QString)));
+    connect(m_ui->gammarayExeChooser, SIGNAL(changed(QString)),
+            m_settings, SLOT(setGammarayExecutable(QString)));
+    connect(m_settings, SIGNAL(gammarayExecutableChanged(QString)),
+            m_ui->gammarayExeChooser, SLOT(setPath(QString)));
 
     connect(m_ui->injectorCombo, SIGNAL(currentIndexChanged(int)),
             this, SLOT(injectorSelected(int)));
@@ -87,19 +87,19 @@ EndoscopeConfigWidget::EndoscopeConfigWidget(EndoscopeBaseSettings *settings,
 #endif
 }
 
-EndoscopeConfigWidget::~EndoscopeConfigWidget()
+GammarayConfigWidget::~GammarayConfigWidget()
 {
     delete m_ui;
 }
 
-void EndoscopeConfigWidget::updateUi()
+void GammarayConfigWidget::updateUi()
 {
-    m_ui->endoscopeExeChooser->setPath(m_settings->endoscopeExecutable());
+    m_ui->gammarayExeChooser->setPath(m_settings->gammarayExecutable());
 
     injectorChanged(m_settings->injector());
 }
 
-void EndoscopeConfigWidget::injectorChanged(Constants::InjectorType type)
+void GammarayConfigWidget::injectorChanged(Constants::InjectorType type)
 {
     for (int i = 0; i < m_ui->injectorCombo->count(); ++i) {
         if (m_ui->injectorCombo->itemData(i).toInt() == type) {
@@ -112,7 +112,7 @@ void EndoscopeConfigWidget::injectorChanged(Constants::InjectorType type)
     m_ui->injectorCombo->setCurrentIndex(0);
 }
 
-void EndoscopeConfigWidget::injectorSelected(int index)
+void GammarayConfigWidget::injectorSelected(int index)
 {
     const QVariant data = m_ui->injectorCombo->itemData(index);
 
@@ -123,4 +123,4 @@ void EndoscopeConfigWidget::injectorSelected(int index)
     m_settings->setInjector(type);
 }
 
-} // namespace Endoscope
+} // namespace Gammaray

@@ -1,7 +1,7 @@
 /*
   fontbrowser.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_FONTBROWSER_H
-#define ENDOSCOPE_FONTBROWSER_H
+#ifndef GAMMARAY_FONTBROWSER_H
+#define GAMMARAY_FONTBROWSER_H
 
 #include <qwidget.h>
 #include <QFontDatabase>
@@ -30,7 +30,7 @@
 
 class QItemSelection;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class FontModel;
 namespace Ui { class FontBrowser; }
@@ -52,7 +52,7 @@ class FontBrowser : public QWidget
 class FontBrowserFactory : public QObject, public StandardToolFactory<QObject, FontBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit FontBrowserFactory(QObject *parent) : QObject(parent) {}
     virtual inline QString name() const { return tr("Fonts"); }
@@ -60,4 +60,4 @@ class FontBrowserFactory : public QObject, public StandardToolFactory<QObject, F
 
 }
 
-#endif // ENDOSCOPE_FONTBROWSER_H
+#endif // GAMMARAY_FONTBROWSER_H

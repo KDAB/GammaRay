@@ -28,18 +28,18 @@
 ** contact the sales department at http://qt.nokia.com/contact.
 **
 **************************************************************************/
-#ifndef ENDOSCOPERUNCONTROLFACTORY_H
-#define ENDOSCOPERUNCONTROLFACTORY_H
+#ifndef GAMMARAYRUNCONTROLFACTORY_H
+#define GAMMARAYRUNCONTROLFACTORY_H
 
 #include <projectexplorer/runconfiguration.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
-class EndoscopeRunControlFactory : public ProjectExplorer::IRunControlFactory
+class GammarayRunControlFactory : public ProjectExplorer::IRunControlFactory
 {
   Q_OBJECT
   public:
-    EndoscopeRunControlFactory(QObject *parent = 0);
+    GammarayRunControlFactory(QObject *parent = 0);
 
     virtual QString displayName() const;
 
@@ -57,4 +57,4 @@ class EndoscopeRunControlFactory : public ProjectExplorer::IRunControlFactory
 
 }
 
-#endif // ENDOSCOPERUNCONTROLFACTORY_H
+#endif // GAMMARAYRUNCONTROLFACTORY_H

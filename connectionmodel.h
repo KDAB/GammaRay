@@ -1,7 +1,7 @@
 /*
   connectionmodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_CONNECTIONMODEL_H
-#define ENDOSCOPE_CONNECTIONMODEL_H
+#ifndef GAMMARAY_CONNECTIONMODEL_H
+#define GAMMARAY_CONNECTIONMODEL_H
 
 #include <QtCore/qabstractitemmodel.h>
 #include <QVector>
@@ -30,7 +30,7 @@
 #include <QPointer>
 #include <QReadWriteLock>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ConnectionModel : public QAbstractTableModel
 {
@@ -82,4 +82,4 @@ class ConnectionModel : public QAbstractTableModel
 
 }
 
-#endif // ENDOSCOPE_CONNECTIONMODEL_H
+#endif // GAMMARAY_CONNECTIONMODEL_H

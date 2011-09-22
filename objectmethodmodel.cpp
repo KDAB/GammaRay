@@ -1,7 +1,7 @@
 /*
   objectmethodmodel.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -23,7 +23,7 @@
 
 #include "objectmethodmodel.h"
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 ObjectMethodModel::ObjectMethodModel(QObject *parent)
   : MetaObjectModel<QMetaMethod, &QMetaObject::method,
@@ -31,7 +31,7 @@ ObjectMethodModel::ObjectMethodModel(QObject *parent)
 {
 }
 
-int Endoscope::ObjectMethodModel::columnCount(const QModelIndex &parent) const
+int Gammaray::ObjectMethodModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 4;
@@ -76,7 +76,7 @@ QVariant ObjectMethodModel::data(const QModelIndex &index,
   return QVariant();
 }
 
-QString Endoscope::ObjectMethodModel::columnHeader(int index) const
+QString Gammaray::ObjectMethodModel::columnHeader(int index) const
 {
   switch (index) {
   case 0:

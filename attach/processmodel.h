@@ -1,7 +1,7 @@
 /*
   processmodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,14 +21,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_PROCESSMODEL_H
-#define ENDOSCOPE_PROCESSMODEL_H
+#ifndef GAMMARAY_PROCESSMODEL_H
+#define GAMMARAY_PROCESSMODEL_H
 
 #include <QAbstractTableModel>
 
 #include "processlist.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ProcessModel : public QAbstractTableModel
 {
@@ -68,4 +68,4 @@ private:
 
 }
 
-#endif // ENDOSCOPE_PROCESSMODEL_H
+#endif // GAMMARAY_PROCESSMODEL_H

@@ -1,7 +1,7 @@
 /*
   styleinjector.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-endoscope.h>
+#include <config-gammaray.h>
 
 #include "styleinjector.h"
 #include "interactiveprocess.h"
@@ -29,7 +29,7 @@
 #include <QProcess>
 #include <cstdlib>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 StyleInjector::StyleInjector() :
   mExitCode(-1),
@@ -42,14 +42,14 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
                           const QString &probeDll, const QString &probeFunc)
 {
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-  env.insert("ENDOSCOPE_STYLEINJECTOR_PROBEDLL", probeDll);
-  env.insert("ENDOSCOPE_STYLEINJECTOR_PROBEFUNC", probeFunc);
+  env.insert("GAMMARAY_STYLEINJECTOR_PROBEDLL", probeDll);
+  env.insert("GAMMARAY_STYLEINJECTOR_PROBEFUNC", probeFunc);
 
   QString qtPluginPath = env.value("QT_PLUGIN_PATH");
   if (!qtPluginPath.isEmpty()) {
     qtPluginPath.append(":");
   }
-  qtPluginPath.append(ENDOSCOPE_LIB_INSTALL_DIR "/qt4/plugins");
+  qtPluginPath.append(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins");
   env.insert("QT_PLUGIN_PATH", qtPluginPath);
 
   InteractiveProcess proc;
@@ -58,17 +58,17 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
 
   QStringList args = programAndArgs;
 
-  if (env.value("ENDOSCOPE_GDB").toInt()) {
+  if (env.value("GAMMARAY_GDB").toInt()) {
     QStringList newArgs;
     newArgs << "gdb" << "--eval-command" << "run" << "--args";
     newArgs += args;
     args = newArgs;
-  } else if (env.value("ENDOSCOPE_MEMCHECK").toInt()) {
+  } else if (env.value("GAMMARAY_MEMCHECK").toInt()) {
     QStringList newArgs;
     newArgs << "valgrind" << "--tool=memcheck" << "--track-origins=yes" << "--num-callers=25";
     newArgs += args;
     args = newArgs;
-  } else if (env.value("ENDOSCOPE_HELGRIND").toInt()) {
+  } else if (env.value("GAMMARAY_HELGRIND").toInt()) {
     QStringList newArgs;
     newArgs << "valgrind" << "--tool=helgrind";
     newArgs += args;
@@ -76,7 +76,7 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
   }
 
   const QString program = args.takeFirst();
-  args << QLatin1String("-style") << QLatin1String("endoscope-injector");
+  args << QLatin1String("-style") << QLatin1String("gammaray-injector");
   proc.start(program, args);
   proc.waitForFinished(-1);
 

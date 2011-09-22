@@ -1,7 +1,7 @@
 /*
   modeltester.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_MODELTESTER_H
-#define ENDOSCOPE_MODELTESTER_H
+#ifndef GAMMARAY_MODELTESTER_H
+#define GAMMARAY_MODELTESTER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
@@ -31,7 +31,7 @@
 class QAbstractItemModel;
 class ModelTest;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ModelTester : public QObject
 {
@@ -54,4 +54,4 @@ class ModelTester : public QObject
 
 }
 
-#endif // ENDOSCOPE_MODELTESTER_H
+#endif // GAMMARAY_MODELTESTER_H

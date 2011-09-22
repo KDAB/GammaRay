@@ -1,7 +1,7 @@
 /*
   mainwindow.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-endoscope-version.h"
+#include "config-gammaray-version.h"
 #include "mainwindow.h"
 #include "probe.h"
 #include "objectlistmodel.h"
@@ -41,12 +41,12 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 static const char progName[] = PROGRAM_NAME;
-static const char progVersion[] = ENDOSCOPE_VERSION_STRING;
+static const char progVersion[] = GAMMARAY_VERSION_STRING;
 static const char progDesc[] = "The Qt application inspection and manipulation tool";
-static const char progURL[] = "http://www.kdab.com/endoscope";
+static const char progURL[] = "http://www.kdab.com/gammaray";
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
           QApplication::instance(), SLOT(quit()));
   connect(ui.actionAboutQt, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(aboutQt()));
-  connect(ui.actionAboutEndoscope, SIGNAL(triggered(bool)), SLOT(about()));
+  connect(ui.actionAboutGammaray, SIGNAL(triggered(bool)), SLOT(about()));
   connect(ui.actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
   setWindowIcon(QIcon(":gammaray/gammaray128.png"));
@@ -105,7 +105,7 @@ void MainWindow::aboutKDAB()
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> to meet the people who write code like this."
        "We also offer Qt training courses.</p>"
-       "<p>Head Engineer for Endoscope is<br>Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;</p></qt>").
+       "<p>Head Engineer for Gammaray is<br>Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;</p></qt>").
     arg(progName));
   mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));
   mb.addButton(QMessageBox::Close);

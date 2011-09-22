@@ -1,7 +1,7 @@
 /*
   propertywidget.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -36,7 +36,7 @@
 
 #include <QDebug>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 PropertyWidget::PropertyWidget(QWidget *parent)
   : QWidget(parent),
@@ -86,7 +86,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.enumSearchLine->setProxy(proxy);
 }
 
-void Endoscope::PropertyWidget::setObject(QObject *object)
+void Gammaray::PropertyWidget::setObject(QObject *object)
 {
   m_object = object;
   m_staticPropertyModel->setObject(object);

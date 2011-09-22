@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::FontBrowser</class>
- <widget class="QWidget" name="Endoscope::FontBrowser">
+ <class>Gammaray::FontBrowser</class>
+ <widget class="QWidget" name="Gammaray::FontBrowser">
   <property name="geometry">
    <rect>
     <x>0</x>

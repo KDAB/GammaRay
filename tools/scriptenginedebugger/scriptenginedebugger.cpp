@@ -1,7 +1,7 @@
 /*
   scriptenginedebugger.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -33,7 +33,7 @@
 #include <QDebug>
 #include <QMainWindow>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 ///NOTE: for crashes related to script engine debugger on shutdown, see:
 ///      https://bugreports.qt.nokia.com/browse/QTBUG-21548

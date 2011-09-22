@@ -1,7 +1,7 @@
 /*
   textdocumentmodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_TEXTDOCUMENTMODEL_H
-#define ENDOSCOPE_TEXTDOCUMENTMODEL_H
+#ifndef GAMMARAY_TEXTDOCUMENTMODEL_H
+#define GAMMARAY_TEXTDOCUMENTMODEL_H
 
 #include <QStandardItemModel>
 #include <qtextobject.h>
@@ -32,7 +32,7 @@ class QTextBlock;
 class QTextFrame;
 class QTextDocument;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class TextDocumentModel : public QStandardItemModel
 {

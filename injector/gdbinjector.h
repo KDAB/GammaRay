@@ -1,7 +1,7 @@
 /*
   gdbinjector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,13 +21,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_GDBINJECTOR_H
-#define ENDOSCOPE_GDBINJECTOR_H
+#ifndef GAMMARAY_GDBINJECTOR_H
+#define GAMMARAY_GDBINJECTOR_H
 
 #include <injector/abstractinjector.h>
 #include <qprocess.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class GdbInjector : public QObject, public AbstractInjector
 {
@@ -64,4 +64,4 @@ class GdbInjector : public QObject, public AbstractInjector
 
 }
 
-#endif // ENDOSCOPE_GDBINJECTOR_H
+#endif // GAMMARAY_GDBINJECTOR_H

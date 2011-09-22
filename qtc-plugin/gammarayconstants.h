@@ -32,27 +32,34 @@
 **
 **************************************************************************/
 
-#ifndef ENDOSCOPEPLUGIN_H
-#define ENDOSCOPEPLUGIN_H
+#ifndef GAMMARAYCONSTANTS_H
+#define GAMMARAYCONSTANTS_H
 
-#include <extensionsystem/iplugin.h>
+#include <QtCore/QLatin1String>
+#include <QtCore/QMetaType>
 
-namespace Endoscope {
+namespace Gammaray {
+namespace Constants {
 
-class EndoscopePlugin : public ExtensionSystem::IPlugin
-{
-    Q_OBJECT
+const QLatin1String RUNMODE("Gammaray");
+const char TOOLID[] = "Gammaray";
 
-public:
-    EndoscopePlugin();
-    virtual ~EndoscopePlugin();
-
-    bool initialize(const QStringList &arguments, QString *errorString);
-    void extensionsInitialized();
-
-    ShutdownFlag aboutToShutdown();
+enum InjectorType {
+    DefaultInjector,
+    GDBInjector,
+    StyleInjector,
+#ifndef Q_OS_WIN
+    PreloadInjector,
+#else
+    WinDLLInjector,
+    DetourInjector,
+#endif
+    INJECTOR_COUNT
 };
 
-} // namespace Endoscope
+} // namespace Constants
+} // namespace Gammaray
 
-#endif // ENDOSCOPEPLUGIN_H
+Q_DECLARE_METATYPE(Gammaray::Constants::InjectorType);
+
+#endif // GAMMARAYCONSTANTS_H

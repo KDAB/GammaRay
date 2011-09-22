@@ -28,8 +28,8 @@
 ** contact the sales department at http://qt.nokia.com/contact.
 **
 **************************************************************************/
-#ifndef ENDOSCOPEENGINE_H
-#define ENDOSCOPEENGINE_H
+#ifndef GAMMARAYENGINE_H
+#define GAMMARAYENGINE_H
 
 #include <analyzerbase/ianalyzerengine.h>
 
@@ -37,19 +37,19 @@
 
 #include <utils/qtcprocess.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
-class EndoscopeBaseSettings;
+class GammarayBaseSettings;
 
-class EndoscopeEngine : public Analyzer::IAnalyzerEngine
+class GammarayEngine : public Analyzer::IAnalyzerEngine
 {
     Q_OBJECT
 
 public:
-    EndoscopeEngine(Analyzer::IAnalyzerTool *tool,
+    GammarayEngine(Analyzer::IAnalyzerTool *tool,
                     const Analyzer::AnalyzerStartParameters &sp,
                     ProjectExplorer::RunConfiguration *runConfiguration);
-    ~EndoscopeEngine();
+    ~GammarayEngine();
 
     virtual bool start();
     virtual void stop();
@@ -68,9 +68,9 @@ private:
     Utils::QtcProcess m_process;
     QFutureInterface<void> m_progress;
     QFutureWatcher<void> m_progressWatcher;
-    EndoscopeBaseSettings *m_settings;
+    GammarayBaseSettings *m_settings;
 };
 
 }
 
-#endif // ENDOSCOPEENGINE_H
+#endif // GAMMARAYENGINE_H

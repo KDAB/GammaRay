@@ -1,7 +1,7 @@
 /*
   methodinvocationdialog.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_METHODINVOCATIONDIALOG_H
-#define ENDOSCOPE_METHODINVOCATIONDIALOG_H
+#ifndef GAMMARAY_METHODINVOCATIONDIALOG_H
+#define GAMMARAY_METHODINVOCATIONDIALOG_H
 
 #include "ui_methodinvocationdialog.h"
 #include <qmetaobject.h>
 #include <QDialog>
 #include <QPointer>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class MethodArgumentModel;
 
@@ -50,4 +50,4 @@ class MethodInvocationDialog : public QDialog
 
 }
 
-#endif // ENDOSCOPE_METHODINVOCATIONDIALOG_H
+#endif // GAMMARAY_METHODINVOCATIONDIALOG_H

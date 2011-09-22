@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::MainWindow</class>
- <widget class="QMainWindow" name="Endoscope::MainWindow">
+ <class>Gammaray::MainWindow</class>
+ <widget class="QMainWindow" name="Gammaray::MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -26,9 +26,9 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_Endoscope">
+   <widget class="QMenu" name="menu_Gammaray">
     <property name="title">
-     <string>&amp;Endoscope</string>
+     <string>&amp;Gammaray</string>
     </property>
     <addaction name="actionRetractProbe"/>
     <addaction name="actionQuit"/>
@@ -37,11 +37,11 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionAboutEndoscope"/>
+    <addaction name="actionAboutGammaray"/>
     <addaction name="actionAboutKDAB"/>
     <addaction name="actionAboutQt"/>
    </widget>
-   <addaction name="menu_Endoscope"/>
+   <addaction name="menu_Gammaray"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -80,9 +80,9 @@
     <string>Quit probed application.</string>
    </property>
   </action>
-  <action name="actionAboutEndoscope">
+  <action name="actionAboutGammaray">
    <property name="text">
-    <string>About &amp;Endoscope</string>
+    <string>About &amp;Gammaray</string>
    </property>
   </action>
   <action name="actionAboutQt">
@@ -97,7 +97,7 @@
   </action>
  </widget>
  <resources>
-  <include location="resources/endoscope.qrc"/>
+  <include location="resources/gammaray.qrc"/>
  </resources>
  <connections/>
 </ui>

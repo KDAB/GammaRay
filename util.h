@@ -1,7 +1,7 @@
 /*
   util.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_UTIL_H
-#define ENDOSCOPE_UTIL_H
+#ifndef GAMMARAY_UTIL_H
+#define GAMMARAY_UTIL_H
 
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
 class QObject;
 
-namespace Endoscope {
+namespace Gammaray {
 
 namespace Util
 {
@@ -51,4 +51,4 @@ namespace Util
 
 }
 
-#endif // ENDOSCOPE_UTIL_H
+#endif // GAMMARAY_UTIL_H

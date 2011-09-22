@@ -1,7 +1,7 @@
 /*
   attachdialog.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -28,7 +28,7 @@
 
 #include "ui_attachdialog.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ProcessModel;
 class ProcessFilterModel;
@@ -51,6 +51,6 @@ class AttachDialog : public QDialog
     ProcessFilterModel *m_proxyModel;
 };
 
-} // namespace Endoscope
+} // namespace Gammaray
 
 #endif // ATTACHDIALOG_H

@@ -1,7 +1,7 @@
 /*
   modelinspector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,13 +21,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_MODELINSPECTOR_H
-#define ENDOSCOPE_MODELINSPECTOR_H
+#ifndef GAMMARAY_MODELINSPECTOR_H
+#define GAMMARAY_MODELINSPECTOR_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ModelModel;
 class ModelTester;
@@ -35,7 +35,7 @@ class ModelTester;
 class ModelInspector : public QObject, public ToolFactory
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit ModelInspector(QObject *parent = 0);
     virtual QString name() const;
@@ -52,4 +52,4 @@ class ModelInspector : public QObject, public ToolFactory
 
 }
 
-#endif // ENDOSCOPE_MODELINSPECTOR_H
+#endif // GAMMARAY_MODELINSPECTOR_H

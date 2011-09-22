@@ -1,7 +1,7 @@
 /*
   sceneinspector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_SCENEINSPECTOR_H
-#define ENDOSCOPE_SCENEINSPECTOR_H
+#ifndef GAMMARAY_SCENEINSPECTOR_H
+#define GAMMARAY_SCENEINSPECTOR_H
 
 #include <qwidget.h>
 #include <toolfactory.h>
@@ -30,7 +30,7 @@
 
 class QModelIndex;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class SceneModel;
 namespace Ui { class SceneInspector; }
@@ -55,7 +55,7 @@ class SceneInspectorFactory : public QObject,
                               public StandardToolFactory<QGraphicsScene, SceneInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Endoscope::ToolFactory)
+  Q_INTERFACES(Gammaray::ToolFactory)
   public:
     explicit SceneInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Graphics Scenes"); }
@@ -63,4 +63,4 @@ class SceneInspectorFactory : public QObject,
 
 }
 
-#endif // ENDOSCOPE_SCENEINSPECTOR_H
+#endif // GAMMARAY_SCENEINSPECTOR_H

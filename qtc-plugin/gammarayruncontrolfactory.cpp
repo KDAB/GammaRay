@@ -29,9 +29,9 @@
 **
 **************************************************************************/
 
-#include "endoscoperuncontrolfactory.h"
+#include "gammarayruncontrolfactory.h"
 
-#include "endoscopeconstants.h"
+#include "gammarayconstants.h"
 
 #include <utils/qtcassert.h>
 
@@ -43,22 +43,22 @@
 
 #include <projectexplorer/applicationrunconfiguration.h>
 
-using namespace Endoscope;
+using namespace Gammaray;
 using namespace ProjectExplorer;
 using namespace Analyzer;
 
-EndoscopeRunControlFactory::EndoscopeRunControlFactory(QObject *parent)
+GammarayRunControlFactory::GammarayRunControlFactory(QObject *parent)
   : IRunControlFactory(parent)
 {
-  setObjectName(QLatin1String("EndoscopeRuncontrolFactory"));
+  setObjectName(QLatin1String("GammarayRuncontrolFactory"));
 }
 
-QString EndoscopeRunControlFactory::displayName() const
+QString GammarayRunControlFactory::displayName() const
 {
-  return tr("Endoscope");
+  return tr("Gammaray");
 }
 
-bool EndoscopeRunControlFactory::canRun(RunConfiguration *runConfiguration,
+bool GammarayRunControlFactory::canRun(RunConfiguration *runConfiguration,
                                         const QString &mode) const
 {
   return
@@ -66,7 +66,7 @@ bool EndoscopeRunControlFactory::canRun(RunConfiguration *runConfiguration,
     dynamic_cast<LocalApplicationRunConfiguration*>(runConfiguration);
 }
 
-RunControl *EndoscopeRunControlFactory::create(RunConfiguration *runConfiguration,
+RunControl *GammarayRunControlFactory::create(RunConfiguration *runConfiguration,
                                                const QString &mode)
 {
   QTC_ASSERT(canRun(runConfiguration, mode), return 0);
@@ -91,7 +91,7 @@ RunControl *EndoscopeRunControlFactory::create(RunConfiguration *runConfiguratio
 }
 
 RunConfigWidget *
-EndoscopeRunControlFactory::createConfigurationWidget(RunConfiguration *runConfiguration)
+GammarayRunControlFactory::createConfigurationWidget(RunConfiguration *runConfiguration)
 {
   AnalyzerProjectSettings *settings = runConfiguration->extraAspect<AnalyzerProjectSettings>();
   if (!settings) {
@@ -103,7 +103,7 @@ EndoscopeRunControlFactory::createConfigurationWidget(RunConfiguration *runConfi
   return ret;
 }
 
-IRunConfigurationAspect *EndoscopeRunControlFactory::createRunConfigurationAspect()
+IRunConfigurationAspect *GammarayRunControlFactory::createRunConfigurationAspect()
 {
   return new AnalyzerProjectSettings;
 }

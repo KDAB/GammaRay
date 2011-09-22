@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Endoscope::PropertyWidget</class>
- <widget class="QWidget" name="Endoscope::PropertyWidget">
+ <class>Gammaray::PropertyWidget</class>
+ <widget class="QWidget" name="Gammaray::PropertyWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

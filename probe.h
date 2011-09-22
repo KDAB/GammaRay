@@ -1,7 +1,7 @@
 /*
   probe.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_PROBE_H
-#define ENDOSCOPE_PROBE_H
+#ifndef GAMMARAY_PROBE_H
+#define GAMMARAY_PROBE_H
 
 #include <qobject.h>
 #include "probeinterface.h"
@@ -31,7 +31,7 @@
 
 class QGraphicsItem;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ConnectionModel;
 class ObjectListModel;
@@ -65,8 +65,8 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
     static const char *connectLocation(const char *member);
 
-    Endoscope::MainWindow *window() const;
-    void setWindow(Endoscope::MainWindow *window);
+    Gammaray::MainWindow *window() const;
+    void setWindow(Gammaray::MainWindow *window);
 
     QObject *probe() const;
 
@@ -95,7 +95,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     ObjectTreeModel *m_objectTreeModel;
     ConnectionModel *m_connectionModel;
     ToolModel *m_toolModel;
-    Endoscope::MainWindow *m_window;
+    Gammaray::MainWindow *m_window;
     // ensures proper information is returned by isValidObject by
     // locking it in objectAdded/Removed
     QMutex m_mutex;
@@ -103,4 +103,4 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
 }
 
-#endif // ENDOSCOPE_PROBE_H
+#endif // GAMMARAY_PROBE_H

@@ -1,7 +1,7 @@
 /*
   metaobjectmodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_METAOBJECTMODEL_H
-#define ENDOSCOPE_METAOBJECTMODEL_H
+#ifndef GAMMARAY_METAOBJECTMODEL_H
+#define GAMMARAY_METAOBJECTMODEL_H
 
 #include <qabstractitemmodel.h>
 #include <QtCore/qsharedpointer.h>
 #include <QMetaObject>
 #include <QPointer>
 
-namespace Endoscope {
+namespace Gammaray {
 
 template <typename MetaThing,
           MetaThing (QMetaObject::*MetaAccessor)(int) const,
@@ -108,4 +108,4 @@ class MetaObjectModel : public QAbstractItemModel
 
 }
 
-#endif // ENDOSCOPE_METAOBJECTMODEL_H
+#endif // GAMMARAY_METAOBJECTMODEL_H

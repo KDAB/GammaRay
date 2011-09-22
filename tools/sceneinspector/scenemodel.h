@@ -1,7 +1,7 @@
 /*
   scenemodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_SCENEMODEL_H
-#define ENDOSCOPE_SCENEMODEL_H
+#ifndef GAMMARAY_SCENEMODEL_H
+#define GAMMARAY_SCENEMODEL_H
 
 #include <qabstractitemmodel.h>
 
 class QGraphicsScene;
 class QGraphicsItem;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class SceneModel : public QAbstractItemModel
 {
@@ -54,4 +54,4 @@ class SceneModel : public QAbstractItemModel
 
 }
 
-#endif // ENDOSCOPE_SCENEMODEL_H
+#endif // GAMMARAY_SCENEMODEL_H

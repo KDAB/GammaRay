@@ -1,7 +1,7 @@
 /*
   singlecolumnobjectproxymodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_SINGLECOLUMNOBJECTPROXYMODEL_H
-#define ENDOSCOPE_SINGLECOLUMNOBJECTPROXYMODEL_H
+#ifndef GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
+#define GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 
 #include "kde/kidentityproxymodel.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 class SingleColumnObjectProxyModel : public KIdentityProxyModel
 {
@@ -38,4 +38,4 @@ class SingleColumnObjectProxyModel : public KIdentityProxyModel
 
 }
 
-#endif // ENDOSCOPE_SINGLECOLUMNOBJECTPROXYMODEL_H
+#endif // GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H

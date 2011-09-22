@@ -1,7 +1,7 @@
 /*
   preloadinjector.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -30,7 +30,7 @@
 #include <QProcess>
 #include <cstdlib>
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 PreloadInjector::PreloadInjector() :
   mExitCode(-1),
@@ -51,10 +51,10 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   //env.insert("DYLD_PRINT_ENV", QLatin1String("1"));
   //env.insert("DYLD_PRINT_LIBRARIES", QLatin1String("1"));
   //env.insert("DYLD_PRINT_INITIALIZERS", QLatin1String("1"));
-  env.insert("ENDOSCOPE_UNSET_DYLD", "1");
+  env.insert("GAMMARAY_UNSET_DYLD", "1");
 #else
   env.insert("LD_PRELOAD", probeDll);
-  env.insert("ENDOSCOPE_UNSET_PRELOAD", "1");
+  env.insert("GAMMARAY_UNSET_PRELOAD", "1");
 #endif
   InteractiveProcess proc;
   proc.setProcessEnvironment(env);
@@ -62,17 +62,17 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
 
   QStringList args = programAndArgs;
 
-  if (env.value("ENDOSCOPE_GDB").toInt()) {
+  if (env.value("GAMMARAY_GDB").toInt()) {
     QStringList newArgs;
     newArgs << "gdb" << "--eval-command" << "run" << "--args";
     newArgs += args;
     args = newArgs;
-  } else if (env.value("ENDOSCOPE_MEMCHECK").toInt()) {
+  } else if (env.value("GAMMARAY_MEMCHECK").toInt()) {
     QStringList newArgs;
     newArgs << "valgrind" << "--tool=memcheck" << "--track-origins=yes" << "--num-callers=25";
     newArgs += args;
     args = newArgs;
-  } else if (env.value("ENDOSCOPE_HELGRIND").toInt()) {
+  } else if (env.value("GAMMARAY_HELGRIND").toInt()) {
     QStringList newArgs;
     newArgs << "valgrind" << "--tool=helgrind";
     newArgs += args;

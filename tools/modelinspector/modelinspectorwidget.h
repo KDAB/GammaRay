@@ -1,7 +1,7 @@
 /*
   modelinspectorwidget.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,14 +21,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_MODELINSPECTORWIDGET_H
-#define ENDOSCOPE_MODELINSPECTORWIDGET_H
+#ifndef GAMMARAY_MODELINSPECTORWIDGET_H
+#define GAMMARAY_MODELINSPECTORWIDGET_H
 
 #include <QWidget>
 
 class QModelIndex;
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ModelCellModel;
 class ModelInspector;
@@ -53,4 +53,4 @@ class ModelInspectorWidget : public QWidget
 
 }
 
-#endif // ENDOSCOPE_MODELINSPECTORWIDGET_H
+#endif // GAMMARAY_MODELINSPECTORWIDGET_H

@@ -1,7 +1,7 @@
 /*
   objectdynamicpropertymodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTDYNAMICPROPERTYMODEL_H
-#define ENDOSCOPE_OBJECTDYNAMICPROPERTYMODEL_H
+#ifndef GAMMARAY_OBJECTDYNAMICPROPERTYMODEL_H
+#define GAMMARAY_OBJECTDYNAMICPROPERTYMODEL_H
 
 #include "objectpropertymodel.h"
 
-namespace Endoscope {
+namespace Gammaray {
 
 class ObjectDynamicPropertyModel : public ObjectPropertyModel
 {
@@ -43,4 +43,4 @@ class ObjectDynamicPropertyModel : public ObjectPropertyModel
 
 }
 
-#endif // ENDOSCOPE_OBJECTDYNAMICPROPERTYMODEL_H
+#endif // GAMMARAY_OBJECTDYNAMICPROPERTYMODEL_H

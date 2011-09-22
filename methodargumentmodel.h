@@ -1,7 +1,7 @@
 /*
   methodargumentmodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,15 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_METHODARGUMENTMODEL_H
-#define ENDOSCOPE_METHODARGUMENTMODEL_H
+#ifndef GAMMARAY_METHODARGUMENTMODEL_H
+#define GAMMARAY_METHODARGUMENTMODEL_H
 
 #include <QtCore/qabstractitemmodel.h>
 #include <qmetaobject.h>
 #include <QVector>
 #include <QtCore/qsharedpointer.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
 class SafeArgument
 {
@@ -67,4 +67,4 @@ class MethodArgumentModel : public QAbstractTableModel
 
 }
 
-#endif // ENDOSCOPE_METHODARGUMENTMODEL_H
+#endif // GAMMARAY_METHODARGUMENTMODEL_H

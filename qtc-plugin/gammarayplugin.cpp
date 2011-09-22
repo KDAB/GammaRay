@@ -32,11 +32,11 @@
 **
 **************************************************************************/
 
-#include "endoscopeplugin.h"
+#include "gammarayplugin.h"
 
-#include "endoscopetool.h"
-#include "endoscoperuncontrolfactory.h"
-#include "endoscopesettings.h"
+#include "gammaraytool.h"
+#include "gammarayruncontrolfactory.h"
+#include "gammaraysettings.h"
 
 #include <analyzerbase/analyzermanager.h>
 #include <analyzerbase/analyzersettings.h>
@@ -45,56 +45,56 @@
 #include <QtCore/QDebug>
 
 using namespace Analyzer;
-using namespace Endoscope;
+using namespace Gammaray;
 
 ////////////////////////////////////////////////////////////////////////
 //
-// EndoscopePlugin
+// GammarayPlugin
 //
 ////////////////////////////////////////////////////////////////////////
 
-EndoscopePlugin::EndoscopePlugin()
+GammarayPlugin::GammarayPlugin()
 {
 }
 
-EndoscopePlugin::~EndoscopePlugin()
+GammarayPlugin::~GammarayPlugin()
 {
 }
 
-static AbstractAnalyzerSubConfig *globalEndoscopeFactory()
+static AbstractAnalyzerSubConfig *globalGammarayFactory()
 {
-  return new EndoscopeGlobalSettings();
+  return new GammarayGlobalSettings();
 }
 
-static AbstractAnalyzerSubConfig *projectEndoscopeFactory()
+static AbstractAnalyzerSubConfig *projectGammarayFactory()
 {
-  return new EndoscopeProjectSettings();
+  return new GammarayProjectSettings();
 }
 
-bool EndoscopePlugin::initialize(const QStringList &/*arguments*/, QString */*errorString*/)
+bool GammarayPlugin::initialize(const QStringList &/*arguments*/, QString */*errorString*/)
 {
-  AnalyzerGlobalSettings::instance()->registerSubConfigs(&globalEndoscopeFactory,
-                                                         &projectEndoscopeFactory);
+  AnalyzerGlobalSettings::instance()->registerSubConfigs(&globalGammarayFactory,
+                                                         &projectGammarayFactory);
 
-  addAutoReleasedObject(new EndoscopeRunControlFactory());
+  addAutoReleasedObject(new GammarayRunControlFactory());
 
   StartModes modes;
   // They are handled the same actually.
   //modes.append(StartMode(StartRemote));
   modes.append(StartMode(StartLocal));
-  AnalyzerManager::addTool(new EndoscopeTool(this), modes);
+  AnalyzerManager::addTool(new GammarayTool(this), modes);
 
   return true;
 }
 
-void EndoscopePlugin::extensionsInitialized()
+void GammarayPlugin::extensionsInitialized()
 {
   // Retrieve objects from the plugin manager's object pool.
   // "In the extensionsInitialized method, a plugin can be sure that all
   //  plugins that depend on it are completely initialized."
 }
 
-ExtensionSystem::IPlugin::ShutdownFlag EndoscopePlugin::aboutToShutdown()
+ExtensionSystem::IPlugin::ShutdownFlag GammarayPlugin::aboutToShutdown()
 {
   // Save settings.
   // Disconnect from signals that are not needed during shutdown
@@ -102,4 +102,4 @@ ExtensionSystem::IPlugin::ShutdownFlag EndoscopePlugin::aboutToShutdown()
   return SynchronousShutdown;
 }
 
-Q_EXPORT_PLUGIN(EndoscopePlugin)
+Q_EXPORT_PLUGIN(GammarayPlugin)

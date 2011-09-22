@@ -1,7 +1,7 @@
 /*
   objectlistmodel.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_OBJECTLISTMODEL_H
-#define ENDOSCOPE_OBJECTLISTMODEL_H
+#ifndef GAMMARAY_OBJECTLISTMODEL_H
+#define GAMMARAY_OBJECTLISTMODEL_H
 
 #include "objectmodelbase.h"
 
@@ -30,7 +30,7 @@
 #include <QPointer>
 #include <QReadWriteLock>
 
-namespace Endoscope {
+namespace Gammaray {
 
 /**
  * NOTE: Making the model itself threadsafe works in theory,
@@ -71,4 +71,4 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
 
 }
 
-#endif // ENDOSCOPE_OBJECTLISTMODEL_H
+#endif // GAMMARAY_OBJECTLISTMODEL_H

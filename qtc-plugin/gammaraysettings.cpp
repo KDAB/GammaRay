@@ -32,8 +32,8 @@
 **
 **************************************************************************/
 
-#include "endoscopesettings.h"
-#include "endoscopeconfigwidget.h"
+#include "gammaraysettings.h"
+#include "gammarayconfigwidget.h"
 
 #include <coreplugin/icore.h>
 #include <utils/qtcassert.h>
@@ -43,33 +43,33 @@
 
 using namespace Analyzer;
 
-namespace Endoscope {
-static const QLatin1String executableC("Analyzer.Endoscope.Executable");
-static const QLatin1String injectorC("Analyzer.Endoscope.Injector");
+namespace Gammaray {
+static const QLatin1String executableC("Analyzer.Gammaray.Executable");
+static const QLatin1String injectorC("Analyzer.Gammaray.Injector");
 
-QVariantMap EndoscopeBaseSettings::toMap() const
+QVariantMap GammarayBaseSettings::toMap() const
 {
     QVariantMap map;
 
-    map.insert(executableC, m_endoscopeExecutable);
+    map.insert(executableC, m_gammarayExecutable);
     map.insert(injectorC, m_injector);
 
     return map;
 }
 
-QVariantMap EndoscopeBaseSettings::defaults() const
+QVariantMap GammarayBaseSettings::defaults() const
 {
     QVariantMap map;
 
-    map.insert(executableC, QLatin1String("endoscope"));
+    map.insert(executableC, QLatin1String("gammaray"));
     map.insert(injectorC, Constants::DefaultInjector);
 
     return map;
 }
 
-bool EndoscopeBaseSettings::fromMap(const QVariantMap &map)
+bool GammarayBaseSettings::fromMap(const QVariantMap &map)
 {
-    setIfPresent(map, executableC, &m_endoscopeExecutable);
+    setIfPresent(map, executableC, &m_gammarayExecutable);
     int injector = 0;
     setIfPresent(map, injectorC, &injector);
     QTC_CHECK(injector >= 0 && injector < Constants::INJECTOR_COUNT);
@@ -79,40 +79,40 @@ bool EndoscopeBaseSettings::fromMap(const QVariantMap &map)
     return true;
 }
 
-QString EndoscopeBaseSettings::id() const
+QString GammarayBaseSettings::id() const
 {
-    return "Analyzer.Endoscope.Settings";
+    return "Analyzer.Gammaray.Settings";
 }
 
-QString EndoscopeBaseSettings::displayName() const
+QString GammarayBaseSettings::displayName() const
 {
-    return tr("Endoscope");
+    return tr("Gammaray");
 }
 
-QString EndoscopeBaseSettings::endoscopeExecutable() const
+QString GammarayBaseSettings::gammarayExecutable() const
 {
-    return m_endoscopeExecutable;
+    return m_gammarayExecutable;
 }
 
-void EndoscopeBaseSettings::setEndoscopeExecutable(const QString &exe)
+void GammarayBaseSettings::setGammarayExecutable(const QString &exe)
 {
-    m_endoscopeExecutable = exe;
+    m_gammarayExecutable = exe;
 }
 
-Constants::InjectorType EndoscopeBaseSettings::injector() const
+Constants::InjectorType GammarayBaseSettings::injector() const
 {
     return m_injector;
 }
 
-void EndoscopeBaseSettings::setInjector(Constants::InjectorType injector)
+void GammarayBaseSettings::setInjector(Constants::InjectorType injector)
 {
     m_injector = injector;
     QTC_CHECK(m_injector == injector);
 }
 
-QWidget *EndoscopeBaseSettings::createConfigWidget(QWidget *parent)
+QWidget *GammarayBaseSettings::createConfigWidget(QWidget *parent)
 {
-    return new EndoscopeConfigWidget(this, parent);
+    return new GammarayConfigWidget(this, parent);
 }
 
 }

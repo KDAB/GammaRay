@@ -1,7 +1,7 @@
 /*
   styleinjector.h
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -21,14 +21,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENDOSCOPE_STYLEINJECTOR_H
-#define ENDOSCOPE_STYLEINJECTOR_H
+#ifndef GAMMARAY_STYLEINJECTOR_H
+#define GAMMARAY_STYLEINJECTOR_H
 
 #include <injector/abstractinjector.h>
 
-namespace Endoscope {
+namespace Gammaray {
 
-class StyleInjector : public Endoscope::AbstractInjector
+class StyleInjector : public Gammaray::AbstractInjector
 {
 
 public:
@@ -52,4 +52,4 @@ public:
 
 }
 
-#endif // ENDOSCOPE_STYLEINJECTOR_H
+#endif // GAMMARAY_STYLEINJECTOR_H

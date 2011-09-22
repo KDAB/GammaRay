@@ -1,7 +1,7 @@
 /*
   connectionfilterproxymodel.cpp
 
-  This file is part of Endoscope, the Qt application inspection and
+  This file is part of Gammaray, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -24,7 +24,7 @@
 #include "connectionfilterproxymodel.h"
 #include "connectionmodel.h"
 
-using namespace Endoscope;
+using namespace Gammaray;
 
 ConnectionFilterProxyModel::ConnectionFilterProxyModel(QObject *parent)
   : QSortFilterProxyModel(parent),
