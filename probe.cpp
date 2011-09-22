@@ -213,6 +213,7 @@ QObject *Probe::probe() const
 
 bool Probe::isValidObject(QObject* obj) const
 {
+  QMutexLocker lock(&m_mutex);
   return m_objectListModel->isValidObject(obj);
 }
 

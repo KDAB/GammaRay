@@ -37,33 +37,24 @@ ObjectTreeModel::ObjectTreeModel(QObject *parent)
 {
 }
 
-void ObjectTreeModel::objectAdded(const QPointer<QObject> &objPtr)
+void ObjectTreeModel::objectAdded(QObject *obj)
 {
-  if (!objPtr) {
-    return;
-  }
-
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QPointer<QObject>, objPtr));
+                            Q_ARG(QObject*, obj));
 }
 
-void ObjectTreeModel::objectAddedMainThread(const QPointer<QObject> &objPtr)
+void ObjectTreeModel::objectAddedMainThread(QObject *obj)
 {
   Q_ASSERT(thread() == QThread::currentThread());
 
-  if (!objPtr) {
-    return;
-  }
-
   QWriteLocker lock(&m_lock);
 
-  QObject* obj = objPtr.data();
-  if (!objPtr || !Probe::instance()->isValidObject(obj)) {
+  if (!Probe::instance()->isValidObject(obj)) {
     return;
   }
 
-  if (!objPtr || m_childParentMap.contains(obj)) {
+  if (m_childParentMap.contains(obj)) {
     return;
   }
 

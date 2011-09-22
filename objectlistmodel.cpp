@@ -65,34 +65,27 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
   return m_objects.size();
 }
 
-void ObjectListModel::objectAdded(const QPointer<QObject> &objPtr)
+void ObjectListModel::objectAdded(QObject* obj)
 {
-  if (!objPtr) {
-    return;
+  {
+  QWriteLocker lock(&m_lock);
+  m_objectsHash[obj] = true;
   }
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QPointer<QObject>, objPtr));
+                            Q_ARG(QObject*, obj));
 }
 
-void ObjectListModel::objectAddedMainThread(const QPointer< QObject >& objPtr)
+void ObjectListModel::objectAddedMainThread(QObject *obj)
 {
-  if (!objPtr) {
-    return;
-  }
-
   QWriteLocker lock(&m_lock);
-
-  QObject *obj = objPtr.data();
-  if (m_objects.contains(obj)) {
-    m_objectsHash[obj] = !objPtr.isNull();
+  if (!m_objectsHash.value(obj, false) || m_objects.contains(obj)) {
     return;
   }
 
   beginInsertRows(QModelIndex(), m_objects.size(), m_objects.size());
   m_objects << obj;
-  m_objectsHash[obj] = !objPtr.isNull();
   endInsertRows();
 }
 
@@ -101,10 +94,7 @@ void ObjectListModel::objectRemoved(QObject *obj)
   if (thread() != QThread::currentThread()) {
     // invalidate data
     QWriteLocker lock(&m_lock);
-    QHash< QObject *, bool >::iterator it = m_objectsHash.find(obj);
-    if (it != m_objectsHash.end()) {
-      it.value() = false;
-    }
+    m_objectsHash.remove(obj);
   }
 
   // when called from background, delay into foreground, otherwise call directly
@@ -115,8 +105,6 @@ void ObjectListModel::objectRemoved(QObject *obj)
 void ObjectListModel::objectRemovedMainThread(QObject *obj)
 {
   QWriteLocker lock(&m_lock);
-
-  m_objectsHash.remove(obj);
 
   const int index = m_objects.indexOf(obj);
   if (index == -1) {

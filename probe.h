@@ -98,7 +98,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     Gammaray::MainWindow *m_window;
     // ensures proper information is returned by isValidObject by
     // locking it in objectAdded/Removed
-    QMutex m_mutex;
+    mutable QMutex m_mutex;
 };
 
 }

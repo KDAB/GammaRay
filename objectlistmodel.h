@@ -27,7 +27,6 @@
 #include "objectmodelbase.h"
 
 #include <QVector>
-#include <QPointer>
 #include <QReadWriteLock>
 
 namespace Gammaray {
@@ -52,13 +51,13 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    void objectAdded(const QPointer<QObject> &objPtr);
+    void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
 
     bool isValidObject(QObject *obj) const;
 
   private slots:
-    void objectAddedMainThread(const QPointer<QObject> &objPtr);
+    void objectAddedMainThread(QObject *obj);
     void objectRemovedMainThread(QObject* obj);
 
   private:
