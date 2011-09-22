@@ -90,7 +90,7 @@ void MainWindow::about()
   mb.setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
   mb.setInformativeText(
     tr("<qt>Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
-       "a KDAB Group company, info@kdab.com</qt>"));
+       "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></qt>"));
   mb.setIconPixmap(QPixmap(":endoscope/endoscope128.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
@@ -105,7 +105,7 @@ void MainWindow::aboutKDAB()
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> to meet the people who write code like this."
        "We also offer Qt training courses.</p>"
-       "<p>Head Engineer for Endoscope is<br>Volker Krause &lt;volker.krause@kdab.com&gt;</p></qt>").
+       "<p>Head Engineer for Endoscope is<br>Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;</p></qt>").
     arg(progName));
   mb.setIconPixmap(QPixmap(":endoscope/kdablogo160.png"));
   mb.addButton(QMessageBox::Close);
