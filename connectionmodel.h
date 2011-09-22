@@ -43,6 +43,7 @@ class ConnectionModel : public QAbstractTableModel
     };
     explicit ConnectionModel(QObject *parent = 0);
 
+    /// can be called from arbitrary threads
     void connectionAdded(QObject *sender, const char *signal,
                          QObject *receiver, const char *method,
                          Qt::ConnectionType type);
@@ -54,9 +55,17 @@ class ConnectionModel : public QAbstractTableModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
+  private slots:
+    void connectionAddedMainThread(QObject *sender, const char *signal,
+                                   QObject *receiver, const char *method,
+                                   Qt::ConnectionType type);
+    void connectionRemovedMainThread(QObject *sender, const char *signal,
+                                     QObject *receiver, const char *method);
+
   private:
     struct Connection
     {
+      Connection();
       QObject *rawSender;
       QPointer<QObject> sender;
       QByteArray signal;

@@ -104,7 +104,8 @@ Probe::Probe(QObject *parent):
   m_objectTreeModel(new ObjectTreeModel(this)),
   m_connectionModel(new ConnectionModel(this)),
   m_toolModel(new ToolModel(this)),
-  m_window(0)
+  m_window(0),
+  m_mutex(QMutex::Recursive)
 {
   qDebug() << Q_FUNC_INFO;
 
@@ -210,6 +211,11 @@ QObject *Probe::probe() const
   return const_cast<Endoscope::Probe*>(this);
 }
 
+bool Probe::isValidObject(QObject* obj) const
+{
+  return m_objectListModel->isValidObject(obj);
+}
+
 void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
   if (!s_listener()->active && obj->thread() == QThread::currentThread()) {
@@ -235,6 +241,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
 void Probe::objectFullyConstructed(const QPointer< QObject > &obj)
 {
+  QMutexLocker lock(&m_mutex);
   if (!obj) {
     return;
   }
@@ -247,8 +254,10 @@ void Probe::objectFullyConstructed(const QPointer< QObject > &obj)
 void Probe::objectRemoved(QObject *obj)
 {
   if (isInitialized()) {
+    QMutexLocker lock(&instance()->m_mutex);
     instance()->m_objectListModel->objectRemoved(obj);
     instance()->m_objectTreeModel->objectRemoved(obj);
+    lock.unlock();
     instance()->connectionRemoved(obj, 0, 0, 0);
     instance()->connectionRemoved(0, 0, obj, 0);
     emit instance()->objectDestroyed(obj);
@@ -274,6 +283,7 @@ void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiv
       descendantOf(instance(), receiver)) {
     return;
   }
+
   instance()->m_connectionModel->connectionAdded(sender, signal, receiver, method, type);
 }
 

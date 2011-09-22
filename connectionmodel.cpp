@@ -23,12 +23,13 @@
 
 #include "connectionmodel.h"
 #include "util.h"
+#include "probe.h"
+#include "readorwritelocker.h"
 
 #include <QDebug>
 #include <QMetaMethod>
 #include <QMetaObject>
-#include "probe.h"
-#include "readorwritelocker.h"
+#include <QThread>
 
 using namespace Endoscope;
 
@@ -55,10 +56,18 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
   return true;
 }
 
+ConnectionModel::Connection::Connection()
+: rawSender(0), rawReceiver(0), type(Qt::AutoConnection), valid(false)
+{
+  
+}
+
 ConnectionModel::ConnectionModel(QObject *parent)
   : QAbstractTableModel(parent),
     m_lock(QReadWriteLock::Recursive)
 {
+  qRegisterMetaType<const char*>("const char*");
+  qRegisterMetaType<Qt::ConnectionType>("Qt::ConnectionType");
 }
 
 void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
@@ -69,7 +78,26 @@ void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
     return;
   }
 
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "connectionAddedMainThread", Qt::AutoConnection,
+                            Q_ARG(QObject* , sender), Q_ARG(const char*, signal),
+                            Q_ARG(QObject* , receiver), Q_ARG(const char*, method),
+                            Q_ARG(Qt::ConnectionType, type));
+}
+
+void ConnectionModel::connectionAddedMainThread(QObject* sender, const char *signal,
+                                                QObject* receiver, const char *method,
+                                                Qt::ConnectionType type)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
+
   QWriteLocker lock(&m_lock);
+
+  if (!Probe::instance()->isValidObject(sender)
+      || !Probe::instance()->isValidObject(receiver)) {
+    return;
+  }
+
   beginInsertRows(QModelIndex(), m_connections.size(), m_connections.size());
   Connection c;
   c.sender = sender;
@@ -110,13 +138,58 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
     normalizedMethod = QMetaObject::normalizedSignature(method);
   }
 
+  if (thread() != QThread::currentThread()) {
+    // called from background thread, invalidate data:
+    QWriteLocker lock(&m_lock);
+    for (int i = 0; i < m_connections.size();) {
+      Connection &con = m_connections[i];
+      if ((sender == 0 || con.rawSender == sender) &&
+          (signal == 0 || con.signal == normalizedSignal) &&
+          (receiver == 0 || con.rawReceiver == receiver) &&
+          (method == 0 || con.method == normalizedMethod)) {
+        con = Connection();
+      } else {
+        ++i;
+      }
+    }
+  }
+
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
+                            Q_ARG(QObject *, sender), Q_ARG(const char*, signal),
+                            Q_ARG(QObject *, receiver), Q_ARG(const char*, method));
+}
+
+void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *signal,
+                                                  QObject *receiver, const char *method)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
+
+  QByteArray normalizedSignal, normalizedMethod;
+  if (signal) {
+    normalizedSignal = QMetaObject::normalizedSignature(signal);
+  }
+  if (method) {
+    normalizedMethod = QMetaObject::normalizedSignature(method);
+  }
+
   QWriteLocker lock(&m_lock);
   for (int i = 0; i < m_connections.size();) {
+    bool remove = false;
+
     const Connection &con = m_connections.at(i);
-    if ((sender == 0 || con.rawSender == sender) &&
+    if (!con.rawReceiver || !con.rawSender || !con.receiver || !con.sender) {
+      // might be invalidated from a background thread
+      remove = true;
+    } else if ((sender == 0 || con.rawSender == sender) &&
         (signal == 0 || con.signal == normalizedSignal) &&
         (receiver == 0 || con.rawReceiver == receiver) &&
         (method == 0 || con.method == normalizedMethod)) {
+      // the connection was actually removed
+      remove = true;
+    }
+
+    if (remove) {
       beginRemoveRows(QModelIndex(), i, i);
       m_connections.remove(i);
       endRemoveRows();

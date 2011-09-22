@@ -25,9 +25,10 @@
 #define ENDOSCOPE_OBJECTTREEMODEL_H
 
 #include "objectmodelbase.h"
-#include <qabstractitemmodel.h>
-#include <qvector.h>
+
+#include <QVector>
 #include <QReadWriteLock>
+#include <QPointer>
 
 namespace Endoscope {
 
@@ -42,8 +43,12 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
     QModelIndex parent(const QModelIndex &child) const;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-    void objectAdded(QObject *obj);
+    void objectAdded(const QPointer<QObject> &objPtr);
     void objectRemoved(QObject *obj);
+
+  private slots:
+    void objectAddedMainThread(const QPointer<QObject> &objPtr);
+    void objectRemovedMainThread(QObject *obj);
 
   private:
     QModelIndex indexForObject(QObject *object) const;
