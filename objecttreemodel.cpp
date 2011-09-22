@@ -23,9 +23,11 @@
 
 #include "objecttreemodel.h"
 
-#include <QtCore/QEvent>
-
 #include "readorwritelocker.h"
+#include "probe.h"
+
+#include <QtCore/QEvent>
+#include <QtCore/QThread>
 
 using namespace Endoscope;
 
@@ -35,12 +37,36 @@ ObjectTreeModel::ObjectTreeModel(QObject *parent)
 {
 }
 
-void ObjectTreeModel::objectAdded(QObject *obj)
+void ObjectTreeModel::objectAdded(const QPointer<QObject> &objPtr)
 {
-  QWriteLocker lock(&m_lock);
-  if (!obj || m_childParentMap.contains(obj)) {
+  if (!objPtr) {
     return;
   }
+
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
+                            Q_ARG(QPointer<QObject>, objPtr));
+}
+
+void ObjectTreeModel::objectAddedMainThread(const QPointer<QObject> &objPtr)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
+
+  if (!objPtr) {
+    return;
+  }
+
+  QWriteLocker lock(&m_lock);
+
+  QObject* obj = objPtr.data();
+  if (!objPtr || !Probe::instance()->isValidObject(obj)) {
+    return;
+  }
+
+  if (!objPtr || m_childParentMap.contains(obj)) {
+    return;
+  }
+
   QVector<QObject*> &children = m_parentChildMap[ obj->parent() ];
   const QModelIndex index = indexForObject(obj->parent());
   if (index.isValid() || !obj->parent()) {
@@ -55,15 +81,25 @@ void ObjectTreeModel::objectAdded(QObject *obj)
 
 void ObjectTreeModel::objectRemoved(QObject *obj)
 {
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
+                            Q_ARG(QObject*, obj));
+}
+
+void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
+{
   QWriteLocker lock(&m_lock);
+
   if (!m_childParentMap.contains(obj)) {
     return;
   }
+
   QObject *parentObj = m_childParentMap[ obj ];
   const QModelIndex parentIndex = indexForObject(parentObj);
   if (parentObj && !parentIndex.isValid()) {
     return;
   }
+
   QVector<QObject*> &children = m_parentChildMap[ parentObj ];
   const int index = children.indexOf(obj);
   if (index < 0 || index >= children.size()) {
@@ -83,7 +119,7 @@ QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 {
   ReadOrWriteLocker lock(&m_lock);
   QObject *obj = reinterpret_cast<QObject*>(index.internalPointer());
-  if (obj) {
+  if (obj && Probe::instance()->isValidObject(obj)) {
     return dataForObject(obj, index, role);
   }
   return QVariant();

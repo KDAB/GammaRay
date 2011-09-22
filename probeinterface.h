@@ -47,6 +47,9 @@ class ProbeInterface
 
     /** Returns the probe QObject for connecting signals. */
     virtual QObject *probe() const = 0;
+
+    /** Returns true when the QObject pointer is still valid, false otherwise. */
+    virtual bool isValidObject(QObject* obj) const = 0;
 };
 
 }

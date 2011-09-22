@@ -25,6 +25,8 @@
 
 #include "readorwritelocker.h"
 
+#include <QThread>
+
 using namespace Endoscope;
 
 ObjectListModel::ObjectListModel(QObject *parent)
@@ -37,8 +39,10 @@ QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
   ReadOrWriteLocker lock(&m_lock);
   if (index.row() >= 0 && index.row() < m_objects.size()) {
-    QObject *obj = m_objects.at(index.row());
-    return dataForObject(obj, index, role);
+    QObject* obj = m_objects.at(index.row());
+    if (m_objectsHash.value(obj, false)) {
+      return dataForObject(obj, index, role);
+    }
   }
   return QVariant();
 }
@@ -63,34 +67,72 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
 
 void ObjectListModel::objectAdded(const QPointer<QObject> &objPtr)
 {
-  QWriteLocker lock(&m_lock);
-
   if (!objPtr) {
     return;
   }
 
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
+                            Q_ARG(QPointer<QObject>, objPtr));
+}
+
+void ObjectListModel::objectAddedMainThread(const QPointer< QObject >& objPtr)
+{
+  if (!objPtr) {
+    return;
+  }
+
+  QWriteLocker lock(&m_lock);
+
   QObject *obj = objPtr.data();
-  const int index = m_objects.indexOf(obj);
-  if (!objPtr || index > 0) {
+  if (m_objects.contains(obj)) {
+    m_objectsHash[obj] = !objPtr.isNull();
     return;
   }
 
   beginInsertRows(QModelIndex(), m_objects.size(), m_objects.size());
-  m_objects.push_back(obj);
+  m_objects << obj;
+  m_objectsHash[obj] = !objPtr.isNull();
   endInsertRows();
 }
 
 void ObjectListModel::objectRemoved(QObject *obj)
 {
+  if (thread() != QThread::currentThread()) {
+    // invalidate data
+    QWriteLocker lock(&m_lock);
+    QHash< QObject *, bool >::iterator it = m_objectsHash.find(obj);
+    if (it != m_objectsHash.end()) {
+      it.value() = false;
+    }
+  }
+
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
+                            Q_ARG(QObject*, obj));
+}
+
+void ObjectListModel::objectRemovedMainThread(QObject *obj)
+{
   QWriteLocker lock(&m_lock);
 
+  m_objectsHash.remove(obj);
+
   const int index = m_objects.indexOf(obj);
-  if (index < 0 || index >= m_objects.size()) {
+  if (index == -1) {
     return;
   }
+
   beginRemoveRows(QModelIndex(), index, index);
   m_objects.remove(index);
   endRemoveRows();
+}
+
+bool ObjectListModel::isValidObject(QObject *obj) const
+{
+  ReadOrWriteLocker lock(&m_lock);
+
+  return m_objectsHash.value(obj, false);
 }
 
 #include "objectlistmodel.moc"

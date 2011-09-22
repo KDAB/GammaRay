@@ -27,6 +27,7 @@
 #include <qobject.h>
 #include "probeinterface.h"
 #include <QPointer>
+#include <QMutex>
 
 class QGraphicsItem;
 
@@ -69,6 +70,8 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
     QObject *probe() const;
 
+    bool isValidObject(QObject* obj) const;
+
   signals:
     void widgetSelected(QWidget *widget);
     void graphicsItemSelected(QGraphicsItem *item);
@@ -93,6 +96,9 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     ConnectionModel *m_connectionModel;
     ToolModel *m_toolModel;
     Endoscope::MainWindow *m_window;
+    // ensures proper information is returned by isValidObject by
+    // locking it in objectAdded/Removed
+    QMutex m_mutex;
 };
 
 }

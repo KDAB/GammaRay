@@ -32,6 +32,17 @@
 
 namespace Endoscope {
 
+/**
+ * NOTE: Making the model itself threadsafe works in theory,
+ * but as soon as we put a proxymodel on top everything breaks.
+ * Esp. the {begin,end}{InsertRemove}Rows() calls trigger
+ * signals which apparently must be delivered directly to the proxy,
+ * otherwise it's internal state may be messed up and assertions
+ * start flying around...
+ * So the solution: only call these methods in the main thread
+ * and on remove. when called from a background thread, invalidate
+ * the data first.
+ */
 class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
 {
   Q_OBJECT
@@ -41,14 +52,21 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
+    void objectAdded(const QPointer<QObject> &objPtr);
     void objectRemoved(QObject *obj);
 
-  public slots:
-    void objectAdded(const QPointer<QObject> &objPtr);
+    bool isValidObject(QObject *obj) const;
+
+  private slots:
+    void objectAddedMainThread(const QPointer<QObject> &objPtr);
+    void objectRemovedMainThread(QObject* obj);
 
   private:
     mutable QReadWriteLock m_lock;
+    // vector for stable iterators/indexes, esp. for the model methods
     QVector<QObject*> m_objects;
+    // hash to allow the background thread to mark the object as invalid
+    QHash<QObject*, bool> m_objectsHash;
 };
 
 }
