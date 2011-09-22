@@ -27,7 +27,7 @@ set(ENDOSCOPE_VERSION_PATCH "0")
 set(ENDOSCOPE_VERSION "${ENDOSCOPE_VERSION_MAJOR}.${ENDOSCOPE_VERSION_MINOR}.${ENDOSCOPE_VERSION_PATCH}")
 set(ENDOSCOPE_VERSION_STRING "${ENDOSCOPE_VERSION}")
 
-ENABLE_TESTING()
+enable_testing()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   find_package(Git)
@@ -286,6 +286,11 @@ set_target_properties(endoscope_probe PROPERTIES PREFIX "")
 
 install(TARGETS endoscope endoscope_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+if(UNIX AND NOT APPLE)
+  set(XDG_APPS_INSTALL_DIR share/applications)
+  install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+endif()
+
 set(LICENSE_FILE "License.txt")
 set(README_FILE "ReadMe.txt")
 if(NOT APPLE)
@@ -325,13 +330,13 @@ set(QTC_SOURCE_DIR "" CACHE STRING "Path to Qt Creator sources")
 set(QTC_BUILD_DIR "" CACHE STRING "Path to Qt Creator build directory")
 if(QTC_SOURCE_DIR AND QTC_BUILD_DIR)
   message(STATUS "building the Qt Creator Endoscope plugin")
-  ExternalProject_add(qtc-plugin
+  externalproject_add(qtc-plugin
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qtc-plugin"
     CONFIGURE_COMMAND ${QT_QMAKE_EXECUTABLE} QTC_SOURCE_DIR="${QTC_SOURCE_DIR}" IDE_BUILD_TREE="${QTC_BUILD_DIR}" ${CMAKE_CURRENT_SOURCE_DIR}/qtc-plugin
     INSTALL_COMMAND ""
   )
-else(QTC_SOURCE_DIR AND QTC_BUILD_DIR)
+else()
   message(STATUS "not building the Qt Creator Endoscope plugin, set QTC_SOURCE_DIR and QTC_BUILD_DIR if you want it")
-endif(QTC_SOURCE_DIR AND QTC_BUILD_DIR)
+endif()
 
 add_subdirectory(tests)
