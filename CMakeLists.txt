@@ -180,7 +180,7 @@ if(USE_DETOURS)
 endif()
 
 qt4_wrap_ui(endoscope_runner_srcs attach/attachdialog.ui)
-qt4_add_resources(endoscope_runner_srcs resources/endoscope.qrc)
+qt4_add_resources(endoscope_runner_srcs resources/gammaray.qrc)
 
 add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
@@ -266,7 +266,7 @@ qt4_wrap_ui(endoscope_srcs
   tools/webinspector/webinspector.ui
   tools/widgetinspector/widgetinspector.ui
 )
-qt4_add_resources(endoscope_srcs resources/endoscope.qrc)
+qt4_add_resources(endoscope_srcs resources/gammaray.qrc)
 add_library(endoscope_probe SHARED ${endoscope_srcs})
 target_link_libraries(endoscope_probe
   ${QT_QTCORE_LIBRARY}

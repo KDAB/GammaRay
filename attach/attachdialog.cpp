@@ -62,8 +62,8 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 
   ui.filter->setProxy(m_proxyModel);
 
-  setWindowTitle(tr("Endoscope - Attach to Process"));
-  setWindowIcon(QIcon(":endoscope/endoscope128.png"));
+  setWindowTitle(tr("GammaRay - Attach to Process"));
+  setWindowIcon(QIcon(":gammaray/gammaray128.png"));
 
   selectionChanged();
 }

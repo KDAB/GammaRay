@@ -14,8 +14,8 @@
    <string>Dialog</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../resources/endoscope.qrc">
-    <normaloff>:/endoscope/endoscope128.png</normaloff>:/endoscope/endoscope128.png</iconset>
+   <iconset resource="../resources/gammaray.qrc">
+    <normaloff>:/gammaray/gammaray128.png</normaloff>:/gammaray/gammaray128.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -63,7 +63,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../resources/endoscope.qrc"/>
+  <include location="../resources/gammaray.qrc"/>
  </resources>
  <connections>
   <connection>

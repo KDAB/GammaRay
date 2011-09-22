@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="gammaray">
+    <file>gammaray512.png</file>
+    <file>gammaray256.png</file>
+    <file>gammaray128.png</file>
+    <file>gammaray48.png</file>
+    <file>gammaray32.png</file>
+    <file>gammaray16.png</file>
+    <file>kdabproducts.png</file>
+    <file>kdablogo160.png</file>
+    <file>splashscreen.png</file>
+  </qresource>
+</RCC>

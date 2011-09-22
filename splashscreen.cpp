@@ -33,7 +33,7 @@ namespace Endoscope {
 void showSplashScreen()
 {
   if (!splash) {
-    QPixmap pixmap(QLatin1String(":endoscope/splashscreen.png"));
+    QPixmap pixmap(QLatin1String(":gammaray/splashscreen.png"));
     splash = new QSplashScreen(pixmap);
     splash->setMask(pixmap.mask());
   }

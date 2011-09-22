@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   connect(ui.actionAboutEndoscope, SIGNAL(triggered(bool)), SLOT(about()));
   connect(ui.actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
-  setWindowIcon(QIcon(":endoscope/endoscope128.png"));
+  setWindowIcon(QIcon(":gammaray/gammaray128.png"));
 
   m_toolSelector = new QComboBox;
   m_toolSelector->setModel(Probe::instance()->toolModel());
@@ -91,7 +91,7 @@ void MainWindow::about()
   mb.setInformativeText(
     tr("<qt>Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
        "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></qt>"));
-  mb.setIconPixmap(QPixmap(":endoscope/endoscope128.png"));
+  mb.setIconPixmap(QPixmap(":gammaray/gammaray128.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
 }
@@ -107,7 +107,7 @@ void MainWindow::aboutKDAB()
        "We also offer Qt training courses.</p>"
        "<p>Head Engineer for Endoscope is<br>Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;</p></qt>").
     arg(progName));
-  mb.setIconPixmap(QPixmap(":endoscope/kdablogo160.png"));
+  mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
 }
