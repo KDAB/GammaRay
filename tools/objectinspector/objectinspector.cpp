@@ -28,6 +28,8 @@
 #include <probeinterface.h>
 #include <objectlistmodel.h>
 
+#include <QLineEdit>
+
 using namespace Gammaray;
 
 ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
@@ -44,6 +46,12 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
   connect(ui->objectTreeView->selectionModel(),
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(objectSelected(QModelIndex)));
+
+  if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
+    QMetaObject::invokeMethod(ui->objectSearchLine->lineEdit(), "setText",
+                              Qt::QueuedConnection,
+                              Q_ARG(QString, QLatin1String("Object")));
+  }
 }
 
 void ObjectInspector::objectSelected(const QModelIndex &index)
