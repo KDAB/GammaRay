@@ -146,6 +146,17 @@ void TestMain::run()
   delete tester;
 }
 
+void TestMain::threading()
+{
+  TestConnections tester1(TestConnections::NoEventLoop, 250);
+  TestConnections tester2(TestConnections::Delete, 250);
+  TestConnections tester3(TestConnections::DeleteLater, 250);
+  TestConnections tester4(TestConnections::Stack, 250);
+  TestConnections tester5(TestConnections::Threaded, 100);
+  TestConnections tester6(TestConnections::Threaded, 100);
+  QTest::qWait(1000);
+}
+
 QTEST_MAIN(TestMain)
 
 #include "test_connections.moc"

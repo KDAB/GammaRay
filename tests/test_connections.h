@@ -64,8 +64,6 @@ class TestThread : public QThread
     TestThread(QObject *obj, QObject *parent);
     virtual ~TestThread();
     virtual void run();
-    // prevent deadlock...
-    bool isRunningNoLock() const;
 
   public slots:
     void dummySlot(){}
@@ -80,6 +78,8 @@ class TestMain : public QObject
   private slots:
     void run_data();
     void run();
+
+    void threading();
 };
 
 #endif // TEST_CONNECTIONS_H
