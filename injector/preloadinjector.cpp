@@ -51,8 +51,10 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   //env.insert("DYLD_PRINT_ENV", QLatin1String("1"));
   //env.insert("DYLD_PRINT_LIBRARIES", QLatin1String("1"));
   //env.insert("DYLD_PRINT_INITIALIZERS", QLatin1String("1"));
+  env.insert("ENDOSCOPE_UNSET_DYLD", "1");
 #else
   env.insert("LD_PRELOAD", probeDll);
+  env.insert("ENDOSCOPE_UNSET_PRELOAD", "1");
 #endif
   InteractiveProcess proc;
   proc.setProcessEnvironment(env);

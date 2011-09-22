@@ -150,6 +150,14 @@ bool Probe::isInitialized()
 
 void Probe::delayedInit()
 {
+  if (qgetenv("ENDOSCOPE_UNSET_PRELOAD") == "1") {
+    qputenv("LD_PRELOAD", "");
+  }
+  if (qgetenv("ENDOSCOPE_UNSET_DYLD") == "1") {
+    qputenv("DYLD_INSERT_LIBRARIES", "");
+    qputenv("DYLD_FORCE_FLAT_NAMESPACE", "");
+  }
+
   QCoreApplication::instance()->installEventFilter(s_instance);
   foreach (QObject *obj, *(s_addedBeforeProbeInsertion())) {
     objectAdded(obj);
