@@ -57,7 +57,7 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
 }
 
 ConnectionModel::Connection::Connection()
-: rawSender(0), rawReceiver(0), type(Qt::AutoConnection), valid(false)
+: sender(0), receiver(0), type(Qt::AutoConnection), valid(false)
 {
   
 }
@@ -101,10 +101,8 @@ void ConnectionModel::connectionAddedMainThread(QObject* sender, const char *sig
   beginInsertRows(QModelIndex(), m_connections.size(), m_connections.size());
   Connection c;
   c.sender = sender;
-  c.rawSender = sender;
   c.signal = QMetaObject::normalizedSignature(signal);
   c.receiver = receiver;
-  c.rawReceiver = receiver;
   c.method = QMetaObject::normalizedSignature(method);
   c.type = type;
   c.location = Probe::connectLocation(signal);
@@ -143,9 +141,9 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
     QWriteLocker lock(&m_lock);
     for (int i = 0; i < m_connections.size();) {
       Connection &con = m_connections[i];
-      if ((sender == 0 || con.rawSender == sender) &&
+      if ((sender == 0 || con.sender == sender) &&
           (signal == 0 || con.signal == normalizedSignal) &&
-          (receiver == 0 || con.rawReceiver == receiver) &&
+          (receiver == 0 || con.receiver == receiver) &&
           (method == 0 || con.method == normalizedMethod)) {
         con = Connection();
       } else {
@@ -178,12 +176,12 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *s
     bool remove = false;
 
     const Connection &con = m_connections.at(i);
-    if (!con.rawReceiver || !con.rawSender || !con.receiver || !con.sender) {
+    if (!con.receiver || !con.sender) {
       // might be invalidated from a background thread
       remove = true;
-    } else if ((sender == 0 || con.rawSender == sender) &&
+    } else if ((sender == 0 || con.sender == sender) &&
         (signal == 0 || con.signal == normalizedSignal) &&
-        (receiver == 0 || con.rawReceiver == receiver) &&
+        (receiver == 0 || con.receiver == receiver) &&
         (method == 0 || con.method == normalizedMethod)) {
       // the connection was actually removed
       remove = true;
@@ -210,8 +208,8 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
   const Connection con = m_connections.at(index.row());
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
-      if (con.sender) {
-        return Util::displayString(con.sender.data());
+      if (con.sender && Probe::instance()->isValidObject(con.sender)) {
+        return Util::displayString(con.sender);
       } else {
         return QLatin1String("<destroyed>");
       }
@@ -220,8 +218,8 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
       return con.signal.mid(1);
     }
     if (index.column() == 2) {
-      if (con.receiver) {
-        return Util::displayString(con.receiver.data());
+      if (con.receiver && Probe::instance()->isValidObject(con.receiver)) {
+        return Util::displayString(con.receiver);
       } else {
         return QLatin1String("<destroyed>");
       }
@@ -251,9 +249,9 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
       return con.location;
     }
   } else if (role == SenderRole) {
-    return QVariant::fromValue(con.sender.data());
+    return QVariant::fromValue(con.sender);
   } else if (role == ReceiverRole) {
-    return QVariant::fromValue(con.receiver.data());
+    return QVariant::fromValue(con.receiver);
   } else if (role == Qt::ForegroundRole) {
     if (!con.valid) {
       return Qt::red;

@@ -27,7 +27,6 @@
 #include <QtCore/qabstractitemmodel.h>
 #include <QVector>
 #include <QtCore/qsharedpointer.h>
-#include <QPointer>
 #include <QReadWriteLock>
 
 namespace Gammaray {
@@ -66,11 +65,9 @@ class ConnectionModel : public QAbstractTableModel
     struct Connection
     {
       Connection();
-      QObject *rawSender;
-      QPointer<QObject> sender;
+      QObject *sender;
       QByteArray signal;
-      QObject *rawReceiver;
-      QPointer<QObject> receiver;
+      QObject *receiver;
       QByteArray method;
       QByteArray location;
       Qt::ConnectionType type;
