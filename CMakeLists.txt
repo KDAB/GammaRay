@@ -8,6 +8,10 @@ set(GENERIC_LIB_SOVERSION "1")
 set(QT_MIN_VERSION "4.6.0")
 find_package(Qt4 REQUIRED)
 
+if(WIN32)
+  option(USE_DETOURS "use detours for in debugging" OFF)
+endif(WIN32)
+
 include_directories(
   ${QT_INCLUDES}
   ${CMAKE_BINARY_DIR}
@@ -16,11 +20,15 @@ include_directories(
   ${CMAKE_BINARY_DIR}/3rdparty
 )
 
+if(USE_DETOURS)
+  add_definitions(-DUSE_DETOURS)
+endif(USE_DETOURS)
+
 set(INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION bin
                                  LIBRARY DESTINATION lib
                                  ARCHIVE DESTINATION lib COMPONENT Devel)
 if(WIN32)
-    add_definitions(-DUNICODE)
+  add_definitions(-DUNICODE)
 endif(WIN32)
 
 if(APPLE)
@@ -37,11 +45,14 @@ if(ENDOSCOPE_UKNOWN_CXX_MANGLED_NAMES)
 endif()
 
 set(endoscope_runner_srcs main.cpp)
-if(WIN32)
-    set(endoscope_runner_srcs ${endoscope_runner_srcs} windllinjection.cpp)
-endif(WIN32)
+if(WIN32 AND NOT USE_DETOURS)
+  set(endoscope_runner_srcs ${endoscope_runner_srcs} windllinjection.cpp)
+endif(WIN32 AND NOT USE_DETOURS)
 add_executable(endoscope ${endoscope_runner_srcs})
 target_link_libraries(endoscope ${QT_QTCORE_LIBRARY})
+if(USE_DETOURS)
+  target_link_libraries(endoscope detours)
+endif(USE_DETOURS)
 
 set(endoscope_srcs
   mainwindow.cpp
@@ -100,6 +111,13 @@ if(NOT WIN32)
     target_link_libraries(endoscope_probe
       dl
     )
+else(NOT WIN32)
+  if(USE_DETOURS)
+    target_link_libraries(endoscope_probe
+      detoured
+      detours
+    )
+  endif(USE_DETOURS)
 endif(NOT WIN32)
 set_target_properties(endoscope_probe PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 

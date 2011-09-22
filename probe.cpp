@@ -16,6 +16,17 @@
 #include <dlfcn.h>
 #else
 #include <windows.h>
+#ifdef USE_DETOURS
+#include <detours.h>
+#endif
+#endif
+
+#if defined(Q_OS_WIN) && defined(USE_DETOURS)
+typedef void (* VoidFunc_t)();
+typedef void (* QObjectFunc_t)( QObject *obj );
+static VoidFunc_t true_qt_startup_hook_Func;
+static QObjectFunc_t true_qt_addObject_Func;
+static QObjectFunc_t true_qt_removeObject_Func;
 #endif
 
 using namespace Endoscope;
@@ -94,7 +105,8 @@ Probe* Endoscope::Probe::instance()
   if ( !s_instance ) {
     s_listener()->active = false;
     s_instance = new Probe;
-    QCoreApplication::instance()->installEventFilter( s_instance );
+    void* ptr = QCoreApplication::instance();
+
     QMetaObject::invokeMethod( s_instance, "delayedInit", Qt::QueuedConnection );
     s_listener()->active = true;
   }
@@ -108,6 +120,7 @@ bool Probe::isInitialized()
 
 void Probe::delayedInit()
 {
+  QCoreApplication::instance()->installEventFilter( s_instance );
   foreach ( QObject *obj, *(s_addedBeforeProbeInsertion()) )
     objectAdded( obj );
   s_addedBeforeProbeInsertion()->clear();
@@ -254,7 +267,17 @@ const char* Probe::connectLocation(const char* member)
   return 0;
 }
 
+#ifdef Q_OS_WIN
+typedef void (*qt_addObject_ptr)(QObject *obj);
+typedef void (*qt_removeObject_ptr)(QObject *obj);
+typedef void (*qt_startup_hook_ptr)();
 
+qt_startup_hook_ptr next_qt_startup_hook = 0;
+qt_addObject_ptr next_qt_addObject = 0;
+qt_removeObject_ptr next_qt_removeObject = 0;
+#endif
+
+#ifndef USE_DETOURS
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
 #ifndef Q_OS_WIN
@@ -262,35 +285,97 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 #endif
   qDebug() << Q_FUNC_INFO;
   Probe::instance();
-#ifndef Q_OS_WIN
   next_qt_startup_hook();
-#endif
 }
+#else
+void fake_qt_startup_hook()
+{
+  Probe::instance();
+  true_qt_startup_hook_Func();
+}
+#endif
 
+#ifndef USE_DETOURS
 extern "C" Q_DECL_EXPORT void qt_addObject( QObject *obj )
 {
 #ifndef Q_OS_WIN
   static void (*next_qt_addObject)(QObject* obj) = (void (*)(QObject *obj)) dlsym( RTLD_NEXT, "qt_addObject" );
-#else
-  static void (*next_qt_addObject)(QObject* obj);
 #endif
   Probe::objectAdded( obj );
   next_qt_addObject( obj );
 }
+#else
+void fake_qt_addObject( QObject *obj )
+{
+  Probe::objectAdded( obj );
+  true_qt_addObject_Func( obj );
+}
+#endif
 
+#ifndef USE_DETOURS
 extern "C" Q_DECL_EXPORT void qt_removeObject( QObject *obj )
 {
 #ifndef Q_OS_WIN
   static void (*next_qt_removeObject)(QObject* obj) = (void (*)(QObject *obj)) dlsym( RTLD_NEXT, "qt_removeObject" );
-#else
-  static void (*next_qt_removeObject)(QObject* obj);
 #endif
   Probe::objectRemoved( obj );
   next_qt_removeObject( obj );
 }
+#else
+void fake_qt_removeObject( QObject *obj )
+{
+  Probe::objectRemoved( obj );
+  true_qt_removeObject_Func( obj );
+}
+#endif
 
 #ifdef Q_OS_WIN
+// IMPORTANT NOTE :
+// In QtCored4.dll, qtstartuphookaddr et. al. actually point to a JMP instruction to the real qt_startup_hook code
+// (the indirection is added by the linker as of the /INCREMENTAL link option), so it's easy to change the offset
+// to redirect to our qt_startup_hook instead.
+// this might not work in release builds though.
+
+template<typename T>
+T rewriteJmp(FARPROC func, T replacement) {
+  MEMORY_BASIC_INFORMATION mbi;
+
+  if(!VirtualQuery(func, &mbi, sizeof(MEMORY_BASIC_INFORMATION))) {
+    qDebug() << "failed to query memory";
+    return 0;
+  }
+  if(!VirtualProtect(mbi.BaseAddress, mbi.RegionSize, PAGE_READWRITE, &mbi.Protect)) {
+    qDebug() << "failed to protect memory";
+    return 0;
+  }
+
+  unsigned char* pjmpbyte_add = reinterpret_cast<unsigned char*>(func);
+
+  union {
+    PBYTE pB;
+    PINT pI;
+  } ip;
+
+  ip.pB = pjmpbyte_add;
+  // make sure that the first instruction is a jump instruction
+  *ip.pB++ = 0xE9;
+
+  // read in the old offset
+  size_t old_offset = *(unsigned long*)(pjmpbyte_add + 1);
+  // make sure that we count the old_offset in bytes, and not in dwords!
+  T ret = (T)((unsigned char*)(ip.pI + 1) + old_offset);
+  // save the original value into next, addresses are calculated in bytes
+
+  // make our memory the new jmpbyte_add destination
+  *ip.pI++ = (unsigned long)replacement - (unsigned long)(ip.pI + 1);
+
+  DWORD dummy;
+  VirtualProtect(mbi.BaseAddress, mbi.RegionSize, mbi.Protect, &dummy);
+  return ret;
+}
+
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /* lpvReserved */ ) {
+#ifdef USE_DETOURS
     switch(dwReason) {
         case DLL_PROCESS_ATTACH:
         {
@@ -303,6 +388,55 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /* lpvReserved *
         }
     };
     return TRUE;
+#else
+  // First retrieve the right module, if Qt is linked in release or debug
+  HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");
+  if ( qtCoreDllHandle == NULL )
+    qtCoreDllHandle = GetModuleHandle(L"QtCored4");
+
+  if ( qtCoreDllHandle == NULL ) {
+    qDebug() << "no handle for QtCore found!";
+    return FALSE;
+  }
+
+  // Look up the address of qt_startup_hook
+  FARPROC qtstartuphookaddr = GetProcAddress( qtCoreDllHandle, "qt_startup_hook" );
+  FARPROC qtaddobjectaddr = GetProcAddress( qtCoreDllHandle, "qt_addObject" );
+  FARPROC qtremobjectaddr = GetProcAddress( qtCoreDllHandle, "qt_removeObject" );
+
+  if ( qtstartuphookaddr == NULL ) {
+    qDebug() << "no address for qt_startup_hook found!";
+    return FALSE;
+  }
+  if ( qtaddobjectaddr == NULL ) {
+    qDebug() << "no address for qt_addObject found!";
+    return FALSE;
+  }
+  if ( qtremobjectaddr == NULL ) {
+    qDebug() << "no address for qt_removeObject found!";
+    return FALSE;
+  }
+
+  switch(dwReason) {
+    case DLL_PROCESS_ATTACH:
+    {
+      // write ourself into the hook chain
+      next_qt_startup_hook = rewriteJmp<qt_startup_hook_ptr>(qtstartuphookaddr, qt_startup_hook);
+      next_qt_addObject = rewriteJmp<qt_addObject_ptr>(qtaddobjectaddr, qt_addObject);
+      next_qt_removeObject = rewriteJmp<qt_removeObject_ptr>(qtremobjectaddr, qt_removeObject);
+      break;
+    }
+    case DLL_PROCESS_DETACH:
+    {
+      // in case the probe dll gets unloaded, lets remove ourselves from the hook chain
+      rewriteJmp<qt_startup_hook_ptr>(qtstartuphookaddr, next_qt_startup_hook);
+      rewriteJmp<qt_addObject_ptr>(qtaddobjectaddr, next_qt_addObject);
+      rewriteJmp<qt_removeObject_ptr>(qtremobjectaddr, next_qt_removeObject);
+      break;
+    }
+  };
+  return TRUE;
+#endif
 }
 #endif
 

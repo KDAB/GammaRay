@@ -7,7 +7,11 @@
 
 #ifdef Q_OS_WIN
 #include <windows.h>
+#ifdef USE_DETOURS
+#include <detours.h>
+#else
 #include "windllinjection.h"
+#endif
 #endif
 
 
@@ -49,6 +53,34 @@ int main( int argc, char** argv )
   proc.waitForFinished( -1 );
   return proc.exitCode();
 #else
+#ifdef USE_DETOURS
+  STARTUPINFO si;
+  PROCESS_INFORMATION pi;
+  ZeroMemory(&si, sizeof(si));
+  ZeroMemory(&pi, sizeof(pi));
+  si.cb = sizeof(si);
+  DWORD dwFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_SUSPENDED;
+
+  QString dllPath = QCoreApplication::applicationDirPath() + "/endoscope_probe.dll";
+  dllPath.replace("/", "\\");
+
+  QString detourPath = QCoreApplication::applicationDirPath() + "/detoured.dll";
+  detourPath.replace("/", "\\");
+
+  if (!DetourCreateProcessWithDll(0, (wchar_t*)args.join(" ").utf16(),
+                                  NULL, NULL, TRUE, dwFlags, NULL, NULL,
+                                  &si, &pi, detourPath.toLatin1().data(), dllPath.toLatin1().data(), NULL)) {
+      printf("DetourCreateProcessWithDll failed: %d\n", GetLastError());
+      ExitProcess(9007);
+  }
+
+  ResumeThread(pi.hThread);
+
+  WaitForSingleObject(pi.hProcess, INFINITE);
+  DWORD exitCode;
+  GetExitCodeProcess(pi.hProcess, &exitCode);
+  return exitCode;
+#else
   DWORD dwCreationFlags = CREATE_NO_WINDOW;
   dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
   dwCreationFlags |= CREATE_SUSPENDED;
@@ -76,5 +108,6 @@ int main( int argc, char** argv )
   DWORD exitCode;
   GetExitCodeProcess(pid.hProcess, &exitCode);
   return exitCode;
+#endif
 #endif
 }

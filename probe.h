@@ -15,7 +15,7 @@ class ObjectTreeModel;
 
 class MainWindow;
 
-class Probe : public QObject
+class Q_DECL_EXPORT Probe : public QObject
 {
   Q_OBJECT
   public:
