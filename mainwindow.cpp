@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   connect(ui.actionAboutGammaray, SIGNAL(triggered(bool)), SLOT(about()));
   connect(ui.actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
-  setWindowIcon(QIcon(":gammaray/gammaray128.png"));
+  setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
   m_toolSelector = new QComboBox;
   m_toolSelector->setModel(Probe::instance()->toolModel());
@@ -91,7 +91,7 @@ void MainWindow::about()
   mb.setInformativeText(
     tr("<qt>Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
        "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></qt>"));
-  mb.setIconPixmap(QPixmap(":gammaray/gammaray128.png"));
+  mb.setIconPixmap(QPixmap(":gammaray/GammaRay-128x128.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
 }

@@ -63,7 +63,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   ui.filter->setProxy(m_proxyModel);
 
   setWindowTitle(tr("GammaRay - Attach to Process"));
-  setWindowIcon(QIcon(":gammaray/gammaray128.png"));
+  setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
   selectionChanged();
 }
