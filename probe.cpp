@@ -243,11 +243,11 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     // Ignore
     return;
   } else if (isInitialized()) {
+    QWriteLocker lock(&instance()->m_lock);
+
     if (filterObject(obj)) {
       return;
     }
-
-    QWriteLocker lock(&instance()->m_lock);
 
     Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
@@ -320,8 +320,12 @@ void Probe::objectRemoved(QObject *obj)
 void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiver,
                             const char *method, Qt::ConnectionType type)
 {
-  if (!isInitialized() || !s_listener()->active || !sender || !receiver ||
-      filterObject(sender) || filterObject(receiver)) {
+  if (!isInitialized() || !s_listener()->active || !sender || !receiver) {
+    return;
+  }
+
+  ReadOrWriteLocker lock(&instance()->m_lock);
+  if (filterObject(sender) || filterObject(receiver)) {
     return;
   }
 
@@ -331,8 +335,12 @@ void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiv
 void Probe::connectionRemoved(QObject *sender, const char *signal,
                               QObject *receiver, const char *method)
 {
-  if (!isInitialized() || !s_listener() || !s_listener()->active ||
-      (sender && filterObject(sender)) || (receiver && filterObject(receiver))) {
+  if (!isInitialized() || !s_listener() || !s_listener()->active) {
+    return;
+  }
+
+  ReadOrWriteLocker lock(&instance()->m_lock);
+  if ((sender && filterObject(sender)) || (receiver && filterObject(receiver))) {
     return;
   }
 
@@ -358,6 +366,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
       Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
       if (!tracked) {
         // was not tracked before, add to all models
+        instance()->m_validObjects << obj;
         objectFullyConstructed(obj);
       } else {
         // object is known already, just update the position in the tree
