@@ -93,7 +93,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
 //   if (!obj->parent()) cout << "removed: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject*, obj));
+                            Q_ARG(QObject *, obj));
 }
 
 void ObjectTreeModel::objectRemovedMainThread(QObject *obj)

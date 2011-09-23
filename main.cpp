@@ -59,8 +59,6 @@ static void usage(const char *argv0)
       << "you can attach to a running process by specifying its pid, or you can\n"
       << "start a new Qt-application by specifying its name (and optional arguments)."
       << endl;
-
-
 }
 
 int main(int argc, char **argv)

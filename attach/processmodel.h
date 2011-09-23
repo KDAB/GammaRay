@@ -33,11 +33,11 @@ namespace Gammaray {
 class ProcessModel : public QAbstractTableModel
 {
   public:
-    explicit ProcessModel(QObject* parent = 0);
+    explicit ProcessModel(QObject *parent = 0);
     virtual ~ProcessModel();
 
-    void addProcess(const ProcData& process);
-    void addProcesses(const QList<ProcData>& process);
+    void addProcess(const ProcData &process);
+    void addProcesses(const QList<ProcData> &process);
     ProcData dataForIndex(const QModelIndex &index) const;
     ProcData dataForRow(int row) const;
 
@@ -50,15 +50,15 @@ class ProcessModel : public QAbstractTableModel
       UserColumn,
       COLUMN_COUNT
     };
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     enum CustomRoles {
       PIDRole = Qt::UserRole,
       NameRole,
       StateRole,
       UserRole
     };
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;

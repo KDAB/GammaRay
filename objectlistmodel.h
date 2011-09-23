@@ -56,7 +56,7 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
 
   private slots:
     void objectAddedMainThread(QObject *obj);
-    void objectRemovedMainThread(QObject* obj);
+    void objectRemovedMainThread(QObject *obj);
 
   private:
     mutable QReadWriteLock m_lock;

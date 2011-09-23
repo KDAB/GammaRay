@@ -59,7 +59,7 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
 ConnectionModel::Connection::Connection()
 : sender(0), receiver(0), type(Qt::AutoConnection), valid(false)
 {
-  
+
 }
 
 ConnectionModel::ConnectionModel(QObject *parent)
@@ -80,20 +80,20 @@ void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "connectionAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject* , sender), Q_ARG(const char*, signal),
-                            Q_ARG(QObject* , receiver), Q_ARG(const char*, method),
+                            Q_ARG(QObject *, sender), Q_ARG(const char *, signal),
+                            Q_ARG(QObject *, receiver), Q_ARG(const char *, method),
                             Q_ARG(Qt::ConnectionType, type));
 }
 
-void ConnectionModel::connectionAddedMainThread(QObject* sender, const char *signal,
-                                                QObject* receiver, const char *method,
+void ConnectionModel::connectionAddedMainThread(QObject *sender, const char *signal,
+                                                QObject *receiver, const char *method,
                                                 Qt::ConnectionType type)
 {
   Q_ASSERT(thread() == QThread::currentThread());
 
   ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
-  if (!Probe::instance()->isValidObject(sender)
-      || !Probe::instance()->isValidObject(receiver)) {
+  if (!Probe::instance()->isValidObject(sender) ||
+      !Probe::instance()->isValidObject(receiver)) {
     return;
   }
 
@@ -155,8 +155,8 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject *, sender), Q_ARG(const char*, signal),
-                            Q_ARG(QObject *, receiver), Q_ARG(const char*, method));
+                            Q_ARG(QObject *, sender), Q_ARG(const char *, signal),
+                            Q_ARG(QObject *, receiver), Q_ARG(const char *, method));
 }
 
 void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *signal,

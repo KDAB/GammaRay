@@ -32,12 +32,12 @@
 static QString qGetLogin() {
   char winUserName[UNLEN + 1]; // UNLEN is defined in LMCONS.H
   DWORD winUserNameSize = sizeof(winUserName);
-  GetUserNameA( winUserName, &winUserNameSize );
-  return QString::fromLocal8Bit( winUserName );
+  GetUserNameA(winUserName, &winUserNameSize);
+  return QString::fromLocal8Bit(winUserName);
 }
 #else
 static QString qGetLogin(){
-  return QString::fromLocal8Bit( getlogin() );
+  return QString::fromLocal8Bit(getlogin());
 }
 #endif
 
@@ -60,20 +60,21 @@ bool ProcessFilterModel::lessThan(const QModelIndex &left, const QModelIndex &ri
 {
   const QString l = sourceModel()->data(left).toString();
   const QString r = sourceModel()->data(right).toString();
-  if (left.column() == ProcessModel::PIDColumn)
-      return l.toInt() < r.toInt();
+  if (left.column() == ProcessModel::PIDColumn) {
+    return l.toInt() < r.toInt();
+  }
 
   return l.compare(r, Qt::CaseInsensitive) <= 0;
 }
 
 bool ProcessFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-  ProcessModel* source = dynamic_cast<ProcessModel*>(sourceModel());
+  ProcessModel *source = dynamic_cast<ProcessModel*>(sourceModel());
   if (!source) {
     return true;
   }
 
-  const ProcData& data = source->dataForRow(source_row);
+  const ProcData &data = source->dataForRow(source_row);
 
   if (data.type == ProcData::NoQtApp) {
     return false;

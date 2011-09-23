@@ -226,7 +226,7 @@ QObject *Probe::probe() const
   return const_cast<Gammaray::Probe*>(this);
 }
 
-bool Probe::isValidObject(QObject* obj) const
+bool Probe::isValidObject(QObject *obj) const
 {
   ///TODO: can we somehow assert(m_lock.isLocked()) ?!
   return m_validObjects.contains(obj);

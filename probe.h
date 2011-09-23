@@ -74,7 +74,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
      * Lock this to check the validity of a QObject
      * and to access it safely afterwards.
      */
-    QReadWriteLock* objectLock() const;
+    QReadWriteLock *objectLock() const;
     /**
      * check whether @p obj is still valid
      *
