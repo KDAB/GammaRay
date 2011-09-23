@@ -289,6 +289,15 @@ install(TARGETS gammaray gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 if(UNIX AND NOT APPLE)
   set(XDG_APPS_INSTALL_DIR share/applications)
   install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+
+  install(FILES resources/gammaray16.png DESTINATION share/icons/hicolor/16x16/apps)
+  install(FILES resources/gammaray32.png DESTINATION share/icons/hicolor/32x32/apps)
+  install(FILES resources/gammaray48.png DESTINATION share/icons/hicolor/48x48/apps)
+  install(FILES resources/gammaray128.png DESTINATION share/icons/hicolor/128x128/apps)
+  install(FILES resources/gammaray256.png DESTINATION share/icons/hicolor/256x256/apps)
+  install(FILES resources/gammaray512.png DESTINATION share/icons/hicolor/512x512/apps)
+
+  install(FILES resources/kdablogo160.png resources/kdabproducts.png resources/splashscreen.png DESTINATION share/icons/hicolor/apps)
 endif()
 
 set(LICENSE_FILE "License.txt")
