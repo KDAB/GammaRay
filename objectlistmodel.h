@@ -27,7 +27,6 @@
 #include "objectmodelbase.h"
 
 #include <QVector>
-#include <QPointer>
 #include <QReadWriteLock>
 
 namespace Gammaray {
@@ -52,21 +51,17 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    void objectAdded(const QPointer<QObject> &objPtr);
+    void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
 
-    bool isValidObject(QObject *obj) const;
-
   private slots:
-    void objectAddedMainThread(const QPointer<QObject> &objPtr);
+    void objectAddedMainThread(QObject *obj);
     void objectRemovedMainThread(QObject *obj);
 
   private:
     mutable QReadWriteLock m_lock;
     // vector for stable iterators/indexes, esp. for the model methods
     QVector<QObject*> m_objects;
-    // hash to allow the background thread to mark the object as invalid
-    QHash<QObject*, bool> m_objectsHash;
 };
 
 }

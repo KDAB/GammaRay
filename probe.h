@@ -26,8 +26,8 @@
 
 #include <qobject.h>
 #include "probeinterface.h"
-#include <QPointer>
-#include <QMutex>
+#include <QReadWriteLock>
+#include <QSet>
 
 class QGraphicsItem;
 
@@ -70,7 +70,17 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
     QObject *probe() const;
 
-    bool isValidObject(QObject *obj) const;
+    /**
+     * Lock this to check the validity of a QObject
+     * and to access it safely afterwards.
+     */
+    QReadWriteLock *objectLock() const;
+    /**
+     * check whether @p obj is still valid
+     *
+     * NOTE: the objectLock must be locked when this is called!
+     */
+    bool isValidObject(QObject* obj) const;
 
   signals:
     void widgetSelected(QWidget *widget);
@@ -84,7 +94,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
   private slots:
     void delayedInit();
-    void objectFullyConstructed(const QPointer<QObject> &obj);
+    void objectFullyConstructed(QObject *obj);
 
   private:
     explicit Probe(QObject *parent = 0);
@@ -98,7 +108,8 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     Gammaray::MainWindow *m_window;
     // ensures proper information is returned by isValidObject by
     // locking it in objectAdded/Removed
-    QMutex m_mutex;
+    mutable QReadWriteLock m_lock;
+    QSet<QObject*> m_validObjects;
 };
 
 }

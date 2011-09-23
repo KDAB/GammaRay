@@ -89,6 +89,9 @@ int main(int argc, char **argv)
           << "a KDAB Group company, info@kdab.com" << endl;
       return 0;
     }
+    if (arg == QLatin1String("-filtertest")) {
+      qputenv("GAMMARAY_TEST_FILTER", "1");
+    }
   }
 
 #ifndef Q_WS_WIN

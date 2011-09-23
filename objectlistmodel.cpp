@@ -26,6 +26,7 @@
 #include "readorwritelocker.h"
 
 #include <QThread>
+#include "probe.h"
 
 using namespace Gammaray;
 
@@ -40,7 +41,7 @@ QVariant ObjectListModel::data(const QModelIndex &index, int role) const
   ReadOrWriteLocker lock(&m_lock);
   if (index.row() >= 0 && index.row() < m_objects.size()) {
     QObject *obj = m_objects.at(index.row());
-    if (m_objectsHash.value(obj, false)) {
+    if (obj) {
       return dataForObject(obj, index, role);
     }
   }
@@ -65,34 +66,27 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
   return m_objects.size();
 }
 
-void ObjectListModel::objectAdded(const QPointer<QObject> &objPtr)
+void ObjectListModel::objectAdded(QObject* obj)
 {
-  if (!objPtr) {
-    return;
-  }
-
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QPointer<QObject>, objPtr));
+                            Q_ARG(QObject*, obj));
 }
 
-void ObjectListModel::objectAddedMainThread(const QPointer< QObject >& objPtr)
+void ObjectListModel::objectAddedMainThread(QObject *obj)
 {
-  if (!objPtr) {
+  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
+  if (!Probe::instance()->isValidObject(obj)) {
     return;
   }
 
   QWriteLocker lock(&m_lock);
-
-  QObject *obj = objPtr.data();
   if (m_objects.contains(obj)) {
-    m_objectsHash[obj] = !objPtr.isNull();
     return;
   }
 
   beginInsertRows(QModelIndex(), m_objects.size(), m_objects.size());
   m_objects << obj;
-  m_objectsHash[obj] = !objPtr.isNull();
   endInsertRows();
 }
 
@@ -101,9 +95,9 @@ void ObjectListModel::objectRemoved(QObject *obj)
   if (thread() != QThread::currentThread()) {
     // invalidate data
     QWriteLocker lock(&m_lock);
-    QHash< QObject *, bool >::iterator it = m_objectsHash.find(obj);
-    if (it != m_objectsHash.end()) {
-      it.value() = false;
+    const int index = m_objects.indexOf(obj);
+    if (index != -1) {
+      m_objects[index] = 0;
     }
   }
 
@@ -116,23 +110,13 @@ void ObjectListModel::objectRemovedMainThread(QObject *obj)
 {
   QWriteLocker lock(&m_lock);
 
-  m_objectsHash.remove(obj);
-
-  const int index = m_objects.indexOf(obj);
-  if (index == -1) {
-    return;
+  for(int i = 0; i < m_objects.size(); ++i) {
+    if (!m_objects.at(i) || m_objects.at(i) == obj) {
+      beginRemoveRows(QModelIndex(), i, i);
+      m_objects.remove(i);
+      endRemoveRows();
+    }
   }
-
-  beginRemoveRows(QModelIndex(), index, index);
-  m_objects.remove(index);
-  endRemoveRows();
-}
-
-bool ObjectListModel::isValidObject(QObject *obj) const
-{
-  ReadOrWriteLocker lock(&m_lock);
-
-  return m_objectsHash.value(obj, false);
 }
 
 #include "objectlistmodel.moc"

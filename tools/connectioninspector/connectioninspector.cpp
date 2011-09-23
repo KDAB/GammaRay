@@ -27,6 +27,8 @@
 #include <connectionfilterproxymodel.h>
 #include <probeinterface.h>
 
+#include <QLineEdit>
+
 using namespace Gammaray;
 
 ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QWidget *parent)
@@ -39,6 +41,12 @@ ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QWidget *parent)
   connectionFilterProxy->setSourceModel(probe->connectionModel());
   ui->connectionSearchLine->setProxy(connectionFilterProxy);
   ui->connectionView->setModel(connectionFilterProxy);
+
+  if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
+    QMetaObject::invokeMethod(ui->connectionSearchLine->lineEdit(), "setText",
+                              Qt::QueuedConnection,
+                              Q_ARG(QString, QLatin1String("destroyed")));
+  }
 }
 
 #include "connectioninspector.moc"

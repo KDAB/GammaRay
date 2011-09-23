@@ -91,12 +91,13 @@ void ConnectionModel::connectionAddedMainThread(QObject *sender, const char *sig
 {
   Q_ASSERT(thread() == QThread::currentThread());
 
-  QWriteLocker lock(&m_lock);
-
+  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
   if (!Probe::instance()->isValidObject(sender) ||
       !Probe::instance()->isValidObject(receiver)) {
     return;
   }
+
+  QWriteLocker lock(&m_lock);
 
   beginInsertRows(QModelIndex(), m_connections.size(), m_connections.size());
   Connection c;
@@ -208,7 +209,7 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
   const Connection con = m_connections.at(index.row());
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
-      if (con.sender && Probe::instance()->isValidObject(con.sender)) {
+      if (con.sender) {
         return Util::displayString(con.sender);
       } else {
         return QLatin1String("<destroyed>");
@@ -218,7 +219,7 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
       return con.signal.mid(1);
     }
     if (index.column() == 2) {
-      if (con.receiver && Probe::instance()->isValidObject(con.receiver)) {
+      if (con.receiver) {
         return Util::displayString(con.receiver);
       } else {
         return QLatin1String("<destroyed>");

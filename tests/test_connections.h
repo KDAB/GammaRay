@@ -30,6 +30,18 @@
 class QTimer;
 class QEventLoop;
 
+class TestObject : public QObject
+{
+  Q_OBJECT
+  public:
+    explicit TestObject(QObject* parent = 0);
+    virtual ~TestObject();
+  private slots:
+    void dummySlot() {}
+  public:
+    QObject *child;
+};
+
 class TestConnections : public QObject
 {
   Q_OBJECT
@@ -38,7 +50,8 @@ class TestConnections : public QObject
       DeleteLater,
       Delete,
       NoEventLoop,
-      Stack
+      Stack,
+      SetParent
     };
 
     TestConnections(Type type, int timeOuts, int timeoutInterval = -1);
@@ -46,7 +59,8 @@ class TestConnections : public QObject
 
   public slots:
     void timeout();
-    void dummyConnection(){}
+  private slots:
+    void dummySlot(){}
 
   signals:
     void done();

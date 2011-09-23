@@ -28,7 +28,6 @@
 
 #include <QVector>
 #include <QReadWriteLock>
-#include <QPointer>
 
 namespace Gammaray {
 
@@ -43,11 +42,11 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
     QModelIndex parent(const QModelIndex &child) const;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-    void objectAdded(const QPointer<QObject> &objPtr);
+    void objectAdded(QObject *objPtr);
     void objectRemoved(QObject *obj);
 
   private slots:
-    void objectAddedMainThread(const QPointer<QObject> &objPtr);
+    void objectAddedMainThread(QObject *objPtr);
     void objectRemovedMainThread(QObject *obj);
 
   private:
