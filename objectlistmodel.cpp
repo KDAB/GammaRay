@@ -26,6 +26,7 @@
 #include "readorwritelocker.h"
 
 #include <QThread>
+#include "probe.h"
 
 using namespace Gammaray;
 
@@ -40,7 +41,7 @@ QVariant ObjectListModel::data(const QModelIndex &index, int role) const
   ReadOrWriteLocker lock(&m_lock);
   if (index.row() >= 0 && index.row() < m_objects.size()) {
     QObject* obj = m_objects.at(index.row());
-    if (m_objectsHash.value(obj, false)) {
+    if (obj) {
       return dataForObject(obj, index, role);
     }
   }
@@ -67,11 +68,6 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
 
 void ObjectListModel::objectAdded(QObject* obj)
 {
-  {
-  QWriteLocker lock(&m_lock);
-  m_objectsHash[obj] = true;
-  }
-
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
                             Q_ARG(QObject*, obj));
@@ -79,8 +75,13 @@ void ObjectListModel::objectAdded(QObject* obj)
 
 void ObjectListModel::objectAddedMainThread(QObject *obj)
 {
+  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
+  if (!Probe::instance()->isValidObject(obj)) {
+    return;
+  }
+
   QWriteLocker lock(&m_lock);
-  if (!m_objectsHash.value(obj, false) || m_objects.contains(obj)) {
+  if (m_objects.contains(obj)) {
     return;
   }
 
@@ -94,7 +95,10 @@ void ObjectListModel::objectRemoved(QObject *obj)
   if (thread() != QThread::currentThread()) {
     // invalidate data
     QWriteLocker lock(&m_lock);
-    m_objectsHash.remove(obj);
+    const int index = m_objects.indexOf(obj);
+    if (index != -1) {
+      m_objects[index] = 0;
+    }
   }
 
   // when called from background, delay into foreground, otherwise call directly
@@ -106,21 +110,13 @@ void ObjectListModel::objectRemovedMainThread(QObject *obj)
 {
   QWriteLocker lock(&m_lock);
 
-  const int index = m_objects.indexOf(obj);
-  if (index == -1) {
-    return;
+  for(int i = 0; i < m_objects.size(); ++i) {
+    if (!m_objects.at(i) || m_objects.at(i) == obj) {
+      beginRemoveRows(QModelIndex(), i, i);
+      m_objects.remove(i);
+      endRemoveRows();
+    }
   }
-
-  beginRemoveRows(QModelIndex(), index, index);
-  m_objects.remove(index);
-  endRemoveRows();
-}
-
-bool ObjectListModel::isValidObject(QObject *obj) const
-{
-  ReadOrWriteLocker lock(&m_lock);
-
-  return m_objectsHash.value(obj, false);
 }
 
 #include "objectlistmodel.moc"

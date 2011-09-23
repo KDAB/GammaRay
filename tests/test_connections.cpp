@@ -39,6 +39,8 @@ TestObject::TestObject(QObject *parent)
 // test object creation in ctor
 , child(new QObject(this))
 {
+  setObjectName("TestObject");
+  child->setObjectName("TestObjectChild");
   // test connect/disconnect in ctor
   connect(child, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
   disconnect(child, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
