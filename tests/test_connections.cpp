@@ -86,7 +86,7 @@ void TestConnections::timeout()
     for (int i = 0; i < OBJECTS; ++i) {
       QObject *obj = new QObject(this);
       m_objects << obj;
-      connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummyConnection()));
+      connect(obj, SIGNAL(destroyed(QObject *)), this, SLOT(dummyConnection()));
     }
   }
 }
@@ -97,17 +97,16 @@ TestThread::TestThread(TestConnections::Type type, int timeOuts, int timeoutInte
                        QObject *parent)
   : QThread(parent), m_type(type), m_timeOuts(timeOuts), m_timeoutInterval(timeoutInterval)
 {
-
 }
 
 TestThread::~TestThread()
 {
-
 }
 
 void TestThread::run()
 {
-  TestConnections tester(m_type, m_timeOuts, m_timeoutInterval == -1 ? TIMEOUTS : m_timeoutInterval);
+  TestConnections tester(m_type, m_timeOuts, m_timeoutInterval == -1 ?
+                         TIMEOUTS : m_timeoutInterval);
 
   QEventLoop *loop = new QEventLoop;
   connect(&tester, SIGNAL(done()), loop, SLOT(quit()));
@@ -161,7 +160,7 @@ void TestWaiter::startThreadsAndWaitForFinished()
     return;
   }
 
-  foreach(TestThread* thread, m_threads) {
+  foreach (TestThread *thread, m_threads) {
     thread->start();
   }
 

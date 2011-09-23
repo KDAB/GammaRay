@@ -39,7 +39,7 @@ QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
   ReadOrWriteLocker lock(&m_lock);
   if (index.row() >= 0 && index.row() < m_objects.size()) {
-    QObject* obj = m_objects.at(index.row());
+    QObject *obj = m_objects.at(index.row());
     if (m_objectsHash.value(obj, false)) {
       return dataForObject(obj, index, role);
     }
@@ -109,7 +109,7 @@ void ObjectListModel::objectRemoved(QObject *obj)
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject*, obj));
+                            Q_ARG(QObject *, obj));
 }
 
 void ObjectListModel::objectRemovedMainThread(QObject *obj)

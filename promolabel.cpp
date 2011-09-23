@@ -63,7 +63,7 @@ QImage PromoLabel::tintedImage(const QString &image, const QColor &color)
   QImage img(image);
   img = img.alphaChannel();
   QColor newColor = color;
-  for(int i = 0; i < img.colorCount(); ++i) {
+  for (int i = 0; i < img.colorCount(); ++i) {
     newColor.setAlpha(qGray(img.color(i)));
     img.setColor(i, newColor.rgba());
   }

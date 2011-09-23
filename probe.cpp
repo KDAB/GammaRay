@@ -211,7 +211,7 @@ QObject *Probe::probe() const
   return const_cast<Gammaray::Probe*>(this);
 }
 
-bool Probe::isValidObject(QObject* obj) const
+bool Probe::isValidObject(QObject *obj) const
 {
   return m_objectListModel->isValidObject(obj);
 }

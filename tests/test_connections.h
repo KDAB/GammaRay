@@ -56,7 +56,7 @@ class TestConnections : public QObject
     const int m_timeOuts;
     int m_numTimeout;
     QList<QObject*> m_objects;
-    QTimer* m_timer;
+    QTimer *m_timer;
 };
 
 class TestThread : public QThread
@@ -88,8 +88,8 @@ class TestWaiter : public QObject
 {
   Q_OBJECT
   public:
-    void addThread(TestThread* thread);
-    void addTester(TestConnections* tester);
+    void addThread(TestThread *thread);
+    void addTester(TestConnections *tester);
     void startThreadsAndWaitForFinished();
 
   private slots:
@@ -100,7 +100,7 @@ class TestWaiter : public QObject
     void checkFinished();
     QList<TestThread*> m_threads;
     QList<TestConnections*> m_tester;
-    QEventLoop* m_loop;
+    QEventLoop *m_loop;
 };
 
 #endif // TEST_CONNECTIONS_H

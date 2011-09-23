@@ -70,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   ui.mainToolBar->addWidget(new QLabel(tr("Select Probe:")));
   ui.mainToolBar->addWidget(m_toolSelector);
 
-  QWidget* promo = new QWidget;
+  QWidget *promo = new QWidget;
   QHBoxLayout *promoLayout = new QHBoxLayout;
   promoLayout->setContentsMargins(0, 0, 0, 0);
   promoLayout->addStretch();
@@ -103,10 +103,12 @@ void MainWindow::aboutKDAB()
   mb.setText(tr("Klaralvdalens Datakonsult AB (KDAB)"));
   mb.setInformativeText(
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
-       "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> to meet the people who write code like this."
+       "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
+       "to meet the people who write code like this."
        "We also offer Qt training courses.</p>"
-       "<p>Head Engineer for Gammaray is<br>Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;</p></qt>").
-    arg(progName));
+       "<p>Head Engineer for Gammaray is<br>"
+       "Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;"
+       "</p></qt>").arg(progName));
   mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();

@@ -26,7 +26,7 @@
 #include <QSplashScreen>
 #include <QBitmap>
 
-QSplashScreen* splash = 0;
+QSplashScreen *splash = 0;
 
 namespace Gammaray {
 

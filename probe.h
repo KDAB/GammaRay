@@ -70,7 +70,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
     QObject *probe() const;
 
-    bool isValidObject(QObject* obj) const;
+    bool isValidObject(QObject *obj) const;
 
   signals:
     void widgetSelected(QWidget *widget);

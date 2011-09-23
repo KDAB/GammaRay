@@ -21,7 +21,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "processmodel.h"
 
 using namespace Gammaray;
@@ -29,12 +28,10 @@ using namespace Gammaray;
 ProcessModel::ProcessModel(QObject *parent)
 : QAbstractTableModel(parent)
 {
-
 }
 
 ProcessModel::~ProcessModel()
 {
-
 }
 
 void ProcessModel::addProcess(const ProcData &process)
@@ -96,7 +93,7 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
     return QVariant();
   }
 
-  const ProcData& data = m_data.at(index.row());
+  const ProcData &data = m_data.at(index.row());
 
   if (role == Qt::DisplayRole) {
     if (index.column() == PIDColumn) {

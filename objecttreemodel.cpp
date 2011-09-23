@@ -58,7 +58,7 @@ void ObjectTreeModel::objectAddedMainThread(const QPointer<QObject> &objPtr)
 
   QWriteLocker lock(&m_lock);
 
-  QObject* obj = objPtr.data();
+  QObject *obj = objPtr.data();
   if (!objPtr || !Probe::instance()->isValidObject(obj)) {
     return;
   }
@@ -83,7 +83,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
 {
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject*, obj));
+                            Q_ARG(QObject *, obj));
 }
 
 void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
