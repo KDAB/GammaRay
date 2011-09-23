@@ -92,6 +92,12 @@ void TestConnections::timeout()
     QObject obj;
     connect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
     disconnect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+  } else if (m_type == SetParent) {
+    TestObject *obj = new TestObject;
+    obj->setParent(this);
+    obj->child->setParent(0);
+    obj->child->setParent(obj);
+    obj->deleteLater();
   } else {
     // delete last objects
     for (int i = 0; i < m_objects.count(); ++i) {
@@ -102,6 +108,8 @@ void TestConnections::timeout()
         break;
       case DeleteLater:
         obj->deleteLater();
+        break;
+      default:
         break;
       }
     }
@@ -204,6 +212,7 @@ void TestMain::run_data()
   QTest::newRow("deleteLater") << static_cast<int>(TestConnections::DeleteLater);
   QTest::newRow("noEventLoop") << static_cast<int>(TestConnections::NoEventLoop);
   QTest::newRow("stack") << static_cast<int>(TestConnections::Stack);
+  QTest::newRow("setParent") << static_cast<int>(TestConnections::SetParent);
 }
 
 void TestMain::run()
@@ -233,6 +242,8 @@ void TestMain::threading()
   waiter.addTester(&tester3);
   TestConnections tester4(TestConnections::Stack, timeouts, 13);
   waiter.addTester(&tester4);
+  TestConnections tester5(TestConnections::SetParent, timeouts, 14);
+  waiter.addTester(&tester5);
   // now some threads
   TestThread thread1(TestConnections::NoEventLoop, timeouts, 10);
   waiter.addThread(&thread1);
@@ -242,6 +253,8 @@ void TestMain::threading()
   waiter.addThread(&thread3);
   TestThread thread4(TestConnections::Stack, timeouts, 13);
   waiter.addThread(&thread4);
+  TestThread thread5(TestConnections::SetParent, timeouts, 13);
+  waiter.addThread(&thread5);
 
   waiter.startThreadsAndWaitForFinished();
 }

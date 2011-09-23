@@ -349,6 +349,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     QChildEvent *childEvent = static_cast<QChildEvent*>(event);
     QObject *obj = childEvent->child();
 
+    QWriteLocker lock(&m_lock);
     const bool tracked = m_validObjects.contains(obj);
     const bool filtered = filterObject(obj);
 

@@ -38,7 +38,7 @@ class TestObject : public QObject
     virtual ~TestObject();
   private slots:
     void dummySlot() {}
-  private:
+  public:
     QObject *child;
 };
 
@@ -50,7 +50,8 @@ class TestConnections : public QObject
       DeleteLater,
       Delete,
       NoEventLoop,
-      Stack
+      Stack,
+      SetParent
     };
 
     TestConnections(Type type, int timeOuts, int timeoutInterval = -1);
