@@ -98,9 +98,11 @@ bool OverlayWidget::eventFilter(QObject *receiver, QEvent *event)
   if (receiver == m_currentToplevelWidget) {
     if (event->type() == QEvent::Resize) {
       resizeOverlay();
+      updatePositions();
     }
   } else if (receiver == m_currentWidget) {
     if (event->type() == QEvent::Resize || event->type() == QEvent::Move) {
+      resizeOverlay();
       updatePositions();
     }
   }
@@ -159,8 +161,6 @@ void OverlayWidget::resizeOverlay()
   if (m_currentToplevelWidget) {
     move(0, 0);
     resize(m_currentToplevelWidget->size());
-
-    updatePositions();
   }
 }
 
