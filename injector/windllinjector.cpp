@@ -80,6 +80,19 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
   return mExitCode == EXIT_SUCCESS;
 }
 
+bool WinDllInjector::attach(int pid, const QString &probeDll, const QString &/*probeFunc*/)
+{
+    m_dllPath = probeDll;
+    m_dllPath.replace('/', '\\');
+
+    m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+
+    if (!m_destProcess)
+        return false;
+
+    return inject2();
+}
+
 bool WinDllInjector::inject()
 {
     CONTEXT     context;
@@ -155,7 +168,29 @@ QProcess::ProcessError WinDllInjector::processError()
 
 QProcess::ExitStatus WinDllInjector::exitStatus()
 {
-  return mExitStatus;
+    return mExitStatus;
+}
+
+
+bool WinDllInjector::inject2()
+{
+    int strsize = (m_dllPath.size() * 2) + 2;
+    void *mem = VirtualAllocEx(m_destProcess, NULL, strsize , MEM_COMMIT, PAGE_READWRITE );
+    WriteProcessMemory( m_destProcess, mem, (void*)m_dllPath.utf16(), strsize, NULL );
+    HMODULE kernel32handle = GetModuleHandleW(L"Kernel32");
+    FARPROC loadLib = GetProcAddress( kernel32handle, "LoadLibraryW" );
+    m_destThread = CreateRemoteThread( m_destProcess, NULL, 0,
+                                       (LPTHREAD_START_ROUTINE)loadLib,
+                                        mem, 0, NULL );
+
+    WaitForSingleObject( m_destThread, INFINITE );
+
+    DWORD   result;
+    GetExitCodeThread( m_destThread, &result );
+
+    CloseHandle( m_destThread );
+    VirtualFreeEx( m_destProcess, mem, strsize, MEM_RELEASE );
+    return true;
 }
 
 QString WinDllInjector::errorString()

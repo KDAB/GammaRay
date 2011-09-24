@@ -43,6 +43,7 @@ class WinDllInjector : public AbstractInjector
     }
     virtual bool launch(const QStringList &programAndArgs,
                        const QString &probeDll, const QString &probeFunc);
+    virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
     virtual int exitCode();
     virtual QProcess::ExitStatus exitStatus();
     virtual QProcess::ProcessError processError();
@@ -55,6 +56,7 @@ class WinDllInjector : public AbstractInjector
     QString mErrorString;
 
     bool inject();
+    bool inject2();
     HANDLE m_destProcess;
     HANDLE m_destThread;
     QString m_dllPath;

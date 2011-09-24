@@ -133,9 +133,12 @@ Gammaray::MainWindow *Probe::window() const
 
 Probe *Gammaray::Probe::instance()
 {
+  if (!qApp)
+    return NULL;
   if (!s_instance) {
     s_listener()->active = false;
     s_instance = new Probe;
+    s_instance->moveToThread(QCoreApplication::instance()->thread());
     //void* ptr = QCoreApplication::instance();
 
     QMetaObject::invokeMethod(s_instance, "delayedInit", Qt::QueuedConnection);
@@ -552,6 +555,8 @@ T rewriteJmp(FARPROC func, T replacement) {
   return ret;
 }
 
+extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
+
 BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */) {
 #ifdef USE_DETOURS
   switch(dwReason) {
@@ -638,6 +643,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
     next_qt_startup_hook = rewriteJmp<qt_startup_hook_ptr>(qtstartuphookaddr, qt_startup_hook);
     next_qt_addObject = rewriteJmp<qt_addObject_ptr>(qtaddobjectaddr, qt_addObject);
     next_qt_removeObject = rewriteJmp<qt_removeObject_ptr>(qtremobjectaddr, qt_removeObject);
+    gammaray_probe_inject();
     break;
   }
   case DLL_PROCESS_DETACH:
@@ -680,6 +686,8 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 {
+  if (!qApp)
+    return;
   printf("gammaray_probe_inject()\n");
   Gammaray::Probe::instance();
   Gammaray::Probe::findExistingObjects();
