@@ -31,7 +31,7 @@
 
 #include <iostream>
 
-#define IF_DEBUG(x) x
+#define IF_DEBUG(x)
 
 extern void dumpObject(QObject *);
 
@@ -46,22 +46,20 @@ ObjectTreeModel::ObjectTreeModel(QObject *parent)
 
 void ObjectTreeModel::objectAdded(QObject *obj)
 {
-#ifdef QT_DEBUG
-  {
+  // this is ugly, but apparently it can happen
+  // that an object gets created without parent
+  // then later the delayed signal comes in
+  // so catch this gracefully by first adding the
+  // parent if required
+  if (obj->parent()) {
     QReadLocker lock(&m_lock);
     const QModelIndex index = indexForObject(obj->parent());
-    IF_DEBUG(
-      cout << "added: " << hex << obj << " " << hex << obj->parent()
-           << dec << " " << m_parentChildMap.value(obj->parent()).size()
-           << " " << m_parentChildMap.contains(obj) << endl;
-      if (obj->parent() && !index.isValid()) {
-        dumpObject(obj);
-      }
-    )
-    // either we get a proper parent and hence valid index or there is no parent
-    Q_ASSERT(index.isValid() || !obj->parent());
+    lock.unlock();
+    if (!index.isValid()) {
+      objectAdded(obj->parent());
+    }
   }
-#endif
+
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
                             Q_ARG(QObject*, obj));
