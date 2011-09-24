@@ -37,6 +37,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QGraphicsView>
 #include <QtGui/QDialog>
+#include <QtCore/QTimer>
 
 #include <iostream>
 
@@ -128,12 +129,18 @@ Probe::Probe(QObject *parent):
   m_connectionModel(new ConnectionModel(this)),
   m_toolModel(new ToolModel(this)),
   m_window(0),
-  m_lock(QReadWriteLock::Recursive)
+  m_lock(QReadWriteLock::Recursive),
+  m_queueTimer(new QTimer(this))
 {
   qDebug() << Q_FUNC_INFO;
 
   QInternal::registerCallback(QInternal::ConnectCallback, &Gammaray::probeConnectCallback);
   QInternal::registerCallback(QInternal::DisconnectCallback, &Gammaray::probeDisconnectCallback);
+
+  m_queueTimer->setSingleShot(true);
+  m_queueTimer->setInterval(0);
+  connect(m_queueTimer, SIGNAL(timeout()),
+          this, SLOT(queuedObjectsFullyConstructed()));
 }
 
 Probe::~Probe()
@@ -283,6 +290,11 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     if (filterObject(obj)) {
       IF_DEBUG(cout << "objectAdded Filter: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
       return;
+    } else if (instance()->m_validObjects.contains(obj)) {
+      // this happens when we get a child event before the objectAdded call from the ctor
+      IF_DEBUG(cout << "objectAdded Known: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
+      Q_ASSERT(fromCtor);
+      return;
     }
 
     // make sure we already know the parent
@@ -299,11 +311,10 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
     IF_DEBUG(cout << "objectAdded: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
 
-    if (fromCtor || (obj->parent() && instance()->m_queuedObjects.contains(obj->parent()))) {
+    if (fromCtor) {
+      Q_ASSERT(!instance()->m_queuedObjects.contains(obj));
       instance()->m_queuedObjects << obj;
-      QMetaObject::invokeMethod(instance(), "objectFullyConstructed",
-                                Qt::QueuedConnection, Q_ARG(QObject*, obj),
-                                Q_ARG(bool, true));
+      instance()->m_queueTimer->start();
     } else {
       instance()->objectFullyConstructed(obj);
     }
@@ -313,13 +324,32 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
   }
 }
 
-void Probe::objectFullyConstructed(QObject *obj, bool wasDelayed)
+void Probe::queuedObjectsFullyConstructed()
 {
   QWriteLocker lock(&m_lock);
 
-  if (wasDelayed) {
-    m_queuedObjects.remove(obj);
+  IF_DEBUG(cout << Q_FUNC_INFO << " " << m_queuedObjects.size() << endl;)
+
+  // must be called from the main thread via timeout
+  Q_ASSERT(QThread::currentThread() == thread());
+
+  // when this is called no object must be in the queue twice
+  // otherwise the cleanup procedures failed
+  Q_ASSERT(m_queuedObjects.size() == m_queuedObjects.toSet().size());
+
+  foreach(QObject* obj, m_queuedObjects) {
+    objectFullyConstructed(obj);
   }
+
+  IF_DEBUG(cout << Q_FUNC_INFO << " done" << endl;)
+
+  m_queuedObjects.clear();
+}
+
+void Probe::objectFullyConstructed(QObject *obj)
+{
+  // must be write locked
+  Q_ASSERT(!m_lock.tryLockForRead());
 
   if (!m_validObjects.contains(obj)) {
     // deleted already
@@ -332,7 +362,7 @@ void Probe::objectFullyConstructed(QObject *obj, bool wasDelayed)
     return;
   }
 
-  IF_DEBUG(cout << "fully constructed: " << hex << obj << (wasDelayed ? " (delayed)" : "") << endl;)
+  IF_DEBUG(cout << "fully constructed: " << hex << obj << endl;)
 
   // ensure we know the parent already
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
@@ -356,7 +386,10 @@ void Probe::objectRemoved(QObject *obj)
       return;
     }
 
-    instance()->m_queuedObjects.remove(obj);
+    instance()->m_queuedObjects.removeOne(obj);
+    if (instance()->m_queuedObjects.isEmpty()) {
+      instance()->m_queueTimer->stop();
+    }
 
     instance()->m_objectListModel->objectRemoved(obj);
     instance()->m_objectTreeModel->objectRemoved(obj);
