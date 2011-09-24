@@ -356,6 +356,8 @@ void Probe::objectRemoved(QObject *obj)
       return;
     }
 
+    instance()->m_queuedObjects.remove(obj);
+
     instance()->m_objectListModel->objectRemoved(obj);
     instance()->m_objectTreeModel->objectRemoved(obj);
 
