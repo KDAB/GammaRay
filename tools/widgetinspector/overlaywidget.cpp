@@ -25,6 +25,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QEvent>
+#include <QtGui/QDialog>
 #include <QtGui/QLayout>
 #include <QtGui/QPainter>
 
@@ -33,7 +34,7 @@ using namespace Gammaray;
 static QWidget* toplevelWidget(QWidget *widget)
 {
   QWidget *parent = widget;
-  while (parent->parentWidget())
+  while (parent->parentWidget() && (qobject_cast<QDialog*>(parent->parentWidget()) == 0) && (qobject_cast<QDialog*>(parent) == 0))
     parent = parent->parentWidget();
 
   return parent;
