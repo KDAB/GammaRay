@@ -76,8 +76,7 @@ AbstractInjector::Ptr defaultInjectorForAttach()
 #ifndef Q_OS_WIN
   return createInjector(QLatin1String("gdb"));
 #else
-  //TODO: what's the default attach injector on Windows?
-  return createInjector(QLatin1String(""));
+  return createInjector(QLatin1String("windll"));
 #endif
 }
 
