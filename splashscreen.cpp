@@ -43,7 +43,8 @@ void showSplashScreen()
 
 void hideSplashScreen()
 {
-  splash->hide();
+  if (splash)
+    splash->hide();
 }
 
 }
