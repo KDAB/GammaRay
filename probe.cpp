@@ -57,6 +57,8 @@ static QObjectFunc_t true_qt_addObject_Func;
 static QObjectFunc_t true_qt_removeObject_Func;
 #endif
 
+#define IF_DEBUG(x)
+
 using namespace Gammaray;
 using namespace std;
 
@@ -88,13 +90,32 @@ static bool probeDisconnectCallback(void ** args)
 
 }
 
+// useful for debugging, dumps the object and all it's parents
+// also useable from GDB!
+void dumpObject(QObject *obj)
+{
+  if (!obj) {
+    cout << "QObject(0x0)" << endl;
+    return;
+  }
+
+  do {
+    cout << obj->metaObject()->className() << "(" << hex << obj << ")";
+    obj = obj->parent();
+    if (obj) {
+      cout << " <- ";
+    }
+  } while(obj);
+  cout << endl;
+}
+
 struct Listener
 {
   Listener()
-    : active(true)
+    : filterThread(0)
   {}
 
-  bool active;
+  QThread *filterThread;
 };
 
 Q_GLOBAL_STATIC(Listener, s_listener)
@@ -136,13 +157,16 @@ Probe *Gammaray::Probe::instance()
   if (!qApp)
     return NULL;
   if (!s_instance) {
-    s_listener()->active = false;
+    IF_DEBUG(cout << "setting up new probe instance" << endl;)
+    s_listener()->filterThread = QThread::currentThread();
     s_instance = new Probe;
+    s_listener()->filterThread = 0;
+    IF_DEBUG(cout << "done setting up new probe instance" << endl;)
+
     s_instance->moveToThread(QCoreApplication::instance()->thread());
     //void* ptr = QCoreApplication::instance();
 
     QMetaObject::invokeMethod(s_instance, "delayedInit", Qt::QueuedConnection);
-    s_listener()->active = true;
     foreach (QObject *obj, *(s_addedBeforeProbeInsertion())) {
       objectAdded(obj);
     }
@@ -168,13 +192,16 @@ void Probe::delayedInit()
 
   QCoreApplication::instance()->installEventFilter(s_instance);
 
-  s_listener()->active = false;
+  IF_DEBUG(cout << "creating Gammaray::MainWindow" << endl;)
+  s_listener()->filterThread = QThread::currentThread();
   Gammaray::MainWindow *window = new Gammaray::MainWindow;
+  s_listener()->filterThread = 0;
+  IF_DEBUG(cout << "creation done" << endl;)
+
   window->setAttribute(Qt::WA_DeleteOnClose);
   instance()->setWindow(window);
   instance()->setParent(window);
   window->show();
-  s_listener()->active = true;
 }
 
 static bool descendantOf(QObject *ascendant, QObject *obj)
@@ -199,6 +226,10 @@ static bool descendantOf(QObject *ascendant, QObject *obj)
 static bool filterObject(QObject* obj)
 {
   Probe* p = Probe::instance();
+  if (obj->thread() != p->thread()) {
+    // shortcut, never filter objects from a different thread
+    return false;
+  }
   return obj == p || obj == p->window() ||
           descendantOf(p, obj) ||
           descendantOf(p->window(), obj);
@@ -242,34 +273,54 @@ QReadWriteLock* Probe::objectLock() const
 
 void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
-  if (!s_listener()->active && obj->thread() == QThread::currentThread()) {
+  if (s_listener()->filterThread == obj->thread()) {
     // Ignore
+    IF_DEBUG(cout << "objectAdded Ignore: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
     return;
   } else if (isInitialized()) {
     QWriteLocker lock(&instance()->m_lock);
 
     if (filterObject(obj)) {
+      IF_DEBUG(cout << "objectAdded Filter: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
       return;
     }
 
+    // make sure we already know the parent
     Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
     instance()->m_validObjects << obj;
 
-    if (fromCtor) {
+    if (!fromCtor && obj->parent() && instance()->m_queuedObjects.contains(obj->parent())) {
+      // when a child event triggers a call to objectAdded while inside the ctor
+      // the parent is already tracked but it's call to objectFullyConstructed
+      // was delayed. hence we must do the same for the child for integrity
+      fromCtor = true;
+    }
+
+    IF_DEBUG(cout << "objectAdded: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
+
+    if (fromCtor || (obj->parent() && instance()->m_queuedObjects.contains(obj->parent()))) {
+      instance()->m_queuedObjects << obj;
       QMetaObject::invokeMethod(instance(), "objectFullyConstructed",
-                                Qt::QueuedConnection, Q_ARG(QObject*, obj));
+                                Qt::QueuedConnection, Q_ARG(QObject*, obj),
+                                Q_ARG(bool, true));
     } else {
       instance()->objectFullyConstructed(obj);
     }
   } else {
+    IF_DEBUG(cout << "objectAdded Before: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
     s_addedBeforeProbeInsertion()->push_back(obj);
   }
 }
 
-void Probe::objectFullyConstructed(QObject *obj)
+void Probe::objectFullyConstructed(QObject *obj, bool wasDelayed)
 {
   QWriteLocker lock(&m_lock);
+
+  if (wasDelayed) {
+    m_queuedObjects.remove(obj);
+  }
+
   if (!m_validObjects.contains(obj)) {
     // deleted already
     return;
@@ -295,6 +346,8 @@ void Probe::objectRemoved(QObject *obj)
 {
   if (isInitialized()) {
     QWriteLocker lock(&instance()->m_lock);
+    IF_DEBUG(cout << "object removed:" << hex << obj << " " << obj->parent() << endl;)
+
     bool success = instance()->m_validObjects.remove(obj);
     if (!success) {
       // object was not tracked by the probe, probably a gammaray object
@@ -323,7 +376,9 @@ void Probe::objectRemoved(QObject *obj)
 void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiver,
                             const char *method, Qt::ConnectionType type)
 {
-  if (!isInitialized() || !s_listener()->active || !sender || !receiver) {
+  if (!isInitialized() || !sender || !receiver ||
+      s_listener()->filterThread == QThread::currentThread())
+  {
     return;
   }
 
@@ -338,7 +393,9 @@ void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiv
 void Probe::connectionRemoved(QObject *sender, const char *signal,
                               QObject *receiver, const char *method)
 {
-  if (!isInitialized() || !s_listener() || !s_listener()->active) {
+  if (!isInitialized() || !s_listener() ||
+      s_listener()->filterThread == QThread::currentThread())
+  {
     return;
   }
 
@@ -352,7 +409,7 @@ void Probe::connectionRemoved(QObject *sender, const char *signal,
 
 bool Probe::eventFilter(QObject *receiver, QEvent *event)
 {
-  if (!s_listener()->active) {
+  if (s_listener()->filterThread == receiver->thread()) {
     return QObject::eventFilter(receiver, event);
   }
 
@@ -364,15 +421,24 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     const bool tracked = m_validObjects.contains(obj);
     const bool filtered = filterObject(obj);
 
-    if (!filtered) {
+    IF_DEBUG(cout << "child event: " << hex << obj << ", p: " << obj->parent() << dec
+         << ", tracked: " << tracked
+         << ", filtered: " << filtered
+         << ", type: " << (childEvent->added() ? "added" : "removed") << endl;)
+
+    if (!filtered && childEvent->added()) {
       // ensure we know the parent
+      if (obj->parent() && !m_validObjects.contains(obj->parent())) {
+        dumpObject(obj);
+      }
       Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
       if (!tracked) {
         // was not tracked before, add to all models
-        instance()->m_validObjects << obj;
-        objectFullyConstructed(obj);
-      } else {
+        objectAdded(obj);
+      } else if (!m_queuedObjects.contains(obj)) {
         // object is known already, just update the position in the tree
+        // BUT: only when we did not queue this item before
+        IF_DEBUG(cout << "update pos: " << hex << obj << endl;)
         m_objectTreeModel->objectRemoved(obj);
         m_objectTreeModel->objectAdded(obj);
       }

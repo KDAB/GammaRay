@@ -94,7 +94,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
   private slots:
     void delayedInit();
-    void objectFullyConstructed(QObject *obj);
+    void objectFullyConstructed(QObject* obj, bool wasDelayed = false);
 
   private:
     explicit Probe(QObject *parent = 0);
@@ -110,6 +110,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     // locking it in objectAdded/Removed
     mutable QReadWriteLock m_lock;
     QSet<QObject*> m_validObjects;
+    QSet<QObject*> m_queuedObjects;
 };
 
 }
