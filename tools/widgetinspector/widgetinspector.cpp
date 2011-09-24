@@ -24,6 +24,8 @@
 #include "widgetinspector.h"
 #include "ui_widgetinspector.h"
 
+#include "overlaywidget.h"
+
 #include <probeinterface.h>
 #include <kde/krecursivefilterproxymodel.h>
 #include <objecttypefilterproxymodel.h>
@@ -32,9 +34,11 @@
 using namespace Gammaray;
 
 WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::WidgetInspector)
+  : QWidget(parent), ui(new Ui::WidgetInspector), m_overlayWidget(new OverlayWidget)
 {
   ui->setupUi(this);
+
+  m_overlayWidget->hide();
 
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)));
 
@@ -56,9 +60,13 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     QObject *obj = index.data(ObjectListModel::ObjectRole).value<QObject*>();
     ui->widgetPropertyWidget->setObject(obj);
     ui->widgetPreviewWidget->setWidget(qobject_cast<QWidget*>(obj));
+
+    QWidget *widget = qobject_cast<QWidget*>(obj);
+    m_overlayWidget->placeOn(widget);
   } else {
     ui->widgetPropertyWidget->setObject(0);
     ui->widgetPreviewWidget->setWidget(0);
+    m_overlayWidget->placeOn(0);
   }
 }
 
