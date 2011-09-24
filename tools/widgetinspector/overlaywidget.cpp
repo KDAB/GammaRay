@@ -58,7 +58,7 @@ void OverlayWidget::placeOn(QWidget *widget)
     
     m_currentToplevelWidget = 0;
     m_currentWidget = 0;
-    m_rect = QRect();
+    m_widgetRect = QRect();
 
     update();
     return;
@@ -113,11 +113,13 @@ void OverlayWidget::updatePositions()
     return;
 
   if (!m_currentWidget->isVisible() || m_currentWidget->isHidden()) {
-    m_rect = QRect();
+    m_widgetColor = Qt::green;
   } else {
-    const QPoint parentPos = m_currentWidget->mapTo(m_currentToplevelWidget, QPoint(0, 0));
-    m_rect = QRect(parentPos.x(), parentPos.y(), m_currentWidget->width(), m_currentWidget->height()).adjusted(0, 0, -1, -1);
+    m_widgetColor = Qt::red;
   }
+
+  const QPoint parentPos = m_currentWidget->mapTo(m_currentToplevelWidget, QPoint(0, 0));
+  m_widgetRect = QRect(parentPos.x(), parentPos.y(), m_currentWidget->width(), m_currentWidget->height()).adjusted(0, 0, -1, -1);
 
   update();
 }
@@ -135,6 +137,6 @@ void OverlayWidget::resizeOverlay()
 void OverlayWidget::paintEvent(QPaintEvent*)
 {
   QPainter p(this);
-  p.setPen(Qt::red);
-  p.drawRect(m_rect);
+  p.setPen(m_widgetColor);
+  p.drawRect(m_widgetRect);
 }

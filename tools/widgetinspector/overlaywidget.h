@@ -46,7 +46,8 @@ class OverlayWidget : public QWidget
 
     QWidget *m_currentToplevelWidget;
     QWidget *m_currentWidget;
-    QRect m_rect;
+    QRect m_widgetRect;
+    QColor m_widgetColor;
 };
 
 }
