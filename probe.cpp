@@ -558,10 +558,12 @@ const char *Probe::connectLocation(const char *member)
 typedef void (*qt_addObject_ptr)(QObject *obj);
 typedef void (*qt_removeObject_ptr)(QObject *obj);
 typedef void (*qt_startup_hook_ptr)();
+typedef const char *(*qFlagLocation_ptr)(const char *method);
 
 qt_startup_hook_ptr next_qt_startup_hook = 0;
 qt_addObject_ptr next_qt_addObject = 0;
 qt_removeObject_ptr next_qt_removeObject = 0;
+qFlagLocation_ptr next_qFlagLocation = 0;
 #endif
 
 #ifndef USE_DETOURS
@@ -615,6 +617,28 @@ void fake_qt_removeObject(QObject *obj)
 {
   Probe::objectRemoved(obj);
   true_qt_removeObject_Func(obj);
+}
+#endif
+
+#ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
+#ifndef Q_OS_WIN
+Q_DECL_EXPORT const char *qFlagLocation(const char *method)
+#else
+Q_DECL_EXPORT const char *myFlagLocation(const char *method)
+#endif
+{
+  static int gammaray_idx = 0;
+  gammaray_flagged_locations[gammaray_idx] = method;
+  gammaray_idx = (gammaray_idx+1) % gammaray_flagged_locations_count;
+
+#ifndef Q_OS_WIN
+  static const char *(*next_qFlagLocation)(const char *method) =
+    (const char * (*)(const char *method)) dlsym(RTLD_NEXT, "_Z13qFlagLocationPKc");
+#endif
+  Q_ASSERT_X(next_qFlagLocation, "",
+             "Recompile with GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES enabled, "
+             "your compiler uses an unsupported C++ name mangling scheme");
+  return next_qFlagLocation(method);
 }
 #endif
 
@@ -731,6 +755,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
   FARPROC qtstartuphookaddr = GetProcAddress(qtCoreDllHandle, "qt_startup_hook");
   FARPROC qtaddobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_addObject");
   FARPROC qtremobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_removeObject");
+  FARPROC qFlagLocationaddr = GetProcAddress(qtCoreDllHandle, "?qFlagLocation@@YAPBDPBD@Z");
 
   if (qtstartuphookaddr == NULL) {
     qDebug() << "no address for qt_startup_hook found!";
@@ -744,6 +769,10 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
     qDebug() << "no address for qt_removeObject found!";
     return FALSE;
   }
+  if (qFlagLocationaddr == NULL) {
+    qDebug() << "no address for qFlagLocation found!";
+    return FALSE;
+  }
 
   switch(dwReason) {
   case DLL_PROCESS_ATTACH:
@@ -752,6 +781,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
     next_qt_startup_hook = rewriteJmp<qt_startup_hook_ptr>(qtstartuphookaddr, qt_startup_hook);
     next_qt_addObject = rewriteJmp<qt_addObject_ptr>(qtaddobjectaddr, qt_addObject);
     next_qt_removeObject = rewriteJmp<qt_removeObject_ptr>(qtremobjectaddr, qt_removeObject);
+    next_qFlagLocation = rewriteJmp<qFlagLocation_ptr>(qFlagLocationaddr, myFlagLocation);
     gammaray_probe_inject();
     break;
   }
@@ -761,35 +791,12 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
     rewriteJmp<qt_startup_hook_ptr>(qtstartuphookaddr, next_qt_startup_hook);
     rewriteJmp<qt_addObject_ptr>(qtaddobjectaddr, next_qt_addObject);
     rewriteJmp<qt_removeObject_ptr>(qtremobjectaddr, next_qt_removeObject);
+    rewriteJmp<qFlagLocation_ptr>(qFlagLocationaddr, next_qFlagLocation);
     break;
   }
   };
   return TRUE;
 #endif
-}
-#endif
-
-#ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
-#ifndef Q_OS_WIN
-Q_DECL_EXPORT const char *qFlagLocation(const char *method)
-#else
-Q_DECL_EXPORT const char *myFlagLocation(const char *method)
-#endif
-{
-  static int gammaray_idx = 0;
-  gammaray_flagged_locations[gammaray_idx] = method;
-  gammaray_idx = (gammaray_idx+1) % gammaray_flagged_locations_count;
-
-#ifndef Q_OS_WIN
-  static const char *(*next_qFlagLocation)(const char *method) =
-    (const char * (*)(const char *method)) dlsym(RTLD_NEXT, "_Z13qFlagLocationPKc");
-#else
-  static const char *(*next_qFlagLocation)(const char *method);
-#endif
-  Q_ASSERT_X(next_qFlagLocation, "",
-             "Recompile with GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES enabled, "
-             "your compiler uses an unsupported C++ name mangling scheme");
-  return next_qFlagLocation(method);
 }
 #endif
 
