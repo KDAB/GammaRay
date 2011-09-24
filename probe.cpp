@@ -332,6 +332,8 @@ void Probe::objectFullyConstructed(QObject *obj, bool wasDelayed)
     return;
   }
 
+  IF_DEBUG(cout << "fully constructed: " << hex << obj << (wasDelayed ? " (delayed)" : "") << endl;)
+
   // ensure we know the parent already
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
 
@@ -428,9 +430,11 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 
     if (!filtered && childEvent->added()) {
       // ensure we know the parent
+      IF_DEBUG(
       if (obj->parent() && !m_validObjects.contains(obj->parent())) {
         dumpObject(obj);
       }
+      )
       Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
       if (!tracked) {
         // was not tracked before, add to all models

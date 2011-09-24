@@ -31,7 +31,9 @@
 
 #include <iostream>
 
-#define IF_DEBUG(x)
+#define IF_DEBUG(x) x
+
+extern void dumpObject(QObject *);
 
 using namespace std;
 using namespace Gammaray;
@@ -48,7 +50,14 @@ void ObjectTreeModel::objectAdded(QObject *obj)
   {
     QReadLocker lock(&m_lock);
     const QModelIndex index = indexForObject(obj->parent());
-    IF_DEBUG(cout << "added: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;)
+    IF_DEBUG(
+      cout << "added: " << hex << obj << " " << hex << obj->parent()
+           << dec << " " << m_parentChildMap.value(obj->parent()).size()
+           << " " << m_parentChildMap.contains(obj) << endl;
+      if (obj->parent() && !index.isValid()) {
+        dumpObject(obj);
+      }
+    )
     // either we get a proper parent and hence valid index or there is no parent
     Q_ASSERT(index.isValid() || !obj->parent());
   }
