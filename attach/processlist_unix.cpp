@@ -43,14 +43,32 @@ static bool isUnixProcessId(const QString &procname)
     return true;
 }
 
+static bool processIsQtApp( const QString& pid )
+{
+  QProcess lsofProcess;
+  QStringList args;
+  args << QLatin1String("-Fn") << QLatin1String("-p") << pid;
+  lsofProcess.start(QLatin1String("lsof"), args);
+  if (!lsofProcess.waitForStarted())
+    return false;
+
+  lsofProcess.waitForFinished();
+  const QByteArray output = lsofProcess.readAllStandardOutput();
+
+  if ( output.contains( "QtCore") )
+    return true;
+
+  return false;
+}
 
 // Determine UNIX processes by running ps
 static QList<ProcData> unixProcessListPS()
 {
 #ifdef Q_OS_MAC
-    static const char formatC[] = "pid state command user";
+    // command goes last, otherwise it is cut off
+    static const char formatC[] = "pid state user command";
 #else
-    static const char formatC[] = "pid,state,cmd,user";
+    static const char formatC[] = "pid,state,user,cmd";
 #endif
     QList<ProcData> rc;
     QProcess psProcess;
@@ -66,13 +84,27 @@ static QList<ProcData> unixProcessListPS()
     const int lineCount = lines.size();
     const QChar blank = QLatin1Char(' ');
     for (int l = 1; l < lineCount; l++) { // Skip header
-        const QStringList line = lines.at(l).simplified().split(blank);
-        if (line.count() == 4) {
+        const QString line = lines.at(l).simplified();
+        // we can't just split on blank as the process name might
+        // contain them
+        const int endOfPid = line.indexOf(blank);
+        const int endOfState = line.indexOf(blank, endOfPid+1);
+        const int endOfUser = line.indexOf(blank, endOfState+1);
+        const QStringList lineParsed =
+            QStringList() << line.left(endOfPid)
+                          << line.mid(endOfPid+1, endOfState-endOfPid-1)
+                          << line.mid(endOfState+1, endOfUser-endOfState-1)
+                             << line.right(line.size()-endOfUser-1);
+        if (lineParsed.count() == 4) {
             ProcData procData;
-            procData.ppid = line.at(0);
-            procData.state = line.at(1);
-            procData.name = line.at(2);
-            procData.user = line.at(3);
+            procData.ppid = lineParsed.at(0);
+            procData.state = lineParsed.at(1);
+            procData.user = lineParsed.at(2);
+            procData.name = lineParsed.at(3);
+            if ( processIsQtApp( procData.ppid ) )
+                procData.type = ProcData::QtApp;
+            else
+                procData.type = ProcData::NoQtApp;
             rc.push_back(procData);
         }
     }
