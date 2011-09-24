@@ -309,7 +309,9 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
       fromCtor = true;
     }
 
-    IF_DEBUG(cout << "objectAdded: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
+    IF_DEBUG(cout << "objectAdded: " << hex << obj
+                  << (fromCtor ? " (from ctor)" : "")
+                  << ", p: " << obj->parent() << endl;)
 
     if (fromCtor) {
       Q_ASSERT(!instance()->m_queuedObjects.contains(obj));
@@ -353,12 +355,14 @@ void Probe::objectFullyConstructed(QObject *obj)
 
   if (!m_validObjects.contains(obj)) {
     // deleted already
+    IF_DEBUG(cout << "stale fully constructed: " << hex << obj << endl;)
     return;
   } else if (filterObject(obj)) {
     // when the call was delayed from the ctor construction,
     // the parent might not have been set properly yet. hence
     // apply the filter again
     m_validObjects.remove(obj);
+    IF_DEBUG(cout << "now filtered fully constructed: " << hex << obj << endl;)
     return;
   }
 
