@@ -298,6 +298,9 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     }
 
     // make sure we already know the parent
+    if (obj->parent() && !instance()->m_validObjects.contains(obj->parent())) {
+      objectAdded(obj->parent(), fromCtor);
+    }
     Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
     instance()->m_validObjects << obj;
@@ -369,6 +372,9 @@ void Probe::objectFullyConstructed(QObject *obj)
   IF_DEBUG(cout << "fully constructed: " << hex << obj << endl;)
 
   // ensure we know the parent already
+  if (obj->parent() && !m_validObjects.contains(obj->parent())) {
+    objectAdded(obj->parent());
+  }
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
 
   m_objectListModel->objectAdded(obj);
@@ -469,13 +475,6 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
          << ", type: " << (childEvent->added() ? "added" : "removed") << endl;)
 
     if (!filtered && childEvent->added()) {
-      // ensure we know the parent
-      IF_DEBUG(
-      if (obj->parent() && !m_validObjects.contains(obj->parent())) {
-        dumpObject(obj);
-      }
-      )
-      Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
       if (!tracked) {
         // was not tracked before, add to all models
         objectAdded(obj);

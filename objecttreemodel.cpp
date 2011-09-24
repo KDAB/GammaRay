@@ -71,15 +71,19 @@ void ObjectTreeModel::objectAddedMainThread(QObject *obj)
 
   ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
   if (!Probe::instance()->isValidObject(obj)) {
+    IF_DEBUG(cout << "tree invalid obj added:" << hex << obj << endl;)
     return;
   }
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
   QWriteLocker lock(&m_lock);
 
-  if (m_childParentMap.contains(obj)) {
+  if (indexForObject(obj).isValid()) {
+    IF_DEBUG(cout << "tree double obj added:" << hex << obj << endl;)
     return;
   }
+
+  IF_DEBUG(cout << "tree obj added:" << hex << obj << endl;)
 
   const QModelIndex index = indexForObject(obj->parent());
 
@@ -110,6 +114,7 @@ void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
   QWriteLocker lock(&m_lock);
 
   if (!m_childParentMap.contains(obj)) {
+    Q_ASSERT(!m_parentChildMap.contains(obj));
     return;
   }
 
@@ -119,6 +124,7 @@ void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
     return;
   }
 
+  Q_ASSERT(m_parentChildMap.contains(parentObj));
   QVector<QObject*> &siblings = m_parentChildMap[ parentObj ];
 
   int index = siblings.indexOf(obj);
