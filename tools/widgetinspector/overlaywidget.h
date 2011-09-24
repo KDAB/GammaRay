@@ -48,6 +48,9 @@ class OverlayWidget : public QWidget
     QWidget *m_currentWidget;
     QRect m_widgetRect;
     QColor m_widgetColor;
+
+    QPainterPath m_layoutPath;
+    bool m_drawLayoutOutlineOnly;
 };
 
 }

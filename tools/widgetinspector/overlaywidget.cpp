@@ -25,7 +25,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QEvent>
-#include <QtGui/QBitmap>
+#include <QtGui/QLayout>
 #include <QtGui/QPainter>
 
 using namespace Gammaray;
@@ -59,6 +59,7 @@ void OverlayWidget::placeOn(QWidget *widget)
     m_currentToplevelWidget = 0;
     m_currentWidget = 0;
     m_widgetRect = QRect();
+    m_layoutPath = QPainterPath();
 
     update();
     return;
@@ -121,6 +122,35 @@ void OverlayWidget::updatePositions()
   const QPoint parentPos = m_currentWidget->mapTo(m_currentToplevelWidget, QPoint(0, 0));
   m_widgetRect = QRect(parentPos.x(), parentPos.y(), m_currentWidget->width(), m_currentWidget->height()).adjusted(0, 0, -1, -1);
 
+  m_layoutPath = QPainterPath();
+
+  if (m_currentWidget->layout()) {
+    const QRect layoutGeometry = m_currentWidget->layout()->geometry();
+
+    const QRect mappedOuterRect = QRect(m_currentWidget->mapTo(m_currentToplevelWidget, layoutGeometry.topLeft()), layoutGeometry.size());
+
+    QPainterPath outerPath;
+    outerPath.addRect(mappedOuterRect.adjusted(1, 1, -2, -2));
+
+    QPainterPath innerPath;
+    for (int i = 0; i < m_currentWidget->layout()->count(); ++i) {
+      QLayoutItem *item = m_currentWidget->layout()->itemAt(i);
+      const QRect mappedInnerRect = QRect(m_currentWidget->mapTo(m_currentToplevelWidget, item->geometry().topLeft()), item->geometry().size());
+      innerPath.addRect(mappedInnerRect);
+    }
+
+    m_layoutPath.setFillRule(Qt::OddEvenFill);
+    m_layoutPath = outerPath.subtracted(innerPath);
+
+    if (m_layoutPath.isEmpty()) {
+      m_layoutPath = outerPath;
+      m_layoutPath.addPath(innerPath);
+      m_drawLayoutOutlineOnly = true;
+    } else {
+      m_drawLayoutOutlineOnly = false;
+    }
+  }
+
   update();
 }
 
@@ -139,4 +169,13 @@ void OverlayWidget::paintEvent(QPaintEvent*)
   QPainter p(this);
   p.setPen(m_widgetColor);
   p.drawRect(m_widgetRect);
+
+  QBrush brush(Qt::BDiagPattern);
+  brush.setColor(Qt::blue);
+
+  if (!m_drawLayoutOutlineOnly)
+    p.fillPath(m_layoutPath, brush);
+
+  p.setPen(Qt::blue);
+  p.drawPath(m_layoutPath);
 }
