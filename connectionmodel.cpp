@@ -129,30 +129,6 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
     return;
   }
 
-  QByteArray normalizedSignal, normalizedMethod;
-  if (signal) {
-    normalizedSignal = QMetaObject::normalizedSignature(signal);
-  }
-  if (method) {
-    normalizedMethod = QMetaObject::normalizedSignature(method);
-  }
-
-  if (thread() != QThread::currentThread()) {
-    // called from background thread, invalidate data:
-    QWriteLocker lock(&m_lock);
-    for (int i = 0; i < m_connections.size();) {
-      Connection &con = m_connections[i];
-      if ((sender == 0 || con.sender == sender) &&
-          (signal == 0 || con.signal == normalizedSignal) &&
-          (receiver == 0 || con.receiver == receiver) &&
-          (method == 0 || con.method == normalizedMethod)) {
-        con = Connection();
-      } else {
-        ++i;
-      }
-    }
-  }
-
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
                             Q_ARG(QObject *, sender), Q_ARG(const char *, signal),
@@ -194,6 +170,21 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *s
       endRemoveRows();
     } else {
       ++i;
+    }
+  }
+}
+
+void ConnectionModel::objectRemoved(QObject* object)
+{
+  QWriteLocker lock(&m_lock);
+
+  // invalidate data
+  for (int i = 0; i < m_connections.size(); ++i) {
+    Connection &con = m_connections[i];
+    if (con.receiver == object) {
+      con.receiver = 0;
+    } else if (con.sender == object) {
+      con.sender = 0;
     }
   }
 }

@@ -31,6 +31,10 @@
 
 #include <iostream>
 
+#define IF_DEBUG(x)
+
+extern void dumpObject(QObject *);
+
 using namespace std;
 using namespace Gammaray;
 
@@ -42,15 +46,20 @@ ObjectTreeModel::ObjectTreeModel(QObject *parent)
 
 void ObjectTreeModel::objectAdded(QObject *obj)
 {
-#ifdef QT_DEBUG
-  {
+  // this is ugly, but apparently it can happen
+  // that an object gets created without parent
+  // then later the delayed signal comes in
+  // so catch this gracefully by first adding the
+  // parent if required
+  if (obj->parent()) {
     QReadLocker lock(&m_lock);
     const QModelIndex index = indexForObject(obj->parent());
-    // either we get a proper parent and hence valid index or there is no parent
-//     if (!obj->parent()) cout << "added: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;
-    Q_ASSERT(index.isValid() || !obj->parent());
+    lock.unlock();
+    if (!index.isValid()) {
+      objectAdded(obj->parent());
+    }
   }
-#endif
+
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
                             Q_ARG(QObject*, obj));
@@ -62,35 +71,39 @@ void ObjectTreeModel::objectAddedMainThread(QObject *obj)
 
   ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
   if (!Probe::instance()->isValidObject(obj)) {
+    IF_DEBUG(cout << "tree invalid obj added:" << hex << obj << endl;)
     return;
   }
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
   QWriteLocker lock(&m_lock);
 
-  if (m_childParentMap.contains(obj)) {
+  if (indexForObject(obj).isValid()) {
+    IF_DEBUG(cout << "tree double obj added:" << hex << obj << endl;)
     return;
   }
 
-  const QModelIndex index = indexForObject(obj->parent());
+  IF_DEBUG(cout << "tree obj added:" << hex << obj << endl;)
 
-//   if (!obj->parent()) cout << "adding: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;
+  const QModelIndex index = indexForObject(obj->parent());
 
   // either we get a proper parent and hence valid index or there is no parent
   Q_ASSERT(index.isValid() || !obj->parent());
 
   QVector<QObject*> &children = m_parentChildMap[ obj->parent() ];
+
   beginInsertRows(index, children.size(), children.size());
+
   children.push_back(obj);
   m_childParentMap.insert(obj, obj->parent());
-//   if (!obj->parent()) cout << "rowcount now:" << rowCount() << endl;
-  Q_ASSERT(rowCount(index) == m_parentChildMap.value(obj->parent()).size());
+
   endInsertRows();
 }
 
 void ObjectTreeModel::objectRemoved(QObject *obj)
 {
-//   if (!obj->parent()) cout << "removed: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;
+  IF_DEBUG(cout << "removed: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;)
+
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
                             Q_ARG(QObject *, obj));
@@ -101,17 +114,17 @@ void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
   QWriteLocker lock(&m_lock);
 
   if (!m_childParentMap.contains(obj)) {
-//     cout << "removing ignored: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;
+    Q_ASSERT(!m_parentChildMap.contains(obj));
     return;
   }
 
   QObject *parentObj = m_childParentMap[ obj ];
   const QModelIndex parentIndex = indexForObject(parentObj);
   if (parentObj && !parentIndex.isValid()) {
-//     cout << "removing ignored 2: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;
     return;
   }
 
+  Q_ASSERT(m_parentChildMap.contains(parentObj));
   QVector<QObject*> &siblings = m_parentChildMap[ parentObj ];
 
   int index = siblings.indexOf(obj);
@@ -127,8 +140,6 @@ void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
   m_parentChildMap.remove(obj);
 
   endRemoveRows();
-
-//   if (!obj->parent()) cout << "removed real: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;
 }
 
 QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const

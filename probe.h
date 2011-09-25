@@ -28,7 +28,9 @@
 #include "probeinterface.h"
 #include <QReadWriteLock>
 #include <QSet>
+#include <QQueue>
 
+class QTimer;
 class QGraphicsItem;
 
 namespace Gammaray {
@@ -94,9 +96,11 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
   private slots:
     void delayedInit();
-    void objectFullyConstructed(QObject *obj);
+    void queuedObjectsFullyConstructed();
 
   private:
+    void objectFullyConstructed(QObject* obj);
+
     explicit Probe(QObject *parent = 0);
     static void addObjectRecursive(QObject *obj);
     static Probe *s_instance;
@@ -110,6 +114,8 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     // locking it in objectAdded/Removed
     mutable QReadWriteLock m_lock;
     QSet<QObject*> m_validObjects;
+    QQueue<QObject*> m_queuedObjects;
+    QTimer *m_queueTimer;
 };
 
 }

@@ -95,11 +95,15 @@ bool GdbInjector::startGdb(const QStringList &args)
 bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(m_process);
+#ifndef Q_OS_MAC
   m_process->write("sha dl\n");
-  m_process->write(qPrintable(QString::fromLatin1("call dlopen(\"%1\", %2)\n").
+#endif
+  m_process->write(qPrintable(QString::fromLatin1("call (void) dlopen(\"%1\", %2)\n").
                               arg(probeDll).arg(RTLD_NOW)));
+#ifndef Q_OS_MAC
   m_process->write(qPrintable(QString::fromLatin1("sha %1\n").arg(probeDll)));
-  m_process->write(qPrintable(QString::fromLatin1("call %1()\n").arg(probeFunc)));
+#endif
+  m_process->write(qPrintable(QString::fromLatin1("call (void) %1()\n").arg(probeFunc)));
   m_process->write("detach\n");
   m_process->write("quit\n");
   m_process->waitForBytesWritten(-1);

@@ -49,6 +49,8 @@ class ConnectionModel : public QAbstractTableModel
     void connectionRemoved(QObject *sender, const char *signal,
                            QObject *receiver, const char *method);
 
+    void objectRemoved(QObject *object);
+
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
