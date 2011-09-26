@@ -53,15 +53,16 @@ Supported injectors are:
 
 =over 4
 
-=item Run gammaray on the Qt-application C<qtfoo>
+=item Run gammaray on the Qt-application C<qtfoo> with command line arguments
+'arg1' and 'arg2':
 
- % gammaray /path/to/qtfoo
+ % gammaray /path/to/qtfoo arg1 arg2
 
-=item Invoke gammaray on the Qt-application running with pid 1234
+=item Invoke gammaray on the Qt-application running with pid 1234:
 
  % gammaray --pid 1234
 
-=item Invoke gammaray on with injector gdb on Qt-application running with pid 1234
+=item Invoke gammaray on with injector gdb on Qt-application running with pid 1234:
 
  % gammaray --injector gdb --pid 1234
 
