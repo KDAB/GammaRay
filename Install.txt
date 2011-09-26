@@ -32,11 +32,3 @@ Building on Windows with mingw:
 % cmake -G "MinGW Makefiles" ..
 % mingw32-make
 % mingw32-make install
-
-
-Building on Windows under Cygwin:
-% mkdir build
-% cd build
-% cmake ..
-% make
-% make install
