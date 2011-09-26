@@ -103,6 +103,10 @@ void MainWindow::aboutKDAB()
   mb.setText(tr("Klaralvdalens Datakonsult AB (KDAB)"));
   mb.setInformativeText(
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
+       "KDAB, the Qt experts, provide consulting and mentoring for developing "
+       "Qt applications from scratch and in porting from all popular and legacy "
+       "frameworks to Qt. Our software products increase Qt productivity and our "
+       "Qt trainers have trained 50% of commercial Qt developers globally.</p>"
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
        "to meet the people who write code like this."
        "We also offer Qt training courses.</p>"
