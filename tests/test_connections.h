@@ -34,10 +34,12 @@ class TestObject : public QObject
 {
   Q_OBJECT
   public:
-    explicit TestObject(QObject* parent = 0);
+    explicit TestObject(QObject *parent = 0);
     virtual ~TestObject();
+
   private slots:
     void dummySlot() {}
+
   public:
     QObject *child;
 };
@@ -59,6 +61,7 @@ class TestConnections : public QObject
 
   public slots:
     void timeout();
+
   private slots:
     void dummySlot(){}
 
@@ -94,7 +97,6 @@ class TestMain : public QObject
   private slots:
     void run_data();
     void run();
-
     void threading();
 };
 

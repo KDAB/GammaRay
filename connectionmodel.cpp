@@ -174,7 +174,7 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *s
   }
 }
 
-void ConnectionModel::objectRemoved(QObject* object)
+void ConnectionModel::objectRemoved(QObject *object)
 {
   QWriteLocker lock(&m_lock);
 

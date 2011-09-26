@@ -62,7 +62,7 @@ void ObjectTreeModel::objectAdded(QObject *obj)
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject*, obj));
+                            Q_ARG(QObject *, obj));
 }
 
 void ObjectTreeModel::objectAddedMainThread(QObject *obj)
@@ -102,7 +102,12 @@ void ObjectTreeModel::objectAddedMainThread(QObject *obj)
 
 void ObjectTreeModel::objectRemoved(QObject *obj)
 {
-  IF_DEBUG(cout << "removed: " << hex << obj << " " << hex << obj->parent() << dec << " " << m_parentChildMap.value(obj->parent()).size() << " " << m_parentChildMap.contains(obj) << endl;)
+  IF_DEBUG(cout
+           << "removed: "
+           << hex << obj << " "
+           << hex << obj->parent() << dec << " "
+           << m_parentChildMap.value(obj->parent()).size() << " "
+           << m_parentChildMap.contains(obj) << endl;)
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,

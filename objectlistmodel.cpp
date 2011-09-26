@@ -66,11 +66,11 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
   return m_objects.size();
 }
 
-void ObjectListModel::objectAdded(QObject* obj)
+void ObjectListModel::objectAdded(QObject *obj)
 {
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject*, obj));
+                            Q_ARG(QObject *, obj));
 }
 
 void ObjectListModel::objectAddedMainThread(QObject *obj)
@@ -110,7 +110,7 @@ void ObjectListModel::objectRemovedMainThread(QObject *obj)
 {
   QWriteLocker lock(&m_lock);
 
-  for(int i = 0; i < m_objects.size(); ++i) {
+  for (int i = 0; i < m_objects.size(); ++i) {
     if (!m_objects.at(i) || m_objects.at(i) == obj) {
       beginRemoveRows(QModelIndex(), i, i);
       m_objects.remove(i);

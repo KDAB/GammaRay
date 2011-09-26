@@ -82,78 +82,79 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
 
 bool WinDllInjector::attach(int pid, const QString &probeDll, const QString &/*probeFunc*/)
 {
-    m_dllPath = probeDll;
-    m_dllPath.replace('/', '\\');
+  m_dllPath = probeDll;
+  m_dllPath.replace('/', '\\');
 
-    m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+  m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
 
-    if (!m_destProcess)
-        return false;
+  if (!m_destProcess) {
+    return false;
+  }
 
-    return inject2();
+  return inject2();
 }
 
 bool WinDllInjector::inject()
 {
-    CONTEXT     context;
+  CONTEXT     context;
 
-    void       *mem             = NULL;
-    size_t      memLen          = 0;
-    UINT_PTR    fnLoadLibrary   = NULL;
+  void       *mem             = NULL;
+  size_t      memLen          = 0;
+  UINT_PTR    fnLoadLibrary   = NULL;
 
-    size_t      codeSize = 20;
+  size_t      codeSize = 20;
 
-    ::ZeroMemory(&context, sizeof(CONTEXT));
+  ::ZeroMemory(&context, sizeof(CONTEXT));
 
-    if(m_destProcess == NULL || m_destThread == NULL) {
-        qDebug() << "destination process or thread are empty: process"
-                 << m_destProcess << "thread" << m_destThread;
-        return false;
-    }
+  if(m_destProcess == NULL || m_destThread == NULL) {
+    qDebug() << "destination process or thread are empty: process"
+             << m_destProcess << "thread" << m_destThread;
+    return false;
+  }
 
-    if (::GetFileAttributes((WCHAR*)m_dllPath.utf16()) == INVALID_FILE_ATTRIBUTES) {
-        qDebug() << "invalid file attributes for file" << m_dllPath;
-        return false;
-    }
+  if (::GetFileAttributes((WCHAR*)m_dllPath.utf16()) == INVALID_FILE_ATTRIBUTES) {
+    qDebug() << "invalid file attributes for file" << m_dllPath;
+    return false;
+  }
 
-    BYTE *code = new BYTE[codeSize + (m_dllPath.length() + 1) * sizeof(wchar_t)];
+  BYTE *code = new BYTE[codeSize + (m_dllPath.length() + 1) * sizeof(wchar_t)];
 
-    memLen = (m_dllPath.length() + 1) * sizeof(wchar_t);
-    CopyMemory(code + codeSize, m_dllPath.utf16(), memLen);
-    memLen += codeSize;
+  memLen = (m_dllPath.length() + 1) * sizeof(wchar_t);
+  CopyMemory(code + codeSize, m_dllPath.utf16(), memLen);
+  memLen += codeSize;
 
-    context.ContextFlags = CONTEXT_FULL;
-    GetThreadContext(m_destThread, &context);
+  context.ContextFlags = CONTEXT_FULL;
+  GetThreadContext(m_destThread, &context);
 
-    mem = VirtualAllocEx(m_destProcess, NULL, memLen, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-    fnLoadLibrary = (UINT_PTR)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "LoadLibraryW");
+  mem = VirtualAllocEx(m_destProcess, NULL, memLen, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+  fnLoadLibrary = (UINT_PTR)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "LoadLibraryW");
 
-    union
-    {
-        PBYTE  pB;
-        PINT   pI;
-        PULONGLONG pL;
-    } ip;
+  union
+  {
+    PBYTE  pB;
+    PINT   pI;
+    PULONGLONG pL;
+  } ip;
 
-    ip.pB = code;
+  ip.pB = code;
 
-    *ip.pB++ = 0x68;            // push  eip
-    *ip.pI++ = context.Eip;
-    *ip.pB++ = 0x9c;            // pushf
-    *ip.pB++ = 0x60;            // pusha
-    *ip.pB++ = 0x68;            // push  "path\to\our.dll"
-    *ip.pI++ = (UINT_PTR)mem + codeSize;
-    *ip.pB++ = 0xe8;            // call  LoadLibraryW
-    *ip.pI++ = (UINT_PTR)fnLoadLibrary - ((UINT_PTR)mem + (ip.pB + 4 - code));
-    *ip.pB++ = 0x61;            // popa
-    *ip.pB++ = 0x9d;            // popf
-    *ip.pB++ = 0xc3;            // ret
+  *ip.pB++ = 0x68;            // push  eip
+  *ip.pI++ = context.Eip;
+  *ip.pB++ = 0x9c;            // pushf
+  *ip.pB++ = 0x60;            // pusha
+  *ip.pB++ = 0x68;            // push  "path\to\our.dll"
+  *ip.pI++ = (UINT_PTR)mem + codeSize;
+  *ip.pB++ = 0xe8;            // call  LoadLibraryW
+  *ip.pI++ = (UINT_PTR)fnLoadLibrary - ((UINT_PTR)mem + (ip.pB + 4 - code));
+  *ip.pB++ = 0x61;            // popa
+  *ip.pB++ = 0x9d;            // popf
+  *ip.pB++ = 0xc3;            // ret
 
-    WriteProcessMemory(m_destProcess, mem, code, memLen, NULL);
-    FlushInstructionCache(m_destProcess, mem, memLen);
-    context.Eip = (UINT_PTR)mem;
-    SetThreadContext(m_destThread, &context);
-    return true;
+  WriteProcessMemory(m_destProcess, mem, code, memLen, NULL);
+  FlushInstructionCache(m_destProcess, mem, memLen);
+  context.Eip = (UINT_PTR)mem;
+  SetThreadContext(m_destThread, &context);
+  return true;
 }
 
 int WinDllInjector::exitCode()
@@ -168,29 +169,28 @@ QProcess::ProcessError WinDllInjector::processError()
 
 QProcess::ExitStatus WinDllInjector::exitStatus()
 {
-    return mExitStatus;
+  return mExitStatus;
 }
-
 
 bool WinDllInjector::inject2()
 {
-    int strsize = (m_dllPath.size() * 2) + 2;
-    void *mem = VirtualAllocEx(m_destProcess, NULL, strsize , MEM_COMMIT, PAGE_READWRITE );
-    WriteProcessMemory( m_destProcess, mem, (void*)m_dllPath.utf16(), strsize, NULL );
-    HMODULE kernel32handle = GetModuleHandleW(L"Kernel32");
-    FARPROC loadLib = GetProcAddress( kernel32handle, "LoadLibraryW" );
-    m_destThread = CreateRemoteThread( m_destProcess, NULL, 0,
-                                       (LPTHREAD_START_ROUTINE)loadLib,
-                                        mem, 0, NULL );
+  int strsize = (m_dllPath.size() * 2) + 2;
+  void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
+  WriteProcessMemory(m_destProcess, mem, (void*)m_dllPath.utf16(), strsize, NULL);
+  HMODULE kernel32handle = GetModuleHandleW(L"Kernel32");
+  FARPROC loadLib = GetProcAddress(kernel32handle, "LoadLibraryW");
+  m_destThread = CreateRemoteThread(m_destProcess, NULL, 0,
+                                    (LPTHREAD_START_ROUTINE)loadLib,
+                                    mem, 0, NULL);
 
-    WaitForSingleObject( m_destThread, INFINITE );
+  WaitForSingleObject(m_destThread, INFINITE);
 
-    DWORD   result;
-    GetExitCodeThread( m_destThread, &result );
+  DWORD result;
+  GetExitCodeThread(m_destThread, &result);
 
-    CloseHandle( m_destThread );
-    VirtualFreeEx( m_destProcess, mem, strsize, MEM_RELEASE );
-    return true;
+  CloseHandle(m_destThread);
+  VirtualFreeEx(m_destProcess, mem, strsize, MEM_RELEASE);
+  return true;
 }
 
 QString WinDllInjector::errorString()

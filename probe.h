@@ -82,7 +82,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
      *
      * NOTE: the objectLock must be locked when this is called!
      */
-    bool isValidObject(QObject* obj) const;
+    bool isValidObject(QObject *obj) const;
 
   signals:
     void widgetSelected(QWidget *widget);
@@ -99,7 +99,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     void queuedObjectsFullyConstructed();
 
   private:
-    void objectFullyConstructed(QObject* obj);
+    void objectFullyConstructed(QObject *obj);
 
     explicit Probe(QObject *parent = 0);
     static void addObjectRecursive(QObject *obj);

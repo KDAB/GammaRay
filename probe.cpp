@@ -161,8 +161,10 @@ GammaRay::MainWindow *Probe::window() const
 
 Probe *GammaRay::Probe::instance()
 {
-  if (!qApp)
+  if (!qApp) {
     return NULL;
+  }
+
   if (!s_instance) {
     IF_DEBUG(cout << "setting up new probe instance" << endl;)
     s_listener()->filterThread = QThread::currentThread();
@@ -223,16 +225,15 @@ static bool descendantOf(QObject *ascendant, QObject *obj)
   return descendantOf(ascendant, parent);
 }
 
-
 /**
  * Returns true if @p obj belongs to the GammaRay Probe or Window.
  *
  * These objects should not be tracked or shown to the user,
  * hence must be explictly filtered.
  */
-static bool filterObject(QObject* obj)
+static bool filterObject(QObject *obj)
 {
-  Probe* p = Probe::instance();
+  Probe *p = Probe::instance();
   if (obj->thread() != p->thread()) {
     // shortcut, never filter objects from a different thread
     return false;
@@ -273,7 +274,7 @@ bool Probe::isValidObject(QObject *obj) const
   return m_validObjects.contains(obj);
 }
 
-QReadWriteLock* Probe::objectLock() const
+QReadWriteLock *Probe::objectLock() const
 {
   return &m_lock;
 }
@@ -282,17 +283,26 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
   if (s_listener()->filterThread == obj->thread()) {
     // Ignore
-    IF_DEBUG(cout << "objectAdded Ignore: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
+    IF_DEBUG(cout
+             << "objectAdded Ignore: "
+             << hex << obj
+             << (fromCtor ? " (from ctor)" : "") << endl;)
     return;
   } else if (isInitialized()) {
     QWriteLocker lock(&instance()->m_lock);
 
     if (filterObject(obj)) {
-      IF_DEBUG(cout << "objectAdded Filter: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
+      IF_DEBUG(cout
+               << "objectAdded Filter: "
+               << hex << obj
+               << (fromCtor ? " (from ctor)" : "") << endl;)
       return;
     } else if (instance()->m_validObjects.contains(obj)) {
       // this happens when we get a child event before the objectAdded call from the ctor
-      IF_DEBUG(cout << "objectAdded Known: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
+      IF_DEBUG(cout
+               << "objectAdded Known: "
+               << hex << obj
+               << (fromCtor ? " (from ctor)" : "") << endl;)
       Q_ASSERT(fromCtor);
       return;
     }
@@ -324,7 +334,10 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
       instance()->objectFullyConstructed(obj);
     }
   } else {
-    IF_DEBUG(cout << "objectAdded Before: " << hex << obj << (fromCtor ? " (from ctor)" : "") << endl;)
+    IF_DEBUG(cout
+             << "objectAdded Before: "
+             << hex << obj
+             << (fromCtor ? " (from ctor)" : "") << endl;)
     s_addedBeforeProbeInsertion()->push_back(obj);
   }
 }
@@ -342,7 +355,7 @@ void Probe::queuedObjectsFullyConstructed()
   // otherwise the cleanup procedures failed
   Q_ASSERT(m_queuedObjects.size() == m_queuedObjects.toSet().size());
 
-  foreach(QObject* obj, m_queuedObjects) {
+  foreach (QObject *obj, m_queuedObjects) {
     objectFullyConstructed(obj);
   }
 
@@ -802,8 +815,9 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 {
-  if (!qApp)
+  if (!qApp) {
     return;
+  }
   printf("gammaray_probe_inject()\n");
   GammaRay::Probe::instance();
   GammaRay::Probe::findExistingObjects();
