@@ -124,7 +124,6 @@ void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
     return;
   }
 
-  Q_ASSERT(m_parentChildMap.contains(parentObj));
   QVector<QObject*> &siblings = m_parentChildMap[ parentObj ];
 
   int index = siblings.indexOf(obj);
