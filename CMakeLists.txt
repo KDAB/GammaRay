@@ -324,7 +324,7 @@ endif()
 
 if(UNIX)
   add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
-                     COMMAND pod2man -c "KDAB Products" -r "\"${GAMMARAY_VERSION_STRING}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
+                     COMMAND pod2man -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
                      DEPENDS ${CMAKE_SOURCE_DIR}/gammaray.pod
                      )
 
