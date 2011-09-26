@@ -1,5 +1,5 @@
 TEMPLATE = lib
-TARGET = Gammaray
+TARGET = GammaRay
 
 # DEFINES += 
 
@@ -12,7 +12,7 @@ LIBS += -L$$IDE_PLUGIN_PATH/Nokia
 
 # QT += 
 
-# Gammaray files
+# GammaRay files
 
 SOURCES += \
     gammarayplugin.cpp \
