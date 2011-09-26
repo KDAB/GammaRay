@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Gammaray::WidgetInspector</class>
- <widget class="QWidget" name="Gammaray::WidgetInspector">
+ <class>GammaRay::WidgetInspector</class>
+ <widget class="QWidget" name="GammaRay::WidgetInspector">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -33,9 +33,9 @@
              </item>
             </layout>
            </widget>
-           <widget class="Gammaray::WidgetPreviewWidget" name="widgetPreviewWidget" native="true"/>
+           <widget class="GammaRay::WidgetPreviewWidget" name="widgetPreviewWidget" native="true"/>
           </widget>
-          <widget class="Gammaray::PropertyWidget" name="widgetPropertyWidget" native="true"/>
+          <widget class="GammaRay::PropertyWidget" name="widgetPropertyWidget" native="true"/>
          </widget>
         </item>
        </layout>
@@ -47,13 +47,13 @@
    <header>kde/kfilterproxysearchline.h</header>
   </customwidget>
   <customwidget>
-   <class>Gammaray::PropertyWidget</class>
+   <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>
    <header>propertywidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Gammaray::WidgetPreviewWidget</class>
+   <class>GammaRay::WidgetPreviewWidget</class>
    <extends>QWidget</extends>
    <header>tools/widgetinspector/widgetpreviewwidget.h</header>
    <container>1</container>

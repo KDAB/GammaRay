@@ -45,56 +45,56 @@
 #include <QtCore/QDebug>
 
 using namespace Analyzer;
-using namespace Gammaray;
+using namespace GammaRay;
 
 ////////////////////////////////////////////////////////////////////////
 //
-// GammarayPlugin
+// GammaRayPlugin
 //
 ////////////////////////////////////////////////////////////////////////
 
-GammarayPlugin::GammarayPlugin()
+GammaRayPlugin::GammaRayPlugin()
 {
 }
 
-GammarayPlugin::~GammarayPlugin()
+GammaRayPlugin::~GammaRayPlugin()
 {
 }
 
-static AbstractAnalyzerSubConfig *globalGammarayFactory()
+static AbstractAnalyzerSubConfig *globalGammaRayFactory()
 {
-  return new GammarayGlobalSettings();
+  return new GammaRayGlobalSettings();
 }
 
-static AbstractAnalyzerSubConfig *projectGammarayFactory()
+static AbstractAnalyzerSubConfig *projectGammaRayFactory()
 {
-  return new GammarayProjectSettings();
+  return new GammaRayProjectSettings();
 }
 
-bool GammarayPlugin::initialize(const QStringList &/*arguments*/, QString */*errorString*/)
+bool GammaRayPlugin::initialize(const QStringList &/*arguments*/, QString */*errorString*/)
 {
-  AnalyzerGlobalSettings::instance()->registerSubConfigs(&globalGammarayFactory,
-                                                         &projectGammarayFactory);
+  AnalyzerGlobalSettings::instance()->registerSubConfigs(&globalGammaRayFactory,
+                                                         &projectGammaRayFactory);
 
-  addAutoReleasedObject(new GammarayRunControlFactory());
+  addAutoReleasedObject(new GammaRayRunControlFactory());
 
   StartModes modes;
   // They are handled the same actually.
   //modes.append(StartMode(StartRemote));
   modes.append(StartMode(StartLocal));
-  AnalyzerManager::addTool(new GammarayTool(this), modes);
+  AnalyzerManager::addTool(new GammaRayTool(this), modes);
 
   return true;
 }
 
-void GammarayPlugin::extensionsInitialized()
+void GammaRayPlugin::extensionsInitialized()
 {
   // Retrieve objects from the plugin manager's object pool.
   // "In the extensionsInitialized method, a plugin can be sure that all
   //  plugins that depend on it are completely initialized."
 }
 
-ExtensionSystem::IPlugin::ShutdownFlag GammarayPlugin::aboutToShutdown()
+ExtensionSystem::IPlugin::ShutdownFlag GammaRayPlugin::aboutToShutdown()
 {
   // Save settings.
   // Disconnect from signals that are not needed during shutdown
@@ -102,4 +102,4 @@ ExtensionSystem::IPlugin::ShutdownFlag GammarayPlugin::aboutToShutdown()
   return SynchronousShutdown;
 }
 
-Q_EXPORT_PLUGIN(GammarayPlugin)
+Q_EXPORT_PLUGIN(GammaRayPlugin)

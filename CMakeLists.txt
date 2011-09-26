@@ -14,11 +14,11 @@
 # To install the resulting man page, run 'make install'
 #
 
-project(gammaray)
+project(GammaRay)
 cmake_minimum_required(VERSION 2.8)
 
 if(NOT Prog_NAME)
-  set(Prog_NAME "Gammaray")
+  set(Prog_NAME "GammaRay")
 endif()
 
 set(GAMMARAY_VERSION_MAJOR "1")

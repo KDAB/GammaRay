@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Gammaray::FontBrowser</class>
- <widget class="QWidget" name="Gammaray::FontBrowser">
+ <class>GammaRay::FontBrowser</class>
+ <widget class="QWidget" name="GammaRay::FontBrowser">
   <property name="geometry">
    <rect>
     <x>0</x>

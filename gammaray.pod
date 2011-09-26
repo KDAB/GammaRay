@@ -1,6 +1,6 @@
 =head1 NAME
 
-Gammaray - Qt-application inspection and manipulation tool.
+GammaRay - Qt-application inspection and manipulation tool.
 
 =head1 SYNOPSIS
 
@@ -9,7 +9,7 @@ gammaray [--injector <injector>] [--pid <pid> | <application> <args>]
 
 =head1 DESCRIPTION
 
-Gammaray inspects runtime internals of a Qt-application, such as:
+GammaRay inspects runtime internals of a Qt-application, such as:
     Object tree, properties, signal/slots, widgets, models,
     graphics views, javascript debugger, resources,
     state machines, meta types, fonts, codecs, text documents

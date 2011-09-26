@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Gammaray::MainWindow</class>
- <widget class="QMainWindow" name="Gammaray::MainWindow">
+ <class>GammaRay::MainWindow</class>
+ <widget class="QMainWindow" name="GammaRay::MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -26,9 +26,9 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_Gammaray">
+   <widget class="QMenu" name="menu_GammaRay">
     <property name="title">
-     <string>&amp;Gammaray</string>
+     <string>&amp;GammaRay</string>
     </property>
     <addaction name="actionRetractProbe"/>
     <addaction name="actionQuit"/>
@@ -37,11 +37,11 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionAboutGammaray"/>
+    <addaction name="actionAboutGammaRay"/>
     <addaction name="actionAboutKDAB"/>
     <addaction name="actionAboutQt"/>
    </widget>
-   <addaction name="menu_Gammaray"/>
+   <addaction name="menu_GammaRay"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -80,9 +80,9 @@
     <string>Quit probed application.</string>
    </property>
   </action>
-  <action name="actionAboutGammaray">
+  <action name="actionAboutGammaRay">
    <property name="text">
-    <string>About &amp;Gammaray</string>
+    <string>About &amp;GammaRay</string>
    </property>
   </action>
   <action name="actionAboutQt">

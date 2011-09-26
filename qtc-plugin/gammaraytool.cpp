@@ -40,56 +40,56 @@
 
 using namespace Analyzer;
 
-namespace Gammaray {
+namespace GammaRay {
 
-GammarayTool::GammarayTool(QObject *parent)
+GammaRayTool::GammaRayTool(QObject *parent)
 : IAnalyzerTool(parent)
 {
-    setObjectName("GammarayTool");
+    setObjectName("GammaRayTool");
 }
 
-void GammarayTool::startTool(StartMode mode)
+void GammaRayTool::startTool(StartMode mode)
 {
     AnalyzerManager::startLocalTool(this, mode);
 }
 
-IAnalyzerEngine *GammarayTool::createEngine(const AnalyzerStartParameters &sp,
+IAnalyzerEngine *GammaRayTool::createEngine(const AnalyzerStartParameters &sp,
                                              ProjectExplorer::RunConfiguration *runConfiguration)
 {
-    GammarayEngine *engine = new GammarayEngine(this, sp, runConfiguration);
+    GammaRayEngine *engine = new GammaRayEngine(this, sp, runConfiguration);
 
     AnalyzerManager::showStatusMessage(AnalyzerManager::msgToolStarted(displayName()));
     return engine;
 }
 
-QWidget *GammarayTool::createWidgets()
+QWidget *GammaRayTool::createWidgets()
 {
     return new QWidget;
 }
 
-void GammarayTool::extensionsInitialized()
+void GammaRayTool::extensionsInitialized()
 {
 
 }
 
-IAnalyzerTool::ToolMode GammarayTool::toolMode() const
+IAnalyzerTool::ToolMode GammaRayTool::toolMode() const
 {
     return AnyMode;
 }
 
-QString GammarayTool::description() const
+QString GammaRayTool::description() const
 {
     return tr("TODO");
 }
 
-QString GammarayTool::displayName() const
+QString GammaRayTool::displayName() const
 {
-    return tr("Gammaray");
+    return tr("GammaRay");
 }
 
-QByteArray GammarayTool::id() const
+QByteArray GammaRayTool::id() const
 {
     return Constants::TOOLID;
 }
 
-} // namespace Gammaray
+} // namespace GammaRay

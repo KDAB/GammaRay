@@ -43,11 +43,12 @@
 
 using namespace Analyzer;
 
-namespace Gammaray {
-static const QLatin1String executableC("Analyzer.Gammaray.Executable");
-static const QLatin1String injectorC("Analyzer.Gammaray.Injector");
+namespace GammaRay {
 
-QVariantMap GammarayBaseSettings::toMap() const
+static const QLatin1String executableC("Analyzer.GammaRay.Executable");
+static const QLatin1String injectorC("Analyzer.GammaRay.Injector");
+
+QVariantMap GammaRayBaseSettings::toMap() const
 {
     QVariantMap map;
 
@@ -57,7 +58,7 @@ QVariantMap GammarayBaseSettings::toMap() const
     return map;
 }
 
-QVariantMap GammarayBaseSettings::defaults() const
+QVariantMap GammaRayBaseSettings::defaults() const
 {
     QVariantMap map;
 
@@ -67,7 +68,7 @@ QVariantMap GammarayBaseSettings::defaults() const
     return map;
 }
 
-bool GammarayBaseSettings::fromMap(const QVariantMap &map)
+bool GammaRayBaseSettings::fromMap(const QVariantMap &map)
 {
     setIfPresent(map, executableC, &m_gammarayExecutable);
     int injector = 0;
@@ -79,40 +80,40 @@ bool GammarayBaseSettings::fromMap(const QVariantMap &map)
     return true;
 }
 
-QString GammarayBaseSettings::id() const
+QString GammaRayBaseSettings::id() const
 {
-    return "Analyzer.Gammaray.Settings";
+    return "Analyzer.GammaRay.Settings";
 }
 
-QString GammarayBaseSettings::displayName() const
+QString GammaRayBaseSettings::displayName() const
 {
-    return tr("Gammaray");
+    return tr("GammaRay");
 }
 
-QString GammarayBaseSettings::gammarayExecutable() const
+QString GammaRayBaseSettings::gammarayExecutable() const
 {
     return m_gammarayExecutable;
 }
 
-void GammarayBaseSettings::setGammarayExecutable(const QString &exe)
+void GammaRayBaseSettings::setGammaRayExecutable(const QString &exe)
 {
     m_gammarayExecutable = exe;
 }
 
-Constants::InjectorType GammarayBaseSettings::injector() const
+Constants::InjectorType GammaRayBaseSettings::injector() const
 {
     return m_injector;
 }
 
-void GammarayBaseSettings::setInjector(Constants::InjectorType injector)
+void GammaRayBaseSettings::setInjector(Constants::InjectorType injector)
 {
     m_injector = injector;
     QTC_CHECK(m_injector == injector);
 }
 
-QWidget *GammarayBaseSettings::createConfigWidget(QWidget *parent)
+QWidget *GammaRayBaseSettings::createConfigWidget(QWidget *parent)
 {
-    return new GammarayConfigWidget(this, parent);
+    return new GammaRayConfigWidget(this, parent);
 }
 
 }

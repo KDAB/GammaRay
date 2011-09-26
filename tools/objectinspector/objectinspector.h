@@ -1,7 +1,7 @@
 /*
   objectinspector.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -29,7 +29,7 @@
 
 class QModelIndex;
 
-namespace Gammaray {
+namespace GammaRay {
 
 namespace Ui { class ObjectInspector; }
 
@@ -49,7 +49,7 @@ class ObjectInspector : public QWidget
 class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObject, ObjectInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Gammaray::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit ObjectInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Objects"); }

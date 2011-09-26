@@ -39,34 +39,34 @@
 
 #include "gammarayconstants.h"
 
-namespace Gammaray {
+namespace GammaRay {
 
 namespace Ui {
-class GammarayConfigWidget;
+class GammaRayConfigWidget;
 }
 
-class GammarayBaseSettings;
+class GammaRayBaseSettings;
 
-class GammarayConfigWidget : public QWidget
+class GammaRayConfigWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    GammarayConfigWidget(GammarayBaseSettings *settings, QWidget *parent);
-    virtual ~GammarayConfigWidget();
+    GammaRayConfigWidget(GammaRayBaseSettings *settings, QWidget *parent);
+    virtual ~GammaRayConfigWidget();
 
 private slots:
     void updateUi();
 
 private:
-    GammarayBaseSettings *m_settings;
-    Ui::GammarayConfigWidget *m_ui;
+    GammaRayBaseSettings *m_settings;
+    Ui::GammaRayConfigWidget *m_ui;
 
 public slots:
     void injectorSelected(int);
     void injectorChanged(Constants::InjectorType);
 };
 
-} // namespace Gammaray
+} // namespace GammaRay
 
 #endif // GAMMARAYCONFIGWIDGET_H

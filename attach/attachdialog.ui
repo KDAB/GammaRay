@@ -31,7 +31,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="Gammaray::PromoLabel" name="promoLabel" native="true"/>
+       <widget class="GammaRay::PromoLabel" name="promoLabel" native="true"/>
       </item>
       <item>
        <widget class="QDialogButtonBox" name="buttonBox">
@@ -56,7 +56,7 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>Gammaray::PromoLabel</class>
+   <class>GammaRay::PromoLabel</class>
    <extends>QWidget</extends>
    <header>promolabel.h</header>
    <container>1</container>

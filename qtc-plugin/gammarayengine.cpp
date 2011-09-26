@@ -51,9 +51,9 @@
 
 using namespace Analyzer;
 
-namespace Gammaray {
+namespace GammaRay {
 
-GammarayEngine::GammarayEngine(IAnalyzerTool *tool,
+GammaRayEngine::GammaRayEngine(IAnalyzerTool *tool,
                                  const AnalyzerStartParameters &sp,
                                  ProjectExplorer::RunConfiguration *runConfiguration)
 : IAnalyzerEngine(tool, sp, runConfiguration), m_settings(0)
@@ -66,7 +66,7 @@ GammarayEngine::GammarayEngine(IAnalyzerTool *tool,
     settings = AnalyzerGlobalSettings::instance();
   }
 
-  m_settings = settings->subConfig<GammarayBaseSettings>();
+  m_settings = settings->subConfig<GammaRayBaseSettings>();
   QTC_CHECK(m_settings);
 
   connect(&m_progressWatcher, SIGNAL(canceled()),
@@ -86,21 +86,21 @@ GammarayEngine::GammarayEngine(IAnalyzerTool *tool,
   connect(AnalyzerManager::stopAction(), SIGNAL(triggered()), this, SLOT(stopIt()));
 }
 
-GammarayEngine::~GammarayEngine()
+GammaRayEngine::~GammaRayEngine()
 {
 }
 
-void GammarayEngine::handleProgressCanceled()
+void GammaRayEngine::handleProgressCanceled()
 {
   AnalyzerManager::stopTool();
 }
 
-void GammarayEngine::handleProgressFinished()
+void GammaRayEngine::handleProgressFinished()
 {
   QApplication::alert(Core::ICore::instance()->mainWindow(), 3000);
 }
 
-bool GammarayEngine::start()
+bool GammaRayEngine::start()
 {
   emit starting(this);
 
@@ -156,27 +156,27 @@ bool GammarayEngine::start()
   return true;
 }
 
-void GammarayEngine::stop()
+void GammaRayEngine::stop()
 {
   m_process.terminate();
 }
 
-void GammarayEngine::stopIt()
+void GammaRayEngine::stopIt()
 {
   stop();
 }
 
-void GammarayEngine::receiveStandardOutput()
+void GammaRayEngine::receiveStandardOutput()
 {
   emit outputReceived(m_process.readAllStandardOutput(), Utils::StdOutFormat);
 }
 
-void GammarayEngine::receiveStandardError()
+void GammaRayEngine::receiveStandardError()
 {
   emit outputReceived(m_process.readAllStandardError(), Utils::StdErrFormat);
 }
 
-void GammarayEngine::processFinished()
+void GammaRayEngine::processFinished()
 {
   emit outputReceived(tr("** Analyzing finished **\n"), Utils::NormalMessageFormat);
   emit finished();
@@ -184,7 +184,7 @@ void GammarayEngine::processFinished()
   m_progress.reportFinished();
 }
 
-void GammarayEngine::processError(QProcess::ProcessError error)
+void GammaRayEngine::processError(QProcess::ProcessError error)
 {
   emit outputReceived(m_process.errorString(), Utils::ErrorMessageFormat);
 }

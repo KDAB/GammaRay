@@ -1,7 +1,7 @@
 /*
   scriptenginedebugger.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -30,7 +30,7 @@
 
 class QScriptEngineDebugger;
 
-namespace Gammaray {
+namespace GammaRay {
 
 namespace Ui { class ScriptEngineDebugger; }
 
@@ -52,7 +52,7 @@ class ScriptEngineDebuggerFactory
   : public QObject, public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
 {
   Q_OBJECT
-  Q_INTERFACES(Gammaray::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit ScriptEngineDebuggerFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Script Engines"); }

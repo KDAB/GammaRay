@@ -1,7 +1,7 @@
 /*
   detourinjector.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -29,7 +29,7 @@
 
 #ifdef Q_OS_WIN
 
-namespace Gammaray {
+namespace GammaRay {
 
 class DetourInjector : public AbstractInjector
 {

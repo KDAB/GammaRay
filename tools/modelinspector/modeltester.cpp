@@ -1,7 +1,7 @@
 /*
   modeltester.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -31,9 +31,9 @@
 
 #include <iostream>
 
-using namespace Gammaray;
+using namespace GammaRay;
 
-namespace Gammaray {
+namespace GammaRay {
   struct ModelTester::ModelTestResult {
     ModelTestResult() : modelTest(0) {}
     ~ModelTestResult() { delete modelTest; }
@@ -89,7 +89,7 @@ void ModelTester::failure(QAbstractItemModel *model, int line, const char *messa
 #include <QtGui/QtGui> // avoid interference with any include used by modeltest
 #include "modeltest.moc"
 #undef Q_ASSERT
-#define Q_ASSERT(x) (!(x) ? static_cast<Gammaray::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __LINE__, #x) : qt_noop())
+#define Q_ASSERT(x) (!(x) ? static_cast<GammaRay::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __LINE__, #x) : qt_noop())
 #define qDebug() QNoDebug()
 #include "modeltest.cpp"
 

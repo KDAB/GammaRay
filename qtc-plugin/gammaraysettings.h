@@ -39,17 +39,17 @@
 
 #include "gammarayconstants.h"
 
-namespace Gammaray {
+namespace GammaRay {
 
 /**
- * Gammaray settings shared for global and per-project.
+ * GammaRay settings shared for global and per-project.
  */
-class GammarayBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
+class GammaRayBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
 {
   Q_OBJECT
 
   public:
-    GammarayBaseSettings() {}
+    GammaRayBaseSettings() {}
 
     virtual QVariantMap toMap() const;
     virtual QVariantMap defaults() const;
@@ -71,7 +71,7 @@ class GammarayBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
     Constants::InjectorType injector() const;
 
   public slots:
-    void setGammarayExecutable(const QString &);
+    void setGammaRayExecutable(const QString &);
     void setInjector(Constants::InjectorType);
 
   signals:
@@ -87,13 +87,13 @@ class GammarayBaseSettings : public Analyzer::AbstractAnalyzerSubConfig
 /**
  * Global gammaray settings
  */
-typedef GammarayBaseSettings GammarayGlobalSettings;
+typedef GammaRayBaseSettings GammaRayGlobalSettings;
 
 /**
  * Per-project gammaray settings.
  */
-typedef GammarayBaseSettings GammarayProjectSettings;
+typedef GammaRayBaseSettings GammaRayProjectSettings;
 
-} // namespace Gammaray
+} // namespace GammaRay
 
 #endif // GAMMARAYSETTINGS_H

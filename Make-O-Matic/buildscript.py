@@ -12,7 +12,7 @@ from core.plugins.reporters.EmailReporter import EmailReporter
 from core.helpers.GlobalMApp import mApp
 from core.plugins.platforms.BlackLister import BlackLister
 
-build, project = BuildProject( name = 'Gammaray', version = '0.1.0', url = 'gitolite@git.kdab.com:gammaray.git' )
+build, project = BuildProject( name = 'GammaRay', version = '0.1.0', url = 'gitolite@git.kdab.com:gammaray.git' )
 build.addPlugin( BlackLister( variable = 'QMAKESPEC', pattern = 'win32-g\+\+' ) )
 
 sharedDebug = Environments( [ 'Qt-4.7.?-Shared-Debug' ], 'Qt 4 Shared Debug', project )

@@ -1,7 +1,7 @@
 /*
   probe.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -60,12 +60,12 @@ static QObjectFunc_t true_qt_removeObject_Func;
 
 #define IF_DEBUG(x)
 
-using namespace Gammaray;
+using namespace GammaRay;
 using namespace std;
 
 Probe *Probe::s_instance = 0;
 
-namespace Gammaray
+namespace GammaRay
 {
 
 static bool probeConnectCallback(void ** args)
@@ -134,8 +134,8 @@ Probe::Probe(QObject *parent):
 {
   qDebug() << Q_FUNC_INFO;
 
-  QInternal::registerCallback(QInternal::ConnectCallback, &Gammaray::probeConnectCallback);
-  QInternal::registerCallback(QInternal::DisconnectCallback, &Gammaray::probeDisconnectCallback);
+  QInternal::registerCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
+  QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);
@@ -149,17 +149,17 @@ Probe::~Probe()
   s_instance = 0;
 }
 
-void Probe::setWindow(Gammaray::MainWindow *window)
+void Probe::setWindow(GammaRay::MainWindow *window)
 {
   m_window = window;
 }
 
-Gammaray::MainWindow *Probe::window() const
+GammaRay::MainWindow *Probe::window() const
 {
   return m_window;
 }
 
-Probe *Gammaray::Probe::instance()
+Probe *GammaRay::Probe::instance()
 {
   if (!qApp)
     return NULL;
@@ -199,9 +199,9 @@ void Probe::delayedInit()
 
   QCoreApplication::instance()->installEventFilter(s_instance);
 
-  IF_DEBUG(cout << "creating Gammaray::MainWindow" << endl;)
+  IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
   s_listener()->filterThread = QThread::currentThread();
-  Gammaray::MainWindow *window = new Gammaray::MainWindow;
+  GammaRay::MainWindow *window = new GammaRay::MainWindow;
   s_listener()->filterThread = 0;
   IF_DEBUG(cout << "creation done" << endl;)
 
@@ -225,7 +225,7 @@ static bool descendantOf(QObject *ascendant, QObject *obj)
 
 
 /**
- * Returns true if @p obj belongs to the Gammaray Probe or Window.
+ * Returns true if @p obj belongs to the GammaRay Probe or Window.
  *
  * These objects should not be tracked or shown to the user,
  * hence must be explictly filtered.
@@ -264,7 +264,7 @@ ToolModel *Probe::toolModel() const
 
 QObject *Probe::probe() const
 {
-  return const_cast<Gammaray::Probe*>(this);
+  return const_cast<GammaRay::Probe*>(this);
 }
 
 bool Probe::isValidObject(QObject *obj) const
@@ -805,10 +805,10 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
   if (!qApp)
     return;
   printf("gammaray_probe_inject()\n");
-  Gammaray::Probe::instance();
-  Gammaray::Probe::findExistingObjects();
-  if (Gammaray::Probe::instance()->window()) {
-    Gammaray::Probe::instance()->window()->show();
+  GammaRay::Probe::instance();
+  GammaRay::Probe::findExistingObjects();
+  if (GammaRay::Probe::instance()->window()) {
+    GammaRay::Probe::instance()->window()->show();
   }
 }
 

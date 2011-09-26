@@ -1,7 +1,7 @@
 /*
   codecbrowser.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -30,7 +30,7 @@
 
 class QItemSelection;
 
-namespace Gammaray {
+namespace GammaRay {
 
 class SelectedCodecsModel;
 namespace Ui { class CodecBrowser; }
@@ -52,7 +52,7 @@ class CodecBrowser : public QWidget
 class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, CodecBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(Gammaray::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit CodecBrowserFactory(QObject *parent) : QObject(parent) {}
     virtual inline QString name() const { return tr("Text Codecs"); }

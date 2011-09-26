@@ -1,7 +1,7 @@
 /*
   toolfactory.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -28,7 +28,7 @@
 #include <QtCore/QStringList>
 #include <QMetaType>
 
-namespace Gammaray {
+namespace GammaRay {
 
 class ProbeInterface;
 
@@ -83,7 +83,7 @@ class StandardToolFactory : public ToolFactory
 
 }
 
-Q_DECLARE_INTERFACE(Gammaray::ToolFactory, "com.kdab.Gammaray.ToolFactory/1.0")
-Q_DECLARE_METATYPE(Gammaray::ToolFactory *)
+Q_DECLARE_INTERFACE(GammaRay::ToolFactory, "com.kdab.GammaRay.ToolFactory/1.0")
+Q_DECLARE_METATYPE(GammaRay::ToolFactory *)
 
 #endif

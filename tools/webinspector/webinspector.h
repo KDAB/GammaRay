@@ -1,7 +1,7 @@
 /*
   webinspector.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -28,7 +28,7 @@
 #include <qwidget.h>
 #include <qwebpage.h>
 
-namespace Gammaray {
+namespace GammaRay {
 
 namespace Ui { class WebInspector; }
 
@@ -36,7 +36,7 @@ class WebInspector : public QWidget
 {
   Q_OBJECT
   public:
-    explicit WebInspector(Gammaray::ProbeInterface *probe, QWidget *parent = 0);
+    explicit WebInspector(GammaRay::ProbeInterface *probe, QWidget *parent = 0);
 
   private slots:
     void webPageSelected(int index);
@@ -49,7 +49,7 @@ class WebInspectorFactory
   : public QObject, public StandardToolFactory<QWebPage, WebInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Gammaray::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit WebInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Web Pages"); }

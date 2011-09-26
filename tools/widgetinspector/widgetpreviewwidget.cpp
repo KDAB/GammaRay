@@ -1,7 +1,7 @@
 /*
   widgetpreviewwidget.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -26,7 +26,7 @@
 #include <QEvent>
 #include <QPainter>
 
-using namespace Gammaray;
+using namespace GammaRay;
 
 WidgetPreviewWidget::WidgetPreviewWidget(QWidget *parent)
   : QWidget(parent), m_grabbingWidget(false)

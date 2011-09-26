@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Gammaray::PropertyWidget</class>
- <widget class="QWidget" name="Gammaray::PropertyWidget">
+ <class>GammaRay::PropertyWidget</class>
+ <widget class="QWidget" name="GammaRay::PropertyWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

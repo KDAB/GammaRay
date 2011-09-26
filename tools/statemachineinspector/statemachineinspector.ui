@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Gammaray::StateMachineInspector</class>
- <widget class="QWidget" name="Gammaray::StateMachineInspector">
+ <class>GammaRay::StateMachineInspector</class>
+ <widget class="QWidget" name="GammaRay::StateMachineInspector">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -38,11 +38,11 @@
 #include <QtCore/QLatin1String>
 #include <QtCore/QMetaType>
 
-namespace Gammaray {
+namespace GammaRay {
 namespace Constants {
 
-const QLatin1String RUNMODE("Gammaray");
-const char TOOLID[] = "Gammaray";
+const QLatin1String RUNMODE("GammaRay");
+const char TOOLID[] = "GammaRay";
 
 enum InjectorType {
     DefaultInjector,
@@ -58,8 +58,8 @@ enum InjectorType {
 };
 
 } // namespace Constants
-} // namespace Gammaray
+} // namespace GammaRay
 
-Q_DECLARE_METATYPE(Gammaray::Constants::InjectorType);
+Q_DECLARE_METATYPE(GammaRay::Constants::InjectorType);
 
 #endif // GAMMARAYCONSTANTS_H

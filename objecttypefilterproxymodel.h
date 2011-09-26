@@ -1,7 +1,7 @@
 /*
   objecttypefilterproxymodel.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -27,7 +27,7 @@
 #include <qsortfilterproxymodel.h>
 #include "objectlistmodel.h"
 
-namespace Gammaray {
+namespace GammaRay {
 
 template <typename T>
 class ObjectTypeFilterProxyModel : public QSortFilterProxyModel

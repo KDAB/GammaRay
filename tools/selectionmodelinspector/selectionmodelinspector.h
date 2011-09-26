@@ -1,7 +1,7 @@
 /*
   selectionmodelinspector.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -28,7 +28,7 @@
 #include <toolfactory.h>
 #include <QItemSelectionModel>
 
-namespace Gammaray {
+namespace GammaRay {
 
 namespace Ui { class SelectionModelInspector; }
 
@@ -49,7 +49,7 @@ class SelectionModelInspectorFactory :
     public QObject, public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Gammaray::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit SelectionModelInspectorFactory(QObject *parent) : QObject(parent) {}
     virtual inline QString name() const { return tr("Selection Models"); }

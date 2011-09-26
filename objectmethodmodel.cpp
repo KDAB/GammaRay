@@ -1,7 +1,7 @@
 /*
   objectmethodmodel.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -23,7 +23,7 @@
 
 #include "objectmethodmodel.h"
 
-using namespace Gammaray;
+using namespace GammaRay;
 
 ObjectMethodModel::ObjectMethodModel(QObject *parent)
   : MetaObjectModel<QMetaMethod, &QMetaObject::method,
@@ -31,7 +31,7 @@ ObjectMethodModel::ObjectMethodModel(QObject *parent)
 {
 }
 
-int Gammaray::ObjectMethodModel::columnCount(const QModelIndex &parent) const
+int GammaRay::ObjectMethodModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 4;
@@ -76,7 +76,7 @@ QVariant ObjectMethodModel::data(const QModelIndex &index,
   return QVariant();
 }
 
-QString Gammaray::ObjectMethodModel::columnHeader(int index) const
+QString GammaRay::ObjectMethodModel::columnHeader(int index) const
 {
   switch (index) {
   case 0:

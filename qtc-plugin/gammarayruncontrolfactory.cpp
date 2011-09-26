@@ -43,22 +43,22 @@
 
 #include <projectexplorer/applicationrunconfiguration.h>
 
-using namespace Gammaray;
+using namespace GammaRay;
 using namespace ProjectExplorer;
 using namespace Analyzer;
 
-GammarayRunControlFactory::GammarayRunControlFactory(QObject *parent)
+GammaRayRunControlFactory::GammaRayRunControlFactory(QObject *parent)
   : IRunControlFactory(parent)
 {
-  setObjectName(QLatin1String("GammarayRuncontrolFactory"));
+  setObjectName(QLatin1String("GammaRayRuncontrolFactory"));
 }
 
-QString GammarayRunControlFactory::displayName() const
+QString GammaRayRunControlFactory::displayName() const
 {
-  return tr("Gammaray");
+  return tr("GammaRay");
 }
 
-bool GammarayRunControlFactory::canRun(RunConfiguration *runConfiguration,
+bool GammaRayRunControlFactory::canRun(RunConfiguration *runConfiguration,
                                         const QString &mode) const
 {
   return
@@ -66,7 +66,7 @@ bool GammarayRunControlFactory::canRun(RunConfiguration *runConfiguration,
     dynamic_cast<LocalApplicationRunConfiguration*>(runConfiguration);
 }
 
-RunControl *GammarayRunControlFactory::create(RunConfiguration *runConfiguration,
+RunControl *GammaRayRunControlFactory::create(RunConfiguration *runConfiguration,
                                                const QString &mode)
 {
   QTC_ASSERT(canRun(runConfiguration, mode), return 0);
@@ -91,7 +91,7 @@ RunControl *GammarayRunControlFactory::create(RunConfiguration *runConfiguration
 }
 
 RunConfigWidget *
-GammarayRunControlFactory::createConfigurationWidget(RunConfiguration *runConfiguration)
+GammaRayRunControlFactory::createConfigurationWidget(RunConfiguration *runConfiguration)
 {
   AnalyzerProjectSettings *settings = runConfiguration->extraAspect<AnalyzerProjectSettings>();
   if (!settings) {
@@ -103,7 +103,7 @@ GammarayRunControlFactory::createConfigurationWidget(RunConfiguration *runConfig
   return ret;
 }
 
-IRunConfigurationAspect *GammarayRunControlFactory::createRunConfigurationAspect()
+IRunConfigurationAspect *GammaRayRunControlFactory::createRunConfigurationAspect()
 {
   return new AnalyzerProjectSettings;
 }

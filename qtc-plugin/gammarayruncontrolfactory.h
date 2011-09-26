@@ -33,13 +33,13 @@
 
 #include <projectexplorer/runconfiguration.h>
 
-namespace Gammaray {
+namespace GammaRay {
 
-class GammarayRunControlFactory : public ProjectExplorer::IRunControlFactory
+class GammaRayRunControlFactory : public ProjectExplorer::IRunControlFactory
 {
   Q_OBJECT
   public:
-    GammarayRunControlFactory(QObject *parent = 0);
+    GammaRayRunControlFactory(QObject *parent = 0);
 
     virtual QString displayName() const;
 

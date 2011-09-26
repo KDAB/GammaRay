@@ -41,18 +41,18 @@
 
 #include <QtGui/QFileDialog>
 
-namespace Gammaray {
+namespace GammaRay {
 
-GammarayConfigWidget::GammarayConfigWidget(GammarayBaseSettings *settings,
+GammaRayConfigWidget::GammaRayConfigWidget(GammaRayBaseSettings *settings,
         QWidget *parent)
     : QWidget(parent),
       m_settings(settings),
-      m_ui(new Ui::GammarayConfigWidget)
+      m_ui(new Ui::GammaRayConfigWidget)
 {
     m_ui->setupUi(this);
 
     m_ui->gammarayExeChooser->setExpectedKind(Utils::PathChooser::ExistingCommand);
-    m_ui->gammarayExeChooser->setPromptDialogTitle(tr("Gammaray Command"));
+    m_ui->gammarayExeChooser->setPromptDialogTitle(tr("GammaRay Command"));
 
     m_ui->injectorCombo->addItem(tr("Default"), Constants::DefaultInjector);
 #ifndef Q_OS_WIN
@@ -70,7 +70,7 @@ GammarayConfigWidget::GammarayConfigWidget(GammarayBaseSettings *settings,
             this, SLOT(updateUi()));
 
     connect(m_ui->gammarayExeChooser, SIGNAL(changed(QString)),
-            m_settings, SLOT(setGammarayExecutable(QString)));
+            m_settings, SLOT(setGammaRayExecutable(QString)));
     connect(m_settings, SIGNAL(gammarayExecutableChanged(QString)),
             m_ui->gammarayExeChooser, SLOT(setPath(QString)));
 
@@ -87,19 +87,19 @@ GammarayConfigWidget::GammarayConfigWidget(GammarayBaseSettings *settings,
 #endif
 }
 
-GammarayConfigWidget::~GammarayConfigWidget()
+GammaRayConfigWidget::~GammaRayConfigWidget()
 {
     delete m_ui;
 }
 
-void GammarayConfigWidget::updateUi()
+void GammaRayConfigWidget::updateUi()
 {
     m_ui->gammarayExeChooser->setPath(m_settings->gammarayExecutable());
 
     injectorChanged(m_settings->injector());
 }
 
-void GammarayConfigWidget::injectorChanged(Constants::InjectorType type)
+void GammaRayConfigWidget::injectorChanged(Constants::InjectorType type)
 {
     for (int i = 0; i < m_ui->injectorCombo->count(); ++i) {
         if (m_ui->injectorCombo->itemData(i).toInt() == type) {
@@ -112,7 +112,7 @@ void GammarayConfigWidget::injectorChanged(Constants::InjectorType type)
     m_ui->injectorCombo->setCurrentIndex(0);
 }
 
-void GammarayConfigWidget::injectorSelected(int index)
+void GammaRayConfigWidget::injectorSelected(int index)
 {
     const QVariant data = m_ui->injectorCombo->itemData(index);
 
@@ -123,4 +123,4 @@ void GammarayConfigWidget::injectorSelected(int index)
     m_settings->setInjector(type);
 }
 
-} // namespace Gammaray
+} // namespace GammaRay

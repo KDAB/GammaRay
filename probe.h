@@ -1,7 +1,7 @@
 /*
   probe.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -33,7 +33,7 @@
 class QTimer;
 class QGraphicsItem;
 
-namespace Gammaray {
+namespace GammaRay {
 
 class ConnectionModel;
 class ObjectListModel;
@@ -67,8 +67,8 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
     static const char *connectLocation(const char *member);
 
-    Gammaray::MainWindow *window() const;
-    void setWindow(Gammaray::MainWindow *window);
+    GammaRay::MainWindow *window() const;
+    void setWindow(GammaRay::MainWindow *window);
 
     QObject *probe() const;
 
@@ -109,7 +109,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     ObjectTreeModel *m_objectTreeModel;
     ConnectionModel *m_connectionModel;
     ToolModel *m_toolModel;
-    Gammaray::MainWindow *m_window;
+    GammaRay::MainWindow *m_window;
     // ensures proper information is returned by isValidObject by
     // locking it in objectAdded/Removed
     mutable QReadWriteLock m_lock;

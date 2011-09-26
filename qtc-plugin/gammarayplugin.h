@@ -37,15 +37,15 @@
 
 #include <extensionsystem/iplugin.h>
 
-namespace Gammaray {
+namespace GammaRay {
 
-class GammarayPlugin : public ExtensionSystem::IPlugin
+class GammaRayPlugin : public ExtensionSystem::IPlugin
 {
     Q_OBJECT
 
 public:
-    GammarayPlugin();
-    virtual ~GammarayPlugin();
+    GammaRayPlugin();
+    virtual ~GammaRayPlugin();
 
     bool initialize(const QStringList &arguments, QString *errorString);
     void extensionsInitialized();
@@ -53,6 +53,6 @@ public:
     ShutdownFlag aboutToShutdown();
 };
 
-} // namespace Gammaray
+} // namespace GammaRay
 
 #endif // GAMMARAYPLUGIN_H

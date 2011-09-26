@@ -1,7 +1,7 @@
 /*
   statemachineinspector.h
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -31,7 +31,7 @@
 
 class QItemSelection;
 
-namespace Gammaray {
+namespace GammaRay {
 
 class StateModel;
 class TransitionModel;
@@ -57,7 +57,7 @@ class StateMachineInspectorFactory :
     public QObject, public StandardToolFactory<QStateMachine, StateMachineInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(Gammaray::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit StateMachineInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("State Machines"); }

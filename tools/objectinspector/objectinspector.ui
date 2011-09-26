@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Gammaray::ObjectInspector</class>
- <widget class="QWidget" name="Gammaray::ObjectInspector">
+ <class>GammaRay::ObjectInspector</class>
+ <widget class="QWidget" name="GammaRay::ObjectInspector">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -36,7 +36,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="Gammaray::PropertyWidget" name="objectPropertyWidget" native="true"/>
+          <widget class="GammaRay::PropertyWidget" name="objectPropertyWidget" native="true"/>
          </widget>
         </item>
        </layout>
@@ -48,7 +48,7 @@
    <header>kde/kfilterproxysearchline.h</header>
   </customwidget>
   <customwidget>
-   <class>Gammaray::PropertyWidget</class>
+   <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>
    <header>propertywidget.h</header>
    <container>1</container>

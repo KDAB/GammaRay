@@ -37,19 +37,19 @@
 
 #include <utils/qtcprocess.h>
 
-namespace Gammaray {
+namespace GammaRay {
 
-class GammarayBaseSettings;
+class GammaRayBaseSettings;
 
-class GammarayEngine : public Analyzer::IAnalyzerEngine
+class GammaRayEngine : public Analyzer::IAnalyzerEngine
 {
     Q_OBJECT
 
 public:
-    GammarayEngine(Analyzer::IAnalyzerTool *tool,
+    GammaRayEngine(Analyzer::IAnalyzerTool *tool,
                     const Analyzer::AnalyzerStartParameters &sp,
                     ProjectExplorer::RunConfiguration *runConfiguration);
-    ~GammarayEngine();
+    ~GammaRayEngine();
 
     virtual bool start();
     virtual void stop();
@@ -68,7 +68,7 @@ private:
     Utils::QtcProcess m_process;
     QFutureInterface<void> m_progress;
     QFutureWatcher<void> m_progressWatcher;
-    GammarayBaseSettings *m_settings;
+    GammaRayBaseSettings *m_settings;
 };
 
 }

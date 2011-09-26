@@ -1,7 +1,7 @@
 /*
   mainwindow.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -41,7 +41,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
 
-using namespace Gammaray;
+using namespace GammaRay;
 
 static const char progName[] = PROGRAM_NAME;
 static const char progVersion[] = GAMMARAY_VERSION_STRING;
@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
           QApplication::instance(), SLOT(quit()));
   connect(ui.actionAboutQt, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(aboutQt()));
-  connect(ui.actionAboutGammaray, SIGNAL(triggered(bool)), SLOT(about()));
+  connect(ui.actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
   connect(ui.actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
@@ -106,7 +106,7 @@ void MainWindow::aboutKDAB()
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
        "to meet the people who write code like this."
        "We also offer Qt training courses.</p>"
-       "<p>Head Engineer for Gammaray is<br>"
+       "<p>Head Engineer for GammaRay is<br>"
        "Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;"
        "</p></qt>").arg(progName));
   mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));

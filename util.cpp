@@ -1,7 +1,7 @@
 /*
   util.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -32,7 +32,7 @@
 #include <qmetaobject.h>
 #include <QtGui/qtextformat.h>
 
-using namespace Gammaray;
+using namespace GammaRay;
 
 QString Util::displayString(const QObject *object)
 {
@@ -54,7 +54,7 @@ static QString sizePolicyToString(QSizePolicy::Policy policy)
   return QString::fromLatin1(metaEnum.valueToKey(policy));
 }
 
-QString Gammaray::Util::variantToString(const QVariant &value)
+QString GammaRay::Util::variantToString(const QVariant &value)
 {
   switch (value.type()) {
   case QVariant::Point:

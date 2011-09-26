@@ -1,7 +1,7 @@
 /*
   objecttreemodel.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -36,7 +36,7 @@
 extern void dumpObject(QObject *);
 
 using namespace std;
-using namespace Gammaray;
+using namespace GammaRay;
 
 ObjectTreeModel::ObjectTreeModel(QObject *parent)
   : ObjectModelBase< QAbstractItemModel >(parent),

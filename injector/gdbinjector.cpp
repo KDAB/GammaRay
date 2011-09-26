@@ -1,7 +1,7 @@
 /*
   gdbinjector.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -32,7 +32,7 @@
 
 #include <dlfcn.h>
 
-using namespace Gammaray;
+using namespace GammaRay;
 
 GdbInjector::GdbInjector() :
   mManualError(false),
@@ -149,12 +149,12 @@ void GdbInjector::readyReadStandardError()
   if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
     mManualError = true;
     mErrorString = tr("The debuggee application is missing debug symbols which are required\n"
-                      "for Gammaray's GDB injector. Please recompile the debuggee.\n\n"
+                      "for GammaRay's GDB injector. Please recompile the debuggee.\n\n"
                       "GDB error was: %1").arg(error);
   } else if (error.startsWith(QLatin1String("Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\""))) {
     mManualError = true;
     mErrorString = tr("Your QtCore library is missing debug symbols which are required\n"
-                      "for Gammaray's GDB injector. Please install the required debug symbols.\n\n"
+                      "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
                       "GDB error was: %1").arg(error);
   }
 

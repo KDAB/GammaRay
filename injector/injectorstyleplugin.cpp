@@ -1,7 +1,7 @@
 /*
   injectorstyleplugin.cpp
 
-  This file is part of Gammaray, the Qt application inspection and
+  This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
@@ -34,7 +34,7 @@
 #include <dlfcn.h>
 #endif
 
-using namespace Gammaray;
+using namespace GammaRay;
 
 QStyle *InjectorStylePlugin::create(const QString &)
 {
@@ -94,6 +94,6 @@ void InjectorStylePlugin::inject()
 #endif
 }
 
-Q_EXPORT_PLUGIN2(gammaray_injector_style, Gammaray::InjectorStylePlugin)
+Q_EXPORT_PLUGIN2(gammaray_injector_style, GammaRay::InjectorStylePlugin)
 
 #include "injectorstyleplugin.moc"

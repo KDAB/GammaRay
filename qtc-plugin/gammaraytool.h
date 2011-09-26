@@ -33,12 +33,12 @@
 
 #include <analyzerbase/ianalyzertool.h>
 
-namespace Gammaray {
+namespace GammaRay {
 
-class GammarayTool : public Analyzer::IAnalyzerTool
+class GammaRayTool : public Analyzer::IAnalyzerTool
 {
   public:
-    explicit GammarayTool(QObject *parent = 0);
+    explicit GammaRayTool(QObject *parent = 0);
 
     virtual void startTool(Analyzer::StartMode mode);
 
@@ -56,6 +56,6 @@ class GammarayTool : public Analyzer::IAnalyzerTool
     virtual QByteArray id() const;
 };
 
-} // namespace Gammaray
+} // namespace GammaRay
 
 #endif // GAMMARAYTOOL_H

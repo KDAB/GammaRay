@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Gammaray::GammarayConfigWidget</class>
- <widget class="QWidget" name="Gammaray::GammarayConfigWidget">
+ <class>GammaRay::GammaRayConfigWidget</class>
+ <widget class="QWidget" name="GammaRay::GammaRayConfigWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -20,13 +20,13 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>Gammaray Settings</string>
+      <string>GammaRay Settings</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="gammarayExeLabel">
         <property name="text">
-         <string>Gammaray executable:</string>
+         <string>GammaRay executable:</string>
         </property>
        </widget>
       </item>
