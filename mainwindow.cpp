@@ -89,8 +89,19 @@ void MainWindow::about()
   mb.setWindowTitle(tr("About %1").arg(progName));
   mb.setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
   mb.setInformativeText(
-    tr("<qt>Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
-       "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></qt>"));
+    tr("<qt><p>Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
+       "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></p>"
+       "<p><u>Authors:</u><br>"
+       "Volker Krause &lt;volker.krause@kdab.com&gt; (Head Engineer)<br>"
+       "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
+       "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
+       "David Faure &lt;david.faure@kdab.com&gt;<br>"
+       "Kevin Funk &lt;kevin.funk@kdab.com&gt;<br>"
+       "Milian Wolff &lt;milian.wolff@kdab.com&gt;<br>"
+       "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
+       "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
+       "Till Adam &lt;till@kdab.com&gt;<br>"
+       "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br></p></qt>"));
   mb.setIconPixmap(QPixmap(":gammaray/GammaRay-128x128.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
@@ -109,9 +120,7 @@ void MainWindow::aboutKDAB()
        "Qt trainers have trained 50% of commercial Qt developers globally.</p>"
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
        "to meet the people who write code like this."
-       "We also offer Qt training courses.</p>"
-       "<p>Head Engineer for GammaRay is<br>"
-       "Volker Krause &lt;<a href='mailto:volker.krause@kdab.com'>volker.krause@kdab.com</a>&gt;"
+       "We also offer Qt training courses."
        "</p></qt>").arg(progName));
   mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));
   mb.addButton(QMessageBox::Close);
