@@ -89,7 +89,7 @@ void MainWindow::about()
   mb.setWindowTitle(tr("About %1").arg(progName));
   mb.setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
   mb.setInformativeText(
-    tr("<qt><p>Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
+    trUtf8("<qt><p>Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, "
        "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></p>"
        "<p><u>Authors:</u><br>"
        "Volker Krause &lt;volker.krause@kdab.com&gt; (Head Engineer)<br>"
@@ -111,7 +111,7 @@ void MainWindow::aboutKDAB()
 {
   QMessageBox mb(this);
   mb.setWindowTitle(tr("About KDAB"));
-  mb.setText(tr("Klaralvdalens Datakonsult AB (KDAB)"));
+  mb.setText(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
   mb.setInformativeText(
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
        "KDAB, the Qt experts, provide consulting and mentoring for developing "
@@ -119,7 +119,7 @@ void MainWindow::aboutKDAB()
        "frameworks to Qt. Our software products increase Qt productivity and our "
        "Qt trainers have trained 50% of commercial Qt developers globally.</p>"
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
-       "to meet the people who write code like this."
+       "to meet the people who write code like this. "
        "We also offer Qt training courses."
        "</p></qt>").arg(progName));
   mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));
