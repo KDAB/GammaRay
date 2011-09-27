@@ -68,18 +68,79 @@ static inline BOOL queryFullProcessImageName(HANDLE h,
     return (*queryFullProcessImageNameW)(h, flags, buffer, size);
 }
 
-static inline QString imageName(DWORD processId)
+struct ProcessInfo {
+    QString imageName;
+    QString processOwner;
+};
+
+static inline ProcessInfo processInfo(DWORD processId)
 {
-    QString  rc;
-    HANDLE handle = OpenProcess(PROCESS_QUERY_INFORMATION , FALSE, processId);
+    ProcessInfo pi;
+    HANDLE handle = OpenProcess(PROCESS_QUERY_INFORMATION , TOKEN_READ, processId);
     if (handle == INVALID_HANDLE_VALUE)
-        return rc;
+        return pi;
     WCHAR buffer[MAX_PATH];
     DWORD bufSize = MAX_PATH;
     if (queryFullProcessImageName(handle, 0, buffer, &bufSize))
-        rc = QString::fromUtf16(reinterpret_cast<const ushort*>(buffer));
+        pi.imageName = QString::fromUtf16(reinterpret_cast<const ushort*>(buffer));
+
+    HANDLE processTokenHandle = NULL;
+    if ( !OpenProcessToken( handle, TOKEN_READ, &processTokenHandle ) || !processTokenHandle )
+        return pi;
+
+    DWORD size = 0;
+    GetTokenInformation(processTokenHandle, TokenUser, NULL, 0, &size);
+
+    if( GetLastError() == ERROR_INSUFFICIENT_BUFFER ) {
+        QByteArray buf;
+        buf.resize(size);
+        PTOKEN_USER userToken = reinterpret_cast<PTOKEN_USER>( buf.data() );
+        if (userToken && GetTokenInformation( processTokenHandle, TokenUser, userToken, size, &size )) {
+            SID_NAME_USE   sidNameUse;
+            TCHAR          user[MAX_PATH] = { 0 };
+            DWORD          userNameLength = MAX_PATH;
+            TCHAR          domain[MAX_PATH] = { 0 };
+            DWORD          domainNameLength = MAX_PATH;
+
+            if (LookupAccountSid( NULL,
+                                   userToken->User.Sid,
+                                   user,
+                                   &userNameLength,
+                                   domain,
+                                   &domainNameLength,
+                                   &sidNameUse )) {
+                pi.processOwner = QString::fromUtf16(reinterpret_cast<const ushort*>(user));
+            }
+        }
+    }
+
+    CloseHandle(processTokenHandle);
     CloseHandle(handle);
-    return rc;
+    return pi;
+}
+
+static inline bool isQtApp(DWORD processId)
+{
+    MODULEENTRY32 me;
+    me.dwSize = sizeof(MODULEENTRY32);
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processId);
+    if (snapshot == INVALID_HANDLE_VALUE)
+        return false;
+
+    for (bool hasNext = Module32First(snapshot, &me); hasNext; hasNext = Module32Next(snapshot, &me)) {
+        const QString module = QString::fromUtf16(reinterpret_cast<ushort*>(me.szModule));
+//TODO: Do this check properly, ptobe does not need to have the same type
+#ifdef NDEBUG
+        if (module == QLatin1String("QtCore4.dll")) {
+#else
+        if (module == QLatin1String("QtCored4.dll")) {
+#endif
+            CloseHandle(snapshot);
+            return true;
+        }
+    }
+    CloseHandle(snapshot);
+    return false;
 }
 
 QList<ProcData> processList()
@@ -96,7 +157,13 @@ QList<ProcData> processList()
         ProcData procData;
         procData.ppid = QString::number(pe.th32ProcessID);
         procData.name = QString::fromUtf16(reinterpret_cast<ushort*>(pe.szExeFile));
-        procData.image = imageName(pe.th32ProcessID);
+        const ProcessInfo processInf = processInfo(pe.th32ProcessID);
+        procData.image = processInf.imageName;
+        procData.user = processInf.processOwner;
+        if (isQtApp(pe.th32ProcessID))
+            procData.type = ProcData::QtApp;
+        else
+            procData.type = ProcData::NoQtApp;
         rc.push_back(procData);
     }
     CloseHandle(snapshot);

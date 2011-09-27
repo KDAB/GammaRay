@@ -94,8 +94,6 @@ int main(int argc, char **argv)
     }
   }
 
-#ifndef Q_WS_WIN
-///NOTE: if this gets activated on windows, we need to add the user+qt-app finding code
   if (args.isEmpty() && pid <= 0) {
     AttachDialog dialog;
     if (dialog.exec() == QDialog::Accepted) {
@@ -108,12 +106,6 @@ int main(int argc, char **argv)
       return 0;
     }
   }
-#else
-  if (args.isEmpty() && pid <= 0) {
-    usage(argv[0]);
-    return 1;
-  }
-#endif
 
   const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
   AbstractInjector::Ptr injector;
