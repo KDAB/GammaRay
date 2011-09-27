@@ -93,15 +93,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 =head1 AUTHORS
 
+ Volker Krause <volker.krause@kdab.com> (Head Engineer)
  Allen Winter <allen.winter@kdab.com>
  Andreas Holzammer <andreas.holzammer@kdab.com>
- David Faure <faure@kde.org>
- Kevin Funk <krf@electrostorm.net>
- Milian Wolff <mail@milianw.de>
- Patrick Spendrin <ps_ml@gmx.de>
+ David Faure <david.faure@kdab.com>
+ Kevin Funk <kevin.funk@kdab.com>
+ Milian Wolff <milian.wolff@kdab.com>
+ Patrick Spendrin <patrick.spendrin@kdab.com>
  Stephen Kelly <stephen.kelly@kdab.com>
  Till Adam <till@kdab.com>
  Tobias Koenig <tobias.koenig@kdab.com>
- Volker Krause <vkrause@kde.org>
 
 =cut
