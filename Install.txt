@@ -6,7 +6,7 @@ the available configuration options you can pass to cmake.
 
 The installation directory defaults to /usr/local on UNIX
 c:/Program Files on Windows and /Applications on MacOS.
-You can change this locatoin by passing the option
+You can change this location by passing the option
 -DCMAKE_INSTALL_PREFIX=/install/path to cmake.
 
 To build a debug version pass -DCMAKE_BUILD_TYPE=Debug to cmake.
