@@ -8,6 +8,5 @@ if(UNIX AND NOT APPLE)
   add_test(connectiontest-preload ${CMAKE_BINARY_DIR}/gammaray -i preload ${CMAKE_CURRENT_BINARY_DIR}/connectiontest)
   add_test(connectiontest-preload-filter ${CMAKE_BINARY_DIR}/gammaray -filtertest -i preload ${CMAKE_CURRENT_BINARY_DIR}/connectiontest)
   add_test(connectiontest-gdb ${CMAKE_BINARY_DIR}/gammaray -i gdb ${CMAKE_CURRENT_BINARY_DIR}/connectiontest)
+  add_test(connectiontest-style ${CMAKE_BINARY_DIR}/gammaray -i style ${CMAKE_CURRENT_BINARY_DIR}/connectiontest)
 endif(UNIX AND NOT APPLE)
-
-add_test(connectiontest-style ${CMAKE_BINARY_DIR}/gammaray -i style ${CMAKE_CURRENT_BINARY_DIR}/connectiontest)
