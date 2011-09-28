@@ -45,16 +45,15 @@ const QLatin1String RUNMODE("GammaRay");
 const char TOOLID[] = "GammaRay";
 
 enum InjectorType {
-    DefaultInjector,
-    GDBInjector,
-    StyleInjector,
+  DefaultInjector,
+  GDBInjector,
+  StyleInjector,
 #ifndef Q_OS_WIN
-    PreloadInjector,
+  PreloadInjector,
 #else
-    WinDLLInjector,
-    DetourInjector,
+  WinDLLInjector,
 #endif
-    INJECTOR_COUNT
+  INJECTOR_COUNT
 };
 
 } // namespace Constants

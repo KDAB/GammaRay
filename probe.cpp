@@ -45,17 +45,6 @@
 #include <dlfcn.h>
 #else
 #include <windows.h>
-#ifdef USE_DETOURS
-#include <detours.h>
-#endif
-#endif
-
-#if defined(Q_OS_WIN) && defined(USE_DETOURS)
-typedef void (* VoidFunc_t)();
-typedef void (* QObjectFunc_t)(QObject *obj);
-static VoidFunc_t true_qt_startup_hook_Func;
-static QObjectFunc_t true_qt_addObject_Func;
-static QObjectFunc_t true_qt_removeObject_Func;
 #endif
 
 #define IF_DEBUG(x)
@@ -579,7 +568,6 @@ qt_removeObject_ptr next_qt_removeObject = 0;
 qFlagLocation_ptr next_qFlagLocation = 0;
 #endif
 
-#ifndef USE_DETOURS
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
 #ifndef Q_OS_WIN
@@ -589,15 +577,7 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
   Probe::instance();
   next_qt_startup_hook();
 }
-#else
-void fake_qt_startup_hook()
-{
-  Probe::instance();
-  true_qt_startup_hook_Func();
-}
-#endif
 
-#ifndef USE_DETOURS
 extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 {
 #ifndef Q_OS_WIN
@@ -607,15 +587,7 @@ extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
   Probe::objectAdded(obj, true);
   next_qt_addObject(obj);
 }
-#else
-void fake_qt_addObject(QObject *obj)
-{
-  Probe::objectAdded(obj);
-  true_qt_addObject_Func(obj);
-}
-#endif
 
-#ifndef USE_DETOURS
 extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
 {
 #ifndef Q_OS_WIN
@@ -625,13 +597,6 @@ extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
   Probe::objectRemoved(obj);
   next_qt_removeObject(obj);
 }
-#else
-void fake_qt_removeObject(QObject *obj)
-{
-  Probe::objectRemoved(obj);
-  true_qt_removeObject_Func(obj);
-}
-#endif
 
 #ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
 #ifndef Q_OS_WIN
@@ -656,7 +621,7 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 #endif
 
 #ifdef Q_OS_WIN
-// IMPORTANT NOTE :
+// IMPORTANT NOTE:
 // In QtCored4.dll, qtstartuphookaddr et. al. actually point to a JMP instruction
 // to the real qt_startup_hook code (the indirection is added by the linker as of
 // the /INCREMENTAL link option), so it's easy to change the offset to redirect
@@ -703,56 +668,8 @@ T rewriteJmp(FARPROC func, T replacement) {
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
 
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */) {
-#ifdef USE_DETOURS
-  switch(dwReason) {
-  case DLL_PROCESS_ATTACH:
-  {
-    true_qt_startup_hook_Func =
-      (VoidFunc_t)GetProcAddress(GetModuleHandle(L"qtcore4"),"qt_startup_hook");
-    if (!true_qt_startup_hook_Func) {
-      true_qt_startup_hook_Func =
-        (VoidFunc_t)GetProcAddress(GetModuleHandle(L"qtcored4"),"qt_startup_hook");
-    }
-
-    true_qt_addObject_Func =
-      (QObjectFunc_t)GetProcAddress(GetModuleHandle(L"qtcore4"),"qt_addObject");
-    if (!true_qt_addObject_Func) {
-      true_qt_addObject_Func =
-        (QObjectFunc_t)GetProcAddress(GetModuleHandle(L"qtcored4"),"qt_addObject");
-    }
-
-    true_qt_removeObject_Func =
-      (QObjectFunc_t)GetProcAddress(GetModuleHandle(L"qtcore4"),"qt_removeObject");
-    if (!true_qt_removeObject_Func) {
-      true_qt_removeObject_Func =
-        (QObjectFunc_t)GetProcAddress(GetModuleHandle(L"qtcored4"),"qt_removeObject");
-    }
-
-    DetourRestoreAfterWith();
-
-    DetourTransactionBegin();
-    DetourUpdateThread(GetCurrentThread());
-    DetourAttach(&(PVOID &)true_qt_startup_hook_Func, fake_qt_startup_hook);
-    DetourAttach(&(PVOID &)true_qt_addObject_Func, fake_qt_addObject);
-    DetourAttach(&(PVOID &)true_qt_removeObject_Func, fake_qt_removeObject);
-    DetourTransactionCommit();
-
-    break;
-  }
-  case DLL_PROCESS_DETACH:
-  {
-    DetourTransactionBegin();
-    DetourUpdateThread(GetCurrentThread());
-    DetourDetach(&(PVOID &)true_qt_startup_hook_Func, fake_qt_startup_hook);
-    DetourDetach(&(PVOID &)true_qt_addObject_Func, fake_qt_addObject);
-    DetourDetach(&(PVOID &)true_qt_removeObject_Func, fake_qt_removeObject);
-    DetourTransactionCommit();
-    break;
-  }
-  };
-  return TRUE;
-#else
+BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */)
+{
   // First retrieve the right module, if Qt is linked in release or debug
   HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");
   if (qtCoreDllHandle == NULL) {
@@ -809,7 +726,6 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
   }
   };
   return TRUE;
-#endif
 }
 #endif
 

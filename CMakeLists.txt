@@ -2,10 +2,6 @@
 #
 # Pass the following variables to cmake to control the build:
 #
-# -DUSE_DETOURS=[on|off]
-#  (Windows-only) Set to use detours if debugging
-#  Default=off
-#
 # -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[on|off]
 #  Set this if your compiler uses an unsupported C++ name mangling scheme
 #  Default=off
@@ -57,10 +53,6 @@ set(QT_MIN_VERSION "4.7.0")
 find_package(Qt4 REQUIRED)
 find_package(Boost REQUIRED)
 
-if(WIN32)
-  option(USE_DETOURS "use detours in debugging" OFF)
-endif()
-
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
@@ -72,10 +64,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
 )
-
-if(USE_DETOURS)
-  add_definitions(-DUSE_DETOURS)
-endif()
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
@@ -172,21 +160,12 @@ else()
     attach/processlist_win.cpp
   )
 endif()
-if(USE_DETOURS)
-  set(gammaray_runner_srcs
-    ${gammaray_runner_srcs}
-    injector/detourinjector.cpp
-  )
-endif()
 
 qt4_wrap_ui(gammaray_runner_srcs attach/attachdialog.ui)
 qt4_add_resources(gammaray_runner_srcs resources/gammaray.qrc)
 
 add_executable(gammaray ${gammaray_runner_srcs})
 target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
-if(USE_DETOURS)
-  target_link_libraries(gammaray detours)
-endif()
 
 set(gammaray_srcs
   mainwindow.cpp
@@ -278,10 +257,6 @@ target_link_libraries(gammaray_probe
 )
 if(NOT WIN32)
   target_link_libraries(gammaray_probe dl)
-else()
-  if(USE_DETOURS)
-    target_link_libraries(gammaray_probe detoured detours)
-  endif()
 endif()
 set_target_properties(gammaray_probe PROPERTIES PREFIX "")
 

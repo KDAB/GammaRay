@@ -45,7 +45,6 @@ Supported injectors are:
      gdb (Linux. requires gdb to be installed)
      style
      windll (Windows)
-     detours (Windows. optional but requires Microsoft's detours library)
 
 =back
 

@@ -138,9 +138,6 @@ bool GammaRayEngine::start()
   case Constants::WinDLLInjector:
     Utils::QtcProcess::addArg(&arguments, "-i windll");
     break;
-  case Constants::DetourInjector:
-    Utils::QtcProcess::addArg(&arguments, "-i detour");
-    break;
 #endif
   }
 

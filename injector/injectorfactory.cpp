@@ -23,7 +23,6 @@
 
 #include "injectorfactory.h"
 
-#include "detourinjector.h"
 #include "gdbinjector.h"
 #include "preloadinjector.h"
 #include "styleinjector.h"
@@ -53,11 +52,6 @@ AbstractInjector::Ptr createInjector(const QString &name)
   if (name == QLatin1String("windll")) {
     return AbstractInjector::Ptr(new WinDllInjector);
   }
-#ifdef USE_DETOURS
-  if (name == QLatin1String("detour")) {
-    return AbstractInjector::Ptr(new DetourInjector);
-  }
-#endif
 #endif
   return AbstractInjector::Ptr(0);
 }
@@ -87,9 +81,6 @@ QStringList availableInjectors()
   types << QLatin1String("preload") << QLatin1String("gdb");
 #else
   types << QLatin1String("windll");
-#ifdef USE_DETOURS
-  types << QLatin1String("detours");
-#endif
 #endif
   types << QLatin1String("style");
   return types;

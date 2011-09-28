@@ -43,84 +43,82 @@
 
 namespace GammaRay {
 
-GammaRayConfigWidget::GammaRayConfigWidget(GammaRayBaseSettings *settings,
-        QWidget *parent)
-    : QWidget(parent),
-      m_settings(settings),
-      m_ui(new Ui::GammaRayConfigWidget)
+GammaRayConfigWidget::GammaRayConfigWidget(GammaRayBaseSettings *settings,QWidget *parent)
+  : QWidget(parent),
+    m_settings(settings),
+    m_ui(new Ui::GammaRayConfigWidget)
 {
-    m_ui->setupUi(this);
+  m_ui->setupUi(this);
 
-    m_ui->gammarayExeChooser->setExpectedKind(Utils::PathChooser::ExistingCommand);
-    m_ui->gammarayExeChooser->setPromptDialogTitle(tr("GammaRay Command"));
+  m_ui->gammarayExeChooser->setExpectedKind(Utils::PathChooser::ExistingCommand);
+  m_ui->gammarayExeChooser->setPromptDialogTitle(tr("GammaRay Command"));
 
-    m_ui->injectorCombo->addItem(tr("Default"), Constants::DefaultInjector);
+  m_ui->injectorCombo->addItem(tr("Default"), Constants::DefaultInjector);
 #ifndef Q_OS_WIN
-    m_ui->injectorCombo->addItem(tr("Preload"), Constants::PreloadInjector);
+  m_ui->injectorCombo->addItem(tr("Preload"), Constants::PreloadInjector);
 #else
-    m_ui->injectorCombo->addItem(tr("WinDLL"), Constants::WinDLLInjector);
-    m_ui->injectorCombo->addItem(tr("Detour"), Constants::DetourInjector);
+  m_ui->injectorCombo->addItem(tr("WinDLL"), Constants::WinDLLInjector);
 #endif
-    m_ui->injectorCombo->addItem(tr("GDB"), Constants::GDBInjector);
-    m_ui->injectorCombo->addItem(tr("Style"), Constants::StyleInjector);
-    QTC_CHECK(m_ui->injectorCombo->count() == Constants::INJECTOR_COUNT);
+  m_ui->injectorCombo->addItem(tr("GDB"), Constants::GDBInjector);
+  m_ui->injectorCombo->addItem(tr("Style"), Constants::StyleInjector);
+  QTC_CHECK(m_ui->injectorCombo->count() == Constants::INJECTOR_COUNT);
 
-    updateUi();
-    connect(m_settings, SIGNAL(changed()),
-            this, SLOT(updateUi()));
+  updateUi();
+  connect(m_settings, SIGNAL(changed()),
+          this, SLOT(updateUi()));
 
-    connect(m_ui->gammarayExeChooser, SIGNAL(changed(QString)),
-            m_settings, SLOT(setGammaRayExecutable(QString)));
-    connect(m_settings, SIGNAL(gammarayExecutableChanged(QString)),
-            m_ui->gammarayExeChooser, SLOT(setPath(QString)));
+  connect(m_ui->gammarayExeChooser, SIGNAL(changed(QString)),
+          m_settings, SLOT(setGammaRayExecutable(QString)));
+  connect(m_settings, SIGNAL(gammarayExecutableChanged(QString)),
+          m_ui->gammarayExeChooser, SLOT(setPath(QString)));
 
-    connect(m_ui->injectorCombo, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(injectorSelected(int)));
-    connect(m_settings, SIGNAL(injectorChanged(Constants::InjectorType)),
-            this, SLOT(injectorChanged(Constants::InjectorType)));
+  connect(m_ui->injectorCombo, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(injectorSelected(int)));
+  connect(m_settings, SIGNAL(injectorChanged(Constants::InjectorType)),
+          this, SLOT(injectorChanged(Constants::InjectorType)));
 
 #ifdef Q_OS_WIN
-    // FIXME: On Window we know that we don't have a local valgrind
-    // executable, so having the "Browse" button in the path chooser
-    // (which is needed for the remote executable) is confusing.
-    m_ui->valgrindExeChooser->buttonAtIndex(0)->hide();
+  // FIXME: On Window we know that we don't have a local valgrind
+  // executable, so having the "Browse" button in the path chooser
+  // (which is needed for the remote executable) is confusing.
+  m_ui->valgrindExeChooser->buttonAtIndex(0)->hide();
 #endif
 }
 
 GammaRayConfigWidget::~GammaRayConfigWidget()
 {
-    delete m_ui;
+  delete m_ui;
 }
 
 void GammaRayConfigWidget::updateUi()
 {
-    m_ui->gammarayExeChooser->setPath(m_settings->gammarayExecutable());
+  m_ui->gammarayExeChooser->setPath(m_settings->gammarayExecutable());
 
-    injectorChanged(m_settings->injector());
+  injectorChanged(m_settings->injector());
 }
 
 void GammaRayConfigWidget::injectorChanged(Constants::InjectorType type)
 {
-    for (int i = 0; i < m_ui->injectorCombo->count(); ++i) {
-        if (m_ui->injectorCombo->itemData(i).toInt() == type) {
-            m_ui->injectorCombo->setCurrentIndex(i);
-            return;
-        }
+  for (int i = 0; i < m_ui->injectorCombo->count(); ++i) {
+    if (m_ui->injectorCombo->itemData(i).toInt() == type) {
+      m_ui->injectorCombo->setCurrentIndex(i);
+      return;
     }
-    // unhandled
-    QTC_CHECK(false && "unhandled injector type");
-    m_ui->injectorCombo->setCurrentIndex(0);
+  }
+  // unhandled
+  QTC_CHECK(false && "unhandled injector type");
+  m_ui->injectorCombo->setCurrentIndex(0);
 }
 
 void GammaRayConfigWidget::injectorSelected(int index)
 {
-    const QVariant data = m_ui->injectorCombo->itemData(index);
+  const QVariant data = m_ui->injectorCombo->itemData(index);
 
-    bool ok = true;
-    Constants::InjectorType type = static_cast<Constants::InjectorType>(data.toInt());
-    QTC_ASSERT(ok && type >= 0 && type < Constants::INJECTOR_COUNT, return);
+  bool ok = true;
+  Constants::InjectorType type = static_cast<Constants::InjectorType>(data.toInt());
+  QTC_ASSERT(ok && type >= 0 && type < Constants::INJECTOR_COUNT, return);
 
-    m_settings->setInjector(type);
+  m_settings->setInjector(type);
 }
 
 } // namespace GammaRay
