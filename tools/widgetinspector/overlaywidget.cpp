@@ -29,9 +29,9 @@
 #include <QtGui/QLayout>
 #include <QtGui/QPainter>
 
-using namespace Gammaray;
+using namespace GammaRay;
 
-static QWidget* toplevelWidget(QWidget *widget)
+static QWidget *toplevelWidget(QWidget *widget)
 {
   QWidget *parent = widget;
   while (parent->parentWidget() && (qobject_cast<QDialog*>(parent->parentWidget()) == 0) && (qobject_cast<QDialog*>(parent) == 0))
@@ -56,7 +56,7 @@ void OverlayWidget::placeOn(QWidget *widget)
 
     if (m_currentToplevelWidget)
       m_currentToplevelWidget->removeEventFilter(this);
-    
+
     m_currentToplevelWidget = 0;
     m_currentWidget = 0;
     m_widgetRect = QRect();

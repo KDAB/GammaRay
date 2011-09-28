@@ -26,7 +26,7 @@
 
 #include <QtGui/QWidget>
 
-namespace Gammaray {
+namespace GammaRay {
 
 class OverlayWidget : public QWidget
 {
