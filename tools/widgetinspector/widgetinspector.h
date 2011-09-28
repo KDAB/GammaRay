@@ -31,6 +31,8 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class OverlayWidget;
+
 namespace Ui { class WidgetInspector; }
 
 class WidgetInspector : public QWidget
@@ -44,6 +46,7 @@ class WidgetInspector : public QWidget
     void widgetSelected(QWidget *widget);
 
   private:
+    OverlayWidget *m_overlayWidget;
     QScopedPointer<Ui::WidgetInspector> ui;
 };
 
