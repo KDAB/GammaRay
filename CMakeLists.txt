@@ -51,7 +51,6 @@ include(CheckCXXCompilerFlag)
 
 set(QT_MIN_VERSION "4.7.0")
 find_package(Qt4 REQUIRED)
-find_package(Boost REQUIRED)
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
@@ -59,7 +58,6 @@ endif()
 
 include_directories(
   ${QT_INCLUDES}
-  ${Boost_INCLUDE_DIRS}
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty

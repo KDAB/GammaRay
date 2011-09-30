@@ -14,7 +14,6 @@ To build a debug version pass -DCMAKE_BUILD_TYPE=Debug to cmake.
 To build GammaRay you will need:
  - CMake 2.8
  - Qt 4.7 or higher
- - Boost (any version should do)
 
 Building on Unix with gcc or clang:
 % mkdir build

@@ -27,9 +27,6 @@
 #include <qgraphicsscene.h>
 #include <qdebug.h>
 
-#include <boost/bind.hpp>
-#include <algorithm>
-
 using namespace GammaRay;
 
 SceneModel::SceneModel(QObject *parent)
@@ -128,9 +125,11 @@ QList<QGraphicsItem*> SceneModel::topLevelItems() const
   if (!m_scene) {
     return topLevel;
   }
-  const QList<QGraphicsItem*> allItems = m_scene->items();
-  std::remove_copy_if(allItems.begin(), allItems.end(), std::back_inserter(topLevel),
-                      boost::bind(&QGraphicsItem::parentItem, _1) != (QGraphicsItem*)(0));
+  Q_FOREACH(QGraphicsItem *item,  m_scene->items()) {
+    if(!item->parentItem()) {
+      topLevel.push_back(item);
+    }
+  }
   return topLevel;
 }
 
