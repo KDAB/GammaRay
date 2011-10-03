@@ -685,7 +685,11 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
   FARPROC qtstartuphookaddr = GetProcAddress(qtCoreDllHandle, "qt_startup_hook");
   FARPROC qtaddobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_addObject");
   FARPROC qtremobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_removeObject");
+#ifdef _M_X64
+  FARPROC qFlagLocationaddr = GetProcAddress(qtCoreDllHandle, "?qFlagLocation@@YAPEBDPEBD@Z");
+#else
   FARPROC qFlagLocationaddr = GetProcAddress(qtCoreDllHandle, "?qFlagLocation@@YAPBDPBD@Z");
+#endif
 
   if (qtstartuphookaddr == NULL) {
     qDebug() << "no address for qt_startup_hook found!";
