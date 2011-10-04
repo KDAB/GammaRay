@@ -318,7 +318,10 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     if (fromCtor) {
       Q_ASSERT(!instance()->m_queuedObjects.contains(obj));
       instance()->m_queuedObjects << obj;
-      instance()->m_queueTimer->start();
+      if (!instance()->m_queueTimer->isActive()) {
+        // timers must not be started from a different thread
+        QMetaObject::invokeMethod(instance()->m_queueTimer, "start", Qt::AutoConnection);
+      }
     } else {
       instance()->objectFullyConstructed(obj);
     }
@@ -399,9 +402,6 @@ void Probe::objectRemoved(QObject *obj)
     }
 
     instance()->m_queuedObjects.removeOne(obj);
-    if (instance()->m_queuedObjects.isEmpty()) {
-      instance()->m_queueTimer->stop();
-    }
 
     instance()->m_objectListModel->objectRemoved(obj);
     instance()->m_objectTreeModel->objectRemoved(obj);
