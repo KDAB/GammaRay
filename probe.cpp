@@ -175,7 +175,7 @@ Probe *GammaRay::Probe::instance()
 
 bool Probe::isInitialized()
 {
-  return s_instance != 0;
+  return s_instance && qApp;
 }
 
 void Probe::delayedInit()
@@ -223,6 +223,7 @@ static bool descendantOf(QObject *ascendant, QObject *obj)
 static bool filterObject(QObject *obj)
 {
   Probe *p = Probe::instance();
+  Q_ASSERT(p);
   if (obj->thread() != p->thread()) {
     // shortcut, never filter objects from a different thread
     return false;
