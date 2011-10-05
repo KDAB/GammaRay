@@ -30,12 +30,14 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtCore/QMutex>
 #include <QDebug>
+#include <QMessageBox>
 
 using namespace GammaRay;
 
 static MessageModel *s_model = 0;
 static QtMsgHandler s_handler = 0;
-static QMutex s_mutex;
+static bool s_handlerDisabled = false;
+static QMutex s_mutex(QMutex::Recursive);
 
 void handleMessage(QtMsgType type, const char *msg)
 {
@@ -51,9 +53,11 @@ void handleMessage(QtMsgType type, const char *msg)
   // but make sure we don't let other threads bypass our
   // handler during that time
   QMutexLocker lock(&s_mutex);
+  s_handlerDisabled = true;
   qInstallMsgHandler(s_handler);
   qt_message_output(type, msg);
   qInstallMsgHandler(handleMessage);
+  s_handlerDisabled = false;
   lock.unlock();
 
   if (s_model) {
@@ -92,11 +96,35 @@ MessageHandlerFactory::MessageHandlerFactory(QObject *parent)
 {
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
-  s_handler = qInstallMsgHandler(handleMessage);
+
+  // install handler directly, catches most cases,
+  // i.e. user has no special handler or the handler
+  // is created before the QApplication
+  ensureHandlerInstalled();
+  // recheck when eventloop is entered, if the user
+  // installs a handler after QApp but before .exec()
+  QMetaObject::invokeMethod(this, "ensureHandlerInstalled", Qt::QueuedConnection);
+}
+
+void MessageHandlerFactory::ensureHandlerInstalled()
+{
+  QMutexLocker lock(&s_mutex);
+
+  if (s_handlerDisabled) {
+    return;
+  }
+
+  QtMsgHandler prevHandler = qInstallMsgHandler(handleMessage);
+
+  if (prevHandler != handleMessage) {
+    s_handler = prevHandler;
+  }
 }
 
 MessageHandlerFactory::~MessageHandlerFactory()
 {
+  QMutexLocker lock(&s_mutex);
+
   s_model = 0;
   QtMsgHandler oldHandler = qInstallMsgHandler(s_handler);
   if (oldHandler != handleMessage) {
