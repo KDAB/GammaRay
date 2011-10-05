@@ -56,16 +56,12 @@ void handleMessage(QtMsgType type, const char *msg)
   s_handlerDisabled = true;
   qInstallMsgHandler(s_handler);
   if (type == QtFatalMsg) {
-    QMessageBox::StandardButton ans = QMessageBox::critical(qApp->activeWindow(),
+    QMessageBox::critical(qApp->activeWindow(),
                           QObject::tr("QFatal message in application %1")
                             .arg(qApp->applicationName()),
                           msg);
-    if (ans != QMessageBox::Discard) {
-      qt_message_output(type, msg);
-    } // else do nothing
-  } else {
-    qt_message_output(type, msg);
   }
+  qt_message_output(type, msg);
   qInstallMsgHandler(handleMessage);
   s_handlerDisabled = false;
   lock.unlock();
