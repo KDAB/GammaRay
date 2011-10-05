@@ -26,6 +26,8 @@
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QTime>
 
+#include "backtrace.h"
+
 namespace GammaRay {
 
 class MessageModel : public QAbstractTableModel {
@@ -51,6 +53,7 @@ class MessageModel : public QAbstractTableModel {
       QtMsgType type;
       QString message;
       QTime time;
+      Backtrace backtrace;
     };
 
   public slots:

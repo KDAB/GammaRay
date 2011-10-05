@@ -49,18 +49,27 @@ void handleMessage(QtMsgType type, const char *msg)
   message.message = QString::fromLocal8Bit(msg);
   message.time = QTime::currentTime();
 
+  if (type == QtCriticalMsg || type == QtFatalMsg || type == QtWarningMsg) {
+    message.backtrace = getBacktrace(50);
+  }
+
+  if (type == QtFatalMsg) {
+    QString error = message.message;
+    if (!message.backtrace.isEmpty()) {
+      error += QObject::tr("\n\nBacktrace:\n\n%1").arg(message.backtrace.join("\n"));
+    }
+    QMessageBox::critical(qApp->activeWindow(),
+                          QObject::tr("QFatal message in application %1")
+                            .arg(qApp->applicationName()),
+                          error);
+  }
+
   // reset msg handler so the app still works as usual
   // but make sure we don't let other threads bypass our
   // handler during that time
   QMutexLocker lock(&s_mutex);
   s_handlerDisabled = true;
   qInstallMsgHandler(s_handler);
-  if (type == QtFatalMsg) {
-    QMessageBox::critical(qApp->activeWindow(),
-                          QObject::tr("QFatal message in application %1")
-                            .arg(qApp->applicationName()),
-                          msg);
-  }
   qt_message_output(type, msg);
   qInstallMsgHandler(handleMessage);
   s_handlerDisabled = false;

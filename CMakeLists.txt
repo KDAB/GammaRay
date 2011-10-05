@@ -224,6 +224,13 @@ set(gammaray_srcs
   3rdparty/kde/kfilterproxysearchline.cpp
   3rdparty/qt/resourcemodel.cpp
 )
+
+if(NOT WIN32)
+  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
+else()
+  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_win.cpp)
+endif()
+
 qt4_automoc(${gammaray_srcs} ${gammaray_runner_srcs})
 qt4_wrap_ui(gammaray_srcs
   mainwindow.ui

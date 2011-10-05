@@ -94,11 +94,26 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
       return msg.time.toString();
     }
   } else if (role == Qt::ToolTipRole) {
-    return tr("<qt><dl>"
-                "<dt><b>Type:</b></dt><dd>%1</dd>"
-                "<dt><b>Time:</b></dt><dd>%2</dd>"
-                "<dt><b>Message:</b></dt><dd>%3</dd>"
-              "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message);
+    if (!msg.backtrace.isEmpty()) {
+      QString bt;
+      int i = 0;
+      foreach(const QString &frame, msg.backtrace) {
+        bt += QString("#%1: %2\n").arg(i, 2).arg(frame);
+        ++i;
+      }
+      return tr("<qt><dl>"
+                  "<dt><b>Type:</b></dt><dd>%1</dd>"
+                  "<dt><b>Time:</b></dt><dd>%2</dd>"
+                  "<dt><b>Message:</b></dt><dd>%3</dd>"
+                  "<dt><b>Backtrace:</b></dt><dd><pre>%4</pre></dd>"
+                "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message, bt);
+    } else {
+      return tr("<qt><dl>"
+                  "<dt><b>Type:</b></dt><dd>%1</dd>"
+                  "<dt><b>Time:</b></dt><dd>%2</dd>"
+                  "<dt><b>Message:</b></dt><dd>%3</dd>"
+                "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message);
+    }
   }
 
   return QVariant();
