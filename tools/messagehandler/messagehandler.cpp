@@ -74,6 +74,7 @@ MessageHandler::MessageHandler(ProbeInterface */*probe*/, QWidget *parent)
   ui->messageSearchLine->setProxy(m_messageProxy);
   ui->messageView->setModel(m_messageProxy);
   ui->messageView->setIndentation(0);
+  ui->messageView->setSortingEnabled(true);
 
   ///FIXME: implement this
   ui->backtraceView->hide();
