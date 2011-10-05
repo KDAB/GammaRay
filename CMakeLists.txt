@@ -197,6 +197,8 @@ set(gammaray_srcs
   tools/codecbrowser/codecmodel.cpp
   tools/textdocumentinspector/textdocumentmodel.cpp
   tools/textdocumentinspector/textdocumentformatmodel.cpp
+  tools/messagehandler/messagehandler.cpp
+  tools/messagehandler/messagemodel.cpp
   toolmodel.cpp
   promolabel.cpp
 
@@ -232,6 +234,7 @@ qt4_wrap_ui(gammaray_srcs
   tools/codecbrowser/codecbrowser.ui
   tools/connectioninspector/connectioninspector.ui
   tools/fontbrowser/fontbrowser.ui
+  tools/messagehandler/messagehandler.ui
   tools/metatypebrowser/metatypebrowser.ui
   tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspector.ui

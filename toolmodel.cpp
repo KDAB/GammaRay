@@ -38,6 +38,7 @@
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/webinspector/webinspector.h"
 #include "tools/widgetinspector/widgetinspector.h"
+#include "tools/messagehandler/messagehandler.h"
 
 #include <QDebug>
 #include "probe.h"
@@ -61,6 +62,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new FontBrowserFactory(this));
   m_tools.push_back(new CodecBrowserFactory(this));
   m_tools.push_back(new TextDocumentInspectorFactory(this));
+  m_tools.push_back(new MessageHandlerFactory(this));
 
   // tool plugins
   // TODO
