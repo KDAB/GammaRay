@@ -27,6 +27,20 @@
 
 using namespace GammaRay;
 
+QString typeToString(QtMsgType type)
+{
+  switch(type) {
+    case QtDebugMsg:
+      return QObject::tr("Debug");
+    case QtWarningMsg:
+      return QObject::tr("Warning");
+    case QtCriticalMsg:
+      return QObject::tr("Critical");
+    case QtFatalMsg:
+      return QObject::tr("Fatal");
+  }
+}
+
 MessageModel::MessageModel(QObject *parent)
   : QAbstractTableModel(parent)
 {
@@ -68,25 +82,23 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     return QVariant();
   }
 
+  const Message &msg = m_messages.at(index.row());
+
   if (role == Qt::DisplayRole) {
-    const Message &msg = m_messages.at(index.row());
     if (index.column() == TypeColumn) {
-      switch(msg.type) {
-        case QtDebugMsg:
-          return tr("Debug");
-        case QtWarningMsg:
-          return tr("Warning");
-        case QtCriticalMsg:
-          return tr("Critical");
-        case QtFatalMsg:
-          return tr("Fatal");
-      }
+      return typeToString(msg.type);
     } else if (index.column() == MessageColumn) {
       ///TODO: elide
       return msg.message;
     } else if (index.column() == TimeColumn) {
       return msg.time.toString();
     }
+  } else if (role == Qt::ToolTipRole) {
+    return tr("<qt><dl>"
+                "<dt><b>Type:</b></dt><dd>%1</dd>"
+                "<dt><b>Time:</b></dt><dd>%2</dd>"
+                "<dt><b>Message:</b></dt><dd>%3</dd>"
+              "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message);
   }
 
   return QVariant();
