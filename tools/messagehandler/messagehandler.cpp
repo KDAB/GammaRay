@@ -55,7 +55,17 @@ void handleMessage(QtMsgType type, const char *msg)
   QMutexLocker lock(&s_mutex);
   s_handlerDisabled = true;
   qInstallMsgHandler(s_handler);
-  qt_message_output(type, msg);
+  if (type == QtFatalMsg) {
+    QMessageBox::StandardButton ans = QMessageBox::critical(qApp->activeWindow(),
+                          QObject::tr("QFatal message in application %1")
+                            .arg(qApp->applicationName()),
+                          msg);
+    if (ans != QMessageBox::Discard) {
+      qt_message_output(type, msg);
+    } // else do nothing
+  } else {
+    qt_message_output(type, msg);
+  }
   qInstallMsgHandler(handleMessage);
   s_handlerDisabled = false;
   lock.unlock();
