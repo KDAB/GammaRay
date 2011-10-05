@@ -42,6 +42,11 @@ void handleMessage(QtMsgType type, const char *msg)
   ///WARNING: do not trigger *any* kind of debug output here
   ///         this would trigger an infinite loop and hence crash!
 
+  MessageModel::Message message;
+  message.type = type;
+  message.message = QString::fromLocal8Bit(msg);
+  message.time = QTime::currentTime();
+
   // reset msg handler so the app still works as usual
   // but make sure we don't let other threads bypass our
   // handler during that time
@@ -50,8 +55,6 @@ void handleMessage(QtMsgType type, const char *msg)
   qt_message_output(type, msg);
   qInstallMsgHandler(handleMessage);
   lock.unlock();
-
-  const MessageModel::Message message = qMakePair(type, QString::fromLocal8Bit(msg));
 
   if (s_model) {
     // add directly from foreground thread, delay from background thread

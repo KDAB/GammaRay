@@ -71,7 +71,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
   if (role == Qt::DisplayRole) {
     const Message &msg = m_messages.at(index.row());
     if (index.column() == TypeColumn) {
-      switch(msg.first) {
+      switch(msg.type) {
         case QtDebugMsg:
           return tr("Debug");
         case QtWarningMsg:
@@ -83,7 +83,9 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
       }
     } else if (index.column() == MessageColumn) {
       ///TODO: elide
-      return msg.second;
+      return msg.message;
+    } else if (index.column() == TimeColumn) {
+      return msg.time.toString();
     }
   }
 
@@ -97,6 +99,8 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
       return tr("Type");
     } else if (section == MessageColumn) {
       return tr("Message");
+    } else if (section == TimeColumn) {
+      return tr("Time");
     }
   }
 

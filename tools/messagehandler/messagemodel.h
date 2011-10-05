@@ -24,6 +24,7 @@
 #define MESSAGEMODEL_H
 
 #include <QtCore/QAbstractTableModel>
+#include <QtCore/QTime>
 
 namespace GammaRay {
 
@@ -41,11 +42,16 @@ class MessageModel : public QAbstractTableModel {
 
     enum Columns {
       TypeColumn,
+      TimeColumn,
       MessageColumn,
       COLUMN_COUNT
     };
 
-    typedef QPair<QtMsgType, QString> Message;
+    struct Message {
+      QtMsgType type;
+      QString message;
+      QTime time;
+    };
 
   public slots:
     void addMessage(const MessageModel::Message &message);
