@@ -67,6 +67,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
 bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(pid > 0);
+  showSplashScreen();
   if (!startGdb(QStringList() << QLatin1String("-pid") << QString::number(pid))) {
     return false;
   }
