@@ -123,6 +123,8 @@ int main(int argc, char **argv)
     if (pid > 0) {
       if (!injector->attach(pid, probeDll, QLatin1String("gammaray_probe_inject"))) {
         err << "Unable to attach injector " << injector->name() << endl;
+        return 1;
+      } else {
         return 0;
       }
     } else {
@@ -152,5 +154,5 @@ int main(int argc, char **argv)
   } else {
     err << "Injector " << injectorType << " not found." << endl;
   }
-  return 0;
+  return 1;
 }
