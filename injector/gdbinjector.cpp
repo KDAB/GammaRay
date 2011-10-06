@@ -34,6 +34,9 @@
 
 using namespace GammaRay;
 
+static QTextStream cout(stdout);
+static QTextStream cerr(stderr);
+
 GdbInjector::GdbInjector() :
   mManualError(false),
   mExitCode(-1),
@@ -55,11 +58,14 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
     return -1;
   }
 
-  m_process->write("break main\n");
-  m_process->write("run\n");
-  m_process->write("sha QtCore\n");
-  m_process->write("break QCoreApplication::exec\n");
-  m_process->write("continue\n");
+  execGdbCmd("break main");
+  execGdbCmd("run");
+  execGdbCmd("sha QtCore");
+  // either this
+  execGdbCmd("break QCoreApplication::exec");
+  // or this for unit tests should hit
+  execGdbCmd("break QTest::qExec");
+  execGdbCmd("continue");
 
   return injectAndDetach(probeDll, probeFunc);
 }
@@ -97,17 +103,24 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
 {
   Q_ASSERT(m_process);
 #ifndef Q_OS_MAC
-  m_process->write("sha dl\n");
+  execGdbCmd("sha dl");
 #endif
-  m_process->write(qPrintable(QString::fromLatin1("call (void) dlopen(\"%1\", %2)\n").
-                              arg(probeDll).arg(RTLD_NOW)));
+  execGdbCmd(qPrintable(QString::fromLatin1("call (void) dlopen(\"%1\", %2)").
+                        arg(probeDll).arg(RTLD_NOW)));
 #ifndef Q_OS_MAC
-  m_process->write(qPrintable(QString::fromLatin1("sha %1\n").arg(probeDll)));
+  execGdbCmd(qPrintable(QString::fromLatin1("sha %1").arg(probeDll)));
 #endif
-  m_process->write(qPrintable(QString::fromLatin1("call (void) %1()\n").arg(probeFunc)));
-  m_process->write("detach\n");
-  m_process->write("quit\n");
-  m_process->waitForBytesWritten(-1);
+  execGdbCmd(qPrintable(QString::fromLatin1("call (void) %1()").arg(probeFunc)));
+
+  if (qgetenv("GAMMARAY_UNITTEST") != "1") {
+    execGdbCmd("detach");
+    execGdbCmd("quit");
+  } else {
+    execGdbCmd("continue");
+    // if we hit a crash or anything, print backtrace and quit
+    execGdbCmd("backtrace", false);
+    execGdbCmd("quit", false);
+  }
 
   m_process->waitForFinished(-1);
 
@@ -121,6 +134,15 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
   hideSplashScreen();
 
   return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
+}
+
+void GdbInjector::execGdbCmd(const QByteArray &cmd, bool waitForWritten)
+{
+  m_process->write(cmd + "\n");
+
+  if (waitForWritten) {
+    m_process->waitForBytesWritten(-1);
+  }
 }
 
 int GdbInjector::exitCode()
@@ -167,14 +189,14 @@ void GdbInjector::readyReadStandardError()
     return;
   }
 
-  static QTextStream out(stderr);
-  out << error << flush;
+  cerr << error << flush;
 }
 
 void GdbInjector::readyReadStandardOutput()
 {
-//   static QTextStream out(stdout);
-//   out << m_process->readAllStandardOutput() << flush;
+  if (qgetenv("GAMMARAY_UNITTEST") == "1") {
+    cout << m_process->readAllStandardOutput() << flush;
+  }
 }
 
 #include "gdbinjector.moc"

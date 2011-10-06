@@ -69,7 +69,7 @@ void handleMessage(QtMsgType type, const char *msg)
     }
   }
 
-  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_NO_DIALOGS") != "1")
+  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1")
   {
     foreach(QWidget *w, qApp->topLevelWidgets()) {
       w->setEnabled(false);
