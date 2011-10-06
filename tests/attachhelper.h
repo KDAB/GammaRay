@@ -1,0 +1,51 @@
+/*
+  attachhelper.h
+
+  This file is part of GammaRay, the Qt application inspection and
+  manipulation tool.
+
+  Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Milian Wolff <milian.wolff@kdab.com>
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#ifndef ATTACHHELPER_H
+#define ATTACHHELPER_H
+
+#include <QObject>
+
+class QTimer;
+class QProcess;
+
+class AttachHelper : public QObject {
+  Q_OBJECT
+  public:
+    explicit AttachHelper(const QString &gammaray, const QString &injector,
+                          const QString &debuggee, const QStringList &arguments,
+                          QObject *parent = 0);
+
+  public slots:
+    void attach();
+    void processStarted();
+    void processFinished(int);
+
+  private:
+    QTimer *m_timer;
+    QProcess *m_proc;
+    QString m_gammaray;
+    QString m_injector;
+};
+
+#endif // ATTACHHELPER_H
