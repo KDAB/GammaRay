@@ -38,6 +38,8 @@ QString typeToString(QtMsgType type)
       return QObject::tr("Critical");
     case QtFatalMsg:
       return QObject::tr("Fatal");
+    default:
+      return QObject::tr("Unknown"); // never reached in theory
   }
 }
 
