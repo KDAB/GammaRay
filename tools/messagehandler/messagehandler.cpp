@@ -53,6 +53,19 @@ void handleMessage(QtMsgType type, const char *msg)
 
   if (type == QtCriticalMsg || type == QtFatalMsg || type == QtWarningMsg) {
     message.backtrace = getBacktrace(50);
+    // remove trailing internal functions
+    // be a bit careful and first make sure that we find this function...
+    // TODO: go even higher until qWarning/qFatal/qDebug/... ?
+    int removeUntil = -1;
+    for(int i = 0; i < message.backtrace.size(); ++i) {
+      if (message.backtrace.at(i).contains(QLatin1String("handleMessage"))) {
+        removeUntil = i;
+        break;
+      }
+    }
+    if (removeUntil != -1) {
+      message.backtrace = message.backtrace.mid(removeUntil + 1);
+    }
   }
 
   if (type == QtFatalMsg) {
