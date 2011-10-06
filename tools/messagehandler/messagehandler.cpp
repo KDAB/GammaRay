@@ -33,6 +33,7 @@
 #include <QMessageBox>
 #include <QListWidget>
 #include <QLabel>
+#include <QDialogButtonBox>
 
 using namespace GammaRay;
 
@@ -92,6 +93,13 @@ void handleMessage(QtMsgType type, const char *msg)
       }
       layout->addWidget(backtrace, 1, 0, 1, 2);
     }
+    QDialogButtonBox *buttons = new QDialogButtonBox;
+    buttons->addButton(QDialogButtonBox::Close);
+    QObject::connect(buttons, SIGNAL(accepted()),
+                     &dlg, SLOT(accept()));
+    QObject::connect(buttons, SIGNAL(rejected()),
+                     &dlg, SLOT(reject()));
+    layout->addWidget(buttons, 2, 0, 1, 2);
     dlg.setLayout(layout);
     dlg.adjustSize();
     dlg.exec();
