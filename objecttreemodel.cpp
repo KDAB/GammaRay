@@ -52,7 +52,7 @@ void ObjectTreeModel::objectAdded(QObject *obj)
   // so catch this gracefully by first adding the
   // parent if required
   if (obj->parent()) {
-    QReadLocker lock(&m_lock);
+    ReadOrWriteLocker lock(&m_lock);
     const QModelIndex index = indexForObject(obj->parent());
     lock.unlock();
     if (!index.isValid()) {

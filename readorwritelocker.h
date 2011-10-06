@@ -39,20 +39,36 @@ class ReadOrWriteLocker
 {
   public:
     ReadOrWriteLocker(QReadWriteLock *lock)
-      : m_lock(lock)
+      : m_lock(lock),
+        m_locked(false)
+    {
+      this->lock();
+    }
+
+    void lock()
     {
       if (!m_lock->tryLockForWrite()) {
         m_lock->lockForRead();
       }
+      m_locked = true;
+    }
+
+    void unlock()
+    {
+      m_lock->unlock();
+      m_locked = false;
     }
 
     ~ReadOrWriteLocker()
     {
-      m_lock->unlock();
+      if (m_locked) {
+        unlock();
+      }
     }
 
   private:
     QReadWriteLock *m_lock;
+    bool m_locked;
 };
 
 }
