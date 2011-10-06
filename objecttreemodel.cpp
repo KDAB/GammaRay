@@ -71,19 +71,18 @@ void ObjectTreeModel::objectAddedMainThread(QObject *obj)
 
   ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
   if (!Probe::instance()->isValidObject(obj)) {
-    IF_DEBUG(cout << "tree invalid obj added:" << hex << obj << endl;)
+    IF_DEBUG(cout << "tree invalid obj added: " << hex << obj << endl;)
     return;
   }
+  IF_DEBUG(cout << "tree obj added: " << hex << obj << " p: " << obj->parent() << endl;)
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
   QWriteLocker lock(&m_lock);
 
   if (indexForObject(obj).isValid()) {
-    IF_DEBUG(cout << "tree double obj added:" << hex << obj << endl;)
+    IF_DEBUG(cout << "tree double obj added: " << hex << obj << endl;)
     return;
   }
-
-  IF_DEBUG(cout << "tree obj added:" << hex << obj << endl;)
 
   const QModelIndex index = indexForObject(obj->parent());
 
@@ -103,7 +102,7 @@ void ObjectTreeModel::objectAddedMainThread(QObject *obj)
 void ObjectTreeModel::objectRemoved(QObject *obj)
 {
   IF_DEBUG(cout
-           << "removed: "
+           << "tree removed: "
            << hex << obj << " "
            << hex << obj->parent() << dec << " "
            << m_parentChildMap.value(obj->parent()).size() << " "
