@@ -92,6 +92,9 @@ int main(int argc, char **argv)
     if (arg == QLatin1String("-filtertest")) {
       qputenv("GAMMARAY_TEST_FILTER", "1");
     }
+    if (arg == QLatin1String("-nodialogs")) {
+      qputenv("GAMMARAY_NO_DIALOGS", "1");
+    }
   }
 
   if (args.isEmpty() && pid <= 0) {

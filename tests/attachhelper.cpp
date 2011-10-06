@@ -69,6 +69,7 @@ void AttachHelper::attach()
   QProcess gammaray;
   QStringList args;
   args << "-i" << m_injector << "-p" << QString::number(m_proc->pid());
+  args << "-nodialogs";
   const int ret = gammaray.execute(m_gammaray, args);
   if (ret != 0) {
     m_proc->kill();
