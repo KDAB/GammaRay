@@ -36,8 +36,7 @@ class ProcessModel : public QAbstractTableModel
     explicit ProcessModel(QObject *parent = 0);
     virtual ~ProcessModel();
 
-    void addProcess(const ProcData &process);
-    void addProcesses(const QList<ProcData> &process);
+    void setProcesses(const QList<ProcData> &process);
     ProcData dataForIndex(const QModelIndex &index) const;
     ProcData dataForRow(int row) const;
 

@@ -34,21 +34,11 @@ ProcessModel::~ProcessModel()
 {
 }
 
-void ProcessModel::addProcess(const ProcData &process)
+void ProcessModel::setProcesses(const QList< ProcData >& processes)
 {
-  beginInsertRows(QModelIndex(), m_data.count(), m_data.count());
-  m_data << process;
-  endInsertRows();
-}
-
-void ProcessModel::addProcesses(const QList< ProcData >& processes)
-{
-  if (processes.isEmpty()) {
-    return;
-  }
-  beginInsertRows(QModelIndex(), m_data.count(), m_data.count() + processes.count() - 1);
-  m_data += processes;
-  endInsertRows();
+  beginResetModel();
+  m_data = processes;
+  endResetModel();
 }
 
 void ProcessModel::clear()

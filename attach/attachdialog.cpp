@@ -29,6 +29,7 @@
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QListView>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -39,7 +40,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   ui.buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Attach"));
 
   m_model = new ProcessModel(this);
-  m_model->addProcesses(processList());
 
   m_proxyModel = new ProcessFilterModel(this);
   m_proxyModel->setSourceModel(m_model);
@@ -65,7 +65,12 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   setWindowTitle(tr("GammaRay - Attach to Process"));
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
+  m_timer = new QTimer(this);
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(updateProcesses()));
+  m_timer->start(1000);
+
   selectionChanged();
+  updateProcesses();
 }
 
 void AttachDialog::selectionChanged()
@@ -76,6 +81,11 @@ void AttachDialog::selectionChanged()
 QString AttachDialog::pid() const
 {
   return ui.view->currentIndex().data(ProcessModel::PIDRole).toString();
+}
+
+void AttachDialog::updateProcesses()
+{
+  m_model->setProcesses(processList());
 }
 
 #include "attachdialog.moc"

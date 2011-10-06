@@ -44,11 +44,13 @@ class AttachDialog : public QDialog
 
   private slots:
     void selectionChanged();
+    void updateProcesses();
 
   private:
     Ui::AttachDialog ui;
     ProcessModel *m_model;
     ProcessFilterModel *m_proxyModel;
+    QTimer *m_timer;
 };
 
 } // namespace GammaRay
