@@ -102,10 +102,12 @@ void dumpObject(QObject *obj)
 struct Listener
 {
   Listener()
-    : filterThread(0)
+    : filterThread(0),
+      trackDestroyed(true)
   {}
 
   QThread *filterThread;
+  bool trackDestroyed;
 };
 
 Q_GLOBAL_STATIC(Listener, s_listener)
@@ -304,6 +306,14 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
     instance()->m_validObjects << obj;
+    if (s_listener()->trackDestroyed) {
+      // when we did not use a preload variant that
+      // overwrites qt_removeObject we must track object
+      // deletion manually
+      connect(obj, SIGNAL(destroyed(QObject*)),
+              instance(), SLOT(handleObjectDestroyed(QObject*)),
+              Qt::DirectConnection);
+    }
 
     if (!fromCtor && obj->parent() && instance()->m_queuedObjects.contains(obj->parent())) {
       // when a child event triggers a call to objectAdded while inside the ctor
@@ -422,6 +432,11 @@ void Probe::objectRemoved(QObject *obj)
       }
     }
   }
+}
+
+void Probe::handleObjectDestroyed(QObject* obj)
+{
+  objectRemoved(obj);
 }
 
 void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiver,
@@ -571,6 +586,7 @@ qFlagLocation_ptr next_qFlagLocation = 0;
 
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
+  s_listener()->trackDestroyed = false;
 #ifndef Q_OS_WIN
   static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
 #endif

@@ -97,6 +97,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
   private slots:
     void delayedInit();
     void queuedObjectsFullyConstructed();
+    void handleObjectDestroyed(QObject *obj);
 
   private:
     void objectFullyConstructed(QObject *obj);
