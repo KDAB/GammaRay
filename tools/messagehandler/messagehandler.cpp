@@ -31,6 +31,8 @@
 #include <QtCore/QMutex>
 #include <QDebug>
 #include <QMessageBox>
+#include <QListWidget>
+#include <QLabel>
 
 using namespace GammaRay;
 
@@ -54,14 +56,32 @@ void handleMessage(QtMsgType type, const char *msg)
   }
 
   if (type == QtFatalMsg) {
-    QString error = message.message;
+    QDialog dlg;
+    dlg.setWindowTitle(QObject::tr("QFatal in %1")
+      .arg(qApp->applicationName().isEmpty()
+            ? qApp->applicationFilePath()
+            : qApp->applicationName()));
+    QGridLayout *layout = new QGridLayout;
+    QLabel *iconLabel = new QLabel;
+    QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, &dlg);
+    int iconSize = dlg.style()->pixelMetric(QStyle::PM_MessageBoxIconSize, 0, &dlg);
+    iconLabel->setPixmap(icon.pixmap(iconSize, iconSize));
+    iconLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    layout->addWidget(iconLabel, 0, 0);
+    QLabel *errorLabel = new QLabel;
+    errorLabel->setTextFormat(Qt::PlainText);
+    errorLabel->setText(message.message);
+    layout->addWidget(errorLabel, 0, 1);
     if (!message.backtrace.isEmpty()) {
-      error += QObject::tr("\n\nBacktrace:\n\n%1").arg(message.backtrace.join("\n"));
+      QListWidget *backtrace = new QListWidget;
+      foreach(const QString &frame, message.backtrace) {
+        backtrace->addItem(frame);
+      }
+      layout->addWidget(backtrace, 1, 0, 1, 2);
     }
-    QMessageBox::critical(qApp->activeWindow(),
-                          QObject::tr("QFatal message in application %1")
-                            .arg(qApp->applicationName()),
-                          error);
+    dlg.setLayout(layout);
+    dlg.adjustSize();
+    dlg.exec();
   }
 
   // reset msg handler so the app still works as usual
