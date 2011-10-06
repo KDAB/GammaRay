@@ -69,10 +69,16 @@ void ModelTester::modelDestroyed(QObject *model)
   }
 }
 
-void ModelTester::failure(QAbstractItemModel *model, int line, const char *message)
+void ModelTester::failure(QAbstractItemModel *model, const char *file, int line, const char *message)
 {
   ModelTestResult *result = m_modelTestMap.value(model);
-  Q_ASSERT(result);
+  Q_ASSERT(result || qgetenv("GAMMARAY_UNITTEST") == "1");
+  if (!result) {
+    // one of our own models
+    qt_assert(message, file, line);
+  }
+
+  ///TODO: track file
   if (!result->failures.contains(line)) {
     std::cout << qPrintable(Util::displayString(model)) << " "
               << line << " " << message << std::endl;
@@ -89,7 +95,7 @@ void ModelTester::failure(QAbstractItemModel *model, int line, const char *messa
 #include <QtGui/QtGui> // avoid interference with any include used by modeltest
 #include "modeltest.moc"
 #undef Q_ASSERT
-#define Q_ASSERT(x) (!(x) ? static_cast<GammaRay::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __LINE__, #x) : qt_noop())
+#define Q_ASSERT(x) (!(x) ? static_cast<GammaRay::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __FILE__, __LINE__, #x) : qt_noop())
 #define qDebug() QNoDebug()
 #include "modeltest.cpp"
 

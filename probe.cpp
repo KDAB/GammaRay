@@ -30,6 +30,7 @@
 #include "connectionmodel.h"
 #include "toolmodel.h"
 #include "readorwritelocker.h"
+#include "tools/modelinspector/modeltest.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -160,6 +161,13 @@ Probe *GammaRay::Probe::instance()
     IF_DEBUG(cout << "setting up new probe instance" << endl;)
     s_listener()->filterThread = QThread::currentThread();
     s_instance = new Probe;
+
+    if (qgetenv("GAMMARAY_MODELTEST") == "1") {
+      new ModelTest(s_instance->m_objectListModel, s_instance->m_objectListModel);
+      new ModelTest(s_instance->m_objectTreeModel, s_instance->m_objectTreeModel);
+      new ModelTest(s_instance->m_connectionModel, s_instance->m_connectionModel);
+      new ModelTest(s_instance->m_toolModel, s_instance->m_toolModel);
+    }
     s_listener()->filterThread = 0;
     IF_DEBUG(cout << "done setting up new probe instance" << endl;)
 

@@ -95,6 +95,9 @@ int main(int argc, char **argv)
     if (arg == QLatin1String("-unittest")) {
       qputenv("GAMMARAY_UNITTEST", "1");
     }
+    if (arg == QLatin1String("-modeltest")) {
+      qputenv("GAMMARAY_MODELTEST", "1");
+    }
   }
 
   if (args.isEmpty() && pid <= 0) {

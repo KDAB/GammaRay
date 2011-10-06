@@ -39,7 +39,7 @@ class ModelTester : public QObject
   public:
     explicit ModelTester(QObject *parent = 0);
 
-    void failure(QAbstractItemModel *model, int line, const char *message);
+    void failure(QAbstractItemModel* model, const char* file, int line, const char* message);
 
   public slots:
     void objectAdded(QObject *obj);
