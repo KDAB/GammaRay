@@ -147,17 +147,31 @@ void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
 
 QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 {
+  if (!index.isValid()) {
+    return QVariant();
+  }
+
   QObject *obj = reinterpret_cast<QObject*>(index.internalPointer());
 
   ReadOrWriteLocker lock(Probe::instance()->objectLock());
   if (Probe::instance()->isValidObject(obj)) {
     return dataForObject(obj, index, role);
+  } else if (role == Qt::DisplayRole) {
+    if (index.column() == 0) {
+      return Util::addressToString(obj);
+    } else {
+      return tr("<deleted>");
+    }
   }
+
   return QVariant();
 }
 
 int ObjectTreeModel::rowCount(const QModelIndex &parent) const
 {
+  if (parent.column() == 1) {
+    return 0;
+  }
   ReadOrWriteLocker lock(&m_lock);
   QObject *parentObj = reinterpret_cast<QObject*>(parent.internalPointer());
   return m_parentChildMap.value(parentObj).size();
