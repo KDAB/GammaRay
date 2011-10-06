@@ -69,7 +69,7 @@ void handleMessage(QtMsgType type, const char *msg)
     }
   }
 
-  if (type == QtFatalMsg) {
+  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1") {
     foreach(QWidget *w, qApp->topLevelWidgets()) {
       w->setEnabled(false);
     }
