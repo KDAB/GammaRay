@@ -27,6 +27,7 @@
 #include <QTimer>
 #include <QProcess>
 #include <QDebug>
+#include <QDateTime>
 
 AttachHelper::AttachHelper(const QString &gammaray, const QString &injector,
                            const QString &debuggee, const QStringList &arguments,
@@ -46,6 +47,7 @@ AttachHelper::AttachHelper(const QString &gammaray, const QString &injector,
 void AttachHelper::processStarted()
 {
   // attach randomly after 1-1500 ms
+  qsrand(QDateTime::currentMSecsSinceEpoch());
   const int timeout = qrand() % 1500 + 1;
   qDebug() << "attaching gammaray in" << timeout << "ms";
   m_timer->setSingleShot(true);
