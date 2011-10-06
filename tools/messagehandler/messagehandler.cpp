@@ -35,6 +35,8 @@
 #include <QLabel>
 #include <QDialogButtonBox>
 
+static QTextStream cerr(stdout);
+
 using namespace GammaRay;
 
 static MessageModel *s_model = 0;
@@ -107,6 +109,13 @@ void handleMessage(QtMsgType type, const char *msg)
     dlg.setLayout(layout);
     dlg.adjustSize();
     dlg.exec();
+  } else if (!message.backtrace.isEmpty() && qgetenv("GAMMARAY_UNITTEST") == "1") {
+    cerr << "START BACKTRACE:" << endl;
+    int i = 0;
+    foreach(const QString &frame, message.backtrace) {
+      cerr << (++i) << "\t" << frame << endl;
+    }
+    cerr << "END BACKTRACE" << endl;
   }
 
   // reset msg handler so the app still works as usual
