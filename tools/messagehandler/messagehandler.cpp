@@ -70,6 +70,9 @@ void handleMessage(QtMsgType type, const char *msg)
   }
 
   if (type == QtFatalMsg) {
+    foreach(QWidget *w, qApp->topLevelWidgets()) {
+      w->setEnabled(false);
+    }
     QDialog dlg;
     dlg.setWindowTitle(QObject::tr("QFatal in %1")
       .arg(qApp->applicationName().isEmpty()
