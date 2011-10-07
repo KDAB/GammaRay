@@ -60,7 +60,7 @@ void handleMessage(QtMsgType type, const char *msg)
     // be a bit careful and first make sure that we find this function...
     // TODO: go even higher until qWarning/qFatal/qDebug/... ?
     int removeUntil = -1;
-    for(int i = 0; i < message.backtrace.size(); ++i) {
+    for (int i = 0; i < message.backtrace.size(); ++i) {
       if (message.backtrace.at(i).contains(QLatin1String("handleMessage"))) {
         removeUntil = i;
         break;
@@ -73,14 +73,14 @@ void handleMessage(QtMsgType type, const char *msg)
 
   if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1")
   {
-    foreach(QWidget *w, qApp->topLevelWidgets()) {
+    foreach (QWidget *w, qApp->topLevelWidgets()) {
       w->setEnabled(false);
     }
     QDialog dlg;
-    dlg.setWindowTitle(QObject::tr("QFatal in %1")
-      .arg(qApp->applicationName().isEmpty()
-            ? qApp->applicationFilePath()
-            : qApp->applicationName()));
+    dlg.setWindowTitle(QObject::tr("QFatal in %1").
+                       arg(qApp->applicationName().isEmpty() ?
+                             qApp->applicationFilePath() :
+                             qApp->applicationName()));
     QGridLayout *layout = new QGridLayout;
     QLabel *iconLabel = new QLabel;
     QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, &dlg);
@@ -94,7 +94,7 @@ void handleMessage(QtMsgType type, const char *msg)
     layout->addWidget(errorLabel, 0, 1);
     if (!message.backtrace.isEmpty()) {
       QListWidget *backtrace = new QListWidget;
-      foreach(const QString &frame, message.backtrace) {
+      foreach (const QString &frame, message.backtrace) {
         backtrace->addItem(frame);
       }
       layout->addWidget(backtrace, 1, 0, 1, 2);
@@ -112,7 +112,7 @@ void handleMessage(QtMsgType type, const char *msg)
   } else if (!message.backtrace.isEmpty() && qgetenv("GAMMARAY_UNITTEST") == "1") {
     cerr << "START BACKTRACE:" << endl;
     int i = 0;
-    foreach(const QString &frame, message.backtrace) {
+    foreach (const QString &frame, message.backtrace) {
       cerr << (++i) << "\t" << frame << endl;
     }
     cerr << "END BACKTRACE" << endl;
@@ -136,7 +136,7 @@ void handleMessage(QtMsgType type, const char *msg)
   }
 }
 
-MessageHandler::MessageHandler(ProbeInterface* /*probe*/, QWidget *parent)
+MessageHandler::MessageHandler(ProbeInterface */*probe*/, QWidget *parent)
   : QWidget(parent),
     ui(new Ui::MessageHandler),
     m_messageModel(0),
@@ -205,7 +205,9 @@ MessageHandlerFactory::~MessageHandlerFactory()
 
 QWidget *MessageHandlerFactory::createWidget(ProbeInterface *probe, QWidget *parentWidget)
 {
-  QWidget *widget = StandardToolFactory<QObject, MessageHandler >::createWidget(probe, parentWidget);
+  QWidget *widget =
+    StandardToolFactory<QObject, MessageHandler >::createWidget(probe, parentWidget);
+
   MessageHandler *handler = qobject_cast<MessageHandler*>(widget);
   Q_ASSERT(handler);
   handler->setModel(m_messageModel);

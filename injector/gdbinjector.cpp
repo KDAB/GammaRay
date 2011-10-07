@@ -138,7 +138,7 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
 
 void GdbInjector::execGdbCmd(const QByteArray &cmd, bool waitForWritten)
 {
-  m_process->write(cmd + "\n");
+  m_process->write(cmd + '\n');
 
   if (waitForWritten) {
     m_process->waitForBytesWritten(-1);

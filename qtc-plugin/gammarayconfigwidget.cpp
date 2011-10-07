@@ -43,7 +43,7 @@
 
 namespace GammaRay {
 
-GammaRayConfigWidget::GammaRayConfigWidget(GammaRayBaseSettings *settings,QWidget *parent)
+GammaRayConfigWidget::GammaRayConfigWidget(GammaRayBaseSettings *settings, QWidget *parent)
   : QWidget(parent),
     m_settings(settings),
     m_ui(new Ui::GammaRayConfigWidget)

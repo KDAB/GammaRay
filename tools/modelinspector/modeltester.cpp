@@ -69,7 +69,8 @@ void ModelTester::modelDestroyed(QObject *model)
   }
 }
 
-void ModelTester::failure(QAbstractItemModel *model, const char *file, int line, const char *message)
+void ModelTester::failure(QAbstractItemModel *model, const char *file, int line,
+                          const char *message)
 {
   ModelTestResult *result = m_modelTestMap.value(model);
   Q_ASSERT(result || qgetenv("GAMMARAY_UNITTEST") == "1");

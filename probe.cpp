@@ -442,7 +442,7 @@ void Probe::objectRemoved(QObject *obj)
   }
 }
 
-void Probe::handleObjectDestroyed(QObject* obj)
+void Probe::handleObjectDestroyed(QObject *obj)
 {
   objectRemoved(obj);
 }

@@ -58,8 +58,12 @@ class MessageHandlerFactory : public QObject, public StandardToolFactory<QObject
     explicit MessageHandlerFactory(QObject *parent);
     virtual ~MessageHandlerFactory();
 
-    virtual inline QString name() const { return tr("Messages"); }
-    virtual QWidget* createWidget(ProbeInterface* probe, QWidget* parentWidget);
+    virtual inline QString name() const
+    {
+      return tr("Messages");
+    }
+
+    virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget);
 
   private slots:
     void ensureHandlerInstalled();

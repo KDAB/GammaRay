@@ -30,7 +30,8 @@
 
 namespace GammaRay {
 
-class MessageModel : public QAbstractTableModel {
+class MessageModel : public QAbstractTableModel
+{
   Q_OBJECT
   public:
     explicit MessageModel(QObject *parent = 0);

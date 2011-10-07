@@ -66,6 +66,7 @@ void MessageModel::addMessage(const MessageModel::Message &message)
 
 int MessageModel::columnCount(const QModelIndex &parent) const
 {
+  Q_UNUSED(parent);
   return COLUMN_COUNT;
 }
 
@@ -99,7 +100,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     if (!msg.backtrace.isEmpty()) {
       QString bt;
       int i = 0;
-      foreach(const QString &frame, msg.backtrace) {
+      foreach (const QString &frame, msg.backtrace) {
         bt += QString("#%1: %2\n").arg(i, 2).arg(frame);
         ++i;
       }

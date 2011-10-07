@@ -29,7 +29,8 @@
 class QTimer;
 class QProcess;
 
-class AttachHelper : public QObject {
+class AttachHelper : public QObject
+{
   Q_OBJECT
   public:
     explicit AttachHelper(const QString &gammaray, const QString &injector,

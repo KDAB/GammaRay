@@ -125,8 +125,8 @@ QList<QGraphicsItem*> SceneModel::topLevelItems() const
   if (!m_scene) {
     return topLevel;
   }
-  Q_FOREACH(QGraphicsItem *item,  m_scene->items()) {
-    if(!item->parentItem()) {
+  Q_FOREACH (QGraphicsItem *item,  m_scene->items()) {
+    if (!item->parentItem()) {
       topLevel.push_back(item);
     }
   }

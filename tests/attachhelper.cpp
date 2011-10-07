@@ -89,7 +89,8 @@ int main(int argc, char **argv) {
   QCoreApplication app(argc, argv);
 
   if (app.arguments().size() < 4) {
-    qWarning() << "usage: " << app.applicationName() << " GAMMARAY INJECTOR DEBUGGEE [DEBUGGEE_ARGS]";
+    qWarning() << "usage: " << app.applicationName()
+               << " GAMMARAY INJECTOR DEBUGGEE [DEBUGGEE_ARGS]";
     return 1;
   }
 
