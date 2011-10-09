@@ -662,6 +662,16 @@ void writeJmp(FARPROC func, ULONG_PTR replacement)
     VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
 
     BYTE *cur = (BYTE *) func;
+
+    // If there is a short jump, its a jumptable and we dont have enough space after, so
+    // follow the short jump and write the jmp there
+    if (*cur == 0xE9) {
+        size_t old_offset = *(unsigned long *)(cur + 1);
+        FARPROC ret = (FARPROC)(((DWORD)(((ULONG_PTR) cur) + sizeof (DWORD))) + old_offset + 1);
+        writeJmp(ret, replacement);
+        return;
+    }
+
     *cur = 0xff;
     *(++cur) = 0x25;
 
