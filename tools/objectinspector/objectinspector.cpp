@@ -52,6 +52,8 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
                               Qt::QueuedConnection,
                               Q_ARG(QString, QLatin1String("Object")));
   }
+
+  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)));
 }
 
 void ObjectInspector::objectSelected(const QModelIndex &index)
@@ -62,6 +64,25 @@ void ObjectInspector::objectSelected(const QModelIndex &index)
   } else {
     ui->objectPropertyWidget->setObject(0);
   }
+}
+
+void ObjectInspector::widgetSelected(QWidget* widget)
+{
+  QAbstractItemModel *model = ui->objectTreeView->model();
+  const QModelIndexList indexList =
+  model->match(model->index(0, 0),
+              ObjectListModel::ObjectRole,
+              QVariant::fromValue<QObject*>(widget), 1,
+                Qt::MatchExactly | Qt::MatchRecursive);
+  if (indexList.isEmpty())
+    return;
+  const QModelIndex index = indexList.first();
+  ui->objectTreeView->selectionModel()->select(
+    index,
+    QItemSelectionModel::Select | QItemSelectionModel::Clear |
+    QItemSelectionModel::Rows | QItemSelectionModel::Current);
+  ui->objectTreeView->scrollTo(index);
+  objectSelected(index);
 }
 
 #include "objectinspector.moc"
