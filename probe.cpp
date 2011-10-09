@@ -532,11 +532,21 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
       }
     }
   }
+
+  // make modal dialogs non-modal so that the gammaray window is still reachable
   if (event->type() == QEvent::Show) {
     QDialog *dlg = qobject_cast<QDialog*>(receiver);
     if (dlg) {
       dlg->setWindowModality(Qt::NonModal);
     }
+  }
+
+  // we have no preloading hooks, so recover all objects we see
+  if (s_listener()->trackDestroyed && event->type() != QEvent::ChildAdded && event->type() != QEvent::ChildRemoved && !filterObject(receiver)) {
+    QWriteLocker lock(&m_lock);
+    const bool tracked = m_validObjects.contains(receiver);
+    if (!tracked)
+      objectAdded(receiver);
   }
   return QObject::eventFilter(receiver, event);
 }
