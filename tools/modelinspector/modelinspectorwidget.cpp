@@ -52,6 +52,8 @@ ModelInspectorWidget::ModelInspectorWidget(ModelInspector *modelInspector,
           SLOT(modelSelected(QModelIndex)));
   m_cellModel = new ModelCellModel(this);
   ui->modelCellView->setModel(m_cellModel);
+
+  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
 }
 
 void ModelInspectorWidget::modelSelected(const QModelIndex &index)
@@ -72,6 +74,28 @@ void ModelInspectorWidget::modelSelected(const QModelIndex &index)
 void ModelInspectorWidget::modelCellSelected(const QModelIndex &index)
 {
   m_cellModel->setModelIndex(index);
+}
+
+void ModelInspectorWidget::widgetSelected(QWidget* widget)
+{
+  QAbstractItemView* view = Util::findParentOfType<QAbstractItemView>(widget);
+  if (view && view->model()) {
+    QAbstractItemModel *model = ui->modelView->model();
+    const QModelIndexList indexList =
+      model->match(model->index(0, 0),
+                 ModelModel::ObjectRole,
+                 QVariant::fromValue<QObject*>(view->model()), 1,
+                 Qt::MatchExactly | Qt::MatchRecursive);
+    if (indexList.isEmpty())
+      return;
+    const QModelIndex index = indexList.first();
+    ui->modelView->selectionModel()->select(
+      index,
+      QItemSelectionModel::Select | QItemSelectionModel::Clear |
+      QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    ui->modelView->scrollTo(index);
+    modelSelected(index);
+  }
 }
 
 #include "modelinspectorwidget.moc"

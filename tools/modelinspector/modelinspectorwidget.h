@@ -45,6 +45,7 @@ class ModelInspectorWidget : public QWidget
   private slots:
     void modelSelected(const QModelIndex &index);
     void modelCellSelected(const QModelIndex &index);
+    void widgetSelected(QWidget* widget);
 
   private:
     QScopedPointer<Ui::ModelInspectorWidget> ui;
