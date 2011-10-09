@@ -580,47 +580,36 @@ const char *Probe::connectLocation(const char *member)
   return 0;
 }
 
-#ifdef Q_OS_WIN
-typedef void (*qt_addObject_ptr)(QObject *obj);
-typedef void (*qt_removeObject_ptr)(QObject *obj);
-typedef void (*qt_startup_hook_ptr)();
-typedef const char *(*qFlagLocation_ptr)(const char *method);
-
-qt_startup_hook_ptr next_qt_startup_hook = 0;
-qt_addObject_ptr next_qt_addObject = 0;
-qt_removeObject_ptr next_qt_removeObject = 0;
-qFlagLocation_ptr next_qFlagLocation = 0;
-#endif
-
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
   s_listener()->trackDestroyed = false;
-#ifndef Q_OS_WIN
-  static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
-#endif
+
   qDebug() << Q_FUNC_INFO;
   Probe::instance();
+#ifndef Q_OS_WIN
+  static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
   next_qt_startup_hook();
+#endif
 }
 
 extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 {
+  Probe::objectAdded(obj, true);
 #ifndef Q_OS_WIN
   static void (*next_qt_addObject)(QObject *obj) =
     (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
-#endif
-  Probe::objectAdded(obj, true);
   next_qt_addObject(obj);
+#endif
 }
 
 extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
 {
+  Probe::objectRemoved(obj);
 #ifndef Q_OS_WIN
   static void (*next_qt_removeObject)(QObject *obj) =
     (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
-#endif
-  Probe::objectRemoved(obj);
   next_qt_removeObject(obj);
+#endif
 }
 
 #ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
@@ -637,63 +626,59 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 #ifndef Q_OS_WIN
   static const char *(*next_qFlagLocation)(const char *method) =
     (const char * (*)(const char *method)) dlsym(RTLD_NEXT, "_Z13qFlagLocationPKc");
-#endif
+
   Q_ASSERT_X(next_qFlagLocation, "",
              "Recompile with GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES enabled, "
              "your compiler uses an unsupported C++ name mangling scheme");
   return next_qFlagLocation(method);
+#else
+  return method;
+#endif
 }
 #endif
 
 #ifdef Q_OS_WIN
 // IMPORTANT NOTE:
-// In QtCored4.dll, qtstartuphookaddr et. al. actually point to a JMP instruction
-// to the real qt_startup_hook code (the indirection is added by the linker as of
-// the /INCREMENTAL link option), so it's easy to change the offset to redirect
-// to our qt_startup_hook instead.
-// this might not work in release builds though.
+// We are writing a jmp instruction at the target address, if the function is not big,
+// we have to trust that the alignment gives us enough place to this jmp. Jumps are
+// 10 bytes long under 32 bit and 13 bytes long under x64. We will overwrite the
+// existing function, which cannot be reverted. It would be possible to save the content
+// and write it back when we unattach.
 
-template<typename T>
-T rewriteJmp(FARPROC func, T replacement) {
-  MEMORY_BASIC_INFORMATION mbi;
+void writeJmp(FARPROC func, ULONG_PTR replacement)
+{
+    DWORD oldProtect = 0;
 
-  if(!VirtualQuery(func, &mbi, sizeof(MEMORY_BASIC_INFORMATION))) {
-    qDebug() << "failed to query memory";
-    return 0;
-  }
-  if(!VirtualProtect(mbi.BaseAddress, mbi.RegionSize, PAGE_READWRITE, &mbi.Protect)) {
-    qDebug() << "failed to protect memory";
-    return 0;
-  }
+    //Jump takes 10 bytes under x86 and 14 bytes under x64
+    int worstSize;
+#ifdef _M_IX86
+    worstSize = 10;
+#else ifdef _M_X64
+    worstSize = 14;
+#endif
 
-  unsigned char* pjmpbyte_add = reinterpret_cast<unsigned char*>(func);
+    VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
 
-  union {
-    PBYTE pB;
-    PINT pI;
-  } ip;
+    BYTE *cur = (BYTE *) func;
+    *cur = 0xff;
+    *(++cur) = 0x25;
 
-  ip.pB = pjmpbyte_add;
-  // make sure that the first instruction is a jump instruction
-  *ip.pB++ = 0xE9;
+#ifdef _M_IX86
+    *((DWORD *) ++cur) = (DWORD)(((ULONG_PTR) cur) + sizeof (DWORD));
+    cur += sizeof (DWORD);
+    *((ULONG_PTR *)cur) = replacement;
+#else ifdef _M_X64
+    *((DWORD *) ++cur) = 0;
+    cur += sizeof (DWORD);
+    *((ULONG_PTR *)cur) = replacement;
+#endif
 
-  // read in the old offset
-  size_t old_offset = *(unsigned long *)(pjmpbyte_add + 1);
-  // make sure that we count the old_offset in bytes, and not in dwords!
-  T ret = (T)((unsigned char *)(ip.pI + 1) + old_offset);
-  // save the original value into next, addresses are calculated in bytes
-
-  // make our memory the new jmpbyte_add destination
-  *ip.pI++ = (unsigned long)replacement - (unsigned long)(ip.pI + 1);
-
-  DWORD dummy;
-  VirtualProtect(mbi.BaseAddress, mbi.RegionSize, mbi.Protect, &dummy);
-  return ret;
+    VirtualProtect(func, worstSize, oldProtect, &oldProtect);
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
 
-BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */)
+BOOL WINAPI DllMain(HINSTANCE /*hInstance*/, DWORD dwReason, LPVOID/* lpvReserved */)
 {
   // First retrieve the right module, if Qt is linked in release or debug
   HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");
@@ -737,21 +722,18 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID/* lpvReserved */
   case DLL_PROCESS_ATTACH:
   {
     // write ourself into the hook chain
-    next_qt_startup_hook = rewriteJmp<qt_startup_hook_ptr>(qtstartuphookaddr, qt_startup_hook);
-    next_qt_addObject = rewriteJmp<qt_addObject_ptr>(qtaddobjectaddr, qt_addObject);
-    next_qt_removeObject = rewriteJmp<qt_removeObject_ptr>(qtremobjectaddr, qt_removeObject);
-    next_qFlagLocation = rewriteJmp<qFlagLocation_ptr>(qFlagLocationaddr, myFlagLocation);
+    writeJmp(qtstartuphookaddr, (ULONG_PTR)qt_startup_hook);
+    writeJmp(qtaddobjectaddr, (ULONG_PTR)qt_addObject);
+    writeJmp(qtremobjectaddr, (ULONG_PTR)qt_removeObject);
+    writeJmp(qFlagLocationaddr, (ULONG_PTR)myFlagLocation);
     gammaray_probe_inject();
     break;
   }
   case DLL_PROCESS_DETACH:
   {
-    // in case the probe dll gets unloaded, lets remove ourselves from the hook chain
-    rewriteJmp<qt_startup_hook_ptr>(qtstartuphookaddr, next_qt_startup_hook);
-    rewriteJmp<qt_addObject_ptr>(qtaddobjectaddr, next_qt_addObject);
-    rewriteJmp<qt_removeObject_ptr>(qtremobjectaddr, next_qt_removeObject);
-    rewriteJmp<qFlagLocation_ptr>(qFlagLocationaddr, next_qFlagLocation);
-    break;
+      //Unloading does not work, because we overwrite existing code
+      exit(-1);
+      break;
   }
   };
   return TRUE;
