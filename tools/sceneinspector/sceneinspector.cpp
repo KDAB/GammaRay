@@ -34,6 +34,7 @@
 
 #include <QDebug>
 #include <QGraphicsItem>
+#include <qgraphicsview.h>
 
 using namespace GammaRay;
 
@@ -43,8 +44,8 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QWidget *parent)
 {
   ui->setupUi(this);
 
-  connect(probe->probe(), SIGNAL(graphicsItemSelected(QGraphicsItem*)),
-          SLOT(sceneItemSelected(QGraphicsItem*)));
+  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
+          SLOT(widgetSelected(QWidget*,QPoint)));
 
   ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy =
     new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
@@ -85,6 +86,18 @@ void SceneInspector::sceneItemSelected(const QModelIndex &index)
     ui->graphicsSceneView->showGraphicsItem(item);
   } else {
     ui->scenePropertyWidget->setObject(0);
+  }
+}
+
+void SceneInspector::widgetSelected(QWidget* widget, const QPoint& pos)
+{
+  QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(widget);
+  if (qgv) {
+    // TODO: select qgv->scene() first, right now this only works for a single scene
+    QGraphicsItem *item = qgv->itemAt(widget->mapTo(qgv, pos));
+    if (item) {
+      sceneItemSelected(item);
+    }
   }
 }
 

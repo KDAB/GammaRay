@@ -30,6 +30,7 @@
 #include <QSet>
 #include <QQueue>
 
+class QPoint;
 class QTimer;
 class QGraphicsItem;
 
@@ -85,8 +86,10 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     bool isValidObject(QObject *obj) const;
 
   signals:
-    void widgetSelected(QWidget *widget);
-    void graphicsItemSelected(QGraphicsItem *item);
+    /**
+     * Emitted when the user selected @p widget at position @p pos in the probed application.
+     */
+    void widgetSelected(QWidget *widget, const QPoint &pos);
 
     void objectCreated(QObject *obj);
     void objectDestroyed(QObject *obj);

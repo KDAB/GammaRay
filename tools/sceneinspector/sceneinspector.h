@@ -44,7 +44,8 @@ class SceneInspector : public QWidget
   private slots:
     void sceneSelected(int index);
     void sceneItemSelected(const QModelIndex &index);
-    void sceneItemSelected(QGraphicsItem *item);
+    void sceneItemSelected(QGraphicsItem* item);
+    void widgetSelected(QWidget *item, const QPoint &pos);
 
   private:
     QScopedPointer<Ui::SceneInspector> ui;

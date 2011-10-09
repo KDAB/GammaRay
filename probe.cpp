@@ -36,7 +36,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QThread>
 #include <QtGui/QMouseEvent>
-#include <QtGui/QGraphicsView>
 #include <QtGui/QDialog>
 #include <QtCore/QTimer>
 
@@ -521,14 +520,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
         mouseEv->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier)) {
       QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
       if (widget) {
-        emit widgetSelected(widget);
-        QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(widget);
-        if (qgv) {
-          QGraphicsItem *item = qgv->itemAt(qgv->mapFromGlobal(mouseEv->globalPos()));
-          if (item) {
-            emit graphicsItemSelected(item);
-          }
-        }
+        emit widgetSelected(widget, widget->mapFromGlobal(mouseEv->globalPos()));
       }
     }
   }

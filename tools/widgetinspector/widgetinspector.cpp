@@ -40,7 +40,7 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
 
   m_overlayWidget->hide();
 
-  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*)), SLOT(widgetSelected(QWidget*)));
+  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)));
 
   ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy =
     new ObjectTypeFilterProxyModel<QWidget>(this);
