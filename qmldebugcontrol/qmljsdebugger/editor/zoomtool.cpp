@@ -325,4 +325,6 @@ qreal ZoomTool::nextZoomScale(ZoomDirection direction) const
 
 } // namespace QmlJSDebugger
 
+#ifdef CMAKE_BUILD
 #include "zoomtool.moc"
+#endif

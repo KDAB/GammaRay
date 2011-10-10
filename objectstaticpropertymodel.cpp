@@ -125,4 +125,6 @@ Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
   return flags;
 }
 
+#ifdef CMAKE_BUILD
 #include "objectstaticpropertymodel.moc"
+#endif

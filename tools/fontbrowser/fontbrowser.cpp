@@ -101,4 +101,6 @@ void FontBrowser::updateFonts(const QItemSelection &selected, const QItemSelecti
   m_selectedFontModel->updateFonts(currentFonts);
 }
 
+#ifdef CMAKE_BUILD
 #include "fontbrowser.moc"
+#endif

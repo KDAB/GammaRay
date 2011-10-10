@@ -176,5 +176,7 @@ Q_EXPORT_PLUGIN2(tcpserver, QTcpServerConnection)
 
 QT_END_NAMESPACE
 
+#ifdef CMAKE_BUILD
 #include "qtcpserverconnection.moc"
+#endif
 

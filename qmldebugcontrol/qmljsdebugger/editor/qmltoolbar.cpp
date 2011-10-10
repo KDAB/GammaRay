@@ -318,4 +318,6 @@ void QmlToolBar::activateToQml()
 
 } // namespace QmlJSDebugger
 
+#ifdef CMAKE_BUILD
 #include "qmltoolbar.moc"
+#endif

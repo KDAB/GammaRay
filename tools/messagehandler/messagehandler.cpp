@@ -214,4 +214,6 @@ QWidget *MessageHandlerFactory::createWidget(ProbeInterface *probe, QWidget *par
   return widget;
 }
 
+#ifdef CMAKE_BUILD
 #include "messagehandler.moc"
+#endif

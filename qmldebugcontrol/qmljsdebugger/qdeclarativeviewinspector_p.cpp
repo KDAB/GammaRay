@@ -930,5 +930,7 @@ void QDeclarativeViewInspectorPrivate::createToolBox()
 
 } // namespace QmlJSDebugger
 
+#ifdef CMAKE_BUILD
 #include "qdeclarativeviewinspector.moc"
 #include "qdeclarativeviewinspector_p.moc"
+#endif

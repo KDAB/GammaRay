@@ -212,5 +212,7 @@ QModelIndex ObjectTreeModel::indexForObject(QObject *object) const
   return index(row, 0, parentIndex);
 }
 
+#ifdef CMAKE_BUILD
 #include "objecttreemodel.moc"
+#endif
 

@@ -153,4 +153,6 @@ QVector<QAbstractProxyModel*> ModelModel::proxiesForModel(QAbstractItemModel* mo
   return proxies;
 }
 
+#ifdef CMAKE_BUILD
 #include "modelmodel.moc"
+#endif

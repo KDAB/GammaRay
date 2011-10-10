@@ -245,6 +245,8 @@ void Canvas::clearInterval(const QScriptValue &handler)
     CanvasTimer::removeTimer(handler);
 }
 
+#ifdef CMAKE_BUILD
 #include "qdeclarativecanvas.moc"
+#endif
 
 QT_END_NAMESPACE

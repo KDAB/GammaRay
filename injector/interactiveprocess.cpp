@@ -47,4 +47,6 @@ void InteractiveProcess::setupChildProcess()
   ::dup2(stdinClone, fileno(stdin));
 }
 
+#ifdef CMAKE_BUILD
 #include "interactiveprocess.moc"
+#endif

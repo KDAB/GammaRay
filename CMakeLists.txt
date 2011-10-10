@@ -12,6 +12,7 @@
 
 project(GammaRay)
 cmake_minimum_required(VERSION 2.8)
+add_definitions(-DCMAKE_BUILD)
 
 if(NOT Prog_NAME)
   set(Prog_NAME "GammaRay")

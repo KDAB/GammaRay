@@ -119,4 +119,6 @@ void ObjectListModel::objectRemovedMainThread(QObject *obj)
   }
 }
 
+#ifdef CMAKE_BUILD
 #include "objectlistmodel.moc"
+#endif

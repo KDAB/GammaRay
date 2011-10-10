@@ -239,4 +239,6 @@ void TimelineView::updateTimeline(bool updateStartX)
     prevMax = maxsample;
 }
 
+#ifdef CMAKE_BUILD
 #include "timelineview.moc"
+#endif

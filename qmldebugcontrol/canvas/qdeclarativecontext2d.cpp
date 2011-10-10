@@ -1127,6 +1127,8 @@ QMatrix Context2D::worldMatrix() const
     return mat;
 }
 
+#ifdef CMAKE_BUILD
 #include "qdeclarativecontext2d.moc"
+#endif
 
 QT_END_NAMESPACE

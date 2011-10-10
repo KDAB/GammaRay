@@ -57,4 +57,6 @@ void SelectionModelInspector::selectionModelSelected(const QItemSelection &selec
   }
 }
 
+#ifdef CMAKE_BUILD
 #include "selectionmodelinspector.moc"
+#endif

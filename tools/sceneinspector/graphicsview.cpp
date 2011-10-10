@@ -106,4 +106,6 @@ void GraphicsView::drawForeground(QPainter *painter, const QRectF &rect)
   }
 }
 
+#ifdef CMAKE_BUILD
 #include "graphicsview.moc"
+#endif

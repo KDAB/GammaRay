@@ -751,4 +751,6 @@ void KIdentityProxyModel::resetInternalData()
 
 }
 
+#ifdef CMAKE_BUILD
 #include "kidentityproxymodel.moc"
+#endif

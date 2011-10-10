@@ -121,4 +121,6 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
   sceneItemSelected(index);
 }
 
+#ifdef CMAKE_BUILD
 #include "sceneinspector.moc"
+#endif

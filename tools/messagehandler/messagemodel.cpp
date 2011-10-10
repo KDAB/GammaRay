@@ -137,4 +137,6 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
   return QVariant();
 }
 
+#ifdef CMAKE_BUILD
 #include "messagemodel.moc"
+#endif

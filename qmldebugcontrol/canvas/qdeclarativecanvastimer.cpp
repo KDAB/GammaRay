@@ -87,4 +87,6 @@ void CanvasTimer::removeTimer(const QScriptValue &val)
 
 QT_END_NAMESPACE
 
+#ifdef CMAKE_BUILD
 #include "qdeclarativecanvastimer.moc"
+#endif

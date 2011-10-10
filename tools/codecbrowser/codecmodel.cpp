@@ -189,4 +189,6 @@ QVariant SelectedCodecsModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
+#ifdef CMAKE_BUILD
 #include "codecmodel.moc"
+#endif

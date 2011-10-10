@@ -187,4 +187,6 @@ QString AbstractLiveEditTool::titleForItem(QGraphicsItem *item)
 
 } // namespace QmlJSDebugger
 
+#ifdef CMAKE_BUILD
 #include "abstractliveedittool.moc"
+#endif

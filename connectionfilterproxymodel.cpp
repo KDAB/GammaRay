@@ -85,4 +85,6 @@ bool ConnectionFilterProxyModel::lessThan(const QModelIndex &left, const QModelI
   }
 }
 
+#ifdef CMAKE_BUILD
 #include "connectionfilterproxymodel.moc"
+#endif

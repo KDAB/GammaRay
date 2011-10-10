@@ -89,4 +89,6 @@ void AttachDialog::updateProcesses()
   m_model->setProcesses(processList());
 }
 
+#ifdef CMAKE_BUILD
 #include "attachdialog.moc"
+#endif

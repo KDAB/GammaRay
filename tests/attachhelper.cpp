@@ -109,4 +109,6 @@ int main(int argc, char **argv) {
   return app.exec();
 }
 
+#ifdef CMAKE_BUILD
 #include "attachhelper.moc"
+#endif

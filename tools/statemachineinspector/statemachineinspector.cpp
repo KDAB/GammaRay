@@ -80,4 +80,6 @@ void StateMachineInspector::stateSelected(const QItemSelection &selected,
   }
 }
 
+#ifdef CMAKE_BUILD
 #include "statemachineinspector.moc"
+#endif

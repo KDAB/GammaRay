@@ -137,4 +137,6 @@ QVariant ModelCellModel::headerData(int section, Qt::Orientation orientation, in
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+#ifdef CMAKE_BUILD
 #include "modelcellmodel.moc"
+#endif

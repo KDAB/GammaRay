@@ -167,4 +167,6 @@ bool FontModel::setData(const QModelIndex &index, const QVariant &value, int rol
   return QAbstractItemModel::setData(index, value, role);
 }
 
+#ifdef CMAKE_BUILD
 #include "fontmodel.moc"
+#endif

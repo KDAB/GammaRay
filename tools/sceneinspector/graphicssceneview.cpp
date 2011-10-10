@@ -71,4 +71,6 @@ void GraphicsSceneView::itemCoordinatesChanged(const QPointF &coord)
                               arg(coord.y(), 0, 'f', 2));
 }
 
+#ifdef CMAKE_BUILD
 #include "graphicssceneview.moc"
+#endif

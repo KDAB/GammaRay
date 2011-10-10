@@ -144,4 +144,6 @@ void ToolModel::objectAdded(const QMetaObject *mo)
   }
 }
 
+#ifdef CMAKE_BUILD
 #include "toolmodel.moc"
+#endif

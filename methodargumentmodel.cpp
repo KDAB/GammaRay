@@ -151,4 +151,6 @@ QVector<SafeArgument> MethodArgumentModel::arguments() const
   return args;
 }
 
+#ifdef CMAKE_BUILD
 #include "methodargumentmodel.moc"
+#endif

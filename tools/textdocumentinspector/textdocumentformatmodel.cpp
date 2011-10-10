@@ -93,4 +93,6 @@ QVariant TextDocumentFormatModel::headerData(int section,
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+#ifdef CMAKE_BUILD
 #include "textdocumentformatmodel.moc"
+#endif

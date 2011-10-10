@@ -123,4 +123,6 @@ void ToolBarColorBox::copyColorToClipboard()
 
 } // namespace QmlJSDebugger
 
+#ifdef CMAKE_BUILD
 #include "toolbarcolorbox.moc"
+#endif

@@ -94,4 +94,6 @@ QVariant MetaTypesModel::headerData(int section, Qt::Orientation orientation, in
   return "MetaTypeId";
 }
 
+#ifdef CMAKE_BUILD
 #include "metatypesmodel.moc"
+#endif

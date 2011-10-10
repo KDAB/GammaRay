@@ -84,4 +84,6 @@ void MethodInvocationDialog::accept()
   QDialog::accept();
 }
 
+#ifdef CMAKE_BUILD
 #include "methodinvocationdialog.moc"
+#endif

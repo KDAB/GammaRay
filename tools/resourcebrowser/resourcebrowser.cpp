@@ -69,4 +69,6 @@ void ResourceBrowser::resourceSelected(const QItemSelection &selected,
 
 }
 
+#ifdef CMAKE_BUILD
 #include "resourcebrowser.moc"
+#endif

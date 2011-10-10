@@ -176,4 +176,6 @@ bool TraceWindow::isRecording() const
 } // namespace Internal
 } // namespace QmlProfiler
 
+#ifdef CMAKE_BUILD
 #include "tracewindow.moc"
+#endif

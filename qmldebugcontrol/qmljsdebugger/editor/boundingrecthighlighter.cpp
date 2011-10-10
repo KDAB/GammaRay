@@ -229,4 +229,6 @@ void BoundingRectHighlighter::refresh()
 
 } // namespace QmlJSDebugger
 
+#ifdef CMAKE_BUILD
 #include "boundingrecthighlighter.moc"
+#endif

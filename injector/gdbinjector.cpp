@@ -199,4 +199,6 @@ void GdbInjector::readyReadStandardOutput()
   }
 }
 
+#ifdef CMAKE_BUILD
 #include "gdbinjector.moc"
+#endif

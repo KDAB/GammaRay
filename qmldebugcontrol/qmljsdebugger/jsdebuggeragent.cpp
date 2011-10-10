@@ -667,4 +667,6 @@ void JSDebuggerAgent::baseMessageReceived(const QByteArray &message)
 
 } // namespace QmlJSDebugger
 
+#ifdef CMAKE_BUILD
 #include "jsdebuggeragent.moc"
+#endif
