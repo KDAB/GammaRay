@@ -24,6 +24,8 @@
 #include "resourcebrowser.h"
 #include "ui_resourcebrowser.h"
 
+#include "resourcefiltermodel.h"
+
 #include <qt/resourcemodel.h>
 
 using namespace GammaRay;
@@ -36,7 +38,9 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QWidget *parent)
   ui->setupUi(this);
 
   ResourceModel *resourceModel = new ResourceModel(this);
-  ui->treeView->setModel(resourceModel);
+  ResourceFilterModel *proxy = new ResourceFilterModel(this);
+  proxy->setSourceModel(resourceModel);
+  ui->treeView->setModel(proxy);
   ui->treeView->expandAll();
   connect(ui->treeView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

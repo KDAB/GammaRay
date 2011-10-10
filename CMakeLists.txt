@@ -210,6 +210,7 @@ set(gammaray_srcs
   tools/modelinspector/modelinspectorwidget.cpp
   tools/objectinspector/objectinspector.cpp
   tools/resourcebrowser/resourcebrowser.cpp
+  tools/resourcebrowser/resourcefiltermodel.cpp
   tools/sceneinspector/sceneinspector.cpp
   tools/scriptenginedebugger/scriptenginedebugger.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
