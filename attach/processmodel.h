@@ -39,6 +39,7 @@ class ProcessModel : public QAbstractTableModel
     void setProcesses(const QList<ProcData> &process);
     ProcData dataForIndex(const QModelIndex &index) const;
     ProcData dataForRow(int row) const;
+    QModelIndex indexForPid(const QString& pid) const;
 
     void clear();
 

@@ -70,7 +70,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   connect(m_timer, SIGNAL(timeout()), this, SLOT(updateProcesses()));
   m_timer->start(1000);
 
-  selectionChanged();
   updateProcesses();
 }
 
@@ -86,7 +85,20 @@ QString AttachDialog::pid() const
 
 void AttachDialog::updateProcesses()
 {
+  QString selectedPid;
+  int oldCol = 0;
+  if (ui.view->currentIndex().isValid()) {
+    selectedPid = pid();
+    oldCol = ui.view->currentIndex().column();
+  }
+
   m_model->setProcesses(processList());
+
+  if (!selectedPid.isEmpty()) {
+    ui.view->setCurrentIndex(m_proxyModel->mapFromSource(m_model->index(m_model->indexForPid(selectedPid).row(), oldCol)));
+  }
+
+  selectionChanged();
 }
 
 #ifdef CMAKE_BUILD

@@ -58,6 +58,16 @@ ProcData ProcessModel::dataForRow(int row) const
   return m_data.at(row);
 }
 
+QModelIndex ProcessModel::indexForPid(const QString& pid) const
+{
+  for (int i = 0; i < m_data.size(); ++i) {
+    if (m_data.at(i).ppid == pid) {
+      return index(i, 0);
+    }
+  }
+  return QModelIndex();
+}
+
 QVariant ProcessModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (role != Qt::DisplayRole || orientation != Qt::Horizontal) {
