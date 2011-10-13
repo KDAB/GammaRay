@@ -166,6 +166,4 @@ void QmlProfilerTraceClient::messageReceived(const QByteArray &data)
     }
 }
 
-#ifdef CMAKE_BUILD
 #include "qmlprofilertraceclient.moc"
-#endif

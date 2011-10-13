@@ -428,6 +428,4 @@ void LiveSelectionTool::selectUnderPoint(QMouseEvent *event)
 
 } // namespace QmlJSDebugger
 
-#ifdef CMAKE_BUILD
 #include "liveselectiontool.moc"
-#endif

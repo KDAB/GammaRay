@@ -49,6 +49,4 @@ ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QWidget *parent)
   }
 }
 
-#ifdef CMAKE_BUILD
 #include "connectioninspector.moc"
-#endif

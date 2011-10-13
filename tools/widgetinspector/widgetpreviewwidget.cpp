@@ -76,6 +76,4 @@ bool WidgetPreviewWidget::eventFilter(QObject *receiver, QEvent *event)
   return QWidget::eventFilter(receiver, event);
 }
 
-#ifdef CMAKE_BUILD
 #include "widgetpreviewwidget.moc"
-#endif

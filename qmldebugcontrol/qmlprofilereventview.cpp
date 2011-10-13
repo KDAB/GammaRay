@@ -542,6 +542,4 @@ void QmlProfilerEventsView::jumpToItem(const QModelIndex &index)
 } // namespace Internal
 } // namespace QmlProfiler
 
-#ifdef CMAKE_BUILD
 #include "qmlprofilereventview.moc"
-#endif

@@ -143,6 +143,4 @@ void MainWindow::toolSelected()
   ui.toolStack->setCurrentIndex(ui.toolStack->indexOf(toolWidget));
 }
 
-#ifdef CMAKE_BUILD
 #include "mainwindow.moc"
-#endif

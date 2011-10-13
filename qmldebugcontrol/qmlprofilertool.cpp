@@ -555,6 +555,4 @@ void QmlProfilerTool::startTool(StartMode mode)
 }
 #endif
 
-#ifdef CMAKE_BUILD
 #include "qmlprofilertool.moc"
-#endif

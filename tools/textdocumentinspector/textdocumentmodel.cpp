@@ -139,6 +139,4 @@ void TextDocumentModel::appendRow(QStandardItem *parent, QStandardItem *item,
   parent->appendRow(QList<QStandardItem*>() << item << formatItem(format));
 }
 
-#ifdef CMAKE_BUILD
 #include "textdocumentmodel.moc"
-#endif

@@ -71,6 +71,4 @@ ModelModel *ModelInspector::modelModel() const
   return m_modelModel;
 }
 
-#ifdef CMAKE_BUILD
 #include "modelinspector.moc"
-#endif

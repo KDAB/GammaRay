@@ -39,6 +39,4 @@ MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QWidget *parent)
   ui->metaTypeView->setModel(mtm);
 }
 
-#ifdef CMAKE_BUILD
 #include "metatypebrowser.moc"
-#endif

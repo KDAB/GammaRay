@@ -67,6 +67,4 @@ void CodecBrowser::updateCodecs(const QItemSelection &selected,
   m_selectedCodecsModel->setCodecs(currentCodecNames);
 }
 
-#ifdef CMAKE_BUILD
 #include "codecbrowser.moc"
-#endif

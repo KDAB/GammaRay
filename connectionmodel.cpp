@@ -290,6 +290,4 @@ int ConnectionModel::rowCount(const QModelIndex &parent) const
   return m_connections.size();
 }
 
-#ifdef CMAKE_BUILD
 #include "connectionmodel.moc"
-#endif

@@ -120,6 +120,4 @@ void ColorPickerTool::pickColor(const QPoint &pos)
 
 } // namespace QmlJSDebugger
 
-#ifdef CMAKE_BUILD
 #include "colorpickertool.moc"
-#endif

@@ -101,6 +101,4 @@ void AttachDialog::updateProcesses()
   selectionChanged();
 }
 
-#ifdef CMAKE_BUILD
 #include "attachdialog.moc"
-#endif

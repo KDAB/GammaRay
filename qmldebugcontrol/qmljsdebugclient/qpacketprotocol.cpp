@@ -375,6 +375,4 @@ QPacketAutoSend::~QPacketAutoSend()
 
 } // namespace QmlJsDebugClient
 
-#ifdef CMAKE_BUILD
 #include <qpacketprotocol.moc>
-#endif

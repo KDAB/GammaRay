@@ -90,6 +90,4 @@ void WidgetInspector::widgetSelected(QWidget *widget)
   widgetSelected(index);
 }
 
-#ifdef CMAKE_BUILD
 #include "widgetinspector.moc"
-#endif

@@ -102,6 +102,4 @@ QLineEdit* KFilterProxySearchLine::lineEdit() const
     return d->searchLine;
 }
 
-#ifdef CMAKE_BUILD
 #include "kfilterproxysearchline.moc"
-#endif

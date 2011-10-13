@@ -262,6 +262,4 @@ void TestMain::threading()
 
 QTEST_MAIN(TestMain)
 
-#ifdef CMAKE_BUILD
 #include "test_connections.moc"
-#endif

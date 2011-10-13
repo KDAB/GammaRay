@@ -343,6 +343,4 @@ void QDeclarativeDebugClient::messageReceived(const QByteArray &)
 
 } // namespace QmlJsDebugClient
 
-#ifdef CMAKE_BUILD
 #include <qdeclarativedebugclient.moc>
-#endif

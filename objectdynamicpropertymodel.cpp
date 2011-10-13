@@ -104,6 +104,4 @@ int ObjectDynamicPropertyModel::rowCount(const QModelIndex &parent) const
   return m_obj.data()->dynamicPropertyNames().size();
 }
 
-#ifdef CMAKE_BUILD
 #include "objectdynamicpropertymodel.moc"
-#endif

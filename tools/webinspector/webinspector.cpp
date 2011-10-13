@@ -55,6 +55,4 @@ void WebInspector::webPageSelected(int index)
   }
 }
 
-#ifdef CMAKE_BUILD
 #include "webinspector.moc"
-#endif

@@ -438,6 +438,4 @@ void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
 
 }
 
-#ifdef CMAKE_BUILD
 #include "krecursivefilterproxymodel.moc"
-#endif

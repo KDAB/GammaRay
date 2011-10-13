@@ -46,6 +46,4 @@ bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex& so
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
-#ifdef CMAKE_BUILD
 #include "resourcefiltermodel.moc"
-#endif

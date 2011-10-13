@@ -285,7 +285,5 @@ void QDeclarativeInspectorService::sendMessage(const QByteArray &message)
 
 } // namespace QmlJSDebugger
 
-#ifdef CMAKE_BUILD
 #include "qdeclarativeinspectorservice.moc"
-#endif
 

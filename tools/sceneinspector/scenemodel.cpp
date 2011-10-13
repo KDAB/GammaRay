@@ -146,6 +146,4 @@ QVariant SceneModel::headerData(int section, Qt::Orientation orientation, int ro
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-#ifdef CMAKE_BUILD
 #include "scenemodel.moc"
-#endif

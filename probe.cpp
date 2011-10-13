@@ -765,6 +765,4 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
   }
 }
 
-#ifdef CMAKE_BUILD
 #include "probe.moc"
-#endif

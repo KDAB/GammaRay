@@ -163,6 +163,4 @@ QPixmap TiledCanvas::getTile(int xx, int yy)
 }
 
 
-#ifdef CMAKE_BUILD
 #include "qdeclarativetiledcanvas.moc"
-#endif

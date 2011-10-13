@@ -44,6 +44,4 @@ QVariant SingleColumnObjectProxyModel::data(const QModelIndex &proxyIndex, int r
   return KIdentityProxyModel::data(proxyIndex, role);
 }
 
-#ifdef CMAKE_BUILD
 #include "singlecolumnobjectproxymodel.moc"
-#endif

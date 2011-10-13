@@ -98,6 +98,4 @@ void ModelInspectorWidget::widgetSelected(QWidget* widget)
   }
 }
 
-#ifdef CMAKE_BUILD
 #include "modelinspectorwidget.moc"
-#endif

@@ -79,6 +79,4 @@ void ScriptEngineDebugger::scriptEngineSelected(int index)
   }
 }
 
-#ifdef CMAKE_BUILD
 #include "scriptenginedebugger.moc"
-#endif

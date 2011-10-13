@@ -111,6 +111,4 @@ void PropertyWidget::methodActivated(const QModelIndex &index)
   }
 }
 
-#ifdef CMAKE_BUILD
 #include "propertywidget.moc"
-#endif

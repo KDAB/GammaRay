@@ -77,6 +77,4 @@ void PromoLabel::updatePixmap()
                                            palette().foreground().color())));
 }
 
-#ifdef CMAKE_BUILD
 #include "promolabel.moc"
-#endif

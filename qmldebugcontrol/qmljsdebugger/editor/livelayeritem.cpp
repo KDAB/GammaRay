@@ -81,6 +81,4 @@ QList<QGraphicsItem*> LiveLayerItem::findAllChildItems(const QGraphicsItem *item
 
 } // namespace QmlJSDebugger
 
-#ifdef CMAKE_BUILD
 #include "livelayeritem.moc"
-#endif

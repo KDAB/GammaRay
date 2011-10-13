@@ -1396,6 +1396,4 @@ QFileInfo ResourceModelPrivate::resolvedInfo(QFileInfo info)
 
 QT_END_NAMESPACE
 
-#ifdef CMAKE_BUILD
 #include "resourcemodel.moc"
-#endif
