@@ -75,7 +75,7 @@ set(
 )
 
 if(WIN32)
-  add_definitions(-DUNICODE)
+  add_definitions(-DUNICODE -D_UNICODE)
 endif()
 
 if(APPLE)
@@ -230,7 +230,9 @@ set(gammaray_srcs
 if(NOT WIN32)
   set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
 else()
-  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_win.cpp)
+  set(gammaray_srcs ${gammaray_srcs}
+                    tools/messagehandler/backtrace_win.cpp
+                    tools/messagehandler/StackWalker.cpp)
 endif()
 
 qt4_automoc(${gammaray_srcs} ${gammaray_runner_srcs})
