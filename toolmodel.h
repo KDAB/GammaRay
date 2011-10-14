@@ -29,6 +29,7 @@
 #include <QSet>
 #include <QPointer>
 
+class QStringList;
 namespace GammaRay {
 
 class ToolFactory;
@@ -56,6 +57,9 @@ class ToolModel : public QAbstractListModel
   private:
     /** Check if we have to activate tools for this type */
     void objectAdded(const QMetaObject *mo);
+
+    /** List all possible tool plugin files. */
+    QStringList plugins() const;
 
   private:
     QVector<ToolFactory*> m_tools;

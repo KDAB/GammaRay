@@ -40,8 +40,13 @@
 #include "tools/widgetinspector/widgetinspector.h"
 #include "tools/messagehandler/messagehandler.h"
 
-#include <QDebug>
 #include "probe.h"
+
+#include <QCoreApplication>
+#include <QDebug>
+#include <QDir>
+#include <QLibrary>
+#include <QPluginLoader>
 
 using namespace GammaRay;
 
@@ -65,7 +70,19 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new MessageHandlerFactory(this));
 
   // tool plugins
-  // TODO
+  foreach ( const QString &pluginFile, plugins() ) {
+    QPluginLoader *loader = new QPluginLoader( pluginFile, this );
+    if ( loader->load() ) {
+      ToolFactory *factory = qobject_cast<ToolFactory*>( loader->instance() );
+      if ( factory ) {
+        m_tools.push_back( factory );
+        continue;
+      }
+    } else {
+      qDebug() << loader->errorString();
+    }
+    delete loader;
+  }
 
   // everything but the object inspector is inactive initially
   for (int i = 1; i < m_tools.size(); ++i) {
@@ -143,5 +160,19 @@ void ToolModel::objectAdded(const QMetaObject *mo)
     objectAdded(mo->superClass());
   }
 }
+
+QStringList ToolModel::plugins() const
+{
+  QStringList r;
+  foreach ( const QString &pluginDir, QCoreApplication::libraryPaths() ) {
+    QDir dir( pluginDir + QLatin1String( "/gammaray/" ) );
+    foreach ( const QString &plugin, dir.entryList( QDir::Files ) ) {
+      if ( QLibrary::isLibrary( plugin ) )
+        r.push_back( plugin );
+    }
+  }
+  return r;
+}
+
 
 #include "toolmodel.moc"
