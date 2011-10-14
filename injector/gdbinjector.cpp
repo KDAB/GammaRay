@@ -62,9 +62,9 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
   execGdbCmd("run");
   execGdbCmd("sha QtCore");
   // either this
-  execGdbCmd("break QCoreApplication::exec");
+  execGdbCmd("break QCoreApplication::exec()");
   // or this for unit tests should hit
-  execGdbCmd("break QTest::qExec");
+  execGdbCmd("break QTest::qExec()");
   execGdbCmd("continue");
 
   return injectAndDetach(probeDll, probeFunc);
