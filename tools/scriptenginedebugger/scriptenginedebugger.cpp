@@ -69,7 +69,7 @@ ScriptEngineDebugger::~ScriptEngineDebugger()
 void ScriptEngineDebugger::scriptEngineSelected(int index)
 {
   QObject *obj =
-    ui->scriptEngineComboBox->itemData(index, ObjectListModel::ObjectRole).value<QObject*>();
+    ui->scriptEngineComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QScriptEngine *engine = qobject_cast<QScriptEngine*>(obj);
   if (engine) {
     qDebug() << "Attaching debugger" << engine;

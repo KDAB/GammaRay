@@ -26,7 +26,7 @@
 
 #include "scenemodel.h"
 
-#include <objectlistmodel.h>
+#include <objectmodel.h>
 #include <objecttypefilterproxymodel.h>
 #include <singlecolumnobjectproxymodel.h>
 #include <probeinterface.h>
@@ -70,7 +70,7 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QWidget *parent)
 
 void SceneInspector::sceneSelected(int index)
 {
-  QObject *obj = ui->sceneComboBox->itemData(index, ObjectListModel::ObjectRole).value<QObject*>();
+  QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
   qDebug() << Q_FUNC_INFO << scene << obj;
 

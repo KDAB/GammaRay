@@ -29,7 +29,7 @@
 #include <probeinterface.h>
 #include <kde/krecursivefilterproxymodel.h>
 #include <objecttypefilterproxymodel.h>
-#include <objecttreemodel.h>
+#include <objectmodel.h>
 
 using namespace GammaRay;
 
@@ -57,7 +57,7 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
 void WidgetInspector::widgetSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
-    QObject *obj = index.data(ObjectListModel::ObjectRole).value<QObject*>();
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     ui->widgetPropertyWidget->setObject(obj);
     ui->widgetPreviewWidget->setWidget(qobject_cast<QWidget*>(obj));
 
@@ -75,7 +75,7 @@ void WidgetInspector::widgetSelected(QWidget *widget)
   QAbstractItemModel *model = ui->widgetTreeView->model();
   const QModelIndexList indexList =
     model->match(model->index(0, 0),
-                 ObjectTreeModel::ObjectRole,
+                 ObjectModel::ObjectRole,
                  QVariant::fromValue<QObject*>(widget), 1,
                  Qt::MatchExactly | Qt::MatchRecursive);
   if (indexList.isEmpty()) {

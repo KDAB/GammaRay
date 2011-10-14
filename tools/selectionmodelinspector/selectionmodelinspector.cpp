@@ -48,7 +48,7 @@ void SelectionModelInspector::selectionModelSelected(const QItemSelection &selec
 {
   Q_UNUSED(deselected);
   const QModelIndex selectedRow = selected.first().topLeft();
-  QObject *selectionModelObject = selectedRow.data(ObjectListModel::ObjectRole).value<QObject*>();
+  QObject *selectionModelObject = selectedRow.data(ObjectModel::ObjectRole).value<QObject*>();
   QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel*>(selectionModelObject);
   if (selectionModel && selectionModel->model()) {
     ui->selectionModelVisualizer->setModel(

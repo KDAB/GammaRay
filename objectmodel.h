@@ -1,5 +1,5 @@
 /*
-  singlecolumnobjectproxymodel.cpp
+  objectmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,27 +21,25 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "singlecolumnobjectproxymodel.h"
-#include "util.h"
-#include "objectmodel.h"
+#ifndef GAMMARAY_OBJECTMODEL_H
+#define GAMMARAY_OBJECTMODEL_H
 
-using namespace GammaRay;
+#include <Qt>
 
-SingleColumnObjectProxyModel::SingleColumnObjectProxyModel(QObject *parent)
-  : KIdentityProxyModel(parent)
-{
+namespace GammaRay {
+
+/**
+ * Public object model roles, for use by tool plugins without needing access to the real object
+ * model classes.
+ */
+namespace ObjectModel {
+
+    /** Role enum, to be used with the object list and tree models. */
+    enum Role {
+      ObjectRole = Qt::UserRole +1
+    };
 }
 
-QVariant SingleColumnObjectProxyModel::data(const QModelIndex &proxyIndex, int role) const
-{
-  if (proxyIndex.isValid() && role == Qt::DisplayRole && proxyIndex.column() == 0) {
-    const QObject *obj = proxyIndex.data(ObjectModel::ObjectRole).value<QObject*>();
-    if (obj) {
-      return Util::displayString(obj);
-    }
-  }
-
-  return KIdentityProxyModel::data(proxyIndex, role);
 }
 
-#include "singlecolumnobjectproxymodel.moc"
+#endif

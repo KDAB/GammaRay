@@ -27,9 +27,10 @@
 #include "modelmodel.h"
 #include "modelcellmodel.h"
 #include "modelinspector.h"
+#include "objectmodel.h"
 
 #include <kde/krecursivefilterproxymodel.h>
-#include <objectlistmodel.h>
+#include <objectmodel.h>
 #include <probeinterface.h>
 
 using namespace GammaRay;
@@ -59,7 +60,7 @@ ModelInspectorWidget::ModelInspectorWidget(ModelInspector *modelInspector,
 void ModelInspectorWidget::modelSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
-    QObject *obj = index.data(ObjectListModel::ObjectRole).value<QObject*>();
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
     ui->modelContentView->setModel(model);
     connect(ui->modelContentView->selectionModel(),
@@ -83,7 +84,7 @@ void ModelInspectorWidget::widgetSelected(QWidget* widget)
     QAbstractItemModel *model = ui->modelView->model();
     const QModelIndexList indexList =
       model->match(model->index(0, 0),
-                 ModelModel::ObjectRole,
+                 ObjectModel::ObjectRole,
                  QVariant::fromValue<QObject*>(view->model()), 1,
                  Qt::MatchExactly | Qt::MatchRecursive);
     if (indexList.isEmpty())

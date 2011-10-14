@@ -55,7 +55,7 @@ void StateMachineInspector::stateMachineSelected(const QItemSelection &selected,
 {
   Q_UNUSED(deselected)
   const QModelIndex selectedRow = selected.first().topLeft();
-  QObject *machineObject = selectedRow.data(ObjectListModel::ObjectRole).value<QObject*>();
+  QObject *machineObject = selectedRow.data(ObjectModel::ObjectRole).value<QObject*>();
   QStateMachine *machine = qobject_cast<QStateMachine*>(machineObject);
   if (machine) {
     delete m_stateModel;

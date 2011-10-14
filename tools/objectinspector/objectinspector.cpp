@@ -26,7 +26,7 @@
 
 #include <kde/krecursivefilterproxymodel.h>
 #include <probeinterface.h>
-#include <objectlistmodel.h>
+#include <objectmodel.h>
 
 #include <QLineEdit>
 
@@ -59,7 +59,7 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
 void ObjectInspector::objectSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
-    QObject *obj = index.data(ObjectListModel::ObjectRole).value<QObject*>();
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     ui->objectPropertyWidget->setObject(obj);
   } else {
     ui->objectPropertyWidget->setObject(0);
@@ -71,7 +71,7 @@ void ObjectInspector::widgetSelected(QWidget* widget)
   QAbstractItemModel *model = ui->objectTreeView->model();
   const QModelIndexList indexList =
   model->match(model->index(0, 0),
-              ObjectListModel::ObjectRole,
+              ObjectModel::ObjectRole,
               QVariant::fromValue<QObject*>(widget), 1,
                 Qt::MatchExactly | Qt::MatchRecursive);
   if (indexList.isEmpty())

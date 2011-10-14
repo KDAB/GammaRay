@@ -25,6 +25,7 @@
 #define GAMMARAY_OBJECTMODELBASE_H
 
 #include "util.h"
+#include "objectmodel.h"
 
 #include <QObject>
 #include <QModelIndex>
@@ -35,10 +36,6 @@ template<typename Base>
 class ObjectModelBase : public Base
 {
   public:
-    enum Role {
-      ObjectRole = Qt::UserRole +1
-    };
-
     explicit ObjectModelBase<Base>(QObject *parent) : Base(parent) {}
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const
@@ -55,7 +52,7 @@ class ObjectModelBase : public Base
         } else if (index.column() == 1) {
           return obj->metaObject()->className();
         }
-      } else if (role == ObjectRole) {
+      } else if (role == ObjectModel::ObjectRole) {
         return QVariant::fromValue(obj);
       } else if (role == Qt::ToolTipRole) {
           return QString("Object name: %1\nParent: %2 (Address: %3)\nNumber of children: %4").

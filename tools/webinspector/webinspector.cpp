@@ -26,7 +26,7 @@
 #include <objecttypefilterproxymodel.h>
 #include <singlecolumnobjectproxymodel.h>
 #include <probeinterface.h>
-#include <objectlistmodel.h>
+#include <objectmodel.h>
 
 using namespace GammaRay;
 
@@ -47,7 +47,7 @@ WebInspector::WebInspector(ProbeInterface *probe, QWidget *parent)
 void WebInspector::webPageSelected(int index)
 {
   QObject *obj =
-    ui->webPageComboBox->itemData(index, ObjectListModel::ObjectRole).value<QObject*>();
+    ui->webPageComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QWebPage *page = qobject_cast<QWebPage*>(obj);
   if (page) {
     page->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);

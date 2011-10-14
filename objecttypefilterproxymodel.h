@@ -46,7 +46,7 @@ class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
         return false;
       }
 
-      QObject *obj = source_index.data(ObjectListModel::ObjectRole).value<QObject*>();
+      QObject *obj = source_index.data(ObjectModel::ObjectRole).value<QObject*>();
       if (!qobject_cast<T*>(obj)) {
         return false;
       }
