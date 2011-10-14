@@ -60,7 +60,7 @@ AbstractInjector::Ptr defaultInjectorForLaunch()
 {
 #ifdef Q_WS_MACX
   return createInjector(QLatin1String("gdb"));
-#elif Q_WS_UNIX
+#elif defined(Q_OS_UNIX)
   return createInjector(QLatin1String("preload"));
 #else
   return createInjector(QLatin1String("windll"));
