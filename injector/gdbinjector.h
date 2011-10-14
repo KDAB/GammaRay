@@ -48,6 +48,8 @@ class GdbInjector : public QObject, public AbstractInjector
   private:
     bool startGdb(const QStringList &args);
     bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
+    /** Method to break on, without arguments or parenthesis. */
+    void addBreakpoint(const QByteArray &method);
     void execGdbCmd(const QByteArray &cmd, bool waitForWritten = true);
 
   private slots:
