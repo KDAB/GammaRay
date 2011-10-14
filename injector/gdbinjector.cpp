@@ -62,9 +62,9 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
   execGdbCmd("run");
   execGdbCmd("sha QtCore");
   // either this
-  addBreakpoint( "QCoreApplication::exec" );
+  addBreakpoint("QCoreApplication::exec");
   // or this for unit tests should hit
-  addBreakpoint( "QTest::qExec" );
+  addBreakpoint("QTest::qExec");
   execGdbCmd("continue");
 
   return injectAndDetach(probeDll, probeFunc);
@@ -199,14 +199,13 @@ void GdbInjector::readyReadStandardOutput()
   }
 }
 
-void GdbInjector::addBreakpoint(const QByteArray& method)
+void GdbInjector::addBreakpoint(const QByteArray &method)
 {
 #ifdef Q_OS_MAC
-  execGdbCmd("break " + method + "()" );
+  execGdbCmd("break " + method + "()");
 #else
-  execGdbCmd("break " + method );
+  execGdbCmd("break " + method);
 #endif
 }
-
 
 #include "gdbinjector.moc"

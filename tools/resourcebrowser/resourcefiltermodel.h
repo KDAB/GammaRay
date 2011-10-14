@@ -31,9 +31,9 @@ namespace GammaRay {
 class ResourceFilterModel : public QSortFilterProxyModel
 {
   Q_OBJECT
-public:
-  explicit ResourceFilterModel(QObject* parent = 0);
-  virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+  public:
+    explicit ResourceFilterModel(QObject *parent = 0);
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 };
 
 }

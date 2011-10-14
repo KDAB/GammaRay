@@ -534,11 +534,13 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
   }
 
   // we have no preloading hooks, so recover all objects we see
-  if (s_listener()->trackDestroyed && event->type() != QEvent::ChildAdded && event->type() != QEvent::ChildRemoved && !filterObject(receiver)) {
+  if (s_listener()->trackDestroyed && event->type() != QEvent::ChildAdded &&
+      event->type() != QEvent::ChildRemoved && !filterObject(receiver)) {
     QWriteLocker lock(&m_lock);
     const bool tracked = m_validObjects.contains(receiver);
-    if (!tracked)
+    if (!tracked) {
       objectAdded(receiver);
+    }
   }
   return QObject::eventFilter(receiver, event);
 }
@@ -649,48 +651,48 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 
 void writeJmp(FARPROC func, ULONG_PTR replacement)
 {
-    DWORD oldProtect = 0;
+  DWORD oldProtect = 0;
 
-    //Jump takes 10 bytes under x86 and 14 bytes under x64
-    int worstSize;
+  //Jump takes 10 bytes under x86 and 14 bytes under x64
+  int worstSize;
 #ifdef _M_IX86
-    worstSize = 10;
+  worstSize = 10;
 #else ifdef _M_X64
-    worstSize = 14;
+  worstSize = 14;
 #endif
 
-    VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
+  VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
 
-    BYTE *cur = (BYTE *) func;
+  BYTE *cur = (BYTE *) func;
 
-    // If there is a short jump, its a jumptable and we dont have enough space after, so
-    // follow the short jump and write the jmp there
-    if (*cur == 0xE9) {
-        size_t old_offset = *(unsigned long *)(cur + 1);
-        FARPROC ret = (FARPROC)(((DWORD)(((ULONG_PTR) cur) + sizeof (DWORD))) + old_offset + 1);
-        writeJmp(ret, replacement);
-        return;
-    }
+  // If there is a short jump, its a jumptable and we don't have enough
+  // space after, so follow the short jump and write the jmp there
+  if (*cur == 0xE9) {
+    size_t old_offset = *(unsigned long *)(cur + 1);
+    FARPROC ret = (FARPROC)(((DWORD)(((ULONG_PTR) cur) + sizeof (DWORD))) + old_offset + 1);
+    writeJmp(ret, replacement);
+    return;
+  }
 
-    *cur = 0xff;
-    *(++cur) = 0x25;
+  *cur = 0xff;
+  *(++cur) = 0x25;
 
 #ifdef _M_IX86
-    *((DWORD *) ++cur) = (DWORD)(((ULONG_PTR) cur) + sizeof (DWORD));
-    cur += sizeof (DWORD);
-    *((ULONG_PTR *)cur) = replacement;
+  *((DWORD *) ++cur) = (DWORD)(((ULONG_PTR) cur) + sizeof (DWORD));
+  cur += sizeof (DWORD);
+  *((ULONG_PTR *)cur) = replacement;
 #else ifdef _M_X64
-    *((DWORD *) ++cur) = 0;
-    cur += sizeof (DWORD);
-    *((ULONG_PTR *)cur) = replacement;
+  *((DWORD *) ++cur) = 0;
+  cur += sizeof (DWORD);
+  *((ULONG_PTR *)cur) = replacement;
 #endif
 
-    VirtualProtect(func, worstSize, oldProtect, &oldProtect);
+  VirtualProtect(func, worstSize, oldProtect, &oldProtect);
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
 
-BOOL WINAPI DllMain(HINSTANCE /*hInstance*/, DWORD dwReason, LPVOID/* lpvReserved */)
+BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
 {
   // First retrieve the right module, if Qt is linked in release or debug
   HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");

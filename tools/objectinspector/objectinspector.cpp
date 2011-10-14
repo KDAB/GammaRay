@@ -66,16 +66,18 @@ void ObjectInspector::objectSelected(const QModelIndex &index)
   }
 }
 
-void ObjectInspector::widgetSelected(QWidget* widget)
+void ObjectInspector::widgetSelected(QWidget *widget)
 {
   QAbstractItemModel *model = ui->objectTreeView->model();
   const QModelIndexList indexList =
   model->match(model->index(0, 0),
-              ObjectModel::ObjectRole,
-              QVariant::fromValue<QObject*>(widget), 1,
-                Qt::MatchExactly | Qt::MatchRecursive);
-  if (indexList.isEmpty())
+               ObjectModel::ObjectRole,
+               QVariant::fromValue<QObject*>(widget), 1,
+               Qt::MatchExactly | Qt::MatchRecursive);
+  if (indexList.isEmpty()) {
     return;
+  }
+
   const QModelIndex index = indexList.first();
   ui->objectTreeView->selectionModel()->select(
     index,

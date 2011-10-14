@@ -29,14 +29,12 @@
 
 using namespace GammaRay;
 
-ResourceFilterModel::ResourceFilterModel(QObject* parent)
+ResourceFilterModel::ResourceFilterModel(QObject *parent)
   : QSortFilterProxyModel(parent)
 {
-
 }
 
-
-bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
   const QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
   const QString path = index.data(ResourceModel::FilePathRole).toString();

@@ -71,12 +71,12 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new MessageHandlerFactory(this));
 
   // tool plugins
-  foreach ( const QString &pluginFile, plugins() ) {
-    QPluginLoader *loader = new QPluginLoader( pluginFile, this );
-    if ( loader->load() ) {
-      ToolFactory *factory = qobject_cast<ToolFactory*>( loader->instance() );
-      if ( factory ) {
-        m_tools.push_back( factory );
+  foreach (const QString &pluginFile, plugins()) {
+    QPluginLoader *loader = new QPluginLoader(pluginFile, this);
+    if (loader->load()) {
+      ToolFactory *factory = qobject_cast<ToolFactory*>(loader->instance());
+      if (factory) {
+        m_tools.push_back(factory);
         continue;
       }
     } else {
@@ -165,18 +165,21 @@ void ToolModel::objectAdded(const QMetaObject *mo)
 QStringList ToolModel::plugins() const
 {
   QStringList r;
-  if ( !QCoreApplication::libraryPaths().contains( QLatin1String( GAMMARAY_PLUGIN_INSTALL_DIR ) ) )
-    QCoreApplication::addLibraryPath( QLatin1String( GAMMARAY_PLUGIN_INSTALL_DIR ) );
-  foreach ( const QString &pluginDir, QCoreApplication::libraryPaths() ) {
-    QDir dir( pluginDir + QLatin1String( "/gammaray/" ) );
-    foreach ( const QString &plugin, dir.entryList( QDir::Files ) ) {
-      const QString pluginFile = dir.absoluteFilePath( plugin );
-      if ( QLibrary::isLibrary( pluginFile ) )
-        r.push_back( pluginFile );
+
+  if (!QCoreApplication::libraryPaths().contains(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR))) {
+    QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
+  }
+
+  foreach (const QString &pluginDir, QCoreApplication::libraryPaths()) {
+    QDir dir(pluginDir + QLatin1String("/gammaray/"));
+    foreach (const QString &plugin, dir.entryList(QDir::Files)) {
+      const QString pluginFile = dir.absoluteFilePath(plugin);
+      if (QLibrary::isLibrary(pluginFile)) {
+        r.push_back(pluginFile);
+      }
     }
   }
   return r;
 }
-
 
 #include "toolmodel.moc"

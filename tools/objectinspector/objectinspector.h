@@ -41,7 +41,7 @@ class ObjectInspector : public QWidget
 
   private slots:
     void objectSelected(const QModelIndex &index);
-    void widgetSelected(QWidget* widget);
+    void widgetSelected(QWidget *widget);
 
   private:
     QScopedPointer<Ui::ObjectInspector> ui;

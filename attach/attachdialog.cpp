@@ -95,7 +95,9 @@ void AttachDialog::updateProcesses()
   m_model->setProcesses(processList());
 
   if (!selectedPid.isEmpty()) {
-    ui.view->setCurrentIndex(m_proxyModel->mapFromSource(m_model->index(m_model->indexForPid(selectedPid).row(), oldCol)));
+    ui.view->setCurrentIndex(
+      m_proxyModel->mapFromSource(
+        m_model->index(m_model->indexForPid(selectedPid).row(), oldCol)));
   }
 
   selectionChanged();

@@ -26,32 +26,46 @@
 
 class StackWalkerToQStringList : public StackWalker
 {
-public:
-  QStringList getStackWalkerBacktrace() {
+  public:
+    QStringList getStackWalkerBacktrace()
+    {
       m_stackTrace.clear();
       ShowCallstack();
       return m_stackTrace;
-  }
+    }
 
-protected:
-  virtual void OnOutput(LPCSTR szText)
-  {
-    m_stackTrace << szText;
-  }
-  virtual void OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUserName){}
-  virtual void OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr, DWORD size, DWORD result, LPCSTR symType, LPCSTR pdbName, ULONGLONG fileVersion){}
-  virtual void OnDbgHelpErr(LPCSTR szFuncName, DWORD gle, DWORD64 addr){}
+  protected:
+    virtual void OnOutput(LPCSTR szText)
+    {
+      m_stackTrace << szText;
+    }
 
-private:
+    virtual void OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUserName)
+    {
+    }
+
+    virtual void OnLoadModule(LPCSTR img, LPCSTR mod,
+                              DWORD64 baseAddr, DWORD size, DWORD result,
+                              LPCSTR symType, LPCSTR pdbName,
+                              ULONGLONG fileVersion)
+    {
+    }
+
+    virtual void OnDbgHelpErr(LPCSTR szFuncName, DWORD gle, DWORD64 addr)
+    {
+    }
+
+  private:
     QStringList m_stackTrace;
 };
 
 static StackWalkerToQStringList *stackWalkerToQStringList = 0;
 
-Backtrace getBacktrace(int /*levels*/)
+Backtrace getBacktrace(int/*levels*/)
 {
-    //FIXME: Perhaps take the levels into account
-    if (!stackWalkerToQStringList)
-        stackWalkerToQStringList = new StackWalkerToQStringList();
-    return stackWalkerToQStringList->getStackWalkerBacktrace();
+  //FIXME: Perhaps take the levels into account
+  if (!stackWalkerToQStringList) {
+    stackWalkerToQStringList = new StackWalkerToQStringList();
+  }
+  return stackWalkerToQStringList->getStackWalkerBacktrace();
 }

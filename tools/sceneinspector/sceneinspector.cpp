@@ -89,7 +89,7 @@ void SceneInspector::sceneItemSelected(const QModelIndex &index)
   }
 }
 
-void SceneInspector::widgetSelected(QWidget* widget, const QPoint& pos)
+void SceneInspector::widgetSelected(QWidget *widget, const QPoint &pos)
 {
   QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(widget);
   if (qgv) {

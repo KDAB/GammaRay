@@ -77,18 +77,20 @@ void ModelInspectorWidget::modelCellSelected(const QModelIndex &index)
   m_cellModel->setModelIndex(index);
 }
 
-void ModelInspectorWidget::widgetSelected(QWidget* widget)
+void ModelInspectorWidget::widgetSelected(QWidget *widget)
 {
-  QAbstractItemView* view = Util::findParentOfType<QAbstractItemView>(widget);
+  QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(widget);
   if (view && view->model()) {
     QAbstractItemModel *model = ui->modelView->model();
     const QModelIndexList indexList =
       model->match(model->index(0, 0),
-                 ObjectModel::ObjectRole,
-                 QVariant::fromValue<QObject*>(view->model()), 1,
-                 Qt::MatchExactly | Qt::MatchRecursive);
-    if (indexList.isEmpty())
+                   ObjectModel::ObjectRole,
+                   QVariant::fromValue<QObject*>(view->model()), 1,
+                   Qt::MatchExactly | Qt::MatchRecursive);
+    if (indexList.isEmpty()) {
       return;
+    }
+
     const QModelIndex index = indexList.first();
     ui->modelView->selectionModel()->select(
       index,
