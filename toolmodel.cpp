@@ -21,6 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "toolmodel.h"
 #include "toolfactory.h"
 
@@ -164,11 +165,14 @@ void ToolModel::objectAdded(const QMetaObject *mo)
 QStringList ToolModel::plugins() const
 {
   QStringList r;
+  if ( !QCoreApplication::libraryPaths().contains( QLatin1String( GAMMARAY_PLUGIN_INSTALL_DIR ) ) )
+    QCoreApplication::addLibraryPath( QLatin1String( GAMMARAY_PLUGIN_INSTALL_DIR ) );
   foreach ( const QString &pluginDir, QCoreApplication::libraryPaths() ) {
     QDir dir( pluginDir + QLatin1String( "/gammaray/" ) );
     foreach ( const QString &plugin, dir.entryList( QDir::Files ) ) {
-      if ( QLibrary::isLibrary( plugin ) )
-        r.push_back( plugin );
+      const QString pluginFile = dir.absoluteFilePath( plugin );
+      if ( QLibrary::isLibrary( pluginFile ) )
+        r.push_back( pluginFile );
     }
   }
   return r;
