@@ -175,6 +175,7 @@ QStringList ToolModel::plugins() const
     foreach (const QString &plugin, dir.entryList(QDir::Files)) {
       const QString pluginFile = dir.absoluteFilePath(plugin);
       if (QLibrary::isLibrary(pluginFile)) {
+        qDebug() << "loading plugin" << pluginFile;
         r.push_back(pluginFile);
       }
     }
