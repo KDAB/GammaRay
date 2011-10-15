@@ -146,6 +146,15 @@ QList<ProcData> processList()
         proc.user = QFileInfo(file).owner();
         file.close();
 
+        QFile cmdFile(QLatin1String("/proc/") + procId + QLatin1String("/cmdline"));
+        if(cmdFile.open(QFile::ReadOnly)) {
+          QByteArray cmd = cmdFile.readAll();
+          cmd.replace('\0', ' ');
+          if ( !cmd.isEmpty() )
+            proc.name = QString::fromLocal8Bit(cmd);
+        }
+        cmdFile.close();
+
         QFile maps(QLatin1String("/proc/") + procId + QLatin1String("/maps"));
         if (!maps.open(QIODevice::ReadOnly))
           continue; // process may have exited
