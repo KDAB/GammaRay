@@ -41,7 +41,8 @@ class TextDocumentModel : public QStandardItemModel
     explicit TextDocumentModel(QObject *parent = 0);
 
     enum Roles {
-      FormatRole = Qt::UserRole
+      FormatRole = Qt::UserRole,
+      BoundingBoxRole
     };
 
     void setDocument(QTextDocument *doc);
@@ -53,7 +54,7 @@ class TextDocumentModel : public QStandardItemModel
     void fillTable(QTextTable *table, QStandardItem *parent);
     void fillBlock(const QTextBlock &block, QStandardItem *parent);
     QStandardItem *formatItem(const QTextFormat &format);
-    void appendRow(QStandardItem *parent, QStandardItem *item, const QTextFormat &format);
+    void appendRow(QStandardItem *parent, QStandardItem *item, const QTextFormat &format, const QRectF &boundingBox = QRectF());
 
   private slots:
     void documentChanged();

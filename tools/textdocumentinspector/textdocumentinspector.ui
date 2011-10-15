@@ -103,7 +103,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QTextEdit" name="documentView"/>
+         <widget class="GammaRay::TextDocumentContentView" name="documentView"/>
         </item>
        </layout>
       </widget>
@@ -122,6 +122,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::TextDocumentContentView</class>
+   <extends>QTextEdit</extends>
+   <header>tools/textdocumentinspector/textdocumentcontentview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

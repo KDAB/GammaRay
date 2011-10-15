@@ -27,6 +27,7 @@
 #include <QTextDocument>
 #include <QTextFrame>
 #include <qtexttable.h>
+#include <QAbstractTextDocumentLayout>
 
 using namespace GammaRay;
 
@@ -79,21 +80,23 @@ void TextDocumentModel::fillFrameIterator(const QTextFrame::iterator &it, QStand
 {
   QStandardItem *item = new QStandardItem;
   if (QTextFrame *frame = it.currentFrame()) {
+    const QRectF b = m_document->documentLayout()->frameBoundingRect(frame);
     QTextTable *table = qobject_cast<QTextTable*>(frame);
     if (table) {
       item->setText(tr("Table"));
-      appendRow(parent, item, table->format());
+      appendRow(parent, item, table->format(), b);
       fillTable(table, item);
     } else {
       item->setText(tr("Frame"));
-      appendRow(parent, item, frame->frameFormat());
+      appendRow(parent, item, frame->frameFormat(), b);
       fillFrame(frame, item);
     }
   }
   const QTextBlock block = it.currentBlock();
   if (block.isValid()) {
     item->setText(tr("Block: %1").arg(block.text()));
-    appendRow(parent, item, block.blockFormat());
+    const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
+    appendRow(parent, item, block.blockFormat(), b);
     fillBlock(block, item);
   }
 }
@@ -117,7 +120,8 @@ void TextDocumentModel::fillBlock(const QTextBlock &block, QStandardItem *parent
 {
   for (QTextBlock::iterator it = block.begin(); it != block.end(); ++it) {
     QStandardItem *item = new QStandardItem(tr("Fragment: %1").arg(it.fragment().text()));
-    appendRow(parent, item, it.fragment().charFormat());
+    const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
+    appendRow(parent, item, it.fragment().charFormat(), b);
   }
 }
 
@@ -136,9 +140,10 @@ QStandardItem *TextDocumentModel::formatItem(const QTextFormat &format)
 }
 
 void TextDocumentModel::appendRow(QStandardItem *parent, QStandardItem *item,
-                                  const QTextFormat &format)
+                                  const QTextFormat &format, const QRectF &boundingBox)
 {
   item->setData(QVariant::fromValue(format), FormatRole);
+  item->setData(boundingBox, BoundingBoxRole);
   parent->appendRow(QList<QStandardItem*>() << item << formatItem(format));
 }
 

@@ -83,6 +83,9 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
   const QModelIndex selectedRow = selected.first().topLeft();
   const QTextFormat f = selectedRow.data(TextDocumentModel::FormatRole).value<QTextFormat>();
   m_textDocumentFormatModel->setFormat(f);
+
+  const QRectF boundingBox = selectedRow.data(TextDocumentModel::BoundingBoxRole).toRectF();
+  ui->documentView->setShowBoundingBox(boundingBox);
 }
 
 void TextDocumentInspector::documentContentChanged()

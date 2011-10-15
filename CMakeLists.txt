@@ -198,6 +198,7 @@ set(gammaray_srcs
   tools/codecbrowser/codecmodel.cpp
   tools/textdocumentinspector/textdocumentmodel.cpp
   tools/textdocumentinspector/textdocumentformatmodel.cpp
+  tools/textdocumentinspector/textdocumentcontentview.cpp
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp
   toolmodel.cpp
