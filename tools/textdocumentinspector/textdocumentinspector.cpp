@@ -63,8 +63,15 @@ void TextDocumentInspector::documentSelected(const QItemSelection &selected,
   const QModelIndex selectedRow = selected.first().topLeft();
   QObject *selectedObj = selectedRow.data(ObjectModel::ObjectRole).value<QObject*>();
   QTextDocument *doc = qobject_cast<QTextDocument*>(selectedObj);
+
+  if (m_currentDocument)
+    disconnect(m_currentDocument, SIGNAL(contentsChanged()), this, SLOT(documentContentChanged()));
+  m_currentDocument = QPointer<QTextDocument>(doc);
+
   if (doc) {
     ui->documentView->setDocument(doc);
+    connect(doc, SIGNAL(contentsChanged()), SLOT(documentContentChanged()));
+    documentContentChanged();
   }
   m_textDocumentModel->setDocument(doc);
 }
@@ -76,6 +83,11 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
   const QModelIndex selectedRow = selected.first().topLeft();
   const QTextFormat f = selectedRow.data(TextDocumentModel::FormatRole).value<QTextFormat>();
   m_textDocumentFormatModel->setFormat(f);
+}
+
+void TextDocumentInspector::documentContentChanged()
+{
+  ui->htmlView->setPlainText(m_currentDocument->toHtml());
 }
 
 #include "textdocumentinspector.moc"

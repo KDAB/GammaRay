@@ -27,6 +27,7 @@
 #include <toolfactory.h>
 #include <qwidget.h>
 #include <qtextdocument.h>
+#include <qpointer.h>
 
 class QItemSelection;
 
@@ -46,11 +47,13 @@ class TextDocumentInspector : public QWidget
   private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void documentContentChanged();
 
   private:
     QScopedPointer<Ui::TextDocumentInspector> ui;
     TextDocumentModel *m_textDocumentModel;
     TextDocumentFormatModel *m_textDocumentFormatModel;
+    QPointer<QTextDocument> m_currentDocument;
 };
 
 class TextDocumentInspectorFactory
