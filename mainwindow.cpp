@@ -76,7 +76,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   ui.toolSelector->setModel(proxyModel);
   ui.toolSelector->resize(0, 0);
   connect(ui.toolSelector, SIGNAL(activated(QModelIndex)), SLOT(toolSelected()));
-  toolSelected();
 
   QWidget *promo = new QWidget;
   QHBoxLayout *promoLayout = new QHBoxLayout;
@@ -88,10 +87,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   // hide unused tool bar for now
   ui.mainToolBar->setHidden(true);
 
-  ui.toolSelector->setCurrentIndex(ui.toolSelector->model()->index(0, 0));
-  toolSelected();
-
   setWindowTitle(tr("%1 (%2)").arg(progName).arg(qApp->applicationName()));
+
+  selectInitialTool();
 }
 
 void MainWindow::about()
@@ -136,6 +134,30 @@ void MainWindow::aboutKDAB()
   mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
+}
+
+void MainWindow::selectInitialTool()
+{
+  static const QLatin1String initialTool("GammaRay::ObjectInspectorFactory");
+
+  QAbstractItemModel* model = ui.toolSelector->model();
+
+  // seems somewhat complex to use the class name for finding the tool
+  // but we can't rely on ToolFactory's name() since it is a translated string
+  // fix by adding some unique identifier to the ToolFactory interface
+  QModelIndex index;
+  for (int i = 0; i < model->rowCount(); ++i) {
+    const QModelIndex& currentIndex = model->index(i, 0);
+    ToolFactory* toolIface = currentIndex.data(ToolModel::ToolFactoryRole).value<ToolFactory*>();
+    QObject* object = dynamic_cast<QObject*>(toolIface);
+    if (object->metaObject()->className() == initialTool) {
+      index = currentIndex;
+      break;
+    }
+  }
+
+  ui.toolSelector->setCurrentIndex(index);
+  toolSelected();
 }
 
 void MainWindow::toolSelected()

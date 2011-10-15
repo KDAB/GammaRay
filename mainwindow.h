@@ -45,6 +45,8 @@ class MainWindow : public QMainWindow
     void toolSelected();
 
   private:
+    void selectInitialTool();
+
     Ui::MainWindow ui;
 };
 
