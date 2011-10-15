@@ -31,6 +31,8 @@
 #include <objecttypefilterproxymodel.h>
 #include <objectmodel.h>
 
+#include <QDesktopWidget>
+
 using namespace GammaRay;
 
 WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
@@ -62,7 +64,10 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     ui->widgetPreviewWidget->setWidget(qobject_cast<QWidget*>(obj));
 
     QWidget *widget = qobject_cast<QWidget*>(obj);
-    m_overlayWidget->placeOn(widget);
+    if ( widget && qobject_cast<QDesktopWidget*>(widget) == 0 )
+      m_overlayWidget->placeOn(widget);
+    else
+      m_overlayWidget->placeOn(0);
   } else {
     ui->widgetPropertyWidget->setObject(0);
     ui->widgetPreviewWidget->setWidget(0);
