@@ -19,10 +19,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="KFilterProxySearchLine" name="filter" native="true"/>
+    <widget class="KFilterProxySearchLine" name="filter"/>
    </item>
    <item>
-    <widget class="QTreeView" name="view"/>
+    <widget class="QTreeView" name="view">
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QWidget" name="widget" native="true">
