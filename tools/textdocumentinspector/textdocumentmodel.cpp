@@ -37,6 +37,9 @@ TextDocumentModel::TextDocumentModel(QObject *parent)
 
 void TextDocumentModel::setDocument(QTextDocument *doc)
 {
+  if (m_document)
+    disconnect(m_document, SIGNAL(contentsChanged()), this, SLOT(documentChanged()));
+
   m_document = doc;
   connect(m_document, SIGNAL(contentsChanged()), SLOT(documentChanged()));
   fillModel();
