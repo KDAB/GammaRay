@@ -69,7 +69,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
   ToolModel* model = Probe::instance()->toolModel();
-  ui.toolSelector->setModel(model);
+  QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
+  proxyModel->setDynamicSortFilter(true);
+  proxyModel->setSourceModel(model);
+  proxyModel->sort(0);
+  ui.toolSelector->setModel(proxyModel);
+  ui.toolSelector->resize(0, 0);
   connect(ui.toolSelector, SIGNAL(activated(QModelIndex)), SLOT(toolSelected()));
   toolSelected();
 

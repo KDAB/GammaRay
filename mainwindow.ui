@@ -66,12 +66,6 @@
    </attribute>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
    <property name="floating">
     <bool>false</bool>
    </property>
@@ -91,17 +85,14 @@
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
       <widget class="SidePane" name="toolSelector">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Plain</enum>
+       </property>
+       <property name="textElideMode">
+        <enum>Qt::ElideRight</enum>
        </property>
        <property name="flow">
         <enum>QListView::TopToBottom</enum>

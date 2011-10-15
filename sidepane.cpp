@@ -37,7 +37,7 @@ SidePane::~SidePane()
 
 QSize SidePane::sizeHint() const
 {
-  static const int widthMargin = 0;
+  static const int widthMargin = 10;
 
   if (!model())
     return QSize(0, 0);
@@ -50,6 +50,8 @@ QSize SidePane::sizeHint() const
 
 void SidePane::resizeEvent(QResizeEvent* e)
 {
+  setMinimumWidth(sizeHint().width());
+
   QListView::resizeEvent(e);
 }
 
