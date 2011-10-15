@@ -90,6 +90,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   setWindowTitle(tr("%1 (%2)").arg(progName).arg(qApp->applicationName()));
 
   selectInitialTool();
+
+  // get some sane size on startup
+  resize(1024, 768);
 }
 
 void MainWindow::about()
