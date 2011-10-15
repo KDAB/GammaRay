@@ -55,9 +55,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   ui.setupUi(this);
 
   connect(ui.actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()));
+
   connect(QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()));
   connect(ui.actionQuit, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(quit()));
+  ui.actionQuit->setIcon(QIcon::fromTheme("application-exit"));
+
   connect(ui.actionAboutQt, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(aboutQt()));
   connect(ui.actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));

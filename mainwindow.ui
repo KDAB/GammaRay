@@ -31,6 +31,7 @@
      <string>&amp;GammaRay</string>
     </property>
     <addaction name="actionRetractProbe"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -142,6 +143,10 @@
    </property>
   </action>
   <action name="actionAboutGammaRay">
+   <property name="icon">
+    <iconset resource="resources/gammaray.qrc">
+     <normaloff>:/gammaray/GammaRay-32x32.png</normaloff>:/gammaray/GammaRay-32x32.png</iconset>
+   </property>
    <property name="text">
     <string>About &amp;GammaRay</string>
    </property>
