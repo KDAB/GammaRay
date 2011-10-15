@@ -75,11 +75,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
   QWidget *promo = new QWidget;
   QHBoxLayout *promoLayout = new QHBoxLayout;
-  promoLayout->setContentsMargins(0, 0, 0, 0);
-  promoLayout->addStretch();
+  promoLayout->setContentsMargins(0, 10, 0, 0);
   promoLayout->addWidget(new PromoLabel(this));
   promo->setLayout(promoLayout);
-  ui.mainToolBar->addWidget(promo);
+  ui.menuBar->setCornerWidget(promo);
+
+  // hide unused tool bar for now
+  ui.mainToolBar->setHidden(true);
 
   ui.toolSelector->setCurrentIndex(ui.toolSelector->model()->index(0, 0));
   toolSelected();
