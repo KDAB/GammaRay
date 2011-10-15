@@ -41,11 +41,11 @@ class MainWindow : public QMainWindow
   private slots:
     void about();
     void aboutKDAB();
+
     void toolSelected();
 
   private:
     Ui::MainWindow ui;
-    QComboBox *m_toolSelector;
 };
 
 }

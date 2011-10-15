@@ -40,6 +40,8 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
+#include <QTreeView>
+#include <QHBoxLayout>
 
 using namespace GammaRay;
 
@@ -63,12 +65,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
-  m_toolSelector = new QComboBox;
-  m_toolSelector->setModel(Probe::instance()->toolModel());
-  connect(m_toolSelector, SIGNAL(currentIndexChanged(int)), SLOT(toolSelected()));
-  connect(m_toolSelector, SIGNAL(activated(int)), SLOT(toolSelected()));
-  ui.mainToolBar->addWidget(new QLabel(tr("Select Probe:")));
-  ui.mainToolBar->addWidget(m_toolSelector);
+  ToolModel* model = Probe::instance()->toolModel();
+  ui.toolSelector->setModel(model);
+  connect(ui.toolSelector, SIGNAL(activated(QModelIndex)), SLOT(toolSelected()));
+  toolSelected();
 
   QWidget *promo = new QWidget;
   QHBoxLayout *promoLayout = new QHBoxLayout;
@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   promo->setLayout(promoLayout);
   ui.mainToolBar->addWidget(promo);
 
+  ui.toolSelector->setCurrentIndex(ui.toolSelector->model()->index(0, 0));
   toolSelected();
 
   setWindowTitle(tr("%1 (%2)").arg(progName).arg(qApp->applicationName()));
@@ -129,7 +130,11 @@ void MainWindow::aboutKDAB()
 
 void MainWindow::toolSelected()
 {
-  const QModelIndex mi = m_toolSelector->model()->index(m_toolSelector->currentIndex(), 0);
+  const int row = ui.toolSelector->currentIndex().row();
+  if (row == -1)
+    return;
+
+  const QModelIndex mi = ui.toolSelector->model()->index(row, 0);
   QWidget *toolWidget = mi.data(ToolModel::ToolWidgetRole).value<QWidget*>();
   if (!toolWidget) {
     ToolFactory *toolIface = mi.data(ToolModel::ToolFactoryRole).value<ToolFactory*>();
@@ -138,7 +143,7 @@ void MainWindow::toolSelected()
              << toolIface->name() << toolIface->supportedTypes();
     toolWidget = toolIface->createWidget(Probe::instance(), this);
     ui.toolStack->addWidget(toolWidget);
-    m_toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
+    ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
   }
   ui.toolStack->setCurrentIndex(ui.toolStack->indexOf(toolWidget));
 }

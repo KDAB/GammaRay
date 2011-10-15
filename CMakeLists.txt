@@ -203,6 +203,7 @@ set(gammaray_srcs
   tools/messagehandler/messagemodel.cpp
   toolmodel.cpp
   promolabel.cpp
+  sidepane.cpp
 
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
