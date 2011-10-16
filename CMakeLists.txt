@@ -187,6 +187,7 @@ set(gammaray_srcs
   tools/widgetinspector/widgetpreviewwidget.cpp
   methodinvocationdialog.cpp
   methodargumentmodel.cpp
+  multisignalmapper.cpp
   singlecolumnobjectproxymodel.cpp
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp

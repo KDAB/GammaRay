@@ -31,6 +31,7 @@
 #include "connectionfilterproxymodel.h"
 #include "probe.h"
 #include "methodinvocationdialog.h"
+#include "multisignalmapper.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -46,7 +47,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_methodModel(new ObjectMethodModel(this)),
     m_inboundConnectionModel(new ConnectionFilterProxyModel(this)),
     m_outboundConnectionModel(new ConnectionFilterProxyModel(this)),
-    m_enumModel(new ObjectEnumModel(this))
+    m_enumModel(new ObjectEnumModel(this)),
+    m_signalMapper(0)
 {
   ui.setupUi(this);
 
@@ -96,6 +98,10 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
   m_inboundConnectionModel->filterReceiver(object);
   m_outboundConnectionModel->filterSender(object);
   m_enumModel->setObject(object);
+
+  delete m_signalMapper;
+  m_signalMapper = new MultiSignalMapper(this);
+  connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int)), SLOT(signalEmitted(QObject*,int)));
 }
 
 void PropertyWidget::methodActivated(const QModelIndex &index)
@@ -107,8 +113,15 @@ void PropertyWidget::methodActivated(const QModelIndex &index)
     dlg->setMethod(m_object.data(), method);
     dlg->show();
   } else if (method.methodType() == QMetaMethod::Signal) {
+    m_signalMapper->connectToSignal(m_object, method);
     qDebug() << "connecting to" << method.signature();
   }
+}
+
+void PropertyWidget::signalEmitted(QObject* sender, int signalIndex)
+{
+  Q_ASSERT(m_object == sender);
+  qDebug() << sender->metaObject()->method(signalIndex).signature() << "emitted";
 }
 
 #include "propertywidget.moc"

@@ -30,6 +30,7 @@
 namespace GammaRay {
 
 class ConnectionFilterProxyModel;
+class MultiSignalMapper;
 class ObjectDynamicPropertyModel;
 class ObjectStaticPropertyModel;
 class ObjectClassInfoModel;
@@ -46,6 +47,7 @@ class PropertyWidget : public QWidget
 
   private slots:
     void methodActivated(const QModelIndex &index);
+    void signalEmitted(QObject *sender, int signalIndex);
 
   private:
     Ui::PropertyWidget ui;
@@ -57,6 +59,7 @@ class PropertyWidget : public QWidget
     ConnectionFilterProxyModel *m_inboundConnectionModel;
     ConnectionFilterProxyModel *m_outboundConnectionModel;
     ObjectEnumModel *m_enumModel;
+    MultiSignalMapper *m_signalMapper;
 };
 
 }
