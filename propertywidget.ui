@@ -60,7 +60,7 @@
       <attribute name="title">
        <string>Methods</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
+      <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,4,1">
        <item>
         <widget class="KFilterProxySearchLine" name="methodSearchLine"/>
        </item>
@@ -72,6 +72,19 @@
          <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTreeView" name="methodLog">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <attribute name="headerVisible">
+          <bool>false</bool>
+         </attribute>
         </widget>
        </item>
       </layout>

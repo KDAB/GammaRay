@@ -27,6 +27,8 @@
 #include "ui_propertywidget.h"
 #include <QPointer>
 
+class QStandardItemModel;
+
 namespace GammaRay {
 
 class ConnectionFilterProxyModel;
@@ -60,6 +62,7 @@ class PropertyWidget : public QWidget
     ConnectionFilterProxyModel *m_outboundConnectionModel;
     ObjectEnumModel *m_enumModel;
     MultiSignalMapper *m_signalMapper;
+    QStandardItemModel *m_methodLogModel;
 };
 
 }

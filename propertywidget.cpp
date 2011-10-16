@@ -36,6 +36,8 @@
 #include "kde/krecursivefilterproxymodel.h"
 
 #include <QDebug>
+#include <QStandardItemModel>
+#include <QtCore/QTime>
 
 using namespace GammaRay;
 
@@ -48,7 +50,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_inboundConnectionModel(new ConnectionFilterProxyModel(this)),
     m_outboundConnectionModel(new ConnectionFilterProxyModel(this)),
     m_enumModel(new ObjectEnumModel(this)),
-    m_signalMapper(0)
+    m_signalMapper(0),
+    m_methodLogModel(new QStandardItemModel(this))
 {
   ui.setupUi(this);
 
@@ -68,6 +71,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.methodSearchLine->setProxy(proxy);
   connect(ui.methodView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(methodActivated(QModelIndex)));
+  ui.methodLog->setModel(m_methodLogModel);
+  
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setSourceModel(m_classInfoModel);
@@ -102,6 +107,8 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
   delete m_signalMapper;
   m_signalMapper = new MultiSignalMapper(this);
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int)), SLOT(signalEmitted(QObject*,int)));
+
+  m_methodLogModel->clear();
 }
 
 void PropertyWidget::methodActivated(const QModelIndex &index)
@@ -112,6 +119,7 @@ void PropertyWidget::methodActivated(const QModelIndex &index)
     MethodInvocationDialog *dlg = new MethodInvocationDialog(this);
     dlg->setMethod(m_object.data(), method);
     dlg->show();
+    // TODO: return value should go into ui->methodLog
   } else if (method.methodType() == QMetaMethod::Signal) {
     m_signalMapper->connectToSignal(m_object, method);
     qDebug() << "connecting to" << method.signature();
@@ -121,7 +129,10 @@ void PropertyWidget::methodActivated(const QModelIndex &index)
 void PropertyWidget::signalEmitted(QObject* sender, int signalIndex)
 {
   Q_ASSERT(m_object == sender);
-  qDebug() << sender->metaObject()->method(signalIndex).signature() << "emitted";
+  m_methodLogModel->appendRow( new QStandardItem( tr( "%1: Signal %2 emitted" )
+    .arg( QTime::currentTime().toString("HH:mm:ss.zzz") )
+    .arg( sender->metaObject()->method(signalIndex).signature() ) 
+  ) );
 }
 
 #include "propertywidget.moc"
