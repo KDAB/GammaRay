@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   proxyModel->sort(0);
   ui.toolSelector->setModel(proxyModel);
   ui.toolSelector->resize(0, 0);
-  connect(ui.toolSelector, SIGNAL(activated(QModelIndex)), SLOT(toolSelected()));
+  connect(ui.toolSelector, SIGNAL(clicked(QModelIndex)), SLOT(toolSelected()));
 
   QWidget *promo = new QWidget;
   QHBoxLayout *promoLayout = new QHBoxLayout;
