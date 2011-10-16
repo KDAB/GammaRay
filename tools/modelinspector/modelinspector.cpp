@@ -38,6 +38,11 @@ ModelInspector::ModelInspector(QObject *parent) :
 {
 }
 
+QString ModelInspector::id() const
+{
+  return metaObject()->className();
+}
+
 QString ModelInspector::name() const
 {
  return tr("Models");

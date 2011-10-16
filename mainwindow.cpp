@@ -141,25 +141,14 @@ void MainWindow::aboutKDAB()
 
 void MainWindow::selectInitialTool()
 {
-  static const QLatin1String initialTool("GammaRay::ObjectInspectorFactory");
+  static const QString initialTool("GammaRay::ObjectInspector");
 
   QAbstractItemModel* model = ui.toolSelector->model();
+  QModelIndexList matches = model->match(model->index(0, 0), ToolModel::ToolId, initialTool);
+  if (matches.isEmpty())
+    return;
 
-  // seems somewhat complex to use the class name for finding the tool
-  // but we can't rely on ToolFactory's name() since it is a translated string
-  // fix by adding some unique identifier to the ToolFactory interface
-  QModelIndex index;
-  for (int i = 0; i < model->rowCount(); ++i) {
-    const QModelIndex& currentIndex = model->index(i, 0);
-    ToolFactory* toolIface = currentIndex.data(ToolModel::ToolFactoryRole).value<ToolFactory*>();
-    QObject* object = dynamic_cast<QObject*>(toolIface);
-    if (object->metaObject()->className() == initialTool) {
-      index = currentIndex;
-      break;
-    }
-  }
-
-  ui.toolSelector->setCurrentIndex(index);
+  ui.toolSelector->setCurrentIndex(matches.first());
   toolSelected();
 }
 

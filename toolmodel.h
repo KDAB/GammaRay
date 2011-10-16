@@ -42,7 +42,8 @@ class ToolModel : public QAbstractListModel
   public:
     enum Role {
       ToolFactoryRole = Qt::UserRole + 1,
-      ToolWidgetRole
+      ToolWidgetRole,
+      ToolId
     };
     explicit ToolModel(QObject *parent = 0);
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

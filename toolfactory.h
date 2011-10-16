@@ -41,6 +41,11 @@ class ToolFactory
     virtual inline ~ToolFactory() {}
 
     /**
+     * Unique id of this tool
+     */
+    virtual QString id() const = 0;
+
+    /**
      * Human readable name of this tool.
      */
     virtual QString name() const = 0;
@@ -74,6 +79,9 @@ class StandardToolFactory : public ToolFactory
   public:
     virtual inline QStringList supportedTypes() const {
       return QStringList(Type::staticMetaObject.className());
+    }
+    virtual inline QString id() const {
+      return Tool::staticMetaObject.className();
     }
     virtual inline void init(ProbeInterface *) {}
     virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget) {

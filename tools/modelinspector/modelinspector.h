@@ -38,6 +38,7 @@ class ModelInspector : public QObject, public ToolFactory
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit ModelInspector(QObject *parent = 0);
+    virtual QString id() const;
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
     virtual void init(ProbeInterface *probe);
