@@ -50,6 +50,7 @@ class PropertyWidget : public QWidget
   private slots:
     void methodActivated(const QModelIndex &index);
     void signalEmitted(QObject *sender, int signalIndex);
+    void methodConextMenu(const QPoint &pos);
 
   private:
     Ui::PropertyWidget ui;

@@ -38,6 +38,7 @@
 #include <QDebug>
 #include <QStandardItemModel>
 #include <QtCore/QTime>
+#include <qmenu.h>
 
 using namespace GammaRay;
 
@@ -71,6 +72,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.methodSearchLine->setProxy(proxy);
   connect(ui.methodView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(methodActivated(QModelIndex)));
+  connect(ui.methodView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(methodConextMenu(QPoint)));
   ui.methodLog->setModel(m_methodLogModel);
   
 
@@ -133,6 +135,24 @@ void PropertyWidget::signalEmitted(QObject* sender, int signalIndex)
     .arg( QTime::currentTime().toString("HH:mm:ss.zzz") )
     .arg( sender->metaObject()->method(signalIndex).signature() ) 
   ) );
+}
+
+void PropertyWidget::methodConextMenu(const QPoint& pos)
+{
+  const QModelIndex index = ui.methodView->indexAt(pos);
+  if (!index.isValid())
+    return;
+
+  const QMetaMethod method = index.data(ObjectMethodModel::MetaMethodRole).value<QMetaMethod>();
+  QMenu contextMenu;
+  if (method.methodType() == QMetaMethod::Slot) {
+    contextMenu.addAction(tr("Invoke"));
+  } else if (method.methodType() == QMetaMethod::Signal) {
+    contextMenu.addAction(tr("Connect to"));
+  }
+
+  if (contextMenu.exec(ui.methodView->viewport()->mapToGlobal(pos)))
+    methodActivated(index);
 }
 
 #include "propertywidget.moc"
