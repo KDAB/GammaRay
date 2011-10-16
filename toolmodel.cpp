@@ -117,7 +117,7 @@ QVariant ToolModel::data(const QModelIndex &index, int role) const
     return QVariant::fromValue(toolIface);
   } else if (role == ToolWidgetRole) {
     return QVariant::fromValue(m_toolWidgets.value(toolIface));
-  } else if (role == ToolId) {
+  } else if (role == ToolIdRole) {
     return toolIface->id();
   }
   return QVariant();
