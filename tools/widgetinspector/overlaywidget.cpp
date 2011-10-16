@@ -137,7 +137,7 @@ void OverlayWidget::updatePositions()
 
   m_layoutPath = QPainterPath();
 
-  if (m_currentWidget->layout()) {
+  if (m_currentWidget->layout() && qstrcmp(m_currentWidget->layout()->metaObject()->className(), "QMainWindowLayout") != 0 ) {
     const QRect layoutGeometry = m_currentWidget->layout()->geometry();
 
     const QRect mappedOuterRect =
