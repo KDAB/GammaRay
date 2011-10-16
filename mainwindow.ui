@@ -76,7 +76,7 @@
     <set>Qt::LeftDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Probes</string>
+    <string>Tools</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
