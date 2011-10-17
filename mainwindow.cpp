@@ -29,7 +29,6 @@
 #include "objecttypefilterproxymodel.h"
 #include "toolmodel.h"
 #include "toolfactory.h"
-#include "promolabel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -76,13 +75,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   ui.toolSelector->setModel(proxyModel);
   ui.toolSelector->resize(0, 0);
   connect(ui.toolSelector, SIGNAL(clicked(QModelIndex)), SLOT(toolSelected()));
-
-  QWidget *promo = new QWidget;
-  QHBoxLayout *promoLayout = new QHBoxLayout;
-  promoLayout->setContentsMargins(0, 10, 0, 0);
-  promoLayout->addWidget(new PromoLabel(this));
-  promo->setLayout(promoLayout);
-  ui.menuBar->setCornerWidget(promo);
 
   // hide unused tool bar for now
   ui.mainToolBar->setHidden(true);
