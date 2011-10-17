@@ -590,7 +590,7 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 
   qDebug() << Q_FUNC_INFO;
   Probe::instance();
-#ifndef Q_OS_WIN
+#if !defined Q_OS_WIN and !defined Q_OS_MAC
   static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
   next_qt_startup_hook();
 #endif
@@ -599,7 +599,7 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 {
   Probe::objectAdded(obj, true);
-#ifndef Q_OS_WIN
+#if !defined Q_OS_WIN and !defined Q_OS_MAC
   static void (*next_qt_addObject)(QObject *obj) =
     (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
   next_qt_addObject(obj);
@@ -609,7 +609,7 @@ extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
 {
   Probe::objectRemoved(obj);
-#ifndef Q_OS_WIN
+#if !defined Q_OS_WIN and !defined Q_OS_MAC
   static void (*next_qt_removeObject)(QObject *obj) =
     (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
   next_qt_removeObject(obj);
@@ -766,5 +766,58 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
     GammaRay::Probe::instance()->window()->show();
   }
 }
+
+#ifdef Q_OS_MAC
+
+
+#include <dlfcn.h>
+#include <inttypes.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/errno.h>
+#include <assert.h>
+
+static inline void *page_align(void *addr)
+{
+  assert(addr != NULL);
+  return (void *)((size_t)addr & ~(0xFFFF));
+}
+
+void writeJmp(void *func, void *replacement)
+{
+  quint8 *cur = (quint8 *) func;
+  quint8 *aligned = (quint8*)page_align(cur);
+  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0 );
+
+  *cur = 0xff;
+  *(++cur) = 0x25;
+
+  *((quint32 *) ++cur) = 0;
+  cur += sizeof (quint32);
+  *((quint64*)cur) = (quint64)replacement;
+
+  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0 );
+}
+
+
+
+// we need a way to execute some code upon load, so let's abuse
+// static initialization
+class HitMeBabyOneMoreTime {
+
+public:
+    HitMeBabyOneMoreTime()
+    {
+      void *qt_startup_hook_addr = dlsym(RTLD_NEXT, "qt_startup_hook");
+      void *qt_add_object_addr = dlsym(RTLD_NEXT, "qt_addObject");
+      void *qt_remove_object_addr = dlsym(RTLD_NEXT, "qt_removeObject");
+      writeJmp(qt_startup_hook_addr, (void * )qt_startup_hook);
+      writeJmp(qt_add_object_addr, (void * )qt_addObject);
+      writeJmp(qt_remove_object_addr, (void * )qt_removeObject);
+    }
+
+};
+static HitMeBabyOneMoreTime britney;
+#endif
 
 #include "probe.moc"
