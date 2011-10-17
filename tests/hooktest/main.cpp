@@ -4,17 +4,32 @@
 
 #include <dlfcn.h>
 #include <inttypes.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/errno.h>
+#include <assert.h>
+
+static inline void *
+page_align(void *addr)
+{
+  assert(addr != NULL);
+  return (void *)((size_t)addr & ~(0xFFFF));
+}
 
 void writeJmp(void *func, void *replacement)
 {
-  short *cur = (short *) func;
+  quint8 *cur = (quint8 *) func;
+  quint8 *aligned = (quint8*)page_align(cur);
+  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0 );
 
   *cur = 0xff;
   *(++cur) = 0x25;
 
-  *((uintptr_t *) ++cur) = 0;
-  cur += sizeof (uintptr_t);
-  *((uintptr_t *)cur) = (uintptr_t)replacement;
+  *((quint32 *) ++cur) = 0;
+  cur += sizeof (quint32);
+  *((quint64*)cur) = (quint64)replacement;
+
+  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0 );
 }
 
 
