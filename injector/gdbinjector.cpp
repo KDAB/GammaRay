@@ -92,9 +92,11 @@ bool GdbInjector::startGdb(const QStringList &args)
   bool status = m_process->waitForStarted(-1);
 
   mExitCode = m_process->exitCode();
-  mProcessError = m_process->error();
   mExitStatus = m_process->exitStatus();
-  mErrorString = m_process->errorString();
+  if (!mManualError) {
+    mProcessError = m_process->error();
+    mErrorString = m_process->errorString();
+  }
 
   return status;
 }
@@ -168,6 +170,7 @@ QString GdbInjector::errorString()
 void GdbInjector::readyReadStandardError()
 {
   const QString error = m_process->readAllStandardError();
+  cerr << error << flush;
 
   if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
     mManualError = true;
@@ -188,8 +191,6 @@ void GdbInjector::readyReadStandardError()
     mProcessError = QProcess::FailedToStart;
     return;
   }
-
-  cerr << error << flush;
 }
 
 void GdbInjector::readyReadStandardOutput()
