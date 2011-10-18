@@ -32,7 +32,6 @@ ConnectionFilterProxyModel::ConnectionFilterProxyModel(QObject *parent)
     m_sender(0)
 {
   setDynamicSortFilter(true);
-  sort(Qt::AscendingOrder);
 }
 
 void ConnectionFilterProxyModel::filterReceiver(QObject *receiver)

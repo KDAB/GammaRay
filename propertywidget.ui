@@ -32,6 +32,9 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
@@ -51,6 +54,9 @@
         <widget class="QTreeView" name="dynamicPropertyView">
          <property name="rootIsDecorated">
           <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
          </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>
@@ -74,6 +80,9 @@
          </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
          </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>
@@ -108,6 +117,9 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
@@ -128,6 +140,9 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>
          </property>
@@ -144,7 +159,11 @@
         <widget class="KFilterProxySearchLine" name="enumSearchLine" native="true"/>
        </item>
        <item>
-        <widget class="QTreeView" name="enumView"/>
+        <widget class="QTreeView" name="enumView">
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -160,6 +179,9 @@
         <widget class="QTreeView" name="classInfoView">
          <property name="rootIsDecorated">
           <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
          </property>
          <property name="allColumnsShowFocus">
           <bool>true</bool>

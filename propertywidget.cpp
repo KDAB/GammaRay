@@ -57,18 +57,24 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.setupUi(this);
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_staticPropertyModel);
   ui.staticPropertyView->setModel(proxy);
+  ui.staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
   ui.staticPropertySearchLine->setProxy(proxy);
 
   proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_dynamicPropertyModel);
   ui.dynamicPropertyView->setModel(proxy);
+  ui.dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
   ui.dynamicPropertySearchLine->setProxy(proxy);
 
   proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_methodModel);
   ui.methodView->setModel(proxy);
+  ui.methodView->sortByColumn(0, Qt::AscendingOrder);
   ui.methodSearchLine->setProxy(proxy);
   connect(ui.methodView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(methodActivated(QModelIndex)));
@@ -77,21 +83,27 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   
 
   proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_classInfoModel);
   ui.classInfoView->setModel(proxy);
+  ui.classInfoView->sortByColumn(0, Qt::AscendingOrder);
   ui.classInfoSearchLine->setProxy(proxy);
 
   m_inboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
   ui.inboundConnectionView->setModel(m_inboundConnectionModel);
+  ui.inboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
   ui.inboundConnectionSearchLine->setProxy(m_inboundConnectionModel);
 
   m_outboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
   ui.outboundConnectionView->setModel(m_outboundConnectionModel);
+  ui.outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
   ui.outboundConnectionSearchLine->setProxy(m_outboundConnectionModel);
 
   proxy = new KRecursiveFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_enumModel);
   ui.enumView->setModel(proxy);
+  ui.enumView->sortByColumn(0, Qt::AscendingOrder);
   ui.enumSearchLine->setProxy(proxy);
 }
 
