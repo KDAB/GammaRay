@@ -42,7 +42,7 @@
           <string notr="true">background-image: url(:/gammaray/kdab-gammary-logo.png);
 background-repeat: no-repeat;
 background-attachment:fixed;
-background-position:bottom;
+background-position:bottom left;
 background-size: 50% 50%;</string>
          </property>
          <property name="frameShape">
