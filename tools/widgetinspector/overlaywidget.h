@@ -22,7 +22,7 @@
 */
 
 #ifndef GAMMARAY_OVERLAYWIDGET_H
-#define GAMMARAy_OVERLAYWIDGET_H
+#define GAMMARAY_OVERLAYWIDGET_H
 
 #include <QtGui/QWidget>
 
