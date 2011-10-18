@@ -40,10 +40,6 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
 
-if(APPLE AND CMAKE_INSTALL_PREFIX MATCHES "/usr/local")
-  set(CMAKE_INSTALL_PREFIX "/Applications")
-endif()
-
 message(STATUS "Building ${Prog_NAME} ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
 add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\")
 
