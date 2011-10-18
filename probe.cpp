@@ -681,8 +681,8 @@ void writeJmp(void *func, void *replacement)
 
   VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
 #else ifdef Q_OS_MAC
-    quint8 *aligned = (quint8*)page_align(cur);
-    assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0 );
+  quint8 *aligned = (quint8*)page_align(func);
+  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0 );
 #endif
 
   quint8 *cur = (quint8 *) func;
