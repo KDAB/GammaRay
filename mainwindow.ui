@@ -32,8 +32,18 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>180</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true">background-image: url(:/gammaray/kdablogo160.png);
+background-repeat: no-repeat;
+background-attachment:fixed;
+background-position:bottom;
+background-size: 50% 50%;</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
@@ -49,6 +59,9 @@
          </property>
          <property name="isWrapping" stdset="0">
           <bool>false</bool>
+         </property>
+         <property name="resizeMode">
+          <enum>QListView::Fixed</enum>
          </property>
          <property name="viewMode">
           <enum>QListView::ListMode</enum>

@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   proxyModel->setSourceModel(model);
   proxyModel->sort(0);
   ui.toolSelector->setModel(proxyModel);
-  ui.toolSelector->resize(0, 0);
+  ui.toolSelector->resize(ui.toolSelector->minimumSize());
   connect(ui.toolSelector, SIGNAL(clicked(QModelIndex)), SLOT(toolSelected()));
 
   // hide unused tool bar for now
