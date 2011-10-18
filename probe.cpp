@@ -47,6 +47,16 @@
 #include <windows.h>
 #endif
 
+#include <assert.h>
+
+#ifdef Q_OS_MAC
+#include <dlfcn.h>
+#include <inttypes.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/errno.h>
+#endif
+
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
@@ -641,7 +651,7 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 }
 #endif
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) or defined(Q_OS_MAC)
 // IMPORTANT NOTE:
 // We are writing a jmp instruction at the target address, if the function is not big,
 // we have to trust that the alignment gives us enough place to this jmp. Jumps are
@@ -649,8 +659,16 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 // existing function, which cannot be reverted. It would be possible to save the content
 // and write it back when we unattach.
 
-void writeJmp(FARPROC func, ULONG_PTR replacement)
+
+static inline void *page_align(void *addr)
 {
+  assert(addr != NULL);
+  return (void *)((size_t)addr & ~(0xFFFF));
+}
+
+void writeJmp(void *func, void *replacement)
+{
+#ifdef Q_OS_WIN
   DWORD oldProtect = 0;
 
   //Jump takes 10 bytes under x86 and 14 bytes under x64
@@ -662,14 +680,22 @@ void writeJmp(FARPROC func, ULONG_PTR replacement)
 #endif
 
   VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
+#else ifdef Q_OS_MAC
+    quint8 *aligned = (quint8*)page_align(cur);
+    assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0 );
+#endif
 
-  BYTE *cur = (BYTE *) func;
+  quint8 *cur = (quint8 *) func;
 
   // If there is a short jump, its a jumptable and we don't have enough
   // space after, so follow the short jump and write the jmp there
   if (*cur == 0xE9) {
     size_t old_offset = *(unsigned long *)(cur + 1);
-    FARPROC ret = (FARPROC)(((DWORD)(((ULONG_PTR) cur) + sizeof (DWORD))) + old_offset + 1);
+#ifdef _M_IX86
+    void *ret = (void *)(((quint32)(((quint32) cur) + sizeof (quint32))) + old_offset + 1);
+#else ifdef _M_X64
+    void *ret = (void *)(((quint32)(((quint64) cur) + sizeof (quint32))) + old_offset + 1);
+#endif
     writeJmp(ret, replacement);
     return;
   }
@@ -678,18 +704,26 @@ void writeJmp(FARPROC func, ULONG_PTR replacement)
   *(++cur) = 0x25;
 
 #ifdef _M_IX86
-  *((DWORD *) ++cur) = (DWORD)(((ULONG_PTR) cur) + sizeof (DWORD));
+  *((quint32 *) ++cur) = (quint32)(((quint32) cur) + sizeof (quint32));
   cur += sizeof (DWORD);
-  *((ULONG_PTR *)cur) = replacement;
+  *((quint32 *)cur) = (quint32)replacement;
 #else ifdef _M_X64
-  *((DWORD *) ++cur) = 0;
-  cur += sizeof (DWORD);
-  *((ULONG_PTR *)cur) = replacement;
+  *((quint32 *) ++cur) = 0;
+  cur += sizeof (quint32);
+  *((quint64*)cur) = (quint64)replacement;
 #endif
 
+#ifdef Q_OS_WIN
   VirtualProtect(func, worstSize, oldProtect, &oldProtect);
+#else ifdef Q_OS_MAC
+  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0 );
+#endif
 }
 
+#endif
+
+
+#ifdef Q_OS_WIN
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
 
 BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
@@ -736,10 +770,10 @@ BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*
   case DLL_PROCESS_ATTACH:
   {
     // write ourself into the hook chain
-    writeJmp(qtstartuphookaddr, (ULONG_PTR)qt_startup_hook);
-    writeJmp(qtaddobjectaddr, (ULONG_PTR)qt_addObject);
-    writeJmp(qtremobjectaddr, (ULONG_PTR)qt_removeObject);
-    writeJmp(qFlagLocationaddr, (ULONG_PTR)myFlagLocation);
+    writeJmp(qtstartuphookaddr, (void *)qt_startup_hook);
+    writeJmp(qtaddobjectaddr, (void *)qt_addObject);
+    writeJmp(qtremobjectaddr, (void *)qt_removeObject);
+    writeJmp(qFlagLocationaddr, (void *)myFlagLocation);
     gammaray_probe_inject();
     break;
   }
@@ -768,39 +802,6 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 }
 
 #ifdef Q_OS_MAC
-
-
-#include <dlfcn.h>
-#include <inttypes.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/errno.h>
-#include <assert.h>
-
-static inline void *page_align(void *addr)
-{
-  assert(addr != NULL);
-  return (void *)((size_t)addr & ~(0xFFFF));
-}
-
-void writeJmp(void *func, void *replacement)
-{
-  quint8 *cur = (quint8 *) func;
-  quint8 *aligned = (quint8*)page_align(cur);
-  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0 );
-
-  *cur = 0xff;
-  *(++cur) = 0x25;
-
-  *((quint32 *) ++cur) = 0;
-  cur += sizeof (quint32);
-  *((quint64*)cur) = (quint64)replacement;
-
-  assert ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0 );
-}
-
-
-
 // we need a way to execute some code upon load, so let's abuse
 // static initialization
 class HitMeBabyOneMoreTime {
