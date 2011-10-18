@@ -58,9 +58,7 @@ AbstractInjector::Ptr createInjector(const QString &name)
 
 AbstractInjector::Ptr defaultInjectorForLaunch()
 {
-#ifdef Q_WS_MACX
-  return createInjector(QLatin1String("gdb"));
-#elif defined(Q_OS_UNIX)
+#if defined(Q_OS_UNIX)
   return createInjector(QLatin1String("preload"));
 #else
   return createInjector(QLatin1String("windll"));
