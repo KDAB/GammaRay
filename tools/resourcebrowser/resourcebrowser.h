@@ -41,6 +41,7 @@ class ResourceBrowser : public QWidget
 
   private slots:
     void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void setupLayout();
 
   private:
     QScopedPointer<Ui::ResourceBrowser> ui;

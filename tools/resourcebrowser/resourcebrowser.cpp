@@ -27,6 +27,7 @@
 #include "resourcefiltermodel.h"
 
 #include <qt/resourcemodel.h>
+#include <QDebug>
 
 using namespace GammaRay;
 
@@ -42,6 +43,16 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QWidget *parent)
   proxy->setSourceModel(resourceModel);
   ui->treeView->setModel(proxy);
   ui->treeView->expandAll();
+
+  // date modifier - not really useful and mostly empty anyways - hide it
+  ui->treeView->hideColumn(3);
+
+  ui->treeView->resizeColumnToContents(0);
+  ui->treeView->resizeColumnToContents(1);
+  ui->treeView->resizeColumnToContents(2);
+
+  QMetaObject::invokeMethod(this, "setupLayout", Qt::QueuedConnection);
+
   connect(ui->treeView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(resourceSelected(QItemSelection,QItemSelection)));
@@ -67,6 +78,22 @@ void ResourceBrowser::resourceSelected(const QItemSelection &selected,
     }
   }
 
+}
+
+void ResourceBrowser::setupLayout()
+{
+  // now the view was setup properly and we can mess with the splitter to resize
+  // the widgets for nicer display
+
+  int viewWidth = ui->treeView->columnWidth(0) + ui->treeView->columnWidth(1)
+                + ui->treeView->columnWidth(2) + ui->treeView->contentsMargins().left()
+                + ui->treeView->contentsMargins().right() + 25;
+  const int totalWidth = ui->splitter_7->width();
+  const int minPreviewWidth = 150;
+  if (totalWidth > viewWidth + minPreviewWidth) {
+    ui->splitter_7->setSizes(QList<int>() << viewWidth << (totalWidth - viewWidth));
+    ui->splitter_7->setStretchFactor(1, 3);
+  }
 }
 
 #include "resourcebrowser.moc"
