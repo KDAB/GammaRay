@@ -71,6 +71,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   m_timer->start(1000);
 
   updateProcesses();
+  selectionChanged();
 }
 
 void AttachDialog::selectionChanged()
@@ -85,22 +86,11 @@ QString AttachDialog::pid() const
 
 void AttachDialog::updateProcesses()
 {
-  QString selectedPid;
-  int oldCol = 0;
-  if (ui.view->currentIndex().isValid()) {
-    selectedPid = pid();
-    oldCol = ui.view->currentIndex().column();
+  const QString oldPid = pid();
+  m_model->mergeProcesses(processList());
+  if (oldPid != pid()) {
+    ui.view->setCurrentIndex(QModelIndex());
   }
-
-  m_model->setProcesses(processList());
-
-  if (!selectedPid.isEmpty()) {
-    ui.view->setCurrentIndex(
-      m_proxyModel->mapFromSource(
-        m_model->index(m_model->indexForPid(selectedPid).row(), oldCol)));
-  }
-
-  selectionChanged();
 }
 
 #include "attachdialog.moc"

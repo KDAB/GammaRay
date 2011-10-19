@@ -22,8 +22,25 @@
 */
 
 #include "processmodel.h"
+#include <QDebug>
 
 using namespace GammaRay;
+
+bool operator<(const ProcData &l, const ProcData &r)
+{
+  return l.ppid < r.ppid;
+}
+
+bool operator==(const ProcData &l, const ProcData &r)
+{
+  return l.ppid == r.ppid;
+}
+
+QDebug operator<<(QDebug d, const ProcData &data) {
+    d << "ProcData{.ppid=" << data.ppid << ", .name=" << data.name << ", .image=" << data.image
+      << ", .state=" << data.state << ", .user=" << data.user << ", .type=" << data.type << "}";
+    return d;
+}
 
 ProcessModel::ProcessModel(QObject *parent)
 : QAbstractTableModel(parent)
@@ -34,11 +51,55 @@ ProcessModel::~ProcessModel()
 {
 }
 
-void ProcessModel::setProcesses(const QList< ProcData >& processes)
+void ProcessModel::setProcesses(const QList< ProcData > &processes)
 {
   beginResetModel();
   m_data = processes;
+  // sort for merging to work properly
+  qStableSort(m_data);
   endResetModel();
+}
+
+void ProcessModel::mergeProcesses(const QList< ProcData > &processes)
+{
+  // sort like m_data
+  QList<ProcData> sortedProcesses = processes;
+  qStableSort(sortedProcesses);
+
+  // iterator over m_data
+  int i = 0;
+
+  foreach(const ProcData& newProc, sortedProcesses) {
+    bool shouldInsert = true;
+    while(i < m_data.count()) {
+      const ProcData &oldProc = m_data.at(i);
+      if (oldProc < newProc) {
+        // remove old proc, seems to be outdated
+        beginRemoveRows(QModelIndex(), i, i);
+        m_data.removeAt(i);
+        endRemoveRows();
+        continue;
+      } else if (newProc == oldProc) {
+        // already contained, hence increment and break
+        ++i;
+        shouldInsert = false;
+        break;
+      } else { // newProc < oldProc
+        // new entry, break and insert it
+        break;
+      }
+    }
+    if (shouldInsert) {
+      beginInsertRows(QModelIndex(), i, i);
+      m_data.insert(i, newProc);
+      endInsertRows();
+      // let i point to old element again
+      ++i;
+    }
+  }
+
+  // make sure the new data is properly inserted
+  Q_ASSERT(m_data == sortedProcesses);
 }
 
 void ProcessModel::clear()
