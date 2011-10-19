@@ -56,6 +56,9 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QWidget *parent)
   connect(ui->treeView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(resourceSelected(QItemSelection,QItemSelection)));
+
+  ui->label_3->setText(tr("select a resource to preview"));
+  ui->stackedWidget->setCurrentWidget(ui->page_4);
 }
 
 void ResourceBrowser::resourceSelected(const QItemSelection &selected,
@@ -76,8 +79,10 @@ void ResourceBrowser::resourceSelected(const QItemSelection &selected,
       ui->textBrowser->setText(f.readAll());
       ui->stackedWidget->setCurrentWidget(ui->page_3);
     }
+  } else {
+    ui->label_3->setText(tr("select a resource to preview"));
+    ui->stackedWidget->setCurrentWidget(ui->page_4);
   }
-
 }
 
 void ResourceBrowser::setupLayout()
