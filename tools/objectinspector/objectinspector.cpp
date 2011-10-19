@@ -42,6 +42,8 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
   objectFilter->setSourceModel(probe->objectTreeModel());
   objectFilter->setDynamicSortFilter(true);
   ui->objectTreeView->setModel(objectFilter);
+  ui->objectTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
+  ui->objectTreeView->header()->setResizeMode(1, QHeaderView::Interactive);
   ui->objectSearchLine->setProxy(objectFilter);
   connect(ui->objectTreeView->selectionModel(),
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
