@@ -217,7 +217,6 @@ set(gammaray_srcs
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/statemachineinspector/statemachineinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
-  tools/webinspector/webinspector.cpp
   tools/widgetinspector/widgetinspector.cpp
   tools/widgetinspector/overlaywidget.cpp
 
@@ -255,7 +254,6 @@ qt4_wrap_ui(gammaray_srcs
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/statemachineinspector/statemachineinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
-  tools/webinspector/webinspector.ui
   tools/widgetinspector/widgetinspector.ui
 )
 qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
@@ -265,7 +263,6 @@ target_link_libraries(gammaray_probe
   ${QT_QTGUI_LIBRARY}
   ${QT_QTSCRIPT_LIBRARY}
   ${QT_QTSCRIPTTOOLS_LIBRARY}
-  ${QT_QTWEBKIT_LIBRARY}
 )
 if(NOT WIN32)
   target_link_libraries(gammaray_probe dl)
@@ -324,3 +321,4 @@ endif()
 include(ExternalProject)
 
 add_subdirectory(tests)
+add_subdirectory(tools)
