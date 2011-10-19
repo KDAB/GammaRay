@@ -153,7 +153,7 @@ Qt::ItemFlags ToolModel::flags(const QModelIndex &index) const
   return flags;
 }
 
-void ToolModel::objectAdded(const QPointer< QObject > &obj)
+void ToolModel::objectAdded(QObject *obj)
 {
   if (obj) {
     objectAdded(obj->metaObject());

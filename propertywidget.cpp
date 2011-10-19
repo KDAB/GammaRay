@@ -61,6 +61,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   proxy->setSourceModel(m_staticPropertyModel);
   ui.staticPropertyView->setModel(proxy);
   ui.staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
+  ui.staticPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
   ui.staticPropertySearchLine->setProxy(proxy);
 
   proxy = new QSortFilterProxyModel(this);
@@ -68,6 +69,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   proxy->setSourceModel(m_dynamicPropertyModel);
   ui.dynamicPropertyView->setModel(proxy);
   ui.dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
+  ui.dynamicPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
   ui.dynamicPropertySearchLine->setProxy(proxy);
 
   proxy = new QSortFilterProxyModel(this);
@@ -75,6 +77,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   proxy->setSourceModel(m_methodModel);
   ui.methodView->setModel(proxy);
   ui.methodView->sortByColumn(0, Qt::AscendingOrder);
+  ui.methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
   ui.methodSearchLine->setProxy(proxy);
   connect(ui.methodView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(methodActivated(QModelIndex)));
@@ -87,6 +90,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   proxy->setSourceModel(m_classInfoModel);
   ui.classInfoView->setModel(proxy);
   ui.classInfoView->sortByColumn(0, Qt::AscendingOrder);
+  ui.classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
   ui.classInfoSearchLine->setProxy(proxy);
 
   m_inboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
@@ -104,6 +108,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   proxy->setSourceModel(m_enumModel);
   ui.enumView->setModel(proxy);
   ui.enumView->sortByColumn(0, Qt::AscendingOrder);
+  ui.enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
   ui.enumSearchLine->setProxy(proxy);
 }
 
