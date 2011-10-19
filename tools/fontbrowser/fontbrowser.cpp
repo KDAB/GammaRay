@@ -39,6 +39,7 @@ FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
 
   m_selectedFontModel = new FontModel(this);
   ui->selectedFontsView->setModel(m_selectedFontModel);
+  ui->selectedFontsView->setRootIsDecorated(false);
 
   ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
   foreach (const QString &family, database.families()) {
@@ -57,11 +58,23 @@ FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
       styleItem->setText(1, sizes.trimmed());
     }
   }
+  ui->fontTree->resizeColumnToContents(0);
   connect(ui->fontTree->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(updateFonts(QItemSelection,QItemSelection)));
   connect(ui->fontText, SIGNAL(textChanged(QString)),
           m_selectedFontModel, SLOT(updateText(QString)));
+
+  ui->pointSize->setValue(font().pointSize());
+
+  connect(ui->boldBox, SIGNAL(toggled(bool)),
+          m_selectedFontModel, SLOT(toggleBoldFont(bool)));
+  connect(ui->italicBox, SIGNAL(toggled(bool)),
+          m_selectedFontModel, SLOT(toggleItalicFont(bool)));
+  connect(ui->underlineBox, SIGNAL(toggled(bool)),
+          m_selectedFontModel, SLOT(toggleUnderlineFont(bool)));
+  connect(ui->pointSize, SIGNAL(valueChanged(int)),
+          m_selectedFontModel, SLOT(setPointSize(int)));
 }
 
 void FontBrowser::updateFonts(const QItemSelection &selected, const QItemSelection &deselected)
@@ -80,6 +93,10 @@ void FontBrowser::updateFonts(const QItemSelection &selected, const QItemSelecti
       continue;
     }
     QFont font(index.data().toString());
+    font.setBold(ui->boldBox->isChecked());
+    font.setUnderline(ui->underlineBox->isChecked());
+    font.setItalic(ui->italicBox->isChecked());
+    font.setPointSize(ui->pointSize->value());
     currentFontNames.append(font.family());
     if (previousFontNames.contains(font.family())) {
       continue;
