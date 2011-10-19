@@ -34,6 +34,7 @@
 #include <QListWidget>
 #include <QLabel>
 #include <QDialogButtonBox>
+#include <QThread>
 
 static QTextStream cerr(stdout);
 
@@ -71,7 +72,9 @@ void handleMessage(QtMsgType type, const char *msg)
     }
   }
 
-  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1")
+  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1"
+      && QThread::currentThread() == QApplication::instance()->thread()
+  )
   {
     foreach (QWidget *w, qApp->topLevelWidgets()) {
       w->setEnabled(false);
@@ -109,7 +112,7 @@ void handleMessage(QtMsgType type, const char *msg)
     dlg.setLayout(layout);
     dlg.adjustSize();
     dlg.exec();
-  } else if (!message.backtrace.isEmpty() && qgetenv("GAMMARAY_UNITTEST") == "1") {
+  } else if (!message.backtrace.isEmpty() && (qgetenv("GAMMARAY_UNITTEST") == "1" || type == QtFatalMsg)) {
     cerr << "START BACKTRACE:" << endl;
     int i = 0;
     foreach (const QString &frame, message.backtrace) {
