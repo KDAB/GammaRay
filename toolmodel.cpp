@@ -42,12 +42,14 @@
 #include "tools/messagehandler/messagehandler.h"
 
 #include "probe.h"
+#include "readorwritelocker.h"
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QLibrary>
 #include <QPluginLoader>
+#include <QThread>
 
 using namespace GammaRay;
 
@@ -155,13 +157,22 @@ Qt::ItemFlags ToolModel::flags(const QModelIndex &index) const
 
 void ToolModel::objectAdded(QObject *obj)
 {
-  if (obj) {
+  // delay to main thread if required
+  QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection, Q_ARG(QObject*, obj));
+}
+
+void ToolModel::objectAddedMainThread(QObject *obj)
+{
+  ReadOrWriteLocker lock(Probe::instance()->objectLock());
+
+  if (Probe::instance()->isValidObject(obj)) {
     objectAdded(obj->metaObject());
   }
 }
 
 void ToolModel::objectAdded(const QMetaObject *mo)
 {
+  Q_ASSERT(thread() == QThread::currentThread());
   foreach (ToolFactory *factory, m_inactiveTools) {
     if (factory->supportedTypes().contains(mo->className())) {
       qDebug() << "found instance of class" << mo->className()

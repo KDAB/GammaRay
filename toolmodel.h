@@ -27,7 +27,6 @@
 #include <qabstractitemmodel.h>
 #include <qvector.h>
 #include <QSet>
-#include <QPointer>
 
 class QStringList;
 namespace GammaRay {
@@ -54,10 +53,15 @@ class ToolModel : public QAbstractListModel
 
   public slots:
     /** Check if we have to activate tools for this type */
-    void objectAdded(const QPointer<QObject> &obj);
+    void objectAdded(QObject *obj);
+    void objectAddedMainThread(QObject *obj);
 
   private:
-    /** Check if we have to activate tools for this type */
+    /**
+     * Check if we have to activate tools for this type
+     *
+     * NOTE: must be called from the GUI thread
+     */
     void objectAdded(const QMetaObject *mo);
 
     /** List all possible tool plugin files. */
