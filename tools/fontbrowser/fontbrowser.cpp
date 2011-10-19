@@ -59,7 +59,7 @@ FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
     }
   }
   ui->fontTree->resizeColumnToContents(0);
-  ui->selectedFontsView->setColumnWidth(ui->fontTree->columnWidth(0));
+  ui->selectedFontsView->setColumnWidth(0, ui->fontTree->columnWidth(0));
   connect(ui->fontTree->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(updateFonts(QItemSelection,QItemSelection)));
