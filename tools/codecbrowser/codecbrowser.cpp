@@ -35,9 +35,11 @@ CodecBrowser::CodecBrowser(ProbeInterface *probe, QWidget *parent)
   Q_UNUSED(probe);
   ui->setupUi(this);
 
+  ui->codecList->setRootIsDecorated(false);
   ui->codecList->setModel(new AllCodecsModel(this));
   ui->codecList->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_selectedCodecsModel = new SelectedCodecsModel(this);
+  ui->selectedCodecs->setRootIsDecorated(false);
   ui->selectedCodecs->setModel(m_selectedCodecsModel);
 
   ui->codecList->resizeColumnToContents(0);
