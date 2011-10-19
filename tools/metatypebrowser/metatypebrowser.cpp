@@ -37,6 +37,7 @@ MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QWidget *parent)
 
   MetaTypesModel *mtm = new MetaTypesModel(this);
   ui->metaTypeView->setModel(mtm);
+  ui->metaTypeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
 }
 
 #include "metatypebrowser.moc"
