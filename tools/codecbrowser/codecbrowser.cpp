@@ -52,18 +52,13 @@ void CodecBrowser::updateCodecs(const QItemSelection &selected,
 {
   Q_UNUSED(selected);
   Q_UNUSED(deselected);
-  QStringList previousCodecs = m_selectedCodecsModel->currentCodecs();
 
   QStringList currentCodecNames;
   foreach (const QModelIndex &index, ui->codecList->selectionModel()->selectedRows()) {
     const QString codecName = index.data().toString();
-    if (previousCodecs.contains(codecName)) {
-      continue;
-    }
     currentCodecNames.append(codecName);
   }
 
-  currentCodecNames << previousCodecs;
   m_selectedCodecsModel->setCodecs(currentCodecNames);
 }
 
