@@ -134,14 +134,12 @@ void PropertyWidget::methodActivated(const QModelIndex &index)
 {
   const QMetaMethod method = index.data(ObjectMethodModel::MetaMethodRole).value<QMetaMethod>();
   if (method.methodType() == QMetaMethod::Slot) {
-    qDebug() << "invoking" << method.signature();
     MethodInvocationDialog *dlg = new MethodInvocationDialog(this);
     dlg->setMethod(m_object.data(), method);
     dlg->show();
     // TODO: return value should go into ui->methodLog
   } else if (method.methodType() == QMetaMethod::Signal) {
     m_signalMapper->connectToSignal(m_object, method);
-    qDebug() << "connecting to" << method.signature();
   }
 }
 

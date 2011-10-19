@@ -72,7 +72,6 @@ void ScriptEngineDebugger::scriptEngineSelected(int index)
     ui->scriptEngineComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QScriptEngine *engine = qobject_cast<QScriptEngine*>(obj);
   if (engine) {
-    qDebug() << "Attaching debugger" << engine;
     debugger->attachTo(engine);
 // FIXME: if we'd do that, we'd get crashes on shutdown.
 //     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();

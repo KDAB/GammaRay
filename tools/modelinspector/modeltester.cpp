@@ -50,7 +50,6 @@ void ModelTester::objectAdded(QObject *obj)
 {
   QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
   if (model) {
-    qDebug() << "Attaching model test to" << model;
     // TODO filter out our own models, way too slow otherwise
     // or even better allow to specify somehow to which models we want to attach
     connect(model, SIGNAL(destroyed(QObject*)), SLOT(modelDestroyed(QObject*)));

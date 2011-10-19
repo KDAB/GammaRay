@@ -38,7 +38,7 @@ SceneModel::SceneModel(QObject *parent)
 void SceneModel::setScene(QGraphicsScene *scene)
 {
   m_scene = scene;
-  qDebug() << "total amount of graphics items:" << m_scene->items().size();
+//   qDebug() << "total amount of graphics items:" << m_scene->items().size();
   reset();
 }
 

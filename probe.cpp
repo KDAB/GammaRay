@@ -33,13 +33,13 @@
 #include "tools/modelinspector/modeltest.h"
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QThread>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDialog>
 #include <QtCore/QTimer>
 
 #include <iostream>
+#include <stdio.h>
 
 #ifndef Q_OS_WIN
 #include <dlfcn.h>
@@ -135,7 +135,7 @@ Probe::Probe(QObject *parent):
   m_window(0),
   m_queueTimer(new QTimer(this))
 {
-  qDebug() << Q_FUNC_INFO;
+  IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
   QInternal::registerCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
   QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
@@ -148,10 +148,11 @@ Probe::Probe(QObject *parent):
 
 Probe::~Probe()
 {
+  IF_DEBUG(cerr << "detaching GammaRay probe" << endl;)
+
   QInternal::unregisterCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
   QInternal::unregisterCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 
-  qDebug() << Q_FUNC_INFO;
   s_instance = 0;
   s_listener()->explicitlyClosed = true;
 }
@@ -604,7 +605,6 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
   s_listener()->trackDestroyed = false;
 
-  qDebug() << Q_FUNC_INFO;
   Probe::instance();
 #if !defined Q_OS_WIN and !defined Q_OS_MAC
   static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
@@ -741,7 +741,7 @@ BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*
   }
 
   if (qtCoreDllHandle == NULL) {
-    qDebug() << "no handle for QtCore found!";
+    cerr << "no handle for QtCore found!" << endl;
     return FALSE;
   }
 
@@ -756,19 +756,19 @@ BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*
 #endif
 
   if (qtstartuphookaddr == NULL) {
-    qDebug() << "no address for qt_startup_hook found!";
+    cerr << "no address for qt_startup_hook found!" << endl;
     return FALSE;
   }
   if (qtaddobjectaddr == NULL) {
-    qDebug() << "no address for qt_addObject found!";
+    cerr << "no address for qt_addObject found!" << endl;
     return FALSE;
   }
   if (qtremobjectaddr == NULL) {
-    qDebug() << "no address for qt_removeObject found!";
+    cerr << "no address for qt_removeObject found!" << endl;
     return FALSE;
   }
   if (qFlagLocationaddr == NULL) {
-    qDebug() << "no address for qFlagLocation found!";
+    cerr << "no address for qFlagLocation found!" << endl;
     return FALSE;
   }
 

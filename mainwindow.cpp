@@ -156,8 +156,8 @@ void MainWindow::toolSelected()
   if (!toolWidget) {
     ToolFactory *toolIface = mi.data(ToolModel::ToolFactoryRole).value<ToolFactory*>();
     Q_ASSERT(toolIface);
-    qDebug() << Q_FUNC_INFO << "creating new probe: "
-             << toolIface->name() << toolIface->supportedTypes();
+//     qDebug() << Q_FUNC_INFO << "creating new probe: "
+//              << toolIface->name() << toolIface->supportedTypes();
     toolWidget = toolIface->createWidget(Probe::instance(), this);
     toolWidget->layout()->setContentsMargins(11,0,0,0);
     ui.toolStack->addWidget(toolWidget);

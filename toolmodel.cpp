@@ -82,7 +82,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
         continue;
       }
     } else {
-      qDebug() << loader->errorString();
+      qWarning() << "could not load plugin:" << loader->errorString();
     }
     delete loader;
   }
@@ -175,8 +175,6 @@ void ToolModel::objectAdded(const QMetaObject *mo)
   Q_ASSERT(thread() == QThread::currentThread());
   foreach (ToolFactory *factory, m_inactiveTools) {
     if (factory->supportedTypes().contains(mo->className())) {
-      qDebug() << "found instance of class" << mo->className()
-               << "activating tool" << factory->name();
       m_inactiveTools.remove(factory);
       factory->init(Probe::instance());
       emit dataChanged(index(0, 0), index(rowCount() - 1, 0));
@@ -200,7 +198,6 @@ QStringList ToolModel::plugins() const
     foreach (const QString &plugin, dir.entryList(QDir::Files)) {
       const QString pluginFile = dir.absoluteFilePath(plugin);
       if (QLibrary::isLibrary(pluginFile)) {
-        qDebug() << "loading plugin" << pluginFile;
         r.push_back(pluginFile);
       }
     }

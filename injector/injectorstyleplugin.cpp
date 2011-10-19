@@ -38,7 +38,6 @@ using namespace GammaRay;
 
 QStyle *InjectorStylePlugin::create(const QString &)
 {
-  qDebug() << Q_FUNC_INFO;
   inject();
   static QGuiPlatformPlugin defaultGuiPlatform;
   return QStyleFactory::create(defaultGuiPlatform.styleName());

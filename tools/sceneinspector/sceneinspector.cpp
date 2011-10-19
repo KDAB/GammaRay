@@ -72,7 +72,7 @@ void SceneInspector::sceneSelected(int index)
 {
   QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-  qDebug() << Q_FUNC_INFO << scene << obj;
+//   qDebug() << Q_FUNC_INFO << scene << obj;
 
   m_sceneModel->setScene(scene);
   ui->graphicsSceneView->setGraphicsScene(scene);
