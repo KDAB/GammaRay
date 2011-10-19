@@ -47,9 +47,7 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QWidget *parent)
   // date modifier - not really useful and mostly empty anyways - hide it
   ui->treeView->hideColumn(3);
 
-  ui->treeView->resizeColumnToContents(0);
-  ui->treeView->resizeColumnToContents(1);
-  ui->treeView->resizeColumnToContents(2);
+  ui->treeView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   QMetaObject::invokeMethod(this, "setupLayout", Qt::QueuedConnection);
 

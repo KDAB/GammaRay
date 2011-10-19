@@ -42,8 +42,8 @@ CodecBrowser::CodecBrowser(ProbeInterface *probe, QWidget *parent)
   ui->selectedCodecs->setRootIsDecorated(false);
   ui->selectedCodecs->setModel(m_selectedCodecsModel);
 
-  ui->codecList->resizeColumnToContents(0);
-  ui->selectedCodecs->setColumnWidth(0, ui->codecList->columnWidth(0));
+  ui->codecList->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  ui->selectedCodecs->header()->setResizeMode(0, QHeaderView::ResizeToContents);
 
   connect(ui->codecList->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
