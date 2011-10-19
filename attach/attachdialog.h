@@ -27,10 +27,6 @@
 #include <QDialog>
 
 #include "ui_attachdialog.h"
-#include "processlist.h"
-
-template<class T >
-class QFutureWatcher;
 
 namespace GammaRay {
 
@@ -56,7 +52,6 @@ class AttachDialog : public QDialog
     ProcessModel *m_model;
     ProcessFilterModel *m_proxyModel;
     QTimer *m_timer;
-    QFutureWatcher<ProcDataList> *m_watcher;
 };
 
 } // namespace GammaRay

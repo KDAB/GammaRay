@@ -72,10 +72,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   connect(m_timer, SIGNAL(timeout()), this, SLOT(updateProcesses()));
   m_timer->start(1000);
 
-  m_watcher = new QFutureWatcher<ProcDataList>(this);
-  connect(m_watcher, SIGNAL(finished()),
-          this, SLOT(updateProcessesFinished()));
-
   // set process list syncronously the first time
   m_model->setProcesses(processList());
   selectionChanged();
@@ -93,16 +89,22 @@ QString AttachDialog::pid() const
 
 void AttachDialog::updateProcesses()
 {
-  m_watcher->setFuture(QtConcurrent::run(processList));
+  QFutureWatcher<ProcDataList>* watcher = new QFutureWatcher<ProcDataList>(this);
+  connect(watcher, SIGNAL(finished()),
+          this, SLOT(updateProcessesFinished()));
+  watcher->setFuture(QtConcurrent::run(processList));
 }
 
 void AttachDialog::updateProcessesFinished()
 {
+  QFutureWatcher<ProcDataList>* watcher = dynamic_cast<QFutureWatcher<ProcDataList>*>(sender());
+  Q_ASSERT(watcher);
   const QString oldPid = pid();
-  m_model->mergeProcesses(m_watcher->result());
+  m_model->mergeProcesses(watcher->result());
   if (oldPid != pid()) {
     ui.view->setCurrentIndex(QModelIndex());
   }
+  watcher->deleteLater();
 }
 
 #include "attachdialog.moc"
