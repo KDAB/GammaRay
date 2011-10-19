@@ -38,6 +38,8 @@ SelectionModelInspector::SelectionModelInspector(ProbeInterface *probe, QWidget 
     new ObjectTypeFilterProxyModel<QItemSelectionModel>(this);
   selectionModelProxy->setSourceModel(probe->objectListModel());
   ui->selectionModelView->setModel(selectionModelProxy);
+  ui->selectionModelView->setRootIsDecorated(false);
+  ui->selectionModelVisualizer->setRootIsDecorated(false);
   connect(ui->selectionModelView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(selectionModelSelected(QItemSelection,QItemSelection)));
