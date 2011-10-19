@@ -29,6 +29,7 @@
 
 #include <QProcess>
 #include <cstdlib>
+#include <QDebug>
 
 using namespace GammaRay;
 
@@ -88,7 +89,8 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   mExitStatus = proc.exitStatus();
   mErrorString = proc.errorString();
 
-  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
+  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit
+          && mProcessError == QProcess::UnknownError;
 }
 
 int PreloadInjector::exitCode()
