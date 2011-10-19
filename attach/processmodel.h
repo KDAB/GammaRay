@@ -36,8 +36,8 @@ class ProcessModel : public QAbstractTableModel
     explicit ProcessModel(QObject *parent = 0);
     virtual ~ProcessModel();
 
-    void setProcesses(const QList<ProcData> &processes);
-    void mergeProcesses(const QList<ProcData> &processes);
+    void setProcesses(const ProcDataList &processes);
+    void mergeProcesses(const ProcDataList &processes);
     ProcData dataForIndex(const QModelIndex &index) const;
     ProcData dataForRow(int row) const;
     QModelIndex indexForPid(const QString &pid) const;
@@ -64,7 +64,7 @@ class ProcessModel : public QAbstractTableModel
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
 private:
-    QList<ProcData> m_data;
+    ProcDataList m_data;
 };
 
 }

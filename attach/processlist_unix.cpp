@@ -62,7 +62,7 @@ static bool processIsQtApp( const QString& pid )
 }
 
 // Determine UNIX processes by running ps
-static QList<ProcData> unixProcessListPS()
+static ProcDataList unixProcessListPS()
 {
 #ifdef Q_OS_MAC
     // command goes last, otherwise it is cut off
@@ -70,7 +70,7 @@ static QList<ProcData> unixProcessListPS()
 #else
     static const char formatC[] = "pid,state,user,cmd";
 #endif
-    QList<ProcData> rc;
+    ProcDataList rc;
     QProcess psProcess;
     QStringList args;
     args << QLatin1String("-e") << QLatin1String("-o") << QLatin1String(formatC);
@@ -113,12 +113,12 @@ static QList<ProcData> unixProcessListPS()
 
 // Determine UNIX processes by reading "/proc". Default to ps if
 // it does not exist
-QList<ProcData> processList()
+ProcDataList processList()
 {
     const QDir procDir(QLatin1String("/proc/"));
     if (!procDir.exists())
         return unixProcessListPS();
-    QList<ProcData> rc;
+    ProcDataList rc;
     const QStringList procIds = procDir.entryList();
     if (procIds.isEmpty())
         return rc;

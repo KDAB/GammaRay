@@ -143,9 +143,9 @@ static inline bool isQtApp(DWORD processId)
     return false;
 }
 
-QList<ProcData> processList()
+ProcDataList processList()
 {
-    QList<ProcData> rc;
+    ProcDataList rc;
 
     PROCESSENTRY32 pe;
     pe.dwSize = sizeof(PROCESSENTRY32);

@@ -56,6 +56,8 @@ struct ProcData
   }
 };
 
-extern QList<ProcData> processList();
+typedef QList<ProcData> ProcDataList;
+
+extern ProcDataList processList();
 
 #endif // PROCESSLIST_H

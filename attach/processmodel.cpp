@@ -51,7 +51,7 @@ ProcessModel::~ProcessModel()
 {
 }
 
-void ProcessModel::setProcesses(const QList< ProcData > &processes)
+void ProcessModel::setProcesses(const ProcDataList &processes)
 {
   beginResetModel();
   m_data = processes;
@@ -60,10 +60,10 @@ void ProcessModel::setProcesses(const QList< ProcData > &processes)
   endResetModel();
 }
 
-void ProcessModel::mergeProcesses(const QList< ProcData > &processes)
+void ProcessModel::mergeProcesses(const ProcDataList &processes)
 {
   // sort like m_data
-  QList<ProcData> sortedProcesses = processes;
+  ProcDataList sortedProcesses = processes;
   qStableSort(sortedProcesses);
 
   // iterator over m_data
