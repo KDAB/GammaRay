@@ -213,7 +213,6 @@ set(gammaray_srcs
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
   tools/sceneinspector/sceneinspector.cpp
-  tools/scriptenginedebugger/scriptenginedebugger.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/statemachineinspector/statemachineinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
@@ -240,7 +239,6 @@ qt4_wrap_ui(gammaray_srcs
   propertywidget.ui
   methodinvocationdialog.ui
   tools/sceneinspector/graphicssceneview.ui
-
   tools/codecbrowser/codecbrowser.ui
   tools/connectioninspector/connectioninspector.ui
   tools/fontbrowser/fontbrowser.ui
@@ -250,7 +248,6 @@ qt4_wrap_ui(gammaray_srcs
   tools/objectinspector/objectinspector.ui
   tools/resourcebrowser/resourcebrowser.ui
   tools/sceneinspector/sceneinspector.ui
-  tools/scriptenginedebugger/scriptenginedebugger.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/statemachineinspector/statemachineinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
@@ -261,8 +258,6 @@ add_library(gammaray_probe SHARED ${gammaray_srcs})
 target_link_libraries(gammaray_probe
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
-  ${QT_QTSCRIPT_LIBRARY}
-  ${QT_QTSCRIPTTOOLS_LIBRARY}
 )
 if(NOT WIN32)
   target_link_libraries(gammaray_probe dl)

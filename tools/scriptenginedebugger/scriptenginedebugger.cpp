@@ -32,6 +32,7 @@
 #include <QtScriptTools/QScriptEngineDebugger>
 #include <QDebug>
 #include <QMainWindow>
+#include <QtPlugin>
 
 using namespace GammaRay;
 
@@ -77,5 +78,7 @@ void ScriptEngineDebugger::scriptEngineSelected(int index)
 //     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
   }
 }
+
+Q_EXPORT_PLUGIN(ScriptEngineDebuggerFactory)
 
 #include "scriptenginedebugger.moc"

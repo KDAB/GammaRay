@@ -53,8 +53,9 @@ class ScriptEngineDebuggerFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+
   public:
-    explicit ScriptEngineDebuggerFactory(QObject *parent) : QObject(parent) {}
+    explicit ScriptEngineDebuggerFactory(QObject *parent = 0) : QObject(parent) {}
     inline QString name() const { return tr("Script Engines"); }
 };
 
