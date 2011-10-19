@@ -197,7 +197,17 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
     return QVariant();
   }
 
-  const Connection con = m_connections.at(index.row());
+  Connection con = m_connections.at(index.row());
+  lock.unlock();
+
+  ReadOrWriteLocker probeLock(Probe::instance()->objectLock());
+  if (!Probe::instance()->isValidObject(con.sender)) {
+    con.sender = 0;
+  }
+  if (!Probe::instance()->isValidObject(con.receiver)) {
+    con.receiver = 0;
+  }
+
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
       if (con.sender) {
