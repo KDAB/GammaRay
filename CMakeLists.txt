@@ -216,6 +216,7 @@ set(gammaray_srcs
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/statemachineinspector/statemachineinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
+  tools/webinspector/webinspector.cpp
   tools/widgetinspector/widgetinspector.cpp
   tools/widgetinspector/overlaywidget.cpp
 
@@ -263,6 +264,7 @@ target_link_libraries(gammaray_probe
   ${QT_QTGUI_LIBRARY}
   ${QT_QTSCRIPT_LIBRARY}
   ${QT_QTSCRIPTTOOLS_LIBRARY}
+  ${QT_QTWEBKIT_LIBRARY}
 )
 if(NOT WIN32)
   target_link_libraries(gammaray_probe dl)
@@ -334,4 +336,3 @@ else()
 endif()
 
 add_subdirectory(tests)
-add_subdirectory(tools)

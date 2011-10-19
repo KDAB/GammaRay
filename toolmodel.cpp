@@ -37,6 +37,7 @@
 #include "tools/selectionmodelinspector/selectionmodelinspector.h"
 #include "tools/statemachineinspector/statemachineinspector.h"
 #include "tools/textdocumentinspector/textdocumentinspector.h"
+#include "tools/webinspector/webinspector.h"
 #include "tools/widgetinspector/widgetinspector.h"
 #include "tools/messagehandler/messagehandler.h"
 
@@ -58,6 +59,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new ModelInspector(this));
   m_tools.push_back(new SceneInspectorFactory(this));
   m_tools.push_back(new ScriptEngineDebuggerFactory(this));
+  m_tools.push_back(new WebInspectorFactory(this));
   m_tools.push_back(new ConnectionInspectorFactory(this));
   m_tools.push_back(new ResourceBrowserFactory(this));
   m_tools.push_back(new StateMachineInspectorFactory(this));

@@ -28,8 +28,6 @@
 #include <probeinterface.h>
 #include <objectmodel.h>
 
-#include <QtPlugin>
-
 using namespace GammaRay;
 
 WebInspector::WebInspector(ProbeInterface *probe, QWidget *parent)
@@ -56,7 +54,5 @@ void WebInspector::webPageSelected(int index)
     ui->webInspector->setPage(page);
   }
 }
-
-Q_EXPORT_PLUGIN(WebInspectorFactory)
 
 #include "webinspector.moc"

@@ -50,9 +50,8 @@ class WebInspectorFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-
   public:
-    explicit WebInspectorFactory(QObject *parent = 0) : QObject(parent) {}
+    explicit WebInspectorFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Web Pages"); }
 };
 
