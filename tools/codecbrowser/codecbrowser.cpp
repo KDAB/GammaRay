@@ -40,6 +40,9 @@ CodecBrowser::CodecBrowser(ProbeInterface *probe, QWidget *parent)
   m_selectedCodecsModel = new SelectedCodecsModel(this);
   ui->selectedCodecs->setModel(m_selectedCodecsModel);
 
+  ui->codecList->resizeColumnToContents(0);
+  ui->selectedCodecs->setColumnWidth(0, ui->codecList->columnWidth(0));
+
   connect(ui->codecList->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(updateCodecs(QItemSelection,QItemSelection)));

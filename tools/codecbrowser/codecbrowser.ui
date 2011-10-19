@@ -13,26 +13,30 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_8">
-        <item>
-         <widget class="QSplitter" name="splitter_11">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QTreeView" name="codecList"/>
-          <widget class="QWidget" name="layoutWidget">
-           <layout class="QVBoxLayout" name="verticalLayout_16">
-            <item>
-             <widget class="QTableView" name="selectedCodecs"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="codecText"/>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-       </layout>
+  <layout class="QHBoxLayout" name="horizontalLayout_8">
+   <item>
+    <widget class="QSplitter" name="splitter_11">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QTreeView" name="codecList"/>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QVBoxLayout" name="verticalLayout_16">
+       <item>
+        <widget class="QLineEdit" name="codecText">
+         <property name="placeholderText">
+          <string>codec preview text</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTreeView" name="selectedCodecs"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
