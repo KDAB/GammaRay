@@ -116,7 +116,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     GammaRay::MainWindow *m_window;
     // ensures proper information is returned by isValidObject by
     // locking it in objectAdded/Removed
-    mutable QReadWriteLock m_lock;
+    static QReadWriteLock s_lock;
     QSet<QObject*> m_validObjects;
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;
