@@ -50,6 +50,8 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
   widgetSearchProxy->setSourceModel(widgetFilterProxy);
   ui->widgetTreeView->setModel(widgetSearchProxy);
+  ui->widgetTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
+  ui->widgetTreeView->header()->setResizeMode(1, QHeaderView::Interactive);
   ui->widgetSearchLine->setProxy(widgetSearchProxy);
   connect(ui->widgetTreeView->selectionModel(),
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
