@@ -100,7 +100,7 @@ static void signal_end_callback(QObject *caller, int method_index)
 }
 
 TimerModel::TimerModel(QObject *parent)
-  : QObject(parent)
+  : QAbstractListModel(parent)
 {
 }
 
@@ -115,10 +115,12 @@ void TimerModel::slotRowsRemoved(const QModelIndex &parent, int start, int end)
   Q_ASSERT(start >= 0 && end >= 0 &&
            start < s_timerInfos.size() && end < s_timerInfos.size());
   int count = end - start + 1;
+  beginRemoveRows(QModelIndex(), start, end);
   while (count > 0) {
     s_timerInfos.removeAt(start);
     count--;
   }
+  endInsertRows();
   checkConsistency();
 }
 
@@ -127,16 +129,20 @@ void TimerModel::slotRowsInserted(const QModelIndex &parent, int start, int end)
   Q_UNUSED(parent);
   Q_ASSERT(start >= 0 && end >= 0 &&
            start <= s_timerInfos.size() && end <= s_timerInfos.size());
+  beginInsertRows(QModelIndex(), start, end);
   for (int i = start; i <= end; i++) {
     s_timerInfos.insert(i, createTimerInfo(timerAt(i)));
   }
+  endInsertRows();
   checkConsistency();
 }
 
 void TimerModel::slotReset()
 {
+  beginResetModel();
   s_timerInfos.clear();
   populateTimerList();
+  endResetModel();
 }
 
 void TimerModel::populateTimerList()
@@ -180,13 +186,23 @@ QTimer *TimerModel::timerAt(int row) const
 
 TimerInfoPtr TimerModel::timerInfoFor(QTimer *timer) const
 {
+  const int index = indexOfTimer(timer);
+  if (index != -1) {
+    return s_timerInfos.at(index);
+  } else {
+    return TimerInfoPtr();
+  }
+}
+
+int TimerModel::indexOfTimer(QTimer *timer) const
+{
   for (int i = 0; i < s_timerInfos.size(); i++) {
     const TimerInfoPtr cur = s_timerInfos.at(i);
     if (cur->timer() == timer) {
-      return cur;
+      return i;
     }
   }
-  return TimerInfoPtr();
+  return -1;
 }
 
 void TimerModel::checkConsistency() const
@@ -195,7 +211,6 @@ void TimerModel::checkConsistency() const
   for (int i = 0; i < s_timerInfos.size(); i++) {
     Q_ASSERT(s_timerInfos[i]->timer() == timerAt(i));
   }
-  dumpTimerList();
 }
 
 void GammaRay::TimerModel::setProbeInterface(ProbeInterface *probe)
@@ -232,15 +247,17 @@ void TimerModel::preSignalActivate(QTimer *timer)
            << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
     }
   } else {
-    cout << "TimerModel::preSignalActivate(): Unable to find timer "
-         << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+    // Ok, likely a GammaRay timer
+    //cout << "TimerModel::preSignalActivate(): Unable to find timer "
+    //     << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
   }
 }
 
 void TimerModel::postSignalActivate(QTimer *timer)
 {
-  const TimerInfoPtr timerInfo = timerInfoFor(timer);
-  if (timerInfo) {
+  const int row = indexOfTimer(timer);
+  if (row != -1) {
+    const TimerInfoPtr timerInfo = s_timerInfos.at(row);
     if (!timerInfo->functionCallTimer()->active()) {
       cout << "TimerModel::postSignalActivate(): Timer not active: "
            << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
@@ -249,12 +266,57 @@ void TimerModel::postSignalActivate(QTimer *timer)
       event.timeStamp = QTime::currentTime();
       event.executionTime = timerInfo->functionCallTimer()->stop();
       timerInfo->addEvent(event);
-      dumpTimerList();
+      emit dataChanged(index(row), index(row));
     }
   } else {
-    cout << "TimerModel::postSignalActivate(): Unable to find timer "
-         << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+    // Ok, likely a GammaRay timer
+    //cout << "TimerModel::postSignalActivate(): Unable to find timer "
+    //     << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
   }
+}
+
+int TimerModel::rowCount(const QModelIndex &parent) const
+{
+  Q_UNUSED(parent);
+  return s_timerInfos.size();
+}
+
+int TimerModel::columnCount(const QModelIndex &parent) const
+{
+  Q_UNUSED(parent);
+  return LastRole - FirstRole - 1;
+}
+
+QVariant TimerModel::data(const QModelIndex &index, int role) const
+{
+  if (role == Qt::DisplayRole && index.isValid() && index.row() >= 0 &&
+      index.row() < s_timerInfos.size() && index.column() >= 0 && index.column() < LastRole) {
+    TimerInfoPtr timerInfo = s_timerInfos.at(index.row());
+    switch ((Roles)(index.column() + FirstRole + 1)) {
+      case ObjectNameRole: return timerInfo->timer()->objectName();
+      case StateRole: return tr("TODO");
+      case WakeupsPerSecRole: return tr("TODO");
+      case TimePerWakeupRole: return tr("TODO");
+      case MaxTimePerWakeupRole: return tr("TODO");
+      case TimerIdRole: return timerInfo->timer()->timerId();
+    }
+  }
+  return QVariant();
+}
+
+QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    switch ((Roles)(section + FirstRole + 1)) {
+      case ObjectNameRole: return tr("Object Name");
+      case StateRole: return tr("State");
+      case WakeupsPerSecRole: return tr("Wakeups/Sec");
+      case TimePerWakeupRole: return tr("Time/Wakeup [uSecs]");
+      case MaxTimePerWakeupRole: return tr("Max Wakeup Time [uSecs]");
+      case TimerIdRole: return tr("Timer ID");
+    }
+  }
+  return QAbstractListModel::headerData(section, orientation, role);
 }
 
 TimerInfo::TimerInfo(QTimer *timer)

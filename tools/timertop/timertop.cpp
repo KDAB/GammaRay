@@ -25,7 +25,7 @@
 #include "ui_timertop.h"
 #include "timermodel.h"
 
-
+#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
@@ -61,6 +61,11 @@ using namespace GammaRay;
 // protect against timer deletion
 // make the connection interface generic and add to probeinterface
 
+// update every x milliseconds and trigger update on timeout()
+
+// remove unable to find timer warning
+// add a property widget
+
 TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
     ui(new Ui::TimerTop)
@@ -68,6 +73,11 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   Q_UNUSED(probe);
   ui->setupUi(this);
   TimerModel::instance()->setProbeInterface(probe);
+  QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel(this);
+  sortProxy->setSourceModel(TimerModel::instance());
+  sortProxy->setDynamicSortFilter(true);
+  ui->timerView->setModel(sortProxy);
+  ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1, Qt::AscendingOrder);
 }
 
 #include "timertop.moc"

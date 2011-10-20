@@ -27,6 +27,7 @@
 #include <QTime>
 #include <QPointer>
 #include <QTimer>
+#include <QAbstractListModel>
 
 namespace GammaRay {
 
@@ -70,7 +71,7 @@ typedef QSharedPointer<TimerInfo> TimerInfoPtr;
 
 class ProbeInterface;
 
-class TimerModel : public QObject
+class TimerModel : public QAbstractListModel
 {
   Q_OBJECT
   public:
@@ -81,6 +82,22 @@ class TimerModel : public QObject
     // For the spy callbacks
     void preSignalActivate(QTimer *timer);
     void postSignalActivate(QTimer *timer);
+
+    enum Roles {
+      FirstRole = Qt::UserRole + 1,
+      ObjectNameRole,
+      StateRole,
+      WakeupsPerSecRole,
+      TimePerWakeupRole,
+      MaxTimePerWakeupRole,
+      TimerIdRole,
+      LastRole
+    };
+
+    /* reimp */ int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    /* reimp */ int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    /* reimp */ QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
   private slots:
     void slotRowsRemoved(const QModelIndex &parent, int start, int end);
@@ -93,6 +110,7 @@ class TimerModel : public QObject
     TimerInfoPtr createTimerInfo(QTimer *timer) const;
     QTimer *timerAt(int index) const;
     TimerInfoPtr timerInfoFor(QTimer *timer) const;
+    int indexOfTimer(QTimer *timer) const;
     void checkConsistency() const;
 
     QScopedPointer<ObjectTypeFilterProxyModel<QTimer> > m_timerFilter;
