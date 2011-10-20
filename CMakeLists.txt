@@ -247,6 +247,7 @@ set(gammaray_srcs
   tools/widgetinspector/widgetinspector.cpp
   tools/widgetinspector/overlaywidget.cpp
   tools/timertop/timertop.cpp
+  tools/timertop/timermodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
