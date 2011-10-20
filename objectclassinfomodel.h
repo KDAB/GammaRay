@@ -37,7 +37,7 @@ class ObjectClassInfoModel : public MetaObjectModel<QMetaClassInfo,
   public:
     explicit ObjectClassInfoModel(QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, const QMetaClassInfo &classInfo, int role) const;
+    QVariant metaData(const QModelIndex &index, const QMetaClassInfo &classInfo, int role) const;
     QString columnHeader(int index) const;
 };
 

@@ -72,7 +72,7 @@ QVariant ObjectEnumModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
-QVariant ObjectEnumModel::data(const QModelIndex &index,
+QVariant ObjectEnumModel::metaData(const QModelIndex &index,
                                const QMetaEnum &enumerator, int role) const
 {
   if (role == Qt::DisplayRole) {

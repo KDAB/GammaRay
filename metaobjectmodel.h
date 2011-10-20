@@ -61,7 +61,7 @@ class MetaObjectModel : public QAbstractItemModel
         }
         return mo->className();
       }
-      return data(index, metaThing, role);
+      return metaData(index, metaThing, role);
     }
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
@@ -99,7 +99,7 @@ class MetaObjectModel : public QAbstractItemModel
     }
 
   protected:
-    virtual QVariant data(const QModelIndex &index, const MetaThing &metaThing, int role) const = 0;
+    virtual QVariant metaData(const QModelIndex &index, const MetaThing &metaThing, int role) const = 0;
     virtual QString columnHeader(int index) const = 0;
 
   protected:

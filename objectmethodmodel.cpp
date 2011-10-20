@@ -37,7 +37,7 @@ int GammaRay::ObjectMethodModel::columnCount(const QModelIndex &parent) const
   return 4;
 }
 
-QVariant ObjectMethodModel::data(const QModelIndex &index,
+QVariant ObjectMethodModel::metaData(const QModelIndex &index,
                                  const QMetaMethod &method, int role) const
 {
   if (role == Qt::DisplayRole) {

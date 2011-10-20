@@ -33,7 +33,7 @@ ObjectClassInfoModel::ObjectClassInfoModel(QObject *parent)
 {
 }
 
-QVariant ObjectClassInfoModel::data(const QModelIndex &index,
+QVariant ObjectClassInfoModel::metaData(const QModelIndex &index,
                                     const QMetaClassInfo &classInfo, int role) const
 {
   if (role == Qt::DisplayRole) {

@@ -43,7 +43,7 @@ class ObjectMethodModel :
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
   protected:
-    QVariant data(const QModelIndex &index,
+    QVariant metaData(const QModelIndex &index,
                   const QMetaMethod &method, int role = Qt::DisplayRole) const;
     QString columnHeader(int index) const;
 };
