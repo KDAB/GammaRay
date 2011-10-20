@@ -322,17 +322,4 @@ endif()
 
 include(ExternalProject)
 
-set(QTC_SOURCE_DIR "" CACHE STRING "Path to Qt Creator sources")
-set(QTC_BUILD_DIR "" CACHE STRING "Path to Qt Creator build directory")
-if(QTC_SOURCE_DIR AND QTC_BUILD_DIR)
-  message(STATUS "building the Qt Creator GammaRay plugin")
-  externalproject_add(qtc-plugin
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/qtc-plugin"
-    CONFIGURE_COMMAND ${QT_QMAKE_EXECUTABLE} QTC_SOURCE_DIR="${QTC_SOURCE_DIR}" IDE_BUILD_TREE="${QTC_BUILD_DIR}" ${CMAKE_CURRENT_SOURCE_DIR}/qtc-plugin
-    INSTALL_COMMAND ""
-  )
-else()
-  message(STATUS "not building the Qt Creator GammaRay plugin, set QTC_SOURCE_DIR and QTC_BUILD_DIR if you want it")
-endif()
-
 add_subdirectory(tests)
