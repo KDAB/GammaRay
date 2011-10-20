@@ -77,7 +77,7 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   sortProxy->setSourceModel(TimerModel::instance());
   sortProxy->setDynamicSortFilter(true);
   ui->timerView->setModel(sortProxy);
-  ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1, Qt::AscendingOrder);
+  ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1, Qt::DescendingOrder);
 }
 
 #include "timertop.moc"
