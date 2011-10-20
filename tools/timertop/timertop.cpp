@@ -23,11 +23,47 @@
 #include "timertop.h"
 
 #include "ui_timertop.h"
+#include <3rdparty/qt/qobject_p_copy.h>
+
+#include <QDebug>
+#include <QMetaMethod>
+
+#include <iostream>
 
 // thread saftey!
 // timer events
 
 using namespace GammaRay;
+using namespace std;
+
+QTimer *timer_from_callback(QObject *caller, int method_index)
+{
+  QTimer * const timer = dynamic_cast<QTimer*>(caller);
+  if (timer) {
+    QMetaMethod method = timer->metaObject()->method(method_index);
+    if (method.signature() == QLatin1String("timeout()")) {
+      return timer;
+    }
+  }
+  return 0;
+}
+
+static void signal_begin_callback(QObject *caller, int method_index, void **argv)
+{
+  Q_UNUSED(argv);
+  QTimer * const timer = timer_from_callback(caller, method_index);
+  if (timer) {
+    cout << "--> QTimer::timeout() " << (void*)caller << " " << caller->objectName().toAscii().data() << endl;
+  }
+}
+
+static void signal_end_callback(QObject *caller, int method_index)
+{
+  QTimer * const timer = timer_from_callback(caller, method_index);
+  if (timer) {
+    cout << "<-- QTimer::timeout() " << (void*)caller << " " << caller->objectName().toAscii().data() << endl;
+  }
+}
 
 TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
@@ -35,6 +71,14 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
 {  
   Q_UNUSED(probe);
   ui->setupUi(this);
+
+  QSignalSpyCallbackSet callbacks;
+  callbacks.slot_begin_callback = 0;
+  callbacks.slot_end_callback = 0;
+  callbacks.signal_begin_callback = signal_begin_callback;
+  callbacks.signal_end_callback = signal_end_callback;
+
+  qt_register_signal_spy_callbacks(callbacks);
 }
 
 #include "timertop.moc"
