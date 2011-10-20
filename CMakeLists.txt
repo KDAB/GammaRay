@@ -23,6 +23,8 @@ set(GAMMARAY_VERSION_PATCH "50")
 set(GAMMARAY_VERSION "${GAMMARAY_VERSION_MAJOR}.${GAMMARAY_VERSION_MINOR}.${GAMMARAY_VERSION_PATCH}")
 set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION}")
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+
 enable_testing()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
@@ -164,6 +166,7 @@ target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 set(gammaray_srcs
   mainwindow.cpp
+  pluginmanager.cpp
   probe.cpp
   propertywidget.cpp
   proxydetacher.cpp
@@ -254,7 +257,9 @@ qt4_wrap_ui(gammaray_srcs
   tools/widgetinspector/widgetinspector.ui
 )
 qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
-add_library(gammaray_probe SHARED ${gammaray_srcs})
+add_library(gammaray_probe
+  SHARED ${gammaray_srcs}
+)
 target_link_libraries(gammaray_probe
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}

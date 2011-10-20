@@ -15,7 +15,10 @@ target_link_libraries(gammaray_scriptenginedebugger_plugin
   ${QT_QTSCRIPT_LIBRARY}
   ${QT_QTSCRIPTTOOLS_LIBRARY}
 )
-set_target_properties(gammaray_scriptenginedebugger_plugin PROPERTIES PREFIX "")
+set_target_properties(gammaray_scriptenginedebugger_plugin
+  PROPERTIES PREFIX ""
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/plugins
+)
 install(
   TARGETS gammaray_scriptenginedebugger_plugin
   DESTINATION ${PLUGIN_INSTALL_DIR}/gammaray/

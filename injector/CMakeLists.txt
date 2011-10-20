@@ -8,7 +8,10 @@ target_link_libraries(gammaray_injector_style
 ${QT_QTCORE_LIBRARY}
 ${QT_QTGUI_LIBRARY}
 )
-set_target_properties(gammaray_injector_style PROPERTIES PREFIX "")
+set_target_properties(gammaray_injector_style
+  PROPERTIES PREFIX ""
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/plugins/styles
+)
 install(
 TARGETS gammaray_injector_style
 DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/styles

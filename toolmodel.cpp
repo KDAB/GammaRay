@@ -39,6 +39,7 @@
 #include "tools/widgetinspector/widgetinspector.h"
 #include "tools/messagehandler/messagehandler.h"
 
+#include "pluginmanager.h"
 #include "probe.h"
 #include "readorwritelocker.h"
 
@@ -46,7 +47,6 @@
 #include <QDebug>
 #include <QDir>
 #include <QLibrary>
-#include <QPluginLoader>
 #include <QThread>
 
 using namespace GammaRay;
@@ -68,19 +68,8 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new TextDocumentInspectorFactory(this));
   m_tools.push_back(new MessageHandlerFactory(this));
 
-  // tool plugins
-  foreach (const QString &pluginFile, plugins()) {
-    QPluginLoader *loader = new QPluginLoader(pluginFile, this);
-    if (loader->load()) {
-      ToolFactory *factory = qobject_cast<ToolFactory*>(loader->instance());
-      if (factory) {
-        m_tools.push_back(factory);
-        continue;
-      }
-    } else {
-      qWarning() << "could not load plugin:" << loader->errorString();
-    }
-    delete loader;
+  Q_FOREACH(ToolFactory* factory, PluginManager::instance()->allObjects<ToolFactory>()) {
+      m_tools.push_back(factory);
   }
 
   // everything but the object inspector is inactive initially
@@ -179,26 +168,6 @@ void ToolModel::objectAdded(const QMetaObject *mo)
   if (mo->superClass()) {
     objectAdded(mo->superClass());
   }
-}
-
-QStringList ToolModel::plugins() const
-{
-  QStringList r;
-
-  if (!QCoreApplication::libraryPaths().contains(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR))) {
-    QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
-  }
-
-  foreach (const QString &pluginDir, QCoreApplication::libraryPaths()) {
-    QDir dir(pluginDir + QLatin1String("/gammaray/"));
-    foreach (const QString &plugin, dir.entryList(QDir::Files)) {
-      const QString pluginFile = dir.absoluteFilePath(plugin);
-      if (QLibrary::isLibrary(pluginFile)) {
-        r.push_back(pluginFile);
-      }
-    }
-  }
-  return r;
 }
 
 #include "toolmodel.moc"
