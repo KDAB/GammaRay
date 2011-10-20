@@ -107,7 +107,6 @@ class TimerModel : public QAbstractListModel
 
   private:
     void populateTimerList();
-    void dumpTimerList() const;
     TimerInfoPtr createTimerInfo(QTimer *timer) const;
     QTimer *timerAt(int index) const;
     TimerInfoPtr timerInfoFor(QTimer *timer) const;

@@ -154,24 +154,6 @@ void TimerModel::populateTimerList()
   checkConsistency();
 }
 
-void TimerModel::dumpTimerList() const
-{
-  cout << "----------------------------- Timers ------------------------------------------" << endl;
-  cout << "-------------------------------------------------------------------------------" << endl;
-  cout << "id     |    timerId | objectName                                     |  wakeups" << endl;
-  cout << "-------|------------|------------------------------------------------|---------" << endl;
-  for (int i = 0; i < s_timerInfos.size(); i++) {
-    TimerInfoPtr timerInfo = s_timerInfos.at(i);
-    const QString formatted = QString("%1 | %2 | %3 | %4")
-        .arg(i, 6)
-        .arg(timerInfo->timer()->timerId(), 10)
-        .arg(timerInfo->timer()->objectName(), 46)
-        .arg(timerInfo->numEvents(), 8);
-    cout << formatted.toStdString() << endl;
-  }
-  cout << "-------------------------------------------------------------------------------" << endl;
-}
-
 TimerInfoPtr TimerModel::createTimerInfo(QTimer *timer) const
 {
   TimerInfoPtr timerInfo(new TimerInfo(timer));
