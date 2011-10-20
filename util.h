@@ -37,6 +37,8 @@ namespace Util
   QString variantToString(const QVariant &value);
   QString addressToString(const void *p);
 
+  bool descendantOf(QObject *ascendant, QObject *obj);
+
   template <typename T>
   T *findParentOfType(QObject *object) {
     if (!object) {

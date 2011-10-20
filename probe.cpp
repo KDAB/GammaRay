@@ -228,18 +228,6 @@ void Probe::delayedInit()
   window->show();
 }
 
-static bool descendantOf(QObject *ascendant, QObject *obj)
-{
-  QObject *parent = obj->parent();
-  if (!parent) {
-    return false;
-  }
-  if (parent == ascendant) {
-    return true;
-  }
-  return descendantOf(ascendant, parent);
-}
-
 /**
  * Returns true if @p obj belongs to the GammaRay Probe or Window.
  *
@@ -255,8 +243,8 @@ static bool filterObject(QObject *obj)
     return false;
   }
   return obj == p || obj == p->window() ||
-          descendantOf(p, obj) ||
-          descendantOf(p->window(), obj);
+          Util::descendantOf(p, obj) ||
+          Util::descendantOf(p->window(), obj);
 }
 
 QAbstractItemModel *Probe::objectListModel() const

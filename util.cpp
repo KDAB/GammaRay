@@ -126,3 +126,15 @@ QString Util::addressToString(const void *p)
 {
   return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
 }
+
+bool Util::descendantOf(QObject* ascendant, QObject* obj)
+{
+  QObject *parent = obj->parent();
+  if (!parent) {
+    return false;
+  }
+  if (parent == ascendant) {
+    return true;
+  }
+  return descendantOf(ascendant, parent);
+}
