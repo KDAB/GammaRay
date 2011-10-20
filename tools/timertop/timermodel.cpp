@@ -30,6 +30,7 @@
 #include <iostream>
 
 static const int maxTimeoutEvents = 1000;
+static const int maxTimeSpan = 10000;
 
 using namespace GammaRay;
 using namespace std;
@@ -295,7 +296,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
     switch ((Roles)(index.column() + FirstRole + 1)) {
       case ObjectNameRole: return timerInfo->timer()->objectName();
       case StateRole: return tr("TODO");
-      case WakeupsPerSecRole: return tr("TODO");
+      case WakeupsPerSecRole: return timerInfo->wakeupsPerSec();
       case TimePerWakeupRole: return tr("TODO");
       case MaxTimePerWakeupRole: return tr("TODO");
       case TimerIdRole: return timerInfo->timer()->timerId();
@@ -343,6 +344,30 @@ QTimer *TimerInfo::timer() const
 FunctionCallTimer *TimerInfo::functionCallTimer()
 {
   return &m_functionCallTimer;
+}
+
+float TimerInfo::wakeupsPerSec() const
+{
+  int totalWakeups = 0;
+  int start = 0;
+  int end = m_timeoutEvents.size() - 1;
+  for (int i = end; i >= 0; i--) {
+    const TimeoutEvent &event = m_timeoutEvents.at(i);
+    if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
+      start = i;
+      break;
+    }
+    totalWakeups++;
+  }
+
+  if (totalWakeups > 0 && end > start) {
+    const QTime startTime = m_timeoutEvents[start].timeStamp;
+    const QTime endTime = m_timeoutEvents[end].timeStamp;
+    const int timeSpan = startTime.msecsTo(endTime);
+    const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
+    return wakeupsPerSec;
+  }
+  return 0;
 }
 
 void TimerInfo::removeOldEvents()
