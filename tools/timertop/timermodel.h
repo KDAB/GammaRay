@@ -35,6 +35,7 @@ class FunctionCallTimer
   public:
     FunctionCallTimer();
     bool start();
+    bool active() const;
     int stop();
 
   private:
@@ -66,6 +67,10 @@ class TimerModel : public QObject
     TimerModel(QObject *parent = 0);
     static TimerModel *instance();
     void setProbeInterface(ProbeInterface *probe);
+
+    // For the spy callbacks
+    void preSignalActivate(QTimer *timer);
+    void postSignalActivate(QTimer *timer);
 
   private slots:
     void slotRowsRemoved(const QModelIndex &parent, int start, int end);

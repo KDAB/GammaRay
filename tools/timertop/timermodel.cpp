@@ -52,6 +52,11 @@ bool FunctionCallTimer::start()
   return true;
 }
 
+bool FunctionCallTimer::active() const
+{
+  return m_active;
+}
+
 int FunctionCallTimer::stop()
 {
   Q_ASSERT(m_active);
@@ -80,7 +85,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
   Q_UNUSED(argv);
   QTimer * const timer = timer_from_callback(caller, method_index);
   if (timer) {
-    cout << "--> QTimer::timeout() " << (void*)caller << " " << caller->objectName().toAscii().data() << endl;
+    TimerModel::instance()->preSignalActivate(timer);
   }
 }
 
@@ -88,7 +93,7 @@ static void signal_end_callback(QObject *caller, int method_index)
 {
   QTimer * const timer = timer_from_callback(caller, method_index);
   if (timer) {
-    cout << "<-- QTimer::timeout() " << (void*)caller << " " << caller->objectName().toAscii().data() << endl;
+    TimerModel::instance()->postSignalActivate(timer);
   }
 }
 
@@ -142,7 +147,7 @@ void TimerModel::populateTimerList()
 
 void TimerModel::dumpTimerList() const
 {
-  cout << "----------------------------- Timers -------.----------------------------------" << endl;
+  cout << "----------------------------- Timers ------------------------------------------" << endl;
   cout << "-------------------------------------------------------------------------------" << endl;
   cout << "id     |    timerId | objectName                                     |  wakeups" << endl;
   cout << "-------|------------|------------------------------------------------|---------" << endl;
@@ -215,6 +220,40 @@ void GammaRay::TimerModel::setProbeInterface(ProbeInterface *probe)
           this, SLOT(slotReset()));
   connect(m_timerFilter.data(), SIGNAL(modelReset()),
           this, SLOT(slotReset()));
+}
+
+void TimerModel::preSignalActivate(QTimer *timer)
+{
+  const TimerInfoPtr timerInfo = timerInfoFor(timer);
+  if (timerInfo) {
+    if (!timerInfo->functionCallTimer.start()) {
+      cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
+           << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+    }
+  } else {
+    cout << "TimerModel::preSignalActivate(): Unable to find timer "
+         << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+  }
+}
+
+void TimerModel::postSignalActivate(QTimer *timer)
+{
+  const TimerInfoPtr timerInfo = timerInfoFor(timer);
+  if (timerInfo) {
+    if (!timerInfo->functionCallTimer.active()) {
+      cout << "TimerModel::postSignalActivate(): Timer not active: "
+           << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+    } else {
+      TimeoutEvent event;
+      event.timeStamp = QTime::currentTime();
+      event.executionTime = timerInfo->functionCallTimer.stop();
+      timerInfo->timeoutEvents.append(event);
+      dumpTimerList();
+    }
+  } else {
+    cout << "TimerModel::postSignalActivate(): Unable to find timer "
+         << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+  }
 }
 
 #include "timermodel.moc"
