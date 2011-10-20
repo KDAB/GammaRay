@@ -246,6 +246,7 @@ set(gammaray_srcs
   tools/textdocumentinspector/textdocumentinspector.cpp
   tools/widgetinspector/widgetinspector.cpp
   tools/widgetinspector/overlaywidget.cpp
+  tools/timertop/timertop.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -281,6 +282,7 @@ qt4_wrap_ui(gammaray_srcs
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/widgetinspector/widgetinspector.ui
+  tools/timertop/timertop.ui
 )
 qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
 add_library(gammaray_probe

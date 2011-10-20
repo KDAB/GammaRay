@@ -37,6 +37,7 @@
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/widgetinspector/widgetinspector.h"
 #include "tools/messagehandler/messagehandler.h"
+#include "tools/timertop/timertop.h"
 
 #include "pluginmanager.h"
 #include "probe.h"
@@ -65,6 +66,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new CodecBrowserFactory(this));
   m_tools.push_back(new TextDocumentInspectorFactory(this));
   m_tools.push_back(new MessageHandlerFactory(this));
+  m_tools.push_back(new TimerTopFactory(this));
 
   Q_FOREACH (ToolFactory *factory, PluginManager::instance()->allObjects<ToolFactory>()) {
     m_tools.push_back(factory);
