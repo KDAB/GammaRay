@@ -139,7 +139,7 @@ void handleMessage(QtMsgType type, const char *msg)
   }
 }
 
-MessageHandler::MessageHandler(ProbeInterface */*probe*/, QWidget *parent)
+MessageHandler::MessageHandler(ProbeInterface * /*probe*/, QWidget *parent)
   : QWidget(parent),
     ui(new Ui::MessageHandler),
     m_messageModel(0),
