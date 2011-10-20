@@ -36,7 +36,7 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
 {
   public:
     enum Roles {
-      TransitionsRole = Qt::UserRole,
+      TransitionsRole = ObjectModel::UserRole + 1,
       IsInitialStateRole,
       StateObjectRole = Qt::UserRole + 11
     };

@@ -36,7 +36,8 @@ namespace ObjectModel {
 
     /** Role enum, to be used with the object list and tree models. */
     enum Role {
-      ObjectRole = Qt::UserRole +1
+      ObjectRole = Qt::UserRole +1,
+      UserRole
     };
 }
 
