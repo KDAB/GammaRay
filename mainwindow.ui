@@ -18,7 +18,7 @@
     <item>
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
-       <string>Tools</string>
+       <string/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="margin">
