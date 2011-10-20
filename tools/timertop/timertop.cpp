@@ -37,9 +37,13 @@ using namespace GammaRay;
 // columns: wakeups, time / wakeup, max time, objectname, receiver
 //    -> averaged over the last x seconds. X being configurable, plus clear button
 // objectname: if not set, use child^3 of xyz
+// active (repeating, singleshot)
+// interval
+// countdown (refresh every 1 second)
 // slot: slotXYZ() and 3 others (shown in tooltip)
 // flash delegate when timer triggered
 // heat map?
+// backgroudn color: either status (runing, stopped, singleshot) or frequency
 // move callback handling to probe interface
 
 // clear timeoutEvents when adding new ones
@@ -48,11 +52,14 @@ using namespace GammaRay;
 
 // filter out timers specific to gammaray (over global blacklist?)
 
-// consistency check for timer model
+// test timer added/removed
 
 
 // put functioncalltimer into own file
-// dump method
+// uncomment dump method
+// filter out gammaray timers with qsortfilterproxymodel
+// protect against timer deletion
+// make the connection interface generic and add to probeinterface
 
 TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
