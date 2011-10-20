@@ -249,7 +249,7 @@ void TimerModel::postSignalActivate(QTimer *timer)
       event.timeStamp = QTime::currentTime();
       event.executionTime = timerInfo->functionCallTimer()->stop();
       timerInfo->addEvent(event);
-      emit dataChanged(index(row), index(row));
+      emit dataChanged(index(row, 0), index(row, columnCount() - 1));
     }
   } else {
     // Ok, likely a GammaRay timer
