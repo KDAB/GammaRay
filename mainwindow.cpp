@@ -80,7 +80,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   // hide unused tool bar for now
   ui.mainToolBar->setHidden(true);
 
-  setWindowTitle(tr("%1 (%2)").arg(progName).arg(qApp->applicationName()));
+  QString appName = qApp->applicationName();
+  if (appName.isEmpty()) {
+    appName = tr("PID %1").arg(qApp->applicationPid());
+  }
+  setWindowTitle(tr("%1 (%2)").arg(progName).arg(appName));
 
   selectInitialTool();
 
