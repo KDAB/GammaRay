@@ -63,8 +63,9 @@ using namespace GammaRay;
 
 // update every x milliseconds and trigger update on timeout()
 
-// remove unable to find timer warning
 // add a property widget
+
+// optimization
 
 TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
