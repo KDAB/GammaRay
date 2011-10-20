@@ -49,11 +49,21 @@ struct TimeoutEvent
   int executionTime;
 };
 
-struct TimerInfo
+class TimerInfo
 {
-  QPointer<QTimer> timer;
-  FunctionCallTimer functionCallTimer;
-  QVector<TimeoutEvent> timeoutEvents;
+  public:
+    explicit TimerInfo(QTimer *timer);
+    void addEvent(const TimeoutEvent &timeoutEvent);
+    int numEvents() const;
+    QTimer *timer() const;
+    FunctionCallTimer *functionCallTimer();
+
+  private:
+    QPointer<QTimer> m_timer;
+    FunctionCallTimer m_functionCallTimer;
+    QList<TimeoutEvent> m_timeoutEvents;
+
+    void removeOldEvents();
 };
 
 typedef QSharedPointer<TimerInfo> TimerInfoPtr;

@@ -29,6 +29,8 @@
 
 #include <iostream>
 
+static const int maxTimeoutEvents = 1000;
+
 using namespace GammaRay;
 using namespace std;
 
@@ -155,9 +157,9 @@ void TimerModel::dumpTimerList() const
     TimerInfoPtr timerInfo = s_timerInfos.at(i);
     const QString formatted = QString("%1 | %2 | %3 | %4")
         .arg(i, 6)
-        .arg(timerInfo->timer->timerId(), 10)
-        .arg(timerInfo->timer->objectName(), 46)
-        .arg(timerInfo->timeoutEvents.size(), 8);
+        .arg(timerInfo->timer()->timerId(), 10)
+        .arg(timerInfo->timer()->objectName(), 46)
+        .arg(timerInfo->numEvents(), 8);
     cout << formatted.toStdString() << endl;
   }
   cout << "-------------------------------------------------------------------------------" << endl;
@@ -165,8 +167,7 @@ void TimerModel::dumpTimerList() const
 
 TimerInfoPtr TimerModel::createTimerInfo(QTimer *timer) const
 {
-  TimerInfoPtr timerInfo(new TimerInfo);
-  timerInfo->timer = timer;
+  TimerInfoPtr timerInfo(new TimerInfo(timer));
   return timerInfo;
 }
 
@@ -181,7 +182,7 @@ TimerInfoPtr TimerModel::timerInfoFor(QTimer *timer) const
 {
   for (int i = 0; i < s_timerInfos.size(); i++) {
     const TimerInfoPtr cur = s_timerInfos.at(i);
-    if (cur->timer == timer) {
+    if (cur->timer() == timer) {
       return cur;
     }
   }
@@ -192,7 +193,7 @@ void TimerModel::checkConsistency() const
 {
   Q_ASSERT(s_timerInfos.size() == m_timerFilter->rowCount());
   for (int i = 0; i < s_timerInfos.size(); i++) {
-    Q_ASSERT(s_timerInfos[i]->timer.data() == timerAt(i));
+    Q_ASSERT(s_timerInfos[i]->timer() == timerAt(i));
   }
   dumpTimerList();
 }
@@ -226,7 +227,7 @@ void TimerModel::preSignalActivate(QTimer *timer)
 {
   const TimerInfoPtr timerInfo = timerInfoFor(timer);
   if (timerInfo) {
-    if (!timerInfo->functionCallTimer.start()) {
+    if (!timerInfo->functionCallTimer()->start()) {
       cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
            << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
     }
@@ -240,19 +241,52 @@ void TimerModel::postSignalActivate(QTimer *timer)
 {
   const TimerInfoPtr timerInfo = timerInfoFor(timer);
   if (timerInfo) {
-    if (!timerInfo->functionCallTimer.active()) {
+    if (!timerInfo->functionCallTimer()->active()) {
       cout << "TimerModel::postSignalActivate(): Timer not active: "
            << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
     } else {
       TimeoutEvent event;
       event.timeStamp = QTime::currentTime();
-      event.executionTime = timerInfo->functionCallTimer.stop();
-      timerInfo->timeoutEvents.append(event);
+      event.executionTime = timerInfo->functionCallTimer()->stop();
+      timerInfo->addEvent(event);
       dumpTimerList();
     }
   } else {
     cout << "TimerModel::postSignalActivate(): Unable to find timer "
          << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+  }
+}
+
+TimerInfo::TimerInfo(QTimer *timer)
+  : m_timer(timer)
+{
+}
+
+void TimerInfo::addEvent(const TimeoutEvent &timeoutEvent)
+{
+  m_timeoutEvents.append(timeoutEvent);
+  removeOldEvents();
+}
+
+int TimerInfo::numEvents() const
+{
+  return m_timeoutEvents.size();
+}
+
+QTimer *TimerInfo::timer() const
+{
+  return m_timer;
+}
+
+FunctionCallTimer *TimerInfo::functionCallTimer()
+{
+  return &m_functionCallTimer;
+}
+
+void TimerInfo::removeOldEvents()
+{
+  if (m_timeoutEvents.size() > maxTimeoutEvents) {
+    m_timeoutEvents.removeFirst();
   }
 }
 
