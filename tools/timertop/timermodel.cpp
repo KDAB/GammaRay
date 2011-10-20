@@ -211,6 +211,10 @@ void GammaRay::TimerModel::setProbeInterface(ProbeInterface *probe)
           this, SLOT(slotRowsRemoved(QModelIndex,int,int)));
   connect(m_timerFilter.data(), SIGNAL(rowsInserted(QModelIndex,int,int)),
           this, SLOT(slotRowsRemoved(QModelIndex,int,int)));
+  connect(m_timerFilter.data(), SIGNAL(layoutChanged()),
+          this, SLOT(slotReset()));
+  connect(m_timerFilter.data(), SIGNAL(modelReset()),
+          this, SLOT(slotReset()));
 }
 
 #include "timermodel.moc"
