@@ -59,6 +59,7 @@ class TimerInfo
     QTimer *timer() const;
     FunctionCallTimer *functionCallTimer();
     float wakeupsPerSec() const;
+    int timePerWakeup() const;
     int totalWakeups() const;
 
   private:

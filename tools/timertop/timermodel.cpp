@@ -249,7 +249,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
       case StateRole: return tr("TODO");
       case TotalWakeupsRole: return timerInfo->totalWakeups();
       case WakeupsPerSecRole: return timerInfo->wakeupsPerSec();
-      case TimePerWakeupRole: return tr("TODO");
+      case TimePerWakeupRole: return timerInfo->timePerWakeup();
       case MaxTimePerWakeupRole: return tr("TODO");
       case TimerIdRole: return timerInfo->timer()->timerId();
     }
@@ -354,6 +354,25 @@ float TimerInfo::wakeupsPerSec() const
     const int timeSpan = startTime.msecsTo(endTime);
     const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
     return wakeupsPerSec;
+  }
+  return 0;
+}
+
+int TimerInfo::timePerWakeup() const
+{
+  int totalWakeups = 0;
+  int totalTime = 0;
+  for (int i = m_timeoutEvents.size() - 1; i >= 0; i--) {
+    const TimeoutEvent &event = m_timeoutEvents.at(i);
+    if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
+      break;
+    }
+    totalWakeups++;
+    totalTime += event.executionTime;
+  }
+
+  if (totalWakeups > 0) {
+    return totalTime / (float)totalWakeups;
   }
   return 0;
 }
