@@ -27,7 +27,6 @@
 #include <QtCore/qabstractitemmodel.h>
 #include <QVector>
 #include <QtCore/qsharedpointer.h>
-#include <QReadWriteLock>
 
 namespace GammaRay {
 
@@ -48,8 +47,6 @@ class ConnectionModel : public QAbstractTableModel
                          Qt::ConnectionType type);
     void connectionRemoved(QObject *sender, const char *signal,
                            QObject *receiver, const char *method);
-
-    void objectRemoved(QObject *object);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
@@ -76,7 +73,6 @@ class ConnectionModel : public QAbstractTableModel
       bool valid;
     };
     QVector<Connection> m_connections;
-    mutable QReadWriteLock m_lock;
 };
 
 }

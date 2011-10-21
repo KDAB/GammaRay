@@ -428,7 +428,6 @@ void Probe::objectRemoved(QObject *obj)
 
     instance()->m_objectListModel->objectRemoved(obj);
     instance()->m_objectTreeModel->objectRemoved(obj);
-    instance()->m_connectionModel->objectRemoved(obj);
 
     instance()->connectionRemoved(obj, 0, 0, 0);
     instance()->connectionRemoved(0, 0, obj, 0);

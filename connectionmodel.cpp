@@ -63,8 +63,7 @@ ConnectionModel::Connection::Connection()
 }
 
 ConnectionModel::ConnectionModel(QObject *parent)
-  : QAbstractTableModel(parent),
-    m_lock(QReadWriteLock::Recursive)
+  : QAbstractTableModel(parent)
 {
   qRegisterMetaType<const char*>("const char*");
   qRegisterMetaType<Qt::ConnectionType>("Qt::ConnectionType");
@@ -96,8 +95,6 @@ void ConnectionModel::connectionAddedMainThread(QObject *sender, const char *sig
       !Probe::instance()->isValidObject(receiver)) {
     return;
   }
-
-  QWriteLocker lock(&m_lock);
 
   beginInsertRows(QModelIndex(), m_connections.size(), m_connections.size());
   Connection c;
@@ -148,7 +145,6 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *s
     normalizedMethod = QMetaObject::normalizedSignature(method);
   }
 
-  QWriteLocker lock(&m_lock);
   for (int i = 0; i < m_connections.size();) {
     bool remove = false;
 
@@ -174,31 +170,13 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *s
   }
 }
 
-void ConnectionModel::objectRemoved(QObject *object)
-{
-  QWriteLocker lock(&m_lock);
-
-  // invalidate data
-  for (int i = 0; i < m_connections.size(); ++i) {
-    Connection &con = m_connections[i];
-    if (con.receiver == object) {
-      con.receiver = 0;
-    } else if (con.sender == object) {
-      con.sender = 0;
-    }
-  }
-}
-
 QVariant ConnectionModel::data(const QModelIndex &index, int role) const
 {
-  ReadOrWriteLocker lock(&m_lock);
-
   if (!index.isValid() || index.row() < 0 || index.row() >= m_connections.size()) {
     return QVariant();
   }
 
   Connection con = m_connections.at(index.row());
-  lock.unlock();
 
   ReadOrWriteLocker probeLock(Probe::instance()->objectLock());
   if (!Probe::instance()->isValidObject(con.sender)) {
@@ -296,7 +274,6 @@ int ConnectionModel::rowCount(const QModelIndex &parent) const
   if (parent.isValid()) {
     return 0;
   }
-  ReadOrWriteLocker lock(&m_lock);
   return m_connections.size();
 }
 
