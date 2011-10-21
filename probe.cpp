@@ -114,17 +114,53 @@ struct Listener
 {
   Listener()
     : filterThread(0),
-      trackDestroyed(true),
-      explicitlyClosed(false)
+      trackDestroyed(true)
   {}
 
   QThread *filterThread;
   bool trackDestroyed;
-  bool explicitlyClosed;
 };
 
 Q_GLOBAL_STATIC(Listener, s_listener)
 Q_GLOBAL_STATIC(QVector<QObject*>, s_addedBeforeProbeInsertion)
+
+ProbeCreator::ProbeCreator(Type type)
+: m_type(type)
+{
+  // delay to foreground thread
+  QMetaObject::invokeMethod(this, "createProbe", Qt::QueuedConnection);
+}
+
+void ProbeCreator::createProbe()
+{
+  // make sure we are in the ui thread
+  Q_ASSERT(QThread::currentThread() == qApp->thread());
+
+  if (!qApp || Probe::isInitialized()) {
+    // never create it twice
+    return;
+  }
+
+  IF_DEBUG(cout << "setting up new probe instance" << endl;)
+  s_listener()->filterThread = QThread::currentThread();
+  Q_ASSERT(!Probe::s_instance);
+  Probe::s_instance = new Probe;
+  s_listener()->filterThread = 0;
+  IF_DEBUG(cout << "done setting up new probe instance" << endl;)
+
+  Q_ASSERT(Probe::instance());
+  QMetaObject::invokeMethod(Probe::instance(), "delayedInit", Qt::QueuedConnection);
+  foreach (QObject *obj, *(s_addedBeforeProbeInsertion())) {
+    Probe::objectAdded(obj);
+  }
+  s_addedBeforeProbeInsertion()->clear();
+
+  if (m_type == CreateAndFindExisting) {
+    Probe::findExistingObjects();
+  }
+
+  deleteLater();
+}
 
 Probe::Probe(QObject *parent):
   QObject(parent),
@@ -135,7 +171,15 @@ Probe::Probe(QObject *parent):
   m_window(0),
   m_queueTimer(new QTimer(this))
 {
+  Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
+
+  if (qgetenv("GAMMARAY_MODELTEST") == "1") {
+    new ModelTest(m_objectListModel, m_objectListModel);
+    new ModelTest(m_objectTreeModel, m_objectTreeModel);
+    new ModelTest(m_connectionModel, m_connectionModel);
+    new ModelTest(m_toolModel, m_toolModel);
+  }
 
   QInternal::registerCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
   QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
@@ -154,7 +198,6 @@ Probe::~Probe()
   QInternal::unregisterCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 
   s_instance = 0;
-  s_listener()->explicitlyClosed = true;
 }
 
 void Probe::setWindow(GammaRay::MainWindow *window)
@@ -169,33 +212,10 @@ GammaRay::MainWindow *Probe::window() const
 
 Probe *GammaRay::Probe::instance()
 {
-  if (!qApp || s_listener()->explicitlyClosed) {
+  if (!qApp) {
     return NULL;
   }
 
-  if (!s_instance) {
-    IF_DEBUG(cout << "setting up new probe instance" << endl;)
-    s_listener()->filterThread = QThread::currentThread();
-    s_instance = new Probe;
-
-    if (qgetenv("GAMMARAY_MODELTEST") == "1") {
-      new ModelTest(s_instance->m_objectListModel, s_instance->m_objectListModel);
-      new ModelTest(s_instance->m_objectTreeModel, s_instance->m_objectTreeModel);
-      new ModelTest(s_instance->m_connectionModel, s_instance->m_connectionModel);
-      new ModelTest(s_instance->m_toolModel, s_instance->m_toolModel);
-    }
-    s_listener()->filterThread = 0;
-    IF_DEBUG(cout << "done setting up new probe instance" << endl;)
-
-    s_instance->moveToThread(QCoreApplication::instance()->thread());
-    //void* ptr = QCoreApplication::instance();
-
-    QMetaObject::invokeMethod(s_instance, "delayedInit", Qt::QueuedConnection);
-    foreach (QObject *obj, *(s_addedBeforeProbeInsertion())) {
-      objectAdded(obj);
-    }
-    s_addedBeforeProbeInsertion()->clear();
-  }
   return s_instance;
 }
 
@@ -303,11 +323,13 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
       return;
     } else if (instance()->m_validObjects.contains(obj)) {
       // this happens when we get a child event before the objectAdded call from the ctor
+      // or when we add an item from s_addedBeforeProbeInsertion who got added already
+      // due to the add-parent-before-child logic
       IF_DEBUG(cout
                << "objectAdded Known: "
                << hex << obj
                << (fromCtor ? " (from ctor)" : "") << endl;)
-      Q_ASSERT(fromCtor);
+      Q_ASSERT(fromCtor || s_addedBeforeProbeInsertion()->contains(obj));
       return;
     }
 
@@ -592,7 +614,7 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
   s_listener()->trackDestroyed = false;
 
-  Probe::instance();
+  new ProbeCreator(ProbeCreator::CreateOnly);
 #if !defined Q_OS_WIN and !defined Q_OS_MAC
   static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
   next_qt_startup_hook();
@@ -788,12 +810,7 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
   }
   printf("gammaray_probe_inject()\n");
   // make it possible to re-attach
-  s_listener()->explicitlyClosed = false;
-  GammaRay::Probe::instance();
-  GammaRay::Probe::findExistingObjects();
-  if (GammaRay::Probe::instance()->window()) {
-    GammaRay::Probe::instance()->window()->show();
-  }
+  new ProbeCreator(ProbeCreator::CreateAndFindExisting);
 }
 
 #ifdef Q_OS_MAC

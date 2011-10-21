@@ -43,6 +43,26 @@ class ToolModel;
 
 class MainWindow;
 
+/**
+ * Creates Probe instance in main thread and deletes self afterwards.
+ */
+class ProbeCreator : public QObject
+{
+  Q_OBJECT
+  public:
+    enum Type {
+      CreateOnly,
+      CreateAndFindExisting
+    };
+    ProbeCreator(Type t);
+
+  private slots:
+    void createProbe();
+
+  private:
+    Type m_type;
+};
+
 class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 {
   Q_OBJECT
@@ -120,6 +140,8 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
     QSet<QObject*> m_validObjects;
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;
+
+    friend class ProbeCreator;
 };
 
 }
