@@ -246,7 +246,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
     const TimerInfoPtr timerInfo = timerInfoFor(index);
     switch ((Roles)(index.column() + FirstRole + 1)) {
       case ObjectNameRole: return timerInfo->timer()->objectName();
-      case StateRole: return tr("TODO");
+      case StateRole: return timerInfo->state();
       case TotalWakeupsRole: return timerInfo->totalWakeups();
       case WakeupsPerSecRole: return timerInfo->wakeupsPerSec();
       case TimePerWakeupRole: return timerInfo->timePerWakeup();
@@ -392,6 +392,19 @@ int TimerInfo::maxWakeupTime() const
 int TimerInfo::totalWakeups() const
 {
   return m_totalWakeups;
+}
+
+QString TimerInfo::state() const
+{
+  if (!m_timer->isActive()) {
+    return QObject::tr("Inactive");
+  } else {
+    if (m_timer->isSingleShot()) {
+      return QObject::tr("Singleshot (%1 ms)").arg(m_timer->interval());
+    } else {
+      return QObject::tr("Repeating (%1 ms)").arg(m_timer->interval());
+    }
+  }
 }
 
 void TimerInfo::removeOldEvents()
