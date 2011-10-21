@@ -60,6 +60,7 @@ class TimerInfo
     FunctionCallTimer *functionCallTimer();
     float wakeupsPerSec() const;
     int timePerWakeup() const;
+    int maxWakeupTime() const;
     int totalWakeups() const;
 
   private:
