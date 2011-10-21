@@ -24,8 +24,7 @@
 
 #include "ui_timertop.h"
 #include "timermodel.h"
-
-#include <QSortFilterProxyModel>
+#include <probeinterface.h>
 
 using namespace GammaRay;
 
@@ -73,11 +72,15 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
 {  
   Q_UNUSED(probe);
   ui->setupUi(this);
-  TimerModel::instance()->setProbeInterface(probe);
-  QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel(this);
-  sortProxy->setSourceModel(TimerModel::instance());
-  sortProxy->setDynamicSortFilter(true);
-  ui->timerView->setModel(sortProxy);
+  ObjectTypeFilterProxyModel<QTimer> * const filterModel =
+      new ObjectTypeFilterProxyModel<QTimer>(this);
+  filterModel->setDynamicSortFilter(true);
+  filterModel->setSourceModel(probe->objectListModel());
+  TimerModel::instance()->setSourceModel(filterModel);
+  QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
+  sortModel->setSourceModel(TimerModel::instance());
+  sortModel->setDynamicSortFilter(true);
+  ui->timerView->setModel(sortModel);
   ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1, Qt::DescendingOrder);
 }
 

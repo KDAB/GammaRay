@@ -23,7 +23,6 @@
 #include "timermodel.h"
 
 #include <3rdparty/qt/qobject_p_copy.h>
-#include <probeinterface.h>
 
 #include <QMetaMethod>
 
@@ -31,13 +30,12 @@
 
 static const int maxTimeoutEvents = 1000;
 static const int maxTimeSpan = 10000;
+static const char * timerInfoPropertyName = "GammaRay TimerInfo";
 
 using namespace GammaRay;
 using namespace std;
 
-Q_GLOBAL_STATIC(TimerModel, s_timerModel);
-
-static QList<TimerInfoPtr> s_timerInfos;
+Q_GLOBAL_STATIC(TimerModel, s_timerModel)
 
 FunctionCallTimer::FunctionCallTimer()
   : m_active(false)
@@ -101,7 +99,8 @@ static void signal_end_callback(QObject *caller, int method_index)
 }
 
 TimerModel::TimerModel(QObject *parent)
-  : QAbstractListModel(parent)
+  : QAbstractListModel(parent),
+    m_sourceModel(0)
 {
 }
 
@@ -110,115 +109,40 @@ TimerModel *TimerModel::instance()
   return s_timerModel();
 }
 
-void TimerModel::slotRowsRemoved(const QModelIndex &parent, int start, int end)
+TimerInfoPtr TimerModel::timerInfoFor(QTimer *timer) const
 {
-  Q_UNUSED(parent);
-  Q_ASSERT(start >= 0 && end >= 0 &&
-           start < s_timerInfos.size() && end < s_timerInfos.size());
-  int count = end - start + 1;
-  beginRemoveRows(QModelIndex(), start, end);
-  while (count > 0) {
-    s_timerInfos.removeAt(start);
-    count--;
+  if (!timer) {
+    return TimerInfoPtr();
   }
-  endInsertRows();
-  checkConsistency();
-}
 
-void TimerModel::slotRowsInserted(const QModelIndex &parent, int start, int end)
-{
-  Q_UNUSED(parent);
-  Q_ASSERT(start >= 0 && end >= 0 &&
-           start <= s_timerInfos.size() && end <= s_timerInfos.size());
-  beginInsertRows(QModelIndex(), start, end);
-  for (int i = start; i <= end; i++) {
-    s_timerInfos.insert(i, createTimerInfo(timerAt(i)));
+  QVariant timerInfoVariant = timer->property(timerInfoPropertyName);
+  if (!timerInfoVariant.isValid()) {
+    timerInfoVariant.setValue(TimerInfoPtr(new TimerInfo(timer)));
+    timer->setProperty(timerInfoPropertyName, timerInfoVariant);
   }
-  endInsertRows();
-  checkConsistency();
-}
 
-void TimerModel::slotReset()
-{
-  beginResetModel();
-  s_timerInfos.clear();
-  populateTimerList();
-  endResetModel();
-}
-
-void TimerModel::populateTimerList()
-{
-  for (int row = 0; row < m_timerFilter->rowCount(); row++) {
-    s_timerInfos.append(createTimerInfo(timerAt(row)));
-  }
-  checkConsistency();
-}
-
-TimerInfoPtr TimerModel::createTimerInfo(QTimer *timer) const
-{
-  TimerInfoPtr timerInfo(new TimerInfo(timer));
+  const TimerInfoPtr timerInfo = timerInfoVariant.value<TimerInfoPtr>();
+  Q_ASSERT(timerInfo->timer() == timer);
   return timerInfo;
 }
 
-QTimer *TimerModel::timerAt(int row) const
+TimerInfoPtr TimerModel::timerInfoFor(const QModelIndex &index) const
 {
-  const QModelIndex index = m_timerFilter->index(row, 0);
-  QObject * const timerObject = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  return qobject_cast<QTimer*>(timerObject);
+  const QModelIndex sourceIndex = m_sourceModel->index(index.row(), 0);
+  QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject*>();
+  QTimer * const timer = qobject_cast<QTimer*>(timerObject);
+  return timerInfoFor(timer);
 }
 
-TimerInfoPtr TimerModel::timerInfoFor(QTimer *timer) const
+int TimerModel::rowFor(QTimer *timer) const
 {
-  const int index = indexOfTimer(timer);
-  if (index != -1) {
-    return s_timerInfos.at(index);
-  } else {
-    return TimerInfoPtr();
-  }
-}
-
-int TimerModel::indexOfTimer(QTimer *timer) const
-{
-  for (int i = 0; i < s_timerInfos.size(); i++) {
-    const TimerInfoPtr cur = s_timerInfos.at(i);
-    if (cur->timer() == timer) {
+  for (int i = 0; i < rowCount(); i++) {
+    const TimerInfoPtr timerInfo = timerInfoFor(index(i, 0));
+    if (timerInfo->timer() == timer) {
       return i;
     }
   }
   return -1;
-}
-
-void TimerModel::checkConsistency() const
-{
-  Q_ASSERT(s_timerInfos.size() == m_timerFilter->rowCount());
-  for (int i = 0; i < s_timerInfos.size(); i++) {
-    Q_ASSERT(s_timerInfos[i]->timer() == timerAt(i));
-  }
-}
-
-void GammaRay::TimerModel::setProbeInterface(ProbeInterface *probe)
-{
-  Q_ASSERT(!m_timerFilter);
-  m_timerFilter.reset(new ObjectTypeFilterProxyModel<QTimer>());
-  m_timerFilter->setSourceModel(probe->objectListModel());
-  populateTimerList();
-
-  QSignalSpyCallbackSet callbacks;
-  callbacks.slot_begin_callback = 0;
-  callbacks.slot_end_callback = 0;
-  callbacks.signal_begin_callback = signal_begin_callback;
-  callbacks.signal_end_callback = signal_end_callback;
-
-  qt_register_signal_spy_callbacks(callbacks);
-
-  connect(m_timerFilter.data(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-          this, SLOT(slotRowsRemoved(QModelIndex,int,int)));
-  connect(m_timerFilter.data(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-          this, SLOT(slotRowsRemoved(QModelIndex,int,int)));
-  connect(m_timerFilter.data(), SIGNAL(layoutChanged()),
-          this, SLOT(slotReset()));
-  connect(m_timerFilter.data(), SIGNAL(modelReset()),
-          this, SLOT(slotReset()));
 }
 
 void TimerModel::preSignalActivate(QTimer *timer)
@@ -238,9 +162,8 @@ void TimerModel::preSignalActivate(QTimer *timer)
 
 void TimerModel::postSignalActivate(QTimer *timer)
 {
-  const int row = indexOfTimer(timer);
-  if (row != -1) {
-    const TimerInfoPtr timerInfo = s_timerInfos.at(row);
+  const TimerInfoPtr timerInfo = timerInfoFor(timer);
+  if (timerInfo) {
     if (!timerInfo->functionCallTimer()->active()) {
       cout << "TimerModel::postSignalActivate(): Timer not active: "
            << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
@@ -249,7 +172,10 @@ void TimerModel::postSignalActivate(QTimer *timer)
       event.timeStamp = QTime::currentTime();
       event.executionTime = timerInfo->functionCallTimer()->stop();
       timerInfo->addEvent(event);
-      emit dataChanged(index(row, 0), index(row, columnCount() - 1));
+      const int row = rowFor(timer);
+      if (row != -1) {
+        emit dataChanged(index(row, 0), index(row, columnCount() - 1));
+      }
     }
   } else {
     // Ok, likely a GammaRay timer
@@ -258,10 +184,37 @@ void TimerModel::postSignalActivate(QTimer *timer)
   }
 }
 
-int TimerModel::rowCount(const QModelIndex &parent) const
+void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
 {
-  Q_UNUSED(parent);
-  return s_timerInfos.size();
+  Q_ASSERT(!m_sourceModel);
+  m_sourceModel = sourceModel;
+
+  QSignalSpyCallbackSet callbacks;
+  callbacks.slot_begin_callback = 0;
+  callbacks.slot_end_callback = 0;
+  callbacks.signal_begin_callback = signal_begin_callback;
+  callbacks.signal_end_callback = signal_end_callback;
+
+  qt_register_signal_spy_callbacks(callbacks);
+
+  connect(m_sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int , int)),
+          this, SLOT(slotBeginInsertRows(QModelIndex,int,int)));
+  connect(m_sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+          this, SLOT(slotEndInsertRows()));
+  connect(m_sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int , int)),
+          this, SLOT(slotBeginRemoveRows(QModelIndex,int,int)));
+  connect(m_sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+          this, SLOT(slotEndRemoveRows()));
+  connect(m_sourceModel, SIGNAL(modelAboutToBeReset()),
+          this, SLOT(slotBeginReset()));
+  connect(m_sourceModel, SIGNAL(modelReset()),
+          this, SLOT(slotEndReset()));
+  connect(m_sourceModel, SIGNAL(layoutAboutToBeChanged()),
+          this, SLOT(slotBeginReset()));
+  connect(m_sourceModel, SIGNAL(layoutChanged()),
+          this, SLOT(slotEndReset()));
+
+  reset();
 }
 
 int TimerModel::columnCount(const QModelIndex &parent) const
@@ -270,11 +223,24 @@ int TimerModel::columnCount(const QModelIndex &parent) const
   return LastRole - FirstRole - 1;
 }
 
+int TimerModel::rowCount(const QModelIndex &parent) const
+{
+  Q_UNUSED(parent);
+  if (!m_sourceModel) {
+    return 0;
+  }
+  return m_sourceModel->rowCount();
+}
+
 QVariant TimerModel::data(const QModelIndex &index, int role) const
 {
-  if (role == Qt::DisplayRole && index.isValid() && index.row() >= 0 &&
-      index.row() < s_timerInfos.size() && index.column() >= 0 && index.column() < LastRole) {
-    TimerInfoPtr timerInfo = s_timerInfos.at(index.row());
+  if (!m_sourceModel) {
+    return QVariant();
+  }
+
+  if (role == Qt::DisplayRole && index.isValid() &&
+      index.column() >= 0 && index.column() < columnCount()) {
+    const TimerInfoPtr timerInfo = timerInfoFor(index);
     switch ((Roles)(index.column() + FirstRole + 1)) {
       case ObjectNameRole: return timerInfo->timer()->objectName();
       case StateRole: return tr("TODO");
@@ -301,6 +267,39 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
   }
   return QAbstractListModel::headerData(section, orientation, role);
 }
+
+void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int end)
+{
+  Q_UNUSED(parent);
+  beginRemoveRows(QModelIndex(), start, end);
+}
+
+void TimerModel::slotEndRemoveRows()
+{
+  endRemoveRows();
+}
+
+void TimerModel::slotBeginInsertRows(const QModelIndex &parent, int start, int end)
+{
+  Q_UNUSED(parent);
+  beginInsertRows(QModelIndex(), start, end);
+}
+
+void TimerModel::slotEndInsertRows()
+{
+  endInsertRows();
+}
+
+void TimerModel::slotBeginReset()
+{
+  beginResetModel();
+}
+
+void TimerModel::slotEndReset()
+{
+  endResetModel();
+}
+
 
 TimerInfo::TimerInfo(QTimer *timer)
   : m_timer(timer)

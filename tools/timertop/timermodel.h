@@ -69,8 +69,11 @@ class TimerInfo
 };
 
 typedef QSharedPointer<TimerInfo> TimerInfoPtr;
+}
 
-class ProbeInterface;
+Q_DECLARE_METATYPE(GammaRay::TimerInfoPtr)
+
+namespace GammaRay {
 
 class TimerModel : public QAbstractListModel
 {
@@ -78,7 +81,6 @@ class TimerModel : public QAbstractListModel
   public:
     TimerModel(QObject *parent = 0);
     static TimerModel *instance();
-    void setProbeInterface(ProbeInterface *probe);
 
     // For the spy callbacks
     void preSignalActivate(QTimer *timer);
@@ -95,25 +97,27 @@ class TimerModel : public QAbstractListModel
       LastRole
     };
 
-    /* reimp */ int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    void setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel);
+
     /* reimp */ int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    /* reimp */ int rowCount(const QModelIndex &parent = QModelIndex()) const;
     /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     /* reimp */ QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
   private slots:
-    void slotRowsRemoved(const QModelIndex &parent, int start, int end);
-    void slotRowsInserted(const QModelIndex &parent, int start, int end);
-    void slotReset();
+    void slotBeginRemoveRows(const QModelIndex &parent, int start, int end);
+    void slotEndRemoveRows();
+    void slotBeginInsertRows(const QModelIndex &parent, int start, int end);
+    void slotEndInsertRows();
+    void slotBeginReset();
+    void slotEndReset();
 
   private:
-    void populateTimerList();
-    TimerInfoPtr createTimerInfo(QTimer *timer) const;
-    QTimer *timerAt(int index) const;
     TimerInfoPtr timerInfoFor(QTimer *timer) const;
-    int indexOfTimer(QTimer *timer) const;
-    void checkConsistency() const;
+    TimerInfoPtr timerInfoFor(const QModelIndex &index) const;
+    int rowFor(QTimer *timer) const;
 
-    QScopedPointer<ObjectTypeFilterProxyModel<QTimer> > m_timerFilter;
+    ObjectTypeFilterProxyModel<QTimer> *m_sourceModel;
 };
 
 }
