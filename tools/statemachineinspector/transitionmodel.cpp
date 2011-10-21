@@ -46,7 +46,7 @@ class TransitionModelPrivate
 
   Q_DECLARE_PUBLIC(TransitionModel)
   TransitionModel * const q_ptr;
-  QState * m_state;
+  QAbstractState * m_state;
 
   QList<QObject*> children(QObject *parent) const;
 
@@ -89,7 +89,7 @@ TransitionModel::TransitionModel(QObject *parent)
   setRoleNames(_roleNames);
 }
 
-void TransitionModel::setState(QState *state)
+void TransitionModel::setState(QAbstractState *state)
 {
   Q_D(TransitionModel);
   beginResetModel();

@@ -1,11 +1,9 @@
 /*
-  util.h
-
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Kevin Funk <kevin.funk@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,37 +19,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_UTIL_H
-#define GAMMARAY_UTIL_H
+#ifndef GAMMARAY_GVTYPES_H
+#define GAMMARAY_GVTYPES_H
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-
-class QObject;
-
-namespace GammaRay {
-
-namespace Util
+namespace GammaRay
 {
-  QString displayString(const QObject *object);
-  QString variantToString(const QVariant &value);
-  QString addressToString(const void *p);
-  QString addressToUid(const void* p);
 
-  bool descendantOf(QObject *ascendant, QObject *obj);
-
-  template <typename T>
-  T *findParentOfType(QObject *object) {
-    if (!object) {
-      return 0;
-    }
-    if (qobject_cast<T*>(object)) {
-      return qobject_cast<T*>(object);
-    }
-    return findParentOfType<T>(object->parent());
-  }
-}
+typedef quintptr ElementId;
+typedef quintptr EdgeId;
+typedef quintptr NodeId;
+typedef quintptr GraphId;
 
 }
 
-#endif // GAMMARAY_UTIL_H
+#endif

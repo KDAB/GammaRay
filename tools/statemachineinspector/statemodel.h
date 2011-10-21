@@ -34,6 +34,8 @@ class StateModelPrivate;
 
 class StateModel : public ObjectModelBase<QAbstractItemModel>
 {
+  Q_OBJECT
+
   public:
     enum Roles {
       TransitionsRole = ObjectModel::UserRole + 1,
@@ -41,6 +43,9 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
       StateObjectRole = Qt::UserRole + 11
     };
     explicit StateModel(QStateMachine *stateMachine, QObject *parent = 0);
+
+    QStateMachine* stateMachine() const;
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;

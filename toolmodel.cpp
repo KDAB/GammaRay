@@ -66,7 +66,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new FontBrowserFactory(this));
   m_tools.push_back(new CodecBrowserFactory(this));
   m_tools.push_back(new TextDocumentInspectorFactory(this));
-  m_tools.push_back(new MessageHandlerFactory(this));
+//   m_tools.push_back(new MessageHandlerFactory(this));
 
   Q_FOREACH(ToolFactory* factory, PluginManager::instance()->allObjects<ToolFactory>()) {
       m_tools.push_back(factory);

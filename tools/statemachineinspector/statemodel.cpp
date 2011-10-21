@@ -89,6 +89,12 @@ StateModel::StateModel(QStateMachine *stateMachine, QObject *parent)
   setRoleNames(_roleNames);
 }
 
+QStateMachine* StateModel::stateMachine() const
+{
+  Q_D(const StateModel);
+  return d->m_stateMachine;
+}
+
 QVariant StateModel::data(const QModelIndex &index, int role) const
 {
   Q_D(const StateModel);
@@ -186,3 +192,5 @@ QModelIndex StateModel::parent(const QModelIndex &index) const
   int row = d->children(grandParent).indexOf(parent);
   return createIndex(row, 0, grandParent);
 }
+
+#include "statemodel.moc"

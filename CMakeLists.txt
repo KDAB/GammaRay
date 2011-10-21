@@ -17,6 +17,8 @@ if(NOT Prog_NAME)
   set(Prog_NAME "GammaRay")
 endif()
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
+
 set(GAMMARAY_VERSION_MAJOR "1")
 set(GAMMARAY_VERSION_MINOR "0")
 set(GAMMARAY_VERSION_PATCH "50")
@@ -163,6 +165,11 @@ qt4_add_resources(gammaray_runner_srcs resources/gammaray.qrc)
 
 add_executable(gammaray ${gammaray_runner_srcs})
 target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+
+find_package(Graphviz)
+if(GRAPHVIZ_FOUND)
+  add_subdirectory(tools/statemachineviewer)
+endif()
 
 set(gammaray_srcs
   mainwindow.cpp

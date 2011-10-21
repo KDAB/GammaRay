@@ -26,6 +26,7 @@
 
 #include "objectmodelbase.h"
 
+class QAbstractState;
 class QState;
 
 namespace GammaRay
@@ -37,7 +38,7 @@ class TransitionModel : public ObjectModelBase<QAbstractItemModel>
 {
   public:
     TransitionModel(QObject *parent = 0);
-    void setState(QState *state);
+    void setState(QAbstractState *state);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount (const QModelIndex &parent = QModelIndex()) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
