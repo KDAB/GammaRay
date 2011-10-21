@@ -29,6 +29,8 @@
 
 #include <QLineEdit>
 
+#include "proxydetacher.h"
+
 using namespace GammaRay;
 
 ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QWidget *parent)
@@ -37,10 +39,10 @@ ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QWidget *parent)
 {
   ui->setupUi(this);
 
-  QSortFilterProxyModel *connectionFilterProxy = new ConnectionFilterProxyModel(this);
-  connectionFilterProxy->setSourceModel(probe->connectionModel());
-  ui->connectionSearchLine->setProxy(connectionFilterProxy);
-  ui->connectionView->setModel(connectionFilterProxy);
+  ConnectionFilterProxyModel *proxy = new ConnectionFilterProxyModel(this);
+  new ProxyDetacher(ui->connectionView, proxy, probe->connectionModel());
+  ui->connectionSearchLine->setProxy(proxy);
+  ui->connectionView->setModel(proxy);
 
   if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
     QMetaObject::invokeMethod(ui->connectionSearchLine->lineEdit(), "setText",

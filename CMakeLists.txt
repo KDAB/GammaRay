@@ -166,6 +166,7 @@ set(gammaray_srcs
   mainwindow.cpp
   probe.cpp
   propertywidget.cpp
+  proxydetacher.cpp
   objectlistmodel.cpp
   objectpropertymodel.cpp
   objectdynamicpropertymodel.cpp

@@ -32,6 +32,7 @@
 #include "probe.h"
 #include "methodinvocationdialog.h"
 #include "multisignalmapper.h"
+#include "proxydetacher.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -83,7 +84,6 @@ PropertyWidget::PropertyWidget(QWidget *parent)
           SLOT(methodActivated(QModelIndex)));
   connect(ui.methodView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(methodConextMenu(QPoint)));
   ui.methodLog->setModel(m_methodLogModel);
-  
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
@@ -93,12 +93,12 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
   ui.classInfoSearchLine->setProxy(proxy);
 
-  m_inboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
+  new ProxyDetacher(ui.inboundConnectionView, m_inboundConnectionModel, Probe::instance()->connectionModel());
   ui.inboundConnectionView->setModel(m_inboundConnectionModel);
   ui.inboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
   ui.inboundConnectionSearchLine->setProxy(m_inboundConnectionModel);
 
-  m_outboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
+  new ProxyDetacher(ui.outboundConnectionView, m_outboundConnectionModel, Probe::instance()->connectionModel());
   ui.outboundConnectionView->setModel(m_outboundConnectionModel);
   ui.outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
   ui.outboundConnectionSearchLine->setProxy(m_outboundConnectionModel);
