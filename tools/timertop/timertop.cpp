@@ -68,7 +68,8 @@ using namespace GammaRay;
 
 TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
-    ui(new Ui::TimerTop)
+    ui(new Ui::TimerTop),
+    m_updateTimer(new QTimer(this))
 {  
   Q_UNUSED(probe);
   ui->setupUi(this);
@@ -82,6 +83,17 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   sortModel->setDynamicSortFilter(true);
   ui->timerView->setModel(sortModel);
   ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1, Qt::DescendingOrder);
+
+  m_updateTimer->setObjectName("GammaRay update timer");
+  m_updateTimer->setSingleShot(false);
+  m_updateTimer->setInterval(500);
+  m_updateTimer->start();
+  connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(slotUpdateView()));
+}
+
+void TimerTop::slotUpdateView()
+{
+  ui->timerView->viewport()->update();
 }
 
 #include "timertop.moc"

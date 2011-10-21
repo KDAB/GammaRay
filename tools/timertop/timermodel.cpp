@@ -75,6 +75,9 @@ QTimer *timer_from_callback(QObject *caller, int method_index)
   if (timer) {
     QMetaMethod method = timer->metaObject()->method(method_index);
     if (method.signature() == QLatin1String("timeout()")) {
+      if (timer->objectName().toLower().startsWith("gammaray")) {
+        return 0;
+      }
       return timer;
     }
   }

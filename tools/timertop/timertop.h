@@ -38,8 +38,12 @@ class TimerTop : public QWidget
   public:
     explicit TimerTop(ProbeInterface *probe, QWidget *parent = 0);
 
+  private slots:
+    void slotUpdateView();
+
   private:
     QScopedPointer<Ui::TimerTop> ui;
+    QTimer *m_updateTimer;
 };
 
 class TimerTopFactory : public QObject,
