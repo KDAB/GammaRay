@@ -28,11 +28,14 @@
 
 using namespace GammaRay;
 
+//
+// TODO
+//
+
 // thread saftey!
 // timer events
 // generalize for signal profiling for every signal
 // retrieve receiver name from connection model
-
 // columns: wakeups, time / wakeup, max time, objectname, receiver
 //    -> averaged over the last x seconds. X being configurable, plus clear button
 // objectname: if not set, use child^3 of xyz
@@ -44,27 +47,18 @@ using namespace GammaRay;
 // heat map?
 // backgroudn color: either status (runing, stopped, singleshot) or frequency
 // move callback handling to probe interface
-
-// clear timeoutEvents when adding new ones
-
-// timeout -> it needs to be in list already!
-
-// filter out timers specific to gammaray (over global blacklist?)
-
 // test timer added/removed
-
-
 // put functioncalltimer into own file
-// uncomment dump method
-// filter out gammaray timers with qsortfilterproxymodel
 // protect against timer deletion
-// make the connection interface generic and add to probeinterface
-
-// update every x milliseconds and trigger update on timeout()
-
 // add a property widget
-
 // optimization
+
+//
+// BUGS
+//
+
+// dynamic sorting doesn't seem to work very well
+// only top-level timers are shown
 
 TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
