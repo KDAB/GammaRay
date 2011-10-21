@@ -59,8 +59,10 @@ class TimerInfo
     QTimer *timer() const;
     FunctionCallTimer *functionCallTimer();
     float wakeupsPerSec() const;
+    int totalWakeups() const;
 
   private:
+    int m_totalWakeups;
     QPointer<QTimer> m_timer;
     FunctionCallTimer m_functionCallTimer;
     QList<TimeoutEvent> m_timeoutEvents;
@@ -90,6 +92,7 @@ class TimerModel : public QAbstractListModel
       FirstRole = Qt::UserRole + 1,
       ObjectNameRole,
       StateRole,
+      TotalWakeupsRole,
       WakeupsPerSecRole,
       TimePerWakeupRole,
       MaxTimePerWakeupRole,

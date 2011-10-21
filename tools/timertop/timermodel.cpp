@@ -247,6 +247,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
     switch ((Roles)(index.column() + FirstRole + 1)) {
       case ObjectNameRole: return timerInfo->timer()->objectName();
       case StateRole: return tr("TODO");
+      case TotalWakeupsRole: return timerInfo->totalWakeups();
       case WakeupsPerSecRole: return timerInfo->wakeupsPerSec();
       case TimePerWakeupRole: return tr("TODO");
       case MaxTimePerWakeupRole: return tr("TODO");
@@ -262,6 +263,7 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
     switch ((Roles)(section + FirstRole + 1)) {
       case ObjectNameRole: return tr("Object Name");
       case StateRole: return tr("State");
+      case TotalWakeupsRole: return tr("Total Wakeups");
       case WakeupsPerSecRole: return tr("Wakeups/Sec");
       case TimePerWakeupRole: return tr("Time/Wakeup [uSecs]");
       case MaxTimePerWakeupRole: return tr("Max Wakeup Time [uSecs]");
@@ -305,7 +307,8 @@ void TimerModel::slotEndReset()
 
 
 TimerInfo::TimerInfo(QTimer *timer)
-  : m_timer(timer)
+  : m_timer(timer),
+    m_totalWakeups(0)
 {
 }
 
@@ -313,6 +316,7 @@ void TimerInfo::addEvent(const TimeoutEvent &timeoutEvent)
 {
   m_timeoutEvents.append(timeoutEvent);
   removeOldEvents();
+  m_totalWakeups++;
 }
 
 int TimerInfo::numEvents() const
@@ -352,6 +356,11 @@ float TimerInfo::wakeupsPerSec() const
     return wakeupsPerSec;
   }
   return 0;
+}
+
+int TimerInfo::totalWakeups() const
+{
+  return m_totalWakeups;
 }
 
 void TimerInfo::removeOldEvents()
