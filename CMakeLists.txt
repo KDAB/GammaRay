@@ -61,6 +61,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_SOURCE_DIR}/3rdparty/kde
 )
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
@@ -169,6 +170,12 @@ target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 find_package(Graphviz)
 if(GRAPHVIZ_FOUND)
   add_subdirectory(tools/statemachineviewer)
+endif()
+
+find_package(VTK)
+if (VTK_FOUND)
+  add_subdirectory(tools/objectvisualizer)
+  add_definitions(-DHAVE_VTK)
 endif()
 
 set(gammaray_srcs
