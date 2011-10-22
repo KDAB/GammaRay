@@ -24,15 +24,10 @@
 #include "injectorstyleplugin.h"
 
 #include <QDebug>
+#include <QLibrary>
 #include <QStyleFactory>
 
 #include <3rdparty/qt/qguiplatformplugin_p.h>
-
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <dlfcn.h>
-#endif
 
 using namespace GammaRay;
 
@@ -50,47 +45,31 @@ QStringList InjectorStylePlugin::keys() const
 
 void InjectorStylePlugin::inject()
 {
-  const QByteArray probeDll = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEDLL");
-  if (probeDll.isEmpty()) {
+  const QByteArray probeDllPath = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEDLL");
+  if (probeDllPath.isEmpty()) {
     qWarning("No probe DLL specified.");
     return;
   }
 
-#ifdef _WIN32
-//TODO: GetLastError and so on for error string
-  HMODULE probeDllHandle = LoadLibrary(reinterpret_cast<LPCWSTR>(QString(probeDll).utf16()));
-  if (!probeDllHandle) {
-    qWarning() << QLatin1String("Failed to load probe dll!");
+  QLibrary probeDll(QString::fromLocal8Bit(probeDllPath));
+  probeDll.setLoadHints(QLibrary::ResolveAllSymbolsHint);
+  if (!probeDll.load()) {
+    qWarning() << "Loading probe DLL failed:" << probeDll.errorString();
     return;
   }
-#else
-  void *probeDllHandle = dlopen(probeDll, RTLD_NOW);
-  if (!probeDllHandle) {
-    qWarning() << dlerror();
-    return;
-  }
-#endif
 
   const QByteArray probeFunc = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEFUNC");
   if (probeFunc.isEmpty()) {
+    qWarning("No probe function specified.");
     return;
   }
-#ifdef _WIN32
-//TODO: GetLastError and so on for error string
-  FARPROC probeFuncHandle = GetProcAddress(probeDllHandle, QString(probeFunc).toLatin1());
+
+  void* probeFuncHandle = probeDll.resolve(probeFunc);
   if (probeFuncHandle) {
     reinterpret_cast<void(*)()>(probeFuncHandle)();
   } else {
-    qWarning() << QLatin1String("Error finding probe function!");
+    qWarning() << "Resolving probe function failed:" << probeDll.errorString();
   }
-#else
-  void *probeFuncHandle = dlsym(probeDllHandle, probeFunc);
-  if (probeFuncHandle) {
-    reinterpret_cast<void(*)()>(probeFuncHandle)();
-  } else {
-    qWarning() << dlerror();
-  }
-#endif
 }
 
 Q_EXPORT_PLUGIN2(gammaray_injector_style, GammaRay::InjectorStylePlugin)

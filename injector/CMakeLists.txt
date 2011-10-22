@@ -8,9 +8,6 @@ target_link_libraries(gammaray_injector_style
 ${QT_QTCORE_LIBRARY}
 ${QT_QTGUI_LIBRARY}
 )
-if(NOT WIN32)
-  target_link_libraries(gammaray_injector_style dl)
-endif()
 set_target_properties(gammaray_injector_style
   PROPERTIES PREFIX ""
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/plugins/styles
