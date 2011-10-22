@@ -5,6 +5,8 @@ include_directories(
 set(gammaray_webinspector_plugin_srcs
   webinspector.cpp
   ../../singlecolumnobjectproxymodel.cpp
+  ../../util.cpp
+  ../../3rdparty/kde/kidentityproxymodel.cpp
 )
 qt4_automoc(${gammaray_webinspector_plugin_srcs})
 qt4_wrap_ui(gammaray_webinspector_plugin_srcs webinspector.ui)

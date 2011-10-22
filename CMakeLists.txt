@@ -126,6 +126,14 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   endif()
 endif()
 
+# linker flags
+if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+  if (CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
+    set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
+  endif()
+endif()
+
 add_subdirectory(injector)
 
 set(gammaray_runner_srcs
