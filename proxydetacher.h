@@ -40,6 +40,7 @@ namespace GammaRay {
  */
 class ProxyDetacher : public QObject
 {
+  Q_OBJECT
   public:
     explicit ProxyDetacher(QWidget *widget,
                            QAbstractProxyModel *proxyModel,

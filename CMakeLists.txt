@@ -226,6 +226,7 @@ set(gammaray_srcs
   tools/messagehandler/messagemodel.cpp
   toolmodel.cpp
   promolabel.cpp
+  proxydetacher.cpp
   sidepane.cpp
 
   tools/codecbrowser/codecbrowser.cpp
