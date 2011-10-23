@@ -44,12 +44,12 @@ class ProxyDetacher : public QObject
     explicit ProxyDetacher(QWidget *widget,
                            QAbstractProxyModel *proxyModel,
                            QAbstractItemModel *sourceModel);
-    virtual bool eventFilter(QObject* obj, QEvent* e );
+    virtual bool eventFilter(QObject *obj, QEvent *e);
 
   private:
     QWidget *m_widget;
-    QAbstractProxyModel* m_proxy;
-    QAbstractItemModel* m_source;
+    QAbstractProxyModel *m_proxy;
+    QAbstractItemModel *m_source;
 };
 
 }

@@ -64,7 +64,7 @@ void InjectorStylePlugin::inject()
     return;
   }
 
-  void* probeFuncHandle = probeDll.resolve(probeFunc);
+  void *probeFuncHandle = probeDll.resolve(probeFunc);
   if (probeFuncHandle) {
     reinterpret_cast<void(*)()>(probeFuncHandle)();
   } else {

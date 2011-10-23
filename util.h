@@ -36,7 +36,7 @@ namespace Util
   QString displayString(const QObject *object);
   QString variantToString(const QVariant &value);
   QString addressToString(const void *p);
-  QString addressToUid(const void* p);
+  QString addressToUid(const void *p);
 
   bool descendantOf(QObject *ascendant, QObject *obj);
 

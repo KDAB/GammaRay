@@ -16,13 +16,14 @@ using namespace GammaRay;
 using namespace std;
 
 static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
-PluginManager* PluginManager::s_instance = 0;
+PluginManager *PluginManager::s_instance = 0;
 
-PluginManager* PluginManager::instance()
+PluginManager *PluginManager::instance()
 {
-    if (!s_instance)
-        s_instance = new PluginManager();
-    return s_instance;
+  if (!s_instance) {
+    s_instance = new PluginManager();
+  }
+  return s_instance;
 }
 
 PluginManager::PluginManager()
@@ -40,7 +41,7 @@ QStringList PluginManager::pluginPaths() const
     QDir::separator() + "plugins";
 
   QStringList libraryPaths = QCoreApplication::libraryPaths();
-  foreach (const QString& libraryPath, libraryPaths) {
+  foreach (const QString &libraryPath, libraryPaths) {
     pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_SUFFIX;
   }
 

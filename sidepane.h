@@ -8,15 +8,14 @@ namespace GammaRay {
 class SidePane : public QListView
 {
   Q_OBJECT
+  public:
+    explicit SidePane(QWidget *parent = 0);
+    virtual ~SidePane();
 
-public:
-  explicit SidePane(QWidget* parent = 0);
-  virtual ~SidePane();
+    virtual QSize sizeHint() const;
 
-  virtual QSize sizeHint() const;
-
-protected:
-  virtual void resizeEvent(QResizeEvent* e);
+  protected:
+    virtual void resizeEvent(QResizeEvent *e);
 };
 
 }

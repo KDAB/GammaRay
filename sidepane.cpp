@@ -7,23 +7,23 @@ using namespace GammaRay;
 
 class Delegate : public QStyledItemDelegate
 {
-public:
-  explicit Delegate(QObject* parent = 0)
-    : QStyledItemDelegate(parent)
-  {
-  }
+  public:
+    explicit Delegate(QObject *parent = 0)
+      : QStyledItemDelegate(parent)
+    {
+    }
 
-  virtual QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
-  {
-    static const int heightMargin = 10;
+    virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+      static const int heightMargin = 10;
 
-    QSize size = QStyledItemDelegate::sizeHint(option, index);
-    size.setHeight(size.height() + heightMargin);
-    return size;
-  }
+      QSize size = QStyledItemDelegate::sizeHint(option, index);
+      size.setHeight(size.height() + heightMargin);
+      return size;
+    }
 };
 
-SidePane::SidePane(QWidget* parent)
+SidePane::SidePane(QWidget *parent)
   : QListView(parent)
 {
   viewport()->setAutoFillBackground(false);
@@ -39,8 +39,9 @@ QSize SidePane::sizeHint() const
 {
   static const int widthMargin = 10;
 
-  if (!model())
+  if (!model()) {
     return QSize(0, 0);
+  }
 
   const int width = sizeHintForColumn(0) + widthMargin;
   const int height = QListView::sizeHint().height();
@@ -48,7 +49,7 @@ QSize SidePane::sizeHint() const
   return QSize(width, height);
 }
 
-void SidePane::resizeEvent(QResizeEvent* e)
+void SidePane::resizeEvent(QResizeEvent *e)
 {
   setMinimumWidth(sizeHint().width());
 

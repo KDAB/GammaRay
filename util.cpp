@@ -47,11 +47,10 @@ QString Util::displayString(const QObject *object)
   return object->objectName();
 }
 
-QString Util::addressToUid(const void* p)
+QString Util::addressToUid(const void *p)
 {
   return QString::number(reinterpret_cast<qlonglong>(p), 16);
 }
-
 
 static QString sizePolicyToString(QSizePolicy::Policy policy)
 {
@@ -133,7 +132,7 @@ QString Util::addressToString(const void *p)
   return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
 }
 
-bool Util::descendantOf(QObject* ascendant, QObject* obj)
+bool Util::descendantOf(QObject *ascendant, QObject *obj)
 {
   QObject *parent = obj->parent();
   if (!parent) {

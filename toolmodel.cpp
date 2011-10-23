@@ -68,8 +68,8 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new TextDocumentInspectorFactory(this));
 //   m_tools.push_back(new MessageHandlerFactory(this));
 
-  Q_FOREACH(ToolFactory* factory, PluginManager::instance()->allObjects<ToolFactory>()) {
-      m_tools.push_back(factory);
+  Q_FOREACH (ToolFactory *factory, PluginManager::instance()->allObjects<ToolFactory>()) {
+    m_tools.push_back(factory);
   }
 
   // everything but the object inspector is inactive initially
@@ -143,7 +143,8 @@ Qt::ItemFlags ToolModel::flags(const QModelIndex &index) const
 void ToolModel::objectAdded(QObject *obj)
 {
   // delay to main thread if required
-  QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection, Q_ARG(QObject*, obj));
+  QMetaObject::invokeMethod(this, "objectAddedMainThread",
+                            Qt::AutoConnection, Q_ARG(QObject *, obj));
 }
 
 void ToolModel::objectAddedMainThread(QObject *obj)

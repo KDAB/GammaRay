@@ -28,7 +28,7 @@
 
 using namespace GammaRay;
 
-MultiSignalMapper::MultiSignalMapper(QObject* parent) : QObject(parent)
+MultiSignalMapper::MultiSignalMapper(QObject *parent) : QObject(parent)
 {
 }
 
@@ -38,25 +38,27 @@ MultiSignalMapper::~MultiSignalMapper()
   m_mappers.clear();
 }
 
-void MultiSignalMapper::connectToSignal(QObject* sender, const QMetaMethod& signal)
+void MultiSignalMapper::connectToSignal(QObject *sender, const QMetaMethod &signal)
 {
-  if (m_mappers.size() <= signal.methodIndex())
+  if (m_mappers.size() <= signal.methodIndex()) {
     m_mappers.resize(signal.methodIndex() + 1);
+  }
 
-  QSignalMapper* mapper = m_mappers.at(signal.methodIndex());
+  QSignalMapper *mapper = m_mappers.at(signal.methodIndex());
   if (!mapper) {
     mapper = new QSignalMapper(this);
     connect(mapper, SIGNAL(mapped(QObject*)), SLOT(slotMapped(QObject*)));
     m_mappers[signal.methodIndex()] = mapper;
   }
 
-  mapper->setMapping( sender, sender );
-  connect(sender, QByteArray::number(QSIGNAL_CODE) + signal.signature(), mapper, SLOT(map()), Qt::UniqueConnection);
+  mapper->setMapping(sender, sender);
+  connect(sender, QByteArray::number(QSIGNAL_CODE) + signal.signature(),
+          mapper, SLOT(map()), Qt::UniqueConnection);
 }
 
-void MultiSignalMapper::slotMapped(QObject* object)
+void MultiSignalMapper::slotMapped(QObject *object)
 {
-  emit signalEmitted( object, m_mappers.indexOf(static_cast<QSignalMapper*>(sender())) );
+  emit signalEmitted(object, m_mappers.indexOf(static_cast<QSignalMapper*>(sender())));
 }
 
 #include "multisignalmapper.moc"

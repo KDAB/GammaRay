@@ -82,7 +82,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.methodSearchLine->setProxy(proxy);
   connect(ui.methodView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(methodActivated(QModelIndex)));
-  connect(ui.methodView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(methodConextMenu(QPoint)));
+  connect(ui.methodView, SIGNAL(customContextMenuRequested(QPoint)),
+          SLOT(methodConextMenu(QPoint)));
   ui.methodLog->setModel(m_methodLogModel);
 
   proxy = new QSortFilterProxyModel(this);
@@ -93,12 +94,14 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
   ui.classInfoSearchLine->setProxy(proxy);
 
-  new ProxyDetacher(ui.inboundConnectionView, m_inboundConnectionModel, Probe::instance()->connectionModel());
+  new ProxyDetacher(ui.inboundConnectionView, m_inboundConnectionModel,
+                    Probe::instance()->connectionModel());
   ui.inboundConnectionView->setModel(m_inboundConnectionModel);
   ui.inboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
   ui.inboundConnectionSearchLine->setProxy(m_inboundConnectionModel);
 
-  new ProxyDetacher(ui.outboundConnectionView, m_outboundConnectionModel, Probe::instance()->connectionModel());
+  new ProxyDetacher(ui.outboundConnectionView, m_outboundConnectionModel,
+                    Probe::instance()->connectionModel());
   ui.outboundConnectionView->setModel(m_outboundConnectionModel);
   ui.outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
   ui.outboundConnectionSearchLine->setProxy(m_outboundConnectionModel);
@@ -143,20 +146,21 @@ void PropertyWidget::methodActivated(const QModelIndex &index)
   }
 }
 
-void PropertyWidget::signalEmitted(QObject* sender, int signalIndex)
+void PropertyWidget::signalEmitted(QObject *sender, int signalIndex)
 {
   Q_ASSERT(m_object == sender);
-  m_methodLogModel->appendRow( new QStandardItem( tr( "%1: Signal %2 emitted" )
-    .arg( QTime::currentTime().toString("HH:mm:ss.zzz") )
-    .arg( sender->metaObject()->method(signalIndex).signature() ) 
-  ) );
+  m_methodLogModel->appendRow(
+    new QStandardItem(tr("%1: Signal %2 emitted").
+                      arg(QTime::currentTime().toString("HH:mm:ss.zzz")).
+                      arg(sender->metaObject()->method(signalIndex).signature())));
 }
 
-void PropertyWidget::methodConextMenu(const QPoint& pos)
+void PropertyWidget::methodConextMenu(const QPoint &pos)
 {
   const QModelIndex index = ui.methodView->indexAt(pos);
-  if (!index.isValid())
+  if (!index.isValid()) {
     return;
+  }
 
   const QMetaMethod method = index.data(ObjectMethodModel::MetaMethodRole).value<QMetaMethod>();
   QMenu contextMenu;
@@ -166,8 +170,9 @@ void PropertyWidget::methodConextMenu(const QPoint& pos)
     contextMenu.addAction(tr("Connect to"));
   }
 
-  if (contextMenu.exec(ui.methodView->viewport()->mapToGlobal(pos)))
+  if (contextMenu.exec(ui.methodView->viewport()->mapToGlobal(pos))) {
     methodActivated(index);
+  }
 }
 
 #include "propertywidget.moc"

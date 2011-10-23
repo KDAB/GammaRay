@@ -674,7 +674,6 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 // existing function, which cannot be reverted. It would be possible to save the content
 // and write it back when we unattach.
 
-
 static inline void *page_align(void *addr)
 {
   assert(addr != NULL);
@@ -697,8 +696,8 @@ void writeJmp(void *func, void *replacement)
   VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
 #else ifdef Q_OS_MAC
   quint8 *aligned = (quint8*)page_align(func);
-  const bool writable = ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0 );
-  assert ( writable );
+  const bool writable = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0);
+  assert(writable);
 #endif
 
   quint8 *cur = (quint8 *) func;
@@ -732,13 +731,12 @@ void writeJmp(void *func, void *replacement)
 #ifdef Q_OS_WIN
   VirtualProtect(func, worstSize, oldProtect, &oldProtect);
 #else ifdef Q_OS_MAC
-  const bool readOnly = ( mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0 );
-  assert( readOnly );
+  const bool readOnly = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0);
+  assert(readOnly);
 #endif
 }
 
 #endif
-
 
 #ifdef Q_OS_WIN
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
@@ -818,17 +816,18 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 #ifdef Q_OS_MAC
 // we need a way to execute some code upon load, so let's abuse
 // static initialization
-class HitMeBabyOneMoreTime {
+class HitMeBabyOneMoreTime
+{
 
-public:
+  public:
     HitMeBabyOneMoreTime()
     {
       void *qt_startup_hook_addr = dlsym(RTLD_NEXT, "qt_startup_hook");
       void *qt_add_object_addr = dlsym(RTLD_NEXT, "qt_addObject");
       void *qt_remove_object_addr = dlsym(RTLD_NEXT, "qt_removeObject");
-      writeJmp(qt_startup_hook_addr, (void * )qt_startup_hook);
-      writeJmp(qt_add_object_addr, (void * )qt_addObject);
-      writeJmp(qt_remove_object_addr, (void * )qt_removeObject);
+      writeJmp(qt_startup_hook_addr, (void *)qt_startup_hook);
+      writeJmp(qt_add_object_addr, (void *)qt_addObject);
+      writeJmp(qt_remove_object_addr, (void *)qt_removeObject);
     }
 
 };

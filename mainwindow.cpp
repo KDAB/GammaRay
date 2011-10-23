@@ -67,8 +67,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
-  ToolModel* model = Probe::instance()->toolModel();
-  QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
+  ToolModel *model = Probe::instance()->toolModel();
+  QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
   proxyModel->setDynamicSortFilter(true);
   proxyModel->setSourceModel(model);
   proxyModel->sort(0);
@@ -136,10 +136,11 @@ void MainWindow::selectInitialTool()
 {
   static const QString initialTool("GammaRay::ObjectInspector");
 
-  QAbstractItemModel* model = ui.toolSelector->model();
+  QAbstractItemModel *model = ui.toolSelector->model();
   QModelIndexList matches = model->match(model->index(0, 0), ToolModel::ToolIdRole, initialTool);
-  if (matches.isEmpty())
+  if (matches.isEmpty()) {
     return;
+  }
 
   ui.toolSelector->setCurrentIndex(matches.first());
   toolSelected();
@@ -148,8 +149,9 @@ void MainWindow::selectInitialTool()
 void MainWindow::toolSelected()
 {
   const int row = ui.toolSelector->currentIndex().row();
-  if (row == -1)
+  if (row == -1) {
     return;
+  }
 
   const QModelIndex mi = ui.toolSelector->model()->index(row, 0);
   QWidget *toolWidget = mi.data(ToolModel::ToolWidgetRole).value<QWidget*>();
@@ -159,7 +161,7 @@ void MainWindow::toolSelected()
 //     qDebug() << Q_FUNC_INFO << "creating new probe: "
 //              << toolIface->name() << toolIface->supportedTypes();
     toolWidget = toolIface->createWidget(Probe::instance(), this);
-    toolWidget->layout()->setContentsMargins(11,0,0,0);
+    toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
     ui.toolStack->addWidget(toolWidget);
     ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
   }
