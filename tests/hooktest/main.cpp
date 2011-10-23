@@ -12,7 +12,7 @@
 static inline void *
 page_align(void *addr)
 {
-  assert(addr != NULL);
+  assert(addr != 0);
   return (void *)((size_t)addr & ~(0xFFFF));
 }
 
