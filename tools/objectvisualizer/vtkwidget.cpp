@@ -54,8 +54,7 @@ using namespace GammaRay;
 //#define WITH_DEBUG
 
 #ifdef WITH_DEBUG
-#define DEBUG(msg) \
-  std::cout << Q_FUNC_INFO << " " << msg << std::endl;
+#define DEBUG(msg) std::cout << Q_FUNC_INFO << " " << msg << std::endl;
 #else
 #define DEBUG(msg) qt_noop();
 #endif
@@ -63,12 +62,12 @@ using namespace GammaRay;
 #define VTK_CREATE(type, name) \
   vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
 
-VtkWidget::VtkWidget(QWidget* parent)
-  : QVTKWidget(parent)
-  , m_mousePressed(false)
-  , m_updateTimer(new QTimer(this))
-  , m_objectFilter(0)
-  , m_colorIndex(0)
+VtkWidget::VtkWidget(QWidget *parent)
+  : QVTKWidget(parent),
+    m_mousePressed(false),
+    m_updateTimer(new QTimer(this)),
+    m_objectFilter(0),
+    m_colorIndex(0)
 {
   setupRenderer();
   setupGraph();
@@ -95,14 +94,14 @@ void VtkWidget::resetCamera()
   m_view->ResetCamera();
 }
 
-void VtkWidget::mousePressEvent(QMouseEvent* event)
+void VtkWidget::mousePressEvent(QMouseEvent *event)
 {
   m_mousePressed = true;
 
   QVTKWidget::mousePressEvent(event);
 }
 
-void VtkWidget::mouseReleaseEvent(QMouseEvent* event)
+void VtkWidget::mouseReleaseEvent(QMouseEvent *event)
 {
   m_mousePressed = false;
 
@@ -140,13 +139,13 @@ void VtkWidget::setupGraph()
   vtkSmartPointer<vtkViewTheme> theme = vtkSmartPointer<vtkViewTheme>::New();
   theme->SetPointLookupTable(colorLookupTable);
 
-  vtkGraphLayoutView* graphLayoutView = vtkGraphLayoutView::New();
+  vtkGraphLayoutView *graphLayoutView = vtkGraphLayoutView::New();
   graphLayoutView->AddRepresentationFromInput(graph);
   graphLayoutView->SetVertexLabelVisibility(true);
   graphLayoutView->SetVertexLabelArrayName("labels");
   graphLayoutView->SetLayoutStrategyToSpanTree();
   graphLayoutView->SetVertexColorArrayName("Color");
-  graphLayoutView->SetColorVertices(true);;
+  graphLayoutView->SetColorVertices(true);
   graphLayoutView->ApplyViewTheme(theme);
   m_view = graphLayoutView;
 
@@ -157,7 +156,6 @@ void VtkWidget::setupGraph()
   renderWindowInteractor->SetInteractorStyle(style);
   renderWindowInteractor->Initialize();
   SetRenderWindow(graphLayoutView->GetRenderWindow());
-
 
   // code for generating edge arrow heads, needs some love
   // currently it modifies the layouting
@@ -176,8 +174,7 @@ void VtkWidget::setupGraph()
 
   // Add the graph to the view. This will render vertices and edges,
   // but not edge arrows.
-  graphLayoutView->AddRepresentationFromInputConnection(
-    layout->GetOutputPort());
+  graphLayoutView->AddRepresentationFromInputConnection(layout->GetOutputPort());
 
   // Manually create an actor containing the glyphed arrows.
   VTK_CREATE(vtkGraphToPolyData, graphToPoly);
@@ -214,31 +211,37 @@ void VtkWidget::setupGraph()
   DEBUG("end")
 }
 
-bool VtkWidget::addObject(QObject* object)
+bool VtkWidget::addObject(QObject *object)
 {
   m_availableObjects << object;
 
   return addObjectInternal(object);
 }
 
-bool VtkWidget::addObjectInternal(QObject* object)
+bool VtkWidget::addObjectInternal(QObject *object)
 {
   // ignore new objects during scene interaction
   // TODO: Add some code to add the objects later on => queue objects
   if (m_mousePressed) {
-    DEBUG("Ignoring new object during scene interaction: " << object << " " << object->metaObject()->className())
+    DEBUG("Ignoring new object during scene interaction: "
+          << object
+          << " "
+          << object->metaObject()->className())
     return false;
   }
 
   const QString className = QLatin1String(object->metaObject()->className());
-  if (className == "QVTKInteractorInternal")
+  if (className == "QVTKInteractorInternal") {
     return false;
+  }
 
-  if (m_objectIdMap.contains(object))
+  if (m_objectIdMap.contains(object)) {
     return false;
+  }
 
-  if (!filterAcceptsObject(object))
+  if (!filterAcceptsObject(object)) {
     return false;
+  }
 
   const QString label = Util::displayString(object);
   const int weight = 1; // TODO: Make weight somewhat usable?
@@ -249,7 +252,7 @@ bool VtkWidget::addObjectInternal(QObject* object)
 
   QMap< QString, int >::const_iterator it = m_typeColorMap.constFind(className);
   if (it != m_typeColorMap.constEnd()) {
-    m_vertexPropertyArr->SetValue(2,  it.value());
+    m_vertexPropertyArr->SetValue(2, it.value());
   } else {
     m_vertexPropertyArr->SetValue(2, m_colorIndex);
     m_typeColorMap.insert(className, m_colorIndex);
@@ -260,7 +263,7 @@ bool VtkWidget::addObjectInternal(QObject* object)
   DEBUG("Add: " << type << " " << object->metaObject()->className())
   m_objectIdMap[object] = type;
 
-  QObject* parentObject = object->parent();
+  QObject *parentObject = object->parent();
   if (parentObject) {
     if (!m_objectIdMap.contains(parentObject)) {
       addObject(parentObject);
@@ -275,17 +278,18 @@ bool VtkWidget::addObjectInternal(QObject* object)
   return true;
 }
 
-bool VtkWidget::removeObject(QObject* object)
+bool VtkWidget::removeObject(QObject *object)
 {
   m_availableObjects.remove(object);
 
   return removeObjectInternal(object);
 }
 
-bool VtkWidget::removeObjectInternal(QObject* object)
+bool VtkWidget::removeObjectInternal(QObject *object)
 {
-  if (!m_objectIdMap.contains(object))
+  if (!m_objectIdMap.contains(object)) {
     return false;
+  }
 
   // Remove id-for-object from VTK's graph data structure
   const vtkIdType type = m_objectIdMap[object];
@@ -297,7 +301,7 @@ bool VtkWidget::removeObjectInternal(QObject* object)
   const vtkIdType lastId = m_objectIdMap.size() - 1;
   DEBUG("Type: " << type << " Last: " << lastId)
   if (type != lastId) {
-    QObject* lastObject = m_objectIdMap.key(lastId);
+    QObject *lastObject = m_objectIdMap.key(lastId);
     Q_ASSERT(lastObject);
     m_objectIdMap[lastObject] = type;
   }
@@ -306,8 +310,7 @@ bool VtkWidget::removeObjectInternal(QObject* object)
   if (size > m_graph->GetNumberOfVertices()) {
     const bool count = m_objectIdMap.remove(object);
     Q_ASSERT(count == 1);
-  }
-  else {
+  } else {
     DEBUG("Warning: Should not happen: Could not remove vertice with id: " << type)
   }
 
@@ -325,7 +328,7 @@ void VtkWidget::clear()
 {
   // TODO: there must be an easier/faster way to clean the graph data
   // Just re-create the vtk graph data object?
-  Q_FOREACH(QObject* object, m_objectIdMap.keys()) {
+  Q_FOREACH (QObject *object, m_objectIdMap.keys()) {
     removeObjectInternal(object);
   }
   m_objectIdMap.clear();
@@ -341,10 +344,11 @@ void VtkWidget::renderViewImpl()
   m_view->ResetCamera();
 }
 
-void VtkWidget::setObjectFilter(QObject* object)
+void VtkWidget::setObjectFilter(QObject *object)
 {
-  if (m_objectFilter == object)
+  if (m_objectFilter == object) {
     return;
+  }
 
   m_objectFilter = object;
   repopulate();
@@ -357,7 +361,7 @@ void VtkWidget::repopulate()
 
   clear();
 
-  Q_FOREACH(QObject* object, m_availableObjects) {
+  Q_FOREACH (QObject *object, m_availableObjects) {
     addObject(object);
   }
 }
@@ -375,15 +379,16 @@ static bool descendantOf(QObject *ascendant, QObject *obj)
   return descendantOf(ascendant, parent);
 }
 
-bool VtkWidget::filterAcceptsObject(QObject* object) const
+bool VtkWidget::filterAcceptsObject(QObject *object) const
 {
   if (m_objectFilter) {
-    if (object == m_objectFilter)
+    if (object == m_objectFilter) {
       return true;
-    else if (descendantOf(m_objectFilter, object))
+    } else if (descendantOf(m_objectFilter, object)) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
   return true;
 }

@@ -54,7 +54,8 @@ class TextDocumentModel : public QStandardItemModel
     void fillTable(QTextTable *table, QStandardItem *parent);
     void fillBlock(const QTextBlock &block, QStandardItem *parent);
     QStandardItem *formatItem(const QTextFormat &format);
-    void appendRow(QStandardItem *parent, QStandardItem *item, const QTextFormat &format, const QRectF &boundingBox = QRectF());
+    void appendRow(QStandardItem *parent, QStandardItem *item,
+                   const QTextFormat &format, const QRectF &boundingBox = QRectF());
 
   private slots:
     void documentChanged();

@@ -89,7 +89,7 @@ StateModel::StateModel(QStateMachine *stateMachine, QObject *parent)
   setRoleNames(_roleNames);
 }
 
-QStateMachine* StateModel::stateMachine() const
+QStateMachine *StateModel::stateMachine() const
 {
   Q_D(const StateModel);
   return d->m_stateMachine;

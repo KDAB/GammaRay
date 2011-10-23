@@ -29,10 +29,10 @@
 
 using namespace GammaRay;
 
-GraphWidget::GraphWidget(QWidget* parent)
+GraphWidget::GraphWidget(QWidget *parent)
   : QWidget(parent)
 {
-  QVBoxLayout* vbox = new QVBoxLayout(this);
+  QVBoxLayout *vbox = new QVBoxLayout(this);
 
   m_vtkWidget = new VtkWidget(this);
 

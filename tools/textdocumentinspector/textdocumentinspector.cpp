@@ -64,8 +64,9 @@ void TextDocumentInspector::documentSelected(const QItemSelection &selected,
   QObject *selectedObj = selectedRow.data(ObjectModel::ObjectRole).value<QObject*>();
   QTextDocument *doc = qobject_cast<QTextDocument*>(selectedObj);
 
-  if (m_currentDocument)
+  if (m_currentDocument) {
     disconnect(m_currentDocument, SIGNAL(contentsChanged()), this, SLOT(documentContentChanged()));
+  }
   m_currentDocument = QPointer<QTextDocument>(doc);
 
   if (doc) {

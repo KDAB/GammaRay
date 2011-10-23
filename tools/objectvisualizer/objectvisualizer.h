@@ -38,19 +38,19 @@ class GraphViewer : public QWidget
 {
   Q_OBJECT
 
-public:
-  explicit GraphViewer(ProbeInterface* probe, QWidget *parent = 0);
-  virtual ~GraphViewer();
+  public:
+    explicit GraphViewer(ProbeInterface *probe, QWidget *parent = 0);
+    virtual ~GraphViewer();
 
-private Q_SLOTS:
-  void delayedInit();
+  private Q_SLOTS:
+    void delayedInit();
 
-  void handleRowChanged(const QModelIndex& index);
+  void handleRowChanged(const QModelIndex &index);
 
-private:
-  QTreeView* mObjectTreeView;
-  GraphWidget* mWidget;
-  ProbeInterface* mProbeIface;
+  private:
+    QTreeView *mObjectTreeView;
+    GraphWidget *mWidget;
+    ProbeInterface *mProbeIface;
 };
 
 class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, GraphViewer>
@@ -58,10 +58,13 @@ class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, G
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
 
-public:
-  explicit GraphViewerFactory(QObject *parent = 0) : QObject(parent) {}
+  public:
+    explicit GraphViewerFactory(QObject *parent = 0) : QObject(parent) {}
 
-  virtual inline QString name() const { return tr("Object Visualizer"); }
+    virtual inline QString name() const
+    {
+      return tr("Object Visualizer");
+    }
 };
 
 }

@@ -38,63 +38,68 @@ class vtkMutableDirectedGraph;
 class QMouseEvent;
 class QTimer;
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class VtkWidget : public QVTKWidget
 {
   Q_OBJECT
 
-public:
-  explicit VtkWidget(QWidget* parent = 0);
-  virtual ~VtkWidget();
+  public:
+    explicit VtkWidget(QWidget *parent = 0);
+    virtual ~VtkWidget();
 
-  QObject* objectFilter() const { return m_objectFilter; }
+    QObject *objectFilter() const
+    {
+      return m_objectFilter;
+    }
 
-  vtkGraphLayoutView* layoutView() const { return m_view; }
+    vtkGraphLayoutView *layoutView() const
+    {
+      return m_view;
+    }
 
-public Q_SLOTS:
-  void resetCamera();
+  public Q_SLOTS:
+    void resetCamera();
 
-  bool addObject(QObject*);
-  bool removeObject(QObject*);
+    bool addObject(QObject *);
+    bool removeObject(QObject *);
 
-  void setObjectFilter(QObject* object);
+    void setObjectFilter(QObject *object);
 
-  void clear();
-  void repopulate();
+    void clear();
+    void repopulate();
 
-private Q_SLOTS:
-  bool addObjectInternal(QObject* object);
-  bool removeObjectInternal(QObject* object);
+  private Q_SLOTS:
+    bool addObjectInternal(QObject *object);
+    bool removeObjectInternal(QObject *object);
 
-  void renderViewImpl();
-  void renderView();
+    void renderViewImpl();
+    void renderView();
 
-protected:
-  virtual void mousePressEvent(QMouseEvent* event);
-  virtual void mouseReleaseEvent(QMouseEvent* event);
+  protected:
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
 
-  bool filterAcceptsObject(QObject* object) const;
+    bool filterAcceptsObject(QObject *object) const;
 
-private:
-  void setupGraph();
-  void setupRenderer();
+  private:
+    void setupGraph();
+    void setupRenderer();
 
-  bool m_mousePressed;
-  QTimer* m_updateTimer;
-  QObject* m_objectFilter;
+    bool m_mousePressed;
+    QTimer *m_updateTimer;
+    QObject *m_objectFilter;
 
-  // TODO: Instead of tracking all available objects, make Probe::m_validObjects public?
-  QSet<QObject*> m_availableObjects;
-  QMap<QObject*, vtkIdType> m_objectIdMap;
+    // TODO: Instead of tracking all available objects, make Probe::m_validObjects public?
+    QSet<QObject*> m_availableObjects;
+    QMap<QObject *, vtkIdType> m_objectIdMap;
 
-  int m_colorIndex;
-  QMap<QString, int> m_typeColorMap;
+    int m_colorIndex;
+    QMap<QString, int> m_typeColorMap;
 
-  vtkSmartPointer<vtkVariantArray> m_vertexPropertyArr;
-  vtkGraphLayoutView* m_view;
-  vtkSmartPointer<vtkMutableDirectedGraph> m_graph;
+    vtkSmartPointer<vtkVariantArray> m_vertexPropertyArr;
+    vtkGraphLayoutView *m_view;
+    vtkSmartPointer<vtkMutableDirectedGraph> m_graph;
 };
 
 }

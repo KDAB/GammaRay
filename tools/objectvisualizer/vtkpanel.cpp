@@ -35,12 +35,12 @@
 
 using namespace GammaRay;
 
-VtkPanel::VtkPanel(VtkWidget* vtkWidget, QWidget* parent)
-  : QToolBar(parent)
-  , m_vtkWidget(vtkWidget)
-  , m_currentLayout("spanTree")
+VtkPanel::VtkPanel(VtkWidget *vtkWidget, QWidget *parent)
+  : QToolBar(parent),
+    m_vtkWidget(vtkWidget),
+    m_currentLayout("spanTree")
 {
-  addWidget( new QLabel( tr("Layout:" ) ) );
+  addWidget(new QLabel(tr("Layout:")));
   m_layoutBox = new QComboBox;
 #if 0
   m_layoutBox->addItem(tr("Tree Layout"), "tree");
@@ -53,7 +53,7 @@ VtkPanel::VtkPanel(VtkWidget* vtkWidget, QWidget* parent)
   connect(m_layoutBox, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
   addWidget(m_layoutBox);
 
-  addWidget( new QLabel( tr("Stereo:" ) ) );
+  addWidget(new QLabel(tr("Stereo:")));
   m_stereoBox = new QComboBox;
   m_stereoBox->addItem(tr("Off"), 0);
   m_stereoBox->addItem(tr("Crystal Eyes"), VTK_STEREO_CRYSTAL_EYES);
@@ -68,36 +68,36 @@ VtkPanel::VtkPanel(VtkWidget* vtkWidget, QWidget* parent)
   addWidget(m_stereoBox);
 }
 
-static vtkGraphLayoutStrategy* layoutStrategyForName(const QString& layoutName)
+static vtkGraphLayoutStrategy *layoutStrategyForName(const QString &layoutName)
 {
   if (layoutName == "tree") {
-    vtkTreeLayoutStrategy* strategy = vtkTreeLayoutStrategy::New();
+    vtkTreeLayoutStrategy *strategy = vtkTreeLayoutStrategy::New();
     strategy->SetRadial(true);
     return strategy;
-  }
-  else if (layoutName == "spanTree")
+  } else if (layoutName == "spanTree") {
     return vtkSpanTreeLayoutStrategy::New();
-  else if (layoutName == "forceDirected")
+  } else if (layoutName == "forceDirected") {
     return vtkForceDirectedLayoutStrategy::New();
-  else if (layoutName == "forceDirected3D") {
-    vtkForceDirectedLayoutStrategy* strategy = vtkForceDirectedLayoutStrategy::New();
+  } else if (layoutName == "forceDirected3D") {
+    vtkForceDirectedLayoutStrategy *strategy = vtkForceDirectedLayoutStrategy::New();
     strategy->SetThreeDimensionalLayout(true);
     return strategy;
-  }
-  else if (layoutName == "simple2D")
+  } else if (layoutName == "simple2D") {
     return vtkSimple2DLayoutStrategy::New();
-  else
+  } else {
     return 0;
+  }
 }
 
 void VtkPanel::currentIndexChanged(int index)
 {
   const QString layoutName = m_layoutBox->itemData(index).toString();
-  if (m_currentLayout == layoutName)
+  if (m_currentLayout == layoutName) {
     return;
+  }
 
   // update
-  vtkGraphLayoutStrategy* strategy = layoutStrategyForName(layoutName);
+  vtkGraphLayoutStrategy *strategy = layoutStrategyForName(layoutName);
   m_vtkWidget->layoutView()->SetLayoutStrategy(strategy);
   m_vtkWidget->layoutView()->ResetCamera();
   m_vtkWidget->layoutView()->Render();
@@ -116,7 +116,6 @@ void VtkPanel::stereoModeChanged(int index)
   }
   m_vtkWidget->layoutView()->GetRenderWindow()->StereoUpdate();
 }
-
 
 VtkPanel::~VtkPanel()
 {

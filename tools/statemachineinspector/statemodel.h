@@ -44,7 +44,7 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
     };
     explicit StateModel(QStateMachine *stateMachine, QObject *parent = 0);
 
-    QStateMachine* stateMachine() const;
+    QStateMachine *stateMachine() const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

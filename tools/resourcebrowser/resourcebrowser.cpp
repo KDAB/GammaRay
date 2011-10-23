@@ -88,9 +88,11 @@ void ResourceBrowser::setupLayout()
   // now the view was setup properly and we can mess with the splitter to resize
   // the widgets for nicer display
 
-  int viewWidth = ui->treeView->columnWidth(0) + ui->treeView->columnWidth(1)
-                + ui->treeView->columnWidth(2) + ui->treeView->contentsMargins().left()
-                + ui->treeView->contentsMargins().right() + 25;
+  int viewWidth = ui->treeView->columnWidth(0) +
+                  ui->treeView->columnWidth(1) +
+                  ui->treeView->columnWidth(2) +
+                  ui->treeView->contentsMargins().left() +
+                  ui->treeView->contentsMargins().right() + 25;
   const int totalWidth = ui->splitter_7->width();
   const int minPreviewWidth = 150;
   if (totalWidth > viewWidth + minPreviewWidth) {
