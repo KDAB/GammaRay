@@ -55,7 +55,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="layoutWidget1">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="1" column="0" colspan="2">
         <widget class="StateMachineView" name="graphicsView">
