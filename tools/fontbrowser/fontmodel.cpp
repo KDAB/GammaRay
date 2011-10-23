@@ -117,7 +117,7 @@ void FontModel::setPointSize(int size)
     return;
   }
 
-  for(int i = 0; i < m_fonts.size(); ++i) {
+  for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setPointSize(size);
   }
 
@@ -130,7 +130,7 @@ void FontModel::toggleItalicFont(bool italic)
     return;
   }
 
-  for(int i = 0; i < m_fonts.size(); ++i) {
+  for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setItalic(italic);
   }
 
@@ -143,7 +143,7 @@ void FontModel::toggleUnderlineFont(bool underline)
     return;
   }
 
-  for(int i = 0; i < m_fonts.size(); ++i) {
+  for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setUnderline(underline);
   }
 
@@ -156,7 +156,7 @@ void FontModel::toggleBoldFont(bool bold)
     return;
   }
 
-  for(int i = 0; i < m_fonts.size(); ++i) {
+  for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setBold(bold);
   }
 

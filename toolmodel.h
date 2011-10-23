@@ -33,7 +33,8 @@ namespace GammaRay {
 
 class ToolFactory;
 
-/** Manages the list of available probing tools.
+/**
+ * Manages the list of available probing tools.
  */
 class ToolModel : public QAbstractListModel
 {
@@ -49,7 +50,8 @@ class ToolModel : public QAbstractListModel
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
   public slots:
     /** Check if we have to activate tools for this type */

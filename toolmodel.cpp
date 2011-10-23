@@ -158,7 +158,8 @@ Qt::ItemFlags ToolModel::flags(const QModelIndex &index) const
 void ToolModel::objectAdded(QObject *obj)
 {
   // delay to main thread if required
-  QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection, Q_ARG(QObject*, obj));
+  QMetaObject::invokeMethod(this, "objectAddedMainThread",
+                            Qt::AutoConnection, Q_ARG(QObject *, obj));
 }
 
 void ToolModel::objectAddedMainThread(QObject *obj)

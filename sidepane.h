@@ -33,13 +33,13 @@ class SidePane : public QListView
   Q_OBJECT
 
 public:
-  explicit SidePane(QWidget* parent = 0);
+  explicit SidePane(QWidget *parent = 0);
   virtual ~SidePane();
 
   virtual QSize sizeHint() const;
 
 protected:
-  virtual void resizeEvent(QResizeEvent* e);
+  virtual void resizeEvent(QResizeEvent *e);
 };
 
 }

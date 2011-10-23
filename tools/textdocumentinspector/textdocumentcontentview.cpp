@@ -27,20 +27,20 @@
 
 using namespace GammaRay;
 
-TextDocumentContentView::TextDocumentContentView(QWidget* parent): QTextEdit(parent)
+TextDocumentContentView::TextDocumentContentView(QWidget *parent): QTextEdit(parent)
 {
 }
 
-void TextDocumentContentView::setShowBoundingBox(const QRectF& boundingBox)
+void TextDocumentContentView::setShowBoundingBox(const QRectF &boundingBox)
 {
   m_boundingBox = boundingBox;
   viewport()->update();
 }
 
-void TextDocumentContentView::paintEvent(QPaintEvent* e)
+void TextDocumentContentView::paintEvent(QPaintEvent *e)
 {
   QTextEdit::paintEvent(e);
-  if ( !m_boundingBox.isEmpty() ) {
+  if (!m_boundingBox.isEmpty()) {
     QPainter painter(viewport());
     painter.setPen(Qt::red);
     painter.drawRect(m_boundingBox);

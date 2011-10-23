@@ -32,12 +32,12 @@ class TextDocumentContentView : public QTextEdit
 {
   Q_OBJECT
   public:
-    explicit TextDocumentContentView(QWidget* parent = 0 );
+    explicit TextDocumentContentView(QWidget *parent = 0);
 
-    void setShowBoundingBox( const QRectF &boundingBox );
+    void setShowBoundingBox(const QRectF &boundingBox);
 
   protected:
-    virtual void paintEvent(QPaintEvent* e);
+    virtual void paintEvent(QPaintEvent *e);
 
   private:
     QRectF m_boundingBox;

@@ -38,13 +38,13 @@ class MultiSignalMapper : public QObject
 {
   Q_OBJECT
   public:
-    explicit MultiSignalMapper(QObject* parent = 0);
+    explicit MultiSignalMapper(QObject *parent = 0);
     ~MultiSignalMapper();
 
-    void connectToSignal( QObject *sender, const QMetaMethod &signal );
+    void connectToSignal(QObject *sender, const QMetaMethod &signal);
 
   signals:
-    void signalEmitted( QObject *sender, int signalIndex );
+    void signalEmitted(QObject *sender, int signalIndex);
 
   private slots:
     void slotMapped(QObject *object);
