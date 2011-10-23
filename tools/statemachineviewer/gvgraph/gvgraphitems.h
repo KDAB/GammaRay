@@ -27,40 +27,45 @@
 
 #include "gvgraph.h"
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class GVNodeItem : public QGraphicsEllipseItem
 {
-public:
-  GVNodeItem(const GVNode& node, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
+  public:
+    explicit GVNodeItem(const GVNode &node, QGraphicsItem *parent = 0,
+                        QGraphicsScene *scene = 0);
 
-  QGraphicsTextItem* textItem() const { return m_textItem; }
+    QGraphicsTextItem* textItem() const { return m_textItem; }
 
-private:
-  GVNode m_node;
-  QGraphicsTextItem* m_textItem;
+  private:
+    GVNode m_node;
+    QGraphicsTextItem* m_textItem;
 };
 
 class GVEdgeItem : public QGraphicsPathItem
 {
-public:
-  GVEdgeItem(const GVEdge& edge, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
+  public:
+    explicit GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent = 0,
+                        QGraphicsScene *scene = 0);
 
-private:
-  GVEdge m_edge;
+  private:
+    GVEdge m_edge;
 };
 
 class GVGraphItem : public QGraphicsPathItem
 {
-public:
-  GVGraphItem(const GVSubGraph& edge, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
+  public:
+    explicit GVGraphItem(const GVSubGraph &edge, QGraphicsItem *parent = 0,
+                         QGraphicsScene *scene = 0);
 
-  QGraphicsTextItem* textItem() const { return m_textItem; }
+    QGraphicsTextItem* textItem() const
+    {
+      return m_textItem;
+    }
 
-private:
-  GVSubGraph m_graph;
-  QGraphicsTextItem* m_textItem;
+  private:
+    GVSubGraph m_graph;
+    QGraphicsTextItem* m_textItem;
 };
 
 }
