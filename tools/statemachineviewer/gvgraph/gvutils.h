@@ -29,50 +29,50 @@
 #include <QString>
 #include <qglobal.h>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 /// The agopen method for opening a graph
-static inline Agraph_t* _agopen(QString name, int kind)
+static inline Agraph_t *_agopen(QString name, int kind)
 {
-    return agopen(const_cast<char *>(qPrintable(name)), kind);
+  return agopen(const_cast<char *>(qPrintable(name)), kind);
 }
 
 /// Add an alternative value parameter to the method for getting an object's attribute
 static inline QString _agget(void *object, QString attr, QString alt=QString())
 {
   const QString str = agget(object, const_cast<char *>(qPrintable(attr)));
-  if(str.isEmpty())
-      return alt;
-  else
-      return str;
+  if(str.isEmpty()) {
+    return alt;
+  } else {
+    return str;
+  }
 }
 
-static inline Agsym_t* _agnodeattr(Agraph_t* object, QString attr, QString alt=QString())
+static inline Agsym_t *_agnodeattr(Agraph_t *object, QString attr, QString alt=QString())
 {
   return agnodeattr(object,
-      const_cast<char *>(qPrintable(attr)),
-      const_cast<char *>(qPrintable(alt)));
+                    const_cast<char *>(qPrintable(attr)),
+                    const_cast<char *>(qPrintable(alt)));
 }
 
-static inline Agsym_t* _agedgeattr(Agraph_t* object, QString attr, QString alt=QString())
+static inline Agsym_t *_agedgeattr(Agraph_t *object, QString attr, QString alt=QString())
 {
   return agedgeattr(object,
-      const_cast<char *>(qPrintable(attr)),
-      const_cast<char *>(qPrintable(alt)));
+                    const_cast<char *>(qPrintable(attr)),
+                    const_cast<char *>(qPrintable(alt)));
 }
 
-static inline int _gvLayout( GVC_t* gvc, graph_t* g, const char* engine )
+static inline int _gvLayout(GVC_t *gvc, graph_t *g, const char *engine)
 {
   return gvLayout(gvc, g, engine);
 }
 
-static inline Agnode_t* _agnode(Agraph_t* graph, const QString& attr)
+static inline Agnode_t *_agnode(Agraph_t *graph, const QString &attr)
 {
   return agnode(graph, const_cast<char*>(qPrintable(attr)));
 }
 
-static inline Agraph_t* _agsubg(Agraph_t* graph, const QString& attr)
+static inline Agraph_t *_agsubg(Agraph_t *graph, const QString &attr)
 {
   return agsubg(graph, const_cast<char*>(qPrintable(attr)));
 }
@@ -80,9 +80,9 @@ static inline Agraph_t* _agsubg(Agraph_t* graph, const QString& attr)
 /// Directly use agsafeset which always works, contrarily to agset
 static inline int _agset(void *object, QString attr, QString value)
 {
-    return agsafeset(object, const_cast<char *>(qPrintable(attr)),
-                     const_cast<char *>(qPrintable(value)),
-                     const_cast<char *>(qPrintable(value)));
+  return agsafeset(object, const_cast<char *>(qPrintable(attr)),
+                   const_cast<char *>(qPrintable(value)),
+                   const_cast<char *>(qPrintable(value)));
 }
 
 }

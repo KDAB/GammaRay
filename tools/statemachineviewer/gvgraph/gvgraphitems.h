@@ -35,11 +35,14 @@ class GVNodeItem : public QGraphicsEllipseItem
     explicit GVNodeItem(const GVNode &node, QGraphicsItem *parent = 0,
                         QGraphicsScene *scene = 0);
 
-    QGraphicsTextItem* textItem() const { return m_textItem; }
+    QGraphicsTextItem *textItem() const
+    {
+      return m_textItem;
+    }
 
   private:
     GVNode m_node;
-    QGraphicsTextItem* m_textItem;
+    QGraphicsTextItem *m_textItem;
 };
 
 class GVEdgeItem : public QGraphicsPathItem
@@ -58,14 +61,14 @@ class GVGraphItem : public QGraphicsPathItem
     explicit GVGraphItem(const GVSubGraph &edge, QGraphicsItem *parent = 0,
                          QGraphicsScene *scene = 0);
 
-    QGraphicsTextItem* textItem() const
+    QGraphicsTextItem *textItem() const
     {
       return m_textItem;
     }
 
   private:
     GVSubGraph m_graph;
-    QGraphicsTextItem* m_textItem;
+    QGraphicsTextItem *m_textItem;
 };
 
 }

@@ -43,36 +43,36 @@ typedef QPair<GraphId, GVSubGraph> GVSubGraphPair;
 /// An object containing a libgraph graph and its associated nodes and edges
 class GVGraph
 {
-public:
+  public:
     /*!
      * \brief Construct a Graphviz graph object
      * \param name The name of the graph, must be unique in the application
      */
-    GVGraph(const QString& name);
+    GVGraph(const QString &name);
     ~GVGraph();
 
-    GraphId addGraph(const QString& name);
-    GraphId addGraph(const QString& name, GraphId subGraphId);
+    GraphId addGraph(const QString &name);
+    GraphId addGraph(const QString &name, GraphId subGraphId);
     void removeGraph(GraphId graphId);
     QList<GVSubGraphPair> gvSubGraphs() const;
 
-    void setGraphAttr(const QString& attr, const QString& value, GraphId id = 0);
+    void setGraphAttr(const QString &attr, const QString &value, GraphId id = 0);
 
     /// Add and remove nodes
-    NodeId addNode(const QString& name);
-    NodeId addNode(const QString& name, GraphId subGraphId);
-    QList<NodeId> addNodes(const QStringList& names);
+    NodeId addNode(const QString &name);
+    NodeId addNode(const QString &name, GraphId subGraphId);
+    QList<NodeId> addNodes(const QStringList &names);
     void removeNode(NodeId nodeId);
     void clearNodes();
     QList<GVNodePair> gvNodes() const;
 
     /// Add and remove edges
-    EdgeId addEdge(NodeId source, NodeId target, const QString& name);
+    EdgeId addEdge(NodeId source, NodeId target, const QString &name);
     void removeEdge(EdgeId id);
     QList<GVEdgePair> gvEdges() const;
 
     /// Set the font to use in all the labels
-    void setFont(const QFont& font);
+    void setFont(const QFont &font);
 
     QRectF boundingRect() const;
 
@@ -80,22 +80,33 @@ public:
 
     void applyLayout();
 
-private:
-    GraphId addGraph(const QString& name, Agraph_t* graph);
-    NodeId addNode(const QString& name, Agraph_t* graph);
+  private:
+    GraphId addGraph(const QString &name, Agraph_t *graph);
+    NodeId addNode(const QString &name, Agraph_t *graph);
 
     void createGraph();
     void closeGraph();
 
-    NodeId id(Agnode_t* node) const { return (NodeId)node; }
-    EdgeId id(Agedge_t* edge) const { return (EdgeId)edge; }
-    GraphId id(Agraph_t* graph) const { return (GraphId)graph; }
+    NodeId id(Agnode_t *node) const
+    {
+      return (NodeId)node;
+    }
 
-    Agnode_t* agNode(NodeId nodeId) const;
-    Agedge_t* agEdge(EdgeId edgeId) const;
-    Agraph_t* agGraph(GraphId graphId) const;
+    EdgeId id(Agedge_t *edge) const
+    {
+      return (EdgeId)edge;
+    }
 
-    GVC_t* _context;
+    GraphId id(Agraph_t *graph) const
+    {
+      return (GraphId)graph;
+    }
+
+    Agnode_t *agNode(NodeId nodeId) const;
+    Agedge_t *agEdge(EdgeId edgeId) const;
+    Agraph_t *agGraph(GraphId graphId) const;
+
+    GVC_t *_context;
     Agraph_t *_graph;
     QFont _font;
     qreal _dpi;
@@ -103,9 +114,9 @@ private:
     QString _name;
 
     // data
-    QHash<Agraph_t*, GVSubGraph> _graphMap;
-    QHash<Agedge_t*, GVEdge> _edgeMap;
-    QHash<Agnode_t*, GVNode> _nodeMap;
+    QHash<Agraph_t *, GVSubGraph> _graphMap;
+    QHash<Agedge_t *, GVEdge> _edgeMap;
+    QHash<Agnode_t *, GVNode> _nodeMap;
 };
 
 }

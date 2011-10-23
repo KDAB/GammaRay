@@ -24,38 +24,43 @@
 
 #include <QPainterPath>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class GVGraph;
 
 class GVElement
 {
-public:
-  friend class GVGraph;
+  public:
+    friend class GVGraph;
 
-  GVElement(const QString& name) : m_name(name) {}
-  GVElement() {}
+    GVElement(const QString &name) : m_name(name) {}
+    GVElement() {}
 
-  QString name() const { return m_name; }
+    QString name() const
+    {
+      return m_name;
+    }
 
-private:
-  /// The unique identifier of the element in the graph
-  QString m_name;
+  private:
+    /// The unique identifier of the element in the graph
+    QString m_name;
 };
 
 class GVSubGraph : public GVElement
 {
   friend class GVGraph;
 
-public:
-  GVSubGraph(const QString& name) : GVElement(name) {}
-  GVSubGraph() {}
+  public:
+    GVSubGraph(const QString &name) : GVElement(name) {}
+    GVSubGraph() {}
 
-  QPainterPath path() const { return m_path; }
+    QPainterPath path() const
+    {
+      return m_path;
+    }
 
-private:
-  QPainterPath m_path;
+  private:
+    QPainterPath m_path;
 };
 
   /// A struct containing the information for a GVGraph's node
@@ -63,34 +68,41 @@ class GVNode : public GVElement
 {
   friend class GVGraph;
 
-public:
-  GVNode(const QString& name) : GVElement(name), m_height(0), m_width(0) {}
-  GVNode() : m_height(0), m_width(0) {}
+  public:
+    GVNode(const QString &name) : GVElement(name), m_height(0), m_width(0) {}
+    GVNode() : m_height(0), m_width(0) {}
 
-  QPoint centerPos() const { return m_centerPos; }
-  QSize size() const { return QSize(m_width, m_height); }
+    QPoint centerPos() const
+    {
+      return m_centerPos;
+    }
 
-private:
-  /// The position of the center point of the node from the top-left corner
-  QPoint m_centerPos;
+    QSize size() const
+    {
+      return QSize(m_width, m_height);
+    }
 
-  /// The size of the node in pixels
-  double m_height, m_width;
+  private:
+    /// The position of the center point of the node from the top-left corner
+    QPoint m_centerPos;
+
+    /// The size of the node in pixels
+    double m_height, m_width;
 };
 
 /// A struct containing the information for a GVGraph's edge
 class GVEdge : public GVElement
 {
-public:
-  GVEdge(const QString& name) : GVElement(name) {}
-  GVEdge() {}
+  public:
+    GVEdge(const QString &name) : GVElement(name) {}
+    GVEdge() {}
 
-  /// The source and target nodes of the edge
-  QString m_source;
-  QString m_target;
+    /// The source and target nodes of the edge
+    QString m_source;
+    QString m_target;
 
-  /// Path of the edge's line
-  QPainterPath m_path;
+    /// Path of the edge's line
+    QPainterPath m_path;
 };
 
 }

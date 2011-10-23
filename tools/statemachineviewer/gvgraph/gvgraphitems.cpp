@@ -25,13 +25,14 @@
 
 using namespace GammaRay;
 
-GVNodeItem::GVNodeItem(const GVNode& node, QGraphicsItem* parent, QGraphicsScene* scene)
-  : QGraphicsEllipseItem(parent, scene)
-  , m_node(node)
-  , m_textItem(new QGraphicsTextItem(node.name(), this))
+GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene *scene)
+  : QGraphicsEllipseItem(parent, scene),
+    m_node(node),
+    m_textItem(new QGraphicsTextItem(node.name(), this))
 {
   const QSizeF size = node.size();
-  const QRectF rect(-size.width()/2, -size.height()/2, size.width(), size.height());
+  const QRectF rect(-size.width() / 2, -size.height() / 2,
+                    size.width(), size.height());
   setRect(rect);
   setPos(m_node.centerPos());
   setToolTip(QObject::tr("State: %1").arg(node.name()));
@@ -39,22 +40,22 @@ GVNodeItem::GVNodeItem(const GVNode& node, QGraphicsItem* parent, QGraphicsScene
 
   // init text item child
   {
-    QGraphicsTextItem* item = m_textItem;
+    QGraphicsTextItem *item = m_textItem;
     QRectF textRect = item->boundingRect();
-    while(size.width() < textRect.size().width()) {
+    while (size.width() < textRect.size().width()) {
       QFont font = item->font();
       font.setPointSize(font.pointSize() - 1);
       item->setFont(font);
       textRect = item->boundingRect();
     }
     const QSizeF size = textRect.size();
-    item->setPos(QPointF(-size.width()/2, -size.height()/2));
+    item->setPos(QPointF(-size.width() / 2, -size.height() / 2));
   }
 }
 
-GVEdgeItem::GVEdgeItem(const GVEdge& edge, QGraphicsItem* parent, QGraphicsScene* scene)
-  : QGraphicsPathItem(parent, scene)
-  , m_edge(edge)
+GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene *scene)
+  : QGraphicsPathItem(parent, scene),
+    m_edge(edge)
 {
   setPath(edge.m_path);
   setToolTip(QObject::tr("Transition: %1 -> %2").arg(edge.m_source).arg(edge.m_target));
@@ -62,15 +63,15 @@ GVEdgeItem::GVEdgeItem(const GVEdge& edge, QGraphicsItem* parent, QGraphicsScene
   // arrow head quick-fix
   QPainterPath path(QPointF(0, 0));
   path.addRect(-2, -2, 4, 4);
-  QGraphicsPathItem* pathItem = new QGraphicsPathItem(this);
+  QGraphicsPathItem *pathItem = new QGraphicsPathItem(this);
   pathItem->setPath(path);
   pathItem->setPos(edge.m_path.pointAtPercent(1.0));
 }
 
-GVGraphItem::GVGraphItem(const GVSubGraph& graph, QGraphicsItem* parent, QGraphicsScene* scene)
-  : QGraphicsPathItem(parent, scene)
-  , m_graph(graph)
-  , m_textItem(0)
+GVGraphItem::GVGraphItem(const GVSubGraph &graph, QGraphicsItem *parent, QGraphicsScene *scene)
+  : QGraphicsPathItem(parent, scene),
+    m_graph(graph),
+    m_textItem(0)
 {
   setZValue(-1);
 
