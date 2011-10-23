@@ -349,7 +349,7 @@ void StateMachineViewer::updateStateItems()
 
   // color recent configurations based on last usage
   // note that each configuration has the same color saturation atm
-  Q_FOREACH (StateMachineConfiguration config, m_lastConfigurations.entries()) {
+  Q_FOREACH (const StateMachineConfiguration &config, m_lastConfigurations.entries()) {
     const qreal alpha = relativePosition(m_lastConfigurations.entries(), config);
     Q_FOREACH (QAbstractState *state, config) {
       NodeId id = m_stateNodeIdMap.value(state);
