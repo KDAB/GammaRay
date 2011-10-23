@@ -281,9 +281,10 @@ void GVGraph::applyLayout()
 }
 
 /// TODO: Is this function even needed to be regularly called?
-static qreal dpiForGraph(Agraph_t* graph) {
+static qreal dpiForGraph(Agraph_t* graph)
+{
   bool ok;
-  const qreal dpi = _agget(graph, "dpi", "96,0").replace(",", ".").toDouble(&ok);
+  const qreal dpi = _agget(graph, "dpi", "96,0").replace(',', '.').toDouble(&ok);
   Q_ASSERT(ok);
   return dpi;
 }
