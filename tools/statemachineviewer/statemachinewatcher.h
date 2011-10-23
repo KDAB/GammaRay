@@ -38,43 +38,42 @@ class ProbeInterface;
 class StateMachineWatcher : public QObject
 {
   Q_OBJECT
+  public:
+    explicit StateMachineWatcher(ProbeInterface *probe, QObject *parent = 0);
+    virtual ~StateMachineWatcher();
 
-public:
-  explicit StateMachineWatcher(ProbeInterface* probe, QObject* parent = 0);
-  virtual ~StateMachineWatcher();
+    void setWatchedStateMachine(QStateMachine *machine);
+    QStateMachine *watchedStateMachine() const;
 
-  void setWatchedStateMachine(QStateMachine* machine);
-  QStateMachine* watchedStateMachine() const;
+  Q_SIGNALS:
+    void stateEntered(QAbstractState *state);
+    void stateExited(QAbstractState *state);
 
-Q_SIGNALS:
-  void stateEntered(QAbstractState* state);
-  void stateExited(QAbstractState* state);
+    void transitionTriggered(QAbstractTransition*);
 
-  void transitionTriggered(QAbstractTransition*);
+    void machineAdded(QStateMachine*);
+    void machineRemoved(QStateMachine*);
 
-  void machineAdded(QStateMachine*);
-  void machineRemoved(QStateMachine*);
+    void watchedStateMachineChanged(QStateMachine *);
 
-  void watchedStateMachineChanged(QStateMachine*);
+  private Q_SLOTS:
+    void objectCreated(QObject *object);
+    void objectDestroyed(QObject *object);
 
-private Q_SLOTS:
-  void objectCreated(QObject* object);
-  void objectDestroyed(QObject* object);
+    void watchState(QAbstractState *state);
+    void clearWatchedStates();
 
-  void watchState(QAbstractState* state);
-  void clearWatchedStates();
+    void handleStateEntered();
+    void handleStateExited();
+    void handleTransitionTriggered();
 
-  void handleStateEntered();
-  void handleStateExited();
-  void handleTransitionTriggered();
+  private:
+    QStateMachine *m_watchedStateMachine;
+    QList<QStateMachine *> m_stateMachines;
+    QVector<QAbstractState *> m_watchedStates;
 
-private:
-  QStateMachine* m_watchedStateMachine;
-  QList<QStateMachine*> m_stateMachines;
-  QVector<QAbstractState*> m_watchedStates;
-
-  QAbstractState* m_lastEnteredState;
-  QAbstractState* m_lastExitedState;
+    QAbstractState *m_lastEnteredState;
+    QAbstractState *m_lastExitedState;
 };
 
 }

@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
 
   // build data
-  GVGraph* graph = new GVGraph("Graph");
+  GVGraph *graph = new GVGraph("Graph");
   NodeId nid1 = graph->addNode("Node1");
   NodeId nid2 = graph->addNode("Node2");
   NodeId nid3 = graph->addNode("Node3");
@@ -41,20 +41,21 @@ int main(int argc, char *argv[])
   graph->addEdge(nid2, nid3, "Edge2");
   graph->applyLayout();
 
-  if (argc > 1 && strcmp(argv[1], "--no-gui") == 0)
+  if (argc > 1 && strcmp(argv[1], "--no-gui") == 0) {
     return 0;
+  }
 
   // build ui
-  QGraphicsView* view = new QGraphicsView;
-  QGraphicsScene* scene = new QGraphicsScene;
+  QGraphicsView *view = new QGraphicsView;
+  QGraphicsScene *scene = new QGraphicsScene;
   view->setScene(scene);
 
-  Q_FOREACH(const GVNodePair& pair, graph->gvNodes()) {
+  Q_FOREACH (const GVNodePair &pair, graph->gvNodes()) {
     const GVNode node = pair.second;
     new GVNodeItem(node, 0, scene);
   }
 
-  Q_FOREACH(const GVEdgePair& pair, graph->gvEdges()) {
+  Q_FOREACH (const GVEdgePair &pair, graph->gvEdges()) {
     const GVEdge edge = pair.second;
     new GVEdgeItem(edge, 0, scene);
   }

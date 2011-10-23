@@ -189,10 +189,10 @@ void GVGraph::removeNode(NodeId nodeId)
 
 void GVGraph::clearNodes()
 {
-  Q_FOREACH(Agnode_t *node, _nodeMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agnode_t *node, _nodeMap.keys()) { //krazy:exclude=foreach
     removeNode(id(node));
   }
-  Q_FOREACH(Agraph_t *graph, _graphMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agraph_t *graph, _graphMap.keys()) { //krazy:exclude=foreach
     removeGraph(id(graph));
   }
   Q_ASSERT(_graphMap.isEmpty());
@@ -332,7 +332,7 @@ QList<GVNodePair> GVGraph::gvNodes() const
   QList<GVNodePair> list;
   const qreal dpi  = dpiForGraph(_graph);
 
-  Q_FOREACH(Agnode_t *node, _nodeMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agnode_t *node, _nodeMap.keys()) { //krazy:exclude=foreach
     GVNode object = _nodeMap[node];
 
     //Set the name of the node
@@ -360,7 +360,7 @@ QList<GVEdgePair> GVGraph::gvEdges() const
   QList<GVEdgePair> list;
   const qreal dpi = dpiForGraph(_graph);
 
-  Q_FOREACH(Agedge_t *edge, _edgeMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agedge_t *edge, _edgeMap.keys()) { //krazy:exclude=foreach
     GVEdge object = _edgeMap[edge];
 
     //Fill the source and target node names
@@ -416,7 +416,7 @@ QList<GVSubGraphPair> GVGraph::gvSubGraphs() const
   QList<GVSubGraphPair> list;
 
   // TODO: Fix painter path calculation
-  Q_FOREACH(Agraph_t *subGraph, _graphMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agraph_t *subGraph, _graphMap.keys()) { //krazy:exclude=foreach
     const QRectF rect = boundingRectForAgraph(subGraph);
 
     QPainterPath path;

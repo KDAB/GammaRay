@@ -32,83 +32,93 @@
 
 using namespace GammaRay;
 
-StateMachineWatcher::StateMachineWatcher(ProbeInterface* probe, QObject* parent)
-  : QObject(parent)
-  , m_watchedStateMachine(0)
-  , m_lastEnteredState(0)
-  , m_lastExitedState(0)
+StateMachineWatcher::StateMachineWatcher(ProbeInterface *probe, QObject *parent)
+  : QObject(parent),
+    m_watchedStateMachine(0),
+    m_lastEnteredState(0),
+    m_lastExitedState(0)
 {
-  Q_ASSERT(connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*))));
-  Q_ASSERT(connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), SLOT(objectDestroyed(QObject*))));
+  Q_ASSERT(connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
+                   SLOT(objectCreated(QObject*))));
+  Q_ASSERT(connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
+                   SLOT(objectDestroyed(QObject*))));
 }
 
 StateMachineWatcher::~StateMachineWatcher()
 {
 }
 
-void StateMachineWatcher::objectCreated(QObject* object)
+void StateMachineWatcher::objectCreated(QObject *object)
 {
   QStateMachine* machine = qobject_cast<QStateMachine*>(object);
-  if (!machine)
+  if (!machine) {
     return;
+  }
 
-  if (m_stateMachines.contains(machine))
+  if (m_stateMachines.contains(machine)) {
     return; // should never happen
+  }
 
   m_stateMachines << machine;
   emit machineAdded(machine);
 }
 
-void StateMachineWatcher::objectDestroyed(QObject* object)
+void StateMachineWatcher::objectDestroyed(QObject *object)
 {
   QStateMachine* machine = qobject_cast<QStateMachine*>(object);
-  if (!machine)
+  if (!machine) {
     return;
+  }
 
   Q_ASSERT(m_stateMachines.removeOne(machine));
 }
 
-void StateMachineWatcher::setWatchedStateMachine(QStateMachine* machine)
+void StateMachineWatcher::setWatchedStateMachine(QStateMachine *machine)
 {
-  if (m_watchedStateMachine == machine)
+  if (m_watchedStateMachine == machine) {
     return;
+  }
 
   m_watchedStateMachine = machine;
 
   clearWatchedStates();
-  Q_FOREACH(QAbstractState* state, machine->findChildren<QAbstractState*>()) {
+  Q_FOREACH (QAbstractState* state, machine->findChildren<QAbstractState*>()) {
     watchState(state);
   }
 
   emit watchedStateMachineChanged(machine);
 }
 
-QStateMachine* StateMachineWatcher::watchedStateMachine() const
+QStateMachine *StateMachineWatcher::watchedStateMachine() const
 {
   return m_watchedStateMachine;
 }
 
-void StateMachineWatcher::watchState(QAbstractState* state)
+void StateMachineWatcher::watchState(QAbstractState *state)
 {
-  if (state->machine() != m_watchedStateMachine)
+  if (state->machine() != m_watchedStateMachine) {
     return;
+  }
 
-  connect(state, SIGNAL(entered()), this, SLOT(handleStateEntered()), Qt::UniqueConnection);
-  connect(state, SIGNAL(exited()), this, SLOT(handleStateExited()), Qt::UniqueConnection);
+  connect(state, SIGNAL(entered()),
+          this, SLOT(handleStateEntered()), Qt::UniqueConnection);
+  connect(state, SIGNAL(exited()),
+          this, SLOT(handleStateExited()), Qt::UniqueConnection);
 
-  Q_FOREACH(QAbstractTransition* transition, state->findChildren<QAbstractTransition*>()) {
-    connect(transition, SIGNAL(triggered()), this, SLOT(handleTransitionTriggered()), Qt::UniqueConnection);
+  Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition*>()) {
+    connect(transition, SIGNAL(triggered()),
+            this, SLOT(handleTransitionTriggered()), Qt::UniqueConnection);
   }
   m_watchedStates << state;
 }
 
 void StateMachineWatcher::clearWatchedStates()
 {
-  Q_FOREACH(QAbstractState* state, m_watchedStates) {
+  Q_FOREACH (QAbstractState *state, m_watchedStates) {
     disconnect(state, SIGNAL(entered()), this, SLOT(handleStateEntered()));
     disconnect(state, SIGNAL(exited()), this, SLOT(handleStateExited()));
 
-    Q_FOREACH(QAbstractTransition* transition, state->findChildren<QAbstractTransition*>()) {
+    Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition*>()) {
       disconnect(transition, SIGNAL(triggered()), this, SLOT(handleTransitionTriggered()));
     }
   }
@@ -117,7 +127,7 @@ void StateMachineWatcher::clearWatchedStates()
 
 void StateMachineWatcher::handleTransitionTriggered()
 {
-  QAbstractTransition* transition = qobject_cast<QAbstractTransition*>(QObject::sender());
+  QAbstractTransition *transition = qobject_cast<QAbstractTransition*>(QObject::sender());
   Q_ASSERT(transition);
 
   emit transitionTriggered(transition);
@@ -128,11 +138,13 @@ void StateMachineWatcher::handleStateEntered()
   QAbstractState* state = qobject_cast<QAbstractState*>(QObject::sender());
   Q_ASSERT(state);
 
-  if (state->machine() != m_watchedStateMachine)
+  if (state->machine() != m_watchedStateMachine) {
     return;
+  }
 
-  if (state == m_lastEnteredState)
+  if (state == m_lastEnteredState) {
     return;
+  }
 
   m_lastEnteredState = state;
   emit stateEntered(state);
@@ -143,11 +155,13 @@ void StateMachineWatcher::handleStateExited()
   QAbstractState* state = qobject_cast<QAbstractState*>(QObject::sender());
   Q_ASSERT(state);
 
-  if (state->machine() != m_watchedStateMachine)
+  if (state->machine() != m_watchedStateMachine) {
     return;
+  }
 
-  if (state == m_lastExitedState)
+  if (state == m_lastExitedState) {
     return;
+  }
 
   m_lastExitedState = state;
   emit stateExited(state);
