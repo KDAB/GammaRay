@@ -270,14 +270,11 @@ void StateMachineViewer::handleDepthChanged(int depth)
 void StateMachineViewer::showMessage(const QString &message)
 {
   // update log
-  QTextBrowser *textBrowser = m_ui->textBrowser;
-  QString entries = textBrowser->toHtml();
-  entries += message;
-
-  textBrowser->setHtml(entries);
+  QPlainTextEdit *plainTextEdit = m_ui->plainTextEdit;
+  plainTextEdit->appendPlainText(message);
 
   // auto-scroll hack
-  QScrollBar *sb = textBrowser->verticalScrollBar();
+  QScrollBar *sb = plainTextEdit->verticalScrollBar();
   sb->setValue(sb->maximum());
 }
 

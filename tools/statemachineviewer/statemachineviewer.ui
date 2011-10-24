@@ -24,9 +24,6 @@
        <item row="1" column="0">
         <widget class="QTreeView" name="stateMachinesView"/>
        </item>
-       <item row="3" column="0" colspan="2">
-        <widget class="QTextBrowser" name="textBrowser"/>
-       </item>
        <item row="2" column="0">
         <widget class="QTreeView" name="singleStateMachineView"/>
        </item>
@@ -51,6 +48,19 @@
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="maximumBlockCount">
+          <number>100</number>
+         </property>
+         <property name="centerOnScroll">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
       </layout>
