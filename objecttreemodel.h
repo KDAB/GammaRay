@@ -52,8 +52,8 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
     QModelIndex indexForObject(QObject *object) const;
 
   private:
-    QMap<QObject*, QObject*> m_childParentMap;
-    QMap<QObject*, QVector<QObject*> > m_parentChildMap;
+    QHash<QObject*, QObject*> m_childParentMap;
+    QHash<QObject*, QVector<QObject*> > m_parentChildMap;
 };
 
 }
