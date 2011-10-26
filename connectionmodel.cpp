@@ -31,6 +31,27 @@
 #include <QMetaObject>
 #include <QThread>
 
+namespace GammaRay {
+
+struct Connection
+{
+  Connection()
+  : sender(0), receiver(0), type(Qt::AutoConnection), valid(false)
+  {
+  }
+  QObject *sender;
+  QByteArray signal;
+  QObject *receiver;
+  QByteArray method;
+  QByteArray location;
+  Qt::ConnectionType type;
+  bool valid;
+};
+
+}
+
+Q_DECLARE_TYPEINFO( GammaRay::Connection, Q_MOVABLE_TYPE );
+
 using namespace GammaRay;
 
 static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool isSender)
@@ -56,11 +77,6 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
   return true;
 }
 
-ConnectionModel::Connection::Connection()
-: sender(0), receiver(0), type(Qt::AutoConnection), valid(false)
-{
-
-}
 
 ConnectionModel::ConnectionModel(QObject *parent)
   : QAbstractTableModel(parent)

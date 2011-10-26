@@ -30,6 +30,8 @@
 
 namespace GammaRay {
 
+class Connection;
+
 class ConnectionModel : public QAbstractTableModel
 {
   Q_OBJECT
@@ -61,17 +63,6 @@ class ConnectionModel : public QAbstractTableModel
                                      QObject *receiver, const char *method);
 
   private:
-    struct Connection
-    {
-      Connection();
-      QObject *sender;
-      QByteArray signal;
-      QObject *receiver;
-      QByteArray method;
-      QByteArray location;
-      Qt::ConnectionType type;
-      bool valid;
-    };
     QVector<Connection> m_connections;
 };
 
