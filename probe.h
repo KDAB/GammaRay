@@ -113,6 +113,7 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
 
     void objectCreated(QObject *obj);
     void objectDestroyed(QObject *obj);
+    void objectReparanted(QObject *obj);
 
   protected:
     bool eventFilter(QObject *receiver, QEvent *event);

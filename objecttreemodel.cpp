@@ -38,35 +38,20 @@ extern void dumpObject(QObject *);
 using namespace std;
 using namespace GammaRay;
 
-ObjectTreeModel::ObjectTreeModel(QObject *parent)
-  : ObjectModelBase< QAbstractItemModel >(parent),
-    m_lock(QReadWriteLock::Recursive)
+ObjectTreeModel::ObjectTreeModel(Probe *probe)
+  : ObjectModelBase< QAbstractItemModel >(probe)
 {
+  connect(probe, SIGNAL(objectCreated(QObject*)),
+          this, SLOT(objectAdded(QObject*)));
+  connect(probe, SIGNAL(objectDestroyed(QObject*)),
+          this, SLOT(objectRemoved(QObject*)));
+  connect(probe, SIGNAL(objectReparanted(QObject*)),
+          this, SLOT(objectReparanted(QObject*)));
 }
 
 void ObjectTreeModel::objectAdded(QObject *obj)
 {
-  // this is ugly, but apparently it can happen
-  // that an object gets created without parent
-  // then later the delayed signal comes in
-  // so catch this gracefully by first adding the
-  // parent if required
-  if (obj->parent()) {
-    ReadOrWriteLocker lock(&m_lock);
-    const QModelIndex index = indexForObject(obj->parent());
-    lock.unlock();
-    if (!index.isValid()) {
-      objectAdded(obj->parent());
-    }
-  }
-
-  // when called from background, delay into foreground, otherwise call directly
-  QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject *, obj));
-}
-
-void ObjectTreeModel::objectAddedMainThread(QObject *obj)
-{
+  // slot, hence should always land in main thread due to auto connection
   Q_ASSERT(thread() == QThread::currentThread());
 
   ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
@@ -77,11 +62,22 @@ void ObjectTreeModel::objectAddedMainThread(QObject *obj)
   IF_DEBUG(cout << "tree obj added: " << hex << obj << " p: " << obj->parent() << endl;)
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
-  QWriteLocker lock(&m_lock);
-
   if (indexForObject(obj).isValid()) {
     IF_DEBUG(cout << "tree double obj added: " << hex << obj << endl;)
     return;
+  }
+
+  // this is ugly, but apparently it can happen
+  // that an object gets created without parent
+  // then later the delayed signal comes in
+  // so catch this gracefully by first adding the
+  // parent if required
+  if (obj->parent()) {
+    const QModelIndex index = indexForObject(obj->parent());
+    if (!index.isValid()) {
+      IF_DEBUG(cout << "tree: handle parent first" << endl;)
+      objectAdded(obj->parent());
+    }
   }
 
   const QModelIndex index = indexForObject(obj->parent());
@@ -101,21 +97,15 @@ void ObjectTreeModel::objectAddedMainThread(QObject *obj)
 
 void ObjectTreeModel::objectRemoved(QObject *obj)
 {
+  // slot, hence should always land in main thread due to auto connection
+  Q_ASSERT(thread() == QThread::currentThread());
+
   IF_DEBUG(cout
            << "tree removed: "
            << hex << obj << " "
            << hex << obj->parent() << dec << " "
            << m_parentChildMap.value(obj->parent()).size() << " "
            << m_parentChildMap.contains(obj) << endl;)
-
-  // when called from background, delay into foreground, otherwise call directly
-  QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject *, obj));
-}
-
-void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
-{
-  QWriteLocker lock(&m_lock);
 
   if (!m_childParentMap.contains(obj)) {
     Q_ASSERT(!m_parentChildMap.contains(obj));
@@ -145,6 +135,19 @@ void ObjectTreeModel::objectRemovedMainThread(QObject *obj)
   endRemoveRows();
 }
 
+void ObjectTreeModel::objectReparanted(QObject *obj)
+{
+  // slot, hence should always land in main thread due to auto connection
+  Q_ASSERT(thread() == QThread::currentThread());
+
+  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
+  if (Probe::instance()->isValidObject(obj)) {
+    objectAdded(obj);
+  }
+
+  objectRemoved(obj);
+}
+
 QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid()) {
@@ -172,21 +175,18 @@ int ObjectTreeModel::rowCount(const QModelIndex &parent) const
   if (parent.column() == 1) {
     return 0;
   }
-  ReadOrWriteLocker lock(&m_lock);
   QObject *parentObj = reinterpret_cast<QObject*>(parent.internalPointer());
   return m_parentChildMap.value(parentObj).size();
 }
 
 QModelIndex ObjectTreeModel::parent(const QModelIndex &child) const
 {
-  ReadOrWriteLocker lock(&m_lock);
   QObject *childObj = reinterpret_cast<QObject*>(child.internalPointer());
   return indexForObject(m_childParentMap.value(childObj));
 }
 
 QModelIndex ObjectTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-  ReadOrWriteLocker lock(&m_lock);
   QObject *parentObj = reinterpret_cast<QObject*>(parent.internalPointer());
   const QVector<QObject*> children = m_parentChildMap.value(parentObj);
   if (row < 0 || column < 0 || row >= children.size()  || column >= columnCount()) {

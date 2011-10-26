@@ -27,27 +27,26 @@
 #include "objectmodelbase.h"
 
 #include <QVector>
-#include <QReadWriteLock>
 
 namespace GammaRay {
+
+class Probe;
 
 class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
 {
   Q_OBJECT
   public:
-    explicit ObjectTreeModel(QObject *parent = 0);
+    explicit ObjectTreeModel(Probe *probe);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-    void objectAdded(QObject *objPtr);
-    void objectRemoved(QObject *obj);
-
   private slots:
-    void objectAddedMainThread(QObject *objPtr);
-    void objectRemovedMainThread(QObject *obj);
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
+    void objectReparanted(QObject *obj);
 
   private:
     QModelIndex indexForObject(QObject *object) const;
@@ -55,7 +54,6 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
   private:
     QMap<QObject*, QObject*> m_childParentMap;
     QMap<QObject*, QVector<QObject*> > m_parentChildMap;
-    mutable QReadWriteLock m_lock;
 };
 
 }

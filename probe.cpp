@@ -428,7 +428,6 @@ void Probe::objectFullyConstructed(QObject *obj)
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
 
   m_objectListModel->objectAdded(obj);
-  m_objectTreeModel->objectAdded(obj);
   m_toolModel->objectAdded(obj);
 
   emit objectCreated(obj);
@@ -449,7 +448,6 @@ void Probe::objectRemoved(QObject *obj)
     instance()->m_queuedObjects.removeOne(obj);
 
     instance()->m_objectListModel->objectRemoved(obj);
-    instance()->m_objectTreeModel->objectRemoved(obj);
 
     instance()->connectionRemoved(obj, 0, 0, 0);
     instance()->connectionRemoved(0, 0, obj, 0);
@@ -533,8 +531,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
         // object is known already, just update the position in the tree
         // BUT: only when we did not queue this item before
         IF_DEBUG(cout << "update pos: " << hex << obj << endl;)
-        m_objectTreeModel->objectRemoved(obj);
-        m_objectTreeModel->objectAdded(obj);
+        emit objectReparanted(obj);
       }
     } else if (tracked) {
       objectRemoved(obj);
