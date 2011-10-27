@@ -1,5 +1,12 @@
+# general
 *.kdev4
 *~
 *.rej
 *.orig
 .*
+
+# from git merge
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
