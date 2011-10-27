@@ -665,12 +665,12 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 
 #if defined(Q_OS_WIN) or defined(Q_OS_MAC)
 // IMPORTANT NOTE:
-// We are writing a jmp instruction at the target address, if the function is not big,
-// we have to trust that the alignment gives us enough place to this jmp. Jumps are
-// 10 bytes long under 32 bit and 13 bytes long under x64. We will overwrite the
-// existing function, which cannot be reverted. It would be possible to save the content
-// and write it back when we unattach.
-
+// We are writing a jmp instruction at the target address.
+// If the function is not big, we have to trust that the alignment gives
+// us enough space to this jmp.  Jumps are 10 bytes long under 32 bit and
+// 13 bytes long under x64.
+// We will overwrite the existing function, which cannot be reverted.
+// It would be possible to save the content and write it back when we unattach.
 static inline void *page_align(void *addr)
 {
   assert(addr != NULL);
@@ -815,7 +815,6 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 // static initialization
 class HitMeBabyOneMoreTime
 {
-
   public:
     HitMeBabyOneMoreTime()
     {

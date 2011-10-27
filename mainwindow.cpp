@@ -137,7 +137,8 @@ void MainWindow::selectInitialTool()
   static const QString initialTool("GammaRay::ObjectInspector");
 
   QAbstractItemModel *model = ui.toolSelector->model();
-  QModelIndexList matches = model->match(model->index(0, 0), ToolModel::ToolIdRole, initialTool);
+  QModelIndexList matches =
+    model->match(model->index(0, 0), ToolModel::ToolIdRole, initialTool);
   if (matches.isEmpty()) {
     return;
   }

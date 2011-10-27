@@ -33,7 +33,8 @@ namespace GammaRay {
 
 class ToolFactory;
 
-/** Manages the list of available probing tools.
+/**
+ * Manages the list of available probing tools.
  */
 class ToolModel : public QAbstractListModel
 {

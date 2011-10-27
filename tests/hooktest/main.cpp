@@ -57,18 +57,18 @@ void writeJmp(void *func, void *replacement)
 
 void test()
 {
-    qWarning() << "hook test!";
+  qWarning() << "hook test!";
 }
 
 int main(int argc, char *argv[])
 {
 
-    void *qt_startup_hook_addr = dlsym(RTLD_NEXT, "qt_startup_hook");
-    writeJmp(qt_startup_hook_addr, (void *)test);
+  void *qt_startup_hook_addr = dlsym(RTLD_NEXT, "qt_startup_hook");
+  writeJmp(qt_startup_hook_addr, (void *)test);
 
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+  QApplication a(argc, argv);
+  MainWindow w;
+  w.show();
 
-    return a.exec();
+  return a.exec();
 }

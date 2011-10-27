@@ -72,8 +72,7 @@ void handleMessage(QtMsgType type, const char *msg)
     }
   }
 
-  if (type == QtFatalMsg &&
-      qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1" &&
+  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1" &&
       QThread::currentThread() == QApplication::instance()->thread()) {
     foreach (QWidget *w, qApp->topLevelWidgets()) {
       w->setEnabled(false);
@@ -81,8 +80,8 @@ void handleMessage(QtMsgType type, const char *msg)
     QDialog dlg;
     dlg.setWindowTitle(QObject::tr("QFatal in %1").
                        arg(qApp->applicationName().isEmpty() ?
-                             qApp->applicationFilePath() :
-                             qApp->applicationName()));
+                           qApp->applicationFilePath() :
+                           qApp->applicationName()));
     QGridLayout *layout = new QGridLayout;
     QLabel *iconLabel = new QLabel;
     QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, &dlg);
