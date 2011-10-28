@@ -39,7 +39,7 @@ class StateMachineWatcher : public QObject
 {
   Q_OBJECT
   public:
-    explicit StateMachineWatcher(ProbeInterface *probe, QObject *parent = 0);
+    explicit StateMachineWatcher(QObject *parent = 0);
     virtual ~StateMachineWatcher();
 
     void setWatchedStateMachine(QStateMachine *machine);
@@ -51,15 +51,9 @@ class StateMachineWatcher : public QObject
 
     void transitionTriggered(QAbstractTransition*);
 
-    void machineAdded(QStateMachine*);
-    void machineRemoved(QStateMachine*);
-
     void watchedStateMachineChanged(QStateMachine *);
 
   private Q_SLOTS:
-    void objectCreated(QObject *object);
-    void objectDestroyed(QObject *object);
-
     void watchState(QAbstractState *state);
     void clearWatchedStates();
 
@@ -69,7 +63,6 @@ class StateMachineWatcher : public QObject
 
   private:
     QStateMachine *m_watchedStateMachine;
-    QList<QStateMachine *> m_stateMachines;
     QVector<QAbstractState *> m_watchedStates;
 
     QAbstractState *m_lastEnteredState;

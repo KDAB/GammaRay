@@ -87,7 +87,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
     m_maximumDepth(0),
     m_selectedStateMachine(0),
     m_font(QFont("Helvetica [Cronxy]", 6)),
-    m_stateMachineWatcher(new StateMachineWatcher(probe, this))
+    m_stateMachineWatcher(new StateMachineWatcher(this))
 {
   m_ui->setupUi(this);
 

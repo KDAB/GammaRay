@@ -21,8 +21,6 @@
 
 #include "statemachinewatcher.h"
 
-#include <probe.h>
-
 #include <QAbstractTransition>
 #include <QFinalState>
 #include <QState>
@@ -32,45 +30,16 @@
 
 using namespace GammaRay;
 
-StateMachineWatcher::StateMachineWatcher(ProbeInterface *probe, QObject *parent)
+StateMachineWatcher::StateMachineWatcher(QObject *parent)
   : QObject(parent),
     m_watchedStateMachine(0),
     m_lastEnteredState(0),
     m_lastExitedState(0)
 {
-  Q_ASSERT(connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
-                   SLOT(objectCreated(QObject*))));
-  Q_ASSERT(connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
-                   SLOT(objectDestroyed(QObject*))));
 }
 
 StateMachineWatcher::~StateMachineWatcher()
 {
-}
-
-void StateMachineWatcher::objectCreated(QObject *object)
-{
-  QStateMachine* machine = qobject_cast<QStateMachine*>(object);
-  if (!machine) {
-    return;
-  }
-
-  if (m_stateMachines.contains(machine)) {
-    return; // should never happen
-  }
-
-  m_stateMachines << machine;
-  emit machineAdded(machine);
-}
-
-void StateMachineWatcher::objectDestroyed(QObject *object)
-{
-  QStateMachine* machine = qobject_cast<QStateMachine*>(object);
-  if (!machine) {
-    return;
-  }
-
-  Q_ASSERT(m_stateMachines.removeOne(machine));
 }
 
 void StateMachineWatcher::setWatchedStateMachine(QStateMachine *machine)
