@@ -34,12 +34,9 @@
 
 #include <QAbstractTransition>
 #include <QDebug>
-#include <QHBoxLayout>
 #include <QPainter>
 #include <QList>
-#include <QGraphicsView>
 #include <QScrollBar>
-#include <QTextBrowser>
 #include <QFinalState>
 #include <QStateMachine>
 
@@ -116,8 +113,6 @@ void StateMachineViewer::clearGraph()
 
 void StateMachineViewer::repopulateGraph()
 {
-  qDebug() << Q_FUNC_INFO;
-
   clearGraph();
 
   for (int i = 0; i < m_stateModel->rowCount(); ++i) {
@@ -228,8 +223,6 @@ void StateMachineViewer::handleMachineClicked(const QModelIndex &index)
 
 void StateMachineViewer::handleStateClicked(const QModelIndex &index)
 {
-  qDebug() << Q_FUNC_INFO;
-
   QObject *stateObject = index.data(ObjectModel::ObjectRole).value<QObject*>();
   Q_ASSERT(stateObject);
   QAbstractState *state = qobject_cast<QAbstractState*>(stateObject);
@@ -382,8 +375,6 @@ void StateMachineViewer::addState(QAbstractState *state)
 
 void StateMachineViewer::addTransition(QAbstractTransition *transition)
 {
-  qDebug() << Q_FUNC_INFO << transition << transition->sourceState() << transition->targetStates();
-
   QState *sourceState = transition->sourceState();
   QAbstractState *targetState = transition->targetState();
   addState(sourceState);
@@ -407,8 +398,6 @@ void StateMachineViewer::clearView()
 
 void StateMachineViewer::repopulateView()
 {
-  qDebug() << Q_FUNC_INFO;
-
   clearView();
 
   m_graph->applyLayout();

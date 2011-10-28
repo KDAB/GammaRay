@@ -91,8 +91,6 @@ GVGraph::~GVGraph()
 
 GraphId GVGraph::addGraph(const QString &name)
 {
-  qDebug() << Q_FUNC_INFO << name;
-
   return addGraph(name, _graph);
 }
 
@@ -142,8 +140,6 @@ NodeId GVGraph::addNode(const QString &name, GraphId subGraphId)
 
 NodeId GVGraph::addNode(const QString &name, Agraph_t *graph)
 {
-  qDebug() << Q_FUNC_INFO << name << graph;
-
   if (!graph) {
     qWarning() << Q_FUNC_INFO << "Node not added, graph is NULL:" << name;
     return 0;
@@ -202,8 +198,6 @@ void GVGraph::clearNodes()
 
 EdgeId GVGraph::addEdge(NodeId sourceId, NodeId targetId, const QString &name)
 {
-  qDebug() << Q_FUNC_INFO << sourceId << targetId << name;
-
   Agnode_t *source = agNode(sourceId);
   Agnode_t *target = agNode(targetId);
   if (!source || !target) {
@@ -275,7 +269,6 @@ void GVGraph::setFont(const QFont &font)
 
 void GVGraph::applyLayout()
 {
-  qDebug() << Q_FUNC_INFO;
   Q_ASSERT(_context);
   Q_ASSERT(_graph);
 
@@ -304,7 +297,6 @@ static QRectF boundingRectForAgraph(Agraph_t *graph)
   const qreal top = graph->u.bb.LL.y * (dpi / DotDefaultDPI);
   const qreal width = graph->u.bb.UR.x * (dpi / DotDefaultDPI);
   const qreal height = graph->u.bb.UR.y * (dpi / DotDefaultDPI);
-  qDebug() << Q_FUNC_INFO << left << top << width << height;
   return QRectF(left, top, width, height);
 }
 
