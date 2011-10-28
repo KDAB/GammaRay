@@ -33,7 +33,10 @@ set(gammaray_statemachineviewer_plugin_libs
 add_library(gammaray_statemachineviewer_plugin MODULE ${gammaray_statemachineviewer_plugin_srcs})
 target_link_libraries(gammaray_statemachineviewer_plugin ${gammaray_statemachineviewer_plugin_libs})
 
-set_target_properties(gammaray_statemachineviewer_plugin PROPERTIES PREFIX "")
+set_target_properties(gammaray_statemachineviewer_plugin
+  PROPERTIES PREFIX ""
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/plugins
+)
 install(
   TARGETS gammaray_statemachineviewer_plugin
   DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/gammaray/
