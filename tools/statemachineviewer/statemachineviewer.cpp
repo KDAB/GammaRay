@@ -81,7 +81,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
     m_ui(new Ui::StateMachineViewer),
     m_graph(new GVGraph("State Machine")),
-    m_stateModel(0),
+    m_stateModel(new StateModel(this)),
     m_transitionModel(new TransitionModel(this)),
     m_filteredState(0),
     m_maximumDepth(0),
@@ -108,6 +108,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
   connect(m_ui->stateMachinesView, SIGNAL(clicked(QModelIndex)),
           SLOT(handleMachineClicked(QModelIndex)));
 
+  m_ui->singleStateMachineView->setModel(m_stateModel);
   connect(m_ui->singleStateMachineView, SIGNAL(clicked(QModelIndex)),
           SLOT(handleStateClicked(QModelIndex)));
 
@@ -154,9 +155,6 @@ void StateMachineViewer::repopulateGraph()
 
 QStateMachine *StateMachineViewer::selectedStateMachine() const
 {
-  if (!m_stateModel) {
-    return 0;
-  }
   return m_stateModel->stateMachine();
 }
 
@@ -167,16 +165,11 @@ void StateMachineViewer::selectStateMachine(QStateMachine *machine)
     return;
   }
 
-  // delete old
-  delete m_stateModel;
-
-  m_stateModel = new StateModel(machine, this);
-  Q_ASSERT(m_stateModel);
+  m_stateModel->setStateMachine(machine);
 
   m_lastConfigurations.clear();
   m_lastTransitions.clear();
 
-  m_ui->singleStateMachineView->setModel(m_stateModel);
   setFilteredState(machine);
   m_stateMachineWatcher->setWatchedStateMachine(machine);
 }

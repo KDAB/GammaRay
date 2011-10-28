@@ -25,6 +25,7 @@
 
 #include "objectmodelbase.h"
 
+class QAbstractTransition;
 class QStateMachine;
 
 namespace GammaRay
@@ -42,8 +43,9 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
       IsInitialStateRole,
       StateObjectRole = Qt::UserRole + 11
     };
-    explicit StateModel(QStateMachine *stateMachine, QObject *parent = 0);
+    explicit StateModel(QObject *parent = 0);
 
+    void setStateMachine(QStateMachine *stateMachine);
     QStateMachine *stateMachine() const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -54,6 +56,9 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
   protected:
     Q_DECLARE_PRIVATE(StateModel)
     StateModelPrivate * const d_ptr;
+
+  private:
+    Q_PRIVATE_SLOT(d_func(), void transitionTriggered(QAbstractTransition*));
 };
 
 }

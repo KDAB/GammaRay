@@ -22,11 +22,13 @@
 */
 #include "statemodel.h"
 
+#include "util.h"
+#include "statemachinewatcher.h"
+
 #include <QtCore/QStringList>
 #include <QtCore/QStateMachine>
 #include <QtCore/QAbstractTransition>
 #include <QtCore/QDebug>
-#include "util.h"
 
 // #include <modeltest.h>
 
@@ -37,19 +39,25 @@ namespace GammaRay
 
 class StateModelPrivate
 {
-  StateModelPrivate(QStateMachine *stateMachine, StateModel *qq)
-    : q_ptr(qq), m_stateMachine(stateMachine)
+  StateModelPrivate(StateModel *qq)
+    : q_ptr(qq)
+    , m_stateMachine(0)
+    , m_stateMachineWatcher(new StateMachineWatcher(qq))
   {
-
+    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(transitionTriggered(QAbstractTransition*)), qq, SLOT(transitionTriggered(QAbstractTransition*))));
   }
 
   Q_DECLARE_PUBLIC(StateModel)
   StateModel * const q_ptr;
-  QStateMachine * const m_stateMachine;
+  StateMachineWatcher * const m_stateMachineWatcher;
+  QStateMachine *m_stateMachine;
 
   QList<QObject*> children(QObject *parent) const;
 
   QObject *mapModelIndex2QObject(const QModelIndex &) const;
+
+// private slots:
+  void transitionTriggered(QAbstractTransition*);
 };
 
 }
@@ -60,6 +68,10 @@ QList<QObject*> StateModelPrivate::children(QObject *parent) const
   if (parent == 0) {
     parent = m_stateMachine;
   }
+
+  // if the state machine is not yet set, return an empty list
+  if (!parent)
+    return result;
 
   foreach (QObject *o, parent->children()) {
     if (o->inherits("QState")) {
@@ -80,13 +92,34 @@ QObject *StateModelPrivate::mapModelIndex2QObject(const QModelIndex &index) cons
   return m_stateMachine;
 }
 
-StateModel::StateModel(QStateMachine *stateMachine, QObject *parent)
-  : ObjectModelBase<QAbstractItemModel>(parent), d_ptr(new StateModelPrivate(stateMachine, this))
+void StateModelPrivate::transitionTriggered(QAbstractTransition* transition)
+{
+  Q_Q(StateModel);
+
+  // TODO: Make this more efficient? Find out the changed states and update just these indices
+  q->dataChanged(QModelIndex(), QModelIndex());
+}
+
+StateModel::StateModel(QObject *parent)
+  : ObjectModelBase<QAbstractItemModel>(parent), d_ptr(new StateModelPrivate(this))
 {
   QHash<int, QByteArray> _roleNames = roleNames();
   _roleNames.insert(TransitionsRole, "transitions");
   _roleNames.insert(IsInitialStateRole, "isInitial");
   setRoleNames(_roleNames);
+}
+
+void StateModel::setStateMachine(QStateMachine* stateMachine)
+{
+  Q_D(StateModel);
+  if (d->m_stateMachine == stateMachine)
+    return;
+
+  beginResetModel();
+  d->m_stateMachine = stateMachine;
+  endResetModel();
+
+  d->m_stateMachineWatcher->setWatchedStateMachine(stateMachine);
 }
 
 QStateMachine *StateModel::stateMachine() const
