@@ -19,6 +19,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef GAMMARAY_STATEMACHINEVIEWER_UTIL_H
+#define GAMMARAY_STATEMACHINEVIEWER_UTIL_H
+
 #include <QQueue>
 
 template<class T>
@@ -71,3 +74,5 @@ class RingBuffer
     QQueue<T> m_entries;
     int m_size;
 };
+
+#endif
