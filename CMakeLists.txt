@@ -255,6 +255,8 @@ set(gammaray_srcs
 
 if(NOT WIN32)
   set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
+elseif(MINGW)
+  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_dummy.cpp)
 else()
   set(gammaray_srcs ${gammaray_srcs}
                     tools/messagehandler/backtrace_win.cpp
