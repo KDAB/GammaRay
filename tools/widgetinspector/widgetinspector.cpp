@@ -35,6 +35,18 @@
 
 using namespace GammaRay;
 
+class WidgetTypeFilterProxyModel : public ObjectFilterProxyModelBase
+{
+public:
+  WidgetTypeFilterProxyModel(QObject* parent = 0) : ObjectFilterProxyModelBase(parent) {}
+
+  virtual bool filterAcceptsObject(QObject* object) const
+  {
+    // according to the docs this is more efficient than qobject_cast
+    return object->isWidgetType();
+  }
+};
+
 WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent), ui(new Ui::WidgetInspector), m_overlayWidget(new OverlayWidget)
 {
@@ -44,8 +56,7 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
 
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)));
 
-  ObjectTypeFilterProxyModel<QWidget> *widgetFilterProxy =
-    new ObjectTypeFilterProxyModel<QWidget>(this);
+  WidgetTypeFilterProxyModel *widgetFilterProxy = new WidgetTypeFilterProxyModel(this);
   widgetFilterProxy->setSourceModel(probe->objectTreeModel());
   KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
   widgetSearchProxy->setSourceModel(widgetFilterProxy);

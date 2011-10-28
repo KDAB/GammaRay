@@ -24,16 +24,16 @@
 #ifndef GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 #define GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 
-#include <qsortfilterproxymodel.h>
-#include "objectlistmodel.h"
+#include <QSortFilterProxyModel>
+
+#include "objectmodelbase.h"
 
 namespace GammaRay {
 
-template <typename T>
-class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
+class ObjectFilterProxyModelBase : public QSortFilterProxyModel
 {
   public:
-    explicit ObjectTypeFilterProxyModel(QObject *parent = 0) : QSortFilterProxyModel(parent)
+    explicit ObjectFilterProxyModelBase(QObject *parent = 0) : QSortFilterProxyModel(parent)
     {
       setDynamicSortFilter(true);
     }
@@ -47,10 +47,27 @@ class ObjectTypeFilterProxyModel : public QSortFilterProxyModel
       }
 
       QObject *obj = source_index.data(ObjectModel::ObjectRole).value<QObject*>();
-      if (!qobject_cast<T*>(obj)) {
+      Q_ASSERT(obj);
+      if (!filterAcceptsObject(obj)) {
         return false;
       }
+
       return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+    }
+
+    virtual bool filterAcceptsObject(QObject *object) const = 0;
+};
+
+template <typename T>
+class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
+{
+  public:
+    explicit ObjectTypeFilterProxyModel(QObject *parent = 0)
+      : ObjectFilterProxyModelBase(parent) {}
+
+  protected:
+    virtual bool filterAcceptsObject(QObject* object) const {
+      return qobject_cast<T*>(object);
     }
 };
 
