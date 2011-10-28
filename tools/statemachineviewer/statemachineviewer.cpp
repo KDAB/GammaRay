@@ -22,6 +22,7 @@
 #include "statemachineviewer.h"
 #include "ui_statemachineviewer.h"
 
+#include "statemachineview.h"
 #include "statemachinewatcher.h"
 #include "gvgraph/gvgraph.h"
 #include "gvgraph/gvgraphitems.h"
@@ -41,7 +42,6 @@
 #include <QTextBrowser>
 #include <QFinalState>
 #include <QStateMachine>
-#include <QWheelEvent>
 
 #include <QtPlugin>
 
@@ -52,29 +52,6 @@ static qreal relativePosition(QList<T> list, T t) {
   const int index = list.indexOf(t);
   Q_ASSERT(index != -1);
   return (index+1.0) / list.size();
-}
-
-StateMachineView::StateMachineView(QWidget *parent)
-  : QGraphicsView(parent)
-{
-}
-
-StateMachineView::StateMachineView(QGraphicsScene *scene, QWidget *parent)
-  : QGraphicsView(scene, parent)
-{
-}
-
-void StateMachineView::zoomBy(qreal scaleFactor)
-{
-  scale(scaleFactor, scaleFactor);
-}
-
-void StateMachineView::wheelEvent(QWheelEvent *event)
-{
-  const qreal step = qAbs(event->delta() / 100.0);
-  const qreal zoomFactor = event->delta() >= 0 ? step : 1.0f / step ;
-  zoomBy(zoomFactor);
-  event->accept();
 }
 
 StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)

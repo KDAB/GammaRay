@@ -24,105 +24,36 @@
 
 #include <toolfactory.h>
 
+#include "gvgraph/gvtypes.h"
+#include "util.h"
+
 #include <QHash>
-#include <QQueue>
-#include <QGraphicsView>
 #include <QString>
 #include <QWidget>
-
-#include "gvgraph/gvtypes.h"
+#include <QSet>
 
 class QAbstractTransition;
 class QStateMachine;
 class QAbstractState;
-class QGraphicsItem;
 class QAbstractItemModel;
 class QModelIndex;
-class QGraphicsView;
 
 typedef QSet<QAbstractState*> StateMachineConfiguration;
 
 namespace GammaRay {
 
-class StateMachineWatcher;
-
-class GVNodeItem;
-class GVEdgeItem;
-class GVGraphItem;
-
 namespace Ui {
   class StateMachineViewer;
 }
 
+class GVNodeItem;
+class GVEdgeItem;
+class GVGraphItem;
 class StateModel;
+class StateMachineWatcher;
 class TransitionModel;
 
 class GVGraph;
-
-template<class T>
-class RingBuffer
-{
-  public:
-    RingBuffer() : m_size(5) {}
-
-    void resize(int size)
-    {
-      Q_ASSERT(size > 0);
-      m_size = size;
-      cleanup();
-    }
-
-    void enqueue(T t)
-    {
-      m_entries.enqueue(t);
-      cleanup();
-    }
-
-    void clear()
-    {
-      m_entries.clear();
-    }
-
-    int size() const
-    {
-      return m_entries.size();
-    }
-
-    T tail() const
-    {
-      return m_entries.last();
-    }
-
-    QList<T> entries() const
-    {
-      return m_entries;
-    }
-
-  private:
-    void cleanup()
-    {
-      while (m_entries.size() > m_size) {
-        m_entries.dequeue();
-      }
-    }
-
-    QQueue<T> m_entries;
-    int m_size;
-};
-
-class StateMachineView : public QGraphicsView
-{
-  Q_OBJECT
-  public:
-    explicit StateMachineView(QWidget *parent = 0);
-    explicit StateMachineView(QGraphicsScene *scene, QWidget *parent = 0);
-
-  public Q_SLOTS:
-    void zoomBy(qreal scaleFactor);
-
-  protected:
-    virtual void wheelEvent(QWheelEvent *event);
-};
 
 class StateMachineViewer : public QWidget
 {

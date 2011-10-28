@@ -87,7 +87,7 @@
   <customwidget>
    <class>StateMachineView</class>
    <extends>QGraphicsView</extends>
-   <header>statemachineviewer.h</header>
+   <header>statemachineview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
