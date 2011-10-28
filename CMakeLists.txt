@@ -317,7 +317,9 @@ if(NOT APPLE)
   install(FILES "${LICENSE_FILE}" "${README_FILE}" DESTINATION ${DOC_INSTALL_DIR})
 endif()
 
+if(NOT MINGW)
 add_subdirectory(qmldebugcontrol)
+endif()
 
 find_program(CPPCHECK_EXECUTABLE cppcheck)
 if(CPPCHECK_EXECUTABLE)
