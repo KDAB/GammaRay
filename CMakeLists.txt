@@ -203,8 +203,6 @@ set(gammaray_srcs
   connectionmodel.cpp
   connectionfilterproxymodel.cpp
   tools/sceneinspector/scenemodel.cpp
-  tools/statemachineinspector/statemodel.cpp
-  tools/statemachineinspector/transitionmodel.cpp
   util.cpp
   tools/widgetinspector/widgetpreviewwidget.cpp
   methodinvocationdialog.cpp
@@ -240,7 +238,6 @@ set(gammaray_srcs
   tools/resourcebrowser/resourcefiltermodel.cpp
   tools/sceneinspector/sceneinspector.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
-  tools/statemachineinspector/statemachineinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
   tools/widgetinspector/widgetinspector.cpp
   tools/widgetinspector/overlaywidget.cpp
@@ -275,7 +272,6 @@ qt4_wrap_ui(gammaray_srcs
   tools/resourcebrowser/resourcebrowser.ui
   tools/sceneinspector/sceneinspector.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
-  tools/statemachineinspector/statemachineinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/widgetinspector/widgetinspector.ui
 )

@@ -1,10 +1,7 @@
-# TODO: Warning: Currently depends on parts of statemachineinspector
-
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${GRAPHVIZ_INCLUDE_DIR}
-  ../statemachineinspector
 )
 
 link_directories(${VTK_LIBRARY_DIRS})
@@ -17,8 +14,8 @@ set(gammaray_statemachineviewer_plugin_srcs
   statemachineviewer.cpp
   statemachinewatcher.cpp
 
-  ../statemachineinspector/transitionmodel.cpp
-  ../statemachineinspector/statemodel.cpp
+  transitionmodel.cpp
+  statemodel.cpp
 
   ${CMAKE_SOURCE_DIR}/util.cpp
 )
