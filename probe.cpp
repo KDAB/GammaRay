@@ -686,8 +686,10 @@ void writeJmp(void *func, void *replacement)
   int worstSize;
 #ifdef _M_IX86
   worstSize = 10;
-#else ifdef _M_X64
+#elif defined(_M_X64)
   worstSize = 14;
+#else
+#error "Unsupported hardware architecture!"
 #endif
 
   VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
