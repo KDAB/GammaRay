@@ -191,6 +191,9 @@ int treeDepth(QAbstractState *ascendant, QAbstractState *obj)
 
 bool StateMachineViewer::mayAddState(QAbstractState *state)
 {
+  if (!state)
+    return false;
+
   if (m_stateNodeIdMap.contains(state)) {
     return false;
   }
