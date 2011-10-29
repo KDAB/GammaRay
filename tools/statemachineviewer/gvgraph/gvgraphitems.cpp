@@ -70,7 +70,7 @@ GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene
   {
     QGraphicsTextItem *item = m_textItem;
     QRectF textRect = item->boundingRect();
-    while (size.width() < textRect.size().width()) {
+    while (size.width() < textRect.size().width() && item->font().pointSize() > 1) {
       QFont font = item->font();
       font.setPointSize(font.pointSize() - 1);
       item->setFont(font);
