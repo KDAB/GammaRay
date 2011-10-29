@@ -42,7 +42,7 @@ WinDllInjector::WinDllInjector() :
 }
 
 bool WinDllInjector::launch(const QStringList &programAndArgs,
-                           const QString &probeDll, const QString &probeFunc)
+                           const QString &probeDll, const QString &/*probeFunc*/)
 {
   DWORD dwCreationFlags = CREATE_NO_WINDOW;
   dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
