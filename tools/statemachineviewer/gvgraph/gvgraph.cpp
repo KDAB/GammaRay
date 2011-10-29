@@ -27,6 +27,7 @@
 #include <graphviz/gvc.h>
 #include <graphviz/graph.h>
 
+#include <QColor>
 #include <QDebug>
 #include <QStringList>
 
@@ -355,6 +356,10 @@ QList<GVNodePair> GVGraph::gvNodes() const
       } else {
         object.m_shape = GVNode::Rect;
       }
+    }
+
+    if (qstricmp(agget(node, "style"), "filled") == 0) {
+      object.m_fillColor = QColor(agget(node, "fillcolor"));
     }
 
     list.append(GVNodePair(id(node), object));

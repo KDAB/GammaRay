@@ -22,6 +22,7 @@
 #ifndef GAMMARAY_GVGRAPHELEMENTS_H
 #define GAMMARAY_GVGRAPHELEMENTS_H
 
+#include <QColor>
 #include <QPainterPath>
 
 namespace GammaRay {
@@ -93,6 +94,11 @@ class GVNode : public GVElement
       return m_shape;
     }
 
+    QColor fillColor() const
+    {
+      return m_fillColor;
+    }
+
   private:
     /// The position of the center point of the node from the top-left corner
     QPoint m_centerPos;
@@ -102,6 +108,9 @@ class GVNode : public GVElement
 
     /// The shape of this node
     Shape m_shape;
+
+    /// Color to fill this node, invalid for non-filled nodes.
+    QColor m_fillColor;
 };
 
 /// A struct containing the information for a GVGraph's edge

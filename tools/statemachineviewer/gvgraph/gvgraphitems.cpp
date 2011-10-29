@@ -79,6 +79,9 @@ GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene
     const QSizeF size = textRect.size();
     item->setPos(QPointF(-size.width() / 2, -size.height() / 2));
   }
+
+  if (node.fillColor().isValid())
+    setBrush(node.fillColor());
 }
 
 void GVNodeItem::setPen(const QPen& pen)
