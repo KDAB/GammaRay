@@ -350,8 +350,11 @@ QList<GVNodePair> GVGraph::gvNodes() const
     object.m_width=node->u.width * dpi;
 
     if (qstricmp(node->u.shape->name, "rectangle") == 0) {
-      // FIXME node->u.shape->polygon->option is always 0 ??
-      object.m_shape = GVNode::RoundedRect;
+      if (qstricmp(agget(node, "style"), "rounded") == 0) {
+        object.m_shape = GVNode::RoundedRect;
+      } else {
+        object.m_shape = GVNode::Rect;
+      }
     }
 
     list.append(GVNodePair(id(node), object));
