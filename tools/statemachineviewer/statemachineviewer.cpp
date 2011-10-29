@@ -369,6 +369,20 @@ void StateMachineViewer::addState(QAbstractState *state)
 //     m_graph->setNodeAttribute(nodeId, "shape", "doublecircle");
   }
 
+  if (QState *s = qobject_cast<QState*>(parentState)) {
+    if (s->initialState() == state) {
+      NodeId initialNode = m_graph->addNode(QString("initial-%1").arg(reinterpret_cast<quintptr>(parentState)), parentGraphId);
+      m_graph->addEdge(initialNode, nodeId, QString());
+      m_graph->setNodeAttribute(initialNode, "shape", "circle");
+      m_graph->setNodeAttribute(initialNode, "style", "filled");
+      m_graph->setNodeAttribute(initialNode, "fillcolor", "black");
+      m_graph->setNodeAttribute(initialNode, "fixedsize", "true");
+      m_graph->setNodeAttribute(initialNode, "heigh", "0.1");
+      m_graph->setNodeAttribute(initialNode, "width", "0.1");
+      m_graph->setNodeAttribute(initialNode, "label", "");
+    }
+  }
+
   m_stateGraphIdMap.insert(state, graphId);
   m_stateNodeIdMap.insert(state, nodeId);
 
