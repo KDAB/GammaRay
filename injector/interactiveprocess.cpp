@@ -29,7 +29,9 @@
 #include <io.h>
 #define dup _dup
 #define dup2 _dup2
+#ifndef __MINGW32__
 #define fileno _fileno
+#endif
 #endif
 
 int InteractiveProcess::stdinClone = -1;
