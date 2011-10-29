@@ -148,6 +148,7 @@ NodeId GVGraph::addNode(const QString &name, Agraph_t *graph)
   // TODO: Check for duplicates?
   Agnode_t *node = _agnode(graph, name);
   Q_ASSERT(node);
+  _agset(node, "label", name);
   _nodeMap.insert(node, GVNode(name));
   return (NodeId)node;
 }
@@ -333,7 +334,9 @@ QList<GVNodePair> GVGraph::gvNodes() const
     GVNode object = _nodeMap[node];
 
     //Set the name of the node
-    object.m_name=node->name;
+    object.m_name = agget(node, "label");
+    if (object.m_name.isEmpty())
+      object.m_name = node->name;
 
     //Fetch the X coordinate, apply the DPI conversion rate (actual DPI / 72, used by dot)
     qreal x = node->u.coord.x * (dpi / DotDefaultDPI);
