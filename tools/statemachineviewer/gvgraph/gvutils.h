@@ -81,8 +81,7 @@ static inline Agraph_t *_agsubg(Agraph_t *graph, const QString &attr)
 static inline int _agset(void *object, QString attr, QString value)
 {
   return agsafeset(object, const_cast<char *>(qPrintable(attr)),
-                   const_cast<char *>(qPrintable(value)),
-                   const_cast<char *>(qPrintable(value)));
+                   const_cast<char *>(qPrintable(value)), "");
 }
 
 }

@@ -66,6 +66,8 @@ class GVGraph
     void clearNodes();
     QList<GVNodePair> gvNodes() const;
 
+    void setNodeAttribute(NodeId id, const QString &attr, const QString &value);
+
     /// Add and remove edges
     EdgeId addEdge(NodeId source, NodeId target, const QString &name);
     void removeEdge(EdgeId id);

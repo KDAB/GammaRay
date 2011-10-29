@@ -314,6 +314,11 @@ void GVGraph::setGraphAttr(const QString &attr, const QString &value, GraphId gr
   _agset(graph, attr, value);
 }
 
+void GVGraph::setNodeAttribute(NodeId id, const QString& attr, const QString& value)
+{
+  _agset(agNode(id), attr, value);
+}
+
 QRectF GVGraph::boundingRect() const
 {
   return boundingRectForAgraph(_graph);
