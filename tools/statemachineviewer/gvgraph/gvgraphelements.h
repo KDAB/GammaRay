@@ -69,8 +69,14 @@ class GVNode : public GVElement
   friend class GVGraph;
 
   public:
-    GVNode(const QString &name) : GVElement(name), m_height(0), m_width(0) {}
-    GVNode() : m_height(0), m_width(0) {}
+    enum Shape {
+      Ellipse,
+      Rect,
+      RoundedRect
+    };
+
+    GVNode(const QString &name) : GVElement(name), m_height(0), m_width(0), m_shape(Ellipse) {}
+    GVNode() : m_height(0), m_width(0), m_shape(Ellipse) {}
 
     QPoint centerPos() const
     {
@@ -82,12 +88,20 @@ class GVNode : public GVElement
       return QSize(m_width, m_height);
     }
 
+    Shape shape() const
+    {
+      return m_shape;
+    }
+
   private:
     /// The position of the center point of the node from the top-left corner
     QPoint m_centerPos;
 
     /// The size of the node in pixels
-    double m_height, m_width;
+    qreal m_height, m_width;
+
+    /// The shape of this node
+    Shape m_shape;
 };
 
 /// A struct containing the information for a GVGraph's edge

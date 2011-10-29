@@ -26,14 +26,42 @@
 using namespace GammaRay;
 
 GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene *scene)
-  : QGraphicsEllipseItem(parent, scene),
-    m_node(node),
-    m_textItem(new QGraphicsTextItem(node.name(), this))
+  : QGraphicsItemGroup(parent, scene),
+    m_node(node)
 {
   const QSizeF size = node.size();
   const QRectF rect(-size.width() / 2, -size.height() / 2,
                     size.width(), size.height());
-  setRect(rect);
+  switch (node.shape()) {
+    case GVNode::Rect:
+    {
+      QGraphicsRectItem *item = new QGraphicsRectItem(this);
+      item->setRect(rect);
+      m_shapeItem = item;
+      break;
+    }
+    case GVNode::RoundedRect:
+    {
+      QPainterPath path;
+      path.addRoundedRect(rect, 10, 10);
+      QGraphicsPathItem *item = new QGraphicsPathItem(this);
+      item->setPath(path);
+      m_shapeItem = item;
+      break;
+    }
+    case GVNode::Ellipse:
+    {
+      QGraphicsEllipseItem *item = new QGraphicsEllipseItem(this);
+      item->setRect(rect);
+      m_shapeItem = item;
+      break;
+    }
+    default:
+      Q_ASSERT(false);
+  }
+
+  m_textItem = new QGraphicsTextItem(node.name(), this);
+
   setPos(m_node.centerPos());
   setToolTip(QObject::tr("State: %1").arg(node.name()));
   setFlags(ItemIsSelectable);
@@ -52,6 +80,22 @@ GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene
     item->setPos(QPointF(-size.width() / 2, -size.height() / 2));
   }
 }
+
+void GVNodeItem::setPen(const QPen& pen)
+{
+  m_shapeItem->setPen(pen);
+}
+
+QBrush GVNodeItem::brush() const
+{
+  return m_shapeItem->brush();
+}
+
+void GVNodeItem::setBrush(const QBrush& brush)
+{
+  m_shapeItem->setBrush(brush);
+}
+
 
 GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene *scene)
   : QGraphicsPathItem(parent, scene),

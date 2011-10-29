@@ -360,6 +360,15 @@ void StateMachineViewer::addState(QAbstractState *state)
   }
   Q_ASSERT(graphId);
   Q_ASSERT(nodeId);
+
+  if ( qobject_cast<QFinalState*>(state) == 0 ) {
+    m_graph->setNodeAttribute(nodeId, "shape", "rectangle");
+    m_graph->setNodeAttribute(nodeId, "style", "rounded");
+  } else {
+    // FIXME way too large as long as the text is on the inside
+//     m_graph->setNodeAttribute(nodeId, "shape", "doublecircle");
+  }
+
   m_stateGraphIdMap.insert(state, graphId);
   m_stateNodeIdMap.insert(state, nodeId);
 

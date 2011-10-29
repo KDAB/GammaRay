@@ -29,7 +29,7 @@
 
 namespace GammaRay {
 
-class GVNodeItem : public QGraphicsEllipseItem
+class GVNodeItem : public QGraphicsItemGroup
 {
   public:
     explicit GVNodeItem(const GVNode &node, QGraphicsItem *parent = 0,
@@ -40,9 +40,14 @@ class GVNodeItem : public QGraphicsEllipseItem
       return m_textItem;
     }
 
+    void setPen(const QPen &pen);
+    QBrush brush() const;
+    void setBrush(const QBrush &brush);
+
   private:
     GVNode m_node;
     QGraphicsTextItem *m_textItem;
+    QAbstractGraphicsShapeItem *m_shapeItem;
 };
 
 class GVEdgeItem : public QGraphicsPathItem
