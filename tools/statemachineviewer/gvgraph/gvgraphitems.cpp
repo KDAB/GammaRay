@@ -61,11 +61,11 @@ GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene
   setToolTip(QObject::tr("Transition: %1 -> %2").arg(edge.m_source).arg(edge.m_target));
 
   // arrow head quick-fix
-  QPainterPath path(QPointF(0, 0));
-  path.addRect(-2, -2, 4, 4);
-  QGraphicsPathItem *pathItem = new QGraphicsPathItem(this);
-  pathItem->setPath(path);
-  pathItem->setPos(edge.m_path.pointAtPercent(1.0));
+  QVector<QPointF> points = QVector<QPointF>() << QPointF(0,0) << QPointF(-8,4) << QPointF(-8,-4);
+  QGraphicsPolygonItem *arrowItem = new QGraphicsPolygonItem(this);
+  arrowItem->setPolygon(QPolygonF(points));
+  arrowItem->setPos(edge.m_path.pointAtPercent(1.0));
+  arrowItem->setRotation(-edge.m_path.angleAtPercent(1.0));
 }
 
 GVGraphItem::GVGraphItem(const GVSubGraph &graph, QGraphicsItem *parent, QGraphicsScene *scene)
