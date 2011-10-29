@@ -693,7 +693,7 @@ void writeJmp(void *func, void *replacement)
 #endif
 
   VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
-#else ifdef Q_OS_MAC
+#elif defined(Q_OS_MAC)
   quint8 *aligned = (quint8*)page_align(func);
   const bool writable = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0);
   assert(writable);
@@ -707,7 +707,7 @@ void writeJmp(void *func, void *replacement)
     size_t old_offset = *(unsigned long *)(cur + 1);
 #ifdef _M_IX86
     void *ret = (void *)(((quint32)(((quint32) cur) + sizeof (quint32))) + old_offset + 1);
-#else ifdef _M_X64
+#elif defined(_M_X64)
     void *ret = (void *)(((quint32)(((quint64) cur) + sizeof (quint32))) + old_offset + 1);
 #endif
     writeJmp(ret, replacement);
@@ -721,7 +721,7 @@ void writeJmp(void *func, void *replacement)
   *((quint32 *) ++cur) = (quint32)(((quint32) cur) + sizeof (quint32));
   cur += sizeof (DWORD);
   *((quint32 *)cur) = (quint32)replacement;
-#else ifdef _M_X64
+#elif defined(_M_X64)
   *((quint32 *) ++cur) = 0;
   cur += sizeof (quint32);
   *((quint64*)cur) = (quint64)replacement;
@@ -729,7 +729,7 @@ void writeJmp(void *func, void *replacement)
 
 #ifdef Q_OS_WIN
   VirtualProtect(func, worstSize, oldProtect, &oldProtect);
-#else ifdef Q_OS_MAC
+#elif defined(Q_OS_MAC)
   const bool readOnly = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0);
   assert(readOnly);
 #endif
