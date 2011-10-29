@@ -53,7 +53,7 @@ class GVNodeItem : public QGraphicsItemGroup
     QAbstractGraphicsShapeItem *m_shapeItem;
 };
 
-class GVEdgeItem : public QGraphicsPathItem
+class GVEdgeItem : public QGraphicsItemGroup
 {
   public:
     explicit GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent = 0,
@@ -62,8 +62,12 @@ class GVEdgeItem : public QGraphicsPathItem
     enum { Type = UserType + 2 };
     inline int type() const { return Type; }
 
+    void setPen(const QPen &pen);
+
   private:
     GVEdge m_edge;
+    QGraphicsPathItem* m_pathItem;
+    QGraphicsPolygonItem* m_arrowItem;
 };
 
 class GVGraphItem : public QGraphicsPathItem
@@ -74,6 +78,7 @@ class GVGraphItem : public QGraphicsPathItem
 
     enum { Type = UserType + 3 };
     inline int type() const { return Type; }
+
     QGraphicsTextItem *textItem() const
     {
       return m_textItem;

@@ -101,18 +101,30 @@ void GVNodeItem::setBrush(const QBrush& brush)
 
 
 GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene *scene)
-  : QGraphicsPathItem(parent, scene),
+  : QGraphicsItemGroup(parent, scene),
     m_edge(edge)
 {
-  setPath(edge.m_path);
+  m_pathItem = new QGraphicsPathItem(this);
+  m_pathItem->setPath(edge.m_path);
   setToolTip(QObject::tr("Transition: %1 -> %2").arg(edge.m_source).arg(edge.m_target));
 
   // arrow head quick-fix
   QVector<QPointF> points = QVector<QPointF>() << QPointF(0,0) << QPointF(-8,4) << QPointF(-8,-4);
-  QGraphicsPolygonItem *arrowItem = new QGraphicsPolygonItem(this);
-  arrowItem->setPolygon(QPolygonF(points));
-  arrowItem->setPos(edge.m_path.pointAtPercent(1.0));
-  arrowItem->setRotation(-edge.m_path.angleAtPercent(1.0));
+  m_arrowItem = new QGraphicsPolygonItem(this);
+  m_arrowItem->setPolygon(QPolygonF(points));
+  m_arrowItem->setPos(edge.m_path.pointAtPercent(1.0));
+  m_arrowItem->setRotation(-edge.m_path.angleAtPercent(1.0));
+
+  setPen(m_pathItem->pen());
+}
+
+void GVEdgeItem::setPen(const QPen& pen)
+{
+  m_pathItem->setPen(pen);
+  QPen arrowPen(pen);
+  arrowPen.setStyle(Qt::SolidLine);
+  m_arrowItem->setPen(arrowPen);
+  m_arrowItem->setBrush(arrowPen.color());
 }
 
 GVGraphItem::GVGraphItem(const GVSubGraph &graph, QGraphicsItem *parent, QGraphicsScene *scene)
