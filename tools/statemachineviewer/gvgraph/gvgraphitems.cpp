@@ -50,10 +50,17 @@ GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene
       break;
     }
     case GVNode::Ellipse:
+    case GVNode::DoubleEllipse:
     {
       QGraphicsEllipseItem *item = new QGraphicsEllipseItem(this);
       item->setRect(rect);
-      m_shapeItem = item;
+      if (node.shape() == GVNode::DoubleEllipse) {
+        QGraphicsEllipseItem *doubleItem = new QGraphicsEllipseItem(item);
+        doubleItem->setRect(rect.adjusted(4, 4, -4, -4));
+        m_shapeItem = doubleItem;
+      } else {
+        m_shapeItem = item;
+      }
       break;
     }
     default:

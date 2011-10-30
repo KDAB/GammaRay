@@ -354,6 +354,8 @@ QList<GVNodePair> GVGraph::gvNodes() const
       } else {
         object.m_shape = GVNode::Rect;
       }
+    } else if (qstricmp(node->u.shape->name, "doublecircle") == 0) {
+      object.m_shape = GVNode::DoubleEllipse;
     }
 
     if (qstricmp(agget(node, "style"), "filled") == 0) {

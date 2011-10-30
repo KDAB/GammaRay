@@ -72,6 +72,7 @@ class GVNode : public GVElement
   public:
     enum Shape {
       Ellipse,
+      DoubleEllipse,
       Rect,
       RoundedRect
     };
