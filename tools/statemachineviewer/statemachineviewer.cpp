@@ -303,8 +303,7 @@ void StateMachineViewer::updateStateItems()
     NodeId id = m_stateNodeIdMap.value(state);
     GVNodeItem *nodeItem = m_nodeItemMap[id];
     if (qobject_cast<QFinalState*>(state)) {
-      QPen pen(Qt::black, 3, Qt::SolidLine);
-      nodeItem->setPen(pen);
+      nodeItem->setBrush(Qt::black);
     } else if (qobject_cast<QStateMachine*>(state)) {
       nodeItem->setBrush(Qt::gray);
     } else {
@@ -365,8 +364,13 @@ void StateMachineViewer::addState(QAbstractState *state)
     m_graph->setNodeAttribute(nodeId, "shape", "rectangle");
     m_graph->setNodeAttribute(nodeId, "style", "rounded");
   } else {
-    // FIXME way too large as long as the text is on the inside
-//     m_graph->setNodeAttribute(nodeId, "shape", "doublecircle");
+    m_graph->setNodeAttribute(nodeId, "shape", "doublecircle");
+    m_graph->setNodeAttribute(nodeId, "label", "");
+    m_graph->setNodeAttribute(nodeId, "style", "filled");
+    m_graph->setNodeAttribute(nodeId, "fillcolor", "black");
+    m_graph->setNodeAttribute(nodeId, "fixedsize", "true");
+    m_graph->setNodeAttribute(nodeId, "heigh", "0.15");
+    m_graph->setNodeAttribute(nodeId, "width", "0.15");
   }
 
   if (QState *s = qobject_cast<QState*>(parentState)) {
