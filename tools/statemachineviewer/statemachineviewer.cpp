@@ -39,6 +39,7 @@
 #include <QScrollBar>
 #include <QFinalState>
 #include <QStateMachine>
+#include <QHistoryState>
 
 #include <QtPlugin>
 
@@ -364,10 +365,7 @@ void StateMachineViewer::addState(QAbstractState *state)
   Q_ASSERT(graphId);
   Q_ASSERT(nodeId);
 
-  if ( qobject_cast<QFinalState*>(state) == 0 ) {
-    m_graph->setNodeAttribute(nodeId, "shape", "rectangle");
-    m_graph->setNodeAttribute(nodeId, "style", "rounded");
-  } else {
+  if (qobject_cast<QFinalState*>(state)) {
     m_graph->setNodeAttribute(nodeId, "shape", "doublecircle");
     m_graph->setNodeAttribute(nodeId, "label", "");
     m_graph->setNodeAttribute(nodeId, "style", "filled");
@@ -375,6 +373,12 @@ void StateMachineViewer::addState(QAbstractState *state)
     m_graph->setNodeAttribute(nodeId, "fixedsize", "true");
     m_graph->setNodeAttribute(nodeId, "heigh", "0.15");
     m_graph->setNodeAttribute(nodeId, "width", "0.15");
+  } else if (qobject_cast<QHistoryState*>(state)) {
+    m_graph->setNodeAttribute(nodeId, "label", "H");
+    m_graph->setNodeAttribute(nodeId, "shape", "circle");
+  } else {
+    m_graph->setNodeAttribute(nodeId, "shape", "rectangle");
+    m_graph->setNodeAttribute(nodeId, "style", "rounded");
   }
 
   if (QState *s = qobject_cast<QState*>(parentState)) {
