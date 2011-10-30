@@ -354,20 +354,13 @@ void StateMachineViewer::addState(QAbstractState *state)
 
   GraphId parentGraphId = m_stateGraphIdMap.value(parentState);
   GraphId graphId = parentGraphId;
-  NodeId nodeId;
   if (parentState && parentGraphId) {
     if (state->findChild<QAbstractState*>()) // only create sub-graphs if we have child states
       graphId = m_graph->addGraph(Util::displayString(state), parentGraphId);
-    nodeId = m_graph->addNode(Util::displayString(state), graphId);
-    const bool success = m_graph->addEdge(m_stateNodeIdMap[parentState], nodeId,
-                              QString("%1 -> %2").
-                                arg(Util::displayString(parentState)).
-                                arg(Util::displayString(state)));
-    Q_ASSERT(success);
   } else {
     graphId = m_graph->addGraph(Util::displayString(state));
-    nodeId = m_graph->addNode(Util::displayString(state), graphId);
   }
+  const NodeId nodeId = m_graph->addNode(Util::displayString(state), graphId);
   Q_ASSERT(graphId);
   Q_ASSERT(nodeId);
 
