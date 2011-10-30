@@ -78,13 +78,16 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
   stateMachineFilter->setSourceModel(probe->objectListModel());
   m_stateMachineModel = stateMachineFilter;
   m_ui->stateMachinesView->setModel(m_stateMachineModel);
-  m_ui->stateMachinesView->resize(0, 0);
+  m_ui->stateMachinesView->header()->setResizeMode(0, QHeaderView::Stretch);
+  m_ui->stateMachinesView->header()->setResizeMode(1, QHeaderView::ResizeToContents );
   connect(m_ui->stateMachinesView, SIGNAL(clicked(QModelIndex)),
           SLOT(handleMachineClicked(QModelIndex)));
 
   m_ui->singleStateMachineView->setModel(m_stateModel);
   connect(m_ui->singleStateMachineView, SIGNAL(clicked(QModelIndex)),
           SLOT(handleStateClicked(QModelIndex)));
+  m_ui->singleStateMachineView->header()->setResizeMode(0, QHeaderView::Stretch);
+  m_ui->singleStateMachineView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
 
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), SLOT(handleDepthChanged(int)));
 
@@ -140,6 +143,7 @@ void StateMachineViewer::selectStateMachine(QStateMachine *machine)
   }
 
   m_stateModel->setStateMachine(machine);
+  m_ui->singleStateMachineView->expandAll();
 
   m_lastConfigurations.clear();
   m_lastTransitions.clear();

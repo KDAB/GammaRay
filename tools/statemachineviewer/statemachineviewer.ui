@@ -22,10 +22,27 @@
      <widget class="QWidget" name="layoutWidget">
       <layout class="QGridLayout" name="gridLayout">
        <item row="1" column="0">
-        <widget class="QTreeView" name="stateMachinesView"/>
+        <widget class="QTreeView" name="stateMachinesView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <attribute name="headerStretchLastSection">
+          <bool>false</bool>
+         </attribute>
+        </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QTreeView" name="singleStateMachineView"/>
+        <widget class="QTreeView" name="singleStateMachineView">
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <attribute name="headerStretchLastSection">
+          <bool>false</bool>
+         </attribute>
+        </widget>
        </item>
        <item row="0" column="0">
         <widget class="QGroupBox" name="groupBox">
