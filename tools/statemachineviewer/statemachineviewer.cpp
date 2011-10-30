@@ -458,8 +458,6 @@ void StateMachineViewer::repopulateView()
     m_edgeItemMap.insert(id, item);
   }
 
-// FIXME: Currently broken since bounding rect calculation fails
-#if 0
   Q_FOREACH (const GVSubGraphPair &graphPair, m_graph->gvSubGraphs()) {
     const GraphId &id = graphPair.first;
     const GVSubGraph &graph = graphPair.second;
@@ -467,7 +465,6 @@ void StateMachineViewer::repopulateView()
     scene->addItem(item);
     m_graphItemMap.insert(id, item);
   }
-#endif
 
   updateStateItems();
   updateTransitionItems();
