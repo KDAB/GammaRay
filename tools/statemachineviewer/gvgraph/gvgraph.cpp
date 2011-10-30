@@ -427,8 +427,9 @@ QList<GVSubGraphPair> GVGraph::gvSubGraphs() const
 {
   QList<GVSubGraphPair> list;
 
-  // TODO: Fix painter path calculation
   Q_FOREACH (Agraph_t *subGraph, _graphMap.keys()) { //krazy:exclude=foreach
+    if (subGraph == _graph)
+      continue;
     const QRectF rect = boundingRectForAgraph(subGraph);
 
     QPainterPath path;
