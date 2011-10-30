@@ -169,7 +169,7 @@ QVariant StateModel::data(const QModelIndex &index, int role) const
     if (index.column() == 0 && role == Qt::CheckStateRole) {
       QState *s = qobject_cast<QState*>(obj);
       if (s) {
-        return d->m_stateMachine->configuration().contains(s);
+        return d->m_stateMachine->configuration().contains(s) ? Qt::Checked : Qt::Unchecked;
       }
     }
 
