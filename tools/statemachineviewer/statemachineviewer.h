@@ -83,6 +83,9 @@ class StateMachineViewer : public QWidget
 
     void showMessage(const QString &message);
 
+    void updateStartStop();
+    void startStopClicked();
+
   private:
     void clearGraph();
     void repopulateGraph();
@@ -104,7 +107,6 @@ class StateMachineViewer : public QWidget
     // filters
     QAbstractState *m_filteredState;
     int m_maximumDepth;
-    QStateMachine *m_selectedStateMachine;
 
     QHash<QAbstractTransition *, EdgeId> m_transitionEdgeIdMap;
     QHash<QAbstractState *, GraphId> m_stateGraphIdMap;

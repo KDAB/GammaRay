@@ -59,7 +59,6 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
     m_transitionModel(new TransitionModel(this)),
     m_filteredState(0),
     m_maximumDepth(0),
-    m_selectedStateMachine(0),
     m_font(QFont("Helvetica [Cronxy]", 6)),
     m_stateMachineWatcher(new StateMachineWatcher(this))
 {
@@ -90,6 +89,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
   m_ui->singleStateMachineView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
 
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), SLOT(handleDepthChanged(int)));
+  connect(m_ui->startStopButton, SIGNAL(clicked()), SLOT(startStopClicked()));
 
   connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
           SLOT(handleStatesChanged()));
@@ -99,6 +99,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
           SLOT(handleTransitionTriggered(QAbstractTransition*)));
 
   setMaximumDepth(3);
+  updateStartStop();
 }
 
 void StateMachineViewer::clearGraph()
@@ -150,6 +151,11 @@ void StateMachineViewer::selectStateMachine(QStateMachine *machine)
 
   setFilteredState(machine);
   m_stateMachineWatcher->setWatchedStateMachine(machine);
+
+  connect(machine, SIGNAL(started()), SLOT(updateStartStop()), Qt::UniqueConnection);
+  connect(machine, SIGNAL(stopped()), SLOT(updateStartStop()), Qt::UniqueConnection);
+  connect(machine, SIGNAL(finished()),SLOT(updateStartStop()), Qt::UniqueConnection);
+  updateStartStop();
 }
 
 int treeDepth(QAbstractState *ascendant, QAbstractState *obj)
@@ -467,6 +473,29 @@ void StateMachineViewer::repopulateView()
 
   // correctly set the scene rect
   scene->setSceneRect(scene->itemsBoundingRect());
+}
+
+void StateMachineViewer::updateStartStop()
+{
+  if (!selectedStateMachine() || !selectedStateMachine()->isRunning()) {
+    m_ui->startStopButton->setChecked(false);
+    m_ui->startStopButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+  } else {
+    m_ui->startStopButton->setChecked(true);
+    m_ui->startStopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+  }
+  m_ui->startStopButton->setEnabled(selectedStateMachine());
+}
+
+void StateMachineViewer::startStopClicked()
+{
+  if (!selectedStateMachine())
+    return;
+  if (selectedStateMachine()->isRunning()) {
+    selectedStateMachine()->stop();
+  } else {
+    selectedStateMachine()->start();
+  }
 }
 
 Q_EXPORT_PLUGIN(StateMachineViewerFactory)
