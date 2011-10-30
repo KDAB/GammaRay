@@ -108,6 +108,8 @@ class GVGraph
     Agedge_t *agEdge(EdgeId edgeId) const;
     Agraph_t *agGraph(GraphId graphId) const;
 
+    QRectF boundingRectForAgraph(Agraph_t *graph) const;
+
     GVC_t *_context;
     Agraph_t *_graph;
     QFont _font;

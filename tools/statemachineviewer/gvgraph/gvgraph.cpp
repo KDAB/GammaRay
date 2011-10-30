@@ -291,15 +291,14 @@ static qreal dpiForGraph(Agraph_t *graph)
   return dpi;
 }
 
-// FIXME: This function is broken
-static QRectF boundingRectForAgraph(Agraph_t *graph)
+QRectF GVGraph::boundingRectForAgraph(Agraph_t* graph) const
 {
   const qreal dpi = dpiForGraph(graph);
   const qreal left = graph->u.bb.LL.x * (dpi / DotDefaultDPI);
-  const qreal top = graph->u.bb.LL.y * (dpi / DotDefaultDPI);
-  const qreal width = graph->u.bb.UR.x * (dpi / DotDefaultDPI);
-  const qreal height = graph->u.bb.UR.y * (dpi / DotDefaultDPI);
-  return QRectF(left, top, width, height);
+  const qreal top = (_graph->u.bb.UR.y - graph->u.bb.LL.y) * (dpi / DotDefaultDPI);
+  const qreal right = graph->u.bb.UR.x * (dpi / DotDefaultDPI);
+  const qreal bottom = (_graph->u.bb.UR.y - graph->u.bb.UR.y) * (dpi / DotDefaultDPI);
+  return QRectF(left, top, right - left, bottom - top);
 }
 
 void GVGraph::setGraphAttr(const QString &attr, const QString &value, GraphId graphId)
