@@ -58,7 +58,7 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
     StateModelPrivate * const d_ptr;
 
   private:
-    Q_PRIVATE_SLOT(d_func(), void transitionTriggered(QAbstractTransition*));
+    Q_PRIVATE_SLOT(d_func(), void transitionTriggered(QAbstractTransition*))
 };
 
 }
