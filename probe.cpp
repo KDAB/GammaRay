@@ -698,13 +698,6 @@ void writeJmp(void *func, void *replacement)
 #error "Unsupported hardware architecture!"
 #endif
 
-  VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
-#elif defined(Q_OS_MAC)
-  quint8 *aligned = (quint8*)page_align(func);
-  const bool writable = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0);
-  assert(writable);
-#endif
-
   quint8 *cur = (quint8 *) func;
 
   // If there is a short jump, its a jumptable and we don't have enough
@@ -721,6 +714,13 @@ void writeJmp(void *func, void *replacement)
     writeJmp(ret, replacement);
     return;
   }
+
+  VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
+#elif defined(Q_OS_MAC)
+  quint8 *aligned = (quint8*)page_align(func);
+  const bool writable = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0);
+  assert(writable);
+#endif
 
   *cur = 0xff;
   *(++cur) = 0x25;
