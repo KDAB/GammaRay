@@ -336,8 +336,6 @@ QList<GVNodePair> GVGraph::gvNodes() const
 
     //Set the name of the node
     object.m_name = agget(node, "label");
-    if (object.m_name.isEmpty())
-      object.m_name = node->name;
 
     //Fetch the X coordinate, apply the DPI conversion rate (actual DPI / 72, used by dot)
     qreal x = node->u.coord.x * (dpi / DotDefaultDPI);
