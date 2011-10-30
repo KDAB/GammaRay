@@ -59,6 +59,12 @@
 
 #define IF_DEBUG(x)
 
+#if defined(_M_X64) or defined(__amd64) or defined(__x86_64)
+#define ARCH_64
+#elif defined(_M_IX86) or defined(__i386__)
+#define ARCH_X86
+#endif
+
 using namespace GammaRay;
 using namespace std;
 
@@ -684,9 +690,9 @@ void writeJmp(void *func, void *replacement)
 
   //Jump takes 10 bytes under x86 and 14 bytes under x64
   int worstSize;
-#ifdef _M_IX86
+#ifdef ARCH_X86
   worstSize = 10;
-#elif defined(_M_X64)
+#elif defined(ARCH_64)
   worstSize = 14;
 #else
 #error "Unsupported hardware architecture!"
@@ -705,10 +711,12 @@ void writeJmp(void *func, void *replacement)
   // space after, so follow the short jump and write the jmp there
   if (*cur == 0xE9) {
     size_t old_offset = *(unsigned long *)(cur + 1);
-#ifdef _M_IX86
+#ifdef ARCH_X86
     void *ret = (void *)(((quint32)(((quint32) cur) + sizeof (quint32))) + old_offset + 1);
-#elif defined(_M_X64)
+#elif defined(ARCH_64)
     void *ret = (void *)(((quint32)(((quint64) cur) + sizeof (quint32))) + old_offset + 1);
+#else
+#error "Unsupported hardware architecture!"
 #endif
     writeJmp(ret, replacement);
     return;
@@ -717,14 +725,16 @@ void writeJmp(void *func, void *replacement)
   *cur = 0xff;
   *(++cur) = 0x25;
 
-#ifdef _M_IX86
+#ifdef ARCH_X86
   *((quint32 *) ++cur) = (quint32)(((quint32) cur) + sizeof (quint32));
   cur += sizeof (DWORD);
   *((quint32 *)cur) = (quint32)replacement;
-#elif defined(_M_X64)
+#elif defined(ARCH_64)
   *((quint32 *) ++cur) = 0;
   cur += sizeof (quint32);
   *((quint64*)cur) = (quint64)replacement;
+#else
+#error "Unsupported hardware architecture!"
 #endif
 
 #ifdef Q_OS_WIN
@@ -757,7 +767,7 @@ BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*
   FARPROC qtstartuphookaddr = GetProcAddress(qtCoreDllHandle, "qt_startup_hook");
   FARPROC qtaddobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_addObject");
   FARPROC qtremobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_removeObject");
-#ifdef _M_X64
+#ifdef ARCH_64
   FARPROC qFlagLocationaddr = GetProcAddress(qtCoreDllHandle, "?qFlagLocation@@YAPEBDPEBD@Z");
 #else
   FARPROC qFlagLocationaddr = GetProcAddress(qtCoreDllHandle, "?qFlagLocation@@YAPBDPBD@Z");
