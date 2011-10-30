@@ -697,6 +697,7 @@ void writeJmp(void *func, void *replacement)
 #else
 #error "Unsupported hardware architecture!"
 #endif
+#endif // Q_OS_WIN
 
   quint8 *cur = (quint8 *) func;
 
@@ -715,6 +716,7 @@ void writeJmp(void *func, void *replacement)
     return;
   }
 
+#ifdef Q_OS_WIN
   VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
 #elif defined(Q_OS_MAC)
   quint8 *aligned = (quint8*)page_align(func);
