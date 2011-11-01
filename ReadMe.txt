@@ -49,6 +49,8 @@ GammaRay can:
  * Browse all QTextDocuments, along with the ability to edit them and view
    their internal structures.
 
+ * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
+
 Head Engineer for GammaRay is Volker Krause <volker.krause@kdab.com>
 
 License
