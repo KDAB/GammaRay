@@ -4,6 +4,7 @@
 *.rej
 *.orig
 .*
+CMakeLists.txt.user
 
 # from git merge
 *.BACKUP.*
