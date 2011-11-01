@@ -101,6 +101,13 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
 
   setMaximumDepth(3);
   updateStartStop();
+
+  // pre-select the first state machine for convenience
+  if (m_stateMachineModel->rowCount() > 0) {
+    const QModelIndex firstRow = m_stateMachineModel->index(0,0);
+    m_ui->stateMachinesView->selectionModel()->select(firstRow, QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
+    handleMachineClicked(firstRow);
+  }
 }
 
 void StateMachineViewer::clearGraph()
