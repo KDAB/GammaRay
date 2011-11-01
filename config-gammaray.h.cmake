@@ -3,3 +3,5 @@
 // for finding the probe during automatic tests
 #define GAMMARAY_BUILD_DIR "${CMAKE_BINARY_DIR}"
 
+#cmakedefine BUILD_TIMER_PLUGIN
+

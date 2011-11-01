@@ -48,6 +48,7 @@ message(STATUS "Building ${Prog_NAME} ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUIL
 add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\")
 
 include(CheckCXXCompilerFlag)
+include(CheckLibraryExists)
 
 set(QT_MIN_VERSION "4.7.0")
 find_package(Qt4 REQUIRED)
@@ -74,6 +75,16 @@ set(
   LIBRARY DESTINATION ${LIB_INSTALL_DIR}
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
 )
+
+# TODO: Make this work on Windows, and test this on Mac
+check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+if(HAVE_CLOCK_GETTIME)
+  set(BUILD_TIMER_PLUGIN TRUE)
+  message(STATUS "clock_gettime in librt found, building timer plugin.")
+else()
+  set(BUILD_TIMER_PLUGIN FALSE)
+  message(STATUS "clock_gettime in librt not found, disabling timer plugin.")
+endif()
 
 if(WIN32)
   add_definitions(-DUNICODE -D_UNICODE)
@@ -246,14 +257,20 @@ set(gammaray_srcs
   tools/textdocumentinspector/textdocumentinspector.cpp
   tools/widgetinspector/widgetinspector.cpp
   tools/widgetinspector/overlaywidget.cpp
-  tools/timertop/timertop.cpp
-  tools/timertop/timermodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
   3rdparty/kde/kfilterproxysearchline.cpp
   3rdparty/qt/resourcemodel.cpp
 )
+
+if(BUILD_TIMER_PLUGIN)
+  set(gammaray_srcs
+    ${gammaray_srcs}
+    tools/timertop/timertop.cpp
+    tools/timertop/timermodel.cpp
+  )
+endif()
 
 if(NOT WIN32)
   set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
@@ -283,12 +300,21 @@ qt4_wrap_ui(gammaray_srcs
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/widgetinspector/widgetinspector.ui
-  tools/timertop/timertop.ui
 )
+
+if(BUILD_TIMER_PLUGIN)
+  qt4_wrap_ui(gammaray_srcs
+    tools/timertop/timertop.ui
+  )
+endif()
+
 qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
 add_library(gammaray_probe
   SHARED ${gammaray_srcs}
 )
+if(BUILD_TIMER_PLUGIN)
+  target_link_libraries(gammaray_probe rt)
+endif()
 target_link_libraries(gammaray_probe
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
