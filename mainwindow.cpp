@@ -81,7 +81,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   ui.mainToolBar->setHidden(true);
 
   QString appName = qApp->applicationName();
-  if (appName.isEmpty()) {
+  if (appName.isEmpty() && !qApp->arguments().isEmpty()) {
+    appName = qApp->arguments().first().remove(qApp->applicationDirPath());
+    if (appName.startsWith('.')) {
+        appName = appName.right(appName.length() - 1);
+    }
+    if (appName.startsWith('/')) {
+        appName = appName.right(appName.length() - 1);
+    }
+  } else {
     appName = tr("PID %1").arg(qApp->applicationPid());
   }
   setWindowTitle(tr("%1 (%2)").arg(progName).arg(appName));
