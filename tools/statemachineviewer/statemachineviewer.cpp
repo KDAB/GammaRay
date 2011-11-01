@@ -284,7 +284,7 @@ void StateMachineViewer::updateTransitionItems()
     }
 
     QColor color(Qt::red);
-    color.setAlphaF(relativePosition(m_lastTransitions.entries(), t));
+    color.setRedF(relativePosition(m_lastTransitions.entries(), t));
     QPen pen(Qt::DashLine);
     pen.setWidth(2);
     pen.setColor(color);
