@@ -20,7 +20,10 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "timermodel.h"
+
+#include <util.h>
 
 #include <3rdparty/qt/qobject_p_copy.h>
 
@@ -245,7 +248,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
       index.column() >= 0 && index.column() < columnCount()) {
     const TimerInfoPtr timerInfo = timerInfoFor(index);
     switch ((Roles)(index.column() + FirstRole + 1)) {
-      case ObjectNameRole: return timerInfo->timer()->objectName();
+      case ObjectNameRole: return Util::displayString(timerInfo->timer());
       case StateRole: return timerInfo->state();
       case TotalWakeupsRole: return timerInfo->totalWakeups();
       case WakeupsPerSecRole: return timerInfo->wakeupsPerSec();
