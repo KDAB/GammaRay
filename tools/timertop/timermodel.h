@@ -27,7 +27,7 @@
 #include <QTime>
 #include <QPointer>
 #include <QTimer>
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 
 namespace GammaRay {
 
@@ -80,7 +80,7 @@ Q_DECLARE_METATYPE(GammaRay::TimerInfoPtr)
 
 namespace GammaRay {
 
-class TimerModel : public QAbstractListModel
+class TimerModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:

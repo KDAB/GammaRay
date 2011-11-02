@@ -105,7 +105,7 @@ static void signal_end_callback(QObject *caller, int method_index)
 }
 
 TimerModel::TimerModel(QObject *parent)
-  : QAbstractListModel(parent),
+  : QAbstractTableModel(parent),
     m_sourceModel(0)
 {
 }
@@ -232,7 +232,7 @@ int TimerModel::columnCount(const QModelIndex &parent) const
 int TimerModel::rowCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
-  if (!m_sourceModel) {
+  if (!m_sourceModel || parent.isValid()) {
     return 0;
   }
   return m_sourceModel->rowCount();
@@ -273,7 +273,7 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
       case TimerIdRole: return tr("Timer ID");
     }
   }
-  return QAbstractListModel::headerData(section, orientation, role);
+  return QAbstractTableModel::headerData(section, orientation, role);
 }
 
 void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int end)
