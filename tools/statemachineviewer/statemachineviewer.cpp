@@ -40,6 +40,7 @@
 #include <QFinalState>
 #include <QStateMachine>
 #include <QHistoryState>
+#include <QFileDialog>
 
 #include <QtPlugin>
 
@@ -96,6 +97,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
 
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), SLOT(handleDepthChanged(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), SLOT(startStopClicked()));
+  connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportClicked()));
 
   connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
           SLOT(handleStatesChanged()));
@@ -508,6 +510,24 @@ void StateMachineViewer::startStopClicked()
   } else {
     selectedStateMachine()->start();
   }
+}
+
+void StateMachineViewer::exportClicked()
+{
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Image"));
+  if (fileName.isEmpty())
+    return;
+
+  QGraphicsScene *scene = m_ui->graphicsView->scene();
+
+  QImage image(scene->sceneRect().width(), scene->sceneRect().height(), QImage::Format_ARGB32_Premultiplied);
+  image.fill(QColor(Qt::white).rgb());
+
+  QPainter painter(&image);
+  painter.setRenderHint(QPainter::Antialiasing);
+  scene->render(&painter);
+
+  image.save(fileName, "PNG");
 }
 
 Q_EXPORT_PLUGIN(StateMachineViewerFactory)
