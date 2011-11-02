@@ -22,8 +22,8 @@
 */
 #include "statemodel.h"
 
-#include "util.h"
 #include "statemachinewatcher.h"
+#include "util.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QStateMachine>

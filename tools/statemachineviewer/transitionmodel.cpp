@@ -23,11 +23,12 @@
 
 #include "transitionmodel.h"
 
+#include "util.h"
+
 #include <QtCore/QStringList>
 #include <QtCore/QState>
 #include <QtCore/QAbstractTransition>
 #include <QtCore/QDebug>
-#include "util.h"
 #include <QtCore/QSignalTransition>
 
 // #include <modeltest.h>

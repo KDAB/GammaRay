@@ -25,7 +25,7 @@
 #include <toolfactory.h>
 
 #include "gvgraph/gvtypes.h"
-#include "util.h"
+#include "statemachineviewerutil.h"
 
 #include <QHash>
 #include <QString>
