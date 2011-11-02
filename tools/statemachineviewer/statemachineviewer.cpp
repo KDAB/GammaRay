@@ -52,6 +52,11 @@ static qreal relativePosition(QList<T> list, T t) {
   return (index+1.0) / list.size();
 }
 
+static QString uniqueIdentifier(QObject *object)
+{
+  return Util::addressToUid(object);
+}
+
 StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
     m_ui(new Ui::StateMachineViewer),
@@ -363,12 +368,17 @@ void StateMachineViewer::addState(QAbstractState *state)
   GraphId parentGraphId = m_stateGraphIdMap.value(parentState);
   GraphId graphId = parentGraphId;
   if (parentState && parentGraphId) {
-    if (state->findChild<QAbstractState*>()) // only create sub-graphs if we have child states
-      graphId = m_graph->addGraph(Util::displayString(state), parentGraphId);
+    if (state->findChild<QAbstractState*>()) {
+      // only create sub-graphs if we have child states
+      graphId = m_graph->addGraph(uniqueIdentifier(state), parentGraphId);
+      m_graph->setGraphAttr(QLatin1String("label"), Util::displayString(state), graphId);
+    }
   } else {
-    graphId = m_graph->addGraph(Util::displayString(state));
+    graphId = m_graph->addGraph(uniqueIdentifier(state));
+    m_graph->setGraphAttr(QLatin1String("label"), Util::displayString(state), graphId);
   }
-  const NodeId nodeId = m_graph->addNode(Util::displayString(state), graphId);
+  const NodeId nodeId = m_graph->addNode(uniqueIdentifier(state), graphId);
+  m_graph->setNodeAttribute(nodeId, QLatin1String("label"), Util::displayString(state));
   Q_ASSERT(graphId);
   Q_ASSERT(nodeId);
 
@@ -390,7 +400,7 @@ void StateMachineViewer::addState(QAbstractState *state)
 
   if (QState *s = qobject_cast<QState*>(parentState)) {
     if (s->initialState() == state) {
-      NodeId initialNode = m_graph->addNode(QString("initial-%1").arg(reinterpret_cast<quintptr>(parentState)), parentGraphId);
+      NodeId initialNode = m_graph->addNode(QString("initial-%1").arg(uniqueIdentifier(parentState)), parentGraphId);
       m_graph->addEdge(initialNode, nodeId, QString());
       m_graph->setNodeAttribute(initialNode, "shape", "circle");
       m_graph->setNodeAttribute(initialNode, "style", "filled");
