@@ -109,7 +109,6 @@ void MainWindow::about()
     trUtf8("<qt><p>Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, "
        "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></p>"
        "<p><u>Authors:</u><br>"
-       "Volker Krause &lt;volker.krause@kdab.com&gt; (Head Engineer)<br>"
        "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
        "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
        "David Faure &lt;david.faure@kdab.com&gt;<br>"
@@ -118,7 +117,9 @@ void MainWindow::about()
        "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
        "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
        "Till Adam &lt;till@kdab.com&gt;<br>"
-       "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br></p></qt>"));
+       "Thomas McGuire &lt;thomas.mcguire@kdab.com&gt;<br>"
+       "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br>"
+       "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p></qt>"));
   mb.setIconPixmap(QPixmap(":gammaray/GammaRay-128x128.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
