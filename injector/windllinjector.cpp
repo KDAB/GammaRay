@@ -58,7 +58,8 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
   PROCESS_INFORMATION pid;
   memset(&pid, 0, sizeof(PROCESS_INFORMATION));
 
-  BOOL success = CreateProcess(0, (wchar_t *)programAndArgs.join(" ").utf16(),
+  const QString applicationName = programAndArgs.join(" ");
+  BOOL success = CreateProcess(0, (wchar_t *)applicationName.utf16(),
                                0, 0, TRUE, dwCreationFlags,
                                0, 0,
                                &startupInfo, &pid);
