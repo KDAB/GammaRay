@@ -32,3 +32,8 @@ install(
   TARGETS gammaray_objectvisualizer_plugin
   DESTINATION ${PLUGIN_INSTALL_DIR}/gammaray/
 )
+install(
+  FILES gammaray_objectvisualizer.desktop
+  DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/gammaray/
+)
+

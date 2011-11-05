@@ -26,45 +26,30 @@
 
 #include <QStringList>
 #include <QPluginLoader>
+#include <QVector>
 
 #include <iostream>
 
-using namespace std;
-
 namespace GammaRay {
+
+class ToolFactory;
 
 class PluginManager
 {
   public:
     static PluginManager *instance();
 
+    QVector<ToolFactory*> plugins();
+
   protected:
     PluginManager();
 
-  public:
-    template<typename T>
-    QList<T*> allObjects() const
-    {
-      QList<T*> objects;
-      foreach (const QString &pluginFile, plugins()) {
-        QPluginLoader loader(pluginFile);
-        if (loader.load()) {
-          T* object = qobject_cast<T*>(loader.instance());
-          if (object) {
-            objects << object;
-          }
-        } else {
-          cout << "error loading plugin: " << qPrintable(loader.errorString()) << endl;
-        }
-      }
-      return objects;
-    }
-
-    QStringList pluginPaths() const;
-    QStringList plugins() const;
-
   private:
+    QStringList pluginPaths() const;
+    void scan();
+
     static PluginManager *s_instance;
+    QVector<ToolFactory*> m_plugins;
 };
 
 }

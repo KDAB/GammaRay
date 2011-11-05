@@ -241,6 +241,7 @@ set(gammaray_srcs
   toolmodel.cpp
   promolabel.cpp
   proxydetacher.cpp
+  proxytoolfactory.cpp
   sidepane.cpp
 
   tools/codecbrowser/codecbrowser.cpp

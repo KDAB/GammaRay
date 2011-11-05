@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Object Visualization
+X-GammaRay-Types=QObject;
+Exec=gammaray_objectvisualizer_plugin

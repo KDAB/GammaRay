@@ -25,3 +25,8 @@ install(
   TARGETS gammaray_webinspector_plugin
   DESTINATION ${PLUGIN_INSTALL_DIR}/gammaray/
 )
+install(
+  FILES gammaray_webinspector.desktop
+  DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/gammaray/
+)
+

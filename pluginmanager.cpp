@@ -32,6 +32,7 @@
 #include <QLibrary>
 
 #include <QPluginLoader>
+#include "proxytoolfactory.h"
 
 #define IF_DEBUG(x)
 
@@ -45,6 +46,7 @@ PluginManager *PluginManager::instance()
 {
   if (!s_instance) {
     s_instance = new PluginManager();
+    s_instance->scan();
   }
   return s_instance;
 }
@@ -71,31 +73,41 @@ QStringList PluginManager::pluginPaths() const
   return pluginPaths;
 }
 
-QStringList PluginManager::plugins() const
+void PluginManager::scan()
 {
   // TODO: temporary work-around to avoid loading the same plugin two times
   // should be fixed when providing valid plugin spec files
-  static QStringList loadedPluginNames;
+  QStringList loadedPluginNames;
 
-  QStringList r;
   foreach (const QString &pluginPath, pluginPaths()) {
     const QDir dir(pluginPath);
     IF_DEBUG(cout << "checking plugin path: " << qPrintable(dir.absolutePath()) << endl);
     foreach (const QString &plugin, dir.entryList(QDir::Files)) {
       const QString pluginFile = dir.absoluteFilePath(plugin);
-      const QString pluginName = QFileInfo(pluginFile).baseName();
+      const QFileInfo pluginInfo(pluginFile);
+      const QString pluginName = pluginInfo.baseName();
 
       if (loadedPluginNames.contains(pluginName)) {
         cout << "not loading plugin, already loaded: " << qPrintable(pluginFile) << endl;
         continue;
       }
 
-      if (QLibrary::isLibrary(pluginFile)) {
-        cout << "loading plugin" << qPrintable(pluginFile) << endl;
-        r.push_back(pluginFile);
-        loadedPluginNames << pluginName;
+      if (pluginInfo.suffix() == QLatin1String("desktop")) {
+        ProxyToolFactory *proxy = new ProxyToolFactory(pluginFile);
+        if (!proxy->isValid()) {
+          std::cerr << "invalid plugin " << qPrintable(pluginFile) << std::endl;
+          delete proxy;
+        } else {
+          IF_DEBUG(cout << "plugin looks valid " << qPrintable(pluginFile) << endl;)
+          m_plugins.push_back(proxy);
+          loadedPluginNames << pluginName;
+        }
       }
     }
   }
-  return r;
+}
+
+QVector< ToolFactory* > PluginManager::plugins()
+{
+  return m_plugins;
 }

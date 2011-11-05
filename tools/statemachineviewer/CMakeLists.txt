@@ -42,6 +42,10 @@ install(
   TARGETS gammaray_statemachineviewer_plugin
   DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/gammaray/
 )
+install(
+  FILES gammaray_statemachineviewer.desktop
+  DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/gammaray/
+)
 
 add_executable(statemachineviewer_test
   gvgraph/gvgraph.cpp

@@ -72,7 +72,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new TimerTopFactory(this));
 #endif
 
-  Q_FOREACH (ToolFactory *factory, PluginManager::instance()->allObjects<ToolFactory>()) {
+  Q_FOREACH (ToolFactory *factory, PluginManager::instance()->plugins()) {
     m_tools.push_back(factory);
   }
 

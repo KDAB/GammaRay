@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=State Machines
+X-GammaRay-Types=QStateMachine;
+Exec=gammaray_statemachineviewer_plugin

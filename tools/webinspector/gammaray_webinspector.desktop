@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Web Inspector
+X-GammaRay-Types=QWebPage;
+Exec=gammaray_webinspector_plugin
