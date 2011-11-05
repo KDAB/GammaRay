@@ -49,6 +49,7 @@ add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\")
 
 include(CheckCXXCompilerFlag)
 include(CheckLibraryExists)
+include(GammaRayMacros)
 
 set(QT_MIN_VERSION "4.7.0")
 find_package(Qt4 REQUIRED)

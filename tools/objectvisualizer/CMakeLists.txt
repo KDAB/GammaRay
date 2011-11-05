@@ -21,23 +21,11 @@ set(gammaray_objectvisualizer_plugin_srcs
 )
 qt4_automoc(${gammaray_objectvisualizer_plugin_srcs})
 
-add_library(gammaray_objectvisualizer_plugin MODULE ${gammaray_objectvisualizer_plugin_srcs})
+gammaray_add_plugin(gammaray_objectvisualizer_plugin gammaray_objectvisualizer.desktop ${gammaray_objectvisualizer_plugin_srcs})
 target_link_libraries(gammaray_objectvisualizer_plugin
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   QVTK
-)
-set_target_properties(gammaray_objectvisualizer_plugin
-  PROPERTIES PREFIX ""
-  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/plugins
-)
-install(
-  TARGETS gammaray_objectvisualizer_plugin
-  DESTINATION ${PLUGIN_INSTALL_DIR}/gammaray/
-)
-install(
-  FILES gammaray_objectvisualizer.desktop
-  DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/gammaray/
 )
 
 endif()
