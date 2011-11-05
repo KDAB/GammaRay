@@ -1,2 +1,4 @@
+add_subdirectory(objectvisualizer)
 add_subdirectory(scriptenginedebugger)
+add_subdirectory(statemachineviewer)
 add_subdirectory(webinspector)

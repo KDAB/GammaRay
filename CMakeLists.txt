@@ -192,15 +192,7 @@ add_executable(gammaray ${gammaray_runner_srcs})
 target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 find_package(Graphviz)
-if(GRAPHVIZ_FOUND)
-  add_subdirectory(tools/statemachineviewer)
-endif()
-
 find_package(VTK)
-if (VTK_FOUND)
-  add_subdirectory(tools/objectvisualizer)
-  add_definitions(-DHAVE_VTK)
-endif()
 
 set(gammaray_srcs
   mainwindow.cpp

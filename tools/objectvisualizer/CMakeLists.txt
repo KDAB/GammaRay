@@ -1,6 +1,9 @@
+if (VTK_FOUND)
+
+add_definitions(-DHAVE_VTK)
+
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-
   ${VTK_INCLUDE_DIRS}
 )
 
@@ -36,4 +39,6 @@ install(
   FILES gammaray_objectvisualizer.desktop
   DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/gammaray/
 )
+
+endif()
 

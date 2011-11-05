@@ -1,10 +1,10 @@
+if(GRAPHVIZ_FOUND)
+
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${GRAPHVIZ_INCLUDE_DIR}
 )
-
-link_directories(${VTK_LIBRARY_DIRS})
 
 set(gammaray_statemachineviewer_plugin_srcs
   # this part depends on graphviz
@@ -54,3 +54,5 @@ add_executable(statemachineviewer_test
   test_main.cpp
 )
 target_link_libraries(statemachineviewer_test ${gammaray_statemachineviewer_plugin_libs})
+
+endif()
