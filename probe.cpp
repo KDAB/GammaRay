@@ -147,6 +147,14 @@ void ProbeCreator::createProbe()
     return;
   }
 
+  // Exit early instead of asserting in QWidgetPrivate::init()
+  const QApplication * const qGuiApp = qobject_cast<const QApplication *>(qApp);
+  if (!qGuiApp || qGuiApp->type() == QApplication::Tty) {
+      cerr << "Unable to attach to non-GUI application.\n"
+              "Your application needs to use QApplication, otherwise GammaRay can not work." << endl;
+      return;
+  }
+
   IF_DEBUG(cout << "setting up new probe instance" << endl;)
   s_listener()->filterThread = QThread::currentThread();
   Q_ASSERT(!Probe::s_instance);
