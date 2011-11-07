@@ -32,7 +32,7 @@ using namespace GammaRay;
 // TODO
 //
 
-// thread saftey!
+// thread safety!
 // timer events
 // generalize for signal profiling for every signal
 // retrieve receiver name from connection model
@@ -64,7 +64,7 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
     ui(new Ui::TimerTop),
     m_updateTimer(new QTimer(this))
-{  
+{
   Q_UNUSED(probe);
   ui->setupUi(this);
   ObjectTypeFilterProxyModel<QTimer> * const filterModel =
@@ -76,7 +76,8 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   sortModel->setSourceModel(TimerModel::instance());
   sortModel->setDynamicSortFilter(true);
   ui->timerView->setModel(sortModel);
-  ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1, Qt::DescendingOrder);
+  ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1,
+                              Qt::DescendingOrder);
 
   m_updateTimer->setObjectName("GammaRay update timer");
   m_updateTimer->setSingleShot(false);
