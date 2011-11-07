@@ -35,8 +35,14 @@ class GVNodeItem : public QGraphicsItemGroup
     explicit GVNodeItem(const GVNode &node, QGraphicsItem *parent = 0,
                         QGraphicsScene *scene = 0);
 
-    enum { Type = UserType + 1 };
-    inline int type() const { return Type; }
+    enum {
+      Type = UserType + 1
+    };
+
+    inline int type() const
+    {
+      return Type;
+    }
 
     QGraphicsTextItem *textItem() const
     {
@@ -59,15 +65,20 @@ class GVEdgeItem : public QGraphicsItemGroup
     explicit GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent = 0,
                         QGraphicsScene *scene = 0);
 
-    enum { Type = UserType + 2 };
-    inline int type() const { return Type; }
+    enum {
+      Type = UserType + 2
+    };
+
+    inline int type() const {
+      return Type;
+    }
 
     void setPen(const QPen &pen);
 
   private:
     GVEdge m_edge;
-    QGraphicsPathItem* m_pathItem;
-    QGraphicsPolygonItem* m_arrowItem;
+    QGraphicsPathItem *m_pathItem;
+    QGraphicsPolygonItem *m_arrowItem;
 };
 
 class GVGraphItem : public QGraphicsPathItem
@@ -76,8 +87,14 @@ class GVGraphItem : public QGraphicsPathItem
     explicit GVGraphItem(const GVSubGraph &edge, QGraphicsItem *parent = 0,
                          QGraphicsScene *scene = 0);
 
-    enum { Type = UserType + 3 };
-    inline int type() const { return Type; }
+    enum {
+      Type = UserType + 3
+    };
+
+    inline int type() const
+    {
+      return Type;
+    }
 
     QGraphicsTextItem *textItem() const
     {

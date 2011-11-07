@@ -175,8 +175,9 @@ void MainWindow::toolSelected()
 //     qDebug() << Q_FUNC_INFO << "creating new probe: "
 //              << toolIface->name() << toolIface->supportedTypes();
     toolWidget = toolIface->createWidget(Probe::instance(), this);
-    if (toolWidget->layout())
+    if (toolWidget->layout()) {
       toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
+    }
     ui.toolStack->addWidget(toolWidget);
     ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
   }

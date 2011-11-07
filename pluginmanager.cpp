@@ -108,7 +108,7 @@ void PluginManager::scan()
   }
 }
 
-QVector< ToolFactory* > PluginManager::plugins()
+QVector<ToolFactory *> PluginManager::plugins()
 {
   return m_plugins;
 }

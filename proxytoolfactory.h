@@ -17,7 +17,7 @@ class ProxyToolFactory : public QObject, public ToolFactory
     /**
      * @param path Path to the plugin spec file
      */
-    explicit ProxyToolFactory( const QString &path, QObject *parent = 0 );
+    explicit ProxyToolFactory(const QString &path, QObject *parent = 0);
 
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
@@ -26,15 +26,15 @@ class ProxyToolFactory : public QObject, public ToolFactory
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
 
-    virtual void init(ProbeInterface* probe);
-    virtual QWidget* createWidget(ProbeInterface* probe, QWidget* parentWidget);
+    virtual void init(ProbeInterface *probe);
+    virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget);
 
   private:
     QString m_id;
     QString m_pluginPath;
     QString m_name;
     QStringList m_supportedTypes;
-    ToolFactory* m_factory;
+    ToolFactory *m_factory;
 };
 
 }

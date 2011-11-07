@@ -40,11 +40,12 @@ namespace GammaRay
 class StateModelPrivate
 {
   StateModelPrivate(StateModel *qq)
-    : q_ptr(qq)
-    , m_stateMachine(0)
-    , m_stateMachineWatcher(new StateMachineWatcher(qq))
+    : q_ptr(qq),
+      m_stateMachine(0),
+      m_stateMachineWatcher(new StateMachineWatcher(qq))
   {
-    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(transitionTriggered(QAbstractTransition*)), qq, SLOT(transitionTriggered(QAbstractTransition*))));
+    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(transitionTriggered(QAbstractTransition*)),
+                         qq, SLOT(transitionTriggered(QAbstractTransition*))));
   }
 
   Q_DECLARE_PUBLIC(StateModel)
@@ -70,8 +71,9 @@ QList<QObject*> StateModelPrivate::children(QObject *parent) const
   }
 
   // if the state machine is not yet set, return an empty list
-  if (!parent)
+  if (!parent) {
     return result;
+  }
 
   foreach (QObject *o, parent->children()) {
     if (o->inherits("QState")) {
@@ -92,7 +94,7 @@ QObject *StateModelPrivate::mapModelIndex2QObject(const QModelIndex &index) cons
   return m_stateMachine;
 }
 
-void StateModelPrivate::transitionTriggered(QAbstractTransition* transition)
+void StateModelPrivate::transitionTriggered(QAbstractTransition *transition)
 {
   Q_UNUSED(transition);
   Q_Q(StateModel);
@@ -110,11 +112,12 @@ StateModel::StateModel(QObject *parent)
   setRoleNames(_roleNames);
 }
 
-void StateModel::setStateMachine(QStateMachine* stateMachine)
+void StateModel::setStateMachine(QStateMachine *stateMachine)
 {
   Q_D(StateModel);
-  if (d->m_stateMachine == stateMachine)
+  if (d->m_stateMachine == stateMachine) {
     return;
+  }
 
   beginResetModel();
   d->m_stateMachine = stateMachine;

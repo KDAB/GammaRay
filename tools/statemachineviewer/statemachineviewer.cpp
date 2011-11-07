@@ -85,7 +85,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
   m_stateMachineModel = stateMachineFilter;
   m_ui->stateMachinesView->setModel(m_stateMachineModel);
   m_ui->stateMachinesView->header()->setResizeMode(0, QHeaderView::Stretch);
-  m_ui->stateMachinesView->header()->setResizeMode(1, QHeaderView::ResizeToContents );
+  m_ui->stateMachinesView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
   connect(m_ui->stateMachinesView, SIGNAL(clicked(QModelIndex)),
           SLOT(handleMachineClicked(QModelIndex)));
 
@@ -111,8 +111,9 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
 
   // pre-select the first state machine for convenience
   if (m_stateMachineModel->rowCount() > 0) {
-    const QModelIndex firstRow = m_stateMachineModel->index(0,0);
-    m_ui->stateMachinesView->selectionModel()->select(firstRow, QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
+    const QModelIndex firstRow = m_stateMachineModel->index(0, 0);
+    m_ui->stateMachinesView->selectionModel()->select(
+      firstRow, QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
     handleMachineClicked(firstRow);
   }
 }
@@ -190,8 +191,9 @@ int treeDepth(QAbstractState *ascendant, QAbstractState *obj)
 
 bool StateMachineViewer::mayAddState(QAbstractState *state)
 {
-  if (!state)
+  if (!state) {
     return false;
+  }
 
   if (m_stateNodeIdMap.contains(state)) {
     return false;
@@ -403,7 +405,8 @@ void StateMachineViewer::addState(QAbstractState *state)
   // add a connection from parent state to initial state iff
   // parent state is valid and parent state has an initial state
   if (parentGraphId && parentState->initialState() == state) {
-    NodeId initialNode = m_graph->addNode(QString("initial-%1").arg(uniqueIdentifier(parentState)), parentGraphId);
+    NodeId initialNode =
+      m_graph->addNode(QString("initial-%1").arg(uniqueIdentifier(parentState)), parentGraphId);
     m_graph->addEdge(initialNode, nodeId, QString());
     m_graph->setNodeAttribute(initialNode, "shape", "circle");
     m_graph->setNodeAttribute(initialNode, "style", "filled");
@@ -503,8 +506,9 @@ void StateMachineViewer::updateStartStop()
 
 void StateMachineViewer::startStopClicked()
 {
-  if (!selectedStateMachine())
+  if (!selectedStateMachine()) {
     return;
+  }
   if (selectedStateMachine()->isRunning()) {
     selectedStateMachine()->stop();
   } else {
@@ -515,12 +519,14 @@ void StateMachineViewer::startStopClicked()
 void StateMachineViewer::exportClicked()
 {
   const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Image"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
 
   QGraphicsScene *scene = m_ui->graphicsView->scene();
 
-  QImage image(scene->sceneRect().width(), scene->sceneRect().height(), QImage::Format_ARGB32_Premultiplied);
+  QImage image(scene->sceneRect().width(), scene->sceneRect().height(),
+               QImage::Format_ARGB32_Premultiplied);
   image.fill(QColor(Qt::white).rgb());
 
   QPainter painter(&image);

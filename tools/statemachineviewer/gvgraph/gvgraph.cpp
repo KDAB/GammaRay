@@ -291,7 +291,7 @@ static qreal dpiForGraph(Agraph_t *graph)
   return dpi;
 }
 
-QRectF GVGraph::boundingRectForAgraph(Agraph_t* graph) const
+QRectF GVGraph::boundingRectForAgraph(Agraph_t *graph) const
 {
   const qreal dpi = dpiForGraph(graph);
   const qreal left = graph->u.bb.LL.x * (dpi / DotDefaultDPI);
@@ -315,7 +315,7 @@ void GVGraph::setGraphAttr(const QString &attr, const QString &value, GraphId gr
   _agset(graph, attr, value);
 }
 
-void GVGraph::setNodeAttribute(NodeId id, const QString& attr, const QString& value)
+void GVGraph::setNodeAttribute(NodeId id, const QString &attr, const QString &value)
 {
   _agset(agNode(id), attr, value);
 }
@@ -428,8 +428,9 @@ QList<GVSubGraphPair> GVGraph::gvSubGraphs() const
   QList<GVSubGraphPair> list;
 
   Q_FOREACH (Agraph_t *subGraph, _graphMap.keys()) { //krazy:exclude=foreach
-    if (subGraph == _graph)
+    if (subGraph == _graph) {
       continue;
+    }
     const QRectF rect = boundingRectForAgraph(subGraph);
 
     QPainterPath path;

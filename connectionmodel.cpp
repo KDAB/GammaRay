@@ -50,7 +50,7 @@ struct Connection
 
 }
 
-Q_DECLARE_TYPEINFO( GammaRay::Connection, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(GammaRay::Connection, Q_MOVABLE_TYPE);
 
 using namespace GammaRay;
 
@@ -76,7 +76,6 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
   }
   return true;
 }
-
 
 ConnectionModel::ConnectionModel(QObject *parent)
   : QAbstractTableModel(parent)

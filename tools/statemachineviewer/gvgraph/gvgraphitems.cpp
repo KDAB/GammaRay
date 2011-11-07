@@ -87,11 +87,12 @@ GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene
     item->setPos(QPointF(-size.width() / 2, -size.height() / 2));
   }
 
-  if (node.fillColor().isValid())
+  if (node.fillColor().isValid()) {
     setBrush(node.fillColor());
+  }
 }
 
-void GVNodeItem::setPen(const QPen& pen)
+void GVNodeItem::setPen(const QPen &pen)
 {
   m_shapeItem->setPen(pen);
 }
@@ -101,11 +102,10 @@ QBrush GVNodeItem::brush() const
   return m_shapeItem->brush();
 }
 
-void GVNodeItem::setBrush(const QBrush& brush)
+void GVNodeItem::setBrush(const QBrush &brush)
 {
   m_shapeItem->setBrush(brush);
 }
-
 
 GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene *scene)
   : QGraphicsItemGroup(parent, scene),
@@ -116,7 +116,9 @@ GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene
   setToolTip(QObject::tr("Transition: %1 -> %2").arg(edge.m_source).arg(edge.m_target));
 
   // arrow head quick-fix
-  QVector<QPointF> points = QVector<QPointF>() << QPointF(0,0) << QPointF(-8,4) << QPointF(-8,-4);
+  QVector<QPointF> points = QVector<QPointF>() << QPointF(0, 0)
+                                               << QPointF(-8, 4)
+                                               << QPointF(-8, -4);
   m_arrowItem = new QGraphicsPolygonItem(this);
   m_arrowItem->setPolygon(QPolygonF(points));
   m_arrowItem->setPos(edge.m_path.pointAtPercent(1.0));
@@ -125,7 +127,7 @@ GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene
   setPen(m_pathItem->pen());
 }
 
-void GVEdgeItem::setPen(const QPen& pen)
+void GVEdgeItem::setPen(const QPen &pen)
 {
   m_pathItem->setPen(pen);
   QPen arrowPen(pen);

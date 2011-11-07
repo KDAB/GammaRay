@@ -37,14 +37,16 @@ using namespace GammaRay;
 
 class WidgetTypeFilterProxyModel : public ObjectFilterProxyModelBase
 {
-public:
-  WidgetTypeFilterProxyModel(QObject* parent = 0) : ObjectFilterProxyModelBase(parent) {}
+  public:
+    WidgetTypeFilterProxyModel(QObject *parent = 0) : ObjectFilterProxyModelBase(parent)
+    {
+    }
 
-  virtual bool filterAcceptsObject(QObject* object) const
-  {
-    // according to the docs this is more efficient than qobject_cast
-    return object->isWidgetType();
-  }
+    virtual bool filterAcceptsObject(QObject *object) const
+    {
+      // according to the docs this is more efficient than qobject_cast
+      return object->isWidgetType();
+    }
 };
 
 WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)

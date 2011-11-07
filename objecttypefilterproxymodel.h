@@ -66,7 +66,7 @@ class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
       : ObjectFilterProxyModelBase(parent) {}
 
   protected:
-    virtual bool filterAcceptsObject(QObject* object) const {
+    virtual bool filterAcceptsObject(QObject *object) const {
       return qobject_cast<T*>(object);
     }
 };

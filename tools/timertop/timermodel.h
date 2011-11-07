@@ -105,10 +105,17 @@ class TimerModel : public QAbstractTableModel
 
     void setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel);
 
-    /* reimp */ int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    /* reimp */ int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    /* reimp */ QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    /* reimp */ QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    /* reimp */
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+    /* reimp */
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+    /* reimp */
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+    /* reimp */
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
   private slots:
     void slotBeginRemoveRows(const QModelIndex &parent, int start, int end);

@@ -63,8 +63,9 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
                                0, 0, TRUE, dwCreationFlags,
                                0, 0,
                                &startupInfo, &pid);
-  if (!success)
-      return false;
+  if (!success) {
+    return false;
+  }
 
   m_destProcess = pid.hProcess;
   m_destThread = pid.hThread;
