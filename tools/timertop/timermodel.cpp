@@ -33,7 +33,7 @@
 
 static const int maxTimeoutEvents = 1000;
 static const int maxTimeSpan = 10000;
-static const char * timerInfoPropertyName = "GammaRay TimerInfo";
+static const char timerInfoPropertyName[] = "GammaRay TimerInfo";
 
 using namespace GammaRay;
 using namespace std;
@@ -203,11 +203,11 @@ void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
 
   qt_register_signal_spy_callbacks(callbacks);
 
-  connect(m_sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int , int)),
+  connect(m_sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
           this, SLOT(slotBeginInsertRows(QModelIndex,int,int)));
   connect(m_sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
           this, SLOT(slotEndInsertRows()));
-  connect(m_sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int , int)),
+  connect(m_sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
           this, SLOT(slotBeginRemoveRows(QModelIndex,int,int)));
   connect(m_sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
           this, SLOT(slotEndRemoveRows()));
@@ -307,7 +307,6 @@ void TimerModel::slotEndReset()
 {
   endResetModel();
 }
-
 
 TimerInfo::TimerInfo(QTimer *timer)
   : m_timer(timer),
