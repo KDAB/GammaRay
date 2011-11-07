@@ -94,6 +94,7 @@ QObject *StateModelPrivate::mapModelIndex2QObject(const QModelIndex &index) cons
 
 void StateModelPrivate::transitionTriggered(QAbstractTransition* transition)
 {
+  Q_UNUSED(transition);
   Q_Q(StateModel);
 
   // TODO: Make this more efficient? Find out the changed states and update just these indices
