@@ -334,7 +334,7 @@ QList<GVNodePair> GVGraph::gvNodes() const
     GVNode object = _nodeMap[node];
 
     //Set the name of the node
-    object.m_name = agget(node, "label");
+    object.m_name = agget(node, const_cast<char *>("label"));
 
     //Fetch the X coordinate, apply the DPI conversion rate (actual DPI / 72, used by dot)
     qreal x = node->u.coord.x * (dpi / DotDefaultDPI);
@@ -348,7 +348,7 @@ QList<GVNodePair> GVGraph::gvNodes() const
     object.m_width=node->u.width * dpi;
 
     if (qstricmp(node->u.shape->name, "rectangle") == 0) {
-      if (qstricmp(agget(node, "style"), "rounded") == 0) {
+      if (qstricmp(agget(node, const_cast<char *>("style")), "rounded") == 0) {
         object.m_shape = GVNode::RoundedRect;
       } else {
         object.m_shape = GVNode::Rect;
@@ -357,8 +357,8 @@ QList<GVNodePair> GVGraph::gvNodes() const
       object.m_shape = GVNode::DoubleEllipse;
     }
 
-    if (qstricmp(agget(node, "style"), "filled") == 0) {
-      object.m_fillColor = QColor(agget(node, "fillcolor"));
+    if (qstricmp(agget(node, const_cast<char *>("style")), "filled") == 0) {
+      object.m_fillColor = QColor(agget(node, const_cast<char *>("fillcolor")));
     }
 
     list.append(GVNodePair(id(node), object));
