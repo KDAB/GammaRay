@@ -351,8 +351,17 @@ if(CPPCHECK_EXECUTABLE)
   foreach(_current ${_inc_dirs})
     set(_cppcheck_flags ${_cppcheck_flags} "-I${_current}")
   endforeach()
+  get_directory_property(_defs COMPILE_DEFINITIONS)
+  foreach(_current ${_defs})
+    set(_cppcheck_flags ${_cppcheck_flags} "-D${_current}")
+  endforeach()
+
   add_custom_target(cppcheck
-    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --quiet ${_cppcheck_flags} ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
+      -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty 
+      -i${CMAKE_CURRENT_SOURCE_DIR}/qmldebugcontrol
+      -i${CMAKE_CURRENT_SOURCE_DIR}/tests
+      ${CMAKE_CURRENT_SOURCE_DIR}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Running the cppcheck static code checker"
   )
