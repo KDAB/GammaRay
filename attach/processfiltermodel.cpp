@@ -36,6 +36,7 @@ static QString qGetLogin() {
   return QString::fromLocal8Bit(winUserName);
 }
 #else
+#include <unistd.h>
 static QString qGetLogin(){
   return QString::fromLocal8Bit(getlogin());
 }

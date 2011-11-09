@@ -32,6 +32,8 @@
 #ifndef __MINGW32__
 #define fileno _fileno
 #endif
+#else
+#include <unistd.h>
 #endif
 
 int InteractiveProcess::stdinClone = -1;
