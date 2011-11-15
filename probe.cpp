@@ -69,7 +69,6 @@ using namespace GammaRay;
 using namespace std;
 
 Probe *Probe::s_instance = 0;
-QReadWriteLock Probe::s_lock(QReadWriteLock::Recursive);
 
 namespace GammaRay
 {
@@ -130,6 +129,16 @@ struct Listener
 Q_GLOBAL_STATIC(Listener, s_listener)
 Q_GLOBAL_STATIC(QVector<QObject*>, s_addedBeforeProbeInsertion)
 
+// ensures proper information is returned by isValidObject by
+// locking it in objectAdded/Removed
+class ObjectLock : public QReadWriteLock {
+public:
+  ObjectLock()
+  : QReadWriteLock(QReadWriteLock::Recursive)
+  {}
+};
+Q_GLOBAL_STATIC(ObjectLock, s_lock)
+
 ProbeCreator::ProbeCreator(Type type)
 : m_type(type)
 {
@@ -139,6 +148,7 @@ ProbeCreator::ProbeCreator(Type type)
 
 void ProbeCreator::createProbe()
 {
+  QWriteLocker lock(s_lock());
   // make sure we are in the ui thread
   Q_ASSERT(QThread::currentThread() == qApp->thread());
 
@@ -308,17 +318,18 @@ QObject *Probe::probe() const
 
 bool Probe::isValidObject(QObject *obj) const
 {
-  ///TODO: can we somehow assert(s_lock.isLocked()) ?!
+  ///TODO: can we somehow assert(s_lock().isLocked()) ?!
   return m_validObjects.contains(obj);
 }
 
 QReadWriteLock *Probe::objectLock() const
 {
-  return &s_lock;
+  return s_lock();
 }
 
 void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
+  QWriteLocker lock(s_lock());
   if (s_listener()->filterThread == obj->thread()) {
     // Ignore
     IF_DEBUG(cout
@@ -327,8 +338,6 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
              << (fromCtor ? " (from ctor)" : "") << endl;)
     return;
   } else if (isInitialized()) {
-    QWriteLocker lock(&s_lock);
-
     if (filterObject(obj)) {
       IF_DEBUG(cout
                << "objectAdded Filter: "
@@ -395,7 +404,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
 void Probe::queuedObjectsFullyConstructed()
 {
-  QWriteLocker lock(&s_lock);
+  QWriteLocker lock(s_lock());
 
   IF_DEBUG(cout << Q_FUNC_INFO << " " << m_queuedObjects.size() << endl;)
 
@@ -418,7 +427,7 @@ void Probe::queuedObjectsFullyConstructed()
 void Probe::objectFullyConstructed(QObject *obj)
 {
   // must be write locked
-  Q_ASSERT(!s_lock.tryLockForRead());
+  Q_ASSERT(!s_lock()->tryLockForRead());
 
   if (!m_validObjects.contains(obj)) {
     // deleted already
@@ -449,8 +458,8 @@ void Probe::objectFullyConstructed(QObject *obj)
 
 void Probe::objectRemoved(QObject *obj)
 {
+  QWriteLocker lock(s_lock());
   if (isInitialized()) {
-    QWriteLocker lock(&s_lock);
     IF_DEBUG(cout << "object removed:" << hex << obj << " " << obj->parent() << endl;)
 
     bool success = instance()->m_validObjects.remove(obj);
@@ -493,7 +502,7 @@ void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiv
     return;
   }
 
-  ReadOrWriteLocker lock(&s_lock);
+  ReadOrWriteLocker lock(s_lock());
   if (filterObject(sender) || filterObject(receiver)) {
     return;
   }
@@ -510,7 +519,7 @@ void Probe::connectionRemoved(QObject *sender, const char *signal,
     return;
   }
 
-  ReadOrWriteLocker lock(&s_lock);
+  ReadOrWriteLocker lock(s_lock());
   if ((sender && filterObject(sender)) || (receiver && filterObject(receiver))) {
     return;
   }
@@ -528,7 +537,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     QChildEvent *childEvent = static_cast<QChildEvent*>(event);
     QObject *obj = childEvent->child();
 
-    QWriteLocker lock(&s_lock);
+    QWriteLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(obj);
     const bool filtered = filterObject(obj);
 
@@ -573,7 +582,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
   // we have no preloading hooks, so recover all objects we see
   if (s_listener()->trackDestroyed && event->type() != QEvent::ChildAdded &&
       event->type() != QEvent::ChildRemoved && !filterObject(receiver)) {
-    QWriteLocker lock(&s_lock);
+    QWriteLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(receiver);
     if (!tracked) {
       objectAdded(receiver);
