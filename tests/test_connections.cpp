@@ -205,6 +205,18 @@ void TestWaiter::startThreadsAndWaitForFinished()
 //END TestWaiter
 
 //BEGIN TestMain
+
+TestMain::TestMain(int argc, char**argv)
+: m_argc(argc), m_argv(argv)
+{
+  QMetaObject::invokeMethod(this, "startTests", Qt::QueuedConnection);
+}
+
+void TestMain::startTests()
+{
+  qApp->exit(QTest::qExec(this, m_argc, m_argv));
+}
+
 void TestMain::run_data()
 {
   QTest::addColumn<int>("type");
@@ -260,6 +272,9 @@ void TestMain::threading()
 }
 //END TestMain
 
-QTEST_MAIN(TestMain)
-
+int main(int argc, char *argv[]) {
+  QApplication app(argc, argv);
+  TestMain tc(argc, argv);
+  return app.exec();
+}
 #include "test_connections.moc"
