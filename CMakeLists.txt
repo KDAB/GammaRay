@@ -174,6 +174,11 @@ set(gammaray_runner_srcs
   3rdparty/kde/kfilterproxysearchline.cpp
 )
 if(NOT WIN32)
+  find_program(GDB_EXECUTABLE gdb)
+  if(NOT GDB_EXECUTABLE)
+    message(FATAL_ERROR "Cannot find gdb: required on non-Windows platforms.")
+  endif()
+
   set(gammaray_runner_srcs
     ${gammaray_runner_srcs}
     injector/gdbinjector.cpp
