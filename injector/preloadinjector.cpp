@@ -70,7 +70,7 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
     args = newArgs;
   } else if (env.value("GAMMARAY_MEMCHECK").toInt()) {
     QStringList newArgs;
-    newArgs << "valgrind" << "--tool=memcheck" << "--track-origins=yes" << "--num-callers=25";
+    newArgs << "valgrind" << "--tool=memcheck" << "--track-origins=yes" << "--num-callers=25" << "--leak-check=full";
     newArgs += args;
     args = newArgs;
   } else if (env.value("GAMMARAY_HELGRIND").toInt()) {
