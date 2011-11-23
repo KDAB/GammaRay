@@ -20,10 +20,11 @@
 */
 
 #include "gvgraph/gvgraph.h"
+#include "gvgraph/gvgraphitems.h"
 
 #include <QApplication>
+#include <QDebug>
 #include <QGraphicsView>
-#include "gvgraph/gvgraphitems.h"
 
 using namespace GammaRay;
 
@@ -34,11 +35,17 @@ int main(int argc, char *argv[])
   // build data
   GVGraph *graph = new GVGraph("Graph");
   NodeId nid1 = graph->addNode("Node1");
-  NodeId nid2 = graph->addNode("Node2");
-  NodeId nid3 = graph->addNode("Node3");
 
-  graph->addEdge(nid1, nid2, "Edge1");
-  graph->addEdge(nid2, nid3, "Edge2");
+  GraphId gid1 = graph->addGraph("SubGraph1");
+  NodeId nid2 = graph->addNode("Node2", gid1);
+  NodeId nid3 = graph->addNode("Node3", gid1);
+
+  EdgeId eid1 = graph->addEdge(nid1, nid2, "Edge1");
+  graph->setEdgeAttribute(eid1, "label", "Edge1");
+  EdgeId eid2 = graph->addEdge(nid2, nid3, "Edge2");
+  graph->setEdgeAttribute(eid2, "label", "Edge2");
+  EdgeId eid3 = graph->addEdge(nid1, nid3, "Edge3");
+  graph->setEdgeAttribute(eid3, "label", "Edge3");
   graph->applyLayout();
 
   if (argc > 1 && strcmp(argv[1], "--no-gui") == 0) {
@@ -47,6 +54,7 @@ int main(int argc, char *argv[])
 
   // build ui
   QGraphicsView *view = new QGraphicsView;
+  view->setRenderHint(QPainter::Antialiasing);
   QGraphicsScene *scene = new QGraphicsScene;
   view->setScene(scene);
 
@@ -54,10 +62,13 @@ int main(int argc, char *argv[])
     const GVNode node = pair.second;
     new GVNodeItem(node, 0, scene);
   }
-
   Q_FOREACH (const GVEdgePair &pair, graph->gvEdges()) {
     const GVEdge edge = pair.second;
     new GVEdgeItem(edge, 0, scene);
+  }
+  Q_FOREACH (const GVSubGraphPair &pair, graph->gvSubGraphs()) {
+    const GVSubGraph graph = pair.second;
+    new GVGraphItem(graph, 0, scene);
   }
   delete graph;
   graph = 0;
