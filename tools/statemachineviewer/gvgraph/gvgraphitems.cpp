@@ -21,6 +21,7 @@
 
 #include "gvgraphitems.h"
 
+#include <QDebug>
 #include <QPen>
 
 using namespace GammaRay;
@@ -125,6 +126,22 @@ GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene
   m_arrowItem->setRotation(-edge.m_path.angleAtPercent(1.0));
 
   setPen(m_pathItem->pen());
+
+  m_textItem = new QGraphicsTextItem(edge.m_label, this);
+  // init text item child
+  {
+    QGraphicsTextItem *item = m_textItem;
+    const QRectF boundingRect = item->mapRectFromScene(edge.m_labelBoundingRect);
+    const QSizeF size = boundingRect.size();
+    QRectF textRect = item->boundingRect();
+    while (size.width() < textRect.size().width() && item->font().pointSize() > 1) {
+      QFont font = item->font();
+      font.setPointSize(font.pointSize() - 1);
+      item->setFont(font);
+      textRect = item->boundingRect();
+    }
+    item->setPos(boundingRect.x(), boundingRect.y());
+  }
 }
 
 void GVEdgeItem::setPen(const QPen &pen)

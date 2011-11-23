@@ -73,6 +73,8 @@ class GVGraph
     void removeEdge(EdgeId id);
     QList<GVEdgePair> gvEdges() const;
 
+    void setEdgeAttribute(EdgeId id, const QString &attr, const QString &value);
+
     /// Set the font to use in all the labels
     void setFont(const QFont &font);
 

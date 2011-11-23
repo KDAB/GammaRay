@@ -320,6 +320,11 @@ void GVGraph::setNodeAttribute(NodeId id, const QString &attr, const QString &va
   _agset(agNode(id), attr, value);
 }
 
+void GVGraph::setEdgeAttribute(EdgeId id, const QString &attr, const QString &value)
+{
+  _agset(agEdge(id), attr, value);
+}
+
 QRectF GVGraph::boundingRect() const
 {
   return boundingRectForAgraph(_graph);
@@ -378,6 +383,19 @@ QList<GVEdgePair> GVGraph::gvEdges() const
     //Fill the source and target node names
     object.m_source=edge->tail->name;
     object.m_target=edge->head->name;
+
+    if (edge->u.label) {
+      object.m_label = QString::fromUtf8(edge->u.label->text);
+
+      // note that the position attributes in graphviz point to the *center* of this element.
+      // we need to subtract half of the width/height to get the top-left position
+      object.m_labelBoundingRect = QRectF(
+          (edge->u.label->pos.x - edge->u.label->dimen.x / 2.0) * (dpi / DotDefaultDPI),
+          ((_graph->u.bb.UR.y - edge->u.label->pos.y) - edge->u.label->dimen.y / 2.0) * (dpi / DotDefaultDPI),
+          edge->u.label->dimen.x * (dpi / DotDefaultDPI),
+          edge->u.label->dimen.y * (dpi / DotDefaultDPI)
+      );
+    }
 
     //Calculate the path from the spline (only one spline, as the graph is strict.
     //If it wasn't, we would have to iterate over the first list too)

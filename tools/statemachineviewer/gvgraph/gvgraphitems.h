@@ -73,12 +73,18 @@ class GVEdgeItem : public QGraphicsItemGroup
       return Type;
     }
 
+    QGraphicsTextItem *textItem() const
+    {
+      return m_textItem;
+    }
+
     void setPen(const QPen &pen);
 
   private:
     GVEdge m_edge;
     QGraphicsPathItem *m_pathItem;
     QGraphicsPolygonItem *m_arrowItem;
+    QGraphicsTextItem *m_textItem;
 };
 
 class GVGraphItem : public QGraphicsPathItem

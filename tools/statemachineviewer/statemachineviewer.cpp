@@ -41,6 +41,7 @@
 #include <QStateMachine>
 #include <QHistoryState>
 #include <QFileDialog>
+#include <QSignalTransition>
 
 #include <QtPlugin>
 
@@ -446,6 +447,14 @@ void StateMachineViewer::addTransition(QAbstractTransition *transition)
 
   EdgeId id = m_graph->addEdge(sourceStateId, targetStateId, Util::displayString(transition));
   Q_ASSERT(id);
+
+  QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
+  if (signalTransition) {
+    const QString label = QString::fromLatin1("%1::%2").arg(Util::displayString(signalTransition->senderObject()))
+                                                       .arg(QString::fromLatin1(signalTransition->signal()));
+    m_graph->setEdgeAttribute(id, QLatin1String("label"), label);
+  }
+
   m_transitionEdgeIdMap.insert(transition, id);
 }
 

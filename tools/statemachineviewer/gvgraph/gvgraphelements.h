@@ -127,6 +127,12 @@ class GVEdge : public GVElement
 
     /// Path of the edge's line
     QPainterPath m_path;
+
+    /// The label of the edge
+    QString m_label;
+
+    /// Position of the label
+    QRectF m_labelBoundingRect;
 };
 
 }
