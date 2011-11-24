@@ -108,6 +108,7 @@ signals:
     void clear();
 
 protected:
+    using QmlJsDebugClient::QDeclarativeDebugClient::event;
     virtual void statusChanged(Status);
     virtual void messageReceived(const QByteArray &);
 
