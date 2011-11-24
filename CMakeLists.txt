@@ -78,7 +78,7 @@ set(
 )
 
 # TODO: Make this work on Windows, and test this on Mac
-check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
 if(HAVE_CLOCK_GETTIME)
   set(BUILD_TIMER_PLUGIN TRUE)
   message(STATUS "clock_gettime in librt found, building timer plugin.")
