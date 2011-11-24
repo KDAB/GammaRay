@@ -53,10 +53,17 @@ struct TimeoutEvent
 class TimerInfo
 {
   public:
+    enum Type {
+        QTimerType,
+        QObjectType
+    };
+
     explicit TimerInfo(QTimer *timer);
+    explicit TimerInfo(int timerId);
     void addEvent(const TimeoutEvent &timeoutEvent);
     int numEvents() const;
     QTimer *timer() const;
+    int timerId() const;
     FunctionCallTimer *functionCallTimer();
     float wakeupsPerSec() const;
     int timePerWakeup() const;
@@ -65,8 +72,10 @@ class TimerInfo
     QString state() const;
 
   private:
+    Type m_type;
     int m_totalWakeups;
     QPointer<QTimer> m_timer;
+    int m_timerId;
     FunctionCallTimer m_functionCallTimer;
     QList<TimeoutEvent> m_timeoutEvents;
 
@@ -117,6 +126,9 @@ class TimerModel : public QAbstractTableModel
     /* reimp */
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+    /* reimp */
+    bool eventFilter(QObject * watched, QEvent * event);
+
   private slots:
     void slotBeginRemoveRows(const QModelIndex &parent, int start, int end);
     void slotEndRemoveRows();
@@ -126,11 +138,14 @@ class TimerModel : public QAbstractTableModel
     void slotEndReset();
 
   private:
-    TimerInfoPtr timerInfoFor(QTimer *timer) const;
-    TimerInfoPtr timerInfoFor(const QModelIndex &index) const;
-    int rowFor(QTimer *timer) const;
+    TimerInfoPtr findOrCreateTimerInfo(const QModelIndex &index);
+    TimerInfoPtr findOrCreateTimerInfo(QTimer *timer);
+    TimerInfoPtr findOrCreateTimerInfo(int timerId);
+
+    int rowFor(QTimer *timer) ;
 
     ObjectTypeFilterProxyModel<QTimer> *m_sourceModel;
+    QList<TimerInfoPtr> m_freeTimers;
 };
 
 }

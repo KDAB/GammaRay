@@ -28,6 +28,8 @@
 #include <3rdparty/qt/qobject_p_copy.h>
 
 #include <QMetaMethod>
+#include <QCoreApplication>
+#include <QTimerEvent>
 
 #include <iostream>
 
@@ -115,7 +117,25 @@ TimerModel *TimerModel::instance()
   return s_timerModel();
 }
 
-TimerInfoPtr TimerModel::timerInfoFor(QTimer *timer) const
+TimerInfoPtr TimerModel::findOrCreateTimerInfo(int timerId)
+{
+  // First, return the timer info if it already exists
+  for (int i = 0; i < rowCount(); i++) {
+    const TimerInfoPtr timerInfo = findOrCreateTimerInfo(index(i, 0));
+    if (timerInfo->timerId() == timerId) {
+      return timerInfo;
+    }
+  }
+
+  // Create a new free timer, and emit the correct update signals
+  TimerInfoPtr timerInfo(new TimerInfo(timerId));
+  beginInsertRows(QModelIndex(), rowCount(), rowCount());
+  m_freeTimers.append(timerInfo);
+  endInsertRows();
+  return timerInfo;
+}
+
+TimerInfoPtr TimerModel::findOrCreateTimerInfo(QTimer *timer)
 {
   if (!timer) {
     return TimerInfoPtr();
@@ -132,18 +152,26 @@ TimerInfoPtr TimerModel::timerInfoFor(QTimer *timer) const
   return timerInfo;
 }
 
-TimerInfoPtr TimerModel::timerInfoFor(const QModelIndex &index) const
+TimerInfoPtr TimerModel::findOrCreateTimerInfo(const QModelIndex &index)
 {
-  const QModelIndex sourceIndex = m_sourceModel->index(index.row(), 0);
-  QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject*>();
-  QTimer * const timer = qobject_cast<QTimer*>(timerObject);
-  return timerInfoFor(timer);
+  if (index.row() < m_sourceModel->rowCount()){
+    const QModelIndex sourceIndex = m_sourceModel->index(index.row(), 0);
+    QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject*>();
+    return findOrCreateTimerInfo(qobject_cast<QTimer*>(timerObject));
+  } else {
+    const int freeListIndex = index.row() - m_sourceModel->rowCount();
+    Q_ASSERT(freeListIndex >= 0);
+    if (freeListIndex < m_freeTimers.size()) {
+      return m_freeTimers.at(freeListIndex);
+    }
+  }
+  return TimerInfoPtr();
 }
 
-int TimerModel::rowFor(QTimer *timer) const
+int TimerModel::rowFor(QTimer *timer)
 {
   for (int i = 0; i < rowCount(); i++) {
-    const TimerInfoPtr timerInfo = timerInfoFor(index(i, 0));
+    const TimerInfoPtr timerInfo = findOrCreateTimerInfo(index(i, 0));
     if (timerInfo->timer() == timer) {
       return i;
     }
@@ -153,7 +181,7 @@ int TimerModel::rowFor(QTimer *timer) const
 
 void TimerModel::preSignalActivate(QTimer *timer)
 {
-  const TimerInfoPtr timerInfo = timerInfoFor(timer);
+  const TimerInfoPtr timerInfo = findOrCreateTimerInfo(timer);
   if (timerInfo) {
     if (!timerInfo->functionCallTimer()->start()) {
       cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
@@ -168,7 +196,7 @@ void TimerModel::preSignalActivate(QTimer *timer)
 
 void TimerModel::postSignalActivate(QTimer *timer)
 {
-  const TimerInfoPtr timerInfo = timerInfoFor(timer);
+  const TimerInfoPtr timerInfo = findOrCreateTimerInfo(timer);
   if (timerInfo) {
     if (!timerInfo->functionCallTimer()->active()) {
       cout << "TimerModel::postSignalActivate(): Timer not active: "
@@ -194,6 +222,7 @@ void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
 {
   Q_ASSERT(!m_sourceModel);
   m_sourceModel = sourceModel;
+  qApp->installEventFilter(this);
 
   QSignalSpyCallbackSet callbacks;
   callbacks.slot_begin_callback = 0;
@@ -235,7 +264,7 @@ int TimerModel::rowCount(const QModelIndex &parent) const
   if (!m_sourceModel || parent.isValid()) {
     return 0;
   }
-  return m_sourceModel->rowCount();
+  return m_sourceModel->rowCount() + m_freeTimers.count();
 }
 
 QVariant TimerModel::data(const QModelIndex &index, int role) const
@@ -246,15 +275,21 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
 
   if (role == Qt::DisplayRole && index.isValid() &&
       index.column() >= 0 && index.column() < columnCount()) {
-    const TimerInfoPtr timerInfo = timerInfoFor(index);
+    const TimerInfoPtr timerInfo = const_cast<TimerModel*>(this)->findOrCreateTimerInfo(index);
     switch ((Roles)(index.column() + FirstRole + 1)) {
-      case ObjectNameRole: return Util::displayString(timerInfo->timer());
+      case ObjectNameRole: {
+        if (timerInfo->timer()) {
+          return Util::displayString(timerInfo->timer());
+        } else {
+          return tr("(No QTimer)");
+        }
+      }
       case StateRole: return timerInfo->state();
       case TotalWakeupsRole: return timerInfo->totalWakeups();
       case WakeupsPerSecRole: return timerInfo->wakeupsPerSec();
       case TimePerWakeupRole: return timerInfo->timePerWakeup();
       case MaxTimePerWakeupRole: return timerInfo->maxWakeupTime();
-      case TimerIdRole: return timerInfo->timer()->timerId();
+      case TimerIdRole: return timerInfo->timerId();
     }
   }
   return QVariant();
@@ -274,6 +309,22 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
     }
   }
   return QAbstractTableModel::headerData(section, orientation, role);
+}
+
+bool TimerModel::eventFilter(QObject *watched, QEvent *event)
+{
+  Q_UNUSED(watched);
+  if (event->type() == QEvent::Timer) {
+
+    QTimerEvent * const timerEvent = dynamic_cast<QTimerEvent*>(event);
+    Q_ASSERT(timerEvent);
+    const TimerInfoPtr timerInfo = findOrCreateTimerInfo(timerEvent->timerId());
+    TimeoutEvent timeoutEvent;
+    timeoutEvent.timeStamp = QTime::currentTime();
+    timeoutEvent.executionTime = -1;
+    timerInfo->addEvent(timeoutEvent);
+  }
+  return false;
 }
 
 void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int end)
@@ -308,8 +359,24 @@ void TimerModel::slotEndReset()
   endResetModel();
 }
 
+
+
+
+
+
+
+
 TimerInfo::TimerInfo(QTimer *timer)
-  : m_timer(timer),
+  : m_type(QTimerType),
+    m_timer(timer),
+    m_timerId(timer->timerId()),
+    m_totalWakeups(0)
+{
+}
+
+TimerInfo::TimerInfo(int timerId)
+  : m_type(QObjectType),
+    m_timerId(timerId),
     m_totalWakeups(0)
 {
 }
@@ -329,6 +396,11 @@ int TimerInfo::numEvents() const
 QTimer *TimerInfo::timer() const
 {
   return m_timer;
+}
+
+int TimerInfo::timerId() const
+{
+  return m_timerId;
 }
 
 FunctionCallTimer *TimerInfo::functionCallTimer()
@@ -398,6 +470,10 @@ int TimerInfo::totalWakeups() const
 
 QString TimerInfo::state() const
 {
+  if (!m_timer){
+    return QObject::tr("None");
+  }
+
   if (!m_timer->isActive()) {
     return QObject::tr("Inactive");
   } else {

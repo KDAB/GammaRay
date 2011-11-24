@@ -32,6 +32,14 @@ using namespace GammaRay;
 // TODO
 //
 
+// Timer Events w/o QTimer
+// -----------------------
+// TODO: delete really old free timers
+// TODO: Total wakeup label (big!) (both current and average)
+// TODO: Add stuff to model
+// TODO: Change access functions to work for non-QTimers
+
+// ------------
 // thread safety!
 // timer events
 // generalize for signal profiling for every signal
