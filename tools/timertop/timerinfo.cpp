@@ -74,7 +74,7 @@ FunctionCallTimer *TimerInfo::functionCallTimer()
   return &m_functionCallTimer;
 }
 
-float TimerInfo::wakeupsPerSec() const
+QString TimerInfo::wakeupsPerSec() const
 {
   int totalWakeups = 0;
   int start = 0;
@@ -93,13 +93,17 @@ float TimerInfo::wakeupsPerSec() const
     const QTime endTime = m_timeoutEvents[end].timeStamp;
     const int timeSpan = startTime.msecsTo(endTime);
     const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
-    return wakeupsPerSec;
+    return QString::number(wakeupsPerSec, 'f', 1);
   }
-  return 0;
+  return "0";
 }
 
-int TimerInfo::timePerWakeup() const
+QString TimerInfo::timePerWakeup() const
 {
+  if (m_type == QObjectType) {
+    return "N/A";
+  }
+
   int totalWakeups = 0;
   int totalTime = 0;
   for (int i = m_timeoutEvents.size() - 1; i >= 0; i--) {
@@ -112,13 +116,17 @@ int TimerInfo::timePerWakeup() const
   }
 
   if (totalWakeups > 0) {
-    return totalTime / (float)totalWakeups;
+    return QString::number(totalTime / (float)totalWakeups, 'f', 1);
   }
-  return 0;
+  return "N/A";
 }
 
-int TimerInfo::maxWakeupTime() const
+QString TimerInfo::maxWakeupTime() const
 {
+  if (m_type == QObjectType) {
+    return "N/A";
+  }
+
   int max = 0;
   for (int i = 0; i < m_timeoutEvents.size(); i++) {
     const TimeoutEvent &event = m_timeoutEvents.at(i);
@@ -126,7 +134,7 @@ int TimerInfo::maxWakeupTime() const
       max = event.executionTime;
     }
   }
-  return max;
+  return QString::number(max);
 }
 
 int TimerInfo::totalWakeups() const
