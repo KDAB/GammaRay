@@ -33,46 +33,12 @@
 
 #include <iostream>
 
-static const int maxTimeoutEvents = 1000;
-static const int maxTimeSpan = 10000;
 static const char timerInfoPropertyName[] = "GammaRay TimerInfo";
 
 using namespace GammaRay;
 using namespace std;
 
 Q_GLOBAL_STATIC(TimerModel, s_timerModel)
-
-FunctionCallTimer::FunctionCallTimer()
-  : m_active(false)
-{
-}
-
-bool FunctionCallTimer::start()
-{
-  if (m_active) {
-    return false;
-  }
-
-  clock_gettime(CLOCK_REALTIME, &m_startTime);
-  m_active = true;
-  return true;
-}
-
-bool FunctionCallTimer::active() const
-{
-  return m_active;
-}
-
-int FunctionCallTimer::stop()
-{
-  Q_ASSERT(m_active);
-  m_active = false;
-  timespec endTime;
-  clock_gettime(CLOCK_REALTIME, &endTime);
-  int elapsed = (endTime.tv_nsec - m_startTime.tv_nsec) / 1000;
-  elapsed += (endTime.tv_sec - m_startTime.tv_sec) * 1000000;
-  return elapsed;
-}
 
 QTimer *timer_from_callback(QObject *caller, int method_index)
 {
@@ -202,7 +168,7 @@ void TimerModel::postSignalActivate(QTimer *timer)
       cout << "TimerModel::postSignalActivate(): Timer not active: "
            << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
     } else {
-      TimeoutEvent event;
+      TimerInfo::TimeoutEvent event;
       event.timeStamp = QTime::currentTime();
       event.executionTime = timerInfo->functionCallTimer()->stop();
       timerInfo->addEvent(event);
@@ -319,7 +285,7 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
     QTimerEvent * const timerEvent = dynamic_cast<QTimerEvent*>(event);
     Q_ASSERT(timerEvent);
     const TimerInfoPtr timerInfo = findOrCreateTimerInfo(timerEvent->timerId());
-    TimeoutEvent timeoutEvent;
+    TimerInfo::TimeoutEvent timeoutEvent;
     timeoutEvent.timeStamp = QTime::currentTime();
     timeoutEvent.executionTime = -1;
     timerInfo->addEvent(timeoutEvent);
@@ -357,139 +323,6 @@ void TimerModel::slotBeginReset()
 void TimerModel::slotEndReset()
 {
   endResetModel();
-}
-
-
-
-
-
-
-
-
-TimerInfo::TimerInfo(QTimer *timer)
-  : m_type(QTimerType),
-    m_timer(timer),
-    m_timerId(timer->timerId()),
-    m_totalWakeups(0)
-{
-}
-
-TimerInfo::TimerInfo(int timerId)
-  : m_type(QObjectType),
-    m_timerId(timerId),
-    m_totalWakeups(0)
-{
-}
-
-void TimerInfo::addEvent(const TimeoutEvent &timeoutEvent)
-{
-  m_timeoutEvents.append(timeoutEvent);
-  removeOldEvents();
-  m_totalWakeups++;
-}
-
-int TimerInfo::numEvents() const
-{
-  return m_timeoutEvents.size();
-}
-
-QTimer *TimerInfo::timer() const
-{
-  return m_timer;
-}
-
-int TimerInfo::timerId() const
-{
-  return m_timerId;
-}
-
-FunctionCallTimer *TimerInfo::functionCallTimer()
-{
-  return &m_functionCallTimer;
-}
-
-float TimerInfo::wakeupsPerSec() const
-{
-  int totalWakeups = 0;
-  int start = 0;
-  int end = m_timeoutEvents.size() - 1;
-  for (int i = end; i >= 0; i--) {
-    const TimeoutEvent &event = m_timeoutEvents.at(i);
-    if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
-      start = i;
-      break;
-    }
-    totalWakeups++;
-  }
-
-  if (totalWakeups > 0 && end > start) {
-    const QTime startTime = m_timeoutEvents[start].timeStamp;
-    const QTime endTime = m_timeoutEvents[end].timeStamp;
-    const int timeSpan = startTime.msecsTo(endTime);
-    const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
-    return wakeupsPerSec;
-  }
-  return 0;
-}
-
-int TimerInfo::timePerWakeup() const
-{
-  int totalWakeups = 0;
-  int totalTime = 0;
-  for (int i = m_timeoutEvents.size() - 1; i >= 0; i--) {
-    const TimeoutEvent &event = m_timeoutEvents.at(i);
-    if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
-      break;
-    }
-    totalWakeups++;
-    totalTime += event.executionTime;
-  }
-
-  if (totalWakeups > 0) {
-    return totalTime / (float)totalWakeups;
-  }
-  return 0;
-}
-
-int TimerInfo::maxWakeupTime() const
-{
-  int max = 0;
-  for (int i = 0; i < m_timeoutEvents.size(); i++) {
-    const TimeoutEvent &event = m_timeoutEvents.at(i);
-    if (event.executionTime > max) {
-      max = event.executionTime;
-    }
-  }
-  return max;
-}
-
-int TimerInfo::totalWakeups() const
-{
-  return m_totalWakeups;
-}
-
-QString TimerInfo::state() const
-{
-  if (!m_timer){
-    return QObject::tr("None");
-  }
-
-  if (!m_timer->isActive()) {
-    return QObject::tr("Inactive");
-  } else {
-    if (m_timer->isSingleShot()) {
-      return QObject::tr("Singleshot (%1 ms)").arg(m_timer->interval());
-    } else {
-      return QObject::tr("Repeating (%1 ms)").arg(m_timer->interval());
-    }
-  }
-}
-
-void TimerInfo::removeOldEvents()
-{
-  if (m_timeoutEvents.size() > maxTimeoutEvents) {
-    m_timeoutEvents.removeFirst();
-  }
 }
 
 #include "timermodel.moc"

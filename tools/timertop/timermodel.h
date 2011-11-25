@@ -23,69 +23,11 @@
 #ifndef GAMMARAY_TIMEMODEL_H
 #define GAMMARAY_TIMEMODEL_H
 
+#include "timerinfo.h"
 #include <objecttypefilterproxymodel.h>
-#include <QTime>
-#include <QPointer>
-#include <QTimer>
 #include <QAbstractTableModel>
 
-namespace GammaRay {
-
-class FunctionCallTimer
-{
-  public:
-    FunctionCallTimer();
-    bool start();
-    bool active() const;
-    int stop();
-
-  private:
-    timespec m_startTime;
-    bool m_active;
-};
-
-struct TimeoutEvent
-{
-  QTime timeStamp;
-  int executionTime;
-};
-
-class TimerInfo
-{
-  public:
-    enum Type {
-        QTimerType,
-        QObjectType
-    };
-
-    explicit TimerInfo(QTimer *timer);
-    explicit TimerInfo(int timerId);
-    void addEvent(const TimeoutEvent &timeoutEvent);
-    int numEvents() const;
-    QTimer *timer() const;
-    int timerId() const;
-    FunctionCallTimer *functionCallTimer();
-    float wakeupsPerSec() const;
-    int timePerWakeup() const;
-    int maxWakeupTime() const;
-    int totalWakeups() const;
-    QString state() const;
-
-  private:
-    Type m_type;
-    int m_totalWakeups;
-    QPointer<QTimer> m_timer;
-    int m_timerId;
-    FunctionCallTimer m_functionCallTimer;
-    QList<TimeoutEvent> m_timeoutEvents;
-
-    void removeOldEvents();
-};
-
-typedef QSharedPointer<TimerInfo> TimerInfoPtr;
-}
-
-Q_DECLARE_METATYPE(GammaRay::TimerInfoPtr)
+class QTimer;
 
 namespace GammaRay {
 

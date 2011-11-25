@@ -263,6 +263,8 @@ if(BUILD_TIMER_PLUGIN)
     ${gammaray_srcs}
     tools/timertop/timertop.cpp
     tools/timertop/timermodel.cpp
+    tools/timertop/timerinfo.cpp
+    tools/timertop/functioncalltimer.cpp
   )
 endif()
 
