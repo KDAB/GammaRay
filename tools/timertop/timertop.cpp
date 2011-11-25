@@ -99,4 +99,9 @@ void TimerTop::slotUpdateView()
   ui->timerView->viewport()->update();
 }
 
+QStringList TimerTopFactory::supportedTypes() const
+{
+  return QStringList() << "QObject" << "QTimer";
+}
+
 #include "timertop.moc"

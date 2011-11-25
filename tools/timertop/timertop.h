@@ -54,6 +54,9 @@ class TimerTopFactory : public QObject,
   public:
     explicit TimerTopFactory(QObject *parent) : QObject(parent) {}
     inline QString name() const { return tr("Timers"); }
+
+    /* reimp */
+    QStringList supportedTypes() const;
 };
 
 }
