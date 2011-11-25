@@ -59,6 +59,7 @@ class TimerInfo
     int maxWakeupTime() const;
     int totalWakeups() const;
     QString state() const;
+    QString displayName() const;
 
   private:
     Type m_type;

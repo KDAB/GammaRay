@@ -23,8 +23,6 @@
 
 #include "timermodel.h"
 
-#include <util.h>
-
 #include <3rdparty/qt/qobject_p_copy.h>
 
 #include <QMetaMethod>
@@ -259,13 +257,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
       index.column() >= 0 && index.column() < columnCount()) {
     const TimerInfoPtr timerInfo = const_cast<TimerModel*>(this)->findOrCreateTimerInfo(index);
     switch ((Roles)(index.column() + FirstRole + 1)) {
-      case ObjectNameRole: {
-        if (timerInfo->timer()) {
-          return Util::displayString(timerInfo->timer());
-        } else {
-          return tr("(No QTimer)");
-        }
-      }
+      case ObjectNameRole: return timerInfo->displayName();
       case StateRole: return timerInfo->state();
       case TotalWakeupsRole: return timerInfo->totalWakeups();
       case WakeupsPerSecRole: return timerInfo->wakeupsPerSec();

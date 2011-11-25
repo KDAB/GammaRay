@@ -22,6 +22,10 @@
 */
 #include "timerinfo.h"
 
+#include <util.h>
+
+#include <QObject>
+
 using namespace GammaRay;
 
 static const int maxTimeoutEvents = 1000;
@@ -150,5 +154,14 @@ void TimerInfo::removeOldEvents()
 {
   if (m_timeoutEvents.size() > maxTimeoutEvents) {
     m_timeoutEvents.removeFirst();
+  }
+}
+
+QString TimerInfo::displayName() const
+{
+  if (timer()) {
+    return Util::displayString(timer());
+  } else {
+    return QObject::tr("(No QTimer)");
   }
 }
