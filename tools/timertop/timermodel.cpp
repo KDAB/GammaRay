@@ -20,9 +20,9 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #include "timermodel.h"
 
+#include <probe.h>
 #include <3rdparty/qt/qobject_p_copy.h>
 
 #include <QMetaMethod>
@@ -295,6 +295,10 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
     // If there is a QTimer associated with this timer ID, don't handle it here, it will be handled
     // by the signal hooks for QTimer::timeout()
     if (findOrCreateQTimerTimerInfo(timerEvent->timerId())) {
+      return false;
+    }
+
+    if (Probe::instance()->filterObject(watched)) {
       return false;
     }
 
