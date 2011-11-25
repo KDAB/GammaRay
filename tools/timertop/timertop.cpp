@@ -29,44 +29,31 @@
 using namespace GammaRay;
 
 //
-// TODO
+// TODO list for timer plugin
 //
 
-// Timer Events w/o QTimer
-// -----------------------
-// TODO: delete really old free timers
-// TODO: Total wakeup label (big!) (both current and average)
-// TODO: Add stuff to model
-// TODO: Change access functions to work for non-QTimers
+// BUG: Some QTimers appear as free timers
+// BUG: QTimeLine class name not shown
+// BUG: No thread saftey yet
+//          Related: Protect against timer deletion
+// BUG: Sorting in the view doesn't work well
+// BUG: Only top-level timers are shown (bug in probe)
 
-// ------------
-// thread safety!
-// timer events
-// generalize for signal profiling for every signal
-// retrieve receiver name from connection model
-// columns: wakeups, time / wakeup, max time, objectname, receiver
-//    -> averaged over the last x seconds. X being configurable, plus clear button
-// objectname: if not set, use child^3 of xyz
-// active (repeating, singleshot)
-// interval
-// countdown (refresh every 1 second)
-// slot: slotXYZ() and 3 others (shown in tooltip)
-// flash delegate when timer triggered
-// heat map?
-// backgroudn color: either status (runing, stopped, singleshot) or frequency
-// move callback handling to probe interface
-// test timer added/removed
-// put functioncalltimer into own file
-// protect against timer deletion
-// add a property widget
-// optimization
-
-//
-// BUGS
-//
-
-// dynamic sorting doesn't seem to work very well
-// only top-level timers are shown
+// ! Delete old free timers
+// ! Wakeup time for QTimers
+// ! Add button to view object info
+// ! Test timer added/removed at runtime
+// Automatic column resizing
+// Filter line edit
+// Buttons to kill or slow down timer and start timer
+// Add clear button that removes all free timers and resets statistics for normal timers
+// Add big fat "total wakeups / sec" label to the status bar
+// Retrieve receiver name from connection model
+//     Add to view as column: receivers: slotXYZ and 3 others (shown in tooltip)
+// Move signal hook to probe interface
+//     Then maybe add general signal profiler plugin, or even visualization
+// Flash delegate when timer triggered
+// Color cell in view redish, depending on how active the timer is
 
 TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
