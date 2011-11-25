@@ -80,9 +80,14 @@ class TimerModel : public QAbstractTableModel
     void slotEndReset();
 
   private:
+    // Finds both QTimer and free timers
     TimerInfoPtr findOrCreateTimerInfo(const QModelIndex &index);
-    TimerInfoPtr findOrCreateTimerInfo(QTimer *timer);
-    TimerInfoPtr findOrCreateTimerInfo(int timerId);
+
+    // Finds QTimer timers
+    TimerInfoPtr findOrCreateQTimerTimerInfo(QTimer *timer);
+
+    // Finds QObject timers
+    TimerInfoPtr findOrCreateFreeTimerInfo(int timerId);
 
     int rowFor(QTimer *timer) ;
 

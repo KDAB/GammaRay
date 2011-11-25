@@ -86,7 +86,7 @@ TimerModel *TimerModel::instance()
   return s_timerModel();
 }
 
-TimerInfoPtr TimerModel::findOrCreateTimerInfo(int timerId)
+TimerInfoPtr TimerModel::findOrCreateFreeTimerInfo(int timerId)
 {
   // First, return the timer info if it already exists
   for (int i = 0; i < rowCount(); i++) {
@@ -104,7 +104,7 @@ TimerInfoPtr TimerModel::findOrCreateTimerInfo(int timerId)
   return timerInfo;
 }
 
-TimerInfoPtr TimerModel::findOrCreateTimerInfo(QTimer *timer)
+TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(QTimer *timer)
 {
   if (!timer) {
     return TimerInfoPtr();
@@ -126,7 +126,7 @@ TimerInfoPtr TimerModel::findOrCreateTimerInfo(const QModelIndex &index)
   if (index.row() < m_sourceModel->rowCount()){
     const QModelIndex sourceIndex = m_sourceModel->index(index.row(), 0);
     QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject*>();
-    return findOrCreateTimerInfo(qobject_cast<QTimer*>(timerObject));
+    return findOrCreateQTimerTimerInfo(qobject_cast<QTimer*>(timerObject));
   } else {
     const int freeListIndex = index.row() - m_sourceModel->rowCount();
     Q_ASSERT(freeListIndex >= 0);
@@ -150,7 +150,7 @@ int TimerModel::rowFor(QTimer *timer)
 
 void TimerModel::preSignalActivate(QTimer *timer)
 {
-  const TimerInfoPtr timerInfo = findOrCreateTimerInfo(timer);
+  const TimerInfoPtr timerInfo = findOrCreateQTimerTimerInfo(timer);
   if (timerInfo) {
     if (!timerInfo->functionCallTimer()->start()) {
       cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
@@ -165,7 +165,7 @@ void TimerModel::preSignalActivate(QTimer *timer)
 
 void TimerModel::postSignalActivate(QTimer *timer)
 {
-  const TimerInfoPtr timerInfo = findOrCreateTimerInfo(timer);
+  const TimerInfoPtr timerInfo = findOrCreateQTimerTimerInfo(timer);
   if (timerInfo) {
     if (!timerInfo->functionCallTimer()->active()) {
       cout << "TimerModel::postSignalActivate(): Timer not active: "
@@ -287,7 +287,7 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
 
     QTimerEvent * const timerEvent = dynamic_cast<QTimerEvent*>(event);
     Q_ASSERT(timerEvent);
-    const TimerInfoPtr timerInfo = findOrCreateTimerInfo(timerEvent->timerId());
+    const TimerInfoPtr timerInfo = findOrCreateFreeTimerInfo(timerEvent->timerId());
     TimerInfo::TimeoutEvent timeoutEvent;
     timeoutEvent.timeStamp = QTime::currentTime();
     timeoutEvent.executionTime = -1;
