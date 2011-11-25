@@ -105,6 +105,14 @@ class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
      */
     bool isValidObject(QObject *obj) const;
 
+    /**
+     * Returns true if @p obj belongs to the GammaRay Probe or Window.
+     *
+     * These objects should not be tracked or shown to the user,
+     * hence must be explictly filtered.
+     */
+    static bool filterObject(QObject *obj);
+
   signals:
     /**
      * Emitted when the user selected @p widget at position @p pos in the probed application.

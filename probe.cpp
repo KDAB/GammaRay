@@ -272,13 +272,7 @@ void Probe::delayedInit()
   window->show();
 }
 
-/**
- * Returns true if @p obj belongs to the GammaRay Probe or Window.
- *
- * These objects should not be tracked or shown to the user,
- * hence must be explictly filtered.
- */
-static bool filterObject(QObject *obj)
+bool Probe::filterObject(QObject *obj)
 {
   Probe *p = Probe::instance();
   Q_ASSERT(p);
