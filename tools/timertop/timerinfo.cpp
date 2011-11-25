@@ -35,7 +35,8 @@ TimerInfo::TimerInfo(QTimer *timer)
   : m_type(QTimerType),
     m_timer(timer),
     m_timerId(timer->timerId()),
-    m_totalWakeups(0)
+    m_totalWakeups(0),
+    m_lastReceiver(0)
 {
 }
 
@@ -157,11 +158,20 @@ void TimerInfo::removeOldEvents()
   }
 }
 
+void TimerInfo::setLastReceiver(QObject *receiver)
+{
+    m_lastReceiver = receiver;
+}
+
 QString TimerInfo::displayName() const
 {
   if (timer()) {
     return Util::displayString(timer());
   } else {
-    return QObject::tr("(No QTimer)");
+    if (m_lastReceiver) {
+      return Util::displayString(m_lastReceiver);
+    } else {
+      return QObject::tr("Unknown QObject");
+    }
   }
 }

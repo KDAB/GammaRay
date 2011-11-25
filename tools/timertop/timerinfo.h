@@ -50,6 +50,7 @@ class TimerInfo
     explicit TimerInfo(QTimer *timer);
     explicit TimerInfo(int timerId);
     void addEvent(const TimeoutEvent &timeoutEvent);
+    void setLastReceiver(QObject *receiver);
     int numEvents() const;
     QTimer *timer() const;
     int timerId() const;
@@ -71,6 +72,9 @@ class TimerInfo
     int m_timerId;
     FunctionCallTimer m_functionCallTimer;
     QList<TimeoutEvent> m_timeoutEvents;
+
+    // Only for free timers, QObject that received the timeout event
+    QPointer<QObject> m_lastReceiver;
 
     void removeOldEvents();
 };

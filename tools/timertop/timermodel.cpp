@@ -287,7 +287,6 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
 
 bool TimerModel::eventFilter(QObject *watched, QEvent *event)
 {
-  Q_UNUSED(watched);
   if (event->type() == QEvent::Timer) {
 
     QTimerEvent * const timerEvent = dynamic_cast<QTimerEvent*>(event);
@@ -304,6 +303,8 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
     timeoutEvent.timeStamp = QTime::currentTime();
     timeoutEvent.executionTime = -1;
     timerInfo->addEvent(timeoutEvent);
+
+    timerInfo->setLastReceiver(watched);
   }
   return false;
 }
