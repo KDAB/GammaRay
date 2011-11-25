@@ -40,7 +40,7 @@ using namespace std;
 
 Q_GLOBAL_STATIC(TimerModel, s_timerModel)
 
-QTimer *timer_from_callback(QObject *caller, int method_index)
+static QTimer *timer_from_callback(QObject *caller, int method_index)
 {
   QTimer * const timer = dynamic_cast<QTimer*>(caller);
   if (timer) {
@@ -71,6 +71,9 @@ static void signal_end_callback(QObject *caller, int method_index)
     TimerModel::instance()->postSignalActivate(timer);
   }
 }
+
+
+
 
 TimerModel::TimerModel(QObject *parent)
   : QAbstractTableModel(parent),
