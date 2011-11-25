@@ -80,6 +80,10 @@ class TimerModel : public QAbstractTableModel
     void slotEndReset();
 
   private:
+
+    // Finds only QTimers based on the timer ID, not free timers.
+    TimerInfoPtr findOrCreateQTimerTimerInfo(int timerId);
+
     // Finds both QTimer and free timers
     TimerInfoPtr findOrCreateTimerInfo(const QModelIndex &index);
 

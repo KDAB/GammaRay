@@ -89,10 +89,9 @@ TimerModel *TimerModel::instance()
 TimerInfoPtr TimerModel::findOrCreateFreeTimerInfo(int timerId)
 {
   // First, return the timer info if it already exists
-  for (int i = 0; i < rowCount(); i++) {
-    const TimerInfoPtr timerInfo = findOrCreateTimerInfo(index(i, 0));
-    if (timerInfo->timerId() == timerId) {
-      return timerInfo;
+  foreach(const TimerInfoPtr &freeTimer, m_freeTimers) {
+    if (freeTimer->timerId() == timerId) {
+      return freeTimer;
     }
   }
 
@@ -119,6 +118,20 @@ TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(QTimer *timer)
   const TimerInfoPtr timerInfo = timerInfoVariant.value<TimerInfoPtr>();
   Q_ASSERT(timerInfo->timer() == timer);
   return timerInfo;
+}
+
+TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(int timerId)
+{
+  for (int row = 0; row < m_sourceModel->rowCount(); row++) {
+    const QModelIndex sourceIndex = m_sourceModel->index(row, 0);
+    QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject*>();
+    QTimer * const timer = qobject_cast<QTimer*>(timerObject);
+    if (timer && timer->timerId() == timerId) {
+      return findOrCreateQTimerTimerInfo(timer);
+    }
+  }
+
+  return TimerInfoPtr();
 }
 
 TimerInfoPtr TimerModel::findOrCreateTimerInfo(const QModelIndex &index)
@@ -287,6 +300,13 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
 
     QTimerEvent * const timerEvent = dynamic_cast<QTimerEvent*>(event);
     Q_ASSERT(timerEvent);
+
+    // If there is a QTimer associated with this timer ID, don't handle it here, it will be handled
+    // by the signal hooks for QTimer::timeout()
+    if (findOrCreateQTimerTimerInfo(timerEvent->timerId())) {
+      return false;
+    }
+
     const TimerInfoPtr timerInfo = findOrCreateFreeTimerInfo(timerEvent->timerId());
     TimerInfo::TimeoutEvent timeoutEvent;
     timeoutEvent.timeStamp = QTime::currentTime();
