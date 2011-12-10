@@ -49,7 +49,11 @@ class SceneModel : public QAbstractItemModel
 
   private:
     QList<QGraphicsItem*> topLevelItems() const;
+    /// Returns a string type name for the given QGV item type id
+    QString typeName( int itemType ) const;
+
     QGraphicsScene *m_scene;
+    QHash<int, QString> m_typeNames;
 };
 
 }

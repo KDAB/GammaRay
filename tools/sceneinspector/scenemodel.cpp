@@ -29,10 +29,24 @@
 
 using namespace GammaRay;
 
+#define QGV_ITEMTYPE(Type) \
+{ \
+  Type t; \
+  m_typeNames.insert( t.type(), QLatin1String( #Type ) ); \
+}
+
 SceneModel::SceneModel(QObject *parent)
   : QAbstractItemModel(parent),
     m_scene(0)
 {
+  QGV_ITEMTYPE(QGraphicsLineItem)
+  QGV_ITEMTYPE(QGraphicsPixmapItem)
+  QGV_ITEMTYPE(QGraphicsRectItem)
+  QGV_ITEMTYPE(QGraphicsEllipseItem)
+  QGV_ITEMTYPE(QGraphicsPathItem)
+  QGV_ITEMTYPE(QGraphicsPolygonItem)
+  QGV_ITEMTYPE(QGraphicsSimpleTextItem)
+  QGV_ITEMTYPE(QGraphicsItemGroup)
 }
 
 void SceneModel::setScene(QGraphicsScene *scene)
@@ -60,7 +74,7 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
       if (obj) {
         return obj->metaObject()->className();
       }
-      return QString::number(item->type());
+      return typeName(item->type());
     }
   } else if (role == SceneItemRole) {
     return QVariant::fromValue(item);
@@ -144,6 +158,18 @@ QVariant SceneModel::headerData(int section, Qt::Orientation orientation, int ro
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
+}
+
+QString SceneModel::typeName(int itemType) const
+{
+  const QHash<int, QString>::const_iterator it = m_typeNames.find(itemType);
+  if (it != m_typeNames.end())
+    return it.value();
+  if (itemType == QGraphicsItem::UserType)
+    return QLatin1String("UserType");
+  if (itemType > QGraphicsItem::UserType)
+    return QString::fromLatin1("UserType + %1").arg(itemType - static_cast<int>(QGraphicsItem::UserType));
+  return QString::number(itemType);
 }
 
 #include "scenemodel.moc"
