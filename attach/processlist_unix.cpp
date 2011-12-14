@@ -35,6 +35,9 @@
 #include <QProcess>
 #include <QDir>
 
+#include <algorithm>
+#include <functional>
+
 static bool isUnixProcessId(const QString &procname)
 {
     for (int i = 0; i != procname.size(); ++i)
@@ -61,8 +64,19 @@ static bool processIsQtApp( const QString& pid )
   return false;
 }
 
+struct PidAndNameMatch : public std::unary_function<ProcData,bool> {
+    explicit PidAndNameMatch(const QString& ppid, const QString& name) : m_ppid(ppid), m_name(name) {}
+
+    bool operator()(const ProcData& p) const {
+        return p.ppid == m_ppid && m_name == p.name;
+    }
+
+    const QString m_ppid;
+    const QString m_name;
+};
+
 // Determine UNIX processes by running ps
-static ProcDataList unixProcessListPS()
+static ProcDataList unixProcessListPS(const ProcDataList& previous)
 {
 #ifdef Q_OS_MAC
     // command goes last, otherwise it is cut off
@@ -101,23 +115,25 @@ static ProcDataList unixProcessListPS()
             procData.state = lineParsed.at(1);
             procData.user = lineParsed.at(2);
             procData.name = lineParsed.at(3);
-            if ( processIsQtApp( procData.ppid ) )
-                procData.type = ProcData::QtApp;
+            ProcDataList::ConstIterator it = std::find_if(previous.constBegin(), previous.constEnd(), PidAndNameMatch(procData.ppid, procData.name));
+            if (it != previous.constEnd())
+                procData.type = it->type;
             else
-                procData.type = ProcData::NoQtApp;
+                procData.type = processIsQtApp( procData.ppid ) ? ProcData::QtApp : ProcData::NoQtApp;
             rc.push_back(procData);
         }
     }
+
     return rc;
 }
 
 // Determine UNIX processes by reading "/proc". Default to ps if
 // it does not exist
-ProcDataList processList()
+ProcDataList processList(const ProcDataList& previous)
 {
     const QDir procDir(QLatin1String("/proc/"));
     if (!procDir.exists())
-        return unixProcessListPS();
+        return unixProcessListPS(previous);
     ProcDataList rc;
     const QStringList procIds = procDir.entryList();
     if (procIds.isEmpty())

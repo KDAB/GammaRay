@@ -189,3 +189,7 @@ int ProcessModel::rowCount(const QModelIndex &parent) const
   return parent.isValid() ? 0 : m_data.count();
 }
 
+ProcDataList ProcessModel::processes() const
+{
+  return m_data;
+}

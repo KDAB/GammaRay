@@ -73,7 +73,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   m_timer->start(1000);
 
   // set process list syncronously the first time
-  m_model->setProcesses(processList());
+  m_model->setProcesses(processList(m_model->processes()));
   selectionChanged();
 }
 
@@ -92,7 +92,7 @@ void AttachDialog::updateProcesses()
   QFutureWatcher<ProcDataList>* watcher = new QFutureWatcher<ProcDataList>(this);
   connect(watcher, SIGNAL(finished()),
           this, SLOT(updateProcessesFinished()));
-  watcher->setFuture(QtConcurrent::run(processList));
+  watcher->setFuture(QtConcurrent::run(processList, m_model->processes()));
 }
 
 void AttachDialog::updateProcessesFinished()
