@@ -34,7 +34,7 @@ using namespace GammaRay;
 
 // BUG: Some QTimers appear as free timers
 // BUG: QTimeLine class name not shown
-// BUG: No thread saftey yet
+// BUG: No thread safety yet
 //          Related: Protect against timer deletion
 // BUG: Sorting in the view doesn't work well
 // BUG: Only top-level timers are shown (bug in probe)

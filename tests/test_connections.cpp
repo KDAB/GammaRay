@@ -206,8 +206,8 @@ void TestWaiter::startThreadsAndWaitForFinished()
 
 //BEGIN TestMain
 
-TestMain::TestMain(int argc, char**argv)
-: m_argc(argc), m_argv(argv)
+TestMain::TestMain(int argc, char **argv)
+  : m_argc(argc), m_argv(argv)
 {
   QMetaObject::invokeMethod(this, "startTests", Qt::QueuedConnection);
 }

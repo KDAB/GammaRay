@@ -32,7 +32,7 @@ using namespace GammaRay;
 #define QGV_ITEMTYPE(Type) \
 { \
   Type t; \
-  m_typeNames.insert( t.type(), QLatin1String( #Type ) ); \
+  m_typeNames.insert(t.type(), QLatin1String(#Type)); \
 }
 
 SceneModel::SceneModel(QObject *parent)
@@ -163,12 +163,17 @@ QVariant SceneModel::headerData(int section, Qt::Orientation orientation, int ro
 QString SceneModel::typeName(int itemType) const
 {
   const QHash<int, QString>::const_iterator it = m_typeNames.find(itemType);
-  if (it != m_typeNames.end())
+  if (it != m_typeNames.end()) {
     return it.value();
-  if (itemType == QGraphicsItem::UserType)
+  }
+  if (itemType == QGraphicsItem::UserType) {
     return QLatin1String("UserType");
-  if (itemType > QGraphicsItem::UserType)
-    return QString::fromLatin1("UserType + %1").arg(itemType - static_cast<int>(QGraphicsItem::UserType));
+  }
+  if (itemType > QGraphicsItem::UserType) {
+    return
+      QString::fromLatin1("UserType + %1").
+        arg(itemType - static_cast<int>(QGraphicsItem::UserType));
+  }
   return QString::number(itemType);
 }
 

@@ -70,9 +70,6 @@ static void signal_end_callback(QObject *caller, int method_index)
   }
 }
 
-
-
-
 TimerModel::TimerModel(QObject *parent)
   : QAbstractTableModel(parent),
     m_sourceModel(0)
@@ -87,7 +84,7 @@ TimerModel *TimerModel::instance()
 TimerInfoPtr TimerModel::findOrCreateFreeTimerInfo(int timerId)
 {
   // First, return the timer info if it already exists
-  foreach(const TimerInfoPtr &freeTimer, m_freeTimers) {
+  foreach (const TimerInfoPtr &freeTimer, m_freeTimers) {
     if (freeTimer->timerId() == timerId) {
       return freeTimer;
     }
