@@ -42,6 +42,8 @@ class ProcessModel : public QAbstractTableModel
     ProcData dataForRow(int row) const;
     QModelIndex indexForPid(const QString &pid) const;
 
+    ProcDataList processes() const;
+
     void clear();
 
     enum Columns {

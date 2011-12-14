@@ -26,6 +26,7 @@
 
 #include <QDialog>
 
+#include "processlist.h"
 #include "ui_attachdialog.h"
 
 namespace GammaRay {
