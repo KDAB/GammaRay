@@ -119,7 +119,7 @@ void TestConnections::timeout()
     for (int i = 0; i < OBJECTS; ++i) {
       QObject *obj = new TestObject(this);
       m_objects << obj;
-      connect(obj, SIGNAL(destroyed(QObject *)), this, SLOT(dummySlot()));
+      connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
     }
   }
 }

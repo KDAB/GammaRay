@@ -60,7 +60,7 @@ GraphViewer::GraphViewer(ProbeInterface *probe, QWidget *parent)
   objectTreeView->setModel(objectFilter);
   objectTreeView->setSortingEnabled(true);
   vbox->addWidget(objectTreeView);
-  connect(objectTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)),
+  connect(objectTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
           SLOT(handleRowChanged(QModelIndex)));
   mObjectTreeView = objectTreeView;
 
