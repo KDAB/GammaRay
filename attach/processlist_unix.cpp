@@ -104,17 +104,12 @@ static ProcDataList unixProcessListPS(const ProcDataList& previous)
         const int endOfPid = line.indexOf(blank);
         const int endOfState = line.indexOf(blank, endOfPid+1);
         const int endOfUser = line.indexOf(blank, endOfState+1);
-        const QStringList lineParsed =
-            QStringList() << line.left(endOfPid)
-                          << line.mid(endOfPid+1, endOfState-endOfPid-1)
-                          << line.mid(endOfState+1, endOfUser-endOfState-1)
-                             << line.right(line.size()-endOfUser-1);
-        if (lineParsed.count() == 4) {
+        if (endOfPid >= 0 && endOfState >= 0 && endOfUser >= 0) {
             ProcData procData;
-            procData.ppid = lineParsed.at(0);
-            procData.state = lineParsed.at(1);
-            procData.user = lineParsed.at(2);
-            procData.name = lineParsed.at(3);
+            procData.ppid = line.left(endOfPid);
+            procData.state = line.mid(endOfPid+1, endOfState-endOfPid-1);
+            procData.user = line.mid(endOfState+1, endOfUser-endOfState-1);
+            procData.name = line.right(line.size()-endOfUser-1);
             ProcDataList::ConstIterator it = std::find_if(previous.constBegin(), previous.constEnd(), PidAndNameMatch(procData.ppid, procData.name));
             if (it != previous.constEnd())
                 procData.type = it->type;
