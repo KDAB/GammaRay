@@ -19,13 +19,34 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="KFilterProxySearchLine" name="filter"/>
-   </item>
-   <item>
-    <widget class="QTreeView" name="view">
-     <property name="rootIsDecorated">
-      <bool>false</bool>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="currentIndex">
+      <number>1</number>
      </property>
+     <widget class="QLabel" name="loadingLabel">
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;:/gammaray/GammaRay-48x48.png&quot;/&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Retrieving the list of processes which use Qt ...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="listViewPage">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="KFilterProxySearchLine" name="filter" native="true"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="view">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <zorder>listViewPage</zorder>
+     <zorder>loadingLabel</zorder>
     </widget>
    </item>
    <item>

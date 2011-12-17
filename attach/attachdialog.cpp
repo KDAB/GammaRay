@@ -32,6 +32,7 @@
 #include <QTimer>
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
+#include <QStackedWidget>
 
 using namespace GammaRay;
 
@@ -72,9 +73,9 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   connect(m_timer, SIGNAL(timeout()), this, SLOT(updateProcesses()));
   m_timer->start(1000);
 
-  // set process list syncronously the first time
-  m_model->setProcesses(processList(m_model->processes()));
+  ui.stackedWidget->setCurrentWidget(ui.loadingLabel);
   selectionChanged();
+  updateProcesses();
 }
 
 void AttachDialog::selectionChanged()
@@ -99,6 +100,7 @@ void AttachDialog::updateProcessesFinished()
 {
   QFutureWatcher<ProcDataList>* watcher = dynamic_cast<QFutureWatcher<ProcDataList>*>(sender());
   Q_ASSERT(watcher);
+  ui.stackedWidget->setCurrentWidget(ui.listViewPage);
   const QString oldPid = pid();
   m_model->mergeProcesses(watcher->result());
   if (oldPid != pid()) {
