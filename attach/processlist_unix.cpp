@@ -50,7 +50,7 @@ static bool processIsQtApp( const QString& pid )
 {
   QProcess lsofProcess;
   QStringList args;
-  args << QLatin1String("-Fn") << QLatin1String("-p") << pid;
+  args << QLatin1String("-Fn") << QLatin1String("-n") << QLatin1String("-p") << pid;
   lsofProcess.start(QLatin1String("lsof"), args);
   if (!lsofProcess.waitForStarted())
     return false;
