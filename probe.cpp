@@ -142,6 +142,9 @@ Q_GLOBAL_STATIC(ObjectLock, s_lock)
 ProbeCreator::ProbeCreator(Type type)
 : m_type(type)
 {
+  //push object into the main thread, as windows creates a
+  //different thread where this runs in
+  moveToThread(QApplication::instance()->thread());
   // delay to foreground thread
   QMetaObject::invokeMethod(this, "createProbe", Qt::QueuedConnection);
 }
