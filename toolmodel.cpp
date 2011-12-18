@@ -28,6 +28,7 @@
 #include "tools/codecbrowser/codecbrowser.h"
 #include "tools/connectioninspector/connectioninspector.h"
 #include "tools/fontbrowser/fontbrowser.h"
+#include "tools/localeinspector/localeinspector.h"
 #include "tools/metatypebrowser/metatypebrowser.h"
 #include "tools/modelinspector/modelinspector.h"
 #include "tools/objectinspector/objectinspector.h"
@@ -68,6 +69,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new CodecBrowserFactory(this));
   m_tools.push_back(new TextDocumentInspectorFactory(this));
   m_tools.push_back(new MessageHandlerFactory(this));
+  m_tools.push_back(new LocaleInspectorFactory(this));
 #ifdef BUILD_TIMER_PLUGIN
   m_tools.push_back(new TimerTopFactory(this));
 #endif
