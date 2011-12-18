@@ -31,6 +31,7 @@
 #include <singlecolumnobjectproxymodel.h>
 #include <probeinterface.h>
 #include <kde/krecursivefilterproxymodel.h>
+#include <metaobjectrepository.h>
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -125,7 +126,9 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
   sceneItemSelected(index);
 }
 
-#define QGV_CHECK_TYPE(Class) if (dynamic_cast<Class*>(item)) return QLatin1String(#Class)
+#define QGV_CHECK_TYPE(Class) \
+  if (dynamic_cast<Class*>(item) && MetaObjectRepository::instance()->hasMetaObject(#Class)) \
+    return QLatin1String(#Class)
 
 QString SceneInspector::findBestType(QGraphicsItem* item)
 {

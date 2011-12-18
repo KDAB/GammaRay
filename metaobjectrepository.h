@@ -30,6 +30,9 @@ public:
   /** Returns the introspection information for the type with the given name. */
   MetaObject* metaObject( const QString &typeName ) const;
 
+  /** Returns whether a meta object is known for the given type name. */
+  bool hasMetaObject( const QString &typeName ) const;
+
 protected:
     MetaObjectRepository();
 

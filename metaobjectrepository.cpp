@@ -168,3 +168,8 @@ MetaObject* MetaObjectRepository::createMetaObject(const char* typeName, const c
 {
   return createMetaObject( QLatin1String(typeName), QLatin1String(baseClassName) );
 }
+
+bool MetaObjectRepository::hasMetaObject(const QString& typeName) const
+{
+  return m_metaObjects.contains(typeName);
+}
