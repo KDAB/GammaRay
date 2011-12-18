@@ -51,14 +51,19 @@
     QLatin1String( #Getter ), \
     &Class::Getter ) );
 
+Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
+Q_DECLARE_METATYPE(Qt::TransformationMode)
 Q_DECLARE_METATYPE(QGraphicsEffect*)
 Q_DECLARE_METATYPE(QGraphicsItemGroup*)
 Q_DECLARE_METATYPE(QGraphicsObject*)
 Q_DECLARE_METATYPE(QGraphicsWidget*)
 Q_DECLARE_METATYPE(QGraphicsItem::CacheMode)
 Q_DECLARE_METATYPE(QGraphicsItem::GraphicsItemFlags)
+Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
+Q_DECLARE_METATYPE(QPainterPath)
+Q_DECLARE_METATYPE(QPolygonF)
 
 using namespace GammaRay;
 
@@ -156,17 +161,34 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QBrush, brush, setBrush);
   MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QPen,   pen,   setPen);
 
-  MO_ADD_METAOBJECT1( QGraphicsEllipseItem, QAbstractGraphicsShapeItem );
+  MO_ADD_METAOBJECT1(QGraphicsEllipseItem, QAbstractGraphicsShapeItem);
   MO_ADD_PROPERTY_CR(QGraphicsEllipseItem, QRectF, rect,    setRect);
   MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, spanAngle,  setSpanAngle);
   MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, startAngle, setStartAngle);
 
-  // TODO: path, polygon, simple text
+  MO_ADD_METAOBJECT1(QGraphicsPathItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY_CR(QGraphicsPathItem, QPainterPath, path, setPath);
 
-  MO_ADD_METAOBJECT1( QGraphicsRectItem, QAbstractGraphicsShapeItem );
+  MO_ADD_METAOBJECT1(QGraphicsPolygonItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY   (QGraphicsPolygonItem, Qt::FillRule, fillRule, setFillRule);
+  MO_ADD_PROPERTY_CR(QGraphicsPolygonItem, QPolygonF, polygon, setPolygon);
+
+  MO_ADD_METAOBJECT1(QGraphicsSimpleTextItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY_CR(QGraphicsSimpleTextItem, QFont, font, setFont);
+  MO_ADD_PROPERTY_CR(QGraphicsSimpleTextItem, QString, text, setText);
+
+  MO_ADD_METAOBJECT1(QGraphicsRectItem, QAbstractGraphicsShapeItem);
   MO_ADD_PROPERTY_CR(QGraphicsRectItem, QRectF, rect, setRect);
 
-  // TODO: line, pixmap
+  MO_ADD_METAOBJECT1(QGraphicsLineItem, QGraphicsItem);
+  MO_ADD_PROPERTY_CR(QGraphicsLineItem, QLineF, line, setLine);
+  MO_ADD_PROPERTY_CR(QGraphicsLineItem, QPen, pen, setPen);
+
+  MO_ADD_METAOBJECT1(QGraphicsPixmapItem, QGraphicsItem);
+  MO_ADD_PROPERTY_CR(QGraphicsPixmapItem, QPointF, offset, setOffset);
+  MO_ADD_PROPERTY_CR(QGraphicsPixmapItem, QPixmap, pixmap, setPixmap);
+  MO_ADD_PROPERTY   (QGraphicsPixmapItem, QGraphicsPixmapItem::ShapeMode, shapeMode, setShapeMode);
+  MO_ADD_PROPERTY   (QGraphicsPixmapItem, Qt::TransformationMode, transformationMode, setTransformationMode);
 
   // no extra properties, but we need the inheritance connection for anything above to work
   MO_ADD_METAOBJECT2( QGraphicsObject, QGraphicsItem, QObject );
