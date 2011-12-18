@@ -3,6 +3,9 @@
 
 #include <qglobal.h>
 #include <qgraphicsitem.h>
+#include <qgraphicslayoutitem.h>
+#include <qgraphicswidget.h>
+#include <qgraphicsproxywidget.h>
 #include <qpen.h>
 #include <qobject.h>
 #include <qwidget.h>
@@ -167,6 +170,18 @@ void MetaObjectRepository::initGraphicsViewTypes()
 
   // no extra properties, but we need the inheritance connection for anything above to work
   MO_ADD_METAOBJECT2( QGraphicsObject, QGraphicsItem, QObject );
+
+  MO_ADD_METAOBJECT0(QGraphicsLayoutItem);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, QRectF, contentsRect);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, bool, isLayout);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, bool, ownedByLayout);
+
+  MO_ADD_METAOBJECT2(QGraphicsWidget, QGraphicsObject, QGraphicsLayoutItem);
+  MO_ADD_PROPERTY_RO(QGraphicsWidget, QRectF, windowFrameGeometry);
+  MO_ADD_PROPERTY_RO(QGraphicsWidget, QRectF, windowFrameRect);
+
+  MO_ADD_METAOBJECT1(QGraphicsProxyWidget, QGraphicsWidget);
+  MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
 }
 
 MetaObjectRepository* MetaObjectRepository::instance()
