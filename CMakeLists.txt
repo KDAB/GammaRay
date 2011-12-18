@@ -197,6 +197,9 @@ find_package(VTK)
 
 set(gammaray_srcs
   mainwindow.cpp
+  metaobject.cpp
+  metaobjectrepository.cpp
+  metaproperty.cpp
   pluginmanager.cpp
   probe.cpp
   propertywidget.cpp
