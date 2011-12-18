@@ -229,6 +229,9 @@ set(gammaray_srcs
   tools/sceneinspector/graphicssceneview.cpp
   tools/metatypebrowser/metatypesmodel.cpp
   tools/fontbrowser/fontmodel.cpp
+  tools/localeinspector/localemodel.cpp
+  tools/localeinspector/localedataaccessor.cpp
+  tools/localeinspector/localeaccessormodel.cpp
   tools/codecbrowser/codecmodel.cpp
   tools/textdocumentinspector/textdocumentmodel.cpp
   tools/textdocumentinspector/textdocumentformatmodel.cpp
@@ -244,6 +247,7 @@ set(gammaray_srcs
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
   tools/fontbrowser/fontbrowser.cpp
+  tools/localeinspector/localeinspector.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/modelinspector/modelinspector.cpp
   tools/modelinspector/modelinspectorwidget.cpp
@@ -291,6 +295,7 @@ qt4_wrap_ui(gammaray_srcs
   tools/codecbrowser/codecbrowser.ui
   tools/connectioninspector/connectioninspector.ui
   tools/fontbrowser/fontbrowser.ui
+  tools/localeinspector/localeinspector.ui
   tools/messagehandler/messagehandler.ui
   tools/metatypebrowser/metatypebrowser.ui
   tools/modelinspector/modelinspectorwidget.ui
