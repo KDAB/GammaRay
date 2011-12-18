@@ -19,13 +19,7 @@ public:
   static MetaObjectRepository* instance();
 
   /** Add object type information to the repository. */
-  void addMetaObject( const QString &typeName, MetaObject* mo );
-
-  /** Convenience method for creating new object tpye information.
-   *  Will automatically add base class reference and insert object into the repository.
-   */
-  MetaObject* createMetaObject( const QString &typeName, const QString &baseClassName = QString() );
-  MetaObject* createMetaObject( const char* typeName, const char *baseClassName = 0 );
+  void addMetaObject( MetaObject* mo );
 
   /** Returns the introspection information for the type with the given name. */
   MetaObject* metaObject( const QString &typeName ) const;

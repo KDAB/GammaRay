@@ -2,7 +2,7 @@
 
 using namespace GammaRay;
 
-MetaObject::MetaObject() : m_baseClass(0)
+MetaObject::MetaObject()
 {
 }
 
@@ -13,28 +13,34 @@ MetaObject::~MetaObject()
 
 int MetaObject::propertyCount() const
 {
-  if ( !m_baseClass )
-    return m_properties.size();
-  return m_properties.size() + m_baseClass->propertyCount();
+  int count = 0;
+  foreach (MetaObject *mo, m_baseClasses)
+    count += mo->propertyCount();
+  return count + m_properties.size();
 }
 
 MetaProperty* MetaObject::propertyAt(int index) const
 {
-  Q_ASSERT( index >= 0 );
-  if ( index >= m_properties.size() ) {
-    Q_ASSERT( m_baseClass );
-    return m_baseClass->propertyAt(index - m_properties.size());
+  foreach (MetaObject *mo, m_baseClasses) {
+    if (index >= mo->propertyCount()) {
+      index -= mo->propertyCount();
+    } else {
+      return mo->propertyAt(index);
+    }
   }
+  Q_ASSERT(index >= 0 && index < m_properties.size());
   return m_properties.at(index);
 }
 
-void MetaObject::setBaseClass(MetaObject* baseClass)
+void MetaObject::addBaseClass(MetaObject* baseClass)
 {
-  m_baseClass = baseClass;
+  Q_ASSERT(baseClass);
+  m_baseClasses.push_back(baseClass);
 }
 
 void MetaObject::addProperty(MetaProperty* property)
 {
+  Q_ASSERT(property);
   // TODO: sort
   property->setMetaObject(this);
   m_properties.push_back(property);
@@ -48,4 +54,17 @@ QString MetaObject::className() const
 void MetaObject::setClassName(const QString& className)
 {
   m_className = className;
+}
+
+void* MetaObject::castForPropertyAt(void* object, int index) const
+{
+  for (int i = 0; i < m_baseClasses.size(); ++i) {
+    const MetaObject *base = m_baseClasses.at(i);
+    if (index >= base->propertyCount()) {
+      index -= base->propertyCount();
+    } else {
+      return base->castForPropertyAt( castToBaseClass(object, i), index );
+    }
+  }
+  return object; // our own property
 }

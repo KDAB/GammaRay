@@ -7,6 +7,28 @@
 #include <qobject.h>
 #include <qwidget.h>
 
+#define MO_ADD_BASECLASS(Base) \
+  Q_ASSERT( hasMetaObject( QLatin1String( #Base ) ) ); \
+  mo->addBaseClass( metaObject( QLatin1String( #Base ) ) );
+
+#define MO_ADD_METAOBJECT0(Class) \
+  mo = new MetaObjectImpl<Class>; \
+  mo->setClassName( QLatin1String( #Class ) ); \
+  addMetaObject(mo);
+
+#define MO_ADD_METAOBJECT1(Class, Base1) \
+  mo = new MetaObjectImpl<Class, Base1>; \
+  mo->setClassName( QLatin1String( #Class ) ); \
+  MO_ADD_BASECLASS( Base1 ) \
+  addMetaObject(mo);
+
+#define MO_ADD_METAOBJECT2(Class, Base1, Base2) \
+  mo = new MetaObjectImpl<Class, Base1, Base2>; \
+  mo->setClassName( QLatin1String( #Class ) ); \
+  MO_ADD_BASECLASS( Base1 ) \
+  MO_ADD_BASECLASS( Base2 ) \
+  addMetaObject(mo);
+
 #define MO_ADD_PROPERTY(Class, Type, Getter, Setter) \
   mo->addProperty( new MetaPropertyImpl<Class, Type>( \
     QLatin1String( #Getter ), \
@@ -65,16 +87,18 @@ void MetaObjectRepository::initBuiltInTypes()
 
 void MetaObjectRepository::initQObjectTypes()
 {
-  MetaObject *mo = createMetaObject( "QObject" );
+  MetaObject *mo = 0;
+  MO_ADD_METAOBJECT0( QObject );
   MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
 
-  mo = createMetaObject( "QWidget", "QObject" );
+  MO_ADD_METAOBJECT1( QWidget, QObject );
   MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy );
 }
 
 void MetaObjectRepository::initGraphicsViewTypes()
 {
-  MetaObject *mo = createMetaObject( "QGraphicsItem" );
+  MetaObject *mo = 0; //createMetaObject( "QGraphicsItem" );
+  MO_ADD_METAOBJECT0( QGraphicsItem );
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptDrops,               setAcceptDrops);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptHoverEvents,         setAcceptHoverEvents);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptTouchEvents,         setAcceptTouchEvents);
@@ -125,23 +149,24 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            y,                         setY);
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            zValue,                    setZValue);
 
-  mo = createMetaObject( "QAbstractGraphicsShapeItem", "QGraphicsItem" );
+  MO_ADD_METAOBJECT1( QAbstractGraphicsShapeItem, QGraphicsItem );
   MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QBrush, brush, setBrush);
   MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QPen,   pen,   setPen);
 
-  mo = createMetaObject( "QGraphicsEllipseItem", "QAbstractGraphicsShapeItem" );
+  MO_ADD_METAOBJECT1( QGraphicsEllipseItem, QAbstractGraphicsShapeItem );
   MO_ADD_PROPERTY_CR(QGraphicsEllipseItem, QRectF, rect,    setRect);
   MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, spanAngle,  setSpanAngle);
   MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, startAngle, setStartAngle);
 
   // TODO: path, polygon, simple text
 
-  mo = createMetaObject( "QGraphicsRectItem", "QAbstractGraphicsShapeItem" );
+  MO_ADD_METAOBJECT1( QGraphicsRectItem, QAbstractGraphicsShapeItem );
   MO_ADD_PROPERTY_CR(QGraphicsRectItem, QRectF, rect, setRect);
 
-  // TODO: line, object, pixmap
-  // TODO multi-inheritance support for e.g. QGraphicsObject
+  // TODO: line, pixmap
 
+  // no extra properties, but we need the inheritance connection for anything above to work
+  MO_ADD_METAOBJECT2( QGraphicsObject, QGraphicsItem, QObject );
 }
 
 MetaObjectRepository* MetaObjectRepository::instance()
@@ -149,31 +174,15 @@ MetaObjectRepository* MetaObjectRepository::instance()
   return s_instance();
 }
 
-void MetaObjectRepository::addMetaObject(const QString &typeName, MetaObject* objectType)
+void MetaObjectRepository::addMetaObject(MetaObject* mo)
 {
-    m_metaObjects.insert(typeName, objectType);
+  Q_ASSERT(!mo->className().isEmpty());
+  m_metaObjects.insert(mo->className(), mo);
 }
 
 MetaObject* MetaObjectRepository::metaObject(const QString& typeName) const
 {
   return m_metaObjects.value(typeName);
-}
-
-MetaObject* MetaObjectRepository::createMetaObject(const QString& typeName, const QString& baseClassName)
-{
-  Q_ASSERT( !typeName.isEmpty() );
-  Q_ASSERT( baseClassName != typeName );
-    MetaObject* mo = new MetaObject;
-  mo->setClassName( typeName );
-    addMetaObject( typeName, mo );
-  if ( !baseClassName.isEmpty() )
-    mo->setBaseClass( metaObject( baseClassName ) );
-  return mo;
-}
-
-MetaObject* MetaObjectRepository::createMetaObject(const char* typeName, const char* baseClassName)
-{
-  return createMetaObject( QLatin1String(typeName), QLatin1String(baseClassName) );
 }
 
 bool MetaObjectRepository::hasMetaObject(const QString& typeName) const

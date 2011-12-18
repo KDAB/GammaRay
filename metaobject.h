@@ -11,7 +11,7 @@ namespace GammaRay {
 class MetaObject
 {
 public:
-    MetaObject();
+  MetaObject();
   virtual ~MetaObject();
 
   /** Returns the amount of properties available in this class (including base classes). */
@@ -19,13 +19,28 @@ public:
   /** Returns the property adaptor for index @p index. */
   MetaProperty* propertyAt(int index) const;
 
-  /** Set base class adaptor. */
-  void setBaseClass( MetaObject* baseClass );
+  /** Add a base class meta object. */
+  void addBaseClass( MetaObject* baseClass );
   /** Add a property for this class. This transfers ownership. */
   void addProperty( MetaProperty* property );
 
   /// Returns the name of the class represented by this object.
   QString className() const;
+
+  /** Casts a void pointer for an instance of this type to one appropriate
+   * for use with the property at index @p index.
+   * Make sure to use this when dealing with multi-inheritance.
+   */
+  void* castForPropertyAt( void *object, int index ) const;
+
+protected:
+  /** Casts down to base class @p baseClassIndex.
+   * This is important when traversing multi-inheritance trees.
+   */
+  virtual void* castToBaseClass( void* object, int baseClassIndex ) const = 0;
+
+protected:
+  QVector<MetaObject*> m_baseClasses;
 
 private:
   friend class MetaObjectRepository;
@@ -33,8 +48,25 @@ private:
 
 private:
   QVector<MetaProperty*> m_properties;
-  MetaObject* m_baseClass;
   QString m_className;
+};
+
+/** Template implementation of MetaObject. */
+template <typename T, typename Base1 = void, typename Base2 = void, typename Base3 = void>
+class MetaObjectImpl : public MetaObject
+{
+  public:
+    void* castToBaseClass( void *object, int baseClassIndex ) const
+    {
+      Q_ASSERT( baseClassIndex >= 0 && baseClassIndex < m_baseClasses.size() );
+      switch (baseClassIndex) {
+        case 0: return static_cast<Base1*>( static_cast<T*>(object) );
+        case 1: return static_cast<Base2*>( static_cast<T*>(object) );
+        case 2: return static_cast<Base3*>( static_cast<T*>(object) );
+      }
+      Q_ASSERT( !"WTF!?" );
+      return 0;
+    }
 };
 
 }

@@ -85,7 +85,8 @@ QVariant MetaPropertyModel::data(const QModelIndex& index, int role) const
   if (index.column() == 1) {
     if (!m_object)
       return QVariant();
-    const QVariant value = property->value(m_object); // TODO: cache this, to make this more robust against m_object becoming invalid
+    // TODO: cache this, to make this more robust against m_object becoming invalid
+    const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
     switch (role) {
       case Qt::DisplayRole:
         return Util::variantToString(value);
@@ -100,7 +101,7 @@ bool MetaPropertyModel::setData(const QModelIndex& index, const QVariant& value,
 {
   if (index.isValid() && index.column() == 1 && m_metaObject && m_object && role == Qt::EditRole) {
     MetaProperty *property = m_metaObject->propertyAt(index.row());
-    property->setValue(m_object, value);
+    property->setValue(m_metaObject->castForPropertyAt(m_object, index.row()), value);
     return true;
   }
   return QAbstractItemModel::setData(index, value, role);
