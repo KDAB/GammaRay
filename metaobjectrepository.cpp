@@ -14,6 +14,13 @@
     static_cast<void (Class::*)(Type)>(&Class::Setter) ) \
   );
 
+#define MO_ADD_PROPERTY_CR(Class, Type, Getter, Setter) \
+  mo->addProperty( new MetaPropertyImpl<Class, Type, const Type&>( \
+    QLatin1String( #Getter ), \
+    &Class::Getter, \
+    static_cast<void (Class::*)(const Type&)>(&Class::Setter) ) \
+  );
+
 #define MO_ADD_PROPERTY_RO(Class, Type, Getter) \
   mo->addProperty( new MetaPropertyImpl<Class, Type>( \
     QLatin1String( #Getter ), \
@@ -76,7 +83,7 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            boundingRegionGranularity, setBoundingRegionGranularity);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem::CacheMode,         cacheMode);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           childrenBoundingRect);
-  MO_ADD_PROPERTY_RO(QGraphicsItem, QCursor,                          cursor); // TODO setter
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QCursor,                          cursor,                    setCursor);
   MO_ADD_PROPERTY_RO(QGraphicsItem, qreal,                            effectiveOpacity);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             filtersChildEvents,        setFiltersChildEvents);
   MO_ADD_PROPERTY   (QGraphicsItem, QGraphicsItem::GraphicsItemFlags, flags,                     setFlags);
@@ -102,16 +109,16 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   parentItem);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsObject*,                 parentObject);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 parentWidget);
-  MO_ADD_PROPERTY_RO(QGraphicsItem, QPointF,                          pos); // TODO support const ref types for setter arguments
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QPointF,                          pos,                       setPos);
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            rotation,                  setRotation);
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            scale,                     setScale);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           sceneBoundingRect);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QPointF,                          scenePos);
   // TODO: sceneTransform, shape (and anything else QPainterPath-based)
-//  MO_ADD_PROPERTY   (QGraphicsItem, QString,                          toolTip,                 setToolTip); TODO const ref
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QString,                          toolTip,                   setToolTip);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   topLevelItem);
   // TODO topLevelWidget, transform
-//  MO_ADD_PROPERTY   (QGraphicsItem, QPointF,                          transformOriginPoint, setTransformOriginPoint); TODO cost ref
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QPointF,                          transformOriginPoint,     setTransformOriginPoint);
   MO_ADD_PROPERTY_RO(QGraphicsItem, int,                              type);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 window);
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            x,                         setX);
@@ -119,18 +126,18 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            zValue,                    setZValue);
 
   mo = createMetaObject( "QAbstractGraphicsShapeItem", "QGraphicsItem" );
-  MO_ADD_PROPERTY_RO(QAbstractGraphicsShapeItem, QBrush, brush); // TODO setter
-  MO_ADD_PROPERTY_RO(QAbstractGraphicsShapeItem, QPen,   pen); //, setPen); TODO const ref
+  MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QBrush, brush, setBrush);
+  MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QPen,   pen,   setPen);
 
   mo = createMetaObject( "QGraphicsEllipseItem", "QAbstractGraphicsShapeItem" );
-  MO_ADD_PROPERTY_RO(QGraphicsEllipseItem, QRectF, rect) // TODO setter
-  MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, spanAngle, setSpanAngle);
+  MO_ADD_PROPERTY_CR(QGraphicsEllipseItem, QRectF, rect,    setRect);
+  MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, spanAngle,  setSpanAngle);
   MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, startAngle, setStartAngle);
 
   // TODO: path, polygon, simple text
 
   mo = createMetaObject( "QGraphicsRectItem", "QAbstractGraphicsShapeItem" );
-  MO_ADD_PROPERTY_RO(QGraphicsRectItem, QRectF, rect); // TODO setter
+  MO_ADD_PROPERTY_CR(QGraphicsRectItem, QRectF, rect, setRect);
 
   // TODO: line, object, pixmap
   // TODO multi-inheritance support for e.g. QGraphicsObject

@@ -42,11 +42,11 @@ private:
 
 
 /** Template-ed implementation of MetaProperty. */
-template <typename Class, typename ValueType>
+template <typename Class, typename ValueType, typename SetterArgType = ValueType>
 class MetaPropertyImpl : public MetaProperty
 {
 public:
-  inline MetaPropertyImpl( const QString &name, ValueType (Class::*getter)() const, void (Class::*setter)(ValueType) = 0 ) :
+  inline MetaPropertyImpl( const QString &name, ValueType (Class::*getter)() const, void (Class::*setter)(SetterArgType) = 0 ) :
     m_name( name ),
     m_getter( getter ),
     m_setter( setter )
@@ -80,7 +80,7 @@ private:
 private:
   QString m_name;
   ValueType (Class::*m_getter)() const;
-  void (Class::*m_setter)(ValueType);
+  void (Class::*m_setter)(SetterArgType);
 };
 
 }
