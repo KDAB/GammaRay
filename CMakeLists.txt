@@ -200,6 +200,7 @@ set(gammaray_srcs
   metaobject.cpp
   metaobjectrepository.cpp
   metaproperty.cpp
+  metapropertymodel.cpp
   pluginmanager.cpp
   probe.cpp
   propertywidget.cpp
