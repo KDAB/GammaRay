@@ -54,7 +54,7 @@ public:
   }
 
   inline QString name() const { return m_name; }
-  inline bool isReadOnly() const { return m_setter != 0 ; }
+  inline bool isReadOnly() const { return m_setter == 0 ; }
   inline QVariant value(void *object) const { return value(static_cast<Class*>(object)); }
   inline void setValue(void *object, const QVariant &value) { setValue(static_cast<Class*>(object), value); }
 
