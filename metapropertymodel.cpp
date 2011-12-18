@@ -98,14 +98,24 @@ QVariant MetaPropertyModel::data(const QModelIndex& index, int role) const
 
 bool MetaPropertyModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  // TODO
+  if (index.isValid() && index.column() == 1 && m_metaObject && m_object && role == Qt::EditRole) {
+    MetaProperty *property = m_metaObject->propertyAt(index.row());
+    property->setValue(m_object, value);
+    return true;
+  }
   return QAbstractItemModel::setData(index, value, role);
 }
 
 Qt::ItemFlags MetaPropertyModel::flags(const QModelIndex& index) const
 {
-  // TODO
-  return QAbstractItemModel::flags(index);
+  const Qt::ItemFlags f = QAbstractItemModel::flags(index);
+  if (!index.isValid() || index.column() != 1 || !m_metaObject || !m_object)
+    return f;
+
+  MetaProperty *property = m_metaObject->propertyAt(index.row());
+  if (property->isReadOnly())
+    return f;
+  return f | Qt::ItemIsEditable;
 }
 
 #include "metapropertymodel.moc"
