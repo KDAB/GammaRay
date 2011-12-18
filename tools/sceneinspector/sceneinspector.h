@@ -48,6 +48,9 @@ class SceneInspector : public QWidget
     void widgetSelected(QWidget *item, const QPoint &pos);
 
   private:
+    QString findBestType(QGraphicsItem *item);
+
+  private:
     QScopedPointer<Ui::SceneInspector> ui;
     SceneModel *m_sceneModel;
 };
