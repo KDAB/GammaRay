@@ -102,6 +102,14 @@ QString GammaRay::Util::variantToString(const QVariant &value)
       arg(sizePolicyToString(value.value<QSizePolicy>().verticalPolicy()));
   case QVariant::StringList:
     return value.toStringList().join(", ");
+  case QVariant::Transform:
+  {
+    const QTransform t = value.value<QTransform>();
+    return QString::fromLatin1("[%1 %2 %3, %4 %5 %6, %7 %8 %9]")
+      .arg(t.m11()).arg(t.m12()).arg(t.m13())
+      .arg(t.m21()).arg(t.m22()).arg(t.m23())
+      .arg(t.m31()).arg(t.m32()).arg(t.m33());
+  }
   default:
     break;
   }

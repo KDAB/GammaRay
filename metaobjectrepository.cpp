@@ -169,11 +169,13 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            scale,                     setScale);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           sceneBoundingRect);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QPointF,                          scenePos);
-  // TODO: sceneTransform, shape (and anything else QPainterPath-based)
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QTransform,                       sceneTransform);
+  // TODO: shape (and anything else QPainterPath-based)
   MO_ADD_PROPERTY_CR(QGraphicsItem, QString,                          toolTip,                   setToolTip);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   topLevelItem);
-  // TODO topLevelWidget, transform
-  MO_ADD_PROPERTY_CR(QGraphicsItem, QPointF,                          transformOriginPoint,     setTransformOriginPoint);
+  // TODO topLevelWidget
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QTransform,                       transform/*,                 setTransform*/); // TODO: support setTransform
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QPointF,                          transformOriginPoint,      setTransformOriginPoint);
   MO_ADD_PROPERTY_RO(QGraphicsItem, int,                              type);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 window);
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            x,                         setX);
