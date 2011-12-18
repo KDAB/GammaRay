@@ -27,6 +27,7 @@
 #include "objectclassinfomodel.h"
 #include "objectmethodmodel.h"
 #include "objectenummodel.h"
+#include "metapropertymodel.h"
 #include "connectionmodel.h"
 #include "connectionfilterproxymodel.h"
 #include "probe.h"
@@ -53,7 +54,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_outboundConnectionModel(new ConnectionFilterProxyModel(this)),
     m_enumModel(new ObjectEnumModel(this)),
     m_signalMapper(0),
-    m_methodLogModel(new QStandardItemModel(this))
+    m_methodLogModel(new QStandardItemModel(this)),
+      m_metaPropertyModel(new MetaPropertyModel(this))
 {
   ui.setupUi(this);
 
@@ -113,6 +115,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.enumView->sortByColumn(0, Qt::AscendingOrder);
   ui.enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
   ui.enumSearchLine->setProxy(proxy);
+
+  ui.metaPropertyView->setModel(m_metaPropertyModel);
 }
 
 void GammaRay::PropertyWidget::setObject(QObject *object)
@@ -131,9 +135,20 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int)), SLOT(signalEmitted(QObject*,int)));
 
   m_methodLogModel->clear();
+
+  m_metaPropertyModel->setObject(object);
+
+  setQObjectTabsVisible(true);
 }
 
-void PropertyWidget::methodActivated(const QModelIndex &index)
+void PropertyWidget::setObject(void *object, const QString &className)
+{
+  setObject(0);
+  m_metaPropertyModel->setObject(object, className);
+  setQObjectTabsVisible(false);
+}
+
+void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 {
   const QMetaMethod method = index.data(ObjectMethodModel::MetaMethodRole).value<QMetaMethod>();
   if (method.methodType() == QMetaMethod::Slot) {
@@ -174,5 +189,17 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
     methodActivated(index);
   }
 }
+
+void PropertyWidget::setQObjectTabsVisible(bool visible)
+{
+  // TODO: this should actually hide instead of disable...
+  for (int i = 0; i < ui.tabWidget->count(); ++i) {
+    if (ui.tabWidget->widget(i) != ui.metaPropertyTab)
+      ui.tabWidget->setTabEnabled(i, visible);
+  }
+  if (!visible)
+    ui.tabWidget->setCurrentWidget(ui.metaPropertyTab);
+}
+
 
 #include "propertywidget.moc"

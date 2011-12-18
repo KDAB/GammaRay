@@ -38,6 +38,7 @@ class ObjectStaticPropertyModel;
 class ObjectClassInfoModel;
 class ObjectMethodModel;
 class ObjectEnumModel;
+class MetaPropertyModel;
 
 class PropertyWidget : public QWidget
 {
@@ -46,6 +47,10 @@ class PropertyWidget : public QWidget
     explicit PropertyWidget(QWidget *parent = 0);
 
     void setObject(QObject *object);
+    void setObject(void *object, const QString &className);
+
+  private:
+    void setQObjectTabsVisible( bool visible );
 
   private slots:
     void methodActivated(const QModelIndex &index);
@@ -64,6 +69,7 @@ class PropertyWidget : public QWidget
     ObjectEnumModel *m_enumModel;
     MultiSignalMapper *m_signalMapper;
     QStandardItemModel *m_methodLogModel;
+    MetaPropertyModel *m_metaPropertyModel;
 };
 
 }

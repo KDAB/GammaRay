@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>703</width>
+    <width>816</width>
     <height>605</height>
    </rect>
   </property>
@@ -25,7 +25,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="KFilterProxySearchLine" name="staticPropertySearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="staticPropertySearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="staticPropertyView">
@@ -48,7 +48,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="KFilterProxySearchLine" name="dynamicPropertySearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="dynamicPropertySearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="dynamicPropertyView">
@@ -71,7 +71,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,4,1">
        <item>
-        <widget class="KFilterProxySearchLine" name="methodSearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="methodSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="methodView">
@@ -110,7 +110,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="KFilterProxySearchLine" name="inboundConnectionSearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="inboundConnectionSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="inboundConnectionView">
@@ -133,7 +133,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
-        <widget class="KFilterProxySearchLine" name="outboundConnectionSearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="outboundConnectionSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="outboundConnectionView">
@@ -156,7 +156,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
-        <widget class="KFilterProxySearchLine" name="enumSearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="enumSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="enumView">
@@ -173,7 +173,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="KFilterProxySearchLine" name="classInfoSearchLine" native="true"/>
+        <widget class="KFilterProxySearchLine" name="classInfoSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="classInfoView">
@@ -181,6 +181,26 @@
           <bool>false</bool>
          </property>
          <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="metaPropertyTab">
+      <attribute name="title">
+       <string>Non-QObject Properties</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <widget class="QTreeView" name="metaPropertyView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
           <bool>true</bool>
          </property>
          <property name="allColumnsShowFocus">
