@@ -31,7 +31,7 @@
 
 namespace GammaRay {
 
-class LocaleDataAccessor;
+struct LocaleDataAccessor;
 
 class LocaleDataAccessorRegistry : public QObject
 {
