@@ -22,6 +22,7 @@
 */
 
 #include "util.h"
+#include "metatypedeclarations.h"
 
 #include <QtCore/qobject.h>
 #include <QtCore/QStringList>
@@ -31,6 +32,10 @@
 #include <qsizepolicy.h>
 #include <qmetaobject.h>
 #include <QtGui/qtextformat.h>
+#include <QGraphicsItem>
+#include <QGraphicsWidget>
+#include <QWidget>
+#include <QDebug>
 
 using namespace GammaRay;
 
@@ -131,6 +136,20 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     }
     return QString::fromLatin1("%1 (%2)").arg(l.rawValue()).arg(typeStr);
   }
+
+  if (value.type() == qMetaTypeId<QWidget*>())
+    return displayString(value.value<QWidget*>());
+
+  if (value.userType() == qMetaTypeId<QGraphicsEffect*>())
+    return addressToString(value.value<QGraphicsEffect*>());
+  if (value.userType() == qMetaTypeId<QGraphicsItem*>())
+    return addressToString(value.value<QGraphicsItem*>());
+  if (value.userType() == qMetaTypeId<QGraphicsItemGroup*>())
+    return addressToString(value.value<QGraphicsItemGroup*>());
+  if (value.userType() == qMetaTypeId<QGraphicsObject*>())
+    return displayString(value.value<QGraphicsObject*>());
+  if (value.userType() == qMetaTypeId<QGraphicsWidget*>())
+    return displayString(value.value<QGraphicsWidget*>());
 
   return value.toString();
 }
