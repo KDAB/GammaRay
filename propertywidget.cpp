@@ -34,6 +34,7 @@
 #include "methodinvocationdialog.h"
 #include "multisignalmapper.h"
 #include "proxydetacher.h"
+#include "propertyeditor/propertyeditorfactory.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -41,6 +42,7 @@
 #include <QStandardItemModel>
 #include <QtCore/QTime>
 #include <qmenu.h>
+#include <QStyledItemDelegate>
 
 using namespace GammaRay;
 
@@ -55,7 +57,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_enumModel(new ObjectEnumModel(this)),
     m_signalMapper(0),
     m_methodLogModel(new QStandardItemModel(this)),
-      m_metaPropertyModel(new MetaPropertyModel(this))
+    m_metaPropertyModel(new MetaPropertyModel(this)),
+    m_editorFactory(new PropertyEditorFactory)
 {
   ui.setupUi(this);
 
@@ -66,6 +69,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
   ui.staticPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
   ui.staticPropertySearchLine->setProxy(proxy);
+  setEditorFactory(ui.staticPropertyView);
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
@@ -73,6 +77,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.dynamicPropertyView->setModel(proxy);
   ui.dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
   ui.dynamicPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  setEditorFactory(ui.dynamicPropertyView);
   ui.dynamicPropertySearchLine->setProxy(proxy);
 
   proxy = new QSortFilterProxyModel(this);
@@ -117,6 +122,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   ui.enumSearchLine->setProxy(proxy);
 
   ui.metaPropertyView->setModel(m_metaPropertyModel);
+  setEditorFactory(ui.metaPropertyView);
 }
 
 void GammaRay::PropertyWidget::setObject(QObject *object)
@@ -199,6 +205,13 @@ void PropertyWidget::setQObjectTabsVisible(bool visible)
   }
   if (!visible)
     ui.tabWidget->setCurrentWidget(ui.metaPropertyTab);
+}
+
+void PropertyWidget::setEditorFactory(QAbstractItemView* view)
+{
+  QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>( view->itemDelegate() );
+  if (delegate)
+    delegate->setItemEditorFactory(m_editorFactory.data());
 }
 
 
