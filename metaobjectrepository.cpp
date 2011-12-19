@@ -122,8 +122,18 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_METAOBJECT0( QObject );
   MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
 
-  MO_ADD_METAOBJECT1( QWidget, QObject );
-  MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy );
+  MO_ADD_METAOBJECT0(QPaintDevice);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int,  colorCount);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int,  heightMM);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int,  logicalDpiX);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int,  logicalDpiY);
+  MO_ADD_PROPERTY_RO(QPaintDevice, bool, paintingActive);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int,  physicalDpiX);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int,  physicalDpiY);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int,  widthMM);
+
+  MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
+  MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
 }
 
 void MetaObjectRepository::initGraphicsViewTypes()
