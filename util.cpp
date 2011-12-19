@@ -154,6 +154,23 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   return value.toString();
 }
 
+QVariant Util::decorationForVariant(const QVariant& value)
+{
+  // TODO: pen, brush, color, cursor
+  switch (value.type()) {
+    case QVariant::Icon:
+      return value;
+    case QVariant::Pixmap:
+    {
+      const QPixmap p = value.value<QPixmap>();
+      return QVariant::fromValue( p.scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation));
+    }
+    default: break;
+  }
+
+  return QVariant();
+}
+
 QString Util::addressToString(const void *p)
 {
   return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));

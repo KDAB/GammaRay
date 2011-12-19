@@ -35,6 +35,8 @@ namespace Util
 {
   QString displayString(const QObject *object);
   QString variantToString(const QVariant &value);
+  /// Returns a value representing @p value in a itemview decoration role
+  QVariant decorationForVariant(const QVariant &value);
   QString addressToString(const void *p);
   QString addressToUid(const void *p);
 

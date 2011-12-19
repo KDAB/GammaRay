@@ -60,6 +60,9 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
       }
       return mo->className();
     }
+  } else if (role == Qt::DecorationRole) {
+    if (index.column() == 1)
+      return Util::decorationForVariant(prop.read(m_obj.data()));
   } else if (role == Qt::EditRole) {
     if (index.column() == 1) {
       return prop.read(m_obj.data());

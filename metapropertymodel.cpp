@@ -113,6 +113,8 @@ QVariant MetaPropertyModel::data(const QModelIndex& index, int role) const
     switch (role) {
       case Qt::DisplayRole:
         return Util::variantToString(value);
+      case Qt::DecorationRole:
+        return Util::decorationForVariant(value);
       case Qt::EditRole:
         return value;
     }
