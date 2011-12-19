@@ -1,5 +1,6 @@
 #include "propertyeditorfactory.h"
 #include "propertyintpaireditor.h"
+#include "propertydoublepaireditor.h"
 
 #include <QItemEditorFactory>
 
@@ -8,7 +9,9 @@ using namespace GammaRay;
 PropertyEditorFactory::PropertyEditorFactory()
 {
   registerEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
+  registerEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
   registerEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
+  registerEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
 }
 
 QWidget* PropertyEditorFactory::createEditor(QVariant::Type type, QWidget* parent) const

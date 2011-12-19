@@ -205,6 +205,7 @@ set(gammaray_srcs
   probe.cpp
 
   propertywidget.cpp
+  propertyeditor/propertydoublepaireditor.cpp
   propertyeditor/propertyeditorfactory.cpp
   propertyeditor/propertyintpaireditor.cpp
 
@@ -295,6 +296,7 @@ qt4_wrap_ui(gammaray_srcs
   mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
+  propertyeditor/propertydoublepaireditor.ui
   propertyeditor/propertyintpaireditor.ui
   tools/sceneinspector/graphicssceneview.ui
   tools/codecbrowser/codecbrowser.ui
