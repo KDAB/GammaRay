@@ -1,6 +1,4 @@
 /*
-  fontmodelocale.h
-
   This file is part of GammaRay, the Qt application inspection and
   manipulation toolocale.
 
