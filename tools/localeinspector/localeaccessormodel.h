@@ -8,7 +8,7 @@
 namespace GammaRay
 {
 
-class LocaleDataAccessor;
+struct LocaleDataAccessor;
 
 class LocaleAccessorModel : public QAbstractTableModel
 {
