@@ -1,6 +1,6 @@
 #include "propertyintpaireditor.h"
 
-#include "ui_propertypointeditor.h"
+#include "ui_propertyintpaireditor.h"
 #include <QDebug>
 
 #include <limits>
