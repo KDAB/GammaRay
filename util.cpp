@@ -68,6 +68,16 @@ static QString sizePolicyToString(QSizePolicy::Policy policy)
 QString GammaRay::Util::variantToString(const QVariant &value)
 {
   switch (value.type()) {
+  case QVariant::Line:
+    return QString::fromUtf8("%1 x %2 → %3 x %4")
+      .arg(value.toLine().x1()).arg(value.toLine().y1())
+      .arg(value.toLine().x2()).arg(value.toLine().y2());
+
+  case QVariant::LineF:
+    return QString::fromUtf8("%1 x %2 → %3 x %4")
+      .arg(value.toLineF().x1()).arg(value.toLineF().y1())
+      .arg(value.toLineF().x2()).arg(value.toLineF().y2());
+
   case QVariant::Point:
     return QString::fromLatin1("%1x%2").
       arg(value.toPoint().x()).
@@ -106,8 +116,10 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return QString::fromLatin1("%1 x %2").
       arg(sizePolicyToString(value.value<QSizePolicy>().horizontalPolicy())).
       arg(sizePolicyToString(value.value<QSizePolicy>().verticalPolicy()));
+
   case QVariant::StringList:
     return value.toStringList().join(", ");
+ 
   case QVariant::Transform:
   {
     const QTransform t = value.value<QTransform>();
