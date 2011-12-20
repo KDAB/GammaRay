@@ -157,13 +157,13 @@ QString GammaRay::Util::variantToString(const QVariant &value)
 
 QVariant Util::decorationForVariant(const QVariant& value)
 {
-  // TODO: pen
   switch (value.type()) {
     case QVariant::Brush:
     {
       const QBrush b = value.value<QBrush>();
       if (b.style() != Qt::NoBrush) {
         QPixmap p(16, 16);
+        p.fill(QColor(0,0,0,0));
         QPainter painter(&p);
         painter.setBrush(b);
         painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
@@ -188,7 +188,22 @@ QVariant Util::decorationForVariant(const QVariant& value)
         return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
     }
     case QVariant::Icon:
+    {
       return value;
+    }
+    case QVariant::Pen:
+    {
+      const QPen pen = value.value<QPen>();
+      if (pen.style() != Qt::NoPen) {
+        QPixmap p(16, 16);
+        p.fill(QColor(0,0,0,0));
+        QPainter painter(&p);
+        painter.setPen(pen);
+        painter.translate(0, 8 - pen.width()/2);
+        painter.drawLine(0,0, p.width(), 0);
+        return p;
+      }
+    }
     case QVariant::Pixmap:
     {
       const QPixmap p = value.value<QPixmap>();
