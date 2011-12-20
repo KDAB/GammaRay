@@ -36,6 +36,7 @@
 #include <QGraphicsWidget>
 #include <QWidget>
 #include <QDebug>
+#include <QPainter>
 
 using namespace GammaRay;
 
@@ -156,8 +157,36 @@ QString GammaRay::Util::variantToString(const QVariant &value)
 
 QVariant Util::decorationForVariant(const QVariant& value)
 {
-  // TODO: pen, brush, color, cursor
+  // TODO: pen
   switch (value.type()) {
+    case QVariant::Brush:
+    {
+      const QBrush b = value.value<QBrush>();
+      if (b.style() != Qt::NoBrush) {
+        QPixmap p(16, 16);
+        QPainter painter(&p);
+        painter.setBrush(b);
+        painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
+        return p;
+      }
+    }
+    case QVariant::Color:
+    {
+      const QColor c = value.value<QColor>();
+      if (c.isValid()) {
+        QPixmap p(16, 16);
+        QPainter painter(&p);
+        painter.setBrush(QBrush(c));
+        painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
+        return p;
+      }
+    }
+    case QVariant::Cursor:
+    {
+      const QCursor c = value.value<QCursor>();
+      if (!c.pixmap().isNull())
+        return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
+    }
     case QVariant::Icon:
       return value;
     case QVariant::Pixmap:
