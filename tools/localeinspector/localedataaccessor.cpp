@@ -31,35 +31,36 @@ LocaleDataAccessorRegistry::LocaleDataAccessorRegistry()
 {
 }
 
-LocaleDataAccessorRegistry* LocaleDataAccessorRegistry::instance()
+LocaleDataAccessorRegistry *LocaleDataAccessorRegistry::instance()
 {
   return ::instance();
 }
 
-QVector< LocaleDataAccessor* > LocaleDataAccessorRegistry::accessors()
+QVector< LocaleDataAccessor * > LocaleDataAccessorRegistry::accessors()
 {
   return ::instance()->m_accessors;
 }
 
-QVector< LocaleDataAccessor* > LocaleDataAccessorRegistry::enabledAccessors()
+QVector< LocaleDataAccessor * > LocaleDataAccessorRegistry::enabledAccessors()
 {
   return ::instance()->m_enabledAccessors;
 }
 
-void LocaleDataAccessorRegistry::registerAccessor(LocaleDataAccessor* accessor)
+void LocaleDataAccessorRegistry::registerAccessor(LocaleDataAccessor *accessor)
 {
   ::instance()->m_accessors.push_back(accessor);
 }
 
-void LocaleDataAccessorRegistry::setAccessorEnabled(LocaleDataAccessor* accessor, bool enabled)
+void LocaleDataAccessorRegistry::setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled)
 {
-  QVector< LocaleDataAccessor* > &accessors = ::instance()->m_enabledAccessors;
+  QVector< LocaleDataAccessor * > &accessors = ::instance()->m_enabledAccessors;
   if (enabled && !accessors.contains(accessor)) {
     accessors.push_back(accessor);
   } else {
     int idx = accessors.indexOf(accessor);
-    if (idx >= 0)
+    if (idx >= 0) {
       accessors.remove(idx);
+    }
   }
   emit ::instance()->accessorsChanged();
 }
@@ -82,88 +83,91 @@ LOCALE_SIMPLE_ACCESSOR(Script,
 )
 
 LOCALE_SIMPLE_ACCESSOR(Currency,
-    return locale.currencySymbol(QLocale::CurrencySymbol)
-            + QLatin1String(" (")
-            + locale.currencySymbol(QLocale::CurrencyIsoCode)
-            + QLatin1String(") - ")
-            + locale.currencySymbol(QLocale::CurrencyDisplayName);
+  return locale.currencySymbol(QLocale::CurrencySymbol) +
+                       QLatin1String(" (") +
+                       locale.currencySymbol(QLocale::CurrencyIsoCode) +
+                       QLatin1String(") - ") +
+                       locale.currencySymbol(QLocale::CurrencyDisplayName);
 )
 
 #endif
 LOCALE_SIMPLE_ACCESSOR(TextDirection,
-    return locale.textDirection() == Qt::LeftToRight ? "LTR" : "RTL";
+  return locale.textDirection() == Qt::LeftToRight ? "LTR" : "RTL";
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(TimeFormatLong,
-    return locale.timeFormat(QLocale::LongFormat);
+  return locale.timeFormat(QLocale::LongFormat);
 )
 
 LOCALE_SIMPLE_ACCESSOR(TimeFormatShort,
-    return locale.timeFormat(QLocale::ShortFormat);
+  return locale.timeFormat(QLocale::ShortFormat);
 )
 
 LOCALE_SIMPLE_ACCESSOR(TimeFormatNarrow,
-    return locale.timeFormat(QLocale::NarrowFormat);
+  return locale.timeFormat(QLocale::NarrowFormat);
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(DateFormatLong,
-    return locale.dateFormat(QLocale::LongFormat);
+  return locale.dateFormat(QLocale::LongFormat);
 )
 
 LOCALE_SIMPLE_ACCESSOR(DateFormatShort,
-    return locale.dateFormat(QLocale::ShortFormat);
+  return locale.dateFormat(QLocale::ShortFormat);
 )
 
 LOCALE_SIMPLE_ACCESSOR(DateFormatNarrow,
-    return locale.dateFormat(QLocale::NarrowFormat);
+  return locale.dateFormat(QLocale::NarrowFormat);
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(DateTimeFormatLong,
-    return locale.dateTimeFormat(QLocale::LongFormat);
+  return locale.dateTimeFormat(QLocale::LongFormat);
 )
 
 LOCALE_SIMPLE_ACCESSOR(DateTimeFormatShort,
-    return locale.dateTimeFormat(QLocale::ShortFormat);
+  return locale.dateTimeFormat(QLocale::ShortFormat);
 )
 
 LOCALE_SIMPLE_ACCESSOR(DateTimeFormatNarrow,
-    return locale.dateTimeFormat(QLocale::NarrowFormat);
+  return locale.dateTimeFormat(QLocale::NarrowFormat);
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(MeasurementSystem,
-    return locale.measurementSystem() == QLocale::ImperialSystem ? "Imperial" : "Metric";
+  return locale.measurementSystem() == QLocale::ImperialSystem ? "Imperial" : "Metric";
 )
 
 LOCALE_SIMPLE_ACCESSOR(AmText,
-    return locale.amText();
+  return locale.amText();
 )
 
 LOCALE_SIMPLE_ACCESSOR(PmText,
-    return locale.pmText();
+  return locale.pmText();
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(FloatFormat,
-    return locale.toString(10000.1);
+  return locale.toString(10000.1);
 )
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 8, 0)
 LOCALE_SIMPLE_ACCESSOR(NativeCountry,
-    return locale.nativeCountryName();
+  return locale.nativeCountryName();
 )
 
 LOCALE_SIMPLE_ACCESSOR(NativeLanguage,
-    return locale.nativeLanguageName();
+  return locale.nativeLanguageName();
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(FirstDayOfWeek,
-    return QLocale().dayName(locale.firstDayOfWeek());
+  return QLocale().dayName(locale.firstDayOfWeek());
 )
+
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(WeekDays,
-    QStringList resultList;
-    Q_FOREACH(Qt::DayOfWeek dayNumber, locale.weekdays())
-      resultList << QLocale().dayName(dayNumber);
-    return QLocale().createSeparatedList(resultList);
+  QStringList resultList;
+  Q_FOREACH (Qt::DayOfWeek dayNumber, locale.weekdays()) {
+    resultList << QLocale().dayName(dayNumber);
+  }
+  return QLocale().createSeparatedList(resultList);
 )
 #endif
 
 #include "localedataaccessor.moc"
+
