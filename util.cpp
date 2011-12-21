@@ -40,6 +40,14 @@
 
 using namespace GammaRay;
 
+namespace GammaRay {
+class ProtectedExposer : public QObject
+{
+public:
+  using QObject::staticQtMetaObject;
+};
+}
+
 QString Util::displayString(const QObject *object)
 {
   if (!object) {
@@ -175,6 +183,11 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   if (value.userType() == qMetaTypeId<QGraphicsWidget*>())
     return displayString(value.value<QGraphicsWidget*>());
 
+  // enums
+  const QString enumStr = enumToString(value);
+  if (!enumStr.isEmpty())
+    return enumStr;
+
   return value.toString();
 }
 
@@ -241,6 +254,32 @@ QVariant Util::decorationForVariant(const QVariant& value)
 QString Util::addressToString(const void *p)
 {
   return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
+}
+
+QString Util::enumToString(const QVariant& value, const char* typeName, QObject* object)
+{
+  QByteArray enumTypeName(typeName);
+  if (enumTypeName.isEmpty())
+    enumTypeName = value.typeName();
+
+  // strip of class name and namespace
+  const int pos = enumTypeName.lastIndexOf("::");
+  if (pos >= 0)
+    enumTypeName = enumTypeName.mid(pos + 2);
+
+  const QMetaObject *mo = &ProtectedExposer::staticQtMetaObject;
+  int enumIndex = mo->indexOfEnumerator(enumTypeName);
+  if (enumIndex < 0 && object) {
+    mo = object->metaObject();
+    enumIndex = mo->indexOfEnumerator(enumTypeName);
+  }
+  if (enumIndex < 0)
+    return QString();
+
+  const QMetaEnum me = mo->enumerator(enumIndex);
+  if (!me.isValid())
+    return QString();
+  return me.valueToKeys(value.toInt());
 }
 
 bool Util::descendantOf(QObject *ascendant, QObject *obj)

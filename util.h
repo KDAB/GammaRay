@@ -40,6 +40,14 @@ namespace Util
   QString addressToString(const void *p);
   QString addressToUid(const void *p);
 
+  /**
+   * Translates an enum or flag value into a human readable text.
+   * @param value The numerical value. Type information from the QVariant are used to find the corresponding QMetaEnum.
+   * @param typeName Use this if the @p value has type int (e.g. the case for QMetaProperty::read).
+   * @param object Additional QObject to search for QMetaEnums.
+   */
+  QString enumToString(const QVariant &value, const char* typeName = 0, QObject *object = 0);
+
   bool descendantOf(QObject *ascendant, QObject *obj);
 
   template <typename T>

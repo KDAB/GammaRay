@@ -50,7 +50,12 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
     if (index.column() == 0) {
       return prop.name();
     } else if (index.column() == 1) {
-      return Util::variantToString(prop.read(m_obj.data()));
+      // QMetaProperty::read sets QVariant::typeName to int for enums, so we need to handle that separately here
+      const QVariant value = prop.read(m_obj.data());
+      const QString enumStr = Util::enumToString(value, prop.typeName(), m_obj.data());
+      if (!enumStr.isEmpty())
+        return enumStr;
+      return Util::variantToString(value);
     } else if (index.column() == 2) {
       return prop.typeName();
     } else if (index.column() == 3) {
