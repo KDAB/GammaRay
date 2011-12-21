@@ -41,3 +41,4 @@ Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
 
 #endif
+
