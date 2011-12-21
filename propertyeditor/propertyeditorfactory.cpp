@@ -22,6 +22,8 @@
 */
 
 #include "propertyeditorfactory.h"
+#include "propertycoloreditor.h"
+#include "propertyfonteditor.h"
 #include "propertyintpaireditor.h"
 #include "propertydoublepaireditor.h"
 
@@ -31,6 +33,8 @@ using namespace GammaRay;
 
 PropertyEditorFactory::PropertyEditorFactory()
 {
+  registerEditor(QVariant::Color, new QStandardItemEditorCreator<PropertyColorEditor>());
+  registerEditor(QVariant::Font, new QStandardItemEditorCreator<PropertyFontEditor>());
   registerEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
   registerEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
   registerEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
