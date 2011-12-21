@@ -102,6 +102,17 @@ QString GammaRay::Util::variantToString(const QVariant &value)
       arg(value.toRectF().width()).
       arg(value.toRectF().height());
 
+  case QVariant::Region:
+  {
+    const QRegion region = value.value<QRegion>();
+    if (region.isEmpty())
+      return QLatin1String("<empty>");
+    if (region.rectCount() == 1)
+      return variantToString(region.rects().first());
+    else
+      return QString::fromLatin1("<%n rects>").arg(region.rectCount());
+  }
+
   case QVariant::Size:
     return QString::fromLatin1("%1x%2").
       arg(value.toSize().width()).
