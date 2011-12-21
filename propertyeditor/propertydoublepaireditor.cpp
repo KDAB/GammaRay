@@ -24,7 +24,7 @@ void PropertyPointFEditor::setPointF(const QPointF& point)
   ui->yBox->setValue(point.y());
 }
 
-PropertySizeFEditor::PropertySizeFEditor(QWidget* parent)
+PropertySizeFEditor::PropertySizeFEditor(QWidget* parent) : PropertyDoublePairEditor(parent)
 {
 }
 
