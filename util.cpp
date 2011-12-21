@@ -169,6 +169,13 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return QString::fromLatin1("%1 (%2)").arg(l.rawValue()).arg(typeStr);
   }
 
+  if (value.userType() == qMetaTypeId<QPainterPath>()) {
+    const QPainterPath path = value.value<QPainterPath>();
+    if (path.isEmpty())
+      return QObject::tr("<empty>");
+    return QObject::tr("<%1 elements>").arg(path.elementCount());
+  }
+
   if (value.type() == qMetaTypeId<QWidget*>())
     return displayString(value.value<QWidget*>());
 

@@ -135,6 +135,7 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            boundingRegionGranularity, setBoundingRegionGranularity);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem::CacheMode,         cacheMode);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           childrenBoundingRect);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QPainterPath,                     clipPath);
   MO_ADD_PROPERTY_CR(QGraphicsItem, QCursor,                          cursor,                    setCursor);
   MO_ADD_PROPERTY_RO(QGraphicsItem, qreal,                            effectiveOpacity);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             filtersChildEvents,        setFiltersChildEvents);
@@ -157,7 +158,9 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isWidget);
   MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isWindow);
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            opacity,                   setOpacity);
-  // TODO: panel, panelModality
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QPainterPath,                     opaqueArea);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   panel);
+  MO_ADD_PROPERTY   (QGraphicsItem, QGraphicsItem::PanelModality,     panelModality,             setPanelModality);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   parentItem);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsObject*,                 parentObject);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 parentWidget);
@@ -167,10 +170,10 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           sceneBoundingRect);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QPointF,                          scenePos);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QTransform,                       sceneTransform);
-  // TODO: shape (and anything else QPainterPath-based)
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QPainterPath,                     shape);
   MO_ADD_PROPERTY_CR(QGraphicsItem, QString,                          toolTip,                   setToolTip);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   topLevelItem);
-  // TODO topLevelWidget
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 topLevelWidget);
   MO_ADD_PROPERTY_RO(QGraphicsItem, QTransform,                       transform/*,                 setTransform*/); // TODO: support setTransform
   MO_ADD_PROPERTY_CR(QGraphicsItem, QPointF,                          transformOriginPoint,      setTransformOriginPoint);
   MO_ADD_PROPERTY_RO(QGraphicsItem, int,                              type);
