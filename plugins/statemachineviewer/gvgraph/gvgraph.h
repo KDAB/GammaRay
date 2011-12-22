@@ -84,6 +84,8 @@ class GVGraph
 
     void applyLayout();
 
+    bool saveAs(const QString &filename);
+
   private:
     GraphId addGraph(const QString &name, Agraph_t *graph);
     NodeId addNode(const QString &name, Agraph_t *graph);

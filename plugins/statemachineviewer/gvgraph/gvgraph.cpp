@@ -282,6 +282,19 @@ void GVGraph::applyLayout()
 #endif
 }
 
+bool GVGraph::saveAs(const QString &filename)
+{
+  FILE *file = fopen(filename.toLocal8Bit().constData(), "w");
+  if (!file)
+    return false;
+
+  agwrite(_graph, file);
+
+  fclose(file);
+
+  return true;
+}
+
 /// TODO: Is this function even needed to be regularly called?
 static qreal dpiForGraph(Agraph_t *graph)
 {
