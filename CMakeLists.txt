@@ -334,6 +334,7 @@ endif()
 target_link_libraries(gammaray_probe
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
+  ${QT_QTSVG_LIBRARY}
 )
 if(NOT WIN32)
   target_link_libraries(gammaray_probe dl)

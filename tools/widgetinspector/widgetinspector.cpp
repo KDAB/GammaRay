@@ -34,9 +34,11 @@
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QPainter>
 #include <QPixmap>
 #include <QPrinter>
 
+#include <QSvgGenerator>
 using namespace GammaRay;
 
 class WidgetTypeFilterProxyModel : public ObjectFilterProxyModelBase
@@ -75,9 +77,11 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
           SLOT(widgetSelected(QModelIndex)));
 
   connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
+  connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
 
   addAction(ui->actionSaveAsImage);
+  addAction(ui->actionSaveAsSvg);
   addAction(ui->actionSaveAsPdf);
 
   setActionsEnabled(false);
@@ -164,6 +168,24 @@ void WidgetInspector::saveAsImage()
   widget->render(&pixmap);
   m_overlayWidget->show();
   pixmap.save(fileName);
+}
+
+void WidgetInspector::saveAsSvg()
+{
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As SVG"), QString(), tr("Scalable Vector Graphics (*.svg)"));
+  QWidget *widget = selectedWidget();
+  if (fileName.isEmpty() || !widget)
+    return;
+
+  QSvgGenerator svg;
+  svg.setFileName(fileName);
+  svg.setSize(widget->size());
+  svg.setViewBox(QRect(QPoint(0,0), widget->size()));
+  m_overlayWidget->hide();
+  QPainter painter(&svg);
+  widget->render(&painter);
+  painter.end();
+  m_overlayWidget->show();
 }
 
 void WidgetInspector::saveAsPdf()
