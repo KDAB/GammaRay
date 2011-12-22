@@ -98,7 +98,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
 
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), SLOT(handleDepthChanged(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), SLOT(startStopClicked()));
-  connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportClicked()));
+  connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
 
   connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
           SLOT(handleStatesChanged()));
@@ -527,7 +527,7 @@ void StateMachineViewer::startStopClicked()
   }
 }
 
-void StateMachineViewer::exportClicked()
+void StateMachineViewer::exportAsImage()
 {
   const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Image"));
   if (fileName.isEmpty()) {

@@ -85,7 +85,7 @@ class StateMachineViewer : public QWidget
 
     void updateStartStop();
     void startStopClicked();
-    void exportClicked();
+    void exportAsImage();
 
   private:
     void clearGraph();
