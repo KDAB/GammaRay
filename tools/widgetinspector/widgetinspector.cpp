@@ -38,9 +38,6 @@
 #include <QPixmap>
 #include <QPrinter>
 
-#include <QSvgGenerator>
-#include <QFormBuilder>
-
 using namespace GammaRay;
 
 class WidgetTypeFilterProxyModel : public ObjectFilterProxyModelBase
@@ -181,14 +178,8 @@ void WidgetInspector::saveAsSvg()
   if (fileName.isEmpty() || !widget)
     return;
 
-  QSvgGenerator svg;
-  svg.setFileName(fileName);
-  svg.setSize(widget->size());
-  svg.setViewBox(QRect(QPoint(0,0), widget->size()));
   m_overlayWidget->hide();
-  QPainter painter(&svg);
-  widget->render(&painter);
-  painter.end();
+  callExternalExportAction("gammaray_save_widget_to_svg", widget, fileName);
   m_overlayWidget->show();
 }
 
@@ -217,11 +208,23 @@ void WidgetInspector::saveAsUiFile()
   if (fileName.isEmpty() || !widget)
     return;
 
-  QFile file(fileName);
-  if (file.open(QFile::WriteOnly)) {
-    QFormBuilder formBuilder;
-    formBuilder.save(&file, widget);
+  callExternalExportAction("gammaray_save_widget_to_ui", widget, fileName);
+}
+
+void WidgetInspector::callExternalExportAction(const char* name, QWidget* widget, const QString& fileName)
+{
+  if (!m_externalExportActions.isLoaded()) {
+    // TODO: get the real path
+    m_externalExportActions.setFileName("libgammaray_widget_export_actions");
+    m_externalExportActions.load();
   }
+
+  void(*function)(QWidget*, const QString&) = reinterpret_cast<void(*)(QWidget*, const QString&)>(m_externalExportActions.resolve(name));
+  if (!function) {
+    qWarning() << m_externalExportActions.errorString();
+    return;
+  }
+  function(widget, fileName);
 }
 
 #include "widgetinspector.moc"
