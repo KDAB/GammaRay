@@ -72,6 +72,14 @@
     <string>Renders the currently selected widget in to a PDF file.</string>
    </property>
   </action>
+  <action name="actionSaveAsUiFile">
+   <property name="text">
+    <string>Save as &amp;UI file...</string>
+   </property>
+   <property name="toolTip">
+    <string>Saves the currently selected widget as a Qt designer UI file.</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

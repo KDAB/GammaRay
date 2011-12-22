@@ -39,6 +39,8 @@
 #include <QPrinter>
 
 #include <QSvgGenerator>
+#include <QFormBuilder>
+
 using namespace GammaRay;
 
 class WidgetTypeFilterProxyModel : public ObjectFilterProxyModelBase
@@ -79,10 +81,12 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
+  connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
 
   addAction(ui->actionSaveAsImage);
   addAction(ui->actionSaveAsSvg);
   addAction(ui->actionSaveAsPdf);
+  addAction(ui->actionSaveAsUiFile);
 
   setActionsEnabled(false);
 }
@@ -204,6 +208,20 @@ void WidgetInspector::saveAsPdf()
   m_overlayWidget->hide();
   widget->render(&printer);
   m_overlayWidget->show();
+}
+
+void WidgetInspector::saveAsUiFile()
+{
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Qt Designer UI File"), QString(), tr("Qt Designer UI File (*.ui)"));
+  QWidget *widget = selectedWidget();
+  if (fileName.isEmpty() || !widget)
+    return;
+
+  QFile file(fileName);
+  if (file.open(QFile::WriteOnly)) {
+    QFormBuilder formBuilder;
+    formBuilder.save(&file, widget);
+  }
 }
 
 #include "widgetinspector.moc"
