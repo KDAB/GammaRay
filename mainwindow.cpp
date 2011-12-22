@@ -162,6 +162,7 @@ void MainWindow::selectInitialTool()
 
 void MainWindow::toolSelected()
 {
+  ui.actionsMenu->clear();
   const int row = ui.toolSelector->currentIndex().row();
   if (row == -1) {
     return;
@@ -182,6 +183,10 @@ void MainWindow::toolSelected()
     ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
   }
   ui.toolStack->setCurrentIndex(ui.toolStack->indexOf(toolWidget));
+
+  foreach (QAction *action, toolWidget->actions())
+    ui.actionsMenu->addAction(action);
+  ui.actionsMenu->setEnabled(!ui.actionsMenu->isEmpty());
 }
 
 #include "mainwindow.moc"
