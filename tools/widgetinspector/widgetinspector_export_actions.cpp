@@ -3,7 +3,8 @@
  * dlopen hack to avoid dependencies on QtSvg and QtDesigner in the main probe.
  */
 
-#include <QFormBuilder>
+#include "uiextractor.h"
+
 #include <QPainter>
 #include <QSvgGenerator>
 #include <QWidget>
@@ -25,7 +26,7 @@ Q_DECL_EXPORT void gammaray_save_widget_to_ui(QWidget* widget, const QString &fi
 {
   QFile file(fileName);
   if (file.open(QFile::WriteOnly)) {
-    QFormBuilder formBuilder;
+    GammaRay::UiExtractor formBuilder;
     formBuilder.save(&file, widget);
   }
 }
