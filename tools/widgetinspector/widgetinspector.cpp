@@ -35,6 +35,7 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QPixmap>
+#include <QPrinter>
 
 using namespace GammaRay;
 
@@ -74,8 +75,10 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
           SLOT(widgetSelected(QModelIndex)));
 
   connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
+  connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
 
   addAction(ui->actionSaveAsImage);
+  addAction(ui->actionSaveAsPdf);
 
   setActionsEnabled(false);
 }
@@ -161,6 +164,24 @@ void WidgetInspector::saveAsImage()
   widget->render(&pixmap);
   m_overlayWidget->show();
   pixmap.save(fileName);
+}
+
+void WidgetInspector::saveAsPdf()
+{
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As PDF"), QString(), tr("PDF (*.pdf)"));
+  QWidget *widget = selectedWidget();
+  if (fileName.isEmpty() || !widget)
+    return;
+
+  QPrinter printer(QPrinter::ScreenResolution);
+  printer.setOutputFileName(fileName);
+  printer.setOutputFormat(QPrinter::PdfFormat);
+  printer.setPageMargins(0, 0, 0, 0, QPrinter::DevicePixel);
+  printer.setPaperSize(widget->size(), QPrinter::DevicePixel);
+
+  m_overlayWidget->hide();
+  widget->render(&printer);
+  m_overlayWidget->show();
 }
 
 #include "widgetinspector.moc"

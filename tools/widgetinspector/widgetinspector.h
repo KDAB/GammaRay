@@ -50,6 +50,7 @@ class WidgetInspector : public QWidget
     void widgetSelected(QWidget *widget);
 
     void saveAsImage();
+    void saveAsPdf();
 
   private:
     OverlayWidget *m_overlayWidget;
