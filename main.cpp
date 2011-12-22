@@ -30,6 +30,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QStringList>
+#include <QFileInfo>
 
 using namespace GammaRay;
 
@@ -114,6 +115,8 @@ int main(int argc, char **argv)
   }
 
   const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
+  qputenv("GAMMARAY_PROBE_PATH", QFileInfo(probeDll).absolutePath().toLocal8Bit());
+
   AbstractInjector::Ptr injector;
   if (injectorType.isEmpty()) {
     if (pid > 0) {
