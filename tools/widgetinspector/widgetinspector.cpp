@@ -45,7 +45,7 @@ class WidgetTypeFilterProxyModel : public ObjectFilterProxyModelBase
     virtual bool filterAcceptsObject(QObject *object) const
     {
       // according to the docs this is more efficient than qobject_cast
-      return object->isWidgetType();
+      return object->isWidgetType() || qobject_cast<QLayout*>(object);
     }
 };
 
