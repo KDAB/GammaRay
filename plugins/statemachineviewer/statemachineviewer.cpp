@@ -20,6 +20,7 @@
 */
 
 #include "statemachineviewer.h"
+#include "statemachinedumper.h"
 #include "statemachineview.h"
 #include "statemachinewatcher.h"
 #include "statemodel.h"
@@ -99,6 +100,7 @@ StateMachineViewer::StateMachineViewer(ProbeInterface *probe, QWidget *parent)
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), SLOT(handleDepthChanged(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), SLOT(startStopClicked()));
   connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
+  connect(m_ui->exportAsDocumentationButton, SIGNAL(clicked()), SLOT(exportAsDocumentation()));
 
   connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
           SLOT(handleStatesChanged()));
@@ -545,6 +547,20 @@ void StateMachineViewer::exportAsImage()
   scene->render(&painter);
 
   image.save(fileName, "PNG");
+}
+
+void StateMachineViewer::exportAsDocumentation()
+{
+  const QString directory = QFileDialog::getExistingDirectory(this, tr("Base directory"));
+  if (directory.isEmpty()) {
+    return;
+  }
+
+  if (!selectedStateMachine())
+    return;
+
+  StateMachineDumper dumper;
+  dumper.dump(selectedStateMachine(), directory);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

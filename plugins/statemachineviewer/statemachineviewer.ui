@@ -65,6 +65,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="exportAsDocumentationButton">
+          <property name="text">
+           <string>Export As Documentation...</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget1">

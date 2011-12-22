@@ -11,6 +11,7 @@ set(gammaray_statemachineviewer_plugin_srcs
   gvgraph/gvgraph.cpp
   gvgraph/gvgraphitems.cpp
 
+  statemachinedumper.cpp
   statemachineview.cpp
   statemachineviewer.cpp
   statemachinewatcher.cpp
