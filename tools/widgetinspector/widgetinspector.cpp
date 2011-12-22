@@ -214,8 +214,8 @@ void WidgetInspector::saveAsUiFile()
 void WidgetInspector::callExternalExportAction(const char* name, QWidget* widget, const QString& fileName)
 {
   if (!m_externalExportActions.isLoaded()) {
-    // TODO: get the real path
-    m_externalExportActions.setFileName("libgammaray_widget_export_actions");
+    const QString probePath = QString::fromLocal8Bit(qgetenv("GAMMARAY_PROBE_PATH"));
+    m_externalExportActions.setFileName(probePath + QLatin1String("/libgammaray_widget_export_actions"));
     m_externalExportActions.load();
   }
 
