@@ -49,6 +49,11 @@ GVGraph::GVGraph(const QString &name)
   createGraph();
 }
 
+GraphId GVGraph::rootGraph() const
+{
+  return (GraphId)_graph;
+}
+
 void GVGraph::createGraph()
 {
   _graph = _agopen(_name, AGDIGRAPHSTRICT); // Strict directed graph, see libgraph doc

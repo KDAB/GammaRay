@@ -51,6 +51,8 @@ class GVGraph
     explicit GVGraph(const QString &name);
     ~GVGraph();
 
+    GraphId rootGraph() const;
+
     GraphId addGraph(const QString &name);
     GraphId addGraph(const QString &name, GraphId subGraphId);
     void removeGraph(GraphId graphId);
