@@ -41,10 +41,11 @@ using namespace std;
     while we display at 96 DPI on most operating systems. */
 const qreal DotDefaultDPI = 72.0;
 
-GVGraph::GVGraph(const QString &name)
+GVGraph::GVGraph(const QString &name, GraphMode mode)
   : _context(gvContext()),
     _graph(0),
-    _name(name)
+    _name(name),
+    _mode(mode)
 {
   createGraph();
 }
@@ -56,7 +57,7 @@ GraphId GVGraph::rootGraph() const
 
 void GVGraph::createGraph()
 {
-  _graph = _agopen(_name, AGDIGRAPHSTRICT); // Strict directed graph, see libgraph doc
+  _graph = _agopen(_name, _mode == ViewMode ? AGDIGRAPHSTRICT : AGDIGRAPH); // Strict directed graph, see libgraph doc
   _graphMap.insert(_graph, GVSubGraph("ROOT"));
 
   Q_ASSERT(_context);
@@ -67,6 +68,8 @@ void GVGraph::createGraph()
   _agset(_graph, "pad", "0,2");
   _agset(_graph, "dpi", "96,0");
   _agset(_graph, "nodesep", "0,4");
+  if (_mode == DocumentationMode)
+    _agset(_graph, "compound", "true");
 
   setFont(_font);
 }

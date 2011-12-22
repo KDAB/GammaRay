@@ -44,11 +44,18 @@ typedef QPair<GraphId, GVSubGraph> GVSubGraphPair;
 class GVGraph
 {
   public:
+    enum GraphMode
+    {
+      ViewMode,
+      DocumentationMode
+    };
+
     /*!
      * \brief Construct a Graphviz graph object
      * \param name The name of the graph, must be unique in the application
+     * \param mode The mode the graph is used for
      */
-    explicit GVGraph(const QString &name);
+    explicit GVGraph(const QString &name, GraphMode mode = ViewMode);
     ~GVGraph();
 
     GraphId rootGraph() const;
@@ -122,6 +129,7 @@ class GVGraph
     qreal _dpi;
 
     QString _name;
+    GraphMode _mode;
 
     // data
     QHash<Agraph_t *, GVSubGraph> _graphMap;
