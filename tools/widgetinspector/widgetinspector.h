@@ -41,9 +41,15 @@ class WidgetInspector : public QWidget
   public:
     explicit WidgetInspector(ProbeInterface *probe, QWidget *parent = 0);
 
+  private:
+    void setActionsEnabled(bool enabled);
+    QWidget* selectedWidget() const;
+
   private slots:
     void widgetSelected(const QModelIndex &index);
     void widgetSelected(QWidget *widget);
+
+    void saveAsImage();
 
   private:
     OverlayWidget *m_overlayWidget;

@@ -48,6 +48,14 @@
     </widget>
    </item>
   </layout>
+  <action name="actionSaveAsImage">
+   <property name="text">
+    <string>Save as &amp;Image...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save currently selected widget as image.</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

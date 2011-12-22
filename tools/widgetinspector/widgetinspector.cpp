@@ -31,7 +31,10 @@
 #include <objecttypefilterproxymodel.h>
 #include <objectmodel.h>
 
+#include <QDebug>
 #include <QDesktopWidget>
+#include <QFileDialog>
+#include <QPixmap>
 
 using namespace GammaRay;
 
@@ -69,21 +72,29 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   connect(ui->widgetTreeView->selectionModel(),
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(widgetSelected(QModelIndex)));
+
+  connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
+
+  addAction(ui->actionSaveAsImage);
+
+  setActionsEnabled(false);
 }
 
 void WidgetInspector::widgetSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    ui->widgetPropertyWidget->setObject(obj);
-    ui->widgetPreviewWidget->setWidget(qobject_cast<QWidget*>(obj));
-
     QWidget *widget = qobject_cast<QWidget*>(obj);
+    QLayout* layout = qobject_cast<QLayout*>(obj);
+    if (!widget && layout)
+      widget = layout->parentWidget();
+
+    ui->widgetPropertyWidget->setObject(obj);
+    ui->widgetPreviewWidget->setWidget(widget);
+    setActionsEnabled(widget != 0);
+
     if (widget && qobject_cast<QDesktopWidget*>(widget) == 0) {
       m_overlayWidget->placeOn(widget);
-    } else if (QLayout* layout = qobject_cast<QLayout*>(obj)) {
-      m_overlayWidget->placeOn(layout->parentWidget());
-      ui->widgetPreviewWidget->setWidget(layout->parentWidget());
     } else {
       m_overlayWidget->placeOn(0);
     }
@@ -91,6 +102,7 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     ui->widgetPropertyWidget->setObject(0);
     ui->widgetPreviewWidget->setWidget(0);
     m_overlayWidget->placeOn(0);
+    setActionsEnabled(false);
   }
 }
 
@@ -112,6 +124,43 @@ void WidgetInspector::widgetSelected(QWidget *widget)
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
   ui->widgetTreeView->scrollTo(index);
   widgetSelected(index);
+}
+
+void WidgetInspector::setActionsEnabled(bool enabled)
+{
+  foreach (QAction *action, actions())
+    action->setEnabled(enabled);
+}
+
+QWidget* WidgetInspector::selectedWidget() const
+{
+  const QModelIndexList indexes = ui->widgetTreeView->selectionModel()->selectedRows();
+  if (indexes.isEmpty())
+    return 0;
+  const QModelIndex index = indexes.first();
+  if (index.isValid()) {
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    QWidget *widget = qobject_cast<QWidget*>(obj);
+    QLayout* layout = qobject_cast<QLayout*>(obj);
+    if (!widget && layout)
+      widget = layout->parentWidget();
+    return widget;
+  }
+  return 0;
+}
+
+void WidgetInspector::saveAsImage()
+{
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Image"), QString(), tr("Image Files (*.png *.jpg)"));
+  QWidget *widget = selectedWidget();
+  if (fileName.isEmpty() || !widget)
+    return;
+
+  QPixmap pixmap(widget->size());
+  m_overlayWidget->hide();
+  widget->render(&pixmap);
+  m_overlayWidget->show();
+  pixmap.save(fileName);
 }
 
 #include "widgetinspector.moc"
