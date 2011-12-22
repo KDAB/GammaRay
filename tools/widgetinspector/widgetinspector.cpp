@@ -82,10 +82,8 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     if (widget && qobject_cast<QDesktopWidget*>(widget) == 0) {
       m_overlayWidget->placeOn(widget);
     } else if (QLayout* layout = qobject_cast<QLayout*>(obj)) {
-      if (layout->parentWidget())
-        m_overlayWidget->placeOn(layout->parentWidget());
-      else
-        m_overlayWidget->placeOn(0);
+      m_overlayWidget->placeOn(layout->parentWidget());
+      ui->widgetPreviewWidget->setWidget(layout->parentWidget());
     } else {
       m_overlayWidget->placeOn(0);
     }
