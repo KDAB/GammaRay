@@ -162,7 +162,7 @@ LOCALE_SIMPLE_DEFAULT_ACCESSOR(FirstDayOfWeek,
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(WeekDays,
   QStringList resultList;
-  Q_FOREACH (Qt::DayOfWeek dayNumber, locale.weekdays()) {
+  Q_FOREACH (const Qt::DayOfWeek &dayNumber, locale.weekdays()) {
     resultList << QLocale().dayName(dayNumber);
   }
   return QLocale().createSeparatedList(resultList);
