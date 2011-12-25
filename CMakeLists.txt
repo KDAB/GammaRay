@@ -237,6 +237,10 @@ set(gammaray_srcs
   3rdparty/kde/krecursivefilterproxymodel.cpp
   3rdparty/kde/kfilterproxysearchline.cpp
   3rdparty/qt/resourcemodel.cpp
+
+  hooking/abstractfunctionoverwriter.cpp
+  hooking/functionoverwriterfactory.cpp
+  hooking/winfunctionoverwriter.cpp
 )
 
 if(BUILD_TIMER_PLUGIN)

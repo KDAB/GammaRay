@@ -31,6 +31,7 @@
 #include "toolmodel.h"
 #include "readorwritelocker.h"
 #include "tools/modelinspector/modeltest.h"
+#include "hooking/functionoverwriterfactory.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QThread>
@@ -58,12 +59,6 @@
 #endif
 
 #define IF_DEBUG(x)
-
-#if defined(_M_X64) or defined(__amd64) or defined(__x86_64)
-#define ARCH_64
-#elif defined(_M_IX86) or defined(__i386__)
-#define ARCH_X86
-#endif
 
 using namespace GammaRay;
 using namespace std;
@@ -633,7 +628,7 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
   s_listener()->trackDestroyed = false;
 
   new ProbeCreator(ProbeCreator::CreateOnly);
-#if !defined Q_OS_WIN and !defined Q_OS_MAC
+#if !defined Q_OS_WIN && !defined Q_OS_MAC
   static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
   next_qt_startup_hook();
 #endif
@@ -642,7 +637,7 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 {
   Probe::objectAdded(obj, true);
-#if !defined Q_OS_WIN and !defined Q_OS_MAC
+#if !defined Q_OS_WIN && !defined Q_OS_MAC
   static void (*next_qt_addObject)(QObject *obj) =
     (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
   next_qt_addObject(obj);
@@ -652,7 +647,7 @@ extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
 {
   Probe::objectRemoved(obj);
-#if !defined Q_OS_WIN and !defined Q_OS_MAC
+#if !defined Q_OS_WIN && !defined Q_OS_MAC
   static void (*next_qt_removeObject)(QObject *obj) =
     (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
   next_qt_removeObject(obj);
@@ -684,137 +679,32 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 }
 #endif
 
-#if defined(Q_OS_WIN) or defined(Q_OS_MAC)
-// IMPORTANT NOTE:
-// We are writing a jmp instruction at the target address.
-// If the function is not big, we have to trust that the alignment gives
-// us enough space to this jmp.  Jumps are 10 bytes long under 32 bit and
-// 13 bytes long under x64.
-// We will overwrite the existing function, which cannot be reverted.
-// It would be possible to save the content and write it back when we unattach.
-static inline void *page_align(void *addr)
+void overwriteQtFunctions()
 {
-  assert(addr != NULL);
-  return (void *)((size_t)addr & ~(0xFFFF));
-}
+    AbstractFunctionOverwriter* overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
 
-void writeJmp(void *func, void *replacement)
-{
-#ifdef Q_OS_WIN
-  DWORD oldProtect = 0;
-
-  //Jump takes 10 bytes under x86 and 14 bytes under x64
-  int worstSize;
-#ifdef ARCH_X86
-  worstSize = 10;
-#elif defined(ARCH_64)
-  worstSize = 14;
+    overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)qt_startup_hook);
+    overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)qt_addObject);
+    overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)qt_removeObject);
+#if !defined(Q_OS_MAC)
+#ifdef ARCH_64
+    overwriter->overwriteFunction(QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)myFlagLocation);
 #else
-#error "Unsupported hardware architecture!"
+    overwriter->overwriteFunction(QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)myFlagLocation);
 #endif
-#endif // Q_OS_WIN
-
-  quint8 *cur = (quint8 *) func;
-
-  // If there is a short jump, its a jumptable and we don't have enough
-  // space after, so follow the short jump and write the jmp there
-  if (*cur == 0xE9) {
-    size_t old_offset = *(unsigned long *)(cur + 1);
-#ifdef ARCH_X86
-    void *ret = (void *)(((quint32)(((quint32) cur) + sizeof (quint32))) + old_offset + 1);
-#elif defined(ARCH_64)
-    void *ret = (void *)(((quint32)(((quint64) cur) + sizeof (quint32))) + old_offset + 1);
-#else
-#error "Unsupported hardware architecture!"
-#endif
-    writeJmp(ret, replacement);
-    return;
-  }
-
-#ifdef Q_OS_WIN
-  VirtualProtect(func, worstSize, PAGE_EXECUTE_READWRITE, &oldProtect);
-#elif defined(Q_OS_MAC)
-  quint8 *aligned = (quint8*)page_align(func);
-  const bool writable = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_WRITE|PROT_EXEC) == 0);
-  assert(writable);
-#endif
-
-  *cur = 0xff;
-  *(++cur) = 0x25;
-
-#ifdef ARCH_X86
-  *((quint32 *) ++cur) = (quint32)(((quint32) cur) + sizeof (quint32));
-  cur += sizeof (DWORD);
-  *((quint32 *)cur) = (quint32)replacement;
-#elif defined(ARCH_64)
-  *((quint32 *) ++cur) = 0;
-  cur += sizeof (quint32);
-  *((quint64*)cur) = (quint64)replacement;
-#else
-#error "Unsupported hardware architecture!"
-#endif
-
-#ifdef Q_OS_WIN
-  VirtualProtect(func, worstSize, oldProtect, &oldProtect);
-#elif defined(Q_OS_MAC)
-  const bool readOnly = (mprotect(aligned, 0xFFFF, PROT_READ|PROT_EXEC) == 0);
-  assert(readOnly);
 #endif
 }
-
-#endif
 
 #ifdef Q_OS_WIN
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
 
 BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
 {
-  // First retrieve the right module, if Qt is linked in release or debug
-  HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");
-  if (qtCoreDllHandle == NULL) {
-    qtCoreDllHandle = GetModuleHandle(L"QtCored4");
-  }
-
-  if (qtCoreDllHandle == NULL) {
-    cerr << "no handle for QtCore found!" << endl;
-    return FALSE;
-  }
-
-  // Look up the address of qt_startup_hook
-  FARPROC qtstartuphookaddr = GetProcAddress(qtCoreDllHandle, "qt_startup_hook");
-  FARPROC qtaddobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_addObject");
-  FARPROC qtremobjectaddr = GetProcAddress(qtCoreDllHandle, "qt_removeObject");
-#ifdef ARCH_64
-  FARPROC qFlagLocationaddr = GetProcAddress(qtCoreDllHandle, "?qFlagLocation@@YAPEBDPEBD@Z");
-#else
-  FARPROC qFlagLocationaddr = GetProcAddress(qtCoreDllHandle, "?qFlagLocation@@YAPBDPBD@Z");
-#endif
-
-  if (qtstartuphookaddr == NULL) {
-    cerr << "no address for qt_startup_hook found!" << endl;
-    return FALSE;
-  }
-  if (qtaddobjectaddr == NULL) {
-    cerr << "no address for qt_addObject found!" << endl;
-    return FALSE;
-  }
-  if (qtremobjectaddr == NULL) {
-    cerr << "no address for qt_removeObject found!" << endl;
-    return FALSE;
-  }
-  if (qFlagLocationaddr == NULL) {
-    cerr << "no address for qFlagLocation found!" << endl;
-    return FALSE;
-  }
-
   switch(dwReason) {
   case DLL_PROCESS_ATTACH:
   {
-    // write ourself into the hook chain
-    writeJmp(qtstartuphookaddr, (void *)qt_startup_hook);
-    writeJmp(qtaddobjectaddr, (void *)qt_addObject);
-    writeJmp(qtremobjectaddr, (void *)qt_removeObject);
-    writeJmp(qFlagLocationaddr, (void *)myFlagLocation);
+    overwriteQtFunctions();
+
     gammaray_probe_inject();
     break;
   }
@@ -847,12 +737,7 @@ class HitMeBabyOneMoreTime
   public:
     HitMeBabyOneMoreTime()
     {
-      void *qt_startup_hook_addr = dlsym(RTLD_NEXT, "qt_startup_hook");
-      void *qt_add_object_addr = dlsym(RTLD_NEXT, "qt_addObject");
-      void *qt_remove_object_addr = dlsym(RTLD_NEXT, "qt_removeObject");
-      writeJmp(qt_startup_hook_addr, (void *)qt_startup_hook);
-      writeJmp(qt_add_object_addr, (void *)qt_addObject);
-      writeJmp(qt_remove_object_addr, (void *)qt_removeObject);
+      overwriteQtFunctions();
     }
 
 };
