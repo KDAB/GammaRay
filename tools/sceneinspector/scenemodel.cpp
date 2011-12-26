@@ -23,8 +23,10 @@
 
 #include "scenemodel.h"
 
+#include <qapplication.h>
 #include <qgraphicsitem.h>
 #include <qgraphicsscene.h>
+#include <qpalette.h>
 #include <qdebug.h>
 
 using namespace GammaRay;
@@ -80,7 +82,7 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
     return QVariant::fromValue(item);
   } else if (item && role == Qt::ForegroundRole) {
     if (!item->isVisible()) {
-      return Qt::gray;
+      return qApp->palette().color(QPalette::Disabled, QPalette::Text);
     }
   }
   return QVariant();
