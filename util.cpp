@@ -118,7 +118,7 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     if (region.rectCount() == 1)
       return variantToString(region.rects().first());
     else
-      return QString::fromLatin1("<%n rects>").arg(region.rectCount());
+      return QString::fromLatin1("<%1 rects>").arg(region.rectCount());
   }
 
   case QVariant::Size:
