@@ -60,6 +60,8 @@ class ObjectModelBase : public Base
             arg(obj->parent() ? obj->parent()->metaObject()->className() : "<No parent>").
             arg(Util::addressToString(obj->parent())).
             arg(obj->children().size());
+      } else if (role == Qt::DecorationRole && index.column() == 0) {
+        return Util::iconForObject(obj);
       }
 
       return QVariant();

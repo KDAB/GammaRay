@@ -60,6 +60,9 @@ namespace Util
     }
     return findParentOfType<T>(object->parent());
   }
+
+  /// Returns an icon for the given object.
+  QVariant iconForObject( QObject* obj );
 }
 
 }

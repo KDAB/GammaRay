@@ -37,6 +37,8 @@
 #include <QWidget>
 #include <QDebug>
 #include <QPainter>
+#include <QDir>
+#include <QIcon>
 
 using namespace GammaRay;
 
@@ -300,3 +302,59 @@ bool Util::descendantOf(QObject *ascendant, QObject *obj)
   }
   return descendantOf(ascendant, parent);
 }
+
+namespace GammaRay {
+static QString stringifyProperty(QObject *obj, const QString &propName)
+{
+  const QVariant value = obj->property(propName.toLatin1());
+  const QMetaProperty mp = obj->metaObject()->property(obj->metaObject()->indexOfProperty(propName.toLatin1()));
+  if (mp.isValid()) {
+    const QString enumStr = Util::enumToString(value, mp.typeName(), obj);
+    if (!enumStr.isEmpty())
+      return enumStr;
+  }
+  return Util::variantToString(value);
+}
+
+static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
+{
+  const QString basePath = QString::fromLatin1(":/gammaray/classes/%1/").arg(mo->className());
+  const QDir dir(basePath);
+  if (dir.exists()) {
+    // see if we find one with exactly matching properties
+    foreach (const QString &entry, dir.entryList(QStringList() << QLatin1String("*.png"), QDir::Files)) {
+      if (entry == QLatin1String("default.png"))
+        continue;
+      QString propString(entry);
+      propString.chop(4);
+      const QStringList props = propString.split(QLatin1String(";"));
+      if (props.isEmpty())
+        continue;
+      bool allMatch = true;
+      foreach (const QString &prop, props) {
+        const QStringList keyValue = prop.split(QLatin1Char('='));
+        if (keyValue.size() != 2)
+          continue;
+        if (stringifyProperty(obj, keyValue.first()) != keyValue.last()) {
+          allMatch = false;
+          break;
+        } 
+      }
+      if (allMatch)
+        return QIcon(basePath + entry);
+    }
+    return QIcon(basePath + QLatin1String("default.png"));
+  } else if (mo->superClass()) {
+    return iconForObject(mo->superClass(), obj);
+  }
+  return QVariant();
+}
+}
+
+QVariant Util::iconForObject(QObject* obj)
+{
+  if (obj)
+    return GammaRay::iconForObject(obj->metaObject(), obj);
+  return QVariant();
+}
+
