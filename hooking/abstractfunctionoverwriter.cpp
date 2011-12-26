@@ -20,16 +20,16 @@
 */
 
 #include "abstractfunctionoverwriter.h"
+#include <assert.h>
 
 #ifdef ARCH_X86
-    const int worstSizeForLongJump = 10;
+    const long worstSizeForLongJump = 10;
 #elif defined(ARCH_64)
-    const int worstSizeForLongJump = 14;
+    const long worstSizeForLongJump = 14;
 #else
 # error "Unsupported hardware architecture!"
 #endif
 
-const int blockSize = 4 * worstSizeForLongJump; // normally we want to overwrite 4 functions
 
 using namespace GammaRay;
 
@@ -38,7 +38,7 @@ bool AbstractFunctionOverwriter::writeShortJump(void *target, void *const func)
     quint8 *cur = (quint8 *) target;
 
     //E9 relative short jump is 5 bytes long
-    bool ret = unprotectMemory(target, 5);
+    bool ret = unprotectMemory(page_align(target), roundToNextPage(5));
 
     if (!ret)
         return false;
@@ -47,7 +47,7 @@ bool AbstractFunctionOverwriter::writeShortJump(void *target, void *const func)
     cur++;
     *((quint32 *)cur) = (unsigned long)func - (unsigned long)(cur + 4);
 
-    ret = reprotectMemory(target, 5);
+    ret = reprotectMemory(page_align(target), roundToNextPage(5));
 
     if (!ret)
         return false;
@@ -59,7 +59,7 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
 {
     quint8 *cur = (quint8 *) target;
 
-    bool ret = unprotectMemory(target, worstSizeForLongJump);
+    bool ret = unprotectMemory(page_align(target), roundToNextPage(worstSizeForLongJump));
 
     if (!ret)
         return false;
@@ -79,7 +79,7 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
 # error "Unsupported hardware architecture!"
 #endif
 
-    ret = reprotectMemory(target, worstSizeForLongJump);
+    ret = reprotectMemory(page_align(target), roundToNextPage(worstSizeForLongJump));
 
     if (!ret)
         return false;
@@ -87,9 +87,9 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
     return true;
 }
 
-void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, int size)
+void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, size_t size)
 {
-    Q_ASSERT(blockSize > size);
+    Q_ASSERT(blocksize() > size);
 
 #if defined(ARCH_64)
     intptr_t minAddr;
@@ -116,18 +116,20 @@ void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, int siz
     void *mem = 0;
 #ifdef ARCH_X86
     Q_UNUSED(addr)
-    mem = reserveMemory(0, blockSize);
+    mem = reserveMemory(0, blocksize());
 #elif defined(ARCH_64)
-    intptr_t min = minAddr / blockSize;
-    intptr_t max = maxAddr / blockSize;
+    intptr_t min = minAddr / blocksize();
+    intptr_t max = maxAddr / blocksize();
     int rel = 0;
     for (int i = 0; i < (max - min + 1); ++i)
     {
         rel = -rel + (i & 1);
-        void* query = reinterpret_cast<void*>(((min + max) / 2 + rel) * blockSize);
+        void* query = reinterpret_cast<void*>(((min + max) / 2 + rel) * blocksize());
 
-        if (isMemoryFree(query, blockSize)) {
-            mem = reserveMemory(query, blockSize);
+        assert(!((size_t)query & (pagesize() - 1)));
+
+        if (isMemoryFree(query, blocksize())) {
+            mem = reserveMemory(query, blocksize());
             if (mem != 0)
             {
                 mem = query;
@@ -138,12 +140,12 @@ void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, int siz
 #else
 #error "Unsupported hardware architecture!"
 #endif
-    if (!commitMemory(mem, size))
+    if (!commitMemory(mem, blocksize()))
         return 0;
     MemorySegment memSegment;
     memSegment.mem = mem;
-    memSegment.size = blockSize;
-    memSegment.free = blockSize - size;
+    memSegment.size = blocksize();
+    memSegment.free = blocksize() - size;
     memoryPool.append(memSegment);
     return mem;
 }
@@ -159,6 +161,7 @@ void *AbstractFunctionOverwriter::createTrampoline(void *const func, void *const
     return mem;
 }
 
+
 AbstractFunctionOverwriter::~AbstractFunctionOverwriter()
 {
 }
@@ -173,4 +176,21 @@ bool AbstractFunctionOverwriter::overwriteFunction(const QString &orignalFunc, v
     bool ret = writeShortJump(func, mem);
 
     return ret;
+}
+
+void *AbstractFunctionOverwriter::page_align(void *addr) const
+{
+    assert(addr != 0);
+    return (void *)((size_t)addr & ~(pagesize() - 1));
+}
+
+size_t AbstractFunctionOverwriter::roundToNextPage(size_t addr) const
+{
+    assert(addr != 0);
+    return (size_t)page_align((void*)(addr + (pagesize() - 1)));
+}
+
+size_t GammaRay::AbstractFunctionOverwriter::blocksize()
+{
+    return roundToNextPage(std::max((worstSizeForLongJump * 4), pagesize()));
 }

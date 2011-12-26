@@ -34,16 +34,17 @@ namespace GammaRay {
 class WinFunctionOverwriter : public AbstractFunctionOverwriter
 {
 protected:
-    virtual bool unprotectMemory(void *mem, int size);
-    virtual bool reprotectMemory(void *mem, int size);
+    virtual bool unprotectMemory(void *mem, size_t size);
+    virtual bool reprotectMemory(void *mem, size_t size);
 
     virtual bool getAddressRange(intptr_t &min, intptr_t &max);
 
-    virtual bool isMemoryFree(void * const mem, int size);
-    virtual void* reserveMemory(void *mem, int size);
-    virtual bool commitMemory(void *mem, int size);
+    virtual bool isMemoryFree(void * const mem, size_t size);
+    virtual void* reserveMemory(void *mem, size_t size);
+    virtual bool commitMemory(void *mem, size_t size);
 
     virtual void* qtCoreFunctionLookup(const QString &function);
+    virtual long pagesize() const;
 
 private:
     WinFunctionOverwriter();

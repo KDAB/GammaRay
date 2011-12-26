@@ -32,13 +32,13 @@ WinFunctionOverwriter::WinFunctionOverwriter():oldProtect(0)
 {
 }
 
-bool WinFunctionOverwriter::unprotectMemory(void *mem, int size)
+bool WinFunctionOverwriter::unprotectMemory(void *mem, size_t size)
 {
     BOOL ret = VirtualProtect(mem, size, PAGE_EXECUTE_READWRITE, &oldProtect);
     return ret;
 }
 
-bool WinFunctionOverwriter::reprotectMemory(void *mem, int size)
+bool WinFunctionOverwriter::reprotectMemory(void *mem, size_t size)
 {
     BOOL ret = VirtualProtect(mem, size, oldProtect, &oldProtect);
     return ret;
@@ -55,7 +55,7 @@ bool WinFunctionOverwriter::getAddressRange(intptr_t &min, intptr_t &max)
     return true;
 }
 
-bool WinFunctionOverwriter::isMemoryFree(void * const mem, int size)
+bool WinFunctionOverwriter::isMemoryFree(void * const mem, size_t size)
 {
     Q_UNUSED(size);
     static MEMORY_BASIC_INFORMATION mi = { 0 };
@@ -67,7 +67,7 @@ bool WinFunctionOverwriter::isMemoryFree(void * const mem, int size)
     return true;
 }
 
-void* WinFunctionOverwriter::reserveMemory(void *mem, int size)
+void* WinFunctionOverwriter::reserveMemory(void *mem, size_t size)
 {
     void *retmem = 0;
 
@@ -76,7 +76,7 @@ void* WinFunctionOverwriter::reserveMemory(void *mem, int size)
     return retmem;
 }
 
-bool WinFunctionOverwriter::commitMemory(void *mem, int size)
+bool WinFunctionOverwriter::commitMemory(void *mem, size_t size)
 {
     void *retmem = 0;
 
@@ -100,6 +100,13 @@ void *WinFunctionOverwriter::qtCoreFunctionLookup(const QString &function)
     FARPROC qtfuncaddr = GetProcAddress(qtCoreDllHandle, function.toLatin1());
 
     return (void*)qtfuncaddr;
+}
+
+long WinFunctionOverwriter::pagesize() const
+{
+    SYSTEM_INFO si;
+    GetSystemInfo(&si);
+    return si.dwPageSize;
 }
 
 #endif // Q_OS_WIN

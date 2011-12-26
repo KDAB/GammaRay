@@ -51,14 +51,14 @@ protected:
      * @param mem start address of the memory that should be unprotected
      * @param size size of the memory region
      */
-    virtual bool unprotectMemory(void *mem, int size) = 0;
+    virtual bool unprotectMemory(void *mem, size_t size) = 0;
     /**
      * Restore the protection of the memory region that has been
      * unproteced before with unprotectMemory
      * @param mem start address of the memory that should be protected
      * @param size size of the memory region
      */
-    virtual bool reprotectMemory(void *mem, int size) = 0;
+    virtual bool reprotectMemory(void *mem, size_t size) = 0;
 
     /**
      * Writes a short jump at a given target to jump to a function.
@@ -82,7 +82,7 @@ protected:
      * @param addr position that should the memory be close to
      * @param size size of the memory region
      */
-    virtual void* getMemoryNearAddress(void * const addr, int size);
+    virtual void* getMemoryNearAddress(void * const addr, size_t size);
 
     /**
      * Creates a tranpoline function close to another function.
@@ -103,21 +103,21 @@ protected:
      * @param mem start address
      * @param size size of the memory region
      */
-    virtual bool isMemoryFree(void * const mem, int size) = 0;
+    virtual bool isMemoryFree(void * const mem, size_t size) = 0;
 
     /**
      * Allocate memory at the griven position
      * @param mem start address
      * @param size size of the memory region
      */
-    virtual void* reserveMemory(void *mem, int size) = 0;
+    virtual void* reserveMemory(void *mem, size_t size) = 0;
 
     /**
      * Commit memory at the griven position
      * @param mem start address
      * @param size size of the memory region
      */
-    virtual bool commitMemory(void *mem, int size) = 0;
+    virtual bool commitMemory(void *mem, size_t size) = 0;
 
     /**
      * Lookup function address of a given Qt Core 4 function.
@@ -125,11 +125,18 @@ protected:
      */
     virtual void* qtCoreFunctionLookup(const QString &function) = 0;
 
+    virtual long pagesize() const = 0;
+
+    virtual size_t blocksize();
+
 private:
+    void *page_align(void *addr) const;
+    size_t roundToNextPage(size_t addr) const;
+
     struct MemorySegment {
         void *mem;
-        int size;
-        int free;
+        size_t size;
+        size_t free;
     };
 
     QList<MemorySegment> memoryPool;
