@@ -686,7 +686,7 @@ void overwriteQtFunctions()
     overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)qt_startup_hook);
     overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)qt_addObject);
     overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)qt_removeObject);
-#if !defined(Q_OS_MAC)
+#if defined(Q_OS_WIN)
 #ifdef ARCH_64
     overwriter->overwriteFunction(QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)myFlagLocation);
 #else
