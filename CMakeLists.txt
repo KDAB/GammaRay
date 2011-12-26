@@ -241,6 +241,7 @@ set(gammaray_srcs
   hooking/abstractfunctionoverwriter.cpp
   hooking/functionoverwriterfactory.cpp
   hooking/winfunctionoverwriter.cpp
+  hooking/unixfunctionoverwriter.cpp
 )
 
 if(BUILD_TIMER_PLUGIN)

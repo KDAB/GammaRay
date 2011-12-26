@@ -21,6 +21,7 @@
 
 #include "functionoverwriterfactory.h"
 #include "winfunctionoverwriter.h"
+#include "unixfunctionoverwriter.h"
 
 using namespace GammaRay;
 
@@ -31,6 +32,9 @@ AbstractFunctionOverwriter *FunctionOverwriterFactory::createFunctionOverwriter(
 #ifdef Q_OS_WIN
     if (!overwriter)
         overwriter = new WinFunctionOverwriter();
+#else
+    if (!overwriter)
+        overwriter = new UnixFunctionOverwriter();
 #endif
     return overwriter;
 }

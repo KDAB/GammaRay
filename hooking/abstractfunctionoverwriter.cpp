@@ -20,7 +20,7 @@
 */
 
 #include "abstractfunctionoverwriter.h"
-#include <assert.h>
+#include <iostream>
 
 #ifdef ARCH_X86
     const long worstSizeForLongJump = 10;
@@ -40,8 +40,10 @@ bool AbstractFunctionOverwriter::writeShortJump(void *target, void *const func)
     //E9 relative short jump is 5 bytes long
     bool ret = unprotectMemory(page_align(target), roundToNextPage(5));
 
-    if (!ret)
+    if (!ret) {
+        std::cerr << "Failed to unprotect memory: " << page_align(target);
         return false;
+    }
 
     *cur = 0xE9;
     cur++;
@@ -49,8 +51,10 @@ bool AbstractFunctionOverwriter::writeShortJump(void *target, void *const func)
 
     ret = reprotectMemory(page_align(target), roundToNextPage(5));
 
-    if (!ret)
+    if (!ret) {
+        std::cerr << "Failed to reprotect memory: " << page_align(target);
         return false;
+    }
 
     return true;
 }
@@ -61,8 +65,10 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
 
     bool ret = unprotectMemory(page_align(target), roundToNextPage(worstSizeForLongJump));
 
-    if (!ret)
+    if (!ret) {
+        std::cerr << "Failed to unprotect memory: " << page_align(target);
         return false;
+    }
 
     *cur = 0xff;
     *(++cur) = 0x25;
@@ -81,8 +87,10 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
 
     ret = reprotectMemory(page_align(target), roundToNextPage(worstSizeForLongJump));
 
-    if (!ret)
+    if (!ret) {
+        std::cerr << "Failed to reprotect memory: " << page_align(target);
         return false;
+    }
 
     return true;
 }
@@ -126,13 +134,12 @@ void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, size_t 
         rel = -rel + (i & 1);
         void* query = reinterpret_cast<void*>(((min + max) / 2 + rel) * blocksize());
 
-        assert(!((size_t)query & (pagesize() - 1)));
+        Q_ASSERT(!((size_t)query & (pagesize() - 1)));
 
         if (isMemoryFree(query, blocksize())) {
             mem = reserveMemory(query, blocksize());
-            if (mem != 0)
+            if (mem != 0 && reinterpret_cast<intptr_t>(mem) > minAddr && reinterpret_cast<intptr_t>(mem) < maxAddr)
             {
-                mem = query;
                 break;
             }
         }
@@ -140,8 +147,10 @@ void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, size_t 
 #else
 #error "Unsupported hardware architecture!"
 #endif
-    if (mem)
+    if (!mem) {
+        std::cerr << "Error could not find memory close to: " << addr;
         return 0;
+    }
     if (!commitMemory(mem, blocksize()))
         return 0;
     MemorySegment memSegment;
@@ -171,6 +180,10 @@ AbstractFunctionOverwriter::~AbstractFunctionOverwriter()
 bool AbstractFunctionOverwriter::overwriteFunction(const QString &orignalFunc, void * const replacementFunc)
 {
     void *func = qtCoreFunctionLookup(orignalFunc);
+    if (!func) {
+        std::cerr << "Failed to lookup: " << orignalFunc.toLatin1().data();
+        return false;
+    }
     void *mem = createTrampoline(func, replacementFunc);
     if (!mem)
         return false;
@@ -182,13 +195,13 @@ bool AbstractFunctionOverwriter::overwriteFunction(const QString &orignalFunc, v
 
 void *AbstractFunctionOverwriter::page_align(void *addr) const
 {
-    assert(addr != 0);
+    Q_ASSERT(addr != 0);
     return (void *)((size_t)addr & ~(pagesize() - 1));
 }
 
 size_t AbstractFunctionOverwriter::roundToNextPage(size_t addr) const
 {
-    assert(addr != 0);
+    Q_ASSERT(addr != 0);
     return (size_t)page_align((void*)(addr + (pagesize() - 1)));
 }
 
