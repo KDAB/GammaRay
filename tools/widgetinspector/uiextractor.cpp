@@ -24,6 +24,7 @@
 #include "uiextractor.h"
 
 #include <QDebug>
+#include <QLocale>
 #include <QMetaObject>
 #include <QMetaProperty>
 
@@ -37,12 +38,24 @@ bool UiExtractor::checkProperty(QObject* obj, const QString& prop) const
   // TODO come up with some more aggressive filtering
   if (mp.isValid() && mp.isDesignable(obj) && mp.isStored(obj) && mp.isWritable()) {
     const QVariant value = mp.read(obj);
+
+    // try to figure out the default by resetting to it
+    if (mp.isResettable()) {
+      mp.reset(obj);
+      if (mp.read(obj) == value)
+        return false;
+      mp.write(obj, value);
+      return true;
+    }
+
+    // some guessing for non-resettable properties
     if (value.isNull() || !value.isValid())
       return false;
 
-    // ### this assumes empty == default, maybe we can temporarily reset and compare actual and default values instead?
     if (value.type() == QVariant::String)
       return !value.toString().isEmpty();
+    else if (value.type() == QVariant::Locale)
+      return value.value<QLocale>() != QLocale::system();
 
     return true;
   }
