@@ -140,6 +140,8 @@ void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, size_t 
 #else
 #error "Unsupported hardware architecture!"
 #endif
+    if (mem)
+        return 0;
     if (!commitMemory(mem, blocksize()))
         return 0;
     MemorySegment memSegment;
