@@ -89,7 +89,7 @@ void* UnixFunctionOverwriter::reserveMemory(void *mem, size_t size)
     Q_ASSERT(!((size_t)size & (pagesize() - 1)));
 
     // reserve a memory region with a hint and hope that it is close to the other address
-    void *retmem = mmap(mem, size, PROT_READ|PROT_EXEC, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    void *retmem = mmap(mem, size, PROT_READ|PROT_EXEC, MAP_ANON | MAP_PRIVATE, -1, 0);
 
     if (retmem == MAP_FAILED)
         return 0;
