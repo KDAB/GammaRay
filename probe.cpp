@@ -546,7 +546,8 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     if (!filtered && childEvent->added()) {
       if (!tracked) {
         // was not tracked before, add to all models
-        objectAdded(obj);
+        // child added events are sent before qt_addObject is called, so we assumes this comes from the ctor
+        objectAdded(obj, true);
       } else if (!m_queuedObjects.contains(obj)) {
         // object is known already, just update the position in the tree
         // BUT: only when we did not queue this item before
