@@ -22,6 +22,7 @@ public slots:
 
 private:
   void testProbe();
+  void testAvailableInjectors();
 
   void error(const QString &msg);
   void information(const QString &msg);

@@ -4,6 +4,7 @@
 
 #include <QStandardItemModel>
 #include <qfileinfo.h>
+#include <injector/injectorfactory.h>
 
 using namespace GammaRay;
 
@@ -23,6 +24,7 @@ void SelfTestPage::run()
 {
   m_resultModel->clear();
   testProbe();
+  testAvailableInjectors();
 }
 
 void SelfTestPage::testProbe()
@@ -40,6 +42,17 @@ void SelfTestPage::testProbe()
   }
 
   information(tr("Found valid probe at %1.").arg(probePath));
+}
+
+void SelfTestPage::testAvailableInjectors()
+{
+  const QStringList injectors = InjectorFactory::availableInjectors();
+  if (injectors.isEmpty()) {
+    error(tr("No injectors available - GammaRay not functional."));
+    return;
+  }
+
+  information(tr("The following injectors are available: %1").arg(injectors.join(QLatin1String(", "))));
 }
 
 void SelfTestPage::error(const QString& msg)
