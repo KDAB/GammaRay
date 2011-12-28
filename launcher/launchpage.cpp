@@ -5,6 +5,7 @@
 #include <QFileSystemModel>
 #include <qfiledialog.h>
 #include <qstringlistmodel.h>
+#include <QSettings>
 
 using namespace GammaRay;
 
@@ -25,10 +26,18 @@ LaunchPage::LaunchPage(QWidget* parent) : QWidget(parent),
   fsModel->setRootPath(QDir::rootPath());
   pathCompleter->setModel(fsModel);
   ui->progEdit->setCompleter(pathCompleter);
+
+  QSettings settings;
+  ui->progEdit->setText(settings.value(QLatin1String("Launcher/Program")).toString());
+  m_argsModel->setStringList(settings.value(QLatin1String("Launcher/Arguments")).toStringList());
 }
 
 LaunchPage::~LaunchPage()
 {
+  QSettings settings;
+  settings.setValue(QLatin1String("Launcher/Program"), ui->progEdit->text());
+  settings.setValue(QLatin1String("Launcher/Arguments"), m_argsModel->stringList());
+
   delete ui;
 }
 
