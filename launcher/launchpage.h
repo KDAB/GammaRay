@@ -19,6 +19,10 @@ public:
   ~LaunchPage();
 
   QStringList launchArguments() const;
+  bool isValid();
+
+signals:
+  void updateButtonState();
 
 private slots:
   void showFileDialog();

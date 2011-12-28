@@ -10,6 +10,7 @@ LauncherWindow::LauncherWindow(QWidget* parent): QDialog(parent), ui( new Ui::La
   ui->setupUi(this);
   connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
+  connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(activate()), ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
 }
 
@@ -39,6 +40,7 @@ void LauncherWindow::tabChanged()
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->attachPage->isValid());
   } else if (ui->tabWidget->currentWidget() == ui->launchPage) {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Launch"));
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->launchPage->isValid());
   }
 }
 

@@ -16,6 +16,7 @@ LaunchPage::LaunchPage(QWidget* parent) : QWidget(parent),
   connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
   connect(ui->addArgButton, SIGNAL(clicked()), SLOT(addArgument()));
   connect(ui->removeArgButton, SIGNAL(clicked()), SLOT(removeArgument()));
+  connect(ui->progEdit, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
 
   ui->argsBox->setModel(m_argsModel);
 
@@ -46,7 +47,6 @@ void LaunchPage::showFileDialog()
   if (exeFilePath.isEmpty())
     return;
 
-  // TODO: check if this is an executable and using a Qt version etc we have a probe for
   ui->progEdit->setText(exeFilePath);
 }
 
@@ -61,6 +61,15 @@ void LaunchPage::removeArgument()
 {
   // TODO check if there's a selection at all and update button state accordingly
   m_argsModel->removeRows(ui->argsBox->currentIndex().row(), 1);
+}
+
+bool LaunchPage::isValid()
+{
+  if (ui->progEdit->text().isEmpty())
+    return false;
+
+  const QFileInfo fi(ui->progEdit->text());
+  return fi.exists() && fi.isFile() && fi.isExecutable();
 }
 
 #include "launchpage.moc"
