@@ -30,6 +30,7 @@ LaunchPage::LaunchPage(QWidget* parent) : QWidget(parent),
   QSettings settings;
   ui->progEdit->setText(settings.value(QLatin1String("Launcher/Program")).toString());
   m_argsModel->setStringList(settings.value(QLatin1String("Launcher/Arguments")).toStringList());
+  updateArgumentButtons();
 }
 
 LaunchPage::~LaunchPage()
@@ -64,12 +65,14 @@ void LaunchPage::addArgument()
   m_argsModel->insertRows(m_argsModel->rowCount(), 1);
   const QModelIndex newIndex = m_argsModel->index(m_argsModel->rowCount() - 1, 0);
   ui->argsBox->edit(newIndex);
+  updateArgumentButtons();
 }
 
 void LaunchPage::removeArgument()
 {
   // TODO check if there's a selection at all and update button state accordingly
   m_argsModel->removeRows(ui->argsBox->currentIndex().row(), 1);
+  updateArgumentButtons();
 }
 
 bool LaunchPage::isValid()
@@ -79,6 +82,11 @@ bool LaunchPage::isValid()
 
   const QFileInfo fi(ui->progEdit->text());
   return fi.exists() && fi.isFile() && fi.isExecutable();
+}
+
+void LaunchPage::updateArgumentButtons()
+{
+  ui->removeArgButton->setEnabled(m_argsModel->rowCount() > 0);
 }
 
 #include "launchpage.moc"

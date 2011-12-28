@@ -28,6 +28,7 @@ private slots:
   void showFileDialog();
   void addArgument();
   void removeArgument();
+  void updateArgumentButtons();
 
 private:
   Ui::LaunchPage* ui;
