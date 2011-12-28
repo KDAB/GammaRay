@@ -24,7 +24,7 @@
 #ifndef ATTACHDIALOG_H
 #define ATTACHDIALOG_H
 
-#include <QDialog>
+#include <QWidget>
 
 #include "processlist.h"
 #include "ui_attachdialog.h"
@@ -34,7 +34,7 @@ namespace GammaRay {
 class ProcessModel;
 class ProcessFilterModel;
 
-class AttachDialog : public QDialog
+class AttachDialog : public QWidget
 {
   Q_OBJECT
 
@@ -42,9 +42,14 @@ class AttachDialog : public QDialog
     explicit AttachDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
     QString pid() const;
+    /// Returns @c true if a valid process is selected.
+    bool isValid() const;
+
+  signals:
+    void updateButtonState();
+    void activate();
 
   private slots:
-    void selectionChanged();
     void updateProcesses();
     void updateProcessesFinished();
 

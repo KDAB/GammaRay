@@ -25,7 +25,7 @@
 #include "config-gammaray-version.h"
 #include "probefinder.h"
 #include "injector/injectorfactory.h"
-#include "attachdialog.h"
+#include "launcherwindow.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
   }
 
   if (args.isEmpty() && pid <= 0) {
-    AttachDialog dialog;
+    LauncherWindow dialog;
     if (dialog.exec() == QDialog::Accepted) {
       bool ok;
       pid = dialog.pid().toInt(&ok);

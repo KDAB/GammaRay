@@ -37,10 +37,9 @@
 using namespace GammaRay;
 
 AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
-: QDialog(parent, f)
+: QWidget(parent, f)
 {
   ui.setupUi(this);
-  ui.buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Attach"));
 
   m_model = new ProcessModel(this);
 
@@ -59,10 +58,10 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   ui.view->setSelectionBehavior(QAbstractItemView::SelectRows);
   ui.view->setSelectionMode(QAbstractItemView::SingleSelection);
   connect(ui.view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-          this, SLOT(selectionChanged()));
+          this, SIGNAL(updateButtonState()));
 
-  connect(ui.view, SIGNAL(activated(QModelIndex)),
-          ui.buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
+  connect(ui.view, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
+         
 
   ui.filter->setProxy(m_proxyModel);
 
@@ -74,13 +73,13 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   m_timer->start(1000);
 
   ui.stackedWidget->setCurrentWidget(ui.loadingLabel);
-  selectionChanged();
+  emit updateButtonState();
   updateProcesses();
 }
 
-void AttachDialog::selectionChanged()
+bool AttachDialog::isValid() const
 {
-  ui.buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui.view->currentIndex().isValid());
+  return ui.view->currentIndex().isValid();
 }
 
 QString AttachDialog::pid() const
