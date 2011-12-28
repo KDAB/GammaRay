@@ -20,11 +20,15 @@ LauncherWindow::~LauncherWindow()
 
 QString LauncherWindow::pid() const
 {
-  return ui->attachPage->pid();
+  if (ui->tabWidget->currentWidget() == ui->attachPage)
+    return ui->attachPage->pid();
+  return QString();
 }
 
 QStringList LauncherWindow::launchArguments() const
 {
+  if (ui->tabWidget->currentWidget() == ui->launchPage)
+    return ui->launchPage->launchArguments();
   return QStringList();
 }
 

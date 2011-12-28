@@ -28,7 +28,7 @@
        <string>Attach</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="launchPage">
+     <widget class="GammaRay::LaunchPage" name="launchPage">
       <attribute name="title">
        <string>Launch</string>
       </attribute>
@@ -70,6 +70,12 @@
    <class>GammaRay::AttachDialog</class>
    <extends>QWidget</extends>
    <header>attachdialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::LaunchPage</class>
+   <extends>QWidget</extends>
+   <header>launchpage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
