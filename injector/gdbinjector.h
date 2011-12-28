@@ -40,6 +40,7 @@ class GdbInjector : public QObject, public AbstractInjector
     virtual bool launch(const QStringList &programAndArgs,
                        const QString &probeDll, const QString &probeFunc);
     virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
+    virtual bool selfTest();
     virtual int exitCode();
     virtual QProcess::ExitStatus exitStatus();
     virtual QProcess::ProcessError processError();
