@@ -2,6 +2,7 @@
 #include "ui_launcherwindow.h"
 
 #include <QPushButton>
+#include <QSettings>
 
 using namespace GammaRay;
 
@@ -12,10 +13,16 @@ LauncherWindow::LauncherWindow(QWidget* parent): QDialog(parent), ui( new Ui::La
   connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(activate()), ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
+
+  QSettings settings;
+  ui->tabWidget->setCurrentIndex(settings.value(QLatin1String("Launcher/TabIndex")).toInt());
 }
 
 LauncherWindow::~LauncherWindow()
 {
+  QSettings settings;
+  settings.setValue(QLatin1String("Launcher/TabIndex"), ui->tabWidget->currentIndex());
+
   delete ui;
 }
 
