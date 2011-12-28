@@ -21,6 +21,8 @@ public:
   QStringList launchArguments() const;
   bool isValid();
 
+  void writeSettings();
+
 signals:
   void updateButtonState();
 

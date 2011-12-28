@@ -35,11 +35,14 @@ LaunchPage::LaunchPage(QWidget* parent) : QWidget(parent),
 
 LaunchPage::~LaunchPage()
 {
+  delete ui;
+}
+
+void LaunchPage::writeSettings()
+{
   QSettings settings;
   settings.setValue(QLatin1String("Launcher/Program"), ui->progEdit->text());
   settings.setValue(QLatin1String("Launcher/Arguments"), m_argsModel->stringList());
-
-  delete ui;
 }
 
 QStringList LaunchPage::launchArguments() const

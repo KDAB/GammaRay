@@ -20,9 +20,6 @@ LauncherWindow::LauncherWindow(QWidget* parent): QDialog(parent), ui( new Ui::La
 
 LauncherWindow::~LauncherWindow()
 {
-  QSettings settings;
-  settings.setValue(QLatin1String("Launcher/TabIndex"), ui->tabWidget->currentIndex());
-
   delete ui;
 }
 
@@ -50,5 +47,16 @@ void LauncherWindow::tabChanged()
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->launchPage->isValid());
   }
 }
+
+void LauncherWindow::accept()
+{
+  QSettings settings;
+  settings.setValue(QLatin1String("Launcher/TabIndex"), ui->tabWidget->currentIndex());
+
+  ui->launchPage->writeSettings();
+
+  QDialog::accept();
+}
+
 
 #include "launcherwindow.moc"

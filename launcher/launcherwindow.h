@@ -21,6 +21,8 @@ public:
   /// returns the command and arguments, if the launch page is active
   QStringList launchArguments() const;
 
+  void accept();
+
 private slots:
   void tabChanged();
 
