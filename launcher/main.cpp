@@ -104,9 +104,10 @@ int main(int argc, char **argv)
   if (args.isEmpty() && pid <= 0) {
     LauncherWindow dialog;
     if (dialog.exec() == QDialog::Accepted) {
+      args = dialog.launchArguments();
       bool ok;
       pid = dialog.pid().toInt(&ok);
-      if (!ok) {
+      if (!ok && args.isEmpty()) {
         return 0;
       }
     } else {
