@@ -33,6 +33,11 @@
        <string>Launch</string>
       </attribute>
      </widget>
+     <widget class="GammaRay::SelfTestPage" name="selfTestPage">
+      <attribute name="title">
+       <string>Self Test</string>
+      </attribute>
+     </widget>
     </widget>
    </item>
    <item>
@@ -76,6 +81,12 @@
    <class>GammaRay::LaunchPage</class>
    <extends>QWidget</extends>
    <header>launchpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::SelfTestPage</class>
+   <extends>QWidget</extends>
+   <header>selftestpage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

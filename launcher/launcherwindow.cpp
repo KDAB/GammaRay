@@ -45,6 +45,8 @@ void LauncherWindow::tabChanged()
   } else if (ui->tabWidget->currentWidget() == ui->launchPage) {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Launch"));
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->launchPage->isValid());
+  } else {
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
   }
 }
 

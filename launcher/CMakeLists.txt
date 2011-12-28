@@ -13,6 +13,7 @@ set(gammaray_runner_srcs
   splashscreen.cpp
   launcherwindow.cpp
   launchpage.cpp
+  selftestpage.cpp
 
   attachdialog.cpp
   processmodel.cpp
@@ -39,6 +40,7 @@ qt4_wrap_ui(gammaray_runner_srcs
   attachdialog.ui
   launcherwindow.ui
   launchpage.ui
+  selftestpage.ui
 )
 # TODO we don't need all the class icons here, so split the qrc file accordingly
 qt4_add_resources(gammaray_runner_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
