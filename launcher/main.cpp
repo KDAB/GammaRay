@@ -25,7 +25,7 @@
 #include "config-gammaray-version.h"
 #include "probefinder.h"
 #include "injector/injectorfactory.h"
-#include "attach/attachdialog.h"
+#include "attachdialog.h"
 
 #include <QApplication>
 #include <QDebug>

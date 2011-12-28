@@ -152,45 +152,7 @@ if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
 endif()
 
 add_subdirectory(injector)
-
-set(gammaray_runner_srcs
-  injector/abstractinjector.cpp
-  injector/injectorfactory.cpp
-  injector/preloadinjector.cpp
-  injector/styleinjector.cpp
-  injector/windllinjector.cpp
-  injector/interactiveprocess.cpp
-  probefinder.cpp
-  main.cpp
-  promolabel.cpp
-  splashscreen.cpp
-
-  attach/attachdialog.cpp
-  attach/processmodel.cpp
-  attach/processfiltermodel.cpp
-
-  3rdparty/kde/kidentityproxymodel.cpp
-  3rdparty/kde/krecursivefilterproxymodel.cpp
-  3rdparty/kde/kfilterproxysearchline.cpp
-)
-if(NOT WIN32)
-  set(gammaray_runner_srcs
-    ${gammaray_runner_srcs}
-    injector/gdbinjector.cpp
-    attach/processlist_unix.cpp
-  )
-else()
-  set(gammaray_runner_srcs
-    ${gammaray_runner_srcs}
-    attach/processlist_win.cpp
-  )
-endif()
-
-qt4_wrap_ui(gammaray_runner_srcs attach/attachdialog.ui)
-qt4_add_resources(gammaray_runner_srcs resources/gammaray.qrc)
-
-add_executable(gammaray ${gammaray_runner_srcs})
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+add_subdirectory(launcher)
 
 find_package(Graphviz)
 find_package(VTK)
@@ -247,7 +209,6 @@ set(gammaray_srcs
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp
   toolmodel.cpp
-  promolabel.cpp
   proxydetacher.cpp
   proxytoolfactory.cpp
   sidepane.cpp
@@ -295,7 +256,7 @@ else()
                     tools/messagehandler/StackWalker.cpp)
 endif()
 
-qt4_automoc(${gammaray_srcs} ${gammaray_runner_srcs})
+qt4_automoc(${gammaray_srcs})
 qt4_wrap_ui(gammaray_srcs
   mainwindow.ui
   propertywidget.ui
@@ -341,7 +302,7 @@ if(NOT WIN32)
 endif()
 set_target_properties(gammaray_probe PROPERTIES PREFIX "")
 
-install(TARGETS gammaray gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if(UNIX AND NOT APPLE)
   set(XDG_APPS_INSTALL_DIR share/applications)
