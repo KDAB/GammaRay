@@ -75,9 +75,17 @@ class AbstractInjector
     virtual QProcess::ProcessError processError() = 0;
 
     /**
-     * @return Descriptional error message when launch/attach failed.
+     * @return Descriptional error message when launch/attach/self-test failed.
      */
     virtual QString errorString() = 0;
+
+    /**
+     * Perform tests to ensure the injector is operational, such as testing if
+     * all necessary runtime dependencies are available.
+     * @return @c true on success, @c false otherwise.
+     * @note Make sure to set errorString() when returning @c false.
+     */
+    virtual bool selfTest();
 };
 
 }

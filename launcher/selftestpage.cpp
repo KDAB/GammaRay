@@ -25,6 +25,7 @@ void SelfTestPage::run()
   m_resultModel->clear();
   testProbe();
   testAvailableInjectors();
+  testInjectors();
 }
 
 void SelfTestPage::testProbe()
@@ -53,6 +54,22 @@ void SelfTestPage::testAvailableInjectors()
   }
 
   information(tr("The following injectors are available: %1").arg(injectors.join(QLatin1String(", "))));
+}
+
+void SelfTestPage::testInjectors()
+{
+  foreach (const QString &injectorType, InjectorFactory::availableInjectors()) {
+    AbstractInjector::Ptr injector = InjectorFactory::createInjector(injectorType);
+    if (!injector) {
+      error(tr("Unable to create instance of injector %1.").arg(injectorType));
+      continue;
+    }
+    if (injector->selfTest()) {
+      information(tr("Injector %1 successfully passed its self-test.").arg(injectorType));
+    } else {
+      error(tr("Injector %1 failed to pass its self-test: %2.").arg(injectorType, injector->errorString()));
+    }
+  }
 }
 
 void SelfTestPage::error(const QString& msg)

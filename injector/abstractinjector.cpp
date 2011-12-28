@@ -51,3 +51,8 @@ bool AbstractInjector::attach(int pid, const QString &probeDll, const QString &p
   qWarning() << "Attaching to a running process is not supported by this injector.";
   return false;
 }
+
+bool AbstractInjector::selfTest()
+{;
+  return true;
+}
