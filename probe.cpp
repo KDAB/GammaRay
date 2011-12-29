@@ -64,6 +64,7 @@ using namespace GammaRay;
 using namespace std;
 
 Probe *Probe::s_instance = 0;
+bool functionsOverwritten = false;
 
 namespace GammaRay
 {
@@ -629,8 +630,10 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 
   new ProbeCreator(ProbeCreator::CreateOnly);
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
-  static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
-  next_qt_startup_hook();
+  if (!functionsOverwritten) {
+    static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
+    next_qt_startup_hook();
+  }
 #endif
 }
 
@@ -638,9 +641,11 @@ extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 {
   Probe::objectAdded(obj, true);
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
-  static void (*next_qt_addObject)(QObject *obj) =
-    (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
-  next_qt_addObject(obj);
+  if (!functionsOverwritten) {
+    static void (*next_qt_addObject)(QObject *obj) =
+      (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
+    next_qt_addObject(obj);
+  }
 #endif
 }
 
@@ -648,9 +653,11 @@ extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
 {
   Probe::objectRemoved(obj);
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
-  static void (*next_qt_removeObject)(QObject *obj) =
-    (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
-  next_qt_removeObject(obj);
+  if (!functionsOverwritten) {
+    static void (*next_qt_removeObject)(QObject *obj) =
+      (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
+    next_qt_removeObject(obj);
+  }
 #endif
 }
 
@@ -681,6 +688,7 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 
 void overwriteQtFunctions()
 {
+    functionsOverwritten = true;
     AbstractFunctionOverwriter* overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
 
     overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)qt_startup_hook);
