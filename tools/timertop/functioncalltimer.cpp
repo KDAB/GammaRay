@@ -22,7 +22,9 @@
 */
 #include "functioncalltimer.h"
 
-#include <qglobal.h>
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#endif
 
 using namespace GammaRay;
 
@@ -37,7 +39,15 @@ bool FunctionCallTimer::start()
     return false;
   }
 
+#ifndef Q_OS_WIN
   clock_gettime(CLOCK_REALTIME, &m_startTime);
+#else
+  LARGE_INTEGER startTime;
+  bool ret = QueryPerformanceCounter(&startTime);
+  if (!ret)
+      return false;
+  m_startTime = startTime.QuadPart;
+#endif
   m_active = true;
   return true;
 }
@@ -51,9 +61,18 @@ int FunctionCallTimer::stop()
 {
   Q_ASSERT(m_active);
   m_active = false;
+#ifndef Q_OS_WIN
   timespec endTime;
   clock_gettime(CLOCK_REALTIME, &endTime);
   int elapsed = (endTime.tv_nsec - m_startTime.tv_nsec) / 1000;
   elapsed += (endTime.tv_sec - m_startTime.tv_sec) * 1000000;
   return elapsed;
+#else
+  LARGE_INTEGER endTime;
+  LARGE_INTEGER frequency;
+  QueryPerformanceCounter(&endTime);
+  QueryPerformanceFrequency(&frequency);
+  int elapsed = ((endTime.QuadPart - m_startTime) * 1000000) / frequency.QuadPart;
+  return elapsed;
+#endif
 }

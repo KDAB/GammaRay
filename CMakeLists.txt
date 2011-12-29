@@ -82,6 +82,9 @@ check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
 if(HAVE_CLOCK_GETTIME)
   set(BUILD_TIMER_PLUGIN TRUE)
   message(STATUS "clock_gettime in librt found, building timer plugin.")
+elseif(WIN32)
+  set(BUILD_TIMER_PLUGIN TRUE)
+  message(STATUS "windows, building timer plugin.")
 else()
   set(BUILD_TIMER_PLUGIN FALSE)
   message(STATUS "clock_gettime in librt not found, disabling timer plugin.")
@@ -290,7 +293,7 @@ qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
 add_library(gammaray_probe
   SHARED ${gammaray_srcs}
 )
-if(BUILD_TIMER_PLUGIN)
+if(BUILD_TIMER_PLUGIN AND NOT WIN32)
   target_link_libraries(gammaray_probe rt)
 endif()
 target_link_libraries(gammaray_probe

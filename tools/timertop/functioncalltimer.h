@@ -24,6 +24,7 @@
 #define GAMMARAY_FUNCTIONCALLTIMER_H
 
 #include "time.h"
+#include <qglobal.h>
 
 namespace GammaRay {
 
@@ -36,7 +37,11 @@ class FunctionCallTimer
     int stop();
 
   private:
+#ifndef Q_OS_WIN
     timespec m_startTime;
+#else
+    qint64 m_startTime;
+#endif
     bool m_active;
 };
 
