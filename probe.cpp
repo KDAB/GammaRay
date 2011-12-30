@@ -706,7 +706,7 @@ void overwriteQtFunctions()
 #ifdef Q_OS_WIN
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
 
-BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
+extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
 {
   switch(dwReason) {
   case DLL_PROCESS_ATTACH:
