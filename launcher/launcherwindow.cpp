@@ -23,6 +23,7 @@
 
 #include "launcherwindow.h"
 #include "ui_launcherwindow.h"
+#include "config-gammaray-version.h"
 
 #include <QPushButton>
 #include <QSettings>
@@ -32,6 +33,7 @@ using namespace GammaRay;
 LauncherWindow::LauncherWindow(QWidget* parent): QDialog(parent), ui( new Ui::LauncherWindow )
 {
   ui->setupUi(this);
+  ui->aboutLabel->setText(ui->aboutLabel->text().arg(GAMMARAY_VERSION_STRING));
   connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
