@@ -52,7 +52,7 @@
     <file alias="classes/QPlainTextEdit/default.png">classes/plaintextedit.png</file>
     <file alias="classes/QSlider/orientation=Vertical.png">classes/vslider.png</file>
     <file alias="classes/QDoubleSpinBox/default.png">classes/doublespinbox.png</file>
-    <file alias="claasses/QLCDNumber/default.png">classes/lcdnumber.png</file>
+    <file alias="classes/QLCDNumber/default.png">classes/lcdnumber.png</file>
     <file alias="classes/QToolButton/default.png">classes/toolbutton.png</file>
     <file alias="classes/QTableView/default.png">classes/table.png</file>
     <file alias="classes/QStackedWidget/default.png">classes/widgetstack.png</file>
