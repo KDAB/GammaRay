@@ -106,7 +106,7 @@ void MainWindow::about()
   mb.setWindowTitle(tr("About %1").arg(progName));
   mb.setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
   mb.setInformativeText(
-    trUtf8("<qt><p>Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, "
+    trUtf8("<qt><p>Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, "
        "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></p>"
        "<p><u>Authors:</u><br>"
        "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"

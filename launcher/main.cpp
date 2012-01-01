@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     }
     if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
       out << PROGRAM_NAME << " version " << GAMMARAY_VERSION_STRING << endl;
-      out << "Copyright (C) 2010-2011 Klaralvdalens Datakonsult AB, "
+      out << "Copyright (C) 2010-2012 Klaralvdalens Datakonsult AB, "
           << "a KDAB Group company, info@kdab.com" << endl;
       return 0;
     }

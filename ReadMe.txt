@@ -55,7 +55,7 @@ Head Engineer for GammaRay is Volker Krause <volker.krause@kdab.com>
 
 License
 =======
-Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
+Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
