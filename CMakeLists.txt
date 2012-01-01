@@ -322,8 +322,6 @@ if(UNIX AND NOT APPLE)
   install(FILES resources/GammaRay-128x128.png DESTINATION share/icons/hicolor/128x128/apps)
   install(FILES resources/GammaRay-256x256.png DESTINATION share/icons/hicolor/256x256/apps)
   install(FILES resources/GammaRay-512x512.png DESTINATION share/icons/hicolor/512x512/apps)
-
-  install(FILES resources/kdablogo160.png resources/kdabproducts.png resources/splashscreen.png DESTINATION share/icons/hicolor/apps)
 endif()
 
 set(LICENSE_FILE "License.txt")
