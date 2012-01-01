@@ -148,7 +148,7 @@ background-position:bottom right;
   </widget>
   <action name="actionRetractProbe">
    <property name="text">
-    <string>&amp;Retract Probe</string>
+    <string>&amp;Detach</string>
    </property>
    <property name="toolTip">
     <string>Retract probe from application.</string>
