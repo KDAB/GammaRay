@@ -157,8 +157,8 @@ void ProbeCreator::createProbe()
   }
 
   // Exit early instead of asserting in QWidgetPrivate::init()
-  const QApplication * const qGuiApp = qobject_cast<const QApplication *>(qApp);
-  if (!qGuiApp || qGuiApp->type() == QApplication::Tty) {
+  const QApplication * const qGuiApplication = qApp; // qobject_cast<const QApplication *>(qApp);
+  if (!qGuiApplication || qGuiApplication->type() == QApplication::Tty) {
       cerr << "Unable to attach to a non-GUI application.\n"
               "Your application needs to use QApplication, otherwise GammaRay can not work." << endl;
       return;
