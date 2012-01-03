@@ -25,6 +25,8 @@
 #define GAMMARAY_METATYPEDECALARATIONS_H
 
 #include <QGraphicsItem>
+#include <QGraphicsWidget>
+#include <QGraphicsEffect>
 
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
