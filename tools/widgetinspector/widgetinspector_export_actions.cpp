@@ -31,6 +31,7 @@
 #include <QPainter>
 #include <QSvgGenerator>
 #include <QWidget>
+#include <QFile>
 
 extern "C" {
 
