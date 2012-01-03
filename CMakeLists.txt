@@ -302,8 +302,8 @@ if(BUILD_TIMER_PLUGIN AND NOT WIN32)
   target_link_libraries(gammaray_probe rt)
 endif()
 target_link_libraries(gammaray_probe
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
 )
 if(NOT WIN32)
   target_link_libraries(gammaray_probe dl)

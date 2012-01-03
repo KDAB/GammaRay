@@ -47,5 +47,5 @@ qt4_add_resources(gammaray_runner_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qr
 qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})

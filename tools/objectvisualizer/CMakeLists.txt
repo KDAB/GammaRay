@@ -23,8 +23,8 @@ qt4_automoc(${gammaray_objectvisualizer_plugin_srcs})
 
 gammaray_add_plugin(gammaray_objectvisualizer_plugin gammaray_objectvisualizer.desktop ${gammaray_objectvisualizer_plugin_srcs})
 target_link_libraries(gammaray_objectvisualizer_plugin
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
   QVTK
 )
 

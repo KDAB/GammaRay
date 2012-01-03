@@ -24,8 +24,8 @@ qt4_automoc(${gammaray_statemachineviewer_plugin_srcs})
 qt4_wrap_ui(gammaray_statemachineviewer_plugin_srcs statemachineviewer.ui)
 
 set(gammaray_statemachineviewer_plugin_libs
-  ${QT_QTCORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
 
   ${GRAPHVIZ_GRAPH_LIBRARY}
   ${GRAPHVIZ_GVC_LIBRARY}

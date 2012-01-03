@@ -2,11 +2,11 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 qt4_automoc(test_connections.cpp)
 add_executable(connectiontest test_connections.cpp)
-target_link_libraries(connectiontest ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTTEST_LIBRARY})
+target_link_libraries(connectiontest ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
 
 qt4_automoc(attachhelper.cpp)
 add_executable(attachhelper attachhelper.cpp)
-target_link_libraries(attachhelper ${QT_QTCORE_LIBRARY})
+target_link_libraries(attachhelper ${QT_QTCORE_LIBRARIES})
 
 if(UNIX AND NOT APPLE)
   add_test(connectiontest-preload ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -i preload ${PROJECT_BINARY_DIR}/bin/connectiontest)
