@@ -29,6 +29,10 @@
 
 #include <3rdparty/qt/qguiplatformplugin_p.h>
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+typedef void* QFunctionPointer;
+#endif
+
 using namespace GammaRay;
 
 QStyle *InjectorStylePlugin::create(const QString &)
@@ -64,7 +68,7 @@ void InjectorStylePlugin::inject()
     return;
   }
 
-  void *probeFuncHandle = probeDll.resolve(probeFunc);
+  QFunctionPointer probeFuncHandle = probeDll.resolve(probeFunc);
   if (probeFuncHandle) {
     reinterpret_cast<void(*)()>(probeFuncHandle)();
   } else {
