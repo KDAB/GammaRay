@@ -67,6 +67,8 @@ using namespace std;
 Probe *Probe::s_instance = 0;
 bool functionsOverwritten = false;
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+
 namespace GammaRay
 {
 
@@ -92,6 +94,7 @@ static bool probeDisconnectCallback(void ** args)
 }
 
 }
+#endif // QT_VERSION
 
 // useful for debugging, dumps the object and all it's parents
 // also useable from GDB!
@@ -205,8 +208,10 @@ Probe::Probe(QObject *parent):
     new ModelTest(m_toolModel, m_toolModel);
   }
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   QInternal::registerCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
   QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
+#endif
 
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);
@@ -218,8 +223,10 @@ Probe::~Probe()
 {
   IF_DEBUG(cerr << "detaching GammaRay probe" << endl;)
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   QInternal::unregisterCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
   QInternal::unregisterCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
+#endif
 
   s_instance = 0;
 }
