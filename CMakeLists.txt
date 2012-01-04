@@ -51,8 +51,26 @@ include(CheckCXXCompilerFlag)
 include(CheckLibraryExists)
 include(GammaRayMacros)
 
-set(QT_MIN_VERSION "4.7.0")
-find_package(Qt4 REQUIRED)
+find_package(Qt5Core QUIET)
+
+if (Qt5Core_FOUND)
+
+  find_package(Qt5Gui REQUIRED)
+  find_package(Qt5Designer REQUIRED)
+  find_package(Qt5Script REQUIRED)
+  find_package(Qt5Network REQUIRED)
+  find_package(Qt5ScriptTools REQUIRED)
+  find_package(Qt5Widgets REQUIRED)
+  find_package(Qt5Svg REQUIRED)
+  find_package(Qt5PrintSupport REQUIRED)
+  find_package(Qt5Test REQUIRED)
+  find_package(Qt5Xml REQUIRED)
+  include(CMakeQt4To5Porting.cmake) # TODO: Port away from this.
+
+else()
+  set(QT_MIN_VERSION "4.7.0")
+  find_package(Qt4 REQUIRED)
+endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
