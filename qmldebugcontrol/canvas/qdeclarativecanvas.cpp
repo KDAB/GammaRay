@@ -34,7 +34,7 @@
 #include "qdeclarativecanvastimer.h"
 #include "qdeclarativecontext2d.h"
 
-#include <QtGui/qpainter.h>
+#include <qpainter.h>
 
 QT_BEGIN_NAMESPACE
 

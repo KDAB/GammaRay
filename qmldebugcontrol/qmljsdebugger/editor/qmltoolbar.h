@@ -33,8 +33,8 @@
 #ifndef QMLTOOLBAR_H
 #define QMLTOOLBAR_H
 
-#include <QtGui/QToolBar>
-#include <QtGui/QIcon>
+#include <QToolBar>
+#include <QIcon>
 
 #include "qmlinspectorconstants.h"
 

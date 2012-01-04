@@ -27,7 +27,7 @@
 #include <qsettings.h>
 #include <qfileinfo.h>
 #include <qdir.h>
-#include <QtGui/QLabel>
+#include <QLabel>
 
 #include <iostream>
 

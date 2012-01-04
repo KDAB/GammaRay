@@ -51,8 +51,8 @@
 #include <qt4projectmanager/qt-s60/s60devicedebugruncontrol.h>
 #include <qt4projectmanager/qt-s60/s60devicerunconfiguration.h>
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QMessageBox>
+#include <QMainWindow>
+#include <QMessageBox>
 
 using namespace Analyzer;
 using namespace ProjectExplorer;

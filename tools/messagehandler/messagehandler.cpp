@@ -27,7 +27,7 @@
 
 #include "messagemodel.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 #include <QtCore/QMutex>
 #include <QDebug>
 #include <QMessageBox>

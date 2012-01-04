@@ -36,7 +36,7 @@
 #include "qmlprofilertraceclient.h"
 
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QDeclarativeView;

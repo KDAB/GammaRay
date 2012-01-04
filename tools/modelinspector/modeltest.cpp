@@ -23,7 +23,7 @@
 //krazy:excludeall=style
 #include "modeltest.h"
 
-#include <QtGui/QtGui>
+#include <QtGui>
 
 Q_DECLARE_METATYPE ( QModelIndex )
 

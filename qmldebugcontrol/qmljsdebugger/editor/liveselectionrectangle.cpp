@@ -33,10 +33,10 @@
 #include "liveselectionrectangle.h"
 #include "qmlinspectorconstants.h"
 
-#include <QtGui/QPen>
-#include <QtGui/QGraphicsRectItem>
-#include <QtGui/QGraphicsObject>
-#include <QtGui/QGraphicsScene>
+#include <QPen>
+#include <QGraphicsRectItem>
+#include <QGraphicsObject>
+#include <QGraphicsScene>
 
 #include <QtCore/QtDebug>
 

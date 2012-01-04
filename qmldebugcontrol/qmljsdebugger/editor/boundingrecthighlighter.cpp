@@ -34,7 +34,7 @@
 #include "qdeclarativeviewinspector.h"
 #include "qmlinspectorconstants.h"
 
-#include <QtGui/QGraphicsPolygonItem>
+#include <QGraphicsPolygonItem>
 
 #include <QtCore/QTimer>
 #include <QtCore/QObject>

@@ -21,7 +21,7 @@
 
 #include "kidentityproxymodel.h"
 
-#include <QtGui/QItemSelection>
+#include <QItemSelection>
 #include <QtCore/QStringList>
 
 class KIdentityProxyModelPrivate

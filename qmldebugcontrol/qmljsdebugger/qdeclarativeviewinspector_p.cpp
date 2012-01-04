@@ -46,11 +46,11 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeExpression>
-#include <QtGui/QWidget>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QGraphicsObject>
-#include <QtGui/QApplication>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QMouseEvent>
+#include <QGraphicsObject>
+#include <QApplication>
 #include <QtCore/QSettings>
 
 #include "qt_private/qdeclarativestate_p.h"

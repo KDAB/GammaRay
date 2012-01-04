@@ -31,7 +31,7 @@
 #include <qrect.h>
 #include <qsizepolicy.h>
 #include <qmetaobject.h>
-#include <QtGui/qtextformat.h>
+#include <qtextformat.h>
 #include <QGraphicsItem>
 #include <QGraphicsWidget>
 #include <QWidget>

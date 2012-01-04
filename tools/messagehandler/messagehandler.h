@@ -25,7 +25,7 @@
 
 #include <toolfactory.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QSortFilterProxyModel;
 
