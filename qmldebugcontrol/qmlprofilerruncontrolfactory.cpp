@@ -48,7 +48,7 @@
 
 #include <utils/qtcassert.h>
 
-#include <QtGui/QAction>
+#include <QAction>
 
 using namespace Analyzer;
 using namespace ProjectExplorer;

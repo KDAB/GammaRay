@@ -49,12 +49,12 @@
 
 #include <QtCore/QFile>
 
-#include <QtGui/QApplication>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTabWidget>
-#include <QtGui/QToolButton>
-#include <QtGui/QMessageBox>
+#include <QApplication>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTabWidget>
+#include <QToolButton>
+#include <QMessageBox>
 
 using namespace QmlProfiler::Internal;
 using namespace QmlJsDebugClient;

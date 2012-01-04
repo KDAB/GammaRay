@@ -37,11 +37,11 @@
 #include <QtCore/qdebug.h>
 #include <math.h>
 
-#include <QtGui/qgraphicsitem.h>
-#include <QtGui/qapplication.h>
-#include <QtGui/qgraphicseffect.h>
+#include <qgraphicsitem.h>
+#include <qapplication.h>
+#include <qgraphicseffect.h>
 
-#include <QtGui/QImage>
+#include <QImage>
 
 QT_BEGIN_NAMESPACE
 

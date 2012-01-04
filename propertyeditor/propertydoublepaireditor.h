@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROPERTYDOUBLEPAIREDITOR_H
 #define GAMMARAY_PROPERTYDOUBLEPAIREDITOR_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace GammaRay {
 

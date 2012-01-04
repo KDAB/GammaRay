@@ -33,11 +33,11 @@
 #include "zoomtool.h"
 #include "../qdeclarativeviewinspector_p.h"
 
-#include <QtGui/QMouseEvent>
-#include <QtGui/QWheelEvent>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
+#include <QMouseEvent>
+#include <QWheelEvent>
+#include <QKeyEvent>
+#include <QMenu>
+#include <QAction>
 
 #include <QtCore/QRectF>
 #include <QtCore/QDebug>

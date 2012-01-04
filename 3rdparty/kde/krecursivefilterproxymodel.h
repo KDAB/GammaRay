@@ -21,7 +21,7 @@
 #ifndef KRECURSIVEFILTERPROXYMODEL_H
 #define KRECURSIVEFILTERPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 #include "kdeui_export.h"
 

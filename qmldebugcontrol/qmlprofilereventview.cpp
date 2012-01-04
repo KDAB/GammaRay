@@ -35,8 +35,8 @@
 #include <QtCore/QUrl>
 #include <QtCore/QHash>
 
-#include <QtGui/QHeaderView>
-#include <QtGui/QStandardItemModel>
+#include <QHeaderView>
+#include <QStandardItemModel>
 
 namespace QmlProfiler {
 namespace Internal {

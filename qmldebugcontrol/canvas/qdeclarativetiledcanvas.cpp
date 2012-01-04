@@ -41,8 +41,8 @@
 
 #include "qdeclarativecontext2d.h"
 
-#include <QtGui/qpixmap.h>
-#include <QtGui/qpainter.h>
+#include <qpixmap.h>
+#include <qpainter.h>
 
 TiledCanvas::TiledCanvas()
 : m_context2d(new Context2D(this)), m_canvasSize(-1, -1), m_tileSize(100, 100)

@@ -38,9 +38,9 @@
 
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeContext>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QToolButton>
-#include <QtGui/QGraphicsObject>
+#include <QVBoxLayout>
+#include <QToolButton>
+#include <QGraphicsObject>
 
 namespace QmlProfiler {
 namespace Internal {

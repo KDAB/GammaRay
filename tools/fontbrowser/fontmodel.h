@@ -25,7 +25,7 @@
 #define FONTMODEL_H
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QFont>
+#include <QFont>
 
 namespace GammaRay
 {

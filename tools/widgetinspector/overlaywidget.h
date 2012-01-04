@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OVERLAYWIDGET_H
 #define GAMMARAY_OVERLAYWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace GammaRay {
 

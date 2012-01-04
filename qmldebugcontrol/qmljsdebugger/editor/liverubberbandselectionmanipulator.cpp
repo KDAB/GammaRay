@@ -33,7 +33,7 @@
 #include "liverubberbandselectionmanipulator.h"
 #include "../qdeclarativeviewinspector_p.h"
 
-#include <QtGui/QGraphicsItem>
+#include <QGraphicsItem>
 
 #include <QtCore/QDebug>
 

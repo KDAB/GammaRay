@@ -33,9 +33,9 @@
 #ifndef QDECLARATIVECONTEXT2D_P_H
 #define QDECLARATIVECONTEXT2D_P_H
 
-#include <QtGui/qpainter.h>
-#include <QtGui/qpainterpath.h>
-#include <QtGui/qpixmap.h>
+#include <qpainter.h>
+#include <qpainterpath.h>
+#include <qpixmap.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qstack.h>
 #include <QtCore/qmetatype.h>

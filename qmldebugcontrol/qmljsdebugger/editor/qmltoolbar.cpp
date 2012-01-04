@@ -33,10 +33,10 @@
 #include "qmltoolbar.h"
 #include "toolbarcolorbox.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QIcon>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
+#include <QLabel>
+#include <QIcon>
+#include <QAction>
+#include <QMenu>
 
 #include <QtCore/QDebug>
 

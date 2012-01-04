@@ -35,13 +35,13 @@
 
 #include "../qdeclarativeviewinspector_p.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QWheelEvent>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QClipboard>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QGraphicsObject>
+#include <QApplication>
+#include <QWheelEvent>
+#include <QMouseEvent>
+#include <QClipboard>
+#include <QMenu>
+#include <QAction>
+#include <QGraphicsObject>
 
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtDeclarative/QDeclarativeEngine>

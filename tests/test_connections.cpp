@@ -24,7 +24,7 @@
 #include "test_connections.h"
 
 #include <QtCore/QDebug>
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QtCore/QTimer>
 #include <QtTest/QtTestGui>
 #include <QtCore/QProcessEnvironment>

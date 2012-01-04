@@ -35,9 +35,10 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QThread>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QDialog>
+#include <QMouseEvent>
+#include <QDialog>
 #include <QtCore/QTimer>
+#include <QApplication>
 
 #include <iostream>
 #include <stdio.h>

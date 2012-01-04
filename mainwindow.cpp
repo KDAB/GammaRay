@@ -34,11 +34,11 @@
 
 #include <QCoreApplication>
 #include <qdebug.h>
-#include <QtGui/QStringListModel>
+#include <QStringListModel>
 #include <QtCore/qtextcodec.h>
-#include <QtGui/QMessageBox>
-#include <QtGui/QComboBox>
-#include <QtGui/QLabel>
+#include <QMessageBox>
+#include <QComboBox>
+#include <QLabel>
 #include <QTreeView>
 #include <QHBoxLayout>
 

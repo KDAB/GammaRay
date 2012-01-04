@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_CONNECTIONFILTERPROXYMODEL_H
 #define GAMMARAY_CONNECTIONFILTERPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace GammaRay {
 

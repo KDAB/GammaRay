@@ -25,9 +25,9 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QEvent>
-#include <QtGui/QDialog>
-#include <QtGui/QLayout>
-#include <QtGui/QPainter>
+#include <QDialog>
+#include <QLayout>
+#include <QPainter>
 
 using namespace GammaRay;
 

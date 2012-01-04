@@ -22,7 +22,7 @@
 #ifndef KIDENTITYPROXYMODEL_H
 #define KIDENTITYPROXYMODEL_H
 
-#include <QtGui/QAbstractProxyModel>
+#include <QAbstractProxyModel>
 
 #include "kdeui_export.h"
 

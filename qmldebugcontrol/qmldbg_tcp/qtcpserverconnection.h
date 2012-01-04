@@ -42,7 +42,7 @@
 #ifndef QTCPSERVERCONNECTION_H
 #define QTCPSERVERCONNECTION_H
 
-#include <QtGui/QStylePlugin>
+#include <QStylePlugin>
 #include <private/qdeclarativedebugserverconnection_p.h>
 
 QT_BEGIN_NAMESPACE
