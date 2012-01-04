@@ -330,10 +330,6 @@ if(NOT APPLE)
   install(FILES "${LICENSE_FILE}" "${README_FILE}" DESTINATION ${DOC_INSTALL_DIR})
 endif()
 
-if(NOT MINGW)
-add_subdirectory(qmldebugcontrol)
-endif()
-
 find_program(CPPCHECK_EXECUTABLE cppcheck)
 if(CPPCHECK_EXECUTABLE)
   set(_cppcheck_flags "-I${CMAKE_CURRENT_BINARY_DIR}")
@@ -349,7 +345,6 @@ if(CPPCHECK_EXECUTABLE)
   add_custom_target(cppcheck
     COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
       -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
-      -i${CMAKE_CURRENT_SOURCE_DIR}/qmldebugcontrol
       -i${CMAKE_CURRENT_SOURCE_DIR}/tests
       ${CMAKE_CURRENT_SOURCE_DIR}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
