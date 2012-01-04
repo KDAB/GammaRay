@@ -23,6 +23,9 @@
 
 #include "uiextractor.h"
 
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+
 #include <QDebug>
 #include <QLocale>
 #include <QMetaObject>
@@ -62,3 +65,5 @@ bool UiExtractor::checkProperty(QObject* obj, const QString& prop) const
 
   return false;
 }
+
+#endif // QT_VERSION

@@ -46,6 +46,9 @@ Q_DECL_EXPORT void gammaray_save_widget_to_svg(QWidget *widget, const QString &f
   painter.end();
 }
 
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+
 Q_DECL_EXPORT void gammaray_save_widget_to_ui(QWidget *widget, const QString &fileName)
 {
   QFile file(fileName);
@@ -54,5 +57,7 @@ Q_DECL_EXPORT void gammaray_save_widget_to_ui(QWidget *widget, const QString &fi
     formBuilder.save(&file, widget);
   }
 }
+
+#endif
 
 }

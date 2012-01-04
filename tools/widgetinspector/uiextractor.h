@@ -24,6 +24,12 @@
 #ifndef GAMMARAY_UIEXTRACTOR_H
 #define GAMMARAY_UIEXTRACTOR_H
 
+#include <qglobal.h>
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+
+// QFormBuilder does not exist in Qt5.
+
 #include <QFormBuilder>
 
 namespace GammaRay {
@@ -35,5 +41,7 @@ protected:
 };
 
 }
+
+#endif // QT_VERSION
 
 #endif // GAMMARAY_UIEXTRACTOR_H

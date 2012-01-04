@@ -70,7 +70,9 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   addAction(ui->actionSaveAsImage);
   addAction(ui->actionSaveAsSvg);
   addAction(ui->actionSaveAsPdf);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   addAction(ui->actionSaveAsUiFile);
+#endif
 
   setActionsEnabled(false);
 }
@@ -190,12 +192,15 @@ void WidgetInspector::saveAsPdf()
 
 void WidgetInspector::saveAsUiFile()
 {
+  // It's not really possible to ifdef slots (moc ignored ifdefs) so I just ifdef the content.
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Qt Designer UI File"), QString(), tr("Qt Designer UI File (*.ui)"));
   QWidget *widget = selectedWidget();
   if (fileName.isEmpty() || !widget)
     return;
 
   callExternalExportAction("gammaray_save_widget_to_ui", widget, fileName);
+#endif
 }
 
 void WidgetInspector::callExternalExportAction(const char* name, QWidget* widget, const QString& fileName)
