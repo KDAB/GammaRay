@@ -191,6 +191,8 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return displayString(value.value<QGraphicsObject*>());
   if (value.userType() == qMetaTypeId<QGraphicsWidget*>())
     return displayString(value.value<QGraphicsWidget*>());
+  if (value.userType() == qMetaTypeId<const QStyle*>())
+    return displayString(value.value<const QStyle*>());
 
   // enums
   const QString enumStr = enumToString(value);

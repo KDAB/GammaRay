@@ -32,6 +32,8 @@
 #include <qgraphicsproxywidget.h>
 #include <qpen.h>
 #include <qobject.h>
+#include <qpalette.h>
+#include <qstyle.h>
 #include <qwidget.h>
 
 #define MO_ADD_BASECLASS(Base) \
@@ -121,6 +123,10 @@ void MetaObjectRepository::initQObjectTypes()
 
   MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
   MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
+
+  MO_ADD_METAOBJECT1(QStyle, QObject);
+  MO_ADD_PROPERTY_RO(QStyle, const QStyle*, proxy);
+  MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
 }
 
 void MetaObjectRepository::initGraphicsViewTypes()

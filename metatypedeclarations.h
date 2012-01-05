@@ -27,6 +27,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsWidget>
 #include <QGraphicsEffect>
+#include <QStyle>
 
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
@@ -42,6 +43,7 @@ Q_DECLARE_METATYPE(QGraphicsItem::PanelModality)
 Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
+Q_DECLARE_METATYPE(const QStyle*)
 
 #endif
 
