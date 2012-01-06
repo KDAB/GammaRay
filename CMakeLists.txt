@@ -233,6 +233,7 @@ set(gammaray_srcs
   proxydetacher.cpp
   proxytoolfactory.cpp
   sidepane.cpp
+  palettemodel.cpp
 
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
