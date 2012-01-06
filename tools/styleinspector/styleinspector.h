@@ -31,6 +31,7 @@
 
 namespace GammaRay {
 
+class PaletteModel;
 class PixelMetricModel;
 class StandardIconModel;
 
@@ -52,6 +53,7 @@ private:
   Ui::StyleInspector *ui;
   PixelMetricModel *m_pixelMetricModel;
   StandardIconModel *m_standardIconModel;
+  PaletteModel *m_standardPaletteModel;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>

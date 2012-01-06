@@ -29,6 +29,9 @@
 #include <probeinterface.h>
 #include "pixelmetricmodel.h"
 #include "standardiconmodel.h"
+#include "palettemodel.h"
+
+#include <QApplication>
 
 using namespace GammaRay;
 
@@ -36,7 +39,8 @@ StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
   QWidget(parent),
   ui(new Ui::StyleInspector),
   m_pixelMetricModel(new PixelMetricModel(this)),
-  m_standardIconModel(new StandardIconModel(this))
+  m_standardIconModel(new StandardIconModel(this)),
+  m_standardPaletteModel(new PaletteModel(this))
 {
   ui->setupUi(this);
 
@@ -51,6 +55,9 @@ StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
   ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   ui->standardIconView->setModel(m_standardIconModel);
+  ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
+
+  ui->standardPaletteView->setModel(m_standardPaletteModel);
   ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   if (ui->styleSelector->count())
@@ -68,6 +75,7 @@ void StyleInspector::styleSelected(int index)
   QStyle *style = qobject_cast<QStyle*>(obj);
   m_pixelMetricModel->setStyle(style);
   m_standardIconModel->setStyle(style);
+  m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
 }
 
 #include "styleinspector.moc"
