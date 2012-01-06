@@ -65,7 +65,14 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QTreeView" name="standardIconView"/>
+        <widget class="QTreeView" name="standardIconView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
