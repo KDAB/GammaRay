@@ -251,6 +251,7 @@ set(gammaray_srcs
   tools/widgetinspector/overlaywidget.cpp
   tools/widgetinspector/widgettreemodel.cpp
   tools/styleinspector/styleinspector.cpp
+  tools/styleinspector/pixelmetricmodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp

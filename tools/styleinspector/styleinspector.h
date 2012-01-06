@@ -8,6 +8,7 @@
 
 namespace GammaRay {
 
+class PixelMetricModel;
 namespace Ui {
 class StyleInspector;
 }
@@ -19,8 +20,12 @@ public:
   explicit StyleInspector(ProbeInterface *probe, QWidget *parent = 0);
   virtual ~StyleInspector();
 
+private slots:
+  void styleSelected(int index);
+
 private:
   Ui::StyleInspector *ui;
+  PixelMetricModel *m_pixelMetricModel;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>
