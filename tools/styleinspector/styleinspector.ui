@@ -59,6 +59,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Standard Icons</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QTreeView" name="standardIconView"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

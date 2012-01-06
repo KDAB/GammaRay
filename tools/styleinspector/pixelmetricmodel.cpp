@@ -130,7 +130,7 @@ int PixelMetricModel::columnCount(const QModelIndex& parent) const
 
 int PixelMetricModel::rowCount(const QModelIndex& parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid() || !m_style)
     return 0;
   return QStyle::PM_SubMenuOverlap + 1;
 }

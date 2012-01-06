@@ -9,6 +9,8 @@
 namespace GammaRay {
 
 class PixelMetricModel;
+class StandardIconModel;
+
 namespace Ui {
 class StyleInspector;
 }
@@ -26,6 +28,7 @@ private slots:
 private:
   Ui::StyleInspector *ui;
   PixelMetricModel *m_pixelMetricModel;
+  StandardIconModel *m_standardIconModel;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>
