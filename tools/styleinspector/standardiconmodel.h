@@ -2,8 +2,7 @@
 #define GAMMARAY_STANDARDICONMODEL_H
 
 #include <qabstractitemmodel.h>
-
-class QStyle;
+#include <qstyle.h>
 
 namespace GammaRay {
 
@@ -22,6 +21,9 @@ public:
   virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
   virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+private:
+  QVariant dataForStandardIcon(QStyle::StandardPixmap stdPix, const QString &name, int column, int role) const;
 
 private:
   QStyle* m_style;

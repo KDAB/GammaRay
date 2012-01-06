@@ -78,6 +78,16 @@ static QString sizePolicyToString(QSizePolicy::Policy policy)
 QString GammaRay::Util::variantToString(const QVariant &value)
 {
   switch (value.type()) {
+  case QVariant::Icon:
+  {
+    const QIcon icon = value.value<QIcon>();
+    if (icon.isNull())
+      return QObject::tr("<no icon>");
+    QStringList l;
+    foreach (const QSize &size, icon.availableSizes())
+      l.push_back(variantToString(size));
+    return l.join(QLatin1String(", "));
+  }
   case QVariant::Line:
     return QString::fromUtf8("%1 x %2 → %3 x %4")
       .arg(value.toLine().x1()).arg(value.toLine().y1())

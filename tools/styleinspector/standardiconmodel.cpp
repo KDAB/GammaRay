@@ -1,6 +1,5 @@
 #include "standardiconmodel.h"
-
-#include <QStyle>
+#include <util.h>
 
 using namespace GammaRay;
 
@@ -15,9 +14,23 @@ void StandardIconModel::setStyle(QStyle* style)
   endResetModel();
 }
 
+QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix, const QString& name, int column, int role) const
+{
+  if (column == 0) {
+    if (role == Qt::DisplayRole)
+      return name;
+  } else if (column == 1) {
+    if (role == Qt::DecorationRole)
+      return m_style->standardIcon(stdPix);
+    else if (role == Qt::DisplayRole)
+      return Util::variantToString(m_style->standardIcon(stdPix));
+  }
+  return QVariant();
+}
+
+
 #define MAKE_SP( stdPix ) \
-if (index.row() == QStyle:: stdPix && index.column() == 0 && role == Qt::DisplayRole) return QLatin1String( #stdPix ); \
-if (index.row() == QStyle:: stdPix && index.column() == 1 && role == Qt::DecorationRole) return m_style->standardIcon( QStyle:: stdPix )
+if (index.row() == QStyle:: stdPix) return dataForStandardIcon(QStyle:: stdPix, QLatin1String( #stdPix ), index.column(), role)
 
 QVariant StandardIconModel::data(const QModelIndex& index, int role) const
 {
