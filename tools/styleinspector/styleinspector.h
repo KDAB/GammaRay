@@ -8,12 +8,19 @@
 
 namespace GammaRay {
 
+namespace Ui {
+class StyleInspector;
+}
+
 class StyleInspector : public QWidget
 {
   Q_OBJECT
 public:
   explicit StyleInspector(ProbeInterface *probe, QWidget *parent = 0);
   virtual ~StyleInspector();
+
+private:
+  Ui::StyleInspector *ui;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>

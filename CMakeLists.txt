@@ -303,6 +303,7 @@ qt4_wrap_ui(gammaray_srcs
   tools/resourcebrowser/resourcebrowser.ui
   tools/sceneinspector/sceneinspector.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
+  tools/styleinspector/styleinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/widgetinspector/widgetinspector.ui
 )
