@@ -23,6 +23,7 @@ StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
   connect(ui->styleSelector, SIGNAL(activated(int)), SLOT(styleSelected(int)));
 
   ui->pixelMetricView->setModel(m_pixelMetricModel);
+  ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   if (ui->styleSelector->count())
     styleSelected(0);
