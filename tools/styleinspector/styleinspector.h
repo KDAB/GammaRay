@@ -33,6 +33,7 @@ namespace GammaRay {
 
 class PaletteModel;
 class PixelMetricModel;
+class PrimitiveModel;
 class StandardIconModel;
 
 namespace Ui {
@@ -51,6 +52,7 @@ private slots:
 
 private:
   Ui::StyleInspector *ui;
+  PrimitiveModel *m_primitiveModel;
   PixelMetricModel *m_pixelMetricModel;
   StandardIconModel *m_standardIconModel;
   PaletteModel *m_standardPaletteModel;

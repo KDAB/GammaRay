@@ -254,6 +254,7 @@ set(gammaray_srcs
   tools/styleinspector/styleinspector.cpp
   tools/styleinspector/pixelmetricmodel.cpp
   tools/styleinspector/standardiconmodel.cpp
+  tools/styleinspector/primitivemodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
