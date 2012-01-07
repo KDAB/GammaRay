@@ -173,9 +173,20 @@ QVariant PrimitiveModel::data(const QModelIndex& index, int role) const
     return primititveElements[index.row()].name;
 
   if (role == Qt::DecorationRole && index.column() > 0) {
+    QPixmap bgPattern(16,16);
+    {
+      bgPattern.fill(Qt::lightGray);
+      QPainter painter(&bgPattern);
+      painter.fillRect(8, 0, 8, 8, Qt::gray);
+      painter.fillRect(0, 8, 8, 8, Qt::gray);
+    }
+
     QPixmap pixmap(64,64);
-    pixmap.fill(Qt::white); // TODO: use palette, or even better an alpha pattern
     QPainter painter(&pixmap);
+    QBrush bgBrush;
+    bgBrush.setTexture(bgPattern);
+    painter.fillRect(pixmap.rect(), bgBrush);
+
     QScopedPointer<QStyleOption> opt((primititveElements[index.row()].styleOptionFactory)());
     opt->rect = pixmap.rect();
     opt->palette = m_style->standardPalette();
