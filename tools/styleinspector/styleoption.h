@@ -42,6 +42,7 @@ namespace StyleOption
   QStyleOption* makeButtonStyleOption();
   QStyleOption* makeFrameStyleOption();
   QStyleOption* makeItemViewStyleOption();
+  QStyleOption* makeProgressBarStyleOption();
 }
 
 }

@@ -101,6 +101,7 @@ QStyleOption* StyleOption::makeButtonStyleOption()
 {
   QStyleOptionButton *opt = new QStyleOptionButton;
   opt->features = QStyleOptionButton::None;
+  opt->text = QLatin1String("Label");
   return opt;
 }
 
@@ -110,3 +111,11 @@ QStyleOption* StyleOption::makeItemViewStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeProgressBarStyleOption()
+{
+  QStyleOptionProgressBarV2 *opt = new QStyleOptionProgressBarV2;
+  opt->minimum = 0;
+  opt->maximum = 100;
+  opt->progress = 42;
+  return opt;
+}
