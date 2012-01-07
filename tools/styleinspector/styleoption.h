@@ -41,7 +41,9 @@ namespace StyleOption
   QStyleOption* makeStyleOption();
   QStyleOption* makeButtonStyleOption();
   QStyleOption* makeFrameStyleOption();
+  QStyleOption* makeHeaderStyleOption();
   QStyleOption* makeItemViewStyleOption();
+  QStyleOption* makeMenuStyleOption();
   QStyleOption* makeProgressBarStyleOption();
   QStyleOption* makeSliderStyleOption();
   QStyleOption* makeTabStyleOption();

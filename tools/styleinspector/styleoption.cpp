@@ -111,6 +111,21 @@ QStyleOption* StyleOption::makeItemViewStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeHeaderStyleOption()
+{
+  QStyleOptionHeader *opt = new QStyleOptionHeader;
+  opt->orientation = Qt::Horizontal;
+  opt->text = QLatin1String("Label");
+  return opt;
+}
+
+QStyleOption* StyleOption::makeMenuStyleOption()
+{
+  QStyleOptionMenuItem *opt = new QStyleOptionMenuItem;
+  opt->text = QLatin1String("Label");
+  return opt;
+}
+
 QStyleOption* StyleOption::makeProgressBarStyleOption()
 {
   QStyleOptionProgressBarV2 *opt = new QStyleOptionProgressBarV2;
