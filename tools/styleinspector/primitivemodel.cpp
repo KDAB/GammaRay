@@ -92,6 +92,44 @@ primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_PanelMenu)
 };
 
+struct style_state_t {
+  const char *name;
+  QStyle::State state;
+};
+
+#define MAKE_STATE( state ) { #state, QStyle:: state }
+
+style_state_t styleStates[] = {
+  MAKE_STATE(State_None),
+  MAKE_STATE(State_Enabled),
+  MAKE_STATE(State_Raised),
+  MAKE_STATE(State_Sunken),
+  MAKE_STATE(State_Off),
+  MAKE_STATE(State_NoChange),
+  MAKE_STATE(State_On),
+  MAKE_STATE(State_DownArrow),
+  MAKE_STATE(State_Horizontal),
+  MAKE_STATE(State_HasFocus),
+  MAKE_STATE(State_Top),
+  MAKE_STATE(State_Bottom),
+  MAKE_STATE(State_FocusAtBorder),
+  MAKE_STATE(State_AutoRaise),
+  MAKE_STATE(State_MouseOver),
+  MAKE_STATE(State_UpArrow),
+  MAKE_STATE(State_Selected),
+  MAKE_STATE(State_Active),
+  MAKE_STATE(State_Window),
+  MAKE_STATE(State_Open),
+  MAKE_STATE(State_Children),
+  MAKE_STATE(State_Item),
+  MAKE_STATE(State_Sibling),
+  MAKE_STATE(State_Editing),
+  MAKE_STATE(State_KeyboardFocusChange),
+  MAKE_STATE(State_ReadOnly),
+  MAKE_STATE(State_Small),
+  MAKE_STATE(State_Mini)
+};
+
 PrimitiveModel::PrimitiveModel(QObject* parent): QAbstractTableModel(parent), m_style(0)
 {
 }
@@ -111,12 +149,16 @@ QVariant PrimitiveModel::data(const QModelIndex& index, int role) const
   if (role == Qt::DisplayRole && index.column() == 0)
     return primititveElements[index.row()].name;
 
-  if (role == Qt::DecorationRole && index.column() == 1) {
+  if (role == Qt::DecorationRole && index.column() > 0) {
     QPixmap pixmap(64,64);
     pixmap.fill(Qt::white); // TODO: use palette, or even better an alpha pattern
     QPainter painter(&pixmap);
     QStyleOption opt;
     opt.rect = pixmap.rect();
+    opt.palette = m_style->standardPalette();
+    opt.state = styleStates[index.column()-1].state;
+    if (opt.state != QStyle::State_None)
+      opt.state |= QStyle::State_Enabled; // enable all other states as well, otherwise we'll only see disabled primitives
     m_style->drawPrimitive(primititveElements[index.row()].primitive, &opt, &painter);
     return pixmap;
   }
@@ -127,7 +169,7 @@ QVariant PrimitiveModel::data(const QModelIndex& index, int role) const
 int PrimitiveModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
-  return 2;
+  return sizeof(styleStates) / sizeof(styleStates[0]);
 }
 
 int PrimitiveModel::rowCount(const QModelIndex& parent) const
@@ -140,10 +182,9 @@ int PrimitiveModel::rowCount(const QModelIndex& parent) const
 QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    switch (section) {
-      case 0: return tr("Primitive Element");
-      case 1: return tr("Normal");
-    }
+    if (section == 0)
+      return tr("Primitive Element");
+    return QString::fromLatin1(styleStates[section-1].name).mid(6); // remove State_ prefix
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
