@@ -120,6 +120,16 @@ QStyleOption* StyleOption::makeProgressBarStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeSliderStyleOption()
+{
+  QStyleOptionSlider *opt = new QStyleOptionSlider;
+  opt->minimum = 0;
+  opt->maximum = 100;
+  opt->sliderValue = 42;
+  return opt;
+}
+
+
 QStyleOption* StyleOption::makeTabStyleOption()
 {
   QStyleOptionTabV3* opt = new QStyleOptionTabV3;
