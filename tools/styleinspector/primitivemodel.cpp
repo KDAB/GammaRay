@@ -44,6 +44,11 @@ QStyleOption* makeButtonStyleOption() {
   return opt;
 }
 
+QStyleOption* makeItemViewStyleOption() {
+  QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
+  return opt;
+}
+
 struct primitive_element_t {
     const char *name;
     QStyle::PrimitiveElement primitive;
@@ -103,7 +108,7 @@ primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_Widget),
   MAKE_PE(PE_IndicatorColumnViewArrow),
   MAKE_PE(PE_IndicatorItemViewItemDrop),
-//   MAKE_PE(PE_PanelItemViewItem), FIXME: needs correct style option, crashes oxygen without
+  MAKE_PE_X(PE_PanelItemViewItem, makeItemViewStyleOption),
   MAKE_PE(PE_PanelItemViewRow),
   MAKE_PE(PE_PanelStatusBar),
   MAKE_PE(PE_IndicatorTabClose),
