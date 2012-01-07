@@ -25,6 +25,7 @@
 #define GAMMARAY_STYLEOPTION_H
 #include <qstyle.h>
 
+class QStyleOption;
 class QString;
 namespace GammaRay {
 
@@ -36,6 +37,11 @@ namespace StyleOption
   int stateCount();
   QString stateDisplayName(int index);
   QStyle::State prettyState(int index);
+
+  QStyleOption* makeStyleOption();
+  QStyleOption* makeButtonStyleOption();
+  QStyleOption* makeFrameStyleOption();
+  QStyleOption* makeItemViewStyleOption();
 }
 
 }

@@ -33,18 +33,20 @@ using namespace GammaRay;
 struct control_element_t {
     const char *name;
     QStyle::ControlElement control;
+    QStyleOption* (*styleOptionFactory)();
 };
 
-#define MAKE_CE( control ) { #control , QStyle:: control }
+#define MAKE_CE( control ) { #control , QStyle:: control, &StyleOption::makeStyleOption }
+#define MAKE_CE_X( control, factory ) { #control, QStyle:: control, &StyleOption:: factory }
 
 static control_element_t controlElements[] =  {
-  MAKE_CE(CE_PushButton),
-  MAKE_CE(CE_PushButtonBevel),
-//   MAKE_CE(CE_PushButtonLabel),
-  MAKE_CE(CE_CheckBox),
-  MAKE_CE(CE_CheckBoxLabel),
-  MAKE_CE(CE_RadioButton),
-  MAKE_CE(CE_RadioButtonLabel),
+  MAKE_CE_X(CE_PushButton, makeButtonStyleOption),
+  MAKE_CE_X(CE_PushButtonBevel, makeButtonStyleOption),
+  MAKE_CE_X(CE_PushButtonLabel, makeButtonStyleOption),
+  MAKE_CE_X(CE_CheckBox, makeButtonStyleOption),
+  MAKE_CE_X(CE_CheckBoxLabel, makeButtonStyleOption),
+  MAKE_CE_X(CE_RadioButton, makeButtonStyleOption),
+  MAKE_CE_X(CE_RadioButtonLabel, makeButtonStyleOption),
   MAKE_CE(CE_TabBarTab),
   MAKE_CE(CE_TabBarTabShape),
   MAKE_CE(CE_TabBarTabLabel),
@@ -123,7 +125,7 @@ QVariant ControlModel::data(const QModelIndex& index, int role) const
     bgBrush.setTexture(bgPattern);
     painter.fillRect(pixmap.rect(), bgBrush);
 
-    QScopedPointer<QStyleOption> opt( new QStyleOption );
+    QScopedPointer<QStyleOption> opt(controlElements[index.row()].styleOptionFactory());
     opt->rect = pixmap.rect();
     opt->palette = m_style->standardPalette();
     opt->state = StyleOption::prettyState(index.column() - 1);

@@ -30,35 +30,14 @@
 
 using namespace GammaRay;
 
-static QStyleOption* makeStyleOption() { return new QStyleOption; }
-
-static QStyleOption* makeFrameStyleOption() {
-  QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
-  opt->lineWidth = 1;
-  opt->midLineWidth = 0;
-  opt->frameShape = QFrame::StyledPanel;
-  return opt;
-}
-
-static QStyleOption* makeButtonStyleOption() {
-  QStyleOptionButton *opt = new QStyleOptionButton;
-  opt->features = QStyleOptionButton::None;
-  return opt;
-}
-
-static QStyleOption* makeItemViewStyleOption() {
-  QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
-  return opt;
-}
-
 struct primitive_element_t {
     const char *name;
     QStyle::PrimitiveElement primitive;
     QStyleOption* (*styleOptionFactory)();
 };
 
-#define MAKE_PE( primitive ) { #primitive , QStyle:: primitive, &makeStyleOption }
-#define MAKE_PE_X( primitive, factory ) { #primitive, QStyle:: primitive, & factory }
+#define MAKE_PE( primitive ) { #primitive , QStyle:: primitive, &StyleOption::makeStyleOption }
+#define MAKE_PE_X( primitive, factory ) { #primitive, QStyle:: primitive, &StyleOption:: factory }
 
 static primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_Q3CheckListController),

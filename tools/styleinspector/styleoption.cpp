@@ -23,6 +23,8 @@
 
 #include "styleoption.h"
 
+#include <QStyleOption>
+
 using namespace GammaRay;
 
 struct style_state_t {
@@ -79,5 +81,32 @@ QStyle::State StyleOption::prettyState(int index)
   if (s == QStyle::State_None)
     return s;
   return s | QStyle::State_Enabled; // enable by default, otherwise we usually only see disabled stuff
+}
+
+QStyleOption* StyleOption::makeStyleOption()
+{
+  return new QStyleOption;
+}
+
+QStyleOption* StyleOption::makeFrameStyleOption()
+{
+  QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
+  opt->lineWidth = 1;
+  opt->midLineWidth = 0;
+  opt->frameShape = QFrame::StyledPanel;
+  return opt;
+}
+
+QStyleOption* StyleOption::makeButtonStyleOption()
+{
+  QStyleOptionButton *opt = new QStyleOptionButton;
+  opt->features = QStyleOptionButton::None;
+  return opt;
+}
+
+QStyleOption* StyleOption::makeItemViewStyleOption()
+{
+  QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
+  return opt;
 }
 
