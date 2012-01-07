@@ -22,6 +22,7 @@
 */
 
 #include "controlmodel.h"
+#include "styleoption.h"
 
 #include <QPainter>
 #include <QStyle>
@@ -87,45 +88,6 @@ static control_element_t controlElements[] =  {
   MAKE_CE(CE_ShapedFrame)
 };
 
-// TODO refactor and share with other models
-struct style_state_t {
-  const char *name;
-  QStyle::State state;
-};
-
-#define MAKE_STATE( state ) { #state, QStyle:: state }
-
-static style_state_t styleStates[] = {
-  MAKE_STATE(State_None),
-  MAKE_STATE(State_Enabled),
-  MAKE_STATE(State_Raised),
-  MAKE_STATE(State_Sunken),
-  MAKE_STATE(State_Off),
-  MAKE_STATE(State_NoChange),
-  MAKE_STATE(State_On),
-  MAKE_STATE(State_DownArrow),
-  MAKE_STATE(State_Horizontal),
-  MAKE_STATE(State_HasFocus),
-  MAKE_STATE(State_Top),
-  MAKE_STATE(State_Bottom),
-  MAKE_STATE(State_FocusAtBorder),
-  MAKE_STATE(State_AutoRaise),
-  MAKE_STATE(State_MouseOver),
-  MAKE_STATE(State_UpArrow),
-  MAKE_STATE(State_Selected),
-  MAKE_STATE(State_Active),
-  MAKE_STATE(State_Window),
-  MAKE_STATE(State_Open),
-  MAKE_STATE(State_Children),
-  MAKE_STATE(State_Item),
-  MAKE_STATE(State_Sibling),
-  MAKE_STATE(State_Editing),
-  MAKE_STATE(State_KeyboardFocusChange),
-  MAKE_STATE(State_ReadOnly),
-  MAKE_STATE(State_Small),
-  MAKE_STATE(State_Mini)
-};
-
 
 ControlModel::ControlModel(QObject* parent): QAbstractTableModel(parent), m_style(0)
 {
@@ -164,9 +126,7 @@ QVariant ControlModel::data(const QModelIndex& index, int role) const
     QScopedPointer<QStyleOption> opt( new QStyleOption );
     opt->rect = pixmap.rect();
     opt->palette = m_style->standardPalette();
-    opt->state = styleStates[index.column()-1].state;
-    if (opt->state != QStyle::State_None)
-      opt->state |= QStyle::State_Enabled; // enable all other states as well, otherwise we'll only see disabled primitives
+    opt->state = StyleOption::prettyState(index.column() - 1);
     m_style->drawControl(controlElements[index.row()].control, opt.data(), &painter);
     return pixmap;
   }
@@ -181,7 +141,7 @@ QVariant ControlModel::data(const QModelIndex& index, int role) const
 int ControlModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
-  return 1 + sizeof(styleStates) / sizeof(styleStates[0]);
+  return 1 + StyleOption::stateCount();
 }
 
 int ControlModel::rowCount(const QModelIndex& parent) const
@@ -196,7 +156,7 @@ QVariant ControlModel::headerData(int section, Qt::Orientation orientation, int 
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     if (section == 0)
       return tr("Control Element");
-    return QString::fromLatin1(styleStates[section-1].name).mid(6); // remove State_ prefix
+    return StyleOption::stateDisplayName(section - 1);
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
