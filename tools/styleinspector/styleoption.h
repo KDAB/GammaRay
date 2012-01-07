@@ -43,6 +43,7 @@ namespace StyleOption
   QStyleOption* makeFrameStyleOption();
   QStyleOption* makeItemViewStyleOption();
   QStyleOption* makeProgressBarStyleOption();
+  QStyleOption* makeTabStyleOption();
   QStyleOption* makeToolBoxStyleOption();
 }
 

@@ -120,6 +120,13 @@ QStyleOption* StyleOption::makeProgressBarStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeTabStyleOption()
+{
+  QStyleOptionTabV3* opt = new QStyleOptionTabV3;
+  opt->text = QLatin1String("label");
+  return opt;
+}
+
 QStyleOption* StyleOption::makeToolBoxStyleOption()
 {
   QStyleOptionToolBoxV2* opt = new QStyleOptionToolBoxV2;
