@@ -31,6 +31,7 @@
 #include "standardiconmodel.h"
 #include "palettemodel.h"
 #include "primitivemodel.h"
+#include "controlmodel.h"
 
 #include <QApplication>
 
@@ -40,6 +41,7 @@ StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
   QWidget(parent),
   ui(new Ui::StyleInspector),
   m_primitiveModel(new PrimitiveModel(this)),
+  m_controlModel(new ControlModel(this)),
   m_pixelMetricModel(new PixelMetricModel(this)),
   m_standardIconModel(new StandardIconModel(this)),
   m_standardPaletteModel(new PaletteModel(this))
@@ -55,6 +57,9 @@ StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
 
   ui->primitiveView->setModel(m_primitiveModel);
   ui->primitiveView->header()->setResizeMode(QHeaderView::ResizeToContents);
+
+  ui->controlView->setModel(m_controlModel);
+  ui->controlView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   ui->pixelMetricView->setModel(m_pixelMetricModel);
   ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
@@ -79,6 +84,7 @@ void StyleInspector::styleSelected(int index)
   QObject *obj = ui->styleSelector->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QStyle *style = qobject_cast<QStyle*>(obj);
   m_primitiveModel->setStyle(style);
+  m_controlModel->setStyle(style);
   m_pixelMetricModel->setStyle(style);
   m_standardIconModel->setStyle(style);
   m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
