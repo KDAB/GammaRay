@@ -38,6 +38,12 @@ QStyleOption* makeFrameStyleOption() {
   return opt;
 }
 
+QStyleOption* makeButtonStyleOption() {
+  QStyleOptionButton *opt = new QStyleOptionButton;
+  opt->features = QStyleOptionButton::None;
+  return opt;
+}
+
 struct primitive_element_t {
     const char *name;
     QStyle::PrimitiveElement primitive;
@@ -79,12 +85,12 @@ primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_IndicatorBranch),
   MAKE_PE(PE_IndicatorButtonDropDown),
   MAKE_PE(PE_IndicatorViewItemCheck),
-//   MAKE_PE(PE_IndicatorCheckBox), TODO dito, but button style option
+  MAKE_PE_X(PE_IndicatorCheckBox, makeButtonStyleOption),
   MAKE_PE(PE_IndicatorDockWidgetResizeHandle),
   MAKE_PE(PE_IndicatorHeaderArrow),
   MAKE_PE(PE_IndicatorMenuCheckMark),
   MAKE_PE(PE_IndicatorProgressChunk),
-//   MAKE_PE(PE_IndicatorRadioButton), TODO dito, button style option
+  MAKE_PE_X(PE_IndicatorRadioButton, makeButtonStyleOption),
   MAKE_PE(PE_IndicatorSpinDown),
   MAKE_PE(PE_IndicatorSpinMinus),
   MAKE_PE(PE_IndicatorSpinPlus),
