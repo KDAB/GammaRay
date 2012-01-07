@@ -46,6 +46,7 @@ namespace StyleOption
   QStyleOption* makeMenuStyleOption();
   QStyleOption* makeProgressBarStyleOption();
   QStyleOption* makeSliderStyleOption();
+  QStyleOption* makeSpinBoxStyleOption();
   QStyleOption* makeTabStyleOption();
   QStyleOption* makeToolBoxStyleOption();
 }

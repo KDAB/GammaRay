@@ -144,6 +144,12 @@ QStyleOption* StyleOption::makeSliderStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeSpinBoxStyleOption()
+{
+  QStyleOptionSpinBox *opt = new QStyleOptionSpinBox;
+  opt->frame = true;
+  return opt;
+}
 
 QStyleOption* StyleOption::makeTabStyleOption()
 {
