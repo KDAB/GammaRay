@@ -28,9 +28,9 @@
 
 using namespace GammaRay;
 
-QStyleOption* makeStyleOption() { return new QStyleOption; }
+static QStyleOption* makeStyleOption() { return new QStyleOption; }
 
-QStyleOption* makeFrameStyleOption() {
+static QStyleOption* makeFrameStyleOption() {
   QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
   opt->lineWidth = 1;
   opt->midLineWidth = 0;
@@ -38,13 +38,13 @@ QStyleOption* makeFrameStyleOption() {
   return opt;
 }
 
-QStyleOption* makeButtonStyleOption() {
+static QStyleOption* makeButtonStyleOption() {
   QStyleOptionButton *opt = new QStyleOptionButton;
   opt->features = QStyleOptionButton::None;
   return opt;
 }
 
-QStyleOption* makeItemViewStyleOption() {
+static QStyleOption* makeItemViewStyleOption() {
   QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
   return opt;
 }
@@ -58,7 +58,7 @@ struct primitive_element_t {
 #define MAKE_PE( primitive ) { #primitive , QStyle:: primitive, &makeStyleOption }
 #define MAKE_PE_X( primitive, factory ) { #primitive, QStyle:: primitive, & factory }
 
-primitive_element_t primititveElements[] =  {
+static primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_Q3CheckListController),
   MAKE_PE(PE_Q3CheckListExclusiveIndicator),
   MAKE_PE(PE_Q3CheckListIndicator),
@@ -122,7 +122,7 @@ struct style_state_t {
 
 #define MAKE_STATE( state ) { #state, QStyle:: state }
 
-style_state_t styleStates[] = {
+static style_state_t styleStates[] = {
   MAKE_STATE(State_None),
   MAKE_STATE(State_Enabled),
   MAKE_STATE(State_Raised),

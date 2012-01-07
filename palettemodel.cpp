@@ -35,7 +35,7 @@ struct role_t {
     QPalette::ColorRole role;
 };
 
-role_t paletteRoles[] =  {
+static role_t paletteRoles[] =  {
     { "Window",          QPalette::Window },
     { "WindowText",      QPalette::WindowText },
     { "Base",            QPalette::Base },
@@ -62,7 +62,7 @@ struct group_t {
     QPalette::ColorGroup group;
 };
 
-group_t paletteGroups[] = {
+static group_t paletteGroups[] = {
     { "Active",    QPalette::Active },
     { "Inactive",  QPalette::Inactive },
     { "Disabled",  QPalette::Disabled },
