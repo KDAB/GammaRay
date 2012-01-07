@@ -67,7 +67,7 @@ static control_element_t controlElements[] =  {
   MAKE_CE_X(CE_HeaderSection, makeHeaderStyleOption),
   MAKE_CE_X(CE_HeaderLabel, makeHeaderStyleOption),
   MAKE_CE(CE_Q3DockWindowEmptyArea),
-  MAKE_CE(CE_ToolBoxTab),
+  MAKE_CE_X(CE_ToolBoxTab, makeToolBoxStyleOption),
   MAKE_CE(CE_SizeGrip),
   MAKE_CE(CE_Splitter),
   MAKE_CE(CE_RubberBand),
