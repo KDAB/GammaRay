@@ -28,12 +28,24 @@
 
 using namespace GammaRay;
 
+QStyleOption* makeStyleOption() { return new QStyleOption; }
+
+QStyleOption* makeFrameStyleOption() {
+  QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
+  opt->lineWidth = 1;
+  opt->midLineWidth = 0;
+  opt->frameShape = QFrame::StyledPanel;
+  return opt;
+}
+
 struct primitive_element_t {
     const char *name;
     QStyle::PrimitiveElement primitive;
+    QStyleOption* (*styleOptionFactory)();
 };
 
-#define MAKE_PE( primitive ) { #primitive , QStyle:: primitive }
+#define MAKE_PE( primitive ) { #primitive , QStyle:: primitive, &makeStyleOption }
+#define MAKE_PE_X( primitive, factory ) { #primitive, QStyle:: primitive, & factory }
 
 primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_Q3CheckListController),
@@ -46,7 +58,7 @@ primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_FrameDockWidget),
   MAKE_PE(PE_FrameFocusRect),
   MAKE_PE(PE_FrameGroupBox),
-//   MAKE_PE(PE_FrameLineEdit), TODO needs frame style option, crashes plastique withou
+  MAKE_PE_X(PE_FrameLineEdit, makeFrameStyleOption),
   MAKE_PE(PE_FrameMenu),
   MAKE_PE(PE_FrameStatusBarItem),
   MAKE_PE(PE_FrameTabWidget),
@@ -59,7 +71,7 @@ primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_PanelButtonTool),
   MAKE_PE(PE_PanelMenuBar),
   MAKE_PE(PE_PanelToolBar),
-//   MAKE_PE(PE_PanelLineEdit), TODO dito, frame style option
+  MAKE_PE_X(PE_PanelLineEdit, makeFrameStyleOption),
   MAKE_PE(PE_IndicatorArrowDown),
   MAKE_PE(PE_IndicatorArrowLeft),
   MAKE_PE(PE_IndicatorArrowRight),
@@ -153,13 +165,13 @@ QVariant PrimitiveModel::data(const QModelIndex& index, int role) const
     QPixmap pixmap(64,64);
     pixmap.fill(Qt::white); // TODO: use palette, or even better an alpha pattern
     QPainter painter(&pixmap);
-    QStyleOption opt;
-    opt.rect = pixmap.rect();
-    opt.palette = m_style->standardPalette();
-    opt.state = styleStates[index.column()-1].state;
-    if (opt.state != QStyle::State_None)
-      opt.state |= QStyle::State_Enabled; // enable all other states as well, otherwise we'll only see disabled primitives
-    m_style->drawPrimitive(primititveElements[index.row()].primitive, &opt, &painter);
+    QScopedPointer<QStyleOption> opt((primititveElements[index.row()].styleOptionFactory)());
+    opt->rect = pixmap.rect();
+    opt->palette = m_style->standardPalette();
+    opt->state = styleStates[index.column()-1].state;
+    if (opt->state != QStyle::State_None)
+      opt->state |= QStyle::State_Enabled; // enable all other states as well, otherwise we'll only see disabled primitives
+    m_style->drawPrimitive(primititveElements[index.row()].primitive, opt.data(), &painter);
     return pixmap;
   }
 
