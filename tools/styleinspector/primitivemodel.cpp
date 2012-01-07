@@ -197,6 +197,10 @@ QVariant PrimitiveModel::data(const QModelIndex& index, int role) const
     return pixmap;
   }
 
+  if (role == Qt::SizeHintRole && index.column() > 0) {
+    return QSize(68, 68);
+  }
+
   return QVariant();
 }
 
