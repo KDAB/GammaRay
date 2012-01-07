@@ -119,3 +119,10 @@ QStyleOption* StyleOption::makeProgressBarStyleOption()
   opt->progress = 42;
   return opt;
 }
+
+QStyleOption* StyleOption::makeToolBoxStyleOption()
+{
+  QStyleOptionToolBoxV2* opt = new QStyleOptionToolBoxV2;
+  opt->text = QLatin1String("Label");
+  return opt;
+}
