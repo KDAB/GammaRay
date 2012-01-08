@@ -40,10 +40,10 @@ class WinFunctionOverwriter : public AbstractFunctionOverwriter
     virtual bool getAddressRange(intptr_t &min, intptr_t &max);
 
     virtual bool isMemoryFree(void * const mem, size_t size);
-    virtual void* reserveMemory(void *mem, size_t size);
+    virtual void *reserveMemory(void *mem, size_t size);
     virtual bool commitMemory(void *mem, size_t size);
 
-    virtual void* qtCoreFunctionLookup(const QString &function);
+    virtual void *qtCoreFunctionLookup(const QString &function);
     virtual long pagesize() const;
 
   private:

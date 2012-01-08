@@ -18,6 +18,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+//krazy:excludeall=null since the WinAPI likes to use NULL
 
 #include "winfunctionoverwriter.h"
 
@@ -34,79 +35,80 @@ WinFunctionOverwriter::WinFunctionOverwriter():oldProtect(0)
 
 bool WinFunctionOverwriter::unprotectMemory(void *mem, size_t size)
 {
-    BOOL ret = VirtualProtect(mem, size, PAGE_EXECUTE_READWRITE, &oldProtect);
-    return ret;
+  BOOL ret = VirtualProtect(mem, size, PAGE_EXECUTE_READWRITE, &oldProtect);
+  return ret;
 }
 
 bool WinFunctionOverwriter::reprotectMemory(void *mem, size_t size)
 {
-    BOOL ret = VirtualProtect(mem, size, oldProtect, &oldProtect);
-    return ret;
+  BOOL ret = VirtualProtect(mem, size, oldProtect, &oldProtect);
+  return ret;
 }
 
 bool WinFunctionOverwriter::getAddressRange(intptr_t &min, intptr_t &max)
 {
-    SYSTEM_INFO si;
-    GetSystemInfo(&si);
+  SYSTEM_INFO si;
+  GetSystemInfo(&si);
 
-    min = reinterpret_cast<intptr_t>(si.lpMinimumApplicationAddress);
-    max = reinterpret_cast<intptr_t>(si.lpMaximumApplicationAddress);
+  min = reinterpret_cast<intptr_t>(si.lpMinimumApplicationAddress);
+  max = reinterpret_cast<intptr_t>(si.lpMaximumApplicationAddress);
 
-    return true;
+  return true;
 }
 
 bool WinFunctionOverwriter::isMemoryFree(void * const mem, size_t size)
 {
-    Q_UNUSED(size);
-    static MEMORY_BASIC_INFORMATION mi = { 0 };
+  Q_UNUSED(size);
+  static MEMORY_BASIC_INFORMATION mi = { 0 };
 
-    VirtualQuery(mem, &mi, sizeof(mi));
-    if (mi.State != MEM_FREE)
-        return false;
+  VirtualQuery(mem, &mi, sizeof(mi));
+  if (mi.State != MEM_FREE) {
+    return false;
+  }
 
-    return true;
+  return true;
 }
 
-void* WinFunctionOverwriter::reserveMemory(void *mem, size_t size)
+void *WinFunctionOverwriter::reserveMemory(void *mem, size_t size)
 {
-    void *retmem = 0;
+  void *retmem = 0;
 
-    retmem  = VirtualAlloc(mem, size, MEM_RESERVE, PAGE_EXECUTE_READ);
+  retmem  = VirtualAlloc(mem, size, MEM_RESERVE, PAGE_EXECUTE_READ);
 
-    return retmem;
+  return retmem;
 }
 
 bool WinFunctionOverwriter::commitMemory(void *mem, size_t size)
 {
-    void *retmem = 0;
+  void *retmem = 0;
 
-    retmem = VirtualAlloc(mem, size, MEM_COMMIT, PAGE_EXECUTE_READ);
+  retmem = VirtualAlloc(mem, size, MEM_COMMIT, PAGE_EXECUTE_READ);
 
-    return retmem != 0;
+  return retmem != 0;
 }
 
 void *WinFunctionOverwriter::qtCoreFunctionLookup(const QString &function)
 {
-    static HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");
-    if (qtCoreDllHandle == NULL) {
-      qtCoreDllHandle = GetModuleHandle(L"QtCored4");
-    }
+  static HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");
+  if (qtCoreDllHandle == NULL) {
+    qtCoreDllHandle = GetModuleHandle(L"QtCored4");
+  }
 
-    if (qtCoreDllHandle == NULL) {
-        cerr << "no handle for QtCore found!" << endl;
-        return 0;
-    }
+  if (qtCoreDllHandle == NULL) {
+    cerr << "no handle for QtCore found!" << endl;
+    return 0;
+  }
 
-    FARPROC qtfuncaddr = GetProcAddress(qtCoreDllHandle, function.toLatin1());
+  FARPROC qtfuncaddr = GetProcAddress(qtCoreDllHandle, function.toLatin1());
 
-    return (void*)qtfuncaddr;
+  return (void*)qtfuncaddr;
 }
 
 long WinFunctionOverwriter::pagesize() const
 {
-    SYSTEM_INFO si;
-    GetSystemInfo(&si);
-    return si.dwPageSize;
+  SYSTEM_INFO si;
+  GetSystemInfo(&si);
+  return si.dwPageSize;
 }
 
 #endif // Q_OS_WIN
