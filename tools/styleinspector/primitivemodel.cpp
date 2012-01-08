@@ -96,26 +96,16 @@ static primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_PanelMenu)
 };
 
-PrimitiveModel::PrimitiveModel(QObject* parent): QAbstractTableModel(parent), m_style(0)
+PrimitiveModel::PrimitiveModel(QObject* parent): AbstractStyleElementModel(parent)
 {
 }
 
-void PrimitiveModel::setStyle(QStyle* style)
+QVariant PrimitiveModel::doData(int row, int column, int role) const
 {
-  beginResetModel();
-  m_style = style;
-  endResetModel();
-}
+  if (role == Qt::DisplayRole && column == 0)
+    return primititveElements[row].name;
 
-QVariant PrimitiveModel::data(const QModelIndex& index, int role) const
-{
-  if (!m_style || !index.isValid())
-    return QVariant();
-
-  if (role == Qt::DisplayRole && index.column() == 0)
-    return primititveElements[index.row()].name;
-
-  if (role == Qt::DecorationRole && index.column() > 0) {
+  if (role == Qt::DecorationRole && column > 0) {
     QPixmap bgPattern(16,16);
     {
       bgPattern.fill(Qt::lightGray);
@@ -130,31 +120,28 @@ QVariant PrimitiveModel::data(const QModelIndex& index, int role) const
     bgBrush.setTexture(bgPattern);
     painter.fillRect(pixmap.rect(), bgBrush);
 
-    QScopedPointer<QStyleOption> opt((primititveElements[index.row()].styleOptionFactory)());
+    QScopedPointer<QStyleOption> opt((primititveElements[row].styleOptionFactory)());
     opt->rect = pixmap.rect();
     opt->palette = m_style->standardPalette();
-    opt->state = StyleOption::prettyState(index.column() - 1);
-    m_style->drawPrimitive(primititveElements[index.row()].primitive, opt.data(), &painter);
+    opt->state = StyleOption::prettyState(column - 1);
+    m_style->drawPrimitive(primititveElements[row].primitive, opt.data(), &painter);
     return pixmap;
   }
 
-  if (role == Qt::SizeHintRole && index.column() > 0) {
+  if (role == Qt::SizeHintRole && column > 0) {
     return QSize(68, 68);
   }
 
   return QVariant();
 }
 
-int PrimitiveModel::columnCount(const QModelIndex& parent) const
+int PrimitiveModel::doColumnCount() const
 {
-  Q_UNUSED(parent);
   return 1 + StyleOption::stateCount();
 }
 
-int PrimitiveModel::rowCount(const QModelIndex& parent) const
+int PrimitiveModel::doRowCount() const
 {
-  if (!m_style || parent.isValid())
-    return 0;
   return sizeof(primititveElements) / sizeof(primititveElements[0]) ;
 }
 

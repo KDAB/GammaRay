@@ -257,6 +257,7 @@ set(gammaray_srcs
   tools/styleinspector/primitivemodel.cpp
   tools/styleinspector/controlmodel.cpp
   tools/styleinspector/styleoption.cpp
+  tools/styleinspector/abstractstyleelementmodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp

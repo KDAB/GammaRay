@@ -91,26 +91,16 @@ static control_element_t controlElements[] =  {
 };
 
 
-ControlModel::ControlModel(QObject* parent): QAbstractTableModel(parent), m_style(0)
+ControlModel::ControlModel(QObject* parent): AbstractStyleElementModel(parent)
 {
 }
 
-void ControlModel::setStyle(QStyle* style)
+QVariant ControlModel::doData(int row, int column, int role) const
 {
-  beginResetModel();
-  m_style = style;
-  endResetModel();
-}
+  if (role == Qt::DisplayRole && column == 0)
+    return controlElements[row].name;
 
-QVariant ControlModel::data(const QModelIndex& index, int role) const
-{
-  if (!m_style || !index.isValid())
-    return QVariant();
-
-  if (role == Qt::DisplayRole && index.column() == 0)
-    return controlElements[index.row()].name;
-
-  if (role == Qt::DecorationRole && index.column() > 0) {
+  if (role == Qt::DecorationRole && column > 0) {
     QPixmap bgPattern(16,16);
     {
       bgPattern.fill(Qt::lightGray);
@@ -125,31 +115,28 @@ QVariant ControlModel::data(const QModelIndex& index, int role) const
     bgBrush.setTexture(bgPattern);
     painter.fillRect(pixmap.rect(), bgBrush);
 
-    QScopedPointer<QStyleOption> opt(controlElements[index.row()].styleOptionFactory());
+    QScopedPointer<QStyleOption> opt(controlElements[row].styleOptionFactory());
     opt->rect = pixmap.rect();
     opt->palette = m_style->standardPalette();
-    opt->state = StyleOption::prettyState(index.column() - 1);
-    m_style->drawControl(controlElements[index.row()].control, opt.data(), &painter);
+    opt->state = StyleOption::prettyState(column - 1);
+    m_style->drawControl(controlElements[row].control, opt.data(), &painter);
     return pixmap;
   }
 
-  if (role == Qt::SizeHintRole && index.column() > 0) {
+  if (role == Qt::SizeHintRole && column > 0) {
     return QSize(68, 68);
   }
 
   return QVariant();
 }
 
-int ControlModel::columnCount(const QModelIndex& parent) const
+int ControlModel::doColumnCount() const
 {
-  Q_UNUSED(parent);
   return 1 + StyleOption::stateCount();
 }
 
-int ControlModel::rowCount(const QModelIndex& parent) const
+int ControlModel::doRowCount() const
 {
-  if (!m_style || parent.isValid())
-    return 0;
   return sizeof(controlElements) / sizeof(controlElements[0]);
 }
 

@@ -26,15 +26,8 @@
 
 using namespace GammaRay;
 
-StandardIconModel::StandardIconModel(QObject* parent): QAbstractTableModel(parent), m_style(0)
+StandardIconModel::StandardIconModel(QObject* parent): AbstractStyleElementModel(parent)
 {
-}
-
-void StandardIconModel::setStyle(QStyle* style)
-{
-  beginResetModel();
-  m_style = style;
-  endResetModel();
 }
 
 QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix, const QString& name, int column, int role) const
@@ -53,13 +46,10 @@ QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix, c
 
 
 #define MAKE_SP( stdPix ) \
-if (index.row() == QStyle:: stdPix) return dataForStandardIcon(QStyle:: stdPix, QLatin1String( #stdPix ), index.column(), role)
+if (row == QStyle:: stdPix) return dataForStandardIcon(QStyle:: stdPix, QLatin1String( #stdPix ), column, role)
 
-QVariant StandardIconModel::data(const QModelIndex& index, int role) const
+QVariant StandardIconModel::doData(int row, int column, int role) const
 {
-  if (!m_style || !index.isValid())
-    return QVariant();
-
   MAKE_SP(SP_TitleBarMenuButton);
   MAKE_SP(SP_TitleBarMinButton);
   MAKE_SP(SP_TitleBarMaxButton);
@@ -133,16 +123,13 @@ QVariant StandardIconModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
-int StandardIconModel::columnCount(const QModelIndex& parent) const
+int StandardIconModel::doColumnCount() const
 {
-  Q_UNUSED(parent);
   return 2;
 }
 
-int StandardIconModel::rowCount(const QModelIndex& parent) const
+int StandardIconModel::doRowCount() const
 {
-  if (parent.isValid() || !m_style)
-    return 0;
   return QStyle::SP_MediaVolumeMuted + 1;
 }
 

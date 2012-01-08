@@ -27,26 +27,16 @@
 
 using namespace GammaRay;
 
-PixelMetricModel::PixelMetricModel(QObject* parent): QAbstractTableModel(parent), m_style(0)
+PixelMetricModel::PixelMetricModel(QObject* parent): AbstractStyleElementModel(parent)
 {
-}
-
-void PixelMetricModel::setStyle(QStyle* style)
-{
-  beginResetModel();
-  m_style = style;
-  endResetModel();
 }
 
 #define MAKE_PM(metric) \
-if (index.row() == QStyle:: metric && index.column() == 0) return QLatin1String(#metric); \
-if (index.row() == QStyle:: metric && index.column() == 1) return m_style->pixelMetric(QStyle :: metric)
+if (row == QStyle:: metric && column == 0) return QLatin1String(#metric); \
+if (row == QStyle:: metric && column == 1) return m_style->pixelMetric(QStyle :: metric)
 
-QVariant PixelMetricModel::data(const QModelIndex& index, int role) const
+QVariant PixelMetricModel::doData(int row, int column, int role) const
 {
-  if (!m_style || !index.isValid())
-    return QVariant();
-
   if (role == Qt::DisplayRole) {
     MAKE_PM(PM_ButtonMargin);
     MAKE_PM(PM_ButtonDefaultIndicator);
@@ -145,16 +135,13 @@ QVariant PixelMetricModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
-int PixelMetricModel::columnCount(const QModelIndex& parent) const
+int PixelMetricModel::doColumnCount() const
 {
-  Q_UNUSED(parent);
   return 2;
 }
 
-int PixelMetricModel::rowCount(const QModelIndex& parent) const
+int PixelMetricModel::doRowCount() const
 {
-  if (parent.isValid() || !m_style)
-    return 0;
   return QStyle::PM_SubMenuOverlap + 1;
 }
 

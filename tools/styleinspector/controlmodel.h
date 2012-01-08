@@ -24,30 +24,25 @@
 #ifndef GAMMARAY_CONTROLMODEL_H
 #define GAMMARAY_CONTROLMODEL_H
 
-#include <qabstractitemmodel.h>
-
-class QStyle;
+#include "abstractstyleelementmodel.h"
 
 namespace GammaRay {
 
 /**
  * Model for listing all controls provided by a QStyle.
  */
-class ControlModel : public QAbstractTableModel
+class ControlModel : public AbstractStyleElementModel
 {
   Q_OBJECT
 public:
   explicit ControlModel(QObject* parent = 0);
 
-  void setStyle(QStyle* style);
-
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-private:
-  QStyle* m_style;
+protected:
+  virtual QVariant doData(int row, int column, int role) const;
+  virtual int doColumnCount() const;
+  virtual int doRowCount() const;
 };
 
 }

@@ -1,5 +1,5 @@
 /*
-  primitivemodel.h
+  abstractstyleelementmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,30 +21,40 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PRIMITIVEMODEL_H
-#define GAMMARAY_PRIMITIVEMODEL_H
+#ifndef GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H
+#define GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H
 
-#include "abstractstyleelementmodel.h"
+#include <qabstractitemmodel.h>
+#include <qpointer.h>
+
+class QStyle;
 
 namespace GammaRay {
 
 /**
- * Model for primitive style elements.
+ * Base class for all models showing style elements.
  */
-class PrimitiveModel : public AbstractStyleElementModel
+class AbstractStyleElementModel : public QAbstractTableModel
 {
   Q_OBJECT
 public:
-  explicit PrimitiveModel(QObject* parent = 0);
+  explicit AbstractStyleElementModel(QObject* parent = 0);
 
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+  void setStyle(QStyle* style);
+  
+  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
 protected:
-  virtual QVariant doData(int row, int column, int role) const;
-  virtual int doColumnCount() const;
-  virtual int doRowCount() const;
+  virtual QVariant doData(int row, int column, int role) const = 0;
+  virtual int doColumnCount() const = 0;
+  virtual int doRowCount() const = 0;
+
+protected:
+  QPointer<QStyle> m_style;
 };
 
 }
 
-#endif // GAMMARAY_PRIMITIVEMODEL_H
+#endif // GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H
