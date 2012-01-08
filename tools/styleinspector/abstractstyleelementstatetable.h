@@ -1,5 +1,5 @@
 /*
-  primitivemodel.h
+  abstractstyleelementstatetable.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,29 +21,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PRIMITIVEMODEL_H
-#define GAMMARAY_PRIMITIVEMODEL_H
+#ifndef GAMMARAY_ABSTRACTSTYLEELEMENTSTATETABLE_H
+#define GAMMARAY_ABSTRACTSTYLEELEMENTSTATETABLE_H
 
-#include "abstractstyleelementstatetable.h"
+#include "abstractstyleelementmodel.h"
 
 namespace GammaRay {
 
 /**
- * Model for primitive style elements.
+ * Base class for style element x style option state tables.
+ * Covers the state part, sub-classes need to fill in the corresponding rows.
  */
-class PrimitiveModel : public AbstractStyleElementStateTable
+class AbstractStyleElementStateTable : public GammaRay::AbstractStyleElementModel
 {
   Q_OBJECT
 public:
-  explicit PrimitiveModel(QObject* parent = 0);
+  explicit AbstractStyleElementStateTable(QObject* parent = 0);
 
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 protected:
+  virtual int doColumnCount() const;
   virtual QVariant doData(int row, int column, int role) const;
-  virtual int doRowCount() const;
 };
 
 }
 
-#endif // GAMMARAY_PRIMITIVEMODEL_H
+#endif // GAMMARAY_ABSTRACTSTYLEELEMENTSTATETABLE_H

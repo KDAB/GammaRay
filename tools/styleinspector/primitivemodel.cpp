@@ -96,7 +96,7 @@ static primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_PanelMenu)
 };
 
-PrimitiveModel::PrimitiveModel(QObject* parent): AbstractStyleElementModel(parent)
+PrimitiveModel::PrimitiveModel(QObject* parent): AbstractStyleElementStateTable(parent)
 {
 }
 
@@ -128,16 +128,7 @@ QVariant PrimitiveModel::doData(int row, int column, int role) const
     return pixmap;
   }
 
-  if (role == Qt::SizeHintRole && column > 0) {
-    return QSize(68, 68);
-  }
-
-  return QVariant();
-}
-
-int PrimitiveModel::doColumnCount() const
-{
-  return 1 + StyleOption::stateCount();
+  return AbstractStyleElementStateTable::doData(row, column, role);
 }
 
 int PrimitiveModel::doRowCount() const
@@ -147,12 +138,9 @@ int PrimitiveModel::doRowCount() const
 
 QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0)
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section == 0)
       return tr("Primitive Element");
-    return StyleOption::stateDisplayName(section - 1);
-  }
-  return QAbstractItemModel::headerData(section, orientation, role);
+  return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
 
 #include "primitivemodel.moc"

@@ -24,14 +24,14 @@
 #ifndef GAMMARAY_CONTROLMODEL_H
 #define GAMMARAY_CONTROLMODEL_H
 
-#include "abstractstyleelementmodel.h"
+#include "abstractstyleelementstatetable.h"
 
 namespace GammaRay {
 
 /**
  * Model for listing all controls provided by a QStyle.
  */
-class ControlModel : public AbstractStyleElementModel
+class ControlModel : public AbstractStyleElementStateTable
 {
   Q_OBJECT
 public:
@@ -41,7 +41,6 @@ public:
 
 protected:
   virtual QVariant doData(int row, int column, int role) const;
-  virtual int doColumnCount() const;
   virtual int doRowCount() const;
 };
 

@@ -1,5 +1,5 @@
 /*
-  primitivemodel.h
+  abstractstyleelementstatetable.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,29 +21,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PRIMITIVEMODEL_H
-#define GAMMARAY_PRIMITIVEMODEL_H
-
 #include "abstractstyleelementstatetable.h"
+#include "styleoption.h"
 
-namespace GammaRay {
+using namespace GammaRay;
 
-/**
- * Model for primitive style elements.
- */
-class PrimitiveModel : public AbstractStyleElementStateTable
+AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent): AbstractStyleElementModel(parent)
 {
-  Q_OBJECT
-public:
-  explicit PrimitiveModel(QObject* parent = 0);
-
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-protected:
-  virtual QVariant doData(int row, int column, int role) const;
-  virtual int doRowCount() const;
-};
-
 }
 
-#endif // GAMMARAY_PRIMITIVEMODEL_H
+int AbstractStyleElementStateTable::doColumnCount() const
+{
+  return 1 + StyleOption::stateCount();
+}
+
+QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) const
+{
+  Q_UNUSED(row);
+  if (role == Qt::SizeHintRole && column > 0)
+    return QSize(68, 68);
+  return QVariant();
+}
+
+QVariant AbstractStyleElementStateTable::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (section > 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    return StyleOption::stateDisplayName(section - 1);
+  return QAbstractItemModel::headerData(section, orientation, role);
+}
+
+#include "abstractstyleelementstatetable.moc"

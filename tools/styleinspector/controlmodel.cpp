@@ -91,7 +91,7 @@ static control_element_t controlElements[] =  {
 };
 
 
-ControlModel::ControlModel(QObject* parent): AbstractStyleElementModel(parent)
+ControlModel::ControlModel(QObject* parent): AbstractStyleElementStateTable(parent)
 {
 }
 
@@ -123,16 +123,7 @@ QVariant ControlModel::doData(int row, int column, int role) const
     return pixmap;
   }
 
-  if (role == Qt::SizeHintRole && column > 0) {
-    return QSize(68, 68);
-  }
-
-  return QVariant();
-}
-
-int ControlModel::doColumnCount() const
-{
-  return 1 + StyleOption::stateCount();
+  return AbstractStyleElementStateTable::doData(row, column, role);
 }
 
 int ControlModel::doRowCount() const
@@ -142,12 +133,9 @@ int ControlModel::doRowCount() const
 
 QVariant ControlModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0)
-      return tr("Control Element");
-    return StyleOption::stateDisplayName(section - 1);
-  }
-  return QAbstractItemModel::headerData(section, orientation, role);
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section == 0)
+    return tr("Control Element");
+  return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
 
 #include "controlmodel.moc"
