@@ -101,7 +101,7 @@ QVariant ControlModel::doData(int row, int column, int role) const
     return controlElements[row].name;
 
   if (role == Qt::DecorationRole && column > 0) {
-    QPixmap pixmap(64,64);
+    QPixmap pixmap(cellWidth(), cellHeight());
     QPainter painter(&pixmap);
     drawTransparencyBackground(&painter, pixmap.rect());
 

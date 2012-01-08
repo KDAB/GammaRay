@@ -42,11 +42,22 @@ public:
 
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+  int cellWidth() const;
+  int cellHeight() const;
+
+public slots:
+  void setCellWidth(int width);
+  void setCellHeight(int height);
+
 protected:
   virtual int doColumnCount() const;
   virtual QVariant doData(int row, int column, int role) const;
 
   void drawTransparencyBackground(QPainter* painter, const QRect &rect) const;
+
+private:
+  int m_cellWidth;
+  int m_cellHeight;
 };
 
 }

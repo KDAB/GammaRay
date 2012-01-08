@@ -28,7 +28,7 @@
 
 using namespace GammaRay;
 
-AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent): AbstractStyleElementModel(parent)
+AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent): AbstractStyleElementModel(parent), m_cellWidth(64), m_cellHeight(64)
 {
 }
 
@@ -41,7 +41,7 @@ QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) c
 {
   Q_UNUSED(row);
   if (role == Qt::SizeHintRole && column > 0)
-    return QSize(68, 68);
+    return QSize(cellWidth() + 4, cellHeight() + 4);
   return QVariant();
 }
 
@@ -63,6 +63,30 @@ void AbstractStyleElementStateTable::drawTransparencyBackground(QPainter* painte
   QBrush bgBrush;
   bgBrush.setTexture(bgPattern);
   painter->fillRect(rect, bgBrush);
+}
+
+int AbstractStyleElementStateTable::cellWidth() const
+{
+  return m_cellWidth;
+}
+
+int AbstractStyleElementStateTable::cellHeight() const
+{
+  return m_cellHeight;
+}
+
+void AbstractStyleElementStateTable::setCellWidth(int width)
+{
+  m_cellWidth = width;
+  if (rowCount() > 0)
+    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1) );
+}
+
+void AbstractStyleElementStateTable::setCellHeight(int height)
+{
+  m_cellHeight = height;
+  if (rowCount() > 0)
+    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
 }
 
 #include "abstractstyleelementstatetable.moc"
