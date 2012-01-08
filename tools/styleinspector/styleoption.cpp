@@ -110,6 +110,14 @@ QStyleOption* StyleOption::makeButtonStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeComboBoxStyleOption()
+{
+  QStyleOptionComboBox *opt = new QStyleOptionComboBox;
+  opt->frame = true;
+  opt->currentText = QLatin1String("Current Text");
+  return opt;
+}
+
 QStyleOption* StyleOption::makeItemViewStyleOption()
 {
   QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
@@ -167,5 +175,13 @@ QStyleOption* StyleOption::makeToolBoxStyleOption()
 {
   QStyleOptionToolBoxV2* opt = new QStyleOptionToolBoxV2;
   opt->text = QLatin1String("Label");
+  return opt;
+}
+
+QStyleOption* StyleOption::makeToolButtonStyleOption()
+{
+  QStyleOptionToolButton *opt = new QStyleOptionToolButton;
+  opt->text = QLatin1String("Label");
+  opt->toolButtonStyle = Qt::ToolButtonFollowStyle;
   return opt;
 }

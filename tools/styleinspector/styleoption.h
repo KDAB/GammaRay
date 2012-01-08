@@ -40,7 +40,9 @@ namespace StyleOption
 
   QStyleOption* makeStyleOption();
   QStyleOption* makeStyleOptionComplex();
+
   QStyleOption* makeButtonStyleOption();
+  QStyleOption* makeComboBoxStyleOption();
   QStyleOption* makeFrameStyleOption();
   QStyleOption* makeHeaderStyleOption();
   QStyleOption* makeItemViewStyleOption();
@@ -50,6 +52,7 @@ namespace StyleOption
   QStyleOption* makeSpinBoxStyleOption();
   QStyleOption* makeTabStyleOption();
   QStyleOption* makeToolBoxStyleOption();
+  QStyleOption* makeToolButtonStyleOption();
 }
 
 }

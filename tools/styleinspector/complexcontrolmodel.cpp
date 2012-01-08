@@ -40,10 +40,10 @@ struct complex_control_element_t {
 
 static complex_control_element_t complexControlElements[] =  {
   MAKE_CC2(CC_SpinBox, makeSpinBoxStyleOption),
-  MAKE_CC1(CC_ComboBox),
+  MAKE_CC2(CC_ComboBox, makeComboBoxStyleOption),
   MAKE_CC2(CC_ScrollBar, makeSliderStyleOption),
   MAKE_CC2(CC_Slider, makeSliderStyleOption),
-  MAKE_CC1(CC_ToolButton),
+  MAKE_CC2(CC_ToolButton, makeToolButtonStyleOption),
   MAKE_CC1(CC_TitleBar),
   MAKE_CC1(CC_Q3ListView),
   MAKE_CC2(CC_Dial, makeSliderStyleOption),
