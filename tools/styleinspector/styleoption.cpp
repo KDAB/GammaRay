@@ -154,7 +154,7 @@ QStyleOption* StyleOption::makeSpinBoxStyleOption()
 QStyleOption* StyleOption::makeTabStyleOption()
 {
   QStyleOptionTabV3* opt = new QStyleOptionTabV3;
-  opt->text = QLatin1String("label");
+  opt->text = QLatin1String("Label");
   return opt;
 }
 
