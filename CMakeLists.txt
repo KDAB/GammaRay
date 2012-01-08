@@ -259,6 +259,7 @@ set(gammaray_srcs
   tools/styleinspector/styleoption.cpp
   tools/styleinspector/abstractstyleelementmodel.cpp
   tools/styleinspector/abstractstyleelementstatetable.cpp
+  tools/styleinspector/styleelementstatetablepage.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -314,6 +315,7 @@ qt4_wrap_ui(gammaray_srcs
   tools/styleinspector/styleinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/widgetinspector/widgetinspector.ui
+  tools/styleinspector/styleelementstatetablepage.ui
 )
 
 if(BUILD_TIMER_PLUGIN)

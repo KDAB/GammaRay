@@ -55,11 +55,8 @@ StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
   ui->styleSelector->setModel(singleColumnProxy);
   connect(ui->styleSelector, SIGNAL(activated(int)), SLOT(styleSelected(int)));
 
-  ui->primitiveView->setModel(m_primitiveModel);
-  ui->primitiveView->header()->setResizeMode(QHeaderView::ResizeToContents);
-
-  ui->controlView->setModel(m_controlModel);
-  ui->controlView->header()->setResizeMode(QHeaderView::ResizeToContents);
+  ui->primitivePage->setModel(m_primitiveModel);
+  ui->controlPage->setModel(m_controlModel);
 
   ui->pixelMetricView->setModel(m_pixelMetricModel);
   ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
