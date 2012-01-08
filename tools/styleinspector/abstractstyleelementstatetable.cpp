@@ -39,6 +39,7 @@ int AbstractStyleElementStateTable::doColumnCount() const
 
 QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) const
 {
+  Q_UNUSED(column);
   Q_UNUSED(row);
   if (role == Qt::SizeHintRole)
     return QSize(cellWidth() + 4, cellHeight() + 4);

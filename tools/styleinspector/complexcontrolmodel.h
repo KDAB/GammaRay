@@ -1,5 +1,5 @@
 /*
-  styleoption.h
+  complexcontrolmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,37 +21,25 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STYLEOPTION_H
-#define GAMMARAY_STYLEOPTION_H
-#include <qstyle.h>
+#ifndef GAMMARAY_COMPLEXCONTROLMODEL_H
+#define GAMMARAY_COMPLEXCONTROLMODEL_H
 
-class QStyleOption;
-class QString;
+#include "abstractstyleelementstatetable.h"
+
 namespace GammaRay {
 
-/**
- * Various helper methods for dealing with QStyleOption.
- */
-namespace StyleOption
+class ComplexControlModel : public AbstractStyleElementStateTable
 {
-  int stateCount();
-  QString stateDisplayName(int index);
-  QStyle::State prettyState(int index);
+  Q_OBJECT
+public:
+  explicit ComplexControlModel(QObject* parent = 0);
+  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-  QStyleOption* makeStyleOption();
-  QStyleOption* makeStyleOptionComplex();
-  QStyleOption* makeButtonStyleOption();
-  QStyleOption* makeFrameStyleOption();
-  QStyleOption* makeHeaderStyleOption();
-  QStyleOption* makeItemViewStyleOption();
-  QStyleOption* makeMenuStyleOption();
-  QStyleOption* makeProgressBarStyleOption();
-  QStyleOption* makeSliderStyleOption();
-  QStyleOption* makeSpinBoxStyleOption();
-  QStyleOption* makeTabStyleOption();
-  QStyleOption* makeToolBoxStyleOption();
-}
+protected:
+  virtual QVariant doData(int row, int column, int role) const;
+  virtual int doRowCount() const;
+};
 
 }
 
-#endif // GAMMARAY_STYLEOPTION_H
+#endif // GAMMARAY_COMPLEXCONTROLMODEL_H

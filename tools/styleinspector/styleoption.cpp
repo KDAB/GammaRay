@@ -88,6 +88,11 @@ QStyleOption* StyleOption::makeStyleOption()
   return new QStyleOption;
 }
 
+QStyleOption* StyleOption::makeStyleOptionComplex()
+{
+  return new QStyleOptionComplex;
+}
+
 QStyleOption* StyleOption::makeFrameStyleOption()
 {
   QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;

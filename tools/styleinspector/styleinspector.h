@@ -31,6 +31,7 @@
 
 namespace GammaRay {
 
+class ComplexControlModel;
 class ControlModel;
 class PaletteModel;
 class PixelMetricModel;
@@ -55,6 +56,7 @@ private:
   Ui::StyleInspector *ui;
   PrimitiveModel *m_primitiveModel;
   ControlModel *m_controlModel;
+  ComplexControlModel *m_complexControlModel;
   PixelMetricModel *m_pixelMetricModel;
   StandardIconModel *m_standardIconModel;
   PaletteModel *m_standardPaletteModel;
