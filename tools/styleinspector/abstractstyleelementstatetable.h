@@ -26,6 +26,8 @@
 
 #include "abstractstyleelementmodel.h"
 
+class QRect;
+class QPainter;
 namespace GammaRay {
 
 /**
@@ -43,6 +45,8 @@ public:
 protected:
   virtual int doColumnCount() const;
   virtual QVariant doData(int row, int column, int role) const;
+
+  void drawTransparencyBackground(QPainter* painter, const QRect &rect) const;
 };
 
 }

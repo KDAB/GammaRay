@@ -24,6 +24,8 @@
 #include "abstractstyleelementstatetable.h"
 #include "styleoption.h"
 
+#include <qpainter.h>
+
 using namespace GammaRay;
 
 AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent): AbstractStyleElementModel(parent)
@@ -48,6 +50,19 @@ QVariant AbstractStyleElementStateTable::headerData(int section, Qt::Orientation
   if (section > 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
     return StyleOption::stateDisplayName(section - 1);
   return QAbstractItemModel::headerData(section, orientation, role);
+}
+
+void AbstractStyleElementStateTable::drawTransparencyBackground(QPainter* painter, const QRect& rect) const
+{
+  QPixmap bgPattern(16,16);
+  bgPattern.fill(Qt::lightGray);
+  QPainter bgPainter(&bgPattern);
+  bgPainter.fillRect(8, 0, 8, 8, Qt::gray);
+  bgPainter.fillRect(0, 8, 8, 8, Qt::gray);
+
+  QBrush bgBrush;
+  bgBrush.setTexture(bgPattern);
+  painter->fillRect(rect, bgBrush);
 }
 
 #include "abstractstyleelementstatetable.moc"
