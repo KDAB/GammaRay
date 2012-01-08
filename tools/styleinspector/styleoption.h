@@ -44,6 +44,7 @@ namespace StyleOption
   QStyleOption* makeButtonStyleOption();
   QStyleOption* makeComboBoxStyleOption();
   QStyleOption* makeFrameStyleOption();
+  QStyleOption* makeGroupBoxStyleOption();
   QStyleOption* makeHeaderStyleOption();
   QStyleOption* makeItemViewStyleOption();
   QStyleOption* makeMenuStyleOption();

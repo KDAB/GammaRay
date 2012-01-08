@@ -93,15 +93,6 @@ QStyleOption* StyleOption::makeStyleOptionComplex()
   return new QStyleOptionComplex;
 }
 
-QStyleOption* StyleOption::makeFrameStyleOption()
-{
-  QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
-  opt->lineWidth = 1;
-  opt->midLineWidth = 0;
-  opt->frameShape = QFrame::StyledPanel;
-  return opt;
-}
-
 QStyleOption* StyleOption::makeButtonStyleOption()
 {
   QStyleOptionButton *opt = new QStyleOptionButton;
@@ -118,9 +109,21 @@ QStyleOption* StyleOption::makeComboBoxStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeItemViewStyleOption()
+QStyleOption* StyleOption::makeFrameStyleOption()
 {
-  QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
+  QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
+  opt->lineWidth = 1;
+  opt->midLineWidth = 0;
+  opt->frameShape = QFrame::StyledPanel;
+  return opt;
+}
+
+QStyleOption* StyleOption::makeGroupBoxStyleOption()
+{
+  QStyleOptionGroupBox *opt = new QStyleOptionGroupBox;
+  opt->lineWidth = 1;
+  opt->midLineWidth = 0;
+  opt->text = QLatin1String("Label");
   return opt;
 }
 
@@ -129,6 +132,12 @@ QStyleOption* StyleOption::makeHeaderStyleOption()
   QStyleOptionHeader *opt = new QStyleOptionHeader;
   opt->orientation = Qt::Horizontal;
   opt->text = QLatin1String("Label");
+  return opt;
+}
+
+QStyleOption* StyleOption::makeItemViewStyleOption()
+{
+  QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
   return opt;
 }
 

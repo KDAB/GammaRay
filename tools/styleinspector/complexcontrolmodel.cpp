@@ -48,6 +48,7 @@ static complex_control_element_t complexControlElements[] =  {
   MAKE_CC1(CC_Q3ListView),
   MAKE_CC2(CC_Dial, makeSliderStyleOption),
   MAKE_CC1(CC_GroupBox),
+//   MAKE_CC2(CC_GroupBox, makeGroupBoxStyleOption), // TODO: oxygen crashes with that due to widget access
   MAKE_CC1(CC_MdiControls)
 };
 
