@@ -104,7 +104,7 @@ bool UnixFunctionOverwriter::commitMemory(void *mem, size_t size)
     Q_UNUSED(mem)
     Q_UNUSED(size)
 
-    //under unix we dont have a commit
+    //under unix we don't have a commit
     return true;
 }
 

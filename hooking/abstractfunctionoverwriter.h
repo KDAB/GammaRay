@@ -35,23 +35,25 @@ namespace GammaRay {
 
 class AbstractFunctionOverwriter
 {
-public:
+  public:
     virtual ~AbstractFunctionOverwriter();
 
     /**
      * Overwrites a given Qt Core 4 function with a replacement function.
-     * @param orignalFunc orignal Qt Core 4 function
+     * @param orignalFunc original Qt Core 4 function
      * @param replacementFunc replacement function
      */
-    bool overwriteFunction(const QString &orignalFunc, void * const replacementFunc);
+    bool overwriteFunction(const QString &orignalFunc,
+                           void * const replacementFunc);
 
-protected:
+  protected:
     /**
      * Unprotects a memory region so that the memory can get written
      * @param mem start address of the memory that should be unprotected
      * @param size size of the memory region
      */
     virtual bool unprotectMemory(void *mem, size_t size) = 0;
+
     /**
      * Restore the protection of the memory region that has been
      * unproteced before with unprotectMemory
@@ -68,6 +70,7 @@ protected:
      * @param size size of the memory region
      */
     virtual bool writeShortJump(void *target, void * const func);
+
     /**
      * Writes a long jump at a given target to jump to a function.
      * NOTE: A short jump takes 10 bytes for x86 and 14 bytes for x64,
@@ -129,14 +132,14 @@ protected:
 
     virtual size_t blocksize();
 
-private:
+  private:
     void *page_align(void *addr) const;
     size_t roundToNextPage(size_t addr) const;
 
     struct MemorySegment {
-        void *mem;
-        size_t size;
-        size_t free;
+      void *mem;
+      size_t size;
+      size_t free;
     };
 
     QList<MemorySegment> memoryPool;
