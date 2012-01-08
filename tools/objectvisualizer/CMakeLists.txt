@@ -1,4 +1,4 @@
-if (VTK_FOUND)
+if(VTK_FOUND)
 
 add_definitions(-DHAVE_VTK)
 

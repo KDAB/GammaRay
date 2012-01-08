@@ -53,7 +53,7 @@ include(GammaRayMacros)
 
 find_package(Qt5Core QUIET)
 
-if (Qt5Core_FOUND)
+if(Qt5Core_FOUND)
 
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Designer REQUIRED)
