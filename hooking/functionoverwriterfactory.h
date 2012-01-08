@@ -32,7 +32,9 @@ class FunctionOverwriterFactory
     static AbstractFunctionOverwriter *createFunctionOverwriter();
 
   private:
-    FunctionOverwriterFactory() {};
+    FunctionOverwriterFactory()
+    {
+    }
 };
 
 }

@@ -85,14 +85,14 @@ class AbstractFunctionOverwriter
      * @param addr position that should the memory be close to
      * @param size size of the memory region
      */
-    virtual void* getMemoryNearAddress(void * const addr, size_t size);
+    virtual void *getMemoryNearAddress(void * const addr, size_t size);
 
     /**
      * Creates a tranpoline function close to another function.
      * @param func function that the tranpoline should be close to
      * @param replacement function that the trampoline should point to
      */
-    virtual void* createTrampoline(void * const func, void * const replacement);
+    virtual void *createTrampoline(void * const func, void * const replacement);
 
     /**
      * Get address range in which the program resists.
@@ -113,7 +113,7 @@ class AbstractFunctionOverwriter
      * @param mem start address
      * @param size size of the memory region
      */
-    virtual void* reserveMemory(void *mem, size_t size) = 0;
+    virtual void *reserveMemory(void *mem, size_t size) = 0;
 
     /**
      * Commit memory at the griven position
@@ -126,7 +126,7 @@ class AbstractFunctionOverwriter
      * Lookup function address of a given Qt Core 4 function.
      * @param function function name
      */
-    virtual void* qtCoreFunctionLookup(const QString &function) = 0;
+    virtual void *qtCoreFunctionLookup(const QString &function) = 0;
 
     virtual long pagesize() const = 0;
 
