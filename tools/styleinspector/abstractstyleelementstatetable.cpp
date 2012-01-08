@@ -34,21 +34,21 @@ AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent):
 
 int AbstractStyleElementStateTable::doColumnCount() const
 {
-  return 1 + StyleOption::stateCount();
+  return StyleOption::stateCount();
 }
 
 QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) const
 {
   Q_UNUSED(row);
-  if (role == Qt::SizeHintRole && column > 0)
+  if (role == Qt::SizeHintRole)
     return QSize(cellWidth() + 4, cellHeight() + 4);
   return QVariant();
 }
 
 QVariant AbstractStyleElementStateTable::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (section > 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    return StyleOption::stateDisplayName(section - 1);
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    return StyleOption::stateDisplayName(section);
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 

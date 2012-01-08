@@ -97,10 +97,7 @@ ControlModel::ControlModel(QObject* parent): AbstractStyleElementStateTable(pare
 
 QVariant ControlModel::doData(int row, int column, int role) const
 {
-  if (role == Qt::DisplayRole && column == 0)
-    return controlElements[row].name;
-
-  if (role == Qt::DecorationRole && column > 0) {
+  if (role == Qt::DecorationRole) {
     QPixmap pixmap(cellWidth(), cellHeight());
     QPainter painter(&pixmap);
     drawTransparencyBackground(&painter, pixmap.rect());
@@ -108,7 +105,7 @@ QVariant ControlModel::doData(int row, int column, int role) const
     QScopedPointer<QStyleOption> opt(controlElements[row].styleOptionFactory());
     opt->rect = pixmap.rect();
     opt->palette = m_style->standardPalette();
-    opt->state = StyleOption::prettyState(column - 1);
+    opt->state = StyleOption::prettyState(column);
     m_style->drawControl(controlElements[row].control, opt.data(), &painter);
     return pixmap;
   }
@@ -123,8 +120,8 @@ int ControlModel::doRowCount() const
 
 QVariant ControlModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section == 0)
-    return tr("Control Element");
+  if (orientation == Qt::Vertical && role == Qt::DisplayRole)
+    return controlElements[section].name;
   return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
 

@@ -102,10 +102,7 @@ PrimitiveModel::PrimitiveModel(QObject* parent): AbstractStyleElementStateTable(
 
 QVariant PrimitiveModel::doData(int row, int column, int role) const
 {
-  if (role == Qt::DisplayRole && column == 0)
-    return primititveElements[row].name;
-
-  if (role == Qt::DecorationRole && column > 0) {
+  if (role == Qt::DecorationRole) {
     QPixmap pixmap(cellWidth(), cellHeight());
     QPainter painter(&pixmap);
     drawTransparencyBackground(&painter, pixmap.rect());
@@ -113,7 +110,7 @@ QVariant PrimitiveModel::doData(int row, int column, int role) const
     QScopedPointer<QStyleOption> opt((primititveElements[row].styleOptionFactory)());
     opt->rect = pixmap.rect();
     opt->palette = m_style->standardPalette();
-    opt->state = StyleOption::prettyState(column - 1);
+    opt->state = StyleOption::prettyState(column);
     m_style->drawPrimitive(primititveElements[row].primitive, opt.data(), &painter);
     return pixmap;
   }
@@ -128,8 +125,8 @@ int PrimitiveModel::doRowCount() const
 
 QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section == 0)
-      return tr("Primitive Element");
+  if (orientation == Qt::Vertical && role == Qt::DisplayRole)
+    return primititveElements[section].name;
   return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
 
