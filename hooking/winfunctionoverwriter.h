@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef WINFUNCTIONOVERWRITER_H
-#define WINFUNCTIONOVERWRITER_H
+#ifndef GAMMARAY_WINFUNCTIONOVERWRITER_H
+#define GAMMARAY_WINFUNCTIONOVERWRITER_H
 
 #include <QtCore/QtGlobal>
 
@@ -33,7 +33,7 @@ namespace GammaRay {
 
 class WinFunctionOverwriter : public AbstractFunctionOverwriter
 {
-protected:
+  protected:
     virtual bool unprotectMemory(void *mem, size_t size);
     virtual bool reprotectMemory(void *mem, size_t size);
 
@@ -46,7 +46,7 @@ protected:
     virtual void* qtCoreFunctionLookup(const QString &function);
     virtual long pagesize() const;
 
-private:
+  private:
     WinFunctionOverwriter();
     DWORD oldProtect;
 

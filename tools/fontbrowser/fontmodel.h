@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FONTMODEL_H
-#define FONTMODEL_H
+#ifndef GAMMARAY_FONTMODEL_H
+#define GAMMARAY_FONTMODEL_H
 
 #include <QtCore/QAbstractItemModel>
 #include <QFont>

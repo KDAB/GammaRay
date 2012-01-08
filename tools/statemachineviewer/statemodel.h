@@ -20,8 +20,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef STATEMODEL_H
-#define STATEMODEL_H
+#ifndef GAMMARAY_STATEMODEL_H
+#define GAMMARAY_STATEMODEL_H
 
 #include "objectmodelbase.h"
 

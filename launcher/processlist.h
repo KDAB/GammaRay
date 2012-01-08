@@ -30,8 +30,8 @@
 **
 **************************************************************************/
 
-#ifndef PROCESSLIST_H
-#define PROCESSLIST_H
+#ifndef GAMMARAY_PROCESSLIST_H
+#define GAMMARAY_PROCESSLIST_H
 
 #include <QString>
 #include <QList>
@@ -43,6 +43,7 @@ struct ProcData
   QString image;
   QString state;
   QString user;
+
   enum AppType {
     Unknown,
     QtApp,

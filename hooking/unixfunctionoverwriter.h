@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UNIXFUNCTIONOVERWRITER_H
-#define UNIXFUNCTIONOVERWRITER_H
+#ifndef GAMMARAY_UNIXFUNCTIONOVERWRITER_H
+#define GAMMARAY_UNIXFUNCTIONOVERWRITER_H
 
 #include <QtCore/QtGlobal>
 
@@ -32,7 +32,7 @@ namespace GammaRay {
 
 class UnixFunctionOverwriter : public AbstractFunctionOverwriter
 {
-protected:
+  protected:
     virtual bool unprotectMemory(void *mem, size_t size);
     virtual bool reprotectMemory(void *mem, size_t size);
 
@@ -45,7 +45,7 @@ protected:
     virtual void* qtCoreFunctionLookup(const QString &function);
     virtual long pagesize() const;
 
-private:
+  private:
     UnixFunctionOverwriter();
 
     long m_pagesize;

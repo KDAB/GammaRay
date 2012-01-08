@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SPLASHSCREEN_H
-#define SPLASHSCREEN_H
+#ifndef GAMMARAY_SPLASHSCREEN_H
+#define GAMMARAY_SPLASHSCREEN_H
 
 namespace GammaRay {
 

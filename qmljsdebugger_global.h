@@ -53,8 +53,8 @@
 **
 **************************************************************************/
 
-#ifndef QMLJSDEBUGGER_GLOBAL_H
-#define QMLJSDEBUGGER_GLOBAL_H
+#ifndef GAMMARAY_QMLJSDEBUGGER_GLOBAL_H
+#define GAMMARAY_QMLJSDEBUGGER_GLOBAL_H
 
 #include <QtCore/qglobal.h>
 

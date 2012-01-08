@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROXYDETACHER_H
-#define PROXYDETACHER_H
+#ifndef GAMMARAY_PROXYDETACHER_H
+#define GAMMARAY_PROXYDETACHER_H
 
 #include <QObject>
 

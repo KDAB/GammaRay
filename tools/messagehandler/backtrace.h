@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BACKTRACE_H
-#define BACKTRACE_H
+#ifndef GAMMARAY_BACKTRACE_H
+#define GAMMARAY_BACKTRACE_H
 
 #include <QtCore/QStringList>
 

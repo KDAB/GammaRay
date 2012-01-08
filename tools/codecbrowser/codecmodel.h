@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CODECMODEL_H
-#define CODECMODEL_H
+#ifndef GAMMARAY_CODECMODEL_H
+#define GAMMARAY_CODECMODEL_H
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QTextCodec>

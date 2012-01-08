@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef METATYPESMODEL_H
-#define METATYPESMODEL_H
+#ifndef GAMMARAY_METATYPESMODEL_H
+#define GAMMARAY_METATYPESMODEL_H
 
 #include <QtCore/QAbstractTableModel>
 

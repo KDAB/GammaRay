@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ABSTRACTFUNCTIONOVERWRITER_H
-#define ABSTRACTFUNCTIONOVERWRITER_H
+#ifndef GAMMARAY_ABSTRACTFUNCTIONOVERWRITER_H
+#define GAMMARAY_ABSTRACTFUNCTIONOVERWRITER_H
 
 #include <QList>
 #include <QString>

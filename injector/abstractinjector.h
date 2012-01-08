@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ABSTRACTINJECTOR_H
-#define ABSTRACTINJECTOR_H
+#ifndef GAMMARAY_ABSTRACTINJECTOR_H
+#define GAMMARAY_ABSTRACTINJECTOR_H
 
 #include <QProcess>
 #include <QSharedPointer>

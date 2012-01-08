@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ATTACHDIALOG_H
-#define ATTACHDIALOG_H
+#ifndef GAMMARAY_ATTACHDIALOG_H
+#define GAMMARAY_ATTACHDIALOG_H
 
 #include <QWidget>
 

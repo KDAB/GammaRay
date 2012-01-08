@@ -22,8 +22,8 @@
 ****************************************************************************/
 //krazy:excludeall=style
 
-#ifndef MODELTEST_H
-#define MODELTEST_H
+#ifndef GAMMARAY_MODELTEST_H
+#define GAMMARAY_MODELTEST_H
 
 #include <QtCore/QObject>
 #include <QtCore/QAbstractItemModel>

@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef TEST_GAMMARAY_MAINWINDOW_H
+#define TEST_GAMMARAY_MAINWINDOW_H
 
 #include <QMainWindow>
 

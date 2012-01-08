@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MODELMODEL_H
-#define MODELMODEL_H
+#ifndef GAMMARAY_MODELMODEL_H
+#define GAMMARAY_MODELMODEL_H
 
 #include "objectmodelbase.h"
 #include <qabstractitemmodel.h>

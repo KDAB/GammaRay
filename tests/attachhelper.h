@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ATTACHHELPER_H
-#define ATTACHHELPER_H
+#ifndef TEST_GAMMARAY_ATTACHHELPER_H
+#define TEST_GAMMARAY_ATTACHHELPER_H
 
 #include <QObject>
 

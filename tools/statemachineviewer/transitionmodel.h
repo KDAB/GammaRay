@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSITIONMODEL_H
-#define TRANSITIONMODEL_H
+#ifndef GAMMARAY_TRANSITIONMODEL_H
+#define GAMMARAY_TRANSITIONMODEL_H
 
 #include "objectmodelbase.h"
 

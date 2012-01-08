@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROMOLABEL_H
-#define PROMOLABEL_H
+#ifndef GAMMARAY_PROMOLABEL_H
+#define GAMMARAY_PROMOLABEL_H
 
 #include <QLabel>
 

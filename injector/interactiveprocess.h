@@ -20,8 +20,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef INTERACTIVEPROCESS_H
-#define INTERACTIVEPROCESS_H
+#ifndef GAMMARAY_INTERACTIVEPROCESS_H
+#define GAMMARAY_INTERACTIVEPROCESS_H
 
 #include <QProcess>
 

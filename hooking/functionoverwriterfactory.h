@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FUNCTIONOVERWRITERFACTORY_H
-#define FUNCTIONOVERWRITERFACTORY_H
+#ifndef GAMMARAY_FUNCTIONOVERWRITERFACTORY_H
+#define GAMMARAY_FUNCTIONOVERWRITERFACTORY_H
 
 #include "abstractfunctionoverwriter.h"
 
@@ -28,10 +28,10 @@ namespace GammaRay {
 
 class FunctionOverwriterFactory
 {
-public:
+  public:
     static AbstractFunctionOverwriter *createFunctionOverwriter();
 
-private:
+  private:
     FunctionOverwriterFactory() {};
 };
 
