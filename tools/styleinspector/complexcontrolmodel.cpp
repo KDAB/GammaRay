@@ -39,14 +39,14 @@ struct complex_control_element_t {
 #define MAKE_CC2( control, factory ) { #control, QStyle:: control, &StyleOption:: factory }
 
 static complex_control_element_t complexControlElements[] =  {
-  MAKE_CC1(CC_SpinBox),
+  MAKE_CC2(CC_SpinBox, makeSpinBoxStyleOption),
   MAKE_CC1(CC_ComboBox),
-  MAKE_CC1(CC_ScrollBar),
-  MAKE_CC1(CC_Slider),
+  MAKE_CC2(CC_ScrollBar, makeSliderStyleOption),
+  MAKE_CC2(CC_Slider, makeSliderStyleOption),
   MAKE_CC1(CC_ToolButton),
   MAKE_CC1(CC_TitleBar),
   MAKE_CC1(CC_Q3ListView),
-  MAKE_CC1(CC_Dial),
+  MAKE_CC2(CC_Dial, makeSliderStyleOption),
   MAKE_CC1(CC_GroupBox),
   MAKE_CC1(CC_MdiControls)
 };
