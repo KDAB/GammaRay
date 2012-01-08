@@ -30,7 +30,7 @@
 
 using namespace GammaRay;
 
-bool UiExtractor::checkProperty(QObject* obj, const QString& prop) const
+bool UiExtractor::checkProperty(QObject *obj, const QString &prop) const
 {
   const QMetaObject *mo = obj->metaObject();
   const QMetaProperty mp = mo->property(mo->indexOfProperty(prop.toLatin1()));
@@ -42,20 +42,23 @@ bool UiExtractor::checkProperty(QObject* obj, const QString& prop) const
     // try to figure out the default by resetting to it
     if (mp.isResettable()) {
       mp.reset(obj);
-      if (mp.read(obj) == value)
+      if (mp.read(obj) == value) {
         return false;
+      }
       mp.write(obj, value);
       return true;
     }
 
     // some guessing for non-resettable properties
-    if (value.isNull() || !value.isValid())
+    if (value.isNull() || !value.isValid()) {
       return false;
+    }
 
-    if (value.type() == QVariant::String)
+    if (value.type() == QVariant::String) {
       return !value.toString().isEmpty();
-    else if (value.type() == QVariant::Locale)
+    } else if (value.type() == QVariant::Locale) {
       return value.value<QLocale>() != QLocale::system();
+    }
 
     return true;
   }

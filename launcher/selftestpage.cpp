@@ -31,7 +31,8 @@
 
 using namespace GammaRay;
 
-SelfTestPage::SelfTestPage(QWidget* parent): QWidget(parent), ui(new Ui::SelfTestPage), m_resultModel(new QStandardItemModel(this))
+SelfTestPage::SelfTestPage(QWidget *parent)
+  : QWidget(parent), ui(new Ui::SelfTestPage), m_resultModel(new QStandardItemModel(this))
 {
   ui->setupUi(this);
   ui->resultView->setModel(m_resultModel);
@@ -76,7 +77,8 @@ void SelfTestPage::testAvailableInjectors()
     return;
   }
 
-  information(tr("The following injectors are available: %1").arg(injectors.join(QLatin1String(", "))));
+  information(tr("The following injectors are available: %1").
+              arg(injectors.join(QLatin1String(", "))));
 }
 
 void SelfTestPage::testInjectors()
@@ -88,14 +90,16 @@ void SelfTestPage::testInjectors()
       continue;
     }
     if (injector->selfTest()) {
-      information(tr("Injector %1 successfully passed its self-test.").arg(injectorType));
+      information(tr("Injector %1 successfully passed its self-test.").
+                  arg(injectorType));
     } else {
-      error(tr("Injector %1 failed to pass its self-test: %2.").arg(injectorType, injector->errorString()));
+      error(tr("Injector %1 failed to pass its self-test: %2.").
+            arg(injectorType, injector->errorString()));
     }
   }
 }
 
-void SelfTestPage::error(const QString& msg)
+void SelfTestPage::error(const QString &msg)
 {
   QStandardItem *item = new QStandardItem;
   item->setText(msg);
@@ -103,7 +107,7 @@ void SelfTestPage::error(const QString& msg)
   m_resultModel->appendRow(item);
 }
 
-void SelfTestPage::information(const QString& msg)
+void SelfTestPage::information(const QString &msg)
 {
   QStandardItem *item = new QStandardItem;
   item->setText(msg);

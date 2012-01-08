@@ -53,6 +53,6 @@ bool AbstractInjector::attach(int pid, const QString &probeDll, const QString &p
 }
 
 bool AbstractInjector::selfTest()
-{;
+{
   return true;
 }

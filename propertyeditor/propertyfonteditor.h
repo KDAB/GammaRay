@@ -31,10 +31,10 @@ namespace GammaRay {
 class PropertyFontEditor : public PropertyExtendedEditor
 {
   Q_OBJECT
-public:
-    explicit PropertyFontEditor(QWidget* parent = 0);
+  public:
+    explicit PropertyFontEditor(QWidget *parent = 0);
 
-protected:
+  protected:
     virtual void edit();
 };
 

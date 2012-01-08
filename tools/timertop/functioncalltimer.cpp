@@ -44,8 +44,9 @@ bool FunctionCallTimer::start()
 #else
   LARGE_INTEGER startTime;
   bool ret = QueryPerformanceCounter(&startTime);
-  if (!ret)
-      return false;
+  if (!ret) {
+    return false;
+  }
   m_startTime = startTime.QuadPart;
 #endif
   m_active = true;

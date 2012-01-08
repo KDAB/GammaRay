@@ -33,7 +33,7 @@ class PropertyEditorFactory : public QItemEditorFactory
 {
   public:
     PropertyEditorFactory();
-    virtual QWidget* createEditor(QVariant::Type type, QWidget* parent) const;
+    virtual QWidget *createEditor(QVariant::Type type, QWidget *parent) const;
 };
 
 }

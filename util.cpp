@@ -115,12 +115,14 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   case QVariant::Region:
   {
     const QRegion region = value.value<QRegion>();
-    if (region.isEmpty())
+    if (region.isEmpty()) {
       return QLatin1String("<empty>");
-    if (region.rectCount() == 1)
+    }
+    if (region.rectCount() == 1) {
       return variantToString(region.rects().first());
-    else
+    } else {
       return QString::fromLatin1("<%1 rects>").arg(region.rectCount());
+    }
   }
 
   case QVariant::Size:
@@ -140,14 +142,14 @@ QString GammaRay::Util::variantToString(const QVariant &value)
 
   case QVariant::StringList:
     return value.toStringList().join(", ");
- 
+
   case QVariant::Transform:
   {
     const QTransform t = value.value<QTransform>();
-    return QString::fromLatin1("[%1 %2 %3, %4 %5 %6, %7 %8 %9]")
-      .arg(t.m11()).arg(t.m12()).arg(t.m13())
-      .arg(t.m21()).arg(t.m22()).arg(t.m23())
-      .arg(t.m31()).arg(t.m32()).arg(t.m33());
+    return QString::fromLatin1("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").
+      arg(t.m11()).arg(t.m12()).arg(t.m13()).
+      arg(t.m21()).arg(t.m22()).arg(t.m23()).
+      arg(t.m31()).arg(t.m32()).arg(t.m33());
   }
   default:
     break;
@@ -173,90 +175,100 @@ QString GammaRay::Util::variantToString(const QVariant &value)
 
   if (value.userType() == qMetaTypeId<QPainterPath>()) {
     const QPainterPath path = value.value<QPainterPath>();
-    if (path.isEmpty())
+    if (path.isEmpty()) {
       return QObject::tr("<empty>");
+    }
     return QObject::tr("<%1 elements>").arg(path.elementCount());
   }
 
-  if (value.type() == qMetaTypeId<QWidget*>())
+  if (value.type() == qMetaTypeId<QWidget*>()) {
     return displayString(value.value<QWidget*>());
+  }
 
-  if (value.userType() == qMetaTypeId<QGraphicsEffect*>())
+  if (value.userType() == qMetaTypeId<QGraphicsEffect*>()) {
     return addressToString(value.value<QGraphicsEffect*>());
-  if (value.userType() == qMetaTypeId<QGraphicsItem*>())
+  }
+  if (value.userType() == qMetaTypeId<QGraphicsItem*>()) {
     return addressToString(value.value<QGraphicsItem*>());
-  if (value.userType() == qMetaTypeId<QGraphicsItemGroup*>())
+  }
+  if (value.userType() == qMetaTypeId<QGraphicsItemGroup*>()) {
     return addressToString(value.value<QGraphicsItemGroup*>());
-  if (value.userType() == qMetaTypeId<QGraphicsObject*>())
+  }
+  if (value.userType() == qMetaTypeId<QGraphicsObject*>()) {
     return displayString(value.value<QGraphicsObject*>());
-  if (value.userType() == qMetaTypeId<QGraphicsWidget*>())
+  }
+  if (value.userType() == qMetaTypeId<QGraphicsWidget*>()) {
     return displayString(value.value<QGraphicsWidget*>());
-  if (value.userType() == qMetaTypeId<const QStyle*>())
+  }
+  if (value.userType() == qMetaTypeId<const QStyle*>()) {
     return displayString(value.value<const QStyle*>());
+  }
 
   // enums
   const QString enumStr = enumToString(value);
-  if (!enumStr.isEmpty())
+  if (!enumStr.isEmpty()) {
     return enumStr;
+  }
 
   return value.toString();
 }
 
-QVariant Util::decorationForVariant(const QVariant& value)
+QVariant Util::decorationForVariant(const QVariant &value)
 {
   switch (value.type()) {
-    case QVariant::Brush:
-    {
-      const QBrush b = value.value<QBrush>();
-      if (b.style() != Qt::NoBrush) {
-        QPixmap p(16, 16);
-        p.fill(QColor(0,0,0,0));
-        QPainter painter(&p);
-        painter.setBrush(b);
-        painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
-        return p;
-      }
+  case QVariant::Brush:
+  {
+    const QBrush b = value.value<QBrush>();
+    if (b.style() != Qt::NoBrush) {
+      QPixmap p(16, 16);
+      p.fill(QColor(0, 0, 0, 0));
+      QPainter painter(&p);
+      painter.setBrush(b);
+      painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
+      return p;
     }
-    case QVariant::Color:
-    {
-      const QColor c = value.value<QColor>();
-      if (c.isValid()) {
-        QPixmap p(16, 16);
-        QPainter painter(&p);
-        painter.setBrush(QBrush(c));
-        painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
-        return p;
-      }
+  }
+  case QVariant::Color:
+  {
+    const QColor c = value.value<QColor>();
+    if (c.isValid()) {
+      QPixmap p(16, 16);
+      QPainter painter(&p);
+      painter.setBrush(QBrush(c));
+      painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
+      return p;
     }
-    case QVariant::Cursor:
-    {
-      const QCursor c = value.value<QCursor>();
-      if (!c.pixmap().isNull())
-        return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
+  }
+  case QVariant::Cursor:
+  {
+    const QCursor c = value.value<QCursor>();
+    if (!c.pixmap().isNull()) {
+      return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
     }
-    case QVariant::Icon:
-    {
-      return value;
+  }
+  case QVariant::Icon:
+  {
+    return value;
+  }
+  case QVariant::Pen:
+  {
+    const QPen pen = value.value<QPen>();
+    if (pen.style() != Qt::NoPen) {
+      QPixmap p(16, 16);
+      p.fill(QColor(0, 0, 0, 0));
+      QPainter painter(&p);
+      painter.setPen(pen);
+      painter.translate(0, 8 - pen.width() / 2);
+      painter.drawLine(0, 0, p.width(), 0);
+      return p;
     }
-    case QVariant::Pen:
-    {
-      const QPen pen = value.value<QPen>();
-      if (pen.style() != Qt::NoPen) {
-        QPixmap p(16, 16);
-        p.fill(QColor(0,0,0,0));
-        QPainter painter(&p);
-        painter.setPen(pen);
-        painter.translate(0, 8 - pen.width()/2);
-        painter.drawLine(0,0, p.width(), 0);
-        return p;
-      }
-    }
-    case QVariant::Pixmap:
-    {
-      const QPixmap p = value.value<QPixmap>();
-      return QVariant::fromValue( p.scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation));
-    }
-    default: break;
+  }
+  case QVariant::Pixmap:
+  {
+    const QPixmap p = value.value<QPixmap>();
+    return QVariant::fromValue(p.scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation));
+  }
+  default: break;
   }
 
   return QVariant();
@@ -267,16 +279,18 @@ QString Util::addressToString(const void *p)
   return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
 }
 
-QString Util::enumToString(const QVariant& value, const char* typeName, QObject* object)
+QString Util::enumToString(const QVariant &value, const char *typeName, QObject *object)
 {
   QByteArray enumTypeName(typeName);
-  if (enumTypeName.isEmpty())
+  if (enumTypeName.isEmpty()) {
     enumTypeName = value.typeName();
+  }
 
   // strip of class name and namespace
   const int pos = enumTypeName.lastIndexOf("::");
-  if (pos >= 0)
+  if (pos >= 0) {
     enumTypeName = enumTypeName.mid(pos + 2);
+  }
 
   const QMetaObject *mo = &ProtectedExposer::staticQtMetaObject;
   int enumIndex = mo->indexOfEnumerator(enumTypeName);
@@ -284,12 +298,14 @@ QString Util::enumToString(const QVariant& value, const char* typeName, QObject*
     mo = object->metaObject();
     enumIndex = mo->indexOfEnumerator(enumTypeName);
   }
-  if (enumIndex < 0)
+  if (enumIndex < 0) {
     return QString();
+  }
 
   const QMetaEnum me = mo->enumerator(enumIndex);
-  if (!me.isValid())
+  if (!me.isValid()) {
     return QString();
+  }
   return me.valueToKeys(value.toInt());
 }
 
@@ -309,11 +325,14 @@ namespace GammaRay {
 static QString stringifyProperty(QObject *obj, const QString &propName)
 {
   const QVariant value = obj->property(propName.toLatin1());
-  const QMetaProperty mp = obj->metaObject()->property(obj->metaObject()->indexOfProperty(propName.toLatin1()));
+  const QMetaProperty mp =
+    obj->metaObject()->property(
+      obj->metaObject()->indexOfProperty(propName.toLatin1()));
   if (mp.isValid()) {
     const QString enumStr = Util::enumToString(value, mp.typeName(), obj);
-    if (!enumStr.isEmpty())
+    if (!enumStr.isEmpty()) {
       return enumStr;
+    }
   }
   return Util::variantToString(value);
 }
@@ -324,26 +343,31 @@ static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
   const QDir dir(basePath);
   if (dir.exists()) {
     // see if we find one with exactly matching properties
-    foreach (const QString &entry, dir.entryList(QStringList() << QLatin1String("*.png"), QDir::Files)) {
-      if (entry == QLatin1String("default.png"))
+    foreach (const QString &entry,
+             dir.entryList(QStringList() << QLatin1String("*.png"), QDir::Files)) {
+      if (entry == QLatin1String("default.png")) {
         continue;
+      }
       QString propString(entry);
       propString.chop(4);
       const QStringList props = propString.split(QLatin1String(";"));
-      if (props.isEmpty())
+      if (props.isEmpty()) {
         continue;
+      }
       bool allMatch = true;
       foreach (const QString &prop, props) {
         const QStringList keyValue = prop.split(QLatin1Char('='));
-        if (keyValue.size() != 2)
+        if (keyValue.size() != 2) {
           continue;
+        }
         if (stringifyProperty(obj, keyValue.first()) != keyValue.last()) {
           allMatch = false;
           break;
-        } 
+        }
       }
-      if (allMatch)
+      if (allMatch) {
         return QIcon(basePath + entry);
+      }
     }
     return QIcon(basePath + QLatin1String("default.png"));
   } else if (mo->superClass()) {
@@ -353,10 +377,11 @@ static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
 }
 }
 
-QVariant Util::iconForObject(QObject* obj)
+QVariant Util::iconForObject(QObject *obj)
 {
-  if (obj)
+  if (obj) {
     return GammaRay::iconForObject(obj->metaObject(), obj);
+  }
   return QVariant();
 }
 

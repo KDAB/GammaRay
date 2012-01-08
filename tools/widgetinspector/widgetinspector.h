@@ -44,8 +44,8 @@ class WidgetInspector : public QWidget
 
   private:
     void setActionsEnabled(bool enabled);
-    QWidget* selectedWidget() const;
-    void callExternalExportAction(const char* name, QWidget* widget, const QString &fileName);
+    QWidget *selectedWidget() const;
+    void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
 
   private slots:
     void widgetSelected(const QModelIndex &index);

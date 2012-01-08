@@ -184,8 +184,9 @@ void MainWindow::toolSelected()
   }
   ui.toolStack->setCurrentIndex(ui.toolStack->indexOf(toolWidget));
 
-  foreach (QAction *action, toolWidget->actions())
+  foreach (QAction *action, toolWidget->actions()) {
     ui.actionsMenu->addAction(action);
+  }
   ui.actionsMenu->setEnabled(!ui.actionsMenu->isEmpty());
 }
 

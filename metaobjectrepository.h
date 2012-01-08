@@ -32,34 +32,43 @@ namespace GammaRay {
 
 class MetaObject;
 
-/** Repository of compile-time introspection information for stuff not covered by the Qt meta object system. */
+/**
+ * Repository of compile-time introspection information for stuff
+ * not covered by the Qt meta object system.
+ */
 class MetaObjectRepository
 {
-public:
-  ~MetaObjectRepository();
+  public:
+    ~MetaObjectRepository();
 
-  /** Singleton accessor. */
-  static MetaObjectRepository* instance();
+    /** Singleton accessor. */
+    static MetaObjectRepository *instance();
 
-  /** Add object type information to the repository. */
-  void addMetaObject( MetaObject* mo );
+    /**
+     * Adds object type information to the repository.
+     */
+    void addMetaObject(MetaObject *mo);
 
-  /** Returns the introspection information for the type with the given name. */
-  MetaObject* metaObject( const QString &typeName ) const;
+    /**
+     * Returns the introspection information for the type with the given name.
+     */
+    MetaObject *metaObject(const QString &typeName) const;
 
-  /** Returns whether a meta object is known for the given type name. */
-  bool hasMetaObject( const QString &typeName ) const;
+    /**
+     * Returns whether a meta object is known for the given type name.
+     */
+    bool hasMetaObject(const QString &typeName) const;
 
-protected:
+  protected:
     MetaObjectRepository();
 
-private:
-  void initBuiltInTypes();
-  void initQObjectTypes();
-  void initGraphicsViewTypes();
+  private:
+    void initBuiltInTypes();
+    void initQObjectTypes();
+    void initGraphicsViewTypes();
 
-private:
-  QHash<QString, MetaObject*> m_metaObjects;
+  private:
+    QHash<QString, MetaObject*> m_metaObjects;
 };
 
 }

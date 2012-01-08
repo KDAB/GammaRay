@@ -93,14 +93,17 @@ bool StyleInjector::selfTest()
 {
   // TODO: be a bit more clever in finding the plugin location (also when actually using it above)
 #ifndef Q_OS_WIN
-  const QString stylePath = QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/styles/gammaray_injector_style.so");
+  const QString stylePath =
+    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/styles/gammaray_injector_style.so");
 #else
-  const QString stylePath = QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/styles/gammaray_injector_style.dll");
+  const QString stylePath =
+    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/styles/gammaray_injector_style.dll");
 #endif
 
   QFileInfo fi(stylePath);
   if (!fi.exists() || !fi.isFile() || !fi.isReadable()) {
-    mErrorString = QObject::tr("Injector style plugin does not exists or is not readable at %1.").arg(stylePath);
+    mErrorString =
+      QObject::tr("Injector style plugin does not exists or is not readable at %1.").arg(stylePath);
     return false;
   }
 

@@ -30,14 +30,16 @@
 
 using namespace GammaRay;
 
-LauncherWindow::LauncherWindow(QWidget* parent): QDialog(parent), ui( new Ui::LauncherWindow )
+LauncherWindow::LauncherWindow(QWidget *parent)
+  : QDialog(parent), ui(new Ui::LauncherWindow)
 {
   ui->setupUi(this);
   ui->aboutLabel->setText(ui->aboutLabel->text().arg(GAMMARAY_VERSION_STRING));
   connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
-  connect(ui->attachPage, SIGNAL(activate()), ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
+  connect(ui->attachPage, SIGNAL(activate()),
+          ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
 
   QSettings settings;
   ui->tabWidget->setCurrentIndex(settings.value(QLatin1String("Launcher/TabIndex")).toInt());
@@ -50,15 +52,17 @@ LauncherWindow::~LauncherWindow()
 
 QString LauncherWindow::pid() const
 {
-  if (ui->tabWidget->currentWidget() == ui->attachPage)
+  if (ui->tabWidget->currentWidget() == ui->attachPage) {
     return ui->attachPage->pid();
+  }
   return QString();
 }
 
 QStringList LauncherWindow::launchArguments() const
 {
-  if (ui->tabWidget->currentWidget() == ui->launchPage)
+  if (ui->tabWidget->currentWidget() == ui->launchPage) {
     return ui->launchPage->launchArguments();
+  }
   return QStringList();
 }
 
@@ -84,6 +88,5 @@ void LauncherWindow::accept()
 
   QDialog::accept();
 }
-
 
 #include "launcherwindow.moc"

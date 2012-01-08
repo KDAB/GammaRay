@@ -34,12 +34,12 @@ namespace GammaRay {
 class WidgetTreeModel : public ObjectFilterProxyModelBase
 {
   Q_OBJECT
-public:
-  explicit WidgetTreeModel(QObject* parent = 0);
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  public:
+    explicit WidgetTreeModel(QObject *parent = 0);
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-protected:
-  virtual bool filterAcceptsObject(QObject* object) const;
+  protected:
+    virtual bool filterAcceptsObject(QObject *object) const;
 };
 
 }

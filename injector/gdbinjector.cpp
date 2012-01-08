@@ -216,5 +216,4 @@ bool GdbInjector::selfTest()
   return startGdb(QStringList() << QLatin1String("--version"));
 }
 
-
 #include "gdbinjector.moc"

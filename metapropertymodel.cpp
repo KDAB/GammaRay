@@ -28,14 +28,14 @@
 
 using namespace GammaRay;
 
-MetaPropertyModel::MetaPropertyModel(QObject* parent):
+MetaPropertyModel::MetaPropertyModel(QObject *parent):
   QAbstractTableModel(parent),
   m_metaObject(0),
   m_object(0)
 {
 }
 
-void MetaPropertyModel::setObject(void* object, const QString& typeName)
+void MetaPropertyModel::setObject(void *object, const QString &typeName)
 {
   beginResetModel();
   m_object = object;
@@ -47,7 +47,7 @@ void MetaPropertyModel::setObject(QObject *object)
 {
   beginResetModel();
   m_object = 0;
-    m_metaObject = 0;
+  m_metaObject = 0;
 
   if (object) {
     const QMetaObject *mo = object->metaObject();
@@ -55,22 +55,24 @@ void MetaPropertyModel::setObject(QObject *object)
       m_metaObject = MetaObjectRepository::instance()->metaObject(mo->className());
       mo = mo->superClass();
     }
-    if (m_metaObject)
+    if (m_metaObject) {
       m_object = object;
+    }
   }
   endResetModel();
 }
 
-int MetaPropertyModel::columnCount(const QModelIndex& parent) const
+int MetaPropertyModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 4;
 }
 
-int MetaPropertyModel::rowCount(const QModelIndex& parent) const
+int MetaPropertyModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid() || !m_metaObject)
+  if (parent.isValid() || !m_metaObject) {
     return 0;
+  }
   return m_metaObject->propertyCount();
 }
 
@@ -91,38 +93,44 @@ QVariant MetaPropertyModel::headerData(int section, Qt::Orientation orientation,
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-QVariant MetaPropertyModel::data(const QModelIndex& index, int role) const
+QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
 {
-  if (!m_metaObject || !index.isValid())
+  if (!m_metaObject || !index.isValid()) {
     return QVariant();
+  }
 
   MetaProperty *property = m_metaObject->propertyAt(index.row());
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
-      case 0: return property->name();
-      case 2: return property->typeName();
-      case 3: return property->metaObject()->className();
+    case 0:
+      return property->name();
+    case 2:
+      return property->typeName();
+    case 3:
+      return property->metaObject()->className();
     }
   }
 
   if (index.column() == 1) {
-    if (!m_object)
+    if (!m_object) {
       return QVariant();
+    }
+
     // TODO: cache this, to make this more robust against m_object becoming invalid
     const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
     switch (role) {
-      case Qt::DisplayRole:
-        return Util::variantToString(value);
-      case Qt::DecorationRole:
-        return Util::decorationForVariant(value);
-      case Qt::EditRole:
-        return value;
+    case Qt::DisplayRole:
+      return Util::variantToString(value);
+    case Qt::DecorationRole:
+      return Util::decorationForVariant(value);
+    case Qt::EditRole:
+      return value;
     }
   }
   return QVariant();
 }
 
-bool MetaPropertyModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool MetaPropertyModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
   if (index.isValid() && index.column() == 1 && m_metaObject && m_object && role == Qt::EditRole) {
     MetaProperty *property = m_metaObject->propertyAt(index.row());
@@ -132,15 +140,17 @@ bool MetaPropertyModel::setData(const QModelIndex& index, const QVariant& value,
   return QAbstractItemModel::setData(index, value, role);
 }
 
-Qt::ItemFlags MetaPropertyModel::flags(const QModelIndex& index) const
+Qt::ItemFlags MetaPropertyModel::flags(const QModelIndex &index) const
 {
   const Qt::ItemFlags f = QAbstractItemModel::flags(index);
-  if (!index.isValid() || index.column() != 1 || !m_metaObject || !m_object)
+  if (!index.isValid() || index.column() != 1 || !m_metaObject || !m_object) {
     return f;
+  }
 
   MetaProperty *property = m_metaObject->propertyAt(index.row());
-  if (property->isReadOnly())
+  if (property->isReadOnly()) {
     return f;
+  }
   return f | Qt::ItemIsEditable;
 }
 

@@ -27,7 +27,8 @@
 
 using namespace GammaRay;
 
-PropertyFontEditor::PropertyFontEditor(QWidget* parent): PropertyExtendedEditor(parent)
+PropertyFontEditor::PropertyFontEditor(QWidget *parent)
+  : PropertyExtendedEditor(parent)
 {
 }
 
@@ -35,8 +36,9 @@ void PropertyFontEditor::edit()
 {
   bool ok = false;
   const QFont font = QFontDialog::getFont(&ok, value().value<QFont>(), this);
-  if (ok)
+  if (ok) {
     setValue(font);
+  }
 }
 
 #include "propertyfonteditor.moc"

@@ -61,7 +61,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
           this, SIGNAL(updateButtonState()));
 
   connect(ui.view, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
-         
 
   ui.filter->setProxy(m_proxyModel);
 

@@ -81,8 +81,9 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QWidget *widget = qobject_cast<QWidget*>(obj);
     QLayout* layout = qobject_cast<QLayout*>(obj);
-    if (!widget && layout)
+    if (!widget && layout) {
       widget = layout->parentWidget();
+    }
 
     ui->widgetPropertyWidget->setObject(obj);
     ui->widgetPreviewWidget->setWidget(widget);
@@ -127,18 +128,20 @@ void WidgetInspector::setActionsEnabled(bool enabled)
     action->setEnabled(enabled);
 }
 
-QWidget* WidgetInspector::selectedWidget() const
+QWidget *WidgetInspector::selectedWidget() const
 {
   const QModelIndexList indexes = ui->widgetTreeView->selectionModel()->selectedRows();
-  if (indexes.isEmpty())
+  if (indexes.isEmpty()) {
     return 0;
+  }
   const QModelIndex index = indexes.first();
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QWidget *widget = qobject_cast<QWidget*>(obj);
     QLayout* layout = qobject_cast<QLayout*>(obj);
-    if (!widget && layout)
+    if (!widget && layout) {
       widget = layout->parentWidget();
+    }
     return widget;
   }
   return 0;
@@ -146,10 +149,17 @@ QWidget* WidgetInspector::selectedWidget() const
 
 void WidgetInspector::saveAsImage()
 {
-  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Image"), QString(), tr("Image Files (*.png *.jpg)"));
+  const QString fileName =
+    QFileDialog::getSaveFileName(
+      this,
+      tr("Save As Image"),
+      QString(),
+      tr("Image Files (*.png *.jpg)"));
+
   QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget)
+  if (fileName.isEmpty() || !widget) {
     return;
+  }
 
   QPixmap pixmap(widget->size());
   m_overlayWidget->hide();
@@ -160,10 +170,17 @@ void WidgetInspector::saveAsImage()
 
 void WidgetInspector::saveAsSvg()
 {
-  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As SVG"), QString(), tr("Scalable Vector Graphics (*.svg)"));
+  const QString fileName =
+    QFileDialog::getSaveFileName(
+      this,
+      tr("Save As SVG"),
+      QString(),
+      tr("Scalable Vector Graphics (*.svg)"));
+
   QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget)
+  if (fileName.isEmpty() || !widget) {
     return;
+  }
 
   m_overlayWidget->hide();
   callExternalExportAction("gammaray_save_widget_to_svg", widget, fileName);
@@ -172,10 +189,17 @@ void WidgetInspector::saveAsSvg()
 
 void WidgetInspector::saveAsPdf()
 {
-  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As PDF"), QString(), tr("PDF (*.pdf)"));
+  const QString fileName =
+    QFileDialog::getSaveFileName(
+      this,
+      tr("Save As PDF"),
+      QString(),
+      tr("PDF (*.pdf)"));
+
   QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget)
+  if (fileName.isEmpty() || !widget) {
     return;
+  }
 
   QPrinter printer(QPrinter::ScreenResolution);
   printer.setOutputFileName(fileName);
@@ -190,23 +214,38 @@ void WidgetInspector::saveAsPdf()
 
 void WidgetInspector::saveAsUiFile()
 {
-  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Qt Designer UI File"), QString(), tr("Qt Designer UI File (*.ui)"));
+  const QString fileName =
+    QFileDialog::getSaveFileName(
+      this,
+      tr("Save As Qt Designer UI File"),
+      QString(),
+      tr("Qt Designer UI File (*.ui)"));
+
   QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget)
+  if (fileName.isEmpty() || !widget) {
     return;
+  }
 
   callExternalExportAction("gammaray_save_widget_to_ui", widget, fileName);
 }
 
-void WidgetInspector::callExternalExportAction(const char* name, QWidget* widget, const QString& fileName)
+void WidgetInspector::callExternalExportAction(const char *name,
+                                               QWidget *widget,
+                                               const QString &fileName)
 {
   if (!m_externalExportActions.isLoaded()) {
-    const QString probePath = QString::fromLocal8Bit(qgetenv("GAMMARAY_PROBE_PATH"));
-    m_externalExportActions.setFileName(probePath + QLatin1String("/libgammaray_widget_export_actions"));
+    const QString probePath =
+      QString::fromLocal8Bit(qgetenv("GAMMARAY_PROBE_PATH"));
+
+    m_externalExportActions.setFileName(
+      probePath + QLatin1String("/libgammaray_widget_export_actions"));
+
     m_externalExportActions.load();
   }
 
-  void(*function)(QWidget*, const QString&) = reinterpret_cast<void(*)(QWidget*, const QString&)>(m_externalExportActions.resolve(name));
+  void(*function)(QWidget*, const QString&) =
+    reinterpret_cast<void(*)(QWidget*, const QString&)>(m_externalExportActions.resolve(name));
+
   if (!function) {
     qWarning() << m_externalExportActions.errorString();
     return;

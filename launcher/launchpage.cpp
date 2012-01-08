@@ -32,9 +32,10 @@
 
 using namespace GammaRay;
 
-LaunchPage::LaunchPage(QWidget* parent) : QWidget(parent),
-  ui(new Ui::LaunchPage),
-  m_argsModel(new QStringListModel(this))
+LaunchPage::LaunchPage(QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::LaunchPage),
+    m_argsModel(new QStringListModel(this))
 {
   ui->setupUi(this);
   connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
@@ -79,9 +80,15 @@ QStringList LaunchPage::launchArguments() const
 void LaunchPage::showFileDialog()
 {
   // TODO: add *.exe filter on Windows
-  const QString exeFilePath = QFileDialog::getOpenFileName(this, tr("Executable to Launch"), ui->progEdit->text());
-  if (exeFilePath.isEmpty())
+  const QString exeFilePath =
+    QFileDialog::getOpenFileName(
+      this,
+      tr("Executable to Launch"),
+      ui->progEdit->text());
+
+  if (exeFilePath.isEmpty()) {
     return;
+  }
 
   ui->progEdit->setText(exeFilePath);
 }
@@ -103,8 +110,9 @@ void LaunchPage::removeArgument()
 
 bool LaunchPage::isValid()
 {
-  if (ui->progEdit->text().isEmpty())
+  if (ui->progEdit->text().isEmpty()) {
     return false;
+  }
 
   const QFileInfo fi(ui->progEdit->text());
   return fi.exists() && fi.isFile() && fi.isExecutable();

@@ -131,16 +131,17 @@ Q_GLOBAL_STATIC(QVector<QObject*>, s_addedBeforeProbeInsertion)
 
 // ensures proper information is returned by isValidObject by
 // locking it in objectAdded/Removed
-class ObjectLock : public QReadWriteLock {
-public:
-  ObjectLock()
-  : QReadWriteLock(QReadWriteLock::Recursive)
-  {}
+class ObjectLock : public QReadWriteLock
+{
+  public:
+    ObjectLock()
+      : QReadWriteLock(QReadWriteLock::Recursive)
+    {}
 };
 Q_GLOBAL_STATIC(ObjectLock, s_lock)
 
 ProbeCreator::ProbeCreator(Type type)
-: m_type(type)
+  : m_type(type)
 {
   //push object into the main thread, as windows creates a
   //different thread where this runs in
@@ -163,9 +164,10 @@ void ProbeCreator::createProbe()
   // Exit early instead of asserting in QWidgetPrivate::init()
   const QApplication * const qGuiApplication = qApp; // qobject_cast<const QApplication *>(qApp);
   if (!qGuiApplication || qGuiApplication->type() == QApplication::Tty) {
-      cerr << "Unable to attach to a non-GUI application.\n"
-              "Your application needs to use QApplication, otherwise GammaRay can not work." << endl;
-      return;
+    cerr << "Unable to attach to a non-GUI application.\n"
+         << "Your application needs to use QApplication, "
+         << "otherwise GammaRay can not work." << endl;
+    return;
   }
 
   IF_DEBUG(cout << "setting up new probe instance" << endl;)
@@ -550,7 +552,8 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     if (!filtered && childEvent->added()) {
       if (!tracked) {
         // was not tracked before, add to all models
-        // child added events are sent before qt_addObject is called, so we assumes this comes from the ctor
+        // child added events are sent before qt_addObject is called,
+        // so we assumes this comes from the ctor
         objectAdded(obj, true);
       } else if (!m_queuedObjects.contains(obj)) {
         // object is known already, just update the position in the tree
@@ -696,17 +699,19 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 
 void overwriteQtFunctions()
 {
-    functionsOverwritten = true;
-    AbstractFunctionOverwriter* overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
+  functionsOverwritten = true;
+  AbstractFunctionOverwriter *overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
 
-    overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)qt_startup_hook);
-    overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)qt_addObject);
-    overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)qt_removeObject);
+  overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)qt_startup_hook);
+  overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)qt_addObject);
+  overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)qt_removeObject);
 #if defined(Q_OS_WIN)
 #ifdef ARCH_64
-    overwriter->overwriteFunction(QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)myFlagLocation);
+  overwriter->overwriteFunction(
+    QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)myFlagLocation);
 #else
-    overwriter->overwriteFunction(QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)myFlagLocation);
+  overwriter->overwriteFunction(
+    QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)myFlagLocation);
 #endif
 #endif
 }

@@ -51,8 +51,8 @@ class PropertyWidget : public QWidget
     void setObject(void *object, const QString &className);
 
   private:
-    void setQObjectTabsVisible( bool visible );
-    void setEditorFactory( QAbstractItemView* view );
+    void setQObjectTabsVisible(bool visible);
+    void setEditorFactory(QAbstractItemView *view);
 
   private slots:
     void methodActivated(const QModelIndex &index);

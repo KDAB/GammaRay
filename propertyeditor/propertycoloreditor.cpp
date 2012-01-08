@@ -26,15 +26,17 @@
 
 using namespace GammaRay;
 
-PropertyColorEditor::PropertyColorEditor(QWidget* parent): PropertyExtendedEditor(parent)
+PropertyColorEditor::PropertyColorEditor(QWidget *parent)
+  : PropertyExtendedEditor(parent)
 {
 }
 
 void PropertyColorEditor::edit()
 {
   const QColor color = QColorDialog::getColor(value().value<QColor>(), this);
-  if (color.isValid())
+  if (color.isValid()) {
     setValue(QVariant::fromValue(color));
+  }
 }
 
 #include "propertycoloreditor.moc"

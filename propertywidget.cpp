@@ -200,19 +200,21 @@ void PropertyWidget::setQObjectTabsVisible(bool visible)
 {
   // TODO: this should actually hide instead of disable...
   for (int i = 0; i < ui.tabWidget->count(); ++i) {
-    if (ui.tabWidget->widget(i) != ui.metaPropertyTab)
+    if (ui.tabWidget->widget(i) != ui.metaPropertyTab) {
       ui.tabWidget->setTabEnabled(i, visible);
+    }
   }
-  if (!visible)
+  if (!visible) {
     ui.tabWidget->setCurrentWidget(ui.metaPropertyTab);
+  }
 }
 
-void PropertyWidget::setEditorFactory(QAbstractItemView* view)
+void PropertyWidget::setEditorFactory(QAbstractItemView *view)
 {
-  QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>( view->itemDelegate() );
-  if (delegate)
+  QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>(view->itemDelegate());
+  if (delegate) {
     delegate->setItemEditorFactory(m_editorFactory.data());
+  }
 }
-
 
 #include "propertywidget.moc"

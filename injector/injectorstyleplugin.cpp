@@ -30,7 +30,7 @@
 #include <3rdparty/qt/qguiplatformplugin_p.h>
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-typedef void* QFunctionPointer;
+typedef void *QFunctionPointer;
 #endif
 
 using namespace GammaRay;

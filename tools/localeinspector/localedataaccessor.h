@@ -34,22 +34,22 @@ struct LocaleDataAccessor;
 class LocaleDataAccessorRegistry : public QObject
 {
   Q_OBJECT
-public:
-  LocaleDataAccessorRegistry();
+  public:
+    LocaleDataAccessorRegistry();
 
-  static LocaleDataAccessorRegistry* instance();
+    static LocaleDataAccessorRegistry *instance();
 
-  static void registerAccessor(LocaleDataAccessor *accessor);
-  static void setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled);
-  static QVector<LocaleDataAccessor*> accessors();
-  static QVector<LocaleDataAccessor*> enabledAccessors();
+    static void registerAccessor(LocaleDataAccessor *accessor);
+    static void setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled);
+    static QVector<LocaleDataAccessor*> accessors();
+    static QVector<LocaleDataAccessor*> enabledAccessors();
 
-Q_SIGNALS:
-  void accessorsChanged();
+  Q_SIGNALS:
+    void accessorsChanged();
 
-private:
-  QVector<LocaleDataAccessor*> m_accessors;
-  QVector<LocaleDataAccessor*> m_enabledAccessors;
+  private:
+    QVector<LocaleDataAccessor*> m_accessors;
+    QVector<LocaleDataAccessor*> m_enabledAccessors;
 };
 
 struct LocaleDataAccessor
@@ -57,16 +57,18 @@ struct LocaleDataAccessor
   LocaleDataAccessor(bool defaultAccessor = false)
   {
     LocaleDataAccessorRegistry::registerAccessor(this);
-    if (defaultAccessor)
+    if (defaultAccessor) {
       LocaleDataAccessorRegistry::setAccessorEnabled(this, true);
+    }
   }
 
   virtual QString accessorName() = 0;
 
   QString data(const QLocale &locale, int role)
   {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole) {
       return display(locale);
+    }
     return QString();
   }
   virtual QString display(const QLocale &)

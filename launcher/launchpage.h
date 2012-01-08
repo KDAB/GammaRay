@@ -31,33 +31,33 @@ class QStringListModel;
 namespace GammaRay {
 
 namespace Ui {
-class LaunchPage;
+  class LaunchPage;
 }
 
 class LaunchPage : public QWidget
 {
   Q_OBJECT
-public:
-  explicit LaunchPage(QWidget* parent = 0);
-  ~LaunchPage();
+  public:
+    explicit LaunchPage(QWidget *parent = 0);
+    ~LaunchPage();
 
-  QStringList launchArguments() const;
-  bool isValid();
+    QStringList launchArguments() const;
+    bool isValid();
 
-  void writeSettings();
+    void writeSettings();
 
-signals:
-  void updateButtonState();
+  signals:
+    void updateButtonState();
 
-private slots:
-  void showFileDialog();
-  void addArgument();
-  void removeArgument();
-  void updateArgumentButtons();
+  private slots:
+    void showFileDialog();
+    void addArgument();
+    void removeArgument();
+    void updateArgumentButtons();
 
-private:
-  Ui::LaunchPage* ui;
-  QStringListModel* m_argsModel;
+  private:
+    Ui::LaunchPage *ui;
+    QStringListModel *m_argsModel;
 };
 
 }

@@ -50,11 +50,13 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
     if (index.column() == 0) {
       return prop.name();
     } else if (index.column() == 1) {
-      // QMetaProperty::read sets QVariant::typeName to int for enums, so we need to handle that separately here
+      // QMetaProperty::read sets QVariant::typeName to int for enums,
+      // so we need to handle that separately here
       const QVariant value = prop.read(m_obj.data());
       const QString enumStr = Util::enumToString(value, prop.typeName(), m_obj.data());
-      if (!enumStr.isEmpty())
+      if (!enumStr.isEmpty()) {
         return enumStr;
+      }
       return Util::variantToString(value);
     } else if (index.column() == 2) {
       return prop.typeName();
@@ -66,8 +68,9 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
       return mo->className();
     }
   } else if (role == Qt::DecorationRole) {
-    if (index.column() == 1)
+    if (index.column() == 1) {
       return Util::decorationForVariant(prop.read(m_obj.data()));
+    }
   } else if (role == Qt::EditRole) {
     if (index.column() == 1) {
       return prop.read(m_obj.data());

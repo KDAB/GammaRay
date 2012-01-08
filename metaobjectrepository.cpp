@@ -80,11 +80,13 @@
 using namespace GammaRay;
 
 namespace GammaRay {
+
 class StaticMetaObjectRepository : public MetaObjectRepository
 {
-public:
-  StaticMetaObjectRepository() : MetaObjectRepository() {}
+  public:
+    StaticMetaObjectRepository() : MetaObjectRepository() {}
 };
+
 }
 
 Q_GLOBAL_STATIC(StaticMetaObjectRepository, s_instance)
@@ -108,7 +110,7 @@ void MetaObjectRepository::initBuiltInTypes()
 void MetaObjectRepository::initQObjectTypes()
 {
   MetaObject *mo = 0;
-  MO_ADD_METAOBJECT0( QObject );
+  MO_ADD_METAOBJECT0(QObject);
   MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
 
   MO_ADD_METAOBJECT0(QPaintDevice);
@@ -132,7 +134,7 @@ void MetaObjectRepository::initQObjectTypes()
 void MetaObjectRepository::initGraphicsViewTypes()
 {
   MetaObject *mo = 0; //createMetaObject( "QGraphicsItem" );
-  MO_ADD_METAOBJECT0( QGraphicsItem );
+  MO_ADD_METAOBJECT0(QGraphicsItem);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptDrops,               setAcceptDrops);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptHoverEvents,         setAcceptHoverEvents);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptTouchEvents,         setAcceptTouchEvents);
@@ -188,7 +190,7 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            y,                         setY);
   MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            zValue,                    setZValue);
 
-  MO_ADD_METAOBJECT1( QAbstractGraphicsShapeItem, QGraphicsItem );
+  MO_ADD_METAOBJECT1(QAbstractGraphicsShapeItem, QGraphicsItem);
   MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QBrush, brush, setBrush);
   MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QPen,   pen,   setPen);
 
@@ -222,7 +224,7 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY   (QGraphicsPixmapItem, Qt::TransformationMode, transformationMode, setTransformationMode);
 
   // no extra properties, but we need the inheritance connection for anything above to work
-  MO_ADD_METAOBJECT2( QGraphicsObject, QGraphicsItem, QObject );
+  MO_ADD_METAOBJECT2(QGraphicsObject, QGraphicsItem, QObject);
 
   MO_ADD_METAOBJECT0(QGraphicsLayoutItem);
   MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, QRectF, contentsRect);
@@ -237,23 +239,23 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
 }
 
-MetaObjectRepository* MetaObjectRepository::instance()
+MetaObjectRepository *MetaObjectRepository::instance()
 {
   return s_instance();
 }
 
-void MetaObjectRepository::addMetaObject(MetaObject* mo)
+void MetaObjectRepository::addMetaObject(MetaObject *mo)
 {
   Q_ASSERT(!mo->className().isEmpty());
   m_metaObjects.insert(mo->className(), mo);
 }
 
-MetaObject* MetaObjectRepository::metaObject(const QString& typeName) const
+MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
 {
   return m_metaObjects.value(typeName);
 }
 
-bool MetaObjectRepository::hasMetaObject(const QString& typeName) const
+bool MetaObjectRepository::hasMetaObject(const QString &typeName) const
 {
   return m_metaObjects.contains(typeName);
 }

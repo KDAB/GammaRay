@@ -30,26 +30,28 @@
 
 using namespace GammaRay;
 
-WidgetTreeModel::WidgetTreeModel(QObject* parent): ObjectFilterProxyModelBase(parent)
+WidgetTreeModel::WidgetTreeModel(QObject *parent)
+  : ObjectFilterProxyModelBase(parent)
 {
 }
 
-QVariant WidgetTreeModel::data(const QModelIndex& index, int role) const
+QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const
 {
   if (index.isValid() && role == Qt::ForegroundRole) {
-    QObject* obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    QWidget* widget = qobject_cast<QWidget*>(obj);
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    QWidget *widget = qobject_cast<QWidget*>(obj);
     if (!widget) {
-      QLayout* layout = qobject_cast<QLayout*>(obj);
+      QLayout *layout = qobject_cast<QLayout*>(obj);
       widget = layout->parentWidget();
     }
-    if (widget && !widget->isVisible())
+    if (widget && !widget->isVisible()) {
       return qApp->palette().color(QPalette::Disabled, QPalette::Text);
+    }
   }
   return QSortFilterProxyModel::data(index, role);
 }
 
-bool WidgetTreeModel::filterAcceptsObject(QObject* object) const
+bool WidgetTreeModel::filterAcceptsObject(QObject *object) const
 {
   return object->isWidgetType() || qobject_cast<QLayout*>(object);
 }

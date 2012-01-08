@@ -27,33 +27,34 @@
 #include <qwidget.h>
 
 class QStandardItemModel;
+
 namespace GammaRay {
 
 namespace Ui {
-class SelfTestPage;
+  class SelfTestPage;
 }
 
 class SelfTestPage : public QWidget
 {
   Q_OBJECT
-public:
-  explicit SelfTestPage(QWidget* parent = 0);
-  ~SelfTestPage();
+  public:
+    explicit SelfTestPage(QWidget *parent = 0);
+    ~SelfTestPage();
 
-public slots:
-  void run();
+  public slots:
+    void run();
 
-private:
-  void testProbe();
-  void testAvailableInjectors();
-  void testInjectors();
+  private:
+    void testProbe();
+    void testAvailableInjectors();
+    void testInjectors();
 
-  void error(const QString &msg);
-  void information(const QString &msg);
+    void error(const QString &msg);
+    void information(const QString &msg);
 
-private:
-  Ui::SelfTestPage* ui;
-  QStandardItemModel *m_resultModel;
+  private:
+    Ui::SelfTestPage *ui;
+    QStandardItemModel *m_resultModel;
 };
 
 }

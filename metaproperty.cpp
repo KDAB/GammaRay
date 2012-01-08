@@ -37,13 +37,13 @@ MetaProperty::~MetaProperty()
 {
 }
 
-MetaObject* MetaProperty::metaObject() const
+MetaObject *MetaProperty::metaObject() const
 {
   Q_ASSERT(m_class);
   return m_class;
 }
 
-void MetaProperty::setMetaObject(MetaObject* om)
+void MetaProperty::setMetaObject(MetaObject *om)
 {
   m_class = om;
 }

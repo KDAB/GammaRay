@@ -32,10 +32,10 @@ namespace GammaRay {
 class PropertyColorEditor : public PropertyExtendedEditor
 {
   Q_OBJECT
-public:
-    explicit PropertyColorEditor(QWidget* parent = 0);
+  public:
+    explicit PropertyColorEditor(QWidget *parent = 0);
 
-protected:
+  protected:
     virtual void edit();
 };
 

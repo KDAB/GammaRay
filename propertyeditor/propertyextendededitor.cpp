@@ -28,7 +28,8 @@
 #include <QColorDialog>
 using namespace GammaRay;
 
-PropertyExtendedEditor::PropertyExtendedEditor(QWidget* parent): QWidget(parent), ui(new Ui::PropertyExtendedEditor)
+PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
+  : QWidget(parent), ui(new Ui::PropertyExtendedEditor)
 {
   ui->setupUi(this);
   // TODO: make button content smaller by using a tiny icon
@@ -45,10 +46,10 @@ QVariant PropertyExtendedEditor::value() const
   return m_value;
 }
 
-void PropertyExtendedEditor::setValue(const QVariant& value)
+void PropertyExtendedEditor::setValue(const QVariant &value)
 {
   m_value = value;
-  ui->valueLabel->setText( Util::variantToString(value) );
+  ui->valueLabel->setText(Util::variantToString(value));
 }
 
 #include "propertyextendededitor.moc"

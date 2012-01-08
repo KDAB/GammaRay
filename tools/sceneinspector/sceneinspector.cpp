@@ -84,10 +84,11 @@ void SceneInspector::sceneItemSelected(const QModelIndex &index)
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
     QGraphicsObject *obj = item->toGraphicsObject();
-    if (obj)
+    if (obj) {
       ui->scenePropertyWidget->setObject(obj);
-    else
+    } else {
       ui->scenePropertyWidget->setObject(item, findBestType(item));
+    }
     ui->graphicsSceneView->showGraphicsItem(item);
   } else {
     ui->scenePropertyWidget->setObject(0);
@@ -130,7 +131,7 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
   if (dynamic_cast<Class*>(item) && MetaObjectRepository::instance()->hasMetaObject(#Class)) \
     return QLatin1String(#Class)
 
-QString SceneInspector::findBestType(QGraphicsItem* item)
+QString SceneInspector::findBestType(QGraphicsItem *item)
 {
   // keep this in reverse topological order of the class hierarchy!
   // QObject-based types are covered elsewhere, so we don't need those here
@@ -146,6 +147,5 @@ QString SceneInspector::findBestType(QGraphicsItem* item)
 
   return QLatin1String("QGraphicsItem");
 }
-
 
 #include "sceneinspector.moc"
