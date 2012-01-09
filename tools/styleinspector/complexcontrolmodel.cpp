@@ -28,6 +28,8 @@
 #include <QPainter>
 #include <QStyleOption>
 
+#include <math.h>
+
 using namespace GammaRay;
 
 struct complex_control_element_t {
