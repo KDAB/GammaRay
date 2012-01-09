@@ -24,6 +24,7 @@
 #include "complexcontrolmodel.h"
 #include "styleoption.h"
 
+#include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
 
@@ -33,23 +34,24 @@ struct complex_control_element_t {
     const char *name;
     QStyle::ComplexControl control;
     QStyleOption* (*styleOptionFactory)();
+    QStyle::SubControls subControls;
 };
 
-#define MAKE_CC1( control ) { #control , QStyle:: control, &StyleOption::makeStyleOptionComplex }
-#define MAKE_CC2( control, factory ) { #control, QStyle:: control, &StyleOption:: factory }
+#define MAKE_CC2( control, factory ) { #control, QStyle:: control, &StyleOption:: factory, 0 }
+#define MAKE_CC3( control, factory, subControls ) { #control, QStyle:: control, &StyleOption:: factory, subControls }
 
 static complex_control_element_t complexControlElements[] =  {
-  MAKE_CC2(CC_SpinBox, makeSpinBoxStyleOption),
-  MAKE_CC2(CC_ComboBox, makeComboBoxStyleOption),
-  MAKE_CC2(CC_ScrollBar, makeSliderStyleOption),
-  MAKE_CC2(CC_Slider, makeSliderStyleOption),
+  MAKE_CC3(CC_SpinBox, makeSpinBoxStyleOption, QStyle::SC_SpinBoxUp | QStyle::SC_SpinBoxDown | QStyle::SC_SpinBoxFrame | QStyle::SC_SpinBoxEditField),
+  MAKE_CC3(CC_ComboBox, makeComboBoxStyleOption, QStyle::SC_ComboBoxFrame | QStyle::SC_ComboBoxArrow | QStyle::SC_ComboBoxEditField | QStyle::SC_ComboBoxListBoxPopup),
+  MAKE_CC3(CC_ScrollBar, makeSliderStyleOption, QStyle::SC_ScrollBarAddLine | QStyle::SC_ScrollBarSubLine | QStyle::SC_ScrollBarAddPage | QStyle::SC_ScrollBarSubPage | QStyle::SC_ScrollBarFirst | QStyle::SC_ScrollBarLast | QStyle::SC_ScrollBarSlider | QStyle::SC_ScrollBarGroove ),
+  MAKE_CC3(CC_Slider, makeSliderStyleOption, QStyle::SC_SliderGroove | QStyle::SC_SliderHandle | QStyle::SC_SliderTickmarks),
   MAKE_CC2(CC_ToolButton, makeToolButtonStyleOption),
-  MAKE_CC1(CC_TitleBar),
-  MAKE_CC1(CC_Q3ListView),
-  MAKE_CC2(CC_Dial, makeSliderStyleOption),
-  MAKE_CC1(CC_GroupBox),
+  MAKE_CC2(CC_TitleBar, makeStyleOptionComplex),
+  MAKE_CC2(CC_Q3ListView, makeStyleOptionComplex),
+  MAKE_CC3(CC_Dial, makeSliderStyleOption, QStyle::SC_DialHandle | QStyle::SC_DialGroove | QStyle::SC_DialTickmarks ),
+  MAKE_CC2(CC_GroupBox, makeStyleOptionComplex),
 //   MAKE_CC2(CC_GroupBox, makeGroupBoxStyleOption), // TODO: oxygen crashes with that due to widget access
-  MAKE_CC1(CC_MdiControls)
+  MAKE_CC2(CC_MdiControls, makeStyleOptionComplex)
 };
 
 
@@ -70,6 +72,20 @@ QVariant ComplexControlModel::doData(int row, int column, int role) const
     opt->palette = m_style->standardPalette();
     opt->state = StyleOption::prettyState(column);
     m_style->drawComplexControl(complexControlElements[row].control, opt.data(), &painter);
+
+    int colorIndex = 7;
+    for (int i = 0; i < logb(QStyle::SC_All); ++i) {
+      QStyle::SubControl sc = static_cast<QStyle::SubControl>(1 << i);
+      if (sc & complexControlElements[row].subControls) {
+        QRect scRect = m_style->subControlRect(complexControlElements[row].control, opt.data(), sc);
+        scRect.adjust(0, 0, -1, -1);
+        if (scRect.isValid() && !scRect.isEmpty()) {
+          painter.setPen(static_cast<Qt::GlobalColor>(colorIndex++)); // HACK: add some real color mapping
+          painter.drawRect(scRect);
+        }
+      }
+    }
+
     return pixmap;
   }
 
