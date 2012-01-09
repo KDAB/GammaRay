@@ -53,13 +53,13 @@ static complex_control_element_t complexControlElements[] =  {
   MAKE_CC3(CC_ComboBox, makeComboBoxStyleOption, QStyle::SC_ComboBoxFrame | QStyle::SC_ComboBoxArrow | QStyle::SC_ComboBoxEditField | QStyle::SC_ComboBoxListBoxPopup),
   MAKE_CC3(CC_ScrollBar, makeSliderStyleOption, QStyle::SC_ScrollBarAddLine | QStyle::SC_ScrollBarSubLine | QStyle::SC_ScrollBarAddPage | QStyle::SC_ScrollBarSubPage | QStyle::SC_ScrollBarFirst | QStyle::SC_ScrollBarLast | QStyle::SC_ScrollBarSlider | QStyle::SC_ScrollBarGroove ),
   MAKE_CC3(CC_Slider, makeSliderStyleOption, QStyle::SC_SliderGroove | QStyle::SC_SliderHandle | QStyle::SC_SliderTickmarks),
-  MAKE_CC2(CC_ToolButton, makeToolButtonStyleOption),
-  MAKE_CC2(CC_TitleBar, makeStyleOptionComplex),
+  MAKE_CC3(CC_ToolButton, makeToolButtonStyleOption, QStyle::SC_ToolButton | QStyle::SC_ToolButtonMenu),
+  MAKE_CC3(CC_TitleBar, makeTitleBarStyleOption, QStyle::SC_TitleBarSysMenu | QStyle::SC_TitleBarMinButton | QStyle::SC_TitleBarMaxButton | QStyle::SC_TitleBarCloseButton | QStyle::SC_TitleBarLabel | QStyle::SC_TitleBarNormalButton | QStyle::SC_TitleBarShadeButton | QStyle::SC_TitleBarUnshadeButton | QStyle::SC_TitleBarContextHelpButton),
   MAKE_CC2(CC_Q3ListView, makeStyleOptionComplex),
   MAKE_CC3(CC_Dial, makeSliderStyleOption, QStyle::SC_DialHandle | QStyle::SC_DialGroove | QStyle::SC_DialTickmarks ),
   MAKE_CC2(CC_GroupBox, makeStyleOptionComplex),
 //   MAKE_CC2(CC_GroupBox, makeGroupBoxStyleOption), // TODO: oxygen crashes with that due to widget access
-  MAKE_CC2(CC_MdiControls, makeStyleOptionComplex)
+  MAKE_CC3(CC_MdiControls, makeStyleOptionComplex, QStyle::SC_MdiNormalButton | QStyle::SC_MdiMinButton | QStyle::SC_MdiCloseButton)
 };
 
 

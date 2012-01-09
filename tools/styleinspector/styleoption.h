@@ -52,6 +52,7 @@ namespace StyleOption
   QStyleOption* makeSliderStyleOption();
   QStyleOption* makeSpinBoxStyleOption();
   QStyleOption* makeTabStyleOption();
+  QStyleOption* makeTitleBarStyleOption();
   QStyleOption* makeToolBoxStyleOption();
   QStyleOption* makeToolButtonStyleOption();
 }

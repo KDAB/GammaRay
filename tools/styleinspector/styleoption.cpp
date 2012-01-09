@@ -180,6 +180,14 @@ QStyleOption* StyleOption::makeTabStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeTitleBarStyleOption()
+{
+  QStyleOptionTitleBar* opt = new QStyleOptionTitleBar;
+  opt->text = QLatin1String("Title");
+  opt->titleBarFlags = Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint;
+  return opt;
+}
+
 QStyleOption* StyleOption::makeToolBoxStyleOption()
 {
   QStyleOptionToolBoxV2* opt = new QStyleOptionToolBoxV2;
