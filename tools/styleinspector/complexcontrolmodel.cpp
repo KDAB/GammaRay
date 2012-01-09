@@ -28,7 +28,7 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include <math.h>
+#include <cmath>
 
 using namespace GammaRay;
 
