@@ -233,6 +233,7 @@ set(gammaray_srcs
   proxydetacher.cpp
   proxytoolfactory.cpp
   sidepane.cpp
+  palettemodel.cpp
 
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
@@ -250,6 +251,16 @@ set(gammaray_srcs
   tools/widgetinspector/widgetinspector.cpp
   tools/widgetinspector/overlaywidget.cpp
   tools/widgetinspector/widgettreemodel.cpp
+  tools/styleinspector/styleinspector.cpp
+  tools/styleinspector/pixelmetricmodel.cpp
+  tools/styleinspector/standardiconmodel.cpp
+  tools/styleinspector/primitivemodel.cpp
+  tools/styleinspector/controlmodel.cpp
+  tools/styleinspector/styleoption.cpp
+  tools/styleinspector/abstractstyleelementmodel.cpp
+  tools/styleinspector/abstractstyleelementstatetable.cpp
+  tools/styleinspector/styleelementstatetablepage.cpp
+  tools/styleinspector/complexcontrolmodel.cpp
 
   3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -302,8 +313,10 @@ qt4_wrap_ui(gammaray_srcs
   tools/resourcebrowser/resourcebrowser.ui
   tools/sceneinspector/sceneinspector.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
+  tools/styleinspector/styleinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/widgetinspector/widgetinspector.ui
+  tools/styleinspector/styleelementstatetablepage.ui
 )
 
 if(BUILD_TIMER_PLUGIN)

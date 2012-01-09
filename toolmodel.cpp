@@ -41,6 +41,7 @@
 #ifdef BUILD_TIMER_PLUGIN
 #include "tools/timertop/timertop.h"
 #endif
+#include "tools/styleinspector/styleinspector.h"
 
 #include "pluginmanager.h"
 #include "probe.h"
@@ -73,6 +74,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
 #ifdef BUILD_TIMER_PLUGIN
   m_tools.push_back(new TimerTopFactory(this));
 #endif
+  m_tools.push_back(new StyleInspectorFactory(this));
 
   Q_FOREACH (ToolFactory *factory, PluginManager::instance()->plugins()) {
     m_tools.push_back(factory);
