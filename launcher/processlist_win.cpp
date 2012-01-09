@@ -137,15 +137,14 @@ static inline bool isQtApp(DWORD processId)
        hasNext;
        hasNext = Module32Next(snapshot, &me)) {
     const QString module = QString::fromUtf16(reinterpret_cast<ushort*>(me.szModule));
-//TODO: Do this check properly, ptobe does not need to have the same type
+//TODO: Do this check properly, probe does not need to have the same type
 #ifdef NDEBUG
     if (module == QLatin1String("QtCore4.dll")) {
 #else
-      if (module == QLatin1String("QtCored4.dll")) {
+    if (module == QLatin1String("QtCored4.dll")) {
 #endif
         CloseHandle(snapshot);
         return true;
-      }
     }
     CloseHandle(snapshot);
     return false;
