@@ -29,6 +29,12 @@
 #include <QStyleOption>
 
 #include <cmath>
+#ifdef Q_OS_WIN // at least MSVC doesn't have log2()
+static double log2(double n)
+{
+  return log(n) / log(2.0f);
+}
+#endif
 
 using namespace GammaRay;
 
