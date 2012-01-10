@@ -25,10 +25,11 @@
 #include "styleoption.h"
 
 #include <qpainter.h>
+#include <qstyleoption.h>
 
 using namespace GammaRay;
 
-AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent): AbstractStyleElementModel(parent), m_cellWidth(64), m_cellHeight(64)
+AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent): AbstractStyleElementModel(parent), m_cellWidth(64), m_cellHeight(64), m_zoomFactor(1)
 {
 }
 
@@ -42,7 +43,7 @@ QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) c
   Q_UNUSED(column);
   Q_UNUSED(row);
   if (role == Qt::SizeHintRole)
-    return QSize(cellWidth() + 4, cellHeight() + 4);
+    return QSize(cellWidth() * zoomFactor() + 4, cellHeight() * zoomFactor() + 4);
   return QVariant();
 }
 
@@ -76,6 +77,11 @@ int AbstractStyleElementStateTable::cellHeight() const
   return m_cellHeight;
 }
 
+int AbstractStyleElementStateTable::zoomFactor() const
+{
+  return m_zoomFactor;
+}
+
 void AbstractStyleElementStateTable::setCellWidth(int width)
 {
   m_cellWidth = width;
@@ -88,6 +94,26 @@ void AbstractStyleElementStateTable::setCellHeight(int height)
   m_cellHeight = height;
   if (rowCount() > 0)
     emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
+}
+
+void AbstractStyleElementStateTable::setZoomFactor(int zoom)
+{
+  Q_ASSERT(zoom > 0);
+  m_zoomFactor = zoom;
+  if (rowCount() > 0)
+    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
+}
+
+QSize AbstractStyleElementStateTable::effectiveCellSize() const
+{
+  return QSize(cellWidth() * zoomFactor(), cellHeight() * zoomFactor());
+}
+
+void AbstractStyleElementStateTable::fillStyleOption(QStyleOption* option, int column) const
+{
+  option->rect = QRect(0, 0, cellWidth(), cellHeight());
+  option->palette = m_style->standardPalette();
+  option->state = StyleOption::prettyState(column);
 }
 
 #include "abstractstyleelementstatetable.moc"

@@ -70,15 +70,14 @@ ComplexControlModel::ComplexControlModel(QObject* parent): AbstractStyleElementS
 QVariant ComplexControlModel::doData(int row, int column, int role) const
 {
   if (role == Qt::DecorationRole) {
-    QPixmap pixmap(cellWidth(), cellHeight());
+    QPixmap pixmap(effectiveCellSize());
     QPainter painter(&pixmap);
     drawTransparencyBackground(&painter, pixmap.rect());
+    painter.scale(zoomFactor(), zoomFactor());
 
     QScopedPointer<QStyleOptionComplex> opt(qstyleoption_cast<QStyleOptionComplex*>(complexControlElements[row].styleOptionFactory()));
     Q_ASSERT(opt);
-    opt->rect = pixmap.rect();
-    opt->palette = m_style->standardPalette();
-    opt->state = StyleOption::prettyState(column);
+        fillStyleOption(opt.data(), column);
     m_style->drawComplexControl(complexControlElements[row].control, opt.data(), &painter);
 
     int colorIndex = 7;

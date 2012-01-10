@@ -98,14 +98,13 @@ ControlModel::ControlModel(QObject* parent): AbstractStyleElementStateTable(pare
 QVariant ControlModel::doData(int row, int column, int role) const
 {
   if (role == Qt::DecorationRole) {
-    QPixmap pixmap(cellWidth(), cellHeight());
+    QPixmap pixmap(effectiveCellSize());
     QPainter painter(&pixmap);
     drawTransparencyBackground(&painter, pixmap.rect());
+    painter.scale(zoomFactor(), zoomFactor());
 
     QScopedPointer<QStyleOption> opt(controlElements[row].styleOptionFactory());
-    opt->rect = pixmap.rect();
-    opt->palette = m_style->standardPalette();
-    opt->state = StyleOption::prettyState(column);
+    fillStyleOption(opt.data(), column);
     m_style->drawControl(controlElements[row].control, opt.data(), &painter);
     return pixmap;
   }

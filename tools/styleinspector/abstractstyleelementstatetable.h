@@ -26,6 +26,7 @@
 
 #include "abstractstyleelementmodel.h"
 
+class QStyleOption;
 class QRect;
 class QPainter;
 namespace GammaRay {
@@ -44,20 +45,27 @@ public:
 
   int cellWidth() const;
   int cellHeight() const;
+  int zoomFactor() const;
 
 public slots:
   void setCellWidth(int width);
   void setCellHeight(int height);
+  void setZoomFactor(int zoom);
 
 protected:
   virtual int doColumnCount() const;
   virtual QVariant doData(int row, int column, int role) const;
 
   void drawTransparencyBackground(QPainter* painter, const QRect &rect) const;
+  /// actual size of the cell on screen
+  QSize effectiveCellSize() const;
+  /// standard setup for the style option used in a cell in column @p column
+  void fillStyleOption(QStyleOption* option, int column) const;
 
 private:
   int m_cellWidth;
   int m_cellHeight;
+  int m_zoomFactor;
 };
 
 }

@@ -42,6 +42,7 @@ void StyleElementStateTablePage::setModel(AbstractStyleElementStateTable* model)
 
   connect(ui->widthBox, SIGNAL(valueChanged(int)), model, SLOT(setCellWidth(int)));
   connect(ui->heightBox, SIGNAL(valueChanged(int)), model, SLOT(setCellHeight(int)));
+  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), model, SLOT(setZoomFactor(int)));
 }
 
 #include "styleelementstatetablepage.moc"

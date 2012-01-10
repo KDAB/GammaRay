@@ -103,14 +103,13 @@ PrimitiveModel::PrimitiveModel(QObject* parent): AbstractStyleElementStateTable(
 QVariant PrimitiveModel::doData(int row, int column, int role) const
 {
   if (role == Qt::DecorationRole) {
-    QPixmap pixmap(cellWidth(), cellHeight());
+    QPixmap pixmap(effectiveCellSize());
     QPainter painter(&pixmap);
     drawTransparencyBackground(&painter, pixmap.rect());
+    painter.scale(zoomFactor(), zoomFactor());
 
     QScopedPointer<QStyleOption> opt((primititveElements[row].styleOptionFactory)());
-    opt->rect = pixmap.rect();
-    opt->palette = m_style->standardPalette();
-    opt->state = StyleOption::prettyState(column);
+    fillStyleOption(opt.data(), column);
     m_style->drawPrimitive(primititveElements[row].primitive, opt.data(), &painter);
     return pixmap;
   }
