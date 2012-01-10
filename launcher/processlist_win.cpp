@@ -146,9 +146,9 @@ static inline bool isQtApp(DWORD processId)
         CloseHandle(snapshot);
         return true;
     }
-    CloseHandle(snapshot);
-    return false;
   }
+  CloseHandle(snapshot);
+  return false;
 }
 
 ProcDataList processList(const ProcDataList &previous)
