@@ -26,7 +26,27 @@
 #include <Windows.h>
 #endif
 
+#ifdef __MACH__
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
 using namespace GammaRay;
+
+static void portableGetTimeUnix( timespec& t )
+{
+#if defined(Q_OS_MAC)
+  clock_serv_t cclock;
+  mach_timespec_t mts;
+  host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+  clock_get_time(cclock, &mts);
+  mach_port_deallocate(mach_task_self(), cclock);
+  t.tv_sec = mts.tv_sec;
+  t.tv_nsec = mts.tv_nsec;
+#else
+  clock_gettime(CLOCK_REALTIME, &t);
+#endif
+}
 
 FunctionCallTimer::FunctionCallTimer()
   : m_active(false)
@@ -39,15 +59,15 @@ bool FunctionCallTimer::start()
     return false;
   }
 
-#ifndef Q_OS_WIN
-  clock_gettime(CLOCK_REALTIME, &m_startTime);
-#else
+#if defined(Q_OS_WIN)
   LARGE_INTEGER startTime;
   bool ret = QueryPerformanceCounter(&startTime);
   if (!ret) {
     return false;
   }
   m_startTime = startTime.QuadPart;
+#else
+  portableGetTimeUnix(m_startTime);
 #endif
   m_active = true;
   return true;
@@ -62,18 +82,18 @@ int FunctionCallTimer::stop()
 {
   Q_ASSERT(m_active);
   m_active = false;
-#ifndef Q_OS_WIN
-  timespec endTime;
-  clock_gettime(CLOCK_REALTIME, &endTime);
-  int elapsed = (endTime.tv_nsec - m_startTime.tv_nsec) / 1000;
-  elapsed += (endTime.tv_sec - m_startTime.tv_sec) * 1000000;
-  return elapsed;
-#else
+
+#if defined(Q_OS_WIN)
   LARGE_INTEGER endTime;
   LARGE_INTEGER frequency;
   QueryPerformanceCounter(&endTime);
   QueryPerformanceFrequency(&frequency);
   int elapsed = ((endTime.QuadPart - m_startTime) * 1000000) / frequency.QuadPart;
-  return elapsed;
+#else
+  timespec endTime;
+  portableGetTimeUnix(endTime);
+  int elapsed = (endTime.tv_nsec - m_startTime.tv_nsec) / 1000;
+  elapsed += (endTime.tv_sec - m_startTime.tv_sec) * 1000000;
 #endif
+  return elapsed;
 }
