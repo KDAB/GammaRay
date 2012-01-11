@@ -33,6 +33,7 @@
 
 using namespace GammaRay;
 
+#ifndef Q_OS_WIN
 static void portableGetTimeUnix( timespec& t )
 {
 #if defined(Q_OS_MAC)
@@ -47,6 +48,7 @@ static void portableGetTimeUnix( timespec& t )
   clock_gettime(CLOCK_REALTIME, &t);
 #endif
 }
+#endif
 
 FunctionCallTimer::FunctionCallTimer()
   : m_active(false)
