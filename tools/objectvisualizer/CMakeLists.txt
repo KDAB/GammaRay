@@ -1,6 +1,6 @@
 if(VTK_FOUND)
 
-add_definitions(-DHAVE_VTK)
+add_definitions(-DHAVE_VTK -DVTK_EXCLUDE_STRSTREAM_HEADERS)
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
