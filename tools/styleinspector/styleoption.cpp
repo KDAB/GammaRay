@@ -180,6 +180,18 @@ QStyleOption* StyleOption::makeTabStyleOption()
   return opt;
 }
 
+QStyleOption* StyleOption::makeTabBarBaseStyleOption()
+{
+  return new QStyleOptionTabBarBaseV2;
+}
+
+QStyleOption* StyleOption::makeTabWidgetFrameStyleOption()
+{
+  QStyleOptionTabWidgetFrameV2 *opt = new QStyleOptionTabWidgetFrameV2;
+  opt->lineWidth = 1;
+  return opt;
+}
+
 QStyleOption* StyleOption::makeTitleBarStyleOption()
 {
   QStyleOptionTitleBar* opt = new QStyleOptionTitleBar;
