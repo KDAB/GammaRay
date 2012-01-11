@@ -95,7 +95,6 @@ set(
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
 )
 
-# TODO: Make this work on Windows, and test this on Mac
 check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
 if(HAVE_CLOCK_GETTIME)
   set(BUILD_TIMER_PLUGIN TRUE)
