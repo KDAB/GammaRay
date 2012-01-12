@@ -46,7 +46,7 @@ bool ProxyDetacher::eventFilter(QObject *obj, QEvent *e)
   Q_ASSERT(obj == m_widget);
 
   if (dynamic_cast<QHideEvent*>(e)) {
-    Q_ASSERT(m_proxy->sourceModel() == m_source);
+    Q_ASSERT(m_proxy->sourceModel() == m_source || !m_proxy->sourceModel());
     m_proxy->setSourceModel(0);
   } else if (dynamic_cast<QShowEvent*>(e)) {
     Q_ASSERT(!m_proxy->sourceModel());
