@@ -710,8 +710,13 @@ void overwriteQtFunctions()
   overwriter->overwriteFunction(
     QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)myFlagLocation);
 #else
+# ifdef __MINGW32__
+  overwriter->overwriteFunction(
+    QLatin1String("_Z13qFlagLocationPKc"), (void*)myFlagLocation);
+# else
   overwriter->overwriteFunction(
     QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)myFlagLocation);
+# endif
 #endif
 #endif
 }
