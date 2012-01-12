@@ -84,7 +84,7 @@ static primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_IndicatorToolBarHandle),
   MAKE_PE(PE_IndicatorToolBarSeparator),
   MAKE_PE(PE_PanelTipLabel),
-  MAKE_PE(PE_IndicatorTabTear),
+  MAKE_PE_X(PE_IndicatorTabTear, makeTabStyleOption),
   MAKE_PE(PE_PanelScrollAreaCorner),
   MAKE_PE(PE_Widget),
   MAKE_PE(PE_IndicatorColumnViewArrow),
