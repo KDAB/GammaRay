@@ -707,7 +707,7 @@ void overwriteQtFunctions()
   overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)qt_removeObject);
 #if defined(Q_OS_WIN)
 #ifdef ARCH_64
-#ifdef __MINGW__
+#ifdef __MINGW32__
   overwriter->overwriteFunction(
     QLatin1String("_Z13qFlagLocationPKc"), (void*)myFlagLocation);
 #else
