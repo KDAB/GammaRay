@@ -84,8 +84,8 @@ QVariant ComplexControlModel::doData(int row, int column, int role) const
     for (int i = 0; i < log2(QStyle::SC_All); ++i) {
       QStyle::SubControl sc = static_cast<QStyle::SubControl>(1 << i);
       if (sc & complexControlElements[row].subControls) {
-        QRect scRect = m_style->subControlRect(complexControlElements[row].control, opt.data(), sc);
-        scRect.adjust(0, 0, -1, -1);
+        QRectF scRect = m_style->subControlRect(complexControlElements[row].control, opt.data(), sc);
+        scRect.adjust(0, 0, -1.0/zoomFactor(), -1.0/zoomFactor());
         if (scRect.isValid() && !scRect.isEmpty()) {
           painter.setPen(static_cast<Qt::GlobalColor>(colorIndex++)); // HACK: add some real color mapping
           painter.drawRect(scRect);
