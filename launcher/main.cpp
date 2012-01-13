@@ -71,6 +71,7 @@ int main(int argc, char **argv)
   QStringList args;
   for (int i = 1; i < argc; ++i)
     args.push_back(QString::fromLocal8Bit(argv[i]));
+  QApplication app(argc, argv);
 
   QStringList builtInArgs = QStringList() << QLatin1String("-style") << QLatin1String("-stylesheet") << QLatin1String("-graphicssystem");
 
@@ -113,7 +114,6 @@ int main(int argc, char **argv)
   }
 
   if (args.isEmpty() && pid <= 0) {
-    QApplication app(argc, argv);
     LauncherWindow dialog;
     if (dialog.exec() == QDialog::Accepted) {
       args = dialog.launchArguments();
