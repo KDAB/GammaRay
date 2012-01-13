@@ -31,6 +31,7 @@
 #include "toolfactory.h"
 
 #include "kde/krecursivefilterproxymodel.h"
+#include <3rdparty/qt/qguiplatformplugin_p.h>
 
 #include <QCoreApplication>
 #include <qdebug.h>
@@ -41,6 +42,7 @@
 #include <QLabel>
 #include <QTreeView>
 #include <QHBoxLayout>
+#include <QStyleFactory>
 
 using namespace GammaRay;
 
@@ -51,6 +53,13 @@ static const char progURL[] = "http://www.kdab.com/gammaray";
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
+  // we don't want application styles to propagate to the GammaRay window, so set the platform default one
+  // unfortunately, that's not recursive by default, unless we have a style sheet set
+  setStyleSheet(QLatin1String("I_DONT_EXIST {}"));
+  QGuiPlatformPlugin defaultGuiPlatform;
+  if (QStyle *defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName()))
+    setStyle(defaultStyle);
+
   ui.setupUi(this);
 
   connect(ui.actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()));
