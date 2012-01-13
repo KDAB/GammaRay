@@ -163,6 +163,7 @@ QStyleOption* StyleOption::makeSliderStyleOption()
   opt->minimum = 0;
   opt->maximum = 100;
   opt->sliderValue = 42;
+  opt->tickInterval = 5;
   return opt;
 }
 
