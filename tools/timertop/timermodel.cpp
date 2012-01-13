@@ -36,7 +36,7 @@ static const char timerInfoPropertyName[] = "GammaRay TimerInfo";
 using namespace GammaRay;
 using namespace std;
 
-Q_GLOBAL_STATIC(TimerModel, s_timerModel)
+static TimerModel* s_timerModel = 0;
 
 static QTimer *timer_from_callback(QObject *caller, int method_index)
 {
@@ -78,7 +78,10 @@ TimerModel::TimerModel(QObject *parent)
 
 TimerModel *TimerModel::instance()
 {
-  return s_timerModel();
+  if (!s_timerModel)
+    s_timerModel = new TimerModel;
+  Q_ASSERT(s_timerModel);
+  return s_timerModel;
 }
 
 TimerInfoPtr TimerModel::findOrCreateFreeTimerInfo(int timerId)

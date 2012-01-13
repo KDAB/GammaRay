@@ -66,7 +66,7 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
       new ObjectTypeFilterProxyModel<QTimer>(this);
   filterModel->setDynamicSortFilter(true);
   filterModel->setSourceModel(probe->objectListModel());
-  filterModel->setParent(this); // otherwise it's not filtered out
+  TimerModel::instance()->setParent(this); // otherwise it's not filtered out
   TimerModel::instance()->setSourceModel(filterModel);
   QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
   sortModel->setSourceModel(TimerModel::instance());
