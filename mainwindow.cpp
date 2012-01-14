@@ -57,8 +57,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   // unfortunately, that's not recursive by default, unless we have a style sheet set
   setStyleSheet(QLatin1String("I_DONT_EXIST {}"));
   QGuiPlatformPlugin defaultGuiPlatform;
-  if (QStyle *defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName()))
+  if (QStyle *defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName())) {
+    defaultStyle->setParent(this);
     setStyle(defaultStyle);
+  }
 
   ui.setupUi(this);
 
