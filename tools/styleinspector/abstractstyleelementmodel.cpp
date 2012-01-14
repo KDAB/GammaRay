@@ -23,6 +23,8 @@
 
 #include "abstractstyleelementmodel.h"
 
+#include <QApplication>
+#include <QProxyStyle>
 #include <QStyle>
 
 using namespace GammaRay;
@@ -56,6 +58,19 @@ int AbstractStyleElementModel::rowCount(const QModelIndex& parent) const
   if (parent.isValid() || !m_style)
     return 0;
   return doRowCount();
+}
+
+bool AbstractStyleElementModel::isMainStyle() const
+{
+  QStyle *style = qApp->style();
+  forever {
+    if (style == m_style)
+      return true;
+    QProxyStyle *proxy = qobject_cast<QProxyStyle*>(style);
+    if (!proxy)
+      return false;
+    style = proxy->baseStyle();
+  }
 }
 
 #include "abstractstyleelementmodel.moc"

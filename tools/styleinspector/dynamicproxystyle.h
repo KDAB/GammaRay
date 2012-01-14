@@ -16,6 +16,7 @@ class DynamicProxyStyle : public QProxyStyle
     explicit DynamicProxyStyle(QStyle *baseStyle);
 
     static DynamicProxyStyle* instance();
+    static bool exists();
     static void insertProxyStyle();
 
     void setPixelMetric(PixelMetric metric, int value);

@@ -18,6 +18,11 @@ DynamicProxyStyle* DynamicProxyStyle::instance()
   return s_instance.data();
 }
 
+bool DynamicProxyStyle::exists()
+{
+  return s_instance;
+}
+
 void DynamicProxyStyle::insertProxyStyle()
 {
   // TODO: if the current style is a CSS proxy, add us underneath to avoid Qt adding yet another CSS proxy on top

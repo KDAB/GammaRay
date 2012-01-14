@@ -51,6 +51,11 @@ protected:
   virtual int doColumnCount() const = 0;
   virtual int doRowCount() const = 0;
 
+  /** Returns @c true if we are looking at the primary style of the application
+   *  ie. the one set in QApplication. This takes proxy styles into account.
+   */
+  bool isMainStyle() const;
+
 protected:
   QPointer<QStyle> m_style;
 };

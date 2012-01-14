@@ -139,7 +139,9 @@ QVariant PixelMetricModel::doData(int row, int column, int role) const
   if (role == Qt::DisplayRole || role == Qt::EditRole) {
     switch (column) {
       case 0: return pixelMetrics[row].name;
-      case 1: return m_style->pixelMetric(pixelMetrics[row].pixelMetric);
+      case 1: return (isMainStyle() && DynamicProxyStyle::exists()) ?
+          DynamicProxyStyle::instance()->pixelMetric(pixelMetrics[row].pixelMetric) :
+          m_style->pixelMetric(pixelMetrics[row].pixelMetric);
     }
   }
 
@@ -170,7 +172,7 @@ QVariant PixelMetricModel::headerData(int section, Qt::Orientation orientation, 
 Qt::ItemFlags PixelMetricModel::flags(const QModelIndex& index) const
 {
   const Qt::ItemFlags baseFlags = QAbstractItemModel::flags(index);
-  if (index.isValid() && index.column() == 1) // TODO also check that we are looking at the qApp style here
+  if (index.isValid() && index.column() == 1 && isMainStyle())
     return baseFlags | Qt::ItemIsEditable;
   return baseFlags;
 }
