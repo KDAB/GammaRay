@@ -22,6 +22,7 @@
 */
 
 #include "pixelmetricmodel.h"
+#include "dynamicproxystyle.h"
 
 #include <QStyle>
 
@@ -165,5 +166,22 @@ QVariant PixelMetricModel::headerData(int section, Qt::Orientation orientation, 
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
+
+Qt::ItemFlags PixelMetricModel::flags(const QModelIndex& index) const
+{
+  const Qt::ItemFlags baseFlags = QAbstractItemModel::flags(index);
+  if (index.isValid() && index.column() == 1) // TODO also check that we are looking at the qApp style here
+    return baseFlags | Qt::ItemIsEditable;
+  return baseFlags;
+}
+
+bool PixelMetricModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  if (!index.isValid() || index.column() != 1 || !value.isValid() || !value.canConvert(QVariant::Int) || role != Qt::EditRole)
+    return false;
+  DynamicProxyStyle::instance()->setPixelMetric(pixelMetrics[index.row()].pixelMetric, value.toInt());
+  return true;
+}
+
 
 #include "pixelmetricmodel.moc"
