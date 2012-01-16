@@ -86,7 +86,7 @@ static control_element_t controlElements[] =  {
   MAKE_CE_X(CE_ToolBoxTabLabel, makeToolBoxStyleOption),
   MAKE_CE_X(CE_HeaderEmptyArea, makeHeaderStyleOption),
   MAKE_CE(CE_ColumnViewGrip),
-  MAKE_CE(CE_ItemViewItem),
+  MAKE_CE_X(CE_ItemViewItem, makeItemViewStyleOption),
   MAKE_CE_X(CE_ShapedFrame, makeFrameStyleOption)
 };
 

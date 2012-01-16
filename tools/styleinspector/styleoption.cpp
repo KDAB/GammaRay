@@ -138,6 +138,8 @@ QStyleOption* StyleOption::makeHeaderStyleOption()
 QStyleOption* StyleOption::makeItemViewStyleOption()
 {
   QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
+  opt->text = QLatin1String("Text");
+  opt->features = QStyleOptionViewItemV2::HasDisplay;
   return opt;
 }
 
