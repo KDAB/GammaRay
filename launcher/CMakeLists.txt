@@ -7,6 +7,7 @@ set(gammaray_runner_srcs
   ${CMAKE_SOURCE_DIR}/injector/styleinjector.cpp
   ${CMAKE_SOURCE_DIR}/injector/windllinjector.cpp
   ${CMAKE_SOURCE_DIR}/injector/interactiveprocess.cpp
+  ${CMAKE_SOURCE_DIR}/injector/preloadcheck.cpp
   probefinder.cpp
   main.cpp
   promolabel.cpp
@@ -47,5 +48,10 @@ qt4_add_resources(gammaray_runner_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qr
 qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
+
 target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+if(UNIX AND NOT APPLE)
+    target_link_libraries(gammaray dl) # for preload check
+endif()
+
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})

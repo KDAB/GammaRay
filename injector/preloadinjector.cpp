@@ -24,12 +24,14 @@
 #include "preloadinjector.h"
 
 #include "interactiveprocess.h"
+#include "preloadcheck.h"
 
 #ifndef Q_OS_WIN
 
 #include <QProcess>
-#include <cstdlib>
 #include <QDebug>
+
+#include <cstdlib>
 
 using namespace GammaRay;
 
@@ -45,6 +47,7 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
                             const QString &probeFunc)
 {
   Q_UNUSED(probeFunc);
+
   QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 #ifdef Q_OS_MAC
   env.insert("DYLD_FORCE_FLAT_NAMESPACE", QLatin1String("1"));
@@ -56,7 +59,16 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
 #else
   env.insert("LD_PRELOAD", probeDll);
   env.insert("GAMMARAY_UNSET_PRELOAD", "1");
+
+  PreloadCheck check;
+  bool success = check.test("qt_startup_hook");
+  if (!success) {
+    mExitCode = 1;
+    mErrorString = check.errorString();
+    return false;
+  }
 #endif
+
   InteractiveProcess proc;
   proc.setProcessEnvironment(env);
   proc.setProcessChannelMode(QProcess::ForwardedChannels);
