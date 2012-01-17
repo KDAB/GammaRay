@@ -10,14 +10,14 @@ include_directories(
 link_directories(${VTK_LIBRARY_DIRS})
 
 set(gammaray_objectvisualizer_plugin_srcs
+  ../../3rdparty/kde/kfilterproxysearchline.cpp
+  ../../3rdparty/kde/krecursivefilterproxymodel.cpp
+  ../../include/util.cpp
+
   objectvisualizer.cpp
   vtkcontainer.cpp
   vtkpanel.cpp
   vtkwidget.cpp
-
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
-  ${CMAKE_SOURCE_DIR}/util.cpp
 )
 qt4_automoc(${gammaray_objectvisualizer_plugin_srcs})
 

@@ -18,7 +18,7 @@ set(gammaray_statemachineviewer_plugin_srcs
   transitionmodel.cpp
   statemodel.cpp
 
-  ${CMAKE_SOURCE_DIR}/util.cpp
+  ../../include/util.cpp
 )
 qt4_automoc(${gammaray_statemachineviewer_plugin_srcs})
 qt4_wrap_ui(gammaray_statemachineviewer_plugin_srcs statemachineviewer.ui)
@@ -32,7 +32,9 @@ set(gammaray_statemachineviewer_plugin_libs
 )
 
 gammaray_add_plugin(gammaray_statemachineviewer_plugin gammaray_statemachineviewer.desktop ${gammaray_statemachineviewer_plugin_srcs})
-target_link_libraries(gammaray_statemachineviewer_plugin ${gammaray_statemachineviewer_plugin_libs})
+target_link_libraries(gammaray_statemachineviewer_plugin
+  ${gammaray_statemachineviewer_plugin_libs}
+)
 
 add_executable(statemachineviewer_test
   gvgraph/gvgraph.cpp

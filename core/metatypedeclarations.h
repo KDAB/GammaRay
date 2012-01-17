@@ -46,4 +46,3 @@ Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(const QStyle*)
 
 #endif
-

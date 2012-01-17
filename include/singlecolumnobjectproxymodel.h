@@ -26,6 +26,9 @@
 
 #include <qglobal.h>
 
+#include "objectmodel.h"
+#include "util.h"
+
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
 #include <QSortFilterProxyModel>
 typedef QSortFilterProxyModel QIdentityProxyModel;
@@ -37,10 +40,20 @@ namespace GammaRay {
 
 class SingleColumnObjectProxyModel : public QIdentityProxyModel
 {
-  Q_OBJECT
   public:
-    explicit SingleColumnObjectProxyModel(QObject *parent = 0);
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const;
+    explicit SingleColumnObjectProxyModel(QObject *parent = 0) {}
+
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const
+    {
+      if (proxyIndex.isValid() && role == Qt::DisplayRole && proxyIndex.column() == 0) {
+        const QObject *obj = proxyIndex.data(ObjectModel::ObjectRole).value<QObject*>();
+        if (obj) {
+          return Util::displayString(obj);
+        }
+      }
+
+      return QIdentityProxyModel::data(proxyIndex, role);
+    }
 };
 
 }

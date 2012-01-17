@@ -403,4 +403,3 @@ QVariant Util::iconForObject(QObject *obj)
   }
   return QVariant();
 }
-
