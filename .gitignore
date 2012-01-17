@@ -3,6 +3,7 @@
 *~
 *.rej
 *.orig
+*.out
 .*
 CMakeLists.txt.user
 
