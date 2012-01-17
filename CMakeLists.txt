@@ -193,6 +193,8 @@ set(gammaray_srcs
   propertyeditor/propertyextendededitor.cpp
   propertyeditor/propertyfonteditor.cpp
   propertyeditor/propertyintpaireditor.cpp
+  propertyeditor/propertypaletteeditor.cpp
+  propertyeditor/palettedialog.cpp
 
   proxydetacher.cpp
   objectlistmodel.cpp
@@ -301,6 +303,7 @@ qt4_wrap_ui(gammaray_srcs
   propertyeditor/propertydoublepaireditor.ui
   propertyeditor/propertyextendededitor.ui
   propertyeditor/propertyintpaireditor.ui
+  propertyeditor/palettedialog.ui
   tools/sceneinspector/graphicssceneview.ui
   tools/codecbrowser/codecbrowser.ui
   tools/connectioninspector/connectioninspector.ui

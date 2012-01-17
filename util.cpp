@@ -39,6 +39,7 @@
 #include <QPainter>
 #include <QDir>
 #include <QIcon>
+#include <QApplication>
 
 using namespace GammaRay;
 
@@ -133,6 +134,14 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     } else {
       return QString::fromLatin1("<%1 rects>").arg(region.rectCount());
     }
+  }
+
+  case QVariant::Palette:
+  {
+    const QPalette pal = value.value<QPalette>();
+    if (pal == qApp->palette())
+      return QLatin1String("<inherited>");
+    return QLatin1String("<custom>");
   }
 
   case QVariant::Size:

@@ -1,5 +1,5 @@
 /*
-  palettemodel.h
+  palettedialog.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,35 +21,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PALETTEMODEL_H
-#define GAMMARAY_PALETTEMODEL_H
+#ifndef GAMMARAY_PALETTEDIALOG_H
+#define GAMMARAY_PALETTEDIALOG_H
 
-#include <qabstractitemmodel.h>
-#include <qpalette.h>
+#include <qdialog.h>
 
 namespace GammaRay {
 
-/**
- * Model showing the content of a QPalette.
- */
-class PaletteModel : public QAbstractTableModel
+class PaletteModel;
+
+namespace Ui {
+class PaletteDialog;
+}
+
+class PaletteDialog : public QDialog
 {
   Q_OBJECT
-public:
-  explicit PaletteModel(QObject* parent = 0);
+  public:
+    explicit PaletteDialog(const QPalette &palette, QWidget* parent = 0);
+    virtual ~PaletteDialog();
 
-  QPalette palette() const;
-  void setPalette(const QPalette &palette);
+    QPalette editedPalette() const;
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-private:
-  QPalette m_palette;
+  private:
+    Ui::PaletteDialog *ui;
+    PaletteModel *m_model;
 };
 
 }
 
-#endif // GAMMARAY_PALETTEMODEL_H
+#endif // GAMMARAY_PALETTEDIALOG_H

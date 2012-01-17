@@ -1,5 +1,5 @@
 /*
-  palettemodel.h
+  propertypaletteeditor.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,35 +21,21 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PALETTEMODEL_H
-#define GAMMARAY_PALETTEMODEL_H
+#include "propertypaletteeditor.h"
+#include "palettedialog.h"
 
-#include <qabstractitemmodel.h>
-#include <qpalette.h>
+using namespace GammaRay;
 
-namespace GammaRay {
-
-/**
- * Model showing the content of a QPalette.
- */
-class PaletteModel : public QAbstractTableModel
+PropertyPaletteEditor::PropertyPaletteEditor(QWidget* parent): PropertyExtendedEditor(parent)
 {
-  Q_OBJECT
-public:
-  explicit PaletteModel(QObject* parent = 0);
-
-  QPalette palette() const;
-  void setPalette(const QPalette &palette);
-
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-private:
-  QPalette m_palette;
-};
-
 }
 
-#endif // GAMMARAY_PALETTEMODEL_H
+void PropertyPaletteEditor::edit()
+{
+  PaletteDialog dlg(value().value<QPalette>(), this);
+  if (dlg.exec() == QDialog::Accepted) {
+    setValue(dlg.editedPalette());
+  }
+}
+
+#include "propertypaletteeditor.moc"

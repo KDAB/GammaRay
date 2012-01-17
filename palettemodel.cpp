@@ -73,6 +73,11 @@ PaletteModel::PaletteModel(QObject* parent): QAbstractTableModel(parent)
 {
 }
 
+QPalette PaletteModel::palette() const
+{
+  return m_palette;
+}
+
 void PaletteModel::setPalette(const QPalette& palette)
 {
   beginResetModel();

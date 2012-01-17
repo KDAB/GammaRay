@@ -1,5 +1,5 @@
 /*
-  palettemodel.h
+  palettedialog.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,35 +21,36 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PALETTEMODEL_H
-#define GAMMARAY_PALETTEMODEL_H
+#include "palettedialog.h"
 
-#include <qabstractitemmodel.h>
-#include <qpalette.h>
+#include "ui_palettedialog.h"
+#include "palettemodel.h"
 
-namespace GammaRay {
+#include <QPushButton>
 
-/**
- * Model showing the content of a QPalette.
- */
-class PaletteModel : public QAbstractTableModel
+using namespace GammaRay;
+
+PaletteDialog::PaletteDialog(const QPalette &palette, QWidget* parent):
+  QDialog(parent),
+  ui(new Ui::PaletteDialog),
+  m_model(new PaletteModel(this))
 {
-  Q_OBJECT
-public:
-  explicit PaletteModel(QObject* parent = 0);
+  ui->setupUi(this);
+  m_model->setPalette(palette);
+  ui->paletteView->setModel(m_model);
 
-  QPalette palette() const;
-  void setPalette(const QPalette &palette);
-
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-private:
-  QPalette m_palette;
-};
-
+  ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(false); // TODO model doesn't support editing yet
 }
 
-#endif // GAMMARAY_PALETTEMODEL_H
+PaletteDialog::~PaletteDialog()
+{
+  delete ui;
+}
+
+QPalette PaletteDialog::editedPalette() const
+{
+  return m_model->palette();
+}
+
+
+#include "palettedialog.moc"

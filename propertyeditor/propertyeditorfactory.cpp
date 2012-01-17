@@ -26,6 +26,7 @@
 #include "propertyfonteditor.h"
 #include "propertyintpaireditor.h"
 #include "propertydoublepaireditor.h"
+#include "propertypaletteeditor.h"
 
 #include <QItemEditorFactory>
 
@@ -35,6 +36,7 @@ PropertyEditorFactory::PropertyEditorFactory()
 {
   registerEditor(QVariant::Color, new QStandardItemEditorCreator<PropertyColorEditor>());
   registerEditor(QVariant::Font, new QStandardItemEditorCreator<PropertyFontEditor>());
+  registerEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>());
   registerEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
   registerEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
   registerEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
