@@ -28,7 +28,7 @@
 using namespace GammaRay;
 
 SingleColumnObjectProxyModel::SingleColumnObjectProxyModel(QObject *parent)
-  : KIdentityProxyModel(parent)
+  : QIdentityProxyModel(parent)
 {
 }
 
@@ -41,7 +41,7 @@ QVariant SingleColumnObjectProxyModel::data(const QModelIndex &proxyIndex, int r
     }
   }
 
-  return KIdentityProxyModel::data(proxyIndex, role);
+  return QIdentityProxyModel::data(proxyIndex, role);
 }
 
 #include "singlecolumnobjectproxymodel.moc"

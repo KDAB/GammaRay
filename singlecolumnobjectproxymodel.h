@@ -24,11 +24,18 @@
 #ifndef GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 #define GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 
-#include "kde/kidentityproxymodel.h"
+#include <qglobal.h>
+
+#if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
+#include <QSortFilterProxyModel>
+typedef QSortFilterProxyModel QIdentityProxyModel
+#else
+#include <QIdentityProxyModel>
+#endif
 
 namespace GammaRay {
 
-class SingleColumnObjectProxyModel : public KIdentityProxyModel
+class SingleColumnObjectProxyModel : public QIdentityProxyModel
 {
   Q_OBJECT
   public:

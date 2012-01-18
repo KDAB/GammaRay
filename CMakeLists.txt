@@ -264,7 +264,6 @@ set(gammaray_srcs
   tools/styleinspector/complexcontrolmodel.cpp
   tools/styleinspector/dynamicproxystyle.cpp
 
-  3rdparty/kde/kidentityproxymodel.cpp
   3rdparty/kde/krecursivefilterproxymodel.cpp
   3rdparty/kde/kfilterproxysearchline.cpp
   3rdparty/qt/resourcemodel.cpp

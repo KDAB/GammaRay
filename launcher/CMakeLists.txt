@@ -20,7 +20,6 @@ set(gammaray_runner_srcs
   processmodel.cpp
   processfiltermodel.cpp
 
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kidentityproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
 )
