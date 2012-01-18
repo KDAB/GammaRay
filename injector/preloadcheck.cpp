@@ -80,7 +80,7 @@ bool PreloadCheck::test(const QString& symbol)
 
   // Example line on x86_64: 00000049f3d8  054300000007 R_X86_64_JUMP_SLO 000000000016c930 qt_startup_hook + 0
   // Example line on   i386: 002e02f0  00034407 R_386_JUMP_SLOT        00181490   qt_startup_hook
-  QRegExp rx("^(?:[^ ]+\\s+){4}([^ ]+)(?:.+)$");
+  QRegExp rx("^(?:[^ ]+\\s+){4}([^ ]+)(?:.*)$");
   while(proc.canReadLine()) {
     const QString line = proc.readLine().trimmed();
     if (!rx.exactMatch(line))
