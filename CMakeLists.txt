@@ -50,6 +50,7 @@ add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\")
 include(CheckCXXCompilerFlag)
 include(CheckLibraryExists)
 include(GammaRayMacros)
+include(MacroLogFeature)
 
 find_package(Qt5Core QUIET)
 
@@ -95,16 +96,12 @@ set(
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
 )
 
-check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
-if(HAVE_CLOCK_GETTIME)
+if(WIN32 OR APPLE)
   set(BUILD_TIMER_PLUGIN TRUE)
-  message(STATUS "clock_gettime in librt found, building timer plugin.")
-elseif(WIN32 OR APPLE)
-  set(BUILD_TIMER_PLUGIN TRUE)
-  message(STATUS "windows or mac, building timer plugin.")
 else()
-  set(BUILD_TIMER_PLUGIN FALSE)
-  message(STATUS "clock_gettime in librt not found, disabling timer plugin.")
+  check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
+  macro_log_feature(HAVE_CLOCK_GETTIME "librt" "High resolution clock for the timer profiler plugin." "part of glibc" FALSE)
+  set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
 endif()
 
 if(WIN32)
@@ -175,7 +172,9 @@ add_subdirectory(injector)
 add_subdirectory(launcher)
 
 find_package(Graphviz)
+macro_log_feature(GRAPHVIZ_FOUND "Graphviz" "Graph layouting library for the state machine visualizer." "http://www.graphviz.org/" FALSE)
 find_package(VTK)
+macro_log_feature(VTK_FOUND "VTK" "Graph visualizing library for the object visualization plugin." "http://www.vtk.org" FALSE)
 
 set(gammaray_srcs
   mainwindow.cpp
@@ -400,3 +399,5 @@ include(ExternalProject)
 
 add_subdirectory(tests)
 add_subdirectory(tools)
+
+macro_display_feature_log()
