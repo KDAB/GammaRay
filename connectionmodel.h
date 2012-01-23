@@ -30,7 +30,7 @@
 
 namespace GammaRay {
 
-class Connection;
+struct Connection;
 
 class ConnectionModel : public QAbstractTableModel
 {
