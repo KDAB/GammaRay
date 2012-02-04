@@ -250,6 +250,7 @@ set(gammaray_srcs
   proxytoolfactory.cpp
   sidepane.cpp
   palettemodel.cpp
+  paintbuffermodel.cpp
 
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
