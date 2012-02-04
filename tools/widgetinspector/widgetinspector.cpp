@@ -21,6 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
+
 #include "widgetinspector.h"
 #include "ui_widgetinspector.h"
 
@@ -31,6 +33,7 @@
 #include <kde/krecursivefilterproxymodel.h>
 #include <objecttypefilterproxymodel.h>
 #include <objectmodel.h>
+#include <paintbuffermodel.h>
 
 #include <QDebug>
 #include <QDesktopWidget>
@@ -38,6 +41,10 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QPrinter>
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
+#include <private/qpaintbuffer_p.h>
+#endif
 
 using namespace GammaRay;
 
@@ -66,11 +73,15 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
+  connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
 
   addAction(ui->actionSaveAsImage);
   addAction(ui->actionSaveAsSvg);
   addAction(ui->actionSaveAsPdf);
   addAction(ui->actionSaveAsUiFile);
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  addAction(ui->actionAnalyzePainting);
+#endif
 
   setActionsEnabled(false);
 }
@@ -252,5 +263,23 @@ void WidgetInspector::callExternalExportAction(const char *name,
   }
   function(widget, fileName);
 }
+
+void WidgetInspector::analyzePainting()
+{
+  QWidget *widget = selectedWidget();
+  if (!widget)
+    return;
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  QPaintBuffer buffer;
+  widget->render(&buffer);
+
+  PaintBufferModel *model = new PaintBufferModel(this);
+  model->setPaintBuffer(buffer);
+  QTreeView *tv = new QTreeView(0);
+  tv->setModel(model);
+  tv->show();
+#endif
+}
+
 
 #include "widgetinspector.moc"

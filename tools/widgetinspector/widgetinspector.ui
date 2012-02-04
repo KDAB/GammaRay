@@ -80,6 +80,11 @@
     <string>Saves the currently selected widget as a Qt designer UI file.</string>
    </property>
   </action>
+  <action name="actionAnalyzePainting">
+   <property name="text">
+    <string>&amp;Analyze Painting...</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

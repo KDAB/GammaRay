@@ -56,6 +56,8 @@ class WidgetInspector : public QWidget
     void saveAsPdf();
     void saveAsUiFile();
 
+    void analyzePainting();
+
   private:
     OverlayWidget *m_overlayWidget;
     QScopedPointer<Ui::WidgetInspector> ui;
