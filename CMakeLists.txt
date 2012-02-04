@@ -96,6 +96,15 @@ set(
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
 )
 
+find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
+if(QT_PRIVATE_INCLUDE_DIR)
+  set(HAVE_PRIVATE_QT_HEADERS TRUE)
+else()
+  set(HAVE_PRIVATE_QT_HEADERS FALSE)
+  include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
+endif()
+macro_log_feature(HAVE_PRIVATE_QT_HEADERS "Qt internals" "Private Qt headers, necessary for painter debugging/profiling." "http://developer.qt.nokia.com/" FALSE)
+
 if(WIN32 OR APPLE)
   set(BUILD_TIMER_PLUGIN TRUE)
 else()

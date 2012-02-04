@@ -23,7 +23,7 @@
 #include "timermodel.h"
 
 #include <probe.h>
-#include <3rdparty/qt/qobject_p_copy.h>
+#include <private/qobject_p.h>
 
 #include <QMetaMethod>
 #include <QCoreApplication>

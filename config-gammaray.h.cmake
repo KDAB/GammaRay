@@ -5,3 +5,5 @@
 
 #cmakedefine BUILD_TIMER_PLUGIN
 
+#cmakedefine HAVE_PRIVATE_QT_HEADERS
+

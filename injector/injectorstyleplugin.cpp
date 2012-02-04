@@ -27,7 +27,7 @@
 #include <QLibrary>
 #include <QStyleFactory>
 
-#include <3rdparty/qt/qguiplatformplugin_p.h>
+#include <private/qguiplatformplugin_p.h>
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 typedef void *QFunctionPointer;

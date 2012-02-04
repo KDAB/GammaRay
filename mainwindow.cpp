@@ -31,7 +31,7 @@
 #include "toolfactory.h"
 
 #include "kde/krecursivefilterproxymodel.h"
-#include <3rdparty/qt/qguiplatformplugin_p.h>
+#include <private/qguiplatformplugin_p.h>
 
 #include <QCoreApplication>
 #include <qdebug.h>
