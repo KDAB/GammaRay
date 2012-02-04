@@ -98,10 +98,17 @@ set(
 
 find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
 if(QT_PRIVATE_INCLUDE_DIR)
+  # not enough, some of them include harfbuzz headers, so we need to find those as well
+  # for now we assume a regular Qt4 source build layout, but that probably should be made more generic
+  find_path(HARFBUZZ_INCLUDE_DIR harfbuzz.h PATH ${QT_PRIVATE_INCLUDE_DIR}/../../src/3rdparty/harfbuzz/src)
+endif()
+
+if(QT_PRIVATE_INCLUDE_DIR AND HARFBUZZ_INCLUDE_DIR)
   set(HAVE_PRIVATE_QT_HEADERS TRUE)
+  include_directories(${HARFBUZZ_INCLUDE_DIR})
 else()
   set(HAVE_PRIVATE_QT_HEADERS FALSE)
-  include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
+  include_directories(${CMAKE_SOURCE_DIR}/3rdparty/qt)
 endif()
 macro_log_feature(HAVE_PRIVATE_QT_HEADERS "Qt internals" "Private Qt headers, necessary for painter debugging/profiling." "http://developer.qt.nokia.com/" FALSE)
 
