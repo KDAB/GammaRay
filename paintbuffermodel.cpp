@@ -114,6 +114,7 @@ QVariant PaintBufferModel::data(const QModelIndex& index, int role) const
         return cmdTypes[cmd.id].name;
       case 1:
       {
+#ifndef QT_NO_DEBUG_STREAM
         QString desc = m_buffer.commandDescription(index.row());
         const QString prefix = QLatin1String("Cmd_") + QLatin1String(cmdTypes[cmd.id].name);
         if (desc.startsWith(prefix))
@@ -121,6 +122,7 @@ QVariant PaintBufferModel::data(const QModelIndex& index, int role) const
         if (desc.startsWith(QLatin1String(": ")) || desc.startsWith(QLatin1String(", ")))
           desc = desc.mid(2);
         return desc;
+#endif
       }
     }
   }
@@ -131,7 +133,11 @@ QVariant PaintBufferModel::data(const QModelIndex& index, int role) const
 int PaintBufferModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
+#ifndef QT_NO_DEBUG_STREAM
   return 2;
+#else
+  return 1;
+#endif
 }
 
 int PaintBufferModel::rowCount(const QModelIndex& parent) const
