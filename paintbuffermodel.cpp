@@ -108,14 +108,20 @@ QVariant PaintBufferModel::data(const QModelIndex& index, int role) const
     return QVariant();
 
   if (role == Qt::DisplayRole) {
+    const QPaintBufferCommand cmd = m_privateBuffer->commands.at(index.row());
     switch (index.column()) {
       case 0:
-      {
-        QPaintBufferCommand cmd = m_privateBuffer->commands.at(index.row());
         return cmdTypes[cmd.id].name;
-      }
       case 1:
-        return m_buffer.commandDescription(index.row());
+      {
+        QString desc = m_buffer.commandDescription(index.row());
+        const QString prefix = QLatin1String("Cmd_") + QLatin1String(cmdTypes[cmd.id].name);
+        if (desc.startsWith(prefix))
+          desc = desc.mid(prefix.length());
+        if (desc.startsWith(QLatin1String(": ")) || desc.startsWith(QLatin1String(", ")))
+          desc = desc.mid(2);
+        return desc;
+      }
     }
   }
 
@@ -140,7 +146,7 @@ QVariant PaintBufferModel::headerData(int section, Qt::Orientation orientation, 
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     switch (section) {
       case 0: return tr("Command");
-      case 1: return tr("Description");
+      case 1: return tr("Arguments");
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
