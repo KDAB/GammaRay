@@ -272,6 +272,7 @@ void WidgetInspector::analyzePainting()
 #ifdef HAVE_PRIVATE_QT_HEADERS
   QPaintBuffer buffer;
   m_overlayWidget->hide();
+  buffer.setBoundingRect(widget->rect());
   widget->render(&buffer);
   m_overlayWidget->show();
 
