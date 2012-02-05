@@ -25,12 +25,26 @@ QSize PaintBufferReplayWidget::sizeHint() const
   return m_buffer.boundingRect().size().toSize();
 }
 
+// TODO: factor out into util namespace, similar code exists in the style tool
+void PaintBufferReplayWidget::drawTransparencyPattern(QPainter* painter, const QRect& rect, int squareSize)
+{
+  QPixmap bgPattern(2*squareSize, 2*squareSize);
+  bgPattern.fill(Qt::lightGray);
+  QPainter bgPainter(&bgPattern);
+  bgPainter.fillRect(squareSize, 0, squareSize, squareSize, Qt::gray);
+  bgPainter.fillRect(0, squareSize, squareSize, squareSize, Qt::gray);
+
+  QBrush bgBrush;
+  bgBrush.setTexture(bgPattern);
+  painter->fillRect(rect, bgBrush);
+}
+
 void PaintBufferReplayWidget::paintEvent(QPaintEvent* event)
 {
   // didn't manage painting on the widget directly, even with the correct translation it is always clipping as if the widget was at 0,0 of its parent
   QImage img(sizeHint(), QImage::Format_ARGB32);
-  img.fill(Qt::white);
   QPainter imgPainter(&img);
+  drawTransparencyPattern(&imgPainter, QRect(QPoint(0,0), sizeHint()));
   int depth = m_buffer.processCommands(&imgPainter, m_buffer.frameStartIndex(0), m_buffer.frameStartIndex(0) + m_endCommandIndex);
   for (;depth > 0;--depth)
     imgPainter.restore();

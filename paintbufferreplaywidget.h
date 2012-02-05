@@ -28,6 +28,9 @@ class PaintBufferReplayWidget : public QWidget
     virtual void paintEvent(QPaintEvent* event);
 
   private:
+    static void drawTransparencyPattern(QPainter* painter, const QRect &rect, int squareSize = 16);
+
+  private:
     QPaintBuffer m_buffer;
     int m_endCommandIndex;
 };
