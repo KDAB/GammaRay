@@ -108,7 +108,8 @@ if(QT_PRIVATE_INCLUDE_DIR AND HARFBUZZ_INCLUDE_DIR)
   include_directories(${HARFBUZZ_INCLUDE_DIR})
 else()
   set(HAVE_PRIVATE_QT_HEADERS FALSE)
-  include_directories(${CMAKE_SOURCE_DIR}/3rdparty/qt)
+  # needs to go before Qt includes, in case we have non-working headers with the same name there
+  include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
 endif()
 macro_log_feature(HAVE_PRIVATE_QT_HEADERS "Qt internals" "Private Qt headers, necessary for painter debugging/profiling." "http://developer.qt.nokia.com/" FALSE)
 
