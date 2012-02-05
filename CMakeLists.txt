@@ -251,6 +251,8 @@ set(gammaray_srcs
   sidepane.cpp
   palettemodel.cpp
   paintbuffermodel.cpp
+  paintbufferviewer.cpp
+  paintbufferreplaywidget.cpp
 
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
@@ -315,6 +317,7 @@ qt4_wrap_ui(gammaray_srcs
   mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
+  paintbufferviewer.ui
   propertyeditor/propertydoublepaireditor.ui
   propertyeditor/propertyextendededitor.ui
   propertyeditor/propertyintpaireditor.ui

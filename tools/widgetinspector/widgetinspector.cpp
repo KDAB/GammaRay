@@ -33,7 +33,7 @@
 #include <kde/krecursivefilterproxymodel.h>
 #include <objecttypefilterproxymodel.h>
 #include <objectmodel.h>
-#include <paintbuffermodel.h>
+#include <paintbufferviewer.h>
 
 #include <QDebug>
 #include <QDesktopWidget>
@@ -275,11 +275,10 @@ void WidgetInspector::analyzePainting()
   widget->render(&buffer);
   m_overlayWidget->show();
 
-  PaintBufferModel *model = new PaintBufferModel(this);
-  model->setPaintBuffer(buffer);
-  QTreeView *tv = new QTreeView(0);
-  tv->setModel(model);
-  tv->show();
+  PaintBufferViewer *viewer = new PaintBufferViewer(0);
+  viewer->setAttribute(Qt::WA_DeleteOnClose);
+  viewer->setPaintBuffer(buffer);
+  viewer->show();
 #endif
 }
 
