@@ -30,12 +30,12 @@ void PaintBufferViewer::setPaintBuffer(const QPaintBuffer& buffer)
 void PaintBufferViewer::commandSelected()
 {
   if (!ui->commandView->selectionModel()->hasSelection()) {
-    ui->replayWidget->setEndCommandIndex(m_bufferModel->rowCount() - 1);
+    ui->replayWidget->setEndCommandIndex(m_bufferModel->rowCount());
     return;
   }
 
   const QModelIndex index = ui->commandView->selectionModel()->selectedRows().first();
-  ui->replayWidget->setEndCommandIndex(index.row());
+  ui->replayWidget->setEndCommandIndex(index.row() + 1); // include the current row
 }
 
 #include "paintbufferviewer.moc"
