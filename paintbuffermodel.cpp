@@ -71,10 +71,12 @@ PaintBufferModel::PaintBufferModel(QObject* parent): QAbstractTableModel(parent)
 
 void PaintBufferModel::setPaintBuffer(const QPaintBuffer& buffer)
 {
+  beginResetModel();
   m_buffer = buffer;
   PaintBufferPrivacyViolater p;
   p.processCommands(buffer, 0, 0, -1); // end < begin -> no processing
   m_privateBuffer = p.extract();
+  endResetModel();
 }
 
 QVariant PaintBufferModel::data(const QModelIndex& index, int role) const
