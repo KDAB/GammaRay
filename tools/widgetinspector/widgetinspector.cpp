@@ -271,7 +271,9 @@ void WidgetInspector::analyzePainting()
     return;
 #ifdef HAVE_PRIVATE_QT_HEADERS
   QPaintBuffer buffer;
+  m_overlayWidget->hide();
   widget->render(&buffer);
+  m_overlayWidget->show();
 
   PaintBufferModel *model = new PaintBufferModel(this);
   model->setPaintBuffer(buffer);
