@@ -36,6 +36,9 @@ PaintBufferViewer::PaintBufferViewer(QWidget* parent): QWidget(parent), ui(new U
 
   ui->commandView->setModel(m_bufferModel);
   connect(ui->commandView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(commandSelected()));
+
+  ui->splitter->setStretchFactor(0, 0);
+  ui->splitter->setStretchFactor(1, 1);
 }
 
 PaintBufferViewer::~PaintBufferViewer()

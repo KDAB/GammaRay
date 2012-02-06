@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>591</width>
+    <height>378</height>
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -15,14 +15,34 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTreeView" name="commandView">
-     <property name="rootIsDecorated">
-      <bool>false</bool>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
+     <widget class="QTreeView" name="commandView">
+      <property name="rootIsDecorated">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <widget class="GammaRay::PaintBufferReplayWidget" name="replayWidget">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>182</width>
+         <height>372</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
     </widget>
-   </item>
-   <item>
-    <widget class="GammaRay::PaintBufferReplayWidget" name="replayWidget" native="true"/>
    </item>
   </layout>
  </widget>
