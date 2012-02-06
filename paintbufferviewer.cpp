@@ -39,6 +39,8 @@ PaintBufferViewer::PaintBufferViewer(QWidget* parent): QWidget(parent), ui(new U
 
   ui->splitter->setStretchFactor(0, 0);
   ui->splitter->setStretchFactor(1, 1);
+
+  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
 }
 
 PaintBufferViewer::~PaintBufferViewer()
@@ -62,6 +64,11 @@ void PaintBufferViewer::commandSelected()
 
   const QModelIndex index = ui->commandView->selectionModel()->selectedRows().first();
   ui->replayWidget->setEndCommandIndex(index.row() + 1); // include the current row
+}
+
+void PaintBufferViewer::zoomChanged(int value)
+{
+  ui->replayWidget->setZoomFactor(value);
 }
 
 #include "paintbufferviewer.moc"

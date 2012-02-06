@@ -26,7 +26,7 @@
 #ifdef HAVE_PRIVATE_QT_HEADERS
 using namespace GammaRay;
 
-PaintBufferReplayWidget::PaintBufferReplayWidget(QWidget* parent): QWidget(parent), m_endCommandIndex(0)
+PaintBufferReplayWidget::PaintBufferReplayWidget(QWidget* parent): QWidget(parent), m_endCommandIndex(0), m_zoomFactor(1)
 {
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
@@ -43,9 +43,16 @@ void PaintBufferReplayWidget::setEndCommandIndex(int index)
   update();
 }
 
+void PaintBufferReplayWidget::setZoomFactor(int zoom)
+{
+  m_zoomFactor = zoom;
+  resize(sizeHint());
+}
+
 QSize PaintBufferReplayWidget::sizeHint() const
 {
-  return m_buffer.boundingRect().size().toSize();
+  const QSize s = m_buffer.boundingRect().size().toSize();
+  return QSize(s.width() * m_zoomFactor, s.height() * m_zoomFactor);
 }
 
 // TODO: factor out into util namespace, similar code exists in the style tool
@@ -65,16 +72,18 @@ void PaintBufferReplayWidget::drawTransparencyPattern(QPainter* painter, const Q
 void PaintBufferReplayWidget::paintEvent(QPaintEvent* event)
 {
   // didn't manage painting on the widget directly, even with the correct translation it is always clipping as if the widget was at 0,0 of its parent
-  QImage img(sizeHint(), QImage::Format_ARGB32);
+  const QSize sourceSize = m_buffer.boundingRect().size().toSize(); 
+  QImage img(sourceSize, QImage::Format_ARGB32);
   QPainter imgPainter(&img);
-  drawTransparencyPattern(&imgPainter, QRect(QPoint(0,0), sizeHint()));
+  drawTransparencyPattern(&imgPainter, QRect(QPoint(0,0), sourceSize));
   int depth = m_buffer.processCommands(&imgPainter, m_buffer.frameStartIndex(0), m_buffer.frameStartIndex(0) + m_endCommandIndex);
   for (;depth > 0;--depth)
     imgPainter.restore();
   imgPainter.end();
 
   QPainter p(this);
-  p.drawImage(QPoint(0,0), img);
+  p.setRenderHint(QPainter::SmoothPixmapTransform, false);
+  p.drawImage(QRect(QPoint(0,0), sizeHint()), img);
 }
 
 #include "paintbufferreplaywidget.moc"

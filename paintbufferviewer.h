@@ -51,6 +51,7 @@ class PaintBufferViewer : public QWidget
 
   private slots:
     void commandSelected();
+    void zoomChanged(int value);
 
   private:
     QScopedPointer<Ui::PaintBufferViewer> ui;

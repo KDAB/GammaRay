@@ -44,6 +44,7 @@ class PaintBufferReplayWidget : public QWidget
 
     void setPaintBuffer(const QPaintBuffer &buffer);
     void setEndCommandIndex(int index);
+    void setZoomFactor(int zoom);
 
     virtual QSize sizeHint() const;
 
@@ -56,6 +57,7 @@ class PaintBufferReplayWidget : public QWidget
   private:
     QPaintBuffer m_buffer;
     int m_endCommandIndex;
+    int m_zoomFactor;
 };
 
 }
