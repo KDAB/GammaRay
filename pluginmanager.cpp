@@ -30,8 +30,8 @@
 #include <QDebug>
 #include <QDir>
 #include <QLibrary>
-
 #include <QPluginLoader>
+
 #include "proxytoolfactory.h"
 
 #define IF_DEBUG(x)
@@ -76,8 +76,6 @@ QStringList PluginManager::pluginPaths() const
 
 void PluginManager::scan()
 {
-  // TODO: temporary work-around to avoid loading the same plugin two times
-  // should be fixed when providing valid plugin spec files
   QStringList loadedPluginNames;
 
   foreach (const QString &pluginPath, pluginPaths()) {
