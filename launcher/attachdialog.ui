@@ -55,7 +55,7 @@
   <customwidget>
    <class>KFilterProxySearchLine</class>
    <extends>QWidget</extends>
-   <header>kfilterproxysearchline.h</header>
+   <header>kde/kfilterproxysearchline.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

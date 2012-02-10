@@ -25,8 +25,9 @@
 #include "vtkwidget.h"
 #include "vtkpanel.h"
 
-#include <kde/kfilterproxysearchline.h>
-#include <kde/krecursivefilterproxymodel.h>
+#include "kde/kfilterproxysearchline.h"
+#include "kde/krecursivefilterproxymodel.h"
+
 #include <objectmodel.h>
 #include <probeinterface.h>
 
