@@ -41,7 +41,10 @@ namespace GammaRay {
 class SingleColumnObjectProxyModel : public QIdentityProxyModel
 {
   public:
-    explicit SingleColumnObjectProxyModel(QObject *parent = 0) {}
+    explicit SingleColumnObjectProxyModel(QObject *parent = 0)
+      : QIdentityProxyModel(parent)
+    {
+    }
 
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const
     {

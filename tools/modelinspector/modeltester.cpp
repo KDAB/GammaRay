@@ -96,6 +96,7 @@ void ModelTester::failure(QAbstractItemModel *model, const char *file, int line,
 #include "modeltest.moc"
 #undef Q_ASSERT
 #define Q_ASSERT(x) (!(x) ? static_cast<GammaRay::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __FILE__, __LINE__, #x) : qt_noop())
+#undef qDebug
 #define qDebug() QNoDebug()
 #include "modeltest.cpp"
 
