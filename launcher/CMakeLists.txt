@@ -50,7 +50,7 @@ add_executable(gammaray ${gammaray_runner_srcs})
 
 target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 if(UNIX AND NOT APPLE)
-    target_link_libraries(gammaray dl) # for preload check
+  target_link_libraries(gammaray dl) # for preload check
 endif()
 
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})

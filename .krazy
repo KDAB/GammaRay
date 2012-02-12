@@ -12,3 +12,6 @@ SKIP processlist_unix\.cpp\|processlist_win\.cpp
 SKIP StackWalker
 #if you have a build subdir, skip it
 SKIP /build
+
+#don't check cmake subdir because it's mostly borrowed code
+SKIP /cmake/

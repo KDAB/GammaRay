@@ -32,6 +32,7 @@
 
 # The automoc_qt4 macro is superceded by CMAKE_AUTOMOC from CMake 2.8.6
 # A Qt 5 version is not provided by CMake or Qt.
+#krazy:excludeall=style
 
 include(MacroAddFileDependencies)
 
