@@ -55,7 +55,7 @@ include(MacroLogFeature)
 find_package(Qt5Core QUIET)
 
 if(Qt5Core_FOUND)
-
+  set(QT_MIN_VERSION "5.0.0")
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Designer REQUIRED)
   find_package(Qt5Script REQUIRED)
@@ -67,7 +67,6 @@ if(Qt5Core_FOUND)
   find_package(Qt5Test REQUIRED)
   find_package(Qt5Xml REQUIRED)
   include(CMakeQt4To5Porting.cmake) # TODO: Port away from this.
-
 else()
   set(QT_MIN_VERSION "4.7.0")
   find_package(Qt4 REQUIRED)
@@ -116,7 +115,7 @@ else()
   # needs to go before Qt includes, in case we have non-working headers with the same name there
   include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
 endif()
-macro_log_feature(HAVE_PRIVATE_QT_HEADERS "Qt internals" "Private Qt headers, necessary for painter debugging/profiling." "http://developer.qt.nokia.com/" FALSE)
+macro_log_feature(HAVE_PRIVATE_QT_HEADERS "Qt internals" "Private Qt headers, necessary for painter debugging/profiling." "http://developer.qt.nokia.com/" FALSE ${QT_MIN_VERSION} "You must have a build version of Qt available and the qmake found first in your execute path must be from this build." )
 
 if(WIN32 OR APPLE)
   set(BUILD_TIMER_PLUGIN TRUE)
@@ -233,9 +232,6 @@ set(gammaray_srcs
   core/sidepane.cpp
   core/palettemodel.cpp
   core/propertywidget.cpp
-  core/paintbuffermodel.cpp
-  core/paintbufferviewer.cpp
-  core/paintbufferreplaywidget.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
@@ -298,6 +294,15 @@ set(gammaray_srcs
   hooking/winfunctionoverwriter.cpp
   hooking/unixfunctionoverwriter.cpp
 )
+
+if(HAVE_PRIVATE_QT_HEADERS)
+  set(gammaray_srcs
+    ${gammaray_srcs}
+    core/paintbuffermodel.cpp
+    core/paintbufferviewer.cpp
+    core/paintbufferreplaywidget.cpp
+  )
+endif()
 
 if(BUILD_TIMER_PLUGIN)
   set(gammaray_srcs
