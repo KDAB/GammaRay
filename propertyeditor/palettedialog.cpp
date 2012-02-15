@@ -25,8 +25,10 @@
 
 #include "ui_palettedialog.h"
 #include "palettemodel.h"
+#include "propertyeditor/propertyeditorfactory.h"
 
 #include <QPushButton>
+#include <QStyledItemDelegate>
 
 using namespace GammaRay;
 
@@ -37,9 +39,14 @@ PaletteDialog::PaletteDialog(const QPalette &palette, QWidget* parent):
 {
   ui->setupUi(this);
   m_model->setPalette(palette);
+  m_model->setEditable(true);
   ui->paletteView->setModel(m_model);
 
-  ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(false); // TODO model doesn't support editing yet
+  QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>(ui->paletteView->itemDelegate());
+  if (delegate) {
+    m_propertyEditorFactory.reset(new PropertyEditorFactory);
+    delegate->setItemEditorFactory(m_propertyEditorFactory.data());
+  }
 }
 
 PaletteDialog::~PaletteDialog()

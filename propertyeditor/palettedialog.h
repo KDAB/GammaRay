@@ -28,6 +28,8 @@
 
 namespace GammaRay {
 
+class PropertyEditorFactory;
+
 class PaletteModel;
 
 namespace Ui {
@@ -46,6 +48,7 @@ class PaletteDialog : public QDialog
   private:
     Ui::PaletteDialog *ui;
     PaletteModel *m_model;
+    QScopedPointer<PropertyEditorFactory> m_propertyEditorFactory;
 };
 
 }
