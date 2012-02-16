@@ -126,7 +126,11 @@ void handleMessage(QtMsgType type, const char *msg)
   QMutexLocker lock(&s_mutex);
   s_handlerDisabled = true;
   qInstallMsgHandler(s_handler);
+#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
+  qt_message_output(type, QMessageLogContext(), msg);
+#else
   qt_message_output(type, msg);
+#endif
   qInstallMsgHandler(handleMessage);
   s_handlerDisabled = false;
   lock.unlock();

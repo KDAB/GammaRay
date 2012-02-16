@@ -55,7 +55,14 @@ include(MacroLogFeature)
 find_package(Qt5Core QUIET)
 
 if(Qt5Core_FOUND)
+  # Avoid errors and build in PIC mode:
+  # qt5/qtbase/include/QtCore/qglobal.h:1765:4: error:
+  #   #error "You must build your code with position independent code if Qt was
+  #   built with -reduce-relocations. " "Compile your code with -fPIC or -fPIE."
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
   set(QT_MIN_VERSION "5.0.0")
+  find_package(Qt5Concurrent REQUIRED)
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Designer REQUIRED)
   find_package(Qt5Script REQUIRED)
