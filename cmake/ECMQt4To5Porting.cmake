@@ -32,7 +32,6 @@
 
 # The automoc_qt4 macro is superceded by CMAKE_AUTOMOC from CMake 2.8.6
 # A Qt 5 version is not provided by CMake or Qt.
-#krazy:excludeall=style
 
 include(MacroAddFileDependencies)
 
@@ -137,8 +136,6 @@ ENDMACRO(QT4_AUTOMOC)
 
 # Portability helpers.
 
-set(QT_QTCORE_LIBRARIES ${Qt5Core_LIBRARIES})
-
 set(QT_QTGUI_LIBRARIES
   ${Qt5Gui_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
@@ -146,27 +143,67 @@ set(QT_QTGUI_LIBRARIES
   ${Qt5Svg_LIBRARIES}
 )
 
-set(QT_QTSCRIPTTOOLS_LIBRARIES ${Qt5ScriptTools_LIBRARIES})
-set(QT_QTNETWORK_LIBRARIES ${Qt5Network_LIBRARIES})
-set(QT_QTTEST_LIBRARIES ${Qt5Test_LIBRARIES})
-set(QT_QTDESIGNER_LIBRARIES ${Qt5Designer_LIBRARIES})
-set(QT_QTXML_LIBRARIES ${Qt5Xml_LIBRARIES})
-
 set(QT_INCLUDES
-    ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Designer_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5Script_INCLUDE_DIRS}
-    ${Qt5ScriptTools_INCLUDE_DIRS}
     ${Qt5PrintSupport_INCLUDE_DIRS}
     ${Qt5Svg_INCLUDE_DIRS}
-    ${Qt5Tests_INCLUDE_DIRS}
-    ${Qt5Xml_INCLUDE_DIRS}
 )
+set(QT_QTGUI_LIBRARY ${QT_QTGUI_LIBRARIES})
+
+set(_qt_modules
+  Core
+  Widgets
+  Script
+  ScriptTools
+  DBus
+  Network
+  Test
+  Designer
+  Concurrent
+  Xml
+  UiTools
+  Declarative
+  Quick
+  WebKit
+  Sql
+)
+
+foreach(_module ${_qt_modules})
+    string(TOUPPER ${_module} _module_upper)
+    set(QT_QT${_module_upper}_LIBRARIES ${Qt5${_module}_LIBRARIES})
+    set(QT_QT${_module_upper}_LIBRARY ${QT_QT${_module_upper}_LIBRARIES})
+    list(APPEND QT_INCLUDES ${Qt5${_module}_INCLUDE_DIRS})
+endforeach()
+
+list(APPEND QT_QTCORE_LIBRARIES ${Qt5Concurrent_LIBRARIES})
+list(APPEND QT_QTCORE_LIBRARY ${Qt5Concurrent_LIBRARIES})
+
+list(APPEND QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick_LIBRARIES})
+list(APPEND QT_QTDECLARATIVE_LIBRARY ${Qt5Quick_LIBRARIES})
 
 macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})
+endmacro()
+
+macro(qt4_generate_moc)
+  qt5_generate_moc(${ARGN})
+endmacro()
+
+macro(qt4_add_dbus_adaptor)
+  qt5_add_dbus_adaptor(${ARGN})
+endmacro()
+
+macro(qt4_add_dbus_interfaces)
+  qt5_add_dbus_interfaces(${ARGN})
+endmacro()
+
+macro(qt4_add_dbus_interface)
+  qt5_add_dbus_interface(${ARGN})
+endmacro()
+
+macro(qt4_generate_dbus_interface)
+  qt5_generate_dbus_interface(${ARGN})
 endmacro()
 
 macro(qt4_add_resources)

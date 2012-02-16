@@ -66,7 +66,7 @@ if(Qt5Core_FOUND)
   find_package(Qt5PrintSupport REQUIRED)
   find_package(Qt5Test REQUIRED)
   find_package(Qt5Xml REQUIRED)
-  include(CMakeQt4To5Porting.cmake) # TODO: Port away from this.
+  include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ECMQt4To5Porting.cmake") # TODO: Port away from this.
 else()
   set(QT_MIN_VERSION "4.7.0")
   find_package(Qt4 REQUIRED)
