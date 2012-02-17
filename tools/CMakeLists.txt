@@ -7,4 +7,7 @@ if(NOT Qt5Core_FOUND OR Qt5Webkit_FOUND)
   add_subdirectory(webinspector)
 endif()
 
-add_subdirectory(widgetinspector)
+# Disabled in Qt5 - QFormBuilder include is not installed
+if(NOT Qt5Core_FOUND)
+  add_subdirectory(widgetinspector)
+endif()

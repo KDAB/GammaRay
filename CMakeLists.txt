@@ -52,31 +52,23 @@ include(CheckLibraryExists)
 include(GammaRayMacros)
 include(MacroLogFeature)
 
-find_package(Qt5Core QUIET)
+set(QT_MIN_VERSION "4.7.0")
+find_package(Qt5Transitional REQUIRED
+    Core
+    Gui
+    Script
+    ScriptTools
+    Svg
+    Test
+)
 
+# TODO: Remove me once fixed in ECM module
 if(Qt5Core_FOUND)
   # Avoid errors and build in PIC mode:
   # qt5/qtbase/include/QtCore/qglobal.h:1765:4: error:
   #   #error "You must build your code with position independent code if Qt was
   #   built with -reduce-relocations. " "Compile your code with -fPIC or -fPIE."
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-
-  set(QT_MIN_VERSION "5.0.0")
-  find_package(Qt5Concurrent REQUIRED)
-  find_package(Qt5Gui REQUIRED)
-  find_package(Qt5Designer REQUIRED)
-  find_package(Qt5Script REQUIRED)
-  find_package(Qt5Network REQUIRED)
-  find_package(Qt5ScriptTools REQUIRED)
-  find_package(Qt5Widgets REQUIRED)
-  find_package(Qt5Svg REQUIRED)
-  find_package(Qt5PrintSupport REQUIRED)
-  find_package(Qt5Test REQUIRED)
-  find_package(Qt5Xml REQUIRED)
-  include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ECMQt4To5Porting.cmake") # TODO: Port away from this.
-else()
-  set(QT_MIN_VERSION "4.7.0")
-  find_package(Qt4 REQUIRED)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
