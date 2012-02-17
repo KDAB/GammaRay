@@ -1,5 +1,5 @@
 
-option(QT5_BUILD "Build with Qt5" ON)
+option(QT5_BUILD "Build with Qt5")
 
 if (QT5_BUILD)
   if (NOT Qt5Transitional_FIND_COMPONENTS)
