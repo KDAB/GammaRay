@@ -38,9 +38,6 @@
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/widgetinspector/widgetinspector.h"
 #include "tools/messagehandler/messagehandler.h"
-#ifdef BUILD_TIMER_PLUGIN
-#include "tools/timertop/timertop.h"
-#endif
 #include "tools/styleinspector/styleinspector.h"
 
 #include "pluginmanager.h"
@@ -71,9 +68,6 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new TextDocumentInspectorFactory(this));
   m_tools.push_back(new MessageHandlerFactory(this));
   m_tools.push_back(new LocaleInspectorFactory(this));
-#ifdef BUILD_TIMER_PLUGIN
-  m_tools.push_back(new TimerTopFactory(this));
-#endif
   m_tools.push_back(new StyleInspectorFactory(this));
 
   Q_FOREACH (ToolFactory *factory, PluginManager::instance()->plugins()) {

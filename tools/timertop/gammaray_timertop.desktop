@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Timers
+X-GammaRay-Types=QTimer;
+Exec=gammaray_timertop_plugin

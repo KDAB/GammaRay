@@ -307,16 +307,6 @@ if(HAVE_PRIVATE_QT_HEADERS)
   )
 endif()
 
-if(BUILD_TIMER_PLUGIN)
-  set(gammaray_srcs
-    ${gammaray_srcs}
-    tools/timertop/timertop.cpp
-    tools/timertop/timermodel.cpp
-    tools/timertop/timerinfo.cpp
-    tools/timertop/functioncalltimer.cpp
-  )
-endif()
-
 if(NOT WIN32)
   set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
 elseif(MINGW)
@@ -355,19 +345,10 @@ qt4_wrap_ui(gammaray_srcs
   tools/styleinspector/styleelementstatetablepage.ui
 )
 
-if(BUILD_TIMER_PLUGIN)
-  qt4_wrap_ui(gammaray_srcs
-    tools/timertop/timertop.ui
-  )
-endif()
-
 qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
 add_library(gammaray_probe
   SHARED ${gammaray_srcs}
 )
-if(BUILD_TIMER_PLUGIN AND NOT WIN32 AND NOT APPLE)
-  target_link_libraries(gammaray_probe rt)
-endif()
 target_link_libraries(gammaray_probe
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}

@@ -26,6 +26,8 @@
 #include "timermodel.h"
 #include <probeinterface.h>
 
+#include <QtPlugin>
+
 using namespace GammaRay;
 
 //
@@ -60,13 +62,15 @@ TimerTop::TimerTop(ProbeInterface *probe, QWidget *parent)
     ui(new Ui::TimerTop),
     m_updateTimer(new QTimer(this))
 {
-  Q_UNUSED(probe);
+  Q_ASSERT(probe);
+
   ui->setupUi(this);
   ObjectTypeFilterProxyModel<QTimer> * const filterModel =
       new ObjectTypeFilterProxyModel<QTimer>(this);
   filterModel->setDynamicSortFilter(true);
   filterModel->setSourceModel(probe->objectListModel());
   TimerModel::instance()->setParent(this); // otherwise it's not filtered out
+  TimerModel::instance()->setProbe(probe);
   TimerModel::instance()->setSourceModel(filterModel);
   QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
   sortModel->setSourceModel(TimerModel::instance());
@@ -91,5 +95,7 @@ QStringList TimerTopFactory::supportedTypes() const
 {
   return QStringList() << "QObject" << "QTimer";
 }
+
+Q_EXPORT_PLUGIN(TimerTopFactory)
 
 #include "timertop.moc"

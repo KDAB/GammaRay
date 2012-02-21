@@ -22,7 +22,8 @@
 */
 #include "timermodel.h"
 
-#include <probe.h>
+#include <probeinterface.h>
+
 #include <private/qobject_p.h>
 
 #include <QMetaMethod>
@@ -71,8 +72,9 @@ static void signal_end_callback(QObject *caller, int method_index)
 }
 
 TimerModel::TimerModel(QObject *parent)
-  : QAbstractTableModel(parent),
-    m_sourceModel(0)
+  : QAbstractTableModel(parent)
+  , m_sourceModel(0)
+  , m_probe(0)
 {
 }
 
@@ -198,6 +200,11 @@ void TimerModel::postSignalActivate(QTimer *timer)
   }
 }
 
+void TimerModel::setProbe(ProbeInterface* probe)
+{
+  m_probe = probe;
+}
+
 void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
 {
   Q_ASSERT(!m_sourceModel);
@@ -304,7 +311,8 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
       return false;
     }
 
-    if (Probe::instance()->filterObject(watched)) {
+    // check if object is owned by GammaRay itself
+    if (m_probe && m_probe->filterObject(watched)) {
       return false;
     }
 

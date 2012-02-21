@@ -52,7 +52,7 @@ class TimerTopFactory : public QObject,
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit TimerTopFactory(QObject *parent) : QObject(parent) {}
+    explicit TimerTopFactory(QObject *parent = 0) : QObject(parent) {}
     inline QString name() const { return tr("Timers"); }
 
     /* reimp */

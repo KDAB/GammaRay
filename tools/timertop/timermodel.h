@@ -31,6 +31,8 @@ class QTimer;
 
 namespace GammaRay {
 
+class ProbeInterface;
+
 class TimerModel : public QAbstractTableModel
 {
   Q_OBJECT
@@ -53,6 +55,9 @@ class TimerModel : public QAbstractTableModel
       TimerIdRole,
       LastRole
     };
+
+    /// if set, filters out object owned by the probe
+    void setProbe(ProbeInterface* probe);
 
     void setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel);
 
@@ -97,6 +102,7 @@ class TimerModel : public QAbstractTableModel
 
     ObjectTypeFilterProxyModel<QTimer> *m_sourceModel;
     QList<TimerInfoPtr> m_freeTimers;
+    ProbeInterface* m_probe;
 };
 
 }
