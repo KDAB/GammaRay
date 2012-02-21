@@ -40,7 +40,6 @@
 #include <QSplitter>
 
 #include <QtPlugin>
-#include <objecttreemodel.h>
 
 using namespace GammaRay;
 
