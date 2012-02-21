@@ -170,4 +170,3 @@ LOCALE_SIMPLE_DEFAULT_ACCESSOR(WeekDays,
 #endif
 
 #include "localedataaccessor.moc"
-

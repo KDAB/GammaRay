@@ -77,19 +77,6 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
-include_directories(
-  ${QT_INCLUDES}
-  ${CMAKE_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}
-
-  # TODO: These paths should be removed so we can be sure plugins don't include non-public headers
-  ${CMAKE_SOURCE_DIR}/core
-  ${CMAKE_SOURCE_DIR}/include
-
-  ${CMAKE_SOURCE_DIR}/3rdparty
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde
-)
-
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
 set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/qt4/plugins")
@@ -192,173 +179,15 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
   endif()
 endif()
 
-add_subdirectory(injector)
+add_subdirectory(core)
 add_subdirectory(launcher)
+
+qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
 
 find_package(Graphviz)
 macro_log_feature(GRAPHVIZ_FOUND "Graphviz" "Graph layouting library for the state machine visualizer." "http://www.graphviz.org/" FALSE)
 find_package(VTK)
 macro_log_feature(VTK_FOUND "VTK" "Graph visualizing library for the object visualization plugin." "http://www.vtk.org" FALSE)
-
-set(gammaray_srcs
-  3rdparty/kde/krecursivefilterproxymodel.cpp
-  3rdparty/kde/kfilterproxysearchline.cpp
-  3rdparty/qt/resourcemodel.cpp
-
-  # FIXME: Remove me
-  include/util.cpp
-
-  core/mainwindow.cpp
-  core/metaobject.cpp
-  core/metaobjectrepository.cpp
-  core/metaproperty.cpp
-  core/metapropertymodel.cpp
-  core/pluginmanager.cpp
-  core/probe.cpp
-  core/proxydetacher.cpp
-  core/objectlistmodel.cpp
-  core/objectpropertymodel.cpp
-  core/objectdynamicpropertymodel.cpp
-  core/objectstaticpropertymodel.cpp
-  core/objectclassinfomodel.cpp
-  core/objectmethodmodel.cpp
-  core/objectenummodel.cpp
-  core/objecttreemodel.cpp
-  core/connectionmodel.cpp
-  core/connectionfilterproxymodel.cpp
-  core/methodinvocationdialog.cpp
-  core/methodargumentmodel.cpp
-  core/multisignalmapper.cpp
-  core/toolmodel.cpp
-  core/proxydetacher.cpp
-  core/proxytoolfactory.cpp
-  core/sidepane.cpp
-  core/palettemodel.cpp
-  core/propertywidget.cpp
-
-  propertyeditor/propertycoloreditor.cpp
-  propertyeditor/propertydoublepaireditor.cpp
-  propertyeditor/propertyeditorfactory.cpp
-  propertyeditor/propertyextendededitor.cpp
-  propertyeditor/propertyfonteditor.cpp
-  propertyeditor/propertyintpaireditor.cpp
-  propertyeditor/propertypaletteeditor.cpp
-  propertyeditor/palettedialog.cpp
-
-  tools/modelinspector/modeltester.cpp
-  tools/modelinspector/modelmodel.cpp
-  tools/modelinspector/modelcellmodel.cpp
-  tools/sceneinspector/graphicsview.cpp
-  tools/sceneinspector/graphicssceneview.cpp
-  tools/sceneinspector/scenemodel.cpp
-  tools/metatypebrowser/metatypesmodel.cpp
-  tools/fontbrowser/fontmodel.cpp
-  tools/localeinspector/localemodel.cpp
-  tools/localeinspector/localedataaccessor.cpp
-  tools/localeinspector/localeaccessormodel.cpp
-  tools/codecbrowser/codecmodel.cpp
-  tools/textdocumentinspector/textdocumentmodel.cpp
-  tools/textdocumentinspector/textdocumentformatmodel.cpp
-  tools/textdocumentinspector/textdocumentcontentview.cpp
-  tools/messagehandler/messagehandler.cpp
-  tools/messagehandler/messagemodel.cpp
-
-  tools/codecbrowser/codecbrowser.cpp
-  tools/connectioninspector/connectioninspector.cpp
-  tools/fontbrowser/fontbrowser.cpp
-  tools/localeinspector/localeinspector.cpp
-  tools/metatypebrowser/metatypebrowser.cpp
-  tools/modelinspector/modelinspector.cpp
-  tools/modelinspector/modelinspectorwidget.cpp
-  tools/objectinspector/objectinspector.cpp
-  tools/resourcebrowser/resourcebrowser.cpp
-  tools/resourcebrowser/resourcefiltermodel.cpp
-  tools/sceneinspector/sceneinspector.cpp
-  tools/selectionmodelinspector/selectionmodelinspector.cpp
-  tools/textdocumentinspector/textdocumentinspector.cpp
-  tools/widgetinspector/widgetinspector.cpp
-  tools/widgetinspector/overlaywidget.cpp
-  tools/widgetinspector/widgettreemodel.cpp
-  tools/widgetinspector/widgetpreviewwidget.cpp
-  tools/styleinspector/styleinspector.cpp
-  tools/styleinspector/pixelmetricmodel.cpp
-  tools/styleinspector/standardiconmodel.cpp
-  tools/styleinspector/primitivemodel.cpp
-  tools/styleinspector/controlmodel.cpp
-  tools/styleinspector/styleoption.cpp
-  tools/styleinspector/abstractstyleelementmodel.cpp
-  tools/styleinspector/abstractstyleelementstatetable.cpp
-  tools/styleinspector/styleelementstatetablepage.cpp
-  tools/styleinspector/complexcontrolmodel.cpp
-  tools/styleinspector/dynamicproxystyle.cpp
-
-  hooking/abstractfunctionoverwriter.cpp
-  hooking/functionoverwriterfactory.cpp
-  hooking/winfunctionoverwriter.cpp
-  hooking/unixfunctionoverwriter.cpp
-)
-
-if(HAVE_PRIVATE_QT_HEADERS)
-  set(gammaray_srcs
-    ${gammaray_srcs}
-    core/paintbuffermodel.cpp
-    core/paintbufferviewer.cpp
-    core/paintbufferreplaywidget.cpp
-  )
-endif()
-
-if(NOT WIN32)
-  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
-elseif(MINGW)
-  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_dummy.cpp)
-else()
-  set(gammaray_srcs ${gammaray_srcs}
-                    tools/messagehandler/backtrace_win.cpp
-                    tools/messagehandler/StackWalker.cpp)
-endif()
-
-qt4_automoc(${gammaray_srcs})
-qt4_wrap_ui(gammaray_srcs
-  core/mainwindow.ui
-  core/propertywidget.ui
-  core/methodinvocationdialog.ui
-  core/paintbufferviewer.ui
-  propertyeditor/propertydoublepaireditor.ui
-  propertyeditor/propertyextendededitor.ui
-  propertyeditor/propertyintpaireditor.ui
-  propertyeditor/palettedialog.ui
-  tools/sceneinspector/graphicssceneview.ui
-  tools/codecbrowser/codecbrowser.ui
-  tools/connectioninspector/connectioninspector.ui
-  tools/fontbrowser/fontbrowser.ui
-  tools/localeinspector/localeinspector.ui
-  tools/messagehandler/messagehandler.ui
-  tools/metatypebrowser/metatypebrowser.ui
-  tools/modelinspector/modelinspectorwidget.ui
-  tools/objectinspector/objectinspector.ui
-  tools/resourcebrowser/resourcebrowser.ui
-  tools/sceneinspector/sceneinspector.ui
-  tools/selectionmodelinspector/selectionmodelinspector.ui
-  tools/styleinspector/styleinspector.ui
-  tools/textdocumentinspector/textdocumentinspector.ui
-  tools/widgetinspector/widgetinspector.ui
-  tools/styleinspector/styleelementstatetablepage.ui
-)
-
-qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
-add_library(gammaray_probe
-  SHARED ${gammaray_srcs}
-)
-target_link_libraries(gammaray_probe
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-)
-if(NOT WIN32)
-  target_link_libraries(gammaray_probe dl)
-endif()
-set_target_properties(gammaray_probe PROPERTIES PREFIX "")
-
-install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if(UNIX AND NOT APPLE)
   set(XDG_APPS_INSTALL_DIR share/applications)

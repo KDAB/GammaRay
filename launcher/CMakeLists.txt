@@ -1,13 +1,22 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+add_subdirectory(injector)
+
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/3rdparty
+)
 
 set(gammaray_runner_srcs
-  ${CMAKE_SOURCE_DIR}/injector/abstractinjector.cpp
-  ${CMAKE_SOURCE_DIR}/injector/injectorfactory.cpp
-  ${CMAKE_SOURCE_DIR}/injector/preloadinjector.cpp
-  ${CMAKE_SOURCE_DIR}/injector/styleinjector.cpp
-  ${CMAKE_SOURCE_DIR}/injector/windllinjector.cpp
-  ${CMAKE_SOURCE_DIR}/injector/interactiveprocess.cpp
-  ${CMAKE_SOURCE_DIR}/injector/preloadcheck.cpp
+  injector/abstractinjector.cpp
+  injector/injectorfactory.cpp
+  injector/preloadinjector.cpp
+  injector/styleinjector.cpp
+  injector/windllinjector.cpp
+  injector/interactiveprocess.cpp
+  injector/preloadcheck.cpp
+
   probefinder.cpp
   main.cpp
   promolabel.cpp
@@ -26,7 +35,7 @@ set(gammaray_runner_srcs
 if(NOT WIN32)
   set(gammaray_runner_srcs
     ${gammaray_runner_srcs}
-    ${CMAKE_SOURCE_DIR}/injector/gdbinjector.cpp
+    injector/gdbinjector.cpp
     processlist_unix.cpp
   )
 else()
