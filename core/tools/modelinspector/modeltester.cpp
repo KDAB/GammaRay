@@ -99,4 +99,3 @@ void ModelTester::failure(QAbstractItemModel *model, const char *file, int line,
 #undef qDebug
 #define qDebug() QNoDebug()
 #include "modeltest.cpp"
-

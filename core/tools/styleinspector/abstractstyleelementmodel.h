@@ -41,7 +41,7 @@ public:
   explicit AbstractStyleElementModel(QObject* parent = 0);
 
   void setStyle(QStyle* style);
-  
+
   virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
   virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
   virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;

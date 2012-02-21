@@ -34,4 +34,3 @@ target_link_libraries(gammaray_objectvisualizer_plugin
 )
 
 endif()
-
