@@ -33,7 +33,6 @@ class QStateMachine;
 
 namespace GammaRay {
 
-class ProbeInterface;
 
 class StateMachineWatcher : public QObject
 {

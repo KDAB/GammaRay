@@ -28,7 +28,6 @@
 #include <qvector.h>
 #include <QSet>
 
-class QStringList;
 namespace GammaRay {
 
 class ToolFactory;

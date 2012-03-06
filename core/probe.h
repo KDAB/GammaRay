@@ -32,7 +32,6 @@
 
 class QPoint;
 class QTimer;
-class QGraphicsItem;
 
 namespace GammaRay {
 

@@ -27,7 +27,6 @@
 #include "objectmodelbase.h"
 
 class QAbstractState;
-class QState;
 
 namespace GammaRay
 {

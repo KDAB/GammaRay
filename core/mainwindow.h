@@ -28,7 +28,6 @@
 
 #include "ui_mainwindow.h"
 
-class QComboBox;
 
 namespace GammaRay {
 
