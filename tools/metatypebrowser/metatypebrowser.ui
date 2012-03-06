@@ -10,9 +10,6 @@
     <height>300</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
          <widget class="QTreeView" name="metaTypeView"/>
