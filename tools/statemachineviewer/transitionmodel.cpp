@@ -90,6 +90,11 @@ TransitionModel::TransitionModel(QObject *parent)
   setRoleNames(_roleNames);
 }
 
+TransitionModel::~TransitionModel()
+{
+  delete d_ptr;
+}
+
 void TransitionModel::setState(QAbstractState *state)
 {
   Q_D(TransitionModel);
