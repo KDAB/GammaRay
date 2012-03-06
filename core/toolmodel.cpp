@@ -81,7 +81,8 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   }
 
   // everything but the object inspector is inactive initially
-  for (int i = 1; i < m_tools.size(); ++i) {
+  const int numberOfTools(m_tools.size());
+  for (int i = 1; i < numberOfTools; ++i) {
     m_inactiveTools.insert(m_tools.at(i));
   }
 }
