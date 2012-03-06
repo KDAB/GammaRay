@@ -102,6 +102,7 @@ void SelfTestPage::testInjectors()
 void SelfTestPage::error(const QString &msg)
 {
   QStandardItem *item = new QStandardItem;
+  item->setEditable(false);
   item->setText(msg);
   item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxCritical));
   m_resultModel->appendRow(item);
@@ -110,6 +111,7 @@ void SelfTestPage::error(const QString &msg)
 void SelfTestPage::information(const QString &msg)
 {
   QStandardItem *item = new QStandardItem;
+  item->setEditable(false);
   item->setText(msg);
   item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));
   m_resultModel->appendRow(item);
