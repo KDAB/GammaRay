@@ -56,6 +56,7 @@ class LaunchPage : public QWidget
     void updateArgumentButtons();
 
   private:
+    QStringList notEmptyString(const QStringList&list) const;
     Ui::LaunchPage *ui;
     QStringListModel *m_argsModel;
 };

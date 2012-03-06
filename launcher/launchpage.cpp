@@ -66,14 +66,25 @@ void LaunchPage::writeSettings()
 {
   QSettings settings;
   settings.setValue(QLatin1String("Launcher/Program"), ui->progEdit->text());
-  settings.setValue(QLatin1String("Launcher/Arguments"), m_argsModel->stringList());
+  settings.setValue(QLatin1String("Launcher/Arguments"), notEmptyString(m_argsModel->stringList()));
+}
+
+QStringList LaunchPage::notEmptyString(const QStringList&list) const 
+{
+  QStringList notEmptyStringList;
+  const int numberOfArguments = list.count();
+  for(int i = 0; i < numberOfArguments; ++i) {
+     if( !list.at(i).trimmed().isEmpty())
+       notEmptyStringList<<list.at(i);
+  }
+  return notEmptyStringList;
 }
 
 QStringList LaunchPage::launchArguments() const
 {
   QStringList l;
   l.push_back(ui->progEdit->text());
-  l.append(m_argsModel->stringList());
+  l.append(notEmptyString(m_argsModel->stringList()));
   return l;
 }
 
