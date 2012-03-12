@@ -264,6 +264,9 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
       case TimePerWakeupRole: return timerInfo->timePerWakeup();
       case MaxTimePerWakeupRole: return timerInfo->maxWakeupTime();
       case TimerIdRole: return timerInfo->timerId();
+      case FirstRole:
+      case LastRole:
+        break;
     }
   }
   return QVariant();
@@ -280,6 +283,9 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
       case TimePerWakeupRole: return tr("Time/Wakeup [uSecs]");
       case MaxTimePerWakeupRole: return tr("Max Wakeup Time [uSecs]");
       case TimerIdRole: return tr("Timer ID");
+      case FirstRole:
+      case LastRole:
+        break;
     }
   }
   return QAbstractTableModel::headerData(section, orientation, role);
