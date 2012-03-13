@@ -23,9 +23,10 @@
 
 #include "propertyextendededitor.h"
 #include "ui_propertyextendededitor.h"
-#include <util.h>
+#include "displayhelpers.h"
 
 #include <QColorDialog>
+
 using namespace GammaRay;
 
 PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)

@@ -6,8 +6,6 @@ include_directories(
 )
 
 set(gammaray_timertop_plugin_srcs
-  ../../include/util.cpp
-
   timertop.cpp
   timermodel.cpp
   timerinfo.cpp

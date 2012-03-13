@@ -22,7 +22,7 @@
 */
 
 #include "objectstaticpropertymodel.h"
-#include "util.h"
+#include "displayhelpers.h"
 
 #include <QtCore/QMetaProperty>
 

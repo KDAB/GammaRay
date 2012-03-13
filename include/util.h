@@ -33,24 +33,40 @@ namespace GammaRay {
 
 namespace Util
 {
-  QString displayString(const QObject *object);
-  QString variantToString(const QVariant &value);
-  /// Returns a value representing @p value in a itemview decoration role
-  QVariant decorationForVariant(const QVariant &value);
-  QString addressToString(const void *p);
-  QString addressToUid(const void *p);
+  inline QString addressToString(const void *p)
+  {
+    return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
+  }
 
-  /**
-   * Translates an enum or flag value into a human readable text.
-   * @param value The numerical value. Type information from the QVariant
-   *              are used to find the corresponding QMetaEnum.
-   * @param typeName Use this if the @p value has type int
-   *                 (e.g. the case for QMetaProperty::read).
-   * @param object Additional QObject to search for QMetaEnums.
-   */
-  QString enumToString(const QVariant &value, const char *typeName = 0, QObject *object = 0);
+  inline QString addressToUid(const void *p)
+  {
+    return QString::number(reinterpret_cast<qlonglong>(p), 16);
+  }
 
-  bool descendantOf(QObject *ascendant, QObject *obj);
+  inline QString displayString(const QObject *object)
+  {
+    if (!object) {
+      return "QObject(0x0)";
+    }
+    if (object->objectName().isEmpty()) {
+      return QString::fromLatin1("%1 (%2)").
+        arg(addressToString(object)).
+        arg(object->metaObject()->className());
+    }
+    return object->objectName();
+  }
+
+  inline bool descendantOf(QObject *ascendant, QObject *obj)
+  {
+    QObject *parent = obj->parent();
+    if (!parent) {
+      return false;
+    }
+    if (parent == ascendant) {
+      return true;
+    }
+    return descendantOf(ascendant, parent);
+  }
 
   template <typename T>
   T *findParentOfType(QObject *object) {
@@ -62,9 +78,6 @@ namespace Util
     }
     return findParentOfType<T>(object->parent());
   }
-
-  /// Returns an icon for the given object.
-  QVariant iconForObject(QObject *obj);
 }
 
 }

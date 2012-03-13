@@ -6,9 +6,7 @@ set(GAMMARAY_HEADERS
   probeinterface.h
   singlecolumnobjectproxymodel.h
   toolfactory.h
-
-  # Deprecated, not added:
-  #util.h
+  util.h
 )
 
 install(FILES ${GAMMARAY_HEADERS} DESTINATION include/gammaray/)

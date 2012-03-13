@@ -61,7 +61,10 @@ class ObjectModelBase : public Base
             arg(Util::addressToString(obj->parent())).
             arg(obj->children().size());
       } else if (role == Qt::DecorationRole && index.column() == 0) {
+      // TODO: Port me to header-only util.h
+#if 0
         return Util::iconForObject(obj);
+#endif
       }
 
       return QVariant();
