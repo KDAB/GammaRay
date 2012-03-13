@@ -45,6 +45,14 @@ class ProbeInterface
     /** Returns the connection model. */
     virtual QAbstractItemModel *connectionModel() const = 0;
 
+    /**
+     * Returns true if @p obj belongs to the GammaRay Probe or Window.
+     *
+     * These objects should not be tracked or shown to the user,
+     * hence must be explictly filtered.
+     */
+    virtual bool filterObject(QObject *obj) const = 0;
+
     /** Returns the probe QObject for connecting signals. */
     virtual QObject *probe() const = 0;
 };

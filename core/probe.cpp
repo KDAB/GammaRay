@@ -281,17 +281,15 @@ void Probe::delayedInit()
   window->show();
 }
 
-bool Probe::filterObject(QObject *obj)
+bool Probe::filterObject(QObject *obj) const
 {
-  Probe *p = Probe::instance();
-  Q_ASSERT(p);
-  if (obj->thread() != p->thread()) {
+  if (obj->thread() != thread()) {
     // shortcut, never filter objects from a different thread
     return false;
   }
-  return obj == p || obj == p->window() ||
-          Util::descendantOf(p, obj) ||
-          Util::descendantOf(p->window(), obj);
+  return obj == this || obj == window() ||
+          Util::descendantOf(const_cast<Probe*>(this), obj) ||
+          Util::descendantOf(window(), obj);
 }
 
 QAbstractItemModel *Probe::objectListModel() const
@@ -341,7 +339,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
              << (fromCtor ? " (from ctor)" : "") << endl;)
     return;
   } else if (isInitialized()) {
-    if (filterObject(obj)) {
+    if (instance()->filterObject(obj)) {
       IF_DEBUG(cout
                << "objectAdded Filter: "
                << hex << obj
@@ -506,7 +504,7 @@ void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiv
   }
 
   ReadOrWriteLocker lock(s_lock());
-  if (filterObject(sender) || filterObject(receiver)) {
+  if (instance()->filterObject(sender) || instance()->filterObject(receiver)) {
     return;
   }
 
@@ -523,7 +521,7 @@ void Probe::connectionRemoved(QObject *sender, const char *signal,
   }
 
   ReadOrWriteLocker lock(s_lock());
-  if ((sender && filterObject(sender)) || (receiver && filterObject(receiver))) {
+  if ((sender && instance()->filterObject(sender)) || (receiver && instance()->filterObject(receiver))) {
     return;
   }
 
