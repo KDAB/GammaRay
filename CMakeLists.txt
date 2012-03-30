@@ -101,6 +101,8 @@ set(
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
 )
 
+macro_log_feature(QT_QTWEBKIT_FOUND "WebKit in Qt" "A Qt-based web browser engine" "included with Qt" FALSE "" "Required for the webinspector tool")
+
 find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
 if(QT_PRIVATE_INCLUDE_DIR)
   # not enough, some of them include harfbuzz headers, so we need to find those as well
