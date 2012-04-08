@@ -58,7 +58,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   setStyleSheet(QLatin1String("I_DONT_EXIST {}"));
   QGuiPlatformPlugin defaultGuiPlatform;
   if (QStyle *defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName())) {
-    defaultStyle->setParent(this);
+    // do not set parent of default style
+    // this will cause the style being deleted too early through ~QObject()
+    // other objects (e.g. the script engine debugger) still might have a reference on the style during destruction
     setStyle(defaultStyle);
   }
 
