@@ -288,7 +288,7 @@ bool Probe::filterObject(QObject *obj) const
     return false;
   }
   return obj == this || obj == window() ||
-          Util::descendantOf(const_cast<Probe*>(this), obj) ||
+          Util::descendantOf(this, obj) ||
           Util::descendantOf(window(), obj);
 }
 

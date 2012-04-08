@@ -50,7 +50,7 @@ namespace Util
    */
   QString enumToString(const QVariant &value, const char *typeName = 0, QObject *object = 0);
 
-  bool descendantOf(QObject *ascendant, QObject *obj);
+  bool descendantOf(const QObject *ascendant, const QObject *obj);
 
   template <typename T>
   T *findParentOfType(QObject *object) {

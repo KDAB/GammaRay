@@ -328,7 +328,7 @@ QString Util::enumToString(const QVariant &value, const char *typeName, QObject 
   return me.valueToKeys(value.toInt());
 }
 
-bool Util::descendantOf(QObject *ascendant, QObject *obj)
+bool Util::descendantOf(const QObject *ascendant, const QObject *obj)
 {
   QObject *parent = obj->parent();
   if (!parent) {
