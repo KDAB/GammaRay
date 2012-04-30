@@ -22,7 +22,7 @@
 */
 
 #include "modelcellmodel.h"
-#include "util.h"
+#include "displayhelpers.h"
 
 #include <qvector.h>
 

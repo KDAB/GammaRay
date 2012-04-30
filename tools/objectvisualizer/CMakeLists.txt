@@ -12,7 +12,6 @@ link_directories(${VTK_LIBRARY_DIRS})
 set(gammaray_objectvisualizer_plugin_srcs
   ../../3rdparty/kde/kfilterproxysearchline.cpp
   ../../3rdparty/kde/krecursivefilterproxymodel.cpp
-  ../../include/util.cpp
 
   objectvisualizer.cpp
   vtkcontainer.cpp

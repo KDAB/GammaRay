@@ -1,5 +1,5 @@
 /*
-  propertyextendededitor.cpp
+  uiextractor.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,35 +21,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "propertyextendededitor.h"
-#include "ui_propertyextendededitor.h"
-#include <util.h>
+#ifndef GAMMARAY_UIEXTRACTOR_H
+#define GAMMARAY_UIEXTRACTOR_H
 
-#include <QColorDialog>
-using namespace GammaRay;
+#include <QFormBuilder>
 
-PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
-  : QWidget(parent), ui(new Ui::PropertyExtendedEditor)
+namespace GammaRay {
+
+class UiExtractor : public QFormBuilder
 {
-  ui->setupUi(this);
-  // TODO: make button content smaller by using a tiny icon
-  connect(ui->editButton, SIGNAL(clicked()),SLOT(edit()));
+  protected:
+    virtual bool checkProperty(QObject *obj, const QString &prop) const;
+};
+
 }
 
-PropertyExtendedEditor::~PropertyExtendedEditor()
-{
-  delete ui;
-}
-
-QVariant PropertyExtendedEditor::value() const
-{
-  return m_value;
-}
-
-void PropertyExtendedEditor::setValue(const QVariant &value)
-{
-  m_value = value;
-  ui->valueLabel->setText(Util::variantToString(value));
-}
-
-#include "propertyextendededitor.moc"
+#endif // GAMMARAY_UIEXTRACTOR_H

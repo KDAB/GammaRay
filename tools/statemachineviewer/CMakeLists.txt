@@ -17,8 +17,6 @@ set(gammaray_statemachineviewer_plugin_srcs
 
   transitionmodel.cpp
   statemodel.cpp
-
-  ../../include/util.cpp
 )
 qt4_automoc(${gammaray_statemachineviewer_plugin_srcs})
 qt4_wrap_ui(gammaray_statemachineviewer_plugin_srcs statemachineviewer.ui)

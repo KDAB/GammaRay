@@ -1,5 +1,5 @@
 /*
-  util.cpp
+  displayhelpers.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -20,6 +20,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "displayhelpers.h"
 
 #include "util.h"
 #include "metatypedeclarations.h"
@@ -49,24 +51,6 @@ class ProtectedExposer : public QObject
 public:
   using QObject::staticQtMetaObject;
 };
-}
-
-QString Util::displayString(const QObject *object)
-{
-  if (!object) {
-    return "QObject(0x0)";
-  }
-  if (object->objectName().isEmpty()) {
-    return QString::fromLatin1("%1 (%2)").
-      arg(addressToString(object)).
-      arg(object->metaObject()->className());
-  }
-  return object->objectName();
-}
-
-QString Util::addressToUid(const void *p)
-{
-  return QString::number(reinterpret_cast<qlonglong>(p), 16);
 }
 
 static QString sizePolicyToString(QSizePolicy::Policy policy)
@@ -293,11 +277,6 @@ QVariant Util::decorationForVariant(const QVariant &value)
   return QVariant();
 }
 
-QString Util::addressToString(const void *p)
-{
-  return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
-}
-
 QString Util::enumToString(const QVariant &value, const char *typeName, QObject *object)
 {
   QByteArray enumTypeName(typeName);
@@ -328,18 +307,6 @@ QString Util::enumToString(const QVariant &value, const char *typeName, QObject 
   return me.valueToKeys(value.toInt());
 }
 
-bool Util::descendantOf(QObject *ascendant, QObject *obj)
-{
-  QObject *parent = obj->parent();
-  if (!parent) {
-    return false;
-  }
-  if (parent == ascendant) {
-    return true;
-  }
-  return descendantOf(ascendant, parent);
-}
-
 namespace GammaRay {
 static QString stringifyProperty(QObject *obj, const QString &propName)
 {
@@ -358,6 +325,7 @@ static QString stringifyProperty(QObject *obj, const QString &propName)
 
 static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
 {
+  Q_ASSERT(false);
   const QString basePath = QString::fromLatin1(":/gammaray/classes/%1/").arg(mo->className());
   const QDir dir(basePath);
   if (dir.exists()) {

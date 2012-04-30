@@ -22,7 +22,7 @@
 */
 
 #include "standardiconmodel.h"
-#include <util.h>
+#include "displayhelpers.h"
 
 using namespace GammaRay;
 
