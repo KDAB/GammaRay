@@ -23,10 +23,7 @@
 
 #if !defined(Q_OS_WIN)
 
-#define __STDC_LIMIT_MACROS
-
 #include <dlfcn.h>
-#include <stdint.h>
 #include <inttypes.h>
 #include <unistd.h>
 #include <sys/mman.h>

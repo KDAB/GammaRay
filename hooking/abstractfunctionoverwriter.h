@@ -25,6 +25,9 @@
 #include <QList>
 #include <QString>
 
+#define __STDC_LIMIT_MACROS
+#include <stdint.h>
+
 #if defined(_M_X64) || defined(__amd64) || defined(__x86_64)
 #define ARCH_64
 #elif defined(_M_IX86) || defined(__i386__)
