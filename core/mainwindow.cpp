@@ -28,6 +28,7 @@
 #include "objecttreemodel.h"
 #include "objecttypefilterproxymodel.h"
 #include "toolmodel.h"
+#include "aboutpluginsdialog.h"
 #include "toolfactory.h"
 
 #include "kde/krecursivefilterproxymodel.h"
@@ -73,6 +74,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
           QApplication::instance(), SLOT(quit()));
   ui.actionQuit->setIcon(QIcon::fromTheme("application-exit"));
 
+  connect(ui.actionPlugins, SIGNAL(triggered(bool)),
+          this, SLOT(aboutPlugins()));
   connect(ui.actionAboutQt, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(aboutQt()));
   connect(ui.actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
@@ -136,6 +139,13 @@ void MainWindow::about()
   mb.setIconPixmap(QPixmap(":gammaray/GammaRay-128x128.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
+}
+
+void MainWindow::aboutPlugins()
+{
+  AboutPluginsDialog dlg(this);
+  dlg.setFixedSize(800, 600);
+  dlg.exec();
 }
 
 void MainWindow::aboutKDAB()

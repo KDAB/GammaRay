@@ -27,12 +27,30 @@
 #include <QStringList>
 #include <QPluginLoader>
 #include <QVector>
+#include <QHash>
+#include <QFileInfo>
 
 #include <iostream>
 
 namespace GammaRay {
 
 class ToolFactory;
+class PluginLoadError;
+
+typedef QList<PluginLoadError> PluginLoadErrors;
+
+class PluginLoadError
+{
+public:
+  PluginLoadError(QString _pluginFile, QString _errorString)
+    : pluginFile(_pluginFile), errorString(_errorString) {}
+
+  QString pluginName() const { return QFileInfo(pluginFile).baseName(); }
+
+public:
+  QString pluginFile;
+  QString errorString;
+};
 
 class PluginManager
 {
@@ -40,6 +58,8 @@ class PluginManager
     static PluginManager *instance();
 
     QVector<ToolFactory*> plugins();
+
+    QList<PluginLoadError> errors() { return m_errors; }
 
   protected:
     PluginManager();
@@ -50,6 +70,7 @@ class PluginManager
 
     static PluginManager *s_instance;
     QVector<ToolFactory*> m_plugins;
+    QList<PluginLoadError> m_errors;
 };
 
 }

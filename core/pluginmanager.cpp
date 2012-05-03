@@ -76,6 +76,7 @@ QStringList PluginManager::pluginPaths() const
 
 void PluginManager::scan()
 {
+  m_errors.clear();
   QStringList loadedPluginNames;
 
   foreach (const QString &pluginPath, pluginPaths()) {
@@ -94,6 +95,7 @@ void PluginManager::scan()
       if (pluginInfo.suffix() == QLatin1String("desktop")) {
         ProxyToolFactory *proxy = new ProxyToolFactory(pluginFile);
         if (!proxy->isValid()) {
+          m_errors << PluginLoadError(pluginFile, QObject::tr("Failed to load plugin."));
           std::cerr << "invalid plugin " << qPrintable(pluginFile) << std::endl;
           delete proxy;
         } else {

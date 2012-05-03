@@ -32,6 +32,8 @@ namespace GammaRay {
  * A wrapper around a plugin ToolFactory that only loads the actual plugin
  * once initialized.
  * Until then, meta-data is provided based on a plugin spec file.
+ *
+ * TODO: Improve error reporting
  */
 class ProxyToolFactory : public QObject, public ToolFactory
 {
@@ -45,6 +47,9 @@ class ProxyToolFactory : public QObject, public ToolFactory
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 
+    /** Returns a human-readable error string if loading failed */
+    QString errorString() const { return m_errorString; }
+
     virtual QString id() const;
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
@@ -56,6 +61,7 @@ class ProxyToolFactory : public QObject, public ToolFactory
     QString m_id;
     QString m_pluginPath;
     QString m_name;
+    QString m_errorString;
     QStringList m_supportedTypes;
     ToolFactory *m_factory;
 };
