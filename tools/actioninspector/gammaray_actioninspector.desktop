@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Action Inspector
+X-GammaRay-Types=QAction;
+Exec=gammaray_actioninspector_plugin
