@@ -55,7 +55,7 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QWidget *parent)
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(resourceSelected(QItemSelection,QItemSelection)));
 
-  ui->label_3->setText(tr("select a resource to preview"));
+  ui->resourceLabel->setText(tr("Select a Resource to Preview"));
   ui->stackedWidget->setCurrentWidget(ui->page_4);
 }
 
@@ -69,7 +69,7 @@ void ResourceBrowser::resourceSelected(const QItemSelection &selected,
   if (fi.isFile()) {
     const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
     if (l.contains(fi.suffix())) {
-      ui->label_3->setPixmap(fi.absoluteFilePath());
+      ui->resourceLabel->setPixmap(fi.absoluteFilePath());
       ui->stackedWidget->setCurrentWidget(ui->page_4);
     } else {
       QFile f(fi.absoluteFilePath());
@@ -78,7 +78,7 @@ void ResourceBrowser::resourceSelected(const QItemSelection &selected,
       ui->stackedWidget->setCurrentWidget(ui->page_3);
     }
   } else {
-    ui->label_3->setText(tr("select a resource to preview"));
+    ui->resourceLabel->setText(tr("Select a Resource to Preview"));
     ui->stackedWidget->setCurrentWidget(ui->page_4);
   }
 }
