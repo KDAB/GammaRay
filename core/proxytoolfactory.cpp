@@ -51,6 +51,7 @@ ProxyToolFactory::ProxyToolFactory(const QString &path, QObject *parent)
 
   const QString dllBaseName = desktopFile.value(QLatin1String("Exec")).toString();
   if (dllBaseName.isEmpty()) {
+    m_errorString = tr("Invalid 'Exec' line in plugin spec file");
     return;
   }
 

@@ -113,6 +113,8 @@ background-position:bottom right;
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionPlugins"/>
+    <addaction name="separator"/>
     <addaction name="actionAboutGammaRay"/>
     <addaction name="actionAboutKDAB"/>
     <addaction name="actionAboutQt"/>
@@ -179,6 +181,11 @@ background-position:bottom right;
   <action name="actionAboutKDAB">
    <property name="text">
     <string>About &amp;KDAB</string>
+   </property>
+  </action>
+  <action name="actionPlugins">
+   <property name="text">
+    <string>Plugins...</string>
    </property>
   </action>
  </widget>

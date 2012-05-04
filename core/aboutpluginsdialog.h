@@ -1,11 +1,11 @@
 /*
-  mainwindow.h
+  aboutpluginsdialog.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2012 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Kevin Funk <kevin.funk@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,35 +21,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MAINWINDOW_H
-#define GAMMARAY_MAINWINDOW_H
+#ifndef GAMMARAY_ABOUTPLUGINSDIALOG_H
+#define GAMMARAY_ABOUTPLUGINSDIALOG_H
 
-#include <qmainwindow.h>
-
-#include "ui_mainwindow.h"
-
+#include <QDialog>
 
 namespace GammaRay {
 
-class MainWindow : public QMainWindow
+class AboutPluginsDialog : public QDialog
 {
   Q_OBJECT
-  public:
-    explicit MainWindow(QWidget *parent = 0);
 
-  private slots:
-    void about();
-    void aboutPlugins();
-    void aboutKDAB();
+public:
+  explicit AboutPluginsDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-    void toolSelected();
-
-  private:
-    void selectInitialTool();
-
-    Ui::MainWindow ui;
+private:
+  void init();
 };
 
 }
 
-#endif // MAINWINDOW_H
+#endif // GAMMARAY_ABOUTPLUGINSDIALOG_H

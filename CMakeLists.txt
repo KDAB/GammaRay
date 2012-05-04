@@ -208,6 +208,7 @@ set(gammaray_srcs
   # FIXME: Remove me
   include/util.cpp
 
+  core/aboutpluginsdialog.cpp
   core/mainwindow.cpp
   core/metaobject.cpp
   core/metaobjectrepository.cpp
