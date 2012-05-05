@@ -39,7 +39,7 @@ class VtkPanel : public QToolBar
     virtual ~VtkPanel();
 
   public slots:
-     void currentIndexChanged(int);
+     void layoutChanged(int);
      void stereoModeChanged(int);
 
   private:

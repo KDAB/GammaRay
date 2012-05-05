@@ -21,11 +21,12 @@
 
 #include "vtkpanel.h"
 
+#include "vtkwidget.h"
+
 #include <QComboBox>
 #include <QDebug>
 #include <QLabel>
 
-#include "vtkwidget.h"
 #include <vtkGraphLayoutView.h>
 #include <vtkForceDirectedLayoutStrategy.h>
 #include <vtkRenderWindow.h>
@@ -50,7 +51,7 @@ VtkPanel::VtkPanel(VtkWidget *vtkWidget, QWidget *parent)
   m_layoutBox->addItem(tr("Force Directed Layout"), "forceDirected");
   m_layoutBox->addItem(tr("Force Directed Layout (3D)"), "forceDirected3D");
   m_layoutBox->addItem(tr("Simple 2D Layout"), "simple2D");
-  connect(m_layoutBox, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
+  connect(m_layoutBox, SIGNAL(currentIndexChanged(int)), SLOT(layoutChanged(int)));
   addWidget(m_layoutBox);
 
   addWidget(new QLabel(tr("Stereo:")));
@@ -89,7 +90,7 @@ static vtkGraphLayoutStrategy *layoutStrategyForName(const QString &layoutName)
   }
 }
 
-void VtkPanel::currentIndexChanged(int index)
+void VtkPanel::layoutChanged(int index)
 {
   const QString layoutName = m_layoutBox->itemData(index).toString();
   if (m_currentLayout == layoutName) {
@@ -119,7 +120,6 @@ void VtkPanel::stereoModeChanged(int index)
 
 VtkPanel::~VtkPanel()
 {
-
 }
 
 #include "vtkpanel.moc"
