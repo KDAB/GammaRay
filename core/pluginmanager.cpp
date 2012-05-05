@@ -24,6 +24,7 @@
 #include "pluginmanager.h"
 
 #include "config-gammaray.h"
+#include "proxytoolfactory.h"
 
 #include <QCoreApplication>
 #include <QStringList>
@@ -32,7 +33,7 @@
 #include <QLibrary>
 #include <QPluginLoader>
 
-#include "proxytoolfactory.h"
+#include <iostream>
 
 #define IF_DEBUG(x)
 

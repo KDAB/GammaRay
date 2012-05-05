@@ -24,13 +24,9 @@
 #ifndef GAMMARAY_PLUGINMANAGER_H
 #define GAMMARAY_PLUGINMANAGER_H
 
-#include <QStringList>
-#include <QPluginLoader>
 #include <QVector>
-#include <QHash>
+#include <QList>
 #include <QFileInfo>
-
-#include <iostream>
 
 namespace GammaRay {
 
