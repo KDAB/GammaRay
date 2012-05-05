@@ -25,7 +25,7 @@ set(GAMMARAY_VERSION_PATCH "50")
 set(GAMMARAY_VERSION "${GAMMARAY_VERSION_MAJOR}.${GAMMARAY_VERSION_MINOR}.${GAMMARAY_VERSION_PATCH}")
 set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION}")
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH  TRUE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
@@ -34,9 +34,10 @@ enable_testing()
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   find_package(Git)
   if(GIT_FOUND)
-    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                    OUTPUT_VARIABLE _git_revision)
+    execute_process(
+      COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      OUTPUT_VARIABLE _git_revision)
     string(REGEX REPLACE "\n" "" _git_revision "${_git_revision}")
     set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION_STRING} (revision: ${_git_revision})")
   endif()
@@ -56,12 +57,12 @@ include(MacroLogFeature)
 
 set(QT_MIN_VERSION "4.7.0")
 find_package(Qt5Transitional REQUIRED
-    Core
-    Gui
-    Script
-    ScriptTools
-    Svg
-    Test
+  Core
+  Gui
+  Script
+  ScriptTools
+  Svg
+  Test
 )
 
 # TODO: Remove me once fixed in ECM module
@@ -101,13 +102,27 @@ set(
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
 )
 
-macro_log_feature(QT_QTWEBKIT_FOUND "WebKit in Qt" "A Qt-based web browser engine" "included with Qt" FALSE "" "Required for the webinspector tool")
+macro_log_feature(
+  QT_QTWEBKIT_FOUND
+  "WebKit in Qt"
+  "A Qt-based web browser engine"
+  "included with Qt"
+  FALSE
+  ""
+  "Required for the webinspector tool"
+)
 
-find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
+find_path(
+  QT_PRIVATE_INCLUDE_DIR private/qobject_p.h
+  PATHS ${QT_INCLUDES}
+)
 if(QT_PRIVATE_INCLUDE_DIR)
   # not enough, some of them include harfbuzz headers, so we need to find those as well
   # for now we assume a regular Qt4 source build layout, but that probably should be generalized
-  find_path(HARFBUZZ_INCLUDE_DIR harfbuzz.h PATH ${QT_PRIVATE_INCLUDE_DIR}/../../src/3rdparty/harfbuzz/src)
+  find_path(
+    HARFBUZZ_INCLUDE_DIR harfbuzz.h
+    PATH ${QT_PRIVATE_INCLUDE_DIR}/../../src/3rdparty/harfbuzz/src
+  )
 endif()
 
 if(QT_PRIVATE_INCLUDE_DIR AND HARFBUZZ_INCLUDE_DIR)
@@ -118,7 +133,15 @@ else()
   # needs to go before Qt includes, in case we have non-working headers with the same name there
   include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
 endif()
-macro_log_feature(HAVE_PRIVATE_QT_HEADERS "Qt internals" "Private Qt headers, necessary for painter debugging/profiling." "http://developer.qt.nokia.com/" FALSE ${QT_MIN_VERSION} "You must have a build version of Qt available and the qmake found first in your execute path must be from this build.")
+macro_log_feature(
+  HAVE_PRIVATE_QT_HEADERS
+  "Qt internals"
+  "Private Qt headers, necessary for painter debugging/profiling."
+  "http://developer.qt.nokia.com/"
+  FALSE
+  ${QT_MIN_VERSION}
+  "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
+)
 
 if(WIN32 OR APPLE)
   set(BUILD_TIMER_PLUGIN TRUE)
@@ -196,9 +219,22 @@ add_subdirectory(injector)
 add_subdirectory(launcher)
 
 find_package(Graphviz)
-macro_log_feature(GRAPHVIZ_FOUND "Graphviz" "Graph layouting library for the state machine visualizer." "http://www.graphviz.org/" FALSE)
+macro_log_feature(
+  GRAPHVIZ_FOUND
+  "Graphviz"
+  "Graph layouting library for the state machine visualizer."
+  "http://www.graphviz.org/"
+  FALSE
+)
+
 find_package(VTK)
-macro_log_feature(VTK_FOUND "VTK" "Graph visualizing library for the object visualization plugin." "http://www.vtk.org" FALSE)
+macro_log_feature(
+  VTK_FOUND
+  "VTK"
+  "Graph visualizing library for the object visualization plugin."
+  "http://www.vtk.org"
+  FALSE
+)
 
 set(gammaray_srcs
   3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -314,8 +350,8 @@ elseif(MINGW)
   set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_dummy.cpp)
 else()
   set(gammaray_srcs ${gammaray_srcs}
-                    tools/messagehandler/backtrace_win.cpp
-                    tools/messagehandler/StackWalker.cpp)
+    tools/messagehandler/backtrace_win.cpp
+    tools/messagehandler/StackWalker.cpp)
 endif()
 
 qt4_automoc(${gammaray_srcs})
@@ -365,12 +401,30 @@ if(UNIX AND NOT APPLE)
   set(XDG_APPS_INSTALL_DIR share/applications)
   install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
-  install(FILES resources/GammaRay-16x16.png DESTINATION share/icons/hicolor/16x16/apps RENAME GammaRay.png)
-  install(FILES resources/GammaRay-32x32.png DESTINATION share/icons/hicolor/32x32/apps RENAME GammaRay.png)
-  install(FILES resources/GammaRay-48x48.png DESTINATION share/icons/hicolor/48x48/apps RENAME GammaRay.png)
-  install(FILES resources/GammaRay-128x128.png DESTINATION share/icons/hicolor/128x128/apps RENAME GammaRay.png)
-  install(FILES resources/GammaRay-256x256.png DESTINATION share/icons/hicolor/256x256/apps RENAME GammaRay.png)
-  install(FILES resources/GammaRay-512x512.png DESTINATION share/icons/hicolor/512x512/apps RENAME GammaRay.png)
+  install(
+    FILES resources/GammaRay-16x16.png
+    DESTINATION share/icons/hicolor/16x16/apps RENAME GammaRay.png
+  )
+  install(
+    FILES resources/GammaRay-32x32.png
+    DESTINATION share/icons/hicolor/32x32/apps RENAME GammaRay.png
+  )
+  install(
+    FILES resources/GammaRay-48x48.png
+    DESTINATION share/icons/hicolor/48x48/apps RENAME GammaRay.png
+  )
+  install(
+    FILES resources/GammaRay-128x128.png
+    DESTINATION share/icons/hicolor/128x128/apps RENAME GammaRay.png
+  )
+  install(
+    FILES resources/GammaRay-256x256.png
+    DESTINATION share/icons/hicolor/256x256/apps RENAME GammaRay.png
+  )
+  install(
+    FILES resources/GammaRay-512x512.png
+    DESTINATION share/icons/hicolor/512x512/apps RENAME GammaRay.png
+  )
 endif()
 
 set(LICENSE_FILE "License.txt")
@@ -395,17 +449,18 @@ if(CPPCHECK_EXECUTABLE)
     COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
       -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
       -i${CMAKE_CURRENT_SOURCE_DIR}/tests
-      ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Running the cppcheck static code checker"
   )
 endif()
 
 if(UNIX)
-  add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
-                     COMMAND pod2man -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
-                     DEPENDS ${CMAKE_SOURCE_DIR}/gammaray.pod
-                     )
+  add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
+    COMMAND pod2man -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
+    DEPENDS ${CMAKE_SOURCE_DIR}/gammaray.pod
+  )
 
   add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/gammaray.1)
 

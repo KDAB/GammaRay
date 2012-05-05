@@ -7,10 +7,16 @@ set(gammaray_scriptenginedebugger_plugin_srcs
 
   ../../include/util.cpp
 )
+
 qt4_automoc(${gammaray_scriptenginedebugger_plugin_srcs})
+
 qt4_wrap_ui(gammaray_scriptenginedebugger_plugin_srcs scriptenginedebugger.ui)
 
-gammaray_add_plugin(gammaray_scriptenginedebugger_plugin gammaray_scriptenginedebugger.desktop ${gammaray_scriptenginedebugger_plugin_srcs})
+gammaray_add_plugin(gammaray_scriptenginedebugger_plugin
+  gammaray_scriptenginedebugger.desktop
+  ${gammaray_scriptenginedebugger_plugin_srcs}
+)
+
 target_link_libraries(gammaray_scriptenginedebugger_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}

@@ -11,9 +11,14 @@ set(gammaray_actioninspector_plugin_srcs
   actioninspector.cpp
   actionmodel.cpp
 )
+
 qt4_automoc(${gammaray_actioninspector_plugin_srcs})
 
-gammaray_add_plugin(gammaray_actioninspector_plugin gammaray_actioninspector.desktop ${gammaray_actioninspector_plugin_srcs})
+gammaray_add_plugin(gammaray_actioninspector_plugin
+  gammaray_actioninspector.desktop
+  ${gammaray_actioninspector_plugin_srcs}
+)
+
 target_link_libraries(gammaray_actioninspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}

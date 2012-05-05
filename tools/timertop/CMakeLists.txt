@@ -13,12 +13,18 @@ set(gammaray_timertop_plugin_srcs
   timerinfo.cpp
   functioncalltimer.cpp
 )
+
 qt4_automoc(${gammaray_timertop_plugin_srcs})
+
 qt4_wrap_ui(gammaray_timertop_plugin_srcs
   timertop.ui
 )
 
-gammaray_add_plugin(gammaray_timertop_plugin gammaray_timertop.desktop ${gammaray_timertop_plugin_srcs})
+gammaray_add_plugin(gammaray_timertop_plugin
+  gammaray_timertop.desktop
+  ${gammaray_timertop_plugin_srcs}
+)
+
 target_link_libraries(gammaray_timertop_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
