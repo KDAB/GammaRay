@@ -83,15 +83,17 @@ void ActionValidator::remove(QAction* action)
   safeRemove(action);
 }
 
-void ActionValidator::safeRemove(QAction* action)
+void ActionValidator::safeRemove( QAction *action )
 {
-  Q_FOREACH(const QKeySequence& sequence, m_shortcutActionMap.keys()) {
-    if (!m_shortcutActionMap.values(sequence).contains(action))
+  Q_FOREACH ( const QKeySequence &sequence, m_shortcutActionMap.keys() ) { //krazy:exclude=foreach
+    if ( !m_shortcutActionMap.values( sequence ).contains( action ) ) {
       continue;
+    }
 
-    QList<QAction*> oldValues = m_shortcutActionMap.values(sequence);
-    const bool success = oldValues.removeOne(action);
-    Q_UNUSED(success); Q_ASSERT(success);
+    QList<QAction*> oldValues = m_shortcutActionMap.values( sequence );
+    const bool success = oldValues.removeOne( action );
+    Q_UNUSED( success );
+    Q_ASSERT( success );
     m_shortcutActionMap[sequence] = action;
   }
 }
