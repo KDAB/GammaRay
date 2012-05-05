@@ -5,7 +5,6 @@ include_directories(
 set(gammaray_actioninspector_plugin_srcs
   ../../3rdparty/kde/kfilterproxysearchline.cpp
   ../../3rdparty/kde/krecursivefilterproxymodel.cpp
-  ../../include/util.cpp
 
   actionvalidator.cpp
   actioninspector.cpp
@@ -22,4 +21,5 @@ gammaray_add_plugin(gammaray_actioninspector_plugin
 target_link_libraries(gammaray_actioninspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
+  gammaray_probe
 )

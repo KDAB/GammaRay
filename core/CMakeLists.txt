@@ -14,9 +14,7 @@ set(gammaray_srcs
   ../3rdparty/kde/kfilterproxysearchline.cpp
   ../3rdparty/qt/resourcemodel.cpp
 
-  # FIXME: Remove me
-  ../include/util.cpp
-
+  util.cpp
   aboutpluginsdialog.cpp
   mainwindow.cpp
   metaobject.cpp

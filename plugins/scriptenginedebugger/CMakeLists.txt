@@ -4,8 +4,6 @@ include_directories(
 
 set(gammaray_scriptenginedebugger_plugin_srcs
   scriptenginedebugger.cpp
-
-  ../../include/util.cpp
 )
 
 qt4_automoc(${gammaray_scriptenginedebugger_plugin_srcs})
@@ -22,4 +20,5 @@ target_link_libraries(gammaray_scriptenginedebugger_plugin
   ${QT_QTGUI_LIBRARIES}
   ${QT_QTSCRIPT_LIBRARIES}
   ${QT_QTSCRIPTTOOLS_LIBRARIES}
+  gammaray_probe
 )

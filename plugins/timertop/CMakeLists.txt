@@ -6,8 +6,6 @@ include_directories(
 )
 
 set(gammaray_timertop_plugin_srcs
-  ../../include/util.cpp
-
   timertop.cpp
   timermodel.cpp
   timerinfo.cpp
@@ -28,6 +26,7 @@ gammaray_add_plugin(gammaray_timertop_plugin
 target_link_libraries(gammaray_timertop_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
+  gammaray_probe
 )
 
 if(NOT WIN32 AND NOT APPLE)

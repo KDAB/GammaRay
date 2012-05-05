@@ -4,8 +4,6 @@ include_directories(
 
 set(gammaray_webinspector_plugin_srcs
   webinspector.cpp
-
-  ../../include/util.cpp
 )
 
 qt4_automoc(${gammaray_webinspector_plugin_srcs})
@@ -21,4 +19,5 @@ target_link_libraries(gammaray_webinspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARIES}
+  gammaray_probe
 )
