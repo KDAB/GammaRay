@@ -41,9 +41,9 @@ static QString toString(QList<T> list)
 ActionModel::ActionModel(QObject* parent)
   : ObjectFilterProxyModelBase(parent)
 {
-  connect(this, SIGNAL(rowsInserted(QModelIndex, int, int)),
-    SLOT(handleRowsInserted(QModelIndex, int, int)));
-  connect(this, SIGNAL(rowsRemoved(QModelIndex, int, int)),
+  connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
+    SLOT(handleRowsInserted(QModelIndex,int,int)));
+  connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
     SLOT(handleRowsRemoved(QModelIndex,int,int)));
   connect(this, SIGNAL(modelReset()), SLOT(handleModelReset()));
 }
