@@ -134,7 +134,7 @@ public:
   }
 
 private:
-  QVector<ToolFactory*> m_tools;;
+  QVector<ToolFactory*> m_tools;
 };
 
 AboutPluginsDialog::AboutPluginsDialog(QWidget* parent, Qt::WindowFlags f)
@@ -144,25 +144,11 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget* parent, Qt::WindowFlags f)
   QVBoxLayout* vbox = new QVBoxLayout(this);
 
   {
-    PluginLoadErrors errors = PluginManager::instance()->errors();
-    ErrorModel* errorModel = new ErrorModel(errors, this);
-    QTableView* errorView = new QTableView(this);
-    errorView->setModel(errorModel);
-    errorView->verticalHeader()->hide();
-    errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-
-    QGroupBox* errorBox = new QGroupBox(tr("Failed Plugins"), this);
-    layout = new QHBoxLayout(errorBox);
-    layout->addWidget(errorView);
-    vbox->addWidget(errorBox);
-
-    errorBox->setEnabled(errorModel->rowCount() > 0);
-  }
-
-  {
     QVector<ToolFactory*> tools = PluginManager::instance()->plugins();
     ToolModel* toolModel = new ToolModel(tools, this);
     QTableView* toolView = new QTableView(this);
+    toolView->setShowGrid(false);
+    toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
     toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     toolView->verticalHeader()->hide();
     toolView->setModel(toolModel);
@@ -173,6 +159,24 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget* parent, Qt::WindowFlags f)
     vbox->addWidget(toolBox);
 
     toolBox->setEnabled(toolModel->rowCount() > 0);
+  }
+
+  {
+    PluginLoadErrors errors = PluginManager::instance()->errors();
+    ErrorModel* errorModel = new ErrorModel(errors, this);
+    QTableView* errorView = new QTableView(this);
+    errorView->setShowGrid(false);
+    errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    errorView->setModel(errorModel);
+    errorView->verticalHeader()->hide();
+    errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+
+    QGroupBox* errorBox = new QGroupBox(tr("Failed Plugins"), this);
+    layout = new QHBoxLayout(errorBox);
+    layout->addWidget(errorView);
+    vbox->addWidget(errorBox);
+
+    errorBox->setEnabled(errorModel->rowCount() > 0);
   }
 
   setWindowTitle(tr("GammaRay: Plugin Info"));
