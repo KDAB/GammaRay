@@ -67,6 +67,7 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
   vbox->addWidget(objectTreeView);
   connect(objectTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
           SLOT(handleRowChanged(QModelIndex)));
+  connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
   mObjectTreeView = objectTreeView;
 
   QWidget *treeViewWidget = new QWidget(this);
@@ -98,6 +99,16 @@ void ActionInspector::handleRowChanged(const QModelIndex &index)
 {
   Q_UNUSED(index);
   // TODO: Unused
+}
+
+void ActionInspector::triggerAction(const QModelIndex& index)
+{
+  if (!index.isValid())
+    return;
+  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
+  QAction *action = qobject_cast<QAction*>(obj);
+  if (action)
+    action->trigger();
 }
 
 Q_EXPORT_PLUGIN(ActionInspectorFactory)

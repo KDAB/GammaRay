@@ -45,7 +45,8 @@ class ActionInspector : public QWidget
   private Q_SLOTS:
     void delayedInit();
 
-  void handleRowChanged(const QModelIndex &index);
+    void handleRowChanged(const QModelIndex &index);
+    void triggerAction(const QModelIndex &index);
 
   private:
     QTreeView *mObjectTreeView;
