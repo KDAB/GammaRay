@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_UTIL_H
 #define GAMMARAY_UTIL_H
 
+#include "gammaray_export.h"
+
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
@@ -33,12 +35,12 @@ namespace GammaRay {
 
 namespace Util
 {
-  QString displayString(const QObject *object);
-  QString variantToString(const QVariant &value);
+  GAMMARAY_EXPORT QString displayString(const QObject *object);
+  GAMMARAY_EXPORT QString variantToString(const QVariant &value);
   /// Returns a value representing @p value in a itemview decoration role
-  QVariant decorationForVariant(const QVariant &value);
-  QString addressToString(const void *p);
-  QString addressToUid(const void *p);
+  GAMMARAY_EXPORT QVariant decorationForVariant(const QVariant &value);
+  GAMMARAY_EXPORT QString addressToString(const void *p);
+  GAMMARAY_EXPORT QString addressToUid(const void *p);
 
   /**
    * Translates an enum or flag value into a human readable text.
@@ -48,9 +50,9 @@ namespace Util
    *                 (e.g. the case for QMetaProperty::read).
    * @param object Additional QObject to search for QMetaEnums.
    */
-  QString enumToString(const QVariant &value, const char *typeName = 0, QObject *object = 0);
+  GAMMARAY_EXPORT QString enumToString(const QVariant &value, const char *typeName = 0, QObject *object = 0);
 
-  bool descendantOf(const QObject *ascendant, const QObject *obj);
+  GAMMARAY_EXPORT bool descendantOf(const QObject *ascendant, const QObject *obj);
 
   template <typename T>
   T *findParentOfType(QObject *object) {
@@ -64,7 +66,7 @@ namespace Util
   }
 
   /// Returns an icon for the given object.
-  QVariant iconForObject(QObject *obj);
+  GAMMARAY_EXPORT QVariant iconForObject(QObject *obj);
 }
 
 }

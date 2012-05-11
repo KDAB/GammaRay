@@ -24,8 +24,10 @@
 #ifndef GAMMARAY_PROBE_H
 #define GAMMARAY_PROBE_H
 
-#include <qobject.h>
+#include "gammaray_export.h"
 #include "probeinterface.h"
+
+#include <QObject>
 #include <QReadWriteLock>
 #include <QSet>
 #include <QQueue>
@@ -39,7 +41,6 @@ class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
 class ToolModel;
-
 class MainWindow;
 
 /**
@@ -62,11 +63,12 @@ class ProbeCreator : public QObject
     Type m_type;
 };
 
-class Q_DECL_EXPORT Probe : public QObject, public ProbeInterface
+class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
 {
   Q_OBJECT
   public:
     virtual ~Probe();
+
     static Probe *instance();
     static bool isInitialized();
 
