@@ -63,6 +63,7 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
   objectTreeView->setModel(searchFilterProxy);
   objectTreeView->setSortingEnabled(true);
   objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
+  objectTreeView->setRootIsDecorated(false);
   vbox->addWidget(objectTreeView);
   connect(objectTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
           SLOT(handleRowChanged(QModelIndex)));
