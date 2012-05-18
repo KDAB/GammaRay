@@ -49,7 +49,7 @@ endif()
 
 message(STATUS "Building ${Prog_NAME} ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
 add_definitions(-DPROGRAM_NAME=\"${Prog_NAME}\")
-add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
+add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS -DQT_STRICT_ITERATORS)
 
 include(CheckCXXCompilerFlag)
 include(CheckLibraryExists)
