@@ -71,7 +71,7 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
       if (obj && !obj->objectName().isEmpty()) {
         return obj->objectName();
       }
-      return QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(item), 16);
+      return QString::fromLatin1("0x%1").arg(QString::number(reinterpret_cast<qlonglong>(item), 16));
     } else if (index.column() == 1) {
       if (obj) {
         return obj->metaObject()->className();
