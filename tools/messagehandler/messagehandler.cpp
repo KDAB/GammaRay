@@ -91,6 +91,7 @@ void handleMessage(QtMsgType type, const char *msg)
     layout->addWidget(iconLabel, 0, 0);
     QLabel *errorLabel = new QLabel;
     errorLabel->setTextFormat(Qt::PlainText);
+    errorLabel->setWordWrap(true);
     errorLabel->setText(message.message);
     layout->addWidget(errorLabel, 0, 1);
     if (!message.backtrace.isEmpty()) {
