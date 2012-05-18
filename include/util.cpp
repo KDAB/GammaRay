@@ -285,7 +285,8 @@ QVariant Util::decorationForVariant(const QVariant &value)
   case QVariant::Pixmap:
   {
     const QPixmap p = value.value<QPixmap>();
-    return QVariant::fromValue(p.scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation));
+    if(!p.isNull())
+      return QVariant::fromValue(p.scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation));
   }
   default: break;
   }
