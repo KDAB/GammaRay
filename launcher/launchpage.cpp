@@ -90,12 +90,15 @@ QStringList LaunchPage::launchArguments() const
 
 void LaunchPage::showFileDialog()
 {
-  // TODO: add *.exe filter on Windows
   const QString exeFilePath =
     QFileDialog::getOpenFileName(
       this,
       tr("Executable to Launch"),
-      ui->progEdit->text());
+      ui->progEdit->text()
+#ifdef Q_OS_WIN
+      ,tr("Executable (*.exe)")
+#endif
+        );
 
   if (exeFilePath.isEmpty()) {
     return;
