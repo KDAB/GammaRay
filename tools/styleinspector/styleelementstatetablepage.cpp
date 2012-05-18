@@ -34,6 +34,11 @@ StyleElementStateTablePage::StyleElementStateTablePage(QWidget* parent): QWidget
   ui->tableView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
+StyleElementStateTablePage::~StyleElementStateTablePage()
+{
+  delete ui;
+}
+
 void StyleElementStateTablePage::setModel(AbstractStyleElementStateTable* model)
 {
   ui->tableView->setModel(model);

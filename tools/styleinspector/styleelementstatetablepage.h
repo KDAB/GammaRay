@@ -42,7 +42,7 @@ class StyleElementStateTablePage : public QWidget
   Q_OBJECT
 public:
   explicit StyleElementStateTablePage(QWidget* parent = 0);
-
+  ~StyleElementStateTablePage();
   void setModel(AbstractStyleElementStateTable *model);
 
 private:
