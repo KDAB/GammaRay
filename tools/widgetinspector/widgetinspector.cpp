@@ -277,6 +277,7 @@ void WidgetInspector::analyzePainting()
   m_overlayWidget->show();
 
   PaintBufferViewer *viewer = new PaintBufferViewer(0);
+  viewer->setWindowTitle(tr("Analyze Painting"));
   viewer->setAttribute(Qt::WA_DeleteOnClose);
   viewer->setPaintBuffer(buffer);
   viewer->show();
