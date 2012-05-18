@@ -44,6 +44,7 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
       StateObjectRole = Qt::UserRole + 11
     };
     explicit StateModel(QObject *parent = 0);
+    ~StateModel();
 
     void setStateMachine(QStateMachine *stateMachine);
     QStateMachine *stateMachine() const;

@@ -112,6 +112,11 @@ StateModel::StateModel(QObject *parent)
   setRoleNames(_roleNames);
 }
 
+StateModel::~StateModel()
+{
+  delete d_ptr;
+}
+
 void StateModel::setStateMachine(QStateMachine *stateMachine)
 {
   Q_D(StateModel);
