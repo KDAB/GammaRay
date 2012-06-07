@@ -175,7 +175,7 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   }
 
   // types with dynamic type ids
-  if (value.type() == qMetaTypeId<QTextLength>()) {
+  if (value.type() == (QVariant::Type)qMetaTypeId<QTextLength>()) {
     const QTextLength l = value.value<QTextLength>();
     QString typeStr;
     switch (l.type()) {
@@ -200,7 +200,7 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return QObject::tr("<%1 elements>").arg(path.elementCount());
   }
 
-  if (value.type() == qMetaTypeId<QWidget*>()) {
+  if (value.type() == (QVariant::Type)qMetaTypeId<QWidget*>()) {
     return displayString(value.value<QWidget*>());
   }
 
