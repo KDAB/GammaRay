@@ -1,6 +1,6 @@
 #!/bin/bash
 
-find "$@" -name '*.h' -o -name '*.cpp' | grep -v /3rdparty/ | grep -v /qmldebugcontrol/ | grep -v /build | while read FILE; do
+find "$@" -name '*.h' -o -name '*.cpp' | grep -v /3rdparty/ | grep -v /qmldebugcontrol/ | grep -v /StackWalker | grep -v /modeltest | grep -v /processlist | grep -v /interactiveprocess | grep -v /build | while read FILE; do
     if grep -qiE "Copyright \(C\) [0-9, -]{4,} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
     thisfile=`basename $FILE`
     authorName=`git config user.name`
