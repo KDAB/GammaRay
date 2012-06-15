@@ -6,8 +6,12 @@
 #  Set this if your compiler uses an unsupported C++ name mangling scheme
 #  Default=off
 #
-# To build the man page from POD, run 'make man' after CMake.
+# To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
+# Not available on Windows.
+#
+# To build the apidox, run 'make apidox' after CMake (assumes doxygen is available)
+# Not available on Windows.
 #
 
 project(GammaRay)
@@ -37,7 +41,8 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
     execute_process(
       COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE _git_revision)
+      OUTPUT_VARIABLE _git_revision
+    )
     string(REGEX REPLACE "\n" "" _git_revision "${_git_revision}")
     set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION_STRING} (revision: ${_git_revision})")
   endif()
@@ -285,15 +290,32 @@ if(CPPCHECK_EXECUTABLE)
 endif()
 
 if(UNIX)
+  #man page generation using pod2man
   add_custom_command(
     OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
     COMMAND pod2man -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
     DEPENDS ${CMAKE_SOURCE_DIR}/gammaray.pod
   )
-
   add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/gammaray.1)
 
   install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
+
+  #apidox generation using doxygen
+  add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/apidocs/html/index.html
+    COMMAND echo \"PROJECT_NUMBER = ${GAMMARAY_VERSION}\" > ${CMAKE_BINARY_DIR}/versfoo
+    COMMAND echo \"IMAGE_PATH = ${CMAKE_SOURCE_DIR}/images\" > ${CMAKE_BINARY_DIR}/imgfoo
+    COMMAND echo \"HTML_FOOTER = ${CMAKE_SOURCE_DIR}/images/footer.html\" > ${CMAKE_BINARY_DIR}/footfoo
+    COMMAND cat ${CMAKE_SOURCE_DIR}/Doxyfile
+                ${CMAKE_BINARY_DIR}/versfoo
+                ${CMAKE_BINARY_DIR}/imgfoo
+                ${CMAKE_BINARY_DIR}/footfoo | doxygen -
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  )
+  add_custom_target(apidox
+    DEPENDS ${CMAKE_BINARY_DIR}/apidocs/html/index.html
+  )
+
 endif()
 
 include(ExternalProject)
