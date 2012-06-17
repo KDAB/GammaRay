@@ -21,34 +21,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "util.h"
-#include "metatypedeclarations.h"
+#include "include/util.h"
+#include "include/metatypedeclarations.h"
 
-#include <QtCore/qobject.h>
-#include <QtCore/QStringList>
-#include <qsize.h>
-#include <qpoint.h>
-#include <qrect.h>
-#include <qsizepolicy.h>
-#include <qmetaobject.h>
-#include <qtextformat.h>
+#include <QApplication>
+#include <QDebug>
+#include <QDir>
 #include <QGraphicsItem>
 #include <QGraphicsWidget>
-#include <QWidget>
-#include <QDebug>
-#include <QPainter>
-#include <QDir>
 #include <QIcon>
-#include <QApplication>
+#include <QMetaEnum>
+#include <QMetaObject>
+#include <QObject>
+#include <QPainter>
+#include <QPoint>
+#include <QRect>
+#include <QSize>
+#include <QSizePolicy>
+#include <QStringList>
+#include <QTextFormat>
+#include <QWidget>
 
 using namespace GammaRay;
 
 namespace GammaRay {
+
 class ProtectedExposer : public QObject
 {
-public:
-  using QObject::staticQtMetaObject;
+  public:
+    using QObject::staticQtMetaObject;
 };
+
 }
 
 QString Util::displayString(const QObject *object)
@@ -82,46 +85,54 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   case QVariant::Icon:
   {
     const QIcon icon = value.value<QIcon>();
-    if (icon.isNull())
+    if (icon.isNull()) {
       return QObject::tr("<no icon>");
+    }
     QStringList l;
-    foreach (const QSize &size, icon.availableSizes())
+    foreach (const QSize &size, icon.availableSizes()) {
       l.push_back(variantToString(size));
+    }
     return l.join(QLatin1String(", "));
   }
   case QVariant::Line:
-    return QString::fromUtf8("%1 x %2 → %3 x %4")
-      .arg(value.toLine().x1()).arg(value.toLine().y1())
-      .arg(value.toLine().x2()).arg(value.toLine().y2());
+    return
+      QString::fromUtf8("%1 x %2 → %3 x %4").
+        arg(value.toLine().x1()).arg(value.toLine().y1()).
+        arg(value.toLine().x2()).arg(value.toLine().y2());
 
   case QVariant::LineF:
-    return QString::fromUtf8("%1 x %2 → %3 x %4")
-      .arg(value.toLineF().x1()).arg(value.toLineF().y1())
-      .arg(value.toLineF().x2()).arg(value.toLineF().y2());
+    return
+      QString::fromUtf8("%1 x %2 → %3 x %4").
+        arg(value.toLineF().x1()).arg(value.toLineF().y1()).
+        arg(value.toLineF().x2()).arg(value.toLineF().y2());
 
   case QVariant::Point:
-    return QString::fromLatin1("%1x%2").
-      arg(value.toPoint().x()).
-      arg(value.toPoint().y());
+    return
+      QString::fromLatin1("%1x%2").
+        arg(value.toPoint().x()).
+        arg(value.toPoint().y());
 
   case QVariant::PointF:
-    return QString::fromLatin1("%1x%2").
-      arg(value.toPointF().x()).
-      arg(value.toPointF().y());
+    return
+      QString::fromLatin1("%1x%2").
+        arg(value.toPointF().x()).
+        arg(value.toPointF().y());
 
   case QVariant::Rect:
-    return QString::fromLatin1("%1x%2 %3x%4").
-      arg(value.toRect().x()).
-      arg(value.toRect().y()).
-      arg(value.toRect().width()).
-      arg(value.toRect().height());
+    return
+      QString::fromLatin1("%1x%2 %3x%4").
+        arg(value.toRect().x()).
+        arg(value.toRect().y()).
+        arg(value.toRect().width()).
+        arg(value.toRect().height());
 
   case QVariant::RectF:
-    return QString::fromLatin1("%1x%2 %3x%4").
-      arg(value.toRectF().x()).
-      arg(value.toRectF().y()).
-      arg(value.toRectF().width()).
-      arg(value.toRectF().height());
+    return
+      QString::fromLatin1("%1x%2 %3x%4").
+        arg(value.toRectF().x()).
+        arg(value.toRectF().y()).
+        arg(value.toRectF().width()).
+        arg(value.toRectF().height());
 
   case QVariant::Region:
   {
@@ -139,25 +150,29 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   case QVariant::Palette:
   {
     const QPalette pal = value.value<QPalette>();
-    if (pal == qApp->palette())
+    if (pal == qApp->palette()) {
       return QLatin1String("<inherited>");
+    }
     return QLatin1String("<custom>");
   }
 
   case QVariant::Size:
-    return QString::fromLatin1("%1x%2").
-      arg(value.toSize().width()).
-      arg(value.toSize().height());
+    return
+      QString::fromLatin1("%1x%2").
+        arg(value.toSize().width()).
+        arg(value.toSize().height());
 
   case QVariant::SizeF:
-    return QString::fromLatin1("%1x%2").
-      arg(value.toSizeF().width()).
-      arg(value.toSizeF().height());
+    return
+      QString::fromLatin1("%1x%2").
+        arg(value.toSizeF().width()).
+        arg(value.toSizeF().height());
 
   case QVariant::SizePolicy:
-    return QString::fromLatin1("%1 x %2").
-      arg(sizePolicyToString(value.value<QSizePolicy>().horizontalPolicy())).
-      arg(sizePolicyToString(value.value<QSizePolicy>().verticalPolicy()));
+    return
+      QString::fromLatin1("%1 x %2").
+        arg(sizePolicyToString(value.value<QSizePolicy>().horizontalPolicy())).
+        arg(sizePolicyToString(value.value<QSizePolicy>().verticalPolicy()));
 
   case QVariant::StringList:
     return value.toStringList().join(", ");
@@ -165,10 +180,11 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   case QVariant::Transform:
   {
     const QTransform t = value.value<QTransform>();
-    return QString::fromLatin1("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").
-      arg(t.m11()).arg(t.m12()).arg(t.m13()).
-      arg(t.m21()).arg(t.m22()).arg(t.m23()).
-      arg(t.m31()).arg(t.m32()).arg(t.m33());
+    return
+      QString::fromLatin1("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").
+        arg(t.m11()).arg(t.m12()).arg(t.m13()).
+        arg(t.m21()).arg(t.m22()).arg(t.m23()).
+        arg(t.m31()).arg(t.m32()).arg(t.m33());
   }
   default:
     break;
@@ -285,8 +301,9 @@ QVariant Util::decorationForVariant(const QVariant &value)
   case QVariant::Pixmap:
   {
     const QPixmap p = value.value<QPixmap>();
-    if(!p.isNull())
+    if(!p.isNull()) {
       return QVariant::fromValue(p.scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation));
+    }
   }
   default: break;
   }
@@ -363,8 +380,8 @@ static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
   const QDir dir(basePath);
   if (dir.exists()) {
     // see if we find one with exactly matching properties
-    foreach (const QString &entry,
-             dir.entryList(QStringList() << QLatin1String("*.png"), QDir::Files)) {
+    const QStringList filterList = QStringList() << QLatin1String("*.png");
+    foreach (const QString &entry, dir.entryList(filterList, QDir::Files)) {
       if (entry == QLatin1String("default.png")) {
         continue;
       }

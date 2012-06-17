@@ -24,14 +24,17 @@
 #ifndef GAMMARAY_RESOURCEBROWSER_H
 #define GAMMARAY_RESOURCEBROWSER_H
 
-#include <qwidget.h>
-#include <toolfactory.h>
+#include "include/toolfactory.h"
+
+#include <QWidget>
 
 class QItemSelection;
 
 namespace GammaRay {
 
-namespace Ui { class ResourceBrowser; }
+namespace Ui {
+  class ResourceBrowser;
+}
 
 class ResourceBrowser : public QWidget
 {
@@ -52,8 +55,14 @@ class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObjec
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit ResourceBrowserFactory(QObject *parent) : QObject(parent) {}
-    inline QString name() const { return tr("Resources"); }
+    explicit ResourceBrowserFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Resources");
+    }
 };
 
 }

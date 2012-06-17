@@ -23,8 +23,9 @@
 #ifndef GAMMARAY_FUNCTIONCALLTIMER_H
 #define GAMMARAY_FUNCTIONCALLTIMER_H
 
-#include "time.h"
 #include <qglobal.h>
+
+#include <ctime>
 
 namespace GammaRay {
 

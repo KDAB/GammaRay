@@ -1,6 +1,6 @@
 include_directories(
-  ${CMAKE_SOURCE_DIR}/3rdparty/
-  ${CMAKE_SOURCE_DIR}/include
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/3rdparty
 )
 
 add_subdirectory(actioninspector)

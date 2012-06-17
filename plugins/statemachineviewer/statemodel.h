@@ -23,13 +23,12 @@
 #ifndef GAMMARAY_STATEMODEL_H
 #define GAMMARAY_STATEMODEL_H
 
-#include "objectmodelbase.h"
+#include "include/objectmodelbase.h"
 
 class QAbstractTransition;
 class QStateMachine;
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class StateModelPrivate;
 

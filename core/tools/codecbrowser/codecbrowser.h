@@ -24,16 +24,19 @@
 #ifndef GAMMARAY_CODECBROWSER_H
 #define GAMMARAY_CODECBROWSER_H
 
-#include <qwidget.h>
+#include "include/toolfactory.h"
 
-#include <toolfactory.h>
+#include <QWidget>
 
 class QItemSelection;
 
 namespace GammaRay {
 
 class SelectedCodecsModel;
-namespace Ui { class CodecBrowser; }
+
+namespace Ui {
+  class CodecBrowser;
+}
 
 class CodecBrowser : public QWidget
 {
@@ -54,8 +57,14 @@ class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, 
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit CodecBrowserFactory(QObject *parent) : QObject(parent) {}
-    virtual inline QString name() const { return tr("Text Codecs"); }
+    explicit CodecBrowserFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    virtual inline QString name() const
+    {
+      return tr("Text Codecs");
+    }
 };
 
 }

@@ -24,9 +24,9 @@
 #ifndef GAMMARAY_CONNECTIONMODEL_H
 #define GAMMARAY_CONNECTIONMODEL_H
 
-#include <QtCore/qabstractitemmodel.h>
+#include <QAbstractItemModel>
+#include <QSharedPointer>
 #include <QVector>
-#include <QtCore/qsharedpointer.h>
 
 namespace GammaRay {
 

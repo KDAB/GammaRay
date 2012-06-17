@@ -24,9 +24,9 @@
 #ifndef GAMMARAY_ACTIONMODEL_H
 #define GAMMARAY_ACTIONMODEL_H
 
-#include <objecttypefilterproxymodel.h>
-
 #include "actionvalidator.h"
+
+#include "include/objecttypefilterproxymodel.h"
 
 class QAction;
 
@@ -42,45 +42,49 @@ class ActionModel : public ObjectFilterProxyModelBase
 {
   Q_OBJECT
 
-public:
-  enum Column {
-    AddressColumn,
-    NameColumn,
-    CheckablePropColumn,
-    CheckedPropColumn,
-    PriorityPropColumn,
-    ShortcutsPropColumn,
-    /** Mark column count */
-    ColumnCount
-  };
+  public:
+    enum Column {
+      AddressColumn,
+      NameColumn,
+      CheckablePropColumn,
+      CheckedPropColumn,
+      PriorityPropColumn,
+      ShortcutsPropColumn,
+      /** Mark column count */
+      ColumnCount
+    };
 
-  explicit ActionModel(QObject* parent = 0);
-  virtual ~ActionModel();
+    explicit ActionModel(QObject *parent = 0);
 
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual ~ActionModel();
 
-  virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-  virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-protected:
-  virtual bool filterAcceptsObject(QObject *object) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-private Q_SLOTS:
-  void handleRowsInserted(const QModelIndex&, int, int);
-  void handleRowsRemoved(const QModelIndex&, int, int);
-  void handleModelReset();
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-private:
-  int sourceColumnCount(const QModelIndex& parent) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-  QAction* actionForIndex(const QModelIndex& index) const;
-  QList<QAction*> actions() const;
-  QList<QAction*> actions(const QModelIndex& parent, int start, int end);
+  protected:
+    virtual bool filterAcceptsObject(QObject *object) const;
 
-  ActionValidator m_duplicateFinder;
+  private Q_SLOTS:
+    void handleRowsInserted(const QModelIndex &, int, int);
+    void handleRowsRemoved(const QModelIndex &, int, int);
+    void handleModelReset();
+
+  private:
+    int sourceColumnCount(const QModelIndex &parent) const;
+
+    QAction *actionForIndex(const QModelIndex &index) const;
+    QList<QAction*> actions() const;
+    QList<QAction*> actions(const QModelIndex &parent, int start, int end);
+
+    ActionValidator m_duplicateFinder;
 };
 
 }

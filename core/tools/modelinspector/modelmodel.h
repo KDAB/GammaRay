@@ -24,10 +24,11 @@
 #ifndef GAMMARAY_MODELMODEL_H
 #define GAMMARAY_MODELMODEL_H
 
-#include "objectmodelbase.h"
-#include <qabstractitemmodel.h>
-#include <qabstractproxymodel.h>
-#include <qpointer.h>
+#include "include/objectmodelbase.h"
+
+#include <QAbstractItemModel>
+#include <QAbstractProxyModel>
+#include <QPointer>
 #include <QVector>
 
 namespace GammaRay {

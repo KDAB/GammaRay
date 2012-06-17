@@ -22,7 +22,8 @@
 */
 
 #include "propertycoloreditor.h"
-#include <qcolordialog.h>
+
+#include <QColorDialog>
 
 using namespace GammaRay;
 

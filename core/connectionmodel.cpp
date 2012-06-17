@@ -22,9 +22,10 @@
 */
 
 #include "connectionmodel.h"
-#include "util.h"
 #include "probe.h"
 #include "readorwritelocker.h"
+
+#include "include/util.h"
 
 #include <QDebug>
 #include <QMetaMethod>

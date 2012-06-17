@@ -23,11 +23,11 @@
 
 #include "proxytoolfactory.h"
 
-#include <qpluginloader.h>
-#include <qsettings.h>
-#include <qfileinfo.h>
-#include <qdir.h>
+#include <QDir>
+#include <QFileInfo>
 #include <QLabel>
+#include <QPluginLoader>
+#include <QSettings>
 
 #include <iostream>
 

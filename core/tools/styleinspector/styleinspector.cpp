@@ -22,31 +22,31 @@
 */
 
 #include "styleinspector.h"
+#include "complexcontrolmodel.h"
+#include "controlmodel.h"
+#include "palettemodel.h"
+#include "pixelmetricmodel.h"
+#include "primitivemodel.h"
+#include "standardiconmodel.h"
 #include "ui_styleinspector.h"
 
-#include <objecttypefilterproxymodel.h>
-#include <singlecolumnobjectproxymodel.h>
-#include <probeinterface.h>
-#include "pixelmetricmodel.h"
-#include "standardiconmodel.h"
-#include "palettemodel.h"
-#include "primitivemodel.h"
-#include "controlmodel.h"
-#include "complexcontrolmodel.h"
+#include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
+#include "include/singlecolumnobjectproxymodel.h"
 
 #include <QApplication>
 
 using namespace GammaRay;
 
-StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui(new Ui::StyleInspector),
-  m_primitiveModel(new PrimitiveModel(this)),
-  m_controlModel(new ControlModel(this)),
-  m_complexControlModel(new ComplexControlModel(this)),
-  m_pixelMetricModel(new PixelMetricModel(this)),
-  m_standardIconModel(new StandardIconModel(this)),
-  m_standardPaletteModel(new PaletteModel(this))
+StyleInspector::StyleInspector(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::StyleInspector),
+    m_primitiveModel(new PrimitiveModel(this)),
+    m_controlModel(new ControlModel(this)),
+    m_complexControlModel(new ComplexControlModel(this)),
+    m_pixelMetricModel(new PixelMetricModel(this)),
+    m_standardIconModel(new StandardIconModel(this)),
+    m_standardPaletteModel(new PaletteModel(this))
 {
   ui->setupUi(this);
 
@@ -70,8 +70,9 @@ StyleInspector::StyleInspector(ProbeInterface* probe, QWidget* parent):
   ui->standardPaletteView->setModel(m_standardPaletteModel);
   ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
-  if (ui->styleSelector->count())
+  if (ui->styleSelector->count()) {
     styleSelected(0);
+  }
 }
 
 StyleInspector::~StyleInspector()

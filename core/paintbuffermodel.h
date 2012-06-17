@@ -27,14 +27,13 @@
 #include "config-gammaray.h"
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
-#include <qabstractitemmodel.h>
+#include <QAbstractItemModel>
 
-#include <private/qpaintbuffer_p.h>
+#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
 
 class QPaintBuffer;
 
 namespace GammaRay {
-
 
 /**
  * Model that shows commands stored in a QPaintBuffer.
@@ -43,14 +42,18 @@ class PaintBufferModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    explicit PaintBufferModel(QObject* parent = 0);
+    explicit PaintBufferModel(QObject *parent = 0);
 
     void setPaintBuffer(const QPaintBuffer &buffer);
 
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
   private:
     QPaintBuffer m_buffer;

@@ -89,7 +89,10 @@ struct Locale##NAME##Accessor : LocaleDataAccessor \
 { \
   Locale##NAME##Accessor() : LocaleDataAccessor(true) {} \
   \
-  QString accessorName() { return #NAME ; } \
+  QString accessorName()                 \
+  {                                      \
+    return #NAME;                        \
+  }                                      \
   QString display(const QLocale &locale) \
   { \
 
@@ -110,6 +113,6 @@ struct Locale##NAME##Accessor : LocaleDataAccessor \
 
 }
 
-Q_DECLARE_METATYPE(GammaRay::LocaleDataAccessor*)
+Q_DECLARE_METATYPE(GammaRay::LocaleDataAccessor *)
 
 #endif

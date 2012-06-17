@@ -30,12 +30,17 @@
 
 using namespace GammaRay;
 
-PaintBufferViewer::PaintBufferViewer(QWidget* parent): QWidget(parent), ui(new Ui::PaintBufferViewer), m_bufferModel(new PaintBufferModel(this))
+PaintBufferViewer::PaintBufferViewer(QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::PaintBufferViewer),
+    m_bufferModel(new PaintBufferModel(this))
 {
   ui->setupUi(this);
 
   ui->commandView->setModel(m_bufferModel);
-  connect(ui->commandView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(commandSelected()));
+  connect(ui->commandView->selectionModel(),
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(commandSelected()));
 
   ui->splitter->setStretchFactor(0, 0);
   ui->splitter->setStretchFactor(1, 1);
@@ -47,7 +52,7 @@ PaintBufferViewer::~PaintBufferViewer()
 {
 }
 
-void PaintBufferViewer::setPaintBuffer(const QPaintBuffer& buffer)
+void PaintBufferViewer::setPaintBuffer(const QPaintBuffer &buffer)
 {
   m_buffer = buffer;
   m_bufferModel->setPaintBuffer(buffer);

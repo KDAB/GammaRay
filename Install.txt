@@ -37,6 +37,16 @@ Building on Windows with mingw:
 % mingw32-make
 % mingw32-make install
 
+== Building with Private Qt Headers ==
+To build against private Qt headers (necessary for painter debugging/profiling)
+you must have a build version of Qt available. Make sure the qmake found first
+in your execute comes from this build version.
+
+For example, if your Qt build is in /data/Qt/4.8 then:
+ % export PATH=/data/Qt/4.8/bin:$PATH # on Linux using bash
+
+
+
 == Warning! ==
 If your Qt is linked with the "-Bsymbolic-function" option preloading will be
 broken.  When this is enabled, references to global functions will be bound to

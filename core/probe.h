@@ -24,13 +24,13 @@
 #ifndef GAMMARAY_PROBE_H
 #define GAMMARAY_PROBE_H
 
-#include "gammaray_export.h"
-#include "probeinterface.h"
+#include "include/gammaray_export.h"
+#include "include/probeinterface.h"
 
 #include <QObject>
+#include <QQueue>
 #include <QReadWriteLock>
 #include <QSet>
-#include <QQueue>
 
 class QPoint;
 class QTimer;

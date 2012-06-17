@@ -34,14 +34,15 @@ namespace GammaRay {
 class PrimitiveModel : public AbstractStyleElementStateTable
 {
   Q_OBJECT
-public:
-  explicit PrimitiveModel(QObject* parent = 0);
+  public:
+    explicit PrimitiveModel(QObject *parent = 0);
 
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-protected:
-  virtual QVariant doData(int row, int column, int role) const;
-  virtual int doRowCount() const;
+  protected:
+    virtual QVariant doData(int row, int column, int role) const;
+    virtual int doRowCount() const;
 };
 
 }

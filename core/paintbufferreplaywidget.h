@@ -27,9 +27,9 @@
 #include "config-gammaray.h"
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
-#include <qwidget.h>
+#include <QWidget>
 
-#include <private/qpaintbuffer_p.h>
+#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
 
 namespace GammaRay {
 
@@ -40,7 +40,7 @@ class PaintBufferReplayWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit PaintBufferReplayWidget(QWidget* parent = 0);
+    explicit PaintBufferReplayWidget(QWidget *parent = 0);
 
     void setPaintBuffer(const QPaintBuffer &buffer);
     void setEndCommandIndex(int index);
@@ -49,10 +49,10 @@ class PaintBufferReplayWidget : public QWidget
     virtual QSize sizeHint() const;
 
   protected:
-    virtual void paintEvent(QPaintEvent* event);
+    virtual void paintEvent(QPaintEvent *event);
 
   private:
-    static void drawTransparencyPattern(QPainter* painter, const QRect &rect, int squareSize = 16);
+    static void drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize = 16);
 
   private:
     QPaintBuffer m_buffer;

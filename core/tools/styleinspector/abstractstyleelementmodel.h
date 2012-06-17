@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H
 #define GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H
 
-#include <qabstractitemmodel.h>
-#include <qpointer.h>
+#include <QAbstractItemModel>
+#include <QPointer>
 
 class QStyle;
 
@@ -37,27 +37,29 @@ namespace GammaRay {
 class AbstractStyleElementModel : public QAbstractTableModel
 {
   Q_OBJECT
-public:
-  explicit AbstractStyleElementModel(QObject* parent = 0);
+  public:
+    explicit AbstractStyleElementModel(QObject *parent = 0);
 
-  void setStyle(QStyle* style);
+    void setStyle(QStyle *style);
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-protected:
-  virtual QVariant doData(int row, int column, int role) const = 0;
-  virtual int doColumnCount() const = 0;
-  virtual int doRowCount() const = 0;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-  /** Returns @c true if we are looking at the primary style of the application
-   *  ie. the one set in QApplication. This takes proxy styles into account.
-   */
-  bool isMainStyle() const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-protected:
-  QPointer<QStyle> m_style;
+  protected:
+    virtual QVariant doData(int row, int column, int role) const = 0;
+    virtual int doColumnCount() const = 0;
+    virtual int doRowCount() const = 0;
+
+    /** Returns @c true if we are looking at the primary style of the application
+     *  ie. the one set in QApplication. This takes proxy styles into account.
+     */
+    bool isMainStyle() const;
+
+  protected:
+    QPointer<QStyle> m_style;
 };
 
 }

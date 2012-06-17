@@ -22,9 +22,9 @@
 */
 #include "timermodel.h"
 
-#include <probeinterface.h>
+#include "include/probeinterface.h"
 
-#include <private/qobject_p.h>
+#include <private/qobject_p.h> //krazy:exclude=camelcase
 
 #include <QMetaMethod>
 #include <QCoreApplication>
@@ -37,7 +37,7 @@ static const char timerInfoPropertyName[] = "GammaRay TimerInfo";
 using namespace GammaRay;
 using namespace std;
 
-static TimerModel* s_timerModel = 0;
+static TimerModel *s_timerModel = 0;
 
 static QTimer *timer_from_callback(QObject *caller, int method_index)
 {
@@ -72,16 +72,17 @@ static void signal_end_callback(QObject *caller, int method_index)
 }
 
 TimerModel::TimerModel(QObject *parent)
-  : QAbstractTableModel(parent)
-  , m_sourceModel(0)
-  , m_probe(0)
+  : QAbstractTableModel(parent),
+    m_sourceModel(0),
+    m_probe(0)
 {
 }
 
 TimerModel *TimerModel::instance()
 {
-  if (!s_timerModel)
+  if (!s_timerModel) {
     s_timerModel = new TimerModel;
+  }
   Q_ASSERT(s_timerModel);
   return s_timerModel;
 }
@@ -200,7 +201,7 @@ void TimerModel::postSignalActivate(QTimer *timer)
   }
 }
 
-void TimerModel::setProbe(ProbeInterface* probe)
+void TimerModel::setProbe(ProbeInterface *probe)
 {
   m_probe = probe;
 }

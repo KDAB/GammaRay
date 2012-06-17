@@ -24,8 +24,9 @@
 #ifndef GAMMARAY_MODELINSPECTOR_H
 #define GAMMARAY_MODELINSPECTOR_H
 
-#include <qwidget.h>
-#include <toolfactory.h>
+#include "include/toolfactory.h"
+
+#include <QWidget>
 
 namespace GammaRay {
 

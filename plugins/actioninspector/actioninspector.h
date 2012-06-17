@@ -22,10 +22,10 @@
 #ifndef GAMMARAY_ACTIONINSPECTOR_H
 #define GAMMARAY_ACTIONINSPECTOR_H
 
-#include <QWidget>
-#include <QAction>
+#include "include/toolfactory.h"
 
-#include <toolfactory.h>
+#include <QAction>
+#include <QWidget>
 
 class QTreeView;
 class QModelIndex;

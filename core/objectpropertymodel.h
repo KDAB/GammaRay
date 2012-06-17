@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OBJECTPROPERTYMODEL_H
 #define GAMMARAY_OBJECTPROPERTYMODEL_H
 
-#include <qabstractitemmodel.h>
+#include <QAbstractItemModel>
 #include <QPointer>
 
 class QTimer;

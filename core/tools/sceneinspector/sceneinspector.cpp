@@ -22,20 +22,21 @@
 */
 
 #include "sceneinspector.h"
+
+#include "metaobjectrepository.h"
+#include "scenemodel.h"
 #include "ui_sceneinspector.h"
 
-#include "scenemodel.h"
+#include "include/objectmodel.h"
+#include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
+#include "include/singlecolumnobjectproxymodel.h"
 
-#include <objectmodel.h>
-#include <objecttypefilterproxymodel.h>
-#include <singlecolumnobjectproxymodel.h>
-#include <probeinterface.h>
 #include <kde/krecursivefilterproxymodel.h>
-#include <metaobjectrepository.h>
 
 #include <QDebug>
 #include <QGraphicsItem>
-#include <qgraphicsview.h>
+#include <QGraphicsView>
 
 using namespace GammaRay;
 

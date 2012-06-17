@@ -37,15 +37,15 @@ typedef QList<PluginLoadError> PluginLoadErrors;
 
 class PluginLoadError
 {
-public:
-  PluginLoadError(QString _pluginFile, QString _errorString)
-    : pluginFile(_pluginFile), errorString(_errorString) {}
+  public:
+    PluginLoadError(QString _pluginFile, QString _errorString)
+      : pluginFile(_pluginFile), errorString(_errorString) {}
 
-  QString pluginName() const { return QFileInfo(pluginFile).baseName(); }
+    QString pluginName() const { return QFileInfo(pluginFile).baseName(); }
 
-public:
-  QString pluginFile;
-  QString errorString;
+  public:
+    QString pluginFile;
+    QString errorString;
 };
 
 class PluginManager

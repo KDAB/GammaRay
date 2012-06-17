@@ -23,40 +23,42 @@
 
 #ifndef GAMMARAY_STYLEOPTION_H
 #define GAMMARAY_STYLEOPTION_H
-#include <qstyle.h>
+
+#include <QStyle>
 
 class QStyleOption;
 class QString;
+
 namespace GammaRay {
 
 /**
  * Various helper methods for dealing with QStyleOption.
  */
-namespace StyleOption
-{
+namespace StyleOption {
+
   int stateCount();
   QString stateDisplayName(int index);
   QStyle::State prettyState(int index);
 
-  QStyleOption* makeStyleOption();
-  QStyleOption* makeStyleOptionComplex();
+  QStyleOption *makeStyleOption();
+  QStyleOption *makeStyleOptionComplex();
 
-  QStyleOption* makeButtonStyleOption();
-  QStyleOption* makeComboBoxStyleOption();
-  QStyleOption* makeFrameStyleOption();
-  QStyleOption* makeGroupBoxStyleOption();
-  QStyleOption* makeHeaderStyleOption();
-  QStyleOption* makeItemViewStyleOption();
-  QStyleOption* makeMenuStyleOption();
-  QStyleOption* makeProgressBarStyleOption();
-  QStyleOption* makeSliderStyleOption();
-  QStyleOption* makeSpinBoxStyleOption();
-  QStyleOption* makeTabStyleOption();
-  QStyleOption* makeTabBarBaseStyleOption();
-  QStyleOption* makeTabWidgetFrameStyleOption();
-  QStyleOption* makeTitleBarStyleOption();
-  QStyleOption* makeToolBoxStyleOption();
-  QStyleOption* makeToolButtonStyleOption();
+  QStyleOption *makeButtonStyleOption();
+  QStyleOption *makeComboBoxStyleOption();
+  QStyleOption *makeFrameStyleOption();
+  QStyleOption *makeGroupBoxStyleOption();
+  QStyleOption *makeHeaderStyleOption();
+  QStyleOption *makeItemViewStyleOption();
+  QStyleOption *makeMenuStyleOption();
+  QStyleOption *makeProgressBarStyleOption();
+  QStyleOption *makeSliderStyleOption();
+  QStyleOption *makeSpinBoxStyleOption();
+  QStyleOption *makeTabStyleOption();
+  QStyleOption *makeTabBarBaseStyleOption();
+  QStyleOption *makeTabWidgetFrameStyleOption();
+  QStyleOption *makeTitleBarStyleOption();
+  QStyleOption *makeToolBoxStyleOption();
+  QStyleOption *makeToolButtonStyleOption();
 }
 
 }

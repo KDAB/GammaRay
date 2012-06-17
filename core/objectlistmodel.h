@@ -24,10 +24,10 @@
 #ifndef GAMMARAY_OBJECTLISTMODEL_H
 #define GAMMARAY_OBJECTLISTMODEL_H
 
-#include "objectmodelbase.h"
+#include "include/objectmodelbase.h"
 
-#include <QVector>
 #include <QReadWriteLock>
+#include <QVector>
 
 namespace GammaRay {
 

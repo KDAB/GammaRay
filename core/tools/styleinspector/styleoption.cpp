@@ -78,22 +78,23 @@ QString StyleOption::stateDisplayName(int index)
 QStyle::State StyleOption::prettyState(int index)
 {
   QStyle::State s = styleStates[index].state;
-  if (s == QStyle::State_None)
+  if (s == QStyle::State_None) {
     return s;
-  return s | QStyle::State_Enabled; // enable by default, otherwise we usually only see disabled stuff
+  }
+  return s | QStyle::State_Enabled; // enable by default, else we usually see disabled stuff only
 }
 
-QStyleOption* StyleOption::makeStyleOption()
+QStyleOption *StyleOption::makeStyleOption()
 {
   return new QStyleOption;
 }
 
-QStyleOption* StyleOption::makeStyleOptionComplex()
+QStyleOption *StyleOption::makeStyleOptionComplex()
 {
   return new QStyleOptionComplex;
 }
 
-QStyleOption* StyleOption::makeButtonStyleOption()
+QStyleOption *StyleOption::makeButtonStyleOption()
 {
   QStyleOptionButton *opt = new QStyleOptionButton;
   opt->features = QStyleOptionButton::None;
@@ -101,7 +102,7 @@ QStyleOption* StyleOption::makeButtonStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeComboBoxStyleOption()
+QStyleOption *StyleOption::makeComboBoxStyleOption()
 {
   QStyleOptionComboBox *opt = new QStyleOptionComboBox;
   opt->frame = true;
@@ -109,7 +110,7 @@ QStyleOption* StyleOption::makeComboBoxStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeFrameStyleOption()
+QStyleOption *StyleOption::makeFrameStyleOption()
 {
   QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
   opt->lineWidth = 1;
@@ -118,7 +119,7 @@ QStyleOption* StyleOption::makeFrameStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeGroupBoxStyleOption()
+QStyleOption *StyleOption::makeGroupBoxStyleOption()
 {
   QStyleOptionGroupBox *opt = new QStyleOptionGroupBox;
   opt->lineWidth = 1;
@@ -127,7 +128,7 @@ QStyleOption* StyleOption::makeGroupBoxStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeHeaderStyleOption()
+QStyleOption *StyleOption::makeHeaderStyleOption()
 {
   QStyleOptionHeader *opt = new QStyleOptionHeader;
   opt->orientation = Qt::Horizontal;
@@ -135,7 +136,7 @@ QStyleOption* StyleOption::makeHeaderStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeItemViewStyleOption()
+QStyleOption *StyleOption::makeItemViewStyleOption()
 {
   QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
   opt->text = QLatin1String("Text");
@@ -143,14 +144,14 @@ QStyleOption* StyleOption::makeItemViewStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeMenuStyleOption()
+QStyleOption *StyleOption::makeMenuStyleOption()
 {
   QStyleOptionMenuItem *opt = new QStyleOptionMenuItem;
   opt->text = QLatin1String("Label");
   return opt;
 }
 
-QStyleOption* StyleOption::makeProgressBarStyleOption()
+QStyleOption *StyleOption::makeProgressBarStyleOption()
 {
   QStyleOptionProgressBarV2 *opt = new QStyleOptionProgressBarV2;
   opt->minimum = 0;
@@ -159,7 +160,7 @@ QStyleOption* StyleOption::makeProgressBarStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeSliderStyleOption()
+QStyleOption *StyleOption::makeSliderStyleOption()
 {
   QStyleOptionSlider *opt = new QStyleOptionSlider;
   opt->minimum = 0;
@@ -169,48 +170,51 @@ QStyleOption* StyleOption::makeSliderStyleOption()
   return opt;
 }
 
-QStyleOption* StyleOption::makeSpinBoxStyleOption()
+QStyleOption *StyleOption::makeSpinBoxStyleOption()
 {
   QStyleOptionSpinBox *opt = new QStyleOptionSpinBox;
   opt->frame = true;
   return opt;
 }
 
-QStyleOption* StyleOption::makeTabStyleOption()
+QStyleOption *StyleOption::makeTabStyleOption()
 {
-  QStyleOptionTabV3* opt = new QStyleOptionTabV3;
+  QStyleOptionTabV3 *opt = new QStyleOptionTabV3;
   opt->text = QLatin1String("Label");
   return opt;
 }
 
-QStyleOption* StyleOption::makeTabBarBaseStyleOption()
+QStyleOption *StyleOption::makeTabBarBaseStyleOption()
 {
   return new QStyleOptionTabBarBaseV2;
 }
 
-QStyleOption* StyleOption::makeTabWidgetFrameStyleOption()
+QStyleOption *StyleOption::makeTabWidgetFrameStyleOption()
 {
   QStyleOptionTabWidgetFrameV2 *opt = new QStyleOptionTabWidgetFrameV2;
   opt->lineWidth = 1;
   return opt;
 }
 
-QStyleOption* StyleOption::makeTitleBarStyleOption()
+QStyleOption *StyleOption::makeTitleBarStyleOption()
 {
-  QStyleOptionTitleBar* opt = new QStyleOptionTitleBar;
+  QStyleOptionTitleBar *opt = new QStyleOptionTitleBar;
   opt->text = QLatin1String("Title");
-  opt->titleBarFlags = Qt::WindowMinMaxButtonsHint | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint;
+  opt->titleBarFlags = Qt::WindowMinMaxButtonsHint |
+                       Qt::WindowTitleHint |
+                       Qt::WindowSystemMenuHint |
+                       Qt::WindowCloseButtonHint;
   return opt;
 }
 
-QStyleOption* StyleOption::makeToolBoxStyleOption()
+QStyleOption *StyleOption::makeToolBoxStyleOption()
 {
-  QStyleOptionToolBoxV2* opt = new QStyleOptionToolBoxV2;
+  QStyleOptionToolBoxV2 *opt = new QStyleOptionToolBoxV2;
   opt->text = QLatin1String("Label");
   return opt;
 }
 
-QStyleOption* StyleOption::makeToolButtonStyleOption()
+QStyleOption * StyleOption::makeToolButtonStyleOption()
 {
   QStyleOptionToolButton *opt = new QStyleOptionToolButton;
   opt->text = QLatin1String("Label");

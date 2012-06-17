@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
   Author: Stephen Kelly <stephen.kelly@kdab.com>
 
@@ -30,18 +30,20 @@
 #include "connectionmodel.h"
 #include "toolmodel.h"
 #include "readorwritelocker.h"
-#include "tools/modelinspector/modeltest.h"
+
 #include "hooking/functionoverwriterfactory.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QThread>
-#include <QMouseEvent>
-#include <QDialog>
-#include <QtCore/QTimer>
+#include "tools/modelinspector/modeltest.h"
+
 #include <QApplication>
+#include <QCoreApplication>
+#include <QDialog>
+#include <QMouseEvent>
+#include <QThread>
+#include <QTimer>
 
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 
 #ifndef Q_OS_WIN
 #include <dlfcn.h>
@@ -49,7 +51,7 @@
 #include <windows.h>
 #endif
 
-#include <assert.h>
+#include <cassert>
 
 #ifdef Q_OS_MAC
 #include <dlfcn.h>
@@ -69,8 +71,7 @@ bool functionsOverwritten = false;
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 static bool probeConnectCallback(void ** args)
 {
@@ -521,7 +522,8 @@ void Probe::connectionRemoved(QObject *sender, const char *signal,
   }
 
   ReadOrWriteLocker lock(s_lock());
-  if ((sender && instance()->filterObject(sender)) || (receiver && instance()->filterObject(receiver))) {
+  if ((sender && instance()->filterObject(sender)) ||
+      (receiver && instance()->filterObject(receiver))) {
     return;
   }
 

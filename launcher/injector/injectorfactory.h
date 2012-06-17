@@ -28,8 +28,8 @@
 
 namespace GammaRay {
 
-namespace InjectorFactory
-{
+namespace InjectorFactory {
+
    AbstractInjector::Ptr createInjector(const QString &name);
 
    AbstractInjector::Ptr defaultInjectorForLaunch();

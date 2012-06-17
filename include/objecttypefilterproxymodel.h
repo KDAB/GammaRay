@@ -24,9 +24,9 @@
 #ifndef GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 #define GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
-
 #include "objectmodelbase.h"
+
+#include <QtGui/QSortFilterProxyModel>
 
 namespace GammaRay {
 

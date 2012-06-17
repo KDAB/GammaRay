@@ -24,10 +24,9 @@
 #ifndef GAMMARAY_MAINWINDOW_H
 #define GAMMARAY_MAINWINDOW_H
 
-#include <qmainwindow.h>
-
 #include "ui_mainwindow.h"
 
+#include <QMainWindow>
 
 namespace GammaRay {
 

@@ -28,8 +28,8 @@ class QString;
 
 namespace GammaRay {
 
-namespace ProbeFinder
-{
+namespace ProbeFinder {
+
   /**
    * Attempts to find the full path of the probe DLL.
    */

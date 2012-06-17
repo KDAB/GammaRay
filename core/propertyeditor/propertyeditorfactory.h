@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROPERTYEDITORFACTORY_H
 #define GAMMARAY_PROPERTYEDITORFACTORY_H
 
-#include <qitemeditorfactory.h>
+#include <QItemEditorFactory>
 
 namespace GammaRay {
 

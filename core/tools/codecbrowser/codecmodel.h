@@ -28,8 +28,7 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QStringList>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class AllCodecsModel : public QAbstractItemModel
 {

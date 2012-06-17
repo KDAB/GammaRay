@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_GRAPHICSSCENEVIEW_H
 #define GAMMARAY_GRAPHICSSCENEVIEW_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class QGraphicsScene;
 class QGraphicsItem;
@@ -32,7 +32,7 @@ class QGraphicsItem;
 namespace GammaRay {
 
 namespace Ui {
-class GraphicsSceneView;
+  class GraphicsSceneView;
 }
 
 class GraphicsSceneView : public QWidget

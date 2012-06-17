@@ -22,13 +22,13 @@
 */
 
 #include "textdocumentinspector.h"
+
+#include "textdocumentformatmodel.h"
+#include "textdocumentmodel.h"
 #include "ui_textdocumentinspector.h"
 
-#include "textdocumentmodel.h"
-#include "textdocumentformatmodel.h"
-
-#include <objecttypefilterproxymodel.h>
-#include <probeinterface.h>
+#include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
 
 #include <QTextDocument>
 

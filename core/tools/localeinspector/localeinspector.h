@@ -22,10 +22,14 @@
 #ifndef GAMMARAY_LOCALEINSPECTOR_H
 #define GAMMARAY_LOCALEINSPECTOR_H
 
-#include <qwidget.h>
-#include <toolfactory.h>
+#include "include/toolfactory.h"
 
-namespace Ui { class LocaleInspector; }
+#include <QWidget>
+
+namespace Ui {
+  class LocaleInspector;
+}
+
 namespace GammaRay {
 
 class LocaleModel;
@@ -49,8 +53,14 @@ class LocaleInspectorFactory : public QObject, public StandardToolFactory<QObjec
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit LocaleInspectorFactory(QObject *parent) : QObject(parent) {}
-    virtual inline QString name() const { return tr("Locales"); }
+    explicit LocaleInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    virtual inline QString name() const
+    {
+      return tr("Locales");
+    }
 };
 
 }

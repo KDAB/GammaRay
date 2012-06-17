@@ -22,12 +22,13 @@
 */
 
 #include "selftestpage.h"
-#include "ui_selftestpage.h"
 #include "probefinder.h"
+#include "ui_selftestpage.h"
 
+#include "injector/injectorfactory.h"
+
+#include <QFileInfo>
 #include <QStandardItemModel>
-#include <qfileinfo.h>
-#include <injector/injectorfactory.h>
 
 using namespace GammaRay;
 

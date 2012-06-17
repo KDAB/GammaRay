@@ -24,8 +24,7 @@
 #ifndef GAMMARAY_METAOBJECTMODEL_H
 #define GAMMARAY_METAOBJECTMODEL_H
 
-#include <qabstractitemmodel.h>
-#include <QtCore/qsharedpointer.h>
+#include <QAbstractItemModel>
 #include <QMetaObject>
 #include <QPointer>
 

@@ -23,14 +23,16 @@
 #ifndef GAMMARAY_TIMERTOP_H
 #define GAMMARAY_TIMERTOP_H
 
-#include <toolfactory.h>
+#include "include/toolfactory.h"
 
-#include <qwidget.h>
-#include <qtimer.h>
+#include <QTimer>
+#include <QWidget>
 
 namespace GammaRay {
 
-namespace Ui { class TimerTop; }
+namespace Ui {
+  class TimerTop;
+}
 
 class TimerTop : public QWidget
 {

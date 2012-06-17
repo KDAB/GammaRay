@@ -25,7 +25,7 @@
 #define GAMMARAY_TEXTDOCUMENTFORMATMODEL_H
 
 #include <QAbstractTableModel>
-#include <qtextformat.h>
+#include <QTextFormat>
 
 namespace GammaRay {
 

@@ -24,7 +24,9 @@
 #define GAMMARAY_TIMEMODEL_H
 
 #include "timerinfo.h"
-#include <objecttypefilterproxymodel.h>
+
+#include "include/objecttypefilterproxymodel.h"
+
 #include <QAbstractTableModel>
 
 class QTimer;
@@ -57,7 +59,7 @@ class TimerModel : public QAbstractTableModel
     };
 
     /// if set, filters out object owned by the probe
-    void setProbe(ProbeInterface* probe);
+    void setProbe(ProbeInterface *probe);
 
     void setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel);
 
@@ -102,7 +104,7 @@ class TimerModel : public QAbstractTableModel
 
     ObjectTypeFilterProxyModel<QTimer> *m_sourceModel;
     QList<TimerInfoPtr> m_freeTimers;
-    ProbeInterface* m_probe;
+    ProbeInterface *m_probe;
 };
 
 }

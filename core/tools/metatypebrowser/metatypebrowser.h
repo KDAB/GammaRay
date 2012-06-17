@@ -24,12 +24,15 @@
 #ifndef GAMMARAY_METATYPEBROWSER_H
 #define GAMMARAY_METATYPEBROWSER_H
 
-#include <qwidget.h>
-#include <toolfactory.h>
+#include "include/toolfactory.h"
+
+#include <QWidget>
 
 namespace GammaRay {
 
-namespace Ui { class MetaTypeBrowser; }
+namespace Ui {
+  class MetaTypeBrowser;
+}
 
 class MetaTypeBrowser : public QWidget
 {
@@ -46,8 +49,14 @@ class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObjec
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit MetaTypeBrowserFactory(QObject *parent) : QObject(parent) {}
-    inline QString name() const { return tr("Meta Types"); }
+    explicit MetaTypeBrowserFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Meta Types");
+    }
 };
 
 }

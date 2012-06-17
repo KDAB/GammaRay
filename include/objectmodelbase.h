@@ -27,8 +27,8 @@
 #include "util.h"
 #include "objectmodel.h"
 
-#include <QObject>
-#include <QModelIndex>
+#include <QtCore/QObject>
+#include <QtCore/QModelIndex>
 
 namespace GammaRay {
 

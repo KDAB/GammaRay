@@ -34,7 +34,7 @@
 using namespace GammaRay;
 
 #ifndef Q_OS_WIN
-static void portableGetTimeUnix( timespec& t )
+static void portableGetTimeUnix(timespec &t)
 {
 #if defined(Q_OS_MAC)
   clock_serv_t cclock;

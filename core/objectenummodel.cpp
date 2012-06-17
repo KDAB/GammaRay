@@ -22,7 +22,9 @@
 */
 
 #include "objectenummodel.h"
-#include <qmetaobject.h>
+
+#include <QMetaEnum>
+#include <QMetaObject>
 
 using namespace GammaRay;
 

@@ -28,14 +28,17 @@
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 
-#include <qwidget.h>
-#include <private/qpaintbuffer_p.h>
+#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
+
+#include <QWidget>
 
 namespace GammaRay {
 
 class PaintBufferModel;
 
-namespace Ui { class PaintBufferViewer; }
+namespace Ui {
+  class PaintBufferViewer;
+}
 
 /**
  * A widget to look at the command list in a QPaintBuffer.
@@ -44,7 +47,7 @@ class PaintBufferViewer : public QWidget
 {
   Q_OBJECT
   public:
-    explicit PaintBufferViewer(QWidget* parent = 0);
+    explicit PaintBufferViewer(QWidget *parent = 0);
     virtual ~PaintBufferViewer();
 
     void setPaintBuffer(const QPaintBuffer &buffer);

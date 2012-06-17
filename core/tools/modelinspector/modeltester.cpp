@@ -22,12 +22,12 @@
 */
 
 #include "modeltester.h"
-
-#include <QtCore/QAbstractListModel>
-#include <QtCore/QDebug>
-
 #include "modeltest.h"
-#include "util.h"
+
+#include "include/util.h"
+
+#include <QAbstractListModel>
+#include <QDebug>
 
 #include <iostream>
 

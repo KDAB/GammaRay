@@ -24,8 +24,9 @@
 #ifndef GAMMARAY_GDBINJECTOR_H
 #define GAMMARAY_GDBINJECTOR_H
 
-#include <injector/abstractinjector.h>
-#include <qprocess.h>
+#include "injector/abstractinjector.h"
+
+#include <QProcess>
 
 namespace GammaRay {
 

@@ -24,12 +24,11 @@
 #ifndef GAMMARAY_TRANSITIONMODEL_H
 #define GAMMARAY_TRANSITIONMODEL_H
 
-#include "objectmodelbase.h"
+#include "include/objectmodelbase.h"
 
 class QAbstractState;
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class TransitionModelPrivate;
 

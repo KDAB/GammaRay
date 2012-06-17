@@ -23,17 +23,17 @@
 
 #include "config-gammaray.h"
 
-#include "widgetinspector.h"
-#include "ui_widgetinspector.h"
-
 #include "overlaywidget.h"
+#include "paintbufferviewer.h"
+#include "ui_widgetinspector.h"
+#include "widgetinspector.h"
 #include "widgettreemodel.h"
 
-#include <probeinterface.h>
+#include "include/probeinterface.h"
+#include "include/objectmodel.h"
+#include "include/objecttypefilterproxymodel.h"
+
 #include <kde/krecursivefilterproxymodel.h>
-#include <objecttypefilterproxymodel.h>
-#include <objectmodel.h>
-#include <paintbufferviewer.h>
 
 #include <QDebug>
 #include <QDesktopWidget>
@@ -43,7 +43,7 @@
 #include <QPrinter>
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
-#include <private/qpaintbuffer_p.h>
+#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
 #endif
 
 using namespace GammaRay;
@@ -135,8 +135,9 @@ void WidgetInspector::widgetSelected(QWidget *widget)
 
 void WidgetInspector::setActionsEnabled(bool enabled)
 {
-  foreach (QAction *action, actions())
+  foreach (QAction *action, actions()) {
     action->setEnabled(enabled);
+  }
 }
 
 QWidget *WidgetInspector::selectedWidget() const
@@ -254,8 +255,8 @@ void WidgetInspector::callExternalExportAction(const char *name,
     m_externalExportActions.load();
   }
 
-  void(*function)(QWidget*, const QString&) =
-    reinterpret_cast<void(*)(QWidget*, const QString&)>(m_externalExportActions.resolve(name));
+  void(*function)(QWidget *, const QString &) =
+    reinterpret_cast<void(*)(QWidget *, const QString &)>(m_externalExportActions.resolve(name));
 
   if (!function) {
     qWarning() << m_externalExportActions.errorString();
@@ -267,8 +268,9 @@ void WidgetInspector::callExternalExportAction(const char *name,
 void WidgetInspector::analyzePainting()
 {
   QWidget *widget = selectedWidget();
-  if (!widget)
+  if (!widget) {
     return;
+  }
 #ifdef HAVE_PRIVATE_QT_HEADERS
   QPaintBuffer buffer;
   m_overlayWidget->hide();
@@ -283,6 +285,5 @@ void WidgetInspector::analyzePainting()
   viewer->show();
 #endif
 }
-
 
 #include "widgetinspector.moc"

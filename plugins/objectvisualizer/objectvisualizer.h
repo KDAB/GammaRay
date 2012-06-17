@@ -22,9 +22,9 @@
 #ifndef GAMMARAY_GRAPHVIEWER_H
 #define GAMMARAY_GRAPHVIEWER_H
 
-#include <QWidget>
+#include "include/toolfactory.h"
 
-#include <toolfactory.h>
+#include <QWidget>
 
 class QTreeView;
 class QModelIndex;

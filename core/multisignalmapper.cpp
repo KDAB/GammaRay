@@ -22,9 +22,11 @@
 */
 
 #include "multisignalmapper.h"
-#include <qmetaobject.h>
-#include <qsignalmapper.h>
-#include <qdebug.h>
+
+#include <QDebug>
+#include <QMetaEnum>
+#include <QMetaObject>
+#include <QSignalMapper>
 
 using namespace GammaRay;
 

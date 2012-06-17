@@ -44,11 +44,11 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
 
   if (index.column() == 0) {
     QString name(QMetaType::typeName(index.row()));
-    if (name.isEmpty())
+    if (name.isEmpty()) {
       return tr("N/A");
+    }
     return name;
-  }
-  else if (index.column() == 1) {
+  } else if (index.column() == 1) {
     return index.row();
   }
   return QVariant();

@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_PROPERTYEXTENDEDEDITOR_H
 #define GAMMARAY_PROPERTYEXTENDEDEDITOR_H
 
-#include <qwidget.h>
-#include <qvariant.h>
+#include <QVariant>
+#include <QWidget>
 
 namespace GammaRay {
 

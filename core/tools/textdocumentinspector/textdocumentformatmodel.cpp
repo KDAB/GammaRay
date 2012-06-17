@@ -22,8 +22,11 @@
 */
 
 #include "textdocumentformatmodel.h"
-#include <qmetaobject.h>
-#include "util.h"
+
+#include "include/util.h"
+
+#include <QMetaEnum>
+#include <QMetaObject>
 
 using namespace GammaRay;
 

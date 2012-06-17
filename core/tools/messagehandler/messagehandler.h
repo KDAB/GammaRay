@@ -23,7 +23,7 @@
 #ifndef GAMMARAY_MESSAGEHANDLER_H
 #define GAMMARAY_MESSAGEHANDLER_H
 
-#include <toolfactory.h>
+#include "include/toolfactory.h"
 
 #include <QWidget>
 
@@ -32,8 +32,9 @@ class QSortFilterProxyModel;
 namespace GammaRay {
 
 class MessageModel;
+
 namespace Ui {
-class MessageHandler;
+  class MessageHandler;
 }
 
 class MessageHandler : public QWidget
@@ -41,7 +42,6 @@ class MessageHandler : public QWidget
   Q_OBJECT
   public:
     explicit MessageHandler(ProbeInterface *probe, QWidget *parent = 0);
-
     void setModel(MessageModel *model);
 
   private:

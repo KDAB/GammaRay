@@ -24,10 +24,11 @@
 #ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_H
 #define GAMMARAY_TEXTDOCUMENTINSPECTOR_H
 
-#include <toolfactory.h>
-#include <qwidget.h>
-#include <qtextdocument.h>
-#include <qpointer.h>
+#include "include/toolfactory.h"
+
+#include <QPointer>
+#include <QTextDocument>
+#include <QWidget>
 
 class QItemSelection;
 
@@ -36,7 +37,9 @@ namespace GammaRay {
 class TextDocumentModel;
 class TextDocumentFormatModel;
 
-namespace Ui { class TextDocumentInspector; }
+namespace Ui {
+  class TextDocumentInspector;
+}
 
 class TextDocumentInspector : public QWidget
 {
@@ -62,8 +65,14 @@ class TextDocumentInspectorFactory
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit TextDocumentInspectorFactory(QObject *parent) : QObject(parent) {}
-    inline QString name() const { return tr("Text Documents"); }
+    explicit TextDocumentInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Text Documents");
+    }
 };
 
 }

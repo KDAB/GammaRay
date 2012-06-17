@@ -23,11 +23,11 @@
 
 #include "modelinspector.h"
 
+#include "modelinspectorwidget.h"
 #include "modelmodel.h"
 #include "modeltester.h"
-#include "modelinspectorwidget.h"
 
-#include <probeinterface.h>
+#include "include/probeinterface.h"
 
 using namespace GammaRay;
 

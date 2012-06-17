@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_SCENEMODEL_H
 #define GAMMARAY_SCENEMODEL_H
 
-#include <qabstractitemmodel.h>
+#include <QAbstractItemModel>
 
 class QGraphicsScene;
 class QGraphicsItem;

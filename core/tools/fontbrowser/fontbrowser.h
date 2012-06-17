@@ -24,16 +24,20 @@
 #ifndef GAMMARAY_FONTBROWSER_H
 #define GAMMARAY_FONTBROWSER_H
 
-#include <qwidget.h>
+#include "include/toolfactory.h"
+
 #include <QFontDatabase>
-#include <toolfactory.h>
+#include <QWidget>
 
 class QItemSelection;
 
 namespace GammaRay {
 
 class FontModel;
-namespace Ui { class FontBrowser; }
+
+namespace Ui {
+  class FontBrowser;
+}
 
 class FontBrowser : public QWidget
 {
@@ -54,8 +58,14 @@ class FontBrowserFactory : public QObject, public StandardToolFactory<QObject, F
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit FontBrowserFactory(QObject *parent) : QObject(parent) {}
-    virtual inline QString name() const { return tr("Fonts"); }
+    explicit FontBrowserFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    virtual inline QString name() const
+    {
+      return tr("Fonts");
+    }
 };
 
 }

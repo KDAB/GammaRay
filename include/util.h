@@ -33,8 +33,8 @@ class QObject;
 
 namespace GammaRay {
 
-namespace Util
-{
+namespace Util {
+
   GAMMARAY_EXPORT QString displayString(const QObject *object);
   GAMMARAY_EXPORT QString variantToString(const QVariant &value);
   /// Returns a value representing @p value in a itemview decoration role
@@ -50,7 +50,9 @@ namespace Util
    *                 (e.g. the case for QMetaProperty::read).
    * @param object Additional QObject to search for QMetaEnums.
    */
-  GAMMARAY_EXPORT QString enumToString(const QVariant &value, const char *typeName = 0, QObject *object = 0);
+  GAMMARAY_EXPORT QString enumToString(const QVariant &value,
+                                       const char *typeName = 0,
+                                       QObject *object = 0);
 
   GAMMARAY_EXPORT bool descendantOf(const QObject *ascendant, const QObject *obj);
 

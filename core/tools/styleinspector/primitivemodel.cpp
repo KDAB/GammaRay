@@ -24,16 +24,16 @@
 #include "primitivemodel.h"
 #include "styleoption.h"
 
-#include <qpixmap.h>
-#include <qpainter.h>
-#include <qstyleoption.h>
+#include <QPainter>
+#include <QPixmap>
+#include <QStyleOption>
 
 using namespace GammaRay;
 
 struct primitive_element_t {
-    const char *name;
-    QStyle::PrimitiveElement primitive;
-    QStyleOption* (*styleOptionFactory)();
+  const char *name;
+  QStyle::PrimitiveElement primitive;
+  QStyleOption * (*styleOptionFactory)();
 };
 
 #define MAKE_PE( primitive ) { #primitive , QStyle:: primitive, &StyleOption::makeStyleOption }
@@ -96,7 +96,8 @@ static primitive_element_t primititveElements[] =  {
   MAKE_PE(PE_PanelMenu)
 };
 
-PrimitiveModel::PrimitiveModel(QObject* parent): AbstractStyleElementStateTable(parent)
+PrimitiveModel::PrimitiveModel(QObject *parent)
+  : AbstractStyleElementStateTable(parent)
 {
 }
 
@@ -124,8 +125,9 @@ int PrimitiveModel::doRowCount() const
 
 QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Vertical && role == Qt::DisplayRole)
+  if (orientation == Qt::Vertical && role == Qt::DisplayRole) {
     return primititveElements[section].name;
+  }
   return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
 

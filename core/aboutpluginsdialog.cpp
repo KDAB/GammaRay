@@ -22,138 +22,154 @@
 */
 
 #include "aboutpluginsdialog.h"
-
 #include "pluginmanager.h"
-#include <toolfactory.h>
+
+#include "include/toolfactory.h"
 
 #include <QAbstractTableModel>
-#include <QVBoxLayout>
-#include <QTableView>
 #include <QGroupBox>
 #include <QHeaderView>
+#include <QTableView>
+#include <QVBoxLayout>
 
 using namespace GammaRay;
 
 class ErrorModel : public QAbstractTableModel
 {
-public:
-  explicit ErrorModel(PluginLoadErrors& errors, QObject* parent = 0)
-    : QAbstractTableModel(parent), m_errors(errors) {}
+  public:
+    explicit ErrorModel(PluginLoadErrors &errors, QObject *parent = 0)
+      : QAbstractTableModel(parent), m_errors(errors) {}
 
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
-  {
-    Q_UNUSED(parent);
-    return 3;
-  }
-
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
-  {
-    Q_UNUSED(parent);
-    return m_errors.size();
-  }
-
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
-  {
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-      switch (section) {
-        case 0: return tr("Plugin Name");
-        case 1: return tr("Plugin File");
-        case 2: return tr("Error Message");
-      }
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+    {
+      Q_UNUSED(parent);
+      return 3;
     }
-    return QAbstractTableModel::headerData(section, orientation, role);
-  }
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if (!index.isValid())
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
+    {
+      Q_UNUSED(parent);
+      return m_errors.size();
+    }
+
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const
+    {
+      if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+        case 0:
+          return tr("Plugin Name");
+        case 1:
+          return tr("Plugin File");
+        case 2:
+          return tr("Error Message");
+        }
+      }
+      return QAbstractTableModel::headerData(section, orientation, role);
+    }
+
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    {
+      if (!index.isValid()) {
+        return QVariant();
+      }
+
+      const int row = index.row();
+      const int column = index.column();
+      if (role == Qt::DisplayRole) {
+        switch (column) {
+        case 0:
+          return m_errors[row].pluginName();
+        case 1:
+          return m_errors[row].pluginFile;
+        case 2:
+          return m_errors[row].errorString;
+        }
+      }
       return QVariant();
-
-    const int row = index.row();
-    const int column = index.column();
-    if (role == Qt::DisplayRole) {
-      switch (column) {
-        case 0: return m_errors[row].pluginName();
-        case 1: return m_errors[row].pluginFile;
-        case 2: return m_errors[row].errorString;
-      }
     }
-    return QVariant();
-  }
 
-private:
-  PluginLoadErrors m_errors;
+  private:
+    PluginLoadErrors m_errors;
 };
 
 class ToolModel : public QAbstractTableModel
 {
-public:
-  explicit ToolModel(const QVector<ToolFactory*>& tools, QObject* parent = 0)
-    : QAbstractTableModel(parent), m_tools(tools) {}
+  public:
+    explicit ToolModel(const QVector<ToolFactory*>& tools, QObject* parent = 0)
+      : QAbstractTableModel(parent), m_tools(tools) {}
 
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
-  {
-    Q_UNUSED(parent);
-    return 3;
-  }
-
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
-  {
-    Q_UNUSED(parent);
-    return m_tools.size();
-  }
-
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
-  {
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-      switch (section) {
-        case 0: return tr("Id");
-        case 1: return tr("Name");
-        case 2: return tr("Supported types");
-      }
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+    {
+      Q_UNUSED(parent);
+      return 3;
     }
-    return QAbstractTableModel::headerData(section, orientation, role);
-  }
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if (!index.isValid())
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
+    {
+      Q_UNUSED(parent);
+      return m_tools.size();
+    }
+
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const
+    {
+      if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+        case 0:
+          return tr("Id");
+        case 1:
+          return tr("Name");
+        case 2:
+          return tr("Supported types");
+        }
+      }
+      return QAbstractTableModel::headerData(section, orientation, role);
+    }
+
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    {
+      if (!index.isValid()) {
+        return QVariant();
+      }
+
+      const int row = index.row();
+      const int column = index.column();
+      if (role == Qt::DisplayRole) {
+        ToolFactory *factory = m_tools[row];
+        switch (column) {
+        case 0:
+          return factory->id();
+        case 1:
+          return factory->name();
+        case 2:
+          return factory->supportedTypes();
+        }
+      }
       return QVariant();
-
-    const int row = index.row();
-    const int column = index.column();
-    if (role == Qt::DisplayRole) {
-      ToolFactory* factory = m_tools[row];
-      switch (column) {
-        case 0: return factory->id();
-        case 1: return factory->name();
-        case 2: return factory->supportedTypes();
-      }
     }
-    return QVariant();
-  }
 
-private:
-  QVector<ToolFactory*> m_tools;
+  private:
+    QVector<ToolFactory*> m_tools;
 };
 
-AboutPluginsDialog::AboutPluginsDialog(QWidget* parent, Qt::WindowFlags f)
+AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
   : QDialog(parent, f)
 {
-  QLayout* layout = 0;
-  QVBoxLayout* vbox = new QVBoxLayout(this);
+  QLayout *layout = 0;
+  QVBoxLayout *vbox = new QVBoxLayout(this);
 
   {
     QVector<ToolFactory*> tools = PluginManager::instance()->plugins();
-    ToolModel* toolModel = new ToolModel(tools, this);
-    QTableView* toolView = new QTableView(this);
+    ToolModel *toolModel = new ToolModel(tools, this);
+    QTableView *toolView = new QTableView(this);
     toolView->setShowGrid(false);
     toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
     toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     toolView->verticalHeader()->hide();
     toolView->setModel(toolModel);
 
-    QGroupBox* toolBox = new QGroupBox(tr("Loaded Plugins"), this);
+    QGroupBox *toolBox = new QGroupBox(tr("Loaded Plugins"), this);
     layout = new QHBoxLayout(toolBox);
     layout->addWidget(toolView);
     vbox->addWidget(toolBox);
@@ -163,15 +179,15 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget* parent, Qt::WindowFlags f)
 
   {
     PluginLoadErrors errors = PluginManager::instance()->errors();
-    ErrorModel* errorModel = new ErrorModel(errors, this);
-    QTableView* errorView = new QTableView(this);
+    ErrorModel *errorModel = new ErrorModel(errors, this);
+    QTableView *errorView = new QTableView(this);
     errorView->setShowGrid(false);
     errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
     errorView->setModel(errorModel);
     errorView->verticalHeader()->hide();
     errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
-    QGroupBox* errorBox = new QGroupBox(tr("Failed Plugins"), this);
+    QGroupBox *errorBox = new QGroupBox(tr("Failed Plugins"), this);
     layout = new QHBoxLayout(errorBox);
     layout->addWidget(errorView);
     vbox->addWidget(errorBox);

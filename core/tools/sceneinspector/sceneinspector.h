@@ -24,16 +24,20 @@
 #ifndef GAMMARAY_SCENEINSPECTOR_H
 #define GAMMARAY_SCENEINSPECTOR_H
 
-#include <qwidget.h>
-#include <toolfactory.h>
-#include <qgraphicsscene.h>
+#include "include/toolfactory.h"
+
+#include <QGraphicsScene>
+#include <QWidget>
 
 class QModelIndex;
 
 namespace GammaRay {
 
 class SceneModel;
-namespace Ui { class SceneInspector; }
+
+namespace Ui {
+  class SceneInspector;
+}
 
 class SceneInspector : public QWidget
 {
@@ -61,8 +65,14 @@ class SceneInspectorFactory : public QObject,
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit SceneInspectorFactory(QObject *parent) : QObject(parent) {}
-    inline QString name() const { return tr("Graphics Scenes"); }
+    explicit SceneInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Graphics Scenes");
+    }
 };
 
 }

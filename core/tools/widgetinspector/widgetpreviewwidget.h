@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_WIDGETPREVIEWWIDGET_H
 #define GAMMARAY_WIDGETPREVIEWWIDGET_H
 
-#include <qwidget.h>
 #include <QPointer>
+#include <QWidget>
 
 namespace GammaRay {
 

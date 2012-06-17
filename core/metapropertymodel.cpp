@@ -24,14 +24,15 @@
 #include "metapropertymodel.h"
 #include "metaobjectrepository.h"
 #include "metaobject.h"
-#include "util.h"
+
+#include "include/util.h"
 
 using namespace GammaRay;
 
-MetaPropertyModel::MetaPropertyModel(QObject *parent):
-  QAbstractTableModel(parent),
-  m_metaObject(0),
-  m_object(0)
+MetaPropertyModel::MetaPropertyModel(QObject *parent)
+  : QAbstractTableModel(parent),
+    m_metaObject(0),
+    m_object(0)
 {
 }
 

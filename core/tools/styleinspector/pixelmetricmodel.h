@@ -34,17 +34,20 @@ namespace GammaRay {
 class PixelMetricModel : public AbstractStyleElementModel
 {
   Q_OBJECT
-public:
-  explicit PixelMetricModel(QObject* parent = 0);
+  public:
+    explicit PixelMetricModel(QObject *parent = 0);
 
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-protected:
-  virtual QVariant doData(int row, int column, int role) const;
-  virtual int doColumnCount() const;
-  virtual int doRowCount() const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+  protected:
+    virtual QVariant doData(int row, int column, int role) const;
+    virtual int doColumnCount() const;
+    virtual int doRowCount() const;
 };
 
 }

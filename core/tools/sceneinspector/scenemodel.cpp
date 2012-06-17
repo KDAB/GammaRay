@@ -23,11 +23,11 @@
 
 #include "scenemodel.h"
 
-#include <qapplication.h>
-#include <qgraphicsitem.h>
-#include <qgraphicsscene.h>
-#include <qpalette.h>
-#include <qdebug.h>
+#include <QApplication>
+#include <QDebug>
+#include <QGraphicsItem>
+#include <QGraphicsScene>
+#include <QPalette>
 
 using namespace GammaRay;
 
@@ -71,7 +71,9 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
       if (obj && !obj->objectName().isEmpty()) {
         return obj->objectName();
       }
-      return QString::fromLatin1("0x%1").arg(QString::number(reinterpret_cast<qlonglong>(item), 16));
+      return
+        QString::fromLatin1("0x%1").
+          arg(QString::number(reinterpret_cast<qlonglong>(item), 16));
     } else if (index.column() == 1) {
       if (obj) {
         return obj->metaObject()->className();

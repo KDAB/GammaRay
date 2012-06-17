@@ -24,10 +24,10 @@
 #ifndef GAMMARAY_STYLEINSPECTOR_H
 #define GAMMARAY_STYLEINSPECTOR_H
 
-#include <toolfactory.h>
+#include "include/toolfactory.h"
 
-#include <qstyle.h>
-#include <qwidget.h>
+#include <QStyle>
+#include <QWidget>
 
 namespace GammaRay {
 
@@ -39,27 +39,27 @@ class PrimitiveModel;
 class StandardIconModel;
 
 namespace Ui {
-class StyleInspector;
+  class StyleInspector;
 }
 
 class StyleInspector : public QWidget
 {
   Q_OBJECT
-public:
-  explicit StyleInspector(ProbeInterface *probe, QWidget *parent = 0);
-  virtual ~StyleInspector();
+  public:
+    explicit StyleInspector(ProbeInterface *probe, QWidget *parent = 0);
+    virtual ~StyleInspector();
 
-private slots:
-  void styleSelected(int index);
+  private slots:
+    void styleSelected(int index);
 
-private:
-  Ui::StyleInspector *ui;
-  PrimitiveModel *m_primitiveModel;
-  ControlModel *m_controlModel;
-  ComplexControlModel *m_complexControlModel;
-  PixelMetricModel *m_pixelMetricModel;
-  StandardIconModel *m_standardIconModel;
-  PaletteModel *m_standardPaletteModel;
+  private:
+    Ui::StyleInspector *ui;
+    PrimitiveModel *m_primitiveModel;
+    ControlModel *m_controlModel;
+    ComplexControlModel *m_complexControlModel;
+    PixelMetricModel *m_pixelMetricModel;
+    StandardIconModel *m_standardIconModel;
+    PaletteModel *m_standardPaletteModel;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>
@@ -67,9 +67,15 @@ class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle,
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
 
-public:
-  explicit StyleInspectorFactory(QObject* parent = 0) : QObject(parent) {}
-  virtual QString name() const { return tr("Style"); }
+  public:
+    explicit StyleInspectorFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
+
+    virtual QString name() const
+    {
+      return tr("Style");
+    }
 };
 
 }

@@ -23,18 +23,18 @@
 
 #include "metaobjectrepository.h"
 #include "metaobject.h"
-#include "metatypedeclarations.h"
 
-#include <qglobal.h>
-#include <qgraphicsitem.h>
-#include <qgraphicslayoutitem.h>
-#include <qgraphicswidget.h>
-#include <qgraphicsproxywidget.h>
-#include <qpen.h>
-#include <qobject.h>
-#include <qpalette.h>
-#include <qstyle.h>
-#include <qwidget.h>
+#include "include/metatypedeclarations.h"
+
+#include <QGraphicsItem>
+#include <QGraphicsLayoutItem>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsWidget>
+#include <QObject>
+#include <QPalette>
+#include <QPen>
+#include <QStyle>
+#include <QWidget>
 
 #define MO_ADD_BASECLASS(Base) \
   Q_ASSERT( hasMetaObject( QLatin1String( #Base ) ) ); \

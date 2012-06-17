@@ -26,12 +26,15 @@
 #ifdef HAVE_PRIVATE_QT_HEADERS
 using namespace GammaRay;
 
-PaintBufferReplayWidget::PaintBufferReplayWidget(QWidget* parent): QWidget(parent), m_endCommandIndex(0), m_zoomFactor(1)
+PaintBufferReplayWidget::PaintBufferReplayWidget(QWidget *parent)
+  : QWidget(parent),
+    m_endCommandIndex(0),
+    m_zoomFactor(1)
 {
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
-void PaintBufferReplayWidget::setPaintBuffer(const QPaintBuffer& buffer)
+void PaintBufferReplayWidget::setPaintBuffer(const QPaintBuffer &buffer)
 {
   m_buffer = buffer;
   update();
@@ -56,9 +59,11 @@ QSize PaintBufferReplayWidget::sizeHint() const
 }
 
 // TODO: factor out into util namespace, similar code exists in the style tool
-void PaintBufferReplayWidget::drawTransparencyPattern(QPainter* painter, const QRect& rect, int squareSize)
+void PaintBufferReplayWidget::drawTransparencyPattern(QPainter *painter,
+                                                      const QRect &rect,
+                                                      int squareSize)
 {
-  QPixmap bgPattern(2*squareSize, 2*squareSize);
+  QPixmap bgPattern(2 * squareSize, 2 * squareSize);
   bgPattern.fill(Qt::lightGray);
   QPainter bgPainter(&bgPattern);
   bgPainter.fillRect(squareSize, 0, squareSize, squareSize, Qt::gray);
@@ -69,22 +74,26 @@ void PaintBufferReplayWidget::drawTransparencyPattern(QPainter* painter, const Q
   painter->fillRect(rect, bgBrush);
 }
 
-void PaintBufferReplayWidget::paintEvent(QPaintEvent* event)
+void PaintBufferReplayWidget::paintEvent(QPaintEvent *event)
 {
-  // didn't manage painting on the widget directly, even with the correct translation it is always clipping as if the widget was at 0,0 of its parent
+  // didn't manage painting on the widget directly, even with the correct
+  // translation it is always clipping as if the widget was at 0,0 of its parent
   const QSize sourceSize = m_buffer.boundingRect().size().toSize();
   QImage img(sourceSize, QImage::Format_ARGB32);
   QPainter imgPainter(&img);
-  drawTransparencyPattern(&imgPainter, QRect(QPoint(0,0), sourceSize));
-  int depth = m_buffer.processCommands(&imgPainter, m_buffer.frameStartIndex(0), m_buffer.frameStartIndex(0) + m_endCommandIndex);
-  for (;depth > 0;--depth)
+  drawTransparencyPattern(&imgPainter, QRect(QPoint(0, 0), sourceSize));
+  int depth = m_buffer.processCommands(&imgPainter, m_buffer.frameStartIndex(0),
+                                       m_buffer.frameStartIndex(0) + m_endCommandIndex);
+  for (; depth > 0; --depth) {
     imgPainter.restore();
+  }
   imgPainter.end();
 
   QPainter p(this);
   p.setRenderHint(QPainter::SmoothPixmapTransform, false);
-  p.drawImage(QRect(QPoint(0,0), sizeHint()), img);
+  p.drawImage(QRect(QPoint(0, 0), sizeHint()), img);
 }
 
 #include "paintbufferreplaywidget.moc"
+
 #endif

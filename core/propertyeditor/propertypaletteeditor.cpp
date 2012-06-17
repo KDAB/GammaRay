@@ -26,7 +26,8 @@
 
 using namespace GammaRay;
 
-PropertyPaletteEditor::PropertyPaletteEditor(QWidget* parent): PropertyExtendedEditor(parent)
+PropertyPaletteEditor::PropertyPaletteEditor(QWidget *parent)
+  : PropertyExtendedEditor(parent)
 {
 }
 

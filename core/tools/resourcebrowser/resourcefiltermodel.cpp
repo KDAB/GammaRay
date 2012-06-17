@@ -23,7 +23,7 @@
 
 #include "resourcefiltermodel.h"
 
-#include <qt/resourcemodel.h>
+#include "qt/resourcemodel.h"
 
 #include <QDebug>
 

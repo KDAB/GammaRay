@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_SELFTESTPAGE_H
 #define GAMMARAY_SELFTESTPAGE_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class QStandardItemModel;
 

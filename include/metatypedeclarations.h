@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2011 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2011-2012 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -24,25 +24,25 @@
 #ifndef GAMMARAY_METATYPEDECALARATIONS_H
 #define GAMMARAY_METATYPEDECALARATIONS_H
 
-#include <QGraphicsItem>
-#include <QGraphicsWidget>
-#include <QGraphicsEffect>
-#include <QStyle>
+#include <QtGui/QGraphicsItem>
+#include <QtGui/QGraphicsWidget>
+#include <QtGui/QGraphicsEffect>
+#include <QtGui/QStyle>
 
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
 Q_DECLARE_METATYPE(Qt::TransformationMode)
-Q_DECLARE_METATYPE(QGraphicsEffect*)
-Q_DECLARE_METATYPE(QGraphicsItemGroup*)
-Q_DECLARE_METATYPE(QGraphicsObject*)
-Q_DECLARE_METATYPE(QGraphicsWidget*)
+Q_DECLARE_METATYPE(QGraphicsEffect *)
+Q_DECLARE_METATYPE(QGraphicsItemGroup *)
+Q_DECLARE_METATYPE(QGraphicsObject *)
+Q_DECLARE_METATYPE(QGraphicsWidget *)
 Q_DECLARE_METATYPE(QGraphicsItem::CacheMode)
 Q_DECLARE_METATYPE(QGraphicsItem::GraphicsItemFlags)
 Q_DECLARE_METATYPE(QGraphicsItem::PanelModality)
 Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
-Q_DECLARE_METATYPE(const QStyle*)
+Q_DECLARE_METATYPE(const QStyle *)
 
 #endif

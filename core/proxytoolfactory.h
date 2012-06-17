@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROXYTOOLFACTORY_H
 #define GAMMARAY_PROXYTOOLFACTORY_H
 
-#include "toolfactory.h"
+#include "include/toolfactory.h"
 
 namespace GammaRay {
 

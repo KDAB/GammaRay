@@ -23,7 +23,7 @@
 
 #include "textdocumentcontentview.h"
 
-#include <qpainter.h>
+#include <QPainter>
 
 using namespace GammaRay;
 

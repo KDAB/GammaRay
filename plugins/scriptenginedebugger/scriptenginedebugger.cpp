@@ -24,9 +24,9 @@
 #include "scriptenginedebugger.h"
 #include "ui_scriptenginedebugger.h"
 
-#include <probeinterface.h>
-#include <objecttypefilterproxymodel.h>
-#include <singlecolumnobjectproxymodel.h>
+#include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
+#include "include/singlecolumnobjectproxymodel.h"
 
 #include <QtScript/qscriptengine.h>
 #include <QtScriptTools/QScriptEngineDebugger>

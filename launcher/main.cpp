@@ -69,11 +69,14 @@ int main(int argc, char **argv)
   QApplication::setApplicationName("GammaRay");
 
   QStringList args;
-  for (int i = 1; i < argc; ++i)
+  for (int i = 1; i < argc; ++i) {
     args.push_back(QString::fromLocal8Bit(argv[i]));
+  }
   QApplication app(argc, argv);
 
-  QStringList builtInArgs = QStringList() << QLatin1String("-style") << QLatin1String("-stylesheet") << QLatin1String("-graphicssystem");
+  QStringList builtInArgs = QStringList() << QLatin1String("-style")
+                                          << QLatin1String("-stylesheet")
+                                          << QLatin1String("-graphicssystem");
 
   QString injectorType;
   int pid = -1;
@@ -108,8 +111,9 @@ int main(int argc, char **argv)
     }
     // built-in arguments of QApp, could be meant for us if we are showing the launcher window
     foreach (const QString &builtInArg, builtInArgs) {
-      if (arg == builtInArg && !args.isEmpty())
+      if (arg == builtInArg && !args.isEmpty()) {
         args.takeFirst();
+      }
     }
   }
 

@@ -59,7 +59,7 @@
 
 ///BEGIN kdebug.cpp
 
-#include <QtCore/QString>
+#include <QString>
 #include <stdlib.h>
 
 #ifdef Q_OS_SOLARIS

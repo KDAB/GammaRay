@@ -24,9 +24,9 @@
 #ifndef GAMMARAY_TOOLMODEL_H
 #define GAMMARAY_TOOLMODEL_H
 
-#include <qabstractitemmodel.h>
-#include <qvector.h>
+#include <QAbstractListModel>
 #include <QSet>
+#include <QVector>
 
 namespace GammaRay {
 

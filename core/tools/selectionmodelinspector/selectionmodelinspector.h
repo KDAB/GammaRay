@@ -24,13 +24,16 @@
 #ifndef GAMMARAY_SELECTIONMODELINSPECTOR_H
 #define GAMMARAY_SELECTIONMODELINSPECTOR_H
 
-#include <qwidget.h>
-#include <toolfactory.h>
+#include "include/toolfactory.h"
+
 #include <QItemSelectionModel>
+#include <QWidget>
 
 namespace GammaRay {
 
-namespace Ui { class SelectionModelInspector; }
+namespace Ui {
+  class SelectionModelInspector;
+}
 
 class SelectionModelInspector : public QWidget
 {
@@ -51,8 +54,14 @@ class SelectionModelInspectorFactory :
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit SelectionModelInspectorFactory(QObject *parent) : QObject(parent) {}
-    virtual inline QString name() const { return tr("Selection Models"); }
+    explicit SelectionModelInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    virtual inline QString name() const
+    {
+      return tr("Selection Models");
+    }
 };
 
 }

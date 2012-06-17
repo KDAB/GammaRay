@@ -20,24 +20,23 @@
 */
 
 #include "objectvisualizer.h"
-
 #include "vtkcontainer.h"
-#include "vtkwidget.h"
 #include "vtkpanel.h"
+#include "vtkwidget.h"
+
+#include "include/objectmodel.h"
+#include "include/probeinterface.h"
 
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
-
-#include <objectmodel.h>
-#include <probeinterface.h>
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QSortFilterProxyModel>
+#include <QSplitter>
 #include <QStateMachine>
 #include <QTreeView>
-#include <QSplitter>
 
 #include <QtPlugin>
 

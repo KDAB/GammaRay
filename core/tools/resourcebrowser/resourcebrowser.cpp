@@ -22,11 +22,11 @@
 */
 
 #include "resourcebrowser.h"
+#include "resourcefiltermodel.h"
 #include "ui_resourcebrowser.h"
 
-#include "resourcefiltermodel.h"
+#include "qt/resourcemodel.h"
 
-#include <qt/resourcemodel.h>
 #include <QDebug>
 
 using namespace GammaRay;

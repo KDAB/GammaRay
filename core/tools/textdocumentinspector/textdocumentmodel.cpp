@@ -23,11 +23,11 @@
 
 #include "textdocumentmodel.h"
 
+#include <QAbstractTextDocumentLayout>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextFrame>
-#include <qtexttable.h>
-#include <QAbstractTextDocumentLayout>
+#include <QTextTable>
 
 using namespace GammaRay;
 

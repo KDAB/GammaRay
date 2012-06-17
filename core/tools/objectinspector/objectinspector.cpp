@@ -24,9 +24,10 @@
 #include "objectinspector.h"
 #include "ui_objectinspector.h"
 
+#include "include/objectmodel.h"
+#include "include/probeinterface.h"
+
 #include <kde/krecursivefilterproxymodel.h>
-#include <probeinterface.h>
-#include <objectmodel.h>
 
 #include <QLineEdit>
 

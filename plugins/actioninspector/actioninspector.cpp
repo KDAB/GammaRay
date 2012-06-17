@@ -22,31 +22,31 @@
 #include "actioninspector.h"
 #include "actionmodel.h"
 
+#include "include/objectmodel.h"
+#include "include/probeinterface.h"
+#include "include/objecttypefilterproxymodel.h"
+
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
-
-#include <objectmodel.h>
-#include <probeinterface.h>
-#include <objecttypefilterproxymodel.h>
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QSortFilterProxyModel>
+#include <QSplitter>
 #include <QStateMachine>
 #include <QTreeView>
-#include <QSplitter>
-#include <QHeaderView>
 
 #include <QtPlugin>
 
 using namespace GammaRay;
 
 ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent)
-  , mProbeIface(probe)
+  : QWidget(parent),
+    mProbeIface(probe)
 {
-  ActionModel* actionFilterProxy = new ActionModel(this);
+  ActionModel *actionFilterProxy = new ActionModel(this);
   actionFilterProxy->setSourceModel(probe->objectListModel());
 
   QSortFilterProxyModel *searchFilterProxy = new KRecursiveFilterProxyModel(this);
@@ -101,14 +101,18 @@ void ActionInspector::handleRowChanged(const QModelIndex &index)
   // TODO: Unused
 }
 
-void ActionInspector::triggerAction(const QModelIndex& index)
+void ActionInspector::triggerAction(const QModelIndex &index)
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return;
+  }
+
   QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
   QAction *action = qobject_cast<QAction*>(obj);
-  if (action)
+
+  if (action) {
     action->trigger();
+  }
 }
 
 Q_EXPORT_PLUGIN(ActionInspectorFactory)

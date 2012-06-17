@@ -29,7 +29,6 @@
 
 using namespace GammaRay;
 
-
 struct role_t {
     const char *name;
     QPalette::ColorRole role;
@@ -68,8 +67,8 @@ static group_t paletteGroups[] = {
     { "Disabled",  QPalette::Disabled },
 };
 
-
-PaletteModel::PaletteModel(QObject* parent): QAbstractTableModel(parent), m_editable(false)
+PaletteModel::PaletteModel(QObject *parent)
+  : QAbstractTableModel(parent), m_editable(false)
 {
 }
 
@@ -78,7 +77,7 @@ QPalette PaletteModel::palette() const
   return m_palette;
 }
 
-void PaletteModel::setPalette(const QPalette& palette)
+void PaletteModel::setPalette(const QPalette &palette)
 {
   beginResetModel();
   m_palette = palette;
@@ -90,19 +89,29 @@ void PaletteModel::setEditable(bool editable)
   m_editable = editable;
 }
 
-QVariant PaletteModel::data(const QModelIndex& index, int role) const
+QVariant PaletteModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
+  }
 
   if (role == Qt::DisplayRole) {
-    if (index.column() == 0)
+    if (index.column() == 0) {
       return paletteRoles[index.row()].name;
-    return m_palette.color(paletteGroups[index.column()-1].group, paletteRoles[index.row()].role).name();
+    }
+
+    return
+      m_palette.color(paletteGroups[index.column()-1].group,
+                      paletteRoles[index.row()].role).name();
+
   } else if (role == Qt::EditRole) {
-    return m_palette.color(paletteGroups[index.column()-1].group, paletteRoles[index.row()].role); // TODO return QBrush once we have an editor for that
+    // TODO return QBrush once we have an editor for that
+    return
+      m_palette.color(paletteGroups[index.column()-1].group,
+                      paletteRoles[index.row()].role);
   } else if (role == Qt::DecorationRole && index.column() != 0) {
-    const QBrush brush = m_palette.brush(paletteGroups[index.column()-1].group, paletteRoles[index.row()].role);
+    const QBrush brush = m_palette.brush(paletteGroups[index.column()-1].group,
+                                         paletteRoles[index.row()].role);
     QPixmap pixmap(32, 32);
     QPainter painter(&pixmap);
     painter.fillRect(pixmap.rect(), Qt::black);
@@ -113,48 +122,55 @@ QVariant PaletteModel::data(const QModelIndex& index, int role) const
   return QVariant();
 }
 
-bool PaletteModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-  if (!m_editable)
+  if (!m_editable) {
     return false;
+  }
+
   if (index.isValid() && role == Qt::EditRole) {
     if (value.type() == QVariant::Color) {
-      m_palette.setColor(paletteGroups[index.column()-1].group, paletteRoles[index.row()].role, value.value<QColor>());
+      m_palette.setColor(paletteGroups[index.column()-1].group,
+                         paletteRoles[index.row()].role, value.value<QColor>());
     } else if (value.type() == QVariant::Brush) {
-      m_palette.setBrush(paletteGroups[index.column()-1].group, paletteRoles[index.row()].role, value.value<QBrush>());
+      m_palette.setBrush(paletteGroups[index.column()-1].group,
+                         paletteRoles[index.row()].role, value.value<QBrush>());
     }
   }
   return QAbstractItemModel::setData(index, value, role);
 }
 
-int PaletteModel::columnCount(const QModelIndex& parent) const
+int PaletteModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 1 + sizeof(paletteGroups) / sizeof(paletteGroups[0]);
 }
 
-int PaletteModel::rowCount(const QModelIndex& parent) const
+int PaletteModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return 0;
+  }
   return sizeof(paletteRoles) / sizeof(paletteRoles[0]);
 }
 
 QVariant PaletteModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0)
+    if (section == 0) {
       return tr("Role");
+    }
     return paletteGroups[section-1].name;
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-Qt::ItemFlags PaletteModel::flags(const QModelIndex& index) const
+Qt::ItemFlags PaletteModel::flags(const QModelIndex &index) const
 {
   const Qt::ItemFlags baseFlags = QAbstractItemModel::flags(index);
-  if (m_editable && index.column() > 0)
+  if (m_editable && index.column() > 0) {
     return baseFlags | Qt::ItemIsEditable;
+  }
   return baseFlags;
 }
 

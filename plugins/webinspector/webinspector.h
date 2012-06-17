@@ -24,13 +24,16 @@
 #ifndef GAMMARAY_WEBINSPECTOR_H
 #define GAMMARAY_WEBINSPECTOR_H
 
-#include <toolfactory.h>
-#include <qwidget.h>
-#include <qwebpage.h>
+#include "include/toolfactory.h"
+
+#include <QWebPage>
+#include <QWidget>
 
 namespace GammaRay {
 
-namespace Ui { class WebInspector; }
+namespace Ui {
+  class WebInspector;
+}
 
 class WebInspector : public QWidget
 {

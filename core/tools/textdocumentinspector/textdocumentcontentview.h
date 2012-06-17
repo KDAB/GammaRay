@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_TEXTDOCUMENTCONTENTVIEW_H
 #define GAMMARAY_TEXTDOCUMENTCONTENTVIEW_H
 
-#include <qtextedit.h>
+#include <QTextEdit>
 
 namespace GammaRay {
 

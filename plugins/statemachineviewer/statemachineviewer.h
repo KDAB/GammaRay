@@ -22,15 +22,15 @@
 #ifndef GAMMARAY_STATEMACHINEVIEWER_H
 #define GAMMARAY_STATEMACHINEVIEWER_H
 
-#include <toolfactory.h>
-
-#include "gvgraph/gvtypes.h"
 #include "statemachineviewerutil.h"
+#include "gvgraph/gvtypes.h"
+
+#include "include/toolfactory.h"
 
 #include <QHash>
+#include <QSet>
 #include <QString>
 #include <QWidget>
-#include <QSet>
 
 class QAbstractTransition;
 class QStateMachine;

@@ -27,8 +27,7 @@
 class QObject;
 class QAbstractItemModel;
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 /**
  * Abstract interface for accessing the core probe without linking to it.

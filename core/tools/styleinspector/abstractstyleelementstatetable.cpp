@@ -24,12 +24,16 @@
 #include "abstractstyleelementstatetable.h"
 #include "styleoption.h"
 
-#include <qpainter.h>
-#include <qstyleoption.h>
+#include <QPainter>
+#include <QStyleOption>
 
 using namespace GammaRay;
 
-AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject* parent): AbstractStyleElementModel(parent), m_cellWidth(64), m_cellHeight(64), m_zoomFactor(1)
+AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject *parent)
+  : AbstractStyleElementModel(parent),
+    m_cellWidth(64),
+    m_cellHeight(64),
+    m_zoomFactor(1)
 {
 }
 
@@ -42,21 +46,26 @@ QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) c
 {
   Q_UNUSED(column);
   Q_UNUSED(row);
-  if (role == Qt::SizeHintRole)
+  if (role == Qt::SizeHintRole) {
     return QSize(cellWidth() * zoomFactor() + 4, cellHeight() * zoomFactor() + 4);
+  }
   return QVariant();
 }
 
-QVariant AbstractStyleElementStateTable::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AbstractStyleElementStateTable::headerData(int section,
+                                                    Qt::Orientation orientation,
+                                                    int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     return StyleOption::stateDisplayName(section);
+  }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-void AbstractStyleElementStateTable::drawTransparencyBackground(QPainter* painter, const QRect& rect) const
+void AbstractStyleElementStateTable::drawTransparencyBackground(QPainter *painter,
+                                                                const QRect &rect) const
 {
-  QPixmap bgPattern(16,16);
+  QPixmap bgPattern(16, 16);
   bgPattern.fill(Qt::lightGray);
   QPainter bgPainter(&bgPattern);
   bgPainter.fillRect(8, 0, 8, 8, Qt::gray);
@@ -85,23 +94,26 @@ int AbstractStyleElementStateTable::zoomFactor() const
 void AbstractStyleElementStateTable::setCellWidth(int width)
 {
   m_cellWidth = width;
-  if (rowCount() > 0)
-    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1) );
+  if (rowCount() > 0) {
+    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
+  }
 }
 
 void AbstractStyleElementStateTable::setCellHeight(int height)
 {
   m_cellHeight = height;
-  if (rowCount() > 0)
+  if (rowCount() > 0) {
     emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
+  }
 }
 
 void AbstractStyleElementStateTable::setZoomFactor(int zoom)
 {
   Q_ASSERT(zoom > 0);
   m_zoomFactor = zoom;
-  if (rowCount() > 0)
+  if (rowCount() > 0) {
     emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
+  }
 }
 
 QSize AbstractStyleElementStateTable::effectiveCellSize() const
@@ -109,7 +121,7 @@ QSize AbstractStyleElementStateTable::effectiveCellSize() const
   return QSize(cellWidth() * zoomFactor(), cellHeight() * zoomFactor());
 }
 
-void AbstractStyleElementStateTable::fillStyleOption(QStyleOption* option, int column) const
+void AbstractStyleElementStateTable::fillStyleOption(QStyleOption *option, int column) const
 {
   option->rect = QRect(0, 0, cellWidth(), cellHeight());
   option->palette = m_style->standardPalette();

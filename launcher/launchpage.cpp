@@ -25,10 +25,10 @@
 #include "ui_launchpage.h"
 
 #include <QCompleter>
+#include <QFileDialog>
 #include <QFileSystemModel>
-#include <qfiledialog.h>
-#include <qstringlistmodel.h>
 #include <QSettings>
+#include <QStringListModel>
 
 using namespace GammaRay;
 
@@ -69,13 +69,14 @@ void LaunchPage::writeSettings()
   settings.setValue(QLatin1String("Launcher/Arguments"), notEmptyString(m_argsModel->stringList()));
 }
 
-QStringList LaunchPage::notEmptyString(const QStringList&list) const 
+QStringList LaunchPage::notEmptyString(const QStringList &list) const
 {
   QStringList notEmptyStringList;
   const int numberOfArguments = list.count();
-  for(int i = 0; i < numberOfArguments; ++i) {
-     if( !list.at(i).trimmed().isEmpty())
-       notEmptyStringList<<list.at(i);
+  for (int i = 0; i < numberOfArguments; ++i) {
+    if(!list.at(i).trimmed().isEmpty()) {
+      notEmptyStringList << list.at(i);
+    }
   }
   return notEmptyStringList;
 }
@@ -98,7 +99,7 @@ void LaunchPage::showFileDialog()
 #ifdef Q_OS_WIN
       ,tr("Executable (*.exe)")
 #endif
-        );
+    );
 
   if (exeFilePath.isEmpty()) {
     return;

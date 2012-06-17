@@ -23,7 +23,8 @@
 
 #include "config-gammaray.h"
 #include "toolmodel.h"
-#include "toolfactory.h"
+
+#include "include/toolfactory.h"
 
 #include "tools/codecbrowser/codecbrowser.h"
 #include "tools/connectioninspector/connectioninspector.h"

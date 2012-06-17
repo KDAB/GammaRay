@@ -22,14 +22,13 @@
 */
 
 #include "connectioninspector.h"
+#include "connectionfilterproxymodel.h"
+#include "proxydetacher.h"
 #include "ui_connectioninspector.h"
 
-#include <connectionfilterproxymodel.h>
-#include <probeinterface.h>
+#include "include/probeinterface.h"
 
 #include <QLineEdit>
-
-#include "proxydetacher.h"
 
 using namespace GammaRay;
 

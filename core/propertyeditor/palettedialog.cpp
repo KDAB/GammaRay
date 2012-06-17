@@ -32,17 +32,18 @@
 
 using namespace GammaRay;
 
-PaletteDialog::PaletteDialog(const QPalette &palette, QWidget* parent):
-  QDialog(parent),
-  ui(new Ui::PaletteDialog),
-  m_model(new PaletteModel(this))
+PaletteDialog::PaletteDialog(const QPalette &palette, QWidget *parent)
+  : QDialog(parent),
+    ui(new Ui::PaletteDialog),
+    m_model(new PaletteModel(this))
 {
   ui->setupUi(this);
   m_model->setPalette(palette);
   m_model->setEditable(true);
   ui->paletteView->setModel(m_model);
 
-  QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>(ui->paletteView->itemDelegate());
+  QStyledItemDelegate *delegate =
+    qobject_cast<QStyledItemDelegate*>(ui->paletteView->itemDelegate());
   if (delegate) {
     m_propertyEditorFactory.reset(new PropertyEditorFactory);
     delegate->setItemEditorFactory(m_propertyEditorFactory.data());
@@ -58,6 +59,5 @@ QPalette PaletteDialog::editedPalette() const
 {
   return m_model->palette();
 }
-
 
 #include "palettedialog.moc"

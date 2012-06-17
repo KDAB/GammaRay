@@ -24,9 +24,9 @@
 #ifndef GAMMARAY_TOOLFACTORY_H
 #define GAMMARAY_TOOLFACTORY_H
 
-#include <QtPlugin>
+#include <QtCore/QMetaType>
 #include <QtCore/QStringList>
-#include <QMetaType>
+#include <QtCore/QtPlugin>
 
 namespace GammaRay {
 
@@ -77,14 +77,22 @@ template <typename Type, typename Tool>
 class StandardToolFactory : public ToolFactory
 {
   public:
-    virtual inline QStringList supportedTypes() const {
+    virtual inline QStringList supportedTypes() const
+    {
       return QStringList(Type::staticMetaObject.className());
     }
-    virtual inline QString id() const {
+
+    virtual inline QString id() const
+    {
       return Tool::staticMetaObject.className();
     }
-    virtual inline void init(ProbeInterface *) {}
-    virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget) {
+
+    virtual inline void init(ProbeInterface *)
+    {
+    }
+
+    virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget)
+    {
       return new Tool(probe, parentWidget);
     }
 };

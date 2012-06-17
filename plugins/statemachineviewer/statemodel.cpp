@@ -21,21 +21,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "statemodel.h"
-
 #include "statemachinewatcher.h"
-#include "util.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QStateMachine>
-#include <QtCore/QAbstractTransition>
-#include <QtCore/QDebug>
+#include "include/util.h"
+
+#include <QAbstractTransition>
+#include <QDebug>
+#include <QStateMachine>
+#include <QStringList>
 
 // #include <modeltest.h>
 
 using namespace GammaRay;
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class StateModelPrivate
 {

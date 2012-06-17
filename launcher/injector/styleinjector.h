@@ -24,24 +24,31 @@
 #ifndef GAMMARAY_STYLEINJECTOR_H
 #define GAMMARAY_STYLEINJECTOR_H
 
-#include <injector/abstractinjector.h>
+#include "injector/abstractinjector.h"
 
 namespace GammaRay {
 
 class StyleInjector : public GammaRay::AbstractInjector
 {
-
-public:
+  public:
     StyleInjector();
-    QString name() const {
+
+    QString name() const
+    {
       return QString("style");
     }
+
     virtual bool launch(const QStringList &programAndArgs,
-                       const QString &probeDll, const QString &probeFunc);
+                        const QString &probeDll, const QString &probeFunc);
+
     virtual bool selfTest();
+
     virtual int exitCode();
+
     virtual QProcess::ExitStatus exitStatus();
+
     virtual QProcess::ProcessError processError();
+
     virtual QString errorString();
 
   private:

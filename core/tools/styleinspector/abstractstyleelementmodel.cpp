@@ -29,34 +29,37 @@
 
 using namespace GammaRay;
 
-AbstractStyleElementModel::AbstractStyleElementModel(QObject* parent): QAbstractTableModel(parent)
+AbstractStyleElementModel::AbstractStyleElementModel(QObject *parent)
+  : QAbstractTableModel(parent)
 {
 }
 
-void AbstractStyleElementModel::setStyle(QStyle* style)
+void AbstractStyleElementModel::setStyle(QStyle *style)
 {
   beginResetModel();
   m_style = QPointer<QStyle>(style);
   endResetModel();
 }
 
-QVariant AbstractStyleElementModel::data(const QModelIndex& index, int role) const
+QVariant AbstractStyleElementModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid() || !m_style)
+  if (!index.isValid() || !m_style) {
     return QVariant();
+  }
   return doData(index.row(), index.column(), role);
 }
 
-int AbstractStyleElementModel::columnCount(const QModelIndex& parent) const
+int AbstractStyleElementModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return doColumnCount();
 }
 
-int AbstractStyleElementModel::rowCount(const QModelIndex& parent) const
+int AbstractStyleElementModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid() || !m_style)
+  if (parent.isValid() || !m_style) {
     return 0;
+  }
   return doRowCount();
 }
 
@@ -64,11 +67,13 @@ bool AbstractStyleElementModel::isMainStyle() const
 {
   QStyle *style = qApp->style();
   forever {
-    if (style == m_style)
+    if (style == m_style) {
       return true;
+    }
     QProxyStyle *proxy = qobject_cast<QProxyStyle*>(style);
-    if (!proxy)
+    if (!proxy) {
       return false;
+    }
     style = proxy->baseStyle();
   }
 }

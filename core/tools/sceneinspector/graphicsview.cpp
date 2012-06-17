@@ -23,8 +23,8 @@
 
 #include "graphicsview.h"
 
+#include <QGraphicsItem>
 #include <QKeyEvent>
-#include <qgraphicsitem.h>
 
 using namespace GammaRay;
 

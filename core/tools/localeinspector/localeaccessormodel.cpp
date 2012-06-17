@@ -20,8 +20,9 @@
 */
 
 #include "localeaccessormodel.h"
-#include <qmath.h>
 #include "localedataaccessor.h"
+
+#include <qmath.h>
 
 #include <QDebug>
 

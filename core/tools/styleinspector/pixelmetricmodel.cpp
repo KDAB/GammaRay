@@ -29,7 +29,7 @@
 using namespace GammaRay;
 
 struct pixel_metric_t {
-  const char* name;
+  const char *name;
   QStyle::PixelMetric pixelMetric;
 };
 
@@ -130,7 +130,8 @@ static pixel_metric_t pixelMetrics[] = {
   MAKE_PM(PM_SubMenuOverlap)
 };
 
-PixelMetricModel::PixelMetricModel(QObject* parent): AbstractStyleElementModel(parent)
+PixelMetricModel::PixelMetricModel(QObject *parent)
+  : AbstractStyleElementModel(parent)
 {
 }
 
@@ -138,8 +139,11 @@ QVariant PixelMetricModel::doData(int row, int column, int role) const
 {
   if (role == Qt::DisplayRole || role == Qt::EditRole) {
     switch (column) {
-      case 0: return pixelMetrics[row].name;
-      case 1: return (isMainStyle() && DynamicProxyStyle::exists()) ?
+    case 0:
+      return pixelMetrics[row].name;
+    case 1:
+      return
+        (isMainStyle() && DynamicProxyStyle::exists()) ?
           DynamicProxyStyle::instance()->pixelMetric(pixelMetrics[row].pixelMetric) :
           m_style->pixelMetric(pixelMetrics[row].pixelMetric);
     }
@@ -162,28 +166,38 @@ QVariant PixelMetricModel::headerData(int section, Qt::Orientation orientation, 
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     switch (section) {
-      case 0: return tr("Metric");
-      case 1: return tr("Default Value");
+    case 0:
+      return tr("Metric");
+    case 1:
+      return tr("Default Value");
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-Qt::ItemFlags PixelMetricModel::flags(const QModelIndex& index) const
+Qt::ItemFlags PixelMetricModel::flags(const QModelIndex &index) const
 {
   const Qt::ItemFlags baseFlags = QAbstractItemModel::flags(index);
-  if (index.isValid() && index.column() == 1 && isMainStyle())
+  if (index.isValid() && index.column() == 1 && isMainStyle()) {
     return baseFlags | Qt::ItemIsEditable;
+  }
   return baseFlags;
 }
 
-bool PixelMetricModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool PixelMetricModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-  if (!index.isValid() || index.column() != 1 || !value.isValid() || !value.canConvert(QVariant::Int) || role != Qt::EditRole)
+  if (!index.isValid() ||
+      index.column() != 1 ||
+      !value.isValid() ||
+      !value.canConvert(QVariant::Int) ||
+      role != Qt::EditRole) {
     return false;
-  DynamicProxyStyle::instance()->setPixelMetric(pixelMetrics[index.row()].pixelMetric, value.toInt());
+  }
+
+  DynamicProxyStyle::instance()->setPixelMetric(
+    pixelMetrics[index.row()].pixelMetric, value.toInt());
+
   return true;
 }
-
 
 #include "pixelmetricmodel.moc"

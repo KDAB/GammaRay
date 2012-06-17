@@ -33,7 +33,6 @@ class QStateMachine;
 
 namespace GammaRay {
 
-
 class StateMachineWatcher : public QObject
 {
   Q_OBJECT

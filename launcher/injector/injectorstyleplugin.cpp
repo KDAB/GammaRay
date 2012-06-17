@@ -23,11 +23,11 @@
 
 #include "injectorstyleplugin.h"
 
+#include <private/qguiplatformplugin_p.h> //krazy:exclude=camelcase
+
 #include <QDebug>
 #include <QLibrary>
 #include <QStyleFactory>
-
-#include <private/qguiplatformplugin_p.h>
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 typedef void *QFunctionPointer;

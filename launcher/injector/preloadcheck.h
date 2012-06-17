@@ -28,20 +28,23 @@
 
 class PreloadCheck
 {
-public:
-  PreloadCheck();
+  public:
+    PreloadCheck();
 
-  bool test(const QString& symbol);
+    bool test(const QString &symbol);
 
-  QString errorString() const { return m_errorString; }
+    QString errorString() const
+    {
+      return m_errorString;
+    }
 
-protected:
-  void setErrorString(const QString& err);
+  protected:
+    void setErrorString(const QString &err);
 
-private:
-  static QString findSharedObjectFile(const QString& symbol);
+  private:
+    static QString findSharedObjectFile(const QString &symbol);
 
-  QString m_errorString;
+    QString m_errorString;
 };
 
 #endif // Q_OS_UNIX

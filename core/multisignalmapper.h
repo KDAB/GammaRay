@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_MULTISIGNALMAPPER_H
 #define GAMMARAY_MULTISIGNALMAPPER_H
 
-#include <qobject.h>
-#include <qvector.h>
+#include <QObject>
+#include <QVector>
 
 class QSignalMapper;
 

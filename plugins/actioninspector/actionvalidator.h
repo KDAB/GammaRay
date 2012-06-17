@@ -37,30 +37,30 @@ class ActionValidator : public QObject
 {
   Q_OBJECT
 
-public:
-  ActionValidator(QObject* parent = 0);
+  public:
+    ActionValidator(QObject *parent = 0);
 
-  QList<QAction*> actions() const;
-  QList<QAction*> actions(const QKeySequence& sequence) const;
+    QList<QAction*> actions() const;
+    QList<QAction*> actions(const QKeySequence &sequence) const;
 
-  void setActions(const QList<QAction*>& actions);
-  void clearActions();
+    void setActions(const QList<QAction*> &actions);
+    void clearActions();
 
-  void insert(QAction* action);
-  void remove(QAction* action);
+    void insert(QAction *action);
+    void remove(QAction *action);
 
-  /// helper method to find out if action has an ambiguous shortcut
-  bool hasAmbiguousShortcut(const QAction* action) const;
+    /// helper method to find out if action has an ambiguous shortcut
+    bool hasAmbiguousShortcut(const QAction *action) const;
 
-private Q_SLOTS:
-  void handleActionDestroyed(QObject* object);
+  private Q_SLOTS:
+    void handleActionDestroyed(QObject *object);
 
-private:
-  /// Does not deref the action pointer
-  void safeRemove(QAction* action);
+  private:
+    /// Does not deref the action pointer
+    void safeRemove(QAction *action);
 
-  // Multi-Map
-  QHash<QKeySequence, QAction*> m_shortcutActionMap;
+    // Multi-Map
+    QHash<QKeySequence, QAction*> m_shortcutActionMap;
 };
 
 }

@@ -24,15 +24,18 @@
 #ifndef GAMMARAY_SCRIPTENGINEDEBUGGER_H
 #define GAMMARAY_SCRIPTENGINEDEBUGGER_H
 
-#include <toolfactory.h>
-#include <qwidget.h>
-#include <qscriptengine.h>
+#include "include/toolfactory.h"
+
+#include <QWidget>
+#include <QScriptEngine>
 
 class QScriptEngineDebugger;
 
 namespace GammaRay {
 
-namespace Ui { class ScriptEngineDebugger; }
+namespace Ui {
+  class ScriptEngineDebugger;
+}
 
 class ScriptEngineDebugger : public QWidget
 {

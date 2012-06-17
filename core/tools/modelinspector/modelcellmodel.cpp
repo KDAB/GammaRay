@@ -22,9 +22,10 @@
 */
 
 #include "modelcellmodel.h"
-#include "util.h"
 
-#include <qvector.h>
+#include "include/util.h"
+
+#include <QVector>
 
 using namespace GammaRay;
 

@@ -1,7 +1,7 @@
 CHECKSETS qt4,c++,foss
 
 #additional checks
-EXTRA defines,null,style
+EXTRA defines,null,style,camelcase
 
 #no need to check 3rdparty stuff
 SKIP /3rdparty/

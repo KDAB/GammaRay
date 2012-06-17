@@ -22,16 +22,16 @@
 */
 
 #include "modelinspectorwidget.h"
-#include "ui_modelinspectorwidget.h"
 
-#include "modelmodel.h"
 #include "modelcellmodel.h"
 #include "modelinspector.h"
-#include "objectmodel.h"
+#include "modelmodel.h"
+#include "ui_modelinspectorwidget.h"
+
+#include "include/objectmodel.h"
+#include "include/probeinterface.h"
 
 #include <kde/krecursivefilterproxymodel.h>
-#include <objectmodel.h>
-#include <probeinterface.h>
 
 using namespace GammaRay;
 

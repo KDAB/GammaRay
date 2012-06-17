@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OBJECTSTATICPROPERTYMODEL_H
 #define GAMMARAY_OBJECTSTATICPROPERTYMODEL_H
 
-#include <objectpropertymodel.h>
+#include "objectpropertymodel.h"
 
 namespace GammaRay {
 

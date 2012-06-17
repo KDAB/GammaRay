@@ -22,9 +22,10 @@
 */
 
 #include "objectstaticpropertymodel.h"
-#include "util.h"
 
-#include <QtCore/QMetaProperty>
+#include "include/util.h"
+
+#include <QMetaProperty>
 
 using namespace GammaRay;
 

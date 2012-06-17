@@ -27,18 +27,18 @@
 #include <QMainWindow>
 
 namespace Ui {
-    class MainWindow;
+  class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
+  public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private:
+  private:
     Ui::MainWindow *ui;
 };
 

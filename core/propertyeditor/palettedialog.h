@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PALETTEDIALOG_H
 #define GAMMARAY_PALETTEDIALOG_H
 
-#include <qdialog.h>
+#include <QDialog>
 
 namespace GammaRay {
 
@@ -33,14 +33,14 @@ class PropertyEditorFactory;
 class PaletteModel;
 
 namespace Ui {
-class PaletteDialog;
+  class PaletteDialog;
 }
 
 class PaletteDialog : public QDialog
 {
   Q_OBJECT
   public:
-    explicit PaletteDialog(const QPalette &palette, QWidget* parent = 0);
+    explicit PaletteDialog(const QPalette &palette, QWidget *parent = 0);
     virtual ~PaletteDialog();
 
     QPalette editedPalette() const;

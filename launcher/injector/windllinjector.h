@@ -24,7 +24,8 @@
 #ifndef GAMMARAY_WINDLLINJECTOR_H
 #define GAMMARAY_WINDLLINJECTOR_H
 
-#include <injector/abstractinjector.h>
+#include "injector/abstractinjector.h"
+
 #include <qglobal.h>
 
 #ifdef Q_OS_WIN

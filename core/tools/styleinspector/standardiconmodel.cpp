@@ -22,31 +22,36 @@
 */
 
 #include "standardiconmodel.h"
-#include <util.h>
+
+#include "include/util.h"
 
 using namespace GammaRay;
 
-StandardIconModel::StandardIconModel(QObject* parent): AbstractStyleElementModel(parent)
+StandardIconModel::StandardIconModel(QObject *parent) : AbstractStyleElementModel(parent)
 {
 }
 
-QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix, const QString& name, int column, int role) const
+QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix,
+                                                const QString &name,
+                                                int column, int role) const
 {
   if (column == 0) {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole) {
       return name;
+    }
   } else if (column == 1) {
-    if (role == Qt::DecorationRole)
+    if (role == Qt::DecorationRole) {
       return m_style->standardIcon(stdPix);
-    else if (role == Qt::DisplayRole)
+    } else if (role == Qt::DisplayRole) {
       return Util::variantToString(m_style->standardIcon(stdPix));
+    }
   }
   return QVariant();
 }
 
-
-#define MAKE_SP( stdPix ) \
-if (row == QStyle:: stdPix) return dataForStandardIcon(QStyle:: stdPix, QLatin1String( #stdPix ), column, role)
+#define MAKE_SP(stdPix) \
+if (row == QStyle:: stdPix) \
+  return dataForStandardIcon(QStyle:: stdPix, QLatin1String(#stdPix), column, role)
 
 QVariant StandardIconModel::doData(int row, int column, int role) const
 {
@@ -137,8 +142,10 @@ QVariant StandardIconModel::headerData(int section, Qt::Orientation orientation,
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     switch (section) {
-      case 0: return tr("Name");
-      case 1: return tr("Icon");
+    case 0:
+      return tr("Name");
+    case 1:
+      return tr("Icon");
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);

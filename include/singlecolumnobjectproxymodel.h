@@ -24,16 +24,14 @@
 #ifndef GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 #define GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 
-#include <qglobal.h>
-
 #include "objectmodel.h"
 #include "util.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
-#include <QSortFilterProxyModel>
+#include <QtGui/QSortFilterProxyModel>
 typedef QSortFilterProxyModel QIdentityProxyModel;
 #else
-#include <QIdentityProxyModel>
+#include <QtGui/QIdentityProxyModel>
 #endif
 
 namespace GammaRay {

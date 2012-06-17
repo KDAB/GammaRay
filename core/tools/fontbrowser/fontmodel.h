@@ -27,8 +27,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QFont>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class FontModel : public QAbstractItemModel
 {

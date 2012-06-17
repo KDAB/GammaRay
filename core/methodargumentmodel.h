@@ -24,10 +24,9 @@
 #ifndef GAMMARAY_METHODARGUMENTMODEL_H
 #define GAMMARAY_METHODARGUMENTMODEL_H
 
-#include <QtCore/qabstractitemmodel.h>
-#include <qmetaobject.h>
+#include <QAbstractTableModel>
+#include <QMetaMethod>
 #include <QVector>
-#include <QtCore/qsharedpointer.h>
 
 namespace GammaRay {
 

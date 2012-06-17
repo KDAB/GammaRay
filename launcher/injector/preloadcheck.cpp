@@ -32,11 +32,12 @@
 
 #include <dlfcn.h>
 
-QString PreloadCheck::findSharedObjectFile(const QString& symbol)
+QString PreloadCheck::findSharedObjectFile(const QString &symbol)
 {
-  void* sym = dlsym(RTLD_NEXT, qPrintable(symbol));
-  if (!sym)
+  void *sym = dlsym(RTLD_NEXT, qPrintable(symbol));
+  if (!sym) {
     return QString();
+  }
 
   Dl_info info;
   dladdr(sym, &info);
@@ -48,7 +49,7 @@ PreloadCheck::PreloadCheck()
 {
 }
 
-bool PreloadCheck::test(const QString& symbol)
+bool PreloadCheck::test(const QString &symbol)
 {
   const QString fileName = findSharedObjectFile(symbol);
   if (fileName.isEmpty()) {
@@ -69,7 +70,8 @@ bool PreloadCheck::test(const QString& symbol)
   if (!proc.waitForFinished()) {
     // TODO: Find out if we want to error out if 'readelf' is missing
     // The question is: Do all (major) distributions ship binutils by default?
-    setErrorString(QObject::tr("Failed to run 'readelf' (binutils) binary: %1").arg(QString(proc.errorString())));
+    setErrorString(QObject::tr("Failed to run 'readelf' (binutils) binary: %1").
+                   arg(QString(proc.errorString())));
     return false;
   }
 
@@ -78,13 +80,16 @@ bool PreloadCheck::test(const QString& symbol)
     return false;
   }
 
-  // Example line on x86_64: 00000049f3d8  054300000007 R_X86_64_JUMP_SLO 000000000016c930 qt_startup_hook + 0
-  // Example line on   i386: 002e02f0  00034407 R_386_JUMP_SLOT        00181490   qt_startup_hook
+  // Example line on x86_64:
+  //   00000049f3d8  054300000007 R_X86_64_JUMP_SLO 000000000016c930 qt_startup_hook + 0
+  // Example line on i386:
+  //   002e02f0  00034407 R_386_JUMP_SLOT        00181490   qt_startup_hook
   QRegExp rx("^(?:[^ ]+\\s+){4}([^ ]+)(?:.*)$");
-  while(proc.canReadLine()) {
+  while (proc.canReadLine()) {
     const QString line = proc.readLine().trimmed();
-    if (!rx.exactMatch(line))
+    if (!rx.exactMatch(line)) {
       continue;
+    }
 
     const QString currentSymbol = rx.cap(1);
     if (currentSymbol == symbol) {
@@ -98,9 +103,9 @@ bool PreloadCheck::test(const QString& symbol)
   return false;
 }
 
-void PreloadCheck::setErrorString(const QString& err)
+void PreloadCheck::setErrorString(const QString &err)
 {
-    m_errorString = err;
+  m_errorString = err;
 }
 
 #endif

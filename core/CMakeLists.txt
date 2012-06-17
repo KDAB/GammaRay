@@ -1,12 +1,12 @@
 add_subdirectory(tools)
 
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty
-  ${CMAKE_CURRENT_SOURCE_DIR}/../include
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/3rdparty
   ${CMAKE_CURRENT_SOURCE_DIR}
 
+  ${CMAKE_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/../
 )
 
 set(gammaray_srcs

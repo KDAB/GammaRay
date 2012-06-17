@@ -33,7 +33,7 @@ using namespace GammaRay;
 struct control_element_t {
     const char *name;
     QStyle::ControlElement control;
-    QStyleOption* (*styleOptionFactory)();
+    QStyleOption * (*styleOptionFactory)();
 };
 
 #define MAKE_CE( control ) { #control , QStyle:: control, &StyleOption::makeStyleOption }
@@ -90,8 +90,8 @@ static control_element_t controlElements[] =  {
   MAKE_CE_X(CE_ShapedFrame, makeFrameStyleOption)
 };
 
-
-ControlModel::ControlModel(QObject* parent): AbstractStyleElementStateTable(parent)
+ControlModel::ControlModel(QObject *parent)
+  : AbstractStyleElementStateTable(parent)
 {
 }
 
@@ -119,8 +119,9 @@ int ControlModel::doRowCount() const
 
 QVariant ControlModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Vertical && role == Qt::DisplayRole)
+  if (orientation == Qt::Vertical && role == Qt::DisplayRole) {
     return controlElements[section].name;
+  }
   return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
 

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_LAUNCHPAGE_H
 #define GAMMARAY_LAUNCHPAGE_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class QStringListModel;
 
@@ -56,7 +56,7 @@ class LaunchPage : public QWidget
     void updateArgumentButtons();
 
   private:
-    QStringList notEmptyString(const QStringList&list) const;
+    QStringList notEmptyString(const QStringList &list) const;
     Ui::LaunchPage *ui;
     QStringListModel *m_argsModel;
 };

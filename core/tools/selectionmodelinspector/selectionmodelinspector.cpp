@@ -24,8 +24,8 @@
 #include "selectionmodelinspector.h"
 #include "ui_selectionmodelinspector.h"
 
-#include <objecttypefilterproxymodel.h>
-#include <probeinterface.h>
+#include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
 
 using namespace GammaRay;
 

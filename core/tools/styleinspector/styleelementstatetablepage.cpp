@@ -27,7 +27,8 @@
 
 using namespace GammaRay;
 
-StyleElementStateTablePage::StyleElementStateTablePage(QWidget* parent): QWidget(parent), ui(new Ui::StyleElementStateTablePage)
+StyleElementStateTablePage::StyleElementStateTablePage(QWidget *parent)
+  : QWidget(parent), ui(new Ui::StyleElementStateTablePage)
 {
   ui->setupUi(this);
   ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
@@ -39,15 +40,20 @@ StyleElementStateTablePage::~StyleElementStateTablePage()
   delete ui;
 }
 
-void StyleElementStateTablePage::setModel(AbstractStyleElementStateTable* model)
+void StyleElementStateTablePage::setModel(AbstractStyleElementStateTable *model)
 {
   ui->tableView->setModel(model);
   ui->widthBox->setValue(model->cellWidth());
   ui->heightBox->setValue(model->cellHeight());
 
-  connect(ui->widthBox, SIGNAL(valueChanged(int)), model, SLOT(setCellWidth(int)));
-  connect(ui->heightBox, SIGNAL(valueChanged(int)), model, SLOT(setCellHeight(int)));
-  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), model, SLOT(setZoomFactor(int)));
+  connect(ui->widthBox, SIGNAL(valueChanged(int)),
+          model, SLOT(setCellWidth(int)));
+
+  connect(ui->heightBox, SIGNAL(valueChanged(int)),
+          model, SLOT(setCellHeight(int)));
+
+  connect(ui->zoomSlider, SIGNAL(valueChanged(int)),
+          model, SLOT(setZoomFactor(int)));
 }
 
 #include "styleelementstatetablepage.moc"

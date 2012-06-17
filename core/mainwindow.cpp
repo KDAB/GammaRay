@@ -23,27 +23,29 @@
 
 #include "config-gammaray-version.h"
 #include "mainwindow.h"
-#include "probe.h"
+#include "aboutpluginsdialog.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
-#include "objecttypefilterproxymodel.h"
+#include "probe.h"
 #include "toolmodel.h"
-#include "aboutpluginsdialog.h"
-#include "toolfactory.h"
+
+#include "include/objecttypefilterproxymodel.h"
+#include "include/toolfactory.h"
 
 #include "kde/krecursivefilterproxymodel.h"
-#include <private/qguiplatformplugin_p.h>
 
-#include <QCoreApplication>
-#include <qdebug.h>
-#include <QStringListModel>
-#include <QtCore/qtextcodec.h>
-#include <QMessageBox>
+#include <private/qguiplatformplugin_p.h> //krazy:exclude=camelcase
+
 #include <QComboBox>
-#include <QLabel>
-#include <QTreeView>
+#include <QCoreApplication>
+#include <QDebug>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QMessageBox>
+#include <QStringListModel>
 #include <QStyleFactory>
+#include <QTextCodec>
+#include <QTreeView>
 
 using namespace GammaRay;
 
@@ -54,14 +56,16 @@ static const char progURL[] = "http://www.kdab.com/gammaray";
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
-  // we don't want application styles to propagate to the GammaRay window, so set the platform default one
+  // we don't want application styles to propagate to the GammaRay window,
+  // so set the platform default one.
   // unfortunately, that's not recursive by default, unless we have a style sheet set
   setStyleSheet(QLatin1String("I_DONT_EXIST {}"));
   QGuiPlatformPlugin defaultGuiPlatform;
   if (QStyle *defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName())) {
     // do not set parent of default style
     // this will cause the style being deleted too early through ~QObject()
-    // other objects (e.g. the script engine debugger) still might have a reference on the style during destruction
+    // other objects (e.g. the script engine debugger) still might have a
+    // reference on the style during destruction
     setStyle(defaultStyle);
   }
 

@@ -33,7 +33,10 @@ namespace GammaRay {
 class ModelCellModel;
 class ModelInspector;
 class ProbeInterface;
-namespace Ui { class ModelInspectorWidget; }
+
+namespace Ui {
+  class ModelInspectorWidget;
+}
 
 class ModelInspectorWidget : public QWidget
 {

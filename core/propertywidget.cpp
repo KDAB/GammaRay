@@ -22,27 +22,28 @@
 */
 
 #include "propertywidget.h"
-#include "objectstaticpropertymodel.h"
-#include "objectdynamicpropertymodel.h"
-#include "objectclassinfomodel.h"
-#include "objectmethodmodel.h"
-#include "objectenummodel.h"
-#include "metapropertymodel.h"
-#include "connectionmodel.h"
 #include "connectionfilterproxymodel.h"
-#include "probe.h"
+#include "connectionmodel.h"
+#include "metapropertymodel.h"
 #include "methodinvocationdialog.h"
 #include "multisignalmapper.h"
+#include "objectclassinfomodel.h"
+#include "objectdynamicpropertymodel.h"
+#include "objectenummodel.h"
+#include "objectmethodmodel.h"
+#include "objectstaticpropertymodel.h"
+#include "probe.h"
 #include "proxydetacher.h"
+
 #include "propertyeditor/propertyeditorfactory.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
 #include <QDebug>
+#include <QMenu>
 #include <QStandardItemModel>
-#include <QtCore/QTime>
-#include <qmenu.h>
 #include <QStyledItemDelegate>
+#include <QTime>
 
 using namespace GammaRay;
 

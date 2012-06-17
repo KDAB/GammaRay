@@ -25,8 +25,10 @@
 #define GAMMARAY_METHODINVOCATIONDIALOG_H
 
 #include "ui_methodinvocationdialog.h"
-#include <qmetaobject.h>
+
 #include <QDialog>
+#include <QMetaEnum>
+#include <QMetaObject>
 #include <QPointer>
 
 namespace GammaRay {

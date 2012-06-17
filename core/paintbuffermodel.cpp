@@ -29,7 +29,7 @@ using namespace GammaRay;
 
 struct cmd_t {
   QPaintBufferPrivate::Command cmd;
-  const char* name;
+  const char *name;
 };
 
 #define CMD(cmd) { QPaintBufferPrivate::Cmd_ ## cmd, #cmd }
@@ -85,14 +85,15 @@ static cmd_t cmdTypes[] =  {
 class PaintBufferPrivacyViolater : public QPainterReplayer
 {
   public:
-    QPaintBufferPrivate* extract() const { return d; }
+    QPaintBufferPrivate *extract() const { return d; }
 };
 
-PaintBufferModel::PaintBufferModel(QObject* parent): QAbstractTableModel(parent), m_privateBuffer(0)
+PaintBufferModel::PaintBufferModel(QObject *parent)
+  : QAbstractTableModel(parent), m_privateBuffer(0)
 {
 }
 
-void PaintBufferModel::setPaintBuffer(const QPaintBuffer& buffer)
+void PaintBufferModel::setPaintBuffer(const QPaintBuffer &buffer)
 {
   beginResetModel();
   m_buffer = buffer;
@@ -102,35 +103,40 @@ void PaintBufferModel::setPaintBuffer(const QPaintBuffer& buffer)
   endResetModel();
 }
 
-QVariant PaintBufferModel::data(const QModelIndex& index, int role) const
+QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid() || !m_privateBuffer)
+  if (!index.isValid() || !m_privateBuffer) {
     return QVariant();
+  }
 
   if (role == Qt::DisplayRole) {
     const QPaintBufferCommand cmd = m_privateBuffer->commands.at(index.row());
     switch (index.column()) {
-      case 0:
-        return cmdTypes[cmd.id].name;
-      case 1:
-      {
+    case 0:
+      return cmdTypes[cmd.id].name;
+    case 1:
+    {
 #ifndef QT_NO_DEBUG_STREAM
-        QString desc = m_buffer.commandDescription(index.row());
-        const QString prefix = QLatin1String("Cmd_") + QLatin1String(cmdTypes[cmd.id].name);
-        if (desc.startsWith(prefix))
-          desc = desc.mid(prefix.length());
-        if (desc.startsWith(QLatin1String(": ")) || desc.startsWith(QLatin1String(", ")))
-          desc = desc.mid(2);
-        return desc;
-#endif
+      QString desc = m_buffer.commandDescription(index.row());
+      const QString prefix = QLatin1String("Cmd_") + QLatin1String(cmdTypes[cmd.id].name);
+
+      if (desc.startsWith(prefix)) {
+        desc = desc.mid(prefix.length());
       }
+
+      if (desc.startsWith(QLatin1String(": ")) || desc.startsWith(QLatin1String(", "))) {
+        desc = desc.mid(2);
+      }
+      return desc;
+#endif
+    }
     }
   }
 
   return QVariant();
 }
 
-int PaintBufferModel::columnCount(const QModelIndex& parent) const
+int PaintBufferModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
 #ifndef QT_NO_DEBUG_STREAM
@@ -140,10 +146,11 @@ int PaintBufferModel::columnCount(const QModelIndex& parent) const
 #endif
 }
 
-int PaintBufferModel::rowCount(const QModelIndex& parent) const
+int PaintBufferModel::rowCount(const QModelIndex &parent) const
 {
-  if (!m_privateBuffer || parent.isValid())
+  if (!m_privateBuffer || parent.isValid()) {
     return 0;
+  }
   return m_privateBuffer->commands.size();
 }
 
@@ -151,12 +158,15 @@ QVariant PaintBufferModel::headerData(int section, Qt::Orientation orientation, 
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     switch (section) {
-      case 0: return tr("Command");
-      case 1: return tr("Arguments");
+    case 0:
+      return tr("Command");
+    case 1:
+      return tr("Arguments");
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 #include "paintbuffermodel.moc"
+
 #endif

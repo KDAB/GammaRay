@@ -24,14 +24,14 @@
 #ifndef GAMMARAY_STYLEELEMENTSTATETABLEPAGE_H
 #define GAMMARAY_STYLEELEMENTSTATETABLEPAGE_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 namespace GammaRay {
 
 class AbstractStyleElementStateTable;
 
 namespace Ui {
-class StyleElementStateTablePage;
+  class StyleElementStateTablePage;
 }
 
 /**
@@ -40,13 +40,13 @@ class StyleElementStateTablePage;
 class StyleElementStateTablePage : public QWidget
 {
   Q_OBJECT
-public:
-  explicit StyleElementStateTablePage(QWidget* parent = 0);
-  ~StyleElementStateTablePage();
-  void setModel(AbstractStyleElementStateTable *model);
+  public:
+    explicit StyleElementStateTablePage(QWidget *parent = 0);
+    ~StyleElementStateTablePage();
+    void setModel(AbstractStyleElementStateTable *model);
 
-private:
-  Ui::StyleElementStateTablePage *ui;
+  private:
+    Ui::StyleElementStateTablePage *ui;
 };
 
 }

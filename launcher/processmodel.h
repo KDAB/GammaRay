@@ -53,19 +53,23 @@ class ProcessModel : public QAbstractTableModel
       UserColumn,
       COLUMN_COUNT
     };
+
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
     enum CustomRoles {
       PIDRole = Qt::UserRole,
       NameRole,
       StateRole,
       UserRole
     };
+
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
-private:
+
+  private:
     ProcDataList m_data;
 };
 

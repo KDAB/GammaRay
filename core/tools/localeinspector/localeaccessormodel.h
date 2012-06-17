@@ -25,8 +25,7 @@
 #include <QAbstractTableModel>
 #include <QVector>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 struct LocaleDataAccessor;
 

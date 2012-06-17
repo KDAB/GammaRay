@@ -27,10 +27,11 @@
 
 #include <dlfcn.h>
 #include <inttypes.h>
+#include <cassert>
+
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/errno.h>
-#include <assert.h>
 
 static inline void *
 page_align(void *addr)

@@ -23,20 +23,19 @@
 
 #include "transitionmodel.h"
 
-#include "util.h"
+#include "include/util.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QState>
-#include <QtCore/QAbstractTransition>
-#include <QtCore/QDebug>
-#include <QtCore/QSignalTransition>
+#include <QAbstractTransition>
+#include <QDebug>
+#include <QSignalTransition>
+#include <QState>
+#include <QStringList>
 
 // #include <modeltest.h>
 
 using namespace GammaRay;
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class TransitionModelPrivate
 {

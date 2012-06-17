@@ -20,28 +20,28 @@
 */
 
 #include "statemachineviewer.h"
-#include "ui_statemachineviewer.h"
-
 #include "statemachineview.h"
 #include "statemachinewatcher.h"
+#include "statemodel.h"
+#include "transitionmodel.h"
+#include "ui_statemachineviewer.h"
+
 #include "gvgraph/gvgraph.h"
 #include "gvgraph/gvgraphitems.h"
 
-#include <transitionmodel.h>
-#include <statemodel.h>
-#include <probeinterface.h>
-#include <objecttypefilterproxymodel.h>
+#include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
 
 #include <QAbstractTransition>
 #include <QDebug>
-#include <QPainter>
-#include <QList>
-#include <QScrollBar>
-#include <QFinalState>
-#include <QStateMachine>
-#include <QHistoryState>
 #include <QFileDialog>
+#include <QFinalState>
+#include <QHistoryState>
+#include <QList>
+#include <QPainter>
+#include <QScrollBar>
 #include <QSignalTransition>
+#include <QStateMachine>
 
 #include <QtPlugin>
 

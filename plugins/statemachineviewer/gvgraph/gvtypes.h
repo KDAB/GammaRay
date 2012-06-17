@@ -22,8 +22,7 @@
 #ifndef GAMMARAY_GVTYPES_H
 #define GAMMARAY_GVTYPES_H
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 typedef quintptr ElementId;
 typedef quintptr EdgeId;

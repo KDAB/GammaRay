@@ -24,13 +24,15 @@
 #ifndef GAMMARAY_CONNECTIONINSPECTOR_H
 #define GAMMARAY_CONNECTIONINSPECTOR_H
 
-#include <qwidget.h>
+#include "include/toolfactory.h"
 
-#include <toolfactory.h>
+#include <QWidget>
 
 namespace GammaRay {
 
-namespace Ui { class ConnectionInspector; }
+namespace Ui {
+  class ConnectionInspector;
+}
 
 class ConnectionInspector : public QWidget
 {
@@ -48,8 +50,14 @@ class ConnectionInspectorFactory : public QObject,
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit ConnectionInspectorFactory(QObject *parent) : QObject(parent) {}
-    inline QString name() const { return tr("Connections"); }
+    explicit ConnectionInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Connections");
+    }
 };
 
 }

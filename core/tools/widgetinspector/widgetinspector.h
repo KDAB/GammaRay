@@ -24,9 +24,10 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_H
 #define GAMMARAY_WIDGETINSPECTOR_H
 
-#include <qlibrary.h>
-#include <qwidget.h>
-#include <toolfactory.h>
+#include "include/toolfactory.h"
+
+#include <QLibrary>
+#include <QWidget>
 
 class QModelIndex;
 
@@ -34,7 +35,9 @@ namespace GammaRay {
 
 class OverlayWidget;
 
-namespace Ui { class WidgetInspector; }
+namespace Ui {
+  class WidgetInspector;
+}
 
 class WidgetInspector : public QWidget
 {
@@ -70,8 +73,14 @@ class WidgetInspectorFactory
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit WidgetInspectorFactory(QObject *parent) : QObject(parent) {}
-    inline QString name() const { return tr("Widgets"); }
+    explicit WidgetInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Widgets");
+    }
 };
 
 }

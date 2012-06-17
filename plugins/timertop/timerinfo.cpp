@@ -22,7 +22,7 @@
 */
 #include "timerinfo.h"
 
-#include <util.h>
+#include "include/util.h"
 
 #include <QObject>
 

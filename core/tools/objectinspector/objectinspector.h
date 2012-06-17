@@ -24,14 +24,17 @@
 #ifndef GAMMARAY_OBJECTINSPECTOR_H
 #define GAMMARAY_OBJECTINSPECTOR_H
 
-#include <qwidget.h>
-#include <toolfactory.h>
+#include "include/toolfactory.h"
+
+#include <QWidget>
 
 class QModelIndex;
 
 namespace GammaRay {
 
-namespace Ui { class ObjectInspector; }
+namespace Ui {
+  class ObjectInspector;
+}
 
 class ObjectInspector : public QWidget
 {
@@ -52,8 +55,14 @@ class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObjec
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit ObjectInspectorFactory(QObject *parent) : QObject(parent) {}
-    inline QString name() const { return tr("Objects"); }
+    explicit ObjectInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Objects");
+    }
 };
 
 }

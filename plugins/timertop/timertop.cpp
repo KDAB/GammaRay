@@ -20,11 +20,12 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "timertop.h"
 
-#include "ui_timertop.h"
+#include "timertop.h"
 #include "timermodel.h"
-#include <probeinterface.h>
+#include "ui_timertop.h"
+
+#include "include/probeinterface.h"
 
 #include <QtPlugin>
 

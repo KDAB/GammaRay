@@ -105,6 +105,7 @@ macro_log_feature(
   "Required for the webinspector tool"
 )
 
+message(FATAL_ERROR "FOO=${QT_INCLUDES}")
 find_path(
   QT_PRIVATE_INCLUDE_DIR private/qobject_p.h
   PATHS ${QT_INCLUDES}

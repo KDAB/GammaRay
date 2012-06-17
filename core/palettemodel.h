@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_PALETTEMODEL_H
 #define GAMMARAY_PALETTEMODEL_H
 
-#include <qabstractitemmodel.h>
-#include <qpalette.h>
+#include <QAbstractItemModel>
+#include <QPalette>
 
 namespace GammaRay {
 
@@ -35,23 +35,29 @@ namespace GammaRay {
 class PaletteModel : public QAbstractTableModel
 {
   Q_OBJECT
-public:
-  explicit PaletteModel(QObject* parent = 0);
+  public:
+    explicit PaletteModel(QObject *parent = 0);
 
-  QPalette palette() const;
-  void setPalette(const QPalette &palette);
-  void setEditable(bool editable);
+    QPalette palette() const;
+    void setPalette(const QPalette &palette);
+    void setEditable(bool editable);
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-private:
-  QPalette m_palette;
-  bool m_editable;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
+
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+  private:
+    QPalette m_palette;
+    bool m_editable;
 };
 
 }

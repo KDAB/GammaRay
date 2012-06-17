@@ -23,10 +23,11 @@
 
 #include "webinspector.h"
 #include "ui_webinspector.h"
-#include <objecttypefilterproxymodel.h>
-#include <singlecolumnobjectproxymodel.h>
-#include <probeinterface.h>
-#include <objectmodel.h>
+
+#include "include/objectmodel.h"
+#include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
+#include "include/singlecolumnobjectproxymodel.h"
 
 #include <QtPlugin>
 

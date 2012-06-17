@@ -25,7 +25,7 @@
 #define GAMMARAY_TEXTDOCUMENTMODEL_H
 
 #include <QStandardItemModel>
-#include <qtextobject.h>
+#include <QTextObject>
 
 class QTextTable;
 class QTextBlock;

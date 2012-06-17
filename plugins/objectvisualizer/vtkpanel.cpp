@@ -20,19 +20,18 @@
 */
 
 #include "vtkpanel.h"
-
 #include "vtkwidget.h"
 
 #include <QComboBox>
 #include <QDebug>
 #include <QLabel>
 
-#include <vtkGraphLayoutView.h>
-#include <vtkForceDirectedLayoutStrategy.h>
-#include <vtkRenderWindow.h>
-#include <vtkSpanTreeLayoutStrategy.h>
-#include <vtkSimple2DLayoutStrategy.h>
-#include <vtkTreeLayoutStrategy.h>
+#include <vtk/vtkGraphLayoutView.h>
+#include <vtk/vtkForceDirectedLayoutStrategy.h>
+#include <vtk/vtkRenderWindow.h>
+#include <vtk/vtkSpanTreeLayoutStrategy.h>
+#include <vtk/vtkSimple2DLayoutStrategy.h>
+#include <vtk/vtkTreeLayoutStrategy.h>
 
 using namespace GammaRay;
 

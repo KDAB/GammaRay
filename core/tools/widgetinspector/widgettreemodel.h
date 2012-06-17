@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_WIDGETTREEMODEL_H
 #define GAMMARAY_WIDGETTREEMODEL_H
 
-#include <objecttypefilterproxymodel.h>
+#include "include/objecttypefilterproxymodel.h"
 
 namespace GammaRay {
 

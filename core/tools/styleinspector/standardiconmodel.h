@@ -25,7 +25,8 @@
 #define GAMMARAY_STANDARDICONMODEL_H
 
 #include "abstractstyleelementmodel.h"
-#include <qstyle.h>
+
+#include <QStyle>
 
 namespace GammaRay {
 
@@ -35,18 +36,21 @@ namespace GammaRay {
 class StandardIconModel : public AbstractStyleElementModel
 {
   Q_OBJECT
-public:
-  explicit StandardIconModel(QObject* parent = 0);
+  public:
+    explicit StandardIconModel(QObject *parent = 0);
 
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-protected:
-  virtual QVariant doData(int row, int column, int role) const;
-  virtual int doColumnCount() const;
-  virtual int doRowCount() const;
+  protected:
+    virtual QVariant doData(int row, int column, int role) const;
+    virtual int doColumnCount() const;
+    virtual int doRowCount() const;
 
-private:
-  QVariant dataForStandardIcon(QStyle::StandardPixmap stdPix, const QString &name, int column, int role) const;
+  private:
+    QVariant dataForStandardIcon(QStyle::StandardPixmap stdPix,
+                                 const QString &name,
+                                 int column, int role) const;
 };
 
 }
