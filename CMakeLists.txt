@@ -312,7 +312,7 @@ if(UNIX)
                 ${CMAKE_BINARY_DIR}/footfoo | doxygen -
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   )
-  add_custom_target(apidox
+  add_custom_target(docs
     DEPENDS ${CMAKE_BINARY_DIR}/apidocs/html/index.html
   )
 
