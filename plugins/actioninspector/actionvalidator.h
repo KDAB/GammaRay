@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_ACTIONVALIDATOR_H
-#define GAMMARAY_ACTIONVALIDATOR_H
+#ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONVALIDATOR_H
+#define GAMMARAY_ACTIONINSPECTOR_ACTIONVALIDATOR_H
 
 #include <QObject>
 

@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_GRAPHWIDGET_H
-#define GAMMARAY_GRAPHWIDGET_H
+#ifndef GAMMARAY_OBJECTVISUALIZER_VTKCONTAINER_H
+#define GAMMARAY_OBJECTVISUALIZER_VTKCONTAINER_H
 
 #include <QWidget>
 

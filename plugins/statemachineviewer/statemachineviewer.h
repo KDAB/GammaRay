@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STATEMACHINEVIEWER_H
-#define GAMMARAY_STATEMACHINEVIEWER_H
+#ifndef GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWER_H
+#define GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWER_H
 
 #include "statemachineviewerutil.h"
 #include "gvgraph/gvtypes.h"

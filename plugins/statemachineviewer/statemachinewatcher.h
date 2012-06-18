@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STATEMACHINEWATCHER_H
-#define GAMMARAY_STATEMACHINEWATCHER_H
+#ifndef GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEWATCHER_H
+#define GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEWATCHER_H
 
 #include <QObject>
 #include <QVector>

@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_ACTIONINSPECTOR_H
-#define GAMMARAY_ACTIONINSPECTOR_H
+#ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTOR_H
+#define GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTOR_H
 
 #include "include/toolfactory.h"
 

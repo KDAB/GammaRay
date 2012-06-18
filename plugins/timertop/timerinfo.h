@@ -20,8 +20,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_TIMERINFO_H
-#define GAMMARAY_TIMERINFO_H
+#ifndef GAMMARAY_TIMERTOP_TIMERINFO_H
+#define GAMMARAY_TIMERTOP_TIMERINFO_H
 
 #include "functioncalltimer.h"
 

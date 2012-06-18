@@ -20,8 +20,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_VTKWIDGET_H
-#define GAMMARAY_VTKWIDGET_H
+#ifndef GAMMARAY_OBJECTVISUALIZER_VTKWIDGET_H
+#define GAMMARAY_OBJECTVISUALIZER_VTKWIDGET_H
 
 #include <QVTKWidget.h>
 

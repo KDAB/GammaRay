@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WEBINSPECTOR_H
-#define GAMMARAY_WEBINSPECTOR_H
+#ifndef GAMMARAY_WEBINSPECTOR_WEBINSPECTOR_H
+#define GAMMARAY_WEBINSPECTOR_WEBINSPECTOR_H
 
 #include "include/toolfactory.h"
 
