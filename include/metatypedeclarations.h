@@ -20,6 +20,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+  @file
+  This file is part of the GammaRay Plugin API and declares the various metatypes.
+
+  @brief
+  Declares the various metatypes.
+
+  @author Volker Krause \<volker.krause@kdab.com\>
+*/
 
 #ifndef GAMMARAY_METATYPEDECALARATIONS_H
 #define GAMMARAY_METATYPEDECALARATIONS_H

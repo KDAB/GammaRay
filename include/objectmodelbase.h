@@ -20,6 +20,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+  @file
+  This file is part of the GammaRay Plugin API and declares a template for an ObjectModelBase class.
+
+  @brief
+  Declares a template for an ObjectModelBase class.
+
+  @author Volker Krause \<volker.krause@kdab.com\>
+*/
 
 #ifndef GAMMARAY_OBJECTMODELBASE_H
 #define GAMMARAY_OBJECTMODELBASE_H
@@ -32,6 +41,9 @@
 
 namespace GammaRay {
 
+/**
+ * @brief A container for a generic Object Model derived from some Base.
+ */
 template<typename Base>
 class ObjectModelBase : public Base
 {

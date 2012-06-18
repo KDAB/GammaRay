@@ -20,6 +20,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+  @file
+  This file is part of the GammaRay Plugin API and declares the ToolFactory abstract base class.
+
+  @brief
+  Declares the ToolFactory abstract base class.
+
+  @author Volker Krause \<volker.krause@kdab.com\>
+*/
 
 #ifndef GAMMARAY_TOOLFACTORY_H
 #define GAMMARAY_TOOLFACTORY_H
@@ -33,7 +42,10 @@ namespace GammaRay {
 class ProbeInterface;
 
 /**
- * Abstract interface for probe tools.
+ * @brief An abstract interface for probe tools.
+ *
+ * The ToolFactory class is an abstract base class for creating probe tools
+ * for GammaRay.  Each tool must have a unique identifier.
  */
 class ToolFactory
 {
@@ -73,6 +85,9 @@ class ToolFactory
     virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget) = 0;
 };
 
+/**
+ * @brief A templated generic ToolFactory for some data type and Tool.
+ */
 template <typename Type, typename Tool>
 class StandardToolFactory : public ToolFactory
 {

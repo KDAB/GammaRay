@@ -20,6 +20,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+  @file
+  This file is part of the GammaRay Plugin API and declares the ProbeInterface abstract base class.
+
+  @brief
+  Declars the ProbeInterface abstract base class.
+
+  @author Volker Krause \<volker.krause@kdab.com\>
+*/
 
 #ifndef GAMMARAY_PROBEINTERFACE_H
 #define GAMMARAY_PROBEINTERFACE_H
@@ -30,7 +39,10 @@ class QAbstractItemModel;
 namespace GammaRay {
 
 /**
- * Abstract interface for accessing the core probe without linking to it.
+ * @brief An abstract interface for accessing the core GammaRay probe.
+ *
+ * The ProbeInterface is an abstract interface that allows one to access
+ * the core GammaRay probe without linking to it.
  */
 class ProbeInterface
 {

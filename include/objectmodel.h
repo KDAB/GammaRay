@@ -20,6 +20,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+  @file
+  This file is part of the GammaRay Plugin API and declares the public object model roles.
+
+  @brief
+  Declares the public object model roles.
+
+  @author Volker Krause \<volker.krause@kdab.com\>
+*/
 
 #ifndef GAMMARAY_OBJECTMODEL_H
 #define GAMMARAY_OBJECTMODEL_H
@@ -29,15 +38,17 @@
 namespace GammaRay {
 
 /**
- * Public object model roles, for use by tool plugins without needing access to the real object
- * model classes.
+ * @brief GammaRay Object Models.
+ *
+ * Public object model roles, for use by tool plugins without needing access
+ * to the real object model classes.
  */
 namespace ObjectModel {
 
     /** Role enum, to be used with the object list and tree models. */
     enum Role {
-      ObjectRole = Qt::UserRole +1,
-      UserRole
+      ObjectRole = Qt::UserRole + 1, /**< the Object role */
+      UserRole                       /**< the UserRole, as defined by Qt */
     };
 }
 

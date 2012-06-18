@@ -20,6 +20,16 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+  @file
+  This file is part of the GammaRay Plugin API and declares a template
+  for an ObjectTypeFilterProxyModel class.
+
+  @brief
+  Declares a template for an ObjectTypeFilterProxyModel class.
+
+  @author Volker Krause \<volker.krause@kdab.com\>
+*/
 
 #ifndef GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 #define GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
@@ -30,6 +40,9 @@
 
 namespace GammaRay {
 
+/**
+ * @brief A QSortFilterProxyModel for generic Objects.
+ */
 class ObjectFilterProxyModelBase : public QSortFilterProxyModel
 {
   public:
@@ -58,6 +71,9 @@ class ObjectFilterProxyModelBase : public QSortFilterProxyModel
     virtual bool filterAcceptsObject(QObject *object) const = 0;
 };
 
+/**
+ * @brief A templated generic ObjectFilterProxyModelBase for some data type.
+ */
 template <typename T>
 class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
 {

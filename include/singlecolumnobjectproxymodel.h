@@ -20,6 +20,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+/**
+  @file
+  This file is part of the GammaRay Plugin API and declares the SingleColumnObjectProxyModel class.
+
+  @brief
+  Declares the SingleColumnObjectProxyModel class.
+
+  @author Volker Krause \<volker.krause@kdab.com\>
+*/
 
 #ifndef GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 #define GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
@@ -36,6 +45,9 @@ typedef QSortFilterProxyModel QIdentityProxyModel;
 
 namespace GammaRay {
 
+/**
+ * @brief A QIdentityProxyModel for generic Objects.
+ */
 class SingleColumnObjectProxyModel : public QIdentityProxyModel
 {
   public:
