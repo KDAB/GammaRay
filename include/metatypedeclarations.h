@@ -33,10 +33,10 @@
 #ifndef GAMMARAY_METATYPEDECALARATIONS_H
 #define GAMMARAY_METATYPEDECALARATIONS_H
 
-#include <QtGui/QGraphicsItem>
-#include <QtGui/QGraphicsWidget>
-#include <QtGui/QGraphicsEffect>
-#include <QtGui/QStyle>
+#include <QGraphicsItem>
+#include <QGraphicsWidget>
+#include <QGraphicsEffect>
+#include <QStyle>
 
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)

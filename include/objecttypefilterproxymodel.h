@@ -36,7 +36,7 @@
 
 #include "objectmodelbase.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace GammaRay {
 

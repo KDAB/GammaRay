@@ -37,10 +37,10 @@
 #include "util.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 typedef QSortFilterProxyModel QIdentityProxyModel;
 #else
-#include <QtGui/QIdentityProxyModel>
+#include <QIdentityProxyModel>
 #endif
 
 namespace GammaRay {
