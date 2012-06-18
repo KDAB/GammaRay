@@ -300,16 +300,21 @@ if(UNIX)
 
   install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
 
+  file(GLOB API_LIST include/*.h)
+
   #apidox generation using doxygen
   add_custom_command(
     OUTPUT ${CMAKE_BINARY_DIR}/apidocs/html/index.html
     COMMAND echo \"PROJECT_NUMBER = ${GAMMARAY_VERSION}\" > ${CMAKE_BINARY_DIR}/versfoo
+    COMMAND echo \"INPUT = ${CMAKE_SOURCE_DIR}/include\" > ${CMAKE_BINARY_DIR}/inputfoo
     COMMAND echo \"IMAGE_PATH = ${CMAKE_SOURCE_DIR}/images\" > ${CMAKE_BINARY_DIR}/imgfoo
     COMMAND echo \"HTML_FOOTER = ${CMAKE_SOURCE_DIR}/images/footer.html\" > ${CMAKE_BINARY_DIR}/footfoo
     COMMAND cat ${CMAKE_SOURCE_DIR}/Doxyfile
                 ${CMAKE_BINARY_DIR}/versfoo
+                ${CMAKE_BINARY_DIR}/inputfoo
                 ${CMAKE_BINARY_DIR}/imgfoo
                 ${CMAKE_BINARY_DIR}/footfoo | doxygen -
+    DEPENDS ${API_LIST} ${CMAKE_SOURCE_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   )
   add_custom_target(docs
