@@ -300,7 +300,7 @@ if(UNIX)
 
   install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
 
-  file(GLOB API_LIST include/*.h)
+  file(GLOB API_LIST include/*.h include/*.dox images/*.html)
 
   #apidox generation using doxygen
   add_custom_command(
