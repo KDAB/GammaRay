@@ -25,7 +25,7 @@
   This file is part of the GammaRay Plugin API and declares the ProbeInterface abstract base class.
 
   @brief
-  Declars the ProbeInterface abstract base class.
+  Declares the ProbeInterface abstract base class.
 
   @author Volker Krause \<volker.krause@kdab.com\>
 */
