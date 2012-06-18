@@ -99,7 +99,8 @@ EXCLUDE_PATTERNS       = */.svn/* \
                          *unload.* \
                          */test/* \
                          */tests/* \
-                         *_p.cpp
+                         *_p.cpp \
+                         *_export.h
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
@@ -153,7 +154,7 @@ EXPAND_ONLY_PREDEF     = NO
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           = 
 INCLUDE_FILE_PATTERNS  = 
-PREDEFINED             = 
+PREDEFINED             = Q_DECL_IMPORT="" GAMMARAY_EXPORT=""
 EXPAND_AS_DEFINED      = 
 SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
