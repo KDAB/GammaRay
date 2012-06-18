@@ -132,7 +132,6 @@ namespace Util {
     return findParentOfType<T>(object->parent());
   }
 
-
   /**
    * Returns an icon for the given object. In normal operation a QIcon is
    * returned containing the icon most closely associated with the data type

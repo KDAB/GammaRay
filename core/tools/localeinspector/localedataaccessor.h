@@ -80,7 +80,7 @@ struct LocaleDataAccessor
 #define LOCALE_DISPLAY_ACCESSOR(NAME) \
 struct Locale##NAME##Accessor : LocaleDataAccessor \
 { \
-  QString accessorName() { return #NAME ; } \
+  QString accessorName() { return #NAME; } \
   QString display(const QLocale &locale) \
   { \
 
