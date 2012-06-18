@@ -25,7 +25,7 @@
 
 #include <QVTKWidget.h>
 
-#include <vtk/vtkSmartPointer.h>
+#include <vtkSmartPointer.h>
 
 #include <QMap>
 #include <QSet>

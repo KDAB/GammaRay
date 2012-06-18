@@ -26,26 +26,26 @@
 
 #include <QTimer>
 
-#include <vtk/vtkRenderer.h>
-#include <vtk/vtkRenderWindow.h>
-#include <vtk/vtkRenderWindowInteractor.h>
-#include <vtk/vtkPolyDataMapper.h>
-#include <vtk/vtkMutableDirectedGraph.h>
-#include <vtk/vtkSmartPointer.h>
-#include <vtk/vtkGraphLayout.h>
-#include <vtk/vtkGraphToPolyData.h>
-#include <vtk/vtkGlyphSource2D.h>
-#include <vtk/vtkGlyph3D.h>
-#include <vtk/vtkGraphLayoutView.h>
-#include <vtk/vtkMutableUndirectedGraph.h>
-#include <vtk/vtkStringArray.h>
-#include <vtk/vtkDataSetAttributes.h>
-#include <vtk/vtkVariantArray.h>
-#include <vtk/vtkInteractorStyleTrackballCamera.h>
-#include <vtk/vtkVertexListIterator.h>
-#include <vtk/vtkIdTypeArray.h>
-#include <vtk/vtkLookupTable.h>
-#include <vtk/vtkViewTheme.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkMutableDirectedGraph.h>
+#include <vtkSmartPointer.h>
+#include <vtkGraphLayout.h>
+#include <vtkGraphToPolyData.h>
+#include <vtkGlyphSource2D.h>
+#include <vtkGlyph3D.h>
+#include <vtkGraphLayoutView.h>
+#include <vtkMutableUndirectedGraph.h>
+#include <vtkStringArray.h>
+#include <vtkDataSetAttributes.h>
+#include <vtkVariantArray.h>
+#include <vtkInteractorStyleTrackballCamera.h>
+#include <vtkVertexListIterator.h>
+#include <vtkIdTypeArray.h>
+#include <vtkLookupTable.h>
+#include <vtkViewTheme.h>
 
 #include <iostream>
 
