@@ -10,7 +10,7 @@
 # To install the resulting man page, run 'make install'
 # Not available on Windows.
 #
-# To build the apidox, run 'make apidox' after CMake (assumes doxygen is available)
+# To build the apidox, run 'make docs' after CMake (assumes doxygen is available)
 # Not available on Windows.
 #
 
