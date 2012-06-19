@@ -1,21 +1,31 @@
-Release Highlights:
-------------------
+Release Highlights
+==================
+
+Version 1.2:
+-----------
+ * Published API for writing your own plugin
+ * New QStyle inspector
+ * New QAction inspector with shortcut conflict finder
+ * New QPalette editor
+ * QWidget paint operation introspection using QPaintBuffer (requires private headers)
 
 Version 1.1:
-  - Plug-in system for tools
-  - Graphical state machine viewer
-  - Object hierarchy visualization plug-in
-  - New timer profiler plug-in
-  - New locale inspector plug-in
-  - New property view/editor for non-QObject types
-    (e.g. QGraphicsItem and many of its sub-classes)
-  - New widget export actions (image, PDF, SVG, Designer UI file)
-  - New launcher UI with support for starting new processes, self-testing,
-    and a much faster process list on Mac OSX
-  - Support more types in the property editor
-  - Improved widget tree model
-  - Fix unreliable attaching with MSVC
-  - MingW support
+-----------
+ * Plug-in system for tools
+ * Graphical state machine viewer
+ * Object hierarchy visualization plug-in
+ * New timer profiler plug-in
+ * New locale inspector plug-in
+ * New property view/editor for non-QObject types
+   (e.g. QGraphicsItem and many of its sub-classes)
+ * New widget export actions (image, PDF, SVG, Designer UI file)
+ * New launcher UI with support for starting new processes, self-testing,
+   and a much faster process list on Mac OSX
+ * Support more types in the property editor
+ * Improved widget tree model
+ * Fix unreliable attaching with MSVC
+ * MingW support
 
 Version 1.0:
-  - Initial Release
+-----------
+ * Initial Release
