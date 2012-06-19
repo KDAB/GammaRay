@@ -54,11 +54,13 @@ class ToolFactory
 
     /**
      * Unique id of this tool
+     * @return a QString containing the tool id.
      */
     virtual QString id() const = 0;
 
     /**
      * Human readable name of this tool.
+     * @return a QString containing the tool name.
      */
     virtual QString name() const = 0;
 
@@ -66,6 +68,7 @@ class ToolFactory
      * Class names of types this tool can handle.
      * The tool will only be activated if an object of one of these types
      * is seen in the probed application.
+     * @return a QStringList of class names of types this tool supports.
      */
     virtual QStringList supportedTypes() const = 0;
 
@@ -81,6 +84,7 @@ class ToolFactory
      * Create the UI part of this tool.
      * @param probe The probe interface allowing access to the object models.
      * @param parentWidget The parent widget for the visual elements of this tool.
+     * @return a pointer to the created QwWidget.
      */
     virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget) = 0;
 };

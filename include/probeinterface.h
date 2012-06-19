@@ -49,22 +49,40 @@ class ProbeInterface
   public:
     virtual inline ~ProbeInterface() {}
 
-    /** Returns the object list model. */
+    /**
+     * Returns the object list model.
+     * @return a pointer to a QAbstractItemModel instance.
+     */
     virtual QAbstractItemModel *objectListModel() const = 0;
-    /** Returns the object tree model. */
+
+    /**
+     * Returns the object tree model.
+     * @return a pointer to a QAbstractItemModel instance.
+     */
     virtual QAbstractItemModel *objectTreeModel() const = 0;
-    /** Returns the connection model. */
+
+    /**
+     * Returns the connection model.
+     * @return a pointer to a QAbstractItemModel instance.
+     */
     virtual QAbstractItemModel *connectionModel() const = 0;
 
     /**
-     * Returns true if @p obj belongs to the GammaRay Probe or Window.
+     * Determines if the specified QObject belongs to the GammaRay Probe or Window.
      *
      * These objects should not be tracked or shown to the user,
      * hence must be explictly filtered.
+     * @param object is a pointer to a QObject instance.
+     *
+     * @return true if the specified QObject belongs to the GammaRay Probe
+     * or Window; false otherwise.
      */
-    virtual bool filterObject(QObject *obj) const = 0;
+    virtual bool filterObject(QObject *object) const = 0;
 
-    /** Returns the probe QObject for connecting signals. */
+    /**
+     * Returns the probe QObject for connecting signals.
+     * @return a pointer to a QObject instance.
+     */
     virtual QObject *probe() const = 0;
 };
 

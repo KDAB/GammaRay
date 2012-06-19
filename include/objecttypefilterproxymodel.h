@@ -46,12 +46,23 @@ namespace GammaRay {
 class ObjectFilterProxyModelBase : public QSortFilterProxyModel
 {
   public:
+    /**
+     * Constructor.
+     * @param parent is the parent object for this instance.
+     */
     explicit ObjectFilterProxyModelBase(QObject *parent = 0) : QSortFilterProxyModel(parent)
     {
       setDynamicSortFilter(true);
     }
 
   protected:
+    /**
+     * Determines if the item in the specified row can be included in the model.
+     * @param source_row is a non-zero integer representing the row of the item.
+     * @param source_parent is the parent QModelIndex for this model.
+     * @return true if the item in the row can be included in the model;
+     *         otherwise returns false.
+     */
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
     {
       const QModelIndex source_index = sourceModel()->index(source_row, 0, source_parent);
@@ -68,6 +79,11 @@ class ObjectFilterProxyModelBase : public QSortFilterProxyModel
       return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
     }
 
+    /**
+     * Determines if the specified QObject can be included in the model.
+     * @param object is a pointer to the QObject to test.
+     * @return true if the QObject can be included in the model; false otherwise.
+     */
     virtual bool filterAcceptsObject(QObject *object) const = 0;
 };
 
@@ -78,6 +94,10 @@ template <typename T>
 class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
 {
   public:
+    /**
+     * Constructor.
+     * @param parent is the parent object for this instance.
+     */
     explicit ObjectTypeFilterProxyModel(QObject *parent = 0)
       : ObjectFilterProxyModelBase(parent) {}
 

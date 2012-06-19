@@ -48,37 +48,71 @@ template<typename Base>
 class ObjectModelBase : public Base
 {
   public:
+    /**
+     * Constructor.
+     * @param parent is the parent object for this instance.
+     */
     explicit ObjectModelBase<Base>(QObject *parent) : Base(parent) {}
 
+    /**
+     * Returns the number of columns in the specified model (currently this is
+     * always 2).
+     * @param parent is the model QModelIndex.
+     * @return the column count for specified model.
+     */
     int columnCount(const QModelIndex &parent = QModelIndex()) const
     {
       Q_UNUSED(parent);
       return 2;
     }
 
-    QVariant dataForObject(QObject *obj, const QModelIndex &index, int role) const
+    /**
+     * Returns the data for the specified object.
+     * @param object is a pointer to a QObject.
+     * @param index is the model QModelIndex.
+     * @param role is the Qt role.
+     *
+     * @return on success, a QVariant containing the data for the specified QObject;
+     *         QVariant() if some anamoly occurs.
+     */
+    QVariant dataForObject(QObject *object, const QModelIndex &index, int role) const
     {
       if (role == Qt::DisplayRole) {
         if (index.column() == 0) {
-          return obj->objectName().isEmpty() ? Util::addressToString(obj) : obj->objectName();
+          return
+            object->objectName().isEmpty() ?
+              Util::addressToString(object) :
+              object->objectName();
         } else if (index.column() == 1) {
-          return obj->metaObject()->className();
+          return object->metaObject()->className();
         }
       } else if (role == ObjectModel::ObjectRole) {
-        return QVariant::fromValue(obj);
+        return QVariant::fromValue(object);
       } else if (role == Qt::ToolTipRole) {
-          return QString("Object name: %1\nParent: %2 (Address: %3)\nNumber of children: %4").
-            arg(obj->objectName().isEmpty() ? "<Not set>" : obj->objectName()).
-            arg(obj->parent() ? obj->parent()->metaObject()->className() : "<No parent>").
-            arg(Util::addressToString(obj->parent())).
-            arg(obj->children().size());
+          return
+            QString("Object name: %1\nParent: %2 (Address: %3)\nNumber of children: %4").
+              arg(object->objectName().isEmpty() ? "<Not set>" : object->objectName()).
+              arg(object->parent() ? object->parent()->metaObject()->className() : "<No parent>").
+              arg(Util::addressToString(object->parent())).
+              arg(object->children().size());
       } else if (role == Qt::DecorationRole && index.column() == 0) {
-        return Util::iconForObject(obj);
+        return Util::iconForObject(object);
       }
 
       return QVariant();
     }
 
+    /**
+     * Returns the header data for the Object, given a section (column),
+     * orientation and role.
+     * @param section an integer (either 0 or 1) corresponding to the section (column).
+     * @param orientation is the Qt::Orientation.
+     * @param role is the Qt role.
+     *
+     * @return on success, a QVariant containing the header data;
+     *         QVariant() if some anamoly occurs.
+     *
+     */
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
     {
       if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
