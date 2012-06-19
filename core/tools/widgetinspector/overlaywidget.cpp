@@ -23,9 +23,9 @@
 
 #include "overlaywidget.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QEvent>
+#include <QDebug>
 #include <QDialog>
+#include <QEvent>
 #include <QLayout>
 #include <QPainter>
 

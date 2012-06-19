@@ -23,8 +23,8 @@
 
 #include "metatypesmodel.h"
 
-#include <QtCore/QMetaType>
-#include <QtCore/QDebug>
+#include <QDebug>
+#include <QMetaType>
 
 MetaTypesModel::MetaTypesModel(QObject *parent)
   : QAbstractItemModel(parent), m_lastMetaType(0)

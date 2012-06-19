@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_FONTBROWSER_H
-#define GAMMARAY_FONTBROWSER_H
+#ifndef GAMMARAY_FONTBROWSER_FONTBROWSER_H
+#define GAMMARAY_FONTBROWSER_FONTBROWSER_H
 
 #include "include/toolfactory.h"
 

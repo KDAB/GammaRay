@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_METAPROPERTYMODEL_H
 #define GAMMARAY_METAPROPERTYMODEL_H
 
-#include <QtCore/QAbstractTableModel>
+#include <QAbstractTableModel>
 
 namespace GammaRay {
 

@@ -33,9 +33,9 @@
 #ifndef GAMMARAY_TOOLFACTORY_H
 #define GAMMARAY_TOOLFACTORY_H
 
-#include <QtCore/QMetaType>
-#include <QtCore/QStringList>
-#include <QtCore/QtPlugin>
+#include <QMetaType>
+#include <QStringList>
+#include <QtPlugin>
 
 namespace GammaRay {
 

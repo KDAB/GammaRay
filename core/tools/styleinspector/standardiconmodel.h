@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STANDARDICONMODEL_H
-#define GAMMARAY_STANDARDICONMODEL_H
+#ifndef GAMMARAY_STYLEINSPECTOR_STANDARDICONMODEL_H
+#define GAMMARAY_STYLEINSPECTOR_STANDARDICONMODEL_H
 
 #include "abstractstyleelementmodel.h"
 

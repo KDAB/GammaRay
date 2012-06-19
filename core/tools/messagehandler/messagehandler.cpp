@@ -22,18 +22,16 @@
 */
 
 #include "messagehandler.h"
-
+#include "messagemodel.h"
 #include "ui_messagehandler.h"
 
-#include "messagemodel.h"
-
-#include <QSortFilterProxyModel>
-#include <QtCore/QMutex>
 #include <QDebug>
-#include <QMessageBox>
-#include <QListWidget>
-#include <QLabel>
 #include <QDialogButtonBox>
+#include <QLabel>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QMutex>
+#include <QSortFilterProxyModel>
 #include <QThread>
 
 static QTextStream cerr(stdout);

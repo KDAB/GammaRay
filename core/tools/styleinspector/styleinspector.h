@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STYLEINSPECTOR_H
-#define GAMMARAY_STYLEINSPECTOR_H
+#ifndef GAMMARAY_STYLEINSPECTOR_STYLEINSPECTOR_H
+#define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTOR_H
 
 #include "include/toolfactory.h"
 

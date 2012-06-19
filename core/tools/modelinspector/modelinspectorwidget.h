@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELINSPECTORWIDGET_H
-#define GAMMARAY_MODELINSPECTORWIDGET_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
+#define GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
 
 #include <QWidget>
 

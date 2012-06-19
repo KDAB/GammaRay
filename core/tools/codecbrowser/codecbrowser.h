@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CODECBROWSER_H
-#define GAMMARAY_CODECBROWSER_H
+#ifndef GAMMARAY_CODECBROWSER_CODECBROWSER_H
+#define GAMMARAY_CODECBROWSER_CODECBROWSER_H
 
 #include "include/toolfactory.h"
 

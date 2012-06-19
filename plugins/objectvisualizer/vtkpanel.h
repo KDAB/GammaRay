@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_VTKPANEL_H
-#define GAMMARAY_VTKPANEL_H
+#ifndef GAMMARAY_OBJECTVISUALIZER_VTKPANEL_H
+#define GAMMARAY_OBJECTVISUALIZER_VTKPANEL_H
 
 #include <QToolBar>
 

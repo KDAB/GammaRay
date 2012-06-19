@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_ACTIONMODEL_H
-#define GAMMARAY_ACTIONMODEL_H
+#ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
+#define GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
 
 #include "actionvalidator.h"
 

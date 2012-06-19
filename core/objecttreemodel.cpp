@@ -26,8 +26,8 @@
 #include "readorwritelocker.h"
 #include "probe.h"
 
-#include <QtCore/QEvent>
-#include <QtCore/QThread>
+#include <QEvent>
+#include <QThread>
 
 #include <iostream>
 

@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_TEXTDOCUMENTFORMATMODEL_H
-#define GAMMARAY_TEXTDOCUMENTFORMATMODEL_H
+#ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTFORMATMODEL_H
+#define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTFORMATMODEL_H
 
 #include <QAbstractTableModel>
 #include <QTextFormat>

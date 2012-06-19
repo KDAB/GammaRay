@@ -22,7 +22,7 @@
 #ifndef GAMMARAY_UNIXFUNCTIONOVERWRITER_H
 #define GAMMARAY_UNIXFUNCTIONOVERWRITER_H
 
-#include <QtCore/QtGlobal>
+#include <QtGlobal>
 
 #if !defined(Q_OS_WIN)
 

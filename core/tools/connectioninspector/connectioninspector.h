@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CONNECTIONINSPECTOR_H
-#define GAMMARAY_CONNECTIONINSPECTOR_H
+#ifndef GAMMARAY_CONNECTIONINSPECTOR_CONNECTIONINSPECTOR_H
+#define GAMMARAY_CONNECTIONINSPECTOR_CONNECTIONINSPECTOR_H
 
 #include "include/toolfactory.h"
 

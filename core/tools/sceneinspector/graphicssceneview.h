@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_GRAPHICSSCENEVIEW_H
-#define GAMMARAY_GRAPHICSSCENEVIEW_H
+#ifndef GAMMARAY_SCENEINSPECTOR_GRAPHICSSCENEVIEW_H
+#define GAMMARAY_SCENEINSPECTOR_GRAPHICSSCENEVIEW_H
 
 #include <QWidget>
 

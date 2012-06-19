@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELCELLMODEL_H
-#define GAMMARAY_MODELCELLMODEL_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELCELLMODEL_H
+#define GAMMARAY_MODELINSPECTOR_MODELCELLMODEL_H
 
 #include <QAbstractTableModel>
 

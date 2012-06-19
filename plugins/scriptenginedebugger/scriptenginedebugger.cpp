@@ -28,8 +28,8 @@
 #include "include/probeinterface.h"
 #include "include/singlecolumnobjectproxymodel.h"
 
-#include <QtScript/qscriptengine.h>
-#include <QtScriptTools/QScriptEngineDebugger>
+#include <QScriptEngine>
+#include <QScriptEngineDebugger>
 #include <QDebug>
 #include <QMainWindow>
 #include <QtPlugin>

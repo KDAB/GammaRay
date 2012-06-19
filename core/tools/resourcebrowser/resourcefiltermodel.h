@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_RESOURCEFILTERMODEL_H
-#define GAMMARAY_RESOURCEFILTERMODEL_H
+#ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
+#define GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
 
 #include <QSortFilterProxyModel>
 

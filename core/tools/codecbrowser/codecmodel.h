@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CODECMODEL_H
-#define GAMMARAY_CODECMODEL_H
+#ifndef GAMMARAY_CODECBROWSER_CODECMODEL_H
+#define GAMMARAY_CODECBROWSER_CODECMODEL_H
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QTextCodec>
-#include <QtCore/QStringList>
+#include <QAbstractItemModel>
+#include <QStringList>
+#include <QTextCodec>
 
 namespace GammaRay {
 

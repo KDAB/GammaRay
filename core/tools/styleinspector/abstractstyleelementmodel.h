@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H
-#define GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H
+#ifndef GAMMARAY_STYLEINSPECTOR_ABSTRACTSTYLEELEMENTMODEL_H
+#define GAMMARAY_STYLEINSPECTOR_ABSTRACTSTYLEELEMENTMODEL_H
 
 #include <QAbstractItemModel>
 #include <QPointer>

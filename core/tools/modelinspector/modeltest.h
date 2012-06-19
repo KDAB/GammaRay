@@ -22,12 +22,12 @@
 ****************************************************************************/
 //krazy:excludeall=style
 
-#ifndef GAMMARAY_MODELTEST_H
-#define GAMMARAY_MODELTEST_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELTEST_H
+#define GAMMARAY_MODELINSPECTOR_MODELTEST_H
 
-#include <QtCore/QObject>
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QStack>
+#include <QAbstractItemModel>
+#include <QObject>
+#include <QStack>
 
 class ModelTest : public QObject
 {

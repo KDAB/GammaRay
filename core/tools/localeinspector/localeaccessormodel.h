@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LOCALEACCESSORMODEL_H
-#define GAMMARAY_LOCALEACCESSORMODEL_H
+#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEACCESSORMODEL_H
+#define GAMMARAY_LOCALEINSPECTOR_LOCALEACCESSORMODEL_H
 
 #include <QAbstractTableModel>
 #include <QVector>

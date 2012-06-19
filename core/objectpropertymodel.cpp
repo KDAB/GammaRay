@@ -23,8 +23,8 @@
 
 #include "objectpropertymodel.h"
 
-#include <QtCore/QMetaProperty>
-#include <QtCore/QTimer>
+#include <QMetaProperty>
+#include <QTimer>
 
 using namespace GammaRay;
 

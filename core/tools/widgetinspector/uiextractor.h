@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_UIEXTRACTOR_H
-#define GAMMARAY_UIEXTRACTOR_H
+#ifndef GAMMARAY_WIDGETINSPECTOR_UIEXTRACTOR_H
+#define GAMMARAY_WIDGETINSPECTOR_UIEXTRACTOR_H
 
 #include <QFormBuilder>
 

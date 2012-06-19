@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LOCALEINSPECTOR_H
-#define GAMMARAY_LOCALEINSPECTOR_H
+#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
+#define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
 
 #include "include/toolfactory.h"
 

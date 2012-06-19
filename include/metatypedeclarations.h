@@ -30,8 +30,8 @@
   @author Volker Krause \<volker.krause@kdab.com\>
 */
 
-#ifndef GAMMARAY_METATYPEDECALARATIONS_H
-#define GAMMARAY_METATYPEDECALARATIONS_H
+#ifndef GAMMARAY_METATYPEDECLARATIONS_H
+#define GAMMARAY_METATYPEDECLARATIONS_H
 
 #include <QGraphicsItem>
 #include <QGraphicsWidget>

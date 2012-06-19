@@ -20,13 +20,13 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_MESSAGEMODEL_H
-#define GAMMARAY_MESSAGEMODEL_H
-
-#include <QtCore/QAbstractTableModel>
-#include <QtCore/QTime>
+#ifndef GAMMARAY_MESSAGEHANDLER_MESSAGEMODEL_H
+#define GAMMARAY_MESSAGEHANDLER_MESSAGEMODEL_H
 
 #include "backtrace.h"
+
+#include <QAbstractTableModel>
+#include <QTime>
 
 namespace GammaRay {
 

@@ -26,12 +26,12 @@
 #include "probefinder.h"
 
 #include <qglobal.h>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QString>
-#include <QtCore/QStringBuilder>
+#include <QCoreApplication>
+#include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QString>
+#include <QStringBuilder>
 
 namespace GammaRay {
 

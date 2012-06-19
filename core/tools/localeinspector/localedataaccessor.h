@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LOCALEDATAACCESSOR_H
-#define GAMMARAY_LOCALEDATAACCESSOR_H
+#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEDATAACCESSOR_H
+#define GAMMARAY_LOCALEINSPECTOR_LOCALEDATAACCESSOR_H
 
 #include <QLocale>
 #include <QVector>

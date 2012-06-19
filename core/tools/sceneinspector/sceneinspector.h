@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCENEINSPECTOR_H
-#define GAMMARAY_SCENEINSPECTOR_H
+#ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTOR_H
+#define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTOR_H
 
 #include "include/toolfactory.h"
 

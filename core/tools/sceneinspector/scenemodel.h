@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCENEMODEL_H
-#define GAMMARAY_SCENEMODEL_H
+#ifndef GAMMARAY_SCENEINSPECTOR_SCENEMODEL_H
+#define GAMMARAY_SCENEINSPECTOR_SCENEMODEL_H
 
 #include <QAbstractItemModel>
 

@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELTESTER_H
-#define GAMMARAY_MODELTESTER_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELTESTER_H
+#define GAMMARAY_MODELINSPECTOR_MODELTESTER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QHash>
-#include <QtCore/QPointer>
+#include <QHash>
+#include <QObject>
+#include <QPointer>
 
 class QAbstractItemModel;
 class ModelTest;

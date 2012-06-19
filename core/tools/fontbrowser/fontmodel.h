@@ -21,10 +21,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_FONTMODEL_H
-#define GAMMARAY_FONTMODEL_H
+#ifndef GAMMARAY_FONTBROWSER_FONTMODEL_H
+#define GAMMARAY_FONTBROWSER_FONTMODEL_H
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 #include <QFont>
 
 namespace GammaRay {

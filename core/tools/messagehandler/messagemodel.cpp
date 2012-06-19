@@ -23,7 +23,7 @@
 
 #include "messagemodel.h"
 
-#include <QtCore/QDebug>
+#include <QDebug>
 
 using namespace GammaRay;
 

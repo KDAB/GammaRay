@@ -24,7 +24,7 @@
 
 #include "windllinjector.h"
 
-#include <QtCore/QDebug>
+#include <QDebug>
 
 #ifdef Q_OS_WIN
 #include <windows.h>

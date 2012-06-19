@@ -21,10 +21,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_BACKTRACE_H
-#define GAMMARAY_BACKTRACE_H
+#ifndef GAMMARAY_MESSAGEHANDLER_BACKTRACE_H
+#define GAMMARAY_MESSAGEHANDLER_BACKTRACE_H
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 typedef QStringList Backtrace;
 

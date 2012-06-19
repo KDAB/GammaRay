@@ -36,8 +36,8 @@
 
 #include "gammaray_export.h"
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
+#include <QString>
+#include <QVariant>
 
 class QObject;
 

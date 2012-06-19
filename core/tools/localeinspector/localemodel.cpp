@@ -20,11 +20,10 @@
 */
 
 #include "localemodel.h"
-
 #include "localedataaccessor.h"
 
-#include <QtCore/QLocale>
-#include <QtCore/QDebug>
+#include <QDebug>
+#include <QLocale>
 
 using namespace GammaRay;
 

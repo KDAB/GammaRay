@@ -28,7 +28,7 @@
 #include "styleinjector.h"
 #include "windllinjector.h"
 
-#include <QtCore/QString>
+#include <QString>
 
 namespace GammaRay {
 

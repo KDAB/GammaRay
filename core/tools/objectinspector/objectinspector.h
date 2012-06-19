@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OBJECTINSPECTOR_H
-#define GAMMARAY_OBJECTINSPECTOR_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTOR_H
+#define GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTOR_H
 
 #include "include/toolfactory.h"
 

@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_GRAPHICSVIEW_H
-#define GAMMARAY_GRAPHICSVIEW_H
+#ifndef GAMMARAY_SCENEINSPECTOR_GRAPHICSVIEW_H
+#define GAMMARAY_SCENEINSPECTOR_GRAPHICSVIEW_H
 
 #include <QGraphicsView>
 

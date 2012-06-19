@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WIDGETTREEMODEL_H
-#define GAMMARAY_WIDGETTREEMODEL_H
+#ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETTREEMODEL_H
+#define GAMMARAY_WIDGETINSPECTOR_WIDGETTREEMODEL_H
 
 #include "include/objecttypefilterproxymodel.h"
 

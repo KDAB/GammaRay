@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STYLEOPTION_H
-#define GAMMARAY_STYLEOPTION_H
+#ifndef GAMMARAY_STYLEINSPECTOR_STYLEOPTION_H
+#define GAMMARAY_STYLEINSPECTOR_STYLEOPTION_H
 
 #include <QStyle>
 

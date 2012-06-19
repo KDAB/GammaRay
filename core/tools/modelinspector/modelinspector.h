@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELINSPECTOR_H
-#define GAMMARAY_MODELINSPECTOR_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
+#define GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
 
 #include "include/toolfactory.h"
 

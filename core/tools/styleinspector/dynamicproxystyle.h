@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_DYNAMICPROXYSTYLE_H
-#define GAMMARAY_DYNAMICPROXYSTYLE_H
+#ifndef GAMMARAY_STYLEINSPECTOR_DYNAMICPROXYSTYLE_H
+#define GAMMARAY_STYLEINSPECTOR_DYNAMICPROXYSTYLE_H
 
 #include <QHash>
 #include <QProxyStyle>

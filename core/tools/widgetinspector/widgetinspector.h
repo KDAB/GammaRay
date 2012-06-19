@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WIDGETINSPECTOR_H
-#define GAMMARAY_WIDGETINSPECTOR_H
+#ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
+#define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
 
 #include "include/toolfactory.h"
 

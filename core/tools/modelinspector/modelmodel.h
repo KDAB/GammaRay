@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELMODEL_H
-#define GAMMARAY_MODELMODEL_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELMODEL_H
+#define GAMMARAY_MODELINSPECTOR_MODELMODEL_H
 
 #include "include/objectmodelbase.h"
 

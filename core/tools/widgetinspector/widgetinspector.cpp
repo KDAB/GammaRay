@@ -21,17 +21,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "widgetinspector.h"
 #include "config-gammaray.h"
-
 #include "overlaywidget.h"
 #include "paintbufferviewer.h"
-#include "ui_widgetinspector.h"
-#include "widgetinspector.h"
 #include "widgettreemodel.h"
+#include "ui_widgetinspector.h"
 
-#include "include/probeinterface.h"
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
+#include "include/probeinterface.h"
 
 #include <kde/krecursivefilterproxymodel.h>
 

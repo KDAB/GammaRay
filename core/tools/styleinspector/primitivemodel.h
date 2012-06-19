@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PRIMITIVEMODEL_H
-#define GAMMARAY_PRIMITIVEMODEL_H
+#ifndef GAMMARAY_STYLEINSPECTOR_PRIMITIVEMODEL_H
+#define GAMMARAY_STYLEINSPECTOR_PRIMITIVEMODEL_H
 
 #include "abstractstyleelementstatetable.h"
 

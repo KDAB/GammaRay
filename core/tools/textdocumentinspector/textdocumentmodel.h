@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_TEXTDOCUMENTMODEL_H
-#define GAMMARAY_TEXTDOCUMENTMODEL_H
+#ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTMODEL_H
+#define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTMODEL_H
 
 #include <QStandardItemModel>
 #include <QTextObject>

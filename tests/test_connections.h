@@ -21,11 +21,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TEST_GAMMARAY_CONNECTIONS_H
-#define TEST_GAMMARAY_CONNECTIONS_H
+#ifndef GAMMARAY_TEST_CONNECTIONS_H
+#define GAMMARAY_TEST_CONNECTIONS_H
 
-#include <QtCore/QObject>
-#include <QtCore/QThread>
+#include <QObject>
+#include <QThread>
 
 class QTimer;
 class QEventLoop;

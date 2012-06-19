@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CONTROLMODEL_H
-#define GAMMARAY_CONTROLMODEL_H
+#ifndef GAMMARAY_STYLEINSPECTOR_CONTROLMODEL_H
+#define GAMMARAY_STYLEINSPECTOR_CONTROLMODEL_H
 
 #include "abstractstyleelementstatetable.h"
 

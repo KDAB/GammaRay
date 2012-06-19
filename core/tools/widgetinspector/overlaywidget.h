@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OVERLAYWIDGET_H
-#define GAMMARAY_OVERLAYWIDGET_H
+#ifndef GAMMARAY_WIDGETINSPECTOR_OVERLAYWIDGET_H
+#define GAMMARAY_WIDGETINSPECTOR_OVERLAYWIDGET_H
 
 #include <QWidget>
 
