@@ -1,20 +1,20 @@
 /*!
  * @mainpage GammaRay - Qt-application inspection and manipulation tool.
  *
- * About
- * =====
+ * @section about About
+ *
  * GammaRay is a tool to poke around in a Qt-application and also
  * to manipulate the application to some extent. GammaRay uses various DLL
  * injection techniques to hook into an application at runtime and provide
  * access to a lot of interesting information.
  *
- * Plugins
- * =======
+ * @section plugins Plugins
+ *
  * Starting with version 1.2, GammaRay provides the ability to write your
  * own plugins. This documentation describes the API for doing just that.
  *
- * Features
- * ========
+ * @section features Features
+ *
  * GammaRay can:
  *
  * * Browse the QObject tree with live updates.
@@ -64,8 +64,8 @@
  * Head Engineer for GammaRay is Volker Krause \<volker.krause@kdab.com\>
  * \image html kdab-gammaray-logo-16x16.png
  *
- * License
- * =======
+ * @section license License
+ *
  * Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, a KDAB Group company, \<info@kdab.com\>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -82,8 +82,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * About KDAB
- * ==========
+ * @section about-KDAB About KDAB
+ *
  * GammaRay is supported and maintained by Klarälvdalens Datakonsult AB (KDAB)
  *
  * KDAB, the Qt experts, provide consulting and mentoring for developing
