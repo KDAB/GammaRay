@@ -94,10 +94,10 @@ bool StyleInjector::selfTest()
   // TODO: be a bit more clever in finding the plugin location (also when actually using it above)
 #ifndef Q_OS_WIN
   const QString stylePath =
-    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/gammaray_injector_style.so");
+    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/gammaray/gammaray_injector_style.so");
 #else
   const QString stylePath =
-    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/gammaray_injector_style.dll");
+    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/gammaray/gammaray_injector_style.dll");
 #endif
 
   QFileInfo fi(stylePath);
