@@ -26,8 +26,12 @@
 #include "styleinjector.h"
 #include "interactiveprocess.h"
 
+#include <QCoreApplication>
+#include <QDebug>
 #include <QFileInfo>
 #include <QProcess>
+#include <QStyleFactory>
+
 #include <cstdlib>
 
 using namespace GammaRay;
@@ -92,18 +96,9 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
 bool StyleInjector::selfTest()
 {
   // TODO: be a bit more clever in finding the plugin location (also when actually using it above)
-#ifndef Q_OS_WIN
-  const QString stylePath =
-    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/gammaray/gammaray_injector_style.so");
-#else
-  const QString stylePath =
-    QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins/gammaray/gammaray_injector_style.dll");
-#endif
-
-  QFileInfo fi(stylePath);
-  if (!fi.exists() || !fi.isFile() || !fi.isReadable()) {
-    mErrorString =
-      QObject::tr("Injector style plugin does not exists or is not readable at %1.").arg(stylePath);
+  QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_LIB_INSTALL_DIR "/qt4/plugins"));
+  if (!QStyleFactory::keys().contains(QLatin1String("gammaray-injector"))) {
+    mErrorString = QObject::tr("Injector style plugin is not found in the Qt style plug-in search path or cannot be loaded");
     return false;
   }
 
