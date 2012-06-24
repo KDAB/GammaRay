@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=KJobs
+X-GammaRay-Types=KJob;
+Exec=gammaray_kjobtracker_plugin
