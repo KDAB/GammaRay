@@ -20,13 +20,24 @@ class KJobModel : public QAbstractTableModel
 
   private slots:
     void objectAdded(QObject *obj);
+    void jobResult(KJob* job);
+    void jobFinished(KJob* obj);
+    void jobInfo(KJob* job, const QString &plainMessage);
 
   private:
+    int indexOfJob(QObject *obj) const;
+
     struct KJobInfo {
       KJob *job;
       QString name;
       QString type;
-      bool alive;
+      QString statusText;
+      enum {
+        Running,
+        Finished,
+        Error,
+        Killed
+      } state;
     };
     QVector<KJobInfo> m_data;
 };
