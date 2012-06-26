@@ -547,6 +547,8 @@ void StateMachineViewer::exportAsImage()
   image.save(fileName, "PNG");
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(StateMachineViewerFactory)
+#endif
 
 #include "statemachineviewer.moc"

@@ -128,6 +128,7 @@ class StateMachineViewerFactory :
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StateMachineViewer")
 
   public:
     explicit StateMachineViewerFactory(QObject *parent = 0) : QObject(parent) {}

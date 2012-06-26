@@ -225,8 +225,10 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
     }
     if (index.column() == 4) {
       switch (con.type) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       case Qt::AutoCompatConnection:
         return QLatin1String("AutoCompatConnection");
+#endif
       case Qt::AutoConnection:
         return QLatin1String("AutoConnection");
       case Qt::BlockingQueuedConnection:

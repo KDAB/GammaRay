@@ -37,6 +37,7 @@ class ProbeInterface;
 class GraphViewer : public QWidget
 {
   Q_OBJECT
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.GraphViewer")
 
   public:
     explicit GraphViewer(ProbeInterface *probe, QWidget *parent = 0);

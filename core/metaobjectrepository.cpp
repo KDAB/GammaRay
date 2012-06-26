@@ -158,7 +158,9 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isActive);
   MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isClipped);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             isEnabled,                 setEnabled);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isObscured);
+#endif
   MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isPanel);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             isSelected,                setSelected);
   MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isUnderMouse);

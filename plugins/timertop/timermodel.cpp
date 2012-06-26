@@ -44,7 +44,11 @@ static QTimer *timer_from_callback(QObject *caller, int method_index)
   QTimer * const timer = dynamic_cast<QTimer*>(caller);
   if (timer) {
     QMetaMethod method = timer->metaObject()->method(method_index);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     if (method.signature() == QLatin1String("timeout()")) {
+#else
+    if (method.methodSignature() == QByteArray("timeout()")) {
+#endif
       if (timer->objectName().toLower().startsWith(QLatin1String("gammaray"))) {
         return 0;
       }

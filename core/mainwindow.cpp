@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   // so set the platform default one.
   // unfortunately, that's not recursive by default, unless we have a style sheet set
   setStyleSheet(QLatin1String("I_DONT_EXIST {}"));
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   QGuiPlatformPlugin defaultGuiPlatform;
   if (QStyle *defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName())) {
     // do not set parent of default style
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     // reference on the style during destruction
     setStyle(defaultStyle);
   }
+#endif
 
   ui.setupUi(this);
 

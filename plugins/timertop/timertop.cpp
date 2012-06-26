@@ -97,6 +97,8 @@ QStringList TimerTopFactory::supportedTypes() const
   return QStringList() << "QObject" << "QTimer";
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(TimerTopFactory)
+#endif
 
 #include "timertop.moc"

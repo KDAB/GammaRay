@@ -54,7 +54,13 @@ void MultiSignalMapper::connectToSignal(QObject *sender, const QMetaMethod &sign
   }
 
   mapper->setMapping(sender, sender);
-  connect(sender, QByteArray::number(QSIGNAL_CODE) + signal.signature(),
+  connect(sender, QByteArray::number(QSIGNAL_CODE) +
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+          signal.signature()
+#else
+          signal.methodSignature()
+#endif
+          ,
           mapper, SLOT(map()), Qt::UniqueConnection);
 }
 
