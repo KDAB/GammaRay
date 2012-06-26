@@ -66,6 +66,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/libgammaray_widget_export_actions.so
 %{_bindir}/gammaray
 %{_libdir}/qt4/plugins/gammaray
+%{_libdir}/qt4/plugins/styles
+%{_libdir}/qt4/plugins/styles/gammaray_injector_style.so
 %{_prefix}/include/gammaray
 
 %changelog
