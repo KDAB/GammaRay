@@ -163,10 +163,10 @@ set(_qt_modules
   Concurrent
   Xml
   UiTools
-  Declarative
-  Quick
+  Quick1
   WebKit
   Sql
+  OpenGL
 )
 
 foreach(_module ${_qt_modules})
@@ -174,16 +174,21 @@ foreach(_module ${_qt_modules})
     set(QT_QT${_module_upper}_LIBRARIES ${Qt5${_module}_LIBRARIES})
     set(QT_QT${_module_upper}_LIBRARY ${QT_QT${_module_upper}_LIBRARIES})
     list(APPEND QT_INCLUDES ${Qt5${_module}_INCLUDE_DIRS})
+    set(QT_QT${_module_upper}_FOUND ${Qt5${_module}_FOUND})
 endforeach()
 
 list(APPEND QT_QTCORE_LIBRARIES ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_QTCORE_LIBRARY ${Qt5Concurrent_LIBRARIES})
 
-list(APPEND QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick_LIBRARIES})
-list(APPEND QT_QTDECLARATIVE_LIBRARY ${Qt5Quick_LIBRARIES})
+set(QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick1_LIBRARIES})
+set(QT_QTDECLARATIVE_LIBRARY ${Qt5Quick1_LIBRARIES})
 
 macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})
+endmacro()
+
+macro(qt4_wrap_cpp)
+  qt5_wrap_cpp(${ARGN})
 endmacro()
 
 macro(qt4_generate_moc)
