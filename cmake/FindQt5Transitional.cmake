@@ -59,13 +59,6 @@ else()
   find_package(Qt4 REQUIRED ${_components})
   include_directories(${QT_INCLUDES})
 
-  # if we are not called from a build of a complete kdelibs, which contains libinqt5,
-  # additionally search for libinqt5:
-  if(NOT kdelibs_SOURCE_DIR AND NOT inqt5_SOURCE_DIR AND NOT TARGET inqt5)
-    find_package(inqt5 REQUIRED NO_MODULE)
-    include_directories(${inqt5_INCLUDE_DIR})
-  endif()
-
   if(QT4_FOUND)
     set(Qt5Transitional_FOUND TRUE)
   endif()
