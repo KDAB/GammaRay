@@ -1,8 +1,8 @@
 Name:           gammaray
-Version:        1.2beta
+Version:        1.1.98
 Release:        0
 Summary:        A tool to poke around in a Qt-application
-Source:         %{name}-%{version}.tar.bz2
+Source:         %{name}-%{version}.tar.gz
 Url:            git@github.com:KDAB/GammaRay.git
 Group:          Development/Tools/Debuggers
 License:        GPL v2, or any later version
@@ -71,6 +71,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_prefix}/include/gammaray
 
 %changelog
+* Tue Jun 27 2012 Allen Winter <allen.winter@kdab.com> 1.1.98
+- Rename version to use all integers
 * Tue Jun 26 2012 Allen Winter <allen.winter@kdab.com> 1.2beta
 - Update to beta release
 * Wed Jun 20 2012 Allen Winter <allen.winter@kdab.com> 1.2prebeta
