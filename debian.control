@@ -1,0 +1,17 @@
+Source: gammaray
+Section: Miscellaneous
+Priority: optional
+Maintainer: Allen Winter <allen.winter@kdab.com>
+Build-Depends: debhelper (>= 4.1.16), cdbs, cmake, libqt4-dev, libqtwebkit-dev, graphviz-dev
+
+Package: gammaray
+Architecture: any
+Depends: ${shlibs:Depends}, graphviz
+Description: A tool to poke around in a Qt-application
+ GammaRay is a tool for examining the internals of a Qt application
+ and to some extent also manipulate it. GammaRay uses injection
+ methods to hook into an application at runtime and provide access to
+ a wide variety of interesting information. It provides easy ways of
+ navigating through the complex internal structures you find in some
+ Qt frameworks, such as QGraphicsView, model/view, QTextDocument,
+ state machines and more.
