@@ -37,6 +37,8 @@ class QTimer;
 
 namespace GammaRay {
 
+class MetaObjectTreeModel;
+
 class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
@@ -84,6 +86,7 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
 
     QAbstractItemModel *objectListModel() const;
     QAbstractItemModel *objectTreeModel() const;
+    QAbstractItemModel *metaObjectModel() const;
     QAbstractItemModel *connectionModel() const;
     ToolModel *toolModel() const;
 
@@ -135,6 +138,7 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
 
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
+    MetaObjectTreeModel *m_metaObjectTreeModel;
     ConnectionModel *m_connectionModel;
     ToolModel *m_toolModel;
     GammaRay::MainWindow *m_window;

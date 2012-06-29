@@ -27,6 +27,7 @@
 #include "mainwindow.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
+#include "metaobjecttreemodel.h"
 #include "connectionmodel.h"
 #include "toolmodel.h"
 #include "readorwritelocker.h"
@@ -196,6 +197,7 @@ Probe::Probe(QObject *parent):
   QObject(parent),
   m_objectListModel(new ObjectListModel(this)),
   m_objectTreeModel(new ObjectTreeModel(this)),
+  m_metaObjectTreeModel(new MetaObjectTreeModel(this)),
   m_connectionModel(new ConnectionModel(this)),
   m_toolModel(new ToolModel(this)),
   m_window(0),
@@ -301,6 +303,11 @@ QAbstractItemModel *Probe::objectListModel() const
 QAbstractItemModel *Probe::objectTreeModel() const
 {
   return m_objectTreeModel;
+}
+
+QAbstractItemModel* Probe::metaObjectModel() const
+{
+  return m_metaObjectTreeModel;
 }
 
 QAbstractItemModel *Probe::connectionModel() const
@@ -453,6 +460,8 @@ void Probe::objectFullyConstructed(QObject *obj)
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
 
   m_objectListModel->objectAdded(obj);
+  m_metaObjectTreeModel->objectAdded(obj);
+
   m_toolModel->objectAdded(obj);
 
   emit objectCreated(obj);
