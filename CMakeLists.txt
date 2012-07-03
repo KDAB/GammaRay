@@ -222,6 +222,10 @@ macro_log_feature(
   FALSE
 )
 
+#VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
+find_path(VTK_DIR VTKConfig.cmake
+  /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
+)
 find_package(VTK)
 macro_log_feature(
   VTK_FOUND
