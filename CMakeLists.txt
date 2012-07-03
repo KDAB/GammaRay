@@ -25,7 +25,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 
 set(GAMMARAY_VERSION_MAJOR "1")
 set(GAMMARAY_VERSION_MINOR "1")
-set(GAMMARAY_VERSION_PATCH "98")
+set(GAMMARAY_VERSION_PATCH "99")
 set(GAMMARAY_VERSION "${GAMMARAY_VERSION_MAJOR}.${GAMMARAY_VERSION_MINOR}.${GAMMARAY_VERSION_PATCH}")
 set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION}")
 
@@ -222,6 +222,10 @@ macro_log_feature(
   FALSE
 )
 
+#VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
+find_path(VTK_DIR VTKConfig.cmake
+  /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
+)
 find_package(VTK)
 macro_log_feature(
   VTK_FOUND
