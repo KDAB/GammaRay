@@ -32,8 +32,6 @@
 #include "toolmodel.h"
 #include "readorwritelocker.h"
 
-#include "hooking/functionoverwriterfactory.h"
-
 #include "tools/modelinspector/modeltest.h"
 
 #include <QApplication>
@@ -46,29 +44,12 @@
 #include <iostream>
 #include <cstdio>
 
-#ifndef Q_OS_WIN
-#include <dlfcn.h>
-#else
-#include <windows.h>
-#endif
-
-#include <cassert>
-
-#ifdef Q_OS_MAC
-#include <dlfcn.h>
-#include <inttypes.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/errno.h>
-#endif
-
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
 using namespace std;
 
 Probe *Probe::s_instance = 0;
-bool functionsOverwritten = false;
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 
@@ -129,7 +110,6 @@ struct Listener
 };
 
 Q_GLOBAL_STATIC(Listener, s_listener)
-Q_GLOBAL_STATIC(QVector<QObject*>, s_addedBeforeProbeInsertion)
 
 // ensures proper information is returned by isValidObject by
 // locking it in objectAdded/Removed
@@ -143,60 +123,6 @@ class ObjectLock : public QReadWriteLock
 };
 Q_GLOBAL_STATIC(ObjectLock, s_lock)
 
-ProbeCreator::ProbeCreator(Type type)
-  : m_type(type)
-{
-  //push object into the main thread, as windows creates a
-  //different thread where this runs in
-  moveToThread(QApplication::instance()->thread());
-  // delay to foreground thread
-  QMetaObject::invokeMethod(this, "createProbe", Qt::QueuedConnection);
-}
-
-void ProbeCreator::createProbe()
-{
-  QWriteLocker lock(s_lock());
-  // make sure we are in the ui thread
-  Q_ASSERT(QThread::currentThread() == qApp->thread());
-
-  if (!qApp || Probe::isInitialized()) {
-    // never create it twice
-    return;
-  }
-
-  // Exit early instead of asserting in QWidgetPrivate::init()
-  const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
-  if (!qGuiApplication
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-      || qGuiApplication->type() == QApplication::Tty
-#endif
-  ) {
-    cerr << "Unable to attach to a non-GUI application.\n"
-         << "Your application needs to use QApplication, "
-         << "otherwise GammaRay can not work." << endl;
-    return;
-  }
-
-  IF_DEBUG(cout << "setting up new probe instance" << endl;)
-  s_listener()->filterThread = QThread::currentThread();
-  Q_ASSERT(!Probe::s_instance);
-  Probe::s_instance = new Probe;
-  s_listener()->filterThread = 0;
-  IF_DEBUG(cout << "done setting up new probe instance" << endl;)
-
-  Q_ASSERT(Probe::instance());
-  QMetaObject::invokeMethod(Probe::instance(), "delayedInit", Qt::QueuedConnection);
-  foreach (QObject *obj, *(s_addedBeforeProbeInsertion())) {
-    Probe::objectAdded(obj);
-  }
-  s_addedBeforeProbeInsertion()->clear();
-
-  if (m_type == CreateAndFindExisting) {
-    Probe::findExistingObjects();
-  }
-
-  deleteLater();
-}
 
 Probe::Probe(QObject *parent):
   QObject(parent),
@@ -241,6 +167,11 @@ Probe::~Probe()
   s_instance = 0;
 }
 
+QThread* Probe::filteredThread()
+{
+  return s_listener()->filterThread;
+}
+
 void Probe::setWindow(GammaRay::MainWindow *window)
 {
   m_window = window;
@@ -263,6 +194,35 @@ Probe *GammaRay::Probe::instance()
 bool Probe::isInitialized()
 {
   return s_instance && qApp;
+}
+
+bool Probe::createProbe()
+{
+  // Exit early instead of asserting in QWidgetPrivate::init()
+  const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
+  if (!qGuiApplication
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+        || qGuiApplication->type() == QApplication::Tty
+#endif
+  ) {
+    cerr << "Unable to attach to a non-GUI application.\n"
+         << "Your application needs to use QApplication, "
+         << "otherwise GammaRay can not work." << endl;
+    return false;
+  }
+
+  IF_DEBUG(cout << "setting up new probe instance" << endl;)
+  s_listener()->filterThread = QThread::currentThread();
+  Q_ASSERT(!Probe::s_instance);
+  Probe::s_instance = new Probe;
+  s_listener()->filterThread = 0;
+  IF_DEBUG(cout << "done setting up new probe instance" << endl;)
+  return true;
+}
+
+void Probe::startupHookReceived()
+{
+  s_listener()->trackDestroyed = false;
 }
 
 void Probe::delayedInit()
@@ -336,7 +296,7 @@ bool Probe::isValidObject(QObject *obj) const
   return m_validObjects.contains(obj);
 }
 
-QReadWriteLock *Probe::objectLock() const
+QReadWriteLock *Probe::objectLock()
 {
   return s_lock();
 }
@@ -366,7 +326,6 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
                << "objectAdded Known: "
                << hex << obj
                << (fromCtor ? " (from ctor)" : "") << endl;)
-      Q_ASSERT(fromCtor || s_addedBeforeProbeInsertion()->contains(obj));
       return;
     }
 
@@ -407,12 +366,6 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     } else {
       instance()->objectFullyConstructed(obj);
     }
-  } else {
-    IF_DEBUG(cout
-             << "objectAdded Before: "
-             << hex << obj
-             << (fromCtor ? " (from ctor)" : "") << endl;)
-    s_addedBeforeProbeInsertion()->push_back(obj);
   }
 }
 
@@ -499,15 +452,6 @@ void Probe::objectRemoved(QObject *obj)
     instance()->connectionRemoved(0, 0, obj, 0);
 
     emit instance()->objectDestroyed(obj);
-  } else if (s_addedBeforeProbeInsertion()) {
-    for (QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
-         it != s_addedBeforeProbeInsertion()->end();) {
-      if (*it == obj) {
-        it = s_addedBeforeProbeInsertion()->erase(it);
-      } else {
-        ++it;
-      }
-    }
   }
 }
 
@@ -644,11 +588,21 @@ void Probe::addObjectRecursive(QObject *obj)
   }
 }
 
+//BEGIN: SignalSlotsLocationStore
+
 // taken from qobject.cpp
 const int gammaray_flagged_locations_count = 2;
-static const char *gammaray_flagged_locations[gammaray_flagged_locations_count] = {0};
+const char *gammaray_flagged_locations[gammaray_flagged_locations_count] = {0};
 
-const char *Probe::connectLocation(const char *member)
+static int gammaray_idx = 0;
+
+void SignalSlotsLocationStore::flagLocation(const char *method)
+{
+  gammaray_flagged_locations[gammaray_idx] = method;
+  gammaray_idx = (gammaray_idx+1) % gammaray_flagged_locations_count;
+}
+
+const char *SignalSlotsLocationStore::extractLocation(const char *member)
 {
   for (int i = 0; i < gammaray_flagged_locations_count; ++i) {
     if (member == gammaray_flagged_locations[i]) {
@@ -663,146 +617,8 @@ const char *Probe::connectLocation(const char *member)
   return 0;
 }
 
-extern "C" Q_DECL_EXPORT void qt_startup_hook()
-{
-  s_listener()->trackDestroyed = false;
-
-  new ProbeCreator(ProbeCreator::CreateOnly);
-#if !defined Q_OS_WIN && !defined Q_OS_MAC
-  if (!functionsOverwritten) {
-    static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
-    next_qt_startup_hook();
-  }
-#endif
-}
-
-extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
-{
-  Probe::objectAdded(obj, true);
-#if !defined Q_OS_WIN && !defined Q_OS_MAC
-  if (!functionsOverwritten) {
-    static void (*next_qt_addObject)(QObject *obj) =
-      (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
-    next_qt_addObject(obj);
-  }
-#endif
-}
-
-extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
-{
-  Probe::objectRemoved(obj);
-#if !defined Q_OS_WIN && !defined Q_OS_MAC
-  if (!functionsOverwritten) {
-    static void (*next_qt_removeObject)(QObject *obj) =
-      (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
-    next_qt_removeObject(obj);
-  }
-#endif
-}
-
-#ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
-#ifndef Q_OS_WIN
-Q_DECL_EXPORT const char *qFlagLocation(const char *method)
-#else
-Q_DECL_EXPORT const char *myFlagLocation(const char *method)
-#endif
-{
-  static int gammaray_idx = 0;
-  gammaray_flagged_locations[gammaray_idx] = method;
-  gammaray_idx = (gammaray_idx+1) % gammaray_flagged_locations_count;
-
-#ifndef Q_OS_WIN
-  static const char *(*next_qFlagLocation)(const char *method) =
-    (const char * (*)(const char *method)) dlsym(RTLD_NEXT, "_Z13qFlagLocationPKc");
-
-  Q_ASSERT_X(next_qFlagLocation, "",
-             "Recompile with GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES enabled, "
-             "your compiler uses an unsupported C++ name mangling scheme");
-  return next_qFlagLocation(method);
-#else
-  return method;
-#endif
-}
-#endif
+//END
 
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-void overwriteQtFunctions()
-{
-  functionsOverwritten = true;
-  AbstractFunctionOverwriter *overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
-
-  overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)qt_startup_hook);
-  overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)qt_addObject);
-  overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)qt_removeObject);
-#if defined(Q_OS_WIN)
-#ifdef ARCH_64
-#ifdef __MINGW32__
-  overwriter->overwriteFunction(
-    QLatin1String("_Z13qFlagLocationPKc"), (void*)myFlagLocation);
-#else
-  overwriter->overwriteFunction(
-    QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)myFlagLocation);
 #endif
-#else
-# ifdef __MINGW32__
-  overwriter->overwriteFunction(
-    QLatin1String("_Z13qFlagLocationPKc"), (void*)myFlagLocation);
-# else
-  overwriter->overwriteFunction(
-    QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)myFlagLocation);
-# endif
-#endif
-#endif
-}
-#endif
-
-#ifdef Q_OS_WIN
-extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
-
-extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
-{
-  switch(dwReason) {
-  case DLL_PROCESS_ATTACH:
-  {
-    overwriteQtFunctions();
-
-    gammaray_probe_inject();
-    break;
-  }
-  case DLL_PROCESS_DETACH:
-  {
-      //Unloading does not work, because we overwrite existing code
-      exit(-1);
-      break;
-  }
-  };
-  return TRUE;
-}
-#endif
-
-extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
-{
-  if (!qApp) {
-    return;
-  }
-  printf("gammaray_probe_inject()\n");
-  // make it possible to re-attach
-  new ProbeCreator(ProbeCreator::CreateAndFindExisting);
-}
-
-#ifdef Q_OS_MAC
-// we need a way to execute some code upon load, so let's abuse
-// static initialization
-class HitMeBabyOneMoreTime
-{
-  public:
-    HitMeBabyOneMoreTime()
-    {
-      overwriteQtFunctions();
-    }
-
-};
-static HitMeBabyOneMoreTime britney;
-#endif
-
 #include "probe.moc"

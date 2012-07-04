@@ -32,38 +32,19 @@
 #include <QReadWriteLock>
 #include <QSet>
 
+class QThread;
 class QPoint;
 class QTimer;
 
 namespace GammaRay {
 
+class ProbeCreator;
 class MetaObjectTreeModel;
-
 class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
 class ToolModel;
 class MainWindow;
-
-/**
- * Creates Probe instance in main thread and deletes self afterwards.
- */
-class ProbeCreator : public QObject
-{
-  Q_OBJECT
-  public:
-    enum Type {
-      CreateOnly,
-      CreateAndFindExisting
-    };
-    explicit ProbeCreator(Type t);
-
-  private slots:
-    void createProbe();
-
-  private:
-    Type m_type;
-};
 
 class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
 {
@@ -101,7 +82,8 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
      * Lock this to check the validity of a QObject
      * and to access it safely afterwards.
      */
-    QReadWriteLock *objectLock() const;
+    static QReadWriteLock *objectLock();
+
     /**
      * check whether @p obj is still valid
      *
@@ -110,6 +92,9 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     bool isValidObject(QObject *obj) const;
 
     bool filterObject(QObject *obj) const;
+
+    /// internal
+    static void startupHookReceived();
 
   signals:
     /**
@@ -131,7 +116,12 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     void objectParentChanged();
 
   private:
+    friend class ProbeCreator;
+
+    static QThread* filteredThread();
+
     void objectFullyConstructed(QObject *obj);
+    static bool createProbe();
 
     explicit Probe(QObject *parent = 0);
     static void addObjectRecursive(QObject *obj);
@@ -146,8 +136,16 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     QSet<QObject*> m_validObjects;
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;
+};
 
-    friend class ProbeCreator;
+class GAMMARAY_EXPORT SignalSlotsLocationStore
+{
+public:
+  /// store the location of @p method
+  static void flagLocation(const char *method);
+
+  /// retrieve the location of @p member
+  static const char *extractLocation(const char *member);
 };
 
 }
