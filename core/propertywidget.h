@@ -24,13 +24,18 @@
 #ifndef GAMMARAY_PROPERTYWIDGET_H
 #define GAMMARAY_PROPERTYWIDGET_H
 
-#include "ui_propertywidget.h"
+#include <QWidget>
 #include <QPointer>
 
+#include "include/gammaray_export.h"
+
+class QAbstractItemView;
+class QModelIndex;
 class QStandardItemModel;
 
 namespace GammaRay {
 
+class Ui_PropertyWidget;
 class ConnectionFilterProxyModel;
 class MultiSignalMapper;
 class ObjectDynamicPropertyModel;
@@ -41,11 +46,12 @@ class ObjectEnumModel;
 class MetaPropertyModel;
 class PropertyEditorFactory;
 
-class PropertyWidget : public QWidget
+class GAMMARAY_EXPORT PropertyWidget : public QWidget
 {
   Q_OBJECT
   public:
     explicit PropertyWidget(QWidget *parent = 0);
+    virtual ~PropertyWidget();
 
     void setObject(QObject *object);
     void setObject(void *object, const QString &className);
@@ -60,7 +66,7 @@ class PropertyWidget : public QWidget
     void methodConextMenu(const QPoint &pos);
 
   private:
-    Ui::PropertyWidget ui;
+    Ui_PropertyWidget* m_ui;
     QPointer<QObject> m_object;
     ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
