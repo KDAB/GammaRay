@@ -1,5 +1,3 @@
-add_subdirectory(tools)
-
 include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
@@ -179,20 +177,25 @@ qt4_wrap_ui(gammaray_srcs
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_definitions(-DMAKE_GAMMARAY_LIB)
-add_library(gammaray_probe SHARED ${gammaray_srcs})
+
+# core lib
+add_library(gammaray_core SHARED
+  ${gammaray_srcs}
+)
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_probe Qt5::Widgets)
+  target_link_libraries(gammaray_core Qt5::Widgets)
 else()
-  target_link_libraries(gammaray_probe
+  target_link_libraries(gammaray_core
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
   )
 endif()
 
 if(NOT WIN32)
-  target_link_libraries(gammaray_probe dl)
+  target_link_libraries(gammaray_core dl)
 endif()
-set_target_properties(gammaray_probe PROPERTIES PREFIX "")
+install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
+add_subdirectory(hooking)
+add_subdirectory(tools)
