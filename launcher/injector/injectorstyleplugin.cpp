@@ -38,8 +38,13 @@ using namespace GammaRay;
 QStyle *InjectorStylePlugin::create(const QString &)
 {
   inject();
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   static QGuiPlatformPlugin defaultGuiPlatform;
   return QStyleFactory::create(defaultGuiPlatform.styleName());
+#else
+#pragma message("Qt 5: port this")
+  return 0;
+#endif
 }
 
 QStringList InjectorStylePlugin::keys() const
@@ -76,6 +81,8 @@ void InjectorStylePlugin::inject()
   }
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(gammaray_injector_style, GammaRay::InjectorStylePlugin)
+#endif
 
 #include "injectorstyleplugin.moc"

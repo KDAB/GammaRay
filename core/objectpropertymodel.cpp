@@ -48,7 +48,13 @@ void ObjectPropertyModel::setObject(QObject *object)
     for (int i = 0; i < object->metaObject()->propertyCount(); ++i) {
       const QMetaProperty prop = object->metaObject()->property(i);
       if (prop.hasNotifySignal()) {
-        connect(object, QByteArray("2") + prop.notifySignal().signature(), SLOT(updateAll()));
+        connect(object, QByteArray("2") +
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+            prop.notifySignal().signature()
+#else
+            prop.notifySignal().methodSignature()
+#endif
+            , SLOT(updateAll()));
       }
     }
   }

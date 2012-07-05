@@ -56,6 +56,7 @@ class ScriptEngineDebuggerFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+  Q_PLUGIN_METADATA(IID "org.qt-project.Qt.ScriptEngineDebugger")
 
   public:
     explicit ScriptEngineDebuggerFactory(QObject *parent = 0) : QObject(parent) {}

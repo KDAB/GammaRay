@@ -174,7 +174,11 @@ void PropertyWidget::signalEmitted(QObject *sender, int signalIndex)
   m_methodLogModel->appendRow(
     new QStandardItem(tr("%1: Signal %2 emitted").
                       arg(QTime::currentTime().toString("HH:mm:ss.zzz")).
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
                       arg(sender->metaObject()->method(signalIndex).signature())));
+#else
+                      arg(QString(sender->metaObject()->method(signalIndex).methodSignature()))));
+#endif
 }
 
 void PropertyWidget::methodConextMenu(const QPoint &pos)

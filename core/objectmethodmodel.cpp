@@ -42,7 +42,11 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index,
 {
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       return method.signature();
+#else
+      return method.methodSignature();
+#endif
     }
     if (index.column() == 1) {
       switch (method.methodType()) {
