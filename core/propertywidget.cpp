@@ -22,6 +22,8 @@
 */
 
 #include "propertywidget.h"
+#include "ui_propertywidget.h"
+
 #include "connectionfilterproxymodel.h"
 #include "connectionmodel.h"
 #include "metapropertymodel.h"
@@ -47,8 +49,20 @@
 
 using namespace GammaRay;
 
+static bool removePage(QTabWidget* tabWidget, QWidget* widget)
+{
+  const int index = tabWidget->indexOf(widget);
+  Q_ASSERT(index >= 0);
+  if (index == -1)
+    return false;
+
+  tabWidget->removeTab(index);
+  return true;
+}
+
 PropertyWidget::PropertyWidget(QWidget *parent)
   : QWidget(parent),
+    m_ui(new Ui_PropertyWidget),
     m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
     m_dynamicPropertyModel(new ObjectDynamicPropertyModel(this)),
     m_classInfoModel(new ObjectClassInfoModel(this)),
@@ -61,69 +75,85 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_metaPropertyModel(new MetaPropertyModel(this)),
     m_editorFactory(new PropertyEditorFactory)
 {
-  ui.setupUi(this);
+  m_ui->setupUi(this);
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_staticPropertyModel);
-  ui.staticPropertyView->setModel(proxy);
-  ui.staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  ui.staticPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-  ui.staticPropertySearchLine->setProxy(proxy);
-  setEditorFactory(ui.staticPropertyView);
+  m_ui->staticPropertyView->setModel(proxy);
+  m_ui->staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->staticPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  m_ui->staticPropertySearchLine->setProxy(proxy);
+  setEditorFactory(m_ui->staticPropertyView);
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_dynamicPropertyModel);
-  ui.dynamicPropertyView->setModel(proxy);
-  ui.dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  ui.dynamicPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-  setEditorFactory(ui.dynamicPropertyView);
-  ui.dynamicPropertySearchLine->setProxy(proxy);
+  m_ui->dynamicPropertyView->setModel(proxy);
+  m_ui->dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->dynamicPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  setEditorFactory(m_ui->dynamicPropertyView);
+  m_ui->dynamicPropertySearchLine->setProxy(proxy);
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_methodModel);
-  ui.methodView->setModel(proxy);
-  ui.methodView->sortByColumn(0, Qt::AscendingOrder);
-  ui.methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  ui.methodSearchLine->setProxy(proxy);
-  connect(ui.methodView, SIGNAL(doubleClicked(QModelIndex)),
+  m_ui->methodView->setModel(proxy);
+  m_ui->methodView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
+  m_ui->methodSearchLine->setProxy(proxy);
+  connect(m_ui->methodView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(methodActivated(QModelIndex)));
-  connect(ui.methodView, SIGNAL(customContextMenuRequested(QPoint)),
+  connect(m_ui->methodView, SIGNAL(customContextMenuRequested(QPoint)),
           SLOT(methodConextMenu(QPoint)));
-  ui.methodLog->setModel(m_methodLogModel);
+  m_ui->methodLog->setModel(m_methodLogModel);
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_classInfoModel);
-  ui.classInfoView->setModel(proxy);
-  ui.classInfoView->sortByColumn(0, Qt::AscendingOrder);
-  ui.classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  ui.classInfoSearchLine->setProxy(proxy);
+  m_ui->classInfoView->setModel(proxy);
+  m_ui->classInfoView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
+  m_ui->classInfoSearchLine->setProxy(proxy);
 
-  new ProxyDetacher(ui.inboundConnectionView, m_inboundConnectionModel,
-                    Probe::instance()->connectionModel());
-  ui.inboundConnectionView->setModel(m_inboundConnectionModel);
-  ui.inboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
-  ui.inboundConnectionSearchLine->setProxy(m_inboundConnectionModel);
+  if (Probe::isInitialized()) {
+    new ProxyDetacher(m_ui->inboundConnectionView, m_inboundConnectionModel,
+                      Probe::instance()->connectionModel());
+    m_ui->inboundConnectionView->setModel(m_inboundConnectionModel);
+    m_ui->inboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
+    m_ui->inboundConnectionSearchLine->setProxy(m_inboundConnectionModel);
 
-  new ProxyDetacher(ui.outboundConnectionView, m_outboundConnectionModel,
-                    Probe::instance()->connectionModel());
-  ui.outboundConnectionView->setModel(m_outboundConnectionModel);
-  ui.outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
-  ui.outboundConnectionSearchLine->setProxy(m_outboundConnectionModel);
+    new ProxyDetacher(m_ui->outboundConnectionView, m_outboundConnectionModel,
+                      Probe::instance()->connectionModel());
+    m_ui->outboundConnectionView->setModel(m_outboundConnectionModel);
+    m_ui->outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
+    m_ui->outboundConnectionSearchLine->setProxy(m_outboundConnectionModel);
+  }
+  else {
+    qDebug() << "Probe not initialized, disabling connection tabs";
+    removePage(m_ui->tabWidget, m_ui->inboundConnectionTab);
+    removePage(m_ui->tabWidget, m_ui->outboundConnectionTab);
+  }
 
   proxy = new KRecursiveFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_enumModel);
-  ui.enumView->setModel(proxy);
-  ui.enumView->sortByColumn(0, Qt::AscendingOrder);
-  ui.enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  ui.enumSearchLine->setProxy(proxy);
+  m_ui->enumView->setModel(proxy);
+  m_ui->enumView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
+  m_ui->enumSearchLine->setProxy(proxy);
 
-  ui.metaPropertyView->setModel(m_metaPropertyModel);
-  setEditorFactory(ui.metaPropertyView);
+  // save back initial tab widgets
+  for (int i = 0; i < m_ui->tabWidget->count(); ++i) {
+    m_tabWidgets[m_ui->tabWidget->widget(i)] = m_ui->tabWidget->tabText(i);
+  }
+
+  m_ui->metaPropertyView->setModel(m_metaPropertyModel);
+  setEditorFactory(m_ui->metaPropertyView);
+}
+
+PropertyWidget::~PropertyWidget()
+{
 }
 
 void GammaRay::PropertyWidget::setObject(QObject *object)
@@ -131,11 +161,15 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
   m_object = object;
   m_staticPropertyModel->setObject(object);
   m_dynamicPropertyModel->setObject(object);
-  m_classInfoModel->setObject(object);
-  m_methodModel->setObject(object);
   m_inboundConnectionModel->filterReceiver(object);
   m_outboundConnectionModel->filterSender(object);
-  m_enumModel->setObject(object);
+
+  const QMetaObject* metaObject = 0;
+  if (object)
+    metaObject = object->metaObject();
+  m_enumModel->setMetaObject(metaObject);
+  m_classInfoModel->setMetaObject(metaObject);
+  m_methodModel->setMetaObject(metaObject);
 
   delete m_signalMapper;
   m_signalMapper = new MultiSignalMapper(this);
@@ -145,14 +179,23 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
 
   m_metaPropertyModel->setObject(object);
 
-  setQObjectTabsVisible(true);
+  setDisplayState(QObjectState);
 }
 
 void PropertyWidget::setObject(void *object, const QString &className)
 {
   setObject(0);
   m_metaPropertyModel->setObject(object, className);
-  setQObjectTabsVisible(false);
+  setDisplayState(ObjectState);
+}
+
+void PropertyWidget::setMetaObject(const QMetaObject* metaObject)
+{
+  setObject(0);
+  m_enumModel->setMetaObject(metaObject);
+  m_classInfoModel->setMetaObject(metaObject);
+  m_methodModel->setMetaObject(metaObject);
+  setDisplayState(MetaObjectState);
 }
 
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
@@ -183,7 +226,7 @@ void PropertyWidget::signalEmitted(QObject *sender, int signalIndex)
 
 void PropertyWidget::methodConextMenu(const QPoint &pos)
 {
-  const QModelIndex index = ui.methodView->indexAt(pos);
+  const QModelIndex index = m_ui->methodView->indexAt(pos);
   if (!index.isValid()) {
     return;
   }
@@ -196,21 +239,37 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
     contextMenu.addAction(tr("Connect to"));
   }
 
-  if (contextMenu.exec(ui.methodView->viewport()->mapToGlobal(pos))) {
+  if (contextMenu.exec(m_ui->methodView->viewport()->mapToGlobal(pos))) {
     methodActivated(index);
   }
 }
 
-void PropertyWidget::setQObjectTabsVisible(bool visible)
+bool PropertyWidget::showTab(const QWidget* widget, DisplayState state) const
 {
-  // TODO: this should actually hide instead of disable...
-  for (int i = 0; i < ui.tabWidget->count(); ++i) {
-    if (ui.tabWidget->widget(i) != ui.metaPropertyTab) {
-      ui.tabWidget->setTabEnabled(i, visible);
-    }
+  switch(state) {
+  case QObjectState:
+    return true; // show all
+  case ObjectState:
+    if (widget == m_ui->metaPropertyTab)
+      return true;
+    break;
+  case MetaObjectState:
+    if (widget == m_ui->enumTab || widget == m_ui->classInfoTab || widget == m_ui->methodTab)
+      return true;
+    break;
   }
-  if (!visible) {
-    ui.tabWidget->setCurrentWidget(ui.metaPropertyTab);
+  return false;
+}
+
+void PropertyWidget::setDisplayState(DisplayState state)
+{
+  // iterate through all tabs, decide for each tab if it gets hidden or not
+  Q_FOREACH(QWidget* widget, m_tabWidgets.keys()) {
+    const bool show = showTab(widget, state);
+    if (show)
+      m_ui->tabWidget->addTab(widget, m_tabWidgets[widget]);
+    else
+      removePage(m_ui->tabWidget, widget);
   }
 }
 

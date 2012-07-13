@@ -18,6 +18,7 @@ set(gammaray_srcs
   aboutpluginsdialog.cpp
   mainwindow.cpp
   metaobject.cpp
+  metaobjecttreemodel.cpp
   metaobjectrepository.cpp
   metaproperty.cpp
   metapropertymodel.cpp
@@ -79,6 +80,7 @@ set(gammaray_srcs
   tools/connectioninspector/connectioninspector.cpp
   tools/fontbrowser/fontbrowser.cpp
   tools/localeinspector/localeinspector.cpp
+  tools/metaobjectbrowser/metaobjectbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/modelinspector/modelinspector.cpp
   tools/modelinspector/modelinspectorwidget.cpp

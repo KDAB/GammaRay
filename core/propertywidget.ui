@@ -19,7 +19,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="staticPropertyTab">
       <attribute name="title">
        <string>Static Properties</string>
       </attribute>
@@ -42,7 +42,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="dynamicPropertyTab">
       <attribute name="title">
        <string>Dynamic Properties</string>
       </attribute>
@@ -65,7 +65,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_4">
+     <widget class="QWidget" name="methodTab">
       <attribute name="title">
        <string>Methods</string>
       </attribute>
@@ -104,7 +104,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_5">
+     <widget class="QWidget" name="inboundConnectionTab">
       <attribute name="title">
        <string>Inbound Connections</string>
       </attribute>
@@ -127,7 +127,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_6">
+     <widget class="QWidget" name="outboundConnectionTab">
       <attribute name="title">
        <string>Outbound Connections</string>
       </attribute>
@@ -150,7 +150,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_7">
+     <widget class="QWidget" name="enumTab">
       <attribute name="title">
        <string>Enums</string>
       </attribute>
@@ -167,7 +167,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="classInfoTab">
       <attribute name="title">
        <string>Class Info</string>
       </attribute>
@@ -218,7 +218,7 @@
   <customwidget>
    <class>KFilterProxySearchLine</class>
    <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
+   <header>kfilterproxysearchline.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

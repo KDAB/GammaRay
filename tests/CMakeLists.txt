@@ -62,3 +62,5 @@ if(UNIX AND NOT APPLE)
     endif()
   endif()
 endif()
+
+add_subdirectory(manual)

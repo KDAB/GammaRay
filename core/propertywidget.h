@@ -24,13 +24,19 @@
 #ifndef GAMMARAY_PROPERTYWIDGET_H
 #define GAMMARAY_PROPERTYWIDGET_H
 
-#include "ui_propertywidget.h"
+#include <QWidget>
 #include <QPointer>
+#include <QHash>
 
+#include "include/gammaray_export.h"
+
+class QAbstractItemView;
+class QModelIndex;
 class QStandardItemModel;
 
 namespace GammaRay {
 
+class Ui_PropertyWidget;
 class ConnectionFilterProxyModel;
 class MultiSignalMapper;
 class ObjectDynamicPropertyModel;
@@ -41,17 +47,24 @@ class ObjectEnumModel;
 class MetaPropertyModel;
 class PropertyEditorFactory;
 
-class PropertyWidget : public QWidget
+class GAMMARAY_EXPORT PropertyWidget : public QWidget
 {
   Q_OBJECT
   public:
     explicit PropertyWidget(QWidget *parent = 0);
+    virtual ~PropertyWidget();
 
     void setObject(QObject *object);
     void setObject(void *object, const QString &className);
+    void setMetaObject(const QMetaObject* metaObject);
 
   private:
-    void setQObjectTabsVisible(bool visible);
+    enum DisplayState {
+      QObjectState, // full QObject instance
+      ObjectState, // non-QObject instance
+      MetaObjectState // QMetaObject instance only
+    };
+    void setDisplayState(DisplayState state);
     void setEditorFactory(QAbstractItemView *view);
 
   private slots:
@@ -60,7 +73,11 @@ class PropertyWidget : public QWidget
     void methodConextMenu(const QPoint &pos);
 
   private:
-    Ui::PropertyWidget ui;
+    /// Decides if widget is supposed to be shown at this display state
+    bool showTab(const QWidget* widget, DisplayState state) const;
+
+    Ui_PropertyWidget* m_ui;
+
     QPointer<QObject> m_object;
     ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
@@ -73,6 +90,9 @@ class PropertyWidget : public QWidget
     QStandardItemModel *m_methodLogModel;
     MetaPropertyModel *m_metaPropertyModel;
     QScopedPointer<PropertyEditorFactory> m_editorFactory;
+
+    // Contains initially added tab widgets (Tab widget -> Label map)
+    QHash<QWidget*,QString> m_tabWidgets;
 };
 
 }
