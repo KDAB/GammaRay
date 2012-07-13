@@ -143,6 +143,11 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   m_ui->enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
   m_ui->enumSearchLine->setProxy(proxy);
 
+  // save back initial tab widgets
+  for (int i = 0; i < m_ui->tabWidget->count(); ++i) {
+    m_tabWidgets[m_ui->tabWidget->widget(i)] = m_ui->tabWidget->tabText(i);
+  }
+
   m_ui->metaPropertyView->setModel(m_metaPropertyModel);
   setEditorFactory(m_ui->metaPropertyView);
 }
@@ -174,14 +179,23 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
 
   m_metaPropertyModel->setObject(object);
 
-  setQObjectTabsVisible(true);
+  setDisplayState(QObjectState);
 }
 
 void PropertyWidget::setObject(void *object, const QString &className)
 {
   setObject(0);
   m_metaPropertyModel->setObject(object, className);
-  setQObjectTabsVisible(false);
+  setDisplayState(ObjectState);
+}
+
+void PropertyWidget::setMetaObject(const QMetaObject* metaObject)
+{
+  setObject(0);
+  m_enumModel->setMetaObject(metaObject);
+  m_classInfoModel->setMetaObject(metaObject);
+  m_methodModel->setMetaObject(metaObject);
+  setDisplayState(MetaObjectState);
 }
 
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
@@ -230,16 +244,32 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
   }
 }
 
-void PropertyWidget::setQObjectTabsVisible(bool visible)
+bool PropertyWidget::showTab(const QWidget* widget, DisplayState state) const
 {
-  // TODO: this should actually hide instead of disable...
-  for (int i = 0; i < m_ui->tabWidget->count(); ++i) {
-    if (m_ui->tabWidget->widget(i) != m_ui->metaPropertyTab) {
-      m_ui->tabWidget->setTabEnabled(i, visible);
-    }
+  switch(state) {
+  case QObjectState:
+    return true; // show all
+  case ObjectState:
+    if (widget == m_ui->metaPropertyTab)
+      return true;
+    break;
+  case MetaObjectState:
+    if (widget == m_ui->enumTab || widget == m_ui->classInfoTab || widget == m_ui->methodTab)
+      return true;
+    break;
   }
-  if (!visible) {
-    m_ui->tabWidget->setCurrentWidget(m_ui->metaPropertyTab);
+  return false;
+}
+
+void PropertyWidget::setDisplayState(DisplayState state)
+{
+  // iterate through all tabs, decide for each tab if it gets hidden or not
+  Q_FOREACH(QWidget* widget, m_tabWidgets.keys()) {
+    const bool show = showTab(widget, state);
+    if (show)
+      m_ui->tabWidget->addTab(widget, m_tabWidgets[widget]);
+    else
+      removePage(m_ui->tabWidget, widget);
   }
 }
 
