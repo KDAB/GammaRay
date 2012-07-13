@@ -32,6 +32,8 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class PropertyWidget;
+
 class MetaObjectBrowser : public QWidget
 {
   Q_OBJECT
@@ -41,6 +43,9 @@ class MetaObjectBrowser : public QWidget
 
   private Q_SLOTS:
     void objectSelected(const QModelIndex& index);
+
+  private:
+     PropertyWidget* m_propertyWidget;
 };
 
 class MetaObjectBrowserFactory : public QObject,
