@@ -58,13 +58,17 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface* probe, QWidget* parent)
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(objectSelected(QModelIndex)));
 
+  PropertyWidget* propertyWidget = new PropertyWidget(this);
+  propertyWidget->setMetaObject(0); // init
+  m_propertyWidget = propertyWidget;
+
   QVBoxLayout* vbox = new QVBoxLayout;
   vbox->addWidget(objectSearchLine);
   vbox->addWidget(treeView);
 
   QHBoxLayout* hbox = new QHBoxLayout(this);
   hbox->addLayout(vbox);
-  // TODO: Add property widget?
+  hbox->addWidget(propertyWidget);
 
   // init widget
   treeView->sortByColumn(0, Qt::AscendingOrder);
@@ -74,13 +78,13 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface* probe, QWidget* parent)
 
 void MetaObjectBrowser::objectSelected(const QModelIndex& index)
 {
-  if (!index.isValid()) {
-    return;
+  if (index.isValid()) {
+    const QMetaObject* metaObject = index.data(MetaObjectTreeModel::MetaObjectRole)
+        .value<const QMetaObject*>();
+    m_propertyWidget->setMetaObject(metaObject);
+  } else {
+    m_propertyWidget->setMetaObject(0);
   }
-
-  const QMetaObject* metaObject = index.data(MetaObjectTreeModel::MetaObjectRole)
-    .value<const QMetaObject*>();
-  // TODO: Do we want to use the property widget here (for meta objects only)?
 }
 
 #include "metaobjectbrowser.moc"
