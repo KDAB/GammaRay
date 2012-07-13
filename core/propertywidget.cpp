@@ -156,11 +156,15 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
   m_object = object;
   m_staticPropertyModel->setObject(object);
   m_dynamicPropertyModel->setObject(object);
-  m_classInfoModel->setObject(object);
-  m_methodModel->setObject(object);
   m_inboundConnectionModel->filterReceiver(object);
   m_outboundConnectionModel->filterSender(object);
-  m_enumModel->setObject(object);
+
+  const QMetaObject* metaObject = 0;
+  if (object)
+    metaObject = object->metaObject();
+  m_enumModel->setMetaObject(metaObject);
+  m_classInfoModel->setMetaObject(metaObject);
+  m_methodModel->setMetaObject(metaObject);
 
   delete m_signalMapper;
   m_signalMapper = new MultiSignalMapper(this);

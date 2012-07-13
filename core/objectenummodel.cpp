@@ -45,7 +45,7 @@ int ObjectEnumModel::rowCount(const QModelIndex &parent) const
   if (parent.parent().isValid()) {
     return 0;
   }
-  const QMetaEnum e = m_object.data()->metaObject()->enumerator(parent.row());
+  const QMetaEnum e = m_metaObject->enumerator(parent.row());
   return e.keyCount();
 }
 
@@ -62,7 +62,7 @@ QVariant ObjectEnumModel::data(const QModelIndex &index, int role) const
   }
 
   if (role == Qt::DisplayRole) {
-    const QMetaEnum e = m_object.data()->metaObject()->enumerator(index.parent().row());
+    const QMetaEnum e = m_metaObject->enumerator(index.parent().row());
     if (index.column() == 0) {
       return e.key(index.row());
     }
