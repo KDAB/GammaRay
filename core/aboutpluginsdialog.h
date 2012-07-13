@@ -34,9 +34,6 @@ class AboutPluginsDialog : public QDialog
 
   public:
     explicit AboutPluginsDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
-
-  private:
-    void init();
 };
 
 }
