@@ -1,3 +1,6 @@
+# VTK includes QtGui/... stuff => breaks compilation with Qt5
+if(NOT Qt5Core_FOUND)
+
 if(VTK_FOUND)
 
 add_definitions(-DHAVE_VTK -DVTK_EXCLUDE_STRSTREAM_HEADERS)
@@ -32,5 +35,7 @@ target_link_libraries(gammaray_objectvisualizer_plugin
   QVTK
   gammaray_probe
 )
+
+endif()
 
 endif()

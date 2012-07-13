@@ -78,6 +78,10 @@ if(Qt5Core_FOUND)
   #   #error "You must build your code with position independent code if Qt was
   #   built with -reduce-relocations. " "Compile your code with -fPIC or -fPIE."
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
+  # more hacks: find qpa/... includes
+  # also see https://codereview.qt-project.org/#change,30483
+  include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
