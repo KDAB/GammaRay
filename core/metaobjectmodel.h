@@ -26,7 +26,6 @@
 
 #include <QAbstractItemModel>
 #include <QMetaObject>
-#include <QPointer>
 
 namespace GammaRay {
 
@@ -37,24 +36,27 @@ template <typename MetaThing,
 class MetaObjectModel : public QAbstractItemModel
 {
   public:
-    explicit MetaObjectModel(QObject *parent = 0) : QAbstractItemModel(parent) {}
+    explicit MetaObjectModel(QObject *parent = 0)
+      : QAbstractItemModel(parent)
+      , m_metaObject(0)
+    {}
 
-    virtual void setObject(QObject *object)
+    virtual void setMetaObject(const QMetaObject *metaObject)
     {
-      m_object = object;
+      m_metaObject = metaObject;
       reset();
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
     {
-      if (!index.isValid() || !m_object ||
+      if (!index.isValid() || !m_metaObject ||
           index.row() < 0 || index.row() >= rowCount(index.parent())) {
         return QVariant();
       }
 
-      const MetaThing metaThing = (m_object.data()->metaObject()->*MetaAccessor)(index.row());
+      const MetaThing metaThing = (m_metaObject->*MetaAccessor)(index.row());
       if (index.column() == columnCount(index) - 1 && role == Qt::DisplayRole) {
-        const QMetaObject *mo = m_object.data()->metaObject();
+        const QMetaObject *mo = m_metaObject;
         while ((mo->*MetaOffset)() > index.row()) {
           mo = mo->superClass();
         }
@@ -76,10 +78,10 @@ class MetaObjectModel : public QAbstractItemModel
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const
     {
-      if (!m_object || parent.isValid()) {
+      if (!m_metaObject || parent.isValid()) {
         return 0;
       }
-      return (m_object.data()->metaObject()->*MetaCount)();
+      return (m_metaObject->*MetaCount)();
     }
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const
@@ -104,7 +106,8 @@ class MetaObjectModel : public QAbstractItemModel
     virtual QString columnHeader(int index) const = 0;
 
   protected:
-    QPointer<QObject> m_object;
+    // let's assume that meta objects never get destroyed
+    const QMetaObject* m_metaObject;
 };
 
 }
