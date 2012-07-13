@@ -26,6 +26,7 @@
 
 #include <QWidget>
 #include <QPointer>
+#include <QHash>
 
 #include "include/gammaray_export.h"
 
@@ -55,9 +56,15 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
 
     void setObject(QObject *object);
     void setObject(void *object, const QString &className);
+    void setMetaObject(const QMetaObject* metaObject);
 
   private:
-    void setQObjectTabsVisible(bool visible);
+    enum DisplayState {
+      QObjectState, // full QObject instance
+      ObjectState, // non-QObject instance
+      MetaObjectState // QMetaObject instance only
+    };
+    void setDisplayState(DisplayState state);
     void setEditorFactory(QAbstractItemView *view);
 
   private slots:
@@ -66,7 +73,11 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     void methodConextMenu(const QPoint &pos);
 
   private:
+    /// Decides if widget is supposed to be shown at this display state
+    bool showTab(const QWidget* widget, DisplayState state) const;
+
     Ui_PropertyWidget* m_ui;
+
     QPointer<QObject> m_object;
     ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
@@ -79,6 +90,9 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     QStandardItemModel *m_methodLogModel;
     MetaPropertyModel *m_metaPropertyModel;
     QScopedPointer<PropertyEditorFactory> m_editorFactory;
+
+    // Contains initially added tab widgets (Tab widget -> Label map)
+    QHash<QWidget*,QString> m_tabWidgets;
 };
 
 }
