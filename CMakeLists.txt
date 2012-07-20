@@ -65,8 +65,6 @@ set(QT_MIN_VERSION "4.7.0")
 find_package(Qt5Transitional REQUIRED
   Core
   Gui
-  Script
-  ScriptTools
   Svg
   Test
 )
@@ -97,6 +95,16 @@ set(
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION ${LIB_INSTALL_DIR}
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
+)
+
+macro_log_feature(
+  QT_QTSCRIPTTOOLS_FOUND
+  "Script engine debugger in Qt"
+  "A debugger for QtScript"
+  "included with Qt"
+  FALSE
+  ""
+  "Required for the script engine debugger tool"
 )
 
 macro_log_feature(
