@@ -36,7 +36,7 @@ class MetaObjectTreeModel : public QAbstractItemModel
 
 public:
   enum Roles {
-    MetaObjectRole = Qt::UserRole + 1,
+    MetaObjectRole = Qt::UserRole + 1
   };
 
   explicit MetaObjectTreeModel(QObject* parent = 0);
@@ -71,6 +71,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(const QMetaObject*);
+Q_DECLARE_METATYPE(const QMetaObject*)
 
 #endif // GAMMARAY_METAOBJECTTREEMODEL_H

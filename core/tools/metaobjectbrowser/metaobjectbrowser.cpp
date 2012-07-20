@@ -40,6 +40,7 @@ using namespace GammaRay;
 MetaObjectBrowser::MetaObjectBrowser(ProbeInterface* probe, QWidget* parent)
   : QWidget(parent)
 {
+  Q_UNUSED(probe);
   QAbstractItemModel* model = Probe::instance()->metaObjectModel();
 
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
