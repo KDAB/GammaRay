@@ -5,7 +5,11 @@ include_directories(
 
 add_subdirectory(actioninspector)
 add_subdirectory(objectvisualizer)
-add_subdirectory(scriptenginedebugger)
+
+if(QT_QTSCRIPTTOOLS_FOUND OR Qt5ScriptTools_FOUND)
+  add_subdirectory(scriptenginedebugger)
+endif()
+
 add_subdirectory(statemachineviewer)
 add_subdirectory(timertop)
 
