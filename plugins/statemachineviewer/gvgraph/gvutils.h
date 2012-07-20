@@ -64,7 +64,7 @@ static inline Agsym_t *_agedgeattr(Agraph_t *object, QString attr, QString alt=Q
 
 static inline int _gvLayout(GVC_t *gvc, graph_t *g, const char *engine)
 {
-  return gvLayout(gvc, g, engine);
+  return gvLayout(gvc, g, const_cast<char*>(engine));
 }
 
 static inline Agnode_t *_agnode(Agraph_t *graph, const QString &attr)
