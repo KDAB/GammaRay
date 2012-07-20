@@ -49,7 +49,6 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface* probe, QWidget* parent)
   QTreeView* treeView = new QTreeView(this);
   treeView->setModel(objectFilter);
   treeView->header()->setResizeMode(0, QHeaderView::Stretch);
-  treeView->header()->setResizeMode(1, QHeaderView::Interactive);
   treeView->setSortingEnabled(true);
 
   KFilterProxySearchLine *objectSearchLine = new KFilterProxySearchLine(this);
