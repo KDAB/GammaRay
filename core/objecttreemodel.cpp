@@ -49,6 +49,19 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
           this, SLOT(objectReparanted(QObject*)));
 }
 
+static QObject* parentObject(QObject *obj)
+{
+  if (obj->parent())
+    return obj->parent();
+
+  // QQuickItem does very ugly things with its parent, so we have to try harder to get hold of it...
+  if (obj->inherits("QQuickItem")) {
+    return obj->property("parent").value<QObject*>();
+  }
+
+  return 0;
+}
+
 void ObjectTreeModel::objectAdded(QObject *obj)
 {
   // slot, hence should always land in main thread due to auto connection
@@ -59,8 +72,8 @@ void ObjectTreeModel::objectAdded(QObject *obj)
     IF_DEBUG(cout << "tree invalid obj added: " << hex << obj << endl;)
     return;
   }
-  IF_DEBUG(cout << "tree obj added: " << hex << obj << " p: " << obj->parent() << endl;)
-  Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
+  IF_DEBUG(cout << "tree obj added: " << hex << obj << " p: " << parentObject(obj) << endl;)
+  Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(parentObject(obj)));
 
   if (indexForObject(obj).isValid()) {
     IF_DEBUG(cout << "tree double obj added: " << hex << obj << endl;)
@@ -72,25 +85,25 @@ void ObjectTreeModel::objectAdded(QObject *obj)
   // then later the delayed signal comes in
   // so catch this gracefully by first adding the
   // parent if required
-  if (obj->parent()) {
-    const QModelIndex index = indexForObject(obj->parent());
+  if (parentObject(obj)) {
+    const QModelIndex index = indexForObject(parentObject(obj));
     if (!index.isValid()) {
       IF_DEBUG(cout << "tree: handle parent first" << endl;)
-      objectAdded(obj->parent());
+      objectAdded(parentObject(obj));
     }
   }
 
-  const QModelIndex index = indexForObject(obj->parent());
+  const QModelIndex index = indexForObject(parentObject(obj));
 
   // either we get a proper parent and hence valid index or there is no parent
-  Q_ASSERT(index.isValid() || !obj->parent());
+  Q_ASSERT(index.isValid() || !parentObject(obj));
 
-  QVector<QObject*> &children = m_parentChildMap[ obj->parent() ];
+  QVector<QObject*> &children = m_parentChildMap[ parentObject(obj) ];
 
   beginInsertRows(index, children.size(), children.size());
 
   children.push_back(obj);
-  m_childParentMap.insert(obj, obj->parent());
+  m_childParentMap.insert(obj, parentObject(obj));
 
   endInsertRows();
 }
