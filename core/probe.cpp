@@ -452,6 +452,13 @@ void Probe::objectFullyConstructed(QObject *obj)
   }
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
 
+  // QQuickItem has the briliant idea of suppressing child events, so we need an
+  // alternative way of detecting reparenting...
+  // Without linking to the QtQuick library of course, for extra fun.
+  if (obj->inherits("QQuickItem")) {
+    bool foo = connect(obj, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(objectParentChanged()));
+  }
+
   m_objectListModel->objectAdded(obj);
   m_toolModel->objectAdded(obj);
 
@@ -493,6 +500,13 @@ void Probe::objectRemoved(QObject *obj)
 void Probe::handleObjectDestroyed(QObject *obj)
 {
   objectRemoved(obj);
+}
+
+void Probe::objectParentChanged()
+{
+  if (sender()) {
+    emit objectReparanted(sender());
+  }
 }
 
 void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiver,

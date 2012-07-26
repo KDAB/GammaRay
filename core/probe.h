@@ -125,6 +125,7 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     void delayedInit();
     void queuedObjectsFullyConstructed();
     void handleObjectDestroyed(QObject *obj);
+    void objectParentChanged();
 
   private:
     void objectFullyConstructed(QObject *obj);
