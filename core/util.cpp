@@ -240,7 +240,8 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return displayString(value.value<const QStyle*>());
   }
 #else
-  if (value.canConvert<QObject*>()) {
+  // HACK workaround for a Qt bug which makes canConvert<QObject*>() crash on a variant holding a null pointer
+  if (value.value<QObject*>() && value.canConvert<QObject*>()) {
     return displayString(value.value<QObject*>());
   }
 #endif
