@@ -7,6 +7,7 @@
 #  GRAPHVIZ_VERSION = The value of PACKAGE_VERSION defined in graphviz_version.h
 #  GRAPHVIZ_MAJOR_VERSION = The library major version number
 #  GRAPHVIZ_MINOR_VERSION = The library minor version number
+#  GRAPHVIZ_PATCH_VERSION = The library patch version number
 
 # Copyright (c) 2009, Adrien Bustany, <madcat@mymadcat.com>
 
@@ -85,8 +86,10 @@ if(GRAPHVIZ_FOUND)
 
   #compute the major and minor version numbers
   if(NOT CMAKE_CROSSCOMPILING)
-    string(REGEX REPLACE "\\..*$" "" GRAPHVIZ_MAJOR_VERSION ${GRAPHVIZ_VERSION})
-    string(REGEX REPLACE "^.*\\." "" GRAPHVIZ_MINOR_VERSION ${GRAPHVIZ_VERSION})
+    string(REPLACE "." ";" VL ${GRAPHVIZ_VERSION})
+    list(GET VL 0 GRAPHVIZ_MAJOR_VERSION)
+    list(GET VL 1 GRAPHVIZ_MINOR_VERSION)
+    list(GET VL 2 GRAPHVIZ_PATCH_VERSION)
   endif()
 
   if(NOT GRAPHVIZ_FIND_QUIETLY)
