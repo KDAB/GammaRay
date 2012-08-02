@@ -225,14 +225,20 @@ add_subdirectory(launcher)
 
 qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
 
+set(GRAPHVIZ_MIN_VERSION "2.20")
 find_package(Graphviz)
 macro_log_feature(
   GRAPHVIZ_FOUND
   "Graphviz"
-  "Graph layouting library for the state machine visualizer."
+  "Graph visualization software"
   "http://www.graphviz.org/"
   FALSE
+  ${GRAPHVIZ_MIN_VERSION}
+  "Needed for the state machine visualizer plugin"
 )
+if(GRAPHVIZ_FOUND)
+  add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
+endif()
 
 #VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
 find_path(VTK_DIR VTKConfig.cmake
@@ -242,9 +248,11 @@ find_package(VTK)
 macro_log_feature(
   VTK_FOUND
   "VTK"
-  "Graph visualizing library for the object visualization plugin."
+  "Visualization Toolkit"
   "http://www.vtk.org"
   FALSE
+  ""
+  "Needed for the object visualization plugin"
 )
 
 if(UNIX AND NOT APPLE)
