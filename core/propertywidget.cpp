@@ -263,6 +263,8 @@ bool PropertyWidget::showTab(const QWidget* widget, DisplayState state) const
 
 void PropertyWidget::setDisplayState(DisplayState state)
 {
+  QWidget* currentWidget = m_ui->tabWidget->currentWidget();
+
   // iterate through all tabs, decide for each tab if it gets hidden or not
   Q_FOREACH(QWidget* widget, m_tabWidgets.keys()) {
     const bool show = showTab(widget, state);
@@ -271,6 +273,9 @@ void PropertyWidget::setDisplayState(DisplayState state)
     else
       removePage(m_ui->tabWidget, widget);
   }
+
+  if (m_ui->tabWidget->indexOf(currentWidget) >= 0)
+    m_ui->tabWidget->setCurrentWidget(currentWidget);
 }
 
 void PropertyWidget::setEditorFactory(QAbstractItemView *view)
