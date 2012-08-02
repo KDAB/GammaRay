@@ -145,7 +145,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
 
   // save back initial tab widgets
   for (int i = 0; i < m_ui->tabWidget->count(); ++i) {
-    m_tabWidgets[m_ui->tabWidget->widget(i)] = m_ui->tabWidget->tabText(i);
+    m_tabWidgets.push_back(qMakePair(m_ui->tabWidget->widget(i), m_ui->tabWidget->tabText(i)));
   }
 
   m_ui->metaPropertyView->setModel(m_metaPropertyModel);
@@ -266,12 +266,13 @@ void PropertyWidget::setDisplayState(DisplayState state)
   QWidget* currentWidget = m_ui->tabWidget->currentWidget();
 
   // iterate through all tabs, decide for each tab if it gets hidden or not
-  Q_FOREACH(QWidget* widget, m_tabWidgets.keys()) {
-    const bool show = showTab(widget, state);
+  typedef QPair<QWidget*, QString> WidgetStringPair;
+  Q_FOREACH(const WidgetStringPair &tab, m_tabWidgets) {
+    const bool show = showTab(tab.first, state);
     if (show)
-      m_ui->tabWidget->addTab(widget, m_tabWidgets[widget]);
+      m_ui->tabWidget->addTab(tab.first, tab.second);
     else
-      removePage(m_ui->tabWidget, widget);
+      removePage(m_ui->tabWidget, tab.first);
   }
 
   if (m_ui->tabWidget->indexOf(currentWidget) >= 0)

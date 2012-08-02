@@ -91,8 +91,8 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     MetaPropertyModel *m_metaPropertyModel;
     QScopedPointer<PropertyEditorFactory> m_editorFactory;
 
-    // Contains initially added tab widgets (Tab widget -> Label map)
-    QHash<QWidget*,QString> m_tabWidgets;
+    // Contains initially added tab widgets (Tab widget/Label)
+    QVector< QPair<QWidget*,QString> > m_tabWidgets;
 };
 
 }
