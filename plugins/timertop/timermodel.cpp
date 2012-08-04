@@ -41,7 +41,7 @@ static TimerModel *s_timerModel = 0;
 
 static QTimer *timer_from_callback(QObject *caller, int method_index)
 {
-  QTimer * const timer = dynamic_cast<QTimer*>(caller);
+  QTimer * const timer = qobject_cast<QTimer*>(caller);
   if (timer) {
     QMetaMethod method = timer->metaObject()->method(method_index);
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -307,8 +307,7 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
 {
   if (event->type() == QEvent::Timer) {
 
-    QTimerEvent * const timerEvent = dynamic_cast<QTimerEvent*>(event);
-    Q_ASSERT(timerEvent);
+    QTimerEvent * const timerEvent = static_cast<QTimerEvent*>(event);
 
     // If there is a QTimer associated with this timer ID, don't handle it here, it will be handled
     // by the signal hooks for QTimer::timeout()
