@@ -17,5 +17,5 @@ set_target_properties(gammaray_injector_style
 
 install(
   TARGETS gammaray_injector_style
-  DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/styles
+  DESTINATION ${PLUGIN_INSTALL_DIR}/styles
 )
