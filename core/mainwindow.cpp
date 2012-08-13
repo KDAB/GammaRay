@@ -46,6 +46,8 @@
 #include <QStyleFactory>
 #include <QTextCodec>
 #include <QTreeView>
+#include <QTextBrowser>
+#include <QDialogButtonBox>
 
 using namespace GammaRay;
 
@@ -124,27 +126,45 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
 void MainWindow::about()
 {
-  QMessageBox mb(this);
-  mb.setWindowTitle(tr("About %1").arg(progName));
-  mb.setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
-  mb.setInformativeText(
-    trUtf8("<qt><p>Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, "
-       "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></p>"
-       "<p><u>Authors:</u><br>"
-       "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
-       "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
-       "David Faure &lt;david.faure@kdab.com&gt;<br>"
-       "Kevin Funk &lt;kevin.funk@kdab.com&gt;<br>"
-       "Milian Wolff &lt;milian.wolff@kdab.com&gt;<br>"
-       "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
-       "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
-       "Till Adam &lt;till@kdab.com&gt;<br>"
-       "Thomas McGuire &lt;thomas.mcguire@kdab.com&gt;<br>"
-       "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br>"
-       "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p></qt>"));
-  mb.setIconPixmap(QPixmap(":gammaray/GammaRay-128x128.png"));
-  mb.addButton(QMessageBox::Close);
-  mb.exec();
+  QDialog dialog(this);
+  dialog.setWindowTitle(tr("About %1").arg(progName));
+  QVBoxLayout *lay = new QVBoxLayout;
+  dialog.setLayout(lay);
+  QLabel *title = new QLabel;
+  QFont titleFont = dialog.font();
+  titleFont.setBold(true);
+  title->setFont(titleFont);
+  title->setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
+
+  lay->addWidget(title);
+
+  QLabel *informativeText = new QLabel;
+  informativeText->setTextInteractionFlags(Qt::TextBrowserInteraction);
+  informativeText->setOpenExternalLinks(true);
+  informativeText->setWordWrap(true);
+  informativeText->setText( trUtf8("<qt><p>Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, "
+                                   "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
+                                   "<p><u>Authors:</u><br>"
+                                   "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
+                                   "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
+                                   "David Faure &lt;david.faure@kdab.com&gt;<br>"
+                                   "Kevin Funk &lt;kevin.funk@kdab.com&gt;<br>"
+                                   "Milian Wolff &lt;milian.wolff@kdab.com&gt;<br>"
+                                   "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
+                                   "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
+                                   "Till Adam &lt;till@kdab.com&gt;<br>"
+                                   "Thomas McGuire &lt;thomas.mcguire@kdab.com&gt;<br>"
+                                   "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br>"
+                                   "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p></qt>"));
+  lay->addWidget(informativeText);
+  QDialogButtonBox * buttonBox = new QDialogButtonBox;
+  buttonBox->addButton(QDialogButtonBox::Close);
+  connect(buttonBox,SIGNAL(rejected()),&dialog,SLOT(close()));
+  lay->addWidget(buttonBox);
+
+  dialog.setWindowIcon(QPixmap(":gammaray/GammaRay-128x128.png"));
+
+  dialog.exec();
 }
 
 void MainWindow::aboutPlugins()
