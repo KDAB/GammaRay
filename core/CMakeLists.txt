@@ -156,6 +156,8 @@ qt4_wrap_ui(gammaray_srcs
   tools/styleinspector/styleelementstatetablepage.ui
 )
 
+qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
+
 add_definitions(-DMAKE_GAMMARAY_LIB)
 add_library(gammaray_probe
   SHARED ${gammaray_srcs}
