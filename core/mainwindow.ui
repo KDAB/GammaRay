@@ -98,7 +98,7 @@ background-position:bottom right;
      <x>0</x>
      <y>0</y>
      <width>829</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_GammaRay">
@@ -166,7 +166,7 @@ background-position:bottom right;
   </action>
   <action name="actionAboutGammaRay">
    <property name="icon">
-    <iconset resource="resources/gammaray.qrc">
+    <iconset resource="../resources/gammaray.qrc">
      <normaloff>:/gammaray/GammaRay-32x32.png</normaloff>:/gammaray/GammaRay-32x32.png</iconset>
    </property>
    <property name="text">
@@ -197,7 +197,7 @@ background-position:bottom right;
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources/gammaray.qrc"/>
+  <include location="../resources/gammaray.qrc"/>
  </resources>
  <connections/>
 </ui>
