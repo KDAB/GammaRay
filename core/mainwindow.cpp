@@ -178,7 +178,7 @@ void MainWindow::aboutPlugins()
 void MainWindow::aboutKDAB()
 {
   QDialog dialog(this);
-  dialog.setWindowTitle(tr("About KDAB").arg(progName));
+  dialog.setWindowTitle(tr("About KDAB"));
   QVBoxLayout *lay = new QVBoxLayout;
   dialog.setLayout(lay);
   QLabel *title = new QLabel;
