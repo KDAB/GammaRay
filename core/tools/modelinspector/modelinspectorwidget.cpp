@@ -75,6 +75,10 @@ void ModelInspectorWidget::modelSelected(const QModelIndex &index)
 void ModelInspectorWidget::modelCellSelected(const QModelIndex &index)
 {
   m_cellModel->setModelIndex(index);
+
+  ui->indexLabel->setText(index.isValid() ? tr("Row: %1 Column: %2").arg(index.row()).arg(index.column()) : tr("Invalid"));
+  ui->internalIdLabel->setText(QString::number(index.internalId()));
+  ui->internalPtrLabel->setText(QLatin1String("0x") + QString::number(reinterpret_cast<long>(index.internalPointer()), 16));
 }
 
 void ModelInspectorWidget::widgetSelected(QWidget *widget)

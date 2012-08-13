@@ -6,77 +6,124 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>770</width>
+    <height>485</height>
    </rect>
   </property>
-       <layout class="QVBoxLayout" name="verticalLayout_14">
-        <item>
-         <widget class="QSplitter" name="splitter_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QWidget" name="layoutWidget_3">
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
-            </item>
-            <item>
-             <widget class="QTreeView" name="modelView">
-              <property name="uniformRowHeights">
-               <bool>true</bool>
-              </property>
-              <property name="allColumnsShowFocus">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QWidget" name="layoutWidget_3">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="modelView">
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_4">
+      <layout class="QVBoxLayout" name="verticalLayout_12">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Model Content:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTreeView" name="modelContentView"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Model Index:</string>
+           </property>
           </widget>
-          <widget class="QWidget" name="layoutWidget_4">
-           <layout class="QVBoxLayout" name="verticalLayout_12">
-            <item>
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>Model Content:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QTreeView" name="modelContentView"/>
-            </item>
-           </layout>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="indexLabel">
+           <property name="text">
+            <string>Invalid</string>
+           </property>
           </widget>
-          <widget class="QWidget" name="layoutWidget_5">
-           <layout class="QVBoxLayout" name="verticalLayout_13">
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Cell Content:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QTreeView" name="modelCellView">
-              <property name="rootIsDecorated">
-               <bool>false</bool>
-              </property>
-              <property name="uniformRowHeights">
-               <bool>true</bool>
-              </property>
-              <property name="allColumnsShowFocus">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Internal Id:</string>
+           </property>
           </widget>
-         </widget>
-        </item>
-       </layout>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="internalIdLabel">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Internal Pointer:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="internalPtrLabel">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Cell Content:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTreeView" name="modelCellView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <resources/>
- <connections/>
  <customwidgets>
   <customwidget>
    <class>KFilterProxySearchLine</class>
@@ -84,4 +131,6 @@
    <header>kde/kfilterproxysearchline.h</header>
   </customwidget>
  </customwidgets>
+ <resources/>
+ <connections/>
 </ui>
