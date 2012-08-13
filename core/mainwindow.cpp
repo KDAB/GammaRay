@@ -149,6 +149,7 @@ void MainWindow::about()
                                    "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
                                    "David Faure &lt;david.faure@kdab.com&gt;<br>"
                                    "Kevin Funk &lt;kevin.funk@kdab.com&gt;<br>"
+                                   "Laurent Montel &lt;laurent.montel@kdab.com&gt;<br>"
                                    "Milian Wolff &lt;milian.wolff@kdab.com&gt;<br>"
                                    "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
                                    "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
