@@ -177,10 +177,23 @@ void MainWindow::aboutPlugins()
 
 void MainWindow::aboutKDAB()
 {
-  QMessageBox mb(this);
-  mb.setWindowTitle(tr("About KDAB"));
-  mb.setText(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
-  mb.setInformativeText(
+  QDialog dialog(this);
+  dialog.setWindowTitle(tr("About KDAB").arg(progName));
+  QVBoxLayout *lay = new QVBoxLayout;
+  dialog.setLayout(lay);
+  QLabel *title = new QLabel;
+  QFont titleFont = dialog.font();
+  titleFont.setBold(true);
+  title->setFont(titleFont);
+  title->setText(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
+
+  lay->addWidget(title);
+
+  QLabel *informativeText = new QLabel;
+  informativeText->setTextInteractionFlags(Qt::TextBrowserInteraction);
+  informativeText->setOpenExternalLinks(true);
+  informativeText->setWordWrap(true);
+  informativeText->setText(
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
        "KDAB, the Qt experts, provide consulting and mentoring for developing "
        "Qt applications from scratch and in porting from all popular and legacy "
@@ -190,9 +203,16 @@ void MainWindow::aboutKDAB()
        "to meet the people who write code like this. "
        "We also offer Qt training courses."
        "</p></qt>").arg(progName));
-  mb.setIconPixmap(QPixmap(":gammaray/kdablogo160.png"));
-  mb.addButton(QMessageBox::Close);
-  mb.exec();
+
+  lay->addWidget(informativeText);
+  QDialogButtonBox * buttonBox = new QDialogButtonBox;
+  buttonBox->addButton(QDialogButtonBox::Close);
+  connect(buttonBox,SIGNAL(rejected()),&dialog,SLOT(close()));
+  lay->addWidget(buttonBox);
+
+  dialog.setWindowIcon(QPixmap(":gammaray/kdablogo160.png"));
+
+  dialog.exec();
 }
 
 void MainWindow::selectInitialTool()
