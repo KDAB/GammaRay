@@ -223,8 +223,6 @@ endif()
 add_subdirectory(core)
 add_subdirectory(launcher)
 
-qt4_add_resources(gammaray_srcs resources/gammaray.qrc)
-
 set(GRAPHVIZ_MIN_VERSION "2.20")
 find_package(Graphviz)
 macro_log_feature(
