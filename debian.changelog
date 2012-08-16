@@ -1,3 +1,9 @@
+gammaray (1.2.1) patch; urgency=low
+
+  * 1.2.1 patch release
+
+ -- Allen Winter <allen.winter@kdab.com> Thu, 16 Aug 2012 10:17:14 -0500
+
 gammaray (1.2.0) final; urgency=low
 
   * 1.2.0 final release
