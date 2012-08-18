@@ -13,5 +13,5 @@ SKIP StackWalker
 #if you have a build subdir, skip it
 SKIP /build
 
-#don't check cmake subdir because it's mostly borrowed code
-SKIP /cmake/
+#skip the borrowed code in the cmake subdir
+SKIP /cmake/MacroLogFeature\.cmake\|/cmake/ECMQt4To5Porting.cmake\|/cmake/FindGraphviz.cmake
