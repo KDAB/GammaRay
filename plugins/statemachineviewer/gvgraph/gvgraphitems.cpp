@@ -26,8 +26,8 @@
 
 using namespace GammaRay;
 
-GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent, QGraphicsScene *scene)
-  : QGraphicsItemGroup(parent, scene),
+GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent)
+  : QGraphicsItemGroup(parent),
     m_node(node)
 {
   const QSizeF size = node.size();
@@ -109,8 +109,8 @@ void GVNodeItem::setBrush(const QBrush &brush)
   m_shapeItem->setBrush(brush);
 }
 
-GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent, QGraphicsScene *scene)
-  : QGraphicsItemGroup(parent, scene),
+GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent)
+  : QGraphicsItemGroup(parent),
     m_edge(edge)
 {
   m_pathItem = new QGraphicsPathItem(this);
@@ -155,8 +155,8 @@ void GVEdgeItem::setPen(const QPen &pen)
   m_arrowItem->setBrush(arrowPen.color());
 }
 
-GVGraphItem::GVGraphItem(const GVSubGraph &graph, QGraphicsItem *parent, QGraphicsScene *scene)
-  : QGraphicsPathItem(parent, scene),
+GVGraphItem::GVGraphItem(const GVSubGraph &graph, QGraphicsItem *parent)
+  : QGraphicsPathItem(parent),
     m_graph(graph),
     m_textItem(0)
 {

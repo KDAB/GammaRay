@@ -32,8 +32,7 @@ namespace GammaRay {
 class GVNodeItem : public QGraphicsItemGroup
 {
   public:
-    explicit GVNodeItem(const GVNode &node, QGraphicsItem *parent = 0,
-                        QGraphicsScene *scene = 0);
+    explicit GVNodeItem(const GVNode &node, QGraphicsItem *parent = 0);
 
     enum {
       Type = UserType + 1
@@ -62,8 +61,7 @@ class GVNodeItem : public QGraphicsItemGroup
 class GVEdgeItem : public QGraphicsItemGroup
 {
   public:
-    explicit GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent = 0,
-                        QGraphicsScene *scene = 0);
+    explicit GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent = 0);
 
     enum {
       Type = UserType + 2
@@ -90,8 +88,7 @@ class GVEdgeItem : public QGraphicsItemGroup
 class GVGraphItem : public QGraphicsPathItem
 {
   public:
-    explicit GVGraphItem(const GVSubGraph &edge, QGraphicsItem *parent = 0,
-                         QGraphicsScene *scene = 0);
+    explicit GVGraphItem(const GVSubGraph &edge, QGraphicsItem *parent = 0);
 
     enum {
       Type = UserType + 3
