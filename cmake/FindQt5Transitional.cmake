@@ -1,42 +1,41 @@
 
 find_package(Qt5Core QUIET)
 
-if (Qt5Core_FOUND)
-  if (NOT Qt5Transitional_FIND_COMPONENTS)
+if(Qt5Core_FOUND)
+  if(NOT Qt5Transitional_FIND_COMPONENTS)
     foreach(_component
-          Core
-          Gui
-          DBus
-          Designer
-          Script
-          ScriptTools
-          Network
-          Test
-          Xml
-          Svg
-          Sql
-          Widgets
-          PrintSupport
-          Concurrent
-          UiTools
-          Quick1
-          WebKit
-          OpenGL
-        )
+      Core
+      Gui
+      DBus
+      Designer
+      Script
+      ScriptTools
+      Network
+      Test
+      Xml
+      Svg
+      Sql
+      Widgets
+      PrintSupport
+      Concurrent
+      UiTools
+      Quick1
+      WebKit
+      OpenGL)
       find_package(Qt5${_component})
     endforeach()
   else()
     foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
-      if ("${_component}" STREQUAL "Declarative")
+      if("${_component}" STREQUAL "Declarative")
         set(_component Quick1)
       endif()
       find_package(Qt5${_component} REQUIRED)
-      if ("${_component}" STREQUAL "Gui")
+      if("${_component}" STREQUAL "Gui")
         find_package(Qt5Widgets REQUIRED)
         find_package(Qt5PrintSupport REQUIRED)
         find_package(Qt5Svg REQUIRED)
       endif()
-      if ("${_component}" STREQUAL "Core")
+      if("${_component}" STREQUAL "Core")
         find_package(Qt5Concurrent REQUIRED)
       endif()
     endforeach()
