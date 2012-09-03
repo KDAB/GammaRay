@@ -26,7 +26,7 @@
 #include <Windows.h>
 #endif
 
-#ifdef __MACH__
+#if defined(Q_OS_MAC) && defined(__MACH__)
 #include <mach/clock.h>
 #include <mach/mach.h>
 #endif
