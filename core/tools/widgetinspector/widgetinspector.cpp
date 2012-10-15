@@ -53,6 +53,7 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   ui->setupUi(this);
 
   m_overlayWidget->hide();
+  connect(m_overlayWidget, SIGNAL(destroyed(QObject*)), SLOT(handleOverlayWidgetDestroyed(QObject*)));
 
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)));
 
@@ -110,6 +111,14 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     m_overlayWidget->placeOn(0);
     setActionsEnabled(false);
   }
+}
+
+void WidgetInspector::handleOverlayWidgetDestroyed(QObject* )
+{
+  // the target application might have destroyed the overlay widget (e.g. because the parent of the overlay got destroyed)
+  // just recreate a new one in this case
+  m_overlayWidget = new OverlayWidget;
+  m_overlayWidget->hide();
 }
 
 void WidgetInspector::widgetSelected(QWidget *widget)

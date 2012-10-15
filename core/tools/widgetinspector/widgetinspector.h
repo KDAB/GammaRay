@@ -54,6 +54,8 @@ class WidgetInspector : public QWidget
     void widgetSelected(const QModelIndex &index);
     void widgetSelected(QWidget *widget);
 
+    void handleOverlayWidgetDestroyed(QObject*);
+
     void saveAsImage();
     void saveAsSvg();
     void saveAsPdf();
