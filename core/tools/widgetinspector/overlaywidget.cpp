@@ -196,3 +196,5 @@ void OverlayWidget::paintEvent(QPaintEvent *)
   p.setPen(Qt::blue);
   p.drawPath(m_layoutPath);
 }
+
+#include "overlaywidget.moc"

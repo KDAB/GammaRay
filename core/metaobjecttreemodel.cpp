@@ -104,7 +104,8 @@ QModelIndex MetaObjectTreeModel::index(int row, int column, const QModelIndex& p
     return QModelIndex();
   }
 
-  return createIndex(row, column, (void*)children.at(row));
+  const QMetaObject* object = children.at(row);
+  return createIndex(row, column, const_cast<QMetaObject*>(object));
 }
 
 void MetaObjectTreeModel::objectAdded(QObject* obj)
@@ -151,11 +152,13 @@ void MetaObjectTreeModel::addMetaObject(const QMetaObject* metaObject)
 
 void MetaObjectTreeModel::removeMetaObject(const QMetaObject* metaObject)
 {
+  Q_UNUSED(metaObject);
   // TODO: Can this even happen?
 }
 
 void MetaObjectTreeModel::objectRemoved(QObject* obj)
 {
+  Q_UNUSED(obj);
   // TODO
 }
 

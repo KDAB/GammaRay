@@ -463,7 +463,7 @@ void Probe::objectFullyConstructed(QObject *obj)
   // alternative way of detecting reparenting...
   // Without linking to the QtQuick library of course, for extra fun.
   if (obj->inherits("QQuickItem")) {
-    bool foo = connect(obj, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(objectParentChanged()));
+    connect(obj, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(objectParentChanged()));
   }
 
   m_objectListModel->objectAdded(obj);

@@ -30,6 +30,8 @@ namespace GammaRay {
 
 class OverlayWidget : public QWidget
 {
+  Q_OBJECT
+
   public:
     OverlayWidget();
 
