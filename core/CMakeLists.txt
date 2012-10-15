@@ -53,11 +53,6 @@ set(gammaray_srcs
   propertyeditor/propertypaletteeditor.cpp
   propertyeditor/palettedialog.cpp
 
-  hooking/abstractfunctionoverwriter.cpp
-  hooking/functionoverwriterfactory.cpp
-  hooking/winfunctionoverwriter.cpp
-  hooking/unixfunctionoverwriter.cpp
-
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
@@ -104,6 +99,16 @@ set(gammaray_srcs
   tools/styleinspector/complexcontrolmodel.cpp
   tools/styleinspector/dynamicproxystyle.cpp
 )
+
+if(WIN32 OR APPLE)
+  set(gammaray_srcs
+    ${gammaray_srcs}
+    hooking/abstractfunctionoverwriter.cpp
+    hooking/functionoverwriterfactory.cpp
+    hooking/winfunctionoverwriter.cpp
+    hooking/unixfunctionoverwriter.cpp
+  )
+endif()
 
 if(HAVE_PRIVATE_QT_HEADERS)
   set(gammaray_srcs

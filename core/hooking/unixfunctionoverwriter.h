@@ -55,6 +55,6 @@ class UnixFunctionOverwriter : public AbstractFunctionOverwriter
 
 }
 
-#endif // Q_OS_WIN
+#endif // !Q_OS_WIN
 
 #endif // UNIXFUNCTIONOVERWRITER_H

@@ -711,6 +711,7 @@ Q_DECL_EXPORT const char *myFlagLocation(const char *method)
 }
 #endif
 
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
 void overwriteQtFunctions()
 {
   functionsOverwritten = true;
@@ -739,6 +740,7 @@ void overwriteQtFunctions()
 #endif
 #endif
 }
+#endif
 
 #ifdef Q_OS_WIN
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
