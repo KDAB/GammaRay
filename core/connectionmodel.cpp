@@ -27,6 +27,7 @@
 
 #include "include/util.h"
 
+#include <QColor>
 #include <QDebug>
 #include <QMetaMethod>
 #include <QMetaObject>
@@ -252,7 +253,7 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
     return QVariant::fromValue(con.receiver);
   } else if (role == Qt::ForegroundRole) {
     if (!con.valid) {
-      return Qt::red;
+      return QVariant::fromValue<QColor>(Qt::red);
     }
   } else if (role == ConnectionValidRole) {
     return con.valid;
