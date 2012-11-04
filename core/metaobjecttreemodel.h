@@ -35,8 +35,12 @@ class MetaObjectTreeModel : public QAbstractItemModel
   Q_OBJECT
 
 public:
-  enum Roles {
+  enum Role {
     MetaObjectRole = Qt::UserRole + 1
+  };
+
+  enum Column {
+    ObjectColumn
   };
 
   explicit MetaObjectTreeModel(QObject* parent = 0);

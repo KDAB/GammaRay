@@ -40,10 +40,10 @@ MetaObjectTreeModel::MetaObjectTreeModel(QObject* parent)
 
 QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (role == Qt::DisplayRole || orientation == Qt::Horizontal) {
+  if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
     switch (section) {
-      case 0:
-        return tr("Meta Object Hierachy");
+      case ObjectColumn:
+        return tr("Meta Object Class Hierarchy");
       default:
         return QVariant();
     }
@@ -61,7 +61,7 @@ QVariant MetaObjectTreeModel::data(const QModelIndex& index, int role) const
   const QMetaObject* object = metaObjectForIndex(index);
   if (role == Qt::DisplayRole) {
     switch(column) {
-      case 0:
+      case ObjectColumn:
         return object->className();
       default:
         break;
