@@ -42,6 +42,8 @@ class ObjectInspector : public QWidget
   public:
     explicit ObjectInspector(ProbeInterface *probe, QWidget *parent = 0);
 
+    void selectDefaultItem();
+
   private slots:
     void objectSelected(const QModelIndex &index);
     void widgetSelected(QWidget *widget);
