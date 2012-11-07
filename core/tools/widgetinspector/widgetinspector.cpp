@@ -33,6 +33,7 @@
 #include "include/probeinterface.h"
 
 #include <kde/krecursivefilterproxymodel.h>
+#include <other/modelutils.h>
 
 #include <QDebug>
 #include <QDesktopWidget>
@@ -40,6 +41,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QPrinter>
+#include <QMainWindow>
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
@@ -84,6 +86,23 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
 #endif
 
   setActionsEnabled(false);
+  selectDefaultItem();
+}
+
+static bool isMainWindowSubclassAcceptor(const QVariant& v)
+{
+  return qobject_cast<QMainWindow*>(v.value<QObject*>());
+}
+
+void WidgetInspector::selectDefaultItem()
+{
+  const QAbstractItemModel *viewModel = ui->widgetTreeView->model();
+  const QModelIndexList matches = ModelUtils::match(viewModel,
+      viewModel->index(0,0), ObjectModel::ObjectRole, isMainWindowSubclassAcceptor);
+
+  if (!matches.isEmpty()) {
+    ui->widgetTreeView->setCurrentIndex(matches.first());
+  }
 }
 
 void WidgetInspector::widgetSelected(const QModelIndex &index)

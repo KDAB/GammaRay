@@ -13,6 +13,7 @@ set(gammaray_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/resourcemodel.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
 
   util.cpp
   aboutpluginsdialog.cpp

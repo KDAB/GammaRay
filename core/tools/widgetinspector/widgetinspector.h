@@ -45,6 +45,8 @@ class WidgetInspector : public QWidget
   public:
     explicit WidgetInspector(ProbeInterface *probe, QWidget *parent = 0);
 
+    void selectDefaultItem();
+
   private:
     void setActionsEnabled(bool enabled);
     QWidget *selectedWidget() const;
