@@ -68,6 +68,11 @@ find_package(Qt5Transitional REQUIRED
   Svg
   Test
 )
+find_package(Qt5Transitional COMPONENTS
+  Script
+  ScriptTools
+  WebKit
+)
 
 # TODO: Remove me once fixed in ECM module
 if(Qt5Core_FOUND)
