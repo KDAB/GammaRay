@@ -58,6 +58,8 @@ void WebInspector::webPageSelected(int index)
   }
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(WebInspectorFactory)
+#endif
 
 #include "webinspector.moc"
