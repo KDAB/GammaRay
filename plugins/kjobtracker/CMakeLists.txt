@@ -1,7 +1,13 @@
 find_package(KDE4)
 
+if (KDE4_FOUND AND NOT Qt5Core_FOUND)
+  set(_KDE4_USABLE TRUE)
+else()
+  set(_KDE4_USABLE FALSE)
+endif()
+
 macro_log_feature(
-  KDE4_FOUND
+  _KDE4_USABLE
   "KDE4"
   "KDE libraries"
   "http://www.kde.org/"
@@ -11,7 +17,7 @@ macro_log_feature(
 )
 
 
-if (KDE4_FOUND)
+if (KDE4_FOUND AND NOT Qt5Core_FOUND)
 
 include_directories(
   ${KDE4_INCLUDES}
