@@ -39,6 +39,7 @@ QVariant KJobModel::data(const QModelIndex& index, int role) const
   else if (role == Qt::ForegroundRole) {
     switch (job.state) {
       case KJobInfo::Finished:
+      case KJobInfo::Deleted:
         return QApplication::palette().brush(QPalette::Disabled, QPalette::Foreground);
       case KJobInfo::Error:
         return Qt::red;
@@ -94,6 +95,23 @@ void KJobModel::objectAdded(QObject* obj)
   jobInfo.state = KJobInfo::Running;
   m_data.push_back(jobInfo);
   endInsertRows();
+}
+
+void KJobModel::objectRemoved(QObject *obj)
+{
+  const int pos = indexOfJob(obj);
+  if (pos < 0)
+    return;
+
+  // KJob dtor emits finished, so this shouldn't happen, in theory
+  // We however seem to get here for very short-lived jobs that emit before objectAdded()
+  // is called (while we wait for the vtable to be complete), so we only see the result
+  // of their deleteLater().
+  if (m_data[pos].state == KJobInfo::Running) {
+    m_data[pos].state = KJobInfo::Deleted;
+    m_data[pos].statusText = tr("Deleted");
+    emit dataChanged(index(pos, 0), index(pos, columnCount() - 1));
+  }
 }
 
 void KJobModel::jobResult(KJob* job)

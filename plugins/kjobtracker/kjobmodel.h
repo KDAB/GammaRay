@@ -20,6 +20,7 @@ class KJobModel : public QAbstractTableModel
 
   private slots:
     void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
     void jobResult(KJob* job);
     void jobFinished(KJob* obj);
     void jobInfo(KJob* job, const QString &plainMessage);
@@ -36,7 +37,8 @@ class KJobModel : public QAbstractTableModel
         Running,
         Finished,
         Error,
-        Killed
+        Killed,
+        Deleted
       } state;
     };
     QVector<KJobInfo> m_data;
