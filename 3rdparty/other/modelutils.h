@@ -45,7 +45,7 @@ namespace ModelUtils {
                               int role, bool (*accept)(const QVariant&),
                               int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchWrap));
 
-};
+}
 
 }
 
