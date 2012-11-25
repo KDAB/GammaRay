@@ -43,7 +43,6 @@ void Message::setInternalBuffer(const QByteArray& buffer)
 
 QDataStream& operator<<(QDataStream& stream, const Message& msg)
 {
-  qDebug() << Q_FUNC_INFO << msg.internalBuffer().size() << stream.device() << stream.status();
   stream << qint32(msg.internalBuffer().size()) << msg.internalBuffer();
   Q_ASSERT(stream.status() == QDataStream::Ok);
   return stream;

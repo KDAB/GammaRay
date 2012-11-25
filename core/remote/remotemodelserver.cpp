@@ -46,6 +46,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       Server::stream() << msg;
       break;
     }
+
     case Protocol::ContentRequest:
     {
       Protocol::ModelIndex index;
@@ -56,6 +57,20 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
       Message msg;
       msg.stream() << qint32(Protocol::ContentChanged) << index << m_model->itemData(qmIndex);
+      Server::stream() << msg;
+    }
+
+    case Protocol::HeaderRequest:
+    {
+      qint8 orientation;
+      qint32 section;
+      msg.stream() >> orientation >> section;
+
+      QHash<qint32, QVariant> data;
+      data.insert(Qt::DisplayRole, m_model->headerData(section, static_cast<Qt::Orientation>(orientation), Qt::DisplayRole)); // TODO: add all roles
+
+      Message msg;
+      msg.stream() << qint32(Protocol::HeaderChanged) << orientation << section << data;
       Server::stream() << msg;
     }
   }

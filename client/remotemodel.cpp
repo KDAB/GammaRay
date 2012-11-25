@@ -95,8 +95,10 @@ Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  // TODO
-  return QAbstractItemModel::headerData(section, orientation, role);
+  if (!m_headers.contains(orientation) || !m_headers.value(orientation).contains(section))
+    requestHeaderData(orientation, section);
+
+  return m_headers.value(orientation).value(section).value(role);
 }
 
 void RemoteModel::newMessage(const GammaRay::Message& msg)
@@ -151,6 +153,17 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       }
       const QModelIndex qmi = modelIndexForNode(node, index.last().second);
       emit dataChanged(qmi, qmi);
+      break;
+    }
+
+    case Protocol::HeaderChanged:
+    {
+      qint8 orientation;
+      qint32 section;
+      QHash<qint32, QVariant> data;
+      msg.stream() >> orientation >> section >> data;
+      m_headers[static_cast<Qt::Orientation>(orientation)][section] = data;
+      emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
       break;
     }
   }
@@ -208,6 +221,16 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
 
   Message msg;
   msg.stream() << qint32(Protocol::ContentRequest) << Protocol::fromQModelIndex(index);
+  Client::stream() << msg;
+}
+
+void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) const
+{
+  Q_ASSERT(!m_headers.value(orientation).contains(section));
+  m_headers[orientation][section][Qt::DisplayRole] = tr("Loading...");
+
+  Message msg;
+  msg.stream() << qint32(Protocol::HeaderRequest) << qint8(orientation) << qint32(section);
   Client::stream() << msg;
 }
 

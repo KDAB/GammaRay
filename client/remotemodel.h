@@ -46,8 +46,11 @@ class RemoteModel : public QAbstractItemModel
 
     void requestRowColumnCount(const QModelIndex &index) const;
     void requestDataAndFlags(const QModelIndex &index) const;
+    void requestHeaderData(Qt::Orientation orientation, int section) const;
 
     Node* m_root;
+
+    mutable QHash<Qt::Orientation, QHash<int, QHash<int, QVariant> > > m_headers; // orientation -> section -> role -> data
 };
 
 }
