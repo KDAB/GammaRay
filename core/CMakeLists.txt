@@ -99,6 +99,9 @@ set(gammaray_srcs
   tools/styleinspector/styleelementstatetablepage.cpp
   tools/styleinspector/complexcontrolmodel.cpp
   tools/styleinspector/dynamicproxystyle.cpp
+
+  remote/server.cpp
+  remote/remotemodelserver.cpp
 )
 
 if(Qt5Core_FOUND)
@@ -189,6 +192,7 @@ else()
   target_link_libraries(gammaray_core
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
+    ${QT_QTNETWORK_LIBRARIES}
   )
 endif()
 

@@ -34,6 +34,8 @@
 
 #include "tools/modelinspector/modeltest.h"
 
+#include "remote/server.h"
+
 #include <QApplication>
 #include <QCoreApplication>
 #include <QDialog>
@@ -247,6 +249,8 @@ void Probe::delayedInit()
   instance()->setWindow(window);
   instance()->setParent(window);
   window->show();
+
+  new Server(this);
 }
 
 bool Probe::filterObject(QObject *obj) const
