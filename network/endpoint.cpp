@@ -24,6 +24,12 @@ QDataStream& Endpoint::stream()
   return *s_instance->m_stream;
 }
 
+bool Endpoint::isConnected()
+{
+  Q_ASSERT(s_instance);
+  return s_instance->m_socket;
+}
+
 quint16 Endpoint::defaultPort()
 {
   return 11732;
@@ -32,11 +38,12 @@ quint16 Endpoint::defaultPort()
 void Endpoint::setDevice(QIODevice* device)
 {
   qDebug() << Q_FUNC_INFO << device;
-  Q_ASSERT(m_socket == 0);
+  Q_ASSERT(!m_socket);
   Q_ASSERT(device);
   m_socket = device;
-  m_stream.reset(new QDataStream(m_socket));
-  connect(m_socket, SIGNAL(readyRead()), SLOT(readyRead()));
+  m_stream.reset(new QDataStream(m_socket.data()));
+  connect(m_socket.data(), SIGNAL(readyRead()), SLOT(readyRead()));
+  connect(m_socket.data(), SIGNAL(disconnected()), SLOT(connectionClosed()));
   if (m_socket->bytesAvailable())
     readyRead();
 }
@@ -44,11 +51,20 @@ void Endpoint::setDevice(QIODevice* device)
 void Endpoint::readyRead()
 {
   qDebug() << Q_FUNC_INFO << m_socket->bytesAvailable();
-  while (Message::canReadMessage(m_socket)) {
+  while (Message::canReadMessage(m_socket.data())) {
     Message msg;
     *m_stream >> msg;
     emit messageReceived(msg);
   }
+}
+
+void Endpoint::connectionClosed()
+{
+  qDebug() << Q_FUNC_INFO;
+  m_socket->deleteLater();
+  m_socket = 0;
+  m_stream.reset();
+  emit disconnected();
 }
 
 #include "endpoint.moc"

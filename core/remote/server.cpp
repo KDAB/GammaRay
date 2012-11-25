@@ -26,13 +26,17 @@ Server::~Server()
 
 void Server::newConnection()
 {
-  qDebug() << Q_FUNC_INFO;
-  // TODO: deal with more than one connection request
+  if (isConnected()) {
+    qDebug() << Q_FUNC_INFO << "connected already, refusing incoming connection.";
+    m_tcpServer->nextPendingConnection()->close();
+    return;
+  }
 
+  qDebug() << Q_FUNC_INFO;
   setDevice(m_tcpServer->nextPendingConnection());
 
   // ### temporary
-  connect(this, SIGNAL(messageReceived(GammaRay::Message)), m_modelServer, SLOT(newRequest(GammaRay::Message)));
+  connect(this, SIGNAL(messageReceived(GammaRay::Message)), m_modelServer, SLOT(newRequest(GammaRay::Message)), Qt::UniqueConnection);
 }
 
 #include "server.moc"
