@@ -1,7 +1,7 @@
 #ifndef GAMMARAY_SERVER_H
 #define GAMMARAY_SERVER_H
 
-#include <QObject>
+#include <network/endpoint.h>
 
 class QTcpServer;
 
@@ -9,7 +9,7 @@ namespace GammaRay {
 
 class RemoteModelServer;
 
-class Server : public QObject
+class Server : public Endpoint
 {
   Q_OBJECT
   public:
@@ -21,7 +21,6 @@ class Server : public QObject
 
   private:
     QTcpServer *m_tcpServer;
-    QDataStream *m_stream;
     RemoteModelServer *m_modelServer;
 };
 

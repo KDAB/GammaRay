@@ -4,9 +4,10 @@
 #include <QObject>
 
 class QAbstractItemModel;
-class QDataStream;
 
 namespace GammaRay {
+
+class Message;
 
 class RemoteModelServer : public QObject
 {
@@ -16,14 +17,12 @@ class RemoteModelServer : public QObject
     ~RemoteModelServer();
 
     void setModel(QAbstractItemModel *model);
-    void setStream(QDataStream *stream);
 
   public slots:
-    void newRequest();
+    void newRequest(const GammaRay::Message &msg);
 
   private:
     QAbstractItemModel *m_model;
-    QDataStream *m_stream;
 };
 
 }

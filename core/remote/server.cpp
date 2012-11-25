@@ -9,12 +9,11 @@
 using namespace GammaRay;
 
 Server::Server(QObject *parent) : 
-  QObject(parent),
-  m_tcpServer(new QTcpServer(this)),
-  m_stream(0)
+  Endpoint(parent),
+  m_tcpServer(new QTcpServer(this))
 {
   connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
-  m_tcpServer->listen(QHostAddress::Any, 11732);
+  m_tcpServer->listen(QHostAddress::Any, defaultPort());
 
   // ### temporary, proof of concept
   m_modelServer = new RemoteModelServer(this);
@@ -23,20 +22,17 @@ Server::Server(QObject *parent) :
 
 Server::~Server()
 {
-  delete m_stream;
 }
 
 void Server::newConnection()
 {
   qDebug() << Q_FUNC_INFO;
+  // TODO: deal with more than one connection request
 
-  QTcpSocket *socket = m_tcpServer->nextPendingConnection();
-  m_stream = new QDataStream(socket);
+  setDevice(m_tcpServer->nextPendingConnection());
 
-  // ### temporary, proof of concept
-  m_modelServer->setStream(m_stream);
-
-  connect(socket, SIGNAL(readyRead()), m_modelServer, SLOT(newRequest()));
+  // ### temporary
+  connect(this, SIGNAL(messageReceived(GammaRay::Message)), m_modelServer, SLOT(newRequest(GammaRay::Message)));
 }
 
 #include "server.moc"
