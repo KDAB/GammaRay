@@ -67,8 +67,13 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
-  if (node->data.contains(index.column()))
-    return node->data.value(index.column()).value(role);
+  if (node->data.contains(index.column())) {
+    if (node->data.value(index.column()).contains(role))
+      return node->data.value(index.column()).value(role);
+    else if (role == Qt::DisplayRole)
+      return tr("Loading...");
+    return QVariant();
+  }
 
   requestDataAndFlags(index);
   if (role == Qt::DisplayRole)
