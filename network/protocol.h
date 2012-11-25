@@ -31,24 +31,9 @@ enum ModelReply {
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
 
-inline ModelIndex fromQModelIndex(const QModelIndex &index)
-{
-  if (!index.isValid())
-    return ModelIndex();
-  ModelIndex result = fromQModelIndex(index.parent());
-  result.push_back(qMakePair(index.row(), index.column()));
-  return result;
-}
+ModelIndex fromQModelIndex(const QModelIndex &index);
 
-inline QModelIndex toQModelIndex(QAbstractItemModel *model, const ModelIndex &index)
-{
-  QModelIndex qmi;
-
-  for (int i = 0; i < index.size(); ++i)
-    qmi = model->index(index.at(i).first, index.at(i).second, qmi);
-
-  return qmi;
-}
+QModelIndex toQModelIndex(QAbstractItemModel *model, const ModelIndex &index);
 
 }
 

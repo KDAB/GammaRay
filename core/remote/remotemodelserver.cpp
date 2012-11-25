@@ -1,5 +1,6 @@
 #include "remotemodelserver.h"
-#include "protocol.h"
+#include <network/protocol.h>
+#include <network/message.h>
 
 #include <QAbstractItemModel>
 #include <QDataStream>
@@ -41,7 +42,7 @@ void RemoteModelServer::newRequest()
   qint32 req;
   *m_stream >> req;
 
-  qDebug() << req;
+  qDebug() << req << m_stream->status();
 
   switch (req) {
     case Protocol::RowColumnCountRequest:
@@ -49,8 +50,11 @@ void RemoteModelServer::newRequest()
       Protocol::ModelIndex index;
       *m_stream >> index;
       const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
-      qDebug() << "row col count for" << index << qmIndex;
-      *m_stream << qint32(Protocol::RowColumnCountReply) << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
+      qDebug() << "row col count for" << index << qmIndex << m_stream->status();
+
+      Message msg;
+      msg.stream() << qint32(Protocol::RowColumnCountReply) << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
+      *m_stream << msg;
       break;
     }
     case Protocol::ContentRequest:
@@ -60,7 +64,10 @@ void RemoteModelServer::newRequest()
       const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
       if (!qmIndex.isValid())
         break;
-      *m_stream << qint32(Protocol::ContentChanged) << index << m_model->itemData(qmIndex);
+
+      Message msg;
+      msg.stream() << qint32(Protocol::ContentChanged) << index << m_model->itemData(qmIndex);
+      *m_stream << msg;
     }
   }
 

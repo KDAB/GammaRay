@@ -1,14 +1,14 @@
 #ifndef GAMMARAY_REMOTEMODEL_H
 #define GAMMARAY_REMOTEMODEL_H
 
-#include <remote/protocol.h>
+#include <network/protocol.h>
 
 #include <QAbstractItemModel>
 #include <QVector>
 
-class QDataStream;
-
 namespace GammaRay {
+
+class Message;
 
 class RemoteModel : public QAbstractItemModel
 {
@@ -16,8 +16,6 @@ class RemoteModel : public QAbstractItemModel
   public:
     explicit RemoteModel(QObject *parent = 0);
     ~RemoteModel();
-
-    void setStream(QDataStream *stream);
 
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex& child) const;
@@ -29,7 +27,7 @@ class RemoteModel : public QAbstractItemModel
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
   public slots:
-    void newMessage();
+    void newMessage(const GammaRay::Message &msg);
 
   private:
     struct Node { // represents one row
@@ -50,8 +48,6 @@ class RemoteModel : public QAbstractItemModel
     void requestDataAndFlags(const QModelIndex &index) const;
 
     Node* m_root;
-
-    mutable QDataStream *m_stream;
 };
 
 }

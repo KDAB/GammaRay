@@ -1,4 +1,7 @@
 #include "remotemodel.h"
+#include "client.h"
+
+#include <network/message.h>
 
 #include <QDataStream>
 #include <QDebug>
@@ -13,11 +16,6 @@ RemoteModel::RemoteModel(QObject *parent) :
 
 RemoteModel::~RemoteModel()
 {
-}
-
-void RemoteModel::setStream(QDataStream *stream)
-{
-  m_stream = stream;
 }
 
 QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) const
@@ -96,12 +94,12 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-void RemoteModel::newMessage()
+void RemoteModel::newMessage(const GammaRay::Message& msg)
 {
   qDebug() << Q_FUNC_INFO;
 
   qint32 type;
-  *m_stream >> type;
+  msg.stream() >> type;
 
   qDebug() << type;
 
@@ -109,11 +107,11 @@ void RemoteModel::newMessage()
     case Protocol::RowColumnCountReply:
     {
       Protocol::ModelIndex index;
-      *m_stream >> index; 
+      msg.stream() >> index;
       Node *node = nodeForIndex(index);
       qDebug() << "row col reply" << index << node->rowCount << node->columnCount;
       Q_ASSERT(node->rowCount == -2 && node->columnCount == -1);
-      *m_stream >> node->rowCount >> node->columnCount;
+      msg.stream() >> node->rowCount >> node->columnCount;
       qDebug() << index << node->rowCount << node->columnCount;
       Q_ASSERT(node->rowCount >= 0 && node->columnCount >= 0);
 
@@ -138,13 +136,13 @@ void RemoteModel::newMessage()
     case Protocol::ContentChanged:
     {
       Protocol::ModelIndex index;
-      *m_stream >> index;
+      msg.stream() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node);
       qDebug() << "content reply" << index << node->data;
       typedef QMap<int, QVariant> ItemData;
       ItemData itemData;
-      *m_stream >> itemData;
+      msg.stream() >> itemData;
       for (ItemData::const_iterator it = itemData.constBegin(); it != itemData.constEnd(); ++it) {
         node->data[index.last().second].insert(it.key(), it.value());
       }
@@ -153,10 +151,6 @@ void RemoteModel::newMessage()
       break;
     }
   }
-
-  // ### temporary
-  if (m_stream->device()->bytesAvailable())
-    newMessage();
 }
 
 RemoteModel::Node* RemoteModel::nodeForIndex(const QModelIndex &index) const
@@ -194,7 +188,9 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
   node->rowCount = -2;
 
   qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
-  *m_stream << qint32(Protocol::RowColumnCountRequest) << Protocol::fromQModelIndex(index);
+  Message msg;
+  msg.stream() << qint32(Protocol::RowColumnCountRequest) << Protocol::fromQModelIndex(index);
+  Client::stream() << msg;
 }
 
 void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
@@ -206,9 +202,10 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
 
   node->data.insert(index.column(), QHash<int, QVariant>()); // mark pending request
   qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
-  *m_stream << qint32(Protocol::ContentRequest) << Protocol::fromQModelIndex(index);
+
+  Message msg;
+  msg.stream() << qint32(Protocol::ContentRequest) << Protocol::fromQModelIndex(index);
+  Client::stream() << msg;
 }
 
-
 #include "remotemodel.moc"
-
