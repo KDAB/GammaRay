@@ -41,6 +41,8 @@ LauncherWindow::LauncherWindow(QWidget *parent)
   connect(ui->attachPage, SIGNAL(activate()),
           ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
 
+  setWindowTitle(tr("GammaRay Launcher"));
+
   QSettings settings;
   ui->tabWidget->setCurrentIndex(settings.value(QLatin1String("Launcher/TabIndex")).toInt());
 }
