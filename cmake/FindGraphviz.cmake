@@ -54,7 +54,7 @@ else()
   set(GRAPHVIZ_FOUND FALSE)
 endif()
 
-#ok now compute the version and make sure its greater then the min required
+# Ok, now compute the version and make sure its greater then the min required
 if(GRAPHVIZ_FOUND)
   set(FIND_GRAPHVIZ_VERSION_SOURCE
     "#include <graphviz/graphviz_version.h>\n#include <stdio.h>\n int main()\n {\n printf(\"%s\",PACKAGE_VERSION);return 1;\n }\n")
@@ -90,7 +90,7 @@ if(GRAPHVIZ_FOUND)
     endif()
   endif()
 
-  #compute the major and minor version numbers
+  # Compute the major and minor version numbers
   if(NOT CMAKE_CROSSCOMPILING)
     string(REPLACE "." ";" VL ${GRAPHVIZ_VERSION})
     list(GET VL 0 GRAPHVIZ_MAJOR_VERSION)
