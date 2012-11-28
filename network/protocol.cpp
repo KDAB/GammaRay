@@ -23,6 +23,10 @@ QModelIndex toQModelIndex(QAbstractItemModel* model, const Protocol::ModelIndex&
   return qmi;
 }
 
+qint32 version()
+{
+  return 1;
+}
 
 }
 

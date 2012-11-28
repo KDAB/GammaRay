@@ -2,6 +2,9 @@
 #include "remotemodelserver.h"
 #include "probe.h"
 
+#include <network/protocol.h>
+#include <network/message.h>
+
 #include <QDebug>
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -34,6 +37,11 @@ void Server::newConnection()
 
   qDebug() << Q_FUNC_INFO;
   setDevice(m_tcpServer->nextPendingConnection());
+
+  // send greeting message for protocol version check
+  Message msg;
+  msg.stream() << Protocol::ServerVersion << Protocol::version();
+  stream() << msg;
 
   // ### temporary
   connect(this, SIGNAL(messageReceived(GammaRay::Message)), m_modelServer, SLOT(newRequest(GammaRay::Message)), Qt::UniqueConnection);

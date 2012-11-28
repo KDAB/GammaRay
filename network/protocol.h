@@ -44,6 +44,8 @@ ModelIndex fromQModelIndex(const QModelIndex &index);
 
 QModelIndex toQModelIndex(QAbstractItemModel *model, const ModelIndex &index);
 
+qint32 version();
+
 }
 
 }
