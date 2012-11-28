@@ -1,6 +1,8 @@
 #ifndef GAMMARAY_MESSAGE_H
 #define GAMMARAY_MESSAGE_H
 
+#include "protocol.h"
+
 #include <QByteArray>
 #include <QDataStream>
 
@@ -20,6 +22,8 @@ class Message
     Message();
     ~Message();
 
+    Protocol::MessageType type() const;
+
     QDataStream& stream() const;
 
     // TODO: sender/receiver
@@ -32,6 +36,8 @@ class Message
   private:
     mutable QByteArray m_buffer;
     mutable QScopedPointer<QDataStream> m_stream;
+
+    Protocol::MessageType m_messageType;
 };
 
 }

@@ -29,11 +29,7 @@ void RemoteModelServer::setModel(QAbstractItemModel *model)
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 {
-  Protocol::MessageType req;
-  msg.stream() >> req;
-  qDebug() << Q_FUNC_INFO << req;
-
-  switch (req) {
+  switch (msg.type()) {
     case Protocol::ModelRowColumnCountRequest:
     {
       Protocol::ModelIndex index;

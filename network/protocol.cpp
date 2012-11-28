@@ -44,7 +44,7 @@ QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::MessageType &me
 {
   quint8 value;
   stream >> value;
-  Q_ASSERT(value < GammaRay::Protocol::LastMessageType);
+  Q_ASSERT(value > GammaRay::Protocol::Invalid && value < GammaRay::Protocol::LastMessageType);
   messageType = static_cast<GammaRay::Protocol::MessageType>(value);
   return stream;
 }

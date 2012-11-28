@@ -4,13 +4,19 @@
 
 using namespace GammaRay;
 
-Message::Message()
+Message::Message() : m_messageType(Protocol::Invalid)
 {
 }
 
 Message::~Message()
 {
 }
+
+Protocol::MessageType Message::type() const
+{
+  return m_messageType;
+}
+
 
 QDataStream& Message::stream() const
 {
@@ -38,6 +44,7 @@ void Message::setInternalBuffer(const QByteArray& buffer)
 {
   m_buffer = buffer;
   m_stream.reset(new QDataStream(m_buffer));
+  *m_stream >> m_messageType;
 }
 
 

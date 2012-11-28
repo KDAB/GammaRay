@@ -103,14 +103,7 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
 
 void RemoteModel::newMessage(const GammaRay::Message& msg)
 {
-  qDebug() << Q_FUNC_INFO;
-
-  Protocol::MessageType type;
-  msg.stream() >> type;
-
-  qDebug() << type;
-
-  switch (type) {
+  switch (msg.type()) {
     case Protocol::ModelRowColumnCountReply:
     {
       Protocol::ModelIndex index;

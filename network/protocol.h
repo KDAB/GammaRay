@@ -11,9 +11,9 @@ namespace GammaRay {
 namespace Protocol {
 
 enum MessageType {
-  // client -> server
-  ResolveObjectName,
+  Invalid = 0,
 
+  // client -> server
   ModelRowColumnCountRequest,
   ModelContentRequest,
   ModelHeaderRequest,
@@ -21,7 +21,10 @@ enum MessageType {
 
   // server -> client
   ServerVersion,
-  ObjectNameReply,
+
+  ObjectMapReply,
+  ObjectAdded,
+  ObjectRemoved,
 
   ModelRowColumnCountReply,
   ModelContentReply,
