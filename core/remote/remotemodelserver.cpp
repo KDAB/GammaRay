@@ -29,12 +29,12 @@ void RemoteModelServer::setModel(QAbstractItemModel *model)
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 {
-  qint32 req;
+  Protocol::MessageType req;
   msg.stream() >> req;
   qDebug() << Q_FUNC_INFO << req;
 
   switch (req) {
-    case Protocol::RowColumnCountRequest:
+    case Protocol::ModelRowColumnCountRequest:
     {
       Protocol::ModelIndex index;
       msg.stream() >> index;
@@ -42,12 +42,12 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       qDebug() << "row col count for" << index << qmIndex;
 
       Message msg;
-      msg.stream() << qint32(Protocol::RowColumnCountReply) << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
+      msg.stream() << Protocol::ModelRowColumnCountReply << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
       Server::stream() << msg;
       break;
     }
 
-    case Protocol::ContentRequest:
+    case Protocol::ModelContentRequest:
     {
       Protocol::ModelIndex index;
       msg.stream() >> index;
@@ -56,11 +56,11 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         break;
 
       Message msg;
-      msg.stream() << qint32(Protocol::ContentChanged) << index << m_model->itemData(qmIndex);
+      msg.stream() << Protocol::ModelContentReply << index << m_model->itemData(qmIndex);
       Server::stream() << msg;
     }
 
-    case Protocol::HeaderRequest:
+    case Protocol::ModelHeaderRequest:
     {
       qint8 orientation;
       qint32 section;
@@ -70,7 +70,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       data.insert(Qt::DisplayRole, m_model->headerData(section, static_cast<Qt::Orientation>(orientation), Qt::DisplayRole)); // TODO: add all roles
 
       Message msg;
-      msg.stream() << qint32(Protocol::HeaderChanged) << orientation << section << data;
+      msg.stream() << Protocol::ModelHeaderChanged << orientation << section << data;
       Server::stream() << msg;
     }
   }

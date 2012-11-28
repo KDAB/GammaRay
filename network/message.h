@@ -8,7 +8,11 @@ namespace GammaRay {
 
 /**
  * Single message send between client and server.
- * Binary format: 4 byte size in QDataStream encoding, followed by the message payload
+ * Binary format:
+ * - 4 byte size of the entire message (not including the size itself) in QDataStream encoding
+ * - 1 byte server object address
+ * - 1 byte command type
+ * - size-2 bytes message payload
  */
 class Message
 {

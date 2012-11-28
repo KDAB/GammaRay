@@ -27,3 +27,20 @@ QModelIndex toQModelIndex(QAbstractItemModel* model, const Protocol::ModelIndex&
 }
 
 }
+
+QDataStream& operator<<(QDataStream& stream, GammaRay::Protocol::MessageType messageType)
+{
+  Q_ASSERT(GammaRay::Protocol::LastMessageType <= 255); // TODO static assert
+  stream << static_cast<quint8>(messageType);
+  return stream;
+}
+
+
+QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::MessageType &messageType)
+{
+  quint8 value;
+  stream >> value;
+  Q_ASSERT(value < GammaRay::Protocol::LastMessageType);
+  messageType = static_cast<GammaRay::Protocol::MessageType>(value);
+  return stream;
+}

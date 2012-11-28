@@ -105,13 +105,13 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
 {
   qDebug() << Q_FUNC_INFO;
 
-  qint32 type;
+  Protocol::MessageType type;
   msg.stream() >> type;
 
   qDebug() << type;
 
   switch (type) {
-    case Protocol::RowColumnCountReply:
+    case Protocol::ModelRowColumnCountReply:
     {
       Protocol::ModelIndex index;
       msg.stream() >> index;
@@ -138,7 +138,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       break;
     }
 
-    case Protocol::ContentChanged:
+    case Protocol::ModelContentReply:
     {
       Protocol::ModelIndex index;
       msg.stream() >> index;
@@ -156,7 +156,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       break;
     }
 
-    case Protocol::HeaderChanged:
+    case Protocol::ModelHeaderChanged:
     {
       qint8 orientation;
       qint32 section;
@@ -205,7 +205,7 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
 
   qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
   Message msg;
-  msg.stream() << qint32(Protocol::RowColumnCountRequest) << Protocol::fromQModelIndex(index);
+  msg.stream() << Protocol::ModelRowColumnCountRequest << Protocol::fromQModelIndex(index);
   Client::stream() << msg;
 }
 
@@ -220,7 +220,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
 
   Message msg;
-  msg.stream() << qint32(Protocol::ContentRequest) << Protocol::fromQModelIndex(index);
+  msg.stream() << Protocol::ModelContentRequest << Protocol::fromQModelIndex(index);
   Client::stream() << msg;
 }
 
@@ -230,7 +230,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
   m_headers[orientation][section][Qt::DisplayRole] = tr("Loading...");
 
   Message msg;
-  msg.stream() << qint32(Protocol::HeaderRequest) << qint8(orientation) << qint32(section);
+  msg.stream() << Protocol::ModelHeaderRequest << qint8(orientation) << qint32(section);
   Client::stream() << msg;
 }
 

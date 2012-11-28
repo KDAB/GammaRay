@@ -10,23 +10,32 @@ namespace GammaRay {
 
 namespace Protocol {
 
-enum ModelRequest {
-  RowColumnCountRequest,
-  ContentRequest,
-  HeaderRequest,
-  SetDataRequest
-};
+enum MessageType {
+  // client -> server
+  ResolveObjectName,
 
-enum ModelReply {
-  RowColumnCountReply,
-  ContentChanged,
-  HeaderChanged,
-  RowsAdded,
-  RowsRemoved,
-  ColumnsAdded,
-  ColumnsRemoved,
+  ModelRowColumnCountRequest,
+  ModelContentRequest,
+  ModelHeaderRequest,
+  ModelSetDataRequest,
+
+  // server -> client
+  ServerVersion,
+  ObjectNameReply,
+
+  ModelRowColumnCountReply,
+  ModelContentReply,
+  ModelContentChanged,
+  ModelHeaderChanged,
+  ModelRowsAdded,
+  ModelRowsRemoved,
+  ModelColumnsAdded,
+  ModelColumnsRemoved,
   ModelReset,
-  ModelLayoutChanged
+  ModelLayoutChanged,
+
+  // internal
+  LastMessageType
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
@@ -38,5 +47,8 @@ QModelIndex toQModelIndex(QAbstractItemModel *model, const ModelIndex &index);
 }
 
 }
+
+QDataStream& operator<<(QDataStream &stream, GammaRay::Protocol::MessageType messageType);
+QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::MessageType& messageType);
 
 #endif
