@@ -16,6 +16,9 @@ class Server : public Endpoint
     explicit Server(QObject *parent = 0);
     ~Server();
 
+  protected:
+    void messageReceived(const Message& msg);
+
   private slots:
     void newConnection();
 

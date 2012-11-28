@@ -17,7 +17,7 @@ int main(int argc, char** argv)
   QObject::connect(&client, SIGNAL(disconnected()), &app, SLOT(quit()));
 
   RemoteModel model;
-  QObject::connect(&client, SIGNAL(messageReceived(GammaRay::Message)), &model, SLOT(newMessage(GammaRay::Message)));
+  client.setModel(&model);
   QTreeView view;
   view.setModel(&model);
 

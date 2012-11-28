@@ -24,13 +24,13 @@ public:
 
 signals:
   void disconnected();
-  // ### temporary
-  void messageReceived(const GammaRay::Message &msg);
 
 protected:
   Endpoint(QObject* parent = 0);
   /// takes ownership
   void setDevice(QIODevice* device);
+
+  virtual void messageReceived(const Message &msg) = 0;
 
 private slots:
   void readyRead();

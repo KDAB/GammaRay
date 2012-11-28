@@ -5,6 +5,8 @@
 
 namespace GammaRay {
 
+class RemoteModel;
+
 class Client : public Endpoint
 {
   Q_OBJECT
@@ -13,6 +15,17 @@ public:
   ~Client();
 
   void connectToHost( /* TODO */ );
+
+  // ### temporary
+  void setModel(RemoteModel* model);
+
+  void registerForObject(const QString &serverObject, QObject *handler, const char* slot);
+
+protected:
+    void messageReceived(const Message& msg);
+
+private:
+  RemoteModel *m_model;
 };
 
 }

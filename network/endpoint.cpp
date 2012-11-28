@@ -54,7 +54,7 @@ void Endpoint::readyRead()
   while (Message::canReadMessage(m_socket.data())) {
     Message msg;
     *m_stream >> msg;
-    emit messageReceived(msg);
+    messageReceived(msg);
   }
 }
 

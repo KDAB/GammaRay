@@ -42,9 +42,12 @@ void Server::newConnection()
   Message msg;
   msg.stream() << Protocol::ServerVersion << Protocol::version();
   stream() << msg;
+}
 
+void Server::messageReceived(const Message& msg)
+{
   // ### temporary
-  connect(this, SIGNAL(messageReceived(GammaRay::Message)), m_modelServer, SLOT(newRequest(GammaRay::Message)), Qt::UniqueConnection);
+  m_modelServer->newRequest(msg);
 }
 
 #include "server.moc"
