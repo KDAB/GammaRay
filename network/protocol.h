@@ -10,6 +10,12 @@ namespace GammaRay {
 
 namespace Protocol {
 
+
+typedef quint8 ObjectAddress;
+
+static const int InvalidObjectAddress = 0;
+
+
 enum MessageType {
   Invalid = 0,
 

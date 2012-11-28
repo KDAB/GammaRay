@@ -67,4 +67,30 @@ void Endpoint::connectionClosed()
   emit disconnected();
 }
 
+Protocol::ObjectAddress Endpoint::objectAddress(const QString& objectName) const
+{
+  const QMap<QString, Protocol::ObjectAddress>::const_iterator it = m_objectsAddresses.constFind(objectName);
+  if (it != m_objectsAddresses.constEnd())
+    return it.value();
+  return Protocol::InvalidObjectAddress;
+}
+
+void Endpoint::registerObjectInternal(const QString& objectName, Protocol::ObjectAddress objectAddress)
+{
+  Q_ASSERT(!m_objectsAddresses.contains(objectName));
+  Q_ASSERT(!m_objectsAddresses.values().contains(objectAddress));
+  Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);
+
+  m_objectsAddresses.insert(objectName, objectAddress);
+  emit objectRegistered(objectName, objectAddress);
+}
+
+void Endpoint::unregisterObjectInternal(const QString& objectName)
+{
+  Q_ASSERT(m_objectsAddresses.contains(objectName));
+
+  emit objectUnregistered(objectName, m_objectsAddresses.value(objectName));
+  m_objectsAddresses.remove(objectName);
+}
+
 #include "endpoint.moc"

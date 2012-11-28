@@ -1,6 +1,8 @@
 #ifndef GAMMARAY_ENDPOINT_H
 #define GAMMARAY_ENDPOINT_H
 
+#include "protocol.h"
+
 #include <QObject>
 #include <QPointer>
 
@@ -22,8 +24,13 @@ public:
   static bool isConnected();
   static quint16 defaultPort();
 
+  Protocol::ObjectAddress objectAddress(const QString &objectName) const;
+
 signals:
   void disconnected();
+
+  void objectRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
+  void objectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
 protected:
   Endpoint(QObject* parent = 0);
@@ -31,6 +38,9 @@ protected:
   void setDevice(QIODevice* device);
 
   virtual void messageReceived(const Message &msg) = 0;
+
+  void registerObjectInternal(const QString &objectName, Protocol::ObjectAddress objectAddress);
+  void unregisterObjectInternal(const QString& objectName);
 
 private slots:
   void readyRead();
@@ -40,6 +50,8 @@ private:
   static Endpoint *s_instance;
   QPointer<QIODevice> m_socket;
   QScopedPointer<QDataStream> m_stream;
+
+  QMap<QString, Protocol::ObjectAddress> m_objectsAddresses;
 };
 }
 
