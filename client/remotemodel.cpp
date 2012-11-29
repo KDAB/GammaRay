@@ -8,10 +8,15 @@
 
 using namespace GammaRay;
 
-RemoteModel::RemoteModel(QObject *parent) : 
-  QAbstractItemModel(parent)
+RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
+  QAbstractItemModel(parent),
+  m_serverObject(serverObject),
+  m_myAddress(Protocol::InvalidObjectAddress)
 {
   m_root = new Node;
+
+  // TODO watch for object appearing/disappearing
+  m_myAddress = 2; //Client::instance()->objectAddress(serverObject);
 }
 
 RemoteModel::~RemoteModel()
@@ -197,7 +202,7 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
   node->rowCount = -2;
 
   qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
-  Message msg;
+  Message msg(m_myAddress);
   msg.stream() << Protocol::ModelRowColumnCountRequest << Protocol::fromQModelIndex(index);
   Client::stream() << msg;
 }
@@ -212,7 +217,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   node->data.insert(index.column(), QHash<int, QVariant>()); // mark pending request
   qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
 
-  Message msg;
+  Message msg(m_myAddress);
   msg.stream() << Protocol::ModelContentRequest << Protocol::fromQModelIndex(index);
   Client::stream() << msg;
 }
@@ -222,7 +227,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
   Q_ASSERT(!m_headers.value(orientation).contains(section));
   m_headers[orientation][section][Qt::DisplayRole] = tr("Loading...");
 
-  Message msg;
+  Message msg(m_myAddress);
   msg.stream() << Protocol::ModelHeaderRequest << qint8(orientation) << qint32(section);
   Client::stream() << msg;
 }

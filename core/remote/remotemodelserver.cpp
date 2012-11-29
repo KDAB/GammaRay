@@ -9,10 +9,11 @@
 
 using namespace GammaRay;
 
-RemoteModelServer::RemoteModelServer(QObject *parent) : 
+RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent) :
   QObject(parent),
   m_model(0)
 {
+  m_myAddress = Server::instance()->registerObject(objectName, this, "newRequest");
 }
 
 RemoteModelServer::~RemoteModelServer()
@@ -37,7 +38,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
       qDebug() << "row col count for" << index << qmIndex;
 
-      Message msg;
+      Message msg(m_myAddress);
       msg.stream() << Protocol::ModelRowColumnCountReply << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
       Server::stream() << msg;
       break;
@@ -51,7 +52,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       if (!qmIndex.isValid())
         break;
 
-      Message msg;
+      Message msg(m_myAddress);
       msg.stream() << Protocol::ModelContentReply << index << m_model->itemData(qmIndex);
       Server::stream() << msg;
     }
@@ -65,7 +66,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       QHash<qint32, QVariant> data;
       data.insert(Qt::DisplayRole, m_model->headerData(section, static_cast<Qt::Orientation>(orientation), Qt::DisplayRole)); // TODO: add all roles
 
-      Message msg;
+      Message msg(m_myAddress);
       msg.stream() << Protocol::ModelHeaderChanged << orientation << section << data;
       Server::stream() << msg;
     }

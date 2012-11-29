@@ -1,6 +1,8 @@
 #ifndef GAMMARAY_REMOTEMODELSERVER_H
 #define GAMMARAY_REMOTEMODELSERVER_H
 
+#include <network/protocol.h>
+
 #include <QObject>
 
 class QAbstractItemModel;
@@ -13,7 +15,7 @@ class RemoteModelServer : public QObject
 {
   Q_OBJECT
   public:
-    explicit RemoteModelServer(QObject *parent = 0);
+    explicit RemoteModelServer(const QString &objectName, QObject *parent = 0);
     ~RemoteModelServer();
 
     void setModel(QAbstractItemModel *model);
@@ -23,6 +25,7 @@ class RemoteModelServer : public QObject
 
   private:
     QAbstractItemModel *m_model;
+    Protocol::ObjectAddress m_myAddress;
 };
 
 }

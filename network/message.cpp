@@ -60,6 +60,7 @@ void Message::setInternalBuffer(const QByteArray& buffer)
 
 QDataStream& operator<<(QDataStream& stream, const Message& msg)
 {
+  Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
   stream << qint32(msg.internalBuffer().size()) << msg.internalBuffer();
   Q_ASSERT(stream.status() == QDataStream::Ok);
   return stream;

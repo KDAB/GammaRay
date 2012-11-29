@@ -1,5 +1,4 @@
 #include "server.h"
-#include "remotemodelserver.h"
 #include "probe.h"
 
 #include <network/protocol.h>
@@ -19,15 +18,17 @@ Server::Server(QObject *parent) :
 {
   connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
   m_tcpServer->listen(QHostAddress::Any, defaultPort());
-
-  // ### temporary, proof of concept
-  m_modelServer = new RemoteModelServer(this);
-  m_modelServer->setModel(Probe::instance()->objectTreeModel());
 }
 
 Server::~Server()
 {
 }
+
+Server* Server::instance()
+{
+  return static_cast<Server*>(s_instance);
+}
+
 
 void Server::newConnection()
 {
@@ -56,8 +57,12 @@ void Server::newConnection()
 
 void Server::messageReceived(const Message& msg)
 {
-  // ### temporary
-  m_modelServer->newRequest(msg);
+  if (!m_messageHandlers.contains(msg.address()))
+    return;
+  QObject *receiver = m_messageHandlers.value(msg.address()).first;
+  QByteArray method = m_messageHandlers.value(msg.address()).second;
+
+  QMetaObject::invokeMethod(receiver, method, Q_ARG(GammaRay::Message, msg));
 }
 
 Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)
@@ -66,12 +71,13 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
   Q_ASSERT(m_nextAddress);
   m_messageHandlers.insert(m_nextAddress, qMakePair<QObject*, QByteArray>(receiver, messageHandlerName));
   m_objectToNameMap.insert(receiver, objectName);
-  registerObjectInternal(objectName, m_nextAddress);
   connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
 
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ObjectAdded << objectName << m_nextAddress;
-  stream() << msg;
+  if (isConnected()) {
+    Message msg(m_myAddress);
+    msg.stream() << Protocol::ObjectAdded << objectName << m_nextAddress;
+    stream() << msg;
+  }
 
   return m_nextAddress;
 }

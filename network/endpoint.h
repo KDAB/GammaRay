@@ -44,13 +44,13 @@ protected:
 
 protected:
   QMap<QString, Protocol::ObjectAddress> m_objectsAddresses;
+  static Endpoint *s_instance;
 
 private slots:
   void readyRead();
   void connectionClosed();
 
 private:
-  static Endpoint *s_instance;
   QPointer<QIODevice> m_socket;
   QScopedPointer<QDataStream> m_stream;
 };

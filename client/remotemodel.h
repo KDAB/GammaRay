@@ -14,7 +14,7 @@ class RemoteModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
-    explicit RemoteModel(QObject *parent = 0);
+    explicit RemoteModel(const QString &serverObject, QObject *parent = 0);
     ~RemoteModel();
 
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
@@ -51,6 +51,9 @@ class RemoteModel : public QAbstractItemModel
     Node* m_root;
 
     mutable QHash<Qt::Orientation, QHash<int, QHash<int, QVariant> > > m_headers; // orientation -> section -> role -> data
+
+    QString m_serverObject;
+    Protocol::ObjectAddress m_myAddress;
 };
 
 }

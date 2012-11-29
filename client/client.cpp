@@ -17,6 +17,11 @@ Client::~Client()
 {
 }
 
+Client* Client::instance()
+{
+  return static_cast<Client*>(s_instance);
+}
+
 void Client::connectToHost()
 {
   QTcpSocket *sock = new QTcpSocket(this);

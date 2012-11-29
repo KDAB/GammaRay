@@ -79,6 +79,7 @@ Protocol::ObjectAddress Endpoint::objectAddress(const QString& objectName) const
 
 void Endpoint::registerObjectInternal(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
+  qDebug() << objectName << objectAddress;
   Q_ASSERT(!m_objectsAddresses.contains(objectName));
   Q_ASSERT(!m_objectsAddresses.values().contains(objectAddress));
   Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);

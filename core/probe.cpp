@@ -35,6 +35,7 @@
 #include "tools/modelinspector/modeltest.h"
 
 #include "remote/server.h"
+#include "remote/remotemodelserver.h"
 
 #include <QApplication>
 #include <QCoreApplication>
@@ -251,6 +252,11 @@ void Probe::delayedInit()
   window->show();
 
   new Server(this);
+
+  RemoteModelServer *ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ObjectTree"), this);
+  ms->setModel(m_objectTreeModel);
+  ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ObjectList"), this);
+  ms->setModel(m_objectListModel);
 }
 
 bool Probe::filterObject(QObject *obj) const

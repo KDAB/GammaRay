@@ -7,8 +7,6 @@ class QTcpServer;
 
 namespace GammaRay {
 
-class RemoteModelServer;
-
 class Server : public Endpoint
 {
   Q_OBJECT
@@ -17,6 +15,7 @@ class Server : public Endpoint
     ~Server();
 
     Protocol::ObjectAddress registerObject(const QString &objectName, QObject* receiver, const char* messageHandlerName);
+    static Server* instance();
 
   protected:
     void messageReceived(const Message& msg);
@@ -27,7 +26,6 @@ class Server : public Endpoint
 
   private:
     QTcpServer *m_tcpServer;
-    RemoteModelServer *m_modelServer;
 
     Protocol::ObjectAddress m_nextAddress;
     Protocol::ObjectAddress m_myAddress;

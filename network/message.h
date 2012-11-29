@@ -19,7 +19,7 @@ namespace GammaRay {
 class Message
 {
   public:
-    explicit Message(Protocol::ObjectAddress address = 0); // TODO default value is temporary
+    explicit Message(Protocol::ObjectAddress address = Protocol::InvalidObjectAddress);
     ~Message();
 
     Protocol::ObjectAddress address() const;

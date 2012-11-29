@@ -21,6 +21,8 @@ public:
 
   void registerForObject(const QString &serverObject, QObject *handler, const char* slot);
 
+  static Client* instance();
+
 protected:
     void messageReceived(const Message& msg);
 
