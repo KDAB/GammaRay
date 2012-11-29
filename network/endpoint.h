@@ -42,6 +42,9 @@ protected:
   void registerObjectInternal(const QString &objectName, Protocol::ObjectAddress objectAddress);
   void unregisterObjectInternal(const QString& objectName);
 
+protected:
+  QMap<QString, Protocol::ObjectAddress> m_objectsAddresses;
+
 private slots:
   void readyRead();
   void connectionClosed();
@@ -50,9 +53,8 @@ private:
   static Endpoint *s_instance;
   QPointer<QIODevice> m_socket;
   QScopedPointer<QDataStream> m_stream;
-
-  QMap<QString, Protocol::ObjectAddress> m_objectsAddresses;
 };
+
 }
 
 #endif // GAMMARAY_ENDPOINT_H

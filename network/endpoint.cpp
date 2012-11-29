@@ -11,6 +11,8 @@ Endpoint::Endpoint(QObject* parent): QObject(parent), m_socket(0)
 {
   Q_ASSERT(!s_instance);
   s_instance = this;
+
+  m_objectsAddresses.insert(QLatin1String("com.kdab.GammaRay.Server"), Protocol::InvalidObjectAddress + 1);
 }
 
 Endpoint::~Endpoint()

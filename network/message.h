@@ -19,14 +19,13 @@ namespace GammaRay {
 class Message
 {
   public:
-    Message();
+    explicit Message(Protocol::ObjectAddress address = 0); // TODO default value is temporary
     ~Message();
 
+    Protocol::ObjectAddress address() const;
     Protocol::MessageType type() const;
 
     QDataStream& stream() const;
-
-    // TODO: sender/receiver
 
     static bool canReadMessage(QIODevice *device);
 
@@ -37,6 +36,7 @@ class Message
     mutable QByteArray m_buffer;
     mutable QScopedPointer<QDataStream> m_stream;
 
+    Protocol::ObjectAddress m_objectAddress;
     Protocol::MessageType m_messageType;
 };
 

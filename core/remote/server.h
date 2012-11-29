@@ -30,6 +30,7 @@ class Server : public Endpoint
     RemoteModelServer *m_modelServer;
 
     Protocol::ObjectAddress m_nextAddress;
+    Protocol::ObjectAddress m_myAddress;
     QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> > m_messageHandlers;
     QHash<QObject*, QString> m_objectToNameMap;
 };

@@ -4,12 +4,19 @@
 
 using namespace GammaRay;
 
-Message::Message() : m_messageType(Protocol::Invalid)
+Message::Message(Protocol::ObjectAddress objectAddress) :
+  m_objectAddress(objectAddress),
+  m_messageType(Protocol::Invalid)
 {
 }
 
 Message::~Message()
 {
+}
+
+Protocol::ObjectAddress Message::address() const
+{
+  return m_objectAddress;
 }
 
 Protocol::MessageType Message::type() const
@@ -20,8 +27,11 @@ Protocol::MessageType Message::type() const
 
 QDataStream& Message::stream() const
 {
-  if (!m_stream)
+  if (!m_stream) {
     m_stream.reset(new QDataStream(&m_buffer, QIODevice::ReadWrite));
+    *m_stream << m_objectAddress;
+    // TODO also write type automatically here
+  }
   return *m_stream;
 }
 
@@ -44,7 +54,7 @@ void Message::setInternalBuffer(const QByteArray& buffer)
 {
   m_buffer = buffer;
   m_stream.reset(new QDataStream(m_buffer));
-  *m_stream >> m_messageType;
+  *m_stream >> m_objectAddress >> m_messageType;
 }
 
 
