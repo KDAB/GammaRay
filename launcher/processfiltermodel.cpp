@@ -36,9 +36,14 @@ static QString qGetLogin() {
   return QString::fromLocal8Bit(winUserName);
 }
 #else
+#include <sys/types.h>
+#include <pwd.h>
 #include <unistd.h>
 static QString qGetLogin(){
-  return QString::fromLocal8Bit(getlogin());
+  struct passwd *pw = getpwuid(getuid());
+  if (!pw || !pw->pw_name)
+    return QString();
+  return QString::fromLocal8Bit(pw->pw_name);
 }
 #endif
 
