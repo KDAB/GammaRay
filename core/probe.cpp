@@ -240,6 +240,8 @@ void Probe::delayedInit()
 
   QCoreApplication::instance()->installEventFilter(s_instance);
 
+  new Server(this);
+
   IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
   s_listener()->filterThread = QThread::currentThread();
   GammaRay::MainWindow *window = new GammaRay::MainWindow;
@@ -250,8 +252,6 @@ void Probe::delayedInit()
   instance()->setWindow(window);
   instance()->setParent(window);
   window->show();
-
-  new Server(this);
 
   RemoteModelServer *ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ObjectTree"), this);
   ms->setModel(m_objectTreeModel);

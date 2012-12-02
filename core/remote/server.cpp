@@ -26,6 +26,7 @@ Server::~Server()
 
 Server* Server::instance()
 {
+  Q_ASSERT(s_instance);
   return static_cast<Server*>(s_instance);
 }
 

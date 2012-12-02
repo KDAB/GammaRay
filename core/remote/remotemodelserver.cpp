@@ -70,6 +70,16 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       msg.stream() << Protocol::ModelHeaderChanged << orientation << section << data;
       Server::stream() << msg;
     }
+
+    case Protocol::ModelSetDataRequest:
+    {
+      Protocol::ModelIndex index;
+      int role;
+      QVariant value;
+      msg.stream() >> index >> role >> value;
+
+      m_model->setData(Protocol::toQModelIndex(m_model, index), value, role);
+    }
   }
 }
 

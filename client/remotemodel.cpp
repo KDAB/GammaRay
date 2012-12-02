@@ -112,14 +112,16 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
 
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  // TODO
-  return QAbstractItemModel::setData(index, value, role);
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelSetDataRequest << Protocol::fromQModelIndex(index) << role << value;
+  Client::stream() << msg;
+  return false;
 }
 
 Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
 {
   // TODO
-  return QAbstractItemModel::flags(index);
+  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const

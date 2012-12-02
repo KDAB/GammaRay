@@ -31,7 +31,7 @@ int main(int argc, char** argv)
   view.setModel(&model);
   view.show();
 
-  RemoteModel model2(QLatin1String("com.kdab.GammaRay.ObjectList"));
+  RemoteModel model2(QLatin1String("com.kdab.GammaRay.StaticPropertyModel"));
   QTreeView view2;
   view2.setModel(&model2);
   view2.show();

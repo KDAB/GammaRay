@@ -39,7 +39,10 @@
 
 #include "propertyeditor/propertyeditorfactory.h"
 
+#include "remote/remotemodelserver.h"
+
 #include "kde/krecursivefilterproxymodel.h"
+#include <client/remotemodel.h>
 
 #include <QDebug>
 #include <QMenu>
@@ -85,6 +88,9 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   m_ui->staticPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
   m_ui->staticPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->staticPropertyView);
+
+  RemoteModelServer *modelServer = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.StaticPropertyModel"), this);
+  modelServer->setModel(proxy); // TODO proxy on client oder server side?
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
