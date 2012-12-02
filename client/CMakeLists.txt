@@ -11,3 +11,4 @@ add_executable(gammaray-client ${gammaray_client_srcs})
 
 target_link_libraries(gammaray-client ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_network)
 
+install(TARGETS gammaray-client ${INSTALL_TARGETS_DEFAULT_ARGS})
