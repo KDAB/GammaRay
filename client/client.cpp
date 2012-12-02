@@ -9,7 +9,7 @@
 
 using namespace GammaRay;
 
-Client::Client(QObject* parent): Endpoint(parent), m_model(0)
+Client::Client(QObject* parent): Endpoint(parent)
 {
 }
 
@@ -78,14 +78,14 @@ void Client::messageReceived(const Message& msg)
     }
   }
 
-  // ### temporary
-  if (m_model)
-    m_model->newMessage(msg);
+  dispatchMessage(msg);
 }
 
-void Client::setModel(RemoteModel* model)
+void Client::registerForObject(Protocol::ObjectAddress& objectAddress, QObject* handler, const char* slot)
 {
-  m_model = model;
+  // TODO implement unregistering as well
+  // TODO tell the server what we are monitoring, to reduce network traffic
+  registerMessageHandlerInternal(objectAddress, handler, slot);
 }
 
 #include "client.moc"

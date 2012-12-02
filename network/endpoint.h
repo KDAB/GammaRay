@@ -42,9 +42,16 @@ protected:
   void registerObjectInternal(const QString &objectName, Protocol::ObjectAddress objectAddress);
   void unregisterObjectInternal(const QString& objectName);
 
+  void registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject *receiver, const char* messageHandlerName);
+
+  void dispatchMessage(const GammaRay::Message& msg);
+
 protected:
   QMap<QString, Protocol::ObjectAddress> m_objectsAddresses;
   static Endpoint *s_instance;
+
+  // TODO make private and move the object monitoring from server here as well
+  QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> > m_messageHandlers;
 
 private slots:
   void readyRead();

@@ -96,4 +96,19 @@ void Endpoint::unregisterObjectInternal(const QString& objectName)
   m_objectsAddresses.remove(objectName);
 }
 
+void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject* receiver, const char* messageHandlerName)
+{
+  m_messageHandlers.insert(objectAddress, qMakePair<QObject*, QByteArray>(receiver, messageHandlerName));
+}
+
+void Endpoint::dispatchMessage(const Message& msg)
+{
+  if (!m_messageHandlers.contains(msg.address()))
+    return;
+  QObject *receiver = m_messageHandlers.value(msg.address()).first;
+  QByteArray method = m_messageHandlers.value(msg.address()).second;
+
+  QMetaObject::invokeMethod(receiver, method, Q_ARG(GammaRay::Message, msg));
+}
+
 #include "endpoint.moc"

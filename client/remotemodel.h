@@ -46,6 +46,7 @@ class RemoteModel : public QAbstractItemModel
     };
 
     void clear();
+    void connectToServer();
 
     Node* nodeForIndex(const QModelIndex &index) const;
     Node* nodeForIndex(const Protocol::ModelIndex &index) const;

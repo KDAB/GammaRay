@@ -1,6 +1,7 @@
 #ifndef GAMMARAY_CLIENT_H
 #define GAMMARAY_CLIENT_H
 
+#include <network/protocol.h>
 #include <network/endpoint.h>
 
 namespace GammaRay {
@@ -16,18 +17,12 @@ public:
 
   void connectToHost( /* TODO */ );
 
-  // ### temporary
-  void setModel(RemoteModel* model);
-
-  void registerForObject(const QString &serverObject, QObject *handler, const char* slot);
+  void registerForObject(Protocol::ObjectAddress &objectAddress, QObject *handler, const char* slot);
 
   static Client* instance();
 
 protected:
     void messageReceived(const Message& msg);
-
-private:
-  RemoteModel *m_model;
 };
 
 }

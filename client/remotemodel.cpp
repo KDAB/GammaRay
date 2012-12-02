@@ -24,6 +24,8 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   m_myAddress = Client::instance()->objectAddress(serverObject);
   connect(Client::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)), SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
   connect(Client::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)), SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
+
+  connectToServer();
 }
 
 RemoteModel::~RemoteModel()
@@ -196,7 +198,7 @@ void RemoteModel::serverRegistered(const QString& objectName, Protocol::ObjectAd
 {
   if (m_serverObject == objectName) {
     m_myAddress = objectAddress;
-    reset();
+    connectToServer();
   }
 }
 
@@ -282,5 +284,16 @@ void RemoteModel::clear()
   m_headers.clear();
   endResetModel();
 }
+
+void RemoteModel::connectToServer()
+{
+  if (m_myAddress == Protocol::InvalidObjectAddress)
+    return;
+
+  beginResetModel();
+  Client::instance()->registerForObject(m_myAddress, this, "newMessage");
+  endResetModel();
+}
+
 
 #include "remotemodel.moc"

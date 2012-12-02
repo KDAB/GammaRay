@@ -57,19 +57,14 @@ void Server::newConnection()
 
 void Server::messageReceived(const Message& msg)
 {
-  if (!m_messageHandlers.contains(msg.address()))
-    return;
-  QObject *receiver = m_messageHandlers.value(msg.address()).first;
-  QByteArray method = m_messageHandlers.value(msg.address()).second;
-
-  QMetaObject::invokeMethod(receiver, method, Q_ARG(GammaRay::Message, msg));
+  dispatchMessage(msg);
 }
 
 Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)
 {
   registerObjectInternal(objectName, ++m_nextAddress);
   Q_ASSERT(m_nextAddress);
-  m_messageHandlers.insert(m_nextAddress, qMakePair<QObject*, QByteArray>(receiver, messageHandlerName));
+  registerMessageHandlerInternal(m_nextAddress, receiver, messageHandlerName);
   m_objectToNameMap.insert(receiver, objectName);
   connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
 
