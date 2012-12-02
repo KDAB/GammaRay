@@ -12,8 +12,18 @@ int main(int argc, char** argv)
 {
   QApplication app(argc, argv);
 
+  QString hostName = QLatin1String("localhost");
+  quint16 port = Client::defaultPort();
+
+  if (app.arguments().size() == 2) {
+    hostName = app.arguments().at(1);
+  } else if (app.arguments().size() == 3) {
+    hostName = app.arguments().at(1);
+    port = app.arguments().at(2).toUShort();
+  }
+
   Client client;
-  client.connectToHost();
+  client.connectToHost(hostName, port);
   QObject::connect(&client, SIGNAL(disconnected()), &app, SLOT(quit()));
 
   RemoteModel model(QLatin1String("com.kdab.GammaRay.ObjectTree"));

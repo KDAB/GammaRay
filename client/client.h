@@ -8,6 +8,7 @@ namespace GammaRay {
 
 class RemoteModel;
 
+/** Client-side connection endpoint. */
 class Client : public Endpoint
 {
   Q_OBJECT
@@ -15,7 +16,7 @@ public:
   explicit Client(QObject *parent = 0);
   ~Client();
 
-  void connectToHost( /* TODO */ );
+  void connectToHost(const QString &hostName, quint16 port);
 
   void registerForObject(Protocol::ObjectAddress &objectAddress, QObject *handler, const char* slot);
 

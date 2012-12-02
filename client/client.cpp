@@ -1,5 +1,4 @@
 #include "client.h"
-#include "remotemodel.h" // ### temporary
 
 #include <network/message.h>
 
@@ -22,10 +21,11 @@ Client* Client::instance()
   return static_cast<Client*>(s_instance);
 }
 
-void Client::connectToHost()
+void Client::connectToHost(const QString &hostName, quint16 port)
 {
+  qDebug() << Q_FUNC_INFO << hostName << port;
   QTcpSocket *sock = new QTcpSocket(this);
-  sock->connectToHost(QHostAddress::LocalHost, defaultPort());
+  sock->connectToHost(hostName, port);
   // TODO: make async
   sock->waitForConnected();
 
