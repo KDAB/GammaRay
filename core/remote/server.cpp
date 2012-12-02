@@ -50,7 +50,7 @@ void Server::newConnection()
 
   {
     Message msg(m_myAddress);
-    msg.stream() << Protocol::ObjectMapReply << m_objectsAddresses;
+    msg.stream() << Protocol::ObjectMapReply << objectAddresses();
     stream() << msg;
   }
 }

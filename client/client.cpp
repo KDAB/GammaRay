@@ -71,7 +71,7 @@ void Client::messageReceived(const Message& msg)
           if (it.key() != QLatin1String("com.kdab.GammaRay.Server"))
             registerObjectInternal(it.key(), it.value());
         }
-        qDebug() << Q_FUNC_INFO << "ObjectMapReply" << m_objectsAddresses;
+        qDebug() << Q_FUNC_INFO << "ObjectMapReply" << objectAddresses();
       }
       default:
         return;

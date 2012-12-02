@@ -12,7 +12,7 @@ Endpoint::Endpoint(QObject* parent): QObject(parent), m_socket(0)
   Q_ASSERT(!s_instance);
   s_instance = this;
 
-  m_objectsAddresses.insert(QLatin1String("com.kdab.GammaRay.Server"), Protocol::InvalidObjectAddress + 1);
+  m_objectAddresses.insert(QLatin1String("com.kdab.GammaRay.Server"), Protocol::InvalidObjectAddress + 1);
 }
 
 Endpoint::~Endpoint()
@@ -71,8 +71,8 @@ void Endpoint::connectionClosed()
 
 Protocol::ObjectAddress Endpoint::objectAddress(const QString& objectName) const
 {
-  const QMap<QString, Protocol::ObjectAddress>::const_iterator it = m_objectsAddresses.constFind(objectName);
-  if (it != m_objectsAddresses.constEnd())
+  const QMap<QString, Protocol::ObjectAddress>::const_iterator it = m_objectAddresses.constFind(objectName);
+  if (it != m_objectAddresses.constEnd())
     return it.value();
   return Protocol::InvalidObjectAddress;
 }
@@ -80,20 +80,20 @@ Protocol::ObjectAddress Endpoint::objectAddress(const QString& objectName) const
 void Endpoint::registerObjectInternal(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
   qDebug() << objectName << objectAddress;
-  Q_ASSERT(!m_objectsAddresses.contains(objectName));
-  Q_ASSERT(!m_objectsAddresses.values().contains(objectAddress));
+  Q_ASSERT(!m_objectAddresses.contains(objectName));
+  Q_ASSERT(!m_objectAddresses.values().contains(objectAddress));
   Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);
 
-  m_objectsAddresses.insert(objectName, objectAddress);
+  m_objectAddresses.insert(objectName, objectAddress);
   emit objectRegistered(objectName, objectAddress);
 }
 
 void Endpoint::unregisterObjectInternal(const QString& objectName)
 {
-  Q_ASSERT(m_objectsAddresses.contains(objectName));
+  Q_ASSERT(m_objectAddresses.contains(objectName));
 
-  emit objectUnregistered(objectName, m_objectsAddresses.value(objectName));
-  m_objectsAddresses.remove(objectName);
+  emit objectUnregistered(objectName, m_objectAddresses.value(objectName));
+  m_objectAddresses.remove(objectName);
 }
 
 void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject* receiver, const char* messageHandlerName)
@@ -109,6 +109,11 @@ void Endpoint::dispatchMessage(const Message& msg)
   QByteArray method = m_messageHandlers.value(msg.address()).second;
 
   QMetaObject::invokeMethod(receiver, method, Q_ARG(GammaRay::Message, msg));
+}
+
+QMap< QString, Protocol::ObjectAddress > Endpoint::objectAddresses() const
+{
+  return m_objectAddresses;
 }
 
 #include "endpoint.moc"

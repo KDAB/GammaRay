@@ -13,7 +13,11 @@ namespace GammaRay {
 
 class Message;
 
-/** Network protocol endpoint. */
+/** Network protocol endpoint.
+ *  Contains:
+ *  - object address <-> object name mapping
+ *  - message handler registration and message dispatching
+ */
 class Endpoint : public QObject
 {
   Q_OBJECT
@@ -47,7 +51,7 @@ protected:
   void dispatchMessage(const GammaRay::Message& msg);
 
 protected:
-  QMap<QString, Protocol::ObjectAddress> m_objectsAddresses;
+  QMap<QString, Protocol::ObjectAddress> objectAddresses() const;
   static Endpoint *s_instance;
 
   // TODO make private and move the object monitoring from server here as well
@@ -58,6 +62,7 @@ private slots:
   void connectionClosed();
 
 private:
+  QMap<QString, Protocol::ObjectAddress> m_objectAddresses;
   QPointer<QIODevice> m_socket;
   QScopedPointer<QDataStream> m_stream;
 };
