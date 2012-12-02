@@ -17,6 +17,8 @@ class RemoteModel : public QAbstractItemModel
     explicit RemoteModel(const QString &serverObject, QObject *parent = 0);
     ~RemoteModel();
 
+    bool isConnected() const;
+
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex& child) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -28,10 +30,13 @@ class RemoteModel : public QAbstractItemModel
 
   public slots:
     void newMessage(const GammaRay::Message &msg);
+    void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
+    void serverUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress);
 
   private:
     struct Node { // represents one row
       Node() : parent(0), rowCount(-1), columnCount(-1) {}
+      ~Node();
       Node* parent;
       QVector<Node*> children;
       qint32 rowCount;
@@ -39,6 +44,8 @@ class RemoteModel : public QAbstractItemModel
       QHash<int, QHash<int, QVariant> > data; // column -> role -> data
       QHash<int, int> flags;                  // column -> flags
     };
+
+    void clear();
 
     Node* nodeForIndex(const QModelIndex &index) const;
     Node* nodeForIndex(const Protocol::ModelIndex &index) const;

@@ -65,7 +65,12 @@ void Client::messageReceived(const Message& msg)
       }
       case Protocol::ObjectMapReply:
       {
-        msg.stream() >> m_objectsAddresses;
+        QMap<QString, Protocol::ObjectAddress> objectMap;
+        msg.stream() >> objectMap;
+        for (QMap<QString, Protocol::ObjectAddress>::const_iterator it = objectMap.constBegin(); it != objectMap.constEnd(); ++it) {
+          if (it.key() != QLatin1String("com.kdab.GammaRay.Server"))
+            registerObjectInternal(it.key(), it.value());
+        }
         qDebug() << Q_FUNC_INFO << "ObjectMapReply" << m_objectsAddresses;
       }
       default:

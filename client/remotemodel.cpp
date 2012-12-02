@@ -8,6 +8,12 @@
 
 using namespace GammaRay;
 
+RemoteModel::Node::~Node()
+{
+  qDeleteAll(children);
+}
+
+
 RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   QAbstractItemModel(parent),
   m_serverObject(serverObject),
@@ -15,16 +21,26 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
 {
   m_root = new Node;
 
-  // TODO watch for object appearing/disappearing
-  m_myAddress = 2; //Client::instance()->objectAddress(serverObject);
+  m_myAddress = Client::instance()->objectAddress(serverObject);
+  connect(Client::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)), SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
+  connect(Client::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)), SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
 }
 
 RemoteModel::~RemoteModel()
 {
+  delete m_root;
+}
+
+bool RemoteModel::isConnected() const
+{
+  return m_myAddress != Protocol::InvalidObjectAddress;
 }
 
 QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) const
 {
+  if (!isConnected())
+    return QModelIndex();
+
 //   qDebug() << row << column << parent << rowCount(parent);
   Node *parentNode = nodeForIndex(parent);
   Q_ASSERT(parentNode->children.size() >= parentNode->rowCount);
@@ -47,6 +63,9 @@ QModelIndex RemoteModel::parent(const QModelIndex &index) const
 
 int RemoteModel::rowCount(const QModelIndex &index) const
 {
+  if (!isConnected())
+    return 0;
+
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
   if (node->rowCount < 0) {
@@ -58,6 +77,9 @@ int RemoteModel::rowCount(const QModelIndex &index) const
 
 int RemoteModel::columnCount(const QModelIndex &index) const
 {
+  if (!isConnected())
+    return 0;
+
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
   if (node->columnCount < 0) {
@@ -100,6 +122,9 @@ Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+  if (!isConnected())
+    return QVariant();
+
   if (!m_headers.contains(orientation) || !m_headers.value(orientation).contains(section))
     requestHeaderData(orientation, section);
 
@@ -167,6 +192,23 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
   }
 }
 
+void RemoteModel::serverRegistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
+{
+  if (m_serverObject == objectName) {
+    m_myAddress = objectAddress;
+    reset();
+  }
+}
+
+void RemoteModel::serverUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
+{
+  Q_UNUSED(objectName);
+  if (m_myAddress == objectAddress) {
+    m_myAddress = Protocol::InvalidObjectAddress;
+    clear();
+  }
+}
+
 RemoteModel::Node* RemoteModel::nodeForIndex(const QModelIndex &index) const
 {
   if (!index.isValid())
@@ -230,6 +272,15 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
   Message msg(m_myAddress);
   msg.stream() << Protocol::ModelHeaderRequest << qint8(orientation) << qint32(section);
   Client::stream() << msg;
+}
+
+void RemoteModel::clear()
+{
+  beginResetModel();
+  delete m_root;
+  m_root = new Node;
+  m_headers.clear();
+  endResetModel();
 }
 
 #include "remotemodel.moc"
