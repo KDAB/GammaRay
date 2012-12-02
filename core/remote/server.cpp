@@ -85,7 +85,11 @@ void Server::objectDestroyed(QObject* object)
   m_messageHandlers.remove(addr);
   unregisterObjectInternal(objectName);
 
-  // TODO send notification message
+  if (isConnected()) {
+    Message msg(m_myAddress);
+    msg.stream() << Protocol::ObjectRemoved << objectName;
+    stream() << msg;
+  }
 }
 
 
