@@ -21,8 +21,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_16">
        <item>
         <widget class="QLineEdit" name="codecText">
+         <property name="text">
+          <string/>
+         </property>
          <property name="placeholderText">
-          <string>codec preview text</string>
+          <string>Enter text for preview...</string>
          </property>
         </widget>
        </item>

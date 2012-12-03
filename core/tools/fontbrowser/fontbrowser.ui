@@ -35,8 +35,11 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QLineEdit" name="fontText">
+         <property name="text">
+          <string>The quick brown fox jumps over the lazy dog</string>
+         </property>
          <property name="placeholderText">
-          <string>preview text</string>
+          <string>Enter some text here...</string>
          </property>
         </widget>
        </item>

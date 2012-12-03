@@ -76,6 +76,9 @@ FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
           m_selectedFontModel, SLOT(toggleUnderlineFont(bool)));
   connect(ui->pointSize, SIGNAL(valueChanged(int)),
           m_selectedFontModel, SLOT(setPointSize(int)));
+
+  // init
+  m_selectedFontModel->updateText(ui->fontText->text());
 }
 
 void FontBrowser::updateFonts(const QItemSelection &selected, const QItemSelection &deselected)
