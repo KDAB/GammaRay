@@ -30,6 +30,7 @@
 
 #include "include/objectmodel.h"
 #include "include/probeinterface.h"
+#include "include/util.h"
 
 #include <kde/krecursivefilterproxymodel.h>
 
@@ -78,7 +79,7 @@ void ModelInspectorWidget::modelCellSelected(const QModelIndex &index)
 
   ui->indexLabel->setText(index.isValid() ? tr("Row: %1 Column: %2").arg(index.row()).arg(index.column()) : tr("Invalid"));
   ui->internalIdLabel->setText(QString::number(index.internalId()));
-  ui->internalPtrLabel->setText(QLatin1String("0x") + QString::number(reinterpret_cast<long>(index.internalPointer()), 16));
+  ui->internalPtrLabel->setText(Util::addressToString(index.internalPointer()));
 }
 
 void ModelInspectorWidget::widgetSelected(QWidget *widget)
