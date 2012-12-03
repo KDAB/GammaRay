@@ -24,7 +24,7 @@ GammaRay can:
    debugging a proxy model chain for example.
 
  * Browse the QAbstractProxyModel (QAPM) hierarchy.
- 
+
  * Browse the QGraphicsView (QGV) item tree of any QGV scene.
 
  * Show a live preview of QGV items, including showing their coordinate system,
@@ -52,6 +52,28 @@ GammaRay can:
  * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
 
 Head Engineer for GammaRay is Volker Krause <volker.krause@kdab.com>
+
+Contact
+=======
+
+* Feel free to visit us on IRC: Channel is #gammaray on Freenode (irc://irc.freenode.net/gammaray)
+* Or send a mail to our mailing list: https://mail.kdab.com/mailman/listinfo/gammaray-interest
+
+How to contribute
+=================
+
+If you find what looks like a bug:
+
+1. Search the mailing list to see if anyone else had the same issue.
+2. Check the GitHub issue tracker (http://github.com/KDAB/GammaRay/issues/) to see if anyone else has reported issue.
+3. If you dont see anything, create an issue with information on how to reproduce it.
+
+If you want to contribute an enhancement or a fix:
+
+1. Fork the project on github.
+2. Make your changes with tests.
+3. Commit and push the changes to your fork.
+4. Send a pull request.
 
 License
 =======
