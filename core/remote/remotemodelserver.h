@@ -23,6 +23,9 @@ class RemoteModelServer : public QObject
   public slots:
     void newRequest(const GammaRay::Message &msg);
 
+  private slots:
+    void dataChanged(const QModelIndex &begin, const QModelIndex &end);
+
   private:
     QAbstractItemModel *m_model;
     Protocol::ObjectAddress m_myAddress;

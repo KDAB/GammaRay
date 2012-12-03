@@ -22,10 +22,11 @@ RemoteModelServer::~RemoteModelServer()
 
 void RemoteModelServer::setModel(QAbstractItemModel *model)
 {
-  // TODO send reset
+  // TODO send reset, disconnect old model
   m_model = model;
 
-  // TODO connect
+  // TODO connect all signals
+  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
 }
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
@@ -81,6 +82,14 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       m_model->setData(Protocol::toQModelIndex(m_model, index), value, role);
     }
   }
+}
+
+void RemoteModelServer::dataChanged(const QModelIndex& begin, const QModelIndex& end)
+{
+  // TODO check if somebody is listening (here or in Server?)
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelContentChanged << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end);
+  Server::stream() << msg;
 }
 
 #include "remotemodelserver.moc"

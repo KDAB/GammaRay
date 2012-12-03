@@ -193,6 +193,33 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
       break;
     }
+
+    case Protocol::ModelContentChanged:
+    {
+      Protocol::ModelIndex beginIndex, endIndex;
+      msg.stream() >> beginIndex >> endIndex;
+      Node *node = nodeForIndex(beginIndex);
+      if (node == m_root)
+        break;
+
+      Q_ASSERT(beginIndex.last().first <= endIndex.last().first);
+      Q_ASSERT(beginIndex.last().second <= endIndex.last().second);
+
+      // reset content for refetching
+      for (int row = beginIndex.last().first; row <= endIndex.last().first; ++row) {
+        Node *currentRow = node->parent->children.at(row);
+        for (int col = beginIndex.last().second; col <= endIndex.last().second; ++col) {
+          currentRow->data.remove(col);
+          currentRow->flags.remove(col);
+        }
+      }
+
+      const QModelIndex qmiBegin = modelIndexForNode(node, beginIndex.last().second);
+      const QModelIndex qmiEnd = qmiBegin.sibling(endIndex.last().first, endIndex.last().second);
+
+      emit dataChanged(qmiBegin, qmiEnd);
+      break;
+    }
   }
 }
 
