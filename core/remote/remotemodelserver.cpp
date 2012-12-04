@@ -27,6 +27,11 @@ void RemoteModelServer::setModel(QAbstractItemModel *model)
 
   // TODO connect all signals
   connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
+  connect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), SLOT(headerDataChanged(Qt::Orientation,int,int)));
+  connect(m_model, SIGNAL(rowsInserted(QModelIndex,int, int)), SLOT(rowsInserted(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(rowsRemoved(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
+  connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
 }
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
@@ -87,8 +92,53 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 void RemoteModelServer::dataChanged(const QModelIndex& begin, const QModelIndex& end)
 {
   // TODO check if somebody is listening (here or in Server?)
+  if (!Server::isConnected())
+    return;
   Message msg(m_myAddress);
   msg.stream() << Protocol::ModelContentChanged << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end);
+  Server::stream() << msg;
+}
+
+void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first, int last)
+{
+  if (!Server::isConnected())
+    return;
+  // TODO
+}
+
+void RemoteModelServer::rowsInserted(const QModelIndex& parent, int start, int end)
+{
+  if (!Server::isConnected())
+    return;
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelRowsAdded << Protocol::fromQModelIndex(parent) << start << end;
+  Server::stream() << msg;
+}
+
+void RemoteModelServer::rowsRemoved(const QModelIndex& parent, int start, int end)
+{
+  if (!Server::isConnected())
+    return;
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelRowsRemoved << Protocol::fromQModelIndex(parent) << start << end;
+  Server::stream() << msg;
+}
+
+void RemoteModelServer::layoutChanged()
+{
+  if (!Server::isConnected())
+    return;
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelLayoutChanged;
+  Server::stream() << msg;
+}
+
+void RemoteModelServer::modelReset()
+{
+  if (!Server::isConnected())
+    return;
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelReset;
   Server::stream() << msg;
 }
 

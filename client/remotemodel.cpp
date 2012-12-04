@@ -220,6 +220,20 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       emit dataChanged(qmiBegin, qmiEnd);
       break;
     }
+
+    case Protocol::ModelRowsAdded:
+    case Protocol::ModelRowsRemoved:
+    case Protocol::ModelColumnsAdded:
+    case Protocol::ModelColumnsRemoved:
+    case Protocol::ModelLayoutChanged:
+      // TODO
+      break;
+
+    case Protocol::ModelReset:
+    {
+      clear();
+      break;
+    }
   }
 }
 

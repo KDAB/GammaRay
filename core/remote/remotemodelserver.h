@@ -25,6 +25,11 @@ class RemoteModelServer : public QObject
 
   private slots:
     void dataChanged(const QModelIndex &begin, const QModelIndex &end);
+    void headerDataChanged(Qt::Orientation orientation, int first, int last);
+    void rowsInserted(const QModelIndex &parent, int start, int end);
+    void rowsRemoved(const QModelIndex &parent, int start, int end);
+    void layoutChanged();
+    void modelReset();
 
   private:
     QAbstractItemModel *m_model;
