@@ -24,6 +24,7 @@ enum MessageType {
   ModelContentRequest,
   ModelHeaderRequest,
   ModelSetDataRequest,
+  ModelSyncBarrier,
 
   // server -> client
   ServerVersion,
@@ -35,6 +36,7 @@ enum MessageType {
   ModelRowColumnCountReply,
   ModelContentReply,
   ModelContentChanged,
+  ModelHeaderReply,
   ModelHeaderChanged,
   ModelRowsAdded,
   ModelRowsRemoved,

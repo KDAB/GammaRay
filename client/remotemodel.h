@@ -48,6 +48,8 @@ class RemoteModel : public QAbstractItemModel
     void clear();
     void connectToServer();
 
+    bool checkSyncBarrier(const Message &msg);
+
     Node* nodeForIndex(const QModelIndex &index) const;
     Node* nodeForIndex(const Protocol::ModelIndex &index) const;
     QModelIndex modelIndexForNode(GammaRay::RemoteModel::Node* node, int column) const;
@@ -62,6 +64,8 @@ class RemoteModel : public QAbstractItemModel
 
     QString m_serverObject;
     Protocol::ObjectAddress m_myAddress;
+
+    qint32 m_currentSyncBarrier, m_targetSyncBarrier;
 };
 
 }

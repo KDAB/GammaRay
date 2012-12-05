@@ -17,7 +17,9 @@ RemoteModel::Node::~Node()
 RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   QAbstractItemModel(parent),
   m_serverObject(serverObject),
-  m_myAddress(Protocol::InvalidObjectAddress)
+  m_myAddress(Protocol::InvalidObjectAddress),
+  m_currentSyncBarrier(0),
+  m_targetSyncBarrier(0)
 {
   m_root = new Node;
 
@@ -137,6 +139,9 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
 
 void RemoteModel::newMessage(const GammaRay::Message& msg)
 {
+  if (!checkSyncBarrier(msg))
+    return;
+
   switch (msg.type()) {
     case Protocol::ModelRowColumnCountReply:
     {
@@ -171,7 +176,6 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.stream() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node);
-      qDebug() << "content reply" << index << node->data;
       typedef QMap<int, QVariant> ItemData;
       ItemData itemData;
       msg.stream() >> itemData;
@@ -183,7 +187,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       break;
     }
 
-    case Protocol::ModelHeaderChanged:
+    case Protocol::ModelHeaderReply:
     {
       qint8 orientation;
       qint32 section;
@@ -226,8 +230,10 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelColumnsAdded:
     case Protocol::ModelColumnsRemoved:
     case Protocol::ModelLayoutChanged:
+    {
       // TODO
-      break;
+      qDebug() << Q_FUNC_INFO << "not implemented yet" << msg.type();
+    }
 
     case Protocol::ModelReset:
     {
@@ -288,7 +294,6 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
     return;
   node->rowCount = -2;
 
-  qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
   Message msg(m_myAddress);
   msg.stream() << Protocol::ModelRowColumnCountRequest << Protocol::fromQModelIndex(index);
   Client::stream() << msg;
@@ -302,7 +307,6 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   Q_ASSERT(!node->flags.contains(index.column()));
 
   node->data.insert(index.column(), QHash<int, QVariant>()); // mark pending request
-  qDebug() << Q_FUNC_INFO << index << Protocol::fromQModelIndex(index);
 
   Message msg(m_myAddress);
   msg.stream() << Protocol::ModelContentRequest << Protocol::fromQModelIndex(index);
@@ -321,7 +325,13 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 
 void RemoteModel::clear()
 {
+  qDebug() << Q_FUNC_INFO;
   beginResetModel();
+
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelSyncBarrier << ++m_targetSyncBarrier;
+  Client::stream() << msg;
+
   delete m_root;
   m_root = new Node;
   m_headers.clear();
@@ -338,5 +348,12 @@ void RemoteModel::connectToServer()
   endResetModel();
 }
 
+bool RemoteModel::checkSyncBarrier(const Message& msg)
+{
+  if (msg.type() == Protocol::ModelSyncBarrier)
+    msg.stream() >> m_currentSyncBarrier;
+
+  return m_currentSyncBarrier == m_targetSyncBarrier;
+}
 
 #include "remotemodel.moc"
