@@ -116,7 +116,9 @@ void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first
 {
   if (!Server::isConnected())
     return;
-  // TODO
+  Message msg(m_myAddress);
+  msg.stream() << Protocol::ModelHeaderChanged << qint8(orientation) << first << last;
+  Server::stream() << msg;
 }
 
 void RemoteModelServer::rowsInserted(const QModelIndex& parent, int start, int end)

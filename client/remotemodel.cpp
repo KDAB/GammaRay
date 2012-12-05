@@ -225,6 +225,20 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       break;
     }
 
+    case Protocol::ModelHeaderChanged:
+    {
+      qint8 ori;
+      int first, last;
+      msg.stream() >> ori >> first >> last;
+      const Qt::Orientation orientation = static_cast<Qt::Orientation>(ori);
+
+      for (int i = first; i < last; ++i)
+        m_headers[orientation].remove(i);
+
+      emit headerDataChanged(orientation, first, last);
+      break;
+    }
+
     case Protocol::ModelRowsAdded:
     case Protocol::ModelRowsRemoved:
     case Protocol::ModelColumnsAdded:
