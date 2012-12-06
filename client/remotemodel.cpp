@@ -276,6 +276,33 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     }
 
     case Protocol::ModelRowsRemoved:
+    {
+      Protocol::ModelIndex parentIndex;
+      int first, last;
+      msg.stream() >> parentIndex >> first >> last;
+      Q_ASSERT(last >= first);
+
+      Node *parentNode = nodeForIndex(parentIndex);
+      if (!parentNode)
+        return; // we don't know the parent yet, so we don't care about changes to it either
+        Q_ASSERT(parentNode->rowCount == parentNode->children.size());
+
+      const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
+      beginRemoveRows(qmiParent, first, last);
+
+      // delete nodes
+      for (int i = first; i <= last; ++i)
+        delete parentNode->children.at(i);
+      parentNode->children.remove(first, last - first + 1);
+
+      // adjust row count
+      parentNode->rowCount -= last - first + 1;
+      Q_ASSERT(parentNode->rowCount == parentNode->children.size());
+
+      endRemoveRows();
+      break;
+    }
+
     case Protocol::ModelColumnsAdded:
     case Protocol::ModelColumnsRemoved:
     case Protocol::ModelLayoutChanged:
