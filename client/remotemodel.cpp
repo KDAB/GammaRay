@@ -303,7 +303,9 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       break;
     }
 
+    case Protocol::ModelRowsMoved:
     case Protocol::ModelColumnsAdded:
+    case Protocol::ModelColumnsMoved:
     case Protocol::ModelColumnsRemoved:
     case Protocol::ModelLayoutChanged:
     {

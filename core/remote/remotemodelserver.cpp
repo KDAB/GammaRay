@@ -25,11 +25,14 @@ void RemoteModelServer::setModel(QAbstractItemModel *model)
   // TODO send reset, disconnect old model
   m_model = model;
 
-  // TODO connect all signals
   connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
   connect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), SLOT(headerDataChanged(Qt::Orientation,int,int)));
-  connect(m_model, SIGNAL(rowsInserted(QModelIndex,int, int)), SLOT(rowsInserted(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(rowsInserted(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
   connect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(rowsRemoved(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)), SLOT(columnsInserted(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
+  connect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), SLOT(columnsRemoved(QModelIndex,int,int)));
   connect(m_model, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
   connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
 }
@@ -42,7 +45,6 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       Protocol::ModelIndex index;
       msg.stream() >> index;
       const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
-      qDebug() << "row col count for" << index << qmIndex;
 
       Message msg(m_myAddress);
       msg.stream() << Protocol::ModelRowColumnCountReply << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
@@ -123,20 +125,32 @@ void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first
 
 void RemoteModelServer::rowsInserted(const QModelIndex& parent, int start, int end)
 {
-  if (!Server::isConnected())
-    return;
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelRowsAdded << Protocol::fromQModelIndex(parent) << start << end;
-  Server::stream() << msg;
+  sendAddRemoveMessage(Protocol::ModelRowsAdded, parent, start, end);
+}
+
+void RemoteModelServer::rowsMoved(const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationRow)
+{
+  sendMoveMessage(Protocol::ModelRowsMoved, sourceParent, sourceStart, sourceEnd, destinationParent, destinationRow);
 }
 
 void RemoteModelServer::rowsRemoved(const QModelIndex& parent, int start, int end)
 {
-  if (!Server::isConnected())
-    return;
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelRowsRemoved << Protocol::fromQModelIndex(parent) << start << end;
-  Server::stream() << msg;
+  sendAddRemoveMessage(Protocol::ModelRowsRemoved, parent, start, end);
+}
+
+void RemoteModelServer::columnsInserted(const QModelIndex& parent, int start, int end)
+{
+  sendAddRemoveMessage(Protocol::ModelColumnsAdded, parent, start, end);
+}
+
+void RemoteModelServer::columnsMoved(const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationColumn)
+{
+  sendMoveMessage(Protocol::ModelColumnsMoved, sourceParent, sourceStart, sourceEnd, destinationParent, destinationColumn);
+}
+
+void RemoteModelServer::columnsRemoved(const QModelIndex& parent, int start, int end)
+{
+  sendAddRemoveMessage(Protocol::ModelColumnsRemoved, parent, start, end);
 }
 
 void RemoteModelServer::layoutChanged()
@@ -154,6 +168,27 @@ void RemoteModelServer::modelReset()
     return;
   Message msg(m_myAddress);
   msg.stream() << Protocol::ModelReset;
+  Server::stream() << msg;
+}
+
+void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const QModelIndex& parent, int start, int end)
+{
+  if (!Server::isConnected())
+    return;
+  Message msg(m_myAddress);
+  msg.stream() << type << Protocol::fromQModelIndex(parent) << start << end;
+  Server::stream() << msg;
+
+}
+
+void RemoteModelServer::sendMoveMessage(Protocol::MessageType type, const QModelIndex& sourceParent, int sourceStart, int sourceEnd,
+                                        const QModelIndex& destinationParent, int destinationIndex)
+{
+  if (!Server::isConnected())
+    return;
+  Message msg(m_myAddress);
+  msg.stream() << type << Protocol::fromQModelIndex(sourceParent) << qint32(sourceStart) << qint32(sourceEnd)
+               << Protocol::fromQModelIndex(destinationParent) << qint32(destinationIndex);
   Server::stream() << msg;
 }
 
