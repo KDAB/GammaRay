@@ -61,7 +61,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         break;
 
       Message msg(m_myAddress);
-      msg.stream() << Protocol::ModelContentReply << index << m_model->itemData(qmIndex);
+      msg.stream() << Protocol::ModelContentReply << index << m_model->itemData(qmIndex) << qint32(m_model->flags(qmIndex));
       Server::stream() << msg;
       break;
     }

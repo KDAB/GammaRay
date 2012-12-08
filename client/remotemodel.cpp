@@ -122,8 +122,10 @@ bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int r
 
 Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
 {
-  // TODO
-  return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+  Node* node = nodeForIndex(index);
+  Q_ASSERT(node);
+
+  return node->flags.value(index.column());
 }
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -178,10 +180,12 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(node);
       typedef QMap<int, QVariant> ItemData;
       ItemData itemData;
-      msg.stream() >> itemData;
+      qint32 flags;
+      msg.stream() >> itemData >> flags;
       for (ItemData::const_iterator it = itemData.constBegin(); it != itemData.constEnd(); ++it) {
         node->data[index.last().second].insert(it.key(), it.value());
       }
+      node->flags[index.last().second] = static_cast<Qt::ItemFlags>(flags);
       const QModelIndex qmi = modelIndexForNode(node, index.last().second);
       emit dataChanged(qmi, qmi);
       break;

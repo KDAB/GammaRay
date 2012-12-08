@@ -42,7 +42,7 @@ class RemoteModel : public QAbstractItemModel
       qint32 rowCount;
       qint32 columnCount;
       QHash<int, QHash<int, QVariant> > data; // column -> role -> data
-      QHash<int, int> flags;                  // column -> flags
+      QHash<int, Qt::ItemFlags> flags;        // column -> flags
     };
 
     void clear();
