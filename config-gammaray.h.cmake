@@ -7,3 +7,4 @@
 
 #cmakedefine HAVE_PRIVATE_QT_HEADERS
 
+#cmakedefine HAVE_STDINT_H

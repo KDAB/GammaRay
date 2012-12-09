@@ -22,11 +22,15 @@
 #ifndef GAMMARAY_ABSTRACTFUNCTIONOVERWRITER_H
 #define GAMMARAY_ABSTRACTFUNCTIONOVERWRITER_H
 
+#include "config-gammaray.h"
+
 #include <QList>
 #include <QString>
 
 #define __STDC_LIMIT_MACROS
+#if defined(HAVE_STDINT_H)
 #include <stdint.h>
+#endif
 
 #if defined(_M_X64) || defined(__amd64) || defined(__x86_64)
 #define ARCH_64
