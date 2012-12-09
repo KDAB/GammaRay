@@ -186,6 +186,9 @@ if(GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES)
   add_definitions(-DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES)
 endif()
 
+include(CheckIncludeFiles)
+check_include_files(stdint.h HAVE_STDINT_H)
+
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
