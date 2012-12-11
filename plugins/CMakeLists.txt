@@ -14,6 +14,6 @@ add_subdirectory(statemachineviewer)
 add_subdirectory(timertop)
 add_subdirectory(kjobtracker)
 
-if(QT_QTWEBKIT_FOUND OR Qt5WebKit_FOUND)
+if(QT_QTWEBKIT_FOUND OR Qt5WebKitWidgets_FOUND)
   add_subdirectory(webinspector)
 endif()

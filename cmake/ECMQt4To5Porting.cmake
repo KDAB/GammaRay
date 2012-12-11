@@ -164,7 +164,7 @@ set(_qt_modules
   Xml
   UiTools
   Quick1
-  WebKit
+  WebKitWidgets
   Sql
   OpenGL
 )

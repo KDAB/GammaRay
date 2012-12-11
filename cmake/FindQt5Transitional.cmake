@@ -51,7 +51,7 @@ if (Qt5Core_FOUND)
           PrintSupport
           Concurrent
           UiTools
-          WebKit
+          WebKitWidgets
           OpenGL
         )
       find_package(Qt5${_component})
