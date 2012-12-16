@@ -96,7 +96,11 @@ endif()
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
-set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/qt4/plugins")
+if (Qt5Core_FOUND)
+  set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/qt5/plugins")
+else()
+  set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/qt4/plugins")
+endif()
 
 set(
   INSTALL_TARGETS_DEFAULT_ARGS
