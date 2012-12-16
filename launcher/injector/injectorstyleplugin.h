@@ -31,6 +31,9 @@ namespace GammaRay {
 class InjectorStylePlugin : public QStylePlugin
 {
   Q_OBJECT
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE "injectorstyle.json")
+#endif
   public:
     QStyle *create(const QString &);
     QStringList keys() const;
