@@ -34,7 +34,9 @@
 
 #include "kde/krecursivefilterproxymodel.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <private/qguiplatformplugin_p.h> //krazy:exclude=camelcase
+#endif
 
 #include <QComboBox>
 #include <QCoreApplication>
@@ -71,6 +73,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     // reference on the style during destruction
     setStyle(defaultStyle);
   }
+#else
+#pragma message("Qt 5: port this")
 #endif
 
   ui.setupUi(this);

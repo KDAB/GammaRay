@@ -129,6 +129,9 @@ macro_log_feature(
   "Required for the webinspector tool"
 )
 
+# TODO: properly port this, Qt5 installs private headers so we can just use them
+# be sure to keep the Qt4 _p.h copies in 3rdparty/qt out of the search path though
+if (NOT Qt5Core_FOUND)
 find_path(
   QT_PRIVATE_INCLUDE_DIR private/qobject_p.h
   PATHS ${QT_INCLUDES}
@@ -150,6 +153,8 @@ else()
   # needs to go before Qt includes, in case we have non-working headers with the same name there
   include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
 endif()
+endif()
+
 macro_log_feature(
   HAVE_PRIVATE_QT_HEADERS
   "Qt internals"
