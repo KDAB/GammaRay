@@ -25,6 +25,9 @@
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <private/qguiplatformplugin_p.h> //krazy:exclude=camelcase
+#else
+#include <qpa/qplatformtheme.h>
+#include <private/qguiapplication_p.h>
 #endif
 
 #include <QDebug>
@@ -44,7 +47,10 @@ QStyle *InjectorStylePlugin::create(const QString &)
   static QGuiPlatformPlugin defaultGuiPlatform;
   return QStyleFactory::create(defaultGuiPlatform.styleName());
 #else
-#pragma message("Qt 5: port this")
+  foreach(const QString &styleName, QGuiApplicationPrivate::platform_theme->defaultThemeHint(QPlatformTheme::StyleNames).toStringList()) {
+    if (QStyle *style = QStyleFactory::create(styleName))
+      return style;
+  }
   return 0;
 #endif
 }
