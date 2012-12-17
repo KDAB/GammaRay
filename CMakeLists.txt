@@ -62,17 +62,33 @@ include(GammaRayMacros)
 include(MacroLogFeature)
 
 set(QT_MIN_VERSION "4.7.0")
-find_package(Qt5Transitional REQUIRED
-  Core
-  Gui
-  Svg
-  Test
-)
-find_package(Qt5Transitional COMPONENTS
-  Script
-  ScriptTools
-  WebKit
-)
+
+# try Qt5 first, and prefer that if found
+find_package(Qt5Core QUIET)
+if (Qt5Core_FOUND)
+  find_package(Qt5Gui REQUIRED)
+  find_package(Qt5Widgets REQUIRED)
+  find_package(Qt5Concurrent REQUIRED)
+  find_package(Qt5PrintSupport REQUIRED) # TODO this should be optional
+
+  find_package(Qt5Test)
+  find_package(Qt5Svg)
+  find_package(Qt5Script)
+  find_package(Qt5ScriptTools)
+  find_package(Qt5WebKit)
+
+  set(QT5_BUILD TRUE)
+
+  include("cmake/ECMQt4To5Porting.cmake")
+  include_directories(${QT_INCLUDES}) # TODO: Port away from this.
+
+# Qt4
+else()
+  find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui)
+
+  include_directories(${QT_INCLUDES})
+endif()
+
 
 # TODO: Remove me once fixed in ECM module
 if(Qt5Core_FOUND)
