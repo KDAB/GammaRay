@@ -25,7 +25,7 @@
 
 #include "include/util.h"
 
-#include <QVector>
+#include <QDebug>
 
 using namespace GammaRay;
 
@@ -33,10 +33,52 @@ ModelCellModel::ModelCellModel(QObject *parent) : QAbstractTableModel(parent)
 {
 }
 
+
 void ModelCellModel::setModelIndex(const QModelIndex &index)
 {
   beginResetModel();
   m_index = index;
+
+  m_roles.clear();
+  if (index.isValid()) {
+
+    // add built-in roles
+    #define R(x) qMakePair<int, QString>(x, QLatin1String(#x))
+    m_roles << R(Qt::DisplayRole)
+            << R(Qt::DecorationRole)
+            << R(Qt::EditRole)
+            << R(Qt::ToolTipRole)
+            << R(Qt::StatusTipRole)
+            << R(Qt::WhatsThisRole)
+            << R(Qt::FontRole)
+            << R(Qt::TextAlignmentRole)
+            << R(Qt::BackgroundRole)
+            << R(Qt::ForegroundRole)
+            << R(Qt::CheckStateRole)
+            << R(Qt::AccessibleTextRole)
+            << R(Qt::AccessibleDescriptionRole)
+            << R(Qt::SizeHintRole)
+#if QT_VERSION >= QT_VERSION_CHECK(4,8,0)
+            << R(Qt::InitialSortOrderRole)
+#endif
+            ;
+    #undef R
+
+    // add custom roles
+    for (QHash<int, QByteArray>::const_iterator it = index.model()->roleNames().constBegin(); it != index.model()->roleNames().constEnd(); ++it) {
+      bool roleFound = false;
+      for (int i = 0; i < m_roles.size(); ++i) {
+        if (m_roles.at(i).first == it.key()) {
+          roleFound = true;
+          break;
+        }
+      }
+      if (!roleFound)
+        m_roles.push_back(qMakePair(it.key(), QString::fromLatin1(it.value())));
+    }
+
+  }
+
   endResetModel();
 }
 
@@ -46,30 +88,12 @@ QVariant ModelCellModel::data(const QModelIndex &index, int role) const
     return QVariant();
   }
 
-  const QVariant value = m_index.data(static_cast<Qt::ItemDataRole>(index.row()));
+  Q_ASSERT(index.row() < m_roles.size());
+  const QVariant value = m_index.data(m_roles.at(index.row()).first);
   if (role == Qt::DisplayRole) {
     switch(index.column()) {
     case 0:
-    {
-      static QVector<QString> itemDataRoleNames = QVector<QString>()
-        << "Qt::DisplayRole"
-        << "Qt::DecorationRole"
-        << "Qt::EditRole"
-        << "Qt::ToolTipRole"
-        << "Qt::StatusTipRole"
-        << "Qt::WhatsThisRole"
-        << "Qt::FontRole"
-        << "Qt::TextAlignmentRole"
-        << "Qt::BackgroundRole"
-        << "Qt::ForegroundRole"
-        << "Qt::CheckStateRole"
-        << "Qt::AccessibleTextRole"
-        << "Qt::AccessibleDescriptionRole"
-        << "Qt::SizeHintRole";
-
-      Q_ASSERT(index.row() < itemDataRoleNames.size());
-      return itemDataRoleNames.at(index.row());
-    }
+      return m_roles.at(index.row()).second;
     case 1:
       return Util::variantToString(value);
     case 2:
@@ -89,7 +113,7 @@ bool ModelCellModel::setData(const QModelIndex &index, const QVariant &value, in
   if (index.isValid() && m_index.isValid() &&
       (m_index.flags() & Qt::ItemIsEditable) &&
       role == Qt::EditRole && index.column() == 1) {
-    Qt::ItemDataRole sourceRole = static_cast<Qt::ItemDataRole>(index.row());
+    const Qt::ItemDataRole sourceRole = static_cast<Qt::ItemDataRole>(m_roles.at(index.row()).first);
     QAbstractItemModel *sourceModel = const_cast<QAbstractItemModel*>(m_index.model());
     return sourceModel->setData(m_index, value, sourceRole);
   }
@@ -120,7 +144,7 @@ int ModelCellModel::rowCount(const QModelIndex &parent) const
   if (parent.isValid() || !m_index.isValid()) {
     return 0;
   }
-  return 14;
+  return m_roles.size();
 }
 
 QVariant ModelCellModel::headerData(int section, Qt::Orientation orientation, int role) const

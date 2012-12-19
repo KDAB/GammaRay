@@ -25,6 +25,7 @@
 #define GAMMARAY_MODELINSPECTOR_MODELCELLMODEL_H
 
 #include <QAbstractTableModel>
+#include <QVector>
 
 namespace GammaRay {
 
@@ -44,6 +45,7 @@ class ModelCellModel : public QAbstractTableModel
 
   private:
     QPersistentModelIndex m_index;
+    QVector<QPair<int, QString> > m_roles;
 };
 
 }
