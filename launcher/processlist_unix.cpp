@@ -61,7 +61,11 @@ static bool processIsQtApp(const QString &pid)
   lsofProcess.waitForFinished();
   const QByteArray output = lsofProcess.readAllStandardOutput();
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   if (output.contains("QtCore")) {
+#else
+  if (output.contains("Qt5Core")) {
+#endif
     return true;
   }
 
@@ -197,7 +201,11 @@ ProcDataList processList(const ProcDataList &previous)
       if (line.isEmpty()) {
         break;
       }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       if (line.contains(QByteArray("/libQtCore.so"))) {
+#else
+      if (line.contains(QByteArray("/libQt5Core.so"))) {
+#endif
         proc.type = ProcData::QtApp;
         break;
       }
