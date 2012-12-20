@@ -78,8 +78,6 @@ if (Qt5Core_FOUND)
   find_package(Qt5WebKit QUIET)
   find_package(Qt5Designer QUIET)
 
-  set(QT5_BUILD TRUE)
-
   include("cmake/ECMQt4To5Porting.cmake")
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 
