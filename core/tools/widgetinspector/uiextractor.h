@@ -24,6 +24,9 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_UIEXTRACTOR_H
 #define GAMMARAY_WIDGETINSPECTOR_UIEXTRACTOR_H
 
+#include "config-gammaray.h"
+
+#ifdef HAVE_QT_DESIGNER
 #include <QFormBuilder>
 
 namespace GammaRay {
@@ -35,5 +38,7 @@ class UiExtractor : public QFormBuilder
 };
 
 }
+
+#endif
 
 #endif // GAMMARAY_UIEXTRACTOR_H

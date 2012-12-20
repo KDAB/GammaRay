@@ -1,3 +1,5 @@
+include_directories(${CMAKE_BINARY_DIR})
+
 add_library(gammaray_widget_export_actions SHARED
   widgetinspector_export_actions.cpp
   uiextractor.cpp

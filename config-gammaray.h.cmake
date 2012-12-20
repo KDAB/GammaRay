@@ -8,3 +8,6 @@
 #cmakedefine HAVE_PRIVATE_QT_HEADERS
 
 #cmakedefine HAVE_STDINT_H
+
+#cmakedefine HAVE_QT_SVG
+#cmakedefine HAVE_QT_DESIGNER

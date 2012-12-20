@@ -23,6 +23,7 @@
 
 #include "uiextractor.h"
 
+#ifdef HAVE_QT_DESIGNER
 #include <QDebug>
 #include <QLocale>
 #include <QMetaObject>
@@ -65,3 +66,5 @@ bool UiExtractor::checkProperty(QObject *obj, const QString &prop) const
 
   return false;
 }
+
+#endif

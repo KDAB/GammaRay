@@ -76,17 +76,23 @@ if (Qt5Core_FOUND)
   find_package(Qt5Script)
   find_package(Qt5ScriptTools)
   find_package(Qt5WebKit)
+  find_package(Qt5Designer)
 
   set(QT5_BUILD TRUE)
 
   include("cmake/ECMQt4To5Porting.cmake")
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 
+  set(HAVE_QT_SVG ${Qt5Svg_FOUND})
+  set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
+
 # Qt4
 else()
   find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui)
 
   include_directories(${QT_INCLUDES})
+  set(HAVE_QT_SVG true)
+  set(HAVE_QT_DESIGNER true)
 endif()
 
 
@@ -143,6 +149,26 @@ macro_log_feature(
   FALSE
   ""
   "Required for the webinspector tool"
+)
+
+macro_log_feature(
+  HAVE_QT_SVG
+  "Qt SVG"
+  "Qt SVG renderer and generator"
+  "http://qt-project.org/"
+  FALSE
+  ""
+  "Required for widget SVG export"
+)
+
+macro_log_feature(
+  HAVE_QT_DESIGNER
+  "Qt Designer Library"
+  "Qt graphical widget editor"
+  "http://qt-project.org/"
+  FALSE
+  ""
+  "Required for widget .ui file export"
 )
 
 if (NOT Qt5Core_FOUND)
