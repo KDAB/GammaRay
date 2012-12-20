@@ -61,7 +61,9 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new WidgetInspectorFactory(this));
   m_tools.push_back(new ModelInspector(this));
   m_tools.push_back(new SceneInspectorFactory(this));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   m_tools.push_back(new ConnectionInspectorFactory(this));
+#endif
   m_tools.push_back(new ResourceBrowserFactory(this));
   m_tools.push_back(new MetaObjectBrowserFactory(this));
   m_tools.push_back(new MetaTypeBrowserFactory(this));

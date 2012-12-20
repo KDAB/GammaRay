@@ -246,6 +246,10 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
 
 bool PropertyWidget::showTab(const QWidget* widget, DisplayState state) const
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  if (widget == m_ui->inboundConnectionTab || widget == m_ui->outboundConnectionTab)
+    return false;
+#endif
   switch(state) {
   case QObjectState:
     return true; // show all
