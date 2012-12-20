@@ -90,8 +90,9 @@ class ObjectModelBase : public Base
         return QVariant::fromValue(object);
       } else if (role == Qt::ToolTipRole) {
           return
-            QString("Object name: %1\nParent: %2 (Address: %3)\nNumber of children: %4").
+            QObject::tr("Object name: %1\nType: %2\nParent: %3 (Address: %4)\nNumber of children: %5").
               arg(object->objectName().isEmpty() ? "<Not set>" : object->objectName()).
+              arg(object->metaObject()->className()).
               arg(object->parent() ? object->parent()->metaObject()->className() : "<No parent>").
               arg(Util::addressToString(object->parent())).
               arg(object->children().size());
