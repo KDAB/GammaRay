@@ -52,6 +52,8 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
       return metaTypeId;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     case 2:
+      return QMetaType::sizeOf(metaTypeId);
+    case 3:
     {
       const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
       QStringList l;
@@ -91,7 +93,7 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   return 2;
 #else
-  return 3;
+  return 4;
 #endif
 }
 
@@ -103,7 +105,8 @@ QVariant MetaTypesModel::headerData(int section, Qt::Orientation orientation, in
   switch (section) {
     case 0: return tr("Type Name");
     case 1: return tr("Meta Type Id");
-    case 2: return tr("Type Flags");
+    case 2: return tr("Size");
+    case 3: return tr("Type Flags");
   }
   return QVariant();
 }
