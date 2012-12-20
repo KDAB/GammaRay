@@ -69,8 +69,8 @@ if (Qt5Core_FOUND)
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Widgets REQUIRED)
   find_package(Qt5Concurrent REQUIRED)
-  find_package(Qt5PrintSupport REQUIRED) # TODO this should be optional
 
+  find_package(Qt5PrintSupport)
   find_package(Qt5Test)
   find_package(Qt5Svg)
   find_package(Qt5Script)
@@ -85,6 +85,7 @@ if (Qt5Core_FOUND)
 
   set(HAVE_QT_SVG ${Qt5Svg_FOUND})
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
+  set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
 
 # Qt4
 else()
@@ -93,6 +94,7 @@ else()
   include_directories(${QT_INCLUDES})
   set(HAVE_QT_SVG true)
   set(HAVE_QT_DESIGNER true)
+  set(HAVE_QT_PRINTSUPPORT true)
 endif()
 
 
@@ -169,6 +171,16 @@ macro_log_feature(
   FALSE
   ""
   "Required for widget .ui file export"
+)
+
+macro_log_feature(
+  HAVE_QT_PRINTSUPPORT
+  "Qt Print Support"
+  "Qt PDF generation"
+  "http://qt-project.org/"
+  FALSE
+  ""
+  "Required for widget PDF export"
 )
 
 if (NOT Qt5Core_FOUND)

@@ -11,3 +11,4 @@
 
 #cmakedefine HAVE_QT_SVG
 #cmakedefine HAVE_QT_DESIGNER
+#cmakedefine HAVE_QT_PRINTSUPPORT

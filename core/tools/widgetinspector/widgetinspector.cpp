@@ -40,7 +40,6 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QPixmap>
-#include <QPrinter>
 #include <QMainWindow>
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
@@ -81,7 +80,9 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
 #ifdef HAVE_QT_SVG
   addAction(ui->actionSaveAsSvg);
 #endif
+#ifdef HAVE_QT_PRINTSUPPORT
   addAction(ui->actionSaveAsPdf);
+#endif
 #ifdef HAVE_QT_DESIGNER
   addAction(ui->actionSaveAsUiFile);
 #endif
@@ -244,14 +245,8 @@ void WidgetInspector::saveAsPdf()
     return;
   }
 
-  QPrinter printer(QPrinter::ScreenResolution);
-  printer.setOutputFileName(fileName);
-  printer.setOutputFormat(QPrinter::PdfFormat);
-  printer.setPageMargins(0, 0, 0, 0, QPrinter::DevicePixel);
-  printer.setPaperSize(widget->size(), QPrinter::DevicePixel);
-
   m_overlayWidget->hide();
-  widget->render(&printer);
+  callExternalExportAction("gammaray_save_widget_to_pdf", widget, fileName);
   m_overlayWidget->show();
 }
 
