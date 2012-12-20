@@ -43,16 +43,16 @@ using namespace std;
 static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
 PluginManager *PluginManager::s_instance = 0;
 
-PluginManager *PluginManager::instance()
+PluginManager *PluginManager::instance(QObject* parent)
 {
   if (!s_instance) {
-    s_instance = new PluginManager();
+    s_instance = new PluginManager(parent);
     s_instance->scan();
   }
   return s_instance;
 }
 
-PluginManager::PluginManager()
+PluginManager::PluginManager(QObject *parent) : m_parent(parent)
 {
   QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
 }
@@ -94,7 +94,7 @@ void PluginManager::scan()
       }
 
       if (pluginInfo.suffix() == QLatin1String("desktop")) {
-        ProxyToolFactory *proxy = new ProxyToolFactory(pluginFile);
+        ProxyToolFactory *proxy = new ProxyToolFactory(pluginFile, m_parent);
         if (!proxy->isValid()) {
           m_errors << PluginLoadError(pluginFile, QObject::tr("Failed to load plugin."));
           std::cerr << "invalid plugin " << qPrintable(pluginFile) << std::endl;

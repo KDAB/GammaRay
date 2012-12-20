@@ -73,7 +73,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new LocaleInspectorFactory(this));
   m_tools.push_back(new StyleInspectorFactory(this));
 
-  Q_FOREACH (ToolFactory *factory, PluginManager::instance()->plugins()) {
+  Q_FOREACH (ToolFactory *factory, PluginManager::instance(this)->plugins()) {
     m_tools.push_back(factory);
   }
 
