@@ -43,6 +43,7 @@ MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QWidget *parent)
   ui->metaTypeView->setModel(proxy);
   ui->metaTypeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
   ui->metaTypeSearchLine->setProxy(proxy);
+  ui->metaTypeView->header()->setSortIndicator(1, Qt::AscendingOrder); // sort by type id
 }
 
 #include "metatypebrowser.moc"
