@@ -85,6 +85,10 @@ if (Qt5Core_FOUND)
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
 
+  if (Qt5_POSITION_INDEPENDENT_CODE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+
 # Qt4
 else()
   find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui)
@@ -98,12 +102,6 @@ endif()
 
 # TODO: Remove me once fixed in ECM module
 if(Qt5Core_FOUND)
-  # Avoid errors and build in PIC mode:
-  # qt5/qtbase/include/QtCore/qglobal.h:1765:4: error:
-  #   #error "You must build your code with position independent code if Qt was
-  #   built with -reduce-relocations. " "Compile your code with -fPIC or -fPIE."
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-
   # more hacks: find qpa/... includes
   # also see https://codereview.qt-project.org/#change,30483
   include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
