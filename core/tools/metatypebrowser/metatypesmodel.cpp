@@ -25,6 +25,7 @@
 
 #include <QDebug>
 #include <QMetaType>
+#include <QStringList>
 
 MetaTypesModel::MetaTypesModel(QObject *parent)
   : QAbstractTableModel(parent)
@@ -49,7 +50,26 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
     }
     case 1:
       return metaTypeId;
-    // TODO type flags
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    case 2:
+    {
+      const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
+      QStringList l;
+      #define F(x) if (flags & QMetaType:: x) l.push_back(#x)
+      F(NeedsConstruction);
+      F(NeedsDestruction);
+      F(MovableType);
+      F(PointerToQObject);
+      F(IsEnumeration);
+      F(SharedPointerToQObject);
+      F(WeakPointerToQObject);
+      F(TrackingPointerToQObject);
+      F(WasDeclaredAsMetaType);
+      #undef F
+
+      return l.join(", ");
+    }
+#endif
   }
   return QVariant();
 }
@@ -68,22 +88,24 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
   if (parent.isValid()) {
     return 0;
   }
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   return 2;
+#else
+  return 3;
+#endif
 }
 
 QVariant MetaTypesModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  Q_UNUSED(orientation);
-
-  if (role != Qt::DisplayRole) {
+  if (role != Qt::DisplayRole || orientation != Qt::Horizontal)
     return QVariant();
-  }
 
-  if (section == 0) {
-    return tr("Type Name");
+  switch (section) {
+    case 0: return tr("Type Name");
+    case 1: return tr("Meta Type Id");
+    case 2: return tr("Type Flags");
   }
-
-  return tr("Meta Type Id");
+  return QVariant();
 }
 
 void MetaTypesModel::scanMetaTypes()
