@@ -25,8 +25,9 @@
 #define GAMMARAY_METATYPEBROWSER_METATYPESMODEL_H
 
 #include <QAbstractTableModel>
+#include <QVector>
 
-class MetaTypesModel : public QAbstractItemModel
+class MetaTypesModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
@@ -36,18 +37,15 @@ class MetaTypesModel : public QAbstractItemModel
                                 Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
 
-    virtual QModelIndex index(int row, int column,
-                              const QModelIndex &parent = QModelIndex()) const;
-
-    virtual QModelIndex parent(const QModelIndex &child) const;
-
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
   private:
-    int m_lastMetaType;
+    void scanMetaTypes();
+
+    QVector<int> m_metaTypes;
 };
 
 #endif
