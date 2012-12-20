@@ -78,9 +78,13 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
 
   addAction(ui->actionSaveAsImage);
+#ifdef HAVE_QT_SVG
   addAction(ui->actionSaveAsSvg);
+#endif
   addAction(ui->actionSaveAsPdf);
+#ifdef HAVE_QT_DESIGNER
   addAction(ui->actionSaveAsUiFile);
+#endif
 #ifdef HAVE_PRIVATE_QT_HEADERS
   addAction(ui->actionAnalyzePainting);
 #endif
