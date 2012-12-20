@@ -27,9 +27,14 @@
 #include <QMetaType>
 
 MetaTypesModel::MetaTypesModel(QObject *parent)
-  : QAbstractItemModel(parent), m_lastMetaType(0)
+  : QAbstractItemModel(parent),
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  m_lastMetaType(0)
+#else
+  m_lastMetaType(1) // 0 is invalid in Qt5, while it's void in Qt4
+#endif
 {
-  for (m_lastMetaType = 0; ; ++m_lastMetaType) {
+  for (;; ++m_lastMetaType) {
     if (!QMetaType::isRegistered(m_lastMetaType)) {
       break;
     }
