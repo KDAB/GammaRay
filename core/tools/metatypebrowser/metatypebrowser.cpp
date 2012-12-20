@@ -26,6 +26,8 @@
 
 #include "metatypesmodel.h"
 
+#include <QSortFilterProxyModel>
+
 using namespace GammaRay;
 
 MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QWidget *parent)
@@ -36,9 +38,11 @@ MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QWidget *parent)
   ui->setupUi(this);
 
   MetaTypesModel *mtm = new MetaTypesModel(this);
-  ui->metaTypeView->setModel(mtm);
-  ui->metaTypeView->setRootIsDecorated(false);
+  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  proxy->setSourceModel(mtm);
+  ui->metaTypeView->setModel(proxy);
   ui->metaTypeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  ui->metaTypeSearchLine->setProxy(proxy);
 }
 
 #include "metatypebrowser.moc"
