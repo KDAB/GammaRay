@@ -52,7 +52,6 @@ using namespace GammaRay;
 static bool removePage(QTabWidget* tabWidget, QWidget* widget)
 {
   const int index = tabWidget->indexOf(widget);
-  Q_ASSERT(index >= 0);
   if (index == -1)
     return false;
 
