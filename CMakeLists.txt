@@ -86,7 +86,11 @@ if (Qt5Core_FOUND)
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
 
   if (Qt5_POSITION_INDEPENDENT_CODE)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    if (CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    else()
+      set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    endif()
   endif()
 
 # Qt4
