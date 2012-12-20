@@ -71,12 +71,12 @@ if (Qt5Core_FOUND)
   find_package(Qt5Concurrent REQUIRED)
   find_package(Qt5Test REQUIRED)
 
-  find_package(Qt5PrintSupport)
-  find_package(Qt5Svg)
-  find_package(Qt5Script)
-  find_package(Qt5ScriptTools)
-  find_package(Qt5WebKit)
-  find_package(Qt5Designer)
+  find_package(Qt5PrintSupport QUIET)
+  find_package(Qt5Svg QUIET)
+  find_package(Qt5Script QUIET)
+  find_package(Qt5ScriptTools QUIET)
+  find_package(Qt5WebKit QUIET)
+  find_package(Qt5Designer QUIET)
 
   set(QT5_BUILD TRUE)
 
