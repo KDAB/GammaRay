@@ -139,6 +139,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
 void MainWindow::about()
 {
+<<<<<<< HEAD
   QDialog dialog(this);
   dialog.setWindowTitle(tr("About %1").arg(progName));
   QVBoxLayout *lay = new QVBoxLayout;
