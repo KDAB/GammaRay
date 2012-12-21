@@ -128,7 +128,8 @@ void MainWindow::about()
   mb.setWindowTitle(tr("About %1").arg(progName));
   mb.setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
   mb.setInformativeText(
-    trUtf8("<qt><p>Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, "
+    trUtf8("<qt>"
+       "<p>Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, "
        "a KDAB Group company, <a href='mailto:info@kdab.com'>info@kdab.com</a></p>"
        "<p><u>Authors:</u><br>"
        "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
@@ -141,7 +142,9 @@ void MainWindow::about()
        "Till Adam &lt;till@kdab.com&gt;<br>"
        "Thomas McGuire &lt;thomas.mcguire@kdab.com&gt;<br>"
        "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br>"
-       "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p></qt>"));
+       "Volker Krause &lt;volker.krause@kdab.com&gt;</p>"
+       "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>"
+       "</qt>"));
   mb.setIconPixmap(QPixmap(":gammaray/GammaRay-128x128.png"));
   mb.addButton(QMessageBox::Close);
   mb.exec();
