@@ -53,7 +53,7 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
   searchFilterProxy->setSourceModel(actionFilterProxy);
   searchFilterProxy->setDynamicSortFilter(true);
 
-  QVBoxLayout *vbox = new QVBoxLayout;
+  QVBoxLayout *vbox = new QVBoxLayout(this);
 
   KFilterProxySearchLine *objectSearchLine = new KFilterProxySearchLine(this);
   objectSearchLine->setProxy(searchFilterProxy);
@@ -69,12 +69,6 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
           SLOT(handleRowChanged(QModelIndex)));
   connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
   mObjectTreeView = objectTreeView;
-
-  QWidget *treeViewWidget = new QWidget(this);
-  treeViewWidget->setLayout(vbox);
-
-  QHBoxLayout *hbox = new QHBoxLayout(this);
-  hbox->addWidget(treeViewWidget);
 
   QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
