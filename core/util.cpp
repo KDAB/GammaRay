@@ -224,12 +224,6 @@ QString GammaRay::Util::variantToString(const QVariant &value)
   if (value.userType() == qMetaTypeId<QGraphicsEffect*>()) {
     return addressToString(value.value<QGraphicsEffect*>());
   }
-  if (value.userType() == qMetaTypeId<QGraphicsItem*>()) {
-    return addressToString(value.value<QGraphicsItem*>());
-  }
-  if (value.userType() == qMetaTypeId<QGraphicsItemGroup*>()) {
-    return addressToString(value.value<QGraphicsItemGroup*>());
-  }
   if (value.userType() == qMetaTypeId<QGraphicsObject*>()) {
     return displayString(value.value<QGraphicsObject*>());
   }
@@ -244,6 +238,13 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return displayString(value.value<QObject*>());
   }
 #endif
+
+  if (value.userType() == qMetaTypeId<QGraphicsItem*>()) {
+    return addressToString(value.value<QGraphicsItem*>());
+  }
+  if (value.userType() == qMetaTypeId<QGraphicsItemGroup*>()) {
+    return addressToString(value.value<QGraphicsItemGroup*>());
+  }
 
   // enums
   const QString enumStr = enumToString(value);
