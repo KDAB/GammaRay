@@ -155,21 +155,25 @@ void MainWindow::about()
   informativeText->setTextInteractionFlags(Qt::TextBrowserInteraction);
   informativeText->setOpenExternalLinks(true);
   informativeText->setWordWrap(true);
-  informativeText->setText( trUtf8("<qt><p>Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, "
-                                   "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
-                                   "<p><u>Authors:</u><br>"
-                                   "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
-                                   "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
-                                   "David Faure &lt;david.faure@kdab.com&gt;<br>"
-                                   "Kevin Funk &lt;kevin.funk@kdab.com&gt;<br>"
-                                   "Laurent Montel &lt;laurent.montel@kdab.com&gt;<br>"
-                                   "Milian Wolff &lt;milian.wolff@kdab.com&gt;<br>"
-                                   "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
-                                   "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
-                                   "Till Adam &lt;till@kdab.com&gt;<br>"
-                                   "Thomas McGuire &lt;thomas.mcguire@kdab.com&gt;<br>"
-                                   "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br>"
-                                   "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p></qt>"));
+  informativeText->setText(
+    trUtf8("<qt>"
+           "<p>Copyright (C) 2010-2012 Klarälvdalens Datakonsult AB, "
+           "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
+           "<p><u>Authors:</u><br>"
+           "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
+           "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
+           "David Faure &lt;david.faure@kdab.com&gt;<br>"
+           "Kevin Funk &lt;kevin.funk@kdab.com&gt;<br>"
+           "Laurent Montel &lt;laurent.montel@kdab.com&gt;<br>"
+           "Milian Wolff &lt;milian.wolff@kdab.com&gt;<br>"
+           "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
+           "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
+           "Till Adam &lt;till@kdab.com&gt;<br>"
+           "Thomas McGuire &lt;thomas.mcguire@kdab.com&gt;<br>"
+           "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br>"
+           "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p>"
+           "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>"
+           "</qt>"));
   lay->addWidget(informativeText);
   QDialogButtonBox * buttonBox = new QDialogButtonBox;
   buttonBox->addButton(QDialogButtonBox::Close);
