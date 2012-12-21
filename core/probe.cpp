@@ -164,7 +164,7 @@ void ProbeCreator::createProbe()
   }
 
   // Exit early instead of asserting in QWidgetPrivate::init()
-  const QApplication * const qGuiApplication = qApp; // qobject_cast<const QApplication *>(qApp);
+  const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
   if (!qGuiApplication
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       || qGuiApplication->type() == QApplication::Tty
