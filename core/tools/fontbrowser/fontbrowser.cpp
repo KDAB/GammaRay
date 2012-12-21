@@ -56,6 +56,7 @@ FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
       }
 
       styleItem->setText(1, sizes.trimmed());
+      styleItem->setToolTip(1, sizes.trimmed());
     }
   }
   ui->fontTree->header()->setResizeMode(0, QHeaderView::ResizeToContents);
