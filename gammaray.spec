@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        1.2.1
+Version:        1.2.2
 Release:        1.2
 Summary:        A tool to poke around in a Qt-application
 Source:         %{name}-%{version}.tar.gz
@@ -81,6 +81,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_prefix}/include/gammaray
 
 %changelog
+* Fri Dec 21 2012 Allen Winter <allen.winter@kdab.com> 1.2.2
+- Update to 1.2.2 release
 * Thu Aug 16 2012 Allen Winter <allen.winter@kdab.com> 1.2.1
 - Update to 1.2.1 release
 * Tue Jul 05 2012 Allen Winter <allen.winter@kdab.com> 1.2.0
