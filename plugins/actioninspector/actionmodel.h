@@ -24,13 +24,13 @@
 #ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
 #define GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
 
-#include "actionvalidator.h"
-
 #include "include/objecttypefilterproxymodel.h"
 
 class QAction;
 
 namespace GammaRay {
+
+class ActionValidator;
 
 /**
  * This QSFPM additionally overwrites index(...) and flags(...)
@@ -84,7 +84,7 @@ class ActionModel : public ObjectFilterProxyModelBase
     QList<QAction*> actions() const;
     QList<QAction*> actions(const QModelIndex &parent, int start, int end);
 
-    ActionValidator m_duplicateFinder;
+    ActionValidator *m_duplicateFinder;
 };
 
 }

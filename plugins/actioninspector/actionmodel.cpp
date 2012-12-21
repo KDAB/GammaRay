@@ -22,6 +22,7 @@
 */
 
 #include "actionmodel.h"
+#include "actionvalidator.h"
 
 #include <QAction>
 #include <QDebug>
@@ -39,7 +40,8 @@ static QString toString(QList<T> list)
 }
 
 ActionModel::ActionModel(QObject *parent)
-  : ObjectFilterProxyModelBase(parent)
+  : ObjectFilterProxyModelBase(parent),
+  m_duplicateFinder(new ActionValidator(this))
 {
   connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
     SLOT(handleRowsInserted(QModelIndex,int,int)));
@@ -74,20 +76,20 @@ QList<QAction *> ActionModel::actions(const QModelIndex &parent, int start, int 
 
 void ActionModel::handleModelReset()
 {
-  m_duplicateFinder.setActions(actions());
+  m_duplicateFinder->setActions(actions());
 }
 
 void ActionModel::handleRowsInserted(const QModelIndex &parent, int start, int end)
 {
   Q_FOREACH (QAction *action, actions(parent, start, end)) {
-    m_duplicateFinder.insert(action);
+    m_duplicateFinder->insert(action);
   }
 }
 
 void ActionModel::handleRowsRemoved(const QModelIndex &parent, int start, int end)
 {
   Q_FOREACH (QAction *action, actions(parent, start, end)) {
-    m_duplicateFinder.remove(action);
+    m_duplicateFinder->remove(action);
   }
 }
 
@@ -168,7 +170,7 @@ QVariant ActionModel::data(const QModelIndex &proxyIndex, int role) const
   } else if (role == Qt::DecorationRole) {
     if (column == NameColumn) {
       return action->icon();
-    } else if (column == ShortcutsPropColumn && m_duplicateFinder.hasAmbiguousShortcut(action)) {
+    } else if (column == ShortcutsPropColumn && m_duplicateFinder->hasAmbiguousShortcut(action)) {
       QIcon icon = QIcon::fromTheme("dialog-warning");
       if (!icon.isNull()) {
         return icon;
@@ -177,7 +179,7 @@ QVariant ActionModel::data(const QModelIndex &proxyIndex, int role) const
       }
     }
   } else if (role == Qt::ToolTipRole) {
-    if (column == ShortcutsPropColumn && m_duplicateFinder.hasAmbiguousShortcut(action)) {
+    if (column == ShortcutsPropColumn && m_duplicateFinder->hasAmbiguousShortcut(action)) {
       return tr("Warning: Ambiguous shortcut detected.");
     }
   }
