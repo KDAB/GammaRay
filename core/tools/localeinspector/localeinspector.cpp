@@ -25,8 +25,6 @@
 #include "localemodel.h"
 #include "localeaccessormodel.h"
 
-#include <QTableView>
-
 using namespace GammaRay;
 
 LocaleInspector::LocaleInspector(ProbeInterface *probe, QWidget *parent)
@@ -46,6 +44,16 @@ LocaleInspector::LocaleInspector(ProbeInterface *probe, QWidget *parent)
   ui->accessorTable->resizeColumnsToContents();
   ui->localeTable->resizeColumnsToContents();
   connect(model, SIGNAL(modelReset()), ui->localeTable, SLOT(resizeColumnsToContents()));
+
+  QMetaObject::invokeMethod(this, "initSplitterPosition", Qt::QueuedConnection);
 }
+
+void LocaleInspector::initSplitterPosition()
+{
+  const int accessorHeight = ui->accessorTable->model()->rowCount() * (ui->accessorTable->rowHeight(0) + 1) // + grid line
+                           + 2 * ui->accessorTable->frameWidth();
+  ui->splitter->setSizes(QList<int>() << accessorHeight << height() - accessorHeight);
+}
+
 
 #include "localeinspector.moc"

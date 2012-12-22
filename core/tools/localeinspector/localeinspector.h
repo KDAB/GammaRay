@@ -40,8 +40,8 @@ class LocaleInspector : public QWidget
   public:
     explicit LocaleInspector(ProbeInterface *probe, QWidget *parent = 0);
 
-//   private slots:
-//     void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
+  private slots:
+    void initSplitterPosition();
 
   private:
     QScopedPointer< ::Ui::LocaleInspector> ui;
