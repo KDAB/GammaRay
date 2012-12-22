@@ -25,6 +25,8 @@
 #include "localemodel.h"
 #include "localeaccessormodel.h"
 
+#include <QSortFilterProxyModel>
+
 using namespace GammaRay;
 
 LocaleInspector::LocaleInspector(ProbeInterface *probe, QWidget *parent)
@@ -36,10 +38,14 @@ LocaleInspector::LocaleInspector(ProbeInterface *probe, QWidget *parent)
   LocaleModel *model = new LocaleModel(this);
   LocaleAccessorModel *accessorModel = new LocaleAccessorModel(this);
 
+  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  proxy->setSourceModel(model);
+
   ui->setupUi(this);
 
-  ui->localeTable->setModel(model);
+  ui->localeTable->setModel(proxy);
   ui->accessorTable->setModel(accessorModel);
+  ui->localeSearchLine->setProxy(proxy);
 
   ui->accessorTable->resizeColumnsToContents();
   ui->localeTable->resizeColumnsToContents();
