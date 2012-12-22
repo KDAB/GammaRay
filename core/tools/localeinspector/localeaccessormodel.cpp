@@ -88,7 +88,8 @@ bool LocaleAccessorModel::setData(const QModelIndex &index, const QVariant &valu
   bool enabled = value.toInt() == Qt::Checked;
   LocaleDataAccessor *accessor = index.data(AccessorRole).value<LocaleDataAccessor*>();
   LocaleDataAccessorRegistry::setAccessorEnabled(accessor, enabled);
-  return false;
+  emit dataChanged(index, index);
+  return true;
 }
 
 #include "localeaccessormodel.moc"
