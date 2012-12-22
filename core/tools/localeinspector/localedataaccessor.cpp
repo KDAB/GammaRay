@@ -167,6 +167,34 @@ LOCALE_SIMPLE_DEFAULT_ACCESSOR(WeekDays,
   }
   return QLocale().createSeparatedList(resultList);
 )
+
+LOCALE_SIMPLE_ACCESSOR(BCP47,
+  return locale.bcp47Name();
+)
 #endif
+
+LOCALE_SIMPLE_ACCESSOR(DecimalPoint,
+  return locale.decimalPoint();
+)
+
+LOCALE_SIMPLE_ACCESSOR(GroupSeparator,
+  return locale.groupSeparator();
+)
+
+LOCALE_SIMPLE_ACCESSOR(Exponential,
+  return locale.exponential();
+)
+
+LOCALE_SIMPLE_ACCESSOR(Percent,
+  return locale.percent();
+)
+
+LOCALE_SIMPLE_ACCESSOR(PositiveSign,
+  return locale.positiveSign();
+)
+
+LOCALE_SIMPLE_ACCESSOR(NegativeSign,
+  return locale.negativeSign();
+)
 
 #include "localedataaccessor.moc"
