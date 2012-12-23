@@ -124,7 +124,7 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     ui->widgetPreviewWidget->setWidget(widget);
     setActionsEnabled(widget != 0);
 
-    if (widget && qobject_cast<QDesktopWidget*>(widget) == 0) {
+    if (widget && qobject_cast<QDesktopWidget*>(widget) == 0 && !widget->inherits("QDesktopScreenWidget")) {
       m_overlayWidget->placeOn(widget);
     } else {
       m_overlayWidget->placeOn(0);
