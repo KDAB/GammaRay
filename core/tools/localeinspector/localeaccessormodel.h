@@ -27,6 +27,7 @@
 
 namespace GammaRay {
 
+class LocaleDataAccessorRegistry;
 struct LocaleDataAccessor;
 
 class LocaleAccessorModel : public QAbstractTableModel
@@ -38,7 +39,7 @@ class LocaleAccessorModel : public QAbstractTableModel
       AccessorRole = Qt::UserRole + 1
     };
 
-    explicit LocaleAccessorModel(QObject *parent = 0);
+    explicit LocaleAccessorModel(LocaleDataAccessorRegistry* registry, QObject *parent = 0);
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -48,6 +49,7 @@ class LocaleAccessorModel : public QAbstractTableModel
 
   private:
     QVector<LocaleDataAccessor*> enabledAccessors;
+    LocaleDataAccessorRegistry *m_registry;
 };
 
 }

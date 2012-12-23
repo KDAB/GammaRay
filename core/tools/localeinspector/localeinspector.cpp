@@ -24,6 +24,7 @@
 
 #include "localemodel.h"
 #include "localeaccessormodel.h"
+#include "localedataaccessor.h"
 
 #include <QSortFilterProxyModel>
 
@@ -35,8 +36,10 @@ LocaleInspector::LocaleInspector(ProbeInterface *probe, QWidget *parent)
 {
   Q_UNUSED(probe);
 
-  LocaleModel *model = new LocaleModel(this);
-  LocaleAccessorModel *accessorModel = new LocaleAccessorModel(this);
+  LocaleDataAccessorRegistry *registry = new LocaleDataAccessorRegistry(this);
+
+  LocaleModel *model = new LocaleModel(registry, this);
+  LocaleAccessorModel *accessorModel = new LocaleAccessorModel(registry, this);
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setSourceModel(model);

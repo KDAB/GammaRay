@@ -35,17 +35,19 @@ class LocaleDataAccessorRegistry : public QObject
 {
   Q_OBJECT
   public:
-    LocaleDataAccessorRegistry();
+    LocaleDataAccessorRegistry(QObject *parent = 0);
+    ~LocaleDataAccessorRegistry();
 
-    static LocaleDataAccessorRegistry *instance();
-
-    static void registerAccessor(LocaleDataAccessor *accessor);
-    static void setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled);
-    static QVector<LocaleDataAccessor*> accessors();
-    static QVector<LocaleDataAccessor*> enabledAccessors();
+    void registerAccessor(LocaleDataAccessor *accessor);
+    void setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled);
+    QVector<LocaleDataAccessor*> accessors();
+    QVector<LocaleDataAccessor*> enabledAccessors();
 
   Q_SIGNALS:
     void accessorsChanged();
+
+  private:
+    void init();
 
   private:
     QVector<LocaleDataAccessor*> m_accessors;
@@ -54,11 +56,11 @@ class LocaleDataAccessorRegistry : public QObject
 
 struct LocaleDataAccessor
 {
-  LocaleDataAccessor(bool defaultAccessor = false)
+  LocaleDataAccessor(LocaleDataAccessorRegistry* registry, bool defaultAccessor = false)
   {
-    LocaleDataAccessorRegistry::registerAccessor(this);
+    registry->registerAccessor(this);
     if (defaultAccessor) {
-      LocaleDataAccessorRegistry::setAccessorEnabled(this, true);
+      registry->setAccessorEnabled(this, true);
     }
   }
 
@@ -80,6 +82,7 @@ struct LocaleDataAccessor
 #define LOCALE_DISPLAY_ACCESSOR(NAME) \
 struct Locale##NAME##Accessor : LocaleDataAccessor \
 { \
+  Locale##NAME##Accessor(LocaleDataAccessorRegistry* registry) : LocaleDataAccessor(registry) {} \
   QString accessorName() { return #NAME; } \
   QString display(const QLocale &locale) \
   { \
@@ -87,7 +90,7 @@ struct Locale##NAME##Accessor : LocaleDataAccessor \
 #define LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
 struct Locale##NAME##Accessor : LocaleDataAccessor \
 { \
-  Locale##NAME##Accessor() : LocaleDataAccessor(true) {} \
+  Locale##NAME##Accessor(LocaleDataAccessorRegistry* registry) : LocaleDataAccessor(registry, true) {} \
   \
   QString accessorName()                 \
   {                                      \
@@ -99,7 +102,7 @@ struct Locale##NAME##Accessor : LocaleDataAccessor \
 #define LOCALE_DISPLAY_ACCESSOR_END(NAME) \
     return QString(); \
   } \
-} locale##NAME##Accessor;
+}; new Locale##NAME##Accessor(this);
 
 #define LOCALE_SIMPLE_ACCESSOR(NAME, IMPLEMENTATION) \
   LOCALE_DISPLAY_ACCESSOR(NAME) \

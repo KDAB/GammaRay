@@ -28,13 +28,14 @@
 
 namespace GammaRay {
 
+class LocaleDataAccessorRegistry;
 struct LocaleDataAccessor;
 
 class LocaleModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    explicit LocaleModel(QObject *parent = 0);
+    explicit LocaleModel(LocaleDataAccessorRegistry *registry, QObject *parent = 0);
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -52,6 +53,7 @@ class LocaleModel : public QAbstractTableModel
   private:
     QVector<QLocale> m_locales;
     QVector<LocaleDataAccessor*> m_localeData;
+    LocaleDataAccessorRegistry *m_registry;
 };
 
 }

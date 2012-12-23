@@ -25,35 +25,34 @@
 
 using namespace GammaRay;
 
-Q_GLOBAL_STATIC(LocaleDataAccessorRegistry, instance)
-
-LocaleDataAccessorRegistry::LocaleDataAccessorRegistry()
+LocaleDataAccessorRegistry::LocaleDataAccessorRegistry(QObject* parent) : QObject(parent)
 {
+  init();
 }
 
-LocaleDataAccessorRegistry *LocaleDataAccessorRegistry::instance()
+LocaleDataAccessorRegistry::~LocaleDataAccessorRegistry()
 {
-  return ::instance();
+  qDeleteAll(m_accessors);
 }
 
 QVector< LocaleDataAccessor * > LocaleDataAccessorRegistry::accessors()
 {
-  return ::instance()->m_accessors;
+  return m_accessors;
 }
 
 QVector< LocaleDataAccessor * > LocaleDataAccessorRegistry::enabledAccessors()
 {
-  return ::instance()->m_enabledAccessors;
+  return m_enabledAccessors;
 }
 
 void LocaleDataAccessorRegistry::registerAccessor(LocaleDataAccessor *accessor)
 {
-  ::instance()->m_accessors.push_back(accessor);
+  m_accessors.push_back(accessor);
 }
 
 void LocaleDataAccessorRegistry::setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled)
 {
-  QVector< LocaleDataAccessor * > &accessors = ::instance()->m_enabledAccessors;
+  QVector< LocaleDataAccessor * > &accessors = m_enabledAccessors;
   if (enabled && !accessors.contains(accessor)) {
     accessors.push_back(accessor);
   } else {
@@ -62,8 +61,11 @@ void LocaleDataAccessorRegistry::setAccessorEnabled(LocaleDataAccessor *accessor
       accessors.remove(idx);
     }
   }
-  emit ::instance()->accessorsChanged();
+  emit accessorsChanged();
 }
+
+void LocaleDataAccessorRegistry::init()
+{
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(Name,
   return locale.name();
@@ -196,5 +198,7 @@ LOCALE_SIMPLE_ACCESSOR(PositiveSign,
 LOCALE_SIMPLE_ACCESSOR(NegativeSign,
   return locale.negativeSign();
 )
+
+}
 
 #include "localedataaccessor.moc"
