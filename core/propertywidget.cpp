@@ -147,7 +147,12 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_tabWidgets.push_back(qMakePair(m_ui->tabWidget->widget(i), m_ui->tabWidget->tabText(i)));
   }
 
-  m_ui->metaPropertyView->setModel(m_metaPropertyModel);
+  proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
+  proxy->setSourceModel(m_metaPropertyModel);
+  m_ui->metaPropertyView->setModel(proxy);
+  m_ui->metaPropertyView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->metaPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->metaPropertyView);
 }
 

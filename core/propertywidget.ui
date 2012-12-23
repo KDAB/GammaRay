@@ -196,6 +196,9 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
+        <widget class="KFilterProxySearchLine" name="metaPropertySearchLine"/>
+       </item>
+       <item>
         <widget class="QTreeView" name="metaPropertyView">
          <property name="rootIsDecorated">
           <bool>false</bool>
@@ -203,7 +206,7 @@
          <property name="uniformRowHeights">
           <bool>true</bool>
          </property>
-         <property name="allColumnsShowFocus">
+         <property name="sortingEnabled">
           <bool>true</bool>
          </property>
         </widget>
