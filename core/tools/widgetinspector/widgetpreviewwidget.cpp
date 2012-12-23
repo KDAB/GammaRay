@@ -53,7 +53,11 @@ void WidgetPreviewWidget::paintEvent(QPaintEvent *event)
 {
   if (m_widget && !m_grabbingWidget) {
     m_grabbingWidget = true;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     const QPixmap pixmap = QPixmap::grabWidget(m_widget.data());
+#else
+    const QPixmap pixmap = m_widget.data()->grab();
+#endif
     m_grabbingWidget = false;
     QPainter painter(this);
     const qreal scale = qMin<qreal>(1.0, qMin((qreal)width() / (qreal)pixmap.width(),
