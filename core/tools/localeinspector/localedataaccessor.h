@@ -66,12 +66,12 @@ struct LocaleDataAccessor
 
   virtual QString accessorName() = 0;
 
-  QString data(const QLocale &locale, int role)
+  QVariant data(const QLocale &locale, int role)
   {
     if (role == Qt::DisplayRole) {
       return display(locale);
     }
-    return QString();
+    return QVariant();
   }
   virtual QString display(const QLocale &)
   {
