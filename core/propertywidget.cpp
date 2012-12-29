@@ -285,6 +285,8 @@ void PropertyWidget::setDisplayState(DisplayState state)
 
   if (m_ui->tabWidget->indexOf(currentWidget) >= 0)
     m_ui->tabWidget->setCurrentWidget(currentWidget);
+
+  m_ui->methodLog->setVisible(m_object);
 }
 
 void PropertyWidget::setEditorFactory(QAbstractItemView *view)
