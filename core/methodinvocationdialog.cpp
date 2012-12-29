@@ -23,12 +23,13 @@
 
 #include "methodinvocationdialog.h"
 #include "methodargumentmodel.h"
+
+#include "include/metatypedeclarations.h"
+
 #include <QMessageBox>
 #include <QPushButton>
 
 using namespace GammaRay;
-
-Q_DECLARE_METATYPE(Qt::ConnectionType)
 
 MethodInvocationDialog::MethodInvocationDialog(QWidget *parent)
   : QDialog(parent),

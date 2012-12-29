@@ -25,6 +25,7 @@
 #include "probe.h"
 #include "readorwritelocker.h"
 
+#include "include/metatypedeclarations.h"
 #include "include/util.h"
 
 #include <QColor>

@@ -38,6 +38,7 @@
 #include <QGraphicsEffect>
 #include <QStyle>
 
+Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
