@@ -231,7 +231,7 @@ void PropertyWidget::signalEmitted(QObject *sender, int signalIndex)
 void PropertyWidget::methodConextMenu(const QPoint &pos)
 {
   const QModelIndex index = m_ui->methodView->indexAt(pos);
-  if (!index.isValid()) {
+  if (!index.isValid() || !m_object) {
     return;
   }
 
