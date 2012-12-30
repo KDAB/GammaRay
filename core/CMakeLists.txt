@@ -103,6 +103,16 @@ set(gammaray_srcs
   tools/styleinspector/dynamicproxystyle.cpp
 )
 
+if(Qt5Core_FOUND)
+  set(gammaray_srcs
+    ${gammaray_srcs}
+    tools/standardpaths/standardpaths.cpp
+    tools/standardpaths/standardpathsmodel.cpp
+  )
+
+  qt4_wrap_ui(gammaray_srcs tools/standardpaths/standardpaths.ui)
+endif()
+
 if(WIN32 OR APPLE)
   set(gammaray_srcs
     ${gammaray_srcs}

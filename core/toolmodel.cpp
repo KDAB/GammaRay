@@ -41,6 +41,7 @@
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/styleinspector/styleinspector.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
+#include "tools/standardpaths/standardpaths.h"
 
 #include "pluginmanager.h"
 #include "probe.h"
@@ -74,6 +75,9 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new MessageHandlerFactory(this));
   m_tools.push_back(new LocaleInspectorFactory(this));
   m_tools.push_back(new StyleInspectorFactory(this));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  m_tools.push_back(new StandardPathsFactory(this));
+#endif
 
   Q_FOREACH (ToolFactory *factory, PluginManager::instance(this)->plugins()) {
     m_tools.push_back(factory);
