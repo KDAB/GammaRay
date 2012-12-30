@@ -41,7 +41,10 @@
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/styleinspector/styleinspector.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include "tools/standardpaths/standardpaths.h"
+#include "tools/mimetypes/mimetypes.h"
+#endif
 
 #include "pluginmanager.h"
 #include "probe.h"
@@ -77,6 +80,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new StyleInspectorFactory(this));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   m_tools.push_back(new StandardPathsFactory(this));
+  m_tools.push_back(new MimeTypesFactory(this));
 #endif
 
   Q_FOREACH (ToolFactory *factory, PluginManager::instance(this)->plugins()) {
