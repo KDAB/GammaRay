@@ -112,6 +112,11 @@ QList< QStandardItem* > MimeTypes::makeRowForType(const QMimeType& mt)
 
   item = new QStandardItem;
   item->setText(mt.iconName() + QLatin1String(" / ") + mt.genericIconName());
+  const QIcon icon = QIcon::fromTheme(mt.iconName());
+  if (icon.isNull())
+    item->setIcon(QIcon::fromTheme(mt.genericIconName()));
+  else
+    item->setIcon(icon);
   row.push_back(item);
 
   item = new QStandardItem;
