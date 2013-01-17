@@ -9,6 +9,7 @@ SKIP /3rdparty/
 SKIP /qmldebugcontrol/
 SKIP modeltest\.cpp\|modeltest\.h
 SKIP processlist_unix\.cpp\|processlist_win\.cpp
+SKIP /launcher/processlist\.h\|/launcher/injector/interactiveprocess\.cpp\|/launcher/injector/interactiveprocess\.h
 SKIP StackWalker
 #if you have a build subdir, skip it
 SKIP /build
