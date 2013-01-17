@@ -34,7 +34,7 @@ class SafeArgument
 {
   public:
     SafeArgument();
-    SafeArgument(const QVariant &v);
+    explicit SafeArgument(const QVariant &v);
     ~SafeArgument();
     operator QGenericArgument () const;
 
@@ -48,7 +48,7 @@ class MethodArgumentModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    MethodArgumentModel(QObject *parent = 0);
+    explicit MethodArgumentModel(QObject *parent = 0);
     void setMethod(const QMetaMethod &method);
     QVector<SafeArgument> arguments() const;
 

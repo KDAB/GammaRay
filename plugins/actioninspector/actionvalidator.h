@@ -38,7 +38,7 @@ class ActionValidator : public QObject
   Q_OBJECT
 
   public:
-    ActionValidator(QObject *parent = 0);
+    explicit ActionValidator(QObject *parent = 0);
 
     QList<QAction*> actions() const;
     QList<QAction*> actions(const QKeySequence &sequence) const;

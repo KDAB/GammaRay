@@ -32,7 +32,7 @@ class ConnectionFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
   public:
-    ConnectionFilterProxyModel(QObject *parent = 0);
+    explicit ConnectionFilterProxyModel(QObject *parent = 0);
 
     void filterReceiver(QObject *receiver);
     void filterSender(QObject *sender);

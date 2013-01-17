@@ -34,7 +34,7 @@ class AllCodecsModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
-    AllCodecsModel(QObject *parent);
+    explicit AllCodecsModel(QObject *parent);
 
     virtual QVariant headerData(int section,
                                 Qt::Orientation orientation,
@@ -56,7 +56,7 @@ class SelectedCodecsModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
-    SelectedCodecsModel(QObject *parent);
+    explicit SelectedCodecsModel(QObject *parent);
 
     void setCodecs(const QStringList &codecs);
     QStringList currentCodecs() const;

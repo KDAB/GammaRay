@@ -48,7 +48,7 @@ class GVGraph
      * \brief Construct a Graphviz graph object
      * \param name The name of the graph, must be unique in the application
      */
-    GVGraph(const QString &name);
+    explicit GVGraph(const QString &name);
     ~GVGraph();
 
     GraphId addGraph(const QString &name);

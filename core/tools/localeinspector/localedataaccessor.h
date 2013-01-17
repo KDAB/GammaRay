@@ -35,7 +35,7 @@ class LocaleDataAccessorRegistry : public QObject
 {
   Q_OBJECT
   public:
-    LocaleDataAccessorRegistry(QObject *parent = 0);
+    explicit LocaleDataAccessorRegistry(QObject *parent = 0);
     ~LocaleDataAccessorRegistry();
 
     void registerAccessor(LocaleDataAccessor *accessor);

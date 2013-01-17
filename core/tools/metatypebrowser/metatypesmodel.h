@@ -31,7 +31,7 @@ class MetaTypesModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    MetaTypesModel(QObject *parent = 0);
+    explicit MetaTypesModel(QObject *parent = 0);
 
     virtual QVariant headerData(int section,
                                 Qt::Orientation orientation,

@@ -39,7 +39,7 @@ class MethodInvocationDialog : public QDialog
 {
   Q_OBJECT
   public:
-    MethodInvocationDialog(QWidget *parent = 0);
+    explicit MethodInvocationDialog(QWidget *parent = 0);
     void setMethod(QObject *object, const QMetaMethod &method);
     void accept();
 

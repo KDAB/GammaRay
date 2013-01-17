@@ -56,7 +56,7 @@ class ProbeCreator : public QObject
       CreateOnly,
       CreateAndFindExisting
     };
-    ProbeCreator(Type t);
+    explicit ProbeCreator(Type t);
 
   private slots:
     void createProbe();

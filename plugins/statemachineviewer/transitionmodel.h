@@ -35,7 +35,7 @@ class TransitionModelPrivate;
 class TransitionModel : public ObjectModelBase<QAbstractItemModel>
 {
   public:
-    TransitionModel(QObject *parent = 0);
+    explicit TransitionModel(QObject *parent = 0);
     ~TransitionModel();
     void setState(QAbstractState *state);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;

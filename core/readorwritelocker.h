@@ -38,7 +38,7 @@ namespace GammaRay {
 class ReadOrWriteLocker
 {
   public:
-    ReadOrWriteLocker(QReadWriteLock *lock)
+    explicit ReadOrWriteLocker(QReadWriteLock *lock)
       : m_lock(lock),
         m_locked(false)
     {

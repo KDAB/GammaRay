@@ -39,7 +39,7 @@ class TimerModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    TimerModel(QObject *parent = 0);
+    explicit TimerModel(QObject *parent = 0);
     static TimerModel *instance();
 
     // For the spy callbacks

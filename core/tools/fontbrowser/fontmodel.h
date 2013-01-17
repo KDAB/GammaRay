@@ -33,7 +33,7 @@ class FontModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
-    FontModel(QObject *parent);
+    explicit FontModel(QObject *parent);
 
     void updateFonts(const QList<QFont> &fonts);
     QList<QFont> currentFonts() const;
