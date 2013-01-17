@@ -21,11 +21,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "core/propertywidget.h"
+
 #include <QApplication>
 #include <QTreeView>
 #include <QGraphicsItem>
-
-#include <core/propertywidget.h>
 
 using namespace GammaRay;
 

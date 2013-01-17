@@ -32,8 +32,8 @@
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
 
-#include <kde/krecursivefilterproxymodel.h>
-#include <other/modelutils.h>
+#include "kde/krecursivefilterproxymodel.h"
+#include "other/modelutils.h"
 
 #include <QDebug>
 #include <QDesktopWidget>

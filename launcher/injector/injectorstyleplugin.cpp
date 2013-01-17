@@ -26,8 +26,8 @@
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <private/qguiplatformplugin_p.h> //krazy:exclude=camelcase
 #else
-#include <qpa/qplatformtheme.h>
-#include <private/qguiapplication_p.h>
+#include <qpa/qplatformtheme.h>           //krazy:exclude=camelcase
+#include <private/qguiapplication_p.h>    //krazy:exclude=camelcase
 #endif
 
 #include <QDebug>

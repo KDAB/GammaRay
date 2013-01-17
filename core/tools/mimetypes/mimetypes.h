@@ -27,7 +27,7 @@
 #include "include/toolfactory.h"
 
 #include <QWidget>
-#include <qmimedata.h>
+#include <QMimeData>
 #include <QMimeDatabase>
 
 class QMimeType;
@@ -36,9 +36,8 @@ class QStandardItem;
 
 namespace GammaRay {
 
-namespace Ui
-{
-class MimeTypes;
+namespace Ui {
+  class MimeTypes;
 }
 
 class MimeTypes : public QWidget

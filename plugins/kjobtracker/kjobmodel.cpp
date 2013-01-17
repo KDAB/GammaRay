@@ -22,11 +22,12 @@
 */
 
 #include "kjobmodel.h"
-#include <include/util.h>
+#include "include/util.h"
 
 #include <KJob>
+
 #include <QApplication>
-#include <qpalette.h>
+#include <QPalette>
 
 using namespace GammaRay;
 

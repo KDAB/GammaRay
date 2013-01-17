@@ -22,18 +22,17 @@
 */
 
 #include "metaobjectbrowser.h"
+#include "metaobjecttreemodel.h"
+#include "probe.h"
+#include "propertywidget.h"
 
-#include <kde/krecursivefilterproxymodel.h>
-#include <kde/kfilterproxysearchline.h>
-
-#include <probe.h>
-#include <propertywidget.h>
-#include <metaobjecttreemodel.h>
+#include "kde/kfilterproxysearchline.h"
+#include "kde/krecursivefilterproxymodel.h"
 
 #include <QDebug>
-#include <QTreeView>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QTreeView>
 
 using namespace GammaRay;
 
