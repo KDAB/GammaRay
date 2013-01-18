@@ -25,7 +25,8 @@
 
 using namespace GammaRay;
 
-LocaleDataAccessorRegistry::LocaleDataAccessorRegistry(QObject* parent) : QObject(parent)
+LocaleDataAccessorRegistry::LocaleDataAccessorRegistry(QObject *parent)
+  : QObject(parent)
 {
   init();
 }

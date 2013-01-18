@@ -27,7 +27,7 @@
 
 using namespace GammaRay;
 
-LocaleModel::LocaleModel(LocaleDataAccessorRegistry* registry, QObject* parent)
+LocaleModel::LocaleModel(LocaleDataAccessorRegistry *registry, QObject *parent)
   : QAbstractTableModel(parent), m_registry(registry)
 {
   init();

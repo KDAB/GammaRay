@@ -56,7 +56,7 @@ class LocaleDataAccessorRegistry : public QObject
 
 struct LocaleDataAccessor
 {
-  LocaleDataAccessor(LocaleDataAccessorRegistry* registry, bool defaultAccessor = false)
+  LocaleDataAccessor(LocaleDataAccessorRegistry *registry, bool defaultAccessor = false)
   {
     registry->registerAccessor(this);
     if (defaultAccessor) {
@@ -82,7 +82,7 @@ struct LocaleDataAccessor
 #define LOCALE_DISPLAY_ACCESSOR(NAME) \
 struct Locale##NAME##Accessor : LocaleDataAccessor \
 { \
-  Locale##NAME##Accessor(LocaleDataAccessorRegistry* registry) : LocaleDataAccessor(registry) {} \
+  Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor(registry) {} \
   QString accessorName() { return #NAME; } \
   QString display(const QLocale &locale) \
   { \
@@ -90,7 +90,7 @@ struct Locale##NAME##Accessor : LocaleDataAccessor \
 #define LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
 struct Locale##NAME##Accessor : LocaleDataAccessor \
 { \
-  Locale##NAME##Accessor(LocaleDataAccessorRegistry* registry) : LocaleDataAccessor(registry, true) {} \
+  Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor(registry, true) {} \
   \
   QString accessorName()                 \
   {                                      \
