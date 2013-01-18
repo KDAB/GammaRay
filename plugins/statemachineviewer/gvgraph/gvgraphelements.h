@@ -37,7 +37,7 @@ class GVElement
     explicit GVElement(const QString &name) : m_name(name)
     {
     }
-  
+
     GVElement()
     {
     }
@@ -57,10 +57,10 @@ class GVSubGraph : public GVElement
   friend class GVGraph;
 
   public:
-    GVSubGraph(const QString &name) : GVElement(name)
+    explicit GVSubGraph(const QString &name) : GVElement(name)
     {
     }
-  
+
     GVSubGraph()
     {
     }
@@ -90,7 +90,7 @@ class GVNode : public GVElement
     GVNode(const QString &name) : GVElement(name), m_height(0), m_width(0), m_shape(Ellipse)
     {
     }
-  
+
     GVNode() : m_height(0), m_width(0), m_shape(Ellipse)
     {
     }
@@ -133,10 +133,10 @@ class GVNode : public GVElement
 class GVEdge : public GVElement
 {
   public:
-    GVEdge(const QString &name) : GVElement(name)
+    explicit GVEdge(const QString &name) : GVElement(name)
     {
     }
-  
+
     GVEdge()
     {
     }
