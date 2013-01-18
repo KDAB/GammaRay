@@ -22,7 +22,6 @@
 */
 
 #include "modelcellmodel.h"
-
 #include "include/util.h"
 
 #include <QDebug>
@@ -32,7 +31,6 @@ using namespace GammaRay;
 ModelCellModel::ModelCellModel(QObject *parent) : QAbstractTableModel(parent)
 {
 }
-
 
 void ModelCellModel::setModelIndex(const QModelIndex &index)
 {
@@ -65,7 +63,8 @@ void ModelCellModel::setModelIndex(const QModelIndex &index)
     #undef R
 
     // add custom roles
-    for (QHash<int, QByteArray>::const_iterator it = index.model()->roleNames().constBegin(); it != index.model()->roleNames().constEnd(); ++it) {
+    for (QHash<int, QByteArray>::const_iterator it = index.model()->roleNames().constBegin();
+         it != index.model()->roleNames().constEnd(); ++it) {
       bool roleFound = false;
       for (int i = 0; i < m_roles.size(); ++i) {
         if (m_roles.at(i).first == it.key()) {
@@ -73,8 +72,9 @@ void ModelCellModel::setModelIndex(const QModelIndex &index)
           break;
         }
       }
-      if (!roleFound)
+      if (!roleFound) {
         m_roles.push_back(qMakePair(it.key(), QString::fromLatin1(it.value())));
+      }
     }
 
   }
@@ -113,7 +113,8 @@ bool ModelCellModel::setData(const QModelIndex &index, const QVariant &value, in
   if (index.isValid() && m_index.isValid() &&
       (m_index.flags() & Qt::ItemIsEditable) &&
       role == Qt::EditRole && index.column() == 1) {
-    const Qt::ItemDataRole sourceRole = static_cast<Qt::ItemDataRole>(m_roles.at(index.row()).first);
+    const Qt::ItemDataRole sourceRole =
+      static_cast<Qt::ItemDataRole>(m_roles.at(index.row()).first);
     QAbstractItemModel *sourceModel = const_cast<QAbstractItemModel*>(m_index.model());
     return sourceModel->setData(m_index, value, sourceRole);
   }

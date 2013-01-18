@@ -38,12 +38,12 @@ namespace GammaRay {
     ModelTestResult() : modelTest(0)
     {
     }
-    
+
     ~ModelTestResult()
     {
       delete modelTest;
     }
-    
+
     ModelTest *modelTest;
     QHash<int, QString> failures;
   };

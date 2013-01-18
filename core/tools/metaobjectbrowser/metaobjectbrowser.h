@@ -42,10 +42,10 @@ class MetaObjectBrowser : public QWidget
     explicit MetaObjectBrowser(ProbeInterface *probe, QWidget *parent = 0);
 
   private Q_SLOTS:
-    void objectSelected(const QModelIndex& index);
+    void objectSelected(const QModelIndex &index);
 
   private:
-     PropertyWidget* m_propertyWidget;
+     PropertyWidget *m_propertyWidget;
 };
 
 class MetaObjectBrowserFactory : public QObject,

@@ -54,7 +54,8 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   ui->setupUi(this);
 
   m_overlayWidget->hide();
-  connect(m_overlayWidget, SIGNAL(destroyed(QObject*)), SLOT(handleOverlayWidgetDestroyed(QObject*)));
+  connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
+          SLOT(handleOverlayWidgetDestroyed(QObject*)));
 
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)));
 
@@ -94,7 +95,7 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   selectDefaultItem();
 }
 
-static bool isMainWindowSubclassAcceptor(const QVariant& v)
+static bool isMainWindowSubclassAcceptor(const QVariant &v)
 {
   return qobject_cast<QMainWindow*>(v.value<QObject*>());
 }
@@ -102,8 +103,10 @@ static bool isMainWindowSubclassAcceptor(const QVariant& v)
 void WidgetInspector::selectDefaultItem()
 {
   const QAbstractItemModel *viewModel = ui->widgetTreeView->model();
-  const QModelIndexList matches = ModelUtils::match(viewModel,
-      viewModel->index(0,0), ObjectModel::ObjectRole, isMainWindowSubclassAcceptor);
+  const QModelIndexList matches =
+    ModelUtils::match(
+      viewModel, viewModel->index(0, 0),
+      ObjectModel::ObjectRole, isMainWindowSubclassAcceptor);
 
   if (!matches.isEmpty()) {
     ui->widgetTreeView->setCurrentIndex(matches.first());
@@ -115,7 +118,7 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QWidget *widget = qobject_cast<QWidget*>(obj);
-    QLayout* layout = qobject_cast<QLayout*>(obj);
+    QLayout *layout = qobject_cast<QLayout*>(obj);
     if (!widget && layout) {
       widget = layout->parentWidget();
     }
@@ -124,7 +127,9 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
     ui->widgetPreviewWidget->setWidget(widget);
     setActionsEnabled(widget != 0);
 
-    if (widget && qobject_cast<QDesktopWidget*>(widget) == 0 && !widget->inherits("QDesktopScreenWidget")) {
+    if (widget &&
+        qobject_cast<QDesktopWidget*>(widget) == 0 &&
+        !widget->inherits("QDesktopScreenWidget")) {
       m_overlayWidget->placeOn(widget);
     } else {
       m_overlayWidget->placeOn(0);
@@ -137,9 +142,10 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
   }
 }
 
-void WidgetInspector::handleOverlayWidgetDestroyed(QObject* )
+void WidgetInspector::handleOverlayWidgetDestroyed(QObject *)
 {
-  // the target application might have destroyed the overlay widget (e.g. because the parent of the overlay got destroyed)
+  // the target application might have destroyed the overlay widget
+  // (e.g. because the parent of the overlay got destroyed).
   // just recreate a new one in this case
   m_overlayWidget = new OverlayWidget;
   m_overlayWidget->hide();

@@ -30,9 +30,8 @@
 
 namespace GammaRay {
 
-namespace Ui
-{
-class StandardPaths;
+namespace Ui {
+  class StandardPaths;
 }
 
 class StandardPaths : public QWidget
@@ -60,7 +59,6 @@ class StandardPathsFactory : public QObject, public StandardToolFactory<QObject,
       return tr("Standard Paths");
     }
 };
-
 
 }
 

@@ -32,7 +32,8 @@
 
 using namespace GammaRay;
 
-MimeTypes::MimeTypes(ProbeInterface* probe, QWidget* parent): QWidget(parent), ui(new Ui::MimeTypes)
+MimeTypes::MimeTypes(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent), ui(new Ui::MimeTypes)
 {
   Q_UNUSED(probe);
   ui->setupUi(this);
@@ -54,16 +55,17 @@ MimeTypes::~MimeTypes()
 {
 }
 
-QVector<QStandardItem*> MimeTypes::itemsForType(const QString& mimeTypeName)
+QVector<QStandardItem*> MimeTypes::itemsForType(const QString &mimeTypeName)
 {
-  if (m_mimeTypeNodes.contains(mimeTypeName))
+  if (m_mimeTypeNodes.contains(mimeTypeName)) {
     return m_mimeTypeNodes.value(mimeTypeName);
+  }
 
   makeItemsForType(mimeTypeName);
   return m_mimeTypeNodes.value(mimeTypeName);
 }
 
-void MimeTypes::makeItemsForType(const QString& mimeTypeName)
+void MimeTypes::makeItemsForType(const QString &mimeTypeName)
 {
   const QMimeType mt = m_db.mimeTypeForName(mimeTypeName);
 
@@ -73,9 +75,9 @@ void MimeTypes::makeItemsForType(const QString& mimeTypeName)
     m_mimeTypeNodes[mt.name()].push_back(row.first());
   } else {
     // parentMimeTypes contains duplicates and aliases
-    const QSet<QString> parentMimeTypeNames = normalizedMimeTypeNames( mt.parentMimeTypes() );
+    const QSet<QString> parentMimeTypeNames = normalizedMimeTypeNames(mt.parentMimeTypes());
     foreach (const QString &parentTypeName, parentMimeTypeNames) {
-      foreach (QStandardItem* parentItem, itemsForType(parentTypeName)) {
+      foreach (QStandardItem *parentItem, itemsForType(parentTypeName)) {
         const QList<QStandardItem*> row = makeRowForType(mt);
         parentItem->appendRow(row);
         m_mimeTypeNodes[mt.name()].push_back(row.first());
@@ -84,7 +86,7 @@ void MimeTypes::makeItemsForType(const QString& mimeTypeName)
   }
 }
 
-QSet< QString > MimeTypes::normalizedMimeTypeNames(const QStringList& typeNames) const
+QSet< QString > MimeTypes::normalizedMimeTypeNames(const QStringList &typeNames) const
 {
   QSet<QString> res;
   foreach (const QString &typeName, typeNames) {
@@ -95,10 +97,10 @@ QSet< QString > MimeTypes::normalizedMimeTypeNames(const QStringList& typeNames)
   return res;
 }
 
-QList< QStandardItem* > MimeTypes::makeRowForType(const QMimeType& mt)
+QList<QStandardItem*> MimeTypes::makeRowForType(const QMimeType &mt)
 {
   QList<QStandardItem*> row;
-  QStandardItem* item = new QStandardItem;
+  QStandardItem *item = new QStandardItem;
   item->setText(mt.name());
   row.push_back(item);
 
@@ -113,16 +115,18 @@ QList< QStandardItem* > MimeTypes::makeRowForType(const QMimeType& mt)
   item = new QStandardItem;
   item->setText(mt.iconName() + QLatin1String(" / ") + mt.genericIconName());
   const QIcon icon = QIcon::fromTheme(mt.iconName());
-  if (icon.isNull())
+  if (icon.isNull()) {
     item->setIcon(QIcon::fromTheme(mt.genericIconName()));
-  else
+  } else {
     item->setIcon(icon);
+  }
   row.push_back(item);
 
   item = new QStandardItem;
   QString s = mt.suffixes().join(QLatin1String(", "));
-  if (!mt.preferredSuffix().isEmpty() && mt.suffixes().size() > 1)
+  if (!mt.preferredSuffix().isEmpty() && mt.suffixes().size() > 1) {
     s += QLatin1String(" (") + mt.preferredSuffix() + QLatin1Char(')');
+  }
   item->setText(s);
   row.push_back(item);
 
@@ -136,11 +140,17 @@ QList< QStandardItem* > MimeTypes::makeRowForType(const QMimeType& mt)
 void MimeTypes::fillModel()
 {
   m_model->clear();
-  m_model->setHorizontalHeaderLabels(QStringList() << tr("Name") << tr("Comment") << tr("Glob Patterns") << tr("Icons") << tr("Suffixes") << tr("Aliases"));
+  m_model->setHorizontalHeaderLabels(QStringList() << tr("Name")
+                                                   << tr("Comment")
+                                                   << tr("Glob Patterns")
+                                                   << tr("Icons")
+                                                   << tr("Suffixes")
+                                                   << tr("Aliases"));
 
   foreach (const QMimeType &mt, m_db.allMimeTypes()) {
-    if (!m_mimeTypeNodes.contains(mt.name()))
+    if (!m_mimeTypeNodes.contains(mt.name())) {
       makeItemsForType(mt.name());
+    }
   }
 
   m_mimeTypeNodes.clear();

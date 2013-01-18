@@ -30,14 +30,17 @@ namespace GammaRay {
 
 class StandardPathsModel : public QAbstractTableModel
 {
-    Q_OBJECT
-public:
+  Q_OBJECT
+  public:
     explicit StandardPathsModel(QObject *parent = 0);
     ~StandardPathsModel();
 
-    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
 };

@@ -42,15 +42,15 @@ namespace Ui {
 
 class MimeTypes : public QWidget
 {
-    Q_OBJECT
-public:
+  Q_OBJECT
+  public:
     explicit MimeTypes(ProbeInterface *probe, QWidget *parent = 0);
     ~MimeTypes();
 
-private:
+  private:
     void fillModel();
     QVector<QStandardItem*> itemsForType(const QString& mimeTypeName);
-    void makeItemsForType(const QString& mimeTypeName);
+    void makeItemsForType(const QString &mimeTypeName);
     static QList<QStandardItem*> makeRowForType(const QMimeType &mt);
     QSet<QString> normalizedMimeTypeNames(const QStringList &typeNames) const;
 

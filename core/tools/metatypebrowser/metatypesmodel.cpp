@@ -41,36 +41,37 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
 
   int metaTypeId = m_metaTypes.at(index.row());
   switch (index.column()) {
-    case 0:
-    {
-      QString name(QMetaType::typeName(metaTypeId));
-      if (name.isEmpty())
-        return tr("N/A");
-      return name;
+  case 0:
+  {
+    QString name(QMetaType::typeName(metaTypeId));
+    if (name.isEmpty()) {
+      return tr("N/A");
     }
-    case 1:
-      return metaTypeId;
+    return name;
+  }
+  case 1:
+    return metaTypeId;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    case 2:
-      return QMetaType::sizeOf(metaTypeId);
-    case 3:
-    {
-      const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
-      QStringList l;
-      #define F(x) if (flags & QMetaType:: x) l.push_back(#x)
-      F(NeedsConstruction);
-      F(NeedsDestruction);
-      F(MovableType);
-      F(PointerToQObject);
-      F(IsEnumeration);
-      F(SharedPointerToQObject);
-      F(WeakPointerToQObject);
-      F(TrackingPointerToQObject);
-      F(WasDeclaredAsMetaType);
-      #undef F
+  case 2:
+    return QMetaType::sizeOf(metaTypeId);
+  case 3:
+  {
+    const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
+    QStringList l;
+    #define F(x) if (flags & QMetaType:: x) l.push_back(#x)
+    F(NeedsConstruction);
+    F(NeedsDestruction);
+    F(MovableType);
+    F(PointerToQObject);
+    F(IsEnumeration);
+    F(SharedPointerToQObject);
+    F(WeakPointerToQObject);
+    F(TrackingPointerToQObject);
+    F(WasDeclaredAsMetaType);
+    #undef F
 
-      return l.join(", ");
-    }
+    return l.join(", ");
+  }
 #endif
   }
   return QVariant();
@@ -99,14 +100,19 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
 
 QVariant MetaTypesModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (role != Qt::DisplayRole || orientation != Qt::Horizontal)
+  if (role != Qt::DisplayRole || orientation != Qt::Horizontal) {
     return QVariant();
+  }
 
   switch (section) {
-    case 0: return tr("Type Name");
-    case 1: return tr("Meta Type Id");
-    case 2: return tr("Size");
-    case 3: return tr("Type Flags");
+  case 0:
+    return tr("Type Name");
+  case 1:
+    return tr("Meta Type Id");
+  case 2:
+    return tr("Size");
+  case 3:
+    return tr("Type Flags");
   }
   return QVariant();
 }
@@ -116,16 +122,17 @@ void MetaTypesModel::scanMetaTypes()
   beginResetModel();
   m_metaTypes.clear();
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  for (int mtId = 0; QMetaType::isRegistered(mtId); ++mtId)
+  for (int mtId = 0; QMetaType::isRegistered(mtId); ++mtId) {
     m_metaTypes.push_back(mtId);
+  }
 #else
   for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
-    if (QMetaType::isRegistered(mtId))
+    if (QMetaType::isRegistered(mtId)) {
       m_metaTypes.push_back(mtId);
+    }
   }
 #endif
   endResetModel();
 }
-
 
 #include "metatypesmodel.moc"

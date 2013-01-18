@@ -27,7 +27,8 @@
 
 using namespace GammaRay;
 
-StandardPaths::StandardPaths(ProbeInterface* probe, QWidget* parent): QWidget(parent), ui(new Ui::StandardPaths)
+StandardPaths::StandardPaths(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent), ui(new Ui::StandardPaths)
 {
   Q_UNUSED(probe);
   ui->setupUi(this);

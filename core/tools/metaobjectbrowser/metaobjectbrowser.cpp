@@ -36,17 +36,17 @@
 
 using namespace GammaRay;
 
-MetaObjectBrowser::MetaObjectBrowser(ProbeInterface* probe, QWidget* parent)
+MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent)
 {
   Q_UNUSED(probe);
-  QAbstractItemModel* model = Probe::instance()->metaObjectModel();
+  QAbstractItemModel *model = Probe::instance()->metaObjectModel();
 
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
   objectFilter->setSourceModel(model);
   objectFilter->setDynamicSortFilter(true);
 
-  QTreeView* treeView = new QTreeView(this);
+  QTreeView *treeView = new QTreeView(this);
   treeView->setModel(objectFilter);
   treeView->header()->setResizeMode(0, QHeaderView::Stretch);
   treeView->setSortingEnabled(true);
@@ -57,29 +57,29 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface* probe, QWidget* parent)
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(objectSelected(QModelIndex)));
 
-  PropertyWidget* propertyWidget = new PropertyWidget(this);
+  PropertyWidget *propertyWidget = new PropertyWidget(this);
   propertyWidget->setMetaObject(0); // init
   m_propertyWidget = propertyWidget;
 
-  QVBoxLayout* vbox = new QVBoxLayout;
+  QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(objectSearchLine);
   vbox->addWidget(treeView);
 
-  QHBoxLayout* hbox = new QHBoxLayout(this);
+  QHBoxLayout *hbox = new QHBoxLayout(this);
   hbox->addLayout(vbox);
   hbox->addWidget(propertyWidget);
 
   // init widget
   treeView->sortByColumn(0, Qt::AscendingOrder);
-  const QModelIndex firstIndex = objectFilter->index(0,0);
+  const QModelIndex firstIndex = objectFilter->index(0, 0);
   treeView->expand(firstIndex);
 }
 
-void MetaObjectBrowser::objectSelected(const QModelIndex& index)
+void MetaObjectBrowser::objectSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
-    const QMetaObject* metaObject = index.data(MetaObjectTreeModel::MetaObjectRole)
-        .value<const QMetaObject*>();
+    const QMetaObject *metaObject =
+      index.data(MetaObjectTreeModel::MetaObjectRole).value<const QMetaObject*>();
     m_propertyWidget->setMetaObject(metaObject);
   } else {
     m_propertyWidget->setMetaObject(0);

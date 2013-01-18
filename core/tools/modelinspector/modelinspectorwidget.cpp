@@ -77,7 +77,9 @@ void ModelInspectorWidget::modelCellSelected(const QModelIndex &index)
 {
   m_cellModel->setModelIndex(index);
 
-  ui->indexLabel->setText(index.isValid() ? tr("Row: %1 Column: %2").arg(index.row()).arg(index.column()) : tr("Invalid"));
+  ui->indexLabel->setText(index.isValid() ?
+    tr("Row: %1 Column: %2").arg(index.row()).arg(index.column()) :
+    tr("Invalid"));
   ui->internalIdLabel->setText(QString::number(index.internalId()));
   ui->internalPtrLabel->setText(Util::addressToString(index.internalPointer()));
 }

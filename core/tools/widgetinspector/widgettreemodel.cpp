@@ -42,8 +42,9 @@ QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const
     QWidget *widget = qobject_cast<QWidget*>(obj);
     if (!widget) {
       QLayout *layout = qobject_cast<QLayout*>(obj);
-      if (layout)
+      if (layout) {
         widget = layout->parentWidget();
+      }
     }
     if (widget && !widget->isVisible()) {
       return qApp->palette().color(QPalette::Disabled, QPalette::Text);
