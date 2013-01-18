@@ -61,7 +61,9 @@ class ActionInspectorFactory : public QObject,
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ActionInspector")
 
   public:
-    explicit ActionInspectorFactory(QObject *parent = 0) : QObject(parent) {}
+    explicit ActionInspectorFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
 
     virtual inline QString name() const
     {

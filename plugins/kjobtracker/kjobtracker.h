@@ -48,9 +48,8 @@ class KJobTracker : public QWidget
   private:
     friend class KJobTrackerFactory;
     QScopedPointer<Ui::KJobTracker> ui;
-    static KJobModel* m_jobModel;
+    static KJobModel *m_jobModel;
 };
-
 
 class KJobTrackerFactory : public QObject, public StandardToolFactory<KJob, KJobTracker>
 {
@@ -58,11 +57,17 @@ class KJobTrackerFactory : public QObject, public StandardToolFactory<KJob, KJob
   Q_INTERFACES(GammaRay::ToolFactory)
 
   public:
-    explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent) {}
-    inline QString name() const { return tr("KJobs"); }
-    void init(ProbeInterface* );
-};
+    explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
 
+    inline QString name() const
+    {
+      return tr("KJobs");
+    }
+
+    void init(ProbeInterface *);
+};
 
 }
 

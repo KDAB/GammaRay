@@ -120,9 +120,9 @@ void dumpObject(QObject *obj)
 struct Listener
 {
   Listener()
-    : filterThread(0),
-      trackDestroyed(true)
-  {}
+    : filterThread(0), trackDestroyed(true)
+  {
+  }
 
   QThread *filterThread;
   bool trackDestroyed;
@@ -138,7 +138,8 @@ class ObjectLock : public QReadWriteLock
   public:
     ObjectLock()
       : QReadWriteLock(QReadWriteLock::Recursive)
-    {}
+    {
+    }
 };
 Q_GLOBAL_STATIC(ObjectLock, s_lock)
 

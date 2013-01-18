@@ -59,8 +59,14 @@ class ScriptEngineDebuggerFactory
   Q_PLUGIN_METADATA(IID "org.qt-project.Qt.ScriptEngineDebugger")
 
   public:
-    explicit ScriptEngineDebuggerFactory(QObject *parent = 0) : QObject(parent) {}
-    inline QString name() const { return tr("Script Engines"); }
+    explicit ScriptEngineDebuggerFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Script Engines");
+    }
 };
 
 }

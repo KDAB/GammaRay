@@ -42,51 +42,54 @@ using namespace GammaRay;
  * - tooltips with additional information (capabilities etc)
  */
 
-KJobModel::KJobModel(QObject* parent): QAbstractTableModel(parent)
+KJobModel::KJobModel(QObject *parent) : QAbstractTableModel(parent)
 {
 }
 
-QVariant KJobModel::data(const QModelIndex& index, int role) const
+QVariant KJobModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
-
-  const KJobInfo& job = m_data.at(index.row());
-  if (role == Qt::DisplayRole) {
-    switch (index.column()) {
-      case 0: return job.name;
-      case 1: return job.type;
-      case 2: return job.statusText;
-    }
   }
 
-  else if (role == Qt::ForegroundRole) {
+  const KJobInfo &job = m_data.at(index.row());
+  if (role == Qt::DisplayRole) {
+    switch (index.column()) {
+    case 0:
+      return job.name;
+    case 1:
+      return job.type;
+    case 2:
+      return job.statusText;
+    }
+  } else if (role == Qt::ForegroundRole) {
     switch (job.state) {
-      case KJobInfo::Finished:
-      case KJobInfo::Deleted:
-        return QApplication::palette().brush(QPalette::Disabled, QPalette::Foreground);
-      case KJobInfo::Error:
-        return Qt::red;
-      case KJobInfo::Killed:
-        return QApplication::palette().link();
-      default:
-        return QVariant();
+    case KJobInfo::Finished:
+    case KJobInfo::Deleted:
+      return QApplication::palette().brush(QPalette::Disabled, QPalette::Foreground);
+    case KJobInfo::Error:
+      return Qt::red;
+    case KJobInfo::Killed:
+      return QApplication::palette().link();
+    default:
+      return QVariant();
     }
   }
 
   return QVariant();
 }
 
-int KJobModel::columnCount(const QModelIndex& parent) const
+int KJobModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 3;
 }
 
-int KJobModel::rowCount(const QModelIndex& parent) const
+int KJobModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return 0;
+  }
   return m_data.size();
 }
 
@@ -94,19 +97,23 @@ QVariant KJobModel::headerData(int section, Qt::Orientation orientation, int rol
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     switch (section) {
-      case 0: return tr("Job");
-      case 1: return tr("Type");
-      case 2: return tr("Status");
+    case 0:
+      return tr("Job");
+    case 1:
+      return tr("Type");
+    case 2:
+      return tr("Status");
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-void KJobModel::objectAdded(QObject* obj)
+void KJobModel::objectAdded(QObject *obj)
 {
   KJob *job = qobject_cast<KJob*>(obj);
-  if (!job)
+  if (!job) {
     return;
+  }
 
   beginInsertRows(QModelIndex(), rowCount(), rowCount());
   KJobInfo jobInfo;
@@ -124,8 +131,9 @@ void KJobModel::objectAdded(QObject* obj)
 void KJobModel::objectRemoved(QObject *obj)
 {
   const int pos = indexOfJob(obj);
-  if (pos < 0)
+  if (pos < 0) {
     return;
+  }
 
   // KJob dtor emits finished, so this shouldn't happen, in theory
   // We however seem to get here for very short-lived jobs that emit before objectAdded()
@@ -138,29 +146,33 @@ void KJobModel::objectRemoved(QObject *obj)
   }
 }
 
-void KJobModel::jobResult(KJob* job)
+void KJobModel::jobResult(KJob *job)
 {
   const int pos = indexOfJob(job);
-  if (pos < 0)
+  if (pos < 0) {
     return;
+  }
 
   if (job->error()) {
     m_data[pos].state = KJobInfo::Error;
     m_data[pos].statusText = job->errorString();
   } else {
-    if (m_data.at(pos).state == KJobInfo::Killed) // we can get finished() before result(), which is perfectly fine
+    if (m_data.at(pos).state == KJobInfo::Killed) {
+      // we can get finished() before result(), which is perfectly fine
       m_data[pos].statusText.clear();
+    }
     m_data[pos].state = KJobInfo::Finished;
   }
 
   emit dataChanged(index(pos, 0), index(pos, columnCount()-1));
 }
 
-void KJobModel::jobFinished(KJob* obj)
+void KJobModel::jobFinished(KJob *obj)
 {
   const int pos = indexOfJob(obj);
-  if (pos < 0)
+  if (pos < 0) {
     return;
+  }
 
   if (m_data.at(pos).state == KJobInfo::Running) {
     m_data[pos].state = KJobInfo::Killed;
@@ -170,26 +182,28 @@ void KJobModel::jobFinished(KJob* obj)
   emit dataChanged(index(pos, 0), index(pos, columnCount()-1));
 }
 
-void KJobModel::jobInfo(KJob* job, const QString& plainMessage)
+void KJobModel::jobInfo(KJob *job, const QString &plainMessage)
 {
   const int pos = indexOfJob(job);
-  if (pos < 0)
+  if (pos < 0) {
     return;
+  }
 
-  if (m_data.at(pos).state == KJobInfo::Running)
+  if (m_data.at(pos).state == KJobInfo::Running) {
     m_data[pos].statusText = plainMessage;
+  }
 
   emit dataChanged(index(pos, 0), index(pos, columnCount()-1));
 }
 
-int KJobModel::indexOfJob(QObject* obj) const
+int KJobModel::indexOfJob(QObject *obj) const
 {
   for (int i = 0; i < m_data.size(); ++i) {
-    if (m_data.at(i).job == obj)
+    if (m_data.at(i).job == obj) {
       return i;
+    }
   }
   return -1;
 }
-
 
 #include "kjobmodel.moc"

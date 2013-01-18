@@ -99,10 +99,13 @@ class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
      * @param parent is the parent object for this instance.
      */
     explicit ObjectTypeFilterProxyModel(QObject *parent = 0)
-      : ObjectFilterProxyModelBase(parent) {}
+      : ObjectFilterProxyModelBase(parent)
+    {
+    }
 
   protected:
-    virtual bool filterAcceptsObject(QObject *object) const {
+    virtual bool filterAcceptsObject(QObject *object) const
+    {
       return qobject_cast<T*>(object);
     }
 };

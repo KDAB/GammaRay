@@ -35,11 +35,10 @@ using namespace GammaRay;
 
 using namespace GammaRay;
 
-KJobModel* KJobTracker::m_jobModel = 0;
+KJobModel *KJobTracker::m_jobModel = 0;
 
-KJobTracker::KJobTracker(ProbeInterface* probe, QWidget* parent):
-  QWidget(parent),
-  ui(new Ui::KJobTracker)
+KJobTracker::KJobTracker(ProbeInterface *probe, QWidget *parent)
+  : QWidget(parent), ui(new Ui::KJobTracker)
 {
   Q_UNUSED(probe);
   ui->setupUi(this);
@@ -54,14 +53,17 @@ KJobTracker::~KJobTracker()
 {
 }
 
-
 void KJobTrackerFactory::init(ProbeInterface *probe)
 {
   GammaRay::StandardToolFactory<KJob, GammaRay::KJobTracker>::init(probe);
+
   if (!KJobTracker::m_jobModel) {
     KJobTracker::m_jobModel = new KJobModel(this);
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), KJobTracker::m_jobModel, SLOT(objectAdded(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), KJobTracker::m_jobModel, SLOT(objectRemoved(QObject*)));
+
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
+            KJobTracker::m_jobModel, SLOT(objectAdded(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
+            KJobTracker::m_jobModel, SLOT(objectRemoved(QObject*)));
   }
 }
 

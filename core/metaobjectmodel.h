@@ -37,9 +37,9 @@ class MetaObjectModel : public QAbstractItemModel
 {
   public:
     explicit MetaObjectModel(QObject *parent = 0)
-      : QAbstractItemModel(parent)
-      , m_metaObject(0)
-    {}
+      : QAbstractItemModel(parent), m_metaObject(0)
+    {
+    }
 
     virtual void setMetaObject(const QMetaObject *metaObject)
     {

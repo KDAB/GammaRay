@@ -50,7 +50,9 @@ class ProbeInterface;
 class ToolFactory
 {
   public:
-    virtual inline ~ToolFactory() {}
+    virtual inline ~ToolFactory()
+    {
+    }
 
     /**
      * Unique id of this tool

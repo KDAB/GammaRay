@@ -28,7 +28,9 @@ template<class T>
 class RingBuffer
 {
   public:
-    RingBuffer() : m_size(5) {}
+    RingBuffer() : m_size(5)
+    {
+    }
 
     void resize(int size)
     {

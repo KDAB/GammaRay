@@ -59,7 +59,9 @@ class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, G
   Q_INTERFACES(GammaRay::ToolFactory)
 
   public:
-    explicit GraphViewerFactory(QObject *parent = 0) : QObject(parent) {}
+    explicit GraphViewerFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
 
     virtual inline QString name() const
     {

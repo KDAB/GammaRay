@@ -35,8 +35,15 @@ using namespace GammaRay;
 
 namespace GammaRay {
   struct ModelTester::ModelTestResult {
-    ModelTestResult() : modelTest(0) {}
-    ~ModelTestResult() { delete modelTest; }
+    ModelTestResult() : modelTest(0)
+    {
+    }
+    
+    ~ModelTestResult()
+    {
+      delete modelTest;
+    }
+    
     ModelTest *modelTest;
     QHash<int, QString> failures;
   };

@@ -56,8 +56,14 @@ class WebInspectorFactory
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.WebInspector")
 
   public:
-    explicit WebInspectorFactory(QObject *parent = 0) : QObject(parent) {}
-    inline QString name() const { return tr("Web Pages"); }
+    explicit WebInspectorFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
+
+    inline QString name() const
+    {
+      return tr("Web Pages");
+    }
 };
 
 }

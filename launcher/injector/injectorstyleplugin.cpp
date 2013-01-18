@@ -47,9 +47,13 @@ QStyle *InjectorStylePlugin::create(const QString &)
   static QGuiPlatformPlugin defaultGuiPlatform;
   return QStyleFactory::create(defaultGuiPlatform.styleName());
 #else
-  foreach(const QString &styleName, QGuiApplicationPrivate::platform_theme->defaultThemeHint(QPlatformTheme::StyleNames).toStringList()) {
-    if (QStyle *style = QStyleFactory::create(styleName))
+  const QStringList styleNameList =
+    QGuiApplicationPrivate::platform_theme->defaultThemeHint(
+      QPlatformTheme::StyleNames).toStringList();
+  foreach (const QString &styleName, styleNameList) {
+    if (QStyle *style = QStyleFactory::create(styleName)) {
       return style;
+    }
   }
   return 0;
 #endif

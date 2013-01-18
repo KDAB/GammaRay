@@ -12,7 +12,7 @@ endif()
 
 add_subdirectory(statemachineviewer)
 add_subdirectory(timertop)
-if (NOT Qt5Core_FOUND)
+if(NOT Qt5Core_FOUND)
   add_subdirectory(kjobtracker)
 endif()
 

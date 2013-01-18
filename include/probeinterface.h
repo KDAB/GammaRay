@@ -47,7 +47,9 @@ namespace GammaRay {
 class ProbeInterface
 {
   public:
-    virtual inline ~ProbeInterface() {}
+    virtual inline ~ProbeInterface()
+    {
+    }
 
     /**
      * Returns the object list model.

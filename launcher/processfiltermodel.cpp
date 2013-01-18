@@ -41,8 +41,9 @@ static QString qGetLogin() {
 #include <unistd.h>
 static QString qGetLogin(){
   struct passwd *pw = getpwuid(getuid());
-  if (!pw || !pw->pw_name)
+  if (!pw || !pw->pw_name) {
     return QString();
+  }
   return QString::fromLocal8Bit(pw->pw_name);
 }
 #endif

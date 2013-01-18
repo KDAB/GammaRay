@@ -1,6 +1,6 @@
 find_package(KDE4)
 
-if (KDE4_FOUND AND NOT Qt5Core_FOUND)
+if(KDE4_FOUND AND NOT Qt5Core_FOUND)
   set(_KDE4_USABLE TRUE)
 else()
   set(_KDE4_USABLE FALSE)
@@ -16,8 +16,7 @@ macro_log_feature(
   "Required for the KJob tracker plug-in"
 )
 
-
-if (KDE4_FOUND AND NOT Qt5Core_FOUND)
+if(KDE4_FOUND AND NOT Qt5Core_FOUND)
 
 include_directories(
   ${KDE4_INCLUDES}
@@ -37,17 +36,17 @@ set(gammaray_kjob_plugin_srcs
 qt4_automoc(${gammaray_kjob_plugin_srcs})
 
 qt4_wrap_ui(gammaray_kjob_plugin_srcs
-   kjobtracker.ui
+  kjobtracker.ui
 )
 
 gammaray_add_plugin(gammaray_kjobtracker_plugin
-    gammaray_kjobtracker.desktop
-    ${gammaray_kjob_plugin_srcs}
+  gammaray_kjobtracker.desktop
+  ${gammaray_kjob_plugin_srcs}
 )
 
 target_link_libraries(gammaray_kjobtracker_plugin
-    ${KDE4_KDECORE_LIBS}
-    gammaray_probe
+  ${KDE4_KDECORE_LIBS}
+  gammaray_probe
 )
 
 endif()

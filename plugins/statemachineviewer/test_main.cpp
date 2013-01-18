@@ -60,17 +60,17 @@ int main(int argc, char *argv[])
 
   Q_FOREACH (const GVNodePair &pair, graph->gvNodes()) {
     const GVNode node = pair.second;
-    QGraphicsItem* item = new GVNodeItem(node, 0);
+    QGraphicsItem *item = new GVNodeItem(node, 0);
     scene->addItem(item);
   }
   Q_FOREACH (const GVEdgePair &pair, graph->gvEdges()) {
     const GVEdge edge = pair.second;
-    QGraphicsItem* item = new GVEdgeItem(edge, 0);
+    QGraphicsItem *item = new GVEdgeItem(edge, 0);
     scene->addItem(item);
   }
   Q_FOREACH (const GVSubGraphPair &pair, graph->gvSubGraphs()) {
     const GVSubGraph graph = pair.second;
-    QGraphicsItem* item = new GVGraphItem(graph, 0);
+    QGraphicsItem *item = new GVGraphItem(graph, 0);
     scene->addItem(item);
   }
   delete graph;

@@ -38,7 +38,9 @@ class ErrorModel : public QAbstractTableModel
 {
   public:
     explicit ErrorModel(PluginLoadErrors &errors, QObject *parent = 0)
-      : QAbstractTableModel(parent), m_errors(errors) {}
+      : QAbstractTableModel(parent), m_errors(errors)
+    {
+    }
 
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
     {
@@ -97,7 +99,9 @@ class ToolModel : public QAbstractTableModel
 {
   public:
     explicit ToolModel(const QVector<ToolFactory*>& tools, QObject* parent = 0)
-      : QAbstractTableModel(parent), m_tools(tools) {}
+      : QAbstractTableModel(parent), m_tools(tools)
+    {
+    }
 
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
     {

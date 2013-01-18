@@ -38,7 +38,9 @@ class TestObject : public QObject
     virtual ~TestObject();
 
   private slots:
-    void dummySlot() {}
+    void dummySlot()
+    {
+    }
 
   public:
     QObject *child;
@@ -63,7 +65,9 @@ class TestConnections : public QObject
     void timeout();
 
   private slots:
-    void dummySlot(){}
+    void dummySlot()
+    {
+    }
 
   signals:
     void done();

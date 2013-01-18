@@ -131,7 +131,10 @@ class StateMachineViewerFactory :
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StateMachineViewer")
 
   public:
-    explicit StateMachineViewerFactory(QObject *parent = 0) : QObject(parent) {}
+    explicit StateMachineViewerFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
+
     inline QString name() const
     {
       return tr("State Machine Viewer");

@@ -52,7 +52,9 @@ class ObjectModelBase : public Base
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit ObjectModelBase<Base>(QObject *parent) : Base(parent) {}
+    explicit ObjectModelBase<Base>(QObject *parent) : Base(parent)
+    {
+    }
 
     /**
      * Returns the number of columns in the specified model (currently this is
