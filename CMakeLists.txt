@@ -65,7 +65,7 @@ set(QT_MIN_VERSION "4.7.0")
 
 # try Qt5 first, and prefer that if found
 find_package(Qt5Core QUIET)
-if (Qt5Core_FOUND)
+if(Qt5Core_FOUND)
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Widgets REQUIRED)
   find_package(Qt5Concurrent REQUIRED)
@@ -87,8 +87,8 @@ if (Qt5Core_FOUND)
 
   set(QT_QTWEBKIT_FOUND ${Qt5WebKitWidgets_FOUND}) # backward compat with Qt4 webkit code
 
-  if (Qt5_POSITION_INDEPENDENT_CODE)
-    if (CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement
+  if(Qt5_POSITION_INDEPENDENT_CODE)
+    if(CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     else()
       set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -104,7 +104,6 @@ else()
   set(HAVE_QT_DESIGNER true)
   set(HAVE_QT_PRINTSUPPORT true)
 endif()
-
 
 # TODO: Remove me once fixed in ECM module
 if(Qt5Core_FOUND)
@@ -122,7 +121,7 @@ endif()
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
-if (Qt5Core_FOUND)
+if(Qt5Core_FOUND)
   set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/qt5/plugins")
 else()
   set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/qt4/plugins")
@@ -185,7 +184,7 @@ macro_log_feature(
   "Required for widget PDF export"
 )
 
-if (NOT Qt5Core_FOUND)
+if(NOT Qt5Core_FOUND)
 find_path(
   QT_PRIVATE_INCLUDE_DIR private/qobject_p.h
   PATHS ${QT_INCLUDES}
@@ -209,7 +208,7 @@ else()
 endif()
 else() # Qt 5
   find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-  if (QT_PRIVATE_INCLUDE_DIR)
+  if(QT_PRIVATE_INCLUDE_DIR)
     set(HAVE_PRIVATE_QT_HEADERS true)
   endif()
 endif()
