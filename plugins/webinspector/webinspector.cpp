@@ -55,6 +55,9 @@ void WebInspector::webPageSelected(int index)
   if (page) {
     page->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
     ui->webInspector->setPage(page);
+    // webinspector needs a show event to actually show anything, just setting the page is not enough...
+    ui->webInspector->hide();
+    ui->webInspector->show();
   }
 }
 
