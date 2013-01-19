@@ -310,7 +310,7 @@ QAbstractItemModel *Probe::objectTreeModel() const
   return m_objectTreeModel;
 }
 
-QAbstractItemModel* Probe::metaObjectModel() const
+QAbstractItemModel *Probe::metaObjectModel() const
 {
   return m_metaObjectTreeModel;
 }

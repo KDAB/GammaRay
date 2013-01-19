@@ -49,10 +49,11 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
           this, SLOT(objectReparanted(QObject*)));
 }
 
-static QObject* parentObject(QObject *obj)
+static QObject *parentObject(QObject *obj)
 {
-  if (obj->parent())
+  if (obj->parent()) {
     return obj->parent();
+  }
 
   // QQuickItem does very ugly things with its parent, so we have to try harder to get hold of it...
   if (obj->inherits("QQuickItem")) {

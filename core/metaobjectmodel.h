@@ -107,7 +107,7 @@ class MetaObjectModel : public QAbstractItemModel
 
   protected:
     // let's assume that meta objects never get destroyed
-    const QMetaObject* m_metaObject;
+    const QMetaObject *m_metaObject;
 };
 
 }

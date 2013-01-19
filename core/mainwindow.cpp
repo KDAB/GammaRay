@@ -73,9 +73,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   QGuiPlatformPlugin defaultGuiPlatform;
   defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName());
 #else
-  foreach(const QString &styleName, QGuiApplicationPrivate::platform_theme->defaultThemeHint(QPlatformTheme::StyleNames).toStringList()) {
-    if (defaultStyle = QStyleFactory::create(styleName))
+  foreach (const QString &styleName, QGuiApplicationPrivate::platform_theme->defaultThemeHint(QPlatformTheme::StyleNames).toStringList()) {
+    if (defaultStyle = QStyleFactory::create(styleName)) {
       break;
+    }
   }
 #endif
   if (defaultStyle) {
@@ -175,9 +176,9 @@ void MainWindow::about()
            "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>"
            "</qt>"));
   lay->addWidget(informativeText);
-  QDialogButtonBox * buttonBox = new QDialogButtonBox;
+  QDialogButtonBox *buttonBox = new QDialogButtonBox;
   buttonBox->addButton(QDialogButtonBox::Close);
-  connect(buttonBox,SIGNAL(rejected()),&dialog,SLOT(close()));
+  connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(close()));
   lay->addWidget(buttonBox);
 
   dialog.setWindowIcon(QPixmap(":gammaray/GammaRay-128x128.png"));

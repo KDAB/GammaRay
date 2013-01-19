@@ -34,47 +34,52 @@ class MetaObjectTreeModel : public QAbstractItemModel
 {
   Q_OBJECT
 
-public:
-  enum Role {
-    MetaObjectRole = Qt::UserRole + 1
-  };
+  public:
+    enum Role {
+      MetaObjectRole = Qt::UserRole + 1
+    };
 
-  enum Column {
-    ObjectColumn
-  };
+    enum Column {
+      ObjectColumn
+    };
 
-  explicit MetaObjectTreeModel(QObject* parent = 0);
+    explicit MetaObjectTreeModel(QObject *parent = 0);
 
-  // reimplemented methods
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  virtual QModelIndex parent(const QModelIndex& child) const;
-  virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    // reimplemented methods
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-  // headers
-  virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-  // Probe callbacks
-  void objectAdded(QObject *obj);
-  void objectRemoved(QObject *obj);
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-private:
-  void addMetaObject(const QMetaObject* metaObject);
-  void removeMetaObject(const QMetaObject* metaObject);
+    virtual QModelIndex parent(const QModelIndex &child) const;
 
-  QModelIndex indexForMetaObject(const QMetaObject* metaObject) const;
-  const QMetaObject* metaObjectForIndex(const QModelIndex& index) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-  mutable QReadWriteLock m_lock;
+    // headers
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
 
-  // data
-  QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
-  QHash<const QMetaObject*, QVector<const QMetaObject*> > m_parentChildMap;
+    // Probe callbacks
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
+
+  private:
+    void addMetaObject(const QMetaObject *metaObject);
+    void removeMetaObject(const QMetaObject *metaObject);
+
+    QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
+    const QMetaObject *metaObjectForIndex(const QModelIndex &index) const;
+
+    mutable QReadWriteLock m_lock;
+
+    // data
+    QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
+    QHash<const QMetaObject*, QVector<const QMetaObject*> > m_parentChildMap;
 };
 
 }
 
-Q_DECLARE_METATYPE(const QMetaObject*)
+Q_DECLARE_METATYPE(const QMetaObject *)
 
 #endif // GAMMARAY_METAOBJECTTREEMODEL_H

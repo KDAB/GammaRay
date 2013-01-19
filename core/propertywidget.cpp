@@ -52,8 +52,9 @@ using namespace GammaRay;
 static bool removePage(QTabWidget* tabWidget, QWidget* widget)
 {
   const int index = tabWidget->indexOf(widget);
-  if (index == -1)
+  if (index == -1) {
     return false;
+  }
 
   tabWidget->removeTab(index);
   return true;
@@ -168,9 +169,10 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
   m_inboundConnectionModel->filterReceiver(object);
   m_outboundConnectionModel->filterSender(object);
 
-  const QMetaObject* metaObject = 0;
-  if (object)
+  const QMetaObject *metaObject = 0;
+  if (object) {
     metaObject = object->metaObject();
+  }
   m_enumModel->setMetaObject(metaObject);
   m_classInfoModel->setMetaObject(metaObject);
   m_methodModel->setMetaObject(metaObject);
@@ -193,7 +195,7 @@ void PropertyWidget::setObject(void *object, const QString &className)
   setDisplayState(ObjectState);
 }
 
-void PropertyWidget::setMetaObject(const QMetaObject* metaObject)
+void PropertyWidget::setMetaObject(const QMetaObject *metaObject)
 {
   setObject(0);
   m_enumModel->setMetaObject(metaObject);
@@ -248,22 +250,26 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
   }
 }
 
-bool PropertyWidget::showTab(const QWidget* widget, DisplayState state) const
+bool PropertyWidget::showTab(const QWidget *widget, DisplayState state) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  if (widget == m_ui->inboundConnectionTab || widget == m_ui->outboundConnectionTab)
+  if (widget == m_ui->inboundConnectionTab ||
+      widget == m_ui->outboundConnectionTab) {
     return false;
+  }
 #endif
   switch(state) {
   case QObjectState:
     return true; // show all
   case ObjectState:
-    if (widget == m_ui->metaPropertyTab)
+    if (widget == m_ui->metaPropertyTab) {
       return true;
+    }
     break;
   case MetaObjectState:
-    if (widget == m_ui->enumTab || widget == m_ui->classInfoTab || widget == m_ui->methodTab)
+    if (widget == m_ui->enumTab || widget == m_ui->classInfoTab || widget == m_ui->methodTab) {
       return true;
+    }
     break;
   }
   return false;
@@ -271,20 +277,22 @@ bool PropertyWidget::showTab(const QWidget* widget, DisplayState state) const
 
 void PropertyWidget::setDisplayState(DisplayState state)
 {
-  QWidget* currentWidget = m_ui->tabWidget->currentWidget();
+  QWidget *currentWidget = m_ui->tabWidget->currentWidget();
 
   // iterate through all tabs, decide for each tab if it gets hidden or not
   typedef QPair<QWidget*, QString> WidgetStringPair;
-  Q_FOREACH(const WidgetStringPair &tab, m_tabWidgets) {
+  Q_FOREACH (const WidgetStringPair &tab, m_tabWidgets) {
     const bool show = showTab(tab.first, state);
-    if (show)
+    if (show) {
       m_ui->tabWidget->addTab(tab.first, tab.second);
-    else
+    } else {
       removePage(m_ui->tabWidget, tab.first);
+    }
   }
 
-  if (m_ui->tabWidget->indexOf(currentWidget) >= 0)
+  if (m_ui->tabWidget->indexOf(currentWidget) >= 0) {
     m_ui->tabWidget->setCurrentWidget(currentWidget);
+  }
 
   m_ui->methodLog->setVisible(m_object);
 }

@@ -37,45 +37,45 @@
 #include <QWidget>
 
 #define MO_ADD_BASECLASS(Base) \
-  Q_ASSERT( hasMetaObject( QLatin1String( #Base ) ) ); \
-  mo->addBaseClass( metaObject( QLatin1String( #Base ) ) );
+  Q_ASSERT(hasMetaObject(QLatin1String(#Base))); \
+  mo->addBaseClass(metaObject(QLatin1String(#Base)));
 
 #define MO_ADD_METAOBJECT0(Class) \
   mo = new MetaObjectImpl<Class>; \
-  mo->setClassName( QLatin1String( #Class ) ); \
+  mo->setClassName(QLatin1String(#Class)); \
   addMetaObject(mo);
 
 #define MO_ADD_METAOBJECT1(Class, Base1) \
   mo = new MetaObjectImpl<Class, Base1>; \
-  mo->setClassName( QLatin1String( #Class ) ); \
-  MO_ADD_BASECLASS( Base1 ) \
+  mo->setClassName(QLatin1String(#Class)); \
+  MO_ADD_BASECLASS(Base1) \
   addMetaObject(mo);
 
 #define MO_ADD_METAOBJECT2(Class, Base1, Base2) \
   mo = new MetaObjectImpl<Class, Base1, Base2>; \
-  mo->setClassName( QLatin1String( #Class ) ); \
-  MO_ADD_BASECLASS( Base1 ) \
-  MO_ADD_BASECLASS( Base2 ) \
+  mo->setClassName(QLatin1String(#Class)); \
+  MO_ADD_BASECLASS(Base1) \
+  MO_ADD_BASECLASS(Base2) \
   addMetaObject(mo);
 
 #define MO_ADD_PROPERTY(Class, Type, Getter, Setter) \
-  mo->addProperty( new MetaPropertyImpl<Class, Type>( \
-    QLatin1String( #Getter ), \
+  mo->addProperty(new MetaPropertyImpl<Class, Type>( \
+    QLatin1String(#Getter), \
     &Class::Getter, \
-    static_cast<void (Class::*)(Type)>(&Class::Setter) ) \
+    static_cast<void (Class::*)(Type)>(&Class::Setter)) \
   );
 
 #define MO_ADD_PROPERTY_CR(Class, Type, Getter, Setter) \
-  mo->addProperty( new MetaPropertyImpl<Class, Type, const Type&>( \
-    QLatin1String( #Getter ), \
+  mo->addProperty(new MetaPropertyImpl<Class, Type, const Type&>( \
+    QLatin1String(#Getter), \
     &Class::Getter, \
-    static_cast<void (Class::*)(const Type&)>(&Class::Setter) ) \
+    static_cast<void (Class::*)(const Type&)>(&Class::Setter)) \
   );
 
 #define MO_ADD_PROPERTY_RO(Class, Type, Getter) \
-  mo->addProperty( new MetaPropertyImpl<Class, Type>( \
-    QLatin1String( #Getter ), \
-    &Class::Getter ) );
+  mo->addProperty(new MetaPropertyImpl<Class, Type>( \
+    QLatin1String(#Getter), \
+    &Class::Getter));
 
 using namespace GammaRay;
 
@@ -117,14 +117,14 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
 
   MO_ADD_METAOBJECT0(QPaintDevice);
-  MO_ADD_PROPERTY_RO(QPaintDevice, int,  colorCount);
-  MO_ADD_PROPERTY_RO(QPaintDevice, int,  heightMM);
-  MO_ADD_PROPERTY_RO(QPaintDevice, int,  logicalDpiX);
-  MO_ADD_PROPERTY_RO(QPaintDevice, int,  logicalDpiY);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int, colorCount);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int, heightMM);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int, logicalDpiX);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int, logicalDpiY);
   MO_ADD_PROPERTY_RO(QPaintDevice, bool, paintingActive);
-  MO_ADD_PROPERTY_RO(QPaintDevice, int,  physicalDpiX);
-  MO_ADD_PROPERTY_RO(QPaintDevice, int,  physicalDpiY);
-  MO_ADD_PROPERTY_RO(QPaintDevice, int,  widthMM);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiX);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiY);
+  MO_ADD_PROPERTY_RO(QPaintDevice, int, widthMM);
 
   MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
   MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
