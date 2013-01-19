@@ -19,5 +19,6 @@ target_link_libraries(gammaray_webinspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARIES}
+  ${Qt5WebKitWidgets_LIBRARIES}
   gammaray_probe
 )

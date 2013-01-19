@@ -75,7 +75,7 @@ if (Qt5Core_FOUND)
   find_package(Qt5Svg QUIET)
   find_package(Qt5Script QUIET)
   find_package(Qt5ScriptTools QUIET)
-  find_package(Qt5WebKit QUIET)
+  find_package(Qt5WebKitWidgets QUIET)
   find_package(Qt5Designer QUIET)
 
   include("cmake/ECMQt4To5Porting.cmake")
@@ -84,6 +84,8 @@ if (Qt5Core_FOUND)
   set(HAVE_QT_SVG ${Qt5Svg_FOUND})
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
+
+  set(QT_QTWEBKIT_FOUND ${Qt5WebKitWidgets_FOUND}) # backward compat with Qt4 webkit code
 
   if (Qt5_POSITION_INDEPENDENT_CODE)
     if (CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement
