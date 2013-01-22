@@ -56,7 +56,7 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
 
     void setObject(QObject *object);
     void setObject(void *object, const QString &className);
-    void setMetaObject(const QMetaObject* metaObject);
+    void setMetaObject(const QMetaObject *metaObject);
 
   private:
     enum DisplayState {
@@ -74,9 +74,9 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
 
   private:
     /// Decides if widget is supposed to be shown at this display state
-    bool showTab(const QWidget* widget, DisplayState state) const;
+    bool showTab(const QWidget *widget, DisplayState state) const;
 
-    Ui_PropertyWidget* m_ui;
+    Ui_PropertyWidget *m_ui;
 
     QPointer<QObject> m_object;
     ObjectStaticPropertyModel *m_staticPropertyModel;
@@ -92,7 +92,7 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     QScopedPointer<PropertyEditorFactory> m_editorFactory;
 
     // Contains initially added tab widgets (Tab widget/Label)
-    QVector< QPair<QWidget*,QString> > m_tabWidgets;
+    QVector< QPair<QWidget *,QString> > m_tabWidgets;
 };
 
 }

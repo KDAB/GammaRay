@@ -33,7 +33,7 @@ using namespace GammaRay;
 
 #define IF_DEBUG(x)
 
-MetaObjectTreeModel::MetaObjectTreeModel(QObject* parent)
+MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
   : QAbstractItemModel(parent)
 {
 }
@@ -52,63 +52,64 @@ QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientatio
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-QVariant MetaObjectTreeModel::data(const QModelIndex& index, int role) const
+QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
+  }
 
   const int column = index.column();
-  const QMetaObject* object = metaObjectForIndex(index);
+  const QMetaObject *object = metaObjectForIndex(index);
   if (role == Qt::DisplayRole) {
     switch(column) {
-      case ObjectColumn:
-        return object->className();
-      default:
-        break;
+    case ObjectColumn:
+      return object->className();
+    default:
+      break;
     }
-  }
-  else if (role == MetaObjectRole) {
+  } else if (role == MetaObjectRole) {
     return QVariant::fromValue<const QMetaObject*>(object);
   }
   return QVariant();
 }
 
-int MetaObjectTreeModel::columnCount(const QModelIndex& parent) const
+int MetaObjectTreeModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 1;
 }
 
-int MetaObjectTreeModel::rowCount(const QModelIndex& parent) const
+int MetaObjectTreeModel::rowCount(const QModelIndex &parent) const
 {
-  const QMetaObject* metaObject = metaObjectForIndex(parent);
+  const QMetaObject *metaObject = metaObjectForIndex(parent);
   return m_parentChildMap.value(metaObject).size();
 }
 
-QModelIndex MetaObjectTreeModel::parent(const QModelIndex& child) const
+QModelIndex MetaObjectTreeModel::parent(const QModelIndex &child) const
 {
-  if (!child.isValid())
+  if (!child.isValid()) {
     return QModelIndex();
+  }
 
-  const QMetaObject* object = metaObjectForIndex(child);
+  const QMetaObject *object = metaObjectForIndex(child);
   Q_ASSERT(object);
-  const QMetaObject* parentObject = object->superClass();
+  const QMetaObject *parentObject = object->superClass();
   return indexForMetaObject(parentObject);
 }
 
-QModelIndex MetaObjectTreeModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex MetaObjectTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-  const QMetaObject* parentObject = metaObjectForIndex(parent);
+  const QMetaObject *parentObject = metaObjectForIndex(parent);
   const QVector<const QMetaObject*> children = m_parentChildMap.value(parentObject);
   if (row < 0 || column < 0 || row >= children.size()  || column >= columnCount()) {
     return QModelIndex();
   }
 
-  const QMetaObject* object = children.at(row);
+  const QMetaObject *object = children.at(row);
   return createIndex(row, column, const_cast<QMetaObject*>(object));
 }
 
-void MetaObjectTreeModel::objectAdded(QObject* obj)
+void MetaObjectTreeModel::objectAdded(QObject *obj)
 {
   // slot, hence should always land in main thread due to auto connection
   Q_ASSERT(thread() == QThread::currentThread());
@@ -119,17 +120,17 @@ void MetaObjectTreeModel::objectAdded(QObject* obj)
   }
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
-  const QMetaObject* metaObject = obj->metaObject();
+  const QMetaObject *metaObject = obj->metaObject();
   addMetaObject(metaObject);
 }
 
-void MetaObjectTreeModel::addMetaObject(const QMetaObject* metaObject)
+void MetaObjectTreeModel::addMetaObject(const QMetaObject *metaObject)
 {
   if (indexForMetaObject(metaObject).isValid()) {
     return;
   }
 
-  const QMetaObject* parentMetaObject = metaObject->superClass();
+  const QMetaObject *parentMetaObject = metaObject->superClass();
   if (parentMetaObject) {
     const QModelIndex parentIndex = indexForMetaObject(parentMetaObject);
     if (!parentIndex.isValid()) {
@@ -150,22 +151,23 @@ void MetaObjectTreeModel::addMetaObject(const QMetaObject* metaObject)
   endInsertRows();
 }
 
-void MetaObjectTreeModel::removeMetaObject(const QMetaObject* metaObject)
+void MetaObjectTreeModel::removeMetaObject(const QMetaObject *metaObject)
 {
   Q_UNUSED(metaObject);
   // TODO: Can this even happen?
 }
 
-void MetaObjectTreeModel::objectRemoved(QObject* obj)
+void MetaObjectTreeModel::objectRemoved(QObject *obj)
 {
   Q_UNUSED(obj);
   // TODO
 }
 
-QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject* metaObject) const
+QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject *metaObject) const
 {
-  if (!metaObject)
+  if (!metaObject) {
     return QModelIndex();
+  }
 
   const QMetaObject *parentObject = m_childParentMap.value(metaObject);
   const QModelIndex parentIndex = indexForMetaObject(parentObject);
@@ -181,12 +183,13 @@ QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject* metaObjec
   return index(row, 0, parentIndex);
 }
 
-const QMetaObject* MetaObjectTreeModel::metaObjectForIndex(const QModelIndex& index) const
+const QMetaObject *MetaObjectTreeModel::metaObjectForIndex(const QModelIndex &index) const
 {
-  if (!index.isValid())
+  if (!index.isValid()) {
     return 0;
+  }
 
-  void* internalPointer = index.internalPointer();
+  void *internalPointer = index.internalPointer();
   const QMetaObject* metaObject = reinterpret_cast<QMetaObject*>(internalPointer);
   return metaObject;
 }

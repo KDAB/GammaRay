@@ -43,7 +43,7 @@ using namespace std;
 static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
 PluginManager *PluginManager::s_instance = 0;
 
-PluginManager *PluginManager::instance(QObject* parent)
+PluginManager *PluginManager::instance(QObject *parent)
 {
   if (!s_instance) {
     s_instance = new PluginManager(parent);

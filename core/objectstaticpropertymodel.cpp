@@ -101,8 +101,9 @@ bool ObjectStaticPropertyModel::setData(const QModelIndex &index, const QVariant
       index.row() < m_obj.data()->metaObject()->propertyCount() && role == Qt::EditRole) {
     const QMetaProperty prop = m_obj.data()->metaObject()->property(index.row());
     const bool result = prop.write(m_obj.data(), value);
-    if (result)
+    if (result) {
       emit dataChanged(index, index);
+    }
     return result;
   }
   return ObjectPropertyModel::setData(index, value, role);

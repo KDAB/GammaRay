@@ -223,9 +223,9 @@ void MainWindow::aboutKDAB()
        "</p></qt>").arg(progName));
 
   lay->addWidget(informativeText);
-  QDialogButtonBox * buttonBox = new QDialogButtonBox;
+  QDialogButtonBox *buttonBox = new QDialogButtonBox;
   buttonBox->addButton(QDialogButtonBox::Close);
-  connect(buttonBox,SIGNAL(rejected()),&dialog,SLOT(close()));
+  connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(close()));
   lay->addWidget(buttonBox);
 
   dialog.setWindowIcon(QPixmap(":gammaray/kdablogo160.png"));

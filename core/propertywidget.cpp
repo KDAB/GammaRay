@@ -49,7 +49,7 @@
 
 using namespace GammaRay;
 
-static bool removePage(QTabWidget* tabWidget, QWidget* widget)
+static bool removePage(QTabWidget *tabWidget, QWidget *widget)
 {
   const int index = tabWidget->indexOf(widget);
   if (index == -1) {
@@ -128,8 +128,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_ui->outboundConnectionView->setModel(m_outboundConnectionModel);
     m_ui->outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
     m_ui->outboundConnectionSearchLine->setProxy(m_outboundConnectionModel);
-  }
-  else {
+  } else {
     qDebug() << "Probe not initialized, disabling connection tabs";
     removePage(m_ui->tabWidget, m_ui->inboundConnectionTab);
     removePage(m_ui->tabWidget, m_ui->outboundConnectionTab);
@@ -280,7 +279,7 @@ void PropertyWidget::setDisplayState(DisplayState state)
   QWidget *currentWidget = m_ui->tabWidget->currentWidget();
 
   // iterate through all tabs, decide for each tab if it gets hidden or not
-  typedef QPair<QWidget*, QString> WidgetStringPair;
+  typedef QPair<QWidget *, QString> WidgetStringPair;
   Q_FOREACH (const WidgetStringPair &tab, m_tabWidgets) {
     const bool show = showTab(tab.first, state);
     if (show) {
