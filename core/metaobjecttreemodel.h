@@ -37,6 +37,7 @@
 namespace GammaRay {
 
 class Probe;
+class MetaObjectInfoTracker;
 
 class MetaObjectTreeModel : public QAbstractItemModel
 {
@@ -48,10 +49,14 @@ class MetaObjectTreeModel : public QAbstractItemModel
     };
 
     enum Column {
-      ObjectColumn
+      ObjectColumn,
+      ObjectSelfCountColumn,
+      ObjectInclusiveCountColumn,
+      _Last
     };
 
     explicit MetaObjectTreeModel(Probe *probe);
+    ~MetaObjectTreeModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
@@ -82,6 +87,8 @@ class MetaObjectTreeModel : public QAbstractItemModel
   private:
     QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
     QHash<const QMetaObject*, QVector<const QMetaObject*> > m_parentChildMap;
+
+    MetaObjectInfoTracker* m_infoTracker;
 };
 
 }
