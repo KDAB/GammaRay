@@ -2,7 +2,9 @@
 # GAMMARAY_ADD_PLUGIN: create a gammaray plugin, install at the right place, etc
 #
 
-# Copyright (c) 2011, Volker Krause <volker.krause@kdab.com>
+#  Copyright (c) 2011-2013 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+
+# Author: Volker Krause <volker.krause@kdab.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 
