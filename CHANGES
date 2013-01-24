@@ -1,6 +1,13 @@
 Release Highlights
 ==================
 
+Version 1.3:
+-----------
+ * New KJob tracker plugin (requires KDE4)
+ * Qt5 support
+ * New Meta Object Browser tool
+ * New QStandardPaths and QMimeTypeDatabase browsers (Qt5 only)
+
 Version 1.2:
 -----------
  * Published API for writing your own plugin
