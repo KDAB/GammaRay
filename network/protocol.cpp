@@ -32,7 +32,7 @@ qint32 version()
 
 }
 
-QDataStream& operator<<(QDataStream& stream, GammaRay::Protocol::MessageType messageType)
+QDataStream& operator<<(QDataStream& stream, GammaRay::Protocol::BuildInMessageType messageType)
 {
   Q_ASSERT(GammaRay::Protocol::LastMessageType <= 255); // TODO static assert
   stream << static_cast<quint8>(messageType);
@@ -40,11 +40,11 @@ QDataStream& operator<<(QDataStream& stream, GammaRay::Protocol::MessageType mes
 }
 
 
-QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::MessageType &messageType)
+QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::BuildInMessageType &messageType)
 {
   quint8 value;
   stream >> value;
-  Q_ASSERT(value > GammaRay::Protocol::Invalid && value < GammaRay::Protocol::LastMessageType);
-  messageType = static_cast<GammaRay::Protocol::MessageType>(value);
+  Q_ASSERT(value > GammaRay::Protocol::InvalidMessageType && value < GammaRay::Protocol::LastMessageType);
+  messageType = static_cast<GammaRay::Protocol::BuildInMessageType>(value);
   return stream;
 }

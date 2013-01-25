@@ -6,13 +6,13 @@ using namespace GammaRay;
 
 Message::Message() :
   m_objectAddress(Protocol::InvalidObjectAddress),
-  m_messageType(Protocol::Invalid)
+  m_messageType(Protocol::InvalidMessageType)
 {
 }
 
 Message::Message(Protocol::ObjectAddress objectAddress) :
   m_objectAddress(objectAddress),
-  m_messageType(Protocol::Invalid)
+  m_messageType(Protocol::InvalidMessageType)
 {
 }
 

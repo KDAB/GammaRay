@@ -12,13 +12,12 @@ namespace Protocol {
 
 
 typedef quint8 ObjectAddress;
+typedef quint8 MessageType;
 
-static const int InvalidObjectAddress = 0;
+static const ObjectAddress InvalidObjectAddress = 0;
+static const MessageType InvalidMessageType = 0;
 
-
-enum MessageType {
-  Invalid = 0,
-
+enum BuildInMessageType {
   // client -> server
   ModelRowColumnCountRequest,
   ModelContentRequest,
@@ -63,7 +62,7 @@ qint32 version();
 
 }
 
-QDataStream& operator<<(QDataStream &stream, GammaRay::Protocol::MessageType messageType);
-QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::MessageType& messageType);
+QDataStream& operator<<(QDataStream &stream, GammaRay::Protocol::BuildInMessageType messageType);
+QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::BuildInMessageType& messageType);
 
 #endif
