@@ -54,9 +54,7 @@ void Endpoint::readyRead()
 {
   qDebug() << Q_FUNC_INFO << m_socket->bytesAvailable();
   while (Message::canReadMessage(m_socket.data())) {
-    Message msg;
-    *m_stream >> msg;
-    messageReceived(msg);
+    messageReceived(Message::readMessage(m_socket.data()));
   }
 }
 

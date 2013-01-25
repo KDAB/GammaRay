@@ -19,7 +19,14 @@ namespace GammaRay {
 class Message
 {
   public:
-    explicit Message(Protocol::ObjectAddress address = Protocol::InvalidObjectAddress);
+    explicit Message(Protocol::ObjectAddress address);
+#ifdef Q_COMPILER_RVALUE_REFS
+    Message(Message &&other);
+#else
+    // this is only needed to make readMessage compile (due to RVO there is no actual copy though)
+    // semantically we don't want to support copying, due to the datastream state
+    Message(const Message &other);
+#endif
     ~Message();
 
     Protocol::ObjectAddress address() const;
@@ -27,12 +34,17 @@ class Message
 
     QDataStream& stream() const;
 
+    /** Checks if there is a full message waiting in @p device. */
     static bool canReadMessage(QIODevice *device);
+    /** Read the next message from @p device. */
+    static Message readMessage(QIODevice *device);
 
+    // TODO get rid of this, implementation detail of the stream operator
     QByteArray internalBuffer() const;
-    void setInternalBuffer(const QByteArray &buffer);
 
   private:
+    Message();
+
     mutable QByteArray m_buffer;
     mutable QScopedPointer<QDataStream> m_stream;
 
@@ -43,6 +55,5 @@ class Message
 }
 
 QDataStream& operator<<(QDataStream& stream, const GammaRay::Message &msg);
-QDataStream& operator>>(QDataStream& stream, GammaRay::Message &msg);
 
 #endif

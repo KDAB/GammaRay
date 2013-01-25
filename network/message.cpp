@@ -4,11 +4,27 @@
 
 using namespace GammaRay;
 
+Message::Message() :
+  m_objectAddress(Protocol::InvalidObjectAddress),
+  m_messageType(Protocol::Invalid)
+{
+}
+
 Message::Message(Protocol::ObjectAddress objectAddress) :
   m_objectAddress(objectAddress),
   m_messageType(Protocol::Invalid)
 {
 }
+
+#ifdef Q_COMPILER_RVALUE_REFS
+Message::Message(Message&& other) :
+  m_buffer(std::move(other.m_buffer)),
+  m_objectAddress(other.m_objectAddress),
+  m_messageType(other.m_messageType)
+{
+  m_stream.swap(other.m_stream);
+}
+#endif
 
 Message::~Message()
 {
@@ -45,18 +61,27 @@ bool Message::canReadMessage(QIODevice* device)
   return device->bytesAvailable() >= size + 4;
 }
 
+Message Message::readMessage(QIODevice* device)
+{
+  Message msg;
+  QDataStream stream(device);
+
+  qint32 size;
+  stream >> size >> msg.m_buffer;
+  Q_ASSERT(size == msg.m_buffer.size());
+  Q_ASSERT(stream.status() == QDataStream::Ok);
+
+  msg.m_stream.reset(new QDataStream(msg.m_buffer));
+  *msg.m_stream >> msg.m_objectAddress >> msg.m_messageType;
+  Q_ASSERT(msg.m_stream->status() == QDataStream::Ok);
+
+  return msg;
+}
+
 QByteArray Message::internalBuffer() const
 {
   return m_buffer;
 }
-
-void Message::setInternalBuffer(const QByteArray& buffer)
-{
-  m_buffer = buffer;
-  m_stream.reset(new QDataStream(m_buffer));
-  *m_stream >> m_objectAddress >> m_messageType;
-}
-
 
 QDataStream& operator<<(QDataStream& stream, const Message& msg)
 {
@@ -65,15 +90,3 @@ QDataStream& operator<<(QDataStream& stream, const Message& msg)
   Q_ASSERT(stream.status() == QDataStream::Ok);
   return stream;
 }
-
-QDataStream& operator>>(QDataStream& stream, Message& msg)
-{
-  qint32 size;
-  QByteArray buffer;
-  stream >> size >> buffer;
-  Q_ASSERT(size == buffer.size());
-  msg.setInternalBuffer(buffer);
-  Q_ASSERT(stream.status() == QDataStream::Ok);
-  return stream;
-}
-
