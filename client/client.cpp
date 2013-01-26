@@ -88,4 +88,9 @@ void Client::registerForObject(Protocol::ObjectAddress& objectAddress, QObject* 
   registerMessageHandlerInternal(objectAddress, handler, slot);
 }
 
+void Client::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)
+{
+  // TODO tell the server we are no longer monitoring this
+}
+
 #include "client.moc"

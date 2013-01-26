@@ -65,7 +65,7 @@ protected:
   void registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject *receiver, const char* messageHandlerName);
 
   /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
-  virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName) {}; // TODO make pure virtual
+  virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName) = 0;
 
   /** Calls the message handler registerd for the receiver of @p msg. */
   void dispatchMessage(const GammaRay::Message& msg);

@@ -24,6 +24,7 @@ public:
 
 protected:
     void messageReceived(const Message& msg);
+    void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
 };
 
 }
