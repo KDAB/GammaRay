@@ -36,6 +36,9 @@ protected:
 
 private:
   void unmonitorObject(Protocol::ObjectAddress objectAddress);
+
+private slots:
+  void socketConnected();
 };
 
 }

@@ -25,11 +25,14 @@ void Client::connectToHost(const QString &hostName, quint16 port)
 {
   qDebug() << Q_FUNC_INFO << hostName << port;
   QTcpSocket *sock = new QTcpSocket(this);
+  connect(sock, SIGNAL(connected()), SLOT(socketConnected()));
   sock->connectToHost(hostName, port);
-  // TODO: make async
-  sock->waitForConnected();
+}
 
-  setDevice(sock);
+void Client::socketConnected()
+{
+  Q_ASSERT(qobject_cast<QIODevice*>(sender()));
+  setDevice(qobject_cast<QIODevice*>(sender()));
 }
 
 void Client::messageReceived(const Message& msg)
