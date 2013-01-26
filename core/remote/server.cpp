@@ -64,7 +64,13 @@ void Server::messageReceived(const Message& msg)
       {
         Protocol::ObjectAddress addr;
         msg.payload() >> addr;
+        Q_ASSERT(addr > Protocol::InvalidObjectAddress);
+        const QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> >::const_iterator it = m_monitorNotifiers.constFind(addr);
+        if (it == m_monitorNotifiers.constEnd())
+          break;
         qDebug() << Q_FUNC_INFO << "un/monitor" << addr;
+        QMetaObject::invokeMethod(it.value().first, it.value().second, Q_ARG(bool, msg.type() == Protocol::ObjectMonitored));
+        break;
       }
     }
   } else {
@@ -72,11 +78,14 @@ void Server::messageReceived(const Message& msg)
   }
 }
 
-Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)
+Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName, const char* monitorNotifier)
 {
   registerObjectInternal(objectName, ++m_nextAddress);
   Q_ASSERT(m_nextAddress);
   registerMessageHandlerInternal(m_nextAddress, receiver, messageHandlerName);
+
+  if (monitorNotifier)
+    m_monitorNotifiers.insert(m_nextAddress, qMakePair<QObject*, QByteArray>(receiver, monitorNotifier));
 
   if (isConnected()) {
     Message msg(endpointAddress(), Protocol::ObjectAdded);
@@ -89,8 +98,8 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
 
 void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)
 {
-  Q_UNUSED(objectAddress);
   unregisterObjectInternal(objectName);
+  m_monitorNotifiers.remove(objectAddress);
 
   if (isConnected()) {
     Message msg(endpointAddress(), Protocol::ObjectRemoved);
