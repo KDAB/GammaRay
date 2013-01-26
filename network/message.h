@@ -11,10 +11,10 @@ namespace GammaRay {
 /**
  * Single message send between client and server.
  * Binary format:
- * - 4 byte size of the entire message (not including the size itself) in QDataStream encoding
- * - 1 byte server object address
- * - 1 byte command type
- * - size-2 bytes message payload
+ * - sizeof(Protocol::PayloadSize) byte size of the message payload (not including the size and other fixed fields itself) in netowork byte order (big endian)
+ * - sizeof(Protocol::ObjectAddress) server object address (big endian)
+ * - sizeof(Protocol::MessageType) command type (big endian)
+ * - size bytes message payload (encoding is user defined, QDataStream provided for convenience)
  */
 class Message
 {

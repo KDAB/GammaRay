@@ -10,7 +10,7 @@ namespace GammaRay {
 
 namespace Protocol {
 
-
+typedef qint32 PayloadSize;
 typedef quint8 ObjectAddress;
 typedef quint8 MessageType;
 
@@ -44,10 +44,7 @@ enum BuildInMessageType {
   ModelColumnsMoved,
   ModelColumnsRemoved,
   ModelReset,
-  ModelLayoutChanged,
-
-  // internal
-  LastMessageType
+  ModelLayoutChanged
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;

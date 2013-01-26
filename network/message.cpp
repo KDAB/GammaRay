@@ -1,8 +1,26 @@
 #include "message.h"
 
 #include <QDebug>
+#include <qendian.h>
 
 static const QDataStream::Version StreamVersion = QDataStream::Qt_4_7;
+
+template<typename T> static T readNumber(QIODevice *device)
+{
+  T buffer;
+  const int readSize = device->read((char*)&buffer, sizeof(T));
+  Q_UNUSED(readSize);
+  Q_ASSERT(readSize == sizeof(T));
+  return qFromBigEndian(buffer);
+}
+
+template<typename T> static void writeNumber(QIODevice *device, T value)
+{
+  value = qToBigEndian(value);
+  const int writeSize = device->write((char*)&value, sizeof(T));
+  Q_UNUSED(writeSize);
+  Q_ASSERT(writeSize == sizeof(T));
+}
 
 using namespace GammaRay;
 
@@ -48,20 +66,21 @@ QDataStream& Message::payload() const
   if (!m_stream) {
     m_stream.reset(new QDataStream(&m_buffer, QIODevice::WriteOnly));
     m_stream->setVersion(StreamVersion);
-    *m_stream << m_objectAddress << m_messageType;
   }
   return *m_stream;
 }
 
 bool Message::canReadMessage(QIODevice* device)
 {
-  if (device->bytesAvailable() < 4)
+  static const int minimumSize = sizeof(Protocol::PayloadSize) + sizeof(Protocol::ObjectAddress) + sizeof(Protocol::MessageType);
+  if (device->bytesAvailable() < minimumSize)
     return false;
-  const QByteArray buffer = device->peek(4);
-  qint32 size;
+  const QByteArray buffer = device->peek(sizeof(Protocol::PayloadSize));
+  // TODO do this without the QDataStream
+  Protocol::PayloadSize size;
   QDataStream(buffer) >> size;
-  Q_ASSERT(size > 0);
-  return device->bytesAvailable() >= size + 4;
+  Q_ASSERT(size >= 0);
+  return device->bytesAvailable() >= size + minimumSize;
 }
 
 Message Message::readMessage(QIODevice* device)
@@ -69,30 +88,36 @@ Message Message::readMessage(QIODevice* device)
   Message msg;
   QDataStream stream(device);
 
-  qint32 size;
-  stream >> size >> msg.m_buffer;
-  Q_ASSERT(size >= 2); // at least address and type
-  Q_ASSERT(size == msg.m_buffer.size());
-  Q_ASSERT(stream.status() == QDataStream::Ok);
+  const Protocol::PayloadSize payloadSize = readNumber<qint32>(device);
+  Q_ASSERT(payloadSize >= 0);
 
+  msg.m_objectAddress = readNumber<Protocol::ObjectAddress>(device);
+  msg.m_messageType = readNumber<Protocol::MessageType>(device);
+  Q_ASSERT(msg.m_messageType != Protocol::InvalidMessageType);
+  Q_ASSERT(msg.m_objectAddress != Protocol::InvalidObjectAddress);
+
+  if (payloadSize)
+    msg.m_buffer = device->read(payloadSize);
+  Q_ASSERT(payloadSize == msg.m_buffer.size());
+
+  // TODO do this on-demand
   msg.m_stream.reset(new QDataStream(msg.m_buffer));
   msg.m_stream->setVersion(StreamVersion);
-  *msg.m_stream >> msg.m_objectAddress >> msg.m_messageType;
-  Q_ASSERT(msg.m_stream->status() == QDataStream::Ok);
-  Q_ASSERT(msg.m_messageType != Protocol::InvalidMessageType);
 
   return msg;
 }
 
 void Message::write(QIODevice* device) const
 {
-  payload(); // HACK for messages without payload, to ensure address and type are in m_buffer
   Q_ASSERT(m_objectAddress != Protocol::InvalidObjectAddress);
   Q_ASSERT(m_messageType != Protocol::InvalidMessageType);
-  Q_ASSERT(m_buffer.size() >= 2); // at least address and type
 
-  // TODO do this manually, we write the size twice this way!
-  QDataStream stream(device);
-  stream << qint32(m_buffer.size()) << m_buffer;
-  Q_ASSERT(stream.status() == QDataStream::Ok);
+  writeNumber<Protocol::PayloadSize>(device, m_buffer.size());
+  writeNumber(device, m_objectAddress);
+  writeNumber(device, m_messageType);
+
+  if (!m_buffer.isEmpty()) {
+    const int s = device->write(m_buffer);
+    Q_ASSERT(s == m_buffer.size());
+  }
 }
