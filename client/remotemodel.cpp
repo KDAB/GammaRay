@@ -115,7 +115,7 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   Message msg(m_myAddress, Protocol::ModelSetDataRequest);
-  msg.stream() << Protocol::fromQModelIndex(index) << role << value;
+  msg.payload() << Protocol::fromQModelIndex(index) << role << value;
   Client::send(msg);
   return false;
 }
@@ -148,10 +148,10 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelRowColumnCountReply:
     {
       Protocol::ModelIndex index;
-      msg.stream() >> index;
+      msg.payload() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node->rowCount == -2 && node->columnCount == -1);
-      msg.stream() >> node->rowCount >> node->columnCount;
+      msg.payload() >> node->rowCount >> node->columnCount;
       Q_ASSERT(node->rowCount >= 0 && node->columnCount >= 0);
 
       if (!node->rowCount || !node->columnCount)
@@ -175,13 +175,13 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelContentReply:
     {
       Protocol::ModelIndex index;
-      msg.stream() >> index;
+      msg.payload() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node);
       typedef QMap<int, QVariant> ItemData;
       ItemData itemData;
       qint32 flags;
-      msg.stream() >> itemData >> flags;
+      msg.payload() >> itemData >> flags;
       for (ItemData::const_iterator it = itemData.constBegin(); it != itemData.constEnd(); ++it) {
         node->data[index.last().second].insert(it.key(), it.value());
       }
@@ -196,7 +196,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       qint8 orientation;
       qint32 section;
       QHash<qint32, QVariant> data;
-      msg.stream() >> orientation >> section >> data;
+      msg.payload() >> orientation >> section >> data;
       m_headers[static_cast<Qt::Orientation>(orientation)][section] = data;
       emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
       break;
@@ -205,7 +205,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelContentChanged:
     {
       Protocol::ModelIndex beginIndex, endIndex;
-      msg.stream() >> beginIndex >> endIndex;
+      msg.payload() >> beginIndex >> endIndex;
       Node *node = nodeForIndex(beginIndex);
       if (node == m_root)
         break;
@@ -233,7 +233,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     {
       qint8 ori;
       int first, last;
-      msg.stream() >> ori >> first >> last;
+      msg.payload() >> ori >> first >> last;
       const Qt::Orientation orientation = static_cast<Qt::Orientation>(ori);
 
       for (int i = first; i < last; ++i)
@@ -247,7 +247,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     {
       Protocol::ModelIndex parentIndex;
       int first, last;
-      msg.stream() >> parentIndex >> first >> last;
+      msg.payload() >> parentIndex >> first >> last;
       Q_ASSERT(last >= first);
 
       Node *parentNode = nodeForIndex(parentIndex);
@@ -283,7 +283,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     {
       Protocol::ModelIndex parentIndex;
       int first, last;
-      msg.stream() >> parentIndex >> first >> last;
+      msg.payload() >> parentIndex >> first >> last;
       Q_ASSERT(last >= first);
 
       Node *parentNode = nodeForIndex(parentIndex);
@@ -379,7 +379,7 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
   node->rowCount = -2;
 
   Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
-  msg.stream() << Protocol::fromQModelIndex(index);
+  msg.payload() << Protocol::fromQModelIndex(index);
   Client::send(msg);
 }
 
@@ -393,7 +393,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   node->data.insert(index.column(), QHash<int, QVariant>()); // mark pending request
 
   Message msg(m_myAddress, Protocol::ModelContentRequest);
-  msg.stream() << Protocol::fromQModelIndex(index);
+  msg.payload() << Protocol::fromQModelIndex(index);
   Client::send(msg);
 }
 
@@ -403,7 +403,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
   m_headers[orientation][section][Qt::DisplayRole] = tr("Loading...");
 
   Message msg(m_myAddress, Protocol::ModelHeaderRequest);
-  msg.stream() << qint8(orientation) << qint32(section);
+  msg.payload() << qint8(orientation) << qint32(section);
   Client::send(msg);
 }
 
@@ -413,7 +413,7 @@ void RemoteModel::clear()
   beginResetModel();
 
   Message msg(m_myAddress, Protocol::ModelSyncBarrier);
-  msg.stream() << ++m_targetSyncBarrier;
+  msg.payload() << ++m_targetSyncBarrier;
   Client::send(msg);
 
   delete m_root;
@@ -435,7 +435,7 @@ void RemoteModel::connectToServer()
 bool RemoteModel::checkSyncBarrier(const Message& msg)
 {
   if (msg.type() == Protocol::ModelSyncBarrier)
-    msg.stream() >> m_currentSyncBarrier;
+    msg.payload() >> m_currentSyncBarrier;
 
   return m_currentSyncBarrier == m_targetSyncBarrier;
 }

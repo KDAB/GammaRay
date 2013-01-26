@@ -41,10 +41,10 @@ Protocol::MessageType Message::type() const
 }
 
 
-QDataStream& Message::stream() const
+QDataStream& Message::payload() const
 {
   if (!m_stream) {
-    m_stream.reset(new QDataStream(&m_buffer, QIODevice::ReadWrite));
+    m_stream.reset(new QDataStream(&m_buffer, QIODevice::WriteOnly));
     *m_stream << m_objectAddress << m_messageType;
   }
   return *m_stream;
@@ -82,7 +82,7 @@ Message Message::readMessage(QIODevice* device)
 
 void Message::write(QIODevice* device) const
 {
-  stream(); // HACK for messages without payload, to ensure address and type are in m_buffer
+  payload(); // HACK for messages without payload, to ensure address and type are in m_buffer
   Q_ASSERT(m_objectAddress != Protocol::InvalidObjectAddress);
   Q_ASSERT(m_messageType != Protocol::InvalidMessageType);
   Q_ASSERT(m_buffer.size() >= 2); // at least address and type

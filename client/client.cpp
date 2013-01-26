@@ -40,7 +40,7 @@ void Client::messageReceived(const Message& msg)
       case Protocol::ServerVersion:
       {
         qint32 serverVersion;
-        msg.stream() >> serverVersion;
+        msg.payload() >> serverVersion;
         if (serverVersion != Protocol::version()) {
           qCritical() << "Server version is" << serverVersion << ", was expecting" << Protocol::version() << " - aborting";
           exit(1);
@@ -51,7 +51,7 @@ void Client::messageReceived(const Message& msg)
       {
         QString name;
         Protocol::ObjectAddress addr;
-        msg.stream() >> name >> addr;
+        msg.payload() >> name >> addr;
         qDebug() << Q_FUNC_INFO << "ObjectAdded" << name << addr;
         registerObjectInternal(name, addr);
         break;
@@ -59,14 +59,14 @@ void Client::messageReceived(const Message& msg)
       case Protocol::ObjectRemoved:
       {
         QString name;
-        msg.stream() >> name;
+        msg.payload() >> name;
         unregisterObjectInternal(name);
         break;
       }
       case Protocol::ObjectMapReply:
       {
         QMap<QString, Protocol::ObjectAddress> objectMap;
-        msg.stream() >> objectMap;
+        msg.payload() >> objectMap;
         for (QMap<QString, Protocol::ObjectAddress>::const_iterator it = objectMap.constBegin(); it != objectMap.constEnd(); ++it) {
           if (it.key() != QLatin1String("com.kdab.GammaRay.Server"))
             registerObjectInternal(it.key(), it.value());

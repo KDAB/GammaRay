@@ -35,7 +35,10 @@ class Message
     Protocol::ObjectAddress address() const;
     Protocol::MessageType type() const;
 
-    QDataStream& stream() const;
+    /** Access to the message payload. This is read-only for received messages
+     *  and write-only for messages to be sent.
+     */
+    QDataStream& payload() const;
 
     /** Checks if there is a full message waiting in @p device. */
     static bool canReadMessage(QIODevice *device);
