@@ -59,23 +59,44 @@ protected:
   /** Call this when learning about a dissolved object <-> address mapping. */
   void unregisterObjectInternal(const QString& objectName);
 
+  /** Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
+   *  @see dispatchMessage()
+   */
   void registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject *receiver, const char* messageHandlerName);
 
+  /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
+  virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName) {}; // TODO make pure virtual
+
+  /** Calls the message handler registerd for the receiver of @p msg. */
   void dispatchMessage(const GammaRay::Message& msg);
 
 protected:
-  QMap<QString, Protocol::ObjectAddress> objectAddresses() const;
+  QMap<QString, Protocol::ObjectAddress> objectAddresses() const; // TODO use a better type for this one
   static Endpoint *s_instance;
-
-  // TODO make private and move the object monitoring from server here as well
-  QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> > m_messageHandlers;
 
 private slots:
   void readyRead();
   void connectionClosed();
+  void handlerDestroyed(QObject* obj);
 
 private:
-  QMap<QString, Protocol::ObjectAddress> m_objectAddresses;
+  struct ObjectInfo {
+    ObjectInfo() : receiver(0) {}
+    QString name;
+    Protocol::ObjectAddress address;
+    QObject* receiver;
+    QByteArray messageHandler;
+  };
+
+  /** Inserts @p oi into all maps. */
+  void insertObjectInfo(ObjectInfo *oi);
+  /** Removes @p oi from all maps and destroys it. */
+  void removeObjectInfo(ObjectInfo *oi);
+
+  QHash<QString, ObjectInfo*> m_nameMap;
+  QHash<Protocol::ObjectAddress, ObjectInfo*> m_addressMap;
+  QMultiHash<QObject*, ObjectInfo*> m_handlerMap;
+
   QPointer<QIODevice> m_socket;
   Protocol::ObjectAddress m_myAddress;
 };

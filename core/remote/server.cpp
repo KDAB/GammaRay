@@ -65,8 +65,6 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
   registerObjectInternal(objectName, ++m_nextAddress);
   Q_ASSERT(m_nextAddress);
   registerMessageHandlerInternal(m_nextAddress, receiver, messageHandlerName);
-  m_objectToNameMap.insert(receiver, objectName);
-  connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
 
   if (isConnected()) {
     Message msg(endpointAddress(), Protocol::ObjectAdded);
@@ -77,12 +75,9 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
   return m_nextAddress;
 }
 
-void Server::objectDestroyed(QObject* object)
+void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)
 {
-  const QString objectName = m_objectToNameMap.value(object);
-  m_objectToNameMap.remove(object);
-  const Protocol::ObjectAddress addr = objectAddress(objectName);
-  m_messageHandlers.remove(addr);
+  Q_UNUSED(objectAddress);
   unregisterObjectInternal(objectName);
 
   if (isConnected()) {
@@ -91,6 +86,5 @@ void Server::objectDestroyed(QObject* object)
     send(msg);
   }
 }
-
 
 #include "server.moc"

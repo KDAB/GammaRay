@@ -19,17 +19,15 @@ class Server : public Endpoint
 
   protected:
     void messageReceived(const Message& msg);
+    void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
 
   private slots:
     void newConnection();
-    void objectDestroyed(QObject* object);
 
   private:
     QTcpServer *m_tcpServer;
 
     Protocol::ObjectAddress m_nextAddress;
-
-    QHash<QObject*, QString> m_objectToNameMap;
 };
 
 }

@@ -12,11 +12,17 @@ Endpoint::Endpoint(QObject* parent): QObject(parent), m_socket(0), m_myAddress(P
   Q_ASSERT(!s_instance);
   s_instance = this;
 
-  m_objectAddresses.insert(QLatin1String("com.kdab.GammaRay.Server"), m_myAddress);
+  ObjectInfo *endpointObj = new ObjectInfo;
+  endpointObj->address = m_myAddress;
+  endpointObj->name = QLatin1String("com.kdab.GammaRay.Server");
+  // TODO: we could set this as message handler here and use the same dispatch mechanism
+  insertObjectInfo(endpointObj);
 }
 
 Endpoint::~Endpoint()
 {
+  for (QHash<Protocol::ObjectAddress, ObjectInfo*>::const_iterator it = m_addressMap.constBegin(); it != m_addressMap.constEnd(); ++it)
+    delete it.value();
 }
 
 void Endpoint::send(const Message& msg)
@@ -71,49 +77,97 @@ void Endpoint::connectionClosed()
 
 Protocol::ObjectAddress Endpoint::objectAddress(const QString& objectName) const
 {
-  const QMap<QString, Protocol::ObjectAddress>::const_iterator it = m_objectAddresses.constFind(objectName);
-  if (it != m_objectAddresses.constEnd())
-    return it.value();
+  const QHash<QString, ObjectInfo*>::const_iterator it = m_nameMap.constFind(objectName);
+  if (it != m_nameMap.constEnd())
+    return it.value()->address;
   return Protocol::InvalidObjectAddress;
 }
 
 void Endpoint::registerObjectInternal(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
-  qDebug() << objectName << objectAddress;
-  Q_ASSERT(!m_objectAddresses.contains(objectName));
-  Q_ASSERT(!m_objectAddresses.values().contains(objectAddress));
   Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);
+  qDebug() << objectName << objectAddress;
 
-  m_objectAddresses.insert(objectName, objectAddress);
+  ObjectInfo *obj = new ObjectInfo;
+  obj->address = objectAddress;
+  obj->name = objectName;
+  insertObjectInfo(obj);
+
   emit objectRegistered(objectName, objectAddress);
 }
 
 void Endpoint::unregisterObjectInternal(const QString& objectName)
 {
-  Q_ASSERT(m_objectAddresses.contains(objectName));
+  Q_ASSERT(m_nameMap.contains(objectName));
+  ObjectInfo *obj = m_nameMap.value(objectName);
 
-  emit objectUnregistered(objectName, m_objectAddresses.value(objectName));
-  m_objectAddresses.remove(objectName);
+  emit objectUnregistered(objectName, obj->address);
+  removeObjectInfo(obj);
 }
 
 void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject* receiver, const char* messageHandlerName)
 {
-  m_messageHandlers.insert(objectAddress, qMakePair<QObject*, QByteArray>(receiver, messageHandlerName));
+  Q_ASSERT(m_addressMap.contains(objectAddress));
+  ObjectInfo *obj = m_addressMap.value(objectAddress);
+  Q_ASSERT(obj);
+  Q_ASSERT(!obj->receiver);
+  Q_ASSERT(obj->messageHandler.isEmpty());
+  obj->receiver = receiver;
+  obj->messageHandler = messageHandlerName;
+  connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(handlerDestroyed(QObject*)));
+}
+
+void Endpoint::handlerDestroyed(QObject* obj)
+{
+  const QList<ObjectInfo*> objs = m_handlerMap.values(obj); // copy, the virtual method below likely changes the maps.
+  m_handlerMap.remove(obj);
+  foreach (ObjectInfo *obj, objs) {
+    obj->receiver = 0;
+    obj->messageHandler.clear();
+    handlerDestroyed(obj->address, obj->name);
+  }
 }
 
 void Endpoint::dispatchMessage(const Message& msg)
 {
-  if (!m_messageHandlers.contains(msg.address()))
+  const QHash<Protocol::ObjectAddress, ObjectInfo*>::const_iterator it = m_addressMap.constFind(msg.address());
+  if (it == m_addressMap.constEnd())
     return;
-  QObject *receiver = m_messageHandlers.value(msg.address()).first;
-  QByteArray method = m_messageHandlers.value(msg.address()).second;
 
-  QMetaObject::invokeMethod(receiver, method, Q_ARG(GammaRay::Message, msg));
+  ObjectInfo* obj = it.value();
+  QMetaObject::invokeMethod(obj->receiver, obj->messageHandler, Q_ARG(GammaRay::Message, msg));
 }
 
 QMap< QString, Protocol::ObjectAddress > Endpoint::objectAddresses() const
 {
-  return m_objectAddresses;
+  QMap<QString, Protocol::ObjectAddress> addrMap;
+  for (QHash<Protocol::ObjectAddress, ObjectInfo*>::const_iterator it = m_addressMap.constBegin(); it != m_addressMap.constEnd(); ++it)
+    addrMap.insert(it.value()->name, it.key());
+  return addrMap;
+}
+
+void Endpoint::insertObjectInfo(Endpoint::ObjectInfo* oi)
+{
+  Q_ASSERT(!m_addressMap.contains(oi->address));
+  m_addressMap.insert(oi->address, oi);
+  Q_ASSERT(!m_nameMap.contains(oi->name));
+  m_nameMap.insert(oi->name, oi);
+
+  if (oi->receiver)
+    m_handlerMap.insert(oi->receiver, oi);
+}
+
+void Endpoint::removeObjectInfo(Endpoint::ObjectInfo* oi)
+{
+  Q_ASSERT(m_addressMap.contains(oi->address));
+  m_addressMap.remove(oi->address);
+  Q_ASSERT(m_nameMap.contains(oi->name));
+  m_nameMap.remove(oi->name);
+
+  if (oi->receiver)
+    m_handlerMap.remove(oi->receiver, oi);
+
+  delete oi;
 }
 
 #include "endpoint.moc"
