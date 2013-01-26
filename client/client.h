@@ -39,6 +39,9 @@ private:
 
 private slots:
   void socketConnected();
+
+private:
+  bool m_versionChecked;
 };
 
 }

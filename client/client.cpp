@@ -8,7 +8,7 @@
 
 using namespace GammaRay;
 
-Client::Client(QObject* parent): Endpoint(parent)
+Client::Client(QObject* parent): Endpoint(parent), m_versionChecked(false)
 {
 }
 
@@ -27,6 +27,7 @@ void Client::connectToHost(const QString &hostName, quint16 port)
   QTcpSocket *sock = new QTcpSocket(this);
   connect(sock, SIGNAL(connected()), SLOT(socketConnected()));
   sock->connectToHost(hostName, port);
+  m_versionChecked = false;
 }
 
 void Client::socketConnected()
@@ -37,19 +38,24 @@ void Client::socketConnected()
 
 void Client::messageReceived(const Message& msg)
 {
-  // TODO ServerVersion is the very first message we get!
+  // server version must be the very first message we get
+  if (!m_versionChecked) {
+    if (msg.address() != endpointAddress() || msg.type() != Protocol::ServerVersion) {
+      qCritical() << "Protocol violation - first message is not the server version.";
+      exit(1);
+    }
+    qint32 serverVersion;
+    msg.payload() >> serverVersion;
+    if (serverVersion != Protocol::version()) {
+      qCritical() << "Server version is" << serverVersion << ", was expecting" << Protocol::version() << " - aborting";
+      exit(1);
+    }
+    m_versionChecked = true;
+    return;
+  }
+
   if (msg.address() == endpointAddress()) {
     switch (msg.type()) {
-      case Protocol::ServerVersion:
-      {
-        qint32 serverVersion;
-        msg.payload() >> serverVersion;
-        if (serverVersion != Protocol::version()) {
-          qCritical() << "Server version is" << serverVersion << ", was expecting" << Protocol::version() << " - aborting";
-          exit(1);
-        }
-        break;
-      }
       case Protocol::ObjectAdded:
       {
         QString name;
@@ -77,6 +83,7 @@ void Client::messageReceived(const Message& msg)
         qDebug() << Q_FUNC_INFO << "ObjectMapReply" << objectAddresses();
       }
       default:
+        qDebug() << Q_FUNC_INFO << "Got unhandled message:" << msg.type();
         return;
     }
   }
