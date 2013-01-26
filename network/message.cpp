@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+static const QDataStream::Version StreamVersion = QDataStream::Qt_4_7;
+
 using namespace GammaRay;
 
 Message::Message() :
@@ -45,6 +47,7 @@ QDataStream& Message::payload() const
 {
   if (!m_stream) {
     m_stream.reset(new QDataStream(&m_buffer, QIODevice::WriteOnly));
+    m_stream->setVersion(StreamVersion);
     *m_stream << m_objectAddress << m_messageType;
   }
   return *m_stream;
@@ -73,6 +76,7 @@ Message Message::readMessage(QIODevice* device)
   Q_ASSERT(stream.status() == QDataStream::Ok);
 
   msg.m_stream.reset(new QDataStream(msg.m_buffer));
+  msg.m_stream->setVersion(StreamVersion);
   *msg.m_stream >> msg.m_objectAddress >> msg.m_messageType;
   Q_ASSERT(msg.m_stream->status() == QDataStream::Ok);
   Q_ASSERT(msg.m_messageType != Protocol::InvalidMessageType);
