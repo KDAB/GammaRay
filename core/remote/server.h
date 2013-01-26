@@ -28,7 +28,6 @@ class Server : public Endpoint
     QTcpServer *m_tcpServer;
 
     Protocol::ObjectAddress m_nextAddress;
-    Protocol::ObjectAddress m_myAddress;
 
     QHash<QObject*, QString> m_objectToNameMap;
 };

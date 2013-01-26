@@ -7,12 +7,12 @@ using namespace GammaRay;
 
 Endpoint* Endpoint::s_instance = 0;
 
-Endpoint::Endpoint(QObject* parent): QObject(parent), m_socket(0)
+Endpoint::Endpoint(QObject* parent): QObject(parent), m_socket(0), m_myAddress(Protocol::InvalidObjectAddress +1)
 {
   Q_ASSERT(!s_instance);
   s_instance = this;
 
-  m_objectAddresses.insert(QLatin1String("com.kdab.GammaRay.Server"), Protocol::InvalidObjectAddress + 1);
+  m_objectAddresses.insert(QLatin1String("com.kdab.GammaRay.Server"), m_myAddress);
 }
 
 Endpoint::~Endpoint()
@@ -46,6 +46,11 @@ void Endpoint::setDevice(QIODevice* device)
   connect(m_socket.data(), SIGNAL(disconnected()), SLOT(connectionClosed()));
   if (m_socket->bytesAvailable())
     readyRead();
+}
+
+Protocol::ObjectAddress Endpoint::endpointAddress() const
+{
+  return m_myAddress;
 }
 
 void Endpoint::readyRead()

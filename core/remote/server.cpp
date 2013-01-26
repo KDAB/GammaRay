@@ -13,8 +13,7 @@ using namespace GammaRay;
 Server::Server(QObject *parent) : 
   Endpoint(parent),
   m_tcpServer(new QTcpServer(this)),
-  m_nextAddress(Protocol::InvalidObjectAddress + 1),
-  m_myAddress(Protocol::InvalidObjectAddress +1 )
+  m_nextAddress(endpointAddress())
 {
   connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
   m_tcpServer->listen(QHostAddress::Any, defaultPort());
@@ -44,13 +43,13 @@ void Server::newConnection()
 
   // send greeting message for protocol version check
   {
-    Message msg(m_myAddress, Protocol::ServerVersion);
+    Message msg(endpointAddress(), Protocol::ServerVersion);
     msg.payload() << Protocol::version();
     send(msg);
   }
 
   {
-    Message msg(m_myAddress, Protocol::ObjectMapReply);
+    Message msg(endpointAddress(), Protocol::ObjectMapReply);
     msg.payload() << objectAddresses();
     send(msg);
   }
@@ -70,7 +69,7 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
   connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
 
   if (isConnected()) {
-    Message msg(m_myAddress, Protocol::ObjectAdded);
+    Message msg(endpointAddress(), Protocol::ObjectAdded);
     msg.payload() <<  objectName << m_nextAddress;
     send(msg);
   }
@@ -87,7 +86,7 @@ void Server::objectDestroyed(QObject* object)
   unregisterObjectInternal(objectName);
 
   if (isConnected()) {
-    Message msg(m_myAddress, Protocol::ObjectRemoved);
+    Message msg(endpointAddress(), Protocol::ObjectRemoved);
     msg.payload() << objectName;
     send(msg);
   }

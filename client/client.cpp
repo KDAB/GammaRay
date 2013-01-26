@@ -35,7 +35,7 @@ void Client::connectToHost(const QString &hostName, quint16 port)
 void Client::messageReceived(const Message& msg)
 {
   // TODO ServerVersion is the very first message we get!
-  if (msg.address() == objectAddress(QLatin1String("com.kdab.GammaRay.Server"))) {
+  if (msg.address() == endpointAddress()) {
     switch (msg.type()) {
       case Protocol::ServerVersion:
       {
@@ -68,7 +68,7 @@ void Client::messageReceived(const Message& msg)
         QMap<QString, Protocol::ObjectAddress> objectMap;
         msg.payload() >> objectMap;
         for (QMap<QString, Protocol::ObjectAddress>::const_iterator it = objectMap.constBegin(); it != objectMap.constEnd(); ++it) {
-          if (it.key() != QLatin1String("com.kdab.GammaRay.Server"))
+          if (it.value() != endpointAddress())
             registerObjectInternal(it.key(), it.value());
         }
         qDebug() << Q_FUNC_INFO << "ObjectMapReply" << objectAddresses();
