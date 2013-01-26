@@ -64,7 +64,10 @@ Protocol::MessageType Message::type() const
 QDataStream& Message::payload() const
 {
   if (!m_stream) {
-    m_stream.reset(new QDataStream(&m_buffer, QIODevice::WriteOnly));
+    if (m_buffer.isEmpty())
+      m_stream.reset(new QDataStream(&m_buffer, QIODevice::WriteOnly));
+    else
+      m_stream.reset(new QDataStream(m_buffer));
     m_stream->setVersion(StreamVersion);
   }
   return *m_stream;
@@ -101,10 +104,6 @@ Message Message::readMessage(QIODevice* device)
   if (payloadSize)
     msg.m_buffer = device->read(payloadSize);
   Q_ASSERT(payloadSize == msg.m_buffer.size());
-
-  // TODO do this on-demand
-  msg.m_stream.reset(new QDataStream(msg.m_buffer));
-  msg.m_stream->setVersion(StreamVersion);
 
   return msg;
 }
