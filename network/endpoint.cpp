@@ -138,12 +138,13 @@ void Endpoint::dispatchMessage(const Message& msg)
   QMetaObject::invokeMethod(obj->receiver, obj->messageHandler, Q_ARG(GammaRay::Message, msg));
 }
 
-QMap< QString, Protocol::ObjectAddress > Endpoint::objectAddresses() const
+QVector< QPair< Protocol::ObjectAddress, QString > > Endpoint::objectAddresses() const
 {
-  QMap<QString, Protocol::ObjectAddress> addrMap;
+  QVector<QPair<Protocol::ObjectAddress, QString> > addrs;
+  addrs.reserve(m_addressMap.size());
   for (QHash<Protocol::ObjectAddress, ObjectInfo*>::const_iterator it = m_addressMap.constBegin(); it != m_addressMap.constEnd(); ++it)
-    addrMap.insert(it.value()->name, it.key());
-  return addrMap;
+    addrs.push_back(qMakePair(it.key(), it.value()->name));
+  return addrs;
 }
 
 void Endpoint::insertObjectInfo(Endpoint::ObjectInfo* oi)

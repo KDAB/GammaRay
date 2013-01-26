@@ -70,8 +70,10 @@ protected:
   /** Calls the message handler registerd for the receiver of @p msg. */
   void dispatchMessage(const GammaRay::Message& msg);
 
-protected:
-  QMap<QString, Protocol::ObjectAddress> objectAddresses() const; // TODO use a better type for this one
+  /** All current object name/address pairs. */
+  QVector<QPair<Protocol::ObjectAddress, QString> > objectAddresses() const;
+
+  /** Singleton instance. */
   static Endpoint *s_instance;
 
 private slots:

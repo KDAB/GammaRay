@@ -65,11 +65,11 @@ void Client::messageReceived(const Message& msg)
       }
       case Protocol::ObjectMapReply:
       {
-        QMap<QString, Protocol::ObjectAddress> objectMap;
-        msg.payload() >> objectMap;
-        for (QMap<QString, Protocol::ObjectAddress>::const_iterator it = objectMap.constBegin(); it != objectMap.constEnd(); ++it) {
-          if (it.value() != endpointAddress())
-            registerObjectInternal(it.key(), it.value());
+        QVector<QPair<Protocol::ObjectAddress, QString> > objects;
+        msg.payload() >> objects;
+        for (QVector<QPair<Protocol::ObjectAddress, QString> >::const_iterator it = objects.constBegin(); it != objects.constEnd(); ++it) {
+          if (it->first != endpointAddress())
+            registerObjectInternal(it->second, it->first);
         }
         qDebug() << Q_FUNC_INFO << "ObjectMapReply" << objectAddresses();
       }
