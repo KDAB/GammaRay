@@ -75,12 +75,14 @@ bool Message::canReadMessage(QIODevice* device)
   static const int minimumSize = sizeof(Protocol::PayloadSize) + sizeof(Protocol::ObjectAddress) + sizeof(Protocol::MessageType);
   if (device->bytesAvailable() < minimumSize)
     return false;
-  const QByteArray buffer = device->peek(sizeof(Protocol::PayloadSize));
-  // TODO do this without the QDataStream
-  Protocol::PayloadSize size;
-  QDataStream(buffer) >> size;
-  Q_ASSERT(size >= 0);
-  return device->bytesAvailable() >= size + minimumSize;
+
+  Protocol::PayloadSize payloadSize;
+  int peekSize = device->peek((char*)&payloadSize, sizeof(Protocol::PayloadSize));
+  if (peekSize < (int)sizeof(Protocol::PayloadSize))
+    return false;
+  payloadSize = qFromBigEndian(payloadSize);
+  Q_ASSERT(payloadSize >= 0);
+  return device->bytesAvailable() >= payloadSize + minimumSize;
 }
 
 Message Message::readMessage(QIODevice* device)
