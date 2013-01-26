@@ -19,11 +19,10 @@ Endpoint::~Endpoint()
 {
 }
 
-QDataStream& Endpoint::stream()
+void Endpoint::send(const Message& msg)
 {
   Q_ASSERT(s_instance);
-  Q_ASSERT(s_instance->m_stream);
-  return *s_instance->m_stream;
+  msg.write(s_instance->m_socket);
 }
 
 bool Endpoint::isConnected()
@@ -43,7 +42,6 @@ void Endpoint::setDevice(QIODevice* device)
   Q_ASSERT(!m_socket);
   Q_ASSERT(device);
   m_socket = device;
-  m_stream.reset(new QDataStream(m_socket.data()));
   connect(m_socket.data(), SIGNAL(readyRead()), SLOT(readyRead()));
   connect(m_socket.data(), SIGNAL(disconnected()), SLOT(connectionClosed()));
   if (m_socket->bytesAvailable())
@@ -63,7 +61,6 @@ void Endpoint::connectionClosed()
   qDebug() << Q_FUNC_INFO;
   m_socket->deleteLater();
   m_socket = 0;
-  m_stream.reset();
   emit disconnected();
 }
 

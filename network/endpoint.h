@@ -24,7 +24,9 @@ class Endpoint : public QObject
 public:
   ~Endpoint();
 
-  static QDataStream& stream();
+  /** Send @p msg to the connected endpoint. */
+  static void send(const Message &msg);
+  /** Returns @c true if we are currently connected to another endpoint. */
   static bool isConnected();
   static quint16 defaultPort();
 
@@ -64,7 +66,6 @@ private slots:
 private:
   QMap<QString, Protocol::ObjectAddress> m_objectAddresses;
   QPointer<QIODevice> m_socket;
-  QScopedPointer<QDataStream> m_stream;
 };
 
 }

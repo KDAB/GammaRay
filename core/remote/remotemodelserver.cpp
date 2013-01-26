@@ -48,7 +48,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
       Message msg(m_myAddress, Protocol::ModelRowColumnCountReply);
       msg.stream() << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
-      Server::stream() << msg;
+      Server::send(msg);
       break;
     }
 
@@ -62,7 +62,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
       Message msg(m_myAddress, Protocol::ModelContentReply);
       msg.stream() << index << m_model->itemData(qmIndex) << qint32(m_model->flags(qmIndex));
-      Server::stream() << msg;
+      Server::send(msg);
       break;
     }
 
@@ -77,7 +77,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
       Message msg(m_myAddress, Protocol::ModelHeaderReply);
       msg.stream() << orientation << section << data;
-      Server::stream() << msg;
+      Server::send(msg);
       break;
     }
 
@@ -98,7 +98,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       msg.stream() >> barrierId;
       Message reply(m_myAddress, Protocol::ModelSyncBarrier);
       reply.stream() << barrierId;
-      Server::stream() << reply;
+      Server::send(reply);
       break;
     }
   }
@@ -111,7 +111,7 @@ void RemoteModelServer::dataChanged(const QModelIndex& begin, const QModelIndex&
     return;
   Message msg(m_myAddress, Protocol::ModelContentChanged);
   msg.stream() << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end);
-  Server::stream() << msg;
+  Server::send(msg);
 }
 
 void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first, int last)
@@ -120,7 +120,7 @@ void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first
     return;
   Message msg(m_myAddress, Protocol::ModelHeaderChanged);
   msg.stream() <<  qint8(orientation) << first << last;
-  Server::stream() << msg;
+  Server::send(msg);
 }
 
 void RemoteModelServer::rowsInserted(const QModelIndex& parent, int start, int end)
@@ -157,16 +157,14 @@ void RemoteModelServer::layoutChanged()
 {
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress, Protocol::ModelLayoutChanged);
-  Server::stream() << msg;
+  Server::send(Message(m_myAddress, Protocol::ModelLayoutChanged));
 }
 
 void RemoteModelServer::modelReset()
 {
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress, Protocol::ModelReset);
-  Server::stream() << msg;
+  Server::send(Message(m_myAddress, Protocol::ModelReset));
 }
 
 void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const QModelIndex& parent, int start, int end)
@@ -175,7 +173,7 @@ void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const Q
     return;
   Message msg(m_myAddress, type);
   msg.stream() << Protocol::fromQModelIndex(parent) << start << end;
-  Server::stream() << msg;
+  Server::send(msg);
 
 }
 
@@ -187,7 +185,7 @@ void RemoteModelServer::sendMoveMessage(Protocol::MessageType type, const QModel
   Message msg(m_myAddress, type);
   msg.stream() << Protocol::fromQModelIndex(sourceParent) << qint32(sourceStart) << qint32(sourceEnd)
                << Protocol::fromQModelIndex(destinationParent) << qint32(destinationIndex);
-  Server::stream() << msg;
+  Server::send(msg);
 }
 
 #include "remotemodelserver.moc"

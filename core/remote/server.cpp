@@ -46,13 +46,13 @@ void Server::newConnection()
   {
     Message msg(m_myAddress, Protocol::ServerVersion);
     msg.stream() << Protocol::version();
-    stream() << msg;
+    send(msg);
   }
 
   {
     Message msg(m_myAddress, Protocol::ObjectMapReply);
     msg.stream() << objectAddresses();
-    stream() << msg;
+    send(msg);
   }
 }
 
@@ -72,7 +72,7 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
   if (isConnected()) {
     Message msg(m_myAddress, Protocol::ObjectAdded);
     msg.stream() <<  objectName << m_nextAddress;
-    stream() << msg;
+    send(msg);
   }
 
   return m_nextAddress;
@@ -89,7 +89,7 @@ void Server::objectDestroyed(QObject* object)
   if (isConnected()) {
     Message msg(m_myAddress, Protocol::ObjectRemoved);
     msg.stream() << objectName;
-    stream() << msg;
+    send(msg);
   }
 }
 

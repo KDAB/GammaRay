@@ -42,8 +42,8 @@ class Message
     /** Read the next message from @p device. */
     static Message readMessage(QIODevice *device);
 
-    // TODO get rid of this, implementation detail of the stream operator
-    QByteArray internalBuffer() const;
+    /** Write this message to @p device. */
+    void write(QIODevice *device) const;
 
   private:
     Message();
@@ -56,7 +56,5 @@ class Message
 };
 
 }
-
-QDataStream& operator<<(QDataStream& stream, const GammaRay::Message &msg);
 
 #endif

@@ -57,6 +57,7 @@ bool Message::canReadMessage(QIODevice* device)
   const QByteArray buffer = device->peek(4);
   qint32 size;
   QDataStream(buffer) >> size;
+  Q_ASSERT(size > 0);
   return device->bytesAvailable() >= size + 4;
 }
 
@@ -67,6 +68,7 @@ Message Message::readMessage(QIODevice* device)
 
   qint32 size;
   stream >> size >> msg.m_buffer;
+  Q_ASSERT(size >= 2); // at least address and type
   Q_ASSERT(size == msg.m_buffer.size());
   Q_ASSERT(stream.status() == QDataStream::Ok);
 
@@ -78,15 +80,15 @@ Message Message::readMessage(QIODevice* device)
   return msg;
 }
 
-QByteArray Message::internalBuffer() const
+void Message::write(QIODevice* device) const
 {
-  return m_buffer;
-}
+  stream(); // HACK for messages without payload, to ensure address and type are in m_buffer
+  Q_ASSERT(m_objectAddress != Protocol::InvalidObjectAddress);
+  Q_ASSERT(m_messageType != Protocol::InvalidMessageType);
+  Q_ASSERT(m_buffer.size() >= 2); // at least address and type
 
-QDataStream& operator<<(QDataStream& stream, const Message& msg)
-{
-  Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
-  stream << qint32(msg.internalBuffer().size()) << msg.internalBuffer();
+  // TODO do this manually, we write the size twice this way!
+  QDataStream stream(device);
+  stream << qint32(m_buffer.size()) << m_buffer;
   Q_ASSERT(stream.status() == QDataStream::Ok);
-  return stream;
 }

@@ -116,7 +116,7 @@ bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int r
 {
   Message msg(m_myAddress, Protocol::ModelSetDataRequest);
   msg.stream() << Protocol::fromQModelIndex(index) << role << value;
-  Client::stream() << msg;
+  Client::send(msg);
   return false;
 }
 
@@ -380,7 +380,7 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
 
   Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
   msg.stream() << Protocol::fromQModelIndex(index);
-  Client::stream() << msg;
+  Client::send(msg);
 }
 
 void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
@@ -394,7 +394,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
 
   Message msg(m_myAddress, Protocol::ModelContentRequest);
   msg.stream() << Protocol::fromQModelIndex(index);
-  Client::stream() << msg;
+  Client::send(msg);
 }
 
 void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) const
@@ -404,7 +404,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 
   Message msg(m_myAddress, Protocol::ModelHeaderRequest);
   msg.stream() << qint8(orientation) << qint32(section);
-  Client::stream() << msg;
+  Client::send(msg);
 }
 
 void RemoteModel::clear()
@@ -414,7 +414,7 @@ void RemoteModel::clear()
 
   Message msg(m_myAddress, Protocol::ModelSyncBarrier);
   msg.stream() << ++m_targetSyncBarrier;
-  Client::stream() << msg;
+  Client::send(msg);
 
   delete m_root;
   m_root = new Node;
