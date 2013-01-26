@@ -19,7 +19,7 @@ static const MessageType InvalidMessageType = 0;
 
 enum BuildInMessageType {
   // client -> server
-  ModelRowColumnCountRequest,
+  ModelRowColumnCountRequest = InvalidMessageType + 1,
   ModelContentRequest,
   ModelHeaderRequest,
   ModelSetDataRequest,
@@ -61,8 +61,5 @@ qint32 version();
 }
 
 }
-
-QDataStream& operator<<(QDataStream &stream, GammaRay::Protocol::BuildInMessageType messageType);
-QDataStream& operator>>(QDataStream& stream, GammaRay::Protocol::BuildInMessageType& messageType);
 
 #endif

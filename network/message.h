@@ -19,7 +19,10 @@ namespace GammaRay {
 class Message
 {
   public:
-    explicit Message(Protocol::ObjectAddress address);
+    /**
+     * Construct a new message to/from @p address and message type @p type.
+     */
+    explicit Message(Protocol::ObjectAddress address, Protocol::MessageType type);
 #ifdef Q_COMPILER_RVALUE_REFS
     Message(Message &&other);
 #else

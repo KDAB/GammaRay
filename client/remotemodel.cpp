@@ -114,8 +114,8 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
 
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelSetDataRequest << Protocol::fromQModelIndex(index) << role << value;
+  Message msg(m_myAddress, Protocol::ModelSetDataRequest);
+  msg.stream() << Protocol::fromQModelIndex(index) << role << value;
   Client::stream() << msg;
   return false;
 }
@@ -378,8 +378,8 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
     return;
   node->rowCount = -2;
 
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelRowColumnCountRequest << Protocol::fromQModelIndex(index);
+  Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
+  msg.stream() << Protocol::fromQModelIndex(index);
   Client::stream() << msg;
 }
 
@@ -392,8 +392,8 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
 
   node->data.insert(index.column(), QHash<int, QVariant>()); // mark pending request
 
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelContentRequest << Protocol::fromQModelIndex(index);
+  Message msg(m_myAddress, Protocol::ModelContentRequest);
+  msg.stream() << Protocol::fromQModelIndex(index);
   Client::stream() << msg;
 }
 
@@ -402,8 +402,8 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
   Q_ASSERT(!m_headers.value(orientation).contains(section));
   m_headers[orientation][section][Qt::DisplayRole] = tr("Loading...");
 
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelHeaderRequest << qint8(orientation) << qint32(section);
+  Message msg(m_myAddress, Protocol::ModelHeaderRequest);
+  msg.stream() << qint8(orientation) << qint32(section);
   Client::stream() << msg;
 }
 
@@ -412,8 +412,8 @@ void RemoteModel::clear()
   qDebug() << Q_FUNC_INFO;
   beginResetModel();
 
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelSyncBarrier << ++m_targetSyncBarrier;
+  Message msg(m_myAddress, Protocol::ModelSyncBarrier);
+  msg.stream() << ++m_targetSyncBarrier;
   Client::stream() << msg;
 
   delete m_root;

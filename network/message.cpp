@@ -10,9 +10,9 @@ Message::Message() :
 {
 }
 
-Message::Message(Protocol::ObjectAddress objectAddress) :
+Message::Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType type) :
   m_objectAddress(objectAddress),
-  m_messageType(Protocol::InvalidMessageType)
+  m_messageType(type)
 {
 }
 
@@ -45,8 +45,7 @@ QDataStream& Message::stream() const
 {
   if (!m_stream) {
     m_stream.reset(new QDataStream(&m_buffer, QIODevice::ReadWrite));
-    *m_stream << m_objectAddress;
-    // TODO also write type automatically here
+    *m_stream << m_objectAddress << m_messageType;
   }
   return *m_stream;
 }
@@ -74,6 +73,7 @@ Message Message::readMessage(QIODevice* device)
   msg.m_stream.reset(new QDataStream(msg.m_buffer));
   *msg.m_stream >> msg.m_objectAddress >> msg.m_messageType;
   Q_ASSERT(msg.m_stream->status() == QDataStream::Ok);
+  Q_ASSERT(msg.m_messageType != Protocol::InvalidMessageType);
 
   return msg;
 }

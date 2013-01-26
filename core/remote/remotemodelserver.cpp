@@ -46,8 +46,8 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       msg.stream() >> index;
       const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
 
-      Message msg(m_myAddress);
-      msg.stream() << Protocol::ModelRowColumnCountReply << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
+      Message msg(m_myAddress, Protocol::ModelRowColumnCountReply);
+      msg.stream() << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
       Server::stream() << msg;
       break;
     }
@@ -60,8 +60,8 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       if (!qmIndex.isValid())
         break;
 
-      Message msg(m_myAddress);
-      msg.stream() << Protocol::ModelContentReply << index << m_model->itemData(qmIndex) << qint32(m_model->flags(qmIndex));
+      Message msg(m_myAddress, Protocol::ModelContentReply);
+      msg.stream() << index << m_model->itemData(qmIndex) << qint32(m_model->flags(qmIndex));
       Server::stream() << msg;
       break;
     }
@@ -75,8 +75,8 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       QHash<qint32, QVariant> data;
       data.insert(Qt::DisplayRole, m_model->headerData(section, static_cast<Qt::Orientation>(orientation), Qt::DisplayRole)); // TODO: add all roles
 
-      Message msg(m_myAddress);
-      msg.stream() << Protocol::ModelHeaderReply << orientation << section << data;
+      Message msg(m_myAddress, Protocol::ModelHeaderReply);
+      msg.stream() << orientation << section << data;
       Server::stream() << msg;
       break;
     }
@@ -96,8 +96,8 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     {
       qint32 barrierId;
       msg.stream() >> barrierId;
-      Message reply(m_myAddress);
-      reply.stream() << Protocol::ModelSyncBarrier << barrierId;
+      Message reply(m_myAddress, Protocol::ModelSyncBarrier);
+      reply.stream() << barrierId;
       Server::stream() << reply;
       break;
     }
@@ -109,8 +109,8 @@ void RemoteModelServer::dataChanged(const QModelIndex& begin, const QModelIndex&
   // TODO check if somebody is listening (here or in Server?)
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelContentChanged << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end);
+  Message msg(m_myAddress, Protocol::ModelContentChanged);
+  msg.stream() << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end);
   Server::stream() << msg;
 }
 
@@ -118,8 +118,8 @@ void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first
 {
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelHeaderChanged << qint8(orientation) << first << last;
+  Message msg(m_myAddress, Protocol::ModelHeaderChanged);
+  msg.stream() <<  qint8(orientation) << first << last;
   Server::stream() << msg;
 }
 
@@ -157,8 +157,7 @@ void RemoteModelServer::layoutChanged()
 {
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelLayoutChanged;
+  Message msg(m_myAddress, Protocol::ModelLayoutChanged);
   Server::stream() << msg;
 }
 
@@ -166,8 +165,7 @@ void RemoteModelServer::modelReset()
 {
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress);
-  msg.stream() << Protocol::ModelReset;
+  Message msg(m_myAddress, Protocol::ModelReset);
   Server::stream() << msg;
 }
 
@@ -175,8 +173,8 @@ void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const Q
 {
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress);
-  msg.stream() << type << Protocol::fromQModelIndex(parent) << start << end;
+  Message msg(m_myAddress, type);
+  msg.stream() << Protocol::fromQModelIndex(parent) << start << end;
   Server::stream() << msg;
 
 }
@@ -186,8 +184,8 @@ void RemoteModelServer::sendMoveMessage(Protocol::MessageType type, const QModel
 {
   if (!Server::isConnected())
     return;
-  Message msg(m_myAddress);
-  msg.stream() << type << Protocol::fromQModelIndex(sourceParent) << qint32(sourceStart) << qint32(sourceEnd)
+  Message msg(m_myAddress, type);
+  msg.stream() << Protocol::fromQModelIndex(sourceParent) << qint32(sourceStart) << qint32(sourceEnd)
                << Protocol::fromQModelIndex(destinationParent) << qint32(destinationIndex);
   Server::stream() << msg;
 }

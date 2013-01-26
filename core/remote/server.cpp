@@ -44,14 +44,14 @@ void Server::newConnection()
 
   // send greeting message for protocol version check
   {
-    Message msg(m_myAddress);
-    msg.stream() << Protocol::ServerVersion << Protocol::version();
+    Message msg(m_myAddress, Protocol::ServerVersion);
+    msg.stream() << Protocol::version();
     stream() << msg;
   }
 
   {
-    Message msg(m_myAddress);
-    msg.stream() << Protocol::ObjectMapReply << objectAddresses();
+    Message msg(m_myAddress, Protocol::ObjectMapReply);
+    msg.stream() << objectAddresses();
     stream() << msg;
   }
 }
@@ -70,8 +70,8 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
   connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
 
   if (isConnected()) {
-    Message msg(m_myAddress);
-    msg.stream() << Protocol::ObjectAdded << objectName << m_nextAddress;
+    Message msg(m_myAddress, Protocol::ObjectAdded);
+    msg.stream() <<  objectName << m_nextAddress;
     stream() << msg;
   }
 
@@ -87,8 +87,8 @@ void Server::objectDestroyed(QObject* object)
   unregisterObjectInternal(objectName);
 
   if (isConnected()) {
-    Message msg(m_myAddress);
-    msg.stream() << Protocol::ObjectRemoved << objectName;
+    Message msg(m_myAddress, Protocol::ObjectRemoved);
+    msg.stream() << objectName;
     stream() << msg;
   }
 }
