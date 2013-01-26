@@ -16,10 +16,18 @@ public:
   explicit Client(QObject *parent = 0);
   ~Client();
 
+  /** Connect to @p hostName on port @p port. */
   void connectToHost(const QString &hostName, quint16 port);
 
-  void registerForObject(Protocol::ObjectAddress &objectAddress, QObject *handler, const char* slot);
+  /** Register a message handler for @p objectAddress on object @p handler.
+   *  Once a message for this object is received, @p slot is called.
+   */
+  void registerForObject(Protocol::ObjectAddress objectAddress, QObject *handler, const char* slot);
 
+  /** Unregister the message handler for @p objectAddress. */
+  void unregisterForObject(Protocol::ObjectAddress objectAddress);
+
+  /** Singleton accessor. */
   static Client* instance();
 
 protected:

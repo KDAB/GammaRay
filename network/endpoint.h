@@ -64,6 +64,9 @@ protected:
    */
   void registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject *receiver, const char* messageHandlerName);
 
+  /** Unregister the message handler for @p objectAddress. */
+  void unregisterMessageHandlerInternal(Protocol::ObjectAddress objectAddress);
+
   /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
   virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName) = 0;
 

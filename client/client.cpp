@@ -81,11 +81,16 @@ void Client::messageReceived(const Message& msg)
   dispatchMessage(msg);
 }
 
-void Client::registerForObject(Protocol::ObjectAddress& objectAddress, QObject* handler, const char* slot)
+void Client::registerForObject(Protocol::ObjectAddress objectAddress, QObject* handler, const char* slot)
 {
-  // TODO implement unregistering as well
   // TODO tell the server what we are monitoring, to reduce network traffic
   registerMessageHandlerInternal(objectAddress, handler, slot);
+}
+
+void Client::unregisterForObject(Protocol::ObjectAddress objectAddress)
+{
+  // TODO tell the server we are no longer monitoring this
+  unregisterMessageHandlerInternal(objectAddress);
 }
 
 void Client::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)

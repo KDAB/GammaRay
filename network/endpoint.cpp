@@ -117,6 +117,18 @@ void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddr
   connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(handlerDestroyed(QObject*)));
 }
 
+void Endpoint::unregisterMessageHandlerInternal(Protocol::ObjectAddress objectAddress)
+{
+  Q_ASSERT(m_addressMap.contains(objectAddress));
+  ObjectInfo *obj = m_addressMap.value(objectAddress);
+  Q_ASSERT(obj);
+  Q_ASSERT(obj->receiver);
+  disconnect(obj->receiver, SIGNAL(destroyed(QObject*)), this, SLOT(handlerDestroyed(QObject*)));
+  m_handlerMap.remove(obj->receiver, obj);
+  obj->receiver = 0;
+  obj->messageHandler.clear();
+}
+
 void Endpoint::handlerDestroyed(QObject* obj)
 {
   const QList<ObjectInfo*> objs = m_handlerMap.values(obj); // copy, the virtual method below likely changes the maps.
