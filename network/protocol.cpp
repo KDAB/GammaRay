@@ -25,7 +25,7 @@ QModelIndex toQModelIndex(QAbstractItemModel* model, const Protocol::ModelIndex&
 
 qint32 version()
 {
-  return 2;
+  return 3;
 }
 
 }

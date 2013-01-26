@@ -57,7 +57,19 @@ void Server::newConnection()
 
 void Server::messageReceived(const Message& msg)
 {
-  dispatchMessage(msg);
+  if (msg.address() == endpointAddress()) {
+    switch (msg.type()) {
+      case Protocol::ObjectMonitored:
+      case Protocol::ObjectUnmonitored:
+      {
+        Protocol::ObjectAddress addr;
+        msg.payload() >> addr;
+        qDebug() << Q_FUNC_INFO << "un/monitor" << addr;
+      }
+    }
+  } else {
+    dispatchMessage(msg);
+  }
 }
 
 Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)

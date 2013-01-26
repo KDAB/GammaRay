@@ -18,12 +18,10 @@ static const ObjectAddress InvalidObjectAddress = 0;
 static const MessageType InvalidMessageType = 0;
 
 enum BuildInMessageType {
+  // object management
   // client -> server
-  ModelRowColumnCountRequest = InvalidMessageType + 1,
-  ModelContentRequest,
-  ModelHeaderRequest,
-  ModelSetDataRequest,
-  ModelSyncBarrier,
+  ObjectMonitored = InvalidMessageType + 1,
+  ObjectUnmonitored,
 
   // server -> client
   ServerVersion,
@@ -32,6 +30,15 @@ enum BuildInMessageType {
   ObjectAdded,
   ObjectRemoved,
 
+  // remote model messages
+  // client -> server
+  ModelRowColumnCountRequest,
+  ModelContentRequest,
+  ModelHeaderRequest,
+  ModelSetDataRequest,
+  ModelSyncBarrier,
+
+  // server -> client
   ModelRowColumnCountReply,
   ModelContentReply,
   ModelContentChanged,

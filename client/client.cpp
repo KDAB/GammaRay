@@ -83,19 +83,32 @@ void Client::messageReceived(const Message& msg)
 
 void Client::registerForObject(Protocol::ObjectAddress objectAddress, QObject* handler, const char* slot)
 {
-  // TODO tell the server what we are monitoring, to reduce network traffic
+  Q_ASSERT(isConnected());
   registerMessageHandlerInternal(objectAddress, handler, slot);
+  Message msg(endpointAddress(), Protocol::ObjectMonitored);
+  msg.payload() << objectAddress;
+  send(msg);
 }
 
 void Client::unregisterForObject(Protocol::ObjectAddress objectAddress)
 {
-  // TODO tell the server we are no longer monitoring this
   unregisterMessageHandlerInternal(objectAddress);
+  unmonitorObject(objectAddress);
 }
 
 void Client::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)
 {
-  // TODO tell the server we are no longer monitoring this
+  Q_UNUSED(objectName);
+  unmonitorObject(objectAddress);
+}
+
+void Client::unmonitorObject(Protocol::ObjectAddress objectAddress)
+{
+  if (!isConnected())
+    return;
+  Message msg(endpointAddress(), Protocol::ObjectUnmonitored);
+  msg.payload() << objectAddress;
+  send(msg);
 }
 
 #include "client.moc"

@@ -31,8 +31,11 @@ public:
   static Client* instance();
 
 protected:
-    void messageReceived(const Message& msg);
-    void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
+  void messageReceived(const Message& msg);
+  void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
+
+private:
+  void unmonitorObject(Protocol::ObjectAddress objectAddress);
 };
 
 }
