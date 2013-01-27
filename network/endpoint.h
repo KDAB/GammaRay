@@ -28,7 +28,9 @@ public:
   static void send(const Message &msg);
   /** Returns @c true if we are currently connected to another endpoint. */
   static bool isConnected();
+
   static quint16 defaultPort();
+  static quint16 broadcastPort();
 
   /** Returns the object address for @p objectName, or @c Protocol::InvalidObjectAddress if not known. */
   Protocol::ObjectAddress objectAddress(const QString &objectName) const;

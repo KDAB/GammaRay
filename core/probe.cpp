@@ -241,6 +241,7 @@ void Probe::delayedInit()
   QCoreApplication::instance()->installEventFilter(s_instance);
 
   new Server(this);
+  Server::instance()->setLabel(qApp->applicationName()); // TODO use the same logic from MainWindow title
 
   IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
   s_listener()->filterThread = QThread::currentThread();

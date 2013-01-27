@@ -42,6 +42,11 @@ quint16 Endpoint::defaultPort()
   return 11732;
 }
 
+quint16 Endpoint::broadcastPort()
+{
+  return 13325;
+}
+
 void Endpoint::setDevice(QIODevice* device)
 {
   qDebug() << Q_FUNC_INFO << device;

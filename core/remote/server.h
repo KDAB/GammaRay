@@ -4,6 +4,8 @@
 #include <network/endpoint.h>
 
 class QTcpServer;
+class QUdpSocket;
+class QTimer;
 
 namespace GammaRay {
 
@@ -25,17 +27,25 @@ class Server : public Endpoint
     /** Singleton accessor. */
     static Server* instance();
 
+    /** Sets the label of this instance used when advertising this server on the network. */
+    void setLabel(const QString &label);
+
   protected:
     void messageReceived(const Message& msg);
     void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
 
   private slots:
     void newConnection();
+    void broadcast();
 
   private:
     QTcpServer *m_tcpServer;
     QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> > m_monitorNotifiers;
     Protocol::ObjectAddress m_nextAddress;
+
+    QString m_label;
+    QTimer* m_broadcastTimer;
+    QUdpSocket* m_broadcastSocket;
 };
 
 }

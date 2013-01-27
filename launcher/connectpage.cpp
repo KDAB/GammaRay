@@ -1,5 +1,6 @@
 #include "connectpage.h"
 #include "ui_connectpage.h"
+#include "networkdiscoverymodel.h"
 
 #include <network/endpoint.h>
 
@@ -15,7 +16,8 @@ ConnectPage::ConnectPage(QWidget* parent): QWidget(parent), ui(new Ui::ConnectPa
   connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
   connect(ui->port, SIGNAL(valueChanged(int)), SIGNAL(updateButtonState()));
 
-  // TODO add discovery model
+  NetworkDiscoveryModel* model = new NetworkDiscoveryModel(this);
+  ui->instanceView->setModel(model);
 
   QSettings settings;
   ui->host->setText(settings.value("Connect/Host", QString()).toString());

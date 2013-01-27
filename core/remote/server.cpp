@@ -7,16 +7,27 @@
 #include <QDebug>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QUdpSocket>
+#include <QTimer>
+#include <QNetworkInterface>
 
 using namespace GammaRay;
 
 Server::Server(QObject *parent) : 
   Endpoint(parent),
   m_tcpServer(new QTcpServer(this)),
-  m_nextAddress(endpointAddress())
+  m_nextAddress(endpointAddress()),
+  m_broadcastTimer(new QTimer(this)),
+  m_broadcastSocket(new QUdpSocket(this))
 {
   connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
   m_tcpServer->listen(QHostAddress::Any, defaultPort());
+
+  m_broadcastTimer->setInterval(5 * 1000);
+  m_broadcastTimer->setSingleShot(false);
+  m_broadcastTimer->start();
+  connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
+  connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(stop()));
 }
 
 Server::~Server()
@@ -106,6 +117,30 @@ void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QStri
     msg.payload() << objectName;
     send(msg);
   }
+}
+
+void Server::broadcast()
+{
+  QString myAddress;
+  foreach (const QHostAddress &addr, QNetworkInterface::allAddresses()) {
+    if (addr == QHostAddress::LocalHost || addr == QHostAddress::LocalHostIPv6)
+      continue;
+    myAddress = addr.toString();
+    break;
+  }
+
+  QByteArray datagram;
+  QDataStream stream(&datagram, QIODevice::WriteOnly);
+  stream << Protocol::version();
+  stream << myAddress;
+  stream << defaultPort(); // might change for multiple instances on the same machine
+  stream << m_label; // TODO integrate hostname
+  m_broadcastSocket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, broadcastPort());
+}
+
+void Server::setLabel(const QString& label)
+{
+  m_label = label;
 }
 
 #include "server.moc"
