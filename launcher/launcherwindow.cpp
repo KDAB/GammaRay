@@ -91,6 +91,7 @@ void LauncherWindow::accept()
   settings.setValue(QLatin1String("Launcher/TabIndex"), ui->tabWidget->currentIndex());
 
   ui->launchPage->writeSettings();
+  ui->connectPage->writeSettings();
 
   if (ui->tabWidget->currentWidget() == ui->connectPage) {
     ui->connectPage->launchClient();

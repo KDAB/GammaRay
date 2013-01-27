@@ -18,7 +18,7 @@ public:
   ~ConnectPage();
 
   bool isValid() const;
-  // TODO write settings
+  void writeSettings();
 
 public slots:
   void launchClient();
