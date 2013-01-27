@@ -27,7 +27,7 @@ Server::Server(QObject *parent) :
   m_broadcastTimer->setSingleShot(false);
   m_broadcastTimer->start();
   connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
-  connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(stop()));
+  connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(start()));
 }
 
 Server::~Server()
@@ -50,6 +50,7 @@ void Server::newConnection()
   }
 
   qDebug() << Q_FUNC_INFO;
+  m_broadcastTimer->stop();
   setDevice(m_tcpServer->nextPendingConnection());
 
   // send greeting message for protocol version check
