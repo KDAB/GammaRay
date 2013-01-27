@@ -26,6 +26,9 @@ public slots:
 signals:
   void updateButtonState();
 
+private slots:
+  void instanceSelected();
+
 private:
   QScopedPointer<Ui::ConnectPage> ui;
 

@@ -82,6 +82,10 @@ QVariant NetworkDiscoveryModel::data(const QModelIndex& index, int role) const
   } else if (role == Qt::ToolTipRole) {
     if (info.version != Protocol::version())
       return tr("Incompatible GammaRay version.");
+  } else if (role == HostNameRole) {
+    return info.host;
+  } else if (role == PortRole) {
+    return info.port;
   }
 
   return QVariant();

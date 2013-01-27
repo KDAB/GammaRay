@@ -18,6 +18,7 @@ ConnectPage::ConnectPage(QWidget* parent): QWidget(parent), ui(new Ui::ConnectPa
 
   NetworkDiscoveryModel* model = new NetworkDiscoveryModel(this);
   ui->instanceView->setModel(model);
+  connect(ui->instanceView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(instanceSelected()));
 
   QSettings settings;
   ui->host->setText(settings.value("Connect/Host", QString()).toString());
@@ -47,6 +48,16 @@ void ConnectPage::writeSettings()
   QSettings settings;
   settings.setValue("Connect/Host", ui->host->text());
   settings.setValue("Connect/Port", ui->port->value());
+}
+
+void ConnectPage::instanceSelected()
+{
+  const QModelIndexList rows = ui->instanceView->selectionModel()->selectedRows();
+  if (rows.size() != 1)
+    return;
+
+  ui->host->setText(rows.first().data(NetworkDiscoveryModel::HostNameRole).toString());
+  ui->port->setValue(rows.first().data(NetworkDiscoveryModel::PortRole).toInt());
 }
 
 #include "connectpage.moc"

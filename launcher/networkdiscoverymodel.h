@@ -14,6 +14,11 @@ class NetworkDiscoveryModel : public QAbstractTableModel
 {
   Q_OBJECT
 public:
+  enum Role {
+    HostNameRole = Qt::UserRole + 1,
+    PortRole
+  };
+
   explicit NetworkDiscoveryModel(QObject* parent);
   ~NetworkDiscoveryModel();
 
