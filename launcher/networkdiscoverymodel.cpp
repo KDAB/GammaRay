@@ -38,6 +38,11 @@ void NetworkDiscoveryModel::processPendingDatagrams()
     m_socket->readDatagram(datagram.data(), datagram.size());
 
     QDataStream stream(datagram);
+    qint32 broadcastVersion;
+    stream >> broadcastVersion;
+    if (broadcastVersion != Protocol::broadcastFormatVersion())
+      continue;
+
     ServerInfo info;
     stream >> info.version >> info.host >> info.port >> info.label;
     info.lastSeen = QDateTime::currentDateTime();

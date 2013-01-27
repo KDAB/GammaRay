@@ -60,7 +60,11 @@ ModelIndex fromQModelIndex(const QModelIndex &index);
 
 QModelIndex toQModelIndex(QAbstractItemModel *model, const ModelIndex &index);
 
+/** Protocol version, must match exactly between client and server. */
 qint32 version();
+
+/** Broadcast format version. */
+qint32 broadcastFormatVersion();
 
 }
 

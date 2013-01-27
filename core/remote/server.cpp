@@ -132,6 +132,7 @@ void Server::broadcast()
 
   QByteArray datagram;
   QDataStream stream(&datagram, QIODevice::WriteOnly);
+  stream << Protocol::broadcastFormatVersion();
   stream << Protocol::version();
   stream << myAddress;
   stream << defaultPort(); // might change for multiple instances on the same machine

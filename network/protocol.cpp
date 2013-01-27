@@ -28,6 +28,11 @@ qint32 version()
   return 3;
 }
 
+qint32 broadcastFormatVersion()
+{
+  return 1;
+}
+
 }
 
 }
