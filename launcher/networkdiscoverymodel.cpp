@@ -7,6 +7,11 @@
 
 using namespace GammaRay;
 
+bool NetworkDiscoveryModel::ServerInfo::operator==(const NetworkDiscoveryModel::ServerInfo& other)
+{
+  return host == other.host && port == other.port;
+}
+
 NetworkDiscoveryModel::NetworkDiscoveryModel(QObject* parent):
   QAbstractTableModel(parent),
   m_socket(new QUdpSocket(this))
@@ -36,11 +41,15 @@ void NetworkDiscoveryModel::processPendingDatagrams()
     ServerInfo info;
     stream >> info.version >> info.host >> info.port >> info.label;
     info.lastSeen = QDateTime::currentDateTime();
-    qDebug() << Q_FUNC_INFO << info.host << info.version << info.port << info.label << info.lastSeen;
-    // TODO - update time only if we know this one already
-    beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
-    m_data.push_back(info);
-    endInsertRows();
+
+    QVector<ServerInfo>::iterator it = std::find(m_data.begin(), m_data.end(), info);
+    if (it == m_data.end()) {
+      beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
+      m_data.push_back(info);
+      endInsertRows();
+    } else {
+      it->lastSeen = info.lastSeen;
+    }
   }
 }
 

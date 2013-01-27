@@ -31,6 +31,7 @@ private:
   QUdpSocket *m_socket;
 
   struct ServerInfo {
+    bool operator==(const ServerInfo &other);
     qint32 version;
     QString host;
     quint16 port;
