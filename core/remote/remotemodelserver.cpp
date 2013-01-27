@@ -11,9 +11,11 @@ using namespace GammaRay;
 
 RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent) :
   QObject(parent),
-  m_model(0)
+  m_model(0),
+  m_monitored(false)
 {
-  m_myAddress = Server::instance()->registerObject(objectName, this, "newRequest");
+  m_myAddress = Server::instance()->registerObject(objectName, this, "newRequest", "modelMonitored");
+  connect(Server::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
 }
 
 RemoteModelServer::~RemoteModelServer()
@@ -22,9 +24,20 @@ RemoteModelServer::~RemoteModelServer()
 
 void RemoteModelServer::setModel(QAbstractItemModel *model)
 {
-  // TODO send reset, disconnect old model
-  m_model = model;
+  if (m_model) {
+    disconnectModel();
+    if (m_monitored)
+      modelReset();
+  }
 
+  m_model = model;
+  if (m_monitored)
+    connectModel();
+}
+
+void RemoteModelServer::connectModel()
+{
+  Q_ASSERT(m_model);
   connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
   connect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), SLOT(headerDataChanged(Qt::Orientation,int,int)));
   connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(rowsInserted(QModelIndex,int,int)));
@@ -35,6 +48,21 @@ void RemoteModelServer::setModel(QAbstractItemModel *model)
   connect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), SLOT(columnsRemoved(QModelIndex,int,int)));
   connect(m_model, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
   connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
+}
+
+void RemoteModelServer::disconnectModel()
+{
+  Q_ASSERT(m_model);
+  disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
+  disconnect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), this, SLOT(headerDataChanged(Qt::Orientation,int,int)));
+  disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)));
+  disconnect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
+  disconnect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(rowsRemoved(QModelIndex,int,int)));
+  disconnect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)), this, SLOT(columnsInserted(QModelIndex,int,int)));
+  disconnect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
+  disconnect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), this, SLOT(columnsRemoved(QModelIndex,int,int)));
+  disconnect(m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()));
+  disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
 }
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
@@ -101,6 +129,20 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       Server::send(reply);
       break;
     }
+  }
+}
+
+void RemoteModelServer::modelMonitored(bool monitored)
+{
+  qDebug() << Q_FUNC_INFO << monitored << m_myAddress;
+  if (m_monitored == monitored)
+    return;
+  m_monitored = monitored;
+  if (m_model) {
+    if (m_monitored)
+      connectModel();
+    else
+      disconnectModel();
   }
 }
 
