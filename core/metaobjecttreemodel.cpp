@@ -29,13 +29,109 @@
 #include <QDebug>
 #include <QThread>
 
+#include <assert.h>
+
 using namespace GammaRay;
 
 #define IF_DEBUG(x)
 
+namespace GammaRay {
+
+/**
+ * Tracks information about meta objects
+ *
+ * @sa objectAdded for explanation
+ */
+class MetaObjectInfoTracker
+{
+public:
+  struct MetaObjectInfo
+  {
+    MetaObjectInfo() : selfCount(0), inclusiveCount(0) {}
+
+    /// Number of objects of a particular meta object type
+    int selfCount;
+    /**
+     * Number of objects of the exact meta object type
+     * + number of objects of type that inherit from this meta type
+     */
+    int inclusiveCount;
+  };
+
+  /**
+   * Use this whenever a new object of type @p metaObject was seen
+   *
+   * This will increase these values:
+   * - selfCount for that particular @p metaObject
+   * - inclusiveCount for @p metaObject and *all* ancestors
+   *
+   * Complexity-wise the inclusive count calculation should be okay,
+   * since the number of ancestors should be rather small
+   * (QMetaObject class hierarchy is rather a broad than a deep tree structure)
+   *
+   * If this yields some performance issues, we might need to remove the inclusive
+   * costs calculation altogether (a calculate-on-request pattern should be even slower)
+   */
+  void objectAdded(const QMetaObject* metaObject)
+  {
+    // note: use plain C asserts here, infinite loops otherwise in case of assert
+
+    ++m_metaObjectInfoMap[metaObject].selfCount;
+
+    // increase inclusive counts
+    const QMetaObject* current = metaObject;
+    while (current) {
+      ++m_metaObjectInfoMap[current].inclusiveCount;
+      current = current->superClass();
+    }
+  }
+
+  /**
+   * @sa objectAdded for explanation
+   */
+  void objectRemoved(const QMetaObject* metaObject)
+  {
+    // note: use plain C asserts here, infinite loops otherwise
+
+    assert(m_metaObjectInfoMap.contains(metaObject));
+    if (m_metaObjectInfoMap[metaObject].selfCount == 0) {
+      // something went wrong, but let's just ignore this event in case of assert
+      return;
+    }
+
+    --m_metaObjectInfoMap[metaObject].selfCount;
+    assert(m_metaObjectInfoMap[metaObject].selfCount >= 0);
+
+    // decrease inclusive counts
+    const QMetaObject* current = metaObject;
+    while (current) {
+      --m_metaObjectInfoMap[current].inclusiveCount;
+      assert(m_metaObjectInfoMap[current].inclusiveCount >= 0);
+      current = current->superClass();
+    }
+  }
+
+  inline const MetaObjectInfo& info(const QMetaObject* metaObject)
+  {
+    return m_metaObjectInfoMap[metaObject];
+  }
+
+private:
+  QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
+};
+
+}
+
 MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
   : QAbstractItemModel(parent)
+  , m_infoTracker(new MetaObjectInfoTracker)
 {
+  qRegisterMetaType<const QMetaObject *>();
+}
+
+MetaObjectTreeModel::~MetaObjectTreeModel()
+{
+  delete m_infoTracker;
 }
 
 QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -43,9 +139,24 @@ QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientatio
   if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
     switch (section) {
       case ObjectColumn:
-        return tr("Meta Object Class Hierarchy");
+        return tr("Meta Object Class");
+      case ObjectSelfCountColumn:
+        return tr("Self (#Objects)");
+      case ObjectInclusiveCountColumn:
+        return tr("Incl. (#Objects)");
       default:
         return QVariant();
+    }
+  } else if (role == Qt::ToolTipRole) {
+    switch (section) {
+    case ObjectColumn:
+      return tr("This column shows the QMetaObject class hierarchy");
+    case ObjectSelfCountColumn:
+      return tr("This column shows the number of objects of particular type");
+    case ObjectInclusiveCountColumn:
+      return tr("This column shows the number of objects that inherit from a particular type");
+    default:
+      return QVariant();
     }
   }
 
@@ -64,6 +175,10 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
     switch(column) {
     case ObjectColumn:
       return object->className();
+      case ObjectSelfCountColumn:
+        return m_infoTracker->info(object).selfCount;
+      case ObjectInclusiveCountColumn:
+        return m_infoTracker->info(object).inclusiveCount;
     default:
       break;
     }
@@ -76,7 +191,7 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
 int MetaObjectTreeModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
-  return 1;
+  return _Last;
 }
 
 int MetaObjectTreeModel::rowCount(const QModelIndex &parent) const
@@ -111,17 +226,31 @@ QModelIndex MetaObjectTreeModel::index(int row, int column, const QModelIndex &p
 
 void MetaObjectTreeModel::objectAdded(QObject *obj)
 {
+  // when called from background, delay into fore&ground, otherwise call directly
+  QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::AutoConnection,
+                            Q_ARG(QObject *, obj));
+}
+
+void MetaObjectTreeModel::objectAddedMainThread(QObject* obj)
+{
   // slot, hence should always land in main thread due to auto connection
-  Q_ASSERT(thread() == QThread::currentThread());
+  assert(thread() == QThread::currentThread());
 
   ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
   if (!Probe::instance()->isValidObject(obj)) {
     return;
   }
-  Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
+  assert(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
+  QWriteLocker lock(&m_lock);
   const QMetaObject *metaObject = obj->metaObject();
   addMetaObject(metaObject);
+
+  // increase counter
+  const QModelIndex metaModelIndex = indexForMetaObject(metaObject);
+  assert(metaModelIndex.isValid());
+  m_infoTracker->objectAdded(metaObject);
+  emit dataChanged(metaModelIndex, metaModelIndex);
 }
 
 void MetaObjectTreeModel::addMetaObject(const QMetaObject *metaObject)
@@ -141,7 +270,7 @@ void MetaObjectTreeModel::addMetaObject(const QMetaObject *metaObject)
 
   const QModelIndex parentIndex = indexForMetaObject(parentMetaObject);
   // either we get a proper parent and hence valid index or there is no parent
-  Q_ASSERT(parentIndex.isValid() || !parentMetaObject);
+  assert(parentIndex.isValid() || !parentMetaObject);
 
   QVector<const QMetaObject*> &children = m_parentChildMap[ parentMetaObject ];
 
@@ -159,8 +288,32 @@ void MetaObjectTreeModel::removeMetaObject(const QMetaObject *metaObject)
 
 void MetaObjectTreeModel::objectRemoved(QObject *obj)
 {
-  Q_UNUSED(obj);
-  // TODO
+  // we need to find out the meta object *now*
+  // in objectRemovedMainThread the QObject* is no longer valid
+  const QMetaObject* metaObject = obj->metaObject();
+
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::AutoConnection,
+                            Q_ARG(const QMetaObject *, metaObject));
+}
+
+// We're just interested in the meta object of the object that was removed
+// Hence the QMetaObject* parameter
+void MetaObjectTreeModel::objectRemovedMainThread(const QMetaObject *metaObject)
+{
+  assert(thread() == QThread::currentThread());
+
+  QWriteLocker lock(&m_lock);
+
+    // decrease counter
+  const QModelIndex metaModelIndex = indexForMetaObject(metaObject);
+  if (!metaModelIndex.isValid()) {
+    // something went wrong, ignore
+    return;
+  }
+
+  m_infoTracker->objectRemoved(metaObject);
+  emit dataChanged(metaModelIndex, metaModelIndex);
 }
 
 QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject *metaObject) const
@@ -170,6 +323,7 @@ QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject *metaObjec
   }
 
   const QMetaObject *parentObject = m_childParentMap.value(metaObject);
+  Q_ASSERT(parentObject != metaObject);
   const QModelIndex parentIndex = indexForMetaObject(parentObject);
   if (!parentIndex.isValid() && parentObject) {
     return QModelIndex();

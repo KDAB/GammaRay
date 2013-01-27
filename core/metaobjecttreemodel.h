@@ -30,6 +30,8 @@
 
 namespace GammaRay {
 
+class MetaObjectInfoTracker;
+
 class MetaObjectTreeModel : public QAbstractItemModel
 {
   Q_OBJECT
@@ -40,10 +42,14 @@ class MetaObjectTreeModel : public QAbstractItemModel
     };
 
     enum Column {
-      ObjectColumn
+      ObjectColumn,
+      ObjectSelfCountColumn,
+      ObjectInclusiveCountColumn,
+      _Last
     };
 
     explicit MetaObjectTreeModel(QObject *parent = 0);
+    virtual ~MetaObjectTreeModel();
 
     // reimplemented methods
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
@@ -64,6 +70,10 @@ class MetaObjectTreeModel : public QAbstractItemModel
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
 
+  private Q_SLOTS:
+    void objectAddedMainThread(QObject *obj);
+    void objectRemovedMainThread(const QMetaObject *metaObject);
+
   private:
     void addMetaObject(const QMetaObject *metaObject);
     void removeMetaObject(const QMetaObject *metaObject);
@@ -76,6 +86,8 @@ class MetaObjectTreeModel : public QAbstractItemModel
     // data
     QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
     QHash<const QMetaObject*, QVector<const QMetaObject*> > m_parentChildMap;
+
+    MetaObjectInfoTracker* m_infoTracker;
 };
 
 }
