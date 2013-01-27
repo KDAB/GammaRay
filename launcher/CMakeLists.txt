@@ -5,6 +5,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 
   ${CMAKE_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
 )
 
@@ -24,6 +25,7 @@ set(gammaray_runner_srcs
   launcherwindow.cpp
   launchpage.cpp
   selftestpage.cpp
+  connectpage.cpp
 
   attachdialog.cpp
   processmodel.cpp
@@ -50,6 +52,7 @@ qt4_wrap_ui(gammaray_runner_srcs
   launcherwindow.ui
   launchpage.ui
   selftestpage.ui
+  connectpage.ui
 )
 # TODO we don't need all the class icons here, so split the qrc file accordingly
 qt4_add_resources(gammaray_runner_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
@@ -57,7 +60,7 @@ qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
 
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_network)
 if(UNIX AND NOT APPLE)
   target_link_libraries(gammaray dl) # for preload check
 endif()

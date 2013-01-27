@@ -76,6 +76,9 @@ void LauncherWindow::tabChanged()
   } else if (ui->tabWidget->currentWidget() == ui->launchPage) {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Launch"));
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->launchPage->isValid());
+  } else if (ui->tabWidget->currentWidget() == ui->connectPage) {
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Connect"));
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true); // TODO
   } else {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
   }
@@ -87,6 +90,10 @@ void LauncherWindow::accept()
   settings.setValue(QLatin1String("Launcher/TabIndex"), ui->tabWidget->currentIndex());
 
   ui->launchPage->writeSettings();
+
+  if (ui->tabWidget->currentWidget() == ui->connectPage) {
+    ui->connectPage->launchClient();
+  }
 
   QDialog::accept();
 }

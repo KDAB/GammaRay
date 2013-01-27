@@ -33,6 +33,11 @@
        <string>Launch</string>
       </attribute>
      </widget>
+     <widget class="GammaRay::ConnectPage" name="connectPage">
+      <attribute name="title">
+       <string>Connect</string>
+      </attribute>
+     </widget>
      <widget class="GammaRay::SelfTestPage" name="selfTestPage">
       <attribute name="title">
        <string>Self Test</string>
@@ -149,6 +154,12 @@
    <class>GammaRay::SelfTestPage</class>
    <extends>QWidget</extends>
    <header>selftestpage.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::ConnectPage</class>
+   <extends>QWidget</extends>
+   <header>connectpage.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
