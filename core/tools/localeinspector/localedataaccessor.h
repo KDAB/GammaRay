@@ -23,9 +23,10 @@
 #define GAMMARAY_LOCALEINSPECTOR_LOCALEDATAACCESSOR_H
 
 #include <QLocale>
-#include <QVector>
 #include <QObject>
 #include <QMetaType>
+#include <QVariant>
+#include <QVector>
 
 namespace GammaRay {
 
