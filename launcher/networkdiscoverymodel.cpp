@@ -55,7 +55,17 @@ void NetworkDiscoveryModel::processPendingDatagrams()
 
 void NetworkDiscoveryModel::expireEntries()
 {
-  // TODO
+  const QDateTime threshold = QDateTime::currentDateTime().addSecs(-30);
+  for (QVector<ServerInfo>::iterator it = m_data.begin(); it != m_data.end();) {
+    if (it->lastSeen >= threshold) {
+      ++it;
+    } else {
+      const int currentRow = std::distance(m_data.begin(), it);
+      beginRemoveRows(QModelIndex(), currentRow, currentRow);
+      it = m_data.erase(it);
+      endRemoveRows();
+    }
+  }
 }
 
 QVariant NetworkDiscoveryModel::data(const QModelIndex& index, int role) const
