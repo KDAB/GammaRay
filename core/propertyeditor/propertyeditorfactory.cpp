@@ -50,7 +50,7 @@ QWidget *PropertyEditorFactory::createEditor(QVariant::Type type, QWidget *paren
     return 0;
   }
 
-  // the read-only view is still in the background usually, so transpareny is not a good choice here
+  // the read-only view is still in the background usually, so transparency is not a good choice here
   w->setAutoFillBackground(true);
   return w;
 }
