@@ -12,6 +12,8 @@ ConnectPage::ConnectPage(QWidget* parent): QWidget(parent), ui(new Ui::ConnectPa
   ui->setupUi(this);
 
   ui->port->setValue(Endpoint::defaultPort());
+  connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
+  connect(ui->port, SIGNAL(valueChanged(int)), SIGNAL(updateButtonState()));
 
   // TODO add discovery model
   // TODO read settings
@@ -19,6 +21,11 @@ ConnectPage::ConnectPage(QWidget* parent): QWidget(parent), ui(new Ui::ConnectPa
 
 ConnectPage::~ConnectPage()
 {
+}
+
+bool ConnectPage::isValid() const
+{
+  return !ui->host->text().isEmpty();
 }
 
 void ConnectPage::launchClient()

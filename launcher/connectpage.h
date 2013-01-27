@@ -17,11 +17,14 @@ public:
   explicit ConnectPage(QWidget* parent = 0);
   ~ConnectPage();
 
-  // TODO input validation
+  bool isValid() const;
   // TODO write settings
 
 public slots:
   void launchClient();
+
+signals:
+  void updateButtonState();
 
 private:
   QScopedPointer<Ui::ConnectPage> ui;

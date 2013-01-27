@@ -38,6 +38,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
   connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
+  connect(ui->connectPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(activate()),
           ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
 
@@ -78,7 +79,7 @@ void LauncherWindow::tabChanged()
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->launchPage->isValid());
   } else if (ui->tabWidget->currentWidget() == ui->connectPage) {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Connect"));
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true); // TODO
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->connectPage->isValid());
   } else {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
   }
