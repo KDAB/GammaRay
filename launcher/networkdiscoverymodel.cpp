@@ -2,6 +2,7 @@
 
 #include <network/endpoint.h>
 
+#include <QDataStream>
 #include <QUdpSocket>
 #include <QTimer>
 

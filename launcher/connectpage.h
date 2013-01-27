@@ -1,7 +1,7 @@
 #ifndef GAMMARAY_CONNECTPAGE_H
 #define GAMMARAY_CONNECTPAGE_H
 
-#include <QtGui/qwidget.h>
+#include <QWidget>
 
 namespace GammaRay {
 
