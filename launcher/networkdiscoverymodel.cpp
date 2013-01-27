@@ -122,8 +122,14 @@ QVariant NetworkDiscoveryModel::headerData(int section, Qt::Orientation orientat
 
 Qt::ItemFlags NetworkDiscoveryModel::flags(const QModelIndex& index) const
 {
-  // TODO - disable on version mismatch
-  return QAbstractItemModel::flags(index);
+  const Qt::ItemFlags baseFlags = QAbstractItemModel::flags(index);
+  if (!index.isValid())
+    return baseFlags;
+
+  const ServerInfo &info = m_data.at(index.row());
+  if (info.version != Protocol::version())
+    return baseFlags & ~(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+  return baseFlags;
 }
 
 #include "networkdiscoverymodel.moc"
