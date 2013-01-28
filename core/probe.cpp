@@ -311,61 +311,70 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
              << hex << obj
              << (fromCtor ? " (from ctor)" : "") << endl;)
     return;
-  } else if (isInitialized()) {
-    if (instance()->filterObject(obj)) {
-      IF_DEBUG(cout
-               << "objectAdded Filter: "
-               << hex << obj
-               << (fromCtor ? " (from ctor)" : "") << endl;)
-      return;
-    } else if (instance()->m_validObjects.contains(obj)) {
-      // this happens when we get a child event before the objectAdded call from the ctor
-      // or when we add an item from s_addedBeforeProbeInsertion who got added already
-      // due to the add-parent-before-child logic
-      IF_DEBUG(cout
-               << "objectAdded Known: "
-               << hex << obj
-               << (fromCtor ? " (from ctor)" : "") << endl;)
-      return;
-    }
+  }
 
-    // make sure we already know the parent
-    if (obj->parent() && !instance()->m_validObjects.contains(obj->parent())) {
-      objectAdded(obj->parent(), fromCtor);
-    }
-    Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
+  if (!isInitialized()) {
+    IF_DEBUG(cout
+             << "objectAdded called while not being initialized: "
+             << hex << obj << endl;)
+    return;
+  }
 
-    instance()->m_validObjects << obj;
-    if (s_listener()->trackDestroyed) {
-      // when we did not use a preload variant that
-      // overwrites qt_removeObject we must track object
-      // deletion manually
-      connect(obj, SIGNAL(destroyed(QObject*)),
-              instance(), SLOT(handleObjectDestroyed(QObject*)),
-              Qt::DirectConnection);
-    }
+  if (instance()->filterObject(obj)) {
+    IF_DEBUG(cout
+              << "objectAdded Filter: "
+              << hex << obj
+              << (fromCtor ? " (from ctor)" : "") << endl;)
+    return;
+  }
 
-    if (!fromCtor && obj->parent() && instance()->m_queuedObjects.contains(obj->parent())) {
-      // when a child event triggers a call to objectAdded while inside the ctor
-      // the parent is already tracked but it's call to objectFullyConstructed
-      // was delayed. hence we must do the same for the child for integrity
-      fromCtor = true;
-    }
+  if (instance()->m_validObjects.contains(obj)) {
+    // this happens when we get a child event before the objectAdded call from the ctor
+    // or when we add an item from s_addedBeforeProbeInsertion who got added already
+    // due to the add-parent-before-child logic
+    IF_DEBUG(cout
+              << "objectAdded Known: "
+              << hex << obj
+              << (fromCtor ? " (from ctor)" : "") << endl;)
+    return;
+  }
 
-    IF_DEBUG(cout << "objectAdded: " << hex << obj
-                  << (fromCtor ? " (from ctor)" : "")
-                  << ", p: " << obj->parent() << endl;)
+  // make sure we already know the parent
+  if (obj->parent() && !instance()->m_validObjects.contains(obj->parent())) {
+    objectAdded(obj->parent(), fromCtor);
+  }
+  Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
-    if (fromCtor) {
-      Q_ASSERT(!instance()->m_queuedObjects.contains(obj));
-      instance()->m_queuedObjects << obj;
-      if (!instance()->m_queueTimer->isActive()) {
-        // timers must not be started from a different thread
-        QMetaObject::invokeMethod(instance()->m_queueTimer, "start", Qt::AutoConnection);
-      }
-    } else {
-      instance()->objectFullyConstructed(obj);
+  instance()->m_validObjects << obj;
+  if (s_listener()->trackDestroyed) {
+    // when we did not use a preload variant that
+    // overwrites qt_removeObject we must track object
+    // deletion manually
+    connect(obj, SIGNAL(destroyed(QObject*)),
+            instance(), SLOT(handleObjectDestroyed(QObject*)),
+            Qt::DirectConnection);
+  }
+
+  if (!fromCtor && obj->parent() && instance()->m_queuedObjects.contains(obj->parent())) {
+    // when a child event triggers a call to objectAdded while inside the ctor
+    // the parent is already tracked but it's call to objectFullyConstructed
+    // was delayed. hence we must do the same for the child for integrity
+    fromCtor = true;
+  }
+
+  IF_DEBUG(cout << "objectAdded: " << hex << obj
+                << (fromCtor ? " (from ctor)" : "")
+                << ", p: " << obj->parent() << endl;)
+
+  if (fromCtor) {
+    Q_ASSERT(!instance()->m_queuedObjects.contains(obj));
+    instance()->m_queuedObjects << obj;
+    if (!instance()->m_queueTimer->isActive()) {
+      // timers must not be started from a different thread
+      QMetaObject::invokeMethod(instance()->m_queueTimer, "start", Qt::AutoConnection);
     }
+  } else {
+    instance()->objectFullyConstructed(obj);
   }
 }
 
@@ -400,7 +409,9 @@ void Probe::objectFullyConstructed(QObject *obj)
     // deleted already
     IF_DEBUG(cout << "stale fully constructed: " << hex << obj << endl;)
     return;
-  } else if (filterObject(obj)) {
+  }
+
+  if (filterObject(obj)) {
     // when the call was delayed from the ctor construction,
     // the parent might not have been set properly yet. hence
     // apply the filter again
@@ -435,24 +446,27 @@ void Probe::objectFullyConstructed(QObject *obj)
 void Probe::objectRemoved(QObject *obj)
 {
   QWriteLocker lock(s_lock());
-  if (isInitialized()) {
-    IF_DEBUG(cout << "object removed:" << hex << obj << " " << obj->parent() << endl;)
-
-    bool success = instance()->m_validObjects.remove(obj);
-    if (!success) {
-      // object was not tracked by the probe, probably a gammaray object
-      return;
-    }
-
-    instance()->m_queuedObjects.removeOne(obj);
-
-    instance()->m_objectListModel->objectRemoved(obj);
-
-    instance()->connectionRemoved(obj, 0, 0, 0);
-    instance()->connectionRemoved(0, 0, obj, 0);
-
-    emit instance()->objectDestroyed(obj);
+  if (!isInitialized()) {
+    IF_DEBUG(cout << "objectRemoved called while not being initialized: " << hex << obj << endl;)
+    return;
   }
+
+  IF_DEBUG(cout << "object removed:" << hex << obj << " " << obj->parent() << endl;)
+
+  bool success = instance()->m_validObjects.remove(obj);
+  if (!success) {
+    // object was not tracked by the probe, probably a gammaray object
+    return;
+  }
+
+  instance()->m_queuedObjects.removeOne(obj);
+
+  instance()->m_objectListModel->objectRemoved(obj);
+
+  instance()->connectionRemoved(obj, 0, 0, 0);
+  instance()->connectionRemoved(0, 0, obj, 0);
+
+  emit instance()->objectDestroyed(obj);
 }
 
 void Probe::handleObjectDestroyed(QObject *obj)
