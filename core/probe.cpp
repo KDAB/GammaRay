@@ -199,21 +199,21 @@ bool Probe::isInitialized()
   return s_instance && qApp;
 }
 
-bool Probe::createProbe()
+bool Probe::canShowWidgets()
 {
-  // Exit early instead of asserting in QWidgetPrivate::init()
   const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
   if (!qGuiApplication
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        || qGuiApplication->type() == QApplication::Tty
-#endif
+    #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    || qGuiApplication->type() == QApplication::Tty
+    #endif
   ) {
-    cerr << "Unable to attach to a non-GUI application.\n"
-         << "Your application needs to use QApplication, "
-         << "otherwise GammaRay can not work." << endl;
     return false;
   }
+  return true;
+}
 
+bool Probe::createProbe()
+{
   IF_DEBUG(cout << "setting up new probe instance" << endl;)
   s_listener()->filterThread = QThread::currentThread();
   Q_ASSERT(!Probe::s_instance);
@@ -243,16 +243,20 @@ void Probe::delayedInit()
   new Server(this);
   Server::instance()->setLabel(qApp->applicationName()); // TODO use the same logic from MainWindow title
 
-  IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
-  s_listener()->filterThread = QThread::currentThread();
-  GammaRay::MainWindow *window = new GammaRay::MainWindow;
-  s_listener()->filterThread = 0;
-  IF_DEBUG(cout << "creation done" << endl;)
+  if (canShowWidgets()) {
+    IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
+    s_listener()->filterThread = QThread::currentThread();
+    GammaRay::MainWindow *window = new GammaRay::MainWindow;
+    s_listener()->filterThread = 0;
+    IF_DEBUG(cout << "creation done" << endl;)
 
-  window->setAttribute(Qt::WA_DeleteOnClose);
-  instance()->setWindow(window);
-  instance()->setParent(window);
-  window->show();
+    window->setAttribute(Qt::WA_DeleteOnClose);
+    instance()->setWindow(window);
+    instance()->setParent(window);
+    window->show();
+  } else {
+    cerr << "Unable to show in-process UI in a non-GUI application." << endl;
+  }
 
   RemoteModelServer *ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ObjectTree"), this);
   ms->setModel(m_objectTreeModel);

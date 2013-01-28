@@ -91,6 +91,9 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
 
     bool filterObject(QObject *obj) const;
 
+    /** Check if we are capable of showing widgets. */
+    static bool canShowWidgets();
+
     /// internal
     static void startupHookReceived();
 
