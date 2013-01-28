@@ -121,7 +121,7 @@ void ConnectionModel::connectionAddedMainThread(QObject *sender, const char *sig
   c.receiver = receiver;
   c.method = QMetaObject::normalizedSignature(method);
   c.type = type;
-  c.location = Probe::connectLocation(signal);
+  c.location = SignalSlotsLocationStore::extractLocation(signal);
 
   // check if that's actually a valid connection
   if (checkMethodForObject(sender, c.signal, true) &&
