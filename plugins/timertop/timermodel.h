@@ -39,7 +39,11 @@ class TimerModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    explicit TimerModel(QObject *parent = 0);
+    virtual ~TimerModel();
+
+    /// @return True in case instance() would return a valid pointer, else false
+    static bool isInitialized();
+
     static TimerModel *instance();
 
     // For the spy callbacks
@@ -87,6 +91,7 @@ class TimerModel : public QAbstractTableModel
     void slotEndReset();
 
   private:
+    explicit TimerModel(QObject *parent = 0);
 
     // Finds only QTimers based on the timer ID, not free timers.
     TimerInfoPtr findOrCreateQTimerTimerInfo(int timerId);
