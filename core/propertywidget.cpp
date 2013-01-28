@@ -89,8 +89,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   m_ui->staticPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->staticPropertyView);
 
-  RemoteModelServer *modelServer = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.StaticPropertyModel"), this);
-  modelServer->setModel(proxy); // TODO proxy on client oder server side?
+//  RemoteModelServer *modelServer = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.StaticPropertyModel"), this);
+//  modelServer->setModel(proxy); // TODO proxy on client oder server side?
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
