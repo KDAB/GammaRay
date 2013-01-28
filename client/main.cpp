@@ -3,8 +3,6 @@
 
 #include <QApplication>
 #include <QTreeView>
-#include <QTcpSocket>
-#include <QHostAddress>
 
 using namespace GammaRay;
 
