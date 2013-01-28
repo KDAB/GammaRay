@@ -71,8 +71,6 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     QAbstractItemModel *connectionModel() const;
     ToolModel *toolModel() const;
 
-    static const char *connectLocation(const char *member);
-
     GammaRay::MainWindow *window() const;
     void setWindow(GammaRay::MainWindow *window);
 
