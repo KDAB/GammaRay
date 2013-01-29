@@ -120,6 +120,7 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     friend class ProbeCreator;
 
     static QThread* filteredThread();
+    void registerModel(QAbstractItemModel* model, const QString &name);
 
     void objectFullyConstructed(QObject *obj);
     static bool createProbe();

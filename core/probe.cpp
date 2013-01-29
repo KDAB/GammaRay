@@ -37,6 +37,8 @@
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"
 
+#include <network/modelbroker.h>
+
 #include <QApplication>
 #include <QCoreApplication>
 #include <QDialog>
@@ -258,12 +260,9 @@ void Probe::delayedInit()
     cerr << "Unable to show in-process UI in a non-GUI application." << endl;
   }
 
-  RemoteModelServer *ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ObjectTree"), this);
-  ms->setModel(m_objectTreeModel);
-  ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ObjectList"), this);
-  ms->setModel(m_objectListModel);
-  ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ToolModel"), this);
-  ms->setModel(m_toolModel);
+  registerModel(m_objectTreeModel, QLatin1String("com.kdab.GammaRay.ObjectTree"));
+  registerModel(m_objectListModel, QLatin1String("com.kdab.GammaRay.ObjectList"));
+  registerModel(m_toolModel, QLatin1String("com.kdab.GammaRay.ToolModel"));
 }
 
 bool Probe::filterObject(QObject *obj) const
@@ -275,6 +274,13 @@ bool Probe::filterObject(QObject *obj) const
   return obj == this || obj == window() ||
           Util::descendantOf(this, obj) ||
           Util::descendantOf(window(), obj);
+}
+
+void Probe::registerModel(QAbstractItemModel* model, const QString& name)
+{
+  RemoteModelServer *ms = new RemoteModelServer(name, this);
+  ms->setModel(model);
+  ModelBroker::registerModel(name, model);
 }
 
 QAbstractItemModel *Probe::objectListModel() const

@@ -4,6 +4,7 @@ set(gammaray_network_srcs
   protocol.cpp
   message.cpp
   endpoint.cpp
+  modelbroker.cpp
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

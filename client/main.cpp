@@ -1,10 +1,17 @@
 #include "remotemodel.h"
 #include "client.h"
 
+#include <network/modelbroker.h>
+
 #include <QApplication>
 #include <QTreeView>
 
 using namespace GammaRay;
+
+QAbstractItemModel* modelNotFoundCallback(const QString &name)
+{
+  return new RemoteModel(name, qApp);
+}
 
 int main(int argc, char** argv)
 {
@@ -24,14 +31,16 @@ int main(int argc, char** argv)
   client.connectToHost(hostName, port);
   QObject::connect(&client, SIGNAL(disconnected()), &app, SLOT(quit()));
 
-  RemoteModel model(QLatin1String("com.kdab.GammaRay.ObjectTree"));
+  // TODO make this async, show some status indicator/splash screen while connecting
+
+  ModelBroker::setModelNotFoundCallback(modelNotFoundCallback);
+
   QTreeView view;
-  view.setModel(&model);
+  view.setModel(ModelBroker::model(QLatin1String("com.kdab.GammaRay.ObjectTree")));
   view.show();
 
-  RemoteModel model2(QLatin1String("com.kdab.GammaRay.StaticPropertyModel"));
   QTreeView view2;
-  view2.setModel(&model2);
+  view2.setModel(ModelBroker::model(QLatin1String("com.kdab.GammaRay.ToolModel")));
   view2.show();
 
   return app.exec();
