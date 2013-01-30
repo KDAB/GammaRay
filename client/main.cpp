@@ -2,12 +2,13 @@
 #include "client.h"
 #include "selectionmodelclient.h"
 #include "objectclient.h"
+#include "clienttoolmodel.h"
 
 #include <network/objectbroker.h>
 #include <network/streamoperators.h>
 
 #include <QApplication>
-#include <QTreeView>
+#include <QStringList>
 
 using namespace GammaRay;
 
@@ -52,9 +53,8 @@ int main(int argc, char** argv)
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
-  QTreeView view;
-  view.setModel(ObjectBroker::model(QLatin1String("com.kdab.GammaRay.ObjectTree")));
-  view.show();
+  ClientToolModel toolModel;
+  ObjectBroker::registerModel("com.kdab.GammaRay.ToolModel", &toolModel);
 
   return app.exec();
 }

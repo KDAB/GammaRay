@@ -13,6 +13,7 @@ set(gammaray_client_srcs
   remotemodel.cpp
   selectionmodelclient.cpp
   objectclient.cpp
+  clienttoolmodel.cpp
 )
 
 qt4_automoc(${gammaray_client_srcs})
