@@ -48,6 +48,7 @@ class ToolModel : public QAbstractListModel
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
+    virtual QMap<int, QVariant> itemData(const QModelIndex& index) const;
 
   public slots:
     /** Check if we have to activate tools for this type */

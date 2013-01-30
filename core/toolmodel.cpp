@@ -156,6 +156,14 @@ Qt::ItemFlags ToolModel::flags(const QModelIndex &index) const
   return flags;
 }
 
+QMap<int, QVariant> ToolModel::itemData(const QModelIndex& index) const
+{
+  QMap<int, QVariant> map = QAbstractListModel::itemData(index);
+  map.insert(ToolModelRole::ToolId, data(index, ToolModelRole::ToolId));
+  // the other custom roles are useless on the client anyway, since they contain raw pointers
+  return map;
+}
+
 void ToolModel::objectAdded(QObject *obj)
 {
   // delay to main thread if required
