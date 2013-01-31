@@ -116,11 +116,11 @@ QVariant ToolModel::data(const QModelIndex &index, int role) const
   ToolFactory *toolIface = m_tools.at(index.row());
   if (role == Qt::DisplayRole) {
     return toolIface->name();
-  } else if (role == ToolFactoryRole) {
+  } else if (role == ToolModelRole::ToolFactory) {
     return QVariant::fromValue(toolIface);
-  } else if (role == ToolWidgetRole) {
+  } else if (role == ToolModelRole::ToolWidget) {
     return QVariant::fromValue(m_toolWidgets.value(toolIface));
-  } else if (role == ToolIdRole) {
+  } else if (role == ToolModelRole::ToolId) {
     return toolIface->id();
   }
   return QVariant();

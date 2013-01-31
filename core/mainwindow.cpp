@@ -32,6 +32,9 @@
 #include "include/objecttypefilterproxymodel.h"
 #include "include/toolfactory.h"
 
+#include <network/modelbroker.h>
+#include <network/modelroles.h>
+
 #include "kde/krecursivefilterproxymodel.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -239,7 +242,7 @@ void MainWindow::selectInitialTool()
 
   QAbstractItemModel *model = ui.toolSelector->model();
   QModelIndexList matches =
-    model->match(model->index(0, 0), ToolModel::ToolIdRole, initialTool);
+    model->match(model->index(0, 0), ToolModelRole::ToolId, initialTool);
   if (matches.isEmpty()) {
     return;
   }
@@ -257,9 +260,9 @@ void MainWindow::toolSelected()
   }
 
   const QModelIndex mi = ui.toolSelector->model()->index(row, 0);
-  QWidget *toolWidget = mi.data(ToolModel::ToolWidgetRole).value<QWidget*>();
+  QWidget *toolWidget = mi.data(ToolModelRole::ToolWidget).value<QWidget*>();
   if (!toolWidget) {
-    ToolFactory *toolIface = mi.data(ToolModel::ToolFactoryRole).value<ToolFactory*>();
+    ToolFactory *toolIface = mi.data(ToolModelRole::ToolFactory).value<ToolFactory*>();
     Q_ASSERT(toolIface);
 //     qDebug() << Q_FUNC_INFO << "creating new probe: "
 //              << toolIface->name() << toolIface->supportedTypes();

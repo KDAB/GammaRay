@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_TOOLMODEL_H
 #define GAMMARAY_TOOLMODEL_H
 
+#include <network/modelroles.h>
+
 #include <QAbstractListModel>
 #include <QSet>
 #include <QVector>
@@ -39,11 +41,6 @@ class ToolModel : public QAbstractListModel
 {
   Q_OBJECT
   public:
-    enum Role {
-      ToolFactoryRole = Qt::UserRole + 1,
-      ToolWidgetRole,
-      ToolIdRole
-    };
     explicit ToolModel(QObject *parent = 0);
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
