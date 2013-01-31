@@ -262,6 +262,8 @@ void Probe::delayedInit()
   ms->setModel(m_objectTreeModel);
   ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ObjectList"), this);
   ms->setModel(m_objectListModel);
+  ms = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.ToolModel"), this);
+  ms->setModel(m_toolModel);
 }
 
 bool Probe::filterObject(QObject *obj) const
