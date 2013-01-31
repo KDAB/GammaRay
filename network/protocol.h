@@ -51,7 +51,11 @@ enum BuildInMessageType {
   ModelColumnsMoved,
   ModelColumnsRemoved,
   ModelReset,
-  ModelLayoutChanged
+  ModelLayoutChanged,
+
+  // server <-> client
+  SelectionModelSelect,
+  SelectionModelCurrent
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
