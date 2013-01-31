@@ -14,6 +14,9 @@ set(gammaray_probe_srcs
   hooks.cpp
 )
 
+# for the hooks, we actually use gammaray_core
+remove_definitions(-DMAKE_GAMMARAY_LIB)
+
 # probe lib
 qt4_automoc(${gammaray_probe_srcs})
 add_library(gammaray_probe SHARED ${gammaray_probe_srcs})
