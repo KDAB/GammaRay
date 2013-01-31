@@ -58,7 +58,7 @@ typedef QVector<QPair<qint32, qint32> > ModelIndex;
 
 ModelIndex fromQModelIndex(const QModelIndex &index);
 
-QModelIndex toQModelIndex(QAbstractItemModel *model, const ModelIndex &index);
+QModelIndex toQModelIndex(const QAbstractItemModel *model, const ModelIndex &index);
 
 /** Protocol version, must match exactly between client and server. */
 qint32 version();

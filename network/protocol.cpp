@@ -13,7 +13,7 @@ Protocol::ModelIndex fromQModelIndex(const QModelIndex& index)
   return result;
 }
 
-QModelIndex toQModelIndex(QAbstractItemModel* model, const Protocol::ModelIndex& index)
+QModelIndex toQModelIndex(const QAbstractItemModel* model, const Protocol::ModelIndex& index)
 {
   QModelIndex qmi;
 
