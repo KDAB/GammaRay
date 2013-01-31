@@ -27,7 +27,6 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "probe.h"
-#include "toolmodel.h"
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/toolfactory.h"
@@ -108,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
-  ToolModel *model = Probe::instance()->toolModel();
+  QAbstractItemModel *model = ModelBroker::model("com.kdab.GammaRay.ToolModel");
   QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
   proxyModel->setDynamicSortFilter(true);
   proxyModel->setSourceModel(model);

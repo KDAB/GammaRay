@@ -245,6 +245,10 @@ void Probe::delayedInit()
   new Server(this);
   Server::instance()->setLabel(qApp->applicationName()); // TODO use the same logic from MainWindow title
 
+  registerModel(m_objectTreeModel, QLatin1String("com.kdab.GammaRay.ObjectTree"));
+  registerModel(m_objectListModel, QLatin1String("com.kdab.GammaRay.ObjectList"));
+  registerModel(m_toolModel, QLatin1String("com.kdab.GammaRay.ToolModel"));
+
   if (canShowWidgets()) {
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
     s_listener()->filterThread = QThread::currentThread();
@@ -259,10 +263,6 @@ void Probe::delayedInit()
   } else {
     cerr << "Unable to show in-process UI in a non-GUI application." << endl;
   }
-
-  registerModel(m_objectTreeModel, QLatin1String("com.kdab.GammaRay.ObjectTree"));
-  registerModel(m_objectListModel, QLatin1String("com.kdab.GammaRay.ObjectList"));
-  registerModel(m_toolModel, QLatin1String("com.kdab.GammaRay.ToolModel"));
 }
 
 bool Probe::filterObject(QObject *obj) const

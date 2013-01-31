@@ -39,9 +39,5 @@ int main(int argc, char** argv)
   view.setModel(ModelBroker::model(QLatin1String("com.kdab.GammaRay.ObjectTree")));
   view.show();
 
-  QTreeView view2;
-  view2.setModel(ModelBroker::model(QLatin1String("com.kdab.GammaRay.ToolModel")));
-  view2.show();
-
   return app.exec();
 }
