@@ -36,6 +36,7 @@
 
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"
+#include "remote/selectionmodelserver.h"
 
 #include <network/modelbroker.h>
 
@@ -79,6 +80,11 @@ static bool probeDisconnectCallback(void ** args)
   const char *method = reinterpret_cast<const char*>(args[3]);
   Probe::connectionRemoved(sender, signal, receiver, method);
   return false;
+}
+
+static QItemSelectionModel* selectionModelNotFound(QAbstractItemModel* model)
+{
+  return new SelectionModelServer(model->objectName() + ".selection", model, Probe::instance());
 }
 
 }
@@ -153,6 +159,8 @@ Probe::Probe(QObject *parent):
   QInternal::registerCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
   QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 #endif
+
+  ModelBroker::setSelectionModelNotFoundCallback(selectionModelNotFound);
 
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);

@@ -1,6 +1,7 @@
 #ifndef GAMMARAY_MODELBROKER_H
 #define GAMMARAY_MODELBROKER_H
 
+class QItemSelectionModel;
 class QAbstractItemModel;
 class QString;
 
@@ -20,6 +21,16 @@ namespace ModelBroker {
   /** Set a callback for the case that a model was requested but had not been registered before. */
   void setModelNotFoundCallback(ModelNotFoundCallback callback);
 
+  /** Register a newly created selection model. */
+  void registerSelectionModel(QItemSelectionModel *selectionModel);
+
+  /** Retrieve the selection model for @p model. */
+  QItemSelectionModel* selectionModel(QAbstractItemModel *model);
+
+  typedef QItemSelectionModel*(*selectionModelNotFoundCallback)(QAbstractItemModel*);
+
+  /** Set a callback for the case that a selection model was requested but had not been registered before. */
+  void setSelectionModelNotFoundCallback(selectionModelNotFoundCallback callback);
 }
 }
 
