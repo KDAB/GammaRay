@@ -57,9 +57,9 @@ using namespace std;
 
 Probe *Probe::s_instance = 0;
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-
 namespace GammaRay {
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 
 static bool probeConnectCallback(void ** args)
 {
@@ -82,13 +82,14 @@ static bool probeDisconnectCallback(void ** args)
   return false;
 }
 
+#endif // QT_VERSION
+
 static QItemSelectionModel* selectionModelNotFound(QAbstractItemModel* model)
 {
   return new SelectionModelServer(model->objectName() + ".selection", model, Probe::instance());
 }
 
 }
-#endif // QT_VERSION
 
 // useful for debugging, dumps the object and all it's parents
 // also useable from GDB!
