@@ -55,7 +55,9 @@ enum BuildInMessageType {
 
   // server <-> client
   SelectionModelSelect,
-  SelectionModelCurrent
+  SelectionModelCurrent,
+
+  MethodCall
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
