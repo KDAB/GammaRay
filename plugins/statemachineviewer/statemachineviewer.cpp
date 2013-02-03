@@ -536,8 +536,8 @@ void StateMachineViewer::exportAsImage()
   const QString key = QLatin1String("StateMachineViewer/imageDir");
   QString lastDir = settings.value(key).toString();
 
-  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save as Image"),
-                                                        lastDir, tr("Images (*.png)"));
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save as1 Image"),
+                                                        lastDir, tr("Images (*.png *.jpg *.jpeg)"));
   if (fileName.isEmpty()) {
     return;
   }
@@ -547,6 +547,16 @@ void StateMachineViewer::exportAsImage()
 
   QGraphicsScene *scene = m_ui->graphicsView->scene();
 
+  int quality = -1;
+  const char* format;
+  if (fileName.endsWith(QLatin1String("jpg"), Qt::CaseInsensitive)
+        || fileName.endsWith(QLatin1String("jpeg"), Qt::CaseInsensitive)) {
+    format = "JPG";
+    quality = 90;
+  } else {
+    format = "PNG";
+  }
+
   QImage image(scene->sceneRect().width(), scene->sceneRect().height(),
                QImage::Format_ARGB32_Premultiplied);
   image.fill(QColor(Qt::white).rgb());
@@ -555,7 +565,7 @@ void StateMachineViewer::exportAsImage()
   painter.setRenderHint(QPainter::Antialiasing);
   scene->render(&painter);
 
-  image.save(fileName, "PNG");
+  image.save(fileName, format, quality);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
