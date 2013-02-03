@@ -52,8 +52,8 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
   ui->objectTreeView->setSelectionModel(ObjectBroker::selectionModel(ui->objectTreeView->model()));
 
   connect(ui->objectTreeView->selectionModel(),
-          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(objectSelected(QModelIndex)));
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(objectSelectionChanged(QItemSelection)));
 
   if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
     QMetaObject::invokeMethod(ui->objectSearchLine->lineEdit(), "setText",
@@ -77,6 +77,14 @@ void ObjectInspector::selectDefaultItem()
   if (!matches.isEmpty()) {
     ui->objectTreeView->setCurrentIndex(matches.first());
   }
+}
+
+void ObjectInspector::objectSelectionChanged(const QItemSelection& selection)
+{
+  if (selection.isEmpty())
+    objectSelected(QModelIndex());
+  else
+    objectSelected(selection.first().topLeft());
 }
 
 void ObjectInspector::objectSelected(const QModelIndex &index)

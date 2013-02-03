@@ -28,6 +28,7 @@
 
 #include <QWidget>
 
+class QItemSelection;
 class QModelIndex;
 
 namespace GammaRay {
@@ -46,6 +47,7 @@ class ObjectInspector : public QWidget
 
   private slots:
     void objectSelected(const QModelIndex &index);
+    void objectSelectionChanged(const QItemSelection &selection);
     void widgetSelected(QWidget *widget);
 
   private:
