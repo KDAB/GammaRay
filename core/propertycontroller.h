@@ -35,6 +35,9 @@ public:
 private:
   void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
 
+private slots:
+  void signalEmitted(QObject *sender, int signalIndex);
+
 private:
   QString m_objectBaseName;
 

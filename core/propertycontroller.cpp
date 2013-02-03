@@ -17,6 +17,7 @@
 #include <network/objectbroker.h>
 
 #include <QStandardItemModel>
+#include <QTime>
 
 using namespace GammaRay;
 
@@ -56,6 +57,19 @@ void PropertyController::registerModel(QAbstractItemModel* model, const QString&
   ObjectBroker::registerModel(m_objectBaseName + "." + nameSuffix, model);
 }
 
+void PropertyController::signalEmitted(QObject* sender, int signalIndex)
+{
+  Q_ASSERT(m_object == sender);
+  m_methodLogModel->appendRow(
+  new QStandardItem(tr("%1: Signal %2 emitted").
+  arg(QTime::currentTime().toString("HH:mm:ss.zzz")).
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  arg(sender->metaObject()->method(signalIndex).signature())));
+#else
+  arg(QString(sender->metaObject()->method(signalIndex).methodSignature()))));
+#endif
+}
+
 void PropertyController::setObject(QObject* object)
 {
   m_object = object;
@@ -72,11 +86,9 @@ void PropertyController::setObject(QObject* object)
   m_classInfoModel->setMetaObject(metaObject);
   m_methodModel->setMetaObject(metaObject);
 
-#if 0 // TODO
   delete m_signalMapper;
   m_signalMapper = new MultiSignalMapper(this);
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int)), SLOT(signalEmitted(QObject*,int)));
-#endif
 
   m_methodLogModel->clear();
 
