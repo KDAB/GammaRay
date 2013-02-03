@@ -1,4 +1,5 @@
 #include "objectbroker.h"
+#include "networkobject.h"
 
 #include <QHash>
 #include <QString>
@@ -8,14 +9,44 @@
 namespace GammaRay {
 
 struct ObjectlBrokerData {
-  ObjectlBrokerData() : modelCallback(0), selectionCallback(0) {}
+  ObjectlBrokerData() : objectCallback(0), modelCallback(0), selectionCallback(0) {}
+  QHash<QString, NetworkObject*> objects;
   QHash<QString, QAbstractItemModel*> models;
   QHash<QAbstractItemModel*, QItemSelectionModel*> selectionModels;
+  ObjectBroker::ObjectFactoryCallback objectCallback;
   ObjectBroker::ModelNotFoundCallback modelCallback;
   ObjectBroker::selectionModelNotFoundCallback selectionCallback;
 };
 
 Q_GLOBAL_STATIC(ObjectlBrokerData, s_objectBroker)
+
+void ObjectBroker::registerObject(const QString& name, NetworkObject* object)
+{
+  Q_ASSERT(!s_objectBroker()->objects.contains(name));
+  object->setObjectName(name);
+  s_objectBroker()->objects.insert(name, object);
+}
+
+NetworkObject* ObjectBroker::object(const QString& name)
+{
+  const QHash<QString, NetworkObject*>::const_iterator it = s_objectBroker()->objects.constFind(name);
+  if (it != s_objectBroker()->objects.constEnd())
+    return it.value();
+
+  if (s_objectBroker()->objectCallback) {
+    NetworkObject* obj = s_objectBroker()->objectCallback(name);
+    if (obj) {
+      registerObject(name, obj);
+      return obj;
+    }
+  }
+  return 0;
+}
+
+void ObjectBroker::setObjectFactoryCallback(ObjectBroker::ObjectFactoryCallback callback)
+{
+  s_objectBroker()->objectCallback = callback;
+}
 
 void ObjectBroker::registerModel(const QString& name, QAbstractItemModel* model)
 {

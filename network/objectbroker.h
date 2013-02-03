@@ -7,8 +7,21 @@ class QString;
 
 namespace GammaRay {
 
+class NetworkObject;
+
 /** Retrieve/expose objects independent of whether using in-process or out-of-process UI. */
 namespace ObjectBroker {
+
+  /** Register a newly created object with a given name. */
+  void registerObject(const QString &name, NetworkObject* object);
+
+  /** Retrieve object by name. */
+  NetworkObject* object(const QString &name);
+
+  typedef NetworkObject*(*ObjectFactoryCallback)(const QString &);
+
+  /** Set a callback for a factory to create not yet existing objects. */
+  void setObjectFactoryCallback(GammaRay::ObjectBroker::ObjectFactoryCallback callback);
 
   /** Register a newly created model with the given name. */
   void registerModel(const QString &name, QAbstractItemModel* model);
