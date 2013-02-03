@@ -84,7 +84,7 @@ static bool probeDisconnectCallback(void ** args)
 
 #endif // QT_VERSION
 
-static QItemSelectionModel* selectionModelNotFound(QAbstractItemModel* model)
+static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
 {
   return new SelectionModelServer(model->objectName() + ".selection", model, Probe::instance());
 }
@@ -161,7 +161,7 @@ Probe::Probe(QObject *parent):
   QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 #endif
 
-  ObjectBroker::setSelectionModelNotFoundCallback(selectionModelNotFound);
+  ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);

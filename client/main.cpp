@@ -9,12 +9,12 @@
 
 using namespace GammaRay;
 
-static QAbstractItemModel* modelNotFoundCallback(const QString &name)
+static QAbstractItemModel* modelFactory(const QString &name)
 {
   return new RemoteModel(name, qApp);
 }
 
-static QItemSelectionModel* selectionModelNotFoundCallback(QAbstractItemModel* model)
+static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
 {
   return new SelectionModelClient(model->objectName() + ".selection", model, qApp);
 }
@@ -39,8 +39,8 @@ int main(int argc, char** argv)
 
   // TODO make this async, show some status indicator/splash screen while connecting
 
-  ObjectBroker::setModelNotFoundCallback(modelNotFoundCallback);
-  ObjectBroker::setSelectionModelNotFoundCallback(selectionModelNotFoundCallback);
+  ObjectBroker::setModelFactoryCallback(modelFactory);
+  ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
   QTreeView view;
   view.setModel(ObjectBroker::model(QLatin1String("com.kdab.GammaRay.ObjectTree")));

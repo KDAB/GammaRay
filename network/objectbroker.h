@@ -29,10 +29,10 @@ namespace ObjectBroker {
   /** Retrieve a model by name. */
   QAbstractItemModel* model(const QString &name);
 
-  typedef QAbstractItemModel*(*ModelNotFoundCallback)(const QString &);
+  typedef QAbstractItemModel*(*ModelFactoryCallback)(const QString &);
 
   /** Set a callback for the case that a model was requested but had not been registered before. */
-  void setModelNotFoundCallback(ModelNotFoundCallback callback);
+  void setModelFactoryCallback(ModelFactoryCallback callback);
 
   /** Register a newly created selection model. */
   void registerSelectionModel(QItemSelectionModel *selectionModel);
@@ -40,10 +40,10 @@ namespace ObjectBroker {
   /** Retrieve the selection model for @p model. */
   QItemSelectionModel* selectionModel(QAbstractItemModel *model);
 
-  typedef QItemSelectionModel*(*selectionModelNotFoundCallback)(QAbstractItemModel*);
+  typedef QItemSelectionModel*(*selectionModelFactoryCallback)(QAbstractItemModel*);
 
   /** Set a callback for the case that a selection model was requested but had not been registered before. */
-  void setSelectionModelNotFoundCallback(selectionModelNotFoundCallback callback);
+  void setSelectionModelFactoryCallback(selectionModelFactoryCallback callback);
 }
 }
 

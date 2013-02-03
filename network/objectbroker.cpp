@@ -14,8 +14,8 @@ struct ObjectlBrokerData {
   QHash<QString, QAbstractItemModel*> models;
   QHash<QAbstractItemModel*, QItemSelectionModel*> selectionModels;
   ObjectBroker::ObjectFactoryCallback objectCallback;
-  ObjectBroker::ModelNotFoundCallback modelCallback;
-  ObjectBroker::selectionModelNotFoundCallback selectionCallback;
+  ObjectBroker::ModelFactoryCallback modelCallback;
+  ObjectBroker::selectionModelFactoryCallback selectionCallback;
 };
 
 Q_GLOBAL_STATIC(ObjectlBrokerData, s_objectBroker)
@@ -72,7 +72,7 @@ QAbstractItemModel* ObjectBroker::model(const QString& name)
   return 0;
 }
 
-void ObjectBroker::setModelNotFoundCallback(ObjectBroker::ModelNotFoundCallback callback)
+void ObjectBroker::setModelFactoryCallback(ObjectBroker::ModelFactoryCallback callback)
 {
   s_objectBroker()->modelCallback = callback;
 }
@@ -99,7 +99,7 @@ QItemSelectionModel* ObjectBroker::selectionModel(QAbstractItemModel* model)
   return 0;
 }
 
-void ObjectBroker::setSelectionModelNotFoundCallback(ObjectBroker::selectionModelNotFoundCallback callback)
+void ObjectBroker::setSelectionModelFactoryCallback(ObjectBroker::selectionModelFactoryCallback callback)
 {
   s_objectBroker()->selectionCallback = callback;
 }
