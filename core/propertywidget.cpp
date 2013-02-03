@@ -42,7 +42,6 @@
 #include "remote/remotemodelserver.h"
 
 #include "kde/krecursivefilterproxymodel.h"
-#include <client/remotemodel.h>
 
 #include <QDebug>
 #include <QMenu>

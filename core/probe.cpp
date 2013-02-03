@@ -38,7 +38,7 @@
 #include "remote/remotemodelserver.h"
 #include "remote/selectionmodelserver.h"
 
-#include <network/modelbroker.h>
+#include <network/objectbroker.h>
 
 #include <QApplication>
 #include <QCoreApplication>
@@ -161,7 +161,7 @@ Probe::Probe(QObject *parent):
   QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 #endif
 
-  ModelBroker::setSelectionModelNotFoundCallback(selectionModelNotFound);
+  ObjectBroker::setSelectionModelNotFoundCallback(selectionModelNotFound);
 
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);
@@ -289,7 +289,7 @@ void Probe::registerModel(QAbstractItemModel* model, const QString& name)
 {
   RemoteModelServer *ms = new RemoteModelServer(name, this);
   ms->setModel(model);
-  ModelBroker::registerModel(name, model);
+  ObjectBroker::registerModel(name, model);
 }
 
 QAbstractItemModel *Probe::objectListModel() const

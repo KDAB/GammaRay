@@ -31,7 +31,7 @@
 #include "include/objecttypefilterproxymodel.h"
 #include "include/toolfactory.h"
 
-#include <network/modelbroker.h>
+#include <network/objectbroker.h>
 #include <network/modelroles.h>
 
 #include "kde/krecursivefilterproxymodel.h"
@@ -107,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
-  QAbstractItemModel *model = ModelBroker::model("com.kdab.GammaRay.ToolModel");
+  QAbstractItemModel *model = ObjectBroker::model("com.kdab.GammaRay.ToolModel");
   QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
   proxyModel->setDynamicSortFilter(true);
   proxyModel->setSourceModel(model);

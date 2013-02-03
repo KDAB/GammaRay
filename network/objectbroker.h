@@ -1,5 +1,5 @@
-#ifndef GAMMARAY_MODELBROKER_H
-#define GAMMARAY_MODELBROKER_H
+#ifndef GAMMARAY_OBJECTBROKER_H
+#define GAMMARAY_OBJECTBROKER_H
 
 class QItemSelectionModel;
 class QAbstractItemModel;
@@ -7,8 +7,8 @@ class QString;
 
 namespace GammaRay {
 
-/** Retrieve/expose models independent of wheather using in-process or out-of-process UI. */
-namespace ModelBroker {
+/** Retrieve/expose objects independent of whether using in-process or out-of-process UI. */
+namespace ObjectBroker {
 
   /** Register a newly created model with the given name. */
   void registerModel(const QString &name, QAbstractItemModel* model);
@@ -34,4 +34,4 @@ namespace ModelBroker {
 }
 }
 
-#endif // GAMMARAY_MODELBROKER_H
+#endif // GAMMARAY_OBJECTBROKER_H

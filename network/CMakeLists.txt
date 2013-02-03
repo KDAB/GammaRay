@@ -4,7 +4,7 @@ set(gammaray_network_srcs
   protocol.cpp
   message.cpp
   endpoint.cpp
-  modelbroker.cpp
+  objectbroker.cpp
   networkselectionmodel.cpp
 )
 

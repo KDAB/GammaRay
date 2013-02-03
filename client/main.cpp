@@ -2,7 +2,7 @@
 #include "client.h"
 #include "selectionmodelclient.h"
 
-#include <network/modelbroker.h>
+#include <network/objectbroker.h>
 
 #include <QApplication>
 #include <QTreeView>
@@ -39,11 +39,11 @@ int main(int argc, char** argv)
 
   // TODO make this async, show some status indicator/splash screen while connecting
 
-  ModelBroker::setModelNotFoundCallback(modelNotFoundCallback);
-  ModelBroker::setSelectionModelNotFoundCallback(selectionModelNotFoundCallback);
+  ObjectBroker::setModelNotFoundCallback(modelNotFoundCallback);
+  ObjectBroker::setSelectionModelNotFoundCallback(selectionModelNotFoundCallback);
 
   QTreeView view;
-  view.setModel(ModelBroker::model(QLatin1String("com.kdab.GammaRay.ObjectTree")));
+  view.setModel(ObjectBroker::model(QLatin1String("com.kdab.GammaRay.ObjectTree")));
   view.show();
 
   return app.exec();

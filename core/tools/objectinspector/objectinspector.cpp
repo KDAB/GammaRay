@@ -27,7 +27,7 @@
 #include "include/objectmodel.h"
 #include "include/probeinterface.h"
 
-#include <network/modelbroker.h>
+#include <network/objectbroker.h>
 
 #include <kde/krecursivefilterproxymodel.h>
 
@@ -42,14 +42,14 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
   ui->setupUi(this);
 
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
-  objectFilter->setSourceModel(probe->objectTreeModel());
+  objectFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
   objectFilter->setDynamicSortFilter(true);
   ui->objectTreeView->setModel(objectFilter);
   ui->objectTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
   ui->objectTreeView->header()->setResizeMode(1, QHeaderView::Interactive);
   ui->objectSearchLine->setProxy(objectFilter);
 
-  ui->objectTreeView->setSelectionModel(ModelBroker::selectionModel(ui->objectTreeView->model()));
+  ui->objectTreeView->setSelectionModel(ObjectBroker::selectionModel(ui->objectTreeView->model()));
 
   connect(ui->objectTreeView->selectionModel(),
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
