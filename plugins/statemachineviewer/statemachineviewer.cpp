@@ -46,6 +46,8 @@
 
 #include <QtPlugin>
 
+#include <cmath>
+
 using namespace GammaRay;
 
 template<class T>
@@ -543,15 +545,23 @@ void StateMachineViewer::exportAsImage()
   lastDir = QFileInfo(fileName).absolutePath();
   settings.setValue(key, lastDir);
 
-  QGraphicsScene *scene = m_ui->graphicsView->scene();
+  QGraphicsView* view = m_ui->graphicsView;
+  const QRectF sceneRect = view->transform().mapRect(view->sceneRect());
+  QSizeF size(sceneRect.width(), sceneRect.height());
 
-  QImage image(scene->sceneRect().width(), scene->sceneRect().height(),
-               QImage::Format_ARGB32_Premultiplied);
+  // limit mega pixels
+  double maxSize = 100 * 1E+6;
+  if (size.width() * size.height() > maxSize) {
+    double scaleFactor = sqrt(maxSize / (size.width() * size.height()));
+    size.scale(size.width() * scaleFactor, size.height() * scaleFactor, Qt::KeepAspectRatio);
+  }
+
+  QImage image(size.width() , size.height(), QImage::Format_ARGB32_Premultiplied);
   image.fill(QColor(Qt::white).rgb());
 
   QPainter painter(&image);
   painter.setRenderHint(QPainter::Antialiasing);
-  scene->render(&painter);
+  view->scene()->render(&painter);
 
   image.save(fileName, "PNG");
 }
