@@ -42,6 +42,7 @@
 #include <QScrollBar>
 #include <QSignalTransition>
 #include <QStateMachine>
+#include <QSettings>
 
 #include <QtPlugin>
 
@@ -529,10 +530,18 @@ void StateMachineViewer::startStopClicked()
 
 void StateMachineViewer::exportAsImage()
 {
-  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Image"));
+  QSettings settings;
+  const QString key = QLatin1String("StateMachineViewer/imageDir");
+  QString lastDir = settings.value(key).toString();
+
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save as Image"),
+                                                        lastDir, tr("Images (*.png)"));
   if (fileName.isEmpty()) {
     return;
   }
+
+  lastDir = QFileInfo(fileName).absolutePath();
+  settings.setValue(key, lastDir);
 
   QGraphicsScene *scene = m_ui->graphicsView->scene();
 
