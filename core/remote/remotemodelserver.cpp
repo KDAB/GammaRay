@@ -6,15 +6,18 @@
 #include <QAbstractItemModel>
 #include <QDataStream>
 #include <QDebug>
+#include <QBuffer>
 
 using namespace GammaRay;
 
 RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent) :
   QObject(parent),
   m_model(0),
+  m_dummyBuffer(new QBuffer(&m_dummyData, this)),
   m_monitored(false)
 {
   m_myAddress = Server::instance()->registerObject(objectName, this, "newRequest", "modelMonitored");
+  m_dummyBuffer->open(QIODevice::WriteOnly);
   connect(Server::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
 }
 
@@ -89,7 +92,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         break;
 
       Message msg(m_myAddress, Protocol::ModelContentReply);
-      msg.payload() << index << m_model->itemData(qmIndex) << qint32(m_model->flags(qmIndex));
+      msg.payload() << index << filterItemData(m_model->itemData(qmIndex)) << qint32(m_model->flags(qmIndex));
       Server::send(msg);
       break;
     }
@@ -130,6 +133,26 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       break;
     }
   }
+}
+
+QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant >& data) const
+{
+  QMap<int, QVariant> itemData(data);
+  for (QMap<int, QVariant>::iterator it = itemData.begin(); it != itemData.end();) {
+    if (canSerialize(it.value()))
+      ++it;
+    else
+      it = itemData.erase(it);
+  }
+  return itemData;
+}
+
+bool RemoteModelServer::canSerialize(const QVariant& value) const
+{
+  // ugly, but there doesn't seem to be a better way atm to find out without trying
+  m_dummyBuffer->seek(0);
+  QDataStream stream(m_dummyBuffer);
+  return QMetaType::save(stream, value.userType(), value.constData());
 }
 
 void RemoteModelServer::modelMonitored(bool monitored)

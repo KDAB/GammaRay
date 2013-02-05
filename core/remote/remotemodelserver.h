@@ -5,6 +5,7 @@
 
 #include <QObject>
 
+class QBuffer;
 class QAbstractItemModel;
 
 namespace GammaRay {
@@ -35,6 +36,8 @@ class RemoteModelServer : public QObject
     void disconnectModel();
     void sendAddRemoveMessage(Protocol::MessageType type, const QModelIndex &parent, int start, int end);
     void sendMoveMessage(Protocol::MessageType type, const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationIndex);
+    QMap< int, QVariant > filterItemData(const QMap< int, QVariant >& data) const;
+    bool canSerialize(const QVariant &value) const;
 
   private slots:
     void dataChanged(const QModelIndex &begin, const QModelIndex &end);
@@ -50,6 +53,10 @@ class RemoteModelServer : public QObject
 
   private:
     QAbstractItemModel *m_model;
+    // those two are used for canSerialize, since recreating the QBuffer is somewhat expensive,
+    // especially since being a QObject triggers all kind of GammaRay internals
+    QByteArray m_dummyData;
+    QBuffer *m_dummyBuffer;
     Protocol::ObjectAddress m_myAddress;
     bool m_monitored;
 };
