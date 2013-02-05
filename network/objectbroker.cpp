@@ -1,10 +1,13 @@
 #include "objectbroker.h"
 #include "networkobject.h"
 
+#include <kde/klinkitemselectionmodel.h>
+
 #include <QHash>
 #include <QString>
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>
+#include <QAbstractProxyModel>
 
 namespace GammaRay {
 
@@ -83,6 +86,14 @@ void ObjectBroker::registerSelectionModel(QItemSelectionModel* selectionModel)
   s_objectBroker()->selectionModels.insert(const_cast<QAbstractItemModel*>(selectionModel->model()), selectionModel);
 }
 
+static QAbstractItemModel* sourceModelForProxy(QAbstractItemModel* model)
+{
+  QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>(model);
+  if (!proxy)
+    return model;
+  return sourceModelForProxy(proxy->sourceModel());
+}
+
 QItemSelectionModel* ObjectBroker::selectionModel(QAbstractItemModel* model)
 {
   const QHash<QAbstractItemModel*, QItemSelectionModel*>::const_iterator it = s_objectBroker()->selectionModels.constFind(model);
@@ -90,7 +101,16 @@ QItemSelectionModel* ObjectBroker::selectionModel(QAbstractItemModel* model)
     return it.value();
 
   if (s_objectBroker()->selectionCallback) {
-    QItemSelectionModel* selectionModel = s_objectBroker()->selectionCallback(model);
+    QAbstractItemModel *sourceModel = sourceModelForProxy(model);
+
+    QItemSelectionModel* selectionModel = 0;
+    if (sourceModel == model) {
+      selectionModel = s_objectBroker()->selectionCallback(sourceModel);
+    } else {
+      QItemSelectionModel *sourceSelectionModel = ObjectBroker::selectionModel(sourceModel);
+      selectionModel = new KLinkItemSelectionModel(model, sourceSelectionModel, model);
+    }
+
     if (selectionModel) {
       s_objectBroker()->selectionModels.insert(model, selectionModel);
       return selectionModel;
