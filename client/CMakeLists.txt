@@ -13,6 +13,6 @@ qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qr
 
 add_executable(gammaray-client ${gammaray_client_srcs})
 
-target_link_libraries(gammaray-client ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_network)
+target_link_libraries(gammaray-client ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_network gammaray_ui)
 
 install(TARGETS gammaray-client ${INSTALL_TARGETS_DEFAULT_ARGS})

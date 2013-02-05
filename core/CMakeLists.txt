@@ -8,10 +8,7 @@ include_directories(
 )
 
 set(gammaray_srcs
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/resourcemodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
 
   util.cpp
   aboutpluginsdialog.cpp
@@ -189,13 +186,14 @@ add_library(gammaray_core SHARED
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_core gammaray_network Qt5::Widgets)
+  target_link_libraries(gammaray_core gammaray_network gammaray_ui Qt5::Widgets)
 else()
   target_link_libraries(gammaray_core
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTNETWORK_LIBRARIES}
     gammaray_network
+    gammaray_ui
   )
 endif()
 
