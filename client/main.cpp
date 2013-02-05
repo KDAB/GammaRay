@@ -1,6 +1,7 @@
 #include "remotemodel.h"
 #include "client.h"
 #include "selectionmodelclient.h"
+#include "objectclient.h"
 
 #include <network/objectbroker.h>
 
@@ -8,6 +9,11 @@
 #include <QTreeView>
 
 using namespace GammaRay;
+
+static NetworkObject* objectFactory(const QString &name)
+{
+  return new ObjectClient(name, qApp);
+}
 
 static QAbstractItemModel* modelFactory(const QString &name)
 {
@@ -39,6 +45,7 @@ int main(int argc, char** argv)
 
   // TODO make this async, show some status indicator/splash screen while connecting
 
+  ObjectBroker::setObjectFactoryCallback(objectFactory);
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
