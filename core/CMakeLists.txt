@@ -36,6 +36,7 @@ set(gammaray_srcs
   toolmodel.cpp
   proxydetacher.cpp
   propertywidget.cpp
+  propertycontroller.cpp
 
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
