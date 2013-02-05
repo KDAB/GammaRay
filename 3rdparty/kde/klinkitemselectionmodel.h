@@ -22,8 +22,8 @@
 #ifndef KLINKITEMSELECTIONMODEL_H
 #define KLINKITEMSELECTIONMODEL_H
 
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QAbstractProxyModel>
+#include <QItemSelectionModel>
+#include <QAbstractProxyModel>
 
 #include "kdeui_export.h"
 

@@ -23,8 +23,8 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QWeakPointer>
-#include <QtGui/QAbstractProxyModel>
-#include <QtGui/QItemSelectionModel>
+#include <QAbstractProxyModel>
+#include <QItemSelectionModel>
 
 #include "kdebug.h"
 
