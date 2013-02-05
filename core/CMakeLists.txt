@@ -1,6 +1,7 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_SOURCE_DIR}/ui
   ${CMAKE_CURRENT_SOURCE_DIR}
 
   ${CMAKE_BINARY_DIR}
@@ -37,7 +38,6 @@ set(gammaray_srcs
   toolmodel.cpp
   proxydetacher.cpp
   proxytoolfactory.cpp
-  sidepane.cpp
   palettemodel.cpp
   propertywidget.cpp
 
