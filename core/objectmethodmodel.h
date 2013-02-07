@@ -26,6 +26,8 @@
 
 #include "metaobjectmodel.h"
 
+#include <network/modelroles.h>
+
 #include <QMetaMethod>
 
 namespace GammaRay {
@@ -35,10 +37,6 @@ class ObjectMethodModel :
                            &QMetaObject::methodCount, &QMetaObject::methodOffset>
 {
   public:
-    enum Role {
-      MetaMethodRole = Qt::UserRole + 1
-    };
-
     explicit ObjectMethodModel(QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 

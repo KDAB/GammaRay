@@ -74,7 +74,7 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index,
         return tr("Unknown");
       }
     }
-  } else if (role == MetaMethodRole) {
+  } else if (role == ObjectMethodModelRole::MetaMethod) {
     return QVariant::fromValue(method);
   }
   return QVariant();

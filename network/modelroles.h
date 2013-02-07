@@ -17,6 +17,14 @@ namespace ToolModelRole {
   };
 }
 
+/** Custom roles for GammaRay::ObjectMethodModel. */
+namespace ObjectMethodModelRole {
+  enum Role {
+    MetaMethod = Qt::UserRole + 1,
+    MetaMethodType
+  };
+}
+
 }
 
 #endif
