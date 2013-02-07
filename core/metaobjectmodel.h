@@ -105,6 +105,8 @@ class MetaObjectModel : public QAbstractItemModel
 
     virtual QString columnHeader(int index) const = 0;
 
+    typedef MetaObjectModel<MetaThing, MetaAccessor, MetaCount, MetaOffset> super;
+
   protected:
     // let's assume that meta objects never get destroyed
     const QMetaObject *m_metaObject;

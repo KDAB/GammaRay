@@ -76,6 +76,8 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index,
     }
   } else if (role == ObjectMethodModelRole::MetaMethod) {
     return QVariant::fromValue(method);
+  } else if (role == ObjectMethodModelRole::MetaMethodType) {
+    return QVariant::fromValue(method.methodType());
   }
   return QVariant();
 }
@@ -91,4 +93,11 @@ QString GammaRay::ObjectMethodModel::columnHeader(int index) const
     return tr("Access");
   }
   return QString();
+}
+
+QMap< int, QVariant > ObjectMethodModel::itemData(const QModelIndex& index) const
+{
+  QMap<int, QVariant> m = super::itemData(index);
+  m.insert(ObjectMethodModelRole::MetaMethodType, data(index, ObjectMethodModelRole::MetaMethodType));
+  return m;
 }

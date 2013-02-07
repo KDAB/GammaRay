@@ -26,6 +26,7 @@
 
 #include "metaobjectmodel.h"
 
+#include <include/metatypedeclarations.h>
 #include <network/modelroles.h>
 
 #include <QMetaMethod>
@@ -39,6 +40,7 @@ class ObjectMethodModel :
   public:
     explicit ObjectMethodModel(QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QMap< int, QVariant > itemData(const QModelIndex& index) const;
 
   protected:
     QVariant metaData(const QModelIndex &index,

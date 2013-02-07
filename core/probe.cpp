@@ -39,6 +39,7 @@
 #include "remote/selectionmodelserver.h"
 
 #include <network/objectbroker.h>
+#include <network/streamoperators.h>
 
 #include <QApplication>
 #include <QCoreApplication>
@@ -148,6 +149,8 @@ Probe::Probe(QObject *parent):
 {
   Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
+
+  StreamOperators::registerOperators();
 
   if (qgetenv("GAMMARAY_MODELTEST") == "1") {
     new ModelTest(m_objectListModel, m_objectListModel);

@@ -241,11 +241,11 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
     return;
   }
 
-  const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
+  const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
   QMenu contextMenu;
-  if (method.methodType() == QMetaMethod::Slot) {
+  if (methodType == QMetaMethod::Slot) {
     contextMenu.addAction(tr("Invoke"));
-  } else if (method.methodType() == QMetaMethod::Signal) {
+  } else if (methodType == QMetaMethod::Signal) {
     contextMenu.addAction(tr("Connect to"));
   }
 

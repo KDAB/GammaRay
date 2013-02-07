@@ -4,6 +4,7 @@
 #include "objectclient.h"
 
 #include <network/objectbroker.h>
+#include <network/streamoperators.h>
 
 #include <QApplication>
 #include <QTreeView>
@@ -28,6 +29,8 @@ static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
 int main(int argc, char** argv)
 {
   QApplication app(argc, argv);
+
+  StreamOperators::registerOperators();
 
   QString hostName = QLatin1String("localhost");
   quint16 port = Client::defaultPort();

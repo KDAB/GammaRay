@@ -37,6 +37,7 @@
 #include <QGraphicsWidget>
 #include <QGraphicsEffect>
 #include <QStyle>
+#include <QMetaMethod>
 
 Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(Qt::FillRule)
@@ -54,5 +55,6 @@ Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(const QStyle *)
+Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 
 #endif
