@@ -197,6 +197,8 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       qint32 section;
       QHash<qint32, QVariant> data;
       msg.payload() >> orientation >> section >> data;
+      Q_ASSERT(orientation == Qt::Horizontal || orientation == Qt::Vertical);
+      Q_ASSERT(section >= 0);
       m_headers[static_cast<Qt::Orientation>(orientation)][section] = data;
       emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
       break;
@@ -399,6 +401,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
 
 void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) const
 {
+  Q_ASSERT(section >= 0);
   Q_ASSERT(!m_headers.value(orientation).contains(section));
   m_headers[orientation][section][Qt::DisplayRole] = tr("Loading...");
 
