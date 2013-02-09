@@ -17,6 +17,7 @@
 #include <network/objectbroker.h>
 
 #include <QDebug>
+#include <QItemSelectionModel>
 #include <QStandardItemModel>
 #include <QTime>
 
@@ -101,7 +102,22 @@ void PropertyController::setObject(QObject* object)
 
 void PropertyController::methodActivated()
 {
-  qDebug() << Q_FUNC_INFO;
+  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(m_methodModel);
+  if (selectionModel->selectedRows().size() != 1)
+    return;
+  const QModelIndex index = selectionModel->selectedRows().first();
+
+  const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
+  if (method.methodType() == QMetaMethod::Slot) {
+#if 0 // TODO this needs to be split up, argument model goes here, dialog stays in the widget
+    MethodInvocationDialog *dlg = new MethodInvocationDialog(this);
+    dlg->setMethod(m_object.data(), method);
+    dlg->show();
+    // TODO: return value should go into ui->methodLog
+#endif
+  } else if (method.methodType() == QMetaMethod::Signal) {
+    m_signalMapper->connectToSignal(m_object, method);
+  }
 }
 
 #include "propertycontroller.moc"
