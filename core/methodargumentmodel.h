@@ -24,25 +24,13 @@
 #ifndef GAMMARAY_METHODARGUMENTMODEL_H
 #define GAMMARAY_METHODARGUMENTMODEL_H
 
+#include "methodargument.h"
+
 #include <QAbstractTableModel>
 #include <QMetaMethod>
 #include <QVector>
 
 namespace GammaRay {
-
-class SafeArgument
-{
-  public:
-    SafeArgument();
-    explicit SafeArgument(const QVariant &v);
-    ~SafeArgument();
-    operator QGenericArgument () const;
-
-  private:
-    QVariant m_value;
-    QByteArray m_name;
-    mutable void *m_data;
-};
 
 class MethodArgumentModel : public QAbstractTableModel
 {
@@ -50,7 +38,7 @@ class MethodArgumentModel : public QAbstractTableModel
   public:
     explicit MethodArgumentModel(QObject *parent = 0);
     void setMethod(const QMetaMethod &method);
-    QVector<SafeArgument> arguments() const;
+    QVector<MethodArgument> arguments() const;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
