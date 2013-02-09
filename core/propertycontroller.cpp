@@ -100,6 +100,20 @@ void PropertyController::setObject(QObject* object)
   m_metaPropertyModel->setObject(object);
 }
 
+void PropertyController::setObject(void* object, const QString& className)
+{
+  setObject(0);
+  m_metaPropertyModel->setObject(object, className);
+}
+
+void PropertyController::setMetaObject(const QMetaObject* metaObject)
+{
+  setObject(0);
+  m_enumModel->setMetaObject(metaObject);
+  m_classInfoModel->setMetaObject(metaObject);
+  m_methodModel->setMetaObject(metaObject);
+}
+
 void PropertyController::methodActivated()
 {
   QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(m_methodModel);
