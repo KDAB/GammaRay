@@ -21,22 +21,25 @@ public:
   ~NetworkObject();
 
   /** Invoke methods connected to @p signalName on the other end. */
-  void emitSignal(const QString &signalName);
+  void emitSignal(const char* signalName);
 
   // TODO publish signals
 
   /** @p slot on @p receiver will be called whenever the remote object ends @p singnalName. */
-  void subscribeToSignal(const QString &signalName, QObject* receiver, const char* slot);
+  void subscribeToSignal(const char *signalName, QObject* receiver, const char* slot);
 
 protected:
   QString m_objectName;
   Protocol::ObjectAddress m_myAddress;
 
+private:
+  void emitLocal(const char *signalName, const QVariantList &args);
+
 private slots:
   void newMessage(const GammaRay::Message &msg);
 
 private:
-  QHash<QString, QPair<QObject*, QByteArray> > m_subscriptions;
+  QHash<QByteArray, QPair<QObject*, QByteArray> > m_subscriptions;
 };
 
 }
