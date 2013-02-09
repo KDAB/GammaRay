@@ -22,7 +22,6 @@
 */
 
 #include "methodargumentmodel.h"
-#include <QtCore/qsharedpointer.h>
 
 using namespace GammaRay;
 
