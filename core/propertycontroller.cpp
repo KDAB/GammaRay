@@ -48,6 +48,10 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
   registerModel(m_metaPropertyModel, "nonQProperties");
 
   ObjectBroker::selectionModel(m_methodModel); // trigger creation
+
+  m_inboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
+  m_outboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
+
   subscribeToSignal("activateMethod", this, "methodActivated");
 }
 
