@@ -35,7 +35,6 @@ set(gammaray_srcs
   connectionfilterproxymodel.cpp
   methodinvocationdialog.cpp
   methodargumentmodel.cpp
-  methodargument.cpp
   multisignalmapper.cpp
   toolmodel.cpp
   proxydetacher.cpp

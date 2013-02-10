@@ -9,6 +9,7 @@ include_directories(
 )
 
 set(gammaray_common_srcs
+  methodargument.cpp
   
   network/protocol.cpp
   network/message.cpp
