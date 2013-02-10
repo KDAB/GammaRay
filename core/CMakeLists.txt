@@ -41,15 +41,6 @@ set(gammaray_srcs
   proxytoolfactory.cpp
   propertywidget.cpp
 
-  propertyeditor/propertycoloreditor.cpp
-  propertyeditor/propertydoublepaireditor.cpp
-  propertyeditor/propertyeditorfactory.cpp
-  propertyeditor/propertyextendededitor.cpp
-  propertyeditor/propertyfonteditor.cpp
-  propertyeditor/propertyintpaireditor.cpp
-  propertyeditor/propertypaletteeditor.cpp
-  propertyeditor/palettedialog.cpp
-
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
@@ -152,11 +143,6 @@ qt4_wrap_ui(gammaray_srcs
   propertywidget.ui
   methodinvocationdialog.ui
   paintbufferviewer.ui
-
-  propertyeditor/propertydoublepaireditor.ui
-  propertyeditor/propertyextendededitor.ui
-  propertyeditor/propertyintpaireditor.ui
-  propertyeditor/palettedialog.ui
 
   tools/sceneinspector/graphicssceneview.ui
   tools/codecbrowser/codecbrowser.ui

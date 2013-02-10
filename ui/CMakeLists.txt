@@ -17,6 +17,22 @@ set(gammaray_ui_srcs
 
   sidepane.cpp
   palettemodel.cpp
+
+  propertyeditor/propertycoloreditor.cpp
+  propertyeditor/propertydoublepaireditor.cpp
+  propertyeditor/propertyeditorfactory.cpp
+  propertyeditor/propertyextendededitor.cpp
+  propertyeditor/propertyfonteditor.cpp
+  propertyeditor/propertyintpaireditor.cpp
+  propertyeditor/propertypaletteeditor.cpp
+  propertyeditor/palettedialog.cpp
+)
+
+qt4_wrap_ui(gammaray_ui_srcs
+  propertyeditor/propertydoublepaireditor.ui
+  propertyeditor/propertyextendededitor.ui
+  propertyeditor/propertyintpaireditor.ui
+  propertyeditor/palettedialog.ui
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
