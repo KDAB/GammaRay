@@ -299,7 +299,7 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
   endif()
 endif()
 
-add_subdirectory(network)
+add_subdirectory(common)
 add_subdirectory(ui)
 add_subdirectory(core)
 add_subdirectory(launcher)

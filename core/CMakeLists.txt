@@ -1,6 +1,7 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_SOURCE_DIR}/common
   ${CMAKE_SOURCE_DIR}/ui
   ${CMAKE_CURRENT_SOURCE_DIR}
 
@@ -172,13 +173,13 @@ add_library(gammaray_core SHARED
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_core gammaray_network gammaray_ui Qt5::Widgets)
+  target_link_libraries(gammaray_core gammaray_common gammaray_ui Qt5::Widgets)
 else()
   target_link_libraries(gammaray_core
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTNETWORK_LIBRARIES}
-    gammaray_network
+    gammaray_common
     gammaray_ui
   )
 endif()

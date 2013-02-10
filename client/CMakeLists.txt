@@ -1,4 +1,11 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
+include_directories(
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_SOURCE_DIR}/common
+  ${CMAKE_SOURCE_DIR}/ui
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 set(gammaray_client_srcs
   main.cpp
@@ -13,6 +20,6 @@ qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qr
 
 add_executable(gammaray-client ${gammaray_client_srcs})
 
-target_link_libraries(gammaray-client ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_network gammaray_ui)
+target_link_libraries(gammaray-client ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_common gammaray_ui gammaray_core)
 
 install(TARGETS gammaray-client ${INSTALL_TARGETS_DEFAULT_ARGS})

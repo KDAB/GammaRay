@@ -7,6 +7,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_SOURCE_DIR}/common
 )
 
 set(gammaray_runner_srcs
@@ -61,7 +62,7 @@ qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
 
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_network)
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common)
 if(UNIX AND NOT APPLE)
   target_link_libraries(gammaray dl) # for preload check
 endif()
