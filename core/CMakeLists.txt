@@ -39,7 +39,6 @@ set(gammaray_srcs
   toolmodel.cpp
   proxydetacher.cpp
   proxytoolfactory.cpp
-  palettemodel.cpp
   propertywidget.cpp
 
   propertyeditor/propertycoloreditor.cpp

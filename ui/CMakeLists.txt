@@ -1,7 +1,11 @@
 #
 # Shared code between in-process and out-of-process UI
 #
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}
+)
 
 set(gammaray_ui_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
@@ -12,6 +16,7 @@ set(gammaray_ui_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
 
   sidepane.cpp
+  palettemodel.cpp
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
