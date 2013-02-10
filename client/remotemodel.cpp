@@ -289,9 +289,9 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(last >= first);
 
       Node *parentNode = nodeForIndex(parentIndex);
-      if (!parentNode)
+      if (!parentNode || parentNode->rowCount < 0)
         return; // we don't know the parent yet, so we don't care about changes to it either
-        Q_ASSERT(parentNode->rowCount == parentNode->children.size());
+      Q_ASSERT(parentNode->rowCount == parentNode->children.size());
 
       const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
       beginRemoveRows(qmiParent, first, last);
