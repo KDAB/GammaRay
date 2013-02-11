@@ -24,8 +24,6 @@
 #include "config-gammaray-version.h"
 #include "mainwindow.h"
 #include "aboutpluginsdialog.h"
-#include "objectlistmodel.h"
-#include "objecttreemodel.h"
 #include "probe.h"
 
 #include "include/objecttypefilterproxymodel.h"
