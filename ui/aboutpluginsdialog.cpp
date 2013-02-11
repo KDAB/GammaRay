@@ -22,7 +22,7 @@
 */
 
 #include "aboutpluginsdialog.h"
-#include "pluginmanager.h"
+#include <common/pluginmanager.h>
 
 #include "include/toolfactory.h"
 

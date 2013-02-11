@@ -13,7 +13,6 @@ set(gammaray_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/resourcemodel.cpp
 
   util.cpp
-  aboutpluginsdialog.cpp
   mainwindow.cpp
   metaobject.cpp
   metaobjecttreemodel.cpp

@@ -17,6 +17,7 @@ set(gammaray_ui_srcs
 
   sidepane.cpp
   palettemodel.cpp
+  aboutpluginsdialog.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
