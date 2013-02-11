@@ -5,11 +5,14 @@
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
+  ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty/
 )
 
 set(gammaray_common_srcs
   methodargument.cpp
+  pluginmanager.cpp
+  proxytoolfactory.cpp
   
   network/protocol.cpp
   network/message.cpp

@@ -20,7 +20,6 @@ set(gammaray_srcs
   metaobjectrepository.cpp
   metaproperty.cpp
   metapropertymodel.cpp
-  pluginmanager.cpp
   probe.cpp
   proxydetacher.cpp
   objectlistmodel.cpp
@@ -38,7 +37,6 @@ set(gammaray_srcs
   multisignalmapper.cpp
   toolmodel.cpp
   proxydetacher.cpp
-  proxytoolfactory.cpp
   propertywidget.cpp
 
   tools/modelinspector/modeltester.cpp
