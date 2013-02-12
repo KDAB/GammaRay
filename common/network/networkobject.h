@@ -21,7 +21,7 @@ public:
   ~NetworkObject();
 
   /** Invoke methods connected to @p signalName on the other end. */
-  void emitSignal(const char* signalName);
+  void emitSignal(const char* signalName, const QVariantList& args = QVariantList());
 
   // TODO publish signals
 
