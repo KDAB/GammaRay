@@ -45,6 +45,7 @@ class MainWindow : public QMainWindow
 
   private:
     void selectInitialTool();
+    QWidget* createErrorPage(const QModelIndex &index);
 
     Ui::MainWindow ui;
 };

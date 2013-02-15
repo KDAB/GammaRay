@@ -260,12 +260,16 @@ void MainWindow::toolSelected()
   QWidget *toolWidget = mi.data(ToolModelRole::ToolWidget).value<QWidget*>();
   if (!toolWidget) {
     ToolFactory *toolIface = mi.data(ToolModelRole::ToolFactory).value<ToolFactory*>();
-    Q_ASSERT(toolIface);
+    if (!toolIface) {
+      toolWidget = createErrorPage(mi);
+    } else {
+      Q_ASSERT(toolIface);
 //     qDebug() << Q_FUNC_INFO << "creating new probe: "
 //              << toolIface->name() << toolIface->supportedTypes();
-    toolWidget = toolIface->createWidget(Probe::instance(), this);
-    if (toolWidget->layout()) {
-      toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
+      toolWidget = toolIface->createWidget(Probe::instance(), this);
+      if (toolWidget->layout()) {
+        toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
+      }
     }
     ui.toolStack->addWidget(toolWidget);
     ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
@@ -276,6 +280,15 @@ void MainWindow::toolSelected()
     ui.actionsMenu->addAction(action);
   }
   ui.actionsMenu->setEnabled(!ui.actionsMenu->isEmpty());
+}
+
+QWidget* MainWindow::createErrorPage(const QModelIndex& index)
+{
+  QLabel *page = new QLabel(this);
+  page->setAlignment(Qt::AlignCenter);
+  // TODO show the actual plugin error message as well as any other useful information (eg. file name) we have, once the tool model has those
+  page->setText(tr("Tool %1 failed to load.").arg(index.data(ToolModelRole::ToolId).toString()));
+  return page;
 }
 
 #include "mainwindow.moc"
