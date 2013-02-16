@@ -24,17 +24,20 @@
 #ifndef GAMMARAY_MAINWINDOW_H
 #define GAMMARAY_MAINWINDOW_H
 
-#include "ui_mainwindow.h"
-
 #include <QMainWindow>
 
+class QModelIndex;
+
 namespace GammaRay {
+
+namespace Ui { class MainWindow; }
 
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
   public:
     explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
   private slots:
     void about();
@@ -47,7 +50,7 @@ class MainWindow : public QMainWindow
     void selectInitialTool();
     QWidget* createErrorPage(const QModelIndex &index);
 
-    Ui::MainWindow ui;
+    QScopedPointer<Ui::MainWindow> ui;
 };
 
 }

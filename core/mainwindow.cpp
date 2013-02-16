@@ -23,6 +23,7 @@
 
 #include "config-gammaray-version.h"
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include "aboutpluginsdialog.h"
 
 #include "include/objecttypefilterproxymodel.h"
@@ -60,7 +61,7 @@ static const char progVersion[] = GAMMARAY_VERSION_STRING;
 static const char progDesc[] = "The Qt application inspection and manipulation tool";
 static const char progURL[] = "http://www.kdab.com/gammaray";
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
   // we don't want application styles to propagate to the GammaRay window,
   // so set the platform default one.
@@ -86,21 +87,21 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     setStyle(defaultStyle);
   }
 
-  ui.setupUi(this);
+  ui->setupUi(this);
 
-  connect(ui.actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()));
+  connect(ui->actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()));
 
   connect(QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()));
-  connect(ui.actionQuit, SIGNAL(triggered(bool)),
+  connect(ui->actionQuit, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(quit()));
-  ui.actionQuit->setIcon(QIcon::fromTheme("application-exit"));
+  ui->actionQuit->setIcon(QIcon::fromTheme("application-exit"));
 
-  connect(ui.actionPlugins, SIGNAL(triggered(bool)),
+  connect(ui->actionPlugins, SIGNAL(triggered(bool)),
           this, SLOT(aboutPlugins()));
-  connect(ui.actionAboutQt, SIGNAL(triggered(bool)),
+  connect(ui->actionAboutQt, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(aboutQt()));
-  connect(ui.actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
-  connect(ui.actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
+  connect(ui->actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
+  connect(ui->actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
@@ -110,13 +111,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   proxyModel->setDynamicSortFilter(true);
   proxyModel->setSourceModel(model);
   proxyModel->sort(0);
-  ui.toolSelector->setModel(proxyModel);
-  ui.toolSelector->resize(ui.toolSelector->minimumSize());
-  connect(ui.toolSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+  ui->toolSelector->setModel(proxyModel);
+  ui->toolSelector->resize(ui->toolSelector->minimumSize());
+  connect(ui->toolSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(toolSelected()));
 
   // hide unused tool bar for now
-  ui.mainToolBar->setHidden(true);
+  ui->mainToolBar->setHidden(true);
 
   QString appName = qApp->applicationName();
   if (appName.isEmpty() && !qApp->arguments().isEmpty()) {
@@ -136,6 +137,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
   // get some sane size on startup
   resize(1024, 768);
+}
+
+MainWindow::~MainWindow()
+{
 }
 
 void MainWindow::about()
@@ -237,46 +242,46 @@ void MainWindow::selectInitialTool()
 {
   static const QString initialTool("GammaRay::ObjectInspector");
 
-  QAbstractItemModel *model = ui.toolSelector->model();
+  QAbstractItemModel *model = ui->toolSelector->model();
   QModelIndexList matches =
     model->match(model->index(0, 0), ToolModelRole::ToolId, initialTool);
   if (matches.isEmpty()) {
     return;
   }
 
-  ui.toolSelector->setCurrentIndex(matches.first());
+  ui->toolSelector->setCurrentIndex(matches.first());
   toolSelected();
 }
 
 void MainWindow::toolSelected()
 {
-  ui.actionsMenu->clear();
-  const int row = ui.toolSelector->currentIndex().row();
+  ui->actionsMenu->clear();
+  const int row = ui->toolSelector->currentIndex().row();
   if (row == -1) {
     return;
   }
 
-  const QModelIndex mi = ui.toolSelector->model()->index(row, 0);
+  const QModelIndex mi = ui->toolSelector->model()->index(row, 0);
   QWidget *toolWidget = mi.data(ToolModelRole::ToolWidget).value<QWidget*>();
   if (!toolWidget) {
     toolWidget = createErrorPage(mi);
-    ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget), ToolModelRole::ToolWidget);
+    ui->toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget), ToolModelRole::ToolWidget);
   }
 
   Q_ASSERT(toolWidget);
-  if (ui.toolStack->indexOf(toolWidget) < 0) { // newly created
+  if (ui->toolStack->indexOf(toolWidget) < 0) { // newly created
     if (toolWidget->layout()) {
       toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
     }
-    ui.toolStack->addWidget(toolWidget);
+    ui->toolStack->addWidget(toolWidget);
   }
 
-  ui.toolStack->setCurrentIndex(ui.toolStack->indexOf(toolWidget));
+  ui->toolStack->setCurrentIndex(ui->toolStack->indexOf(toolWidget));
 
   foreach (QAction *action, toolWidget->actions()) {
-    ui.actionsMenu->addAction(action);
+    ui->actionsMenu->addAction(action);
   }
-  ui.actionsMenu->setEnabled(!ui.actionsMenu->isEmpty());
+  ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
 }
 
 QWidget* MainWindow::createErrorPage(const QModelIndex& index)
