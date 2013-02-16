@@ -18,22 +18,24 @@ ClientToolModel::~ClientToolModel()
 
 QVariant ClientToolModel::data(const QModelIndex& index, int role) const
 {
-  const QString toolId = RemoteModel::data(index, ToolModelRole::ToolId).toString();
-  if (toolId.isEmpty())
-    return QVariant();
-
-  if (role == ToolModelRole::ToolFactory)
-    return QVariant::fromValue(m_factories.value(toolId));
-  if (role == ToolModelRole::ToolWidget) {
-    const QHash<QString, QWidget*>::const_iterator it = m_widgets.constFind(toolId);
-    if (it != m_widgets.constEnd())
-      return QVariant::fromValue(it.value());
-    ToolFactory *factory = m_factories.value(toolId);
-    if (!factory)
+  if (role == ToolModelRole::ToolFactory || role == ToolModelRole::ToolWidget) {
+    const QString toolId = RemoteModel::data(index, ToolModelRole::ToolId).toString();
+    if (toolId.isEmpty())
       return QVariant();
-    QWidget *widget = factory->createWidget(0, m_parentWidget);
-    m_widgets.insert(toolId, widget);
-    return QVariant::fromValue(widget);
+
+    if (role == ToolModelRole::ToolFactory)
+      return QVariant::fromValue(m_factories.value(toolId));
+    if (role == ToolModelRole::ToolWidget) {
+      const QHash<QString, QWidget*>::const_iterator it = m_widgets.constFind(toolId);
+      if (it != m_widgets.constEnd())
+        return QVariant::fromValue(it.value());
+      ToolFactory *factory = m_factories.value(toolId);
+      if (!factory)
+        return QVariant();
+      QWidget *widget = factory->createWidget(0, m_parentWidget);
+      m_widgets.insert(toolId, widget);
+      return QVariant::fromValue(widget);
+    }
   }
 
   return RemoteModel::data(index, role);
