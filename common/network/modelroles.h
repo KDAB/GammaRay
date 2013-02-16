@@ -8,10 +8,12 @@
  */
 namespace GammaRay {
 
+static const int UserRole = 256; // Qt4 uses 32, Qt5 256, use the latter globaly to allow combining Qt4/5 client/servers.
+
 /** Custom roles for GammaRay::ToolModel. */
 namespace ToolModelRole {
   enum Role {
-    ToolFactory = Qt::UserRole + 1,
+    ToolFactory = UserRole + 1,
     ToolWidget,
     ToolId,
     ToolWidgetParent
@@ -21,7 +23,7 @@ namespace ToolModelRole {
 /** Custom roles for GammaRay::ObjectMethodModel. */
 namespace ObjectMethodModelRole {
   enum Role {
-    MetaMethod = Qt::UserRole + 1,
+    MetaMethod = UserRole + 1,
     MetaMethodType
   };
 }
