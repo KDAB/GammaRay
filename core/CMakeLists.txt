@@ -13,7 +13,6 @@ set(gammaray_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/resourcemodel.cpp
 
   util.cpp
-  mainwindow.cpp
   metaobject.cpp
   metaobjecttreemodel.cpp
   metaobjectrepository.cpp
@@ -136,7 +135,6 @@ endif()
 
 qt4_automoc(${gammaray_srcs})
 qt4_wrap_ui(gammaray_srcs
-  mainwindow.ui
   propertywidget.ui
   methodinvocationdialog.ui
   paintbufferviewer.ui

@@ -7,6 +7,8 @@
 #include <network/objectbroker.h>
 #include <network/streamoperators.h>
 
+#include <ui/mainwindow.h>
+
 #include <QApplication>
 #include <QStringList>
 
@@ -55,6 +57,9 @@ int main(int argc, char** argv)
 
   ClientToolModel toolModel;
   ObjectBroker::registerModel("com.kdab.GammaRay.ToolModel", &toolModel);
+
+  MainWindow mainWindow;
+  mainWindow.show();
 
   return app.exec();
 }

@@ -5,6 +5,9 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_SOURCE_DIR}/common
 )
 
 set(gammaray_ui_srcs
@@ -18,6 +21,7 @@ set(gammaray_ui_srcs
   sidepane.cpp
   palettemodel.cpp
   aboutpluginsdialog.cpp
+  mainwindow.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
@@ -30,6 +34,8 @@ set(gammaray_ui_srcs
 )
 
 qt4_wrap_ui(gammaray_ui_srcs
+  mainwindow.ui
+
   propertyeditor/propertydoublepaireditor.ui
   propertyeditor/propertyextendededitor.ui
   propertyeditor/propertyintpaireditor.ui
