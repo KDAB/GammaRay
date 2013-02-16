@@ -72,11 +72,25 @@ QSize SidePane::sizeHint() const
   return QSize(width, height);
 }
 
+void SidePane::setModel(QAbstractItemModel* model)
+{
+  if (model) {
+    connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), SLOT(updateSizeHint()));
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updateSizeHint()));
+  }
+  QAbstractItemView::setModel(model);
+}
+
 void SidePane::resizeEvent(QResizeEvent *e)
 {
-  setMinimumWidth(sizeHint().width());
+  updateSizeHint();
 
   QListView::resizeEvent(e);
+}
+
+void SidePane::updateSizeHint()
+{
+  setMinimumWidth(sizeHint().width());
 }
 
 #include "sidepane.moc"

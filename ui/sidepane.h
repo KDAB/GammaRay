@@ -36,9 +36,13 @@ class SidePane : public QListView
     virtual ~SidePane();
 
     virtual QSize sizeHint() const;
+    virtual void setModel(QAbstractItemModel* model);
 
   protected:
     virtual void resizeEvent(QResizeEvent *e);
+
+  private slots:
+    void updateSizeHint();
 };
 
 }
