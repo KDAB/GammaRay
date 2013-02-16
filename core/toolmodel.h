@@ -29,6 +29,7 @@
 #include <QAbstractListModel>
 #include <QSet>
 #include <QVector>
+#include <QPointer>
 
 namespace GammaRay {
 
@@ -65,8 +66,9 @@ class ToolModel : public QAbstractListModel
 
   private:
     QVector<ToolFactory*> m_tools;
-    QHash<ToolFactory*, QWidget*> m_toolWidgets;
+    mutable QHash<ToolFactory*, QWidget*> m_toolWidgets;
     QSet<ToolFactory*> m_inactiveTools;
+    QPointer<QWidget> m_parentWidget;
 };
 
 }

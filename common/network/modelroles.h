@@ -13,7 +13,8 @@ namespace ToolModelRole {
   enum Role {
     ToolFactory = Qt::UserRole + 1,
     ToolWidget,
-    ToolId
+    ToolId,
+    ToolWidgetParent
   };
 }
 

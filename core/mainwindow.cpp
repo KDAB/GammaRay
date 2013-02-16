@@ -24,7 +24,6 @@
 #include "config-gammaray-version.h"
 #include "mainwindow.h"
 #include "aboutpluginsdialog.h"
-#include "probe.h"
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/toolfactory.h"
@@ -106,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
   QAbstractItemModel *model = ObjectBroker::model("com.kdab.GammaRay.ToolModel");
+  model->setData(QModelIndex(), QVariant::fromValue<QWidget*>(this), ToolModelRole::ToolWidgetParent);
   QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
   proxyModel->setDynamicSortFilter(true);
   proxyModel->setSourceModel(model);
@@ -259,21 +259,18 @@ void MainWindow::toolSelected()
   const QModelIndex mi = ui.toolSelector->model()->index(row, 0);
   QWidget *toolWidget = mi.data(ToolModelRole::ToolWidget).value<QWidget*>();
   if (!toolWidget) {
-    ToolFactory *toolIface = mi.data(ToolModelRole::ToolFactory).value<ToolFactory*>();
-    if (!toolIface) {
-      toolWidget = createErrorPage(mi);
-    } else {
-      Q_ASSERT(toolIface);
-//     qDebug() << Q_FUNC_INFO << "creating new probe: "
-//              << toolIface->name() << toolIface->supportedTypes();
-      toolWidget = toolIface->createWidget(Probe::instance(), this);
-      if (toolWidget->layout()) {
-        toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
-      }
+    toolWidget = createErrorPage(mi);
+    ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget), ToolModelRole::ToolWidget);
+  }
+
+  Q_ASSERT(toolWidget);
+  if (ui.toolStack->indexOf(toolWidget) < 0) { // newly created
+    if (toolWidget->layout()) {
+      toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
     }
     ui.toolStack->addWidget(toolWidget);
-    ui.toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget));
   }
+
   ui.toolStack->setCurrentIndex(ui.toolStack->indexOf(toolWidget));
 
   foreach (QAction *action, toolWidget->actions()) {
