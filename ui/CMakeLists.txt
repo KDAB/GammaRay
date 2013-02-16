@@ -22,6 +22,7 @@ set(gammaray_ui_srcs
   palettemodel.cpp
   aboutpluginsdialog.cpp
   mainwindow.cpp
+  deferredresizemodesetter.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp

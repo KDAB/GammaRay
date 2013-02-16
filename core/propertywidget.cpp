@@ -38,6 +38,7 @@
 #include "proxydetacher.h"
 
 #include "propertyeditor/propertyeditorfactory.h"
+#include <ui/deferredresizemodesetter.h>
 
 #include "remote/remotemodelserver.h"
 
@@ -84,7 +85,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   proxy->setSourceModel(m_staticPropertyModel);
   m_ui->staticPropertyView->setModel(proxy);
   m_ui->staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->staticPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(m_ui->staticPropertyView->header(), 0, QHeaderView::ResizeToContents);
   m_ui->staticPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->staticPropertyView);
 
@@ -96,7 +97,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   proxy->setSourceModel(m_dynamicPropertyModel);
   m_ui->dynamicPropertyView->setModel(proxy);
   m_ui->dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->dynamicPropertyView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(m_ui->dynamicPropertyView->header(), 0, QHeaderView::ResizeToContents);
   setEditorFactory(m_ui->dynamicPropertyView);
   m_ui->dynamicPropertySearchLine->setProxy(proxy);
 

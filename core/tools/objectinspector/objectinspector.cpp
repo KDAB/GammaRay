@@ -29,6 +29,8 @@
 
 #include <network/objectbroker.h>
 
+#include <ui/deferredresizemodesetter.h>
+
 #include <kde/krecursivefilterproxymodel.h>
 
 #include <QLineEdit>
@@ -45,8 +47,8 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
   objectFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
   objectFilter->setDynamicSortFilter(true);
   ui->objectTreeView->setModel(objectFilter);
-  ui->objectTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
-  ui->objectTreeView->header()->setResizeMode(1, QHeaderView::Interactive);
+  new DeferredResizeModeSetter(ui->objectTreeView->header(), 0, QHeaderView::Stretch);
+  new DeferredResizeModeSetter(ui->objectTreeView->header(), 1, QHeaderView::Interactive);
   ui->objectSearchLine->setProxy(objectFilter);
 
   ui->objectTreeView->setSelectionModel(ObjectBroker::selectionModel(ui->objectTreeView->model()));
