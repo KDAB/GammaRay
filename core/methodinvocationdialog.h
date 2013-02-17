@@ -24,8 +24,6 @@
 #ifndef GAMMARAY_METHODINVOCATIONDIALOG_H
 #define GAMMARAY_METHODINVOCATIONDIALOG_H
 
-#include "ui_methodinvocationdialog.h"
-
 #include <QDialog>
 #include <QMetaEnum>
 #include <QMetaObject>
@@ -33,6 +31,7 @@
 
 namespace GammaRay {
 
+namespace Ui { class MethodInvocationDialog; }
 class MethodArgumentModel;
 
 class MethodInvocationDialog : public QDialog
@@ -40,13 +39,17 @@ class MethodInvocationDialog : public QDialog
   Q_OBJECT
   public:
     explicit MethodInvocationDialog(QWidget *parent = 0);
+    ~MethodInvocationDialog();
+
+    Qt::ConnectionType connectionType() const;
+
     void setMethod(QObject *object, const QMetaMethod &method);
     void accept();
 
   private:
     QMetaMethod m_method;
     QPointer<QObject> m_object;
-    Ui::MethodInvocationDialog ui;
+    QScopedPointer<Ui::MethodInvocationDialog> ui;
     MethodArgumentModel *m_argumentModel;
 };
 

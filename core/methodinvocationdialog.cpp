@@ -22,6 +22,8 @@
 */
 
 #include "methodinvocationdialog.h"
+#include "ui_methodinvocationdialog.h"
+
 #include "methodargumentmodel.h"
 
 #include "include/metatypedeclarations.h"
@@ -33,21 +35,26 @@ using namespace GammaRay;
 
 MethodInvocationDialog::MethodInvocationDialog(QWidget *parent)
   : QDialog(parent),
+    ui(new Ui::MethodInvocationDialog),
     m_argumentModel(new MethodArgumentModel(this))
 {
   setAttribute(Qt::WA_DeleteOnClose);
 
-  ui.setupUi(this);
+  ui->setupUi(this);
 
-  ui.buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Invoke"));
-  connect(ui.buttonBox, SIGNAL(accepted()), SLOT(accept()));
-  connect(ui.buttonBox, SIGNAL(rejected()), SLOT(reject()));
+  ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Invoke"));
+  connect(ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
+  connect(ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
-  ui.connectionTypeComboBox->addItem(tr("Auto"), Qt::AutoConnection);
-  ui.connectionTypeComboBox->addItem(tr("Direct"), Qt::DirectConnection);
-  ui.connectionTypeComboBox->addItem(tr("Queued"), Qt::QueuedConnection);
+  ui->connectionTypeComboBox->addItem(tr("Auto"), Qt::AutoConnection);
+  ui->connectionTypeComboBox->addItem(tr("Direct"), Qt::DirectConnection);
+  ui->connectionTypeComboBox->addItem(tr("Queued"), Qt::QueuedConnection);
 
-  ui.argumentView->setModel(m_argumentModel);
+  ui->argumentView->setModel(m_argumentModel);
+}
+
+MethodInvocationDialog::~MethodInvocationDialog()
+{
 }
 
 void MethodInvocationDialog::setMethod(QObject *object, const QMetaMethod &method)
@@ -55,6 +62,11 @@ void MethodInvocationDialog::setMethod(QObject *object, const QMetaMethod &metho
   m_object = object;
   m_method = method;
   m_argumentModel->setMethod(method);
+}
+
+Qt::ConnectionType MethodInvocationDialog::connectionType() const
+{
+  return ui->connectionTypeComboBox->itemData(ui->connectionTypeComboBox->currentIndex()).value<Qt::ConnectionType>();
 }
 
 void MethodInvocationDialog::accept()
@@ -67,13 +79,10 @@ void MethodInvocationDialog::accept()
     return;
   }
 
-  const Qt::ConnectionType connectionType =
-    ui.connectionTypeComboBox->itemData(
-      ui.connectionTypeComboBox->currentIndex()).value<Qt::ConnectionType>();
   const QVector<MethodArgument> args = m_argumentModel->arguments();
 
   const bool result = m_method.invoke(
-    m_object.data(), connectionType,
+    m_object.data(), connectionType(),
     args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
 
   if (!result) {
