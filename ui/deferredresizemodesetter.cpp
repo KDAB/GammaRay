@@ -1,5 +1,4 @@
 #include "deferredresizemodesetter.h"
-#include <boost/graph/graph_concepts.hpp>
 
 using namespace GammaRay;
 
