@@ -1,5 +1,7 @@
 #include "clienttoolmodel.h"
 
+#include <ui/tools/objectinspector/objectinspectorwidget.h>
+
 #include <network/modelroles.h>
 #include <include/toolfactory.h>
 
@@ -7,13 +9,29 @@
 
 using namespace GammaRay;
 
+
+#define MAKE_FACTORY(type) \
+class type ## Factory : public ToolFactory { \
+public: \
+  virtual inline QStringList supportedTypes() const { return QStringList(#type); } \
+  virtual inline QString id() const { return "GammaRay::" #type; } \
+  virtual inline QString name() const { return QString(); } \
+  virtual inline void init(ProbeInterface *) {} \
+  virtual inline QWidget *createWidget(ProbeInterface *, QWidget *parentWidget) { return new type ## Widget(parentWidget); } \
+}
+
+MAKE_FACTORY(ObjectInspector);
+
+
 ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("com.kdab.GammaRay.ToolModel"), parent)
 {
   // TODO add tools
+  insertFactory(new ObjectInspectorFactory);
 }
 
 ClientToolModel::~ClientToolModel()
 {
+  qDeleteAll(m_factories.values());
 }
 
 QVariant ClientToolModel::data(const QModelIndex& index, int role) const
