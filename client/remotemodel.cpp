@@ -157,22 +157,25 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node->rowCount == -2 && node->columnCount == -1);
-      msg.payload() >> node->rowCount >> node->columnCount;
-      Q_ASSERT(node->rowCount >= 0 && node->columnCount >= 0);
+      int rowCount, columnCount;
+      msg.payload() >> rowCount >> columnCount;
+      Q_ASSERT(rowCount >= 0 && columnCount >= 0);
 
-      if (!node->rowCount || !node->columnCount)
+      if (!rowCount || !columnCount)
         break;
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
-      qDebug() << "insert" << qmi << node->rowCount << node->columnCount;
-      beginInsertRows(qmi, 0, node->rowCount - 1);
-      beginInsertColumns(qmi, 0, node->columnCount - 1);
-      node->children.reserve(node->rowCount);
-      for (int i = 0; i < node->rowCount; ++i) {
+      qDebug() << "insert" << qmi << rowCount << columnCount;
+      beginInsertRows(qmi, 0, rowCount - 1);
+      beginInsertColumns(qmi, 0, columnCount - 1);
+      node->children.reserve(rowCount);
+      for (int i = 0; i < rowCount; ++i) {
         Node *child = new Node;
         child->parent = node;
         node->children.push_back(child);
       }
+      node->rowCount = rowCount;
+      node->columnCount = columnCount;
       endInsertColumns();
       endInsertRows();
       break;
