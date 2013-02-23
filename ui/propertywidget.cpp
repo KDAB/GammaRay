@@ -169,6 +169,8 @@ void PropertyWidget::setMetaObject(const QMetaObject *metaObject)
 
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 {
+  if (!index.isValid() || m_displayState != PropertyWidgetDisplayState::QObject)
+    return;
   ObjectBroker::object(m_objectBaseName + ".controller")->emitSignal("activateMethod");
 
   const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
