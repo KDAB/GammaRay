@@ -32,6 +32,8 @@ set(gammaray_ui_srcs
   propertyeditor/propertyintpaireditor.cpp
   propertyeditor/propertypaletteeditor.cpp
   propertyeditor/palettedialog.cpp
+
+  tools/objectinspector/objectinspectorwidget.cpp
 )
 
 qt4_wrap_ui(gammaray_ui_srcs
@@ -43,6 +45,8 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/propertyextendededitor.ui
   propertyeditor/propertyintpaireditor.ui
   propertyeditor/palettedialog.ui
+
+  tools/objectinspector/objectinspectorwidget.ui
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

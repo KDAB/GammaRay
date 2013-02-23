@@ -21,53 +21,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTOR_H
-#define GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTOR_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTORWIDGET_H
+#define GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTORWIDGET_H
 
-#include "include/toolfactory.h"
-
-#include <ui/tools/objectinspector/objectinspectorwidget.h>
-
-#include <QObject>
+#include <QWidget>
 
 class QItemSelection;
-class QItemSelectionModel;
 class QModelIndex;
 
 namespace GammaRay {
 
-class PropertyController;
+namespace Ui {
+  class ObjectInspectorWidget;
+}
 
-class ObjectInspector : public QObject
+class ObjectInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ObjectInspector(ProbeInterface *probe, QObject *parent = 0);
-
-  private slots:
-    void selectDefaultItem();
-    void objectSelected(const QModelIndex &index);
-    void objectSelectionChanged(const QItemSelection &selection);
-    void widgetSelected(QWidget *widget);
+    explicit ObjectInspectorWidget(QWidget *parent = 0);
+    ~ObjectInspectorWidget();
 
   private:
-    PropertyController *m_propertyController;
-    QItemSelectionModel *m_selectionModel;
-};
-
-class ObjectInspectorFactory : public QObject, public StandardToolFactory2<QObject, ObjectInspector, ObjectInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit ObjectInspectorFactory(QObject *parent) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Objects");
-    }
+    QScopedPointer<Ui::ObjectInspectorWidget> ui;
 };
 
 }
