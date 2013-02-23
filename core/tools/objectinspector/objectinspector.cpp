@@ -96,10 +96,8 @@ void ObjectInspector::objectSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    ui->objectPropertyWidget->setObject(obj);
     m_propertyController->setObject(obj);
   } else {
-    ui->objectPropertyWidget->setObject(0);
     m_propertyController->setObject(0);
   }
 }

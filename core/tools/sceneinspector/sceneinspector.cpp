@@ -26,6 +26,7 @@
 #include "metaobjectrepository.h"
 #include "scenemodel.h"
 #include "ui_sceneinspector.h"
+#include "propertycontroller.h"
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
@@ -42,9 +43,11 @@ using namespace GammaRay;
 
 SceneInspector::SceneInspector(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
-    ui(new Ui::SceneInspector)
+    ui(new Ui::SceneInspector),
+    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
 {
   ui->setupUi(this);
+  ui->scenePropertyWidget->setObjectBaseName("com.kdab.GammaRay.SceneInspector");
 
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
           SLOT(widgetSelected(QWidget*,QPoint)));
@@ -86,13 +89,13 @@ void SceneInspector::sceneItemSelected(const QModelIndex &index)
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
     QGraphicsObject *obj = item->toGraphicsObject();
     if (obj) {
-      ui->scenePropertyWidget->setObject(obj);
+      m_propertyController->setObject(obj);
     } else {
-      ui->scenePropertyWidget->setObject(item, findBestType(item));
+      m_propertyController->setObject(item, findBestType(item));
     }
     ui->graphicsSceneView->showGraphicsItem(item);
   } else {
-    ui->scenePropertyWidget->setObject(0);
+    m_propertyController->setObject(0);
   }
 }
 

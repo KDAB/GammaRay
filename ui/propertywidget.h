@@ -50,10 +50,6 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
 
     void setObjectBaseName(const QString &baseName);
 
-    void setObject(QObject *object);
-    void setObject(void *object, const QString &className);
-    void setMetaObject(const QMetaObject *metaObject);
-
   private:
     void setEditorFactory(QAbstractItemView *view);
 

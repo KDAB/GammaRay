@@ -24,6 +24,7 @@
 #include "metaobjectbrowser.h"
 #include "metaobjecttreemodel.h"
 #include "probe.h"
+#include "propertycontroller.h"
 #include "propertywidget.h"
 
 #include "kde/kfilterproxysearchline.h"
@@ -37,7 +38,7 @@
 using namespace GammaRay;
 
 MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent)
+  : QWidget(parent), m_propertyController(new PropertyController("com.kdab.GammaRay.MetaObjectBrowser", this))
 {
   Q_UNUSED(probe);
   QAbstractItemModel *model = Probe::instance()->metaObjectModel();
@@ -58,8 +59,9 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QWidget *parent)
           SLOT(objectSelected(QModelIndex)));
 
   PropertyWidget *propertyWidget = new PropertyWidget(this);
-  propertyWidget->setMetaObject(0); // init
+  m_propertyController->setMetaObject(0); // init
   m_propertyWidget = propertyWidget;
+  m_propertyWidget->setObjectBaseName("com.kdab.GammaRay.MetaObjectBrowser");
 
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(objectSearchLine);
@@ -80,9 +82,9 @@ void MetaObjectBrowser::objectSelected(const QModelIndex &index)
   if (index.isValid()) {
     const QMetaObject *metaObject =
       index.data(MetaObjectTreeModel::MetaObjectRole).value<const QMetaObject*>();
-    m_propertyWidget->setMetaObject(metaObject);
+    m_propertyController->setMetaObject(metaObject);
   } else {
-    m_propertyWidget->setMetaObject(0);
+    m_propertyController->setMetaObject(0);
   }
 }
 

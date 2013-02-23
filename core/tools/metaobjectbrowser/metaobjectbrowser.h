@@ -32,6 +32,7 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class PropertyController;
 class PropertyWidget;
 
 class MetaObjectBrowser : public QWidget
@@ -46,6 +47,7 @@ class MetaObjectBrowser : public QWidget
 
   private:
      PropertyWidget *m_propertyWidget;
+     PropertyController *m_propertyController;
 };
 
 class MetaObjectBrowserFactory : public QObject,

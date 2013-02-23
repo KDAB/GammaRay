@@ -33,6 +33,7 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class PropertyController;
 class SceneModel;
 
 namespace Ui {
@@ -57,6 +58,7 @@ class SceneInspector : public QWidget
   private:
     QScopedPointer<Ui::SceneInspector> ui;
     SceneModel *m_sceneModel;
+    PropertyController *m_propertyController;
 };
 
 class SceneInspectorFactory : public QObject,

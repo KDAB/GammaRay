@@ -33,6 +33,7 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class PropertyController;
 class OverlayWidget;
 
 namespace Ui {
@@ -69,6 +70,7 @@ class WidgetInspector : public QWidget
     OverlayWidget *m_overlayWidget;
     QScopedPointer<Ui::WidgetInspector> ui;
     QLibrary m_externalExportActions;
+    PropertyController *m_propertyController;
 };
 
 class WidgetInspectorFactory

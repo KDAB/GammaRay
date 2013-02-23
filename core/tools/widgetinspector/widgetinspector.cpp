@@ -27,6 +27,7 @@
 #include "paintbufferviewer.h"
 #include "widgettreemodel.h"
 #include "ui_widgetinspector.h"
+#include "propertycontroller.h"
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
@@ -49,9 +50,11 @@
 using namespace GammaRay;
 
 WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::WidgetInspector), m_overlayWidget(new OverlayWidget)
+  : QWidget(parent), ui(new Ui::WidgetInspector), m_overlayWidget(new OverlayWidget),
+  m_propertyController(new PropertyController("com.kdab.GammaRay.WidgetInspector", this))
 {
   ui->setupUi(this);
+  ui->widgetPropertyWidget->setObjectBaseName("com.kdab.GammaRay.WidgetInspector");
 
   m_overlayWidget->hide();
   connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
@@ -123,7 +126,7 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
       widget = layout->parentWidget();
     }
 
-    ui->widgetPropertyWidget->setObject(obj);
+    m_propertyController->setObject(obj);
     ui->widgetPreviewWidget->setWidget(widget);
     setActionsEnabled(widget != 0);
 
@@ -135,7 +138,7 @@ void WidgetInspector::widgetSelected(const QModelIndex &index)
       m_overlayWidget->placeOn(0);
     }
   } else {
-    ui->widgetPropertyWidget->setObject(0);
+    m_propertyController->setObject(0);
     ui->widgetPreviewWidget->setWidget(0);
     m_overlayWidget->placeOn(0);
     setActionsEnabled(false);

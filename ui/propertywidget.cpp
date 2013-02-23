@@ -155,18 +155,6 @@ QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
   return ObjectBroker::model(m_objectBaseName + "." + nameSuffix);
 }
 
-void GammaRay::PropertyWidget::setObject(QObject *object)
-{
-}
-
-void PropertyWidget::setObject(void *object, const QString &className)
-{
-}
-
-void PropertyWidget::setMetaObject(const QMetaObject *metaObject)
-{
-}
-
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 {
   if (!index.isValid() || m_displayState != PropertyWidgetDisplayState::QObject)
