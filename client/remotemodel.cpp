@@ -42,7 +42,7 @@ bool RemoteModel::isConnected() const
 
 QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (!isConnected())
+  if (!isConnected() || row < 0 || column < 0)
     return QModelIndex();
 
 //   qDebug() << row << column << parent << rowCount(parent);
@@ -67,7 +67,7 @@ QModelIndex RemoteModel::parent(const QModelIndex &index) const
 
 int RemoteModel::rowCount(const QModelIndex &index) const
 {
-  if (!isConnected())
+  if (!isConnected() || index.column() > 0)
     return 0;
 
   Node* node = nodeForIndex(index);
@@ -95,6 +95,9 @@ int RemoteModel::columnCount(const QModelIndex &index) const
 
 QVariant RemoteModel::data(const QModelIndex &index, int role) const
 {
+  if (!isConnected() || !index.isValid())
+    return QVariant();
+
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
@@ -114,6 +117,9 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
 
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
+  if (!isConnected())
+    return false;
+
   Message msg(m_myAddress, Protocol::ModelSetDataRequest);
   msg.payload() << Protocol::fromQModelIndex(index) << role << value;
   Client::send(msg);
@@ -200,7 +206,8 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(orientation == Qt::Horizontal || orientation == Qt::Vertical);
       Q_ASSERT(section >= 0);
       m_headers[static_cast<Qt::Orientation>(orientation)][section] = data;
-      emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
+      if ((orientation == Qt::Horizontal && m_root->columnCount > section) || (orientation == Qt::Vertical && m_root->rowCount > section))
+        emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
       break;
     }
 
