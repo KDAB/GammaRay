@@ -11,5 +11,7 @@ add_executable(propertywidgettest
 target_link_libraries(propertywidgettest
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
-  gammaray_probe
+  gammaray_core
+  gammaray_ui
+  gammaray_common
 )

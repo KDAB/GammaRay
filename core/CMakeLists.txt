@@ -34,7 +34,6 @@ set(gammaray_srcs
   multisignalmapper.cpp
   toolmodel.cpp
   proxydetacher.cpp
-  propertywidget.cpp
   propertycontroller.cpp
 
   tools/modelinspector/modeltester.cpp
@@ -135,7 +134,6 @@ endif()
 
 qt4_automoc(${gammaray_srcs})
 qt4_wrap_ui(gammaray_srcs
-  propertywidget.ui
   paintbufferviewer.ui
 
   tools/sceneinspector/graphicssceneview.ui

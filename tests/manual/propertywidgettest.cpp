@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "core/propertywidget.h"
+#include "ui/propertywidget.h"
 
 #include <QApplication>
 #include <QTreeView>
