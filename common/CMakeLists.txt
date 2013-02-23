@@ -11,6 +11,9 @@ include_directories(
 )
 
 set(gammaray_common_srcs
+  ${CMAKE_SOURCE_DIR}/3rdparty/kde/klinkitemselectionmodel.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp
+
   methodargument.cpp
   pluginmanager.cpp
   proxytoolfactory.cpp
