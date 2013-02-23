@@ -53,6 +53,7 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
 
   ObjectBroker::selectionModel(m_methodModel); // trigger creation
 
+  // TODO 1.3 had an optimization using the ProxyDetacher for these models, re-add that
   m_inboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
   m_outboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
 

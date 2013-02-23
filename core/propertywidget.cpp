@@ -24,18 +24,15 @@
 #include "propertywidget.h"
 #include "ui_propertywidget.h"
 
-#include "connectionfilterproxymodel.h"
-#include "connectionmodel.h"
-#include "methodinvocationdialog.h"
-#include "objectmethodmodel.h"
-#include "probe.h"
-#include "proxydetacher.h"
-
-#include "propertyeditor/propertyeditorfactory.h"
+#include <ui/methodinvocationdialog.h>
+#include <ui/propertyeditor/propertyeditorfactory.h>
 #include <ui/deferredresizemodesetter.h>
 
 #include <network/objectbroker.h>
 #include <network/networkobject.h>
+#include <network/modelroles.h>
+
+#include <include/metatypedeclarations.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -61,8 +58,6 @@ static bool removePage(QTabWidget *tabWidget, QWidget *widget)
 PropertyWidget::PropertyWidget(QWidget *parent)
   : QWidget(parent),
     m_ui(new Ui_PropertyWidget),
-    m_inboundConnectionModel(new ConnectionFilterProxyModel(this)),
-    m_outboundConnectionModel(new ConnectionFilterProxyModel(this)),
     m_editorFactory(new PropertyEditorFactory),
     m_displayState(PropertyWidgetDisplayState::QObject)
 {
@@ -117,28 +112,19 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
   m_ui->classInfoSearchLine->setProxy(proxy);
 
-#ifndef GAMMARAY_CLIENT
-  if (Probe::isInitialized()) {
-    new ProxyDetacher(m_ui->inboundConnectionView, m_inboundConnectionModel,
-                      Probe::instance()->connectionModel());
-    m_ui->inboundConnectionView->setModel(m_inboundConnectionModel);
-    m_ui->inboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
-    m_ui->inboundConnectionSearchLine->setProxy(m_inboundConnectionModel);
+  proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
+  proxy->setSourceModel(model("inboundConnections"));
+  m_ui->inboundConnectionView->setModel(proxy);
+  m_ui->inboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->inboundConnectionSearchLine->setProxy(proxy);
 
-    new ProxyDetacher(m_ui->outboundConnectionView, m_outboundConnectionModel,
-                      Probe::instance()->connectionModel());
-    m_ui->outboundConnectionView->setModel(m_outboundConnectionModel);
-    m_ui->outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
-    m_ui->outboundConnectionSearchLine->setProxy(m_outboundConnectionModel);
-  } else {
-    qDebug() << "Probe not initialized, disabling connection tabs";
-    removePage(m_ui->tabWidget, m_ui->inboundConnectionTab);
-    removePage(m_ui->tabWidget, m_ui->outboundConnectionTab);
-  }
-#else
-  m_ui->inboundConnectionView->setModel(model("inboundConnections"));
-  m_ui->outboundConnectionView->setModel(model("outboundConnections"));
-#endif
+  proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
+  proxy->setSourceModel(model("outboundConnections"));
+  m_ui->outboundConnectionView->setModel(proxy);
+  m_ui->outboundConnectionView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->outboundConnectionSearchLine->setProxy(proxy);
 
   proxy = new KRecursiveFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
@@ -171,19 +157,14 @@ QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
 
 void GammaRay::PropertyWidget::setObject(QObject *object)
 {
-  m_object = object;
-  m_inboundConnectionModel->filterReceiver(object);
-  m_outboundConnectionModel->filterSender(object);
 }
 
 void PropertyWidget::setObject(void *object, const QString &className)
 {
-  setObject(0);
 }
 
 void PropertyWidget::setMetaObject(const QMetaObject *metaObject)
 {
-  setObject(0);
 }
 
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
@@ -222,6 +203,7 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
 
 bool PropertyWidget::showTab(const QWidget* widget, PropertyWidgetDisplayState::State state) const
 {
+  // TODO: this check needs to consider the server-side Qt version!
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (widget == m_ui->inboundConnectionTab ||
       widget == m_ui->outboundConnectionTab) {

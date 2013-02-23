@@ -39,7 +39,6 @@ class QModelIndex;
 namespace GammaRay {
 
 class Ui_PropertyWidget;
-class ConnectionFilterProxyModel;
 class PropertyEditorFactory;
 
 class GAMMARAY_EXPORT PropertyWidget : public QWidget
@@ -72,9 +71,6 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     Ui_PropertyWidget *m_ui;
 
     QString m_objectBaseName;
-    QPointer<QObject> m_object;
-    ConnectionFilterProxyModel *m_inboundConnectionModel;
-    ConnectionFilterProxyModel *m_outboundConnectionModel;
     QScopedPointer<PropertyEditorFactory> m_editorFactory;
 
     // Contains initially added tab widgets (Tab widget/Label)
