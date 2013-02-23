@@ -41,6 +41,7 @@
 #include <ui/deferredresizemodesetter.h>
 
 #include <network/objectbroker.h>
+#include <network/networkobject.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -112,6 +113,7 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   proxy->setSourceModel(model("methods"));
   m_ui->methodView->setModel(proxy);
   m_ui->methodView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->methodView->setSelectionModel(ObjectBroker::selectionModel(proxy));
   m_ui->methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
   m_ui->methodSearchLine->setProxy(proxy);
   connect(m_ui->methodView, SIGNAL(doubleClicked(QModelIndex)),
@@ -232,6 +234,7 @@ void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
   } else if (method.methodType() == QMetaMethod::Signal) {
     m_signalMapper->connectToSignal(m_object, method);
   }
+  ObjectBroker::object(m_objectBaseName + ".controller")->emitSignal("activateMethod");
 }
 
 void PropertyWidget::signalEmitted(QObject *sender, int signalIndex)

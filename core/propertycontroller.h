@@ -3,7 +3,8 @@
 
 #include "include/gammaray_export.h"
 
-#include <QObject>
+#include "remote/objectserver.h"
+
 #include <QPointer>
 
 class QAbstractItemModel;
@@ -21,7 +22,7 @@ class ObjectEnumModel;
 class MetaPropertyModel;
 
 /** Non-UI part of the property widget. */
-class GAMMARAY_EXPORT PropertyController : public QObject
+class GAMMARAY_EXPORT PropertyController : public ObjectServer
 {
   Q_OBJECT
 public:
@@ -37,6 +38,7 @@ private:
 
 private slots:
   void signalEmitted(QObject *sender, int signalIndex);
+  void methodActivated();
 
 private:
   QString m_objectBaseName;

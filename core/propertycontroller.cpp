@@ -16,13 +16,14 @@
 
 #include <network/objectbroker.h>
 
+#include <QDebug>
 #include <QStandardItemModel>
 #include <QTime>
 
 using namespace GammaRay;
 
 PropertyController::PropertyController(const QString& baseName, QObject* parent) :
-  QObject(parent),
+  ObjectServer(baseName + ".controller", parent),
   m_objectBaseName(baseName),
   m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
   m_dynamicPropertyModel(new ObjectDynamicPropertyModel(this)),
@@ -44,6 +45,9 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
   registerModel(m_outboundConnectionModel, "outboundConnections");
   registerModel(m_enumModel, "enums");
   registerModel(m_metaPropertyModel, "nonQProperties");
+
+  ObjectBroker::selectionModel(m_methodModel); // trigger creation
+  subscribeToSignal("activateMethod", this, "methodActivated");
 }
 
 PropertyController::~PropertyController()
@@ -93,6 +97,11 @@ void PropertyController::setObject(QObject* object)
   m_methodLogModel->clear();
 
   m_metaPropertyModel->setObject(object);
+}
+
+void PropertyController::methodActivated()
+{
+  qDebug() << Q_FUNC_INFO;
 }
 
 #include "propertycontroller.moc"
