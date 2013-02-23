@@ -23,6 +23,7 @@
 
 #include "objectinspector.h"
 #include "ui_objectinspector.h"
+#include "propertycontroller.h"
 
 #include "include/objectmodel.h"
 #include "include/probeinterface.h"
@@ -39,9 +40,11 @@ using namespace GammaRay;
 
 ObjectInspector::ObjectInspector(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
-    ui(new Ui::ObjectInspector)
+    ui(new Ui::ObjectInspector),
+    m_propertyController(new PropertyController("com.kdab.GammaRay.ObjectInspector", this))
 {
   ui->setupUi(this);
+  ui->objectPropertyWidget->setObjectBaseName("com.kdab.GammaRay.ObjectInspector");
 
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
   objectFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
@@ -94,8 +97,10 @@ void ObjectInspector::objectSelected(const QModelIndex &index)
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     ui->objectPropertyWidget->setObject(obj);
+    m_propertyController->setObject(obj);
   } else {
     ui->objectPropertyWidget->setObject(0);
+    m_propertyController->setObject(0);
   }
 }
 

@@ -40,7 +40,7 @@
 #include "propertyeditor/propertyeditorfactory.h"
 #include <ui/deferredresizemodesetter.h>
 
-#include "remote/remotemodelserver.h"
+#include <network/objectbroker.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -79,22 +79,28 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_editorFactory(new PropertyEditorFactory)
 {
   m_ui->setupUi(this);
+}
+
+PropertyWidget::~PropertyWidget()
+{
+}
+
+void PropertyWidget::setObjectBaseName(const QString& baseName)
+{
+  m_objectBaseName = baseName;
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_staticPropertyModel);
+  proxy->setSourceModel(model("staticProperties"));
   m_ui->staticPropertyView->setModel(proxy);
   m_ui->staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
   new DeferredResizeModeSetter(m_ui->staticPropertyView->header(), 0, QHeaderView::ResizeToContents);
   m_ui->staticPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->staticPropertyView);
 
-//  RemoteModelServer *modelServer = new RemoteModelServer(QLatin1String("com.kdab.GammaRay.StaticPropertyModel"), this);
-//  modelServer->setModel(proxy); // TODO proxy on client oder server side?
-
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_dynamicPropertyModel);
+  proxy->setSourceModel(model("dynamicProperties"));
   m_ui->dynamicPropertyView->setModel(proxy);
   m_ui->dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
   new DeferredResizeModeSetter(m_ui->dynamicPropertyView->header(), 0, QHeaderView::ResizeToContents);
@@ -103,7 +109,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_methodModel);
+  proxy->setSourceModel(model("methods"));
   m_ui->methodView->setModel(proxy);
   m_ui->methodView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
@@ -112,16 +118,17 @@ PropertyWidget::PropertyWidget(QWidget *parent)
           SLOT(methodActivated(QModelIndex)));
   connect(m_ui->methodView, SIGNAL(customContextMenuRequested(QPoint)),
           SLOT(methodConextMenu(QPoint)));
-  m_ui->methodLog->setModel(m_methodLogModel);
+  m_ui->methodLog->setModel(model("methodLog"));
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_classInfoModel);
+  proxy->setSourceModel(model("classInfo"));
   m_ui->classInfoView->setModel(proxy);
   m_ui->classInfoView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
   m_ui->classInfoSearchLine->setProxy(proxy);
 
+#ifndef GAMMARAY_CLIENT
   if (Probe::isInitialized()) {
     new ProxyDetacher(m_ui->inboundConnectionView, m_inboundConnectionModel,
                       Probe::instance()->connectionModel());
@@ -139,10 +146,14 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     removePage(m_ui->tabWidget, m_ui->inboundConnectionTab);
     removePage(m_ui->tabWidget, m_ui->outboundConnectionTab);
   }
+#else
+  m_ui->inboundConnectionView->setModel(model("inboundConnections"));
+  m_ui->outboundConnectionView->setModel(model("outboundConnections"));
+#endif
 
   proxy = new KRecursiveFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_enumModel);
+  proxy->setSourceModel(model("enums"));
   m_ui->enumView->setModel(proxy);
   m_ui->enumView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
@@ -155,15 +166,16 @@ PropertyWidget::PropertyWidget(QWidget *parent)
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_metaPropertyModel);
+  proxy->setSourceModel(model("nonQProperties"));
   m_ui->metaPropertyView->setModel(proxy);
   m_ui->metaPropertyView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->metaPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->metaPropertyView);
 }
 
-PropertyWidget::~PropertyWidget()
+QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
 {
+  return ObjectBroker::model(m_objectBaseName + "." + nameSuffix);
 }
 
 void GammaRay::PropertyWidget::setObject(QObject *object)

@@ -30,6 +30,7 @@
 
 #include "include/gammaray_export.h"
 
+class QAbstractItemModel;
 class QAbstractItemView;
 class QModelIndex;
 class QStandardItemModel;
@@ -54,6 +55,8 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     explicit PropertyWidget(QWidget *parent = 0);
     virtual ~PropertyWidget();
 
+    void setObjectBaseName(const QString &baseName);
+
     void setObject(QObject *object);
     void setObject(void *object, const QString &className);
     void setMetaObject(const QMetaObject *metaObject);
@@ -76,8 +79,11 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     /// Decides if widget is supposed to be shown at this display state
     bool showTab(const QWidget *widget, DisplayState state) const;
 
+    QAbstractItemModel* model(const QString &nameSuffix);
+
     Ui_PropertyWidget *m_ui;
 
+    QString m_objectBaseName;
     QPointer<QObject> m_object;
     ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;

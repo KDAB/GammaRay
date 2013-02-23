@@ -33,6 +33,8 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class PropertyController;
+
 namespace Ui {
   class ObjectInspector;
 }
@@ -52,6 +54,7 @@ class ObjectInspector : public QWidget
 
   private:
     QScopedPointer<Ui::ObjectInspector> ui;
+    PropertyController *m_propertyController;
 };
 
 class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObject, ObjectInspector>
