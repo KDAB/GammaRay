@@ -63,7 +63,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_ui(new Ui_PropertyWidget),
     m_inboundConnectionModel(new ConnectionFilterProxyModel(this)),
     m_outboundConnectionModel(new ConnectionFilterProxyModel(this)),
-    m_editorFactory(new PropertyEditorFactory)
+    m_editorFactory(new PropertyEditorFactory),
+    m_displayState(PropertyWidgetDisplayState::QObject)
 {
   m_ui->setupUi(this);
 }
@@ -159,6 +160,8 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->metaPropertyView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->metaPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->metaPropertyView);
+
+  ObjectBroker::object(m_objectBaseName + ".controller")->subscribeToSignal("displayState", this, "setDisplayState");
 }
 
 QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
@@ -171,20 +174,16 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
   m_object = object;
   m_inboundConnectionModel->filterReceiver(object);
   m_outboundConnectionModel->filterSender(object);
-
-  setDisplayState(QObjectState);
 }
 
 void PropertyWidget::setObject(void *object, const QString &className)
 {
   setObject(0);
-  setDisplayState(ObjectState);
 }
 
 void PropertyWidget::setMetaObject(const QMetaObject *metaObject)
 {
   setObject(0);
-  setDisplayState(MetaObjectState);
 }
 
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
@@ -202,7 +201,7 @@ void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 void PropertyWidget::methodConextMenu(const QPoint &pos)
 {
   const QModelIndex index = m_ui->methodView->indexAt(pos);
-  if (!index.isValid() || !m_object) { // TODO m_object is 0 on the client, check for display mode instead
+  if (!index.isValid() || m_displayState != PropertyWidgetDisplayState::QObject) {
     return;
   }
 
@@ -219,7 +218,7 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
   }
 }
 
-bool PropertyWidget::showTab(const QWidget *widget, DisplayState state) const
+bool PropertyWidget::showTab(const QWidget* widget, PropertyWidgetDisplayState::State state) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (widget == m_ui->inboundConnectionTab ||
@@ -228,14 +227,14 @@ bool PropertyWidget::showTab(const QWidget *widget, DisplayState state) const
   }
 #endif
   switch(state) {
-  case QObjectState:
+  case PropertyWidgetDisplayState::QObject:
     return true; // show all
-  case ObjectState:
+  case PropertyWidgetDisplayState::Object:
     if (widget == m_ui->metaPropertyTab) {
       return true;
     }
     break;
-  case MetaObjectState:
+  case PropertyWidgetDisplayState::MetaObject:
     if (widget == m_ui->enumTab || widget == m_ui->classInfoTab || widget == m_ui->methodTab) {
       return true;
     }
@@ -244,8 +243,9 @@ bool PropertyWidget::showTab(const QWidget *widget, DisplayState state) const
   return false;
 }
 
-void PropertyWidget::setDisplayState(DisplayState state)
+void PropertyWidget::setDisplayState(PropertyWidgetDisplayState::State state)
 {
+  m_displayState = state;
   QWidget *currentWidget = m_ui->tabWidget->currentWidget();
 
   // iterate through all tabs, decide for each tab if it gets hidden or not
@@ -263,7 +263,7 @@ void PropertyWidget::setDisplayState(DisplayState state)
     m_ui->tabWidget->setCurrentWidget(currentWidget);
   }
 
-  m_ui->methodLog->setVisible(m_object);
+  m_ui->methodLog->setVisible(m_displayState == PropertyWidgetDisplayState::QObject);
 }
 
 void PropertyWidget::setEditorFactory(QAbstractItemView *view)

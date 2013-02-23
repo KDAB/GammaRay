@@ -30,6 +30,8 @@
 
 #include "include/gammaray_export.h"
 
+#include <common/network/enums.h>
+
 class QAbstractItemModel;
 class QAbstractItemView;
 class QModelIndex;
@@ -54,21 +56,16 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
     void setMetaObject(const QMetaObject *metaObject);
 
   private:
-    enum DisplayState {
-      QObjectState, // full QObject instance
-      ObjectState, // non-QObject instance
-      MetaObjectState // QMetaObject instance only
-    };
-    void setDisplayState(DisplayState state);
     void setEditorFactory(QAbstractItemView *view);
 
   private slots:
+    void setDisplayState(GammaRay::PropertyWidgetDisplayState::State state);
     void methodActivated(const QModelIndex &index);
     void methodConextMenu(const QPoint &pos);
 
   private:
     /// Decides if widget is supposed to be shown at this display state
-    bool showTab(const QWidget *widget, DisplayState state) const;
+    bool showTab(const QWidget *widget, PropertyWidgetDisplayState::State state) const;
 
     QAbstractItemModel* model(const QString &nameSuffix);
 
@@ -82,6 +79,8 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
 
     // Contains initially added tab widgets (Tab widget/Label)
     QVector< QPair<QWidget *,QString> > m_tabWidgets;
+
+    PropertyWidgetDisplayState::State m_displayState;
 };
 
 }

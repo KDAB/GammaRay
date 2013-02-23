@@ -1,4 +1,5 @@
 #include "streamoperators.h"
+#include "enums.h"
 
 #include <include/metatypedeclarations.h>
 
@@ -7,22 +8,26 @@
 
 using namespace GammaRay;
 
-QDataStream &operator<<(QDataStream &out, QMetaMethod::MethodType methodType)
-{
-  out << qint32(methodType);
-  return out;
-}
+#define MAKE_ENUM_OPERATORS(enumType) \
+  QDataStream &operator<<(QDataStream &out, enumType value) \
+  { \
+    out << qint32(value); \
+    return out; \
+  } \
+  \
+  QDataStream &operator>>(QDataStream &in, enumType &value) \
+  { \
+    qint32 t; \
+    in >> t; \
+    value = static_cast<enumType>(t); \
+    return in; \
+  }
 
-QDataStream &operator>>(QDataStream &in, QMetaMethod::MethodType &methodType)
-{
-  qint32 t;
-  in >> t;
-  methodType = static_cast<QMetaMethod::MethodType>(t);
-  return in;
-}
-
+MAKE_ENUM_OPERATORS(QMetaMethod::MethodType)
+MAKE_ENUM_OPERATORS(PropertyWidgetDisplayState::State)
 
 void StreamOperators::registerOperators()
 {
   qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
+  qRegisterMetaTypeStreamOperators<PropertyWidgetDisplayState::State>();
 }

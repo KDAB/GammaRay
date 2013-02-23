@@ -15,6 +15,7 @@
 #include "remote/remotemodelserver.h"
 
 #include <network/objectbroker.h>
+#include <network/enums.h>
 
 #include <QDebug>
 #include <QItemSelectionModel>
@@ -102,12 +103,16 @@ void PropertyController::setObject(QObject* object)
   m_methodLogModel->clear();
 
   m_metaPropertyModel->setObject(object);
+
+  emitSignal("displayState", QVariantList() << QVariant::fromValue(PropertyWidgetDisplayState::QObject));
 }
 
 void PropertyController::setObject(void* object, const QString& className)
 {
   setObject(0);
   m_metaPropertyModel->setObject(object, className);
+
+  emitSignal("displayState", QVariantList() << QVariant::fromValue(PropertyWidgetDisplayState::Object));
 }
 
 void PropertyController::setMetaObject(const QMetaObject* metaObject)
@@ -116,6 +121,8 @@ void PropertyController::setMetaObject(const QMetaObject* metaObject)
   m_enumModel->setMetaObject(metaObject);
   m_classInfoModel->setMetaObject(metaObject);
   m_methodModel->setMetaObject(metaObject);
+
+  emitSignal("displayState", QVariantList() << QVariant::fromValue(PropertyWidgetDisplayState::MetaObject));
 }
 
 void PropertyController::methodActivated()
