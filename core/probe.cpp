@@ -150,7 +150,14 @@ Probe::Probe(QObject *parent):
   Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
+  new Server(this);
+
   StreamOperators::registerOperators();
+  ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
+
+  registerModel(m_objectTreeModel, QLatin1String("com.kdab.GammaRay.ObjectTree"));
+  registerModel(m_objectListModel, QLatin1String("com.kdab.GammaRay.ObjectList"));
+  registerModel(m_toolModel, QLatin1String("com.kdab.GammaRay.ToolModel"));
 
   if (qgetenv("GAMMARAY_MODELTEST") == "1") {
     new ModelTest(m_objectListModel, m_objectListModel);
@@ -163,8 +170,6 @@ Probe::Probe(QObject *parent):
   QInternal::registerCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
   QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 #endif
-
-  ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);
@@ -254,12 +259,7 @@ void Probe::delayedInit()
 
   QCoreApplication::instance()->installEventFilter(s_instance);
 
-  new Server(this);
   Server::instance()->setLabel(qApp->applicationName()); // TODO use the same logic from MainWindow title
-
-  registerModel(m_objectTreeModel, QLatin1String("com.kdab.GammaRay.ObjectTree"));
-  registerModel(m_objectListModel, QLatin1String("com.kdab.GammaRay.ObjectList"));
-  registerModel(m_toolModel, QLatin1String("com.kdab.GammaRay.ToolModel"));
 
   if (canShowWidgets()) {
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
