@@ -33,6 +33,8 @@
 #ifndef GAMMARAY_TOOLFACTORY_H
 #define GAMMARAY_TOOLFACTORY_H
 
+#include "probeinterface.h"
+
 #include <QMetaType>
 #include <QStringList>
 #include <QtPlugin>
@@ -115,6 +117,33 @@ class StandardToolFactory : public ToolFactory
     virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget)
     {
       return new Tool(probe, parentWidget);
+    }
+};
+
+// TODO: split this completely, this is just a migration aid
+template <typename Type, typename Tool, typename ToolUi>
+class StandardToolFactory2 : public ToolFactory
+{
+  public:
+    virtual inline QStringList supportedTypes() const
+    {
+      return QStringList(Type::staticMetaObject.className());
+    }
+
+    virtual inline QString id() const
+    {
+      return Tool::staticMetaObject.className();
+    }
+
+    virtual inline void init(ProbeInterface *probe)
+    {
+      new Tool(probe, probe->probe());
+    }
+
+    virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget)
+    {
+      Q_UNUSED(probe);
+      return new ToolUi(parentWidget);
     }
 };
 
