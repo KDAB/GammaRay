@@ -26,14 +26,8 @@
 
 #include "connectionfilterproxymodel.h"
 #include "connectionmodel.h"
-#include "metapropertymodel.h"
 #include "methodinvocationdialog.h"
-#include "multisignalmapper.h"
-#include "objectclassinfomodel.h"
-#include "objectdynamicpropertymodel.h"
-#include "objectenummodel.h"
 #include "objectmethodmodel.h"
-#include "objectstaticpropertymodel.h"
 #include "probe.h"
 #include "proxydetacher.h"
 
@@ -67,16 +61,8 @@ static bool removePage(QTabWidget *tabWidget, QWidget *widget)
 PropertyWidget::PropertyWidget(QWidget *parent)
   : QWidget(parent),
     m_ui(new Ui_PropertyWidget),
-    m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
-    m_dynamicPropertyModel(new ObjectDynamicPropertyModel(this)),
-    m_classInfoModel(new ObjectClassInfoModel(this)),
-    m_methodModel(new ObjectMethodModel(this)),
     m_inboundConnectionModel(new ConnectionFilterProxyModel(this)),
     m_outboundConnectionModel(new ConnectionFilterProxyModel(this)),
-    m_enumModel(new ObjectEnumModel(this)),
-    m_signalMapper(0),
-    m_methodLogModel(new QStandardItemModel(this)),
-    m_metaPropertyModel(new MetaPropertyModel(this)),
     m_editorFactory(new PropertyEditorFactory)
 {
   m_ui->setupUi(this);
@@ -183,26 +169,8 @@ QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
 void GammaRay::PropertyWidget::setObject(QObject *object)
 {
   m_object = object;
-  m_staticPropertyModel->setObject(object);
-  m_dynamicPropertyModel->setObject(object);
   m_inboundConnectionModel->filterReceiver(object);
   m_outboundConnectionModel->filterSender(object);
-
-  const QMetaObject *metaObject = 0;
-  if (object) {
-    metaObject = object->metaObject();
-  }
-  m_enumModel->setMetaObject(metaObject);
-  m_classInfoModel->setMetaObject(metaObject);
-  m_methodModel->setMetaObject(metaObject);
-
-  delete m_signalMapper;
-  m_signalMapper = new MultiSignalMapper(this);
-  connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int)), SLOT(signalEmitted(QObject*,int)));
-
-  m_methodLogModel->clear();
-
-  m_metaPropertyModel->setObject(object);
 
   setDisplayState(QObjectState);
 }
@@ -210,16 +178,12 @@ void GammaRay::PropertyWidget::setObject(QObject *object)
 void PropertyWidget::setObject(void *object, const QString &className)
 {
   setObject(0);
-  m_metaPropertyModel->setObject(object, className);
   setDisplayState(ObjectState);
 }
 
 void PropertyWidget::setMetaObject(const QMetaObject *metaObject)
 {
   setObject(0);
-  m_enumModel->setMetaObject(metaObject);
-  m_classInfoModel->setMetaObject(metaObject);
-  m_methodModel->setMetaObject(metaObject);
   setDisplayState(MetaObjectState);
 }
 
@@ -231,29 +195,14 @@ void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
     dlg->setMethod(m_object.data(), method);
     dlg->show();
     // TODO: return value should go into ui->methodLog
-  } else if (method.methodType() == QMetaMethod::Signal) {
-    m_signalMapper->connectToSignal(m_object, method);
   }
   ObjectBroker::object(m_objectBaseName + ".controller")->emitSignal("activateMethod");
-}
-
-void PropertyWidget::signalEmitted(QObject *sender, int signalIndex)
-{
-  Q_ASSERT(m_object == sender);
-  m_methodLogModel->appendRow(
-    new QStandardItem(tr("%1: Signal %2 emitted").
-                      arg(QTime::currentTime().toString("HH:mm:ss.zzz")).
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-                      arg(sender->metaObject()->method(signalIndex).signature())));
-#else
-                      arg(QString(sender->metaObject()->method(signalIndex).methodSignature()))));
-#endif
 }
 
 void PropertyWidget::methodConextMenu(const QPoint &pos)
 {
   const QModelIndex index = m_ui->methodView->indexAt(pos);
-  if (!index.isValid() || !m_object) {
+  if (!index.isValid() || !m_object) { // TODO m_object is 0 on the client, check for display mode instead
     return;
   }
 

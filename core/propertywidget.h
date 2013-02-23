@@ -33,19 +33,11 @@
 class QAbstractItemModel;
 class QAbstractItemView;
 class QModelIndex;
-class QStandardItemModel;
 
 namespace GammaRay {
 
 class Ui_PropertyWidget;
 class ConnectionFilterProxyModel;
-class MultiSignalMapper;
-class ObjectDynamicPropertyModel;
-class ObjectStaticPropertyModel;
-class ObjectClassInfoModel;
-class ObjectMethodModel;
-class ObjectEnumModel;
-class MetaPropertyModel;
 class PropertyEditorFactory;
 
 class GAMMARAY_EXPORT PropertyWidget : public QWidget
@@ -72,7 +64,6 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
 
   private slots:
     void methodActivated(const QModelIndex &index);
-    void signalEmitted(QObject *sender, int signalIndex);
     void methodConextMenu(const QPoint &pos);
 
   private:
@@ -85,16 +76,8 @@ class GAMMARAY_EXPORT PropertyWidget : public QWidget
 
     QString m_objectBaseName;
     QPointer<QObject> m_object;
-    ObjectStaticPropertyModel *m_staticPropertyModel;
-    ObjectDynamicPropertyModel *m_dynamicPropertyModel;
-    ObjectClassInfoModel *m_classInfoModel;
-    ObjectMethodModel *m_methodModel;
     ConnectionFilterProxyModel *m_inboundConnectionModel;
     ConnectionFilterProxyModel *m_outboundConnectionModel;
-    ObjectEnumModel *m_enumModel;
-    MultiSignalMapper *m_signalMapper;
-    QStandardItemModel *m_methodLogModel;
-    MetaPropertyModel *m_metaPropertyModel;
     QScopedPointer<PropertyEditorFactory> m_editorFactory;
 
     // Contains initially added tab widgets (Tab widget/Label)
