@@ -188,14 +188,16 @@ void PropertyWidget::setMetaObject(const QMetaObject *metaObject)
 
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 {
-  const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
-  if (method.methodType() == QMetaMethod::Slot) {
-    MethodInvocationDialog *dlg = new MethodInvocationDialog(this);
-    dlg->setMethod(m_object.data(), method);
-    dlg->show();
-    // TODO: return value should go into ui->methodLog
-  }
   ObjectBroker::object(m_objectBaseName + ".controller")->emitSignal("activateMethod");
+
+  const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
+  if (methodType == QMetaMethod::Slot) {
+    MethodInvocationDialog dlg(this);
+    dlg.setArgumentModel(model("methodArguments"));
+    if (dlg.exec()) {
+      ObjectBroker::object(m_objectBaseName + ".controller")->emitSignal("invokeMethod", QVariantList() << QVariant::fromValue(dlg.connectionType()));
+    }
+  }
 }
 
 void PropertyWidget::methodConextMenu(const QPoint &pos)

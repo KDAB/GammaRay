@@ -30,7 +30,6 @@ set(gammaray_srcs
   objecttreemodel.cpp
   connectionmodel.cpp
   connectionfilterproxymodel.cpp
-  methodinvocationdialog.cpp
   methodargumentmodel.cpp
   multisignalmapper.cpp
   toolmodel.cpp
@@ -137,7 +136,6 @@ endif()
 qt4_automoc(${gammaray_srcs})
 qt4_wrap_ui(gammaray_srcs
   propertywidget.ui
-  methodinvocationdialog.ui
   paintbufferviewer.ui
 
   tools/sceneinspector/graphicssceneview.ui

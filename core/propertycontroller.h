@@ -20,6 +20,7 @@ class ObjectClassInfoModel;
 class ObjectMethodModel;
 class ObjectEnumModel;
 class MetaPropertyModel;
+class MethodArgumentModel;
 
 /** Non-UI part of the property widget. */
 class GAMMARAY_EXPORT PropertyController : public ObjectServer
@@ -39,6 +40,7 @@ private:
 private slots:
   void signalEmitted(QObject *sender, int signalIndex);
   void methodActivated();
+  void invokeMethod(Qt::ConnectionType type);
 
 private:
   QString m_objectBaseName;
@@ -55,6 +57,7 @@ private:
   QStandardItemModel *m_methodLogModel;
   MetaPropertyModel *m_metaPropertyModel;
 
+  MethodArgumentModel *m_methodArgumentModel;
 };
 
 }

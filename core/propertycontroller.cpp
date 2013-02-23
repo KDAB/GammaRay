@@ -11,6 +11,7 @@
 #include "objectmethodmodel.h"
 #include "objectstaticpropertymodel.h"
 #include "probe.h"
+#include "methodargumentmodel.h"
 
 #include "remote/remotemodelserver.h"
 
@@ -36,7 +37,8 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
   m_enumModel(new ObjectEnumModel(this)),
   m_signalMapper(0),
   m_methodLogModel(new QStandardItemModel(this)),
-  m_metaPropertyModel(new MetaPropertyModel(this))
+  m_metaPropertyModel(new MetaPropertyModel(this)),
+  m_methodArgumentModel(new MethodArgumentModel(this))
 {
   registerModel(m_staticPropertyModel, "staticProperties");
   registerModel(m_dynamicPropertyModel, "dynamicProperties");
@@ -47,6 +49,7 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
   registerModel(m_outboundConnectionModel, "outboundConnections");
   registerModel(m_enumModel, "enums");
   registerModel(m_metaPropertyModel, "nonQProperties");
+  registerModel(m_methodArgumentModel, "methodArguments");
 
   ObjectBroker::selectionModel(m_methodModel); // trigger creation
 
@@ -54,6 +57,7 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
   m_outboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
 
   subscribeToSignal("activateMethod", this, "methodActivated");
+  subscribeToSignal("invokeMethod", this, "invokeMethod");
 }
 
 PropertyController::~PropertyController()
@@ -134,15 +138,45 @@ void PropertyController::methodActivated()
 
   const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
   if (method.methodType() == QMetaMethod::Slot) {
-#if 0 // TODO this needs to be split up, argument model goes here, dialog stays in the widget
-    MethodInvocationDialog *dlg = new MethodInvocationDialog(this);
-    dlg->setMethod(m_object.data(), method);
-    dlg->show();
-    // TODO: return value should go into ui->methodLog
-#endif
+    m_methodArgumentModel->setMethod(method);
   } else if (method.methodType() == QMetaMethod::Signal) {
     m_signalMapper->connectToSignal(m_object, method);
   }
+}
+
+void PropertyController::invokeMethod(Qt::ConnectionType connectionType)
+{
+  if (!m_object) {
+    m_methodLogModel->appendRow(new QStandardItem(tr("%1: Invocation failed: Invalid object, probably got deleted in the meantime.")
+      .arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
+    return;
+  }
+
+  QMetaMethod method;
+  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(m_methodModel);
+  if (selectionModel->selectedRows().size() == 1) {
+    const QModelIndex index = selectionModel->selectedRows().first();
+    method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
+  }
+
+  if (method.methodType() != QMetaMethod::Slot) {
+    m_methodLogModel->appendRow(new QStandardItem(tr("%1: Invocation failed: Invalid method (not a slot?).")
+      .arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
+    return;
+  }
+
+  const QVector<MethodArgument> args = m_methodArgumentModel->arguments();
+  // TODO retrieve return value and add it to the log in case of success
+  // TODO measure executation time and that to the log
+  const bool result = method.invoke(m_object.data(), connectionType,
+    args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+
+  if (!result) {
+    m_methodLogModel->appendRow(new QStandardItem(tr("%1: Invocation failed..").arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
+    return;
+  }
+
+  m_methodArgumentModel->setMethod(QMetaMethod());
 }
 
 #include "propertycontroller.moc"

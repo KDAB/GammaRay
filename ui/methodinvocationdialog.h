@@ -25,9 +25,8 @@
 #define GAMMARAY_METHODINVOCATIONDIALOG_H
 
 #include <QDialog>
-#include <QMetaEnum>
-#include <QMetaObject>
-#include <QPointer>
+
+class QAbstractItemModel;
 
 namespace GammaRay {
 
@@ -42,15 +41,10 @@ class MethodInvocationDialog : public QDialog
     ~MethodInvocationDialog();
 
     Qt::ConnectionType connectionType() const;
-
-    void setMethod(QObject *object, const QMetaMethod &method);
-    void accept();
+    void setArgumentModel(QAbstractItemModel *model);
 
   private:
-    QMetaMethod m_method;
-    QPointer<QObject> m_object;
     QScopedPointer<Ui::MethodInvocationDialog> ui;
-    MethodArgumentModel *m_argumentModel;
 };
 
 }
