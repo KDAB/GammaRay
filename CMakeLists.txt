@@ -63,8 +63,17 @@ include(MacroLogFeature)
 
 set(QT_MIN_VERSION "4.7.0")
 
-# try Qt5 first, and prefer that if found
-find_package(Qt5Core QUIET)
+option(
+  GAMMARAY_ENFORCE_QT4_BUILD
+  "Enable if you want to enfore a build with Qt4"
+  OFF
+)
+
+# try Qt5 first, and prefer that (if found), but only if not disabled via option
+if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
+  find_package(Qt5Core QUIET)
+endif()
+
 if(Qt5Core_FOUND)
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Widgets REQUIRED)
