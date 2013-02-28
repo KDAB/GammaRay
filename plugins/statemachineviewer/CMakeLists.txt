@@ -6,12 +6,16 @@ include_directories(
   ${GRAPHVIZ_INCLUDE_DIR}
 )
 
+# TODO remove
+set(tools_dir ../../tools/statemachineviewer)
+include_directories(${tools_dir})
+
 set(gammaray_statemachineviewer_plugin_srcs
   # this part depends on graphviz
   gvgraph/gvgraph.cpp
   gvgraph/gvgraphitems.cpp
 
-  statemachinedumper.cpp
+  ${tools_dir}/statemachinedumper.cpp
   statemachineview.cpp
   statemachineviewer.cpp
   statemachinewatcher.cpp
