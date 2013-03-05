@@ -451,10 +451,12 @@ void StateMachineViewer::addTransition(QAbstractTransition *transition)
 
   QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
   if (signalTransition) {
-    const QString label =
-      QString::fromLatin1("%1::%2").
-        arg(Util::displayString(signalTransition->senderObject())).
-        arg(QString::fromLatin1(signalTransition->signal().mid(1)));
+    QString label = signalTransition->objectName();
+    if (label.isEmpty()) {
+        label = QString::fromLatin1("%1::%2").
+                    arg(Util::displayString(signalTransition->senderObject())).
+                    arg(QString::fromLatin1(signalTransition->signal().mid(1)));
+    }
     m_graph->setEdgeAttribute(id, QLatin1String("label"), label);
   }
 
