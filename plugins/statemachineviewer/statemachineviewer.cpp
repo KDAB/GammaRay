@@ -536,7 +536,7 @@ void StateMachineViewer::exportAsImage()
   const QString key = QLatin1String("StateMachineViewer/imageDir");
   QString lastDir = settings.value(key).toString();
 
-  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save as1 Image"),
+  const QString fileName = QFileDialog::getSaveFileName(this, tr("Save As Image"),
                                                         lastDir, tr("Images (*.png *.jpg *.jpeg)"));
   if (fileName.isEmpty()) {
     return;
