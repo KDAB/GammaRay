@@ -33,7 +33,12 @@ class PropertyEditorFactory : public QItemEditorFactory
 {
   public:
     PropertyEditorFactory();
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     virtual QWidget *createEditor(QVariant::Type type, QWidget *parent) const;
+#else
+    virtual QWidget *createEditor(int type, QWidget *parent) const;
+#endif
 };
 
 }
