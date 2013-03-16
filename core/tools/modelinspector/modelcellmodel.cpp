@@ -63,8 +63,9 @@ void ModelCellModel::setModelIndex(const QModelIndex &index)
     #undef R
 
     // add custom roles
-    for (QHash<int, QByteArray>::const_iterator it = index.model()->roleNames().constBegin();
-         it != index.model()->roleNames().constEnd(); ++it) {
+    QHash<int, QByteArray> roleNames = index.model()->roleNames();
+    for (QHash<int, QByteArray>::const_iterator it = roleNames.constBegin();
+         it != roleNames.constEnd(); ++it) {
       bool roleFound = false;
       for (int i = 0; i < m_roles.size(); ++i) {
         if (m_roles.at(i).first == it.key()) {
