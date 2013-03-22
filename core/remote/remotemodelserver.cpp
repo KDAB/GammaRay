@@ -16,6 +16,7 @@ RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent)
   m_dummyBuffer(new QBuffer(&m_dummyData, this)),
   m_monitored(false)
 {
+  setObjectName(objectName);
   m_myAddress = Server::instance()->registerObject(objectName, this, "newRequest", "modelMonitored");
   m_dummyBuffer->open(QIODevice::WriteOnly);
   connect(Server::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
