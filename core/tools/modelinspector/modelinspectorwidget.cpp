@@ -56,6 +56,8 @@ ModelInspectorWidget::ModelInspectorWidget(ModelInspector *modelInspector,
   ui->modelCellView->setModel(m_cellModel);
 
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
+
+  setModelCell(QModelIndex());
 }
 
 void ModelInspectorWidget::modelSelected(const QModelIndex &index)
@@ -66,14 +68,16 @@ void ModelInspectorWidget::modelSelected(const QModelIndex &index)
     ui->modelContentView->setModel(model);
     connect(ui->modelContentView->selectionModel(),
             SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            SLOT(modelCellSelected(QModelIndex)));
+            SLOT(setModelCell(QModelIndex)));
   } else {
     ui->modelContentView->setModel(0);
   }
-  m_cellModel->setModelIndex(QModelIndex());
+
+  // clear the cell info box
+  setModelCell(QModelIndex());
 }
 
-void ModelInspectorWidget::modelCellSelected(const QModelIndex &index)
+void ModelInspectorWidget::setModelCell(const QModelIndex &index)
 {
   m_cellModel->setModelIndex(index);
 

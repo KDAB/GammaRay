@@ -85,7 +85,7 @@ if(Qt5Core_FOUND)
   find_package(Qt5Svg QUIET)
   find_package(Qt5Script QUIET)
   find_package(Qt5ScriptTools QUIET)
-  find_package(Qt5WebKitWidgets 5.0.1 QUIET) # 5.0.0 has a code generation bug in uic that fails to generate proper code for webkitwidget classes
+  find_package(Qt5WebKitWidgets 5.0.2 QUIET) # 5.0.[01] has a code generation bug in uic that fails to generate proper code for webkitwidget classes
   find_package(Qt5Designer QUIET)
 
   include("cmake/ECMQt4To5Porting.cmake")

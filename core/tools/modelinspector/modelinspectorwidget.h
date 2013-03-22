@@ -46,8 +46,9 @@ class ModelInspectorWidget : public QWidget
                          QWidget *parent = 0);
 
   private slots:
+    void setModelCell(const QModelIndex &index);
+
     void modelSelected(const QModelIndex &index);
-    void modelCellSelected(const QModelIndex &index);
     void widgetSelected(QWidget *widget);
 
   private:
