@@ -1,5 +1,5 @@
 /*
-  metatypebrowser.cpp
+  metatypebrowserwidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,23 +21,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "metatypebrowser.h"
+#include "metatypebrowserwidget.h"
+#include <deferredresizemodesetter.h>
+#include "ui_metatypebrowserwidget.h"
 
-#include "metatypesmodel.h"
-
-#include <remote/remotemodelserver.h>
 #include <network/objectbroker.h>
+
+#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
-MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::MetaTypeBrowserWidget)
 {
-  Q_UNUSED(probe);
-  MetaTypesModel *mtm = new MetaTypesModel(this);
-  RemoteModelServer *server = new RemoteModelServer("com.kdab.GammaRay.MetaTypeModel", this);
-  server->setModel(mtm);
-  ObjectBroker::registerModel(server->objectName(), mtm);
+  ui->setupUi(this);
+
+  QAbstractItemModel *mtm = ObjectBroker::model("com.kdab.GammaRay.MetaTypeModel");
+  Q_ASSERT(mtm);
+
+  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  proxy->setSourceModel(mtm);
+  ui->metaTypeView->setModel(proxy);
+  new DeferredResizeModeSetter(ui->metaTypeView->header(), 0, QHeaderView::ResizeToContents);
+  ui->metaTypeSearchLine->setProxy(proxy);
+  ui->metaTypeView->header()->setSortIndicator(1, Qt::AscendingOrder); // sort by type id
 }
 
-#include "metatypebrowser.moc"
+#include "metatypebrowserwidget.moc"

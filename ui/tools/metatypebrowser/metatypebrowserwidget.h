@@ -1,5 +1,5 @@
 /*
-  metatypebrowser.cpp
+  metatypebrowserwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,23 +21,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "metatypebrowser.h"
+#ifndef GAMMARAY_METATYPEBROWSERWIDGET_H
+#define GAMMARAY_METATYPEBROWSERWIDGET_H
 
-#include "metatypesmodel.h"
+#include "include/toolfactory.h"
 
-#include <remote/remotemodelserver.h>
-#include <network/objectbroker.h>
+#include <QWidget>
 
-using namespace GammaRay;
+namespace GammaRay {
 
-MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
-{
-  Q_UNUSED(probe);
-  MetaTypesModel *mtm = new MetaTypesModel(this);
-  RemoteModelServer *server = new RemoteModelServer("com.kdab.GammaRay.MetaTypeModel", this);
-  server->setModel(mtm);
-  ObjectBroker::registerModel(server->objectName(), mtm);
+namespace Ui {
+  class MetaTypeBrowserWidget;
 }
 
-#include "metatypebrowser.moc"
+class MetaTypeBrowserWidget : public QWidget
+{
+  Q_OBJECT
+  public:
+    explicit MetaTypeBrowserWidget(QWidget *parent = 0);
+
+  private:
+    QScopedPointer<Ui::MetaTypeBrowserWidget> ui;
+};
+
+}
+
+#endif // GAMMARAY_METATYPEBROWSERWIDGET_H
