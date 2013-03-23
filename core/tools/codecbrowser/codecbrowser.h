@@ -26,9 +26,11 @@
 
 #include "include/toolfactory.h"
 
-#include <QWidget>
+#include <ui/tools/codecbrowser/codecbrowserwidget.h>
+#include <remote/objectserver.h>
 
 class QItemSelection;
+class QItemSelectionModel;
 
 namespace GammaRay {
 
@@ -38,21 +40,21 @@ namespace Ui {
   class CodecBrowser;
 }
 
-class CodecBrowser : public QWidget
+class CodecBrowser : public ObjectServer
 {
   Q_OBJECT
   public:
-    explicit CodecBrowser(ProbeInterface *probe, QWidget *parent = 0);
+    explicit CodecBrowser(ProbeInterface *probe, QObject *parent = 0);
 
   private slots:
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
-    QScopedPointer<Ui::CodecBrowser> ui;
     SelectedCodecsModel *m_selectedCodecsModel;
+    QItemSelectionModel *m_codecSelectionModel;
 };
 
-class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, CodecBrowser>
+class CodecBrowserFactory : public QObject, public StandardToolFactory2<QObject, CodecBrowser, CodecBrowserWidget>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

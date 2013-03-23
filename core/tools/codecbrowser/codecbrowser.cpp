@@ -22,34 +22,35 @@
 */
 
 #include "codecbrowser.h"
-#include "ui_codecbrowser.h"
-
 #include "codecmodel.h"
+
+#include <remote/remotemodelserver.h>
+#include <network/objectbroker.h>
+
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
-CodecBrowser::CodecBrowser(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::CodecBrowser)
+CodecBrowser::CodecBrowser(ProbeInterface* probe, QObject* parent)
+  : ObjectServer("com.kdab.GammaRay.CodecBrowser", parent)
 {
   Q_UNUSED(probe);
-  ui->setupUi(this);
 
-  ui->codecList->setRootIsDecorated(false);
-  ui->codecList->setModel(new AllCodecsModel(this));
-  ui->codecList->setSelectionMode(QAbstractItemView::ExtendedSelection);
-  m_selectedCodecsModel = new SelectedCodecsModel(this);
-  ui->selectedCodecs->setRootIsDecorated(false);
-  ui->selectedCodecs->setModel(m_selectedCodecsModel);
+  AllCodecsModel* model = new AllCodecsModel(this);
+  RemoteModelServer *server = new RemoteModelServer("com.kdab.GammaRay.AllCodecsModel", this);
+  server->setModel(model);
+  ObjectBroker::registerModel(server->objectName(), model);
 
-  ui->codecList->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-  ui->selectedCodecs->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-
-  connect(ui->codecList->selectionModel(),
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+  m_codecSelectionModel = ObjectBroker::selectionModel(model);
+  connect(m_codecSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(updateCodecs(QItemSelection,QItemSelection)));
-  connect(ui->codecText, SIGNAL(textChanged(QString)),
-          m_selectedCodecsModel, SLOT(updateText(QString)));
+
+  m_selectedCodecsModel = new SelectedCodecsModel(this);
+  server = new RemoteModelServer("com.kdab.GammaRay.SelectedCodecsModel", this);
+  server->setModel(m_selectedCodecsModel);
+  ObjectBroker::registerModel(server->objectName(), m_selectedCodecsModel);
+
+  subscribeToSignal("textChanged", m_selectedCodecsModel, "updateText");
 }
 
 void CodecBrowser::updateCodecs(const QItemSelection &selected,
@@ -59,7 +60,7 @@ void CodecBrowser::updateCodecs(const QItemSelection &selected,
   Q_UNUSED(deselected);
 
   QStringList currentCodecNames;
-  foreach (const QModelIndex &index, ui->codecList->selectionModel()->selectedRows()) {
+  foreach (const QModelIndex &index, m_codecSelectionModel->selectedRows()) {
     const QString codecName = index.data().toString();
     currentCodecNames.append(codecName);
   }

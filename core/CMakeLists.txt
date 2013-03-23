@@ -137,7 +137,6 @@ qt4_wrap_ui(gammaray_srcs
   paintbufferviewer.ui
 
   tools/sceneinspector/graphicssceneview.ui
-  tools/codecbrowser/codecbrowser.ui
   tools/connectioninspector/connectioninspector.ui
   tools/fontbrowser/fontbrowser.ui
   tools/localeinspector/localeinspector.ui

@@ -23,6 +23,7 @@
 
 #include "clienttoolmodel.h"
 
+#include <ui/tools/codecbrowser/codecbrowserwidget.h>
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 
@@ -44,6 +45,7 @@ public: \
   virtual inline QWidget *createWidget(ProbeInterface *, QWidget *parentWidget) { return new type ## Widget(parentWidget); } \
 }
 
+MAKE_FACTORY(CodecBrowser);
 MAKE_FACTORY(MetaTypeBrowser);
 MAKE_FACTORY(ObjectInspector);
 
@@ -51,6 +53,7 @@ MAKE_FACTORY(ObjectInspector);
 ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("com.kdab.GammaRay.ToolModel"), parent)
 {
   // TODO add tools
+  insertFactory(new CodecBrowserFactory);
   insertFactory(new MetaTypeBrowserFactory);
   insertFactory(new ObjectInspectorFactory);
 }

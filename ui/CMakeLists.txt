@@ -33,6 +33,7 @@ set(gammaray_ui_srcs
   propertyeditor/propertypaletteeditor.cpp
   propertyeditor/palettedialog.cpp
 
+  tools/codecbrowser/codecbrowserwidget.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
 )
@@ -47,6 +48,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/propertyintpaireditor.ui
   propertyeditor/palettedialog.ui
 
+  tools/codecbrowser/codecbrowserwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
 )
