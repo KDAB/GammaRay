@@ -24,8 +24,6 @@
 #ifndef GAMMARAY_METATYPEBROWSERWIDGET_H
 #define GAMMARAY_METATYPEBROWSERWIDGET_H
 
-#include "include/toolfactory.h"
-
 #include <QWidget>
 
 namespace GammaRay {
