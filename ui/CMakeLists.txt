@@ -34,6 +34,7 @@ set(gammaray_ui_srcs
   propertyeditor/palettedialog.cpp
 
   tools/codecbrowser/codecbrowserwidget.cpp
+  tools/connectioninspector/connectioninspectorwidget.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
 )
@@ -49,6 +50,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/palettedialog.ui
 
   tools/codecbrowser/codecbrowserwidget.ui
+  tools/connectioninspector/connectioninspectorwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
 )

@@ -22,32 +22,13 @@
 */
 
 #include "connectioninspector.h"
-#include "connectionfilterproxymodel.h"
-#include "proxydetacher.h"
-#include "ui_connectioninspector.h"
-
-#include "include/probeinterface.h"
-
-#include <QLineEdit>
 
 using namespace GammaRay;
 
-ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::ConnectionInspector)
+ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QObject *parent)
+  : QObject(parent)
 {
-  ui->setupUi(this);
-
-  ConnectionFilterProxyModel *proxy = new ConnectionFilterProxyModel(this);
-  new ProxyDetacher(ui->connectionView, proxy, probe->connectionModel());
-  ui->connectionSearchLine->setProxy(proxy);
-  ui->connectionView->setModel(proxy);
-
-  if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
-    QMetaObject::invokeMethod(ui->connectionSearchLine->lineEdit(), "setText",
-                              Qt::QueuedConnection,
-                              Q_ARG(QString, QLatin1String("destroyed")));
-  }
+  Q_UNUSED(probe);
 }
 
 #include "connectioninspector.moc"

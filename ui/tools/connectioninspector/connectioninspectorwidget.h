@@ -1,5 +1,5 @@
 /*
-  connectioninspector.h
+  connectioninspectorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,38 +21,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CONNECTIONINSPECTOR_CONNECTIONINSPECTOR_H
-#define GAMMARAY_CONNECTIONINSPECTOR_CONNECTIONINSPECTOR_H
+#ifndef GAMMARAY_CONNECTIONINSPECTORWIDGET_H
+#define GAMMARAY_CONNECTIONINSPECTORWIDGET_H
 
-#include "include/toolfactory.h"
-
-#include <ui/tools/connectioninspector/connectioninspectorwidget.h>
+#include <QWidget>
 
 namespace GammaRay {
 
-class ConnectionInspector : public QObject
+namespace Ui {
+  class ConnectionInspectorWidget;
+}
+
+class ConnectionInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ConnectionInspector(ProbeInterface *probe, QObject *parent = 0);
-};
+    explicit ConnectionInspectorWidget(QWidget *parent = 0);
 
-class ConnectionInspectorFactory : public QObject,
-                                   public StandardToolFactory2<QObject, ConnectionInspector, ConnectionInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit ConnectionInspectorFactory(QObject *parent) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Connections");
-    }
+  private:
+    QScopedPointer<Ui::ConnectionInspectorWidget> ui;
 };
 
 }
 
-#endif // GAMMARAY_CONNECTIONINSPECTOR_H
+#endif // GAMMARAY_CONNECTIONINSPECTORWIDGET_H
