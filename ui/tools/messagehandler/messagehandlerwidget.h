@@ -1,5 +1,5 @@
 /*
-  messagehandler.cpp
+  messagehandlerwidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -20,12 +20,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLER_H
-#define GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLER_H
-
-#include "include/toolfactory.h"
-
-#include <tools/messagehandler/messagehandlerwidget.h>
+#ifndef GAMMARAY_MESSAGEHANDLERWIDGET_H
+#define GAMMARAY_MESSAGEHANDLERWIDGET_H
 
 #include <QWidget>
 
@@ -33,39 +29,20 @@ class QSortFilterProxyModel;
 
 namespace GammaRay {
 
-class MessageModel;
-
 namespace Ui {
-  class MessageHandler;
+  class MessageHandlerWidget;
 }
 
-class MessageHandler : public QObject
+class MessageHandlerWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit MessageHandler(ProbeInterface *probe, QObject *parent = 0);
-    ~MessageHandler();
-
-  private slots:
-    void ensureHandlerInstalled();
+    explicit MessageHandlerWidget(QWidget *parent = 0);
 
   private:
-    MessageModel *m_messageModel;
-};
-
-class MessageHandlerFactory : public QObject, public StandardToolFactory2<QObject, MessageHandler, MessageHandlerWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit MessageHandlerFactory(QObject *parent);
-
-    virtual inline QString name() const
-    {
-      return tr("Messages");
-    }
+    QScopedPointer<Ui::MessageHandlerWidget> ui;
 };
 
 }
 
-#endif // MESSAGEHANDLER_H
+#endif // MESSAGEHANDLERWIDGET_H

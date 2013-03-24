@@ -23,15 +23,18 @@
 
 #include "messagehandler.h"
 #include "messagemodel.h"
-#include "ui_messagehandler.h"
 
+#include <remote/remotemodelserver.h>
+#include <network/objectbroker.h>
+
+#include <QApplication>
 #include <QDebug>
 #include <QDialogButtonBox>
+#include <QGridLayout>
 #include <QLabel>
 #include <QListWidget>
 #include <QMessageBox>
 #include <QMutex>
-#include <QSortFilterProxyModel>
 #include <QThread>
 
 static QTextStream cerr(stdout);
@@ -141,35 +144,16 @@ void handleMessage(QtMsgType type, const char *msg)
   }
 }
 
-MessageHandler::MessageHandler(ProbeInterface * /*probe*/, QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::MessageHandler),
-    m_messageModel(0),
-    m_messageProxy(new QSortFilterProxyModel(this))
-{
-  ui->setupUi(this);
-
-  ui->messageSearchLine->setProxy(m_messageProxy);
-  ui->messageView->setModel(m_messageProxy);
-  ui->messageView->setIndentation(0);
-  ui->messageView->setSortingEnabled(true);
-
-  ///FIXME: implement this
-  ui->backtraceView->hide();
-}
-
-void MessageHandler::setModel(MessageModel *model)
-{
-  m_messageModel = model;
-  m_messageProxy->setSourceModel(m_messageModel);
-}
-
-MessageHandlerFactory::MessageHandlerFactory(QObject *parent)
+MessageHandler::MessageHandler(ProbeInterface * /*probe*/, QObject *parent)
   : QObject(parent),
-    m_messageModel(new MessageModel(this))
+  m_messageModel(new MessageModel(this))
 {
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
+
+  RemoteModelServer *server = new RemoteModelServer("com.kdab.GammaRay.MessageModel", this);
+  server->setModel(m_messageModel);
+  ObjectBroker::registerModel(server->objectName(), m_messageModel);
 
   // install handler directly, catches most cases,
   // i.e. user has no special handler or the handler
@@ -180,7 +164,20 @@ MessageHandlerFactory::MessageHandlerFactory(QObject *parent)
   QMetaObject::invokeMethod(this, "ensureHandlerInstalled", Qt::QueuedConnection);
 }
 
-void MessageHandlerFactory::ensureHandlerInstalled()
+MessageHandler::~MessageHandler()
+{
+  QMutexLocker lock(&s_mutex);
+
+  s_model = 0;
+  QtMsgHandler oldHandler = qInstallMsgHandler(s_handler);
+  if (oldHandler != handleMessage) {
+    // ups, the app installed it's own handler after ours...
+    qInstallMsgHandler(oldHandler);
+  }
+  s_handler = 0;
+}
+
+void MessageHandler::ensureHandlerInstalled()
 {
   QMutexLocker lock(&s_mutex);
 
@@ -195,28 +192,8 @@ void MessageHandlerFactory::ensureHandlerInstalled()
   }
 }
 
-MessageHandlerFactory::~MessageHandlerFactory()
+MessageHandlerFactory::MessageHandlerFactory(QObject* parent): QObject(parent)
 {
-  QMutexLocker lock(&s_mutex);
-
-  s_model = 0;
-  QtMsgHandler oldHandler = qInstallMsgHandler(s_handler);
-  if (oldHandler != handleMessage) {
-    // ups, the app installed it's own handler after ours...
-    qInstallMsgHandler(oldHandler);
-  }
-  s_handler = 0;
-}
-
-QWidget *MessageHandlerFactory::createWidget(ProbeInterface *probe, QWidget *parentWidget)
-{
-  QWidget *widget =
-    StandardToolFactory<QObject, MessageHandler >::createWidget(probe, parentWidget);
-
-  MessageHandler *handler = qobject_cast<MessageHandler*>(widget);
-  Q_ASSERT(handler);
-  handler->setModel(m_messageModel);
-  return widget;
 }
 
 #include "messagehandler.moc"

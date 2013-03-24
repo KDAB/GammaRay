@@ -35,6 +35,7 @@ set(gammaray_ui_srcs
 
   tools/codecbrowser/codecbrowserwidget.cpp
   tools/connectioninspector/connectioninspectorwidget.cpp
+  tools/messagehandler/messagehandlerwidget.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
 )
@@ -51,6 +52,7 @@ qt4_wrap_ui(gammaray_ui_srcs
 
   tools/codecbrowser/codecbrowserwidget.ui
   tools/connectioninspector/connectioninspectorwidget.ui
+  tools/messagehandler/messagehandlerwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
 )
