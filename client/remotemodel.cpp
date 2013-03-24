@@ -96,7 +96,8 @@ int RemoteModel::rowCount(const QModelIndex &index) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
   if (node->rowCount < 0) {
-    requestRowColumnCount(index);
+    if (node->columnCount < 0) // not yet requested vs. in the middle of insertion
+      requestRowColumnCount(index);
     return 0;
   }
   return node->rowCount;
@@ -188,9 +189,12 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         break;
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
-      qDebug() << "insert" << qmi << rowCount << columnCount;
-      beginInsertRows(qmi, 0, rowCount - 1);
+      qDebug() << "insert" << this << index << qmi << rowCount << columnCount;
       beginInsertColumns(qmi, 0, columnCount - 1);
+      node->columnCount = columnCount;
+      endInsertColumns();
+
+      beginInsertRows(qmi, 0, rowCount - 1);
       node->children.reserve(rowCount);
       for (int i = 0; i < rowCount; ++i) {
         Node *child = new Node;
@@ -198,8 +202,6 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         node->children.push_back(child);
       }
       node->rowCount = rowCount;
-      node->columnCount = columnCount;
-      endInsertColumns();
       endInsertRows();
       break;
     }
