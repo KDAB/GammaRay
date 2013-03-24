@@ -157,6 +157,7 @@ Probe::Probe(QObject *parent):
 
   registerModel(m_objectTreeModel, QLatin1String("com.kdab.GammaRay.ObjectTree"));
   registerModel(m_objectListModel, QLatin1String("com.kdab.GammaRay.ObjectList"));
+  registerModel(m_metaObjectTreeModel, QLatin1String("com.kdab.GammaRay.MetaObjectModel"));
   registerModel(m_toolModel, QLatin1String("com.kdab.GammaRay.ToolModel"));
   registerModel(m_connectionModel, QLatin1String("com.kdab.GammaRay.ConnectionModel"));
 

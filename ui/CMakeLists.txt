@@ -36,6 +36,7 @@ set(gammaray_ui_srcs
   tools/codecbrowser/codecbrowserwidget.cpp
   tools/connectioninspector/connectioninspectorwidget.cpp
   tools/messagehandler/messagehandlerwidget.cpp
+  tools/metaobjectbrowser/metaobjectbrowserwidget.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
 )

@@ -1,5 +1,5 @@
 /*
-  metaobjectbrowser.h
+  metaobjectbrowserwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,50 +21,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_METAOBJECTBROWSER_METATYPEBROWSER_H
-#define GAMMARAY_METAOBJECTBROWSER_METATYPEBROWSER_H
+#ifndef GAMMARAY_METAOBJECTBROWSERWIDGET_H
+#define GAMMARAY_METAOBJECTBROWSERWIDGET_H
 
-#include "include/toolfactory.h"
-
-#include <tools/metaobjectbrowser/metaobjectbrowserwidget.h>
-
-class QItemSelection;
+#include <QWidget>
 
 namespace GammaRay {
 
-class PropertyController;
+class PropertyWidget;
 
-class MetaObjectBrowser : public QObject
+class MetaObjectBrowserWidget : public QWidget
 {
   Q_OBJECT
 
   public:
-    explicit MetaObjectBrowser(ProbeInterface *probe, QObject *parent = 0);
-
-  private Q_SLOTS:
-    void objectSelected(const QItemSelection &selection);
+    explicit MetaObjectBrowserWidget(QWidget *parent = 0);
 
   private:
-     PropertyController *m_propertyController;
-};
-
-class MetaObjectBrowserFactory : public QObject,
-    public StandardToolFactory2<QObject, MetaObjectBrowser, MetaObjectBrowserWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-
-  public:
-    explicit MetaObjectBrowserFactory(QObject *parent) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Meta Objects");
-    }
+     PropertyWidget *m_propertyWidget;
 };
 
 }
 
-#endif // GAMMARAY_METAOBJECTBROWSER_METATYPEBROWSER_H
+#endif // GAMMARAY_METAOBJECTBROWSERWIDGET_H

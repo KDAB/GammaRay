@@ -25,60 +25,32 @@
 #include "metaobjecttreemodel.h"
 #include "probe.h"
 #include "propertycontroller.h"
-#include "propertywidget.h"
 
-#include "kde/kfilterproxysearchline.h"
-#include "kde/krecursivefilterproxymodel.h"
+#include <network/objectbroker.h>
 
 #include <QDebug>
-#include <QHBoxLayout>
-#include <QHeaderView>
-#include <QTreeView>
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
-MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), m_propertyController(new PropertyController("com.kdab.GammaRay.MetaObjectBrowser", this))
+MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
+  : QObject(parent), m_propertyController(new PropertyController("com.kdab.GammaRay.MetaObjectBrowser", this))
 {
   Q_UNUSED(probe);
-  QAbstractItemModel *model = Probe::instance()->metaObjectModel();
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(Probe::instance()->metaObjectModel());
 
-  QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
-  objectFilter->setSourceModel(model);
-  objectFilter->setDynamicSortFilter(true);
+  connect(selectionModel,SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(objectSelected(QItemSelection)));
 
-  QTreeView *treeView = new QTreeView(this);
-  treeView->setModel(objectFilter);
-  treeView->header()->setResizeMode(0, QHeaderView::Stretch);
-  treeView->setSortingEnabled(true);
-
-  KFilterProxySearchLine *objectSearchLine = new KFilterProxySearchLine(this);
-  objectSearchLine->setProxy(objectFilter);
-  connect(treeView->selectionModel(),
-          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(objectSelected(QModelIndex)));
-
-  PropertyWidget *propertyWidget = new PropertyWidget(this);
   m_propertyController->setMetaObject(0); // init
-  m_propertyWidget = propertyWidget;
-  m_propertyWidget->setObjectBaseName("com.kdab.GammaRay.MetaObjectBrowser");
-
-  QVBoxLayout *vbox = new QVBoxLayout;
-  vbox->addWidget(objectSearchLine);
-  vbox->addWidget(treeView);
-
-  QHBoxLayout *hbox = new QHBoxLayout(this);
-  hbox->addLayout(vbox);
-  hbox->addWidget(propertyWidget);
-
-  // init widget
-  treeView->sortByColumn(0, Qt::AscendingOrder);
-  const QModelIndex firstIndex = objectFilter->index(0, 0);
-  treeView->expand(firstIndex);
 }
 
-void MetaObjectBrowser::objectSelected(const QModelIndex &index)
+void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
 {
+  QModelIndex index;
+  if (selection.size() == 1)
+    index = selection.first().topLeft();
+
   if (index.isValid()) {
     const QMetaObject *metaObject =
       index.data(MetaObjectTreeModel::MetaObjectRole).value<const QMetaObject*>();
