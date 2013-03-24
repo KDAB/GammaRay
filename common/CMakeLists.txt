@@ -27,8 +27,6 @@ set(gammaray_common_srcs
   network/streamoperators.cpp
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-
 qt4_automoc(${gammaray_common_srcs})
 
 add_library(gammaray_common STATIC ${gammaray_common_srcs})

@@ -55,8 +55,6 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/objectinspector/objectinspectorwidget.ui
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-
 qt4_automoc(${gammaray_ui_srcs})
 
 # TODO: Compile fix for windows.
