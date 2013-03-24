@@ -25,7 +25,7 @@
 
 #include <cstdio>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <io.h>
 #define dup _dup
 #define dup2 _dup2
