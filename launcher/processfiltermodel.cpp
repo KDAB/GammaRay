@@ -55,7 +55,7 @@ ProcessFilterModel::ProcessFilterModel(QObject *parent)
 {
   m_currentProcId = QString::number(qApp->applicationPid());
   m_currentUser = qGetLogin();
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
   if (m_currentUser == QLatin1String("root")) {
     // empty current user == no filter. as root we want to show all
     m_currentUser.clear();
