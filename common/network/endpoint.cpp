@@ -89,7 +89,6 @@ Protocol::ObjectAddress Endpoint::endpointAddress() const
 
 void Endpoint::readyRead()
 {
-  qDebug() << Q_FUNC_INFO << m_socket->bytesAvailable();
   while (Message::canReadMessage(m_socket.data())) {
     messageReceived(Message::readMessage(m_socket.data()));
   }
