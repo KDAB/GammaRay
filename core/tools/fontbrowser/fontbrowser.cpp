@@ -26,6 +26,8 @@
 
 #include "fontmodel.h"
 
+#include <QStandardItemModel>
+
 using namespace GammaRay;
 
 FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
@@ -42,23 +44,31 @@ FontBrowser::FontBrowser(ProbeInterface *probe, QWidget *parent)
   ui->selectedFontsView->setRootIsDecorated(false);
 
   ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
+  QStandardItemModel *model = new QStandardItemModel(this);
+  model->setHorizontalHeaderLabels(QStringList() << tr("Fonts") << tr("Smooth sizes"));
   foreach (const QString &family, database.families()) {
-    QTreeWidgetItem *familyItem = new QTreeWidgetItem(ui->fontTree);
-    familyItem->setText(0, family);
+    QStandardItem *familyItem = new QStandardItem;
+    familyItem->setText(family);
 
     foreach (const QString &style, database.styles(family)) {
-      QTreeWidgetItem *styleItem = new QTreeWidgetItem(familyItem);
-      styleItem->setText(0, style);
+      QStandardItem *styleItem0 = new QStandardItem;
+      styleItem0->setText(style);
 
       QString sizes;
       foreach (int points, database.smoothSizes(family, style)) {
         sizes += QString::number(points) + ' ';
       }
 
-      styleItem->setText(1, sizes.trimmed());
-      styleItem->setToolTip(1, sizes.trimmed());
+      QStandardItem *styleItem1 = new QStandardItem;
+      styleItem1->setText(sizes.trimmed());
+      styleItem1->setToolTip(sizes.trimmed());
+
+      familyItem->appendRow(QList<QStandardItem*>() << styleItem0 << styleItem1);
     }
+
+    model->appendRow(familyItem);
   }
+  ui->fontTree->setModel(model);
   ui->fontTree->header()->setResizeMode(0, QHeaderView::ResizeToContents);
   ui->selectedFontsView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
   connect(ui->fontTree->selectionModel(),

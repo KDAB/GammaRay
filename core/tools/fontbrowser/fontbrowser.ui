@@ -16,20 +16,10 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QTreeWidget" name="fontTree">
-      <property name="columnCount">
-       <number>2</number>
+     <widget class="QTreeView" name="fontTree">
+      <property name="uniformRowHeights">
+       <bool>true</bool>
       </property>
-      <column>
-       <property name="text">
-        <string>Fonts</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Smooth sizes</string>
-       </property>
-      </column>
      </widget>
      <widget class="QWidget" name="layoutWidget_7">
       <layout class="QVBoxLayout" name="verticalLayout">
