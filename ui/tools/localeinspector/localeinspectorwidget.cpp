@@ -47,8 +47,10 @@ LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
   ui->accessorTable->resizeColumnsToContents();
   ui->localeTable->resizeColumnsToContents();
   connect(localeModel, SIGNAL(modelReset()), ui->localeTable, SLOT(resizeColumnsToContents()));
+  connect(accessorModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->accessorTable, SLOT(resizeColumnsToContents()));
 
   QMetaObject::invokeMethod(this, "initSplitterPosition", Qt::QueuedConnection);
+  connect(accessorModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(initSplitterPosition()));
 }
 
 LocaleInspectorWidget::~LocaleInspectorWidget()
