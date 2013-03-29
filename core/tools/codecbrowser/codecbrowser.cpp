@@ -34,21 +34,15 @@ using namespace GammaRay;
 CodecBrowser::CodecBrowser(ProbeInterface* probe, QObject* parent)
   : ObjectServer("com.kdab.GammaRay.CodecBrowser", parent)
 {
-  Q_UNUSED(probe);
-
   AllCodecsModel* model = new AllCodecsModel(this);
-  RemoteModelServer *server = new RemoteModelServer("com.kdab.GammaRay.AllCodecsModel", this);
-  server->setModel(model);
-  ObjectBroker::registerModel(server->objectName(), model);
+  probe->registerModel("com.kdab.GammaRay.AllCodecsModel", model);
 
   m_codecSelectionModel = ObjectBroker::selectionModel(model);
   connect(m_codecSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(updateCodecs(QItemSelection,QItemSelection)));
 
   m_selectedCodecsModel = new SelectedCodecsModel(this);
-  server = new RemoteModelServer("com.kdab.GammaRay.SelectedCodecsModel", this);
-  server->setModel(m_selectedCodecsModel);
-  ObjectBroker::registerModel(server->objectName(), m_selectedCodecsModel);
+  probe->registerModel("com.kdab.GammaRay.SelectedCodecsModel", m_selectedCodecsModel);
 
   subscribeToSignal("textChanged", m_selectedCodecsModel, "updateText");
 }

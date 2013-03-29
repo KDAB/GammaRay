@@ -144,16 +144,14 @@ void handleMessage(QtMsgType type, const char *msg)
   }
 }
 
-MessageHandler::MessageHandler(ProbeInterface * /*probe*/, QObject *parent)
+MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   : QObject(parent),
   m_messageModel(new MessageModel(this))
 {
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
 
-  RemoteModelServer *server = new RemoteModelServer("com.kdab.GammaRay.MessageModel", this);
-  server->setModel(m_messageModel);
-  ObjectBroker::registerModel(server->objectName(), m_messageModel);
+  probe->registerModel("com.kdab.GammaRay.MessageModel", m_messageModel);
 
   // install handler directly, catches most cases,
   // i.e. user has no special handler or the handler

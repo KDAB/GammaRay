@@ -33,11 +33,8 @@ using namespace GammaRay;
 MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
-  Q_UNUSED(probe);
   MetaTypesModel *mtm = new MetaTypesModel(this);
-  RemoteModelServer *server = new RemoteModelServer("com.kdab.GammaRay.MetaTypeModel", this);
-  server->setModel(mtm);
-  ObjectBroker::registerModel(server->objectName(), mtm);
+  probe->registerModel("com.kdab.GammaRay.MetaTypeModel", mtm);
 }
 
 #include "metatypebrowser.moc"
