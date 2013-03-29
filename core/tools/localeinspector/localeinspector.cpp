@@ -20,48 +20,22 @@
 */
 
 #include "localeinspector.h"
-#include "ui_localeinspector.h"
 
 #include "localemodel.h"
 #include "localeaccessormodel.h"
 #include "localedataaccessor.h"
 
-#include <QSortFilterProxyModel>
-
 using namespace GammaRay;
 
-LocaleInspector::LocaleInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::LocaleInspector)
+LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
+: QObject(parent)
 {
-  Q_UNUSED(probe);
-
   LocaleDataAccessorRegistry *registry = new LocaleDataAccessorRegistry(this);
 
   LocaleModel *model = new LocaleModel(registry, this);
+  probe->registerModel("com.kdab.GammaRay.LocaleModel", model);
   LocaleAccessorModel *accessorModel = new LocaleAccessorModel(registry, this);
-
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setSourceModel(model);
-
-  ui->setupUi(this);
-
-  ui->localeTable->setModel(proxy);
-  ui->accessorTable->setModel(accessorModel);
-  ui->localeSearchLine->setProxy(proxy);
-
-  ui->accessorTable->resizeColumnsToContents();
-  ui->localeTable->resizeColumnsToContents();
-  connect(model, SIGNAL(modelReset()), ui->localeTable, SLOT(resizeColumnsToContents()));
-
-  QMetaObject::invokeMethod(this, "initSplitterPosition", Qt::QueuedConnection);
-}
-
-void LocaleInspector::initSplitterPosition()
-{
-  const int accessorHeight = ui->accessorTable->model()->rowCount() * (ui->accessorTable->rowHeight(0) + 1) // + grid line
-                           + 2 * ui->accessorTable->frameWidth();
-  ui->splitter->setSizes(QList<int>() << accessorHeight << height() - accessorHeight);
+  probe->registerModel("com.kdab.GammaRay.LocaleAccessorModel", accessorModel);
 }
 
 #include "localeinspector.moc"

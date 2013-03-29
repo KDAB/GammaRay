@@ -19,37 +19,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
-#define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
+#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
+#define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
 
-#include "include/toolfactory.h"
-
-#include <tools/localeinspector/localeinspectorwidget.h>
+#include <QWidget>
 
 namespace GammaRay {
 
-class LocaleInspector : public QObject
+namespace Ui {
+  class LocaleInspectorWidget;
+}
+
+class LocaleInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit LocaleInspector(ProbeInterface *probe, QObject *parent = 0);
-};
+    explicit LocaleInspectorWidget(QWidget *parent = 0);
+    ~LocaleInspectorWidget();
 
-class LocaleInspectorFactory : public QObject, public StandardToolFactory2<QObject, LocaleInspector, LocaleInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit LocaleInspectorFactory(QObject *parent) : QObject(parent)
-    {
-    }
+  private slots:
+    void initSplitterPosition();
 
-    virtual inline QString name() const
-    {
-      return tr("Locales");
-    }
+  private:
+    QScopedPointer<Ui::LocaleInspectorWidget> ui;
 };
 
 }
 
-#endif // GAMMARAY_LOCALEINSPECTOR_H
+#endif // GAMMARAY_LOCALEINSPECTORWIDGET_H

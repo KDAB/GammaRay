@@ -25,6 +25,7 @@
 
 #include <ui/tools/codecbrowser/codecbrowserwidget.h>
 #include <ui/tools/connectioninspector/connectioninspectorwidget.h>
+#include <ui/tools/localeinspector/localeinspectorwidget.h>
 #include <ui/tools/messagehandler/messagehandlerwidget.h>
 #include <ui/tools/metaobjectbrowser/metaobjectbrowserwidget.h>
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
@@ -52,6 +53,7 @@ public: \
 
 MAKE_FACTORY(CodecBrowser);
 MAKE_FACTORY(ConnectionInspector);
+MAKE_FACTORY(LocaleInspector);
 MAKE_FACTORY(MessageHandler);
 MAKE_FACTORY(MetaObjectBrowser);
 MAKE_FACTORY(MetaTypeBrowser);
@@ -64,6 +66,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   // TODO add tools
   insertFactory(new CodecBrowserFactory);
   insertFactory(new ConnectionInspectorFactory);
+  insertFactory(new LocaleInspectorFactory);
   insertFactory(new MessageHandlerFactory);
   insertFactory(new MetaObjectBrowserFactory);
   insertFactory(new MetaTypeBrowserFactory);

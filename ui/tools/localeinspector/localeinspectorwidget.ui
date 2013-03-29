@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LocaleInspector</class>
- <widget class="QWidget" name="LocaleInspector">
+ <class>GammaRay::LocaleInspectorWidget</class>
+ <widget class="QWidget" name="GammaRay::LocaleInspectorWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
