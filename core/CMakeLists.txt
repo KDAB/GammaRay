@@ -107,6 +107,7 @@ if(Qt5Core_FOUND)
   set(gammaray_srcs
     ${gammaray_srcs}
     tools/mimetypes/mimetypes.cpp
+    tools/mimetypes/mimetypesmodel.cpp
     tools/standardpaths/standardpaths.cpp
     tools/standardpaths/standardpathsmodel.cpp
   )
