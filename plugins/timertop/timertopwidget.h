@@ -1,5 +1,5 @@
 /*
-  timertop.h
+  timertopwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -20,52 +20,33 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_TIMERTOP_TIMERTOP_H
-#define GAMMARAY_TIMERTOP_TIMERTOP_H
+#ifndef GAMMARAY_TIMERTOPWIDGET_H
+#define GAMMARAY_TIMERTOPWIDGET_H
 
-#include "include/toolfactory.h"
-#include "timertopwidget.h"
-
-#include <QTimer>
 #include <QWidget>
+
+class QTimer;
 
 namespace GammaRay {
 
 namespace Ui {
-  class TimerTop;
+  class TimerTopWidget;
 }
 
-class TimerTop : public QObject
+class TimerTopWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit TimerTop(ProbeInterface *probe, QObject *parent = 0);
+    explicit TimerTopWidget(QWidget *parent = 0);
+
+  private slots:
+    void slotUpdateView();
 
   private:
+    QScopedPointer<Ui::TimerTopWidget> ui;
     QTimer *m_updateTimer;
 };
 
-class TimerTopFactory : public QObject,
-                        public StandardToolFactory2<QTimer, TimerTop, TimerTopWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.TimerTop")
-
-  public:
-    explicit TimerTopFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Timers");
-    }
-
-    /* reimp */
-    QStringList supportedTypes() const;
-};
-
 }
 
-#endif // GAMMARAY_SCENEINSPECTOR_H
+#endif // GAMMARAY_TIMERTOPWIDGET_H
