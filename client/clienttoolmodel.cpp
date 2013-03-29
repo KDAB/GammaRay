@@ -30,6 +30,7 @@
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 
+#include <common/pluginmanager.h>
 #include <network/modelroles.h>
 #include <include/toolfactory.h>
 
@@ -65,6 +66,9 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new MetaObjectBrowserFactory);
   insertFactory(new MetaTypeBrowserFactory);
   insertFactory(new ObjectInspectorFactory);
+
+  foreach(ToolFactory* factory, PluginManager::instance()->plugins())
+    insertFactory(factory);
 }
 
 ClientToolModel::~ClientToolModel()
