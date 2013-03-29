@@ -62,7 +62,7 @@ qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
 
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common)
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal)
 if(UNIX AND NOT APPLE)
   target_link_libraries(gammaray dl) # for preload check
 endif()

@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_OBJECTBROKER_H
 #define GAMMARAY_OBJECTBROKER_H
 
+#include "include/gammaray_common_export.h"
+
 class QItemSelectionModel;
 class QAbstractItemModel;
 class QString;
@@ -36,37 +38,37 @@ class NetworkObject;
 namespace ObjectBroker {
 
   /** Register a newly created object with a given name. */
-  void registerObject(const QString &name, NetworkObject* object);
+  GAMMARAY_COMMON_EXPORT void registerObject(const QString &name, NetworkObject* object);
 
   /** Retrieve object by name. */
-  NetworkObject* object(const QString &name);
+  GAMMARAY_COMMON_EXPORT NetworkObject* object(const QString &name);
 
   typedef NetworkObject*(*ObjectFactoryCallback)(const QString &);
 
   /** Set a callback for a factory to create not yet existing objects. */
-  void setObjectFactoryCallback(GammaRay::ObjectBroker::ObjectFactoryCallback callback);
+  GAMMARAY_COMMON_EXPORT void setObjectFactoryCallback(GammaRay::ObjectBroker::ObjectFactoryCallback callback);
 
   /** Register a newly created model with the given name. */
-  void registerModel(const QString &name, QAbstractItemModel* model);
+  GAMMARAY_COMMON_EXPORT void registerModel(const QString &name, QAbstractItemModel* model);
 
   /** Retrieve a model by name. */
-  QAbstractItemModel* model(const QString &name);
+  GAMMARAY_COMMON_EXPORT QAbstractItemModel* model(const QString &name);
 
   typedef QAbstractItemModel*(*ModelFactoryCallback)(const QString &);
 
   /** Set a callback for the case that a model was requested but had not been registered before. */
-  void setModelFactoryCallback(ModelFactoryCallback callback);
+  GAMMARAY_COMMON_EXPORT void setModelFactoryCallback(ModelFactoryCallback callback);
 
   /** Register a newly created selection model. */
-  void registerSelectionModel(QItemSelectionModel *selectionModel);
+  GAMMARAY_COMMON_EXPORT void registerSelectionModel(QItemSelectionModel *selectionModel);
 
   /** Retrieve the selection model for @p model. */
-  QItemSelectionModel* selectionModel(QAbstractItemModel *model);
+  GAMMARAY_COMMON_EXPORT QItemSelectionModel* selectionModel(QAbstractItemModel *model);
 
   typedef QItemSelectionModel*(*selectionModelFactoryCallback)(QAbstractItemModel*);
 
   /** Set a callback for the case that a selection model was requested but had not been registered before. */
-  void setSelectionModelFactoryCallback(selectionModelFactoryCallback callback);
+  GAMMARAY_COMMON_EXPORT void setSelectionModelFactoryCallback(selectionModelFactoryCallback callback);
 }
 }
 
