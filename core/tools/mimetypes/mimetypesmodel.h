@@ -10,6 +10,11 @@ class MimeTypesModel : public QStandardItemModel
 {
   Q_OBJECT
 public:
+  enum Roles {
+    IconNameRole = Qt::UserRole + 1,
+    GenericIconNameRole
+  };
+
   explicit MimeTypesModel(QObject* parent = 0);
   ~MimeTypesModel();
 
