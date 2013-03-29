@@ -70,6 +70,8 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     QAbstractItemModel *metaObjectModel() const;
     QAbstractItemModel *connectionModel() const;
     ToolModel *toolModel() const;
+    void registerModel(const QString& objectName, QAbstractItemModel* model);
+
 
     GammaRay::MainWindow *window() const;
     void setWindow(GammaRay::MainWindow *window);
@@ -120,7 +122,6 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     friend class ProbeCreator;
 
     static QThread* filteredThread();
-    void registerModel(QAbstractItemModel* model, const QString &name);
 
     void objectFullyConstructed(QObject *obj);
     static bool createProbe();

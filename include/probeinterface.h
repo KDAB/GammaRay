@@ -35,6 +35,7 @@
 
 class QObject;
 class QAbstractItemModel;
+class QString;
 
 namespace GammaRay {
 
@@ -86,6 +87,12 @@ class ProbeInterface
      * @return a pointer to a QObject instance.
      */
     virtual QObject *probe() const = 0;
+
+    /**
+     * Register a model for remote usage.
+     * @param objectName unique identifier for the model, typically in reverse domain notation.
+     */
+    virtual void registerModel(const QString &objectName, QAbstractItemModel* model) = 0;
 };
 
 }

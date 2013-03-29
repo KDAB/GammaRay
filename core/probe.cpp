@@ -155,11 +155,11 @@ Probe::Probe(QObject *parent):
   StreamOperators::registerOperators();
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
-  registerModel(m_objectTreeModel, QLatin1String("com.kdab.GammaRay.ObjectTree"));
-  registerModel(m_objectListModel, QLatin1String("com.kdab.GammaRay.ObjectList"));
-  registerModel(m_metaObjectTreeModel, QLatin1String("com.kdab.GammaRay.MetaObjectModel"));
-  registerModel(m_toolModel, QLatin1String("com.kdab.GammaRay.ToolModel"));
-  registerModel(m_connectionModel, QLatin1String("com.kdab.GammaRay.ConnectionModel"));
+  registerModel(QLatin1String("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
+  registerModel(QLatin1String("com.kdab.GammaRay.ObjectList"), m_objectListModel);
+  registerModel(QLatin1String("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
+  registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), m_toolModel);
+  registerModel(QLatin1String("com.kdab.GammaRay.ConnectionModel"), m_connectionModel);
 
   if (qgetenv("GAMMARAY_MODELTEST") == "1") {
     new ModelTest(m_objectListModel, m_objectListModel);
@@ -290,11 +290,11 @@ bool Probe::filterObject(QObject *obj) const
           Util::descendantOf(window(), obj);
 }
 
-void Probe::registerModel(QAbstractItemModel* model, const QString& name)
+void Probe::registerModel(const QString& objectName, QAbstractItemModel* model)
 {
-  RemoteModelServer *ms = new RemoteModelServer(name, this);
+  RemoteModelServer *ms = new RemoteModelServer(objectName, this);
   ms->setModel(model);
-  ObjectBroker::registerModel(name, model);
+  ObjectBroker::registerModel(objectName, model);
 }
 
 QAbstractItemModel *Probe::objectListModel() const
