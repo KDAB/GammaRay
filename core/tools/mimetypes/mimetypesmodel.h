@@ -19,6 +19,7 @@ public:
   ~MimeTypesModel();
 
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  Qt::ItemFlags flags(const QModelIndex& index) const;
 
 private:
   void fillModel();

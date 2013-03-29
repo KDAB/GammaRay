@@ -46,6 +46,11 @@ QVariant MimeTypesModel::data(const QModelIndex& index, int role) const
   return QStandardItemModel::data(index, role);
 }
 
+Qt::ItemFlags MimeTypesModel::flags(const QModelIndex& index) const
+{
+  return QStandardItemModel::flags(index) & ~Qt::ItemIsEditable;
+}
+
 QVector<QStandardItem*> MimeTypesModel::itemsForType(const QString &mimeTypeName)
 {
   if (m_mimeTypeNodes.contains(mimeTypeName)) {
