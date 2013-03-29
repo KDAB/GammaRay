@@ -28,6 +28,7 @@
 #include <ui/tools/messagehandler/messagehandlerwidget.h>
 #include <ui/tools/metaobjectbrowser/metaobjectbrowserwidget.h>
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
+#include <ui/tools/mimetypes/mimetypeswidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 
 #include <common/pluginmanager.h>
@@ -54,6 +55,7 @@ MAKE_FACTORY(ConnectionInspector);
 MAKE_FACTORY(MessageHandler);
 MAKE_FACTORY(MetaObjectBrowser);
 MAKE_FACTORY(MetaTypeBrowser);
+MAKE_FACTORY(MimeTypes);
 MAKE_FACTORY(ObjectInspector);
 
 
@@ -65,6 +67,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new MessageHandlerFactory);
   insertFactory(new MetaObjectBrowserFactory);
   insertFactory(new MetaTypeBrowserFactory);
+  insertFactory(new MimeTypesFactory);
   insertFactory(new ObjectInspectorFactory);
 
   foreach(ToolFactory* factory, PluginManager::instance()->plugins())

@@ -25,8 +25,8 @@
 #define GAMMARAY_MIMETYPES_H
 
 #include "include/toolfactory.h"
+#include <ui/tools/mimetypes/mimetypeswidget.h>
 
-#include <QWidget>
 #include <QMimeData>
 #include <QMimeDatabase>
 
@@ -36,15 +36,11 @@ class QStandardItem;
 
 namespace GammaRay {
 
-namespace Ui {
-  class MimeTypes;
-}
-
-class MimeTypes : public QWidget
+class MimeTypes : public QObject
 {
   Q_OBJECT
   public:
-    explicit MimeTypes(ProbeInterface *probe, QWidget *parent = 0);
+    explicit MimeTypes(ProbeInterface *probe, QObject *parent = 0);
     ~MimeTypes();
 
   private:
@@ -54,13 +50,12 @@ class MimeTypes : public QWidget
     static QList<QStandardItem*> makeRowForType(const QMimeType &mt);
     QSet<QString> normalizedMimeTypeNames(const QStringList &typeNames) const;
 
-    QScopedPointer<Ui::MimeTypes> ui;
     QStandardItemModel *m_model;
     QHash<QString, QVector<QStandardItem*> > m_mimeTypeNodes;
     QMimeDatabase m_db;
 };
 
-class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, MimeTypes>
+class MimeTypesFactory : public QObject, public StandardToolFactory2<QObject, MimeTypes, MimeTypesWidget>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

@@ -38,6 +38,7 @@ set(gammaray_ui_srcs
   tools/messagehandler/messagehandlerwidget.cpp
   tools/metaobjectbrowser/metaobjectbrowserwidget.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
+  tools/mimetypes/mimetypeswidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
 )
 
@@ -55,6 +56,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/connectioninspector/connectioninspectorwidget.ui
   tools/messagehandler/messagehandlerwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
+  tools/mimetypes/mimetypeswidget.ui
   tools/objectinspector/objectinspectorwidget.ui
 )
 

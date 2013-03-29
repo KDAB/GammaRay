@@ -22,9 +22,6 @@
 */
 
 #include "mimetypes.h"
-#include "ui_mimetypes.h"
-
-#include <kde/krecursivefilterproxymodel.h>
 
 #include <QDebug>
 #include <QMimeType>
@@ -32,23 +29,12 @@
 
 using namespace GammaRay;
 
-MimeTypes::MimeTypes(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::MimeTypes)
+MimeTypes::MimeTypes(ProbeInterface *probe, QObject *parent)
+  : QObject(parent)
 {
-  Q_UNUSED(probe);
-  ui->setupUi(this);
-
   m_model = new QStandardItemModel(this);
   fillModel();
-
-  QSortFilterProxyModel *proxy = new KRecursiveFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_model);
-  ui->mimeTypeView->setModel(proxy);
-  ui->mimeTypeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-  ui->mimeTypeView->header()->setResizeMode(1, QHeaderView::ResizeToContents);
-  ui->mimeTypeView->sortByColumn(0, Qt::AscendingOrder);
-  ui->searchLine->setProxy(proxy);
+  probe->registerModel("com.kdab.GammaRay.MimeTypeModel", m_model);
 }
 
 MimeTypes::~MimeTypes()

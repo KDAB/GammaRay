@@ -98,7 +98,6 @@ if(Qt5Core_FOUND)
   )
 
   qt4_wrap_ui(gammaray_srcs
-    tools/mimetypes/mimetypes.ui
     tools/standardpaths/standardpaths.ui
   )
 endif()
