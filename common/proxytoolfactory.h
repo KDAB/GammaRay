@@ -58,6 +58,9 @@ class ProxyToolFactory : public QObject, public ToolFactory
     virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget);
 
   private:
+    void loadPlugin();
+
+  private:
     QString m_id;
     QString m_pluginPath;
     QString m_name;
