@@ -33,6 +33,7 @@
 #include "include/util.h"
 
 #include <kde/krecursivefilterproxymodel.h>
+#include <QComboBox>
 
 using namespace GammaRay;
 
@@ -90,13 +91,22 @@ void ModelInspectorWidget::setModelCell(const QModelIndex &index)
 
 void ModelInspectorWidget::widgetSelected(QWidget *widget)
 {
+  QAbstractItemModel *selectedModel = 0;
+
   QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(widget);
-  if (view && view->model()) {
+  if (view)
+    selectedModel = view->model();
+
+  QComboBox *box = Util::findParentOfType<QComboBox>(widget);
+  if (!selectedModel && box)
+    selectedModel = box->model();
+
+  if (selectedModel) {
     QAbstractItemModel *model = ui->modelView->model();
     const QModelIndexList indexList =
       model->match(model->index(0, 0),
                    ObjectModel::ObjectRole,
-                   QVariant::fromValue<QObject*>(view->model()), 1,
+                   QVariant::fromValue<QObject*>(selectedModel), 1,
                    Qt::MatchExactly | Qt::MatchRecursive);
     if (indexList.isEmpty()) {
       return;
