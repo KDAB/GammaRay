@@ -32,6 +32,7 @@
 #include <network/objectbroker.h>
 
 #include <QAbstractItemView>
+#include <QComboBox>
 
 using namespace GammaRay;
 
@@ -62,12 +63,21 @@ QString ModelInspectorFactory::name() const
 
 void ModelInspector::widgetSelected(QWidget* widget)
 {
+  QAbstractItemModel *selectedModel = 0;
+
   QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(widget);
-  if (view && view->model()) {
+  if (view)
+    selectedModel = view->model();
+
+  QComboBox *box = Util::findParentOfType<QComboBox>(widget);
+  if (!selectedModel && box)
+    selectedModel = box->model();
+
+  if (selectedModel) {
     const QModelIndexList indexList =
       m_modelModel->match(m_modelModel->index(0, 0),
                    ObjectModel::ObjectRole,
-                   QVariant::fromValue<QObject*>(view->model()), 1,
+                   QVariant::fromValue<QObject*>(selectedModel), 1,
                    Qt::MatchExactly | Qt::MatchRecursive);
     if (indexList.isEmpty()) {
       return;
