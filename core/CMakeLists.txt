@@ -60,7 +60,6 @@ set(gammaray_srcs
   tools/metaobjectbrowser/metaobjectbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/modelinspector/modelinspector.cpp
-  tools/modelinspector/modelinspectorwidget.cpp
   tools/objectinspector/objectinspector.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
@@ -134,7 +133,6 @@ qt4_wrap_ui(gammaray_srcs
 
   tools/sceneinspector/graphicssceneview.ui
   tools/fontbrowser/fontbrowser.ui
-  tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspector.ui
   tools/resourcebrowser/resourcebrowser.ui
   tools/sceneinspector/sceneinspector.ui

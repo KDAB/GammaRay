@@ -22,16 +22,16 @@
 */
 
 #include "modelinspectorwidget.h"
-
-#include "modelcellmodel.h"
 #include "ui_modelinspectorwidget.h"
 
 #include "include/objectmodel.h"
 #include "include/util.h"
 
+#include <network/endpoint.h>
 #include <network/objectbroker.h>
 
 #include <kde/krecursivefilterproxymodel.h>
+#include <QDebug>
 
 using namespace GammaRay;
 
@@ -49,8 +49,8 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   connect(ui->modelView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(modelSelected(QItemSelection)));
-  m_cellModel = new ModelCellModel(this);
-  ui->modelCellView->setModel(m_cellModel);
+
+  ui->modelCellView->setModel(ObjectBroker::model("com.kdab.GammaRay.ModelCellModel"));
 
   setModelCell(QModelIndex());
 }
@@ -64,10 +64,19 @@ void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
-    ui->modelContentView->setModel(model);
-    connect(ui->modelContentView->selectionModel(),
-            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            SLOT(setModelCell(QModelIndex)));
+    if (model) {
+      // we are on the server side
+      ui->modelContentView->setModel(model);
+      if (ObjectBroker::hasSelectionModel(ui->modelContentView->model()))
+        setupModelContentSelectionModel();
+      connect(Endpoint::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
+              this, SLOT(objectRegistered(QString)), Qt::UniqueConnection);
+    } else {
+      // we are on the client side
+      model = ObjectBroker::model("com.kdab.GammaRay.ModelContent");
+      ui->modelContentView->setModel(model);
+      setupModelContentSelectionModel();
+    }
 
     // in case selection is not directly triggered by the user
     ui->modelView->scrollTo(index, QAbstractItemView::EnsureVisible);
@@ -81,13 +90,29 @@ void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
 
 void ModelInspectorWidget::setModelCell(const QModelIndex &index)
 {
-  m_cellModel->setModelIndex(index);
-
+  // TODO this wont work remotely!
   ui->indexLabel->setText(index.isValid() ?
     tr("Row: %1 Column: %2").arg(index.row()).arg(index.column()) :
     tr("Invalid"));
   ui->internalIdLabel->setText(QString::number(index.internalId()));
   ui->internalPtrLabel->setText(Util::addressToString(index.internalPointer()));
+}
+
+void ModelInspectorWidget::objectRegistered(const QString& objectName)
+{
+  if (objectName == "com.kdab.GammaRay.ModelContent.selection")
+    // delay, since it's not registered yet when the signal is emitted
+    QMetaObject::invokeMethod(this, "setupModelContentSelectionModel", Qt::QueuedConnection);
+}
+
+void ModelInspectorWidget::setupModelContentSelectionModel()
+{
+  if (!ui->modelContentView->model())
+    return;
+
+  ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(ui->modelContentView->model()));
+  connect(ui->modelContentView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          this, SLOT(setModelCell(QModelIndex)), Qt::UniqueConnection);
 }
 
 #include "modelinspectorwidget.moc"

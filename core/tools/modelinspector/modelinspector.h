@@ -25,7 +25,8 @@
 #define GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
 
 #include "include/toolfactory.h"
-#include "modelinspectorwidget.h"
+
+#include <ui/tools/modelinspector/modelinspectorwidget.h>
 
 #include <QWidget>
 
@@ -34,7 +35,9 @@ class QItemSelectionModel;
 namespace GammaRay {
 
 class ModelModel;
+class ModelCellModel;
 class ModelTester;
+class RemoteModelServer;
 
 class ModelInspector : public QObject
 {
@@ -43,11 +46,19 @@ class ModelInspector : public QObject
     explicit ModelInspector(ProbeInterface *probe, QObject *parent = 0);
 
   private slots:
+    void modelSelected(const QItemSelection &selected);
+    void cellSelected(const QItemSelection &selected);
+
     void widgetSelected(QWidget *widget);
 
   private:
     ModelModel *m_modelModel;
     QItemSelectionModel *m_modelSelectionModel;
+
+    RemoteModelServer *m_modelContentServer;
+    QItemSelectionModel *m_modelContentSelectionModel;
+
+    ModelCellModel *m_cellModel;
 
     ModelTester *m_modelTester;
 };

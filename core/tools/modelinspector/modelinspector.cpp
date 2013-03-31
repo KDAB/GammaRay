@@ -23,22 +23,27 @@
 
 #include "modelinspector.h"
 
-#include "modelinspectorwidget.h"
 #include "modelmodel.h"
+#include "modelcellmodel.h"
 #include "modeltester.h"
 
 #include "include/probeinterface.h"
 
 #include <network/objectbroker.h>
+#include <remote/remotemodelserver.h>
+#include <remote/selectionmodelserver.h>
 
 #include <QAbstractItemView>
 #include <QComboBox>
+#include <QDebug>
 
 using namespace GammaRay;
 
 ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   QObject(parent),
   m_modelModel(0),
+  m_modelContentServer(0),
+  m_modelContentSelectionModel(0),
   m_modelTester(0)
 {
   m_modelModel = new ModelModel(this);
@@ -49,7 +54,15 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   probe->registerModel("com.kdab.GammaRay.ModelModel", m_modelModel);
 
   m_modelSelectionModel = ObjectBroker::selectionModel(m_modelModel);
+  connect(m_modelSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(modelSelected(QItemSelection)));
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
+
+  m_modelContentServer = new RemoteModelServer("com.kdab.GammaRay.ModelContent", this);
+
+  m_cellModel = new ModelCellModel(this);
+  probe->registerModel("com.kdab.GammaRay.ModelCellModel", m_cellModel);
+  cellSelected(QItemSelection());
 
   m_modelTester = new ModelTester(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
@@ -59,6 +72,35 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
 QString ModelInspectorFactory::name() const
 {
  return tr("Models");
+}
+
+void ModelInspector::modelSelected(const QItemSelection& selected)
+{
+  if (m_modelContentSelectionModel && m_modelContentSelectionModel->model())
+    ObjectBroker::unregisterSelectionModel(m_modelContentSelectionModel);
+  delete m_modelContentSelectionModel;
+  m_modelContentSelectionModel = 0;
+
+  QModelIndex index;
+  if (selected.size() >= 1)
+    index = selected.first().topLeft();
+
+  if (index.isValid()) {
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
+    m_modelContentServer->setModel(model);
+
+    m_modelContentSelectionModel = new SelectionModelServer("com.kdab.GammaRay.ModelContent.selection", model, this);
+    ObjectBroker::registerSelectionModel(m_modelContentSelectionModel);
+    connect(m_modelContentSelectionModel,
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(cellSelected(QItemSelection)));
+  } else {
+    m_modelContentServer->setModel(0);
+  }
+
+  // clear the cell info box
+  cellSelected(QItemSelection());
 }
 
 void ModelInspector::widgetSelected(QWidget* widget)
@@ -86,6 +128,17 @@ void ModelInspector::widgetSelected(QWidget* widget)
     const QModelIndex index = indexList.first();
     m_modelSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
   }
+}
+
+void ModelInspector::cellSelected(const QItemSelection& selected)
+{
+  QModelIndex index;
+  if (selected.size() >= 1)
+    index = selected.first().topLeft();
+
+  m_cellModel->setModelIndex(index);
+
+  // TODO send model index info to client
 }
 
 #include "modelinspector.moc"

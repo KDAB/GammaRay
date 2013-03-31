@@ -40,6 +40,7 @@ set(gammaray_ui_srcs
   tools/metaobjectbrowser/metaobjectbrowserwidget.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
   tools/mimetypes/mimetypeswidget.cpp
+  tools/modelinspector/modelinspectorwidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
 )
@@ -60,6 +61,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/messagehandler/messagehandlerwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
   tools/mimetypes/mimetypeswidget.ui
+  tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
   tools/standardpaths/standardpathswidget.ui
 )

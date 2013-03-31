@@ -30,6 +30,7 @@
 #include <ui/tools/metaobjectbrowser/metaobjectbrowserwidget.h>
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
 #include <ui/tools/mimetypes/mimetypeswidget.h>
+#include <ui/tools/modelinspector/modelinspectorwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
 
@@ -59,6 +60,7 @@ MAKE_FACTORY(MessageHandler);
 MAKE_FACTORY(MetaObjectBrowser);
 MAKE_FACTORY(MetaTypeBrowser);
 MAKE_FACTORY(MimeTypes);
+MAKE_FACTORY(ModelInspector);
 MAKE_FACTORY(ObjectInspector);
 MAKE_FACTORY(StandardPaths);
 
@@ -73,6 +75,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new MetaObjectBrowserFactory);
   insertFactory(new MetaTypeBrowserFactory);
   insertFactory(new MimeTypesFactory);
+  insertFactory(new ModelInspectorFactory);
   insertFactory(new ObjectInspectorFactory);
   insertFactory(new StandardPathsFactory);
 

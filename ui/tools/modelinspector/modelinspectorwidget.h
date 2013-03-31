@@ -27,11 +27,10 @@
 #include <QWidget>
 
 class QItemSelection;
+class QItemSelectionModel;
 class QModelIndex;
 
 namespace GammaRay {
-
-class ModelCellModel;
 
 namespace Ui {
   class ModelInspectorWidget;
@@ -45,12 +44,12 @@ class ModelInspectorWidget : public QWidget
 
   private slots:
     void setModelCell(const QModelIndex &index);
-
+    void objectRegistered(const QString &objectName);
     void modelSelected(const QItemSelection& selected);
+    void setupModelContentSelectionModel();
 
   private:
     QScopedPointer<Ui::ModelInspectorWidget> ui;
-    ModelCellModel *m_cellModel;
 };
 
 }
