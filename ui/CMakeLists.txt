@@ -41,6 +41,7 @@ set(gammaray_ui_srcs
   tools/metatypebrowser/metatypebrowserwidget.cpp
   tools/mimetypes/mimetypeswidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
+  tools/standardpaths/standardpathswidget.cpp
 )
 
 qt4_wrap_ui(gammaray_ui_srcs
@@ -60,6 +61,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/metatypebrowser/metatypebrowserwidget.ui
   tools/mimetypes/mimetypeswidget.ui
   tools/objectinspector/objectinspectorwidget.ui
+  tools/standardpaths/standardpathswidget.ui
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

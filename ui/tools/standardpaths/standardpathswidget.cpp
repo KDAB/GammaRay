@@ -1,5 +1,5 @@
 /*
-  standardpaths.h
+  standardpathswidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,37 +21,25 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STANDARDPATHS_H
-#define GAMMARAY_STANDARDPATHS_H
+#include "standardpathswidget.h"
+#include "ui_standardpathswidget.h"
 
-#include "include/toolfactory.h"
-#include <ui/tools/standardpaths/standardpathswidget.h>
+#include <network/objectbroker.h>
 
-namespace GammaRay {
+using namespace GammaRay;
 
-class StandardPaths : public QObject
+StandardPathsWidget::StandardPathsWidget(QWidget *parent)
+  : QWidget(parent), ui(new Ui::StandardPathsWidget)
 {
-  Q_OBJECT
-  public:
-    explicit StandardPaths(ProbeInterface *probe, QObject *parent = 0);
-    ~StandardPaths();
-};
+  ui->setupUi(this);
 
-class StandardPathsFactory : public QObject, public StandardToolFactory2<QObject, StandardPaths, StandardPathsWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit StandardPathsFactory(QObject *parent) : QObject(parent)
-    {
-    }
+  ui->pathView->setModel(ObjectBroker::model("com.kdab.GammaRay.StandardPathsModel"));
 
-    virtual inline QString name() const
-    {
-      return tr("Standard Paths");
-    }
-};
-
+  ui->pathView->header()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
-#endif // GAMMARAY_STANDARDPATHS_H
+StandardPathsWidget::~StandardPathsWidget()
+{
+}
+
+#include "standardpathswidget.moc"

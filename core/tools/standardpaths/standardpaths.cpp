@@ -22,21 +22,15 @@
 */
 
 #include "standardpaths.h"
-#include "ui_standardpaths.h"
 #include "standardpathsmodel.h"
 
 using namespace GammaRay;
 
-StandardPaths::StandardPaths(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::StandardPaths)
+StandardPaths::StandardPaths(ProbeInterface *probe, QObject *parent)
+  : QObject(parent)
 {
-  Q_UNUSED(probe);
-  ui->setupUi(this);
-
   StandardPathsModel *model = new StandardPathsModel(this);
-  ui->pathView->setModel(model);
-
-  ui->pathView->header()->setResizeMode(QHeaderView::ResizeToContents);
+  probe->registerModel("com.kdab.GammaRay.StandardPathsModel", model);
 }
 
 StandardPaths::~StandardPaths()

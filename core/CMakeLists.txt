@@ -97,10 +97,6 @@ if(Qt5Core_FOUND)
     tools/standardpaths/standardpaths.cpp
     tools/standardpaths/standardpathsmodel.cpp
   )
-
-  qt4_wrap_ui(gammaray_srcs
-    tools/standardpaths/standardpaths.ui
-  )
 endif()
 
 if(WIN32 OR APPLE)
