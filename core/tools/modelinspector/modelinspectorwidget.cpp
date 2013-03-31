@@ -71,6 +71,9 @@ void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
     connect(ui->modelContentView->selectionModel(),
             SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             SLOT(setModelCell(QModelIndex)));
+
+    // in case selection is not directly triggered by the user
+    ui->modelView->scrollTo(index, QAbstractItemView::EnsureVisible);
   } else {
     ui->modelContentView->setModel(0);
   }

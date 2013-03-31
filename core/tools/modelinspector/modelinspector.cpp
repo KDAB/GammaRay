@@ -75,8 +75,6 @@ void ModelInspector::widgetSelected(QWidget* widget)
 
     const QModelIndex index = indexList.first();
     m_modelSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-    // TODO still needed?
-//     ui->modelView->scrollTo(index);
   }
 }
 
