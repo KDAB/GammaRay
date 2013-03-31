@@ -23,7 +23,6 @@
 
 #include "timertop.h"
 #include "timermodel.h"
-#include "ui_timertop.h"
 
 #include "include/probeinterface.h"
 
