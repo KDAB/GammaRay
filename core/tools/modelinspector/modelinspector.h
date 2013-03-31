@@ -29,6 +29,8 @@
 
 #include <QWidget>
 
+class QItemSelectionModel;
+
 namespace GammaRay {
 
 class ModelModel;
@@ -40,10 +42,13 @@ class ModelInspector : public QObject
   public:
     explicit ModelInspector(ProbeInterface *probe, QObject *parent = 0);
 
-    ModelModel *modelModel() const;
+  private slots:
+    void widgetSelected(QWidget *widget);
 
   private:
     ModelModel *m_modelModel;
+    QItemSelectionModel *m_modelSelectionModel;
+
     ModelTester *m_modelTester;
 };
 

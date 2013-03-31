@@ -29,6 +29,10 @@
 
 #include "include/probeinterface.h"
 
+#include <network/objectbroker.h>
+
+#include <QAbstractItemView>
+
 using namespace GammaRay;
 
 ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
@@ -43,6 +47,9 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
           m_modelModel, SLOT(objectRemoved(QObject*)));
   probe->registerModel("com.kdab.GammaRay.ModelModel", m_modelModel);
 
+  m_modelSelectionModel = ObjectBroker::selectionModel(m_modelModel);
+  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
+
   m_modelTester = new ModelTester(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
           m_modelTester, SLOT(objectAdded(QObject*)));
@@ -53,9 +60,24 @@ QString ModelInspectorFactory::name() const
  return tr("Models");
 }
 
-ModelModel *ModelInspector::modelModel() const
+void ModelInspector::widgetSelected(QWidget* widget)
 {
-  return m_modelModel;
+  QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(widget);
+  if (view && view->model()) {
+    const QModelIndexList indexList =
+      m_modelModel->match(m_modelModel->index(0, 0),
+                   ObjectModel::ObjectRole,
+                   QVariant::fromValue<QObject*>(view->model()), 1,
+                   Qt::MatchExactly | Qt::MatchRecursive);
+    if (indexList.isEmpty()) {
+      return;
+    }
+
+    const QModelIndex index = indexList.first();
+    m_modelSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    // TODO still needed?
+//     ui->modelView->scrollTo(index);
+  }
 }
 
 #include "modelinspector.moc"

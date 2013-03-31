@@ -47,21 +47,23 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel(this);
   modelFilterProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ModelModel"));
   ui->modelView->setModel(modelFilterProxy);
+  ui->modelView->setSelectionModel(ObjectBroker::selectionModel(modelFilterProxy));
   ui->modelSearchLine->setProxy(modelFilterProxy);
   connect(ui->modelView->selectionModel(),
-          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(modelSelected(QModelIndex)));
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(modelSelected(QItemSelection)));
   m_cellModel = new ModelCellModel(this);
   ui->modelCellView->setModel(m_cellModel);
-
-  // FIXME enable again
-//   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
 
   setModelCell(QModelIndex());
 }
 
-void ModelInspectorWidget::modelSelected(const QModelIndex &index)
+void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
 {
+  QModelIndex index;
+  if (selected.size() >= 1)
+    index = selected.first().topLeft();
+
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
@@ -86,30 +88,6 @@ void ModelInspectorWidget::setModelCell(const QModelIndex &index)
     tr("Invalid"));
   ui->internalIdLabel->setText(QString::number(index.internalId()));
   ui->internalPtrLabel->setText(Util::addressToString(index.internalPointer()));
-}
-
-void ModelInspectorWidget::widgetSelected(QWidget *widget)
-{
-  QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(widget);
-  if (view && view->model()) {
-    QAbstractItemModel *model = ui->modelView->model();
-    const QModelIndexList indexList =
-      model->match(model->index(0, 0),
-                   ObjectModel::ObjectRole,
-                   QVariant::fromValue<QObject*>(view->model()), 1,
-                   Qt::MatchExactly | Qt::MatchRecursive);
-    if (indexList.isEmpty()) {
-      return;
-    }
-
-    const QModelIndex index = indexList.first();
-    ui->modelView->selectionModel()->select(
-      index,
-      QItemSelectionModel::Select | QItemSelectionModel::Clear |
-      QItemSelectionModel::Rows | QItemSelectionModel::Current);
-    ui->modelView->scrollTo(index);
-    modelSelected(index);
-  }
 }
 
 #include "modelinspectorwidget.moc"

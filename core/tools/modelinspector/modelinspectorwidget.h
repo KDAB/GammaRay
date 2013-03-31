@@ -26,6 +26,7 @@
 
 #include <QWidget>
 
+class QItemSelection;
 class QModelIndex;
 
 namespace GammaRay {
@@ -47,8 +48,7 @@ class ModelInspectorWidget : public QWidget
   private slots:
     void setModelCell(const QModelIndex &index);
 
-    void modelSelected(const QModelIndex &index);
-    void widgetSelected(QWidget *widget);
+    void modelSelected(const QItemSelection& selected);
 
   private:
     QScopedPointer<Ui::ModelInspectorWidget> ui;
