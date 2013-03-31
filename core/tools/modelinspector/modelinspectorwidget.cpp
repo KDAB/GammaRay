@@ -24,12 +24,9 @@
 #include "modelinspectorwidget.h"
 
 #include "modelcellmodel.h"
-#include "modelinspector.h"
-#include "modelmodel.h"
 #include "ui_modelinspectorwidget.h"
 
 #include "include/objectmodel.h"
-#include "include/probeinterface.h"
 #include "include/util.h"
 
 #include <network/objectbroker.h>
