@@ -25,6 +25,7 @@
 #define GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
 
 #include "include/toolfactory.h"
+#include "modelinspectorwidget.h"
 
 #include <QWidget>
 
@@ -33,23 +34,29 @@ namespace GammaRay {
 class ModelModel;
 class ModelTester;
 
-class ModelInspector : public QObject, public ToolFactory
+class ModelInspector : public QObject
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit ModelInspector(QObject *parent = 0);
-    virtual QString id() const;
-    virtual QString name() const;
-    virtual QStringList supportedTypes() const;
-    virtual void init(ProbeInterface *probe);
-    virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget);
+    explicit ModelInspector(ProbeInterface *probe, QObject *parent = 0);
 
     ModelModel *modelModel() const;
 
   private:
     ModelModel *m_modelModel;
     ModelTester *m_modelTester;
+};
+
+class ModelInspectorFactory : public QObject, public StandardToolFactory2<QAbstractItemModel, ModelInspector, ModelInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolFactory)
+  public:
+    explicit ModelInspectorFactory(QObject *parent) : QObject(parent)
+    {
+    }
+
+    QString name() const;
 };
 
 }

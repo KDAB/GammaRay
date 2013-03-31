@@ -32,21 +32,20 @@
 #include "include/probeinterface.h"
 #include "include/util.h"
 
+#include <network/objectbroker.h>
+
 #include <kde/krecursivefilterproxymodel.h>
 
 using namespace GammaRay;
 
-ModelInspectorWidget::ModelInspectorWidget(ModelInspector *modelInspector,
-                                           ProbeInterface *probe,
-                                           QWidget *parent)
+ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   : QWidget(parent),
     ui(new Ui::ModelInspectorWidget)
 {
-  Q_UNUSED(probe);
   ui->setupUi(this);
 
   KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel(this);
-  modelFilterProxy->setSourceModel(modelInspector->modelModel());
+  modelFilterProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ModelModel"));
   ui->modelView->setModel(modelFilterProxy);
   ui->modelSearchLine->setProxy(modelFilterProxy);
   connect(ui->modelView->selectionModel(),
@@ -55,7 +54,8 @@ ModelInspectorWidget::ModelInspectorWidget(ModelInspector *modelInspector,
   m_cellModel = new ModelCellModel(this);
   ui->modelCellView->setModel(m_cellModel);
 
-  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
+  // FIXME enable again
+//   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
 
   setModelCell(QModelIndex());
 }

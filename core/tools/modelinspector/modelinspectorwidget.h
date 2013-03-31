@@ -42,8 +42,7 @@ class ModelInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    ModelInspectorWidget(ModelInspector *modelInspector, ProbeInterface *probe,
-                         QWidget *parent = 0);
+    explicit ModelInspectorWidget(QWidget *parent = 0);
 
   private slots:
     void setModelCell(const QModelIndex &index);

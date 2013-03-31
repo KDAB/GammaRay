@@ -31,44 +31,26 @@
 
 using namespace GammaRay;
 
-ModelInspector::ModelInspector(QObject *parent) :
+ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   QObject(parent),
   m_modelModel(0),
   m_modelTester(0)
-{
-}
-
-QString ModelInspector::id() const
-{
-  return metaObject()->className();
-}
-
-QString ModelInspector::name() const
-{
- return tr("Models");
-}
-
-QStringList ModelInspector::supportedTypes() const
-{
-  return QStringList(QAbstractItemModel::staticMetaObject.className());
-}
-
-void ModelInspector::init(ProbeInterface *probe)
 {
   m_modelModel = new ModelModel(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
           m_modelModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
           m_modelModel, SLOT(objectRemoved(QObject*)));
+  probe->registerModel("com.kdab.GammaRay.ModelModel", m_modelModel);
 
   m_modelTester = new ModelTester(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
           m_modelTester, SLOT(objectAdded(QObject*)));
 }
 
-QWidget *ModelInspector::createWidget(ProbeInterface *probe, QWidget *parentWidget)
+QString ModelInspectorFactory::name() const
 {
-  return new ModelInspectorWidget(this, probe, parentWidget);
+ return tr("Models");
 }
 
 ModelModel *ModelInspector::modelModel() const

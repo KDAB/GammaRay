@@ -63,7 +63,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   // built-in tools
   m_tools.push_back(new ObjectInspectorFactory(this));
   m_tools.push_back(new WidgetInspectorFactory(this));
-  m_tools.push_back(new ModelInspector(this));
+  m_tools.push_back(new ModelInspectorFactory(this));
   m_tools.push_back(new SceneInspectorFactory(this));
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   m_tools.push_back(new ConnectionInspectorFactory(this));
