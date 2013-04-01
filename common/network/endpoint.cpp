@@ -141,6 +141,8 @@ void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddr
   Q_ASSERT(obj->messageHandler.isEmpty());
   obj->receiver = receiver;
   obj->messageHandler = messageHandlerName;
+  Q_ASSERT(!m_handlerMap.contains(receiver, obj));
+  m_handlerMap.insert(receiver, obj);
   connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(handlerDestroyed(QObject*)));
 }
 
