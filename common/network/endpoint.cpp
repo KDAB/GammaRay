@@ -48,6 +48,11 @@ Endpoint::~Endpoint()
     delete it.value();
 }
 
+Endpoint* Endpoint::instance()
+{
+  return s_instance;
+}
+
 void Endpoint::send(const Message& msg)
 {
   Q_ASSERT(s_instance);

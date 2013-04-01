@@ -58,6 +58,9 @@ public:
   /** Returns the object address for @p objectName, or @c Protocol::InvalidObjectAddress if not known. */
   Protocol::ObjectAddress objectAddress(const QString &objectName) const;
 
+  /** Singleton accessor. */
+  static Endpoint* instance();
+
 signals:
   /** Emitted when we lost the connection to the other endpoint. */
   void disconnected();
