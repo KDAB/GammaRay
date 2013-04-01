@@ -27,6 +27,7 @@
 #include <network/protocol.h>
 
 #include <QObject>
+#include <QPointer>
 
 class QBuffer;
 class QAbstractItemModel;
@@ -74,8 +75,10 @@ class RemoteModelServer : public QObject
     void layoutChanged();
     void modelReset();
 
+    void modelDeleted();
+
   private:
-    QAbstractItemModel *m_model;
+    QPointer<QAbstractItemModel> m_model;
     // those two are used for canSerialize, since recreating the QBuffer is somewhat expensive,
     // especially since being a QObject triggers all kind of GammaRay internals
     QByteArray m_dummyData;

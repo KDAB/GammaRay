@@ -75,6 +75,7 @@ void RemoteModelServer::connectModel()
   connect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), SLOT(columnsRemoved(QModelIndex,int,int)));
   connect(m_model, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
   connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
+  connect(m_model, SIGNAL(destroyed(QObject*)), SLOT(modelDeleted()));
 }
 
 void RemoteModelServer::disconnectModel()
@@ -90,6 +91,7 @@ void RemoteModelServer::disconnectModel()
   disconnect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), this, SLOT(columnsRemoved(QModelIndex,int,int)));
   disconnect(m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()));
   disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
+  disconnect(m_model, SIGNAL(destroyed(QObject*)), this, SLOT(modelDeleted()));
 }
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
@@ -280,6 +282,13 @@ void RemoteModelServer::sendMoveMessage(Protocol::MessageType type, const QModel
   msg.payload() << Protocol::fromQModelIndex(sourceParent) << qint32(sourceStart) << qint32(sourceEnd)
                << Protocol::fromQModelIndex(destinationParent) << qint32(destinationIndex);
   Server::send(msg);
+}
+
+void RemoteModelServer::modelDeleted()
+{
+  m_model = 0;
+  if (m_monitored)
+    modelReset();
 }
 
 #include "remotemodelserver.moc"
