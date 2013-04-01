@@ -55,7 +55,7 @@ void SelectionModelClient::serverRegistered(const QString& objectName, Protocol:
   }
 }
 
-void SelectionModelClient::serverunRegistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
+void SelectionModelClient::serverUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
   Q_UNUSED(objectAddress);
   if (objectName == m_objectName)
