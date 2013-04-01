@@ -165,7 +165,7 @@ void Endpoint::handlerDestroyed(QObject* obj)
   foreach (ObjectInfo *obj, objs) {
     obj->receiver = 0;
     obj->messageHandler.clear();
-    handlerDestroyed(obj->address, obj->name);
+    handlerDestroyed(obj->address, QString(obj->name)); // copy the name, in case unregisterMessageHandlerInternal() is called inside
   }
 }
 
