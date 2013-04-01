@@ -58,7 +58,7 @@ void RemoteModelServer::setModel(QAbstractItemModel *model)
   }
 
   m_model = model;
-  if (m_monitored)
+  if (m_model && m_monitored)
     connectModel();
 }
 
@@ -94,6 +94,9 @@ void RemoteModelServer::disconnectModel()
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 {
+  if (!m_model && msg.type() != Protocol::ModelSyncBarrier)
+    return;
+
   switch (msg.type()) {
     case Protocol::ModelRowColumnCountRequest:
     {
