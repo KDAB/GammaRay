@@ -61,6 +61,10 @@ namespace ObjectBroker {
 
   /** Register a newly created selection model. */
   GAMMARAY_COMMON_EXPORT void registerSelectionModel(QItemSelectionModel *selectionModel);
+  /** Unregisters a selection model. You have to take care of deletion yourself. */
+  GAMMARAY_COMMON_EXPORT void unregisterSelectionModel(QItemSelectionModel *selectionModel);
+  /** Checks whether a selection model for the given @p model is registered already. */
+  GAMMARAY_COMMON_EXPORT bool hasSelectionModel(QAbstractItemModel* model);
 
   /** Retrieve the selection model for @p model. */
   GAMMARAY_COMMON_EXPORT QItemSelectionModel* selectionModel(QAbstractItemModel *model);

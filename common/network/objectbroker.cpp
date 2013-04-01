@@ -109,6 +109,17 @@ void ObjectBroker::registerSelectionModel(QItemSelectionModel* selectionModel)
   s_objectBroker()->selectionModels.insert(const_cast<QAbstractItemModel*>(selectionModel->model()), selectionModel);
 }
 
+void ObjectBroker::unregisterSelectionModel(QItemSelectionModel *selectionModel)
+{
+  Q_ASSERT(s_objectBroker()->selectionModels.contains(const_cast<QAbstractItemModel*>(selectionModel->model())));
+  s_objectBroker()->selectionModels.remove(const_cast<QAbstractItemModel*>(selectionModel->model()));
+}
+
+bool ObjectBroker::hasSelectionModel(QAbstractItemModel* model)
+{
+  return s_objectBroker()->selectionModels.contains(model);
+}
+
 static QAbstractItemModel* sourceModelForProxy(QAbstractItemModel* model)
 {
   QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>(model);
