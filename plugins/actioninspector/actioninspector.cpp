@@ -35,7 +35,6 @@
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
 #include <QSplitter>
-#include <QStateMachine>
 #include <QTreeView>
 
 #include <QtPlugin>
@@ -65,8 +64,6 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
   objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
   objectTreeView->setRootIsDecorated(false);
   vbox->addWidget(objectTreeView);
-  connect(objectTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-          SLOT(handleRowChanged(QModelIndex)));
   connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
   mObjectTreeView = objectTreeView;
 
@@ -87,12 +84,6 @@ void ActionInspector::delayedInit()
   if (!matches.isEmpty()) {
     mObjectTreeView->setCurrentIndex(matches.first());
   }
-}
-
-void ActionInspector::handleRowChanged(const QModelIndex &index)
-{
-  Q_UNUSED(index);
-  // TODO: Unused
 }
 
 void ActionInspector::triggerAction(const QModelIndex &index)
