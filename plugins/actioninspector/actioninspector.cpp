@@ -29,12 +29,10 @@
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
 
-#include <QCoreApplication>
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
-#include <QSplitter>
 #include <QTreeView>
 
 #include <QtPlugin>
@@ -66,24 +64,10 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
   vbox->addWidget(objectTreeView);
   connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
   mObjectTreeView = objectTreeView;
-
-  QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
 
 ActionInspector::~ActionInspector()
 {
-}
-
-void ActionInspector::delayedInit()
-{
-  // select the qApp object (if any) in the object treeView
-  const QAbstractItemModel *viewModel = mObjectTreeView->model();
-  const QModelIndexList matches = viewModel->match(viewModel->index(0, 0),
-                                                   ObjectModel::ObjectRole,
-                                                   QVariant::fromValue<QObject*>(qApp));
-  if (!matches.isEmpty()) {
-    mObjectTreeView->setCurrentIndex(matches.first());
-  }
 }
 
 void ActionInspector::triggerAction(const QModelIndex &index)

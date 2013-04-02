@@ -43,8 +43,6 @@ class ActionInspector : public QWidget
     virtual ~ActionInspector();
 
   private Q_SLOTS:
-    void delayedInit();
-
     void triggerAction(const QModelIndex &index);
 
   private:
