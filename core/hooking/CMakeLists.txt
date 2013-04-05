@@ -6,13 +6,19 @@ include_directories(
 )
 
 set(gammaray_probe_srcs
-  abstractfunctionoverwriter.cpp
-  functionoverwriterfactory.cpp
-  winfunctionoverwriter.cpp
-  unixfunctionoverwriter.cpp
   probecreator.cpp
   hooks.cpp
 )
+
+if(WIN32 OR APPLE)
+  set(gammaray_probe_srcs
+    ${gammaray_probe_srcs}
+    abstractfunctionoverwriter.cpp
+    functionoverwriterfactory.cpp
+    winfunctionoverwriter.cpp
+    unixfunctionoverwriter.cpp
+  )
+endif()
 
 # for the hooks, we actually use gammaray_core
 remove_definitions(-DMAKE_GAMMARAY_LIB)
