@@ -26,62 +26,20 @@
 #include "include/probeinterface.h"
 #include "include/objecttypefilterproxymodel.h"
 
-#include "kde/kfilterproxysearchline.h"
-#include "kde/krecursivefilterproxymodel.h"
-
-#include <QDebug>
-#include <QHBoxLayout>
-#include <QHeaderView>
-#include <QSortFilterProxyModel>
-#include <QTreeView>
-
 #include <QtPlugin>
 
 using namespace GammaRay;
 
-ActionInspector::ActionInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent),
-    mProbeIface(probe)
+ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
+  : QObject(parent)
 {
   ActionModel *actionFilterProxy = new ActionModel(this);
   actionFilterProxy->setSourceModel(probe->objectListModel());
-
-  QSortFilterProxyModel *searchFilterProxy = new KRecursiveFilterProxyModel(this);
-  searchFilterProxy->setSourceModel(actionFilterProxy);
-  searchFilterProxy->setDynamicSortFilter(true);
-
-  QVBoxLayout *vbox = new QVBoxLayout(this);
-
-  KFilterProxySearchLine *objectSearchLine = new KFilterProxySearchLine(this);
-  objectSearchLine->setProxy(searchFilterProxy);
-  vbox->addWidget(objectSearchLine);
-
-  QTreeView *objectTreeView = new QTreeView(this);
-  objectTreeView->setModel(searchFilterProxy);
-  objectTreeView->setSortingEnabled(true);
-  objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
-  objectTreeView->setRootIsDecorated(false);
-  vbox->addWidget(objectTreeView);
-  connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
-  mObjectTreeView = objectTreeView;
+  probe->registerModel("com.kdab.GammaRay.ActionModel", actionFilterProxy);
 }
 
 ActionInspector::~ActionInspector()
 {
-}
-
-void ActionInspector::triggerAction(const QModelIndex &index)
-{
-  if (!index.isValid()) {
-    return;
-  }
-
-  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  QAction *action = qobject_cast<QAction*>(obj);
-
-  if (action) {
-    action->trigger();
-  }
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

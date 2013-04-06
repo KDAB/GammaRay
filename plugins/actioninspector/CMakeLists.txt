@@ -8,6 +8,7 @@ set(gammaray_actioninspector_plugin_srcs
 
   actionvalidator.cpp
   actioninspector.cpp
+  actioninspectorwidget.cpp
   actionmodel.cpp
 )
 

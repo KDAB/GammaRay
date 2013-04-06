@@ -19,43 +19,34 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTOR_H
-#define GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTOR_H
+#ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTORWIDGET_H
+#define GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTORWIDGET_H
 
 #include "include/toolfactory.h"
-#include "actioninspectorwidget.h"
 
 #include <QAction>
+#include <QWidget>
+
+class QTreeView;
+class QModelIndex;
 
 namespace GammaRay {
 
-class ActionInspector : public QObject
+class ActionInspectorWidget : public QWidget
 {
   Q_OBJECT
 
   public:
-    explicit ActionInspector(ProbeInterface *probe, QObject *parent = 0);
-    virtual ~ActionInspector();
-};
+    explicit ActionInspectorWidget(QWidget *parent = 0);
+    ~ActionInspectorWidget();
 
-class ActionInspectorFactory : public QObject,
-    public StandardToolFactory2<QAction, ActionInspector, ActionInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ActionInspector")
+  private Q_SLOTS:
+    void triggerAction(const QModelIndex &index);
 
-  public:
-    explicit ActionInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    virtual inline QString name() const
-    {
-      return tr("Action Inspector");
-    }
+  private:
+    QTreeView *mObjectTreeView;
 };
 
 }
 
-#endif // GAMMARAY_ACTIONINSPECTOR_H
+#endif // GAMMARAY_ACTIONINSPECTORWIDGET_H
