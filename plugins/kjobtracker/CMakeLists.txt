@@ -30,13 +30,14 @@ add_definitions(
 set(gammaray_kjob_plugin_srcs
   kjobmodel.cpp
   kjobtracker.cpp
+  kjobtrackerwidget.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
 )
 
 qt4_automoc(${gammaray_kjob_plugin_srcs})
 
 qt4_wrap_ui(gammaray_kjob_plugin_srcs
-  kjobtracker.ui
+  kjobtrackerwidget.ui
 )
 
 gammaray_add_plugin(gammaray_kjobtracker_plugin

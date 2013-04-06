@@ -23,7 +23,6 @@
 
 #include "kjobtracker.h"
 #include "kjobmodel.h"
-#include "ui_kjobtracker.h"
 
 using namespace GammaRay;
 
@@ -31,40 +30,22 @@ using namespace GammaRay;
 
 #include <QDebug>
 #include <QtPlugin>
-#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
-KJobModel *KJobTracker::m_jobModel = 0;
-
-KJobTracker::KJobTracker(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::KJobTracker)
+KJobTracker::KJobTracker(ProbeInterface *probe, QObject *parent)
+  : QObject(parent), m_jobModel(new KJobModel(this))
 {
-  Q_UNUSED(probe);
-  ui->setupUi(this);
+  connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
+          m_jobModel, SLOT(objectAdded(QObject*)));
+  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
+          m_jobModel, SLOT(objectRemoved(QObject*)));
 
-  QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
-  filter->setSourceModel(m_jobModel);
-  ui->searchLine->setProxy(filter);
-  ui->jobView->setModel(filter);
+  probe->registerModel("com.kdab.GammaRay.KJobModel", m_jobModel);
 }
 
 KJobTracker::~KJobTracker()
 {
-}
-
-void KJobTrackerFactory::init(ProbeInterface *probe)
-{
-  GammaRay::StandardToolFactory<KJob, GammaRay::KJobTracker>::init(probe);
-
-  if (!KJobTracker::m_jobModel) {
-    KJobTracker::m_jobModel = new KJobModel(this);
-
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
-            KJobTracker::m_jobModel, SLOT(objectAdded(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
-            KJobTracker::m_jobModel, SLOT(objectRemoved(QObject*)));
-  }
 }
 
 Q_EXPORT_PLUGIN(KJobTrackerFactory)

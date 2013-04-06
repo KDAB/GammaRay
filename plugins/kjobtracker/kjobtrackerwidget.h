@@ -1,5 +1,5 @@
 /*
-  kjobtracker.h
+  kjobtrackerwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,46 +21,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_KJOBTRACKER_H
-#define GAMMARAY_KJOBTRACKER_H
+#ifndef GAMMARAY_KJOBTRACKERWIDGET_H
+#define GAMMARAY_KJOBTRACKERWIDGET_H
 
-#include "kjobtrackerwidget.h"
-#include "include/toolfactory.h"
+#include <QWidget>
 
-#include <KJob>
-
-class KJob;
 namespace GammaRay {
 
-class KJobModel;
+namespace Ui {
+  class KJobTrackerWidget;
+}
 
-class KJobTracker : public QObject
+class KJobTrackerWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit KJobTracker(ProbeInterface *probe, QObject *parent = 0);
-    virtual ~KJobTracker();
+    explicit KJobTrackerWidget(QWidget *parent = 0);
+    ~KJobTrackerWidget();
 
   private:
-    KJobModel *m_jobModel;
-};
-
-class KJobTrackerFactory : public QObject, public StandardToolFactory2<KJob, KJobTracker, KJobTrackerWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-
-  public:
-    explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("KJobs");
-    }
+    QScopedPointer<Ui::KJobTrackerWidget> ui;
 };
 
 }
 
-#endif // GAMMARAY_KJOBTRACKER_H
+#endif // GAMMARAY_KJOBTRACKERWIDGET_H

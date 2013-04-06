@@ -1,5 +1,5 @@
 /*
-  kjobtracker.h
+  kjobtrackerwidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,46 +21,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_KJOBTRACKER_H
-#define GAMMARAY_KJOBTRACKER_H
-
 #include "kjobtrackerwidget.h"
-#include "include/toolfactory.h"
+#include "ui_kjobtrackerwidget.h"
 
-#include <KJob>
+#include <common/network/objectbroker.h>
 
-class KJob;
-namespace GammaRay {
+using namespace GammaRay;
 
-class KJobModel;
+#include <QDebug>
+#include <QtPlugin>
+#include <QSortFilterProxyModel>
 
-class KJobTracker : public QObject
+using namespace GammaRay;
+
+KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
+  : QWidget(parent), ui(new Ui::KJobTrackerWidget)
 {
-  Q_OBJECT
-  public:
-    explicit KJobTracker(ProbeInterface *probe, QObject *parent = 0);
-    virtual ~KJobTracker();
+  ui->setupUi(this);
 
-  private:
-    KJobModel *m_jobModel;
-};
-
-class KJobTrackerFactory : public QObject, public StandardToolFactory2<KJob, KJobTracker, KJobTrackerWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-
-  public:
-    explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("KJobs");
-    }
-};
-
+  QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
+  filter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.KJobModel"));
+  ui->searchLine->setProxy(filter);
+  ui->jobView->setModel(filter);
 }
 
-#endif // GAMMARAY_KJOBTRACKER_H
+KJobTrackerWidget::~KJobTrackerWidget()
+{
+}
+
+#include "kjobtrackerwidget.moc"
