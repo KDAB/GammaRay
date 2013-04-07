@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Style
+X-GammaRay-Types=QStyle;
+Exec=gammaray_styleinspector_plugin

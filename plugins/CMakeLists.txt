@@ -11,6 +11,7 @@ if(QT_QTSCRIPTTOOLS_FOUND OR Qt5ScriptTools_FOUND)
 endif()
 
 add_subdirectory(statemachineviewer)
+add_subdirectory(styleinspector)
 add_subdirectory(timertop)
 if(NOT Qt5Core_FOUND)
   add_subdirectory(kjobtracker)
