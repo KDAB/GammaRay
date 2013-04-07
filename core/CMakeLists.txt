@@ -122,7 +122,6 @@ qt4_wrap_ui(gammaray_srcs
 
   tools/sceneinspector/graphicssceneview.ui
   tools/fontbrowser/fontbrowser.ui
-  tools/objectinspector/objectinspector.ui
   tools/resourcebrowser/resourcebrowser.ui
   tools/sceneinspector/sceneinspector.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
