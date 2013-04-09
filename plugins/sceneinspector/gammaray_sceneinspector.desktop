@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Graphics Scenes
+X-GammaRay-Types=QGraphicsScene;
+Exec=gammaray_sceneinspector_plugin

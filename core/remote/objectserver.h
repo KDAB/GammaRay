@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OBJECTSERVER_H
 #define GAMMARAY_OBJECTSERVER_H
 
-#include <network/networkobject.h>
+#include <common/network/networkobject.h>
 
 namespace GammaRay {
 

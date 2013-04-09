@@ -34,7 +34,6 @@
 #include "tools/modelinspector/modelinspector.h"
 #include "tools/objectinspector/objectinspector.h"
 #include "tools/resourcebrowser/resourcebrowser.h"
-#include "tools/sceneinspector/sceneinspector.h"
 #include "tools/selectionmodelinspector/selectionmodelinspector.h"
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/widgetinspector/widgetinspector.h"
@@ -63,7 +62,6 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new ObjectInspectorFactory(this));
   m_tools.push_back(new WidgetInspectorFactory(this));
   m_tools.push_back(new ModelInspectorFactory(this));
-  m_tools.push_back(new SceneInspectorFactory(this));
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   m_tools.push_back(new ConnectionInspectorFactory(this));
 #endif

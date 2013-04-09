@@ -39,9 +39,6 @@ set(gammaray_srcs
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
-  tools/sceneinspector/graphicsview.cpp
-  tools/sceneinspector/graphicssceneview.cpp
-  tools/sceneinspector/scenemodel.cpp
   tools/metatypebrowser/metatypesmodel.cpp
   tools/fontbrowser/fontmodel.cpp
   tools/localeinspector/localemodel.cpp
@@ -63,7 +60,6 @@ set(gammaray_srcs
   tools/objectinspector/objectinspector.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
-  tools/sceneinspector/sceneinspector.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
   tools/widgetinspector/widgetinspector.cpp
@@ -120,10 +116,8 @@ qt4_automoc(${gammaray_srcs})
 qt4_wrap_ui(gammaray_srcs
   paintbufferviewer.ui
 
-  tools/sceneinspector/graphicssceneview.ui
   tools/fontbrowser/fontbrowser.ui
   tools/resourcebrowser/resourcebrowser.ui
-  tools/sceneinspector/sceneinspector.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
   tools/widgetinspector/widgetinspector.ui

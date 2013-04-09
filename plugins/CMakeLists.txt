@@ -10,6 +10,7 @@ if(QT_QTSCRIPTTOOLS_FOUND OR Qt5ScriptTools_FOUND)
   add_subdirectory(scriptenginedebugger)
 endif()
 
+add_subdirectory(sceneinspector)
 add_subdirectory(statemachineviewer)
 add_subdirectory(styleinspector)
 add_subdirectory(timertop)

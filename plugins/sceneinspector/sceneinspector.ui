@@ -61,7 +61,7 @@
   <customwidget>
    <class>GammaRay::GraphicsSceneView</class>
    <extends>QWidget</extends>
-   <header location="global">tools/sceneinspector/graphicssceneview.h</header>
+   <header>graphicssceneview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

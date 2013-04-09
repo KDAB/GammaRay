@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_METAOBJECTREPOSITORY_H
 #define GAMMARAY_METAOBJECTREPOSITORY_H
 
+#include <include/gammaray_export.h>
 #include <QHash>
 
 class QString;
@@ -36,7 +37,7 @@ class MetaObject;
  * Repository of compile-time introspection information for stuff
  * not covered by the Qt meta object system.
  */
-class MetaObjectRepository
+class GAMMARAY_EXPORT MetaObjectRepository
 {
   public:
     ~MetaObjectRepository();
