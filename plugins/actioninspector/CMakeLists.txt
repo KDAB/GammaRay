@@ -22,5 +22,5 @@ gammaray_add_plugin(gammaray_actioninspector_plugin
 target_link_libraries(gammaray_actioninspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
-  gammaray_probe
+  gammaray_core
 )

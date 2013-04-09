@@ -5,9 +5,6 @@ include_directories(
 )
 
 set(gammaray_sceneinspector_plugin_srcs
-#   ../../3rdparty/kde/kfilterproxysearchline.cpp
-#   ../../3rdparty/kde/krecursivefilterproxymodel.cpp
-
   graphicsview.cpp
   graphicssceneview.cpp
   scenemodel.cpp
@@ -28,5 +25,5 @@ gammaray_add_plugin(gammaray_sceneinspector_plugin
 target_link_libraries(gammaray_sceneinspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
-  gammaray_probe
+  gammaray_core
 )

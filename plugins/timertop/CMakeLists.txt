@@ -27,7 +27,7 @@ gammaray_add_plugin(gammaray_timertop_plugin
 target_link_libraries(gammaray_timertop_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
-  gammaray_probe
+  gammaray_core
 )
 
 if(NOT WIN32 AND NOT APPLE)

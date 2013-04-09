@@ -47,7 +47,7 @@ gammaray_add_plugin(gammaray_kjobtracker_plugin
 
 target_link_libraries(gammaray_kjobtracker_plugin
   ${KDE4_KDECORE_LIBS}
-  gammaray_probe
+  gammaray_core
 )
 
 endif()

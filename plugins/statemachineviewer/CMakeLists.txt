@@ -29,7 +29,7 @@ set(gammaray_statemachineviewer_plugin_libs
 
   ${GRAPHVIZ_GRAPH_LIBRARY}
   ${GRAPHVIZ_GVC_LIBRARY}
-  gammaray_probe
+  gammaray_core
 )
 
 gammaray_add_plugin(gammaray_statemachineviewer_plugin

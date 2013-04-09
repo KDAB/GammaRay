@@ -34,7 +34,7 @@ target_link_libraries(gammaray_objectvisualizer_plugin
   ${QT_QTGUI_LIBRARIES}
   ${VTK_LIBRARIES}
   QVTK
-  gammaray_probe
+  gammaray_core
 )
 
 endif()

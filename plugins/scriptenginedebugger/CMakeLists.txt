@@ -20,5 +20,5 @@ target_link_libraries(gammaray_scriptenginedebugger_plugin
   ${QT_QTGUI_LIBRARIES}
   ${QT_QTSCRIPT_LIBRARIES}
   ${QT_QTSCRIPTTOOLS_LIBRARIES}
-  gammaray_probe
+  gammaray_core
 )
