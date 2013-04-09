@@ -15,6 +15,7 @@ set(gammaray_common_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp
 
   network/objectbroker.cpp
+  util.cpp
 )
 
 qt4_automoc(${gammaray_common_srcs})

@@ -12,7 +12,6 @@ include_directories(
 set(gammaray_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/resourcemodel.cpp
 
-  util.cpp
   metaobject.cpp
   metaobjecttreemodel.cpp
   metaobjectrepository.cpp
