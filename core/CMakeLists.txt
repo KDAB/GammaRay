@@ -2,6 +2,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
   ${CMAKE_SOURCE_DIR}/common
+  ${CMAKE_SOURCE_DIR}/include
   ${CMAKE_SOURCE_DIR}/ui
   ${CMAKE_CURRENT_SOURCE_DIR}
 
@@ -149,5 +150,4 @@ if(NOT WIN32)
 endif()
 install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_subdirectory(hooking)
 add_subdirectory(tools)

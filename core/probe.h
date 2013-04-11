@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_PROBE_H
 #define GAMMARAY_PROBE_H
 
-#include "include/gammaray_core_export.h"
-#include "include/probeinterface.h"
+#include "gammaray_core_export.h"
+#include "probeinterface.h"
 
 #include <QObject>
 #include <QQueue>
