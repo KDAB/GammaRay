@@ -24,6 +24,8 @@
 #include <QSortFilterProxyModel>
 
 #include "kdeui_export.h"
+#undef KDEUI_EXPORT
+#define KDEUI_EXPORT GAMMARAY_UI_EXPORT
 
 class KRecursiveFilterProxyModelPrivate;
 

@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_DEFERREDRESIZEMODESETTER_H
 #define GAMMARAY_DEFERREDRESIZEMODESETTER_H
 
+#include "include/gammaray_ui_export.h"
+
 #include <QObject>
 #include <QHeaderView>
 
@@ -35,7 +37,7 @@ namespace GammaRay {
  * hasn't been loaded yet by the corresponding model, as well as forgetting the setting if the
  * model reports a columnCount of 0 again inbetween.
  */
-class DeferredResizeModeSetter : public QObject
+class GAMMARAY_UI_EXPORT DeferredResizeModeSetter : public QObject
 {
   Q_OBJECT
 public:

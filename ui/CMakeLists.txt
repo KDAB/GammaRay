@@ -14,15 +14,10 @@ set(gammaray_ui_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
 
-  ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
-
-  sidepane.cpp
   palettemodel.cpp
-  aboutpluginsdialog.cpp
-  mainwindow.cpp
-  deferredresizemodesetter.cpp
   methodinvocationdialog.cpp
   propertywidget.cpp
+  deferredresizemodesetter.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
@@ -32,6 +27,35 @@ set(gammaray_ui_srcs
   propertyeditor/propertyintpaireditor.cpp
   propertyeditor/propertypaletteeditor.cpp
   propertyeditor/palettedialog.cpp
+)
+
+qt4_wrap_ui(gammaray_ui_srcs
+  methodinvocationdialog.ui
+  propertywidget.ui
+
+  propertyeditor/propertydoublepaireditor.ui
+  propertyeditor/propertyextendededitor.ui
+  propertyeditor/propertyintpaireditor.ui
+  propertyeditor/palettedialog.ui
+)
+
+qt4_automoc(${gammaray_ui_srcs})
+
+add_definitions(-DMAKE_GAMMARAY_UI_LIB)
+
+add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
+
+target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal)
+
+install(TARGETS gammaray_ui ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+
+set(gammaray_ui_internal_srcs
+  ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
+
+  sidepane.cpp
+  aboutpluginsdialog.cpp
+  mainwindow.cpp
 
   tools/codecbrowser/codecbrowserwidget.cpp
   tools/connectioninspector/connectioninspectorwidget.cpp
@@ -45,15 +69,8 @@ set(gammaray_ui_srcs
   tools/standardpaths/standardpathswidget.cpp
 )
 
-qt4_wrap_ui(gammaray_ui_srcs
+qt4_wrap_ui(gammaray_ui_internal_srcs
   mainwindow.ui
-  methodinvocationdialog.ui
-  propertywidget.ui
-
-  propertyeditor/propertydoublepaireditor.ui
-  propertyeditor/propertyextendededitor.ui
-  propertyeditor/propertyintpaireditor.ui
-  propertyeditor/palettedialog.ui
 
   tools/codecbrowser/codecbrowserwidget.ui
   tools/connectioninspector/connectioninspectorwidget.ui
@@ -66,12 +83,13 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/standardpaths/standardpathswidget.ui
 )
 
+qt4_automoc(${gammaray_ui_internal_srcs})
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 
-qt4_automoc(${gammaray_ui_srcs})
+target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)
 
-add_definitions(-DMAKE_GAMMARAY_UI_LIB)
 
-add_library(gammaray_ui STATIC ${gammaray_ui_srcs})
 
-target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+

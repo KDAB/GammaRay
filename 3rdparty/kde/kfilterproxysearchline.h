@@ -21,6 +21,8 @@
 #define KFILTERPROXYSEARCHLINE_H
 
 #include "kdeui_export.h"
+#undef KDEUI_EXPORT
+#define KDEUI_EXPORT GAMMARAY_UI_EXPORT
 
 #include <QWidget>
 

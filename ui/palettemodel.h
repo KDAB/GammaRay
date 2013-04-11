@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_PALETTEMODEL_H
 #define GAMMARAY_PALETTEMODEL_H
 
+#include "include/gammaray_ui_export.h"
+
 #include <QAbstractItemModel>
 #include <QPalette>
 
@@ -32,7 +34,7 @@ namespace GammaRay {
 /**
  * Model showing the content of a QPalette.
  */
-class PaletteModel : public QAbstractTableModel
+class GAMMARAY_UI_EXPORT PaletteModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
