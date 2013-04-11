@@ -27,7 +27,8 @@
 #include "paintbufferviewer.h"
 #include "widgettreemodel.h"
 #include "ui_widgetinspector.h"
-#include "propertycontroller.h"
+
+#include <core/propertycontroller.h>
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
@@ -42,6 +43,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QMainWindow>
+#include <QtPlugin>
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
@@ -320,5 +322,9 @@ void WidgetInspector::analyzePainting()
   viewer->show();
 #endif
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(WidgetInspectorFactory)
+#endif
 
 #include "widgetinspector.moc"

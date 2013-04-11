@@ -98,7 +98,7 @@
   <customwidget>
    <class>GammaRay::WidgetPreviewWidget</class>
    <extends>QWidget</extends>
-   <header>tools/widgetinspector/widgetpreviewwidget.h</header>
+   <header>widgetpreviewwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

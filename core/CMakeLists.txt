@@ -62,10 +62,6 @@ set(gammaray_srcs
   tools/resourcebrowser/resourcefiltermodel.cpp
   tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
-  tools/widgetinspector/widgetinspector.cpp
-  tools/widgetinspector/overlaywidget.cpp
-  tools/widgetinspector/widgettreemodel.cpp
-  tools/widgetinspector/widgetpreviewwidget.cpp
 
   remote/server.cpp
   remote/remotemodelserver.cpp
@@ -83,15 +79,6 @@ if(Qt5Core_FOUND)
   )
 endif()
 
-if(HAVE_PRIVATE_QT_HEADERS)
-  set(gammaray_srcs
-    ${gammaray_srcs}
-    paintbuffermodel.cpp
-    paintbufferviewer.cpp
-    paintbufferreplaywidget.cpp
-  )
-endif()
-
 if(NOT WIN32)
   set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
 elseif(MINGW)
@@ -104,13 +91,10 @@ endif()
 
 qt4_automoc(${gammaray_srcs})
 qt4_wrap_ui(gammaray_srcs
-  paintbufferviewer.ui
-
   tools/fontbrowser/fontbrowser.ui
   tools/resourcebrowser/resourcebrowser.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
   tools/textdocumentinspector/textdocumentinspector.ui
-  tools/widgetinspector/widgetinspector.ui
 )
 
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
@@ -140,5 +124,3 @@ if(NOT WIN32)
   target_link_libraries(gammaray_core dl)
 endif()
 install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-add_subdirectory(tools)

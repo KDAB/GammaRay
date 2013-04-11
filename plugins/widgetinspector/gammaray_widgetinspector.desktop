@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Widgets
+X-GammaRay-Types=QWidget;
+Exec=gammaray_widgetinspector_plugin
