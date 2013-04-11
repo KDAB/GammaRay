@@ -28,7 +28,7 @@
 #include <QPointer>
 #include <QHash>
 
-#include "include/gammaray_export.h"
+#include "include/gammaray_ui_export.h"
 
 #include <common/network/enums.h>
 
@@ -41,7 +41,7 @@ namespace GammaRay {
 class Ui_PropertyWidget;
 class PropertyEditorFactory;
 
-class GAMMARAY_EXPORT PropertyWidget : public QWidget
+class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
 {
   Q_OBJECT
   public:

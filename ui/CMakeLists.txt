@@ -70,10 +70,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 qt4_automoc(${gammaray_ui_srcs})
 
-# TODO: Compile fix for windows.
-# We might want create different export macros for core and ui,
-# they have been split into two different libraries
-add_definitions(-DMAKE_GAMMARAY_LIB)
+add_definitions(-DMAKE_GAMMARAY_UI_LIB)
 
 add_library(gammaray_ui STATIC ${gammaray_ui_srcs})
 

@@ -124,7 +124,7 @@ qt4_wrap_ui(gammaray_srcs
 
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
-add_definitions(-DMAKE_GAMMARAY_LIB)
+add_definitions(-DMAKE_GAMMARAY_CORE_LIB)
 
 # core lib
 add_library(gammaray_core SHARED

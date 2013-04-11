@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROBE_H
 #define GAMMARAY_PROBE_H
 
-#include "include/gammaray_export.h"
+#include "include/gammaray_core_export.h"
 #include "include/probeinterface.h"
 
 #include <QObject>
@@ -46,7 +46,7 @@ class ObjectTreeModel;
 class ToolModel;
 class MainWindow;
 
-class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
+class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
   Q_OBJECT
   public:
@@ -141,7 +141,7 @@ class GAMMARAY_EXPORT Probe : public QObject, public ProbeInterface
     QTimer *m_queueTimer;
 };
 
-class GAMMARAY_EXPORT SignalSlotsLocationStore
+class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore
 {
 public:
   /// store the location of @p method

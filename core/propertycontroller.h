@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROPERTYCONTROLLER_H
 #define GAMMARAY_PROPERTYCONTROLLER_H
 
-#include "include/gammaray_export.h"
+#include "include/gammaray_core_export.h"
 
 #include "remote/objectserver.h"
 
@@ -46,7 +46,7 @@ class MetaPropertyModel;
 class MethodArgumentModel;
 
 /** Non-UI part of the property widget. */
-class GAMMARAY_EXPORT PropertyController : public ObjectServer
+class GAMMARAY_CORE_EXPORT PropertyController : public ObjectServer
 {
   Q_OBJECT
 public:

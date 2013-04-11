@@ -1,5 +1,5 @@
 /*
-  gammaray_export.h
+  gammaray_ui_export.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,20 +21,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_EXPORT_H
-#define GAMMARAY_EXPORT_H
+#ifndef GAMMARAY_UI_EXPORT_H
+#define GAMMARAY_UI_EXPORT_H
 
 #include <qglobal.h>
 
-#ifdef GAMMARAY_STATICLIB
-#  undef GAMMARAY_SHAREDLIB
-#  define GAMMARAY_EXPORT
+#ifdef GAMMARAY_UI_STATICLIB
+#  undef GAMMARAY_UI_SHAREDLIB
+#  define GAMMARAY_UI_EXPORT
 #else
-#  ifdef MAKE_GAMMARAY_LIB
-#    define GAMMARAY_EXPORT Q_DECL_EXPORT
+#  ifdef MAKE_GAMMARAY_UI_LIB
+#    define GAMMARAY_UI_EXPORT Q_DECL_EXPORT
 #  else
-#    define GAMMARAY_EXPORT Q_DECL_IMPORT
+#    define GAMMARAY_UI_EXPORT Q_DECL_IMPORT
 #  endif
 #endif
 
-#endif /* GAMMARAY_EXPORT_H */
+#endif /* GAMMARAY_UI_EXPORT_H */
