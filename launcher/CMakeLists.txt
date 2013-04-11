@@ -32,9 +32,6 @@ set(gammaray_runner_srcs
   attachdialog.cpp
   processmodel.cpp
   processfiltermodel.cpp
-
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
 )
 if(NOT WIN32)
   set(gammaray_runner_srcs
@@ -62,7 +59,7 @@ qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
 
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal)
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)
 if(UNIX AND NOT APPLE)
   target_link_libraries(gammaray dl) # for preload check
 endif()
