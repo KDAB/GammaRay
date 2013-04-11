@@ -2,7 +2,11 @@
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 include_directories(
+  ${CMAKE_BINARY_DIR} # config-gammaray.h
   ${CMAKE_CURRENT_BINARY_DIR}
+
+  ${CMAKE_SOURCE_DIR}/core
+  ${CMAKE_SOURCE_DIR}/include
 )
 
 set(gammaray_probe_srcs
@@ -19,9 +23,6 @@ if(WIN32 OR APPLE)
     unixfunctionoverwriter.cpp
   )
 endif()
-
-# for the hooks, we actually use gammaray_core
-remove_definitions(-DMAKE_GAMMARAY_LIB)
 
 # probe lib
 qt4_automoc(${gammaray_probe_srcs})
