@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_MODELUTILS_H
 #define GAMMARAY_MODELUTILS_H
 
+#include "include/gammaray_ui_export.h"
+
 #include <QModelIndex>
 
 namespace GammaRay {
@@ -41,7 +43,7 @@ namespace ModelUtils {
   *
   * @see QAbstractItemModel::match(...)
   */
-  QModelIndexList match(const QAbstractItemModel* model, const QModelIndex& start,
+  GAMMARAY_UI_EXPORT QModelIndexList match(const QAbstractItemModel* model, const QModelIndex& start,
                               int role, bool (*accept)(const QVariant&),
                               int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchWrap));
 
