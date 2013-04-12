@@ -115,8 +115,8 @@ else()
     ${QT_QTNETWORK_LIBRARIES}
     gammaray_common
     gammaray_common_internal
-    gammaray_ui
     gammaray_ui_internal
+    gammaray_ui
   )
 endif()
 
