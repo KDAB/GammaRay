@@ -29,7 +29,6 @@
 
 #include <QWidget>
 
-class QSortFilterProxyModel;
 
 namespace GammaRay {
 

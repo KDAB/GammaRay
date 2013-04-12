@@ -29,7 +29,6 @@
 
 namespace GammaRay {
 
-class RemoteModel;
 
 /** Client-side connection endpoint. */
 class Client : public Endpoint

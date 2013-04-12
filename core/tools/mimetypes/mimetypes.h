@@ -30,7 +30,6 @@
 #include <QMimeData>
 #include <QMimeDatabase>
 
-class QMimeType;
 class QStandardItemModel;
 class QStandardItem;
 

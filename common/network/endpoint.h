@@ -30,7 +30,6 @@
 #include <QPointer>
 
 class QIODevice;
-class QDataStream;
 
 namespace GammaRay {
 

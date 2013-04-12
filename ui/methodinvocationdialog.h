@@ -31,7 +31,6 @@ class QAbstractItemModel;
 namespace GammaRay {
 
 namespace Ui { class MethodInvocationDialog; }
-class MethodArgumentModel;
 
 class MethodInvocationDialog : public QDialog
 {

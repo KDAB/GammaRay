@@ -26,8 +26,6 @@
 
 #include <QWidget>
 
-class QItemSelection;
-class QModelIndex;
 
 namespace GammaRay {
 
