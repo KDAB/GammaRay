@@ -38,7 +38,7 @@ typedef QList<PluginLoadError> PluginLoadErrors;
 class PluginLoadError
 {
   public:
-    PluginLoadError(QString _pluginFile, QString _errorString)
+    PluginLoadError(const QString &_pluginFile, const QString &_errorString)
       : pluginFile(_pluginFile), errorString(_errorString)
     {
     }
@@ -63,7 +63,7 @@ class PluginManager
 
     QVector<ToolFactory*> plugins();
 
-    QList<PluginLoadError> errors()
+    QList<PluginLoadError> errors() const
     {
       return m_errors;
     }
