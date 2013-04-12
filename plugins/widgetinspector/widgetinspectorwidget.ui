@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GammaRay::WidgetInspector</class>
- <widget class="QWidget" name="GammaRay::WidgetInspector">
+ <class>GammaRay::WidgetInspectorWidget</class>
+ <widget class="QWidget" name="GammaRay::WidgetInspectorWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -92,7 +92,7 @@
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>
-   <header>propertywidget.h</header>
+   <header>ui/propertywidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

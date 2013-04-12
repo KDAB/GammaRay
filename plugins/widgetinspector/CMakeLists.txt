@@ -7,6 +7,7 @@ include_directories(
 
 set(gammaray_widgetinspector_plugin_srcs
   widgetinspector.cpp
+  widgetinspectorwidget.cpp
   overlaywidget.cpp
   widgettreemodel.cpp
   widgetpreviewwidget.cpp
@@ -22,7 +23,7 @@ if(HAVE_PRIVATE_QT_HEADERS)
 endif()
 
 qt4_wrap_ui(gammaray_widgetinspector_plugin_srcs
-  widgetinspector.ui
+  widgetinspectorwidget.ui
   paintbufferviewer.ui
 )
 

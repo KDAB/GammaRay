@@ -52,13 +52,10 @@
 
 using namespace GammaRay;
 
-WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::WidgetInspector), m_overlayWidget(new OverlayWidget),
+WidgetInspector::WidgetInspector(ProbeInterface *probe, QObject *parent)
+  : ObjectServer("com.kdab.GammaRay.WidgetInspector", parent), m_overlayWidget(new OverlayWidget),
   m_propertyController(new PropertyController("com.kdab.GammaRay.WidgetInspector", this))
 {
-  ui->setupUi(this);
-  ui->widgetPropertyWidget->setObjectBaseName("com.kdab.GammaRay.WidgetInspector");
-
   m_overlayWidget->hide();
   connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
           SLOT(handleOverlayWidgetDestroyed(QObject*)));
@@ -70,38 +67,11 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   probe->registerModel("com.kdab.GammaRay.WidgetTree", widgetFilterProxy);
 
   m_widgetSelectionModel = ObjectBroker::selectionModel(widgetFilterProxy);
-  KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
-  widgetSearchProxy->setSourceModel(widgetFilterProxy);
-  ui->widgetTreeView->setModel(widgetSearchProxy);
-  ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetSearchProxy));
-  ui->widgetTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
-  ui->widgetTreeView->header()->setResizeMode(1, QHeaderView::Interactive);
-  ui->widgetSearchLine->setProxy(widgetSearchProxy);
   connect(m_widgetSelectionModel,
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
 
-  connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
-  connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
-  connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
-  connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
-  connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
-
-  addAction(ui->actionSaveAsImage);
-#ifdef HAVE_QT_SVG
-  addAction(ui->actionSaveAsSvg);
-#endif
-#ifdef HAVE_QT_PRINTSUPPORT
-  addAction(ui->actionSaveAsPdf);
-#endif
-#ifdef HAVE_QT_DESIGNER
-  addAction(ui->actionSaveAsUiFile);
-#endif
-#ifdef HAVE_PRIVATE_QT_HEADERS
-  addAction(ui->actionAnalyzePainting);
-#endif
-
-  setActionsEnabled(false);
+  // TODO this needs to be delayed until there actually is something to select
   selectDefaultItem();
 }
 
@@ -138,8 +108,6 @@ void WidgetInspector::widgetSelected(const QItemSelection& selection)
     }
 
     m_propertyController->setObject(obj);
-    ui->widgetPreviewWidget->setWidget(widget);
-    setActionsEnabled(widget != 0);
 
     if (widget &&
         qobject_cast<QDesktopWidget*>(widget) == 0 &&
@@ -148,14 +116,9 @@ void WidgetInspector::widgetSelected(const QItemSelection& selection)
     } else {
       m_overlayWidget->placeOn(0);
     }
-
-    // in case selection was triggered remotely
-    ui->widgetTreeView->scrollTo(index);
   } else {
     m_propertyController->setObject(0);
-    ui->widgetPreviewWidget->setWidget(0);
     m_overlayWidget->placeOn(0);
-    setActionsEnabled(false);
   }
 }
 
@@ -186,13 +149,6 @@ void WidgetInspector::widgetSelected(QWidget *widget)
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
-void WidgetInspector::setActionsEnabled(bool enabled)
-{
-  foreach (QAction *action, actions()) {
-    action->setEnabled(enabled);
-  }
-}
-
 QWidget *WidgetInspector::selectedWidget() const
 {
   const QModelIndexList indexes = m_widgetSelectionModel->selectedRows();
@@ -212,15 +168,10 @@ QWidget *WidgetInspector::selectedWidget() const
   return 0;
 }
 
-void WidgetInspector::saveAsImage()
-{
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As Image"),
-      QString(),
-      tr("Image Files (*.png *.jpg)"));
+// TODO the following actions should actually store the file on the client!
 
+void WidgetInspector::saveAsImage(const QString& fileName)
+{
   QWidget *widget = selectedWidget();
   if (fileName.isEmpty() || !widget) {
     return;
@@ -233,15 +184,8 @@ void WidgetInspector::saveAsImage()
   pixmap.save(fileName);
 }
 
-void WidgetInspector::saveAsSvg()
+void WidgetInspector::saveAsSvg(const QString &fileName)
 {
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As SVG"),
-      QString(),
-      tr("Scalable Vector Graphics (*.svg)"));
-
   QWidget *widget = selectedWidget();
   if (fileName.isEmpty() || !widget) {
     return;
@@ -252,15 +196,8 @@ void WidgetInspector::saveAsSvg()
   m_overlayWidget->show();
 }
 
-void WidgetInspector::saveAsPdf()
+void WidgetInspector::saveAsPdf(const QString &fileName)
 {
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As PDF"),
-      QString(),
-      tr("PDF (*.pdf)"));
-
   QWidget *widget = selectedWidget();
   if (fileName.isEmpty() || !widget) {
     return;
@@ -271,15 +208,8 @@ void WidgetInspector::saveAsPdf()
   m_overlayWidget->show();
 }
 
-void WidgetInspector::saveAsUiFile()
+void WidgetInspector::saveAsUiFile(const QString &fileName)
 {
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As Qt Designer UI File"),
-      QString(),
-      tr("Qt Designer UI File (*.ui)"));
-
   QWidget *widget = selectedWidget();
   if (fileName.isEmpty() || !widget) {
     return;
@@ -314,6 +244,7 @@ void WidgetInspector::callExternalExportAction(const char *name,
 
 void WidgetInspector::analyzePainting()
 {
+  qDebug() << Q_FUNC_INFO << selectedWidget();
   QWidget *widget = selectedWidget();
   if (!widget) {
     return;
@@ -325,6 +256,7 @@ void WidgetInspector::analyzePainting()
   widget->render(&buffer);
   m_overlayWidget->show();
 
+  // TODO: this still needs a core/UI split to work remotely
   PaintBufferViewer *viewer = new PaintBufferViewer(0);
   viewer->setWindowTitle(tr("Analyze Painting"));
   viewer->setAttribute(Qt::WA_DeleteOnClose);

@@ -24,10 +24,11 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
 
+#include "widgetinspectorwidget.h"
 #include "include/toolfactory.h"
+#include <core/remote/objectserver.h>
 
 #include <QLibrary>
-#include <QWidget>
 
 class QItemSelection;
 class QItemSelectionModel;
@@ -38,20 +39,15 @@ namespace GammaRay {
 class PropertyController;
 class OverlayWidget;
 
-namespace Ui {
-  class WidgetInspector;
-}
-
-class WidgetInspector : public QWidget
+class WidgetInspector : public ObjectServer
 {
   Q_OBJECT
   public:
-    explicit WidgetInspector(ProbeInterface *probe, QWidget *parent = 0);
+    explicit WidgetInspector(ProbeInterface *probe, QObject *parent = 0);
 
     void selectDefaultItem();
 
   private:
-    void setActionsEnabled(bool enabled);
     QWidget *selectedWidget() const;
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
 
@@ -61,23 +57,22 @@ class WidgetInspector : public QWidget
 
     void handleOverlayWidgetDestroyed(QObject*);
 
-    void saveAsImage();
-    void saveAsSvg();
-    void saveAsPdf();
-    void saveAsUiFile();
+    void saveAsImage(const QString &fileName);
+    void saveAsSvg(const QString &fileName);
+    void saveAsPdf(const QString &fileName);
+    void saveAsUiFile(const QString &fileName);
 
     void analyzePainting();
 
   private:
     OverlayWidget *m_overlayWidget;
-    QScopedPointer<Ui::WidgetInspector> ui;
     QLibrary m_externalExportActions;
     PropertyController *m_propertyController;
     QItemSelectionModel *m_widgetSelectionModel;
 };
 
 class WidgetInspectorFactory
-  : public QObject, public StandardToolFactory<QWidget, WidgetInspector>
+  : public QObject, public StandardToolFactory2<QWidget, WidgetInspector, WidgetInspectorWidget>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
