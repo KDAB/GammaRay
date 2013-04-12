@@ -107,7 +107,7 @@ add_library(gammaray_core SHARED
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_core gammaray_common gammaray_common_internal gammaray_ui gammaray_ui_internal Qt5::Widgets)
+  target_link_libraries(gammaray_core gammaray_common gammaray_common_internal gammaray_ui_internal gammaray_ui Qt5::Widgets)
 else()
   target_link_libraries(gammaray_core
     ${QT_QTCORE_LIBRARIES}
