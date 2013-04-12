@@ -3,9 +3,6 @@ include_directories(
 )
 
 set(gammaray_actioninspector_plugin_srcs
-  ../../3rdparty/kde/kfilterproxysearchline.cpp
-  ../../3rdparty/kde/krecursivefilterproxymodel.cpp
-
   actionvalidator.cpp
   actioninspector.cpp
   actioninspectorwidget.cpp
