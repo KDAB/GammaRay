@@ -75,8 +75,8 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   ui->widgetTreeView->header()->setResizeMode(1, QHeaderView::Interactive);
   ui->widgetSearchLine->setProxy(widgetSearchProxy);
   connect(ui->widgetTreeView->selectionModel(),
-          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(widgetSelected(QModelIndex)));
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(widgetSelected(QItemSelection)));
 
   connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
@@ -116,12 +116,16 @@ void WidgetInspector::selectDefaultItem()
       ObjectModel::ObjectRole, isMainWindowSubclassAcceptor);
 
   if (!matches.isEmpty()) {
-    ui->widgetTreeView->setCurrentIndex(matches.first());
+    ui->widgetTreeView->selectionModel()->select(matches.first(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
   }
 }
 
-void WidgetInspector::widgetSelected(const QModelIndex &index)
+void WidgetInspector::widgetSelected(const QItemSelection& selection)
 {
+  QModelIndex index;
+  if (selection.size() > 0)
+    index = selection.first().topLeft();
+
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QWidget *widget = qobject_cast<QWidget*>(obj);
@@ -175,7 +179,6 @@ void WidgetInspector::widgetSelected(QWidget *widget)
     QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
   ui->widgetTreeView->scrollTo(index);
-  widgetSelected(index);
 }
 
 void WidgetInspector::setActionsEnabled(bool enabled)

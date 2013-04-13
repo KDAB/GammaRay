@@ -29,6 +29,7 @@
 #include <QLibrary>
 #include <QWidget>
 
+class QItemSelection;
 class QModelIndex;
 
 namespace GammaRay {
@@ -54,7 +55,7 @@ class WidgetInspector : public QWidget
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
 
   private slots:
-    void widgetSelected(const QModelIndex &index);
+    void widgetSelected(const QItemSelection &selection);
     void widgetSelected(QWidget *widget);
 
     void handleOverlayWidgetDestroyed(QObject*);
