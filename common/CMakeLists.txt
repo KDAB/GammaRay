@@ -14,8 +14,14 @@ set(gammaray_common_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/klinkitemselectionmodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp
 
-  network/objectbroker.cpp
+  methodargument.cpp
   util.cpp
+
+  network/objectbroker.cpp
+  network/protocol.cpp
+  network/message.cpp
+  network/endpoint.cpp
+  network/networkobject.cpp
 )
 
 qt4_automoc(${gammaray_common_srcs})
@@ -27,15 +33,10 @@ target_link_libraries(gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIE
 install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(gammaray_common_internal_srcs
-  methodargument.cpp
   pluginmanager.cpp
   proxytoolfactory.cpp
 
-  network/protocol.cpp
-  network/message.cpp
-  network/endpoint.cpp
   network/networkselectionmodel.cpp
-  network/networkobject.cpp
   network/streamoperators.cpp
 )
 

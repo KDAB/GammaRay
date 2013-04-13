@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_METHODARGUMENT_H
 #define GAMMARAY_METHODARGUMENT_H
 
+#include "include/gammaray_common_export.h"
 #include <QSharedDataPointer>
 #include <QVariant>
 
@@ -32,7 +33,7 @@ namespace GammaRay {
 class MethodArgumentPrivate;
 
 /** Q[Generic]Argument that works on a QVariant, with some memory handling safety. */
-class MethodArgument
+class GAMMARAY_COMMON_EXPORT MethodArgument
 {
   public:
     MethodArgument();

@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_MESSAGE_H
 #define GAMMARAY_MESSAGE_H
 
+#include "include/gammaray_common_export.h"
 #include "protocol.h"
 
 #include <QByteArray>
@@ -39,7 +40,7 @@ namespace GammaRay {
  * - sizeof(Protocol::MessageType) command type (big endian)
  * - size bytes message payload (encoding is user defined, QDataStream provided for convenience)
  */
-class Message
+class GAMMARAY_COMMON_EXPORT Message
 {
   public:
     /**

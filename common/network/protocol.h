@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_PROTOCOL_H
 #define GAMMARAY_PROTOCOL_H
 
+#include "include/gammaray_common_export.h"
 #include <QAbstractItemModel>
 #include <QVector>
 #include <QModelIndex>
@@ -85,15 +86,15 @@ enum BuildInMessageType {
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
 
-ModelIndex fromQModelIndex(const QModelIndex &index);
+GAMMARAY_COMMON_EXPORT ModelIndex fromQModelIndex(const QModelIndex &index);
 
-QModelIndex toQModelIndex(const QAbstractItemModel *model, const ModelIndex &index);
+GAMMARAY_COMMON_EXPORT QModelIndex toQModelIndex(const QAbstractItemModel *model, const ModelIndex &index);
 
 /** Protocol version, must match exactly between client and server. */
-qint32 version();
+GAMMARAY_COMMON_EXPORT qint32 version();
 
 /** Broadcast format version. */
-qint32 broadcastFormatVersion();
+GAMMARAY_COMMON_EXPORT qint32 broadcastFormatVersion();
 
 }
 

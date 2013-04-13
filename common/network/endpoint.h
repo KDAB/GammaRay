@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_ENDPOINT_H
 #define GAMMARAY_ENDPOINT_H
 
+#include "include/gammaray_common_export.h"
 #include "protocol.h"
 
 #include <QObject>
@@ -40,7 +41,7 @@ class Message;
  *  - object address <-> object name mapping
  *  - message handler registration and message dispatching
  */
-class Endpoint : public QObject
+class GAMMARAY_COMMON_EXPORT Endpoint : public QObject
 {
   Q_OBJECT
 public:

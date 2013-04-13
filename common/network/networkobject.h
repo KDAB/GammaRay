@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_NETWORKOBJECT_H
 #define GAMMARAY_NETWORKOBJECT_H
 
+#include "include/gammaray_common_export.h"
 #include "protocol.h"
 
 #include <QObject>
@@ -36,7 +37,7 @@ class Message;
  *  Do not create directly, instead retrieve instances via GammaRay::ObjectBroker.
  *  TODO: add support for signal arguments
  */
-class NetworkObject : public QObject
+class GAMMARAY_COMMON_EXPORT NetworkObject : public QObject
 {
   Q_OBJECT
 public:
