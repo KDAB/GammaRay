@@ -24,12 +24,13 @@
 #ifndef GAMMARAY_OBJECTSERVER_H
 #define GAMMARAY_OBJECTSERVER_H
 
+#include <include/gammaray_core_export.h>
 #include <common/network/networkobject.h>
 
 namespace GammaRay {
 
 /** Server-side part of NetworkObject. */
-class ObjectServer : public GammaRay::NetworkObject
+class GAMMARAY_CORE_EXPORT ObjectServer : public GammaRay::NetworkObject
 {
   Q_OBJECT
 public:
