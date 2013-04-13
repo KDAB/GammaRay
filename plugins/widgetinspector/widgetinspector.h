@@ -30,6 +30,7 @@
 #include <QWidget>
 
 class QItemSelection;
+class QItemSelectionModel;
 class QModelIndex;
 
 namespace GammaRay {
@@ -72,6 +73,7 @@ class WidgetInspector : public QWidget
     QScopedPointer<Ui::WidgetInspector> ui;
     QLibrary m_externalExportActions;
     PropertyController *m_propertyController;
+    QItemSelectionModel *m_widgetSelectionModel;
 };
 
 class WidgetInspectorFactory

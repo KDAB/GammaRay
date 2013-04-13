@@ -29,6 +29,7 @@
 #include "ui_widgetinspector.h"
 
 #include <core/propertycontroller.h>
+#include <common/network/objectbroker.h>
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
@@ -68,13 +69,15 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
   widgetFilterProxy->setSourceModel(probe->objectTreeModel());
   probe->registerModel("com.kdab.GammaRay.WidgetTree", widgetFilterProxy);
 
+  m_widgetSelectionModel = ObjectBroker::selectionModel(widgetFilterProxy);
   KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
   widgetSearchProxy->setSourceModel(widgetFilterProxy);
   ui->widgetTreeView->setModel(widgetSearchProxy);
+  ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetSearchProxy));
   ui->widgetTreeView->header()->setResizeMode(0, QHeaderView::Stretch);
   ui->widgetTreeView->header()->setResizeMode(1, QHeaderView::Interactive);
   ui->widgetSearchLine->setProxy(widgetSearchProxy);
-  connect(ui->widgetTreeView->selectionModel(),
+  connect(m_widgetSelectionModel,
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
 
@@ -109,14 +112,14 @@ static bool isMainWindowSubclassAcceptor(const QVariant &v)
 
 void WidgetInspector::selectDefaultItem()
 {
-  const QAbstractItemModel *viewModel = ui->widgetTreeView->model();
+  const QAbstractItemModel *viewModel = m_widgetSelectionModel->model();
   const QModelIndexList matches =
     ModelUtils::match(
       viewModel, viewModel->index(0, 0),
       ObjectModel::ObjectRole, isMainWindowSubclassAcceptor);
 
   if (!matches.isEmpty()) {
-    ui->widgetTreeView->selectionModel()->select(matches.first(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    m_widgetSelectionModel->select(matches.first(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
   }
 }
 
@@ -145,6 +148,9 @@ void WidgetInspector::widgetSelected(const QItemSelection& selection)
     } else {
       m_overlayWidget->placeOn(0);
     }
+
+    // in case selection was triggered remotely
+    ui->widgetTreeView->scrollTo(index);
   } else {
     m_propertyController->setObject(0);
     ui->widgetPreviewWidget->setWidget(0);
@@ -164,7 +170,7 @@ void WidgetInspector::handleOverlayWidgetDestroyed(QObject *)
 
 void WidgetInspector::widgetSelected(QWidget *widget)
 {
-  QAbstractItemModel *model = ui->widgetTreeView->model();
+  const QAbstractItemModel *model = m_widgetSelectionModel->model();
   const QModelIndexList indexList =
     model->match(model->index(0, 0),
                  ObjectModel::ObjectRole,
@@ -174,11 +180,10 @@ void WidgetInspector::widgetSelected(QWidget *widget)
     return;
   }
   const QModelIndex index = indexList.first();
-  ui->widgetTreeView->selectionModel()->select(
+  m_widgetSelectionModel->select(
     index,
     QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
-  ui->widgetTreeView->scrollTo(index);
 }
 
 void WidgetInspector::setActionsEnabled(bool enabled)
@@ -190,7 +195,7 @@ void WidgetInspector::setActionsEnabled(bool enabled)
 
 QWidget *WidgetInspector::selectedWidget() const
 {
-  const QModelIndexList indexes = ui->widgetTreeView->selectionModel()->selectedRows();
+  const QModelIndexList indexes = m_widgetSelectionModel->selectedRows();
   if (indexes.isEmpty()) {
     return 0;
   }
