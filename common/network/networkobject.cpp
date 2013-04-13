@@ -76,9 +76,13 @@ void NetworkObject::subscribeToSignal(const char *signalName, QObject* receiver,
 
 void NetworkObject::emitLocal(const char* signalName, const QVariantList& args)
 {
+  QByteArray name(signalName);
+  QObject* receiver = this;
   const QHash<QByteArray, QPair<QObject*, QByteArray> >::const_iterator it = m_subscriptions.constFind(signalName);
-  if (it == m_subscriptions.constEnd())
-    return;
+  if (it != m_subscriptions.constEnd()) {
+    name = it.value().second;
+    receiver = it.value().first;
+  }
 
   Q_ASSERT(args.size() <= 10);
   QVector<MethodArgument> a;
@@ -87,7 +91,7 @@ void NetworkObject::emitLocal(const char* signalName, const QVariantList& args)
     a.push_back(MethodArgument(v));
   a.resize(10);
 
-  QMetaObject::invokeMethod(it.value().first, it.value().second, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
+  QMetaObject::invokeMethod(receiver, name, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
 }
 
 #include "networkobject.moc"
