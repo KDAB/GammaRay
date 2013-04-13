@@ -122,6 +122,10 @@ bool ObjectBroker::hasSelectionModel(QAbstractItemModel* model)
 
 static QAbstractItemModel* sourceModelForProxy(QAbstractItemModel* model)
 {
+  // stop once we found a registered model, this is what network communication is based on
+  if (s_objectBroker()->models.values().contains(model))
+    return model;
+
   QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>(model);
   if (!proxy)
     return model;
