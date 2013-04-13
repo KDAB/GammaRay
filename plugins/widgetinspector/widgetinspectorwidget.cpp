@@ -23,33 +23,21 @@
 
 #include "widgetinspectorwidget.h"
 #include "config-gammaray.h"
-#include "overlaywidget.h"
 #include "paintbufferviewer.h"
-#include "widgettreemodel.h"
 #include "ui_widgetinspectorwidget.h"
 
 #include <core/propertycontroller.h>
 #include <common/network/objectbroker.h>
 
 #include "include/objectmodel.h"
-#include "include/objecttypefilterproxymodel.h"
-#include "include/probeinterface.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 #include "other/modelutils.h"
 #include <deferredresizemodesetter.h>
 
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QFileDialog>
-#include <QPainter>
-#include <QPixmap>
-#include <QMainWindow>
 #include <QtPlugin>
-
-#ifdef HAVE_PRIVATE_QT_HEADERS
-#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
-#endif
 
 using namespace GammaRay;
 

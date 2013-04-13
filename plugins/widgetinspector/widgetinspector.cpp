@@ -26,7 +26,6 @@
 #include "overlaywidget.h"
 #include "paintbufferviewer.h"
 #include "widgettreemodel.h"
-#include "ui_widgetinspector.h"
 
 #include <core/propertycontroller.h>
 #include <common/network/objectbroker.h>
@@ -35,12 +34,12 @@
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
 
-#include "kde/krecursivefilterproxymodel.h"
 #include "other/modelutils.h"
 
 #include <QDebug>
 #include <QDesktopWidget>
-#include <QFileDialog>
+#include <QLayout>
+#include <QItemSelectionModel>
 #include <QPainter>
 #include <QPixmap>
 #include <QMainWindow>
