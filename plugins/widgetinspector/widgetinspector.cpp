@@ -66,6 +66,8 @@ WidgetInspector::WidgetInspector(ProbeInterface *probe, QWidget *parent)
 
   WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
   widgetFilterProxy->setSourceModel(probe->objectTreeModel());
+  probe->registerModel("com.kdab.GammaRay.WidgetTree", widgetFilterProxy);
+
   KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
   widgetSearchProxy->setSourceModel(widgetFilterProxy);
   ui->widgetTreeView->setModel(widgetSearchProxy);
