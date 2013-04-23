@@ -26,8 +26,8 @@ set(gammaray_common_srcs
 
 qt4_automoc(${gammaray_common_srcs})
 
-add_definitions(-DMAKE_GAMMARAY_COMMON_LIB)
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
+set_target_properties(gammaray_common PROPERTIES DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB)
 
 target_link_libraries(gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
 install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
