@@ -85,7 +85,10 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
 
 qt4_automoc(${gammaray_ui_internal_srcs})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+if(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif(WIN32)
+
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 
 target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)

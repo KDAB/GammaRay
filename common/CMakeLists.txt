@@ -42,7 +42,9 @@ set(gammaray_common_internal_srcs
 
 qt4_automoc(${gammaray_common_internal_srcs})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+if(NOT WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 
 target_link_libraries(gammaray_common_internal gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})

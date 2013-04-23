@@ -97,7 +97,7 @@ if(Qt5Core_FOUND)
 
   set(QT_QTWEBKIT_FOUND ${Qt5WebKitWidgets_FOUND}) # backward compat with Qt4 webkit code
 
-  if(Qt5_POSITION_INDEPENDENT_CODE)
+  if(Qt5_POSITION_INDEPENDENT_CODE AND NOT WIN32)
     if(CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     else()
