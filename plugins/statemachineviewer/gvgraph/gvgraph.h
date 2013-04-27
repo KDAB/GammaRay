@@ -29,9 +29,9 @@
 #include <QHash>
 #include <QString>
 
-class Agedge_t;
-class Agnode_t;
-class Agraph_t;
+struct Agedge_t;
+struct Agnode_t;
+struct Agraph_t;
 typedef struct GVC_s GVC_t;
 
 namespace GammaRay {
