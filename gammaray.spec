@@ -71,7 +71,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_prefix}/include/gammaray
 
 %changelog
-* Tues Apr 30 2013 Allen Winter <allen.winter@kdab.com> 1.3.1
+* Tue Apr 30 2013 Allen Winter <allen.winter@kdab.com> 1.3.1
   First 1.3 bugfix release
 * Sun Jan 27 2013 Allen Winter <allen.winter@kdab.com> 1.3.0
   Update to latest release
