@@ -93,8 +93,11 @@ void ProxyToolFactory::init(ProbeInterface *probe)
 {
   QPluginLoader loader(m_pluginPath, this);
   QObject *obj = loader.instance();
-  obj->setParent(this);
-  m_factory = qobject_cast<ToolFactory*>(obj);
+  if (obj) {
+    obj->setParent(this);
+    m_factory = qobject_cast<ToolFactory*>(obj);
+  }
+
   if (!m_factory) {
     std::cerr << "error loading plugin " << qPrintable(m_pluginPath)
               << ": " << qPrintable(loader.errorString()) << std::endl;
