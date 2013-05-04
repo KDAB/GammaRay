@@ -162,4 +162,11 @@ void ObjectBroker::setSelectionModelFactoryCallback(ObjectBroker::selectionModel
   s_objectBroker()->selectionCallback = callback;
 }
 
+void ObjectBroker::clear()
+{
+  s_objectBroker()->objects.clear();
+  s_objectBroker()->models.clear();
+  s_objectBroker()->selectionModels.clear();
+}
+
 }

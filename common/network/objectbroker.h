@@ -73,6 +73,9 @@ namespace ObjectBroker {
 
   /** Set a callback for the case that a selection model was requested but had not been registered before. */
   GAMMARAY_COMMON_EXPORT void setSelectionModelFactoryCallback(selectionModelFactoryCallback callback);
+
+  /** Clear all registered objects. Useful when the probe is deleted. */
+  GAMMARAY_COMMON_EXPORT void clear();
 }
 }
 

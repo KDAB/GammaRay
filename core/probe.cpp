@@ -188,6 +188,7 @@ Probe::~Probe()
   QInternal::unregisterCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
 #endif
 
+  ObjectBroker::clear();
   s_instance = 0;
 }
 
