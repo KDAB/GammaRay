@@ -61,6 +61,8 @@ class PluginManager
      */
     static PluginManager *instance(QObject *parent = 0);
 
+    ~PluginManager();
+
     QVector<ToolFactory*> plugins();
 
     QList<PluginLoadError> errors() const

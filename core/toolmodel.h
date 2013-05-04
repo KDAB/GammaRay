@@ -43,6 +43,7 @@ class ToolModel : public QAbstractListModel
   Q_OBJECT
   public:
     explicit ToolModel(QObject *parent = 0);
+    ~ToolModel();
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;

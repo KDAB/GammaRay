@@ -57,6 +57,11 @@ PluginManager::PluginManager(QObject *parent) : m_parent(parent)
   QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
 }
 
+PluginManager::~PluginManager()
+{
+  s_instance = 0;
+}
+
 QStringList PluginManager::pluginPaths() const
 {
   QStringList pluginPaths;

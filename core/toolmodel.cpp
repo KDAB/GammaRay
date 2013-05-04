@@ -88,6 +88,14 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   }
 }
 
+ToolModel::~ToolModel()
+{
+  // ### HACK to make re-attaching of the probe work
+  // the correct solution would be to make PluginManager a member rather than a singleton
+  // and base the about dialog on the tool model instead
+  delete PluginManager::instance();
+}
+
 QVariant ToolModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {

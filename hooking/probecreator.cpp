@@ -86,6 +86,7 @@ void ProbeCreator::createProbe()
 
   if (!qApp || Probe::isInitialized()) {
     // never create it twice
+    deleteLater();
     return;
   }
 
