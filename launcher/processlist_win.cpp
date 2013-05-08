@@ -138,10 +138,18 @@ static inline bool isQtApp(DWORD processId)
        hasNext = Module32Next(snapshot, &me)) {
     const QString module = QString::fromUtf16(reinterpret_cast<ushort*>(me.szModule));
 //TODO: Do this check properly, probe does not need to have the same type
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #ifdef NDEBUG
     if (module == QLatin1String("QtCore4.dll")) {
 #else
     if (module == QLatin1String("QtCored4.dll")) {
+#endif
+#else
+#ifdef NDEBUG
+    if (module == QLatin1String("Qt5Core.dll")) {
+#else
+    if (module == QLatin1String("Qt5Cored.dll")) {
+#endif
 #endif
         CloseHandle(snapshot);
         return true;
