@@ -147,7 +147,7 @@ void Server::broadcast()
 {
   QString myAddress;
   foreach (const QHostAddress &addr, QNetworkInterface::allAddresses()) {
-    if (addr == QHostAddress::LocalHost || addr == QHostAddress::LocalHostIPv6)
+    if (addr == QHostAddress::LocalHost || addr == QHostAddress::LocalHostIPv6 || !addr.scopeId().isEmpty())
       continue;
     myAddress = addr.toString();
     break;
