@@ -764,10 +764,12 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*l
 {
   switch(dwReason) {
   case DLL_PROCESS_ATTACH:
+  case DLL_THREAD_ATTACH:
   {
-    overwriteQtFunctions();
-
-    gammaray_probe_inject();
+    if (!functionsOverwritten)
+      overwriteQtFunctions();
+    if (!Probe::isInitialized())
+      gammaray_probe_inject();
     break;
   }
   case DLL_PROCESS_DETACH:
