@@ -671,6 +671,4 @@ const char *SignalSlotsLocationStore::extractLocation(const char *member)
 
 //END
 
-#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-#endif
 #include "probe.moc"
