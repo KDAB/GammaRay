@@ -42,11 +42,9 @@ using namespace GammaRay;
 
 StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
   : QObject(parent),
-#if 0
     m_primitiveModel(new PrimitiveModel(this)),
     m_controlModel(new ControlModel(this)),
     m_complexControlModel(new ComplexControlModel(this)),
-#endif
     m_pixelMetricModel(new PixelMetricModel(this)),
     m_standardIconModel(new StandardIconModel(this)),
     m_standardPaletteModel(new PaletteModel(this))
@@ -61,6 +59,9 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(styleSelected(QItemSelection)));
 
+  probe->registerModel("com.kdab.GammaRay.StyleInspector.PrimitiveModel", m_primitiveModel);
+  probe->registerModel("com.kdab.GammaRay.StyleInspector.ControlModel", m_controlModel);
+  probe->registerModel("com.kdab.GammaRay.StyleInspector.ComplexControlModel", m_complexControlModel);
   probe->registerModel("com.kdab.GammaRay.StyleInspector.PixelMetricModel", m_pixelMetricModel);
   probe->registerModel("com.kdab.GammaRay.StyleInspector.StandardIconModel", m_standardIconModel);
   probe->registerModel("com.kdab.GammaRay.StyleInspector.PaletteModel", m_standardPaletteModel);
@@ -77,11 +78,9 @@ void StyleInspector::styleSelected(const QItemSelection &selection)
   const QModelIndex index = selection.first().topLeft();
   QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
   QStyle *style = qobject_cast<QStyle*>(obj);
-#if 0
   m_primitiveModel->setStyle(style);
   m_controlModel->setStyle(style);
   m_complexControlModel->setStyle(style);
-#endif
   m_pixelMetricModel->setStyle(style);
   m_standardIconModel->setStyle(style);
   m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());

@@ -22,12 +22,7 @@
 */
 
 #include "styleinspectorwidget.h"
-#include "complexcontrolmodel.h"
-#include "controlmodel.h"
-#include "primitivemodel.h"
 #include "ui_styleinspectorwidget.h"
-
-#include <include/objectmodel.h>
 
 #include <common/network/objectbroker.h>
 
@@ -35,19 +30,16 @@ using namespace GammaRay;
 
 StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
   : QWidget(parent),
-    ui(new Ui::StyleInspectorWidget),
-    m_primitiveModel(new PrimitiveModel(this)),
-    m_controlModel(new ControlModel(this)),
-    m_complexControlModel(new ComplexControlModel(this))
+    ui(new Ui::StyleInspectorWidget)
 {
   ui->setupUi(this);
 
   ui->styleSelector->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleList"));
   connect(ui->styleSelector, SIGNAL(activated(int)), SLOT(styleSelected(int)));
 
-  ui->primitivePage->setModel(m_primitiveModel);
-  ui->controlPage->setModel(m_controlModel);
-  ui->complexControlPage->setModel(m_complexControlModel);
+  ui->primitivePage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PrimitiveModel"));
+  ui->controlPage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.ControlModel"));
+  ui->complexControlPage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.ComplexControlModel"));
 
   ui->pixelMetricView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PixelMetricModel"));
   ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
@@ -58,6 +50,7 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
   ui->standardPaletteView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PaletteModel"));
   ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
+  // TODO this will fail due to lazy model population
   if (ui->styleSelector->count()) {
     styleSelected(0);
   }
@@ -72,12 +65,6 @@ void StyleInspectorWidget::styleSelected(int index)
 {
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->styleSelector->model());
   selectionModel->select(ui->styleSelector->model()->index(index, 0), QItemSelectionModel::ClearAndSelect);
-
-  QObject *obj = ui->styleSelector->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
-  QStyle *style = qobject_cast<QStyle*>(obj);
-  m_primitiveModel->setStyle(style);
-  m_controlModel->setStyle(style);
-  m_complexControlModel->setStyle(style);
 }
 
 #include "styleinspectorwidget.moc"

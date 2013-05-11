@@ -28,10 +28,6 @@
 
 namespace GammaRay {
 
-class ComplexControlModel;
-class ControlModel;
-class PrimitiveModel;
-
 namespace Ui {
   class StyleInspectorWidget;
 }
@@ -48,9 +44,6 @@ class StyleInspectorWidget : public QWidget
 
   private:
     Ui::StyleInspectorWidget *ui;
-    PrimitiveModel *m_primitiveModel;
-    ControlModel *m_controlModel;
-    ComplexControlModel *m_complexControlModel;
 };
 
 }
