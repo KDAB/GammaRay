@@ -1,5 +1,5 @@
 /*
-  styleinspector.cpp
+  styleinspectorwidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,42 +21,36 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "styleinspector.h"
+#include "styleinspectorwidget.h"
 #include "complexcontrolmodel.h"
 #include "controlmodel.h"
 #include "pixelmetricmodel.h"
 #include "primitivemodel.h"
 #include "standardiconmodel.h"
+#include "ui_styleinspectorwidget.h"
 
-#include "include/objecttypefilterproxymodel.h"
-#include "include/probeinterface.h"
-#include "include/singlecolumnobjectproxymodel.h"
+#include <include/objectmodel.h>
 
+#include <common/network/objectbroker.h>
 #include <ui/palettemodel.h>
 
 #include <QApplication>
 
 using namespace GammaRay;
 
-StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
-#if 0
+StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::StyleInspectorWidget),
     m_primitiveModel(new PrimitiveModel(this)),
     m_controlModel(new ControlModel(this)),
     m_complexControlModel(new ComplexControlModel(this)),
     m_pixelMetricModel(new PixelMetricModel(this)),
     m_standardIconModel(new StandardIconModel(this)),
     m_standardPaletteModel(new PaletteModel(this))
-#endif
 {
-  ObjectTypeFilterProxyModel<QStyle> *styleFilter = new ObjectTypeFilterProxyModel<QStyle>(this);
-  styleFilter->setSourceModel(probe->objectListModel());
-  SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
-  singleColumnProxy->setSourceModel(styleFilter);
-  probe->registerModel("com.kdab.GammaRay.StyleList", singleColumnProxy);
+  ui->setupUi(this);
 
-#if 0
-  ui->styleSelector->setModel(singleColumnProxy);
+  ui->styleSelector->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleList"));
   connect(ui->styleSelector, SIGNAL(activated(int)), SLOT(styleSelected(int)));
 
   ui->primitivePage->setModel(m_primitiveModel);
@@ -75,16 +69,15 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
   if (ui->styleSelector->count()) {
     styleSelected(0);
   }
-#endif
 }
 
-StyleInspector::~StyleInspector()
+StyleInspectorWidget::~StyleInspectorWidget()
 {
+  delete ui;
 }
 
-void StyleInspector::styleSelected(int index)
+void StyleInspectorWidget::styleSelected(int index)
 {
-#if 0
   QObject *obj = ui->styleSelector->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QStyle *style = qobject_cast<QStyle*>(obj);
   m_primitiveModel->setStyle(style);
@@ -93,11 +86,6 @@ void StyleInspector::styleSelected(int index)
   m_pixelMetricModel->setStyle(style);
   m_standardIconModel->setStyle(style);
   m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
-#endif
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(StyleInspectorFactory)
-#endif
-
-#include "styleinspector.moc"
+#include "styleinspectorwidget.moc"

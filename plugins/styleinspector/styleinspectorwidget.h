@@ -1,5 +1,5 @@
 /*
-  styleinspector.h
+  styleinspectorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,11 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STYLEINSPECTOR_STYLEINSPECTOR_H
-#define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTOR_H
-
-#include "include/toolfactory.h"
-#include "styleinspectorwidget.h"
+#ifndef GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORWIDGET_H
+#define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORWIDGET_H
 
 #include <QStyle>
 #include <QWidget>
@@ -39,17 +36,22 @@ class PixelMetricModel;
 class PrimitiveModel;
 class StandardIconModel;
 
-class StyleInspector : public QObject
+namespace Ui {
+  class StyleInspectorWidget;
+}
+
+class StyleInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit StyleInspector(ProbeInterface *probe, QObject *parent = 0);
-    virtual ~StyleInspector();
+    explicit StyleInspectorWidget(QWidget *parent = 0);
+    virtual ~StyleInspectorWidget();
 
   private slots:
     void styleSelected(int index);
 
   private:
+    Ui::StyleInspectorWidget *ui;
     PrimitiveModel *m_primitiveModel;
     ControlModel *m_controlModel;
     ComplexControlModel *m_complexControlModel;
@@ -58,23 +60,6 @@ class StyleInspector : public QObject
     PaletteModel *m_standardPaletteModel;
 };
 
-class StyleInspectorFactory : public QObject, public StandardToolFactory2<QStyle, StyleInspector, StyleInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StyleInspector")
-
-  public:
-    explicit StyleInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    virtual QString name() const
-    {
-      return tr("Style");
-    }
-};
-
 }
 
-#endif // GAMMARAY_STYLEINSPECTOR_H
+#endif // GAMMARAY_STYLEINSPECTORWIDGET_H

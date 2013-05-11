@@ -5,6 +5,7 @@ include_directories(
 
 set(gammaray_styleinspector_plugin_srcs
   styleinspector.cpp
+  styleinspectorwidget.cpp
   pixelmetricmodel.cpp
   standardiconmodel.cpp
   primitivemodel.cpp
@@ -19,7 +20,7 @@ set(gammaray_styleinspector_plugin_srcs
 
 qt4_automoc(${gammaray_styleinspector_plugin_srcs})
 qt4_wrap_ui(gammaray_styleinspector_plugin_srcs
-  styleinspector.ui
+  styleinspectorwidget.ui
   styleelementstatetablepage.ui
 )
 
