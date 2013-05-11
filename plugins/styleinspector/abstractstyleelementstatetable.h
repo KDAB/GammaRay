@@ -39,6 +39,10 @@ namespace GammaRay {
 class AbstractStyleElementStateTable : public GammaRay::AbstractStyleElementModel
 {
   Q_OBJECT
+  Q_PROPERTY(int cellWidth READ cellWidth WRITE setCellWidth)
+  Q_PROPERTY(int cellHeight READ cellHeight WRITE setCellHeight)
+  Q_PROPERTY(int zoomFactor READ zoomFactor WRITE setZoomFactor)
+
   public:
     explicit AbstractStyleElementStateTable(QObject *parent = 0);
 

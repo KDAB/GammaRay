@@ -40,11 +40,11 @@ StyleElementStateTablePage::~StyleElementStateTablePage()
   delete ui;
 }
 
-void StyleElementStateTablePage::setModel(AbstractStyleElementStateTable *model)
+void StyleElementStateTablePage::setModel(QAbstractItemModel *model)
 {
   ui->tableView->setModel(model);
-  ui->widthBox->setValue(model->cellWidth());
-  ui->heightBox->setValue(model->cellHeight());
+  ui->widthBox->setValue(model->property("cellWidth").toInt());
+  ui->heightBox->setValue(model->property("cellHeight").toInt());
 
   connect(ui->widthBox, SIGNAL(valueChanged(int)),
           model, SLOT(setCellWidth(int)));

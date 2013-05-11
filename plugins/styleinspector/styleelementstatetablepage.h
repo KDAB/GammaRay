@@ -26,9 +26,9 @@
 
 #include <QWidget>
 
-namespace GammaRay {
+class QAbstractItemModel;
 
-class AbstractStyleElementStateTable;
+namespace GammaRay {
 
 namespace Ui {
   class StyleElementStateTablePage;
@@ -43,7 +43,7 @@ class StyleElementStateTablePage : public QWidget
   public:
     explicit StyleElementStateTablePage(QWidget *parent = 0);
     ~StyleElementStateTablePage();
-    void setModel(AbstractStyleElementStateTable *model);
+    void setModel(QAbstractItemModel *model);
 
   private:
     Ui::StyleElementStateTablePage *ui;
