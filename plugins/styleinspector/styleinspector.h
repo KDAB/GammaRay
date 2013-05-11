@@ -30,6 +30,8 @@
 #include <QStyle>
 #include <QWidget>
 
+class QItemSelection;
+
 namespace GammaRay {
 
 class ComplexControlModel;
@@ -47,7 +49,7 @@ class StyleInspector : public QObject
     virtual ~StyleInspector();
 
   private slots:
-    void styleSelected(int index);
+    void styleSelected(const QItemSelection &selection);
 
   private:
     PrimitiveModel *m_primitiveModel;

@@ -33,8 +33,10 @@
 #include "include/singlecolumnobjectproxymodel.h"
 
 #include <ui/palettemodel.h>
+#include <common/network/objectbroker.h>
 
 #include <QApplication>
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
@@ -54,6 +56,10 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
   SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
   singleColumnProxy->setSourceModel(styleFilter);
   probe->registerModel("com.kdab.GammaRay.StyleList", singleColumnProxy);
+
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(singleColumnProxy);
+  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(styleSelected(QItemSelection)));
 
 #if 0
   ui->styleSelector->setModel(singleColumnProxy);
@@ -82,11 +88,14 @@ StyleInspector::~StyleInspector()
 {
 }
 
-void StyleInspector::styleSelected(int index)
+void StyleInspector::styleSelected(const QItemSelection &selection)
 {
-#if 0
-  QObject *obj = ui->styleSelector->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
+  if (selection.isEmpty())
+    return;
+  const QModelIndex index = selection.first().topLeft();
+  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
   QStyle *style = qobject_cast<QStyle*>(obj);
+#if 0
   m_primitiveModel->setStyle(style);
   m_controlModel->setStyle(style);
   m_complexControlModel->setStyle(style);
