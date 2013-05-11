@@ -24,17 +24,12 @@
 #include "styleinspectorwidget.h"
 #include "complexcontrolmodel.h"
 #include "controlmodel.h"
-#include "pixelmetricmodel.h"
 #include "primitivemodel.h"
-#include "standardiconmodel.h"
 #include "ui_styleinspectorwidget.h"
 
 #include <include/objectmodel.h>
 
 #include <common/network/objectbroker.h>
-#include <ui/palettemodel.h>
-
-#include <QApplication>
 
 using namespace GammaRay;
 
@@ -43,10 +38,7 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
     ui(new Ui::StyleInspectorWidget),
     m_primitiveModel(new PrimitiveModel(this)),
     m_controlModel(new ControlModel(this)),
-    m_complexControlModel(new ComplexControlModel(this)),
-    m_pixelMetricModel(new PixelMetricModel(this)),
-    m_standardIconModel(new StandardIconModel(this)),
-    m_standardPaletteModel(new PaletteModel(this))
+    m_complexControlModel(new ComplexControlModel(this))
 {
   ui->setupUi(this);
 
@@ -57,13 +49,13 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
   ui->controlPage->setModel(m_controlModel);
   ui->complexControlPage->setModel(m_complexControlModel);
 
-  ui->pixelMetricView->setModel(m_pixelMetricModel);
+  ui->pixelMetricView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PixelMetricModel"));
   ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
-  ui->standardIconView->setModel(m_standardIconModel);
+  ui->standardIconView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.StandardIconModel"));
   ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
-  ui->standardPaletteView->setModel(m_standardPaletteModel);
+  ui->standardPaletteView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PaletteModel"));
   ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   if (ui->styleSelector->count()) {
@@ -86,9 +78,6 @@ void StyleInspectorWidget::styleSelected(int index)
   m_primitiveModel->setStyle(style);
   m_controlModel->setStyle(style);
   m_complexControlModel->setStyle(style);
-  m_pixelMetricModel->setStyle(style);
-  m_standardIconModel->setStyle(style);
-  m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
 }
 
 #include "styleinspectorwidget.moc"

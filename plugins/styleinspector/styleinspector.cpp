@@ -41,15 +41,15 @@
 using namespace GammaRay;
 
 StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+  : QObject(parent),
 #if 0
     m_primitiveModel(new PrimitiveModel(this)),
     m_controlModel(new ControlModel(this)),
     m_complexControlModel(new ComplexControlModel(this)),
+#endif
     m_pixelMetricModel(new PixelMetricModel(this)),
     m_standardIconModel(new StandardIconModel(this)),
     m_standardPaletteModel(new PaletteModel(this))
-#endif
 {
   ObjectTypeFilterProxyModel<QStyle> *styleFilter = new ObjectTypeFilterProxyModel<QStyle>(this);
   styleFilter->setSourceModel(probe->objectListModel());
@@ -61,27 +61,9 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(styleSelected(QItemSelection)));
 
-#if 0
-  ui->styleSelector->setModel(singleColumnProxy);
-  connect(ui->styleSelector, SIGNAL(activated(int)), SLOT(styleSelected(int)));
-
-  ui->primitivePage->setModel(m_primitiveModel);
-  ui->controlPage->setModel(m_controlModel);
-  ui->complexControlPage->setModel(m_complexControlModel);
-
-  ui->pixelMetricView->setModel(m_pixelMetricModel);
-  ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
-
-  ui->standardIconView->setModel(m_standardIconModel);
-  ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
-
-  ui->standardPaletteView->setModel(m_standardPaletteModel);
-  ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
-
-  if (ui->styleSelector->count()) {
-    styleSelected(0);
-  }
-#endif
+  probe->registerModel("com.kdab.GammaRay.StyleInspector.PixelMetricModel", m_pixelMetricModel);
+  probe->registerModel("com.kdab.GammaRay.StyleInspector.StandardIconModel", m_standardIconModel);
+  probe->registerModel("com.kdab.GammaRay.StyleInspector.PaletteModel", m_standardPaletteModel);
 }
 
 StyleInspector::~StyleInspector()
@@ -99,10 +81,10 @@ void StyleInspector::styleSelected(const QItemSelection &selection)
   m_primitiveModel->setStyle(style);
   m_controlModel->setStyle(style);
   m_complexControlModel->setStyle(style);
+#endif
   m_pixelMetricModel->setStyle(style);
   m_standardIconModel->setStyle(style);
   m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
-#endif
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

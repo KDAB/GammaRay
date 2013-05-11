@@ -24,17 +24,13 @@
 #ifndef GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORWIDGET_H
 #define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORWIDGET_H
 
-#include <QStyle>
 #include <QWidget>
 
 namespace GammaRay {
 
 class ComplexControlModel;
 class ControlModel;
-class PaletteModel;
-class PixelMetricModel;
 class PrimitiveModel;
-class StandardIconModel;
 
 namespace Ui {
   class StyleInspectorWidget;
@@ -55,9 +51,6 @@ class StyleInspectorWidget : public QWidget
     PrimitiveModel *m_primitiveModel;
     ControlModel *m_controlModel;
     ComplexControlModel *m_complexControlModel;
-    PixelMetricModel *m_pixelMetricModel;
-    StandardIconModel *m_standardIconModel;
-    PaletteModel *m_standardPaletteModel;
 };
 
 }
