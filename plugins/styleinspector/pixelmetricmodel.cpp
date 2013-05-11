@@ -198,7 +198,7 @@ bool PixelMetricModel::setData(const QModelIndex &index, const QVariant &value, 
 
   DynamicProxyStyle::instance()->setPixelMetric(
     pixelMetrics[index.row()].pixelMetric, value.toInt());
-
+  emit dataChanged(index, index);
   return true;
 }
 
