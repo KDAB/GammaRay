@@ -1,5 +1,5 @@
 /*
-  sceneinspector.cpp
+  sceneinspectorwidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,20 +21,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "sceneinspector.h"
+#include "sceneinspectorwidget.h"
 
 #include "scenemodel.h"
+#include "ui_sceneinspectorwidget.h"
 
 #include <core/metaobjectrepository.h>
 #include <core/propertycontroller.h>
+#include <common/network/objectbroker.h>
 
 #include "include/objectmodel.h"
-#include "include/objecttypefilterproxymodel.h"
-#include "include/probeinterface.h"
-#include "include/singlecolumnobjectproxymodel.h"
+#include "include/util.h"
 
 #include <kde/krecursivefilterproxymodel.h>
-#include <common/network/objectbroker.h>
 
 #include <QDebug>
 #include <QGraphicsItem>
@@ -42,21 +41,16 @@
 
 using namespace GammaRay;
 
-SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)/*,
-    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))*/
+SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
+  : QWidget(parent),
+    ui(new Ui::SceneInspectorWidget),
+    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
 {
-  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
-          SLOT(widgetSelected(QWidget*,QPoint)));
+  ui->setupUi(this);
+  ui->scenePropertyWidget->setObjectBaseName("com.kdab.GammaRay.SceneInspector");
 
-  ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy =
-    new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
-  sceneFilterProxy->setSourceModel(probe->objectListModel());
-  SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
-  singleColumnProxy->setSourceModel(sceneFilterProxy);
-  ObjectBroker::registerModel("com.kdab.GammaRay.SceneList", singleColumnProxy);
-
-#if 0
+  ui->sceneComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.SceneList"));
+  connect(ui->sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)));
   m_sceneModel = new SceneModel(this);
   QSortFilterProxyModel *sceneFilter = new KRecursiveFilterProxyModel(this);
   sceneFilter->setSourceModel(m_sceneModel);
@@ -69,22 +63,23 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   if (ui->sceneComboBox->count()) {
     sceneSelected(0);
   }
-#endif
 }
 
-void SceneInspector::sceneSelected(int index)
+SceneInspectorWidget::~SceneInspectorWidget()
 {
-#if 0
+}
+
+void SceneInspectorWidget::sceneSelected(int index)
+{
   QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
 //   qDebug() << Q_FUNC_INFO << scene << obj;
 
   m_sceneModel->setScene(scene);
   ui->graphicsSceneView->setGraphicsScene(scene);
-#endif
 }
 
-void SceneInspector::sceneItemSelected(const QModelIndex &index)
+void SceneInspectorWidget::sceneItemSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
@@ -94,14 +89,13 @@ void SceneInspector::sceneItemSelected(const QModelIndex &index)
     } else {
       m_propertyController->setObject(item, findBestType(item));
     }
-    // TODO remote support?
-//    ui->graphicsSceneView->showGraphicsItem(item);
+    ui->graphicsSceneView->showGraphicsItem(item);
   } else {
     m_propertyController->setObject(0);
   }
 }
 
-void SceneInspector::widgetSelected(QWidget *widget, const QPoint &pos)
+void SceneInspectorWidget::widgetSelected(QWidget *widget, const QPoint &pos)
 {
   QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(widget);
   if (qgv) {
@@ -113,9 +107,8 @@ void SceneInspector::widgetSelected(QWidget *widget, const QPoint &pos)
   }
 }
 
-void SceneInspector::sceneItemSelected(QGraphicsItem *item)
+void SceneInspectorWidget::sceneItemSelected(QGraphicsItem *item)
 {
-#if 0
   QAbstractItemModel *model = ui->sceneTreeView->model();
   const QModelIndexList indexList =
     model->match(model->index(0, 0),
@@ -132,14 +125,13 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
   ui->sceneTreeView->scrollTo(index);
   sceneItemSelected(index);
-#endif
 }
 
 #define QGV_CHECK_TYPE(Class) \
   if (dynamic_cast<Class*>(item) && MetaObjectRepository::instance()->hasMetaObject(#Class)) \
     return QLatin1String(#Class)
 
-QString SceneInspector::findBestType(QGraphicsItem *item)
+QString SceneInspectorWidget::findBestType(QGraphicsItem *item)
 {
   // keep this in reverse topological order of the class hierarchy!
   // QObject-based types are covered elsewhere, so we don't need those here
@@ -156,8 +148,4 @@ QString SceneInspector::findBestType(QGraphicsItem *item)
   return QLatin1String("QGraphicsItem");
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(SceneInspectorFactory)
-#endif
-
-#include "sceneinspector.moc"
+#include "sceneinspectorwidget.moc"

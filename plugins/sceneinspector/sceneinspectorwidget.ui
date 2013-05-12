@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GammaRay::SceneInspector</class>
- <widget class="QWidget" name="GammaRay::SceneInspector">
+ <class>GammaRay::SceneInspectorWidget</class>
+ <widget class="QWidget" name="GammaRay::SceneInspectorWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

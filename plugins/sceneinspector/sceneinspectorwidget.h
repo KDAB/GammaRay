@@ -1,5 +1,5 @@
 /*
-  sceneinspector.h
+  sceneinspectorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,11 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTOR_H
-#define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTOR_H
-
-#include "include/toolfactory.h"
-#include "sceneinspectorwidget.h"
+#ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
+#define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
 
 #include <QGraphicsScene>
 #include <QWidget>
@@ -37,11 +34,16 @@ namespace GammaRay {
 class PropertyController;
 class SceneModel;
 
-class SceneInspector : public QObject
+namespace Ui {
+  class SceneInspectorWidget;
+}
+
+class SceneInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit SceneInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit SceneInspectorWidget(QWidget *parent = 0);
+    ~SceneInspectorWidget();
 
   private slots:
     void sceneSelected(int index);
@@ -53,25 +55,9 @@ class SceneInspector : public QObject
     QString findBestType(QGraphicsItem *item);
 
   private:
+    QScopedPointer<Ui::SceneInspectorWidget> ui;
     SceneModel *m_sceneModel;
     PropertyController *m_propertyController;
-};
-
-class SceneInspectorFactory : public QObject,
-                              public StandardToolFactory2<QGraphicsScene, SceneInspector, SceneInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SceneInspector")
-  public:
-    explicit SceneInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Graphics Scenes");
-    }
 };
 
 }

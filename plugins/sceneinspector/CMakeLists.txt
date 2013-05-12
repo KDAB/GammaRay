@@ -9,12 +9,13 @@ set(gammaray_sceneinspector_plugin_srcs
   graphicssceneview.cpp
   scenemodel.cpp
   sceneinspector.cpp
+  sceneinspectorwidget.cpp
 )
 
 qt4_automoc(${gammaray_sceneinspector_plugin_srcs})
 qt4_wrap_ui(gammaray_sceneinspector_plugin_srcs
   graphicssceneview.ui
-  sceneinspector.ui
+  sceneinspectorwidget.ui
 )
 
 gammaray_add_plugin(gammaray_sceneinspector_plugin
