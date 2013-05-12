@@ -63,10 +63,9 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
 
   m_sceneModel = new SceneModel(this);
   probe->registerModel("com.kdab.GammaRay.SceneGraphModel", m_sceneModel);
-  QItemSelectionModel* itemSelection = ObjectBroker::selectionModel(m_sceneModel);
-  connect(itemSelection,
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(sceneItemSelected(QItemSelection)));
+  m_itemSelectionModel = ObjectBroker::selectionModel(m_sceneModel);
+  connect(m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(sceneItemSelected(QItemSelection)));
 
   // TODO: preselect a scene
 }
@@ -121,10 +120,8 @@ void SceneInspector::widgetSelected(QWidget *widget, const QPoint &pos)
 
 void SceneInspector::sceneItemSelected(QGraphicsItem *item)
 {
-#if 0
-  QAbstractItemModel *model = ui->sceneTreeView->model();
   const QModelIndexList indexList =
-    model->match(model->index(0, 0),
+    m_sceneModel->match(m_sceneModel->index(0, 0),
                  SceneModel::SceneItemRole,
                  QVariant::fromValue<QGraphicsItem*>(item), 1,
                  Qt::MatchExactly | Qt::MatchRecursive);
@@ -132,13 +129,10 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
     return;
   }
   const QModelIndex index = indexList.first();
-  ui->sceneTreeView->selectionModel()->select(
+  m_itemSelectionModel->select(
     index,
     QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
-  ui->sceneTreeView->scrollTo(index);
-  sceneItemSelected(index);
-#endif
 }
 
 #define QGV_CHECK_TYPE(Class) \

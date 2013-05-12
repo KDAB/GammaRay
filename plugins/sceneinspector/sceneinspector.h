@@ -30,6 +30,7 @@
 #include <QGraphicsScene>
 #include <QWidget>
 
+class QItemSelectionModel;
 class QItemSelection;
 class QModelIndex;
 
@@ -55,6 +56,7 @@ class SceneInspector : public QObject
 
   private:
     SceneModel *m_sceneModel;
+    QItemSelectionModel* m_itemSelectionModel;
     PropertyController *m_propertyController;
 };
 

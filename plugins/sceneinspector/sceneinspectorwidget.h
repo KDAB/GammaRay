@@ -24,10 +24,9 @@
 #ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
 #define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
 
-#include <QGraphicsScene>
 #include <QWidget>
 
-class QModelIndex;
+class QItemSelection;
 
 namespace GammaRay {
 
@@ -44,11 +43,7 @@ class SceneInspectorWidget : public QWidget
 
   private slots:
     void sceneSelected(int index);
-    void sceneItemSelected(const QModelIndex &index);
-    void sceneItemSelected(QGraphicsItem *item);
-
-  private:
-    QString findBestType(QGraphicsItem *item);
+    void sceneItemSelected(const QItemSelection &selection);
 
   private:
     QScopedPointer<Ui::SceneInspectorWidget> ui;

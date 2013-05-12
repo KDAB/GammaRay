@@ -26,8 +26,6 @@
 #include "scenemodel.h"
 #include "ui_sceneinspectorwidget.h"
 
-#include <core/metaobjectrepository.h>
-#include <core/propertycontroller.h>
 #include <common/network/objectbroker.h>
 
 #include "include/objectmodel.h"
@@ -58,8 +56,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
 
   QItemSelectionModel *itemSelection = ObjectBroker::selectionModel(sceneFilter);
   ui->sceneTreeView->setSelectionModel(itemSelection);
-  connect(itemSelection, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          this, SLOT(sceneItemSelected(QModelIndex)));
+  connect(itemSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(sceneItemSelected(QItemSelection)));
 
   if (ui->sceneComboBox->count()) {
     sceneSelected(0);
@@ -82,53 +80,17 @@ void SceneInspectorWidget::sceneSelected(int index)
   ui->graphicsSceneView->setGraphicsScene(scene);
 }
 
-void SceneInspectorWidget::sceneItemSelected(const QModelIndex &index)
+void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
 {
+  QModelIndex index;
+  if (!selection.isEmpty())
+    index = selection.first().topLeft();
+
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
     ui->graphicsSceneView->showGraphicsItem(item);
+    ui->sceneTreeView->scrollTo(index); // in case selection does not come from us
   }
-}
-
-void SceneInspectorWidget::sceneItemSelected(QGraphicsItem *item)
-{
-  QAbstractItemModel *model = ui->sceneTreeView->model();
-  const QModelIndexList indexList =
-    model->match(model->index(0, 0),
-                 SceneModel::SceneItemRole,
-                 QVariant::fromValue<QGraphicsItem*>(item), 1,
-                 Qt::MatchExactly | Qt::MatchRecursive);
-  if (indexList.isEmpty()) {
-    return;
-  }
-  const QModelIndex index = indexList.first();
-  ui->sceneTreeView->selectionModel()->select(
-    index,
-    QItemSelectionModel::Select | QItemSelectionModel::Clear |
-    QItemSelectionModel::Rows | QItemSelectionModel::Current);
-  ui->sceneTreeView->scrollTo(index);
-  sceneItemSelected(index);
-}
-
-#define QGV_CHECK_TYPE(Class) \
-  if (dynamic_cast<Class*>(item) && MetaObjectRepository::instance()->hasMetaObject(#Class)) \
-    return QLatin1String(#Class)
-
-QString SceneInspectorWidget::findBestType(QGraphicsItem *item)
-{
-  // keep this in reverse topological order of the class hierarchy!
-  // QObject-based types are covered elsewhere, so we don't need those here
-  QGV_CHECK_TYPE(QGraphicsEllipseItem);
-  QGV_CHECK_TYPE(QGraphicsPathItem);
-  QGV_CHECK_TYPE(QGraphicsPolygonItem);
-  QGV_CHECK_TYPE(QGraphicsSimpleTextItem);
-  QGV_CHECK_TYPE(QGraphicsRectItem);
-  QGV_CHECK_TYPE(QAbstractGraphicsShapeItem);
-  QGV_CHECK_TYPE(QGraphicsLineItem);
-  QGV_CHECK_TYPE(QGraphicsItemGroup);
-  QGV_CHECK_TYPE(QGraphicsPixmapItem);
-
-  return QLatin1String("QGraphicsItem");
 }
 
 #include "sceneinspectorwidget.moc"
