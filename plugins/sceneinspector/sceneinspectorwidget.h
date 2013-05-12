@@ -31,9 +31,6 @@ class QModelIndex;
 
 namespace GammaRay {
 
-class PropertyController;
-class SceneModel;
-
 namespace Ui {
   class SceneInspectorWidget;
 }
@@ -49,15 +46,12 @@ class SceneInspectorWidget : public QWidget
     void sceneSelected(int index);
     void sceneItemSelected(const QModelIndex &index);
     void sceneItemSelected(QGraphicsItem *item);
-    void widgetSelected(QWidget *item, const QPoint &pos);
 
   private:
     QString findBestType(QGraphicsItem *item);
 
   private:
     QScopedPointer<Ui::SceneInspectorWidget> ui;
-    SceneModel *m_sceneModel;
-    PropertyController *m_propertyController;
 };
 
 }

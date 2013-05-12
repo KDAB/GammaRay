@@ -43,22 +43,23 @@ using namespace GammaRay;
 
 SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   : QWidget(parent),
-    ui(new Ui::SceneInspectorWidget),
-    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
+    ui(new Ui::SceneInspectorWidget)
 {
   ui->setupUi(this);
   ui->scenePropertyWidget->setObjectBaseName("com.kdab.GammaRay.SceneInspector");
 
   ui->sceneComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.SceneList"));
   connect(ui->sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)));
-  m_sceneModel = new SceneModel(this);
+
   QSortFilterProxyModel *sceneFilter = new KRecursiveFilterProxyModel(this);
-  sceneFilter->setSourceModel(m_sceneModel);
+  sceneFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.SceneGraphModel"));
   ui->sceneTreeView->setModel(sceneFilter);
   ui->screneTreeSearchLine->setProxy(sceneFilter);
-  connect(ui->sceneTreeView->selectionModel(),
-          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(sceneItemSelected(QModelIndex)));
+
+  QItemSelectionModel *itemSelection = ObjectBroker::selectionModel(sceneFilter);
+  ui->sceneTreeView->setSelectionModel(itemSelection);
+  connect(itemSelection, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          this, SLOT(sceneItemSelected(QModelIndex)));
 
   if (ui->sceneComboBox->count()) {
     sceneSelected(0);
@@ -71,11 +72,13 @@ SceneInspectorWidget::~SceneInspectorWidget()
 
 void SceneInspectorWidget::sceneSelected(int index)
 {
+  const QModelIndex mi = ui->sceneComboBox->model()->index(index, 0);
+  ObjectBroker::selectionModel(ui->sceneComboBox->model())->select(mi, QItemSelectionModel::ClearAndSelect);
+
   QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-//   qDebug() << Q_FUNC_INFO << scene << obj;
+  qDebug() << Q_FUNC_INFO << scene << obj;
 
-  m_sceneModel->setScene(scene);
   ui->graphicsSceneView->setGraphicsScene(scene);
 }
 
@@ -83,27 +86,7 @@ void SceneInspectorWidget::sceneItemSelected(const QModelIndex &index)
 {
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
-    QGraphicsObject *obj = item->toGraphicsObject();
-    if (obj) {
-      m_propertyController->setObject(obj);
-    } else {
-      m_propertyController->setObject(item, findBestType(item));
-    }
     ui->graphicsSceneView->showGraphicsItem(item);
-  } else {
-    m_propertyController->setObject(0);
-  }
-}
-
-void SceneInspectorWidget::widgetSelected(QWidget *widget, const QPoint &pos)
-{
-  QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(widget);
-  if (qgv) {
-    // TODO: select qgv->scene() first, right now this only works for a single scene
-    QGraphicsItem *item = qgv->itemAt(widget->mapTo(qgv, pos));
-    if (item) {
-      sceneItemSelected(item);
-    }
   }
 }
 

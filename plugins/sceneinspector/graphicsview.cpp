@@ -38,6 +38,9 @@ GraphicsView::GraphicsView(QWidget *parent)
 void GraphicsView::showItem(QGraphicsItem *item)
 {
   m_currentItem = item;
+  if (!item)
+    return;
+
   fitInView(item, Qt::KeepAspectRatio);
   scale(0.8f, 0.8f);
 }

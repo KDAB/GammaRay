@@ -30,6 +30,7 @@
 #include <QGraphicsScene>
 #include <QWidget>
 
+class QItemSelection;
 class QModelIndex;
 
 namespace GammaRay {
@@ -44,8 +45,8 @@ class SceneInspector : public QObject
     explicit SceneInspector(ProbeInterface *probe, QObject *parent = 0);
 
   private slots:
-    void sceneSelected(int index);
-    void sceneItemSelected(const QModelIndex &index);
+    void sceneSelected(const QItemSelection &selection);
+    void sceneItemSelected(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
     void widgetSelected(QWidget *item, const QPoint &pos);
 

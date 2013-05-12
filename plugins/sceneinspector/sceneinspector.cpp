@@ -39,12 +39,13 @@
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
 SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)/*,
-    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))*/
+  : QObject(parent),
+    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
 {
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
           SLOT(widgetSelected(QWidget*,QPoint)));
@@ -54,38 +55,43 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   sceneFilterProxy->setSourceModel(probe->objectListModel());
   SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
   singleColumnProxy->setSourceModel(sceneFilterProxy);
-  ObjectBroker::registerModel("com.kdab.GammaRay.SceneList", singleColumnProxy);
+  probe->registerModel("com.kdab.GammaRay.SceneList", singleColumnProxy);
 
-#if 0
+  QItemSelectionModel* sceneSelection = ObjectBroker::selectionModel(singleColumnProxy);
+  connect(sceneSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(sceneSelected(QItemSelection)));
+
   m_sceneModel = new SceneModel(this);
-  QSortFilterProxyModel *sceneFilter = new KRecursiveFilterProxyModel(this);
-  sceneFilter->setSourceModel(m_sceneModel);
-  ui->sceneTreeView->setModel(sceneFilter);
-  ui->screneTreeSearchLine->setProxy(sceneFilter);
-  connect(ui->sceneTreeView->selectionModel(),
-          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(sceneItemSelected(QModelIndex)));
+  probe->registerModel("com.kdab.GammaRay.SceneGraphModel", m_sceneModel);
+  QItemSelectionModel* itemSelection = ObjectBroker::selectionModel(m_sceneModel);
+  connect(itemSelection,
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(sceneItemSelected(QItemSelection)));
 
-  if (ui->sceneComboBox->count()) {
-    sceneSelected(0);
-  }
-#endif
+  // TODO: preselect a scene
 }
 
-void SceneInspector::sceneSelected(int index)
+void SceneInspector::sceneSelected(const QItemSelection& selection)
 {
-#if 0
-  QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
+  if (selection.isEmpty())
+    return;
+  const QModelIndex index = selection.first().topLeft();
+
+  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-//   qDebug() << Q_FUNC_INFO << scene << obj;
+  qDebug() << Q_FUNC_INFO << scene << obj;
 
   m_sceneModel->setScene(scene);
-  ui->graphicsSceneView->setGraphicsScene(scene);
-#endif
+  // TODO remote support?
+//  ui->graphicsSceneView->setGraphicsScene(scene);
 }
 
-void SceneInspector::sceneItemSelected(const QModelIndex &index)
+void SceneInspector::sceneItemSelected(const QItemSelection& selection)
 {
+  QModelIndex index;
+  if (!selection.isEmpty())
+    index = selection.first().topLeft();
+
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
     QGraphicsObject *obj = item->toGraphicsObject();
