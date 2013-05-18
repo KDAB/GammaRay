@@ -21,14 +21,14 @@
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="page_3">
+      <widget class="QWidget" name="contentTextPage">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QTextBrowser" name="textBrowser"/>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_4">
+      <widget class="QWidget" name="contentLabelPage">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <spacer name="horizontalSpacer">
