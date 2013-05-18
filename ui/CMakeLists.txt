@@ -65,6 +65,7 @@ set(gammaray_ui_internal_srcs
   tools/mimetypes/mimetypeswidget.cpp
   tools/modelinspector/modelinspectorwidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
+  tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
 )
 
@@ -79,6 +80,7 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/mimetypes/mimetypeswidget.ui
   tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
+  tools/resourcebrowser/resourcebrowserwidget.ui
   tools/standardpaths/standardpathswidget.ui
 )
 

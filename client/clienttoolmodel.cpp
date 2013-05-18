@@ -32,6 +32,7 @@
 #include <ui/tools/mimetypes/mimetypeswidget.h>
 #include <ui/tools/modelinspector/modelinspectorwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
+#include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
 
 #include <common/pluginmanager.h>
@@ -62,12 +63,12 @@ MAKE_FACTORY(MetaTypeBrowser);
 MAKE_FACTORY(MimeTypes);
 MAKE_FACTORY(ModelInspector);
 MAKE_FACTORY(ObjectInspector);
+MAKE_FACTORY(ResourceBrowser);
 MAKE_FACTORY(StandardPaths);
 
 
 ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("com.kdab.GammaRay.ToolModel"), parent)
 {
-  // TODO add tools
   insertFactory(new CodecBrowserFactory);
   insertFactory(new ConnectionInspectorFactory);
   insertFactory(new LocaleInspectorFactory);
@@ -77,6 +78,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new MimeTypesFactory);
   insertFactory(new ModelInspectorFactory);
   insertFactory(new ObjectInspectorFactory);
+  insertFactory(new ResourceBrowserFactory);
   insertFactory(new StandardPathsFactory);
 
   foreach(ToolFactory* factory, PluginManager::instance()->plugins())

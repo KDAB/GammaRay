@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GammaRay::ResourceBrowser</class>
- <widget class="QWidget" name="GammaRay::ResourceBrowser">
+ <class>GammaRay::ResourceBrowserWidget</class>
+ <widget class="QWidget" name="GammaRay::ResourceBrowserWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

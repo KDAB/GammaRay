@@ -23,7 +23,6 @@
 
 #include "resourcebrowser.h"
 #include "resourcefiltermodel.h"
-#include "ui_resourcebrowser.h"
 
 #include "qt/resourcemodel.h"
 
@@ -31,74 +30,13 @@
 
 using namespace GammaRay;
 
-ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::ResourceBrowser)
+ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
+  : QObject(parent)
 {
-  Q_UNUSED(probe);
-  ui->setupUi(this);
-
   ResourceModel *resourceModel = new ResourceModel(this);
   ResourceFilterModel *proxy = new ResourceFilterModel(this);
   proxy->setSourceModel(resourceModel);
-  ui->treeView->setModel(proxy);
-  ui->treeView->expandAll();
-
-  // date modifier - not really useful and mostly empty anyways - hide it
-  ui->treeView->hideColumn(3);
-
-  ui->treeView->header()->setResizeMode(QHeaderView::ResizeToContents);
-
-  QMetaObject::invokeMethod(this, "setupLayout", Qt::QueuedConnection);
-
-  connect(ui->treeView->selectionModel(),
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(resourceSelected(QItemSelection,QItemSelection)));
-
-  ui->resourceLabel->setText(tr("Select a Resource to Preview"));
-  ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-}
-
-void ResourceBrowser::resourceSelected(const QItemSelection &selected,
-                                       const QItemSelection &deselected)
-{
-  Q_UNUSED(deselected)
-  const QModelIndex selectedRow = selected.first().topLeft();
-  const QFileInfo fi(selectedRow.data(ResourceModel::FilePathRole).toString());
-
-  if (fi.isFile()) {
-    const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
-    if (l.contains(fi.suffix())) {
-      ui->resourceLabel->setPixmap(fi.absoluteFilePath());
-      ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-    } else {
-      QFile f(fi.absoluteFilePath());
-      f.open(QFile::ReadOnly | QFile::Text);
-      ui->textBrowser->setText(f.readAll());
-      ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
-    }
-  } else {
-    ui->resourceLabel->setText(tr("Select a Resource to Preview"));
-    ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-  }
-}
-
-void ResourceBrowser::setupLayout()
-{
-  // now the view was setup properly and we can mess with the splitter to resize
-  // the widgets for nicer display
-
-  int viewWidth = ui->treeView->columnWidth(0) +
-                  ui->treeView->columnWidth(1) +
-                  ui->treeView->columnWidth(2) +
-                  ui->treeView->contentsMargins().left() +
-                  ui->treeView->contentsMargins().right() + 25;
-  const int totalWidth = ui->splitter_7->width();
-  const int minPreviewWidth = 150;
-  if (totalWidth > viewWidth + minPreviewWidth) {
-    ui->splitter_7->setSizes(QList<int>() << viewWidth << (totalWidth - viewWidth));
-    ui->splitter_7->setStretchFactor(1, 3);
-  }
+  probe->registerModel("com.kdab.GammaRay.ResourceModel", proxy);
 }
 
 #include "resourcebrowser.moc"

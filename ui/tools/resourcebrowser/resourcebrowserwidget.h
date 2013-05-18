@@ -1,5 +1,5 @@
 /*
-  resourcebrowser.h
+  resourcebrowserwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,34 +21,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSER_H
-#define GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSER_H
+#ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSERWIDGET_H
+#define GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSERWIDGET_H
 
-#include "include/toolfactory.h"
-#include <tools/resourcebrowser/resourcebrowserwidget.h>
+#include <QWidget>
+
+class QItemSelection;
 
 namespace GammaRay {
 
-class ResourceBrowser : public QObject
+namespace Ui {
+  class ResourceBrowserWidget;
+}
+
+class ResourceBrowserWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ResourceBrowser(ProbeInterface *probe, QObject *parent = 0);
-};
+    explicit ResourceBrowserWidget(QWidget *parent = 0);
+    ~ResourceBrowserWidget();
 
-class ResourceBrowserFactory : public QObject, public StandardToolFactory2<QObject, ResourceBrowser, ResourceBrowserWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit ResourceBrowserFactory(QObject *parent) : QObject(parent)
-    {
-    }
+  private slots:
+    void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void setupLayout();
 
-    inline QString name() const
-    {
-      return tr("Resources");
-    }
+  private:
+    QScopedPointer<Ui::ResourceBrowserWidget> ui;
 };
 
 }
