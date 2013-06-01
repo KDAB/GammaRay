@@ -25,13 +25,13 @@
 
 #include "textdocumentformatmodel.h"
 #include "textdocumentmodel.h"
-#include "ui_textdocumentinspector.h"
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
 
 #include <network/objectbroker.h>
 
+#include <QItemSelection>
 #include <QTextDocument>
 
 using namespace GammaRay;
