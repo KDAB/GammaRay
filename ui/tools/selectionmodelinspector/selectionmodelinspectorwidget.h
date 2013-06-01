@@ -1,5 +1,5 @@
 /*
-  selectionmodelinspector.cpp
+  selectionmodelinspectorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,20 +21,34 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "selectionmodelinspector.h"
+#ifndef GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTORWIDGET_H
+#define GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTORWIDGET_H
 
-#include "include/objecttypefilterproxymodel.h"
-#include "include/probeinterface.h"
+#include "include/toolfactory.h"
 
-using namespace GammaRay;
+#include <QItemSelectionModel>
+#include <QWidget>
 
-SelectionModelInspector::SelectionModelInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
-{
-  ObjectTypeFilterProxyModel<QItemSelectionModel> *selectionModelProxy =
-    new ObjectTypeFilterProxyModel<QItemSelectionModel>(this);
-  selectionModelProxy->setSourceModel(probe->objectListModel());
-  probe->registerModel("com.kdab.GammaRay.SelectionModelsModel", selectionModelProxy);
+namespace GammaRay {
+
+namespace Ui {
+  class SelectionModelInspectorWidget;
 }
 
-#include "selectionmodelinspector.moc"
+class SelectionModelInspectorWidget : public QWidget
+{
+  Q_OBJECT
+  public:
+    explicit SelectionModelInspectorWidget(QWidget *widget = 0);
+    ~SelectionModelInspectorWidget();
+
+  private slots:
+    void selectionModelSelected(const QItemSelection &selected, const QItemSelection &deselected);
+
+  private:
+    QScopedPointer<Ui::SelectionModelInspectorWidget> ui;
+};
+
+}
+
+#endif // GAMMARAY_SELECTIONMODELINSPECTOR_H

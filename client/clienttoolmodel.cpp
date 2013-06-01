@@ -33,6 +33,7 @@
 #include <ui/tools/modelinspector/modelinspectorwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
+#include <ui/tools/selectionmodelinspector/selectionmodelinspectorwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
 #include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
@@ -65,6 +66,7 @@ MAKE_FACTORY(MimeTypes);
 MAKE_FACTORY(ModelInspector);
 MAKE_FACTORY(ObjectInspector);
 MAKE_FACTORY(ResourceBrowser);
+MAKE_FACTORY(SelectionModelInspector);
 MAKE_FACTORY(StandardPaths);
 MAKE_FACTORY(TextDocumentInspector);
 
@@ -81,6 +83,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new ModelInspectorFactory);
   insertFactory(new ObjectInspectorFactory);
   insertFactory(new ResourceBrowserFactory);
+  insertFactory(new SelectionModelInspectorFactory);
   insertFactory(new StandardPathsFactory);
   insertFactory(new TextDocumentInspectorFactory);
 

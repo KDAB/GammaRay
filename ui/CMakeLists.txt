@@ -66,6 +66,7 @@ set(gammaray_ui_internal_srcs
   tools/modelinspector/modelinspectorwidget.cpp
   tools/objectinspector/objectinspectorwidget.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
+  tools/selectionmodelinspector/selectionmodelinspectorwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
   tools/textdocumentinspector/textdocumentinspectorwidget.cpp
   tools/textdocumentinspector/textdocumentcontentview.cpp
@@ -83,6 +84,7 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
   tools/resourcebrowser/resourcebrowserwidget.ui
+  tools/selectionmodelinspector/selectionmodelinspectorwidget.ui
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )

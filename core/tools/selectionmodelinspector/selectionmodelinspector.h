@@ -25,31 +25,21 @@
 #define GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTOR_H
 
 #include "include/toolfactory.h"
+#include <ui/tools/selectionmodelinspector/selectionmodelinspectorwidget.h>
 
 #include <QItemSelectionModel>
-#include <QWidget>
 
 namespace GammaRay {
 
-namespace Ui {
-  class SelectionModelInspector;
-}
-
-class SelectionModelInspector : public QWidget
+class SelectionModelInspector : public QObject
 {
   Q_OBJECT
   public:
-    explicit SelectionModelInspector(ProbeInterface *probe, QWidget *widget = 0);
-
-  private slots:
-    void selectionModelSelected(const QItemSelection &selected, const QItemSelection &deselected);
-
-  private:
-    QScopedPointer<Ui::SelectionModelInspector> ui;
+    explicit SelectionModelInspector(ProbeInterface *probe, QObject *parent = 0);
 };
 
 class SelectionModelInspectorFactory :
-    public QObject, public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
+    public QObject, public StandardToolFactory2<QItemSelectionModel, SelectionModelInspector, SelectionModelInspectorWidget>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
