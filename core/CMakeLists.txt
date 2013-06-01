@@ -47,7 +47,6 @@ set(gammaray_srcs
   tools/codecbrowser/codecmodel.cpp
   tools/textdocumentinspector/textdocumentmodel.cpp
   tools/textdocumentinspector/textdocumentformatmodel.cpp
-  tools/textdocumentinspector/textdocumentcontentview.cpp
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp
   tools/codecbrowser/codecbrowser.cpp
@@ -93,7 +92,6 @@ qt4_automoc(${gammaray_srcs})
 qt4_wrap_ui(gammaray_srcs
   tools/fontbrowser/fontbrowser.ui
   tools/selectionmodelinspector/selectionmodelinspector.ui
-  tools/textdocumentinspector/textdocumentinspector.ui
 )
 
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)

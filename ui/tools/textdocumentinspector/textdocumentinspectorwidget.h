@@ -1,5 +1,5 @@
 /*
-  textdocumentinspector.h
+  textdocumentinspectorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,11 +21,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTOR_H
-#define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTOR_H
+#ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
+#define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
 
 #include "include/toolfactory.h"
-#include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
 #include <QPointer>
 #include <QTextDocument>
@@ -38,35 +37,25 @@ namespace GammaRay {
 class TextDocumentModel;
 class TextDocumentFormatModel;
 
-class TextDocumentInspector : public QObject
+namespace Ui {
+  class TextDocumentInspectorWidget;
+}
+
+class TextDocumentInspectorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit TextDocumentInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit TextDocumentInspectorWidget(QWidget *parent = 0);
+    ~TextDocumentInspectorWidget();
 
   private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void documentContentChanged();
 
   private:
-    TextDocumentModel *m_textDocumentModel;
-    TextDocumentFormatModel *m_textDocumentFormatModel;
-};
-
-class TextDocumentInspectorFactory
-  : public QObject, public StandardToolFactory2<QTextDocument,TextDocumentInspector, TextDocumentInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit TextDocumentInspectorFactory(QObject *parent) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Text Documents");
-    }
+    QScopedPointer<Ui::TextDocumentInspectorWidget> ui;
+    QPointer<QTextDocument> m_currentDocument;
 };
 
 }

@@ -34,6 +34,7 @@
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
+#include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
 #include <common/pluginmanager.h>
 #include <network/modelroles.h>
@@ -65,6 +66,7 @@ MAKE_FACTORY(ModelInspector);
 MAKE_FACTORY(ObjectInspector);
 MAKE_FACTORY(ResourceBrowser);
 MAKE_FACTORY(StandardPaths);
+MAKE_FACTORY(TextDocumentInspector);
 
 
 ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("com.kdab.GammaRay.ToolModel"), parent)
@@ -80,6 +82,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new ObjectInspectorFactory);
   insertFactory(new ResourceBrowserFactory);
   insertFactory(new StandardPathsFactory);
+  insertFactory(new TextDocumentInspectorFactory);
 
   foreach(ToolFactory* factory, PluginManager::instance()->plugins())
     insertFactory(factory);

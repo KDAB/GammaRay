@@ -67,6 +67,8 @@ set(gammaray_ui_internal_srcs
   tools/objectinspector/objectinspectorwidget.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
+  tools/textdocumentinspector/textdocumentinspectorwidget.cpp
+  tools/textdocumentinspector/textdocumentcontentview.cpp
 )
 
 qt4_wrap_ui(gammaray_ui_internal_srcs
@@ -82,6 +84,7 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/objectinspector/objectinspectorwidget.ui
   tools/resourcebrowser/resourcebrowserwidget.ui
   tools/standardpaths/standardpathswidget.ui
+  tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )
 
 qt4_automoc(${gammaray_ui_internal_srcs})
