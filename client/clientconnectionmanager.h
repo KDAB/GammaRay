@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class QAbstractItemModel;
+
 namespace GammaRay {
 
 class Client;
@@ -22,9 +24,12 @@ class ClientConnectionManager : public QObject
     void connectionEstablished();
     void connectionError(const QString &msg);
 
+    void toolModelPopulated();
+
   private:
     Client *m_client;
     MainWindow *m_mainWindow;
+    QAbstractItemModel *m_toolModel;
 };
 
 }
