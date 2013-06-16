@@ -25,12 +25,10 @@
 #include "client.h"
 #include "selectionmodelclient.h"
 #include "objectclient.h"
-#include "clienttoolmodel.h"
+#include "clientconnectionmanager.h"
 
 #include <network/objectbroker.h>
 #include <network/streamoperators.h>
-
-#include <ui/mainwindow.h>
 
 #include <QApplication>
 #include <QStringList>
@@ -68,21 +66,11 @@ int main(int argc, char** argv)
     port = app.arguments().at(2).toUShort();
   }
 
-  Client client;
-  client.connectToHost(hostName, port);
-  QObject::connect(&client, SIGNAL(disconnected()), &app, SLOT(quit()));
-
-  // TODO make this async, show some status indicator/splash screen while connecting
-
   ObjectBroker::setObjectFactoryCallback(objectFactory);
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
-  ClientToolModel toolModel;
-  ObjectBroker::registerModel("com.kdab.GammaRay.ToolModel", &toolModel);
-
-  MainWindow mainWindow;
-  mainWindow.show();
-
+  ClientConnectionManager conMan;
+  conMan.connectToHost(hostName, port);
   return app.exec();
 }

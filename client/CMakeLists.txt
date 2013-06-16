@@ -14,6 +14,7 @@ set(gammaray_client_srcs
   selectionmodelclient.cpp
   objectclient.cpp
   clienttoolmodel.cpp
+  clientconnectionmanager.cpp
 )
 
 qt4_automoc(${gammaray_client_srcs})

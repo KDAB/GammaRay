@@ -74,6 +74,7 @@ void Client::messageReceived(const Message& msg)
       exit(1);
     }
     m_versionChecked = true;
+    emit connectionEstablished();
     return;
   }
 

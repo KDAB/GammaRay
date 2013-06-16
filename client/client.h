@@ -52,6 +52,12 @@ public:
   /** Singleton accessor. */
   static Client* instance();
 
+signals:
+  /** Emitted when we successfully established a connection and passed the protocol version handshake step. */
+  void connectionEstablished();
+  /** Emitted on connection errors. */
+  void connectionError(const QString &msg);
+
 protected:
   void messageReceived(const Message& msg);
   void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
