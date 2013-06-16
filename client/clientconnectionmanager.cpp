@@ -46,7 +46,15 @@ void ClientConnectionManager::connectionEstablished()
 
 void ClientConnectionManager::connectionError(const QString& msg)
 {
-  QMessageBox::critical(m_mainWindow, tr("Connection Error"), msg);
+  hideSplashScreen();
+
+  QString errorMsg;
+  if (m_mainWindow)
+    errorMsg = tr("Lost connection to remote host: %1").arg(msg);
+  else
+    errorMsg = tr("Could not establish connection to remote host: %1").arg(msg);
+
+  QMessageBox::critical(m_mainWindow, tr("GammaRay - Connection Error"), errorMsg);
   QApplication::exit(1);
 }
 

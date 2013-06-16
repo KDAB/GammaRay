@@ -49,6 +49,7 @@ void Client::connectToHost(const QString &hostName, quint16 port)
   qDebug() << Q_FUNC_INFO << hostName << port;
   QTcpSocket *sock = new QTcpSocket(this);
   connect(sock, SIGNAL(connected()), SLOT(socketConnected()));
+  connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()));
   sock->connectToHost(hostName, port);
   m_versionChecked = false;
 }
@@ -57,6 +58,12 @@ void Client::socketConnected()
 {
   Q_ASSERT(qobject_cast<QIODevice*>(sender()));
   setDevice(qobject_cast<QIODevice*>(sender()));
+}
+
+void Client::socketError()
+{
+  Q_ASSERT(qobject_cast<QIODevice*>(sender()));
+  emit connectionError(qobject_cast<QIODevice*>(sender())->errorString());
 }
 
 void Client::messageReceived(const Message& msg)

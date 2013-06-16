@@ -67,6 +67,7 @@ private:
 
 private slots:
   void socketConnected();
+  void socketError();
 
 private:
   bool m_versionChecked;
