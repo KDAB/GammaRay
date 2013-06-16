@@ -24,10 +24,12 @@
 #ifndef GAMMARAY_SPLASHSCREEN_H
 #define GAMMARAY_SPLASHSCREEN_H
 
+#include "include/gammaray_ui_export.h"
+
 namespace GammaRay {
 
-void showSplashScreen();
-void hideSplashScreen();
+GAMMARAY_UI_EXPORT void showSplashScreen();
+GAMMARAY_UI_EXPORT void hideSplashScreen();
 
 }
 

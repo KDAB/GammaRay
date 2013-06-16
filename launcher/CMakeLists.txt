@@ -22,7 +22,6 @@ set(gammaray_runner_srcs
   probefinder.cpp
   main.cpp
   promolabel.cpp
-  splashscreen.cpp
   launcherwindow.cpp
   launchpage.cpp
   selftestpage.cpp

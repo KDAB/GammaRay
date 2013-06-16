@@ -23,7 +23,7 @@
 
 #include "gdbinjector.h"
 
-#include "splashscreen.h"
+#include <ui/splashscreen.h>
 
 #include <QDebug>
 #include <QProcess>
