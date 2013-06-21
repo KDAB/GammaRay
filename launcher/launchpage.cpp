@@ -130,6 +130,13 @@ bool LaunchPage::isValid()
   }
 
   const QFileInfo fi(ui->progEdit->text());
+  
+#ifdef Q_OS_MAC
+  if (fi.isBundle() && (fi.suffix() == "app")) {
+    return true;
+  }
+#endif
+  
   return fi.exists() && fi.isFile() && fi.isExecutable();
 }
 
