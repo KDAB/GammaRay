@@ -61,7 +61,7 @@ static bool processIsQtApp(const QString &pid)
   lsofProcess.waitForFinished();
   const QByteArray output = lsofProcess.readAllStandardOutput();
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0) || defined(Q_OS_MAC)
   if (output.contains("QtCore")) {
 #else
   if (output.contains("Qt5Core")) {
