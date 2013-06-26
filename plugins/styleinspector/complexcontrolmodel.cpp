@@ -36,6 +36,10 @@ static double log2(double n)
 }
 #endif
 
+#ifdef Q_OS_QNX
+using std::log2;
+#endif
+
 using namespace GammaRay;
 
 struct complex_control_element_t {
