@@ -10,11 +10,19 @@ target_link_libraries(connectiontest
   ${QT_QTTEST_LIBRARIES}
 )
 
+if(QNXNTO)
+  target_link_libraries(connectiontest cpp)
+endif()
+
 qt4_automoc(attachhelper.cpp)
 
 add_executable(attachhelper attachhelper.cpp)
 
 target_link_libraries(attachhelper ${QT_QTCORE_LIBRARIES})
+
+if(QNXNTO)
+  target_link_libraries(attachhelper cpp)
+endif()
 
 if(UNIX AND NOT APPLE)
   add_test(connectiontest-preload

@@ -15,3 +15,7 @@ target_link_libraries(propertywidgettest
   gammaray_core
   gammaray_common
 )
+
+if(QNXNTO)
+  target_link_libraries(propertywidgettest cpp)
+endif()
