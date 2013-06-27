@@ -34,3 +34,7 @@ target_link_libraries(gammaray_styleinspector_plugin
   ${QT_QTGUI_LIBRARIES}
   gammaray_core
 )
+
+if(QNXNTO)
+  target_link_libraries(gammaray_styleinspector_plugin cpp)
+endif()

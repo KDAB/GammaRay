@@ -32,6 +32,9 @@
 #ifndef __MINGW32__
 #define fileno _fileno
 #endif
+#elif defined(Q_OS_QNX)
+#include <unistd.h>
+using std::fileno;
 #else
 #include <unistd.h>
 #endif
