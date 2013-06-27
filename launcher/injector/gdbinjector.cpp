@@ -114,7 +114,7 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
 #endif
 //  execGdbCmd(qPrintable(QString::fromLatin1("call (void) %1()").arg(probeFunc)));
   execGdbCmd(qPrintable(QString::fromLatin1("print %1").arg(probeFunc)));
-  execGdbCmd("call $()");
+  execGdbCmd("call (void) $()");
 
   if (qgetenv("GAMMARAY_UNITTEST") != "1") {
     execGdbCmd("detach");
