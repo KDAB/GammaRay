@@ -129,7 +129,8 @@ void handleMessage(QtMsgType type, const char *msg)
   s_handlerDisabled = true;
   qInstallMsgHandler(s_handler);
 #if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
-  qt_message_output(type, QMessageLogContext(), msg);
+  static QMessageLogContext context;
+  qt_message_output(type, context, msg);
 #else
   qt_message_output(type, msg);
 #endif
