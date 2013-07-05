@@ -58,10 +58,12 @@ QString findProbe(const QString &baseName)
     qWarning()
       << "Cannot locate" << baseName
       << "in the typical places.\n"
-         "Try setting the $LD_PRELOAD environment variable to the fullpath,\n"
+#if !(defined(Q_OS_MAC) || defined(Q_OS_WIN))
+      << "Try setting the $LD_PRELOAD environment variable to the fullpath,\n"
          "For example:\n"
          "  export LD_PRELOAD=/opt/lib64/libgammaray_probe.so\n"
-         "Continuing nevertheless, some systems can also preload from just the library name...";
+#endif
+      << "Continuing nevertheless, some systems can also preload from just the library name...";
     return baseName;
   }
 
