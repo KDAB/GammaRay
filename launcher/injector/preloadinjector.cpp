@@ -77,7 +77,11 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
 
   if (env.value("GAMMARAY_GDB").toInt()) {
     QStringList newArgs;
-    newArgs << "gdb" << "--eval-command" << "run" << "--args";
+    newArgs << "gdb";
+#ifndef Q_OS_MAC
+    newArgs << "--eval-command" << "run";
+#endif
+    newArgs << "--args";
     newArgs += args;
     args = newArgs;
   } else if (env.value("GAMMARAY_MEMCHECK").toInt()) {
