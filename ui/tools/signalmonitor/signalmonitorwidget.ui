@@ -73,6 +73,9 @@
    </item>
    <item>
     <widget class="QTreeView" name="objectTreeView">
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
      </property>
