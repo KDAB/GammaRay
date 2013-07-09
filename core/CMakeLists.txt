@@ -37,6 +37,7 @@ set(gammaray_srcs
   proxydetacher.cpp
   propertycontroller.cpp
   propertycontrollerinterface.cpp
+  relativeclock.cpp
 
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp

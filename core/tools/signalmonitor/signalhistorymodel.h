@@ -107,7 +107,6 @@ class SignalHistoryModel : public QAbstractItemModel
     void onSignalEmitted(QObject *sender, int signalIndex);
 
   private:
-    const qint64 m_startTime;
     QAbstractItemModel *const m_objectTreeModel;
     MultiSignalMapper *const m_signalMapper;
     QVector<Item *> m_tracedObjects;
