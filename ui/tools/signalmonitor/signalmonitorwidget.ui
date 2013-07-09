@@ -54,6 +54,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QLabel" name="intervalScaleLabel">
+       <property name="text">
+        <string>Zoom Level:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QSlider" name="intervalScale">
        <property name="minimum">
         <number>-100</number>
