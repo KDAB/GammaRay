@@ -183,7 +183,7 @@ add_definitions(-DMAKE_GAMMARAY_LIB)
 add_library(gammaray_probe SHARED ${gammaray_srcs})
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_probe Qt5::Widgets)
+  target_link_libraries(gammaray_probe Qt5::Widgets Qt5::Network)
 else()
   target_link_libraries(gammaray_probe
     ${QT_QTCORE_LIBRARIES}
