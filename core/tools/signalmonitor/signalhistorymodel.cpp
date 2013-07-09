@@ -27,7 +27,7 @@
 #include "multisignalmapper.h"
 
 #include <QDateTime>
-#include <QDebug>
+#include <QLocale>
 
 using namespace GammaRay;
 
@@ -40,7 +40,6 @@ SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
   , m_objectTreeModel(probe->objectTreeModel())
   , m_signalMapper(new MultiSignalMapper(this))
 {
-  qDebug() << sizeof(*this);
   connect(m_objectTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
           this, SLOT(onRowsInserted(QModelIndex,int,int)));
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
