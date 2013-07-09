@@ -25,9 +25,9 @@
 
 #include <core/tools/signalmonitor/signalhistorymodel.h>
 
-#include <QDebug>
 #include <QDateTime>
 #include <QPainter>
+#include <QSortFilterProxyModel>
 #include <QTimer>
 
 using namespace GammaRay;
@@ -134,5 +134,43 @@ void SignalHistoryDelegate::setActive(bool active)
 bool SignalHistoryDelegate::isActive() const
 {
   return m_updateTimer->isActive();
+}
+
+QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position, int width)
+{
+  const QAbstractItemModel *const model = index.model();
+  const QVector<qint64> &events = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
+
+  const qint64 t = m_visibleInterval * position / width + m_beginOfTime;
+  qint64 dtMin = std::numeric_limits<qint64>::max();
+  int toolTipIndex = -1;
+
+  for (int i = 0; i < events.size(); ++i) {
+    const qint64 dt = qAbs(SignalHistoryModel::timestamp(events.at(i)) - t);
+
+    if (dt < dtMin) {
+      toolTipIndex = i;
+      dtMin = dt;
+    }
+  }
+
+  if (toolTipIndex >= 0) {
+    QModelIndex parent = index;
+
+    forever {
+      const QSortFilterProxyModel *const filter =
+          qobject_cast<const QSortFilterProxyModel *>(parent.model());
+
+      if (filter == 0)
+        break;
+
+      parent = filter->mapToSource(parent);
+    }
+
+    return parent.model()->data(parent.model()->index(toolTipIndex, SignalHistoryModel::EventColumn, parent),
+                                Qt::ToolTipRole).toString();
+  }
+
+  return QString();
 }
 

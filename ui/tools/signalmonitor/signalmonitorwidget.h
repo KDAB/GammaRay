@@ -41,6 +41,9 @@ class SignalMonitorWidget : public QWidget
     explicit SignalMonitorWidget(QWidget *parent = 0);
     ~SignalMonitorWidget();
 
+  protected:
+    bool event(QEvent *event) Q_DECL_OVERRIDE;
+
   private slots:
     void adjustEventScale(int value);
     void adjustEventRange();
@@ -48,6 +51,9 @@ class SignalMonitorWidget : public QWidget
     void adjustEventScrollBarSize();
     void pauseAndResume(bool pause);
     void eventsActiveChanged(bool active);
+
+    int eventColumnPosition() const;
+    int eventColumnWidth() const;
 
   private:
     static const QString ITEM_TYPE_NAME_OBJECT;

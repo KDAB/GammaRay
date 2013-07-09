@@ -27,6 +27,7 @@
 #include <common/objectmodel.h>
 
 #include <QAbstractItemModel>
+#include <QIcon>
 #include <QMetaMethod>
 #include <QPointer>
 
@@ -49,13 +50,15 @@ class SignalHistoryModel : public QAbstractItemModel
       const QMetaObject *const metaObject;
       QString objectName;
       QString objectType;
+      QString toolTip;
+      QIcon decoration;
       QVector<qint64> events;
       const qint64 startTime; // FIXME: make them all methods
       qint64 endTime(/*qint64 now*/) const;
 
       qint64 timestamp(int i) const { return SignalHistoryModel::timestamp(events.at(i)); }
       int signalIndex(int i) const { return SignalHistoryModel::signalIndex(events.at(i)); }
-      QString signalName(int i) const { return metaObject->method(signalIndex(i)).name(); }
+      QString signalName(int i) const { return metaObject->method(signalIndex(i)).methodSignature(); }
     };
 
   public:

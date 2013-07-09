@@ -30,6 +30,9 @@
 #include <ui/deferredresizemodesetter.h>
 #include <kde/krecursivefilterproxymodel.h>
 
+#include <QHelpEvent>
+#include <QToolTip>
+
 #include <cmath>
 
 using namespace GammaRay;
@@ -86,9 +89,8 @@ void SignalMonitorWidget::adjustEventScale(int value)
 
 void SignalMonitorWidget::adjustEventRange()
 {
-  const int x0 = ui->objectTreeView->columnViewportPosition(SignalHistoryModel::EventColumn);
-  const int dx = ui->objectTreeView->columnWidth(SignalHistoryModel::EventColumn);
-  ui->objectTreeView->viewport()->update(x0, 0, dx, ui->objectTreeView->height());
+  ui->objectTreeView->viewport()->update(eventColumnPosition(), 0,
+                                         eventColumnWidth(), ui->objectTreeView->height());
 
   const bool signalsBlocked = ui->eventScrollBar->blockSignals(true);
 
@@ -119,7 +121,7 @@ void SignalMonitorWidget::adjustEventScrollBarSize()
   const QWidget *const scrollBar = ui->objectTreeView->verticalScrollBar();
   const QWidget *const viewport = ui->objectTreeView->viewport();
 
-  const int eventColumnLeft = ui->objectTreeView->columnViewportPosition(SignalHistoryModel::EventColumn);
+  const int eventColumnLeft = eventColumnPosition();
   const int scrollBarLeft = scrollBar->mapTo(this, scrollBar->pos()).x();
   const int viewportLeft = viewport->mapTo(this, viewport->pos()).x();
   const int viewportRight = viewportLeft + viewport->width();
@@ -138,5 +140,43 @@ void SignalMonitorWidget::pauseAndResume(bool pause)
 void SignalMonitorWidget::eventsActiveChanged(bool active)
 {
   ui->pauseButton->setChecked(not active);
+}
+
+int SignalMonitorWidget::eventColumnPosition() const
+{
+  return ui->objectTreeView->columnViewportPosition(SignalHistoryModel::EventColumn);
+}
+
+int SignalMonitorWidget::eventColumnWidth() const
+{
+  return ui->objectTreeView->columnWidth(SignalHistoryModel::EventColumn);
+}
+
+bool SignalMonitorWidget::event(QEvent *event)
+{
+  if (event->type() == QEvent::ToolTip) {
+    const QHelpEvent *const help = static_cast<QHelpEvent *>(event);
+    if (childAt(help->x(), help->y()) == ui->objectTreeView->viewport()) {
+      const QPoint &pos = ui->objectTreeView->viewport()->mapFrom(this, help->pos());
+      const QModelIndex index = ui->objectTreeView->indexAt(pos);
+
+      if (index.isValid() && index.column() == SignalHistoryModel::EventColumn) {
+        const int x0 = pos.x() - eventColumnPosition();
+        const int dx = eventColumnWidth();
+        const QString &toolTipText = m_eventDelegate->toolTipAt(index, x0, dx);
+
+        if (not toolTipText.isEmpty()) {
+          QToolTip::showText(help->globalPos(), toolTipText);
+        } else {
+          QToolTip::hideText();
+          event->ignore();
+        }
+
+        return true;
+      }
+    }
+  }
+
+  return QWidget::event(event);
 }
 

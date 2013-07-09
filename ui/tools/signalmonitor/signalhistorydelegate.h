@@ -54,6 +54,8 @@ class SignalHistoryDelegate : public QAbstractItemDelegate
     void setActive(bool isActive);
     bool isActive() const;
 
+    QString toolTipAt(const QModelIndex &index, int position, int width);
+
   signals:
     void visibleIntervalChanged(qint64 value);
     void visibleOffsetChanged(qint64 value);
