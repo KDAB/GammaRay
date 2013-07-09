@@ -249,11 +249,20 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
 }
 
-Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
 Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
 Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QIODevice::OpenMode)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
+#else // !Qt5
+Q_DECLARE_METATYPE(QAbstractSocket::SocketError)
+Q_DECLARE_METATYPE(QAbstractSocket::SocketState)
+#ifndef QT_NO_NETWORKPROXY
+Q_DECLARE_METATYPE(QNetworkProxy)
+#endif
+#endif
 
 void MetaObjectRepository::initNetworkTypes()
 {
@@ -276,16 +285,19 @@ void MetaObjectRepository::initNetworkTypes()
   // FIXME: QIODevice::readAll() would be nice to have
 
   MO_ADD_METAOBJECT1(QAbstractSocket, QIODevice);
-  MO_ADD_PROPERTY   (QAbstractSocket, QAbstractSocket::PauseModes, pauseMode, setPauseMode);
   MO_ADD_PROPERTY_RO(QAbstractSocket, bool, isValid);
   MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, localPort);
   MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, localAddress);
   MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, peerPort);
   MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, peerAddress);
   MO_ADD_PROPERTY_RO(QAbstractSocket, QString, peerName);
-
   MO_ADD_PROPERTY   (QAbstractSocket, qint64, readBufferSize, setReadBufferSize);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_PROPERTY   (QAbstractSocket, QAbstractSocket::PauseModes, pauseMode, setPauseMode);
   MO_ADD_PROPERTY_RO(QAbstractSocket, qintptr, socketDescriptor);
+#else // !Qt5
+  MO_ADD_PROPERTY_RO(QAbstractSocket, int, socketDescriptor);
+#endif
   MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketType, socketType);
   MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketState, state);
   MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketError, error);
@@ -301,7 +313,11 @@ void MetaObjectRepository::initNetworkTypes()
   MO_ADD_PROPERTY   (QTcpServer, int, maxPendingConnections, setMaxPendingConnections);
   MO_ADD_PROPERTY_RO(QTcpServer, quint16, serverPort);
   MO_ADD_PROPERTY_RO(QTcpServer, QHostAddress, serverAddress);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   MO_ADD_PROPERTY_RO(QTcpServer, qintptr, socketDescriptor);
+#else // !QT5
+  MO_ADD_PROPERTY_RO(QTcpServer, int, socketDescriptor);
+#endif
   MO_ADD_PROPERTY_RO(QTcpServer, bool, hasPendingConnections);
   MO_ADD_PROPERTY_RO(QTcpServer, QAbstractSocket::SocketError, serverError);
   MO_ADD_PROPERTY_RO(QTcpServer, QString, errorString);
@@ -310,7 +326,11 @@ void MetaObjectRepository::initNetworkTypes()
 #endif
 
   MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
+#else // !Qt5
+  MO_ADD_PROPERTY_RO(QSocketNotifier, int, socket);
+#endif
   MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
   MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
 }
