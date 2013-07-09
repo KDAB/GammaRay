@@ -83,7 +83,7 @@ SignalMonitorWidget::~SignalMonitorWidget()
 void SignalMonitorWidget::adjustEventScale(int value)
 {
   // FIXME: define more reasonable formula
-  qint64 i = std::pow(1.07, value) * 5000;
+  qint64 i = 5000 / std::pow(1.07, value);
   m_eventDelegate->setVisibleInterval(i);
 }
 
