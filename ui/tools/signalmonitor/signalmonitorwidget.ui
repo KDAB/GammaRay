@@ -74,7 +74,7 @@
    <item>
     <widget class="QTreeView" name="objectTreeView">
      <property name="selectionMode">
-      <enum>QAbstractItemView::NoSelection</enum>
+      <enum>QAbstractItemView::SingleSelection</enum>
      </property>
     </widget>
    </item>

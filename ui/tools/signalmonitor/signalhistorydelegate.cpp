@@ -64,14 +64,19 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
   const int x1 = x0 + dx * t0 / interval;
   const int x2 = dx * dt / interval + 1;
 
-  painter->setPen(QColor(240, 240, 240)); // FIXME: color cache
-  painter->drawLine(x0, y0 + dy - 2, x0 + dx, y0 + dy - 2);
+  const bool selected = option.state & QStyle::State_Selected;
 
-  if (t1 >= 0) {
-    painter->fillRect(x1, y0 + 1, x2, dy - 1, QColor(225, 225, 235)); // FIXME: color cache
+  if (selected) {
+    painter->fillRect(option.rect, option.palette.highlight());
   }
 
-  painter->setPen(QColor(60, 60, 80)); // FIXME: color cache
+  if (t1 >= 0) {
+    painter->fillRect(x1, y0 + 1, x2, dy - 2,
+                      selected ? option.palette.highlightedText()
+                               : option.palette.midlight());
+  }
+
+  painter->setPen(option.palette.color(selected ? QPalette::Highlight : QPalette::WindowText));
 
   foreach (qint64 ev, events) {
     const qint64 ts = SignalHistoryModel::timestamp(ev);
