@@ -26,15 +26,19 @@
 
 #include "include/metatypedeclarations.h"
 
+#include <QAbstractSocket>
 #include <QGraphicsItem>
 #include <QGraphicsLayoutItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsWidget>
+#include <QNetworkProxy>
 #include <QObject>
 #include <QPalette>
 #include <QPen>
+#include <QSocketNotifier>
 #include <QStyle>
 #include <QWidget>
+#include <QTcpServer>
 
 #define MO_ADD_BASECLASS(Base) \
   Q_ASSERT(hasMetaObject(QLatin1String(#Base))); \
@@ -107,6 +111,7 @@ void MetaObjectRepository::initBuiltInTypes()
 {
   initQObjectTypes();
   initGraphicsViewTypes();
+  initNetworkTypes();
 }
 
 void MetaObjectRepository::initQObjectTypes()
@@ -242,6 +247,72 @@ void MetaObjectRepository::initGraphicsViewTypes()
 
   MO_ADD_METAOBJECT1(QGraphicsProxyWidget, QGraphicsWidget);
   MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
+}
+
+Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
+Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
+Q_DECLARE_METATYPE(QHostAddress)
+Q_DECLARE_METATYPE(QIODevice::OpenMode)
+Q_DECLARE_METATYPE(QSocketNotifier::Type)
+
+void MetaObjectRepository::initNetworkTypes()
+{
+  MetaObject *mo = 0;
+  MO_ADD_METAOBJECT1(QIODevice, QObject);
+  MO_ADD_PROPERTY_RO(QIODevice, QIODevice::OpenMode, openMode);
+  MO_ADD_PROPERTY   (QIODevice, bool, isTextModeEnabled, setTextModeEnabled);
+  MO_ADD_PROPERTY_RO(QIODevice, bool, isOpen);
+  MO_ADD_PROPERTY_RO(QIODevice, bool, isReadable);
+  MO_ADD_PROPERTY_RO(QIODevice, bool, isWritable);
+  MO_ADD_PROPERTY_RO(QIODevice, bool, isSequential);
+  MO_ADD_PROPERTY_RO(QIODevice, qint64, pos);
+  MO_ADD_PROPERTY_RO(QIODevice, qint64, size);
+  MO_ADD_PROPERTY_RO(QIODevice, bool, atEnd);
+  MO_ADD_PROPERTY_RO(QIODevice, qint64, bytesAvailable);
+  MO_ADD_PROPERTY_RO(QIODevice, qint64, bytesToWrite);
+  MO_ADD_PROPERTY_RO(QIODevice, bool, canReadLine);
+  MO_ADD_PROPERTY_RO(QIODevice, QString, errorString);
+
+  // FIXME: QIODevice::readAll() would be nice to have
+
+  MO_ADD_METAOBJECT1(QAbstractSocket, QIODevice);
+  MO_ADD_PROPERTY   (QAbstractSocket, QAbstractSocket::PauseModes, pauseMode, setPauseMode);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, bool, isValid);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, localPort);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, localAddress);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, peerPort);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, peerAddress);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, QString, peerName);
+
+  MO_ADD_PROPERTY   (QAbstractSocket, qint64, readBufferSize, setReadBufferSize);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, qintptr, socketDescriptor);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketType, socketType);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketState, state);
+  MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketError, error);
+#ifndef QT_NO_NETWORKPROXY
+  MO_ADD_PROPERTY_RO(QAbstractSocket, QNetworkProxy, proxy);
+#endif
+
+  // FIXME: QAbstractSocket::setSocketOption() would be nice to have
+  // FIXME: QQAbstractSocket::socketOption() would be nice to have
+
+  MO_ADD_METAOBJECT1(QTcpServer, QObject);
+  MO_ADD_PROPERTY_RO(QTcpServer, bool, isListening);
+  MO_ADD_PROPERTY   (QTcpServer, int, maxPendingConnections, setMaxPendingConnections);
+  MO_ADD_PROPERTY_RO(QTcpServer, quint16, serverPort);
+  MO_ADD_PROPERTY_RO(QTcpServer, QHostAddress, serverAddress);
+  MO_ADD_PROPERTY_RO(QTcpServer, qintptr, socketDescriptor);
+  MO_ADD_PROPERTY_RO(QTcpServer, bool, hasPendingConnections);
+  MO_ADD_PROPERTY_RO(QTcpServer, QAbstractSocket::SocketError, serverError);
+  MO_ADD_PROPERTY_RO(QTcpServer, QString, errorString);
+#ifndef QT_NO_NETWORKPROXY
+  MO_ADD_PROPERTY_RO(QTcpServer, QNetworkProxy, proxy);
+#endif
+
+  MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
+  MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
+  MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
+  MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
 }
 
 MetaObjectRepository *MetaObjectRepository::instance()

@@ -67,6 +67,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
     void initBuiltInTypes();
     void initQObjectTypes();
     void initGraphicsViewTypes();
+    void initNetworkTypes();
 
   private:
     QHash<QString, MetaObject*> m_metaObjects;
