@@ -36,7 +36,7 @@ const QString SignalHistoryModel::ITEM_TYPE_NAME_EVENT = "Event";
 
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
   : QAbstractItemModel(parent)
-  , m_startTime(0) //FIXME QDateTime::currentMSecsSinceEpoch())
+  , m_startTime(QDateTime::currentMSecsSinceEpoch()) // FIXME: get form some central source
   , m_objectTreeModel(probe->objectTreeModel())
   , m_signalMapper(new MultiSignalMapper(this))
 {
@@ -103,6 +103,10 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
         case ObjectItem:
           if (role == Qt::DisplayRole)
             return item(index)->objectName;
+          if (role == Qt::ToolTipRole)
+            return item(index)->toolTip;
+          if (role == Qt::DecorationRole)
+            return item(index)->decoration;
 
           break;
 
@@ -125,6 +129,8 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
         case ObjectItem:
           if (role == Qt::DisplayRole)
             return item(index)->objectType;
+          if (role == Qt::ToolTipRole)
+            return item(index)->toolTip;
 
           break;
 
@@ -154,6 +160,11 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
         case EventItem:
           if (role == ItemTypeNameRole)
             return ITEM_TYPE_NAME_EVENT;
+          if (role == Qt::ToolTipRole) {
+            const Item *const data = item(index);
+            const QString &ts = QLocale::system().toString(data->timestamp(index.row()) - m_startTime);
+            return QStringLiteral("%1 at %2 ms").arg(data->signalName(index.row()), ts);
+          }
 
           break;
       }
@@ -207,7 +218,7 @@ void SignalHistoryModel::onRowsInserted(const QModelIndex &otherParent, int firs
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 {
   // FIXME: optimize this linear lookup
-  const qint64 timestamp = QDateTime::currentMSecsSinceEpoch() - m_startTime;
+  const qint64 timestamp = QDateTime::currentMSecsSinceEpoch(); // FIXME: subtract m_startTime;
   for (int i = 0, l = m_tracedObjects.size(); i < l; ++i) {
     Item *const data = m_tracedObjects.at(i);
 
@@ -249,10 +260,11 @@ void SignalHistoryModel::Item::updateFromModel(const QModelIndex &index)
   if (object) {
     const QAbstractItemModel *const model = index.model();
 
-    interned(model->data(model->index(index.row(), 0, index.parent()),
-                         Qt::DisplayRole).toString(), &objectName);
-    interned(model->data(model->index(index.row(), 1, index.parent()),
-                         Qt::DisplayRole).toString(), &objectType);
+    interned(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString(), &objectName);
+    interned(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString(), &objectType);
+
+    toolTip = model->data(model->index(index.row(), 0, index.parent()), Qt::ToolTipRole).toString();
+    decoration = model->data(model->index(index.row(), 0, index.parent()), Qt::DecorationRole).value<QIcon>();
   }
 }
 
