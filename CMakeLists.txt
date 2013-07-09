@@ -97,7 +97,7 @@ if(Qt5Core_FOUND)
 
 # Qt4
 else()
-  find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtTest)
+	find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtTest QtNetwork)
   find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg)
 
   include(${QT_USE_FILE})

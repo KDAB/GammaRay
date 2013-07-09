@@ -188,6 +188,7 @@ else()
   target_link_libraries(gammaray_probe
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
+    ${QT_QTNETWORK_LIBRARIES}
   )
 endif()
 
