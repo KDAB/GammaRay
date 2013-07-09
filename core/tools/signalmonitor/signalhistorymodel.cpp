@@ -23,10 +23,10 @@
 
 #include "signalhistorymodel.h"
 
-#include "probeinterface.h"
 #include "multisignalmapper.h"
+#include "probeinterface.h"
+#include "relativeclock.h"
 
-#include <QDateTime>
 #include <QLocale>
 
 using namespace GammaRay;
@@ -36,7 +36,6 @@ const QString SignalHistoryModel::ITEM_TYPE_NAME_EVENT = "Event";
 
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
   : QAbstractItemModel(parent)
-  , m_startTime(QDateTime::currentMSecsSinceEpoch()) // FIXME: get form some central source
   , m_objectTreeModel(probe->objectTreeModel())
   , m_signalMapper(new MultiSignalMapper(this))
 {
@@ -162,7 +161,7 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
             return ITEM_TYPE_NAME_EVENT;
           if (role == Qt::ToolTipRole) {
             const Item *const data = item(index);
-            const QString &ts = QLocale::system().toString(data->timestamp(index.row()) - m_startTime);
+            const QString &ts = QLocale::system().toString(data->timestamp(index.row()));
             return QStringLiteral("%1 at %2 ms").arg(data->signalName(index.row()), ts);
           }
 
@@ -218,7 +217,8 @@ void SignalHistoryModel::onRowsInserted(const QModelIndex &otherParent, int firs
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 {
   // FIXME: optimize this linear lookup
-  const qint64 timestamp = QDateTime::currentMSecsSinceEpoch(); // FIXME: subtract m_startTime;
+  const qint64 timestamp = RelativeClock::sinceAppStart()->mSecs();
+
   for (int i = 0, l = m_tracedObjects.size(); i < l; ++i) {
     Item *const data = m_tracedObjects.at(i);
 
@@ -249,7 +249,7 @@ static void interned(const QString &input, QString *result)
 SignalHistoryModel::Item::Item(const QModelIndex &index)
   : object(index.model()->data(index, ObjectModel::ObjectRole).value<QObject *>())
   , metaObject(object->metaObject()) // FIXME: how about non-static meta objects?
-  , startTime(QDateTime::currentMSecsSinceEpoch())
+  , startTime(RelativeClock::sinceAppStart()->mSecs())
 {
 
   updateFromModel(index);
@@ -270,7 +270,7 @@ void SignalHistoryModel::Item::updateFromModel(const QModelIndex &index)
 
 qint64 SignalHistoryModel::Item::endTime(/*qint64 now*/) const
 {
-  const qint64 now = QDateTime::currentMSecsSinceEpoch(); // FIXME
+  const qint64 now = RelativeClock::sinceAppStart()->mSecs(); // FIXME
 
   if (object)
     return now;

@@ -96,9 +96,9 @@ void SignalMonitorWidget::adjustEventRange()
 
   // With 31 bits we cover more than 24 days when counting milliseconds.
   // That's much more time than this tool can handle. IMHO.
-  ui->eventScrollBar->setMaximum(qMax(m_eventDelegate->endOfTime() -
-                                      m_eventDelegate->visibleInterval() -
-                                      m_eventDelegate->beginOfTime(), 0LL));
+  ui->eventScrollBar->setMaximum(qMax(m_eventDelegate->totalInterval() -
+                                      m_eventDelegate->visibleInterval(),
+                                      0LL));
 
   ui->eventScrollBar->setSingleStep(m_eventDelegate->visibleInterval() / 10);
   ui->eventScrollBar->setPageStep(m_eventDelegate->visibleInterval());
@@ -113,7 +113,7 @@ void SignalMonitorWidget::adjustEventRange()
 void SignalMonitorWidget::adjustEventOffset(int value)
 {
   m_eventDelegate->setActive(false);
-  m_eventDelegate->setVisibleOffset(m_eventDelegate->beginOfTime() + value);
+  m_eventDelegate->setVisibleOffset(value);
 }
 
 void SignalMonitorWidget::adjustEventScrollBarSize()

@@ -47,9 +47,7 @@ class SignalHistoryDelegate : public QAbstractItemDelegate
     void setVisibleOffset(qint64 offset);
     qint64 visibleOffset() const { return m_visibleOffset; }
 
-    qint64 beginOfTime() const { return m_beginOfTime; }
-    qint64 endOfTime() const { return m_endOfTime; }
-    qint64 totalInterval() const { return m_endOfTime - m_beginOfTime; }
+    qint64 totalInterval() const { return m_totalInterval; }
 
     void setActive(bool isActive);
     bool isActive() const;
@@ -66,10 +64,9 @@ class SignalHistoryDelegate : public QAbstractItemDelegate
 
   private:
     QTimer *const m_updateTimer;
-    const qint64 m_beginOfTime;
-    qint64 m_endOfTime;
-    qint64 m_visibleInterval;
     qint64 m_visibleOffset;
+    qint64 m_visibleInterval;
+    qint64 m_totalInterval;
 };
 
 } // namespace GammaRay

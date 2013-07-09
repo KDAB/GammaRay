@@ -31,6 +31,7 @@ set(gammaray_srcs
   proxytoolfactory.cpp
   util.cpp
   varianthandler.cpp
+  relativeclock.cpp
 
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp

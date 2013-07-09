@@ -23,22 +23,23 @@
 
 #include "signalhistorydelegate.h"
 
+#include <core/relativeclock.h>
 #include <core/tools/signalmonitor/signalhistorymodel.h>
 
-#include <QDateTime>
 #include <QPainter>
 #include <QSortFilterProxyModel>
 #include <QTimer>
+
+#include <limits>
 
 using namespace GammaRay;
 
 SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
   : QAbstractItemDelegate(parent)
   , m_updateTimer(new QTimer(this))
-  , m_beginOfTime(QDateTime::currentMSecsSinceEpoch()) // FIXME: rather get a timestamp from app start
-  , m_endOfTime(m_visibleOffset)
-  , m_visibleInterval(15000)
   , m_visibleOffset(0)
+  , m_visibleInterval(15000)
+  , m_totalInterval(0)
 {
   connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
   m_updateTimer->start(1000 / 25);
@@ -112,9 +113,16 @@ void SignalHistoryDelegate::setVisibleOffset(qint64 offset)
 
 void SignalHistoryDelegate::onUpdateTimeout()
 {
-  const qint64 t = QDateTime::currentMSecsSinceEpoch();
-  m_endOfTime = (t - (t % m_updateTimer->interval())); // align to fixed intervals
-  m_visibleOffset = m_endOfTime - m_visibleInterval;
+#warning port to remote access!
+#if 0
+  // extend the tracked time interval
+  m_totalInterval = RelativeClock::sinceAppStart()->mSecs(m_updateTimer->interval());
+#else
+  m_totalInterval += m_updateTimer->interval();
+#endif
+
+  // move the visible region to show the most recent samples
+  m_visibleOffset = m_totalInterval - m_visibleInterval;
   emit visibleOffsetChanged(m_visibleOffset);
 }
 
