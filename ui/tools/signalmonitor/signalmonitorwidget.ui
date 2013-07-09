@@ -79,6 +79,9 @@
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
      </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>
