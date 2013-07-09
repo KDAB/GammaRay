@@ -8,6 +8,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
   ${CMAKE_SOURCE_DIR}/common
+  ${CMAKE_SOURCE_DIR}/include
 )
 
 set(gammaray_ui_srcs
@@ -68,6 +69,8 @@ set(gammaray_ui_internal_srcs
   tools/objectinspector/objectinspectorwidget.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/selectionmodelinspector/selectionmodelinspectorwidget.cpp
+  tools/signalmonitor/signalhistorydelegate.cpp
+  tools/signalmonitor/signalmonitorwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
   tools/textdocumentinspector/textdocumentinspectorwidget.cpp
   tools/textdocumentinspector/textdocumentcontentview.cpp
@@ -86,6 +89,7 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/objectinspector/objectinspectorwidget.ui
   tools/resourcebrowser/resourcebrowserwidget.ui
   tools/selectionmodelinspector/selectionmodelinspectorwidget.ui
+  tools/signalmonitor/signalmonitorwidget.ui
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )
