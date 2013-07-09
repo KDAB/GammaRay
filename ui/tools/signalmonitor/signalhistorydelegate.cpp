@@ -141,7 +141,7 @@ QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position,
   const QAbstractItemModel *const model = index.model();
   const QVector<qint64> &events = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
 
-  const qint64 t = m_visibleInterval * position / width + m_beginOfTime;
+  const qint64 t = m_visibleInterval * position / width + m_visibleOffset;
   qint64 dtMin = std::numeric_limits<qint64>::max();
   int toolTipIndex = -1;
 
