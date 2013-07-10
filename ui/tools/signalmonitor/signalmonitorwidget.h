@@ -32,8 +32,6 @@ namespace Ui {
   class SignalMonitorWidget;
 }
 
-class SignalHistoryDelegate;
-
 class SignalMonitorWidget : public QWidget
 {
   Q_OBJECT
@@ -41,24 +39,15 @@ class SignalMonitorWidget : public QWidget
     explicit SignalMonitorWidget(QWidget *parent = 0);
     ~SignalMonitorWidget();
 
-  protected:
-    bool event(QEvent *event) Q_DECL_OVERRIDE;
-
   private slots:
-    void adjustEventScale(int value);
-    void adjustEventRange();
-    void adjustEventOffset(int value);
+    void intervalScaleValueChanged(int value);
     void adjustEventScrollBarSize();
     void pauseAndResume(bool pause);
-    void eventsActiveChanged(bool active);
-
-    int eventColumnPosition() const;
-    int eventColumnWidth() const;
+    void eventDelegateIsActiveChanged(bool active);
 
   private:
     static const QString ITEM_TYPE_NAME_OBJECT;
     QScopedPointer<Ui::SignalMonitorWidget> ui;
-    SignalHistoryDelegate *const m_eventDelegate;
 };
 
 } // namespace GammaRay

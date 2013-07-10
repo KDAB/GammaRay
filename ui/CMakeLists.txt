@@ -81,6 +81,7 @@ set(gammaray_ui_internal_srcs
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp
   tools/signalmonitor/signalhistorydelegate.cpp
+  tools/signalmonitor/signalhistoryview.cpp
   tools/signalmonitor/signalmonitorwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
   tools/textdocumentinspector/textdocumentinspectorwidget.cpp
