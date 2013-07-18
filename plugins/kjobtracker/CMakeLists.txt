@@ -31,7 +31,6 @@ set(gammaray_kjob_plugin_srcs
   kjobmodel.cpp
   kjobtracker.cpp
   kjobtrackerwidget.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
 )
 
 qt4_automoc(${gammaray_kjob_plugin_srcs})
@@ -48,6 +47,7 @@ gammaray_add_plugin(gammaray_kjobtracker_plugin
 target_link_libraries(gammaray_kjobtracker_plugin
   ${KDE4_KDECORE_LIBS}
   gammaray_core
+  gammaray_ui
 )
 
 endif()
