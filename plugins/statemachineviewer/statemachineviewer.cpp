@@ -449,14 +449,17 @@ void StateMachineViewer::addTransition(QAbstractTransition *transition)
   EdgeId id = m_graph->addEdge(sourceStateId, targetStateId, Util::displayString(transition));
   Q_ASSERT(id);
 
-  QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
-  if (signalTransition) {
-    QString label = signalTransition->objectName();
-    if (label.isEmpty()) {
+  QString label = transition->objectName();
+  if (label.isEmpty()) {
+    // Try to get a label for the transition if it is a QSignalTransition.
+    QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
+    if (signalTransition) {
         label = QString::fromLatin1("%1::%2").
                     arg(Util::displayString(signalTransition->senderObject())).
                     arg(QString::fromLatin1(signalTransition->signal().mid(1)));
     }
+  }
+  if (!label.isEmpty()) {
     m_graph->setEdgeAttribute(id, QLatin1String("label"), label);
   }
 
