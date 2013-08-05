@@ -61,10 +61,21 @@ static bool processIsQtApp(const QString &pid)
   lsofProcess.waitForFinished();
   const QByteArray output = lsofProcess.readAllStandardOutput();
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0) || defined(Q_OS_MAC)
+// Mac uses "Versions/<major>/QtCore" for frameworks, and normal Unix/Linux style names for non-frameworks (Qt5 only)
+#ifdef Q_OS_MAC
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  if (output.contains("4/QtCore")) {
+#else
+  if (output.contains("5/QtCore") || output.contains("Qt5Core")) {
+#endif
+#else
+
+// normal UNIX/Linux
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   if (output.contains("QtCore")) {
 #else
   if (output.contains("Qt5Core")) {
+#endif
 #endif
     return true;
   }
