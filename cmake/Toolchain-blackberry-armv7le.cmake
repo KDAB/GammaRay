@@ -1,14 +1,13 @@
-include(Platform/QNX)
 # the name of the target operating system
-SET(CMAKE_SYSTEM_NAME BlackBerry)
+SET(CMAKE_SYSTEM_NAME QNX)
 
 # which compilers to use for C and C++
 SET(arch gcc_ntoarmv7le)
 SET(CMAKE_C_COMPILER qcc -V${arch})
-SET(CMAKE_CXX_COMPILER qcc -V${arch})
+SET(CMAKE_CXX_COMPILER QCC -V${arch})
 
 # here is the target environment located
-SET(CMAKE_FIND_ROOT_PATH $ENV{QNX_TARGET}/armle-v7)
+SET(CMAKE_FIND_ROOT_PATH $ENV{QNX_TARGET}/armle-v7 $ENV{QNX_TARGET})
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search 
