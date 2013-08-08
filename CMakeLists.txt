@@ -112,7 +112,9 @@ else()
 
   include(${QT_USE_FILE})
   set(HAVE_QT_SVG true)
-  set(HAVE_QT_DESIGNER true)
+  if(QT_QTDESIGNER_FOUND)
+    set(HAVE_QT_DESIGNER true)
+  endif(QT_QTDESIGNER_FOUND)
   set(HAVE_QT_PRINTSUPPORT true)
 endif()
 
