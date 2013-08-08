@@ -412,17 +412,31 @@ if(CPPCHECK_EXECUTABLE)
   )
 endif()
 
-if(UNIX)
+find_program(POD2MAN_EXECUTABLE pod2man)
+
+if(POD2MAN_EXECUTABLE)
   #man page generation using pod2man
   add_custom_command(
     OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
-    COMMAND pod2man -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
+    COMMAND ${POD2MAN_EXECUTABLE} -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
     DEPENDS ${CMAKE_SOURCE_DIR}/gammaray.pod
   )
   add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/gammaray.1)
 
   install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
+endif(POD2MAN_EXECUTABLE)
 
+find_package(Doxygen)
+
+if(CMAKE_HOST_UNIX)
+    find_program(CAT_EXECUTABLE cat)
+endif()
+
+if(CMAKE_HOST_WIN32)
+    set(CAT_EXECUTABLE "type")
+endif()
+
+if(DOXYGEN_FOUND AND CAT_EXECUTABLE)
   file(GLOB API_LIST include/*.h include/*.dox images/*.html)
 
   #apidox generation using doxygen
@@ -432,11 +446,11 @@ if(UNIX)
     COMMAND echo \"INPUT = ${CMAKE_SOURCE_DIR}/include\" > ${CMAKE_BINARY_DIR}/inputfoo
     COMMAND echo \"IMAGE_PATH = ${CMAKE_SOURCE_DIR}/images\" > ${CMAKE_BINARY_DIR}/imgfoo
     COMMAND echo \"HTML_FOOTER = ${CMAKE_SOURCE_DIR}/images/footer.html\" > ${CMAKE_BINARY_DIR}/footfoo
-    COMMAND cat ${CMAKE_SOURCE_DIR}/Doxyfile
+    COMMAND ${CAT_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile
                 ${CMAKE_BINARY_DIR}/versfoo
                 ${CMAKE_BINARY_DIR}/inputfoo
                 ${CMAKE_BINARY_DIR}/imgfoo
-                ${CMAKE_BINARY_DIR}/footfoo | doxygen -
+                ${CMAKE_BINARY_DIR}/footfoo | ${DOXYGEN_EXECUTABLE} -
     DEPENDS ${API_LIST} ${CMAKE_SOURCE_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   )
