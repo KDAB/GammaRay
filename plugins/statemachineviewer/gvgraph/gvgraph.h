@@ -25,14 +25,11 @@
 #include "gvgraphelements.h"
 #include "gvtypes.h"
 
+#include <graphviz/types.h>
+
 #include <QFont>
 #include <QHash>
 #include <QString>
-
-struct Agedge_t;
-struct Agnode_t;
-struct Agraph_t;
-typedef struct GVC_s GVC_t;
 
 namespace GammaRay {
 

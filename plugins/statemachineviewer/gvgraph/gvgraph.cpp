@@ -23,9 +23,12 @@
 
 #include "gvutils.h"
 
-#include <graphviz/types.h>
 #include <graphviz/gvc.h>
-#include <graphviz/graph.h>
+#ifdef WITH_CGRAPH
+#  include <graphviz/cgraph.h>
+#else
+#  include <graphviz/graph.h>
+#endif
 
 #include <QColor>
 #include <QDebug>
@@ -34,6 +37,7 @@
 #include <iostream>
 
 using namespace GammaRay;
+using namespace GammaRay::GVUtils;
 using namespace std;
 
 /*! Dot uses a 72
@@ -51,11 +55,15 @@ GVGraph::GVGraph(const QString &name)
 
 void GVGraph::createGraph()
 {
-  _graph = _agopen(_name, AGDIGRAPHSTRICT); // Strict directed graph, see libgraph doc
-  _graphMap.insert(_graph, GVSubGraph("ROOT"));
-
   Q_ASSERT(_context);
+
+#ifdef WITH_CGRAPH
+  _graph = _agopen(_name, Agdirected, &AgDefaultDisc);
+#else
+  _graph = _agopen(_name, AGDIGRAPHSTRICT); // Strict directed graph, see libgraph doc
+#endif
   Q_ASSERT(_graph);
+  _graphMap.insert(_graph, GVSubGraph("ROOT"));
 
   _agset(_graph, "overlap", "prism");
   _agset(_graph, "splines", "true");
@@ -207,7 +215,7 @@ EdgeId GVGraph::addEdge(NodeId sourceId, NodeId targetId, const QString &name)
     return 0;
   }
 
-  Agedge_t *edge = agedge(_graph, source, target);
+  Agedge_t *edge = _agedge(_graph, source, target, 0, true);
   Q_ASSERT(edge);
   EdgeId edgeId = id(edge);
   Q_ASSERT(edge);
@@ -294,10 +302,10 @@ static qreal dpiForGraph(Agraph_t *graph)
 QRectF GVGraph::boundingRectForAgraph(Agraph_t *graph) const
 {
   const qreal dpi = dpiForGraph(graph);
-  const qreal left = graph->u.bb.LL.x * (dpi / DotDefaultDPI);
-  const qreal top = (_graph->u.bb.UR.y - graph->u.bb.LL.y) * (dpi / DotDefaultDPI);
-  const qreal right = graph->u.bb.UR.x * (dpi / DotDefaultDPI);
-  const qreal bottom = (_graph->u.bb.UR.y - graph->u.bb.UR.y) * (dpi / DotDefaultDPI);
+  const qreal left = GD_bb(graph).LL.x * (dpi / DotDefaultDPI);
+  const qreal top = (GD_bb(_graph).UR.y - GD_bb(graph).LL.y) * (dpi / DotDefaultDPI);
+  const qreal right = GD_bb(graph).UR.x * (dpi / DotDefaultDPI);
+  const qreal bottom = (GD_bb(_graph).UR.y - GD_bb(graph).UR.y) * (dpi / DotDefaultDPI);
   return QRectF(left, top, right - left, bottom - top);
 }
 
@@ -342,23 +350,23 @@ QList<GVNodePair> GVGraph::gvNodes() const
     object.m_name = agget(node, const_cast<char *>("label"));
 
     //Fetch the X coordinate, apply the DPI conversion rate (actual DPI / 72, used by dot)
-    qreal x = node->u.coord.x * (dpi / DotDefaultDPI);
+    qreal x = ND_coord(node).x * (dpi / DotDefaultDPI);
 
     //Translate the Y coordinate from bottom-left to top-left corner
-    qreal y = (_graph->u.bb.UR.y - node->u.coord.y) * (dpi / DotDefaultDPI);
-    object.m_centerPos=QPoint(x, y);
+    qreal y = (GD_bb(_graph).UR.y - ND_coord(node).y) * (dpi / DotDefaultDPI);
+    object.m_centerPos = QPoint(x, y);
 
     //Transform the width and height from inches to pixels
-    object.m_height=node->u.height * dpi;
-    object.m_width=node->u.width * dpi;
+    object.m_height = ND_height(node) * dpi;
+    object.m_width = ND_width(node) * dpi;
 
-    if (qstricmp(node->u.shape->name, "rectangle") == 0) {
+    if (qstricmp(ND_shape(node)->name, "rectangle") == 0) {
       if (qstricmp(agget(node, const_cast<char *>("style")), "rounded") == 0) {
         object.m_shape = GVNode::RoundedRect;
       } else {
         object.m_shape = GVNode::Rect;
       }
-    } else if (qstricmp(node->u.shape->name, "doublecircle") == 0) {
+    } else if (qstricmp(ND_shape(node)->name, "doublecircle") == 0) {
       object.m_shape = GVNode::DoubleEllipse;
     }
 
@@ -381,62 +389,63 @@ QList<GVEdgePair> GVGraph::gvEdges() const
     GVEdge object = _edgeMap[edge];
 
     //Fill the source and target node names
-    object.m_source=edge->tail->name;
-    object.m_target=edge->head->name;
-
-    if (edge->u.label) {
-      object.m_label = QString::fromUtf8(edge->u.label->text);
+    if (ED_tail_label(edge))
+      object.m_source = QString::fromUtf8(ED_tail_label(edge)->text);
+    if (ED_head_label(edge))
+      object.m_target = QString::fromUtf8(ED_head_label(edge)->text);
+    if (ED_label(edge)) {
+      object.m_label = QString::fromUtf8(ED_label(edge)->text);
 
       // note that the position attributes in graphviz point to the *center* of this element.
       // we need to subtract half of the width/height to get the top-left position
 #if GRAPHVIZ_MAJOR_VERSION >= 2 && GRAPHVIZ_MINOR_VERSION > 20
-      const double posx = edge->u.label->pos.x;
-      const double posy = edge->u.label->pos.y;
+      const double posx = ED_label(edge)->pos.x;
+      const double posy = ED_label(edge)->pos.y;
 #else
-      const double posx = edge->u.label->p.x;
-      const double posy = edge->u.label->p.y;
+      const double posx = ED_label(edge)->p.x;
+      const double posy = ED_label(edge)->p.y;
 #endif
       object.m_labelBoundingRect = QRectF(
-        (posx - edge->u.label->dimen.x / 2.0) * (dpi / DotDefaultDPI),
-        ((_graph->u.bb.UR.y - posy) - edge->u.label->dimen.y / 2.0) * (dpi / DotDefaultDPI),
-        edge->u.label->dimen.x * (dpi / DotDefaultDPI),
-        edge->u.label->dimen.y * (dpi / DotDefaultDPI));
+        (posx - ED_label(edge)->dimen.x / 2.0) * (dpi / DotDefaultDPI),
+        ((GD_bb(_graph).UR.y - posy) - ED_label(edge)->dimen.y / 2.0) * (dpi / DotDefaultDPI),
+        ED_label(edge)->dimen.x * (dpi / DotDefaultDPI),
+        ED_label(edge)->dimen.y * (dpi / DotDefaultDPI));
     }
 
     //Calculate the path from the spline (only one spline, as the graph is strict.
     //If it wasn't, we would have to iterate over the first list too)
     //Calculate the path from the spline (only one as the graph is strict)
-    if ((edge->u.spl->list != 0) && (edge->u.spl->list->size%3 == 1)) {
+    if ((ED_spl(edge)->list != 0) && (ED_spl(edge)->list->size%3 == 1)) {
       //If there is a starting point, draw a line from it to the first curve point
-      if (edge->u.spl->list->sflag) {
-        object.m_path.moveTo(edge->u.spl->list->sp.x * (dpi / DotDefaultDPI),
-                             (_graph->u.bb.UR.y - edge->u.spl->list->sp.y) * (dpi / DotDefaultDPI));
-        object.m_path.lineTo(edge->u.spl->list->list[0].x * (dpi / DotDefaultDPI),
-                             (_graph->u.bb.UR.y - edge->u.spl->list->list[0].y) *
+      if (ED_spl(edge)->list->sflag) {
+        object.m_path.moveTo(ED_spl(edge)->list->sp.x * (dpi / DotDefaultDPI),
+                             (GD_bb(_graph).UR.y - ED_spl(edge)->list->sp.y) * (dpi / DotDefaultDPI));
+        object.m_path.lineTo(ED_spl(edge)->list->list[0].x * (dpi / DotDefaultDPI),
+                             (GD_bb(_graph).UR.y - ED_spl(edge)->list->list[0].y) *
                              (dpi / DotDefaultDPI));
       } else {
-        object.m_path.moveTo(edge->u.spl->list->list[0].x * (dpi / DotDefaultDPI),
-                             (_graph->u.bb.UR.y - edge->u.spl->list->list[0].y) *
+        object.m_path.moveTo(ED_spl(edge)->list->list[0].x * (dpi / DotDefaultDPI),
+                             (GD_bb(_graph).UR.y - ED_spl(edge)->list->list[0].y) *
                              (dpi / DotDefaultDPI));
       }
 
       //Loop over the curve points
-      for (int i=1; i<edge->u.spl->list->size; i+=3) {
-        object.m_path.cubicTo(edge->u.spl->list->list[i].x * (dpi / DotDefaultDPI),
-                              (_graph->u.bb.UR.y - edge->u.spl->list->list[i].y) *
+      for (int i=1; i<ED_spl(edge)->list->size; i+=3) {
+        object.m_path.cubicTo(ED_spl(edge)->list->list[i].x * (dpi / DotDefaultDPI),
+                              (GD_bb(_graph).UR.y - ED_spl(edge)->list->list[i].y) *
                               (dpi / DotDefaultDPI),
-                              edge->u.spl->list->list[i+1].x * (dpi / DotDefaultDPI),
-                              (_graph->u.bb.UR.y - edge->u.spl->list->list[i+1].y) *
+                              ED_spl(edge)->list->list[i+1].x * (dpi / DotDefaultDPI),
+                              (GD_bb(_graph).UR.y - ED_spl(edge)->list->list[i+1].y) *
                               (dpi / DotDefaultDPI),
-                              edge->u.spl->list->list[i+2].x * (dpi / DotDefaultDPI),
-                              (_graph->u.bb.UR.y - edge->u.spl->list->list[i+2].y) *
+                              ED_spl(edge)->list->list[i+2].x * (dpi / DotDefaultDPI),
+                              (GD_bb(_graph).UR.y - ED_spl(edge)->list->list[i+2].y) *
                               (dpi / DotDefaultDPI));
       }
 
       //If there is an ending point, draw a line to it
-      if(edge->u.spl->list->eflag) {
-        object.m_path.lineTo(edge->u.spl->list->ep.x * (dpi / DotDefaultDPI),
-                             (_graph->u.bb.UR.y - edge->u.spl->list->ep.y) * (dpi / DotDefaultDPI));
+      if(ED_spl(edge)->list->eflag) {
+        object.m_path.lineTo(ED_spl(edge)->list->ep.x * (dpi / DotDefaultDPI),
+                             (GD_bb(_graph).UR.y - ED_spl(edge)->list->ep.y) * (dpi / DotDefaultDPI));
       }
     }
 
@@ -462,7 +471,7 @@ QList<GVSubGraphPair> GVGraph::gvSubGraphs() const
 
     GVSubGraph object = _graphMap[subGraph];
     object.m_path = path;
-    object.m_name = subGraph->name;
+    object.m_name = agnameof(subGraph);
 
     list.append(GVSubGraphPair(id(subGraph), object));
   }
