@@ -25,7 +25,6 @@
 #include <graphviz/types.h>
 
 #include <QString>
-#include <qglobal.h>
 
 namespace GammaRay {
 
@@ -44,7 +43,7 @@ QString _agget(void *object, const QString &attr, const QString& alt = QString()
 Agsym_t *_agnodeattr(Agraph_t *object, const QString &attr,
                      const QString &alt = QString());
 Agsym_t *_agedgeattr(Agraph_t *object, const QString &attr,
-                                   const QString &alt = QString());
+                     const QString &alt = QString());
 
 int _gvLayout(GVC_t *gvc, graph_t *g, const char *engine);
 
