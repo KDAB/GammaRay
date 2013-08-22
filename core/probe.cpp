@@ -223,6 +223,9 @@ bool Probe::isInitialized()
 
 bool Probe::canShowWidgets()
 {
+#ifdef Q_OS_QNX
+    return false;
+#else
   const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
   if (!qGuiApplication
     #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -232,6 +235,7 @@ bool Probe::canShowWidgets()
     return false;
   }
   return true;
+#endif
 }
 
 bool Probe::createProbe()
