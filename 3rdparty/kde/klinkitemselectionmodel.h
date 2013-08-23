@@ -22,8 +22,8 @@
 #ifndef KLINKITEMSELECTIONMODEL_H
 #define KLINKITEMSELECTIONMODEL_H
 
-#include <QItemSelectionModel>
-#include <QAbstractProxyModel>
+#include <QtGui/QItemSelectionModel>
+#include <QtGui/QAbstractProxyModel>
 
 #include "kdeui_export.h"
 
@@ -110,6 +110,8 @@ protected:
 private:
     Q_DECLARE_PRIVATE(KLinkItemSelectionModel)
     Q_PRIVATE_SLOT( d_func(), void sourceSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected))
+    Q_PRIVATE_SLOT( d_func(), void sourceCurrentChanged(const QModelIndex &current))
+    Q_PRIVATE_SLOT( d_func(), void slotCurrentChanged(const QModelIndex &current))
 };
 
 #endif

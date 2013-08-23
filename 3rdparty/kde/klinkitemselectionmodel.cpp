@@ -56,6 +56,8 @@ public:
     }
 
     void sourceSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
+    void sourceCurrentChanged(const QModelIndex& current);
+    void slotCurrentChanged(const QModelIndex& current);
 
     QAbstractItemModel * const m_model;
     QItemSelectionModel * const m_linkedItemSelectionModel;
@@ -68,6 +70,8 @@ KLinkItemSelectionModel::KLinkItemSelectionModel(QAbstractItemModel *model, QIte
         d_ptr(new KLinkItemSelectionModelPrivate(this, model, proxySelector))
 {
     connect(proxySelector, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(sourceSelectionChanged(QItemSelection,QItemSelection)));
+    connect(proxySelector, SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(sourceCurrentChanged(QModelIndex)));
+    connect(this, SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(slotCurrentChanged(QModelIndex)));
 }
 
 KLinkItemSelectionModel::~KLinkItemSelectionModel()
@@ -83,7 +87,21 @@ void KLinkItemSelectionModel::select(const QModelIndex &index, QItemSelectionMod
     if (d->m_ignoreCurrentChanged) {
         return;
     }
-    QItemSelectionModel::select(index, command);
+    // Do *not* replace next line with: QItemSelectionModel::select(index, command)
+    //
+    // Doing so would end up calling KLinkItemSelectionModel::select(QItemSelection, QItemSelectionModel::SelectionFlags)
+    //
+    // This is because the code for QItemSelectionModel::select(QModelIndex, QItemSelectionModel::SelectionFlags) looks like this:
+    // {
+    //     QItemSelection selection(index, index);
+    //     select(selection, command);
+    // }
+    // So it calls KLinkItemSelectionModel overload of
+    // select(QItemSelection, QItemSelectionModel::SelectionFlags)
+    //
+    // When this happens and the selection flags include Toggle, it causes the
+    // selection to be toggled twice.
+    QItemSelectionModel::select(QItemSelection(index, index), command);
     if (index.isValid())
         d->m_linkedItemSelectionModel->select(d->m_indexMapper->mapSelectionLeftToRight(QItemSelection(index, index)), command);
     else {
@@ -130,6 +148,12 @@ void KLinkItemSelectionModel::select(const QItemSelection &selection, QItemSelec
     d->m_ignoreCurrentChanged = false;
 }
 
+void KLinkItemSelectionModelPrivate::slotCurrentChanged(const QModelIndex& current)
+{
+    const QModelIndex mappedCurrent = m_indexMapper->mapLeftToRight(current);
+    m_linkedItemSelectionModel->setCurrentIndex(mappedCurrent, QItemSelectionModel::NoUpdate);
+}
+
 void KLinkItemSelectionModelPrivate::sourceSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
     Q_Q(KLinkItemSelectionModel);
@@ -147,6 +171,13 @@ void KLinkItemSelectionModelPrivate::sourceSelectionChanged(const QItemSelection
 
     q->QItemSelectionModel::select(mappedDeselection, QItemSelectionModel::Deselect);
     q->QItemSelectionModel::select(mappedSelection, QItemSelectionModel::Select);
+}
+
+void KLinkItemSelectionModelPrivate::sourceCurrentChanged(const QModelIndex& current)
+{
+    Q_Q(KLinkItemSelectionModel);
+    const QModelIndex mappedCurrent = m_indexMapper->mapRightToLeft(current);
+    q->setCurrentIndex(mappedCurrent, QItemSelectionModel::NoUpdate);
 }
 
 #include "klinkitemselectionmodel.moc"
