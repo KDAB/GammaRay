@@ -1,5 +1,5 @@
 /*
-  fontbrowser.h
+  fontbrowserwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -22,39 +22,34 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_FONTBROWSER_FONTBROWSER_H
-#define GAMMARAY_FONTBROWSER_FONTBROWSER_H
+#ifndef GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
+#define GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
 
-#include "include/toolfactory.h"
+#include <QWidget>
 
-#include <tools/fontbrowser/fontbrowserwidget.h>
+class QAbstractItemModel;
+class QItemSelection;
 
 namespace GammaRay {
 
-class FontModel;
+namespace Ui {
+  class FontBrowserWidget;
+}
 
-class FontBrowser : public QObject
+class FontBrowserWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit FontBrowser(ProbeInterface *probe, QObject *parent = 0);
-};
+    explicit FontBrowserWidget(QWidget *parent = 0);
 
-class FontBrowserFactory : public QObject, public StandardToolFactory2<QObject, FontBrowser, FontBrowserWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit FontBrowserFactory(QObject *parent) : QObject(parent)
-    {
-    }
+  private slots:
+    void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
 
-    virtual inline QString name() const
-    {
-      return tr("Fonts");
-    }
+  private:
+    QScopedPointer<Ui::FontBrowserWidget> ui;
+    QAbstractItemModel *m_selectedFontModel;
 };
 
 }
 
-#endif // GAMMARAY_FONTBROWSER_H
+#endif // GAMMARAY_FONTBROWSERWIDGET_H
