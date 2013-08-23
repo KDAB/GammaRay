@@ -26,6 +26,7 @@
 #include "ui_fontbrowser.h"
 
 #include "fontmodel.h"
+#include <network/objectbroker.h>
 
 #include <QStandardItemModel>
 #include <QFontDatabase>
@@ -34,18 +35,17 @@ using namespace GammaRay;
 
 FontBrowser::FontBrowser(ProbeInterface *probe, QObject *parent)
   : ObjectServer("com.kdab.GammaRay.FontBrowser", parent)
+  , m_selectedFontModel(new FontModel(this))
 {
-  QFontDatabase database;
-
-  FontModel *selectedFontModel = new FontModel(this);
-  subscribeToSignal("updateText", selectedFontModel, "updateText");
-  subscribeToSignal("toggleBoldFont", selectedFontModel, "toggleBoldFont");
-  subscribeToSignal("toggleItalicFont", selectedFontModel, "toggleItalicFont");
-  subscribeToSignal("toggleUnderlineFont", selectedFontModel, "toggleUnderlineFont");
-  subscribeToSignal("setPointSize", selectedFontModel, "setPointSize");
+  subscribeToSignal("updateText", m_selectedFontModel, "updateText");
+  subscribeToSignal("toggleBoldFont", m_selectedFontModel, "toggleBoldFont");
+  subscribeToSignal("toggleItalicFont", m_selectedFontModel, "toggleItalicFont");
+  subscribeToSignal("toggleUnderlineFont", m_selectedFontModel, "toggleUnderlineFont");
+  subscribeToSignal("setPointSize", m_selectedFontModel, "setPointSize");
 
   QStandardItemModel *model = new QStandardItemModel(this);
   model->setHorizontalHeaderLabels(QStringList() << tr("Fonts") << tr("Smooth sizes"));
+  QFontDatabase database;
   foreach (const QString &family, database.families()) {
     QStandardItem *familyItem = new QStandardItem;
     familyItem->setText(family);
@@ -70,7 +70,45 @@ FontBrowser::FontBrowser(ProbeInterface *probe, QObject *parent)
   }
 
   probe->registerModel("com.kdab.GammaRay.FontModel", model);
-  probe->registerModel("com.kdab.GammaRay.SelectedFontModel", selectedFontModel);
+  m_fontSelectionModel = ObjectBroker::selectionModel(model);
+  connect(m_fontSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(updateFonts()));
+  probe->registerModel("com.kdab.GammaRay.SelectedFontModel", m_selectedFontModel);
+}
+
+void FontBrowser::updateFonts()
+{
+  QList<QFont> previousFonts = m_selectedFontModel->currentFonts();
+  QStringList previousFontNames;
+  foreach (const QFont &f, previousFonts) {
+    previousFontNames.append(f.family());
+  }
+  QList<QFont> currentFonts;
+  QStringList currentFontNames;
+  foreach (const QModelIndex &index, m_fontSelectionModel->selectedRows()) {
+    if (index.parent().isValid()) {
+      continue;
+    }
+    QFont font(index.data().toString());
+    currentFontNames.append(font.family());
+    if (previousFontNames.contains(font.family())) {
+      continue;
+    }
+    currentFonts.append(font);
+  }
+  {
+    QList<QFont>::iterator it = previousFonts.begin();
+    while (it != previousFonts.end()) {
+      if (!currentFontNames.contains(it->family())) {
+        it = previousFonts.erase(it);
+      } else {
+        ++it;
+      }
+    }
+  }
+
+  currentFonts << previousFonts;
+  m_selectedFontModel->updateFonts(currentFonts);
 }
 
 #include "fontbrowser.moc"

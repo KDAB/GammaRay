@@ -45,9 +45,6 @@ class FontBrowserWidget : public QWidget
     explicit FontBrowserWidget(QWidget *parent = 0);
 
   private slots:
-    void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
-
-  private slots:
     void updateText(const QString &text);
     void toggleBoldFont(bool bold);
     void toggleItalicFont(bool italic);

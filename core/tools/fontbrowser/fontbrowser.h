@@ -30,6 +30,8 @@
 #include <tools/fontbrowser/fontbrowserwidget.h>
 #include <remote/objectserver.h>
 
+class QItemSelectionModel;
+
 namespace GammaRay {
 
 class FontModel;
@@ -39,6 +41,13 @@ class FontBrowser : public ObjectServer
   Q_OBJECT
   public:
     explicit FontBrowser(ProbeInterface *probe, QObject *parent = 0);
+
+  private slots:
+    void updateFonts();
+
+  private:
+    FontModel *m_selectedFontModel;
+    QItemSelectionModel *m_fontSelectionModel;
 };
 
 class FontBrowserFactory : public QObject, public StandardToolFactory2<QObject, FontBrowser, FontBrowserWidget>
