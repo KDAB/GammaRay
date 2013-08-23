@@ -32,6 +32,8 @@ class QItemSelection;
 
 namespace GammaRay {
 
+class NetworkObject;
+
 namespace Ui {
   class FontBrowserWidget;
 }
@@ -45,9 +47,17 @@ class FontBrowserWidget : public QWidget
   private slots:
     void updateFonts(const QItemSelection &selected, const QItemSelection &deselected);
 
+  private slots:
+    void updateText(const QString &text);
+    void toggleBoldFont(bool bold);
+    void toggleItalicFont(bool italic);
+    void toggleUnderlineFont(bool underline);
+    void setPointSize(int pointSize);
+
   private:
     QScopedPointer<Ui::FontBrowserWidget> ui;
     QAbstractItemModel *m_selectedFontModel;
+    NetworkObject *m_fontBrowser;
 };
 
 }

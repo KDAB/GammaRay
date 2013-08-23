@@ -26,6 +26,7 @@
 #include "ui_fontbrowserwidget.h"
 
 #include <network/objectbroker.h>
+#include <network/networkobject.h>
 
 #include <QAbstractItemModel>
 
@@ -35,6 +36,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::FontBrowserWidget)
   , m_selectedFontModel(0)
+  , m_fontBrowser(ObjectBroker::object("com.kdab.GammaRay.FontBrowser"))
 {
   ui->setupUi(this);
 
@@ -44,19 +46,16 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   ui->selectedFontsView->setRootIsDecorated(false);
   ui->selectedFontsView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
 
-  /* FIXME:
   connect(ui->fontText, SIGNAL(textChanged(QString)),
-          m_selectedFontModel, SLOT(updateText(QString)));
+          this, SLOT(updateText(QString)));
   connect(ui->boldBox, SIGNAL(toggled(bool)),
-          m_selectedFontModel, SLOT(toggleBoldFont(bool)));
+          this, SLOT(toggleBoldFont(bool)));
   connect(ui->italicBox, SIGNAL(toggled(bool)),
-          m_selectedFontModel, SLOT(toggleItalicFont(bool)));
+          this, SLOT(toggleItalicFont(bool)));
   connect(ui->underlineBox, SIGNAL(toggled(bool)),
-          m_selectedFontModel, SLOT(toggleUnderlineFont(bool)));
+          this, SLOT(toggleUnderlineFont(bool)));
   connect(ui->pointSize, SIGNAL(valueChanged(int)),
-          m_selectedFontModel, SLOT(setPointSize(int)));
-  */
-
+          this, SLOT(setPointSize(int)));
 
   QAbstractItemModel *fontModel = ObjectBroker::model("com.kdab.GammaRay.FontModel");
   ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -67,9 +66,34 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
           SLOT(updateFonts(QItemSelection,QItemSelection)));
 
   ui->pointSize->setValue(font().pointSize());
+
   // init
-  /// TODO:
-//   selectedFontModel->updateText(ui->fontText->text());
+  updateText(ui->fontText->text());
+}
+
+void FontBrowserWidget::updateText(const QString &text)
+{
+  m_fontBrowser->emitSignal("updateText", QVariantList() << text);
+}
+
+void FontBrowserWidget::toggleBoldFont(bool bold)
+{
+  m_fontBrowser->emitSignal("toggleBoldFont", QVariantList() << bold);
+}
+
+void FontBrowserWidget::toggleItalicFont(bool italic)
+{
+  m_fontBrowser->emitSignal("toggleItalicFont", QVariantList() << italic);
+}
+
+void FontBrowserWidget::toggleUnderlineFont(bool underline)
+{
+  m_fontBrowser->emitSignal("toggleUnderlineFont", QVariantList() << underline);
+}
+
+void FontBrowserWidget::setPointSize(int pointSize)
+{
+  m_fontBrowser->emitSignal("setPointSize", QVariantList() << pointSize);
 }
 
 void FontBrowserWidget::updateFonts(const QItemSelection &selected, const QItemSelection &deselected)

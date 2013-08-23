@@ -33,11 +33,16 @@
 using namespace GammaRay;
 
 FontBrowser::FontBrowser(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+  : ObjectServer("com.kdab.GammaRay.FontBrowser", parent)
 {
   QFontDatabase database;
 
   FontModel *selectedFontModel = new FontModel(this);
+  subscribeToSignal("updateText", selectedFontModel, "updateText");
+  subscribeToSignal("toggleBoldFont", selectedFontModel, "toggleBoldFont");
+  subscribeToSignal("toggleItalicFont", selectedFontModel, "toggleItalicFont");
+  subscribeToSignal("toggleUnderlineFont", selectedFontModel, "toggleUnderlineFont");
+  subscribeToSignal("setPointSize", selectedFontModel, "setPointSize");
 
   QStandardItemModel *model = new QStandardItemModel(this);
   model->setHorizontalHeaderLabels(QStringList() << tr("Fonts") << tr("Smooth sizes"));

@@ -28,12 +28,13 @@
 #include "include/toolfactory.h"
 
 #include <tools/fontbrowser/fontbrowserwidget.h>
+#include <remote/objectserver.h>
 
 namespace GammaRay {
 
 class FontModel;
 
-class FontBrowser : public QObject
+class FontBrowser : public ObjectServer
 {
   Q_OBJECT
   public:
