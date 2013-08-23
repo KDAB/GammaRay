@@ -37,7 +37,7 @@ using namespace GammaRay;
 class ErrorModel : public QAbstractTableModel
 {
   public:
-    explicit ErrorModel(PluginLoadErrors &errors, QObject *parent = 0)
+    explicit ErrorModel(const PluginLoadErrors &errors, QObject *parent = 0)
       : QAbstractTableModel(parent), m_errors(errors)
     {
     }
