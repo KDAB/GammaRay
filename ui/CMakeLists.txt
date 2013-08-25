@@ -71,6 +71,7 @@ set(gammaray_ui_internal_srcs
   tools/standardpaths/standardpathswidget.cpp
   tools/textdocumentinspector/textdocumentinspectorwidget.cpp
   tools/textdocumentinspector/textdocumentcontentview.cpp
+  tools/fontbrowser/fontbrowserwidget.cpp
 )
 
 qt4_wrap_ui(gammaray_ui_internal_srcs
@@ -88,6 +89,7 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/selectionmodelinspector/selectionmodelinspectorwidget.ui
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
+  tools/fontbrowser/fontbrowserwidget.ui
 )
 
 qt4_automoc(${gammaray_ui_internal_srcs})
@@ -99,7 +101,3 @@ endif(NOT WIN32)
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 
 target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)
-
-
-
-

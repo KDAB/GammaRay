@@ -63,6 +63,10 @@ class FontModel : public QAbstractItemModel
   private:
     QList<QFont> m_fonts;
     QString m_text;
+    int m_size;
+    bool m_bold;
+    bool m_italic;
+    bool m_underline;
 };
 
 }
