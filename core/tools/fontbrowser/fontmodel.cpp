@@ -27,6 +27,10 @@ using namespace GammaRay;
 
 FontModel::FontModel(QObject *parent)
   : QAbstractItemModel(parent)
+  , m_size(12)
+  , m_bold(false)
+  , m_italic(false)
+  , m_underline(false)
 {
 }
 
@@ -37,6 +41,14 @@ QList<QFont> FontModel::currentFonts() const
 
 void FontModel::updateFonts(const QList<QFont> &fonts)
 {
+  for (int i = 0; i < m_fonts.size(); ++i) {
+    QFont &font = m_fonts[i];
+    font.setPointSize(m_size);
+    font.setBold(m_bold);
+    font.setItalic(m_italic);
+    font.setUnderline(m_underline);
+  }
+
   beginResetModel();
   m_fonts = fonts;
   endResetModel();
@@ -44,6 +56,9 @@ void FontModel::updateFonts(const QList<QFont> &fonts)
 
 void FontModel::updateText(const QString &text)
 {
+  if (text == m_text) {
+    return;
+  }
   beginResetModel();
   m_text = text;
   endResetModel();
@@ -113,9 +128,11 @@ QVariant FontModel::data(const QModelIndex &index, int role) const
 
 void FontModel::setPointSize(int size)
 {
-  if (m_fonts.isEmpty()) {
+  if (m_fonts.isEmpty() || size == m_size) {
     return;
   }
+
+  m_size = size;
 
   for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setPointSize(size);
@@ -126,9 +143,11 @@ void FontModel::setPointSize(int size)
 
 void FontModel::toggleItalicFont(bool italic)
 {
-  if (m_fonts.isEmpty()) {
+  if (m_fonts.isEmpty() || italic == m_italic) {
     return;
   }
+
+  m_italic = italic;
 
   for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setItalic(italic);
@@ -139,9 +158,11 @@ void FontModel::toggleItalicFont(bool italic)
 
 void FontModel::toggleUnderlineFont(bool underline)
 {
-  if (m_fonts.isEmpty()) {
+  if (m_fonts.isEmpty() || underline == m_underline) {
     return;
   }
+
+  m_underline = underline;
 
   for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setUnderline(underline);
@@ -152,9 +173,11 @@ void FontModel::toggleUnderlineFont(bool underline)
 
 void FontModel::toggleBoldFont(bool bold)
 {
-  if (m_fonts.isEmpty()) {
+  if (m_fonts.isEmpty() || bold == m_bold) {
     return;
   }
+
+  m_bold = bold;
 
   for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setBold(bold);
