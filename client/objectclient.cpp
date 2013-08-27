@@ -53,7 +53,7 @@ void ObjectClient::serverRegistered(const QString& objectName, Protocol::ObjectA
   }
 }
 
-void ObjectClient::serverunRegistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
+void ObjectClient::serverUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
   Q_UNUSED(objectAddress);
   if (objectName == m_objectName)

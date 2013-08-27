@@ -40,7 +40,7 @@ public:
 
 private slots:
   void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
-  void serverunRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
+  void serverUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
 private:
   void connectToServer();
