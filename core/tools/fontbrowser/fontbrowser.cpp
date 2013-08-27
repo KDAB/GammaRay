@@ -23,11 +23,11 @@
 */
 
 #include "fontbrowser.h"
-#include "ui_fontbrowser.h"
 
 #include "fontmodel.h"
 #include <network/objectbroker.h>
 
+#include <QItemSelectionModel>
 #include <QStandardItemModel>
 #include <QFontDatabase>
 
