@@ -27,8 +27,8 @@
 
 #include "include/toolfactory.h"
 
-#include <tools/fontbrowser/fontbrowserwidget.h>
-#include <remote/objectserver.h>
+#include "fontbrowserwidget.h"
+#include <core/remote/objectserver.h>
 
 class QItemSelectionModel;
 
@@ -54,8 +54,10 @@ class FontBrowserFactory : public QObject, public StandardToolFactory2<QObject, 
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.FontBrowser")
+
   public:
-    explicit FontBrowserFactory(QObject *parent) : QObject(parent)
+    explicit FontBrowserFactory(QObject *parent = 0) : QObject(parent)
     {
     }
 

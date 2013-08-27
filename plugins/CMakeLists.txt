@@ -22,3 +22,5 @@ if(QT_QTWEBKIT_FOUND OR Qt5WebKitWidgets_FOUND)
   add_subdirectory(webinspector)
 endif()
 add_subdirectory(widgetinspector)
+
+add_subdirectory(fontbrowser)

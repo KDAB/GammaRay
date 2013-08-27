@@ -36,7 +36,6 @@
 #include <ui/tools/selectionmodelinspector/selectionmodelinspectorwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
 #include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
-#include <ui/tools/fontbrowser/fontbrowserwidget.h>
 
 #include <common/pluginmanager.h>
 #include <network/modelroles.h>
@@ -70,8 +69,6 @@ MAKE_FACTORY(ResourceBrowser);
 MAKE_FACTORY(SelectionModelInspector);
 MAKE_FACTORY(StandardPaths);
 MAKE_FACTORY(TextDocumentInspector);
-MAKE_FACTORY(FontBrowser);
-
 
 ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("com.kdab.GammaRay.ToolModel"), parent)
 {
@@ -88,7 +85,6 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new SelectionModelInspectorFactory);
   insertFactory(new StandardPathsFactory);
   insertFactory(new TextDocumentInspectorFactory);
-  insertFactory(new FontBrowserFactory);
 
   foreach(ToolFactory* factory, PluginManager::instance()->plugins())
     insertFactory(factory);

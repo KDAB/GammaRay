@@ -25,8 +25,8 @@
 #include "fontbrowserwidget.h"
 #include "ui_fontbrowserwidget.h"
 
-#include <network/objectbroker.h>
-#include <network/networkobject.h>
+#include <common/network/objectbroker.h>
+#include <common/network/networkobject.h>
 
 #include <QAbstractItemModel>
 

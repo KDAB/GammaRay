@@ -25,11 +25,14 @@
 #include "fontbrowser.h"
 
 #include "fontmodel.h"
-#include <network/objectbroker.h>
+
+#include <common/network/objectbroker.h>
 
 #include <QItemSelectionModel>
 #include <QStandardItemModel>
 #include <QFontDatabase>
+
+#include <QtPlugin>
 
 using namespace GammaRay;
 
@@ -110,5 +113,9 @@ void FontBrowser::updateFonts()
   currentFonts << previousFonts;
   m_selectedFontModel->updateFonts(currentFonts);
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(FontBrowserFactory)
+#endif
 
 #include "fontbrowser.moc"

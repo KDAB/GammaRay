@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Font Browser
+X-GammaRay-Types=QObject;
+Exec=gammaray_fontbrowser_plugin

@@ -40,7 +40,6 @@ set(gammaray_srcs
   tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
   tools/metatypebrowser/metatypesmodel.cpp
-  tools/fontbrowser/fontmodel.cpp
   tools/localeinspector/localemodel.cpp
   tools/localeinspector/localedataaccessor.cpp
   tools/localeinspector/localeaccessormodel.cpp
@@ -51,7 +50,6 @@ set(gammaray_srcs
   tools/messagehandler/messagemodel.cpp
   tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
-  tools/fontbrowser/fontbrowser.cpp
   tools/localeinspector/localeinspector.cpp
   tools/metaobjectbrowser/metaobjectbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
