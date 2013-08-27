@@ -34,7 +34,9 @@ class ConnectionFilterProxyModel : public QSortFilterProxyModel
   public:
     explicit ConnectionFilterProxyModel(QObject *parent = 0);
 
+    void setFilterOnReceiver(bool filter);
     void filterReceiver(QObject *receiver);
+    void setFilterOnSender(bool filter);
     void filterSender(QObject *sender);
 
   protected:
@@ -46,6 +48,8 @@ class ConnectionFilterProxyModel : public QSortFilterProxyModel
   private:
     QObject *m_receiver;
     QObject *m_sender;
+    bool m_filterOnReceiver;
+    bool m_filterOnSender;
 };
 
 }

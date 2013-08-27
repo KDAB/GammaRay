@@ -63,6 +63,9 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
   m_metaPropertyModel(new MetaPropertyModel(this)),
   m_methodArgumentModel(new MethodArgumentModel(this))
 {
+  m_inboundConnectionModel->setFilterOnReceiver(true);
+  m_outboundConnectionModel->setFilterOnSender(true);
+
   registerModel(m_staticPropertyModel, "staticProperties");
   registerModel(m_dynamicPropertyModel, "dynamicProperties");
   registerModel(m_methodModel, "methods");

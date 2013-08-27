@@ -29,14 +29,28 @@ using namespace GammaRay;
 ConnectionFilterProxyModel::ConnectionFilterProxyModel(QObject *parent)
   : QSortFilterProxyModel(parent),
     m_receiver(0),
-    m_sender(0)
+    m_sender(0),
+    m_filterOnReceiver(false),
+    m_filterOnSender(false)
 {
   setDynamicSortFilter(true);
+}
+
+void ConnectionFilterProxyModel::setFilterOnReceiver(bool filter)
+{
+  m_filterOnReceiver = filter;
+  invalidateFilter();
 }
 
 void ConnectionFilterProxyModel::filterReceiver(QObject *receiver)
 {
   m_receiver = receiver;
+  invalidateFilter();
+}
+
+void ConnectionFilterProxyModel::setFilterOnSender(bool filter)
+{
+  m_filterOnSender = filter;
   invalidateFilter();
 }
 
@@ -50,12 +64,12 @@ bool ConnectionFilterProxyModel::filterAcceptsRow(int source_row,
                                                   const QModelIndex &source_parent) const
 {
   const QModelIndex sourceIndex = sourceModel()->index(source_row, 0, source_parent);
-  if (m_sender &&
-      sourceIndex.data(ConnectionModel::SenderRole).value<QObject*>() != m_sender) {
+  if (m_filterOnSender && (!m_sender ||
+      sourceIndex.data(ConnectionModel::SenderRole).value<QObject*>() != m_sender)) {
     return false;
   }
-  if (m_receiver &&
-      sourceIndex.data(ConnectionModel::ReceiverRole).value<QObject*>() != m_receiver) {
+  if (m_filterOnReceiver && (!m_receiver ||
+      sourceIndex.data(ConnectionModel::ReceiverRole).value<QObject*>() != m_receiver)) {
     return false;
   }
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
@@ -64,10 +78,10 @@ bool ConnectionFilterProxyModel::filterAcceptsRow(int source_row,
 bool ConnectionFilterProxyModel::filterAcceptsColumn(int source_column,
                                                      const QModelIndex &source_parent) const
 {
-  if (m_sender && source_column == 0) {
+  if (m_filterOnSender && source_column == 0) {
     return false;
   }
-  if (m_receiver && source_column == 2) {
+  if (m_filterOnReceiver && source_column == 2) {
     return false;
   }
   return QSortFilterProxyModel::filterAcceptsColumn(source_column, source_parent);
