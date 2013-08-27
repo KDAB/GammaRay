@@ -351,7 +351,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelLayoutChanged:
     {
       // TODO
-      qDebug() << Q_FUNC_INFO << "not implemented yet" << msg.type();
+      qDebug() << Q_FUNC_INFO << "not implemented yet" << msg.type() << m_serverObject;
     }
 
     case Protocol::ModelReset:
