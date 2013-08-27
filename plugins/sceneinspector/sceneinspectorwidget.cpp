@@ -47,7 +47,7 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   ui->scenePropertyWidget->setObjectBaseName("com.kdab.GammaRay.SceneInspector");
 
   ui->sceneComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.SceneList"));
-  connect(ui->sceneComboBox, SIGNAL(activated(int)), SLOT(sceneSelected(int)));
+  connect(ui->sceneComboBox, SIGNAL(currentIndexChanged(int)), SLOT(sceneSelected(int)));
 
   QSortFilterProxyModel *sceneFilter = new KRecursiveFilterProxyModel(this);
   sceneFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.SceneGraphModel"));
@@ -86,6 +86,8 @@ void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
   if (!selection.isEmpty())
     index = selection.first().topLeft();
 
+  qDebug() << Q_FUNC_INFO << index;
+  return;
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
     ui->graphicsSceneView->showGraphicsItem(item);
