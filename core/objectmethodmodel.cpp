@@ -34,7 +34,11 @@ ObjectMethodModel::ObjectMethodModel(QObject *parent)
 int GammaRay::ObjectMethodModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
-  return 4;
+#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
+  return 5;
+#else
+  return 6;
+#endif
 }
 
 QVariant ObjectMethodModel::metaData(const QModelIndex &index,
@@ -74,6 +78,14 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index,
         return tr("Unknown");
       }
     }
+    if (index.column() == 3) {
+      return method.tag();
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+    if (index.column() == 4) {
+      return QString::number(method.revision());
+    }
+#endif
   } else if (role == ObjectMethodModelRole::MetaMethod) {
     return QVariant::fromValue(method);
   } else if (role == ObjectMethodModelRole::MetaMethodType) {
@@ -91,6 +103,10 @@ QString GammaRay::ObjectMethodModel::columnHeader(int index) const
     return tr("Type");
   case 2:
     return tr("Access");
+  case 3:
+    return tr("Tag");
+  case 4:
+    return tr("Revision");
   }
   return QString();
 }
