@@ -10,6 +10,8 @@ include_directories(
   ${VTK_INCLUDE_DIRS}
 )
 
+include(${VTK_USE_FILE})
+
 link_directories(${VTK_LIBRARY_DIRS})
 
 set(gammaray_objectvisualizer_plugin_srcs
