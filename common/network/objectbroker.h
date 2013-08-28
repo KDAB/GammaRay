@@ -51,7 +51,7 @@ namespace ObjectBroker {
     return ret;
   }
 
-  typedef NetworkObject*(*ClientObjectFactoryCallback)(const QString &);
+  typedef NetworkObject*(*ClientObjectFactoryCallback)(const QString &, QObject *parent);
 
   /** Register a callback for a factory to create remote object stubs for the given type. */
   GAMMARAY_COMMON_EXPORT void registerClientObjectFactoryCallbackInternal(const QString &interface, ClientObjectFactoryCallback callback);

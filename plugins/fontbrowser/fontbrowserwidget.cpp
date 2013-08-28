@@ -35,9 +35,9 @@
 
 using namespace GammaRay;
 
-static NetworkObject* fontBrowserClientFactory(const QString &/*name*/)
+static NetworkObject* fontBrowserClientFactory(const QString &/*name*/, QObject *parent)
 {
-  return new FontBrowserClient(qApp);
+  return new FontBrowserClient(parent);
 }
 
 FontBrowserWidget::FontBrowserWidget(QWidget *parent)

@@ -70,7 +70,7 @@ NetworkObject* ObjectBroker::object(const QString& name)
 
   QHash< QString, ClientObjectFactoryCallback >::const_iterator factory = s_objectBroker()->clientObjectFactories.constFind(name);
   if (factory != s_objectBroker()->clientObjectFactories.constEnd()) {
-    obj = (*factory)(name);
+    obj = (*factory)(name, qApp);
     Q_ASSERT(obj);
   }
   if (!obj) {
