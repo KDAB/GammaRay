@@ -49,6 +49,7 @@ public:
 
   /** Send @p msg to the connected endpoint. */
   static void send(const Message &msg);
+
   /** Returns @c true if we are currently connected to another endpoint. */
   static bool isConnected();
 
@@ -60,6 +61,22 @@ public:
 
   /** Singleton accessor. */
   static Endpoint* instance();
+
+  /**
+   * Register an object of the given name for transparent server/client communication.
+   */
+  virtual Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
+
+  /**
+   * Invoke @p method on the object called @p objectName with the given @p args.
+   *
+   * This also works with signals.
+   *
+   * The default implementation forwards the object calls to remote side when the
+   * endpoint is connected. The Server implementation is furthermore expected to
+   * call the method directly on the local object to support the in-process mode.
+   */
+  virtual void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const;
 
 signals:
   /** Emitted when we lost the connection to the other endpoint. */
@@ -98,7 +115,10 @@ protected:
   /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
   virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName) = 0;
 
-  /** Calls the message handler registerd for the receiver of @p msg. */
+  /** Called when a registered object identified by @p objectAddress has been destroyed. */
+  virtual void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object) = 0;
+
+  /** Calls the message handler registered for the receiver of @p msg. */
   void dispatchMessage(const GammaRay::Message& msg);
 
   /** All current object name/address pairs. */
@@ -107,17 +127,35 @@ protected:
   /** Singleton instance. */
   static Endpoint *s_instance;
 
+  /**
+   * Invoke @p method on @p object with the given @p args.
+   *
+   * This is invokes the method directly on the local object.
+   */
+  void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const;
+
 private slots:
   void readyRead();
   void connectionClosed();
   void handlerDestroyed(QObject* obj);
+  void objectDestroyed(QObject* obj);
 
 private:
-  struct ObjectInfo {
-    ObjectInfo() : receiver(0) {}
+  struct ObjectInfo
+  {
+    ObjectInfo()
+      : object(0)
+      , receiver(0)
+    {
+    }
     QString name;
     Protocol::ObjectAddress address;
-    QObject* receiver;
+    // the locally registered object
+    QObject *object;
+
+    // custom message handling support
+    // TODO: obsolete this
+    QObject *receiver;
     QByteArray messageHandler;
   };
 
@@ -128,6 +166,7 @@ private:
 
   QHash<QString, ObjectInfo*> m_nameMap;
   QHash<Protocol::ObjectAddress, ObjectInfo*> m_addressMap;
+  QHash<QObject*, ObjectInfo*> m_objectMap;
   QMultiHash<QObject*, ObjectInfo*> m_handlerMap;
 
   QPointer<QIODevice> m_socket;

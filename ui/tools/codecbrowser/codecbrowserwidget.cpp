@@ -26,7 +26,7 @@
 
 #include <deferredresizemodesetter.h>
 #include <network/objectbroker.h>
-#include <network/networkobject.h>
+#include <network/endpoint.h>
 
 using namespace GammaRay;
 
@@ -51,7 +51,7 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
 
 void CodecBrowserWidget::textChanged(const QString& text)
 {
-  ObjectBroker::objectInternal("com.kdab.GammaRay.CodecBrowser")->emitSignal("textChanged", QVariantList() << text);
+  Endpoint::instance()->invokeObject("com.kdab.GammaRay.CodecBrowser", "textChanged", QVariantList() << text);
 }
 
 #include "codecbrowserwidget.moc"

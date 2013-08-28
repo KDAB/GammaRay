@@ -52,9 +52,12 @@
 using namespace GammaRay;
 
 WidgetInspector::WidgetInspector(ProbeInterface *probe, QObject *parent)
-  : NetworkObject("com.kdab.GammaRay.WidgetInspector", parent), m_overlayWidget(new OverlayWidget),
-  m_propertyController(new PropertyController("com.kdab.GammaRay.WidgetInspector", this))
+  : QObject(parent)
+  , m_overlayWidget(new OverlayWidget)
+  , m_propertyController(new PropertyController("com.kdab.GammaRay.WidgetInspector", this))
 {
+  ObjectBroker::registerObject("com.kdab.GammaRay.WidgetInspector", this);
+
   m_overlayWidget->hide();
   connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
           SLOT(handleOverlayWidgetDestroyed(QObject*)));

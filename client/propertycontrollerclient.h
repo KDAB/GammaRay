@@ -1,5 +1,5 @@
 /*
-  fontbrowserclient.cpp
+  propertycontrollerinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,29 +21,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "fontbrowserclient.h"
+#ifndef GAMMARAY_PROPERTYCONTROLLERCLIENT_H
+#define GAMMARAY_PROPERTYCONTROLLERCLIENT_H
 
-#include <common/network/endpoint.h>
+#include <core/propertycontrollerinterface.h>
 
-using namespace GammaRay;
+namespace GammaRay {
 
-FontBrowserClient::FontBrowserClient(QObject *parent)
-  : FontBrowserInterface(parent)
+class PropertyControllerClient : public PropertyControllerInterface
 {
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::PropertyControllerInterface)
+  public:
+    explicit PropertyControllerClient(const QString &name, QObject *parent = 0);
+    virtual ~PropertyControllerClient();
+
+  public slots:
+    virtual void activateMethod();
+    virtual void invokeMethod(Qt::ConnectionType type);
+};
 
 }
 
-#define WRAP_REMOTE(func, type) \
-void FontBrowserClient::func(type arg) \
-{ \
-  Endpoint::instance()->invokeObject(objectName(), #func, QVariantList() << arg); \
-}
-
-WRAP_REMOTE(setPointSize, int)
-WRAP_REMOTE(toggleBoldFont, bool)
-WRAP_REMOTE(toggleItalicFont, bool)
-WRAP_REMOTE(toggleUnderlineFont, bool)
-WRAP_REMOTE(updateText, const QString&)
-
-
-#include "fontbrowserclient.moc"
+#endif // GAMMARAY_PROPERTYCONTROLLERCLIENT_H

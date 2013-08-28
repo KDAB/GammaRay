@@ -28,6 +28,7 @@
 
 #include <core/propertycontroller.h>
 #include <common/network/objectbroker.h>
+#include <common/network/endpoint.h>
 
 #include "include/objectmodel.h"
 
@@ -42,7 +43,8 @@
 using namespace GammaRay;
 
 WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
-  : QWidget(parent), ui(new Ui::WidgetInspectorWidget)
+  : QWidget(parent)
+  , ui(new Ui::WidgetInspectorWidget)
 {
   ui->setupUi(this);
   ui->widgetPropertyWidget->setObjectBaseName("com.kdab.GammaRay.WidgetInspector");
@@ -125,7 +127,8 @@ void WidgetInspectorWidget::saveAsImage()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsImage", QVariantList() << fileName);
+
+  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsImage", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::saveAsSvg()
@@ -139,7 +142,7 @@ void WidgetInspectorWidget::saveAsSvg()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsSvg", QVariantList() << fileName);
+  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsSvg", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::saveAsPdf()
@@ -153,7 +156,7 @@ void WidgetInspectorWidget::saveAsPdf()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsPdf", QVariantList() << fileName);
+  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsPdf", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::saveAsUiFile()
@@ -167,13 +170,12 @@ void WidgetInspectorWidget::saveAsUiFile()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsUiFile", QVariantList() << fileName);
+  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsUiFile", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::analyzePainting()
 {
-  qDebug() << Q_FUNC_INFO << ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector");
-  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("analyzePainting");
+  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "analyzePainting");
 }
 
 #include "widgetinspectorwidget.moc"
