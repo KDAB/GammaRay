@@ -125,7 +125,7 @@ void WidgetInspectorWidget::saveAsImage()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::object("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsImage", QVariantList() << fileName);
+  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsImage", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::saveAsSvg()
@@ -139,7 +139,7 @@ void WidgetInspectorWidget::saveAsSvg()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::object("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsSvg", QVariantList() << fileName);
+  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsSvg", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::saveAsPdf()
@@ -153,7 +153,7 @@ void WidgetInspectorWidget::saveAsPdf()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::object("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsPdf", QVariantList() << fileName);
+  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsPdf", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::saveAsUiFile()
@@ -167,13 +167,13 @@ void WidgetInspectorWidget::saveAsUiFile()
 
   if (fileName.isEmpty())
     return;
-  ObjectBroker::object("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsUiFile", QVariantList() << fileName);
+  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("saveAsUiFile", QVariantList() << fileName);
 }
 
 void WidgetInspectorWidget::analyzePainting()
 {
-  qDebug() << Q_FUNC_INFO << ObjectBroker::object("com.kdab.GammaRay.WidgetInspector");
-  ObjectBroker::object("com.kdab.GammaRay.WidgetInspector")->emitSignal("analyzePainting");
+  qDebug() << Q_FUNC_INFO << ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector");
+  ObjectBroker::objectInternal("com.kdab.GammaRay.WidgetInspector")->emitSignal("analyzePainting");
 }
 
 #include "widgetinspectorwidget.moc"

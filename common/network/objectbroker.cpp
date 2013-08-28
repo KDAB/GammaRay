@@ -57,7 +57,7 @@ void ObjectBroker::registerObject(NetworkObject* object)
   s_objectBroker()->objects.insert(object->objectName(), object);
 }
 
-NetworkObject* ObjectBroker::object(const QString& name)
+NetworkObject* ObjectBroker::objectInternal(const QString& name)
 {
   const QHash<QString, NetworkObject*>::const_iterator it = s_objectBroker()->objects.constFind(name);
   if (it != s_objectBroker()->objects.constEnd()) {

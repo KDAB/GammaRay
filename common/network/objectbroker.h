@@ -42,13 +42,34 @@ namespace ObjectBroker {
   GAMMARAY_COMMON_EXPORT void registerObject(NetworkObject* object);
 
   /** Retrieve object by name. */
-  GAMMARAY_COMMON_EXPORT NetworkObject* object(const QString &name);
+  GAMMARAY_COMMON_EXPORT NetworkObject* objectInternal(const QString &name);
+
+  /**
+   * Retrieve an object by name implementing interface @p T.
+   *
+   * Use this if multiple objects of the given type have been registered.
+   * Otherwise the function below is simpler and more failsafe.
+   */
+  template<class T>
+  T object(const QString &name)
+  {
+    T ret = qobject_cast<T>(objectInternal(name));
+    Q_ASSERT(ret);
+    return ret;
+  }
+
+  /**
+   * Retrieve object implementing interface @p T.
+   *
+   * This only works if a single type was registered implementing this interface
+   * using qobject_interface_iid as object name.
+   *
+   * In most cases this is the simplest way for tools to get an object.
+   */
   template<class T>
   T object()
   {
-    T ret = qobject_cast<T>(object(QString::fromUtf8(qobject_interface_iid<T>())));
-    Q_ASSERT(ret);
-    return ret;
+    return object<T>(QString::fromUtf8(qobject_interface_iid<T>()));
   }
 
   typedef NetworkObject*(*ClientObjectFactoryCallback)(const QString &, QObject *parent);
