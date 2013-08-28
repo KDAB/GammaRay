@@ -90,6 +90,11 @@ static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
   return new SelectionModelServer(model->objectName() + ".selection", model, Probe::instance());
 }
 
+static void objectRegistrar(NetworkObject *object)
+{
+  Server::instance()->registerObject(object->objectName(), object, "newMessage");
+}
+
 }
 
 // useful for debugging, dumps the object and all it's parents
@@ -150,6 +155,7 @@ Probe::Probe(QObject *parent):
   Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
+  ObjectBroker::setObjectRegistrarCallback(objectRegistrar);
   new Server(this);
 
   StreamOperators::registerOperators();

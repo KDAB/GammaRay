@@ -147,7 +147,7 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->metaPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->metaPropertyView);
 
-  ObjectBroker::object(m_objectBaseName + ".controller")->subscribeToSignal("displayState", this, "setDisplayState");
+  ObjectBroker::objectInternal(m_objectBaseName + ".controller")->subscribeToSignal("displayState", this, "setDisplayState");
 }
 
 QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
@@ -159,14 +159,14 @@ void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 {
   if (!index.isValid() || m_displayState != PropertyWidgetDisplayState::QObject)
     return;
-  ObjectBroker::object(m_objectBaseName + ".controller")->emitSignal("activateMethod");
+  ObjectBroker::objectInternal(m_objectBaseName + ".controller")->emitSignal("activateMethod");
 
   const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
   if (methodType == QMetaMethod::Slot) {
     MethodInvocationDialog dlg(this);
     dlg.setArgumentModel(model("methodArguments"));
     if (dlg.exec()) {
-      ObjectBroker::object(m_objectBaseName + ".controller")->emitSignal("invokeMethod", QVariantList() << QVariant::fromValue(dlg.connectionType()));
+      ObjectBroker::objectInternal(m_objectBaseName + ".controller")->emitSignal("invokeMethod", QVariantList() << QVariant::fromValue(dlg.connectionType()));
     }
   }
 }

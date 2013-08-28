@@ -1,11 +1,11 @@
 /*
-  objectclient.h
+  fontbrowserinterface.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,31 +21,18 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OBJECTCLIENT_H
-#define GAMMARAY_OBJECTCLIENT_H
+#include "fontbrowserinterface.h"
 
-#include <network/networkobject.h>
+using namespace GammaRay;
 
-namespace GammaRay {
-
-/** Client-side wrapper for NetworkObject instances.
- *  Never create manualy but retrieve via GammaRay::ObjectBroker.
- */
-class ObjectClient : public NetworkObject
+FontBrowserInterface::FontBrowserInterface(QObject *parent)
+  : NetworkObject(QString::fromUtf8(qobject_interface_iid<FontBrowserInterface*>()), parent)
 {
-  Q_OBJECT
-public:
-  explicit ObjectClient(const QString& objectName, QObject* parent);
-  ~ObjectClient();
+}
 
-private slots:
-  void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
-  void serverUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
-
-private:
-  void connectToServer();
-};
+FontBrowserInterface::~FontBrowserInterface()
+{
 
 }
 
-#endif // GAMMARAY_OBJECTCLIENT_H
+#include "fontbrowserinterface.moc"

@@ -26,7 +26,7 @@
 
 #include "widgetinspectorwidget.h"
 #include "include/toolfactory.h"
-#include <core/remote/objectserver.h>
+#include <common/network/networkobject.h>
 
 #include <QLibrary>
 
@@ -39,7 +39,7 @@ namespace GammaRay {
 class PropertyController;
 class OverlayWidget;
 
-class WidgetInspector : public ObjectServer
+class WidgetInspector : public NetworkObject
 {
   Q_OBJECT
   public:

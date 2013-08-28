@@ -31,7 +31,7 @@
 using namespace GammaRay;
 
 CodecBrowser::CodecBrowser(ProbeInterface* probe, QObject* parent)
-  : ObjectServer("com.kdab.GammaRay.CodecBrowser", parent)
+  : NetworkObject("com.kdab.GammaRay.CodecBrowser", parent)
 {
   AllCodecsModel* model = new AllCodecsModel(this);
   probe->registerModel("com.kdab.GammaRay.AllCodecsModel", model);

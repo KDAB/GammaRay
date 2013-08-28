@@ -3,9 +3,12 @@ include_directories(
 )
 
 set(gammaray_fontbrowser_plugin_srcs
+  fontbrowserinterface.cpp
   fontbrowser.cpp
   fontbrowserwidget.cpp
   fontmodel.cpp
+  fontbrowserclient.cpp
+  fontbrowserserver.cpp
 )
 
 qt4_automoc(${gammaray_fontbrowser_plugin_srcs})

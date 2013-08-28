@@ -1,11 +1,11 @@
 /*
-  objectserver.cpp
+  fontbrowserclient.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,21 +21,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "objectserver.h"
-#include "server.h"
-
-#include <network/objectbroker.h>
+#include "fontbrowserclient.h"
 
 using namespace GammaRay;
 
-ObjectServer::ObjectServer(const QString& objectName, QObject* parent) : NetworkObject(objectName, parent)
+FontBrowserClient::FontBrowserClient(QObject *parent)
+  : FontBrowserInterface(parent)
 {
-  m_myAddress = Server::instance()->registerObject(objectName, this, "newMessage");
-  ObjectBroker::registerObject(objectName, this);
+
 }
 
-ObjectServer::~ObjectServer()
-{
+#define WRAP_REMOTE(func, type) \
+void FontBrowserClient::func(type arg) \
+{ \
+  emitSignal(#func, QVariantList() << arg); \
 }
 
-#include "objectserver.moc"
+WRAP_REMOTE(setPointSize, int)
+WRAP_REMOTE(toggleBoldFont, bool)
+WRAP_REMOTE(toggleItalicFont, bool)
+WRAP_REMOTE(toggleUnderlineFont, bool)
+WRAP_REMOTE(updateText, const QString&)
+
+
+#include "fontbrowserclient.moc"

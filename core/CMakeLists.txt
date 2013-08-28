@@ -63,7 +63,6 @@ set(gammaray_srcs
   remote/server.cpp
   remote/remotemodelserver.cpp
   remote/selectionmodelserver.cpp
-  remote/objectserver.cpp
 )
 
 if(Qt5Core_FOUND)

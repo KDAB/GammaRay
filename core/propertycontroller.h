@@ -26,7 +26,7 @@
 
 #include "include/gammaray_core_export.h"
 
-#include "remote/objectserver.h"
+#include <common/network/networkobject.h>
 
 #include <QPointer>
 
@@ -46,7 +46,7 @@ class MetaPropertyModel;
 class MethodArgumentModel;
 
 /** Non-UI part of the property widget. */
-class GAMMARAY_CORE_EXPORT PropertyController : public ObjectServer
+class GAMMARAY_CORE_EXPORT PropertyController : public NetworkObject
 {
   Q_OBJECT
 public:
