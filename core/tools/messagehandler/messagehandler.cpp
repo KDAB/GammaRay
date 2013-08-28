@@ -24,7 +24,6 @@
 #include "messagehandler.h"
 #include "messagemodel.h"
 
-#include <remote/remotemodelserver.h>
 #include <network/objectbroker.h>
 
 #include <QApplication>

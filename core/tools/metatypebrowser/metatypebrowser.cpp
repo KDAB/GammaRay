@@ -25,7 +25,6 @@
 
 #include "metatypesmodel.h"
 
-#include <remote/remotemodelserver.h>
 #include <network/objectbroker.h>
 
 using namespace GammaRay;

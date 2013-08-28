@@ -24,7 +24,6 @@
 #include "codecbrowser.h"
 #include "codecmodel.h"
 
-#include <remote/remotemodelserver.h>
 #include <network/objectbroker.h>
 
 #include <QItemSelectionModel>
