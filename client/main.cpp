@@ -24,7 +24,6 @@
 #include "remotemodel.h"
 #include "client.h"
 #include "selectionmodelclient.h"
-#include "objectclient.h"
 #include "clientconnectionmanager.h"
 
 #include <network/objectbroker.h>
@@ -35,9 +34,9 @@
 
 using namespace GammaRay;
 
-static NetworkObject* objectFactory(const QString &name)
+static void objectRegistrar(NetworkObject *object)
 {
-  return new ObjectClient(name, qApp);
+  Client::instance()->registerObject(object);
 }
 
 static QAbstractItemModel* modelFactory(const QString &name)
@@ -66,7 +65,7 @@ int main(int argc, char** argv)
     port = app.arguments().at(2).toUShort();
   }
 
-  ObjectBroker::setObjectFactoryCallback(objectFactory);
+  ObjectBroker::setObjectRegistrarCallback(objectRegistrar);
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 

@@ -31,47 +31,69 @@
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>
 #include <QAbstractProxyModel>
+#include <QCoreApplication>
 
 namespace GammaRay {
 
 struct ObjectlBrokerData {
-  ObjectlBrokerData() : objectCallback(0), modelCallback(0), selectionCallback(0) {}
+  ObjectlBrokerData() : objectRegistrar(0), modelCallback(0), selectionCallback(0) {}
   QHash<QString, NetworkObject*> objects;
   QHash<QString, QAbstractItemModel*> models;
   QHash<QAbstractItemModel*, QItemSelectionModel*> selectionModels;
-  ObjectBroker::ObjectFactoryCallback objectCallback;
+  QHash<QString, ObjectBroker::ClientObjectFactoryCallback> clientObjectFactories;
+  ObjectBroker::ObjectRegistrarCallback objectRegistrar;
   ObjectBroker::ModelFactoryCallback modelCallback;
   ObjectBroker::selectionModelFactoryCallback selectionCallback;
 };
 
 Q_GLOBAL_STATIC(ObjectlBrokerData, s_objectBroker)
 
-void ObjectBroker::registerObject(const QString& name, NetworkObject* object)
+void ObjectBroker::registerObject(NetworkObject* object)
 {
-  Q_ASSERT(!s_objectBroker()->objects.contains(name));
-  object->setObjectName(name);
-  s_objectBroker()->objects.insert(name, object);
+  Q_ASSERT(!object->objectName().isEmpty());
+  Q_ASSERT(s_objectBroker()->objectRegistrar);
+  s_objectBroker()->objectRegistrar(object);
+  Q_ASSERT(!s_objectBroker()->objects.contains(object->objectName()));
+  s_objectBroker()->objects.insert(object->objectName(), object);
 }
 
 NetworkObject* ObjectBroker::object(const QString& name)
 {
   const QHash<QString, NetworkObject*>::const_iterator it = s_objectBroker()->objects.constFind(name);
-  if (it != s_objectBroker()->objects.constEnd())
+  if (it != s_objectBroker()->objects.constEnd()) {
     return it.value();
-
-  if (s_objectBroker()->objectCallback) {
-    NetworkObject* obj = s_objectBroker()->objectCallback(name);
-    if (obj) {
-      registerObject(name, obj);
-      return obj;
-    }
   }
-  return 0;
+
+  // Below here only valid for clients!
+  // Remote/probe side should have registered the object directly
+  NetworkObject* obj = 0;
+
+  QHash< QString, ClientObjectFactoryCallback >::const_iterator factory = s_objectBroker()->clientObjectFactories.constFind(name);
+  if (factory != s_objectBroker()->clientObjectFactories.constEnd()) {
+    obj = (*factory)(name);
+    Q_ASSERT(obj);
+  }
+  if (!obj) {
+    // fallback
+    obj = new NetworkObject(name, qApp);
+  }
+
+  Q_ASSERT(obj);
+  // ensure it was registered
+  Q_ASSERT(s_objectBroker()->objects.value(name, 0) == obj);
+
+  return obj;
 }
 
-void ObjectBroker::setObjectFactoryCallback(ObjectBroker::ObjectFactoryCallback callback)
+void ObjectBroker::registerClientObjectFactoryCallbackInternal(const QString &interface, ObjectBroker::ClientObjectFactoryCallback callback)
 {
-  s_objectBroker()->objectCallback = callback;
+  Q_ASSERT(!interface.isEmpty());
+  s_objectBroker()->clientObjectFactories[interface] = callback;
+}
+
+void ObjectBroker::setObjectRegistrarCallback(ObjectBroker::ObjectRegistrarCallback callback)
+{
+  s_objectBroker()->objectRegistrar = callback;
 }
 
 void ObjectBroker::registerModel(const QString& name, QAbstractItemModel* model)

@@ -1,11 +1,11 @@
 /*
-  objectserver.h
+  fontbrowserclient.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,23 +21,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OBJECTSERVER_H
-#define GAMMARAY_OBJECTSERVER_H
+#ifndef GAMMARAY_FONTBROWSERCLIENT_H
+#define GAMMARAY_FONTBROWSERCLIENT_H
 
-#include <include/gammaray_core_export.h>
-#include <common/network/networkobject.h>
+#include "fontbrowserinterface.h"
 
 namespace GammaRay {
 
-/** Server-side part of NetworkObject. */
-class GAMMARAY_CORE_EXPORT ObjectServer : public GammaRay::NetworkObject
+class FontBrowserClient : public FontBrowserInterface
 {
   Q_OBJECT
-public:
-  explicit ObjectServer(const QString& objectName, QObject* parent);
-  ~ObjectServer();
+  Q_INTERFACES(GammaRay::FontBrowserInterface)
+  public:
+    explicit FontBrowserClient(QObject *parent = 0);
+
+  public slots:
+    virtual void setPointSize(int size);
+    virtual void toggleBoldFont(bool bold);
+    virtual void toggleItalicFont(bool italic);
+    virtual void toggleUnderlineFont(bool underline);
+    virtual void updateText(const QString &text);
 };
 
 }
 
-#endif // GAMMARAY_OBJECTSERVER_H
+#endif // GAMMARAY_FONTBROWSERCLIENT_H

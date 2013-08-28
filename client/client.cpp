@@ -24,6 +24,7 @@
 #include "client.h"
 
 #include <network/message.h>
+#include <network/networkobject.h>
 
 #include <QDebug>
 #include <QTcpSocket>
@@ -31,8 +32,14 @@
 
 using namespace GammaRay;
 
-Client::Client(QObject* parent): Endpoint(parent), m_versionChecked(false)
+Client::Client(QObject* parent)
+  : Endpoint(parent)
+  , m_versionChecked(false)
 {
+  connect(this, SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
+          this, SLOT(serverObjectRegistered(QString,Protocol::ObjectAddress)));
+  connect(this, SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)),
+          this, SLOT(serverObjectUnregistered(QString,Protocol::ObjectAddress)));
 }
 
 Client::~Client()
@@ -122,6 +129,39 @@ void Client::messageReceived(const Message& msg)
   dispatchMessage(msg);
 }
 
+void Client::registerObject(NetworkObject *object)
+{
+  m_objects[object->objectName()] = object;
+  object->setAddress(objectAddress(object->objectName()));
+  connectObjectToServer(object);
+}
+
+void Client::connectObjectToServer(NetworkObject *object)
+{
+  if (object->address() == Protocol::InvalidObjectAddress)
+    return;
+  Client::instance()->registerForObject(object->address(), object, "newMessage");
+}
+
+void Client::serverObjectRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress)
+{
+  NetworkObject* object = m_objects.value(objectName, 0);
+  if (object) {
+    object->setAddress(objectAddress);
+    connectObjectToServer(object);
+  }
+}
+
+void Client::serverObjectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress)
+{
+  NetworkObject* object = m_objects.value(objectName, 0);
+  if (object) {
+    Q_ASSERT(object->address() == objectAddress);
+    Q_UNUSED(objectAddress);
+    object->setAddress(Protocol::InvalidObjectAddress);
+  }
+}
+
 void Client::registerForObject(Protocol::ObjectAddress objectAddress, QObject* handler, const char* slot)
 {
   Q_ASSERT(isConnected());
@@ -139,7 +179,7 @@ void Client::unregisterForObject(Protocol::ObjectAddress objectAddress)
 
 void Client::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)
 {
-  Q_UNUSED(objectName);
+  m_objects.remove(objectName);
   unmonitorObject(objectAddress);
 }
 

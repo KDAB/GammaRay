@@ -1,5 +1,5 @@
 /*
-  fontbrowser.cpp
+  fontbrowserserver.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -22,14 +22,39 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "fontbrowser.h"
+#ifndef FONTBROWSERSERVER_H
+#define FONTBROWSERSERVER_H
 
-#include <QtPlugin>
+#include "fontbrowserinterface.h"
 
-using namespace GammaRay;
+class QItemSelectionModel;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(FontBrowserFactory)
-#endif
+namespace GammaRay {
 
-#include "fontbrowser.moc"
+class ProbeInterface;
+class FontModel;
+
+class FontBrowserServer : public FontBrowserInterface
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::FontBrowserInterface)
+  public:
+    explicit FontBrowserServer(ProbeInterface *probe, QObject *parent = 0);
+
+  private slots:
+    void updateFonts();
+
+    virtual void setPointSize(int size);
+    virtual void toggleBoldFont(bool bold);
+    virtual void toggleItalicFont(bool italic);
+    virtual void toggleUnderlineFont(bool underline);
+    virtual void updateText(const QString &text);
+
+  private:
+    FontModel *m_selectedFontModel;
+    QItemSelectionModel *m_fontSelectionModel;
+};
+
+}
+
+#endif // FONTBROWSERSERVER_H

@@ -26,9 +26,10 @@
 
 #include "include/gammaray_common_export.h"
 
+#include <QObject>
+
 class QItemSelectionModel;
 class QAbstractItemModel;
-class QString;
 
 namespace GammaRay {
 
@@ -37,16 +38,32 @@ class NetworkObject;
 /** Retrieve/expose objects independent of whether using in-process or out-of-process UI. */
 namespace ObjectBroker {
 
-  /** Register a newly created object with a given name. */
-  GAMMARAY_COMMON_EXPORT void registerObject(const QString &name, NetworkObject* object);
+  /** Register a newly created NetworkObject, it must have a valid object name set. */
+  GAMMARAY_COMMON_EXPORT void registerObject(NetworkObject* object);
 
   /** Retrieve object by name. */
   GAMMARAY_COMMON_EXPORT NetworkObject* object(const QString &name);
+  template<class T>
+  T object()
+  {
+    T ret = qobject_cast<T>(object(QString::fromUtf8(qobject_interface_iid<T>())));
+    Q_ASSERT(ret);
+    return ret;
+  }
 
-  typedef NetworkObject*(*ObjectFactoryCallback)(const QString &);
+  typedef NetworkObject*(*ClientObjectFactoryCallback)(const QString &);
 
-  /** Set a callback for a factory to create not yet existing objects. */
-  GAMMARAY_COMMON_EXPORT void setObjectFactoryCallback(GammaRay::ObjectBroker::ObjectFactoryCallback callback);
+  /** Register a callback for a factory to create remote object stubs for the given type. */
+  GAMMARAY_COMMON_EXPORT void registerClientObjectFactoryCallbackInternal(const QString &interface, ClientObjectFactoryCallback callback);
+  template<class T>
+  void registerClientObjectFactoryCallback(ClientObjectFactoryCallback callback)
+  {
+    registerClientObjectFactoryCallbackInternal(QString::fromUtf8(qobject_interface_iid<T>()), callback);
+  }
+
+  typedef void(*ObjectRegistrarCallback)(NetworkObject*);
+  /** Set a callback for a NetworkObject registry. */
+  GAMMARAY_COMMON_EXPORT void setObjectRegistrarCallback(ObjectRegistrarCallback callback);
 
   /** Register a newly created model with the given name. */
   GAMMARAY_COMMON_EXPORT void registerModel(const QString &name, QAbstractItemModel* model);

@@ -27,7 +27,7 @@
 #include "include/toolfactory.h"
 
 #include <ui/tools/codecbrowser/codecbrowserwidget.h>
-#include <remote/objectserver.h>
+#include <common/network/networkobject.h>
 
 class QItemSelection;
 class QItemSelectionModel;
@@ -40,7 +40,7 @@ namespace Ui {
   class CodecBrowser;
 }
 
-class CodecBrowser : public ObjectServer
+class CodecBrowser : public NetworkObject
 {
   Q_OBJECT
   public:
