@@ -58,6 +58,7 @@ Endpoint* Endpoint::instance()
 void Endpoint::send(const Message& msg)
 {
   Q_ASSERT(s_instance);
+  Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
   msg.write(s_instance->m_socket);
 }
 

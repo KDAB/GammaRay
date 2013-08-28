@@ -92,7 +92,8 @@ static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
 
 static void objectRegistrar(NetworkObject *object)
 {
-  Server::instance()->registerObject(object->objectName(), object, "newMessage");
+  Protocol::ObjectAddress address = Server::instance()->registerObject(object->objectName(), object, "newMessage");
+  object->setAddress(address);
 }
 
 }
