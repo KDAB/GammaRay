@@ -1,11 +1,10 @@
 /*
-  fontbrowser.h
+  fontbrowserinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Stephen Kelly <stephen.kelly@kdab.com>
+  Copyright (C) 2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -22,33 +21,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_FONTBROWSER_FONTBROWSER_H
-#define GAMMARAY_FONTBROWSER_FONTBROWSER_H
+#ifndef FONTBROWSERINTERFACE_H
+#define FONTBROWSERINTERFACE_H
 
-#include "include/toolfactory.h"
-
-#include "fontbrowserwidget.h"
-#include "fontbrowserserver.h"
+#include <common/network/networkobject.h>
 
 namespace GammaRay {
 
-class FontBrowserFactory : public QObject, public StandardToolFactory2<QObject, FontBrowserServer, FontBrowserWidget>
+class FontBrowserInterface : public NetworkObject
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.FontBrowser")
-
   public:
-    explicit FontBrowserFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
+    explicit FontBrowserInterface(QObject *parent);
+    virtual ~FontBrowserInterface();
 
-    virtual inline QString name() const
-    {
-      return tr("Fonts");
-    }
+  public slots:
+    virtual void updateText(const QString &text) = 0;
+    virtual void toggleBoldFont(bool bold) = 0;
+    virtual void toggleItalicFont(bool italic) = 0;
+    virtual void toggleUnderlineFont(bool underline) = 0;
+    virtual void setPointSize(int size) = 0;
 };
 
 }
 
-#endif // GAMMARAY_FONTBROWSER_H
+Q_DECLARE_INTERFACE(GammaRay::FontBrowserInterface, "com.kdab.GammaRay.FontBrowser")
+
+#endif // FONTBROWSERINTERFACE_H

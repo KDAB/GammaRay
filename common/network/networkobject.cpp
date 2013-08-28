@@ -24,20 +24,33 @@
 #include "networkobject.h"
 #include "message.h"
 #include "endpoint.h"
+#include "objectbroker.h"
 #include "methodargument.h"
 
 using namespace GammaRay;
 
-NetworkObject::NetworkObject(const QString& objectName, QObject* parent) :
-  QObject(parent),
-  m_objectName(objectName),
-  m_myAddress(Protocol::InvalidObjectAddress)
+NetworkObject::NetworkObject(const QString& objectName, QObject* parent)
+  : QObject(parent)
+  , m_myAddress(Protocol::InvalidObjectAddress)
 {
-  // TODO register
+  Q_ASSERT(!objectName.isEmpty());
+  setObjectName(objectName);
+
+  ObjectBroker::registerObject(this);
 }
 
 NetworkObject::~NetworkObject()
 {
+}
+
+Protocol::ObjectAddress NetworkObject::address() const
+{
+  return m_myAddress;
+}
+
+void NetworkObject::setAddress(Protocol::ObjectAddress address)
+{
+  m_myAddress = address;
 }
 
 void NetworkObject::newMessage(const Message& msg)
@@ -64,9 +77,6 @@ void NetworkObject::emitSignal(const char *signalName, const QVariantList &args)
     msg.payload() << name << args;
     Endpoint::send(msg);
   }
-
-  // emit locally as well, for in-process mode
-  emitLocal(signalName, args);
 }
 
 void NetworkObject::subscribeToSignal(const char *signalName, QObject* receiver, const char* slot)

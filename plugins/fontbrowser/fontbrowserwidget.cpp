@@ -25,19 +25,30 @@
 #include "fontbrowserwidget.h"
 #include "ui_fontbrowserwidget.h"
 
+#include "fontbrowserclient.h"
+
 #include <common/network/objectbroker.h>
 #include <common/network/networkobject.h>
 
 #include <QAbstractItemModel>
+#include <QDebug>
 
 using namespace GammaRay;
+
+static NetworkObject* fontBrowserClientFactory(const QString &/*name*/, QObject *parent)
+{
+  return new FontBrowserClient(parent);
+}
 
 FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::FontBrowserWidget)
   , m_selectedFontModel(0)
-  , m_fontBrowser(ObjectBroker::object("com.kdab.GammaRay.FontBrowser"))
+  , m_fontBrowser(0)
 {
+  ObjectBroker::registerClientObjectFactoryCallback<FontBrowserInterface*>(fontBrowserClientFactory);
+
+  m_fontBrowser = ObjectBroker::object<FontBrowserInterface*>();
   ui->setupUi(this);
 
   m_selectedFontModel = ObjectBroker::model("com.kdab.GammaRay.SelectedFontModel");
@@ -47,15 +58,15 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   ui->selectedFontsView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
 
   connect(ui->fontText, SIGNAL(textChanged(QString)),
-          this, SLOT(updateText(QString)));
+          m_fontBrowser, SLOT(updateText(QString)));
   connect(ui->boldBox, SIGNAL(toggled(bool)),
-          this, SLOT(toggleBoldFont(bool)));
+          m_fontBrowser, SLOT(toggleBoldFont(bool)));
   connect(ui->italicBox, SIGNAL(toggled(bool)),
-          this, SLOT(toggleItalicFont(bool)));
+          m_fontBrowser, SLOT(toggleItalicFont(bool)));
   connect(ui->underlineBox, SIGNAL(toggled(bool)),
-          this, SLOT(toggleUnderlineFont(bool)));
+          m_fontBrowser, SLOT(toggleUnderlineFont(bool)));
   connect(ui->pointSize, SIGNAL(valueChanged(int)),
-          this, SLOT(setPointSize(int)));
+          m_fontBrowser, SLOT(setPointSize(int)));
 
   QAbstractItemModel *fontModel = ObjectBroker::model("com.kdab.GammaRay.FontModel");
   ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -66,36 +77,11 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   ui->pointSize->setValue(font().pointSize());
 
   // init
-  updateText(ui->fontText->text());
-  toggleBoldFont(ui->boldBox->isChecked());
-  toggleItalicFont(ui->italicBox->isChecked());
-  toggleUnderlineFont(ui->underlineBox->isChecked());
-  setPointSize(ui->pointSize->value());
-}
-
-void FontBrowserWidget::updateText(const QString &text)
-{
-  m_fontBrowser->emitSignal("updateText", QVariantList() << text);
-}
-
-void FontBrowserWidget::toggleBoldFont(bool bold)
-{
-  m_fontBrowser->emitSignal("toggleBoldFont", QVariantList() << bold);
-}
-
-void FontBrowserWidget::toggleItalicFont(bool italic)
-{
-  m_fontBrowser->emitSignal("toggleItalicFont", QVariantList() << italic);
-}
-
-void FontBrowserWidget::toggleUnderlineFont(bool underline)
-{
-  m_fontBrowser->emitSignal("toggleUnderlineFont", QVariantList() << underline);
-}
-
-void FontBrowserWidget::setPointSize(int pointSize)
-{
-  m_fontBrowser->emitSignal("setPointSize", QVariantList() << pointSize);
+  m_fontBrowser->updateText(ui->fontText->text());
+  m_fontBrowser->toggleBoldFont(ui->boldBox->isChecked());
+  m_fontBrowser->toggleItalicFont(ui->italicBox->isChecked());
+  m_fontBrowser->toggleUnderlineFont(ui->underlineBox->isChecked());
+  m_fontBrowser->setPointSize(ui->pointSize->value());
 }
 
 #include "fontbrowserwidget.moc"

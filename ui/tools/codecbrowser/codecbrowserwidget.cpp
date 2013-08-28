@@ -51,7 +51,7 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
 
 void CodecBrowserWidget::textChanged(const QString& text)
 {
-  ObjectBroker::object("com.kdab.GammaRay.CodecBrowser")->emitSignal("textChanged", QVariantList() << text);
+  ObjectBroker::objectInternal("com.kdab.GammaRay.CodecBrowser")->emitSignal("textChanged", QVariantList() << text);
 }
 
 #include "codecbrowserwidget.moc"

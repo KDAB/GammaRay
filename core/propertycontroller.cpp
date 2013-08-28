@@ -49,7 +49,7 @@
 using namespace GammaRay;
 
 PropertyController::PropertyController(const QString& baseName, QObject* parent) :
-  ObjectServer(baseName + ".controller", parent),
+  NetworkObject(baseName + ".controller", parent),
   m_objectBaseName(baseName),
   m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
   m_dynamicPropertyModel(new ObjectDynamicPropertyModel(this)),

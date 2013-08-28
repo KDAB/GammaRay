@@ -44,6 +44,9 @@ public:
   explicit NetworkObject(const QString &objectName, QObject* parent);
   ~NetworkObject();
 
+  Protocol::ObjectAddress address() const;
+  void setAddress(Protocol::ObjectAddress address);
+
   /** Invoke methods connected to @p signalName on the other end. */
   void emitSignal(const char* signalName, const QVariantList& args = QVariantList());
 
@@ -51,10 +54,6 @@ public:
 
   /** @p slot on @p receiver will be called whenever the remote object ends @p singnalName. */
   void subscribeToSignal(const char *signalName, QObject* receiver, const char* slot);
-
-protected:
-  QString m_objectName;
-  Protocol::ObjectAddress m_myAddress;
 
 private:
   void emitLocal(const char *signalName, const QVariantList &args);
@@ -64,6 +63,7 @@ private slots:
 
 private:
   QHash<QByteArray, QPair<QObject*, QByteArray> > m_subscriptions;
+  Protocol::ObjectAddress m_myAddress;
 };
 
 }

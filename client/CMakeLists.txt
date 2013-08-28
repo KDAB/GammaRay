@@ -12,7 +12,6 @@ set(gammaray_client_srcs
   client.cpp
   remotemodel.cpp
   selectionmodelclient.cpp
-  objectclient.cpp
   clienttoolmodel.cpp
   clientconnectionmanager.cpp
 )
