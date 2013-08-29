@@ -10,11 +10,13 @@
 
 #include <QApplication>
 #include <QMessageBox>
+#include <QTimer>
 
 using namespace GammaRay;
 
 ClientConnectionManager::ClientConnectionManager(QObject* parent) :
   QObject(parent),
+  m_port(0),
   m_client(new Client(this)),
   m_mainWindow(0),
   m_toolModel(0)
@@ -32,7 +34,15 @@ ClientConnectionManager::~ClientConnectionManager()
 
 void ClientConnectionManager::connectToHost(const QString& hostname, quint16 port)
 {
-    m_client->connectToHost(hostname, port);
+  m_hostname = hostname;
+  m_port = port;
+  m_connectionTimeout.start();
+  connectToHost();
+}
+
+void ClientConnectionManager::connectToHost()
+{
+  m_client->connectToHost(m_hostname, m_port);
 }
 
 void ClientConnectionManager::connectionEstablished()
@@ -61,8 +71,14 @@ void ClientConnectionManager::toolModelPopulated()
   hideSplashScreen();
 }
 
-void ClientConnectionManager::connectionError(const QString& msg)
+void ClientConnectionManager::connectionError(QAbstractSocket::SocketError error, const QString& msg)
 {
+  if (m_connectionTimeout.elapsed() < 60 * 1000 && error == QAbstractSocket::ConnectionRefusedError) {
+    // client wasn't up yet, keep trying
+    QTimer::singleShot(1000, this, SLOT(connectToHost()));
+    return;
+  }
+
   hideSplashScreen();
 
   QString errorMsg;

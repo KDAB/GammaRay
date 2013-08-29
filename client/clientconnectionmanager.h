@@ -2,6 +2,8 @@
 #define GAMMARAY_CLIENTCONNECTIONMANAGER_H
 
 #include <QObject>
+#include <QAbstractSocket>
+#include <QTime>
 
 class QAbstractItemModel;
 
@@ -21,15 +23,19 @@ class ClientConnectionManager : public QObject
     void connectToHost(const QString &hostname, quint16 port);
 
   private slots:
+    void connectToHost();
     void connectionEstablished();
     void connectionError(QAbstractSocket::SocketError error, const QString &msg);
 
     void toolModelPopulated();
 
   private:
+    QString m_hostname;
+    quint16 m_port;
     Client *m_client;
     MainWindow *m_mainWindow;
     QAbstractItemModel *m_toolModel;
+    QTime m_connectionTimeout;
 };
 
 }
