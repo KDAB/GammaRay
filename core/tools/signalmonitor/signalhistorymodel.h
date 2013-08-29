@@ -58,7 +58,11 @@ class SignalHistoryModel : public QAbstractItemModel
 
       qint64 timestamp(int i) const { return SignalHistoryModel::timestamp(events.at(i)); }
       int signalIndex(int i) const { return SignalHistoryModel::signalIndex(events.at(i)); }
-      QString signalName(int i) const { return metaObject->method(signalIndex(i)).methodSignature(); }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+      QByteArray signalName(int i) const { return metaObject->method(signalIndex(i)).methodSignature(); }
+#else
+      QByteArray signalName(int i) const { return metaObject->method(signalIndex(i)).signature(); }
+#endif
     };
 
   public:
