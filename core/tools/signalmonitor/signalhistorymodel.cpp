@@ -29,6 +29,10 @@
 
 #include <QLocale>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QVector<qint64>)
+#endif // !Qt5
+
 using namespace GammaRay;
 
 const QString SignalHistoryModel::ITEM_TYPE_NAME_OBJECT = "Object";
