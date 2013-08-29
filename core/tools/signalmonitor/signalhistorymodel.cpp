@@ -236,13 +236,19 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
   }
 }
 
-static void interned(const QString &input, QString *result)
+/// Tries to reuse an already existing instances of \param input by checking
+/// a global string pool. If no instance of \param input is interned yet the
+/// string will be added to the pool.
+static void internString(const QString &input, QString *result)
 {
+  // Compare identities to figure out of the input is interned already.
   if (input.constData() != result->constData()) {
     static QHash<QString, QString> pool;
 
+    // Check if the pool already contains the string...
     QHash<QString, QString>::iterator it = pool.find(input);
 
+    // ...and insert if if needed.
     if (it == pool.end())
       it = pool.insert(input, input);
 
@@ -264,8 +270,8 @@ void SignalHistoryModel::Item::updateFromModel(const QModelIndex &index)
   if (object) {
     const QAbstractItemModel *const model = index.model();
 
-    interned(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString(), &objectName);
-    interned(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString(), &objectType);
+    internString(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString(), &objectName);
+    internString(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString(), &objectType);
 
     toolTip = model->data(model->index(index.row(), 0, index.parent()), Qt::ToolTipRole).toString();
     decoration = model->data(model->index(index.row(), 0, index.parent()), Qt::DecorationRole).value<QIcon>();
