@@ -49,7 +49,7 @@
 using namespace GammaRay;
 
 PropertyController::PropertyController(const QString& baseName, QObject* parent) :
-  NetworkObject(baseName + ".controller", parent),
+  PropertyControllerInterface(baseName + ".controller", parent),
   m_objectBaseName(baseName),
   m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
   m_dynamicPropertyModel(new ObjectDynamicPropertyModel(this)),
@@ -82,9 +82,6 @@ PropertyController::PropertyController(const QString& baseName, QObject* parent)
   // TODO 1.3 had an optimization using the ProxyDetacher for these models, re-add that
   m_inboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
   m_outboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
-
-  subscribeToSignal("activateMethod", this, "methodActivated");
-  subscribeToSignal("invokeMethod", this, "invokeMethod");
 }
 
 PropertyController::~PropertyController()
@@ -135,7 +132,7 @@ void PropertyController::setObject(QObject* object)
 
   m_metaPropertyModel->setObject(object);
 
-  emitSignal("displayState", QVariantList() << QVariant::fromValue(PropertyWidgetDisplayState::QObject));
+  emit displayStateChanged(PropertyWidgetDisplayState::QObject);
 }
 
 void PropertyController::setObject(void* object, const QString& className)
@@ -143,7 +140,7 @@ void PropertyController::setObject(void* object, const QString& className)
   setObject(0);
   m_metaPropertyModel->setObject(object, className);
 
-  emitSignal("displayState", QVariantList() << QVariant::fromValue(PropertyWidgetDisplayState::Object));
+  emit displayStateChanged(PropertyWidgetDisplayState::Object);
 }
 
 void PropertyController::setMetaObject(const QMetaObject* metaObject)
@@ -153,10 +150,10 @@ void PropertyController::setMetaObject(const QMetaObject* metaObject)
   m_classInfoModel->setMetaObject(metaObject);
   m_methodModel->setMetaObject(metaObject);
 
-  emitSignal("displayState", QVariantList() << QVariant::fromValue(PropertyWidgetDisplayState::MetaObject));
+  emit displayStateChanged(PropertyWidgetDisplayState::MetaObject);
 }
 
-void PropertyController::methodActivated()
+void PropertyController::activateMethod()
 {
   QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(m_methodModel);
   if (selectionModel->selectedRows().size() != 1)

@@ -28,14 +28,13 @@
 #include "fontbrowserclient.h"
 
 #include <common/network/objectbroker.h>
-#include <common/network/networkobject.h>
 
 #include <QAbstractItemModel>
 #include <QDebug>
 
 using namespace GammaRay;
 
-static NetworkObject* fontBrowserClientFactory(const QString &/*name*/, QObject *parent)
+static QObject* fontBrowserClientFactory(const QString &/*name*/, QObject *parent)
 {
   return new FontBrowserClient(parent);
 }
@@ -47,8 +46,8 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   , m_fontBrowser(0)
 {
   ObjectBroker::registerClientObjectFactoryCallback<FontBrowserInterface*>(fontBrowserClientFactory);
-
   m_fontBrowser = ObjectBroker::object<FontBrowserInterface*>();
+
   ui->setupUi(this);
 
   m_selectedFontModel = ObjectBroker::model("com.kdab.GammaRay.SelectedFontModel");

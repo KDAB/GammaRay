@@ -32,7 +32,9 @@
 #include <QTcpSocket>
 #include <QUdpSocket>
 #include <QTimer>
+#include <QMetaMethod>
 #include <QNetworkInterface>
+#include <QSignalSpy>
 
 using namespace GammaRay;
 
@@ -113,6 +115,65 @@ void Server::messageReceived(const Message& msg)
   }
 }
 
+void Server::invokeObject(const QString &objectName, const char *method, const QVariantList &args) const
+{
+  Endpoint::invokeObject(objectName, method, args);
+
+  QObject* object = ObjectBroker::objectInternal(objectName);
+  Q_ASSERT(object);
+  // also invoke locally for in-process mode
+  invokeObjectLocal(object, method, args);
+}
+
+Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *object)
+{
+  registerObjectInternal(name, ++m_nextAddress);
+  Protocol::ObjectAddress address = Endpoint::registerObject(name, object);
+  Q_ASSERT(m_nextAddress);
+
+  if (isConnected()) {
+    Message msg(endpointAddress(), Protocol::ObjectAdded);
+    msg.payload() <<  name << m_nextAddress;
+    send(msg);
+  }
+
+  const QMetaObject *meta = object->metaObject();
+
+  QHash<int, QSignalSpy*>& signalForwards = m_signalForwards[object];
+  for(int i = 0; i < meta->methodCount(); ++i) {
+    QMetaMethod method = meta->method(i);
+    if (method.methodType() == QMetaMethod::Signal) {
+      QByteArray signature = method.signature();
+      // simulate SIGNAL() macro by prepending magic number.
+      signature.prepend(QSIGNAL_CODE);
+      QSignalSpy *spy = new QSignalSpy(object, signature);
+      spy->setParent(object);
+      signalForwards[i] = spy;
+      connect(object, signature, this, SLOT(forwardSignal()));
+    }
+  }
+
+  return address;
+}
+
+void Server::forwardSignal() const
+{
+  Q_ASSERT(sender());
+  QSignalSpy *spy = m_signalForwards.value(sender()).value(senderSignalIndex());
+  Q_ASSERT(spy->count() == 1);
+
+  if (!isConnected()) {
+    spy->clear();
+    return;
+  }
+
+  QByteArray name = spy->signal();
+  // get the name of the function to invoke, excluding the parens and function arguments.
+  name = name.mid(0, name.indexOf('('));
+  QVariantList args = spy->takeFirst();
+  Endpoint::invokeObject(sender()->objectName(), name, args);
+}
+
 Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName, const char* monitorNotifier)
 {
   registerObjectInternal(objectName, ++m_nextAddress);
@@ -135,6 +196,19 @@ void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QStri
 {
   unregisterObjectInternal(objectName);
   m_monitorNotifiers.remove(objectAddress);
+
+  if (isConnected()) {
+    Message msg(endpointAddress(), Protocol::ObjectRemoved);
+    msg.payload() << objectName;
+    send(msg);
+  }
+}
+
+void Server::objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object)
+{
+  m_signalForwards.remove(object);
+
+  unregisterObjectInternal(objectName);
 
   if (isConnected()) {
     Message msg(endpointAddress(), Protocol::ObjectRemoved);

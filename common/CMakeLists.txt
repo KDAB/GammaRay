@@ -21,7 +21,6 @@ set(gammaray_common_srcs
   network/protocol.cpp
   network/message.cpp
   network/endpoint.cpp
-  network/networkobject.cpp
 )
 
 qt4_automoc(${gammaray_common_srcs})

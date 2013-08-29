@@ -29,12 +29,12 @@
 #include <ui/deferredresizemodesetter.h>
 
 #include <network/objectbroker.h>
-#include <network/networkobject.h>
 #include <network/modelroles.h>
 
 #include <include/metatypedeclarations.h>
 
 #include "kde/krecursivefilterproxymodel.h"
+#include <core/propertycontrollerinterface.h>
 
 #include <QDebug>
 #include <QMenu>
@@ -59,7 +59,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   : QWidget(parent),
     m_ui(new Ui_PropertyWidget),
     m_editorFactory(new PropertyEditorFactory),
-    m_displayState(PropertyWidgetDisplayState::QObject)
+    m_displayState(PropertyWidgetDisplayState::QObject),
+    m_controller(0)
 {
   m_ui->setupUi(this);
 }
@@ -147,7 +148,13 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->metaPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->metaPropertyView);
 
-  ObjectBroker::objectInternal(m_objectBaseName + ".controller")->subscribeToSignal("displayState", this, "setDisplayState");
+  if (m_controller) {
+    disconnect(m_controller, SIGNAL(displayStateChanged(GammaRay::PropertyWidgetDisplayState::State)),
+               this, SLOT(setDisplayState(GammaRay::PropertyWidgetDisplayState::State)));
+  }
+  m_controller = ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
+  connect(m_controller, SIGNAL(displayStateChanged(GammaRay::PropertyWidgetDisplayState::State)),
+          this, SLOT(setDisplayState(GammaRay::PropertyWidgetDisplayState::State)));
 }
 
 QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
@@ -159,14 +166,14 @@ void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 {
   if (!index.isValid() || m_displayState != PropertyWidgetDisplayState::QObject)
     return;
-  ObjectBroker::objectInternal(m_objectBaseName + ".controller")->emitSignal("activateMethod");
+  m_controller->activateMethod();
 
   const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
   if (methodType == QMetaMethod::Slot) {
     MethodInvocationDialog dlg(this);
     dlg.setArgumentModel(model("methodArguments"));
     if (dlg.exec()) {
-      ObjectBroker::objectInternal(m_objectBaseName + ".controller")->emitSignal("invokeMethod", QVariantList() << QVariant::fromValue(dlg.connectionType()));
+      m_controller->invokeMethod(dlg.connectionType());
     }
   }
 }

@@ -23,6 +23,7 @@
 
 #include "endpoint.h"
 #include "message.h"
+#include "methodargument.h"
 
 #include <QDebug>
 
@@ -118,6 +119,51 @@ Protocol::ObjectAddress Endpoint::objectAddress(const QString& objectName) const
   return Protocol::InvalidObjectAddress;
 }
 
+Protocol::ObjectAddress Endpoint::registerObject(const QString &name, QObject *object)
+{
+  ObjectInfo* obj = m_nameMap.value(name, 0);
+  Q_ASSERT(obj);
+  Q_ASSERT(!obj->object);
+  Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
+  obj->object = object;
+
+  Q_ASSERT(!m_objectMap.contains(object));
+  m_objectMap[object] = obj;
+
+  connect(object, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
+
+  return obj->address;
+}
+
+void Endpoint::invokeObject(const QString &objectName, const char *method, const QVariantList &args) const
+{
+  if (!isConnected()) {
+    return;
+  }
+
+  ObjectInfo* obj = m_nameMap.value(objectName, 0);
+  Q_ASSERT(obj);
+  Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
+
+  Message msg(obj->address, Protocol::MethodCall);
+  const QByteArray name(method);
+  Q_ASSERT(!name.isEmpty());
+  msg.payload() << name << args;
+  send(msg);
+}
+
+void Endpoint::invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const
+{
+  Q_ASSERT(args.size() <= 10);
+  QVector<MethodArgument> a;
+  a.reserve(10);
+  foreach (const QVariant &v, args)
+    a.push_back(MethodArgument(v));
+  a.resize(10);
+
+  QMetaObject::invokeMethod(object, method, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
+}
+
 void Endpoint::registerObjectInternal(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
   Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);
@@ -166,6 +212,16 @@ void Endpoint::unregisterMessageHandlerInternal(Protocol::ObjectAddress objectAd
   obj->messageHandler.clear();
 }
 
+void Endpoint::objectDestroyed(QObject *obj)
+{
+  ObjectInfo* info = m_objectMap.value(obj, 0);
+  Q_ASSERT(info);
+  Q_ASSERT(info->object == obj);
+  info->object = 0;
+  m_objectMap.remove(obj);
+  objectDestroyed(info->address, QString(info->name), obj); // copy the name, in case unregisterMessageHandlerInternal() is called inside
+}
+
 void Endpoint::handlerDestroyed(QObject* obj)
 {
   const QList<ObjectInfo*> objs = m_handlerMap.values(obj); // copy, the virtual method below likely changes the maps.
@@ -184,7 +240,19 @@ void Endpoint::dispatchMessage(const Message& msg)
     return;
 
   ObjectInfo* obj = it.value();
-  QMetaObject::invokeMethod(obj->receiver, obj->messageHandler, Q_ARG(GammaRay::Message, msg));
+  if (obj->object && msg.type() == Protocol::MethodCall) {
+    QByteArray method;
+    msg.payload() >> method;
+    Q_ASSERT(!method.isEmpty());
+    QVariantList args;
+    msg.payload() >> args;
+
+    invokeObjectLocal(obj->object, method.constData(), args);
+  }
+
+  if (obj->receiver) {
+    QMetaObject::invokeMethod(obj->receiver, obj->messageHandler, Q_ARG(GammaRay::Message, msg));
+  }
 }
 
 QVector< QPair< Protocol::ObjectAddress, QString > > Endpoint::objectAddresses() const
@@ -205,6 +273,9 @@ void Endpoint::insertObjectInfo(Endpoint::ObjectInfo* oi)
 
   if (oi->receiver)
     m_handlerMap.insert(oi->receiver, oi);
+
+  if (oi->object)
+    m_objectMap.insert(oi->object, oi);
 }
 
 void Endpoint::removeObjectInfo(Endpoint::ObjectInfo* oi)
@@ -216,6 +287,9 @@ void Endpoint::removeObjectInfo(Endpoint::ObjectInfo* oi)
 
   if (oi->receiver)
     m_handlerMap.remove(oi->receiver, oi);
+
+  if (oi->object)
+    m_objectMap.remove(oi->object);
 
   delete oi;
 }

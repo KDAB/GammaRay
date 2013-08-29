@@ -1,5 +1,5 @@
 /*
-  fontbrowserclient.cpp
+  propertycontrollerinterface.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,29 +21,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "fontbrowserclient.h"
-
-#include <common/network/endpoint.h>
+#include "propertycontrollerclient.h"
+#include <network/endpoint.h>
 
 using namespace GammaRay;
 
-FontBrowserClient::FontBrowserClient(QObject *parent)
-  : FontBrowserInterface(parent)
+PropertyControllerClient::PropertyControllerClient(const QString &name, QObject *parent)
+  : PropertyControllerInterface(name, parent)
 {
 
 }
 
-#define WRAP_REMOTE(func, type) \
-void FontBrowserClient::func(type arg) \
-{ \
-  Endpoint::instance()->invokeObject(objectName(), #func, QVariantList() << arg); \
+PropertyControllerClient::~PropertyControllerClient()
+{
+
 }
 
-WRAP_REMOTE(setPointSize, int)
-WRAP_REMOTE(toggleBoldFont, bool)
-WRAP_REMOTE(toggleItalicFont, bool)
-WRAP_REMOTE(toggleUnderlineFont, bool)
-WRAP_REMOTE(updateText, const QString&)
+void PropertyControllerClient::activateMethod()
+{
+  Endpoint::instance()->invokeObject(name(), "activateMethod");
+}
 
+void PropertyControllerClient::invokeMethod(Qt::ConnectionType type)
+{
+  Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << type);
+}
 
-#include "fontbrowserclient.moc"
+#include "propertycontrollerclient.moc"

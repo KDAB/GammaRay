@@ -26,7 +26,7 @@
 
 #include "include/gammaray_core_export.h"
 
-#include <common/network/networkobject.h>
+#include "propertycontrollerinterface.h"
 
 #include <QPointer>
 
@@ -46,9 +46,10 @@ class MetaPropertyModel;
 class MethodArgumentModel;
 
 /** Non-UI part of the property widget. */
-class GAMMARAY_CORE_EXPORT PropertyController : public NetworkObject
+class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::PropertyControllerInterface)
 public:
   explicit PropertyController(const QString &baseName, QObject *parent);
   ~PropertyController();
@@ -57,13 +58,15 @@ public:
   void setObject(void *object, const QString &className);
   void setMetaObject(const QMetaObject *metaObject);
 
-private:
-  void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
+public slots:
+  void activateMethod();
+  void invokeMethod(Qt::ConnectionType type);
 
 private slots:
   void signalEmitted(QObject *sender, int signalIndex);
-  void methodActivated();
-  void invokeMethod(Qt::ConnectionType type);
+
+private:
+  void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
 
 private:
   QString m_objectBaseName;

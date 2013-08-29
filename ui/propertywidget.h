@@ -29,7 +29,6 @@
 #include <QHash>
 
 #include "include/gammaray_ui_export.h"
-
 #include <common/network/enums.h>
 
 class QAbstractItemModel;
@@ -40,6 +39,7 @@ namespace GammaRay {
 
 class Ui_PropertyWidget;
 class PropertyEditorFactory;
+class PropertyControllerInterface;
 
 class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
 {
@@ -73,6 +73,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
     QVector< QPair<QWidget *,QString> > m_tabWidgets;
 
     PropertyWidgetDisplayState::State m_displayState;
+    PropertyControllerInterface *m_controller;
 };
 
 }
