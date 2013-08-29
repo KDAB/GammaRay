@@ -38,8 +38,8 @@ class SignalHistoryDelegate : public QAbstractItemDelegate
   public:
     explicit SignalHistoryDelegate(QObject *parent = 0);
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     void setVisibleInterval(qint64 interval);
     qint64 visibleInterval() const { return m_visibleInterval; }

@@ -43,7 +43,7 @@ class RelativeClock
     static const RelativeClock* sinceAppStart();
 
   private:
-    static qint64 currentMSecsSinceEpoch() Q_DECL_NOTHROW;
+    static qint64 currentMSecsSinceEpoch();
 
   private:
     const qint64 m_offset;
