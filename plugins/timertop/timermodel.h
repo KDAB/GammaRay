@@ -47,8 +47,8 @@ class TimerModel : public QAbstractTableModel
     static TimerModel *instance();
 
     // For the spy callbacks
-    void preSignalActivate(QTimer *timer);
-    void postSignalActivate(QTimer *timer);
+    void preSignalActivate(QObject *caller, int methodIndex);
+    void postSignalActivate(QObject *caller, int methodIndex);
 
     enum Roles {
       FirstRole = Qt::UserRole + 1,
@@ -110,6 +110,10 @@ class TimerModel : public QAbstractTableModel
     ObjectTypeFilterProxyModel<QTimer> *m_sourceModel;
     QList<TimerInfoPtr> m_freeTimers;
     ProbeInterface *m_probe;
+    // current timer signals that are being processed
+    QHash<QObject*, TimerInfoPtr> m_currentSignals;
+    // the method index of the timeout() signal of a QTimer
+    const int m_timeoutIndex;
 };
 
 }
