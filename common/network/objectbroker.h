@@ -46,7 +46,7 @@ namespace ObjectBroker {
   }
 
   /** Retrieve object by name. */
-  GAMMARAY_COMMON_EXPORT QObject* objectInternal(const QString &name, const QString &type = QString());
+  GAMMARAY_COMMON_EXPORT QObject* objectInternal(const QString &name, const QByteArray &type = QByteArray());
 
   /**
    * Retrieve an object by name implementing interface @p T.
@@ -57,7 +57,7 @@ namespace ObjectBroker {
   template<class T>
   T object(const QString &name)
   {
-    T ret = qobject_cast<T>(objectInternal(name, QString::fromUtf8(qobject_interface_iid<T>())));
+    T ret = qobject_cast<T>(objectInternal(name, QByteArray(qobject_interface_iid<T>())));
     Q_ASSERT(ret);
     return ret;
   }
@@ -73,8 +73,8 @@ namespace ObjectBroker {
   template<class T>
   T object()
   {
-    const QString interface = QString::fromUtf8(qobject_interface_iid<T>());
-    T ret = qobject_cast<T>(objectInternal(interface, interface));
+    const QByteArray interface(qobject_interface_iid<T>());
+    T ret = qobject_cast<T>(objectInternal(QString::fromUtf8(interface), interface));
     Q_ASSERT(ret);
     return ret;
   }
@@ -82,11 +82,11 @@ namespace ObjectBroker {
   typedef QObject*(*ClientObjectFactoryCallback)(const QString &, QObject *parent);
 
   /** Register a callback for a factory to create remote object stubs for the given type. */
-  GAMMARAY_COMMON_EXPORT void registerClientObjectFactoryCallbackInternal(const QString &interface, ClientObjectFactoryCallback callback);
+  GAMMARAY_COMMON_EXPORT void registerClientObjectFactoryCallbackInternal(const QByteArray &type, ClientObjectFactoryCallback callback);
   template<class T>
   void registerClientObjectFactoryCallback(ClientObjectFactoryCallback callback)
   {
-    registerClientObjectFactoryCallbackInternal(QString::fromUtf8(qobject_interface_iid<T>()), callback);
+    registerClientObjectFactoryCallbackInternal(QByteArray(qobject_interface_iid<T>()), callback);
   }
 
   /** Register a newly created model with the given name. */

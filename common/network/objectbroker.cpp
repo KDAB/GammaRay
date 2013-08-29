@@ -40,7 +40,7 @@ struct ObjectlBrokerData {
   QHash<QString, QObject*> objects;
   QHash<QString, QAbstractItemModel*> models;
   QHash<QAbstractItemModel*, QItemSelectionModel*> selectionModels;
-  QHash<QString, ObjectBroker::ClientObjectFactoryCallback> clientObjectFactories;
+  QHash<QByteArray, ObjectBroker::ClientObjectFactoryCallback> clientObjectFactories;
   ObjectBroker::ModelFactoryCallback modelCallback;
   ObjectBroker::selectionModelFactoryCallback selectionCallback;
 };
@@ -60,7 +60,7 @@ void ObjectBroker::registerObject(const QString &name, QObject *object)
   Endpoint::instance()->registerObject(name, object);
 }
 
-QObject* ObjectBroker::objectInternal(const QString& name, const QString &type)
+QObject* ObjectBroker::objectInternal(const QString& name, const QByteArray &type)
 {
   const QHash<QString, QObject*>::const_iterator it = s_objectBroker()->objects.constFind(name);
   if (it != s_objectBroker()->objects.constEnd()) {
@@ -87,10 +87,10 @@ QObject* ObjectBroker::objectInternal(const QString& name, const QString &type)
   return obj;
 }
 
-void ObjectBroker::registerClientObjectFactoryCallbackInternal(const QString &interface, ObjectBroker::ClientObjectFactoryCallback callback)
+void ObjectBroker::registerClientObjectFactoryCallbackInternal(const QByteArray &type, ObjectBroker::ClientObjectFactoryCallback callback)
 {
-  Q_ASSERT(!interface.isEmpty());
-  s_objectBroker()->clientObjectFactories[interface] = callback;
+  Q_ASSERT(!type.isEmpty());
+  s_objectBroker()->clientObjectFactories[type] = callback;
 }
 
 void ObjectBroker::registerModel(const QString& name, QAbstractItemModel* model)
