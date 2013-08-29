@@ -22,7 +22,7 @@ class ClientConnectionManager : public QObject
 
   private slots:
     void connectionEstablished();
-    void connectionError(const QString &msg);
+    void connectionError(QAbstractSocket::SocketError error, const QString &msg);
 
     void toolModelPopulated();
 

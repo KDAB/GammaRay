@@ -27,6 +27,8 @@
 #include <network/protocol.h>
 #include <network/endpoint.h>
 
+#include <QAbstractSocket>
+
 namespace GammaRay {
 
 /** Client-side connection endpoint. */
@@ -62,7 +64,7 @@ signals:
   /** Emitted when we successfully established a connection and passed the protocol version handshake step. */
   void connectionEstablished();
   /** Emitted on connection errors. */
-  void connectionError(const QString &msg);
+  void connectionError(QAbstractSocket::SocketError error, const QString &msg);
 
 protected:
   void messageReceived(const Message& msg);

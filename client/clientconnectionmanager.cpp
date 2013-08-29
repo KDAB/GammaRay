@@ -23,7 +23,7 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent) :
 
   connect(m_client, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
   connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
-  connect(m_client, SIGNAL(connectionError(QString)), SLOT(connectionError(QString)));
+  connect(m_client, SIGNAL(connectionError(QAbstractSocket::SocketError,QString)), SLOT(connectionError(QAbstractSocket::SocketError,QString)));
 }
 
 ClientConnectionManager::~ClientConnectionManager()

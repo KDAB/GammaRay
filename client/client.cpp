@@ -64,8 +64,9 @@ void Client::socketConnected()
 
 void Client::socketError()
 {
-  Q_ASSERT(qobject_cast<QIODevice*>(sender()));
-  emit connectionError(qobject_cast<QIODevice*>(sender())->errorString());
+  QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
+  Q_ASSERT(socket);
+  emit connectionError(socket->error(), socket->errorString());
 }
 
 void Client::messageReceived(const Message& msg)
