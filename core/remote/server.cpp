@@ -143,7 +143,12 @@ Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *obj
   for(int i = 0; i < meta->methodCount(); ++i) {
     QMetaMethod method = meta->method(i);
     if (method.methodType() == QMetaMethod::Signal) {
-      QByteArray signature = method.signature();
+      #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+        QByteArray signature = method.signature();
+      #else
+        QByteArray signature = method.methodSignature();
+      #endif
+
       // simulate SIGNAL() macro by prepending magic number.
       signature.prepend(QSIGNAL_CODE);
       QSignalSpy *spy = new QSignalSpy(object, signature);
