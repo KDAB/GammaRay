@@ -112,7 +112,7 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
         case EventItem:
           if (role == Qt::DisplayRole) {
             const qint64 t = item(index)->timestamp(index.row());
-            return QStringLiteral("%1 ms").arg(QLocale::system().toString(t));
+            return tr("%1 ms").arg(QLocale::system().toString(t));
           }
 
           if (role == Qt::TextAlignmentRole)
@@ -162,7 +162,7 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
           if (role == Qt::ToolTipRole) {
             const Item *const data = item(index);
             const QString &ts = QLocale::system().toString(data->timestamp(index.row()));
-            return QStringLiteral("%1 at %2 ms").arg(data->signalName(index.row()), ts);
+            return tr("%1 at %2 ms").arg(data->signalName(index.row()), ts);
           }
 
           break;
