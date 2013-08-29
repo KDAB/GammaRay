@@ -27,7 +27,6 @@
 #include "include/toolfactory.h"
 
 #include <ui/tools/codecbrowser/codecbrowserwidget.h>
-#include <common/network/networkobject.h>
 
 class QItemSelection;
 class QItemSelectionModel;
@@ -40,11 +39,14 @@ namespace Ui {
   class CodecBrowser;
 }
 
-class CodecBrowser : public NetworkObject
+class CodecBrowser : public QObject
 {
   Q_OBJECT
   public:
     explicit CodecBrowser(ProbeInterface *probe, QObject *parent = 0);
+
+  public slots:
+    void textChanged(const QString &text);
 
   private slots:
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);

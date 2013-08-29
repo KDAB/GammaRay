@@ -25,6 +25,7 @@
 #include "client.h"
 #include "selectionmodelclient.h"
 #include "clientconnectionmanager.h"
+#include "propertycontrollerclient.h"
 
 #include <network/objectbroker.h>
 #include <network/streamoperators.h>
@@ -34,11 +35,6 @@
 
 using namespace GammaRay;
 
-static void objectRegistrar(NetworkObject *object)
-{
-  Client::instance()->registerObject(object);
-}
-
 static QAbstractItemModel* modelFactory(const QString &name)
 {
   return new RemoteModel(name, qApp);
@@ -47,6 +43,11 @@ static QAbstractItemModel* modelFactory(const QString &name)
 static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
 {
   return new SelectionModelClient(model->objectName() + ".selection", model, qApp);
+}
+
+static QObject* createPropertyController(const QString &name, QObject *parent)
+{
+  return new PropertyControllerClient(name, parent);
 }
 
 int main(int argc, char** argv)
@@ -65,7 +66,7 @@ int main(int argc, char** argv)
     port = app.arguments().at(2).toUShort();
   }
 
-  ObjectBroker::setObjectRegistrarCallback(objectRegistrar);
+  ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 

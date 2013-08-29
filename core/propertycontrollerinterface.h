@@ -1,5 +1,5 @@
 /*
-  fontbrowserinterface.h
+  propertycontrollerinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,30 +21,38 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FONTBROWSERINTERFACE_H
-#define FONTBROWSERINTERFACE_H
+#ifndef GAMMARAY_PROPERTYCONTROLLERINTERFACE_H
+#define GAMMARAY_PROPERTYCONTROLLERINTERFACE_H
 
 #include <QObject>
 
+#include "include/gammaray_core_export.h"
+#include <common/network/enums.h>
+
 namespace GammaRay {
 
-class FontBrowserInterface : public QObject
+class GAMMARAY_CORE_EXPORT PropertyControllerInterface : public QObject
 {
   Q_OBJECT
   public:
-    explicit FontBrowserInterface(QObject *parent);
-    virtual ~FontBrowserInterface();
+    explicit PropertyControllerInterface(const QString &name, QObject *parent = 0);
+    virtual ~PropertyControllerInterface();
+
+    QString name() const;
 
   public slots:
-    virtual void updateText(const QString &text) = 0;
-    virtual void toggleBoldFont(bool bold) = 0;
-    virtual void toggleItalicFont(bool italic) = 0;
-    virtual void toggleUnderlineFont(bool underline) = 0;
-    virtual void setPointSize(int size) = 0;
+    virtual void activateMethod() = 0;
+    virtual void invokeMethod(Qt::ConnectionType type) = 0;
+
+  signals:
+    void displayStateChanged(GammaRay::PropertyWidgetDisplayState::State displayState);
+
+  private:
+    QString m_name;
 };
 
 }
 
-Q_DECLARE_INTERFACE(GammaRay::FontBrowserInterface, "com.kdab.GammaRay.FontBrowser")
+Q_DECLARE_INTERFACE(GammaRay::PropertyControllerInterface, "com.kdab.GammaRay.PropertyControllerInterface")
 
-#endif // FONTBROWSERINTERFACE_H
+#endif // GAMMARAY_PROPERTYCONTROLLERINTERFACE_H

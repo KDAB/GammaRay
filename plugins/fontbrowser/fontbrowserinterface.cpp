@@ -23,11 +23,14 @@
 
 #include "fontbrowserinterface.h"
 
+#include <common/network/objectbroker.h>
+
 using namespace GammaRay;
 
 FontBrowserInterface::FontBrowserInterface(QObject *parent)
-  : NetworkObject(QString::fromUtf8(qobject_interface_iid<FontBrowserInterface*>()), parent)
+  : QObject(parent)
 {
+  ObjectBroker::registerObject<FontBrowserInterface*>(this);
 }
 
 FontBrowserInterface::~FontBrowserInterface()

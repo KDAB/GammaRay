@@ -25,12 +25,12 @@
 #define GAMMARAY_SERVER_H
 
 #include <network/endpoint.h>
-#include <network/networkobject.h>
 #include <network/objectbroker.h>
 
 class QTcpServer;
 class QUdpSocket;
 class QTimer;
+class QSignalSpy;
 
 namespace GammaRay {
 
@@ -41,6 +41,11 @@ class Server : public Endpoint
   public:
     explicit Server(QObject *parent = 0);
     ~Server();
+
+    /**
+     * Register a server-side QObject to send/receive messages to/from the client side.
+     */
+    virtual Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
 
     /** Register a new object with name @p objectName as a destination for messages.
      *  New messages to that object are passed to the slot @p messageHandlerName on @p receiver.
@@ -55,13 +60,24 @@ class Server : public Endpoint
     /** Sets the label of this instance used when advertising this server on the network. */
     void setLabel(const QString &label);
 
+    /**
+     * Call @p method on the remote client and also directly on the local object identified by @p objectName.
+     */
+    virtual void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const;
+
   protected:
     void messageReceived(const Message& msg);
     void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
+    void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object);
 
   private slots:
     void newConnection();
     void broadcast();
+
+    /**
+     * Forward the signal that triggered the call to this slot to the remote client if connected.
+     */
+    void forwardSignal() const;
 
   private:
     QTcpServer *m_tcpServer;
@@ -71,6 +87,9 @@ class Server : public Endpoint
     QString m_label;
     QTimer* m_broadcastTimer;
     QUdpSocket* m_broadcastSocket;
+
+    // maps registered objects to a map of signal index to signal spy
+    QHash<QObject*, QHash<int, QSignalSpy*> > m_signalForwards;
 };
 
 }

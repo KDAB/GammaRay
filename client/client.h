@@ -29,8 +29,6 @@
 
 namespace GammaRay {
 
-class NetworkObject;
-
 /** Client-side connection endpoint. */
 class Client : public Endpoint
 {
@@ -43,12 +41,14 @@ public:
   void connectToHost(const QString &hostName, quint16 port);
 
   /**
-   * Register a client-side NetworkObject to receive messages from the remote side.
+   * Register a client-side QObject to send/receive messages to/from the server side.
    */
-  void registerObject(NetworkObject *object);
+  Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
 
   /** Register a message handler for @p objectAddress on object @p handler.
    *  Once a message for this object is received, @p slot is called.
+   *
+   * TODO: get rid of this
    */
   void registerForObject(Protocol::ObjectAddress objectAddress, QObject *handler, const char* slot);
 
@@ -66,9 +66,8 @@ signals:
 
 protected:
   void messageReceived(const Message& msg);
+  void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object);
   void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
-
-  void connectObjectToServer(NetworkObject *object);
 
 private:
   void unmonitorObject(Protocol::ObjectAddress objectAddress);
@@ -77,11 +76,7 @@ private slots:
   void socketConnected();
   void socketError();
 
-  void serverObjectRegistered(const QString& objectName, Protocol::ObjectAddress objectAddress);
-  void serverObjectUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress);
-
 private:
-  QHash<QString, NetworkObject*> m_objects;
   bool m_versionChecked;
 };
 

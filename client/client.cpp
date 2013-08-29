@@ -24,7 +24,6 @@
 #include "client.h"
 
 #include <network/message.h>
-#include <network/networkobject.h>
 
 #include <QDebug>
 #include <QTcpSocket>
@@ -36,10 +35,6 @@ Client::Client(QObject* parent)
   : Endpoint(parent)
   , m_versionChecked(false)
 {
-  connect(this, SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
-          this, SLOT(serverObjectRegistered(QString,Protocol::ObjectAddress)));
-  connect(this, SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)),
-          this, SLOT(serverObjectUnregistered(QString,Protocol::ObjectAddress)));
 }
 
 Client::~Client()
@@ -129,39 +124,19 @@ void Client::messageReceived(const Message& msg)
   dispatchMessage(msg);
 }
 
-void Client::registerObject(NetworkObject *object)
+Protocol::ObjectAddress Client::registerObject(const QString &name, QObject *object)
 {
-  m_objects[object->objectName()] = object;
-  object->setAddress(objectAddress(object->objectName()));
-  connectObjectToServer(object);
+  Q_ASSERT(isConnected());
+  Protocol::ObjectAddress address = Endpoint::registerObject(name, object);
+
+  Message msg(endpointAddress(), Protocol::ObjectMonitored);
+  msg.payload() << address;
+  send(msg);
+
+  return address;
 }
 
-void Client::connectObjectToServer(NetworkObject *object)
-{
-  if (object->address() == Protocol::InvalidObjectAddress)
-    return;
-  Client::instance()->registerForObject(object->address(), object, "newMessage");
-}
-
-void Client::serverObjectRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress)
-{
-  NetworkObject* object = m_objects.value(objectName, 0);
-  if (object) {
-    object->setAddress(objectAddress);
-    connectObjectToServer(object);
-  }
-}
-
-void Client::serverObjectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress)
-{
-  NetworkObject* object = m_objects.value(objectName, 0);
-  if (object) {
-    Q_ASSERT(object->address() == objectAddress);
-    Q_UNUSED(objectAddress);
-    object->setAddress(Protocol::InvalidObjectAddress);
-  }
-}
-
+/// TODO: get rid of this
 void Client::registerForObject(Protocol::ObjectAddress objectAddress, QObject* handler, const char* slot)
 {
   Q_ASSERT(isConnected());
@@ -177,9 +152,13 @@ void Client::unregisterForObject(Protocol::ObjectAddress objectAddress)
   unmonitorObject(objectAddress);
 }
 
-void Client::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)
+void Client::objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &/*objectName*/, QObject */*object*/)
 {
-  m_objects.remove(objectName);
+  unmonitorObject(objectAddress);
+}
+
+void Client::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& /*objectName*/)
+{
   unmonitorObject(objectAddress);
 }
 

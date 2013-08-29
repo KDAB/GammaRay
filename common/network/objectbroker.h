@@ -33,16 +33,20 @@ class QAbstractItemModel;
 
 namespace GammaRay {
 
-class NetworkObject;
-
 /** Retrieve/expose objects independent of whether using in-process or out-of-process UI. */
 namespace ObjectBroker {
 
-  /** Register a newly created NetworkObject, it must have a valid object name set. */
-  GAMMARAY_COMMON_EXPORT void registerObject(NetworkObject* object);
+  /** Register a newly created QObject under the given name. */
+  GAMMARAY_COMMON_EXPORT void registerObject(const QString &name, QObject *object);
+  template<class T>
+  void registerObject(QObject *object)
+  {
+    const QString interface = QString::fromUtf8(qobject_interface_iid<T>());
+    registerObject(interface, object);
+  }
 
   /** Retrieve object by name. */
-  GAMMARAY_COMMON_EXPORT NetworkObject* objectInternal(const QString &name);
+  GAMMARAY_COMMON_EXPORT QObject* objectInternal(const QString &name, const QString &type = QString());
 
   /**
    * Retrieve an object by name implementing interface @p T.
@@ -53,7 +57,7 @@ namespace ObjectBroker {
   template<class T>
   T object(const QString &name)
   {
-    T ret = qobject_cast<T>(objectInternal(name));
+    T ret = qobject_cast<T>(objectInternal(name, QString::fromUtf8(qobject_interface_iid<T>())));
     Q_ASSERT(ret);
     return ret;
   }
@@ -69,10 +73,13 @@ namespace ObjectBroker {
   template<class T>
   T object()
   {
-    return object<T>(QString::fromUtf8(qobject_interface_iid<T>()));
+    const QString interface = QString::fromUtf8(qobject_interface_iid<T>());
+    T ret = qobject_cast<T>(objectInternal(interface, interface));
+    Q_ASSERT(ret);
+    return ret;
   }
 
-  typedef NetworkObject*(*ClientObjectFactoryCallback)(const QString &, QObject *parent);
+  typedef QObject*(*ClientObjectFactoryCallback)(const QString &, QObject *parent);
 
   /** Register a callback for a factory to create remote object stubs for the given type. */
   GAMMARAY_COMMON_EXPORT void registerClientObjectFactoryCallbackInternal(const QString &interface, ClientObjectFactoryCallback callback);
@@ -81,10 +88,6 @@ namespace ObjectBroker {
   {
     registerClientObjectFactoryCallbackInternal(QString::fromUtf8(qobject_interface_iid<T>()), callback);
   }
-
-  typedef void(*ObjectRegistrarCallback)(NetworkObject*);
-  /** Set a callback for a NetworkObject registry. */
-  GAMMARAY_COMMON_EXPORT void setObjectRegistrarCallback(ObjectRegistrarCallback callback);
 
   /** Register a newly created model with the given name. */
   GAMMARAY_COMMON_EXPORT void registerModel(const QString &name, QAbstractItemModel* model);
