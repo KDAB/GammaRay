@@ -42,6 +42,10 @@ class LaunchPage : public QWidget
     ~LaunchPage();
 
     QStringList launchArguments() const;
+
+    typedef QVector<QPair<QByteArray, QByteArray> > Environment;
+    Environment launchEnvironment() const;
+
     bool isValid();
 
     void writeSettings();

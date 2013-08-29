@@ -54,6 +54,7 @@ LaunchPage::LaunchPage(QWidget *parent)
   QSettings settings;
   ui->progEdit->setText(settings.value(QLatin1String("Launcher/Program")).toString());
   m_argsModel->setStringList(settings.value(QLatin1String("Launcher/Arguments")).toStringList());
+  ui->accessMode->setCurrentIndex(settings.value(QLatin1String("Launcher/AccessMode")).toInt());
   updateArgumentButtons();
 }
 
@@ -67,6 +68,7 @@ void LaunchPage::writeSettings()
   QSettings settings;
   settings.setValue(QLatin1String("Launcher/Program"), ui->progEdit->text());
   settings.setValue(QLatin1String("Launcher/Arguments"), notEmptyString(m_argsModel->stringList()));
+  settings.setValue(QLatin1String("Launcher/AccessMode"), ui->accessMode->currentIndex());
 }
 
 QStringList LaunchPage::notEmptyString(const QStringList &list) const
@@ -87,6 +89,28 @@ QStringList LaunchPage::launchArguments() const
   l.push_back(ui->progEdit->text());
   l.append(notEmptyString(m_argsModel->stringList()));
   return l;
+}
+
+LaunchPage::Environment LaunchPage::launchEnvironment() const
+{
+  Environment env;
+  switch (ui->accessMode->currentIndex()) {
+    case 0: // local, out-of-process
+      env.push_back(qMakePair<QByteArray, QByteArray>("RemoteAccessEnabled", "true"));
+      env.push_back(qMakePair<QByteArray, QByteArray>("TCPServer", "127.0.0.1"));
+      env.push_back(qMakePair<QByteArray, QByteArray>("InProcessUi", "false"));
+      break;
+    case 1: // remote, out-of-process
+      env.push_back(qMakePair<QByteArray, QByteArray>("RemoteAccessEnabled", "true"));
+      env.push_back(qMakePair<QByteArray, QByteArray>("TCPServer", "0.0.0.0"));
+      env.push_back(qMakePair<QByteArray, QByteArray>("InProcessUi", "false"));
+      break;
+    case 2: // in-process
+      env.push_back(qMakePair<QByteArray, QByteArray>("RemoteAccessEnabled", "false"));
+      env.push_back(qMakePair<QByteArray, QByteArray>("InProcessUi", "true"));
+      break;
+  }
+  return env;
 }
 
 void LaunchPage::showFileDialog()

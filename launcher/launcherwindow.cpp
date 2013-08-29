@@ -69,6 +69,14 @@ QStringList LauncherWindow::launchArguments() const
   return QStringList();
 }
 
+LauncherWindow::Environment LauncherWindow::launchEnvironment() const
+{
+  if (ui->tabWidget->currentWidget() == ui->launchPage) {
+    return ui->launchPage->launchEnvironment();
+  }
+  return Environment();
+}
+
 void LauncherWindow::tabChanged()
 {
   if (ui->tabWidget->currentWidget() == ui->attachPage) {

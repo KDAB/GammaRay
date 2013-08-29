@@ -79,6 +79,48 @@
      </item>
     </layout>
    </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>&amp;Access Mode:</string>
+       </property>
+       <property name="buddy">
+        <cstring>accessMode</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="accessMode">
+       <property name="currentIndex">
+        <number>2</number>
+       </property>
+       <item>
+        <property name="text">
+         <string>Out-of-process, local-only</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Out-of-process, remote debugging enabled</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>In-process</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <resources/>

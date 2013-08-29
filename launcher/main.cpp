@@ -121,6 +121,9 @@ int main(int argc, char **argv)
     LauncherWindow dialog;
     if (dialog.exec() == QDialog::Accepted) {
       args = dialog.launchArguments();
+      typedef QPair<QByteArray, QByteArray> EnvVar;
+      foreach (const EnvVar &envVar, dialog.launchEnvironment())
+        qputenv("GAMMARAY_" + envVar.first, envVar.second);
       bool ok;
       pid = dialog.pid().toInt(&ok);
       if (!ok && args.isEmpty()) {
