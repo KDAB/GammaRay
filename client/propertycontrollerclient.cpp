@@ -24,6 +24,8 @@
 #include "propertycontrollerclient.h"
 #include <network/endpoint.h>
 
+#include <include/metatypedeclarations.h>
+
 using namespace GammaRay;
 
 PropertyControllerClient::PropertyControllerClient(const QString &name, QObject *parent)
@@ -44,7 +46,7 @@ void PropertyControllerClient::activateMethod()
 
 void PropertyControllerClient::invokeMethod(Qt::ConnectionType type)
 {
-  Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << type);
+  Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << QVariant::fromValue(type));
 }
 
 #include "propertycontrollerclient.moc"
