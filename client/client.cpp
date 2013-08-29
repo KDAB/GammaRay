@@ -67,6 +67,7 @@ void Client::socketError()
   QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
   Q_ASSERT(socket);
   emit connectionError(socket->error(), socket->errorString());
+  socket->deleteLater();
 }
 
 void Client::messageReceived(const Message& msg)
