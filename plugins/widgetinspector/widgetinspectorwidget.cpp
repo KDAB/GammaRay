@@ -25,10 +25,11 @@
 #include "config-gammaray.h"
 #include "paintbufferviewer.h"
 #include "ui_widgetinspectorwidget.h"
+#include "widgetinspectorinterface.h"
+#include "widgetinspectorclient.h"
 
 #include <core/propertycontroller.h>
 #include <common/network/objectbroker.h>
-#include <common/network/endpoint.h>
 
 #include "include/objectmodel.h"
 
@@ -42,12 +43,21 @@
 
 using namespace GammaRay;
 
+static QObject* createWidgetInspectorClient(const QString &/*name*/, QObject *parent)
+{
+  return new WidgetInspectorClient(parent);
+}
+
 WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::WidgetInspectorWidget)
+  , m_inspector(0)
 {
+  ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface*>(createWidgetInspectorClient);
+  m_inspector = ObjectBroker::object<WidgetInspectorInterface*>();
+
   ui->setupUi(this);
-  ui->widgetPropertyWidget->setObjectBaseName("com.kdab.GammaRay.WidgetInspector");
+  ui->widgetPropertyWidget->setObjectBaseName(m_inspector->objectName());
 
   KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
   widgetSearchProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.WidgetTree"));
@@ -64,7 +74,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
-  connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
+  connect(ui->actionAnalyzePainting, SIGNAL(triggered()), m_inspector, SLOT(analyzePainting()));
 
   addAction(ui->actionSaveAsImage);
 // TODO these checks needs to be dynamic, based on probe features
@@ -128,7 +138,7 @@ void WidgetInspectorWidget::saveAsImage()
   if (fileName.isEmpty())
     return;
 
-  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsImage", QVariantList() << fileName);
+  m_inspector->saveAsImage(fileName);
 }
 
 void WidgetInspectorWidget::saveAsSvg()
@@ -142,7 +152,8 @@ void WidgetInspectorWidget::saveAsSvg()
 
   if (fileName.isEmpty())
     return;
-  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsSvg", QVariantList() << fileName);
+
+  m_inspector->saveAsSvg(fileName);
 }
 
 void WidgetInspectorWidget::saveAsPdf()
@@ -156,7 +167,8 @@ void WidgetInspectorWidget::saveAsPdf()
 
   if (fileName.isEmpty())
     return;
-  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsPdf", QVariantList() << fileName);
+
+  m_inspector->saveAsPdf(fileName);
 }
 
 void WidgetInspectorWidget::saveAsUiFile()
@@ -170,12 +182,8 @@ void WidgetInspectorWidget::saveAsUiFile()
 
   if (fileName.isEmpty())
     return;
-  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "saveAsUiFile", QVariantList() << fileName);
-}
 
-void WidgetInspectorWidget::analyzePainting()
-{
-  Endpoint::instance()->invokeObject("com.kdab.GammaRay.WidgetInspector", "analyzePainting");
+  m_inspector->saveAsUiFile(fileName);
 }
 
 #include "widgetinspectorwidget.moc"

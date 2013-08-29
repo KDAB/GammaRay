@@ -31,6 +31,8 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class WidgetInspectorInterface;
+
 namespace Ui {
   class WidgetInspectorWidget;
 }
@@ -52,10 +54,9 @@ class WidgetInspectorWidget : public QWidget
     void saveAsPdf();
     void saveAsUiFile();
 
-    void analyzePainting();
-
   private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;
+    WidgetInspectorInterface *m_inspector;
 };
 
 }

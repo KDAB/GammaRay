@@ -1,11 +1,11 @@
 /*
-  widgetinspector.cpp
+  widgetinspectorinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,14 +21,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "widgetinspector.h"
+#include "widgetinspectorinterface.h"
 
-#include <QtPlugin>
+#include <common/network/objectbroker.h>
 
 using namespace GammaRay;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(WidgetInspectorFactory)
-#endif
+WidgetInspectorInterface::WidgetInspectorInterface(QObject *parent)
+  : QObject(parent)
+{
+  ObjectBroker::registerObject<WidgetInspectorInterface*>(this);
+}
 
-#include "widgetinspector.moc"
+WidgetInspectorInterface::~WidgetInspectorInterface()
+{
+
+}
+
+
+#include "widgetinspectorinterface.moc"

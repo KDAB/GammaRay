@@ -7,6 +7,9 @@ include_directories(
 
 set(gammaray_widgetinspector_plugin_srcs
   widgetinspector.cpp
+  widgetinspectorinterface.cpp
+  widgetinspectorserver.cpp
+  widgetinspectorclient.cpp
   widgetinspectorwidget.cpp
   overlaywidget.cpp
   widgettreemodel.cpp
