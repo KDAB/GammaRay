@@ -65,6 +65,9 @@ class SignalHistoryModel : public QAbstractItemModel
     static const QString ITEM_TYPE_NAME_OBJECT;
     static const QString ITEM_TYPE_NAME_EVENT;
 
+    static const size_t ITEM_TYPE_MASK = 3;
+    static const size_t ITEM_POINTER_MASK = ~ITEM_TYPE_MASK;
+
     enum ItemType {
       ObjectItem,
       EventItem
@@ -115,18 +118,18 @@ class SignalHistoryModel : public QAbstractItemModel
 template<SignalHistoryModel::ItemType type>
 inline void * SignalHistoryModel::itemPointer(void *p)
 {
-  const qintptr q = reinterpret_cast<qintptr>(p) & ~static_cast<qintptr>(3);
+  const size_t q = reinterpret_cast<size_t>(p) & ITEM_POINTER_MASK;
   return reinterpret_cast<void *>(q | type);
 }
 
 inline SignalHistoryModel::ItemType SignalHistoryModel::itemType(const QModelIndex &index)
 {
-  return static_cast<ItemType>(index.internalId() & 3);
+  return static_cast<ItemType>(index.internalId() & ITEM_TYPE_MASK);
 }
 
 inline SignalHistoryModel::Item * SignalHistoryModel::item(const QModelIndex &index)
 {
-  return reinterpret_cast<Item *>(index.internalId() & ~static_cast<qintptr>(3));
+  return reinterpret_cast<Item *>(index.internalId() & ITEM_POINTER_MASK);
 }
 
 } // namespace GammaRay
