@@ -40,9 +40,9 @@ MethodInvocationDialog::MethodInvocationDialog(QWidget *parent)
   connect(ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
   connect(ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
-  ui->connectionTypeComboBox->addItem(tr("Auto"), Qt::AutoConnection);
-  ui->connectionTypeComboBox->addItem(tr("Direct"), Qt::DirectConnection);
-  ui->connectionTypeComboBox->addItem(tr("Queued"), Qt::QueuedConnection);
+  ui->connectionTypeComboBox->addItem(tr("Auto"), QVariant::fromValue(Qt::AutoConnection));
+  ui->connectionTypeComboBox->addItem(tr("Direct"), QVariant::fromValue(Qt::DirectConnection));
+  ui->connectionTypeComboBox->addItem(tr("Queued"), QVariant::fromValue(Qt::QueuedConnection));
 }
 
 MethodInvocationDialog::~MethodInvocationDialog()
