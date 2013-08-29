@@ -150,7 +150,7 @@ Probe::Probe(QObject *parent):
   Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
-  Server* server = new Server(this);
+  new Server(this);
 
   StreamOperators::registerOperators();
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);

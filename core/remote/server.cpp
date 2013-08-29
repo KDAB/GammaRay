@@ -209,7 +209,7 @@ void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QStri
   }
 }
 
-void Server::objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object)
+void Server::objectDestroyed(Protocol::ObjectAddress /*objectAddress*/, const QString &objectName, QObject *object)
 {
   m_signalForwards.remove(object);
 
