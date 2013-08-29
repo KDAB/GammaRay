@@ -28,6 +28,7 @@ set(gammaray_runner_srcs
   connectpage.cpp
   networkdiscoverymodel.cpp
   launchoptions.cpp
+  clientlauncher.cpp
 
   attachdialog.cpp
   processmodel.cpp

@@ -27,6 +27,7 @@
 #include "injector/injectorfactory.h"
 #include "launcherwindow.h"
 #include "launchoptions.h"
+#include "clientlauncher.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -156,6 +157,11 @@ int main(int argc, char **argv)
   }
 
   if (injector) {
+    ClientLauncher client;
+    if (!options.useInProcessUi() && !client.launch("127.0.0.1")) {
+      err << "Failed to launch GammaRay client!";
+      return 1;
+    }
     if (options.isAttach()) {
       if (!injector->attach(options.pid(), probeDll, QLatin1String("gammaray_probe_inject"))) {
         err << "Unable to attach injector " << injector->name() << endl;
@@ -163,8 +169,10 @@ int main(int argc, char **argv)
         if (!injector->errorString().isEmpty()) {
           err << "Error: " << injector->errorString() << endl;
         }
+        client.terminate();
         return 1;
       } else {
+        client.waitForFinished();
         return 0;
       }
     } else {
@@ -174,11 +182,12 @@ int main(int argc, char **argv)
         if (!injector->errorString().isEmpty()) {
           err << "Error: " << injector->errorString() << endl;
         }
+        client.terminate();
         return 1;
       }
+      client.waitForFinished();
       return injector->exitCode();
     }
-    return 1;
   }
 
   if (injectorType.isEmpty()) {

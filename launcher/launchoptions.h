@@ -39,11 +39,13 @@ public:
   int pid() const;
 
   /** In-process UI setting. */
+  bool useInProcessUi() const;
   void setUseInProcessUi(bool enable);
 
 private:
   QStringList m_launchArguments;
   int m_pid;
+  bool m_inProcessUi;
   QHash<QByteArray, QByteArray> m_probeSettings;
 };
 }
