@@ -213,7 +213,10 @@ void GdbInjector::addBreakpoint(const QByteArray &method)
 
 bool GdbInjector::selfTest()
 {
-  return startGdb(QStringList() << QLatin1String("--version"));
+  if (startGdb(QStringList() << QLatin1String("--version"))) {
+    return m_process->waitForFinished(-1);
+  }
+  return false;
 }
 
 #include "gdbinjector.moc"
