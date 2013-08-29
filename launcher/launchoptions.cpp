@@ -50,6 +50,11 @@ void LaunchOptions::setPid(int pid)
   Q_ASSERT(m_pid <= 0 || m_launchArguments.isEmpty());
 }
 
+void LaunchOptions::setUseInProcessUi(bool enable)
+{
+  setProbeSetting("InProcessUi", enable);
+}
+
 void LaunchOptions::sendProbeSettings()
 {
   // for now just use env vars, in order to make this work with attaching as well

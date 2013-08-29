@@ -53,6 +53,7 @@ static void usage(const char *argv0)
   out << "                          \t" << InjectorFactory::availableInjectors().join(", ")
       << endl;
   out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
+  out << "     --inprocess          \tuse in-process UI" << endl;
   out << " -h, --help               \tprint program help and exit" << endl;
   out << " -v, --version            \tprint program version and exit" << endl;
   out << endl
@@ -100,6 +101,12 @@ int main(int argc, char **argv)
       out << "Copyright (C) 2010-2013 Klaralvdalens Datakonsult AB, "
           << "a KDAB Group company, info@kdab.com" << endl;
       return 0;
+    }
+    if (arg == QLatin1String("--inprocess")) {
+      options.setUseInProcessUi(true);
+    }
+    if (arg == QLatin1String("--no-inprocess")) {
+      options.setUseInProcessUi(false);
     }
     if (arg == QLatin1String("-filtertest")) {
       qputenv("GAMMARAY_TEST_FILTER", "1");

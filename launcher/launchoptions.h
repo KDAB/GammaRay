@@ -38,6 +38,9 @@ public:
   void setPid(int pid);
   int pid() const;
 
+  /** In-process UI setting. */
+  void setUseInProcessUi(bool enable);
+
 private:
   QStringList m_launchArguments;
   int m_pid;
