@@ -23,6 +23,7 @@
 
 #include "server.h"
 #include "probe.h"
+#include "probesettings.h"
 
 #include <network/protocol.h>
 #include <network/message.h>
@@ -45,14 +46,26 @@ Server::Server(QObject *parent) :
   m_broadcastTimer(new QTimer(this)),
   m_broadcastSocket(new QUdpSocket(this))
 {
-  connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
-  m_tcpServer->listen(QHostAddress::Any, defaultPort());
+  if (!ProbeSettings::value("RemoteAccessEnabled", true).toBool())
+    return;
 
-  m_broadcastTimer->setInterval(5 * 1000);
-  m_broadcastTimer->setSingleShot(false);
-  m_broadcastTimer->start();
-  connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
-  connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(start()));
+  const QHostAddress address(ProbeSettings::value("TCPServer", QLatin1String("0.0.0.0")).toString());
+
+  connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
+  m_tcpServer->listen(address, defaultPort());
+
+  // broadcast announcement only if we are actually listinging to remote connections
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  if (address.toString() != "127.0.0.1" && address.toString() != "::1") {
+#else
+  if (!address.isLoopback()) {
+#endif
+    m_broadcastTimer->setInterval(5 * 1000);
+    m_broadcastTimer->setSingleShot(false);
+    m_broadcastTimer->start();
+    connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
+    connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(start()));
+  }
 }
 
 Server::~Server()
