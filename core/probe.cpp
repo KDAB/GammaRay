@@ -31,6 +31,7 @@
 #include "connectionmodel.h"
 #include "toolmodel.h"
 #include "readorwritelocker.h"
+#include "probesettings.h"
 
 #include "tools/modelinspector/modeltest.h"
 
@@ -268,7 +269,7 @@ void Probe::delayedInit()
 
   Server::instance()->setLabel(qApp->applicationName()); // TODO use the same logic from MainWindow title
 
-  if (canShowWidgets()) {
+  if (canShowWidgets() && ProbeSettings::value("InProcessUi", true).toBool()) {
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
     s_listener()->filterThread = QThread::currentThread();
     GammaRay::MainWindow *window = new GammaRay::MainWindow;
