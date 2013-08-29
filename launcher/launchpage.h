@@ -30,6 +30,7 @@ class QStringListModel;
 
 namespace GammaRay {
 
+class LaunchOptions;
 namespace Ui {
   class LaunchPage;
 }
@@ -41,10 +42,8 @@ class LaunchPage : public QWidget
     explicit LaunchPage(QWidget *parent = 0);
     ~LaunchPage();
 
+    LaunchOptions launchOptions() const;
     QStringList launchArguments() const;
-
-    typedef QVector<QPair<QByteArray, QByteArray> > Environment;
-    Environment launchEnvironment() const;
 
     bool isValid();
 

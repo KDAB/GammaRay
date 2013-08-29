@@ -26,6 +26,7 @@
 #include "probefinder.h"
 #include "injector/injectorfactory.h"
 #include "launcherwindow.h"
+#include "launchoptions.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -79,7 +80,7 @@ int main(int argc, char **argv)
                                           << QLatin1String("-graphicssystem");
 
   QString injectorType;
-  int pid = -1;
+  LaunchOptions options;
   while (!args.isEmpty() && args.first().startsWith('-')) {
     const QString arg = args.takeFirst();
     if ((arg == QLatin1String("-i") || arg == QLatin1String("--injector")) && !args.isEmpty()) {
@@ -87,7 +88,7 @@ int main(int argc, char **argv)
       continue;
     }
     if ((arg == QLatin1String("-p") || arg == QLatin1String("--pid")) && !args.isEmpty()) {
-      pid = args.takeFirst().toInt();
+      options.setPid( args.takeFirst().toInt() );
       continue;
     }
     if (arg == QLatin1String("-h") || arg == QLatin1String("--help")) {
@@ -116,30 +117,29 @@ int main(int argc, char **argv)
       }
     }
   }
+  options.setLaunchArguments(args);
 
-  if (args.isEmpty() && pid <= 0) {
+  if (!options.isValid()) {
     LauncherWindow dialog;
     if (dialog.exec() == QDialog::Accepted) {
-      args = dialog.launchArguments();
-      typedef QPair<QByteArray, QByteArray> EnvVar;
-      foreach (const EnvVar &envVar, dialog.launchEnvironment())
-        qputenv("GAMMARAY_" + envVar.first, envVar.second);
-      bool ok;
-      pid = dialog.pid().toInt(&ok);
-      if (!ok && args.isEmpty()) {
+      options = dialog.launchOptions();
+      options.setPid(dialog.pid().toInt());
+      if (!options.isValid()) {
         return 0;
       }
     } else {
       return 0;
     }
   }
+  Q_ASSERT(options.isValid());
 
   const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
   qputenv("GAMMARAY_PROBE_PATH", QFileInfo(probeDll).absolutePath().toLocal8Bit());
+  options.sendProbeSettings();
 
   AbstractInjector::Ptr injector;
   if (injectorType.isEmpty()) {
-    if (pid > 0) {
+    if (options.isAttach()) {
       injector = InjectorFactory::defaultInjectorForAttach();
     } else {
       injector = InjectorFactory::defaultInjectorForLaunch();
@@ -149,8 +149,8 @@ int main(int argc, char **argv)
   }
 
   if (injector) {
-    if (pid > 0) {
-      if (!injector->attach(pid, probeDll, QLatin1String("gammaray_probe_inject"))) {
+    if (options.isAttach()) {
+      if (!injector->attach(options.pid(), probeDll, QLatin1String("gammaray_probe_inject"))) {
         err << "Unable to attach injector " << injector->name() << endl;
         err << "Exit code: " << injector->exitCode() << endl;
         if (!injector->errorString().isEmpty()) {
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
         return 0;
       }
     } else {
-      if (!injector->launch(args, probeDll, QLatin1String("gammaray_probe_inject"))) {
+      if (!injector->launch(options.launchArguments(), probeDll, QLatin1String("gammaray_probe_inject"))) {
         err << "Failed to launch injector " << injector->name() << endl;
         err << "Exit code: " << injector->exitCode() << endl;
         if (!injector->errorString().isEmpty()) {
@@ -175,7 +175,7 @@ int main(int argc, char **argv)
   }
 
   if (injectorType.isEmpty()) {
-    if (pid > 0) {
+    if (options.isAttach()) {
 #if defined(Q_OS_WIN)
       err << "Sorry, but at this time there is no attach injector on the Windows platform" << endl;
       err << "Only the launch injector windll is available on Windows" << endl;

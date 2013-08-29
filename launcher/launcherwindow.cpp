@@ -24,6 +24,7 @@
 #include "launcherwindow.h"
 #include "ui_launcherwindow.h"
 #include "config-gammaray-version.h"
+#include "launchoptions.h"
 
 #include <QPushButton>
 #include <QSettings>
@@ -61,20 +62,12 @@ QString LauncherWindow::pid() const
   return QString();
 }
 
-QStringList LauncherWindow::launchArguments() const
+LaunchOptions LauncherWindow::launchOptions() const
 {
   if (ui->tabWidget->currentWidget() == ui->launchPage) {
-    return ui->launchPage->launchArguments();
+    return ui->launchPage->launchOptions();
   }
-  return QStringList();
-}
-
-LauncherWindow::Environment LauncherWindow::launchEnvironment() const
-{
-  if (ui->tabWidget->currentWidget() == ui->launchPage) {
-    return ui->launchPage->launchEnvironment();
-  }
-  return Environment();
+  return LaunchOptions();
 }
 
 void LauncherWindow::tabChanged()

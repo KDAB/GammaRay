@@ -23,6 +23,7 @@
 
 #include "launchpage.h"
 #include "ui_launchpage.h"
+#include "launchoptions.h"
 
 #include <QCompleter>
 #include <QFileDialog>
@@ -83,34 +84,33 @@ QStringList LaunchPage::notEmptyString(const QStringList &list) const
   return notEmptyStringList;
 }
 
-QStringList LaunchPage::launchArguments() const
+LaunchOptions LaunchPage::launchOptions() const
 {
+  LaunchOptions opt;
+
   QStringList l;
   l.push_back(ui->progEdit->text());
   l.append(notEmptyString(m_argsModel->stringList()));
-  return l;
-}
+  opt.setLaunchArguments(l);
 
-LaunchPage::Environment LaunchPage::launchEnvironment() const
-{
-  Environment env;
   switch (ui->accessMode->currentIndex()) {
     case 0: // local, out-of-process
-      env.push_back(qMakePair<QByteArray, QByteArray>("RemoteAccessEnabled", "true"));
-      env.push_back(qMakePair<QByteArray, QByteArray>("TCPServer", "127.0.0.1"));
-      env.push_back(qMakePair<QByteArray, QByteArray>("InProcessUi", "false"));
+      opt.setProbeSetting("RemoteAccessEnabled", true);
+      opt.setProbeSetting("TCPServer", "127.0.0.1");
+      opt.setProbeSetting("InProcessUi", false);
       break;
     case 1: // remote, out-of-process
-      env.push_back(qMakePair<QByteArray, QByteArray>("RemoteAccessEnabled", "true"));
-      env.push_back(qMakePair<QByteArray, QByteArray>("TCPServer", "0.0.0.0"));
-      env.push_back(qMakePair<QByteArray, QByteArray>("InProcessUi", "false"));
+      opt.setProbeSetting("RemoteAccessEnabled", true);
+      opt.setProbeSetting("TCPServer", "0.0.0.0");
+      opt.setProbeSetting("InProcessUi", false);
       break;
     case 2: // in-process
-      env.push_back(qMakePair<QByteArray, QByteArray>("RemoteAccessEnabled", "false"));
-      env.push_back(qMakePair<QByteArray, QByteArray>("InProcessUi", "true"));
+      opt.setProbeSetting("RemoteAccessEnabled", false);
+      opt.setProbeSetting("InProcessUi", true);
       break;
   }
-  return env;
+
+  return opt;
 }
 
 void LaunchPage::showFileDialog()

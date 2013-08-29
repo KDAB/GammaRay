@@ -27,6 +27,7 @@ set(gammaray_runner_srcs
   selftestpage.cpp
   connectpage.cpp
   networkdiscoverymodel.cpp
+  launchoptions.cpp
 
   attachdialog.cpp
   processmodel.cpp
