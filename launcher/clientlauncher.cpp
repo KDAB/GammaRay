@@ -4,6 +4,7 @@ using namespace GammaRay;
 
 ClientLauncher::ClientLauncher()
 {
+  m_process.setProcessChannelMode(QProcess::ForwardedChannels);
 }
 
 ClientLauncher::~ClientLauncher()
