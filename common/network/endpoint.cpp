@@ -65,8 +65,7 @@ void Endpoint::send(const Message& msg)
 
 bool Endpoint::isConnected()
 {
-  Q_ASSERT(s_instance);
-  return s_instance->m_socket;
+  return s_instance && s_instance->m_socket;
 }
 
 quint16 Endpoint::defaultPort()
