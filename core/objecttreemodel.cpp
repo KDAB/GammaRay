@@ -60,7 +60,9 @@ static QObject *parentObject(QObject *obj)
 #if 0
   // QQuickItem does very ugly things with its parent, so we have to try harder to get hold of it...
   if (obj->inherits("QQuickItem")) {
-    return obj->property("parent").value<QObject*>();
+    QObject *p = obj->property("parent").value<QObject*>();
+    if (Probe::instance()->isValidObject(p))
+      return p;
   }
 #endif
 
