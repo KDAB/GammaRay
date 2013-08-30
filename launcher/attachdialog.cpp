@@ -86,6 +86,22 @@ LaunchOptions AttachDialog::launchOptions() const
 {
   LaunchOptions opt;
   opt.setPid(pid());
+
+  switch (ui.accessMode->currentIndex()) {
+    case 0: // local, out-of-process
+      opt.setProbeSetting("TCPServer", "127.0.0.1");
+      opt.setUseInProcessUi(false);
+      break;
+    case 1: // remote, out-of-process
+      opt.setProbeSetting("TCPServer", "0.0.0.0");
+      opt.setUseInProcessUi(false);
+      break;
+    case 2: // in-process
+      opt.setProbeSetting("RemoteAccessEnabled", false);
+      opt.setUseInProcessUi(true);
+      break;
+  }
+
   return opt;
 }
 
