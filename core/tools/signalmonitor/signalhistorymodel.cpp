@@ -262,21 +262,13 @@ SignalHistoryModel::Item::Item(const QModelIndex &index)
   , metaObject(object->metaObject()) // FIXME: how about non-static meta objects?
   , startTime(RelativeClock::sinceAppStart()->mSecs())
 {
+  const QAbstractItemModel *const model = index.model();
 
-  updateFromModel(index);
-}
+  internString(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString(), &objectName);
+  internString(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString(), &objectType);
 
-void SignalHistoryModel::Item::updateFromModel(const QModelIndex &index)
-{
-  if (object) {
-    const QAbstractItemModel *const model = index.model();
-
-    internString(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString(), &objectName);
-    internString(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString(), &objectType);
-
-    toolTip = model->data(model->index(index.row(), 0, index.parent()), Qt::ToolTipRole).toString();
-    decoration = model->data(model->index(index.row(), 0, index.parent()), Qt::DecorationRole).value<QIcon>();
-  }
+  toolTip = model->data(model->index(index.row(), 0, index.parent()), Qt::ToolTipRole).toString();
+  decoration = model->data(model->index(index.row(), 0, index.parent()), Qt::DecorationRole).value<QIcon>();
 }
 
 qint64 SignalHistoryModel::Item::endTime(/*qint64 now*/) const

@@ -44,7 +44,6 @@ class SignalHistoryModel : public QAbstractItemModel
     struct Item
     {
       Item(const QModelIndex &index);
-      void updateFromModel(const QModelIndex &index);
 
       const QPointer<QObject> object;
       const QMetaObject *const metaObject;
