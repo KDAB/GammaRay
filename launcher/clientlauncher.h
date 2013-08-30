@@ -12,9 +12,15 @@ public:
   ClientLauncher();
   ~ClientLauncher();
 
-  bool launch(const QString &hostName); // TODO add port eventually
+  bool launch(const QString &hostName, quint16 port = 0);
   void terminate();
   void waitForFinished();
+
+  static void launchDetached(const QString &hostName, quint16 port = 0);
+
+private:
+  static QString clientPath();
+  static QStringList makeArgs(const QString &hostName, quint16 port);
 
 private:
   QProcess m_process;

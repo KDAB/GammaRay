@@ -24,6 +24,7 @@
 #include "connectpage.h"
 #include "ui_connectpage.h"
 #include "networkdiscoverymodel.h"
+#include "clientlauncher.h"
 
 #include <network/endpoint.h>
 
@@ -59,11 +60,7 @@ bool ConnectPage::isValid() const
 
 void ConnectPage::launchClient()
 {
-  QStringList args;
-  args.push_back(ui->host->text());
-  args.push_back(QString::number(ui->port->value()));
-  // TODO be more clever in finding the executable
-  QProcess::startDetached("gammaray-client", args);
+  ClientLauncher::launchDetached(ui->host->text(), ui->port->value());
 }
 
 void ConnectPage::writeSettings()
