@@ -55,10 +55,14 @@ static QObject *parentObject(QObject *obj)
     return obj->parent();
   }
 
+  // FIXME: this is still valid, but way too unstable since we miss reparentings
+  // so for now rather live with the wrong hierarchy than crashes/asserts
+#if 0
   // QQuickItem does very ugly things with its parent, so we have to try harder to get hold of it...
   if (obj->inherits("QQuickItem")) {
     return obj->property("parent").value<QObject*>();
   }
+#endif
 
   return 0;
 }
