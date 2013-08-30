@@ -41,7 +41,7 @@ const QString SignalHistoryModel::ITEM_TYPE_NAME_EVENT = "Event";
 
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
   : QAbstractItemModel(parent)
-  , m_objectTreeModel(probe->objectTreeModel())
+  , m_objectTreeModel(probe->objectListModel())
   , m_signalMapper(new MultiSignalMapper(this))
 {
   connect(m_objectTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
