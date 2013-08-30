@@ -73,8 +73,8 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     void registerModel(const QString& objectName, QAbstractItemModel* model);
 
 
-    GammaRay::MainWindow *window() const;
-    void setWindow(GammaRay::MainWindow *window);
+    QObject *window() const;
+    void setWindow(QObject *window);
 
     QObject *probe() const;
 
@@ -135,7 +135,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     MetaObjectTreeModel *m_metaObjectTreeModel;
     ConnectionModel *m_connectionModel;
     ToolModel *m_toolModel;
-    GammaRay::MainWindow *m_window;
+    QObject *m_window;
     QSet<QObject*> m_validObjects;
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;

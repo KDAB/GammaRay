@@ -198,12 +198,12 @@ QThread* Probe::filteredThread()
   return s_listener()->filterThread;
 }
 
-void Probe::setWindow(GammaRay::MainWindow *window)
+void Probe::setWindow(QObject *window)
 {
   m_window = window;
 }
 
-GammaRay::MainWindow *Probe::window() const
+QObject* Probe::window() const
 {
   return m_window;
 }
