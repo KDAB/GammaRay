@@ -54,18 +54,13 @@ LauncherWindow::~LauncherWindow()
   delete ui;
 }
 
-QString LauncherWindow::pid() const
-{
-  if (ui->tabWidget->currentWidget() == ui->attachPage) {
-    return ui->attachPage->pid();
-  }
-  return QString();
-}
-
 LaunchOptions LauncherWindow::launchOptions() const
 {
-  if (ui->tabWidget->currentWidget() == ui->launchPage) {
+  QWidget *current = ui->tabWidget->currentWidget();
+  if (current == ui->launchPage) {
     return ui->launchPage->launchOptions();
+  } else if (current == ui->attachPage) {
+    return ui->attachPage->launchOptions();
   }
   return LaunchOptions();
 }

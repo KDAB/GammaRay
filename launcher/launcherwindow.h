@@ -40,10 +40,7 @@ class LauncherWindow : public QDialog
     explicit LauncherWindow(QWidget *parent = 0);
     ~LauncherWindow();
 
-    /// returns the selected PID, if the attach page is active
-    QString pid() const;
-
-    /// returns the command and arguments, if the launch page is active
+    /// returns all information required to perform the launch/attach
     LaunchOptions launchOptions() const;
 
     void accept();

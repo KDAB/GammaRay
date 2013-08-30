@@ -23,6 +23,7 @@
 
 #include "attachdialog.h"
 
+#include "launchoptions.h"
 #include "processfiltermodel.h"
 #include "processmodel.h"
 
@@ -81,9 +82,16 @@ bool AttachDialog::isValid() const
   return ui.view->currentIndex().isValid();
 }
 
-QString AttachDialog::pid() const
+LaunchOptions AttachDialog::launchOptions() const
 {
-  return ui.view->currentIndex().data(ProcessModel::PIDRole).toString();
+  LaunchOptions opt;
+  opt.setPid(pid());
+  return opt;
+}
+
+int AttachDialog::pid() const
+{
+  return ui.view->currentIndex().data(ProcessModel::PIDRole).toInt();
 }
 
 void AttachDialog::updateProcesses()
@@ -99,7 +107,7 @@ void AttachDialog::updateProcessesFinished()
   QFutureWatcher<ProcDataList>* watcher = dynamic_cast<QFutureWatcher<ProcDataList>*>(sender());
   Q_ASSERT(watcher);
   ui.stackedWidget->setCurrentWidget(ui.listViewPage);
-  const QString oldPid = pid();
+  const int oldPid = pid();
   m_model->mergeProcesses(watcher->result());
   if (oldPid != pid()) {
     ui.view->setCurrentIndex(QModelIndex());

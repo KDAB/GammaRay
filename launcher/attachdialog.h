@@ -31,6 +31,7 @@
 
 namespace GammaRay {
 
+class LaunchOptions;
 class ProcessModel;
 class ProcessFilterModel;
 
@@ -41,7 +42,9 @@ class AttachDialog : public QWidget
   public:
     explicit AttachDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
-    QString pid() const;
+    LaunchOptions launchOptions() const;
+    int pid() const;
+
     /// Returns @c true if a valid process is selected.
     bool isValid() const;
 

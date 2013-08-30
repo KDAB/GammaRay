@@ -167,7 +167,7 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
       return data.user;
     }
   } else if (role == PIDRole) {
-    return data.ppid;
+    return data.ppid.toInt(); // why is this a QString in the first place!?
   } else if (role == NameRole) {
     return data.image.isEmpty() ? data.name : data.image;
   } else if (role == StateRole) {

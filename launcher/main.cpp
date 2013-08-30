@@ -129,16 +129,12 @@ int main(int argc, char **argv)
 
   if (!options.isValid()) {
     LauncherWindow dialog;
-    if (dialog.exec() == QDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted)
       options = dialog.launchOptions();
-      options.setPid(dialog.pid().toInt());
-      if (!options.isValid()) {
-        return 0;
-      }
-    } else {
-      return 0;
-    }
   }
+
+  if (!options.isValid())
+    return 0;
   Q_ASSERT(options.isValid());
 
   const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
