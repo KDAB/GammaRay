@@ -28,6 +28,7 @@
 #include "relativeclock.h"
 
 #include <QLocale>
+#include <QSet>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QVector<qint64>)
@@ -243,14 +244,14 @@ static void internString(const QString &input, QString *result)
 {
   // Compare identities to figure out of the input is interned already.
   if (input.constData() != result->constData()) {
-    static QHash<QString, QString> pool;
+    static QSet<QString> pool;
 
     // Check if the pool already contains the string...
-    QHash<QString, QString>::iterator it = pool.find(input);
+    QSet<QString>::iterator it = pool.find(input);
 
     // ...and insert if if needed.
     if (it == pool.end())
-      it = pool.insert(input, input);
+      pool.insert(input);
 
     *result = input;
   }
