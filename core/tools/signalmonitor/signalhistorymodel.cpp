@@ -237,24 +237,23 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
   }
 }
 
-/// Tries to reuse an already existing instances of \param input by checking
-/// a global string pool. If no instance of \param input is interned yet the
+/// Tries to reuse an already existing instances of \param str by checking
+/// a global string pool. If no instance of \param str is interned yet the
 /// string will be added to the pool.
-static void internString(const QString &input, QString *result)
+static QString internString(const QString &str)
 {
-  // Compare identities to figure out of the input is interned already.
-  if (input.constData() != result->constData()) {
-    static QSet<QString> pool;
+  static QSet<QString> pool;
 
-    // Check if the pool already contains the string...
-    QSet<QString>::iterator it = pool.find(input);
+  // Check if the pool already contains the string...
+  const QSet<QString>::const_iterator it = pool.find(str);
 
-    // ...and insert if if needed.
-    if (it == pool.end())
-      pool.insert(input);
+  //  ...and return it if possible.
+  if (it != pool.end())
+    return *it;
 
-    *result = input;
-  }
+  // Otherwise add the string to the pool.
+  pool.insert(str);
+  return str;
 }
 
 SignalHistoryModel::Item::Item(const QModelIndex &index)
@@ -264,9 +263,8 @@ SignalHistoryModel::Item::Item(const QModelIndex &index)
 {
   const QAbstractItemModel *const model = index.model();
 
-  internString(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString(), &objectName);
-  internString(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString(), &objectType);
-
+  objectName = internString(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString());
+  objectType = internString(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString());
   toolTip = model->data(model->index(index.row(), 0, index.parent()), Qt::ToolTipRole).toString();
   decoration = model->data(model->index(index.row(), 0, index.parent()), Qt::DecorationRole).value<QIcon>();
 }
