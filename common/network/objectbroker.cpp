@@ -169,7 +169,7 @@ QItemSelectionModel* ObjectBroker::selectionModel(QAbstractItemModel* model)
     }
 
     if (selectionModel) {
-      s_objectBroker()->selectionModels.insert(model, selectionModel);
+      registerSelectionModel(selectionModel);
       return selectionModel;
     }
   }
