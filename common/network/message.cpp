@@ -143,5 +143,6 @@ void Message::write(QIODevice* device) const
   if (!m_buffer.isEmpty()) {
     const int s = device->write(m_buffer);
     Q_ASSERT(s == m_buffer.size());
+    Q_UNUSED(s);
   }
 }

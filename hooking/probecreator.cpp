@@ -92,6 +92,7 @@ void ProbeCreator::createProbe()
 
   const bool success = Probe::createProbe();
   Q_ASSERT(success);
+  Q_UNUSED(success);
 
   Q_ASSERT(Probe::instance());
   QMetaObject::invokeMethod(Probe::instance(), "delayedInit", Qt::QueuedConnection);
