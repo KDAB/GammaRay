@@ -597,7 +597,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
   if (event->type() == QEvent::MouseButtonRelease) {
     QMouseEvent *mouseEv = static_cast<QMouseEvent*>(event);
     if (mouseEv->button() == Qt::LeftButton &&
-        mouseEv->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier)) {
+        mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
       QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
       if (widget) {
         emit widgetSelected(widget, widget->mapFromGlobal(mouseEv->globalPos()));
