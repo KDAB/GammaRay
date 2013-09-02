@@ -26,7 +26,6 @@
 
 #include "include/toolfactory.h"
 
-#include "tools/codecbrowser/codecbrowser.h"
 #include "tools/connectioninspector/connectioninspector.h"
 #include "tools/localeinspector/localeinspector.h"
 #include "tools/metatypebrowser/metatypebrowser.h"
@@ -66,7 +65,6 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new MetaObjectBrowserFactory(this));
   m_tools.push_back(new MetaTypeBrowserFactory(this));
   m_tools.push_back(new SelectionModelInspectorFactory(this));
-  m_tools.push_back(new CodecBrowserFactory(this));
   m_tools.push_back(new TextDocumentInspectorFactory(this));
   m_tools.push_back(new MessageHandlerFactory(this));
   m_tools.push_back(new LocaleInspectorFactory(this));

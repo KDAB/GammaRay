@@ -45,12 +45,10 @@ set(gammaray_srcs
   tools/localeinspector/localemodel.cpp
   tools/localeinspector/localedataaccessor.cpp
   tools/localeinspector/localeaccessormodel.cpp
-  tools/codecbrowser/codecmodel.cpp
   tools/textdocumentinspector/textdocumentmodel.cpp
   tools/textdocumentinspector/textdocumentformatmodel.cpp
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp
-  tools/codecbrowser/codecbrowser.cpp
   tools/connectioninspector/connectioninspector.cpp
   tools/localeinspector/localeinspector.cpp
   tools/metaobjectbrowser/metaobjectbrowser.cpp

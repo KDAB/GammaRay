@@ -24,9 +24,9 @@
 #ifndef GAMMARAY_CODECBROWSER_CODECBROWSER_H
 #define GAMMARAY_CODECBROWSER_CODECBROWSER_H
 
-#include "include/toolfactory.h"
+#include <include/toolfactory.h>
 
-#include <ui/tools/codecbrowser/codecbrowserwidget.h>
+#include "codecbrowserwidget.h"
 
 class QItemSelection;
 class QItemSelectionModel;
@@ -61,7 +61,7 @@ class CodecBrowserFactory : public QObject, public StandardToolFactory2<QObject,
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
-    explicit CodecBrowserFactory(QObject *parent) : QObject(parent)
+    explicit CodecBrowserFactory(QObject *parent = 0) : QObject(parent)
     {
     }
 

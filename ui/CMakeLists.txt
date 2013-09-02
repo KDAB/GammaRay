@@ -57,7 +57,6 @@ set(gammaray_ui_internal_srcs
   aboutpluginsdialog.cpp
   mainwindow.cpp
 
-  tools/codecbrowser/codecbrowserwidget.cpp
   tools/connectioninspector/connectioninspectorwidget.cpp
   tools/localeinspector/localeinspectorwidget.cpp
   tools/messagehandler/messagehandlerwidget.cpp
@@ -76,7 +75,6 @@ set(gammaray_ui_internal_srcs
 qt4_wrap_ui(gammaray_ui_internal_srcs
   mainwindow.ui
 
-  tools/codecbrowser/codecbrowserwidget.ui
   tools/connectioninspector/connectioninspectorwidget.ui
   tools/localeinspector/localeinspectorwidget.ui
   tools/messagehandler/messagehandlerwidget.ui

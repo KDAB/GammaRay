@@ -24,9 +24,11 @@
 #include "codecbrowser.h"
 #include "codecmodel.h"
 
-#include <network/objectbroker.h>
+#include <common/network/objectbroker.h>
 
 #include <QItemSelectionModel>
+
+#include <QtPlugin>
 
 using namespace GammaRay;
 
@@ -65,5 +67,9 @@ void CodecBrowser::updateCodecs(const QItemSelection &selected,
 
   m_selectedCodecsModel->setCodecs(currentCodecNames);
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(CodecBrowserFactory)
+#endif
 
 #include "codecbrowser.moc"

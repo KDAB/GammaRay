@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Text Codecs
+X-GammaRay-Types=QObject;
+Exec=gammaray_codecbrowser_plugin

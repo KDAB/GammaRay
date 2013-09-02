@@ -24,3 +24,4 @@ endif()
 add_subdirectory(widgetinspector)
 
 add_subdirectory(fontbrowser)
+add_subdirectory(codecbrowser)
