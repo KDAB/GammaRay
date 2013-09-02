@@ -30,7 +30,7 @@
 
 #include <QItemSelectionModel>
 
-class QIdentityProxyModel;
+class QAbstractProxyModel;
 
 namespace GammaRay {
 
@@ -44,7 +44,7 @@ class SelectionModelInspector : public QObject
     void currentChanged(const QModelIndex &current);
 
   private:
-    QIdentityProxyModel *m_current;
+    QAbstractProxyModel *m_current;
 };
 
 class SelectionModelInspectorFactory :

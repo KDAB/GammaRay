@@ -30,7 +30,12 @@
 
 #include <QtPlugin>
 
+#if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
+#include <QSortFilterProxyModel>
+typedef QSortFilterProxyModel QIdentityProxyModel;
+#else
 #include <QIdentityProxyModel>
+#endif
 
 using namespace GammaRay;
 
