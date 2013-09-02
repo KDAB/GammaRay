@@ -77,13 +77,13 @@ void Client::messageReceived(const Message& msg)
   // server version must be the very first message we get
   if (!m_versionChecked) {
     if (msg.address() != endpointAddress() || msg.type() != Protocol::ServerVersion) {
-      qCritical() << "Protocol violation - first message is not the server version.";
+      cerr << "Protocol violation - first message is not the server version." << endl;
       exit(1);
     }
     qint32 serverVersion;
     msg.payload() >> serverVersion;
     if (serverVersion != Protocol::version()) {
-      qCritical() << "Server version is" << serverVersion << ", was expecting" << Protocol::version() << " - aborting";
+      cerr << "Server version is " << serverVersion << ", was expecting " << Protocol::version() << " - aborting" << endl;
       exit(1);
     }
     m_versionChecked = true;
