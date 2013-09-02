@@ -61,7 +61,7 @@ include(CheckLibraryExists)
 include(GammaRayMacros)
 include(MacroLogFeature)
 
-set(QT_MIN_VERSION "4.7.0")
+set(QT_MIN_VERSION "4.8.0")
 
 option(
   GAMMARAY_ENFORCE_QT4_BUILD
