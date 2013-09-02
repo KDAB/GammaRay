@@ -57,7 +57,6 @@ set(gammaray_srcs
   tools/objectinspector/objectinspector.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
-  tools/selectionmodelinspector/selectionmodelinspector.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
 
   remote/server.cpp

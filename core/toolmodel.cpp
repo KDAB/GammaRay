@@ -32,7 +32,6 @@
 #include "tools/modelinspector/modelinspector.h"
 #include "tools/objectinspector/objectinspector.h"
 #include "tools/resourcebrowser/resourcebrowser.h"
-#include "tools/selectionmodelinspector/selectionmodelinspector.h"
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
@@ -64,7 +63,6 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new ResourceBrowserFactory(this));
   m_tools.push_back(new MetaObjectBrowserFactory(this));
   m_tools.push_back(new MetaTypeBrowserFactory(this));
-  m_tools.push_back(new SelectionModelInspectorFactory(this));
   m_tools.push_back(new TextDocumentInspectorFactory(this));
   m_tools.push_back(new MessageHandlerFactory(this));
   m_tools.push_back(new LocaleInspectorFactory(this));

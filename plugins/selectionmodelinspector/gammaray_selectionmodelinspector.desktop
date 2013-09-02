@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Selection Models
+X-GammaRay-Types=QItemSelectionModel;
+Exec=gammaray_selectionmodelinspector_plugin

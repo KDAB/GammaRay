@@ -24,8 +24,9 @@
 #ifndef GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTOR_H
 #define GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTOR_H
 
-#include "include/toolfactory.h"
-#include <ui/tools/selectionmodelinspector/selectionmodelinspectorwidget.h>
+#include <include/toolfactory.h>
+
+#include "selectionmodelinspectorwidget.h"
 
 #include <QItemSelectionModel>
 
@@ -43,8 +44,9 @@ class SelectionModelInspectorFactory :
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SelectionModelInspector")
   public:
-    explicit SelectionModelInspectorFactory(QObject *parent) : QObject(parent)
+    explicit SelectionModelInspectorFactory(QObject *parent = 0) : QObject(parent)
     {
     }
 

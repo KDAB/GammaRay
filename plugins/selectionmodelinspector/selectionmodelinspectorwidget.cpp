@@ -25,7 +25,7 @@
 #include "ui_selectionmodelinspectorwidget.h"
 
 #include <include/objectmodel.h>
-#include <network/objectbroker.h>
+#include <common/network/objectbroker.h>
 
 using namespace GammaRay;
 
@@ -47,7 +47,7 @@ SelectionModelInspectorWidget::~SelectionModelInspectorWidget()
 }
 
 void SelectionModelInspectorWidget::selectionModelSelected(const QItemSelection &selected,
-                                                     const QItemSelection &deselected)
+                                                           const QItemSelection &deselected)
 {
   Q_UNUSED(deselected);
   QModelIndex selectedRow;

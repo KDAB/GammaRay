@@ -24,10 +24,11 @@
 #ifndef GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTORWIDGET_H
 #define GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTORWIDGET_H
 
-#include "include/toolfactory.h"
+#include <include/toolfactory.h>
 
-#include <QItemSelectionModel>
 #include <QWidget>
+
+class QItemSelection;
 
 namespace GammaRay {
 
