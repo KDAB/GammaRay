@@ -16,6 +16,22 @@ target_link_libraries(propertywidgettest
   gammaray_common
 )
 
+set(gammaray_messagemodeltest_srcs
+  messagemodeltest.cpp
+)
+
+add_executable(messagemodeltest
+  ${gammaray_messagemodeltest_srcs}
+)
+
+qt4_automoc(${gammaray_messagemodeltest_srcs})
+
+target_link_libraries(messagemodeltest
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+)
+
 if(QNXNTO)
   target_link_libraries(propertywidgettest cpp)
+  target_link_libraries(messagemodeltest cpp)
 endif()
