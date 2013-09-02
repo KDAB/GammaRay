@@ -43,9 +43,6 @@ class SelectionModelInspectorWidget : public QWidget
     explicit SelectionModelInspectorWidget(QWidget *widget = 0);
     ~SelectionModelInspectorWidget();
 
-  private slots:
-    void selectionModelSelected(const QItemSelection &selected, const QItemSelection &deselected);
-
   private:
     QScopedPointer<Ui::SelectionModelInspectorWidget> ui;
 };

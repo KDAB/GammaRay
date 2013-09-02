@@ -30,6 +30,8 @@
 
 #include <QItemSelectionModel>
 
+class QAbstractProxyModel;
+
 namespace GammaRay {
 
 class SelectionModelInspector : public QObject
@@ -37,6 +39,12 @@ class SelectionModelInspector : public QObject
   Q_OBJECT
   public:
     explicit SelectionModelInspector(ProbeInterface *probe, QObject *parent = 0);
+
+  private slots:
+    void currentChanged(const QModelIndex &current);
+
+  private:
+    QAbstractProxyModel *m_current;
 };
 
 class SelectionModelInspectorFactory :
