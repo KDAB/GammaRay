@@ -51,6 +51,8 @@ private slots:
   void slotCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
   void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
+private:
+  bool m_handlingRemoteMessage;
 };
 
 }

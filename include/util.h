@@ -141,6 +141,27 @@ namespace Util {
    * @return on failure QVariant() is returned; else a QIcon
    */
   GAMMARAY_COMMON_EXPORT QVariant iconForObject(QObject *object);
+
+  /**
+   * Temporarily overwrite a given object with a new value and reset the value
+   * when the scope is exited.
+   */
+  template<class T>
+  struct SetTempValue
+  {
+    SetTempValue(T& obj, T newValue)
+    : obj(obj)
+    , oldValue(obj)
+    {
+      obj = newValue;
+    }
+    ~SetTempValue()
+    {
+      obj = oldValue;
+    }
+    T& obj;
+    T oldValue;
+  };
 }
 
 }
