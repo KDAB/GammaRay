@@ -30,7 +30,26 @@
 
 namespace GammaRay {
 
-struct Connection;
+struct Connection
+{
+  Connection()
+  : sender(0), receiver(0), type(Qt::AutoConnection), valid(false)
+  { }
+  QObject *sender;
+  QByteArray signal;
+  QObject *receiver;
+  QByteArray method;
+  QByteArray location;
+  Qt::ConnectionType type;
+  bool valid;
+};
+
+}
+
+Q_DECLARE_TYPEINFO(GammaRay::Connection, Q_MOVABLE_TYPE);
+Q_DECLARE_METATYPE(GammaRay::Connection)
+
+namespace GammaRay {
 
 class ConnectionModel : public QAbstractTableModel
 {
@@ -56,11 +75,9 @@ class ConnectionModel : public QAbstractTableModel
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
   private slots:
-    void connectionAddedMainThread(QObject *sender, const char *signal,
-                                   QObject *receiver, const char *method,
-                                   Qt::ConnectionType type);
-    void connectionRemovedMainThread(QObject *sender, const char *signal,
-                                     QObject *receiver, const char *method);
+    void connectionAddedMainThread(const GammaRay::Connection &connection);
+    void connectionRemovedMainThread(QObject *sender, const QByteArray &normalizedSignal,
+                                     QObject *receiver, const QByteArray &normalizedMethod);
 
   private:
     QVector<Connection> m_connections;

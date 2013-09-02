@@ -34,27 +34,6 @@
 #include <QMetaObject>
 #include <QThread>
 
-namespace GammaRay {
-
-struct Connection
-{
-  Connection()
-  : sender(0), receiver(0), type(Qt::AutoConnection), valid(false)
-  {
-  }
-  QObject *sender;
-  QByteArray signal;
-  QObject *receiver;
-  QByteArray method;
-  QByteArray location;
-  Qt::ConnectionType type;
-  bool valid;
-};
-
-}
-
-Q_DECLARE_TYPEINFO(GammaRay::Connection, Q_MOVABLE_TYPE);
-
 using namespace GammaRay;
 
 static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool isSender)
@@ -85,36 +64,17 @@ ConnectionModel::ConnectionModel(QObject *parent)
 {
   qRegisterMetaType<const char*>("const char*");
   qRegisterMetaType<Qt::ConnectionType>("Qt::ConnectionType");
+  qRegisterMetaType<Connection>();
 }
 
 void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
                                       QObject *receiver, const char *method,
                                       Qt::ConnectionType type)
 {
-  if (sender == this || receiver == this) {
+  if (sender == this || receiver == this || !sender || !receiver) {
     return;
   }
 
-  // when called from background, delay into foreground, otherwise call directly
-  QMetaObject::invokeMethod(this, "connectionAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject *, sender), Q_ARG(const char *, signal),
-                            Q_ARG(QObject *, receiver), Q_ARG(const char *, method),
-                            Q_ARG(Qt::ConnectionType, type));
-}
-
-void ConnectionModel::connectionAddedMainThread(QObject *sender, const char *signal,
-                                                QObject *receiver, const char *method,
-                                                Qt::ConnectionType type)
-{
-  Q_ASSERT(thread() == QThread::currentThread());
-
-  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
-  if (!Probe::instance()->isValidObject(sender) ||
-      !Probe::instance()->isValidObject(receiver)) {
-    return;
-  }
-
-  beginInsertRows(QModelIndex(), m_connections.size(), m_connections.size());
   Connection c;
   c.sender = sender;
   c.signal = QMetaObject::normalizedSignature(signal);
@@ -133,7 +93,25 @@ void ConnectionModel::connectionAddedMainThread(QObject *sender, const char *sig
   //TODO: we could check more stuff here  eg. if queued connection is possible etc.
   //and use verktygs heuristics to detect likely misconnects
 
-  m_connections.push_back(c);
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "connectionAddedMainThread", Qt::AutoConnection,
+                            Q_ARG(GammaRay::Connection, c));
+}
+
+void ConnectionModel::connectionAddedMainThread(const Connection& connection)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
+
+  {
+    ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
+    if (!Probe::instance()->isValidObject(connection.sender) ||
+        !Probe::instance()->isValidObject(connection.receiver)) {
+      return;
+    }
+  }
+
+  beginInsertRows(QModelIndex(), m_connections.size(), m_connections.size());
+  m_connections.push_back(connection);
   endInsertRows();
 }
 
@@ -144,17 +122,6 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
     return;
   }
 
-  // when called from background, delay into foreground, otherwise call directly
-  QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject *, sender), Q_ARG(const char *, signal),
-                            Q_ARG(QObject *, receiver), Q_ARG(const char *, method));
-}
-
-void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *signal,
-                                                  QObject *receiver, const char *method)
-{
-  Q_ASSERT(thread() == QThread::currentThread());
-
   QByteArray normalizedSignal, normalizedMethod;
   if (signal) {
     normalizedSignal = QMetaObject::normalizedSignature(signal);
@@ -162,6 +129,17 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *s
   if (method) {
     normalizedMethod = QMetaObject::normalizedSignature(method);
   }
+
+  // when called from background, delay into foreground, otherwise call directly
+  QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
+                            Q_ARG(QObject *, sender), Q_ARG(QByteArray, normalizedSignal),
+                            Q_ARG(QObject *, receiver), Q_ARG(QByteArray, normalizedMethod));
+}
+
+void ConnectionModel::connectionRemovedMainThread(QObject *sender, const QByteArray &normalizedSignal,
+                                                  QObject *receiver, const QByteArray &normalizedMethod)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
 
   for (int i = 0; i < m_connections.size();) {
     bool remove = false;
@@ -171,9 +149,9 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const char *s
       // might be invalidated from a background thread
       remove = true;
     } else if ((sender == 0 || con.sender == sender) &&
-        (signal == 0 || con.signal == normalizedSignal) &&
         (receiver == 0 || con.receiver == receiver) &&
-        (method == 0 || con.method == normalizedMethod)) {
+        (normalizedSignal.isEmpty() || con.signal == normalizedSignal) &&
+        (normalizedMethod.isEmpty() || con.method == normalizedMethod)) {
       // the connection was actually removed
       remove = true;
     }
