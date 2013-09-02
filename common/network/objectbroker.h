@@ -53,9 +53,11 @@ namespace ObjectBroker {
    *
    * Use this if multiple objects of the given type have been registered.
    * Otherwise the function below is simpler and more failsafe.
+   *
+   * NOTE: the "T = 0" is just to ensure a pointer type is given.
    */
   template<class T>
-  T object(const QString &name)
+  T object(const QString &name, T = 0)
   {
     T ret = qobject_cast<T>(objectInternal(name, QByteArray(qobject_interface_iid<T>())));
     Q_ASSERT(ret);
@@ -69,9 +71,11 @@ namespace ObjectBroker {
    * using qobject_interface_iid as object name.
    *
    * In most cases this is the simplest way for tools to get an object.
+   *
+   * NOTE: the "T = 0" is just to ensure a pointer type is given.
    */
   template<class T>
-  T object()
+  T object(T = 0)
   {
     const QByteArray interface(qobject_interface_iid<T>());
     T ret = qobject_cast<T>(objectInternal(QString::fromUtf8(interface), interface));
@@ -83,8 +87,14 @@ namespace ObjectBroker {
 
   /** Register a callback for a factory to create remote object stubs for the given type. */
   GAMMARAY_COMMON_EXPORT void registerClientObjectFactoryCallbackInternal(const QByteArray &type, ClientObjectFactoryCallback callback);
+
+  /**
+   * Register a callback for a factory of a given interface to create remote object stubs for the given type.
+   *
+   * NOTE: the "T = 0" is just to ensure a pointer type is given.
+   */
   template<class T>
-  void registerClientObjectFactoryCallback(ClientObjectFactoryCallback callback)
+  void registerClientObjectFactoryCallback(ClientObjectFactoryCallback callback, T = 0)
   {
     registerClientObjectFactoryCallbackInternal(QByteArray(qobject_interface_iid<T>()), callback);
   }
