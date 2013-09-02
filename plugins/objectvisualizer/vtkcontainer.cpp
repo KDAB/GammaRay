@@ -21,7 +21,6 @@
 
 #include "vtkcontainer.h"
 
-#include <QDebug>
 #include <QVBoxLayout>
 
 #include "vtkwidget.h"
@@ -43,7 +42,6 @@ GraphWidget::GraphWidget(QWidget *parent)
 
 GraphWidget::~GraphWidget()
 {
-  qDebug() << Q_FUNC_INFO;
 }
 
 #include "vtkcontainer.moc"

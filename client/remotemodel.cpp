@@ -27,9 +27,11 @@
 #include <network/message.h>
 
 #include <QDataStream>
-#include <QDebug>
+
+#include <iostream>
 
 using namespace GammaRay;
+using namespace std;
 
 RemoteModel::Node::~Node()
 {
@@ -68,7 +70,6 @@ QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) c
   if (!isConnected() || row < 0 || column < 0)
     return QModelIndex();
 
-//   qDebug() << row << column << parent << rowCount(parent);
   Node *parentNode = nodeForIndex(parent);
   Q_ASSERT(parentNode->children.size() >= parentNode->rowCount);
   if (parentNode->rowCount <= row || parentNode->columnCount <= column)
@@ -198,7 +199,6 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         break;
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
-      qDebug() << "insert" << this << index << qmi << rowCount << columnCount;
       beginInsertColumns(qmi, 0, columnCount - 1);
       node->columnCount = columnCount;
       endInsertColumns();
@@ -360,7 +360,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelLayoutChanged:
     {
       // TODO
-      qDebug() << Q_FUNC_INFO << "not implemented yet" << msg.type() << m_serverObject;
+      cerr << Q_FUNC_INFO << " not implemented yet " << msg.type() << ' ' << qPrintable(m_serverObject);
     }
 
     case Protocol::ModelReset:
@@ -456,7 +456,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 
 void RemoteModel::clear()
 {
-  qDebug() << Q_FUNC_INFO;
+  cout << Q_FUNC_INFO << endl;
   beginResetModel();
 
   Message msg(m_myAddress, Protocol::ModelSyncBarrier);

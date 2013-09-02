@@ -24,7 +24,6 @@
 #include "scenemodel.h"
 
 #include <QApplication>
-#include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QPalette>
@@ -54,7 +53,6 @@ SceneModel::SceneModel(QObject *parent)
 void SceneModel::setScene(QGraphicsScene *scene)
 {
   m_scene = scene;
-//   qDebug() << "total amount of graphics items:" << m_scene->items().size();
   reset();
 }
 

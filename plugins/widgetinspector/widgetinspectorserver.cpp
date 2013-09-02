@@ -38,7 +38,6 @@
 
 #include "other/modelutils.h"
 
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QLayout>
 #include <QItemSelectionModel>
@@ -46,11 +45,14 @@
 #include <QPixmap>
 #include <QMainWindow>
 
+#include <iostream>
+
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
 #endif
 
 using namespace GammaRay;
+using namespace std;
 
 WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *parent)
   : WidgetInspectorInterface(parent)
@@ -237,7 +239,7 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
     reinterpret_cast<void(*)(QWidget *, const QString &)>(m_externalExportActions.resolve(name));
 
   if (!function) {
-    qWarning() << m_externalExportActions.errorString();
+    cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions.errorString()) << endl;
     return;
   }
   function(widget, fileName);
@@ -245,7 +247,7 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
 
 void WidgetInspectorServer::analyzePainting()
 {
-  qDebug() << Q_FUNC_INFO << selectedWidget();
+  cout << Q_FUNC_INFO << ' ' << selectedWidget() << endl;
   QWidget *widget = selectedWidget();
   if (!widget) {
     return;

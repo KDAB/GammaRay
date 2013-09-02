@@ -28,7 +28,6 @@
 #include <network/protocol.h>
 #include <network/message.h>
 
-#include <QDebug>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QUdpSocket>
@@ -37,7 +36,10 @@
 #include <QNetworkInterface>
 #include <QSignalSpy>
 
+#include <iostream>
+
 using namespace GammaRay;
+using namespace std;
 
 Server::Server(QObject *parent) : 
   Endpoint(parent),
@@ -82,12 +84,11 @@ Server* Server::instance()
 void Server::newConnection()
 {
   if (isConnected()) {
-    qDebug() << Q_FUNC_INFO << "connected already, refusing incoming connection.";
+    cerr << Q_FUNC_INFO << " connected already, refusing incoming connection." << endl;
     m_tcpServer->nextPendingConnection()->close();
     return;
   }
 
-  qDebug() << Q_FUNC_INFO;
   m_broadcastTimer->stop();
   setDevice(m_tcpServer->nextPendingConnection());
 
@@ -118,7 +119,7 @@ void Server::messageReceived(const Message& msg)
         const QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> >::const_iterator it = m_monitorNotifiers.constFind(addr);
         if (it == m_monitorNotifiers.constEnd())
           break;
-        qDebug() << Q_FUNC_INFO << "un/monitor" << addr;
+        cout << Q_FUNC_INFO << " un/monitor " << addr;
         QMetaObject::invokeMethod(it.value().first, it.value().second, Q_ARG(bool, msg.type() == Protocol::ObjectMonitored));
         break;
       }

@@ -36,12 +36,14 @@
 #include <kde/krecursivefilterproxymodel.h>
 #include <common/network/objectbroker.h>
 
-#include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsView>
 #include <QItemSelectionModel>
 
+#include <iostream>
+
 using namespace GammaRay;
+using namespace std;
 
 SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   : QObject(parent),
@@ -78,7 +80,7 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
 
   QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-  qDebug() << Q_FUNC_INFO << scene << obj;
+  cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
   m_sceneModel->setScene(scene);
   // TODO remote support?

@@ -33,11 +33,13 @@
 
 #include <kde/krecursivefilterproxymodel.h>
 
-#include <QDebug>
 #include <QGraphicsItem>
 #include <QGraphicsView>
 
+#include <iostream>
+
 using namespace GammaRay;
+using namespace std;
 
 SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   : QWidget(parent),
@@ -75,7 +77,7 @@ void SceneInspectorWidget::sceneSelected(int index)
 
   QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-  qDebug() << Q_FUNC_INFO << scene << obj;
+  cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
   ui->graphicsSceneView->setGraphicsScene(scene);
 }
@@ -86,7 +88,8 @@ void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
   if (!selection.isEmpty())
     index = selection.first().topLeft();
 
-  qDebug() << Q_FUNC_INFO << index;
+  cout << Q_FUNC_INFO << " NOT IMPLEMENTED" << endl;
+  /// FIXME
   return;
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();

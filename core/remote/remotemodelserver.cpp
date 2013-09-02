@@ -28,10 +28,12 @@
 
 #include <QAbstractItemModel>
 #include <QDataStream>
-#include <QDebug>
 #include <QBuffer>
 
+#include <iostream>
+
 using namespace GammaRay;
+using namespace std;
 
 RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent) :
   QObject(parent),
@@ -188,7 +190,7 @@ bool RemoteModelServer::canSerialize(const QVariant& value) const
 
 void RemoteModelServer::modelMonitored(bool monitored)
 {
-  qDebug() << Q_FUNC_INFO << monitored << m_myAddress;
+  cout << Q_FUNC_INFO << ' ' << monitored << ' ' << qPrintable(m_myAddress) << endl;
   if (m_monitored == monitored)
     return;
   m_monitored = monitored;

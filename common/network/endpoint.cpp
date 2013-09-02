@@ -25,8 +25,6 @@
 #include "message.h"
 #include "methodargument.h"
 
-#include <QDebug>
-
 using namespace GammaRay;
 
 Endpoint* Endpoint::s_instance = 0;
@@ -80,7 +78,6 @@ quint16 Endpoint::broadcastPort()
 
 void Endpoint::setDevice(QIODevice* device)
 {
-  qDebug() << Q_FUNC_INFO << device;
   Q_ASSERT(!m_socket);
   Q_ASSERT(device);
   m_socket = device;
@@ -104,7 +101,6 @@ void Endpoint::readyRead()
 
 void Endpoint::connectionClosed()
 {
-  qDebug() << Q_FUNC_INFO;
   m_socket->deleteLater();
   m_socket = 0;
   emit disconnected();
@@ -166,7 +162,6 @@ void Endpoint::invokeObjectLocal(QObject *object, const char *method, const QVar
 void Endpoint::registerObjectInternal(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
   Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);
-  qDebug() << objectName << objectAddress;
 
   ObjectInfo *obj = new ObjectInfo;
   obj->address = objectAddress;
