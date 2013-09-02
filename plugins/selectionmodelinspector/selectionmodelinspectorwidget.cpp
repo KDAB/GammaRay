@@ -36,30 +36,13 @@ SelectionModelInspectorWidget::SelectionModelInspectorWidget(QWidget *widget)
 
   ui->selectionModelView->setModel(ObjectBroker::model("com.kdab.GammaRay.SelectionModelsModel"));
   ui->selectionModelView->setRootIsDecorated(false);
+  ui->selectionModelView->setSelectionModel(ObjectBroker::selectionModel(ui->selectionModelView->model()));
   ui->selectionModelVisualizer->setRootIsDecorated(false);
-  connect(ui->selectionModelView->selectionModel(),
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(selectionModelSelected(QItemSelection,QItemSelection)));
+  ui->selectionModelVisualizer->setModel(ObjectBroker::model("com.kdab.GammaRay.CurrentSelectionModel"));
 }
 
 SelectionModelInspectorWidget::~SelectionModelInspectorWidget()
 {
-}
-
-void SelectionModelInspectorWidget::selectionModelSelected(const QItemSelection &selected,
-                                                           const QItemSelection &deselected)
-{
-  Q_UNUSED(deselected);
-  QModelIndex selectedRow;
-  if (!selected.isEmpty())
-    selectedRow = selected.first().topLeft();
-  QObject *selectionModelObject = selectedRow.data(ObjectModel::ObjectRole).value<QObject*>();
-  QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel*>(selectionModelObject);
-  if (selectionModel && selectionModel->model()) {
-    ui->selectionModelVisualizer->setModel(
-      const_cast<QAbstractItemModel*>(selectionModel->model()));
-    ui->selectionModelVisualizer->setSelectionModel(selectionModel);
-  }
 }
 
 #include "selectionmodelinspectorwidget.moc"
