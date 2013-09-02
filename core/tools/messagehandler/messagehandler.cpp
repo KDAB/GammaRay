@@ -24,15 +24,13 @@
 #include "messagehandler.h"
 #include "messagemodel.h"
 
-#include <network/objectbroker.h>
+#include "backtrace.h"
 
-#include <QApplication>
+#include <network/objectbroker.h>
+#include <network/endpoint.h>
+
+#include <QCoreApplication>
 #include <QDebug>
-#include <QDialogButtonBox>
-#include <QGridLayout>
-#include <QLabel>
-#include <QListWidget>
-#include <QMessageBox>
 #include <QMutex>
 #include <QThread>
 
@@ -50,7 +48,7 @@ void handleMessage(QtMsgType type, const char *msg)
   ///WARNING: do not trigger *any* kind of debug output here
   ///         this would trigger an infinite loop and hence crash!
 
-  MessageModel::Message message;
+  DebugMessage message;
   message.type = type;
   message.message = QString::fromLocal8Bit(msg);
   message.time = QTime::currentTime();
@@ -72,53 +70,23 @@ void handleMessage(QtMsgType type, const char *msg)
     }
   }
 
-  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1" &&
-      QThread::currentThread() == QApplication::instance()->thread()) {
-    foreach (QWidget *w, qApp->topLevelWidgets()) {
-      w->setEnabled(false);
+  if (!message.backtrace.isEmpty() && (qgetenv("GAMMARAY_UNITTEST") == "1" || type == QtFatalMsg)) {
+    if (type == QtFatalMsg) {
+      cerr << "QFatal in " << qPrintable(qApp->applicationName()) << " (" << qPrintable(qApp->applicationFilePath()) << ')' << endl;
     }
-    QDialog dlg;
-    dlg.setWindowTitle(QObject::tr("QFatal in %1").
-                       arg(qApp->applicationName().isEmpty() ?
-                           qApp->applicationFilePath() :
-                           qApp->applicationName()));
-    QGridLayout *layout = new QGridLayout;
-    QLabel *iconLabel = new QLabel;
-    QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, &dlg);
-    int iconSize = dlg.style()->pixelMetric(QStyle::PM_MessageBoxIconSize, 0, &dlg);
-    iconLabel->setPixmap(icon.pixmap(iconSize, iconSize));
-    iconLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    layout->addWidget(iconLabel, 0, 0);
-    QLabel *errorLabel = new QLabel;
-    errorLabel->setTextFormat(Qt::PlainText);
-    errorLabel->setWordWrap(true);
-    errorLabel->setText(message.message);
-    layout->addWidget(errorLabel, 0, 1);
-    if (!message.backtrace.isEmpty()) {
-      QListWidget *backtrace = new QListWidget;
-      foreach (const QString &frame, message.backtrace) {
-        backtrace->addItem(frame);
-      }
-      layout->addWidget(backtrace, 1, 0, 1, 2);
-    }
-    QDialogButtonBox *buttons = new QDialogButtonBox;
-    buttons->addButton(QDialogButtonBox::Close);
-    QObject::connect(buttons, SIGNAL(accepted()),
-                     &dlg, SLOT(accept()));
-    QObject::connect(buttons, SIGNAL(rejected()),
-                     &dlg, SLOT(reject()));
-    layout->addWidget(buttons, 2, 0, 1, 2);
-    dlg.setLayout(layout);
-    dlg.adjustSize();
-    dlg.exec();
-  } else if (!message.backtrace.isEmpty() &&
-             (qgetenv("GAMMARAY_UNITTEST") == "1" || type == QtFatalMsg)) {
     cerr << "START BACKTRACE:" << endl;
     int i = 0;
     foreach (const QString &frame, message.backtrace) {
       cerr << (++i) << "\t" << frame << endl;
     }
     cerr << "END BACKTRACE" << endl;
+  }
+
+  if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1") {
+    // Enforce handling on the GUI thread and block until we are done.
+    QMetaObject::invokeMethod(static_cast<QObject*>(s_model)->parent(), "handleFatalMessage",
+                              qApp->thread() ==  QThread::currentThread() ? Qt::DirectConnection : Qt::BlockingQueuedConnection,
+                              Q_ARG(GammaRay::DebugMessage, message));
   }
 
   // reset msg handler so the app still works as usual
@@ -140,14 +108,15 @@ void handleMessage(QtMsgType type, const char *msg)
   if (s_model) {
     // add directly from foreground thread, delay from background thread
     QMetaObject::invokeMethod(s_model, "addMessage", Qt::AutoConnection,
-                              Q_ARG(MessageModel::Message, message));
+                              Q_ARG(GammaRay::DebugMessage, message));
   }
 }
 
 MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
-  : QObject(parent),
+  : MessageHandlerInterface(parent),
   m_messageModel(new MessageModel(this))
 {
+
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
 
@@ -187,6 +156,17 @@ void MessageHandler::ensureHandlerInstalled()
 
   if (prevHandler != handleMessage) {
     s_handler = prevHandler;
+  }
+}
+
+void MessageHandler::handleFatalMessage(const DebugMessage &message)
+{
+  const QString app = qApp->applicationName().isEmpty()
+                      ? qApp->applicationFilePath()
+                      : qApp->applicationName();
+  emit fatalMessageReceived(app, message.message, message.time, message.backtrace);
+  if (Endpoint::isConnected()) {
+    Endpoint::instance()->waitForMessagesWritten();
   }
 }
 

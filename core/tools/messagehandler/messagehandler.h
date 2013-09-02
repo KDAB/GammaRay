@@ -25,28 +25,29 @@
 
 #include "include/toolfactory.h"
 
+#include "messagehandlerinterface.h"
 #include <tools/messagehandler/messagehandlerwidget.h>
-
-#include <QWidget>
-
 
 namespace GammaRay {
 
+class DebugMessage;
 class MessageModel;
 
 namespace Ui {
   class MessageHandler;
 }
 
-class MessageHandler : public QObject
+class MessageHandler : public MessageHandlerInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::MessageHandlerInterface)
   public:
     explicit MessageHandler(ProbeInterface *probe, QObject *parent = 0);
     ~MessageHandler();
 
   private slots:
     void ensureHandlerInstalled();
+    void handleFatalMessage(const GammaRay::DebugMessage &message);
 
   private:
     MessageModel *m_messageModel;

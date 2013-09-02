@@ -1,5 +1,5 @@
 /*
-  messagehandlerwidget.cpp
+  messagehandlerinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -20,33 +20,29 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_MESSAGEHANDLERWIDGET_H
-#define GAMMARAY_MESSAGEHANDLERWIDGET_H
 
-#include <QWidget>
+#ifndef GAMMARAY_MESSAGEHANDLERINTERFACE_H
+#define GAMMARAY_MESSAGEHANDLERINTERFACE_H
+
+#include <QObject>
 
 class QTime;
 
 namespace GammaRay {
 
-namespace Ui {
-  class MessageHandlerWidget;
-}
-
-class MessageHandlerWidget : public QWidget
+class MessageHandlerInterface : public QObject
 {
   Q_OBJECT
   public:
-    explicit MessageHandlerWidget(QWidget *parent = 0);
+    explicit MessageHandlerInterface(QObject *parent = 0);
+    virtual ~MessageHandlerInterface();
 
-  private slots:
-    void fatalMessageReceived(const QString &app, const QString &message,
-                              const QTime &time, const QStringList &backtrace);
-
-  private:
-    QScopedPointer<Ui::MessageHandlerWidget> ui;
+  signals:
+    void fatalMessageReceived(const QString &app, const QString &message, const QTime &time, const QStringList &backtrace);
 };
 
 }
 
-#endif // MESSAGEHANDLERWIDGET_H
+Q_DECLARE_INTERFACE(GammaRay::MessageHandlerInterface, "com.kdab.GammaRay.MessageHandler")
+
+#endif // GAMMARAY_MESSAGEHANDLERINTERFACE_H

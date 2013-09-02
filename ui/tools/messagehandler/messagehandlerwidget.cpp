@@ -22,17 +22,36 @@
 */
 
 #include "messagehandlerwidget.h"
-#include <network/objectbroker.h>
 #include "ui_messagehandlerwidget.h"
 
+#include <network/endpoint.h>
+#include <network/objectbroker.h>
+#include "messagehandlerclient.h"
+
 #include <QSortFilterProxyModel>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QListWidget>
+#include <QTime>
 
 using namespace GammaRay;
+
+static QObject *createClientMessageHandler(const QString &/*name*/, QObject *parent)
+{
+  return new MessageHandlerClient(parent);
+}
 
 MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   : QWidget(parent),
     ui(new Ui::MessageHandlerWidget)
 {
+  ObjectBroker::registerClientObjectFactoryCallback<MessageHandlerInterface*>(createClientMessageHandler);
+  MessageHandlerInterface *handler = ObjectBroker::object<MessageHandlerInterface*>();
+
+  connect(handler, SIGNAL(fatalMessageReceived(QString,QString,QTime,QStringList)),
+          this, SLOT(fatalMessageReceived(QString,QString,QTime,QStringList)));
+
   ui->setupUi(this);
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
@@ -44,6 +63,52 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
   ///FIXME: implement this
   ui->backtraceView->hide();
+}
+
+void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QString &message,
+                                                const QTime &time, const QStringList &backtrace)
+{
+  if (Endpoint::isConnected() && !qobject_cast<MessageHandlerClient*>(ObjectBroker::object<MessageHandlerInterface*>())) {
+    // only show on remote side
+    return;
+  }
+  QDialog dlg;
+  dlg.setWindowTitle(QObject::tr("QFatal in %1 at %2").arg(app).arg(time.toString()));
+
+  QGridLayout *layout = new QGridLayout;
+
+  QLabel *iconLabel = new QLabel;
+  QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, &dlg);
+  int iconSize = dlg.style()->pixelMetric(QStyle::PM_MessageBoxIconSize, 0, &dlg);
+  iconLabel->setPixmap(icon.pixmap(iconSize, iconSize));
+  iconLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  layout->addWidget(iconLabel, 0, 0);
+
+  QLabel *errorLabel = new QLabel;
+  errorLabel->setTextFormat(Qt::PlainText);
+  errorLabel->setWordWrap(true);
+  errorLabel->setText(message);
+  layout->addWidget(errorLabel, 0, 1);
+
+  if (!backtrace.isEmpty()) {
+    QListWidget *backtraceWidget = new QListWidget;
+    foreach (const QString &frame, backtrace) {
+      backtraceWidget->addItem(frame);
+    }
+    layout->addWidget(backtraceWidget, 1, 0, 1, 2);
+  }
+
+  QDialogButtonBox *buttons = new QDialogButtonBox;
+  buttons->addButton(QDialogButtonBox::Close);
+  QObject::connect(buttons, SIGNAL(accepted()),
+                    &dlg, SLOT(accept()));
+  QObject::connect(buttons, SIGNAL(rejected()),
+                    &dlg, SLOT(reject()));
+  layout->addWidget(buttons, 2, 0, 1, 2);
+
+  dlg.setLayout(layout);
+  dlg.adjustSize();
+  dlg.exec();
 }
 
 #include "messagehandlerwidget.moc"

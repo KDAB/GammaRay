@@ -27,6 +27,21 @@
 
 #include <QAbstractTableModel>
 #include <QTime>
+#include <QVector>
+
+namespace GammaRay {
+
+struct DebugMessage {
+  QtMsgType type;
+  QString message;
+  QTime time;
+  Backtrace backtrace;
+};
+
+}
+
+Q_DECLARE_METATYPE(GammaRay::DebugMessage)
+Q_DECLARE_TYPEINFO(GammaRay::DebugMessage, Q_MOVABLE_TYPE);
 
 namespace GammaRay {
 
@@ -50,18 +65,11 @@ class MessageModel : public QAbstractTableModel
       COLUMN_COUNT
     };
 
-    struct Message {
-      QtMsgType type;
-      QString message;
-      QTime time;
-      Backtrace backtrace;
-    };
-
   public slots:
-    void addMessage(const MessageModel::Message &message);
+    void addMessage(const GammaRay::DebugMessage &message);
 
   private:
-    QList<Message> m_messages;
+    QVector<DebugMessage> m_messages;
 };
 
 }
