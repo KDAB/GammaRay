@@ -31,6 +31,31 @@
 
 using namespace GammaRay;
 
+static QItemSelection readSelection(const Message &msg, const QAbstractItemModel *model)
+{
+  QItemSelection selection;
+  qint32 size = 0;
+  msg.payload() >> size;
+  for (int i = 0; i < size; ++i) {
+    Protocol::ModelIndex topLeft, bottomRight;
+    msg.payload() >> topLeft >> bottomRight;
+    const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model, topLeft);
+    const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model, bottomRight);
+    if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
+      continue;
+    selection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
+  }
+  return selection;
+}
+
+static void writeSelection(Message *msg, const QItemSelection &selection)
+{
+  msg->payload() << qint32(selection.size());
+  foreach(const QItemSelectionRange& range, selection) {
+    msg->payload() << Protocol::fromQModelIndex(range.topLeft()) << Protocol::fromQModelIndex(range.bottomRight());
+  }
+}
+
 NetworkSelectionModel::NetworkSelectionModel(const QString &objectName, QAbstractItemModel* model, QObject* parent):
   QItemSelectionModel(model, parent),
   m_objectName(objectName),
@@ -53,21 +78,15 @@ void NetworkSelectionModel::newMessage(const Message& msg)
   switch (msg.type()) {
     case Protocol::SelectionModelSelect:
     {
-      qint32 flags, size;
-      msg.payload() >> flags >> size;
-      QItemSelection selection;
-      selection.reserve(size);
-      for (int i = 0; i < size; ++i) {
-        Protocol::ModelIndex topLeft, bottomRight;
-        msg.payload() >> topLeft >> bottomRight;
-        const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), topLeft);
-        const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), bottomRight);
-        if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
-          continue;
-        selection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
-      }
+      QItemSelection selected = readSelection(msg, model());
+      QItemSelection deselected = readSelection(msg, model());
       Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
-      select(selection, QItemSelectionModel::SelectionFlags(flags));
+      if (!deselected.isEmpty()) {
+        select(deselected, Deselect);
+      }
+      if (!selected.isEmpty()) {
+        select(selected, Select);
+      }
       break;
     }
     case Protocol::SelectionModelCurrent:
@@ -119,13 +138,12 @@ void NetworkSelectionModel::slotCurrentRowChanged(const QModelIndex& current, co
 
 void NetworkSelectionModel::slotSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
-  Q_UNUSED(deselected);
   if (m_handlingRemoteMessage ||!Endpoint::isConnected())
     return;
+
   Message msg(m_myAddress, Protocol::SelectionModelSelect);
-  msg.payload() << qint32(QItemSelectionModel::ClearAndSelect) << qint32(selected.size());
-  foreach(const QItemSelectionRange& range, selected)
-    msg.payload() << Protocol::fromQModelIndex(range.topLeft()) << Protocol::fromQModelIndex(range.bottomRight());
+  writeSelection(&msg, selected);
+  writeSelection(&msg, deselected);
   Endpoint::send(msg);
 }
 
