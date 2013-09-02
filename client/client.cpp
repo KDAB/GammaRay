@@ -154,7 +154,7 @@ void Client::unregisterForObject(Protocol::ObjectAddress objectAddress)
   unmonitorObject(objectAddress);
 }
 
-void Client::objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &/*objectName*/, QObject */*object*/)
+void Client::objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &/*objectName*/, QObject * /*object*/)
 {
   unmonitorObject(objectAddress);
 }
