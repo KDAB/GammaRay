@@ -3,7 +3,7 @@ Release Highlights
 
 Version 1.3.2 (unreleased):
 -------------
- * StateMachineViewer plugin: Make build with VTK6
+ * Object Visualizer plugin: Make build with VTK6
 
 Version 1.3.1:
 -------------
