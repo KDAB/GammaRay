@@ -188,7 +188,14 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         // the object may already have been invalidated.
         break;
       }
-      Q_ASSERT(node->rowCount == -2 && node->columnCount == -1);
+      // Note that the rowCount might be "-1" which would mean we didn't request the row/col count
+      // explicitly. Yet the data is valid and we can use it nonetheless.
+      // This happens in some (thankfully harmless) raceconditions, e.g. when we request row/col count
+      // then first get messages from the server that a row was deleted and that another was created
+      // at the same model index. Then later he'll answer the initial row/col count request and
+      // we handle it here. Since the initial Node was deleted and a new one created for that index,
+      // it's rowCount will be -1 but the response data is actually useful and we store it.
+      Q_ASSERT(node->rowCount <= -1 && node->columnCount == -1);
       int rowCount, columnCount;
       msg.payload() >> rowCount >> columnCount;
       Q_ASSERT(rowCount >= 0 && columnCount >= 0);
