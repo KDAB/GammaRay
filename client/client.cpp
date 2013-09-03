@@ -126,12 +126,11 @@ void Client::messageReceived(const Message& msg)
         qWarning() << Q_FUNC_INFO << "Got unhandled message:" << msg.type();
         return;
     }
-
     if (m_initState == InitComplete)
       emit connectionEstablished();
+  } else {
+    dispatchMessage(msg);
   }
-
-  dispatchMessage(msg);
 }
 
 Protocol::ObjectAddress Client::registerObject(const QString &name, QObject *object)
