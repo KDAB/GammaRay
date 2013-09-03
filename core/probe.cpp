@@ -267,7 +267,20 @@ void Probe::delayedInit()
 
   QCoreApplication::instance()->installEventFilter(s_instance);
 
-  Server::instance()->setLabel(qApp->applicationName()); // TODO use the same logic from MainWindow title
+  QString appName = qApp->applicationName();
+  if (appName.isEmpty() && !qApp->arguments().isEmpty()) {
+    appName = qApp->arguments().first().remove(qApp->applicationDirPath());
+    if (appName.startsWith('.')) {
+        appName = appName.right(appName.length() - 1);
+    }
+    if (appName.startsWith('/')) {
+        appName = appName.right(appName.length() - 1);
+    }
+  }
+  if (appName.isEmpty()) {
+    appName = tr("PID %1").arg(qApp->applicationPid());
+  }
+  Server::instance()->setLabel(appName);
 
   if (canShowWidgets() && ProbeSettings::value("InProcessUi", true).toBool()) {
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)

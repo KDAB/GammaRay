@@ -31,6 +31,7 @@
 
 #include <network/objectbroker.h>
 #include <network/modelroles.h>
+#include <network/endpoint.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -119,19 +120,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   // hide unused tool bar for now
   ui->mainToolBar->setHidden(true);
 
-  QString appName = qApp->applicationName();
-  if (appName.isEmpty() && !qApp->arguments().isEmpty()) {
-    appName = qApp->arguments().first().remove(qApp->applicationDirPath());
-    if (appName.startsWith('.')) {
-        appName = appName.right(appName.length() - 1);
-    }
-    if (appName.startsWith('/')) {
-        appName = appName.right(appName.length() - 1);
-    }
-  } else {
-    appName = tr("PID %1").arg(qApp->applicationPid());
-  }
-  setWindowTitle(tr("%1 (%2)").arg(progName).arg(appName));
+  setWindowTitle(tr("%1 (%2)").arg(progName).arg(Endpoint::instance()->label()));
 
   selectInitialTool();
 
