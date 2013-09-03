@@ -57,9 +57,6 @@ class Server : public Endpoint
     /** Singleton accessor. */
     static Server* instance();
 
-    /** Sets the label of this instance used when advertising this server on the network. */
-    void setLabel(const QString &label);
-
     /**
      * Call @p method on the remote client and also directly on the local object identified by @p objectName.
      */

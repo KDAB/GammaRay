@@ -252,13 +252,8 @@ void Server::broadcast()
   stream << Protocol::version();
   stream << myAddress;
   stream << defaultPort(); // might change for multiple instances on the same machine
-  stream << m_label; // TODO integrate hostname
+  stream << label(); // TODO integrate hostname
   m_broadcastSocket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, broadcastPort());
-}
-
-void Server::setLabel(const QString& label)
-{
-  m_label = label;
 }
 
 #include "server.moc"

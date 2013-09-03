@@ -293,4 +293,14 @@ void Endpoint::removeObjectInfo(Endpoint::ObjectInfo* oi)
   delete oi;
 }
 
+QString Endpoint::label() const
+{
+  return m_label;
+}
+
+void Endpoint::setLabel(const QString &label)
+{
+  m_label = label;
+}
+
 #include "endpoint.moc"

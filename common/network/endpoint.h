@@ -85,6 +85,16 @@ public:
    */
   void waitForMessagesWritten();
 
+  /**
+   * Returns a human-readable string describing the host program.
+   */
+  QString label() const;
+
+  /**
+   * Sets the human-readable label of this instance used e.g. when advertising on the network.
+   */
+  void setLabel(const QString &label);
+
 signals:
   /** Emitted when we lost the connection to the other endpoint. */
   void disconnected();
@@ -178,6 +188,8 @@ private:
 
   QPointer<QIODevice> m_socket;
   Protocol::ObjectAddress m_myAddress;
+
+  QString m_label;
 };
 
 }
