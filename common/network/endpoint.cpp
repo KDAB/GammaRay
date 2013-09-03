@@ -61,6 +61,11 @@ void Endpoint::send(const Message& msg)
   msg.write(s_instance->m_socket);
 }
 
+void Endpoint::waitForMessagesWritten()
+{
+  m_socket->waitForBytesWritten(-1);
+}
+
 bool Endpoint::isConnected()
 {
   return s_instance && s_instance->m_socket;

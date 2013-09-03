@@ -46,7 +46,7 @@ QString typeToString(QtMsgType type)
 MessageModel::MessageModel(QObject *parent)
   : QAbstractTableModel(parent)
 {
-  qRegisterMetaType<Message>("MessageModel::Message");
+  qRegisterMetaType<DebugMessage>();
 }
 
 MessageModel::~MessageModel()
@@ -54,7 +54,7 @@ MessageModel::~MessageModel()
 
 }
 
-void MessageModel::addMessage(const MessageModel::Message &message)
+void MessageModel::addMessage(const DebugMessage &message)
 {
   ///WARNING: do not trigger *any* kind of debug output here
   ///         this would trigger an infinite loop and hence crash!
@@ -85,7 +85,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     return QVariant();
   }
 
-  const Message &msg = m_messages.at(index.row());
+  const DebugMessage &msg = m_messages.at(index.row());
 
   if (role == Qt::DisplayRole) {
     if (index.column() == TypeColumn) {
