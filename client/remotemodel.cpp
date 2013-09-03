@@ -27,11 +27,9 @@
 #include <network/message.h>
 
 #include <QDataStream>
-
-#include <iostream>
+#include <QDebug>
 
 using namespace GammaRay;
-using namespace std;
 
 RemoteModel::Node::~Node()
 {
@@ -366,7 +364,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelLayoutChanged:
     {
       // TODO
-      cerr << Q_FUNC_INFO << " not implemented yet " << msg.type() << ' ' << qPrintable(m_serverObject);
+      qWarning() << Q_FUNC_INFO << "not implemented yet" << msg.type() << m_serverObject;
     }
 
     case Protocol::ModelReset:
@@ -462,7 +460,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 
 void RemoteModel::clear()
 {
-  cout << Q_FUNC_INFO << endl;
+  qDebug() << Q_FUNC_INFO;
   beginResetModel();
 
   Message msg(m_myAddress, Protocol::ModelSyncBarrier);

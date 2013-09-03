@@ -25,13 +25,11 @@
 
 #include <network/message.h>
 
-#include <iostream>
-
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <QDebug>
 
 using namespace GammaRay;
-using namespace std;
 
 Client::Client(QObject* parent)
   : Endpoint(parent)
@@ -50,7 +48,7 @@ Client* Client::instance()
 
 void Client::connectToHost(const QString &hostName, quint16 port)
 {
-  cout << Q_FUNC_INFO << ' ' << qPrintable(hostName) << ':' << port << endl;
+  qDebug() << Q_FUNC_INFO << hostName << ':' << port;
   QTcpSocket *sock = new QTcpSocket(this);
   connect(sock, SIGNAL(connected()), SLOT(socketConnected()));
   connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()));
@@ -77,14 +75,12 @@ void Client::messageReceived(const Message& msg)
   // server version must be the very first message we get
   if (!m_versionChecked) {
     if (msg.address() != endpointAddress() || msg.type() != Protocol::ServerVersion) {
-      cerr << "Protocol violation - first message is not the server version." << endl;
-      exit(1);
+      qFatal("Protocol violation - first message is not the server version.\n");
     }
     qint32 serverVersion;
     msg.payload() >> serverVersion;
     if (serverVersion != Protocol::version()) {
-      cerr << "Server version is " << serverVersion << ", was expecting " << Protocol::version() << " - aborting" << endl;
-      exit(1);
+      qFatal("Server version is %d, was expecting %d - aborting.\n", serverVersion, Protocol::version());
     }
     m_versionChecked = true;
     emit connectionEstablished();
@@ -118,7 +114,7 @@ void Client::messageReceived(const Message& msg)
         }
       }
       default:
-        cerr << Q_FUNC_INFO << "Got unhandled message: " << msg.type() << endl;
+        qWarning() << Q_FUNC_INFO << "Got unhandled message:" << msg.type();
         return;
     }
   }
