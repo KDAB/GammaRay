@@ -31,6 +31,9 @@ target_link_libraries(messagemodeltest
   ${QT_QTGUI_LIBRARIES}
 )
 
+add_executable(minimalcoreapplication minimalcoreapplication.cpp)
+target_link_libraries(minimalcoreapplication ${QT_QTCORE_LIBRARIES})
+
 if(QNXNTO)
   target_link_libraries(propertywidgettest cpp)
   target_link_libraries(messagemodeltest cpp)
