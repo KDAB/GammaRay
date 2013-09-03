@@ -27,6 +27,7 @@
 #include <QAction>
 #include <QWidget>
 
+class QAbstractProxyModel;
 class QTreeView;
 class QModelIndex;
 
@@ -45,6 +46,7 @@ class ActionInspectorWidget : public QWidget
 
   private:
     QTreeView *mObjectTreeView;
+    QAbstractProxyModel *m_proxy;
 };
 
 }

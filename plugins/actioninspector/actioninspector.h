@@ -36,6 +36,9 @@ class ActionInspector : public QObject
   public:
     explicit ActionInspector(ProbeInterface *probe, QObject *parent = 0);
     virtual ~ActionInspector();
+
+  public Q_SLOTS:
+    void triggerAction(int row);
 };
 
 class ActionInspectorFactory : public QObject,

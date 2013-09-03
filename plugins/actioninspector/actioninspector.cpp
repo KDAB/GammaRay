@@ -25,14 +25,20 @@
 #include "include/objectmodel.h"
 #include "include/probeinterface.h"
 #include "include/objecttypefilterproxymodel.h"
+#include <common/network/objectbroker.h>
 
 #include <QtPlugin>
 
+#include <iostream>
+
 using namespace GammaRay;
+using namespace std;
 
 ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
+  ObjectBroker::registerObject("com.kdab.GammaRay.ActionInspector", this);
+
   ActionModel *actionFilterProxy = new ActionModel(this);
   actionFilterProxy->setSourceModel(probe->objectListModel());
   probe->registerModel("com.kdab.GammaRay.ActionModel", actionFilterProxy);
@@ -40,6 +46,22 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
 
 ActionInspector::~ActionInspector()
 {
+}
+
+void ActionInspector::triggerAction(int row)
+{
+  QAbstractItemModel *model = ObjectBroker::model("com.kdab.GammaRay.ActionModel");
+  const QModelIndex index = model->index(row, 0);
+  if (!index.isValid()) {
+    return;
+  }
+
+  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
+  QAction *action = qobject_cast<QAction*>(obj);
+
+  if (action) {
+    action->trigger();
+  }
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

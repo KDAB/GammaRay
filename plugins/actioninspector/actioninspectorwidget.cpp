@@ -23,6 +23,7 @@
 #include "actionmodel.h" // for column enum only
 
 #include <common/network/objectbroker.h>
+#include <common/network/endpoint.h>
 
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
@@ -43,6 +44,7 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
   QSortFilterProxyModel *searchFilterProxy = new KRecursiveFilterProxyModel(this);
   searchFilterProxy->setSourceModel(actionModel);
   searchFilterProxy->setDynamicSortFilter(true);
+  m_proxy = searchFilterProxy;
 
   QVBoxLayout *vbox = new QVBoxLayout(this);
 
@@ -64,19 +66,15 @@ ActionInspectorWidget::~ActionInspectorWidget()
 {
 }
 
-// TODO this wont work remotely!
 void ActionInspectorWidget::triggerAction(const QModelIndex &index)
 {
   if (!index.isValid()) {
     return;
   }
 
-  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  QAction *action = qobject_cast<QAction*>(obj);
-
-  if (action) {
-    action->trigger();
-  }
+  Q_ASSERT(index.model() == m_proxy);
+  Endpoint::instance()->invokeObject("com.kdab.GammaRay.ActionInspector", "triggerAction",
+                                     QVariantList() << m_proxy->mapToSource(index).row());
 }
 
 #include "actioninspectorwidget.moc"
