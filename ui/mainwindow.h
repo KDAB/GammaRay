@@ -45,9 +45,9 @@ class MainWindow : public QMainWindow
     void aboutKDAB();
 
     void toolSelected();
+    void selectInitialTool();
 
   private:
-    void selectInitialTool();
     QWidget* createErrorPage(const QModelIndex &index);
 
     QScopedPointer<Ui::MainWindow> ui;

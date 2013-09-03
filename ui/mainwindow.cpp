@@ -123,6 +123,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   setWindowTitle(tr("%1 (%2)").arg(progName).arg(Endpoint::instance()->label()));
 
   selectInitialTool();
+  connect(ui->toolSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectInitialTool()));
+  connect(ui->toolSelector->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(selectInitialTool()));
 
   // get some sane size on startup
   resize(1024, 768);
@@ -238,6 +240,7 @@ void MainWindow::selectInitialTool()
     return;
   }
 
+  disconnect(ui->toolSelector->model(), 0, this, SLOT(selectInitialTool()));
   ui->toolSelector->setCurrentIndex(matches.first());
   toolSelected();
 }
