@@ -112,6 +112,7 @@ void Client::messageReceived(const Message& msg)
           if (it->first != endpointAddress())
             registerObjectInternal(it->second, it->first);
         }
+        break;
       }
       default:
         qWarning() << Q_FUNC_INFO << "Got unhandled message:" << msg.type();
