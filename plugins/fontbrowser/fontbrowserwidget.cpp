@@ -28,6 +28,7 @@
 #include "fontbrowserclient.h"
 
 #include <common/network/objectbroker.h>
+#include <ui/deferredresizemodesetter.h>
 
 #include <QAbstractItemModel>
 #include <QDebug>
@@ -54,7 +55,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
 
   ui->selectedFontsView->setModel(m_selectedFontModel);
   ui->selectedFontsView->setRootIsDecorated(false);
-  ui->selectedFontsView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(ui->selectedFontsView->header(), 0, QHeaderView::ResizeToContents);
 
   connect(ui->fontText, SIGNAL(textChanged(QString)),
           m_fontBrowser, SLOT(updateText(QString)));
@@ -71,7 +72,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
   ui->fontTree->setModel(fontModel);
   ui->fontTree->setSelectionModel(ObjectBroker::selectionModel(fontModel));
-  ui->fontTree->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(ui->fontTree->header(), 0, QHeaderView::ResizeToContents);
 
   ui->pointSize->setValue(font().pointSize());
 
