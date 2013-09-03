@@ -24,8 +24,10 @@
 #include "attachhelper.h"
 
 #ifdef Q_OS_WIN32
+#ifndef NOMINMAX
 // compile fix for Qt5+VS2010+QDateTime, see: http://qt-project.org/forums/viewthread/22133
 #define NOMINMAX
+#endif
 
 #include <Windows.h>
 #endif

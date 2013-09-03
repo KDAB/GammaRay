@@ -159,7 +159,7 @@ static inline bool isQtApp(DWORD processId)
   return false;
 }
 
-ProcDataList processList(const ProcDataList &previous)
+ProcDataList processList(const ProcDataList &/*previous*/)
 {
   ProcDataList rc;
 

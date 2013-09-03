@@ -30,7 +30,7 @@
 
 namespace GammaRay {
 
-class DebugMessage;
+struct DebugMessage;
 class MessageModel;
 
 namespace Ui {

@@ -59,7 +59,8 @@ bool WinFunctionOverwriter::getAddressRange(intptr_t &min, intptr_t &max)
 bool WinFunctionOverwriter::isMemoryFree(void * const mem, size_t size)
 {
   Q_UNUSED(size);
-  static MEMORY_BASIC_INFORMATION mi = { 0 };
+  MEMORY_BASIC_INFORMATION mi;
+  ZeroMemory(&mi, sizeof(MEMORY_BASIC_INFORMATION));
 
   VirtualQuery(mem, &mi, sizeof(mi));
   if (mi.State != MEM_FREE) {
