@@ -74,7 +74,7 @@ void PaintBufferReplayWidget::drawTransparencyPattern(QPainter *painter,
   painter->fillRect(rect, bgBrush);
 }
 
-void PaintBufferReplayWidget::paintEvent(QPaintEvent *event)
+void PaintBufferReplayWidget::paintEvent(QPaintEvent */*event*/)
 {
   // didn't manage painting on the widget directly, even with the correct
   // translation it is always clipping as if the widget was at 0,0 of its parent

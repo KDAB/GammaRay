@@ -26,6 +26,10 @@
 
 #include <QWidget>
 
+#ifndef Q_NORETURN
+#define Q_NORETURN
+#endif
+
 namespace GammaRay {
 
 class MessageGenerator : public QWidget
@@ -39,7 +43,7 @@ class MessageGenerator : public QWidget
     void generateDebug();
     void generateWarning();
     void generateCritical();
-    void generateFatal();
+    Q_NORETURN void generateFatal();
 };
 
 }
