@@ -78,6 +78,13 @@ public:
    */
   virtual void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const;
 
+  /**
+   * Write all pending data and block until this is done.
+   *
+   * This should only be used in very rare situations.
+   */
+  void waitForMessagesWritten();
+
 signals:
   /** Emitted when we lost the connection to the other endpoint. */
   void disconnected();

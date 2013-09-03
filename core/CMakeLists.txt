@@ -48,6 +48,7 @@ set(gammaray_srcs
   tools/textdocumentinspector/textdocumentmodel.cpp
   tools/textdocumentinspector/textdocumentformatmodel.cpp
   tools/messagehandler/messagehandler.cpp
+  tools/messagehandler/messagehandlerinterface.cpp
   tools/messagehandler/messagemodel.cpp
   tools/connectioninspector/connectioninspector.cpp
   tools/localeinspector/localeinspector.cpp
