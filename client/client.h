@@ -79,7 +79,14 @@ private slots:
   void socketError();
 
 private:
-  bool m_versionChecked;
+  enum InitState {
+    VersionChecked    =  1,
+    ObjectMapReceived =  2,
+    ServerInfoReceived = 4,
+
+    InitComplete = VersionChecked | ObjectMapReceived | ServerInfoReceived
+  };
+  int m_initState;
 };
 
 }
