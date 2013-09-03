@@ -190,7 +190,7 @@ bool RemoteModelServer::canSerialize(const QVariant& value) const
 
 void RemoteModelServer::modelMonitored(bool monitored)
 {
-  cout << Q_FUNC_INFO << ' ' << monitored << ' ' << qPrintable(m_myAddress) << endl;
+  cout << Q_FUNC_INFO << ' ' << monitored << ' ' << static_cast<quint64>(m_myAddress) << endl;
   if (m_monitored == monitored)
     return;
   m_monitored = monitored;
