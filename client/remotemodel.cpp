@@ -240,10 +240,9 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       ItemData itemData;
       qint32 flags;
       msg.payload() >> itemData >> flags;
-      const QModelIndex qmi = modelIndexForNode(node, index.last().second);
-      qDebug() << "got data" << qmi << itemData;
       node->data[index.last().second] = itemData;
       node->flags[index.last().second] = static_cast<Qt::ItemFlags>(flags);
+      const QModelIndex qmi = modelIndexForNode(node, index.last().second);
       emit dataChanged(qmi, qmi);
       break;
     }
