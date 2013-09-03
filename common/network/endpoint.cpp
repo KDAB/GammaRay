@@ -25,7 +25,10 @@
 #include "message.h"
 #include "methodargument.h"
 
+#include <iostream>
+
 using namespace GammaRay;
+using namespace std;
 
 Endpoint* Endpoint::s_instance = 0;
 
@@ -235,22 +238,34 @@ void Endpoint::handlerDestroyed(QObject* obj)
 void Endpoint::dispatchMessage(const Message& msg)
 {
   const QHash<Protocol::ObjectAddress, ObjectInfo*>::const_iterator it = m_addressMap.constFind(msg.address());
-  if (it == m_addressMap.constEnd())
+  if (it == m_addressMap.constEnd()) {
+    cerr << "message for unknown object address received: " << quint64(msg.address()) << endl;
     return;
+  }
 
   ObjectInfo* obj = it.value();
-  if (obj->object && msg.type() == Protocol::MethodCall) {
-    QByteArray method;
-    msg.payload() >> method;
-    Q_ASSERT(!method.isEmpty());
-    QVariantList args;
-    msg.payload() >> args;
+  if (msg.type() == Protocol::MethodCall) {
+    if (obj->object) {
+      QByteArray method;
+      msg.payload() >> method;
+      Q_ASSERT(!method.isEmpty());
+      QVariantList args;
+      msg.payload() >> args;
 
-    invokeObjectLocal(obj->object, method.constData(), args);
+      invokeObjectLocal(obj->object, method.constData(), args);
+    } else {
+      cerr << "cannot call method on unknown object of name " << qPrintable(obj->name) << " with address " << quint64(obj->address)
+           << " - did you forget to register it?" << endl;
+    }
   }
 
   if (obj->receiver) {
     QMetaObject::invokeMethod(obj->receiver, obj->messageHandler, Q_ARG(GammaRay::Message, msg));
+  }
+
+  if (!obj->receiver && (msg.type() != Protocol::MethodCall || !obj->object)) {
+    cerr << "Cannot dispatch message " << quint64(msg.type()) << " - no handler registered."
+         << " Receiver: " << qPrintable(obj->name) << ", address " << quint64(obj->address) << endl;
   }
 }
 
