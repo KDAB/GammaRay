@@ -81,7 +81,9 @@ enum BuildInMessageType {
   SelectionModelSelect,
   SelectionModelCurrent,
 
-  MethodCall
+  MethodCall,
+
+  ServerInfo
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;

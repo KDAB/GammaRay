@@ -100,6 +100,12 @@ void Server::newConnection()
   }
 
   {
+    Message msg(endpointAddress(), Protocol::ServerInfo);
+    msg.payload() << label(); // TODO: expand with anything else needed here: Qt/GammaRay version, hostname, that kind of stuff
+    send(msg);
+  }
+
+  {
     Message msg(endpointAddress(), Protocol::ObjectMapReply);
     msg.payload() << objectAddresses();
     send(msg);

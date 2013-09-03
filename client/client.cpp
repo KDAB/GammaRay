@@ -114,6 +114,12 @@ void Client::messageReceived(const Message& msg)
         }
         break;
       }
+      case Protocol::ServerInfo:
+      {
+        QString label;
+        msg.payload() >> label;
+        setLabel(label);
+      }
       default:
         qWarning() << Q_FUNC_INFO << "Got unhandled message:" << msg.type();
         return;
