@@ -124,18 +124,16 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
+  if (!node->data.contains(index.column())) {
+    requestDataAndFlags(index);
+  }
+
+  // note .value returns good defaults otherwise
+  return node->data.value(index.column()).value(role);
   if (node->data.contains(index.column())) {
     if (node->data.value(index.column()).contains(role))
       return node->data.value(index.column()).value(role);
-    else if (role == Qt::DisplayRole)
-      return tr("Loading...");
-    return QVariant();
   }
-
-  requestDataAndFlags(index);
-  if (role == Qt::DisplayRole)
-    return tr("Loading...");
-  return QVariant();
 }
 
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -238,13 +236,11 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node);
-      typedef QMap<int, QVariant> ItemData;
+      typedef QHash<int, QVariant> ItemData;
       ItemData itemData;
       qint32 flags;
       msg.payload() >> itemData >> flags;
-      for (ItemData::const_iterator it = itemData.constBegin(); it != itemData.constEnd(); ++it) {
-        node->data[index.last().second].insert(it.key(), it.value());
-      }
+      node->data[index.last().second] = itemData;
       node->flags[index.last().second] = static_cast<Qt::ItemFlags>(flags);
       const QModelIndex qmi = modelIndexForNode(node, index.last().second);
       emit dataChanged(qmi, qmi);
@@ -453,7 +449,11 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   Q_ASSERT(!node->data.contains(index.column()));
   Q_ASSERT(!node->flags.contains(index.column()));
 
-  node->data.insert(index.column(), QHash<int, QVariant>()); // mark pending request
+  static QHash<int, QVariant> loading;
+  if (loading.isEmpty()) {
+    loading.insert(Qt::DisplayRole, tr("Loading..."));
+  }
+  node->data.insert(index.column(), loading); // mark pending request
 
   Message msg(m_myAddress, Protocol::ModelContentRequest);
   msg.payload() << Protocol::fromQModelIndex(index);
