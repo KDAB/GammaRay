@@ -1117,6 +1117,10 @@ QString ResourceModel::fileName(const QModelIndex &index) const
 
 QIcon ResourceModel::fileIcon(const QModelIndex &index) const
 {
+    // QFileIconProvider crashes when used with just a QCoreApplication
+    if (!qApp->inherits("QGuiApplication") && !qApp->inherits("QApplication"))
+      return QIcon();
+
     Q_D(const ResourceModel);
     if (!d->indexValid(index))
         return d->iconProvider->icon(QFileIconProvider::Computer);
