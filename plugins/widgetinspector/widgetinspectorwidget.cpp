@@ -101,15 +101,7 @@ void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
   if (selection.size() > 0)
     index = selection.first().topLeft();
 
-  ///FIXME: this does not work remotely
   if (index.isValid()) {
-    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    QWidget *widget = qobject_cast<QWidget*>(obj);
-    QLayout *layout = qobject_cast<QLayout*>(obj);
-    if (!widget && layout) {
-      widget = layout->parentWidget();
-    }
-
     setActionsEnabled(true);
 
     // in case selection was triggered remotely
