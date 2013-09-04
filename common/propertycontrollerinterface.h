@@ -26,12 +26,12 @@
 
 #include <QObject>
 
-#include "include/gammaray_core_export.h"
+#include "include/gammaray_common_export.h"
 #include <common/network/enums.h>
 
 namespace GammaRay {
 
-class GAMMARAY_CORE_EXPORT PropertyControllerInterface : public QObject
+class GAMMARAY_COMMON_EXPORT PropertyControllerInterface : public QObject
 {
   Q_OBJECT
   public:

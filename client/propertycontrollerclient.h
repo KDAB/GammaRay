@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROPERTYCONTROLLERCLIENT_H
 #define GAMMARAY_PROPERTYCONTROLLERCLIENT_H
 
-#include <core/propertycontrollerinterface.h>
+#include <common/propertycontrollerinterface.h>
 
 namespace GammaRay {
 

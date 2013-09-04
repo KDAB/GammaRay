@@ -34,7 +34,7 @@
 #include <include/metatypedeclarations.h>
 
 #include "kde/krecursivefilterproxymodel.h"
-#include <core/propertycontrollerinterface.h>
+#include <common/propertycontrollerinterface.h>
 
 #include <QDebug>
 #include <QMenu>

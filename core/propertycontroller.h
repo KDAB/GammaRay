@@ -26,7 +26,7 @@
 
 #include "include/gammaray_core_export.h"
 
-#include "propertycontrollerinterface.h"
+#include <common/propertycontrollerinterface.h>
 
 #include <QPointer>
 
