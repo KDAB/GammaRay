@@ -1,4 +1,4 @@
 [Desktop Entry]
 Name=Font Browser
-X-GammaRay-Types=QGuiApplication;QApplication;
+X-GammaRay-Types="QGuiApplication;QApplication;"
 Exec=gammaray_fontbrowser_plugin
