@@ -75,6 +75,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
   connect(ui->actionAnalyzePainting, SIGNAL(triggered()), m_inspector, SLOT(analyzePainting()));
+  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QPixmap)), SLOT(widgetPreviewAvailable(QPixmap)));
 
   addAction(ui->actionSaveAsImage);
 // TODO these checks needs to be dynamic, based on probe features
@@ -100,6 +101,7 @@ void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
   if (selection.size() > 0)
     index = selection.first().topLeft();
 
+  ///FIXME: this does not work remotely
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QWidget *widget = qobject_cast<QWidget*>(obj);
@@ -108,15 +110,18 @@ void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
       widget = layout->parentWidget();
     }
 
-    ui->widgetPreviewWidget->setWidget(widget);
     setActionsEnabled(true);
 
     // in case selection was triggered remotely
     ui->widgetTreeView->scrollTo(index);
   } else {
-    ui->widgetPreviewWidget->setWidget(0);
     setActionsEnabled(false);
   }
+}
+
+void WidgetInspectorWidget::widgetPreviewAvailable(const QPixmap &preview)
+{
+  ui->widgetPreviewWidget->setPixmap(preview);
 }
 
 void WidgetInspectorWidget::setActionsEnabled(bool enabled)

@@ -53,6 +53,7 @@ class WidgetInspectorWidget : public QWidget
     void saveAsSvg();
     void saveAsPdf();
     void saveAsUiFile();
+    void widgetPreviewAvailable(const QPixmap &preview);
 
   private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;

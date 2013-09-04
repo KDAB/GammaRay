@@ -34,15 +34,13 @@ class WidgetPreviewWidget : public QWidget
   Q_OBJECT
   public:
     explicit WidgetPreviewWidget(QWidget *parent = 0);
-    void setWidget(QWidget *widget);
+    void setPixmap(const QPixmap &pixmap);
 
   protected:
     virtual void paintEvent(QPaintEvent *event);
-    virtual bool eventFilter(QObject *receiver, QEvent *event);
 
   private:
-    QPointer<QWidget> m_widget;
-    bool m_grabbingWidget;
+    QPixmap m_pixmap;
 };
 
 }

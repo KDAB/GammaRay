@@ -116,6 +116,13 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection& selection)
         qobject_cast<QDesktopWidget*>(widget) == 0 &&
         !widget->inherits("QDesktopScreenWidget")) {
       m_overlayWidget->placeOn(widget);
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+      const QPixmap pixmap = QPixmap::grabWidget(widget);
+#else
+      const QPixmap pixmap = widget->grab();
+#endif
+      emit widgetPreviewAvailable(pixmap);
     } else {
       m_overlayWidget->placeOn(0);
     }

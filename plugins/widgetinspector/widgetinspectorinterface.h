@@ -26,6 +26,8 @@
 
 #include <QObject>
 
+class QPixmap;
+
 namespace GammaRay {
 
 class WidgetInspectorInterface : public QObject
@@ -42,6 +44,9 @@ class WidgetInspectorInterface : public QObject
     virtual void saveAsUiFile(const QString &fileName) = 0;
 
     virtual void analyzePainting() = 0;
+
+  signals:
+    void widgetPreviewAvailable(const QPixmap &pixmap);
 };
 
 }
