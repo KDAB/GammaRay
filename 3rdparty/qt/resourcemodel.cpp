@@ -51,8 +51,7 @@
 #include <qobject.h>
 #include <qdatetime.h>
 #include <qlocale.h>
-#include <qstyle.h>
-#include <qapplication.h>
+#include <qcoreapplication.h>
 #include <qdebug.h>
 
 /*!
