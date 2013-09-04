@@ -64,28 +64,30 @@ static const char progURL[] = "http://www.kdab.com/gammaray";
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
-  // we don't want application styles to propagate to the GammaRay window,
-  // so set the platform default one.
-  // unfortunately, that's not recursive by default, unless we have a style sheet set
-  setStyleSheet(QLatin1String("I_DONT_EXIST {}"));
+  if (!Endpoint::instance()->isRemoteClient()) {
+    // we don't want application styles to propagate to the GammaRay window,
+    // so set the platform default one.
+    // unfortunately, that's not recursive by default, unless we have a style sheet set
+    setStyleSheet(QLatin1String("I_DONT_EXIST {}"));
 
-  QStyle *defaultStyle = 0;
+    QStyle *defaultStyle = 0;
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  QGuiPlatformPlugin defaultGuiPlatform;
-  defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName());
+    QGuiPlatformPlugin defaultGuiPlatform;
+    defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName());
 #else
-  foreach (const QString &styleName, QGuiApplicationPrivate::platform_theme->defaultThemeHint(QPlatformTheme::StyleNames).toStringList()) {
-    if ((defaultStyle = QStyleFactory::create(styleName))) {
-      break;
+    foreach (const QString &styleName, QGuiApplicationPrivate::platform_theme->defaultThemeHint(QPlatformTheme::StyleNames).toStringList()) {
+      if ((defaultStyle = QStyleFactory::create(styleName))) {
+        break;
+      }
     }
-  }
 #endif
-  if (defaultStyle) {
-    // do not set parent of default style
-    // this will cause the style being deleted too early through ~QObject()
-    // other objects (e.g. the script engine debugger) still might have a
-    // reference on the style during destruction
-    setStyle(defaultStyle);
+    if (defaultStyle) {
+      // do not set parent of default style
+      // this will cause the style being deleted too early through ~QObject()
+      // other objects (e.g. the script engine debugger) still might have a
+      // reference on the style during destruction
+      setStyle(defaultStyle);
+    }
   }
 
   ui->setupUi(this);
