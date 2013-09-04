@@ -46,6 +46,11 @@ Client* Client::instance()
   return static_cast<Client*>(s_instance);
 }
 
+bool Client::isRemoteClient() const
+{
+  return true;
+}
+
 void Client::connectToHost(const QString &hostName, quint16 port)
 {
   qDebug() << Q_FUNC_INFO << hostName << ':' << port;

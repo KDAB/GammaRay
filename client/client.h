@@ -60,6 +60,8 @@ public:
   /** Singleton accessor. */
   static Client* instance();
 
+  bool isRemoteClient() const;
+
 signals:
   /** Emitted when we successfully established a connection and passed the protocol version handshake step. */
   void connectionEstablished();

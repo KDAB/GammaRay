@@ -95,6 +95,11 @@ public:
    */
   void setLabel(const QString &label);
 
+  /**
+   * Returns true for remote clients and false for the in-probe server endpoint.
+   */
+  virtual bool isRemoteClient() const = 0;
+
 signals:
   /** Emitted when we lost the connection to the other endpoint. */
   void disconnected();

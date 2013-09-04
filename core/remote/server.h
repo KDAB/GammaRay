@@ -62,6 +62,7 @@ class Server : public Endpoint
      */
     virtual void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const;
 
+    bool isRemoteClient() const;
   protected:
     void messageReceived(const Message& msg);
     void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);

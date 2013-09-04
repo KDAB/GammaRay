@@ -80,6 +80,10 @@ Server* Server::instance()
   return static_cast<Server*>(s_instance);
 }
 
+bool Server::isRemoteClient() const
+{
+  return false;
+}
 
 void Server::newConnection()
 {
