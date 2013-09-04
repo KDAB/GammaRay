@@ -99,7 +99,7 @@ void StateModelPrivate::transitionTriggered(QAbstractTransition *transition)
   Q_Q(StateModel);
 
   // TODO: Make this more efficient? Find out the changed states and update just these indices
-  q->dataChanged(QModelIndex(), QModelIndex());
+  q->layoutChanged();
 }
 
 StateModel::StateModel(QObject *parent)
