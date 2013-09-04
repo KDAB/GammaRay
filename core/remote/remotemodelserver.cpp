@@ -177,7 +177,8 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant 
       // see also: https://bugreports.qt-project.org/browse/QTBUG-33321
       const QIcon icon = it.value().value<QIcon>();
       ///TODO: what size to use? icon.availableSizes is empty...
-      it.value() = icon.pixmap(QSize(16, 16));
+      if (!icon.isNull())
+        it.value() = icon.pixmap(QSize(16, 16));
       ++it;
     } else if (canSerialize(it.value())) {
       ++it;
