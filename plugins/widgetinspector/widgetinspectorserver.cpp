@@ -44,6 +44,8 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QMainWindow>
+#include <QEvent>
+#include <QTimer>
 
 #include <iostream>
 
@@ -58,7 +60,12 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   : WidgetInspectorInterface(parent)
   , m_overlayWidget(new OverlayWidget)
   , m_propertyController(new PropertyController(objectName(), this))
+  , m_updatePreviewTimer(new QTimer(this))
 {
+  m_updatePreviewTimer->setSingleShot(true);
+  m_updatePreviewTimer->setInterval(100);
+  connect(m_updatePreviewTimer, SIGNAL(timeout()), SLOT(updateWidgetPreview()));
+
   m_overlayWidget->hide();
   connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
           SLOT(handleOverlayWidgetDestroyed(QObject*)));
@@ -71,8 +78,8 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
   m_widgetSelectionModel = ObjectBroker::selectionModel(widgetFilterProxy);
   connect(m_widgetSelectionModel,
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(widgetSelected(QItemSelection)));
+          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          SLOT(widgetSelected(QModelIndex)));
 
   // TODO this needs to be delayed until there actually is something to select
   selectDefaultItem();
@@ -96,40 +103,79 @@ void WidgetInspectorServer::selectDefaultItem()
   }
 }
 
-void WidgetInspectorServer::widgetSelected(const QItemSelection& selection)
+void WidgetInspectorServer::widgetSelected(const QModelIndex &index)
 {
-  QModelIndex index;
-  if (selection.size() > 0)
-    index = selection.first().topLeft();
+  m_propertyController->setObject(0);
 
+  QWidget *widget = 0;
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    QWidget *widget = qobject_cast<QWidget*>(obj);
+    m_propertyController->setObject(obj);
+    widget = qobject_cast<QWidget*>(obj);
     QLayout *layout = qobject_cast<QLayout*>(obj);
     if (!widget && layout) {
       widget = layout->parentWidget();
     }
-
-    m_propertyController->setObject(obj);
-
-    if (widget &&
-        qobject_cast<QDesktopWidget*>(widget) == 0 &&
-        !widget->inherits("QDesktopScreenWidget")) {
-      m_overlayWidget->placeOn(widget);
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-      const QPixmap pixmap = QPixmap::grabWidget(widget);
-#else
-      const QPixmap pixmap = widget->grab();
-#endif
-      emit widgetPreviewAvailable(pixmap);
-    } else {
-      m_overlayWidget->placeOn(0);
-    }
-  } else {
-    m_propertyController->setObject(0);
-    m_overlayWidget->placeOn(0);
   }
+
+  if (m_selectedWidget == widget) {
+    return;
+  }
+
+  if (m_selectedWidget) {
+    m_selectedWidget->removeEventFilter(this);
+  }
+
+  m_selectedWidget = widget;
+
+  if (m_selectedWidget &&
+      qobject_cast<QDesktopWidget*>(m_selectedWidget) ||
+      m_selectedWidget->inherits("QDesktopScreenWidget")) {
+    m_overlayWidget->placeOn(0);
+    return;
+  }
+
+  m_overlayWidget->placeOn(m_selectedWidget);
+
+  if (!m_selectedWidget) {
+    return;
+  }
+
+  m_selectedWidget->installEventFilter(this);
+
+  updateWidgetPreview();
+}
+
+bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
+{
+  if (object == m_selectedWidget && event->type() == QEvent::Paint) {
+    // delay pixmap grabbing such that the object can update itself beforehand
+    // also use a timer to prevent aggregation of previews
+    if (!m_updatePreviewTimer->isActive()) {
+      m_updatePreviewTimer->start();
+    }
+  }
+  return QObject::eventFilter(object, event);
+}
+
+void WidgetInspectorServer::updateWidgetPreview()
+{
+  if (!m_selectedWidget) {
+    return;
+  }
+
+  emit widgetPreviewAvailable(pixmapForWidget(m_selectedWidget));
+}
+
+QPixmap WidgetInspectorServer::pixmapForWidget(QWidget *widget)
+{
+  // prevent "recursion", i.e. infinite update loop, in our eventFilter
+  Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, 0);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  return QPixmap::grabWidget(widget);
+#else
+  return widget->grab();
+#endif
 }
 
 void WidgetInspectorServer::handleOverlayWidgetDestroyed(QObject *)
@@ -159,73 +205,49 @@ void WidgetInspectorServer::widgetSelected(QWidget *widget)
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
-QWidget *WidgetInspectorServer::selectedWidget() const
-{
-  const QModelIndexList indexes = m_widgetSelectionModel->selectedRows();
-  if (indexes.isEmpty()) {
-    return 0;
-  }
-  const QModelIndex index = indexes.first();
-  if (index.isValid()) {
-    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    QWidget *widget = qobject_cast<QWidget*>(obj);
-    QLayout* layout = qobject_cast<QLayout*>(obj);
-    if (!widget && layout) {
-      widget = layout->parentWidget();
-    }
-    return widget;
-  }
-  return 0;
-}
-
 // TODO the following actions should actually store the file on the client!
 
 void WidgetInspectorServer::saveAsImage(const QString& fileName)
 {
-  QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget) {
+  if (fileName.isEmpty() || !m_selectedWidget) {
     return;
   }
 
-  QPixmap pixmap(widget->size());
   m_overlayWidget->hide();
-  widget->render(&pixmap);
+  QPixmap pixmap = pixmapForWidget(m_selectedWidget);
   m_overlayWidget->show();
   pixmap.save(fileName);
 }
 
 void WidgetInspectorServer::saveAsSvg(const QString &fileName)
 {
-  QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget) {
+  if (fileName.isEmpty() || !m_selectedWidget) {
     return;
   }
 
   m_overlayWidget->hide();
-  callExternalExportAction("gammaray_save_widget_to_svg", widget, fileName);
+  callExternalExportAction("gammaray_save_widget_to_svg", m_selectedWidget, fileName);
   m_overlayWidget->show();
 }
 
 void WidgetInspectorServer::saveAsPdf(const QString &fileName)
 {
-  QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget) {
+  if (fileName.isEmpty() || !m_selectedWidget) {
     return;
   }
 
   m_overlayWidget->hide();
-  callExternalExportAction("gammaray_save_widget_to_pdf", widget, fileName);
+  callExternalExportAction("gammaray_save_widget_to_pdf", m_selectedWidget, fileName);
   m_overlayWidget->show();
 }
 
 void WidgetInspectorServer::saveAsUiFile(const QString &fileName)
 {
-  QWidget *widget = selectedWidget();
-  if (fileName.isEmpty() || !widget) {
+  if (fileName.isEmpty() || !m_selectedWidget) {
     return;
   }
 
-  callExternalExportAction("gammaray_save_widget_to_ui", widget, fileName);
+  callExternalExportAction("gammaray_save_widget_to_ui", m_selectedWidget, fileName);
 }
 
 void WidgetInspectorServer::callExternalExportAction(const char *name,
@@ -254,16 +276,15 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
 
 void WidgetInspectorServer::analyzePainting()
 {
-  cout << Q_FUNC_INFO << ' ' << selectedWidget() << endl;
-  QWidget *widget = selectedWidget();
-  if (!widget) {
+  cout << Q_FUNC_INFO << ' ' << m_selectedWidget << endl;
+  if (!m_selectedWidget) {
     return;
   }
 #ifdef HAVE_PRIVATE_QT_HEADERS
   QPaintBuffer buffer;
   m_overlayWidget->hide();
-  buffer.setBoundingRect(widget->rect());
-  widget->render(&buffer);
+  buffer.setBoundingRect(m_selectedWidget->rect());
+  m_selectedWidget->render(&buffer);
   m_overlayWidget->show();
 
   // TODO: this still needs a core/UI split to work remotely

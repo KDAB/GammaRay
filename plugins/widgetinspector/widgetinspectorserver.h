@@ -28,9 +28,11 @@
 #include <widgetinspectorinterface.h>
 
 #include <QLibrary>
+#include <QPointer>
 
-class QItemSelection;
+class QModelIndex;
 class QItemSelectionModel;
+class QTimer;
 
 namespace GammaRay {
 
@@ -47,12 +49,15 @@ class WidgetInspectorServer : public WidgetInspectorInterface
 
     void selectDefaultItem();
 
+  protected:
+    bool eventFilter(QObject *object, QEvent *event);
+
   private:
-    QWidget *selectedWidget() const;
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
+    QPixmap pixmapForWidget(QWidget *widget);
 
   private slots:
-    void widgetSelected(const QItemSelection &selection);
+    void widgetSelected(const QModelIndex &index);
     void widgetSelected(QWidget *widget);
 
     void handleOverlayWidgetDestroyed(QObject*);
@@ -64,11 +69,15 @@ class WidgetInspectorServer : public WidgetInspectorInterface
 
     void analyzePainting();
 
+    void updateWidgetPreview();
+
   private:
     OverlayWidget *m_overlayWidget;
     QLibrary m_externalExportActions;
     PropertyController *m_propertyController;
     QItemSelectionModel *m_widgetSelectionModel;
+    QPointer<QWidget> m_selectedWidget;
+    QTimer *m_updatePreviewTimer;
 };
 
 }
