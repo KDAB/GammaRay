@@ -32,6 +32,7 @@
 #include <network/objectbroker.h>
 #include <network/modelroles.h>
 #include <network/endpoint.h>
+#include <common/probecontrollerinterface.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -92,11 +93,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
   ui->setupUi(this);
 
-  connect(ui->actionRetractProbe, SIGNAL(triggered(bool)), SLOT(close()));
+  connect(ui->actionRetractProbe, SIGNAL(triggered(bool)), SLOT(detachProbe()));
 
   connect(QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()));
-  connect(ui->actionQuit, SIGNAL(triggered(bool)),
-          QApplication::instance(), SLOT(quit()));
+  connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(quitHost()));
   ui->actionQuit->setIcon(QIcon::fromTheme("application-exit"));
 
   connect(ui->actionPlugins, SIGNAL(triggered(bool)),
@@ -285,6 +285,16 @@ QWidget* MainWindow::createErrorPage(const QModelIndex& index)
   // TODO show the actual plugin error message as well as any other useful information (eg. file name) we have, once the tool model has those
   page->setText(tr("Tool %1 failed to load.").arg(index.data(ToolModelRole::ToolId).toString()));
   return page;
+}
+
+void MainWindow::quitHost()
+{
+  ObjectBroker::object<ProbeControllerInterface*>()->quitHost();
+}
+
+void MainWindow::detachProbe()
+{
+  ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
 }
 
 #include "mainwindow.moc"

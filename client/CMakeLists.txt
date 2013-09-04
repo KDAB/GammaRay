@@ -15,6 +15,7 @@ set(gammaray_client_srcs
   clienttoolmodel.cpp
   clientconnectionmanager.cpp
   propertycontrollerclient.cpp
+  probecontrollerclient.cpp
 )
 
 qt4_automoc(${gammaray_client_srcs})

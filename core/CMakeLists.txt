@@ -20,6 +20,7 @@ set(gammaray_srcs
   metapropertymodel.cpp
   probe.cpp
   probesettings.cpp
+  probecontroller.cpp
   proxydetacher.cpp
   objectlistmodel.cpp
   objectpropertymodel.cpp

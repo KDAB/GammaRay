@@ -26,6 +26,7 @@
 #include "selectionmodelclient.h"
 #include "clientconnectionmanager.h"
 #include "propertycontrollerclient.h"
+#include "probecontrollerclient.h"
 
 #include <network/objectbroker.h>
 #include <network/streamoperators.h>
@@ -50,6 +51,13 @@ static QObject* createPropertyController(const QString &name, QObject *parent)
   return new PropertyControllerClient(name, parent);
 }
 
+static QObject* createProbeController(const QString &name, QObject *parent)
+{
+  QObject *o = new ProbeControllerClient(parent);
+  ObjectBroker::registerObject(name, o);
+  return o;
+}
+
 int main(int argc, char** argv)
 {
   QApplication app(argc, argv);
@@ -67,6 +75,7 @@ int main(int argc, char** argv)
   }
 
   ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
+  ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface*>(createProbeController);
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 

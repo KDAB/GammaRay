@@ -47,6 +47,9 @@ class MainWindow : public QMainWindow
     void toolSelected();
     void selectInitialTool();
 
+    void quitHost();
+    void detachProbe();
+
   private:
     QWidget* createErrorPage(const QModelIndex &index);
 

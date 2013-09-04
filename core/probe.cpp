@@ -32,6 +32,7 @@
 #include "toolmodel.h"
 #include "readorwritelocker.h"
 #include "probesettings.h"
+#include "probecontroller.h"
 
 #include "tools/modelinspector/modeltest.h"
 
@@ -155,6 +156,7 @@ Probe::Probe(QObject *parent):
 
   StreamOperators::registerOperators();
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
+  ObjectBroker::registerObject<ProbeControllerInterface*>(new ProbeController(this));
 
   registerModel(QLatin1String("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ObjectList"), m_objectListModel);
