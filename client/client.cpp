@@ -131,8 +131,10 @@ void Client::messageReceived(const Message& msg)
         qWarning() << Q_FUNC_INFO << "Got unhandled message:" << msg.type();
         return;
     }
-    if (m_initState == InitComplete)
+    if (m_initState == InitComplete) {
+      m_initState |= ConnectionEstablished;
       emit connectionEstablished();
+    }
   } else {
     dispatchMessage(msg);
   }

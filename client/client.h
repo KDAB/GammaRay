@@ -85,6 +85,7 @@ private:
     VersionChecked    =  1,
     ObjectMapReceived =  2,
     ServerInfoReceived = 4,
+    ConnectionEstablished = 8,
 
     InitComplete = VersionChecked | ObjectMapReceived | ServerInfoReceived
   };
