@@ -77,6 +77,11 @@ class ToolFactory
     virtual QStringList supportedTypes() const = 0;
 
     /**
+     * Return true if this tool supports remoting, false otherwise.
+     */
+    virtual bool remotingSupported() const = 0;
+
+    /**
      * Initialize the tool.
      * Implement this method to do non-GUI initialization, such as creating
      * object tracking models etc.
@@ -118,6 +123,11 @@ class StandardToolFactory : public ToolFactory
     {
       return new Tool(probe, parentWidget);
     }
+
+    virtual bool remotingSupported() const
+    {
+      return false;
+    }
 };
 
 // TODO: split this completely, this is just a migration aid
@@ -144,6 +154,11 @@ class StandardToolFactory2 : public ToolFactory
     {
       Q_UNUSED(probe);
       return new ToolUi(parentWidget);
+    }
+
+    virtual bool remotingSupported() const
+    {
+      return true;
     }
 };
 

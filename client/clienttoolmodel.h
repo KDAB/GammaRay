@@ -45,6 +45,7 @@ public:
 
   virtual QVariant data(const QModelIndex& index, int role) const;
   virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+  virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
 private:
   void insertFactory(ToolFactory* factory);

@@ -32,9 +32,12 @@
 #include <iostream>
 
 using namespace GammaRay;
+using namespace std;
 
 ProxyToolFactory::ProxyToolFactory(const QString &path, QObject *parent)
-  : QObject(parent), m_factory(0)
+  : QObject(parent)
+  , m_factory(0)
+  , m_remotingSupported(false)
 {
   const QFileInfo pluginInfo(path);
   m_id = pluginInfo.baseName();
@@ -46,6 +49,9 @@ ProxyToolFactory::ProxyToolFactory(const QString &path, QObject *parent)
     desktopFile.value(
       QLatin1String("X-GammaRay-Types")).toString().split(QLatin1Char(';'),
                                                           QString::SkipEmptyParts);
+
+  m_remotingSupported = desktopFile.value(QLatin1String("X-GammaRay-Remote"), true).toBool();
+
   m_pluginPath =
     pluginInfo.dir().absoluteFilePath(desktopFile.value(QLatin1String("Exec")).toString());
 
@@ -87,6 +93,11 @@ QString ProxyToolFactory::name() const
 QStringList ProxyToolFactory::supportedTypes() const
 {
   return m_supportedTypes;
+}
+
+bool ProxyToolFactory::remotingSupported() const
+{
+  return m_remotingSupported;
 }
 
 void ProxyToolFactory::init(ProbeInterface *probe)

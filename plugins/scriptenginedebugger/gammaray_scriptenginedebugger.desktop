@@ -2,3 +2,4 @@
 Name=Script Engines
 X-GammaRay-Types=QScriptEngine;
 Exec=gammaray_scriptenginedebugger_plugin
+X-GammaRay-Remote=false

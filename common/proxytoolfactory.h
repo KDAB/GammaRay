@@ -53,6 +53,7 @@ class ProxyToolFactory : public QObject, public ToolFactory
     virtual QString id() const;
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
+    virtual bool remotingSupported() const;
 
     virtual void init(ProbeInterface *probe);
     virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget);
@@ -67,6 +68,7 @@ class ProxyToolFactory : public QObject, public ToolFactory
     QString m_errorString;
     QStringList m_supportedTypes;
     ToolFactory *m_factory;
+    bool m_remotingSupported;
 };
 
 }

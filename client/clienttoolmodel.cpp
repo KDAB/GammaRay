@@ -52,6 +52,7 @@ public: \
   virtual inline QString name() const { return QString(); } \
   virtual inline void init(ProbeInterface *) {} \
   virtual inline QWidget *createWidget(ProbeInterface *, QWidget *parentWidget) { return new type ## Widget(parentWidget); } \
+  virtual inline bool remotingSupported() const { return true; } \
 }
 
 MAKE_FACTORY(ConnectionInspector);
@@ -128,6 +129,17 @@ bool ClientToolModel::setData(const QModelIndex& index, const QVariant& value, i
   }
 
   return RemoteModel::setData(index, value, role);
+}
+
+Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
+{
+  Qt::ItemFlags ret = RemoteModel::flags(index);
+  const QString toolId = RemoteModel::data(index, ToolModelRole::ToolId).toString();
+  ToolFactory *factory = m_factories.value(toolId);
+  if (!factory || !factory->remotingSupported()) {
+    ret &= ~Qt::ItemIsEnabled;
+  }
+  return ret;
 }
 
 void ClientToolModel::insertFactory(ToolFactory* factory)
