@@ -21,17 +21,23 @@ else()
 endif()
 
 set(gammaray_statemachineviewer_plugin_srcs
+  # shared
+  statemachineviewerinterface.cpp
+
+  # server
+  statemachineviewerserver.cpp
+  transitionmodel.cpp
+  statemodel.cpp
+
+  # gui & client
+  statemachineviewerclient.cpp
+  statemachineview.cpp
+  statemachineviewerwidget.cpp
+  statemachinewatcher.cpp
   # this part depends on graphviz
   gvgraph/gvgraph.cpp
   gvgraph/gvgraphitems.cpp
   gvgraph/gvutils.cpp
-
-  statemachineview.cpp
-  statemachineviewer.cpp
-  statemachinewatcher.cpp
-
-  transitionmodel.cpp
-  statemodel.cpp
 )
 
 qt4_automoc(${gammaray_statemachineviewer_plugin_srcs})
