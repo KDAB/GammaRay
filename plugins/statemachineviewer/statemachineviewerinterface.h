@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QMetaType>
+#include <QDataStream>
 
 class QAbstractState;
 class QAbstractTransition;
