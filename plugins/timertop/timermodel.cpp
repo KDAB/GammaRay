@@ -127,7 +127,8 @@ TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(QTimer *timer)
   QVariant timerInfoVariant = timer->property(timerInfoPropertyName);
   if (!timerInfoVariant.isValid()) {
     timerInfoVariant.setValue(TimerInfoPtr(new TimerInfo(timer)));
-    timer->setProperty(timerInfoPropertyName, timerInfoVariant);
+    if (timer->thread() == QThread::currentThread()) // ### FIXME: we shouldn't use setProperty() in the first place...
+      timer->setProperty(timerInfoPropertyName, timerInfoVariant);
   }
 
   const TimerInfoPtr timerInfo = timerInfoVariant.value<TimerInfoPtr>();
