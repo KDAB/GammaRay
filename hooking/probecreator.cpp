@@ -37,8 +37,6 @@
 using namespace GammaRay;
 using namespace std;
 
-Q_GLOBAL_STATIC(QVector<QObject*>, s_addedBeforeProbeInsertion)
-
 ProbeCreator::ProbeCreator(Type type)
   : m_type(type)
 {
@@ -49,38 +47,8 @@ ProbeCreator::ProbeCreator(Type type)
   QMetaObject::invokeMethod(this, "createProbe", Qt::QueuedConnection);
 }
 
-void ProbeCreator::trackObject(QObject* object)
-{
-  QWriteLocker lock(Probe::objectLock());
-
-  // need to pay attention if the Probe asked to filter certain objects
-  // e.g. during the construction of the Probe itself
-  if (Probe::filteredThread() == object->thread())
-    return;
-
-  s_addedBeforeProbeInsertion()->push_back(object);
-}
-
-void ProbeCreator::untrackObject(QObject* obj)
-{
-  QWriteLocker lock(Probe::objectLock());
-
-  if (!s_addedBeforeProbeInsertion())
-    return;
-
-  for (QVector<QObject*>::iterator it = s_addedBeforeProbeInsertion()->begin();
-      it != s_addedBeforeProbeInsertion()->end();) {
-    if (*it == obj) {
-      it = s_addedBeforeProbeInsertion()->erase(it);
-    } else {
-      ++it;
-    }
-  }
-}
-
 void ProbeCreator::createProbe()
 {
-  QWriteLocker lock(Probe::objectLock());
   // make sure we are in the ui thread
   Q_ASSERT(QThread::currentThread() == qApp->thread());
 
@@ -90,22 +58,8 @@ void ProbeCreator::createProbe()
     return;
   }
 
-  const bool success = Probe::createProbe();
-  Q_ASSERT(success);
-  Q_UNUSED(success);
-
-  Q_ASSERT(Probe::instance());
-  QMetaObject::invokeMethod(Probe::instance(), "delayedInit", Qt::QueuedConnection);
-
-  // add objects to the probe that were tracked before its creation
-  foreach (QObject *obj, *(s_addedBeforeProbeInsertion())) {
-    Probe::objectAdded(obj);
-  }
-  s_addedBeforeProbeInsertion()->clear();
-
-  if (m_type == CreateAndFindExisting) {
-    Probe::findExistingObjects();
-  }
+  Probe::createProbe(m_type == GammaRay::ProbeCreator::CreateAndFindExisting);
+  Q_ASSERT(Probe::isInitialized());
 
   deleteLater();
 }
