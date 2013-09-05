@@ -58,7 +58,7 @@
 using namespace GammaRay;
 using namespace std;
 
-QAtomicPointer<Probe> Probe::s_instance = 0;
+QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(0);
 
 namespace GammaRay {
 
@@ -194,7 +194,8 @@ Probe::~Probe()
 #endif
 
   ObjectBroker::clear();
-  s_instance = 0;
+
+  s_instance = QAtomicPointer<Probe>(0);
 }
 
 QThread* Probe::filteredThread()
@@ -218,12 +219,16 @@ Probe *GammaRay::Probe::instance()
     return NULL;
   }
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   return s_instance;
+#else
+  return s_instance.load();
+#endif
 }
 
 bool Probe::isInitialized()
 {
-  return s_instance && qApp;
+  return instance() && qApp;
 }
 
 bool Probe::canShowWidgets()
@@ -259,18 +264,19 @@ void Probe::createProbe(bool findExisting)
 
   // now we can get the lock and add items which where added before this point in time
   {
-    QWriteLocker lock(Probe::objectLock());
+    QWriteLocker lock(s_lock());
     // now we set the instance while holding the lock,
     // all future calls to object{Added,Removed} will
     // act directly on the data structures there instead
     // of using addedBeforeProbeInstance
     // this will only happen _after_ the object lock above is released though
-    Q_ASSERT(!Probe::s_instance);
-    Probe::s_instance = probe;
+    Q_ASSERT(!instance());
+
+    s_instance = QAtomicPointer<Probe>(probe);
 
     // add objects to the probe that were tracked before its creation
     foreach (QObject *obj, s_listener()->addedBeforeProbeInstance) {
-      Probe::objectAdded(obj);
+      objectAdded(obj);
     }
     s_listener()->addedBeforeProbeInstance.clear();
 
@@ -299,7 +305,7 @@ void Probe::delayedInit()
     qputenv("DYLD_FORCE_FLAT_NAMESPACE", "");
   }
 
-  QCoreApplication::instance()->installEventFilter(s_instance);
+  QCoreApplication::instance()->installEventFilter(this);
 
   QString appName = qApp->applicationName();
   if (appName.isEmpty() && !qApp->arguments().isEmpty()) {

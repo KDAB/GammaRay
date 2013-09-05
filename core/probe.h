@@ -52,7 +52,14 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
   public:
     virtual ~Probe();
 
+    /**
+     * NOTE: You must hold the object lock when operating on the instance!
+     */
     static Probe *instance();
+
+    /**
+     * Returns true if the probe is initialized, false otherwise.
+     */
     static bool isInitialized();
 
     static void objectAdded(QObject *obj, bool fromCtor = false);
