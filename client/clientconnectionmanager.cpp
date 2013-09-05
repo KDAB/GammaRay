@@ -48,7 +48,8 @@ void ClientConnectionManager::connectToHost()
 void ClientConnectionManager::connectionEstablished()
 {
   m_toolModel = new ClientToolModel(this);
-  ObjectBroker::registerModel("com.kdab.GammaRay.ToolModel", m_toolModel);
+  // overload the remote tool model with the special client tool model
+  ObjectBroker::registerModelInternal("com.kdab.GammaRay.ToolModel", m_toolModel);
 
   if (m_toolModel->rowCount() <= 0) {
     connect(m_toolModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(toolModelPopulated()));

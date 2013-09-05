@@ -99,8 +99,13 @@ namespace ObjectBroker {
     registerClientObjectFactoryCallbackInternal(QByteArray(qobject_interface_iid<T>()), callback);
   }
 
-  /** Register a newly created model with the given name. */
-  GAMMARAY_COMMON_EXPORT void registerModel(const QString &name, QAbstractItemModel* model);
+  /**
+   * Register a newly created model with the given name.
+   *
+   * NOTE: This must not be called directly by anything but the probe/server side.
+   * User code must use Probe::registerModel() instead!
+   */
+  GAMMARAY_COMMON_EXPORT void registerModelInternal(const QString &name, QAbstractItemModel* model);
 
   /** Retrieve a model by name. */
   GAMMARAY_COMMON_EXPORT QAbstractItemModel* model(const QString &name);

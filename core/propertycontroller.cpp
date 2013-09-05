@@ -90,9 +90,7 @@ PropertyController::~PropertyController()
 
 void PropertyController::registerModel(QAbstractItemModel* model, const QString& nameSuffix)
 {
-  RemoteModelServer *server = new RemoteModelServer(m_objectBaseName + "." + nameSuffix, this);
-  server->setModel(model);
-  ObjectBroker::registerModel(m_objectBaseName + "." + nameSuffix, model);
+  Probe::instance()->registerModel(m_objectBaseName + "." + nameSuffix, model);
 }
 
 void PropertyController::signalEmitted(QObject* sender, int signalIndex)

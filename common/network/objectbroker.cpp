@@ -93,7 +93,7 @@ void ObjectBroker::registerClientObjectFactoryCallbackInternal(const QByteArray 
   s_objectBroker()->clientObjectFactories[type] = callback;
 }
 
-void ObjectBroker::registerModel(const QString& name, QAbstractItemModel* model)
+void ObjectBroker::registerModelInternal(const QString& name, QAbstractItemModel* model)
 {
   Q_ASSERT(!s_objectBroker()->models.contains(name));
   model->setObjectName(name);
