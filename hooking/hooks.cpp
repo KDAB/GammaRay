@@ -65,15 +65,7 @@ extern "C" Q_DECL_EXPORT void qt_startup_hook()
 
 extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 {
-  if (!Probe::isInitialized()) {
-    IF_DEBUG(cout
-             << "objectAdded Before: "
-             << hex << obj
-             << (fromCtor ? " (from ctor)" : "") << endl;)
-    ProbeCreator::trackObject(obj);
-  } else {
-    Probe::objectAdded(obj, true);
-  }
+  Probe::objectAdded(obj, true);
 
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
   if (!functionsOverwritten) {
@@ -86,11 +78,7 @@ extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 
 extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
 {
-  if (!Probe::isInitialized()) {
-    ProbeCreator::untrackObject(obj);
-  } else {
-    Probe::objectRemoved(obj);
-  }
+  Probe::objectRemoved(obj);
 
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
   if (!functionsOverwritten) {
