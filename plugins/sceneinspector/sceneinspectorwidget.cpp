@@ -75,6 +75,7 @@ void SceneInspectorWidget::sceneSelected(int index)
   const QModelIndex mi = ui->sceneComboBox->model()->index(index, 0);
   ObjectBroker::selectionModel(ui->sceneComboBox->model())->select(mi, QItemSelectionModel::ClearAndSelect);
 
+  ///FIXME: this won't work remotely
   QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
   cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
@@ -88,9 +89,7 @@ void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
   if (!selection.isEmpty())
     index = selection.first().topLeft();
 
-  cout << Q_FUNC_INFO << " NOT IMPLEMENTED" << endl;
-  /// FIXME
-  return;
+  ///FIXME: this won't work remotely
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
     ui->graphicsSceneView->showGraphicsItem(item);
