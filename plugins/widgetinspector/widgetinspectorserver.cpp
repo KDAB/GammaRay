@@ -129,8 +129,8 @@ void WidgetInspectorServer::widgetSelected(const QModelIndex &index)
   m_selectedWidget = widget;
 
   if (m_selectedWidget &&
-      qobject_cast<QDesktopWidget*>(m_selectedWidget) ||
-      m_selectedWidget->inherits("QDesktopScreenWidget")) {
+      (qobject_cast<QDesktopWidget*>(m_selectedWidget) ||
+      m_selectedWidget->inherits("QDesktopScreenWidget"))) {
     m_overlayWidget->placeOn(0);
     return;
   }
