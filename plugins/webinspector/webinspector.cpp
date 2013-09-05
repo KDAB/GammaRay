@@ -22,7 +22,6 @@
 */
 
 #include "webinspector.h"
-#include "ui_webinspector.h"
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
