@@ -41,6 +41,8 @@ DeferredTreeViewConfiguration::DeferredTreeViewConfiguration(QTreeView *view, bo
 
   connect(view->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
           SLOT(rowsInserted(QModelIndex)));
+  connect(view->model(), SIGNAL(columnsInserted(QModelIndex,int,int)),
+          SLOT(columnsInserted(QModelIndex)));
 
   if (view->model()->rowCount() > 0) {
     rowsInserted(QModelIndex());
@@ -48,6 +50,14 @@ DeferredTreeViewConfiguration::DeferredTreeViewConfiguration(QTreeView *view, bo
       view->expandAll();
     }
   }
+  columnsInserted(QModelIndex());
+}
+
+void DeferredTreeViewConfiguration::hideColumn(int column)
+{
+  m_hiddenColumns << column;
+
+  columnsInserted(QModelIndex());
 }
 
 void DeferredTreeViewConfiguration::rowsInserted(const QModelIndex &parent)
@@ -57,6 +67,20 @@ void DeferredTreeViewConfiguration::rowsInserted(const QModelIndex &parent)
   }
   if (m_select && !m_view->currentIndex().isValid()) {
     m_view->selectionModel()->setCurrentIndex(m_view->model()->index(0, 0), QItemSelectionModel::ClearAndSelect);
+  }
+}
+
+void DeferredTreeViewConfiguration::columnsInserted(const QModelIndex &parent)
+{
+  if (m_hiddenColumns.isEmpty() || parent.isValid()) {
+    return;
+  }
+
+  const int columns = m_view->model()->columnCount(parent);
+  foreach(int column, m_hiddenColumns) {
+    if (column < columns) {
+      m_view->hideColumn(column);
+    }
   }
 }
 

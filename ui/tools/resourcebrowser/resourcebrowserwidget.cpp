@@ -22,6 +22,7 @@
 */
 
 #include "resourcebrowserwidget.h"
+#include <deferredtreeviewconfiguration.h>
 #include "ui_resourcebrowserwidget.h"
 
 #include <3rdparty/qt/resourcemodel.h>
@@ -39,12 +40,8 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   ui->setupUi(this);
   ui->treeView->setModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
 
-  // TODO this and most of the following needs to be delayed when being used remotely
-  ui->treeView->expandAll();
-
-  // date modifier - not really useful and mostly empty anyways - hide it
-  ui->treeView->hideColumn(3);
-
+  DeferredTreeViewConfiguration *config = new DeferredTreeViewConfiguration(ui->treeView);
+  config->hideColumn(3);
   ui->treeView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   QMetaObject::invokeMethod(this, "setupLayout", Qt::QueuedConnection);

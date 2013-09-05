@@ -27,6 +27,7 @@
 #include "include/gammaray_ui_export.h"
 
 #include <QObject>
+#include <QVector>
 
 class QModelIndex;
 class QTreeView;
@@ -53,13 +54,17 @@ class GAMMARAY_UI_EXPORT DeferredTreeViewConfiguration : public QObject
                                            bool expandNewContent = true, bool selectNewContent = true,
                                            QObject *parent = 0);
 
+    void hideColumn(int column);
+
   private slots:
     void rowsInserted(const QModelIndex &parent);
+    void columnsInserted(const QModelIndex &parent);
 
   private:
     QTreeView *m_view;
     bool m_expand;
     bool m_select;
+    QVector<int> m_hiddenColumns;
 };
 
 }
