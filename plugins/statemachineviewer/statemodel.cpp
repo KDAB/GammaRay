@@ -43,21 +43,25 @@ class StateModelPrivate
       m_stateMachine(0),
       m_stateMachineWatcher(new StateMachineWatcher(qq))
   {
-    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(transitionTriggered(QAbstractTransition*)),
-                         qq, SLOT(transitionTriggered(QAbstractTransition*))));
+    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
+                         qq, SLOT(stateConfigurationChanged())));
+    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(stateExited(QAbstractState*)),
+                         qq, SLOT(stateConfigurationChanged())));
   }
 
   Q_DECLARE_PUBLIC(StateModel)
   StateModel * const q_ptr;
   StateMachineWatcher * const m_stateMachineWatcher;
   QStateMachine *m_stateMachine;
+  QSet<QAbstractState*> m_lastConfiguration;
 
   QList<QObject*> children(QObject *parent) const;
 
   QObject *mapModelIndex2QObject(const QModelIndex &) const;
+  QModelIndex indexForState(QAbstractState *state) const;
 
 // private slots:
-  void transitionTriggered(QAbstractTransition*);
+  void stateConfigurationChanged();
 };
 
 }
@@ -93,13 +97,43 @@ QObject *StateModelPrivate::mapModelIndex2QObject(const QModelIndex &index) cons
   return m_stateMachine;
 }
 
-void StateModelPrivate::transitionTriggered(QAbstractTransition *transition)
+QModelIndex StateModelPrivate::indexForState(QAbstractState *state) const
 {
-  Q_UNUSED(transition);
+  Q_ASSERT(state);
+
+  if (state == m_stateMachine) {
+    return QModelIndex();
+  }
+
+  Q_ASSERT(state->parentState());
+  Q_Q(const StateModel);
+  int row = children(state->parentState()).indexOf(state);
+  if (row == -1) {
+    return QModelIndex();
+  }
+  return q->index(row, 0, indexForState(state->parentState()));
+}
+
+void StateModelPrivate::stateConfigurationChanged()
+{
   Q_Q(StateModel);
 
-  // TODO: Make this more efficient? Find out the changed states and update just these indices
-  q->layoutChanged();
+  QSet<QAbstractState *> newConfig = m_stateMachine->configuration();
+  // states which became active
+  foreach(QAbstractState *state, (newConfig - m_lastConfiguration)) {
+    const QModelIndex source = indexForState(state);
+    if (source.isValid()) {
+      q->dataChanged(source, source);
+    }
+  }
+  // states which became inactive
+  foreach(QAbstractState *state, (m_lastConfiguration - newConfig)) {
+    const QModelIndex source = indexForState(state);
+    if (source.isValid()) {
+      q->dataChanged(source, source);
+    }
+  }
+  m_lastConfiguration = newConfig;
 }
 
 StateModel::StateModel(QObject *parent)
@@ -125,6 +159,7 @@ void StateModel::setStateMachine(QStateMachine *stateMachine)
 
   beginResetModel();
   d->m_stateMachine = stateMachine;
+  d->m_lastConfiguration = stateMachine->configuration();
   endResetModel();
 
   d->m_stateMachineWatcher->setWatchedStateMachine(stateMachine);
