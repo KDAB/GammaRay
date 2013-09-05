@@ -28,6 +28,7 @@
 #include "statemachineviewerclient.h"
 
 #include <ui/deferredresizemodesetter.h>
+#include <ui/deferredtreeviewconfiguration.h>
 #include <ui_statemachineviewer.h>
 
 #include <common/network/objectbroker.h>
@@ -84,6 +85,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
   m_ui->stateMachinesView->setSelectionModel(ObjectBroker::selectionModel(stateMachineModel));
   new DeferredResizeModeSetter(m_ui->stateMachinesView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(m_ui->stateMachinesView->header(), 1, QHeaderView::ResizeToContents);
+  new DeferredTreeViewConfiguration(m_ui->stateMachinesView, false);
 
   QAbstractItemModel *stateModel = ObjectBroker::model("com.kdab.GammaRay.StateModel");
   connect(stateModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
@@ -92,6 +94,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
   m_ui->singleStateMachineView->setSelectionModel(ObjectBroker::selectionModel(stateModel));
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 1, QHeaderView::ResizeToContents);
+  new DeferredTreeViewConfiguration(m_ui->singleStateMachineView, true, false);
 
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setMaximumDepth(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), m_interface, SLOT(toggleRunning()));

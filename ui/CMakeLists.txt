@@ -20,6 +20,7 @@ set(gammaray_ui_srcs
   methodinvocationdialog.cpp
   propertywidget.cpp
   deferredresizemodesetter.cpp
+  deferredtreeviewconfiguration.cpp
   splashscreen.cpp
 
   propertyeditor/propertycoloreditor.cpp
