@@ -24,7 +24,6 @@
 #include "webinspector.h"
 #include "ui_webinspector.h"
 
-#include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
 #include "include/singlecolumnobjectproxymodel.h"
@@ -33,32 +32,16 @@
 
 using namespace GammaRay;
 
-WebInspector::WebInspector(ProbeInterface *probe, QWidget *parent)
-  : QWidget(parent), ui(new Ui::WebInspector)
+WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
+  : QObject(parent)
 {
-  ui->setupUi(this);
-
   ObjectTypeFilterProxyModel<QWebPage> *webPageFilter =
     new ObjectTypeFilterProxyModel<QWebPage>(this);
   webPageFilter->setSourceModel(probe->objectListModel());
   SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
   singleColumnProxy->setSourceModel(webPageFilter);
-  ui->webPageComboBox->setModel(singleColumnProxy);
-  connect(ui->webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)));
-}
 
-void WebInspector::webPageSelected(int index)
-{
-  QObject *obj =
-    ui->webPageComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
-  QWebPage *page = qobject_cast<QWebPage*>(obj);
-  if (page) {
-    page->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-    ui->webInspector->setPage(page);
-    // webinspector needs a show event to actually show anything, just setting the page is not enough...
-    ui->webInspector->hide();
-    ui->webInspector->show();
-  }
+  probe->registerModel("com.kdab.GammaRay.WebPages", singleColumnProxy);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
