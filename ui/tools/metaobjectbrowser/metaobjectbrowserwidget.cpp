@@ -24,6 +24,7 @@
 #include "metaobjectbrowserwidget.h"
 #include "propertywidget.h"
 #include "deferredresizemodesetter.h"
+#include <deferredtreeviewconfiguration.h>
 
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
@@ -68,9 +69,8 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   hbox->addWidget(propertyWidget);
 
   // init widget
+  new DeferredTreeViewConfiguration(treeView);
   treeView->sortByColumn(0, Qt::AscendingOrder);
-  const QModelIndex firstIndex = objectFilter->index(0, 0);
-  treeView->expand(firstIndex);
 }
 
 #include "metaobjectbrowserwidget.moc"
