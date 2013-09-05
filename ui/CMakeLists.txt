@@ -11,9 +11,6 @@ include_directories(
 )
 
 set(gammaray_ui_srcs
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
-
   ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
 
   palettemodel.cpp
@@ -54,6 +51,9 @@ install(TARGETS gammaray_ui ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 set(gammaray_ui_internal_srcs
+  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
+
   sidepane.cpp
   aboutpluginsdialog.cpp
   mainwindow.cpp
