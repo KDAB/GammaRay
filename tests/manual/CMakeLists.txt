@@ -36,7 +36,7 @@ target_link_libraries(minimalcoreapplication ${QT_QTCORE_LIBRARIES})
 
 if (QT_QTWEBKIT_FOUND)
   add_executable(wk1application wk1application.cpp)
-  target_link_libraries(wk1application ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTWEBKIT_LIBRARIES})
+  target_link_libraries(wk1application ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTWEBKIT_LIBRARIES} ${QT_QTWEBKITWIDGETS_LIBRARIES})
 endif()
 
 if(QNXNTO)
