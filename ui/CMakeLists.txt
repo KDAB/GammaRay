@@ -97,4 +97,4 @@ endif(NOT WIN32)
 
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 
-target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)
+target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui_internal)
