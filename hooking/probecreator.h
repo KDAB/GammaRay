@@ -41,9 +41,6 @@ class ProbeCreator : public QObject
     };
     explicit ProbeCreator(Type t);
 
-    static void trackObject(QObject* object);
-    static void untrackObject(QObject* object);
-
   private slots:
     void createProbe();
 

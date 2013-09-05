@@ -63,8 +63,6 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     static void connectionRemoved(QObject *sender, const char *signal,
                                   QObject *receiver, const char *method);
 
-    static void findExistingObjects();
-
     QAbstractItemModel *objectListModel() const;
     QAbstractItemModel *objectTreeModel() const;
     QAbstractItemModel *metaObjectModel() const;
@@ -124,11 +122,13 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     static QThread* filteredThread();
 
     void objectFullyConstructed(QObject *obj);
-    static bool createProbe();
+    void findExistingObjects();
+
+    static void createProbe(bool findExisting);
 
     explicit Probe(QObject *parent = 0);
     static void addObjectRecursive(QObject *obj);
-    static Probe *s_instance;
+    static QAtomicPointer<Probe> s_instance;
 
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;

@@ -58,7 +58,7 @@
 using namespace GammaRay;
 using namespace std;
 
-Probe *Probe::s_instance = 0;
+QAtomicPointer<Probe> Probe::s_instance = 0;
 
 namespace GammaRay {
 
@@ -122,6 +122,8 @@ struct Listener
 
   QThread *filterThread;
   bool trackDestroyed;
+
+  QVector<QObject*> addedBeforeProbeInstance;
 };
 
 Q_GLOBAL_STATIC(Listener, s_listener)
@@ -241,15 +243,45 @@ bool Probe::canShowWidgets()
 #endif
 }
 
-bool Probe::createProbe()
+void Probe::createProbe(bool findExisting)
 {
+  Q_ASSERT(!isInitialized());
+
+  // first create the probe and its children
+  // we must not hold the object lock here as otherwise we can deadlock
+  // with other QObject's we create and other threads are using. One
+  // example are QAbstractSocketEngine.
   IF_DEBUG(cout << "setting up new probe instance" << endl;)
   s_listener()->filterThread = QThread::currentThread();
-  Q_ASSERT(!Probe::s_instance);
-  Probe::s_instance = new Probe;
+  Probe *probe = new Probe;
   s_listener()->filterThread = 0;
   IF_DEBUG(cout << "done setting up new probe instance" << endl;)
-  return true;
+
+  // now we can get the lock and add items which where added before this point in time
+  {
+    QWriteLocker lock(Probe::objectLock());
+    // now we set the instance while holding the lock,
+    // all future calls to object{Added,Removed} will
+    // act directly on the data structures there instead
+    // of using addedBeforeProbeInstance
+    // this will only happen _after_ the object lock above is released though
+    Q_ASSERT(!Probe::s_instance);
+    Probe::s_instance = probe;
+
+    // add objects to the probe that were tracked before its creation
+    foreach (QObject *obj, s_listener()->addedBeforeProbeInstance) {
+      Probe::objectAdded(obj);
+    }
+    s_listener()->addedBeforeProbeInstance.clear();
+
+    // try to find existing objects by other means
+    if (findExisting) {
+      probe->findExistingObjects();
+    }
+  }
+
+  // eventually initialize the rest
+  QMetaObject::invokeMethod(probe, "delayedInit", Qt::QueuedConnection);
 }
 
 void Probe::startupHookReceived()
@@ -373,8 +405,10 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
   if (!isInitialized()) {
     IF_DEBUG(cout
-             << "objectAdded called while not being initialized: "
-             << hex << obj << endl;)
+             << "objectAdded Before: "
+             << hex << obj
+             << (fromCtor ? " (from ctor)" : "") << endl;)
+    s_listener()->addedBeforeProbeInstance << obj;
     return;
   }
 
@@ -388,7 +422,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
   if (instance()->m_validObjects.contains(obj)) {
     // this happens when we get a child event before the objectAdded call from the ctor
-    // or when we add an item from s_addedBeforeProbeInsertion who got added already
+    // or when we add an item from addedBeforeProbeInstance who got added already
     // due to the add-parent-before-child logic
     IF_DEBUG(cout
               << "objectAdded Known: "
@@ -504,8 +538,24 @@ void Probe::objectFullyConstructed(QObject *obj)
 void Probe::objectRemoved(QObject *obj)
 {
   QWriteLocker lock(s_lock());
+
   if (!isInitialized()) {
-    IF_DEBUG(cout << "objectRemoved called while not being initialized: " << hex << obj << endl;)
+    IF_DEBUG(cout
+             << "objectRemoved Before: "
+             << hex << obj
+             << " have statics: " << s_listener() << endl;)
+
+    if (!s_listener())
+      return;
+
+    QVector<QObject*> &addedBefore = s_listener()->addedBeforeProbeInstance;
+    for (QVector<QObject*>::iterator it = addedBefore.begin(); it != addedBefore.end();) {
+      if (*it == obj) {
+        it = addedBefore.erase(it);
+      } else {
+        ++it;
+      }
+    }
     return;
   }
 
