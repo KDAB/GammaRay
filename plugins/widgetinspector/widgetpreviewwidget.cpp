@@ -39,7 +39,7 @@ void WidgetPreviewWidget::setPixmap(const QPixmap &pixmap)
   update();
 }
 
-void WidgetPreviewWidget::paintEvent(QPaintEvent */*event*/)
+void WidgetPreviewWidget::paintEvent(QPaintEvent * /*event*/)
 {
   QPainter painter(this);
   const qreal scale = qMin<qreal>(1.0, qMin((qreal)width() / (qreal)m_pixmap.width(),
