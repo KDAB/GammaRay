@@ -4,6 +4,7 @@
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Kevin Funk <kevin.funk@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,18 +20,18 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWER_H
-#define GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWER_H
+#ifndef GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWERSERVER_H
+#define GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWERSERVER_H
 
 #include "statemachineviewerutil.h"
-#include "gvgraph/gvtypes.h"
+#include "statemachineviewerinterface.h"
+#include "statemachineviewerwidget.h"
 
 #include "include/toolfactory.h"
 
 #include <QHash>
 #include <QSet>
 #include <QString>
-#include <QWidget>
 
 class QAbstractTransition;
 class QStateMachine;
@@ -38,70 +39,47 @@ class QAbstractState;
 class QAbstractItemModel;
 class QModelIndex;
 
-typedef QSet<QAbstractState*> StateMachineConfiguration;
-
 namespace GammaRay {
 
-namespace Ui {
-  class StateMachineViewer;
-}
-
-class GVNodeItem;
-class GVEdgeItem;
-class GVGraphItem;
 class StateModel;
 class StateMachineWatcher;
 class TransitionModel;
 
-class GVGraph;
-
-class StateMachineViewer : public QWidget
+class StateMachineViewerServer : public StateMachineViewerInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::StateMachineViewerInterface)
   public:
-    explicit StateMachineViewer(ProbeInterface *probe, QWidget *parent = 0);
+    explicit StateMachineViewerServer(ProbeInterface *probe, QObject *parent = 0);
 
     void addState(QAbstractState *state);
     void addTransition(QAbstractTransition *transition);
 
     QStateMachine *selectedStateMachine() const;
 
+    using StateMachineViewerInterface::stateConfigurationChanged;
   private slots:
-    void handleStatesChanged();
+    void stateEntered(QAbstractState *state);
+    void stateExited(QAbstractState *state);
+    void stateConfigurationChanged();
     void handleTransitionTriggered(QAbstractTransition *);
 
     void handleMachineClicked(const QModelIndex &);
     void handleStateClicked(const QModelIndex &);
-    void handleDepthChanged(int depth);
 
-    void selectStateMachine(QStateMachine *stateMachine);
     void setFilteredState(QAbstractState *state);
     void setMaximumDepth(int depth);
 
-    void clearView();
-    void repopulateView();
-
-    void showMessage(const QString &message);
-
     void updateStartStop();
-    void startStopClicked();
-    void exportAsImage();
+    void toggleRunning();
 
   private:
-    void clearGraph();
     void repopulateGraph();
 
     void updateStateItems();
-    void updateTransitionItems();
 
     bool mayAddState(QAbstractState *state);
 
-    QScopedPointer<Ui::StateMachineViewer> m_ui;
-
-    GVGraph *m_graph;
-    QFont m_font;
-
-    QAbstractItemModel *m_stateMachineModel;
     StateModel *m_stateModel;
     TransitionModel *m_transitionModel;
 
@@ -109,22 +87,13 @@ class StateMachineViewer : public QWidget
     QAbstractState *m_filteredState;
     int m_maximumDepth;
 
-    QHash<QAbstractTransition *, EdgeId> m_transitionEdgeIdMap;
-    QHash<QAbstractState *, GraphId> m_stateGraphIdMap;
-    QHash<QAbstractState *, NodeId> m_stateNodeIdMap;
-
-    QHash<EdgeId, GVEdgeItem *> m_edgeItemMap;
-    QHash<GraphId, GVGraphItem *> m_graphItemMap;
-    QHash<NodeId, GVNodeItem *> m_nodeItemMap;
-
-    RingBuffer<StateMachineConfiguration> m_lastConfigurations;
-    RingBuffer<QAbstractTransition*> m_lastTransitions;
-
     StateMachineWatcher *m_stateMachineWatcher;
+    QSet<QAbstractState*> m_recursionGuard;
+    QSet<QAbstractState*> m_lastStateConfig;
 };
 
 class StateMachineViewerFactory :
-    public QObject, public StandardToolFactory<QStateMachine, StateMachineViewer>
+public QObject, public StandardToolFactory2<QStateMachine, StateMachineViewerServer, StateMachineViewerWidget>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
@@ -143,4 +112,4 @@ class StateMachineViewerFactory :
 
 }
 
-#endif // GAMMARAY_STATEMACHINEVIEWER_H
+#endif // GAMMARAY_STATEMACHINEVIEWERSERVER_H
