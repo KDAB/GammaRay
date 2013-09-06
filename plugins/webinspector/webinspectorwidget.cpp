@@ -44,13 +44,23 @@ WebInspectorWidget::~WebInspectorWidget()
 void WebInspectorWidget::webPageSelected(int index)
 {
   QObject *obj = ui->webPageComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
-  QWebPage *page = qobject_cast<QWebPage*>(obj);
-  if (page) {
+
+  // Wk 1, local
+  if (QWebPage *page = qobject_cast<QWebPage*>(obj)) {
     page->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
     ui->webInspector->setPage(page);
     // webinspector needs a show event to actually show anything, just setting the page is not enough...
     ui->webInspector->hide();
     ui->webInspector->show();
+
+    ui->stack->setCurrentWidget(ui->wk1LocalPage);
+  }
+
+  // TODO: handle WK2
+
+  // WK1, remote
+  else {
+    ui->stack->setCurrentWidget(ui->wk1RemotePage);
   }
 }
 
