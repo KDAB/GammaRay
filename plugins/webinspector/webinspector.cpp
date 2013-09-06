@@ -38,6 +38,8 @@ WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
   WebViewModel *webViewModel = new WebViewModel(this);
   webViewModel->setSourceModel(probe->objectListModel());
   probe->registerModel("com.kdab.GammaRay.WebPages", webViewModel);
+
+  qputenv("QTWEBKIT_INSPECTOR_SERVER", "0.0.0.0:11733"); // TODO set based on Server address/port
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

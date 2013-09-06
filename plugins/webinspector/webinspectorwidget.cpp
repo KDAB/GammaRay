@@ -22,6 +22,7 @@
 */
 
 #include "webinspectorwidget.h"
+#include "webviewmodel.h"
 #include "ui_webinspectorwidget.h"
 
 #include "include/objectmodel.h"
@@ -56,7 +57,10 @@ void WebInspectorWidget::webPageSelected(int index)
     ui->stack->setCurrentWidget(ui->wk1LocalPage);
   }
 
-  // TODO: handle WK2
+  else if (ui->webPageComboBox->itemData(index, WebViewModel::WebKitVersionRole).toInt() == 2) {
+    ui->webView->setUrl(QUrl("http://localhost:11733")); // TODO determine correctly
+    ui->stack->setCurrentWidget(ui->wk2Page);
+  }
 
   // WK1, remote
   else {
