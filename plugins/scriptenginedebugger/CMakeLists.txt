@@ -4,11 +4,12 @@ include_directories(
 
 set(gammaray_scriptenginedebugger_plugin_srcs
   scriptenginedebugger.cpp
+  scriptenginedebuggerwidget.cpp
 )
 
 qt4_automoc(${gammaray_scriptenginedebugger_plugin_srcs})
 
-qt4_wrap_ui(gammaray_scriptenginedebugger_plugin_srcs scriptenginedebugger.ui)
+qt4_wrap_ui(gammaray_scriptenginedebugger_plugin_srcs scriptenginedebuggerwidget.ui)
 
 gammaray_add_plugin(gammaray_scriptenginedebugger_plugin
   gammaray_scriptenginedebugger.desktop

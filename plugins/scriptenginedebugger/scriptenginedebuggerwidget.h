@@ -1,5 +1,5 @@
 /*
-  scriptenginedebugger.h
+  scriptenginedebuggerwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,40 +21,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGER_H
-#define GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGER_H
+#ifndef GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGERWIDGET_H
+#define GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGERWIDGET_H
 
-#include "scriptenginedebuggerwidget.h"
-#include "include/toolfactory.h"
-
+#include <QWidget>
 #include <QScriptEngine>
+
+class QScriptEngineDebugger;
 
 namespace GammaRay {
 
-class ScriptEngineDebugger : public QObject
+namespace Ui {
+  class ScriptEngineDebuggerWidget;
+}
+
+class ScriptEngineDebuggerWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit ScriptEngineDebugger(ProbeInterface *probe, QObject *parent = 0);
-    virtual ~ScriptEngineDebugger();
-};
+    explicit ScriptEngineDebuggerWidget(QWidget *parent = 0);
+    virtual ~ScriptEngineDebuggerWidget();
+  private slots:
+    void scriptEngineSelected(int index);
 
-class ScriptEngineDebuggerFactory
-  : public QObject, public StandardToolFactory2<QScriptEngine, ScriptEngineDebugger, ScriptEngineDebuggerWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "org.qt-project.Qt.ScriptEngineDebugger")
-
-  public:
-    explicit ScriptEngineDebuggerFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Script Engines");
-    }
+  private:
+    QScopedPointer<Ui::ScriptEngineDebuggerWidget> ui;
+    QScriptEngineDebugger *debugger;
 };
 
 }

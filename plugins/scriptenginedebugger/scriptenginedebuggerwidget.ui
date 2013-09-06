@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GammaRay::ScriptEngineDebugger</class>
- <widget class="QWidget" name="GammaRay::ScriptEngineDebugger">
+ <class>GammaRay::ScriptEngineDebuggerWidget</class>
+ <widget class="QWidget" name="GammaRay::ScriptEngineDebuggerWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
