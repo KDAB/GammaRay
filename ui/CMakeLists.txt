@@ -54,9 +54,6 @@ install(TARGETS gammaray_ui ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 set(gammaray_ui_internal_srcs
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
-
   sidepane.cpp
   aboutpluginsdialog.cpp
   mainwindow.cpp
@@ -100,4 +97,4 @@ endif(NOT WIN32)
 
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 
-target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui_internal)
+target_link_libraries(gammaray_ui_internal ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)
