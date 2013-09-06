@@ -47,10 +47,12 @@ class GraphViewer : public QWidget
     void delayedInit();
     void handleRowChanged(const QModelIndex &index);
 
+    void objectRowsInserted(const QModelIndex &parent, int start, int end);
+    void objectRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+
   private:
     QTreeView *mObjectTreeView;
     GraphWidget *mWidget;
-    ProbeInterface *mProbeIface;
 };
 
 class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, GraphViewer>

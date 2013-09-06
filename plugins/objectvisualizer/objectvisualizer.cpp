@@ -29,6 +29,7 @@
 
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
+#include <common/network/objectbroker.h>
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -44,11 +45,11 @@ using namespace GammaRay;
 
 GraphViewer::GraphViewer(ProbeInterface *probe, QWidget *parent)
   : QWidget(parent),
-    mWidget(new GraphWidget(this)),
-    mProbeIface(probe)
+    mWidget(new GraphWidget(this))
 {
+  Q_UNUSED(probe);
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
-  objectFilter->setSourceModel(probe->objectTreeModel());
+  objectFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
   objectFilter->setDynamicSortFilter(true);
 
   QVBoxLayout *vbox = new QVBoxLayout;
@@ -82,17 +83,16 @@ GraphViewer::~GraphViewer()
 void GraphViewer::delayedInit()
 {
   // make all existing objects known to the vtk widget
-  const QAbstractItemModel *listModel = mProbeIface->objectListModel();
+  const QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
   for (int i = 0; i < listModel->rowCount(); ++i) {
     const QModelIndex index = listModel->index(i, 0);
     QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
     Q_ASSERT(object);
     mWidget->vtkWidget()->addObject(object);
   }
-  connect(mProbeIface->probe(), SIGNAL(objectCreated(QObject*)),
-          mWidget->vtkWidget(), SLOT(addObject(QObject*)));
-  connect(mProbeIface->probe(), SIGNAL(objectDestroyed(QObject*)),
-          mWidget->vtkWidget(), SLOT(removeObject(QObject*)));
+
+  connect(listModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(objectRowsInserted(QModelIndex,int,int)));
+  connect(listModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(objectRowsAboutToBeRemoved(QModelIndex,int,int)));
 
   // select the qApp object (if any) in the object treeView
   const QAbstractItemModel *viewModel = mObjectTreeView->model();
@@ -111,6 +111,28 @@ void GraphViewer::handleRowChanged(const QModelIndex &index)
   QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
   Q_ASSERT(object);
   mWidget->vtkWidget()->setObjectFilter(object);
+}
+
+void GraphViewer::objectRowsInserted(const QModelIndex& parent, int start, int end)
+{
+  const QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
+  for (int i = start; i <= end; ++i) {
+    const QModelIndex index = listModel->index(i, 0);
+    QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    Q_ASSERT(object);
+    mWidget->vtkWidget()->addObject(object);
+  }
+}
+
+void GraphViewer::objectRowsAboutToBeRemoved(const QModelIndex& parent, int start, int end)
+{
+  const QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
+  for (int i = start; i <= end; ++i) {
+    const QModelIndex index = listModel->index(i, 0);
+    QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    Q_ASSERT(object);
+    mWidget->vtkWidget()->removeObject(object);
+  }
 }
 
 Q_EXPORT_PLUGIN(GraphViewerFactory)
