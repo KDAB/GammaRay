@@ -5,6 +5,7 @@ include_directories(
 set(gammaray_webinspector_plugin_srcs
   webinspector.cpp
   webinspectorwidget.cpp
+  webviewmodel.cpp
 )
 
 qt4_automoc(${gammaray_webinspector_plugin_srcs})

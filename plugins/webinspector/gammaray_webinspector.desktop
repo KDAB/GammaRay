@@ -1,4 +1,4 @@
 [Desktop Entry]
 Name=Web Inspector
-X-GammaRay-Types=QWebPage;
+X-GammaRay-Types="QWebPage;QQuickWebView"
 Exec=gammaray_webinspector_plugin

@@ -22,6 +22,7 @@
 */
 
 #include "webinspector.h"
+#include "webviewmodel.h"
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
@@ -34,13 +35,9 @@ using namespace GammaRay;
 WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
-  ObjectTypeFilterProxyModel<QWebPage> *webPageFilter =
-    new ObjectTypeFilterProxyModel<QWebPage>(this);
-  webPageFilter->setSourceModel(probe->objectListModel());
-  SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
-  singleColumnProxy->setSourceModel(webPageFilter);
-
-  probe->registerModel("com.kdab.GammaRay.WebPages", singleColumnProxy);
+  WebViewModel *webViewModel = new WebViewModel(this);
+  webViewModel->setSourceModel(probe->objectListModel());
+  probe->registerModel("com.kdab.GammaRay.WebPages", webViewModel);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
