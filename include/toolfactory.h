@@ -101,35 +101,6 @@ class ToolFactory
 /**
  * @brief A templated generic ToolFactory for some data type and Tool.
  */
-template <typename Type, typename Tool>
-class StandardToolFactory : public ToolFactory
-{
-  public:
-    virtual inline QStringList supportedTypes() const
-    {
-      return QStringList(Type::staticMetaObject.className());
-    }
-
-    virtual inline QString id() const
-    {
-      return Tool::staticMetaObject.className();
-    }
-
-    virtual inline void init(ProbeInterface *)
-    {
-    }
-
-    virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget)
-    {
-      return new Tool(probe, parentWidget);
-    }
-
-    virtual bool remotingSupported() const
-    {
-      return false;
-    }
-};
-
 // TODO: split this completely, this is just a migration aid
 template <typename Type, typename Tool, typename ToolUi>
 class StandardToolFactory2 : public ToolFactory
