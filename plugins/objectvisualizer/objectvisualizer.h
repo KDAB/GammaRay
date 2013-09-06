@@ -23,39 +23,21 @@
 #define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZER_H
 
 #include "include/toolfactory.h"
-
-#include <QWidget>
-
-class QTreeView;
-class QModelIndex;
+#include "objectvisualizerwidget.h"
 
 namespace GammaRay {
 
-class GraphWidget;
-class ProbeInterface;
-
-class GraphViewer : public QWidget
+class GraphViewer : public QObject
 {
   Q_OBJECT
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.GraphViewer")
 
   public:
-    explicit GraphViewer(ProbeInterface *probe, QWidget *parent = 0);
-    virtual ~GraphViewer();
-
-  private Q_SLOTS:
-    void delayedInit();
-    void handleRowChanged(const QModelIndex &index);
-
-    void objectRowsInserted(const QModelIndex &parent, int start, int end);
-    void objectRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
-
-  private:
-    QTreeView *mObjectTreeView;
-    GraphWidget *mWidget;
+    explicit GraphViewer(ProbeInterface *probe, QObject *parent = 0);
+    ~GraphViewer();
 };
 
-class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, GraphViewer>
+class GraphViewerFactory : public QObject, public StandardToolFactory2<QObject, GraphViewer, GraphViewerWidget>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

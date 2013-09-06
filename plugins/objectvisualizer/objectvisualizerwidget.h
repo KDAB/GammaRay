@@ -19,22 +19,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "objectvisualizer.h"
+#ifndef GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERWIDGET_H
+#define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERWIDGET_H
 
-#include <QtPlugin>
+#include <QWidget>
 
-using namespace GammaRay;
+class QTreeView;
+class QModelIndex;
 
-GraphViewer::GraphViewer(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+namespace GammaRay {
+
+class GraphWidget;
+
+class GraphViewerWidget : public QWidget
 {
-  Q_UNUSED(probe);
+  Q_OBJECT
+  public:
+    explicit GraphViewerWidget(QWidget *parent = 0);
+    virtual ~GraphViewerWidget();
+
+  private Q_SLOTS:
+    void delayedInit();
+    void handleRowChanged(const QModelIndex &index);
+
+    void objectRowsInserted(const QModelIndex &parent, int start, int end);
+    void objectRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+
+  private:
+    QTreeView *mObjectTreeView;
+    GraphWidget *mWidget;
+};
+
 }
 
-GraphViewer::~GraphViewer()
-{
-}
-
-Q_EXPORT_PLUGIN(GraphViewerFactory)
-
-#include "objectvisualizer.moc"
+#endif // GAMMARAY_GRAPHVIEWER_H
