@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/">
+    <file>wk2application.qml</file>
+  </qresource>
+</RCC>

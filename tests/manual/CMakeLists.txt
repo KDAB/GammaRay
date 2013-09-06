@@ -39,6 +39,13 @@ if (QT_QTWEBKIT_FOUND)
   target_link_libraries(wk1application ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTWEBKIT_LIBRARIES} ${QT_QTWEBKITWIDGETS_LIBRARIES})
 endif()
 
+if (Qt5WebKit_FOUND)
+  set(wk2application_srcs wk2application.cpp)
+  qt4_add_resources(wk2application_srcs wk2application.qrc)
+  add_executable(wk2application ${wk2application_srcs})
+  target_link_libraries(wk2application Qt5::Quick)
+endif()
+
 if(QNXNTO)
   target_link_libraries(propertywidgettest cpp)
   target_link_libraries(messagemodeltest cpp)
