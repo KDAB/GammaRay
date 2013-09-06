@@ -12,7 +12,12 @@ public:
     explicit WebViewModel(QObject *parent = 0);
     ~WebViewModel();
 
+    enum Role {
+      WebKitVersionRole = ObjectModel::UserRole
+    };
+
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QMap< int, QVariant > itemData(const QModelIndex& index) const;
     bool filterAcceptsObject(QObject* object) const;
 };
 
