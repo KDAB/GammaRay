@@ -44,6 +44,8 @@ enum {
   KEY_STATETYPE
 };
 
+#include <cmath>
+
 using namespace GammaRay;
 using namespace std;
 
@@ -392,8 +394,17 @@ void StateMachineViewerWidget::exportAsImage()
   lastDir = QFileInfo(fileName).absolutePath();
   settings.setValue(key, lastDir);
 
-  QGraphicsScene *scene = m_ui->graphicsView->scene();
+  QGraphicsView* view = m_ui->graphicsView;
+  const QRectF sceneRect = view->transform().mapRect(view->sceneRect());
+  QSizeF size(sceneRect.width(), sceneRect.height());
 
+  // limit mega pixels
+  double maxSize = 100 * 1E+6;
+  if (size.width() * size.height() > maxSize) {
+    double scaleFactor = sqrt(maxSize / (size.width() * size.height()));
+    size.scale(size.width() * scaleFactor, size.height() * scaleFactor, Qt::KeepAspectRatio);
+  }
+  
   int quality = -1;
   const char* format;
   if (fileName.endsWith(QLatin1String("jpg"), Qt::CaseInsensitive)
@@ -404,13 +415,12 @@ void StateMachineViewerWidget::exportAsImage()
     format = "PNG";
   }
 
-  QImage image(scene->sceneRect().width(), scene->sceneRect().height(),
-               QImage::Format_ARGB32_Premultiplied);
+  QImage image(size.width() , size.height(), QImage::Format_ARGB32_Premultiplied);
   image.fill(QColor(Qt::white).rgb());
 
   QPainter painter(&image);
   painter.setRenderHint(QPainter::Antialiasing);
-  scene->render(&painter);
+  view->scene()->render(&painter);
 
   image.save(fileName, format, quality);
 }
