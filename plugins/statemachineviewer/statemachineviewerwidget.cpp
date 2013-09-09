@@ -335,6 +335,7 @@ void StateMachineViewerWidget::stateAdded(const StateId state, const StateId par
       m_graph->setNodeAttribute(nodeId, "label", "H");
       m_graph->setNodeAttribute(nodeId, "shape", "circle");
       break;
+    case StateMachineState:
     case OtherState:
       m_graph->setNodeAttribute(nodeId, "GammaRayStateType", "other");
       m_graph->setNodeAttribute(nodeId, "shape", "rectangle");
