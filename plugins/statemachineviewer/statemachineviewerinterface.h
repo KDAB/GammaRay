@@ -142,10 +142,10 @@ class StateMachineViewerInterface : public QObject
 
 }
 
-Q_DECLARE_METATYPE(GammaRay::StateId);
-Q_DECLARE_METATYPE(GammaRay::TransitionId);
-Q_DECLARE_METATYPE(GammaRay::StateMachineConfiguration);
-Q_DECLARE_METATYPE(GammaRay::StateType);
+Q_DECLARE_METATYPE(GammaRay::StateId)
+Q_DECLARE_METATYPE(GammaRay::TransitionId)
+Q_DECLARE_METATYPE(GammaRay::StateMachineConfiguration)
+Q_DECLARE_METATYPE(GammaRay::StateType)
 Q_DECLARE_INTERFACE(GammaRay::StateMachineViewerInterface, "com.kdab.GammaRay.StateMachineViewer")
 
 #endif // GAMMARAY_STATEMACHINEVIEWERINTERFACE_H
