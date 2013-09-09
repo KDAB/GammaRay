@@ -53,7 +53,7 @@
 #endif
 
 //NOTE: we don't have check_function_exists, so lets just hardcode some OS'es
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 #define HAVE_BACKTRACE (1)
 #endif
 ///TODO: what else is supported? what about mac?

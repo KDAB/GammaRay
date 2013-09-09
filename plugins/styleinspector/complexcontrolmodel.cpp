@@ -29,7 +29,7 @@
 #include <QStyleOption>
 
 #include <cmath>
-#ifdef _MSC_VER // only MSVC doesn't have log2()...
+#if defined(_MSC_VER) || defined(Q_OS_ANDROID) // only MSVC and Android don't have log2()...
 static double log2(double n)
 {
   return log(n) / log(2.0f);
