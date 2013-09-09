@@ -264,6 +264,8 @@ void StateMachineViewerWidget::updateStateItems()
         break;
     }
     QBrush brush = item->brush();
+    if (brush.style() == Qt::NoBrush)
+      brush.setStyle(Qt::SolidPattern);
     brush.setColor(color);
     item->setBrush(brush);
   }
