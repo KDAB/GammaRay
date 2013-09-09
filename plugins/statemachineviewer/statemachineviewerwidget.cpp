@@ -253,14 +253,14 @@ void StateMachineViewerWidget::updateStateItems()
     Q_ASSERT(item);
     QColor color;
     switch (item->data(KEY_STATETYPE).value<StateType>()) {
-      default:
-        color = QColor(Qt::white);
-        break;
       case FinalState:
         color = QColor(Qt::black);
         break;
       case StateMachineState:
         color = QColor(Qt::gray);
+        break;
+      default:
+        color = QColor(Qt::white);
         break;
     }
     QBrush brush = item->brush();
