@@ -73,8 +73,9 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     void updateStartStop();
     void toggleRunning();
 
-  private:
     void repopulateGraph();
+
+  private:
 
     void updateStateItems();
 

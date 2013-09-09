@@ -113,6 +113,8 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
   connect(m_interface, SIGNAL(statusChanged(bool,bool)), this, SLOT(statusChanged(bool,bool)));
   connect(m_interface, SIGNAL(transitionTriggered(GammaRay::TransitionId,QString)),
           this, SLOT(transitionTriggered(GammaRay::TransitionId,QString)));
+
+  m_interface->repopulateGraph();
 }
 
 void StateMachineViewerWidget::statusChanged(const bool haveStateMachine, const bool running)

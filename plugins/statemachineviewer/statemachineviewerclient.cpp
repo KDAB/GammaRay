@@ -40,5 +40,10 @@ void StateMachineViewerClient::toggleRunning()
   Endpoint::instance()->invokeObject(objectName(), "toggleRunning");
 }
 
+void StateMachineViewerClient::repopulateGraph()
+{
+  Endpoint::instance()->invokeObject(objectName(), "repopulateGraph");
+}
+
 
 #include "statemachineviewerclient.moc"

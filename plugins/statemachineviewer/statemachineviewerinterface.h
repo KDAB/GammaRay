@@ -122,6 +122,8 @@ class StateMachineViewerInterface : public QObject
     virtual void toggleRunning() = 0;
     virtual void setMaximumDepth(int depth) = 0;
 
+    virtual void repopulateGraph() = 0;
+
   signals:
     void statusChanged(bool haveStateMachine, bool running);
     void message(const QString &message);

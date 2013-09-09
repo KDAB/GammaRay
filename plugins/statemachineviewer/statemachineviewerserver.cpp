@@ -83,6 +83,10 @@ void StateMachineViewerServer::repopulateGraph()
 {
   emit aboutToRepopulateGraph();
 
+  // just to be sure the client has the same setting than we do
+  emit maximumDepthChanged(m_maximumDepth);
+  updateStartStop();
+
   addState(m_filteredState ? m_filteredState : m_stateModel->stateMachine());
   m_recursionGuard.clear();
 
