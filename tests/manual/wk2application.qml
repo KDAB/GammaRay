@@ -6,5 +6,4 @@ WebView {
   width: 800
   height: 600
   url: "http://www.kdab.com/gammaray"
-  experimental.preferences.developerExtrasEnabled: true
 }

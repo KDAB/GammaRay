@@ -39,7 +39,31 @@ WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
   webViewModel->setSourceModel(probe->objectListModel());
   probe->registerModel("com.kdab.GammaRay.WebPages", webViewModel);
 
+  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
+
   qputenv("QTWEBKIT_INSPECTOR_SERVER", "0.0.0.0:11733"); // TODO set based on Server address/port
+}
+
+void WebInspector::objectAdded(QObject* obj)
+{
+  // both of the following cases seem to be needed, the web view object changes depending on
+  // you have "import QtWebKit.experimental 1.0" or not...
+  QObject *experimental = 0;
+  if (obj->inherits("QQuickWebView")) {
+    experimental = obj->property("experimental").value<QObject*>();
+  }
+  if (obj->inherits("QQuickWebViewExperimental"))
+    experimental = obj;
+
+  if (!experimental)
+    return;
+
+  // FIXME: this conversion fails with "QMetaProperty::read: Unable to handle unregistered datatype 'QWebPreferences*' for property 'QQuickWebViewExperimental::preferences'"
+  // if we don't have "import QtWebKit.experimental 1.0"
+  QObject *prefs = experimental->property("preferences").value<QObject*>();
+  if (!prefs)
+    return;
+  prefs->setProperty("developerExtrasEnabled", true);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

@@ -37,6 +37,9 @@ class WebInspector : public QObject
   Q_OBJECT
   public:
     explicit WebInspector(GammaRay::ProbeInterface *probe, QObject *parent = 0);
+
+  private slots:
+    void objectAdded(QObject *obj);
 };
 
 class WebInspectorFactory
