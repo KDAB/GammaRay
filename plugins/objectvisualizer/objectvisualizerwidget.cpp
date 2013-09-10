@@ -81,13 +81,8 @@ GraphViewerWidget::~GraphViewerWidget()
 void GraphViewerWidget::delayedInit()
 {
   // make all existing objects known to the vtk widget
-  const QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
-  for (int i = 0; i < listModel->rowCount(); ++i) {
-    const QModelIndex index = listModel->index(i, 0);
-    QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    if (object)
-      mWidget->vtkWidget()->addObject(object);
-  }
+  QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
+  mWidget->vtkWidget()->setModel(listModel);
 
   connect(listModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(objectRowsInserted(QModelIndex,int,int)));
   connect(listModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(objectRowsAboutToBeRemoved(QModelIndex,int,int)));

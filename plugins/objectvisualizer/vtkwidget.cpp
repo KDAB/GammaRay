@@ -23,7 +23,9 @@
 #include "vtkwidget.h"
 
 #include "include/util.h"
+#include <include/objectmodel.h>
 
+#include <QAbstractItemModel>
 #include <QTimer>
 
 #include <vtkRenderer.h>
@@ -67,6 +69,7 @@ VtkWidget::VtkWidget(QWidget *parent)
     m_mousePressed(false),
     m_updateTimer(new QTimer(this)),
     m_objectFilter(0),
+    m_model(0),
     m_colorIndex(0)
 {
   setupRenderer();
@@ -83,6 +86,12 @@ VtkWidget::~VtkWidget()
   clear();
 
   DEBUG("")
+}
+
+void VtkWidget::setModel(QAbstractItemModel* model)
+{
+  m_model = model;
+  repopulate();
 }
 
 void VtkWidget::setupRenderer()
@@ -213,8 +222,6 @@ void VtkWidget::setupGraph()
 
 bool VtkWidget::addObject(QObject *object)
 {
-  m_availableObjects << object;
-
   return addObjectInternal(object);
 }
 
@@ -280,8 +287,6 @@ bool VtkWidget::addObjectInternal(QObject *object)
 
 bool VtkWidget::removeObject(QObject *object)
 {
-  m_availableObjects.remove(object);
-
   return removeObjectInternal(object);
 }
 
@@ -361,8 +366,11 @@ void VtkWidget::repopulate()
 
   clear();
 
-  Q_FOREACH (QObject *object, m_availableObjects) {
-    addObject(object);
+  for (int i = 0; i < m_model->rowCount(); ++i) {
+    const QModelIndex index = m_model->index(i, 0);
+    QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    if (object)
+      addObject(object);
   }
 }
 

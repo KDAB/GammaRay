@@ -30,6 +30,7 @@
 #include <QMap>
 #include <QSet>
 
+class QAbstractItemModel;
 class vtkGraphLayoutStrategy;
 class vtkVariantArray;
 class vtkGraphLayoutView;
@@ -57,6 +58,8 @@ class VtkWidget : public QVTKWidget
     {
       return m_view;
     }
+
+    void setModel(QAbstractItemModel* model);
 
   public Q_SLOTS:
     void resetCamera();
@@ -89,9 +92,9 @@ class VtkWidget : public QVTKWidget
     bool m_mousePressed;
     QTimer *m_updateTimer;
     QObject *m_objectFilter;
+    QAbstractItemModel* m_model;
 
     // TODO: Instead of tracking all available objects, make Probe::m_validObjects public?
-    QSet<QObject*> m_availableObjects;
     QMap<QObject *, vtkIdType> m_objectIdMap;
 
     int m_colorIndex;
