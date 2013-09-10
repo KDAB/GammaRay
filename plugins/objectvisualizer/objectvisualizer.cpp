@@ -20,6 +20,7 @@
 */
 
 #include "objectvisualizer.h"
+#include "objectvisualizermodel.h"
 
 #include <QtPlugin>
 
@@ -28,7 +29,9 @@ using namespace GammaRay;
 GraphViewer::GraphViewer(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
-  Q_UNUSED(probe);
+  ObjectVisualizerModel *model = new ObjectVisualizerModel(this);
+  model->setSourceModel(probe->objectTreeModel());
+  probe->registerModel("com.kdab.GammaRay.ObjectVisualizerModel", model);
 }
 
 GraphViewer::~GraphViewer()

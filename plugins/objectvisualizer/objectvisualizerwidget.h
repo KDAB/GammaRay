@@ -24,6 +24,7 @@
 
 #include <QWidget>
 
+class QAbstractItemModel;
 class QTreeView;
 class QModelIndex;
 
@@ -46,6 +47,7 @@ class GraphViewerWidget : public QWidget
     void objectRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
 
   private:
+    QAbstractItemModel* mModel;
     QTreeView *mObjectTreeView;
     GraphWidget *mWidget;
 };

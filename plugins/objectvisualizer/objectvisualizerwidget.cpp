@@ -44,6 +44,8 @@ GraphViewerWidget::GraphViewerWidget(QWidget *parent)
   : QWidget(parent),
     mWidget(new GraphWidget(this))
 {
+  mModel = ObjectBroker::model("com.kdab.GammaRay.ObjectVisualizerModel");
+
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
   objectFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
   objectFilter->setDynamicSortFilter(true);

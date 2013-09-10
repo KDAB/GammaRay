@@ -16,6 +16,7 @@ link_directories(${VTK_LIBRARY_DIRS})
 
 set(gammaray_objectvisualizer_plugin_srcs
   objectvisualizer.cpp
+  objectvisualizermodel.cpp
   objectvisualizerwidget.cpp
   vtkcontainer.cpp
   vtkpanel.cpp
