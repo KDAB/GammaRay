@@ -47,7 +47,7 @@ GraphViewerWidget::GraphViewerWidget(QWidget *parent)
   mModel = ObjectBroker::model("com.kdab.GammaRay.ObjectVisualizerModel");
 
   QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
-  objectFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
+  objectFilter->setSourceModel(mModel);
   objectFilter->setDynamicSortFilter(true);
 
   QVBoxLayout *vbox = new QVBoxLayout;
@@ -58,8 +58,7 @@ GraphViewerWidget::GraphViewerWidget(QWidget *parent)
   objectTreeView->setModel(objectFilter);
   objectTreeView->setSortingEnabled(true);
   vbox->addWidget(objectTreeView);
-  connect(objectTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-          SLOT(handleRowChanged(QModelIndex)));
+
   mObjectTreeView = objectTreeView;
 
   QWidget *treeViewWidget = new QWidget(this);
@@ -81,9 +80,10 @@ GraphViewerWidget::~GraphViewerWidget()
 void GraphViewerWidget::delayedInit()
 {
   // make all existing objects known to the vtk widget
-  QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
-  mWidget->vtkWidget()->setModel(listModel);
+  mWidget->vtkWidget()->setModel(mModel);
+  mWidget->vtkWidget()->setSelectionModel(mObjectTreeView->selectionModel());
 
+  QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
   connect(listModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(objectRowsInserted(QModelIndex,int,int)));
   connect(listModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(objectRowsAboutToBeRemoved(QModelIndex,int,int)));
 
@@ -97,13 +97,6 @@ void GraphViewerWidget::delayedInit()
     Q_ASSERT(matches.first().data(ObjectModel::ObjectRole).value<QObject*>() == qApp);
     mObjectTreeView->setCurrentIndex(matches.first());
   }
-}
-
-void GraphViewerWidget::handleRowChanged(const QModelIndex &index)
-{
-  QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  if (object)
-    mWidget->vtkWidget()->setObjectFilter(object);
 }
 
 void GraphViewerWidget::objectRowsInserted(const QModelIndex& parent, int start, int end)

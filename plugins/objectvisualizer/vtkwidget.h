@@ -30,6 +30,8 @@
 #include <QMap>
 #include <QSet>
 
+class QItemSelectionModel;
+class QModelIndex;
 class QAbstractItemModel;
 class vtkGraphLayoutStrategy;
 class vtkVariantArray;
@@ -49,32 +51,26 @@ class VtkWidget : public QVTKWidget
     explicit VtkWidget(QWidget *parent = 0);
     virtual ~VtkWidget();
 
-    QObject *objectFilter() const
-    {
-      return m_objectFilter;
-    }
-
     vtkGraphLayoutView *layoutView() const
     {
       return m_view;
     }
 
     void setModel(QAbstractItemModel* model);
+    void setSelectionModel(QItemSelectionModel* selectionModel);
 
   public Q_SLOTS:
     void resetCamera();
 
-    bool addObject(QObject *);
+    qulonglong addObject(const QModelIndex& index);
     bool removeObject(QObject *);
-
-    void setObjectFilter(QObject *object);
 
     void clear();
     void repopulate();
 
   private Q_SLOTS:
-    bool addObjectInternal(QObject *object);
-    bool removeObjectInternal(QObject *object);
+    bool removeObjectInternal(qulonglong objectId);
+    void selectionChanged();
 
     void renderViewImpl();
     void renderView();
@@ -83,7 +79,7 @@ class VtkWidget : public QVTKWidget
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
 
-    bool filterAcceptsObject(QObject *object) const;
+    bool filterAcceptsObject(const QModelIndex &index) const;
 
   private:
     void setupGraph();
@@ -91,11 +87,11 @@ class VtkWidget : public QVTKWidget
 
     bool m_mousePressed;
     QTimer *m_updateTimer;
-    QObject *m_objectFilter;
     QAbstractItemModel* m_model;
+    QItemSelectionModel* m_selectionModel;
 
     // TODO: Instead of tracking all available objects, make Probe::m_validObjects public?
-    QMap<QObject *, vtkIdType> m_objectIdMap;
+    QMap<qulonglong, vtkIdType> m_objectIdMap;
 
     int m_colorIndex;
     QMap<QString, int> m_typeColorMap;

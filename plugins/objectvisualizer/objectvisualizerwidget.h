@@ -41,7 +41,6 @@ class GraphViewerWidget : public QWidget
 
   private Q_SLOTS:
     void delayedInit();
-    void handleRowChanged(const QModelIndex &index);
 
     void objectRowsInserted(const QModelIndex &parent, int start, int end);
     void objectRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
