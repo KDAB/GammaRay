@@ -216,6 +216,13 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return QObject::tr("<%1 elements>").arg(path.elementCount());
   }
 
+  if (value.userType() == qMetaTypeId<QMargins>()) {
+    const QMargins margins = value.value<QMargins>();
+    return QObject::tr("left: %1, top: %2, right: %3, bottom: %4")
+       .arg(margins.left()).arg(margins.top())
+       .arg(margins.right()).arg(margins.bottom());
+  }
+
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   if (value.type() == (QVariant::Type)qMetaTypeId<QWidget*>()) {
     return displayString(value.value<QWidget*>());
@@ -289,6 +296,25 @@ QString GammaRay::Util::variantToString(const QVariant &value)
 
     return s;
   }
+
+  if (value.userType() == qMetaTypeId<QSurface::SurfaceClass>()) {
+    const QSurface::SurfaceClass sc = value.value<QSurface::SurfaceClass>();
+    switch (sc) {
+      case QSurface::Window: return QObject::tr("Window");
+      case QSurface::Offscreen: return QObject::tr("Offscreen");
+      default: return QObject::tr("Unknown Surface Class");
+    }
+  }
+
+  if (value.userType() == qMetaTypeId<QSurface::SurfaceType>()) {
+    const QSurface::SurfaceType type = value.value<QSurface::SurfaceType>();
+    switch (type) {
+      case QSurface::RasterSurface: return QObject::tr("Raster");
+      case QSurface::OpenGLSurface: return QObject::tr("OpenGL");
+      default: return QObject::tr("Unknown Surface Type");
+    }
+  }
+
 #endif
 
   // enums

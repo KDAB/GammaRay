@@ -45,6 +45,7 @@
 #include <QOpenGLShader>
 #include <QScreen>
 #include <QSurface>
+#include <QWindow>
 #endif
 
 #define MO_ADD_BASECLASS(Base) \
@@ -119,6 +120,7 @@ void MetaObjectRepository::initBuiltInTypes()
   initQObjectTypes();
   initGraphicsViewTypes();
   initNetworkTypes();
+  initGuiTypes();
   initOpenGLTypes();
 }
 
@@ -342,6 +344,40 @@ void MetaObjectRepository::initNetworkTypes()
 #endif
   MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
   MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
+}
+
+void MetaObjectRepository::initGuiTypes()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MetaObject *mo = 0;
+  MO_ADD_METAOBJECT0(QSurface);
+  MO_ADD_PROPERTY_RO(QSurface, QSurfaceFormat, format);
+  MO_ADD_PROPERTY_RO(QSurface, QSize, size);
+  MO_ADD_PROPERTY_RO(QSurface, QSurface::SurfaceClass, surfaceClass);
+  MO_ADD_PROPERTY_RO(QSurface, QSurface::SurfaceType, surfaceType);
+
+  MO_ADD_METAOBJECT2(QWindow, QObject, QSurface);
+  MO_ADD_PROPERTY_CR(QWindow, QSize, baseSize, setBaseSize);
+  MO_ADD_PROPERTY_CR(QWindow, QCursor, cursor, setCursor);
+  MO_ADD_PROPERTY_RO(QWindow, qreal, devicePixelRatio);
+  MO_ADD_PROPERTY_CR(QWindow, QString, filePath, setFilePath);
+  MO_ADD_PROPERTY_RO(QWindow, QObject*, focusObject);
+  MO_ADD_PROPERTY_RO(QWindow, QRect, frameGeometry);
+  MO_ADD_PROPERTY_RO(QWindow, QMargins, frameMargins);
+  MO_ADD_PROPERTY_CR(QWindow, QPoint, framePosition, setFramePosition);
+  MO_ADD_PROPERTY_CR(QWindow, QRect, geometry, setGeometry);
+  MO_ADD_PROPERTY_CR(QWindow, QIcon, icon, setIcon);
+  MO_ADD_PROPERTY_RO(QWindow, bool, isExposed);
+  MO_ADD_PROPERTY_RO(QWindow, bool, isTopLevel);
+  MO_ADD_PROPERTY_CR(QWindow, QRegion, mask, setMask);
+  MO_ADD_PROPERTY_CR(QWindow, QPoint, position, setPosition);
+  MO_ADD_PROPERTY_RO(QWindow, QSurfaceFormat, requestedFormat);
+  MO_ADD_PROPERTY_RO(QWindow, QScreen*, screen);
+  MO_ADD_PROPERTY_CR(QWindow, QSize, sizeIncrement, setSizeIncrement);
+  MO_ADD_PROPERTY   (QWindow, Qt::WindowState, windowState, setWindowState);
+  MO_ADD_PROPERTY_RO(QWindow, QWindow*, transientParent);
+  MO_ADD_PROPERTY_RO(QWindow, Qt::WindowType, type);
+#endif
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
