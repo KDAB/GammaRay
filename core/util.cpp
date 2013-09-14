@@ -301,7 +301,9 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     const QSurface::SurfaceClass sc = value.value<QSurface::SurfaceClass>();
     switch (sc) {
       case QSurface::Window: return QObject::tr("Window");
+#if QT_VERSION > QT_VERSION_CHECK(5, 1, 0)
       case QSurface::Offscreen: return QObject::tr("Offscreen");
+#endif
       default: return QObject::tr("Unknown Surface Class");
     }
   }
