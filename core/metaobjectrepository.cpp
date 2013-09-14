@@ -40,6 +40,13 @@
 #include <QWidget>
 #include <QTcpServer>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QOpenGLContext>
+#include <QOpenGLShader>
+#include <QScreen>
+#include <QSurface>
+#endif
+
 #define MO_ADD_BASECLASS(Base) \
   Q_ASSERT(hasMetaObject(QLatin1String(#Base))); \
   mo->addBaseClass(metaObject(QLatin1String(#Base)));
@@ -112,6 +119,7 @@ void MetaObjectRepository::initBuiltInTypes()
   initQObjectTypes();
   initGraphicsViewTypes();
   initNetworkTypes();
+  initOpenGLTypes();
 }
 
 void MetaObjectRepository::initQObjectTypes()
@@ -249,6 +257,7 @@ void MetaObjectRepository::initGraphicsViewTypes()
   MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
 }
 
+
 Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
 Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QIODevice::OpenMode)
@@ -333,6 +342,40 @@ void MetaObjectRepository::initNetworkTypes()
 #endif
   MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
   MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
+}
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)
+#endif
+
+void MetaObjectRepository::initOpenGLTypes()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MetaObject *mo = 0;
+  MO_ADD_METAOBJECT1(QOpenGLShader, QObject);
+  MO_ADD_PROPERTY_RO(QOpenGLShader, bool, isCompiled);
+  MO_ADD_PROPERTY_RO(QOpenGLShader, QString, log);
+  MO_ADD_PROPERTY_RO(QOpenGLShader, uint, shaderId);
+  MO_ADD_PROPERTY_RO(QOpenGLShader, QOpenGLShader::ShaderType, shaderType);
+  MO_ADD_PROPERTY_RO(QOpenGLShader, QByteArray, sourceCode);
+
+  MO_ADD_METAOBJECT1(QOpenGLShaderProgram, QObject);
+  MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, bool, isLinked);
+  MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, QString, log);
+  MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, maxGeometryOutputVertices);
+  MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, patchVertexCount);
+  MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, uint, programId);
+
+  MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
+  MO_ADD_PROPERTY_RO(QOpenGLContext, uint, defaultFramebufferObject);
+  MO_ADD_PROPERTY_RO(QOpenGLContext, QSet<QByteArray>, extensions);
+  MO_ADD_PROPERTY_RO(QOpenGLContext, QSurfaceFormat, format);
+  MO_ADD_PROPERTY_RO(QOpenGLContext, bool, isValid);
+  MO_ADD_PROPERTY_RO(QOpenGLContext, QScreen*, screen);
+  MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContext*, shareContext);
+  MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContextGroup*, shareGroup);
+//   MO_ADD_PROPERTY_RO(QOpenGLContext, QSurface*, surface);
+#endif
 }
 
 MetaObjectRepository *MetaObjectRepository::instance()

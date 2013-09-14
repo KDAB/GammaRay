@@ -39,6 +39,10 @@
 #include <QStyle>
 #include <QMetaMethod>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QSurfaceFormat>
+#endif
+
 Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
@@ -56,5 +60,9 @@ Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(const QStyle *)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QSurfaceFormat)
+#endif
 
 #endif
