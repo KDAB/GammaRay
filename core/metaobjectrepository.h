@@ -67,6 +67,7 @@ class MetaObjectRepository
     void initQObjectTypes();
     void initGraphicsViewTypes();
     void initNetworkTypes();
+    void initGuiTypes();
     void initOpenGLTypes();
 
   private:

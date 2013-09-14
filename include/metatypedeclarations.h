@@ -37,8 +37,11 @@
 #include <QGraphicsWidget>
 #include <QGraphicsEffect>
 #include <QStyle>
+#include <QMetaMethod>
+#include <QMargins>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QSurface>
 #include <QSurfaceFormat>
 #endif
 
@@ -58,9 +61,15 @@ Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(const QStyle *)
+Q_DECLARE_METATYPE(QMetaMethod::MethodType)
+Q_DECLARE_METATYPE(QMargins)
+Q_DECLARE_METATYPE(Qt::WindowType)
+Q_DECLARE_METATYPE(Qt::WindowState)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QSurfaceFormat)
+Q_DECLARE_METATYPE(QSurface::SurfaceClass)
+Q_DECLARE_METATYPE(QSurface::SurfaceType)
 #endif
 
 #endif
