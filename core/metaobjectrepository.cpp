@@ -369,7 +369,9 @@ void MetaObjectRepository::initGuiTypes()
   MO_ADD_PROPERTY_CR(QWindow, QIcon, icon, setIcon);
   MO_ADD_PROPERTY_RO(QWindow, bool, isExposed);
   MO_ADD_PROPERTY_RO(QWindow, bool, isTopLevel);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
   MO_ADD_PROPERTY_CR(QWindow, QRegion, mask, setMask);
+#endif
   MO_ADD_PROPERTY_CR(QWindow, QPoint, position, setPosition);
   MO_ADD_PROPERTY_RO(QWindow, QSurfaceFormat, requestedFormat);
   MO_ADD_PROPERTY_RO(QWindow, QScreen*, screen);
@@ -398,8 +400,10 @@ void MetaObjectRepository::initOpenGLTypes()
   MO_ADD_METAOBJECT1(QOpenGLShaderProgram, QObject);
   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, bool, isLinked);
   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, QString, log);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, maxGeometryOutputVertices);
-  MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, patchVertexCount);
+  MO_ADD_PROPERTY   (QOpenGLShaderProgram, int, patchVertexCount, setPatchVertexCount);
+#endif
   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, uint, programId);
 
   MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
