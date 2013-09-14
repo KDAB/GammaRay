@@ -246,6 +246,51 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     return addressToString(value.value<QGraphicsItemGroup*>());
   }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
+    const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
+    QStringList l;
+    foreach (const QByteArray &b, set)
+      l.push_back(QString::fromUtf8(b));
+    return l.join(", ");
+  }
+
+  if (value.userType() == qMetaTypeId<QSurfaceFormat>()) {
+    const QSurfaceFormat format = value.value<QSurfaceFormat>();
+    QString s;
+    switch (format.renderableType()) {
+      case QSurfaceFormat::DefaultRenderableType: s += "Default"; break;
+      case QSurfaceFormat::OpenGL: s += "OpenGL"; break;
+      case QSurfaceFormat::OpenGLES: s += "OpenGL ES"; break;
+      case QSurfaceFormat::OpenVG: s += "OpenVG"; break;
+    }
+
+    s += " (" + QString::number(format.majorVersion()) + "." + QString::number(format.minorVersion());
+    switch (format.profile()) {
+      case QSurfaceFormat::CoreProfile: s += " core"; break;
+      case QSurfaceFormat::CompatibilityProfile: s += " compat"; break;
+    }
+    s += ")";
+
+    s += " RGBA: " + QString::number(format.redBufferSize()) + "/" + QString::number(format.greenBufferSize())
+      + "/" + QString::number(format.blueBufferSize()) + "/" + QString::number(format.alphaBufferSize());
+
+    s += " Depth: " + QString::number(format.depthBufferSize());
+    s += " Stencil: " + QString::number(format.stencilBufferSize());
+
+    s += " Buffer: ";
+    switch (format.swapBehavior()) {
+      case QSurfaceFormat::DefaultSwapBehavior: s += "default"; break;
+      case QSurfaceFormat::SingleBuffer: s += "single"; break;
+      case QSurfaceFormat::DoubleBuffer: s += "double"; break;
+      case QSurfaceFormat::TripleBuffer: s += "triple"; break;
+      default: s += "unknown";
+    }
+
+    return s;
+  }
+#endif
+
   // enums
   const QString enumStr = enumToString(value);
   if (!enumStr.isEmpty()) {
