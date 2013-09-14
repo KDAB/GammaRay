@@ -99,7 +99,12 @@ VtkWidget::~VtkWidget()
 void VtkWidget::setModel(QAbstractItemModel* model)
 {
   m_model = model;
-  repopulate();
+
+  connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(objectRowsInserted(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(objectRowsAboutToBeRemoved(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(objectDataChanged(QModelIndex,QModelIndex)));
+
+  doRepopulate(); // no delay here, otherwise we race against the signals
 }
 
 void VtkWidget::setSelectionModel(QItemSelectionModel* selectionModel)
@@ -249,9 +254,11 @@ qulonglong VtkWidget::addObject(const QModelIndex &index)
 
   qulonglong objectId = index.data(ObjectVisualizerModel::ObjectId).toULongLong();
   const QString className = index.data(ObjectVisualizerModel::ClassName).toString();
+#if 0 // FIXME this breaks the graph structure since this will cause orphan children!
   if (className == "QVTKInteractorInternal") {
     return 0;
   }
+#endif
 
   if (!objectId || m_objectIdMap.contains(objectId)) {
     return 0;
@@ -281,22 +288,31 @@ qulonglong VtkWidget::addObject(const QModelIndex &index)
   DEBUG("Add: " << type << " " << object->metaObject()->className())
   m_objectIdMap[objectId] = type;
 
-  for (int i = 0; i < index.model()->rowCount(index); ++i) {
-    qulonglong childId = addObject(index.child(i, 0));
-    if (!childId)
-      continue;
-    const vtkIdType childType = m_objectIdMap[childId];
-    m_graph->AddEdge(type, childType);
+  // recursively add our children
+  for (int i = 0; i < index.model()->rowCount(index); ++i)
+    addObject(index.child(i, 0));
+
+  // add edge to parent
+  if (index.parent().isValid()) {
+    const qulonglong parentId = index.parent().data(ObjectVisualizerModel::ObjectId).toULongLong();
+    if (parentId) {
+      Q_ASSERT(m_objectIdMap.contains(parentId));
+      const vtkIdType parentType = m_objectIdMap.value(parentId);
+      m_graph->AddEdge(parentType, type);
+    }
   }
 
   renderView();
   return objectId;
 }
 
-bool VtkWidget::removeObject(QObject *object)
+bool VtkWidget::removeObject(const QModelIndex &index)
 {
-//   return removeObjectInternal(object);
-  return false;
+  for (int i = 0; i < index.model()->rowCount(index); ++i)
+    removeObject(index.child(i, 0));
+
+  const qulonglong objectId = index.data(ObjectVisualizerModel::ObjectId).toULongLong();
+  return removeObjectInternal(objectId);
 }
 
 bool VtkWidget::removeObjectInternal(qulonglong objectId)
@@ -420,6 +436,30 @@ bool VtkWidget::filterAcceptsObject(const QModelIndex &index) const
   }
 
   return true; // empty selection
+}
+
+void VtkWidget::objectRowsInserted(const QModelIndex& parent, int start, int end)
+{
+  for (int i = start; i <= end; ++i) {
+    const QModelIndex index = m_model->index(i, 0, parent);
+    addObject(index);
+  }
+}
+
+void VtkWidget::objectRowsAboutToBeRemoved(const QModelIndex& parent, int start, int end)
+{
+  for (int i = start; i <= end; ++i) {
+    const QModelIndex index = m_model->index(i, 0, parent);
+    removeObject(index);
+  }
+}
+
+void VtkWidget::objectDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  for (int i = topLeft.row(); i <= bottomRight.row(); ++i) {
+    const QModelIndex index = m_model->index(i, 0, topLeft.parent());
+    addObject(index);
+  }
 }
 
 #include "vtkwidget.moc"

@@ -83,10 +83,6 @@ void GraphViewerWidget::delayedInit()
   mWidget->vtkWidget()->setModel(mModel);
   mWidget->vtkWidget()->setSelectionModel(mObjectTreeView->selectionModel());
 
-  QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
-  connect(listModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(objectRowsInserted(QModelIndex,int,int)));
-  connect(listModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(objectRowsAboutToBeRemoved(QModelIndex,int,int)));
-
   // select the qApp object (if any) in the object treeView
   const QAbstractItemModel *viewModel = mObjectTreeView->model();
   const QModelIndexList matches = viewModel->match(viewModel->index(0, 0),
@@ -96,30 +92,6 @@ void GraphViewerWidget::delayedInit()
   if (!matches.isEmpty()) {
     Q_ASSERT(matches.first().data(ObjectModel::ObjectRole).value<QObject*>() == qApp);
     mObjectTreeView->setCurrentIndex(matches.first());
-  }
-}
-
-void GraphViewerWidget::objectRowsInserted(const QModelIndex& parent, int start, int end)
-{
-  Q_UNUSED(parent);
-  const QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
-  for (int i = start; i <= end; ++i) {
-    const QModelIndex index = listModel->index(i, 0);
-    QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    if (object)
-      mWidget->vtkWidget()->addObject(object);
-  }
-}
-
-void GraphViewerWidget::objectRowsAboutToBeRemoved(const QModelIndex& parent, int start, int end)
-{
-  Q_UNUSED(parent);
-  const QAbstractItemModel *listModel = ObjectBroker::model("com.kdab.GammaRay.ObjectList");
-  for (int i = start; i <= end; ++i) {
-    const QModelIndex index = listModel->index(i, 0);
-    QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    if (object)
-      mWidget->vtkWidget()->removeObject(object);
   }
 }
 

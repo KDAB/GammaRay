@@ -63,7 +63,7 @@ class VtkWidget : public QVTKWidget
     void resetCamera();
 
     qulonglong addObject(const QModelIndex& index);
-    bool removeObject(QObject *);
+    bool removeObject(const QModelIndex &index);
 
     void clear();
     void repopulate();
@@ -75,6 +75,10 @@ class VtkWidget : public QVTKWidget
 
     void renderViewImpl();
     void renderView();
+
+    void objectRowsInserted(const QModelIndex &parent, int start, int end);
+    void objectRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+    void objectDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
   protected:
     virtual void mousePressEvent(QMouseEvent *event);
