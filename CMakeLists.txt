@@ -329,6 +329,7 @@ add_subdirectory(ui)
 add_subdirectory(core)
 add_subdirectory(launcher)
 add_subdirectory(hooking)
+add_subdirectory(inprocessui)
 
 set(GRAPHVIZ_MIN_VERSION "2.20")
 find_package(Graphviz)

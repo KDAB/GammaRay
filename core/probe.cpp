@@ -48,6 +48,8 @@
 #include <QApplication>
 #include <QCoreApplication>
 #include <QDialog>
+#include <QDir>
+#include <QLibrary>
 #include <QMouseEvent>
 #include <QThread>
 #include <QTimer>
@@ -332,14 +334,25 @@ void Probe::delayedInit()
   if (canShowWidgets() && ProbeSettings::value("InProcessUi", true).toBool()) {
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
     s_listener()->filterThread = QThread::currentThread();
-    GammaRay::MainWindow *window = new GammaRay::MainWindow;
+
+    QString path = QString::fromLocal8Bit(qgetenv("GAMMARAY_PROBE_PATH"));
+    if (!path.isEmpty())
+      path += QDir::separator();
+    path += "gammaray_inprocessui";
+    QLibrary lib;
+    lib.setFileName(path);
+    if (!lib.load()) {
+      std::cerr << "Failed to load in-process UI module: " << qPrintable(lib.errorString()) << std::endl;
+    } else {
+      void(*factory)() = reinterpret_cast<void(*)()>(lib.resolve("gammaray_create_inprocess_mainwindow"));
+      if (!factory)
+        std::cerr << Q_FUNC_INFO << ' ' << qPrintable(lib.errorString()) << endl;
+      else
+        factory();
+    }
+
     s_listener()->filterThread = 0;
     IF_DEBUG(cout << "creation done" << endl;)
-
-    window->setAttribute(Qt::WA_DeleteOnClose);
-    instance()->setWindow(window);
-    instance()->setParent(window);
-    window->show();
   } else {
     cerr << "Unable to show in-process UI in a non-GUI application." << endl;
   }
