@@ -73,6 +73,7 @@ VtkWidget::VtkWidget(QWidget *parent)
     m_updateTimer(new QTimer(this)),
     m_model(0),
     m_selectionModel(0),
+    m_repopulateTimer(new QTimer(this)),
     m_colorIndex(0)
 {
   setupRenderer();
@@ -82,6 +83,10 @@ VtkWidget::VtkWidget(QWidget *parent)
   m_updateTimer->setInterval(0);
   m_updateTimer->setSingleShot(true);
   connect(m_updateTimer, SIGNAL(timeout()), SLOT(renderViewImpl()));
+
+  m_repopulateTimer->setInterval(100);
+  m_repopulateTimer->setSingleShot(true);
+  connect(m_repopulateTimer, SIGNAL(timeout()), SLOT(doRepopulate()));
 }
 
 VtkWidget::~VtkWidget()
@@ -360,6 +365,12 @@ void VtkWidget::selectionChanged()
 }
 
 void VtkWidget::repopulate()
+{
+  if (!m_repopulateTimer->isActive())
+    m_repopulateTimer->start();
+}
+
+void VtkWidget::doRepopulate()
 {
   DEBUG("")
 

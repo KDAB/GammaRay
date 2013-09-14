@@ -70,6 +70,7 @@ class VtkWidget : public QVTKWidget
 
   private Q_SLOTS:
     bool removeObjectInternal(qulonglong objectId);
+    void doRepopulate();
     void selectionChanged();
 
     void renderViewImpl();
@@ -89,6 +90,7 @@ class VtkWidget : public QVTKWidget
     QTimer *m_updateTimer;
     QAbstractItemModel* m_model;
     QItemSelectionModel* m_selectionModel;
+    QTimer *m_repopulateTimer;
 
     // TODO: Instead of tracking all available objects, make Probe::m_validObjects public?
     QMap<qulonglong, vtkIdType> m_objectIdMap;
