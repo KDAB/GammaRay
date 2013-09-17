@@ -33,6 +33,7 @@
 #include "readorwritelocker.h"
 #include "probesettings.h"
 #include "probecontroller.h"
+#include "toolpluginmodel.h"
 
 #include "tools/modelinspector/modeltest.h"
 
@@ -165,6 +166,9 @@ Probe::Probe(QObject *parent):
   registerModel(QLatin1String("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), m_toolModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ConnectionModel"), m_connectionModel);
+
+  ToolPluginModel *toolPluginModel = new ToolPluginModel(m_toolModel->plugins(), this);
+  registerModel(QLatin1String("com.kdab.GammaRay.ToolPluginModel"), toolPluginModel);
 
   if (qgetenv("GAMMARAY_MODELTEST") == "1") {
     new ModelTest(m_objectListModel, m_objectListModel);

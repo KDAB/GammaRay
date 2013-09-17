@@ -52,6 +52,9 @@ class ToolModel : public QAbstractListModel
                                 int role = Qt::DisplayRole) const;
     virtual QMap<int, QVariant> itemData(const QModelIndex& index) const;
 
+    /** returns all tools provided by plugins for the ToolPluginModel. */
+    QVector<ToolFactory*> plugins() const;
+
   public slots:
     /** Check if we have to activate tools for this type */
     void objectAdded(QObject *obj);

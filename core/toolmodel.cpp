@@ -201,4 +201,9 @@ void ToolModel::objectAdded(const QMetaObject *mo)
   }
 }
 
+QVector< ToolFactory* > ToolModel::plugins() const
+{
+  return PluginManager::instance()->plugins();
+}
+
 #include "toolmodel.moc"

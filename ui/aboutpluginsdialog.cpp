@@ -23,6 +23,7 @@
 
 #include "aboutpluginsdialog.h"
 #include <common/pluginmanager.h>
+#include <network/objectbroker.h>
 
 #include "include/toolfactory.h"
 
@@ -95,68 +96,6 @@ class ErrorModel : public QAbstractTableModel
     PluginLoadErrors m_errors;
 };
 
-class ToolModel : public QAbstractTableModel
-{
-  public:
-    explicit ToolModel(const QVector<ToolFactory*>& tools, QObject* parent = 0)
-      : QAbstractTableModel(parent), m_tools(tools)
-    {
-    }
-
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
-    {
-      Q_UNUSED(parent);
-      return 3;
-    }
-
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
-    {
-      Q_UNUSED(parent);
-      return m_tools.size();
-    }
-
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const
-    {
-      if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        switch (section) {
-        case 0:
-          return tr("Id");
-        case 1:
-          return tr("Name");
-        case 2:
-          return tr("Supported types");
-        }
-      }
-      return QAbstractTableModel::headerData(section, orientation, role);
-    }
-
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
-    {
-      if (!index.isValid()) {
-        return QVariant();
-      }
-
-      const int row = index.row();
-      const int column = index.column();
-      if (role == Qt::DisplayRole) {
-        ToolFactory *factory = m_tools[row];
-        switch (column) {
-        case 0:
-          return factory->id();
-        case 1:
-          return factory->name();
-        case 2:
-          return factory->supportedTypes();
-        }
-      }
-      return QVariant();
-    }
-
-  private:
-    QVector<ToolFactory*> m_tools;
-};
-
 AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
   : QDialog(parent, f)
 {
@@ -164,21 +103,17 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
   QVBoxLayout *vbox = new QVBoxLayout(this);
 
   {
-    QVector<ToolFactory*> tools = PluginManager::instance()->plugins();
-    ToolModel *toolModel = new ToolModel(tools, this);
     QTableView *toolView = new QTableView(this);
     toolView->setShowGrid(false);
     toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
     toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     toolView->verticalHeader()->hide();
-    toolView->setModel(toolModel);
+    toolView->setModel(ObjectBroker::model("com.kdab.GammaRay.ToolPluginModel"));
 
     QGroupBox *toolBox = new QGroupBox(tr("Loaded Plugins"), this);
     layout = new QHBoxLayout(toolBox);
     layout->addWidget(toolView);
     vbox->addWidget(toolBox);
-
-    toolBox->setEnabled(toolModel->rowCount() > 0);
   }
 
   {

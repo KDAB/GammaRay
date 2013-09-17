@@ -35,6 +35,7 @@ set(gammaray_srcs
   methodargumentmodel.cpp
   multisignalmapper.cpp
   toolmodel.cpp
+  toolpluginmodel.cpp
   proxydetacher.cpp
   propertycontroller.cpp
 
