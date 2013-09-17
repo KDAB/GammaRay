@@ -28,6 +28,8 @@
 #include <ui/propertyeditor/propertyeditorfactory.h>
 #include <ui/deferredresizemodesetter.h>
 
+#include "variantcontainermodel.h"
+
 #include <network/objectbroker.h>
 #include <network/modelroles.h>
 
@@ -82,6 +84,10 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->staticPropertySearchLine->setProxy(proxy);
   setEditorFactory(m_ui->staticPropertyView);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  connect(m_ui->staticPropertyView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClick(QModelIndex)));
+#endif
+
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(model("dynamicProperties"));
@@ -90,6 +96,10 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   new DeferredResizeModeSetter(m_ui->dynamicPropertyView->header(), 0, QHeaderView::ResizeToContents);
   setEditorFactory(m_ui->dynamicPropertyView);
   m_ui->dynamicPropertySearchLine->setProxy(proxy);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  connect(m_ui->dynamicPropertyView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClick(QModelIndex)));
+#endif
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
@@ -253,6 +263,27 @@ void PropertyWidget::setEditorFactory(QAbstractItemView *view)
   if (delegate) {
     delegate->setItemEditorFactory(m_editorFactory.data());
   }
+}
+
+void PropertyWidget::onDoubleClick(const QModelIndex &index)
+{
+  if (index.column() != 0)
+    return;
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  QVariant var = index.sibling(index.row(), 1).data(Qt::EditRole);
+
+  if (!var.canConvert<QVariantList>() && !var.canConvert<QVariantHash>() )
+    return;
+
+  QTreeView *v = new QTreeView;
+
+  VariantContainerModel *m = new VariantContainerModel(v);
+  m->setVariant(var);
+
+  v->setModel(m);
+  v->show();
+#endif
 }
 
 #include "propertywidget.moc"

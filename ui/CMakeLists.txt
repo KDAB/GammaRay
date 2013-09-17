@@ -33,6 +33,12 @@ set(gammaray_ui_srcs
   propertyeditor/palettedialog.cpp
 )
 
+if (NOT Qt5Core_VERSION VERSION_LESS 5.2.0)
+  list(APPEND gammaray_ui_srcs
+    variantcontainermodel.cpp
+  )
+endif()
+
 qt4_wrap_ui(gammaray_ui_srcs
   methodinvocationdialog.ui
   propertywidget.ui

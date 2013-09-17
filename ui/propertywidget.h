@@ -58,6 +58,8 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
     void methodActivated(const QModelIndex &index);
     void methodConextMenu(const QPoint &pos);
 
+    void onDoubleClick(const QModelIndex &index);
+
   private:
     /// Decides if widget is supposed to be shown at this display state
     bool showTab(const QWidget *widget, PropertyWidgetDisplayState::State state) const;
