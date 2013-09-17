@@ -206,4 +206,9 @@ QVector< ToolFactory* > ToolModel::plugins() const
   return PluginManager::instance()->plugins();
 }
 
+PluginLoadErrors ToolModel::pluginErrors() const
+{
+  return PluginManager::instance()->errors();
+}
+
 #include "toolmodel.moc"

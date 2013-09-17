@@ -35,67 +35,6 @@
 
 using namespace GammaRay;
 
-class ErrorModel : public QAbstractTableModel
-{
-  public:
-    explicit ErrorModel(const PluginLoadErrors &errors, QObject *parent = 0)
-      : QAbstractTableModel(parent), m_errors(errors)
-    {
-    }
-
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
-    {
-      Q_UNUSED(parent);
-      return 3;
-    }
-
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const
-    {
-      Q_UNUSED(parent);
-      return m_errors.size();
-    }
-
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const
-    {
-      if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        switch (section) {
-        case 0:
-          return tr("Plugin Name");
-        case 1:
-          return tr("Plugin File");
-        case 2:
-          return tr("Error Message");
-        }
-      }
-      return QAbstractTableModel::headerData(section, orientation, role);
-    }
-
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
-    {
-      if (!index.isValid()) {
-        return QVariant();
-      }
-
-      const int row = index.row();
-      const int column = index.column();
-      if (role == Qt::DisplayRole) {
-        switch (column) {
-        case 0:
-          return m_errors[row].pluginName();
-        case 1:
-          return m_errors[row].pluginFile;
-        case 2:
-          return m_errors[row].errorString;
-        }
-      }
-      return QVariant();
-    }
-
-  private:
-    PluginLoadErrors m_errors;
-};
-
 AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
   : QDialog(parent, f)
 {
@@ -117,12 +56,10 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
   }
 
   {
-    PluginLoadErrors errors = PluginManager::instance()->errors();
-    ErrorModel *errorModel = new ErrorModel(errors, this);
     QTableView *errorView = new QTableView(this);
     errorView->setShowGrid(false);
     errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    errorView->setModel(errorModel);
+    errorView->setModel(ObjectBroker::model("com.kdab.GammaRay.ToolPluginErrorModel"));
     errorView->verticalHeader()->hide();
     errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
@@ -130,8 +67,6 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
     layout = new QHBoxLayout(errorBox);
     layout->addWidget(errorView);
     vbox->addWidget(errorBox);
-
-    errorBox->setEnabled(errorModel->rowCount() > 0);
   }
 
   setWindowTitle(tr("GammaRay: Plugin Info"));

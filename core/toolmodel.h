@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_TOOLMODEL_H
 #define GAMMARAY_TOOLMODEL_H
 
+#include <common/pluginmanager.h>
 #include <network/modelroles.h>
 
 #include <QAbstractListModel>
@@ -54,6 +55,8 @@ class ToolModel : public QAbstractListModel
 
     /** returns all tools provided by plugins for the ToolPluginModel. */
     QVector<ToolFactory*> plugins() const;
+    /** returns all plugin load errors. */
+    PluginLoadErrors pluginErrors() const;
 
   public slots:
     /** Check if we have to activate tools for this type */

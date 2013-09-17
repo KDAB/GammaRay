@@ -40,6 +40,7 @@
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"
 #include "remote/selectionmodelserver.h"
+#include "toolpluginerrormodel.h"
 
 #include <network/objectbroker.h>
 #include <network/streamoperators.h>
@@ -169,6 +170,8 @@ Probe::Probe(QObject *parent):
 
   ToolPluginModel *toolPluginModel = new ToolPluginModel(m_toolModel->plugins(), this);
   registerModel(QLatin1String("com.kdab.GammaRay.ToolPluginModel"), toolPluginModel);
+  ToolPluginErrorModel *toolPluginErrorModel = new ToolPluginErrorModel(m_toolModel->pluginErrors(), this);
+  registerModel(QLatin1String("com.kdab.GammaRay.ToolPluginErrorModel"), toolPluginErrorModel);
 
   if (qgetenv("GAMMARAY_MODELTEST") == "1") {
     new ModelTest(m_objectListModel, m_objectListModel);
