@@ -99,7 +99,7 @@ protected:
     {
       Proxy *proxy = new Proxy(desktopFilePath, parent);
       if (!proxy->isValid()) {
-        m_errors << PluginLoadError(desktopFilePath, QObject::tr("Failed to load plugin."));
+        m_errors << PluginLoadError(desktopFilePath, QObject::tr("Failed to load plugin: %1").arg(proxy->errorString()));
         std::cerr << "invalid plugin " << qPrintable(desktopFilePath) << std::endl;
         delete proxy;
       } else {

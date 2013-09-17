@@ -132,6 +132,7 @@ void ProxyToolFactory::loadPlugin()
   }
 
   if (!m_factory) {
+    m_errorString = loader.errorString();
     std::cerr << "error loading plugin " << qPrintable(m_pluginPath)
               << ": " << qPrintable(loader.errorString()) << std::endl;
     return;
