@@ -34,6 +34,7 @@
 #define GAMMARAY_TOOLFACTORY_H
 
 #include "probeinterface.h"
+#include "tooluifactory.h"
 
 #include <QMetaType>
 #include <QStringList>
@@ -49,7 +50,7 @@ class ProbeInterface;
  * The ToolFactory class is an abstract base class for creating probe tools
  * for GammaRay.  Each tool must have a unique identifier.
  */
-class ToolFactory
+class ToolFactory: public ToolUiFactory // ### this is just a porting aid, until we have properly split both interfaces
 {
   public:
     virtual inline ~ToolFactory()
@@ -88,13 +89,6 @@ class ToolFactory
      * @param probe The probe interface allowing access to the object models.
      */
     virtual void init(ProbeInterface *probe) = 0;
-
-    /**
-     * Create the UI part of this tool.
-     * @param parentWidget The parent widget for the visual elements of this tool.
-     * @return a pointer to the created QwWidget.
-     */
-    virtual QWidget *createWidget(QWidget *parentWidget) = 0;
 };
 
 /**
