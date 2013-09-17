@@ -41,25 +41,15 @@ using namespace GammaRay;
 using namespace std;
 
 static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
-PluginManager *PluginManager::s_instance = 0;
-
-PluginManager *PluginManager::instance(QObject *parent)
-{
-  if (!s_instance) {
-    s_instance = new PluginManager(parent);
-    s_instance->scan();
-  }
-  return s_instance;
-}
 
 PluginManager::PluginManager(QObject *parent) : m_parent(parent)
 {
   QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
+  scan();
 }
 
 PluginManager::~PluginManager()
 {
-  s_instance = 0;
 }
 
 QStringList PluginManager::pluginPaths() const

@@ -71,7 +71,8 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new MimeTypesFactory(this));
 #endif
 
-  Q_FOREACH (ToolFactory *factory, PluginManager::instance(this)->plugins()) {
+  m_pluginManager.reset(new PluginManager(this));
+  Q_FOREACH (ToolFactory *factory, m_pluginManager->plugins()) {
     m_tools.push_back(factory);
   }
 
@@ -84,10 +85,6 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
 
 ToolModel::~ToolModel()
 {
-  // ### HACK to make re-attaching of the probe work
-  // the correct solution would be to make PluginManager a member rather than a singleton
-  // and base the about dialog on the tool model instead
-  delete PluginManager::instance();
 }
 
 QVariant ToolModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -203,12 +200,12 @@ void ToolModel::objectAdded(const QMetaObject *mo)
 
 QVector< ToolFactory* > ToolModel::plugins() const
 {
-  return PluginManager::instance()->plugins();
+  return m_pluginManager->plugins();
 }
 
 PluginLoadErrors ToolModel::pluginErrors() const
 {
-  return PluginManager::instance()->errors();
+  return m_pluginManager->errors();
 }
 
 #include "toolmodel.moc"

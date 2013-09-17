@@ -81,7 +81,8 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new StandardPathsFactory);
   insertFactory(new TextDocumentInspectorFactory);
 
-  foreach(ToolFactory* factory, PluginManager::instance()->plugins())
+  PluginManager pm;
+  foreach(ToolFactory* factory, pm.plugins())
     insertFactory(factory);
 }
 

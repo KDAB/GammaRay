@@ -56,11 +56,10 @@ class PluginLoadError
 class PluginManager
 {
   public:
-    /** Slightly ugly, but we need a valid QObject parent that is a decendent of the probe,
-     *  for creating [Proxy]ToolFactory instances, otherwise they show up in the object tree.
+    /**
+     * @param parent This is the parent object for all objects created by the plugins
      */
-    static PluginManager *instance(QObject *parent = 0);
-
+    explicit PluginManager(QObject *parent = 0);
     ~PluginManager();
 
     QVector<ToolFactory*> plugins();
@@ -70,14 +69,10 @@ class PluginManager
       return m_errors;
     }
 
-  protected:
-    PluginManager(QObject *parent = 0);
-
   private:
     QStringList pluginPaths() const;
     void scan();
 
-    static PluginManager *s_instance;
     QVector<ToolFactory*> m_plugins;
     QList<PluginLoadError> m_errors;
     QObject *m_parent;
