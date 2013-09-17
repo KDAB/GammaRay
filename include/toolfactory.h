@@ -91,11 +91,10 @@ class ToolFactory
 
     /**
      * Create the UI part of this tool.
-     * @param probe The probe interface allowing access to the object models.
      * @param parentWidget The parent widget for the visual elements of this tool.
      * @return a pointer to the created QwWidget.
      */
-    virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget) = 0;
+    virtual QWidget *createWidget(QWidget *parentWidget) = 0;
 };
 
 /**
@@ -121,9 +120,8 @@ class StandardToolFactory2 : public ToolFactory
       new Tool(probe, probe->probe());
     }
 
-    virtual inline QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget)
+    virtual inline QWidget *createWidget(QWidget *parentWidget)
     {
-      Q_UNUSED(probe);
       return new ToolUi(parentWidget);
     }
 

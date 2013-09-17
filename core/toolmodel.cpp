@@ -120,7 +120,7 @@ QVariant ToolModel::data(const QModelIndex &index, int role) const
       return QVariant::fromValue(it.value());
     if (!toolIface)
       return QVariant();
-    QWidget *widget = toolIface->createWidget(Probe::instance(), m_parentWidget);
+    QWidget *widget = toolIface->createWidget(m_parentWidget);
     m_toolWidgets.insert(toolIface, widget);
     return QVariant::fromValue(widget);
   } else if (role == ToolModelRole::ToolId) {

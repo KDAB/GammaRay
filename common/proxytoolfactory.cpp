@@ -110,14 +110,14 @@ void ProxyToolFactory::init(ProbeInterface *probe)
   m_factory->init(probe);
 }
 
-QWidget *ProxyToolFactory::createWidget(ProbeInterface *probe, QWidget *parentWidget)
+QWidget *ProxyToolFactory::createWidget(QWidget *parentWidget)
 {
   loadPlugin();
   if (!m_factory) {
     return new QLabel(tr("Plugin '%1' could not be loaded.").arg(m_pluginPath), parentWidget);
   }
   Q_ASSERT(m_factory);
-  return m_factory->createWidget(probe, parentWidget);
+  return m_factory->createWidget(parentWidget);
 }
 
 void ProxyToolFactory::loadPlugin()

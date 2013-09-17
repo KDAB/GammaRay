@@ -56,7 +56,7 @@ class ProxyToolFactory : public QObject, public ToolFactory
     virtual bool remotingSupported() const;
 
     virtual void init(ProbeInterface *probe);
-    virtual QWidget *createWidget(ProbeInterface *probe, QWidget *parentWidget);
+    virtual QWidget *createWidget(QWidget *parentWidget);
 
   private:
     void loadPlugin();

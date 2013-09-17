@@ -51,7 +51,7 @@ public: \
   virtual inline QString id() const { return "GammaRay::" #type; } \
   virtual inline QString name() const { return QString(); } \
   virtual inline void init(ProbeInterface *) {} \
-  virtual inline QWidget *createWidget(ProbeInterface *, QWidget *parentWidget) { return new type ## Widget(parentWidget); } \
+  virtual inline QWidget *createWidget(QWidget *parentWidget) { return new type ## Widget(parentWidget); } \
   virtual inline bool remotingSupported() const { return true; } \
 }
 
@@ -106,7 +106,7 @@ QVariant ClientToolModel::data(const QModelIndex& index, int role) const
       ToolFactory *factory = m_factories.value(toolId);
       if (!factory)
         return QVariant();
-      QWidget *widget = factory->createWidget(0, m_parentWidget);
+      QWidget *widget = factory->createWidget(m_parentWidget);
       m_widgets.insert(toolId, widget);
       return QVariant::fromValue(widget);
     }
