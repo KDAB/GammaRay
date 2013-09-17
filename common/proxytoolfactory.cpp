@@ -52,9 +52,6 @@ ProxyToolFactory::ProxyToolFactory(const QString &path, QObject *parent)
 
   m_remotingSupported = desktopFile.value(QLatin1String("X-GammaRay-Remote"), true).toBool();
 
-  m_pluginPath =
-    pluginInfo.dir().absoluteFilePath(desktopFile.value(QLatin1String("Exec")).toString());
-
   const QString dllBaseName = desktopFile.value(QLatin1String("Exec")).toString();
   if (dllBaseName.isEmpty()) {
     m_errorString = tr("Invalid 'Exec' line in plugin spec file");
