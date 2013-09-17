@@ -36,6 +36,7 @@
 #include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
 #include <common/pluginmanager.h>
+#include <common/proxytoolfactory.h>
 #include <network/modelroles.h>
 #include <include/toolfactory.h>
 
@@ -81,7 +82,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new StandardPathsFactory);
   insertFactory(new TextDocumentInspectorFactory);
 
-  PluginManager pm;
+  PluginManager<ToolFactory, ProxyToolFactory> pm; // ### temporary, this should only be ToolUiFactory
   foreach(ToolFactory* factory, pm.plugins())
     insertFactory(factory);
 }

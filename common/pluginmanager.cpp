@@ -24,7 +24,6 @@
 #include "pluginmanager.h"
 
 #include "config-gammaray.h"
-#include "proxytoolfactory.h"
 
 #include <QCoreApplication>
 #include <QStringList>
@@ -42,17 +41,16 @@ using namespace std;
 
 static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
 
-PluginManager::PluginManager(QObject *parent) : m_parent(parent)
+PluginManagerBase::PluginManagerBase(QObject *parent) : m_parent(parent)
 {
   QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
-  scan();
 }
 
-PluginManager::~PluginManager()
+PluginManagerBase::~PluginManagerBase()
 {
 }
 
-QStringList PluginManager::pluginPaths() const
+QStringList PluginManagerBase::pluginPaths() const
 {
   QStringList pluginPaths;
 
@@ -70,7 +68,7 @@ QStringList PluginManager::pluginPaths() const
   return pluginPaths;
 }
 
-void PluginManager::scan()
+void PluginManagerBase::scan()
 {
   m_errors.clear();
   QStringList loadedPluginNames;
@@ -94,24 +92,4 @@ void PluginManager::scan()
       }
     }
   }
-}
-
-QVector<ToolFactory *> PluginManager::plugins()
-{
-  return m_plugins;
-}
-
-bool PluginManager::createProxyFactory(const QString& desktopFilePath, QObject* parent)
-{
-  ProxyToolFactory *proxy = new ProxyToolFactory(desktopFilePath, parent);
-  if (!proxy->isValid()) {
-    m_errors << PluginLoadError(desktopFilePath, QObject::tr("Failed to load plugin."));
-    std::cerr << "invalid plugin " << qPrintable(desktopFilePath) << std::endl;
-    delete proxy;
-  } else {
-    IF_DEBUG(cout << "plugin looks valid " << qPrintable(desktopFilePath) << endl;)
-    m_plugins.push_back(proxy);
-    return true;
-  }
-  return false;
 }

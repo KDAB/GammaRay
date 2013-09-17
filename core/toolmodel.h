@@ -35,6 +35,9 @@
 namespace GammaRay {
 
 class ToolFactory;
+class ProxyToolFactory;
+
+typedef PluginManager<ToolFactory, ProxyToolFactory> ToolPluginManager;
 
 /**
  * Manages the list of available probing tools.
@@ -76,7 +79,7 @@ class ToolModel : public QAbstractListModel
     mutable QHash<ToolFactory*, QWidget*> m_toolWidgets;
     QSet<ToolFactory*> m_inactiveTools;
     QPointer<QWidget> m_parentWidget;
-    QScopedPointer<PluginManager> m_pluginManager;
+    QScopedPointer<ToolPluginManager> m_pluginManager;
 };
 
 }

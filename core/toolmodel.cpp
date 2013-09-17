@@ -25,6 +25,7 @@
 #include "toolmodel.h"
 
 #include "include/toolfactory.h"
+#include <common/proxytoolfactory.h>
 
 #include "tools/connectioninspector/connectioninspector.h"
 #include "tools/localeinspector/localeinspector.h"
@@ -71,7 +72,7 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new MimeTypesFactory(this));
 #endif
 
-  m_pluginManager.reset(new PluginManager(this));
+  m_pluginManager.reset(new ToolPluginManager(this));
   Q_FOREACH (ToolFactory *factory, m_pluginManager->plugins()) {
     m_tools.push_back(factory);
   }

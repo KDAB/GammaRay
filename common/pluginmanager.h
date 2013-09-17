@@ -28,9 +28,10 @@
 #include <QList>
 #include <QFileInfo>
 
+#include <iostream>
+
 namespace GammaRay {
 
-class ToolFactory;
 class PluginLoadError;
 
 typedef QList<PluginLoadError> PluginLoadErrors;
@@ -53,16 +54,14 @@ class PluginLoadError
     QString errorString;
 };
 
-class PluginManager
+class PluginManagerBase
 {
   public:
     /**
      * @param parent This is the parent object for all objects created by the plugins
      */
-    explicit PluginManager(QObject *parent = 0);
-    ~PluginManager();
-
-    QVector<ToolFactory*> plugins();
+    explicit PluginManagerBase(QObject *parent = 0);
+    ~PluginManagerBase();
 
     QList<PluginLoadError> errors() const
     {
@@ -70,15 +69,48 @@ class PluginManager
     }
 
   protected:
-    bool createProxyFactory(const QString& desktopFilePath, QObject* parent);
+    virtual bool createProxyFactory(const QString& desktopFilePath, QObject* parent) = 0;
 
-  private:
-    QStringList pluginPaths() const;
     void scan();
+    QStringList pluginPaths() const;
 
-    QVector<ToolFactory*> m_plugins;
     QList<PluginLoadError> m_errors;
     QObject *m_parent;
+};
+
+template <typename IFace, typename Proxy>
+class PluginManager : public PluginManagerBase
+{
+public:
+    explicit inline PluginManager(QObject *parent = 0) : PluginManagerBase(parent)
+    {
+      scan();
+    }
+
+    inline ~PluginManager() {}
+
+    inline QVector<IFace*> plugins()
+    {
+      return m_plugins;
+    }
+
+protected:
+    bool createProxyFactory(const QString& desktopFilePath, QObject* parent)
+    {
+      Proxy *proxy = new Proxy(desktopFilePath, parent);
+      if (!proxy->isValid()) {
+        m_errors << PluginLoadError(desktopFilePath, QObject::tr("Failed to load plugin."));
+        std::cerr << "invalid plugin " << qPrintable(desktopFilePath) << std::endl;
+        delete proxy;
+      } else {
+        m_plugins.push_back(proxy);
+        return true;
+      }
+      return false;
+    }
+
+private:
+    QVector<IFace*> m_plugins;
 };
 
 }
