@@ -69,6 +69,9 @@ class PluginManager
       return m_errors;
     }
 
+  protected:
+    bool createProxyFactory(const QString& desktopFilePath, QObject* parent);
+
   private:
     QStringList pluginPaths() const;
     void scan();

@@ -89,16 +89,8 @@ void PluginManager::scan()
       }
 
       if (pluginInfo.suffix() == QLatin1String("desktop")) {
-        ProxyToolFactory *proxy = new ProxyToolFactory(pluginFile, m_parent);
-        if (!proxy->isValid()) {
-          m_errors << PluginLoadError(pluginFile, QObject::tr("Failed to load plugin."));
-          std::cerr << "invalid plugin " << qPrintable(pluginFile) << std::endl;
-          delete proxy;
-        } else {
-          IF_DEBUG(cout << "plugin looks valid " << qPrintable(pluginFile) << endl;)
-          m_plugins.push_back(proxy);
-          loadedPluginNames << pluginName;
-        }
+        if (createProxyFactory(pluginFile, m_parent))
+          loadedPluginNames.push_back(pluginName);
       }
     }
   }
@@ -107,4 +99,19 @@ void PluginManager::scan()
 QVector<ToolFactory *> PluginManager::plugins()
 {
   return m_plugins;
+}
+
+bool PluginManager::createProxyFactory(const QString& desktopFilePath, QObject* parent)
+{
+  ProxyToolFactory *proxy = new ProxyToolFactory(desktopFilePath, parent);
+  if (!proxy->isValid()) {
+    m_errors << PluginLoadError(desktopFilePath, QObject::tr("Failed to load plugin."));
+    std::cerr << "invalid plugin " << qPrintable(desktopFilePath) << std::endl;
+    delete proxy;
+  } else {
+    IF_DEBUG(cout << "plugin looks valid " << qPrintable(desktopFilePath) << endl;)
+    m_plugins.push_back(proxy);
+    return true;
+  }
+  return false;
 }
