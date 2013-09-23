@@ -136,6 +136,8 @@ QString kRealBacktrace(int levels)
   if (strings) {
     free (strings);
   }
+#else
+  Q_UNUSED(levels);
 #endif
   return s;
 }
@@ -164,6 +166,8 @@ Backtrace backtraceList(int levels)
   if (strings) {
     free(strings);
   }
+#else
+  Q_UNUSED(levels);
 #endif
   return s;
 }
