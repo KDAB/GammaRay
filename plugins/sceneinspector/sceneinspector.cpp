@@ -35,6 +35,7 @@
 
 #include <kde/krecursivefilterproxymodel.h>
 #include <common/network/objectbroker.h>
+#include <common/network/endpoint.h>
 
 #include <QGraphicsItem>
 #include <QGraphicsView>
@@ -103,7 +104,11 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
 
 void SceneInspector::initializeGui()
 {
-  ///TODO: do not do this for in-process mode
+  if (!Endpoint::isConnected()) {
+    // only do something if we are connected to a remote client
+    return;
+  }
+
   QGraphicsScene *scene = m_sceneModel->scene();
   if (!scene) {
     return;
@@ -115,6 +120,11 @@ void SceneInspector::initializeGui()
 
 void SceneInspector::renderScene()
 {
+  if (!Endpoint::isConnected()) {
+    // only do something if we are connected to a remote client
+    return;
+  }
+
   QGraphicsScene *scene = m_sceneModel->scene();
   if (!scene) {
     return;
