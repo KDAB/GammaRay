@@ -48,6 +48,7 @@ class SceneInspector : public SceneInspectorInterface
 
   private slots:
     virtual void initializeGui();
+    void renderScene();
 
     void sceneSelected(const QItemSelection &selection);
     void sceneItemSelected(const QItemSelection &selection);

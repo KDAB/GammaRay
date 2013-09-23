@@ -84,7 +84,17 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
   cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
+  if (m_sceneModel->scene()) {
+    disconnect(m_sceneModel->scene(), 0, this, 0);
+  }
+
   m_sceneModel->setScene(scene);
+
+  connect(scene, SIGNAL(sceneRectChanged(QRectF)),
+          this, SIGNAL(sceneRectChanged(QRectF)));
+  connect(scene, SIGNAL(changed(QList<QRectF>)),
+          this, SLOT(renderScene()));
+
   initializeGui();
 
   // TODO remote support?
@@ -93,12 +103,30 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
 
 void SceneInspector::initializeGui()
 {
+  ///TODO: do not do this for in-process mode
   QGraphicsScene *scene = m_sceneModel->scene();
   if (!scene) {
     return;
   }
 
   emit sceneRectChanged(scene->sceneRect());
+  renderScene();
+}
+
+void SceneInspector::renderScene()
+{
+  QGraphicsScene *scene = m_sceneModel->scene();
+  if (!scene) {
+    return;
+  }
+
+  QPixmap view(scene->sceneRect().size().toSize());
+  view.fill(Qt::transparent);
+
+  QPainter painter(&view);
+  scene->render(&painter);
+
+  emit sceneRendered(view);
 }
 
 void SceneInspector::sceneItemSelected(const QItemSelection& selection)

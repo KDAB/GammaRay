@@ -53,6 +53,7 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   , ui(new Ui::SceneInspectorWidget)
   , m_interface(0)
   , m_scene(new QGraphicsScene(this))
+  , m_pixmap(0)
 {
   ObjectBroker::registerClientObjectFactoryCallback<SceneInspectorInterface*>(createClientSceneInspector);
   m_interface = ObjectBroker::object<SceneInspectorInterface*>();
@@ -76,6 +77,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   ui->graphicsSceneView->setGraphicsScene(m_scene);
   connect(m_interface, SIGNAL(sceneRectChanged(QRectF)),
           this, SLOT(sceneRectChanged(QRectF)));
+  connect(m_interface, SIGNAL(sceneRendered(QPixmap)),
+          this, SLOT(sceneRendered(QPixmap)));
 
   m_interface->initializeGui();
 
@@ -93,6 +96,16 @@ void SceneInspectorWidget::sceneRectChanged(const QRectF &rect)
 {
   qDebug() << rect;
   m_scene->setSceneRect(rect);
+}
+
+void SceneInspectorWidget::sceneRendered(const QPixmap &view)
+{
+  if (!m_pixmap) {
+    m_pixmap = m_scene->addPixmap(view);
+  } else {
+    m_pixmap->setPixmap(view);
+  }
+  m_pixmap->setPos(m_scene->sceneRect().topLeft());
 }
 
 void SceneInspectorWidget::sceneSelected(int index)

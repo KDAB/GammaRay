@@ -26,6 +26,7 @@
 
 #include <QWidget>
 
+class QGraphicsPixmapItem;
 class QGraphicsScene;
 class QItemSelection;
 
@@ -48,11 +49,13 @@ class SceneInspectorWidget : public QWidget
     void sceneSelected(int index);
     void sceneItemSelected(const QItemSelection &selection);
     void sceneRectChanged(const QRectF &rect);
+    void sceneRendered(const QPixmap &view);
 
   private:
     QScopedPointer<Ui::SceneInspectorWidget> ui;
     SceneInspectorInterface *m_interface;
     QGraphicsScene *m_scene;
+    QGraphicsPixmapItem *m_pixmap;
 };
 
 }
