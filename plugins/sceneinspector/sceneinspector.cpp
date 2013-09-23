@@ -46,7 +46,7 @@ using namespace GammaRay;
 using namespace std;
 
 SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent),
+  : SceneInspectorInterface(parent),
     m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
 {
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
@@ -69,7 +69,9 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   connect(m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(sceneItemSelected(QItemSelection)));
 
-  // TODO: preselect a scene
+  if (singleColumnProxy->rowCount()) {
+    sceneSelection->setCurrentIndex(singleColumnProxy->index(0, 0), QItemSelectionModel::ClearAndSelect);
+  }
 }
 
 void SceneInspector::sceneSelected(const QItemSelection& selection)
@@ -83,8 +85,20 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
   cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
   m_sceneModel->setScene(scene);
+  initializeGui();
+
   // TODO remote support?
 //  ui->graphicsSceneView->setGraphicsScene(scene);
+}
+
+void SceneInspector::initializeGui()
+{
+  QGraphicsScene *scene = m_sceneModel->scene();
+  if (!scene) {
+    return;
+  }
+
+  emit sceneRectChanged(scene->sceneRect());
 }
 
 void SceneInspector::sceneItemSelected(const QItemSelection& selection)

@@ -24,6 +24,7 @@
 #include "sceneinspectorwidget.h"
 
 #include "scenemodel.h"
+#include "sceneinspectorclient.h"
 #include "ui_sceneinspectorwidget.h"
 
 #include <common/network/objectbroker.h>
@@ -35,16 +36,27 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <QDebug>
 
 #include <iostream>
 
 using namespace GammaRay;
 using namespace std;
 
-SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::SceneInspectorWidget)
+static QObject* createClientSceneInspector(const QString &/*name*/, QObject *parent)
 {
+  return new SceneInspectorClient(parent);
+}
+
+SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::SceneInspectorWidget)
+  , m_interface(0)
+  , m_scene(new QGraphicsScene(this))
+{
+  ObjectBroker::registerClientObjectFactoryCallback<SceneInspectorInterface*>(createClientSceneInspector);
+  m_interface = ObjectBroker::object<SceneInspectorInterface*>();
+
   ui->setupUi(this);
   ui->scenePropertyWidget->setObjectBaseName("com.kdab.GammaRay.SceneInspector");
 
@@ -61,13 +73,26 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   connect(itemSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(sceneItemSelected(QItemSelection)));
 
-  if (ui->sceneComboBox->count()) {
-    sceneSelected(0);
+  ui->graphicsSceneView->setGraphicsScene(m_scene);
+  connect(m_interface, SIGNAL(sceneRectChanged(QRectF)),
+          this, SLOT(sceneRectChanged(QRectF)));
+
+  m_interface->initializeGui();
+
+  QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
+  if (selection->currentIndex().isValid()) {
+    sceneSelected(selection->currentIndex().row());
   }
 }
 
 SceneInspectorWidget::~SceneInspectorWidget()
 {
+}
+
+void SceneInspectorWidget::sceneRectChanged(const QRectF &rect)
+{
+  qDebug() << rect;
+  m_scene->setSceneRect(rect);
 }
 
 void SceneInspectorWidget::sceneSelected(int index)
@@ -80,7 +105,9 @@ void SceneInspectorWidget::sceneSelected(int index)
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
   cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
-  ui->graphicsSceneView->setGraphicsScene(scene);
+  if (scene) {
+    ui->graphicsSceneView->setGraphicsScene(scene);
+  }
 }
 
 void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)

@@ -56,6 +56,11 @@ void SceneModel::setScene(QGraphicsScene *scene)
   reset();
 }
 
+QGraphicsScene *SceneModel::scene() const
+{
+  return m_scene;
+}
+
 QVariant SceneModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid()) {

@@ -1,11 +1,11 @@
 /*
-  sceneinspectorwidget.h
+  sceneinspectorclient.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,40 +21,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
-#define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
+#ifndef GAMMARAY_SCENEINSPECTORCLIENT_H
+#define GAMMARAY_SCENEINSPECTORCLIENT_H
 
-#include <QWidget>
-
-class QGraphicsScene;
-class QItemSelection;
+#include "sceneinspectorinterface.h"
 
 namespace GammaRay {
 
-class SceneInspectorInterface;
-
-namespace Ui {
-  class SceneInspectorWidget;
-}
-
-class SceneInspectorWidget : public QWidget
+class SceneInspectorClient : public SceneInspectorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::SceneInspectorInterface)
   public:
-    explicit SceneInspectorWidget(QWidget *parent = 0);
-    ~SceneInspectorWidget();
+    explicit SceneInspectorClient(QObject *parent = 0);
+    virtual ~SceneInspectorClient();
 
-  private slots:
-    void sceneSelected(int index);
-    void sceneItemSelected(const QItemSelection &selection);
-    void sceneRectChanged(const QRectF &rect);
-
-  private:
-    QScopedPointer<Ui::SceneInspectorWidget> ui;
-    SceneInspectorInterface *m_interface;
-    QGraphicsScene *m_scene;
+    virtual void initializeGui();
 };
 
 }
 
-#endif // GAMMARAY_SCENEINSPECTOR_H
+#endif // GAMMARAY_SCENEINSPECTORCLIENT_H

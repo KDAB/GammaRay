@@ -26,9 +26,9 @@
 
 #include "include/toolfactory.h"
 #include "sceneinspectorwidget.h"
+#include "sceneinspectorinterface.h"
 
 #include <QGraphicsScene>
-#include <QWidget>
 
 class QItemSelectionModel;
 class QItemSelection;
@@ -39,13 +39,16 @@ namespace GammaRay {
 class PropertyController;
 class SceneModel;
 
-class SceneInspector : public QObject
+class SceneInspector : public SceneInspectorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::SceneInspectorInterface)
   public:
     explicit SceneInspector(ProbeInterface *probe, QObject *parent = 0);
 
   private slots:
+    virtual void initializeGui();
+
     void sceneSelected(const QItemSelection &selection);
     void sceneItemSelected(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
