@@ -40,7 +40,7 @@ bool AbstractFunctionOverwriter::writeShortJump(void *target, void *const func)
   bool ret = unprotectMemory(page_align(target), roundToNextPage(5));
 
   if (!ret) {
-    std::cerr << "Failed to unprotect memory: " << page_align(target);
+    std::cerr << "Failed to unprotect memory: " << page_align(target) << std::endl;
     return false;
   }
 
@@ -51,7 +51,7 @@ bool AbstractFunctionOverwriter::writeShortJump(void *target, void *const func)
   ret = reprotectMemory(page_align(target), roundToNextPage(5));
 
   if (!ret) {
-    std::cerr << "Failed to reprotect memory: " << page_align(target);
+    std::cerr << "Failed to reprotect memory: " << page_align(target) << std::endl;
     return false;
   }
 
@@ -65,7 +65,7 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
   bool ret = unprotectMemory(page_align(target), roundToNextPage(worstSizeForLongJump));
 
   if (!ret) {
-    std::cerr << "Failed to unprotect memory: " << page_align(target);
+    std::cerr << "Failed to unprotect memory: " << page_align(target) << std::endl;
     return false;
   }
 
@@ -87,7 +87,7 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
   ret = reprotectMemory(page_align(target), roundToNextPage(worstSizeForLongJump));
 
   if (!ret) {
-    std::cerr << "Failed to reprotect memory: " << page_align(target);
+    std::cerr << "Failed to reprotect memory: " << page_align(target) << std::endl;
     return false;
   }
 
@@ -148,7 +148,7 @@ void *AbstractFunctionOverwriter::getMemoryNearAddress(void *const addr, size_t 
 #error "Unsupported hardware architecture!"
 #endif
   if (!mem) {
-    std::cerr << "Error could not find memory close to: " << addr;
+    std::cerr << "Error could not find memory close to: " << addr << std::endl;
     return 0;
   }
   if (!commitMemory(mem, blocksize())) {
@@ -184,7 +184,7 @@ bool AbstractFunctionOverwriter::overwriteFunction(const QString &orignalFunc,
 {
   void *func = qtCoreFunctionLookup(orignalFunc);
   if (!func) {
-    std::cerr << "Failed to lookup: " << orignalFunc.toLatin1().data();
+    std::cerr << "Failed to lookup: " << orignalFunc.toLatin1().data() << std::endl;
     return false;
   }
   void *mem = createTrampoline(func, replacementFunc);
