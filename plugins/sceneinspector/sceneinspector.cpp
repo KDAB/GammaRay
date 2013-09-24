@@ -144,6 +144,11 @@ void SceneInspector::renderScene(const QTransform &transform, const QSize &size)
 
   scene->render(&painter, area, area, Qt::IgnoreAspectRatio);
 
+  QGraphicsItem *currentItem = m_itemSelectionModel->currentIndex().data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
+  if (currentItem) {
+    paintItemDecoration(currentItem, transform, &painter);
+  }
+
   emit sceneRendered(view);
 }
 
@@ -161,10 +166,10 @@ void SceneInspector::sceneItemSelected(const QItemSelection& selection)
     } else {
       m_propertyController->setObject(item, findBestType(item));
     }
-    // TODO remote support?
-//    ui->graphicsSceneView->showGraphicsItem(item);
+    emit itemSelected(item->mapRectToScene(item->boundingRect()));
   } else {
     m_propertyController->setObject(0);
+    emit sceneChanged();
   }
 }
 

@@ -22,6 +22,7 @@
 */
 
 #include "graphicsview.h"
+#include "sceneinspectorinterface.h"
 
 #include <QGraphicsItem>
 #include <QKeyEvent>
@@ -88,29 +89,7 @@ void GraphicsView::drawForeground(QPainter *painter, const QRectF &rect)
 {
   QGraphicsView::drawForeground(painter, rect);
   if (m_currentItem) {
-    const QRectF itemBoundingRect = m_currentItem->boundingRect();
-    // coord system, TODO: nicer axis with arrows, tics, markers for current mouse position etc.
-    painter->setPen(Qt::black);
-    const qreal maxX = qMax(qAbs(itemBoundingRect.left()), qAbs(itemBoundingRect.right()));
-    const qreal maxY = qMax(qAbs(itemBoundingRect.top()), qAbs(itemBoundingRect.bottom()));
-    const qreal maxXY = qMax(maxX, maxY) * 1.5f;
-    painter->drawLine(m_currentItem->mapToScene(-maxXY, 0), m_currentItem->mapToScene(maxXY, 0));
-    painter->drawLine(m_currentItem->mapToScene(0, -maxXY), m_currentItem->mapToScene(0, maxXY));
-
-    painter->setPen(Qt::blue);
-    const QPolygonF boundingBox = m_currentItem->mapToScene(itemBoundingRect);
-    painter->drawPolygon(boundingBox);
-
-    painter->setPen(Qt::green);
-    const QPainterPath shape = m_currentItem->mapToScene(m_currentItem->shape());
-    painter->drawPath(shape);
-
-    painter->setPen(Qt::red);
-    const QPointF transformOrigin =
-      m_currentItem->mapToScene(m_currentItem->transformOriginPoint());
-    painter->drawEllipse(transformOrigin,
-                         5.0 / transform().m11(),
-                         5.0 / transform().m22());
+    SceneInspectorInterface::paintItemDecoration(m_currentItem, transform(), painter);
   }
 }
 

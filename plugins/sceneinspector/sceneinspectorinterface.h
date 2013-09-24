@@ -26,6 +26,8 @@
 
 #include <QObject>
 
+class QPainter;
+class QGraphicsItem;
 class QSize;
 class QTransform;
 class QRectF;
@@ -42,6 +44,8 @@ class SceneInspectorInterface : public QObject
 
     virtual void initializeGui() = 0;
 
+    static void paintItemDecoration(QGraphicsItem *item, const QTransform &transform, QPainter *painter);
+
   public slots:
     virtual void renderScene(const QTransform &transform, const QSize &size) = 0;
 
@@ -49,6 +53,7 @@ class SceneInspectorInterface : public QObject
     void sceneRectChanged(const QRectF &rect);
     void sceneChanged();
     void sceneRendered(const QPixmap &view);
+    void itemSelected(const QRectF &boundingRect);
 };
 
 }

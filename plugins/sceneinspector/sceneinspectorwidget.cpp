@@ -86,6 +86,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
           this, SLOT(sceneChanged()));
   connect(m_interface, SIGNAL(sceneRendered(QPixmap)),
           this, SLOT(sceneRendered(QPixmap)));
+  connect(m_interface, SIGNAL(itemSelected(QRectF)),
+          this, SLOT(itemSelected(QRectF)));
 
   m_interface->initializeGui();
 
@@ -122,6 +124,13 @@ bool SceneInspectorWidget::eventFilter(QObject *obj, QEvent *event)
     QMetaObject::invokeMethod(this, "visibleSceneRectChanged", Qt::QueuedConnection);
   }
   return QObject::eventFilter(obj, event);
+}
+
+void SceneInspectorWidget::itemSelected(const QRectF &boundingRect)
+{
+  ui->graphicsSceneView->view()->fitInView(boundingRect, Qt::KeepAspectRatio);
+  ui->graphicsSceneView->view()->scale(0.8, 0.8);
+  visibleSceneRectChanged();
 }
 
 void SceneInspectorWidget::sceneRectChanged(const QRectF &rect)
@@ -183,11 +192,14 @@ void SceneInspectorWidget::sceneSelected(int index)
 
 void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
 {
+  if (Endpoint::instance()->isRemoteClient()) {
+    return;
+  }
+
   QModelIndex index;
   if (!selection.isEmpty())
     index = selection.first().topLeft();
 
-  ///FIXME: this won't work remotely
   if (index.isValid()) {
     QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
     ui->graphicsSceneView->showGraphicsItem(item);

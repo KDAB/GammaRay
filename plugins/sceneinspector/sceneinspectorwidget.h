@@ -53,6 +53,7 @@ class SceneInspectorWidget : public QWidget
     void requestSceneUpdate();
     void sceneRendered(const QPixmap &view);
     void visibleSceneRectChanged();
+    void itemSelected(const QRectF &boundingRect);
 
   private:
     virtual bool eventFilter(QObject *obj, QEvent *event);
