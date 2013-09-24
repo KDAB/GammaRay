@@ -59,6 +59,17 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
   return true;
 }
 
+static QByteArray normalize(QObject *obj, const char *signature)
+{
+  int idx = obj->metaObject()->indexOfMethod(signature + 1);
+  if (idx == -1) {
+    return QMetaObject::normalizedSignature(signature);
+  } else {
+    // oh how I'd like to use ::fromRawData here reliably ;-)
+    return QByteArray(signature);
+  }
+}
+
 ConnectionModel::ConnectionModel(QObject *parent)
   : QAbstractTableModel(parent)
 {
@@ -77,9 +88,9 @@ void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
 
   Connection c;
   c.sender = sender;
-  c.signal = QMetaObject::normalizedSignature(signal);
+  c.signal = normalize(sender, signal);
   c.receiver = receiver;
-  c.method = QMetaObject::normalizedSignature(method);
+  c.method = normalize(receiver, method);
   c.type = type;
   c.location = SignalSlotsLocationStore::extractLocation(signal);
 
