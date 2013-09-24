@@ -132,8 +132,8 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject *, sender), Q_ARG(QByteArray, normalizedSignal),
-                            Q_ARG(QObject *, receiver), Q_ARG(QByteArray, normalizedMethod));
+                            Q_ARG(QObject*, sender), Q_ARG(QByteArray, normalizedSignal),
+                            Q_ARG(QObject*, receiver), Q_ARG(QByteArray, normalizedMethod));
 }
 
 void ConnectionModel::connectionRemovedMainThread(QObject *sender, const QByteArray &normalizedSignal,
