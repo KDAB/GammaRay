@@ -196,10 +196,7 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
     return;
   }
   const QModelIndex index = indexList.first();
-  m_itemSelectionModel->select(
-    index,
-    QItemSelectionModel::Select | QItemSelectionModel::Clear |
-    QItemSelectionModel::Rows | QItemSelectionModel::Current);
+  m_itemSelectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
 }
 
 #define QGV_CHECK_TYPE(Class) \
