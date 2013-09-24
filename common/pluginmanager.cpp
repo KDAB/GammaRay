@@ -82,7 +82,6 @@ void PluginManagerBase::scan()
       const QString pluginName = pluginInfo.baseName();
 
       if (loadedPluginNames.contains(pluginName)) {
-        cout << "not loading plugin, already loaded: " << qPrintable(pluginFile) << endl;
         continue;
       }
 
