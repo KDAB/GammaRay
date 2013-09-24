@@ -42,7 +42,7 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
     return false;
   }
   const QMetaObject *mo = obj->metaObject();
-  const int methodIndex = mo->indexOfMethod(signature.mid(1));
+  const int methodIndex = mo->indexOfMethod(signature.constData() + 1);
   if (methodIndex < 0) {
     return false;
   }
