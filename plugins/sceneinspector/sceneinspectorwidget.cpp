@@ -25,9 +25,11 @@
 
 #include "scenemodel.h"
 #include "sceneinspectorclient.h"
+#include "graphicsview.h"
 #include "ui_sceneinspectorwidget.h"
 
 #include <common/network/objectbroker.h>
+#include <common/network/endpoint.h>
 
 #include "include/objectmodel.h"
 #include "include/util.h"
@@ -36,7 +38,9 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <QScrollBar>
 #include <QDebug>
+#include <QTimer>
 
 #include <iostream>
 
@@ -53,7 +57,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   , ui(new Ui::SceneInspectorWidget)
   , m_interface(0)
   , m_scene(new QGraphicsScene(this))
-  , m_pixmap(0)
+  , m_pixmap(new QGraphicsPixmapItem)
+  , m_updateTimer(new QTimer(this))
 {
   ObjectBroker::registerClientObjectFactoryCallback<SceneInspectorInterface*>(createClientSceneInspector);
   m_interface = ObjectBroker::object<SceneInspectorInterface*>();
@@ -77,15 +82,30 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   ui->graphicsSceneView->setGraphicsScene(m_scene);
   connect(m_interface, SIGNAL(sceneRectChanged(QRectF)),
           this, SLOT(sceneRectChanged(QRectF)));
+  connect(m_interface, SIGNAL(sceneChanged()),
+          this, SLOT(sceneChanged()));
   connect(m_interface, SIGNAL(sceneRendered(QPixmap)),
           this, SLOT(sceneRendered(QPixmap)));
 
   m_interface->initializeGui();
 
+  m_pixmap->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+  m_scene->addItem(m_pixmap);
+  connect(ui->graphicsSceneView->view(), SIGNAL(transformChanged()),
+          this, SLOT(visibleSceneRectChanged()));
+  connect(ui->graphicsSceneView->view()->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+          this, SLOT(visibleSceneRectChanged()));
+  connect(ui->graphicsSceneView->view()->verticalScrollBar(), SIGNAL(valueChanged(int)),
+          this, SLOT(visibleSceneRectChanged()));
+
   QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
   if (selection->currentIndex().isValid()) {
     sceneSelected(selection->currentIndex().row());
   }
+
+  m_updateTimer->setSingleShot(true);
+  m_updateTimer->setInterval(100);
+  connect(m_updateTimer, SIGNAL(timeout()), SLOT(requestSceneUpdate()));
 }
 
 SceneInspectorWidget::~SceneInspectorWidget()
@@ -94,18 +114,41 @@ SceneInspectorWidget::~SceneInspectorWidget()
 
 void SceneInspectorWidget::sceneRectChanged(const QRectF &rect)
 {
-  qDebug() << rect;
   m_scene->setSceneRect(rect);
+  visibleSceneRectChanged();
+}
+
+void SceneInspectorWidget::sceneChanged()
+{
+  if (!m_updateTimer->isActive()) {
+    m_updateTimer->start();
+  }
+}
+
+void SceneInspectorWidget::requestSceneUpdate()
+{
+  if (!Endpoint::instance()->isRemoteClient()) {
+    return;
+  }
+
+  if (ui->graphicsSceneView->view()->rect().isEmpty()) {
+    // when the splitter is moved to hide the view, don't request updates
+    return;
+  }
+
+  m_interface->renderScene(ui->graphicsSceneView->view()->viewportTransform(),
+                           ui->graphicsSceneView->view()->viewport()->rect().size());
 }
 
 void SceneInspectorWidget::sceneRendered(const QPixmap &view)
 {
-  if (!m_pixmap) {
-    m_pixmap = m_scene->addPixmap(view);
-  } else {
-    m_pixmap->setPixmap(view);
-  }
-  m_pixmap->setPos(m_scene->sceneRect().topLeft());
+  m_pixmap->setPixmap(view);
+}
+
+void SceneInspectorWidget::visibleSceneRectChanged()
+{
+  m_pixmap->setPos(ui->graphicsSceneView->view()->mapToScene(0, 0));
+  sceneChanged();
 }
 
 void SceneInspectorWidget::sceneSelected(int index)

@@ -26,6 +26,8 @@
 
 #include <QObject>
 
+class QSize;
+class QTransform;
 class QRectF;
 class QPixmap;
 
@@ -40,8 +42,12 @@ class SceneInspectorInterface : public QObject
 
     virtual void initializeGui() = 0;
 
+  public slots:
+    virtual void renderScene(const QTransform &transform, const QSize &size) = 0;
+
   signals:
     void sceneRectChanged(const QRectF &rect);
+    void sceneChanged();
     void sceneRendered(const QPixmap &view);
 };
 

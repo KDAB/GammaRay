@@ -39,6 +39,7 @@ class GraphicsView : public QGraphicsView
   signals:
     void sceneCoordinatesChanged(const QPointF &sceneCoord);
     void itemCoordinatesChanged(const QPointF &itemCoord);
+    void transformChanged();
 
   protected:
     void keyPressEvent(QKeyEvent *event);

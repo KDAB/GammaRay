@@ -23,6 +23,8 @@
 
 #include "sceneinspectorclient.h"
 
+#include <QTransform>
+
 #include <common/network/endpoint.h>
 
 using namespace GammaRay;
@@ -41,6 +43,11 @@ SceneInspectorClient::~SceneInspectorClient()
 void SceneInspectorClient::initializeGui()
 {
   Endpoint::instance()->invokeObject(objectName(), "initializeGui");
+}
+
+void SceneInspectorClient::renderScene(const QTransform &transform, const QSize &size)
+{
+  Endpoint::instance()->invokeObject(objectName(), "renderScene", QVariantList() << transform << size);
 }
 
 #include "sceneinspectorclient.moc"

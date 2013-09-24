@@ -94,7 +94,7 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
   connect(scene, SIGNAL(sceneRectChanged(QRectF)),
           this, SIGNAL(sceneRectChanged(QRectF)));
   connect(scene, SIGNAL(changed(QList<QRectF>)),
-          this, SLOT(renderScene()));
+          this, SIGNAL(sceneChanged()));
 
   initializeGui();
 
@@ -115,10 +115,9 @@ void SceneInspector::initializeGui()
   }
 
   emit sceneRectChanged(scene->sceneRect());
-  renderScene();
 }
 
-void SceneInspector::renderScene()
+void SceneInspector::renderScene(const QTransform &transform, const QSize &size)
 {
   if (!Endpoint::isConnected()) {
     // only do something if we are connected to a remote client
@@ -130,11 +129,20 @@ void SceneInspector::renderScene()
     return;
   }
 
-  QPixmap view(scene->sceneRect().size().toSize());
+  // initialize transparent pixmap
+  QPixmap view(size);
   view.fill(Qt::transparent);
 
+  // setup painter and apply transformation of client view
   QPainter painter(&view);
-  scene->render(&painter);
+  painter.setWorldTransform(transform);
+
+  // the area we want to paint has the size of the client's viewport _after_ applying
+  // the transformation. Thus first apply the inverse to yield the desired area afterwards
+  QRectF area(QPointF(0, 0), size);
+  area = transform.inverted().mapRect(area);
+
+  scene->render(&painter, area, area, Qt::IgnoreAspectRatio);
 
   emit sceneRendered(view);
 }

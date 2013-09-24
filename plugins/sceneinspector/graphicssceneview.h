@@ -31,6 +31,8 @@ class QGraphicsItem;
 
 namespace GammaRay {
 
+class GraphicsView;
+
 namespace Ui {
   class GraphicsSceneView;
 }
@@ -41,6 +43,8 @@ class GraphicsSceneView : public QWidget
   public:
     explicit GraphicsSceneView(QWidget *parent = 0);
     ~GraphicsSceneView();
+
+    GraphicsView* view() const;
 
     void showGraphicsItem(QGraphicsItem *item);
     void setGraphicsScene(QGraphicsScene *scene);

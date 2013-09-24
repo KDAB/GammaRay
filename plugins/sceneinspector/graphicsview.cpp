@@ -43,6 +43,7 @@ void GraphicsView::showItem(QGraphicsItem *item)
 
   fitInView(item, Qt::KeepAspectRatio);
   scale(0.8f, 0.8f);
+  emit transformChanged();
 }
 
 void GraphicsView::keyPressEvent(QKeyEvent *event)
@@ -51,18 +52,22 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Plus:
       scale(1.2, 1.2);
+      emit transformChanged();
       event->accept();
       return;
     case Qt::Key_Minus:
       scale(0.8, 0.8);
+      emit transformChanged();
       event->accept();
       return;
     case Qt::Key_Left:
       rotate(-5);
+      emit transformChanged();
       event->accept();
       break;
     case Qt::Key_Right:
       rotate(5);
+      emit transformChanged();
       event->accept();
       break;
     }

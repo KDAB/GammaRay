@@ -37,6 +37,7 @@ class SceneInspectorClient : public SceneInspectorInterface
     virtual ~SceneInspectorClient();
 
     virtual void initializeGui();
+    virtual void renderScene(const QTransform &transform, const QSize &size);
 };
 
 }

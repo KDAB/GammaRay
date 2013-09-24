@@ -49,13 +49,17 @@ class SceneInspectorWidget : public QWidget
     void sceneSelected(int index);
     void sceneItemSelected(const QItemSelection &selection);
     void sceneRectChanged(const QRectF &rect);
+    void sceneChanged();
+    void requestSceneUpdate();
     void sceneRendered(const QPixmap &view);
+    void visibleSceneRectChanged();
 
   private:
     QScopedPointer<Ui::SceneInspectorWidget> ui;
     SceneInspectorInterface *m_interface;
     QGraphicsScene *m_scene;
     QGraphicsPixmapItem *m_pixmap;
+    QTimer *m_updateTimer;
 };
 
 }
