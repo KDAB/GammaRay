@@ -97,6 +97,7 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
           this, SLOT(visibleSceneRectChanged()));
   connect(ui->graphicsSceneView->view()->verticalScrollBar(), SIGNAL(valueChanged(int)),
           this, SLOT(visibleSceneRectChanged()));
+  ui->graphicsSceneView->view()->viewport()->installEventFilter(this);
 
   QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
   if (selection->currentIndex().isValid()) {
@@ -112,6 +113,15 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
 
 SceneInspectorWidget::~SceneInspectorWidget()
 {
+}
+
+bool SceneInspectorWidget::eventFilter(QObject *obj, QEvent *event)
+{
+  Q_ASSERT(obj == ui->graphicsSceneView->view()->viewport());
+  if (event->type() == QEvent::Resize) {
+    QMetaObject::invokeMethod(this, "visibleSceneRectChanged", Qt::QueuedConnection);
+  }
+  return QObject::eventFilter(obj, event);
 }
 
 void SceneInspectorWidget::sceneRectChanged(const QRectF &rect)

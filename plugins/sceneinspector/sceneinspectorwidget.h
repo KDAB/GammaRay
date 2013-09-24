@@ -55,6 +55,8 @@ class SceneInspectorWidget : public QWidget
     void visibleSceneRectChanged();
 
   private:
+    virtual bool eventFilter(QObject *obj, QEvent *event);
+
     QScopedPointer<Ui::SceneInspectorWidget> ui;
     SceneInspectorInterface *m_interface;
     QGraphicsScene *m_scene;
