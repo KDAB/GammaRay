@@ -19,7 +19,7 @@ QVariant WebViewModel::data(const QModelIndex& index, int role) const
   if (!index.isValid())
     return QVariant();
 
-  if (role != Qt::DisplayRole && role != WebKitVersionRole || index.column() != 0)
+  if ((role != Qt::DisplayRole && role != WebKitVersionRole) || index.column() != 0)
     return QSortFilterProxyModel::data(index, role);
 
   const QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
