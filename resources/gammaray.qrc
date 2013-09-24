@@ -24,7 +24,7 @@
 <!--     <file>classes/groupboxcollapsible.png</file> -->
     <file alias="classes/QComboBox/default.png">classes/combobox.png</file>
 <!--     <file>classes/line.png</file> -->
-    <file>classes/hsplit.png</file>
+<!--     <file>classes/hsplit.png</file> -->
     <file alias="classes/QCommandLinkButton/default.png">classes/commandlinkbutton.png</file>
     <file alias="classes/QWizard/default.png">classes/wizard.png</file>
     <file alias="classes/QWidget/default.png">classes/widget.png</file>
