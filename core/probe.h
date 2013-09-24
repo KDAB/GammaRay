@@ -45,6 +45,7 @@ class ObjectListModel;
 class ObjectTreeModel;
 class ToolModel;
 class MainWindow;
+class BenchSuite;
 
 class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
@@ -125,6 +126,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
   private:
     friend class ProbeCreator;
+    friend class BenchSuite;
 
     static QThread* filteredThread();
 

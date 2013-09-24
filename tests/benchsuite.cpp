@@ -50,4 +50,31 @@ void BenchSuite::iconForObject()
   }
 }
 
+void BenchSuite::connectionModel_connectionAdded()
+{
+  Probe::createProbe(false);
+
+  ConnectionModel model;
+  static const int NUM_OBJECTS = 10000;
+  QVector<QObject*> objects;
+  objects.reserve(NUM_OBJECTS + 1);
+  // fill it
+  objects << new QObject;
+  for(int i = 1; i <= NUM_OBJECTS; ++i) {
+    QObject *obj = new QObject;
+    objects << obj;
+    Probe::objectAdded(obj);
+  }
+
+  QBENCHMARK {
+    for(int i = 1; i <= NUM_OBJECTS; ++i) {
+      model.connectionAdded(objects.at(i), SIGNAL(destroyed()), objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
+      model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()), objects.at(i), SLOT(deleteLater()), Qt::AutoConnection);
+    }
+  }
+
+  qDeleteAll(objects);
+  delete Probe::instance();
+}
+
 #include "benchsuite.moc"

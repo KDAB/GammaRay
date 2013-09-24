@@ -34,6 +34,7 @@ class BenchSuite : public QObject
 
   private slots:
     void iconForObject();
+    void connectionModel_connectionAdded();
 };
 
 }
