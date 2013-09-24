@@ -156,13 +156,16 @@ void SceneInspectorWidget::sceneSelected(int index)
   const QModelIndex mi = ui->sceneComboBox->model()->index(index, 0);
   ObjectBroker::selectionModel(ui->sceneComboBox->model())->select(mi, QItemSelectionModel::ClearAndSelect);
 
-  ///FIXME: this won't work remotely
-  QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
-  QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-  cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
+  if (!Endpoint::instance()->isRemoteClient()) {
+    // for in-process mode, use the user scene directly. This is much more performant and we can
+    // skip the pixmap conversions and fps limitations thereof.
+    QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
+    QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
+    cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
-  if (scene) {
-    ui->graphicsSceneView->setGraphicsScene(scene);
+    if (scene) {
+      ui->graphicsSceneView->setGraphicsScene(scene);
+    }
   }
 }
 
