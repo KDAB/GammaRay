@@ -73,7 +73,7 @@ bool AbstractFunctionOverwriter::writeLongJump(void *target, void *const func)
   *(++cur) = 0x25;
 
 #ifdef ARCH_X86
-  *reinterpret_cast<quint32 *>(++cur) = reinterpret_cast<quint32>(reinterpret_cast<quint32>(cur) + sizeof (quint32));
+  *reinterpret_cast<quint32 *>(++cur) = reinterpret_cast<quint32>(cur) + sizeof (quint32);
   cur += sizeof (quint32);
   *reinterpret_cast<quint32 *>(cur) = reinterpret_cast<quint32>(func);
 #elif defined(ARCH_64)
