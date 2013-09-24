@@ -50,4 +50,9 @@ void SceneInspectorClient::renderScene(const QTransform &transform, const QSize 
   Endpoint::instance()->invokeObject(objectName(), "renderScene", QVariantList() << transform << size);
 }
 
+void SceneInspectorClient::sceneClicked(const QPointF &pos)
+{
+  Endpoint::instance()->invokeObject(objectName(), "sceneClicked", QVariantList() << pos);
+}
+
 #include "sceneinspectorclient.moc"

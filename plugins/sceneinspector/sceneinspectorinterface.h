@@ -32,6 +32,7 @@ class QSize;
 class QTransform;
 class QRectF;
 class QPixmap;
+class QPointF;
 
 namespace GammaRay {
 
@@ -48,6 +49,7 @@ class SceneInspectorInterface : public QObject
 
   public slots:
     virtual void renderScene(const QTransform &transform, const QSize &size) = 0;
+    virtual void sceneClicked(const QPointF &pos) = 0;
 
   signals:
     void sceneRectChanged(const QRectF &rect);

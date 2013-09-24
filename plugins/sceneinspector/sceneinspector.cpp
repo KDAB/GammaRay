@@ -200,6 +200,14 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
   m_itemSelectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
+void SceneInspector::sceneClicked(const QPointF &pos)
+{
+  QGraphicsItem *item = m_sceneModel->scene()->itemAt(pos);
+  if (item) {
+    sceneItemSelected(item);
+  }
+}
+
 #define QGV_CHECK_TYPE(Class) \
   if (dynamic_cast<Class*>(item) && MetaObjectRepository::instance()->hasMetaObject(#Class)) \
     return QLatin1String(#Class)

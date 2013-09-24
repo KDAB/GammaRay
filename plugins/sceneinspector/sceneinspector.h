@@ -55,6 +55,7 @@ class SceneInspector : public SceneInspectorInterface
     void sceneItemSelected(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
     void widgetSelected(QWidget *item, const QPoint &pos);
+    void sceneClicked(const QPointF &pos);
 
   private:
     QString findBestType(QGraphicsItem *item);

@@ -40,6 +40,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsView>
 #include <QScrollBar>
+#include <QMouseEvent>
 #include <QDebug>
 #include <QTimer>
 
@@ -100,7 +101,10 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
           this, SLOT(visibleSceneRectChanged()));
   connect(ui->graphicsSceneView->view()->verticalScrollBar(), SIGNAL(valueChanged(int)),
           this, SLOT(visibleSceneRectChanged()));
-  ui->graphicsSceneView->view()->viewport()->installEventFilter(this);
+
+  if (Endpoint::instance()->isRemoteClient()) {
+    ui->graphicsSceneView->view()->viewport()->installEventFilter(this);
+  }
 
   QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
   if (selection->currentIndex().isValid()) {
@@ -123,6 +127,13 @@ bool SceneInspectorWidget::eventFilter(QObject *obj, QEvent *event)
   Q_ASSERT(obj == ui->graphicsSceneView->view()->viewport());
   if (event->type() == QEvent::Resize) {
     QMetaObject::invokeMethod(this, "visibleSceneRectChanged", Qt::QueuedConnection);
+  } else if (event->type() == QEvent::MouseButtonRelease) {
+    QMouseEvent *e = static_cast<QMouseEvent*>(event);
+    if (e->button() == Qt::LeftButton &&
+        e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
+    {
+      m_interface->sceneClicked(ui->graphicsSceneView->view()->mapToScene(e->pos()));
+    }
   }
   return QObject::eventFilter(obj, event);
 }
