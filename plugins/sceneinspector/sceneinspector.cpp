@@ -98,7 +98,7 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
 
   initializeGui();
 
-  // TODO remote support?
+  // TODO remote support when a different graphics scene was selected
 //  ui->graphicsSceneView->setGraphicsScene(scene);
 }
 
