@@ -103,6 +103,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     sceneSelected(selection->currentIndex().row());
   }
 
+  // limit fps to prevent bad performance, and to group update requests which is esp. required
+  // for scrolling and similar high-frequency update requests
   m_updateTimer->setSingleShot(true);
   m_updateTimer->setInterval(100);
   connect(m_updateTimer, SIGNAL(timeout()), SLOT(requestSceneUpdate()));
