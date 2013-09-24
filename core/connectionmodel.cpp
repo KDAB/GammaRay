@@ -157,8 +157,15 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const QByteAr
     }
 
     if (remove) {
-      beginRemoveRows(QModelIndex(), i, i);
-      m_connections.remove(i);
+      // note: QVector in Qt4 does not move objects when erasing, even though Connection is marked as movable.
+      // To workaround this issue, we swap with the last entry and pop from the back which is cheap.
+      if (i < m_connections.size() - 1) {
+        qSwap(m_connections[i], m_connections.last());
+        emit dataChanged(index(i, 0), index(i, columnCount()));
+      }
+
+      beginRemoveRows(QModelIndex(), m_connections.size() - 1, m_connections. size() - 1);
+      m_connections.pop_back();
       endRemoveRows();
     } else {
       ++i;
