@@ -36,6 +36,7 @@ class BenchSuite : public QObject
     void iconForObject();
     void connectionModel_connectionAdded();
     void connectionModel_connectionRemoved();
+    void probe_objectAdded();
 };
 
 }

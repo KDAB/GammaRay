@@ -115,4 +115,30 @@ void BenchSuite::connectionModel_connectionRemoved()
   delete Probe::instance();
 }
 
+void BenchSuite::probe_objectAdded()
+{
+  Probe::createProbe(false);
+
+  static const int NUM_OBJECTS = 10000;
+  QVector<QObject*> objects;
+  objects.reserve(NUM_OBJECTS + 1);
+  // fill it
+  for(int i = 0; i < NUM_OBJECTS; ++i) {
+    QObject *obj = new QObject;
+    objects << obj;
+  }
+
+  QVector<QObject*>::const_iterator it = objects.constBegin();
+  QVector<QObject*>::const_iterator end = objects.constEnd();
+  QBENCHMARK_ONCE {
+    while (it != end) {
+      Probe::objectAdded(*it);
+      ++it;
+    }
+  }
+
+  qDeleteAll(objects);
+  delete Probe::instance();
+}
+
 #include "benchsuite.moc"
