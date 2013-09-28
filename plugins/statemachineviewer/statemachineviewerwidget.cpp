@@ -101,6 +101,9 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setMaximumDepth(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), m_interface, SLOT(toggleRunning()));
   connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
+  
+  m_ui->maxMegaPixelsSpinBox->setValue(maximumMegaPixels());
+  connect(m_ui->maxMegaPixelsSpinBox, SIGNAL(valueChanged(int)), SLOT(setMaximumMegaPixels(int)));
 
   connect(m_interface, SIGNAL(maximumDepthChanged(int)), m_ui->depthSpinBox, SLOT(setValue(int)));
   connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
@@ -379,6 +382,16 @@ void StateMachineViewerWidget::transitionAdded(const TransitionId transition, co
   m_transitionEdgeIdMap.insert(transition, id);
 }
 
+int StateMachineViewerWidget::maximumMegaPixels() const
+{
+    return QSettings().value("StateMachineViewerServer/maximumMegaPixels", 10).toInt();
+}
+
+void StateMachineViewerWidget::setMaximumMegaPixels(int megaPixels)
+{
+    QSettings().setValue("StateMachineViewerServer/maximumMegaPixels", megaPixels);
+}
+
 void StateMachineViewerWidget::exportAsImage()
 {
   QSettings settings;
@@ -399,10 +412,10 @@ void StateMachineViewerWidget::exportAsImage()
   QSizeF size(sceneRect.width(), sceneRect.height());
 
   // limit mega pixels
-  double maxSize = 100 * 1E+6;
-  if (size.width() * size.height() > maxSize) {
-    double scaleFactor = sqrt(maxSize / (size.width() * size.height()));
-    size.scale(size.width() * scaleFactor, size.height() * scaleFactor, Qt::KeepAspectRatio);
+  const double maxPixels = maximumMegaPixels() * 1E+6;
+  const double actualMegaPixels = size.width() * size.height();
+  if (actualMegaPixels > maxPixels && actualMegaPixels != 0) {
+    size *= sqrt(maxPixels / actualMegaPixels);
   }
   
   int quality = -1;

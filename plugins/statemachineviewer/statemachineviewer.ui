@@ -59,11 +59,32 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="exportButton">
-          <property name="text">
-           <string>Save As Image...</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,2,1">
+          <item>
+           <widget class="QPushButton" name="exportButton">
+            <property name="text">
+             <string>Save As Image...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="maxMegaPixelsLabel">
+            <property name="text">
+             <string>Maximum Mega Pixels</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="maxMegaPixelsSpinBox">
+            <property name="toolTip">
+             <string>Limit the size of the image file. Zooming could make the image very large.</string>
+            </property>
+            <property name="text" stdset="0">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
