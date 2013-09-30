@@ -35,7 +35,7 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
   ui->setupUi(this);
 
   ui->styleSelector->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleList"));
-  connect(ui->styleSelector, SIGNAL(activated(int)), SLOT(styleSelected(int)));
+  connect(ui->styleSelector, SIGNAL(currentIndexChanged(int)), SLOT(styleSelected(int)));
 
   ui->primitivePage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PrimitiveModel"));
   ui->controlPage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.ControlModel"));
