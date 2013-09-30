@@ -42,7 +42,10 @@
 #include <QTextFormat>
 #include <QWidget>
 
+#include <iostream>
+
 using namespace GammaRay;
+using namespace std;
 
 namespace GammaRay {
 
@@ -454,44 +457,95 @@ static QString stringifyProperty(QObject *obj, const QString &propName)
   return Util::variantToString(value);
 }
 
-static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
+struct IconCacheEntry
 {
-  const QString basePath = QString::fromLatin1(":/gammaray/classes/%1/").arg(mo->className());
-  const QDir dir(basePath);
-  if (dir.exists()) {
-    // see if we find one with exactly matching properties
-    const QStringList filterList = QStringList() << QLatin1String("*.png");
-    foreach (const QString &entry, dir.entryList(filterList, QDir::Files)) {
-      if (entry == QLatin1String("default.png")) {
+  QVariant defaultIcon;
+
+  // pair of property name and expected string value
+  typedef QPair<QString, QString> PropertyPair;
+  // a list of property pairs
+  typedef QVector<PropertyPair> PropertyMap;
+  // pair of icon and property map, for which this icon is valid
+  typedef QPair<QVariant, PropertyMap> PropertyIcon;
+  typedef QVector<PropertyIcon> PropertyIcons;
+  PropertyIcons propertyIcons;
+};
+/// maps latin1 class name to list of icons valid for a given property map
+typedef QHash<QByteArray, IconCacheEntry> IconDatabase;
+
+static IconDatabase readIconData()
+{
+  IconDatabase data;
+
+  const QString basePath = QLatin1String(":/gammaray/classes/");
+  QDir dir(basePath);
+
+  const QStringList filterList = QStringList() << QLatin1String("*.png");
+
+  foreach (const QFileInfo &classEntry, dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+    IconCacheEntry perClassData;
+    dir.cd(classEntry.fileName());
+    const QStringList classIcons = dir.entryList(filterList, QDir::Files);
+    dir.cdUp();
+    if (classIcons.isEmpty()) {
+      cerr << "invalid class icon resource file: " << qPrintable(classEntry.absoluteFilePath()) << endl;
+      continue;
+    }
+    foreach (const QString &iconName, classIcons) {
+      const QIcon icon(classEntry.absoluteFilePath() + '/' + iconName);
+      if (iconName == QLatin1String("default.png")) {
+        perClassData.defaultIcon = icon;
         continue;
       }
-      QString propString(entry);
+      // special property-specific icons with file name format prop1=val;prop2=val.png
+      QString propString(iconName);
       propString.chop(4);
       const QStringList props = propString.split(QLatin1String(";"));
-      if (props.isEmpty()) {
-        continue;
-      }
-      bool allMatch = true;
+      IconCacheEntry::PropertyMap propertyMap;
       foreach (const QString &prop, props) {
         const QStringList keyValue = prop.split(QLatin1Char('='));
         if (keyValue.size() != 2) {
           continue;
         }
-        if (stringifyProperty(obj, keyValue.first()) != keyValue.last()) {
+        propertyMap << qMakePair(keyValue.at(0), keyValue.at(1));
+      }
+      Q_ASSERT(!propertyMap.isEmpty());
+      perClassData.propertyIcons << qMakePair(QVariant::fromValue(icon), propertyMap);
+    }
+    data[classEntry.fileName().toLatin1()] = perClassData;
+  }
+  return data;
+}
+
+static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
+{
+  static const IconDatabase iconDataBase = readIconData();
+  const QByteArray className = QByteArray::fromRawData(mo->className(), strlen(mo->className()));
+  IconDatabase::const_iterator it = iconDataBase.constFind(className);
+  if (it != iconDataBase.constEnd()) {
+    foreach (const IconCacheEntry::PropertyIcon &propertyIcon, it->propertyIcons) {
+      bool allMatch = true;
+      Q_ASSERT(!propertyIcon.second.isEmpty());
+      foreach (const IconCacheEntry::PropertyPair &keyValue, propertyIcon.second) {
+        if (stringifyProperty(obj, keyValue.first) != keyValue.second) {
           allMatch = false;
           break;
         }
       }
       if (allMatch) {
-        return QIcon(basePath + entry);
+        return propertyIcon.first;
       }
     }
-    return QIcon(basePath + QLatin1String("default.png"));
-  } else if (mo->superClass()) {
+    return it->defaultIcon;
+  }
+
+  if (mo->superClass()) {
     return iconForObject(mo->superClass(), obj);
   }
+
   return QVariant();
 }
+
 }
 
 QVariant Util::iconForObject(QObject *obj)

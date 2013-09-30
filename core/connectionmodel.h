@@ -28,6 +28,8 @@
 #include <QSharedPointer>
 #include <QVector>
 
+#include "gammaray_core_export.h"
+
 namespace GammaRay {
 
 struct Connection
@@ -51,7 +53,7 @@ Q_DECLARE_METATYPE(GammaRay::Connection)
 
 namespace GammaRay {
 
-class ConnectionModel : public QAbstractTableModel
+class GAMMARAY_CORE_EXPORT ConnectionModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:

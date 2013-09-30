@@ -42,7 +42,7 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
     return false;
   }
   const QMetaObject *mo = obj->metaObject();
-  const int methodIndex = mo->indexOfMethod(signature.mid(1));
+  const int methodIndex = mo->indexOfMethod(signature.constData() + 1);
   if (methodIndex < 0) {
     return false;
   }
@@ -57,6 +57,17 @@ static bool checkMethodForObject(QObject *obj, const QByteArray &signature, bool
     return false;
   }
   return true;
+}
+
+static QByteArray normalize(QObject *obj, const char *signature)
+{
+  int idx = obj->metaObject()->indexOfMethod(signature + 1);
+  if (idx == -1) {
+    return QMetaObject::normalizedSignature(signature);
+  } else {
+    // oh how I'd like to use ::fromRawData here reliably ;-)
+    return QByteArray(signature);
+  }
 }
 
 ConnectionModel::ConnectionModel(QObject *parent)
@@ -77,9 +88,9 @@ void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
 
   Connection c;
   c.sender = sender;
-  c.signal = QMetaObject::normalizedSignature(signal);
+  c.signal = normalize(sender, signal);
   c.receiver = receiver;
-  c.method = QMetaObject::normalizedSignature(method);
+  c.method = normalize(receiver, method);
   c.type = type;
   c.location = SignalSlotsLocationStore::extractLocation(signal);
 
@@ -132,8 +143,8 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
 
   // when called from background, delay into foreground, otherwise call directly
   QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject *, sender), Q_ARG(QByteArray, normalizedSignal),
-                            Q_ARG(QObject *, receiver), Q_ARG(QByteArray, normalizedMethod));
+                            Q_ARG(QObject*, sender), Q_ARG(QByteArray, normalizedSignal),
+                            Q_ARG(QObject*, receiver), Q_ARG(QByteArray, normalizedMethod));
 }
 
 void ConnectionModel::connectionRemovedMainThread(QObject *sender, const QByteArray &normalizedSignal,
@@ -157,8 +168,15 @@ void ConnectionModel::connectionRemovedMainThread(QObject *sender, const QByteAr
     }
 
     if (remove) {
-      beginRemoveRows(QModelIndex(), i, i);
-      m_connections.remove(i);
+      // note: QVector in Qt4 does not move objects when erasing, even though Connection is marked as movable.
+      // To workaround this issue, we swap with the last entry and pop from the back which is cheap.
+      if (i < m_connections.size() - 1) {
+        qSwap(m_connections[i], m_connections.last());
+        emit dataChanged(index(i, 0), index(i, columnCount()));
+      }
+
+      beginRemoveRows(QModelIndex(), m_connections.size() - 1, m_connections. size() - 1);
+      m_connections.pop_back();
       endRemoveRows();
     } else {
       ++i;
