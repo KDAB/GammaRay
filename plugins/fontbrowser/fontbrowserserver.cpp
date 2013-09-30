@@ -45,10 +45,12 @@ FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
   foreach (const QString &family, database.families()) {
     QStandardItem *familyItem = new QStandardItem;
     familyItem->setText(family);
+    familyItem->setEditable(false);
 
     foreach (const QString &style, database.styles(family)) {
       QStandardItem *styleItem0 = new QStandardItem;
       styleItem0->setText(style);
+      styleItem0->setEditable(false);
 
       QString sizes;
       foreach (int points, database.smoothSizes(family, style)) {
@@ -57,6 +59,7 @@ FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
 
       QStandardItem *styleItem1 = new QStandardItem;
       styleItem1->setText(sizes.trimmed());
+      styleItem1->setEditable(false);
       styleItem1->setToolTip(sizes.trimmed());
 
       familyItem->appendRow(QList<QStandardItem*>() << styleItem0 << styleItem1);
