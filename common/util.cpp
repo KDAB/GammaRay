@@ -555,3 +555,16 @@ QVariant Util::iconForObject(QObject *obj)
   }
   return QVariant();
 }
+
+void Util::drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize)
+{
+  QPixmap bgPattern(2 * squareSize, 2 * squareSize);
+  bgPattern.fill(Qt::lightGray);
+  QPainter bgPainter(&bgPattern);
+  bgPainter.fillRect(squareSize, 0, squareSize, squareSize, Qt::gray);
+  bgPainter.fillRect(0, squareSize, squareSize, squareSize, Qt::gray);
+
+  QBrush bgBrush;
+  bgBrush.setTexture(bgPattern);
+  painter->fillRect(rect, bgBrush);
+}

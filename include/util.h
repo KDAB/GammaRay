@@ -39,6 +39,8 @@
 #include <QString>
 #include <QVariant>
 
+class QRect;
+class QPainter;
 class QObject;
 
 namespace GammaRay {
@@ -162,6 +164,13 @@ namespace Util {
     T& obj;
     T oldValue;
   };
+
+  /**
+   * Draws a transparency pattern, i.e. the common checkerboard pattern into @p rect.
+   *
+   * @p size The size of the individual checkerboard squares.
+   */
+  GAMMARAY_COMMON_EXPORT void drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize = 8);
 }
 
 }

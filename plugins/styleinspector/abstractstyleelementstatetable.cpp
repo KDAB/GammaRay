@@ -69,20 +69,6 @@ QVariant AbstractStyleElementStateTable::headerData(int section,
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-void AbstractStyleElementStateTable::drawTransparencyBackground(QPainter *painter,
-                                                                const QRect &rect) const
-{
-  QPixmap bgPattern(16, 16);
-  bgPattern.fill(Qt::lightGray);
-  QPainter bgPainter(&bgPattern);
-  bgPainter.fillRect(8, 0, 8, 8, Qt::gray);
-  bgPainter.fillRect(0, 8, 8, 8, Qt::gray);
-
-  QBrush bgBrush;
-  bgBrush.setTexture(bgPattern);
-  painter->fillRect(rect, bgBrush);
-}
-
 void AbstractStyleElementStateTable::fillStyleOption(QStyleOption *option, int column) const
 {
   option->rect = QRect(0, 0, m_interface->cellWidth(), m_interface->cellHeight());

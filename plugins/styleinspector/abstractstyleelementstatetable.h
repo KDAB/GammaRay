@@ -52,7 +52,6 @@ class AbstractStyleElementStateTable : public GammaRay::AbstractStyleElementMode
     virtual int doColumnCount() const;
     virtual QVariant doData(int row, int column, int role) const;
 
-    void drawTransparencyBackground(QPainter *painter, const QRect &rect) const;
     /// standard setup for the style option used in a cell in column @p column
     void fillStyleOption(QStyleOption *option, int column) const;
 

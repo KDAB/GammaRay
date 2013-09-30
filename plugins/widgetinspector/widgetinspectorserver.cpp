@@ -299,20 +299,6 @@ void WidgetInspectorServer::analyzePainting()
 #endif
 }
 
-// TODO: factor out into util namespace, similar code exists in the style tool
-static void drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize = 16)
-{
-  QPixmap bgPattern(2 * squareSize, 2 * squareSize);
-  bgPattern.fill(Qt::lightGray);
-  QPainter bgPainter(&bgPattern);
-  bgPainter.fillRect(squareSize, 0, squareSize, squareSize, Qt::gray);
-  bgPainter.fillRect(0, squareSize, squareSize, squareSize, Qt::gray);
-
-  QBrush bgBrush;
-  bgBrush.setTexture(bgPattern);
-  painter->fillRect(rect, bgBrush);
-}
-
 void WidgetInspectorServer::updatePaintAnalyzer(const QModelIndex &index)
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
@@ -321,7 +307,7 @@ void WidgetInspectorServer::updatePaintAnalyzer(const QModelIndex &index)
   const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
   QPixmap pixmap(sourceSize);
   QPainter painter(&pixmap);
-  drawTransparencyPattern(&painter, QRect(QPoint(0, 0), sourceSize));
+  Util::drawTransparencyPattern(&painter, QRect(QPoint(0, 0), sourceSize));
   int start = m_paintBufferModel->buffer().frameStartIndex(0);
   // include selected row or paint all if nothing is selected
   int end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();

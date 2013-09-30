@@ -24,6 +24,7 @@
 #include "complexcontrolmodel.h"
 #include "styleoption.h"
 #include "styleinspectorinterface.h"
+#include <include/util.h>
 
 #include <QDebug>
 #include <QPainter>
@@ -78,7 +79,7 @@ QVariant ComplexControlModel::doData(int row, int column, int role) const
   if (role == Qt::DecorationRole) {
     QPixmap pixmap(m_interface->cellSizeHint());
     QPainter painter(&pixmap);
-    drawTransparencyBackground(&painter, pixmap.rect());
+    Util::drawTransparencyPattern(&painter, pixmap.rect());
     painter.scale(m_interface->cellZoom(), m_interface->cellZoom());
 
     QScopedPointer<QStyleOptionComplex> opt(
