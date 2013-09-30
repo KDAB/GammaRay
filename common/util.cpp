@@ -279,6 +279,7 @@ QString GammaRay::Util::variantToString(const QVariant &value)
     switch (format.profile()) {
       case QSurfaceFormat::CoreProfile: s += " core"; break;
       case QSurfaceFormat::CompatibilityProfile: s += " compat"; break;
+      case QSurfaceFormat::NoProfile: break;
     }
     s += ")";
 
