@@ -27,7 +27,6 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QLabel>
-#include <QDebug>
 
 using namespace GammaRay;
 
@@ -204,7 +203,6 @@ void FontModel::toggleBoldFont(bool bold)
 
 void FontModel::setColors(const QColor &foreground, const QColor &background)
 {
-  qDebug() << "COLORS" << foreground << background;
   if (foreground == m_foreground && background == m_background) {
     return;
   }
