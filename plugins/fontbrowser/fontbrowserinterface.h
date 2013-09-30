@@ -26,6 +26,8 @@
 
 #include <QObject>
 
+class QColor;
+
 namespace GammaRay {
 
 class FontBrowserInterface : public QObject
@@ -41,6 +43,7 @@ class FontBrowserInterface : public QObject
     virtual void toggleItalicFont(bool italic) = 0;
     virtual void toggleUnderlineFont(bool underline) = 0;
     virtual void setPointSize(int size) = 0;
+    virtual void setColors(const QColor &foreground, const QColor &background) = 0;
 };
 
 }

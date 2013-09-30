@@ -82,6 +82,13 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   m_fontBrowser->toggleItalicFont(ui->italicBox->isChecked());
   m_fontBrowser->toggleUnderlineFont(ui->underlineBox->isChecked());
   m_fontBrowser->setPointSize(ui->pointSize->value());
+
+  QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
+}
+
+void FontBrowserWidget::delayedInit()
+{
+  m_fontBrowser->setColors(palette().color(QPalette::Foreground), palette().color(QPalette::Base));
 }
 
 #include "fontbrowserwidget.moc"

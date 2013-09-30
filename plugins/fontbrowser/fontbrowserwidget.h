@@ -44,6 +44,9 @@ class FontBrowserWidget : public QWidget
   public:
     explicit FontBrowserWidget(QWidget *parent = 0);
 
+  private slots:
+    void delayedInit();
+
   private:
     QScopedPointer<Ui::FontBrowserWidget> ui;
     QAbstractItemModel *m_selectedFontModel;

@@ -23,6 +23,12 @@
 
 #include "fontmodel.h"
 
+#include <QFontMetrics>
+#include <QPixmap>
+#include <QPainter>
+#include <QLabel>
+#include <QDebug>
+
 using namespace GammaRay;
 
 FontModel::FontModel(QObject *parent)
@@ -115,11 +121,21 @@ QVariant FontModel::data(const QModelIndex &index, int role) const
       return m_fonts.at(index.row()).family();
     }
   } else if (index.column() == 1) {
-    if (role == Qt::DisplayRole) {
-      return m_text.isEmpty() ? "<no text>" : m_text;
-    }
-    if (role == Qt::FontRole) {
-      return m_fonts.at(index.row());
+    if (role == Qt::DecorationRole || role == Qt::SizeHintRole) {
+      const QFont &font = m_fonts.at(index.row());
+      QFontMetrics metrics(font);
+      const QString text = m_text.isEmpty() ? tr("<no text>") : m_text;
+      const QRect rect = metrics.boundingRect(text.left(100));
+      if (role == Qt::SizeHintRole) {
+        return rect.size();
+      }
+      QPixmap pixmap(rect.size());
+      pixmap.fill(m_background);
+      QPainter painter(&pixmap);
+      painter.setPen(m_foreground);
+      painter.setFont(font);
+      painter.drawText(0, -rect.y(), text);
+      return pixmap;
     }
   }
 
@@ -128,7 +144,7 @@ QVariant FontModel::data(const QModelIndex &index, int role) const
 
 void FontModel::setPointSize(int size)
 {
-  if (m_fonts.isEmpty() || size == m_size) {
+  if (size == m_size) {
     return;
   }
 
@@ -138,12 +154,12 @@ void FontModel::setPointSize(int size)
     m_fonts[i].setPointSize(size);
   }
 
-  emit dataChanged(index(0, 1), index(rowCount() - 1, 1));
+  fontDataChanged();
 }
 
 void FontModel::toggleItalicFont(bool italic)
 {
-  if (m_fonts.isEmpty() || italic == m_italic) {
+  if (italic == m_italic) {
     return;
   }
 
@@ -153,12 +169,12 @@ void FontModel::toggleItalicFont(bool italic)
     m_fonts[i].setItalic(italic);
   }
 
-  emit dataChanged(index(0, 1), index(rowCount() - 1, 1));
+  fontDataChanged();
 }
 
 void FontModel::toggleUnderlineFont(bool underline)
 {
-  if (m_fonts.isEmpty() || underline == m_underline) {
+  if (underline == m_underline) {
     return;
   }
 
@@ -168,12 +184,12 @@ void FontModel::toggleUnderlineFont(bool underline)
     m_fonts[i].setUnderline(underline);
   }
 
-  emit dataChanged(index(0, 1), index(rowCount() - 1, 1));
+  fontDataChanged();
 }
 
 void FontModel::toggleBoldFont(bool bold)
 {
-  if (m_fonts.isEmpty() || bold == m_bold) {
+  if (bold == m_bold) {
     return;
   }
 
@@ -181,6 +197,28 @@ void FontModel::toggleBoldFont(bool bold)
 
   for (int i = 0; i < m_fonts.size(); ++i) {
     m_fonts[i].setBold(bold);
+  }
+
+  fontDataChanged();
+}
+
+void FontModel::setColors(const QColor &foreground, const QColor &background)
+{
+  qDebug() << "COLORS" << foreground << background;
+  if (foreground == m_foreground && background == m_background) {
+    return;
+  }
+
+  m_foreground = foreground;
+  m_background = background;
+
+  fontDataChanged();
+}
+
+void FontModel::fontDataChanged()
+{
+  if (m_fonts.isEmpty()) {
+    return;
   }
 
   emit dataChanged(index(0, 1), index(rowCount() - 1, 1));

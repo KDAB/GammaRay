@@ -41,6 +41,7 @@ class FontBrowserClient : public FontBrowserInterface
     virtual void toggleItalicFont(bool italic);
     virtual void toggleUnderlineFont(bool underline);
     virtual void updateText(const QString &text);
+    virtual void setColors(const QColor &foreground, const QColor &background);
 };
 
 }

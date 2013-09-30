@@ -132,4 +132,9 @@ void FontBrowserServer::updateText(const QString &text)
   m_selectedFontModel->updateText(text);
 }
 
+void FontBrowserServer::setColors(const QColor &foreground, const QColor &background)
+{
+  m_selectedFontModel->setColors(foreground, background);
+}
+
 #include "fontbrowserserver.moc"

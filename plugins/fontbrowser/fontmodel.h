@@ -26,6 +26,7 @@
 
 #include <QAbstractItemModel>
 #include <QFont>
+#include <QColor>
 
 namespace GammaRay {
 
@@ -59,14 +60,19 @@ class FontModel : public QAbstractItemModel
     void toggleItalicFont(bool italic);
     void toggleUnderlineFont(bool underline);
     void setPointSize(int size);
+    void setColors(const QColor &foreground, const QColor &background);
 
   private:
+    void fontDataChanged();
+
     QList<QFont> m_fonts;
     QString m_text;
     int m_size;
     bool m_bold;
     bool m_italic;
     bool m_underline;
+    QColor m_foreground;
+    QColor m_background;
 };
 
 }

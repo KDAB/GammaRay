@@ -25,6 +25,8 @@
 
 #include <common/network/endpoint.h>
 
+#include <QColor>
+
 using namespace GammaRay;
 
 FontBrowserClient::FontBrowserClient(QObject *parent)
@@ -44,6 +46,11 @@ WRAP_REMOTE(toggleBoldFont, bool)
 WRAP_REMOTE(toggleItalicFont, bool)
 WRAP_REMOTE(toggleUnderlineFont, bool)
 WRAP_REMOTE(updateText, const QString&)
+
+void FontBrowserClient::setColors(const QColor &foreground, const QColor &background)
+{
+  Endpoint::instance()->invokeObject(objectName(), "setColors", QVariantList() << foreground << background);
+}
 
 
 #include "fontbrowserclient.moc"
