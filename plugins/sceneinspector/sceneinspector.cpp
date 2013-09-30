@@ -6,6 +6,7 @@
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -35,6 +36,7 @@
 
 #include <kde/krecursivefilterproxymodel.h>
 #include <common/network/objectbroker.h>
+#include <common/network/endpoint.h>
 
 #include <QGraphicsItem>
 #include <QGraphicsView>
@@ -46,7 +48,7 @@ using namespace GammaRay;
 using namespace std;
 
 SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent),
+  : SceneInspectorInterface(parent),
     m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
 {
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
@@ -69,7 +71,9 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   connect(m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(sceneItemSelected(QItemSelection)));
 
-  // TODO: preselect a scene
+  if (singleColumnProxy->rowCount()) {
+    sceneSelection->setCurrentIndex(singleColumnProxy->index(0, 0), QItemSelectionModel::ClearAndSelect);
+  }
 }
 
 void SceneInspector::sceneSelected(const QItemSelection& selection)
@@ -82,9 +86,71 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
   cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
+  if (m_sceneModel->scene()) {
+    disconnect(m_sceneModel->scene(), 0, this, 0);
+  }
+
   m_sceneModel->setScene(scene);
-  // TODO remote support?
+
+  connect(scene, SIGNAL(sceneRectChanged(QRectF)),
+          this, SIGNAL(sceneRectChanged(QRectF)));
+  connect(scene, SIGNAL(changed(QList<QRectF>)),
+          this, SIGNAL(sceneChanged()));
+
+  initializeGui();
+
+  // TODO remote support when a different graphics scene was selected
 //  ui->graphicsSceneView->setGraphicsScene(scene);
+}
+
+void SceneInspector::initializeGui()
+{
+  if (!Endpoint::isConnected()) {
+    // only do something if we are connected to a remote client
+    return;
+  }
+
+  QGraphicsScene *scene = m_sceneModel->scene();
+  if (!scene) {
+    return;
+  }
+
+  emit sceneRectChanged(scene->sceneRect());
+}
+
+void SceneInspector::renderScene(const QTransform &transform, const QSize &size)
+{
+  if (!Endpoint::isConnected()) {
+    // only do something if we are connected to a remote client
+    return;
+  }
+
+  QGraphicsScene *scene = m_sceneModel->scene();
+  if (!scene) {
+    return;
+  }
+
+  // initialize transparent pixmap
+  QPixmap view(size);
+  view.fill(Qt::transparent);
+
+  // setup painter and apply transformation of client view
+  QPainter painter(&view);
+  painter.setWorldTransform(transform);
+
+  // the area we want to paint has the size of the client's viewport _after_ applying
+  // the transformation. Thus first apply the inverse to yield the desired area afterwards
+  QRectF area(QPointF(0, 0), size);
+  area = transform.inverted().mapRect(area);
+
+  scene->render(&painter, area, area, Qt::IgnoreAspectRatio);
+
+  QGraphicsItem *currentItem = m_itemSelectionModel->currentIndex().data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
+  if (currentItem) {
+    paintItemDecoration(currentItem, transform, &painter);
+  }
+
+  emit sceneRendered(view);
 }
 
 void SceneInspector::sceneItemSelected(const QItemSelection& selection)
@@ -101,10 +167,10 @@ void SceneInspector::sceneItemSelected(const QItemSelection& selection)
     } else {
       m_propertyController->setObject(item, findBestType(item));
     }
-    // TODO remote support?
-//    ui->graphicsSceneView->showGraphicsItem(item);
+    emit itemSelected(item->mapRectToScene(item->boundingRect()));
   } else {
     m_propertyController->setObject(0);
+    emit sceneChanged();
   }
 }
 
@@ -131,10 +197,15 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
     return;
   }
   const QModelIndex index = indexList.first();
-  m_itemSelectionModel->select(
-    index,
-    QItemSelectionModel::Select | QItemSelectionModel::Clear |
-    QItemSelectionModel::Rows | QItemSelectionModel::Current);
+  m_itemSelectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+}
+
+void SceneInspector::sceneClicked(const QPointF &pos)
+{
+  QGraphicsItem *item = m_sceneModel->scene()->itemAt(pos);
+  if (item) {
+    sceneItemSelected(item);
+  }
 }
 
 #define QGV_CHECK_TYPE(Class) \

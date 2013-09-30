@@ -6,6 +6,7 @@
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@
 */
 
 #include "graphicsview.h"
+#include "sceneinspectorinterface.h"
 
 #include <QGraphicsItem>
 #include <QKeyEvent>
@@ -43,6 +45,7 @@ void GraphicsView::showItem(QGraphicsItem *item)
 
   fitInView(item, Qt::KeepAspectRatio);
   scale(0.8f, 0.8f);
+  emit transformChanged();
 }
 
 void GraphicsView::keyPressEvent(QKeyEvent *event)
@@ -51,18 +54,22 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Plus:
       scale(1.2, 1.2);
+      emit transformChanged();
       event->accept();
       return;
     case Qt::Key_Minus:
       scale(0.8, 0.8);
+      emit transformChanged();
       event->accept();
       return;
     case Qt::Key_Left:
       rotate(-5);
+      emit transformChanged();
       event->accept();
       break;
     case Qt::Key_Right:
       rotate(5);
+      emit transformChanged();
       event->accept();
       break;
     }
@@ -83,29 +90,7 @@ void GraphicsView::drawForeground(QPainter *painter, const QRectF &rect)
 {
   QGraphicsView::drawForeground(painter, rect);
   if (m_currentItem) {
-    const QRectF itemBoundingRect = m_currentItem->boundingRect();
-    // coord system, TODO: nicer axis with arrows, tics, markers for current mouse position etc.
-    painter->setPen(Qt::black);
-    const qreal maxX = qMax(qAbs(itemBoundingRect.left()), qAbs(itemBoundingRect.right()));
-    const qreal maxY = qMax(qAbs(itemBoundingRect.top()), qAbs(itemBoundingRect.bottom()));
-    const qreal maxXY = qMax(maxX, maxY) * 1.5f;
-    painter->drawLine(m_currentItem->mapToScene(-maxXY, 0), m_currentItem->mapToScene(maxXY, 0));
-    painter->drawLine(m_currentItem->mapToScene(0, -maxXY), m_currentItem->mapToScene(0, maxXY));
-
-    painter->setPen(Qt::blue);
-    const QPolygonF boundingBox = m_currentItem->mapToScene(itemBoundingRect);
-    painter->drawPolygon(boundingBox);
-
-    painter->setPen(Qt::green);
-    const QPainterPath shape = m_currentItem->mapToScene(m_currentItem->shape());
-    painter->drawPath(shape);
-
-    painter->setPen(Qt::red);
-    const QPointF transformOrigin =
-      m_currentItem->mapToScene(m_currentItem->transformOriginPoint());
-    painter->drawEllipse(transformOrigin,
-                         5.0 / transform().m11(),
-                         5.0 / transform().m22());
+    SceneInspectorInterface::paintItemDecoration(m_currentItem, transform(), painter);
   }
 }
 

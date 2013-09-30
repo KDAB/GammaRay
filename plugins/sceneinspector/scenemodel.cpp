@@ -52,8 +52,14 @@ SceneModel::SceneModel(QObject *parent)
 
 void SceneModel::setScene(QGraphicsScene *scene)
 {
+  beginResetModel();
   m_scene = scene;
-  reset();
+  endResetModel();
+}
+
+QGraphicsScene *SceneModel::scene() const
+{
+  return m_scene;
 }
 
 QVariant SceneModel::data(const QModelIndex &index, int role) const
@@ -100,6 +106,9 @@ int SceneModel::rowCount(const QModelIndex &parent) const
     return 0;
   }
   if (parent.isValid()) {
+    if (parent.column() != 0) {
+      return 0;
+    }
     QGraphicsItem* item = static_cast<QGraphicsItem*>(parent.internalPointer());
     if (item) {
       return item->childItems().size();
@@ -119,12 +128,18 @@ QModelIndex SceneModel::parent(const QModelIndex &child) const
   if (!item->parentItem()) {
     return QModelIndex();
   }
-  int row = item->parentItem()->childItems().indexOf(item);
+  int row = 0;
+  if (item->parentItem()->parentItem()) {
+    row = item->parentItem()->parentItem()->childItems().indexOf(item->parentItem());
+  }
   return createIndex(row, 0, item->parentItem());
 }
 
 QModelIndex SceneModel::index(int row, int column, const QModelIndex &parent) const
 {
+  if (column < 0 || column >= columnCount()) {
+    return QModelIndex();
+  }
   if (!parent.isValid() && row >= 0 && row < topLevelItems().size()) {
     return createIndex(row, column, topLevelItems().at(row));
   }
