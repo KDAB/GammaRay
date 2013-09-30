@@ -54,6 +54,8 @@ class WidgetInspectorWidget : public QWidget
     void saveAsPdf();
     void saveAsUiFile();
     void widgetPreviewAvailable(const QPixmap &preview);
+    void analyzePainting();
+    void setFeatures(bool svg, bool print, bool designer, bool privateHeaders);
 
   private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;

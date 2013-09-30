@@ -14,14 +14,14 @@ set(gammaray_widgetinspector_plugin_srcs
   overlaywidget.cpp
   widgettreemodel.cpp
   widgetpreviewwidget.cpp
+  paintbufferviewer.cpp
+  paintbufferreplaywidget.cpp
 )
 
 if(HAVE_PRIVATE_QT_HEADERS)
   set(gammaray_widgetinspector_plugin_srcs
     ${gammaray_widgetinspector_plugin_srcs}
     paintbuffermodel.cpp
-    paintbufferviewer.cpp
-    paintbufferreplaywidget.cpp
   )
 endif()
 

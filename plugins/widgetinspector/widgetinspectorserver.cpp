@@ -28,6 +28,7 @@
 #include "overlaywidget.h"
 #include "paintbufferviewer.h"
 #include "widgettreemodel.h"
+#include "paintbuffermodel.h"
 
 #include <core/propertycontroller.h>
 #include <common/network/objectbroker.h>
@@ -61,6 +62,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   , m_overlayWidget(new OverlayWidget)
   , m_propertyController(new PropertyController(objectName(), this))
   , m_updatePreviewTimer(new QTimer(this))
+  , m_paintBufferModel(0)
 {
   m_updatePreviewTimer->setSingleShot(true);
   m_updatePreviewTimer->setInterval(100);
@@ -80,6 +82,13 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   connect(m_widgetSelectionModel,
           SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(widgetSelected(QModelIndex)));
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  m_paintBufferModel = new PaintBufferModel(this);
+  probe->registerModel("com.kdab.GammaRay.PaintBufferModel", m_paintBufferModel);
+  connect(ObjectBroker::selectionModel(m_paintBufferModel), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          this, SLOT(updatePaintAnalyzer(QModelIndex)));
+#endif
 
   // TODO this needs to be delayed until there actually is something to select
   selectDefaultItem();
@@ -276,7 +285,6 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
 
 void WidgetInspectorServer::analyzePainting()
 {
-  cout << Q_FUNC_INFO << ' ' << m_selectedWidget << endl;
   if (!m_selectedWidget) {
     return;
   }
@@ -286,14 +294,72 @@ void WidgetInspectorServer::analyzePainting()
   buffer.setBoundingRect(m_selectedWidget->rect());
   m_selectedWidget->render(&buffer);
   m_overlayWidget->show();
-
-  // TODO: this still needs a core/UI split to work remotely
-  PaintBufferViewer *viewer = new PaintBufferViewer(0);
-  viewer->setWindowTitle(tr("Analyze Painting"));
-  viewer->setAttribute(Qt::WA_DeleteOnClose);
-  viewer->setPaintBuffer(buffer);
-  viewer->show();
+  m_paintBufferModel->setPaintBuffer(buffer);
+  updatePaintAnalyzer(QModelIndex());
 #endif
+}
+
+// TODO: factor out into util namespace, similar code exists in the style tool
+static void drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize = 16)
+{
+  QPixmap bgPattern(2 * squareSize, 2 * squareSize);
+  bgPattern.fill(Qt::lightGray);
+  QPainter bgPainter(&bgPattern);
+  bgPainter.fillRect(squareSize, 0, squareSize, squareSize, Qt::gray);
+  bgPainter.fillRect(0, squareSize, squareSize, squareSize, Qt::gray);
+
+  QBrush bgBrush;
+  bgBrush.setTexture(bgPattern);
+  painter->fillRect(rect, bgBrush);
+}
+
+void WidgetInspectorServer::updatePaintAnalyzer(const QModelIndex &index)
+{
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  // didn't manage painting on the widget directly, even with the correct
+  // translation it is always clipping as if the widget was at 0,0 of its parent
+  const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
+  QPixmap pixmap(sourceSize);
+  QPainter painter(&pixmap);
+  drawTransparencyPattern(&painter, QRect(QPoint(0, 0), sourceSize));
+  int start = m_paintBufferModel->buffer().frameStartIndex(0);
+  // include selected row or paint all if nothing is selected
+  int end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();
+  int depth = m_paintBufferModel->buffer().processCommands(&painter, start, start + end);
+  for (; depth > 0; --depth) {
+    painter.restore();
+  }
+  painter.end();
+  emit paintAnalyzed(pixmap);
+#else
+  Q_UNUSED(index);
+#endif
+}
+
+void WidgetInspectorServer::checkFeatures()
+{
+  emit features(
+#ifdef HAVE_QT_SVG
+    true,
+#else
+    false,
+#endif
+#ifdef HAVE_QT_PRINTSUPPORT
+    true,
+#else
+    false,
+#endif
+#ifdef HAVE_QT_DESIGNER
+    true,
+#else
+    false,
+#endif
+#ifdef HAVE_PRIVATE_QT_HEADERS
+    true
+#else
+    false
+#endif
+  );
 }
 
 #include "widgetinspectorserver.moc"

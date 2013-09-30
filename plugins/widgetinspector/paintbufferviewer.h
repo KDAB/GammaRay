@@ -26,15 +26,13 @@
 
 #include "config-gammaray.h"
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#include <QDialog>
 
-#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
-
-#include <QWidget>
+class QAbstractItemModel;
 
 namespace GammaRay {
 
-class PaintBufferModel;
+class WidgetInspectorInterface;
 
 namespace Ui {
   class PaintBufferViewer;
@@ -43,26 +41,18 @@ namespace Ui {
 /**
  * A widget to look at the command list in a QPaintBuffer.
  */
-class PaintBufferViewer : public QWidget
+class PaintBufferViewer : public QDialog
 {
   Q_OBJECT
   public:
     explicit PaintBufferViewer(QWidget *parent = 0);
     virtual ~PaintBufferViewer();
 
-    void setPaintBuffer(const QPaintBuffer &buffer);
-
-  private slots:
-    void commandSelected();
-    void zoomChanged(int value);
-
   private:
     QScopedPointer<Ui::PaintBufferViewer> ui;
-    PaintBufferModel *m_bufferModel;
+    WidgetInspectorInterface *m_interface;
 };
 
 }
 
 #endif
-
-#endif // GAMMARAY_PAINTBUFFERVIEWER_H

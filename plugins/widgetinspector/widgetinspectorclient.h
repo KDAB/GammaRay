@@ -44,6 +44,7 @@ class WidgetInspectorClient : public WidgetInspectorInterface
     virtual void saveAsPdf(const QString &fileName);
     virtual void saveAsUiFile(const QString &fileName);
     virtual void analyzePainting();
+    virtual void checkFeatures();
 };
 }
 

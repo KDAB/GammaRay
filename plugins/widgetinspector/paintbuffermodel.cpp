@@ -103,6 +103,11 @@ void PaintBufferModel::setPaintBuffer(const QPaintBuffer &buffer)
   endResetModel();
 }
 
+QPaintBuffer PaintBufferModel::buffer() const
+{
+  return m_buffer;
+}
+
 QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid() || !m_privateBuffer) {

@@ -45,6 +45,7 @@ class PaintBufferModel : public QAbstractTableModel
     explicit PaintBufferModel(QObject *parent = 0);
 
     void setPaintBuffer(const QPaintBuffer &buffer);
+    QPaintBuffer buffer() const;
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 

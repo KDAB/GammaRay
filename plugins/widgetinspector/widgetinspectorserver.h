@@ -39,6 +39,7 @@ namespace GammaRay {
 class ProbeInterface;
 class PropertyController;
 class OverlayWidget;
+class PaintBufferModel;
 
 class WidgetInspectorServer : public WidgetInspectorInterface
 {
@@ -68,8 +69,11 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void saveAsUiFile(const QString &fileName);
 
     void analyzePainting();
+    void updatePaintAnalyzer(const QModelIndex &index);
 
     void updateWidgetPreview();
+
+    void checkFeatures();
 
   private:
     OverlayWidget *m_overlayWidget;
@@ -78,6 +82,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     QItemSelectionModel *m_widgetSelectionModel;
     QPointer<QWidget> m_selectedWidget;
     QTimer *m_updatePreviewTimer;
+    PaintBufferModel *m_paintBufferModel;
 };
 
 }

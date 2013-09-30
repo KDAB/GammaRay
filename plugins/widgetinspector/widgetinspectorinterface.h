@@ -38,6 +38,7 @@ class WidgetInspectorInterface : public QObject
     virtual ~WidgetInspectorInterface();
 
   public slots:
+    virtual void checkFeatures() = 0;
     virtual void saveAsImage(const QString &fileName) = 0;
     virtual void saveAsSvg(const QString &fileName) = 0;
     virtual void saveAsPdf(const QString &fileName) = 0;
@@ -47,6 +48,8 @@ class WidgetInspectorInterface : public QObject
 
   signals:
     void widgetPreviewAvailable(const QPixmap &pixmap);
+    void paintAnalyzed(const QPixmap &pixmap);
+    void features(bool svg, bool print, bool designer, bool privateHeaders);
 };
 
 }

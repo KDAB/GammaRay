@@ -74,25 +74,43 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
-  connect(ui->actionAnalyzePainting, SIGNAL(triggered()), m_inspector, SLOT(analyzePainting()));
+  connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
   connect(m_inspector, SIGNAL(widgetPreviewAvailable(QPixmap)), SLOT(widgetPreviewAvailable(QPixmap)));
 
-  addAction(ui->actionSaveAsImage);
-// TODO these checks needs to be dynamic, based on probe features
-#ifdef HAVE_QT_SVG
-  addAction(ui->actionSaveAsSvg);
-#endif
-#ifdef HAVE_QT_PRINTSUPPORT
-  addAction(ui->actionSaveAsPdf);
-#endif
-#ifdef HAVE_QT_DESIGNER
-  addAction(ui->actionSaveAsUiFile);
-#endif
-#ifdef HAVE_PRIVATE_QT_HEADERS
-  addAction(ui->actionAnalyzePainting);
-#endif
+  connect(m_inspector, SIGNAL(features(bool,bool,bool,bool)),
+          this, SLOT(setFeatures(bool,bool,bool,bool)));
 
+  // NOTE: we must add actions in the ctor...
+  addAction(ui->actionSaveAsImage);
+  addAction(ui->actionSaveAsSvg);
+  addAction(ui->actionSaveAsPdf);
+  addAction(ui->actionSaveAsUiFile);
+  addAction(ui->actionAnalyzePainting);
   setActionsEnabled(false);
+
+  m_inspector->checkFeatures();
+}
+
+void WidgetInspectorWidget::setFeatures(bool svg, bool print, bool designer, bool privateHeaders)
+{
+  if (!svg) {
+    delete ui->actionSaveAsSvg;
+    ui->actionSaveAsSvg = 0;
+  }
+  if (!print) {
+    delete ui->actionSaveAsPdf;
+    ui->actionSaveAsPdf = 0;
+  }
+  if (!designer) {
+    delete ui->actionSaveAsUiFile;
+    ui->actionSaveAsUiFile = 0;
+  }
+  if (!privateHeaders) {
+    delete ui->actionAnalyzePainting;
+    ui->actionAnalyzePainting = 0;
+  }
+
+  setActionsEnabled(ui->widgetTreeView->selectionModel()->hasSelection());
 }
 
 void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
@@ -181,6 +199,17 @@ void WidgetInspectorWidget::saveAsUiFile()
     return;
 
   m_inspector->saveAsUiFile(fileName);
+}
+
+void WidgetInspectorWidget::analyzePainting()
+{
+  m_inspector->analyzePainting();
+
+  PaintBufferViewer *viewer = new PaintBufferViewer(this);
+  viewer->setWindowTitle(tr("Analyze Painting"));
+  viewer->setAttribute(Qt::WA_DeleteOnClose);
+  viewer->setModal(true);
+  viewer->show();
 }
 
 #include "widgetinspectorwidget.moc"

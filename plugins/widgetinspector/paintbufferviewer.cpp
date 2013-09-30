@@ -23,57 +23,32 @@
 
 #include "paintbufferviewer.h"
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include "ui_paintbufferviewer.h"
 
-#include "paintbuffermodel.h"
+#include "widgetinspectorinterface.h"
+#include <common/network/objectbroker.h>
 
 using namespace GammaRay;
 
 PaintBufferViewer::PaintBufferViewer(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::PaintBufferViewer),
-    m_bufferModel(new PaintBufferModel(this))
+  : QDialog(parent)
+  , ui(new Ui::PaintBufferViewer)
 {
   ui->setupUi(this);
 
-  ui->commandView->setModel(m_bufferModel);
-  connect(ui->commandView->selectionModel(),
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(commandSelected()));
+  ui->commandView->setModel(ObjectBroker::model("com.kdab.GammaRay.PaintBufferModel"));
+  ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
 
   ui->splitter->setStretchFactor(0, 0);
   ui->splitter->setStretchFactor(1, 1);
 
-  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
+  connect(ObjectBroker::object<WidgetInspectorInterface*>(), SIGNAL(paintAnalyzed(QPixmap)),
+          ui->replayWidget, SLOT(setPixmap(QPixmap)));
+  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), ui->replayWidget, SLOT(setZoomFactor(int)));
 }
 
 PaintBufferViewer::~PaintBufferViewer()
 {
 }
 
-void PaintBufferViewer::setPaintBuffer(const QPaintBuffer &buffer)
-{
-  m_bufferModel->setPaintBuffer(buffer);
-  ui->replayWidget->setPaintBuffer(buffer);
-  commandSelected();
-}
-
-void PaintBufferViewer::commandSelected()
-{
-  if (!ui->commandView->selectionModel()->hasSelection()) {
-    ui->replayWidget->setEndCommandIndex(m_bufferModel->rowCount());
-    return;
-  }
-
-  const QModelIndex index = ui->commandView->selectionModel()->selectedRows().first();
-  ui->replayWidget->setEndCommandIndex(index.row() + 1); // include the current row
-}
-
-void PaintBufferViewer::zoomChanged(int value)
-{
-  ui->replayWidget->setZoomFactor(value);
-}
-
 #include "paintbufferviewer.moc"
-#endif
