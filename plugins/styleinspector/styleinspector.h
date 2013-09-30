@@ -60,9 +60,6 @@ class StyleInspector : public StyleInspectorInterface
     PixelMetricModel *m_pixelMetricModel;
     StandardIconModel *m_standardIconModel;
     PaletteModel *m_standardPaletteModel;
-    int m_cellHeight;
-    int m_cellWidth;
-    int m_cellZoom;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory2<QStyle, StyleInspector, StyleInspectorWidget>
