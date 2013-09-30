@@ -27,6 +27,7 @@
 #include "include/toolfactory.h"
 
 #include <ui/tools/modelinspector/modelinspectorwidget.h>
+#include <common/modelinspectorinterface.h>
 
 #include <QWidget>
 
@@ -39,15 +40,16 @@ class ModelCellModel;
 class ModelTester;
 class RemoteModelServer;
 
-class ModelInspector : public QObject
+class ModelInspector : public ModelInspectorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::ModelInspectorInterface)
   public:
     explicit ModelInspector(ProbeInterface *probe, QObject *parent = 0);
 
   private slots:
     void modelSelected(const QItemSelection &selected);
-    void cellSelected(const QItemSelection &selected);
+    void selectionChanged(const QItemSelection &selected);
 
     void widgetSelected(QWidget *widget);
 

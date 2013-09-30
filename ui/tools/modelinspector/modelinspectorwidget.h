@@ -31,6 +31,8 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class ModelInspectorInterface;
+
 namespace Ui {
   class ModelInspectorWidget;
 }
@@ -42,13 +44,14 @@ class ModelInspectorWidget : public QWidget
     explicit ModelInspectorWidget(QWidget *parent = 0);
 
   private slots:
-    void setModelCell(const QModelIndex &index);
+    void cellSelected(int row, int column, const QString &internalId, const QString &internalPtr);
     void objectRegistered(const QString &objectName);
     void modelSelected(const QItemSelection& selected);
     void setupModelContentSelectionModel();
 
   private:
     QScopedPointer<Ui::ModelInspectorWidget> ui;
+    ModelInspectorInterface *m_interface;
 };
 
 }

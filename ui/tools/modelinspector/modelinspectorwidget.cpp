@@ -24,6 +24,8 @@
 #include "modelinspectorwidget.h"
 #include "ui_modelinspectorwidget.h"
 
+#include "modelinspectorclient.h"
+
 #include "include/objectmodel.h"
 #include "include/util.h"
 
@@ -35,11 +37,22 @@
 
 using namespace GammaRay;
 
+static QObject* createModelInspectorClient(const QString & /*name*/, QObject *parent)
+{
+  return new ModelInspectorClient(parent);
+}
+
 ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::ModelInspectorWidget)
+  : QWidget(parent)
+  , ui(new Ui::ModelInspectorWidget)
+  , m_interface(0)
 {
   ui->setupUi(this);
+
+  ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface*>(createModelInspectorClient);
+  m_interface = ObjectBroker::object<ModelInspectorInterface*>();
+  connect(m_interface, SIGNAL(cellSelected(int,int,QString,QString)),
+          SLOT(cellSelected(int,int,QString,QString)));
 
   KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel(this);
   modelFilterProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ModelModel"));
@@ -52,7 +65,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
 
   ui->modelCellView->setModel(ObjectBroker::model("com.kdab.GammaRay.ModelCellModel"));
 
-  setModelCell(QModelIndex());
+  cellSelected(-1, -1, QString(), QString());
 }
 
 void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
@@ -85,17 +98,16 @@ void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
   }
 
   // clear the cell info box
-  setModelCell(QModelIndex());
+  cellSelected(-1, -1, QString(), QString());
 }
 
-void ModelInspectorWidget::setModelCell(const QModelIndex &index)
+void ModelInspectorWidget::cellSelected(int row, int column, const QString &internalId, const QString &internalPtr)
 {
-  // TODO this wont work remotely!
-  ui->indexLabel->setText(index.isValid() ?
-    tr("Row: %1 Column: %2").arg(index.row()).arg(index.column()) :
+  ui->indexLabel->setText(row != -1 ?
+    tr("Row: %1 Column: %2").arg(row).arg(column) :
     tr("Invalid"));
-  ui->internalIdLabel->setText(QString::number(index.internalId()));
-  ui->internalPtrLabel->setText(Util::addressToString(index.internalPointer()));
+  ui->internalIdLabel->setText(internalId);
+  ui->internalPtrLabel->setText(internalPtr);
 }
 
 void ModelInspectorWidget::objectRegistered(const QString& objectName)
@@ -111,8 +123,6 @@ void ModelInspectorWidget::setupModelContentSelectionModel()
     return;
 
   ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(ui->modelContentView->model()));
-  connect(ui->modelContentView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          this, SLOT(setModelCell(QModelIndex)), Qt::UniqueConnection);
 }
 
 #include "modelinspectorwidget.moc"

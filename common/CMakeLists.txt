@@ -36,6 +36,7 @@ set(gammaray_common_internal_srcs
   proxytoolfactory.cpp
   propertycontrollerinterface.cpp
   probecontrollerinterface.cpp
+  modelinspectorinterface.cpp
 
   network/networkselectionmodel.cpp
   network/streamoperators.cpp

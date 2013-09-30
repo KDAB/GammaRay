@@ -73,6 +73,7 @@ set(gammaray_ui_internal_srcs
   tools/metatypebrowser/metatypebrowserwidget.cpp
   tools/mimetypes/mimetypeswidget.cpp
   tools/modelinspector/modelinspectorwidget.cpp
+  tools/modelinspector/modelinspectorclient.cpp
   tools/objectinspector/objectinspectorwidget.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
