@@ -25,12 +25,15 @@
 #define GAMMARAY_STYLEINSPECTOR_ABSTRACTSTYLEELEMENTSTATETABLE_H
 
 #include "abstractstyleelementmodel.h"
+#include <common/network/modelroles.h>
 
 class QStyleOption;
 class QRect;
 class QPainter;
 
 namespace GammaRay {
+
+class StyleInspectorInterface;
 
 /**
  * Base class for style element x style option state tables.
@@ -39,39 +42,25 @@ namespace GammaRay {
 class AbstractStyleElementStateTable : public GammaRay::AbstractStyleElementModel
 {
   Q_OBJECT
-  Q_PROPERTY(int cellWidth READ cellWidth WRITE setCellWidth)
-  Q_PROPERTY(int cellHeight READ cellHeight WRITE setCellHeight)
-  Q_PROPERTY(int zoomFactor READ zoomFactor WRITE setZoomFactor)
-
   public:
     explicit AbstractStyleElementStateTable(QObject *parent = 0);
 
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
 
-    int cellWidth() const;
-    int cellHeight() const;
-    int zoomFactor() const;
-
-  public slots:
-    void setCellWidth(int width);
-    void setCellHeight(int height);
-    void setZoomFactor(int zoom);
-
   protected:
     virtual int doColumnCount() const;
     virtual QVariant doData(int row, int column, int role) const;
 
     void drawTransparencyBackground(QPainter *painter, const QRect &rect) const;
-    /// actual size of the cell on screen
-    QSize effectiveCellSize() const;
     /// standard setup for the style option used in a cell in column @p column
     void fillStyleOption(QStyleOption *option, int column) const;
 
-  private:
-    int m_cellWidth;
-    int m_cellHeight;
-    int m_zoomFactor;
+  protected:
+    StyleInspectorInterface *m_interface;
+
+  private slots:
+    void cellSizeChanged();
 };
 
 }

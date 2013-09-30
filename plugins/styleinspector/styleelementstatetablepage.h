@@ -30,6 +30,8 @@ class QAbstractItemModel;
 
 namespace GammaRay {
 
+class StyleInspectorInterface;
+
 namespace Ui {
   class StyleElementStateTablePage;
 }
@@ -45,8 +47,15 @@ class StyleElementStateTablePage : public QWidget
     ~StyleElementStateTablePage();
     void setModel(QAbstractItemModel *model);
 
+  protected:
+    virtual void showEvent(QShowEvent *show);
+
+  private slots:
+    void updateCellSize();
+
   private:
     Ui::StyleElementStateTablePage *ui;
+    StyleInspectorInterface *m_interface;
 };
 
 }

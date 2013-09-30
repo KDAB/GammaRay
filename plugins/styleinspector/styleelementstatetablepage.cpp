@@ -25,14 +25,44 @@
 #include "ui_styleelementstatetablepage.h"
 #include "abstractstyleelementstatetable.h"
 
+#include "styleinspectorclient.h"
+#include <common/network/objectbroker.h>
+
+static QObject* createStyleInspectorClient(const QString & /*name*/, QObject *parent)
+{
+  return new GammaRay::StyleInspectorClient(parent);
+}
+
 using namespace GammaRay;
 
 StyleElementStateTablePage::StyleElementStateTablePage(QWidget *parent)
-  : QWidget(parent), ui(new Ui::StyleElementStateTablePage)
+  : QWidget(parent)
+  , ui(new Ui::StyleElementStateTablePage)
+  , m_interface(0)
 {
+  ObjectBroker::registerClientObjectFactoryCallback<StyleInspectorInterface*>(createStyleInspectorClient);
+  m_interface = ObjectBroker::object<StyleInspectorInterface*>();
+
   ui->setupUi(this);
-  ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  ui->tableView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
+  ui->tableView->verticalHeader()->setResizeMode(QHeaderView::Fixed);
+
+  connect(ui->widthBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setCellWidth(int)));
+  connect(ui->widthBox, SIGNAL(valueChanged(int)), SLOT(updateCellSize()));
+  connect(ui->heightBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setCellWidth(int)));
+  connect(ui->heightBox, SIGNAL(valueChanged(int)), SLOT(updateCellSize()));
+  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), m_interface, SLOT(setCellZoom(int)));
+  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), SLOT(updateCellSize()));
+
+  updateCellSize();
+}
+
+void StyleElementStateTablePage::showEvent(QShowEvent *show)
+{
+  ui->widthBox->setValue(m_interface->cellWidth());
+  ui->heightBox->setValue(m_interface->cellHeight());
+  ui->zoomSlider->setValue(m_interface->cellZoom());
+  QWidget::showEvent(show);
 }
 
 StyleElementStateTablePage::~StyleElementStateTablePage()
@@ -43,17 +73,12 @@ StyleElementStateTablePage::~StyleElementStateTablePage()
 void StyleElementStateTablePage::setModel(QAbstractItemModel *model)
 {
   ui->tableView->setModel(model);
-  ui->widthBox->setValue(model->property("cellWidth").toInt());
-  ui->heightBox->setValue(model->property("cellHeight").toInt());
+}
 
-  connect(ui->widthBox, SIGNAL(valueChanged(int)),
-          model, SLOT(setCellWidth(int)));
-
-  connect(ui->heightBox, SIGNAL(valueChanged(int)),
-          model, SLOT(setCellHeight(int)));
-
-  connect(ui->zoomSlider, SIGNAL(valueChanged(int)),
-          model, SLOT(setZoomFactor(int)));
+void StyleElementStateTablePage::updateCellSize()
+{
+  ui->tableView->verticalHeader()->setDefaultSectionSize(m_interface->cellSizeHint().height() + 4);
+  ui->tableView->horizontalHeader()->setDefaultSectionSize(m_interface->cellSizeHint().width() + 4);
 }
 
 #include "styleelementstatetablepage.moc"

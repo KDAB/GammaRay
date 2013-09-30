@@ -23,6 +23,7 @@
 
 #include "complexcontrolmodel.h"
 #include "styleoption.h"
+#include "styleinspectorinterface.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -75,10 +76,10 @@ ComplexControlModel::ComplexControlModel(QObject *parent) : AbstractStyleElement
 QVariant ComplexControlModel::doData(int row, int column, int role) const
 {
   if (role == Qt::DecorationRole) {
-    QPixmap pixmap(effectiveCellSize());
+    QPixmap pixmap(m_interface->cellSizeHint());
     QPainter painter(&pixmap);
     drawTransparencyBackground(&painter, pixmap.rect());
-    painter.scale(zoomFactor(), zoomFactor());
+    painter.scale(m_interface->cellZoom(), m_interface->cellZoom());
 
     QScopedPointer<QStyleOptionComplex> opt(
       qstyleoption_cast<QStyleOptionComplex*>(complexControlElements[row].styleOptionFactory()));
@@ -92,7 +93,7 @@ QVariant ComplexControlModel::doData(int row, int column, int role) const
       if (sc & complexControlElements[row].subControls) {
         QRectF scRect =
           m_style->subControlRect(complexControlElements[row].control, opt.data(), sc);
-        scRect.adjust(0, 0, -1.0 / zoomFactor(), -1.0 / zoomFactor());
+        scRect.adjust(0, 0, -1.0 / m_interface->cellZoom(), -1.0 / m_interface->cellZoom());
         if (scRect.isValid() && !scRect.isEmpty()) {
           // HACK: add some real color mapping
           painter.setPen(static_cast<Qt::GlobalColor>(colorIndex++));

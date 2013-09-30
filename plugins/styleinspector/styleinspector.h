@@ -26,6 +26,7 @@
 
 #include "include/toolfactory.h"
 #include "styleinspectorwidget.h"
+#include "styleinspectorinterface.h"
 
 #include <QStyle>
 #include <QWidget>
@@ -41,9 +42,10 @@ class PixelMetricModel;
 class PrimitiveModel;
 class StandardIconModel;
 
-class StyleInspector : public QObject
+class StyleInspector : public StyleInspectorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::StyleInspectorInterface)
   public:
     explicit StyleInspector(ProbeInterface *probe, QObject *parent = 0);
     virtual ~StyleInspector();
@@ -58,6 +60,9 @@ class StyleInspector : public QObject
     PixelMetricModel *m_pixelMetricModel;
     StandardIconModel *m_standardIconModel;
     PaletteModel *m_standardPaletteModel;
+    int m_cellHeight;
+    int m_cellWidth;
+    int m_cellZoom;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory2<QStyle, StyleInspector, StyleInspectorWidget>

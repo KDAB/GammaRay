@@ -16,6 +16,8 @@ set(gammaray_styleinspector_plugin_srcs
   styleelementstatetablepage.cpp
   complexcontrolmodel.cpp
   dynamicproxystyle.cpp
+  styleinspectorinterface.cpp
+  styleinspectorclient.cpp
 )
 
 qt4_automoc(${gammaray_styleinspector_plugin_srcs})

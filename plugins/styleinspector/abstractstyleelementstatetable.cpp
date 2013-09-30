@@ -23,18 +23,25 @@
 
 #include "abstractstyleelementstatetable.h"
 #include "styleoption.h"
+#include "styleinspectorinterface.h"
+#include <common/network/objectbroker.h>
 
 #include <QPainter>
 #include <QStyleOption>
+#include <QDebug>
 
 using namespace GammaRay;
 
 AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject *parent)
   : AbstractStyleElementModel(parent),
-    m_cellWidth(64),
-    m_cellHeight(64),
-    m_zoomFactor(1)
+    m_interface(ObjectBroker::object<StyleInspectorInterface*>())
 {
+  connect(m_interface, SIGNAL(cellSizeChanged()), SLOT(cellSizeChanged()));
+}
+
+void AbstractStyleElementStateTable::cellSizeChanged()
+{
+  emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
 int AbstractStyleElementStateTable::doColumnCount() const
@@ -47,7 +54,7 @@ QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) c
   Q_UNUSED(column);
   Q_UNUSED(row);
   if (role == Qt::SizeHintRole) {
-    return QSize(cellWidth() * zoomFactor() + 4, cellHeight() * zoomFactor() + 4);
+    return m_interface->cellSizeHint();
   }
   return QVariant();
 }
@@ -56,7 +63,7 @@ QVariant AbstractStyleElementStateTable::headerData(int section,
                                                     Qt::Orientation orientation,
                                                     int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+  if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
     return StyleOption::stateDisplayName(section);
   }
   return QAbstractItemModel::headerData(section, orientation, role);
@@ -76,54 +83,9 @@ void AbstractStyleElementStateTable::drawTransparencyBackground(QPainter *painte
   painter->fillRect(rect, bgBrush);
 }
 
-int AbstractStyleElementStateTable::cellWidth() const
-{
-  return m_cellWidth;
-}
-
-int AbstractStyleElementStateTable::cellHeight() const
-{
-  return m_cellHeight;
-}
-
-int AbstractStyleElementStateTable::zoomFactor() const
-{
-  return m_zoomFactor;
-}
-
-void AbstractStyleElementStateTable::setCellWidth(int width)
-{
-  m_cellWidth = width;
-  if (rowCount() > 0) {
-    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
-  }
-}
-
-void AbstractStyleElementStateTable::setCellHeight(int height)
-{
-  m_cellHeight = height;
-  if (rowCount() > 0) {
-    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
-  }
-}
-
-void AbstractStyleElementStateTable::setZoomFactor(int zoom)
-{
-  Q_ASSERT(zoom > 0);
-  m_zoomFactor = zoom;
-  if (rowCount() > 0) {
-    emit dataChanged(index(0, 0), index(doRowCount() - 1, doColumnCount() - 1));
-  }
-}
-
-QSize AbstractStyleElementStateTable::effectiveCellSize() const
-{
-  return QSize(cellWidth() * zoomFactor(), cellHeight() * zoomFactor());
-}
-
 void AbstractStyleElementStateTable::fillStyleOption(QStyleOption *option, int column) const
 {
-  option->rect = QRect(0, 0, cellWidth(), cellHeight());
+  option->rect = QRect(0, 0, m_interface->cellWidth(), m_interface->cellHeight());
   option->palette = m_style->standardPalette();
   option->state = StyleOption::prettyState(column);
 }
