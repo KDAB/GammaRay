@@ -46,11 +46,13 @@ FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
     QStandardItem *familyItem = new QStandardItem;
     familyItem->setText(family);
     familyItem->setEditable(false);
+    familyItem->setData(QFont(family));
 
     foreach (const QString &style, database.styles(family)) {
       QStandardItem *styleItem0 = new QStandardItem;
       styleItem0->setText(style);
       styleItem0->setEditable(false);
+      styleItem0->setData(database.font(family, style, 10));
 
       QString sizes;
       foreach (int points, database.smoothSizes(family, style)) {
@@ -77,36 +79,10 @@ FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
 
 void FontBrowserServer::updateFonts()
 {
-  QList<QFont> previousFonts = m_selectedFontModel->currentFonts();
-  QStringList previousFontNames;
-  foreach (const QFont &f, previousFonts) {
-    previousFontNames.append(f.family());
-  }
   QList<QFont> currentFonts;
-  QStringList currentFontNames;
   foreach (const QModelIndex &index, m_fontSelectionModel->selectedRows()) {
-    if (index.parent().isValid()) {
-      continue;
-    }
-    QFont font(index.data().toString());
-    currentFontNames.append(font.family());
-    if (previousFontNames.contains(font.family())) {
-      continue;
-    }
-    currentFonts.append(font);
+    currentFonts << index.data(Qt::UserRole + 1).value<QFont>();
   }
-  {
-    QList<QFont>::iterator it = previousFonts.begin();
-    while (it != previousFonts.end()) {
-      if (!currentFontNames.contains(it->family())) {
-        it = previousFonts.erase(it);
-      } else {
-        ++it;
-      }
-    }
-  }
-
-  currentFonts << previousFonts;
   m_selectedFontModel->updateFonts(currentFonts);
 }
 

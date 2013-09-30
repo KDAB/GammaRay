@@ -73,9 +73,10 @@ QVariant FontModel::headerData(int section, Qt::Orientation orientation, int rol
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     if (section == 0) {
-      return "Font";
-    }
-    if (section == 1) {
+      return "Font Family";
+    } else if (section == 1) {
+      return "Style Name";
+    } else if (section == 2) {
       return "Text Preview";
     }
   }
@@ -110,7 +111,7 @@ QModelIndex FontModel::parent(const QModelIndex &child) const
 int FontModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
-  return 2;
+  return 3;
 }
 
 QVariant FontModel::data(const QModelIndex &index, int role) const
@@ -120,6 +121,10 @@ QVariant FontModel::data(const QModelIndex &index, int role) const
       return m_fonts.at(index.row()).family();
     }
   } else if (index.column() == 1) {
+    if (role == Qt::DisplayRole) {
+      return m_fonts.at(index.row()).styleName();
+    }
+  } else if (index.column() == 2) {
     if (role == Qt::DecorationRole || role == Qt::SizeHintRole) {
       const QFont &font = m_fonts.at(index.row());
       QFontMetrics metrics(font);
@@ -219,7 +224,7 @@ void FontModel::fontDataChanged()
     return;
   }
 
-  emit dataChanged(index(0, 1), index(rowCount() - 1, 1));
+  emit dataChanged(index(0, 2), index(rowCount() - 1, 2));
 }
 
 #include "fontmodel.moc"
