@@ -138,7 +138,9 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       Q_ASSERT(section >= 0);
 
       QHash<qint32, QVariant> data;
-      data.insert(Qt::DisplayRole, m_model->headerData(section, static_cast<Qt::Orientation>(orientation), Qt::DisplayRole)); // TODO: add all roles
+      // TODO: add all roles
+      data.insert(Qt::DisplayRole, m_model->headerData(section, static_cast<Qt::Orientation>(orientation), Qt::DisplayRole));
+      data.insert(Qt::ToolTipRole, m_model->headerData(section, static_cast<Qt::Orientation>(orientation), Qt::ToolTipRole));
 
       Message msg(m_myAddress, Protocol::ModelHeaderReply);
       msg.payload() << orientation << section << data;
