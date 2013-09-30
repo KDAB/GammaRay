@@ -54,7 +54,6 @@ PaintBufferViewer::~PaintBufferViewer()
 
 void PaintBufferViewer::setPaintBuffer(const QPaintBuffer &buffer)
 {
-  m_buffer = buffer;
   m_bufferModel->setPaintBuffer(buffer);
   ui->replayWidget->setPaintBuffer(buffer);
   commandSelected();

@@ -58,7 +58,6 @@ class PaintBufferViewer : public QWidget
 
   private:
     QScopedPointer<Ui::PaintBufferViewer> ui;
-    QPaintBuffer m_buffer;
     PaintBufferModel *m_bufferModel;
 };
 
