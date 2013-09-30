@@ -74,6 +74,9 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
                                                     const QItemSelection &deselected)
 {
   Q_UNUSED(deselected);
+  if (selected.isEmpty()) {
+    return;
+  }
   const QModelIndex selectedRow = selected.first().topLeft();
   const QTextFormat f = selectedRow.data(TextDocumentModel::FormatRole).value<QTextFormat>();
   m_textDocumentFormatModel->setFormat(f);
