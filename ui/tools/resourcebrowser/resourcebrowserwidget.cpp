@@ -22,9 +22,11 @@
 */
 
 #include "resourcebrowserwidget.h"
-#include <deferredtreeviewconfiguration.h>
-#include "ui_resourcebrowserwidget.h"
 
+#include "ui_resourcebrowserwidget.h"
+#include "resourcebrowserclient.h"
+
+#include <deferredtreeviewconfiguration.h>
 #include <3rdparty/qt/resourcemodel.h>
 #include <network/objectbroker.h>
 
@@ -34,22 +36,29 @@
 
 using namespace GammaRay;
 
+static QObject* createResourceBrowserClient(const QString & /*name*/, QObject *parent)
+{
+  return new ResourceBrowserClient(parent);
+}
+
 ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::ResourceBrowserWidget)
   , m_timer(new QTimer(this))
+  , m_interface(0)
 {
+  ObjectBroker::registerClientObjectFactoryCallback<ResourceBrowserInterface*>(createResourceBrowserClient);
+  m_interface = ObjectBroker::object<ResourceBrowserInterface*>();
+  connect(m_interface, SIGNAL(resourceSelected(QVariant)), this, SLOT(resourceSelected(QVariant)));
+
   ui->setupUi(this);
   ui->treeView->setModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
+  ui->treeView->setSelectionModel(ObjectBroker::selectionModel(ui->treeView->model()));
 
   DeferredTreeViewConfiguration *config = new DeferredTreeViewConfiguration(ui->treeView);
   config->hideColumn(3);
   connect(ui->treeView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
           SLOT(rowsInserted()));
-
-  connect(ui->treeView->selectionModel(),
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(resourceSelected(QItemSelection,QItemSelection)));
 
   ui->resourceLabel->setText(tr("Select a Resource to Preview"));
   ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
@@ -62,31 +71,6 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 
 ResourceBrowserWidget::~ResourceBrowserWidget()
 {
-}
-
-void ResourceBrowserWidget::resourceSelected(const QItemSelection &selected,
-                                       const QItemSelection &deselected)
-{
-  Q_UNUSED(deselected)
-  // TODO this doesn't work remotely yet
-  const QModelIndex selectedRow = selected.first().topLeft();
-  const QFileInfo fi(selectedRow.data(ResourceModel::FilePathRole).toString());
-
-  if (fi.isFile()) {
-    const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
-    if (l.contains(fi.suffix())) {
-      ui->resourceLabel->setPixmap(fi.absoluteFilePath());
-      ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-    } else {
-      QFile f(fi.absoluteFilePath());
-      f.open(QFile::ReadOnly | QFile::Text);
-      ui->textBrowser->setText(f.readAll());
-      ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
-    }
-  } else {
-    ui->resourceLabel->setText(tr("Select a Resource to Preview"));
-    ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-  }
 }
 
 void ResourceBrowserWidget::rowsInserted()
@@ -115,6 +99,22 @@ void ResourceBrowserWidget::setupLayout()
     ui->splitter_7->setSizes(QList<int>() << viewWidth << (totalWidth - viewWidth));
     ui->splitter_7->setStretchFactor(1, 3);
   }
+}
+
+void ResourceBrowserWidget::resourceSelected(const QVariant &data)
+{
+  if (data.canConvert(QVariant::Pixmap)) {
+      ui->resourceLabel->setPixmap(data.value<QPixmap>());
+      ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
+  } else if (data.canConvert(QVariant::QVariant::ByteArray)) {
+    //TODO: make encoding configurable
+    ui->textBrowser->setText(data.toByteArray());
+    ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
+  } else {
+    ui->resourceLabel->setText(tr("Select a Resource to Preview"));
+    ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
+  }
+
 }
 
 #include "resourcebrowserwidget.moc"

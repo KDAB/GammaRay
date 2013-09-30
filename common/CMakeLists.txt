@@ -37,6 +37,7 @@ set(gammaray_common_internal_srcs
   propertycontrollerinterface.cpp
   probecontrollerinterface.cpp
   modelinspectorinterface.cpp
+  resourcebrowserinterface.cpp
 
   network/networkselectionmodel.cpp
   network/streamoperators.cpp

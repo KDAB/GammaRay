@@ -25,18 +25,42 @@
 #include "resourcefiltermodel.h"
 
 #include "qt/resourcemodel.h"
+#include <network/objectbroker.h>
 
 #include <QDebug>
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
 ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+  : ResourceBrowserInterface(parent)
 {
   ResourceModel *resourceModel = new ResourceModel(this);
   ResourceFilterModel *proxy = new ResourceFilterModel(this);
   proxy->setSourceModel(resourceModel);
   probe->registerModel("com.kdab.GammaRay.ResourceModel", proxy);
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
+  connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          this, SLOT(currentChanged(QModelIndex)));
+}
+
+void ResourceBrowser::currentChanged(const QModelIndex &current)
+{
+  const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());
+
+  QVariant data;
+  if (fi.isFile()) {
+    static const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
+    if (l.contains(fi.suffix())) {
+      data.setValue(QPixmap(fi.absoluteFilePath()));
+    } else {
+      QFile f(fi.absoluteFilePath());
+      f.open(QFile::ReadOnly | QFile::Text);
+      data.setValue(f.readAll());
+    }
+  }
+
+  emit resourceSelected(data);
 }
 
 #include "resourcebrowser.moc"

@@ -31,6 +31,8 @@ class QItemSelection;
 
 namespace GammaRay {
 
+class ResourceBrowserInterface;
+
 namespace Ui {
   class ResourceBrowserWidget;
 }
@@ -43,13 +45,14 @@ class ResourceBrowserWidget : public QWidget
     ~ResourceBrowserWidget();
 
   private slots:
-    void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void rowsInserted();
     void setupLayout();
+    void resourceSelected(const QVariant &data);
 
   private:
     QScopedPointer<Ui::ResourceBrowserWidget> ui;
     QTimer *m_timer;
+    ResourceBrowserInterface *m_interface;
 };
 
 }
