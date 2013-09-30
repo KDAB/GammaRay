@@ -6,6 +6,7 @@
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,6 +40,7 @@ class GraphicsView : public QGraphicsView
   signals:
     void sceneCoordinatesChanged(const QPointF &sceneCoord);
     void itemCoordinatesChanged(const QPointF &itemCoord);
+    void transformChanged();
 
   protected:
     void keyPressEvent(QKeyEvent *event);

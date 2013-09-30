@@ -6,6 +6,7 @@
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,9 +27,9 @@
 
 #include "include/toolfactory.h"
 #include "sceneinspectorwidget.h"
+#include "sceneinspectorinterface.h"
 
 #include <QGraphicsScene>
-#include <QWidget>
 
 class QItemSelectionModel;
 class QItemSelection;
@@ -39,17 +40,22 @@ namespace GammaRay {
 class PropertyController;
 class SceneModel;
 
-class SceneInspector : public QObject
+class SceneInspector : public SceneInspectorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::SceneInspectorInterface)
   public:
     explicit SceneInspector(ProbeInterface *probe, QObject *parent = 0);
 
   private slots:
+    virtual void initializeGui();
+    virtual void renderScene(const QTransform &transform, const QSize &size);
+
     void sceneSelected(const QItemSelection &selection);
     void sceneItemSelected(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
     void widgetSelected(QWidget *item, const QPoint &pos);
+    void sceneClicked(const QPointF &pos);
 
   private:
     QString findBestType(QGraphicsItem *item);

@@ -40,6 +40,7 @@ class SceneModel : public QAbstractItemModel
     };
     explicit SceneModel(QObject *parent = 0);
     void setScene(QGraphicsScene *scene);
+    QGraphicsScene *scene() const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;

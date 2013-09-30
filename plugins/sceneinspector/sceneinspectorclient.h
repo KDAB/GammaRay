@@ -1,11 +1,11 @@
 /*
-  graphicssceneview.h
+  sceneinspectorclient.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,42 +21,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCENEINSPECTOR_GRAPHICSSCENEVIEW_H
-#define GAMMARAY_SCENEINSPECTOR_GRAPHICSSCENEVIEW_H
+#ifndef GAMMARAY_SCENEINSPECTORCLIENT_H
+#define GAMMARAY_SCENEINSPECTORCLIENT_H
 
-#include <QWidget>
-
-class QGraphicsScene;
-class QGraphicsItem;
+#include "sceneinspectorinterface.h"
 
 namespace GammaRay {
 
-class GraphicsView;
-
-namespace Ui {
-  class GraphicsSceneView;
-}
-
-class GraphicsSceneView : public QWidget
+class SceneInspectorClient : public SceneInspectorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::SceneInspectorInterface)
   public:
-    explicit GraphicsSceneView(QWidget *parent = 0);
-    ~GraphicsSceneView();
+    explicit SceneInspectorClient(QObject *parent = 0);
+    virtual ~SceneInspectorClient();
 
-    GraphicsView* view() const;
-
-    void showGraphicsItem(QGraphicsItem *item);
-    void setGraphicsScene(QGraphicsScene *scene);
-
-  private slots:
-    void sceneCoordinatesChanged(const QPointF &coord);
-    void itemCoordinatesChanged(const QPointF &coord);
-
-  private:
-    Ui::GraphicsSceneView *ui;
+    virtual void initializeGui();
+    virtual void renderScene(const QTransform &transform, const QSize &size);
+    virtual void sceneClicked(const QPointF &pos);
 };
 
 }
 
-#endif // GAMMARAY_GRAPHICSSCENEVIEW_H
+#endif // GAMMARAY_SCENEINSPECTORCLIENT_H

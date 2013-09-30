@@ -1,11 +1,11 @@
 /*
-  graphicssceneview.h
+  sceneinspectorclient.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,42 +21,38 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCENEINSPECTOR_GRAPHICSSCENEVIEW_H
-#define GAMMARAY_SCENEINSPECTOR_GRAPHICSSCENEVIEW_H
+#include "sceneinspectorclient.h"
 
-#include <QWidget>
+#include <QTransform>
 
-class QGraphicsScene;
-class QGraphicsItem;
+#include <common/network/endpoint.h>
 
-namespace GammaRay {
+using namespace GammaRay;
 
-class GraphicsView;
-
-namespace Ui {
-  class GraphicsSceneView;
-}
-
-class GraphicsSceneView : public QWidget
+SceneInspectorClient::SceneInspectorClient(QObject *parent)
+  : SceneInspectorInterface(parent)
 {
-  Q_OBJECT
-  public:
-    explicit GraphicsSceneView(QWidget *parent = 0);
-    ~GraphicsSceneView();
-
-    GraphicsView* view() const;
-
-    void showGraphicsItem(QGraphicsItem *item);
-    void setGraphicsScene(QGraphicsScene *scene);
-
-  private slots:
-    void sceneCoordinatesChanged(const QPointF &coord);
-    void itemCoordinatesChanged(const QPointF &coord);
-
-  private:
-    Ui::GraphicsSceneView *ui;
-};
 
 }
 
-#endif // GAMMARAY_GRAPHICSSCENEVIEW_H
+SceneInspectorClient::~SceneInspectorClient()
+{
+
+}
+
+void SceneInspectorClient::initializeGui()
+{
+  Endpoint::instance()->invokeObject(objectName(), "initializeGui");
+}
+
+void SceneInspectorClient::renderScene(const QTransform &transform, const QSize &size)
+{
+  Endpoint::instance()->invokeObject(objectName(), "renderScene", QVariantList() << transform << size);
+}
+
+void SceneInspectorClient::sceneClicked(const QPointF &pos)
+{
+  Endpoint::instance()->invokeObject(objectName(), "sceneClicked", QVariantList() << pos);
+}
+
+#include "sceneinspectorclient.moc"

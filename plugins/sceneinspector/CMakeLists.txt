@@ -8,7 +8,9 @@ set(gammaray_sceneinspector_plugin_srcs
   graphicsview.cpp
   graphicssceneview.cpp
   scenemodel.cpp
+  sceneinspectorinterface.cpp
   sceneinspector.cpp
+  sceneinspectorclient.cpp
   sceneinspectorwidget.cpp
 )
 

@@ -47,6 +47,11 @@ GraphicsSceneView::~GraphicsSceneView()
   delete ui;
 }
 
+GraphicsView * GraphicsSceneView::view() const
+{
+  return ui->graphicsView;
+}
+
 void GraphicsSceneView::showGraphicsItem(QGraphicsItem *item)
 {
   ui->graphicsView->showItem(item);
