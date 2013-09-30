@@ -30,21 +30,22 @@
 
 #include <QDebug>
 #include <QFileInfo>
+#include <QTimer>
 
 using namespace GammaRay;
 
 ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::ResourceBrowserWidget)
+  : QWidget(parent)
+  , ui(new Ui::ResourceBrowserWidget)
+  , m_timer(new QTimer(this))
 {
   ui->setupUi(this);
   ui->treeView->setModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
 
   DeferredTreeViewConfiguration *config = new DeferredTreeViewConfiguration(ui->treeView);
   config->hideColumn(3);
-  ui->treeView->header()->setResizeMode(QHeaderView::ResizeToContents);
-
-  QMetaObject::invokeMethod(this, "setupLayout", Qt::QueuedConnection);
+  connect(ui->treeView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+          SLOT(rowsInserted()));
 
   connect(ui->treeView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -52,6 +53,11 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 
   ui->resourceLabel->setText(tr("Select a Resource to Preview"));
   ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
+
+  m_timer->setInterval(100);
+  m_timer->setSingleShot(true);
+  connect(m_timer, SIGNAL(timeout()), SLOT(setupLayout()));
+  m_timer->start();
 }
 
 ResourceBrowserWidget::~ResourceBrowserWidget()
@@ -83,8 +89,18 @@ void ResourceBrowserWidget::resourceSelected(const QItemSelection &selected,
   }
 }
 
+void ResourceBrowserWidget::rowsInserted()
+{
+  m_timer->start();
+}
+
 void ResourceBrowserWidget::setupLayout()
 {
+  // now we can assume the model is filled properly and can adjust the tree view column sizes
+  for(int i = 0; i < 3; ++i) {
+    ui->treeView->resizeColumnToContents(i);
+  }
+
   // now the view was setup properly and we can mess with the splitter to resize
   // the widgets for nicer display
 

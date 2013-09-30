@@ -26,6 +26,7 @@
 
 #include <QWidget>
 
+class QTimer;
 class QItemSelection;
 
 namespace GammaRay {
@@ -43,10 +44,12 @@ class ResourceBrowserWidget : public QWidget
 
   private slots:
     void resourceSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void rowsInserted();
     void setupLayout();
 
   private:
     QScopedPointer<Ui::ResourceBrowserWidget> ui;
+    QTimer *m_timer;
 };
 
 }
