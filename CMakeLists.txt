@@ -284,6 +284,13 @@ endif()
 include(CheckIncludeFiles)
 check_include_files(stdint.h HAVE_STDINT_H)
 
+# strip off sysroot for cross-compilation
+if(CMAKE_FIND_ROOT_PATH)
+  string(REPLACE "${CMAKE_FIND_ROOT_PATH}" "" GAMMARAY_LOCAL_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+else()
+  set(GAMMARAY_LOCAL_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+endif()
+
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
