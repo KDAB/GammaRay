@@ -106,7 +106,7 @@ void ResourceBrowserWidget::resourceSelected(const QVariant &data)
   if (data.canConvert(QVariant::Pixmap)) {
       ui->resourceLabel->setPixmap(data.value<QPixmap>());
       ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-  } else if (data.canConvert(QVariant::QVariant::ByteArray)) {
+  } else if (data.canConvert(QVariant::ByteArray)) {
     //TODO: make encoding configurable
     ui->textBrowser->setText(data.toByteArray());
     ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
