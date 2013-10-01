@@ -97,16 +97,16 @@ LaunchOptions LaunchPage::launchOptions() const
     case 0: // local, out-of-process
       opt.setProbeSetting("RemoteAccessEnabled", true);
       opt.setProbeSetting("TCPServer", "127.0.0.1");
-      opt.setUseInProcessUi(false);
+      opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 1: // remote, out-of-process
       opt.setProbeSetting("RemoteAccessEnabled", true);
       opt.setProbeSetting("TCPServer", "0.0.0.0");
-      opt.setUseInProcessUi(false);
+      opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 2: // in-process
       opt.setProbeSetting("RemoteAccessEnabled", false);
-      opt.setUseInProcessUi(true);
+      opt.setUiMode(LaunchOptions::InProcessUi);
       break;
   }
 
@@ -154,13 +154,13 @@ bool LaunchPage::isValid()
   }
 
   const QFileInfo fi(ui->progEdit->text());
-  
+
 #ifdef Q_OS_MAC
   if (fi.isBundle() && (fi.suffix() == "app")) {
     return true;
   }
 #endif
-  
+
   return fi.exists() && fi.isFile() && fi.isExecutable();
 }
 

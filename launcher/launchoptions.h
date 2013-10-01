@@ -15,6 +15,12 @@ public:
   LaunchOptions();
   ~LaunchOptions();
 
+  enum UiMode {
+    InProcessUi,
+    OutOfProcessUi,
+    NoUi
+  };
+
   /** Returns @c true if this is valid and has launch arguments set. */
   bool isLaunch() const;
 
@@ -38,14 +44,14 @@ public:
   void setPid(int pid);
   int pid() const;
 
-  /** In-process UI setting. */
-  bool useInProcessUi() const;
-  void setUseInProcessUi(bool enable);
+  /** UI mode. */
+  UiMode uiMode() const;
+  void setUiMode(UiMode mode);
 
 private:
   QStringList m_launchArguments;
   int m_pid;
-  bool m_inProcessUi;
+  UiMode m_uiMode;
   QHash<QByteArray, QByteArray> m_probeSettings;
 };
 }

@@ -90,15 +90,15 @@ LaunchOptions AttachDialog::launchOptions() const
   switch (ui.accessMode->currentIndex()) {
     case 0: // local, out-of-process
       opt.setProbeSetting("TCPServer", "127.0.0.1");
-      opt.setUseInProcessUi(false);
+      opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 1: // remote, out-of-process
       opt.setProbeSetting("TCPServer", "0.0.0.0");
-      opt.setUseInProcessUi(false);
+      opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 2: // in-process
       opt.setProbeSetting("RemoteAccessEnabled", false);
-      opt.setUseInProcessUi(true);
+      opt.setUiMode(LaunchOptions::InProcessUi);
       break;
   }
 

@@ -55,6 +55,7 @@ static void usage(const char *argv0)
       << endl;
   out << " -p, --pid <pid>          \tattach to running Qt application" << endl;
   out << "     --inprocess          \tuse in-process UI" << endl;
+  out << "     --inject-only        \tonly inject the probe, don't show the UI" << endl;
   out << " -h, --help               \tprint program help and exit" << endl;
   out << " -v, --version            \tprint program version and exit" << endl;
   out << endl
@@ -104,10 +105,13 @@ int main(int argc, char **argv)
       return 0;
     }
     if (arg == QLatin1String("--inprocess")) {
-      options.setUseInProcessUi(true);
+      options.setUiMode(LaunchOptions::InProcessUi);
     }
     if (arg == QLatin1String("--no-inprocess")) {
-      options.setUseInProcessUi(false);
+      options.setUiMode(LaunchOptions::OutOfProcessUi);
+    }
+    if (arg == QLatin1String("--inject-only")) {
+      options.setUiMode(LaunchOptions::NoUi);
     }
     if (arg == QLatin1String("-filtertest")) {
       qputenv("GAMMARAY_TEST_FILTER", "1");
@@ -154,7 +158,7 @@ int main(int argc, char **argv)
 
   if (injector) {
     ClientLauncher client;
-    if (!options.useInProcessUi() && !client.launch("127.0.0.1")) {
+    if (options.uiMode() == LaunchOptions::OutOfProcessUi && !client.launch("127.0.0.1")) {
       err << "Failed to launch GammaRay client!";
       return 1;
     }

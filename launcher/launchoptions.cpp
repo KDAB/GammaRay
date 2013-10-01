@@ -6,7 +6,7 @@ using namespace GammaRay;
 
 LaunchOptions::LaunchOptions() :
   m_pid(-1),
-  m_inProcessUi(true)
+  m_uiMode(InProcessUi)
 {
 }
 
@@ -51,15 +51,15 @@ void LaunchOptions::setPid(int pid)
   Q_ASSERT(m_pid <= 0 || m_launchArguments.isEmpty());
 }
 
-bool LaunchOptions::useInProcessUi() const
+LaunchOptions::UiMode LaunchOptions::uiMode() const
 {
-  return m_inProcessUi;
+  return m_uiMode;
 }
 
-void LaunchOptions::setUseInProcessUi(bool enable)
+void LaunchOptions::setUiMode(LaunchOptions::UiMode mode)
 {
-  m_inProcessUi = enable;
-  setProbeSetting("InProcessUi", enable);
+  m_uiMode = mode;
+  setProbeSetting("InProcessUi", mode == InProcessUi);
 }
 
 void LaunchOptions::sendProbeSettings()
