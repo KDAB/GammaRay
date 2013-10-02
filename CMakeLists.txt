@@ -292,10 +292,6 @@ else()
 endif()
 
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
-)
-configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
 )
@@ -470,6 +466,11 @@ if(DOXYGEN_FOUND AND CAT_EXECUTABLE)
   )
 
 endif()
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
+)
 
 include(ExternalProject)
 
