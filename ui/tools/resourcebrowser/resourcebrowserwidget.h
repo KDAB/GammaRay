@@ -47,7 +47,9 @@ class ResourceBrowserWidget : public QWidget
   private slots:
     void rowsInserted();
     void setupLayout();
-    void resourceSelected(const QVariant &data);
+    void resourceDeselected();
+    void resourceSelected(const QPixmap &pixmap);
+    void resourceSelected(const QByteArray &contents);
 
   private:
     QScopedPointer<Ui::ResourceBrowserWidget> ui;

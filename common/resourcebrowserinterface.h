@@ -26,6 +26,8 @@
 
 #include <QObject>
 
+class QPixmap;
+
 namespace GammaRay {
 
 class ResourceBrowserInterface : public QObject
@@ -36,7 +38,9 @@ class ResourceBrowserInterface : public QObject
     virtual ~ResourceBrowserInterface();
 
   signals:
-    void resourceSelected(const QVariant &data);
+    void resourceDeselected();
+    void resourceSelected(const QPixmap &pixmap);
+    void resourceSelected(const QByteArray &contents);
 };
 
 }

@@ -48,19 +48,18 @@ void ResourceBrowser::currentChanged(const QModelIndex &current)
 {
   const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());
 
-  QVariant data;
   if (fi.isFile()) {
     static const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
     if (l.contains(fi.suffix())) {
-      data.setValue(QPixmap(fi.absoluteFilePath()));
+      emit resourceSelected(QPixmap(fi.absoluteFilePath()));
     } else {
       QFile f(fi.absoluteFilePath());
       f.open(QFile::ReadOnly | QFile::Text);
-      data.setValue(f.readAll());
+      emit resourceSelected(f.readAll());
     }
+  } else {
+    emit resourceDeselected();
   }
-
-  emit resourceSelected(data);
 }
 
 #include "resourcebrowser.moc"

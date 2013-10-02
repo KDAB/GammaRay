@@ -49,7 +49,9 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 {
   ObjectBroker::registerClientObjectFactoryCallback<ResourceBrowserInterface*>(createResourceBrowserClient);
   m_interface = ObjectBroker::object<ResourceBrowserInterface*>();
-  connect(m_interface, SIGNAL(resourceSelected(QVariant)), this, SLOT(resourceSelected(QVariant)));
+  connect(m_interface, SIGNAL(resourceDeselected()), this, SLOT(resourceDeselected()));
+  connect(m_interface, SIGNAL(resourceSelected(QPixmap)), this, SLOT(resourceSelected(QPixmap)));
+  connect(m_interface, SIGNAL(resourceSelected(QByteArray)), this, SLOT(resourceSelected(QByteArray)));
 
   ui->setupUi(this);
   ui->treeView->setModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
@@ -101,20 +103,23 @@ void ResourceBrowserWidget::setupLayout()
   }
 }
 
-void ResourceBrowserWidget::resourceSelected(const QVariant &data)
+void ResourceBrowserWidget::resourceDeselected()
 {
-  if (data.canConvert(QVariant::Pixmap)) {
-      ui->resourceLabel->setPixmap(data.value<QPixmap>());
-      ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-  } else if (data.canConvert(QVariant::ByteArray)) {
-    //TODO: make encoding configurable
-    ui->textBrowser->setText(data.toByteArray());
-    ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
-  } else {
-    ui->resourceLabel->setText(tr("Select a Resource to Preview"));
-    ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-  }
+  ui->resourceLabel->setText(tr("Select a Resource to Preview"));
+  ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
+}
 
+void ResourceBrowserWidget::resourceSelected(const QPixmap &pixmap)
+{
+  ui->resourceLabel->setPixmap(pixmap);
+  ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
+}
+
+void ResourceBrowserWidget::resourceSelected(const QByteArray &contents)
+{
+  //TODO: make encoding configurable
+  ui->textBrowser->setText(contents);
+  ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
 }
 
 #include "resourcebrowserwidget.moc"
