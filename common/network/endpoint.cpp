@@ -158,11 +158,10 @@ void Endpoint::invokeObject(const QString &objectName, const char *method, const
 void Endpoint::invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const
 {
   Q_ASSERT(args.size() <= 10);
-  QVector<MethodArgument> a;
-  a.reserve(10);
-  foreach (const QVariant &v, args)
-    a.push_back(MethodArgument(v));
-  a.resize(10);
+  QVector<MethodArgument> a(10);
+  for (int i = 0; i < args.size(); ++i) {
+    a[i] = MethodArgument(args.at(i));
+  }
 
   QMetaObject::invokeMethod(object, method, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
 }
