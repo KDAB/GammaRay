@@ -106,6 +106,10 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   mExitStatus = proc.exitStatus();
   mErrorString = proc.errorString();
 
+  if (mProcessError == QProcess::FailedToStart) {
+    mErrorString.prepend(QString("Could not start '%1': ").arg(program));
+  }
+
   return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit
           && mProcessError == QProcess::UnknownError;
 }
