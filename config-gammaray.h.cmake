@@ -14,3 +14,4 @@
 #cmakedefine HAVE_QT_PRINTSUPPORT
 
 #cmakedefine HAVE_VTK
+#cmakedefine HAVE_GRAPHVIZ

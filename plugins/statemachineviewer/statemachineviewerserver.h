@@ -25,13 +25,20 @@
 
 #include "statemachineviewerutil.h"
 #include "statemachineviewerinterface.h"
-#include "statemachineviewerwidget.h"
 
 #include "include/toolfactory.h"
 
 #include <QHash>
 #include <QSet>
 #include <QString>
+
+#include <config-gammaray.h>
+
+#ifdef HAVE_GRAPHVIZ
+#include "statemachineviewerwidget.h"
+#else
+typedef QWidget StateMachineViewerWidget;
+#endif
 
 class QAbstractTransition;
 class QStateMachine;
@@ -109,6 +116,10 @@ public QObject, public StandardToolFactory2<QStateMachine, StateMachineViewerSer
     {
       return tr("State Machine Viewer");
     }
+
+#ifndef HAVE_GRAPHVIZ
+    virtual QWidget *createWidget(QWidget *parentWidget);
+#endif
 };
 
 }

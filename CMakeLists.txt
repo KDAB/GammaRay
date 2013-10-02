@@ -344,6 +344,7 @@ macro_log_feature(
 if(GRAPHVIZ_FOUND)
   add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
 endif()
+set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
 
 #VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
 find_path(VTK_DIR VTKConfig.cmake
