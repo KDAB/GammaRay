@@ -50,3 +50,12 @@ if(QNXNTO)
   target_link_libraries(propertywidgettest cpp)
   target_link_libraries(messagemodeltest cpp)
 endif()
+
+if (Qt5Widgets_FOUND AND NOT Qt5Widgets_VERSION VERSION_LESS 5.2.0)
+  add_executable(variantinspectortest
+    variantinspector.cpp
+    variantinspectorapplication.cpp
+  )
+  set_property(TARGET variantinspectortest PROPERTY AUTOMOC TRUE)
+  target_link_libraries(variantinspectortest Qt5::Widgets)
+endif()
