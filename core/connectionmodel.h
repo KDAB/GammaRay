@@ -29,6 +29,7 @@
 #include <QVector>
 
 #include "gammaray_core_export.h"
+#include <common/network/modelroles.h>
 
 namespace GammaRay {
 
@@ -58,7 +59,7 @@ class GAMMARAY_CORE_EXPORT ConnectionModel : public QAbstractTableModel
   Q_OBJECT
   public:
     enum Role {
-      SenderRole = Qt::UserRole + 1,
+      SenderRole = UserRole + 1,
       ReceiverRole,
       ConnectionValidRole
     };

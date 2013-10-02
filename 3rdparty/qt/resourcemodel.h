@@ -62,7 +62,8 @@ class ResourceModel : public QAbstractItemModel
 public:
     enum Roles {
         FileIconRole = Qt::DecorationRole,
-        FilePathRole = Qt::UserRole + 1,
+        // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globaly to allow combining Qt4/5 client/servers.
+        FilePathRole = 256 + 1,
         FileNameRole
     };
 

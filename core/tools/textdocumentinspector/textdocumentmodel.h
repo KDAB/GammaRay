@@ -26,6 +26,7 @@
 
 #include <QStandardItemModel>
 #include <QTextObject>
+#include <network/modelroles.h>
 
 class QTextTable;
 class QTextBlock;
@@ -41,7 +42,7 @@ class TextDocumentModel : public QStandardItemModel
     explicit TextDocumentModel(QObject *parent = 0);
 
     enum Roles {
-      FormatRole = Qt::UserRole,
+      FormatRole = UserRole,
       BoundingBoxRole
     };
 

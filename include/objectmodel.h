@@ -47,7 +47,8 @@ namespace ObjectModel {
 
     /** Role enum, to be used with the object list and tree models. */
     enum Role {
-      ObjectRole = Qt::UserRole + 1, /**< the Object role */
+      // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globaly to allow combining Qt4/5 client/servers.
+      ObjectRole = 256 + 1, /**< the Object role */
       UserRole                       /**< the UserRole, as defined by Qt */
     };
 }

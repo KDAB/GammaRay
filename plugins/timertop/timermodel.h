@@ -26,6 +26,7 @@
 #include "timerinfo.h"
 
 #include "include/objecttypefilterproxymodel.h"
+#include <common/network/modelroles.h>
 
 #include <QAbstractTableModel>
 
@@ -51,7 +52,7 @@ class TimerModel : public QAbstractTableModel
     void postSignalActivate(QObject *caller, int methodIndex);
 
     enum Roles {
-      FirstRole = Qt::UserRole + 1,
+      FirstRole = UserRole + 1,
       ObjectNameRole,
       StateRole,
       TotalWakeupsRole,

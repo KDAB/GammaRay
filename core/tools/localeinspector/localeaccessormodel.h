@@ -24,6 +24,7 @@
 
 #include <QAbstractTableModel>
 #include <QVector>
+#include <network/modelroles.h>
 
 namespace GammaRay {
 
@@ -36,7 +37,7 @@ class LocaleAccessorModel : public QAbstractTableModel
   Q_ENUMS(CustomRoles)
   public:
     enum CustomRoles {
-      AccessorRole = Qt::UserRole + 1
+      AccessorRole = UserRole + 1
     };
 
     explicit LocaleAccessorModel(LocaleDataAccessorRegistry *registry, QObject *parent = 0);

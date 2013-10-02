@@ -27,6 +27,7 @@
 #include <QModelIndex>
 #include <QReadWriteLock>
 #include <QVector>
+#include <network/modelroles.h>
 
 namespace GammaRay {
 
@@ -36,7 +37,7 @@ class MetaObjectTreeModel : public QAbstractItemModel
 
   public:
     enum Role {
-      MetaObjectRole = Qt::UserRole + 1
+      MetaObjectRole = UserRole + 1
     };
 
     enum Column {

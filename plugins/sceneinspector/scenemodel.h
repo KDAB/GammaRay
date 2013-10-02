@@ -25,6 +25,7 @@
 #define GAMMARAY_SCENEINSPECTOR_SCENEMODEL_H
 
 #include <QAbstractItemModel>
+#include <common/network/modelroles.h>
 
 class QGraphicsScene;
 class QGraphicsItem;
@@ -36,7 +37,7 @@ class SceneModel : public QAbstractItemModel
   Q_OBJECT
   public:
     enum Role {
-      SceneItemRole = Qt::UserRole + 1
+      SceneItemRole = UserRole + 1
     };
     explicit SceneModel(QObject *parent = 0);
     void setScene(QGraphicsScene *scene);
