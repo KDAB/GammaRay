@@ -17,7 +17,7 @@ if(NOT Qt5Core_FOUND)
 
 if(VTK_FOUND)
 
-add_definitions(-DVTK_EXCLUDE_STRSTREAM_HEADERS)
+add_definitions(-DVTKGUI_ENABLED -DVTK_EXCLUDE_STRSTREAM_HEADERS)
 
 include_directories(
   ${VTK_INCLUDE_DIRS}

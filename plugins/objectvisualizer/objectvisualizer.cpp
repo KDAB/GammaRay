@@ -39,7 +39,7 @@ GraphViewer::~GraphViewer()
 {
 }
 
-#ifndef HAVE_VTK
+#ifndef VTKGUI_ENABLED
 QWidget *GraphViewerFactory::createWidget(QWidget *parentWidget)
 {
   ///FIXME: disable selection of the tool, should be possible once we have a proper separation

@@ -24,9 +24,7 @@
 
 #include "include/toolfactory.h"
 
-#include "config-gammaray.h"
-
-#ifdef HAVE_VTK
+#ifdef VTKGUI_ENABLED
 #include "objectvisualizerwidget.h"
 #else
 #include <QWidget>
@@ -60,7 +58,7 @@ class GraphViewerFactory : public QObject, public StandardToolFactory2<QObject, 
       return tr("Object Visualizer");
     }
 
-#ifndef HAVE_VTK
+#ifndef VTKGUI_ENABLED
     virtual QWidget *createWidget(QWidget *parentWidget);
 #endif
 };
