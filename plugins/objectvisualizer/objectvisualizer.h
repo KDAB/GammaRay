@@ -23,14 +23,21 @@
 #define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZER_H
 
 #include "include/toolfactory.h"
+
+#include "config-gammaray.h"
+
+#ifdef HAVE_VTK
 #include "objectvisualizerwidget.h"
+#else
+#include <QWidget>
+typedef QWidget GraphViewerWidget;
+#endif
 
 namespace GammaRay {
 
 class GraphViewer : public QObject
 {
   Q_OBJECT
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.GraphViewer")
 
   public:
     explicit GraphViewer(ProbeInterface *probe, QObject *parent = 0);
@@ -41,6 +48,7 @@ class GraphViewerFactory : public QObject, public StandardToolFactory2<QObject, 
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.GraphViewer")
 
   public:
     explicit GraphViewerFactory(QObject *parent = 0) : QObject(parent)
@@ -51,6 +59,10 @@ class GraphViewerFactory : public QObject, public StandardToolFactory2<QObject, 
     {
       return tr("Object Visualizer");
     }
+
+#ifndef HAVE_VTK
+    virtual QWidget *createWidget(QWidget *parentWidget);
+#endif
 };
 
 }

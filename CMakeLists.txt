@@ -363,6 +363,7 @@ macro_log_feature(
   ""
   "Needed for the object visualization plugin"
 )
+set(HAVE_VTK ${VTK_FOUND})
 
 if(UNIX AND NOT APPLE)
   set(XDG_APPS_INSTALL_DIR share/applications)
