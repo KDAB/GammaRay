@@ -83,6 +83,7 @@ void GraphViewerWidget::delayedInit()
   mWidget->vtkWidget()->setModel(mModel);
   mWidget->vtkWidget()->setSelectionModel(mObjectTreeView->selectionModel());
 
+  /// FIXME: This won't work for remote clients!
   // select the qApp object (if any) in the object treeView
   const QAbstractItemModel *viewModel = mObjectTreeView->model();
   const QModelIndexList matches = viewModel->match(viewModel->index(0, 0),
