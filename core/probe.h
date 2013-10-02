@@ -113,7 +113,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     void objectCreated(QObject *obj);
     void objectDestroyed(QObject *obj);
-    void objectReparanted(QObject *obj);
+    void objectReparented(QObject *obj);
 
   protected:
     bool eventFilter(QObject *receiver, QEvent *event);

@@ -598,7 +598,7 @@ void Probe::handleObjectDestroyed(QObject *obj)
 void Probe::objectParentChanged()
 {
   if (sender()) {
-    emit objectReparanted(sender());
+    emit objectReparented(sender());
   }
 }
 
@@ -666,7 +666,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
         // object is known already, just update the position in the tree
         // BUT: only when we did not queue this item before
         IF_DEBUG(cout << "update pos: " << hex << obj << endl;)
-        emit objectReparanted(obj);
+        emit objectReparented(obj);
       }
     } else if (tracked) {
       objectRemoved(obj);

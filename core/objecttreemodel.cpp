@@ -45,8 +45,8 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
           this, SLOT(objectAdded(QObject*)));
   connect(probe, SIGNAL(objectDestroyed(QObject*)),
           this, SLOT(objectRemoved(QObject*)));
-  connect(probe, SIGNAL(objectReparanted(QObject*)),
-          this, SLOT(objectReparanted(QObject*)));
+  connect(probe, SIGNAL(objectReparented(QObject*)),
+          this, SLOT(objectReparented(QObject*)));
 }
 
 static QObject *parentObject(QObject *obj)
@@ -157,7 +157,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
   endRemoveRows();
 }
 
-void ObjectTreeModel::objectReparanted(QObject *obj)
+void ObjectTreeModel::objectReparented(QObject *obj)
 {
   // slot, hence should always land in main thread due to auto connection
   Q_ASSERT(thread() == QThread::currentThread());
