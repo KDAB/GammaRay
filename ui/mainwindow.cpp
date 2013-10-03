@@ -25,6 +25,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "aboutpluginsdialog.h"
+#include "aboutdialog.h"
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/toolfactory.h"
@@ -138,23 +139,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::about()
 {
-  QDialog dialog(this);
+  AboutDialog dialog(this);
   dialog.setWindowTitle(tr("About %1").arg(progName));
-  QVBoxLayout *lay = new QVBoxLayout;
-  dialog.setLayout(lay);
-  QLabel *title = new QLabel;
-  QFont titleFont = dialog.font();
-  titleFont.setBold(true);
-  title->setFont(titleFont);
-  title->setText(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
-
-  lay->addWidget(title);
-
-  QLabel *informativeText = new QLabel;
-  informativeText->setTextInteractionFlags(Qt::TextBrowserInteraction);
-  informativeText->setOpenExternalLinks(true);
-  informativeText->setWordWrap(true);
-  informativeText->setText(
+  dialog.setTitle(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
+  dialog.setText(
     trUtf8("<qt>"
            "<p>Copyright (C) 2010-2013 Klarälvdalens Datakonsult AB, "
            "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
@@ -173,14 +161,8 @@ void MainWindow::about()
            "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p>"
            "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>"
            "</qt>"));
-  lay->addWidget(informativeText);
-  QDialogButtonBox *buttonBox = new QDialogButtonBox;
-  buttonBox->addButton(QDialogButtonBox::Close);
-  connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(close()));
-  lay->addWidget(buttonBox);
-
+  dialog.setLogo(":gammaray/GammaRay-128x128.png");
   dialog.setWindowIcon(QPixmap(":gammaray/GammaRay-128x128.png"));
-
   dialog.exec();
 }
 
@@ -193,23 +175,10 @@ void MainWindow::aboutPlugins()
 
 void MainWindow::aboutKDAB()
 {
-  QDialog dialog(this);
+  AboutDialog dialog(this);
   dialog.setWindowTitle(tr("About KDAB"));
-  QVBoxLayout *lay = new QVBoxLayout;
-  dialog.setLayout(lay);
-  QLabel *title = new QLabel;
-  QFont titleFont = dialog.font();
-  titleFont.setBold(true);
-  title->setFont(titleFont);
-  title->setText(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
-
-  lay->addWidget(title);
-
-  QLabel *informativeText = new QLabel;
-  informativeText->setTextInteractionFlags(Qt::TextBrowserInteraction);
-  informativeText->setOpenExternalLinks(true);
-  informativeText->setWordWrap(true);
-  informativeText->setText(
+  dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
+  dialog.setText(
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
        "KDAB, the Qt experts, provide consulting and mentoring for developing "
        "Qt applications from scratch and in porting from all popular and legacy "
@@ -219,15 +188,8 @@ void MainWindow::aboutKDAB()
        "to meet the people who write code like this. "
        "We also offer Qt training courses."
        "</p></qt>").arg(progName));
-
-  lay->addWidget(informativeText);
-  QDialogButtonBox *buttonBox = new QDialogButtonBox;
-  buttonBox->addButton(QDialogButtonBox::Close);
-  connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(close()));
-  lay->addWidget(buttonBox);
-
+  dialog.setLogo(":gammaray/kdablogo160.png");
   dialog.setWindowIcon(QPixmap(":gammaray/kdablogo160.png"));
-
   dialog.exec();
 }
 

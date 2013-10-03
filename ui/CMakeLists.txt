@@ -63,6 +63,7 @@ set(gammaray_ui_internal_srcs
   sidepane.cpp
   aboutpluginsdialog.cpp
   mainwindow.cpp
+  aboutdialog.cpp
 
   tools/connectioninspector/connectioninspectorwidget.cpp
   tools/localeinspector/localeinspectorwidget.cpp
@@ -84,6 +85,7 @@ set(gammaray_ui_internal_srcs
 
 qt4_wrap_ui(gammaray_ui_internal_srcs
   mainwindow.ui
+  aboutdialog.ui
 
   tools/connectioninspector/connectioninspectorwidget.ui
   tools/localeinspector/localeinspectorwidget.ui
