@@ -33,6 +33,9 @@
              <property name="text">
               <string>Maximum depth of state hierarchy shown:</string>
              </property>
+             <property name="buddy">
+              <cstring>depthSpinBox</cstring>
+             </property>
             </widget>
            </item>
            <item row="0" column="1">
@@ -69,18 +72,30 @@
           </item>
           <item>
            <widget class="QLabel" name="maxMegaPixelsLabel">
+            <property name="toolTip">
+             <string>&lt;qt&gt;Limits the maximum size of the exported image file. Zooming could otherwise make the image extremely large. The number given is in units of mega pixel.&lt;/qt&gt;</string>
+            </property>
             <property name="text">
-             <string>Maximum Mega Pixels</string>
+             <string>Maximum Size:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy">
+             <cstring>maxMegaPixelsSpinBox</cstring>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QSpinBox" name="maxMegaPixelsSpinBox">
             <property name="toolTip">
-             <string>Limit the size of the image file. Zooming could make the image very large.</string>
+             <string>&lt;qt&gt;Limits the maximum size of the exported image file. Zooming could otherwise make the image extremely large. The number given is in units of mega pixel.&lt;/qt&gt;</string>
             </property>
             <property name="text" stdset="0">
-             <string>0</string>
+             <string>0 MPx</string>
+            </property>
+            <property name="suffix">
+             <string comment="mega pixel unit"> MPx</string>
             </property>
            </widget>
           </item>
@@ -94,6 +109,9 @@
          <widget class="QLabel" name="label">
           <property name="text">
            <string>Start/Stop State Machine:</string>
+          </property>
+          <property name="buddy">
+           <cstring>startStopButton</cstring>
           </property>
          </widget>
         </item>
