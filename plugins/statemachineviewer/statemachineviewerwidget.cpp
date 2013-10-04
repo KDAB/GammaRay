@@ -44,6 +44,8 @@ enum {
   KEY_STATETYPE
 };
 
+#include <cmath>
+
 using namespace GammaRay;
 using namespace std;
 
@@ -99,6 +101,9 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setMaximumDepth(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), m_interface, SLOT(toggleRunning()));
   connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
+  
+  m_ui->maxMegaPixelsSpinBox->setValue(maximumMegaPixels());
+  connect(m_ui->maxMegaPixelsSpinBox, SIGNAL(valueChanged(int)), SLOT(setMaximumMegaPixels(int)));
 
   connect(m_interface, SIGNAL(maximumDepthChanged(int)), m_ui->depthSpinBox, SLOT(setValue(int)));
   connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
@@ -377,6 +382,16 @@ void StateMachineViewerWidget::transitionAdded(const TransitionId transition, co
   m_transitionEdgeIdMap.insert(transition, id);
 }
 
+int StateMachineViewerWidget::maximumMegaPixels() const
+{
+    return QSettings().value("StateMachineViewerServer/maximumMegaPixels", 10).toInt();
+}
+
+void StateMachineViewerWidget::setMaximumMegaPixels(int megaPixels)
+{
+    QSettings().setValue("StateMachineViewerServer/maximumMegaPixels", megaPixels);
+}
+
 void StateMachineViewerWidget::exportAsImage()
 {
   QSettings settings;
@@ -392,8 +407,17 @@ void StateMachineViewerWidget::exportAsImage()
   lastDir = QFileInfo(fileName).absolutePath();
   settings.setValue(key, lastDir);
 
-  QGraphicsScene *scene = m_ui->graphicsView->scene();
+  QGraphicsView* view = m_ui->graphicsView;
+  const QRectF sceneRect = view->transform().mapRect(view->sceneRect());
+  QSizeF size(sceneRect.width(), sceneRect.height());
 
+  // limit mega pixels
+  const double maxPixels = maximumMegaPixels() * 1E+6;
+  const double actualMegaPixels = size.width() * size.height();
+  if (actualMegaPixels > maxPixels && actualMegaPixels != 0) {
+    size *= sqrt(maxPixels / actualMegaPixels);
+  }
+  
   int quality = -1;
   const char* format;
   if (fileName.endsWith(QLatin1String("jpg"), Qt::CaseInsensitive)
@@ -404,13 +428,12 @@ void StateMachineViewerWidget::exportAsImage()
     format = "PNG";
   }
 
-  QImage image(scene->sceneRect().width(), scene->sceneRect().height(),
-               QImage::Format_ARGB32_Premultiplied);
+  QImage image(size.width() , size.height(), QImage::Format_ARGB32_Premultiplied);
   image.fill(QColor(Qt::white).rgb());
 
   QPainter painter(&image);
   painter.setRenderHint(QPainter::Antialiasing);
-  scene->render(&painter);
+  view->scene()->render(&painter);
 
   image.save(fileName, format, quality);
 }
