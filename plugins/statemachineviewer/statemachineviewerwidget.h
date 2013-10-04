@@ -67,10 +67,12 @@ class StateMachineViewerWidget : public QWidget
 
     void exportAsImage();
     void stateModelReset();
+    void setMaximumMegaPixels(int);
 
   private:
     void updateStateItems();
     void updateTransitionItems();
+    int maximumMegaPixels() const;
 
     QScopedPointer<Ui::StateMachineViewer> m_ui;
 
