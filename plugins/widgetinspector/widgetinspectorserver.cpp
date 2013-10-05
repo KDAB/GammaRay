@@ -80,8 +80,8 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
   m_widgetSelectionModel = ObjectBroker::selectionModel(widgetFilterProxy);
   connect(m_widgetSelectionModel,
-          SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(widgetSelected(QModelIndex)));
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(widgetSelected(QItemSelection)));
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
   m_paintBufferModel = new PaintBufferModel(this);
@@ -112,9 +112,13 @@ void WidgetInspectorServer::selectDefaultItem()
   }
 }
 
-void WidgetInspectorServer::widgetSelected(const QModelIndex &index)
+void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
 {
   m_propertyController->setObject(0);
+
+  if (selection.isEmpty())
+    return;
+  const QModelIndex index = selection.first().topLeft();
 
   QWidget *widget = 0;
   if (index.isValid()) {

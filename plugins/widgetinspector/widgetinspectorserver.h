@@ -31,6 +31,7 @@
 #include <QPointer>
 
 class QModelIndex;
+class QItemSelection;
 class QItemSelectionModel;
 class QTimer;
 
@@ -58,7 +59,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     QPixmap pixmapForWidget(QWidget *widget);
 
   private slots:
-    void widgetSelected(const QModelIndex &index);
+    void widgetSelected(const QItemSelection &selection);
     void widgetSelected(QWidget *widget);
 
     void handleOverlayWidgetDestroyed(QObject*);
