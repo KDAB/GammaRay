@@ -87,6 +87,29 @@ class ToolFactory
 };
 
 /**
+ * @brief A templated generic ToolFactory for some data type and tool.
+ */
+template <typename Type, typename Tool>
+class StandardToolFactory : public ToolFactory
+{
+public:
+  virtual inline QStringList supportedTypes() const
+  {
+    return QStringList(Type::staticMetaObject.className());
+  }
+
+  virtual inline QString id() const
+  {
+    return Tool::staticMetaObject.className();
+  }
+
+  virtual inline void init(ProbeInterface *probe)
+  {
+    new Tool(probe, probe->probe());
+  }
+};
+
+/**
  * @brief A templated generic ToolFactory for some data type and Tool.
  */
 // TODO: split this completely, this is just a migration aid

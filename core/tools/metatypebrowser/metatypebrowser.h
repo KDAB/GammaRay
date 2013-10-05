@@ -26,8 +26,6 @@
 
 #include "include/toolfactory.h"
 
-#include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
-
 namespace GammaRay {
 
 class MetaTypeBrowser : public QObject
@@ -37,7 +35,7 @@ class MetaTypeBrowser : public QObject
     explicit MetaTypeBrowser(ProbeInterface *probe, QObject *parent = 0);
 };
 
-class MetaTypeBrowserFactory : public QObject, public StandardToolFactory2<QObject, MetaTypeBrowser, MetaTypeBrowserWidget>
+class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObject, MetaTypeBrowser>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

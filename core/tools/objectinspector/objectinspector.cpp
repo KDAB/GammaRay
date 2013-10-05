@@ -31,6 +31,7 @@
 
 #include <QCoreApplication>
 #include <QItemSelectionModel>
+#include <QWidget>
 
 using namespace GammaRay;
 

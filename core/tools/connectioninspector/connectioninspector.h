@@ -26,8 +26,6 @@
 
 #include "include/toolfactory.h"
 
-#include <ui/tools/connectioninspector/connectioninspectorwidget.h>
-
 namespace GammaRay {
 
 class ConnectionInspector : public QObject
@@ -38,7 +36,7 @@ class ConnectionInspector : public QObject
 };
 
 class ConnectionInspectorFactory : public QObject,
-                                   public StandardToolFactory2<QObject, ConnectionInspector, ConnectionInspectorWidget>
+                                   public StandardToolFactory<QObject, ConnectionInspector>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

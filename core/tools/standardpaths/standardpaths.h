@@ -25,7 +25,6 @@
 #define GAMMARAY_STANDARDPATHS_H
 
 #include "include/toolfactory.h"
-#include <ui/tools/standardpaths/standardpathswidget.h>
 
 namespace GammaRay {
 
@@ -37,7 +36,7 @@ class StandardPaths : public QObject
     ~StandardPaths();
 };
 
-class StandardPathsFactory : public QObject, public StandardToolFactory2<QObject, StandardPaths, StandardPathsWidget>
+class StandardPathsFactory : public QObject, public StandardToolFactory<QObject, StandardPaths>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

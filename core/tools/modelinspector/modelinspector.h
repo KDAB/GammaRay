@@ -26,11 +26,11 @@
 
 #include "include/toolfactory.h"
 
-#include <ui/tools/modelinspector/modelinspectorwidget.h>
 #include <common/modelinspectorinterface.h>
 
 #include <QWidget>
 
+class QItemSelection;
 class QItemSelectionModel;
 
 namespace GammaRay {
@@ -65,7 +65,7 @@ class ModelInspector : public ModelInspectorInterface
     ModelTester *m_modelTester;
 };
 
-class ModelInspectorFactory : public QObject, public StandardToolFactory2<QAbstractItemModel, ModelInspector, ModelInspectorWidget>
+class ModelInspectorFactory : public QObject, public StandardToolFactory<QAbstractItemModel, ModelInspector>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

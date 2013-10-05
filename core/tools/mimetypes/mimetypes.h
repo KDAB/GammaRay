@@ -25,7 +25,6 @@
 #define GAMMARAY_MIMETYPES_H
 
 #include "include/toolfactory.h"
-#include <ui/tools/mimetypes/mimetypeswidget.h>
 
 #include <QMimeData>
 #include <QMimeDatabase>
@@ -46,7 +45,7 @@ class MimeTypes : public QObject
     QStandardItemModel *m_model;
 };
 
-class MimeTypesFactory : public QObject, public StandardToolFactory2<QObject, MimeTypes, MimeTypesWidget>
+class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, MimeTypes>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

@@ -26,8 +26,6 @@
 
 #include "include/toolfactory.h"
 
-#include <ui/tools/objectinspector/objectinspectorwidget.h>
-
 #include <QObject>
 
 class QItemSelection;
@@ -55,7 +53,7 @@ class ObjectInspector : public QObject
     QItemSelectionModel *m_selectionModel;
 };
 
-class ObjectInspectorFactory : public QObject, public StandardToolFactory2<QObject, ObjectInspector, ObjectInspectorWidget>
+class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObject, ObjectInspector>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

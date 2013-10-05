@@ -26,7 +26,6 @@
 #include "include/toolfactory.h"
 
 #include "messagehandlerinterface.h"
-#include <tools/messagehandler/messagehandlerwidget.h>
 
 namespace GammaRay {
 
@@ -53,7 +52,7 @@ class MessageHandler : public MessageHandlerInterface
     MessageModel *m_messageModel;
 };
 
-class MessageHandlerFactory : public QObject, public StandardToolFactory2<QObject, MessageHandler, MessageHandlerWidget>
+class MessageHandlerFactory : public QObject, public StandardToolFactory<QObject, MessageHandler>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

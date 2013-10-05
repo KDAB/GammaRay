@@ -26,8 +26,6 @@
 
 #include "include/toolfactory.h"
 
-#include <tools/metaobjectbrowser/metaobjectbrowserwidget.h>
-
 class QItemSelection;
 
 namespace GammaRay {
@@ -49,7 +47,7 @@ class MetaObjectBrowser : public QObject
 };
 
 class MetaObjectBrowserFactory : public QObject,
-    public StandardToolFactory2<QObject, MetaObjectBrowser, MetaObjectBrowserWidget>
+    public StandardToolFactory<QObject, MetaObjectBrowser>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

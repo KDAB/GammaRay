@@ -25,7 +25,6 @@
 #define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTOR_H
 
 #include "include/toolfactory.h"
-#include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
 #include <QPointer>
 #include <QTextDocument>
@@ -54,7 +53,7 @@ class TextDocumentInspector : public QObject
 };
 
 class TextDocumentInspectorFactory
-  : public QObject, public StandardToolFactory2<QTextDocument,TextDocumentInspector, TextDocumentInspectorWidget>
+  : public QObject, public StandardToolFactory<QTextDocument,TextDocumentInspector>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

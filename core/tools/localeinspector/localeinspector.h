@@ -24,8 +24,6 @@
 
 #include "include/toolfactory.h"
 
-#include <tools/localeinspector/localeinspectorwidget.h>
-
 namespace GammaRay {
 
 class LocaleInspector : public QObject
@@ -35,7 +33,7 @@ class LocaleInspector : public QObject
     explicit LocaleInspector(ProbeInterface *probe, QObject *parent = 0);
 };
 
-class LocaleInspectorFactory : public QObject, public StandardToolFactory2<QObject, LocaleInspector, LocaleInspectorWidget>
+class LocaleInspectorFactory : public QObject, public StandardToolFactory<QObject, LocaleInspector>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)

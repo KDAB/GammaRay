@@ -26,7 +26,6 @@
 
 #include "include/toolfactory.h"
 #include <common/resourcebrowserinterface.h>
-#include <tools/resourcebrowser/resourcebrowserwidget.h>
 
 class QModelIndex;
 
@@ -43,7 +42,7 @@ class ResourceBrowser : public ResourceBrowserInterface
     void currentChanged(const QModelIndex &current);
 };
 
-class ResourceBrowserFactory : public QObject, public StandardToolFactory2<QObject, ResourceBrowser, ResourceBrowserWidget>
+class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObject, ResourceBrowser>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
