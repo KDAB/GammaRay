@@ -9,6 +9,7 @@ set(gammaray_statemachineviewer_plugin_libs
   ${QT_QTGUI_LIBRARIES}
 
   gammaray_core
+  gammaray_ui
 )
 
 set(gammaray_statemachineviewer_plugin_srcs

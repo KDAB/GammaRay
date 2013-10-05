@@ -20,4 +20,5 @@ target_link_libraries(gammaray_actioninspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   gammaray_core
+  gammaray_ui
 )

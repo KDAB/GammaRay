@@ -35,6 +35,7 @@ target_link_libraries(gammaray_styleinspector_plugin
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   gammaray_core
+  gammaray_ui
 )
 
 if(QNXNTO)

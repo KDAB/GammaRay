@@ -62,4 +62,5 @@ target_link_libraries(gammaray_objectvisualizer_plugin
   ${OPTIONAL_VTK_LIBRARIES}
   ${VTK_QT_LIBRARY}
   gammaray_core
+  gammaray_ui
 )
