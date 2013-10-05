@@ -49,6 +49,11 @@ class ToolUiFactory
     virtual QString id() const = 0;
 
     /**
+     * Return true if this tool supports remoting, false otherwise.
+     */
+    virtual bool remotingSupported() const = 0;
+
+    /**
      * Create the UI part of this tool.
      * @param parentWidget The parent widget for the visual elements of this tool.
      * @return a pointer to the created QwWidget.
