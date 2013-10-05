@@ -64,6 +64,7 @@ set(gammaray_ui_internal_srcs
   aboutpluginsdialog.cpp
   mainwindow.cpp
   aboutdialog.cpp
+  proxytooluifactory.cpp
 
   tools/connectioninspector/connectioninspectorwidget.cpp
   tools/localeinspector/localeinspectorwidget.cpp
