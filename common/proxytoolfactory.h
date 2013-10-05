@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_PROXYTOOLFACTORY_H
 #define GAMMARAY_PROXYTOOLFACTORY_H
 
+#include "proxyfactorybase.h"
 #include "include/toolfactory.h"
 
 namespace GammaRay {
@@ -35,9 +36,8 @@ namespace GammaRay {
  *
  * TODO: Improve error reporting
  */
-class ProxyToolFactory : public QObject, public ToolFactory
+class ProxyToolFactory : public ProxyFactory<ToolFactory>
 {
-  Q_OBJECT
   public:
     /**
      * @param path Path to the plugin spec file
@@ -47,27 +47,16 @@ class ProxyToolFactory : public QObject, public ToolFactory
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 
-    /** Returns a human-readable error string if loading failed */
-    QString errorString() const { return m_errorString; }
-
-    virtual QString id() const;
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
-    virtual bool remotingSupported() const;
+    virtual bool remotingSupported() const; // ### TODO temporyry until the plugin split is complete
 
     virtual void init(ProbeInterface *probe);
-    virtual QWidget *createWidget(QWidget *parentWidget);
+    virtual QWidget *createWidget(QWidget *parentWidget); // ### TODO temporary until the plugin split is complete
 
   private:
-    void loadPlugin();
-
-  private:
-    QString m_id;
-    QString m_pluginPath;
     QString m_name;
-    QString m_errorString;
     QStringList m_supportedTypes;
-    ToolFactory *m_factory;
     bool m_remotingSupported;
 };
 
