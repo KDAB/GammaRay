@@ -25,7 +25,7 @@
 #include "toolmodel.h"
 
 #include "include/toolfactory.h"
-#include <common/proxytoolfactory.h>
+#include "proxytoolfactory.h"
 
 #include "tools/connectioninspector/connectioninspector.h"
 #include "tools/localeinspector/localeinspector.h"

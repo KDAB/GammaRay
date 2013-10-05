@@ -23,8 +23,6 @@
 
 #include "proxytoolfactory.h"
 
-#include <QLabel>
-
 using namespace GammaRay;
 using namespace std;
 
