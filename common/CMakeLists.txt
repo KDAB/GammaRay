@@ -28,7 +28,11 @@ qt4_automoc(${gammaray_common_srcs})
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
 set_target_properties(gammaray_common PROPERTIES DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB)
 
-target_link_libraries(gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+if (Qt5Core_FOUND)
+  target_link_libraries(gammaray_common Qt5::Widgets Qt5::Network)
+else ()
+  target_link_libraries(gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+endif()
 install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(gammaray_common_internal_srcs
@@ -51,6 +55,10 @@ if(NOT WIN32)
 endif()
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 
-target_link_libraries(gammaray_common_internal gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
-
+target_link_libraries(gammaray_common_internal gammaray_common)
+if (Qt5Core_FOUND)
+  target_link_libraries(gammaray_common_internal Qt5::Widgets Qt5::Network)
+else ()
+  target_link_libraries(gammaray_common_internal ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+endif()
 
