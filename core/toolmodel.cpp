@@ -112,32 +112,10 @@ QVariant ToolModel::data(const QModelIndex &index, int role) const
     return toolIface->name();
   } else if (role == ToolModelRole::ToolFactory) {
     return QVariant::fromValue(toolIface);
-  } else if (role == ToolModelRole::ToolWidget) {
-    const QHash<ToolFactory*, QWidget*>::const_iterator it = m_toolWidgets.constFind(toolIface);
-    if (it != m_toolWidgets.constEnd())
-      return QVariant::fromValue(it.value());
-    if (!toolIface)
-      return QVariant();
-    QWidget *widget = toolIface->createWidget(m_parentWidget);
-    m_toolWidgets.insert(toolIface, widget);
-    return QVariant::fromValue(widget);
   } else if (role == ToolModelRole::ToolId) {
     return toolIface->id();
   }
   return QVariant();
-}
-
-bool ToolModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-  if (index.isValid() && role == ToolModelRole::ToolWidget) {
-    ToolFactory *toolIface = m_tools.at(index.row());
-    m_toolWidgets.insert(toolIface, value.value<QWidget*>());
-    return true;
-  } else if (role == ToolModelRole::ToolWidgetParent) {
-    m_parentWidget = value.value<QWidget*>();
-    return true;
-  }
-  return QAbstractItemModel::setData(index, value, role);
 }
 
 int ToolModel::rowCount(const QModelIndex &parent) const

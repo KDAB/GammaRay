@@ -49,7 +49,6 @@ class ToolModel : public QAbstractListModel
     explicit ToolModel(QObject *parent = 0);
     ~ToolModel();
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation,
@@ -76,7 +75,6 @@ class ToolModel : public QAbstractListModel
 
   private:
     QVector<ToolFactory*> m_tools;
-    mutable QHash<ToolFactory*, QWidget*> m_toolWidgets;
     QSet<ToolFactory*> m_inactiveTools;
     QPointer<QWidget> m_parentWidget;
     QScopedPointer<ToolPluginManager> m_pluginManager;
