@@ -33,7 +33,7 @@ class QWidget;
 
 namespace GammaRay {
 
-class ToolFactory;
+class ToolUiFactory;
 
 /** Tool model for the client that implements the custom roles that return widget/factory pointers. */
 class ClientToolModel : public RemoteModel
@@ -48,10 +48,10 @@ public:
   virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
 private:
-  void insertFactory(ToolFactory* factory);
+  void insertFactory(ToolUiFactory* factory);
 
 private:
-  QHash<QString, ToolFactory*> m_factories; // ToolId -> ToolFactory
+  QHash<QString, ToolUiFactory*> m_factories; // ToolId -> ToolUiFactory
   mutable QHash<QString, QWidget*> m_widgets; // ToolId -> Widget
   QPointer<QWidget> m_parentWidget;
 };

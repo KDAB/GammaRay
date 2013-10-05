@@ -36,7 +36,7 @@
 #include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
 #include <common/pluginmanager.h>
-#include <common/proxytoolfactory.h>
+#include <ui/proxytooluifactory.h>
 #include <network/modelroles.h>
 #include <include/toolfactory.h>
 
@@ -46,12 +46,9 @@ using namespace GammaRay;
 
 
 #define MAKE_FACTORY(type) \
-class type ## Factory : public ToolFactory { \
+class type ## Factory : public ToolUiFactory { \
 public: \
-  virtual inline QStringList supportedTypes() const { return QStringList(#type); } \
   virtual inline QString id() const { return "GammaRay::" #type; } \
-  virtual inline QString name() const { return QString(); } \
-  virtual inline void init(ProbeInterface *) {} \
   virtual inline QWidget *createWidget(QWidget *parentWidget) { return new type ## Widget(parentWidget); } \
   virtual inline bool remotingSupported() const { return true; } \
 }
@@ -82,8 +79,8 @@ ClientToolModel::ClientToolModel(QObject* parent) : RemoteModel(QLatin1String("c
   insertFactory(new StandardPathsFactory);
   insertFactory(new TextDocumentInspectorFactory);
 
-  PluginManager<ToolFactory, ProxyToolFactory> pm; // ### temporary, this should only be ToolUiFactory
-  foreach(ToolFactory* factory, pm.plugins())
+  PluginManager<ToolUiFactory, ProxyToolUiFactory> pm; // ### temporary, this should only be ToolUiFactory
+  foreach(ToolUiFactory* factory, pm.plugins())
     insertFactory(factory);
 }
 
@@ -105,7 +102,7 @@ QVariant ClientToolModel::data(const QModelIndex& index, int role) const
       const QHash<QString, QWidget*>::const_iterator it = m_widgets.constFind(toolId);
       if (it != m_widgets.constEnd())
         return QVariant::fromValue(it.value());
-      ToolFactory *factory = m_factories.value(toolId);
+      ToolUiFactory *factory = m_factories.value(toolId);
       if (!factory)
         return QVariant();
       QWidget *widget = factory->createWidget(m_parentWidget);
@@ -137,14 +134,14 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
 {
   Qt::ItemFlags ret = RemoteModel::flags(index);
   const QString toolId = RemoteModel::data(index, ToolModelRole::ToolId).toString();
-  ToolFactory *factory = m_factories.value(toolId);
+  ToolUiFactory *factory = m_factories.value(toolId);
   if (!factory || !factory->remotingSupported()) {
     ret &= ~Qt::ItemIsEnabled;
   }
   return ret;
 }
 
-void ClientToolModel::insertFactory(ToolFactory* factory)
+void ClientToolModel::insertFactory(ToolUiFactory* factory)
 {
   m_factories.insert(factory->id(), factory);
 }
