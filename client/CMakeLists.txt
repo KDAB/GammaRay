@@ -12,7 +12,6 @@ set(gammaray_client_srcs
   client.cpp
   remotemodel.cpp
   selectionmodelclient.cpp
-  clienttoolmodel.cpp
   clientconnectionmanager.cpp
   propertycontrollerclient.cpp
   probecontrollerclient.cpp

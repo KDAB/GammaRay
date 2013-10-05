@@ -24,10 +24,9 @@
 #ifndef GAMMARAY_CLIENTTOOLMODEL_H
 #define GAMMARAY_CLIENTTOOLMODEL_H
 
-#include "remotemodel.h"
-
 #include <QHash>
 #include <QPointer>
+#include <QSortFilterProxyModel>
 
 class QWidget;
 
@@ -36,7 +35,7 @@ namespace GammaRay {
 class ToolUiFactory;
 
 /** Tool model for the client that implements the custom roles that return widget/factory pointers. */
-class ClientToolModel : public RemoteModel
+class ClientToolModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:

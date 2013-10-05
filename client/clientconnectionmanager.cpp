@@ -1,7 +1,6 @@
 #include "clientconnectionmanager.h"
 
 #include "client.h"
-#include "clienttoolmodel.h"
 
 #include <common/network/objectbroker.h>
 
@@ -47,9 +46,7 @@ void ClientConnectionManager::connectToHost()
 
 void ClientConnectionManager::connectionEstablished()
 {
-  m_toolModel = new ClientToolModel(this);
-  // overload the remote tool model with the special client tool model
-  ObjectBroker::registerModelInternal("com.kdab.GammaRay.ToolModel", m_toolModel);
+  m_toolModel = ObjectBroker::model("com.kdab.GammaRay.ToolModel");
 
   if (m_toolModel->rowCount() <= 0) {
     connect(m_toolModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(toolModelPopulated()));

@@ -26,6 +26,7 @@
 #include "ui_mainwindow.h"
 #include "aboutpluginsdialog.h"
 #include "aboutdialog.h"
+#include "clienttoolmodel.h"
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/toolfactory.h"
@@ -110,8 +111,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
   QAbstractItemModel *model = ObjectBroker::model("com.kdab.GammaRay.ToolModel");
-  model->setData(QModelIndex(), QVariant::fromValue<QWidget*>(this), ToolModelRole::ToolWidgetParent);
-  QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+  ClientToolModel *proxyModel = new ClientToolModel(this);
+  proxyModel->setData(QModelIndex(), QVariant::fromValue<QWidget*>(this), ToolModelRole::ToolWidgetParent);
   proxyModel->setDynamicSortFilter(true);
   proxyModel->setSourceModel(model);
   proxyModel->sort(0);
