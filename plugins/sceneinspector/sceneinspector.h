@@ -70,7 +70,7 @@ class SceneInspectorFactory : public QObject,
                               public StandardToolFactory2<QGraphicsScene, SceneInspector, SceneInspectorWidget>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SceneInspector")
   public:
     explicit SceneInspectorFactory(QObject *parent = 0) : QObject(parent)

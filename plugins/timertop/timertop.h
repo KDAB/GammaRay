@@ -49,7 +49,7 @@ class TimerTopFactory : public QObject,
                         public StandardToolFactory2<QTimer, TimerTop, TimerTopWidget>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.TimerTop")
 
   public:

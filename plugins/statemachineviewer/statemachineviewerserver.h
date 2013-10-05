@@ -104,7 +104,7 @@ class StateMachineViewerFactory :
 public QObject, public StandardToolFactory2<QStateMachine, StateMachineViewerServer, StateMachineViewerWidget>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StateMachineViewer")
 
   public:

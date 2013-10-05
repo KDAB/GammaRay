@@ -48,7 +48,7 @@ class KJobTracker : public QObject
 class KJobTrackerFactory : public QObject, public StandardToolFactory2<KJob, KJobTracker, KJobTrackerWidget>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
 
   public:
     explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent)

@@ -59,7 +59,7 @@ class CodecBrowser : public QObject
 class CodecBrowserFactory : public QObject, public StandardToolFactory2<QObject, CodecBrowser, CodecBrowserWidget>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
+  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.CodecBrowser")
   public:
     explicit CodecBrowserFactory(QObject *parent = 0) : QObject(parent)
