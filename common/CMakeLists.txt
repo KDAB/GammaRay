@@ -33,6 +33,7 @@ install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(gammaray_common_internal_srcs
   pluginmanager.cpp
+  proxyfactorybase.cpp
   proxytoolfactory.cpp
   propertycontrollerinterface.cpp
   probecontrollerinterface.cpp
