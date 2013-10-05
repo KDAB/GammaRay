@@ -85,15 +85,6 @@ namespace Util {
   GAMMARAY_COMMON_EXPORT QString addressToString(const void *p);
 
   /**
-   * Returns a string version of the memory address @p p. The resulting string
-   * can be used as a unique identifier in GammaRay.
-   * @param p is a pointer to an address in memory.
-   *
-   * @return a QString containing the Uid.
-   */
-  GAMMARAY_COMMON_EXPORT QString addressToUid(const void *p);
-
-  /**
    * Translates an enum or flag value into a human readable text.
    * @param value The numerical value. Type information from the QVariant
    *              are used to find the corresponding QMetaEnum.

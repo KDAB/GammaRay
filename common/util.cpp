@@ -70,11 +70,6 @@ QString Util::displayString(const QObject *object)
   return object->objectName();
 }
 
-QString Util::addressToUid(const void *p)
-{
-  return QString::number(reinterpret_cast<qlonglong>(p), 16);
-}
-
 static QString sizePolicyToString(QSizePolicy::Policy policy)
 {
   const int index = QSizePolicy::staticMetaObject.indexOfEnumerator("Policy");
