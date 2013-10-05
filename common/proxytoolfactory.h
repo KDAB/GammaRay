@@ -49,15 +49,12 @@ class ProxyToolFactory : public ProxyFactory<ToolFactory>
 
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
-    virtual bool remotingSupported() const; // ### TODO temporyry until the plugin split is complete
 
     virtual void init(ProbeInterface *probe);
-    virtual QWidget *createWidget(QWidget *parentWidget); // ### TODO temporary until the plugin split is complete
 
   private:
     QString m_name;
     QStringList m_supportedTypes;
-    bool m_remotingSupported;
 };
 
 }

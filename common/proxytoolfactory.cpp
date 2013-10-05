@@ -30,11 +30,9 @@ using namespace std;
 
 ProxyToolFactory::ProxyToolFactory(const QString &path, QObject *parent)
   : ProxyFactory<ToolFactory>(path, parent)
-  , m_remotingSupported(false)
 {
   m_name = value(QLatin1String("Name")).toString();
   m_supportedTypes = value(QLatin1String("X-GammaRay-Types")).toString().split(QLatin1Char(';'), QString::SkipEmptyParts);
-  m_remotingSupported = value(QLatin1String("X-GammaRay-Remote"), true).toBool();
 }
 
 bool ProxyToolFactory::isValid() const
@@ -56,11 +54,6 @@ QStringList ProxyToolFactory::supportedTypes() const
   return m_supportedTypes;
 }
 
-bool ProxyToolFactory::remotingSupported() const
-{
-  return m_remotingSupported;
-}
-
 void ProxyToolFactory::init(ProbeInterface *probe)
 {
   loadPlugin();
@@ -70,15 +63,4 @@ void ProxyToolFactory::init(ProbeInterface *probe)
   }
   Q_ASSERT(fac);
   fac->init(probe);
-}
-
-QWidget *ProxyToolFactory::createWidget(QWidget *parentWidget)
-{
-  loadPlugin();
-  ToolFactory *fac = factory();
-  if (!fac) {
-    return new QLabel(tr("Plugin '%1' could not be loaded.").arg(m_pluginPath), parentWidget);
-  }
-  Q_ASSERT(fac);
-  return fac->createWidget(parentWidget);
 }

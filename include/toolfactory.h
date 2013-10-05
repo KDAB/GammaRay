@@ -50,7 +50,7 @@ class ProbeInterface;
  * The ToolFactory class is an abstract base class for creating probe tools
  * for GammaRay.  Each tool must have a unique identifier.
  */
-class ToolFactory: public ToolUiFactory // ### this is just a porting aid, until we have properly split both interfaces
+class ToolFactory
 {
   public:
     virtual inline ~ToolFactory()
@@ -91,7 +91,7 @@ class ToolFactory: public ToolUiFactory // ### this is just a porting aid, until
  */
 // TODO: split this completely, this is just a migration aid
 template <typename Type, typename Tool, typename ToolUi>
-class StandardToolFactory2 : public ToolFactory
+class StandardToolFactory2 : public ToolFactory, public ToolUiFactory
 {
   public:
     virtual inline QStringList supportedTypes() const
