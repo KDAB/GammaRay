@@ -93,6 +93,7 @@ void SceneInspector::sceneItemSelected(const QModelIndex &index)
     ui->graphicsSceneView->showGraphicsItem(item);
   } else {
     ui->scenePropertyWidget->setObject(0);
+    ui->graphicsSceneView->showGraphicsItem(0);
   }
 }
 
