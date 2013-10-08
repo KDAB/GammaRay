@@ -1,9 +1,20 @@
 Release Highlights
 ==================
 
-Version 1.3.2 (unreleased):
+Version 1.3.2:
 -------------
- * Object Visualizer plugin: Make build with VTK6
+ * Support more Qt5-specific data types
+ * Fix crash on some QtQuick2 applicaitons
+ * Support VTK6
+ * Fix compilation with Mac OSX 10.6
+ * Fix GDB injector on Mac OSX
+ * Fix launching of bundles on Mac OSX
+ * Fix crash in selection model inspector
+ * Add fallback if function overwriting fails in MSVC release builds
+ * Fix WinDLL injector with Qt5
+ * Fix Qt version detection in the process list on Windows and Mac OSX
+ * Fix probe re-injections
+ * Fix plugin loading on MSVC release builds
 
 Version 1.3.1:
 -------------
