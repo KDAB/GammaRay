@@ -5,7 +5,7 @@ Summary:        A tool to poke around in a Qt-application
 Source:         %{name}-%{version}.tar.gz
 Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools/Debuggers
-License:        GPL v2, or any later version
+License:        GPL-2.0+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %if %{defined suse_version}
