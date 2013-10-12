@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_METAOBJECT_H
 #define GAMMARAY_METAOBJECT_H
 
+#include "include/gammaray_core_export.h"
+
 #include "metaproperty.h"
 
 #include <QVector>
@@ -31,7 +33,7 @@
 namespace GammaRay {
 
 /** Compile-time introspection adaptor for non-QObject classes. */
-class MetaObject
+class GAMMARAY_CORE_EXPORT MetaObject
 {
   public:
     MetaObject();
@@ -62,6 +64,8 @@ class MetaObject
      */
     void *castForPropertyAt(void *object, int index) const;
 
+    void setClassName(const QString &className);
+
   protected:
     /** Casts down to base class @p baseClassIndex.
      * This is important when traversing multi-inheritance trees.
@@ -70,10 +74,6 @@ class MetaObject
 
   protected:
     QVector<MetaObject*> m_baseClasses;
-
-  private:
-    friend class MetaObjectRepository;
-    void setClassName(const QString &className);
 
   private:
     QVector<MetaProperty*> m_properties;

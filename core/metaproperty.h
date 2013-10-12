@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_METAPROPERTY_H
 #define GAMMARAY_METAPROPERTY_H
 
+#include "include/gammaray_core_export.h"
+
 #include <QString>
 #include <QVariant>
 
@@ -32,7 +34,7 @@ namespace GammaRay {
 class MetaObject;
 
 /** Introspectable adaptor to non-QObject properties. */
-class MetaProperty
+class GAMMARAY_CORE_EXPORT MetaProperty
 {
   public:
     MetaProperty();

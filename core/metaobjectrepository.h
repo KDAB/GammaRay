@@ -73,8 +73,50 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 
   private:
     QHash<QString, MetaObject*> m_metaObjects;
+    bool m_initialized;
 };
 
 }
+
+#define MO_ADD_BASECLASS(Base) \
+  Q_ASSERT(MetaObjectRepository::instance()->hasMetaObject(QLatin1String(#Base))); \
+  mo->addBaseClass(MetaObjectRepository::instance()->metaObject(QLatin1String(#Base)));
+
+#define MO_ADD_METAOBJECT0(Class) \
+  mo = new MetaObjectImpl<Class>; \
+  mo->setClassName(QLatin1String(#Class)); \
+  MetaObjectRepository::instance()->addMetaObject(mo);
+
+#define MO_ADD_METAOBJECT1(Class, Base1) \
+  mo = new MetaObjectImpl<Class, Base1>; \
+  mo->setClassName(QLatin1String(#Class)); \
+  MO_ADD_BASECLASS(Base1) \
+  MetaObjectRepository::instance()->addMetaObject(mo);
+
+#define MO_ADD_METAOBJECT2(Class, Base1, Base2) \
+  mo = new MetaObjectImpl<Class, Base1, Base2>; \
+  mo->setClassName(QLatin1String(#Class)); \
+  MO_ADD_BASECLASS(Base1) \
+  MO_ADD_BASECLASS(Base2) \
+  MetaObjectRepository::instance()->addMetaObject(mo);
+
+#define MO_ADD_PROPERTY(Class, Type, Getter, Setter) \
+  mo->addProperty(new MetaPropertyImpl<Class, Type>( \
+    QLatin1String(#Getter), \
+    &Class::Getter, \
+    static_cast<void (Class::*)(Type)>(&Class::Setter)) \
+  );
+
+#define MO_ADD_PROPERTY_CR(Class, Type, Getter, Setter) \
+  mo->addProperty(new MetaPropertyImpl<Class, Type, const Type&>( \
+    QLatin1String(#Getter), \
+    &Class::Getter, \
+    static_cast<void (Class::*)(const Type&)>(&Class::Setter)) \
+  );
+
+#define MO_ADD_PROPERTY_RO(Class, Type, Getter) \
+  mo->addProperty(new MetaPropertyImpl<Class, Type>( \
+    QLatin1String(#Getter), \
+    &Class::Getter));
 
 #endif // GAMMARAY_METAOBJECTREPOSITORY_H
