@@ -53,7 +53,11 @@ qt4_wrap_ui(gammaray_ui_srcs
 qt4_automoc(${gammaray_ui_srcs})
 
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
-set_target_properties(gammaray_ui PROPERTIES DEFINE_SYMBOL MAKE_GAMMARAY_UI_LIB)
+set_target_properties(gammaray_ui PROPERTIES
+  DEFINE_SYMBOL MAKE_GAMMARAY_UI_LIB
+  SOVERSION ${GAMMARAY_SOVERSION}
+  VERSION ${GAMMARAY_SOVERSION}
+)
 
 target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal)
 

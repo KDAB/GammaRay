@@ -25,7 +25,11 @@ set(gammaray_common_srcs
 qt4_automoc(${gammaray_common_srcs})
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
-set_target_properties(gammaray_common PROPERTIES DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB)
+set_target_properties(gammaray_common PROPERTIES
+  DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB
+  SOVERSION ${GAMMARAY_SOVERSION}
+  VERSION ${GAMMARAY_SOVERSION}
+)
 
 if (Qt5Core_FOUND)
   target_link_libraries(gammaray_common Qt5::Core Qt5::Network)

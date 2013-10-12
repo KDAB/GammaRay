@@ -104,6 +104,10 @@ target_link_libraries(gammaray_core
   gammaray_common
   gammaray_common_internal
 )
+set_target_properties(gammaray_core PROPERTIES
+  SOVERSION ${GAMMARAY_SOVERSION}
+  VERSION ${GAMMARAY_SOVERSION}
+)
 
 if(Qt5Core_FOUND)
   target_link_libraries(gammaray_core Qt5::Widgets Qt5::Test)
