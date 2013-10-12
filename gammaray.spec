@@ -3,7 +3,7 @@ Version:        1.3.2
 Release:        0
 Summary:        A tool to poke around in a Qt-application
 Source:         %{name}-%{version}.tar.gz
-Url:            git@github.com:KDAB/GammaRay.git
+Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools/Debuggers
 License:        GPL v2, or any later version
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
