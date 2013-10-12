@@ -59,6 +59,7 @@ class SceneInspector : public SceneInspectorInterface
 
   private:
     QString findBestType(QGraphicsItem *item);
+    void registerGraphicsViewMetaTypes();
 
   private:
     SceneModel *m_sceneModel;

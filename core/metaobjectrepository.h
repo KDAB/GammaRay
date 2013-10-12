@@ -66,7 +66,6 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
   private:
     void initBuiltInTypes();
     void initQObjectTypes();
-    void initGraphicsViewTypes();
     void initNetworkTypes();
     void initGuiTypes();
     void initOpenGLTypes();

@@ -26,6 +26,7 @@
 
 #include "scenemodel.h"
 
+#include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/propertycontroller.h>
 
@@ -33,12 +34,16 @@
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
 #include "include/singlecolumnobjectproxymodel.h"
+#include "include/metatypedeclarations.h"
 
 #include <kde/krecursivefilterproxymodel.h>
 #include <common/network/objectbroker.h>
 #include <common/network/endpoint.h>
 
 #include <QGraphicsItem>
+#include <QGraphicsLayoutItem>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsWidget>
 #include <QGraphicsView>
 #include <QItemSelectionModel>
 
@@ -51,6 +56,8 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   : SceneInspectorInterface(parent),
     m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
 {
+  registerGraphicsViewMetaTypes();
+
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
           SLOT(widgetSelected(QWidget*,QPoint)));
 
@@ -227,6 +234,116 @@ QString SceneInspector::findBestType(QGraphicsItem *item)
   QGV_CHECK_TYPE(QGraphicsPixmapItem);
 
   return QLatin1String("QGraphicsItem");
+}
+
+void SceneInspector::registerGraphicsViewMetaTypes()
+{
+  MetaObject *mo = 0;
+  MO_ADD_METAOBJECT0(QGraphicsItem);
+  MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptDrops,               setAcceptDrops);
+  MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptHoverEvents,         setAcceptHoverEvents);
+  MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptTouchEvents,         setAcceptTouchEvents);
+  MO_ADD_PROPERTY   (QGraphicsItem, Qt::MouseButtons,                 acceptedMouseButtons,      setAcceptedMouseButtons);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           boundingRect);
+  MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            boundingRegionGranularity, setBoundingRegionGranularity);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem::CacheMode,         cacheMode);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           childrenBoundingRect);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QPainterPath,                     clipPath);
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QCursor,                          cursor,                    setCursor);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, qreal,                            effectiveOpacity);
+  MO_ADD_PROPERTY   (QGraphicsItem, bool,                             filtersChildEvents,        setFiltersChildEvents);
+  MO_ADD_PROPERTY   (QGraphicsItem, QGraphicsItem::GraphicsItemFlags, flags,                     setFlags);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   focusItem);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   focusProxy);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsEffect*,                 graphicsEffect);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItemGroup*,              group);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             hasCursor);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             hasFocus);
+  MO_ADD_PROPERTY   (QGraphicsItem, Qt::InputMethodHints,             inputMethodHints,          setInputMethodHints);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isActive);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isClipped);
+  MO_ADD_PROPERTY   (QGraphicsItem, bool,                             isEnabled,                 setEnabled);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isObscured);
+#endif
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isPanel);
+  MO_ADD_PROPERTY   (QGraphicsItem, bool,                             isSelected,                setSelected);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isUnderMouse);
+  MO_ADD_PROPERTY   (QGraphicsItem, bool,                             isVisible,                 setVisible);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isWidget);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, bool,                             isWindow);
+  MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            opacity,                   setOpacity);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QPainterPath,                     opaqueArea);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   panel);
+  MO_ADD_PROPERTY   (QGraphicsItem, QGraphicsItem::PanelModality,     panelModality,             setPanelModality);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   parentItem);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsObject*,                 parentObject);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 parentWidget);
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QPointF,                          pos,                       setPos);
+  MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            rotation,                  setRotation);
+  MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            scale,                     setScale);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QRectF,                           sceneBoundingRect);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QPointF,                          scenePos);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QTransform,                       sceneTransform);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QPainterPath,                     shape);
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QString,                          toolTip,                   setToolTip);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsItem*,                   topLevelItem);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 topLevelWidget);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QTransform,                       transform/*,                 setTransform*/); // TODO: support setTransform
+  MO_ADD_PROPERTY_CR(QGraphicsItem, QPointF,                          transformOriginPoint,      setTransformOriginPoint);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, int,                              type);
+  MO_ADD_PROPERTY_RO(QGraphicsItem, QGraphicsWidget*,                 window);
+  MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            x,                         setX);
+  MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            y,                         setY);
+  MO_ADD_PROPERTY   (QGraphicsItem, qreal,                            zValue,                    setZValue);
+
+  MO_ADD_METAOBJECT1(QAbstractGraphicsShapeItem, QGraphicsItem);
+  MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QBrush, brush, setBrush);
+  MO_ADD_PROPERTY_CR(QAbstractGraphicsShapeItem, QPen,   pen,   setPen);
+
+  MO_ADD_METAOBJECT1(QGraphicsEllipseItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY_CR(QGraphicsEllipseItem, QRectF, rect,    setRect);
+  MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, spanAngle,  setSpanAngle);
+  MO_ADD_PROPERTY   (QGraphicsEllipseItem, int, startAngle, setStartAngle);
+
+  MO_ADD_METAOBJECT1(QGraphicsPathItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY_CR(QGraphicsPathItem, QPainterPath, path, setPath);
+
+  MO_ADD_METAOBJECT1(QGraphicsPolygonItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY   (QGraphicsPolygonItem, Qt::FillRule, fillRule, setFillRule);
+  MO_ADD_PROPERTY_CR(QGraphicsPolygonItem, QPolygonF, polygon, setPolygon);
+
+  MO_ADD_METAOBJECT1(QGraphicsSimpleTextItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY_CR(QGraphicsSimpleTextItem, QFont, font, setFont);
+  MO_ADD_PROPERTY_CR(QGraphicsSimpleTextItem, QString, text, setText);
+
+  MO_ADD_METAOBJECT1(QGraphicsRectItem, QAbstractGraphicsShapeItem);
+  MO_ADD_PROPERTY_CR(QGraphicsRectItem, QRectF, rect, setRect);
+
+  MO_ADD_METAOBJECT1(QGraphicsLineItem, QGraphicsItem);
+  MO_ADD_PROPERTY_CR(QGraphicsLineItem, QLineF, line, setLine);
+  MO_ADD_PROPERTY_CR(QGraphicsLineItem, QPen, pen, setPen);
+
+  MO_ADD_METAOBJECT1(QGraphicsPixmapItem, QGraphicsItem);
+  MO_ADD_PROPERTY_CR(QGraphicsPixmapItem, QPointF, offset, setOffset);
+  MO_ADD_PROPERTY_CR(QGraphicsPixmapItem, QPixmap, pixmap, setPixmap);
+  MO_ADD_PROPERTY   (QGraphicsPixmapItem, QGraphicsPixmapItem::ShapeMode, shapeMode, setShapeMode);
+  MO_ADD_PROPERTY   (QGraphicsPixmapItem, Qt::TransformationMode, transformationMode, setTransformationMode);
+
+  // no extra properties, but we need the inheritance connection for anything above to work
+  MO_ADD_METAOBJECT2(QGraphicsObject, QGraphicsItem, QObject);
+
+  MO_ADD_METAOBJECT0(QGraphicsLayoutItem);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, QRectF, contentsRect);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, bool, isLayout);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, bool, ownedByLayout);
+
+  MO_ADD_METAOBJECT2(QGraphicsWidget, QGraphicsObject, QGraphicsLayoutItem);
+  MO_ADD_PROPERTY_RO(QGraphicsWidget, QRectF, windowFrameGeometry);
+  MO_ADD_PROPERTY_RO(QGraphicsWidget, QRectF, windowFrameRect);
+
+  MO_ADD_METAOBJECT1(QGraphicsProxyWidget, QGraphicsWidget);
+  MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
