@@ -36,6 +36,7 @@
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
+#include "include/settempvalue.h"
 
 #include "other/modelutils.h"
 
