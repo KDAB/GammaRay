@@ -35,6 +35,15 @@ Authors:
 --------
      The GammaRay Team <gammaray-interest@kdab.com>
 
+%package devel
+Summary:        Development files for %{name}
+Group:          Development/Libraries/C and C++
+Requires:       %{name} = %{version}
+
+%description    devel
+The %{name}-devel package contains libraries and header files for
+developing GammaRay plug-ins.
+
 %prep
 %setup -q
 
@@ -72,6 +81,9 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/qt4/plugins/gammaray
 %{_libdir}/qt4/plugins/styles
 %{_libdir}/qt4/plugins/styles/gammaray_injector_style.so
+
+%files devel
+%defattr(-,root,root)
 %{_prefix}/include/gammaray
 
 %changelog
