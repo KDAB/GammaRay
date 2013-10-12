@@ -31,6 +31,7 @@ set(gammaray_ui_srcs
   propertyeditor/propertyintpaireditor.cpp
   propertyeditor/propertypaletteeditor.cpp
   propertyeditor/palettedialog.cpp
+  propertyeditor/propertyeditordelegate.cpp
 )
 
 if (NOT Qt5Core_VERSION VERSION_LESS 5.2.0)

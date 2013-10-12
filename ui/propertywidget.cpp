@@ -25,7 +25,7 @@
 #include "ui_propertywidget.h"
 
 #include <ui/methodinvocationdialog.h>
-#include <ui/propertyeditor/propertyeditorfactory.h>
+#include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/deferredresizemodesetter.h>
 
 #include "variantcontainermodel.h"
@@ -60,7 +60,6 @@ static bool removePage(QTabWidget *tabWidget, QWidget *widget)
 PropertyWidget::PropertyWidget(QWidget *parent)
   : QWidget(parent),
     m_ui(new Ui_PropertyWidget),
-    m_editorFactory(new PropertyEditorFactory),
     m_displayState(PropertyWidgetDisplayState::QObject),
     m_controller(0)
 {
@@ -82,7 +81,7 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
   new DeferredResizeModeSetter(m_ui->staticPropertyView->header(), 0, QHeaderView::ResizeToContents);
   m_ui->staticPropertySearchLine->setProxy(proxy);
-  setEditorFactory(m_ui->staticPropertyView);
+  m_ui->staticPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
   connect(m_ui->staticPropertyView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClick(QModelIndex)));
@@ -94,7 +93,7 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->dynamicPropertyView->setModel(proxy);
   m_ui->dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
   new DeferredResizeModeSetter(m_ui->dynamicPropertyView->header(), 0, QHeaderView::ResizeToContents);
-  setEditorFactory(m_ui->dynamicPropertyView);
+  m_ui->dynamicPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
   m_ui->dynamicPropertySearchLine->setProxy(proxy);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
@@ -156,7 +155,7 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->metaPropertyView->setModel(proxy);
   m_ui->metaPropertyView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->metaPropertySearchLine->setProxy(proxy);
-  setEditorFactory(m_ui->metaPropertyView);
+  m_ui->metaPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
 
   if (m_controller) {
     disconnect(m_controller, SIGNAL(displayStateChanged(GammaRay::PropertyWidgetDisplayState::State)),
@@ -255,14 +254,6 @@ void PropertyWidget::setDisplayState(PropertyWidgetDisplayState::State state)
   }
 
   m_ui->methodLog->setVisible(m_displayState == PropertyWidgetDisplayState::QObject);
-}
-
-void PropertyWidget::setEditorFactory(QAbstractItemView *view)
-{
-  QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>(view->itemDelegate());
-  if (delegate) {
-    delegate->setItemEditorFactory(m_editorFactory.data());
-  }
 }
 
 void PropertyWidget::onDoubleClick(const QModelIndex &index)

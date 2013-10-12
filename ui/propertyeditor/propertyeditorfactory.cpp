@@ -43,6 +43,13 @@ PropertyEditorFactory::PropertyEditorFactory()
   registerEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
 }
 
+PropertyEditorFactory* PropertyEditorFactory::instance()
+{
+  static PropertyEditorFactory *s_instance = new PropertyEditorFactory;
+  return s_instance;
+}
+
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 QWidget *PropertyEditorFactory::createEditor(QVariant::Type type, QWidget *parent) const
 #else

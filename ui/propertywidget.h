@@ -38,7 +38,6 @@ class QModelIndex;
 namespace GammaRay {
 
 class Ui_PropertyWidget;
-class PropertyEditorFactory;
 class PropertyControllerInterface;
 
 class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
@@ -49,9 +48,6 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
     virtual ~PropertyWidget();
 
     void setObjectBaseName(const QString &baseName);
-
-  private:
-    void setEditorFactory(QAbstractItemView *view);
 
   private slots:
     void setDisplayState(GammaRay::PropertyWidgetDisplayState::State state);
@@ -69,7 +65,6 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
     Ui_PropertyWidget *m_ui;
 
     QString m_objectBaseName;
-    QScopedPointer<PropertyEditorFactory> m_editorFactory;
 
     // Contains initially added tab widgets (Tab widget/Label)
     QVector< QPair<QWidget *,QString> > m_tabWidgets;

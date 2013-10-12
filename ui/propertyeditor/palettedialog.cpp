@@ -25,7 +25,7 @@
 
 #include "ui_palettedialog.h"
 #include "palettemodel.h"
-#include "propertyeditor/propertyeditorfactory.h"
+#include "propertyeditor/propertyeditordelegate.h"
 
 #include <QPushButton>
 #include <QStyledItemDelegate>
@@ -41,13 +41,7 @@ PaletteDialog::PaletteDialog(const QPalette &palette, QWidget *parent)
   m_model->setPalette(palette);
   m_model->setEditable(true);
   ui->paletteView->setModel(m_model);
-
-  QStyledItemDelegate *delegate =
-    qobject_cast<QStyledItemDelegate*>(ui->paletteView->itemDelegate());
-  if (delegate) {
-    m_propertyEditorFactory.reset(new PropertyEditorFactory);
-    delegate->setItemEditorFactory(m_propertyEditorFactory.data());
-  }
+  ui->paletteView->setItemDelegate(new PropertyEditorDelegate(this));
 }
 
 PaletteDialog::~PaletteDialog()

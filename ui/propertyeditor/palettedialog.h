@@ -48,7 +48,6 @@ class PaletteDialog : public QDialog
   private:
     Ui::PaletteDialog *ui;
     PaletteModel *m_model;
-    QScopedPointer<PropertyEditorFactory> m_propertyEditorFactory;
 };
 
 }

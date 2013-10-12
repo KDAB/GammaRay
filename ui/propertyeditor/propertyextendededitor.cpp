@@ -50,7 +50,8 @@ QVariant PropertyExtendedEditor::value() const
 void PropertyExtendedEditor::setValue(const QVariant &value)
 {
   m_value = value;
-  ui->valueLabel->setText(Util::variantToString(value));
+  const QString displayValue = property("displayString").toString();
+  ui->valueLabel->setText(displayValue.isEmpty() ? value.toString() : displayValue);
 }
 
 #include "propertyextendededitor.moc"
