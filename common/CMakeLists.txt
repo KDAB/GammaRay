@@ -15,7 +15,6 @@ set(gammaray_common_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp
 
   methodargument.cpp
-  util.cpp
 
   network/objectbroker.cpp
   network/protocol.cpp
@@ -29,7 +28,7 @@ add_library(gammaray_common SHARED ${gammaray_common_srcs})
 set_target_properties(gammaray_common PROPERTIES DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB)
 
 if (Qt5Core_FOUND)
-  target_link_libraries(gammaray_common Qt5::Widgets Qt5::Network)
+  target_link_libraries(gammaray_common Qt5::Core Qt5::Network)
 else ()
   target_link_libraries(gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
 endif()
@@ -56,7 +55,7 @@ add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 
 target_link_libraries(gammaray_common_internal gammaray_common)
 if (Qt5Core_FOUND)
-  target_link_libraries(gammaray_common_internal Qt5::Widgets Qt5::Network)
+  target_link_libraries(gammaray_common_internal Qt5::Gui Qt5::Network)
 else ()
   target_link_libraries(gammaray_common_internal ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
 endif()

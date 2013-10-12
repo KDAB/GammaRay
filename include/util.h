@@ -34,7 +34,7 @@
 #ifndef GAMMARAY_UTIL_H
 #define GAMMARAY_UTIL_H
 
-#include "gammaray_common_export.h"
+#include "gammaray_core_export.h"
 
 #include <QString>
 #include <QVariant>
@@ -56,7 +56,7 @@ namespace Util {
    *
    * @return a QString containing the human readable display string.
    */
-  GAMMARAY_COMMON_EXPORT QString displayString(const QObject *object);
+  GAMMARAY_CORE_EXPORT QString displayString(const QObject *object);
 
   /**
    * Returns a human readable string version of the QVariant value.
@@ -65,7 +65,7 @@ namespace Util {
    *
    * @return a QString containing the human readable string.
    */
-  GAMMARAY_COMMON_EXPORT QString variantToString(const QVariant &value);
+  GAMMARAY_CORE_EXPORT QString variantToString(const QVariant &value);
 
   /**
    * Returns a value representing @p value in a itemview decoration role.
@@ -73,7 +73,7 @@ namespace Util {
    *
    * @return a QVariant itemview decoration role.
    */
-  GAMMARAY_COMMON_EXPORT QVariant decorationForVariant(const QVariant &value);
+  GAMMARAY_CORE_EXPORT QVariant decorationForVariant(const QVariant &value);
 
   /**
    * Returns a string version (as a hex number starting with "0x") of the
@@ -82,7 +82,7 @@ namespace Util {
    *
    * @return a QString containing the human readable address string.
    */
-  GAMMARAY_COMMON_EXPORT QString addressToString(const void *p);
+  GAMMARAY_CORE_EXPORT QString addressToString(const void *p);
 
   /**
    * Translates an enum or flag value into a human readable text.
@@ -94,7 +94,7 @@ namespace Util {
    *
    * @return a QString containing the string version of the specified @p value.
    */
-  GAMMARAY_COMMON_EXPORT QString enumToString(const QVariant &value,
+  GAMMARAY_CORE_EXPORT QString enumToString(const QVariant &value,
                                        const char *typeName = 0,
                                        QObject *object = 0);
 
@@ -105,7 +105,7 @@ namespace Util {
    *
    * @return true if @p obj is a descendant of @p ascendant; false otherwise.
    */
-  GAMMARAY_COMMON_EXPORT bool descendantOf(const QObject *ascendant, const QObject *object);
+  GAMMARAY_CORE_EXPORT bool descendantOf(const QObject *ascendant, const QObject *object);
 
   /**
    * Finds the parent QObject of the specified type T, if such exists.
@@ -133,14 +133,14 @@ namespace Util {
    *
    * @return on failure QVariant() is returned; else a QIcon
    */
-  GAMMARAY_COMMON_EXPORT QVariant iconForObject(QObject *object);
+  GAMMARAY_CORE_EXPORT QVariant iconForObject(QObject *object);
 
   /**
    * Draws a transparency pattern, i.e. the common checkerboard pattern into @p rect.
    *
    * @p size The size of the individual checkerboard squares.
    */
-  GAMMARAY_COMMON_EXPORT void drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize = 8);
+  GAMMARAY_CORE_EXPORT void drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize = 8);
 }
 
 }
