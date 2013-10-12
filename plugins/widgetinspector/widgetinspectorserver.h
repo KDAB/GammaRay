@@ -57,6 +57,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
   private:
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
     QPixmap pixmapForWidget(QWidget *widget);
+    void registerWidgetMetaTypes();
 
   private slots:
     void widgetSelected(const QItemSelection &selection);

@@ -31,12 +31,15 @@
 #include "paintbuffermodel.h"
 
 #include <core/propertycontroller.h>
+#include <core/metaobject.h>
+#include <core/metaobjectrepository.h>
 #include <common/network/objectbroker.h>
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
 #include "include/settempvalue.h"
+#include "include/metatypedeclarations.h"
 
 #include "other/modelutils.h"
 
@@ -48,6 +51,7 @@
 #include <QMainWindow>
 #include <QEvent>
 #include <QTimer>
+#include <QStyle>
 
 #include <iostream>
 
@@ -65,6 +69,8 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   , m_updatePreviewTimer(new QTimer(this))
   , m_paintBufferModel(0)
 {
+  registerWidgetMetaTypes();
+
   m_updatePreviewTimer->setSingleShot(true);
   m_updatePreviewTimer->setInterval(100);
   connect(m_updatePreviewTimer, SIGNAL(timeout()), SLOT(updateWidgetPreview()));
@@ -351,6 +357,17 @@ void WidgetInspectorServer::checkFeatures()
     false
 #endif
   );
+}
+
+void WidgetInspectorServer::registerWidgetMetaTypes()
+{
+  MetaObject *mo = 0;
+  MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
+  MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
+
+  MO_ADD_METAOBJECT1(QStyle, QObject);
+  MO_ADD_PROPERTY_RO(QStyle, const QStyle*, proxy);
+  MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
 }
 
 #include "widgetinspectorserver.moc"

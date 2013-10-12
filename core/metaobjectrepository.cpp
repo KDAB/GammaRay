@@ -32,8 +32,6 @@
 #include <QPalette>
 #include <QPen>
 #include <QSocketNotifier>
-#include <QStyle>
-#include <QWidget>
 #include <QTcpServer>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -94,13 +92,6 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiX);
   MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiY);
   MO_ADD_PROPERTY_RO(QPaintDevice, int, widthMM);
-
-  MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
-  MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
-
-  MO_ADD_METAOBJECT1(QStyle, QObject);
-  MO_ADD_PROPERTY_RO(QStyle, const QStyle*, proxy);
-  MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
 }
 
 
