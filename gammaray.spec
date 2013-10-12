@@ -15,6 +15,10 @@ Requires:       graphviz
 
 %if %{defined fedora}
 BuildRequires:  gcc-c++ libqt4-devel qtwebkit-devel cmake desktop-file-utils graphviz-devel
+# for pod2man
+%if 0%{?fedora} > 18
+BuildRequires: perl-podlators
+%endif
 Requires:       graphviz
 %endif
 
