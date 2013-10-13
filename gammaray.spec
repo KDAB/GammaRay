@@ -16,7 +16,7 @@ Requires:       graphviz
 %endif
 
 %if %{defined fedora}
-BuildRequires:  gcc-c++ libqt4-devel qtwebkit-devel cmake desktop-file-utils graphviz-devel kdelibs-devel
+BuildRequires:  gcc-c++ qt-devel qtwebkit-devel cmake desktop-file-utils graphviz-devel kdelibs-devel
 # for pod2man
 %if 0%{?fedora} > 18
 BuildRequires: perl-podlators
@@ -93,7 +93,10 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %dir %{_libdir}/qt4/plugins/gammaray/
 %{_libdir}/qt4/plugins/gammaray/gammaray_actioninspector*
 %{_libdir}/qt4/plugins/gammaray/gammaray_scriptenginedebugger*
+# FIXME Graphviz 2.30 on F19 isn't properly detected for some reason
+%if %{undefined fedora} || 0%{?fedora} < 19
 %{_libdir}/qt4/plugins/gammaray/gammaray_statemachineviewer*
+%endif
 %{_libdir}/qt4/plugins/gammaray/gammaray_timertop*
 %{_libdir}/qt4/plugins/gammaray/gammaray_webinspector*
 %{_libdir}/qt4/plugins/styles/
