@@ -3,6 +3,8 @@ Version:        1.3.2
 Release:        0
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
+# included upstream > 1.3.2
+Patch0:         gammaray-rpath-fix.patch
 Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools/Debuggers
 License:        GPL-2.0+
@@ -55,6 +57,7 @@ developing GammaRay plug-ins.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %if %{defined fedora}
