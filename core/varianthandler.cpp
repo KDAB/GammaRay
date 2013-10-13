@@ -11,8 +11,6 @@
 #include <QCursor>
 #include <QDebug>
 #include <QDir>
-#include <QGraphicsItem>
-#include <QGraphicsWidget>
 #include <QIcon>
 #include <QMetaEnum>
 #include <QMetaObject>
@@ -179,26 +177,8 @@ QString VariantHandler::displayString(const QVariant& value)
        .arg(margins.right()).arg(margins.bottom());
   }
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-  if (value.userType() == qMetaTypeId<QGraphicsEffect*>()) {
-    return Util::addressToString(value.value<QGraphicsEffect*>());
-  }
-  if (value.userType() == qMetaTypeId<QGraphicsObject*>()) {
-    return Util::displayString(value.value<QGraphicsObject*>());
-  }
-  if (value.userType() == qMetaTypeId<QGraphicsWidget*>()) {
-    return Util::displayString(value.value<QGraphicsWidget*>());
-  }
-#endif
   if (value.canConvert<QObject*>()) {
     return Util::displayString(value.value<QObject*>());
-  }
-
-  if (value.userType() == qMetaTypeId<QGraphicsItem*>()) {
-    return Util::addressToString(value.value<QGraphicsItem*>());
-  }
-  if (value.userType() == qMetaTypeId<QGraphicsItemGroup*>()) {
-    return Util::addressToString(value.value<QGraphicsItemGroup*>());
   }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)

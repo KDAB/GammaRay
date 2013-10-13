@@ -29,6 +29,7 @@
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/propertycontroller.h>
+#include <core/varianthandler.h>
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
@@ -57,6 +58,7 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
     m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
 {
   registerGraphicsViewMetaTypes();
+  registerVariantHandlers();
 
   connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
           SLOT(widgetSelected(QWidget*,QPoint)));
@@ -344,6 +346,18 @@ void SceneInspector::registerGraphicsViewMetaTypes()
 
   MO_ADD_METAOBJECT1(QGraphicsProxyWidget, QGraphicsWidget);
   MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
+}
+
+void SceneInspector::registerVariantHandlers()
+{
+  VariantHandler::registerStringConverter<QGraphicsItem*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QGraphicsItemGroup*>(Util::addressToString);
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+  VariantHandler::registerStringConverter<QGraphicsEffect*>(Util::displayString);
+  VariantHandler::registerStringConverter<QGraphicsObject*>(Util::displayString);
+  VariantHandler::registerStringConverter<QGraphicsWidget*>(Util::displayString);
+#endif
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
