@@ -47,7 +47,6 @@
 
 #include <QApplication>
 #include <QCoreApplication>
-#include <QDialog>
 #include <QDir>
 #include <QLibrary>
 #include <QMouseEvent>
@@ -693,14 +692,6 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
       if (widget) {
         emit widgetSelected(widget, widget->mapFromGlobal(mouseEv->globalPos()));
       }
-    }
-  }
-
-  // make modal dialogs non-modal so that the gammaray window is still reachable
-  if (event->type() == QEvent::Show) {
-    QDialog *dlg = qobject_cast<QDialog*>(receiver);
-    if (dlg) {
-      dlg->setWindowModality(Qt::NonModal);
     }
   }
 

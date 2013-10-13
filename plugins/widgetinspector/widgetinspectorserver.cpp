@@ -70,6 +70,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   , m_paintBufferModel(0)
 {
   registerWidgetMetaTypes();
+  probe->installGlobalEventFilter(this);
 
   m_updatePreviewTimer->setSingleShot(true);
   m_updatePreviewTimer->setInterval(100);
@@ -142,10 +143,6 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     return;
   }
 
-  if (m_selectedWidget) {
-    m_selectedWidget->removeEventFilter(this);
-  }
-
   m_selectedWidget = widget;
 
   if (m_selectedWidget &&
@@ -161,8 +158,6 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     return;
   }
 
-  m_selectedWidget->installEventFilter(this);
-
   updateWidgetPreview();
 }
 
@@ -175,6 +170,16 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
       m_updatePreviewTimer->start();
     }
   }
+
+  // make modal dialogs non-modal so that the gammaray window is still reachable
+  // TODO: should only be done in in-process mode
+  if (event->type() == QEvent::Show) {
+    QDialog *dlg = qobject_cast<QDialog*>(object);
+    if (dlg) {
+      dlg->setWindowModality(Qt::NonModal);
+    }
+  }
+
   return QObject::eventFilter(object, event);
 }
 
