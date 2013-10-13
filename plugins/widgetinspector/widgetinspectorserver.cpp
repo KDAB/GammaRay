@@ -395,6 +395,11 @@ static QString sizePolicyToString(const QSizePolicy &policy)
 void WidgetInspectorServer::registerVariantHandlers()
 {
   VariantHandler::registerStringConverter<QSizePolicy>(sizePolicyToString);
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+  VariantHandler::registerStringConverter<QWidget*>(Util::displayString);
+  VariantHandler::registerStringConverter<const QStyle*>(Util::displayString);
+#endif
 }
 
 #include "widgetinspectorserver.moc"

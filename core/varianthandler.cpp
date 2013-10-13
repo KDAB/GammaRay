@@ -23,7 +23,6 @@
 #include <QSize>
 #include <QStringList>
 #include <QTextFormat>
-#include <QWidget>
 
 using namespace GammaRay;
 
@@ -181,10 +180,6 @@ QString VariantHandler::displayString(const QVariant& value)
   }
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-  if (value.type() == (QVariant::Type)qMetaTypeId<QWidget*>()) {
-    return Util::displayString(value.value<QWidget*>());
-  }
-
   if (value.userType() == qMetaTypeId<QGraphicsEffect*>()) {
     return Util::addressToString(value.value<QGraphicsEffect*>());
   }
@@ -193,9 +188,6 @@ QString VariantHandler::displayString(const QVariant& value)
   }
   if (value.userType() == qMetaTypeId<QGraphicsWidget*>()) {
     return Util::displayString(value.value<QGraphicsWidget*>());
-  }
-  if (value.userType() == qMetaTypeId<const QStyle*>()) {
-    return Util::displayString(value.value<const QStyle*>());
   }
 #endif
   if (value.canConvert<QObject*>()) {
