@@ -24,8 +24,7 @@
 #include "metapropertymodel.h"
 #include "metaobjectrepository.h"
 #include "metaobject.h"
-
-#include "include/util.h"
+#include "varianthandler.h"
 
 using namespace GammaRay;
 
@@ -121,9 +120,9 @@ QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
     const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
     switch (role) {
     case Qt::DisplayRole:
-      return Util::variantToString(value);
+      return VariantHandler::displayString(value);
     case Qt::DecorationRole:
-      return Util::decorationForVariant(value);
+      return VariantHandler::decoration(value);
     case Qt::EditRole:
       return value;
     }

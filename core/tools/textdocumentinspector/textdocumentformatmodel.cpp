@@ -23,7 +23,7 @@
 
 #include "textdocumentformatmodel.h"
 
-#include "include/util.h"
+#include <core/varianthandler.h>
 
 #include <QMetaEnum>
 #include <QMetaObject>
@@ -71,7 +71,7 @@ QVariant TextDocumentFormatModel::data(const QModelIndex &index, int role) const
     case 0:
       return QString::fromLatin1(propertyEnum().key(index.row()));
     case 1:
-      return Util::variantToString(m_format.property(enumValue));
+      return VariantHandler::displayString(m_format.property(enumValue));
     case 2:
       return QString::fromLatin1(m_format.property(enumValue).typeName());
     }

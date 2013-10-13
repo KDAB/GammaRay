@@ -33,6 +33,7 @@
 #include <core/propertycontroller.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/varianthandler.h>
 #include <common/network/objectbroker.h>
 
 #include "include/objectmodel.h"
@@ -70,6 +71,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   , m_paintBufferModel(0)
 {
   registerWidgetMetaTypes();
+  registerVariantHandlers();
   probe->installGlobalEventFilter(this);
 
   m_updatePreviewTimer->setSingleShot(true);
@@ -373,6 +375,26 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
   MO_ADD_METAOBJECT1(QStyle, QObject);
   MO_ADD_PROPERTY_RO(QStyle, const QStyle*, proxy);
   MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
+}
+
+static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
+{
+  const int index = QSizePolicy::staticMetaObject.indexOfEnumerator("Policy");
+  const QMetaEnum metaEnum = QSizePolicy::staticMetaObject.enumerator(index);
+  return QString::fromLatin1(metaEnum.valueToKey(policy));
+}
+
+static QString sizePolicyToString(const QSizePolicy &policy)
+{
+  return QString::fromLatin1("%1 x %2").
+    arg(sizePolicyPolicyToString(policy.horizontalPolicy())).
+    arg(sizePolicyPolicyToString(policy.verticalPolicy()));
+
+}
+
+void WidgetInspectorServer::registerVariantHandlers()
+{
+  VariantHandler::registerStringConverter<QSizePolicy>(sizePolicyToString);
 }
 
 #include "widgetinspectorserver.moc"

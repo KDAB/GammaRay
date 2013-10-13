@@ -23,7 +23,7 @@
 
 #include "standardiconmodel.h"
 
-#include "include/util.h"
+#include <core/varianthandler.h>
 
 using namespace GammaRay;
 
@@ -43,7 +43,7 @@ QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix,
     if (role == Qt::DecorationRole) {
       return m_style->standardIcon(stdPix);
     } else if (role == Qt::DisplayRole) {
-      return Util::variantToString(m_style->standardIcon(stdPix));
+      return VariantHandler::displayString(m_style->standardIcon(stdPix));
     }
   }
   return QVariant();

@@ -41,6 +41,7 @@ set(gammaray_srcs
   propertycontroller.cpp
   proxytoolfactory.cpp
   util.cpp
+  varianthandler.cpp
 
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp

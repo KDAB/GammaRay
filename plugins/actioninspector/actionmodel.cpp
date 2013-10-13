@@ -24,6 +24,8 @@
 #include "actionmodel.h"
 #include "actionvalidator.h"
 
+#include <core/varianthandler.h>
+
 #include <QAction>
 #include <QDebug>
 
@@ -159,9 +161,9 @@ QVariant ActionModel::data(const QModelIndex &proxyIndex, int role) const
     case CheckablePropColumn:
       return action->isCheckable();
     case CheckedPropColumn:
-      return Util::variantToString(action->isChecked());
+      return VariantHandler::displayString(action->isChecked());
     case PriorityPropColumn:
-      return Util::variantToString(action->priority());
+      return VariantHandler::displayString(action->priority());
     case ShortcutsPropColumn:
       return toString(action->shortcuts());
     default:

@@ -59,23 +59,6 @@ namespace Util {
   GAMMARAY_CORE_EXPORT QString displayString(const QObject *object);
 
   /**
-   * Returns a human readable string version of the QVariant value.
-   * Converts to the variant type and prints the string value accordingly.
-   * @param value is a QVariant.
-   *
-   * @return a QString containing the human readable string.
-   */
-  GAMMARAY_CORE_EXPORT QString variantToString(const QVariant &value);
-
-  /**
-   * Returns a value representing @p value in a itemview decoration role.
-   * @param value is a QVariant.
-   *
-   * @return a QVariant itemview decoration role.
-   */
-  GAMMARAY_CORE_EXPORT QVariant decorationForVariant(const QVariant &value);
-
-  /**
    * Returns a string version (as a hex number starting with "0x") of the
    * memory address @p p.
    * @param p is a pointer to an address in memory.

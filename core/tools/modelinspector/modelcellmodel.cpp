@@ -22,7 +22,8 @@
 */
 
 #include "modelcellmodel.h"
-#include "include/util.h"
+
+#include <core/varianthandler.h>
 
 #include <QDebug>
 
@@ -96,7 +97,7 @@ QVariant ModelCellModel::data(const QModelIndex &index, int role) const
     case 0:
       return m_roles.at(index.row()).second;
     case 1:
-      return Util::variantToString(value);
+      return VariantHandler::displayString(value);
     case 2:
       return value.typeName();
     }
