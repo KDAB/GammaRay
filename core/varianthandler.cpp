@@ -39,6 +39,11 @@ Q_GLOBAL_STATIC(VariantHandlerRepository, s_variantHandlerRepository)
 QString VariantHandler::displayString(const QVariant& value)
 {
   switch (value.type()) {
+  case QVariant::Cursor:
+  {
+    const QCursor cursor = value.value<QCursor>();
+    return Util::enumToString(QVariant::fromValue<int>(cursor.shape()), "Qt::CursorShape");
+  }
   case QVariant::Icon:
   {
     const QIcon icon = value.value<QIcon>();
