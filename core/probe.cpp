@@ -713,6 +713,13 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
       objectAdded(receiver);
     }
   }
+
+  // filters provided by plugins
+  if (!filterObject(receiver)) {
+    foreach (QObject *filter, m_globalEventFilters)
+      filter->eventFilter(receiver, event);
+  }
+
   return QObject::eventFilter(receiver, event);
 }
 
@@ -734,6 +741,12 @@ void Probe::addObjectRecursive(QObject *obj)
   foreach (QObject *child, obj->children()) {
     addObjectRecursive(child);
   }
+}
+
+void Probe::installGlobalEventFilter(QObject* filter)
+{
+  Q_ASSERT(!m_globalEventFilters.contains(filter));
+  m_globalEventFilters.push_back(filter);
 }
 
 //BEGIN: SignalSlotsLocationStore

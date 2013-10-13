@@ -31,6 +31,7 @@
 #include <QQueue>
 #include <QReadWriteLock>
 #include <QSet>
+#include <QVector>
 
 class QThread;
 class QPoint;
@@ -77,7 +78,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QAbstractItemModel *connectionModel() const;
     ToolModel *toolModel() const;
     void registerModel(const QString& objectName, QAbstractItemModel* model);
-
+    /*override*/ void installGlobalEventFilter(QObject* filter);
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -148,6 +149,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QSet<QObject*> m_validObjects;
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;
+    QVector<QObject*> m_globalEventFilters;
 };
 
 class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore

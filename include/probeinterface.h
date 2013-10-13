@@ -93,6 +93,13 @@ class ProbeInterface
      * @param objectName unique identifier for the model, typically in reverse domain notation.
      */
     virtual void registerModel(const QString &objectName, QAbstractItemModel* model) = 0;
+
+    /**
+     * Install a global event filter.
+     * Use this rather than installing the filter manually on QCoreApplication,
+     * this will filter out GammaRay-internal events and objects already for you.
+     */
+    virtual void installGlobalEventFilter(QObject *filter) = 0;
 };
 
 }
