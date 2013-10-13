@@ -1,7 +1,7 @@
 Name:           gammaray
 Version:        1.3.2
 Release:        0
-Summary:        A tool to poke around in a Qt-application
+Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
 Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools/Debuggers
@@ -9,12 +9,12 @@ License:        GPL-2.0+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %if %{defined suse_version}
-BuildRequires:  libqt4-devel libQtWebKit-devel cmake graphviz-devel update-desktop-files
+BuildRequires:  libqt4-devel libQtWebKit-devel cmake graphviz-devel update-desktop-files libkde4-devel
 Requires:       graphviz
 %endif
 
 %if %{defined fedora}
-BuildRequires:  gcc-c++ libqt4-devel qtwebkit-devel cmake desktop-file-utils graphviz-devel
+BuildRequires:  gcc-c++ libqt4-devel qtwebkit-devel cmake desktop-file-utils graphviz-devel kdelibs-devel
 # for pod2man
 %if 0%{?fedora} > 18
 BuildRequires: perl-podlators
@@ -35,12 +35,21 @@ Authors:
 --------
      The GammaRay Team <gammaray-interest@kdab.com>
 
+%package kde4-plugins
+Summary:        GammaRay plug-ins to introspect KDE4 applications
+Group:          Development/Tools/Debuggers
+Requires:       %{name} = %{version}
+
+%description kde4-plugins
+Plug-ins for the GammaRay introspection tool to debug KDE4 applications,
+such as a KJob tracker.
+
 %package devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries/C and C++
 Requires:       %{name} = %{version}
 
-%description    devel
+%description devel
 The %{name}-devel package contains libraries and header files for
 developing GammaRay plug-ins.
 
@@ -78,9 +87,17 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/gammaray_probe.so
 %{_libdir}/libgammaray_widget_export_actions.so
 %{_bindir}/gammaray
-%{_libdir}/qt4/plugins/gammaray
-%{_libdir}/qt4/plugins/styles
-%{_libdir}/qt4/plugins/styles/gammaray_injector_style.so
+%dir %{_libdir}/qt4/plugins/gammaray/
+%{_libdir}/qt4/plugins/gammaray/gammaray_actioninspector*
+%{_libdir}/qt4/plugins/gammaray/gammaray_scriptenginedebugger*
+%{_libdir}/qt4/plugins/gammaray/gammaray_statemachineviewer*
+%{_libdir}/qt4/plugins/gammaray/gammaray_timertop*
+%{_libdir}/qt4/plugins/gammaray/gammaray_webinspector*
+%{_libdir}/qt4/plugins/styles/
+
+%files kde4-plugins
+%defattr(-,root,root)
+%{_libdir}/qt4/plugins/gammaray/gammaray_kjob*
 
 %files devel
 %defattr(-,root,root)
