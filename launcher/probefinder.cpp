@@ -45,7 +45,7 @@ QString findProbe(const QString &baseName)
          << "/usr/local/lib64" << "/usr/local/lib"
          << "/opt/lib64" << "/opt/lib"
          << "/usr/lib64" << "/usr/lib"
-         << GAMMARAY_BUILD_DIR "/hooking";
+         << GAMMARAY_BUILD_DIR "/lib";
   QDir::setSearchPaths("preloads", pldirs);
 #ifdef Q_OS_MAC
   QFile plfile(QLatin1Literal("preloads:") % baseName % QLatin1Literal(".dylib"));
