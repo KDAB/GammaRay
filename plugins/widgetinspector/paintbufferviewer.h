@@ -50,7 +50,6 @@ class PaintBufferViewer : public QDialog
 
   private:
     QScopedPointer<Ui::PaintBufferViewer> ui;
-    WidgetInspectorInterface *m_interface;
 };
 
 }
