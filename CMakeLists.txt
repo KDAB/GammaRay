@@ -1,11 +1,5 @@
 # This is the top-level CMakeLists.txt file for the GammaRay project.
 #
-# Pass the following variables to cmake to control the build:
-#
-# -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[on|off]
-#  Set this if your compiler uses an unsupported C++ name mangling scheme
-#  Default=off
-#
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
 # Not available on Windows.
