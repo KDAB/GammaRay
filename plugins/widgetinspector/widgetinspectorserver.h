@@ -72,7 +72,8 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void saveAsUiFile(const QString &fileName);
 
     void analyzePainting();
-    void updatePaintAnalyzer(const QModelIndex &index);
+    void eventuallyUpdatePaintAnalyzer();
+    void updatePaintAnalyzer();
 
     void updateWidgetPreview();
 
@@ -86,6 +87,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     QPointer<QWidget> m_selectedWidget;
     QTimer *m_updatePreviewTimer;
     PaintBufferModel *m_paintBufferModel;
+    QTimer *m_paintAnalyzerTimer;
 };
 
 }

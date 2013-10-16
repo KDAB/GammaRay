@@ -69,6 +69,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   , m_propertyController(new PropertyController(objectName(), this))
   , m_updatePreviewTimer(new QTimer(this))
   , m_paintBufferModel(0)
+  , m_paintAnalyzerTimer(new QTimer(this))
 {
   registerWidgetMetaTypes();
   registerVariantHandlers();
@@ -77,6 +78,10 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   m_updatePreviewTimer->setSingleShot(true);
   m_updatePreviewTimer->setInterval(100);
   connect(m_updatePreviewTimer, SIGNAL(timeout()), SLOT(updateWidgetPreview()));
+
+  m_paintAnalyzerTimer->setSingleShot(true);
+  m_paintAnalyzerTimer->setInterval(100);
+  connect(m_paintAnalyzerTimer, SIGNAL(timeout()), SLOT(updatePaintAnalyzer()));
 
   m_overlayWidget->hide();
   connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
@@ -97,7 +102,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   m_paintBufferModel = new PaintBufferModel(this);
   probe->registerModel("com.kdab.GammaRay.PaintBufferModel", m_paintBufferModel);
   connect(ObjectBroker::selectionModel(m_paintBufferModel), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          this, SLOT(updatePaintAnalyzer(QModelIndex)));
+          this, SLOT(eventuallyUpdatePaintAnalyzer()));
 #endif
 
   // TODO this needs to be delayed until there actually is something to select
@@ -313,11 +318,18 @@ void WidgetInspectorServer::analyzePainting()
   m_selectedWidget->render(&buffer);
   m_overlayWidget->show();
   m_paintBufferModel->setPaintBuffer(buffer);
-  updatePaintAnalyzer(QModelIndex());
+  eventuallyUpdatePaintAnalyzer();
 #endif
 }
 
-void WidgetInspectorServer::updatePaintAnalyzer(const QModelIndex &index)
+void WidgetInspectorServer::eventuallyUpdatePaintAnalyzer()
+{
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  m_paintAnalyzerTimer->start();
+#endif
+}
+
+void WidgetInspectorServer::updatePaintAnalyzer()
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
   // didn't manage painting on the widget directly, even with the correct
@@ -328,6 +340,7 @@ void WidgetInspectorServer::updatePaintAnalyzer(const QModelIndex &index)
   Util::drawTransparencyPattern(&painter, QRect(QPoint(0, 0), sourceSize));
   int start = m_paintBufferModel->buffer().frameStartIndex(0);
   // include selected row or paint all if nothing is selected
+  const QModelIndex index = ObjectBroker::selectionModel(m_paintBufferModel)->currentIndex();
   int end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();
   int depth = m_paintBufferModel->buffer().processCommands(&painter, start, start + end);
   for (; depth > 0; --depth) {
@@ -335,8 +348,6 @@ void WidgetInspectorServer::updatePaintAnalyzer(const QModelIndex &index)
   }
   painter.end();
   emit paintAnalyzed(pixmap);
-#else
-  Q_UNUSED(index);
 #endif
 }
 
