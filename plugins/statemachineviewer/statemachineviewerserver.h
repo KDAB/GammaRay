@@ -72,9 +72,9 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     void handleTransitionTriggered(QAbstractTransition *);
 
     void handleMachineClicked(const QModelIndex &);
-    void handleStateClicked(const QModelIndex &);
+    void stateSelectionChanged();
 
-    void setFilteredState(QAbstractState *state);
+    void setFilteredStates(const QVector<QAbstractState*> &states);
     void setMaximumDepth(int depth);
 
     void updateStartStop();
@@ -92,7 +92,7 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     TransitionModel *m_transitionModel;
 
     // filters
-    QAbstractState *m_filteredState;
+    QVector<QAbstractState*> m_filteredStates;
     int m_maximumDepth;
 
     StateMachineWatcher *m_stateMachineWatcher;

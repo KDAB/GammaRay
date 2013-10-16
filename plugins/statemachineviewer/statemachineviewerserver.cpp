@@ -50,14 +50,13 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
   : StateMachineViewerInterface(parent),
     m_stateModel(new StateModel(this)),
     m_transitionModel(new TransitionModel(this)),
-    m_filteredState(0),
     m_maximumDepth(0),
     m_stateMachineWatcher(new StateMachineWatcher(this))
 {
   probe->registerModel("com.kdab.GammaRay.StateModel", m_stateModel);
   QItemSelectionModel *stateSelectionModel = ObjectBroker::selectionModel(m_stateModel);
-  connect(stateSelectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(handleStateClicked(QModelIndex)));
+  connect(stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          SLOT(stateSelectionChanged()));
 
   ObjectTypeFilterProxyModel<QStateMachine> *stateMachineFilter =
     new ObjectTypeFilterProxyModel<QStateMachine>(this);
@@ -88,7 +87,13 @@ void StateMachineViewerServer::repopulateGraph()
   emit maximumDepthChanged(m_maximumDepth);
   updateStartStop();
 
-  addState(m_filteredState ? m_filteredState : m_stateModel->stateMachine());
+  if (m_filteredStates.isEmpty()) {
+    addState(m_stateModel->stateMachine());
+  } else {
+    foreach(QAbstractState* state, m_filteredStates) {
+      addState(state);
+    }
+  }
   m_recursionGuard.clear();
 
   emit graphRepopulated();
@@ -124,14 +129,32 @@ bool StateMachineViewerServer::mayAddState(QAbstractState *state)
     return false;
   }
 
-  if (m_filteredState) {
-    if (m_filteredState != state && !Util::descendantOf(m_filteredState, state)) {
+  if (!m_filteredStates.isEmpty()) {
+    bool isValid = false;
+    foreach(QAbstractState* filter, m_filteredStates) {
+      if (filter == state || Util::descendantOf(filter, state)) {
+        isValid = true;
+        break;
+      }
+    }
+    if (!isValid) {
       return false;
     }
   }
 
   if (m_maximumDepth > 0) {
-    if (::treeDepth(m_filteredState, state) > m_maximumDepth) {
+    int depth = -1;
+    if (!m_filteredStates.isEmpty()) {
+      foreach(QAbstractState* filter, m_filteredStates) {
+        depth = ::treeDepth(filter, state);
+        if (depth != -1) {
+          break;
+        }
+      }
+    } else {
+      depth = ::treeDepth(m_stateModel->stateMachine(), state);
+    }
+    if (depth > m_maximumDepth) {
       return false;
     }
   }
@@ -139,14 +162,24 @@ bool StateMachineViewerServer::mayAddState(QAbstractState *state)
   return true;
 }
 
-void StateMachineViewerServer::setFilteredState(QAbstractState *state)
+void StateMachineViewerServer::setFilteredStates(const QVector<QAbstractState*>& states)
 {
-  if (m_filteredState == state) {
+  if (m_filteredStates == states) {
     return;
   }
 
-  emit message(tr("Setting filter on: %1").arg(Util::displayString(state)));
-  m_filteredState = state;
+  if (states.isEmpty()) {
+    emit message(tr("Clearing filter."));
+  } else {
+    QStringList stateNames;
+    stateNames.reserve(states.size());
+    foreach(QAbstractState* state, states) {
+      stateNames << Util::displayString(state);
+    }
+    emit message(tr("Setting filter on: %1").arg(stateNames.join(", ")));
+  }
+
+  m_filteredStates = states;
   repopulateGraph();
 }
 
@@ -172,7 +205,7 @@ void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
   m_stateModel->setStateMachine(machine);
   stateConfigurationChanged();
 
-  setFilteredState(machine);
+  setFilteredStates(QVector<QAbstractState*>());
   m_stateMachineWatcher->setWatchedStateMachine(machine);
 
   connect(machine, SIGNAL(started()), SLOT(updateStartStop()), Qt::UniqueConnection);
@@ -181,13 +214,32 @@ void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
   updateStartStop();
 }
 
-void StateMachineViewerServer::handleStateClicked(const QModelIndex &index)
+void StateMachineViewerServer::stateSelectionChanged()
 {
-  QObject *stateObject = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  Q_ASSERT(stateObject);
-  QAbstractState *state = qobject_cast<QAbstractState*>(stateObject);
-  Q_ASSERT(state);
-  setFilteredState(state);
+  const QModelIndexList& selection = ObjectBroker::selectionModel(m_stateModel)->selectedRows();
+  QVector<QAbstractState*> filter;
+  filter.reserve(selection.size());
+  foreach(const QModelIndex &index, selection) {
+    QObject *stateObject = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    Q_ASSERT(stateObject);
+    QAbstractState *state = qobject_cast<QAbstractState*>(stateObject);
+    Q_ASSERT(state);
+    bool addState = true;
+    /// only pick the top-level items of the selection
+    // NOTE: this might be slow for large selections, if someone wants to come up with a better
+    // algorithm, please - go for it!
+    foreach(QAbstractState *potentialParent, filter) {
+      if (Util::descendantOf(potentialParent, state)) {
+        addState = false;
+        break;
+      }
+    }
+
+    if (addState) {
+      filter << state;
+    }
+  }
+  setFilteredStates(filter);
 }
 
 void StateMachineViewerServer::handleTransitionTriggered(QAbstractTransition *transition)
