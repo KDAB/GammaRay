@@ -99,7 +99,7 @@ QStateMachine *StateMachineViewerServer::selectedStateMachine() const
   return m_stateModel->stateMachine();
 }
 
-int treeDepth(QAbstractState *ascendant, QAbstractState *obj)
+static int treeDepth(QAbstractState *ascendant, QAbstractState *obj)
 {
   if (!Util::descendantOf(ascendant, obj)) {
     return -1;
