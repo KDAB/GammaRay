@@ -187,7 +187,8 @@ static IconDatabase readIconData()
 static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
 {
   static const IconDatabase iconDataBase = readIconData();
-  const QByteArray className = QByteArray::fromRawData(mo->className(), strlen(mo->className()));
+  // stupid Qt convention to use int for sizes... the static cast shuts down warnings about conversion from size_t to int.
+  const QByteArray className = QByteArray::fromRawData(mo->className(), static_cast<int>(strlen(mo->className())));
   IconDatabase::const_iterator it = iconDataBase.constFind(className);
   if (it != iconDataBase.constEnd()) {
     foreach (const IconCacheEntry::PropertyIcon &propertyIcon, it->propertyIcons) {
