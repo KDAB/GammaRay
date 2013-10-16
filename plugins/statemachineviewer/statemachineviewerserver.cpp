@@ -145,7 +145,7 @@ void StateMachineViewerServer::setFilteredState(QAbstractState *state)
     return;
   }
 
-  emit message(QString("Setting filter on: %1").arg(Util::displayString(state)));
+  emit message(tr("Setting filter on: %1").arg(Util::displayString(state)));
   m_filteredState = state;
   repopulateGraph();
 }
@@ -156,7 +156,7 @@ void StateMachineViewerServer::setMaximumDepth(int depth)
     return;
   }
 
-  emit message(QString("Showing states until a depth of %1").arg(depth));
+  emit message(tr("Showing states until a depth of %1").arg(depth));
   m_maximumDepth = depth;
   repopulateGraph();
 
