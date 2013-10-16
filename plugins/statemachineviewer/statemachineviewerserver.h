@@ -31,6 +31,7 @@
 #include <QHash>
 #include <QSet>
 #include <QString>
+#include <QVector>
 
 #include <config-gammaray.h>
 
