@@ -44,7 +44,9 @@
 #include <network/objectbroker.h>
 #include <network/streamoperators.h>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
+#endif
 #include <QCoreApplication>
 #include <QDir>
 #include <QLibrary>
