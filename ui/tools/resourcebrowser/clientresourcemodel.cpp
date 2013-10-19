@@ -4,7 +4,7 @@
 
 using namespace GammaRay;
 
-ClientResourceModel::ClientResourceModel(QObject* parent): QSortFilterProxyModel(parent)
+ClientResourceModel::ClientResourceModel(QObject* parent): KRecursiveFilterProxyModel(parent)
 {
 }
 

@@ -59,6 +59,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   model->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
   ui->treeView->setModel(model);
   ui->treeView->setSelectionModel(ObjectBroker::selectionModel(ui->treeView->model()));
+  ui->searchLine->setProxy(model);
 
   DeferredTreeViewConfiguration *config = new DeferredTreeViewConfiguration(ui->treeView);
   config->hideColumn(3);
@@ -98,11 +99,11 @@ void ResourceBrowserWidget::setupLayout()
                   ui->treeView->columnWidth(2) +
                   ui->treeView->contentsMargins().left() +
                   ui->treeView->contentsMargins().right() + 25;
-  const int totalWidth = ui->splitter_7->width();
+  const int totalWidth = ui->splitter->width();
   const int minPreviewWidth = 150;
   if (totalWidth > viewWidth + minPreviewWidth) {
-    ui->splitter_7->setSizes(QList<int>() << viewWidth << (totalWidth - viewWidth));
-    ui->splitter_7->setStretchFactor(1, 3);
+    ui->splitter->setSizes(QList<int>() << viewWidth << (totalWidth - viewWidth));
+    ui->splitter->setStretchFactor(1, 3);
   }
 }
 
