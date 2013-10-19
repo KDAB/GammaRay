@@ -63,6 +63,8 @@
 #include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
 #endif
 
+Q_DECLARE_METATYPE(const QStyle *)
+
 using namespace GammaRay;
 using namespace std;
 

@@ -16,6 +16,7 @@
 #include <QMetaObject>
 #include <QObject>
 #include <QPainter>
+#include <QPalette>
 #include <QPoint>
 #include <QRect>
 #include <QSize>

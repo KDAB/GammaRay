@@ -33,9 +33,9 @@
 #ifndef GAMMARAY_METATYPEDECLARATIONS_H
 #define GAMMARAY_METATYPEDECLARATIONS_H
 
-#include <QStyle>
 #include <QMetaMethod>
 #include <QMargins>
+#include <QPainterPath>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QSurface>
@@ -49,7 +49,6 @@ Q_DECLARE_METATYPE(Qt::MouseButtons)
 Q_DECLARE_METATYPE(Qt::TransformationMode)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
-Q_DECLARE_METATYPE(const QStyle *)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 Q_DECLARE_METATYPE(QMargins)
 Q_DECLARE_METATYPE(Qt::WindowType)
