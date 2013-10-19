@@ -37,7 +37,6 @@ set(gammaray_srcs
   toolmodel.cpp
   toolpluginmodel.cpp
   toolpluginerrormodel.cpp
-  proxydetacher.cpp
   propertycontroller.cpp
   proxytoolfactory.cpp
   util.cpp
