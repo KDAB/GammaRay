@@ -59,10 +59,12 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     QPixmap pixmapForWidget(QWidget *widget);
     void registerWidgetMetaTypes();
     void registerVariantHandlers();
+    void discoverObjects();
 
   private slots:
     void widgetSelected(const QItemSelection &selection);
     void widgetSelected(QWidget *widget);
+    void objectCreated(QObject *object);
 
     void handleOverlayWidgetDestroyed(QObject*);
 
@@ -88,6 +90,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     QTimer *m_updatePreviewTimer;
     PaintBufferModel *m_paintBufferModel;
     QTimer *m_paintAnalyzerTimer;
+    ProbeInterface *m_probe;
 };
 
 }

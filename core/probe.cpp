@@ -717,9 +717,6 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 void Probe::findExistingObjects()
 {
   discoverObject(QCoreApplication::instance());
-  foreach (QObject *obj, QApplication::topLevelWidgets()) {
-    discoverObject(obj);
-  }
 }
 
 void Probe::discoverObject(QObject* obj)

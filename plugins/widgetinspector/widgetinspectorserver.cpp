@@ -44,6 +44,8 @@
 
 #include "other/modelutils.h"
 
+#include <QAbstractItemView>
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QLayout>
 #include <QItemSelectionModel>
@@ -70,6 +72,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   , m_updatePreviewTimer(new QTimer(this))
   , m_paintBufferModel(0)
   , m_paintAnalyzerTimer(new QTimer(this))
+  , m_probe(probe)
 {
   registerWidgetMetaTypes();
   registerVariantHandlers();
@@ -107,6 +110,11 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
   // TODO this needs to be delayed until there actually is something to select
   selectDefaultItem();
+
+  if (!m_probe->hasReliableObjectTracking()) {
+    connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+    discoverObjects();
+  }
 }
 
 static bool isMainWindowSubclassAcceptor(const QVariant &v)
@@ -412,5 +420,25 @@ void WidgetInspectorServer::registerVariantHandlers()
   VariantHandler::registerStringConverter<const QStyle*>(Util::displayString);
 #endif
 }
+
+void WidgetInspectorServer::discoverObjects()
+{
+  if (qApp) {
+    foreach (QWidget *widget, qApp->topLevelWidgets())
+      m_probe->discoverObject(widget);
+  }
+}
+
+void WidgetInspectorServer::objectCreated(QObject* object)
+{
+  if (!object)
+    return;
+
+  if (qobject_cast<QApplication*>(object))
+    discoverObjects();
+  if (QAbstractItemView* view = qobject_cast<QAbstractItemView*>(object))
+    m_probe->discoverObject(view->model());
+}
+
 
 #include "widgetinspectorserver.moc"
