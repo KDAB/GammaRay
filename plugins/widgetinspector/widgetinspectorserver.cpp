@@ -53,6 +53,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QMainWindow>
+#include <QMouseEvent>
 #include <QEvent>
 #include <QTimer>
 #include <QStyle>
