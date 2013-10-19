@@ -241,18 +241,15 @@ bool Probe::isInitialized()
 
 bool Probe::canShowWidgets()
 {
-#ifdef Q_OS_QNX
+#ifdef Q_OS_QNX // TODO remove this once out-of-process mode is the default
     return false;
-#else
+#endif
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
-  if (!qGuiApplication
-    #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    || qGuiApplication->type() == QApplication::Tty
-    #endif
-  ) {
-    return false;
-  }
-  return true;
+  return qGuiApplication && qGuiApplication->type() != QApplication::Tty;
+#else
+  return QCoreApplication::instance()->inherits("QApplication");
 #endif
 }
 
