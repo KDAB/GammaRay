@@ -27,6 +27,7 @@
 #include "include/metatypedeclarations.h"
 
 #include <QAbstractSocket>
+#include <QFile>
 #include <QNetworkProxy>
 #include <QObject>
 #include <QPalette>
@@ -40,6 +41,10 @@
 #include <QScreen>
 #include <QSurface>
 #include <QWindow>
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+#include <QSaveFile>
 #endif
 
 using namespace GammaRay;
@@ -71,6 +76,7 @@ void MetaObjectRepository::initBuiltInTypes()
 {
   m_initialized = true;
   initQObjectTypes();
+  initIOTypes();
   initNetworkTypes();
   initGuiTypes();
   initOpenGLTypes();
@@ -102,6 +108,8 @@ Q_DECLARE_METATYPE(QSocketNotifier::Type)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
+Q_DECLARE_METATYPE(QFileDevice::FileError)
+Q_DECLARE_METATYPE(QFileDevice::Permissions)
 #else // !Qt5
 Q_DECLARE_METATYPE(QAbstractSocket::SocketError)
 Q_DECLARE_METATYPE(QAbstractSocket::SocketState)
@@ -110,7 +118,7 @@ Q_DECLARE_METATYPE(QNetworkProxy)
 #endif
 #endif
 
-void MetaObjectRepository::initNetworkTypes()
+void MetaObjectRepository::initIOTypes()
 {
   MetaObject *mo = 0;
   MO_ADD_METAOBJECT1(QIODevice, QObject);
@@ -130,6 +138,27 @@ void MetaObjectRepository::initNetworkTypes()
 
   // FIXME: QIODevice::readAll() would be nice to have
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_METAOBJECT1(QFileDevice, QIODevice);
+  MO_ADD_PROPERTY_RO(QFileDevice, QFileDevice::FileError, error);
+  MO_ADD_PROPERTY_RO(QFileDevice, QString, fileName);
+  MO_ADD_PROPERTY_RO(QFileDevice, int, handle);
+  MO_ADD_PROPERTY_RO(QFileDevice, QFileDevice::Permissions, permissions);
+
+  MO_ADD_METAOBJECT1(QFile, QFileDevice);
+  MO_ADD_PROPERTY_RO(QFile, bool, exists);
+  MO_ADD_PROPERTY_RO(QFile, QString, symLinkTarget);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+  MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
+#endif
+#endif
+}
+
+
+void MetaObjectRepository::initNetworkTypes()
+{
+  MetaObject *mo = 0;
   MO_ADD_METAOBJECT1(QAbstractSocket, QIODevice);
   MO_ADD_PROPERTY_RO(QAbstractSocket, bool, isValid);
   MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, localPort);
