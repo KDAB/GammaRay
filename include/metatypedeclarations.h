@@ -33,9 +33,6 @@
 #ifndef GAMMARAY_METATYPEDECLARATIONS_H
 #define GAMMARAY_METATYPEDECLARATIONS_H
 
-#include <QGraphicsItem>
-#include <QGraphicsWidget>
-#include <QGraphicsEffect>
 #include <QStyle>
 #include <QMetaMethod>
 #include <QMargins>
@@ -50,14 +47,6 @@ Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
 Q_DECLARE_METATYPE(Qt::TransformationMode)
-Q_DECLARE_METATYPE(QGraphicsEffect *)
-Q_DECLARE_METATYPE(QGraphicsItemGroup *)
-Q_DECLARE_METATYPE(QGraphicsObject *)
-Q_DECLARE_METATYPE(QGraphicsWidget *)
-Q_DECLARE_METATYPE(QGraphicsItem::CacheMode)
-Q_DECLARE_METATYPE(QGraphicsItem::GraphicsItemFlags)
-Q_DECLARE_METATYPE(QGraphicsItem::PanelModality)
-Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(const QStyle *)

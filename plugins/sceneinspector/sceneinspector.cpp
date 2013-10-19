@@ -41,6 +41,7 @@
 #include <common/network/objectbroker.h>
 #include <common/network/endpoint.h>
 
+#include <QGraphicsEffect>
 #include <QGraphicsItem>
 #include <QGraphicsLayoutItem>
 #include <QGraphicsProxyWidget>
@@ -52,6 +53,15 @@
 
 using namespace GammaRay;
 using namespace std;
+
+Q_DECLARE_METATYPE(QGraphicsEffect *)
+Q_DECLARE_METATYPE(QGraphicsItemGroup *)
+Q_DECLARE_METATYPE(QGraphicsObject *)
+Q_DECLARE_METATYPE(QGraphicsWidget *)
+Q_DECLARE_METATYPE(QGraphicsItem::CacheMode)
+Q_DECLARE_METATYPE(QGraphicsItem::GraphicsItemFlags)
+Q_DECLARE_METATYPE(QGraphicsItem::PanelModality)
+Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 
 SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   : SceneInspectorInterface(parent),
