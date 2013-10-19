@@ -21,7 +21,7 @@ set(gammaray_srcs
   probe.cpp
   probesettings.cpp
   probecontroller.cpp
-  proxydetacher.cpp
+#  proxydetacher.cpp
   objectlistmodel.cpp
   objectpropertymodel.cpp
   objectdynamicpropertymodel.cpp
