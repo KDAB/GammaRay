@@ -25,6 +25,7 @@
 
 #include "ui_resourcebrowserwidget.h"
 #include "resourcebrowserclient.h"
+#include "clientresourcemodel.h"
 
 #include <deferredtreeviewconfiguration.h>
 #include <3rdparty/qt/resourcemodel.h>
@@ -54,7 +55,9 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   connect(m_interface, SIGNAL(resourceSelected(QByteArray)), this, SLOT(resourceSelected(QByteArray)));
 
   ui->setupUi(this);
-  ui->treeView->setModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
+  ClientResourceModel* model = new ClientResourceModel(this);
+  model->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
+  ui->treeView->setModel(model);
   ui->treeView->setSelectionModel(ObjectBroker::selectionModel(ui->treeView->model()));
 
   DeferredTreeViewConfiguration *config = new DeferredTreeViewConfiguration(ui->treeView);
