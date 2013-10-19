@@ -100,6 +100,31 @@ class ProbeInterface
      * this will filter out GammaRay-internal events and objects already for you.
      */
     virtual void installGlobalEventFilter(QObject *filter) = 0;
+
+    /**
+     * Returns @c true if we have working hooks in QtCore, that is we are notified reliably
+     * about every QObject creation/destruction.
+     * If this is not the case, we try to discover QObjects by walking the hierarchy, starting
+     * from known singletons, and by watching out for unknown receivers of events.
+     * This is far from complete obviously, and plug-ins can help finding more objects, using
+     * specific knowledge about the types they are responsible for.
+     *
+     * Connect to the objectAdded(QObject*) signal on probe(), and call discoverObject(QObject*)
+     * for "your" objects.
+     *
+     * @since 2.0
+     */
+    virtual bool hasReliableObjectTracking() const = 0;
+
+    /**
+     * Notify the probe about QObjects your plug-in can discover by using information about
+     * the types it can handle.
+     * Only use this if hasReliableObjectTracking() returns @c false.
+     *
+     * @see hasReliableObjectTracking()
+     * @since 2.0
+     */
+    virtual void discoverObject(QObject *object) = 0;
 };
 
 }

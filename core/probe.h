@@ -79,6 +79,8 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     ToolModel *toolModel() const;
     void registerModel(const QString& objectName, QAbstractItemModel* model);
     /*override*/ void installGlobalEventFilter(QObject* filter);
+    /*override*/ bool hasReliableObjectTracking() const;
+    /*override*/ void discoverObject(QObject* object);
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -137,7 +139,6 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     static void createProbe(bool findExisting);
 
     explicit Probe(QObject *parent = 0);
-    static void addObjectRecursive(QObject *obj);
     static QAtomicPointer<Probe> s_instance;
 
     ObjectListModel *m_objectListModel;

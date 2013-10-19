@@ -463,7 +463,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
   Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
   instance()->m_validObjects << obj;
-  if (s_listener()->trackDestroyed) {
+  if (!instance()->hasReliableObjectTracking()) {
     // when we did not use a preload variant that
     // overwrites qt_removeObject we must track object
     // deletion manually
@@ -696,12 +696,12 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
   }
 
   // we have no preloading hooks, so recover all objects we see
-  if (s_listener()->trackDestroyed && event->type() != QEvent::ChildAdded &&
+  if (!hasReliableObjectTracking() && event->type() != QEvent::ChildAdded &&
       event->type() != QEvent::ChildRemoved && !filterObject(receiver)) {
     QWriteLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(receiver);
     if (!tracked) {
-      objectAdded(receiver);
+      discoverObject(receiver);
     }
   }
 
@@ -716,21 +716,25 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 
 void Probe::findExistingObjects()
 {
-  addObjectRecursive(QCoreApplication::instance());
+  discoverObject(QCoreApplication::instance());
   foreach (QObject *obj, QApplication::topLevelWidgets()) {
-    addObjectRecursive(obj);
+    discoverObject(obj);
   }
 }
 
-void Probe::addObjectRecursive(QObject *obj)
+void Probe::discoverObject(QObject* obj)
 {
   if (!obj) {
     return;
   }
-  objectRemoved(obj); // in case we find it twice
+
+  QWriteLocker lock(s_lock());
+  if (m_validObjects.contains(obj))
+    return;
+
   objectAdded(obj);
   foreach (QObject *child, obj->children()) {
-    addObjectRecursive(child);
+    discoverObject(child);
   }
 }
 
@@ -739,6 +743,12 @@ void Probe::installGlobalEventFilter(QObject* filter)
   Q_ASSERT(!m_globalEventFilters.contains(filter));
   m_globalEventFilters.push_back(filter);
 }
+
+bool Probe::hasReliableObjectTracking() const
+{
+  return !s_listener()->trackDestroyed;
+}
+
 
 //BEGIN: SignalSlotsLocationStore
 
