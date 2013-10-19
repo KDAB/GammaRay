@@ -25,7 +25,7 @@
 
 #include "probe.h"
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QMetaObject>
 #include <QVector>
 #include <QThread>
@@ -42,7 +42,7 @@ ProbeCreator::ProbeCreator(Type type)
 {
   //push object into the main thread, as windows creates a
   //different thread where this runs in
-  moveToThread(QApplication::instance()->thread());
+  moveToThread(QCoreApplication::instance()->thread());
   // delay to foreground thread
   QMetaObject::invokeMethod(this, "createProbe", Qt::QueuedConnection);
 }
