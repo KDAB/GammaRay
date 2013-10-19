@@ -40,11 +40,13 @@ Q_GLOBAL_STATIC(VariantHandlerRepository, s_variantHandlerRepository)
 QString VariantHandler::displayString(const QVariant& value)
 {
   switch (value.type()) {
+#ifndef QT_NO_CURSOR
   case QVariant::Cursor:
   {
     const QCursor cursor = value.value<QCursor>();
     return Util::enumToString(QVariant::fromValue<int>(cursor.shape()), "Qt::CursorShape");
   }
+#endif
   case QVariant::Icon:
   {
     const QIcon icon = value.value<QIcon>();
@@ -295,6 +297,7 @@ QVariant VariantHandler::decoration(const QVariant& value)
       return p;
     }
   }
+#ifndef QT_NO_CURSOR
   case QVariant::Cursor:
   {
     const QCursor c = value.value<QCursor>();
@@ -302,6 +305,7 @@ QVariant VariantHandler::decoration(const QVariant& value)
       return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
     }
   }
+#endif
   case QVariant::Icon:
   {
     return value;

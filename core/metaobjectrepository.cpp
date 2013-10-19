@@ -222,7 +222,9 @@ void MetaObjectRepository::initGuiTypes()
 
   MO_ADD_METAOBJECT2(QWindow, QObject, QSurface);
   MO_ADD_PROPERTY_CR(QWindow, QSize, baseSize, setBaseSize);
+#ifndef QT_NO_CURSOR
   MO_ADD_PROPERTY_CR(QWindow, QCursor, cursor, setCursor);
+#endif
   MO_ADD_PROPERTY_RO(QWindow, qreal, devicePixelRatio);
   MO_ADD_PROPERTY_CR(QWindow, QString, filePath, setFilePath);
   MO_ADD_PROPERTY_RO(QWindow, QObject*, focusObject);
