@@ -4,6 +4,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 add_executable(propertywidgettest
   propertywidgettest.cpp
 )
@@ -30,6 +31,7 @@ target_link_libraries(messagemodeltest
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
 )
+endif()
 
 add_executable(minimalcoreapplication minimalcoreapplication.cpp)
 target_link_libraries(minimalcoreapplication ${QT_QTCORE_LIBRARIES})

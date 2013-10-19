@@ -7,6 +7,7 @@ include_directories(
 
 ### BENCH SUITE
 
+if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 qt4_automoc(benchsuite.cpp)
 add_executable(benchsuite benchsuite.cpp)
 
@@ -36,6 +37,7 @@ target_link_libraries(connectiontest
 
 if(QNXNTO)
   target_link_libraries(connectiontest cpp)
+endif()
 endif()
 
 qt4_automoc(attachhelper.cpp)
