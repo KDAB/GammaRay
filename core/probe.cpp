@@ -24,7 +24,6 @@
 //krazy:excludeall=null,captruefalse,staticobjects
 
 #include "probe.h"
-#include "mainwindow.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "metaobjecttreemodel.h"

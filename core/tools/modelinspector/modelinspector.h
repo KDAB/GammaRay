@@ -28,8 +28,6 @@
 
 #include <common/modelinspectorinterface.h>
 
-#include <QWidget>
-
 class QItemSelection;
 class QItemSelectionModel;
 

@@ -26,7 +26,6 @@
 #include "connectionfilterproxymodel.h"
 #include "connectionmodel.h"
 #include "metapropertymodel.h"
-#include "methodinvocationdialog.h"
 #include "multisignalmapper.h"
 #include "objectclassinfomodel.h"
 #include "objectdynamicpropertymodel.h"

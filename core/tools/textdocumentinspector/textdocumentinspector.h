@@ -28,7 +28,6 @@
 
 #include <QPointer>
 #include <QTextDocument>
-#include <QWidget>
 
 class QItemSelection;
 
