@@ -33,8 +33,6 @@
 #include <remote/remotemodelserver.h>
 #include <remote/selectionmodelserver.h>
 
-#include <QAbstractItemView>
-#include <QComboBox>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -105,16 +103,7 @@ void ModelInspector::modelSelected(const QItemSelection& selected)
 
 void ModelInspector::objectSelected(QObject* object)
 {
-  QAbstractItemModel *selectedModel = 0;
-
-  QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(object);
-  if (view)
-    selectedModel = view->model();
-
-  QComboBox *box = Util::findParentOfType<QComboBox>(object);
-  if (!selectedModel && box)
-    selectedModel = box->model();
-
+  QAbstractItemModel *selectedModel = qobject_cast<QAbstractItemModel*>(object);
   if (selectedModel) {
     const QModelIndexList indexList =
       m_modelModel->match(m_modelModel->index(0, 0),

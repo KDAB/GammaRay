@@ -46,6 +46,7 @@
 
 #include <QAbstractItemView>
 #include <QApplication>
+#include <QComboBox>
 #include <QDesktopWidget>
 #include <QLayout>
 #include <QItemSelectionModel>
@@ -199,6 +200,13 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
       mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
       QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
       if (widget) {
+        // also select the corresponding model if a view was selected
+        if (QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(object)) {
+          m_probe->selectObject(view->model());
+        } else if (QComboBox *box = Util::findParentOfType<QComboBox>(object)) {
+          m_probe->selectObject(box->model());
+        }
+
         m_probe->selectObject(widget, widget->mapFromGlobal(mouseEv->globalPos()));
         widgetSelected(widget);
       }
