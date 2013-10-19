@@ -54,7 +54,7 @@ class SceneInspector : public SceneInspectorInterface
     void sceneSelected(const QItemSelection &selection);
     void sceneItemSelected(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
-    void widgetSelected(QWidget *item, const QPoint &pos);
+    void objectSelected(QObject *object, const QPoint &pos);
     void sceneClicked(const QPointF &pos);
 
   private:

@@ -45,7 +45,7 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QObject *parent)
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(objectSelectionChanged(QItemSelection)));
 
-  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)));
+  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
 
   // when we end up here the object model isn't populated yet
   QMetaObject::invokeMethod(this, "selectDefaultItem", Qt::QueuedConnection);
@@ -82,13 +82,13 @@ void ObjectInspector::objectSelected(const QModelIndex &index)
   }
 }
 
-void ObjectInspector::widgetSelected(QWidget *widget)
+void ObjectInspector::objectSelected(QObject *object)
 {
   const QAbstractItemModel *model = m_selectionModel->model();
   const QModelIndexList indexList =
   model->match(model->index(0, 0),
                ObjectModel::ObjectRole,
-               QVariant::fromValue<QObject*>(widget), 1,
+               QVariant::fromValue<QObject*>(object), 1,
                Qt::MatchExactly | Qt::MatchRecursive);
   if (indexList.isEmpty()) {
     return;

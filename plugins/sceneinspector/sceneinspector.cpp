@@ -60,8 +60,8 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   registerGraphicsViewMetaTypes();
   registerVariantHandlers();
 
-  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)),
-          SLOT(widgetSelected(QWidget*,QPoint)));
+  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
+          SLOT(objectSelected(QObject*,QPoint)));
 
   ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy =
     new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
@@ -183,12 +183,13 @@ void SceneInspector::sceneItemSelected(const QItemSelection& selection)
   }
 }
 
-void SceneInspector::widgetSelected(QWidget *widget, const QPoint &pos)
+void SceneInspector::objectSelected(QObject *object, const QPoint &pos)
 {
-  QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(widget);
+  QWidget *widget = qobject_cast<QWidget*>(object);
+  QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(object);
   if (qgv) {
     // TODO: select qgv->scene() first, right now this only works for a single scene
-    QGraphicsItem *item = qgv->itemAt(widget->mapTo(qgv, pos));
+    QGraphicsItem *item = qgv->itemAt(widget ? widget->mapTo(qgv, pos) : pos);
     if (item) {
       sceneItemSelected(item);
     }

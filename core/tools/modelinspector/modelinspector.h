@@ -51,7 +51,7 @@ class ModelInspector : public ModelInspectorInterface
     void modelSelected(const QItemSelection &selected);
     void selectionChanged(const QItemSelection &selected);
 
-    void widgetSelected(QWidget *widget);
+    void objectSelected(QObject* object);
 
   private:
     ModelModel *m_modelModel;

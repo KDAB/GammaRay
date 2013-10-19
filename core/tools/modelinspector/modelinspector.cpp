@@ -56,7 +56,7 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   m_modelSelectionModel = ObjectBroker::selectionModel(m_modelModel);
   connect(m_modelSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(modelSelected(QItemSelection)));
-  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)) );
+  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)) );
 
   m_modelContentServer = new RemoteModelServer("com.kdab.GammaRay.ModelContent", this);
 
@@ -103,15 +103,15 @@ void ModelInspector::modelSelected(const QItemSelection& selected)
   selectionChanged(QItemSelection());
 }
 
-void ModelInspector::widgetSelected(QWidget* widget)
+void ModelInspector::objectSelected(QObject* object)
 {
   QAbstractItemModel *selectedModel = 0;
 
-  QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(widget);
+  QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(object);
   if (view)
     selectedModel = view->model();
 
-  QComboBox *box = Util::findParentOfType<QComboBox>(widget);
+  QComboBox *box = Util::findParentOfType<QComboBox>(object);
   if (!selectedModel && box)
     selectedModel = box->model();
 

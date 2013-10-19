@@ -90,8 +90,6 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
           SLOT(handleOverlayWidgetDestroyed(QObject*)));
 
-  connect(probe->probe(), SIGNAL(widgetSelected(QWidget*,QPoint)), SLOT(widgetSelected(QWidget*)));
-
   WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
   widgetFilterProxy->setSourceModel(probe->objectTreeModel());
   probe->registerModel("com.kdab.GammaRay.WidgetTree", widgetFilterProxy);
@@ -192,6 +190,18 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
     QDialog *dlg = qobject_cast<QDialog*>(object);
     if (dlg) {
       dlg->setWindowModality(Qt::NonModal);
+    }
+  }
+
+  if (event->type() == QEvent::MouseButtonRelease) {
+    QMouseEvent *mouseEv = static_cast<QMouseEvent*>(event);
+    if (mouseEv->button() == Qt::LeftButton &&
+      mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
+      QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
+      if (widget) {
+        m_probe->selectObject(widget, widget->mapFromGlobal(mouseEv->globalPos()));
+        widgetSelected(widget);
+      }
     }
   }
 

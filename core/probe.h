@@ -81,6 +81,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     /*override*/ void installGlobalEventFilter(QObject* filter);
     /*override*/ bool hasReliableObjectTracking() const;
     /*override*/ void discoverObject(QObject* object);
+    /*override*/ void selectObject(QObject* object, const QPoint& pos = QPoint());
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -110,9 +111,9 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
   signals:
     /**
-     * Emitted when the user selected @p widget at position @p pos in the probed application.
+     * Emitted when the user selected @p object at position @p pos in the probed application.
      */
-    void widgetSelected(QWidget *widget, const QPoint &pos);
+    void objectSelected(QObject *object, const QPoint &pos);
 
     void objectCreated(QObject *obj);
     void objectDestroyed(QObject *obj);

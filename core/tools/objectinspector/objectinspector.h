@@ -46,7 +46,7 @@ class ObjectInspector : public QObject
     void selectDefaultItem();
     void objectSelected(const QModelIndex &index);
     void objectSelectionChanged(const QItemSelection &selection);
-    void widgetSelected(QWidget *widget);
+    void objectSelected(QObject *object);
 
   private:
     PropertyController *m_propertyController;

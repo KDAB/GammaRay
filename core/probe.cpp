@@ -684,16 +684,6 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
       objectRemoved(obj);
     }
   }
-  if (event->type() == QEvent::MouseButtonRelease) {
-    QMouseEvent *mouseEv = static_cast<QMouseEvent*>(event);
-    if (mouseEv->button() == Qt::LeftButton &&
-        mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
-      QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
-      if (widget) {
-        emit widgetSelected(widget, widget->mapFromGlobal(mouseEv->globalPos()));
-      }
-    }
-  }
 
   // we have no preloading hooks, so recover all objects we see
   if (!hasReliableObjectTracking() && event->type() != QEvent::ChildAdded &&
@@ -746,6 +736,10 @@ bool Probe::hasReliableObjectTracking() const
   return !s_listener()->trackDestroyed;
 }
 
+void Probe::selectObject(QObject* object, const QPoint& pos)
+{
+  emit objectSelected(object, pos);
+}
 
 //BEGIN: SignalSlotsLocationStore
 

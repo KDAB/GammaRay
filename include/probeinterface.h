@@ -33,6 +33,8 @@
 #ifndef GAMMARAY_PROBEINTERFACE_H
 #define GAMMARAY_PROBEINTERFACE_H
 
+#include <QPoint>
+
 class QObject;
 class QAbstractItemModel;
 class QString;
@@ -125,6 +127,14 @@ class ProbeInterface
      * @since 2.0
      */
     virtual void discoverObject(QObject *object) = 0;
+
+    /**
+     * Notify the probe about the user selecting one of "your" objects via in-app interaction.
+     * If you know the exact position the user interacted with, pass that in as @p pos.
+     *
+     * @since 2.0
+     */
+    virtual void selectObject(QObject *object, const QPoint &pos = QPoint()) = 0;
 };
 
 }
