@@ -29,6 +29,7 @@
 
 #include <QDebug>
 #include <QItemSelectionModel>
+#include <QPixmap>
 
 using namespace GammaRay;
 

@@ -55,7 +55,6 @@
 
 /*!
     \enum ResourceModel::Roles
-    \value FileIconRole
     \value FilePathRole
     \value FileNameRole
 */
@@ -74,7 +73,6 @@ public:
         ~QDirNode() { children.clear(); }
         QDirNode *parent;
         QFileInfo info;
-        QIcon icon; // cache the icon
         mutable QVector<QDirNode> children;
         mutable bool populated; // have we read the children
         mutable bool stat;
@@ -85,7 +83,6 @@ public:
           readOnly(true),
           lazyChildCount(false),
           allowAppendChild(true),
-          iconProvider(&defaultProvider),
           shouldStat(true), // ### This is set to false by QFileDialog
           q_ptr(qq)
     { }
@@ -127,9 +124,6 @@ public:
     QDir::Filters filters;
     QDir::SortFlags sort;
     QStringList nameFilters;
-
-    QFileIconProvider *iconProvider;
-    QFileIconProvider defaultProvider;
 
     struct SavedPersistent {
         QString path;
@@ -369,8 +363,6 @@ QVariant ResourceModel::data(const QModelIndex &index, int role) const
     }
 
     if (index.column() == 0) {
-        if (role == FileIconRole)
-            return fileIcon(index);
         if (role == FilePathRole)
             return filePath(index);
         if (role == FileNameRole)
@@ -621,27 +613,6 @@ bool ResourceModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
 Qt::DropActions ResourceModel::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction; // FIXME: LinkAction is not supported yet
-}
-
-/*!
-  Sets the \a provider of file icons for the directory model.
-
-*/
-
-void ResourceModel::setIconProvider(QFileIconProvider *provider)
-{
-    Q_D(ResourceModel);
-    d->iconProvider = provider;
-}
-
-/*!
-  Returns the file icon provider for this directory model.
-*/
-
-QFileIconProvider *ResourceModel::iconProvider() const
-{
-    Q_D(const ResourceModel);
-    return d->iconProvider;
 }
 
 /*!
@@ -1110,26 +1081,6 @@ QString ResourceModel::fileName(const QModelIndex &index) const
 }
 
 /*!
-  Returns the icons for the item stored in the model under the given
-  \a index.
-*/
-
-QIcon ResourceModel::fileIcon(const QModelIndex &index) const
-{
-    // QFileIconProvider crashes when used with just a QCoreApplication
-    if (!qApp->inherits("QGuiApplication") && !qApp->inherits("QApplication"))
-      return QIcon();
-
-    Q_D(const ResourceModel);
-    if (!d->indexValid(index))
-        return d->iconProvider->icon(QFileIconProvider::Computer);
-    ResourceModelPrivate::QDirNode *node = d->node(index);
-    if (node->icon.isNull())
-        node->icon = d->iconProvider->icon(node->info);
-    return node->icon;
-}
-
-/*!
   Returns the file information for the specified model \a index.
 
   \bold{Note:} If the model index represents a symbolic link in the
@@ -1168,7 +1119,6 @@ void ResourceModelPrivate::init()
     root.info = QFileInfo(":");
     clear(&root);
     QHash<int, QByteArray> roles = q->roleNames();
-    roles.insertMulti(ResourceModel::FileIconRole, "fileIcon"); // == Qt::decoration
     roles.insert(ResourceModel::FilePathRole, "filePath");
     roles.insert(ResourceModel::FileNameRole, "fileName");
     q->setRoleNames(roles);
@@ -1340,7 +1290,13 @@ QString ResourceModelPrivate::size(const QModelIndex &index) const
 
 QString ResourceModelPrivate::type(const QModelIndex &index) const
 {
-    return iconProvider->type(node(index)->info);
+  // poor interpolation of what QFileIconProvider::type() did
+  // TODO: for Qt5 QMimeType might actually be a better choice here
+  if (!index.parent().isValid())
+    return QObject::tr("Root");
+  if (node(index)->info.isDir())
+    return QObject::tr("Folder");
+  return QObject::tr("%1 File").arg(node(index)->info.suffix());
 }
 
 QString ResourceModelPrivate::time(const QModelIndex &index) const

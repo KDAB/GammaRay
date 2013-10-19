@@ -44,7 +44,6 @@
 
 #include <QtCore/qabstractitemmodel.h>
 #include <QtCore/qdir.h>
-#include <qfileiconprovider.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -61,7 +60,6 @@ class ResourceModel : public QAbstractItemModel
 
 public:
     enum Roles {
-        FileIconRole = Qt::DecorationRole,
         // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globaly to allow combining Qt4/5 client/servers.
         FilePathRole = 256 + 1,
         FileNameRole
@@ -96,9 +94,6 @@ public:
 
     // ResourceModel specific API
 
-    void setIconProvider(QFileIconProvider *provider);
-    QFileIconProvider *iconProvider() const;
-
     void setNameFilters(const QStringList &filters);
     QStringList nameFilters() const;
 
@@ -126,7 +121,6 @@ public:
 
     QString filePath(const QModelIndex &index) const;
     QString fileName(const QModelIndex &index) const;
-    QIcon fileIcon(const QModelIndex &index) const;
     QFileInfo fileInfo(const QModelIndex &index) const;
 
 #ifdef Q_NO_USING_KEYWORD
