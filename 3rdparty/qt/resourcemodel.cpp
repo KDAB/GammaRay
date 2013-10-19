@@ -43,7 +43,6 @@
 
 #include <qstack.h>
 #include <qfile.h>
-#include <qfilesystemmodel.h>
 #include <qurl.h>
 #include <qmimedata.h>
 #include <qpair.h>
@@ -1329,14 +1328,14 @@ QString ResourceModelPrivate::size(const QModelIndex &index) const
     const quint64 tb = 1024 * gb;
     quint64 bytes = n->info.size();
     if (bytes >= tb)
-        return QFileSystemModel::tr("%1 TB").arg(QLocale().toString(qreal(bytes) / tb, 'f', 3));
+        return QObject::tr("%1 TB").arg(QLocale().toString(qreal(bytes) / tb, 'f', 3));
     if (bytes >= gb)
-        return QFileSystemModel::tr("%1 GB").arg(QLocale().toString(qreal(bytes) / gb, 'f', 2));
+        return QObject::tr("%1 GB").arg(QLocale().toString(qreal(bytes) / gb, 'f', 2));
     if (bytes >= mb)
-        return QFileSystemModel::tr("%1 MB").arg(QLocale().toString(qreal(bytes) / mb, 'f', 1));
+        return QObject::tr("%1 MB").arg(QLocale().toString(qreal(bytes) / mb, 'f', 1));
     if (bytes >= kb)
-        return QFileSystemModel::tr("%1 KB").arg(QLocale().toString(bytes / kb));
-    return QFileSystemModel::tr("%1 byte(s)").arg(QLocale().toString(bytes));
+        return QObject::tr("%1 KB").arg(QLocale().toString(bytes / kb));
+    return QObject::tr("%1 byte(s)").arg(QLocale().toString(bytes));
 }
 
 QString ResourceModelPrivate::type(const QModelIndex &index) const
