@@ -61,6 +61,29 @@ class ToolUiFactory
     virtual QWidget *createWidget(QWidget *parentWidget) = 0;
 };
 
+/**
+ * @brief A templated convenience ToolUiFactory applicable for most use-cases.
+ */
+template <typename ToolUi>
+class StandardToolUiFactory : public ToolUiFactory
+{
+public:
+  virtual inline QString id() const
+  {
+    return QString(); // TODO is this a problem??
+  }
+
+  virtual inline QWidget *createWidget(QWidget *parentWidget)
+  {
+    return new ToolUi(parentWidget);
+  }
+
+  virtual bool remotingSupported() const
+  {
+    return true;
+  }
+};
+
 }
 
 Q_DECLARE_INTERFACE(GammaRay::ToolUiFactory, "com.kdab.GammaRay.ToolUiFactory/1.0")
