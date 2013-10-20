@@ -36,10 +36,10 @@ ProxyFactoryBase::ProxyFactoryBase(const QString& desktopFilePath, QObject* pare
   m_desktopFile(0)
 {
   const QFileInfo pluginInfo(desktopFilePath);
-  m_id = pluginInfo.baseName();
-
   m_desktopFile = new QSettings(desktopFilePath, QSettings::IniFormat);
   m_desktopFile->beginGroup(QLatin1String("Desktop Entry"));
+
+  m_id = value("X-GammaRay-Id", pluginInfo.baseName()).toString();
 
   const QString dllBaseName = value(QLatin1String("Exec")).toString();
   if (dllBaseName.isEmpty()) {
