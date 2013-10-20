@@ -76,7 +76,7 @@ void PluginManagerBase::scan()
   foreach (const QString &pluginPath, pluginPaths()) {
     const QDir dir(pluginPath);
     IF_DEBUG(cout << "checking plugin path: " << qPrintable(dir.absolutePath()) << endl);
-    foreach (const QString &plugin, dir.entryList(QDir::Files)) {
+    foreach (const QString &plugin, dir.entryList(QStringList() << "*.desktop", QDir::Files)) {
       const QString pluginFile = dir.absoluteFilePath(plugin);
       const QFileInfo pluginInfo(pluginFile);
       const QString pluginName = pluginInfo.baseName();
@@ -85,10 +85,8 @@ void PluginManagerBase::scan()
         continue;
       }
 
-      if (pluginInfo.suffix() == QLatin1String("desktop")) {
-        if (createProxyFactory(pluginFile, m_parent))
-          loadedPluginNames.push_back(pluginName);
-      }
+      if (createProxyFactory(pluginFile, m_parent))
+        loadedPluginNames.push_back(pluginName);
     }
   }
 }
