@@ -26,8 +26,6 @@
 
 #include <include/toolfactory.h>
 
-#include "codecbrowserwidget.h"
-
 class QItemSelection;
 class QItemSelectionModel;
 
@@ -56,10 +54,10 @@ class CodecBrowser : public QObject
     QItemSelectionModel *m_codecSelectionModel;
 };
 
-class CodecBrowserFactory : public QObject, public StandardToolFactory2<QObject, CodecBrowser, CodecBrowserWidget>
+class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, CodecBrowser>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.CodecBrowser")
   public:
     explicit CodecBrowserFactory(QObject *parent = 0) : QObject(parent)

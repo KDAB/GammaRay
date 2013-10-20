@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_CODECBROWSERWIDGET_H
 #define GAMMARAY_CODECBROWSERWIDGET_H
 
+#include "include/tooluifactory.h"
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -43,6 +45,13 @@ class CodecBrowserWidget : public QWidget
 
   private:
     QScopedPointer<Ui::CodecBrowserWidget> ui;
+};
+
+class CodecBrowserUiFactory : public QObject, public StandardToolUiFactory<CodecBrowserWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.CodecBrowserUi")
 };
 
 }
