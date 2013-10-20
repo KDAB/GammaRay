@@ -1,4 +1,5 @@
 [Desktop Entry]
 Name=Text Codecs
 X-GammaRay-Types=QObject;
+X-GammaRay-ServiceTypes="com.kdab.GammaRay.ToolFactory;com.kdab.GammaRay.ToolUiFactory"
 Exec=gammaray_codecbrowser_plugin

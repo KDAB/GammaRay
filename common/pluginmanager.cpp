@@ -31,6 +31,7 @@
 #include <QDir>
 #include <QLibrary>
 #include <QPluginLoader>
+#include <QSettings>
 
 #include <iostream>
 
@@ -68,7 +69,7 @@ QStringList PluginManagerBase::pluginPaths() const
   return pluginPaths;
 }
 
-void PluginManagerBase::scan()
+void PluginManagerBase::scan(const QString &serviceType)
 {
   m_errors.clear();
   QStringList loadedPluginNames;
@@ -82,6 +83,14 @@ void PluginManagerBase::scan()
       const QString pluginName = pluginInfo.baseName();
 
       if (loadedPluginNames.contains(pluginName)) {
+        continue;
+      }
+
+      QSettings desktopFile(pluginFile, QSettings::IniFormat);
+      desktopFile.beginGroup("Desktop Entry");
+      const QStringList serviceTypes = desktopFile.value("X-GammaRay-ServiceTypes", QString()).toString().split(';', QString::SkipEmptyParts);
+      if (!serviceTypes.contains(serviceType)) {
+        IF_DEBUG(qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << serviceTypes;)
         continue;
       }
 

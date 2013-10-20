@@ -1,4 +1,5 @@
 [Desktop Entry]
 Name=State Machines
 X-GammaRay-Types=QStateMachine;
+X-GammaRay-ServiceTypes="com.kdab.GammaRay.ToolFactory;com.kdab.GammaRay.ToolUiFactory"
 Exec=gammaray_statemachineviewer_plugin

@@ -1,4 +1,5 @@
 [Desktop Entry]
 Name=Style
 X-GammaRay-Types=QStyle;
+X-GammaRay-ServiceTypes="com.kdab.GammaRay.ToolFactory;com.kdab.GammaRay.ToolUiFactory"
 Exec=gammaray_styleinspector_plugin

@@ -27,6 +27,7 @@
 #include <QVector>
 #include <QList>
 #include <QFileInfo>
+#include <QStringList>
 
 #include <iostream>
 
@@ -71,7 +72,7 @@ class PluginManagerBase
   protected:
     virtual bool createProxyFactory(const QString& desktopFilePath, QObject* parent) = 0;
 
-    void scan();
+    void scan(const QString& serviceType);
     QStringList pluginPaths() const;
 
     QList<PluginLoadError> m_errors;
@@ -84,7 +85,10 @@ class PluginManager : public PluginManagerBase
 public:
     explicit inline PluginManager(QObject *parent = 0) : PluginManagerBase(parent)
     {
-      scan();
+      const QString iid = QString::fromLatin1(qobject_interface_iid<IFace*>());
+      Q_ASSERT(!iid.isEmpty());
+      const QString serviceType = iid.split('/').first();
+      scan(serviceType);
     }
 
     inline ~PluginManager() {}
