@@ -26,7 +26,6 @@
 #include <QFontMetrics>
 #include <QPixmap>
 #include <QPainter>
-#include <QLabel>
 
 using namespace GammaRay;
 
