@@ -25,6 +25,8 @@
 #ifndef GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
 #define GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
 
+#include "include/tooluifactory.h"
+
 #include <QWidget>
 
 class QAbstractItemModel;
@@ -52,6 +54,14 @@ class FontBrowserWidget : public QWidget
     QAbstractItemModel *m_selectedFontModel;
     FontBrowserInterface *m_fontBrowser;
 };
+
+class FontBrowserUiFactory : public QObject, public StandardToolUiFactory<FontBrowserWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.FontBrowserUi")
+};
+
 
 }
 

@@ -27,7 +27,6 @@
 
 #include "include/toolfactory.h"
 
-#include "fontbrowserwidget.h"
 #include "fontbrowserserver.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -41,14 +40,14 @@ namespace GammaRay {
 class FontBrowserFactory : public QObject
 #ifndef Q_MOC_RUN // Qt4 moc fails on the ifdef'ed multi-inheritance and generates invalid code
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-, public StandardToolFactory2<QApplication, FontBrowserServer, FontBrowserWidget>
+, public StandardToolFactory<QApplication, FontBrowserServer>
 #else
-, public StandardToolFactory2<QGuiApplication, FontBrowserServer, FontBrowserWidget>
+, public StandardToolFactory<QGuiApplication, FontBrowserServer>
 #endif
 #endif
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.FontBrowser")
 
   public:
