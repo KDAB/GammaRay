@@ -26,8 +26,6 @@
 
 #include <include/toolfactory.h>
 
-#include "selectionmodelinspectorwidget.h"
-
 #include <QItemSelectionModel>
 
 class QAbstractProxyModel;
@@ -48,10 +46,10 @@ class SelectionModelInspector : public QObject
 };
 
 class SelectionModelInspectorFactory :
-    public QObject, public StandardToolFactory2<QItemSelectionModel, SelectionModelInspector, SelectionModelInspectorWidget>
+    public QObject, public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SelectionModelInspector")
   public:
     explicit SelectionModelInspectorFactory(QObject *parent = 0) : QObject(parent)

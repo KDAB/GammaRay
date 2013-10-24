@@ -47,6 +47,14 @@ class SelectionModelInspectorWidget : public QWidget
     QScopedPointer<Ui::SelectionModelInspectorWidget> ui;
 };
 
+class SelectionModelInspectorUiFactory : public QObject, public StandardToolUiFactory<SelectionModelInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SelectionModelInspectorUi")
+};
+
+
 }
 
 #endif // GAMMARAY_SELECTIONMODELINSPECTOR_H

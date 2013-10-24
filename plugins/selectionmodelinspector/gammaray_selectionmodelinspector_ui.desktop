@@ -1,0 +1,4 @@
+[Desktop Entry]
+X-GammaRay-Id=gammaray_selectionmodelinspector
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
+Exec=gammaray_selectionmodelinspector_ui_plugin
