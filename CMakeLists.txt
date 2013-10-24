@@ -326,13 +326,6 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
   endif()
 endif()
 
-add_subdirectory(common)
-add_subdirectory(ui)
-add_subdirectory(core)
-add_subdirectory(launcher)
-add_subdirectory(hooking)
-add_subdirectory(inprocessui)
-
 set(GRAPHVIZ_MIN_VERSION "2.20")
 find_package(Graphviz)
 macro_log_feature(
@@ -479,8 +472,16 @@ configure_file(
 include(ExternalProject)
 
 add_subdirectory(include)
+add_subdirectory(common)
+add_subdirectory(core)
+add_subdirectory(hooking)
+if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+  add_subdirectory(ui)
+  add_subdirectory(launcher)
+  add_subdirectory(inprocessui)
+  add_subdirectory(client)
+endif ()
 add_subdirectory(tests)
 add_subdirectory(plugins)
-add_subdirectory(client)
 
 macro_display_feature_log()
