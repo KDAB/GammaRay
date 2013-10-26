@@ -23,7 +23,6 @@
 #include "objectvisualizermodel.h"
 
 #include <QtPlugin>
-#include <QLabel>
 
 using namespace GammaRay;
 
