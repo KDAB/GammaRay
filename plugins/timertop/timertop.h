@@ -24,10 +24,8 @@
 #define GAMMARAY_TIMERTOP_TIMERTOP_H
 
 #include "include/toolfactory.h"
-#include "timertopwidget.h"
 
 #include <QTimer>
-#include <QWidget>
 
 namespace GammaRay {
 
@@ -46,10 +44,10 @@ class TimerTop : public QObject
 };
 
 class TimerTopFactory : public QObject,
-                        public StandardToolFactory2<QTimer, TimerTop, TimerTopWidget>
+                        public StandardToolFactory<QTimer, TimerTop>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.TimerTop")
 
   public:

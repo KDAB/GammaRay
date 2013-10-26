@@ -1,0 +1,4 @@
+[Desktop Entry]
+X-GammaRay-Id=gammaray_timertop
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
+Exec=gammaray_timertop_ui_plugin

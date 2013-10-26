@@ -23,6 +23,8 @@
 #ifndef GAMMARAY_TIMERTOPWIDGET_H
 #define GAMMARAY_TIMERTOPWIDGET_H
 
+#include "include/tooluifactory.h"
+
 #include <QWidget>
 
 class QTimer;
@@ -45,6 +47,13 @@ class TimerTopWidget : public QWidget
   private:
     QScopedPointer<Ui::TimerTopWidget> ui;
     QTimer *m_updateTimer;
+};
+
+class TimerTopUiFactory : public QObject, public StandardToolUiFactory<TimerTopWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.TimerTopUi")
 };
 
 }

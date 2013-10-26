@@ -58,4 +58,8 @@ void TimerTopWidget::slotUpdateView()
   ui->timerView->viewport()->update();
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(TimerTopUiFactory)
+#endif
+
 #include "timertopwidget.moc"
