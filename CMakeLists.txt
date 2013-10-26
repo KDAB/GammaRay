@@ -78,11 +78,11 @@ endif()
 
 if(Qt5Core_FOUND)
   find_package(Qt5Gui REQUIRED)
-  find_package(Qt5Widgets REQUIRED)
   find_package(Qt5Concurrent REQUIRED)
   find_package(Qt5Test REQUIRED)
   find_package(Qt5Network REQUIRED)
 
+  find_package(Qt5Widgets QUIET)
   find_package(Qt5PrintSupport QUIET)
   find_package(Qt5Svg QUIET)
   find_package(Qt5Script QUIET)
