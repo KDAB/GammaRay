@@ -1,0 +1,4 @@
+[Desktop Entry]
+X-GammaRay-Id=gammaray_statemachineviewer
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
+Exec=gammaray_statemachineviewer_ui_plugin

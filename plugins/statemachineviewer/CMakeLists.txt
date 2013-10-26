@@ -4,54 +4,45 @@ include_directories(
   ${CMAKE_BINARY_DIR}
 )
 
-set(gammaray_statemachineviewer_plugin_libs
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-
-  gammaray_core
-  gammaray_ui
-)
-
-set(gammaray_statemachineviewer_plugin_srcs
-  # shared
+# shared part
+set(gammaray_statemachineviewer_shared_srcs
   statemachineviewerinterface.cpp
+)
+qt4_automoc(${gammaray_statemachineviewer_shared_srcs})
 
-  # server
+# probe part
+set(gammaray_statemachineviewer_plugin_srcs
   statemachineviewerserver.cpp
   transitionmodel.cpp
   statemodel.cpp
   statemachinewatcher.cpp
 )
 
+qt4_automoc(${gammaray_statemachineviewer_plugin_srcs})
+
+gammaray_add_plugin(gammaray_statemachineviewer_plugin
+  gammaray_statemachineviewer.desktop
+  ${gammaray_statemachineviewer_shared_srcs}
+  ${gammaray_statemachineviewer_plugin_srcs}
+)
+
+target_link_libraries(gammaray_statemachineviewer_plugin
+  ${QT_QTCORE_LIBRARIES}
+  gammaray_core
+)
+
 ############ BEGIN GRAPHVIZ GUI
 if(GRAPHVIZ_FOUND)
-include_directories(
-  ${GRAPHVIZ_INCLUDE_DIR}
 
-  # TODO: Work-around issue in graphviz/types.h header
-  # <cgraph.h> is included there, but it should rather be "cgraph.h"
-  ${GRAPHVIZ_INCLUDE_DIR}/graphviz
+set(gammaray_statemachineviewer_ui_plugin_libs
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+
+  gammaray_common
+  gammaray_ui
 )
 
-list(APPEND gammaray_statemachineviewer_plugin_libs
-  ${GRAPHVIZ_GVC_LIBRARY}
-)
-
-if (GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_VERSION VERSION_GREATER 2.30.0)
-  message(STATUS "Enabling use of experimental 'cgraph' library of GraphViz")
-  # you must add this define when using cgraph from graphviz
-  # some headers check for this define (see for example graphviz/types.h header)
-  add_definitions(-DWITH_CGRAPH)
-  list(APPEND gammaray_statemachineviewer_plugin_libs
-    ${GRAPHVIZ_CGRAPH_LIBRARY}
-  )
-else()
-  list(APPEND gammaray_statemachineviewer_plugin_libs
-    ${GRAPHVIZ_GRAPH_LIBRARY}
-  )
-endif()
-
-list(APPEND gammaray_statemachineviewer_plugin_srcs
+set(gammaray_statemachineviewer_ui_plugin_srcs
   # gui & client
   statemachineviewerclient.cpp
   statemachineview.cpp
@@ -62,7 +53,33 @@ list(APPEND gammaray_statemachineviewer_plugin_srcs
   gvgraph/gvutils.cpp
 )
 
-qt4_wrap_ui(gammaray_statemachineviewer_plugin_srcs statemachineviewer.ui)
+include_directories(
+  ${GRAPHVIZ_INCLUDE_DIR}
+
+  # TODO: Work-around issue in graphviz/types.h header
+  # <cgraph.h> is included there, but it should rather be "cgraph.h"
+  ${GRAPHVIZ_INCLUDE_DIR}/graphviz
+)
+
+list(APPEND gammaray_statemachineviewer_ui_plugin_libs
+  ${GRAPHVIZ_GVC_LIBRARY}
+)
+
+if (GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_VERSION VERSION_GREATER 2.30.0)
+  message(STATUS "Enabling use of experimental 'cgraph' library of GraphViz")
+  # you must add this define when using cgraph from graphviz
+  # some headers check for this define (see for example graphviz/types.h header)
+  add_definitions(-DWITH_CGRAPH)
+  list(APPEND gammaray_statemachineviewer_ui_plugin_libs
+    ${GRAPHVIZ_CGRAPH_LIBRARY}
+  )
+else()
+  list(APPEND gammaray_statemachineviewer_ui_plugin_libs
+    ${GRAPHVIZ_GRAPH_LIBRARY}
+  )
+endif()
+
+qt4_wrap_ui(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewer.ui)
 
 add_executable(statemachineviewer_test
   gvgraph/gvgraph.cpp
@@ -72,19 +89,20 @@ add_executable(statemachineviewer_test
   test_main.cpp
 )
 
-target_link_libraries(statemachineviewer_test ${gammaray_statemachineviewer_plugin_libs})
+target_link_libraries(statemachineviewer_test ${gammaray_statemachineviewer_ui_plugin_libs})
+
+qt4_automoc(${gammaray_statemachineviewer_ui_plugin_srcs})
+
+gammaray_add_plugin(gammaray_statemachineviewer_ui_plugin
+  gammaray_statemachineviewer_ui.desktop
+  ${gammaray_statemachineviewer_shared_srcs}
+  ${gammaray_statemachineviewer_ui_plugin_srcs}
+)
+
+target_link_libraries(gammaray_statemachineviewer_ui_plugin
+  ${gammaray_statemachineviewer_ui_plugin_libs}
+)
 
 endif()
 
 ################### END GRAPHVIZ GUI
-
-qt4_automoc(${gammaray_statemachineviewer_plugin_srcs})
-
-gammaray_add_plugin(gammaray_statemachineviewer_plugin
-  gammaray_statemachineviewer.desktop
-  ${gammaray_statemachineviewer_plugin_srcs}
-)
-
-target_link_libraries(gammaray_statemachineviewer_plugin
-  ${gammaray_statemachineviewer_plugin_libs}
-)

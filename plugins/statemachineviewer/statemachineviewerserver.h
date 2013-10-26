@@ -35,12 +35,6 @@
 
 #include <config-gammaray.h>
 
-#ifdef HAVE_GRAPHVIZ
-#include "statemachineviewerwidget.h"
-#else
-typedef QWidget StateMachineViewerWidget;
-#endif
-
 class QAbstractTransition;
 class QStateMachine;
 class QAbstractState;
@@ -102,10 +96,10 @@ class StateMachineViewerServer : public StateMachineViewerInterface
 };
 
 class StateMachineViewerFactory :
-public QObject, public StandardToolFactory2<QStateMachine, StateMachineViewerServer, StateMachineViewerWidget>
+public QObject, public StandardToolFactory<QStateMachine, StateMachineViewerServer>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StateMachineViewer")
 
   public:
@@ -117,10 +111,6 @@ public QObject, public StandardToolFactory2<QStateMachine, StateMachineViewerSer
     {
       return tr("State Machine Viewer");
     }
-
-#ifndef HAVE_GRAPHVIZ
-    virtual QWidget *createWidget(QWidget *parentWidget);
-#endif
 };
 
 }

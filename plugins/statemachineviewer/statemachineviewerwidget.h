@@ -23,6 +23,7 @@
 #ifndef GAMMARAY_STATEMACHINEVIEWERWIDGET_H
 #define GAMMARAY_STATEMACHINEVIEWERWIDGET_H
 
+#include "include/tooluifactory.h"
 #include "statemachineviewerinterface.h"
 
 #include "statemachineviewerutil.h"
@@ -92,6 +93,13 @@ class StateMachineViewerWidget : public QWidget
     RingBuffer<TransitionId> m_lastTransitions;
 
     StateMachineViewerInterface *m_interface;
+};
+
+class StateMachineViewerUiFactory : public QObject, public StandardToolUiFactory<StateMachineViewerWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StateMachineViewerUi")
 };
 
 }

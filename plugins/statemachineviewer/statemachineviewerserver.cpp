@@ -37,7 +37,6 @@
 #include <QSignalTransition>
 #include <QStateMachine>
 #include <QItemSelectionModel>
-#include <QLabel>
 
 #include <QtPlugin>
 
@@ -365,17 +364,6 @@ void StateMachineViewerServer::toggleRunning()
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(StateMachineViewerFactory)
-#endif
-
-#ifndef HAVE_GRAPHVIZ
-QWidget *StateMachineViewerFactory::createWidget(QWidget *parentWidget)
-{
-  ///FIXME: properly split up server/client and make this obsolete
-  QLabel *label = new QLabel(parentWidget);
-  label->setAlignment(Qt::AlignCenter);
-  label->setText(tr("GammaRay was built without GraphViz support. State Machine visualization is disabled."));
-  return label;
-}
 #endif
 
 #include "statemachineviewerserver.moc"
