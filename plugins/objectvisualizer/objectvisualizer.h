@@ -24,13 +24,6 @@
 
 #include "include/toolfactory.h"
 
-#ifdef VTKGUI_ENABLED
-#include "objectvisualizerwidget.h"
-#else
-#include <QWidget>
-typedef QWidget GraphViewerWidget;
-#endif
-
 namespace GammaRay {
 
 class GraphViewer : public QObject
@@ -42,10 +35,10 @@ class GraphViewer : public QObject
     ~GraphViewer();
 };
 
-class GraphViewerFactory : public QObject, public StandardToolFactory2<QObject, GraphViewer, GraphViewerWidget>
+class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, GraphViewer>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.GraphViewer")
 
   public:
@@ -57,10 +50,6 @@ class GraphViewerFactory : public QObject, public StandardToolFactory2<QObject, 
     {
       return tr("Object Visualizer");
     }
-
-#ifndef VTKGUI_ENABLED
-    virtual QWidget *createWidget(QWidget *parentWidget);
-#endif
 };
 
 }

@@ -19,7 +19,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "objectvisualizer.h"
+#include "objectvisualizerwidget.h"
 #include "vtkcontainer.h"
 #include "vtkpanel.h"
 #include "vtkwidget.h"
@@ -95,5 +95,9 @@ void GraphViewerWidget::delayedInit()
     mObjectTreeView->setCurrentIndex(matches.first());
   }
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(ObjectVisualizerUiFactory)
+#endif
 
 #include "objectvisualizerwidget.moc"

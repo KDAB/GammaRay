@@ -413,7 +413,7 @@ static bool descendantOf(const QModelIndex &ascendant, const QModelIndex &index)
 
 static QModelIndex mapToSource(const QModelIndex &proxyIndex)
 {
-  if (qobject_cast<const ObjectVisualizerModel*>(proxyIndex.model()))
+  if (proxyIndex.model()->inherits("GammaRay::ObjectVisualizerModel"))
     return proxyIndex;
 
   if (const QAbstractProxyModel *proxyModel = qobject_cast<const QAbstractProxyModel*>(proxyIndex.model()))

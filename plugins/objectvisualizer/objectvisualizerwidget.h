@@ -22,6 +22,8 @@
 #ifndef GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERWIDGET_H
 #define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERWIDGET_H
 
+#include "include/tooluifactory.h"
+
 #include <QWidget>
 
 class QAbstractItemModel;
@@ -46,6 +48,13 @@ class GraphViewerWidget : public QWidget
     QAbstractItemModel* mModel;
     QTreeView *mObjectTreeView;
     GraphWidget *mWidget;
+};
+
+class ObjectVisualizerUiFactory : public QObject, public StandardToolUiFactory<GraphViewerWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ObjectVisualizerUi")
 };
 
 }

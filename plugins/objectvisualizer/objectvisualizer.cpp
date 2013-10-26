@@ -39,18 +39,6 @@ GraphViewer::~GraphViewer()
 {
 }
 
-#ifndef VTKGUI_ENABLED
-QWidget *GraphViewerFactory::createWidget(QWidget *parentWidget)
-{
-  ///FIXME: disable selection of the tool, should be possible once we have a proper separation
-  /// between server and client. Only the Client needs to be built with VTK support.
-  QLabel *label = new QLabel(parentWidget);
-  label->setAlignment(Qt::AlignCenter);
-  label->setText(tr("GammaRay was built without VTK support. Object visualization is disabled."));
-  return label;
-}
-#endif
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(GraphViewerFactory)
 #endif
