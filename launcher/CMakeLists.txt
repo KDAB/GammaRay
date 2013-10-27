@@ -35,13 +35,15 @@ target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES})
 set(gammaray_runner_srcs
   main.cpp
 )
-# TODO we don't need all the class icons here, so split the qrc file accordingly
-qt4_add_resources(gammaray_runner_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
 
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common gammaray_ui gammaray_launcher_shared)
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} gammaray_launcher_shared)
+if(HAVE_QT_WIDGETS)
+  # needed for splash screen and style inspector
+  target_link_libraries(gammaray ${QT_QTGUI_LIBRARIES} gammaray_ui)
+endif()
 
 if (QNXNTO)
   target_link_libraries(gammaray cpp)
@@ -52,3 +54,8 @@ if(UNIX AND NOT APPLE AND NOT QNXNTO)
 endif()
 
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+# UI launcher
+if ((Qt5Widgets_FOUND AND Qt5Concurrent_FOUND) OR QT_QTGUI_FOUND)
+   add_subdirectory(ui)
+endif ()

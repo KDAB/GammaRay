@@ -24,6 +24,7 @@
 #include "launchoptions.h"
 
 #include <QVariant>
+#include <QProcess>
 
 using namespace GammaRay;
 
@@ -85,7 +86,7 @@ void LaunchOptions::setUiMode(LaunchOptions::UiMode mode)
   setProbeSetting("InProcessUi", mode == InProcessUi);
 }
 
-void LaunchOptions::sendProbeSettings()
+void LaunchOptions::sendProbeSettings() const
 {
   // for now just use env vars, in order to make this work with attaching as well
   // we are going to need temporary files, shared memory, or something like that
@@ -112,4 +113,33 @@ void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
   }
 
   m_probeSettings.insert(key.toUtf8(), v);
+}
+
+bool LaunchOptions::execute(const QString& launcherPath) const
+{
+  Q_ASSERT(!launcherPath.isEmpty());
+  Q_ASSERT(isValid());
+
+  sendProbeSettings(); // TODO: add cli options for network settings too, to replace this
+
+  QStringList args;
+  switch (uiMode()) {
+    case InProcessUi:
+      args.push_back("--inprocess");
+      break;
+    case OutOfProcessUi:
+      args.push_back("--no-inprocess");
+      break;
+    case NoUi:
+      args.push_back("--inject-only");
+      break;
+  }
+
+  if (isAttach()) {
+    args.push_back("--pid");
+    args.push_back(QString::number(pid()));
+  } else {
+    args += launchArguments();
+  }
+  return QProcess::startDetached(launcherPath, args);
 }

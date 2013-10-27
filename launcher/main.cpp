@@ -25,14 +25,19 @@
 #include "config-gammaray-version.h"
 #include "probefinder.h"
 #include "injector/injectorfactory.h"
-#include "launcherwindow.h"
 #include "launchoptions.h"
 #include "clientlauncher.h"
 
+#ifdef HAVE_QT_WIDGETS
 #include <QApplication>
+#else
+#include <QCoreApplication>
+#endif
+
 #include <QDebug>
-#include <QStringList>
+#include <QDir>
 #include <QFileInfo>
+#include <QStringList>
 
 using namespace GammaRay;
 
@@ -66,6 +71,23 @@ static void usage(const char *argv0)
       << endl;
 }
 
+static bool startLauncher()
+{
+  QString launcherPath = QCoreApplication::applicationDirPath() + QDir::separator() + "gammaray-launcher";
+#ifdef Q_OS_WIN
+  launcherPath += ".exe";
+#endif
+  const QFileInfo fi(launcherPath);
+  if (fi.isExecutable()) {
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::ForwardedChannels);
+    proc.start(launcherPath);
+    proc.waitForFinished(-1);
+    return proc.exitCode() == 0;
+  }
+  return false;
+}
+
 int main(int argc, char **argv)
 {
   QCoreApplication::setOrganizationName("KDAB");
@@ -76,7 +98,11 @@ int main(int argc, char **argv)
   for (int i = 1; i < argc; ++i) {
     args.push_back(QString::fromLocal8Bit(argv[i]));
   }
-  QApplication app(argc, argv);
+#ifdef HAVE_QT_WIDGETS
+  QApplication app(argc, argv); // for splash screen and style inspector
+#else
+  QCoreApplication app(argc, argv);
+#endif
 
   QStringList builtInArgs = QStringList() << QLatin1String("-style")
                                           << QLatin1String("-stylesheet")
@@ -132,9 +158,10 @@ int main(int argc, char **argv)
   options.setLaunchArguments(args);
 
   if (!options.isValid()) {
-    LauncherWindow dialog;
-    if (dialog.exec() == QDialog::Accepted)
-      options = dialog.launchOptions();
+    if (startLauncher())
+      return 0;
+    usage(argv[0]);
+    return 1;
   }
 
   if (!options.isValid())

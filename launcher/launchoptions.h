@@ -54,7 +54,7 @@ public:
   bool isValid() const;
 
   /** Call before launching to communicate probe settings. */
-  void sendProbeSettings();
+  void sendProbeSettings() const;
 
   /** Generic key/value settings send to the probe. */
   void setProbeSetting(const QString &key, const QVariant &value);
@@ -70,6 +70,9 @@ public:
   /** UI mode. */
   UiMode uiMode() const;
   void setUiMode(UiMode mode);
+
+  /** execute this launch options with the given command-line launcher. */
+  bool execute(const QString& launcherPath) const;
 
 private:
   QStringList m_launchArguments;
