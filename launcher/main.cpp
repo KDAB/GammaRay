@@ -68,9 +68,9 @@ static void usage(const char *argv0)
 
 int main(int argc, char **argv)
 {
-  QApplication::setOrganizationName("KDAB");
-  QApplication::setOrganizationDomain("kdab.com");
-  QApplication::setApplicationName("GammaRay");
+  QCoreApplication::setOrganizationName("KDAB");
+  QCoreApplication::setOrganizationDomain("kdab.com");
+  QCoreApplication::setApplicationName("GammaRay");
 
   QStringList args;
   for (int i = 1; i < argc; ++i) {
