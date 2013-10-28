@@ -44,7 +44,7 @@ static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
 
 PluginManagerBase::PluginManagerBase(QObject *parent) : m_parent(parent)
 {
-  QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
+  QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_LOCAL_INSTALL_PREFIX) + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
 }
 
 PluginManagerBase::~PluginManagerBase()
@@ -59,6 +59,11 @@ QStringList PluginManagerBase::pluginPaths() const
   pluginPaths << QLatin1String(GAMMARAY_BUILD_DIR) +
     QDir::separator() + "lib" +
     QDir::separator() + "plugins" +
+    QDir::separator() + GAMMARAY_PLUGIN_SUFFIX;
+
+  pluginPaths << QCoreApplication::applicationDirPath() +
+    QDir::separator() + ".." +
+    QDir::separator() + GAMMARAY_PLUGIN_INSTALL_DIR +
     QDir::separator() + GAMMARAY_PLUGIN_SUFFIX;
 
   QStringList libraryPaths = QCoreApplication::libraryPaths();
