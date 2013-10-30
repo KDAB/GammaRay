@@ -141,6 +141,19 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
+if(APPLE)
+  # Qt 4.8 fails to build with libc++
+  #
+  # - QVector::iterator + STL algorithms fails to build when QT_STRICT_ITERATORS
+  #   if defined
+  # - QTBUG-25960
+  # - And possibly others
+  #
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libstdc++")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -stdlib=libstdc++")
+endif()
+
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
 if(Qt5Core_FOUND)
