@@ -8,8 +8,13 @@
 #  GRAPHVIZ_MAJOR_VERSION = The library major version number
 #  GRAPHVIZ_MINOR_VERSION = The library minor version number
 #  GRAPHVIZ_PATCH_VERSION = The library patch version number
+#
+# This module reads hints about search locations from the following env variables:
+#  GRAPHVIZ_ROOT          - Graphviz installation prefix
+#                           (containing bin/, include/, etc.)
 
 # Copyright (c) 2009, Adrien Bustany, <madcat@mymadcat.com>
+# Copyright (c) 2013 Kevin Funk <kevin.funk@kdab.com>
 
 # Version computation and some cleanups by Allen Winter <allen.winter@kdab.com>
 # Copyright (c) 2012-2013 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
@@ -26,17 +31,22 @@ if(GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_CGRAPH_LIBRARY AND
   set(GRAPHVIZ_FIND_QUIETLY TRUE)
 endif()
 
-if(WIN32)
-    find_program(DOT_TOOL dot)
-    get_filename_component(_GRAPHVIZ_DIR ${DOT_TOOL} PATH)
-    set(_GRAPHVIZ_INCLUDE_DIR ${_GRAPHVIZ_DIR}/../include)
-    set(_GRAPHVIZ_LIBRARY_DIR ${_GRAPHVIZ_DIR}/../lib)
-else()
-    set(_GRAPHVIZ_INCLUDE_DIR)
-    set(_GRAPHVIZ_LIBRARY_DIR)
+set(_GRAPHVIZ_ROOT $ENV{GRAPHVIZ_ROOT})
+
+if(NOT _GRAPHVIZ_ROOT)
+  if(WIN32)
+      find_program(DOT_TOOL dot)
+      get_filename_component(_GRAPHVIZ_ROOT ${DOT_TOOL} PATH)
+  endif()
 endif()
 
-find_path(GRAPHVIZ_INCLUDE_DIR graphviz/graph.h PATH ${_GRAPHVIZ_INCLUDE_DIR})
+if(_GRAPHVIZ_ROOT)
+  set(_GRAPHVIZ_INCLUDE_DIR ${_GRAPHVIZ_ROOT}/include)
+  set(_GRAPHVIZ_LIBRARY_DIR ${_GRAPHVIZ_ROOT}/lib)
+endif()
+
+find_path(GRAPHVIZ_INCLUDE_DIR graphviz/graph.h
+  HINTS ${_GRAPHVIZ_INCLUDE_DIR})
 
 if(WIN32)
   if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -48,11 +58,16 @@ else()
   set(GRAPHVIZ_LIB_PATH_SUFFIX)
 endif()
 
-find_library(GRAPHVIZ_CDT_LIBRARY NAMES cdt PATHS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
-find_library(GRAPHVIZ_GVC_LIBRARY NAMES gvc PATHS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
-find_library(GRAPHVIZ_CGRAPH_LIBRARY NAMES cgraph PATHS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
-find_library(GRAPHVIZ_GRAPH_LIBRARY NAMES graph PATHS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
-find_library(GRAPHVIZ_PATHPLAN_LIBRARY NAMES pathplan PATHS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
+find_library(GRAPHVIZ_CDT_LIBRARY NAMES cdt
+  HINTS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
+find_library(GRAPHVIZ_GVC_LIBRARY NAMES gvc
+  HINTS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
+find_library(GRAPHVIZ_CGRAPH_LIBRARY NAMES cgraph
+  HINTS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
+find_library(GRAPHVIZ_GRAPH_LIBRARY NAMES graph
+  HINTS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
+find_library(GRAPHVIZ_PATHPLAN_LIBRARY NAMES pathplan
+  HINTS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX})
 
 check_include_files(graphviz/graphviz_version.h HAVE_GRAPHVIZ_VERSION_H)
 
