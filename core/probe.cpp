@@ -351,7 +351,7 @@ void Probe::delayedInit()
     s_listener()->filterThread = 0;
     IF_DEBUG(cout << "creation done" << endl;)
   } else {
-    cerr << "Unable to show in-process UI in a non-GUI application." << endl;
+    cerr << "Unable to show in-process UI in a non-QWidget based application." << endl;
   }
 }
 
