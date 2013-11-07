@@ -21,6 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
 #include "gdbinjector.h"
 
 #include <ui/splashscreen.h>
@@ -48,7 +49,9 @@ GdbInjector::GdbInjector() :
 bool GdbInjector::launch(const QStringList &programAndArgs,
                         const QString &probeDll, const QString &probeFunc)
 {
+#ifdef HAVE_QT_WIDGETS
   showSplashScreen();
+#endif
 
   QStringList gdbArgs;
   gdbArgs.push_back(QLatin1String("--args"));
@@ -73,7 +76,9 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
 bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(pid > 0);
+#ifdef HAVE_QT_WIDGETS
   showSplashScreen();
+#endif
   if (!startGdb(QStringList() << QLatin1String("-pid") << QString::number(pid))) {
     return false;
   }
@@ -135,7 +140,9 @@ bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeF
     mErrorString = m_process->errorString();
   }
 
+#ifdef HAVE_QT_WIDGETS
   hideSplashScreen();
+#endif
 
   return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
 }
