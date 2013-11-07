@@ -94,6 +94,7 @@ if(Qt5Core_FOUND)
   include("cmake/ECMQt4To5Porting.cmake")
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 
+  set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
   set(HAVE_QT_SVG ${Qt5Svg_FOUND})
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
@@ -114,6 +115,7 @@ else()
   find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg)
 
   include(${QT_USE_FILE})
+  set(HAVE_QT_WIDGETS true)
   set(HAVE_QT_SVG true)
   if(QT_QTDESIGNER_FOUND)
     set(HAVE_QT_DESIGNER true)
@@ -154,6 +156,16 @@ set(
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION ${LIB_INSTALL_DIR}
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
+)
+
+macro_log_feature(
+  HAVE_QT_WIDGETS
+  "Qt Widgets"
+  "Qt Widgets"
+  "included with Qt"
+  FALSE
+  ""
+  "Required for the GammaRay client UI and widget-related tools"
 )
 
 macro_log_feature(
