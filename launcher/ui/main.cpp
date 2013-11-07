@@ -1,8 +1,8 @@
 #include "launcherwindow.h"
 #include "launchoptions.h"
+#include "launcherfinder.h"
 
 #include <QApplication>
-#include <QDir>
 
 using namespace GammaRay;
 
@@ -20,11 +20,7 @@ int main(int argc, char** argv)
   if (launcher.result() == QDialog::Accepted) {
     const LaunchOptions opts = launcher.launchOptions();
     if (opts.isValid()) {
-      QString launcherPath = QCoreApplication::applicationDirPath() + QDir::separator() + "gammaray";
-#ifdef Q_OS_WIN
-      launcherPath += ".exe";
-#endif
-      opts.execute(launcherPath);
+      opts.execute(LauncherFinder::findLauncher(LauncherFinder::Injector));
     }
   }
 

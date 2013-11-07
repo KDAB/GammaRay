@@ -22,11 +22,7 @@
 */
 
 #include "clientlauncher.h"
-
-#include <QCoreApplication>
-#include <QDebug>
-#include <QDir>
-#include <QFile>
+#include "launcherfinder.h"
 
 using namespace GammaRay;
 
@@ -41,12 +37,7 @@ ClientLauncher::~ClientLauncher()
 
 QString ClientLauncher::clientPath()
 {
-  const QString path = QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String("gammaray-client");
-  if (QFile::exists(path))
-    return path;
-  qWarning() << "gammaray-client executable not found in the expected location (" << QCoreApplication::applicationDirPath() << "), "
-             << "continuing anyway, hoping for it to be in PATH.";
-  return "gammaray-client";
+  return LauncherFinder::findLauncher(LauncherFinder::Client);
 }
 
 QStringList ClientLauncher::makeArgs(const QString& hostName, quint16 port)

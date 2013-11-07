@@ -23,6 +23,7 @@ set(gammaray_launcher_shared_srcs
   probefinder.cpp
   launchoptions.cpp
   clientlauncher.cpp
+  launcherfinder.cpp
 )
 if(NOT WIN32)
   list(APPEND gammaray_launcher_shared_srcs injector/gdbinjector.cpp)

@@ -27,6 +27,7 @@
 #include "injector/injectorfactory.h"
 #include "launchoptions.h"
 #include "clientlauncher.h"
+#include "launcherfinder.h"
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>
@@ -35,7 +36,6 @@
 #endif
 
 #include <QDebug>
-#include <QDir>
 #include <QFileInfo>
 #include <QStringList>
 
@@ -73,19 +73,12 @@ static void usage(const char *argv0)
 
 static bool startLauncher()
 {
-  QString launcherPath = QCoreApplication::applicationDirPath() + QDir::separator() + "gammaray-launcher";
-#ifdef Q_OS_WIN
-  launcherPath += ".exe";
-#endif
-  const QFileInfo fi(launcherPath);
-  if (fi.isExecutable()) {
-    QProcess proc;
-    proc.setProcessChannelMode(QProcess::ForwardedChannels);
-    proc.start(launcherPath);
-    proc.waitForFinished(-1);
-    return proc.exitCode() == 0;
-  }
-  return false;
+  const QString launcherPath = LauncherFinder::findLauncher(LauncherFinder::LauncherUI);
+  QProcess proc;
+  proc.setProcessChannelMode(QProcess::ForwardedChannels);
+  proc.start(launcherPath);
+  proc.waitForFinished(-1);
+  return proc.exitCode() == 0;
 }
 
 int main(int argc, char **argv)
