@@ -22,6 +22,8 @@
 #ifndef GAMMARAY_GVTYPES_H
 #define GAMMARAY_GVTYPES_H
 
+#include <qglobal.h>
+
 namespace GammaRay {
 
 typedef quintptr ElementId;
