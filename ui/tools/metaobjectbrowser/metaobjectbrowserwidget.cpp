@@ -48,6 +48,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   objectFilter->setDynamicSortFilter(true);
 
   QTreeView *treeView = new QTreeView(this);
+  treeView->setUniformRowHeights(true);
   treeView->setModel(objectFilter);
   new DeferredResizeModeSetter(treeView->header(), 0, QHeaderView::Stretch);
   treeView->setSortingEnabled(true);

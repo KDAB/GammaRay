@@ -39,7 +39,11 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="QTreeView" name="modelContentView"/>
+        <widget class="QTreeView" name="modelContentView">
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
