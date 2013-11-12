@@ -57,6 +57,6 @@ endif()
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 # UI launcher
-if ((Qt5Widgets_FOUND AND Qt5Concurrent_FOUND) OR QT_QTGUI_FOUND)
+if (HAVE_QT_CONCURRENT AND HAVE_QT_WIDGETS)
    add_subdirectory(ui)
 endif ()
