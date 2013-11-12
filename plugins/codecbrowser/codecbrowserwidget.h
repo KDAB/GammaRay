@@ -39,6 +39,7 @@ class CodecBrowserWidget : public QWidget
   Q_OBJECT
   public:
     explicit CodecBrowserWidget(QWidget *parent = 0);
+    ~CodecBrowserWidget();
 
   private slots:
     void textChanged(const QString &text);

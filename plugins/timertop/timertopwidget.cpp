@@ -53,6 +53,10 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
   connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(slotUpdateView()));
 }
 
+TimerTopWidget::~TimerTopWidget()
+{
+}
+
 void TimerTopWidget::slotUpdateView()
 {
   ui->timerView->viewport()->update();

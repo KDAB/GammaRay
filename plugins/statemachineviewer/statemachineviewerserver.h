@@ -32,6 +32,7 @@
 #include <QSet>
 #include <QString>
 #include <QVector>
+#include <QStateMachine>
 
 #include <config-gammaray.h>
 

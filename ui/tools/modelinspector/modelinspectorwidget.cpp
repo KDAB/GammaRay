@@ -68,6 +68,10 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   cellSelected(-1, -1, QString(), QString());
 }
 
+ModelInspectorWidget::~ModelInspectorWidget()
+{
+}
+
 void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
 {
   QModelIndex index;

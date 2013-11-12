@@ -33,6 +33,10 @@ PropertyDoublePairEditor::PropertyDoublePairEditor(QWidget *parent)
   ui->setupUi(this);
 }
 
+PropertyDoublePairEditor::~PropertyDoublePairEditor()
+{
+}
+
 PropertyPointFEditor::PropertyPointFEditor(QWidget *parent)
   : PropertyDoublePairEditor(parent)
 {

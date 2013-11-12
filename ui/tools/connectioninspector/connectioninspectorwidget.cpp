@@ -50,4 +50,8 @@ ConnectionInspectorWidget::ConnectionInspectorWidget(QWidget* parent)
   }
 }
 
+ConnectionInspectorWidget::~ConnectionInspectorWidget()
+{
+}
+
 #include "connectioninspectorwidget.moc"

@@ -123,6 +123,10 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
   m_interface->repopulateGraph();
 }
 
+StateMachineViewerWidget::~StateMachineViewerWidget()
+{
+}
+
 void StateMachineViewerWidget::statusChanged(const bool haveStateMachine, const bool running)
 {
   if (!running) {

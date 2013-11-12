@@ -49,6 +49,10 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
   connect(ui->codecText, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)));
 }
 
+CodecBrowserWidget::~CodecBrowserWidget()
+{
+}
+
 void CodecBrowserWidget::textChanged(const QString& text)
 {
   Endpoint::instance()->invokeObject("com.kdab.GammaRay.CodecBrowser", "textChanged", QVariantList() << text);

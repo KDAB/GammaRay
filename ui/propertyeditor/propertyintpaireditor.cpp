@@ -40,6 +40,10 @@ PropertyIntPairEditor::PropertyIntPairEditor(QWidget *parent)
   ui->yBox->setMaximum(std::numeric_limits<int>::max());
 }
 
+PropertyIntPairEditor::~PropertyIntPairEditor()
+{
+}
+
 PropertyPointEditor::PropertyPointEditor(QWidget *parent)
   : PropertyIntPairEditor(parent)
 {

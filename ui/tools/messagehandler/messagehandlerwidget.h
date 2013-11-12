@@ -38,6 +38,7 @@ class MessageHandlerWidget : public QWidget
   Q_OBJECT
   public:
     explicit MessageHandlerWidget(QWidget *parent = 0);
+    ~MessageHandlerWidget();
 
   private slots:
     void fatalMessageReceived(const QString &app, const QString &message,

@@ -38,6 +38,7 @@ class PropertyDoublePairEditor : public QWidget
   Q_OBJECT
   public:
     explicit PropertyDoublePairEditor(QWidget *parent = 0);
+    ~PropertyDoublePairEditor();
 
   protected:
     QScopedPointer<Ui::PropertyDoublePairEditor> ui;

@@ -42,6 +42,7 @@ class ModelInspectorWidget : public QWidget
   Q_OBJECT
   public:
     explicit ModelInspectorWidget(QWidget *parent = 0);
+    ~ModelInspectorWidget();
 
   private slots:
     void cellSelected(int row, int column, const QString &internalId, const QString &internalPtr);

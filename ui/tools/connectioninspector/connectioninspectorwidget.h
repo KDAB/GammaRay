@@ -37,6 +37,7 @@ class ConnectionInspectorWidget : public QWidget
   Q_OBJECT
   public:
     explicit ConnectionInspectorWidget(QWidget *parent = 0);
+    ~ConnectionInspectorWidget();
 
   private:
     QScopedPointer<Ui::ConnectionInspectorWidget> ui;

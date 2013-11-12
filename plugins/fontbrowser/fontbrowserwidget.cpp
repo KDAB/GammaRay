@@ -86,6 +86,10 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
 
+FontBrowserWidget::~FontBrowserWidget()
+{
+}
+
 void FontBrowserWidget::delayedInit()
 {
   m_fontBrowser->setColors(palette().color(QPalette::Foreground), palette().color(QPalette::Base));

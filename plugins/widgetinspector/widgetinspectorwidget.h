@@ -42,6 +42,7 @@ class WidgetInspectorWidget : public QWidget
   Q_OBJECT
   public:
     explicit WidgetInspectorWidget(QWidget *parent = 0);
+    ~WidgetInspectorWidget();
 
   private:
     void setActionsEnabled(bool enabled);

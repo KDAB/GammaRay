@@ -91,6 +91,10 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   m_inspector->checkFeatures();
 }
 
+WidgetInspectorWidget::~WidgetInspectorWidget()
+{
+}
+
 void WidgetInspectorWidget::setFeatures(bool svg, bool print, bool designer, bool privateHeaders)
 {
   if (!svg) {

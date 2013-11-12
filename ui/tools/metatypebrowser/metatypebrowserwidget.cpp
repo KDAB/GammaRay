@@ -48,4 +48,8 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
   ui->metaTypeView->header()->setSortIndicator(1, Qt::AscendingOrder); // sort by type id
 }
 
+MetaTypeBrowserWidget::~MetaTypeBrowserWidget()
+{
+}
+
 #include "metatypebrowserwidget.moc"

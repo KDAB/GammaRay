@@ -65,6 +65,10 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   ui->backtraceView->hide();
 }
 
+MessageHandlerWidget::~MessageHandlerWidget()
+{
+}
+
 void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QString &message,
                                                 const QTime &time, const QStringList &backtrace)
 {

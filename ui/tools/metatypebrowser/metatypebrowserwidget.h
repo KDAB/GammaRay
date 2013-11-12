@@ -37,6 +37,7 @@ class MetaTypeBrowserWidget : public QWidget
   Q_OBJECT
   public:
     explicit MetaTypeBrowserWidget(QWidget *parent = 0);
+    ~MetaTypeBrowserWidget();
 
   private:
     QScopedPointer<Ui::MetaTypeBrowserWidget> ui;
