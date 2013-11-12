@@ -92,4 +92,3 @@ bool LocaleAccessorModel::setData(const QModelIndex &index, const QVariant &valu
   return true;
 }
 
-#include "localeaccessormodel.moc"

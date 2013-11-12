@@ -10,8 +10,6 @@ set(gammaray_fontbrowser_plugin_srcs
   fontbrowserserver.cpp
 )
 
-qt4_automoc(${gammaray_fontbrowser_plugin_srcs})
-
 gammaray_add_plugin(gammaray_fontbrowser_plugin
   gammaray_fontbrowser.desktop
   ${gammaray_fontbrowser_plugin_srcs}
@@ -31,7 +29,6 @@ set(gammaray_fontbrowser_plugin_ui_srcs
   fontbrowserclient.cpp
 )
 
-qt4_automoc(${gammaray_fontbrowser_plugin_ui_srcs})
 qt4_wrap_ui(gammaray_fontbrowser_plugin_ui_srcs
   fontbrowserwidget.ui
 )

@@ -156,4 +156,3 @@ Qt::ItemFlags NetworkDiscoveryModel::flags(const QModelIndex& index) const
   return baseFlags;
 }
 
-#include "networkdiscoverymodel.moc"

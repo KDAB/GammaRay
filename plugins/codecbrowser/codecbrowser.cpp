@@ -71,5 +71,3 @@ void CodecBrowser::updateCodecs(const QItemSelection &selected,
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(CodecBrowserFactory)
 #endif
-
-#include "codecbrowser.moc"

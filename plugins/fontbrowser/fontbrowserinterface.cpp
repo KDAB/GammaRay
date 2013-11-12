@@ -37,5 +37,3 @@ FontBrowserInterface::~FontBrowserInterface()
 {
 
 }
-
-#include "fontbrowserinterface.moc"

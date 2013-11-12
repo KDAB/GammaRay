@@ -193,5 +193,3 @@ QString SceneModel::typeName(int itemType) const
   }
   return QString::number(itemType);
 }
-
-#include "scenemodel.moc"

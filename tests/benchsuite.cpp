@@ -141,4 +141,3 @@ void BenchSuite::probe_objectAdded()
   delete Probe::instance();
 }
 
-#include "benchsuite.moc"

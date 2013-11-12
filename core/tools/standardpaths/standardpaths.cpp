@@ -37,4 +37,3 @@ StandardPaths::~StandardPaths()
 {
 }
 
-#include "standardpaths.moc"

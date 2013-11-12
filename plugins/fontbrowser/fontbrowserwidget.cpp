@@ -98,5 +98,3 @@ void FontBrowserWidget::delayedInit()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(FontBrowserUiFactory)
 #endif
-
-#include "fontbrowserwidget.moc"

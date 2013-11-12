@@ -266,4 +266,3 @@ void Server::broadcast()
   m_broadcastSocket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, broadcastPort());
 }
 
-#include "server.moc"

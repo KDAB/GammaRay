@@ -2,7 +2,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 set(gammaray_injector_style_srcs injectorstyleplugin.cpp)
-qt4_automoc(${gammaray_injector_style_srcs})
 
 add_library(gammaray_injector_style MODULE ${gammaray_injector_style_srcs})
 

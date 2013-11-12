@@ -68,4 +68,3 @@ void PropertySizeFEditor::setSizeF(const QSizeF &size)
   ui->yBox->setValue(size.height());
 }
 
-#include "propertydoublepaireditor.moc"

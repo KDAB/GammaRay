@@ -61,5 +61,3 @@ void CodecBrowserWidget::textChanged(const QString& text)
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(CodecBrowserUiFactory)
 #endif
-
-#include "codecbrowserwidget.moc"

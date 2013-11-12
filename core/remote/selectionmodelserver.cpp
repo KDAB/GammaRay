@@ -36,5 +36,3 @@ SelectionModelServer::~SelectionModelServer()
 {
 }
 
-
-#include "selectionmodelserver.moc"

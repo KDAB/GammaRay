@@ -169,4 +169,3 @@ void LaunchPage::updateArgumentButtons()
   ui->removeArgButton->setEnabled(m_argsModel->rowCount() > 0);
 }
 
-#include "launchpage.moc"

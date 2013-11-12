@@ -47,5 +47,3 @@ void StateMachineView::wheelEvent(QWheelEvent *event)
   zoomBy(zoomFactor);
   event->accept();
 }
-
-#include "statemachineview.moc"

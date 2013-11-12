@@ -96,4 +96,3 @@ void LauncherWindow::accept()
   QDialog::accept();
 }
 
-#include "launcherwindow.moc"

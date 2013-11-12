@@ -40,7 +40,4 @@ StateMachineViewerInterface::StateMachineViewerInterface(QObject *parent)
 
 StateMachineViewerInterface::~StateMachineViewerInterface()
 {
-
 }
-
-#include "statemachineviewerinterface.moc"

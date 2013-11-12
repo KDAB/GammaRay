@@ -172,6 +172,4 @@ QVariant PaintBufferModel::headerData(int section, Qt::Orientation orientation, 
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-#include "paintbuffermodel.moc"
-
 #endif

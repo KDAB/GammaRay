@@ -36,4 +36,3 @@ ModelInspectorClient::~ModelInspectorClient()
 
 }
 
-#include "modelinspectorclient.moc"

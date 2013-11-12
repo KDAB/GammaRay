@@ -187,4 +187,3 @@ void Client::unmonitorObject(Protocol::ObjectAddress objectAddress)
   send(msg);
 }
 
-#include "client.moc"

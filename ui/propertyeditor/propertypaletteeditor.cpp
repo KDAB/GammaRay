@@ -39,4 +39,3 @@ void PropertyPaletteEditor::edit()
   }
 }
 
-#include "propertypaletteeditor.moc"

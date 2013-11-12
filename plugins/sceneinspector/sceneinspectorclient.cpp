@@ -54,5 +54,3 @@ void SceneInspectorClient::sceneClicked(const QPointF &pos)
 {
   Endpoint::instance()->invokeObject(objectName(), "sceneClicked", QVariantList() << pos);
 }
-
-#include "sceneinspectorclient.moc"

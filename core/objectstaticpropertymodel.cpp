@@ -142,4 +142,3 @@ Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
   return flags;
 }
 
-#include "objectstaticpropertymodel.moc"

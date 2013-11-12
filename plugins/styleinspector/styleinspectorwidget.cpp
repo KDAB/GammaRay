@@ -66,5 +66,3 @@ void StyleInspectorWidget::styleSelected(int index)
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->styleSelector->model());
   selectionModel->select(ui->styleSelector->model()->index(index, 0), QItemSelectionModel::ClearAndSelect);
 }
-
-#include "styleinspectorwidget.moc"

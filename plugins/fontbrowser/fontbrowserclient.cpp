@@ -51,6 +51,3 @@ void FontBrowserClient::setColors(const QColor &foreground, const QColor &backgr
 {
   Endpoint::instance()->invokeObject(objectName(), "setColors", QVariantList() << foreground << background);
 }
-
-
-#include "fontbrowserclient.moc"

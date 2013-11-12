@@ -36,4 +36,3 @@ ResourceBrowserClient::~ResourceBrowserClient()
 
 }
 
-#include "resourcebrowserclient.moc"

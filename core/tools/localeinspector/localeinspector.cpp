@@ -38,4 +38,3 @@ LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
   probe->registerModel("com.kdab.GammaRay.LocaleAccessorModel", accessorModel);
 }
 
-#include "localeinspector.moc"

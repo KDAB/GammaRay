@@ -461,5 +461,3 @@ void VtkWidget::objectDataChanged(const QModelIndex& topLeft, const QModelIndex&
     addObject(index);
   }
 }
-
-#include "vtkwidget.moc"

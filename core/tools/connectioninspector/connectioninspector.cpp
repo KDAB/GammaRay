@@ -31,4 +31,3 @@ ConnectionInspector::ConnectionInspector(ProbeInterface *probe, QObject *parent)
   Q_UNUSED(probe);
 }
 
-#include "connectioninspector.moc"

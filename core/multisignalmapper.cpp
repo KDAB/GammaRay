@@ -68,4 +68,3 @@ void MultiSignalMapper::slotMapped(QObject *object)
   emit signalEmitted(object, m_mappers.indexOf(static_cast<QSignalMapper*>(sender())));
 }
 
-#include "multisignalmapper.moc"

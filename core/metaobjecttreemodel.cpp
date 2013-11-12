@@ -238,4 +238,3 @@ const QMetaObject *MetaObjectTreeModel::metaObjectForIndex(const QModelIndex &in
   return metaObject;
 }
 
-#include "metaobjecttreemodel.moc"

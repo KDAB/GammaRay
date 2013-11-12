@@ -43,5 +43,3 @@ GraphWidget::GraphWidget(QWidget *parent)
 GraphWidget::~GraphWidget()
 {
 }
-
-#include "vtkcontainer.moc"

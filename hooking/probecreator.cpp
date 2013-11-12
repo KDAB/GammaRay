@@ -64,4 +64,3 @@ void ProbeCreator::createProbe()
   deleteLater();
 }
 
-#include "probecreator.moc"

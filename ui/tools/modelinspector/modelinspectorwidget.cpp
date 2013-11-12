@@ -129,4 +129,3 @@ void ModelInspectorWidget::setupModelContentSelectionModel()
   ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(ui->modelContentView->model()));
 }
 
-#include "modelinspectorwidget.moc"

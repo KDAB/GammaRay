@@ -22,8 +22,6 @@ set(gammaray_common_srcs
   network/endpoint.cpp
 )
 
-qt4_automoc(${gammaray_common_srcs})
-
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
 set_target_properties(gammaray_common PROPERTIES
   DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB
@@ -49,8 +47,6 @@ set(gammaray_common_internal_srcs
   network/networkselectionmodel.cpp
   network/streamoperators.cpp
 )
-
-qt4_automoc(${gammaray_common_internal_srcs})
 
 if(NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

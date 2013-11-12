@@ -75,5 +75,3 @@ void GraphicsSceneView::itemCoordinatesChanged(const QPointF &coord)
                               arg(coord.x(), 0, 'f', 2).
                               arg(coord.y(), 0, 'f', 2));
 }
-
-#include "graphicssceneview.moc"

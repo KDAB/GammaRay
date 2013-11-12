@@ -50,4 +50,3 @@ MimeTypesWidget::~MimeTypesWidget()
 {
 }
 
-#include "mimetypeswidget.moc"

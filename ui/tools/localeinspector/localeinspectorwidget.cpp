@@ -64,4 +64,3 @@ void LocaleInspectorWidget::initSplitterPosition()
   ui->splitter->setSizes(QList<int>() << accessorHeight << height() - accessorHeight);
 }
 
-#include "localeinspectorwidget.moc"

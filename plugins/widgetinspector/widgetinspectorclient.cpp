@@ -56,5 +56,3 @@ void WidgetInspectorClient::checkFeatures()
 {
   Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
 }
-
-#include "widgetinspectorclient.moc"

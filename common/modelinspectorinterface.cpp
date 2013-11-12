@@ -37,5 +37,3 @@ ModelInspectorInterface::~ModelInspectorInterface()
 
 }
 
-#include "modelinspectorinterface.moc"
-

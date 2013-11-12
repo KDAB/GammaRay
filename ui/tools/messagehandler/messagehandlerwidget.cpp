@@ -115,4 +115,3 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
   dlg.exec();
 }
 
-#include "messagehandlerwidget.moc"

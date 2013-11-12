@@ -51,5 +51,3 @@ void WidgetPreviewWidget::paintEvent(QPaintEvent * /*event*/)
                       targetWidth, targetHeight,
                       m_pixmap);
 }
-
-#include "widgetpreviewwidget.moc"

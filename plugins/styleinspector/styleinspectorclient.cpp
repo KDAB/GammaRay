@@ -57,5 +57,3 @@ void StyleInspectorClient::setCellZoom(int zoom)
   StyleInspectorInterface::setCellZoom(zoom);
   Endpoint::instance()->invokeObject(objectName(), "setCellZoom", QVariantList() << zoom);
 }
-
-#include "styleinspectorclient.moc"

@@ -74,4 +74,3 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   treeView->sortByColumn(0, Qt::AscendingOrder);
 }
 
-#include "metaobjectbrowserwidget.moc"

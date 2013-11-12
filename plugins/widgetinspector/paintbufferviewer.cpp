@@ -50,5 +50,3 @@ PaintBufferViewer::PaintBufferViewer(QWidget *parent)
 PaintBufferViewer::~PaintBufferViewer()
 {
 }
-
-#include "paintbufferviewer.moc"

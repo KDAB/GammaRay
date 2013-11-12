@@ -37,5 +37,3 @@ ResourceBrowserInterface::~ResourceBrowserInterface()
 
 }
 
-
-#include "resourcebrowserinterface.moc"

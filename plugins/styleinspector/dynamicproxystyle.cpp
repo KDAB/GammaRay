@@ -70,5 +70,3 @@ int DynamicProxyStyle::pixelMetric(QStyle::PixelMetric metric,
   }
   return QProxyStyle::pixelMetric(metric, option, widget);
 }
-
-#include "dynamicproxystyle.moc"

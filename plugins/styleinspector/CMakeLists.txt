@@ -20,7 +20,6 @@ set(gammaray_styleinspector_plugin_srcs
   styleinspectorclient.cpp
 )
 
-qt4_automoc(${gammaray_styleinspector_plugin_srcs})
 qt4_wrap_ui(gammaray_styleinspector_plugin_srcs
   styleinspectorwidget.ui
   styleelementstatetablepage.ui

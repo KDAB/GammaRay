@@ -49,4 +49,3 @@ void PropertyControllerClient::invokeMethod(Qt::ConnectionType type)
   Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << QVariant::fromValue(type));
 }
 
-#include "propertycontrollerclient.moc"

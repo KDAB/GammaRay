@@ -225,5 +225,3 @@ void FontModel::fontDataChanged()
 
   emit dataChanged(index(0, 2), index(rowCount() - 1, 2));
 }
-
-#include "fontmodel.moc"

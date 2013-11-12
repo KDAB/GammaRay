@@ -80,4 +80,3 @@ void ConnectPage::instanceSelected()
   ui->port->setValue(rows.first().data(NetworkDiscoveryModel::PortRole).toInt());
 }
 
-#include "connectpage.moc"

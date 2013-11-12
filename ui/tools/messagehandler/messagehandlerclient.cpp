@@ -31,4 +31,3 @@ MessageHandlerClient::MessageHandlerClient(QObject *parent)
 
 }
 
-#include "messagehandlerclient.moc"

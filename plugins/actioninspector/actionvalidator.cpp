@@ -121,5 +121,3 @@ bool ActionValidator::hasAmbiguousShortcut(const QAction *action) const
   }
   return false;
 }
-
-#include "actionvalidator.moc"

@@ -82,4 +82,3 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
   m_textDocumentFormatModel->setFormat(f);
 }
 
-#include "textdocumentinspector.moc"

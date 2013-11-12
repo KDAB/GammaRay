@@ -95,4 +95,3 @@ QVariant VariantContainerModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
-#include "variantcontainermodel.moc"

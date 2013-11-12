@@ -102,4 +102,4 @@ QLineEdit* KFilterProxySearchLine::lineEdit() const
     return d->searchLine;
 }
 
-#include "kfilterproxysearchline.moc"
+#include "moc_kfilterproxysearchline.cpp"

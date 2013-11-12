@@ -80,5 +80,3 @@ void StyleElementStateTablePage::updateCellSize()
   ui->tableView->verticalHeader()->setDefaultSectionSize(m_interface->cellSizeHint().height() + 4);
   ui->tableView->horizontalHeader()->setDefaultSectionSize(m_interface->cellSizeHint().width() + 4);
 }
-
-#include "styleelementstatetablepage.moc"

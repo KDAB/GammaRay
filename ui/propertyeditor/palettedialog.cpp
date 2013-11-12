@@ -54,4 +54,3 @@ QPalette PaletteDialog::editedPalette() const
   return m_model->palette();
 }
 
-#include "palettedialog.moc"

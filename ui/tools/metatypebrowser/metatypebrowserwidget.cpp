@@ -51,5 +51,3 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
 MetaTypeBrowserWidget::~MetaTypeBrowserWidget()
 {
 }
-
-#include "metatypebrowserwidget.moc"

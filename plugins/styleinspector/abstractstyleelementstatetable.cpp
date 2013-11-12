@@ -76,4 +76,3 @@ void AbstractStyleElementStateTable::fillStyleOption(QStyleOption *option, int c
   option->state = StyleOption::prettyState(column);
 }
 
-#include "abstractstyleelementstatetable.moc"

@@ -78,4 +78,3 @@ bool AbstractStyleElementModel::isMainStyle() const
   }
 }
 
-#include "abstractstyleelementmodel.moc"

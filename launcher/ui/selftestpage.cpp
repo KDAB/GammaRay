@@ -118,4 +118,3 @@ void SelfTestPage::information(const QString &msg)
   m_resultModel->appendRow(item);
 }
 
-#include "selftestpage.moc"

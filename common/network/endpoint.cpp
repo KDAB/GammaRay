@@ -317,4 +317,3 @@ void Endpoint::setLabel(const QString &label)
   m_label = label;
 }
 
-#include "endpoint.moc"

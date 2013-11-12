@@ -63,4 +63,3 @@ void ResourceBrowser::currentChanged(const QModelIndex &current)
   }
 }
 
-#include "resourcebrowser.moc"

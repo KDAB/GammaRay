@@ -750,4 +750,3 @@ void ModelTest::ensureConsistent()
     }
 }
 
-#include "modeltest.moc"

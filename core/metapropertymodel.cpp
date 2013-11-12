@@ -154,4 +154,3 @@ Qt::ItemFlags MetaPropertyModel::flags(const QModelIndex &index) const
   return f | Qt::ItemIsEditable;
 }
 
-#include "metapropertymodel.moc"

@@ -220,5 +220,3 @@ bool ActionModel::filterAcceptsObject(QObject *object) const
 {
   return qobject_cast<QAction*>(object);
 }
-
-#include "actionmodel.moc"

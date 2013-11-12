@@ -33,8 +33,6 @@ set(gammaray_kjob_plugin_srcs
   kjobtrackerwidget.cpp
 )
 
-qt4_automoc(${gammaray_kjob_plugin_srcs})
-
 qt4_wrap_ui(gammaray_kjob_plugin_srcs
   kjobtrackerwidget.ui
 )

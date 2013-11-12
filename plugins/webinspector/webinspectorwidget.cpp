@@ -67,5 +67,3 @@ void WebInspectorWidget::webPageSelected(int index)
     ui->stack->setCurrentWidget(ui->wk1RemotePage);
   }
 }
-
-#include "webinspectorwidget.moc"

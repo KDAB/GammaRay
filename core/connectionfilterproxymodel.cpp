@@ -98,4 +98,3 @@ bool ConnectionFilterProxyModel::lessThan(const QModelIndex &left, const QModelI
   }
 }
 
-#include "connectionfilterproxymodel.moc"

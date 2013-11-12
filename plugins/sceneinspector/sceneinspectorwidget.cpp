@@ -218,5 +218,3 @@ void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
     ui->sceneTreeView->scrollTo(index); // in case selection does not come from us
   }
 }
-
-#include "sceneinspectorwidget.moc"

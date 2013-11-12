@@ -92,4 +92,3 @@ void TextDocumentInspectorWidget::documentContentChanged()
   ui->htmlView->setPlainText(m_currentDocument->toHtml());
 }
 
-#include "textdocumentinspectorwidget.moc"

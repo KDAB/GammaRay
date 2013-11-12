@@ -72,4 +72,3 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
   setWindowTitle(tr("GammaRay: Plugin Info"));
 }
 
-#include "aboutpluginsdialog.moc"

@@ -80,4 +80,3 @@ QVariant ToolPluginErrorModel::headerData(int section, Qt::Orientation orientati
   return QAbstractTableModel::headerData(section, orientation, role);
 }
 
-#include "toolpluginerrormodel.moc"

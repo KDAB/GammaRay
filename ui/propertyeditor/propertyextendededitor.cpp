@@ -54,4 +54,3 @@ void PropertyExtendedEditor::setValue(const QVariant &value)
   ui->valueLabel->setText(displayValue.isEmpty() ? value.toString() : displayValue);
 }
 
-#include "propertyextendededitor.moc"

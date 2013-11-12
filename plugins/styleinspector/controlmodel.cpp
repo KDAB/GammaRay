@@ -128,5 +128,3 @@ QVariant ControlModel::headerData(int section, Qt::Orientation orientation, int 
   }
   return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
-
-#include "controlmodel.moc"

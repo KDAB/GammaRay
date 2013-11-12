@@ -153,4 +153,3 @@ QVector<QAbstractProxyModel*> ModelModel::proxiesForModel(QAbstractItemModel* mo
   return proxies;
 }
 
-#include "modelmodel.moc"

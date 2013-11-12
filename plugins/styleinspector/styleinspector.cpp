@@ -89,5 +89,3 @@ void StyleInspector::styleSelected(const QItemSelection &selection)
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(StyleInspectorFactory)
 #endif
-
-#include "styleinspector.moc"

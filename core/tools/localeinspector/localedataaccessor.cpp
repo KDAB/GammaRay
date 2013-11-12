@@ -202,4 +202,3 @@ LOCALE_SIMPLE_ACCESSOR(NegativeSign,
 
 }
 
-#include "localedataaccessor.moc"

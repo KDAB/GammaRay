@@ -84,4 +84,3 @@ void DeferredTreeViewConfiguration::columnsInserted(const QModelIndex &parent)
   }
 }
 
-#include "deferredtreeviewconfiguration.moc"

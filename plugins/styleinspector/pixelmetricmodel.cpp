@@ -201,5 +201,3 @@ bool PixelMetricModel::setData(const QModelIndex &index, const QVariant &value, 
   emit dataChanged(index, index);
   return true;
 }
-
-#include "pixelmetricmodel.moc"

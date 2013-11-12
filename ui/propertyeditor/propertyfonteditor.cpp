@@ -41,4 +41,3 @@ void PropertyFontEditor::edit()
   }
 }
 
-#include "propertyfonteditor.moc"

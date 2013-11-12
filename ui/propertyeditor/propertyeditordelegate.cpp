@@ -41,4 +41,3 @@ void PropertyEditorDelegate::setEditorData(QWidget* editor, const QModelIndex& i
   QStyledItemDelegate::setEditorData(editor, index);
 }
 
-#include "propertyeditordelegate.moc"

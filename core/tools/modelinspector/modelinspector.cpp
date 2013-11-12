@@ -130,4 +130,3 @@ void ModelInspector::selectionChanged(const QItemSelection& selected)
   emit cellSelected(index.row(), index.column(), QString::number(index.internalId()), Util::addressToString(index.internalPointer()));
 }
 
-#include "modelinspector.moc"

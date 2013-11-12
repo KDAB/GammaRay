@@ -9,8 +9,6 @@ set(gammaray_actioninspector_plugin_srcs
   actionmodel.cpp
 )
 
-qt4_automoc(${gammaray_actioninspector_plugin_srcs})
-
 gammaray_add_plugin(gammaray_actioninspector_plugin
   gammaray_actioninspector.desktop
   ${gammaray_actioninspector_plugin_srcs}

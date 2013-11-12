@@ -38,4 +38,3 @@ MessageHandlerInterface::~MessageHandlerInterface()
 
 }
 
-#include "messagehandlerinterface.moc"

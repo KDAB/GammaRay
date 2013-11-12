@@ -146,4 +146,3 @@ void ClientToolModel::insertFactory(ToolUiFactory* factory)
 }
 
 
-#include "clienttoolmodel.moc"

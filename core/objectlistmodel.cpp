@@ -159,4 +159,3 @@ void ObjectListModel::objectRemovedMainThread(QObject *obj, bool fromBackground)
   endRemoveRows();
 }
 
-#include "objectlistmodel.moc"

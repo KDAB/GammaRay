@@ -171,4 +171,3 @@ void MimeTypesModel::fillModel()
   m_mimeTypeNodes.clear();
 }
 
-#include "mimetypesmodel.moc"

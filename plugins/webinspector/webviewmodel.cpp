@@ -68,6 +68,3 @@ bool WebViewModel::filterAcceptsObject(QObject* object) const
 {
   return qobject_cast<QWebPage*>(object) || object->inherits("QQuickWebView");
 }
-
-
-#include "webviewmodel.moc"

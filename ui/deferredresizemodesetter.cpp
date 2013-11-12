@@ -47,4 +47,3 @@ void DeferredResizeModeSetter::setSectionResizeMode()
   m_view->setResizeMode(m_section, m_resizeMode);
 }
 
-#include "deferredresizemodesetter.moc"

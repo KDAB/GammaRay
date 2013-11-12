@@ -67,5 +67,3 @@ void SceneInspectorInterface::paintItemDecoration(QGraphicsItem *item, const QTr
                         5.0 / transform.m11(),
                         5.0 / transform.m22());
 }
-
-#include "sceneinspectorinterface.moc"

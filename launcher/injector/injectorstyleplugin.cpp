@@ -97,4 +97,3 @@ void InjectorStylePlugin::inject()
 Q_EXPORT_PLUGIN2(gammaray_injector_style, GammaRay::InjectorStylePlugin)
 #endif
 
-#include "injectorstyleplugin.moc"

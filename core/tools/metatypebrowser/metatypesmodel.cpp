@@ -139,4 +139,3 @@ void MetaTypesModel::scanMetaTypes()
   endResetModel();
 }
 
-#include "metatypesmodel.moc"

@@ -304,4 +304,3 @@ void RemoteModelServer::modelDeleted()
     modelReset();
 }
 
-#include "remotemodelserver.moc"

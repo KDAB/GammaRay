@@ -277,4 +277,3 @@ void PropertyWidget::onDoubleClick(const QModelIndex &index)
 #endif
 }
 
-#include "propertywidget.moc"

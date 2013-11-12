@@ -13,8 +13,6 @@ set(gammaray_timertop_plugin_srcs
   functioncalltimer.cpp
 )
 
-qt4_automoc(${gammaray_timertop_plugin_srcs})
-
 gammaray_add_plugin(gammaray_timertop_plugin
   gammaray_timertop.desktop
   ${gammaray_timertop_plugin_srcs}
@@ -37,8 +35,6 @@ if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 set(gammaray_timertop_plugin_ui_srcs
   timertopwidget.cpp
 )
-
-qt4_automoc(${gammaray_timertop_plugin_ui_srcs})
 
 qt4_wrap_ui(gammaray_timertop_plugin_ui_srcs
   timertopwidget.ui

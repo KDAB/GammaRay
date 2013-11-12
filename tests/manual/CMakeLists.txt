@@ -25,8 +25,6 @@ add_executable(messagemodeltest
   ${gammaray_messagemodeltest_srcs}
 )
 
-qt4_automoc(${gammaray_messagemodeltest_srcs})
-
 target_link_libraries(messagemodeltest
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}

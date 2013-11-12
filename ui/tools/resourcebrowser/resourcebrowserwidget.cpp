@@ -126,4 +126,3 @@ void ResourceBrowserWidget::resourceSelected(const QByteArray &contents)
   ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
 }
 
-#include "resourcebrowserwidget.moc"

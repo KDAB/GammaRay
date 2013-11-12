@@ -52,7 +52,6 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
 #ifdef HAVE_QT_WIDGETS
   showSplashScreen();
 #endif
-
   QStringList gdbArgs;
   gdbArgs.push_back(QLatin1String("--args"));
   gdbArgs.append(programAndArgs);
@@ -226,4 +225,3 @@ bool GdbInjector::selfTest()
   return false;
 }
 
-#include "gdbinjector.moc"

@@ -103,4 +103,3 @@ int LocaleModel::rowCount(const QModelIndex &parent) const
   return m_locales.size();
 }
 
-#include "localemodel.moc"

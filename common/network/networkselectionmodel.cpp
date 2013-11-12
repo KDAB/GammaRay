@@ -147,4 +147,3 @@ void NetworkSelectionModel::slotSelectionChanged(const QItemSelection& selected,
   Endpoint::send(msg);
 }
 
-#include "networkselectionmodel.moc"

@@ -7,8 +7,6 @@ set(gammaray_selectionmodelinspector_plugin_srcs
   selectionmodelinspector.cpp
 )
 
-qt4_automoc(${gammaray_selectionmodelinspector_plugin_srcs})
-
 gammaray_add_plugin(gammaray_selectionmodelinspector_plugin
   gammaray_selectionmodelinspector.desktop
   ${gammaray_selectionmodelinspector_plugin_srcs}
@@ -26,7 +24,6 @@ set(gammaray_selectionmodelinspector_plugin_ui_srcs
   selectionmodelinspectorwidget.cpp
 )
 
-qt4_automoc(${gammaray_selectionmodelinspector_plugin_ui_srcs})
 qt4_wrap_ui(gammaray_selectionmodelinspector_plugin_ui_srcs
   selectionmodelinspectorwidget.ui
 )

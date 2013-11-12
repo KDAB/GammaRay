@@ -42,4 +42,3 @@ StandardPathsWidget::~StandardPathsWidget()
 {
 }
 
-#include "standardpathswidget.moc"

@@ -57,5 +57,3 @@ bool WidgetTreeModel::filterAcceptsObject(QObject *object) const
 {
   return object->isWidgetType() || qobject_cast<QLayout*>(object);
 }
-
-#include "widgettreemodel.moc"

@@ -460,6 +460,3 @@ void WidgetInspectorServer::objectCreated(QObject* object)
   if (QAbstractItemView* view = qobject_cast<QAbstractItemView*>(object))
     m_probe->discoverObject(view->model());
 }
-
-
-#include "widgetinspectorserver.moc"

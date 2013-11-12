@@ -200,4 +200,3 @@ void PropertyController::invokeMethod(Qt::ConnectionType connectionType)
   m_methodArgumentModel->setMethod(QMetaMethod());
 }
 
-#include "propertycontroller.moc"

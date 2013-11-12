@@ -103,4 +103,3 @@ void ObjectInspector::objectSelected(QObject *object)
   objectSelected(index);
 }
 
-#include "objectinspector.moc"

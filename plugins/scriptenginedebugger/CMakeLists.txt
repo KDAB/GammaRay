@@ -7,8 +7,6 @@ set(gammaray_scriptenginedebugger_plugin_srcs
   scriptenginedebuggerwidget.cpp
 )
 
-qt4_automoc(${gammaray_scriptenginedebugger_plugin_srcs})
-
 qt4_wrap_ui(gammaray_scriptenginedebugger_plugin_srcs scriptenginedebuggerwidget.ui)
 
 gammaray_add_plugin(gammaray_scriptenginedebugger_plugin

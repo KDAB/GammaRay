@@ -62,5 +62,3 @@ QMap< int, QVariant > ObjectVisualizerModel::itemData(const QModelIndex& index) 
   d.insert(ClassName, data(index, ClassName));
   return d;
 }
-
-#include "objectvisualizermodel.moc"

@@ -8,8 +8,6 @@ set(gammaray_webinspector_plugin_srcs
   webviewmodel.cpp
 )
 
-qt4_automoc(${gammaray_webinspector_plugin_srcs})
-
 qt4_wrap_ui(gammaray_webinspector_plugin_srcs webinspectorwidget.ui)
 
 gammaray_add_plugin(gammaray_webinspector_plugin

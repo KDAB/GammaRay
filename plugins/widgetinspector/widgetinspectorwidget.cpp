@@ -215,5 +215,3 @@ void WidgetInspectorWidget::analyzePainting()
   viewer->setModal(true);
   viewer->show();
 }
-
-#include "widgetinspectorwidget.moc"

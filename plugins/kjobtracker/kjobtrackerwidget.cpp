@@ -48,5 +48,3 @@ KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
 KJobTrackerWidget::~KJobTrackerWidget()
 {
 }
-
-#include "kjobtrackerwidget.moc"

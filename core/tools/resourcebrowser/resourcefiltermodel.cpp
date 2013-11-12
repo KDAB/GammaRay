@@ -44,4 +44,3 @@ bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex &so
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
-#include "resourcefiltermodel.moc"

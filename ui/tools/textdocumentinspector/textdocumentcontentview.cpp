@@ -47,4 +47,3 @@ void TextDocumentContentView::paintEvent(QPaintEvent *e)
   }
 }
 
-#include "textdocumentcontentview.moc"

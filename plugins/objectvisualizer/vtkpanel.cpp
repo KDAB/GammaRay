@@ -120,5 +120,3 @@ void VtkPanel::stereoModeChanged(int index)
 VtkPanel::~VtkPanel()
 {
 }
-
-#include "vtkpanel.moc"

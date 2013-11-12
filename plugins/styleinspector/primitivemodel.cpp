@@ -134,5 +134,3 @@ QVariant PrimitiveModel::headerData(int section, Qt::Orientation orientation, in
   }
   return AbstractStyleElementStateTable::headerData(section, orientation, role);
 }
-
-#include "primitivemodel.moc"

@@ -42,5 +42,3 @@ QString PropertyControllerInterface::name() const
 {
   return m_name;
 }
-
-#include "propertycontrollerinterface.moc"

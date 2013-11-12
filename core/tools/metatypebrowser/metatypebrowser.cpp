@@ -36,4 +36,3 @@ MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
   probe->registerModel("com.kdab.GammaRay.MetaTypeModel", mtm);
 }
 
-#include "metatypebrowser.moc"

@@ -49,5 +49,3 @@ KJobTracker::~KJobTracker()
 }
 
 Q_EXPORT_PLUGIN(KJobTrackerFactory)
-
-#include "kjobtracker.moc"

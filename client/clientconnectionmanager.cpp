@@ -112,4 +112,3 @@ void ClientConnectionManager::connectionError(QAbstractSocket::SocketError error
   QApplication::exit(1);
 }
 
-#include "clientconnectionmanager.moc"

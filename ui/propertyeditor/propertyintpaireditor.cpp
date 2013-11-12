@@ -76,4 +76,3 @@ void PropertySizeEditor::setSizeValue(const QSize &size)
   ui->yBox->setValue(size.height());
 }
 
-#include "propertyintpaireditor.moc"

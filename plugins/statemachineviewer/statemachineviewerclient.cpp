@@ -44,6 +44,3 @@ void StateMachineViewerClient::repopulateGraph()
 {
   Endpoint::instance()->invokeObject(objectName(), "repopulateGraph");
 }
-
-
-#include "statemachineviewerclient.moc"

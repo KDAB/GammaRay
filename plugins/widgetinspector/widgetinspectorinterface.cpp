@@ -37,6 +37,3 @@ WidgetInspectorInterface::~WidgetInspectorInterface()
 {
 
 }
-
-
-#include "widgetinspectorinterface.moc"

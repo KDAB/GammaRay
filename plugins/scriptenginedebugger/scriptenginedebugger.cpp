@@ -58,5 +58,3 @@ ScriptEngineDebugger::~ScriptEngineDebugger()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(ScriptEngineDebuggerFactory)
 #endif
-
-#include "scriptenginedebugger.moc"

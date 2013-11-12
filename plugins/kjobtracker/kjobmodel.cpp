@@ -205,5 +205,3 @@ int KJobModel::indexOfJob(QObject *obj) const
   }
   return -1;
 }
-
-#include "kjobmodel.moc"

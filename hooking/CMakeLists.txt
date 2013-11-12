@@ -25,7 +25,6 @@ if(WIN32 OR APPLE)
 endif()
 
 # probe lib
-qt4_automoc(${gammaray_probe_srcs})
 add_library(gammaray_probe SHARED ${gammaray_probe_srcs})
 target_link_libraries(gammaray_probe
   gammaray_core

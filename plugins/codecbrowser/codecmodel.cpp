@@ -189,5 +189,3 @@ QVariant SelectedCodecsModel::data(const QModelIndex &index, int role) const
 
   return QVariant();
 }
-
-#include "codecmodel.moc"

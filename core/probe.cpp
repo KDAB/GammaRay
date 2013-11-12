@@ -770,4 +770,3 @@ const char *SignalSlotsLocationStore::extractLocation(const char *member)
 
 //END
 
-#include "probe.moc"

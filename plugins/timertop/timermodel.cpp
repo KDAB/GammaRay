@@ -405,5 +405,3 @@ void TimerModel::slotEndReset()
 {
   endResetModel();
 }
-
-#include "timermodel.moc"

@@ -99,5 +99,3 @@ void GraphViewerWidget::delayedInit()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(ObjectVisualizerUiFactory)
 #endif
-
-#include "objectvisualizerwidget.moc"

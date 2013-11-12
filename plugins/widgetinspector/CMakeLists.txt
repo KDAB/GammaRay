@@ -30,8 +30,6 @@ qt4_wrap_ui(gammaray_widgetinspector_plugin_srcs
   paintbufferviewer.ui
 )
 
-qt4_automoc(${gammaray_widgetinspector_plugin_srcs})
-
 gammaray_add_plugin(gammaray_widgetinspector_plugin
   gammaray_widgetinspector.desktop
   ${gammaray_widgetinspector_plugin_srcs}

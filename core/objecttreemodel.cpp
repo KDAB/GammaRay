@@ -237,4 +237,3 @@ QModelIndex ObjectTreeModel::indexForObject(QObject *object) const
   return index(row, 0, parentIndex);
 }
 
-#include "objecttreemodel.moc"

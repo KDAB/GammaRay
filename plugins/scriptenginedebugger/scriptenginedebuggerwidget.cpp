@@ -70,5 +70,3 @@ void ScriptEngineDebuggerWidget::scriptEngineSelected(int index)
 //     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
   }
 }
-
-#include "scriptenginedebuggerwidget.moc"

@@ -51,4 +51,3 @@ void AboutDialog::setLogo(const QString& iconFileName)
   ui->logoLabel->setPixmap(iconFileName);
 }
 
-#include "aboutdialog.moc"

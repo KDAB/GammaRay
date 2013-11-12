@@ -504,4 +504,3 @@ bool RemoteModel::checkSyncBarrier(const Message& msg)
   return m_currentSyncBarrier == m_targetSyncBarrier;
 }
 
-#include "remotemodel.moc"

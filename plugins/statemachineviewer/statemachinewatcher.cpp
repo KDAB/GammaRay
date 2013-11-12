@@ -135,5 +135,3 @@ void StateMachineWatcher::handleStateExited()
   m_lastExitedState = state;
   emit stateExited(state);
 }
-
-#include "statemachinewatcher.moc"

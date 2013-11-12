@@ -54,4 +54,3 @@ void InteractiveProcess::setupChildProcess()
   ::dup2(stdinClone, fileno(stdin));
 }
 
-#include "interactiveprocess.moc"

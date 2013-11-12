@@ -62,4 +62,3 @@ void SelectionModelClient::serverUnregistered(const QString& objectName, Protoco
     m_myAddress = Protocol::InvalidObjectAddress;
 }
 
-#include "selectionmodelclient.moc"

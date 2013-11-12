@@ -269,4 +269,4 @@ QModelIndex StateModel::parent(const QModelIndex &index) const
   return createIndex(row, 0, grandParent);
 }
 
-#include "statemodel.moc"
+#include "moc_statemodel.cpp"

@@ -260,4 +260,3 @@ void MainWindow::detachProbe()
   ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
 }
 
-#include "mainwindow.moc"

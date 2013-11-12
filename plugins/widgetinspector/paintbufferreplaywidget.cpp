@@ -61,5 +61,3 @@ void PaintBufferReplayWidget::paintEvent(QPaintEvent * /*event*/)
   p.scale(m_zoomFactor, m_zoomFactor);
   p.drawPixmap(QPoint(0, 0), m_pixmap);
 }
-
-#include "paintbufferreplaywidget.moc"

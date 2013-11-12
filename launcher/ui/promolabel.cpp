@@ -77,4 +77,3 @@ void PromoLabel::updatePixmap()
                                            palette().foreground().color())));
 }
 
-#include "promolabel.moc"

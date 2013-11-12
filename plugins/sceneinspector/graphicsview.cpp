@@ -93,5 +93,3 @@ void GraphicsView::drawForeground(QPainter *painter, const QRectF &rect)
     SceneInspectorInterface::paintItemDecoration(m_currentItem, transform(), painter);
   }
 }
-
-#include "graphicsview.moc"

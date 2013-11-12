@@ -277,4 +277,3 @@ int main(int argc, char *argv[]) {
   TestMain tc(argc, argv);
   return app.exec();
 }
-#include "test_connections.moc"

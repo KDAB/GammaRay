@@ -50,8 +50,6 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/palettedialog.ui
 )
 
-qt4_automoc(${gammaray_ui_srcs})
-
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
 set_target_properties(gammaray_ui PROPERTIES
   DEFINE_SYMBOL MAKE_GAMMARAY_UI_LIB
@@ -106,8 +104,6 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )
-
-qt4_automoc(${gammaray_ui_internal_srcs})
 
 if(NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

@@ -56,4 +56,3 @@ bool ProxyDetacher::eventFilter(QObject *obj, QEvent *e)
   return QObject::eventFilter(obj, e);
 }
 
-#include "proxydetacher.moc"

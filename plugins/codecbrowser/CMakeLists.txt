@@ -8,8 +8,6 @@ set(gammaray_codecbrowser_plugin_srcs
   codecmodel.cpp
 )
 
-qt4_automoc(${gammaray_codecbrowser_plugin_srcs})
-
 gammaray_add_plugin(gammaray_codecbrowser_plugin
   gammaray_codecbrowser.desktop
   ${gammaray_codecbrowser_plugin_srcs}
@@ -27,7 +25,6 @@ set(gammaray_codecbrowser_plugin_ui_srcs
   codecbrowserwidget.cpp
 )
 
-qt4_automoc(${gammaray_codecbrowser_plugin_ui_srcs})
 qt4_wrap_ui(gammaray_codecbrowser_plugin_ui_srcs
   codecbrowserwidget.ui
 )

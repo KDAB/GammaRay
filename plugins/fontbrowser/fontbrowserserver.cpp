@@ -115,5 +115,3 @@ void FontBrowserServer::setColors(const QColor &foreground, const QColor &backgr
 {
   m_selectedFontModel->setColors(foreground, background);
 }
-
-#include "fontbrowserserver.moc"

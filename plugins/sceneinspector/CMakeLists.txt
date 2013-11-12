@@ -14,7 +14,6 @@ set(gammaray_sceneinspector_plugin_srcs
   sceneinspectorwidget.cpp
 )
 
-qt4_automoc(${gammaray_sceneinspector_plugin_srcs})
 qt4_wrap_ui(gammaray_sceneinspector_plugin_srcs
   graphicssceneview.ui
   sceneinspectorwidget.ui

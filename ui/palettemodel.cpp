@@ -174,4 +174,3 @@ Qt::ItemFlags PaletteModel::flags(const QModelIndex &index) const
   return baseFlags;
 }
 
-#include "palettemodel.moc"

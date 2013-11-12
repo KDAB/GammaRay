@@ -374,5 +374,3 @@ void SceneInspector::registerVariantHandlers()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(SceneInspectorFactory)
 #endif
-
-#include "sceneinspector.moc"

@@ -28,7 +28,6 @@ set(gammaray_launcher_shared_srcs
 if(NOT WIN32)
   list(APPEND gammaray_launcher_shared_srcs injector/gdbinjector.cpp)
 endif()
-qt4_automoc(${gammaray_launcher_shared_srcs})
 add_library(gammaray_launcher_shared STATIC ${gammaray_launcher_shared_srcs})
 target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES})
 
@@ -36,7 +35,6 @@ target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES})
 set(gammaray_runner_srcs
   main.cpp
 )
-qt4_automoc(${gammaray_runner_srcs})
 
 add_executable(gammaray ${gammaray_runner_srcs})
 

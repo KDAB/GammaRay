@@ -104,4 +104,3 @@ int ObjectDynamicPropertyModel::rowCount(const QModelIndex &parent) const
   return m_obj.data()->dynamicPropertyNames().size();
 }
 
-#include "objectdynamicpropertymodel.moc"

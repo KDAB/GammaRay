@@ -37,4 +37,3 @@ MimeTypes::~MimeTypes()
 {
 }
 
-#include "mimetypes.moc"

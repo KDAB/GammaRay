@@ -78,5 +78,3 @@ void StyleInspectorInterface::setCellZoom(int zoom)
   m_cellZoom = zoom;
   emit cellSizeChanged();
 }
-
-#include "styleinspectorinterface.moc"

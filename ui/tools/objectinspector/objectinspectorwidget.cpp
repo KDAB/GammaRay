@@ -62,4 +62,3 @@ ObjectInspectorWidget::~ObjectInspectorWidget()
 {
 }
 
-#include "objectinspectorwidget.moc"

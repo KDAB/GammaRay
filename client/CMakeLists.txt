@@ -17,7 +17,6 @@ set(gammaray_client_srcs
   probecontrollerclient.cpp
 )
 
-qt4_automoc(${gammaray_client_srcs})
 qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_executable(gammaray-client ${gammaray_client_srcs})

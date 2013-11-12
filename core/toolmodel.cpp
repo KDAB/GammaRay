@@ -187,4 +187,3 @@ PluginLoadErrors ToolModel::pluginErrors() const
   return m_pluginManager->errors();
 }
 
-#include "toolmodel.moc"

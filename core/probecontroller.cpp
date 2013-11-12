@@ -42,4 +42,3 @@ void ProbeController::quitHost()
   QCoreApplication::instance()->quit();
 }
 
-#include "probecontroller.moc"

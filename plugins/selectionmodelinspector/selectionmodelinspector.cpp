@@ -69,5 +69,3 @@ void SelectionModelInspector::currentChanged(const QModelIndex &current)
     m_current->setSourceModel(0);
   }
 }
-
-#include "selectionmodelinspector.moc"

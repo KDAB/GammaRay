@@ -59,4 +59,3 @@ void MethodInvocationDialog::setArgumentModel(QAbstractItemModel* model)
   ui->argumentView->setModel(model);
 }
 
-#include "methodinvocationdialog.moc"

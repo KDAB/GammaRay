@@ -40,4 +40,3 @@ void PropertyColorEditor::edit()
   }
 }
 
-#include "propertycoloreditor.moc"

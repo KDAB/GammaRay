@@ -96,4 +96,3 @@ QVariant TextDocumentFormatModel::headerData(int section,
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-#include "textdocumentformatmodel.moc"

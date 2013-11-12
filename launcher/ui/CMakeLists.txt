@@ -30,7 +30,6 @@ qt4_wrap_ui(gammaray_launcher_ui_srcs
 )
 # TODO we don't need all the class icons here, so split the qrc file accordingly
 qt4_add_resources(gammaray_launcher_ui_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
-qt4_automoc(${gammaray_launcher_ui_srcs})
 
 add_executable(gammaray-launcher ${gammaray_launcher_ui_srcs})
 

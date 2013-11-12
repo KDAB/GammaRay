@@ -126,4 +126,3 @@ QVariant StandardPathsModel::headerData(int section, Qt::Orientation orientation
   return QVariant();
 }
 
-#include "standardpathsmodel.moc"

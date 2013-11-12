@@ -137,4 +137,3 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
   return QVariant();
 }
 
-#include "messagemodel.moc"

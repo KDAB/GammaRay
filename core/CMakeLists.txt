@@ -89,8 +89,7 @@ else()
     tools/messagehandler/StackWalker.cpp)
 endif()
 
-qt4_automoc(${gammaray_srcs})
-
+qt4_wrap_cpp(gammaray_srcs tools/modelinspector/modeltest.h)
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_definitions(-DMAKE_GAMMARAY_CORE_LIB)

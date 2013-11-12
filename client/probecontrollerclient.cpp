@@ -41,4 +41,3 @@ void ProbeControllerClient::quitHost()
   Endpoint::instance()->invokeObject(objectName(), "quitHost");
 }
 
-#include "probecontrollerclient.moc"

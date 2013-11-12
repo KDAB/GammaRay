@@ -8,7 +8,6 @@ include_directories(
 set(gammaray_statemachineviewer_shared_srcs
   statemachineviewerinterface.cpp
 )
-qt4_automoc(${gammaray_statemachineviewer_shared_srcs})
 
 # probe part
 set(gammaray_statemachineviewer_plugin_srcs
@@ -17,8 +16,6 @@ set(gammaray_statemachineviewer_plugin_srcs
   statemodel.cpp
   statemachinewatcher.cpp
 )
-
-qt4_automoc(${gammaray_statemachineviewer_plugin_srcs})
 
 gammaray_add_plugin(gammaray_statemachineviewer_plugin
   gammaray_statemachineviewer.desktop
@@ -90,8 +87,6 @@ add_executable(statemachineviewer_test
 )
 
 target_link_libraries(statemachineviewer_test ${gammaray_statemachineviewer_ui_plugin_libs})
-
-qt4_automoc(${gammaray_statemachineviewer_ui_plugin_srcs})
 
 gammaray_add_plugin(gammaray_statemachineviewer_ui_plugin
   gammaray_statemachineviewer_ui.desktop

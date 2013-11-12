@@ -60,4 +60,3 @@ void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
   }
 }
 
-#include "metaobjectbrowser.moc"

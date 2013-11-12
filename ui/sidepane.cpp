@@ -93,4 +93,3 @@ void SidePane::updateSizeHint()
   setMinimumWidth(sizeHint().width());
 }
 
-#include "sidepane.moc"

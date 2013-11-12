@@ -150,5 +150,3 @@ QVariant StandardIconModel::headerData(int section, Qt::Orientation orientation,
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
-
-#include "standardiconmodel.moc"

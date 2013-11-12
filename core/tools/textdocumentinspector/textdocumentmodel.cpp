@@ -148,4 +148,3 @@ void TextDocumentModel::appendRow(QStandardItem *parent, QStandardItem *item,
   parent->appendRow(QList<QStandardItem*>() << item << formatItem(format));
 }
 
-#include "textdocumentmodel.moc"

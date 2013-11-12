@@ -174,4 +174,3 @@ MessageHandlerFactory::MessageHandlerFactory(QObject* parent): QObject(parent)
 {
 }
 
-#include "messagehandler.moc"
