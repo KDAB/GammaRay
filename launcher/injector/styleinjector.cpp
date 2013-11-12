@@ -31,7 +31,9 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QProcess>
+#ifdef HAVE_QT_WIDGETS
 #include <QStyleFactory>
+#endif
 
 #include <cstdlib>
 
