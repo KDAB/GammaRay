@@ -7,7 +7,7 @@
 .*
 CMakeLists.txt.user
 
-# from git merge
+# from kdiff3
 *.BACKUP.*
 *.BASE.*
 *.LOCAL.*
