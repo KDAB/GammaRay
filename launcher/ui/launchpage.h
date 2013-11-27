@@ -43,7 +43,6 @@ class LaunchPage : public QWidget
     ~LaunchPage();
 
     LaunchOptions launchOptions() const;
-    QStringList launchArguments() const;
 
     bool isValid();
 
