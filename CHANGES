@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 2.0 (unreleased):
+-------------
+ * Fix preload check on MIPS/MIPSel (issue #63)
+
 Version 1.3.2:
 -------------
  * Support more Qt5-specific data types
