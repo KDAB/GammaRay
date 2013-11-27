@@ -99,12 +99,12 @@ bool PreloadCheck::test(const QString &symbol)
     }
   }
 
-//Mips, besides the plt, has another method of
-//calling functions from .so files, and this method doesn't need JUMP_SLOT
-//relocations (in fact, it doesn't need any relocations). This method uses .got
-//entries and lazy binding stubs.
 #ifdef __mips__
-  if (testMips(symbol, fileName)){
+  // Mips, besides the plt, has another method of
+  // calling functions from .so files, and this method doesn't need JUMP_SLOT
+  // relocations (in fact, it doesn't need any relocations). This method uses .got
+  // entries and lazy binding stubs.
+  if (testMips(symbol, fileName)) {
     qDebug() << "Call of function " << symbol << " will go through lazy binding stub";
     setErrorString(QString());
     return true;
@@ -115,17 +115,15 @@ bool PreloadCheck::test(const QString &symbol)
   return false;
 }
 
-
-//The way to determine whether the call to function will go
-//through .got and lazy binding stub is:
-//- find the value of dynamic symbol index of the function with the command
-//  "readelf --dyn-syms"
-//- find the value of dynamic tag MIPS_GOTSYM with the command "readelf -d"
-//- if (dyn_sym_index >= MIPS_GOTSYM) then the function has entry in the global
-//  part of the .got, and the call will go through lazy binding stub and be
-//  resolved by dynamic linker.
-
 #ifdef __mips__
+// The way to determine whether the call to function will go
+// through .got and lazy binding stub is:
+// - find the value of dynamic symbol index of the function with the command
+//   "readelf --dyn-syms"
+// - find the value of dynamic tag MIPS_GOTSYM with the command "readelf -d"
+// - if (dyn_sym_index >= MIPS_GOTSYM) then the function has entry in the global
+//   part of the .got, and the call will go through lazy binding stub and be
+//   resolved by dynamic linker.
 bool PreloadCheck::testMips(const QString &symbol, const QString &fileName)
 {
   QProcess proc;
@@ -190,7 +188,6 @@ bool PreloadCheck::testMips(const QString &symbol, const QString &fileName)
   return false;
 }
 #endif
-
 
 void PreloadCheck::setErrorString(const QString &err)
 {
