@@ -26,31 +26,46 @@
 
 #include <QString>
 
+/**
+ * This class checks if it's possible to overwrite symbols
+ * by setting the LD_PRELOAD environment variable
+ */
 class PreloadCheck
 {
   public:
     PreloadCheck();
 
+    /**
+     * Test whether it is possible to overwrite @p symbol
+     * via LD_PRELOAD
+     *
+     * On Linux the 'readelf' binary is called to find out whether
+     * @p symbol is marked as relocatable
+     *
+     * @return True in case it's possible to overwrite @p symbol, otherwise false
+     * @sa errorString()
+     */
     bool test(const QString &symbol);
 
-    QString errorString() const
-    {
-      return m_errorString;
-    }
+    QString errorString() const;
 
   protected:
     void setErrorString(const QString &err);
 
   private:
-    static QString findSharedObjectFile(const QString &symbol);
-
 #ifdef __mips__
+    /**
+     * Additional method for testing whether the call to the function will go
+     * through .got and lazy binding stub (MIPS specific)
+     *
+     * @see https://github.com/KDAB/GammaRay/issues/63
+     */
     bool testMips(const QString &symbol, const QString &fileName);
 #endif
 
     QString m_errorString;
 };
 
-#endif // Q_OS_UNIX
+#endif
 
 #endif // GAMMARAY_PRELOADCHECK

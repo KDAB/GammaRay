@@ -32,7 +32,7 @@
 
 #include <dlfcn.h>
 
-QString PreloadCheck::findSharedObjectFile(const QString &symbol)
+static QString findSharedObjectFile(const QString &symbol)
 {
   void *sym = dlsym(RTLD_NEXT, qPrintable(symbol));
   if (!sym) {
@@ -188,6 +188,11 @@ bool PreloadCheck::testMips(const QString &symbol, const QString &fileName)
   return false;
 }
 #endif
+
+QString PreloadCheck::errorString() const
+{
+  return m_errorString;
+}
 
 void PreloadCheck::setErrorString(const QString &err)
 {
