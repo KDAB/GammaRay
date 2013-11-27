@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_UI_EXPORT_H
 #define GAMMARAY_UI_EXPORT_H
 
-#include <qglobal.h>
+#include <QtCore/qglobal.h>
 
 #ifdef GAMMARAY_UI_STATICLIB
 #  undef GAMMARAY_UI_SHAREDLIB

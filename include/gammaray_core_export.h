@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_CORE_EXPORT_H
 #define GAMMARAY_CORE_EXPORT_H
 
-#include <qglobal.h>
+#include <QtCore/qglobal.h>
 
 #ifdef GAMMARAY_CORE_STATICLIB
 #  undef GAMMARAY_CORE_SHAREDLIB
