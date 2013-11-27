@@ -44,6 +44,10 @@ class PreloadCheck
   private:
     static QString findSharedObjectFile(const QString &symbol);
 
+#ifdef __mips__
+    bool testMips(const QString &symbol, const QString &fileName);
+#endif
+
     QString m_errorString;
 };
 
