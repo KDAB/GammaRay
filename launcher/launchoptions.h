@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_LAUNCHOPTIONS_H
 #define GAMMARAY_LAUNCHOPTIONS_H
 
-#include <QStringList>
 #include <QHash>
+#include <QStringList>
 
 class QVariant;
 
@@ -71,11 +71,16 @@ public:
   UiMode uiMode() const;
   void setUiMode(UiMode mode);
 
+  /** Injector type. */
+  QString injectorType() const;
+  void setInjectorType(const QString &injectorType);
+
   /** execute this launch options with the given command-line launcher. */
   bool execute(const QString& launcherPath) const;
 
 private:
   QStringList m_launchArguments;
+  QString m_injectorType;
   int m_pid;
   UiMode m_uiMode;
   QHash<QByteArray, QByteArray> m_probeSettings;

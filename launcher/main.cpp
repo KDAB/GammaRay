@@ -81,6 +81,18 @@ static bool startLauncher()
   return proc.exitCode() == 0;
 }
 
+AbstractInjector::Ptr createInjector(const LaunchOptions& options)
+{
+  if (options.injectorType().isEmpty()) {
+    if (options.isAttach()) {
+      return InjectorFactory::defaultInjectorForAttach();
+    } else {
+      return InjectorFactory::defaultInjectorForLaunch();
+    }
+  }
+  return InjectorFactory::createInjector(options.injectorType());
+}
+
 int main(int argc, char **argv)
 {
   QCoreApplication::setOrganizationName("KDAB");
@@ -101,12 +113,11 @@ int main(int argc, char **argv)
                                           << QLatin1String("-stylesheet")
                                           << QLatin1String("-graphicssystem");
 
-  QString injectorType;
   LaunchOptions options;
   while (!args.isEmpty() && args.first().startsWith('-')) {
     const QString arg = args.takeFirst();
     if ((arg == QLatin1String("-i") || arg == QLatin1String("--injector")) && !args.isEmpty()) {
-      injectorType = args.takeFirst();
+      options.setInjectorType(args.takeFirst());
       continue;
     }
     if ((arg == QLatin1String("-p") || arg == QLatin1String("--pid")) && !args.isEmpty()) {
@@ -165,17 +176,7 @@ int main(int argc, char **argv)
   qputenv("GAMMARAY_PROBE_PATH", QFileInfo(probeDll).absolutePath().toLocal8Bit());
   options.sendProbeSettings();
 
-  AbstractInjector::Ptr injector;
-  if (injectorType.isEmpty()) {
-    if (options.isAttach()) {
-      injector = InjectorFactory::defaultInjectorForAttach();
-    } else {
-      injector = InjectorFactory::defaultInjectorForLaunch();
-    }
-  } else {
-    injector = InjectorFactory::createInjector(injectorType);
-  }
-
+  const AbstractInjector::Ptr injector = createInjector(options);
   if (injector) {
     ClientLauncher client;
     if (options.uiMode() == LaunchOptions::OutOfProcessUi && !client.launch("127.0.0.1")) {
@@ -210,14 +211,14 @@ int main(int argc, char **argv)
     }
   }
 
-  if (injectorType.isEmpty()) {
+  if (options.injectorType().isEmpty()) {
     if (options.isAttach()) {
       err << "Uh-oh, there is no default attach injector" << endl;
     } else {
       err << "Uh-oh, there is no default launch injector" << endl;
     }
   } else {
-    err << "Injector " << injectorType << " not found." << endl;
+    err << "Injector " << options.injectorType() << " not found." << endl;
   }
   return 1;
 }

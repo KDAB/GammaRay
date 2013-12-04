@@ -86,6 +86,16 @@ void LaunchOptions::setUiMode(LaunchOptions::UiMode mode)
   setProbeSetting("InProcessUi", mode == InProcessUi);
 }
 
+QString LaunchOptions::injectorType() const
+{
+  return m_injectorType;
+}
+
+void LaunchOptions::setInjectorType(const QString& injectorType)
+{
+  m_injectorType = injectorType;
+}
+
 void LaunchOptions::sendProbeSettings() const
 {
   // for now just use env vars, in order to make this work with attaching as well
