@@ -32,6 +32,12 @@ namespace GammaRay {
 namespace ProbeSettings
 {
   QVariant value(const QString &key, const QVariant &defaultValue = QString());
+
+  /** Call if using runtime attaching to obtain settings provided via shared memory. */
+  void receiveSettings();
+
+  /** Identifier used for finding the communication channels to the launcher. */
+  qint64 launcherIdentifier();
 }
 
 }

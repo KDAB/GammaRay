@@ -39,6 +39,7 @@ typedef quint8 ObjectAddress;
 typedef quint8 MessageType;
 
 static const ObjectAddress InvalidObjectAddress = 0;
+static const ObjectAddress LauncherAddress = 255;
 static const MessageType InvalidMessageType = 0;
 
 enum BuildInMessageType {
@@ -83,7 +84,10 @@ enum BuildInMessageType {
 
   MethodCall,
 
-  ServerInfo
+  ServerInfo,
+
+  // probe settings provided by the launcher
+  ProbeSettings
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;

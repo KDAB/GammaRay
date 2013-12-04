@@ -58,6 +58,7 @@ public:
 
   /** Generic key/value settings send to the probe. */
   void setProbeSetting(const QString &key, const QVariant &value);
+  QHash<QByteArray, QByteArray> probeSettings() const;
 
   /** Program and command line arguments to launch. */
   void setLaunchArguments(const QStringList &args);

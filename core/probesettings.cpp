@@ -23,14 +23,23 @@
 
 #include "probesettings.h"
 
+#include <sharedmemorylocker.h>
+#include <network/message.h>
+
+#include <QBuffer>
+#include <QCoreApplication>
+#include <QDebug>
+#include <QSharedMemory>
+
 using namespace GammaRay;
+
+static QHash<QByteArray, QByteArray> s_probeSettings;
 
 QVariant ProbeSettings::value(const QString& key, const QVariant& defaultValue)
 {
-  // TODO: for now we simply use environment variables, which only works for launching, not attaching
-  // this eventually needs to be extended to eg. shared memory or temporary files as communication channel
-
-  const QByteArray v = qgetenv("GAMMARAY_" + key.toLocal8Bit());
+  QByteArray v = s_probeSettings.value(key.toUtf8());
+  if (v.isEmpty())
+    v = qgetenv("GAMMARAY_" + key.toLocal8Bit());
   if (v.isEmpty())
     return defaultValue;
 
@@ -44,4 +53,52 @@ QVariant ProbeSettings::value(const QString& key, const QVariant& defaultValue)
     default:
       return v;
   }
+}
+
+void ProbeSettings::receiveSettings()
+{
+  QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
+  if (!shm.attach()) {
+    qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
+    qWarning() << "Continueing anyway, with default settings.";
+    return;
+  }
+  SharedMemoryLocker locker(&shm);
+
+  QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(shm.data()), shm.size());
+  QBuffer buffer(&ba);
+  buffer.open(QIODevice::ReadOnly);
+
+  while (Message::canReadMessage(&buffer)) {
+    const Message msg = Message::readMessage(&buffer);
+    switch (msg.type()) {
+      case Protocol::ServerVersion:
+      {
+        qint32 version;
+        msg.payload() >> version;
+        if (version != Protocol::version()) {
+          qWarning() << "Unable to receive probe settings, mismatching protocol versions (expected:" << Protocol::version() << "got:" << version << ")";
+          qWarning() << "Continueing anyway, but this is likely going to fail.";
+          return;
+        }
+        break;
+      }
+      case Protocol::ProbeSettings:
+      {
+        msg.payload() >> s_probeSettings;
+        qDebug() << Q_FUNC_INFO << s_probeSettings; // TODO remove
+      }
+      default:
+        return;
+    }
+  }
+}
+
+qint64 ProbeSettings::launcherIdentifier()
+{
+  bool ok;
+  const qint64 id = qgetenv("GAMMARAY_LAUNCHER_ID").toLongLong(&ok);
+  if (ok && id > 0)
+    return id;
+  return QCoreApplication::applicationPid();
 }

@@ -33,6 +33,7 @@ target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES})
 
 # command line launcher
 set(gammaray_runner_srcs
+  launcher.cpp
   main.cpp
 )
 

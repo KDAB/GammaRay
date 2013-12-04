@@ -125,6 +125,11 @@ void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
   m_probeSettings.insert(key.toUtf8(), v);
 }
 
+QHash< QByteArray, QByteArray > LaunchOptions::probeSettings() const
+{
+  return m_probeSettings;
+}
+
 bool LaunchOptions::execute(const QString& launcherPath) const
 {
   Q_ASSERT(!launcherPath.isEmpty());

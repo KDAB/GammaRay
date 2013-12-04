@@ -158,6 +158,8 @@ Probe::Probe(QObject *parent):
   Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
+  ProbeSettings::receiveSettings();
+
   new Server(this);
 
   StreamOperators::registerOperators();

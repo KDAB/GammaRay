@@ -28,6 +28,7 @@
 #include "launchoptions.h"
 #include "clientlauncher.h"
 #include "launcherfinder.h"
+#include "launcher.h"
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>
@@ -172,6 +173,10 @@ int main(int argc, char **argv)
     return 0;
   Q_ASSERT(options.isValid());
 
+  Launcher launcher(options);
+  app.exec();
+
+  // TODO: port all the below code to the new Launcher class
   const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
   qputenv("GAMMARAY_PROBE_PATH", QFileInfo(probeDll).absolutePath().toLocal8Bit());
   options.sendProbeSettings();
