@@ -212,12 +212,7 @@ int main(int argc, char **argv)
 
   if (injectorType.isEmpty()) {
     if (options.isAttach()) {
-#if defined(Q_OS_WIN)
-      err << "Sorry, but at this time there is no attach injector on the Windows platform" << endl;
-      err << "Only the launch injector windll is available on Windows" << endl;
-#else
       err << "Uh-oh, there is no default attach injector" << endl;
-#endif
     } else {
       err << "Uh-oh, there is no default launch injector" << endl;
     }
