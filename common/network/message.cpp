@@ -103,7 +103,7 @@ bool Message::canReadMessage(QIODevice* device)
     return false;
 
   Protocol::PayloadSize payloadSize;
-  int peekSize = device->peek((char*)&payloadSize, sizeof(Protocol::PayloadSize));
+  const int peekSize = device->peek((char*)&payloadSize, sizeof(Protocol::PayloadSize));
   if (peekSize < (int)sizeof(Protocol::PayloadSize))
     return false;
   payloadSize = qFromBigEndian(payloadSize);
