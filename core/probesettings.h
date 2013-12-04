@@ -40,6 +40,9 @@ namespace ProbeSettings
 
   /** Identifier used for finding the communication channels to the launcher. */
   qint64 launcherIdentifier();
+
+  /** Sends the TCP port used for communication with the client back to the launcher. */
+  void sendPort(quint16 port);
 }
 
 }

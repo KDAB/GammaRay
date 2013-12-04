@@ -22,6 +22,7 @@ public:
 
 private slots:
   void delayedInit();
+  void semaphoreReleased();
 
 private:
   void sendLauncherId();

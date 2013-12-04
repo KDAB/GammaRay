@@ -30,6 +30,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QSharedMemory>
+#include <QSystemSemaphore>
 
 using namespace GammaRay;
 
@@ -101,4 +102,24 @@ qint64 ProbeSettings::launcherIdentifier()
   if (ok && id > 0)
     return id;
   return QCoreApplication::applicationPid();
+}
+
+void ProbeSettings::sendPort(quint16 port)
+{
+  qDebug() << Q_FUNC_INFO;
+  QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
+  if (!shm.attach()) {
+    qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
+    qWarning() << "Continueing anyway, with default settings.";
+    return;
+  }
+
+  {
+    SharedMemoryLocker locker(&shm);
+    *reinterpret_cast<quint16*>(shm.data()) = port; // TODO endian conversion
+  }
+
+  qDebug() << "releasing";
+  QSystemSemaphore sem("gammaray-semaphore-" + QString::number(launcherIdentifier()), QSystemSemaphore::Open);
+  sem.release();
 }

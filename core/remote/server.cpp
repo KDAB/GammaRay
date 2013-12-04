@@ -266,3 +266,7 @@ void Server::broadcast()
   m_broadcastSocket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, broadcastPort());
 }
 
+quint16 Server::port() const
+{
+  return m_tcpServer->serverPort();
+}

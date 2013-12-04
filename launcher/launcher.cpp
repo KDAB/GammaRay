@@ -8,8 +8,33 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QSharedMemory>
+#include <QSystemSemaphore>
+#include <QThread>
 
 using namespace GammaRay;
+
+class SemaphoreWaiter : public QThread
+{
+  Q_OBJECT
+public:
+  explicit SemaphoreWaiter(qint64 id, QObject *parent = 0) : QThread(parent), m_id(id) {}
+  ~SemaphoreWaiter() {}
+  void run()
+  {
+    QSystemSemaphore sem("gammaray-semaphore-" + QString::number(m_id), 0, QSystemSemaphore::Create);
+    qDebug() << Q_FUNC_INFO << "pre aquire";
+    sem.acquire();
+    qDebug() << Q_FUNC_INFO << "post aquire" << sem.errorString();
+    emit semaphoreReleased();
+  }
+
+signals:
+  void semaphoreReleased();
+
+private:
+  qint64 m_id;
+};
+
 
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
   QObject(parent),
@@ -39,7 +64,10 @@ void Launcher::delayedInit()
   sendProbeSettings();
   sendProbeSettingsFallback();
 
-  // TODO system semaphore setup, start notifier thread (out-of-process only)
+  // TODO out-of-process only
+  SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
+  connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::DirectConnection); // TODO make queued connection once injector moved to a thread
+  semWaiter->start();
 
   // TODO start async launch/attach
 
@@ -107,3 +135,13 @@ void Launcher::sendProbeSettingsFallback()
   for (QHash<QByteArray, QByteArray>::const_iterator it = probeSettings.constBegin(); it != probeSettings.constEnd(); ++it)
     qputenv("GAMMARAY_" + it.key(), it.value());
 }
+
+void Launcher::semaphoreReleased()
+{
+  qDebug() << Q_FUNC_INFO;
+  SharedMemoryLocker locker(m_shm);
+  quint16 port = *reinterpret_cast<const quint16*>(m_shm->constData());
+  qDebug() << "port: " << port;
+}
+
+#include "launcher.moc"

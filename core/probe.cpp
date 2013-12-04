@@ -160,7 +160,8 @@ Probe::Probe(QObject *parent):
 
   ProbeSettings::receiveSettings();
 
-  new Server(this);
+  Server *server = new Server(this);
+  ProbeSettings::sendPort(server->port());
 
   StreamOperators::registerOperators();
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
