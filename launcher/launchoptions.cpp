@@ -96,15 +96,6 @@ void LaunchOptions::setInjectorType(const QString& injectorType)
   m_injectorType = injectorType;
 }
 
-void LaunchOptions::sendProbeSettings() const
-{
-  // for now just use env vars, in order to make this work with attaching as well
-  // we are going to need temporary files, shared memory, or something like that
-  // cf. GammaRay::ProbeSettings for the receiving side of this
-  for (QHash<QByteArray, QByteArray>::const_iterator it = m_probeSettings.constBegin(); it != m_probeSettings.constEnd(); ++it)
-    qputenv("GAMMARAY_" + it.key(), it.value());
-}
-
 void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
 {
   QByteArray v;
@@ -135,7 +126,7 @@ bool LaunchOptions::execute(const QString& launcherPath) const
   Q_ASSERT(!launcherPath.isEmpty());
   Q_ASSERT(isValid());
 
-  sendProbeSettings(); // TODO: add cli options for network settings too, to replace this
+  //sendProbeSettings(); // TODO: add cli options for network settings too, to replace this
 
   QStringList args;
   switch (uiMode()) {

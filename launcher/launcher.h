@@ -26,6 +26,8 @@ private slots:
 private:
   void sendLauncherId();
   void sendProbeSettings();
+  // in case shared memory isn't available
+  void sendProbeSettingsFallback();
 
 private:
   LaunchOptions m_options;

@@ -179,7 +179,6 @@ int main(int argc, char **argv)
   // TODO: port all the below code to the new Launcher class
   const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
   qputenv("GAMMARAY_PROBE_PATH", QFileInfo(probeDll).absolutePath().toLocal8Bit());
-  options.sendProbeSettings();
 
   const AbstractInjector::Ptr injector = createInjector(options);
   if (injector) {

@@ -53,9 +53,6 @@ public:
   /** Returns @c true if no valid launch arguments or process id are set. */
   bool isValid() const;
 
-  /** Call before launching to communicate probe settings. */
-  void sendProbeSettings() const;
-
   /** Generic key/value settings send to the probe. */
   void setProbeSetting(const QString &key, const QVariant &value);
   QHash<QByteArray, QByteArray> probeSettings() const;

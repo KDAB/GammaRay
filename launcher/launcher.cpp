@@ -37,6 +37,7 @@ void Launcher::delayedInit()
 {
   sendLauncherId();
   sendProbeSettings();
+  sendProbeSettingsFallback();
 
   // TODO system semaphore setup, start notifier thread (out-of-process only)
 
@@ -95,4 +96,14 @@ void Launcher::sendProbeSettings()
 
   SharedMemoryLocker locker(m_shm);
   qMemCopy(m_shm->data(), ba.constData(), ba.size());
+}
+
+void Launcher::sendProbeSettingsFallback()
+{
+  if (!m_options.isAttach())
+    return;
+
+  const QHash<QByteArray, QByteArray> probeSettings = m_options.probeSettings();
+  for (QHash<QByteArray, QByteArray>::const_iterator it = probeSettings.constBegin(); it != probeSettings.constEnd(); ++it)
+    qputenv("GAMMARAY_" + it.key(), it.value());
 }
