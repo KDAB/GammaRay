@@ -34,6 +34,7 @@
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/varianthandler.h>
+#include <core/probesettings.h>
 #include <common/network/objectbroker.h>
 
 #include "include/objectmodel.h"
@@ -316,8 +317,7 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
                                                const QString &fileName)
 {
   if (!m_externalExportActions.isLoaded()) {
-    const QString probePath =
-      QString::fromLocal8Bit(qgetenv("GAMMARAY_PROBE_PATH"));
+    const QString probePath = ProbeSettings::value("ProbePath").toString();
 
     m_externalExportActions.setFileName(
       probePath + QLatin1String("/libgammaray_widget_export_actions"));

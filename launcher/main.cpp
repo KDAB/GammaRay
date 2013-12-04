@@ -173,13 +173,13 @@ int main(int argc, char **argv)
     return 0;
   Q_ASSERT(options.isValid());
 
+  const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
+  options.setProbeSetting("ProbePath", QFileInfo(probeDll).absolutePath());
+
   Launcher launcher(options);
   app.exec();
 
   // TODO: port all the below code to the new Launcher class
-  const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
-  qputenv("GAMMARAY_PROBE_PATH", QFileInfo(probeDll).absolutePath().toLocal8Bit());
-
   const AbstractInjector::Ptr injector = createInjector(options);
   if (injector) {
     ClientLauncher client;

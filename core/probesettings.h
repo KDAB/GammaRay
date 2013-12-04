@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_PROBESETTINGS_H
 #define GAMMARAY_PROBESETTINGS_H
 
+#include "include/gammaray_core_export.h"
+
 #include <QVariant>
 
 namespace GammaRay {
@@ -31,7 +33,7 @@ namespace GammaRay {
 /** General purpose settings of the probe provided by the launcher. */
 namespace ProbeSettings
 {
-  QVariant value(const QString &key, const QVariant &defaultValue = QString());
+  GAMMARAY_CORE_EXPORT QVariant value(const QString &key, const QVariant &defaultValue = QString());
 
   /** Call if using runtime attaching to obtain settings provided via shared memory. */
   void receiveSettings();

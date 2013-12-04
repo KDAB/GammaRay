@@ -334,7 +334,7 @@ void Probe::delayedInit()
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
     s_listener()->filterThread = QThread::currentThread();
 
-    QString path = QString::fromLocal8Bit(qgetenv("GAMMARAY_PROBE_PATH"));
+    QString path = ProbeSettings::value("ProbePath").toString();
     if (!path.isEmpty())
       path += QDir::separator();
     path += "gammaray_inprocessui";
