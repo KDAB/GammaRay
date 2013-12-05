@@ -35,7 +35,6 @@ private:
   qint64 m_id;
 };
 
-
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
   QObject(parent),
   m_options(options),
@@ -49,6 +48,7 @@ Launcher::Launcher(const LaunchOptions& options, QObject* parent):
 
 Launcher::~Launcher()
 {
+  m_client.waitForFinished();
 }
 
 qint64 Launcher::instanceIdentifier() const
@@ -74,7 +74,7 @@ void Launcher::delayedInit()
 
   // TODO wait for port (out-of-process only)
 
-  // TODO launch client (out-of-process only)
+  // TODO add safety timeout in case target doesn't respond (out-of-process only)
 
 
   // ### temporary until the code from main moved here
@@ -139,10 +139,14 @@ void Launcher::sendProbeSettingsFallback()
 
 void Launcher::semaphoreReleased()
 {
-  qDebug() << Q_FUNC_INFO;
   SharedMemoryLocker locker(m_shm);
   quint16 port = *reinterpret_cast<const quint16*>(m_shm->constData());
-  qDebug() << "port: " << port;
+  qDebug() << "GammaRay server listening on port:" << port;
+
+  if (!m_client.launch("127.0.0.1", port)) {
+    qCritical("Unable to launch gammaray-client!");
+    QCoreApplication::exit(1);
+  }
 }
 
 #include "launcher.moc"

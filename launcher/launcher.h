@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "launchoptions.h"
+#include "clientlauncher.h"
 
 class QSharedMemory;
 
@@ -33,7 +34,7 @@ private:
 private:
   LaunchOptions m_options;
   QSharedMemory *m_shm;
-
+  ClientLauncher m_client;
 };
 }
 
