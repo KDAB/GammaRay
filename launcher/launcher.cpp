@@ -114,6 +114,10 @@ Launcher::Launcher(const LaunchOptions& options, QObject* parent):
 {
   Q_ASSERT(options.isValid());
 
+  m_safetyTimer.setSingleShot(true);
+  m_safetyTimer.setInterval(60 * 1000);
+  connect(&m_safetyTimer, SIGNAL(timeout()), SLOT(timeout()));
+
   // wait for the event loop to be available
   QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
@@ -143,6 +147,8 @@ void Launcher::delayedInit()
     SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
     connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::QueuedConnection);
     semWaiter->start();
+
+    m_safetyTimer.start();
   }
 
   InjectorThread *injector = new InjectorThread(m_options, probeDll, this);
@@ -150,8 +156,6 @@ void Launcher::delayedInit()
   connect(injector, SIGNAL(finished()), QCoreApplication::instance(), SLOT(quit()), Qt::QueuedConnection);
   connect(injector, SIGNAL(error(int,QString)), this, SLOT(injectorError(int,QString)), Qt::QueuedConnection);
   injector->start();
-
-  // TODO add safety timeout in case target doesn't respond (out-of-process only)
 }
 
 void Launcher::sendLauncherId()
@@ -212,6 +216,8 @@ void Launcher::sendProbeSettingsFallback()
 
 void Launcher::semaphoreReleased()
 {
+  m_safetyTimer.stop();
+
   SharedMemoryLocker locker(m_shm);
   quint16 port = *reinterpret_cast<const quint16*>(m_shm->constData());
   qDebug() << "GammaRay server listening on port:" << port;
@@ -226,6 +232,13 @@ void Launcher::injectorError(int exitCode, const QString& errorMessage)
 {
   std::cerr << qPrintable(errorMessage) << std::endl;
   QCoreApplication::exit(exitCode);
+}
+
+void Launcher::timeout()
+{
+  std::cerr << "Target not responding - timeout." << std::endl;
+  m_client.terminate();
+  QCoreApplication::exit(1);
 }
 
 #include "launcher.moc"

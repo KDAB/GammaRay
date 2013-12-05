@@ -2,6 +2,7 @@
 #define GAMMARAY_LAUNCHER_H
 
 #include <QObject>
+#include <QTimer>
 
 #include "launchoptions.h"
 #include "clientlauncher.h"
@@ -25,6 +26,7 @@ private slots:
   void delayedInit();
   void semaphoreReleased();
   void injectorError(int exitCode, const QString &errorMessage);
+  void timeout();
 
 private:
   void sendLauncherId();
@@ -36,6 +38,7 @@ private:
   LaunchOptions m_options;
   QSharedMemory *m_shm;
   ClientLauncher m_client;
+  QTimer m_safetyTimer;
 };
 }
 
