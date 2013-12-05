@@ -64,10 +64,11 @@ void Launcher::delayedInit()
   sendProbeSettings();
   sendProbeSettingsFallback();
 
-  // TODO out-of-process only
-  SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
-  connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::DirectConnection); // TODO make queued connection once injector moved to a thread
-  semWaiter->start();
+  if (m_options.uiMode() != LaunchOptions::InProcessUi) {
+    SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
+    connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::DirectConnection); // TODO make queued connection once injector moved to a thread
+    semWaiter->start();
+  }
 
   // TODO start async launch/attach
 
