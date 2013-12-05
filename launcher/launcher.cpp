@@ -222,6 +222,9 @@ void Launcher::semaphoreReleased()
   quint16 port = *reinterpret_cast<const quint16*>(m_shm->constData());
   qDebug() << "GammaRay server listening on port:" << port;
 
+  if (m_options.uiMode() != LaunchOptions::OutOfProcessUi)
+    return;
+
   if (!m_client.launch("127.0.0.1", port)) {
     qCritical("Unable to launch gammaray-client!");
     QCoreApplication::exit(1);
