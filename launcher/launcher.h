@@ -24,6 +24,7 @@ public:
 private slots:
   void delayedInit();
   void semaphoreReleased();
+  void injectorError(int exitCode, const QString &errorMessage);
 
 private:
   void sendLauncherId();

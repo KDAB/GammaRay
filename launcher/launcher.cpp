@@ -1,4 +1,7 @@
 #include "launcher.h"
+#include "probefinder.h"
+#include "injector/abstractinjector.h"
+#include "injector/injectorfactory.h"
 
 #include <include/sharedmemorylocker.h>
 #include <network/message.h>
@@ -7,9 +10,12 @@
 #include <QBuffer>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QFileInfo>
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 #include <QThread>
+
+#include <iostream>
 
 using namespace GammaRay;
 
@@ -22,9 +28,7 @@ public:
   void run()
   {
     QSystemSemaphore sem("gammaray-semaphore-" + QString::number(m_id), 0, QSystemSemaphore::Create);
-    qDebug() << Q_FUNC_INFO << "pre aquire";
     sem.acquire();
-    qDebug() << Q_FUNC_INFO << "post aquire" << sem.errorString();
     emit semaphoreReleased();
   }
 
@@ -33,6 +37,74 @@ signals:
 
 private:
   qint64 m_id;
+};
+
+class InjectorThread : public QThread
+{
+  Q_OBJECT
+public:
+  explicit InjectorThread(const LaunchOptions &options, const QString &probeDll, QObject *parent = 0)
+    : QThread(parent), m_options(options), m_probeDll(probeDll)
+  {
+    Q_ASSERT(options.isValid());
+  }
+  ~InjectorThread() {}
+
+  AbstractInjector::Ptr createInjector() const
+  {
+    if (m_options.injectorType().isEmpty()) {
+      if (m_options.isAttach()) {
+        return InjectorFactory::defaultInjectorForAttach();
+      } else {
+        return InjectorFactory::defaultInjectorForLaunch();
+      }
+    }
+    return InjectorFactory::createInjector(m_options.injectorType());
+  }
+
+  void run()
+  {
+    const AbstractInjector::Ptr injector = createInjector();
+
+    if (!injector) {
+      if (m_options.injectorType().isEmpty()) {
+        if (m_options.isAttach()) {
+          emit error(-1, tr("Uh-oh, there is no default attach injector on this platform."));
+        } else {
+          emit error(-1, tr("Uh-oh, there is no default launch injector on this platform."));
+        }
+      } else {
+        emit error(-1, tr("Injector %1 not found.").arg(m_options.injectorType()));
+      }
+      return;
+    }
+
+    bool success = false;
+    if (m_options.isLaunch()) {
+      success = injector->launch(m_options.launchArguments(), m_probeDll, QLatin1String("gammaray_probe_inject"));
+    }
+    if (m_options.isAttach()) {
+      success = injector->attach(m_options.pid(), m_probeDll, QLatin1String("gammaray_probe_inject"));
+    }
+
+    if (!success) {
+      QString errorMessage;
+      if (m_options.isLaunch())
+        errorMessage = tr("Failed to launch target '%1'.").arg(m_options.launchArguments().join(" "));
+      if (m_options.isAttach())
+        errorMessage = tr("Failed to attach to target with PID %1.").arg(m_options.pid());
+      if (!injector->errorString().isEmpty())
+        errorMessage += tr("\nError: %1").arg(injector->errorString());
+      emit error(injector->exitCode(), errorMessage);
+    }
+  }
+
+signals:
+  void error(int exitCode, const QString &errorMessage);
+
+private:
+  LaunchOptions m_options;
+  QString m_probeDll;
 };
 
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
@@ -60,25 +132,26 @@ qint64 Launcher::instanceIdentifier() const
 
 void Launcher::delayedInit()
 {
+  const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
+  m_options.setProbeSetting("ProbePath", QFileInfo(probeDll).absolutePath());
+
   sendLauncherId();
   sendProbeSettings();
   sendProbeSettingsFallback();
 
   if (m_options.uiMode() != LaunchOptions::InProcessUi) {
     SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
-    connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::DirectConnection); // TODO make queued connection once injector moved to a thread
+    connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::QueuedConnection);
     semWaiter->start();
   }
 
-  // TODO start async launch/attach
-
-  // TODO wait for port (out-of-process only)
+  InjectorThread *injector = new InjectorThread(m_options, probeDll, this);
+  // this is ok since we are going to wait for the client in our own dtor
+  connect(injector, SIGNAL(finished()), QCoreApplication::instance(), SLOT(quit()), Qt::QueuedConnection);
+  connect(injector, SIGNAL(error(int,QString)), this, SLOT(injectorError(int,QString)), Qt::QueuedConnection);
+  injector->start();
 
   // TODO add safety timeout in case target doesn't respond (out-of-process only)
-
-
-  // ### temporary until the code from main moved here
-  QCoreApplication::quit();
 }
 
 void Launcher::sendLauncherId()
@@ -147,6 +220,12 @@ void Launcher::semaphoreReleased()
     qCritical("Unable to launch gammaray-client!");
     QCoreApplication::exit(1);
   }
+}
+
+void Launcher::injectorError(int exitCode, const QString& errorMessage)
+{
+  std::cerr << qPrintable(errorMessage) << std::endl;
+  QCoreApplication::exit(exitCode);
 }
 
 #include "launcher.moc"

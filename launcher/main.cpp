@@ -23,7 +23,6 @@
 
 #include "config-gammaray.h"
 #include "config-gammaray-version.h"
-#include "probefinder.h"
 #include "injector/injectorfactory.h"
 #include "launchoptions.h"
 #include "launcherfinder.h"
@@ -36,7 +35,6 @@
 #endif
 
 #include <QDebug>
-#include <QFileInfo>
 #include <QStringList>
 
 using namespace GammaRay;
@@ -79,18 +77,6 @@ static bool startLauncher()
   proc.start(launcherPath);
   proc.waitForFinished(-1);
   return proc.exitCode() == 0;
-}
-
-AbstractInjector::Ptr createInjector(const LaunchOptions& options)
-{
-  if (options.injectorType().isEmpty()) {
-    if (options.isAttach()) {
-      return InjectorFactory::defaultInjectorForAttach();
-    } else {
-      return InjectorFactory::defaultInjectorForLaunch();
-    }
-  }
-  return InjectorFactory::createInjector(options.injectorType());
 }
 
 int main(int argc, char **argv)
@@ -172,47 +158,6 @@ int main(int argc, char **argv)
     return 0;
   Q_ASSERT(options.isValid());
 
-  const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
-  options.setProbeSetting("ProbePath", QFileInfo(probeDll).absolutePath());
-
   Launcher launcher(options);
-  app.exec();
-
-  // TODO: port all the below code to the new Launcher class
-  const AbstractInjector::Ptr injector = createInjector(options);
-  if (injector) {
-    if (options.isAttach()) {
-      if (!injector->attach(options.pid(), probeDll, QLatin1String("gammaray_probe_inject"))) {
-        err << "Unable to attach injector " << injector->name() << endl;
-        err << "Exit code: " << injector->exitCode() << endl;
-        if (!injector->errorString().isEmpty()) {
-          err << "Error: " << injector->errorString() << endl;
-        }
-        return 1;
-      } else {
-        return 0;
-      }
-    } else {
-      if (!injector->launch(options.launchArguments(), probeDll, QLatin1String("gammaray_probe_inject"))) {
-        err << "Failed to launch injector " << injector->name() << endl;
-        err << "Exit code: " << injector->exitCode() << endl;
-        if (!injector->errorString().isEmpty()) {
-          err << "Error: " << injector->errorString() << endl;
-        }
-        return 1;
-      }
-      return injector->exitCode();
-    }
-  }
-
-  if (options.injectorType().isEmpty()) {
-    if (options.isAttach()) {
-      err << "Uh-oh, there is no default attach injector" << endl;
-    } else {
-      err << "Uh-oh, there is no default launch injector" << endl;
-    }
-  } else {
-    err << "Injector " << options.injectorType() << " not found." << endl;
-  }
-  return 1;
+  return app.exec();
 }
