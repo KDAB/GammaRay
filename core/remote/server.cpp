@@ -54,7 +54,10 @@ Server::Server(QObject *parent) :
   const QHostAddress address(ProbeSettings::value("TCPServer", QLatin1String("0.0.0.0")).toString());
 
   connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
-  m_tcpServer->listen(address, defaultPort());
+
+  // try the default port first, and fall back to a random port otherwise
+  if (!m_tcpServer->listen(address, defaultPort()))
+    m_tcpServer->listen(address, 0);
 
   // broadcast announcement only if we are actually listinging to remote connections
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -261,7 +264,7 @@ void Server::broadcast()
   stream << Protocol::broadcastFormatVersion();
   stream << Protocol::version();
   stream << myAddress;
-  stream << defaultPort(); // might change for multiple instances on the same machine
+  stream << port();
   stream << label(); // TODO integrate hostname
   m_broadcastSocket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, broadcastPort());
 }
