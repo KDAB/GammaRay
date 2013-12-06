@@ -39,10 +39,10 @@ set(gammaray_runner_srcs
 
 add_executable(gammaray ${gammaray_runner_srcs})
 
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} gammaray_launcher_shared)
+target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} gammaray_launcher_shared gammaray_common)
 if(HAVE_QT_WIDGETS)
-  # needed for splash screen and style inspector
-  target_link_libraries(gammaray ${QT_QTGUI_LIBRARIES} gammaray_ui)
+  # needed for style inspector
+  target_link_libraries(gammaray ${QT_QTGUI_LIBRARIES})
 endif()
 
 if (QNXNTO)
