@@ -127,9 +127,6 @@ int main(int argc, char **argv)
     if (arg == QLatin1String("--inprocess")) {
       options.setUiMode(LaunchOptions::InProcessUi);
     }
-    if (arg == QLatin1String("--no-inprocess")) {
-      options.setUiMode(LaunchOptions::OutOfProcessUi);
-    }
     if (arg == QLatin1String("--inject-only")) {
       options.setUiMode(LaunchOptions::NoUi);
     }

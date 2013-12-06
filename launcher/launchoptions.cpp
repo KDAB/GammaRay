@@ -30,7 +30,7 @@ using namespace GammaRay;
 
 LaunchOptions::LaunchOptions() :
   m_pid(-1),
-  m_uiMode(InProcessUi)
+  m_uiMode(OutOfProcessUi)
 {
 }
 

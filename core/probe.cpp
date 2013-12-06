@@ -245,10 +245,6 @@ bool Probe::isInitialized()
 
 bool Probe::canShowWidgets()
 {
-#ifdef Q_OS_QNX // TODO remove this once out-of-process mode is the default
-    return false;
-#endif
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
   return qGuiApplication && qGuiApplication->type() != QApplication::Tty;
@@ -331,7 +327,7 @@ void Probe::delayedInit()
   }
   Server::instance()->setLabel(appName);
 
-  if (canShowWidgets() && ProbeSettings::value("InProcessUi", true).toBool()) {
+  if (ProbeSettings::value("InProcessUi", false).toBool() && canShowWidgets()) {
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
     s_listener()->filterThread = QThread::currentThread();
 
