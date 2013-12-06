@@ -126,8 +126,6 @@ bool LaunchOptions::execute(const QString& launcherPath) const
   Q_ASSERT(!launcherPath.isEmpty());
   Q_ASSERT(isValid());
 
-  //sendProbeSettings(); // TODO: add cli options for network settings too, to replace this
-
   QStringList args;
   switch (uiMode()) {
     case InProcessUi:
@@ -140,6 +138,13 @@ bool LaunchOptions::execute(const QString& launcherPath) const
       args.push_back("--inject-only");
       break;
   }
+
+  if (m_probeSettings.contains("TCPServer")) {
+    args.push_back("--listen");
+    args.push_back(m_probeSettings.value("TCPServer"));
+  }
+  if (m_probeSettings.value("RemoteAccessEnabled") == "false")
+    args.push_back("--no-listen");
 
   if (isAttach()) {
     args.push_back("--pid");
