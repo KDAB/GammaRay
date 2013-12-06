@@ -47,11 +47,11 @@ endif()
 
 if(UNIX AND NOT APPLE)
   add_test(connectiontest-preload
-    ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -i preload
+    ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -i preload
     ${PROJECT_BINARY_DIR}/bin/connectiontest
   )
   add_test(connectiontest-style
-    ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -i style
+    ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -i style
     ${PROJECT_BINARY_DIR}/bin/connectiontest
   )
 
@@ -76,7 +76,7 @@ if(UNIX AND NOT APPLE)
   find_program(GDB_EXECUTABLE gdb)
   if(GDB_EXECUTABLE)
     add_test(connectiontest-gdb
-      ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -i gdb
+      ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -i gdb
       ${PROJECT_BINARY_DIR}/bin/connectiontest
     )
     add_test(attachtest-gdb
@@ -85,7 +85,7 @@ if(UNIX AND NOT APPLE)
     )
     if(RUN_FILTER_TESTS)
       add_test(connectiontest-gdb-filter
-        ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -filtertest -i gdb
+        ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -filtertest -i gdb
         ${PROJECT_BINARY_DIR}/bin/connectiontest
       )
     endif()
