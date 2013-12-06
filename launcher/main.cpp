@@ -61,12 +61,14 @@ static void usage(const char *argv0)
   out << "     --inject-only        \tonly inject the probe, don't show the UI" << endl;
   out << " -h, --help               \tprint program help and exit" << endl;
   out << " -v, --version            \tprint program version and exit" << endl;
+#ifdef HAVE_QT_WIDGETS
   out << endl
       << "When run without any options, " << argv0 << " will present a list of running\n"
       << "Qt-applications from which you can attach the selected injector. Else,\n"
       << "you can attach to a running process by specifying its pid, or you can\n"
       << "start a new Qt-application by specifying its name (and optional arguments)."
       << endl;
+#endif
 }
 
 static bool startLauncher()
