@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     args.push_back(QString::fromLocal8Bit(argv[i]));
   }
 #ifdef HAVE_QT_WIDGETS
-  QApplication app(argc, argv); // for splash screen and style inspector
+  QApplication app(argc, argv); // for style inspector
 #else
   QCoreApplication app(argc, argv);
 #endif
