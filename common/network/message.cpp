@@ -107,6 +107,8 @@ bool Message::canReadMessage(QIODevice* device)
   if (peekSize < (int)sizeof(Protocol::PayloadSize))
     return false;
   payloadSize = qFromBigEndian(payloadSize);
+  if (payloadSize < 0 && !device->isSequential()) // input end on shared memory
+    return false;
   Q_ASSERT(payloadSize >= 0);
   return device->bytesAvailable() >= payloadSize + minimumSize;
 }
