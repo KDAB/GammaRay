@@ -129,7 +129,7 @@ void ProbeSettings::sendPort(quint16 port)
   {
     SharedMemoryLocker locker(&shm);
     qMemCopy(shm.data(), ba.constData(), ba.size());
-    qMemSet(shm.data() + ba.size(), 0xff, shm.size() - ba.size());
+    qMemSet(static_cast<char*>(shm.data()) + ba.size(), 0xff, shm.size() - ba.size());
   }
 
   QSystemSemaphore sem("gammaray-semaphore-" + QString::number(launcherIdentifier()), QSystemSemaphore::Open);
