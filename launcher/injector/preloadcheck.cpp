@@ -70,9 +70,10 @@ bool PreloadCheck::test(const QString &symbol)
   if (!proc.waitForFinished()) {
     // TODO: Find out if we want to error out if 'readelf' is missing
     // The question is: Do all (major) distributions ship binutils by default?
+    // Major distros do, but not custom embedded ones...
     setErrorString(QObject::tr("Failed to run 'readelf' (binutils) binary: %1").
                    arg(QString(proc.errorString())));
-    return false;
+    return true;
   }
 
   if (proc.exitCode() != 0) {
