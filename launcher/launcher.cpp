@@ -219,10 +219,34 @@ void Launcher::semaphoreReleased()
   m_safetyTimer.stop();
 
   SharedMemoryLocker locker(m_shm);
-  quint16 port = *reinterpret_cast<const quint16*>(m_shm->constData());
-  qDebug() << "GammaRay server listening on port:" << port;
+  QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(m_shm->data()), m_shm->size());
+  QBuffer buffer(&ba);
+  buffer.open(QIODevice::ReadOnly);
 
-  if (m_options.uiMode() != LaunchOptions::OutOfProcessUi)
+  quint16 port = 0;
+
+  while (Message::canReadMessage(&buffer)) {
+    const Message msg = Message::readMessage(&buffer);
+    switch (msg.type()) {
+      case Protocol::ServerPort:
+      {
+        msg.payload() >> port;
+        break;
+      }
+      default:
+        continue;
+    }
+  }
+
+  if (port == 0) {
+    qWarning() << "Unable to receive port number.";
+    QCoreApplication::exit(1);
+    return;
+  }
+
+  std::cout << "GammaRay server listening on port: " << port << std::endl;
+
+  if (m_options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
     return;
 
   if (!m_client.launch("127.0.0.1", port)) {

@@ -90,7 +90,7 @@ void ProbeSettings::receiveSettings()
         qDebug() << Q_FUNC_INFO << s_probeSettings; // TODO remove
       }
       default:
-        return;
+        continue;
     }
   }
 }
@@ -106,7 +106,6 @@ qint64 ProbeSettings::launcherIdentifier()
 
 void ProbeSettings::sendPort(quint16 port)
 {
-  qDebug() << Q_FUNC_INFO;
   QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
   if (!shm.attach()) {
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
@@ -114,12 +113,25 @@ void ProbeSettings::sendPort(quint16 port)
     return;
   }
 
+  QByteArray ba;
+  QBuffer buffer(&ba);
+  buffer.open(QIODevice::WriteOnly);
+  {
+    Message msg(Protocol::LauncherAddress, Protocol::ServerPort);
+    msg.payload() << port;
+    msg.write(&buffer);
+  }
+  buffer.close();
+
+  if(shm.size() < ba.size())
+    qFatal("SHM region too small!");
+
   {
     SharedMemoryLocker locker(&shm);
-    *reinterpret_cast<quint16*>(shm.data()) = port; // TODO endian conversion
+    qMemCopy(shm.data(), ba.constData(), ba.size());
+    qMemSet(shm.data() + ba.size(), 0xff, shm.size() - ba.size());
   }
 
-  qDebug() << "releasing";
   QSystemSemaphore sem("gammaray-semaphore-" + QString::number(launcherIdentifier()), QSystemSemaphore::Open);
   sem.release();
 }
