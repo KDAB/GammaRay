@@ -79,7 +79,8 @@ static bool startLauncher()
   QProcess proc;
   proc.setProcessChannelMode(QProcess::ForwardedChannels);
   proc.start(launcherPath);
-  proc.waitForFinished(-1);
+  if (!proc.waitForFinished(-1))
+    return false;
   return proc.exitCode() == 0;
 }
 
