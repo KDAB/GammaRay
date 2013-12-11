@@ -202,6 +202,8 @@ void Launcher::sendProbeSettings()
 
   SharedMemoryLocker locker(m_shm);
   qMemCopy(m_shm->data(), ba.constData(), ba.size());
+  if (m_shm->size() > ba.size()) // Windows...
+    qMemSet(static_cast<char*>(m_shm->data()) + ba.size(), 0xff, m_shm->size() - ba.size());
 }
 
 void Launcher::sendProbeSettingsFallback()
