@@ -281,7 +281,7 @@ void Launcher::timeout()
 
 void Launcher::checkDone()
 {
-  if (m_state == Complete)
+  if (m_state == Complete || (m_options.uiMode() != LaunchOptions::OutOfProcessUi && m_state == InjectorFinished))
     QCoreApplication::quit();
 }
 
