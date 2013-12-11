@@ -34,6 +34,11 @@ namespace ProbeFinder {
    * Attempts to find the full path of the probe DLL.
    */
   QString findProbe(const QString &baseName);
+
+  /**
+   * Returns the platform-specific file name extenstion.
+   */
+  QString fileExtension();
 }
 
 }

@@ -39,45 +39,34 @@ namespace ProbeFinder {
 
 QString findProbe(const QString &baseName)
 {
-#ifndef Q_OS_WIN
-  QStringList pldirs;
-  pldirs << GAMMARAY_LIB_INSTALL_DIR
-         << "/usr/local/lib64" << "/usr/local/lib"
-         << "/opt/lib64" << "/opt/lib"
-         << "/usr/lib64" << "/usr/lib"
-         << GAMMARAY_BUILD_DIR "/lib";
-  QDir::setSearchPaths("preloads", pldirs);
-#ifdef Q_OS_MAC
-  QFile plfile(QLatin1Literal("preloads:") % baseName % QLatin1Literal(".dylib"));
-#else
-  QFile plfile(QLatin1Literal("preloads:") % baseName % QLatin1Literal(".so"));
-#endif
-  if (plfile.exists()) {
-    return plfile.fileName();
-  } else {
-    qWarning()
-      << "Cannot locate" << baseName
-      << "in the typical places.\n"
-#if !(defined(Q_OS_MAC) || defined(Q_OS_WIN))
-      << "Try setting the $LD_PRELOAD environment variable to the fullpath,\n"
-         "For example:\n"
-         "  export LD_PRELOAD=/opt/lib64/libgammaray_probe.so\n"
-#endif
-      << "Continuing nevertheless, some systems can also preload from just the library name...";
-    return baseName;
-  }
-
-#else
-  return
+  const QString probePath =
     QCoreApplication::applicationDirPath() %
     QDir::separator() %
+    QLatin1Literal(GAMMARAY_RELATIVE_PROBE_PATH) %
+    QDir::separator() %
     baseName %
-    QLatin1Literal(".dll");
+    fileExtension();
+
+  if (!QFile::exists(probePath)) {
+    qWarning() << "Cannot locate probe" << probePath;
+    qWarning() << "This is likely a setup problem, due to an incomplete or partially moved installation.";
+    return QString();
+  }
+
+  return probePath;
+}
+
+QString fileExtension()
+{
+#ifdef Q_OS_WIN
+  return QLatin1String(".dll");
+#elif defined(Q_OS_MAC)
+  return QLatin1String(".dylib");
+#else
+  return QLatin1String(".so");
 #endif
-
-  Q_ASSERT(false);
-  return QString();
 }
 
 }
+
 }
