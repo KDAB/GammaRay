@@ -31,7 +31,7 @@ qt4_wrap_ui(gammaray_launcher_ui_srcs
 # TODO we don't need all the class icons here, so split the qrc file accordingly
 qt4_add_resources(gammaray_launcher_ui_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
-add_executable(gammaray-launcher ${gammaray_launcher_ui_srcs})
+add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
 
 target_link_libraries(gammaray-launcher ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui gammaray_launcher_shared)
 

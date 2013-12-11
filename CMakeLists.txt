@@ -9,7 +9,14 @@
 #
 
 project(GammaRay)
-cmake_minimum_required(VERSION 2.8.6)
+
+if (WIN32)
+  # needed for automoc and QtMain to work correctly
+  cmake_minimum_required(VERSION 2.8.11)
+  cmake_policy(SET CMP0020 NEW)
+else ()
+  cmake_minimum_required(VERSION 2.8.6)
+endif()
 
 if(NOT Prog_NAME)
   set(Prog_NAME "GammaRay")
@@ -107,6 +114,7 @@ if(Qt5Core_FOUND)
 
 # Qt4
 else()
+  set(QT_USE_IMPORTED_TARGETS true)
   find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtTest QtNetwork)
   find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg)
 
