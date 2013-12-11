@@ -110,7 +110,8 @@ private:
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
   QObject(parent),
   m_options(options),
-  m_shm(0)
+  m_shm(0),
+  m_state(Initial)
 {
   Q_ASSERT(options.isValid());
 
@@ -152,8 +153,7 @@ void Launcher::delayedInit()
   }
 
   InjectorThread *injector = new InjectorThread(m_options, probeDll, this);
-  // this is ok since we are going to wait for the client in our own dtor
-  connect(injector, SIGNAL(finished()), QCoreApplication::instance(), SLOT(quit()), Qt::QueuedConnection);
+  connect(injector, SIGNAL(finished()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
   connect(injector, SIGNAL(error(int,QString)), this, SLOT(injectorError(int,QString)), Qt::QueuedConnection);
   injector->start();
 }
@@ -255,6 +255,15 @@ void Launcher::semaphoreReleased()
     qCritical("Unable to launch gammaray-client!");
     QCoreApplication::exit(1);
   }
+
+  m_state |= ClientStarted;
+  checkDone();
+}
+
+void Launcher::injectorFinished()
+{
+  m_state |= InjectorFinished;
+  checkDone();
 }
 
 void Launcher::injectorError(int exitCode, const QString& errorMessage)
@@ -268,6 +277,12 @@ void Launcher::timeout()
   std::cerr << "Target not responding - timeout." << std::endl;
   m_client.terminate();
   QCoreApplication::exit(1);
+}
+
+void Launcher::checkDone()
+{
+  if (m_state == Complete)
+    QCoreApplication::quit();
 }
 
 #include "launcher.moc"

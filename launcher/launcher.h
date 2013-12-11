@@ -26,6 +26,7 @@ private slots:
   void delayedInit();
   void semaphoreReleased();
   void injectorError(int exitCode, const QString &errorMessage);
+  void injectorFinished();
   void timeout();
 
 private:
@@ -33,12 +34,20 @@ private:
   void sendProbeSettings();
   // in case shared memory isn't available
   void sendProbeSettingsFallback();
+  void checkDone();
 
 private:
   LaunchOptions m_options;
   QSharedMemory *m_shm;
   ClientLauncher m_client;
   QTimer m_safetyTimer;
+  enum State {
+    Initial = 0,
+    InjectorFinished = 1,
+    ClientStarted = 2,
+    Complete = InjectorFinished | ClientStarted
+  };
+  int m_state;
 };
 }
 
