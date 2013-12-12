@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_ENDPOINT_H
 #define GAMMARAY_ENDPOINT_H
 
-#include "include/gammaray_common_export.h"
+#include "gammaray_common_export.h"
 #include "protocol.h"
 
 #include <QObject>

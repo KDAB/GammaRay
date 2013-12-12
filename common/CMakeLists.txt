@@ -58,3 +58,11 @@ else ()
   target_link_libraries(gammaray_common_internal ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
 endif()
 
+install(FILES
+  gammaray_common_export.h
+  endpoint.h
+  modelroles.h
+  objectbroker.h
+  protocol.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/common
+)

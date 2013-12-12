@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_MESSAGE_H
 #define GAMMARAY_MESSAGE_H
 
-#include "include/gammaray_common_export.h"
+#include "gammaray_common_export.h"
 #include "protocol.h"
 
 #include <QByteArray>

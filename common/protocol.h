@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROTOCOL_H
 #define GAMMARAY_PROTOCOL_H
 
-#include "include/gammaray_common_export.h"
+#include "gammaray_common_export.h"
 #include <QAbstractItemModel>
 #include <QVector>
 #include <QModelIndex>

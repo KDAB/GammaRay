@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OBJECTBROKER_H
 #define GAMMARAY_OBJECTBROKER_H
 
-#include "include/gammaray_common_export.h"
+#include "gammaray_common_export.h"
 
 #include <QObject>
 
