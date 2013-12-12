@@ -2,10 +2,10 @@
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 include_directories(
+  ${CMAKE_SOURCE_DIR}
   ${CMAKE_BINARY_DIR} # config-gammaray.h
   ${CMAKE_CURRENT_BINARY_DIR}
 
-  ${CMAKE_SOURCE_DIR}/core
   ${CMAKE_SOURCE_DIR}/include
 )
 

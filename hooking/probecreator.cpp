@@ -23,7 +23,7 @@
 
 #include "probecreator.h"
 
-#include "probe.h"
+#include <core/probe.h>
 
 #include <QCoreApplication>
 #include <QMetaObject>
