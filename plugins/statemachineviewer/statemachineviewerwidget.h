@@ -23,7 +23,7 @@
 #ifndef GAMMARAY_STATEMACHINEVIEWERWIDGET_H
 #define GAMMARAY_STATEMACHINEVIEWERWIDGET_H
 
-#include "include/tooluifactory.h"
+#include <ui/tooluifactory.h>
 #include "statemachineviewerinterface.h"
 
 #include "statemachineviewerutil.h"

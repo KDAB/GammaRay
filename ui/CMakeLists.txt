@@ -118,5 +118,6 @@ install(FILES
   deferredtreeviewconfiguration.h
   palettemodel.h
   propertywidget.h
+  tooluifactory.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/ui
 )

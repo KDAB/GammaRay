@@ -22,7 +22,7 @@
 #ifndef GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERWIDGET_H
 #define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERWIDGET_H
 
-#include "include/tooluifactory.h"
+#include <ui/tooluifactory.h>
 
 #include <QWidget>
 

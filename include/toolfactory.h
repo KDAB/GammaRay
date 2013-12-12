@@ -34,7 +34,7 @@
 #define GAMMARAY_TOOLFACTORY_H
 
 #include "probeinterface.h"
-#include "tooluifactory.h"
+#include <ui/tooluifactory.h>
 
 #include <QMetaType>
 #include <QStringList>

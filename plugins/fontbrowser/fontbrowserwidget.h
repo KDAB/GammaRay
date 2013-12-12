@@ -25,7 +25,7 @@
 #ifndef GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
 #define GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
 
-#include "include/tooluifactory.h"
+#include <ui/tooluifactory.h>
 
 #include <QWidget>
 

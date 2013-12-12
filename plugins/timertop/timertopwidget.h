@@ -23,7 +23,7 @@
 #ifndef GAMMARAY_TIMERTOPWIDGET_H
 #define GAMMARAY_TIMERTOPWIDGET_H
 
-#include "include/tooluifactory.h"
+#include <ui/tooluifactory.h>
 
 #include <QWidget>
 

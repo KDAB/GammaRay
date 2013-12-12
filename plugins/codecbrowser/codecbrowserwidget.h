@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_CODECBROWSERWIDGET_H
 #define GAMMARAY_CODECBROWSERWIDGET_H
 
-#include "include/tooluifactory.h"
+#include <ui/tooluifactory.h>
 
 #include <QWidget>
 

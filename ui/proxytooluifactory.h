@@ -23,7 +23,7 @@
 #define GAMMARAY_PROXYTOOLUIFACTORY_H
 
 #include <common/proxyfactorybase.h>
-#include <include/tooluifactory.h>
+#include <ui/tooluifactory.h>
 
 namespace GammaRay {
 
