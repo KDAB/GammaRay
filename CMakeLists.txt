@@ -61,6 +61,7 @@ add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 include(CheckCXXCompilerFlag)
 include(CheckLibraryExists)
 include(GammaRayMacros)
+include(GammaRayMacrosInternal)
 include(MacroLogFeature)
 
 set(QT_MIN_VERSION "4.7.0")
@@ -469,25 +470,6 @@ if(POD2MAN_EXECUTABLE)
   install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
 endif(POD2MAN_EXECUTABLE)
 
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-  file(GLOB API_LIST include/*.h include/*.dox images/*.html)
-
-  #apidox generation using doxygen
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake
-                 ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-  add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/apidocs/html/index.html
-    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
-    DEPENDS ${API_LIST} ${CMAKE_BINARY_DIR}/Doxyfile
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  )
-  add_custom_target(docs
-    DEPENDS ${CMAKE_BINARY_DIR}/apidocs/html/index.html
-  )
-
-endif()
-
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
@@ -508,3 +490,25 @@ add_subdirectory(tests)
 add_subdirectory(plugins)
 
 macro_display_feature_log()
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  file(GLOB _dox_deps include/*.dox images/*.html)
+  gammaray_all_installed_headers(_all_hdrs common core ui)
+  list(APPEND _all_hdrs ${_dox_deps})
+  gammaray_join_list(DOXYGEN_INPUT " " ${_all_hdrs})
+
+  #apidox generation using doxygen
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake
+                 ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+  add_custom_command(
+    OUTPUT ${CMAKE_BINARY_DIR}/apidocs/html/index.html
+    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
+    DEPENDS ${_all_hdrs} ${_dox_deps} ${CMAKE_SOURCE_DIR}/Doxyfile.cmake
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  )
+  add_custom_target(docs
+    DEPENDS ${CMAKE_BINARY_DIR}/apidocs/html/index.html
+  )
+
+endif()

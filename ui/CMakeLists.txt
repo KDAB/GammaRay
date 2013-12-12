@@ -112,12 +112,11 @@ add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 
 target_link_libraries(gammaray_ui_internal ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)
 
-install(FILES
+gammaray_install_headers(
   gammaray_ui_export.h
   deferredresizemodesetter.h
   deferredtreeviewconfiguration.h
   palettemodel.h
   propertywidget.h
   tooluifactory.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/ui
 )

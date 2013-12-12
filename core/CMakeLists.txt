@@ -119,7 +119,7 @@ if(NOT WIN32 AND NOT QNXNTO)
 endif()
 install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(FILES
+gammaray_install_headers(
   metaobject.h
   metaobjectrepository.h
   objectmodelbase.h
@@ -129,5 +129,4 @@ install(FILES
   toolfactory.h
   util.h
   varianthandler.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/core
 )

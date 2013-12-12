@@ -78,7 +78,7 @@ WARN_LOGFILE           = doxygen.log
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @CMAKE_SOURCE_DIR@
+INPUT                  = @DOXYGEN_INPUT@
 FILE_PATTERNS          = *.cpp \
                          *.cc \
                          *.cxx \
