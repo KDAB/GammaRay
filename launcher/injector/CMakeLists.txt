@@ -12,7 +12,7 @@ target_link_libraries(gammaray_injector_style
 
 set_target_properties(gammaray_injector_style
   PROPERTIES PREFIX ""
-  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/plugins/styles
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${PLUGIN_INSTALL_DIR}/styles
 )
 
 install(
