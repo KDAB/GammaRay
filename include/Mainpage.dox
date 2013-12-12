@@ -94,4 +94,7 @@
  * Please visit http://www.kdab.com to meet the people who write code like this.
  * We also offer Qt training courses.
  * \image html kdab-logo-16x16.png
+ *
+ *
+ * @namespace GammaRay All GammaRay classes.
  */
