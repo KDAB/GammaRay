@@ -24,9 +24,7 @@
 #include "kjobtracker.h"
 #include "kjobmodel.h"
 
-using namespace GammaRay;
-
-#include "include/probeinterface.h"
+#include <core/probeinterface.h>
 
 #include <QDebug>
 #include <QtPlugin>

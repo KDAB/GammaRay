@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
 #define GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 
 #include <common/modelinspectorinterface.h>
 

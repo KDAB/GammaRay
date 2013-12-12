@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_CONNECTIONINSPECTOR_CONNECTIONINSPECTOR_H
 #define GAMMARAY_CONNECTIONINSPECTOR_CONNECTIONINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 
 namespace GammaRay {
 

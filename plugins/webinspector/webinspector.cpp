@@ -24,9 +24,9 @@
 #include "webinspector.h"
 #include "webviewmodel.h"
 
-#include "include/objecttypefilterproxymodel.h"
-#include "include/probeinterface.h"
-#include "include/singlecolumnobjectproxymodel.h"
+#include <core/objecttypefilterproxymodel.h>
+#include <core/probeinterface.h>
+#include <core/singlecolumnobjectproxymodel.h>
 
 #include <QtPlugin>
 

@@ -23,7 +23,7 @@
 #include "statemodel.h"
 #include "statemachinewatcher.h"
 
-#include "include/util.h"
+#include <core/util.h>
 
 #include <QAbstractTransition>
 #include <QDebug>

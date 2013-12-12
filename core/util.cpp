@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "include/util.h"
+#include "util.h"
 #include <common/metatypedeclarations.h>
 #include "varianthandler.h"
 

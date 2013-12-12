@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTOR_H
 #define GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTOR_H
 
-#include <include/toolfactory.h>
+#include <core/toolfactory.h>
 
 #include <QItemSelectionModel>
 

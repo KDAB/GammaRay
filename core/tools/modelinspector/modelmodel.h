@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_MODELINSPECTOR_MODELMODEL_H
 #define GAMMARAY_MODELINSPECTOR_MODELMODEL_H
 
-#include "include/objectmodelbase.h"
+#include "objectmodelbase.h"
 
 #include <QAbstractItemModel>
 #include <QAbstractProxyModel>

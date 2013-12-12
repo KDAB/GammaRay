@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_METAOBJECTBROWSER_METATYPEBROWSER_H
 #define GAMMARAY_METAOBJECTBROWSER_METATYPEBROWSER_H
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 
 class QItemSelection;
 

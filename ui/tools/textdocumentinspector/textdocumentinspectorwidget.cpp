@@ -25,10 +25,10 @@
 #include "ui_textdocumentinspectorwidget.h"
 #include "core/tools/textdocumentinspector/textdocumentmodel.h"
 
-#include <include/objectmodel.h>
+#include <common/objectmodel.h>
 #include <common/objectbroker.h>
 
- #include <QTextDocument>
+#include <QTextDocument>
 
 using namespace GammaRay;
 

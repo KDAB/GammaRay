@@ -24,7 +24,7 @@
 #include "primitivemodel.h"
 #include "styleoption.h"
 #include "styleinspectorinterface.h"
-#include <include/util.h>
+#include <core/util.h>
 
 #include <QPainter>
 #include <QPixmap>

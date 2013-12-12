@@ -24,7 +24,7 @@
 #include "scriptenginedebuggerwidget.h"
 #include "ui_scriptenginedebuggerwidget.h"
 
-#include "include/objectmodel.h"
+#include <common/objectmodel.h>
 #include <common/objectbroker.h>
 
 #include <QScriptEngine>

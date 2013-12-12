@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTOR_H
 #define GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 
 #include <QObject>
 

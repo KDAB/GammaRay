@@ -22,7 +22,7 @@
 */
 #include "timermodel.h"
 
-#include "include/probeinterface.h"
+#include <core/probeinterface.h>
 
 #include <private/qobject_p.h> //krazy:exclude=camelcase
 

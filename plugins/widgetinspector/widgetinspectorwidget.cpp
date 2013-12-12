@@ -28,10 +28,8 @@
 #include "widgetinspectorinterface.h"
 #include "widgetinspectorclient.h"
 
-#include <core/propertycontroller.h>
 #include <common/objectbroker.h>
-
-#include "include/objectmodel.h"
+#include <common/objectmodel.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 #include "other/modelutils.h"

@@ -31,9 +31,7 @@
 
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
-
-#include "include/objectmodel.h"
-#include "include/util.h"
+#include <common/objectmodel.h>
 
 #include <kde/krecursivefilterproxymodel.h>
 

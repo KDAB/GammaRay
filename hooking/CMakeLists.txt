@@ -5,8 +5,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_BINARY_DIR} # config-gammaray.h
   ${CMAKE_CURRENT_BINARY_DIR}
-
-  ${CMAKE_SOURCE_DIR}/include
 )
 
 set(gammaray_probe_srcs

@@ -25,7 +25,7 @@
 #define GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGER_H
 
 #include "scriptenginedebuggerwidget.h"
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 #include <QScriptEngine>
 

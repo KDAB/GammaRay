@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OBJECTLISTMODEL_H
 #define GAMMARAY_OBJECTLISTMODEL_H
 
-#include "include/objectmodelbase.h"
+#include "objectmodelbase.h"
 
 #include <QMutex>
 #include <QVector>

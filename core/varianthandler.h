@@ -1,7 +1,7 @@
 #ifndef GAMMARAY_VARIANTHANDLER_H
 #define GAMMARAY_VARIANTHANDLER_H
 
-#include "include/gammaray_core_export.h"
+#include "gammaray_core_export.h"
 
 #include <QVariant>
 

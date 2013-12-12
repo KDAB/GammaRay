@@ -25,8 +25,6 @@
 #include <common/pluginmanager.h>
 #include <common/objectbroker.h>
 
-#include "include/toolfactory.h"
-
 #include <QAbstractTableModel>
 #include <QGroupBox>
 #include <QHeaderView>

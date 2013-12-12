@@ -23,8 +23,8 @@
 
 #include "selectionmodelinspector.h"
 
-#include <include/objecttypefilterproxymodel.h>
-#include <include/probeinterface.h>
+#include <core/objecttypefilterproxymodel.h>
+#include <core/probeinterface.h>
 
 #include <common/objectbroker.h>
 

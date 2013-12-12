@@ -25,7 +25,7 @@
 #include "webviewmodel.h"
 #include "ui_webinspectorwidget.h"
 
-#include "include/objectmodel.h"
+#include <common/objectmodel.h>
 #include <common/objectbroker.h>
 
 using namespace GammaRay;

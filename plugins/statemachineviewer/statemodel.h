@@ -23,7 +23,7 @@
 #ifndef GAMMARAY_STATEMACHINEVIEWER_STATEMODEL_H
 #define GAMMARAY_STATEMACHINEVIEWER_STATEMODEL_H
 
-#include "include/objectmodelbase.h"
+#include <core/objectmodelbase.h>
 
 class QAbstractTransition;
 class QStateMachine;

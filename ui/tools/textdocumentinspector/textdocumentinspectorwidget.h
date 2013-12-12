@@ -24,8 +24,6 @@
 #ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
 #define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
 
-#include "include/toolfactory.h"
-
 #include <QPointer>
 #include <QTextDocument>
 #include <QWidget>

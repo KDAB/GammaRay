@@ -25,7 +25,7 @@
 #ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTOR_H
 #define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 #include "sceneinspectorwidget.h"
 #include "sceneinspectorinterface.h"
 

@@ -23,8 +23,8 @@
 #include "vtkwidget.h"
 #include "objectvisualizermodel.h"
 
-#include "include/util.h"
-#include <include/objectmodel.h>
+#include <core/util.h>
+#include <common/objectmodel.h>
 
 #include <QAbstractItemModel>
 #include <QDebug>

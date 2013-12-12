@@ -23,7 +23,7 @@
 
 #include "objectvisualizermodel.h"
 
-#include <include/util.h>
+#include <core/util.h>
 
 using namespace GammaRay;
 

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_MIMETYPES_H
 #define GAMMARAY_MIMETYPES_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 #include <QMimeData>
 #include <QMimeDatabase>

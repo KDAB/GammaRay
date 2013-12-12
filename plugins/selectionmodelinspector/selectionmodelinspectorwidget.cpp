@@ -24,7 +24,7 @@
 #include "selectionmodelinspectorwidget.h"
 #include "ui_selectionmodelinspectorwidget.h"
 
-#include <include/objectmodel.h>
+#include <common/objectmodel.h>
 #include <common/objectbroker.h>
 
 using namespace GammaRay;

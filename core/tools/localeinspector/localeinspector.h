@@ -22,7 +22,7 @@
 #ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
 #define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 
 namespace GammaRay {
 

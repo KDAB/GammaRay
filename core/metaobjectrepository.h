@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_METAOBJECTREPOSITORY_H
 #define GAMMARAY_METAOBJECTREPOSITORY_H
 
-#include "include/gammaray_core_export.h"
+#include "gammaray_core_export.h"
 #include <QHash>
 
 class QString;

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
 #define GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
 
-#include "include/objecttypefilterproxymodel.h"
+#include <core/objecttypefilterproxymodel.h>
 
 class QAction;
 

@@ -28,9 +28,9 @@
 #include "primitivemodel.h"
 #include "standardiconmodel.h"
 
-#include "include/objecttypefilterproxymodel.h"
-#include "include/probeinterface.h"
-#include "include/singlecolumnobjectproxymodel.h"
+#include <core/objecttypefilterproxymodel.h>
+#include <core/probeinterface.h>
+#include <core/singlecolumnobjectproxymodel.h>
 
 #include <ui/palettemodel.h>
 #include <common/objectbroker.h>

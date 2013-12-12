@@ -27,7 +27,7 @@
 #include "modelcellmodel.h"
 #include "modeltester.h"
 
-#include "include/probeinterface.h"
+#include "probeinterface.h"
 
 #include <common/objectbroker.h>
 #include <remote/remotemodelserver.h>

@@ -24,7 +24,7 @@
 #include "timertop.h"
 #include "timermodel.h"
 
-#include "include/probeinterface.h"
+#include <core/probeinterface.h>
 
 #include <QtPlugin>
 

@@ -64,6 +64,7 @@ install(FILES
   metatypedeclarations.h
   modelroles.h
   objectbroker.h
+  objectmodel.h
   protocol.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/common
 )

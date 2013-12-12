@@ -26,7 +26,7 @@
 #include "readorwritelocker.h"
 
 #include <common/metatypedeclarations.h>
-#include "include/util.h"
+#include "util.h"
 
 #include <QColor>
 #include <QDebug>

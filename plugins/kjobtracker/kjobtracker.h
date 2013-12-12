@@ -25,7 +25,7 @@
 #define GAMMARAY_KJOBTRACKER_H
 
 #include "kjobtrackerwidget.h"
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 #include <KJob>
 

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSER_H
 #define GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSER_H
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 #include <common/resourcebrowserinterface.h>
 
 class QModelIndex;

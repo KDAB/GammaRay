@@ -33,7 +33,7 @@ typedef QSortFilterProxyModel QIdentityProxyModel;
 #include <QIdentityProxyModel>
 #endif
 
-#include "include/objectmodel.h"
+#include <common/objectmodel.h>
 
 namespace GammaRay {
 

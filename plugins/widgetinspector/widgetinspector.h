@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 #include "widgetinspectorwidget.h"
 #include "widgetinspectorserver.h"

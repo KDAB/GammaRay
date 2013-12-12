@@ -23,11 +23,10 @@
 
 #include "objectinspector.h"
 #include "propertycontroller.h"
-
-#include "include/objectmodel.h"
-#include "include/probeinterface.h"
+#include "probeinterface.h"
 
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
 
 #include <QCoreApplication>
 #include <QItemSelectionModel>

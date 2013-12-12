@@ -22,7 +22,7 @@
 #ifndef GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZER_H
 #define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZER_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 namespace GammaRay {
 

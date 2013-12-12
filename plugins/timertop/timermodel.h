@@ -25,7 +25,7 @@
 
 #include "timerinfo.h"
 
-#include "include/objecttypefilterproxymodel.h"
+#include <core/objecttypefilterproxymodel.h>
 #include <common/modelroles.h>
 
 #include <QAbstractTableModel>

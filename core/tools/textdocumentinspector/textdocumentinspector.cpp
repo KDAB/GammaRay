@@ -26,8 +26,8 @@
 #include "textdocumentformatmodel.h"
 #include "textdocumentmodel.h"
 
-#include "include/objecttypefilterproxymodel.h"
-#include "include/probeinterface.h"
+#include "objecttypefilterproxymodel.h"
+#include "probeinterface.h"
 
 #include <common/objectbroker.h>
 

@@ -23,7 +23,7 @@
 #ifndef GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLER_H
 #define GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLER_H
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 
 #include "messagehandlerinterface.h"
 

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_WEBINSPECTOR_WEBINSPECTOR_H
 #define GAMMARAY_WEBINSPECTOR_WEBINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 #include "webinspectorwidget.h"
 
 #include <QWebPage>

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_METAOBJECT_H
 #define GAMMARAY_METAOBJECT_H
 
-#include "include/gammaray_core_export.h"
+#include "gammaray_core_export.h"
 
 #include "metaproperty.h"
 

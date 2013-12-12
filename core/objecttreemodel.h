@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_OBJECTTREEMODEL_H
 #define GAMMARAY_OBJECTTREEMODEL_H
 
-#include "include/objectmodelbase.h"
+#include "objectmodelbase.h"
 
 #include <QVector>
 

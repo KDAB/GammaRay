@@ -27,7 +27,7 @@
 #include "fontmodel.h"
 
 #include <common/objectbroker.h>
-#include <include/probeinterface.h>
+#include <core/probeinterface.h>
 
 #include <QItemSelectionModel>
 #include <QStandardItemModel>

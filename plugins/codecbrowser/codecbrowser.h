@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_CODECBROWSER_CODECBROWSER_H
 #define GAMMARAY_CODECBROWSER_CODECBROWSER_H
 
-#include <include/toolfactory.h>
+#include <core/toolfactory.h>
 
 class QItemSelection;
 class QItemSelectionModel;

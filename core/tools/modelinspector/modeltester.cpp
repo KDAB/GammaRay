@@ -24,7 +24,7 @@
 #include "modeltester.h"
 #include "modeltest.h"
 
-#include "include/util.h"
+#include "util.h"
 
 #include <QAbstractListModel>
 #include <QDebug>

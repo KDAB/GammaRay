@@ -24,7 +24,7 @@
 #include "config-gammaray.h"
 #include "toolmodel.h"
 
-#include "include/toolfactory.h"
+#include "toolfactory.h"
 #include "proxytoolfactory.h"
 
 #include "tools/connectioninspector/connectioninspector.h"

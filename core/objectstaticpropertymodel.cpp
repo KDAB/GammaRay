@@ -23,8 +23,7 @@
 
 #include "objectstaticpropertymodel.h"
 #include "varianthandler.h"
-
-#include "include/util.h"
+#include "util.h"
 
 #include <QMetaProperty>
 

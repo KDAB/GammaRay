@@ -26,7 +26,7 @@
 #include "statemachineviewerutil.h"
 #include "statemachineviewerinterface.h"
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 #include <QHash>
 #include <QSet>

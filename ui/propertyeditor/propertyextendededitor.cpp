@@ -24,8 +24,6 @@
 #include "propertyextendededitor.h"
 #include "ui_propertyextendededitor.h"
 
-#include "include/util.h"
-
 #include <QColorDialog>
 using namespace GammaRay;
 

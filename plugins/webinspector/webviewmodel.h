@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_WEBVIEWMODEL_H
 #define GAMMARAY_WEBVIEWMODEL_H
 
-#include "include/objecttypefilterproxymodel.h"
+#include <core/objecttypefilterproxymodel.h>
 
 namespace GammaRay {
 

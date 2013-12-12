@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_STYLEINSPECTOR_STYLEINSPECTOR_H
 #define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 #include "styleinspectorwidget.h"
 #include "styleinspectorinterface.h"
 

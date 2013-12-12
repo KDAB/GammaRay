@@ -22,8 +22,6 @@
 #ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTORWIDGET_H
 #define GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTORWIDGET_H
 
-#include "include/toolfactory.h"
-
 #include <QAction>
 #include <QWidget>
 

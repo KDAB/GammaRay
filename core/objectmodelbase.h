@@ -34,7 +34,7 @@
 #define GAMMARAY_OBJECTMODELBASE_H
 
 #include "util.h"
-#include "objectmodel.h"
+#include <common/objectmodel.h>
 
 #include <QModelIndex>
 #include <QObject>

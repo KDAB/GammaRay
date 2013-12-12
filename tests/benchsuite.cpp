@@ -28,7 +28,7 @@
 #include <QLabel>
 #include <QTreeView>
 
-#include <include/util.h>
+#include <core/util.h>
 
 #include <core/connectionmodel.h>
 #include <core/probe.h>

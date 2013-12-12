@@ -28,9 +28,6 @@
 #include "aboutdialog.h"
 #include "clienttoolmodel.h"
 
-#include "include/objecttypefilterproxymodel.h"
-#include "include/toolfactory.h"
-
 #include <common/objectbroker.h>
 #include <common/modelroles.h>
 #include <common/endpoint.h>

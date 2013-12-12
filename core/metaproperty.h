@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_METAPROPERTY_H
 #define GAMMARAY_METAPROPERTY_H
 
-#include "include/gammaray_core_export.h"
+#include "gammaray_core_export.h"
 
 #include <QString>
 #include <QVariant>

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PROPERTYCONTROLLER_H
 #define GAMMARAY_PROPERTYCONTROLLER_H
 
-#include "include/gammaray_core_export.h"
+#include "gammaray_core_export.h"
 
 #include <common/propertycontrollerinterface.h>
 

@@ -22,7 +22,7 @@
 #ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTOR_H
 #define GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTOR_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 #include "actioninspectorwidget.h"
 
 #include <QAction>

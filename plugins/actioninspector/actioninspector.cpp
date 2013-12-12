@@ -22,9 +22,8 @@
 #include "actioninspector.h"
 #include "actionmodel.h"
 
-#include "include/objectmodel.h"
-#include "include/probeinterface.h"
-#include "include/objecttypefilterproxymodel.h"
+#include <common/objectmodel.h>
+#include <core/probeinterface.h>
 #include <common/objectbroker.h>
 
 #include <QtPlugin>

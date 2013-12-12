@@ -1,6 +1,5 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/include
 )
 
 add_library(gammaray_inprocessui MODULE main.cpp)

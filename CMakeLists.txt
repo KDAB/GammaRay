@@ -510,7 +510,6 @@ configure_file(
 
 include(ExternalProject)
 
-add_subdirectory(include)
 add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(hooking)

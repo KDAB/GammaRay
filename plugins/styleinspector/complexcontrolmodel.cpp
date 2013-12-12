@@ -24,7 +24,7 @@
 #include "complexcontrolmodel.h"
 #include "styleoption.h"
 #include "styleinspectorinterface.h"
-#include <include/util.h>
+#include <core/util.h>
 
 #include <QDebug>
 #include <QPainter>

@@ -1,9 +1,7 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
-  ${CMAKE_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}
-
   ${CMAKE_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -120,3 +118,16 @@ if(NOT WIN32 AND NOT QNXNTO)
   target_link_libraries(gammaray_core dl)
 endif()
 install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+install(FILES
+  metaobject.h
+  metaobjectrepository.h
+  objectmodelbase.h
+  objecttypefilterproxymodel.h
+  probeinterface.h
+  singlecolumnobjectproxymodel.h
+  toolfactory.h
+  util.h
+  varianthandler.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/core
+)

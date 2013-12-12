@@ -23,7 +23,7 @@
 
 #include "webviewmodel.h"
 
-#include "include/objectmodel.h"
+#include <common/objectmodel.h>
 
 #include <QWebPage>
 

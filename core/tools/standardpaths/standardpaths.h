@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_STANDARDPATHS_H
 #define GAMMARAY_STANDARDPATHS_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 namespace GammaRay {
 

@@ -24,11 +24,10 @@
 #include "vtkpanel.h"
 #include "vtkwidget.h"
 
-#include "include/objectmodel.h"
-
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
 
 #include <QCoreApplication>
 #include <QDebug>

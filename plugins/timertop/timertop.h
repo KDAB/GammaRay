@@ -23,7 +23,7 @@
 #ifndef GAMMARAY_TIMERTOP_TIMERTOP_H
 #define GAMMARAY_TIMERTOP_TIMERTOP_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 #include <QTimer>
 

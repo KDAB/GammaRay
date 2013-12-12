@@ -33,7 +33,7 @@
 #ifndef GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 #define GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
 
-#include "objectmodel.h"
+#include <common/objectmodel.h>
 #include "util.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)

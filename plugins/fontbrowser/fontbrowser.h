@@ -25,7 +25,7 @@
 #ifndef GAMMARAY_FONTBROWSER_FONTBROWSER_H
 #define GAMMARAY_FONTBROWSER_FONTBROWSER_H
 
-#include "include/toolfactory.h"
+#include <core/toolfactory.h>
 
 #include "fontbrowserserver.h"
 
