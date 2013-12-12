@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_DEFERREDRESIZEMODESETTER_H
 #define GAMMARAY_DEFERREDRESIZEMODESETTER_H
 
-#include "include/gammaray_ui_export.h"
+#include "gammaray_ui_export.h"
 
 #include <QObject>
 #include <QHeaderView>

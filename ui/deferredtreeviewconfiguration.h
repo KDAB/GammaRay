@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_DEFERREDTREEVIEWCONFIGURATION_H
 #define GAMMARAY_DEFERREDTREEVIEWCONFIGURATION_H
 
-#include "include/gammaray_ui_export.h"
+#include "gammaray_ui_export.h"
 
 #include <QObject>
 #include <QVector>

@@ -35,7 +35,7 @@
 
 #include "kde/krecursivefilterproxymodel.h"
 #include "other/modelutils.h"
-#include <deferredresizemodesetter.h>
+#include <ui/deferredresizemodesetter.h>
 
 #include <QDebug>
 #include <QFileDialog>

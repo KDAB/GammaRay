@@ -55,7 +55,7 @@
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>
-   <header location="global">propertywidget.h</header>
+   <header location="global">ui/propertywidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

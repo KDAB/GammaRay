@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_SPLASHSCREEN_H
 #define GAMMARAY_SPLASHSCREEN_H
 
-#include "include/gammaray_ui_export.h"
+#include "gammaray_ui_export.h"
 
 namespace GammaRay {
 

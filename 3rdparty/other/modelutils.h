@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_MODELUTILS_H
 #define GAMMARAY_MODELUTILS_H
 
-#include "include/gammaray_ui_export.h"
+#include "ui/gammaray_ui_export.h"
 
 #include <QModelIndex>
 

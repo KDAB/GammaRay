@@ -28,7 +28,7 @@
 #include <QPointer>
 #include <QHash>
 
-#include "include/gammaray_ui_export.h"
+#include "gammaray_ui_export.h"
 #include <common/enums.h>
 
 class QAbstractItemModel;

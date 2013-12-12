@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_PALETTEMODEL_H
 #define GAMMARAY_PALETTEMODEL_H
 
-#include "include/gammaray_ui_export.h"
+#include "gammaray_ui_export.h"
 
 #include <QAbstractItemModel>
 #include <QPalette>
