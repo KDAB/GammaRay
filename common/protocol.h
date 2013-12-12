@@ -32,6 +32,7 @@
 
 namespace GammaRay {
 
+/** Helper functions and constants defining the communication protocol between client and server. */
 namespace Protocol {
 
 typedef qint32 PayloadSize;
@@ -93,8 +94,10 @@ enum BuildInMessageType {
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
 
+/** Serializes a QModelIndex. */
 GAMMARAY_COMMON_EXPORT ModelIndex fromQModelIndex(const QModelIndex &index);
 
+/** Deserializes a QModelIndex. */
 GAMMARAY_COMMON_EXPORT QModelIndex toQModelIndex(const QAbstractItemModel *model, const ModelIndex &index);
 
 /** Protocol version, must match exactly between client and server. */

@@ -40,6 +40,7 @@ namespace GammaRay {
 class Ui_PropertyWidget;
 class PropertyControllerInterface;
 
+/** Client-side counter-part GammaRay::PropertyController. */
 class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
 {
   Q_OBJECT

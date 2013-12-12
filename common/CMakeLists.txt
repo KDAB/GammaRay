@@ -65,5 +65,6 @@ gammaray_install_headers(
   modelroles.h
   objectbroker.h
   objectmodel.h
+  propertycontrollerinterface.h
   protocol.h
 )
