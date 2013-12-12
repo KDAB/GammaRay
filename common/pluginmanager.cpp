@@ -56,7 +56,7 @@ QStringList PluginManagerBase::pluginPaths() const
 {
   QStringList pluginPaths;
   foreach (const QString &libraryPath, QCoreApplication::libraryPaths()) {
-    pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_SUFFIX;
+    pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_SUFFIX + QDir::separator() + GAMMARAY_PLUGIN_VERSION;
   }
 
   return pluginPaths;
