@@ -36,11 +36,11 @@
 #include <core/varianthandler.h>
 #include <core/probesettings.h>
 #include <common/objectbroker.h>
+#include <common/settempvalue.h>
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
-#include "include/settempvalue.h"
 #include "include/metatypedeclarations.h"
 
 #include "other/modelutils.h"

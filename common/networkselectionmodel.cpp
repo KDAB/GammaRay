@@ -24,8 +24,7 @@
 #include "networkselectionmodel.h"
 #include "message.h"
 #include "endpoint.h"
-
-#include <include/settempvalue.h>
+#include "settempvalue.h"
 
 #include <QDebug>
 
