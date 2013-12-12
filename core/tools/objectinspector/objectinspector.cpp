@@ -27,7 +27,7 @@
 #include "include/objectmodel.h"
 #include "include/probeinterface.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QCoreApplication>
 #include <QItemSelectionModel>

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_SELECTIONMODELCLIENT_H
 #define GAMMARAY_SELECTIONMODELCLIENT_H
 
-#include <network/networkselectionmodel.h>
+#include <common/networkselectionmodel.h>
 
 namespace GammaRay {
 

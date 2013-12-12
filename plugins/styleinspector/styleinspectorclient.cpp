@@ -22,7 +22,7 @@
 */
 
 #include "styleinspectorclient.h"
-#include <common/network/endpoint.h>
+#include <common/endpoint.h>
 
 using namespace GammaRay;
 

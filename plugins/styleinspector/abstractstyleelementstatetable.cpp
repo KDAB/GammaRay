@@ -24,7 +24,7 @@
 #include "abstractstyleelementstatetable.h"
 #include "styleoption.h"
 #include "styleinspectorinterface.h"
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QPainter>
 #include <QStyleOption>

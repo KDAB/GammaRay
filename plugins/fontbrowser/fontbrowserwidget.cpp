@@ -27,7 +27,7 @@
 
 #include "fontbrowserclient.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 #include <ui/deferredresizemodesetter.h>
 
 #include <QAbstractItemModel>

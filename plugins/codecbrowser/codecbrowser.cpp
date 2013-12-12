@@ -24,7 +24,7 @@
 #include "codecbrowser.h"
 #include "codecmodel.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QItemSelectionModel>
 

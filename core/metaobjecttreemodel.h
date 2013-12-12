@@ -27,7 +27,7 @@
 #include <QModelIndex>
 #include <QReadWriteLock>
 #include <QVector>
-#include <network/modelroles.h>
+#include <common/modelroles.h>
 
 namespace GammaRay {
 

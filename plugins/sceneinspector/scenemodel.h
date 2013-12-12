@@ -25,7 +25,7 @@
 #define GAMMARAY_SCENEINSPECTOR_SCENEMODEL_H
 
 #include <QAbstractItemModel>
-#include <common/network/modelroles.h>
+#include <common/modelroles.h>
 
 class QGraphicsScene;
 class QGraphicsItem;

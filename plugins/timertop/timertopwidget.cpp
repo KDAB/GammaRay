@@ -25,7 +25,7 @@
 #include "ui_timertopwidget.h"
 #include "timermodel.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QSortFilterProxyModel>
 #include <QTimer>

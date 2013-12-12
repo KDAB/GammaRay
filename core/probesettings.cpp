@@ -24,7 +24,7 @@
 #include "probesettings.h"
 
 #include <sharedmemorylocker.h>
-#include <network/message.h>
+#include <common/message.h>
 
 #include <QBuffer>
 #include <QCoreApplication>

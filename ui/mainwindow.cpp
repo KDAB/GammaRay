@@ -31,9 +31,9 @@
 #include "include/objecttypefilterproxymodel.h"
 #include "include/toolfactory.h"
 
-#include <network/objectbroker.h>
-#include <network/modelroles.h>
-#include <network/endpoint.h>
+#include <common/objectbroker.h>
+#include <common/modelroles.h>
+#include <common/endpoint.h>
 #include <common/probecontrollerinterface.h>
 
 #include "kde/krecursivefilterproxymodel.h"

@@ -26,7 +26,7 @@
 
 #include <QStandardItemModel>
 #include <QTextObject>
-#include <network/modelroles.h>
+#include <common/modelroles.h>
 
 class QTextTable;
 class QTextBlock;

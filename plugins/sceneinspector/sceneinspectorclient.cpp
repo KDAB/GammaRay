@@ -25,7 +25,7 @@
 
 #include <QTransform>
 
-#include <common/network/endpoint.h>
+#include <common/endpoint.h>
 
 using namespace GammaRay;
 

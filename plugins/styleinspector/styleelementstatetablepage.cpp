@@ -26,7 +26,7 @@
 #include "abstractstyleelementstatetable.h"
 
 #include "styleinspectorclient.h"
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 static QObject* createStyleInspectorClient(const QString & /*name*/, QObject *parent)
 {

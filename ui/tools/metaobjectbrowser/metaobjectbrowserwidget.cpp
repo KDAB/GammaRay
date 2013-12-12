@@ -29,7 +29,7 @@
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QDebug>
 #include <QHBoxLayout>

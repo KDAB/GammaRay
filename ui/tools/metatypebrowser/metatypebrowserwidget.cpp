@@ -25,7 +25,7 @@
 #include <deferredresizemodesetter.h>
 #include "ui_metatypebrowserwidget.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QSortFilterProxyModel>
 

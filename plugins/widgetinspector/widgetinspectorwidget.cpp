@@ -29,7 +29,7 @@
 #include "widgetinspectorclient.h"
 
 #include <core/propertycontroller.h>
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include "include/objectmodel.h"
 

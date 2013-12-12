@@ -22,7 +22,7 @@
 #include "localeinspectorwidget.h"
 #include "ui_localeinspectorwidget.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QSortFilterProxyModel>
 

@@ -26,7 +26,7 @@
 #include "core/tools/textdocumentinspector/textdocumentmodel.h"
 
 #include <include/objectmodel.h>
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
  #include <QTextDocument>
 

@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_SERVER_H
 #define GAMMARAY_SERVER_H
 
-#include <network/endpoint.h>
-#include <network/objectbroker.h>
+#include <common/endpoint.h>
+#include <common/objectbroker.h>
 
 class QTcpServer;
 class QUdpSocket;

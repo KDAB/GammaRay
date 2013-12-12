@@ -29,7 +29,7 @@
 
 #include "include/probeinterface.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 #include <remote/remotemodelserver.h>
 #include <remote/selectionmodelserver.h>
 

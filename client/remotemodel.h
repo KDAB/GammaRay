@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_REMOTEMODEL_H
 #define GAMMARAY_REMOTEMODEL_H
 
-#include <network/protocol.h>
+#include <common/protocol.h>
 
 #include <QAbstractItemModel>
 #include <QVector>

@@ -29,8 +29,8 @@
 #include "graphicsview.h"
 #include "ui_sceneinspectorwidget.h"
 
-#include <common/network/objectbroker.h>
-#include <common/network/endpoint.h>
+#include <common/objectbroker.h>
+#include <common/endpoint.h>
 
 #include "include/objectmodel.h"
 #include "include/util.h"

@@ -41,8 +41,8 @@
 #include "remote/selectionmodelserver.h"
 #include "toolpluginerrormodel.h"
 
-#include <network/objectbroker.h>
-#include <network/streamoperators.h>
+#include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>

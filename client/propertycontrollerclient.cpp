@@ -22,7 +22,7 @@
 */
 
 #include "propertycontrollerclient.h"
-#include <network/endpoint.h>
+#include <common/endpoint.h>
 
 #include <include/metatypedeclarations.h>
 

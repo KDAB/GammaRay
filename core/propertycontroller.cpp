@@ -37,8 +37,8 @@
 
 #include "remote/remotemodelserver.h"
 
-#include <network/objectbroker.h>
-#include <network/enums.h>
+#include <common/objectbroker.h>
+#include <common/enums.h>
 
 #include <QDebug>
 #include <QItemSelectionModel>

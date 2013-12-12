@@ -35,7 +35,7 @@
 #include <core/metaobjectrepository.h>
 #include <core/varianthandler.h>
 #include <core/probesettings.h>
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include "include/objectmodel.h"
 #include "include/objecttypefilterproxymodel.h"

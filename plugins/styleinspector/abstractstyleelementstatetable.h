@@ -25,7 +25,7 @@
 #define GAMMARAY_STYLEINSPECTOR_ABSTRACTSTYLEELEMENTSTATETABLE_H
 
 #include "abstractstyleelementmodel.h"
-#include <common/network/modelroles.h>
+#include <common/modelroles.h>
 
 class QStyleOption;
 class QRect;

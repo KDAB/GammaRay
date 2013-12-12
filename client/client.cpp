@@ -23,7 +23,7 @@
 
 #include "client.h"
 
-#include <network/message.h>
+#include <common/message.h>
 
 #include <QTcpSocket>
 #include <QHostAddress>

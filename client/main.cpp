@@ -28,8 +28,8 @@
 #include "propertycontrollerclient.h"
 #include "probecontrollerclient.h"
 
-#include <network/objectbroker.h>
-#include <network/streamoperators.h>
+#include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 #include <QApplication>
 #include <QStringList>

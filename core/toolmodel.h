@@ -25,7 +25,7 @@
 #define GAMMARAY_TOOLMODEL_H
 
 #include <common/pluginmanager.h>
-#include <network/modelroles.h>
+#include <common/modelroles.h>
 
 #include <QAbstractListModel>
 #include <QSet>

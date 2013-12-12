@@ -31,7 +31,7 @@
 #include <ui/deferredtreeviewconfiguration.h>
 #include <ui_statemachineviewer.h>
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QScrollBar>
 #include <QGraphicsItem>
@@ -102,7 +102,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setMaximumDepth(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), m_interface, SLOT(toggleRunning()));
   connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
-  
+
   m_ui->maxMegaPixelsSpinBox->setValue(maximumMegaPixels());
   connect(m_ui->maxMegaPixelsSpinBox, SIGNAL(valueChanged(int)), SLOT(setMaximumMegaPixels(int)));
 
@@ -422,7 +422,7 @@ void StateMachineViewerWidget::exportAsImage()
   if (actualMegaPixels > maxPixels && actualMegaPixels != 0) {
     size *= sqrt(maxPixels / actualMegaPixels);
   }
-  
+
   int quality = -1;
   const char* format;
   if (fileName.endsWith(QLatin1String("jpg"), Qt::CaseInsensitive)

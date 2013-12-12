@@ -22,7 +22,7 @@
 */
 
 #include "styleinspectorinterface.h"
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 #include <QSize>
 
 using namespace GammaRay;

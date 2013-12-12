@@ -25,8 +25,8 @@
 #include "ui_codecbrowserwidget.h"
 
 #include <ui/deferredresizemodesetter.h>
-#include <common/network/objectbroker.h>
-#include <common/network/endpoint.h>
+#include <common/objectbroker.h>
+#include <common/endpoint.h>
 
 using namespace GammaRay;
 

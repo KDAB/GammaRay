@@ -24,7 +24,7 @@
 
 #include <QAbstractTableModel>
 #include <QVector>
-#include <network/modelroles.h>
+#include <common/modelroles.h>
 
 namespace GammaRay {
 

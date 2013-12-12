@@ -22,8 +22,8 @@
 #include "actioninspectorwidget.h"
 #include "actionmodel.h" // for column enum only
 
-#include <common/network/objectbroker.h>
-#include <common/network/endpoint.h>
+#include <common/objectbroker.h>
+#include <common/endpoint.h>
 
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"

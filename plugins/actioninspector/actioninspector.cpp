@@ -25,7 +25,7 @@
 #include "include/objectmodel.h"
 #include "include/probeinterface.h"
 #include "include/objecttypefilterproxymodel.h"
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QtPlugin>
 

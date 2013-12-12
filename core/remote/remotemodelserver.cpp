@@ -23,8 +23,8 @@
 
 #include "remotemodelserver.h"
 #include "server.h"
-#include <network/protocol.h>
-#include <network/message.h>
+#include <common/protocol.h>
+#include <common/message.h>
 
 #include <QAbstractItemModel>
 #include <QDataStream>

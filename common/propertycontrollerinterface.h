@@ -26,7 +26,7 @@
 
 #include <QObject>
 
-#include <common/network/enums.h>
+#include "enums.h"
 
 namespace GammaRay {
 

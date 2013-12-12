@@ -29,7 +29,7 @@
 #include <QHash>
 
 #include "include/gammaray_ui_export.h"
-#include <common/network/enums.h>
+#include <common/enums.h>
 
 class QAbstractItemModel;
 class QAbstractItemView;

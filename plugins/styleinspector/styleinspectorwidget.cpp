@@ -24,7 +24,7 @@
 #include "styleinspectorwidget.h"
 #include "ui_styleinspectorwidget.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 

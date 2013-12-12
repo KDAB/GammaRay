@@ -24,8 +24,8 @@
 #ifndef GAMMARAY_CLIENT_H
 #define GAMMARAY_CLIENT_H
 
-#include <network/protocol.h>
-#include <network/endpoint.h>
+#include <common/protocol.h>
+#include <common/endpoint.h>
 
 #include <QAbstractSocket>
 

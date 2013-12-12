@@ -25,7 +25,7 @@
 
 #include "client.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <ui/mainwindow.h>
 #include <ui/splashscreen.h>

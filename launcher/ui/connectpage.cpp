@@ -26,7 +26,7 @@
 #include "networkdiscoverymodel.h"
 #include "clientlauncher.h"
 
-#include <network/endpoint.h>
+#include <common/endpoint.h>
 
 #include <QProcess>
 #include <QSettings>

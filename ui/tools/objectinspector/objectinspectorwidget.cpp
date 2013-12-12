@@ -24,7 +24,7 @@
 #include "objectinspectorwidget.h"
 #include "ui_objectinspectorwidget.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <ui/deferredresizemodesetter.h>
 

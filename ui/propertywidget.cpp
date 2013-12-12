@@ -30,8 +30,8 @@
 
 #include "variantcontainermodel.h"
 
-#include <network/objectbroker.h>
-#include <network/modelroles.h>
+#include <common/objectbroker.h>
+#include <common/modelroles.h>
 
 #include <include/metatypedeclarations.h>
 

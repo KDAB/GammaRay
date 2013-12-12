@@ -22,7 +22,7 @@
 */
 
 #include "propertycontrollerinterface.h"
-#include <network/objectbroker.h>
+#include "objectbroker.h"
 
 using namespace GammaRay;
 

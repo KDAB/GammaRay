@@ -4,7 +4,7 @@
 #include "injector/injectorfactory.h"
 
 #include <include/sharedmemorylocker.h>
-#include <network/message.h>
+#include <common/message.h>
 
 #include <QByteArray>
 #include <QBuffer>

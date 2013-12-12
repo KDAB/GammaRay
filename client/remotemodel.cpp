@@ -24,7 +24,7 @@
 #include "remotemodel.h"
 #include "client.h"
 
-#include <network/message.h>
+#include <common/message.h>
 
 #include <QDataStream>
 #include <QDebug>

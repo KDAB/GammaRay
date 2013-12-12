@@ -25,7 +25,7 @@
 
 #include "metatypesmodel.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 

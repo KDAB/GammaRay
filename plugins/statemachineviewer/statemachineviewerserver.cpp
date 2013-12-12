@@ -29,7 +29,7 @@
 
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QAbstractTransition>
 #include <QFinalState>

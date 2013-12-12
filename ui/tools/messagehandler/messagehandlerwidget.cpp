@@ -24,8 +24,8 @@
 #include "messagehandlerwidget.h"
 #include "ui_messagehandlerwidget.h"
 
-#include <network/endpoint.h>
-#include <network/objectbroker.h>
+#include <common/endpoint.h>
+#include <common/objectbroker.h>
 #include "messagehandlerclient.h"
 
 #include <QSortFilterProxyModel>

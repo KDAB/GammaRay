@@ -15,11 +15,10 @@ set(gammaray_common_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp
 
   methodargument.cpp
-
-  network/objectbroker.cpp
-  network/protocol.cpp
-  network/message.cpp
-  network/endpoint.cpp
+  objectbroker.cpp
+  protocol.cpp
+  message.cpp
+  endpoint.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
@@ -43,9 +42,8 @@ set(gammaray_common_internal_srcs
   probecontrollerinterface.cpp
   modelinspectorinterface.cpp
   resourcebrowserinterface.cpp
-
-  network/networkselectionmodel.cpp
-  network/streamoperators.cpp
+  networkselectionmodel.cpp
+  streamoperators.cpp
 )
 
 if(NOT WIN32)

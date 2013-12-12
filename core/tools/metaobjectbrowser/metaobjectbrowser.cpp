@@ -26,7 +26,7 @@
 #include "probe.h"
 #include "propertycontroller.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QDebug>
 #include <QItemSelectionModel>

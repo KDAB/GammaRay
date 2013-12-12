@@ -24,7 +24,7 @@
 #include "connectioninspectorwidget.h"
 #include "ui_connectioninspectorwidget.h"
 
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QLineEdit>
 #include <QSortFilterProxyModel>

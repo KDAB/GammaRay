@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_REMOTEMODELSERVER_H
 #define GAMMARAY_REMOTEMODELSERVER_H
 
-#include <network/protocol.h>
+#include <common/protocol.h>
 
 #include <QObject>
 #include <QPointer>

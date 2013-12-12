@@ -23,7 +23,7 @@
 
 #include "fontbrowserclient.h"
 
-#include <common/network/endpoint.h>
+#include <common/endpoint.h>
 
 #include <QColor>
 

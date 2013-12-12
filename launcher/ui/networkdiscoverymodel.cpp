@@ -23,7 +23,7 @@
 
 #include "networkdiscoverymodel.h"
 
-#include <network/endpoint.h>
+#include <common/endpoint.h>
 
 #include <QDataStream>
 #include <QUdpSocket>

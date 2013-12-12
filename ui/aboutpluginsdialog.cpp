@@ -23,7 +23,7 @@
 
 #include "aboutpluginsdialog.h"
 #include <common/pluginmanager.h>
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include "include/toolfactory.h"
 

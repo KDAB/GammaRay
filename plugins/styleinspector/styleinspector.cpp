@@ -33,7 +33,7 @@
 #include "include/singlecolumnobjectproxymodel.h"
 
 #include <ui/palettemodel.h>
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QApplication>
 #include <QItemSelectionModel>

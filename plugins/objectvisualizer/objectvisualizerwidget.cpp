@@ -28,7 +28,7 @@
 
 #include "kde/kfilterproxysearchline.h"
 #include "kde/krecursivefilterproxymodel.h"
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QCoreApplication>
 #include <QDebug>

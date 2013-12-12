@@ -36,9 +36,9 @@
 #include <ui/tools/standardpaths/standardpathswidget.h>
 #include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
+#include <common/modelroles.h>
 #include <common/pluginmanager.h>
 #include <ui/proxytooluifactory.h>
-#include <network/modelroles.h>
 
 #include <QCoreApplication>
 #include <QDir>

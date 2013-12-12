@@ -29,7 +29,7 @@
 
 #include <deferredtreeviewconfiguration.h>
 #include <3rdparty/qt/resourcemodel.h>
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QDebug>
 #include <QFileInfo>

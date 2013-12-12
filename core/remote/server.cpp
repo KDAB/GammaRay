@@ -25,8 +25,8 @@
 #include "probe.h"
 #include "probesettings.h"
 
-#include <network/protocol.h>
-#include <network/message.h>
+#include <common/protocol.h>
+#include <common/message.h>
 
 #include <QTcpServer>
 #include <QTcpSocket>
@@ -41,7 +41,7 @@
 using namespace GammaRay;
 using namespace std;
 
-Server::Server(QObject *parent) : 
+Server::Server(QObject *parent) :
   Endpoint(parent),
   m_tcpServer(new QTcpServer(this)),
   m_nextAddress(endpointAddress()),

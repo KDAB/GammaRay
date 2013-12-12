@@ -29,7 +29,7 @@
 #include <QVector>
 
 #include "gammaray_core_export.h"
-#include <common/network/modelroles.h>
+#include <common/modelroles.h>
 
 namespace GammaRay {
 

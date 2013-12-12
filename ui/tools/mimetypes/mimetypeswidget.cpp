@@ -25,7 +25,7 @@
 #include "ui_mimetypeswidget.h"
 
 #include <ui/deferredresizemodesetter.h>
-#include <network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <kde/krecursivefilterproxymodel.h>
 

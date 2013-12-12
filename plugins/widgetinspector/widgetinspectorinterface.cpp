@@ -23,7 +23,7 @@
 
 #include "widgetinspectorinterface.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 

@@ -23,7 +23,7 @@
 
 #include "sceneinspectorinterface.h"
 
-#include <common/network/objectbroker.h>
+#include <common/objectbroker.h>
 
 #include <QGraphicsItem>
 #include <QPainter>

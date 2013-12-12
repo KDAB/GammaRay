@@ -25,7 +25,7 @@
 #define GAMMARAY_MIMETYPESMODEL_H
 
 #include <QStandardItemModel>
-#include <network/modelroles.h>
+#include <common/modelroles.h>
 #include <QMimeDatabase>
 
 namespace GammaRay {
