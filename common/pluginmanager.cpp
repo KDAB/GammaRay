@@ -42,8 +42,9 @@ using namespace std;
 
 static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
 
-PluginManagerBase::PluginManagerBase(QObject *parent) : m_parent(parent)
+PluginManagerBase::PluginManagerBase(const QString &pluginPath, QObject *parent) : m_parent(parent)
 {
+  QCoreApplication::addLibraryPath(pluginPath);
   QCoreApplication::addLibraryPath(QLatin1String(GAMMARAY_LOCAL_INSTALL_PREFIX) + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
 }
 

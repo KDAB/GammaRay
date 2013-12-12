@@ -44,6 +44,7 @@
 #include "pluginmanager.h"
 #include "probe.h"
 #include "readorwritelocker.h"
+#include "probesettings.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -72,7 +73,8 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   m_tools.push_back(new MimeTypesFactory(this));
 #endif
 
-  m_pluginManager.reset(new ToolPluginManager(this));
+  const QString pluginPath = ProbeSettings::value("ProbePath").toString() + QDir::separator() + QLatin1String(GAMMARAY_RELATIVE_PROBE_TO_PLUGIN_PATH);
+  m_pluginManager.reset(new ToolPluginManager(pluginPath, this));
   Q_FOREACH (ToolFactory *factory, m_pluginManager->plugins()) {
     m_tools.push_back(factory);
   }
