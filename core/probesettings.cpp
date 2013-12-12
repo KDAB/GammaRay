@@ -23,7 +23,7 @@
 
 #include "probesettings.h"
 
-#include <sharedmemorylocker.h>
+#include <common/sharedmemorylocker.h>
 #include <common/message.h>
 
 #include <QBuffer>

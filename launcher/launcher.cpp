@@ -3,7 +3,7 @@
 #include "injector/abstractinjector.h"
 #include "injector/injectorfactory.h"
 
-#include <include/sharedmemorylocker.h>
+#include <common/sharedmemorylocker.h>
 #include <common/message.h>
 
 #include <QByteArray>
