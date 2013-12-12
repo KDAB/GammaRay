@@ -55,20 +55,7 @@ PluginManagerBase::~PluginManagerBase()
 QStringList PluginManagerBase::pluginPaths() const
 {
   QStringList pluginPaths;
-
-  // add plugins from gammaray's build directory
-  pluginPaths << QLatin1String(GAMMARAY_BUILD_DIR) +
-    QDir::separator() + "lib" +
-    QDir::separator() + "plugins" +
-    QDir::separator() + GAMMARAY_PLUGIN_SUFFIX;
-
-  pluginPaths << QCoreApplication::applicationDirPath() +
-    QDir::separator() + ".." +
-    QDir::separator() + GAMMARAY_PLUGIN_INSTALL_DIR +
-    QDir::separator() + GAMMARAY_PLUGIN_SUFFIX;
-
-  QStringList libraryPaths = QCoreApplication::libraryPaths();
-  foreach (const QString &libraryPath, libraryPaths) {
+  foreach (const QString &libraryPath, QCoreApplication::libraryPaths()) {
     pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_SUFFIX;
   }
 
