@@ -151,7 +151,7 @@ Probe::Probe(QObject *parent):
   m_objectTreeModel(new ObjectTreeModel(this)),
   m_metaObjectTreeModel(new MetaObjectTreeModel(this)),
   m_connectionModel(new ConnectionModel(this)),
-  m_toolModel(new ToolModel(this)),
+  m_toolModel(0),
   m_window(0),
   m_queueTimer(new QTimer(this))
 {
@@ -159,6 +159,7 @@ Probe::Probe(QObject *parent):
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
   ProbeSettings::receiveSettings();
+  m_toolModel = new ToolModel(this);
 
   Server *server = new Server(this);
   ProbeSettings::sendPort(server->port());
