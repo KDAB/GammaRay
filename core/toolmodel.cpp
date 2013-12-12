@@ -41,7 +41,7 @@
 #include "tools/mimetypes/mimetypes.h"
 #endif
 
-#include "pluginmanager.h"
+#include <common/pluginmanager.h>
 #include "probe.h"
 #include "readorwritelocker.h"
 #include "probesettings.h"

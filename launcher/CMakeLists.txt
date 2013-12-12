@@ -7,7 +7,6 @@ include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
-  ${CMAKE_SOURCE_DIR}/common
 )
 
 # shared launcher code

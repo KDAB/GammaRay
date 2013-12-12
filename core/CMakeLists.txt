@@ -1,7 +1,6 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
-  ${CMAKE_SOURCE_DIR}/common
   ${CMAKE_SOURCE_DIR}/include
   ${CMAKE_SOURCE_DIR}/ui
   ${CMAKE_CURRENT_SOURCE_DIR}

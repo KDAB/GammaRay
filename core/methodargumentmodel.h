@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_METHODARGUMENTMODEL_H
 #define GAMMARAY_METHODARGUMENTMODEL_H
 
-#include "methodargument.h"
+#include <common/methodargument.h>
 
 #include <QAbstractTableModel>
 #include <QMetaMethod>
