@@ -2,7 +2,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = GammaRay
-PROJECT_NUMBER         = 1.3
+PROJECT_NUMBER         = @GAMMARAY_VERSION@
 OUTPUT_DIRECTORY       = apidocs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -78,7 +78,7 @@ WARN_LOGFILE           = doxygen.log
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = include
+INPUT                  = @CMAKE_SOURCE_DIR@
 FILE_PATTERNS          = *.cpp \
                          *.cc \
                          *.cxx \
@@ -104,7 +104,7 @@ EXCLUDE_PATTERNS       = */.svn/* \
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
-IMAGE_PATH             = images
+IMAGE_PATH             = @CMAKE_SOURCE_DIR@/images
 INPUT_FILTER           = 
 FILTER_PATTERNS        = 
 FILTER_SOURCE_FILES    = NO
@@ -132,7 +132,7 @@ GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
-HTML_FOOTER            = images/footer.html
+HTML_FOOTER            = @CMAKE_SOURCE_DIR@/images/footer.html
 HTML_STYLESHEET        =
 HTML_ALIGN_MEMBERS     = YES
 GENERATE_HTMLHELP      = NO
@@ -154,7 +154,7 @@ EXPAND_ONLY_PREDEF     = NO
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           = 
 INCLUDE_FILE_PATTERNS  = 
-PREDEFINED             = Q_DECL_IMPORT="" GAMMARAY_EXPORT=""
+PREDEFINED             = Q_DECL_IMPORT="" GAMMARAY_COMMON_EXPORT="" GAMMARAY_CORE_EXPORT="" GAMMARAY_UI_EXPORT=""
 EXPAND_AS_DEFINED      = 
 SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
@@ -174,8 +174,8 @@ COLLABORATION_GRAPH    = NO
 GROUP_GRAPHS           = NO
 UML_LOOK               = NO
 TEMPLATE_RELATIONS     = NO
-INCLUDE_GRAPH          = YES
-INCLUDED_BY_GRAPH      = YES
+INCLUDE_GRAPH          = NO
+INCLUDED_BY_GRAPH      = NO
 CALL_GRAPH             = NO
 CALLER_GRAPH           = NO
 GRAPHICAL_HIERARCHY    = YES
