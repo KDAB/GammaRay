@@ -24,7 +24,7 @@
 #include "metaobjectrepository.h"
 #include "metaobject.h"
 
-#include "include/metatypedeclarations.h"
+#include <common/metatypedeclarations.h>
 
 #include <QAbstractSocket>
 #include <QFile>

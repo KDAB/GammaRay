@@ -61,6 +61,7 @@ endif()
 install(FILES
   gammaray_common_export.h
   endpoint.h
+  metatypedeclarations.h
   modelroles.h
   objectbroker.h
   protocol.h

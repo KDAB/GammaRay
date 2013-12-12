@@ -22,9 +22,9 @@
 */
 
 #include "propertycontrollerclient.h"
-#include <common/endpoint.h>
 
-#include <include/metatypedeclarations.h>
+#include <common/endpoint.h>
+#include <common/metatypedeclarations.h>
 
 using namespace GammaRay;
 

@@ -24,7 +24,7 @@
 #include "methodinvocationdialog.h"
 #include "ui_methodinvocationdialog.h"
 
-#include "include/metatypedeclarations.h"
+#include <common/metatypedeclarations.h>
 
 #include <QPushButton>
 

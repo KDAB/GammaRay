@@ -22,7 +22,7 @@
 */
 
 #include "include/util.h"
-#include "include/metatypedeclarations.h"
+#include <common/metatypedeclarations.h>
 #include "varianthandler.h"
 
 #include <QDebug>

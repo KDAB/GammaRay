@@ -23,8 +23,7 @@
 
 #include "streamoperators.h"
 #include "enums.h"
-
-#include <include/metatypedeclarations.h>
+#include "metatypedeclarations.h"
 
 #include <QDataStream>
 #include <QMetaMethod>

@@ -35,11 +35,11 @@
 #include "include/objecttypefilterproxymodel.h"
 #include "include/probeinterface.h"
 #include "include/singlecolumnobjectproxymodel.h"
-#include "include/metatypedeclarations.h"
 
 #include <kde/krecursivefilterproxymodel.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
+#include <common/metatypedeclarations.h>
 
 #include <QGraphicsEffect>
 #include <QGraphicsItem>

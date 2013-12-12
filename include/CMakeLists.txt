@@ -1,5 +1,4 @@
 set(GAMMARAY_HEADERS
-  metatypedeclarations.h
   objectmodel.h
   objectmodelbase.h
   objecttypefilterproxymodel.h

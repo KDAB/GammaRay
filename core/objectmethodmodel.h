@@ -26,7 +26,7 @@
 
 #include "metaobjectmodel.h"
 
-#include <include/metatypedeclarations.h>
+#include <common/metatypedeclarations.h>
 #include <common/modelroles.h>
 
 #include <QMetaMethod>

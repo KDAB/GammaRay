@@ -32,11 +32,10 @@
 
 #include <common/objectbroker.h>
 #include <common/modelroles.h>
-
-#include <include/metatypedeclarations.h>
+#include <common/metatypedeclarations.h>
+#include <common/propertycontrollerinterface.h>
 
 #include "kde/krecursivefilterproxymodel.h"
-#include <common/propertycontrollerinterface.h>
 
 #include <QDebug>
 #include <QMenu>
