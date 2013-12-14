@@ -4,7 +4,7 @@ GammaRay - Qt-application inspection and manipulation tool.
 
 =head1 SYNOPSIS
 
-gammaray [--injector <injector>] [--pid <pid> | <application> <args>]
+gammaray [--pid <pid> | <application> <args>]
 
 
 =head1 DESCRIPTION
@@ -45,6 +45,29 @@ Supported injectors are:
      gdb (Linux. requires gdb to be installed)
      style
      windll (Windows)
+
+=item B<--inprocess>
+
+Use the Gammaray 1.x in-process UI. This is not necessary in most cases,
+apart from using tools that do not work remotely.
+
+=item B<--inject-only>
+
+This will only inject the GammaRay probe into a process, but not start
+the GammaRay UI. This is useful for example when doing remote debugging
+on embedded devices.
+
+=item B<--listen <address>>
+
+Specify on which network address the GammaRay server should listen,
+default is 0.0.0.0 (ie. all of them). This can be used for example
+on Windows to avoid firewall warnings by setting the address to
+127.0.0.1 if you don't need remote access.
+
+=item B<--no-listen>
+
+Disables the GammaRay server. This implies --inprocess as there is no
+other way to connect to the GammaRay probe in this case.
 
 =back
 
