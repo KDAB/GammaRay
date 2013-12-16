@@ -179,7 +179,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Node *node = nodeForIndex(index);
       if (!node) {
         // This can happen e.g. when we called a blocking operation from the remote client
-        // via the method invokation with a direct connection. Then when the blocking
+        // via the method invocation with a direct connection. Then when the blocking
         // operation creates e.g. a QObject it is directly added/removed to the ObjectTree
         // and we get signals for that. When we then though ask for column counts we will
         // only get responses once the blocking operation has finished, at which point

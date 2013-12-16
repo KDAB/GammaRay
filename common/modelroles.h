@@ -31,7 +31,7 @@
  */
 namespace GammaRay {
 
-static const int UserRole = 256; // Qt4 uses 32, Qt5 256, use the latter globaly to allow combining Qt4/5 client/servers.
+static const int UserRole = 256; // Qt4 uses 32, Qt5 256, use the latter globally to allow combining Qt4/5 client/servers.
 
 /** Custom roles for GammaRay::ToolModel.
  * @todo These can be split again, between core tool model and UI tool model.

@@ -51,7 +51,7 @@ class RemoteModelServer : public QObject
   public slots:
     void newRequest(const GammaRay::Message &msg);
     /** Notifications about an object on the client side (un)monitoring this object.
-     *  If noone is watching, we don't send out any change notification to reduce network traffice.
+     *  If no one is watching, we don't send out any change notification to reduce network traffice.
      */
     void modelMonitored(bool monitored = false);
 
