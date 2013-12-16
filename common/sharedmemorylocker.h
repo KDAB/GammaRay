@@ -23,7 +23,8 @@
 
 #include <QSharedMemory>
 
-namespace GammaRay {
+namespace GammaRay
+{
 
 /** RAII helper class for locking QSharedMemory.
  * @todo this should be upstream
@@ -31,7 +32,7 @@ namespace GammaRay {
 class SharedMemoryLocker
 {
 public:
-  explicit inline SharedMemoryLocker(QSharedMemory* shm) : m_shm(shm)
+  explicit inline SharedMemoryLocker(QSharedMemory *shm) : m_shm(shm)
   {
     Q_ASSERT(shm);
     shm->lock();
