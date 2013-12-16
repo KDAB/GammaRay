@@ -1,4 +1,10 @@
-# GammaRay-specfic CMake macros that don't make sense outside of the GammaRay source tree.
+# GammaRay-specific CMake macros that don't make sense outside of the GammaRay source tree.
+
+#  Copyright (c) 2013 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+
+# Author: Volker Krause <volker.krause@kdab.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
 
 macro(gammaray_install_headers)
   get_filename_component(_dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)
