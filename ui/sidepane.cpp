@@ -72,10 +72,10 @@ QSize SidePane::sizeHint() const
   return QSize(width, height);
 }
 
-void SidePane::setModel(QAbstractItemModel* model)
+void SidePane::setModel(QAbstractItemModel *model)
 {
   if (model) {
-    connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), SLOT(updateSizeHint()));
+    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateSizeHint()));
     connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updateSizeHint()));
   }
   QAbstractItemView::setModel(model);
