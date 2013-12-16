@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2012 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2012-2013 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <core/probe.h>
+#include "core/probe.h"
 #include "functionoverwriterfactory.h"
 #include "probecreator.h"
 
@@ -151,10 +151,12 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*l
   switch(dwReason) {
   case DLL_THREAD_ATTACH:
   {
-    if (!functionsOverwritten)
+    if (!functionsOverwritten) {
       overwriteQtFunctions();
-    if (!Probe::isInitialized())
+    }
+    if (!Probe::isInitialized()) {
       gammaray_probe_inject();
+    }
     break;
   }
   case DLL_PROCESS_DETACH:
@@ -164,7 +166,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*l
       break;
   }
   };
-  return TRUE;
+  return TRUE; //krazy:exclude=captruefalse
 }
 #endif
 
