@@ -24,16 +24,16 @@
 #include "propertywidget.h"
 #include "ui_propertywidget.h"
 
-#include <ui/methodinvocationdialog.h>
-#include <ui/propertyeditor/propertyeditordelegate.h>
-#include <ui/deferredresizemodesetter.h>
+#include "ui/methodinvocationdialog.h"
+#include "ui/propertyeditor/propertyeditordelegate.h"
+#include "ui/deferredresizemodesetter.h"
 
 #include "variantcontainermodel.h"
 
-#include <common/objectbroker.h>
-#include <common/modelroles.h>
-#include <common/metatypedeclarations.h>
-#include <common/propertycontrollerinterface.h>
+#include "common/objectbroker.h"
+#include "common/modelroles.h"
+#include "common/metatypedeclarations.h"
+#include "common/propertycontrollerinterface.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -69,7 +69,7 @@ PropertyWidget::~PropertyWidget()
 {
 }
 
-void PropertyWidget::setObjectBaseName(const QString& baseName)
+void PropertyWidget::setObjectBaseName(const QString &baseName)
 {
   m_objectBaseName = baseName;
 
@@ -78,12 +78,14 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   proxy->setSourceModel(model("staticProperties"));
   m_ui->staticPropertyView->setModel(proxy);
   m_ui->staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  new DeferredResizeModeSetter(m_ui->staticPropertyView->header(), 0, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(
+    m_ui->staticPropertyView->header(), 0, QHeaderView::ResizeToContents);
   m_ui->staticPropertySearchLine->setProxy(proxy);
   m_ui->staticPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  connect(m_ui->staticPropertyView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClick(QModelIndex)));
+  connect(m_ui->staticPropertyView, SIGNAL(doubleClicked(QModelIndex)),
+          SLOT(onDoubleClick(QModelIndex)));
 #endif
 
   proxy = new QSortFilterProxyModel(this);
@@ -91,12 +93,14 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   proxy->setSourceModel(model("dynamicProperties"));
   m_ui->dynamicPropertyView->setModel(proxy);
   m_ui->dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  new DeferredResizeModeSetter(m_ui->dynamicPropertyView->header(), 0, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(
+    m_ui->dynamicPropertyView->header(), 0, QHeaderView::ResizeToContents);
   m_ui->dynamicPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
   m_ui->dynamicPropertySearchLine->setProxy(proxy);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  connect(m_ui->dynamicPropertyView, SIGNAL(doubleClicked(QModelIndex)), SLOT(onDoubleClick(QModelIndex)));
+  connect(m_ui->dynamicPropertyView, SIGNAL(doubleClicked(QModelIndex)),
+          SLOT(onDoubleClick(QModelIndex)));
 #endif
 
   proxy = new QSortFilterProxyModel(this);
@@ -157,26 +161,30 @@ void PropertyWidget::setObjectBaseName(const QString& baseName)
   m_ui->metaPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
 
   if (m_controller) {
-    disconnect(m_controller, SIGNAL(displayStateChanged(GammaRay::PropertyWidgetDisplayState::State)),
+    disconnect(m_controller,
+               SIGNAL(displayStateChanged(GammaRay::PropertyWidgetDisplayState::State)),
                this, SLOT(setDisplayState(GammaRay::PropertyWidgetDisplayState::State)));
   }
-  m_controller = ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
+  m_controller =
+    ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
   connect(m_controller, SIGNAL(displayStateChanged(GammaRay::PropertyWidgetDisplayState::State)),
           this, SLOT(setDisplayState(GammaRay::PropertyWidgetDisplayState::State)));
 }
 
-QAbstractItemModel* PropertyWidget::model(const QString& nameSuffix)
+QAbstractItemModel *PropertyWidget::model(const QString &nameSuffix)
 {
-  return ObjectBroker::model(m_objectBaseName + "." + nameSuffix);
+  return ObjectBroker::model(m_objectBaseName + '.' + nameSuffix);
 }
 
 void GammaRay::PropertyWidget::methodActivated(const QModelIndex &index)
 {
-  if (!index.isValid() || m_displayState != PropertyWidgetDisplayState::QObject)
+  if (!index.isValid() || m_displayState != PropertyWidgetDisplayState::QObject) {
     return;
+  }
   m_controller->activateMethod();
 
-  const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
+  const QMetaMethod::MethodType methodType =
+    index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
   if (methodType == QMetaMethod::Slot) {
     MethodInvocationDialog dlg(this);
     dlg.setArgumentModel(model("methodArguments"));
@@ -193,7 +201,8 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
     return;
   }
 
-  const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
+  const QMetaMethod::MethodType methodType =
+    index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
   QMenu contextMenu;
   if (methodType == QMetaMethod::Slot) {
     contextMenu.addAction(tr("Invoke"));
@@ -206,7 +215,7 @@ void PropertyWidget::methodConextMenu(const QPoint &pos)
   }
 }
 
-bool PropertyWidget::showTab(const QWidget* widget, PropertyWidgetDisplayState::State state) const
+bool PropertyWidget::showTab(const QWidget *widget, PropertyWidgetDisplayState::State state) const
 {
   // TODO: this check needs to consider the server-side Qt version!
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -257,14 +266,16 @@ void PropertyWidget::setDisplayState(PropertyWidgetDisplayState::State state)
 
 void PropertyWidget::onDoubleClick(const QModelIndex &index)
 {
-  if (index.column() != 0)
+  if (index.column() != 0) {
     return;
+  }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
   QVariant var = index.sibling(index.row(), 1).data(Qt::EditRole);
 
-  if (!var.canConvert<QVariantList>() && !var.canConvert<QVariantHash>() )
+  if (!var.canConvert<QVariantList>() && !var.canConvert<QVariantHash>()) {
     return;
+  }
 
   QTreeView *v = new QTreeView;
 

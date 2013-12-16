@@ -26,6 +26,7 @@
 #include "connectionfilterproxymodel.h"
 #include "connectionmodel.h"
 #include "metapropertymodel.h"
+#include "methodargumentmodel.h"
 #include "multisignalmapper.h"
 #include "objectclassinfomodel.h"
 #include "objectdynamicpropertymodel.h"
@@ -33,12 +34,11 @@
 #include "objectmethodmodel.h"
 #include "objectstaticpropertymodel.h"
 #include "probe.h"
-#include "methodargumentmodel.h"
 
 #include "remote/remotemodelserver.h"
 
-#include <common/objectbroker.h>
-#include <common/enums.h>
+#include "common/objectbroker.h"
+#include "common/enums.h"
 
 #include <QDebug>
 #include <QItemSelectionModel>
@@ -47,7 +47,7 @@
 
 using namespace GammaRay;
 
-PropertyController::PropertyController(const QString& baseName, QObject* parent) :
+PropertyController::PropertyController(const QString &baseName, QObject *parent) :
   PropertyControllerInterface(baseName + ".controller", parent),
   m_objectBaseName(baseName),
   m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
@@ -87,12 +87,12 @@ PropertyController::~PropertyController()
 {
 }
 
-void PropertyController::registerModel(QAbstractItemModel* model, const QString& nameSuffix)
+void PropertyController::registerModel(QAbstractItemModel *model, const QString &nameSuffix)
 {
-  Probe::instance()->registerModel(m_objectBaseName + "." + nameSuffix, model);
+  Probe::instance()->registerModel(m_objectBaseName + '.' + nameSuffix, model);
 }
 
-void PropertyController::signalEmitted(QObject* sender, int signalIndex)
+void PropertyController::signalEmitted(QObject *sender, int signalIndex)
 {
   Q_ASSERT(m_object == sender);
   m_methodLogModel->appendRow(
@@ -105,7 +105,7 @@ void PropertyController::signalEmitted(QObject* sender, int signalIndex)
 #endif
 }
 
-void PropertyController::setObject(QObject* object)
+void PropertyController::setObject(QObject *object)
 {
   m_object = object;
   m_staticPropertyModel->setObject(object);
@@ -132,7 +132,7 @@ void PropertyController::setObject(QObject* object)
   emit displayStateChanged(PropertyWidgetDisplayState::QObject);
 }
 
-void PropertyController::setObject(void* object, const QString& className)
+void PropertyController::setObject(void *object, const QString &className)
 {
   setObject(0);
   m_metaPropertyModel->setObject(object, className);
@@ -140,7 +140,7 @@ void PropertyController::setObject(void* object, const QString& className)
   emit displayStateChanged(PropertyWidgetDisplayState::Object);
 }
 
-void PropertyController::setMetaObject(const QMetaObject* metaObject)
+void PropertyController::setMetaObject(const QMetaObject *metaObject)
 {
   setObject(0);
   m_enumModel->setMetaObject(metaObject);
@@ -152,9 +152,10 @@ void PropertyController::setMetaObject(const QMetaObject* metaObject)
 
 void PropertyController::activateMethod()
 {
-  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(m_methodModel);
-  if (selectionModel->selectedRows().size() != 1)
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_methodModel);
+  if (selectionModel->selectedRows().size() != 1) {
     return;
+  }
   const QModelIndex index = selectionModel->selectedRows().first();
 
   const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
@@ -168,21 +169,25 @@ void PropertyController::activateMethod()
 void PropertyController::invokeMethod(Qt::ConnectionType connectionType)
 {
   if (!m_object) {
-    m_methodLogModel->appendRow(new QStandardItem(tr("%1: Invocation failed: Invalid object, probably got deleted in the meantime.")
-      .arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
+    m_methodLogModel->appendRow(
+      new QStandardItem(
+        tr("%1: Invocation failed: Invalid object, probably got deleted in the meantime.").
+        arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
     return;
   }
 
   QMetaMethod method;
-  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(m_methodModel);
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_methodModel);
   if (selectionModel->selectedRows().size() == 1) {
     const QModelIndex index = selectionModel->selectedRows().first();
     method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
   }
 
   if (method.methodType() != QMetaMethod::Slot) {
-    m_methodLogModel->appendRow(new QStandardItem(tr("%1: Invocation failed: Invalid method (not a slot?).")
-      .arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
+    m_methodLogModel->appendRow(
+      new QStandardItem(
+        tr("%1: Invocation failed: Invalid method (not a slot?).").
+        arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
     return;
   }
 
@@ -193,7 +198,10 @@ void PropertyController::invokeMethod(Qt::ConnectionType connectionType)
     args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
 
   if (!result) {
-    m_methodLogModel->appendRow(new QStandardItem(tr("%1: Invocation failed..").arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
+    m_methodLogModel->appendRow(
+      new QStandardItem(
+        tr("%1: Invocation failed..").
+        arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
     return;
   }
 

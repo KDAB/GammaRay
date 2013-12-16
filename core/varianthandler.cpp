@@ -23,7 +23,7 @@
 
 #include "varianthandler.h"
 #include "util.h"
-#include <common/metatypedeclarations.h>
+#include "common/metatypedeclarations.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0 , 0)
 #include <QApplication>
@@ -48,7 +48,8 @@
 
 using namespace GammaRay;
 
-namespace GammaRay {
+namespace GammaRay
+{
 
 struct VariantHandlerRepository
 {
@@ -59,8 +60,7 @@ struct VariantHandlerRepository
 
 Q_GLOBAL_STATIC(VariantHandlerRepository, s_variantHandlerRepository)
 
-
-QString VariantHandler::displayString(const QVariant& value)
+QString VariantHandler::displayString(const QVariant &value)
 {
   switch (value.type()) {
 #ifndef QT_NO_CURSOR
@@ -216,8 +216,9 @@ QString VariantHandler::displayString(const QVariant& value)
   if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
     const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
     QStringList l;
-    foreach (const QByteArray &b, set)
+    foreach (const QByteArray &b, set) {
       l.push_back(QString::fromUtf8(b));
+    }
     return l.join(", ");
   }
 
@@ -225,33 +226,58 @@ QString VariantHandler::displayString(const QVariant& value)
     const QSurfaceFormat format = value.value<QSurfaceFormat>();
     QString s;
     switch (format.renderableType()) {
-      case QSurfaceFormat::DefaultRenderableType: s += "Default"; break;
-      case QSurfaceFormat::OpenGL: s += "OpenGL"; break;
-      case QSurfaceFormat::OpenGLES: s += "OpenGL ES"; break;
-      case QSurfaceFormat::OpenVG: s += "OpenVG"; break;
+    case QSurfaceFormat::DefaultRenderableType:
+      s += "Default";
+      break;
+    case QSurfaceFormat::OpenGL:
+      s += "OpenGL";
+      break;
+    case QSurfaceFormat::OpenGLES:
+      s += "OpenGL ES";
+      break;
+    case QSurfaceFormat::OpenVG:
+      s += "OpenVG";
+      break;
     }
 
-    s += " (" + QString::number(format.majorVersion()) + "." + QString::number(format.minorVersion());
+    s += " (" + QString::number(format.majorVersion()) +
+         '.' + QString::number(format.minorVersion());
     switch (format.profile()) {
-      case QSurfaceFormat::CoreProfile: s += " core"; break;
-      case QSurfaceFormat::CompatibilityProfile: s += " compat"; break;
-      case QSurfaceFormat::NoProfile: break;
+    case QSurfaceFormat::CoreProfile:
+      s += " core";
+      break;
+    case QSurfaceFormat::CompatibilityProfile:
+      s += " compat";
+      break;
+    case QSurfaceFormat::NoProfile:
+      break;
     }
-    s += ")";
+    s += ')';
 
-    s += " RGBA: " + QString::number(format.redBufferSize()) + "/" + QString::number(format.greenBufferSize())
-      + "/" + QString::number(format.blueBufferSize()) + "/" + QString::number(format.alphaBufferSize());
+    s += " RGBA: " + QString::number(format.redBufferSize()) +
+         '/' + QString::number(format.greenBufferSize()) +
+         '/' + QString::number(format.blueBufferSize()) +
+         '/' + QString::number(format.alphaBufferSize());
 
     s += " Depth: " + QString::number(format.depthBufferSize());
     s += " Stencil: " + QString::number(format.stencilBufferSize());
 
     s += " Buffer: ";
     switch (format.swapBehavior()) {
-      case QSurfaceFormat::DefaultSwapBehavior: s += "default"; break;
-      case QSurfaceFormat::SingleBuffer: s += "single"; break;
-      case QSurfaceFormat::DoubleBuffer: s += "double"; break;
-      case QSurfaceFormat::TripleBuffer: s += "triple"; break;
-      default: s += "unknown";
+    case QSurfaceFormat::DefaultSwapBehavior:
+      s += "default";
+      break;
+    case QSurfaceFormat::SingleBuffer:
+      s += "single";
+      break;
+    case QSurfaceFormat::DoubleBuffer:
+      s += "double";
+      break;
+    case QSurfaceFormat::TripleBuffer:
+      s += "triple";
+      break;
+    default:
+      s += "unknown";
     }
 
     return s;
@@ -286,7 +312,8 @@ QString VariantHandler::displayString(const QVariant& value)
   }
 
   // custom converters
-  const QHash<int, Converter<QString>*>::const_iterator it = s_variantHandlerRepository()->stringConverters.constFind(value.userType());
+  const QHash<int, Converter<QString>*>::const_iterator it =
+    s_variantHandlerRepository()->stringConverters.constFind(value.userType());
   if (it != s_variantHandlerRepository()->stringConverters.constEnd()) {
     return (*it.value())(value);
   }
@@ -294,7 +321,7 @@ QString VariantHandler::displayString(const QVariant& value)
   return value.toString();
 }
 
-QVariant VariantHandler::decoration(const QVariant& value)
+QVariant VariantHandler::decoration(const QVariant &value)
 {
   switch (value.type()) {
   case QVariant::Brush:
