@@ -39,7 +39,7 @@ class ClientToolModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
-  ClientToolModel(QObject* parent = 0);
+  explicit ClientToolModel(QObject* parent = 0);
   ~ClientToolModel();
 
   virtual QVariant data(const QModelIndex& index, int role) const;

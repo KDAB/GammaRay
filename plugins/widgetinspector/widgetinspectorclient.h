@@ -35,7 +35,7 @@ class WidgetInspectorClient : public WidgetInspectorInterface
   Q_INTERFACES(GammaRay::WidgetInspectorInterface)
 
   public:
-    WidgetInspectorClient(QObject *parent);
+    explicit WidgetInspectorClient(QObject *parent);
     ~WidgetInspectorClient();
 
   private:

@@ -34,7 +34,7 @@ class ResourceBrowserClient : public ResourceBrowserInterface
   Q_OBJECT
   Q_INTERFACES(GammaRay::ResourceBrowserInterface)
   public:
-    ResourceBrowserClient(QObject *parent);
+    explicit ResourceBrowserClient(QObject *parent);
     virtual ~ResourceBrowserClient();
 };
 
