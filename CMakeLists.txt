@@ -5,7 +5,6 @@
 # Not available on Windows.
 #
 # To build the apidox, run 'make docs' after CMake (assumes doxygen is available)
-# Not available on Windows.
 #
 
 project(GammaRay)
