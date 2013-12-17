@@ -1,10 +1,8 @@
 Name:           gammaray
-Version:        1.3.2
+Version:        1.9.95
 Release:        0
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
-# included upstream > 1.3.2
-Patch0:         gammaray-rpath-fix.patch
 Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools/Debuggers
 License:        GPL-2.0+
@@ -81,7 +79,6 @@ developing GammaRay plug-ins.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %if %{defined fedora}
@@ -140,6 +137,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_prefix}/include/gammaray
 
 %changelog
+* Fri Dec 20 2013 Allen Winter <allen.winter@kdab.com> 1.9.95
+  First 2.0 beta release
 * Thu Oct 02 2013 Allen Winter <allen.winter@kdab.com> 1.3.2
   Second 1.3 bugfix release
 * Tue Apr 30 2013 Allen Winter <allen.winter@kdab.com> 1.3.1
