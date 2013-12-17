@@ -28,16 +28,18 @@
 
 #include <iostream>
 
-namespace GammaRay {
+namespace GammaRay
+{
 
 /** Base class for wrappers for potentially not yet loaded plugins. */
 class ProxyFactoryBase : public QObject
 {
+  Q_OBJECT
 public:
-  explicit ProxyFactoryBase(const QString& desktopFilePath, QObject* parent = 0);
+  explicit ProxyFactoryBase(const QString &desktopFilePath, QObject *parent = 0);
   ~ProxyFactoryBase();
 
-  QVariant value(const QString& key, const QVariant& defaultValue = QVariant()) const;
+  QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
   QString errorString() const;
 
 protected:
@@ -56,7 +58,8 @@ template <typename IFace>
 class ProxyFactory : public ProxyFactoryBase, public IFace
 {
 public:
-  explicit inline ProxyFactory(const QString &desktopFilePath, QObject *parent = 0) : ProxyFactoryBase(desktopFilePath, parent) {}
+  explicit inline ProxyFactory(const QString &desktopFilePath, QObject *parent = 0)
+    : ProxyFactoryBase(desktopFilePath, parent) {}
   inline ~ProxyFactory() {}
 
   inline /*override*/ QString id() const
@@ -65,13 +68,16 @@ public:
   }
 
 protected:
-  IFace* factory()
+  IFace *factory()
   {
     loadPlugin();
     IFace *iface = qobject_cast<IFace*>(m_factory);
     if (!iface) {
-      m_errorString = QObject::tr("Plugin does not provide an instance of %1.").arg(qobject_interface_iid<IFace*>());
-      std::cerr << "Failed to cast object from " << qPrintable(m_pluginPath) << " to " << qobject_interface_iid<IFace*>();
+      m_errorString =
+        QObject::tr("Plugin does not provide an instance of %1.").
+        arg(qobject_interface_iid<IFace*>());
+      std::cerr << "Failed to cast object from " << qPrintable(m_pluginPath)
+                << " to " << qobject_interface_iid<IFace*>();
     }
     return iface;
   }
