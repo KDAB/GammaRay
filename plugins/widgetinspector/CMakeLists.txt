@@ -41,8 +41,6 @@ target_link_libraries(gammaray_widgetinspector_plugin
   gammaray_ui
 )
 
-install(TARGETS gammaray_widgetinspector_plugin ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 
 add_library(gammaray_widget_export_actions SHARED
   widgetinspector_export_actions.cpp
