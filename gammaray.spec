@@ -1,12 +1,14 @@
 Name:           gammaray
 Version:        1.9.95
-Release:        0
+Release:        2
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
 Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools/Debuggers
 License:        GPL-2.0+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+
+%define rel 1.9
 
 %if %{defined suse_version}
 BuildRequires:  libqt4-devel libQtWebKit-devel cmake graphviz-devel update-desktop-files libkde4-devel
@@ -108,44 +110,53 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_prefix}/share/icons/hicolor
 %{_prefix}/share/doc/gammaray
 %{_mandir}/man1/gammaray.1.gz
+%{_libdir}/gammaray_inprocessui.so
 %{_libdir}/gammaray_probe.so
+%{_libdir}/gammaray_widgetinspector_plugin.so
+%{_libdir}/libgammaray_common.so
+%{_libdir}/libgammaray_core.so
+%{_libdir}/libgammaray_ui.so
 %{_libdir}/libgammaray_widget_export_actions.so
 %{_bindir}/gammaray
-%dir %{_libdir}/qt4/plugins/gammaray/
-%{_libdir}/qt4/plugins/gammaray/gammaray_actioninspector*
-%{_libdir}/qt4/plugins/gammaray/gammaray_scriptenginedebugger*
-# FIXME Graphviz 2.30 on F19 isn't properly detected for some reason
-%if %{undefined fedora} || 0%{?fedora} < 19
-%{_libdir}/qt4/plugins/gammaray/gammaray_statemachineviewer*
-%endif
-%{_libdir}/qt4/plugins/gammaray/gammaray_timertop*
-%{_libdir}/qt4/plugins/gammaray/gammaray_webinspector*
+%{_bindir}/gammaray-launcher
+%{_bindir}/gammaray-client
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_actioninspector*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_codecbrowser*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_fontbrowser*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_sceneinspector*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_scriptenginedebugger*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_selectionmodelinspector*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_statemachineviewer*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_styleinspector*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_timertop*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_webinspector*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_widgetinspector*
 %{_libdir}/qt4/plugins/styles/
 
 %files kde4-plugins
 %defattr(-,root,root)
-%{_libdir}/qt4/plugins/gammaray/gammaray_kjob*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_kjobtracker*
 
 %if 0%{?suse_version} >= 1220 || 0%{?fedora} >= 18
 %files vtk-plugins
 %defattr(-,root,root)
-%{_libdir}/qt4/plugins/gammaray/gammaray_objectvisualizer*
+%{_libdir}/qt4/plugins/gammaray/%{rel}/gammaray_objectvisualizer*
 %endif
 
 %files devel
 %defattr(-,root,root)
-%{_prefix}/include/gammaray
+%{_includedir}/gammaray
 
 %changelog
 * Fri Dec 20 2013 Allen Winter <allen.winter@kdab.com> 1.9.95
   First 2.0 beta release
-* Thu Oct 02 2013 Allen Winter <allen.winter@kdab.com> 1.3.2
+* Thu Oct 03 2013 Allen Winter <allen.winter@kdab.com> 1.3.2
   Second 1.3 bugfix release
 * Tue Apr 30 2013 Allen Winter <allen.winter@kdab.com> 1.3.1
   First 1.3 bugfix release
 * Sun Jan 27 2013 Allen Winter <allen.winter@kdab.com> 1.3.0
   Update to latest release
-* Tue Jun 27 2012 Allen Winter <allen.winter@kdab.com> 1.1.98
+* Wed Jun 27 2012 Allen Winter <allen.winter@kdab.com> 1.1.98
 - Rename version to use all integers
 * Tue Jun 26 2012 Allen Winter <allen.winter@kdab.com> 1.2beta
 - Update to beta release
