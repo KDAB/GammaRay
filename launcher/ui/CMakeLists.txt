@@ -33,9 +33,15 @@ qt4_add_resources(gammaray_launcher_ui_srcs ${CMAKE_SOURCE_DIR}/resources/gammar
 
 add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
 
-target_link_libraries(gammaray-launcher ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui gammaray_launcher_shared)
+target_link_libraries(gammaray-launcher
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  gammaray_common_internal
+  gammaray_ui
+  gammaray_launcher_shared
+)
 
-if (QNXNTO)
+if(QNXNTO)
   target_link_libraries(gammaray-launcher cpp)
 endif()
 

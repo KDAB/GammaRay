@@ -33,7 +33,7 @@ set(gammaray_ui_srcs
   propertyeditor/propertyeditordelegate.cpp
 )
 
-if (NOT Qt5Core_VERSION VERSION_LESS 5.2.0)
+if(NOT Qt5Core_VERSION VERSION_LESS 5.2.0)
   list(APPEND gammaray_ui_srcs
     variantcontainermodel.cpp
   )
@@ -56,10 +56,13 @@ set_target_properties(gammaray_ui PROPERTIES
   VERSION ${GAMMARAY_SOVERSION}
 )
 
-target_link_libraries(gammaray_ui ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal)
+target_link_libraries(gammaray_ui
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  gammaray_common_internal
+)
 
 install(TARGETS gammaray_ui ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 
 set(gammaray_ui_internal_srcs
   sidepane.cpp
@@ -105,12 +108,17 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
 )
 
 if(NOT WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif(NOT WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
 
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 
-target_link_libraries(gammaray_ui_internal ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common_internal gammaray_ui)
+target_link_libraries(gammaray_ui_internal
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  gammaray_common_internal
+  gammaray_ui
+)
 
 gammaray_install_headers(
   gammaray_ui_export.h

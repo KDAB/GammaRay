@@ -9,11 +9,11 @@
 
 project(GammaRay)
 
-if (WIN32)
+if(WIN32)
   # needed for automoc and QtMain to work correctly
   cmake_minimum_required(VERSION 2.8.11)
   cmake_policy(SET CMP0020 NEW)
-else ()
+else()
   cmake_minimum_required(VERSION 2.8.6)
 endif()
 
@@ -122,7 +122,7 @@ else()
   set(HAVE_QT_SVG true)
   if(QT_QTDESIGNER_FOUND)
     set(HAVE_QT_DESIGNER true)
-  endif(QT_QTDESIGNER_FOUND)
+  endif()
   set(HAVE_QT_PRINTSUPPORT true)
 endif()
 
@@ -166,12 +166,12 @@ set(
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
 )
 
-if (WIN32)
-file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_PATH "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}")
-file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_TO_PLUGIN_PATH "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${PLUGIN_INSTALL_DIR}")
-else ()
-file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_PATH "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
-file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_TO_PLUGIN_PATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${PLUGIN_INSTALL_DIR}")
+if(WIN32)
+  file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_PATH "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}")
+  file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_TO_PLUGIN_PATH "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${PLUGIN_INSTALL_DIR}")
+else()
+  file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_PATH "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
+  file(RELATIVE_PATH GAMMARAY_RELATIVE_PROBE_TO_PLUGIN_PATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${PLUGIN_INSTALL_DIR}")
 endif()
 file(RELATIVE_PATH GAMMARAY_RELATIVE_BIN_TO_PLUGIN_PATH "${CMAKE_INSTALL_PREFIX}/${BIN_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}/${PLUGIN_INSTALL_DIR}")
 
@@ -467,7 +467,7 @@ if(POD2MAN_EXECUTABLE)
   add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/gammaray.1)
 
   install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
-endif(POD2MAN_EXECUTABLE)
+endif()
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
@@ -480,17 +480,24 @@ add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(hooking)
 add_subdirectory(launcher)
-if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(ui)
   add_subdirectory(inprocessui)
   add_subdirectory(client)
-endif ()
+endif()
 add_subdirectory(tests)
 add_subdirectory(plugins)
 
-macro_display_feature_log()
-
 find_package(Doxygen)
+macro_log_feature(
+  DOXYGEN_FOUND
+  "Doxygen"
+  "Documentation system"
+  "http://www.doxygen.org"
+  FALSE
+  ""
+  "Needed to build the optional API documention"
+)
 if(DOXYGEN_FOUND)
   file(GLOB _dox_deps include/*.dox images/*.html)
   gammaray_all_installed_headers(_all_hdrs common core ui)
@@ -498,8 +505,11 @@ if(DOXYGEN_FOUND)
   gammaray_join_list(DOXYGEN_INPUT " " ${_all_hdrs})
 
   #apidox generation using doxygen
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake
-                 ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+  )
+
   add_custom_command(
     OUTPUT ${CMAKE_BINARY_DIR}/apidocs/html/index.html
     COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
@@ -511,3 +521,5 @@ if(DOXYGEN_FOUND)
   )
 
 endif()
+
+macro_display_feature_log()

@@ -43,15 +43,15 @@ set(gammaray_objectvisualizer_ui_plugin_srcs
   vtkwidget.cpp
 )
 
-LIST(APPEND OPTIONAL_VTK_LIBRARIES
+list(APPEND OPTIONAL_VTK_LIBRARIES
   ${VTK_LIBRARIES}
 )
 
-if (${VTK_MAJOR_VERSION} EQUAL 5)
-  LIST(APPEND OPTIONAL_VTK_LIBRARIES QVTK)
-elseif (${VTK_MAJOR_VERSION} EQUAL 6)
-  LIST(APPEND OPTIONAL_VTK_LIBRARIES vtkGUISupportQt)
-endif ()
+if(${VTK_MAJOR_VERSION} EQUAL 5)
+  list(APPEND OPTIONAL_VTK_LIBRARIES QVTK)
+elseif(${VTK_MAJOR_VERSION} EQUAL 6)
+  list(APPEND OPTIONAL_VTK_LIBRARIES vtkGUISupportQt)
+endif()
 
 gammaray_add_plugin(gammaray_objectvisualizer_ui_plugin
   gammaray_objectvisualizer_ui.desktop

@@ -19,9 +19,16 @@ qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qr
 
 add_executable(gammaray-client WIN32 ${gammaray_client_srcs})
 
-target_link_libraries(gammaray-client ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_common gammaray_ui gammaray_ui_internal)
+target_link_libraries(gammaray-client
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTNETWORK_LIBRARIES}
+  gammaray_common
+  gammaray_ui
+  gammaray_ui_internal
+)
 
-if (QNXNTO)
+if(QNXNTO)
   target_link_libraries(gammaray-client cpp)
 endif()
 

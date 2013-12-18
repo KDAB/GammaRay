@@ -10,7 +10,7 @@ add_subdirectory(selectionmodelinspector)
 add_subdirectory(statemachineviewer)
 add_subdirectory(timertop)
 
-if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(actioninspector)
   add_subdirectory(widgetinspector)
   add_subdirectory(sceneinspector)

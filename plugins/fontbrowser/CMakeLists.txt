@@ -21,28 +21,28 @@ target_link_libraries(gammaray_fontbrowser_plugin
 )
 
 # ui part
-if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 
-set(gammaray_fontbrowser_plugin_ui_srcs
-  fontbrowserinterface.cpp
-  fontbrowserwidget.cpp
-  fontbrowserclient.cpp
-)
+  set(gammaray_fontbrowser_plugin_ui_srcs
+    fontbrowserinterface.cpp
+    fontbrowserwidget.cpp
+    fontbrowserclient.cpp
+  )
 
-qt4_wrap_ui(gammaray_fontbrowser_plugin_ui_srcs
-  fontbrowserwidget.ui
-)
+  qt4_wrap_ui(gammaray_fontbrowser_plugin_ui_srcs
+    fontbrowserwidget.ui
+  )
 
-gammaray_add_plugin(gammaray_fontbrowser_ui_plugin
-  gammaray_fontbrowser_ui.desktop
-  ${gammaray_fontbrowser_plugin_ui_srcs}
-)
+  gammaray_add_plugin(gammaray_fontbrowser_ui_plugin
+    gammaray_fontbrowser_ui.desktop
+    ${gammaray_fontbrowser_plugin_ui_srcs}
+  )
 
-target_link_libraries(gammaray_fontbrowser_ui_plugin
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  gammaray_common
-  gammaray_ui
-)
+  target_link_libraries(gammaray_fontbrowser_ui_plugin
+    ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
+    gammaray_common
+    gammaray_ui
+  )
 
 endif()

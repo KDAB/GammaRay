@@ -28,11 +28,16 @@ set_target_properties(gammaray_common PROPERTIES
   VERSION ${GAMMARAY_SOVERSION}
 )
 
-if (Qt5Core_FOUND)
+if(Qt5Core_FOUND)
   target_link_libraries(gammaray_common Qt5::Core Qt5::Network)
-else ()
-  target_link_libraries(gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+else()
+  target_link_libraries(gammaray_common
+    ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
+    ${QT_QTNETWORK_LIBRARIES}
+  )
 endif()
+
 install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(gammaray_common_internal_srcs
@@ -47,15 +52,20 @@ set(gammaray_common_internal_srcs
 )
 
 if(NOT WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
+
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 
 target_link_libraries(gammaray_common_internal gammaray_common)
-if (Qt5Core_FOUND)
+if(Qt5Core_FOUND)
   target_link_libraries(gammaray_common_internal Qt5::Gui Qt5::Network)
-else ()
-  target_link_libraries(gammaray_common_internal ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+else()
+  target_link_libraries(gammaray_common_internal
+    ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
+    ${QT_QTNETWORK_LIBRARIES}
+  )
 endif()
 
 gammaray_install_headers(

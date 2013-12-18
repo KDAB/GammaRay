@@ -41,14 +41,13 @@ target_link_libraries(gammaray_widgetinspector_plugin
   gammaray_ui
 )
 
-
 add_library(gammaray_widget_export_actions SHARED
   widgetinspector_export_actions.cpp
   uiextractor.cpp
 )
 
 set(EXTRA_LIBS)
-if (HAVE_QT_DESIGNER)
+if(HAVE_QT_DESIGNER)
   list(APPEND EXTRA_LIBS ${QT_QTDESIGNER_LIBRARIES})
 endif()
 

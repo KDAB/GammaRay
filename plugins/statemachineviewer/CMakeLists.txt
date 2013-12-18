@@ -62,7 +62,7 @@ list(APPEND gammaray_statemachineviewer_ui_plugin_libs
   ${GRAPHVIZ_GVC_LIBRARY}
 )
 
-if (GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_VERSION VERSION_GREATER 2.30.0)
+if(GRAPHVIZ_CGRAPH_LIBRARY AND GRAPHVIZ_VERSION VERSION_GREATER 2.30.0)
   message(STATUS "Enabling use of experimental 'cgraph' library of GraphViz")
   # you must add this define when using cgraph from graphviz
   # some headers check for this define (see for example graphviz/types.h header)

@@ -30,25 +30,25 @@ endif()
 endif()
 
 # ui part
-if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 
-set(gammaray_timertop_plugin_ui_srcs
-  timertopwidget.cpp
-)
+  set(gammaray_timertop_plugin_ui_srcs
+    timertopwidget.cpp
+  )
 
-qt4_wrap_ui(gammaray_timertop_plugin_ui_srcs
-  timertopwidget.ui
-)
+  qt4_wrap_ui(gammaray_timertop_plugin_ui_srcs
+    timertopwidget.ui
+  )
 
-gammaray_add_plugin(gammaray_timertop_ui_plugin
-  gammaray_timertop_ui.desktop
-  ${gammaray_timertop_plugin_ui_srcs}
-)
+  gammaray_add_plugin(gammaray_timertop_ui_plugin
+    gammaray_timertop_ui.desktop
+    ${gammaray_timertop_plugin_ui_srcs}
+  )
 
-target_link_libraries(gammaray_timertop_ui_plugin
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  gammaray_common
-)
+  target_link_libraries(gammaray_timertop_ui_plugin
+    ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
+    gammaray_common
+  )
 
 endif()

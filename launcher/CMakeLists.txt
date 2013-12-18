@@ -44,7 +44,7 @@ if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray ${QT_QTGUI_LIBRARIES})
 endif()
 
-if (QNXNTO)
+if(QNXNTO)
   target_link_libraries(gammaray cpp)
 endif()
 
@@ -55,6 +55,6 @@ endif()
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 # UI launcher
-if (HAVE_QT_CONCURRENT AND HAVE_QT_WIDGETS)
-   add_subdirectory(ui)
-endif ()
+if(HAVE_QT_CONCURRENT AND HAVE_QT_WIDGETS)
+  add_subdirectory(ui)
+endif()

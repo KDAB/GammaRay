@@ -18,25 +18,25 @@ target_link_libraries(gammaray_selectionmodelinspector_plugin
 )
 
 # ui part
-if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 
-set(gammaray_selectionmodelinspector_plugin_ui_srcs
-  selectionmodelinspectorwidget.cpp
-)
+  set(gammaray_selectionmodelinspector_plugin_ui_srcs
+    selectionmodelinspectorwidget.cpp
+  )
 
-qt4_wrap_ui(gammaray_selectionmodelinspector_plugin_ui_srcs
-  selectionmodelinspectorwidget.ui
-)
+  qt4_wrap_ui(gammaray_selectionmodelinspector_plugin_ui_srcs
+    selectionmodelinspectorwidget.ui
+  )
 
-gammaray_add_plugin(gammaray_selectionmodelinspector_ui_plugin
-  gammaray_selectionmodelinspector_ui.desktop
-  ${gammaray_selectionmodelinspector_plugin_ui_srcs}
-)
+  gammaray_add_plugin(gammaray_selectionmodelinspector_ui_plugin
+    gammaray_selectionmodelinspector_ui.desktop
+    ${gammaray_selectionmodelinspector_plugin_ui_srcs}
+  )
 
-target_link_libraries(gammaray_selectionmodelinspector_ui_plugin
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  gammaray_common
-)
+  target_link_libraries(gammaray_selectionmodelinspector_ui_plugin
+    ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
+    gammaray_common
+  )
 
 endif()

@@ -5,34 +5,34 @@ include_directories(
 
 ### BENCH SUITE
 
-if (Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
-add_executable(benchsuite benchsuite.cpp)
+if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+  add_executable(benchsuite benchsuite.cpp)
 
-target_link_libraries(benchsuite
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  ${QT_QTTEST_LIBRARIES}
-  gammaray_common
-  gammaray_core
-)
+  target_link_libraries(benchsuite
+    ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
+    ${QT_QTTEST_LIBRARIES}
+    gammaray_common
+    gammaray_core
+  )
 
-if(QNXNTO)
-  target_link_libraries(benchsuite cpp)
-endif()
+  if(QNXNTO)
+    target_link_libraries(benchsuite cpp)
+  endif()
 
 ### CONNECTIONTEST
 
-add_executable(connectiontest test_connections.cpp)
+  add_executable(connectiontest test_connections.cpp)
 
-target_link_libraries(connectiontest
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  ${QT_QTTEST_LIBRARIES}
-)
+  target_link_libraries(connectiontest
+    ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
+    ${QT_QTTEST_LIBRARIES}
+  )
 
-if(QNXNTO)
-  target_link_libraries(connectiontest cpp)
-endif()
+  if(QNXNTO)
+    target_link_libraries(connectiontest cpp)
+  endif()
 endif()
 
 add_executable(attachhelper attachhelper.cpp)
