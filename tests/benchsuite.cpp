@@ -22,16 +22,14 @@
 */
 
 #include "benchsuite.h"
+#include "core/connectionmodel.h"
+#include "core/probe.h"
+#include "core/util.h"
 
-#include <qtest_gui.h>
+#include <QtTestGui>
 
 #include <QLabel>
 #include <QTreeView>
-
-#include <core/util.h>
-
-#include <core/connectionmodel.h>
-#include <core/probe.h>
 
 QTEST_MAIN(GammaRay::BenchSuite)
 
@@ -60,16 +58,18 @@ void BenchSuite::connectionModel_connectionAdded()
   objects.reserve(NUM_OBJECTS + 1);
   // fill it
   objects << new QObject;
-  for(int i = 1; i <= NUM_OBJECTS; ++i) {
+  for (int i = 1; i <= NUM_OBJECTS; ++i) {
     QObject *obj = new QObject;
     objects << obj;
     Probe::objectAdded(obj);
   }
 
   QBENCHMARK {
-    for(int i = 1; i <= NUM_OBJECTS; ++i) {
-      model.connectionAdded(objects.at(i), SIGNAL(destroyed()), objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
-      model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()), objects.at(i), SLOT(deleteLater()), Qt::AutoConnection);
+    for (int i = 1; i <= NUM_OBJECTS; ++i) {
+      model.connectionAdded(objects.at(i), SIGNAL(destroyed()),
+                            objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
+      model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()),
+                            objects.at(i), SLOT(deleteLater()), Qt::AutoConnection);
     }
   }
 
@@ -87,27 +87,51 @@ void BenchSuite::connectionModel_connectionRemoved()
   objects.reserve(NUM_OBJECTS + 1);
   // fill it
   objects << new QObject;
-  for(int i = 1; i <= NUM_OBJECTS; ++i) {
+  for (int i = 1; i <= NUM_OBJECTS; ++i) {
     QObject *obj = new QObject;
     objects << obj;
     Probe::objectAdded(obj);
-    model.connectionAdded(obj, SIGNAL(destroyed()), objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
-    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()), obj, SLOT(deleteLater()), Qt::AutoConnection);
-    model.connectionAdded(obj, SIGNAL(destroyed()), objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
-    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()), obj, SLOT(deleteLater()), Qt::AutoConnection);
-    model.connectionAdded(obj, SIGNAL(invalid()), objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
-    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()), obj, SLOT(invalid()), Qt::AutoConnection);
+    model.connectionAdded(obj, SIGNAL(destroyed()),
+                          objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
+
+    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()),
+                          obj, SLOT(deleteLater()), Qt::AutoConnection);
+
+    model.connectionAdded(obj, SIGNAL(destroyed()),
+                          objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
+
+    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()),
+                          obj, SLOT(deleteLater()), Qt::AutoConnection);
+
+    model.connectionAdded(obj, SIGNAL(invalid()),
+                          objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
+
+    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()),
+                          obj, SLOT(invalid()), Qt::AutoConnection);
+
+//krazy:cond=normalized,style
     // non-normalized
-    model.connectionAdded(obj, SIGNAL( destroyed(  ) ), objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
-    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()), obj, SLOT( deleteLater(  ) ), Qt::AutoConnection);
+    model.connectionAdded(obj, SIGNAL( destroyed(  ) ),
+                          objects.at(i-1), SLOT(deleteLater()), Qt::AutoConnection);
+
+    model.connectionAdded(objects.at(i-1), SIGNAL(destroyed()),
+                          obj, SLOT( deleteLater(  ) ), Qt::AutoConnection);
+//krazy:endcond=normalized,style
   }
 
   QBENCHMARK_ONCE {
-    for(int i = 1; i <= NUM_OBJECTS; ++i) {
-      model.connectionRemoved(objects.at(i), SIGNAL(destroyed()), objects.at(i-1), SLOT(deleteLater()));
-      model.connectionRemoved(objects.at(i-1), SIGNAL(destroyed()), objects.at(i), SLOT(deleteLater()));
-      model.connectionRemoved(objects.at(i), SIGNAL(destroyed()), objects.at(i-1), SLOT(invalid()));
-      model.connectionRemoved(objects.at(i-1), SIGNAL(invalid()), objects.at(i), SLOT(deleteLater()));
+    for (int i = 1; i <= NUM_OBJECTS; ++i) {
+      model.connectionRemoved(objects.at(i), SIGNAL(destroyed()),
+                              objects.at(i-1), SLOT(deleteLater()));
+
+      model.connectionRemoved(objects.at(i-1), SIGNAL(destroyed()),
+                              objects.at(i), SLOT(deleteLater()));
+
+      model.connectionRemoved(objects.at(i), SIGNAL(destroyed()),
+                              objects.at(i-1), SLOT(invalid()));
+
+      model.connectionRemoved(objects.at(i-1), SIGNAL(invalid()),
+                              objects.at(i), SLOT(deleteLater()));
     }
   }
 
@@ -123,7 +147,7 @@ void BenchSuite::probe_objectAdded()
   QVector<QObject*> objects;
   objects.reserve(NUM_OBJECTS + 1);
   // fill it
-  for(int i = 0; i < NUM_OBJECTS; ++i) {
+  for (int i = 0; i < NUM_OBJECTS; ++i) {
     QObject *obj = new QObject;
     objects << obj;
   }
