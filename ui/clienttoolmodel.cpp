@@ -95,7 +95,7 @@ ClientToolModel::~ClientToolModel()
 
 QVariant ClientToolModel::data(const QModelIndex& index, int role) const
 {
-  if (role == ToolModelRole::ToolFactory || role == ToolModelRole::ToolWidget) {
+  if (role == ToolModelRole::ToolFactory || role == ToolModelRole::ToolWidget || role == Qt::ToolTipRole) {
     const QString toolId = QSortFilterProxyModel::data(index, ToolModelRole::ToolId).toString();
     if (toolId.isEmpty())
       return QVariant();
@@ -112,6 +112,11 @@ QVariant ClientToolModel::data(const QModelIndex& index, int role) const
       QWidget *widget = factory->createWidget(m_parentWidget);
       m_widgets.insert(toolId, widget);
       return QVariant::fromValue(widget);
+    }
+    if (role == Qt::ToolTipRole) {
+      ToolUiFactory *factory = m_factories.value(toolId);
+      if (factory && (!factory->remotingSupported() && Endpoint::instance()->isRemoteClient()))
+        return tr("This tool does not work in out-of-process mode.");
     }
   }
 
