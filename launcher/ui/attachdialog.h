@@ -47,6 +47,7 @@ class AttachDialog : public QWidget
 
     /// Returns @c true if a valid process is selected.
     bool isValid() const;
+    void writeSettings();
 
   signals:
     void updateButtonState();

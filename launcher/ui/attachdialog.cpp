@@ -36,6 +36,7 @@
 #include <QtConcurrentRun>
 #include <QStackedWidget>
 #include <QStringListModel>
+#include <QSettings>
 
 using namespace GammaRay;
 
@@ -71,6 +72,10 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   probeABIModel->setStringList(ProbeFinder::listProbeABIs());
   ui.probeBox->setModel(probeABIModel);
 
+  QSettings settings;
+  ui.probeBox->setCurrentIndex(settings.value(QLatin1String("Launcher/AttachProbeABI")).toInt());
+  ui.accessMode->setCurrentIndex(settings.value(QLatin1String("Launcher/AttachAccessMode")).toInt());
+
   setWindowTitle(tr("GammaRay - Attach to Process"));
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
@@ -86,6 +91,13 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 bool AttachDialog::isValid() const
 {
   return ui.view->currentIndex().isValid();
+}
+
+void AttachDialog::writeSettings()
+{
+  QSettings settings;
+  settings.setValue(QLatin1String("Launcher/AttachProbeABI"), ui.probeBox->currentIndex());
+  settings.setValue(QLatin1String("Launcher/AttachAccessMode"), ui.accessMode->currentIndex());
 }
 
 LaunchOptions AttachDialog::launchOptions() const
