@@ -59,4 +59,4 @@ target_link_libraries(gammaray_widget_export_actions
   ${EXTRA_LIBS}
 )
 
-install(TARGETS gammaray_widget_export_actions ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray_widget_export_actions DESTINATION ${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI})

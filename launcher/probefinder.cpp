@@ -44,6 +44,10 @@ QString findProbe(const QString &baseName)
     QDir::separator() %
     QLatin1Literal(GAMMARAY_RELATIVE_PROBE_PATH) %
     QDir::separator() %
+    QLatin1Literal(GAMMARAY_PLUGIN_VERSION) %
+    QDir::separator() %
+    QLatin1Literal(GAMMARAY_PROBE_ABI) % // TODO this needs to be an argument
+    QDir::separator() %
     baseName %
     fileExtension();
 

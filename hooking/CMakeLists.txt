@@ -28,4 +28,4 @@ target_link_libraries(gammaray_probe
   gammaray_core
 )
 set_target_properties(gammaray_probe PROPERTIES PREFIX "")
-install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray_probe DESTINATION ${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}/)
