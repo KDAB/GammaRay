@@ -40,8 +40,6 @@
 using namespace GammaRay;
 using namespace std;
 
-static const QLatin1String GAMMARAY_PLUGIN_SUFFIX("gammaray");
-
 PluginManagerBase::PluginManagerBase(const QString &pluginPath, QObject *parent) : m_parent(parent)
 {
   QCoreApplication::addLibraryPath(pluginPath);
@@ -56,7 +54,7 @@ QStringList PluginManagerBase::pluginPaths() const
 {
   QStringList pluginPaths;
   foreach (const QString &libraryPath, QCoreApplication::libraryPaths()) {
-    pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_SUFFIX + QDir::separator() + GAMMARAY_PLUGIN_VERSION;
+    pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_VERSION + QDir::separator() + GAMMARAY_PROBE_ABI; // TODO probe ABI needs to be an argument
   }
 
   return pluginPaths;
