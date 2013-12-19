@@ -332,6 +332,8 @@ else()
   set(GAMMARAY_LOCAL_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 endif()
 
+include(GammaRayProbeABI) # this needs to be run after we know what exactly we are building
+
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
