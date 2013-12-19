@@ -26,6 +26,7 @@
 #include "launchoptions.h"
 #include "processfiltermodel.h"
 #include "processmodel.h"
+#include <probefinder.h>
 
 #include <QPushButton>
 #include <QStandardItemModel>
@@ -34,6 +35,7 @@
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
 #include <QStackedWidget>
+#include <QStringListModel>
 
 using namespace GammaRay;
 
@@ -65,6 +67,10 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 
   ui.filter->setProxy(m_proxyModel);
 
+  QStringListModel *probeABIModel = new QStringListModel(this);
+  probeABIModel->setStringList(ProbeFinder::listProbeABIs());
+  ui.probeBox->setModel(probeABIModel);
+
   setWindowTitle(tr("GammaRay - Attach to Process"));
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
@@ -86,6 +92,7 @@ LaunchOptions AttachDialog::launchOptions() const
 {
   LaunchOptions opt;
   opt.setPid(pid());
+  opt.setProbeABI(ui.probeBox->currentText());
 
   switch (ui.accessMode->currentIndex()) {
     case 0: // local, out-of-process

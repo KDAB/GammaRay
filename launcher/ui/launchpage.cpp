@@ -24,6 +24,7 @@
 #include "launchpage.h"
 #include "ui_launchpage.h"
 #include "launchoptions.h"
+#include "probefinder.h"
 
 #include <QCompleter>
 #include <QFileDialog>
@@ -52,9 +53,14 @@ LaunchPage::LaunchPage(QWidget *parent)
   pathCompleter->setModel(fsModel);
   ui->progEdit->setCompleter(pathCompleter);
 
+  QStringListModel *probeABIModel = new QStringListModel(this);
+  probeABIModel->setStringList(ProbeFinder::listProbeABIs());
+  ui->probeBox->setModel(probeABIModel);
+
   QSettings settings;
   ui->progEdit->setText(settings.value(QLatin1String("Launcher/Program")).toString());
   m_argsModel->setStringList(settings.value(QLatin1String("Launcher/Arguments")).toStringList());
+  ui->probeBox->setCurrentIndex(settings.value(QLatin1String("Launcher/ProbeABI")).toInt());
   ui->accessMode->setCurrentIndex(settings.value(QLatin1String("Launcher/AccessMode")).toInt());
   updateArgumentButtons();
 }
@@ -69,6 +75,7 @@ void LaunchPage::writeSettings()
   QSettings settings;
   settings.setValue(QLatin1String("Launcher/Program"), ui->progEdit->text());
   settings.setValue(QLatin1String("Launcher/Arguments"), notEmptyString(m_argsModel->stringList()));
+  settings.setValue(QLatin1String("Launcher/ProbeABI"), ui->probeBox->currentIndex());
   settings.setValue(QLatin1String("Launcher/AccessMode"), ui->accessMode->currentIndex());
 }
 
@@ -92,6 +99,7 @@ LaunchOptions LaunchPage::launchOptions() const
   l.push_back(ui->progEdit->text());
   l.append(notEmptyString(m_argsModel->stringList()));
   opt.setLaunchArguments(l);
+  opt.setProbeABI(ui->probeBox->currentText());
 
   switch (ui->accessMode->currentIndex()) {
     case 0: // local, out-of-process

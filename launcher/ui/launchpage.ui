@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>401</width>
-    <height>280</height>
+    <height>305</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -80,8 +80,21 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Pro&amp;be:</string>
+       </property>
+       <property name="buddy">
+        <cstring>probeBox</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="probeBox"/>
+     </item>
+     <item row="1" column="0">
       <widget class="QLabel" name="label_3">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -97,7 +110,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="1">
       <widget class="QComboBox" name="accessMode">
        <property name="currentIndex">
         <number>0</number>
