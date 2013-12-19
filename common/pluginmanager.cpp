@@ -54,7 +54,7 @@ QStringList PluginManagerBase::pluginPaths() const
 {
   QStringList pluginPaths;
   foreach (const QString &libraryPath, QCoreApplication::libraryPaths()) {
-    pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_VERSION + QDir::separator() + GAMMARAY_PROBE_ABI; // TODO probe ABI needs to be an argument
+    pluginPaths << libraryPath + QDir::separator() + GAMMARAY_PLUGIN_VERSION + QDir::separator() + GAMMARAY_PROBE_ABI;
   }
 
   return pluginPaths;
