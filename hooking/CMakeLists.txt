@@ -1,5 +1,5 @@
 # Enable RPATH, make gammaray_probe find gammaray_core (same directory)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
 
 include_directories(
   ${CMAKE_SOURCE_DIR}
