@@ -102,6 +102,7 @@ target_link_libraries(gammaray_core
 set_target_properties(gammaray_core PROPERTIES
   SOVERSION ${GAMMARAY_SOVERSION}
   VERSION ${GAMMARAY_SOVERSION}
+  OUTPUT_NAME gammaray_core-${GAMMARAY_PROBE_ABI}
 )
 
 if(Qt5Core_FOUND)

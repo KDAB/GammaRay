@@ -54,6 +54,7 @@ set_target_properties(gammaray_ui PROPERTIES
   DEFINE_SYMBOL MAKE_GAMMARAY_UI_LIB
   SOVERSION ${GAMMARAY_SOVERSION}
   VERSION ${GAMMARAY_SOVERSION}
+  OUTPUT_NAME gammaray_ui-${GAMMARAY_PROBE_ABI}
 )
 
 target_link_libraries(gammaray_ui
