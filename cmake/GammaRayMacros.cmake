@@ -9,8 +9,8 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 
 macro(gammaray_add_plugin _target_name _desktop_file)
-  set(_build_target_dir "${PROJECT_BINARY_DIR}/${PLUGIN_INSTALL_DIR}/gammaray/${GAMMARAY_PLUGIN_VERSION}")
   set(_install_target_dir "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}")
+  set(_build_target_dir "${PROJECT_BINARY_DIR}/${_install_target_dir}")
 
   add_library(${_target_name} MODULE ${ARGN})
   set_target_properties(${_target_name} PROPERTIES
