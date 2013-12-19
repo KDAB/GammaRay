@@ -55,19 +55,28 @@ void SelfTestPage::run()
 
 void SelfTestPage::testProbe()
 {
-  const QString probePath = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
-  if (probePath.isEmpty()) {
-    error(tr("No probe found - GammaRay not functional."));
-    return;
+  int validProbeCount = 0;
+  const QStringList probeABIs = ProbeFinder::listProbeABIs();
+  foreach (const QString &abi, probeABIs) {
+    const QString probePath = ProbeFinder::findProbe(QLatin1String("gammaray_probe"), abi);
+    if (probePath.isEmpty()) {
+      error(tr("No probe found for ABI %1.").arg(abi));
+      continue;
+    }
+
+    QFileInfo fi(probePath);
+    if (!fi.exists() || !fi.isFile() || !fi.isReadable()) {
+      error(tr("Probe at %1 is invalid."));
+      continue;
+    }
+
+    information(tr("Found valid probe for ABI %1 at %2.").arg(abi).arg(probePath));
+    ++validProbeCount;
   }
 
-  QFileInfo fi(probePath);
-  if (!fi.exists() || !fi.isFile() || !fi.isReadable()) {
-    error(tr("Probe at %1 is invalid - GammaRay not functional."));
-    return;
+  if (validProbeCount == 0) {
+    error(tr("No probes found - GammaRay no functional."));
   }
-
-  information(tr("Found valid probe at %1.").arg(probePath));
 }
 
 void SelfTestPage::testAvailableInjectors()

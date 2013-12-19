@@ -34,7 +34,7 @@ namespace ProbeFinder {
   /**
    * Attempts to find the full path of the probe DLL.
    */
-  QString findProbe(const QString &baseName);
+  QString findProbe(const QString& baseName, const QString& probeAbi);
 
   /**
    * List all available probe ABIs.

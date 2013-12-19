@@ -37,7 +37,7 @@ namespace GammaRay {
 
 namespace ProbeFinder {
 
-QString findProbe(const QString &baseName)
+QString findProbe(const QString &baseName, const QString &probeAbi)
 {
   const QString probePath =
     QCoreApplication::applicationDirPath() %
@@ -46,7 +46,7 @@ QString findProbe(const QString &baseName)
     QDir::separator() %
     QLatin1Literal(GAMMARAY_PLUGIN_VERSION) %
     QDir::separator() %
-    QLatin1Literal(GAMMARAY_PROBE_ABI) % // TODO this needs to be an argument
+    probeAbi %
     QDir::separator() %
     baseName %
     fileExtension();

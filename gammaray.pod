@@ -73,6 +73,12 @@ other way to connect to the GammaRay probe in this case.
 
 List all installed probes.
 
+=item B<--probe <abi>>
+
+Explicitly specify which probe to use. You should use this if you have
+more than one probe installed (e.g. one for Qt4 and one for Qt5), until
+probe ABI auto-detection is implemented.
+
 =back
 
 =head1 EXAMPLES

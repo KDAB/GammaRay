@@ -63,6 +63,7 @@ static void usage(const char *argv0)
   out << "     --listen <address>   \tspecify the address the server should listen on [default: 0.0.0.0]" << endl;
   out << "     --no-listen          \tdisables remote access entirely (implies --inprocess)" << endl;
   out << "     --list-probes        \tlist all installed probes" << endl;
+  out << "     --probe <abi>        \tspecify which probe to use" << endl;
   out << " -h, --help               \tprint program help and exit" << endl;
   out << " -v, --version            \tprint program version and exit" << endl;
 #ifdef HAVE_QT_WIDGETS
@@ -145,6 +146,16 @@ int main(int argc, char **argv)
         out << abi << endl;
       return 0;
     }
+    if ( arg == QLatin1String("--probe") && !args.isEmpty()) {
+      const QString abi = args.takeFirst();
+      if (!ProbeFinder::listProbeABIs().contains(abi)) {
+        out << abi << "is not a known probe, see --list-probes." << endl;
+        return 1;
+      }
+      options.setProbeABI(abi);
+    }
+
+    // debug/test options
     if (arg == QLatin1String("-filtertest")) {
       qputenv("GAMMARAY_TEST_FILTER", "1");
     }
@@ -173,6 +184,20 @@ int main(int argc, char **argv)
   if (!options.isValid())
     return 0;
   Q_ASSERT(options.isValid());
+
+  // TODO auto-detect probe ABI
+  if (options.probeABI().isEmpty()) {
+    const QStringList availableProbes = ProbeFinder::listProbeABIs();
+    if (availableProbes.isEmpty()) {
+      out << "No probes found, this is likely an installation problem." << endl;
+      return 1;
+    }
+    if (availableProbes.size() > 1) {
+      out << "No probe ABI specified and ABI auto-detection not implemented yet, picking " << availableProbes.first() << " at random." << endl;
+      out << "To specify the probe ABI explicitly use --probe <abi>, available probes are: " << availableProbes.join(", ") << endl;
+    }
+    options.setProbeABI(availableProbes.first());
+  }
 
   Launcher launcher(options);
   return app.exec();

@@ -96,6 +96,16 @@ void LaunchOptions::setInjectorType(const QString& injectorType)
   m_injectorType = injectorType;
 }
 
+QString LaunchOptions::probeABI() const
+{
+  return m_probeABI;
+}
+
+void LaunchOptions::setProbeABI(const QString& abi)
+{
+  m_probeABI = abi;
+}
+
 void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
 {
   QByteArray v;

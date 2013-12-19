@@ -73,12 +73,17 @@ public:
   QString injectorType() const;
   void setInjectorType(const QString &injectorType);
 
+  /** Probe ABI. */
+  QString probeABI() const;
+  void setProbeABI(const QString &abi);
+
   /** execute this launch options with the given command-line launcher. */
   bool execute(const QString& launcherPath) const;
 
 private:
   QStringList m_launchArguments;
   QString m_injectorType;
+  QString m_probeABI;
   int m_pid;
   UiMode m_uiMode;
   QHash<QByteArray, QByteArray> m_probeSettings;

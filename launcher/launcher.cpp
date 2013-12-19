@@ -160,7 +160,7 @@ qint64 Launcher::instanceIdentifier() const
 
 void Launcher::delayedInit()
 {
-  const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"));
+  const QString probeDll = ProbeFinder::findProbe(QLatin1String("gammaray_probe"), m_options.probeABI());
   m_options.setProbeSetting("ProbePath", QFileInfo(probeDll).absolutePath());
 
   sendLauncherId();
