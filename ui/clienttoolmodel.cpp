@@ -38,6 +38,7 @@
 
 #include <common/modelroles.h>
 #include <common/pluginmanager.h>
+#include <common/endpoint.h>
 #include <ui/proxytooluifactory.h>
 
 #include <QCoreApplication>
@@ -138,7 +139,7 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
   Qt::ItemFlags ret = QSortFilterProxyModel::flags(index);
   const QString toolId = QSortFilterProxyModel::data(index, ToolModelRole::ToolId).toString();
   ToolUiFactory *factory = m_factories.value(toolId);
-  if (!factory || !factory->remotingSupported()) {
+  if (!factory || (!factory->remotingSupported() && Endpoint::instance()->isRemoteClient())) {
     ret &= ~Qt::ItemIsEnabled;
   }
   return ret;
