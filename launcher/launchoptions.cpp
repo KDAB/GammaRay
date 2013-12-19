@@ -149,6 +149,11 @@ bool LaunchOptions::execute(const QString& launcherPath) const
       break;
   }
 
+  if (!m_probeABI.isEmpty()) {
+    args.push_back("--probe");
+    args.push_back(m_probeABI);
+  }
+
   if (m_probeSettings.contains("TCPServer")) {
     args.push_back("--listen");
     args.push_back(m_probeSettings.value("TCPServer"));
