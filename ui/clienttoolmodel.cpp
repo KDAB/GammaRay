@@ -48,25 +48,25 @@
 using namespace GammaRay;
 
 
-#define MAKE_FACTORY(type) \
+#define MAKE_FACTORY(type, remote) \
 class type ## Factory : public ToolUiFactory { \
 public: \
   virtual inline QString id() const { return "GammaRay::" #type; } \
   virtual inline QWidget *createWidget(QWidget *parentWidget) { return new type ## Widget(parentWidget); } \
-  virtual inline bool remotingSupported() const { return true; } \
+  virtual inline bool remotingSupported() const { return remote; } \
 }
 
-MAKE_FACTORY(ConnectionInspector);
-MAKE_FACTORY(LocaleInspector);
-MAKE_FACTORY(MessageHandler);
-MAKE_FACTORY(MetaObjectBrowser);
-MAKE_FACTORY(MetaTypeBrowser);
-MAKE_FACTORY(MimeTypes);
-MAKE_FACTORY(ModelInspector);
-MAKE_FACTORY(ObjectInspector);
-MAKE_FACTORY(ResourceBrowser);
-MAKE_FACTORY(StandardPaths);
-MAKE_FACTORY(TextDocumentInspector);
+MAKE_FACTORY(ConnectionInspector, true);
+MAKE_FACTORY(LocaleInspector, true);
+MAKE_FACTORY(MessageHandler, true);
+MAKE_FACTORY(MetaObjectBrowser, true);
+MAKE_FACTORY(MetaTypeBrowser, true);
+MAKE_FACTORY(MimeTypes, true);
+MAKE_FACTORY(ModelInspector, true);
+MAKE_FACTORY(ObjectInspector, true);
+MAKE_FACTORY(ResourceBrowser, true);
+MAKE_FACTORY(StandardPaths, true);
+MAKE_FACTORY(TextDocumentInspector, false);
 
 ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent)
 {
