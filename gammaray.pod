@@ -69,6 +69,10 @@ on Windows to avoid firewall warnings by setting the address to
 Disables the GammaRay server. This implies --inprocess as there is no
 other way to connect to the GammaRay probe in this case.
 
+=item B<--list-probes>
+
+List all installed probes.
+
 =back
 
 =head1 EXAMPLES

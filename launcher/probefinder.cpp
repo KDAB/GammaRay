@@ -60,6 +60,18 @@ QString findProbe(const QString &baseName)
   return probePath;
 }
 
+QStringList listProbeABIs()
+{
+  const QString path =
+    QCoreApplication::applicationDirPath() %
+    QDir::separator() %
+    QLatin1Literal(GAMMARAY_RELATIVE_PROBE_PATH) %
+    QDir::separator() %
+    QLatin1Literal(GAMMARAY_PLUGIN_VERSION);
+  const QDir dir(path);
+  return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+}
+
 QString fileExtension()
 {
 #ifdef Q_OS_WIN

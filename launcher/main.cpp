@@ -27,6 +27,7 @@
 #include "launchoptions.h"
 #include "launcherfinder.h"
 #include "launcher.h"
+#include "probefinder.h"
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>
@@ -61,6 +62,7 @@ static void usage(const char *argv0)
   out << "     --inject-only        \tonly inject the probe, don't show the UI" << endl;
   out << "     --listen <address>   \tspecify the address the server should listen on [default: 0.0.0.0]" << endl;
   out << "     --no-listen          \tdisables remote access entirely (implies --inprocess)" << endl;
+  out << "     --list-probes        \tlist all installed probes" << endl;
   out << " -h, --help               \tprint program help and exit" << endl;
   out << " -v, --version            \tprint program version and exit" << endl;
 #ifdef HAVE_QT_WIDGETS
@@ -137,6 +139,11 @@ int main(int argc, char **argv)
     if ( arg == QLatin1String("--no-listen")) {
       options.setProbeSetting("RemoteAccessEnabled", false);
       options.setUiMode(LaunchOptions::InProcessUi);
+    }
+    if ( arg == QLatin1String("--list-probes")) {
+      foreach( const QString &abi, ProbeFinder::listProbeABIs())
+        out << abi << endl;
+      return 0;
     }
     if (arg == QLatin1String("-filtertest")) {
       qputenv("GAMMARAY_TEST_FILTER", "1");
