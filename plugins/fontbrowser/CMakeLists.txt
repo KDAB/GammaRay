@@ -21,7 +21,7 @@ target_link_libraries(gammaray_fontbrowser_plugin
 )
 
 # ui part
-if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if((Qt5Widgets_FOUND OR QT_QTGUI_FOUND) AND NOT GAMMARAY_PROBE_ONLY_BUILD)
 
   set(gammaray_fontbrowser_plugin_ui_srcs
     fontbrowserinterface.cpp

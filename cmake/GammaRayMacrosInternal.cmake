@@ -8,7 +8,9 @@
 
 macro(gammaray_install_headers)
   get_filename_component(_dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-  install(FILES ${ARGN} DESTINATION ${INCLUDE_INSTALL_DIR}/${_dir})
+  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+    install(FILES ${ARGN} DESTINATION ${INCLUDE_INSTALL_DIR}/${_dir})
+  endif()
   set_directory_properties(PROPERTIES GAMMARAY_INSTALLED_HEADERS "${ARGN}")
 endmacro()
 

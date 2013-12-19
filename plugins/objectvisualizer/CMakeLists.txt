@@ -21,7 +21,7 @@ target_link_libraries(gammaray_objectvisualizer_plugin
 
 ######## START VTK VISUALIZATION
 # VTK includes QtGui/... stuff => breaks compilation with Qt5
-if(VTK_FOUND AND NOT Qt5Core_FOUND)
+if(VTK_FOUND AND NOT Qt5Core_FOUND AND NOT GAMMARAY_PROBE_ONLY_BUILD)
 
 set(OPTIONAL_VTK_LIBRARIES
 )

@@ -71,6 +71,12 @@ option(
   OFF
 )
 
+option(
+  GAMMARAY_PROBE_ONLY_BUILD
+  "Build only the probe, not the host tools (client, launcher, etc)."
+  OFF
+)
+
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
   find_package(Qt5Core QUIET)
@@ -399,7 +405,7 @@ macro_log_feature(
 )
 set(HAVE_VTK ${VTK_FOUND})
 
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   set(XDG_APPS_INSTALL_DIR share/applications)
   install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
@@ -431,7 +437,7 @@ endif()
 
 set(LICENSE_FILE "License.txt")
 set(README_FILE "ReadMe.txt")
-if(NOT APPLE)
+if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(FILES "${LICENSE_FILE}" "${README_FILE}" DESTINATION ${DOC_INSTALL_DIR})
 endif()
 
@@ -459,7 +465,7 @@ endif()
 
 find_program(POD2MAN_EXECUTABLE pod2man)
 
-if(POD2MAN_EXECUTABLE)
+if(POD2MAN_EXECUTABLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   #man page generation using pod2man
   add_custom_command(
     OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
@@ -481,11 +487,15 @@ include(ExternalProject)
 add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(hooking)
-add_subdirectory(launcher)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  add_subdirectory(launcher)
+endif()
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(ui)
   add_subdirectory(inprocessui)
-  add_subdirectory(client)
+  if (NOT GAMMARAY_PROBE_ONLY_BUILD)
+    add_subdirectory(client)
+  endif()
 endif()
 add_subdirectory(tests)
 add_subdirectory(plugins)
