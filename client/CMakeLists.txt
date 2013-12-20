@@ -32,4 +32,4 @@ if(QNXNTO)
   target_link_libraries(gammaray-client cpp)
 endif()
 
-install(TARGETS gammaray-client ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray-client DESTINATION ${LIBEXEC_INSTALL_DIR})

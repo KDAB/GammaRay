@@ -21,6 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "launcherfinder.h"
 
 #include <QCoreApplication>
@@ -30,7 +31,11 @@
 
 using namespace GammaRay;
 
-const char* executableNames[] = { "gammaray", "gammaray-launcher", "gammaray-client" };
+const char *executableNames[] = {
+  "gammaray",          // the Injector
+  "gammaray-launcher", // the LauncherUI
+  "gammaray-client"    // the Client
+};
 
 QString LauncherFinder::findLauncher(LauncherFinder::Type type)
 {
@@ -38,11 +43,32 @@ QString LauncherFinder::findLauncher(LauncherFinder::Type type)
 #ifdef Q_OS_WIN
   fileName += ".exe";
 #endif
-  const QFileInfo fi(QCoreApplication::applicationDirPath() + QDir::separator() + fileName);
-  if (fi.isExecutable())
+
+  QStringList appPaths; //a list of all the paths we have searched
+
+  QString appPath =
+    QCoreApplication::applicationDirPath() + QDir::separator() + fileName;
+  QFileInfo fi(appPath);
+  if (fi.isExecutable()) {
     return fi.absoluteFilePath();
-  qWarning() << fileName << "not found in the expected location (" << QCoreApplication::applicationDirPath() << "), "
+  }
+  appPaths.append(appPath);
+
+  appPath =
+    QLatin1String(GAMMARAY_LOCAL_INSTALL_PREFIX) +
+    QDir::separator() + QLatin1String(GAMMARAY_LIBEXEC_INSTALL_DIR) + \
+    QDir::separator() + fileName;
+  if(!appPaths.contains(appPath)) {
+    fi.setFile(appPath);
+    if (fi.isExecutable()) {
+      return fi.absoluteFilePath();
+    }
+    appPaths.append(appPath);
+  }
+
+  qWarning() << fileName << "not found in the expected location(s):";
+  qWarning() << appPaths.join(", ") << endl
              << "continuing anyway, hoping for it to be in PATH.";
-  qWarning() << "This is likely a setup problem.";
+  qWarning() << "This is likely a setup problem." << endl;
   return fileName;
 }

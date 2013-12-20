@@ -49,4 +49,5 @@ if(UNIX AND NOT APPLE AND NOT QNXNTO)
   target_link_libraries(gammaray-launcher dl) # for preload check
 endif()
 
-install(TARGETS gammaray-launcher ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray-launcher DESTINATION ${LIBEXEC_INSTALL_DIR})
+
