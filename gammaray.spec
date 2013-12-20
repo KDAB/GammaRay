@@ -7,8 +7,8 @@ Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools/Debuggers
 License:        GPL-2.0+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-Vendor:         Klarälvdalens Datakonsult AB (KDAB)
-Packager:       Klarälvdalens Datakonsult AB (KDAB) <info@kdab.com>
+Vendor:         Klaralvdalens Datakonsult AB (KDAB)
+Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
 %define rel 1.9
 %define sover 2.0.0
@@ -123,8 +123,9 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_prefix}/share/doc/gammaray
 %{_mandir}/man1/gammaray.1.gz
 %{_bindir}/gammaray
-%{_libexecdir}/gammaray-launcher
-%{_libexecdir}/gammaray-client
+%dir %{_libdir}/gammaray/libexec/
+%{_libdir}/gammaray/libexec/gammaray-client
+%{_libdir}/gammaray/libexec/gammaray-launcher
 %{_libdir}/libgammaray_common-%{abi}.so.%{sover}
 %{_libdir}/libgammaray_core-%{abi}.so.%{sover}
 %{_libdir}/libgammaray_ui-%{abi}.so.%{sover}
