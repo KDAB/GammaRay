@@ -1,14 +1,18 @@
 Release Highlights
 ==================
 
-Version 2.0 (unreleased):
+Version 2.0 (beta released):
 -------------
+ * Out-of-process UI
+ * Remote Debugging
+ * Multi-probe support
+ * Probe usable on targets without QtWidget available
  * Fix preload check on MIPS/MIPSel (issue #63)
 
 Version 1.3.2:
 -------------
  * Support more Qt5-specific data types
- * Fix crash on some QtQuick2 applicaitons
+ * Fix crash on some QtQuick2 applications
  * Support VTK6
  * Fix compilation with Mac OSX 10.6
  * Fix GDB injector on Mac OSX
