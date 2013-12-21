@@ -46,6 +46,10 @@ add_library(gammaray_widget_export_actions SHARED
   uiextractor.cpp
 )
 
+set_target_properties(gammaray_widget_export_actions PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}"
+)
+
 set(EXTRA_LIBS)
 if(HAVE_QT_DESIGNER)
   list(APPEND EXTRA_LIBS ${QT_QTDESIGNER_LIBRARIES})

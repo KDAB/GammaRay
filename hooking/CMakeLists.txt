@@ -27,5 +27,8 @@ add_library(gammaray_probe SHARED ${gammaray_probe_srcs})
 target_link_libraries(gammaray_probe
   gammaray_core
 )
-set_target_properties(gammaray_probe PROPERTIES PREFIX "")
+set_target_properties(gammaray_probe PROPERTIES
+  PREFIX ""
+  LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}"
+)
 install(TARGETS gammaray_probe DESTINATION ${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}/)
