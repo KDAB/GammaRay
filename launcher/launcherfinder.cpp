@@ -55,8 +55,8 @@ QString LauncherFinder::findLauncher(LauncherFinder::Type type)
   appPaths.append(appPath);
 
   appPath =
-    QLatin1String(GAMMARAY_LOCAL_INSTALL_PREFIX) +
-    QDir::separator() + QLatin1String(GAMMARAY_LIBEXEC_INSTALL_DIR) + \
+    QCoreApplication::applicationDirPath() + QDir::separator() +
+    QLatin1String(GAMMARAY_RELATIVE_LIBEXEC_PATH) +
     QDir::separator() + fileName;
   if(!appPaths.contains(appPath)) {
     fi.setFile(appPath);
