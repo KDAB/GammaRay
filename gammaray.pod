@@ -4,7 +4,7 @@ GammaRay - Qt-application inspection and manipulation tool.
 
 =head1 SYNOPSIS
 
-gammaray [--pid <pid> | <application> <args>]
+gammaray [--pid <pid> | <application> <args> | --connect <host>[:<port>]
 
 
 =head1 DESCRIPTION
@@ -78,6 +78,11 @@ List all installed probes.
 Explicitly specify which probe to use. You should use this if you have
 more than one probe installed (e.g. one for Qt4 and one for Qt5), until
 probe ABI auto-detection is implemented.
+
+=item B<--connect <host>[:port]>
+
+Connect to a target with an already injected GammaRay probe. Useful for
+example for remote debugging.
 
 =back
 
