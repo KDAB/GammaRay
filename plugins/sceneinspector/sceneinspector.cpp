@@ -34,6 +34,7 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
+#include <core/remote/server.h>
 
 #include <kde/krecursivefilterproxymodel.h>
 #include <common/objectbroker.h>
@@ -65,8 +66,11 @@ Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 
 SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   : SceneInspectorInterface(parent),
-    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this))
+    m_propertyController(new PropertyController("com.kdab.GammaRay.SceneInspector", this)),
+    m_clientConnected(false)
 {
+  Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(objectName()), this, "clientConnectedChanged");
+
   registerGraphicsViewMetaTypes();
   registerVariantHandlers();
 
@@ -110,6 +114,17 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
   }
 
   m_sceneModel->setScene(scene);
+  connectToScene();
+  // TODO remote support when a different graphics scene was selected
+//  ui->graphicsSceneView->setGraphicsScene(scene);
+}
+
+void SceneInspector::connectToScene()
+{
+  QGraphicsScene *scene = m_sceneModel->scene();
+  if (!scene || !m_clientConnected) {
+    return;
+  }
 
   connect(scene, SIGNAL(sceneRectChanged(QRectF)),
           this, SIGNAL(sceneRectChanged(QRectF)));
@@ -117,9 +132,6 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
           this, SIGNAL(sceneChanged()));
 
   initializeGui();
-
-  // TODO remote support when a different graphics scene was selected
-//  ui->graphicsSceneView->setGraphicsScene(scene);
 }
 
 void SceneInspector::initializeGui()
@@ -135,6 +147,12 @@ void SceneInspector::initializeGui()
   }
 
   emit sceneRectChanged(scene->sceneRect());
+}
+
+void SceneInspector::clientConnectedChanged(bool clientConnected)
+{
+  m_clientConnected = clientConnected;
+  connectToScene();
 }
 
 void SceneInspector::renderScene(const QTransform &transform, const QSize &size)

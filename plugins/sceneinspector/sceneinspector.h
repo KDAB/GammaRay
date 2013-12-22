@@ -57,15 +57,19 @@ class SceneInspector : public SceneInspectorInterface
     void objectSelected(QObject *object, const QPoint &pos);
     void sceneClicked(const QPointF &pos);
 
+    void clientConnectedChanged(bool clientConnected);
+
   private:
     QString findBestType(QGraphicsItem *item);
     void registerGraphicsViewMetaTypes();
     void registerVariantHandlers();
+    void connectToScene();
 
   private:
     SceneModel *m_sceneModel;
     QItemSelectionModel* m_itemSelectionModel;
     PropertyController *m_propertyController;
+    bool m_clientConnected;
 };
 
 class SceneInspectorFactory : public QObject,
