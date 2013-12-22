@@ -206,14 +206,11 @@ void Server::forwardSignal() const
   Endpoint::invokeObject(sender()->objectName(), name, args);
 }
 
-Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName, const char* monitorNotifier)
+Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)
 {
   registerObjectInternal(objectName, ++m_nextAddress);
   Q_ASSERT(m_nextAddress);
   registerMessageHandlerInternal(m_nextAddress, receiver, messageHandlerName);
-
-  if (monitorNotifier)
-    m_monitorNotifiers.insert(m_nextAddress, qMakePair<QObject*, QByteArray>(receiver, monitorNotifier));
 
   if (isConnected()) {
     Message msg(endpointAddress(), Protocol::ObjectAdded);
@@ -222,6 +219,15 @@ Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObjec
   }
 
   return m_nextAddress;
+}
+
+void Server::registerMonitorNotifier(Protocol::ObjectAddress address, QObject* receiver, const char* monitorNotifier)
+{
+  Q_ASSERT(address != Protocol::InvalidObjectAddress);
+  Q_ASSERT(receiver);
+  Q_ASSERT(monitorNotifier);
+
+  m_monitorNotifiers.insert(address, qMakePair<QObject*, QByteArray>(receiver, monitorNotifier));
 }
 
 void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)

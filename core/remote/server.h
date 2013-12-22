@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_SERVER_H
 #define GAMMARAY_SERVER_H
 
+#include "../gammaray_core_export.h"
+
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
 
@@ -35,7 +37,7 @@ class QSignalSpy;
 namespace GammaRay {
 
 /** Server side connection endpoint. */
-class Server : public Endpoint
+class GAMMARAY_CORE_EXPORT Server : public Endpoint
 {
   Q_OBJECT
   public:
@@ -49,10 +51,17 @@ class Server : public Endpoint
 
     /** Register a new object with name @p objectName as a destination for messages.
      *  New messages to that object are passed to the slot @p messageHandlerName on @p receiver.
-     *  If the object is unused on the client side it might be useful to disable sending out signals or
-     *  other expensive operations, when this state changes the slot @p monitorNotifier is called.
      */
-    Protocol::ObjectAddress registerObject(const QString &objectName, QObject* receiver, const char* messageHandlerName, const char* monitorNotifier = 0);
+    Protocol::ObjectAddress registerObject(const QString &objectName, QObject* receiver, const char* messageHandlerName);
+
+    /**
+     * Register a callback slot @p monitorNotifier on object @p receiver that is called if the usage
+     * of an object with address @p address changes on the client side.
+     *
+     * This is useful for example to disable expensive operations like sending large amounts of
+     * data if nobody is interested anyway.
+     */
+    void registerMonitorNotifier(Protocol::ObjectAddress address, QObject *receiver, const char* monitorNotifier);
 
     /** Singleton accessor. */
     static Server* instance();
