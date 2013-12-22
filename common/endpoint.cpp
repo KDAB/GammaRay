@@ -244,16 +244,16 @@ void Endpoint::dispatchMessage(const Message& msg)
 
   ObjectInfo* obj = it.value();
   if (msg.type() == Protocol::MethodCall) {
+    QByteArray method;
+    msg.payload() >> method;
     if (obj->object) {
-      QByteArray method;
-      msg.payload() >> method;
       Q_ASSERT(!method.isEmpty());
       QVariantList args;
       msg.payload() >> args;
 
       invokeObjectLocal(obj->object, method.constData(), args);
     } else {
-      cerr << "cannot call method on unknown object of name " << qPrintable(obj->name) << " with address " << quint64(obj->address)
+      cerr << "cannot call method " << method.constData() << " on unknown object of name " << qPrintable(obj->name) << " with address " << quint64(obj->address)
            << " - did you forget to register it?" << endl;
     }
   }
