@@ -9,6 +9,9 @@
 
 project(GammaRay)
 
+option(WITH_VTK "Build with the VTK virtualization toolkit, if found. Needed for the object visualizer plugin" True)
+option(WITH_GRAPHVIZ "Build with the Graphviz virtualization software, if found. Needed for the state machine visualizer plugin" True)
+
 if(WIN32)
   # needed for automoc and QtMain to work correctly
   cmake_minimum_required(VERSION 2.8.11)
@@ -371,36 +374,44 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
   endif()
 endif()
 
-set(GRAPHVIZ_MIN_VERSION "2.20")
-find_package(Graphviz)
-macro_log_feature(
-  GRAPHVIZ_FOUND
-  "Graphviz"
-  "Graph visualization software"
-  "http://www.graphviz.org/"
-  FALSE
-  ${GRAPHVIZ_MIN_VERSION}
-  "Needed for the state machine visualizer plugin"
-)
+if(WITH_GRAPHVIZ)
+  set(GRAPHVIZ_MIN_VERSION "2.20")
+  find_package(Graphviz)
+  macro_log_feature(
+    GRAPHVIZ_FOUND
+    "Graphviz"
+    "Graph visualization software"
+    "http://www.graphviz.org/"
+    FALSE
+    ${GRAPHVIZ_MIN_VERSION}
+    "Needed for the state machine visualizer plugin"
+  )
+else()
+  set(GRAPHVIZ_FOUND False)
+endif()
+set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
 if(GRAPHVIZ_FOUND)
   add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
 endif()
-set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
 
-#VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
-find_path(VTK_DIR VTKConfig.cmake
-  /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
-)
-find_package(VTK)
-macro_log_feature(
-  VTK_FOUND
-  "VTK"
-  "Visualization Toolkit"
-  "http://www.vtk.org"
-  FALSE
-  ""
-  "Needed for the object visualization plugin"
-)
+if(WITH_VTK)
+  #VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
+  find_path(VTK_DIR VTKConfig.cmake
+    /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
+  )
+  find_package(VTK)
+  macro_log_feature(
+    VTK_FOUND
+    "VTK"
+    "Visualization Toolkit"
+    "http://www.vtk.org"
+    FALSE
+    ""
+    "Needed for the object visualizer plugin"
+  )
+else()
+  set(VTK_FOUND False)
+endif()
 set(HAVE_VTK ${VTK_FOUND})
 
 if(UNIX AND NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
@@ -533,3 +544,9 @@ if(DOXYGEN_FOUND)
 endif()
 
 macro_display_feature_log()
+if(NOT WITH_VTK)
+  message(STATUS "Skipped VTK discovery due to WITH_VTK option. Object visualizer plugin will not be built")
+endif()
+if(NOT WITH_GRAPHVIZ)
+  message(STATUS "Skipped Graphviz discovery due to WITH_GRAPHVIZ option. State machine visualizer plugin will not be built")
+endif()
