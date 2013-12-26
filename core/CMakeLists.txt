@@ -106,7 +106,7 @@ set_target_properties(gammaray_core PROPERTIES
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_core Qt5::Gui Qt5::Test)
+  target_link_libraries(gammaray_core Qt5::Gui)
 else()
   target_link_libraries(gammaray_core
     ${QT_QTCORE_LIBRARIES}
