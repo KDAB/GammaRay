@@ -24,47 +24,51 @@
 #include "multisignalmapper.h"
 
 #include <QDebug>
-#include <QMetaEnum>
+#include <QMetaMethod>
 #include <QMetaObject>
-#include <QSignalMapper>
+
+namespace GammaRay {
+
+class MultiSignalMapperPrivate : public QObject
+{
+  public:
+    explicit MultiSignalMapperPrivate(MultiSignalMapper* parent) : QObject(parent), q(parent) {}
+    ~MultiSignalMapperPrivate() {}
+
+    int qt_metacall(QMetaObject::Call call, int methodId, void** args)
+    {
+      methodId = QObject::qt_metacall(call, methodId, args);
+      if (methodId < 0)
+        return methodId;
+
+      if (call == QMetaObject::InvokeMetaMethod) {
+        if (methodId == 0) {
+          Q_ASSERT(sender());
+          Q_ASSERT(senderSignalIndex() != -1);
+          emit q->signalEmitted(sender(), senderSignalIndex());
+        }
+        --methodId; // our method offset is 1
+      }
+      return methodId;
+    }
+
+  private:
+    MultiSignalMapper* q;
+};
+
+}
 
 using namespace GammaRay;
 
-MultiSignalMapper::MultiSignalMapper(QObject *parent) : QObject(parent)
+MultiSignalMapper::MultiSignalMapper(QObject *parent) : QObject(parent), d(new MultiSignalMapperPrivate(this))
 {
 }
 
 MultiSignalMapper::~MultiSignalMapper()
 {
-  qDeleteAll(m_mappers);
-  m_mappers.clear();
 }
 
 void MultiSignalMapper::connectToSignal(QObject *sender, const QMetaMethod &signal)
 {
-  if (m_mappers.size() <= signal.methodIndex()) {
-    m_mappers.resize(signal.methodIndex() + 1);
-  }
-
-  QSignalMapper *mapper = m_mappers.at(signal.methodIndex());
-  if (!mapper) {
-    mapper = new QSignalMapper(this);
-    connect(mapper, SIGNAL(mapped(QObject*)), SLOT(slotMapped(QObject*)));
-    m_mappers[signal.methodIndex()] = mapper;
-  }
-
-  mapper->setMapping(sender, sender);
-  connect(sender, QByteArray::number(QSIGNAL_CODE) +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-          signal.signature(),
-#else
-          signal.methodSignature(),
-#endif
-          mapper, SLOT(map()), Qt::UniqueConnection);
+  QMetaObject::connect(sender, signal.methodIndex(), d, QObject::metaObject()->methodCount(), Qt::AutoConnection | Qt::UniqueConnection, 0);
 }
-
-void MultiSignalMapper::slotMapped(QObject *object)
-{
-  emit signalEmitted(object, m_mappers.indexOf(static_cast<QSignalMapper*>(sender())));
-}
-
