@@ -32,9 +32,10 @@
 class QTcpServer;
 class QUdpSocket;
 class QTimer;
-class QSignalSpy;
 
 namespace GammaRay {
+
+class MultiSignalMapper;
 
 /** Server side connection endpoint. */
 class GAMMARAY_CORE_EXPORT Server : public Endpoint
@@ -85,7 +86,7 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     /**
      * Forward the signal that triggered the call to this slot to the remote client if connected.
      */
-    void forwardSignal() const;
+    void forwardSignal(QObject* sender, int signalIndex, const QVector<QVariant> &args);
 
   private:
     QTcpServer *m_tcpServer;
@@ -96,8 +97,7 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     QTimer* m_broadcastTimer;
     QUdpSocket* m_broadcastSocket;
 
-    // maps registered objects to a map of signal index to signal spy
-    QHash<QObject*, QHash<int, QSignalSpy*> > m_signalForwards;
+    MultiSignalMapper* m_signalMapper;
 };
 
 }
