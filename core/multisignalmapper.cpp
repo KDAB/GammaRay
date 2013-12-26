@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QMetaMethod>
 #include <QMetaObject>
+#include <QVariant>
 
 namespace GammaRay {
 
@@ -45,11 +46,34 @@ class MultiSignalMapperPrivate : public QObject
         if (methodId == 0) {
           Q_ASSERT(sender());
           Q_ASSERT(senderSignalIndex() != -1);
-          emit q->signalEmitted(sender(), senderSignalIndex());
+          const QVector<QVariant> v = convertArguments(sender(), senderSignalIndex(), args);
+          emit q->signalEmitted(sender(), senderSignalIndex(), v);
         }
         --methodId; // our method offset is 1
       }
       return methodId;
+    }
+
+    QVector<QVariant> convertArguments(QObject *sender, int signalIndex, void** args)
+    {
+      Q_ASSERT(sender);
+      Q_ASSERT(signalIndex >= 0);
+
+      const QMetaMethod signal = sender->metaObject()->method(signalIndex);
+      Q_ASSERT(signal.methodType() == QMetaMethod::Signal);
+
+      QVector<QVariant> v;
+      const QList<QByteArray> paramTypes = signal.parameterTypes();
+      for (int i = 0; i < paramTypes.size(); ++i) {
+        int type = QMetaType::type(paramTypes[i]);
+        if (type == QMetaType::Void) {
+          qWarning() << Q_FUNC_INFO << "unknown metatype for signal argument type" << paramTypes[i];
+          continue;
+        }
+        v.push_back(QVariant(type, args[i + 1]));
+      }
+
+      return v;
     }
 
   private:

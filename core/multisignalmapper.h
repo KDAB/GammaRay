@@ -43,7 +43,7 @@ class MultiSignalMapper : public QObject
     void connectToSignal(QObject *sender, const QMetaMethod &signal);
 
   signals:
-    void signalEmitted(QObject *sender, int signalIndex);
+    void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &arguments);
 
   private:
     friend class MultiSignalMapperPrivate;
