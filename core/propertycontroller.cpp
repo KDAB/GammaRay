@@ -34,6 +34,7 @@
 #include "objectmethodmodel.h"
 #include "objectstaticpropertymodel.h"
 #include "probe.h"
+#include "varianthandler.h"
 
 #include "remote/remotemodelserver.h"
 
@@ -92,17 +93,23 @@ void PropertyController::registerModel(QAbstractItemModel *model, const QString 
   Probe::instance()->registerModel(m_objectBaseName + '.' + nameSuffix, model);
 }
 
-void PropertyController::signalEmitted(QObject *sender, int signalIndex)
+void PropertyController::signalEmitted(QObject* sender, int signalIndex, const QVector<QVariant>& args)
 {
   Q_ASSERT(m_object == sender);
+
+  QStringList prettyArgs;
+  foreach (const QVariant &v, args)
+    prettyArgs.push_back(VariantHandler::displayString(v));
+
   m_methodLogModel->appendRow(
-  new QStandardItem(tr("%1: Signal %2 emitted").
+  new QStandardItem(tr("%1: Signal %2 emitted, arguments: %3").
   arg(QTime::currentTime().toString("HH:mm:ss.zzz")).
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  arg(sender->metaObject()->method(signalIndex).signature())));
+  arg(sender->metaObject()->method(signalIndex).signature())
 #else
-  arg(QString(sender->metaObject()->method(signalIndex).methodSignature()))));
+  arg(QString(sender->metaObject()->method(signalIndex).methodSignature()))
 #endif
+  .arg(prettyArgs.join(", "))));
 }
 
 void PropertyController::setObject(QObject *object)
@@ -123,7 +130,7 @@ void PropertyController::setObject(QObject *object)
 
   delete m_signalMapper;
   m_signalMapper = new MultiSignalMapper(this);
-  connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int)), SLOT(signalEmitted(QObject*,int)));
+  connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)), SLOT(signalEmitted(QObject*,int,QVector<QVariant>)));
 
   m_methodLogModel->clear();
 

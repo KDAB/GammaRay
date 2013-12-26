@@ -63,7 +63,7 @@ public slots:
   void invokeMethod(Qt::ConnectionType type);
 
 private slots:
-  void signalEmitted(QObject *sender, int signalIndex);
+  void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);
 
 private:
   void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
