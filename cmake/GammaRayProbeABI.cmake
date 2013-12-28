@@ -25,6 +25,9 @@ if(WIN32)
   set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_CXX_COMPILER_ID}")
 endif()
 
+if(NOT CMAKE_SYSTEM_PROCESSOR)
+  message(FATAL "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+endif()
 set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
 
 message(STATUS "Building probe for ABI: ${GAMMARAY_PROBE_ABI}")
