@@ -26,7 +26,7 @@ if(WIN32)
 endif()
 
 if(NOT CMAKE_SYSTEM_PROCESSOR)
-  message(FATAL "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+  message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
 endif()
 set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
 
