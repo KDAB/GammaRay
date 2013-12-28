@@ -56,7 +56,7 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
   if (!qtPluginPath.isEmpty()) {
     qtPluginPath.append(":");
   }
-  qtPluginPath.append(GAMMARAY_PLUGIN_INSTALL_DIR);
+  qtPluginPath.append(Paths::currentProbePath());
   env.insert("QT_PLUGIN_PATH", qtPluginPath);
 
   QStringList args = programAndArgs;
@@ -68,8 +68,7 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
 bool StyleInjector::selfTest()
 {
 #ifdef HAVE_QT_WIDGETS
-  // TODO: be a bit more clever in finding the plugin location (also when actually using it above)
-  QCoreApplication::addLibraryPath(Paths::rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR));
+  QCoreApplication::addLibraryPath(Paths::currentProbePath());
   if (!QStyleFactory::keys().contains(QLatin1String("gammaray-injector"))) {
     mErrorString = QObject::tr("Injector style plugin is not found in the Qt style "
                                "plug-in search path or cannot be loaded");
