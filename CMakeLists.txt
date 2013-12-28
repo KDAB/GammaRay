@@ -517,7 +517,7 @@ macro_log_feature(
 )
 if(DOXYGEN_FOUND)
   file(GLOB _dox_deps include/*.dox images/*.html)
-  gammaray_all_installed_headers(_all_hdrs common core ui)
+  gammaray_all_installed_headers(_all_hdrs)
   list(APPEND _all_hdrs ${_dox_deps})
   gammaray_join_list(DOXYGEN_INPUT " " ${_all_hdrs})
 
