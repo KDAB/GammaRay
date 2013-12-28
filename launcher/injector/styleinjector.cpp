@@ -41,10 +41,7 @@
 
 using namespace GammaRay;
 
-StyleInjector::StyleInjector() :
-  mExitCode(-1),
-  mProcessError(QProcess::UnknownError),
-  mExitStatus(QProcess::NormalExit)
+StyleInjector::StyleInjector() : ProcessInjector()
 {
 }
 
@@ -62,40 +59,10 @@ bool StyleInjector::launch(const QStringList &programAndArgs,
   qtPluginPath.append(GAMMARAY_PLUGIN_INSTALL_DIR);
   env.insert("QT_PLUGIN_PATH", qtPluginPath);
 
-  InteractiveProcess proc;
-  proc.setProcessEnvironment(env);
-  proc.setProcessChannelMode(QProcess::ForwardedChannels);
-
   QStringList args = programAndArgs;
-
-  if (env.value("GAMMARAY_GDB").toInt()) {
-    QStringList newArgs;
-    newArgs << "gdb" << "--eval-command" << "run" << "--args";
-    newArgs += args;
-    args = newArgs;
-  } else if (env.value("GAMMARAY_MEMCHECK").toInt()) {
-    QStringList newArgs;
-    newArgs << "valgrind" << "--tool=memcheck" << "--track-origins=yes" << "--num-callers=25";
-    newArgs += args;
-    args = newArgs;
-  } else if (env.value("GAMMARAY_HELGRIND").toInt()) {
-    QStringList newArgs;
-    newArgs << "valgrind" << "--tool=helgrind";
-    newArgs += args;
-    args = newArgs;
-  }
-
-  const QString program = args.takeFirst();
   args << QLatin1String("-style") << QLatin1String("gammaray-injector");
-  proc.start(program, args);
-  proc.waitForFinished(-1);
 
-  mExitCode = proc.exitCode();
-  mProcessError = proc.error();
-  mExitStatus = proc.exitStatus();
-  mErrorString = proc.errorString();
-
-  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
+  return launchProcess(args, env);
 }
 
 bool StyleInjector::selfTest()
@@ -114,24 +81,4 @@ bool StyleInjector::selfTest()
   mErrorString = QObject::tr("GammaRay was compiled without QtWidget support, style injector is not available.");
   return false;
 #endif
-}
-
-int StyleInjector::exitCode()
-{
-  return mExitCode;
-}
-
-QProcess::ProcessError StyleInjector::processError()
-{
-  return mProcessError;
-}
-
-QProcess::ExitStatus StyleInjector::exitStatus()
-{
-  return mExitStatus;
-}
-
-QString StyleInjector::errorString()
-{
-  return mErrorString;
 }

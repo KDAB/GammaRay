@@ -24,11 +24,11 @@
 #ifndef GAMMARAY_STYLEINJECTOR_H
 #define GAMMARAY_STYLEINJECTOR_H
 
-#include "injector/abstractinjector.h"
+#include "processinjector.h"
 
 namespace GammaRay {
 
-class StyleInjector : public GammaRay::AbstractInjector
+class StyleInjector : public GammaRay::ProcessInjector
 {
   public:
     StyleInjector();
@@ -42,20 +42,6 @@ class StyleInjector : public GammaRay::AbstractInjector
                         const QString &probeDll, const QString &probeFunc);
 
     virtual bool selfTest();
-
-    virtual int exitCode();
-
-    virtual QProcess::ExitStatus exitStatus();
-
-    virtual QProcess::ProcessError processError();
-
-    virtual QString errorString();
-
-  private:
-    int mExitCode;
-    QProcess::ProcessError mProcessError;
-    QProcess::ExitStatus mExitStatus;
-    QString mErrorString;
 };
 
 }

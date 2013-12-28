@@ -12,6 +12,7 @@ include_directories(
 # shared launcher code
 set(gammaray_launcher_shared_srcs
   injector/abstractinjector.cpp
+  injector/processinjector.cpp
   injector/injectorfactory.cpp
   injector/preloadinjector.cpp
   injector/styleinjector.cpp
