@@ -53,7 +53,6 @@ bool Client::isRemoteClient() const
 
 void Client::connectToHost(const QString &hostName, quint16 port)
 {
-  qDebug() << Q_FUNC_INFO << hostName << ':' << port;
   QTcpSocket *sock = new QTcpSocket(this);
   connect(sock, SIGNAL(connected()), SLOT(socketConnected()));
   connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()));

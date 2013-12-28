@@ -87,7 +87,7 @@ void ProbeSettings::receiveSettings()
       case Protocol::ProbeSettings:
       {
         msg.payload() >> s_probeSettings;
-        qDebug() << Q_FUNC_INFO << s_probeSettings; // TODO remove
+        //qDebug() << Q_FUNC_INFO << s_probeSettings;
       }
       default:
         continue;

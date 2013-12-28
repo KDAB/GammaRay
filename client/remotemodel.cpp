@@ -473,7 +473,6 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 
 void RemoteModel::clear()
 {
-  qDebug() << Q_FUNC_INFO;
   beginResetModel();
 
   Message msg(m_myAddress, Protocol::ModelSyncBarrier);

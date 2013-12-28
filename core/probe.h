@@ -136,6 +136,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     void objectFullyConstructed(QObject *obj);
     void findExistingObjects();
+    void showInProcessUi();
 
     static void createProbe(bool findExisting);
 

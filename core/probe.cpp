@@ -328,31 +328,38 @@ void Probe::delayedInit()
   }
   Server::instance()->setLabel(appName);
 
-  if (ProbeSettings::value("InProcessUi", false).toBool() && canShowWidgets()) {
-    IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
-    s_listener()->filterThread = QThread::currentThread();
+  if (ProbeSettings::value("InProcessUi", false).toBool())
+    showInProcessUi();
+}
 
-    QString path = ProbeSettings::value("ProbePath").toString();
-    if (!path.isEmpty())
-      path += QDir::separator();
-    path += "gammaray_inprocessui";
-    QLibrary lib;
-    lib.setFileName(path);
-    if (!lib.load()) {
-      std::cerr << "Failed to load in-process UI module: " << qPrintable(lib.errorString()) << std::endl;
-    } else {
-      void(*factory)() = reinterpret_cast<void(*)()>(lib.resolve("gammaray_create_inprocess_mainwindow"));
-      if (!factory)
-        std::cerr << Q_FUNC_INFO << ' ' << qPrintable(lib.errorString()) << endl;
-      else
-        factory();
-    }
-
-    s_listener()->filterThread = 0;
-    IF_DEBUG(cout << "creation done" << endl;)
-  } else {
+void Probe::showInProcessUi()
+{
+  if (!canShowWidgets()) {
     cerr << "Unable to show in-process UI in a non-QWidget based application." << endl;
+    return;
   }
+
+  IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
+  s_listener()->filterThread = QThread::currentThread();
+
+  QString path = ProbeSettings::value("ProbePath").toString();
+  if (!path.isEmpty())
+    path += QDir::separator();
+  path += "gammaray_inprocessui";
+  QLibrary lib;
+  lib.setFileName(path);
+  if (!lib.load()) {
+    std::cerr << "Failed to load in-process UI module: " << qPrintable(lib.errorString()) << std::endl;
+  } else {
+    void(*factory)() = reinterpret_cast<void(*)()>(lib.resolve("gammaray_create_inprocess_mainwindow"));
+    if (!factory)
+      std::cerr << Q_FUNC_INFO << ' ' << qPrintable(lib.errorString()) << endl;
+    else
+      factory();
+  }
+
+  s_listener()->filterThread = 0;
+  IF_DEBUG(cout << "creation done" << endl;)
 }
 
 bool Probe::filterObject(QObject *obj) const

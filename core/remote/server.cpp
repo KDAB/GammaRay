@@ -136,7 +136,7 @@ void Server::messageReceived(const Message& msg)
         const QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> >::const_iterator it = m_monitorNotifiers.constFind(addr);
         if (it == m_monitorNotifiers.constEnd())
           break;
-        cout << Q_FUNC_INFO << " un/monitor " << (int)addr << endl;
+        //cout << Q_FUNC_INFO << " un/monitor " << (int)addr << endl;
         QMetaObject::invokeMethod(it.value().first, it.value().second, Q_ARG(bool, msg.type() == Protocol::ObjectMonitored));
         break;
       }

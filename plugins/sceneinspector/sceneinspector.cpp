@@ -107,7 +107,6 @@ void SceneInspector::sceneSelected(const QItemSelection& selection)
 
   QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
   QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-  cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
   if (m_sceneModel->scene()) {
     disconnect(m_sceneModel->scene(), 0, this, 0);
