@@ -43,6 +43,7 @@
 
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
+#include <common/paths.h>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
@@ -342,7 +343,7 @@ void Probe::showInProcessUi()
   IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
   s_listener()->filterThread = QThread::currentThread();
 
-  QString path = ProbeSettings::value("ProbePath").toString();
+  QString path = Paths::currentProbePath();
   if (!path.isEmpty())
     path += QDir::separator();
   path += "gammaray_inprocessui";

@@ -21,8 +21,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
 #include "launcherfinder.h"
+
+#include <common/paths.h>
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -54,10 +55,7 @@ QString LauncherFinder::findLauncher(LauncherFinder::Type type)
   }
   appPaths.append(appPath);
 
-  appPath =
-    QCoreApplication::applicationDirPath() + QDir::separator() +
-    QLatin1String(GAMMARAY_RELATIVE_LIBEXEC_PATH) +
-    QDir::separator() + fileName;
+  appPath = Paths::libexecPath() + QDir::separator() + fileName;
   if(!appPaths.contains(appPath)) {
     fi.setFile(appPath);
     if (fi.isExecutable()) {

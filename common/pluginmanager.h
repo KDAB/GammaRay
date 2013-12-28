@@ -59,11 +59,9 @@ class PluginManagerBase
 {
   public:
     /**
-     * @param pluginPath The base path to look for plugins (usually called "plugins",
-     *                   without the GammaRay specific subfolders).
      * @param parent This is the parent object for all objects created by the plugins
      */
-    explicit PluginManagerBase(const QString &pluginPath, QObject *parent = 0);
+    explicit PluginManagerBase(QObject *parent = 0);
     ~PluginManagerBase();
 
     QList<PluginLoadError> errors() const
@@ -85,7 +83,7 @@ template <typename IFace, typename Proxy>
 class PluginManager : public PluginManagerBase
 {
 public:
-    explicit inline PluginManager(const QString &pluginPath, QObject *parent = 0) : PluginManagerBase(pluginPath, parent)
+    explicit inline PluginManager(QObject *parent = 0) : PluginManagerBase(parent)
     {
       const QString iid = QString::fromLatin1(qobject_interface_iid<IFace*>());
       Q_ASSERT(!iid.isEmpty());

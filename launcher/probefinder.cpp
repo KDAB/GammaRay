@@ -21,9 +21,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
-
 #include "probefinder.h"
+
+#include <common/paths.h>
 
 #include <qglobal.h>
 #include <QCoreApplication>
@@ -40,13 +40,7 @@ namespace ProbeFinder {
 QString findProbe(const QString &baseName, const QString &probeAbi)
 {
   const QString probePath =
-    QCoreApplication::applicationDirPath() %
-    QDir::separator() %
-    QLatin1Literal(GAMMARAY_RELATIVE_PROBE_PATH) %
-    QDir::separator() %
-    QLatin1Literal(GAMMARAY_PLUGIN_VERSION) %
-    QDir::separator() %
-    probeAbi %
+    Paths::probePath(probeAbi) %
     QDir::separator() %
     baseName %
     fileExtension();
@@ -62,13 +56,7 @@ QString findProbe(const QString &baseName, const QString &probeAbi)
 
 QStringList listProbeABIs()
 {
-  const QString path =
-    QCoreApplication::applicationDirPath() %
-    QDir::separator() %
-    QLatin1Literal(GAMMARAY_RELATIVE_PROBE_PATH) %
-    QDir::separator() %
-    QLatin1Literal(GAMMARAY_PLUGIN_VERSION);
-  const QDir dir(path);
+  const QDir dir(Paths::probePath(QString()));
   return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 }
 

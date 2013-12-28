@@ -21,7 +21,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
 #include "clienttoolmodel.h"
 
 #include <ui/tools/connectioninspector/connectioninspectorwidget.h>
@@ -82,8 +81,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent
   insertFactory(new StandardPathsFactory);
   insertFactory(new TextDocumentInspectorFactory);
 
-  const QString pluginPath = QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String(GAMMARAY_RELATIVE_BIN_TO_PLUGIN_PATH);
-  PluginManager<ToolUiFactory, ProxyToolUiFactory> pm(pluginPath);
+  PluginManager<ToolUiFactory, ProxyToolUiFactory> pm;
   foreach(ToolUiFactory* factory, pm.plugins())
     insertFactory(factory);
 }

@@ -21,6 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "remotemodel.h"
 #include "client.h"
 #include "selectionmodelclient.h"
@@ -30,6 +31,7 @@
 
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
+#include <common/paths.h>
 
 #include <QApplication>
 #include <QStringList>
@@ -61,6 +63,7 @@ static QObject* createProbeController(const QString &name, QObject *parent)
 int main(int argc, char** argv)
 {
   QApplication app(argc, argv);
+  Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
 
   StreamOperators::registerOperators();
 

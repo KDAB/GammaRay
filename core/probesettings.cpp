@@ -21,14 +21,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "probesettings.h"
 
 #include <common/sharedmemorylocker.h>
 #include <common/message.h>
+#include <common/paths.h>
 
 #include <QBuffer>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 
@@ -88,6 +91,9 @@ void ProbeSettings::receiveSettings()
       {
         msg.payload() >> s_probeSettings;
         //qDebug() << Q_FUNC_INFO << s_probeSettings;
+        const QString probePath = value("ProbePath").toString();
+        if (!probePath.isEmpty())
+          Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
       }
       default:
         continue;

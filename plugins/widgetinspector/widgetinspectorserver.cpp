@@ -42,6 +42,7 @@
 #include <common/settempvalue.h>
 #include <common/metatypedeclarations.h>
 #include <common/objectmodel.h>
+#include <common/paths.h>
 
 #include "other/modelutils.h"
 
@@ -317,10 +318,8 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
                                                const QString &fileName)
 {
   if (!m_externalExportActions.isLoaded()) {
-    const QString probePath = ProbeSettings::value("ProbePath").toString();
-
     m_externalExportActions.setFileName(
-      probePath + QLatin1String("/libgammaray_widget_export_actions"));
+      Paths::currentProbePath() + QLatin1String("/libgammaray_widget_export_actions"));
 
     m_externalExportActions.load();
   }

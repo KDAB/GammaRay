@@ -30,3 +30,7 @@ macro(gammaray_join_list _var _sep)
     set(${_var} "${${_var}}${_sep}${_element}")
   endforeach()
 endmacro()
+
+macro(gammaray_inverse_dir _var _prefix)
+  file(RELATIVE_PATH ${_var} "${CMAKE_INSTALL_PREFIX}/${_prefix}" "${CMAKE_INSTALL_PREFIX}")
+endmacro()

@@ -29,6 +29,8 @@
 #include "launcher.h"
 #include "probefinder.h"
 
+#include <common/paths.h>
+
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>
 #else
@@ -36,6 +38,7 @@
 #endif
 
 #include <QDebug>
+#include <QDir>
 #include <QStringList>
 
 using namespace GammaRay;
@@ -103,6 +106,7 @@ int main(int argc, char **argv)
 #else
   QCoreApplication app(argc, argv);
 #endif
+  Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
 
   QStringList builtInArgs = QStringList() << QLatin1String("-style")
                                           << QLatin1String("-stylesheet")

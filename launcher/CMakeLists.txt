@@ -28,7 +28,7 @@ if(NOT WIN32)
   list(APPEND gammaray_launcher_shared_srcs injector/gdbinjector.cpp)
 endif()
 add_library(gammaray_launcher_shared STATIC ${gammaray_launcher_shared_srcs})
-target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES})
+target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES} gammaray_common)
 
 # command line launcher
 set(gammaray_runner_srcs

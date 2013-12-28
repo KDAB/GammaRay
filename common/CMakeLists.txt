@@ -19,6 +19,7 @@ set(gammaray_common_srcs
   protocol.cpp
   message.cpp
   endpoint.cpp
+  paths.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})

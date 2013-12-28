@@ -21,9 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "launcherwindow.h"
 #include "launchoptions.h"
 #include "launcherfinder.h"
+
+#include <common/paths.h>
 
 #include <QApplication>
 
@@ -36,6 +39,8 @@ int main(int argc, char **argv)
   QCoreApplication::setApplicationName("GammaRay");
 
   QApplication app(argc, argv);
+  Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
+
   LauncherWindow launcher;
   launcher.show();
   const int result = app.exec();
