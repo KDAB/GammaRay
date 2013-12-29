@@ -9,25 +9,47 @@
 
 # This contains all properties that define ABI compatibility of a probe with a target
 
-# It includes:
-# - Qt version (major/minor)
-# - Compiler (Windows only)
-# - Release/Debug (Windows only) TODO
-# - processor architecture
-
+# Qt version
 if(Qt5Core_FOUND)
   set(GAMMARAY_PROBE_ABI "qt${Qt5Core_VERSION_MAJOR}.${Qt5Core_VERSION_MINOR}")
 else()
   set(GAMMARAY_PROBE_ABI "qt${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}")
 endif()
 
+
+# on Windows, the compiler also matters
 if(WIN32)
   set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_CXX_COMPILER_ID}")
 endif()
 
-if(NOT CMAKE_SYSTEM_PROCESSOR)
-  message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+
+# debug vs. release (Windows only)
+if(WIN32)
+  if(CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-release")
+  else()
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-debug")
+  endif()
 endif()
-set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
+
+
+# processor architecture
+# this is a bit messy since CMAKE_SYSTEM_PROCESSOR seems to contain the host CPU rather than the target architecture sometimes
+
+# on Windows our best bet is CMAKE_SIZEOF_VOID_P and assuming a x86 host==target build
+if(WIN32)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
+  else()
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
+  endif()
+else()
+# on UNIX CMAKE_SYSTEM_PROCESSOR seems more reliable, as long as we don't cross-compile, then it's empty...
+  if(NOT CMAKE_SYSTEM_PROCESSOR)
+    message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+  endif()
+  set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+
 
 message(STATUS "Building probe for ABI: ${GAMMARAY_PROBE_ABI}")
