@@ -5,6 +5,7 @@ include_directories(
 
 add_subdirectory(codecbrowser)
 add_subdirectory(fontbrowser)
+add_subdirectory(kjobtracker)
 add_subdirectory(objectvisualizer)
 add_subdirectory(selectionmodelinspector)
 add_subdirectory(statemachineviewer)
@@ -19,10 +20,6 @@ endif()
 
 if(QT_QTSCRIPTTOOLS_FOUND OR Qt5ScriptTools_FOUND)
   add_subdirectory(scriptenginedebugger)
-endif()
-
-if(NOT Qt5Core_FOUND)
-  add_subdirectory(kjobtracker)
 endif()
 
 if(QT_QTWEBKIT_FOUND OR Qt5WebKitWidgets_FOUND)

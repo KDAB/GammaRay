@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_KJOBTRACKERWIDGET_H
 #define GAMMARAY_KJOBTRACKERWIDGET_H
 
+#include <ui/tooluifactory.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -41,6 +43,13 @@ class KJobTrackerWidget : public QWidget
 
   private:
     QScopedPointer<Ui::KJobTrackerWidget> ui;
+};
+
+class KJobTrackerUiFactory : public QObject, public StandardToolUiFactory<KJobTrackerWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.KJobTrackerUi")
 };
 
 }

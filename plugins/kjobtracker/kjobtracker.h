@@ -24,7 +24,6 @@
 #ifndef GAMMARAY_KJOBTRACKER_H
 #define GAMMARAY_KJOBTRACKER_H
 
-#include "kjobtrackerwidget.h"
 #include <core/toolfactory.h>
 
 #include <KJob>
@@ -45,10 +44,10 @@ class KJobTracker : public QObject
     KJobModel *m_jobModel;
 };
 
-class KJobTrackerFactory : public QObject, public StandardToolFactory2<KJob, KJobTracker, KJobTrackerWidget>
+class KJobTrackerFactory : public QObject, public StandardToolFactory<KJob, KJobTracker>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
 
   public:
     explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent)

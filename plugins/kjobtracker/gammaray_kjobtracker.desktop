@@ -1,5 +1,5 @@
 [Desktop Entry]
 Name=KJobs
 X-GammaRay-Types=KJob;
-X-GammaRay-ServiceTypes="com.kdab.GammaRay.ToolFactory;com.kdab.GammaRay.ToolUiFactory"
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
 Exec=gammaray_kjobtracker_plugin
