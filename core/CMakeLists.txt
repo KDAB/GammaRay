@@ -119,6 +119,7 @@ endif()
 install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 gammaray_install_headers(
+  gammaray_core_export.h
   metaobject.h
   metaobjectrepository.h
   objectmodelbase.h
