@@ -517,7 +517,7 @@ macro_log_feature(
   "Needed to build the optional API documention"
 )
 if(DOXYGEN_FOUND)
-  file(GLOB _dox_deps include/*.dox images/*.html)
+  file(GLOB _dox_deps docs/*.dox docs/*.html)
   gammaray_all_installed_headers(_all_hdrs)
   list(APPEND _all_hdrs ${_dox_deps})
   gammaray_join_list(DOXYGEN_INPUT " " ${_all_hdrs})
