@@ -66,6 +66,7 @@ set(_qt_modules
   WebKitWidgets
   Sql
   OpenGL
+  Svg
 )
 
 foreach(_module ${_qt_modules})
