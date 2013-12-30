@@ -25,7 +25,6 @@
 #define GAMMARAY_WEBINSPECTOR_WEBINSPECTOR_H
 
 #include <core/toolfactory.h>
-#include "webinspectorwidget.h"
 
 #include <QWebPage>
 #include <QWidget>
@@ -43,10 +42,10 @@ class WebInspector : public QObject
 };
 
 class WebInspectorFactory
-  : public QObject, public StandardToolFactory2<QWebPage, WebInspector, WebInspectorWidget>
+  : public QObject, public StandardToolFactory<QWebPage, WebInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.WebInspector")
 
   public:

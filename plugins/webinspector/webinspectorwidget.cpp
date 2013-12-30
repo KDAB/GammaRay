@@ -67,3 +67,7 @@ void WebInspectorWidget::webPageSelected(int index)
     ui->stack->setCurrentWidget(ui->wk1RemotePage);
   }
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(WebInspectorUiFactory)
+#endif

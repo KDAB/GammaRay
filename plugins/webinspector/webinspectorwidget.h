@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_WEBINSPECTOR_WEBINSPECTORWIDGET_H
 #define GAMMARAY_WEBINSPECTOR_WEBINSPECTORWIDGET_H
 
+#include <ui/tooluifactory.h>
+
 #include <QWebPage>
 #include <QWidget>
 
@@ -45,6 +47,13 @@ class WebInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::WebInspectorWidget> ui;
+};
+
+class WebInspectorUiFactory : public QObject, public StandardToolUiFactory<WebInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.WebInspectorUi")
 };
 
 }
