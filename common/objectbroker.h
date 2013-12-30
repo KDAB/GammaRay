@@ -33,7 +33,7 @@ class QAbstractItemModel;
 
 namespace GammaRay {
 
-/** Retrieve/expose objects independent of whether using in-process or out-of-process UI. */
+/** @brief Retrieve/expose objects independent of whether using in-process or out-of-process UI. */
 namespace ObjectBroker {
 
   /** Register a newly created QObject under the given name. */

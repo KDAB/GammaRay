@@ -45,7 +45,7 @@ class ObjectEnumModel;
 class MetaPropertyModel;
 class MethodArgumentModel;
 
-/** Non-UI part of the property widget. */
+/** @brief Non-UI part of the property widget. */
 class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterface
 {
   Q_OBJECT

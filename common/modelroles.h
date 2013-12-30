@@ -27,13 +27,17 @@
 #include <QAbstractItemModel>
 
 /**
- * @file modelroles.h A collection of custom model roles shared between client and server.
+ * @file modelroles.h
+ * @brief A collection of custom model roles shared between client and server.
  */
 namespace GammaRay {
 
-static const int UserRole = 256; // Qt4 uses 32, Qt5 256, use the latter globally to allow combining Qt4/5 client/servers.
+/** Portable replacement for Qt::UserRole.
+ * Qt4 uses 32, Qt5 256, use the latter globally to allow combining Qt4/5 client/servers.
+ */
+static const int UserRole = 256;
 
-/** Custom roles for GammaRay::ToolModel.
+/** @brief  Custom roles for GammaRay::ToolModel.
  * @todo These can be split again, between core tool model and UI tool model.
  */
 namespace ToolModelRole {
@@ -45,7 +49,7 @@ namespace ToolModelRole {
   };
 }
 
-/** Custom roles for GammaRay::ObjectMethodModel. */
+/** @brief Custom roles for GammaRay::ObjectMethodModel. */
 namespace ObjectMethodModelRole {
   enum Role {
     MetaMethod = UserRole + 1,

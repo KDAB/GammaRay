@@ -31,7 +31,7 @@
 
 namespace GammaRay {
 
-/** Sets the resize mode on a QHeaderView section once that section is actually available.
+/** @brief Sets the resize mode on a QHeaderView section once that section is actually available.
  *
  * This is a workaround for QHeaderView asserting when manipulating if the corresponding section
  * hasn't been loaded yet by the corresponding model, as well as forgetting the setting if the

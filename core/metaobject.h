@@ -32,7 +32,7 @@
 
 namespace GammaRay {
 
-/** Compile-time introspection adaptor for non-QObject classes. */
+/** @brief Compile-time introspection adaptor for non-QObject classes. */
 class GAMMARAY_CORE_EXPORT MetaObject
 {
   public:
@@ -80,7 +80,7 @@ class GAMMARAY_CORE_EXPORT MetaObject
     QString m_className;
 };
 
-/** Template implementation of MetaObject. */
+/** @brief Template implementation of MetaObject. */
 template <typename T, typename Base1 = void, typename Base2 = void, typename Base3 = void>
 class MetaObjectImpl : public MetaObject
 {

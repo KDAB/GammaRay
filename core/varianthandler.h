@@ -30,22 +30,22 @@
 
 namespace GammaRay {
 
-/** Variant conversion functions, extendable by plugins. */
+/** @brief Variant conversion functions, extendable by plugins. */
 namespace VariantHandler
 {
-  /** @internal */
+  ///@cond internal
   template <typename RetT> struct Converter
   {
     virtual RetT operator() (const QVariant &v) = 0;
   };
 
-  /** @internal */
   template <typename RetT, typename InputT, typename FuncT> struct ConverterImpl : public Converter<RetT>
   {
     explicit inline ConverterImpl(FuncT converter) : f(converter) {}
     /*override*/ inline RetT operator() (const QVariant &v) { return f(v.value<InputT>()); }
     FuncT f;
   };
+  ///@endcond
 
   /**
    * Returns a human readable string version of the QVariant value.

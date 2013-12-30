@@ -36,7 +36,8 @@ namespace GammaRay {
 
 class Message;
 
-/** Network protocol endpoint.
+/** @brief Network protocol endpoint.
+ *
  *  Contains:
  *  - object address <-> object name mapping
  *  - message handler registration and message dispatching

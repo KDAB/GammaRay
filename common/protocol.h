@@ -32,7 +32,7 @@
 
 namespace GammaRay {
 
-/** Helper functions and constants defining the communication protocol between client and server. */
+/** @brief Helper functions and constants defining the communication protocol between client and server. */
 namespace Protocol {
 
 typedef qint32 PayloadSize;

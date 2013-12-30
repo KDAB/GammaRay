@@ -30,6 +30,7 @@
 
 namespace GammaRay {
 
+/** @brief Client/Server interface of the property editor. */
 class PropertyControllerInterface : public QObject
 {
   Q_OBJECT

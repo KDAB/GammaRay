@@ -32,7 +32,7 @@
 namespace GammaRay {
 
 /**
- * Model showing the content of a QPalette.
+ * @brief Model showing the content of a QPalette.
  */
 class GAMMARAY_UI_EXPORT PaletteModel : public QAbstractTableModel
 {
@@ -44,6 +44,7 @@ class GAMMARAY_UI_EXPORT PaletteModel : public QAbstractTableModel
     void setPalette(const QPalette &palette);
     void setEditable(bool editable);
 
+    ///@cond override
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -56,6 +57,7 @@ class GAMMARAY_UI_EXPORT PaletteModel : public QAbstractTableModel
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    ///@endcond
 
   private:
     QPalette m_palette;

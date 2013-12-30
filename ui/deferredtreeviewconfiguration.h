@@ -35,7 +35,7 @@ class QTreeView;
 namespace GammaRay {
 
 /**
- * A utility helper to configure views for remote content.
+ * @brief A utility helper to configure views for remote content.
  *
  * When @p expandNewContent is set to true, the tree view will stay expanded
  * when new content is added to the model.
@@ -43,7 +43,7 @@ namespace GammaRay {
  * When @p selectNewContent is set to true, the tree view will select new content,
  * if no selection is already present.
  *
- * NOTE: The tree view's model and selectionModel must be set beforehand and not
+ * @note The tree view's model and selectionModel must be set beforehand and not
  * be changed afterwards!
  */
 class GAMMARAY_UI_EXPORT DeferredTreeViewConfiguration : public QObject
