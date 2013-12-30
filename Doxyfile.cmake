@@ -88,7 +88,9 @@ FILE_PATTERNS          = *.cpp \
                          *.hpp \
                          *.dox
 RECURSIVE              = YES
-EXCLUDE                = 
+EXCLUDE                = @CMAKE_SOURCE_DIR@/common/gammaray_common_export.h \
+                         @CMAKE_SOURCE_DIR@/core/gammaray_core_export.h \
+			 @CMAKE_SOURCE_DIR@/ui/gammaray_ui_export.h
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */.svn/* \
                          */.git/* \
