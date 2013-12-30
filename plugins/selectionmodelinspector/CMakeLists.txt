@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 # probe part
 set(gammaray_selectionmodelinspector_plugin_srcs
   selectionmodelinspector.cpp

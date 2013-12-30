@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 # probe part
 set(gammaray_fontbrowser_plugin_srcs
   fontbrowserinterface.cpp

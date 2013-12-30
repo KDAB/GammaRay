@@ -1,8 +1,3 @@
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 set(gammaray_launcher_ui_srcs
   main.cpp
   promolabel.cpp

@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 # probe part
 set(gammaray_codecbrowser_plugin_srcs
   codecbrowser.cpp

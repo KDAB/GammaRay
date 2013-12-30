@@ -1,7 +1,5 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}
-
-  ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)

@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 if(NOT Qt5Core_FOUND)
   # ugly workaround for FindKDE4Internal messing with the install rpath (https://github.com/KDAB/GammaRay/issues/36)
   set(_old_CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH})

@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 set(gammaray_actioninspector_plugin_srcs
   actionvalidator.cpp
   actioninspector.cpp

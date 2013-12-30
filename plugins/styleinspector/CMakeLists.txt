@@ -1,8 +1,3 @@
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 set(gammaray_styleinspector_plugin_srcs
   styleinspector.cpp
   styleinspectorwidget.cpp

@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 set(gammaray_scriptenginedebugger_plugin_srcs
   scriptenginedebugger.cpp
   scriptenginedebuggerwidget.cpp
