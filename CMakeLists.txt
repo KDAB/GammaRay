@@ -122,8 +122,8 @@ if(Qt5Core_FOUND)
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
-  find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtTest QtNetwork)
-  find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg)
+  find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtNetwork)
+  find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
 
   include(${QT_USE_FILE})
   set(HAVE_QT_CONCURRENT true)
