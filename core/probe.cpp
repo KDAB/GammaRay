@@ -304,14 +304,6 @@ void Probe::startupHookReceived()
 
 void Probe::delayedInit()
 {
-  if (qgetenv("GAMMARAY_UNSET_PRELOAD") == "1") {
-    qputenv("LD_PRELOAD", "");
-  }
-  if (qgetenv("GAMMARAY_UNSET_DYLD") == "1") {
-    qputenv("DYLD_INSERT_LIBRARIES", "");
-    qputenv("DYLD_FORCE_FLAT_NAMESPACE", "");
-  }
-
   QCoreApplication::instance()->installEventFilter(this);
 
   QString appName = qApp->applicationName();
