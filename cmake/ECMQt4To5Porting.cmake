@@ -40,8 +40,6 @@ include(MacroAddFileDependencies)
 set(QT_QTGUI_LIBRARIES
   ${Qt5Gui_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
-  ${Qt5PrintSupport_LIBRARIES}
-  ${Qt5Svg_LIBRARIES}
 )
 
 set(QT_INCLUDES
@@ -77,9 +75,6 @@ foreach(_module ${_qt_modules})
     list(APPEND QT_INCLUDES ${Qt5${_module}_INCLUDE_DIRS})
     set(QT_QT${_module_upper}_FOUND ${Qt5${_module}_FOUND})
 endforeach()
-
-list(APPEND QT_QTCORE_LIBRARIES ${Qt5Concurrent_LIBRARIES})
-list(APPEND QT_QTCORE_LIBRARY ${Qt5Concurrent_LIBRARIES})
 
 set(QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick1_LIBRARIES})
 set(QT_QTDECLARATIVE_LIBRARY ${Qt5Quick1_LIBRARIES})

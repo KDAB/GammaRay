@@ -59,6 +59,7 @@ target_link_libraries(gammaray_widget_export_actions
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   ${QT_QTSVG_LIBRARIES}
+  ${Qt5PrintSupport_LIBRARIES}
 
   ${EXTRA_LIBS}
 )
