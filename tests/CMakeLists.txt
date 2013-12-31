@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}
-)
-
 ### BENCH SUITE
 
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)

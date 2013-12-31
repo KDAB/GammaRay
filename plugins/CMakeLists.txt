@@ -1,8 +1,3 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/3rdparty
-)
-
 add_subdirectory(codecbrowser)
 add_subdirectory(fontbrowser)
 add_subdirectory(kjobtracker)

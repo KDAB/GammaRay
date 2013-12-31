@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_BINARY_DIR}
-)
-
 # probe part
 set(gammaray_objectvisualizer_plugin_srcs
   objectvisualizer.cpp

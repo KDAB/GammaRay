@@ -1,9 +1,3 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/3rdparty
-  ${CMAKE_BINARY_DIR}
-)
-
 set(gammaray_client_srcs
   main.cpp
   client.cpp

@@ -487,6 +487,12 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
 )
 
+include_directories(
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/3rdparty
+  ${CMAKE_BINARY_DIR}
+)
+
 include(ExternalProject)
 
 add_subdirectory(common)

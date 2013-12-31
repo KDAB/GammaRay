@@ -1,13 +1,6 @@
 #
 # Shared non-UI code between probe and client
 #
-
-include_directories(
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/3rdparty/
-)
-
 set(gammaray_common_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/klinkitemselectionmodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp

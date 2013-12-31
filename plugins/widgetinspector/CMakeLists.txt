@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_BINARY_DIR}
-)
-
 set(gammaray_widgetinspector_plugin_srcs
   widgetinspector.cpp
   widgetinspectorinterface.cpp

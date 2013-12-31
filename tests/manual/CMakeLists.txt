@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_SOURCE_DIR}
-)
-
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_executable(propertywidgettest
     propertywidgettest.cpp

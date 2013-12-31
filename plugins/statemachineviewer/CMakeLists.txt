@@ -1,7 +1,3 @@
-include_directories(
-  ${CMAKE_BINARY_DIR}
-)
-
 # shared part
 set(gammaray_statemachineviewer_shared_srcs
   statemachineviewerinterface.cpp

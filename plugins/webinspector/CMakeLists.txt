@@ -1,5 +1,3 @@
-include_directories(${CMAKE_BINARY_DIR})
-
 # probe part
 set(gammaray_webinspector_plugin_srcs
   webinspector.cpp
