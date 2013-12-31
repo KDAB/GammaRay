@@ -59,7 +59,11 @@ void WebInspectorWidget::webPageSelected(int index)
   }
 
   else if (ui->webPageComboBox->itemData(index, WebViewModel::WebKitVersionRole).toInt() == 2) {
-    ui->webView->setUrl(QUrl("http://" + Endpoint::instance()->serverAddress() + ":11733"));
+    QUrl url;
+    url.setScheme("http");
+    url.setHost(Endpoint::instance()->serverAddress());
+    url.setPort(Endpoint::defaultPort() + 1);
+    ui->webView->setUrl(url);
     ui->stack->setCurrentWidget(ui->wk2Page);
   }
 

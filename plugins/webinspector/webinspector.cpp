@@ -24,6 +24,7 @@
 #include "webinspector.h"
 #include "webviewmodel.h"
 
+#include <common/endpoint.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
@@ -43,7 +44,7 @@ WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
 
   const QString serverAddress = ProbeSettings::value("TCPServer", QLatin1String("0.0.0.0")).toString();
-  qputenv("QTWEBKIT_INSPECTOR_SERVER", serverAddress.toLocal8Bit() + ":11733");
+  qputenv("QTWEBKIT_INSPECTOR_SERVER", serverAddress.toLocal8Bit() + ":" + QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
 void WebInspector::objectAdded(QObject* obj)
