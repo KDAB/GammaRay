@@ -61,6 +61,7 @@ public:
   static Client* instance();
 
   bool isRemoteClient() const;
+  QString serverAddress() const;
 
 signals:
   /** Emitted when we successfully established a connection and passed the protocol version handshake step. */
@@ -89,6 +90,7 @@ private:
 
     InitComplete = VersionChecked | ObjectMapReceived | ServerInfoReceived
   };
+  QString m_hostName;
   int m_initState;
 };
 

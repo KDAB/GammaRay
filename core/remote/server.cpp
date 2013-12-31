@@ -92,6 +92,11 @@ bool Server::isRemoteClient() const
   return false;
 }
 
+QString Server::serverAddress() const
+{
+  return QHostAddress(QHostAddress::LocalHost).toString();
+}
+
 void Server::newConnection()
 {
   if (isConnected()) {

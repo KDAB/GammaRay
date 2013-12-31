@@ -27,6 +27,7 @@
 
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
+#include <common/endpoint.h>
 
 using namespace GammaRay;
 
@@ -58,7 +59,7 @@ void WebInspectorWidget::webPageSelected(int index)
   }
 
   else if (ui->webPageComboBox->itemData(index, WebViewModel::WebKitVersionRole).toInt() == 2) {
-    ui->webView->setUrl(QUrl("http://localhost:11733")); // TODO determine correctly
+    ui->webView->setUrl(QUrl("http://" + Endpoint::instance()->serverAddress() + ":11733"));
     ui->stack->setCurrentWidget(ui->wk2Page);
   }
 

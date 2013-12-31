@@ -51,6 +51,11 @@ bool Client::isRemoteClient() const
   return true;
 }
 
+QString Client::serverAddress() const
+{
+  return m_hostName;
+}
+
 void Client::connectToHost(const QString &hostName, quint16 port)
 {
   QTcpSocket *sock = new QTcpSocket(this);
@@ -58,6 +63,7 @@ void Client::connectToHost(const QString &hostName, quint16 port)
   connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()));
   sock->connectToHost(hostName, port);
   m_initState = 0;
+  m_hostName = hostName;
 }
 
 void Client::socketConnected()
