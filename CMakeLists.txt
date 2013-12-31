@@ -110,7 +110,7 @@ if(Qt5Core_FOUND)
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
 
-  set(QT_QTWEBKIT_FOUND ${Qt5WebKitWidgets_FOUND}) # backward compat with Qt4 webkit code
+  set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND}) # backward compat with Qt4 webkit code
 
   if(Qt5_POSITION_INDEPENDENT_CODE AND NOT WIN32)
     if(CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement
@@ -134,6 +134,7 @@ else()
     set(HAVE_QT_DESIGNER true)
   endif()
   set(HAVE_QT_PRINTSUPPORT true)
+  set(HAVE_QT_WEBKIT1 ${QT_QTWEBKIT_FOUND})
 endif()
 
 # TODO: Remove me once fixed in ECM module
@@ -215,7 +216,7 @@ macro_log_feature(
 )
 
 macro_log_feature(
-  QT_QTWEBKIT_FOUND
+  HAVE_QT_WEBKIT1
   "WebKit in Qt"
   "A Qt-based web browser engine"
   "included with Qt"

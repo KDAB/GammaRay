@@ -10,6 +10,7 @@ add_subdirectory(objectvisualizer)
 add_subdirectory(selectionmodelinspector)
 add_subdirectory(statemachineviewer)
 add_subdirectory(timertop)
+add_subdirectory(webinspector)
 
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(actioninspector)
@@ -22,7 +23,4 @@ if(QT_QTSCRIPTTOOLS_FOUND OR Qt5ScriptTools_FOUND)
   add_subdirectory(scriptenginedebugger)
 endif()
 
-if(QT_QTWEBKIT_FOUND OR Qt5WebKitWidgets_FOUND)
-  add_subdirectory(webinspector)
-endif()
 
