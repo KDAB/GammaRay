@@ -66,6 +66,36 @@ void WebInspector::objectAdded(QObject* obj)
   prefs->setProperty("developerExtrasEnabled", true);
 }
 
+
+WebInspectorFactory::WebInspectorFactory(QObject* parent): QObject(parent)
+{
+}
+
+QString WebInspectorFactory::id() const
+{
+  return WebInspector::staticMetaObject.className();
+}
+
+void WebInspectorFactory::init(ProbeInterface* probe)
+{
+  new WebInspector(probe, probe->probe());
+}
+
+QStringList WebInspectorFactory::supportedTypes() const
+{
+  QStringList types;
+#ifdef HAVE_QT_WEBKIT1
+  types.push_back(QWebPage::staticMetaObject.className();
+#endif
+  types.push_back("QQuickWebView");
+  return types;
+}
+
+QString WebInspectorFactory::name() const
+{
+  return tr("Web Pages");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(WebInspectorFactory)
 #endif

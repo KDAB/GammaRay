@@ -26,9 +26,6 @@
 
 #include <core/toolfactory.h>
 
-#include <QWebPage>
-#include <QWidget>
-
 namespace GammaRay {
 
 class WebInspector : public QObject
@@ -41,22 +38,18 @@ class WebInspector : public QObject
     void objectAdded(QObject *obj);
 };
 
-class WebInspectorFactory
-  : public QObject, public StandardToolFactory<QWebPage, WebInspector>
+class WebInspectorFactory : public QObject, public ToolFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.WebInspector")
 
   public:
-    explicit WebInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    inline QString name() const
-    {
-      return tr("Web Pages");
-    }
+    explicit WebInspectorFactory(QObject *parent = 0);
+    QString id() const;
+    QString name() const;
+    void init(ProbeInterface* probe);
+    QStringList supportedTypes() const;
 };
 
 }
