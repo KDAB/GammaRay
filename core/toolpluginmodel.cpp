@@ -62,7 +62,7 @@ QVariant ToolPluginModel::data(const QModelIndex& index, int role) const
     case 1:
       return factory->name();
     case 2:
-      return factory->supportedTypes();
+      return factory->supportedTypes().join(", ");
     }
   }
   return QVariant();
