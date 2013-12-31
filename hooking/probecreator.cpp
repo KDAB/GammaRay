@@ -22,7 +22,9 @@
 */
 
 #include "probecreator.h"
-#include "core/probe.h"
+
+#include <common/endpoint.h>
+#include <core/probe.h>
 
 #include <QCoreApplication>
 #include <QMetaObject>
@@ -53,6 +55,10 @@ ProbeCreator::ProbeCreator(Type type)
     qputenv("DYLD_INSERT_LIBRARIES", "");
     qputenv("DYLD_FORCE_FLAT_NAMESPACE", "");
   }
+
+  // HACK the webinspector plugin does this as well, but if the web view is created
+  // too early the env var from there isn't going to reach the web process
+  qputenv("QTWEBKIT_INSPECTOR_SERVER", "0.0.0.0:" + QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
 void ProbeCreator::createProbe()
