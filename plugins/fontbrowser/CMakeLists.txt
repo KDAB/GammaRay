@@ -11,10 +11,12 @@ gammaray_add_plugin(gammaray_fontbrowser_plugin
   ${gammaray_fontbrowser_plugin_srcs}
 )
 
-target_link_libraries(gammaray_fontbrowser_plugin
-  ${QT_QTCORE_LIBRARIES}
-  gammaray_core
-)
+target_link_libraries(gammaray_fontbrowser_plugin gammaray_core)
+if(Qt5Core_FOUND)
+  target_link_libraries(gammaray_fontbrowser_plugin Qt5::Gui)
+else()
+  target_link_libraries(gammaray_fontbrowser_plugin ${QT_QTGUI_LIBRARIES})
+endif()
 
 # ui part
 if((Qt5Widgets_FOUND OR QT_QTGUI_FOUND) AND NOT GAMMARAY_PROBE_ONLY_BUILD)

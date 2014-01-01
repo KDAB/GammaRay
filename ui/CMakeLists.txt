@@ -56,7 +56,12 @@ target_link_libraries(gammaray_ui
   gammaray_common_internal
 )
 
-install(TARGETS gammaray_ui ${INSTALL_TARGETS_DEFAULT_ARGS})
+target_link_libraries(gammaray_ui LINK_INTERFACE_LIBRARIES
+  gammaray_common
+  ${QT_QTGUI_LIBRARIES}
+)
+
+install(TARGETS gammaray_ui EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(gammaray_ui_internal_srcs
   sidepane.cpp

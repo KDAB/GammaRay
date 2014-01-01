@@ -107,7 +107,8 @@ else()
   )
 endif()
 
-install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
+target_link_libraries(gammaray_core LINK_INTERFACE_LIBRARIES gammaray_common ${QT_QTCORE_LIBRARIES})
+install(TARGETS gammaray_core EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 gammaray_install_headers(
   gammaray_core_export.h

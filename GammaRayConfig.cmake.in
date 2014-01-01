@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+# TODO: find_dependency() for Qt
+
+include("${CMAKE_CURRENT_LIST_DIR}/GammaRayTarget.cmake")

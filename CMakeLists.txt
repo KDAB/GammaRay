@@ -161,6 +161,7 @@ set(BIN_INSTALL_DIR "bin")
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
 set(INCLUDE_INSTALL_DIR "include/gammaray")
+set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
 if(WIN32)
   set(PLUGIN_INSTALL_DIR "plugins")
   set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
@@ -553,4 +554,28 @@ if(NOT WITH_VTK)
 endif()
 if(NOT WITH_GRAPHVIZ)
   message(STATUS "Skipped Graphviz discovery due to WITH_GRAPHVIZ option. State machine visualizer plugin will not be built")
+endif()
+
+# CMake package config file generation (only available with CMake >= 2.8.9)
+if(CMAKE_VERSION VERSION_GREATER 2.8.8)
+  include(CMakePackageConfigHelpers)
+  configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in
+                                ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+                                INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+                                PATH_VARS INCLUDE_INSTALL_DIR)
+  write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+                                   VERSION ${GAMMARAY_VERSION}
+                                   COMPATIBILITY SameMajorVersion)
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+    DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+  )
+
+  install(
+    EXPORT GammaRayTargets
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    FILE GammaRayTarget.cmake
+#     NAMESPACE GammaRay::
+  )
 endif()
