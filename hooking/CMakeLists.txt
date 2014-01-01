@@ -21,6 +21,11 @@ add_library(gammaray_probe MODULE ${gammaray_probe_srcs})
 target_link_libraries(gammaray_probe
   gammaray_core
 )
+
+if(NOT WIN32 AND NOT QNXNTO)
+  target_link_libraries(gammaray_probe dl)
+endif()
+
 set_target_properties(gammaray_probe PROPERTIES
   PREFIX ""
   LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}"

@@ -107,9 +107,6 @@ else()
   )
 endif()
 
-if(NOT WIN32 AND NOT QNXNTO)
-  target_link_libraries(gammaray_core dl)
-endif()
 install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 gammaray_install_headers(
