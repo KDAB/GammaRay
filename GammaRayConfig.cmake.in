@@ -1,6 +1,11 @@
 @PACKAGE_INIT@
 
-# TODO: find_dependency() for Qt
+if(@Qt5Core_FOUND@)
+  find_package(Qt5Core @Qt5Core_VERSION_MAJOR@.@Qt5Core_VERSION_MINOR@)
+  find_package(Qt5Network)
+else()
+  find_package(Qt4 @QT_VERSION_MAJOR@.@QT_VERSION_MINOR@)
+endif()
 
 set_and_check(GammaRay_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
 list(APPEND GammaRay_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@/..")
