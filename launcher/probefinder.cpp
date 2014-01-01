@@ -29,7 +29,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
-#include <QFile>
+#include <QFileInfo>
 #include <QString>
 #include <QStringBuilder>
 
@@ -45,13 +45,15 @@ QString findProbe(const QString &baseName, const QString &probeAbi)
     baseName %
     fileExtension();
 
-  if (!QFile::exists(probePath)) {
+  const QFileInfo fi(probePath);
+  const QString canonicalPath = fi.canonicalFilePath();
+  if (!fi.isFile() || !fi.isReadable() || canonicalPath.isEmpty()) {
     qWarning() << "Cannot locate probe" << probePath;
     qWarning() << "This is likely a setup problem, due to an incomplete or partially moved installation.";
     return QString();
   }
 
-  return probePath;
+  return canonicalPath;
 }
 
 QStringList listProbeABIs()
