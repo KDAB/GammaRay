@@ -64,6 +64,7 @@ endif()
 gammaray_install_headers(
   gammaray_common_export.h
   endpoint.h
+  enums.h
   metatypedeclarations.h
   modelroles.h
   objectbroker.h
