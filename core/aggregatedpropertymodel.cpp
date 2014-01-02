@@ -72,12 +72,19 @@ int AggregatedPropertyModel::rowCount(const QModelIndex& parent) const
 
 Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex& index) const
 {
-  return QAbstractItemModel::flags(index);
+  const QModelIndex sourceIndex = mapToSource(index);
+  if (!sourceIndex.isValid())
+    return QAbstractTableModel::flags(QModelIndex());
+
+  return sourceIndex.flags();
 }
 
 QVariant AggregatedPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  return QAbstractItemModel::headerData(section, orientation, role);
+  if (m_models.isEmpty())
+    return QVariant();
+
+  return m_models.first()->headerData(section, orientation, role);
 }
 
 void AggregatedPropertyModel::sourceModelReset()
