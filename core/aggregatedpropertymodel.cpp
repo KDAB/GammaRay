@@ -38,6 +38,7 @@ void AggregatedPropertyModel::addModel(QAbstractItemModel* model)
   beginResetModel(); // FIXME: use insertRows instead
   m_models.append(model);
   connect(model, SIGNAL(modelReset()), this, SLOT(sourceModelReset()));
+  connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(sourceDataChanged(QModelIndex,QModelIndex)));
   // TODO: connect signals
   endResetModel();
 }
@@ -49,6 +50,15 @@ QVariant AggregatedPropertyModel::data(const QModelIndex& index, int role) const
     return QVariant();
 
   return sourceIndex.data(role);
+}
+
+bool AggregatedPropertyModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  const QModelIndex sourceIndex = mapToSource(index);
+  if (!sourceIndex.isValid())
+    return false;
+
+  return const_cast<QAbstractItemModel*>(sourceIndex.model())->setData(sourceIndex, value, role);
 }
 
 int AggregatedPropertyModel::columnCount(const QModelIndex& parent) const
@@ -92,6 +102,14 @@ void AggregatedPropertyModel::sourceModelReset()
   reset();
 }
 
+void AggregatedPropertyModel::sourceDataChanged(const QModelIndex& sourceTopLeft, const QModelIndex& sourceBottomRight)
+{
+  const QModelIndex topLeft = mapFromSource(sourceTopLeft);
+  const QModelIndex bottomRight = mapFromSource(sourceBottomRight);
+  if (topLeft.isValid() && bottomRight.isValid())
+    emit dataChanged(topLeft, bottomRight);
+}
+
 QModelIndex AggregatedPropertyModel::mapToSource(const QModelIndex& aggregatedIndex) const
 {
   if (!aggregatedIndex.isValid())
@@ -106,5 +124,18 @@ QModelIndex AggregatedPropertyModel::mapToSource(const QModelIndex& aggregatedIn
     }
   }
 
+  return QModelIndex();
+}
+
+QModelIndex AggregatedPropertyModel::mapFromSource(const QModelIndex& sourceIndex) const
+{
+  int count = 0;
+  foreach (QAbstractItemModel* model, m_models) {
+    if (model == sourceIndex.model()) {
+      return index(count + sourceIndex.row(), sourceIndex.column());
+    } else {
+      count += model->rowCount();
+    }
+  }
   return QModelIndex();
 }
