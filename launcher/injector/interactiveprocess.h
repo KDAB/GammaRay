@@ -24,6 +24,7 @@
 #define GAMMARAY_INTERACTIVEPROCESS_H
 
 #include <QProcess>
+#include <cstdlib> //for EXIT_STATUS
 
 class InteractiveProcess : public QProcess
 {
