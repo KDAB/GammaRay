@@ -44,7 +44,11 @@ void AggregatedPropertyModel::addModel(QAbstractItemModel* model)
 
 QVariant AggregatedPropertyModel::data(const QModelIndex& index, int role) const
 {
-  return QVariant();
+  const QModelIndex sourceIndex = mapToSource(index);
+  if (!sourceIndex.isValid())
+    return QVariant();
+
+  return sourceIndex.data(role);
 }
 
 int AggregatedPropertyModel::columnCount(const QModelIndex& parent) const
@@ -79,4 +83,21 @@ QVariant AggregatedPropertyModel::headerData(int section, Qt::Orientation orient
 void AggregatedPropertyModel::sourceModelReset()
 {
   reset();
+}
+
+QModelIndex AggregatedPropertyModel::mapToSource(const QModelIndex& aggregatedIndex) const
+{
+  if (!aggregatedIndex.isValid())
+    return QModelIndex();
+
+  int row = aggregatedIndex.row();
+  foreach (QAbstractItemModel *model, m_models) {
+    if (row < model->rowCount()) {
+      return model->index(row, aggregatedIndex.column());
+    } else {
+      row -= model->rowCount();
+    }
+  }
+
+  return QModelIndex();
 }
