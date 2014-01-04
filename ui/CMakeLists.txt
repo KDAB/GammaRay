@@ -13,6 +13,7 @@ set(gammaray_ui_srcs
   deferredresizemodesetter.cpp
   deferredtreeviewconfiguration.cpp
   splashscreen.cpp
+  editabletypesmodel.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
