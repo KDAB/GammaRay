@@ -26,6 +26,7 @@
 
 #include "ui/methodinvocationdialog.h"
 #include "ui/propertyeditor/propertyeditordelegate.h"
+#include "ui/propertyeditor/propertyeditorfactory.h"
 #include "ui/deferredresizemodesetter.h"
 
 #include "variantcontainermodel.h"
@@ -60,7 +61,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   : QWidget(parent),
     m_ui(new Ui_PropertyWidget),
     m_displayState(PropertyWidgetDisplayState::QObject),
-    m_controller(0)
+    m_controller(0),
+    m_newPropertyValue(0)
 {
   m_ui->setupUi(this);
 }
@@ -167,6 +169,14 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
   m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->propertySearchLine->setProxy(proxy);
   m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
+  connect(m_ui->newPropertyType, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(updateNewPropertyValueEditor()));
+  updateNewPropertyValueEditor();
+  connect(m_ui->newPropertyName, SIGNAL(textChanged(QString)),
+          this, SLOT(validateNewProperty()));
+  validateNewProperty();
+  connect(m_ui->newPropertyButton, SIGNAL(clicked()),
+          this, SLOT(addNewProperty()));
 
   if (m_controller) {
     disconnect(m_controller,
@@ -295,3 +305,33 @@ void PropertyWidget::onDoubleClick(const QModelIndex &index)
 #endif
 }
 
+void PropertyWidget::updateNewPropertyValueEditor()
+{
+  delete m_newPropertyValue;
+
+  const QVariant::Type type = QVariant::String; // TODO add real model with supported types
+
+  m_newPropertyValue = PropertyEditorFactory::instance()->createEditor(type, this);
+  m_ui->newPropertyLayout->insertWidget(5, m_newPropertyValue);
+  m_ui->newPropertyValueLabel->setBuddy(m_newPropertyValue);
+}
+
+void PropertyWidget::validateNewProperty()
+{
+  Q_ASSERT(m_newPropertyValue);
+  m_ui->newPropertyButton->setEnabled(!m_ui->newPropertyName->text().isEmpty());
+}
+
+void PropertyWidget::addNewProperty()
+{
+  const QVariant::Type type = QVariant::String; // TODO add read model with supported types
+
+  const QByteArray editorPropertyName = PropertyEditorFactory::instance()->valuePropertyName(type);
+
+  const QVariant value = m_newPropertyValue->property(editorPropertyName);
+
+  qDebug() << Q_FUNC_INFO << "TODO: add new dynamic property:" << m_ui->newPropertyName->text() << value;
+
+  m_ui->newPropertyName->clear();
+  updateNewPropertyValueEditor();
+}

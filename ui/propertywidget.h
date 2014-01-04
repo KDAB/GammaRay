@@ -56,6 +56,9 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
     void methodConextMenu(const QPoint &pos);
 
     void onDoubleClick(const QModelIndex &index);
+    void updateNewPropertyValueEditor();
+    void validateNewProperty();
+    void addNewProperty();
 
   private:
     /// Decides if widget is supposed to be shown at this display state
@@ -72,6 +75,8 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
 
     PropertyWidgetDisplayState::State m_displayState;
     PropertyControllerInterface *m_controller;
+
+    QWidget *m_newPropertyValue;
 };
 
 }
