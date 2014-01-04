@@ -30,6 +30,7 @@
 #include "ui/deferredresizemodesetter.h"
 
 #include "variantcontainermodel.h"
+#include "editabletypesmodel.h"
 
 #include "common/objectbroker.h"
 #include "common/modelroles.h"
@@ -169,6 +170,12 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
   m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->propertySearchLine->setProxy(proxy);
   m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
+  EditableTypesModel *typesModel = new EditableTypesModel(this);
+  proxy = new QSortFilterProxyModel(this);
+  proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+  proxy->setSourceModel(typesModel);
+  proxy->sort(0);
+  m_ui->newPropertyType->setModel(proxy);
   connect(m_ui->newPropertyType, SIGNAL(currentIndexChanged(int)),
           this, SLOT(updateNewPropertyValueEditor()));
   updateNewPropertyValueEditor();
@@ -305,11 +312,16 @@ void PropertyWidget::onDoubleClick(const QModelIndex &index)
 #endif
 }
 
+static PropertyEditorFactory::TypeId selectedTypeId(QComboBox* box)
+{
+  return static_cast<PropertyEditorFactory::TypeId>(box->itemData(box->currentIndex(), Qt::UserRole).toInt());
+}
+
 void PropertyWidget::updateNewPropertyValueEditor()
 {
   delete m_newPropertyValue;
 
-  const QVariant::Type type = QVariant::String; // TODO add real model with supported types
+  const PropertyEditorFactory::TypeId type = selectedTypeId(m_ui->newPropertyType);
 
   m_newPropertyValue = PropertyEditorFactory::instance()->createEditor(type, this);
   m_ui->newPropertyLayout->insertWidget(5, m_newPropertyValue);
@@ -324,7 +336,7 @@ void PropertyWidget::validateNewProperty()
 
 void PropertyWidget::addNewProperty()
 {
-  const QVariant::Type type = QVariant::String; // TODO add read model with supported types
+  const PropertyEditorFactory::TypeId type = selectedTypeId(m_ui->newPropertyType);
 
   const QByteArray editorPropertyName = PropertyEditorFactory::instance()->valuePropertyName(type);
   const QVariant value = m_newPropertyValue->property(editorPropertyName);
