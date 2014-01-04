@@ -34,13 +34,15 @@ using namespace GammaRay;
 
 PropertyEditorFactory::PropertyEditorFactory()
 {
-  registerEditor(QVariant::Color, new QStandardItemEditorCreator<PropertyColorEditor>());
-  registerEditor(QVariant::Font, new QStandardItemEditorCreator<PropertyFontEditor>());
-  registerEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>());
-  registerEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
-  registerEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
-  registerEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
-  registerEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
+  initBuiltInTypes();
+
+  addEditor(QVariant::Color, new QStandardItemEditorCreator<PropertyColorEditor>());
+  addEditor(QVariant::Font, new QStandardItemEditorCreator<PropertyFontEditor>());
+  addEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>());
+  addEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
+  addEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
+  addEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
+  addEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
 }
 
 PropertyEditorFactory* PropertyEditorFactory::instance()
@@ -50,11 +52,7 @@ PropertyEditorFactory* PropertyEditorFactory::instance()
 }
 
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-QWidget *PropertyEditorFactory::createEditor(QVariant::Type type, QWidget *parent) const
-#else
-QWidget *PropertyEditorFactory::createEditor(int type, QWidget *parent) const
-#endif
+QWidget *PropertyEditorFactory::createEditor(TypeId type, QWidget *parent) const
 {
   QWidget *w = QItemEditorFactory::createEditor(type, parent);
   if (!w) {
@@ -64,4 +62,28 @@ QWidget *PropertyEditorFactory::createEditor(int type, QWidget *parent) const
   // the read-only view is still in the background usually, so transparency is not a good choice here
   w->setAutoFillBackground(true);
   return w;
+}
+
+QVector< int > PropertyEditorFactory::supportedTypes()
+{
+  return instance()->m_supportedTypes;
+}
+
+void PropertyEditorFactory::initBuiltInTypes()
+{
+  m_supportedTypes
+    << QVariant::Bool
+    << QVariant::Double
+    << QVariant::Int
+    << QVariant::UInt
+    << QVariant::Date
+    << QVariant::DateTime
+    << QVariant::String
+    << QVariant::Time;
+}
+
+void PropertyEditorFactory::addEditor(PropertyEditorFactory::TypeId type, QItemEditorCreatorBase* creator)
+{
+  registerEditor(type, creator);
+  m_supportedTypes.push_back(type);
 }

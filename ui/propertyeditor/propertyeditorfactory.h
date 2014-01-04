@@ -25,6 +25,7 @@
 #define GAMMARAY_PROPERTYEDITORFACTORY_H
 
 #include <QItemEditorFactory>
+#include <QVector>
 
 namespace GammaRay {
 
@@ -35,13 +36,23 @@ class PropertyEditorFactory : public QItemEditorFactory
     static PropertyEditorFactory *instance();
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    virtual QWidget *createEditor(QVariant::Type type, QWidget *parent) const;
+    typedef QVariant::Type TypeId;
 #else
-    virtual QWidget *createEditor(int type, QWidget *parent) const;
+    typedef int TypeId;
 #endif
+
+    QWidget *createEditor(TypeId type, QWidget *parent) const;
+
+    static QVector<int> supportedTypes();
 
   protected:
     PropertyEditorFactory();
+
+  private:
+    void initBuiltInTypes();
+    void addEditor(TypeId type, QItemEditorCreatorBase *creator);
+
+    QVector<int> m_supportedTypes;
 };
 
 }
