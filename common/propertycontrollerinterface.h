@@ -43,6 +43,7 @@ class PropertyControllerInterface : public QObject
   public slots:
     virtual void activateMethod() = 0;
     virtual void invokeMethod(Qt::ConnectionType type) = 0;
+    virtual void setProperty(const QString &name, const QVariant &value) = 0;
 
   signals:
     void displayStateChanged(GammaRay::PropertyWidgetDisplayState::State displayState);

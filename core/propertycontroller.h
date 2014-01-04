@@ -62,6 +62,7 @@ public:
 public slots:
   void activateMethod();
   void invokeMethod(Qt::ConnectionType type);
+  void setProperty(const QString& name, const QVariant& value);
 
 private slots:
   void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);

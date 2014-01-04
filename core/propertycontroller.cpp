@@ -222,3 +222,9 @@ void PropertyController::invokeMethod(Qt::ConnectionType connectionType)
   m_methodArgumentModel->setMethod(QMetaMethod());
 }
 
+void PropertyController::setProperty(const QString& name, const QVariant& value)
+{
+  if (!m_object)
+    return;
+  m_object->setProperty(name.toUtf8(), value);
+}

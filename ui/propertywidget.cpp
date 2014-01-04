@@ -327,10 +327,8 @@ void PropertyWidget::addNewProperty()
   const QVariant::Type type = QVariant::String; // TODO add read model with supported types
 
   const QByteArray editorPropertyName = PropertyEditorFactory::instance()->valuePropertyName(type);
-
   const QVariant value = m_newPropertyValue->property(editorPropertyName);
-
-  qDebug() << Q_FUNC_INFO << "TODO: add new dynamic property:" << m_ui->newPropertyName->text() << value;
+  m_controller->setProperty(m_ui->newPropertyName->text(), value);
 
   m_ui->newPropertyName->clear();
   updateNewPropertyValueEditor();

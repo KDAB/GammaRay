@@ -25,6 +25,7 @@
 
 #include <common/endpoint.h>
 #include <common/metatypedeclarations.h>
+#include <common/variantwrapper.h>
 
 using namespace GammaRay;
 
@@ -49,3 +50,7 @@ void PropertyControllerClient::invokeMethod(Qt::ConnectionType type)
   Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << QVariant::fromValue(type));
 }
 
+void PropertyControllerClient::setProperty(const QString& propertyName, const QVariant& value)
+{
+  Endpoint::instance()->invokeObject(name(), "setProperty", QVariantList() << QVariant::fromValue(propertyName) << VariantWrapper(value));
+}
