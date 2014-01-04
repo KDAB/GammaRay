@@ -22,6 +22,7 @@
 */
 
 #include "objectdynamicpropertymodel.h"
+#include "varianthandler.h"
 
 #include <QEvent>
 
@@ -51,7 +52,7 @@ QVariant ObjectDynamicPropertyModel::data(const QModelIndex &index, int role) co
     if (index.column() == 0) {
       return QString::fromUtf8(propName);
     } else if (index.column() == 1) {
-      return propValue;
+      return VariantHandler::displayString(propValue);
     } else if (index.column() == 2) {
       return propValue.typeName();
     }
