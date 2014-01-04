@@ -28,6 +28,9 @@ endif()
 add_executable(minimalcoreapplication minimalcoreapplication.cpp)
 target_link_libraries(minimalcoreapplication ${QT_QTCORE_LIBRARIES})
 
+add_executable(propertytest propertytest.cpp)
+target_link_libraries(propertytest ${QT_QTCORE_LIBRARIES})
+
 if(QT_QTWEBKIT_FOUND)
   add_executable(wk1application wk1application.cpp)
   target_link_libraries(wk1application
