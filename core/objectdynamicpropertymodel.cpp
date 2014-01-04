@@ -55,6 +55,8 @@ QVariant ObjectDynamicPropertyModel::data(const QModelIndex &index, int role) co
       return role == Qt::EditRole ? propValue : VariantHandler::displayString(propValue);
     } else if (index.column() == 2) {
       return propValue.typeName();
+    } else if (index.column() == 3) {
+      return tr("<dynamic>");
     }
   }
 
@@ -91,14 +93,6 @@ Qt::ItemFlags ObjectDynamicPropertyModel::flags(const QModelIndex &index) const
   }
 
   return flags | Qt::ItemIsEditable;
-}
-
-int ObjectDynamicPropertyModel::columnCount(const QModelIndex &parent) const
-{
-  if (parent.isValid()) {
-    return 0;
-  }
-  return 3;
 }
 
 int ObjectDynamicPropertyModel::rowCount(const QModelIndex &parent) const

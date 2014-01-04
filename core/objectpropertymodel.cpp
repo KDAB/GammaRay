@@ -63,6 +63,14 @@ void ObjectPropertyModel::setObject(QObject *object)
   reset();
 }
 
+int ObjectPropertyModel::columnCount(const QModelIndex& parent) const
+{
+  if (parent.isValid()) {
+    return 0;
+  }
+  return 4;
+}
+
 QVariant ObjectPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {

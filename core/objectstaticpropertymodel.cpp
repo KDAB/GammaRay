@@ -109,14 +109,6 @@ bool ObjectStaticPropertyModel::setData(const QModelIndex &index, const QVariant
   return ObjectPropertyModel::setData(index, value, role);
 }
 
-int ObjectStaticPropertyModel::columnCount(const QModelIndex &parent) const
-{
-  if (parent.isValid()) {
-    return 0;
-  }
-  return 4;
-}
-
 int ObjectStaticPropertyModel::rowCount(const QModelIndex &parent) const
 {
   if (!m_obj || parent.isValid()) {
