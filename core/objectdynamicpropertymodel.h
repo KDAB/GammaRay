@@ -45,6 +45,12 @@ class ObjectDynamicPropertyModel : public ObjectPropertyModel
 protected:
     void monitorObject(QObject *obj);
     void unmonitorObject(QObject *obj);
+
+private slots:
+    void updatePropertyCount();
+
+private:
+    int m_propertyCount;
 };
 
 }

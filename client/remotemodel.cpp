@@ -269,6 +269,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       if (node == m_root)
         break;
 
+      Q_ASSERT(node);
       Q_ASSERT(beginIndex.last().first <= endIndex.last().first);
       Q_ASSERT(beginIndex.last().second <= endIndex.last().second);
 

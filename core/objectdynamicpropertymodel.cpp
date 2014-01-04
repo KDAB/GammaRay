@@ -30,6 +30,7 @@ using namespace GammaRay;
 ObjectDynamicPropertyModel::ObjectDynamicPropertyModel(QObject *parent)
   : ObjectPropertyModel(parent)
 {
+  connect(this, SIGNAL(modelReset()), SLOT(updatePropertyCount()));
 }
 
 QVariant ObjectDynamicPropertyModel::data(const QModelIndex &index, int role) const
@@ -120,8 +121,19 @@ void ObjectDynamicPropertyModel::unmonitorObject(QObject* obj)
 bool ObjectDynamicPropertyModel::eventFilter(QObject* receiver, QEvent* event)
 {
   if (receiver == m_obj && event->type() == QEvent::DynamicPropertyChange) {
-    // FIXME: detect addition/removals, send dataChanged for the affected cell only
-    updateAll();
+    const int newPropertyCount = m_obj->dynamicPropertyNames().size();
+    if (newPropertyCount != m_propertyCount) {
+      // FIXME: this can be done more efficiently...
+      reset();
+    } else {
+      // FIXME: send dataChanged for the affected cell only
+      updateAll();
+    }
   }
   return ObjectPropertyModel::eventFilter(receiver, event);
+}
+
+void ObjectDynamicPropertyModel::updatePropertyCount()
+{
+  m_propertyCount = rowCount();
 }
