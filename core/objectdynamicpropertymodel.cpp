@@ -71,6 +71,7 @@ bool ObjectDynamicPropertyModel::setData(const QModelIndex &index, const QVarian
   if (role == Qt::EditRole) {
     const QByteArray propName = propNames.at(index.row());
     m_obj.data()->setProperty(propName, value);
+    emit dataChanged(index, index);
     return true;
   }
 
