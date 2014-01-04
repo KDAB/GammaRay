@@ -23,6 +23,8 @@
 
 #include "objectdynamicpropertymodel.h"
 
+#include <QEvent>
+
 using namespace GammaRay;
 
 ObjectDynamicPropertyModel::ObjectDynamicPropertyModel(QObject *parent)
@@ -105,3 +107,21 @@ int ObjectDynamicPropertyModel::rowCount(const QModelIndex &parent) const
   return m_obj.data()->dynamicPropertyNames().size();
 }
 
+void ObjectDynamicPropertyModel::monitorObject(QObject* obj)
+{
+  obj->installEventFilter(this);
+}
+
+void ObjectDynamicPropertyModel::unmonitorObject(QObject* obj)
+{
+  obj->removeEventFilter(this);
+}
+
+bool ObjectDynamicPropertyModel::eventFilter(QObject* receiver, QEvent* event)
+{
+  if (receiver == m_obj && event->type() == QEvent::DynamicPropertyChange) {
+    // FIXME: detect addition/removals, send dataChanged for the affected cell only
+    updateAll();
+  }
+  return ObjectPropertyModel::eventFilter(receiver, event);
+}

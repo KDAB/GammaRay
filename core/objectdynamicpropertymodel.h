@@ -39,6 +39,12 @@ class ObjectDynamicPropertyModel : public ObjectPropertyModel
     Qt::ItemFlags flags(const QModelIndex &index) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+    bool eventFilter(QObject *receiver, QEvent *event);
+
+protected:
+    void monitorObject(QObject *obj);
+    void unmonitorObject(QObject *obj);
 };
 
 }
