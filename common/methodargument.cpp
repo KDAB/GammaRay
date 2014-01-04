@@ -22,6 +22,7 @@
 */
 
 #include "methodargument.h"
+#include "variantwrapper.h"
 
 #include <QSharedData>
 #include <QMetaType>
@@ -38,6 +39,7 @@ class GammaRay::MethodArgumentPrivate : public QSharedData
       value = other.value;
       name = other.name;
       data = 0;
+      unwrapVariant = true;
     }
 
     ~MethodArgumentPrivate()
@@ -49,6 +51,7 @@ class GammaRay::MethodArgumentPrivate : public QSharedData
     QVariant value;
     QByteArray name;
     void *data;
+    bool unwrapVariant;
 };
 
 MethodArgument::MethodArgument() : d(new MethodArgumentPrivate)
@@ -57,8 +60,15 @@ MethodArgument::MethodArgument() : d(new MethodArgumentPrivate)
 
 MethodArgument::MethodArgument(const QVariant& v) : d(new MethodArgumentPrivate)
 {
-  d->value = v;
-  d->name = v.typeName();
+  if (v.userType() == qMetaTypeId<VariantWrapper>()) {
+    d->value = v.value<VariantWrapper>().variant();
+    d->unwrapVariant = false;
+    d->name = "QVariant";
+  } else {
+    d->value = v;
+    d->unwrapVariant = true;
+    d->name = v.typeName();
+  }
 }
 
 MethodArgument::MethodArgument(const MethodArgument& other) : d(other.d)
@@ -78,9 +88,13 @@ MethodArgument& MethodArgument::operator=(const MethodArgument& other)
 MethodArgument::operator QGenericArgument() const
 {
   if (d->value.isValid()) {
-    d->data = QMetaType::construct(d->value.userType(), d->value.constData());
-    Q_ASSERT(d->data);
-    return QGenericArgument(d->name.data(), d->data);
+    if (d->unwrapVariant) {
+      d->data = QMetaType::construct(d->value.userType(), d->value.constData());
+      Q_ASSERT(d->data);
+      return QGenericArgument(d->name.data(), d->data);
+    } else {
+      return QGenericArgument(d->name.data(), &d->value);
+    }
   }
   return QGenericArgument();
 }

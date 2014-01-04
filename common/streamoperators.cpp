@@ -24,6 +24,7 @@
 #include "streamoperators.h"
 #include "enums.h"
 #include "metatypedeclarations.h"
+#include "variantwrapper.h"
 
 #include <QDataStream>
 #include <QMetaMethod>
@@ -54,4 +55,6 @@ void StreamOperators::registerOperators()
   qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
   qRegisterMetaTypeStreamOperators<PropertyWidgetDisplayState::State>();
   qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
+
+  qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
 }
