@@ -105,15 +105,13 @@ if(Qt5Core_FOUND)
   find_package(Qt5WebKitWidgets 5.0.2 QUIET) # 5.0.[01] has a code generation bug in uic that fails to generate proper code for webkitwidget classes
 
   include("cmake/ECMQt4To5Porting.cmake")
-  include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 
   set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
   set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
   set(HAVE_QT_SVG ${Qt5Svg_FOUND})
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
-
-  set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND}) # backward compat with Qt4 webkit code
+  set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND})
 
   if(Qt5_POSITION_INDEPENDENT_CODE AND NOT WIN32)
     if(CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement

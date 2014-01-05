@@ -25,6 +25,9 @@ if(NOT WIN32)
 endif()
 add_library(gammaray_launcher_shared STATIC ${gammaray_launcher_shared_srcs})
 target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES} gammaray_common)
+if(HAVE_QT_WIDGETS)
+  target_link_libraries(gammaray_launcher_shared ${QT_QTGUI_LIBRARIES})
+endif()
 
 # command line launcher
 set(gammaray_runner_srcs
@@ -34,11 +37,7 @@ set(gammaray_runner_srcs
 
 add_executable(gammaray ${gammaray_runner_srcs})
 
-target_link_libraries(gammaray ${QT_QTCORE_LIBRARIES} gammaray_launcher_shared gammaray_common)
-if(HAVE_QT_WIDGETS)
-  # needed for style inspector
-  target_link_libraries(gammaray ${QT_QTGUI_LIBRARIES})
-endif()
+target_link_libraries(gammaray gammaray_launcher_shared)
 
 if(QNXNTO)
   target_link_libraries(gammaray cpp)

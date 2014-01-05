@@ -51,7 +51,6 @@ set_target_properties(gammaray_ui PROPERTIES
 
 target_link_libraries(gammaray_ui
   ${QT_QTCORE_LIBRARIES}
-  ${QT_QTCONCURRENT_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   gammaray_common_internal
 )
