@@ -26,6 +26,7 @@
 #include "util.h"
 
 #include <QMetaProperty>
+#include <QStringList>
 
 using namespace GammaRay;
 
@@ -77,19 +78,7 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
       return prop.read(m_obj.data());
     }
   } else if (role == Qt::ToolTipRole) {
-    const QString toolTip =
-      tr("Constant: %1\nDesignable: %2\nFinal: %3\nResetable: %4\n"
-         "Has notification: %5\nScriptable: %6\nStored: %7\nUser: %8\nWritable: %9").
-      arg(translateBool(prop.isConstant())).
-      arg(translateBool(prop.isDesignable(m_obj.data()))).
-      arg(translateBool(prop.isFinal())).
-      arg(translateBool(prop.isResettable())).
-      arg(translateBool(prop.hasNotifySignal())).
-      arg(translateBool(prop.isScriptable(m_obj.data()))).
-      arg(translateBool(prop.isStored(m_obj.data()))).
-      arg(translateBool(prop.isUser(m_obj.data()))).
-      arg(translateBool(prop.isWritable()));
-    return toolTip;
+    return detailString(prop);
   }
 
   return QVariant();
@@ -133,3 +122,28 @@ Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
   return flags;
 }
 
+QString ObjectStaticPropertyModel::detailString(const QMetaProperty& prop) const
+{
+  QStringList s;
+  s << tr("Constant: %1").arg(translateBool(prop.isConstant()));
+  s << tr("Designable: %1").arg(translateBool(prop.isDesignable(m_obj.data())));
+  s << tr("Final: %1").arg(translateBool(prop.isFinal()));
+  if (prop.hasNotifySignal()) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    s << tr("Notification: %1").arg(prop.notifySignal().signature());
+#else
+    s << tr("Notification: %1").arg(QString::fromUtf8(prop.notifySignal().methodSignature()));
+#endif
+  } else {
+    s << tr("Notification: no");
+  }
+  s << tr("Resetable: %1").arg(translateBool(prop.isResettable()));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+  s << tr("Revision: %1").arg(prop.revision());
+#endif
+  s << tr("Scriptable: %1").arg(translateBool(prop.isScriptable(m_obj.data())));
+  s << tr("Stored: %1").arg(translateBool(prop.isStored(m_obj.data())));
+  s << tr("User: %1").arg(translateBool(prop.isUser(m_obj.data())));
+  s << tr("Writable: %1").arg(translateBool(prop.isWritable()));
+  return s.join("\n");
+}

@@ -38,6 +38,9 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
+
+  private:
+    QString detailString(const QMetaProperty& prop) const;
 };
 
 }
