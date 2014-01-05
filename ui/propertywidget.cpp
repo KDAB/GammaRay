@@ -170,6 +170,8 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
   m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->propertySearchLine->setProxy(proxy);
   m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
+  connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(propertyContextMenu(QPoint)));
   EditableTypesModel *typesModel = new EditableTypesModel(this);
   proxy = new QSortFilterProxyModel(this);
   proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
@@ -344,4 +346,21 @@ void PropertyWidget::addNewProperty()
 
   m_ui->newPropertyName->clear();
   updateNewPropertyValueEditor();
+}
+
+void PropertyWidget::propertyContextMenu(const QPoint& pos)
+{
+  const QModelIndex index = m_ui->propertyView->indexAt(pos);
+  if (!index.isValid()) {
+    return;
+  }
+
+  // TODO: check if this is a dynamic property
+  QMenu contextMenu;
+  contextMenu.addAction(tr("Remove"));
+
+  if (contextMenu.exec(m_ui->propertyView->viewport()->mapToGlobal(pos))) {
+    const QString propertyName = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
+    m_controller->setProperty(propertyName, QVariant());
+  }
 }

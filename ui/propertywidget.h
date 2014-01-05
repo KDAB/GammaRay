@@ -59,6 +59,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
     void updateNewPropertyValueEditor();
     void validateNewProperty();
     void addNewProperty();
+    void propertyContextMenu(const QPoint &pos);
 
   private:
     /// Decides if widget is supposed to be shown at this display state
