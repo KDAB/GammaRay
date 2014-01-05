@@ -1,6 +1,3 @@
-# Enable RPATH, make gammaray_probe find gammaray_core (same directory)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
-
 set(gammaray_probe_srcs
   probecreator.cpp
   hooks.cpp
