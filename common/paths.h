@@ -55,6 +55,9 @@ namespace Paths
    */
   GAMMARAY_COMMON_EXPORT QString probePath(const QString& probeABI);
 
+  /** Returns the path containing the GammaRay injector executable. */
+  GAMMARAY_COMMON_EXPORT QString binPath();
+
   /** Returns the path containing helper executables. */
   GAMMARAY_COMMON_EXPORT QString libexecPath();
 

@@ -63,6 +63,11 @@ QString probePath(const QString& probeABI)
     + probeABI;
 }
 
+QString binPath()
+{
+  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_BIN_INSTALL_DIR);
+}
+
 QString libexecPath()
 {
   return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_LIBEXEC_INSTALL_DIR);

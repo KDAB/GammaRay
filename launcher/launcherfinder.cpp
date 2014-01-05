@@ -47,8 +47,7 @@ QString LauncherFinder::findLauncher(LauncherFinder::Type type)
 
   QStringList appPaths; //a list of all the paths we have searched
 
-  QString appPath =
-    QCoreApplication::applicationDirPath() + QDir::separator() + fileName;
+  QString appPath = Paths::binPath() + QDir::separator() + fileName;
   QFileInfo fi(appPath);
   if (fi.isExecutable()) {
     return fi.absoluteFilePath();
