@@ -139,3 +139,11 @@ QModelIndex AggregatedPropertyModel::mapFromSource(const QModelIndex& sourceInde
   }
   return QModelIndex();
 }
+
+QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) const
+{
+  const QModelIndex sourceIndex = mapToSource(index);
+  if (index.isValid())
+    return sourceIndex.model()->itemData(sourceIndex);
+  return QMap<int, QVariant>();
+}
