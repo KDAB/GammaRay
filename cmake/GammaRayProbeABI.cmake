@@ -35,6 +35,10 @@ endif()
 
 # processor architecture
 # this is a bit messy since CMAKE_SYSTEM_PROCESSOR seems to contain the host CPU rather than the target architecture sometimes
+# and is empty on cross-builds by default
+if(NOT CMAKE_SYSTEM_PROCESSOR)
+  message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+endif()
 
 # on Windows our best bet is CMAKE_SIZEOF_VOID_P and assuming a x86 host==target build
 if(WIN32)
@@ -43,11 +47,16 @@ if(WIN32)
   else()
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
   endif()
-else()
-# on UNIX CMAKE_SYSTEM_PROCESSOR seems more reliable, as long as we don't cross-compile, then it's empty...
-  if(NOT CMAKE_SYSTEM_PROCESSOR)
-    message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+
+# on Mac we apparently always get i386 on x86
+elseif(APPLE)
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
+  else()
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
   endif()
+
+else()
   set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
