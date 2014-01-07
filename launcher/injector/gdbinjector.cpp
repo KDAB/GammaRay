@@ -57,7 +57,9 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
 
   execGdbCmd("break main");
   execGdbCmd("run");
+#ifndef Q_OS_MAC
   execGdbCmd("sha QtCore");
+#endif
   // either this
   addBreakpoint("QCoreApplication::exec");
   // or this for unit tests should hit
