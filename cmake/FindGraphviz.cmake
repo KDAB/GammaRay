@@ -22,6 +22,7 @@
 # Redistribution and use is allowed according to the terms of the GPLv3+ license.
 
 include(CheckIncludeFiles)
+include(CMakePushCheckState)
 
 if(NOT GRAPHVIZ_MIN_VERSION)
   set(GRAPHVIZ_MIN_VERSION "2.00")
@@ -79,7 +80,10 @@ find_library(GRAPHVIZ_PATHPLAN_LIBRARY NAMES pathplan
   HINTS ${_GRAPHVIZ_LIBRARY_DIR} PATH_SUFFIXES ${GRAPHVIZ_LIB_PATH_SUFFIX}
   ${_GRAPHVIZ_FIND_OPTS})
 
+cmake_push_check_state()
+set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${GRAPHVIZ_INCLUDE_DIR})
 check_include_files(graphviz/graphviz_version.h HAVE_GRAPHVIZ_VERSION_H)
+cmake_pop_check_state()
 
 if(GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_GVC_LIBRARY
     AND (GRAPHVIZ_CGRAPH_LIBRARY OR GRAPHVIZ_GRAPH_LIBRARY) AND GRAPHVIZ_PATHPLAN_LIBRARY)
