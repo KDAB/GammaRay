@@ -14,7 +14,11 @@ if(WIN32 OR APPLE)
 endif()
 
 # probe lib
-add_library(gammaray_probe MODULE ${gammaray_probe_srcs})
+if(APPLE) # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
+  add_library(gammaray_probe SHARED ${gammaray_probe_srcs})
+else()
+  add_library(gammaray_probe MODULE ${gammaray_probe_srcs})
+endif()
 target_link_libraries(gammaray_probe
   gammaray_core
 )
