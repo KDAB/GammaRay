@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     QGuiPlatformPlugin defaultGuiPlatform;
     defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName());
 #else
-    foreach (const QString &styleName, QGuiApplicationPrivate::platform_theme->defaultThemeHint(QPlatformTheme::StyleNames).toStringList()) {
+    foreach (const QString &styleName, QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).toStringList()) {
       if ((defaultStyle = QStyleFactory::create(styleName))) {
         break;
       }
