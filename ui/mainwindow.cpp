@@ -127,6 +127,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   connect(ui->toolSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectInitialTool()));
   connect(ui->toolSelector->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(selectInitialTool()));
 
+#ifdef Q_OS_MAC
+  ui->groupBox->setFlat(true);
+  ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
+#endif
+
   // get some sane size on startup
   resize(1024, 768);
 }
@@ -225,7 +230,13 @@ void MainWindow::toolSelected()
   Q_ASSERT(toolWidget);
   if (ui->toolStack->indexOf(toolWidget) < 0) { // newly created
     if (toolWidget->layout()) {
+#ifndef Q_OS_MAC
       toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
+#else
+      QMargins margins = toolWidget->layout()->contentsMargins();
+      margins.setLeft(0);
+      toolWidget->layout()->setContentsMargins(margins);
+#endif
     }
     ui->toolStack->addWidget(toolWidget);
   }

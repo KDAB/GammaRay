@@ -50,6 +50,7 @@ SidePane::SidePane(QWidget *parent)
   : QListView(parent)
 {
   viewport()->setAutoFillBackground(false);
+  setAttribute(Qt::WA_MacShowFocusRect, false);
 
   setItemDelegate(new Delegate(this));
 }
