@@ -9,9 +9,6 @@
 
 project(GammaRay)
 
-option(WITH_VTK "Build with the VTK virtualization toolkit, if found. Needed for the object visualizer plugin" True)
-option(WITH_GRAPHVIZ "Build with the Graphviz virtualization software, if found. Needed for the state machine visualizer plugin" True)
-
 if(WIN32)
   # needed for automoc and QtMain to work correctly
   cmake_minimum_required(VERSION 2.8.11)
@@ -374,7 +371,7 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
   endif()
 endif()
 
-if(WITH_GRAPHVIZ)
+if(NOT CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ)
   set(GRAPHVIZ_MIN_VERSION "2.20")
   find_package(Graphviz)
   macro_log_feature(
@@ -394,7 +391,7 @@ if(GRAPHVIZ_FOUND)
   add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
 endif()
 
-if(WITH_VTK)
+if(NOT CMAKE_DISABLE_FIND_PACKAGE_VTK)
   #VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
   find_path(VTK_DIR VTKConfig.cmake
     /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
@@ -561,11 +558,11 @@ if(DOXYGEN_FOUND)
 endif()
 
 macro_display_feature_log()
-if(NOT WITH_VTK)
-  message(STATUS "Skipped VTK discovery due to WITH_VTK option. Object visualizer plugin will not be built")
+if(CMAKE_DISABLE_FIND_PACKAGE_VTK)
+  message(STATUS "Skipped VTK discovery due to the CMAKE_DISABLE_FIND_PACKAGE_VTK option. Object visualizer plugin will not be built")
 endif()
-if(NOT WITH_GRAPHVIZ)
-  message(STATUS "Skipped Graphviz discovery due to WITH_GRAPHVIZ option. State machine visualizer plugin will not be built")
+if(CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ)
+  message(STATUS "Skipped Graphviz discovery due to the CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ option. State machine visualizer plugin will not be built")
 endif()
 
 # CMake package config file generation (only available with CMake >= 2.8.9)
