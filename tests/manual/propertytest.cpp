@@ -28,7 +28,7 @@
 class MyTestObject : public QObject
 {
   Q_OBJECT
-  Q_PROPERTY(int staticChangingProperty READ staticChangingProperty NOTIFY staticChangingPropertyChanged)
+  Q_PROPERTY(int staticChangingProperty READ staticChangingProperty RESET staticChangingPropertyReset NOTIFY staticChangingPropertyChanged)
 public:
   explicit MyTestObject(QObject *parent = 0) : QObject(parent), m_count(0)
   {
@@ -39,6 +39,11 @@ public:
   }
 
   int staticChangingProperty() { return m_count; }
+  void staticChangingPropertyReset()
+  {
+    m_count = 0;
+    emit staticChangingPropertyChanged();
+  }
 
 signals:
   void staticChangingPropertyChanged();

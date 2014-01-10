@@ -54,3 +54,8 @@ void PropertyControllerClient::setProperty(const QString& propertyName, const QV
 {
   Endpoint::instance()->invokeObject(name(), "setProperty", QVariantList() << QVariant::fromValue(propertyName) << VariantWrapper(value));
 }
+
+void PropertyControllerClient::resetProperty(const QString& propertyName)
+{
+  Endpoint::instance()->invokeObject(name(), "resetProperty", QVariantList() << QVariant::fromValue(propertyName));
+}

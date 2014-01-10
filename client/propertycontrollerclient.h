@@ -40,6 +40,7 @@ class PropertyControllerClient : public PropertyControllerInterface
     virtual void activateMethod();
     virtual void invokeMethod(Qt::ConnectionType type);
     virtual void setProperty(const QString& name, const QVariant& value);
+    virtual void resetProperty(const QString& name);
 };
 
 }

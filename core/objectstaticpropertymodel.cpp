@@ -25,6 +25,8 @@
 #include "varianthandler.h"
 #include "util.h"
 
+#include <common/propertymodel.h>
+
 #include <QMetaProperty>
 #include <QStringList>
 
@@ -79,6 +81,8 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
     }
   } else if (role == Qt::ToolTipRole) {
     return detailString(prop);
+  } else if (role == PropertyModel::ActionRole) {
+    return prop.isResettable() ? PropertyModel::Reset : PropertyModel::NoAction;
   }
 
   return QVariant();

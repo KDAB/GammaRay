@@ -359,11 +359,16 @@ void PropertyWidget::propertyContextMenu(const QPoint& pos)
   const int actions = index.data(PropertyModel::ActionRole).toInt();
   if (actions == PropertyModel::NoAction)
     return;
+
   // TODO: check if this is a dynamic property
   QMenu contextMenu;
   if (actions & PropertyModel::Delete) {
     QAction *action = contextMenu.addAction(tr("Remove"));
     action->setData(PropertyModel::Delete);
+  }
+  if (actions & PropertyModel::Reset) {
+    QAction *action = contextMenu.addAction(tr("Reset"));
+    action->setData(PropertyModel::Reset);
   }
 
   if (QAction *action = contextMenu.exec(m_ui->propertyView->viewport()->mapToGlobal(pos))) {
@@ -371,6 +376,9 @@ void PropertyWidget::propertyContextMenu(const QPoint& pos)
     switch (action->data().toInt()) {
       case PropertyModel::Delete:
         m_controller->setProperty(propertyName, QVariant());
+        break;
+      case PropertyModel::Reset:
+        m_controller->resetProperty(propertyName);
         break;
     }
   }
