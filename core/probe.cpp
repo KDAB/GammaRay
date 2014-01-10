@@ -685,7 +685,9 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 
   // we have no preloading hooks, so recover all objects we see
   if (!hasReliableObjectTracking() && event->type() != QEvent::ChildAdded &&
-      event->type() != QEvent::ChildRemoved && !filterObject(receiver)) {
+      event->type() != QEvent::ChildRemoved && // already handled above
+      event->type() != QEvent::Destroy && event->type() != QEvent::WinIdChange  && // unsafe since emitted from dtors
+      !filterObject(receiver)) {
     QWriteLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(receiver);
     if (!tracked) {
