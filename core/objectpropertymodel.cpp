@@ -23,6 +23,8 @@
 
 #include "objectpropertymodel.h"
 
+#include <common/propertymodel.h>
+
 #include <QMetaProperty>
 #include <QTimer>
 
@@ -86,6 +88,13 @@ QVariant ObjectPropertyModel::headerData(int section, Qt::Orientation orientatio
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
+}
+
+QMap< int, QVariant > ObjectPropertyModel::itemData(const QModelIndex& index) const
+{
+  QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
+  d.insert(PropertyModel::ActionRole, data(index, PropertyModel::ActionRole));
+  return d;
 }
 
 void ObjectPropertyModel::updateAll()

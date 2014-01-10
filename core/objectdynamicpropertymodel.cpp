@@ -24,6 +24,8 @@
 #include "objectdynamicpropertymodel.h"
 #include "varianthandler.h"
 
+#include <common/propertymodel.h>
+
 #include <QEvent>
 
 using namespace GammaRay;
@@ -58,6 +60,8 @@ QVariant ObjectDynamicPropertyModel::data(const QModelIndex &index, int role) co
     } else if (index.column() == 3) {
       return tr("<dynamic>");
     }
+  } else if (role == PropertyModel::ActionRole) {
+    return PropertyModel::Delete;
   }
 
   return QVariant();
