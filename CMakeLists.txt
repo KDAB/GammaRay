@@ -189,7 +189,6 @@ gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/GAMMARAY_PROBE_ABI_DUMMY")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 
-
 macro_log_feature(
   HAVE_QT_CONCURRENT
   "QtConcurrent"
@@ -401,6 +400,14 @@ if(WITH_VTK)
     /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
   )
   find_package(VTK)
+  set(VTK_MESSAGE "Needed for the object visualizer plugin")
+  if(VTK_FOUND)
+    find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
+    if(NOT VTK_QT_INCLUDE_DIR)
+      set(VTK_FOUND FALSE)
+      set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built")
+    endif()
+  endif()
   macro_log_feature(
     VTK_FOUND
     "VTK"
@@ -408,7 +415,7 @@ if(WITH_VTK)
     "http://www.vtk.org"
     FALSE
     ""
-    "Needed for the object visualizer plugin"
+    ${VTK_MESSAGE}
   )
 else()
   set(VTK_FOUND False)
