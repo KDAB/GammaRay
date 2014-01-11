@@ -20,10 +20,20 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 if(POLICY CMP0022)
   cmake_policy(SET CMP0022 OLD) # until we require 2.8.12
 endif()
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
+endif()
+
+enable_testing()
+
+
+# Version setup
 set(GAMMARAY_VERSION_MAJOR "2")
 set(GAMMARAY_VERSION_MINOR "0")
 set(GAMMARAY_VERSION_PATCH "50")
@@ -31,10 +41,6 @@ set(GAMMARAY_VERSION "${GAMMARAY_VERSION_MAJOR}.${GAMMARAY_VERSION_MINOR}.${GAMM
 set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION}")
 set(GAMMARAY_SOVERSION "2.1.0")
 set(GAMMARAY_PLUGIN_VERSION "2.1")
-
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-enable_testing()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   find_package(Git)
@@ -47,10 +53,6 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
     string(REGEX REPLACE "\n" "" _git_revision "${_git_revision}")
     set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION_STRING} (revision: ${_git_revision})")
   endif()
-endif()
-
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
 
 message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
@@ -75,6 +77,43 @@ option(
   "Build only the probe, not the host tools (client, launcher, etc)."
   OFF
 )
+
+
+#
+# Compiler & linker settings
+#
+if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  check_cxx_compiler_flag(-Wunused-but-set-variable HAVE_GCC_UNUSED_BUT_SET)
+  check_cxx_compiler_flag(-Wlogical-op HAVE_GCC_LOGICAL_OP)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wmissing-noreturn -Werror=return-type")
+  if(HAVE_GCC_UNUSED_BUT_SET)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-but-set-variable")
+  endif()
+  if(HAVE_GCC_LOGICAL_OP)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wlogical-op")
+  endif()
+  if(MINGW)
+    # mingw will error out on the crazy casts in probe.cpp without this
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+  else()
+    # visibility attributes not supported on mingw, don't use -fvisibility option
+    # see: http://stackoverflow.com/questions/7994415/mingw-fvisibility-hidden-does-not-seem-to-work
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+  endif()
+endif()
+
+# linker flags
+if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+  if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
+    set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
+  endif()
+endif()
+
+
+#
+# Finding Qt
+#
 
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
@@ -111,6 +150,19 @@ if(Qt5Core_FOUND)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
   endif()
 
+  # TODO: Remove me once fixed in ECM module
+  # more hacks: find qpa/... includes
+  # also see https://codereview.qt-project.org/#change,30483
+  include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+
+  # TODO warnings rather than build errors for the deprecated methods would be nice...
+  add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+
+  find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${Qt5Core_PRIVATE_INCLUDE_DIRS})
+  if(QT_PRIVATE_INCLUDE_DIR)
+    set(HAVE_PRIVATE_QT_HEADERS true)
+  endif()
+
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
@@ -126,16 +178,23 @@ else()
   endif()
   set(HAVE_QT_PRINTSUPPORT true)
   set(HAVE_QT_WEBKIT1 ${QT_QTWEBKIT_FOUND})
-endif()
 
-# TODO: Remove me once fixed in ECM module
-if(Qt5Core_FOUND)
-  # more hacks: find qpa/... includes
-  # also see https://codereview.qt-project.org/#change,30483
-  include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+  find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
+  if(QT_PRIVATE_INCLUDE_DIR)
+    # not enough, some of them include harfbuzz headers, so we need to find those as well
+    # for now we assume a regular Qt4 source build layout, but that probably should be generalized
+    find_path(HARFBUZZ_INCLUDE_DIR harfbuzz.h PATH ${QT_PRIVATE_INCLUDE_DIR}/../../src/3rdparty/harfbuzz/src)
+  endif()
 
-  # TODO warnings rather than build errors for the deprecated methods would be nice...
-  add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+  if(QT_PRIVATE_INCLUDE_DIR AND HARFBUZZ_INCLUDE_DIR)
+    set(HAVE_PRIVATE_QT_HEADERS TRUE)
+    include_directories(${HARFBUZZ_INCLUDE_DIR})
+  else()
+    set(HAVE_PRIVATE_QT_HEADERS FALSE)
+    # needs to go before Qt includes, in case we have non-working headers with the same name there
+    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
+  endif()
+
 endif()
 
 # disable QT_STRICT_ITERATORS on the Qt5+Windows combo
@@ -148,6 +207,10 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
+
+#
+# Installation settings
+#
 set(BIN_INSTALL_DIR "bin")
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
@@ -160,6 +223,11 @@ if(WIN32)
 else()
   set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
   set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
+endif()
+if(UNIX AND NOT APPLE)
+  set(DOC_INSTALL_DIR share/doc/gammaray/)
+else()
+  set(DOC_INSTALL_DIR .)
 endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
@@ -178,6 +246,7 @@ set(
   RUNTIME DESTINATION ${BIN_INSTALL_DIR}
   LIBRARY DESTINATION ${LIB_INSTALL_DIR}
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
+  BUNDLE DESTINATION "/Applications/Qt4"
 )
 
 # "inverse" install dirs, to find the base location again
@@ -185,6 +254,10 @@ gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/GAMMARAY_PROBE_ABI_DUMMY")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 
+
+#
+# Feature summary
+#
 macro_log_feature(
   HAVE_QT_CONCURRENT
   "QtConcurrent"
@@ -255,35 +328,6 @@ macro_log_feature(
   "Required for widget PDF export"
 )
 
-if(NOT Qt5Core_FOUND)
-find_path(
-  QT_PRIVATE_INCLUDE_DIR private/qobject_p.h
-  PATHS ${QT_INCLUDES}
-)
-if(QT_PRIVATE_INCLUDE_DIR)
-  # not enough, some of them include harfbuzz headers, so we need to find those as well
-  # for now we assume a regular Qt4 source build layout, but that probably should be generalized
-  find_path(
-    HARFBUZZ_INCLUDE_DIR harfbuzz.h
-    PATH ${QT_PRIVATE_INCLUDE_DIR}/../../src/3rdparty/harfbuzz/src
-  )
-endif()
-
-if(QT_PRIVATE_INCLUDE_DIR AND HARFBUZZ_INCLUDE_DIR)
-  set(HAVE_PRIVATE_QT_HEADERS TRUE)
-  include_directories(${HARFBUZZ_INCLUDE_DIR})
-else()
-  set(HAVE_PRIVATE_QT_HEADERS FALSE)
-  # needs to go before Qt includes, in case we have non-working headers with the same name there
-  include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
-endif()
-else() # Qt 5
-  find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-  if(QT_PRIVATE_INCLUDE_DIR)
-    set(HAVE_PRIVATE_QT_HEADERS true)
-  endif()
-endif()
-
 macro_log_feature(
   HAVE_PRIVATE_QT_HEADERS
   "Qt internals"
@@ -312,21 +356,6 @@ if(WIN32)
   add_definitions(-DUNICODE -D_UNICODE)
 endif()
 
-if(APPLE)
-  # on the Mac support an extra install directory for application bundles
-  set(
-    INSTALL_TARGETS_DEFAULT_ARGS
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
-    BUNDLE DESTINATION "/Applications/Qt4"
-  )
-endif()
-
-if(UNIX AND NOT APPLE)
-  set(DOC_INSTALL_DIR share/doc/gammaray/)
-else()
-  set(DOC_INSTALL_DIR .)
-endif()
-
 # TODO: find a nicer way for all this. ideally auto-detect the name mangling
 # format, but at least guess a default based on OS + compiler.
 option(
@@ -347,34 +376,6 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
 )
-
-if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  check_cxx_compiler_flag(-Wunused-but-set-variable HAVE_GCC_UNUSED_BUT_SET)
-  check_cxx_compiler_flag(-Wlogical-op HAVE_GCC_LOGICAL_OP)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wcast-qual -Wmissing-noreturn -Werror=return-type")
-  if(HAVE_GCC_UNUSED_BUT_SET)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wunused-but-set-variable")
-  endif()
-  if(HAVE_GCC_LOGICAL_OP)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wlogical-op")
-  endif()
-  if(MINGW)
-    # mingw will error out on the crazy casts in probe.cpp without this
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-  else()
-    # visibility attributes not supported on mingw, don't use -fvisibility option
-    # see: http://stackoverflow.com/questions/7994415/mingw-fvisibility-hidden-does-not-seem-to-work
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-  endif()
-endif()
-
-# linker flags
-if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
-  if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
-  endif()
-endif()
 
 if(NOT CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ)
   set(GRAPHVIZ_MIN_VERSION "2.20")
@@ -478,7 +479,6 @@ include_directories(
   ${CMAKE_BINARY_DIR}
 )
 
-include(ExternalProject)
 
 add_subdirectory(cmake)
 add_subdirectory(common)
