@@ -39,6 +39,9 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    void monitorObject(QObject* obj);
+    void unmonitorObject(QObject* obj);
+
   private:
     QString detailString(const QMetaProperty& prop) const;
 };

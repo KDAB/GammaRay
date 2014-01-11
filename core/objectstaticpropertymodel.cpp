@@ -126,6 +126,27 @@ Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
   return flags;
 }
 
+void ObjectStaticPropertyModel::monitorObject(QObject* obj)
+{
+  for (int i = 0; i < obj->metaObject()->propertyCount(); ++i) {
+    const QMetaProperty prop = obj->metaObject()->property(i);
+    if (prop.hasNotifySignal()) {
+      connect(obj, QByteArray("2") +
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+      prop.notifySignal().signature()
+#else
+      prop.notifySignal().methodSignature()
+#endif
+      , SLOT(updateAll()));
+    }
+  }
+}
+
+void ObjectStaticPropertyModel::unmonitorObject(QObject* obj)
+{
+  disconnect(obj, 0, this, SLOT(updateAll()));
+}
+
 QString ObjectStaticPropertyModel::detailString(const QMetaProperty& prop) const
 {
   QStringList s;

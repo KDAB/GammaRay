@@ -42,25 +42,12 @@ void ObjectPropertyModel::setObject(QObject *object)
 {
   if (m_obj) {
     unmonitorObject(m_obj.data());
-    disconnect(m_obj.data(), 0, this, SLOT(updateAll()));
     disconnect(m_obj.data(), 0, this, SLOT(slotReset()));
   }
   m_obj = object;
   if (object) {
     connect(object, SIGNAL(destroyed(QObject*)), SLOT(slotReset()));
     monitorObject(object);
-    for (int i = 0; i < object->metaObject()->propertyCount(); ++i) {
-      const QMetaProperty prop = object->metaObject()->property(i);
-      if (prop.hasNotifySignal()) {
-        connect(object, QByteArray("2") +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-            prop.notifySignal().signature()
-#else
-            prop.notifySignal().methodSignature()
-#endif
-            , SLOT(updateAll()));
-      }
-    }
   }
   reset();
 }
