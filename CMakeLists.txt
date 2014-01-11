@@ -153,6 +153,7 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
 set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
 set(INCLUDE_INSTALL_DIR "include/gammaray")
 set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
+set(XDG_APPS_INSTALL_DIR share/applications)
 if(WIN32)
   set(PLUGIN_INSTALL_DIR "plugins")
   set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
@@ -423,40 +424,11 @@ else()
 endif()
 set(HAVE_VTK ${VTK_FOUND})
 
-if(UNIX AND NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
-  set(XDG_APPS_INSTALL_DIR share/applications)
-  install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-
-  install(
-    FILES resources/GammaRay-16x16.png
-    DESTINATION share/icons/hicolor/16x16/apps RENAME GammaRay.png
-  )
-  install(
-    FILES resources/GammaRay-32x32.png
-    DESTINATION share/icons/hicolor/32x32/apps RENAME GammaRay.png
-  )
-  install(
-    FILES resources/GammaRay-48x48.png
-    DESTINATION share/icons/hicolor/48x48/apps RENAME GammaRay.png
-  )
-  install(
-    FILES resources/GammaRay-128x128.png
-    DESTINATION share/icons/hicolor/128x128/apps RENAME GammaRay.png
-  )
-  install(
-    FILES resources/GammaRay-256x256.png
-    DESTINATION share/icons/hicolor/256x256/apps RENAME GammaRay.png
-  )
-  install(
-    FILES resources/GammaRay-512x512.png
-    DESTINATION share/icons/hicolor/512x512/apps RENAME GammaRay.png
-  )
-endif()
-
-set(LICENSE_FILE "License.txt")
-set(README_FILE "ReadMe.txt")
 if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
-  install(FILES "${LICENSE_FILE}" "${README_FILE}" DESTINATION ${DOC_INSTALL_DIR})
+  if(UNIX)
+    install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+  endif()
+  install(FILES License.txt ReadMe.txt DESTINATION ${DOC_INSTALL_DIR})
 endif()
 
 find_program(CPPCHECK_EXECUTABLE cppcheck)
@@ -526,6 +498,7 @@ if((Qt5Test_FOUND OR QT_QTTEST_FOUND) AND NOT CMAKE_CROSSCOMPILING)
   add_subdirectory(tests)
 endif()
 add_subdirectory(plugins)
+add_subdirectory(resources)
 
 find_package(Doxygen)
 macro_log_feature(
