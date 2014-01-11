@@ -128,7 +128,7 @@ int main(int argc, char **argv)
       return 0;
     }
     if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
-      out << PROGRAM_NAME << " version " << GAMMARAY_VERSION_STRING << endl;
+      out << "GammaRay version " << GAMMARAY_VERSION_STRING << endl;
       out << "Copyright (C) 2010-2014 Klaralvdalens Datakonsult AB, "
           << "a KDAB Group company, info@kdab.com" << endl;
       return 0;

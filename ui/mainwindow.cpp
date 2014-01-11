@@ -57,7 +57,7 @@
 
 using namespace GammaRay;
 
-static const char progName[] = PROGRAM_NAME;
+static const char progName[] = "GammaRay";
 static const char progVersion[] = GAMMARAY_VERSION_STRING;
 static const char progDesc[] = "The Qt application inspection and manipulation tool";
 static const char progURL[] = "http://www.kdab.com/gammaray";
