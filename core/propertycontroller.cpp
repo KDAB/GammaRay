@@ -68,15 +68,12 @@ PropertyController::PropertyController(const QString &baseName, QObject *parent)
   m_inboundConnectionModel->setFilterOnReceiver(true);
   m_outboundConnectionModel->setFilterOnSender(true);
 
-  registerModel(m_staticPropertyModel, "staticProperties");
-  registerModel(m_dynamicPropertyModel, "dynamicProperties");
   registerModel(m_methodModel, "methods");
   registerModel(m_methodLogModel, "methodLog");
   registerModel(m_classInfoModel, "classInfo");
   registerModel(m_inboundConnectionModel, "inboundConnections");
   registerModel(m_outboundConnectionModel, "outboundConnections");
   registerModel(m_enumModel, "enums");
-  registerModel(m_metaPropertyModel, "nonQProperties");
   registerModel(m_aggregatedPropertyModel, "properties");
   registerModel(m_methodArgumentModel, "methodArguments");
 

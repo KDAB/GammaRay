@@ -79,33 +79,34 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(model("staticProperties"));
-  m_ui->staticPropertyView->setModel(proxy);
-  m_ui->staticPropertyView->sortByColumn(0, Qt::AscendingOrder);
+  proxy->setSourceModel(model("properties"));
+  m_ui->propertyView->setModel(proxy);
+  m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
   new DeferredResizeModeSetter(
-    m_ui->staticPropertyView->header(), 0, QHeaderView::ResizeToContents);
-  m_ui->staticPropertySearchLine->setProxy(proxy);
-  m_ui->staticPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
-
+    m_ui->propertyView->header(), 0, QHeaderView::ResizeToContents);
+  m_ui->propertySearchLine->setProxy(proxy);
+  m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
+  connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(propertyContextMenu(QPoint)));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  connect(m_ui->staticPropertyView, SIGNAL(doubleClicked(QModelIndex)),
+  connect(m_ui->propertyView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(onDoubleClick(QModelIndex)));
 #endif
 
+  EditableTypesModel *typesModel = new EditableTypesModel(this);
   proxy = new QSortFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(model("dynamicProperties"));
-  m_ui->dynamicPropertyView->setModel(proxy);
-  m_ui->dynamicPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  new DeferredResizeModeSetter(
-    m_ui->dynamicPropertyView->header(), 0, QHeaderView::ResizeToContents);
-  m_ui->dynamicPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
-  m_ui->dynamicPropertySearchLine->setProxy(proxy);
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  connect(m_ui->dynamicPropertyView, SIGNAL(doubleClicked(QModelIndex)),
-          SLOT(onDoubleClick(QModelIndex)));
-#endif
+  proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+  proxy->setSourceModel(typesModel);
+  proxy->sort(0);
+  m_ui->newPropertyType->setModel(proxy);
+  connect(m_ui->newPropertyType, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(updateNewPropertyValueEditor()));
+  updateNewPropertyValueEditor();
+  connect(m_ui->newPropertyName, SIGNAL(textChanged(QString)),
+          this, SLOT(validateNewProperty()));
+  validateNewProperty();
+  connect(m_ui->newPropertyButton, SIGNAL(clicked()),
+          this, SLOT(addNewProperty()));
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
@@ -155,38 +156,6 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
   for (int i = 0; i < m_ui->tabWidget->count(); ++i) {
     m_tabWidgets.push_back(qMakePair(m_ui->tabWidget->widget(i), m_ui->tabWidget->tabText(i)));
   }
-
-  proxy = new QSortFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(model("nonQProperties"));
-  m_ui->metaPropertyView->setModel(proxy);
-  m_ui->metaPropertyView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->metaPropertySearchLine->setProxy(proxy);
-  m_ui->metaPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
-
-  proxy = new QSortFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(model("properties"));
-  m_ui->propertyView->setModel(proxy);
-  m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->propertySearchLine->setProxy(proxy);
-  m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
-  connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
-          this, SLOT(propertyContextMenu(QPoint)));
-  EditableTypesModel *typesModel = new EditableTypesModel(this);
-  proxy = new QSortFilterProxyModel(this);
-  proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-  proxy->setSourceModel(typesModel);
-  proxy->sort(0);
-  m_ui->newPropertyType->setModel(proxy);
-  connect(m_ui->newPropertyType, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(updateNewPropertyValueEditor()));
-  updateNewPropertyValueEditor();
-  connect(m_ui->newPropertyName, SIGNAL(textChanged(QString)),
-          this, SLOT(validateNewProperty()));
-  validateNewProperty();
-  connect(m_ui->newPropertyButton, SIGNAL(clicked()),
-          this, SLOT(addNewProperty()));
 
   if (m_controller) {
     disconnect(m_controller,
@@ -256,7 +225,7 @@ bool PropertyWidget::showTab(const QWidget *widget, PropertyWidgetDisplayState::
   case PropertyWidgetDisplayState::QObject:
     return true; // show all
   case PropertyWidgetDisplayState::Object:
-    if (widget == m_ui->metaPropertyTab) {
+    if (widget == m_ui->propertyTab) {
       return true;
     }
     break;
