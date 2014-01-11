@@ -14,7 +14,7 @@ if(WIN32)
   cmake_minimum_required(VERSION 2.8.11)
   cmake_policy(SET CMP0020 NEW)
 else()
-  cmake_minimum_required(VERSION 2.8.6)
+  cmake_minimum_required(VERSION 2.8.9)
 endif()
 
 if(NOT Prog_NAME)
@@ -113,11 +113,7 @@ if(Qt5Core_FOUND)
   set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND})
 
   if(Qt5_POSITION_INDEPENDENT_CODE AND NOT WIN32)
-    if(CMAKE_VERSION VERSION_LESS 2.8.9) # TODO remove once we increase the cmake requirement
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-    else()
-      set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    endif()
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
   endif()
 
 # Qt4
@@ -572,26 +568,27 @@ if(CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ)
   message(STATUS "Skipped Graphviz discovery due to the CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ option. State machine visualizer plugin will not be built")
 endif()
 
-# CMake package config file generation (only available with CMake >= 2.8.9)
-if(CMAKE_VERSION VERSION_GREATER 2.8.8)
-  include(CMakePackageConfigHelpers)
-  configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in
-                                ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
-                                INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-                                PATH_VARS INCLUDE_INSTALL_DIR)
-  write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
-                                   VERSION ${GAMMARAY_VERSION}
-                                   COMPATIBILITY SameMajorVersion)
-  install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
-    DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-  )
 
-  install(
-    EXPORT GammaRayTargets
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    FILE GammaRayTarget.cmake
+#
+# CMake package config file generation
+#
+include(CMakePackageConfigHelpers)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in
+                              ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+                              INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+                              PATH_VARS INCLUDE_INSTALL_DIR)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+                                 VERSION ${GAMMARAY_VERSION}
+                                 COMPATIBILITY SameMajorVersion)
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+  DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(
+  EXPORT GammaRayTargets
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  FILE GammaRayTarget.cmake
 #     NAMESPACE GammaRay::
-  )
-endif()
+)
