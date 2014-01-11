@@ -59,7 +59,7 @@ You can also force CMake to ignore any or all of the optional dependencies
 by passing the option -DCMAKE_DISABLE_FIND_PACKAGE_<PACKAGE>=True.
 For instance:
 # tell cmake to ignore Graphiz and VTK
-cmake -DCMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ=True -DCMAKE_DISABLE_FIND_PACKAGE_VTK=True
+cmake -DCMAKE_DISABLE_FIND_PACKAGE_Graphviz=True -DCMAKE_DISABLE_FIND_PACKAGE_VTK=True
 
 
 == Warning! ==

@@ -377,52 +377,44 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
 )
 
-if(NOT CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ)
-  set(GRAPHVIZ_MIN_VERSION "2.20")
-  find_package(Graphviz)
-  macro_log_feature(
-    GRAPHVIZ_FOUND
-    "Graphviz"
-    "Graph visualization software"
-    "http://www.graphviz.org/"
-    FALSE
-    ${GRAPHVIZ_MIN_VERSION}
-    "Needed for the state machine visualizer plugin"
-  )
-else()
-  set(GRAPHVIZ_FOUND False)
-endif()
+set(GRAPHVIZ_MIN_VERSION "2.20")
+find_package(Graphviz)
+macro_log_feature(
+  GRAPHVIZ_FOUND
+  "Graphviz"
+  "Graph visualization software"
+  "http://www.graphviz.org/"
+  FALSE
+  ${GRAPHVIZ_MIN_VERSION}
+  "Needed for the state machine visualizer plugin"
+)
 set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
 if(GRAPHVIZ_FOUND)
   add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
 endif()
 
-if(NOT CMAKE_DISABLE_FIND_PACKAGE_VTK)
-  #VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
-  find_path(VTK_DIR VTKConfig.cmake
-    /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
-  )
-  find_package(VTK)
-  set(VTK_MESSAGE "Needed for the object visualizer plugin")
-  if(VTK_FOUND)
-    find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
-    if(NOT VTK_QT_INCLUDE_DIR)
-      set(VTK_FOUND FALSE)
-      set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built")
-    endif()
+#VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
+find_path(VTK_DIR VTKConfig.cmake
+  /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
+)
+find_package(VTK)
+set(VTK_MESSAGE "Needed for the object visualizer plugin")
+if(VTK_FOUND)
+  find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
+  if(NOT VTK_QT_INCLUDE_DIR)
+    set(VTK_FOUND FALSE)
+    set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built")
   endif()
-  macro_log_feature(
-    VTK_FOUND
-    "VTK"
-    "Visualization Toolkit"
-    "http://www.vtk.org"
-    FALSE
-    ""
-    ${VTK_MESSAGE}
-  )
-else()
-  set(VTK_FOUND False)
 endif()
+macro_log_feature(
+  VTK_FOUND
+  "VTK"
+  "Visualization Toolkit"
+  "http://www.vtk.org"
+  FALSE
+  ""
+  ${VTK_MESSAGE}
+)
 set(HAVE_VTK ${VTK_FOUND})
 
 if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
@@ -503,12 +495,6 @@ add_subdirectory(resources)
 
 
 macro_display_feature_log()
-if(CMAKE_DISABLE_FIND_PACKAGE_VTK)
-  message(STATUS "Skipped VTK discovery due to the CMAKE_DISABLE_FIND_PACKAGE_VTK option. Object visualizer plugin will not be built")
-endif()
-if(CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ)
-  message(STATUS "Skipped Graphviz discovery due to the CMAKE_DISABLE_FIND_PACKAGE_GRAPHVIZ option. State machine visualizer plugin will not be built")
-endif()
 
 
 #
