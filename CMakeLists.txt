@@ -66,6 +66,9 @@ message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TY
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 
+#
+# Build options
+#
 option(
   GAMMARAY_ENFORCE_QT4_BUILD
   "Enable if you want to enfore a build with Qt4"
@@ -75,6 +78,14 @@ option(
 option(
   GAMMARAY_PROBE_ONLY_BUILD
   "Build only the probe, not the host tools (client, launcher, etc)."
+  OFF
+)
+
+# TODO: find a nicer way for all this. ideally auto-detect the name mangling
+# format, but at least guess a default based on OS + compiler.
+option(
+  GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
+  "Enable if your compiler uses an unsupported C++ name mangling scheme"
   OFF
 )
 
@@ -299,17 +310,6 @@ endif()
 
 if(WIN32)
   add_definitions(-DUNICODE -D_UNICODE)
-endif()
-
-# TODO: find a nicer way for all this. ideally auto-detect the name mangling
-# format, but at least guess a default based on OS + compiler.
-option(
-  GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
-  "Enable if your compiler uses an unsupported C++ name mangling scheme"
-  OFF
-)
-if(GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES)
-  add_definitions(-DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES)
 endif()
 
 include(CheckIncludeFiles)

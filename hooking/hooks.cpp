@@ -21,6 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
 #include "core/probe.h"
 #include "functionoverwriterfactory.h"
 #include "probecreator.h"
