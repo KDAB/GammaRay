@@ -31,6 +31,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 include(CheckCXXCompilerFlag)
+include(CheckIncludeFiles)
 include(CheckLibraryExists)
 include(GammaRayMacros)
 include(GammaRayMacrosInternal)
@@ -62,8 +63,12 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   endif()
 endif()
 
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
+)
+
 message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
-add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 
 #
@@ -111,6 +116,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # see: http://stackoverflow.com/questions/7994415/mingw-fvisibility-hidden-does-not-seem-to-work
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
   endif()
+endif()
+
+if(WIN32)
+  add_definitions(-DUNICODE -D_UNICODE)
 endif()
 
 # linker flags
@@ -223,6 +232,7 @@ else()
 
 endif()
 
+add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 # disable QT_STRICT_ITERATORS on the Qt5+Windows combo
 # see: https://bugreports.qt-project.org/browse/QTBUG-29608
 if(NOT (Qt5Core_FOUND AND WIN32))
@@ -308,19 +318,7 @@ else()
   endif()
 endif()
 
-if(WIN32)
-  add_definitions(-DUNICODE -D_UNICODE)
-endif()
-
-include(CheckIncludeFiles)
 check_include_files(stdint.h HAVE_STDINT_H)
-
-include(GammaRayProbeABI) # this needs to be run after we know what exactly we are building
-
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
-)
 
 set(GRAPHVIZ_MIN_VERSION "2.20")
 find_package(Graphviz)
@@ -356,35 +354,11 @@ set_package_properties(VTK PROPERTIES
 )
 set(HAVE_VTK ${VTK_FOUND})
 
-if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
-  if(UNIX)
-    install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-  endif()
-  install(FILES License.txt ReadMe.txt DESTINATION ${DOC_INSTALL_DIR})
-endif()
 
-find_program(CPPCHECK_EXECUTABLE cppcheck)
-if(CPPCHECK_EXECUTABLE)
-  set(_cppcheck_flags "-I${CMAKE_CURRENT_BINARY_DIR}")
-  get_directory_property(_inc_dirs INCLUDE_DIRECTORIES)
-  foreach(_current ${_inc_dirs})
-    set(_cppcheck_flags ${_cppcheck_flags} "-I${_current}")
-  endforeach()
-  get_directory_property(_defs COMPILE_DEFINITIONS)
-  foreach(_current ${_defs})
-    set(_cppcheck_flags ${_cppcheck_flags} "-D${_current}")
-  endforeach()
-
-  add_custom_target(cppcheck
-    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
-      -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
-      -i${CMAKE_CURRENT_SOURCE_DIR}/tests
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Running the cppcheck static code checker"
-  )
-endif()
-
+#
+# actually build the stuff
+#
+include(GammaRayProbeABI) # this needs to be run after we know what exactly we are building
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
@@ -418,8 +392,38 @@ endif()
 add_subdirectory(plugins)
 add_subdirectory(resources)
 
+if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
+  if(UNIX)
+    install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+  endif()
+  install(FILES License.txt ReadMe.txt DESTINATION ${DOC_INSTALL_DIR})
+endif()
 
-feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
+#
+# cppcheck
+#
+find_program(CPPCHECK_EXECUTABLE cppcheck)
+if(CPPCHECK_EXECUTABLE)
+  set(_cppcheck_flags "-I${CMAKE_CURRENT_BINARY_DIR}")
+  get_directory_property(_inc_dirs INCLUDE_DIRECTORIES)
+  foreach(_current ${_inc_dirs})
+    set(_cppcheck_flags ${_cppcheck_flags} "-I${_current}")
+  endforeach()
+  get_directory_property(_defs COMPILE_DEFINITIONS)
+  foreach(_current ${_defs})
+    set(_cppcheck_flags ${_cppcheck_flags} "-D${_current}")
+  endforeach()
+
+  add_custom_target(cppcheck
+    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
+      -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
+      -i${CMAKE_CURRENT_SOURCE_DIR}/tests
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Running the cppcheck static code checker"
+  )
+endif()
 
 
 #
@@ -445,3 +449,6 @@ install(
   FILE GammaRayTarget.cmake
 #     NAMESPACE GammaRay::
 )
+
+
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
