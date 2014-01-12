@@ -446,19 +446,6 @@ if(CPPCHECK_EXECUTABLE)
   )
 endif()
 
-find_program(POD2MAN_EXECUTABLE pod2man)
-
-if(POD2MAN_EXECUTABLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
-  #man page generation using pod2man
-  add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/gammaray.1
-    COMMAND ${POD2MAN_EXECUTABLE} -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_SOURCE_DIR}/gammaray.pod ${CMAKE_BINARY_DIR}/gammaray.1
-    DEPENDS ${CMAKE_SOURCE_DIR}/gammaray.pod
-  )
-  add_custom_target(man ALL DEPENDS ${CMAKE_BINARY_DIR}/gammaray.1)
-
-  install(FILES ${CMAKE_BINARY_DIR}/gammaray.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
-endif()
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
@@ -470,7 +457,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/3rdparty
   ${CMAKE_BINARY_DIR}
 )
-
 
 add_subdirectory(cmake)
 add_subdirectory(common)
