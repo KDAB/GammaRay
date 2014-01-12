@@ -36,8 +36,8 @@ BuildRequires:  gcc-c++ qt-devel qtwebkit-devel cmake desktop-file-utils graphvi
 %if 0%{?fedora} >= 17
 BuildRequires:  vtk-devel
 %endif
-# dependency ambiguity for vtk-java needed by vtk-devel in Fedora 19
-%if 0%{?fedora} == 19
+# dependency ambiguity for vtk-java needed by vtk-devel in Fedora >= 19
+%if 0%{?fedora} >= 19
 BuildRequires:  java-1.8.0-openjdk
 %endif
 # for pod2man
