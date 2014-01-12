@@ -47,3 +47,16 @@ macro(gammaray_embed_info_plist _target _plist)
     set_target_properties(${_target} PROPERTIES LINK_FLAGS "-sectcreate __TEXT __info_plist ${CMAKE_CURRENT_BINARY_DIR}/${_target}_Info.plist")
   endif()
 endmacro()
+
+# allow to use CMake FeatureSummary with "packages" that consist only of a minor inline check
+# rather than a fully-featured find module
+macro(gammaray_add_dummy_package _package _found)
+  if(${_found})
+    set(_property_name "PACKAGES_FOUND")
+  else()
+    set(_property_name "PACKAGES_NOT_FOUND")
+  endif()
+  get_property(_packages GLOBAL PROPERTY ${_property_name})
+  list(APPEND _packages ${_package})
+  set_property(GLOBAL PROPERTY ${_property_name} "${_packages}")
+endmacro()

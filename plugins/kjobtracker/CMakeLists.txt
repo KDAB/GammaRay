@@ -11,14 +11,11 @@ else()
   set(_KDE4_USABLE FALSE)
 endif()
 
-macro_log_feature(
-  _KDE4_USABLE
-  "KDE4"
-  "KDE libraries"
-  "http://www.kde.org/"
-  FALSE
-  ""
-  "Required for the KJob tracker plug-in"
+set_package_properties(KDE4 PROPERTIES
+  TYPE OPTIONAL
+  DESCRIPTION "KDE libraries"
+  URL "http://www.kde.org/"
+  PURPOSE "Required for the KJob tracker plug-in."
 )
 
 # probe part

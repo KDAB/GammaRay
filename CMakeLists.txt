@@ -30,6 +30,12 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
 
+include(CheckCXXCompilerFlag)
+include(CheckLibraryExists)
+include(GammaRayMacros)
+include(GammaRayMacrosInternal)
+include(FeatureSummary)
+
 enable_testing()
 
 
@@ -44,6 +50,7 @@ set(GAMMARAY_PLUGIN_VERSION "2.1")
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
   find_package(Git)
+  set_package_properties(Git PROPERTIES TYPE OPTIONAL PURPOSE "Determine exact build version.")
   if(GIT_FOUND)
     execute_process(
       COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
@@ -58,13 +65,6 @@ endif()
 message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
-include(CheckCXXCompilerFlag)
-include(CheckLibraryExists)
-include(GammaRayMacros)
-include(GammaRayMacrosInternal)
-include(MacroLogFeature)
-
-set(QT_MIN_VERSION "4.7.0")
 
 option(
   GAMMARAY_ENFORCE_QT4_BUILD
@@ -115,6 +115,8 @@ endif()
 # Finding Qt
 #
 
+set(QT_MIN_VERSION "4.7.0")
+
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
   find_package(Qt5Core QUIET)
@@ -122,6 +124,7 @@ endif()
 
 if(Qt5Core_FOUND)
   # Qt5 COMPONENT x y z only works with Qt >= 5.1 ...
+  set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
   find_package(Qt5Gui NO_MODULE REQUIRED)
   find_package(Qt5Network NO_MODULE REQUIRED)
   find_package(Qt5Concurrent NO_MODULE QUIET)
@@ -163,6 +166,13 @@ if(Qt5Core_FOUND)
     set(HAVE_PRIVATE_QT_HEADERS true)
   endif()
 
+  set_package_properties(Qt5 PROPERTIES URL "http://qt-project.org/")
+  set_package_properties(Qt5Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
+  set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
+  set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
+  set_package_properties(Qt5PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
+  add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS "Requires private Qt headers to be available.")
+
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
@@ -195,6 +205,11 @@ else()
     include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
   endif()
 
+  set_package_properties(Qt4 PROPERTIES URL "http://qt-project.org/")
+  add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS
+    "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
+  )
+
 endif()
 
 # disable QT_STRICT_ITERATORS on the Qt5+Windows combo
@@ -206,6 +221,10 @@ endif()
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
+
+add_feature_info("QtScript debugger" QT_QTSCRIPTTOOLS_FOUND "Requires QtScript and QtScriptTools.")
+add_feature_info("Web inspector" HAVE_QT_WEBKIT1 "Requires QtWebKit.")
+add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
 
 
 #
@@ -256,87 +275,8 @@ gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 
 
 #
-# Feature summary
+# Additional dependencies
 #
-macro_log_feature(
-  HAVE_QT_CONCURRENT
-  "QtConcurrent"
-  "Qt concurrency library"
-  "included with Qt"
-  FALSE
-  ""
-  "Required for the GammaRay launcher process list"
-)
-
-macro_log_feature(
-  HAVE_QT_WIDGETS
-  "Qt Widgets"
-  "Qt Widgets"
-  "included with Qt"
-  FALSE
-  ""
-  "Required for the GammaRay client UI and widget-related tools"
-)
-
-macro_log_feature(
-  QT_QTSCRIPTTOOLS_FOUND
-  "Script engine debugger in Qt"
-  "A debugger for QtScript"
-  "included with Qt"
-  FALSE
-  ""
-  "Required for the script engine debugger tool"
-)
-
-macro_log_feature(
-  HAVE_QT_WEBKIT1
-  "WebKit in Qt"
-  "A Qt-based web browser engine"
-  "included with Qt"
-  FALSE
-  ""
-  "Required for the webinspector tool"
-)
-
-macro_log_feature(
-  HAVE_QT_SVG
-  "Qt SVG"
-  "Qt SVG renderer and generator"
-  "http://qt-project.org/"
-  FALSE
-  ""
-  "Required for widget SVG export"
-)
-
-macro_log_feature(
-  HAVE_QT_DESIGNER
-  "Qt Designer Library"
-  "Qt graphical widget editor"
-  "http://qt-project.org/"
-  FALSE
-  ""
-  "Required for widget .ui file export"
-)
-
-macro_log_feature(
-  HAVE_QT_PRINTSUPPORT
-  "Qt Print Support"
-  "Qt PDF generation"
-  "http://qt-project.org/"
-  FALSE
-  ""
-  "Required for widget PDF export"
-)
-
-macro_log_feature(
-  HAVE_PRIVATE_QT_HEADERS
-  "Qt internals"
-  "Private Qt headers, necessary for painter debugging/profiling."
-  "http://developer.qt.nokia.com/"
-  FALSE
-  ${QT_MIN_VERSION}
-  "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
-)
 
 if(Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.2.2)
   # https://codereview.qt-project.org/75530
@@ -347,7 +287,12 @@ else()
     set(BUILD_TIMER_PLUGIN TRUE)
   else()
     check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
-    macro_log_feature(HAVE_CLOCK_GETTIME "librt" "High resolution clock for the timer profiler plugin." "part of glibc" FALSE)
+    gammaray_add_dummy_package(rt HAVE_CLOCK_GETTIME)
+    set_package_properties(rt PROPERTIES
+      TYPE RECOMMENDED
+      DESCRIPTION "High resolution clock, part of glibc"
+      PURPOSE "Needed for the timer profiler plugin."
+    )
     set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
   endif()
 endif()
@@ -379,14 +324,11 @@ configure_file(
 
 set(GRAPHVIZ_MIN_VERSION "2.20")
 find_package(Graphviz)
-macro_log_feature(
-  GRAPHVIZ_FOUND
-  "Graphviz"
-  "Graph visualization software"
-  "http://www.graphviz.org/"
-  FALSE
-  ${GRAPHVIZ_MIN_VERSION}
-  "Needed for the state machine visualizer plugin"
+set_package_properties(Graphviz PROPERTIES
+  TYPE RECOMMENDED
+  DESCRIPTION "Graph visualization software"
+  URL "http://www.graphviz.org/"
+  PURPOSE "Needed for the state machine visualizer plugin."
 )
 set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
 if(GRAPHVIZ_FOUND)
@@ -398,22 +340,19 @@ find_path(VTK_DIR VTKConfig.cmake
   /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
 )
 find_package(VTK)
-set(VTK_MESSAGE "Needed for the object visualizer plugin")
+set(VTK_MESSAGE "Needed for the object visualizer plugin.")
 if(VTK_FOUND)
   find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
   if(NOT VTK_QT_INCLUDE_DIR)
     set(VTK_FOUND FALSE)
-    set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built")
+    set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built.")
   endif()
 endif()
-macro_log_feature(
-  VTK_FOUND
-  "VTK"
-  "Visualization Toolkit"
-  "http://www.vtk.org"
-  FALSE
-  ""
-  ${VTK_MESSAGE}
+set_package_properties(VTK PROPERTIES
+  TYPE OPTIONAL
+  DESCRIPTION "Visualization Toolkit."
+  PURPOSE ${VTK_MESSAGE}
+  URL "http://www.vtk.org"
 )
 set(HAVE_VTK ${VTK_FOUND})
 
@@ -480,7 +419,7 @@ add_subdirectory(plugins)
 add_subdirectory(resources)
 
 
-macro_display_feature_log()
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 
 #

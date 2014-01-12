@@ -3,6 +3,12 @@
 #
 if (UNIX)
   find_program(POD2MAN_EXECUTABLE pod2man)
+  gammaray_add_dummy_package(pod2man POD2MAN_EXECUTABLE)
+  set_package_properties(pod2man PROPERTIES
+    TYPE RECOMMENDED
+    DESCRIPTION "Man page generator"
+    PURPOSE "Generate GammaRay man pages."
+  )
 
   if(POD2MAN_EXECUTABLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
     add_custom_command(
@@ -20,14 +26,11 @@ endif()
 # API docs
 #
 find_package(Doxygen)
-macro_log_feature(
-  DOXYGEN_FOUND
-  "Doxygen"
-  "Documentation system"
-  "http://www.doxygen.org"
-  FALSE
-  ""
-  "Needed to build the optional API documention"
+set_package_properties(Doxygen PROPERTIES
+  TYPE OPTIONAL
+  DESCRIPTION "API Documentation system"
+  URL "http://www.doxygen.org"
+  PURPOSE "Needed to build the API documention."
 )
 if(DOXYGEN_FOUND)
   file(GLOB _dox_deps docs/*.dox docs/*.html)
