@@ -405,7 +405,7 @@ if(NOT CMAKE_DISABLE_FIND_PACKAGE_VTK)
     find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
     if(NOT VTK_QT_INCLUDE_DIR)
       set(VTK_FOUND FALSE)
-      set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built")
+      set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built (looked in ${VTK_INCLUDE_DIRS})")
     endif()
   endif()
   macro_log_feature(
