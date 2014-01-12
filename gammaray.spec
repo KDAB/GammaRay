@@ -10,7 +10,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
-%define rel 1.9
+%define rel 2.0
 %define sover 2.0.0
 %define qtver qt4.8
 %define this_arch %(uname -p)
@@ -167,12 +167,16 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_scriptenginedebugger.desktop
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector_plugin.so
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector.desktop
-%{_libdir}/qt4/plugins/styles/
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector_ui_plugin.so
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector_ui.desktop
+%{_libdir}/gammaray/%{rel}/%{abi}/styles/
 
 %files kde4-plugins
 %defattr(-,root,root)
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker_plugin.so
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker.desktop
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker_ui_plugin.so
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker_ui.desktop
 
 
 %if 0%{?suse_version} >= 1220 || 0%{?fedora} >= 17
@@ -190,6 +194,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/libgammaray_common-%{abi}.so
 %{_libdir}/libgammaray_core-%{abi}.so
 %{_libdir}/libgammaray_ui-%{abi}.so
+%{_libdir}/cmake/GammaRay/
 
 %changelog
 * Sat Jan 11 2014 Allen Winter <allen.winter@kdab.com> 1.9.96
