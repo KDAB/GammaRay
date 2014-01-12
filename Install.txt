@@ -1,5 +1,4 @@
 GammaRay uses the CMake buildsystem.
-You must have CMake version 2.8 or higher.
 
 Please see the comments at the top of CMakeLists.txt for
 the available configuration options you can pass to cmake.
@@ -12,7 +11,7 @@ You can change this location by passing the option
 To build a debug version pass -DCMAKE_BUILD_TYPE=Debug to cmake.
 
 To build GammaRay you will need:
- - CMake 2.8
+ - CMake 2.8.9 (or 2.8.11 on Windows)
  - Qt 4.7 or higher
 
 Optional FOSS packages (eg. VTK, Graphviz, etc) provide extra functionality.
