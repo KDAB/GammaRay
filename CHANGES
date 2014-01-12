@@ -8,6 +8,7 @@ Version 2.0 (beta released):
  * Multi-probe support
  * Probe usable on targets without QtWidget available
  * Fix preload check on MIPS/MIPSel (issue #63)
+ * Support for displaying arguments of monitored signals
 
 Version 1.3.2:
 -------------
