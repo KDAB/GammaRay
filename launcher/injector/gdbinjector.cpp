@@ -37,10 +37,7 @@ static QTextStream cout(stdout);
 static QTextStream cerr(stderr);
 
 GdbInjector::GdbInjector() :
-  mManualError(false),
-  mExitCode(-1),
-  mProcessError(QProcess::UnknownError),
-  mExitStatus(QProcess::NormalExit)
+  mManualError(false)
 {
 }
 
@@ -143,26 +140,6 @@ void GdbInjector::execGdbCmd(const QByteArray &cmd, bool waitForWritten)
   if (waitForWritten) {
     m_process->waitForBytesWritten(-1);
   }
-}
-
-int GdbInjector::exitCode()
-{
-  return mExitCode;
-}
-
-QProcess::ProcessError GdbInjector::processError()
-{
-  return mProcessError;
-}
-
-QProcess::ExitStatus GdbInjector::exitStatus()
-{
-  return mExitStatus;
-}
-
-QString GdbInjector::errorString()
-{
-  return mErrorString;
 }
 
 void GdbInjector::readyReadStandardError()

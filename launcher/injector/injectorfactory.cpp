@@ -24,6 +24,7 @@
 #include "injectorfactory.h"
 
 #include "gdbinjector.h"
+#include "lldbinjector.h"
 #include "preloadinjector.h"
 #include "styleinjector.h"
 #include "windllinjector.h"
@@ -39,6 +40,9 @@ AbstractInjector::Ptr createInjector(const QString &name)
 #ifndef Q_OS_WIN
   if (name == QLatin1String("gdb")) {
     return AbstractInjector::Ptr(new GdbInjector);
+  }
+  if (name == QLatin1String("lldb")) {
+    return AbstractInjector::Ptr(new LldbInjector);
   }
 #endif
   if (name == QLatin1String("style")) {
@@ -80,7 +84,7 @@ QStringList availableInjectors()
 {
   QStringList types;
 #ifndef Q_OS_WIN
-  types << QLatin1String("preload") << QLatin1String("gdb");
+  types << QLatin1String("preload") << QLatin1String("gdb") << QLatin1String("lldb");
 #else
   types << QLatin1String("windll");
 #endif

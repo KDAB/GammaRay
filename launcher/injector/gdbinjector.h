@@ -24,13 +24,13 @@
 #ifndef GAMMARAY_GDBINJECTOR_H
 #define GAMMARAY_GDBINJECTOR_H
 
-#include "injector/abstractinjector.h"
+#include "injector/debuggerinjector.h"
 
 #include <QProcess>
 
 namespace GammaRay {
 
-class GdbInjector : public QObject, public AbstractInjector
+class GdbInjector : public QObject, public DebuggerInjector
 {
   Q_OBJECT
   public:
@@ -42,10 +42,6 @@ class GdbInjector : public QObject, public AbstractInjector
                        const QString &probeDll, const QString &probeFunc);
     virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
     virtual bool selfTest();
-    virtual int exitCode();
-    virtual QProcess::ExitStatus exitStatus();
-    virtual QProcess::ProcessError processError();
-    virtual QString errorString();
 
   private:
     bool startGdb(const QStringList &args);
@@ -60,10 +56,6 @@ class GdbInjector : public QObject, public AbstractInjector
 
   private:
     bool mManualError;
-    int mExitCode;
-    QProcess::ProcessError mProcessError;
-    QProcess::ExitStatus mExitStatus;
-    QString mErrorString;
     QScopedPointer<QProcess> m_process;
 };
 
