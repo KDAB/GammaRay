@@ -122,3 +122,12 @@ void GdbInjector::addMethodBreakpoint(const QByteArray& method)
   execCmd("break " + method);
 #endif
 }
+
+void GdbInjector::loadSymbols(const QByteArray& library)
+{
+#ifndef Q_OS_MAC
+  execCmd("sha " + library);
+#else
+  Q_UNUSED(library);
+#endif
+}

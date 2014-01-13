@@ -45,6 +45,7 @@ class GdbInjector : public DebuggerInjector
     void execCmd(const QByteArray &cmd, bool waitForWritten = true);
     void addFunctionBreakpoint(const QByteArray& function);
     void addMethodBreakpoint(const QByteArray& method);
+    void loadSymbols(const QByteArray& library);
 
   private slots:
     void readyReadStandardError();

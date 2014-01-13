@@ -105,8 +105,11 @@ void DebuggerInjector::waitForMain()
 {
   addFunctionBreakpoint("main");
   execCmd("run");
-#ifndef Q_OS_MAC
-  execCmd("sha QtCore");
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  loadSymbols("QtCore");
+#else
+  loadSymbols("Qt5Core");
 #endif
   // either this
   addMethodBreakpoint("QCoreApplication::exec");
@@ -118,14 +121,10 @@ void DebuggerInjector::waitForMain()
 int DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(m_process);
-#ifndef Q_OS_MAC
-  execCmd("sha dl");
-#endif
+  loadSymbols("dl");
   execCmd(qPrintable(QString::fromLatin1("call (void) dlopen(\"%1\", %2)").
           arg(probeDll).arg(RTLD_NOW)));
-#ifndef Q_OS_MAC
-  execCmd(qPrintable(QString::fromLatin1("sha %1").arg(probeDll)));
-#endif
+  loadSymbols(probeDll.toUtf8());
   //  execCmd(qPrintable(QString::fromLatin1("call (void) %1()").arg(probeFunc)));
   execCmd(qPrintable(QString::fromLatin1("print %1").arg(probeFunc)));
   execCmd("call (void) $()");
@@ -150,4 +149,9 @@ int DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &pr
   }
 
   return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
+}
+
+void DebuggerInjector::loadSymbols(const QByteArray& library)
+{
+  Q_UNUSED(library);
 }

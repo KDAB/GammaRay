@@ -54,6 +54,8 @@ class DebuggerInjector : public QObject, public AbstractInjector
     virtual void addFunctionBreakpoint(const QByteArray &function) = 0;
     /** Break in the method @p method, specifiy name without parenthesis. */
     virtual void addMethodBreakpoint(const QByteArray &method) = 0;
+    /** Load symbols for the given shared library. */
+    virtual void loadSymbols(const QByteArray &library);
 
     /** Start the debugger with the given command line arguments. */
     bool startDebugger(const QStringList &args);
