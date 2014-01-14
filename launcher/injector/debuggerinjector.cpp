@@ -122,12 +122,10 @@ int DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &pr
 {
   Q_ASSERT(m_process);
   loadSymbols("dl");
-  execCmd(qPrintable(QString::fromLatin1("call (void) dlopen(\"%1\", %2)").
-          arg(probeDll).arg(RTLD_NOW)));
+  execCmd(QString::fromLatin1("call (void) dlopen(\"%1\", %2)").
+          arg(probeDll).arg(RTLD_NOW).toUtf8());
   loadSymbols(probeDll.toUtf8());
-  //  execCmd(qPrintable(QString::fromLatin1("call (void) %1()").arg(probeFunc)));
-  execCmd(qPrintable(QString::fromLatin1("print %1").arg(probeFunc)));
-  execCmd("call (void) $()");
+  execCmd(QString::fromLatin1("call (void) %1()").arg(probeFunc).toUtf8());
 
   if (qgetenv("GAMMARAY_UNITTEST") != "1") {
     execCmd("detach");
