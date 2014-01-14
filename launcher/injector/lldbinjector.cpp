@@ -83,7 +83,7 @@ bool LldbInjector::launch(const QStringList& programAndArgs, const QString& prob
 bool LldbInjector::attach(int pid, const QString& probeDll, const QString& probeFunc)
 {
   Q_ASSERT(pid > 0);
-  if (!startDebugger(QStringList() << QLatin1String("-pid") << QString::number(pid))) {
+  if (!startDebugger(QStringList() << QLatin1String("-p") << QString::number(pid))) {
     return false;
   }
   return injectAndDetach(probeDll, probeFunc);
