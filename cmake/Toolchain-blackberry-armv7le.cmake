@@ -8,6 +8,7 @@
 
 # the name of the target operating system
 set(CMAKE_SYSTEM_NAME QNX)
+set(CMAKE_SYSTEM_PROCESSOR "armv7le")
 
 # which compilers to use for C and C++
 set(arch gcc_ntoarmv7le)
