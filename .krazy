@@ -24,4 +24,4 @@ SKIP /build
 SKIP Doxyfile.cmake
 
 #skip the borrowed code in the cmake subdir
-SKIP /cmake/MacroLogFeature.cmake|/cmake/ECMQt4To5Porting.cmake|/cmake/FindGraphviz.cmake
+SKIP /cmake/MacroLogFeature.cmake|/cmake/ECMQt4To5Porting.cmake|/cmake/FindGraphviz.cmake|/cmake/Toolchain-QNX65.cmake
