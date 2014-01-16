@@ -87,19 +87,19 @@ if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
 endif()
 
 if(Qt5Core_FOUND)
-  find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
-  find_package(Qt5 NO_MODULE QUIET COMPONENTS
-    Concurrent
-    Test
-    Widgets
-    PrintSupport
-    Svg
-    Script
-    ScriptTools
-    Location # workaround for 5.1 webkit that tries to find a qtlocation with a matching version if none (with any version) has been found before...
-    Designer
-  )
-  find_package(Qt5WebKitWidgets 5.0.2 QUIET) # 5.0.[01] has a code generation bug in uic that fails to generate proper code for webkitwidget classes
+  # Qt5 COMPONENT x y z only works with Qt >= 5.1 ...
+  find_package(Qt5Gui NO_MODULE REQUIRED)
+  find_package(Qt5Network NO_MODULE REQUIRED)
+  find_package(Qt5Concurrent NO_MODULE)
+  find_package(Qt5Test NO_MODULE)
+  find_package(Qt5Widgets NO_MODULE)
+  find_package(Qt5PrintSupport NO_MODULE)
+  find_package(Qt5Svg NO_MODULE)
+  find_package(Qt5Script NO_MODULE)
+  find_package(Qt5ScriptTools NO_MODULE)
+  find_package(Qt5Location NO_MODULE) # workaround for 5.1 webkit that tries to find a qtlocation with a matching version if none (with any version) has been found before...
+  find_package(Qt5Designer NO_MODULE)
+  find_package(Qt5WebKitWidgets 5.0.2 NO_MODULE) # 5.0.[01] has a code generation bug in uic that fails to generate proper code for webkitwidget classes
 
   include("cmake/ECMQt4To5Porting.cmake")
   # only needed for Qt <= 5.1 and/or some older CMake versions (exact combination unknown unfortunately)
