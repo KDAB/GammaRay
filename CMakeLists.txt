@@ -298,12 +298,18 @@ macro_log_feature(
   "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
 )
 
-if(WIN32 OR APPLE)
-  set(BUILD_TIMER_PLUGIN TRUE)
+if(Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.2.2)
+  # https://codereview.qt-project.org/75530
+  message(STATUS "Disabling timer profiler plug-in due to a bug in Qt5 <= 5.2.1.")
+  set(BUILD_TIMER_PLUGIN FALSE)
 else()
-  check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
-  macro_log_feature(HAVE_CLOCK_GETTIME "librt" "High resolution clock for the timer profiler plugin." "part of glibc" FALSE)
-  set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
+  if(WIN32 OR APPLE)
+    set(BUILD_TIMER_PLUGIN TRUE)
+  else()
+    check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
+    macro_log_feature(HAVE_CLOCK_GETTIME "librt" "High resolution clock for the timer profiler plugin." "part of glibc" FALSE)
+    set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
+  endif()
 endif()
 
 if(WIN32)
