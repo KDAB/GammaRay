@@ -137,7 +137,9 @@ private:
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
   QObject(parent),
   m_options(options),
+#ifdef HAVE_SHM
   m_shm(0),
+#endif
   m_state(Initial)
 {
   Q_ASSERT(options.isValid());
