@@ -61,7 +61,9 @@ private:
 
 private:
   LaunchOptions m_options;
+#ifndef QT_NO_SHAREDMEMORY
   QSharedMemory *m_shm;
+#endif
   ClientLauncher m_client;
   QTimer m_safetyTimer;
   enum State {

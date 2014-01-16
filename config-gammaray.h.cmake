@@ -27,3 +27,8 @@
 
 #cmakedefine HAVE_VTK
 #cmakedefine HAVE_GRAPHVIZ
+
+#include <qglobal.h>
+#if !defined(QT_NO_SHAREDMEMORY) && !defined(QT_NO_SYSTEMSEMAPHORE)
+#define HAVE_SHM
+#endif

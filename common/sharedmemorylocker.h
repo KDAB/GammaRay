@@ -26,6 +26,7 @@
 namespace GammaRay
 {
 
+#ifndef QT_NO_SHAREDMEMORY
 /** RAII helper class for locking QSharedMemory.
  * @todo this should be upstream
  */
@@ -46,5 +47,6 @@ public:
 private:
   QSharedMemory *m_shm;
 };
+#endif
 
 }

@@ -61,6 +61,7 @@ QVariant ProbeSettings::value(const QString& key, const QVariant& defaultValue)
 
 void ProbeSettings::receiveSettings()
 {
+#ifdef HAVE_SHM
   QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
   if (!shm.attach()) {
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
@@ -99,6 +100,7 @@ void ProbeSettings::receiveSettings()
         continue;
     }
   }
+#endif
 }
 
 qint64 ProbeSettings::launcherIdentifier()
@@ -112,6 +114,7 @@ qint64 ProbeSettings::launcherIdentifier()
 
 void ProbeSettings::sendPort(quint16 port)
 {
+#ifdef HAVE_SHM
   QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
   if (!shm.attach()) {
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
@@ -140,4 +143,5 @@ void ProbeSettings::sendPort(quint16 port)
 
   QSystemSemaphore sem("gammaray-semaphore-" + QString::number(launcherIdentifier()), QSystemSemaphore::Open);
   sem.release();
+#endif
 }

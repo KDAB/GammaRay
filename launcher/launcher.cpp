@@ -21,11 +21,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
 #include "launcher.h"
 #include "probefinder.h"
 #include "injector/abstractinjector.h"
 #include "injector/injectorfactory.h"
 
+#include <common/endpoint.h>
 #include <common/sharedmemorylocker.h>
 #include <common/message.h>
 
@@ -50,9 +52,11 @@ public:
   ~SemaphoreWaiter() {}
   void run()
   {
+#ifdef HAVE_SHM
     QSystemSemaphore sem("gammaray-semaphore-" + QString::number(m_id), 0, QSystemSemaphore::Create);
     sem.acquire();
     emit semaphoreReleased();
+#endif
   }
 
 signals:
@@ -197,6 +201,7 @@ void Launcher::sendLauncherId()
 
 void Launcher::sendProbeSettings()
 {
+#ifdef HAVE_SHM
   QByteArray ba; // need a full copy of this first, since there's no QIODevice to directly work on void*...
   QBuffer buffer(&ba);
   buffer.open(QIODevice::WriteOnly);
@@ -227,6 +232,7 @@ void Launcher::sendProbeSettings()
   qMemCopy(m_shm->data(), ba.constData(), ba.size());
   if (m_shm->size() > ba.size()) // Windows...
     qMemSet(static_cast<char*>(m_shm->data()) + ba.size(), 0xff, m_shm->size() - ba.size());
+#endif
 }
 
 void Launcher::sendProbeSettingsFallback()
@@ -243,6 +249,7 @@ void Launcher::semaphoreReleased()
 {
   m_safetyTimer.stop();
 
+#ifdef HAVE_SHM
   SharedMemoryLocker locker(m_shm);
   QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(m_shm->data()), m_shm->size());
   QBuffer buffer(&ba);
@@ -268,6 +275,9 @@ void Launcher::semaphoreReleased()
     QCoreApplication::exit(1);
     return;
   }
+#else
+  quint16 port = Endpoint::defaultPort();
+#endif
 
   std::cout << "GammaRay server listening on port: " << port << std::endl;
 
