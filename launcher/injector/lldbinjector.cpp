@@ -23,6 +23,8 @@
 
 #include "lldbinjector.h"
 
+#include <iostream>
+
 using namespace GammaRay;
 
 LldbInjector::LldbInjector()
@@ -48,6 +50,10 @@ void LldbInjector::execCmd(const QByteArray& cmd, bool waitForWritten)
   // wait for the prompt, otherwise LLDB loses the command
   if (!m_process->bytesAvailable())
     m_process->waitForReadyRead(-1);
+
+  if (qgetenv("GAMMARAY_UNITTEST") == "1") {
+    std::cout << m_process->readAllStandardOutput().constData();
+  }
 
   m_process->write(cmd + '\n');
 
