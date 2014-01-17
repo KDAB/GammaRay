@@ -137,14 +137,23 @@ void ObjectStaticPropertyModel::monitorObject(QObject* obj)
 #else
       prop.notifySignal().methodSignature()
 #endif
-      , SLOT(updateAll()));
+      , this, SLOT(propertyUpdated()));
+      m_notifyToPropertyMap.insert(prop.notifySignalIndex(), i);
     }
   }
 }
 
 void ObjectStaticPropertyModel::unmonitorObject(QObject* obj)
 {
-  disconnect(obj, 0, this, SLOT(updateAll()));
+  disconnect(obj, 0, this, SLOT(propertyUpdated()));
+  m_notifyToPropertyMap.clear();
+}
+
+void ObjectStaticPropertyModel::propertyUpdated()
+{
+  Q_ASSERT(senderSignalIndex() >= 0);
+  const int propertyIndex = m_notifyToPropertyMap.value(senderSignalIndex());
+  emit dataChanged(index(propertyIndex, 1), index(propertyIndex, 1));
 }
 
 QString ObjectStaticPropertyModel::detailString(const QMetaProperty& prop) const

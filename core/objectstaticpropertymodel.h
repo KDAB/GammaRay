@@ -42,8 +42,12 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
     void monitorObject(QObject* obj);
     void unmonitorObject(QObject* obj);
 
+  private slots:
+    void propertyUpdated();
+
   private:
     QString detailString(const QMetaProperty& prop) const;
+    QHash<int, int> m_notifyToPropertyMap;
 };
 
 }
