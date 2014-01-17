@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        1.9.96
+Version:        2.0.0
 Release:        2
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -197,6 +197,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/cmake/GammaRay/
 
 %changelog
+* Fri Jan 17 2014 Allen Winter <allen.winter@kdab.com> 2.0.0
+  2.0.0 final
 * Sat Jan 11 2014 Allen Winter <allen.winter@kdab.com> 1.9.96
   Second 2.0 beta release
 * Fri Dec 20 2013 Allen Winter <allen.winter@kdab.com> 1.9.95
