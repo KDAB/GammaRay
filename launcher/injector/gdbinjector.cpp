@@ -36,9 +36,13 @@ using namespace GammaRay;
 static QTextStream cout(stdout);
 static QTextStream cerr(stderr);
 
-GdbInjector::GdbInjector() :
-  mManualError(false)
+GdbInjector::GdbInjector()
 {
+}
+
+QString GdbInjector::debuggerExecutable() const
+{
+  return QLatin1String("gdb");
 }
 
 bool GdbInjector::launch(const QStringList &programAndArgs,
@@ -48,7 +52,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
   gdbArgs.push_back(QLatin1String("--args"));
   gdbArgs.append(programAndArgs);
 
-  if (!startGdb(gdbArgs)) {
+  if (!startDebugger(gdbArgs)) {
     return -1;
   }
 
@@ -69,31 +73,10 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
 bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(pid > 0);
-  if (!startGdb(QStringList() << QLatin1String("-pid") << QString::number(pid))) {
+  if (!startDebugger(QStringList() << QLatin1String("-pid") << QString::number(pid))) {
     return false;
   }
   return injectAndDetach(probeDll, probeFunc);
-}
-
-bool GdbInjector::startGdb(const QStringList &args)
-{
-  m_process.reset(new QProcess);
-  connect(m_process.data(), SIGNAL(readyReadStandardError()),
-          this, SLOT(readyReadStandardError()));
-  connect(m_process.data(), SIGNAL(readyReadStandardOutput()),
-          this, SLOT(readyReadStandardOutput()));
-  m_process->setProcessChannelMode(QProcess::SeparateChannels);
-  m_process->start(QLatin1String("gdb"), args);
-  bool status = m_process->waitForStarted(-1);
-
-  mExitCode = m_process->exitCode();
-  mExitStatus = m_process->exitStatus();
-  if (!mManualError) {
-    mProcessError = m_process->error();
-    mErrorString = m_process->errorString();
-  }
-
-  return status;
 }
 
 bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
@@ -183,12 +166,3 @@ void GdbInjector::addBreakpoint(const QByteArray &method)
   execGdbCmd("break " + method);
 #endif
 }
-
-bool GdbInjector::selfTest()
-{
-  if (startGdb(QStringList() << QLatin1String("--version"))) {
-    return m_process->waitForFinished(-1);
-  }
-  return false;
-}
-

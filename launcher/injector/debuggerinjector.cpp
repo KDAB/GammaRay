@@ -23,12 +23,17 @@
 
 #include "debuggerinjector.h"
 
+#include <QProcess>
+
+#include <iostream>
+
 using namespace GammaRay;
 
 DebuggerInjector::DebuggerInjector() :
   mExitCode(-1),
   mProcessError(QProcess::UnknownError),
-  mExitStatus(QProcess::NormalExit)
+  mExitStatus(QProcess::NormalExit),
+  mManualError(false)
 {
 }
 
@@ -54,4 +59,43 @@ QProcess::ExitStatus DebuggerInjector::exitStatus()
 QProcess::ProcessError DebuggerInjector::processError()
 {
   return mProcessError;
+}
+
+void DebuggerInjector::readyReadStandardOutput()
+{
+}
+
+void DebuggerInjector::readyReadStandardError()
+{
+  const QString error = m_process->readAllStandardError();
+  std::cerr << qPrintable(error) << std::endl;
+}
+
+bool DebuggerInjector::startDebugger(const QStringList& args)
+{
+  m_process.reset(new QProcess);
+  connect(m_process.data(), SIGNAL(readyReadStandardError()),
+          this, SLOT(readyReadStandardError()));
+  connect(m_process.data(), SIGNAL(readyReadStandardOutput()),
+          this, SLOT(readyReadStandardOutput()));
+  m_process->setProcessChannelMode(QProcess::SeparateChannels);
+  m_process->start(debuggerExecutable(), args);
+  bool status = m_process->waitForStarted(-1);
+
+  mExitCode = m_process->exitCode();
+  mExitStatus = m_process->exitStatus();
+  if (!mManualError) {
+    mProcessError = m_process->error();
+    mErrorString = m_process->errorString();
+  }
+
+  return status;
+}
+
+bool DebuggerInjector::selfTest()
+{
+  if (startDebugger(QStringList() << QLatin1String("--version"))) {
+    return m_process->waitForFinished(-1);
+  }
+  return false;
 }

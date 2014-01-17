@@ -26,14 +26,20 @@
 
 #include "injector/abstractinjector.h"
 
+#include <QObject>
+#include <QProcess>
+
 namespace GammaRay {
 
 /** Base class for debugger-based injectors. */
-class DebuggerInjector : public AbstractInjector
+class DebuggerInjector : public QObject, public AbstractInjector
 {
+  Q_OBJECT
   public:
     DebuggerInjector();
     ~DebuggerInjector();
+
+    bool selfTest();
 
     QString errorString();
     int exitCode();
@@ -41,12 +47,21 @@ class DebuggerInjector : public AbstractInjector
     QProcess::ProcessError processError();
 
   protected:
+    virtual QString debuggerExecutable() const = 0;
+
+    bool startDebugger(const QStringList &args);
+
+  protected slots:
+    virtual void readyReadStandardError();
+    virtual void readyReadStandardOutput();
+
+  protected:
+    QScopedPointer<QProcess> m_process;
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
     QString mErrorString;
-
-  private:
+    bool mManualError;
 };
 
 }

@@ -37,3 +37,8 @@ QString LldbInjector::name() const
 {
   return QLatin1String("lldb");
 }
+
+QString LldbInjector::debuggerExecutable() const
+{
+  return QLatin1String("lldb");
+}

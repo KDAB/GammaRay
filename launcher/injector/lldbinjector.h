@@ -35,6 +35,9 @@ class LldbInjector : public DebuggerInjector
     ~LldbInjector();
 
     QString name() const;
+
+  protected:
+    QString debuggerExecutable() const;
 };
 }
 

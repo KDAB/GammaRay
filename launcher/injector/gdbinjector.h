@@ -26,11 +26,9 @@
 
 #include "injector/debuggerinjector.h"
 
-#include <QProcess>
-
 namespace GammaRay {
 
-class GdbInjector : public QObject, public DebuggerInjector
+class GdbInjector : public DebuggerInjector
 {
   Q_OBJECT
   public:
@@ -41,10 +39,11 @@ class GdbInjector : public QObject, public DebuggerInjector
     virtual bool launch(const QStringList &programAndArgs,
                        const QString &probeDll, const QString &probeFunc);
     virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
-    virtual bool selfTest();
+
+  protected:
+    QString debuggerExecutable() const;
 
   private:
-    bool startGdb(const QStringList &args);
     bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
     /** Method to break on, without arguments or parenthesis. */
     void addBreakpoint(const QByteArray &method);
@@ -53,10 +52,6 @@ class GdbInjector : public QObject, public DebuggerInjector
   private slots:
     void readyReadStandardError();
     void readyReadStandardOutput();
-
-  private:
-    bool mManualError;
-    QScopedPointer<QProcess> m_process;
 };
 
 }
