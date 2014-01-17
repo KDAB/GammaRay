@@ -26,6 +26,7 @@
 #include <QProcess>
 
 #include <iostream>
+#include <dlfcn.h>
 
 using namespace GammaRay;
 
@@ -98,4 +99,55 @@ bool DebuggerInjector::selfTest()
     return m_process->waitForFinished(-1);
   }
   return false;
+}
+
+void DebuggerInjector::waitForMain()
+{
+  addFunctionBreakpoint("main");
+  execCmd("run");
+#ifndef Q_OS_MAC
+  execCmd("sha QtCore");
+#endif
+  // either this
+  addMethodBreakpoint("QCoreApplication::exec");
+  // or this for unit tests should hit
+  addMethodBreakpoint("QTest::qExec");
+  execCmd("continue");
+}
+
+int DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
+{
+  Q_ASSERT(m_process);
+#ifndef Q_OS_MAC
+  execCmd("sha dl");
+#endif
+  execCmd(qPrintable(QString::fromLatin1("call (void) dlopen(\"%1\", %2)").
+          arg(probeDll).arg(RTLD_NOW)));
+#ifndef Q_OS_MAC
+  execCmd(qPrintable(QString::fromLatin1("sha %1").arg(probeDll)));
+#endif
+  //  execCmd(qPrintable(QString::fromLatin1("call (void) %1()").arg(probeFunc)));
+  execCmd(qPrintable(QString::fromLatin1("print %1").arg(probeFunc)));
+  execCmd("call (void) $()");
+
+  if (qgetenv("GAMMARAY_UNITTEST") != "1") {
+    execCmd("detach");
+    execCmd("quit");
+  } else {
+    execCmd("continue");
+    // if we hit a crash or anything, print backtrace and quit
+    execCmd("backtrace", false);
+    execCmd("quit", false);
+  }
+
+  m_process->waitForFinished(-1);
+
+  mExitCode = m_process->exitCode();
+  mExitStatus = m_process->exitStatus();
+  if (!mManualError) {
+    mProcessError = m_process->error();
+    mErrorString = m_process->errorString();
+  }
+
+  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
 }

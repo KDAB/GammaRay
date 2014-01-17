@@ -42,12 +42,9 @@ class GdbInjector : public DebuggerInjector
 
   protected:
     QString debuggerExecutable() const;
-
-  private:
-    bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
-    /** Method to break on, without arguments or parenthesis. */
-    void addBreakpoint(const QByteArray &method);
-    void execGdbCmd(const QByteArray &cmd, bool waitForWritten = true);
+    void execCmd(const QByteArray &cmd, bool waitForWritten = true);
+    void addFunctionBreakpoint(const QByteArray& function);
+    void addMethodBreakpoint(const QByteArray& method);
 
   private slots:
     void readyReadStandardError();

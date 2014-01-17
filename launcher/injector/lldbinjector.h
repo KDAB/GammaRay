@@ -35,9 +35,14 @@ class LldbInjector : public DebuggerInjector
     ~LldbInjector();
 
     QString name() const;
+    bool launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc);
+    bool attach(int pid, const QString& probeDll, const QString& probeFunc);
 
   protected:
     QString debuggerExecutable() const;
+    void execCmd(const QByteArray& cmd, bool waitForWritten = true);
+    void addFunctionBreakpoint(const QByteArray& function);
+    void addMethodBreakpoint(const QByteArray& method);
 };
 }
 

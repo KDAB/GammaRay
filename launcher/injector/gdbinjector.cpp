@@ -29,8 +29,6 @@
 #include <QStringList>
 #include <QCoreApplication>
 
-#include <dlfcn.h>
-
 using namespace GammaRay;
 
 static QTextStream cout(stdout);
@@ -56,17 +54,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
     return -1;
   }
 
-  execGdbCmd("break main");
-  execGdbCmd("run");
-#ifndef Q_OS_MAC
-  execGdbCmd("sha QtCore");
-#endif
-  // either this
-  addBreakpoint("QCoreApplication::exec");
-  // or this for unit tests should hit
-  addBreakpoint("QTest::qExec");
-  execGdbCmd("continue");
-
+  waitForMain();
   return injectAndDetach(probeDll, probeFunc);
 }
 
@@ -79,44 +67,7 @@ bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeF
   return injectAndDetach(probeDll, probeFunc);
 }
 
-bool GdbInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
-{
-  Q_ASSERT(m_process);
-#ifndef Q_OS_MAC
-  execGdbCmd("sha dl");
-#endif
-  execGdbCmd(qPrintable(QString::fromLatin1("call (void) dlopen(\"%1\", %2)").
-                        arg(probeDll).arg(RTLD_NOW)));
-#ifndef Q_OS_MAC
-  execGdbCmd(qPrintable(QString::fromLatin1("sha %1").arg(probeDll)));
-#endif
-//  execGdbCmd(qPrintable(QString::fromLatin1("call (void) %1()").arg(probeFunc)));
-  execGdbCmd(qPrintable(QString::fromLatin1("print %1").arg(probeFunc)));
-  execGdbCmd("call (void) $()");
-
-  if (qgetenv("GAMMARAY_UNITTEST") != "1") {
-    execGdbCmd("detach");
-    execGdbCmd("quit");
-  } else {
-    execGdbCmd("continue");
-    // if we hit a crash or anything, print backtrace and quit
-    execGdbCmd("backtrace", false);
-    execGdbCmd("quit", false);
-  }
-
-  m_process->waitForFinished(-1);
-
-  mExitCode = m_process->exitCode();
-  mExitStatus = m_process->exitStatus();
-  if (!mManualError) {
-    mProcessError = m_process->error();
-    mErrorString = m_process->errorString();
-  }
-
-  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
-}
-
-void GdbInjector::execGdbCmd(const QByteArray &cmd, bool waitForWritten)
+void GdbInjector::execCmd(const QByteArray &cmd, bool waitForWritten)
 {
   m_process->write(cmd + '\n');
 
@@ -158,11 +109,16 @@ void GdbInjector::readyReadStandardOutput()
   }
 }
 
-void GdbInjector::addBreakpoint(const QByteArray &method)
+void GdbInjector::addFunctionBreakpoint(const QByteArray& function)
+{
+  execCmd("break " + function);
+}
+
+void GdbInjector::addMethodBreakpoint(const QByteArray& method)
 {
 #ifdef Q_OS_MAC
-  execGdbCmd("break " + method + "()");
+  execCmd("break " + method + "()");
 #else
-  execGdbCmd("break " + method);
+  execCmd("break " + method);
 #endif
 }
