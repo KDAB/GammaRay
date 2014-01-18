@@ -1,10 +1,10 @@
 /*
-  gdbinjector.h
+  lldbinjector.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2014 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2014 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -21,37 +21,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_GDBINJECTOR_H
-#define GAMMARAY_GDBINJECTOR_H
+#ifndef GAMMARAY_LLDBINJECTOR_H
+#define GAMMARAY_LLDBINJECTOR_H
 
 #include "injector/debuggerinjector.h"
 
 namespace GammaRay {
 
-class GdbInjector : public DebuggerInjector
+class LldbInjector : public DebuggerInjector
 {
-  Q_OBJECT
   public:
-    GdbInjector();
-    QString name() const {
-      return QString("gdb");
-    }
-    virtual bool launch(const QStringList &programAndArgs,
-                       const QString &probeDll, const QString &probeFunc);
-    virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
+    LldbInjector();
+    ~LldbInjector();
+
+    QString name() const;
+    bool launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc);
+    bool attach(int pid, const QString& probeDll, const QString& probeFunc);
 
   protected:
     QString debuggerExecutable() const;
-    void execCmd(const QByteArray &cmd, bool waitForWritten = true);
+    void execCmd(const QByteArray& cmd, bool waitForWritten = true);
     void addFunctionBreakpoint(const QByteArray& function);
     void addMethodBreakpoint(const QByteArray& method);
-    void loadSymbols(const QByteArray& library);
-
-  private slots:
-    void readyReadStandardError();
-    void readyReadStandardOutput();
 };
-
 }
 
-#endif // GAMMARAY_GDBINJECTOR_H
+#endif // GAMMARAY_LLDBINJECTOR_H

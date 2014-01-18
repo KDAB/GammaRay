@@ -21,7 +21,11 @@ set(gammaray_launcher_shared_srcs
   launcherfinder.cpp
 )
 if(NOT WIN32)
-  list(APPEND gammaray_launcher_shared_srcs injector/gdbinjector.cpp)
+  list(APPEND gammaray_launcher_shared_srcs
+    injector/debuggerinjector.cpp
+    injector/gdbinjector.cpp
+    injector/lldbinjector.cpp
+  )
 endif()
 add_library(gammaray_launcher_shared STATIC ${gammaray_launcher_shared_srcs})
 target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES} gammaray_common)
@@ -46,6 +50,8 @@ endif()
 if(UNIX AND NOT APPLE AND NOT QNXNTO)
   target_link_libraries(gammaray dl) # for preload check
 endif()
+
+gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 

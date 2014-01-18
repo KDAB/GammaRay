@@ -25,6 +25,7 @@ if(QNXNTO)
   target_link_libraries(gammaray-client cpp)
 endif()
 
+gammaray_embed_info_plist(gammaray-client ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 set_target_properties(gammaray-client PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"
 )
