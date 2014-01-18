@@ -85,40 +85,40 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 }
 ///@cond internal
 #define MO_ADD_BASECLASS(Base) \
-  Q_ASSERT(MetaObjectRepository::instance()->hasMetaObject(QLatin1String(#Base))); \
-  mo->addBaseClass(MetaObjectRepository::instance()->metaObject(QLatin1String(#Base)));
+  Q_ASSERT(GammaRay::MetaObjectRepository::instance()->hasMetaObject(QLatin1String(#Base))); \
+  mo->addBaseClass(GammaRay::MetaObjectRepository::instance()->metaObject(QLatin1String(#Base)));
 ///@endcond
 
 /** Register @p Class with the MetaObjectRepository.
  *  Use this if @p Class has no base class.
  */
 #define MO_ADD_METAOBJECT0(Class) \
-  mo = new MetaObjectImpl<Class>; \
+  mo = new GammaRay::MetaObjectImpl<Class>; \
   mo->setClassName(QLatin1String(#Class)); \
-  MetaObjectRepository::instance()->addMetaObject(mo);
+  GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
 /** Register @p Class with the MetaObjectRepository.
  *  Use this if @p Class has one base class.
  */
 #define MO_ADD_METAOBJECT1(Class, Base1) \
-  mo = new MetaObjectImpl<Class, Base1>; \
+  mo = new GammaRay::MetaObjectImpl<Class, Base1>; \
   mo->setClassName(QLatin1String(#Class)); \
   MO_ADD_BASECLASS(Base1) \
-  MetaObjectRepository::instance()->addMetaObject(mo);
+  GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
 /** Register @p Class with the MetaObjectRepository.
  *  Use this if @p Class has two base classes.
  */
 #define MO_ADD_METAOBJECT2(Class, Base1, Base2) \
-  mo = new MetaObjectImpl<Class, Base1, Base2>; \
+  mo = new GammaRay::MetaObjectImpl<Class, Base1, Base2>; \
   mo->setClassName(QLatin1String(#Class)); \
   MO_ADD_BASECLASS(Base1) \
   MO_ADD_BASECLASS(Base2) \
-  MetaObjectRepository::instance()->addMetaObject(mo);
+  GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
 /** Register a read/write property for class @p Class. */
 #define MO_ADD_PROPERTY(Class, Type, Getter, Setter) \
-  mo->addProperty(new MetaPropertyImpl<Class, Type>( \
+  mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type>( \
     QLatin1String(#Getter), \
     &Class::Getter, \
     static_cast<void (Class::*)(Type)>(&Class::Setter)) \
@@ -126,7 +126,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 
 /** Register a read/write property for class @p Class with a type that is passed as const reference. */
 #define MO_ADD_PROPERTY_CR(Class, Type, Getter, Setter) \
-  mo->addProperty(new MetaPropertyImpl<Class, Type, const Type&>( \
+  mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type, const Type&>( \
     QLatin1String(#Getter), \
     &Class::Getter, \
     static_cast<void (Class::*)(const Type&)>(&Class::Setter)) \
@@ -134,7 +134,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 
 /** Register a read-only property for class @p Class. */
 #define MO_ADD_PROPERTY_RO(Class, Type, Getter) \
-  mo->addProperty(new MetaPropertyImpl<Class, Type>( \
+  mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type>( \
     QLatin1String(#Getter), \
     &Class::Getter));
 
