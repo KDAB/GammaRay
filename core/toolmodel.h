@@ -73,6 +73,8 @@ class ToolModel : public QAbstractListModel
      */
     void objectAdded(const QMetaObject *mo);
 
+    void addToolFactory(ToolFactory* tool);
+
   private:
     QVector<ToolFactory*> m_tools;
     QSet<ToolFactory*> m_inactiveTools;

@@ -31,6 +31,7 @@ ProxyToolFactory::ProxyToolFactory(const QString &path, QObject *parent)
 {
   m_name = value(QLatin1String("Name")).toString();
   m_supportedTypes = value(QLatin1String("X-GammaRay-Types")).toString().split(QLatin1Char(';'), QString::SkipEmptyParts);
+  m_hidden = value(QLatin1String("Hidden"), false).toBool();
 }
 
 bool ProxyToolFactory::isValid() const
@@ -61,4 +62,9 @@ void ProxyToolFactory::init(ProbeInterface *probe)
   }
   Q_ASSERT(fac);
   fac->init(probe);
+}
+
+bool ProxyToolFactory::isHidden() const
+{
+  return m_hidden;
 }

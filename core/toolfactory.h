@@ -84,6 +84,14 @@ class ToolFactory
      * @param probe The probe interface allowing access to the object models.
      */
     virtual void init(ProbeInterface *probe) = 0;
+
+    /**
+     * Allows to hide a plug-in from the UI.
+     * This is useful for plug-ins that only provide support for additional
+     * data types.
+     * @since 2.1
+     */
+    virtual bool isHidden() const = 0;
 };
 
 /**
@@ -106,6 +114,11 @@ public:
   virtual inline void init(ProbeInterface *probe)
   {
     new Tool(probe, probe->probe());
+  }
+
+  inline bool isHidden() const
+  {
+    return false;
   }
 };
 
@@ -130,6 +143,11 @@ class StandardToolFactory2 : public ToolFactory, public ToolUiFactory
     virtual inline void init(ProbeInterface *probe)
     {
       new Tool(probe, probe->probe());
+    }
+
+    inline bool isHidden() const
+    {
+      return false;
     }
 
     virtual inline QWidget *createWidget(QWidget *parentWidget)

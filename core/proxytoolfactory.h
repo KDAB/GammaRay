@@ -49,12 +49,14 @@ class ProxyToolFactory : public ProxyFactory<ToolFactory>
 
     virtual QString name() const;
     virtual QStringList supportedTypes() const;
+    bool isHidden() const;
 
     virtual void init(ProbeInterface *probe);
 
   private:
     QString m_name;
     QStringList m_supportedTypes;
+    bool m_hidden;
 };
 
 }

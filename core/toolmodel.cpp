@@ -56,31 +56,25 @@ using namespace GammaRay;
 ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
 {
   // built-in tools
-  m_tools.push_back(new ObjectInspectorFactory(this));
-  m_tools.push_back(new ModelInspectorFactory(this));
+  addToolFactory(new ObjectInspectorFactory(this));
+  addToolFactory(new ModelInspectorFactory(this));
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  m_tools.push_back(new ConnectionInspectorFactory(this));
+  addToolFactory(new ConnectionInspectorFactory(this));
 #endif
-  m_tools.push_back(new ResourceBrowserFactory(this));
-  m_tools.push_back(new MetaObjectBrowserFactory(this));
-  m_tools.push_back(new MetaTypeBrowserFactory(this));
-  m_tools.push_back(new TextDocumentInspectorFactory(this));
-  m_tools.push_back(new MessageHandlerFactory(this));
-  m_tools.push_back(new LocaleInspectorFactory(this));
+  addToolFactory(new ResourceBrowserFactory(this));
+  addToolFactory(new MetaObjectBrowserFactory(this));
+  addToolFactory(new MetaTypeBrowserFactory(this));
+  addToolFactory(new TextDocumentInspectorFactory(this));
+  addToolFactory(new MessageHandlerFactory(this));
+  addToolFactory(new LocaleInspectorFactory(this));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  m_tools.push_back(new StandardPathsFactory(this));
-  m_tools.push_back(new MimeTypesFactory(this));
+  addToolFactory(new StandardPathsFactory(this));
+  addToolFactory(new MimeTypesFactory(this));
 #endif
 
   m_pluginManager.reset(new ToolPluginManager(this));
   Q_FOREACH (ToolFactory *factory, m_pluginManager->plugins()) {
-    m_tools.push_back(factory);
-  }
-
-  // everything but the object inspector is inactive initially
-  const int numberOfTools(m_tools.size());
-  for (int i = 0; i < numberOfTools; ++i) {
-    m_inactiveTools.insert(m_tools.at(i));
+    addToolFactory(factory);
   }
 }
 
@@ -187,3 +181,9 @@ PluginLoadErrors ToolModel::pluginErrors() const
   return m_pluginManager->errors();
 }
 
+void ToolModel::addToolFactory(ToolFactory* tool)
+{
+  if (!tool->isHidden())
+    m_tools.push_back(tool);
+  m_inactiveTools.insert(tool);
+}

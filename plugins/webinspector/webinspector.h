@@ -50,6 +50,7 @@ class WebInspectorFactory : public QObject, public ToolFactory
     QString name() const;
     void init(ProbeInterface* probe);
     QStringList supportedTypes() const;
+    bool isHidden() const;
 };
 
 }
