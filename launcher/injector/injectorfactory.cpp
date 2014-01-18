@@ -60,10 +60,20 @@ AbstractInjector::Ptr createInjector(const QString &name)
   return AbstractInjector::Ptr(0);
 }
 
+static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types)
+{
+  foreach (const QString &type, types) {
+    AbstractInjector::Ptr injector = createInjector(type);
+    if (injector->selfTest())
+      return injector;
+  }
+  return AbstractInjector::Ptr(0);
+}
+
 AbstractInjector::Ptr defaultInjectorForLaunch()
 {
 #if defined(Q_OS_MAC)
-  return createInjector(QLatin1String("gdb"));
+  return findFirstWorkingInjector(QStringList() << QLatin1String("gdb") << QLatin1String("lldb"));
 #elif defined(Q_OS_UNIX)
   return createInjector(QLatin1String("preload"));
 #else
@@ -74,7 +84,7 @@ AbstractInjector::Ptr defaultInjectorForLaunch()
 AbstractInjector::Ptr defaultInjectorForAttach()
 {
 #ifndef Q_OS_WIN
-  return createInjector(QLatin1String("gdb"));
+  return findFirstWorkingInjector(QStringList() << QLatin1String("gdb") << QLatin1String("lldb"));
 #else
   return createInjector(QLatin1String("windll"));
 #endif
