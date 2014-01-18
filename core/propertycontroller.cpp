@@ -23,6 +23,7 @@
 
 #include "propertycontroller.h"
 
+#include "aggregatedpropertymodel.h"
 #include "connectionfilterproxymodel.h"
 #include "connectionmodel.h"
 #include "metapropertymodel.h"
@@ -61,6 +62,7 @@ PropertyController::PropertyController(const QString &baseName, QObject *parent)
   m_signalMapper(0),
   m_methodLogModel(new QStandardItemModel(this)),
   m_metaPropertyModel(new MetaPropertyModel(this)),
+  m_aggregatedPropertyModel(new AggregatedPropertyModel(this)),
   m_methodArgumentModel(new MethodArgumentModel(this))
 {
   m_inboundConnectionModel->setFilterOnReceiver(true);
@@ -75,7 +77,12 @@ PropertyController::PropertyController(const QString &baseName, QObject *parent)
   registerModel(m_outboundConnectionModel, "outboundConnections");
   registerModel(m_enumModel, "enums");
   registerModel(m_metaPropertyModel, "nonQProperties");
+  registerModel(m_aggregatedPropertyModel, "properties");
   registerModel(m_methodArgumentModel, "methodArguments");
+
+  m_aggregatedPropertyModel->addModel(m_staticPropertyModel);
+  m_aggregatedPropertyModel->addModel(m_metaPropertyModel);
+  m_aggregatedPropertyModel->addModel(m_dynamicPropertyModel);
 
   ObjectBroker::selectionModel(m_methodModel); // trigger creation
 

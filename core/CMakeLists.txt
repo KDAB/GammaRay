@@ -1,6 +1,7 @@
 set(gammaray_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/resourcemodel.cpp
 
+  aggregatedpropertymodel.cpp
   metaobject.cpp
   metaobjecttreemodel.cpp
   metaobjectrepository.cpp

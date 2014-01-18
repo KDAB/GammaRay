@@ -19,6 +19,29 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <widget class="QWidget" name="propertyTab">
+      <attribute name="title">
+       <string>Properties</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <item>
+        <widget class="KFilterProxySearchLine" name="propertySearchLine"/>
+       </item>
+       <item>
+        <widget class="QTreeView" name="propertyView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="staticPropertyTab">
       <attribute name="title">
        <string>Static Properties</string>
@@ -29,6 +52,9 @@
        </item>
        <item>
         <widget class="QTreeView" name="staticPropertyView">
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>

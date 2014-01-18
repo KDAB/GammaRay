@@ -160,6 +160,14 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
   m_ui->metaPropertySearchLine->setProxy(proxy);
   m_ui->metaPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
 
+  proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
+  proxy->setSourceModel(model("properties"));
+  m_ui->propertyView->setModel(proxy);
+  m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->propertySearchLine->setProxy(proxy);
+  m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
+
   if (m_controller) {
     disconnect(m_controller,
                SIGNAL(displayStateChanged(GammaRay::PropertyWidgetDisplayState::State)),

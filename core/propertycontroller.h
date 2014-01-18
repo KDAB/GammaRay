@@ -44,6 +44,7 @@ class ObjectMethodModel;
 class ObjectEnumModel;
 class MetaPropertyModel;
 class MethodArgumentModel;
+class AggregatedPropertyModel;
 
 /** @brief Non-UI part of the property widget. */
 class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterface
@@ -82,6 +83,7 @@ private:
   MultiSignalMapper *m_signalMapper;
   QStandardItemModel *m_methodLogModel;
   MetaPropertyModel *m_metaPropertyModel;
+  AggregatedPropertyModel *m_aggregatedPropertyModel;
 
   MethodArgumentModel *m_methodArgumentModel;
 };
