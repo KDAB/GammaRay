@@ -114,6 +114,7 @@ gammaray_install_headers(
   gammaray_core_export.h
   metaobject.h
   metaobjectrepository.h
+  metaproperty.h
   objectmodelbase.h
   objecttypefilterproxymodel.h
   probeinterface.h

@@ -33,7 +33,7 @@ namespace GammaRay {
 
 class MetaObject;
 
-/** Introspectable adaptor to non-QObject properties. */
+/** @brief Introspectable adaptor to non-QObject properties. */
 class GAMMARAY_CORE_EXPORT MetaProperty
 {
   public:
@@ -65,7 +65,7 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     MetaObject *m_class;
 };
 
-/** Template-ed implementation of MetaProperty. */
+/** @brief Template-ed implementation of MetaProperty. */
 template <typename Class, typename ValueType, typename SetterArgType = ValueType>
 class MetaPropertyImpl : public MetaProperty
 {
