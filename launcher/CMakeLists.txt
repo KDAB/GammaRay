@@ -47,6 +47,8 @@ if(UNIX AND NOT APPLE AND NOT QNXNTO)
   target_link_libraries(gammaray dl) # for preload check
 endif()
 
+gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
+
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 # UI launcher

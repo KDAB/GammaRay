@@ -45,6 +45,7 @@ if(UNIX AND NOT APPLE AND NOT QNXNTO)
   target_link_libraries(gammaray-launcher dl) # for preload check
 endif()
 
+gammaray_embed_info_plist(gammaray-launcher ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 set_target_properties(gammaray-launcher PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"
 )

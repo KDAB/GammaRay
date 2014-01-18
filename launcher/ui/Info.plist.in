@@ -1,0 +1,14 @@
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.kdab.GammaRay.launcherUi</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>GammaRay</string>
+    <key>CFBundleVersion</key>
+    <string>@GAMMARAY_VERSION_STRING@</string>
+    <key>CFBundleShortVersion</key>
+    <string>@GAMMARAY_VERSION@</string>
+</dict>
+</plist>

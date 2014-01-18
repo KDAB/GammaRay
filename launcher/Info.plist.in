@@ -1,0 +1,16 @@
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.kdab.GammaRay.injector</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>gammaray</string>
+    <key>CFBundleVersion</key>
+    <string>@GAMMARAY_VERSION_STRING@</string>
+    <key>CFBundleShortVersion</key>
+    <string>@GAMMARAY_VERSION@</string>
+    <key>LSUIElement</key>
+    <string>1</string>
+</dict>
+</plist>
