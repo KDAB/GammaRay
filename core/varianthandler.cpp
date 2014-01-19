@@ -318,6 +318,26 @@ QString VariantHandler::displayString(const QVariant &value)
     return (*it.value())(value);
   }
 
+  // recurse into sequences
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  if (value.canConvert<QVariantList>()) {
+    QStringList s;
+    QSequentialIterable it = value.value<QSequentialIterable>();
+    int emptyStrings = 0;
+    foreach (const QVariant &v, it) {
+      s.push_back(displayString(v));
+      if (s.last().isEmpty())
+        ++emptyStrings;
+    }
+    if (it.size() == 0)
+      return QObject::tr("<empty>");
+    else if (it.size() == emptyStrings) // we don't know the content either
+      return QObject::tr("%1 entries").arg(emptyStrings);
+    else
+      return s.join(", ");
+  }
+#endif
+
   return value.toString();
 }
 
