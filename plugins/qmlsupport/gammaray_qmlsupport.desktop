@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=QML Support
+X-GammaRay-Types=QQmlEngine;
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
+Exec=gammaray_qmlsupport
+Hidden=true

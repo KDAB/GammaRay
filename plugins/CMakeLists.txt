@@ -18,4 +18,6 @@ if(QT_QTSCRIPTTOOLS_FOUND OR Qt5ScriptTools_FOUND)
   add_subdirectory(scriptenginedebugger)
 endif()
 
-
+if(Qt5Qml_FOUND)
+  add_subdirectory(qmlsupport)
+endif()
