@@ -21,3 +21,7 @@ endif()
 if(Qt5Qml_FOUND)
   add_subdirectory(qmlsupport)
 endif()
+
+if(Qt5Quick_FOUND)
+  add_subdirectory(quickinspector)
+endif()

@@ -1,0 +1,3 @@
+# probe plugin
+gammaray_add_plugin(gammaray_quickinspector gammaray_quickinspector.desktop quickinspector.cpp)
+target_link_libraries(gammaray_quickinspector gammaray_core Qt5::Quick)

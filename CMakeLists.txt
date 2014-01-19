@@ -151,13 +151,14 @@ if(Qt5Core_FOUND)
   find_package(Qt5Script NO_MODULE QUIET)
   find_package(Qt5ScriptTools NO_MODULE QUIET)
   find_package(Qt5Qml NO_MODULE QUIET)
+  find_package(Qt5Quick NO_MODULE QUIET)
   find_package(Qt5Location NO_MODULE QUIET) # workaround for 5.1 webkit that tries to find a qtlocation with a matching version if none (with any version) has been found before...
   find_package(Qt5Designer NO_MODULE QUIET)
   find_package(Qt5WebKitWidgets 5.0.2 NO_MODULE QUIET) # 5.0.[01] has a code generation bug in uic that fails to generate proper code for webkitwidget classes
 
   include("cmake/ECMQt4To5Porting.cmake")
   # only needed for Qt <= 5.1 and/or some older CMake versions (exact combination unknown unfortunately)
-  include_directories(${QT_INCLUDES} ${Qt5Qml_INCLUDE_DIRS})
+  include_directories(${QT_INCLUDES} ${Qt5Qml_INCLUDE_DIRS} ${Qt5Quick_INCLUDE_DIRS})
 
   set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
   set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
