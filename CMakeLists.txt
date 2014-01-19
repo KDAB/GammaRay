@@ -157,7 +157,7 @@ if(Qt5Core_FOUND)
 
   include("cmake/ECMQt4To5Porting.cmake")
   # only needed for Qt <= 5.1 and/or some older CMake versions (exact combination unknown unfortunately)
-  include_directories(${QT_INCLUDES})
+  include_directories(${QT_INCLUDES} ${Qt5Qml_INCLUDE_DIRS})
 
   set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
   set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
