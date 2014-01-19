@@ -89,8 +89,8 @@ add_library(gammaray_core SHARED
 )
 
 target_link_libraries(gammaray_core
-  gammaray_common
-  gammaray_common_internal
+  LINK_PUBLIC gammaray_common
+  LINK_PRIVATE gammaray_common_internal
 )
 set_target_properties(gammaray_core PROPERTIES
   SOVERSION ${GAMMARAY_SOVERSION}
@@ -99,16 +99,14 @@ set_target_properties(gammaray_core PROPERTIES
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_core Qt5::Gui)
+  target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui)
 else()
   target_link_libraries(gammaray_core
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
-    ${QT_QTNETWORK_LIBRARIES}
+    LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} # GUI is needed for QItemSelectionModel
+    LINK_PRIVATE ${QT_QTNETWORK_LIBRARIES}
   )
 endif()
 
-target_link_libraries(gammaray_core LINK_INTERFACE_LIBRARIES gammaray_common ${QT_QTCORE_LIBRARIES})
 install(TARGETS gammaray_core EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 gammaray_install_headers(

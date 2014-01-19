@@ -51,14 +51,8 @@ set_target_properties(gammaray_ui PROPERTIES
 )
 
 target_link_libraries(gammaray_ui
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  gammaray_common_internal
-)
-
-target_link_libraries(gammaray_ui LINK_INTERFACE_LIBRARIES
-  gammaray_common
-  ${QT_QTGUI_LIBRARIES}
+  LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common
+  LINK_PRIVATE gammaray_common_internal
 )
 
 install(TARGETS gammaray_ui EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

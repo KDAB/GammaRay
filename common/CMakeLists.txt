@@ -22,12 +22,11 @@ set_target_properties(gammaray_common PROPERTIES
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_common Qt5::Core Qt5::Network)
+  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network)
 else()
   target_link_libraries(gammaray_common
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
-    ${QT_QTNETWORK_LIBRARIES}
+    LINK_PUBLIC ${QT_QTCORE_LIBRARIES}
+    LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES}
   )
 endif()
 
