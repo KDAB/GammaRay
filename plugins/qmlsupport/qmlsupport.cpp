@@ -25,6 +25,7 @@
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/varianthandler.h>
 
 #include <QQmlComponent>
 #include <QQmlContext>
@@ -33,6 +34,15 @@
 Q_DECLARE_METATYPE(QQmlError)
 
 using namespace GammaRay;
+
+static QString qmlErrorToString(const QQmlError &error)
+{
+  return QString::fromLatin1("%1:%2:%3: %4")
+    .arg(error.url().toString())
+    .arg(error.line())
+    .arg(error.column())
+    .arg(error.description());
+}
 
 QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   QObject(parent)
@@ -60,4 +70,6 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   MO_ADD_PROPERTY   (QQmlEngine, bool, outputWarningsToStandardError, setOutputWarningsToStandardError);
   MO_ADD_PROPERTY_CR(QQmlEngine, QStringList, pluginPathList, setPluginPathList);
   MO_ADD_PROPERTY_RO(QQmlEngine, QQmlContext*, rootContext);
+
+  VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
 }
