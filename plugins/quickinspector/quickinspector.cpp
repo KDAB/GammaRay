@@ -25,6 +25,7 @@
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/probeinterface.h>
 
 #include <QQuickItem>
 #include <QQuickView>
@@ -33,6 +34,8 @@
 #include <QQmlEngine>
 #include <QQmlError>
 
+#include <QDebug>
+#include <QMouseEvent>
 #include <QOpenGLContext>
 
 Q_DECLARE_METATYPE(QQmlError)
@@ -40,15 +43,41 @@ Q_DECLARE_METATYPE(QQmlError)
 using namespace GammaRay;
 
 QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
-  QObject(parent)
+  QObject(parent),
+  m_probe(probe)
 {
-  Q_UNUSED(probe);
-
   registerMetaTypes();
+  probe->installGlobalEventFilter(this);
 }
 
 QuickInspector::~QuickInspector()
 {
+}
+
+QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const
+{
+  Q_ASSERT(parent);
+  QQuickItem *child = parent->childAt(pos.x(), pos.y());
+  if (child)
+    return recursiveChiltAt(child, parent->mapToItem(child, pos));
+  return parent;
+}
+
+bool QuickInspector::eventFilter(QObject *receiver, QEvent *event)
+{
+  if (event->type() == QEvent::MouseButtonRelease) {
+    QMouseEvent *mouseEv = static_cast<QMouseEvent*>(event);
+    if (mouseEv->button() == Qt::LeftButton &&
+        mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
+      QQuickWindow *window = qobject_cast<QQuickWindow*>(receiver);
+      if (window && window->contentItem()) {
+        QQuickItem *item = recursiveChiltAt(window->contentItem(), mouseEv->pos());
+        m_probe->selectObject(item);
+      }
+    }
+  }
+
+  return QObject::eventFilter(receiver, event);
 }
 
 void QuickInspector::registerMetaTypes()

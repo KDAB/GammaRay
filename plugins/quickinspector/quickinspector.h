@@ -37,8 +37,15 @@ public:
   explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
   ~QuickInspector();
 
+protected:
+  bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;
+
 private:
   void registerMetaTypes();
+
+  QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
+
+  ProbeInterface* m_probe;
 };
 
 class QuickInspectorFactory : public QObject, public StandardToolFactory<QQuickWindow, QuickInspector>
