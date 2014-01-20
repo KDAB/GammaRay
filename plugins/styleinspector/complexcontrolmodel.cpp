@@ -30,18 +30,6 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include <cmath>
-#if defined(_MSC_VER) || defined(Q_OS_ANDROID) // only MSVC and Android don't have log2()...
-static double log2(double n)
-{
-  return log(n) / log(2.0f);
-}
-#endif
-
-#ifdef Q_OS_QNX
-using std::log2;
-#endif
-
 using namespace GammaRay;
 
 struct complex_control_element_t {
@@ -89,7 +77,7 @@ QVariant ComplexControlModel::doData(int row, int column, int role) const
     m_style->drawComplexControl(complexControlElements[row].control, opt.data(), &painter);
 
     int colorIndex = 7;
-    for (int i = 0; i < log2(QStyle::SC_All); ++i) {
+    for (int i = 0; i < 32; ++i) {
       QStyle::SubControl sc = static_cast<QStyle::SubControl>(1 << i);
       if (sc & complexControlElements[row].subControls) {
         QRectF scRect =
