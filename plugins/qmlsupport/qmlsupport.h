@@ -48,11 +48,7 @@ public:
   {
   }
 
-  inline QString name() const Q_DECL_OVERRIDE
-  {
-    return tr("QML Support");
-  }
-
+  QString name() const Q_DECL_OVERRIDE;
 };
 
 }

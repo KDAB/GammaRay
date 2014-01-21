@@ -73,3 +73,8 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
 
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
 }
+
+QString QmlSupportFactory::name() const
+{
+  return tr("QML Support");
+}
