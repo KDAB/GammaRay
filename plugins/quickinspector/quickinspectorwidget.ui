@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GammaRay::QuickInspectorWidget</class>
+ <widget class="QWidget" name="GammaRay::QuickInspectorWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_6">
+   <item>
+    <widget class="QComboBox" name="windowComboBox"/>
+   </item>
+   <item>
+    <widget class="QSplitter" name="splitter_6">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QSplitter" name="splitter_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget_6">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="KFilterProxySearchLine" name="itemTreeSearchLine" native="true"/>
+        </item>
+        <item>
+         <widget class="QTreeView" name="itemTreeView">
+          <attribute name="headerShowSortIndicator" stdset="0">
+           <bool>true</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="sceneView" native="true"/>
+     </widget>
+     <widget class="GammaRay::PropertyWidget" name="itemPropertyWidget" native="true"/>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KFilterProxySearchLine</class>
+   <extends>QWidget</extends>
+   <header location="global">kde/kfilterproxysearchline.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::PropertyWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">ui/propertywidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

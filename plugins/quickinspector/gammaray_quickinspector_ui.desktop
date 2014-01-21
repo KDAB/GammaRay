@@ -1,0 +1,4 @@
+[Desktop Entry]
+X-GammaRay-Id=gammaray_quickinspector
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
+Exec=gammaray_quickinspector_ui
