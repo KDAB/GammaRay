@@ -24,6 +24,8 @@
 #include "quickinspectorwidget.h"
 #include "ui_quickinspectorwidget.h"
 
+#include <common/objectbroker.h>
+
 using namespace GammaRay;
 
 QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
@@ -31,6 +33,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ui(new Ui::QuickInspectorWidget)
 {
   ui->setupUi(this);
+
+  ui->windowComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel"));
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()

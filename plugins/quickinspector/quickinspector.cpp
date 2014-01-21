@@ -25,7 +25,9 @@
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
+#include <core/singlecolumnobjectproxymodel.h>
 
 #include <QQuickItem>
 #include <QQuickView>
@@ -48,6 +50,12 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
 {
   registerMetaTypes();
   probe->installGlobalEventFilter(this);
+
+  QAbstractProxyModel* windowModel = new ObjectTypeFilterProxyModel<QQuickWindow>(this);
+  windowModel->setSourceModel(probe->objectListModel());
+  QAbstractProxyModel* proxy = new SingleColumnObjectProxyModel(this);
+  proxy->setSourceModel(windowModel);
+  probe->registerModel("com.kdab.GammaRay.QuickWindowModel", proxy);
 }
 
 QuickInspector::~QuickInspector()
