@@ -59,11 +59,7 @@ public:
   {
   }
 
-  inline QString name() const Q_DECL_OVERRIDE
-  {
-    return tr("Quick Scenes");
-  }
-
+  QString name() const Q_DECL_OVERRIDE;
 };
 
 }

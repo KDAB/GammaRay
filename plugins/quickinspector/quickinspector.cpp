@@ -98,3 +98,8 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_PROPERTY_RO(QQuickView, QQmlContext*, rootContext);
   MO_ADD_PROPERTY_RO(QQuickView, QQuickItem*, rootObject);
 }
+
+QString QuickInspectorFactory::name() const
+{
+  return tr("Quick Scenes");
+}
