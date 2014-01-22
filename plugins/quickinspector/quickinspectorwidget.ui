@@ -37,7 +37,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="sceneView" native="true"/>
+      <widget class="QLabel" name="sceneView" native="true"/>
      </widget>
      <widget class="GammaRay::PropertyWidget" name="itemPropertyWidget" native="true"/>
     </widget>

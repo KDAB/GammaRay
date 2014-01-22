@@ -24,13 +24,15 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_H
 #define GAMMARAY_QUICKINSPECTOR_H
 
+#include "quickinspectorinterface.h"
+
 #include <core/toolfactory.h>
 
 #include <QQuickWindow>
 
 namespace GammaRay {
 
-class QuickInspector : public QObject
+class QuickInspector : public QuickInspectorInterface
 {
   Q_OBJECT
 public:
@@ -40,12 +42,17 @@ public:
 protected:
   bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;
 
+private slots:
+  void frameSwapped();
+
 private:
+  void selectWindow(QQuickWindow* window);
   void registerMetaTypes();
 
   QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
 
   ProbeInterface* m_probe;
+  QPointer<QQuickWindow> m_window;
 };
 
 class QuickInspectorFactory : public QObject, public StandardToolFactory<QQuickWindow, QuickInspector>

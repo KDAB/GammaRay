@@ -22,16 +22,27 @@
 */
 
 #include "quickinspectorwidget.h"
+#include "quickinspectorclient.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
 
 using namespace GammaRay;
 
+
+static QObject* createQuickInspectorClient(const QString &/*name*/, QObject *parent)
+{
+  return new QuickInspectorClient(parent);
+}
+
 QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   QWidget(parent),
   ui(new Ui::QuickInspectorWidget)
 {
+  ObjectBroker::registerClientObjectFactoryCallback<QuickInspectorInterface*>(createQuickInspectorClient);
+  m_interface = ObjectBroker::object<QuickInspectorInterface*>();
+  connect(m_interface, SIGNAL(sceneRendered(QImage)), this, SLOT(sceneRendered(QImage)));
+
   ui->setupUi(this);
 
   ui->windowComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel"));
@@ -39,4 +50,10 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
 
 QuickInspectorWidget::~QuickInspectorWidget()
 {
+}
+
+void QuickInspectorWidget::sceneRendered(const QImage& img)
+{
+  // ### only for testing
+  ui->sceneView->setPixmap(QPixmap::fromImage(img));
 }

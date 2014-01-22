@@ -45,7 +45,7 @@ Q_DECLARE_METATYPE(QQmlError)
 using namespace GammaRay;
 
 QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
-  QObject(parent),
+  QuickInspectorInterface(parent),
   m_probe(probe)
 {
   registerMetaTypes();
@@ -56,10 +56,26 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QAbstractProxyModel* proxy = new SingleColumnObjectProxyModel(this);
   proxy->setSourceModel(windowModel);
   probe->registerModel("com.kdab.GammaRay.QuickWindowModel", proxy);
+
+  // ### just for testing
+  selectWindow(qobject_cast<QQuickWindow*>(windowModel->index(0,0).data(ObjectModel::ObjectRole).value<QObject*>()));
 }
 
 QuickInspector::~QuickInspector()
 {
+}
+
+void QuickInspector::selectWindow(QQuickWindow* window)
+{
+  // TODO disconnect previous window
+  m_window = window;
+  connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::frameSwapped);
+}
+
+void QuickInspector::frameSwapped()
+{
+  // ### just for testing, we need to rate-limit that and only update if the client actually wants that
+  emit sceneRendered(m_window->grabWindow());
 }
 
 QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const

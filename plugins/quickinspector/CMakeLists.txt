@@ -1,13 +1,22 @@
+# shared stuff
+add_library(gammaray_quickinspector_shared STATIC quickinspectorinterface.cpp)
+target_link_libraries(gammaray_quickinspector_shared gammaray_common)
+set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 # probe plugin
 if(Qt5Quick_FOUND)
   gammaray_add_plugin(gammaray_quickinspector gammaray_quickinspector.desktop quickinspector.cpp)
-  target_link_libraries(gammaray_quickinspector gammaray_core Qt5::Quick)
+  target_link_libraries(gammaray_quickinspector
+    gammaray_quickinspector_shared
+    gammaray_core Qt5::Quick
+  )
 endif()
 
 
 # ui plugin
 if(HAVE_QT_WIDGETS)
   set(gammaray_quickinspector_ui_srcs
+    quickinspectorclient.cpp
     quickinspectorwidget.cpp
   )
 
@@ -21,7 +30,7 @@ if(HAVE_QT_WIDGETS)
   )
 
   target_link_libraries(gammaray_quickinspector_ui
-    ${QT_GUI_LIBRARIES}
+    gammaray_quickinspector_shared
     gammaray_ui
   )
 endif()

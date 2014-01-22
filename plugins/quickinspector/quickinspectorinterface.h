@@ -1,5 +1,5 @@
 /*
-  quickinspectorwidget.h
+  quickinspectorinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,44 +21,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKINSPECTORWIDGET_H
-#define GAMMARAY_QUICKINSPECTORWIDGET_H
+#ifndef GAMMARAY_QUICKINSPECTORINTERFACE_H
+#define GAMMARAY_QUICKINSPECTORINTERFACE_H
 
-#include <ui/tooluifactory.h>
-
-#include <QWidget>
+#include <QObject>
 
 class QImage;
+
 namespace GammaRay {
 
-class QuickInspectorInterface;
-
-namespace Ui {
-  class QuickInspectorWidget;
-}
-
-class QuickInspectorWidget : public QWidget
+class QuickInspectorInterface : public QObject
 {
   Q_OBJECT
-  public:
-    explicit QuickInspectorWidget(QWidget *parent = 0);
-    ~QuickInspectorWidget();
+public:
+  explicit QuickInspectorInterface(QObject *parent = 0);
+  ~QuickInspectorInterface();
 
-  private slots:
-    void sceneRendered(const QImage &img);
+signals:
+  void sceneRendered(const QImage &img);
 
-  private:
-    QScopedPointer<Ui::QuickInspectorWidget> ui;
-    QuickInspectorInterface* m_interface;
 };
-
-class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.QuickInspectorUi")
-};
-
 }
 
-#endif
+Q_DECLARE_INTERFACE(GammaRay::QuickInspectorInterface, "com.kdab.GammaRay.QuickInspectorInterface/1.0")
+
+#endif // GAMMARAY_QUICKINSPECTORINTERFACE_H
