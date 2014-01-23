@@ -22,6 +22,7 @@
 */
 
 #include "quickinspector.h"
+#include "quickitemmodel.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -46,7 +47,8 @@ using namespace GammaRay;
 
 QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QuickInspectorInterface(parent),
-  m_probe(probe)
+  m_probe(probe),
+  m_itemModel(new QuickItemModel(this))
 {
   registerMetaTypes();
   probe->installGlobalEventFilter(this);
@@ -56,6 +58,7 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QAbstractProxyModel* proxy = new SingleColumnObjectProxyModel(this);
   proxy->setSourceModel(windowModel);
   probe->registerModel("com.kdab.GammaRay.QuickWindowModel", proxy);
+  probe->registerModel("com.kdab.GammaRay.QuickItemModel", m_itemModel);
 
   // ### just for testing
   selectWindow(qobject_cast<QQuickWindow*>(windowModel->index(0,0).data(ObjectModel::ObjectRole).value<QObject*>()));
@@ -70,6 +73,7 @@ void QuickInspector::selectWindow(QQuickWindow* window)
   // TODO disconnect previous window
   m_window = window;
   connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::frameSwapped);
+  m_itemModel->setWindow(window);
 }
 
 void QuickInspector::frameSwapped()

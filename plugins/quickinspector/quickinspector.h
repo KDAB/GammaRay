@@ -32,6 +32,8 @@
 
 namespace GammaRay {
 
+class QuickItemModel;
+
 class QuickInspector : public QuickInspectorInterface
 {
   Q_OBJECT
@@ -53,6 +55,7 @@ private:
 
   ProbeInterface* m_probe;
   QPointer<QQuickWindow> m_window;
+  QuickItemModel *m_itemModel;
 };
 
 class QuickInspectorFactory : public QObject, public StandardToolFactory<QQuickWindow, QuickInspector>

@@ -27,6 +27,8 @@
 
 #include <common/objectbroker.h>
 
+#include <QSortFilterProxyModel>
+
 using namespace GammaRay;
 
 
@@ -46,6 +48,12 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ui->setupUi(this);
 
   ui->windowComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel"));
+
+  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickItemModel"));
+  proxy->setDynamicSortFilter(true);
+  ui->itemTreeView->setModel(proxy);
+  ui->itemTreeSearchLine->setProxy(proxy);
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()

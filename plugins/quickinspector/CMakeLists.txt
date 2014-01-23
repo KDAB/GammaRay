@@ -5,7 +5,13 @@ set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPEN
 
 # probe plugin
 if(Qt5Quick_FOUND)
-  gammaray_add_plugin(gammaray_quickinspector gammaray_quickinspector.desktop quickinspector.cpp)
+  set(gammaray_quickinspector_srcs
+    quickinspector.cpp
+    quickitemmodel.cpp
+  )
+
+  gammaray_add_plugin(gammaray_quickinspector gammaray_quickinspector.desktop ${gammaray_quickinspector_srcs})
+
   target_link_libraries(gammaray_quickinspector
     gammaray_quickinspector_shared
     gammaray_core Qt5::Quick
