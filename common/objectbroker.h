@@ -41,8 +41,8 @@ namespace ObjectBroker {
   template<class T>
   void registerObject(QObject *object)
   {
-    const QString interface = QString::fromUtf8(qobject_interface_iid<T>());
-    registerObject(interface, object);
+    const QString interfaceName = QString::fromUtf8(qobject_interface_iid<T>());
+    registerObject(interfaceName, object);
   }
 
   /** Retrieve object by name. */
@@ -77,8 +77,8 @@ namespace ObjectBroker {
   template<class T>
   T object(T = 0)
   {
-    const QByteArray interface(qobject_interface_iid<T>());
-    T ret = qobject_cast<T>(objectInternal(QString::fromUtf8(interface), interface));
+    const QByteArray interfaceName(qobject_interface_iid<T>());
+    T ret = qobject_cast<T>(objectInternal(QString::fromUtf8(interfaceName), interfaceName));
     Q_ASSERT(ret);
     return ret;
   }
