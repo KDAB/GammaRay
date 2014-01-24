@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <QThread>
 
 #include <algorithm>
 
@@ -97,4 +98,36 @@ QModelIndex QuickItemModel::indexForItem(QQuickItem* item) const
 
   const int row = std::distance(siblings.constBegin(), it);
   return index(row, 0, parentIndex);
+}
+
+void QuickItemModel::objectRemoved(QObject* obj)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
+  QQuickItem *item = static_cast<QQuickItem*>(obj); // this is fine, we must not dereference obj/item at this point anyway
+
+  if (!m_childParentMap.contains(item)) { // not an item of our current scene
+    Q_ASSERT(!m_parentChildMap.contains(item));
+    return;
+  }
+
+  QQuickItem *parentItem = m_childParentMap[item];
+  const QModelIndex parentIndex = indexForItem(parentItem);
+  if (parentItem && !parentIndex.isValid()) {
+    return;
+  }
+
+  QVector<QQuickItem*> &siblings = m_parentChildMap[parentItem];
+  QVector<QQuickItem*>::iterator it = std::lower_bound(siblings.begin(), siblings.end(), item);
+  if (it == siblings.end() || *it != item) {
+    return;
+  }
+  const int row = std::distance(siblings.begin(), it);
+
+  beginRemoveRows(parentIndex, row, row);
+
+  siblings.erase(it);
+  m_childParentMap.remove(item);
+  m_parentChildMap.remove(item);
+
+  endRemoveRows();
 }

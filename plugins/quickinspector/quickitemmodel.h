@@ -26,6 +26,9 @@ public:
     QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
     QModelIndex index(int row, int column, const QModelIndex& parent) const Q_DECL_OVERRIDE;
 
+public slots:
+  void objectRemoved(QObject *obj);
+
 private:
   void clear();
   void populateFromItem(QQuickItem *item);
