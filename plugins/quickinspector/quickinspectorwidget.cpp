@@ -54,6 +54,9 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   proxy->setDynamicSortFilter(true);
   ui->itemTreeView->setModel(proxy);
   ui->itemTreeSearchLine->setProxy(proxy);
+  ui->itemTreeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
+
+  ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()

@@ -30,8 +30,11 @@
 
 #include <QQuickWindow>
 
+class QItemSelection;
+
 namespace GammaRay {
 
+class PropertyController;
 class QuickItemModel;
 
 class QuickInspector : public QuickInspectorInterface
@@ -46,6 +49,7 @@ protected:
 
 private slots:
   void frameSwapped();
+  void itemSelectionChanged(const QItemSelection &selection);
 
 private:
   void selectWindow(QQuickWindow* window);
@@ -56,6 +60,7 @@ private:
   ProbeInterface* m_probe;
   QPointer<QQuickWindow> m_window;
   QuickItemModel *m_itemModel;
+  PropertyController *m_propertyController;
 };
 
 class QuickInspectorFactory : public QObject, public StandardToolFactory<QQuickWindow, QuickInspector>

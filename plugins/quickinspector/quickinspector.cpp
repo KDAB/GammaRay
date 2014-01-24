@@ -24,10 +24,13 @@
 #include "quickinspector.h"
 #include "quickitemmodel.h"
 
+#include <common/objectbroker.h>
+
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
+#include <core/propertycontroller.h>
 #include <core/singlecolumnobjectproxymodel.h>
 
 #include <QQuickItem>
@@ -38,6 +41,8 @@
 #include <QQmlError>
 
 #include <QDebug>
+#include <QItemSelection>
+#include <QItemSelectionModel>
 #include <QMouseEvent>
 #include <QOpenGLContext>
 
@@ -48,7 +53,8 @@ using namespace GammaRay;
 QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QuickInspectorInterface(parent),
   m_probe(probe),
-  m_itemModel(new QuickItemModel(this))
+  m_itemModel(new QuickItemModel(this)),
+  m_propertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this))
 {
   registerMetaTypes();
   probe->installGlobalEventFilter(this);
@@ -59,6 +65,9 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   proxy->setSourceModel(windowModel);
   probe->registerModel("com.kdab.GammaRay.QuickWindowModel", proxy);
   probe->registerModel("com.kdab.GammaRay.QuickItemModel", m_itemModel);
+
+  QItemSelectionModel* selection = ObjectBroker::selectionModel(m_itemModel);
+  connect(selection, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
 
   // ### just for testing
   selectWindow(qobject_cast<QQuickWindow*>(windowModel->index(0,0).data(ObjectModel::ObjectRole).value<QObject*>()));
@@ -80,6 +89,15 @@ void QuickInspector::frameSwapped()
 {
   // ### just for testing, we need to rate-limit that and only update if the client actually wants that
   emit sceneRendered(m_window->grabWindow());
+}
+
+void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
+{
+  if (selection.isEmpty())
+    return;
+  const QModelIndex index = selection.first().topLeft();
+  QQuickItem* item = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
+  m_propertyController->setObject(item);
 }
 
 QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const
