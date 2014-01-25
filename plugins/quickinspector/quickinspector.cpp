@@ -66,6 +66,7 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   probe->registerModel("com.kdab.GammaRay.QuickWindowModel", proxy);
   probe->registerModel("com.kdab.GammaRay.QuickItemModel", m_itemModel);
 
+  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_itemModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_itemModel, SLOT(objectRemoved(QObject*)));
 
   QItemSelectionModel* selection = ObjectBroker::selectionModel(m_itemModel);

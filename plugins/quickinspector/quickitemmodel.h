@@ -4,6 +4,7 @@
 #include <core/objectmodelbase.h>
 
 #include <QHash>
+#include <QPointer>
 #include <QVector>
 
 class QQuickItem;
@@ -27,12 +28,15 @@ public:
     QModelIndex index(int row, int column, const QModelIndex& parent) const Q_DECL_OVERRIDE;
 
 public slots:
+  void objectAdded(QObject *obj);
   void objectRemoved(QObject *obj);
 
 private:
   void clear();
   void populateFromItem(QQuickItem *item);
   QModelIndex indexForItem(QQuickItem *item) const;
+
+  QPointer<QQuickWindow> m_window;
 
   QHash<QQuickItem*, QQuickItem*> m_childParentMap;
   QHash<QQuickItem*, QVector<QQuickItem*> > m_parentChildMap;

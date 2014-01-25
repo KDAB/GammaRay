@@ -21,6 +21,7 @@ void QuickItemModel::setWindow(QQuickWindow* window)
 {
   beginResetModel();
   clear();
+  m_window = window;
   populateFromItem(window->contentItem());
   endResetModel();
 }
@@ -98,6 +99,39 @@ QModelIndex QuickItemModel::indexForItem(QQuickItem* item) const
 
   const int row = std::distance(siblings.constBegin(), it);
   return index(row, 0, parentIndex);
+}
+
+void QuickItemModel::objectAdded(QObject* obj)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
+  QQuickItem *item = qobject_cast<QQuickItem*>(obj);
+  if (!item)
+    return;
+
+  if (item->window() != m_window)
+    return; // item for a different scene
+
+  if (m_childParentMap.contains(item))
+    return; // already known
+
+  QQuickItem *parentItem = item->parentItem();
+  if (parentItem) {
+    // add parent first, if we don't know that yet
+    if (!m_childParentMap.contains(parentItem))
+      objectAdded(parentItem);
+  }
+
+  const QModelIndex index = indexForItem(parentItem);
+  Q_ASSERT(index.isValid() || !parentItem);
+
+  QVector<QQuickItem*> &children = m_parentChildMap[parentItem];
+  QVector<QQuickItem*>::iterator it = std::lower_bound(children.begin(), children.end(), obj);
+  const int row = std::distance(children.begin(), it);
+
+  beginInsertRows(index, row, row);
+  children.insert(it, item);
+  m_childParentMap.insert(item, parentItem);
+  endInsertRows();
 }
 
 void QuickItemModel::objectRemoved(QObject* obj)
