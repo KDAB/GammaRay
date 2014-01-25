@@ -68,3 +68,7 @@ void QuickInspectorWidget::sceneRendered(const QImage& img)
   // ### only for testing
   ui->sceneView->setPixmap(QPixmap::fromImage(img));
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(QuickInspectorUiFactory)
+#endif
