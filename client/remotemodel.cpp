@@ -124,16 +124,18 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
+  if (node->loading.contains(index.column())) { // still waiting for data
+    if (role == Qt::DisplayRole)
+      return tr("Loading...");
+    return QVariant();
+  }
+
   if (!node->data.contains(index.column())) {
     requestDataAndFlags(index);
   }
 
   // note .value returns good defaults otherwise
   return node->data.value(index.column()).value(role);
-  if (node->data.contains(index.column())) {
-    if (node->data.value(index.column()).contains(role))
-      return node->data.value(index.column()).value(role);
-  }
 }
 
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -195,14 +197,11 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         // was created). Anyhow, since the data is equal we can/should ignore it anyways.
         break;
       }
-      // Note that the rowCount might be "-1" which would mean we didn't request the row/col count
-      // explicitly. Yet the data is valid and we can use it nonetheless.
-      // This happens in some (thankfully harmless) raceconditions, e.g. when we request row/col count
-      // then first get messages from the server that a row was deleted and that another was created
-      // at the same model index. Then later he'll answer the initial row/col count request and
-      // we handle it here. Since the initial Node was deleted and a new one created for that index,
-      // it's rowCount will be -1 but the response data is actually useful and we store it.
-      Q_ASSERT(node->rowCount <= -1 && node->columnCount == -1);
+
+      if (node->rowCount == -1)
+        break; // we didn't ask for this, probably outdated response for a moved node
+
+      Q_ASSERT(node->rowCount < -1 && node->columnCount == -1);
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
 
@@ -236,12 +235,15 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node);
+      if (!node->loading.contains(index.last().second))
+        break; // we didn't ask for this, probably outdated response for a moved cell
       typedef QHash<int, QVariant> ItemData;
       ItemData itemData;
       qint32 flags;
       msg.payload() >> itemData >> flags;
       node->data[index.last().second] = itemData;
       node->flags[index.last().second] = static_cast<Qt::ItemFlags>(flags);
+      node->loading.remove(index.last().second);
       const QModelIndex qmi = modelIndexForNode(node, index.last().second);
       emit dataChanged(qmi, qmi);
       break;
@@ -336,6 +338,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(parentNode->rowCount == parentNode->children.size());
 
       endInsertRows();
+      resetLoadingState(parentNode, last);
       break;
     }
 
@@ -364,6 +367,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(parentNode->rowCount == parentNode->children.size());
 
       endRemoveRows();
+      resetLoadingState(parentNode, first);
       break;
     }
 
@@ -449,12 +453,9 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   Q_ASSERT(node);
   Q_ASSERT(!node->data.contains(index.column()));
   Q_ASSERT(!node->flags.contains(index.column()));
+  Q_ASSERT(!node->loading.contains(index.column()));
 
-  static QHash<int, QVariant> loading;
-  if (loading.isEmpty()) {
-    loading.insert(Qt::DisplayRole, tr("Loading..."));
-  }
-  node->data.insert(index.column(), loading); // mark pending request
+  node->loading.insert(index.column()); // mark pending request
 
   Message msg(m_myAddress, Protocol::ModelContentRequest);
   msg.payload() << Protocol::fromQModelIndex(index);
@@ -504,3 +505,17 @@ bool RemoteModel::checkSyncBarrier(const Message& msg)
   return m_currentSyncBarrier == m_targetSyncBarrier;
 }
 
+void RemoteModel::resetLoadingState(RemoteModel::Node* node, int startRow) const
+{
+  if (node->rowCount < 0) {
+    node->rowCount = -1; // reset row count loading state
+    return;
+  }
+
+  Q_ASSERT(node->children.size() == node->rowCount);
+  for (int row = startRow; row < node->rowCount; ++row) {
+    Node *child = node->children[row];
+    child->loading.clear();
+    resetLoadingState(child, 0);
+  }
+}

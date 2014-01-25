@@ -135,6 +135,7 @@ bool MetaPropertyModel::setData(const QModelIndex &index, const QVariant &value,
   if (index.isValid() && index.column() == 1 && m_metaObject && m_object && role == Qt::EditRole) {
     MetaProperty *property = m_metaObject->propertyAt(index.row());
     property->setValue(m_metaObject->castForPropertyAt(m_object, index.row()), value);
+    emit dataChanged(index, index);
     return true;
   }
   return QAbstractItemModel::setData(index, value, role);

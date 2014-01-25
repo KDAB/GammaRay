@@ -118,6 +118,11 @@ void PropertyController::signalEmitted(QObject* sender, int signalIndex, const Q
 
 void PropertyController::setObject(QObject *object)
 {
+  if (m_object)
+    disconnect(m_object, 0, this, 0);
+  if (object)
+    connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+
   m_object = object;
   m_staticPropertyModel->setObject(object);
   m_dynamicPropertyModel->setObject(object);
@@ -234,4 +239,9 @@ void PropertyController::resetProperty(const QString& name)
   const int index = m_object->metaObject()->indexOfProperty(name.toUtf8());
   const QMetaProperty prop = m_object->metaObject()->property(index);
   prop.reset(m_object);
+}
+
+void PropertyController::objectDestroyed()
+{
+  setObject(0);
 }

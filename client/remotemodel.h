@@ -27,6 +27,7 @@
 #include <common/protocol.h>
 
 #include <QAbstractItemModel>
+#include <QSet>
 #include <QVector>
 
 namespace GammaRay {
@@ -66,6 +67,7 @@ class RemoteModel : public QAbstractItemModel
       qint32 columnCount;
       QHash<int, QHash<int, QVariant> > data; // column -> role -> data
       QHash<int, Qt::ItemFlags> flags;        // column -> flags
+      QSet<int> loading;                      // columns waiting for data (ie. showing "Loading...")
     };
 
     void clear();
@@ -80,6 +82,10 @@ class RemoteModel : public QAbstractItemModel
     void requestRowColumnCount(const QModelIndex &index) const;
     void requestDataAndFlags(const QModelIndex &index) const;
     void requestHeaderData(Qt::Orientation orientation, int section) const;
+    /// Reset the loading state for all rows at @p startRow or later.
+    /// This is needed when rows have been added or removed before @p startRow, since
+    /// pending replies might have a wrong index.
+    void resetLoadingState(Node *node, int startRow) const;
 
     Node* m_root;
 

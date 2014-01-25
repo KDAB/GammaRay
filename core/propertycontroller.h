@@ -67,6 +67,7 @@ public slots:
 
 private slots:
   void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);
+  void objectDestroyed();
 
 private:
   void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
