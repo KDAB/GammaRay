@@ -130,10 +130,6 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
 
   // note .value returns good defaults otherwise
   return node->data.value(index.column()).value(role);
-  if (node->data.contains(index.column())) {
-    if (node->data.value(index.column()).contains(role))
-      return node->data.value(index.column()).value(role);
-  }
 }
 
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
