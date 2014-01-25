@@ -197,14 +197,11 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         // was created). Anyhow, since the data is equal we can/should ignore it anyways.
         break;
       }
-      // Note that the rowCount might be "-1" which would mean we didn't request the row/col count
-      // explicitly. Yet the data is valid and we can use it nonetheless.
-      // This happens in some (thankfully harmless) raceconditions, e.g. when we request row/col count
-      // then first get messages from the server that a row was deleted and that another was created
-      // at the same model index. Then later he'll answer the initial row/col count request and
-      // we handle it here. Since the initial Node was deleted and a new one created for that index,
-      // it's rowCount will be -1 but the response data is actually useful and we store it.
-      Q_ASSERT(node->rowCount <= -1 && node->columnCount == -1);
+
+      if (node->rowCount == -1)
+        break; // we didn't ask for this, probably outdated response for a moved node
+
+      Q_ASSERT(node->rowCount < -1 && node->columnCount == -1);
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
 
@@ -238,6 +235,8 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> index;
       Node *node = nodeForIndex(index);
       Q_ASSERT(node);
+      if (!node->loading.contains(index.last().second))
+        break; // we didn't ask for this, probably outdated response for a moved cell
       typedef QHash<int, QVariant> ItemData;
       ItemData itemData;
       qint32 flags;
