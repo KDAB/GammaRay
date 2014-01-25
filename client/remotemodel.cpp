@@ -124,6 +124,12 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
+  if (node->loading.contains(index.column())) { // still waiting for data
+    if (role == Qt::DisplayRole)
+      return tr("Loading...");
+    return QVariant();
+  }
+
   if (!node->data.contains(index.column())) {
     requestDataAndFlags(index);
   }
@@ -238,6 +244,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> itemData >> flags;
       node->data[index.last().second] = itemData;
       node->flags[index.last().second] = static_cast<Qt::ItemFlags>(flags);
+      node->loading.remove(index.last().second);
       const QModelIndex qmi = modelIndexForNode(node, index.last().second);
       emit dataChanged(qmi, qmi);
       break;
@@ -445,12 +452,9 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   Q_ASSERT(node);
   Q_ASSERT(!node->data.contains(index.column()));
   Q_ASSERT(!node->flags.contains(index.column()));
+  Q_ASSERT(!node->loading.contains(index.column()));
 
-  static QHash<int, QVariant> loading;
-  if (loading.isEmpty()) {
-    loading.insert(Qt::DisplayRole, tr("Loading..."));
-  }
-  node->data.insert(index.column(), loading); // mark pending request
+  node->loading.insert(index.column()); // mark pending request
 
   Message msg(m_myAddress, Protocol::ModelContentRequest);
   msg.payload() << Protocol::fromQModelIndex(index);

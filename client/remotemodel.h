@@ -27,6 +27,7 @@
 #include <common/protocol.h>
 
 #include <QAbstractItemModel>
+#include <QSet>
 #include <QVector>
 
 namespace GammaRay {
@@ -66,6 +67,7 @@ class RemoteModel : public QAbstractItemModel
       qint32 columnCount;
       QHash<int, QHash<int, QVariant> > data; // column -> role -> data
       QHash<int, Qt::ItemFlags> flags;        // column -> flags
+      QSet<int> loading;                      // columns waiting for data (ie. showing "Loading...")
     };
 
     void clear();
