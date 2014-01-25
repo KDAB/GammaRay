@@ -114,6 +114,11 @@ void PropertyController::signalEmitted(QObject* sender, int signalIndex, const Q
 
 void PropertyController::setObject(QObject *object)
 {
+  if (m_object)
+    disconnect(m_object, 0, this, 0);
+  if (object)
+    connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+
   m_object = object;
   m_staticPropertyModel->setObject(object);
   m_dynamicPropertyModel->setObject(object);
@@ -215,3 +220,7 @@ void PropertyController::invokeMethod(Qt::ConnectionType connectionType)
   m_methodArgumentModel->setMethod(QMetaMethod());
 }
 
+void PropertyController::objectDestroyed()
+{
+  setObject(0);
+}
