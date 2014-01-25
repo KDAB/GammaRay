@@ -82,6 +82,10 @@ class RemoteModel : public QAbstractItemModel
     void requestRowColumnCount(const QModelIndex &index) const;
     void requestDataAndFlags(const QModelIndex &index) const;
     void requestHeaderData(Qt::Orientation orientation, int section) const;
+    /// Reset the loading state for all rows at @p startRow or later.
+    /// This is needed when rows have been added or removed before @p startRow, since
+    /// pending replies might have a wrong index.
+    void resetLoadingState(Node *node, int startRow) const;
 
     Node* m_root;
 

@@ -339,6 +339,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(parentNode->rowCount == parentNode->children.size());
 
       endInsertRows();
+      resetLoadingState(parentNode, last);
       break;
     }
 
@@ -367,6 +368,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(parentNode->rowCount == parentNode->children.size());
 
       endRemoveRows();
+      resetLoadingState(parentNode, first);
       break;
     }
 
@@ -504,3 +506,17 @@ bool RemoteModel::checkSyncBarrier(const Message& msg)
   return m_currentSyncBarrier == m_targetSyncBarrier;
 }
 
+void RemoteModel::resetLoadingState(RemoteModel::Node* node, int startRow) const
+{
+  if (node->rowCount < 0) {
+    node->rowCount = -1; // reset row count loading state
+    return;
+  }
+
+  Q_ASSERT(node->children.size() == node->rowCount);
+  for (int row = startRow; row < node->rowCount; ++row) {
+    Node *child = node->children[row];
+    child->loading.clear();
+    resetLoadingState(child, 0);
+  }
+}
