@@ -69,8 +69,8 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_itemModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_itemModel, SLOT(objectRemoved(QObject*)));
 
-  QItemSelectionModel* selection = ObjectBroker::selectionModel(m_itemModel);
-  connect(selection, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
+  m_itemSelectionModel = ObjectBroker::selectionModel(m_itemModel);
+  connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
 
   // ### just for testing
   selectWindow(qobject_cast<QQuickWindow*>(windowModel->index(0,0).data(ObjectModel::ObjectRole).value<QObject*>()));
@@ -86,6 +86,19 @@ void QuickInspector::selectWindow(QQuickWindow* window)
   m_window = window;
   connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::frameSwapped);
   m_itemModel->setWindow(window);
+}
+
+void QuickInspector::selectItem(QQuickItem* item)
+{
+  const QAbstractItemModel *model = m_itemModel;
+  const QModelIndexList indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole,
+    QVariant::fromValue<QQuickItem*>(item), 1, Qt::MatchExactly | Qt::MatchRecursive);
+  if (indexList.isEmpty())
+    return;
+
+  const QModelIndex index = indexList.first();
+  m_itemSelectionModel->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear |
+    QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
 void QuickInspector::frameSwapped()
@@ -122,6 +135,7 @@ bool QuickInspector::eventFilter(QObject *receiver, QEvent *event)
       if (window && window->contentItem()) {
         QQuickItem *item = recursiveChiltAt(window->contentItem(), mouseEv->pos());
         m_probe->selectObject(item);
+        selectItem(item);
       }
     }
   }

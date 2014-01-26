@@ -31,6 +31,7 @@
 #include <QQuickWindow>
 
 class QItemSelection;
+class QItemSelectionModel;
 
 namespace GammaRay {
 
@@ -53,6 +54,7 @@ private slots:
 
 private:
   void selectWindow(QQuickWindow* window);
+  void selectItem(QQuickItem *item);
   void registerMetaTypes();
 
   QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
@@ -60,6 +62,7 @@ private:
   ProbeInterface* m_probe;
   QPointer<QQuickWindow> m_window;
   QuickItemModel *m_itemModel;
+  QItemSelectionModel *m_itemSelectionModel;
   PropertyController *m_propertyController;
 };
 
