@@ -70,6 +70,8 @@ QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) c
 
   Node *parentNode = nodeForIndex(parent);
   Q_ASSERT(parentNode->children.size() >= parentNode->rowCount);
+  if (parentNode->rowCount == -1)
+    requestRowColumnCount(parent); // trying to traverse into a branch we haven't loaded yet
   if (parentNode->rowCount <= row || parentNode->columnCount <= column)
     return QModelIndex();
   return createIndex(row, column, parentNode->children.at(row));
@@ -154,7 +156,12 @@ Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
-  return node->flags.value(index.column());
+  const QHash<int, Qt::ItemFlags>::const_iterator it = node->flags.constFind(index.column());
+  if (it == node->flags.constEnd()) {
+    // default flags if we don't know better, otherwise we can't select into non-expanded branches
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  }
+  return it.value();
 }
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const
