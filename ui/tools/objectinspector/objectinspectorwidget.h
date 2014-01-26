@@ -26,6 +26,7 @@
 
 #include <QWidget>
 
+class QItemSelection;
 
 namespace GammaRay {
 
@@ -39,6 +40,9 @@ class ObjectInspectorWidget : public QWidget
   public:
     explicit ObjectInspectorWidget(QWidget *parent = 0);
     ~ObjectInspectorWidget();
+
+  private slots:
+    void objectSelectionChanged(const QItemSelection &selection);
 
   private:
     QScopedPointer<Ui::ObjectInspectorWidget> ui;

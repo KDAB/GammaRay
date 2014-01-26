@@ -31,6 +31,7 @@
 #include <kde/krecursivefilterproxymodel.h>
 
 #include <QLineEdit>
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
@@ -49,7 +50,10 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
   new DeferredResizeModeSetter(ui->objectTreeView->header(), 1, QHeaderView::Interactive);
   ui->objectSearchLine->setProxy(objectFilter);
 
-  ui->objectTreeView->setSelectionModel(ObjectBroker::selectionModel(ui->objectTreeView->model()));
+  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(ui->objectTreeView->model());
+  ui->objectTreeView->setSelectionModel(selectionModel);
+  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(objectSelectionChanged(QItemSelection)));
 
   if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
     QMetaObject::invokeMethod(ui->objectSearchLine->lineEdit(), "setText",
@@ -62,3 +66,10 @@ ObjectInspectorWidget::~ObjectInspectorWidget()
 {
 }
 
+void ObjectInspectorWidget::objectSelectionChanged(const QItemSelection& selection)
+{
+  if (selection.isEmpty())
+    return;
+  const QModelIndex index = selection.first().topLeft();
+  ui->objectTreeView->scrollTo(index);
+}
