@@ -156,7 +156,12 @@ Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
-  return node->flags.value(index.column());
+  const QHash<int, Qt::ItemFlags>::const_iterator it = node->flags.constFind(index.column());
+  if (it == node->flags.constEnd()) {
+    // default flags if we don't know better, otherwise we can't select into non-expanded branches
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  }
+  return it.value();
 }
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const
