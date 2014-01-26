@@ -54,7 +54,10 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   proxy->setDynamicSortFilter(true);
   ui->itemTreeView->setModel(proxy);
   ui->itemTreeSearchLine->setProxy(proxy);
-  ui->itemTreeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
+  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(proxy);
+  ui->itemTreeView->setSelectionModel(selectionModel);
+  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(itemSelectionChanged(QItemSelection)));
 
   ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
 }
@@ -67,6 +70,14 @@ void QuickInspectorWidget::sceneRendered(const QImage& img)
 {
   // ### only for testing
   ui->sceneView->setPixmap(QPixmap::fromImage(img));
+}
+
+void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
+{
+  if (selection.isEmpty())
+    return;
+  const QModelIndex &index = selection.first().topLeft();
+  ui->itemTreeView->scrollTo(index);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

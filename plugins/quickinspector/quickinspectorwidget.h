@@ -29,6 +29,8 @@
 #include <QWidget>
 
 class QImage;
+class QItemSelection;
+
 namespace GammaRay {
 
 class QuickInspectorInterface;
@@ -46,6 +48,7 @@ class QuickInspectorWidget : public QWidget
 
   private slots:
     void sceneRendered(const QImage &img);
+    void itemSelectionChanged(const QItemSelection &selection);
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
