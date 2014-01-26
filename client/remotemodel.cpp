@@ -70,6 +70,8 @@ QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) c
 
   Node *parentNode = nodeForIndex(parent);
   Q_ASSERT(parentNode->children.size() >= parentNode->rowCount);
+  if (parentNode->rowCount == -1)
+    requestRowColumnCount(parent); // trying to traverse into a branch we haven't loaded yet
   if (parentNode->rowCount <= row || parentNode->columnCount <= column)
     return QModelIndex();
   return createIndex(row, column, parentNode->children.at(row));
