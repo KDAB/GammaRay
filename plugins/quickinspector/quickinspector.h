@@ -51,6 +51,7 @@ protected:
 private slots:
   void frameSwapped();
   void itemSelectionChanged(const QItemSelection &selection);
+  void clientConnectedChanged(bool connected);
 
 private:
   void selectWindow(QQuickWindow* window);
@@ -64,6 +65,7 @@ private:
   QuickItemModel *m_itemModel;
   QItemSelectionModel *m_itemSelectionModel;
   PropertyController *m_propertyController;
+  bool m_clientConnected;
 };
 
 class QuickInspectorFactory : public QObject, public StandardToolFactory<QQuickWindow, QuickInspector>

@@ -31,6 +31,7 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 #include <core/propertycontroller.h>
+#include <core/remote/server.h>
 #include <core/singlecolumnobjectproxymodel.h>
 
 #include <QQuickItem>
@@ -54,8 +55,11 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QuickInspectorInterface(parent),
   m_probe(probe),
   m_itemModel(new QuickItemModel(this)),
-  m_propertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this))
+  m_propertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
+  m_clientConnected(false)
 {
+  Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(objectName()), this, "clientConnectedChanged");
+
   registerMetaTypes();
   probe->installGlobalEventFilter(this);
 
@@ -104,7 +108,8 @@ void QuickInspector::selectItem(QQuickItem* item)
 void QuickInspector::frameSwapped()
 {
   // ### just for testing, we need to rate-limit that and only update if the client actually wants that
-  emit sceneRendered(m_window->grabWindow());
+  if (m_clientConnected)
+    emit sceneRendered(m_window->grabWindow());
 }
 
 void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
@@ -114,6 +119,11 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
   const QModelIndex index = selection.first().topLeft();
   QQuickItem* item = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
   m_propertyController->setObject(item);
+}
+
+void QuickInspector::clientConnectedChanged(bool connected)
+{
+  m_clientConnected = connected;
 }
 
 QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const
