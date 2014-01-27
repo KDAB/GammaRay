@@ -27,6 +27,7 @@
 
 #include <common/objectbroker.h>
 
+#include <QLabel>
 #include <QSortFilterProxyModel>
 
 using namespace GammaRay;
@@ -60,6 +61,10 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
           this, SLOT(itemSelectionChanged(QItemSelection)));
 
   ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
+
+  m_sceneImage = new QLabel;
+  ui->sceneView->setWidget(m_sceneImage);
+  ui->sceneView->setBackgroundRole(QPalette::Dark);
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
@@ -69,7 +74,8 @@ QuickInspectorWidget::~QuickInspectorWidget()
 void QuickInspectorWidget::sceneRendered(const QImage& img)
 {
   // ### only for testing
-  ui->sceneView->setPixmap(QPixmap::fromImage(img));
+  m_sceneImage->resize(img.size());
+  m_sceneImage->setPixmap(QPixmap::fromImage(img));
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)

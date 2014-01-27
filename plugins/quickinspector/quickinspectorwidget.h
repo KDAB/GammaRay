@@ -28,6 +28,7 @@
 
 #include <QWidget>
 
+class QLabel;
 class QImage;
 class QItemSelection;
 
@@ -53,6 +54,7 @@ class QuickInspectorWidget : public QWidget
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
     QuickInspectorInterface* m_interface;
+    QLabel *m_sceneImage;
 };
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>

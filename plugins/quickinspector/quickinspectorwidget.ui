@@ -37,7 +37,11 @@
         </item>
        </layout>
       </widget>
-      <widget class="QLabel" name="sceneView" native="true"/>
+      <widget class="QScrollArea" name="sceneView">
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
      </widget>
      <widget class="GammaRay::PropertyWidget" name="itemPropertyWidget" native="true"/>
     </widget>
