@@ -124,6 +124,8 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
 void QuickInspector::clientConnectedChanged(bool connected)
 {
   m_clientConnected = connected;
+  if (connected && m_window)
+    emit sceneRendered(m_window->grabWindow());
 }
 
 QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const
