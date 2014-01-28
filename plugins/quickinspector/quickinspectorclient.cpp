@@ -22,6 +22,7 @@
 */
 
 #include "quickinspectorclient.h"
+#include <common/endpoint.h>
 
 using namespace GammaRay;
 
@@ -31,4 +32,9 @@ QuickInspectorClient::QuickInspectorClient(QObject* parent): QuickInspectorInter
 
 QuickInspectorClient::~QuickInspectorClient()
 {
+}
+
+void QuickInspectorClient::selectWindow(int index)
+{
+  Endpoint::instance()->invokeObject(objectName(), "selectWindow", QVariantList() << index);
 }

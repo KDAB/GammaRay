@@ -49,6 +49,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ui->setupUi(this);
 
   ui->windowComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel"));
+  connect(ui->windowComboBox, SIGNAL(currentIndexChanged(int)), m_interface, SLOT(selectWindow(int)));
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickItemModel"));

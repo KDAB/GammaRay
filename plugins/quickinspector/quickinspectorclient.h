@@ -35,6 +35,9 @@ class QuickInspectorClient : public QuickInspectorInterface
 public:
   explicit QuickInspectorClient(QObject *parent = 0);
   ~QuickInspectorClient();
+
+public slots:
+  void selectWindow(int index);
 };
 }
 

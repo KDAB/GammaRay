@@ -37,6 +37,9 @@ public:
   explicit QuickInspectorInterface(QObject *parent = 0);
   ~QuickInspectorInterface();
 
+public slots:
+  virtual void selectWindow(int index) = 0;
+
 signals:
   void sceneRendered(const QImage &img);
 

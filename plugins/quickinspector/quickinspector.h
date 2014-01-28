@@ -30,6 +30,7 @@
 
 #include <QQuickWindow>
 
+class QAbstractItemModel;
 class QItemSelection;
 class QItemSelectionModel;
 
@@ -44,6 +45,9 @@ class QuickInspector : public QuickInspectorInterface
 public:
   explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
   ~QuickInspector();
+
+public slots:
+  void selectWindow(int index) Q_DECL_OVERRIDE;
 
 protected:
   bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;
@@ -62,6 +66,7 @@ private:
 
   ProbeInterface* m_probe;
   QPointer<QQuickWindow> m_window;
+  QAbstractItemModel *m_windowModel;
   QuickItemModel *m_itemModel;
   QItemSelectionModel *m_itemSelectionModel;
   PropertyController *m_propertyController;

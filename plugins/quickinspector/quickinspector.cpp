@@ -67,7 +67,8 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   windowModel->setSourceModel(probe->objectListModel());
   QAbstractProxyModel* proxy = new SingleColumnObjectProxyModel(this);
   proxy->setSourceModel(windowModel);
-  probe->registerModel("com.kdab.GammaRay.QuickWindowModel", proxy);
+  m_windowModel = proxy;
+  probe->registerModel("com.kdab.GammaRay.QuickWindowModel", m_windowModel);
   probe->registerModel("com.kdab.GammaRay.QuickItemModel", m_itemModel);
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_itemModel, SLOT(objectAdded(QObject*)));
@@ -75,21 +76,34 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
 
   m_itemSelectionModel = ObjectBroker::selectionModel(m_itemModel);
   connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
-
-  // ### just for testing
-  selectWindow(qobject_cast<QQuickWindow*>(windowModel->index(0,0).data(ObjectModel::ObjectRole).value<QObject*>()));
 }
 
 QuickInspector::~QuickInspector()
 {
 }
 
+void QuickInspector::selectWindow(int index)
+{
+  const QModelIndex mi = m_windowModel->index(index, 0);
+  QQuickWindow* window = mi.data(ObjectModel::ObjectRole).value<QQuickWindow*>();
+  selectWindow(window);
+}
+
 void QuickInspector::selectWindow(QQuickWindow* window)
 {
-  // TODO disconnect previous window
+  if (m_window) {
+    disconnect(m_window, 0, this, 0);
+  }
+
   m_window = window;
-  connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::frameSwapped);
   m_itemModel->setWindow(window);
+
+  if (m_window) {
+    connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::frameSwapped);
+  }
+
+  if (m_clientConnected)
+    emit sceneRendered(m_window->grabWindow());
 }
 
 void QuickInspector::selectItem(QQuickItem* item)
