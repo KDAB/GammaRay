@@ -30,6 +30,7 @@ public:
 public slots:
   void objectAdded(QObject *obj);
   void objectRemoved(QObject *obj);
+  void itemReparented();
 
 private:
   void clear();

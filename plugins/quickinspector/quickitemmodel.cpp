@@ -62,6 +62,8 @@ QModelIndex QuickItemModel::index(int row, int column, const QModelIndex& parent
 
 void QuickItemModel::clear()
 {
+  for (QHash<QQuickItem*, QQuickItem*>::const_iterator it = m_childParentMap.constBegin(); it != m_childParentMap.constEnd(); ++it)
+    disconnect(it.key(), 0, this, 0);
   m_childParentMap.clear();
   m_parentChildMap.clear();
 }
@@ -71,6 +73,7 @@ void QuickItemModel::populateFromItem(QQuickItem* item)
   if (!item)
     return;
 
+  connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()), Qt::UniqueConnection);
   m_childParentMap[item] = item->parentItem();
   m_parentChildMap[item->parentItem()].push_back(item);
 
@@ -121,6 +124,8 @@ void QuickItemModel::objectAdded(QObject* obj)
       objectAdded(parentItem);
   }
 
+  connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()), Qt::UniqueConnection);
+
   const QModelIndex index = indexForItem(parentItem);
   Q_ASSERT(index.isValid() || !parentItem);
 
@@ -164,4 +169,14 @@ void QuickItemModel::objectRemoved(QObject* obj)
   m_parentChildMap.remove(item);
 
   endRemoveRows();
+}
+
+void QuickItemModel::itemReparented()
+{
+  QQuickItem *item = qobject_cast<QQuickItem*>(sender());
+  if (!item || item->window() != m_window)
+    return;
+
+  objectRemoved(item);
+  objectAdded(item);
 }
