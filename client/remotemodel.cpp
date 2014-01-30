@@ -379,6 +379,41 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     }
 
     case Protocol::ModelRowsMoved:
+    {
+      Protocol::ModelIndex sourceParentIndex, destParentIndex;
+      int sourceFirst, sourceLast, destChild;
+      msg.payload() >> sourceParentIndex >> sourceFirst >> sourceLast >> destParentIndex >> destChild;
+      Q_ASSERT(sourceLast >= sourceFirst);
+
+      Node *sourceParent = nodeForIndex(sourceParentIndex);
+      Node *destParent = nodeForIndex(destParentIndex);
+
+      const bool sourceKnown = sourceParent && sourceParent->rowCount >= 0;
+      const bool destKnown = destParent && destParent->rowCount >= 0;
+
+      // case 1: source and destination not locally cached -> nothing to do
+      if (!sourceKnown && !destKnown)
+        break;
+
+      // case 2: only source is locally known -> remove
+      if (sourceKnown && !destKnown) {
+        clear();
+        break;
+      }
+
+      // case 3: only destination is locally known -> added
+      if (!sourceKnown && destKnown) {
+        clear();
+        break;
+      }
+
+      // case 4: source and destination are locally known -> move
+      if (sourceKnown && destKnown) {
+        clear();
+        break;
+      }
+    }
+
     case Protocol::ModelColumnsAdded:
     case Protocol::ModelColumnsMoved:
     case Protocol::ModelColumnsRemoved:
