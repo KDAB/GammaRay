@@ -371,7 +371,8 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
 
       // case 4: source and destination are locally known -> move
       if (sourceKnown && destKnown) {
-        clear();
+        doRemoveRows(sourceParent, sourceFirst, sourceLast);
+        doInsertRows(destParent, destChild, destChild + sourceLast - sourceFirst);
         break;
       }
     }
