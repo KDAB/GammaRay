@@ -42,6 +42,8 @@ class QuickItemModel;
 class QuickInspector : public QuickInspectorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::QuickInspectorInterface)
+
 public:
   explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
   ~QuickInspector();
