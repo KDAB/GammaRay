@@ -89,6 +89,9 @@ class RemoteModel : public QAbstractItemModel
 
     /// execute a insertRows() operation
     void doInsertRows(Node *parentNode, int first, int last);
+    /// execute a removeRows() operation
+    void doRemoveRows(Node *parentNode, int first, int last);
+
     Node* m_root;
 
     mutable QHash<Qt::Orientation, QHash<int, QHash<int, QVariant> > > m_headers; // orientation -> section -> role -> data
