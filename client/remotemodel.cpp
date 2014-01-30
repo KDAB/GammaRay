@@ -322,30 +322,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Node *parentNode = nodeForIndex(parentIndex);
       if (!parentNode || parentNode->rowCount < 0)
         return; // we don't know the parent yet, so we don't care about changes to it either
-      Q_ASSERT(parentNode->rowCount == parentNode->children.size());
-
-      const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
-      beginInsertRows(qmiParent, first, last);
-
-      // allocate rows in the right spot
-      if (first == parentNode->children.size())
-        parentNode->children.resize(parentNode->children.size() + 1 + last - first);
-      else
-        parentNode->children.insert(first, last - first + 1, 0);
-
-      // create nodes for the new rows
-      for (int i = first; i <= last; ++i) {
-        Node *child = new Node;
-        child->parent = parentNode;
-        parentNode->children[i] = child;
-      }
-
-      // adjust row count
-      parentNode->rowCount += last - first + 1;
-      Q_ASSERT(parentNode->rowCount == parentNode->children.size());
-
-      endInsertRows();
-      resetLoadingState(parentNode, last);
+      doInsertRows(parentNode, first, last);
       break;
     }
 
@@ -403,7 +380,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
 
       // case 3: only destination is locally known -> added
       if (!sourceKnown && destKnown) {
-        clear();
+        doInsertRows(destParent, destChild, destChild + sourceLast - sourceFirst);
         break;
       }
 
@@ -560,4 +537,36 @@ void RemoteModel::resetLoadingState(RemoteModel::Node* node, int startRow) const
     child->loading.clear();
     resetLoadingState(child, 0);
   }
+}
+
+void RemoteModel::doInsertRows(RemoteModel::Node* parentNode, int first, int last)
+{
+  Q_ASSERT(parentNode->rowCount == parentNode->children.size());
+
+  const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
+  beginInsertRows(qmiParent, first, last);
+
+  // allocate rows in the right spot
+  if (first == parentNode->children.size())
+    parentNode->children.resize(parentNode->children.size() + 1 + last - first);
+  else
+    parentNode->children.insert(first, last - first + 1, 0);
+
+  // create nodes for the new rows
+  for (int i = first; i <= last; ++i) {
+    Node *child = new Node;
+    child->parent = parentNode;
+    parentNode->children[i] = child;
+  }
+
+  // adjust row count
+  parentNode->rowCount += last - first + 1;
+  Q_ASSERT(parentNode->rowCount == parentNode->children.size());
+
+  endInsertRows();
+  resetLoadingState(parentNode, last);
+}
+
+void RemoteModel::doRemoveRows(RemoteModel::Node* parentNode, int first, int last)
+{
 }
