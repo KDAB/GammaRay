@@ -177,6 +177,26 @@ void QuickItemModel::itemReparented()
   if (!item || item->window() != m_window)
     return;
 
-  objectRemoved(item);
-  objectAdded(item);
+  QQuickItem* sourceParent = m_childParentMap.value(item);
+  Q_ASSERT(sourceParent);
+  const QModelIndex sourceParentIndex = indexForItem(sourceParent);
+
+  QVector<QQuickItem*> &sourceSiblings = m_parentChildMap[sourceParent];
+  QVector<QQuickItem*>::iterator sit = std::lower_bound(sourceSiblings.begin(), sourceSiblings.end(), item);
+  Q_ASSERT(sit != sourceSiblings.end() && *sit == item);
+  const int sourceRow = std::distance(sourceSiblings.begin(), sit);
+
+  QQuickItem* destParent = item->parentItem();
+  Q_ASSERT(destParent);
+  const QModelIndex destParentIndex = indexForItem(destParent);
+
+  QVector<QQuickItem*> &destSiblings = m_parentChildMap[destParent];
+  QVector<QQuickItem*>::iterator dit = std::lower_bound(destSiblings.begin(), destSiblings.end(), item);
+  const int destRow = std::distance(destSiblings.begin(), dit);
+
+  beginMoveRows(sourceParentIndex, sourceRow, sourceRow, destParentIndex, destRow);
+  destSiblings.insert(dit, item);
+  sourceSiblings.erase(sit);
+  m_childParentMap.insert(item, destParent);
+  endMoveRows();
 }

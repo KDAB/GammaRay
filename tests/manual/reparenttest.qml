@@ -41,6 +41,12 @@ Rectangle {
       focus: true
       Keys.onLeftPressed: { parent = left }
       Keys.onRightPressed: { parent = right }
+
+      Rectangle {
+        color: "blue"
+        anchors.centerIn: parent
+        anchors.margins: 5
+      }
     }
   }
 
