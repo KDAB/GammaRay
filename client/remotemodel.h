@@ -91,6 +91,8 @@ class RemoteModel : public QAbstractItemModel
     void doInsertRows(Node *parentNode, int first, int last);
     /// execute a removeRows() operation
     void doRemoveRows(Node *parentNode, int first, int last);
+    /// execute a rowsMoved() operation
+    void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node* destParentNode, int destStart);
 
     Node* m_root;
 

@@ -371,8 +371,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
 
       // case 4: source and destination are locally known -> move
       if (sourceKnown && destKnown) {
-        doRemoveRows(sourceParent, sourceFirst, sourceLast);
-        doInsertRows(destParent, destChild, destChild + sourceLast - sourceFirst);
+        doMoveRows(sourceParent, sourceFirst, sourceLast, destParent, destChild);
         break;
       }
     }
@@ -571,4 +570,43 @@ void RemoteModel::doRemoveRows(RemoteModel::Node* parentNode, int first, int las
 
   endRemoveRows();
   resetLoadingState(parentNode, first);
+}
+
+void RemoteModel::doMoveRows(RemoteModel::Node* sourceParentNode, int sourceStart, int sourceEnd, RemoteModel::Node* destParentNode, int destStart)
+{
+  Q_ASSERT(sourceParentNode->rowCount == sourceParentNode->children.size());
+  Q_ASSERT(destParentNode->rowCount == destParentNode->children.size());
+
+  const int destEnd = destStart + sourceEnd - sourceStart;
+  const int amount = sourceEnd - sourceStart + 1;
+
+  const QModelIndex qmiSourceParent = modelIndexForNode(sourceParentNode, 0);
+  const QModelIndex qmiDestParent = modelIndexForNode(destParentNode, 0);
+  beginMoveRows(qmiSourceParent, sourceStart, sourceEnd, qmiDestParent, destStart);
+
+  // make room in the destination
+  if (destStart == destParentNode->children.size())
+    destParentNode->children.resize(destParentNode->children.size() + amount);
+  else
+    destParentNode->children.insert(destStart, amount, 0);
+
+  // move nodes
+  for (int i; i < amount; ++i) {
+    Node *node = sourceParentNode->children.at(sourceStart + i);
+    node->parent = destParentNode;
+    destParentNode->children[destStart + i] = node;
+  }
+
+  // shrink source
+  sourceParentNode->children.remove(sourceStart, amount);
+
+  // adjust row count
+  sourceParentNode->rowCount -= amount;
+  destParentNode->rowCount += amount;
+  Q_ASSERT(sourceParentNode->rowCount == sourceParentNode->children.size());
+  Q_ASSERT(destParentNode->rowCount == destParentNode->children.size());
+
+  endMoveRows();
+  resetLoadingState(sourceParentNode, sourceStart);
+  resetLoadingState(destParentNode, destEnd);
 }
