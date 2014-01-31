@@ -87,6 +87,13 @@ class RemoteModel : public QAbstractItemModel
     /// pending replies might have a wrong index.
     void resetLoadingState(Node *node, int startRow) const;
 
+    /// execute a insertRows() operation
+    void doInsertRows(Node *parentNode, int first, int last);
+    /// execute a removeRows() operation
+    void doRemoveRows(Node *parentNode, int first, int last);
+    /// execute a rowsMoved() operation
+    void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node* destParentNode, int destStart);
+
     Node* m_root;
 
     mutable QHash<Qt::Orientation, QHash<int, QHash<int, QVariant> > > m_headers; // orientation -> section -> role -> data
