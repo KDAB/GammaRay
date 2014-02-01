@@ -46,6 +46,7 @@
 #include <QItemSelectionModel>
 #include <QMouseEvent>
 #include <QOpenGLContext>
+#include <QPainter>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -102,8 +103,7 @@ void QuickInspector::selectWindow(QQuickWindow* window)
     connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::frameSwapped);
   }
 
-  if (m_clientConnected)
-    emit sceneRendered(m_window->grabWindow());
+  renderScene();
 }
 
 void QuickInspector::selectItem(QQuickItem* item)
@@ -119,11 +119,37 @@ void QuickInspector::selectItem(QQuickItem* item)
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
+void QuickInspector::renderScene()
+{
+  if (!m_clientConnected || !m_window)
+    return;
+
+  QImage img = m_window->grabWindow();
+  if (m_currentItem) {
+    QPainter p(&img);
+
+    // bounding box
+    const QRectF itemRect(0, 0, m_currentItem->width(), m_currentItem->height());
+    p.setPen(Qt::blue);
+    p.drawRect(m_currentItem->mapRectToScene(itemRect));
+
+    // children rect
+    p.setPen(Qt::cyan);
+    p.drawRect(m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
+
+    // transform origin
+    p.setPen(Qt::red);
+    const QPointF tfo = m_currentItem->property("transformOriginPoint").toPointF();
+    p.drawEllipse(m_currentItem->mapToScene(tfo), 2, 2);
+  }
+
+  emit sceneRendered(img);
+}
+
 void QuickInspector::frameSwapped()
 {
   // ### just for testing, we need to rate-limit that and only update if the client actually wants that
-  if (m_clientConnected)
-    emit sceneRendered(m_window->grabWindow());
+  renderScene();
 }
 
 void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
@@ -131,15 +157,15 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
   if (selection.isEmpty())
     return;
   const QModelIndex index = selection.first().topLeft();
-  QQuickItem* item = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
-  m_propertyController->setObject(item);
+  m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
+  m_propertyController->setObject(m_currentItem);
+  renderScene();
 }
 
 void QuickInspector::clientConnectedChanged(bool connected)
 {
   m_clientConnected = connected;
-  if (connected && m_window)
-    emit sceneRendered(m_window->grabWindow());
+  renderScene();
 }
 
 QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const

@@ -62,12 +62,14 @@ private slots:
 private:
   void selectWindow(QQuickWindow* window);
   void selectItem(QQuickItem *item);
+  void renderScene();
   void registerMetaTypes();
 
   QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
 
   ProbeInterface* m_probe;
   QPointer<QQuickWindow> m_window;
+  QPointer<QQuickItem> m_currentItem;
   QAbstractItemModel *m_windowModel;
   QuickItemModel *m_itemModel;
   QItemSelectionModel *m_itemSelectionModel;
