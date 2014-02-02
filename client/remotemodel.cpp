@@ -241,8 +241,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Protocol::ModelIndex index;
       msg.payload() >> index;
       Node *node = nodeForIndex(index);
-      Q_ASSERT(node);
-      if (!node->loading.contains(index.last().second))
+      if (!node || !node->loading.contains(index.last().second))
         break; // we didn't ask for this, probably outdated response for a moved cell
       typedef QHash<int, QVariant> ItemData;
       ItemData itemData;
