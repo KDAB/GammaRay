@@ -66,7 +66,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
           this, SLOT(itemSelectionChanged(QItemSelection)));
 
   new QuickItemTreeWatcher(ui->itemTreeView);
-  new DeferredResizeModeSetter(ui->itemTreeView->header(), 0, QHeaderView::QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(ui->itemTreeView->header(), 0, QHeaderView::ResizeToContents);
 
   ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
 
