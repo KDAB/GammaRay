@@ -25,6 +25,7 @@ if(HAVE_QT_WIDGETS)
     quickinspectorclient.cpp
     quickinspectorwidget.cpp
     quickclientitemmodel.cpp
+    quickitemtreewatcher.cpp
   )
 
   qt4_wrap_ui(gammaray_quickinspector_ui_srcs

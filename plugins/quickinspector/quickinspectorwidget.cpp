@@ -24,9 +24,11 @@
 #include "quickinspectorwidget.h"
 #include "quickinspectorclient.h"
 #include "quickclientitemmodel.h"
+#include "quickitemtreewatcher.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
+#include <ui/deferredresizemodesetter.h>
 
 #include <QLabel>
 
@@ -62,6 +64,9 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ui->itemTreeView->setSelectionModel(selectionModel);
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
+
+  new QuickItemTreeWatcher(ui->itemTreeView);
+  new DeferredResizeModeSetter(ui->itemTreeView->header(), 0, QHeaderView::QHeaderView::ResizeToContents);
 
   ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
 
