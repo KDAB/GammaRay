@@ -67,5 +67,22 @@
     <file alias="classes/QVBoxLayout/default.png">classes/editvlayout.png</file>
     <file alias="classes/QFormLayout/default.png">classes/editform.png</file>
 
+    <!-- QtQuick 2 class icons -->
+    <file alias="classes/QQuickBorderImage/default.png">classes/qtquick2/border-image-icon16.png</file>
+    <file alias="classes/QQuickFlickable/default.png">classes/qtquick2/flickable-icon16.png</file>
+    <file alias="classes/QQuickFlipable/default.png">classes/qtquick2/flipable-icon16.png</file>
+    <file alias="classes/QQuickFocusScope/default.png">classes/qtquick2/focusscope-icon16.png</file>
+    <file alias="classes/QQuickGridView/default.png">classes/qtquick2/gridview-icon16.png</file>
+    <file alias="classes/QQuickImage/default.png">classes/qtquick2/image-icon16.png</file>
+    <file alias="classes/QQuickItem/default.png">classes/qtquick2/item-icon16.png</file>
+    <file alias="classes/QQuickListView/default.png">classes/qtquick2/listview-icon16.png</file>
+    <file alias="classes/QQuickMouseArea/default.png">classes/qtquick2/mouse-area-icon16.png</file>
+    <file alias="classes/QQuickPathView/default.png">classes/qtquick2/pathview-icon16.png</file>
+    <file alias="classes/QQuickRectangle/default.png">classes/qtquick2/rect-icon16.png</file>
+    <file alias="classes/QQuickTextEdit/default.png">classes/qtquick2/text-edit-icon16.png</file>
+    <file alias="classes/QQuickText/default.png">classes/qtquick2/text-icon16.png</file>
+    <file alias="classes/QQuickTextInput/default.png">classes/qtquick2/text-input-icon16.png</file>
+    <file alias="classes/QQuickWebView/default.png">classes/qtquick2/webview-icon16.png</file>
+
   </qresource>
 </RCC>
