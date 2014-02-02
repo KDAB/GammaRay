@@ -24,6 +24,7 @@ if(HAVE_QT_WIDGETS)
   set(gammaray_quickinspector_ui_srcs
     quickinspectorclient.cpp
     quickinspectorwidget.cpp
+    quickclientitemmodel.cpp
   )
 
   qt4_wrap_ui(gammaray_quickinspector_ui_srcs

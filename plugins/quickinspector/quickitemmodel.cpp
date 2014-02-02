@@ -1,4 +1,28 @@
+/*
+  quickitemmodel.cpp
+
+  This file is part of GammaRay, the Qt application inspection and
+  manipulation tool.
+
+  Copyright (C) 2014 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "quickitemmodel.h"
+#include "quickitemmodelroles.h"
 
 #include <QDebug>
 #include <QQuickItem>
@@ -32,6 +56,10 @@ QVariant QuickItemModel::data(const QModelIndex& index, int role) const
     return QVariant();
 
   QQuickItem *item = reinterpret_cast<QQuickItem*>(index.internalPointer());
+
+  if (role == QuickItemModelRole::Visibility)
+    return item->isVisible();
+
   return dataForObject(item, index, role);
 }
 
@@ -60,6 +88,13 @@ QModelIndex QuickItemModel::index(int row, int column, const QModelIndex& parent
   return createIndex(row, column, children.at(row));
 }
 
+QMap<int, QVariant> QuickItemModel::itemData(const QModelIndex& index) const
+{
+  QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
+  d.insert(QuickItemModelRole::Visibility, data(index, QuickItemModelRole::Visibility));
+  return d;
+}
+
 void QuickItemModel::clear()
 {
   for (QHash<QQuickItem*, QQuickItem*>::const_iterator it = m_childParentMap.constBegin(); it != m_childParentMap.constEnd(); ++it)
@@ -73,7 +108,7 @@ void QuickItemModel::populateFromItem(QQuickItem* item)
   if (!item)
     return;
 
-  connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()), Qt::UniqueConnection);
+  connectItem(item);
   m_childParentMap[item] = item->parentItem();
   m_parentChildMap[item->parentItem()].push_back(item);
 
@@ -83,6 +118,13 @@ void QuickItemModel::populateFromItem(QQuickItem* item)
   QVector<QQuickItem*> &children  = m_parentChildMap[item->parentItem()];
   std::sort(children.begin(), children.end());
 }
+
+void QuickItemModel::connectItem(QQuickItem* item)
+{
+  connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
+  connect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
+}
+
 
 QModelIndex QuickItemModel::indexForItem(QQuickItem* item) const
 {
@@ -124,7 +166,7 @@ void QuickItemModel::objectAdded(QObject* obj)
       objectAdded(parentItem);
   }
 
-  connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()), Qt::UniqueConnection);
+  connectItem(item);
 
   const QModelIndex index = indexForItem(parentItem);
   Q_ASSERT(index.isValid() || !parentItem);
@@ -199,4 +241,15 @@ void QuickItemModel::itemReparented()
   sourceSiblings.erase(sit);
   m_childParentMap.insert(item, destParent);
   endMoveRows();
+}
+
+void QuickItemModel::itemUpdated()
+{
+  QQuickItem *item = qobject_cast<QQuickItem*>(sender());
+  if (!item || item->window() != m_window)
+    return;
+
+  const QModelIndex left = indexForItem(item);
+  const QModelIndex right = left.sibling(left.row(), columnCount() - 1);
+  emit dataChanged(left, right);
 }

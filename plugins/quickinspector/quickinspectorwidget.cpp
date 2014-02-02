@@ -23,12 +23,12 @@
 
 #include "quickinspectorwidget.h"
 #include "quickinspectorclient.h"
+#include "quickclientitemmodel.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
 
 #include <QLabel>
-#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
@@ -53,7 +53,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   if (ui->windowComboBox->currentIndex() >= 0)
     m_interface->selectWindow(ui->windowComboBox->currentIndex());
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  QSortFilterProxyModel *proxy = new QuickClientItemModel(this);
   proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickItemModel"));
   proxy->setDynamicSortFilter(true);
   ui->itemTreeView->setModel(proxy);
