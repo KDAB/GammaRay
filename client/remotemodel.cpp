@@ -274,10 +274,9 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Protocol::ModelIndex beginIndex, endIndex;
       msg.payload() >> beginIndex >> endIndex;
       Node *node = nodeForIndex(beginIndex);
-      if (node == m_root)
+      if (!node || node == m_root)
         break;
 
-      Q_ASSERT(node);
       Q_ASSERT(beginIndex.last().first <= endIndex.last().first);
       Q_ASSERT(beginIndex.last().second <= endIndex.last().second);
 
