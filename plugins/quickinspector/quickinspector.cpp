@@ -100,10 +100,10 @@ void QuickInspector::selectWindow(QQuickWindow* window)
   m_itemModel->setWindow(window);
 
   if (m_window) {
-    connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::frameSwapped);
+    connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::emitSceneChanged);
   }
 
-  renderScene();
+  emitSceneChanged();
 }
 
 void QuickInspector::selectItem(QQuickItem* item)
@@ -146,10 +146,10 @@ void QuickInspector::renderScene()
   emit sceneRendered(img);
 }
 
-void QuickInspector::frameSwapped()
+void QuickInspector::emitSceneChanged()
 {
-  // ### just for testing, we need to rate-limit that and only update if the client actually wants that
-  renderScene();
+  if (m_clientConnected && m_window)
+    emit sceneChanged();
 }
 
 void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
@@ -159,13 +159,13 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
   const QModelIndex index = selection.first().topLeft();
   m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
   m_propertyController->setObject(m_currentItem);
-  renderScene();
+  emitSceneChanged();
 }
 
 void QuickInspector::clientConnectedChanged(bool connected)
 {
   m_clientConnected = connected;
-  renderScene();
+  emitSceneChanged();
 }
 
 QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const

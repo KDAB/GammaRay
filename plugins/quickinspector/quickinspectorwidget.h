@@ -28,6 +28,7 @@
 
 #include <QWidget>
 
+class QTimer;
 class QLabel;
 class QImage;
 class QItemSelection;
@@ -48,13 +49,18 @@ class QuickInspectorWidget : public QWidget
     ~QuickInspectorWidget();
 
   private slots:
+    void sceneChanged();
     void sceneRendered(const QImage &img);
     void itemSelectionChanged(const QItemSelection &selection);
+    void requestRender();
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
     QuickInspectorInterface* m_interface;
     QLabel *m_sceneImage;
+    QTimer *m_renderTimer;
+    bool m_sceneChangedSinceLastRequest;
+    bool m_waitingForImage;
 };
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>

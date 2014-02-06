@@ -38,6 +38,7 @@ public:
 
 public slots:
   void selectWindow(int index);
+  void renderScene();
 };
 }
 

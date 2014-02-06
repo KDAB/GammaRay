@@ -31,6 +31,7 @@
 #include <ui/deferredresizemodesetter.h>
 
 #include <QLabel>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -42,10 +43,14 @@ static QObject* createQuickInspectorClient(const QString &/*name*/, QObject *par
 
 QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   QWidget(parent),
-  ui(new Ui::QuickInspectorWidget)
+  ui(new Ui::QuickInspectorWidget),
+  m_renderTimer(new QTimer(this)),
+  m_sceneChangedSinceLastRequest(false),
+  m_waitingForImage(false)
 {
   ObjectBroker::registerClientObjectFactoryCallback<QuickInspectorInterface*>(createQuickInspectorClient);
   m_interface = ObjectBroker::object<QuickInspectorInterface*>();
+  connect(m_interface, SIGNAL(sceneChanged()), this, SLOT(sceneChanged()));
   connect(m_interface, SIGNAL(sceneRendered(QImage)), this, SLOT(sceneRendered(QImage)));
 
   ui->setupUi(this);
@@ -73,17 +78,44 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   m_sceneImage = new QLabel;
   ui->sceneView->setWidget(m_sceneImage);
   ui->sceneView->setBackgroundRole(QPalette::Dark);
+
+  m_renderTimer->setInterval(100);
+  m_renderTimer->setSingleShot(true);
+  connect(m_renderTimer, SIGNAL(timeout()), this, SLOT(requestRender()));
+  m_interface->renderScene();
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
 {
 }
 
+void QuickInspectorWidget::sceneChanged()
+{
+  if (!m_renderTimer->isActive())
+    m_renderTimer->start();
+}
+
 void QuickInspectorWidget::sceneRendered(const QImage& img)
 {
-  // ### only for testing
+  m_waitingForImage = false;
+
   m_sceneImage->resize(img.size());
   m_sceneImage->setPixmap(QPixmap::fromImage(img));
+
+  if (m_sceneChangedSinceLastRequest) {
+    m_sceneChangedSinceLastRequest = false;
+    sceneChanged();
+  }
+}
+
+void QuickInspectorWidget::requestRender()
+{
+  if (!m_waitingForImage) {
+    m_waitingForImage = true;
+    m_interface->renderScene();
+  } else {
+    m_sceneChangedSinceLastRequest = true;
+  }
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)

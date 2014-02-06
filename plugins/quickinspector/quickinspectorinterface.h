@@ -39,8 +39,12 @@ public:
 
 public slots:
   virtual void selectWindow(int index) = 0;
+  /// Ask for a new screenshot of the scene.
+  virtual void renderScene() = 0;
 
 signals:
+  /// Emitted when the view has been newly rendered, for the client to request an update.
+  void sceneChanged();
   void sceneRendered(const QImage &img);
 
 };

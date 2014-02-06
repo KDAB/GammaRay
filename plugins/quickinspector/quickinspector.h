@@ -50,19 +50,19 @@ public:
 
 public slots:
   void selectWindow(int index) Q_DECL_OVERRIDE;
+  void renderScene();
 
 protected:
   bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
-  void frameSwapped();
+  void emitSceneChanged();
   void itemSelectionChanged(const QItemSelection &selection);
   void clientConnectedChanged(bool connected);
 
 private:
   void selectWindow(QQuickWindow* window);
   void selectItem(QQuickItem *item);
-  void renderScene();
   void registerMetaTypes();
 
   QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
