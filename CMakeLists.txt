@@ -175,6 +175,7 @@ if(Qt5Core_FOUND)
   # more hacks: find qpa/... includes
   # also see https://codereview.qt-project.org/#change,30483
   include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+  include_directories(${Qt5Quick_PRIVATE_INCLUDE_DIRS})
 
   # TODO warnings rather than build errors for the deprecated methods would be nice...
   add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)

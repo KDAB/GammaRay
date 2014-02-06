@@ -10,6 +10,13 @@ if(Qt5Quick_FOUND)
     quickitemmodel.cpp
   )
 
+  if(HAVE_PRIVATE_QT_HEADERS)
+    set(gammaray_quickinspector_srcs
+      ${gammaray_quickinspector_srcs}
+      quickscenegraphmodel.cpp
+    )
+  endif()
+
   gammaray_add_plugin(gammaray_quickinspector gammaray_quickinspector.desktop ${gammaray_quickinspector_srcs})
 
   target_link_libraries(gammaray_quickinspector

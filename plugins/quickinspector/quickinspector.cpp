@@ -23,6 +23,7 @@
 
 #include "quickinspector.h"
 #include "quickitemmodel.h"
+#include "quickscenegraphmodel.h"
 
 #include <common/objectbroker.h>
 
@@ -33,6 +34,7 @@
 #include <core/propertycontroller.h>
 #include <core/remote/server.h>
 #include <core/singlecolumnobjectproxymodel.h>
+#include <core/varianthandler.h>
 
 #include <QQuickItem>
 #include <QQuickView>
@@ -47,21 +49,84 @@
 #include <QMouseEvent>
 #include <QOpenGLContext>
 #include <QPainter>
+#include <QSGNode>
+#include <QSGGeometry>
+#include <QSGMaterial>
+#include <QMatrix4x4>
 
 Q_DECLARE_METATYPE(QQmlError)
 
+Q_DECLARE_METATYPE(QSGNode*)
+Q_DECLARE_METATYPE(QSGBasicGeometryNode*)
+Q_DECLARE_METATYPE(QSGGeometryNode*)
+Q_DECLARE_METATYPE(QSGClipNode*)
+Q_DECLARE_METATYPE(QSGTransformNode*)
+Q_DECLARE_METATYPE(QSGRootNode*)
+Q_DECLARE_METATYPE(QSGOpacityNode*)
+Q_DECLARE_METATYPE(QSGNode::Flags)
+Q_DECLARE_METATYPE(QSGNode::DirtyState)
+Q_DECLARE_METATYPE(QSGGeometry*)
+Q_DECLARE_METATYPE(QMatrix4x4*)
+Q_DECLARE_METATYPE(const QMatrix4x4*)
+Q_DECLARE_METATYPE(const QSGClipNode*)
+Q_DECLARE_METATYPE(const QSGGeometry*)
+Q_DECLARE_METATYPE(QSGMaterial*)
 using namespace GammaRay;
+
+static QString qSGNodeFlagsToString(QSGNode::Flags flags) {
+    QStringList list;
+    if (flags & QSGNode::OwnedByParent)
+        list << "OwnedByParent";
+    if (flags & QSGNode::UsePreprocess)
+        list << "UsePreprocess";
+    if (flags & QSGNode::OwnsGeometry)
+        list << "OwnsGeometry";
+    if (flags & QSGNode::OwnsMaterial)
+        list << "OwnsMaterial";
+    if (flags & QSGNode::OwnsOpaqueMaterial)
+        list << "OwnsOpaqueMaterial";
+    return list.join(" | ");
+}
+static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags) {
+    QStringList list;
+    if (flags & QSGNode::DirtySubtreeBlocked)
+        list << "DirtySubtreeBlocked";
+    if (flags & QSGNode::DirtyMatrix)
+        list << "DirtyMatrix";
+    if (flags & QSGNode::DirtyNodeAdded)
+        list << "DirtyNodeAdded";
+    if (flags & QSGNode::DirtyNodeRemoved)
+        list << "DirtyNodeRemoved";
+    if (flags & QSGNode::DirtyGeometry)
+        list << "DirtyGeometry";
+    if (flags & QSGNode::DirtyMaterial)
+        list << "DirtyMaterial";
+    if (flags & QSGNode::DirtyOpacity)
+        list << "DirtyOpacity";
+    if (flags & QSGNode::DirtyForceUpdate)
+        list << "DirtyForceUpdate";
+    if (flags & QSGNode::DirtyUsePreprocess)
+        list << "DirtyUsePreprocess";
+    if (flags & QSGNode::DirtyPropagationMask)
+        list << "DirtyPropagationMask";
+    return list.join(" | ");
+}
+
 
 QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QuickInspectorInterface(parent),
   m_probe(probe),
   m_itemModel(new QuickItemModel(this)),
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  m_sgModel(new QuickSceneGraphModel(this)),
+#endif
   m_propertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
   m_clientConnected(false)
 {
   Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(objectName()), this, "clientConnectedChanged");
 
   registerMetaTypes();
+  registerVariantHandlers();
   probe->installGlobalEventFilter(this);
 
   QAbstractProxyModel* windowModel = new ObjectTypeFilterProxyModel<QQuickWindow>(this);
@@ -77,6 +142,15 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
 
   m_itemSelectionModel = ObjectBroker::selectionModel(m_itemModel);
   connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", m_sgModel);
+  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_sgModel, SLOT(objectAdded(QObject*)));
+  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_sgModel, SLOT(objectRemoved(QObject*)));
+
+  m_sgSelectionModel = ObjectBroker::selectionModel(m_sgModel);
+  connect(m_sgSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::sgSelectionChanged);
+#endif
 }
 
 QuickInspector::~QuickInspector()
@@ -98,6 +172,7 @@ void QuickInspector::selectWindow(QQuickWindow* window)
 
   m_window = window;
   m_itemModel->setWindow(window);
+  m_sgModel->setWindow(window);
 
   if (m_window) {
     connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::emitSceneChanged);
@@ -130,7 +205,7 @@ void QuickInspector::renderScene()
 
     // bounding box
     const QRectF itemRect(0, 0, m_currentItem->width(), m_currentItem->height());
-    p.setPen(Qt::blue);
+    p.setPen(Qt::red);
     p.drawRect(m_currentItem->mapRectToScene(itemRect));
 
     // children rect
@@ -158,8 +233,19 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
     return;
   const QModelIndex index = selection.first().topLeft();
   m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
+  m_currentSgNode = 0;
   m_propertyController->setObject(m_currentItem);
   emitSceneChanged();
+}
+
+void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
+{
+  if (selection.isEmpty())
+    return;
+  const QModelIndex index = selection.first().topLeft();
+  m_currentItem = 0;
+  m_currentSgNode = index.data(ObjectModel::ObjectRole).value<QSGNode*>();
+  m_propertyController->setObject(m_currentSgNode, findSGNodeType(m_currentSgNode));
 }
 
 void QuickInspector::clientConnectedChanged(bool connected)
@@ -212,6 +298,72 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_PROPERTY_RO(QQuickView, QSize, initialSize);
   MO_ADD_PROPERTY_RO(QQuickView, QQmlContext*, rootContext);
   MO_ADD_PROPERTY_RO(QQuickView, QQuickItem*, rootObject);
+
+  MO_ADD_METAOBJECT0(QSGNode);
+  MO_ADD_PROPERTY_RO(QSGNode, QSGNode*, parent);
+  MO_ADD_PROPERTY_RO(QSGNode, int, childCount);
+  MO_ADD_PROPERTY_RO(QSGNode, int, childCount);
+  MO_ADD_PROPERTY_RO(QSGNode, QSGNode::Flags, flags);
+  MO_ADD_PROPERTY   (QSGNode, QSGNode::DirtyState, dirtyState, markDirty);
+
+  MO_ADD_METAOBJECT1(QSGBasicGeometryNode, QSGNode);
+  MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, const QSGGeometry*, geometry);
+  MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, const QMatrix4x4*, matrix);
+  MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, const QSGClipNode*, clipList);
+
+  MO_ADD_METAOBJECT1(QSGGeometryNode, QSGBasicGeometryNode);
+  MO_ADD_PROPERTY   (QSGGeometryNode, QSGMaterial*, material, setMaterial);
+  MO_ADD_PROPERTY   (QSGGeometryNode, QSGMaterial*, opaqueMaterial, setOpaqueMaterial);
+  MO_ADD_PROPERTY_RO(QSGGeometryNode, QSGMaterial*, activeMaterial);
+  MO_ADD_PROPERTY   (QSGGeometryNode, int, renderOrder, setRenderOrder);
+  MO_ADD_PROPERTY   (QSGGeometryNode, qreal, inheritedOpacity, setInheritedOpacity);
+
+  MO_ADD_METAOBJECT1(QSGClipNode, QSGBasicGeometryNode);
+  MO_ADD_PROPERTY   (QSGClipNode, bool, isRectangular, setIsRectangular);
+  MO_ADD_PROPERTY_CR(QSGClipNode, QRectF, clipRect, setClipRect);
+  MO_ADD_PROPERTY_RO(QSGClipNode, const QMatrix4x4*, matrix);
+  MO_ADD_PROPERTY_RO(QSGClipNode, const QSGClipNode*, clipList);
+
+  MO_ADD_METAOBJECT1(QSGTransformNode, QSGNode);
+//  MO_ADD_PROPERTY   (QSGTransformNode, const QMatrix4x4&, matrix, setMatrix);
+//  MO_ADD_PROPERTY   (QSGTransformNode, const QMatrix4x4&, combinedMatrix, setCombinedMatrix);
+
+  MO_ADD_METAOBJECT1(QSGRootNode, QSGNode);
+
+  MO_ADD_METAOBJECT1(QSGOpacityNode, QSGNode);
+  MO_ADD_PROPERTY   (QSGOpacityNode, qreal, opacity, setOpacity);
+  MO_ADD_PROPERTY   (QSGOpacityNode, qreal, combinedOpacity, setCombinedOpacity);
+  MO_ADD_PROPERTY_RO(QSGOpacityNode, bool, isSubtreeBlocked);
+}
+
+void QuickInspector::registerVariantHandlers()
+{
+  VariantHandler::registerStringConverter<QSGNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGBasicGeometryNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGGeometryNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGClipNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGTransformNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGRootNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGOpacityNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGNode::Flags>(qSGNodeFlagsToString);
+  VariantHandler::registerStringConverter<QSGNode::DirtyState>(qSGNodeDirtyStateToString);
+}
+
+#define QSG_CHECK_TYPE(Class) \
+  if (dynamic_cast<Class*>(node) && MetaObjectRepository::instance()->hasMetaObject(#Class)) \
+    return QLatin1String(#Class)
+
+QString QuickInspector::findSGNodeType(QSGNode *node) const
+{
+    // keep this in reverse topological order of the class hierarchy!
+    QSG_CHECK_TYPE(QSGClipNode);
+    QSG_CHECK_TYPE(QSGGeometryNode);
+    QSG_CHECK_TYPE(QSGBasicGeometryNode);
+    QSG_CHECK_TYPE(QSGTransformNode);
+    QSG_CHECK_TYPE(QSGRootNode);
+    QSG_CHECK_TYPE(QSGOpacityNode);
+
+    return QLatin1String("QSGNode");
 }
 
 QString QuickInspectorFactory::name() const

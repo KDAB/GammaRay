@@ -70,6 +70,16 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
 
+  QSortFilterProxyModel *sgProxy = new QSortFilterProxyModel(this);
+  sgProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel"));
+  sgProxy->setDynamicSortFilter(true);
+  ui->sgTreeView->setModel(sgProxy);
+  ui->sgTreeSearchLine->setProxy(sgProxy);
+  QItemSelectionModel* sgSelectionModel = ObjectBroker::selectionModel(sgProxy);
+  ui->sgTreeView->setSelectionModel(sgSelectionModel);
+  connect(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(itemSelectionChanged(QItemSelection)));
+
   new QuickItemTreeWatcher(ui->itemTreeView);
   new DeferredResizeModeSetter(ui->itemTreeView->header(), 0, QHeaderView::ResizeToContents);
 

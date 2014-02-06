@@ -33,11 +33,19 @@
 class QAbstractItemModel;
 class QItemSelection;
 class QItemSelectionModel;
+class QSGNode;
+//class QSGBasicGeometryNode;
+//class QSGGeometryNode;
+//class QSGClipNode;
+//class QSGTransformNode;
+//class QSGRootNode;
+//class QSGOpacityNode;
 
 namespace GammaRay {
 
 class PropertyController;
 class QuickItemModel;
+class QuickSceneGraphModel;
 
 class QuickInspector : public QuickInspectorInterface
 {
@@ -58,21 +66,27 @@ protected:
 private slots:
   void emitSceneChanged();
   void itemSelectionChanged(const QItemSelection &selection);
+  void sgSelectionChanged(const QItemSelection &selection);
   void clientConnectedChanged(bool connected);
 
 private:
   void selectWindow(QQuickWindow* window);
   void selectItem(QQuickItem *item);
   void registerMetaTypes();
+  void registerVariantHandlers();
+  QString findSGNodeType(QSGNode *node) const;
 
   QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
 
   ProbeInterface* m_probe;
   QPointer<QQuickWindow> m_window;
   QPointer<QQuickItem> m_currentItem;
+  QSGNode *m_currentSgNode;
   QAbstractItemModel *m_windowModel;
   QuickItemModel *m_itemModel;
   QItemSelectionModel *m_itemSelectionModel;
+  QuickSceneGraphModel *m_sgModel;
+  QItemSelectionModel *m_sgSelectionModel;
   PropertyController *m_propertyController;
   bool m_clientConnected;
 };

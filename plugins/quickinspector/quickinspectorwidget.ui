@@ -23,19 +23,47 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QWidget" name="layoutWidget_6">
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="KFilterProxySearchLine" name="itemTreeSearchLine" native="true"/>
-        </item>
-        <item>
-         <widget class="QTreeView" name="itemTreeView">
-          <attribute name="headerShowSortIndicator" stdset="0">
-           <bool>true</bool>
-          </attribute>
-         </widget>
-        </item>
-       </layout>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="tabPosition">
+        <enum>QTabWidget::South</enum>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="itemsTab">
+        <attribute name="title">
+         <string>Items</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="KFilterProxySearchLine" name="itemTreeSearchLine" native="true"/>
+         </item>
+         <item>
+          <widget class="QTreeView" name="itemTreeView">
+           <attribute name="headerShowSortIndicator" stdset="0">
+            <bool>true</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="sceneGraphTab">
+        <attribute name="title">
+         <string>Scene Graph</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="KFilterProxySearchLine" name="sgTreeSearchLine" native="true"/>
+         </item>
+         <item>
+          <widget class="QTreeView" name="sgTreeView">
+           <attribute name="headerShowSortIndicator" stdset="0">
+            <bool>true</bool>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
       <widget class="QScrollArea" name="sceneView">
        <property name="alignment">
