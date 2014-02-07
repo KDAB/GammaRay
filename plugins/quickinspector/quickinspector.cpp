@@ -145,8 +145,6 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
   probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", m_sgModel);
-  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_sgModel, SLOT(objectAdded(QObject*)));
-  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_sgModel, SLOT(objectRemoved(QObject*)));
 
   m_sgSelectionModel = ObjectBroker::selectionModel(m_sgModel);
   connect(m_sgSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::sgSelectionChanged);
