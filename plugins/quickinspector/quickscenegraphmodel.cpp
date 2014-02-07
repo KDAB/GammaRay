@@ -210,8 +210,9 @@ void QuickSceneGraphModel::collectItemNodes(QQuickItem *item)
   if (!item)
     return;
 
-  m_itemItemNodeMap.remove(item);
-  m_itemItemNodeMap.insert(item, QQuickItemPrivate::get(item)->itemNode());
+  QSGNode *itemNode = QQuickItemPrivate::get(item)->itemNode();
+  m_itemItemNodeMap[item] = itemNode;
+  m_itemNodeItemMap[itemNode] = item;
 
   foreach (QQuickItem *child, item->childItems())
     collectItemNodes(child);
@@ -237,6 +238,18 @@ QModelIndex QuickSceneGraphModel::indexForNode(QSGNode* node) const
 
   const int row = std::distance(siblings.constBegin(), it);
   return index(row, 0, parentIndex);
+}
+
+QSGNode *QuickSceneGraphModel::sgNodeForItem(QQuickItem *item) const
+{
+  return m_itemItemNodeMap[item];
+}
+
+QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
+{
+  while (node && !m_itemNodeItemMap.contains(node)) // If there's no entry for node, take its parent
+    node = m_childParentMap[node];
+  return m_itemNodeItemMap[node];
 }
 
 #endif // HAVE_PRIVATE_QT_HEADERS

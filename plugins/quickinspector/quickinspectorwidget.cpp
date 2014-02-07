@@ -84,6 +84,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   new DeferredResizeModeSetter(ui->itemTreeView->header(), 0, QHeaderView::ResizeToContents);
 
   ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
+  ui->sgPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickSceneGraph");
 
   m_sceneImage = new QLabel;
   ui->sceneView->setWidget(m_sceneImage);

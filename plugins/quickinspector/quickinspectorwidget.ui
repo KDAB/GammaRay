@@ -71,7 +71,22 @@
        </property>
       </widget>
      </widget>
-     <widget class="GammaRay::PropertyWidget" name="itemPropertyWidget" native="true"/>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="QWidget" name="page_13">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="GammaRay::PropertyWidget" name="itemPropertyWidget" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_14">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="GammaRay::PropertyWidget" name="sgPropertyWidget" native="true"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -90,5 +105,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>tabWidget</sender>
+   <signal>tabBarClicked(int)</signal>
+   <receiver>stackedWidget</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>188</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>381</x>
+     <y>163</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

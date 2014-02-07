@@ -87,7 +87,8 @@ private:
   QItemSelectionModel *m_itemSelectionModel;
   QuickSceneGraphModel *m_sgModel;
   QItemSelectionModel *m_sgSelectionModel;
-  PropertyController *m_propertyController;
+  PropertyController *m_itemPropertyController;
+  PropertyController *m_sgPropertyController;
   bool m_clientConnected;
 };
 

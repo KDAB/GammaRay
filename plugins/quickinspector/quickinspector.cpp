@@ -117,10 +117,11 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QuickInspectorInterface(parent),
   m_probe(probe),
   m_itemModel(new QuickItemModel(this)),
+  m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
 #ifdef HAVE_PRIVATE_QT_HEADERS
   m_sgModel(new QuickSceneGraphModel(this)),
+  m_sgPropertyController(new PropertyController("com.kdab.GammaRay.QuickSceneGraph", this)),
 #endif
-  m_propertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
   m_clientConnected(false)
 {
   Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(objectName()), this, "clientConnectedChanged");
@@ -170,7 +171,9 @@ void QuickInspector::selectWindow(QQuickWindow* window)
 
   m_window = window;
   m_itemModel->setWindow(window);
+#ifdef HAVE_PRIVATE_QT_HEADERS
   m_sgModel->setWindow(window);
+#endif
 
   if (m_window) {
     connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::emitSceneChanged);
@@ -231,19 +234,29 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
     return;
   const QModelIndex index = selection.first().topLeft();
   m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
-  m_currentSgNode = 0;
-  m_propertyController->setObject(m_currentItem);
+  m_itemPropertyController->setObject(m_currentItem);
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  m_currentSgNode = m_sgModel->sgNodeForItem(m_currentItem);
+  m_sgSelectionModel->select(m_sgModel->indexForNode(m_currentSgNode), QItemSelectionModel::Select |
+    QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+#endif
+
   emitSceneChanged();
 }
 
 void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
 {
+#ifdef HAVE_PRIVATE_QT_HEADERS
   if (selection.isEmpty())
     return;
   const QModelIndex index = selection.first().topLeft();
-  m_currentItem = 0;
   m_currentSgNode = index.data(ObjectModel::ObjectRole).value<QSGNode*>();
-  m_propertyController->setObject(m_currentSgNode, findSGNodeType(m_currentSgNode));
+  m_sgPropertyController->setObject(m_currentSgNode, findSGNodeType(m_currentSgNode));
+
+  m_currentItem = m_sgModel->itemForSgNode(m_currentSgNode);
+  selectItem(m_currentItem);
+#endif
 }
 
 void QuickInspector::clientConnectedChanged(bool connected)

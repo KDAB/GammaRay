@@ -54,6 +54,9 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
     QModelIndex index(int row, int column, const QModelIndex& parent) const Q_DECL_OVERRIDE;
+    QModelIndex indexForNode(QSGNode *node) const;
+    QSGNode *sgNodeForItem(QQuickItem *item) const;
+    QQuickItem *itemForSgNode(QSGNode *node) const;
 
 private slots:
   void updateSGTree();
@@ -62,7 +65,6 @@ private:
   void clear();
   void populateFromNode(QSGNode *node);
   void collectItemNodes(QQuickItem *item);
-  QModelIndex indexForNode(QSGNode *node) const;
 
   QPointer<QQuickWindow> m_window;
 
@@ -72,6 +74,7 @@ private:
   QHash<QSGNode*, QSGNode*> m_oldChildParentMap;
   QHash<QSGNode*, QVector<QSGNode*> > m_oldParentChildMap;
   QHash<QQuickItem*, QSGNode*> m_itemItemNodeMap;
+  QHash<QSGNode*, QQuickItem*> m_itemNodeItemMap;
 };
 }
 
