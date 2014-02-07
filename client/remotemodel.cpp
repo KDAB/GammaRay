@@ -589,7 +589,7 @@ void RemoteModel::doMoveRows(RemoteModel::Node* sourceParentNode, int sourceStar
     destParentNode->children.insert(destStart, amount, 0);
 
   // move nodes
-  for (int i; i < amount; ++i) {
+  for (int i = 0; i < amount; ++i) {
     Node *node = sourceParentNode->children.at(sourceStart + i);
     node->parent = destParentNode;
     destParentNode->children[destStart + i] = node;
