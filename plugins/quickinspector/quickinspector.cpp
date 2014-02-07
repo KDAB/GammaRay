@@ -313,7 +313,6 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_METAOBJECT0(QSGNode);
   MO_ADD_PROPERTY_RO(QSGNode, QSGNode*, parent);
   MO_ADD_PROPERTY_RO(QSGNode, int, childCount);
-  MO_ADD_PROPERTY_RO(QSGNode, int, childCount);
   MO_ADD_PROPERTY_RO(QSGNode, QSGNode::Flags, flags);
   MO_ADD_PROPERTY   (QSGNode, QSGNode::DirtyState, dirtyState, markDirty);
 
