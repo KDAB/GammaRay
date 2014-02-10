@@ -174,6 +174,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
     if (*i < *j) { // We don't have to do anything but inform the client about the change
       beginRemoveRows(myIndex, childList.size(), childList.size());
       endRemoveRows();
+      emit nodeDeleted(*i);
       i++;
     } else if (*i > *j) { // Add to new list and inform the client about the change
       beginInsertRows(myIndex, childList.size(), childList.size());
@@ -202,6 +203,8 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
   } else if (i != oldChildList.end()) { // Inform the client about the removed rows
     beginRemoveRows(myIndex, childList.size(), childList.size() + std::distance(i, oldChildList.end()) - 1);
     endRemoveRows();
+    for (; i != oldChildList.end(); i++)
+      emit nodeDeleted(*i);
   }
 }
 

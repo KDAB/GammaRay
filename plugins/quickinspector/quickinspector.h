@@ -68,6 +68,7 @@ private slots:
   void itemSelectionChanged(const QItemSelection &selection);
   void sgSelectionChanged(const QItemSelection &selection);
   void clientConnectedChanged(bool connected);
+  void sgNodeDeleted(QSGNode *node);
 
 private:
   void selectWindow(QQuickWindow* window);

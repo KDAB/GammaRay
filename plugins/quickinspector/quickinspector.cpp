@@ -149,6 +149,7 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
 
   m_sgSelectionModel = ObjectBroker::selectionModel(m_sgModel);
   connect(m_sgSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::sgSelectionChanged);
+  connect(m_sgModel, &QuickSceneGraphModel::nodeDeleted, this, &QuickInspector::sgNodeDeleted);
 #endif
 }
 
@@ -256,6 +257,14 @@ void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
 
   m_currentItem = m_sgModel->itemForSgNode(m_currentSgNode);
   selectItem(m_currentItem);
+#endif
+}
+
+void QuickInspector::sgNodeDeleted(QSGNode *node)
+{
+#ifdef HAVE_PRIVATE_QT_HEADERS
+  if (m_currentSgNode == node)
+    m_sgPropertyController->setObject(0);
 #endif
 }
 

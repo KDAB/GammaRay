@@ -58,6 +58,9 @@ public:
     QSGNode *sgNodeForItem(QQuickItem *item) const;
     QQuickItem *itemForSgNode(QSGNode *node) const;
 
+signals:
+    void nodeDeleted(QSGNode *node);
+
 private slots:
   void updateSGTree();
 
