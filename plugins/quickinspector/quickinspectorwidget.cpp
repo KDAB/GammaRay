@@ -80,7 +80,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   connect(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
 
-  new QuickItemTreeWatcher(ui->itemTreeView);
+  new QuickItemTreeWatcher(ui->itemTreeView, ui->sgTreeView, this);
   new DeferredResizeModeSetter(ui->itemTreeView->header(), 0, QHeaderView::ResizeToContents);
 
   ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");

@@ -36,14 +36,16 @@ class QuickItemTreeWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit QuickItemTreeWatcher(QTreeView* view);
+    explicit QuickItemTreeWatcher(QTreeView* view, QTreeView *sgView, QObject *parent = 0);
     ~QuickItemTreeWatcher();
 
 private slots:
-    void modelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void sgModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-    QTreeView *m_view;
+    QTreeView *m_itemView;
+    QTreeView *m_sgView;
 };
 
 }

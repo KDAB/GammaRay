@@ -29,23 +29,37 @@
 
 using namespace GammaRay;
 
-QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView* view) : QObject(view), m_view(view)
+QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView* itemView, QTreeView* sgView, QObject *parent)
+  : QObject(parent),
+    m_itemView(itemView),
+    m_sgView(sgView)
 {
-  connect(view->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-          this, SLOT(modelDataChanged(QModelIndex, QModelIndex)));
+  connect(itemView->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+          this, SLOT(itemModelDataChanged(QModelIndex, QModelIndex)));
+  connect(sgView->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+          this, SLOT(sgModelDataChanged(QModelIndex,QModelIndex)));
 }
 
 QuickItemTreeWatcher::~QuickItemTreeWatcher()
 {
 }
 
-void QuickItemTreeWatcher::modelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+void QuickItemTreeWatcher::itemModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
   for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
     const QModelIndex index = topLeft.sibling(row, 0);
     const bool visible = index.data(QuickItemModelRole::Visibility).toBool();
     if (visible) {
-      m_view->setExpanded(index, true);
+      m_itemView->setExpanded(index, true);
     }
   }
+}
+
+void QuickItemTreeWatcher::sgModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
+    const QModelIndex index = topLeft.sibling(row, 0);
+    m_sgView->setExpanded(index, true);
+  }
+  m_sgView->resizeColumnToContents(0);
 }
