@@ -22,13 +22,18 @@
 */
 
 #include "objectmethodmodel.h"
+#include "propertycontroller.h"
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 
-ObjectMethodModel::ObjectMethodModel(QObject *parent)
+ObjectMethodModel::ObjectMethodModel(PropertyController *controller)
   : MetaObjectModel<QMetaMethod, &QMetaObject::method,
-                    &QMetaObject::methodCount, &QMetaObject::methodOffset>(parent)
+                    &QMetaObject::methodCount, &QMetaObject::methodOffset>(controller)
 {
+  controller->registerModel(this, "methods");
+
+  ObjectBroker::selectionModel(this); // trigger creation
 }
 
 int GammaRay::ObjectMethodModel::columnCount(const QModelIndex &parent) const

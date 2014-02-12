@@ -24,6 +24,10 @@
 #include "objectinspector.h"
 #include "propertycontroller.h"
 #include "probeinterface.h"
+#include "objectmethodmodel.h"
+#include "objectclassinfomodel.h"
+#include "objectenummodel.h"
+#include "aggregatedpropertymodel.h"
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -37,6 +41,8 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QObject *parent)
   : QObject(parent),
   m_propertyController(new PropertyController("com.kdab.GammaRay.ObjectInspector", this))
 {
+  registerPCExtensions();
+
   m_selectionModel = ObjectBroker::selectionModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
 
   connect(m_selectionModel,
@@ -100,5 +106,13 @@ void ObjectInspector::objectSelected(QObject *object)
   // TODO: move this to the client side!
   //ui->objectTreeView->scrollTo(index);
   objectSelected(index);
+}
+
+void ObjectInspector::registerPCExtensions()
+{
+  PropertyController::registerExtension<ObjectClassInfoModel>();
+  PropertyController::registerExtension<ObjectMethodModel>();
+  PropertyController::registerExtension<ObjectEnumModel>();
+  PropertyController::registerExtension<AggregatedPropertyModel>();
 }
 

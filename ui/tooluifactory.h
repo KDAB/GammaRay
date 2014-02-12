@@ -59,6 +59,13 @@ class ToolUiFactory
      * @return a pointer to the created QwWidget.
      */
     virtual QWidget *createWidget(QWidget *parentWidget) = 0;
+
+    /**
+     * Initialize UI related stuff for this tool. This function is called on loading
+     * the plugin, before the widget itself is needed. Use createWidget to create
+     * the actual widget.
+     */
+      virtual void initUi() {} \
 };
 
 /**

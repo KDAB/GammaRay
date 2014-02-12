@@ -25,10 +25,12 @@
 #define GAMMARAY_PROPERTYCONTROLLER_H
 
 #include "gammaray_core_export.h"
+#include "propertycontrollerextension.h"
 
 #include <common/propertycontrollerinterface.h>
 
 #include <QPointer>
+#include <QVector>
 
 class QAbstractItemModel;
 class QStandardItemModel;
@@ -37,14 +39,7 @@ namespace GammaRay {
 
 class ConnectionFilterProxyModel;
 class MultiSignalMapper;
-class ObjectDynamicPropertyModel;
-class ObjectStaticPropertyModel;
-class ObjectClassInfoModel;
-class ObjectMethodModel;
-class ObjectEnumModel;
-class MetaPropertyModel;
 class MethodArgumentModel;
-class AggregatedPropertyModel;
 
 /** @brief Non-UI part of the property widget. */
 class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterface
@@ -59,6 +54,12 @@ public:
   void setObject(void *object, const QString &className);
   void setMetaObject(const QMetaObject *metaObject);
 
+  void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
+  template<typename T> static void registerExtension()
+  {
+    s_extensionFactories << new PropertyControllerExtensionFactory<T>();
+  }
+
 public slots:
   void activateMethod();
   void invokeMethod(Qt::ConnectionType type);
@@ -70,23 +71,16 @@ private slots:
   void objectDestroyed();
 
 private:
-  void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
-
-private:
   QString m_objectBaseName;
 
   QPointer<QObject> m_object;
-  ObjectStaticPropertyModel *m_staticPropertyModel;
-  ObjectDynamicPropertyModel *m_dynamicPropertyModel;
-  ObjectClassInfoModel *m_classInfoModel;
-  ObjectMethodModel *m_methodModel;
   ConnectionFilterProxyModel *m_inboundConnectionModel;
   ConnectionFilterProxyModel *m_outboundConnectionModel;
-  ObjectEnumModel *m_enumModel;
   MultiSignalMapper *m_signalMapper;
   QStandardItemModel *m_methodLogModel;
-  MetaPropertyModel *m_metaPropertyModel;
-  AggregatedPropertyModel *m_aggregatedPropertyModel;
+  QVector<PropertyControllerExtension*> m_extensions;
+
+  static QVector<PropertyControllerExtensionFactoryBase*> s_extensionFactories;
 
   MethodArgumentModel *m_methodArgumentModel;
 };

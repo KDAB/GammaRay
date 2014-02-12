@@ -49,6 +49,8 @@ class ObjectInspector : public QObject
     void objectSelected(QObject *object);
 
   private:
+    void registerPCExtensions();
+
     PropertyController *m_propertyController;
     QItemSelectionModel *m_selectionModel;
 };
@@ -59,8 +61,7 @@ class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObjec
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit ObjectInspectorFactory(QObject *parent) : QObject(parent)
-    {
-    }
+    {}
 
     inline QString name() const
     {

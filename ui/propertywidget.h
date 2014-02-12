@@ -24,12 +24,13 @@
 #ifndef GAMMARAY_PROPERTYWIDGET_H
 #define GAMMARAY_PROPERTYWIDGET_H
 
-#include <QWidget>
+#include <QTabWidget>
 #include <QPointer>
 #include <QHash>
 
 #include "gammaray_ui_export.h"
 #include <common/enums.h>
+#include "propertywidgettab.h"
 
 class QAbstractItemModel;
 class QAbstractItemView;
@@ -41,7 +42,7 @@ class Ui_PropertyWidget;
 class PropertyControllerInterface;
 
 /** @brief Client-side counter-part GammaRay::PropertyController. */
-class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
+class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 {
   Q_OBJECT
   public:
@@ -49,6 +50,14 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
     virtual ~PropertyWidget();
 
     void setObjectBaseName(const QString &baseName);
+
+    template<typename T> static void registerTab(QString name)
+    {
+      s_tabFactories << new PropertyWidgetTabFactory<T>(name);
+    }
+
+  signals:
+    void objectBaseNameChanged(const QString &baseName);
 
   private slots:
     void setDisplayState(GammaRay::PropertyWidgetDisplayState::State state);
@@ -67,7 +76,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
 
     QAbstractItemModel* model(const QString &nameSuffix);
 
-    Ui_PropertyWidget *m_ui;
+//    Ui_PropertyWidget *m_ui;
 
     QString m_objectBaseName;
 
@@ -76,6 +85,8 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QWidget
 
     PropertyWidgetDisplayState::State m_displayState;
     PropertyControllerInterface *m_controller;
+
+    static QVector<PropertyWidgetTabFactoryBase*> s_tabFactories;
 
     QWidget *m_newPropertyValue;
 };

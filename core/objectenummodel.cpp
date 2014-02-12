@@ -22,6 +22,7 @@
 */
 
 #include "objectenummodel.h"
+#include "propertycontroller.h"
 
 #include <QMetaEnum>
 #include <QMetaObject>
@@ -33,8 +34,9 @@ typedef MetaObjectModel<QMetaEnum,
                         &QMetaObject::enumeratorCount,
                         &QMetaObject::enumeratorOffset> SuperClass;
 
-GammaRay::ObjectEnumModel::ObjectEnumModel(QObject *parent) : SuperClass(parent)
+GammaRay::ObjectEnumModel::ObjectEnumModel(PropertyController *controller) : SuperClass(controller)
 {
+  controller->registerModel(this, "enums");
 }
 
 int ObjectEnumModel::rowCount(const QModelIndex &parent) const

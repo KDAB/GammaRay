@@ -22,18 +22,28 @@
 */
 
 #include "aggregatedpropertymodel.h"
+#include "propertycontroller.h"
+#include "objectstaticpropertymodel.h"
+#include "objectdynamicpropertymodel.h"
+#include "metapropertymodel.h"
+#include "objectpropertymodel.h"
 
 using namespace GammaRay;
 
-AggregatedPropertyModel::AggregatedPropertyModel(QObject* parent) : QAbstractTableModel(parent)
+AggregatedPropertyModel::AggregatedPropertyModel(PropertyController *controller) : QAbstractTableModel(controller)
 {
+  addModel(new ObjectStaticPropertyModel(this));
+  addModel(new ObjectDynamicPropertyModel(this));
+  addModel(new MetaPropertyModel(this));
+
+  controller->registerModel(this, "properties");
 }
 
 AggregatedPropertyModel::~AggregatedPropertyModel()
 {
 }
 
-void AggregatedPropertyModel::addModel(QAbstractItemModel* model)
+void AggregatedPropertyModel::addModel(ObjectPropertyModel *model)
 {
   beginResetModel(); // FIXME: use insertRows instead
   m_models.append(model);
@@ -41,6 +51,23 @@ void AggregatedPropertyModel::addModel(QAbstractItemModel* model)
   connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(sourceDataChanged(QModelIndex,QModelIndex)));
   // TODO: connect signals
   endResetModel();
+}
+
+void AggregatedPropertyModel::setObject(QObject *object)
+{
+  foreach (ObjectPropertyModel* model, m_models)
+    model->setObject(object);
+}
+
+void AggregatedPropertyModel::setObject(void *object, const QString &typeName)
+{
+  foreach (ObjectPropertyModel* model, m_models)
+    model->setObject(object, typeName);
+}
+
+void AggregatedPropertyModel::setMetaObject(const QMetaObject *metaObject)
+{
+  Q_UNUSED(metaObject)
 }
 
 QVariant AggregatedPropertyModel::data(const QModelIndex& index, int role) const

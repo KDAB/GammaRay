@@ -38,7 +38,7 @@ class ObjectMethodModel :
                            &QMetaObject::methodCount, &QMetaObject::methodOffset>
 {
   public:
-    explicit ObjectMethodModel(QObject *parent = 0);
+    explicit ObjectMethodModel(PropertyController *controller);
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QMap< int, QVariant > itemData(const QModelIndex& index) const;
 

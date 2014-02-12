@@ -76,6 +76,13 @@ set(gammaray_ui_internal_srcs
   tools/modelinspector/modelinspectorwidget.cpp
   tools/modelinspector/modelinspectorclient.cpp
   tools/objectinspector/objectinspectorwidget.cpp
+  tools/objectinspector/propertiestab.cpp
+  tools/objectinspector/methodstab.cpp
+  tools/objectinspector/inboundconnectionstab.cpp
+  tools/objectinspector/outboundconnectionstab.cpp
+  tools/objectinspector/enumstab.cpp
+  tools/objectinspector/classinfotab.cpp
+  tools/objectinspector/methodstab.cpp
   tools/resourcebrowser/clientresourcemodel.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp
@@ -95,6 +102,13 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/mimetypes/mimetypeswidget.ui
   tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
+  tools/objectinspector/propertiestab.ui
+  tools/objectinspector/methodstab.ui
+  tools/objectinspector/inboundconnectionstab.ui
+  tools/objectinspector/outboundconnectionstab.ui
+  tools/objectinspector/enumstab.ui
+  tools/objectinspector/classinfotab.ui
+  tools/objectinspector/methodstab.ui
   tools/resourcebrowser/resourcebrowserwidget.ui
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
@@ -119,5 +133,6 @@ gammaray_install_headers(
   deferredtreeviewconfiguration.h
   palettemodel.h
   propertywidget.h
+  propertywidgettab.h
   tooluifactory.h
 )

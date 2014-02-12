@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_METAPROPERTYMODEL_H
 #define GAMMARAY_METAPROPERTYMODEL_H
 
-#include <QAbstractTableModel>
+#include "objectpropertymodel.h"
 
 namespace GammaRay {
 
@@ -34,7 +34,7 @@ class MetaObject;
  * @todo needs better name, but ObjectPropertyModel is already in use...
  * @todo maybe it's a good to merge those to anyway?
  */
-class MetaPropertyModel : public QAbstractTableModel
+class MetaPropertyModel : public ObjectPropertyModel
 {
   Q_OBJECT
   public:
@@ -50,6 +50,10 @@ class MetaPropertyModel : public QAbstractTableModel
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     Qt::ItemFlags flags(const QModelIndex &index) const;
+
+  private:
+    void monitorObject(QObject* obj);
+    void unmonitorObject(QObject* obj);
 
   private:
     MetaObject *m_metaObject;

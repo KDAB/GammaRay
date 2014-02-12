@@ -62,7 +62,6 @@ MAKE_FACTORY(MetaObjectBrowser, true);
 MAKE_FACTORY(MetaTypeBrowser, true);
 MAKE_FACTORY(MimeTypes, true);
 MAKE_FACTORY(ModelInspector, true);
-MAKE_FACTORY(ObjectInspector, true);
 MAKE_FACTORY(ResourceBrowser, true);
 MAKE_FACTORY(StandardPaths, true);
 MAKE_FACTORY(TextDocumentInspector, false);
@@ -150,6 +149,7 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
 
 void ClientToolModel::insertFactory(ToolUiFactory* factory)
 {
+  factory->initUi();
   m_factories.insert(factory->id(), factory);
 }
 

@@ -25,6 +25,14 @@
 #define GAMMARAY_OBJECTINSPECTOR_OBJECTINSPECTORWIDGET_H
 
 #include <QWidget>
+#include "tooluifactory.h"
+#include "propertywidget.h"
+#include "propertiestab.h"
+#include "methodstab.h"
+#include "inboundconnectionstab.h"
+#include "outboundconnectionstab.h"
+#include "enumstab.h"
+#include "classinfotab.h"
 
 class QItemSelection;
 
@@ -46,6 +54,22 @@ class ObjectInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::ObjectInspectorWidget> ui;
+};
+
+class ObjectInspectorFactory : public ToolUiFactory {
+public:
+  virtual inline QString id() const { return "GammaRay::ObjectInspector"; }
+  virtual inline QWidget *createWidget(QWidget *parentWidget) { return new ObjectInspectorWidget(parentWidget); }
+  virtual inline bool remotingSupported() const { return true; }
+  virtual void initUi()
+  {
+    PropertyWidget::registerTab<PropertiesTab>(QObject::tr("Properties"));
+    PropertyWidget::registerTab<MethodsTab>(QObject::tr("Methods"));
+    PropertyWidget::registerTab<InboundConnectionsTab>(QObject::tr("Inbound Connections"));
+    PropertyWidget::registerTab<OutboundConnectionsTab>(QObject::tr("Outbound Connections"));
+    PropertyWidget::registerTab<EnumsTab>(QObject::tr("Enums"));
+    PropertyWidget::registerTab<ClassInfoTab>(QObject::tr("Class Info"));
+  }
 };
 
 }
