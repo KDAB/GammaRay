@@ -33,13 +33,10 @@
 #include <QVector>
 
 class QAbstractItemModel;
-class QStandardItemModel;
 
 namespace GammaRay {
 
 class ConnectionFilterProxyModel;
-class MultiSignalMapper;
-class MethodArgumentModel;
 
 /** @brief Non-UI part of the property widget. */
 class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterface
@@ -49,6 +46,8 @@ class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterfa
 public:
   explicit PropertyController(const QString &baseName, QObject *parent);
   ~PropertyController();
+
+  const QString &objectBaseName();
 
   void setObject(QObject *object);
   void setObject(void *object, const QString &className);
@@ -60,29 +59,16 @@ public:
     s_extensionFactories << new PropertyControllerExtensionFactory<T>();
   }
 
-public slots:
-  void activateMethod();
-  void invokeMethod(Qt::ConnectionType type);
-  void setProperty(const QString& name, const QVariant& value);
-  void resetProperty(const QString& name);
-
 private slots:
-  void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);
   void objectDestroyed();
 
 private:
   QString m_objectBaseName;
 
   QPointer<QObject> m_object;
-  ConnectionFilterProxyModel *m_inboundConnectionModel;
-  ConnectionFilterProxyModel *m_outboundConnectionModel;
-  MultiSignalMapper *m_signalMapper;
-  QStandardItemModel *m_methodLogModel;
   QVector<PropertyControllerExtension*> m_extensions;
 
   static QVector<PropertyControllerExtensionFactoryBase*> s_extensionFactories;
-
-  MethodArgumentModel *m_methodArgumentModel;
 };
 
 }

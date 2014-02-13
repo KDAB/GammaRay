@@ -26,7 +26,6 @@
 
 #include <QAbstractItemModel>
 #include <QMetaObject>
-#include "propertycontrollerextension.h"
 
 namespace GammaRay {
 
@@ -34,7 +33,7 @@ template <typename MetaThing,
           MetaThing (QMetaObject::*MetaAccessor)(int) const,
           int (QMetaObject::*MetaCount)() const,
           int (QMetaObject::*MetaOffset)() const>
-class MetaObjectModel : public QAbstractItemModel, public PropertyControllerExtension
+class MetaObjectModel : public QAbstractItemModel
 {
   public:
     explicit MetaObjectModel(QObject *parent = 0)
@@ -46,21 +45,6 @@ class MetaObjectModel : public QAbstractItemModel, public PropertyControllerExte
     {
       m_metaObject = metaObject;
       reset();
-    }
-
-    void setObject(void *object, const QString &typeName)
-    {
-      Q_UNUSED(object)
-      Q_UNUSED(typeName)
-    }
-
-    void setObject(QObject *object)
-    {
-      const QMetaObject *metaObject = 0;
-      if (object) {
-        metaObject = object->metaObject();
-      }
-      setMetaObject(metaObject);
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const

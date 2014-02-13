@@ -24,13 +24,15 @@
 #ifndef GAMMARAY_PROPERTYEDITORFACTORY_H
 #define GAMMARAY_PROPERTYEDITORFACTORY_H
 
+#include "gammaray_ui_export.h"
+
 #include <QItemEditorFactory>
 #include <QVector>
 
 namespace GammaRay {
 
 /** Item editor factory with support for extra types while keeping support for the built-in ones. */
-class PropertyEditorFactory : public QItemEditorFactory
+class GAMMARAY_UI_EXPORT PropertyEditorFactory : public QItemEditorFactory
 {
   public:
     static PropertyEditorFactory *instance();

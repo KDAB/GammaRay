@@ -61,7 +61,8 @@ class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObjec
   Q_INTERFACES(GammaRay::ToolFactory)
   public:
     explicit ObjectInspectorFactory(QObject *parent) : QObject(parent)
-    {}
+    {
+    }
 
     inline QString name() const
     {

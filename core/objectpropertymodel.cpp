@@ -52,12 +52,6 @@ void ObjectPropertyModel::setObject(QObject *object)
   reset();
 }
 
-void ObjectPropertyModel::setObject(void *object, const QString &typeName)
-{
-  Q_UNUSED(object)
-  Q_UNUSED(typeName)
-}
-
 int ObjectPropertyModel::columnCount(const QModelIndex& parent) const
 {
   if (parent.isValid()) {

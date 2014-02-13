@@ -23,29 +23,9 @@
 
 #include "propertycontroller.h"
 
-#include "aggregatedpropertymodel.h"
-#include "connectionfilterproxymodel.h"
-#include "connectionmodel.h"
-#include "metapropertymodel.h"
-#include "methodargumentmodel.h"
-#include "multisignalmapper.h"
-#include "objectclassinfomodel.h"
-#include "objectdynamicpropertymodel.h"
-#include "objectenummodel.h"
-#include "objectmethodmodel.h"
-#include "objectstaticpropertymodel.h"
 #include "probe.h"
-#include "varianthandler.h"
 
-#include "remote/remotemodelserver.h"
-
-#include "common/objectbroker.h"
-#include "common/enums.h"
-
-#include <QDebug>
-#include <QItemSelectionModel>
-#include <QStandardItemModel>
-#include <QTime>
+#include <QStringList>
 
 using namespace GammaRay;
 
@@ -53,56 +33,25 @@ QVector<PropertyControllerExtensionFactoryBase*> PropertyController::s_extension
 
 PropertyController::PropertyController(const QString &baseName, QObject *parent) :
   PropertyControllerInterface(baseName + ".controller", parent),
-  m_objectBaseName(baseName),
-  m_inboundConnectionModel(new ConnectionFilterProxyModel(this)),
-  m_outboundConnectionModel(new ConnectionFilterProxyModel(this)),
-  m_signalMapper(0),
-  m_methodLogModel(new QStandardItemModel(this)),
-  m_methodArgumentModel(new MethodArgumentModel(this))
+  m_objectBaseName(baseName)
 {
-  m_inboundConnectionModel->setFilterOnReceiver(true);
-  m_outboundConnectionModel->setFilterOnSender(true);
-
   foreach (PropertyControllerExtensionFactoryBase *factory, s_extensionFactories) {
     m_extensions << factory->create(this);
   }
-
-  registerModel(m_methodLogModel, "methodLog");
-  registerModel(m_inboundConnectionModel, "inboundConnections");
-  registerModel(m_outboundConnectionModel, "outboundConnections");
-  registerModel(m_methodArgumentModel, "methodArguments");
-
-  // TODO 1.3 had an optimization using the ProxyDetacher for these models, re-add that
-  m_inboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
-  m_outboundConnectionModel->setSourceModel(Probe::instance()->connectionModel());
 }
 
 PropertyController::~PropertyController()
 {
 }
 
+const QString &PropertyController::objectBaseName()
+{
+  return m_objectBaseName;
+}
+
 void PropertyController::registerModel(QAbstractItemModel *model, const QString &nameSuffix)
 {
   Probe::instance()->registerModel(m_objectBaseName + '.' + nameSuffix, model);
-}
-
-void PropertyController::signalEmitted(QObject* sender, int signalIndex, const QVector<QVariant>& args)
-{
-  Q_ASSERT(m_object == sender);
-
-  QStringList prettyArgs;
-  foreach (const QVariant &v, args)
-    prettyArgs.push_back(VariantHandler::displayString(v));
-
-  m_methodLogModel->appendRow(
-  new QStandardItem(tr("%1: Signal %2 emitted, arguments: %3").
-  arg(QTime::currentTime().toString("HH:mm:ss.zzz")).
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  arg(sender->metaObject()->method(signalIndex).signature())
-#else
-  arg(QString(sender->metaObject()->method(signalIndex).methodSignature()))
-#endif
-  .arg(prettyArgs.join(", "))));
 }
 
 void PropertyController::setObject(QObject *object)
@@ -113,115 +62,43 @@ void PropertyController::setObject(QObject *object)
     connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
 
   m_object = object;
-  m_inboundConnectionModel->filterReceiver(object);
-  m_outboundConnectionModel->filterSender(object);
+
+  QStringList availableExtensions;
 
   foreach (PropertyControllerExtension *extension, m_extensions) {
-    extension->setObject(object);
+    if (extension->setObject(object))
+      availableExtensions << extension->name();
   }
 
-  delete m_signalMapper;
-  m_signalMapper = new MultiSignalMapper(this);
-  connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)), SLOT(signalEmitted(QObject*,int,QVector<QVariant>)));
-
-  m_methodLogModel->clear();
-
-  emit displayStateChanged(PropertyWidgetDisplayState::QObject);
+  emit availableExtensionsChanged(availableExtensions);
 }
 
 void PropertyController::setObject(void *object, const QString &className)
 {
   setObject(0);
+
+  QStringList availableExtensions;
+
   foreach (PropertyControllerExtension *extension, m_extensions) {
-    extension->setObject(object, className);
+    if (extension->setObject(object, className))
+      availableExtensions << extension->name();
   }
 
-  emit displayStateChanged(PropertyWidgetDisplayState::Object);
+  emit availableExtensionsChanged(availableExtensions);
 }
 
 void PropertyController::setMetaObject(const QMetaObject *metaObject)
 {
   setObject(0);
+
+  QStringList availableExtensions;
+
   foreach (PropertyControllerExtension *extension, m_extensions) {
-    extension->setMetaObject(metaObject);
+    if (extension->setMetaObject(metaObject))
+      availableExtensions << extension->name();
   }
 
-  emit displayStateChanged(PropertyWidgetDisplayState::MetaObject);
-}
-
-void PropertyController::activateMethod()
-{
-//  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_methodModel);
-//  if (selectionModel->selectedRows().size() != 1) {
-//    return;
-//  }
-//  const QModelIndex index = selectionModel->selectedRows().first();
-
-//  const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
-//  if (method.methodType() == QMetaMethod::Slot) {
-//    m_methodArgumentModel->setMethod(method);
-//  } else if (method.methodType() == QMetaMethod::Signal) {
-//    m_signalMapper->connectToSignal(m_object, method);
-//  }
-}
-
-void PropertyController::invokeMethod(Qt::ConnectionType connectionType)
-{
-//  if (!m_object) {
-    m_methodLogModel->appendRow(
-      new QStandardItem(
-        tr("%1: Invocation failed: Invalid object, probably got deleted in the meantime.").
-        arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
-    return;
-//  }
-
-//  QMetaMethod method;
-//  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_methodModel);
-//  if (selectionModel->selectedRows().size() == 1) {
-//    const QModelIndex index = selectionModel->selectedRows().first();
-//    method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
-//  }
-
-//  if (method.methodType() != QMetaMethod::Slot) {
-//    m_methodLogModel->appendRow(
-//      new QStandardItem(
-//        tr("%1: Invocation failed: Invalid method (not a slot?).").
-//        arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
-//    return;
-//  }
-
-//  const QVector<MethodArgument> args = m_methodArgumentModel->arguments();
-//  // TODO retrieve return value and add it to the log in case of success
-//  // TODO measure executation time and that to the log
-//  const bool result = method.invoke(m_object.data(), connectionType,
-//    args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
-
-//  if (!result) {
-//    m_methodLogModel->appendRow(
-//      new QStandardItem(
-//        tr("%1: Invocation failed..").
-//        arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
-//    return;
-//  }
-
-//  m_methodArgumentModel->setMethod(QMetaMethod());
-}
-
-void PropertyController::setProperty(const QString& name, const QVariant& value)
-{
-  if (!m_object)
-    return;
-  m_object->setProperty(name.toUtf8(), value);
-}
-
-void PropertyController::resetProperty(const QString& name)
-{
-  if (!m_object || name.isEmpty())
-    return;
-
-  const int index = m_object->metaObject()->indexOfProperty(name.toUtf8());
-  const QMetaProperty prop = m_object->metaObject()->property(index);
-  prop.reset(m_object);
+  emit availableExtensionsChanged(availableExtensions);
 }
 
 void PropertyController::objectDestroyed()

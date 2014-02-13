@@ -26,7 +26,7 @@
 
 #include <QTabWidget>
 #include <QPointer>
-#include <QHash>
+#include <QMap>
 
 #include "gammaray_ui_export.h"
 #include <common/enums.h>
@@ -51,44 +51,27 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 
     void setObjectBaseName(const QString &baseName);
 
-    template<typename T> static void registerTab(QString name)
+    template<typename T> static void registerTab(QString name, QString label)
     {
-      s_tabFactories << new PropertyWidgetTabFactory<T>(name);
+      s_tabFactories << new PropertyWidgetTabFactory<T>(name, label);
     }
 
   signals:
     void objectBaseNameChanged(const QString &baseName);
 
   private slots:
-    void setDisplayState(GammaRay::PropertyWidgetDisplayState::State state);
-    void methodActivated(const QModelIndex &index);
-    void methodConextMenu(const QPoint &pos);
+    void updateShownTabs(QStringList availableExtensions);
 
-    void onDoubleClick(const QModelIndex &index);
-    void updateNewPropertyValueEditor();
-    void validateNewProperty();
-    void addNewProperty();
-    void propertyContextMenu(const QPoint &pos);
 
   private:
-    /// Decides if widget is supposed to be shown at this display state
-    bool showTab(const QWidget *widget, PropertyWidgetDisplayState::State state) const;
-
-    QAbstractItemModel* model(const QString &nameSuffix);
-
-//    Ui_PropertyWidget *m_ui;
-
     QString m_objectBaseName;
 
-    // Contains initially added tab widgets (Tab widget/Label)
-    QVector< QPair<QWidget *,QString> > m_tabWidgets;
+    // Contains all tab widgets
+    QVector<QWidget *> m_tabWidgets;
 
-    PropertyWidgetDisplayState::State m_displayState;
     PropertyControllerInterface *m_controller;
 
     static QVector<PropertyWidgetTabFactoryBase*> s_tabFactories;
-
-    QWidget *m_newPropertyValue;
 };
 
 }

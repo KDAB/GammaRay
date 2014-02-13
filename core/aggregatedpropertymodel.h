@@ -26,27 +26,20 @@
 
 #include <QAbstractItemModel>
 #include <QVector>
-#include "propertycontrollerextension.h"
 
 namespace GammaRay {
-
-class ObjectPropertyModel;
 
 /** Model that aggregates static and dynamic QObject properties and properties
  *  from our own meta-type system.
  */
-class AggregatedPropertyModel : public QAbstractTableModel, public PropertyControllerExtension
+class AggregatedPropertyModel : public QAbstractTableModel
 {
   Q_OBJECT
 public:
-  explicit AggregatedPropertyModel(PropertyController *controller);
+  explicit AggregatedPropertyModel(QObject *parent = 0);
   ~AggregatedPropertyModel();
 
-  void addModel(ObjectPropertyModel* model);
-
-  void setObject(void *object, const QString &typeName);
-  void setObject(QObject *object);
-  void setMetaObject(const QMetaObject *metaObject);
+  void addModel(QAbstractItemModel* model);
 
   QVariant data(const QModelIndex& index, int role) const;
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
@@ -65,7 +58,7 @@ private slots:
   void sourceDataChanged(const QModelIndex &sourceTopLeft, const QModelIndex &sourceBottomRight);
 
 private:
-  QVector<ObjectPropertyModel*> m_models;
+  QVector<QAbstractItemModel*> m_models;
 
 };
 

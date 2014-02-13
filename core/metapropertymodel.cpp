@@ -29,7 +29,7 @@
 using namespace GammaRay;
 
 MetaPropertyModel::MetaPropertyModel(QObject *parent)
-  : ObjectPropertyModel(parent),
+  : QAbstractTableModel(parent),
     m_metaObject(0),
     m_object(0)
 {
@@ -60,16 +60,6 @@ void MetaPropertyModel::setObject(QObject *object)
     }
   }
   endResetModel();
-}
-
-void MetaPropertyModel::monitorObject(QObject *obj)
-{
-  Q_UNUSED(obj)
-}
-
-void MetaPropertyModel::unmonitorObject(QObject *obj)
-{
-  Q_UNUSED(obj)
 }
 
 int MetaPropertyModel::columnCount(const QModelIndex &parent) const

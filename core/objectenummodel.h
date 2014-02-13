@@ -33,7 +33,7 @@ class ObjectEnumModel : public MetaObjectModel<QMetaEnum, &QMetaObject::enumerat
                                                &QMetaObject::enumeratorOffset>
 {
   public:
-    explicit ObjectEnumModel(PropertyController *controller);
+    explicit ObjectEnumModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QString columnHeader(int index) const;

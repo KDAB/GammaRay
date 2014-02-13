@@ -4,6 +4,8 @@
 class QObject;
 class QMetaObject;
 
+#include <QString>
+
 namespace GammaRay {
 
 class PropertyController;
@@ -11,12 +13,17 @@ class PropertyController;
 class PropertyControllerExtension
 {
 public:
-  explicit PropertyControllerExtension() {}
+  explicit PropertyControllerExtension(const QString &name);
 
   /** Sets the object that should be represented by this extension. */
-  virtual void setObject(void *object, const QString &typeName) = 0;
-  virtual void setObject(QObject *object) = 0;
-  virtual void setMetaObject(const QMetaObject *metaObject) = 0;
+  virtual bool setObject(void *object, const QString &typeName) = 0;
+  virtual bool setObject(QObject *object) = 0;
+  virtual bool setMetaObject(const QMetaObject *metaObject) = 0;
+
+  const QString &name() const;
+
+private:
+  QString m_name;
 };
 
 class PropertyControllerExtensionFactoryBase {

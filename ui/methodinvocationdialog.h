@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_METHODINVOCATIONDIALOG_H
 #define GAMMARAY_METHODINVOCATIONDIALOG_H
 
+#include "gammaray_ui_export.h"
+
 #include <QDialog>
 
 class QAbstractItemModel;
@@ -32,7 +34,7 @@ namespace GammaRay {
 
 namespace Ui { class MethodInvocationDialog; }
 
-class MethodInvocationDialog : public QDialog
+class GAMMARAY_UI_EXPORT MethodInvocationDialog : public QDialog
 {
   Q_OBJECT
   public:

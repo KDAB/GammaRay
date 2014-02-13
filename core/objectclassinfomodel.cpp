@@ -22,17 +22,15 @@
 */
 
 #include "objectclassinfomodel.h"
-#include "propertycontroller.h"
 
 using namespace GammaRay;
 
-ObjectClassInfoModel::ObjectClassInfoModel(PropertyController *controller)
+ObjectClassInfoModel::ObjectClassInfoModel(QObject *parent)
   : MetaObjectModel<QMetaClassInfo,
                     &QMetaObject::classInfo,
                     &QMetaObject::classInfoCount,
-                    &QMetaObject::classInfoOffset>(controller)
+                    &QMetaObject::classInfoOffset>(parent)
 {
-  controller->registerModel(this, "classInfo");
 }
 
 QVariant ObjectClassInfoModel::metaData(const QModelIndex &index,

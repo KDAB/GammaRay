@@ -27,6 +27,7 @@ set(gammaray_srcs
   toolpluginmodel.cpp
   toolpluginerrormodel.cpp
   propertycontroller.cpp
+  propertycontrollerextension.cpp
   proxytoolfactory.cpp
   util.cpp
   varianthandler.cpp
@@ -49,6 +50,12 @@ set(gammaray_srcs
   tools/metatypebrowser/metatypebrowser.cpp
   tools/modelinspector/modelinspector.cpp
   tools/objectinspector/objectinspector.cpp
+  tools/objectinspector/propertiesextension.cpp
+  tools/objectinspector/methodsextension.cpp
+  tools/objectinspector/inboundconnectionsextension.cpp
+  tools/objectinspector/outboundconnectionsextension.cpp
+  tools/objectinspector/enumsextension.cpp
+  tools/objectinspector/classinfoextension.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp

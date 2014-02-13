@@ -41,6 +41,9 @@ set(gammaray_common_internal_srcs
   resourcebrowserinterface.cpp
   networkselectionmodel.cpp
   streamoperators.cpp
+
+  tools/objectinspector/propertiesextensioninterface.cpp
+  tools/objectinspector/methodsextensioninterface.cpp
 )
 
 if(NOT WIN32)

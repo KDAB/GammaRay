@@ -24,13 +24,15 @@
 #ifndef GAMMARAY_VARIANTCONTAINERMODEL_H
 #define GAMMARAY_VARIANTCONTAINERMODEL_H
 
+#include "gammaray_ui_export.h"
+
 #include <QAbstractTableModel>
 
 namespace GammaRay {
 
 /** Model showing sequence inside a QVariant instance..
  */
-class VariantContainerModel : public QAbstractTableModel
+class GAMMARAY_UI_EXPORT VariantContainerModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:

@@ -24,11 +24,12 @@
 #ifndef GAMMARAY_PROPERTYEDITORDELEGATE_H
 #define GAMMARAY_PROPERTYEDITORDELEGATE_H
 
+#include "gammaray_ui_export.h"
 #include <QStyledItemDelegate>
 
 namespace GammaRay {
 
-class PropertyEditorDelegate : public QStyledItemDelegate
+class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:

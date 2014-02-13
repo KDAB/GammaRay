@@ -33,6 +33,9 @@
 #include "outboundconnectionstab.h"
 #include "enumstab.h"
 #include "classinfotab.h"
+#include "propertiesextensionclient.h"
+#include "methodsextensionclient.h"
+#include <common/objectbroker.h>
 
 class QItemSelection;
 
@@ -40,6 +43,16 @@ namespace GammaRay {
 
 namespace Ui {
   class ObjectInspectorWidget;
+}
+
+static QObject* createPropertiesExtension(const QString &name, QObject *parent)
+{
+  return new PropertiesExtensionClient(name, parent);
+}
+
+static QObject* createMethodsExtension(const QString &name, QObject *parent)
+{
+  return new MethodsExtensionClient(name, parent);
 }
 
 class ObjectInspectorWidget : public QWidget
@@ -63,12 +76,14 @@ public:
   virtual inline bool remotingSupported() const { return true; }
   virtual void initUi()
   {
-    PropertyWidget::registerTab<PropertiesTab>(QObject::tr("Properties"));
-    PropertyWidget::registerTab<MethodsTab>(QObject::tr("Methods"));
-    PropertyWidget::registerTab<InboundConnectionsTab>(QObject::tr("Inbound Connections"));
-    PropertyWidget::registerTab<OutboundConnectionsTab>(QObject::tr("Outbound Connections"));
-    PropertyWidget::registerTab<EnumsTab>(QObject::tr("Enums"));
-    PropertyWidget::registerTab<ClassInfoTab>(QObject::tr("Class Info"));
+    PropertyWidget::registerTab<PropertiesTab>("properties", QObject::tr("Properties"));
+    ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createPropertiesExtension);
+    PropertyWidget::registerTab<MethodsTab>("methods", QObject::tr("Methods"));
+    ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createMethodsExtension);
+    PropertyWidget::registerTab<InboundConnectionsTab>("inboundConnections", QObject::tr("Inbound Connections"));
+    PropertyWidget::registerTab<OutboundConnectionsTab>("outboundConnections", QObject::tr("Outbound Connections"));
+    PropertyWidget::registerTab<EnumsTab>("enums", QObject::tr("Enums"));
+    PropertyWidget::registerTab<ClassInfoTab>("classInfo", QObject::tr("Class Info"));
   }
 };
 

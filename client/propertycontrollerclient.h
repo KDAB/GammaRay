@@ -35,12 +35,6 @@ class PropertyControllerClient : public PropertyControllerInterface
   public:
     explicit PropertyControllerClient(const QString &name, QObject *parent = 0);
     virtual ~PropertyControllerClient();
-
-  public slots:
-    virtual void activateMethod();
-    virtual void invokeMethod(Qt::ConnectionType type);
-    virtual void setProperty(const QString& name, const QVariant& value);
-    virtual void resetProperty(const QString& name);
 };
 
 }

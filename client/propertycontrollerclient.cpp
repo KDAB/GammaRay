@@ -39,23 +39,3 @@ PropertyControllerClient::~PropertyControllerClient()
 {
 
 }
-
-void PropertyControllerClient::activateMethod()
-{
-  Endpoint::instance()->invokeObject(name(), "activateMethod");
-}
-
-void PropertyControllerClient::invokeMethod(Qt::ConnectionType type)
-{
-  Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << QVariant::fromValue(type));
-}
-
-void PropertyControllerClient::setProperty(const QString& propertyName, const QVariant& value)
-{
-  Endpoint::instance()->invokeObject(name(), "setProperty", QVariantList() << QVariant::fromValue(propertyName) << VariantWrapper(value));
-}
-
-void PropertyControllerClient::resetProperty(const QString& propertyName)
-{
-  Endpoint::instance()->invokeObject(name(), "resetProperty", QVariantList() << QVariant::fromValue(propertyName));
-}

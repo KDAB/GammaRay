@@ -34,7 +34,6 @@ endif()
 
 qt4_wrap_ui(gammaray_ui_srcs
   methodinvocationdialog.ui
-  propertywidget.ui
 
   propertyeditor/propertydoublepaireditor.ui
   propertyeditor/propertyextendededitor.ui
@@ -77,6 +76,8 @@ set(gammaray_ui_internal_srcs
   tools/modelinspector/modelinspectorclient.cpp
   tools/objectinspector/objectinspectorwidget.cpp
   tools/objectinspector/propertiestab.cpp
+  tools/objectinspector/propertiesextensionclient.cpp
+  tools/objectinspector/methodsextensionclient.cpp
   tools/objectinspector/methodstab.cpp
   tools/objectinspector/inboundconnectionstab.cpp
   tools/objectinspector/outboundconnectionstab.cpp
