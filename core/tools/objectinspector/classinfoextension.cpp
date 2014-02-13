@@ -43,11 +43,7 @@ ClassInfoExtension::~ClassInfoExtension()
 
 bool ClassInfoExtension::setObject(QObject* object)
 {
-  const QMetaObject *metaObject = 0;
-  if (object) {
-    metaObject = object->metaObject();
-  }
-  setMetaObject(metaObject);
+  m_model->setMetaObject(object ? object->metaObject() : 0);
   return true;
 }
 

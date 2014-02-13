@@ -60,11 +60,7 @@ bool MethodsExtension::setObject(QObject* object)
 {
   m_object = object;
 
-  const QMetaObject *metaObject = 0;
-  if (object) {
-    metaObject = object->metaObject();
-  }
-  m_model->setMetaObject(metaObject);
+  m_model->setMetaObject(object ? object->metaObject() : 0);
 
   delete m_signalMapper;
   m_signalMapper = new MultiSignalMapper(this);

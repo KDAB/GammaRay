@@ -54,7 +54,9 @@ public:
   void setMetaObject(const QMetaObject *metaObject);
 
   void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
-  template<typename T> static void registerExtension()
+
+  template<typename T>
+  static void registerExtension()
   {
     s_extensionFactories << new PropertyControllerExtensionFactory<T>();
   }
