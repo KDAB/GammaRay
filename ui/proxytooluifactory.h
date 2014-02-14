@@ -44,6 +44,7 @@ class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
 
     /*override*/ bool remotingSupported() const;
     /*override*/ QWidget *createWidget(QWidget *parentWidget);
+    void initUi();
 
 private:
   bool m_remotingSupported;

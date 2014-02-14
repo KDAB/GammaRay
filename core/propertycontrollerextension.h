@@ -4,13 +4,14 @@
 class QObject;
 class QMetaObject;
 
+#include "gammaray_core_export.h"
 #include <QString>
 
 namespace GammaRay {
 
 class PropertyController;
 
-class PropertyControllerExtension
+class GAMMARAY_CORE_EXPORT PropertyControllerExtension
 {
 public:
   explicit PropertyControllerExtension(const QString &name);

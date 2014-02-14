@@ -75,7 +75,7 @@ void PropertyWidget::updateShownTabs(QStringList availableExtensions)
     int index = indexOf(widget);
     if (availableExtensions.contains(m_objectBaseName + '.' + s_tabFactories.at(i)->name())) {
       if (index == -1)
-        addTab(widget, s_tabFactories.at(i)->name());
+        addTab(widget, s_tabFactories.at(i)->label());
     } else if (index != -1) {
       removeTab(index);
     }

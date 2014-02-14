@@ -54,3 +54,12 @@ QWidget *ProxyToolUiFactory::createWidget(QWidget *parentWidget)
   Q_ASSERT(fac);
   return fac->createWidget(parentWidget);
 }
+
+void ProxyToolUiFactory::initUi()
+{
+  loadPlugin();
+  ToolUiFactory *fac = factory();
+  if (!fac)
+    return;
+  return fac->initUi();
+}

@@ -58,11 +58,17 @@ public:
   template<typename T>
   static void registerExtension()
   {
-    s_extensionFactories << new PropertyControllerExtensionFactory<T>();
+    PropertyControllerExtensionFactoryBase *factory = new PropertyControllerExtensionFactory<T>();
+    s_extensionFactories << factory;
+    foreach (PropertyController *instance, s_instances)
+      instance->loadExtension(factory);
   }
 
 private slots:
   void objectDestroyed();
+
+private:
+  void loadExtension(PropertyControllerExtensionFactoryBase *factory);
 
 private:
   QString m_objectBaseName;
@@ -71,6 +77,7 @@ private:
   QVector<PropertyControllerExtension*> m_extensions;
 
   static QVector<PropertyControllerExtensionFactoryBase*> s_extensionFactories;
+  static QVector<PropertyController*> s_instances;
 };
 
 }

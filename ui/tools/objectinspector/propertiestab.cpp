@@ -88,8 +88,6 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
   connect(m_ui->newPropertyButton, SIGNAL(clicked()),
           this, SLOT(addNewProperty()));
 
-  qDebug() << "HUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU" << baseName + ".propertiesExtension";
-
   m_interface =
     ObjectBroker::object<PropertiesExtensionInterface*>(baseName + ".propertiesExtension");
 }

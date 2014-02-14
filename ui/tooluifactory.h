@@ -65,7 +65,7 @@ class ToolUiFactory
      * the plugin, before the widget itself is needed. Use createWidget to create
      * the actual widget.
      */
-      virtual void initUi() {} \
+    virtual void initUi() {}
 };
 
 /**
