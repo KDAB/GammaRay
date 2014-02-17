@@ -24,6 +24,7 @@
 #include "quickinspector.h"
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
+#include "geometryextension/sggeometryextension.h"
 
 #include <common/objectbroker.h>
 
@@ -126,6 +127,7 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
 #endif
   m_clientConnected(false)
 {
+  registerPCExtensions();
   Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(objectName()), this, "clientConnectedChanged");
 
   registerMetaTypes();
@@ -372,6 +374,11 @@ void QuickInspector::registerVariantHandlers()
   VariantHandler::registerStringConverter<QSGOpacityNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGNode::Flags>(qSGNodeFlagsToString);
   VariantHandler::registerStringConverter<QSGNode::DirtyState>(qSGNodeDirtyStateToString);
+}
+
+void QuickInspector::registerPCExtensions()
+{
+  PropertyController::registerExtension<SGGeometryExtension>();
 }
 
 #define QSG_CHECK_TYPE(Class) \

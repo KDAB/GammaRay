@@ -75,6 +75,7 @@ private:
   void selectItem(QQuickItem *item);
   void registerMetaTypes();
   void registerVariantHandlers();
+  void registerPCExtensions();
   QString findSGNodeType(QSGNode *node) const;
 
   QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;

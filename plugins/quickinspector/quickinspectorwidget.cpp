@@ -25,6 +25,8 @@
 #include "quickinspectorclient.h"
 #include "quickclientitemmodel.h"
 #include "quickitemtreewatcher.h"
+#include "geometryextension/sggeometryextensionclient.h"
+#include "geometryextension/sggeometrytab.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
@@ -39,6 +41,11 @@ using namespace GammaRay;
 static QObject* createQuickInspectorClient(const QString &/*name*/, QObject *parent)
 {
   return new QuickInspectorClient(parent);
+}
+
+static QObject* createSGGeometryExtension(const QString &name, QObject *parent)
+{
+  return new SGGeometryExtensionClient(name, parent);
 }
 
 QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
@@ -135,6 +142,12 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
     return;
   const QModelIndex &index = selection.first().topLeft();
   ui->itemTreeView->scrollTo(index);
+}
+
+void QuickInspectorUiFactory::initUi()
+{
+    PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", QObject::tr("Geometry"));
+    ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface*>(createSGGeometryExtension);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

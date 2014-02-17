@@ -1,5 +1,10 @@
 # shared stuff
-add_library(gammaray_quickinspector_shared STATIC quickinspectorinterface.cpp)
+set(gammaray_quickinspector_shared_srcs
+      quickinspectorinterface.cpp
+      geometryextension/sggeometryextensioninterface.cpp
+    )
+
+add_library(gammaray_quickinspector_shared STATIC ${gammaray_quickinspector_shared_srcs})
 target_link_libraries(gammaray_quickinspector_shared gammaray_common)
 set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
@@ -18,6 +23,9 @@ if(Qt5Quick_FOUND)
   set(gammaray_quickinspector_srcs
     quickinspector.cpp
     quickitemmodel.cpp
+
+    geometryextension/sggeometryextension.cpp
+    geometryextension/sggeometrymodel.cpp
   )
 
   if(HAVE_SG_INSPECTOR)
@@ -45,10 +53,15 @@ if(HAVE_QT_WIDGETS)
     quickinspectorwidget.cpp
     quickclientitemmodel.cpp
     quickitemtreewatcher.cpp
+
+    geometryextension/sggeometryextensionclient.cpp
+    geometryextension/sggeometrytab.cpp
+    geometryextension/sgwireframewidget.cpp
   )
 
   qt4_wrap_ui(gammaray_quickinspector_ui_srcs
     quickinspectorwidget.ui
+    geometryextension/sggeometrytab.ui
   )
 
   gammaray_add_plugin(gammaray_quickinspector_ui

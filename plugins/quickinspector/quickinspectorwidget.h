@@ -25,6 +25,8 @@
 #define GAMMARAY_QUICKINSPECTORWIDGET_H
 
 #include <ui/tooluifactory.h>
+#include <ui/propertywidget.h>
+#include <common/objectbroker.h>
 
 #include <QWidget>
 
@@ -68,6 +70,8 @@ class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<Qui
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.QuickInspectorUi")
+
+  void initUi() Q_DECL_OVERRIDE;
 };
 
 }
