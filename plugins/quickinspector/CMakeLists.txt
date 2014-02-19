@@ -11,6 +11,8 @@ if(Qt5Quick_FOUND)
   )
 
   if(HAVE_PRIVATE_QT_HEADERS)
+    include_directories(${Qt5Quick_PRIVATE_INCLUDE_DIRS})
+
     set(gammaray_quickinspector_srcs
       ${gammaray_quickinspector_srcs}
       quickscenegraphmodel.cpp
