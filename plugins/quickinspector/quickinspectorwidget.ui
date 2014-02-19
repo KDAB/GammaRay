@@ -108,7 +108,7 @@
  <connections>
   <connection>
    <sender>tabWidget</sender>
-   <signal>tabBarClicked(int)</signal>
+   <signal>currentChanged(int)</signal>
    <receiver>stackedWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
