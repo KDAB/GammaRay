@@ -304,12 +304,14 @@ void Launcher::injectorFinished()
 void Launcher::injectorError(int exitCode, const QString& errorMessage)
 {
   std::cerr << qPrintable(errorMessage) << std::endl;
+  std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;
   QCoreApplication::exit(exitCode);
 }
 
 void Launcher::timeout()
 {
   std::cerr << "Target not responding - timeout." << std::endl;
+  std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;
   m_client.terminate();
   QCoreApplication::exit(1);
 }
