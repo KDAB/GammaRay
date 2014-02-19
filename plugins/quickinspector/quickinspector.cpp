@@ -240,9 +240,13 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
   m_itemPropertyController->setObject(m_currentItem);
 
 #ifdef HAVE_SG_INSPECTOR
-  m_currentSgNode = m_sgModel->sgNodeForItem(m_currentItem);
-  m_sgSelectionModel->select(m_sgModel->indexForNode(m_currentSgNode), QItemSelectionModel::Select |
-    QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+  // It might be that a sg-node is already selected that belongs to this item, but isn't the root
+  // node of the Item. In this case we don't want to overwrite that selection.
+  if (m_sgModel->itemForSgNode(m_currentSgNode) != m_currentItem) {
+    m_currentSgNode = m_sgModel->sgNodeForItem(m_currentItem);
+    m_sgSelectionModel->select(m_sgModel->indexForNode(m_currentSgNode), QItemSelectionModel::Select |
+      QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+  }
 #endif
 
   emitSceneChanged();
