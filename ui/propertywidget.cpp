@@ -37,6 +37,7 @@
 #include "common/metatypedeclarations.h"
 #include "common/propertycontrollerinterface.h"
 #include <common/propertymodel.h>
+#include <common/endpoint.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -76,6 +77,9 @@ PropertyWidget::~PropertyWidget()
 void PropertyWidget::setObjectBaseName(const QString &baseName)
 {
   m_objectBaseName = baseName;
+
+  if (Endpoint::instance()->objectAddress(baseName + ".controller") == Protocol::InvalidObjectAddress)
+    return; // unknown property controller, likely disabled/not supported on the server
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
