@@ -120,7 +120,7 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   m_probe(probe),
   m_itemModel(new QuickItemModel(this)),
   m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
   m_sgModel(new QuickSceneGraphModel(this)),
   m_sgPropertyController(new PropertyController("com.kdab.GammaRay.QuickSceneGraph", this)),
 #endif
@@ -146,7 +146,7 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   m_itemSelectionModel = ObjectBroker::selectionModel(m_itemModel);
   connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
   probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", m_sgModel);
 
   m_sgSelectionModel = ObjectBroker::selectionModel(m_sgModel);
@@ -174,7 +174,7 @@ void QuickInspector::selectWindow(QQuickWindow* window)
 
   m_window = window;
   m_itemModel->setWindow(window);
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
   m_sgModel->setWindow(window);
 #endif
 
@@ -239,7 +239,7 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
   m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
   m_itemPropertyController->setObject(m_currentItem);
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
   m_currentSgNode = m_sgModel->sgNodeForItem(m_currentItem);
   m_sgSelectionModel->select(m_sgModel->indexForNode(m_currentSgNode), QItemSelectionModel::Select |
     QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
@@ -250,7 +250,7 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
 
 void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
   if (selection.isEmpty())
     return;
   const QModelIndex index = selection.first().topLeft();
@@ -264,7 +264,7 @@ void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
 
 void QuickInspector::sgNodeDeleted(QSGNode *node)
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
   if (m_currentSgNode == node)
     m_sgPropertyController->setObject(0);
 #endif

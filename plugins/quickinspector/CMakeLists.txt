@@ -5,12 +5,22 @@ set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPEN
 
 # probe plugin
 if(Qt5Quick_FOUND)
+
+  # check if we can build the QSG stuff
+  # TODO 5.1.0 and below require private V8 headers which do not provide CMake variables,
+  # so we would need to find those manually
+  if (Qt5Quick_PRIVATE_INCLUDE_DIRS AND NOT ${Qt5Quick_VERSION} VERSION_LESS 5.2.0)
+    set(HAVE_SG_INSPECTOR TRUE)
+    add_definitions(-DHAVE_SG_INSPECTOR)
+  endif()
+  add_feature_info("QSG inspector" HAVE_SG_INSPECTOR "Requires private Qt headers and Qt >= 5.2.0 to be available.")
+
   set(gammaray_quickinspector_srcs
     quickinspector.cpp
     quickitemmodel.cpp
   )
 
-  if(HAVE_PRIVATE_QT_HEADERS)
+  if(HAVE_SG_INSPECTOR)
     include_directories(${Qt5Quick_PRIVATE_INCLUDE_DIRS})
 
     set(gammaray_quickinspector_srcs

@@ -26,7 +26,7 @@
 
 #include "config-gammaray.h"
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
 
 #include <core/objectmodelbase.h>
 
@@ -81,6 +81,6 @@ private:
 };
 }
 
-#endif // HAVE_PRIVATE_QT_HEADERS
+#endif // HAVE_SG_INSPECTOR
 
 #endif // GAMMARAY_QUICKSCENEGRAPHMODEL_H
