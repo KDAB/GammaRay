@@ -1,6 +1,7 @@
 # shared stuff
 set(gammaray_quickinspector_shared_srcs
       quickinspectorinterface.cpp
+      materialextension/materialextensioninterface.cpp
       geometryextension/sggeometryextensioninterface.cpp
     )
 
@@ -24,6 +25,7 @@ if(Qt5Quick_FOUND)
     quickinspector.cpp
     quickitemmodel.cpp
 
+    materialextension/materialextension.cpp
     geometryextension/sggeometryextension.cpp
     geometryextension/sggeometrymodel.cpp
   )
@@ -54,6 +56,8 @@ if(HAVE_QT_WIDGETS)
     quickclientitemmodel.cpp
     quickitemtreewatcher.cpp
 
+    materialextension/materialextensionclient.cpp
+    materialextension/materialtab.cpp
     geometryextension/sggeometryextensionclient.cpp
     geometryextension/sggeometrytab.cpp
     geometryextension/sgwireframewidget.cpp
@@ -61,6 +65,7 @@ if(HAVE_QT_WIDGETS)
 
   qt4_wrap_ui(gammaray_quickinspector_ui_srcs
     quickinspectorwidget.ui
+    materialextension/materialtab.ui
     geometryextension/sggeometrytab.ui
   )
 

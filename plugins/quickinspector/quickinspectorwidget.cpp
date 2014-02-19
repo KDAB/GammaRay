@@ -27,6 +27,8 @@
 #include "quickitemtreewatcher.h"
 #include "geometryextension/sggeometryextensionclient.h"
 #include "geometryextension/sggeometrytab.h"
+#include "materialextension/materialextensionclient.h"
+#include "materialextension/materialtab.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
@@ -43,6 +45,10 @@ static QObject* createQuickInspectorClient(const QString &/*name*/, QObject *par
   return new QuickInspectorClient(parent);
 }
 
+static QObject* createMaterialExtension(const QString &name, QObject *parent)
+{
+  return new MaterialExtensionClient(name, parent);
+}
 static QObject* createSGGeometryExtension(const QString &name, QObject *parent)
 {
   return new SGGeometryExtensionClient(name, parent);
@@ -146,6 +152,8 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
 
 void QuickInspectorUiFactory::initUi()
 {
+    PropertyWidget::registerTab<MaterialTab>("material", QObject::tr("Shaders"));
+    ObjectBroker::registerClientObjectFactoryCallback<MaterialExtensionInterface*>(createMaterialExtension);
     PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", QObject::tr("Geometry"));
     ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface*>(createSGGeometryExtension);
 }

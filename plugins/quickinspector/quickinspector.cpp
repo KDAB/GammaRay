@@ -25,6 +25,7 @@
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
 #include "geometryextension/sggeometryextension.h"
+#include "materialextension/materialextension.h"
 
 #include <common/objectbroker.h>
 
@@ -378,6 +379,7 @@ void QuickInspector::registerVariantHandlers()
 
 void QuickInspector::registerPCExtensions()
 {
+  PropertyController::registerExtension<MaterialExtension>();
   PropertyController::registerExtension<SGGeometryExtension>();
 }
 
