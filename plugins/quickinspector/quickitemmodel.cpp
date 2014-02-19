@@ -28,6 +28,8 @@
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QThread>
+#include <QQmlEngine>
+#include <QQmlContext>
 
 #include <algorithm>
 
@@ -59,6 +61,12 @@ QVariant QuickItemModel::data(const QModelIndex& index, int role) const
 
   if (role == QuickItemModelRole::Visibility)
     return item->isVisible();
+  if (role == Qt::DisplayRole && index.column() == 0) {
+    QQmlContext *ctx = QQmlEngine::contextForObject(item);
+    QString id = ctx ? ctx->nameForObject(item) : "";
+    if (!id.isEmpty())
+      return id;
+  }
 
   return dataForObject(item, index, role);
 }
