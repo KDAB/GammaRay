@@ -184,7 +184,6 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
       populateFromNode(*j);
       j++;
     } else { // Adopt to new list, without informing the client (as nothing really changed)
-      Q_ASSERT(*i == *j);
       m_childParentMap.insert(*j, node);
       childList.append(*j);
       populateFromNode(*j);
@@ -234,10 +233,8 @@ QModelIndex QuickSceneGraphModel::indexForNode(QSGNode* node) const
   }
   const QVector<QSGNode*> &siblings = m_parentChildMap[parent];
   QVector<QSGNode*>::const_iterator it = std::lower_bound(siblings.constBegin(), siblings.constEnd(), node);
-  if (it == siblings.constEnd() || *it != node) {
-    Q_ASSERT(!siblings.contains(node));
+  if (it == siblings.constEnd() || *it != node)
     return QModelIndex();
-  }
 
   const int row = std::distance(siblings.constBegin(), it);
   return index(row, 0, parentIndex);
