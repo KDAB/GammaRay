@@ -71,7 +71,7 @@ class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<Qui
   Q_INTERFACES(GammaRay::ToolUiFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.QuickInspectorUi")
 
-  void initUi() Q_DECL_OVERRIDE;
+  void initUi();
 };
 
 }

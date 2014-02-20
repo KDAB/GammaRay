@@ -25,6 +25,7 @@
 #define GAMMARAY_SGGEOMETRYMODEL_H
 
 #include <QAbstractTableModel>
+#include <QStringList>
 
 class QSGGeometry;
 namespace GammaRay {

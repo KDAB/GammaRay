@@ -28,6 +28,8 @@
 
 #include <QWidget>
 
+class QModelIndex;
+
 namespace GammaRay {
 
 class PropertiesExtensionInterface;
