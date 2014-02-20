@@ -42,7 +42,7 @@ class PropertyControllerInterface : public QObject
     QString name() const;
 
   signals:
-    void availableExtensionsChanged(QStringList availableExtensions);
+    void availableExtensionsChanged(const QStringList &availableExtensions);
 
   private:
     QString m_name;
