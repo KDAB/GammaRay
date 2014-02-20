@@ -86,14 +86,18 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
         return toStringList<uint>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
       case GL_FLOAT:
         return toStringList<float>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+#if GL_DOUBLE != GL_FLOAT
       case GL_DOUBLE:
         return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+#endif
+#ifndef QT_OPENGL_ES_2
       case GL_2_BYTES:
         return "2Bytes";
       case GL_3_BYTES:
         return "3Bytes";
       case GL_4_BYTES:
         return "4Bytes";
+#endif
       default:
         return QString("Unknown %1 byte data: 0x").arg(attrInfo->tupleSize).append(QByteArray((char*)index.internalPointer(), attrInfo->tupleSize).toHex());
     }
@@ -119,8 +123,10 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
         return toVariantList<uint>(index.internalPointer(), attrInfo->tupleSize);
       case GL_FLOAT:
         return toVariantList<float>(index.internalPointer(), attrInfo->tupleSize);
+#if GL_DOUBLE != GL_FLOAT
       case GL_DOUBLE:
         return toVariantList<double>(index.internalPointer(), attrInfo->tupleSize);
+#endif
       default:
         return QVariant();
     }

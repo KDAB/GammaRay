@@ -127,25 +127,35 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
       ||(m_drawingMode == GL_TRIANGLES && i % 3)
       || m_drawingMode == GL_TRIANGLE_STRIP
       || m_drawingMode == GL_TRIANGLE_FAN
+#ifndef QT_OPENGL_ES_2
       ||(m_drawingMode == GL_QUADS && i % 4 != 0)
       ||(m_drawingMode == GL_QUAD_STRIP && i % 2)
-      || m_drawingMode == GL_POLYGON) && i > 0) {
+      || m_drawingMode == GL_POLYGON
+#endif
+    ) && i > 0) {
 
       // draw a connection to the last vertex
       painter.drawLine(prevVertex1 * zoom + shift, vertex * zoom + shift);
     }
     if ((m_drawingMode == GL_TRIANGLE_STRIP
       ||(m_drawingMode == GL_TRIANGLES && i % 3 == 2)
-      || m_drawingMode == GL_QUAD_STRIP) && i > 1) {
+#ifndef QT_OPENGL_ES_2
+      || m_drawingMode == GL_QUAD_STRIP
+#endif
+    ) && i > 1) {
       // draw a connection to the second last vertex
       painter.drawLine(prevVertex2 * zoom + shift, vertex * zoom + shift);
     }
+#ifndef QT_OPENGL_ES_2
     if (m_drawingMode == GL_QUADS && i % 4 == 3) {
       // draw a connection to the second last vertex
       painter.drawLine(prevVertex3 * zoom + shift, vertex * zoom + shift);
     }
+#endif
     if ((m_drawingMode == GL_LINE_LOOP && i == count - 1)
+#ifndef QT_OPENGL_ES_2
       || (m_drawingMode == GL_POLYGON && i == count - 1)
+#endif
       || m_drawingMode == GL_TRIANGLE_FAN) {
       // draw a connection to the first vertex
       painter.drawLine(vertices[0] * zoom + shift, vertex * zoom + shift);
