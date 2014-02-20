@@ -29,13 +29,13 @@
 
 #include "config-gammaray.h"
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
 #include <private/qsgmaterialshader_p.h> //krazy:exclude=camelcase
 #endif
 
 using namespace GammaRay;
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
 class SGMaterialShaderThief : public QSGMaterialShader
 {
 public:
@@ -64,7 +64,7 @@ bool MaterialExtension::setObject(QObject* object)
 
 bool MaterialExtension::setObject(void* object, const QString& typeName)
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_SG_INSPECTOR
   if (typeName == "QSGGeometryNode") {
     m_node = static_cast<QSGGeometryNode*>(object);
 
