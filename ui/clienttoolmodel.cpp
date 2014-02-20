@@ -84,7 +84,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent
   foreach(ToolUiFactory* factory, pm.plugins())
     insertFactory(factory);
 
-  connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateToolInitialization(QModelIndex,QModelIndex)));
+  connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(updateToolInitialization(QModelIndex,QModelIndex)));
 }
 
 ClientToolModel::~ClientToolModel()
