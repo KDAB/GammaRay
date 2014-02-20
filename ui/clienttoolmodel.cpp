@@ -83,6 +83,8 @@ ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent
   PluginManager<ToolUiFactory, ProxyToolUiFactory> pm;
   foreach(ToolUiFactory* factory, pm.plugins())
     insertFactory(factory);
+
+  connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(updateToolInitialization(QModelIndex,QModelIndex)));
 }
 
 ClientToolModel::~ClientToolModel()
@@ -147,10 +149,27 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
   return ret;
 }
 
+void ClientToolModel::updateToolInitialization(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
+    QModelIndex index = QSortFilterProxyModel::index(i, 0);
+
+    if (QSortFilterProxyModel::data(index, ToolModelRole::ToolEnabled).toBool()) {
+      const QString toolId = QSortFilterProxyModel::data(index, ToolModelRole::ToolId).toString();
+      ToolUiFactory *factory = m_factories.value(toolId);
+
+      if (factory && (factory->remotingSupported() || !Endpoint::instance()->isRemoteClient()) && m_inactiveTools.contains(factory)) {
+        factory->initUi();
+        m_inactiveTools.remove(factory);
+      }
+    }
+  }
+}
+
 void ClientToolModel::insertFactory(ToolUiFactory* factory)
 {
-  factory->initUi();
   m_factories.insert(factory->id(), factory);
+  m_inactiveTools.insert(factory);
 }
 
 

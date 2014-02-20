@@ -45,7 +45,8 @@ namespace ToolModelRole {
     ToolFactory = UserRole + 1,
     ToolWidget,
     ToolId,
-    ToolWidgetParent
+    ToolWidgetParent,
+    ToolEnabled
   };
 }
 

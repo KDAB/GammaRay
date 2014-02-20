@@ -27,6 +27,7 @@
 #include <QHash>
 #include <QPointer>
 #include <QSortFilterProxyModel>
+#include <QSet>
 
 class QWidget;
 
@@ -49,10 +50,14 @@ public:
 private:
   void insertFactory(ToolUiFactory* factory);
 
+private slots:
+  void updateToolInitialization(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+
 private:
   QHash<QString, ToolUiFactory*> m_factories; // ToolId -> ToolUiFactory
   mutable QHash<QString, QWidget*> m_widgets; // ToolId -> Widget
   QPointer<QWidget> m_parentWidget;
+  QSet<ToolUiFactory*> m_inactiveTools;
 };
 
 }

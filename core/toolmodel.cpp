@@ -108,6 +108,8 @@ QVariant ToolModel::data(const QModelIndex &index, int role) const
     return QVariant::fromValue(toolIface);
   } else if (role == ToolModelRole::ToolId) {
     return toolIface->id();
+  } else if (role == ToolModelRole::ToolEnabled) {
+    return !m_inactiveTools.contains(toolIface);
   }
   return QVariant();
 }
@@ -136,6 +138,7 @@ QMap<int, QVariant> ToolModel::itemData(const QModelIndex& index) const
 {
   QMap<int, QVariant> map = QAbstractListModel::itemData(index);
   map.insert(ToolModelRole::ToolId, data(index, ToolModelRole::ToolId));
+  map.insert(ToolModelRole::ToolEnabled, data(index, ToolModelRole::ToolEnabled));
   // the other custom roles are useless on the client anyway, since they contain raw pointers
   return map;
 }
