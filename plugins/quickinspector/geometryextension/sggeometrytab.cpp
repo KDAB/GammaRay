@@ -48,6 +48,8 @@ SGGeometryTab::~SGGeometryTab()
 
 void SGGeometryTab::setObjectBaseName(const QString &baseName)
 {
+  if (m_interface)
+    disconnect(m_interface, 0, m_ui->wireframeWidget, 0);
   m_model = ObjectBroker::model(baseName + '.' + "sgGeometryModel");
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
@@ -60,4 +62,5 @@ void SGGeometryTab::setObjectBaseName(const QString &baseName)
     ObjectBroker::object<SGGeometryExtensionInterface*>(baseName + ".sgGeometry");
 
   m_ui->wireframeWidget->setModel(m_model);
+  connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)), m_ui->wireframeWidget, SLOT(onGeometryChanged(uint, QByteArray,int)));
 }

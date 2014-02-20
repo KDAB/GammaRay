@@ -65,14 +65,8 @@ int GammaRay::SGGeometryModel::columnCount(const QModelIndex &parent) const
 
 QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid() || !m_geometry || !index.internalPointer() || index.row() >= m_geometry->vertexCount() || index.column() >= m_geometry->attributeCount()) {
-    Q_ASSERT(index.isValid());
-    Q_ASSERT(m_geometry);
-    Q_ASSERT(index.internalPointer());
-    Q_ASSERT(m_geometry->vertexCount());
-    Q_ASSERT(m_geometry->attributeCount());
+  if (!index.isValid() || !m_geometry || !index.internalPointer() || index.row() >= m_geometry->vertexCount() || index.column() >= m_geometry->attributeCount())
     return QVariant();
-  }
 
   if (role == Qt::DisplayRole) {
     const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();

@@ -26,6 +26,7 @@
 
 #include <QWidget>
 #include <QModelIndex>
+#include <GL/gl.h>
 
 class QAbstractItemModel;
 
@@ -47,10 +48,14 @@ class SGWireframeWidget : public QWidget
 
   private slots:
     void onModelDataChanged(const QModelIndex & topLeft = QModelIndex(), const QModelIndex & bottomRight = QModelIndex());
+    void onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType);
 
   private:
     QAbstractItemModel *m_model;
     int m_positionColumn;
+    GLenum m_drawingMode;
+    QByteArray m_indexData;
+    int m_indexType;
 };
 
 }

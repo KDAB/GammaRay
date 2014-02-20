@@ -26,8 +26,6 @@
 
 #include <QObject>
 
-class QSGGeometry4x4;
-
 namespace GammaRay {
 
 /** @brief Client/Server interface of the sggeometry viewer. */
@@ -41,8 +39,7 @@ class SGGeometryExtensionInterface : public QObject
     const QString &name() const;
 
   signals:
-    void sggeometryChanged(const QSGGeometry4x4 &sggeometry);
-    void combinedSGGeometryChanged(const QSGGeometry4x4 &combinedSGGeometry);
+    void geometryChanged(uint drawingMode, QByteArray indices, int indexType);
 
   private:
     QString m_name;

@@ -30,7 +30,8 @@ using namespace GammaRay;
 SGWireframeWidget::SGWireframeWidget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(),
     m_model(0),
-    m_positionColumn(-1)
+    m_positionColumn(-1),
+    m_drawingMode(0)
 {
 }
 
@@ -43,6 +44,8 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
 {
   if (!m_model)
     return;
+
+  // Get the column in which the vertex position data is stored in
   if (m_positionColumn == -1) {
     for(int j = 0; j <= m_model->columnCount(); j++) {
         if (m_model->data(m_model->index(0, j), SGGeometryModel::IsCoordinateRole).toBool()) {
@@ -54,6 +57,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
   if (m_positionColumn == -1)
     return;
 
+  // Get all the vertices
   QVector<QPointF> vertices;
   qreal w = 0;
   qreal h = 0;
@@ -75,6 +79,8 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
     }
   }
 
+
+  // Paint the vertices
   QPointF shift(10, 10);
   qreal zoom = qMin((width() - 20) / w, (height() - 20) / h);
 
@@ -83,18 +89,70 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
   painter.setPen(Qt::black);
   painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
 
+  foreach (QPointF vertex, vertices)
+    painter.drawEllipse(vertex * zoom + shift, 3, 3);
+
+  // Paint the wires
   QPointF prevVertex1;
   QPointF prevVertex2;
+  QPointF prevVertex3;
+
+  int indexSize = 0;
+  if (m_indexType == GL_UNSIGNED_INT)
+    indexSize = sizeof(quint32);
+  else if (m_indexType == GL_UNSIGNED_SHORT)
+    indexSize = sizeof(quint16);
+  else if (m_indexType == GL_UNSIGNED_BYTE)
+    indexSize = sizeof(quint8);
+
+  int count = m_indexData.isEmpty() ? vertices.count() : m_indexData.size() / indexSize;
   int i = 0;
-  foreach (QPointF vertex, vertices) {
-    painter.drawEllipse(vertex * zoom + shift, 3, 3);
-    if (i > 0)
+
+  for (int i = 0; i < count; i++) {
+    int index = i;
+    if (!m_indexData.isEmpty()) {
+      if (m_indexType == GL_UNSIGNED_INT)
+        index = *reinterpret_cast<const quint32*>(m_indexData.constData() + i * indexSize);
+      else if (m_indexType == GL_UNSIGNED_SHORT)
+        index = *reinterpret_cast<const quint16*>(m_indexData.constData() + i * indexSize);
+      else if (m_indexType == GL_UNSIGNED_BYTE)
+        index = *reinterpret_cast<const quint8*>(m_indexData.constData() + i * indexSize);
+    }
+    QPointF vertex = vertices[index];
+
+
+    if (((m_drawingMode == GL_LINES && i % 2)
+      || m_drawingMode == GL_LINE_LOOP
+      || m_drawingMode == GL_LINE_STRIP
+      ||(m_drawingMode == GL_TRIANGLES && i % 3)
+      || m_drawingMode == GL_TRIANGLE_STRIP
+      || m_drawingMode == GL_TRIANGLE_FAN
+      ||(m_drawingMode == GL_QUADS && i % 4 != 0)
+      ||(m_drawingMode == GL_QUAD_STRIP && i % 2)
+      || m_drawingMode == GL_POLYGON) && i > 0) {
+
+      // draw a connection to the last vertex
       painter.drawLine(prevVertex1 * zoom + shift, vertex * zoom + shift);
-    if (i > 1)
+    }
+    if ((m_drawingMode == GL_TRIANGLE_STRIP
+      ||(m_drawingMode == GL_TRIANGLES && i % 3 == 2)
+      || m_drawingMode == GL_QUAD_STRIP) && i > 1) {
+      // draw a connection to the second last vertex
       painter.drawLine(prevVertex2 * zoom + shift, vertex * zoom + shift);
+    }
+    if (m_drawingMode == GL_QUADS && i % 4 == 3) {
+      // draw a connection to the second last vertex
+      painter.drawLine(prevVertex3 * zoom + shift, vertex * zoom + shift);
+    }
+    if ((m_drawingMode == GL_LINE_LOOP && i == count - 1)
+      || (m_drawingMode == GL_POLYGON && i == count - 1)
+      || m_drawingMode == GL_TRIANGLE_FAN) {
+      // draw a connection to the first vertex
+      painter.drawLine(vertices[0] * zoom + shift, vertex * zoom + shift);
+    }
+    prevVertex3 = prevVertex2;
     prevVertex2 = prevVertex1;
     prevVertex1 = vertex;
-    i++;
   }
 }
 
@@ -116,4 +174,11 @@ void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QMo
   if (!topLeft.isValid() || !bottomRight.isValid() || m_positionColumn == -1 || (topLeft.column() <= m_positionColumn && bottomRight.column() >= m_positionColumn)) {
     update();
   }
+}
+
+void SGWireframeWidget::onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType)
+{
+  m_drawingMode = drawingMode;
+  m_indexData = indexData;
+  m_indexType = indexType;
 }
