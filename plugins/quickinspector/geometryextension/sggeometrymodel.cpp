@@ -186,9 +186,11 @@ QModelIndex GammaRay::SGGeometryModel::index(int row, int column, const QModelIn
     case GL_FLOAT:
       tupleItemSize = sizeof(float);
       break;
+#if GL_DOUBLE != GL_FLOAT
     case GL_DOUBLE:
       tupleItemSize = sizeof(double);
       break;
+#endif
     default:
       return createIndex(row, column);
   }
