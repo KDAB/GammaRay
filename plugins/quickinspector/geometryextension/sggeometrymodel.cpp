@@ -160,12 +160,40 @@ QModelIndex GammaRay::SGGeometryModel::index(int row, int column, const QModelIn
   if (!m_geometry || row >= m_geometry->vertexCount() || column >= m_geometry->attributeCount())
     return createIndex(row, column);
 
-
   void *attr = m_geometry->vertexData();
   attr += m_geometry->sizeOfVertex()*row;
   const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();
+  int tupleItemSize = 0;
+  switch (attrInfo->type) {
+    case GL_BYTE:
+      tupleItemSize = sizeof(char);
+      break;
+    case GL_UNSIGNED_BYTE:
+      tupleItemSize = sizeof(unsigned char);
+      break;
+    case GL_UNSIGNED_SHORT:
+      tupleItemSize = sizeof(unsigned short);
+      break;
+    case GL_SHORT:
+      tupleItemSize = sizeof(short);
+      break;
+    case GL_INT:
+      tupleItemSize = sizeof(int);
+      break;
+    case GL_UNSIGNED_INT:
+      tupleItemSize = sizeof(unsigned int);
+      break;
+    case GL_FLOAT:
+      tupleItemSize = sizeof(float);
+      break;
+    case GL_DOUBLE:
+      tupleItemSize = sizeof(double);
+      break;
+    default:
+      return createIndex(row, column);
+  }
   for (int i = 0; i < column; i++) {
-    attr += attrInfo->tupleSize;
+    attr += tupleItemSize * attrInfo->tupleSize;
     attrInfo++;
   }
   return createIndex(row, column, attr);
