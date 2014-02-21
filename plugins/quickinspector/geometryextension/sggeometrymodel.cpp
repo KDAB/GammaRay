@@ -158,7 +158,7 @@ QModelIndex GammaRay::SGGeometryModel::index(int row, int column, const QModelIn
   if (!m_geometry || row >= m_geometry->vertexCount() || column >= m_geometry->attributeCount() || parent.isValid())
     return QModelIndex();
 
-  void *attr = m_geometry->vertexData();
+  char *attr = static_cast<char*>(m_geometry->vertexData());
   attr += m_geometry->sizeOfVertex()*row;
   const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();
   int tupleItemSize = 0;
