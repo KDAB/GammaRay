@@ -25,7 +25,7 @@
 #define PROPERTYCONTROLLEREXTENSION_H
 
 class QObject;
-class QMetaObject;
+struct QMetaObject;
 
 #include "gammaray_core_export.h"
 #include <QString>
