@@ -53,18 +53,20 @@ class SGGeometryModel : public QAbstractTableModel
     template <typename T>
     static QStringList toStringList(void *data, int size) {
       QStringList list;
+      T* typedData = static_cast<T*>(data);
       for (int i = 0; i < size; i++) {
-        list << QString::number(*(static_cast<T*>(data)));
-        data += sizeof(T);
+        list << QString::number(*typedData);
+        ++typedData;
       }
       return list;
     }
     template <typename T>
     static QVariantList toVariantList(void *data, int size) {
       QVariantList list;
+      T* typedData = static_cast<T*>(data);
       for (int i = 0; i < size; i++) {
-        list << QVariant::fromValue<T>(*(static_cast<T*>(data)));
-        data += sizeof(T);
+        list << QVariant::fromValue<T>(*typedData);
+        ++typedData;
       }
       return list;
     }
