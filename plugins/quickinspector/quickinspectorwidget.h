@@ -37,6 +37,9 @@ class QItemSelection;
 
 namespace GammaRay {
 
+class QuickSceneImageProvider;
+
+class QuickPreviewScene;
 class QuickInspectorInterface;
 
 namespace Ui {
@@ -55,14 +58,15 @@ class QuickInspectorWidget : public QWidget
     void sceneRendered(const QImage &img);
     void itemSelectionChanged(const QItemSelection &selection);
     void requestRender();
+    void setPreviewZoom(int zoom);
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
     QuickInspectorInterface* m_interface;
-    QLabel *m_sceneImage;
     QTimer *m_renderTimer;
     bool m_sceneChangedSinceLastRequest;
     bool m_waitingForImage;
+    QuickSceneImageProvider* m_imageProvider;
 };
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>

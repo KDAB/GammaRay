@@ -19,7 +19,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QSplitter" name="splitter_3">
+     <widget class="QSplitter" name="previewTreeSplitter">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -36,7 +36,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="KFilterProxySearchLine" name="itemTreeSearchLine" native="true"/>
+          <widget class="KFilterProxySearchLine" name="itemTreeSearchLine"/>
          </item>
          <item>
           <widget class="QTreeView" name="itemTreeView">
@@ -53,7 +53,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="KFilterProxySearchLine" name="sgTreeSearchLine" native="true"/>
+          <widget class="KFilterProxySearchLine" name="sgTreeSearchLine"/>
          </item>
          <item>
           <widget class="QTreeView" name="sgTreeView">
@@ -65,9 +65,9 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QScrollArea" name="sceneView">
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+      <widget class="QDeclarativeView" name="sceneView">
+       <property name="resizeMode">
+        <enum>QDeclarativeView::SizeRootObjectToView</enum>
        </property>
       </widget>
      </widget>
@@ -93,9 +93,14 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QDeclarativeView</class>
+   <extends>QGraphicsView</extends>
+   <header>QtDeclarative/QDeclarativeView</header>
+  </customwidget>
+  <customwidget>
    <class>KFilterProxySearchLine</class>
    <extends>QWidget</extends>
-   <header location="global">kde/kfilterproxysearchline.h</header>
+   <header>kfilterproxysearchline.h</header>
   </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>

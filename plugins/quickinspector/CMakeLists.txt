@@ -47,9 +47,11 @@ if(Qt5Quick_FOUND)
   )
 endif()
 
+find_package(Qt5Declarative)
+
 
 # ui plugin
-if(HAVE_QT_WIDGETS)
+if(HAVE_QT_WIDGETS AND Qt5Declarative_FOUND)
   set(gammaray_quickinspector_ui_srcs
     quickinspectorclient.cpp
     quickinspectorwidget.cpp
@@ -62,6 +64,7 @@ if(HAVE_QT_WIDGETS)
     geometryextension/sggeometrytab.cpp
     geometryextension/sgwireframewidget.cpp
   )
+  qt4_add_resources(gammaray_quickinspector_ui_srcs quickinspector.qrc)
 
   qt4_wrap_ui(gammaray_quickinspector_ui_srcs
     quickinspectorwidget.ui
@@ -77,5 +80,6 @@ if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray_quickinspector_ui
     gammaray_quickinspector_shared
     gammaray_ui
+    Qt5::Declarative
   )
 endif()

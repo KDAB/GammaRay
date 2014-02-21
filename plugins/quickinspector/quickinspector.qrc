@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="gammaray/plugins/quickinspector">
+    <file>quickpreview.qml</file>
+  </qresource>
+</RCC>
