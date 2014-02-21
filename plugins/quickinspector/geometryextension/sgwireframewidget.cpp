@@ -176,7 +176,7 @@ void SGWireframeWidget::setModel(QAbstractItemModel *model)
   if (m_model)
     disconnect(m_model, 0, this, 0);
   m_model = model;
-  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
+  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
 }
 
 void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
