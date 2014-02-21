@@ -24,8 +24,6 @@
 #ifndef PROPERTIESTAB_H
 #define PROPERTIESTAB_H
 
-#include "gammaray_ui_export.h"
-
 #include <QWidget>
 
 class QModelIndex;
@@ -37,7 +35,7 @@ class PropertiesExtensionInterface;
 class Ui_PropertiesTab;
 class PropertyWidget;
 
-class GAMMARAY_UI_EXPORT PropertiesTab : public QWidget
+class PropertiesTab : public QWidget
 {
   Q_OBJECT
   public:

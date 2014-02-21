@@ -24,8 +24,6 @@
 #ifndef CLASSINFOTAB_H
 #define CLASSINFOTAB_H
 
-#include "gammaray_ui_export.h"
-
 #include <QWidget>
 
 namespace GammaRay {
@@ -33,7 +31,7 @@ namespace GammaRay {
 class Ui_ClassInfoTab;
 class PropertyWidget;
 
-class GAMMARAY_UI_EXPORT ClassInfoTab : public QWidget
+class ClassInfoTab : public QWidget
 {
   Q_OBJECT
 public:

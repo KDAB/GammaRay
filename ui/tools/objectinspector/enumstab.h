@@ -24,8 +24,6 @@
 #ifndef ENUMSTAB_H
 #define ENUMSTAB_H
 
-#include "gammaray_ui_export.h"
-
 #include <QWidget>
 
 namespace GammaRay {
@@ -33,7 +31,7 @@ namespace GammaRay {
 class Ui_EnumsTab;
 class PropertyWidget;
 
-class GAMMARAY_UI_EXPORT EnumsTab : public QWidget
+class EnumsTab : public QWidget
 {
   Q_OBJECT
 public:

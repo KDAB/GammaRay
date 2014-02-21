@@ -24,8 +24,6 @@
 #ifndef METHODSTAB_H
 #define METHODSTAB_H
 
-#include "gammaray_ui_export.h"
-
 #include <QWidget>
 
 class QModelIndex;
@@ -37,7 +35,7 @@ class MethodsExtensionInterface;
 class Ui_MethodsTab;
 class PropertyWidget;
 
-class GAMMARAY_UI_EXPORT MethodsTab : public QWidget
+class MethodsTab : public QWidget
 {
   Q_OBJECT
   public:

@@ -24,8 +24,6 @@
 #ifndef OUTBOUNDCONNECTIONSTAB_H
 #define OUTBOUNDCONNECTIONSTAB_H
 
-#include "gammaray_ui_export.h"
-
 #include <QWidget>
 
 namespace GammaRay {
@@ -33,7 +31,7 @@ namespace GammaRay {
 class Ui_OutboundConnectionsTab;
 class PropertyWidget;
 
-class GAMMARAY_UI_EXPORT OutboundConnectionsTab : public QWidget
+class OutboundConnectionsTab : public QWidget
 {
   Q_OBJECT
 public:
