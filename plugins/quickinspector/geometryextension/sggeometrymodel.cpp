@@ -31,12 +31,12 @@
 
 using namespace GammaRay;
 
-Q_DECLARE_METATYPE(QVector<quint16>);
-Q_DECLARE_METATYPE(QVector<qint16>);
-Q_DECLARE_METATYPE(QVector<int>);
-Q_DECLARE_METATYPE(QVector<uint>);
-Q_DECLARE_METATYPE(QVector<float>);
-Q_DECLARE_METATYPE(QVector<double>);
+Q_DECLARE_METATYPE(QVector<quint16>)
+Q_DECLARE_METATYPE(QVector<qint16>)
+Q_DECLARE_METATYPE(QVector<int>)
+Q_DECLARE_METATYPE(QVector<uint>)
+Q_DECLARE_METATYPE(QVector<float>)
+Q_DECLARE_METATYPE(QVector<double>)
 
 GammaRay::SGGeometryModel::SGGeometryModel(QObject *parent) : QAbstractTableModel(parent),
 m_geometry(0)
@@ -45,7 +45,6 @@ m_geometry(0)
 
 int SGGeometryModel::rowCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
   if (!m_geometry || parent.isValid())
     return 0;
   qDebug() << "(" << m_geometry->vertexCount() << ")";
@@ -55,7 +54,6 @@ int SGGeometryModel::rowCount(const QModelIndex &parent) const
 
 int GammaRay::SGGeometryModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
   if (!m_geometry || parent.isValid())
     return 0;
   qDebug() << "(" << m_geometry->attributeCount() << ")";
@@ -157,8 +155,8 @@ void SGGeometryModel::setGeometry(QSGGeometry* geometry)
 
 QModelIndex GammaRay::SGGeometryModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (!m_geometry || row >= m_geometry->vertexCount() || column >= m_geometry->attributeCount())
-    return createIndex(row, column);
+  if (!m_geometry || row >= m_geometry->vertexCount() || column >= m_geometry->attributeCount() || parent.isValid())
+    return QModelIndex();
 
   void *attr = m_geometry->vertexData();
   attr += m_geometry->sizeOfVertex()*row;
