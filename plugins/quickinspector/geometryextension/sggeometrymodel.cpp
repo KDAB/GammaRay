@@ -73,22 +73,22 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
     attrInfo += index.column();
     switch (attrInfo->type) {
       case GL_BYTE:
-        return toStringList<char>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<char>(index.internalPointer(), attrInfo->tupleSize).join(", ");
       case GL_UNSIGNED_BYTE:
-        return toStringList<unsigned char>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<unsigned char>(index.internalPointer(), attrInfo->tupleSize).join(", ");
       case GL_UNSIGNED_SHORT:
-        return toStringList<quint16>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<quint16>(index.internalPointer(), attrInfo->tupleSize).join(", ");
       case GL_SHORT:
-        return toStringList<qint16>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<qint16>(index.internalPointer(), attrInfo->tupleSize).join(", ");
       case GL_INT:
-        return toStringList<int>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<int>(index.internalPointer(), attrInfo->tupleSize).join(", ");
       case GL_UNSIGNED_INT:
-        return toStringList<uint>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<uint>(index.internalPointer(), attrInfo->tupleSize).join(", ");
       case GL_FLOAT:
-        return toStringList<float>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<float>(index.internalPointer(), attrInfo->tupleSize).join(", ");
 #if GL_DOUBLE != GL_FLOAT
       case GL_DOUBLE:
-        return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(", \n");
+        return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(", ");
 #endif
 #ifndef QT_OPENGL_ES_2
       case GL_2_BYTES:
