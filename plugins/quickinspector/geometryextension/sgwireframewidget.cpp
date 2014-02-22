@@ -49,7 +49,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
 
   // Get the column in which the vertex position data is stored in
   if (m_positionColumn == -1) {
-    for(int j = 0; j <= m_model->columnCount(); j++) {
+    for(int j = 0; j < m_model->columnCount(); j++) {
         if (m_model->data(m_model->index(0, j), SGGeometryModel::IsCoordinateRole).toBool()) {
           m_positionColumn = j;
           break;
