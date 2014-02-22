@@ -257,9 +257,9 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
 
 void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
 {
-#ifdef HAVE_SG_INSPECTOR
   if (selection.isEmpty())
     return;
+#ifdef HAVE_SG_INSPECTOR
   const QModelIndex index = selection.first().topLeft();
   m_currentSgNode = index.data(ObjectModel::ObjectRole).value<QSGNode*>();
   m_sgPropertyController->setObject(m_currentSgNode, findSGNodeType(m_currentSgNode));
@@ -274,6 +274,8 @@ void QuickInspector::sgNodeDeleted(QSGNode *node)
 #ifdef HAVE_SG_INSPECTOR
   if (m_currentSgNode == node)
     m_sgPropertyController->setObject(0);
+#else
+  Q_UNUSED(node);
 #endif
 }
 

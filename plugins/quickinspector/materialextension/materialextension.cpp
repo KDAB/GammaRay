@@ -75,6 +75,9 @@ bool MaterialExtension::setObject(void* object, const QString& typeName)
     emit shaderListChanged(sourceFiles);
     return true;
   }
+#else
+  Q_UNUSED(object);
+  Q_UNUSED(typeName);
 #endif
   return false;
 }
