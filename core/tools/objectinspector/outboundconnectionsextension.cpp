@@ -46,6 +46,11 @@ OutboundConnectionsExtension::~OutboundConnectionsExtension()
 
 bool OutboundConnectionsExtension::setQObject(QObject* object)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   m_model->filterSender(object);
   return true;
+#else
+  Q_UNUSED(object);
+  return false;
+#endif
 }
