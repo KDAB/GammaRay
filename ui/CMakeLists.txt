@@ -8,12 +8,10 @@ set(gammaray_ui_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
 
   palettemodel.cpp
-  methodinvocationdialog.cpp
   propertywidget.cpp
   deferredresizemodesetter.cpp
   deferredtreeviewconfiguration.cpp
   splashscreen.cpp
-  editabletypesmodel.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
@@ -26,15 +24,7 @@ set(gammaray_ui_srcs
   propertyeditor/propertyeditordelegate.cpp
 )
 
-if(NOT Qt5Core_VERSION VERSION_LESS 5.2.0)
-  list(APPEND gammaray_ui_srcs
-    variantcontainermodel.cpp
-  )
-endif()
-
 qt4_wrap_ui(gammaray_ui_srcs
-  methodinvocationdialog.ui
-
   propertyeditor/propertydoublepaireditor.ui
   propertyeditor/propertyextendededitor.ui
   propertyeditor/propertyintpaireditor.ui
@@ -63,6 +53,8 @@ set(gammaray_ui_internal_srcs
   aboutdialog.cpp
   proxytooluifactory.cpp
   clienttoolmodel.cpp
+  editabletypesmodel.cpp
+  methodinvocationdialog.cpp
 
   tools/connectioninspector/connectioninspectorwidget.cpp
   tools/localeinspector/localeinspectorwidget.cpp
@@ -92,9 +84,16 @@ set(gammaray_ui_internal_srcs
   tools/textdocumentinspector/textdocumentcontentview.cpp
 )
 
+if(NOT Qt5Core_VERSION VERSION_LESS 5.2.0)
+  list(APPEND gammaray_ui_internal_srcs
+    variantcontainermodel.cpp
+  )
+endif()
+
 qt4_wrap_ui(gammaray_ui_internal_srcs
   mainwindow.ui
   aboutdialog.ui
+  methodinvocationdialog.ui
 
   tools/connectioninspector/connectioninspectorwidget.ui
   tools/localeinspector/localeinspectorwidget.ui

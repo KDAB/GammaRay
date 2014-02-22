@@ -24,15 +24,13 @@
 #ifndef GAMMARAY_EDITABLETYPESMODEL_H
 #define GAMMARAY_EDITABLETYPESMODEL_H
 
-#include "gammaray_ui_export.h"
-
 #include <QAbstractListModel>
 #include <QVector>
 
 namespace GammaRay {
 
 /** All types we have edit widgets for. */
-class GAMMARAY_UI_EXPORT EditableTypesModel : public QAbstractListModel
+class EditableTypesModel : public QAbstractListModel
 {
     Q_OBJECT
   public:
