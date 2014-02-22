@@ -125,6 +125,7 @@ gammaray_install_headers(
   objecttypefilterproxymodel.h
   probeinterface.h
   propertycontroller.h
+  propertycontrollerextension.h
   singlecolumnobjectproxymodel.h
   toolfactory.h
   util.h

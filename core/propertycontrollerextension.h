@@ -24,32 +24,62 @@
 #ifndef PROPERTYCONTROLLEREXTENSION_H
 #define PROPERTYCONTROLLEREXTENSION_H
 
+#include "gammaray_core_export.h"
+
+#include <QString>
+
 class QObject;
 struct QMetaObject;
-
-#include "gammaray_core_export.h"
-#include <QString>
 
 namespace GammaRay {
 
 class PropertyController;
 
+/**
+ * @brief Base-class for server-side property editor extensions.
+ *
+ * This can be used to add your own tabs to the property widget.
+ * Re-implement the corresponding variant of setObject/setMetaObject
+ * you can handle, the default implementations do nothing and return
+ * @c false.
+ *
+ * @since 2.1
+ */
 class GAMMARAY_CORE_EXPORT PropertyControllerExtension
 {
 public:
+  /** @brief Create a new property extension.
+   *  @param name The extension identifier used for client/server communication.
+   */
   explicit PropertyControllerExtension(const QString &name);
+  virtual ~PropertyControllerExtension();
 
-  /** Sets the object that should be represented by this extension. */
-  virtual bool setObject(void *object, const QString &typeName) = 0;
-  virtual bool setObject(QObject *object) = 0;
-  virtual bool setMetaObject(const QMetaObject *metaObject) = 0;
+  /** @brief Sets the object that should be represented by this extension.
+   *  This variant is used for non-QObject types using Gammaray::MetaObjectRepository.
+   *  @return @c true if the extension can handle @p object, @c false otherwise.
+   */
+  virtual bool setObject(void *object, const QString &typeName);
 
-  const QString &name() const;
+  /** @brief Sets the QObject that should be represented by this extension.
+   *  This variant is used for QObject-derived types.
+   *  @return @c true if the extension can handle @p object, @c false otherwise.
+   */
+  virtual bool setObject(QObject *object);
+
+  /** @brief Sets the meta object that should be represented by this extension.
+   *  This variant is used for QMetaObjects without a specific object instance.
+   *  @return @c true if the extension can handle @p object, @c false otherwise.
+   */
+  virtual bool setMetaObject(const QMetaObject *metaObject);
+
+  /** @brief Returns the identifier of this extension, used for client/server communication. */
+  QString name() const;
 
 private:
   QString m_name;
 };
 
+///@cond internal
 class PropertyControllerExtensionFactoryBase {
   public:
     explicit PropertyControllerExtensionFactoryBase() {}
@@ -66,6 +96,7 @@ class PropertyControllerExtensionFactory : public PropertyControllerExtensionFac
       return new T(controller);
     }
 };
+///@endcond
 
 }
 

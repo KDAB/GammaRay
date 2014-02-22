@@ -30,6 +30,30 @@ PropertyControllerExtension::PropertyControllerExtension(const QString& name)
 {
 }
 
-const QString &PropertyControllerExtension::name() const {
+PropertyControllerExtension::~PropertyControllerExtension()
+{
+}
+
+QString PropertyControllerExtension::name() const
+{
   return m_name;
+}
+
+bool PropertyControllerExtension::setObject(void* object, const QString& typeName)
+{
+  Q_UNUSED(object);
+  Q_UNUSED(typeName);
+  return false;
+}
+
+bool PropertyControllerExtension::setObject(QObject* object)
+{
+  Q_UNUSED(object);
+  return false;
+}
+
+bool PropertyControllerExtension::setMetaObject(const QMetaObject* metaObject)
+{
+  Q_UNUSED(metaObject);
+  return false;
 }
