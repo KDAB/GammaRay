@@ -44,21 +44,8 @@ OutboundConnectionsExtension::~OutboundConnectionsExtension()
 {
 }
 
-bool OutboundConnectionsExtension::setObject(QObject* object)
+bool OutboundConnectionsExtension::setQObject(QObject* object)
 {
   m_model->filterSender(object);
   return true;
-}
-
-bool OutboundConnectionsExtension::setObject(void* object, const QString& typeName)
-{
-  Q_UNUSED(object)
-  Q_UNUSED(typeName)
-  return false;
-}
-
-bool OutboundConnectionsExtension::setMetaObject(const QMetaObject* metaObject)
-{
-  Q_UNUSED(metaObject)
-  return false;
 }

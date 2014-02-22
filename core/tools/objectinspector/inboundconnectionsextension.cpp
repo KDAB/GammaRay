@@ -44,21 +44,8 @@ InboundConnectionsExtension::~InboundConnectionsExtension()
 {
 }
 
-bool InboundConnectionsExtension::setObject(QObject* object)
+bool InboundConnectionsExtension::setQObject(QObject* object)
 {
   m_model->filterReceiver(object);
   return true;
-}
-
-bool InboundConnectionsExtension::setObject(void* object, const QString& typeName)
-{
-  Q_UNUSED(object)
-  Q_UNUSED(typeName)
-  return false;
-}
-
-bool InboundConnectionsExtension::setMetaObject(const QMetaObject* metaObject)
-{
-  Q_UNUSED(metaObject)
-  return false;
 }

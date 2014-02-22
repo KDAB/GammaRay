@@ -44,8 +44,6 @@ class SGGeometryExtension : public SGGeometryExtensionInterface, public Property
     ~SGGeometryExtension();
 
     bool setObject(void *object, const QString &typeName);
-    bool setObject(QObject *object);
-    bool setMetaObject(const QMetaObject *metaObject);
 
   private:
     QSGBasicGeometryNode *m_node;

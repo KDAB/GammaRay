@@ -73,7 +73,7 @@ void PropertyController::setObject(QObject *object)
   QStringList availableExtensions;
 
   foreach (PropertyControllerExtension *extension, m_extensions) {
-    if (extension->setObject(object))
+    if (extension->setQObject(object))
       availableExtensions << extension->name();
   }
 

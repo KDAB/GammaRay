@@ -57,11 +57,6 @@ MaterialExtension::~MaterialExtension()
 {
 }
 
-bool MaterialExtension::setObject(QObject* object)
-{
-  return false;
-}
-
 bool MaterialExtension::setObject(void* object, const QString& typeName)
 {
 #ifdef HAVE_SG_INSPECTOR
@@ -81,11 +76,6 @@ bool MaterialExtension::setObject(void* object, const QString& typeName)
     return true;
   }
 #endif
-  return false;
-}
-
-bool MaterialExtension::setMetaObject(const QMetaObject* metaObject)
-{
   return false;
 }
 

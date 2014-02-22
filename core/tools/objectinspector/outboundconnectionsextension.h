@@ -38,9 +38,7 @@ class OutboundConnectionsExtension : public PropertyControllerExtension
     explicit OutboundConnectionsExtension(PropertyController *controller);
     ~OutboundConnectionsExtension();
 
-    bool setObject(void *object, const QString &typeName);
-    bool setObject(QObject *object);
-    bool setMetaObject(const QMetaObject *metaObject);
+    bool setQObject(QObject *object);
 
   private:
     ConnectionFilterProxyModel *m_model;

@@ -64,7 +64,7 @@ public:
    *  This variant is used for QObject-derived types.
    *  @return @c true if the extension can handle @p object, @c false otherwise.
    */
-  virtual bool setObject(QObject *object);
+  virtual bool setQObject(QObject *object);
 
   /** @brief Sets the meta object that should be represented by this extension.
    *  This variant is used for QMetaObjects without a specific object instance.

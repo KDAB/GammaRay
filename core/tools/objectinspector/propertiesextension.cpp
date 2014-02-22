@@ -51,7 +51,7 @@ PropertiesExtension::~PropertiesExtension()
 {
 }
 
-bool PropertiesExtension::setObject(QObject* object)
+bool PropertiesExtension::setQObject(QObject* object)
 {
   m_object = object;
   m_staticPropertyModel->setObject(object);
@@ -65,12 +65,6 @@ bool PropertiesExtension::setObject(void* object, const QString& typeName)
   m_object = 0;
   m_metaPropertyModel->setObject(object, typeName);
   return true;
-}
-
-bool PropertiesExtension::setMetaObject(const QMetaObject* metaObject)
-{
-  Q_UNUSED(metaObject)
-  return false;
 }
 
 void PropertiesExtension::setProperty(const QString& name, const QVariant& value)
@@ -89,5 +83,3 @@ void PropertiesExtension::resetProperty(const QString& name)
   const QMetaProperty prop = m_object->metaObject()->property(index);
   prop.reset(m_object);
 }
-
-#include "propertiesextension.moc"

@@ -41,8 +41,6 @@ class MaterialExtension : public MaterialExtensionInterface, public PropertyCont
     ~MaterialExtension();
 
     bool setObject(void *object, const QString &typeName);
-    bool setObject(QObject *object);
-    bool setMetaObject(const QMetaObject *metaObject);
 
   public slots:
     void getShader(const QString &fileName);

@@ -46,7 +46,7 @@ bool PropertyControllerExtension::setObject(void* object, const QString& typeNam
   return false;
 }
 
-bool PropertyControllerExtension::setObject(QObject* object)
+bool PropertyControllerExtension::setQObject(QObject* object)
 {
   Q_UNUSED(object);
   return false;

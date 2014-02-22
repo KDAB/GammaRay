@@ -44,11 +44,6 @@ SGGeometryExtension::~SGGeometryExtension()
 {
 }
 
-bool SGGeometryExtension::setObject(QObject* object)
-{
-  return false;
-}
-
 bool SGGeometryExtension::setObject(void* object, const QString& typeName)
 {
   if (typeName == "QSGGeometryNode") {
@@ -61,10 +56,5 @@ bool SGGeometryExtension::setObject(void* object, const QString& typeName)
                          geometry->indexType());
     return true;
   }
-  return false;
-}
-
-bool SGGeometryExtension::setMetaObject(const QMetaObject* metaObject)
-{
   return false;
 }

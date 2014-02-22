@@ -45,8 +45,7 @@ class MethodsExtension : public MethodsExtensionInterface, public PropertyContro
     explicit MethodsExtension(PropertyController *controller);
     ~MethodsExtension();
 
-    bool setObject(void *object, const QString &typeName);
-    bool setObject(QObject *object);
+    bool setQObject(QObject *object);
     bool setMetaObject(const QMetaObject *metaObject);
 
   public slots:

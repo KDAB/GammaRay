@@ -41,17 +41,10 @@ ClassInfoExtension::~ClassInfoExtension()
 {
 }
 
-bool ClassInfoExtension::setObject(QObject* object)
+bool ClassInfoExtension::setQObject(QObject* object)
 {
   m_model->setMetaObject(object ? object->metaObject() : 0);
   return true;
-}
-
-bool ClassInfoExtension::setObject(void* object, const QString& typeName)
-{
-  Q_UNUSED(object)
-  Q_UNUSED(typeName)
-  return false;
 }
 
 bool ClassInfoExtension::setMetaObject(const QMetaObject* metaObject)

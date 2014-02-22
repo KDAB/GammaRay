@@ -41,17 +41,10 @@ EnumsExtension::~EnumsExtension()
 {
 }
 
-bool EnumsExtension::setObject(QObject* object)
+bool EnumsExtension::setQObject(QObject* object)
 {
   m_model->setMetaObject(object ? object->metaObject() : 0);
   return true;
-}
-
-bool EnumsExtension::setObject(void* object, const QString& typeName)
-{
-  Q_UNUSED(object)
-  Q_UNUSED(typeName)
-  return false;
 }
 
 bool EnumsExtension::setMetaObject(const QMetaObject* metaObject)

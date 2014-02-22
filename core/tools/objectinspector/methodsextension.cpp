@@ -56,7 +56,7 @@ MethodsExtension::~MethodsExtension()
 {
 }
 
-bool MethodsExtension::setObject(QObject* object)
+bool MethodsExtension::setQObject(QObject* object)
 {
   m_object = object;
 
@@ -70,15 +70,8 @@ bool MethodsExtension::setObject(QObject* object)
   return true;
 }
 
-bool MethodsExtension::setObject(void* object, const QString& typeName)
-{
-  m_object = 0;
-  return false;
-}
-
 bool MethodsExtension::setMetaObject(const QMetaObject* metaObject)
 {
-  Q_UNUSED(metaObject)
   m_object = 0;
   m_model->setMetaObject(metaObject);
   return true;
@@ -160,5 +153,3 @@ void MethodsExtension::invokeMethod(Qt::ConnectionType connectionType)
 
   m_methodArgumentModel->setMethod(QMetaMethod());
 }
-
-#include "methodsextension.moc"
