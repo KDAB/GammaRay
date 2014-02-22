@@ -23,6 +23,8 @@
 
 #include "sgwireframewidget.h"
 #include "sggeometrymodel.h"
+
+#include <QApplication>
 #include <QPainter>
 
 using namespace GammaRay;
@@ -86,7 +88,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
-  painter.setPen(Qt::black);
+  painter.setPen(qApp->palette().color(QPalette::WindowText));
   painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
 
   foreach (QPointF vertex, vertices)
