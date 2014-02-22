@@ -30,7 +30,7 @@
 using namespace GammaRay;
 
 SGWireframeWidget::SGWireframeWidget(QWidget* parent, Qt::WindowFlags f)
-  : QWidget(),
+  : QWidget(parent, f),
     m_model(0),
     m_positionColumn(-1),
     m_drawingMode(0)
@@ -63,16 +63,15 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
   QVector<QPointF> vertices;
   qreal w = 0;
   qreal h = 0;
-  bool isComplete = true;
 
   for (int i = 0; i < m_model->rowCount(); i++) {
-    QModelIndex index = m_model->index(i, m_positionColumn);
-    QVariantList data = m_model->data(index, SGGeometryModel::RenderRole).toList();
+    const QModelIndex index = m_model->index(i, m_positionColumn);
+    const QVariantList data = m_model->data(index, SGGeometryModel::RenderRole).toList();
     if (data.isEmpty()) // Data is incomplete, so no need to render the wireframe yet. It will be repainted as soon as the data is available.
       return;
     if (data.size() >= 2) {
-      qreal x = data[0].toReal();
-      qreal y = data[1].toReal();
+      const qreal x = data[0].toReal();
+      const qreal y = data[1].toReal();
       vertices << QPointF(x, y);
       if (x > w)
         w = x;
@@ -83,15 +82,15 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
 
 
   // Paint the vertices
-  QPointF shift(10, 10);
-  qreal zoom = qMin((width() - 20) / w, (height() - 20) / h);
+  const QPointF shift(10, 10);
+  const qreal zoom = qMin((width() - 20) / w, (height() - 20) / h);
 
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
   painter.setPen(qApp->palette().color(QPalette::WindowText));
   painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
 
-  foreach (QPointF vertex, vertices)
+  foreach (const QPointF &vertex, vertices)
     painter.drawEllipse(vertex * zoom + shift, 3, 3);
 
   // Paint the wires
@@ -107,8 +106,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
   else if (m_indexType == GL_UNSIGNED_BYTE)
     indexSize = sizeof(quint8);
 
-  int count = m_indexData.isEmpty() ? vertices.count() : m_indexData.size() / indexSize;
-  int i = 0;
+  const int count = m_indexData.isEmpty() ? vertices.count() : m_indexData.size() / indexSize;
 
   for (int i = 0; i < count; i++) {
     int index = i;
@@ -120,7 +118,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
       else if (m_indexType == GL_UNSIGNED_BYTE)
         index = *reinterpret_cast<const quint8*>(m_indexData.constData() + i * indexSize);
     }
-    QPointF vertex = vertices[index];
+    const QPointF vertex = vertices[index];
 
 
     if (((m_drawingMode == GL_LINES && i % 2)

@@ -25,7 +25,6 @@
 #define SGWIREFRAMEWIDGET_H
 
 #include <QWidget>
-#include <QModelIndex>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <qopengl.h>
@@ -34,6 +33,7 @@
 #endif
 
 class QAbstractItemModel;
+class QModelIndex;
 
 namespace GammaRay {
 
@@ -43,16 +43,16 @@ class SGWireframeWidget : public QWidget
 
   public:
     explicit SGWireframeWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
-    virtual ~SGWireframeWidget();
+    ~SGWireframeWidget();
 
     QAbstractItemModel *model() const;
     void setModel(QAbstractItemModel *m_model);
 
   protected:
-    virtual void paintEvent(QPaintEvent* );
+    void paintEvent(QPaintEvent*);
 
   private slots:
-    void onModelDataChanged(const QModelIndex & topLeft = QModelIndex(), const QModelIndex & bottomRight = QModelIndex());
+    void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType);
 
   private:
