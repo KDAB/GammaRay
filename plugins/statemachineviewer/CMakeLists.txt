@@ -37,12 +37,26 @@ set(gammaray_statemachineviewer_ui_plugin_srcs
   # gui & client
   statemachineviewerclient.cpp
   statemachineview.cpp
-  statemachineviewerwidget.cpp
   # this part depends on graphviz
   gvgraph/gvgraph.cpp
   gvgraph/gvgraphitems.cpp
   gvgraph/gvutils.cpp
 )
+
+find_package(SME)
+if (SME_FOUND)
+  list(APPEND gammaray_statemachineviewer_ui_plugin_srcs
+    statemachineviewerwidgetng.cpp
+  )
+  list(APPEND gammaray_statemachineviewer_ui_plugin_libs
+    SME::sme_core
+    SME::sme_view
+  )
+else()
+  list(APPEND gammaray_statemachineviewer_ui_plugin_srcs
+    statemachineviewerwidget.cpp
+  )
+endif()
 
 include_directories(
   ${GRAPHVIZ_INCLUDE_DIR}
