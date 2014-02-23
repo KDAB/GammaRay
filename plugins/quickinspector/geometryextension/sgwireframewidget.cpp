@@ -90,8 +90,9 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
   painter.setPen(qApp->palette().color(QPalette::WindowText));
   painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
 
-  foreach (const QPointF &vertex, vertices)
-    painter.drawEllipse(vertex * zoom + shift, 3, 3);
+  for (int i=0; i<vertices.size(); ++i) {
+    painter.drawEllipse(vertices[i] * zoom + shift, 3, 3);
+  }
 
   // Paint the wires
   QPointF prevVertex1;
