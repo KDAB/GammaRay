@@ -76,7 +76,7 @@ void ObjectListModel::objectAdded(QObject *obj)
       QMutexLocker lock(&m_mutex);
       m_invalidatedObjects.remove(obj);
     }
-    QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::QueuedConnection,
+    QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::QueuedConnection,
                               Q_ARG(QObject*, obj));
   } else {
     objectAddedMainThread(obj);
