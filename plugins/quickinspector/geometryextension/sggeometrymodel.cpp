@@ -143,7 +143,33 @@ QMap< int, QVariant > SGGeometryModel::itemData(const QModelIndex& index) const
 
 QVariant SGGeometryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    return QAbstractItemModel::headerData(section, orientation, role);
+  if (role == Qt::DisplayRole && orientation == Qt::Horizontal && m_geometry) {
+    const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();
+    attrInfo += section;
+    if (attrInfo->isVertexCoordinate)
+      return tr("Vertex Coordinate");
+    switch (attrInfo->type) {
+      case GL_BYTE:
+        return tr("%1 * byte").arg(attrInfo->tupleSize);
+      case GL_UNSIGNED_BYTE:
+        return tr("%1 * ubyte").arg(attrInfo->tupleSize);
+      case GL_UNSIGNED_SHORT:
+        return tr("%1 * ushort").arg(attrInfo->tupleSize);
+      case GL_SHORT:
+        return tr("%1 * short").arg(attrInfo->tupleSize);
+      case GL_INT:
+        return tr("%1 * int").arg(attrInfo->tupleSize);
+      case GL_UNSIGNED_INT:
+        return tr("%1 * uint").arg(attrInfo->tupleSize);
+      case GL_FLOAT:
+        return tr("%1 * float").arg(attrInfo->tupleSize);
+#if GL_DOUBLE != GL_FLOAT
+      case GL_DOUBLE:
+        return tr("%1 * double").arg(attrInfo->tupleSize);
+#endif
+    }
+  }
+  return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 void SGGeometryModel::setGeometry(QSGGeometry* geometry)
