@@ -47,7 +47,6 @@ int SGGeometryModel::rowCount(const QModelIndex &parent) const
 {
   if (!m_geometry || parent.isValid())
     return 0;
-  qDebug() << "(" << m_geometry->vertexCount() << ")";
 
   return m_geometry->vertexCount();
 }
@@ -56,7 +55,6 @@ int GammaRay::SGGeometryModel::columnCount(const QModelIndex &parent) const
 {
   if (!m_geometry || parent.isValid())
     return 0;
-  qDebug() << "(" << m_geometry->attributeCount() << ")";
 
   return m_geometry->attributeCount();
 }
