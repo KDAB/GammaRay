@@ -73,6 +73,8 @@ void StateMachineWatcher::watchState(QAbstractState *state)
           this, SLOT(handleStateEntered()), Qt::UniqueConnection);
   connect(state, SIGNAL(exited()),
           this, SLOT(handleStateExited()), Qt::UniqueConnection);
+  connect(state, SIGNAL(destroyed(QObject*)),
+          this, SLOT(handleStateDestroyed()), Qt::UniqueConnection);
 
   Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition*>()) {
     connect(transition, SIGNAL(triggered()),
@@ -86,6 +88,7 @@ void StateMachineWatcher::clearWatchedStates()
   Q_FOREACH (QAbstractState *state, m_watchedStates) {
     disconnect(state, SIGNAL(entered()), this, SLOT(handleStateEntered()));
     disconnect(state, SIGNAL(exited()), this, SLOT(handleStateExited()));
+    disconnect(state, SIGNAL(destroyed(QObject*)), this, SLOT(handleStateDestroyed()));
 
     Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition*>()) {
       disconnect(transition, SIGNAL(triggered()), this, SLOT(handleTransitionTriggered()));
@@ -134,4 +137,14 @@ void StateMachineWatcher::handleStateExited()
 
   m_lastExitedState = state;
   emit stateExited(state);
+}
+
+void StateMachineWatcher::handleStateDestroyed()
+{
+  QAbstractState* state = static_cast<QAbstractState*>(QObject::sender());
+  Q_ASSERT(state);
+
+  const int index = m_watchedStates.indexOf(state);
+  Q_ASSERT(index != -1);
+  m_watchedStates.remove(index);
 }

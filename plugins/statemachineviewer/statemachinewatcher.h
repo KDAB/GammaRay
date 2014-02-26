@@ -57,6 +57,7 @@ class StateMachineWatcher : public QObject
 
     void handleStateEntered();
     void handleStateExited();
+    void handleStateDestroyed();
     void handleTransitionTriggered();
 
   private:
