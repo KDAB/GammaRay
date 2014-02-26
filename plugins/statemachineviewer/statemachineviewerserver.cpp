@@ -179,7 +179,6 @@ void StateMachineViewerServer::setFilteredStates(const QVector<QAbstractState*>&
   }
 
   m_filteredStates = states;
-  repopulateGraph();
 }
 
 void StateMachineViewerServer::setMaximumDepth(int depth)
@@ -206,6 +205,7 @@ void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
 
   setFilteredStates(QVector<QAbstractState*>());
   m_stateMachineWatcher->setWatchedStateMachine(machine);
+  repopulateGraph();
 
   connect(machine, SIGNAL(started()), SLOT(updateStartStop()), Qt::UniqueConnection);
   connect(machine, SIGNAL(stopped()), SLOT(updateStartStop()), Qt::UniqueConnection);
