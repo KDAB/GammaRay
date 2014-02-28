@@ -1,6 +1,11 @@
 Release Highlights
 ==================
 
+Version 2.0.1:
+-------------
+ * LLDB injector (enables Mac OSX 10.9 support)
+ * Fix various cases where client and server states get out of sync
+
 Version 2.0.0:
 -------------
  * Out-of-process UI
