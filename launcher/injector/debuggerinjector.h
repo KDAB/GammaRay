@@ -50,9 +50,9 @@ class DebuggerInjector : public QObject, public AbstractInjector
     virtual QString debuggerExecutable() const = 0;
     /** Execute a raw command on the debugger. */
     virtual void execCmd(const QByteArray &cmd, bool waitForWritten = true) = 0;
-    /** Break in the function @p function, specifiy name without parenthesis. */
+    /** Break in the function @p function, specify name without parenthesis. */
     virtual void addFunctionBreakpoint(const QByteArray &function) = 0;
-    /** Break in the method @p method, specifiy name without parenthesis. */
+    /** Break in the method @p method, specify name without parenthesis. */
     virtual void addMethodBreakpoint(const QByteArray &method) = 0;
     /** Load symbols for the given shared library. */
     virtual void loadSymbols(const QByteArray &library);
@@ -61,7 +61,7 @@ class DebuggerInjector : public QObject, public AbstractInjector
     bool startDebugger(const QStringList &args);
     /** Add a breakpoint in common entry points and wait until they are hit. */
     void waitForMain();
-    /** Given an interupted process, this injects the probe and continues the process. */
+    /** Given an interrupted process, this injects the probe and continues the process. */
     int injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
   protected slots:
