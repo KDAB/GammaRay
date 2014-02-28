@@ -11,7 +11,7 @@ Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
 %define rel 2.0
-%define sover 2.0.0
+%define sover 2.0.1
 %define qtver qt4.8
 %define this_arch %(uname -p)
 %if %{this_arch} == "athlon"
