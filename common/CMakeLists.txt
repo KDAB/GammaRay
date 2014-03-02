@@ -41,6 +41,7 @@ set(gammaray_common_internal_srcs
   resourcebrowserinterface.cpp
   networkselectionmodel.cpp
   streamoperators.cpp
+  probeabi.cpp
 
   tools/objectinspector/propertiesextensioninterface.cpp
   tools/objectinspector/methodsextensioninterface.cpp

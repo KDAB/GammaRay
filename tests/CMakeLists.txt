@@ -85,4 +85,11 @@ if(UNIX AND NOT APPLE)
   endif()
 endif()
 
+### Probe ABI test
+
+add_executable(probeabitest probeabitest.cpp)
+target_link_libraries(probeabitest gammaray_common_internal ${QT_QTTEST_LIBRARIES})
+add_test(probeabitest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabitest)
+
+
 add_subdirectory(manual)
