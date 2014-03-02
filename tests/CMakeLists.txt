@@ -91,5 +91,9 @@ add_executable(probeabitest probeabitest.cpp)
 target_link_libraries(probeabitest gammaray_common_internal ${QT_QTTEST_LIBRARIES})
 add_test(probeabitest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabitest)
 
+add_executable(probeabidetectortest probeabidetectortest.cpp)
+target_link_libraries(probeabidetectortest gammaray_common_internal ${QT_QTTEST_LIBRARIES})
+add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
+
 
 add_subdirectory(manual)

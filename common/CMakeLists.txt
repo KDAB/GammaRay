@@ -42,10 +42,21 @@ set(gammaray_common_internal_srcs
   networkselectionmodel.cpp
   streamoperators.cpp
   probeabi.cpp
+  probeabidetector.cpp
 
   tools/objectinspector/propertiesextensioninterface.cpp
   tools/objectinspector/methodsextensioninterface.cpp
 )
+
+if(WIN32)
+  list(APPEND gammaray_common_internal_srcs probeabidetector_win.cpp)
+elseif(APPLE)
+  list(APPEND gammaray_common_internal_srcs probeabidetector_mac.cpp)
+elseif(UNIX)
+  list(APPEND gammaray_common_internal_srcs probeabidetector_elf.cpp)
+else()
+  list(APPEND gammaray_common_internal_srcs probeabidetector_dummy.cpp)
+endif()
 
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
