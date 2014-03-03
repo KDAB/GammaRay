@@ -54,6 +54,8 @@
 #include <QSGNode>
 #include <QSGGeometry>
 #include <QSGMaterial>
+#include <private/qquickanchors_p.h>
+#include <private/qquickitem_p.h>
 #include <QMatrix4x4>
 
 Q_DECLARE_METATYPE(QQmlError)
@@ -206,32 +208,73 @@ void QuickInspector::renderScene()
   if (!m_clientConnected || !m_window)
     return;
 
-  QImage img = m_window->grabWindow();
+  QImage img;
+  if (m_window->windowState() != Qt::WindowMinimized)
+    img = m_window->grabWindow();
   if (m_currentItem) {
-    QPainter p(&img);
+    QQuickAnchors *anchors = m_currentItem->property("anchors").value<QQuickAnchors*>();
+    QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
+    QQuickItem *parent = m_currentItem->parentItem();
 
-    // bounding box
-    const QRectF itemRect(0, 0, m_currentItem->width(), m_currentItem->height());
-    p.setPen(Qt::red);
-    p.drawRect(m_currentItem->mapRectToScene(itemRect));
+    QVariantMap geometryData;
+    if (parent)
+      geometryData.insert("itemRect", m_currentItem->parentItem()->mapRectToScene(QRectF(m_currentItem->x(), m_currentItem->y(), m_currentItem->width(), m_currentItem->height())));
+    else
+      geometryData.insert("itemRect", QRectF(0, 0, m_currentItem->width(), m_currentItem->height()));
+    geometryData.insert("boundingRect", m_currentItem->mapRectToScene(m_currentItem->boundingRect()));
+    geometryData.insert("childrenRect", m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
+    geometryData.insert("transformOriginPoint", m_currentItem->mapToScene(m_currentItem->transformOriginPoint()));
+    geometryData.insert("left", (bool)(usedAnchors & QQuickAnchors::LeftAnchor) || anchors->fill());
+    geometryData.insert("right", (bool)(usedAnchors & QQuickAnchors::RightAnchor) || anchors->fill());
+    geometryData.insert("top", (bool)(usedAnchors & QQuickAnchors::TopAnchor) || anchors->fill());
+    geometryData.insert("bottom", (bool)(usedAnchors & QQuickAnchors::BottomAnchor) || anchors->fill());
+    geometryData.insert("baseline", (bool)(usedAnchors & QQuickAnchors::BaselineAnchor));
+    geometryData.insert("horizontalCenter", (bool)(usedAnchors & QQuickAnchors::HCenterAnchor) || anchors->centerIn());
+    geometryData.insert("verticalCenter", (bool)(usedAnchors & QQuickAnchors::VCenterAnchor) || anchors->centerIn());
+    geometryData.insert("leftMargin", anchors->leftMargin());
+    geometryData.insert("rightMargin", anchors->rightMargin());
+    geometryData.insert("topMargin", anchors->topMargin());
+    geometryData.insert("bottomMargin", anchors->bottomMargin());
+    geometryData.insert("horizontalCenterOffset", anchors->horizontalCenterOffset());
+    geometryData.insert("verticalCenterOffset", anchors->verticalCenterOffset());
+    geometryData.insert("baselineOffset", anchors->baselineOffset());
+    geometryData.insert("margins", anchors->margins());
+    geometryData.insert("x", m_currentItem->x());
+    geometryData.insert("y", m_currentItem->y());
+    QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(m_currentItem);
+    geometryData.insert("transform", itemPriv->itemToWindowTransform());
+    if (parent) {
+      QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
+      geometryData.insert("parentTransform", parentPriv->itemToWindowTransform());
+    }
 
-    // children rect
-    p.setPen(Qt::cyan);
-    p.drawRect(m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
-
-    // transform origin
-    p.setPen(Qt::red);
-    const QPointF tfo = m_currentItem->property("transformOriginPoint").toPointF();
-    p.drawEllipse(m_currentItem->mapToScene(tfo), 2, 2);
+    emit sceneRendered(img, geometryData);
+  } else {
+    emit sceneRendered(img, QVariantMap());
   }
 
-  emit sceneRendered(img);
 }
 
 void QuickInspector::emitSceneChanged()
 {
   if (m_clientConnected && m_window)
     emit sceneChanged();
+}
+
+void QuickInspector::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
+{
+  if (!m_clientConnected || !m_window)
+    return;
+
+  QCoreApplication::sendEvent(m_window, new QKeyEvent((QEvent::Type)type, key, (Qt::KeyboardModifiers)modifiers, text, autorep, count));
+}
+
+void QuickInspector::sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers)
+{
+  if (!m_clientConnected || !m_window)
+    return;
+
+  QCoreApplication::sendEvent(m_window, new QMouseEvent((QEvent::Type)type, localPos, (Qt::MouseButton)button, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers));
 }
 
 void QuickInspector::itemSelectionChanged(const QItemSelection& selection)

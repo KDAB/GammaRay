@@ -26,6 +26,7 @@
 
 #include "quickinspectorinterface.h"
 
+class QEvent;
 namespace GammaRay {
 
 class QuickInspectorClient : public QuickInspectorInterface
@@ -39,6 +40,8 @@ public:
 public slots:
   void selectWindow(int index);
   void renderScene();
+  void sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count);
+  void sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers);
 };
 }
 

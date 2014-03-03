@@ -59,6 +59,8 @@ public:
 public slots:
   void selectWindow(int index) Q_DECL_OVERRIDE;
   void renderScene();
+  void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1);
+  void sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers);
 
 protected:
   bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;

@@ -23,6 +23,8 @@
 
 #include "quickinspectorclient.h"
 #include <common/endpoint.h>
+#include <QEvent>
+#include <QDebug>
 
 using namespace GammaRay;
 
@@ -43,3 +45,24 @@ void QuickInspectorClient::renderScene()
 {
   Endpoint::instance()->invokeObject(objectName(), "renderScene");
 }
+
+void QuickInspectorClient::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
+{
+  Endpoint::instance()->invokeObject(objectName(), "sendKeyEvent", QVariantList() << QVariant::fromValue(type)
+                                                                                  << QVariant::fromValue(key)
+                                                                                  << QVariant::fromValue(modifiers)
+                                                                                  << QVariant::fromValue(text)
+                                                                                  << QVariant::fromValue(autorep)
+                                                                                  << QVariant::fromValue(count));
+}
+
+void QuickInspectorClient::sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers)
+{
+  Endpoint::instance()->invokeObject(objectName(), "sendMouseEvent", QVariantList() << QVariant::fromValue(type)
+                                                                                    << QVariant::fromValue(localPos)
+                                                                                    << QVariant::fromValue(button)
+                                                                                    << QVariant::fromValue(buttons)
+                                                                                    << QVariant::fromValue(modifiers));
+}
+
+

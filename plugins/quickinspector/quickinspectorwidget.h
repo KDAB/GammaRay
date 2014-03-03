@@ -30,6 +30,7 @@
 
 #include <QWidget>
 
+class QDeclarativeItem;
 class QTimer;
 class QLabel;
 class QImage;
@@ -55,10 +56,9 @@ class QuickInspectorWidget : public QWidget
 
   private slots:
     void sceneChanged();
-    void sceneRendered(const QImage &img);
+    void sceneRendered(const QImage &img, QVariantMap geometryData);
     void itemSelectionChanged(const QItemSelection &selection);
     void requestRender();
-    void setPreviewZoom(int zoom);
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
@@ -67,6 +67,7 @@ class QuickInspectorWidget : public QWidget
     bool m_sceneChangedSinceLastRequest;
     bool m_waitingForImage;
     QuickSceneImageProvider* m_imageProvider;
+    QDeclarativeItem* m_rootItem;
 };
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>

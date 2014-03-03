@@ -25,6 +25,9 @@
 #define GAMMARAY_QUICKINSPECTORINTERFACE_H
 
 #include <QObject>
+#include <QRectF>
+#include <QVariantMap>
+#include <QEvent>
 
 class QImage;
 
@@ -41,11 +44,13 @@ public slots:
   virtual void selectWindow(int index) = 0;
   /// Ask for a new screenshot of the scene.
   virtual void renderScene() = 0;
+  virtual void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1) = 0;
+  virtual void sendMouseEvent(int type, const QPointF & localPos, int button, int buttons, int modifiers) = 0;
 
 signals:
   /// Emitted when the view has been newly rendered, for the client to request an update.
   void sceneChanged();
-  void sceneRendered(const QImage &img);
+  void sceneRendered(const QImage &img, QVariantMap geometryData);
 
 };
 }

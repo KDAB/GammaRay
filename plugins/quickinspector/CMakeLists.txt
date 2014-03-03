@@ -57,6 +57,7 @@ if(HAVE_QT_WIDGETS AND Qt5Declarative_FOUND)
     quickinspectorwidget.cpp
     quickclientitemmodel.cpp
     quickitemtreewatcher.cpp
+    quickitemoverlay.cpp
 
     materialextension/materialextensionclient.cpp
     materialextension/materialtab.cpp
