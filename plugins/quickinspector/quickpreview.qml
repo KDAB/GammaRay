@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 import com.kdab.GammaRay 1.0
 
 Image {
@@ -20,6 +20,7 @@ Image {
 
   function updatePreview()
   {
+    image.source = "";
     image.source = "image://quicksceneprovider/scene";
     image.x = (root.width - image.width - rightRuler.width) / 2;
     image.y = (root.height - image.height - bottomRuler.height) / 2;
@@ -39,6 +40,7 @@ Image {
   Image {
     id: image
     property real zoom: 1
+    cache: false
 
     onZoomChanged: {
       x += (width - sourceSize.width * zoom) / 2;
