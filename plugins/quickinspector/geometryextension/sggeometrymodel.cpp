@@ -27,7 +27,6 @@
 #include <QMetaObject>
 #include <QSGGeometry>
 #include <QtGui/qopengl.h>
-#include <QDebug>
 
 using namespace GammaRay;
 

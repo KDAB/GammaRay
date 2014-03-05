@@ -24,7 +24,6 @@
 #include "quickinspectorclient.h"
 #include <common/endpoint.h>
 #include <QEvent>
-#include <QDebug>
 
 using namespace GammaRay;
 

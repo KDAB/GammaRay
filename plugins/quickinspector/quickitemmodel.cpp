@@ -24,7 +24,6 @@
 #include "quickitemmodel.h"
 #include "quickitemmodelroles.h"
 
-#include <QDebug>
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QThread>

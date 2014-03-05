@@ -45,7 +45,6 @@
 #include <QQmlEngine>
 #include <QQmlError>
 
-#include <QDebug>
 #include <QItemSelection>
 #include <QItemSelectionModel>
 #include <QMouseEvent>

@@ -28,7 +28,6 @@
 #include <private/qquickitem_p.h> //krazy:exclude=camelcase
 #include "quickitemmodelroles.h"
 
-#include <QDebug>
 #include <QQuickWindow>
 #include <QThread>
 #include <QSGNode>

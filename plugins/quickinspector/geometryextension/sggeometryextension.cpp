@@ -27,7 +27,6 @@
 #include <core/probe.h>
 #include <QMetaProperty>
 #include <QSGNode>
-#include <QtCore/QDebug>
 
 using namespace GammaRay;
 

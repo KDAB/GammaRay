@@ -171,7 +171,6 @@ void QuickInspectorWidget::sceneChanged()
 void QuickInspectorWidget::sceneRendered(const QImage& img, QVariantMap geometryData)
 {
   m_waitingForImage = false;
-  qDebug() << "got new frame";
 
   m_imageProvider->setPixmap(QPixmap::fromImage(img));
 
