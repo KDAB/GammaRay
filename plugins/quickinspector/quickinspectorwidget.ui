@@ -100,7 +100,7 @@
   <customwidget>
    <class>KFilterProxySearchLine</class>
    <extends>QWidget</extends>
-   <header>kfilterproxysearchline.h</header>
+   <header>kde/kfilterproxysearchline.h</header>
   </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
