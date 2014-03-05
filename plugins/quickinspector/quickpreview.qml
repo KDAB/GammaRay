@@ -8,8 +8,14 @@ Image {
   property real oldWidth
   property real oldHeight
   property variant geometryData
+  property bool isFirstFrame: true
 
   focus: true
+
+  Component.onCompleted: {
+    oldWidth = root.width;
+    oldHeight = root.height;
+  }
 
   Keys.onPressed: {
     inspectorInterface.sendKeyEvent(6, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
@@ -22,10 +28,14 @@ Image {
   {
     image.source = "";
     image.source = "image://quicksceneprovider/scene";
-    image.x = (root.width - image.width - rightRuler.width) / 2;
-    image.y = (root.height - image.height - bottomRuler.height) / 2;
-    oldWidth = root.width;
-    oldHeight = root.height;
+    image.width = image.sourceSize.width * image.zoom;
+    image.height = image.sourceSize.height * image.zoom;
+
+    if (isFirstFrame) {
+      image.x = (root.width - image.width - rightRuler.width) / 2;
+      image.y = (root.height - image.height - bottomRuler.height) / 2;
+      isFirstFrame = false;
+    }
   }
 
   onWidthChanged: {
@@ -46,7 +56,7 @@ Image {
       x += (width - sourceSize.width * zoom) / 2;
       y += (height - sourceSize.height * zoom) / 2;
       width = sourceSize.width * zoom;
-      height = sourceSize.height * zoom
+      height = sourceSize.height * zoom;
     }
   }
 
