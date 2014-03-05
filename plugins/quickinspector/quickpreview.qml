@@ -168,7 +168,7 @@ Image {
             color: "#aaffffff"
             height: 1
             width: index % 10 == 0 ? 10 : 5
-            visible: pixelNumber <= image.sourceSize.width
+            visible: pixelNumber <= image.sourceSize.height
 
             property int pixelNumber: image.zoom > 1 ? index : index * 2 / image.zoom
 
