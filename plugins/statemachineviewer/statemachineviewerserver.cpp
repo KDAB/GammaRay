@@ -194,11 +194,14 @@ void StateMachineViewerServer::setMaximumDepth(int depth)
   emit maximumDepthChanged(depth);
 }
 
-void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
+void StateMachineViewerServer::setSelectedStateMachine(QStateMachine* machine)
 {
-  QObject *stateMachineObject = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  QStateMachine *machine = qobject_cast<QStateMachine*>(stateMachineObject);
-  Q_ASSERT(machine);
+  QStateMachine* oldMachine = selectedStateMachine();
+  if (oldMachine) {
+    disconnect(oldMachine, SIGNAL(started()), this, SLOT(updateStartStop()));
+    disconnect(oldMachine, SIGNAL(stopped()), this, SLOT(updateStartStop()));
+    disconnect(oldMachine, SIGNAL(finished()), this, SLOT(updateStartStop()));
+  }
 
   m_stateModel->setStateMachine(machine);
   stateConfigurationChanged();
@@ -207,10 +210,24 @@ void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
   m_stateMachineWatcher->setWatchedStateMachine(machine);
   repopulateGraph();
 
-  connect(machine, SIGNAL(started()), SLOT(updateStartStop()), Qt::UniqueConnection);
-  connect(machine, SIGNAL(stopped()), SLOT(updateStartStop()), Qt::UniqueConnection);
-  connect(machine, SIGNAL(finished()),SLOT(updateStartStop()), Qt::UniqueConnection);
+  if (machine) {
+    connect(machine, SIGNAL(started()), this, SLOT(updateStartStop()));
+    connect(machine, SIGNAL(stopped()), this, SLOT(updateStartStop()));
+    connect(machine, SIGNAL(finished()), this, SLOT(updateStartStop()));
+  }
   updateStartStop();
+}
+
+void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
+{
+  if (!index.isValid()) {
+    setSelectedStateMachine(0);
+    return;
+  }
+
+  QObject *stateMachineObject = index.data(ObjectModel::ObjectRole).value<QObject*>();
+  QStateMachine *machine = qobject_cast<QStateMachine*>(stateMachineObject);
+  setSelectedStateMachine(machine);
 }
 
 void StateMachineViewerServer::stateSelectionChanged()
@@ -347,7 +364,7 @@ void StateMachineViewerServer::addTransition(QAbstractTransition *transition)
 
 void StateMachineViewerServer::updateStartStop()
 {
-  emit statusChanged(selectedStateMachine(), selectedStateMachine() && selectedStateMachine()->isRunning());
+  emit statusChanged(selectedStateMachine() != 0, selectedStateMachine() && selectedStateMachine()->isRunning());
 }
 
 void StateMachineViewerServer::toggleRunning()

@@ -72,6 +72,7 @@ class StateMachineViewerServer : public StateMachineViewerInterface
 
     void setFilteredStates(const QVector<QAbstractState*> &states);
     void setMaximumDepth(int depth);
+    void setSelectedStateMachine(QStateMachine* machine);
 
     void updateStartStop();
     void toggleRunning();

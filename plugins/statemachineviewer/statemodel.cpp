@@ -62,6 +62,7 @@ class StateModelPrivate
 
 // private slots:
   void stateConfigurationChanged();
+  void handleMachineDestroyed(QObject*);
 };
 
 }
@@ -136,6 +137,15 @@ void StateModelPrivate::stateConfigurationChanged()
   m_lastConfiguration = newConfig;
 }
 
+void StateModelPrivate::handleMachineDestroyed(QObject*)
+{
+  Q_Q(StateModel);
+
+  q->beginResetModel();
+  m_stateMachine = 0;
+  q->endResetModel();
+}
+
 StateModel::StateModel(QObject *parent)
   : ObjectModelBase<QAbstractItemModel>(parent), d_ptr(new StateModelPrivate(this))
 {
@@ -157,10 +167,18 @@ void StateModel::setStateMachine(QStateMachine *stateMachine)
     return;
   }
 
+  if (d->m_stateMachine) {
+    disconnect(d->m_stateMachine, SIGNAL(destroyed(QObject*)), this, SLOT(handleMachineDestroyed(QObject*)));
+  }
+
   beginResetModel();
   d->m_stateMachine = stateMachine;
-  d->m_lastConfiguration = stateMachine->configuration();
+  d->m_lastConfiguration = (stateMachine ? stateMachine->configuration() : QSet<QAbstractState*>());
   endResetModel();
+
+  if (d->m_stateMachine) {
+    connect(d->m_stateMachine, SIGNAL(destroyed(QObject*)), this, SLOT(handleMachineDestroyed(QObject*)));
+  }
 
   d->m_stateMachineWatcher->setWatchedStateMachine(stateMachine);
 }
