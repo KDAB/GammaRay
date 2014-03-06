@@ -224,7 +224,8 @@ void Launcher::sendProbeSettings()
 
   m_shm = new QSharedMemory(QLatin1String("gammaray-") + QString::number(instanceIdentifier()), this);
   if (!m_shm->create(ba.size())) {
-    qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << m_shm->errorString();
+    qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << m_shm->errorString()
+      << "- error code (QSharedMemory::SharedMemoryError):" << m_shm->error();
     delete m_shm;
     m_shm = 0;
     return;
