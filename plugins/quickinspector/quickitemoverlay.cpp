@@ -196,5 +196,3 @@ void QuickItemOverlay::setImageRect(QRectF imageRect)
     m_imageRect = imageRect;
     update();
 }
-
-#include "quickitemoverlay.moc"

@@ -52,6 +52,6 @@ private:
     qreal m_y;
 };
 
-};
+}
 
 #endif // QUICKITEMOVERLAY_H

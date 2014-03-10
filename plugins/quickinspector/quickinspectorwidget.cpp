@@ -39,13 +39,11 @@
 #include <QLabel>
 #include <QTimer>
 #include <QGraphicsScene>
-#include <qgraphicsitem.h>
-#include <QtGui/QGraphicsScene>
 #include <qmath.h>
 #include <QDeclarativeImageProvider>
 #include <QDeclarativeEngine>
 #include <QDeclarativeItem>
-#include <QtDeclarative>
+#include <QDeclarativeContext>
 #include <QRectF>
 
 namespace GammaRay {
@@ -57,6 +55,7 @@ class QuickSceneImageProvider : public QDeclarativeImageProvider
 
     QPixmap requestPixmap(const QString & id, QSize * size, const QSize & requestedSize)
     {
+      Q_UNUSED(requestedSize);
       if (id == "background") {
         QPixmap bgPattern(20, 20);
         bgPattern.fill(Qt::lightGray);
