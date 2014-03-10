@@ -53,9 +53,13 @@
 #include <QSGNode>
 #include <QSGGeometry>
 #include <QSGMaterial>
+#include <QMatrix4x4>
+#include <QCoreApplication>
+
+#ifdef HAVE_SG_INSPECTOR
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
-#include <QMatrix4x4>
+#endif
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -211,8 +215,10 @@ void QuickInspector::renderScene()
   if (m_window->windowState() != Qt::WindowMinimized)
     img = m_window->grabWindow();
   if (m_currentItem) {
+#ifdef HAVE_SG_INSPECTOR
     QQuickAnchors *anchors = m_currentItem->property("anchors").value<QQuickAnchors*>();
     QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
+#endif
     QQuickItem *parent = m_currentItem->parentItem();
 
     QVariantMap geometryData;
@@ -223,6 +229,7 @@ void QuickInspector::renderScene()
     geometryData.insert("boundingRect", m_currentItem->mapRectToScene(m_currentItem->boundingRect()));
     geometryData.insert("childrenRect", m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
     geometryData.insert("transformOriginPoint", m_currentItem->mapToScene(m_currentItem->transformOriginPoint()));
+#ifdef HAVE_SG_INSPECTOR
     geometryData.insert("left", (bool)(usedAnchors & QQuickAnchors::LeftAnchor) || anchors->fill());
     geometryData.insert("right", (bool)(usedAnchors & QQuickAnchors::RightAnchor) || anchors->fill());
     geometryData.insert("top", (bool)(usedAnchors & QQuickAnchors::TopAnchor) || anchors->fill());
@@ -238,14 +245,17 @@ void QuickInspector::renderScene()
     geometryData.insert("verticalCenterOffset", anchors->verticalCenterOffset());
     geometryData.insert("baselineOffset", anchors->baselineOffset());
     geometryData.insert("margins", anchors->margins());
+#endif
     geometryData.insert("x", m_currentItem->x());
     geometryData.insert("y", m_currentItem->y());
+#ifdef HAVE_SG_INSPECTOR
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(m_currentItem);
     geometryData.insert("transform", itemPriv->itemToWindowTransform());
     if (parent) {
       QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
       geometryData.insert("parentTransform", parentPriv->itemToWindowTransform());
     }
+#endif
 
     emit sceneRendered(img, geometryData);
   } else {
