@@ -47,11 +47,9 @@ if(Qt5Quick_FOUND)
   )
 endif()
 
-find_package(Qt5Declarative)
-
 
 # ui plugin
-if(HAVE_QT_WIDGETS AND Qt5Declarative_FOUND)
+if(HAVE_QT_QUICK1)
   set(gammaray_quickinspector_ui_srcs
     quickinspectorclient.cpp
     quickinspectorwidget.cpp
@@ -81,6 +79,6 @@ if(HAVE_QT_WIDGETS AND Qt5Declarative_FOUND)
   target_link_libraries(gammaray_quickinspector_ui
     gammaray_quickinspector_shared
     gammaray_ui
-    Qt5::Declarative
+    ${QT_QTDECLARATIVE_LIBRARIES}
   )
 endif()

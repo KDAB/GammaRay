@@ -155,6 +155,7 @@ if(Qt5Core_FOUND)
   find_package(Qt5Location NO_MODULE QUIET) # workaround for 5.1 webkit that tries to find a qtlocation with a matching version if none (with any version) has been found before...
   find_package(Qt5Designer NO_MODULE QUIET)
   find_package(Qt5WebKitWidgets 5.0.2 NO_MODULE QUIET) # 5.0.[01] has a code generation bug in uic that fails to generate proper code for webkitwidget classes
+  find_package(Qt5Declarative NO_MODULE QUIET)
 
   include("cmake/ECMQt4To5Porting.cmake")
   # only needed for Qt <= 5.1 and/or some older CMake versions (exact combination unknown unfortunately)
@@ -166,6 +167,7 @@ if(Qt5Core_FOUND)
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
   set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND})
+  set(HAVE_QT_QUICK1 ${Qt5Declarative_FOUND})
 
   if(Qt5_POSITION_INDEPENDENT_CODE AND NOT WIN32)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -189,13 +191,14 @@ if(Qt5Core_FOUND)
   set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
   set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
   set_package_properties(Qt5PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
+  set_package_properties(Qt5Declarative PROPERTIES TYPE RECOMMENDED PURPOSE "Required for QtQuick inspector.")
   add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS "Requires private Qt headers to be available.")
 
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
   find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtNetwork)
-  find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
+  find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest QtDeclarative)
 
   include(${QT_USE_FILE})
   set(HAVE_QT_CONCURRENT true)
@@ -206,6 +209,7 @@ else()
   endif()
   set(HAVE_QT_PRINTSUPPORT true)
   set(HAVE_QT_WEBKIT1 ${QT_QTWEBKIT_FOUND})
+  set(HAVE_QT_QUICK1 ${QT_QTDECLARATIVE_FOUND})
 
   find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
   if(QT_PRIVATE_INCLUDE_DIR)
@@ -227,6 +231,7 @@ else()
   add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS
     "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
   )
+  add_feature_info("QtQuick inspector" HAVE_QT_QUICK1 "Client UI for inspecting Qt5 QtQuick2 scenes. Needs QtDeclarative.")
 
 endif()
 

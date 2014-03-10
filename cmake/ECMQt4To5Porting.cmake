@@ -63,6 +63,7 @@ set(_qt_modules
   Sql
   OpenGL
   Svg
+  Declarative
 )
 
 foreach(_module ${_qt_modules})
@@ -72,9 +73,6 @@ foreach(_module ${_qt_modules})
     list(APPEND QT_INCLUDES ${Qt5${_module}_INCLUDE_DIRS})
     set(QT_QT${_module_upper}_FOUND ${Qt5${_module}_FOUND})
 endforeach()
-
-set(QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick1_LIBRARIES})
-set(QT_QTDECLARATIVE_LIBRARY ${Qt5Quick1_LIBRARIES})
 
 macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})
