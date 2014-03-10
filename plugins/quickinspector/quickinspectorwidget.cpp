@@ -168,7 +168,7 @@ void QuickInspectorWidget::sceneChanged()
     m_renderTimer->start();
 }
 
-void QuickInspectorWidget::sceneRendered(const QImage& img, QVariantMap geometryData)
+void QuickInspectorWidget::sceneRendered(const QImage& img, const QVariantMap &geometryData)
 {
   m_waitingForImage = false;
 

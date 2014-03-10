@@ -29,6 +29,7 @@
 #include <common/objectbroker.h>
 
 #include <QWidget>
+#include <QVariant>
 
 class QDeclarativeItem;
 class QTimer;
@@ -56,7 +57,7 @@ class QuickInspectorWidget : public QWidget
 
   private slots:
     void sceneChanged();
-    void sceneRendered(const QImage &img, QVariantMap geometryData);
+    void sceneRendered(const QImage &img, const QVariantMap &geometryData);
     void itemSelectionChanged(const QItemSelection &selection);
     void requestRender();
 
