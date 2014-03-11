@@ -5,17 +5,12 @@ Image {
   id: root
   source: "image://quicksceneprovider/background"
   fillMode: Image.Tile
-  property real oldWidth
-  property real oldHeight
-  property variant geometryData
+  property real oldWidth: 0
+  property real oldHeight: 0
+  property variant geometryData: {}
   property bool isFirstFrame: true
 
   focus: true
-
-  Component.onCompleted: {
-    oldWidth = root.width;
-    oldHeight = root.height;
-  }
 
   Keys.onPressed: { // event-forwarding
     inspectorInterface.sendKeyEvent(6, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
