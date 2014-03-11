@@ -17,20 +17,21 @@ Image {
     oldHeight = root.height;
   }
 
-  Keys.onPressed: {
+  Keys.onPressed: { // event-forwarding
     inspectorInterface.sendKeyEvent(6, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
   }
-  Keys.onReleased: {
+  Keys.onReleased: { // event-forwarding
     inspectorInterface.sendKeyEvent(7, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
   }
 
   function updatePreview()
   {
-    image.source = "";
+    image.source = ""; // needed in order to get quicksceneprovider/scene to get refreshed.
     image.source = "image://quicksceneprovider/scene";
     image.width = image.sourceSize.width * image.zoom;
     image.height = image.sourceSize.height * image.zoom;
 
+    // Align image to center
     if (isFirstFrame) {
       image.x = (root.width - image.width - rightRuler.width) / 2;
       image.y = (root.height - image.height - bottomRuler.height) / 2;
@@ -39,27 +40,31 @@ Image {
   }
 
   onWidthChanged: {
+    // Make scene preview stay centered when resizing
     image.x += (width - oldWidth) / 2;
     oldWidth = width;
   }
   onHeightChanged: {
+    // Make scene preview stay centered when resizing
     image.y += (height - oldHeight) / 2;
     oldHeight = height;
   }
 
+  // Scene preview
   Image {
     id: image
     property real zoom: 1
     cache: false
 
     onZoomChanged: {
-      x += (width - sourceSize.width * zoom) / 2;
+      x += (width - sourceSize.width * zoom) / 2; // zoom to image center
       y += (height - sourceSize.height * zoom) / 2;
       width = sourceSize.width * zoom;
       height = sourceSize.height * zoom;
     }
   }
 
+  // Geometry overlay
   QuickItemOverlay {
     anchors.fill: parent
     zoom: image.zoom
@@ -76,20 +81,20 @@ Image {
     property int modifiers: 0
 
 
-    onReleased: {
+    onReleased: { // event-forwarding
       if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(3, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
     }
-    onPressed: {
+    onPressed: { // event-forwarding
       if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(2, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
       oldMouseX = mouse.x;
       oldMouseY = mouse.y;
     }
-    onPositionChanged: {
-      if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))
+    onPositionChanged: { // move image / event-forwarding
+      if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) // event-forwarding
         inspectorInterface.sendMouseEvent(5, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-      else if (pressed) {
+      else if (pressed) { // move image
         modifiers = mouse.modifiers
         if (modifiers !== Qt.ControlModifier) {
           image.x += mouse.x - oldMouseX;
@@ -99,12 +104,13 @@ Image {
         }
       }
     }
-    onDoubleClicked: {
+    onDoubleClicked: { // event-forwarding
       if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
     }
   }
 
+  // Text item (top-right)
   Rectangle {
     color: "#aa333333"
     width: overlayText.width; height: overlayText.height
@@ -122,6 +128,7 @@ Image {
     }
   }
 
+  // Rulers
   Rectangle {
     id: bottomRuler
     height: 25
@@ -138,13 +145,16 @@ Image {
         x: image.x
         spacing: image.zoom > 1 ? image.zoom - 1 : 1
         Repeater {
+          // We always create as many elements as the image has pixels. We *could* change it according to
+          // the zoom value, but that would mean recreating all elements on zooming, which is too expensive.
           model: image.sourceSize.width
           delegate: Rectangle {
             color: "#aaffffff"
             width: 1
             height: index % 10 == 0 ? 10 : 5
-            visible: pixelNumber <= image.sourceSize.width
+            visible: pixelNumber <= image.sourceSize.width // Don't draw the ruler bigger than the image
 
+            // states which pixel of the original scene this bar indicates
             property int pixelNumber: image.zoom > 1 ? index : index * 2 / image.zoom
 
             Text {
@@ -175,13 +185,16 @@ Image {
         y: image.y
         spacing: image.zoom > 1 ? image.zoom - 1 : 1
         Repeater {
+          // We always create as many elements as the image has pixels. We *could* change it according to
+          // the zoom value, but that would mean recreating all elements on zooming, which is too expensive.
           model: image.sourceSize.height
           delegate: Rectangle {
             color: "#aaffffff"
             height: 1
             width: index % 10 == 0 ? 10 : 5
-            visible: pixelNumber <= image.sourceSize.height
+            visible: pixelNumber <= image.sourceSize.height // Don't draw the ruler bigger than the image
 
+            // states which pixel of the original scene this bar indicates
             property int pixelNumber: image.zoom > 1 ? index : index * 2 / image.zoom
 
             Text {
@@ -197,6 +210,7 @@ Image {
     }
   }
 
+  // Zoom buttons
   Row {
     anchors { right: parent.right; top: bottomRuler.top }
 
