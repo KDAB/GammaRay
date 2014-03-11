@@ -10,6 +10,7 @@
 #include <sme/core/element.h>
 #include <sme/core/layoutinformation.h>
 #include <sme/core/view.h>
+#include <sme/view/statemachinetoolbar.h>
 #include <sme/view/statemachineview.h>
 
 #include <QDebug>
@@ -84,7 +85,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   m_currentView = new View(this);
   m_stateMachineView = new SME::StateMachineView;
   m_stateMachineView->setView(m_currentView);
-  QWidget* container = QWidget::createWindowContainer(m_stateMachineView);
+  QWidget* container = QWidget::createWindowContainer(m_stateMachineView, this);
   container->setMinimumWidth(300);
 
   // FIXME: Do it properly
@@ -104,6 +105,11 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
 
   connect(m_interface, SIGNAL(aboutToRepopulateGraph()), this, SLOT(clearGraph()));
   connect(m_interface, SIGNAL(graphRepopulated()), this, SLOT(repopulateView()));
+
+  // append actions for the state machine view
+  StateMachineToolBar* toolBar = new StateMachineToolBar(m_stateMachineView, this);
+  toolBar->setHidden(true);
+  addActions(toolBar->actions());
 
   m_interface->repopulateGraph();
 }
