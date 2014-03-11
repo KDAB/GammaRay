@@ -27,6 +27,7 @@
 #include <QAbstractTableModel>
 #include <QStringList>
 
+class QSGGeometryNode;
 class QSGGeometry;
 namespace GammaRay {
 
@@ -48,7 +49,7 @@ class SGGeometryModel : public QAbstractTableModel
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-    void setGeometry(QSGGeometry *geometry);
+    void setNode(QSGGeometryNode *node);
 
     template <typename T>
     static QStringList toStringList(void *data, int size) {
@@ -73,6 +74,7 @@ class SGGeometryModel : public QAbstractTableModel
 
   private:
     QSGGeometry *m_geometry;
+    QSGGeometryNode *m_node;
 };
 
 }

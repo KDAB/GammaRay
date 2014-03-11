@@ -47,9 +47,9 @@ bool SGGeometryExtension::setObject(void* object, const QString& typeName)
 {
   if (typeName == "QSGGeometryNode") {
     m_node = static_cast<QSGGeometryNode*>(object);
-    QSGGeometry *geometry = m_node->geometry();
-    m_model->setGeometry(geometry);
+    m_model->setNode(m_node);
 
+    QSGGeometry *geometry = m_node->geometry();
     emit geometryChanged(geometry->drawingMode(),
                          QByteArray::fromRawData(reinterpret_cast<char*>(geometry->indexData()), geometry->indexCount()*geometry->sizeOfIndex()),
                          geometry->indexType());

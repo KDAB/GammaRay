@@ -26,9 +26,8 @@
 
 #include <core/propertycontrollerextension.h>
 #include "sggeometryextensioninterface.h"
-#include <QPointer>
 
-class QSGBasicGeometryNode;
+class QSGGeometryNode;
 
 namespace GammaRay {
 
@@ -46,7 +45,7 @@ class SGGeometryExtension : public SGGeometryExtensionInterface, public Property
     bool setObject(void *object, const QString &typeName);
 
   private:
-    QSGBasicGeometryNode *m_node;
+    QSGGeometryNode *m_node;
     SGGeometryModel *m_model;
 };
 

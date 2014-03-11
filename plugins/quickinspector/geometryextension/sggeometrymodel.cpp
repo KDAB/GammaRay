@@ -26,6 +26,8 @@
 #include <QMetaEnum>
 #include <QMetaObject>
 #include <QSGGeometry>
+#include <QSGMaterial>
+#include <QSGNode>
 #include <QtGui/qopengl.h>
 
 using namespace GammaRay;
@@ -143,36 +145,22 @@ QVariant SGGeometryModel::headerData(int section, Qt::Orientation orientation, i
   if (role == Qt::DisplayRole && orientation == Qt::Horizontal && m_geometry) {
     const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();
     attrInfo += section;
-    if (attrInfo->isVertexCoordinate)
-      return tr("Vertex Coordinate");
-    switch (attrInfo->type) {
-      case GL_BYTE:
-        return tr("%1 * byte").arg(attrInfo->tupleSize);
-      case GL_UNSIGNED_BYTE:
-        return tr("%1 * ubyte").arg(attrInfo->tupleSize);
-      case GL_UNSIGNED_SHORT:
-        return tr("%1 * ushort").arg(attrInfo->tupleSize);
-      case GL_SHORT:
-        return tr("%1 * short").arg(attrInfo->tupleSize);
-      case GL_INT:
-        return tr("%1 * int").arg(attrInfo->tupleSize);
-      case GL_UNSIGNED_INT:
-        return tr("%1 * uint").arg(attrInfo->tupleSize);
-      case GL_FLOAT:
-        return tr("%1 * float").arg(attrInfo->tupleSize);
-#if GL_DOUBLE != GL_FLOAT
-      case GL_DOUBLE:
-        return tr("%1 * double").arg(attrInfo->tupleSize);
-#endif
+    char const *const *attributeNames = m_node->material()->createShader()->attributeNames();
+    for (int i = 0; i <= section; i++) {
+      if (!attributeNames[i])
+        break;
+      if (i == section)
+        return attributeNames[section];
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-void SGGeometryModel::setGeometry(QSGGeometry* geometry)
+void SGGeometryModel::setNode(QSGGeometryNode* node)
 {
   beginResetModel();
-  m_geometry = geometry;
+  m_node = node;
+  m_geometry = node->geometry();
   endResetModel();
 }
 
