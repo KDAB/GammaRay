@@ -315,7 +315,7 @@ void SGWireframeWidget::mouseReleaseEvent(QMouseEvent *e)
     m_highlightModel->clear();
   }
   for (int i = 0; i < m_vertices.size(); i++) {
-    int distance = QLineF(e->localPos(), m_vertices[i] * m_zoom + m_offset).length();
+    int distance = QLineF(e->pos(), m_vertices[i] * m_zoom + m_offset).length();
     if (distance <= 5) {
       if (e->modifiers() & Qt::ControlModifier)
         m_highlightModel->select(m_model->index(i, m_positionColumn), QItemSelectionModel::Toggle);
