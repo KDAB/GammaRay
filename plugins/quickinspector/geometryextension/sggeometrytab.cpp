@@ -56,11 +56,14 @@ void SGGeometryTab::setObjectBaseName(const QString &baseName)
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(m_model);
   m_ui->tableView->setModel(proxy);
+  QItemSelectionModel *selectionModel = new QItemSelectionModel(proxy);
+  m_ui->tableView->setSelectionModel(selectionModel);
 
 
   m_interface =
     ObjectBroker::object<SGGeometryExtensionInterface*>(baseName + ".sgGeometry");
 
   m_ui->wireframeWidget->setModel(m_model);
+  m_ui->wireframeWidget->setHighlightModel(selectionModel);
   connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)), m_ui->wireframeWidget, SLOT(onGeometryChanged(uint, QByteArray,int)));
 }

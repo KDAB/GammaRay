@@ -32,6 +32,9 @@
 #include <QtOpenGL/qgl.h>
 #endif
 
+class QItemSelection;
+class QPainter;
+class QItemSelectionModel;
 class QAbstractItemModel;
 class QModelIndex;
 
@@ -47,13 +50,22 @@ class SGWireframeWidget : public QWidget
 
     QAbstractItemModel *model() const;
     void setModel(QAbstractItemModel *m_model);
+    void setHighlightModel(QItemSelectionModel *selectionModel);
+
+  public slots:
+    void onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType);
 
   protected:
     void paintEvent(QPaintEvent*);
+    void mouseReleaseEvent(QMouseEvent*);
 
   private slots:
     void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
-    void onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType);
+    void onHighlightDataChanged(const QItemSelection& selected, const QItemSelection& deselected);
+
+  private:
+    void drawWire(QPainter* painter, int vertexIndex1, int vertexIndex2);
+    void drawHighlightedFace(QPainter* painter, QVector< int > vertexIndices);
 
   private:
     QAbstractItemModel *m_model;
@@ -61,6 +73,13 @@ class SGWireframeWidget : public QWidget
     GLenum m_drawingMode;
     QByteArray m_indexData;
     int m_indexType;
+    QItemSelectionModel *m_highlightModel;
+    QVector<QPointF> m_vertices;
+    QVector<int> m_highlightedVertices;
+    qreal m_geometryWidth;
+    qreal m_geometryHeight;
+    qreal m_zoom;
+    const QPointF m_offset;
 };
 
 }
