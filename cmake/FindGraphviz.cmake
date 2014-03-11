@@ -27,16 +27,11 @@ include(CMakePushCheckState)
 
 if(NOT GRAPHVIZ_MIN_VERSION)
   set(GRAPHVIZ_MIN_VERSION "2.00")
-
 endif()
 
 if(GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY
-
-
-
     AND (GRAPHVIZ_CGRAPH_LIBRARY OR GRAPHVIZ_GRAPH_LIBRARY) AND GRAPHVIZ_PATHPLAN_LIBRARY)
   set(GRAPHVIZ_FIND_QUIETLY TRUE)
-
 endif()
 
 set(_GRAPHVIZ_ROOT $ENV{GRAPHVIZ_ROOT})
@@ -45,8 +40,6 @@ if(NOT _GRAPHVIZ_ROOT)
   if(WIN32)
       find_program(DOT_TOOL dot)
       get_filename_component(_GRAPHVIZ_ROOT ${DOT_TOOL} PATH)
-
-
   endif()
 endif()
 
@@ -54,10 +47,8 @@ if(_GRAPHVIZ_ROOT)
   set(_GRAPHVIZ_INCLUDE_DIR ${_GRAPHVIZ_ROOT}/include)
   set(_GRAPHVIZ_LIBRARY_DIR ${_GRAPHVIZ_ROOT}/lib)
   set(_GRAPHVIZ_FIND_OPTS NO_DEFAULT_PATH)
-
 else()
   set(_GRAPHVIZ_FIND_OPTS "")
-
 endif()
 
 find_path(GRAPHVIZ_INCLUDE_DIR NAMES graphviz/graph.h graphviz/cgraph.h
@@ -67,15 +58,11 @@ find_path(GRAPHVIZ_INCLUDE_DIR NAMES graphviz/graph.h graphviz/cgraph.h
 if(WIN32)
   if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(GRAPHVIZ_LIB_PATH_SUFFIX "release/lib")
-
   else()
     set(GRAPHVIZ_LIB_PATH_SUFFIX "debug/lib")
-
-
   endif()
 else()
   set(GRAPHVIZ_LIB_PATH_SUFFIX)
-
 endif()
 
 find_library(GRAPHVIZ_CDT_LIBRARY NAMES cdt
@@ -103,12 +90,9 @@ if(GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY AND GRAPHVIZ_GVC_LIBRARY
     AND (GRAPHVIZ_CGRAPH_LIBRARY OR GRAPHVIZ_GRAPH_LIBRARY) AND GRAPHVIZ_PATHPLAN_LIBRARY)
   if(HAVE_GRAPHVIZ_VERSION_H OR WIN32)
     set(GRAPHVIZ_FOUND TRUE)
-
-
   endif()
 else()
   set(GRAPHVIZ_FOUND FALSE)
-
 endif()
 
 # Ok, now compute the version and make sure its greater then the min required
@@ -128,7 +112,6 @@ if(GRAPHVIZ_FOUND)
       ${FIND_GRAPHVIZ_VERSION_SOURCE_FILE}
       CMAKE_FLAGS "${FIND_GRAPHVIZ_VERSION_ADD_INCLUDES}"
       RUN_OUTPUT_VARIABLE GRAPHVIZ_VERSION)
-
     endif()
 
     if(COMPILE_RESULT AND RUN_RESULT EQUAL 1 AND NOT CMAKE_CROSSCOMPILING)
@@ -149,19 +132,14 @@ if(GRAPHVIZ_FOUND)
           list(GET VL 0 GRAPHVIZ_MAJOR_VERSION)
           list(GET VL 1 GRAPHVIZ_MINOR_VERSION)
           list(GET VL 2 GRAPHVIZ_PATCH_VERSION)
-
         endif()
       endif(${GRAPHVIZ_VERSION} VERSION_LESS ${GRAPHVIZ_MIN_VERSION})
-
     else()
       if(NOT CMAKE_CROSSCOMPILING)
         message(FATAL_ERROR "Unable to compile or run the graphviz version detection program.")
-
-
       endif()
     endif()
   elseif(WIN32)
-
     find_program(DOT_TOOL dot PATHS ${_GRAPHVIZ_ROOT}/bin)
     execute_process(COMMAND ${DOT_TOOL} -V OUTPUT_VARIABLE DOT_VERSION_OUTPUT ERROR_VARIABLE DOT_VERSION_OUTPUT OUTPUT_QUIET)
     string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" GRAPHVIZ_VERSION "${DOT_VERSION_OUTPUT}")
@@ -169,18 +147,13 @@ if(GRAPHVIZ_FOUND)
     list(GET VL 0 GRAPHVIZ_MAJOR_VERSION)
     list(GET VL 1 GRAPHVIZ_MINOR_VERSION)
     list(GET VL 2 GRAPHVIZ_PATCH_VERSION)
-
   endif()
 
   if(NOT GRAPHVIZ_FIND_QUIETLY)
     message(STATUS "Found Graphviz: ${GRAPHVIZ_CDT_LIBRARY} ${GRAPHVIZ_GVC_LIBRARY} ${GRAPHVIZ_CGRAPH_LIBRARY} ${GRAPHVIZ_GRAPH_LIBRARY} ${GRAPHVIZ_PATHPLAN_LIBRARY}")
-
-
   endif()
 else()
   if(GRAPHVIZ_FIND_REQUIRED)
     message(FATAL_ERROR "Could NOT find Graphivz")
-
-
   endif()
 endif()
