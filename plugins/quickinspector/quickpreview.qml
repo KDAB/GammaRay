@@ -77,17 +77,17 @@ Image {
 
 
     onReleased: { // event-forwarding
-      if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))
+      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(3, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
     }
     onPressed: { // event-forwarding
-      if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))
+      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(2, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
       oldMouseX = mouse.x;
       oldMouseY = mouse.y;
     }
     onPositionChanged: { // move image / event-forwarding
-      if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) // event-forwarding
+      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier)) // event-forwarding
         inspectorInterface.sendMouseEvent(5, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
       else if (pressed) { // move image
         modifiers = mouse.modifiers
@@ -100,7 +100,7 @@ Image {
       }
     }
     onDoubleClicked: { // event-forwarding
-      if (mouse.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))
+      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
     }
   }
