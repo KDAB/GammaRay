@@ -59,7 +59,7 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
 
   private:
     Q_PRIVATE_SLOT(d_func(), void stateConfigurationChanged())
-    Q_PRIVATE_SLOT(d_func(), void handleMachineDestroyed(QObject*));
+    Q_PRIVATE_SLOT(d_func(), void handleMachineDestroyed(QObject*))
 };
 
 }
