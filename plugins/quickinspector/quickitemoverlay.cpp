@@ -45,8 +45,8 @@ void QuickItemOverlay::paint(QPainter* p, const QStyleOptionGraphicsItem* , QWid
     p->setTransform(QTransform::fromTranslate(m_imageRect.x(), m_imageRect.y()), true);
 
     // bounding box
-    p->setPen(QColor("#aaE85752"));
-    p->setBrush(QBrush(QColor("#5fE85752")));
+    p->setPen(QColor(232, 87, 82, 170));
+    p->setBrush(QBrush(QColor(232, 87, 82, 95)));
     p->drawRect(m_boundingRect);
 
     // original geometry
@@ -58,19 +58,19 @@ void QuickItemOverlay::paint(QPainter* p, const QStyleOptionGraphicsItem* , QWid
 
     // children rect
     if (m_itemRect != m_boundingRect && m_transform.isIdentity()) { // If this item is transformed the children rect will be painted wrongly, so for now skip painting it.
-      p->setPen(QColor("#aa0063c1"));
-      p->setBrush(QBrush(QColor("#5f0063c1")));
+      p->setPen(QColor(0, 99, 193, 170));
+      p->setBrush(QBrush(QColor(0, 99, 193, 95)));
       p->drawRect(m_childrenRect);
     }
 
     // transform origin
-    p->setPen(QColor("#aa9C0F56"));
+    p->setPen(QColor(156, 15, 86, 170));
     p->drawEllipse(m_transformOriginPoint, 2.5, 2.5);
     p->drawLine(m_transformOriginPoint - QPointF(0, 6), m_transformOriginPoint + QPointF(0, 6));
     p->drawLine(m_transformOriginPoint - QPointF(6, 0), m_transformOriginPoint + QPointF(6, 0));
 
     // x and y values
-    p->setPen(QColor("#888"));
+    p->setPen(QColor(136, 136, 136));
     if (!m_geometryData.value("left").toBool() && !m_geometryData.value("horizontalCenter").toBool() && !m_geometryData.value("right").toBool() && m_x != 0) {
         QPointF parentEnd = (QPointF(m_itemRect.x() - m_x, m_itemRect.y()));
         QPointF itemEnd = m_itemRect.topLeft();
@@ -123,7 +123,7 @@ void QuickItemOverlay::drawArrow(QPainter* p, QPointF first, QPointF second)
 void QuickItemOverlay::drawAnchor(QPainter* p, Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label)
 {
     qreal foreignAnchorLine = ownAnchorLine - offset;
-    QPen pen(QColor("#8BB300"));
+    QPen pen(QColor(139, 179, 0));
 
     // Margin arrow
     if (offset) {
