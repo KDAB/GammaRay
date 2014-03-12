@@ -57,13 +57,22 @@ public slots:
 
 private slots:
   void itemReparented();
+  void itemWindowChanged();
   void itemUpdated();
 
 private:
   void clear();
   void populateFromItem(QQuickItem *item);
+  /// Track all changes to item @p item in this model (parentChanged, windowChanged, ...)
   void connectItem(QQuickItem *item);
+  /// Untrack item @p item
+  void disconnectItem(QQuickItem *item);
   QModelIndex indexForItem(QQuickItem *item) const;
+
+  /// Add item @p item to this model
+  void addItem(QQuickItem* item);
+  /// Remove item @p item from this model. Set @p danglingPointer to true if the item has already been destructed
+  void removeItem(QQuickItem* item, bool danglingPointer = false);
 
   QPointer<QQuickWindow> m_window;
 
