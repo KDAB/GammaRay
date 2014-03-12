@@ -172,6 +172,9 @@ void QuickItemModel::addItem(QQuickItem* item)
   if (!item)
     return;
 
+  if (!item->window())
+    return; // item not (yet) added to a scene
+
   if (item->window() != m_window)
     return; // item for a different scene
 
