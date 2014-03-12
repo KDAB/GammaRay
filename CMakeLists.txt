@@ -135,27 +135,26 @@ set(QT_MIN_VERSION "4.8.0")
 
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
-  find_package(Qt5Core QUIET)
+  find_package(Qt5Core 5.1 QUIET)
 endif()
 
 if(Qt5Core_FOUND)
-  # Qt5 COMPONENT x y z only works with Qt >= 5.1 ...
   set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
-  find_package(Qt5Gui NO_MODULE REQUIRED)
-  find_package(Qt5Network NO_MODULE REQUIRED)
-  find_package(Qt5Concurrent NO_MODULE QUIET)
-  find_package(Qt5Test NO_MODULE QUIET)
-  find_package(Qt5Widgets NO_MODULE QUIET)
-  find_package(Qt5PrintSupport NO_MODULE QUIET)
-  find_package(Qt5Svg NO_MODULE QUIET)
-  find_package(Qt5Script NO_MODULE QUIET)
-  find_package(Qt5ScriptTools NO_MODULE QUIET)
-  find_package(Qt5Qml NO_MODULE QUIET)
-  find_package(Qt5Quick NO_MODULE QUIET)
-  find_package(Qt5Location NO_MODULE QUIET) # workaround for 5.1 webkit that tries to find a qtlocation with a matching version if none (with any version) has been found before...
-  find_package(Qt5Designer NO_MODULE QUIET)
-  find_package(Qt5WebKitWidgets 5.0.2 NO_MODULE QUIET) # 5.0.[01] has a code generation bug in uic that fails to generate proper code for webkitwidget classes
-  find_package(Qt5Declarative NO_MODULE QUIET)
+  find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
+  find_package(Qt5 NO_MODULE QUIET COMPONENTS
+    Concurrent
+    Declarative
+    Designer
+    Location # workaround for 5.1 webkit that tries to find a qtlocation with a matching version if none (with any version) has been found before...
+    PrintSupport
+    Qml
+    Quick
+    Svg
+    Script
+    ScriptTools
+    Test
+    WebKitWidgets
+    Widgets)
 
   include("cmake/ECMQt4To5Porting.cmake")
   # only needed for Qt <= 5.1 and/or some older CMake versions (exact combination unknown unfortunately)
