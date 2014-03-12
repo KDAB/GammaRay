@@ -141,7 +141,7 @@ endif()
 if(Qt5Core_FOUND)
   set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
   find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
-  find_package(Qt5 NO_MODULE QUIET COMPONENTS
+  find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Concurrent
     Declarative
     Designer
@@ -185,6 +185,7 @@ if(Qt5Core_FOUND)
     set(HAVE_PRIVATE_QT_HEADERS true)
   endif()
 
+  set_package_properties(Qt5 PROPERTIES URL "http://qt-project.org/")
   set_package_properties(Qt5Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
   set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
   set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
