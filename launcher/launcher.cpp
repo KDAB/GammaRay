@@ -224,7 +224,8 @@ void Launcher::sendProbeSettings()
 
   m_shm = new QSharedMemory(QLatin1String("gammaray-") + QString::number(instanceIdentifier()), this);
   if (!m_shm->create(ba.size())) {
-    qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << m_shm->errorString();
+    qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << m_shm->errorString()
+      << "- error code (QSharedMemory::SharedMemoryError):" << m_shm->error();
     delete m_shm;
     m_shm = 0;
     return;
@@ -252,25 +253,28 @@ void Launcher::semaphoreReleased()
   m_safetyTimer.stop();
 
 #ifdef HAVE_SHM
-  SharedMemoryLocker locker(m_shm);
-  QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(m_shm->data()), m_shm->size());
-  QBuffer buffer(&ba);
-  buffer.open(QIODevice::ReadOnly);
-
   quint16 port = 0;
+  {
+    SharedMemoryLocker locker(m_shm);
+    QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(m_shm->data()), m_shm->size());
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::ReadOnly);
 
-  while (Message::canReadMessage(&buffer)) {
-    const Message msg = Message::readMessage(&buffer);
-    switch (msg.type()) {
-      case Protocol::ServerPort:
-      {
-        msg.payload() >> port;
-        break;
+    while (Message::canReadMessage(&buffer)) {
+      const Message msg = Message::readMessage(&buffer);
+      switch (msg.type()) {
+        case Protocol::ServerPort:
+        {
+          msg.payload() >> port;
+          break;
+        }
+        default:
+          continue;
       }
-      default:
-        continue;
     }
   }
+  delete m_shm;
+  m_shm = 0;
 
   if (port == 0) {
     qWarning() << "Unable to receive port number.";
