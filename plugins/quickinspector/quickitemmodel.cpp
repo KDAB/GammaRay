@@ -129,9 +129,16 @@ void QuickItemModel::populateFromItem(QQuickItem* item)
 void QuickItemModel::connectItem(QQuickItem* item)
 {
   connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
+  connect(item, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(itemWindowChanged()));
   connect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
 }
 
+void QuickItemModel::disconnectItem(QQuickItem* item)
+{
+  disconnect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
+  disconnect(item, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(itemWindowChanged()));
+  disconnect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
+}
 
 QModelIndex QuickItemModel::indexForItem(QQuickItem* item) const
 {
@@ -157,8 +164,16 @@ void QuickItemModel::objectAdded(QObject* obj)
 {
   Q_ASSERT(thread() == QThread::currentThread());
   QQuickItem *item = qobject_cast<QQuickItem*>(obj);
+  addItem(item);
+}
+
+void QuickItemModel::addItem(QQuickItem* item)
+{
   if (!item)
     return;
+
+  if (!item->window())
+    return; // item not (yet) added to a scene
 
   if (item->window() != m_window)
     return; // item for a different scene
@@ -179,7 +194,7 @@ void QuickItemModel::objectAdded(QObject* obj)
   Q_ASSERT(index.isValid() || !parentItem);
 
   QVector<QQuickItem*> &children = m_parentChildMap[parentItem];
-  QVector<QQuickItem*>::iterator it = std::lower_bound(children.begin(), children.end(), obj);
+  QVector<QQuickItem*>::iterator it = std::lower_bound(children.begin(), children.end(), item);
   const int row = std::distance(children.begin(), it);
 
   beginInsertRows(index, row, row);
@@ -192,10 +207,18 @@ void QuickItemModel::objectRemoved(QObject* obj)
 {
   Q_ASSERT(thread() == QThread::currentThread());
   QQuickItem *item = static_cast<QQuickItem*>(obj); // this is fine, we must not dereference obj/item at this point anyway
+  removeItem(item, true);
+}
 
+void QuickItemModel::removeItem(QQuickItem* item, bool danglingPointer)
+{
   if (!m_childParentMap.contains(item)) { // not an item of our current scene
     Q_ASSERT(!m_parentChildMap.contains(item));
     return;
+  }
+
+  if (item && !danglingPointer) {
+    disconnectItem(item);
   }
 
   QQuickItem *parentItem = m_childParentMap[item];
@@ -223,8 +246,7 @@ void QuickItemModel::objectRemoved(QObject* obj)
 void QuickItemModel::itemReparented()
 {
   QQuickItem *item = qobject_cast<QQuickItem*>(sender());
-  if (!item || item->window() != m_window)
-    return;
+  Q_ASSERT(item && item->window() == m_window);
 
   QQuickItem* sourceParent = m_childParentMap.value(item);
   Q_ASSERT(sourceParent);
@@ -250,11 +272,17 @@ void QuickItemModel::itemReparented()
   endMoveRows();
 }
 
+void QuickItemModel::itemWindowChanged()
+{
+  QQuickItem *item = qobject_cast<QQuickItem*>(sender());
+  Q_ASSERT(item && (!item->window() || item->window() != m_window));
+  removeItem(item);
+}
+
 void QuickItemModel::itemUpdated()
 {
   QQuickItem *item = qobject_cast<QQuickItem*>(sender());
-  if (!item || item->window() != m_window)
-    return;
+  Q_ASSERT(item && item->window() == m_window);
 
   const QModelIndex left = indexForItem(item);
   const QModelIndex right = left.sibling(left.row(), columnCount() - 1);
