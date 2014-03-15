@@ -31,6 +31,7 @@
 
 #include <common/paths.h>
 #include <common/probeabi.h>
+#include <common/probeabidetector.h>
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>
@@ -204,8 +205,20 @@ int main(int argc, char **argv)
     return 0;
   Q_ASSERT(options.isValid());
 
-  // TODO auto-detect probe ABI
+  // attempt to autodetect probe ABI, if not set explicitly
   if (options.probeABI().isEmpty()) {
+    ProbeABIDetector detector;
+    if (options.isLaunch()) {
+      options.setProbeABI(detector.abiForExecutable(options.absoluteExecutablePath()).id());
+    } else {
+      options.setProbeABI(detector.abiForProcess(options.pid()).id());
+    }
+  }
+
+  // find a compatible probe
+  if (!options.probeABI().isEmpty()) {
+    // TODO: find the best matching probe
+  } else {
     const QStringList availableProbes = ProbeFinder::listProbeABIIds();
     if (availableProbes.isEmpty()) {
       out << "No probes found, this is likely an installation problem." << endl;
