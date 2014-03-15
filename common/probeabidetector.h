@@ -54,6 +54,11 @@ private:
      */
     ProbeABI abiForQtCore(const QString &path) const;
 
+    /** Detect the ABI of the given QtCore DLL.
+     *  This needs to be implemented for every platform.
+     */
+    ProbeABI detectAbiForQtCore(const QString &path) const;
+
 
     mutable QHash<QString, ProbeABI> m_abiForQtCoreCache;
 };

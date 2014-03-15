@@ -41,3 +41,9 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
   Q_UNUSED(pid);
   return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
 }
+
+ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
+{
+  Q_UNUSED(path);
+  return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
+}
