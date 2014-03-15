@@ -60,6 +60,10 @@ public:
   /** Program and command line arguments to launch. */
   void setLaunchArguments(const QStringList &args);
   QStringList launchArguments() const;
+  /** Absolute path (as far as it can be determined) of the executable to launch.
+   *  Only valid if isLaunch() returns @c true.
+   */
+  QString absoluteExecutablePath() const;
 
   /** Process id for the process to attach to. */
   void setPid(int pid);

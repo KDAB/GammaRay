@@ -25,6 +25,9 @@
 
 #include <QVariant>
 #include <QProcess>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QStandardPaths>
+#endif
 
 using namespace GammaRay;
 
@@ -62,6 +65,18 @@ void LaunchOptions::setLaunchArguments(const QStringList& args)
 {
   m_launchArguments = args;
   Q_ASSERT(m_pid <= 0 || m_launchArguments.isEmpty());
+}
+
+QString LaunchOptions::absoluteExecutablePath() const
+{
+  if (m_launchArguments.isEmpty())
+    return QString();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  return QStandardPaths::findExecutable(m_launchArguments.first());
+#else
+  return m_launchArguments.first();
+#endif
 }
 
 int LaunchOptions::pid() const
