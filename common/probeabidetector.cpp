@@ -24,9 +24,8 @@
 #include "config-gammaray.h"
 
 #include "probeabidetector.h"
-#include "probeabi.h"
 
-#include <QString>
+#include <QFileInfo>
 
 using namespace GammaRay;
 
@@ -36,4 +35,19 @@ ProbeABIDetector::ProbeABIDetector()
 
 ProbeABIDetector::~ProbeABIDetector()
 {
+}
+
+ProbeABI ProbeABIDetector::abiForQtCore(const QString& path) const
+{
+  QFileInfo fi(path);
+  if (!fi.exists())
+    return ProbeABI();
+
+  const QHash<QString, ProbeABI>::const_iterator it = m_abiForQtCoreCache.constFind(fi.canonicalFilePath());
+  if (it != m_abiForQtCoreCache.constEnd())
+    return it.value();
+
+  const ProbeABI abi = detectAbiForQtCore(fi.canonicalFilePath());
+  m_abiForQtCoreCache.insert(fi.canonicalFilePath(), abi);
+  return abi;
 }

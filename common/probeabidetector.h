@@ -24,9 +24,10 @@
 #ifndef GAMMARAY_PROBEABIDETECTOR_H
 #define GAMMARAY_PROBEABIDETECTOR_H
 
-#include <qobjectdefs.h>
+#include "probeabi.h"
 
-class QString;
+#include <QHash>
+#include <QString>
 
 namespace GammaRay {
 
@@ -47,7 +48,14 @@ public:
     /** Detect the ABI of the process running with PID @p pid. */
     ProbeABI abiForProcess(qint64 pid) const;
 
-  private:
+private:
+    /** Returns the ABI of the given QtCore DLL.
+     *  Implementation of abiForXXX() should call this as it implements caching.
+     */
+    ProbeABI abiForQtCore(const QString &path) const;
+
+
+    mutable QHash<QString, ProbeABI> m_abiForQtCoreCache;
 };
 
 }
