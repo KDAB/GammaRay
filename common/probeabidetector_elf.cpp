@@ -38,9 +38,39 @@
 
 using namespace GammaRay;
 
+static QString qtCoreFromLdd(const QString &path)
+{
+  QProcess proc;
+  proc.setProcessChannelMode(QProcess::SeparateChannels);
+  proc.setReadChannel(QProcess::StandardOutput);
+  proc.start("ldd", QStringList() << path);
+  proc.waitForFinished();
+
+  forever {
+    const QByteArray line = proc.readLine();
+    if (line.isEmpty())
+      break;
+
+    if (line.contains("QtCore") || line.contains("Qt5Core")) {
+      const int begin = line.indexOf("=> ");
+      const int end = line.lastIndexOf(" (");
+      if (begin <= 0 || end <= 0 || end <= begin)
+        continue;
+      return QString::fromLocal8Bit(line.mid(begin + 3, end - begin - 3).trimmed());
+    }
+  }
+
+  return QString();
+}
+
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
-  return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
+  // TODO: add fast version reading the ELF file directly?
+  const QString qtCorePath = qtCoreFromLdd(path);
+  if (!qtCorePath.isEmpty())
+    return abiForQtCore(qtCorePath);
+
+  return ProbeABI();
 }
 
 
@@ -117,7 +147,6 @@ static QString archFromELFHeader(const uchar *data, qint64 size)
     return QString();
   const ElfEHdr *hdr = reinterpret_cast<const ElfEHdr*>(data);
 
-  qDebug() << hdr->e_machine;
   switch (hdr->e_machine) {
     case EM_386: return "i686";
     case EM_X86_64: return "x86_64";
