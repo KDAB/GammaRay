@@ -92,6 +92,11 @@ void ProbeABI::setQtVersion(int major, int minor)
   d->minorQtVersion = minor;
 }
 
+bool ProbeABI::hasQtVersion() const
+{
+  return d->majorQtVersion > 0 && d->minorQtVersion >= 0;
+}
+
 QString ProbeABI::architecture() const
 {
   return d->architecture;
@@ -124,8 +129,7 @@ void ProbeABI::setIsDebug(bool debug)
 
 bool ProbeABI::isValid() const
 {
-  return d->majorQtVersion >= 0
-      && d->minorQtVersion >= 0
+  return hasQtVersion()
       && !d->architecture.isEmpty()
 #ifdef Q_OS_WIN
       && !d->compiler.isEmpty()

@@ -47,6 +47,7 @@ public:
   int majorQtVersion() const;
   int minorQtVersion() const;
   void setQtVersion(int major, int minor);
+  bool hasQtVersion() const;
 
   /** Processor architecture. */
   QString architecture() const;
