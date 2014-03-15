@@ -46,11 +46,8 @@ set(gammaray_common_internal_srcs
   tools/objectinspector/methodsextensioninterface.cpp
 )
 
-if(NOT WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif()
-
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
+set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(gammaray_common_internal gammaray_common)
 if(Qt5Core_FOUND)

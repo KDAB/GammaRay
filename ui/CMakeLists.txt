@@ -114,11 +114,8 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )
 
-if(NOT WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif()
-
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
+set_target_properties(gammaray_ui_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(gammaray_ui_internal
   ${QT_QTCORE_LIBRARIES}
