@@ -30,6 +30,7 @@
 #include "probefinder.h"
 
 #include <common/paths.h>
+#include <common/probeabi.h>
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>
@@ -147,13 +148,13 @@ int main(int argc, char **argv)
       options.setUiMode(LaunchOptions::InProcessUi);
     }
     if ( arg == QLatin1String("--list-probes")) {
-      foreach( const QString &abi, ProbeFinder::listProbeABIs())
-        out << abi << endl;
+      foreach( const ProbeABI &abi, ProbeFinder::listProbeABIs())
+        out << abi.id() << " (" << abi.displayString() << ")" << endl;
       return 0;
     }
     if ( arg == QLatin1String("--probe") && !args.isEmpty()) {
       const QString abi = args.takeFirst();
-      if (!ProbeFinder::listProbeABIs().contains(abi)) {
+      if (ProbeFinder::findProbe("gammaray_probe", abi).isEmpty()) {
         out << abi << "is not a known probe, see --list-probes." << endl;
         return 1;
       }
@@ -205,7 +206,7 @@ int main(int argc, char **argv)
 
   // TODO auto-detect probe ABI
   if (options.probeABI().isEmpty()) {
-    const QStringList availableProbes = ProbeFinder::listProbeABIs();
+    const QStringList availableProbes = ProbeFinder::listProbeABIIds();
     if (availableProbes.isEmpty()) {
       out << "No probes found, this is likely an installation problem." << endl;
       return 1;

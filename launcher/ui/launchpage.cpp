@@ -54,7 +54,7 @@ LaunchPage::LaunchPage(QWidget *parent)
   ui->progEdit->setCompleter(pathCompleter);
 
   QStringListModel *probeABIModel = new QStringListModel(this);
-  probeABIModel->setStringList(ProbeFinder::listProbeABIs());
+  probeABIModel->setStringList(ProbeFinder::listProbeABIIds());
   ui->probeBox->setModel(probeABIModel);
 
   QSettings settings;

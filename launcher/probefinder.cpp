@@ -24,6 +24,7 @@
 #include "probefinder.h"
 
 #include <common/paths.h>
+#include <common/probeabi.h>
 
 #include <qglobal.h>
 #include <QCoreApplication>
@@ -56,7 +57,19 @@ QString findProbe(const QString &baseName, const QString &probeAbi)
   return canonicalPath;
 }
 
-QStringList listProbeABIs()
+QVector<ProbeABI> listProbeABIs()
+{
+  QVector<ProbeABI> abis;
+  const QDir dir(Paths::probePath(QString()));
+  foreach (const QString &abiId, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+    const ProbeABI abi = ProbeABI::fromString(abiId);
+    if (abi.isValid())
+      abis.push_back(abi);
+  }
+  return abis;
+}
+
+QStringList listProbeABIIds()
 {
   const QDir dir(Paths::probePath(QString()));
   return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);

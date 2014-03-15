@@ -24,10 +24,14 @@
 #ifndef GAMMARAY_PROBEFINDER_H
 #define GAMMARAY_PROBEFINDER_H
 
-class QStringList;
+#include <QVector>
+
 class QString;
+class QStringList;
 
 namespace GammaRay {
+
+class ProbeABI;
 
 namespace ProbeFinder {
 
@@ -39,7 +43,12 @@ namespace ProbeFinder {
   /**
    * List all available probe ABIs.
    */
-  QStringList listProbeABIs();
+  QVector<ProbeABI> listProbeABIs();
+
+  /**
+   * @deprecated porting aid
+   */
+  QStringList listProbeABIIds();
 
   /**
    * Returns the platform-specific file name extenstion.

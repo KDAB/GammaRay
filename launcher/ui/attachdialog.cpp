@@ -69,7 +69,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   ui.filter->setProxy(m_proxyModel);
 
   QStringListModel *probeABIModel = new QStringListModel(this);
-  probeABIModel->setStringList(ProbeFinder::listProbeABIs());
+  probeABIModel->setStringList(ProbeFinder::listProbeABIIds());
   ui.probeBox->setModel(probeABIModel);
 
   QSettings settings;

@@ -27,6 +27,8 @@
 
 #include "injector/injectorfactory.h"
 
+#include <common/probeabi.h>
+
 #include <QFileInfo>
 #include <QStandardItemModel>
 
@@ -56,11 +58,11 @@ void SelfTestPage::run()
 void SelfTestPage::testProbe()
 {
   int validProbeCount = 0;
-  const QStringList probeABIs = ProbeFinder::listProbeABIs();
-  foreach (const QString &abi, probeABIs) {
-    const QString probePath = ProbeFinder::findProbe(QLatin1String("gammaray_probe"), abi);
+  const QVector<ProbeABI> probeABIs = ProbeFinder::listProbeABIs();
+  foreach (const ProbeABI &abi, probeABIs) {
+    const QString probePath = ProbeFinder::findProbe(QLatin1String("gammaray_probe"), abi.id());
     if (probePath.isEmpty()) {
-      error(tr("No probe found for ABI %1.").arg(abi));
+      error(tr("No probe found for ABI %1.").arg(abi.id()));
       continue;
     }
 
@@ -70,7 +72,7 @@ void SelfTestPage::testProbe()
       continue;
     }
 
-    information(tr("Found valid probe for ABI %1 at %2.").arg(abi).arg(probePath));
+    information(tr("Found valid probe for ABI %1 at %2.").arg(abi.id()).arg(probePath));
     ++validProbeCount;
   }
 
