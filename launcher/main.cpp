@@ -217,7 +217,13 @@ int main(int argc, char **argv)
 
   // find a compatible probe
   if (!options.probeABI().isEmpty()) {
-    // TODO: find the best matching probe
+    const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(ProbeABI::fromString(options.probeABI()));
+    if (!bestABI.isValid()) {
+      out << "No probe found for ABI " << options.probeABI() << endl;
+      return 1;
+    }
+    out << "Detected ABI " << options.probeABI() << ", using ABI " << bestABI.id() << "." << endl;
+    options.setProbeABI(bestABI.id());
   } else {
     const QStringList availableProbes = ProbeFinder::listProbeABIIds();
     if (availableProbes.isEmpty()) {

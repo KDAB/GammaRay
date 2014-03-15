@@ -57,6 +57,21 @@ QString findProbe(const QString &baseName, const QString &probeAbi)
   return canonicalPath;
 }
 
+ProbeABI findBestMatchingABI(const ProbeABI& targetABI)
+{
+  QVector<ProbeABI> compatABIs;
+  foreach (const ProbeABI &abi, listProbeABIs()) {
+    if (targetABI.isCompatible(abi))
+      compatABIs.push_back(abi);
+  }
+
+  if (compatABIs.isEmpty())
+    return ProbeABI();
+
+  std::sort(compatABIs.begin(), compatABIs.end());
+  return compatABIs.last();
+}
+
 QVector<ProbeABI> listProbeABIs()
 {
   QVector<ProbeABI> abis;

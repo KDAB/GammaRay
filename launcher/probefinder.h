@@ -41,6 +41,12 @@ namespace ProbeFinder {
   QString findProbe(const QString& baseName, const QString& probeAbi);
 
   /**
+   * Find the best matching probe for the given @p targetABI.
+   * An invalid ProbeABI instance is returned if there is no compatible probe installed.
+   */
+  ProbeABI findBestMatchingABI(const ProbeABI &targetABI);
+
+  /**
    * List all available probe ABIs.
    */
   QVector<ProbeABI> listProbeABIs();
