@@ -351,6 +351,13 @@ set_package_properties(VTK PROPERTIES
 )
 set(HAVE_VTK ${VTK_FOUND})
 
+# ELF header for ABI detection
+find_file(ELF_H elf.h)
+if (ELF_H)
+  set(HAVE_ELF_H TRUE)
+endif ()
+add_feature_info("ELF ABI detection" HAVE_ELF_H "Automatic probe ABI detection on ELF-based systems. Requires elf.h.")
+
 
 #
 # actually build the stuff

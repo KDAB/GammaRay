@@ -32,6 +32,10 @@
 #include <QString>
 #include <QStringList>
 
+#ifdef HAVE_ELF_H
+#include <elf.h>
+#endif
+
 using namespace GammaRay;
 
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
@@ -105,6 +109,48 @@ static ProbeABI qtVersionFromExec(const QString &path)
   return abi;
 }
 
+#ifdef HAVE_ELF_H
+template <typename ElfEHdr>
+static QString archFromELFHeader(const uchar *data, qint64 size)
+{
+  if (size <= sizeof(ElfEHdr))
+    return QString();
+  const ElfEHdr *hdr = reinterpret_cast<const ElfEHdr*>(data);
+
+  qDebug() << hdr->e_machine;
+  switch (hdr->e_machine) {
+    case EM_386: return "i686";
+    case EM_X86_64: return "x86_64";
+  }
+
+  return QString();
+}
+#endif
+
+static QString archFromELF(const QString &path)
+{
+#ifdef HAVE_ELF_H
+  QFile f(path);
+  if (!f.open(QFile::ReadOnly))
+    return QString();
+
+  const uchar* data = f.map(0, f.size());
+  if (!data || f.size() < EI_NIDENT)
+    return QString();
+
+  if (qstrncmp(reinterpret_cast<const char*>(data), ELFMAG, SELFMAG) != 0) // no ELF signature
+    return QString();
+
+  switch (data[EI_CLASS]) {
+    case ELFCLASS32:
+      return archFromELFHeader<Elf32_Ehdr>(data, f.size());
+    case ELFCLASS64:
+      return archFromELFHeader<Elf64_Ehdr>(data, f.size());
+  }
+#endif
+  return QString();
+}
+
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
   // try to find the version
@@ -112,8 +158,9 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
   if (!abi.hasQtVersion())
     abi = qtVersionFromExec(path);
 
-  // TODO: detect architecture
-  abi.setArchitecture("TODO");
+  // TODO: architecture detection fallback without elf.h?
+  const QString arch = archFromELF(path);
+  abi.setArchitecture(arch);
 
   return abi;
 }
