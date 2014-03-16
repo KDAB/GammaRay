@@ -67,6 +67,8 @@ public:
   /** Checks if this is ABI is compatible with @p referenceABI. */
   bool isCompatible(const ProbeABI &referenceABI) const;
 
+  bool operator==(const ProbeABI &rhs) const;
+
   /** @brief Orders probes by Qt version.
    *  This is useful to pick the best matching one of multiple compatible ones.
    */

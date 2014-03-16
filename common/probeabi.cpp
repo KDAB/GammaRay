@@ -213,6 +213,15 @@ QString ProbeABI::displayString() const
 #endif
 }
 
+bool ProbeABI::operator==(const ProbeABI& rhs) const
+{
+  return majorQtVersion() == rhs.majorQtVersion()
+    && minorQtVersion() == rhs.minorQtVersion()
+    && architecture() == rhs.architecture()
+    && compiler() == rhs.compiler()
+    && isDebug() == rhs.isDebug();
+}
+
 bool ProbeABI::operator<(const ProbeABI& rhs) const
 {
   if (majorQtVersion() == rhs.majorQtVersion())
