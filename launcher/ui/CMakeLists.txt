@@ -9,6 +9,7 @@ set(gammaray_launcher_ui_srcs
   attachdialog.cpp
   processmodel.cpp
   processfiltermodel.cpp
+  probeabimodel.cpp
 )
 if(NOT WIN32)
   list(APPEND gammaray_launcher_ui_srcs processlist_unix.cpp)

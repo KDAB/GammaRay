@@ -25,6 +25,7 @@
 #include "ui_launchpage.h"
 #include "launchoptions.h"
 #include "probefinder.h"
+#include "probeabimodel.h"
 
 #include <QCompleter>
 #include <QFileDialog>
@@ -37,12 +38,14 @@ using namespace GammaRay;
 LaunchPage::LaunchPage(QWidget *parent)
   : QWidget(parent),
     ui(new Ui::LaunchPage),
-    m_argsModel(new QStringListModel(this))
+    m_argsModel(new QStringListModel(this)),
+    m_abiModel(new ProbeABIModel(this))
 {
   ui->setupUi(this);
   connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
   connect(ui->addArgButton, SIGNAL(clicked()), SLOT(addArgument()));
   connect(ui->removeArgButton, SIGNAL(clicked()), SLOT(removeArgument()));
+  connect(ui->progEdit, SIGNAL(textChanged(QString)), SLOT(detectABI(QString)));
   connect(ui->progEdit, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
 
   ui->argsBox->setModel(m_argsModel);
@@ -53,14 +56,11 @@ LaunchPage::LaunchPage(QWidget *parent)
   pathCompleter->setModel(fsModel);
   ui->progEdit->setCompleter(pathCompleter);
 
-  QStringListModel *probeABIModel = new QStringListModel(this);
-  probeABIModel->setStringList(ProbeFinder::listProbeABIIds());
-  ui->probeBox->setModel(probeABIModel);
+  ui->probeBox->setModel(m_abiModel);
 
   QSettings settings;
   ui->progEdit->setText(settings.value(QLatin1String("Launcher/Program")).toString());
   m_argsModel->setStringList(settings.value(QLatin1String("Launcher/Arguments")).toStringList());
-  ui->probeBox->setCurrentIndex(settings.value(QLatin1String("Launcher/ProbeABI")).toInt());
   ui->accessMode->setCurrentIndex(settings.value(QLatin1String("Launcher/AccessMode")).toInt());
   updateArgumentButtons();
 }
@@ -75,7 +75,6 @@ void LaunchPage::writeSettings()
   QSettings settings;
   settings.setValue(QLatin1String("Launcher/Program"), ui->progEdit->text());
   settings.setValue(QLatin1String("Launcher/Arguments"), notEmptyString(m_argsModel->stringList()));
-  settings.setValue(QLatin1String("Launcher/ProbeABI"), ui->probeBox->currentIndex());
   settings.setValue(QLatin1String("Launcher/AccessMode"), ui->accessMode->currentIndex());
 }
 
@@ -177,3 +176,11 @@ void LaunchPage::updateArgumentButtons()
   ui->removeArgButton->setEnabled(m_argsModel->rowCount() > 0);
 }
 
+void LaunchPage::detectABI(const QString &path)
+{
+  const ProbeABI abi = m_abiDetector.abiForExecutable(path);
+  const int index = m_abiModel->indexOfBestMatchingABI(abi);
+  if (index >= 0)
+    ui->probeBox->setCurrentIndex(index);
+  // TODO show warning icon if we can't detect the ABI, or don't have a matching probe
+}

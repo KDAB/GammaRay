@@ -45,6 +45,7 @@ namespace ProbeFinder {
    * An invalid ProbeABI instance is returned if there is no compatible probe installed.
    */
   ProbeABI findBestMatchingABI(const ProbeABI &targetABI);
+  ProbeABI findBestMatchingABI(const ProbeABI &targetABI, const QVector<ProbeABI> &availableABIs);
 
   /**
    * List all available probe ABIs.

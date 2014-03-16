@@ -59,8 +59,13 @@ QString findProbe(const QString &baseName, const QString &probeAbi)
 
 ProbeABI findBestMatchingABI(const ProbeABI& targetABI)
 {
+  return findBestMatchingABI(targetABI, listProbeABIs());
+}
+
+ProbeABI findBestMatchingABI(const ProbeABI &targetABI, const QVector<ProbeABI> &availableABIs)
+{
   QVector<ProbeABI> compatABIs;
-  foreach (const ProbeABI &abi, listProbeABIs()) {
+  foreach (const ProbeABI &abi, availableABIs) {
     if (targetABI.isCompatible(abi))
       compatABIs.push_back(abi);
   }

@@ -24,11 +24,15 @@
 #ifndef GAMMARAY_LAUNCHPAGE_H
 #define GAMMARAY_LAUNCHPAGE_H
 
+#include <common/probeabidetector.h>
+
 #include <QWidget>
 
 class QStringListModel;
 
 namespace GammaRay {
+
+class ProbeABIModel;
 
 class LaunchOptions;
 namespace Ui {
@@ -56,11 +60,14 @@ class LaunchPage : public QWidget
     void addArgument();
     void removeArgument();
     void updateArgumentButtons();
+    void detectABI(const QString &path);
 
   private:
     QStringList notEmptyString(const QStringList &list) const;
     Ui::LaunchPage *ui;
     QStringListModel *m_argsModel;
+    ProbeABIModel *m_abiModel;
+    ProbeABIDetector m_abiDetector;
 };
 
 }
