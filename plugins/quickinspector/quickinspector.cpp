@@ -286,6 +286,29 @@ void QuickInspector::sendMouseEvent(int type, const QPointF& localPos, int butto
   QCoreApplication::sendEvent(m_window, new QMouseEvent((QEvent::Type)type, localPos, (Qt::MouseButton)button, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers));
 }
 
+void QuickInspector::setVisualizeOverdraw(bool visualizeOverdraw)
+{
+#if defined(HAVE_SG_INSPECTOR) && QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+  QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
+  winPriv->customRenderMode = visualizeOverdraw ? "overdraw" : "";
+  m_window->update();
+#endif
+}
+
+void QuickInspector::checkFeatures()
+{
+  emit features(
+    Features(
+#ifdef HAVE_SG_INSPECTOR
+    SGInspector
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+    | VisualizeOverdraw
+#endif // QT_VERSION >= 5.3.0
+#endif // HAVE_SG_INSPECTOR
+    )
+  );
+}
+
 void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
 {
   if (selection.isEmpty())

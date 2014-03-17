@@ -9,6 +9,7 @@ Image {
   property real oldHeight: 0
   property variant geometryData: {}
   property bool isFirstFrame: true
+  property bool canVisualizeOverdraw: true
 
   focus: true
 
@@ -45,6 +46,65 @@ Image {
     oldHeight = height;
   }
 
+  // Toolbar (top-left)
+  Rectangle {
+    color: "#aa333333"
+    width: toolbarRow.width + 7; height: toolbarRow.height + 1
+    x: 5; y: 5; z: 1
+    radius: 4
+    visible: toolbarRow.width
+
+    Row {
+      id: toolbarRow
+      x: 3
+
+      Rectangle {
+        color: visualizeOverdrawMA.containsMouse || checked ? "#22ffffff" : "transparent"
+        border.color: "grey"
+        width: visualizeOverdrawText.width + 10; height: 20
+        visible: canVisualizeOverdraw
+        property bool checked: false
+
+        Text {
+          id: visualizeOverdrawText
+          text: "Show 3D Box Model"
+          color: "lightgrey"
+          anchors.centerIn: parent
+        }
+
+        MouseArea {
+          id: visualizeOverdrawMA
+          anchors.fill: parent
+          hoverEnabled: true
+          onClicked: {
+            parent.checked = !parent.checked;
+            inspectorInterface.setVisualizeOverdraw(parent.checked);
+            geometryOverlay.visible = !parent.checked;
+          }
+        }
+      }
+    }
+  }
+
+  // Text item (top-right)
+  Rectangle {
+    color: "#aa333333"
+    width: overlayText.width; height: overlayText.height
+    anchors { top: parent.top; right: rightRuler.left; margins: 5 }
+    radius: 3
+    z: 1
+
+    Text {
+      id: overlayText
+      color: "lightgrey"
+      text: imageMA.pressed && imageMA.modifiers == Qt.ControlModifier
+            ? Math.floor((imageMA.oldMouseX - image.x) / image.zoom) + ", " + Math.floor((imageMA.oldMouseY - image.y) / image.zoom) + " - "
+              + Math.floor((imageMA.mouseX - image.x) / image.zoom) + ", " + Math.floor((imageMA.mouseY - image.y) / image.zoom) + " -> "
+              + Math.floor(Math.sqrt( Math.pow(imageMA.mouseX - imageMA.oldMouseX, 2) + Math.pow(imageMA.mouseY - imageMA.oldMouseY, 2) ) / image.zoom) + "px"
+            : Math.floor((imageMA.mouseX - image.x) / image.zoom) + "x" + Math.floor((imageMA.mouseY - image.y) / image.zoom)
+    }
+  }
+
   // Scene preview
   Image {
     id: image
@@ -61,6 +121,7 @@ Image {
 
   // Geometry overlay
   QuickItemOverlay {
+    id: geometryOverlay
     anchors.fill: parent
     zoom: image.zoom
     geometryData: root.geometryData
@@ -102,24 +163,6 @@ Image {
     onDoubleClicked: { // event-forwarding
       if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-    }
-  }
-
-  // Text item (top-right)
-  Rectangle {
-    color: "#aa333333"
-    width: overlayText.width; height: overlayText.height
-    anchors { top: parent.top; right: rightRuler.left; margins: 5 }
-    radius: 3
-
-    Text {
-      id: overlayText
-      color: "lightgrey"
-      text: imageMA.pressed && imageMA.modifiers == Qt.ControlModifier
-            ? Math.floor((imageMA.oldMouseX - image.x) / image.zoom) + ", " + Math.floor((imageMA.oldMouseY - image.y) / image.zoom) + " - "
-              + Math.floor((imageMA.mouseX - image.x) / image.zoom) + ", " + Math.floor((imageMA.mouseY - image.y) / image.zoom) + " -> "
-              + Math.floor(Math.sqrt( Math.pow(imageMA.mouseX - imageMA.oldMouseX, 2) + Math.pow(imageMA.mouseY - imageMA.oldMouseY, 2) ) / image.zoom) + "px"
-            : Math.floor((imageMA.mouseX - image.x) / image.zoom) + "x" + Math.floor((imageMA.mouseY - image.y) / image.zoom)
     }
   }
 

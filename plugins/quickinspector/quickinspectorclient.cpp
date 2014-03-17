@@ -64,4 +64,14 @@ void QuickInspectorClient::sendMouseEvent(int type, const QPointF& localPos, int
                                                                                     << QVariant::fromValue(modifiers));
 }
 
+void QuickInspectorClient::setVisualizeOverdraw(bool visualizeOverdraw)
+{
+  Endpoint::instance()->invokeObject(objectName(), "setVisualizeOverdraw", QVariantList() << QVariant::fromValue(visualizeOverdraw));
+}
+
+void QuickInspectorClient::checkFeatures()
+{
+  Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
+}
+
 

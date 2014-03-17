@@ -37,6 +37,12 @@ class QuickInspectorInterface : public QObject
 {
   Q_OBJECT
 public:
+  enum Feature {
+    SGInspector = 1,
+    VisualizeOverdraw = 2
+  };
+  Q_DECLARE_FLAGS(Features, Feature)
+
   explicit QuickInspectorInterface(QObject *parent = 0);
   ~QuickInspectorInterface();
 
@@ -46,15 +52,19 @@ public slots:
   virtual void renderScene() = 0;
   virtual void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1) = 0;
   virtual void sendMouseEvent(int type, const QPointF & localPos, int button, int buttons, int modifiers) = 0;
+  virtual void setVisualizeOverdraw(bool visualizeOverdraw) = 0;
+  virtual void checkFeatures() = 0;
 
 signals:
   /// Emitted when the view has been newly rendered, for the client to request an update.
   void sceneChanged();
   void sceneRendered(const QImage &img, QVariantMap geometryData);
+  void features(GammaRay::QuickInspectorInterface::Features features);
 
 };
 }
 
+Q_DECLARE_METATYPE(GammaRay::QuickInspectorInterface::Features)
 Q_DECLARE_INTERFACE(GammaRay::QuickInspectorInterface, "com.kdab.GammaRay.QuickInspectorInterface/1.0")
 
 #endif // GAMMARAY_QUICKINSPECTORINTERFACE_H

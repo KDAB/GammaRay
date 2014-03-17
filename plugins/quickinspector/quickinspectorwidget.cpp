@@ -154,6 +154,9 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   m_renderTimer->setInterval(100);
   m_renderTimer->setSingleShot(true);
   connect(m_renderTimer, SIGNAL(timeout()), this, SLOT(requestRender()));
+
+  connect(m_interface, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)), this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
+  m_interface->checkFeatures();
   m_interface->renderScene();
 }
 
@@ -192,6 +195,15 @@ void QuickInspectorWidget::requestRender()
   } else {
     m_sceneChangedSinceLastRequest = true;
   }
+}
+
+void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
+{
+  if (!(features & QuickInspectorInterface::SGInspector)) {
+    ui->tabWidget->removeTab(1);
+  }
+
+  m_rootItem->setProperty("canVisualizeOverdraw", (bool)(features & QuickInspectorInterface::VisualizeOverdraw));
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)

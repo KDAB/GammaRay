@@ -27,6 +27,7 @@
 #include <ui/tooluifactory.h>
 #include <ui/propertywidget.h>
 #include <common/objectbroker.h>
+#include "quickinspectorinterface.h"
 
 #include <QWidget>
 #include <QVariant>
@@ -42,7 +43,6 @@ namespace GammaRay {
 class QuickSceneImageProvider;
 
 class QuickPreviewScene;
-class QuickInspectorInterface;
 
 namespace Ui {
   class QuickInspectorWidget;
@@ -60,6 +60,7 @@ class QuickInspectorWidget : public QWidget
     void sceneRendered(const QImage &img, const QVariantMap &geometryData);
     void itemSelectionChanged(const QItemSelection &selection);
     void requestRender();
+    void setFeatures(GammaRay::QuickInspectorInterface::Features features);
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;

@@ -61,6 +61,8 @@ public slots:
   void renderScene();
   void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1);
   void sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers);
+  void setVisualizeOverdraw(bool visualizeOverdraw);
+  void checkFeatures();
 
 protected:
   bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;
