@@ -66,7 +66,7 @@ class MultiSignalMapperPrivate : public QObject
       const QList<QByteArray> paramTypes = signal.parameterTypes();
       for (int i = 0; i < paramTypes.size(); ++i) {
         int type = QMetaType::type(paramTypes[i]);
-        if (type == QMetaType::Void) {
+        if (type == QMetaType::Void || !type) {
           qWarning() << Q_FUNC_INFO << "unknown metatype for signal argument type" << paramTypes[i];
           continue;
         }
