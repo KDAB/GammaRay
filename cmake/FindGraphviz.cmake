@@ -8,6 +8,7 @@
 #  GRAPHVIZ_MAJOR_VERSION = The library major version number
 #  GRAPHVIZ_MINOR_VERSION = The library minor version number
 #  GRAPHVIZ_PATCH_VERSION = The library patch version number
+#  GRAPHVIZ_COMPILE_FLAGS = List of compile flags needed by the GraphViz installation headers
 #
 # This module reads hints about search locations from the following env variables:
 #  GRAPHVIZ_ROOT          - Graphviz installation prefix
@@ -17,6 +18,7 @@
 # Copyright (c) 2013-2014 Kevin Funk <kevin.funk@kdab.com>
 
 # Version computation and some cleanups by Allen Winter <allen.winter@kdab.com>
+# Bug fixing for WIN32 by Guillaume Jacquenot <guillaume.jacquenot@gmail.com>
 # Copyright (c) 2012-2014 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Redistribution and use is allowed according to the terms of the GPLv3+ license.
@@ -139,12 +141,19 @@ if(GRAPHVIZ_FOUND)
       endif()
     endif()
   elseif(WIN32)
+    find_program(DOT_TOOL dot PATHS ${_GRAPHVIZ_ROOT}/bin)
     execute_process(COMMAND ${DOT_TOOL} -V OUTPUT_VARIABLE DOT_VERSION_OUTPUT ERROR_VARIABLE DOT_VERSION_OUTPUT OUTPUT_QUIET)
-    string(REGEX MATCH "([0-9]*\\.[0-9]*\\.[0-9]*)" GRAPHVIZ_VERSION "${DOT_VERSION_OUTPUT}")
+    string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" GRAPHVIZ_VERSION "${DOT_VERSION_OUTPUT}")
     string(REPLACE "." ";" VL ${GRAPHVIZ_VERSION})
     list(GET VL 0 GRAPHVIZ_MAJOR_VERSION)
     list(GET VL 1 GRAPHVIZ_MINOR_VERSION)
     list(GET VL 2 GRAPHVIZ_PATCH_VERSION)
+  endif()
+
+  set(GRAPHVIZ_COMPILE_FLAGS "")
+  check_include_files(string.h HAVE_STRING_H)
+  if (HAVE_STRING_H)
+    list(APPEND GRAPHVIZ_COMPILE_FLAGS "-DHAVE_STRING_H=1")
   endif()
 
   if(NOT GRAPHVIZ_FIND_QUIETLY)

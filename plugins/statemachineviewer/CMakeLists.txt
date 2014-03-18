@@ -69,6 +69,7 @@ else()
     ${GRAPHVIZ_GRAPH_LIBRARY}
   )
 endif()
+add_definitions(${GRAPHVIZ_COMPILE_FLAGS})
 
 qt4_wrap_ui(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewer.ui)
 
