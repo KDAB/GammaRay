@@ -126,17 +126,20 @@ void ObjectListModel::objectRemovedMainThread(QObject *obj, bool fromBackground)
 {
   Q_ASSERT(thread() == QThread::currentThread());
 
-  if (fromBackground) {
+  {
     QMutexLocker lock(&m_mutex);
     bool removed = m_invalidatedObjects.remove(obj);
-    if (!removed) {
-      Q_ASSERT(!m_objects.contains(obj));
-      return;
-    }
-  } else {
+
 #ifndef NDEBUG
-    QMutexLocker lock(&m_mutex);
-    Q_ASSERT(!m_invalidatedObjects.contains(obj));
+    if (fromBackground) {
+      if (!removed) {
+        Q_ASSERT(!m_objects.contains(obj));
+        return;
+      }
+    }
+#else
+    Q_UNUSED(fromBackground);
+    Q_UNUSED(removed);
 #endif
   }
 
