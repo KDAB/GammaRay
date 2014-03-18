@@ -8,6 +8,7 @@
 #  GRAPHVIZ_MAJOR_VERSION = The library major version number
 #  GRAPHVIZ_MINOR_VERSION = The library minor version number
 #  GRAPHVIZ_PATCH_VERSION = The library patch version number
+#  GRAPHVIZ_COMPILE_FLAGS = List of compile flags needed by the GraphViz installation headers
 #
 # This module reads hints about search locations from the following env variables:
 #  GRAPHVIZ_ROOT          - Graphviz installation prefix
@@ -145,6 +146,12 @@ if(GRAPHVIZ_FOUND)
     list(GET VL 0 GRAPHVIZ_MAJOR_VERSION)
     list(GET VL 1 GRAPHVIZ_MINOR_VERSION)
     list(GET VL 2 GRAPHVIZ_PATCH_VERSION)
+  endif()
+
+  set(GRAPHVIZ_COMPILE_FLAGS "")
+  check_include_files(string.h HAVE_STRING_H)
+  if (HAVE_STRING_H)
+    list(APPEND GRAPHVIZ_COMPILE_FLAGS "-DHAVE_STRING_H=1")
   endif()
 
   if(NOT GRAPHVIZ_FIND_QUIETLY)
