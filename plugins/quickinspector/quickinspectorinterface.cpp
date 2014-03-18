@@ -25,6 +25,8 @@
 
 #include <common/objectbroker.h>
 
+#include <QDataStream>
+
 using namespace GammaRay;
 
 namespace {
