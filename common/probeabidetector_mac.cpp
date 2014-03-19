@@ -140,7 +140,17 @@ static ProbeABI abiFromMachO(const uchar* data, qint64 size)
   if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
     return ProbeABI();
 
-  // TODO read load commands
+  // read load commands
+  for (int i = 0; i < ncmds; ++i) {
+    const load_command* cmd = reinterpret_cast<const load_command*>(data + offset);
+    if (cmd->cmd == LC_ID_DYLIB) {
+      const dylib_command* dlcmd = reinterpret_cast<const dylib_command*>(data + offset);
+      const int majorVersion = (dlcmd->dylib.current_version & 0x00ff0000) >> 16;
+      const int minorVersion = (dlcmd->dylib.current_version & 0x0000ff00) >> 8;
+      abi.setQtVersion(majorVersion, minorVersion);
+    }
+    offset += cmd->cmdsize;
+  }
 
   return abi;
 }
