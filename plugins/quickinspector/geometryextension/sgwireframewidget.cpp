@@ -274,6 +274,8 @@ void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QMo
 
     // Get all the vertices
     m_vertices.clear();
+    m_geometryWidth = 0;
+    m_geometryHeight = 0;
     for (int i = 0; i < m_model->rowCount(); i++) {
       const QModelIndex index = m_model->index(i, m_positionColumn);
       const QVariantList data = m_model->data(index, SGGeometryModel::RenderRole).toList();
