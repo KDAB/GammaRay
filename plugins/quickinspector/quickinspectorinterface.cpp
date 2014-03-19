@@ -29,20 +29,18 @@
 
 using namespace GammaRay;
 
-namespace {
-  QDataStream &operator<<(QDataStream &out, QuickInspectorInterface::Features value)
-  {
-    out << qint32(value);
-    return out;
-  }
+QDataStream &operator<<(QDataStream &out, QuickInspectorInterface::Features value)
+{
+  out << qint32(value);
+  return out;
+}
 
-  QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::Features &value)
-  {
-    qint32 t;
-    in >> t;
-    value = static_cast<QuickInspectorInterface::Features>(t);
-    return in;
-  }
+QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::Features &value)
+{
+  qint32 t;
+  in >> t;
+  value = static_cast<QuickInspectorInterface::Features>(t);
+  return in;
 }
 
 QuickInspectorInterface::QuickInspectorInterface(QObject* parent) : QObject(parent)
