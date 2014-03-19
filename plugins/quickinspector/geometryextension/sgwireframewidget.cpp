@@ -93,14 +93,18 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
     if (i == 0)
       firstIndex = index;
 
+
     // Draw highlighted faces
-    if ((m_drawingMode == GL_TRIANGLES && i % 3 == 2) || m_drawingMode == GL_TRIANGLE_STRIP)
+    if ((m_drawingMode == GL_TRIANGLES && i % 3 == 2) || (m_drawingMode == GL_TRIANGLE_STRIP && i >= 2))
       drawHighlightedFace(&painter, QVector<int>() << index << prevIndex1 << prevIndex2);
-    else if (m_drawingMode == GL_TRIANGLE_FAN)
+
+    else if (m_drawingMode == GL_TRIANGLE_FAN && i >= 2)
       drawHighlightedFace(&painter, QVector<int>() << index << prevIndex1 << firstIndex);
+
 #ifndef QT_OPENGL_ES_2
     else if ((m_drawingMode == GL_QUADS || m_drawingMode == GL_QUAD_STRIP) && i % 4 == 3)
       drawHighlightedFace(&painter, QVector<int>() << index << prevIndex1 << prevIndex2 << prevIndex3);
+
     else if (m_drawingMode == GL_POLYGON && i == count - 1) {
       QVector<int> vertices;
       for (int j = 0; j < count; j++)
@@ -110,6 +114,8 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
 #endif
 
     // Draw wires
+
+    // Draw a connection to the previous vertex
     if (((m_drawingMode == GL_LINES && i % 2)
       || m_drawingMode == GL_LINE_LOOP
       || m_drawingMode == GL_LINE_STRIP
@@ -122,31 +128,35 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
       || m_drawingMode == GL_POLYGON
 #endif
     ) && i > 0) {
-
-      // Draw a connection to the last vertex
       drawWire(&painter, index, prevIndex1);
     }
+
+
+    // Draw a connection to the second previous vertex
     if ((m_drawingMode == GL_TRIANGLE_STRIP
       ||(m_drawingMode == GL_TRIANGLES && i % 3 == 2)
 #ifndef QT_OPENGL_ES_2
       || m_drawingMode == GL_QUAD_STRIP
 #endif
     ) && i > 1) {
-      // Draw a connection to the second last vertex
       drawWire(&painter, index, prevIndex2);
     }
+
+
+    // draw a connection to the third previous vertex
 #ifndef QT_OPENGL_ES_2
     if (m_drawingMode == GL_QUADS && i % 4 == 3) {
-      // draw a connection to the third last vertex
       drawWire(&painter, index, prevIndex3);
     }
 #endif
+
+
+    // Draw a connection to the very first vertex
     if ((m_drawingMode == GL_LINE_LOOP && i == count - 1)
 #ifndef QT_OPENGL_ES_2
       || (m_drawingMode == GL_POLYGON && i == count - 1)
 #endif
       || m_drawingMode == GL_TRIANGLE_FAN) {
-      // Draw a connection to the first vertex
       drawWire(&painter, index, firstIndex);
     }
 
