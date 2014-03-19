@@ -27,6 +27,7 @@
 #include "probeabi.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QProcess>
 #include <QString>
 
@@ -98,8 +99,50 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
   return abiForQtCore(qtCorePath);
 }
 
+
+template <typename T>
+static QString architectureFromMachO(const uchar* data, quint64 size, quint32 magic)
+{
+  if (size <= sizeof(T))
+    return QString();
+  const T* header = reinterpret_cast<const T*>(data);
+  if (header->magic != magic)
+    return QString();
+
+  switch (header->cputype) {
+    case CPU_TYPE_I386: return "i686";
+    case CPU_TYPE_X86_64: return "x86_64";
+  }
+
+  return QString();
+}
+
+static QString architectureFromMachO(const uchar* data, qint64 size)
+{
+  const QString arch = architectureFromMachO<mach_header>(data, size, MH_MAGIC);
+  if (!arch.isEmpty())
+    return arch;
+  return architectureFromMachO<mach_header_64>(data, size, MH_MAGIC_64);
+}
+
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
-  qWarning() << path;
-  return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
+  ProbeABI abi;
+
+  QFile f(path);
+  if (!f.open(QFile::ReadOnly))
+    return abi;
+
+  const uchar* data = f.map(0, f.size());
+  if (!data)
+    return abi;
+
+  const QString arch = architectureFromMachO(data, f.size());
+  if (arch.isEmpty())
+    return abi; // might not have been a valid Mach-O file
+
+  abi.setArchitecture(arch);
+  // TODO: read load commands to obtain version number
+
+  return abi;
 }
