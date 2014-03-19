@@ -101,13 +101,15 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
 
 
 template <typename T>
-static QString architectureFromMachO(const uchar* data, quint64 size, quint32 magic)
+static QString readMachOHeader(const uchar* data, quint64 size, quint32 &offset, qint32 &ncmds, qint32 &cmdsize)
 {
   if (size <= sizeof(T))
     return QString();
   const T* header = reinterpret_cast<const T*>(data);
-  if (header->magic != magic)
-    return QString();
+
+  offset = sizeof(T);
+  ncmds = header->ncmds;
+  cmdsize = header->sizeofcmds;
 
   switch (header->cputype) {
     case CPU_TYPE_I386: return "i686";
@@ -117,32 +119,40 @@ static QString architectureFromMachO(const uchar* data, quint64 size, quint32 ma
   return QString();
 }
 
-static QString architectureFromMachO(const uchar* data, qint64 size)
+static ProbeABI abiFromMachO(const uchar* data, qint64 size)
 {
-  const QString arch = architectureFromMachO<mach_header>(data, size, MH_MAGIC);
-  if (!arch.isEmpty())
-    return arch;
-  return architectureFromMachO<mach_header_64>(data, size, MH_MAGIC_64);
+  ProbeABI abi;
+  const quint32 magic = *reinterpret_cast<const quint32*>(data);
+
+  quint32 offset = 0;
+  qint32 ncmds = 0;
+  qint32 cmdsize = 0;
+
+  switch (magic) {
+    case MH_MAGIC:
+      abi.setArchitecture(readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize));
+      break;
+    case MH_MAGIC_64:
+      abi.setArchitecture(readMachOHeader<mach_header_64>(data, size, offset, ncmds, cmdsize));
+      break;
+  }
+
+  if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
+    return ProbeABI();
+
+  // TODO read load commands
+
+  return abi;
 }
 
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
-  ProbeABI abi;
-
   QFile f(path);
   if (!f.open(QFile::ReadOnly))
-    return abi;
+    return ProbeABI();
 
   const uchar* data = f.map(0, f.size());
-  if (!data)
-    return abi;
-
-  const QString arch = architectureFromMachO(data, f.size());
-  if (arch.isEmpty())
-    return abi; // might not have been a valid Mach-O file
-
-  abi.setArchitecture(arch);
-  // TODO: read load commands to obtain version number
-
-  return abi;
+  if (!data || (uint)f.size() <= sizeof(quint32))
+    return ProbeABI();
+  return abiFromMachO(data, f.size());
 }
