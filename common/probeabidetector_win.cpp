@@ -26,7 +26,12 @@
 #include "probeabidetector.h"
 #include "probeabi.h"
 
+#include <QDebug>
 #include <QString>
+
+#include <windows.h>
+#include <tlhelp32.h>
+#include <winnt.h>
 
 using namespace GammaRay;
 
@@ -37,7 +42,24 @@ ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 
 ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
 {
-  return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
+  MODULEENTRY32 me;
+  me.dwSize = sizeof(MODULEENTRY32);
+  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
+  if (snapshot == INVALID_HANDLE_VALUE) {
+    return ProbeABI();
+  }
+
+  for (bool hasNext = Module32First(snapshot, &me); hasNext; hasNext = Module32Next(snapshot, &me)) {
+    const QString module = QString::fromUtf16(reinterpret_cast<const ushort*>(me.szModule));
+    if (module.contains("QtCore") || module.contains("Qt5Core")) {
+      const QString path = QString::fromUtf16(reinterpret_cast<const ushort*>(me.szExePath));
+      CloseHandle(snapshot);
+      return abiForQtCore(path);
+    }
+  }
+
+  CloseHandle(snapshot);
+  return ProbeABI();
 }
 
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
