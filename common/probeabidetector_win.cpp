@@ -27,6 +27,7 @@
 #include "probeabi.h"
 
 #include <QDebug>
+#include <QFile>
 #include <QString>
 
 #include <windows.h>
@@ -62,7 +63,50 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
   return ProbeABI();
 }
 
+
+static QString archFromPEHeader(const IMAGE_FILE_HEADER *coffHdr)
+{
+  switch(coffHdr->Machine) {
+    case IMAGE_FILE_MACHINE_I386: return "i686";
+    case IMAGE_FILE_MACHINE_AMD64: return "x86_64";
+  }
+
+  return QString();
+}
+
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
-  return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
+  QFile f(path);
+  if (!f.open(QFile::ReadOnly))
+    return ProbeABI();
+
+  const uchar* data = f.map(0, f.size());
+  const uchar* end = data + f.size();
+  if (!data || f.size() < sizeof(IMAGE_DOS_HEADER))
+    return ProbeABI();
+
+  const IMAGE_DOS_HEADER *dosHdr = reinterpret_cast<const IMAGE_DOS_HEADER*>(data);
+  if (dosHdr->e_magic != IMAGE_DOS_SIGNATURE)
+    return ProbeABI();
+  data += dosHdr->e_lfanew;
+  if (data + sizeof(quint32) >= end)
+    return ProbeABI();
+
+  const quint32 *peHdr = reinterpret_cast<const quint32*>(data);
+  if (*peHdr != IMAGE_NT_SIGNATURE) {
+    qWarning() << "pe signature" << *peHdr << IMAGE_NT_SIGNATURE;
+    return ProbeABI();
+  }
+  data += sizeof(quint32);
+  if (data + sizeof(IMAGE_FILE_HEADER) >= end)
+    return ProbeABI();
+
+  // architecture
+  const IMAGE_FILE_HEADER* coffHdr = reinterpret_cast<const IMAGE_FILE_HEADER*>(data);
+  ProbeABI abi;
+  abi.setArchitecture(archFromPEHeader(coffHdr));
+
+  // TODO: Qt version, debug/release, compiler
+
+  return abi;
 }
