@@ -221,7 +221,7 @@ void QuickInspector::renderScene()
     if (parent)
       geometryData.insert("itemRect", m_currentItem->parentItem()->mapRectToScene(QRectF(m_currentItem->x(), m_currentItem->y(), m_currentItem->width(), m_currentItem->height())));
     else
-    geometryData.insert("itemRect", QRectF(0, 0, m_currentItem->width(), m_currentItem->height()));
+      geometryData.insert("itemRect", QRectF(0, 0, m_currentItem->width(), m_currentItem->height()));
     geometryData.insert("boundingRect", m_currentItem->mapRectToScene(m_currentItem->boundingRect()));
     geometryData.insert("childrenRect", m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
     geometryData.insert("transformOriginPoint", m_currentItem->mapToScene(m_currentItem->transformOriginPoint()));
