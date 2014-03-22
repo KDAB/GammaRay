@@ -72,6 +72,10 @@ else()
   )
 endif()
 
+if(WIN32)
+  target_link_libraries(gammaray_common_internal version)
+endif()
+
 gammaray_install_headers(
   gammaray_common_export.h
   endpoint.h

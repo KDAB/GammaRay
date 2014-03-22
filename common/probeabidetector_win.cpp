@@ -76,6 +76,28 @@ static QString archFromPEHeader(const IMAGE_FILE_HEADER *coffHdr)
 
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
+  ProbeABI abi;
+
+  // version
+  DWORD pointlessHandle;
+  DWORD fileVersionInfoSize = GetFileVersionInfoSize(path.toStdWString().c_str(), &pointlessHandle);
+  if (!fileVersionInfoSize)
+    return ProbeABI();
+
+  BYTE *buffer = new BYTE[fileVersionInfoSize];
+  if (GetFileVersionInfo(path.toStdWString().c_str(), pointlessHandle, fileVersionInfoSize, buffer)) {
+    void* versionInfoData;
+    unsigned int versionInfoSize;
+    if (VerQueryValue(buffer, TEXT("\\"), &versionInfoData, &versionInfoSize) && versionInfoSize) {
+      VS_FIXEDFILEINFO *versionInfo = reinterpret_cast<VS_FIXEDFILEINFO*>(versionInfoData);
+      if (versionInfo->dwSignature == VS_FFI_SIGNATURE) {
+        abi.setQtVersion(versionInfo->dwFileVersionMS >> 16, versionInfo->dwFileVersionMS & 0xffff);
+      }
+    }
+  }
+  delete[] buffer;
+
+  // architecture and dependent libraries
   QFile f(path);
   if (!f.open(QFile::ReadOnly))
     return ProbeABI();
@@ -103,10 +125,9 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 
   // architecture
   const IMAGE_FILE_HEADER* coffHdr = reinterpret_cast<const IMAGE_FILE_HEADER*>(data);
-  ProbeABI abi;
   abi.setArchitecture(archFromPEHeader(coffHdr));
 
-  // TODO: Qt version, debug/release, compiler
+  // TODO: debug/release, compiler
 
   return abi;
 }
