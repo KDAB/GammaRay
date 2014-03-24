@@ -74,6 +74,37 @@ static QString archFromPEHeader(const IMAGE_FILE_HEADER *coffHdr)
   return QString();
 }
 
+static const IMAGE_SECTION_HEADER* sectionForRVA(const IMAGE_FILE_HEADER *hdr, DWORD rva, const uchar *end)
+{
+  const uchar *data = reinterpret_cast<const uchar*>(hdr);
+  const IMAGE_SECTION_HEADER* sectionHdr = reinterpret_cast<const IMAGE_SECTION_HEADER*>(data + sizeof(IMAGE_FILE_HEADER) + hdr->SizeOfOptionalHeader);
+  for (int i = 0; i < hdr->NumberOfSections; ++i, ++sectionHdr) {
+    if (reinterpret_cast<const uchar*>(sectionHdr +1) >= end)
+      return 0;
+    if (rva >= sectionHdr->VirtualAddress && rva < sectionHdr->VirtualAddress + sectionHdr->Misc.VirtualSize)
+      return sectionHdr;
+  }
+  return 0;
+}
+
+static const uchar* rvaToFile(const IMAGE_FILE_HEADER *hdr, DWORD rva, const uchar *begin, const uchar *end)
+{
+  const IMAGE_SECTION_HEADER* sectionHdr = sectionForRVA(hdr, rva, end);
+  if (!sectionHdr)
+    return 0;
+  return begin + rva - sectionHdr->VirtualAddress + sectionHdr->PointerToRawData;
+}
+
+static QString compilerFromLibraries(const QStringList &libraries)
+{
+  foreach (const QString &lib, libraries) {
+    if (lib.toLower().startsWith("libgcc"))
+      return "GNU";
+  }
+
+  return "MSVC";
+}
+
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
   ProbeABI abi;
@@ -102,8 +133,9 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
   if (!f.open(QFile::ReadOnly))
     return ProbeABI();
 
-  const uchar* data = f.map(0, f.size());
-  const uchar* end = data + f.size();
+  const uchar* const begin = f.map(0, f.size());
+  const uchar* data = begin;
+  const uchar* const end = begin + f.size();
   if (!data || f.size() < sizeof(IMAGE_DOS_HEADER))
     return ProbeABI();
 
@@ -115,10 +147,8 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
     return ProbeABI();
 
   const quint32 *peHdr = reinterpret_cast<const quint32*>(data);
-  if (*peHdr != IMAGE_NT_SIGNATURE) {
-    qWarning() << "pe signature" << *peHdr << IMAGE_NT_SIGNATURE;
+  if (*peHdr != IMAGE_NT_SIGNATURE)
     return ProbeABI();
-  }
   data += sizeof(quint32);
   if (data + sizeof(IMAGE_FILE_HEADER) >= end)
     return ProbeABI();
@@ -126,8 +156,37 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
   // architecture
   const IMAGE_FILE_HEADER* coffHdr = reinterpret_cast<const IMAGE_FILE_HEADER*>(data);
   abi.setArchitecture(archFromPEHeader(coffHdr));
+  data += sizeof(IMAGE_FILE_HEADER);
+  if (data + sizeof(IMAGE_OPTIONAL_HEADER64) >= end)
+    return ProbeABI();
 
-  // TODO: debug/release, compiler
+  // import table
+  const IMAGE_OPTIONAL_HEADER32 *optHdr32 = reinterpret_cast<const IMAGE_OPTIONAL_HEADER32*>(data);
+  if (optHdr32->Magic == IMAGE_NT_OPTIONAL_HDR32_MAGIC) {
+    data = rvaToFile(coffHdr, optHdr32->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress, begin, end);
+  } else {
+    const IMAGE_OPTIONAL_HEADER64 *optHdr64 = reinterpret_cast<const IMAGE_OPTIONAL_HEADER64*>(data);
+    if (optHdr64->Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC)
+      return ProbeABI();
+    data = rvaToFile(coffHdr, optHdr64->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress, begin, end);
+  }
+  if (data + sizeof(IMAGE_IMPORT_DESCRIPTOR) >= end)
+    return ProbeABI();
+
+  const IMAGE_IMPORT_DESCRIPTOR* importDesc = reinterpret_cast<const IMAGE_IMPORT_DESCRIPTOR*>(data);
+  QStringList libs;
+  while (importDesc->Name) {
+    const char* libraryName = reinterpret_cast<const char*>(rvaToFile(coffHdr, importDesc->Name, begin, end));
+    if (libraryName)
+      libs.push_back(QString::fromAscii(libraryName));
+    importDesc++;
+    if (reinterpret_cast<const uchar*>(importDesc) + sizeof(IMAGE_IMPORT_DESCRIPTOR) >= end)
+      return ProbeABI();
+  }
+
+  // compiler and debug mode
+  abi.setCompiler(compilerFromLibraries(libs));
+  // TODO: debug/release if this is MSVC
 
   return abi;
 }
