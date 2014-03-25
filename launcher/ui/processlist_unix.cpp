@@ -32,11 +32,15 @@
 
 #include "processlist.h"
 
+#include <common/probeabidetector.h>
+
 #include <QProcess>
 #include <QDir>
 
 #include <algorithm>
 #include <functional>
+
+static GammaRay::ProbeABIDetector s_abiDetector;
 
 static bool isUnixProcessId(const QString &procname)
 {
@@ -46,41 +50,6 @@ static bool isUnixProcessId(const QString &procname)
     }
   }
   return true;
-}
-
-static bool processIsQtApp(const QString &pid)
-{
-  QProcess lsofProcess;
-  QStringList args;
-  args << QLatin1String("-Fn") << QLatin1String("-n") << QLatin1String("-p") << pid;
-  lsofProcess.start(QLatin1String("lsof"), args);
-  if (!lsofProcess.waitForStarted()) {
-    return false;
-  }
-
-  lsofProcess.waitForFinished();
-  const QByteArray output = lsofProcess.readAllStandardOutput();
-
-// Mac uses "Versions/<major>/QtCore" for frameworks, and normal Unix/Linux style names for non-frameworks (Qt5 only)
-#ifdef Q_OS_MAC
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  if (output.contains("4/QtCore")) {
-#else
-  if (output.contains("5/QtCore") || output.contains("Qt5Core")) {
-#endif
-#else
-
-// normal UNIX/Linux
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  if (output.contains("QtCore")) {
-#else
-  if (output.contains("Qt5Core")) {
-#endif
-#endif
-    return true;
-  }
-
-  return false;
 }
 
 struct PidAndNameMatch : public std::unary_function<ProcData,bool> {
@@ -139,11 +108,9 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
         std::find_if(previous.constBegin(), previous.constEnd(),
                      PidAndNameMatch(procData.ppid, procData.name));
       if (it != previous.constEnd()) {
-        procData.type = it->type;
+        procData.abi = it->abi;
       } else {
-        procData.type = processIsQtApp(procData.ppid) ?
-                          ProcData::QtApp :
-                          ProcData::NoQtApp;
+        procData.abi = s_abiDetector.abiForProcess(procData.ppid.toLongLong());
       }
       rc.push_back(procData);
     }
@@ -201,26 +168,7 @@ ProcDataList processList(const ProcDataList &previous)
     }
     cmdFile.close();
 
-    QFile maps(QLatin1String("/proc/") + procId + QLatin1String("/maps"));
-    if (!maps.open(QIODevice::ReadOnly)) {
-      continue; // process may have exited
-    }
-
-    proc.type = ProcData::NoQtApp;
-    forever {
-      const QByteArray line = maps.readLine();
-      if (line.isEmpty()) {
-        break;
-      }
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-      if (line.contains(QByteArray("/libQtCore.so"))) {
-#else
-      if (line.contains(QByteArray("/libQt5Core.so"))) {
-#endif
-        proc.type = ProcData::QtApp;
-        break;
-      }
-    }
+    proc.abi = s_abiDetector.abiForProcess(procId.toLongLong());
 
     rc.push_back(proc);
   }

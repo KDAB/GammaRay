@@ -83,7 +83,7 @@ bool ProcessFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sou
 
   const ProcData &data = source->dataForRow(source_row);
 
-  if (data.type == ProcData::NoQtApp) {
+  if (!data.abi.isValid()) {
     return false;
   }
 

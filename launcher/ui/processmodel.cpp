@@ -38,7 +38,7 @@ bool operator==(const ProcData &l, const ProcData &r)
 
 QDebug operator<<(QDebug d, const ProcData &data) {
     d << "ProcData{.ppid=" << data.ppid << ", .name=" << data.name << ", .image=" << data.image
-      << ", .state=" << data.state << ", .user=" << data.user << ", .type=" << data.type << "}";
+      << ", .state=" << data.state << ", .user=" << data.user << ", .type=" << data.abi.id() << "}";
     return d;
 }
 

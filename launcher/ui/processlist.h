@@ -33,6 +33,8 @@
 #ifndef GAMMARAY_PROCESSLIST_H
 #define GAMMARAY_PROCESSLIST_H
 
+#include <common/probeabi.h>
+
 #include <QString>
 #include <QList>
 
@@ -43,18 +45,9 @@ struct ProcData
   QString image;
   QString state;
   QString user;
+  GammaRay::ProbeABI abi;
 
-  enum AppType {
-    Unknown,
-    QtApp,
-    NoQtApp
-  };
-  AppType type;
-
-  ProcData()
-  : type(Unknown)
-  {
-  }
+  ProcData() {}
 };
 
 typedef QList<ProcData> ProcDataList;
