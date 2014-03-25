@@ -69,6 +69,9 @@
      <widget class="QStackedWidget" name="stackedWidget">
       <widget class="QWidget" name="page_13">
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="margin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="GammaRay::PropertyWidget" name="itemPropertyWidget" native="true"/>
         </item>
@@ -76,6 +79,9 @@
       </widget>
       <widget class="QWidget" name="page_14">
        <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="margin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="GammaRay::PropertyWidget" name="sgPropertyWidget" native="true"/>
         </item>
