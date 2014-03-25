@@ -27,6 +27,7 @@
 #include <QRegExp>
 #include <QSharedData>
 #include <QString>
+#include <QStringList>
 
 namespace GammaRay {
 
@@ -127,6 +128,11 @@ void ProbeABI::setIsDebug(bool debug)
   d->isDebug = debug;
 }
 
+bool ProbeABI::isDebugRelevant() const
+{
+  return compiler() == "MSVC";
+}
+
 bool ProbeABI::isValid() const
 {
   return hasQtVersion()
@@ -144,8 +150,8 @@ bool ProbeABI::isCompatible(const ProbeABI& referenceABI) const
       && d->architecture == referenceABI.architecture()
 #ifdef Q_OS_WIN
       && d->compiler == referenceABI.compiler()
-      && d->isDebug == referenceABI.isDebug()
 #endif
+      && (isDebugRelevant() ?  d->isDebug == referenceABI.isDebug() : true)
       ;
 }
 
@@ -154,42 +160,55 @@ QString ProbeABI::id() const
   if (!isValid())
     return QString();
 
-#ifndef Q_OS_WIN
-  return QString("qt%1.%2-%3")
-    .arg(majorQtVersion())
-    .arg(minorQtVersion())
-    .arg(architecture());
-#else
-  return QString("qt%1.%2-%3-%4-%5")
-    .arg(majorQtVersion())
-    .arg(minorQtVersion())
-    .arg(compiler())
-    .arg(isDebug() ? "debug" : "release")
-    .arg(architecture());
+  QStringList idParts;
+  idParts.push_back(QString("qt%1.%2").arg(majorQtVersion()).arg(minorQtVersion()));
+
+#ifdef Q_OS_WIN
+  idParts.push_back(compiler());
 #endif
+
+  if (isDebugRelevant())
+    idParts.push_back(isDebug() ? "debug" : "release");
+
+  idParts.push_back(architecture());
+
+  return idParts.join("-");
 }
 
 ProbeABI ProbeABI::fromString(const QString& id)
 {
-#ifndef Q_OS_WIN
-  static QRegExp regExp("^qt(\\d+)\\.(\\d+)-(.+)$");
-#else
-  static QRegExp regExp("^qt(\\d+)\\.(\\d+)-([^-]+)-(debug|release)-(.+)$");
-#endif
-
-  if (regExp.indexIn(id) != 0)
+  QStringList idParts = id.split("-");
+  if (idParts.size() < 2)
     return ProbeABI();
 
+  int index = 0;
   ProbeABI abi;
-  abi.setQtVersion(regExp.cap(1).toInt(), regExp.cap(2).toInt());
-#ifndef Q_OS_WIN
-  abi.setArchitecture(regExp.cap(3));
-#else
-  abi.setCompiler(regExp.cap(3));
-  abi.setIsDebug(regExp.cap(4) == "debug");
-  abi.setArchitecture(regExp.cap(5));
+
+  // version
+  static QRegExp versionRegExp("^qt(\\d+)\\.(\\d+)$");
+  if (versionRegExp.indexIn(idParts.value(index++)) != 0)
+    return ProbeABI();
+  abi.setQtVersion(versionRegExp.cap(1).toInt(), versionRegExp.cap(2).toInt());
+
+  // compiler
+#ifdef Q_OS_WIN
+  abi.setCompiler(idParts.value(index++));
 #endif
 
+  // debug/release
+  if (abi.isDebugRelevant()) {
+    if (idParts.size() <= index)
+      return ProbeABI();
+    const QString s = idParts.value(index++);
+    if (s != "release" && s != "debug")
+      return ProbeABI();
+    abi.setIsDebug(s == "debug");
+  }
+
+  // architecture
+  if (idParts.size() != index + 1)
+    return ProbeABI();
+  abi.setArchitecture(idParts.value(index));
   return abi;
 }
 
@@ -198,19 +217,18 @@ QString ProbeABI::displayString() const
   if (!isValid())
     return QString();
 
-#ifndef Q_OS_WIN
+  QStringList details;
+#ifdef Q_OS_WIN
+  details.push_back(compiler());
+#endif
+  if (isDebugRelevant())
+    details.push_back(isDebug() ? QObject::tr("debug") : QObject::tr("release"));
+  details.push_back(architecture());
+
   return QObject::tr("Qt %1.%2 (%3)")
     .arg(majorQtVersion())
     .arg(minorQtVersion())
-    .arg(architecture());
-#else
-    return QObject::tr("Qt %1.%2 (%3, %4, %5)")
-      .arg(majorQtVersion())
-      .arg(minorQtVersion())
-      .arg(compiler())
-      .arg(isDebug() ? QObject::tr("debug") : QObject::tr("release"))
-      .arg(architecture());
-#endif
+    .arg(details.join(", "));
 }
 
 bool ProbeABI::operator==(const ProbeABI& rhs) const

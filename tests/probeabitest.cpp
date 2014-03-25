@@ -64,7 +64,8 @@ private slots:
 #ifndef Q_OS_WIN
     QTest::newRow("unix") << "qt5.2-x86_64" << 5 << 2 << true << "x86_64" << "GCC";
 #else
-    QTest::newRow("windows") << "qt5.2-MSVC-debug-x86_64" << 5 << 2 << true << "x86_64" << "MSVC";
+    QTest::newRow("msvc") << "qt5.2-MSVC-debug-x86_64" << 5 << 2 << true << "x86_64" << "MSVC";
+    QTest::newRow("mingw") << "qt5.2-GNU-i686" << 5 << 2 << false << "i686" << "GNU";
 #endif
   }
 
@@ -97,10 +98,15 @@ private slots:
     QTest::addColumn<QString>("compiler");
 
     QTest::newRow("invalid") << QString() << false << -1 << -1 << false << QString() << QString();
+    QTest::newRow("only version") << "qt5.2" << false << -1 << -1 << false << QString() << QString();
+    QTest::newRow("too many items") << "qt5.2-some-random-stuff-with-too-many-dashs" << false << -1 << -1 << false << QString() << QString();
+    QTest::newRow("missing debug/release") << "qt5.2-MSVC-i686" << false << -1 << -1 << false << QString() << QString();
+    QTest::newRow("extra debug/release") << "qt5.2-GNU-debug-arm" << false << -1 << -1 << false << QString() << QString();
 #ifndef Q_OS_WIN
     QTest::newRow("unix") << "qt5.2-x86_64" << true << 5 << 2 << true << "x86_64" << "GCC";
 #else
-    QTest::newRow("windows") << "qt5.2-MSVC-debug-x86_64" << true << 5 << 2 << true << "x86_64" << "MSVC";
+    QTest::newRow("msvc") << "qt5.2-MSVC-debug-x86_64" << true << 5 << 2 << true << "x86_64" << "MSVC";
+    QTest::newRow("mingw") << "qt5.2-GNU-i686" << true << 5 << 2 << true << "i686" << "GNU";
 #endif
   }
 
@@ -122,11 +128,11 @@ private slots:
     QCOMPARE(abi.majorQtVersion(), majorVersion);
     QCOMPARE(abi.minorQtVersion(), minorVersion);
     QCOMPARE(abi.architecture(), arch);
+    if (abi.isDebugRelevant())
+      QCOMPARE(abi.isDebug(), isDebug);
 #ifdef Q_OS_WIN
-    QCOMPARE(abi.isDebug(), isDebug);
     QCOMPARE(abi.compiler(), compiler);
 #else
-    Q_UNUSED(isDebug);
     Q_UNUSED(compiler);
 #endif
   }
@@ -140,7 +146,8 @@ private slots:
 #ifndef Q_OS_WIN
     QTest::newRow("unix") << "qt5.2-x86_64" << "Qt 5.2 (x86_64)";
 #else
-    QTest::newRow("windows") << "qt5.2-MSVC-debug-x86_64" << "Qt 5.2 (MSVC, debug, x86_64)";
+    QTest::newRow("msvc") << "qt5.2-MSVC-debug-x86_64" << "Qt 5.2 (MSVC, debug, x86_64)";
+    QTest::newRow("mingw") << "qt5.2-GNU-i686" << "Qt 5.2 (GNU, i686)";
 #endif
   }
 

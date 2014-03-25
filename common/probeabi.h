@@ -53,9 +53,11 @@ public:
   QString architecture() const;
   void setArchitecture(const QString &architecture);
 
-  /** Debug vs. release only matters on Windows. */
+  /** Debug vs. release. */
   bool isDebug() const;
   void setIsDebug(bool debug);
+  /** Returns @c true if debug vs. release is changing the ABI. */
+  bool isDebugRelevant() const;
 
   /** Compiler ABI is currently only relevant for MSVC vs. Mingw. */
   QString compiler() const;
