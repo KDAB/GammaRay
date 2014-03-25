@@ -237,10 +237,19 @@ void QuickItemModel::removeItem(QQuickItem* item, bool danglingPointer)
   beginRemoveRows(parentIndex, row, row);
 
   siblings.erase(it);
-  m_childParentMap.remove(item);
-  m_parentChildMap.remove(item);
+  doRemoveSubtree(item, danglingPointer);
 
   endRemoveRows();
+}
+
+void QuickItemModel::doRemoveSubtree(QQuickItem* item, bool danglingPointer)
+{
+  m_childParentMap.remove(item);
+  m_parentChildMap.remove(item);
+  if (!danglingPointer) {
+    foreach (QQuickItem *child, item->childItems())
+      doRemoveSubtree(child, false);
+  }
 }
 
 void QuickItemModel::itemReparented()

@@ -73,6 +73,11 @@ private:
   void addItem(QQuickItem* item);
   /// Remove item @p item from this model. Set @p danglingPointer to true if the item has already been destructed
   void removeItem(QQuickItem* item, bool danglingPointer = false);
+  /**
+   * Remove item @p item from the internal data set. This function won't cause rowsRemoved to be emitted.
+   * Set @p danglingPointer to true if the item has already been destructed.
+   */
+  void doRemoveSubtree(QQuickItem* item, bool danglingPointer = false);
 
   QPointer<QQuickWindow> m_window;
 
