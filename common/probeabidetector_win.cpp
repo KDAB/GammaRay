@@ -105,6 +105,15 @@ static QString compilerFromLibraries(const QStringList &libraries)
   return "MSVC";
 }
 
+static bool isDebugRuntime(const QStringList &libraries)
+{
+  foreach (const QString &lib, libraries) {
+    if (lib.toLower().startsWith("msvcr"))
+      return lib.toLower().endsWith("d.dll");
+  }
+  return false;
+}
+
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
   ProbeABI abi;
@@ -186,7 +195,8 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 
   // compiler and debug mode
   abi.setCompiler(compilerFromLibraries(libs));
-  // TODO: debug/release if this is MSVC
+  if (abi.compiler() == "MSVC")
+    abi.setIsDebug(isDebugRuntime(libs));
 
   return abi;
 }
