@@ -59,6 +59,10 @@ private:
      */
     ProbeABI detectAbiForQtCore(const QString &path) const;
 
+    /** Path to the QtCore DLL for @p pid, using the lsof tool
+     *  on UNIX-like systems.
+     */
+    QString qtCoreFromLsof(qint64 pid) const;
 
     mutable QHash<QString, ProbeABI> m_abiForQtCoreCache;
 };

@@ -69,27 +69,6 @@ ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 }
 
 
-static QString qtCoreFromLsof(qint64 pid)
-{
-  QProcess proc;
-  proc.setProcessChannelMode(QProcess::SeparateChannels);
-  proc.setReadChannel(QProcess::StandardOutput);
-  proc.start("lsof", QStringList() << "-Fn" << "-n" << "-p" << QString::number(pid));
-  proc.waitForFinished();
-
-  forever {
-    const QByteArray line = proc.readLine();
-    if (line.isEmpty())
-      break;
-
-    if (line.contains("QtCore") || line.contains("Qt5Core")) {
-      return QString::fromLocal8Bit(line.mid(1).trimmed()); // strip the field identifier
-    }
-  }
-
-  return QString();
-}
-
 ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
 {
   const QString qtCorePath = qtCoreFromLsof(pid);

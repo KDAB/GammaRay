@@ -26,6 +26,7 @@
 #include "probeabidetector.h"
 
 #include <QFileInfo>
+#include <QProcess>
 
 using namespace GammaRay;
 
@@ -50,4 +51,25 @@ ProbeABI ProbeABIDetector::abiForQtCore(const QString& path) const
   const ProbeABI abi = detectAbiForQtCore(fi.canonicalFilePath());
   m_abiForQtCoreCache.insert(fi.canonicalFilePath(), abi);
   return abi;
+}
+
+QString ProbeABIDetector::qtCoreFromLsof(qint64 pid) const
+{
+  QProcess proc;
+  proc.setProcessChannelMode(QProcess::SeparateChannels);
+  proc.setReadChannel(QProcess::StandardOutput);
+  proc.start("lsof", QStringList() << "-Fn" << "-n" << "-p" << QString::number(pid));
+  proc.waitForFinished();
+
+  forever {
+    const QByteArray line = proc.readLine();
+    if (line.isEmpty())
+      break;
+
+    if (line.contains("QtCore") || line.contains("Qt5Core")) {
+      return QString::fromLocal8Bit(line.mid(1).trimmed()); // strip the field identifier
+    }
+  }
+
+  return QString();
 }

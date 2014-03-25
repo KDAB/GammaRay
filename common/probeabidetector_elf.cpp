@@ -98,11 +98,11 @@ static QString qtCoreFromProc(qint64 pid)
 
 ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
 {
-  const QString qtCorePath = qtCoreFromProc(pid);
-  if (!qtCorePath.isEmpty())
-    return abiForQtCore(qtCorePath);
+  QString qtCorePath = qtCoreFromProc(pid);
+  if (qtCorePath.isEmpty())
+    qtCorePath = qtCoreFromLsof(pid);
 
-  return ProbeABI(); // TODO non-/proc fallback
+  return abiForQtCore(qtCorePath);
 }
 
 
