@@ -246,6 +246,11 @@ void QuickItemModel::removeItem(QQuickItem* item, bool danglingPointer)
 void QuickItemModel::itemReparented()
 {
   QQuickItem *item = qobject_cast<QQuickItem*>(sender());
+  if (!item->parentItem()) { // Item was not deleted, but removed from the scene.
+    removeItem(item, false);
+    return;
+  }
+
   Q_ASSERT(item && item->window() == m_window);
 
   QQuickItem* sourceParent = m_childParentMap.value(item);
