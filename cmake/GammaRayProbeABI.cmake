@@ -23,8 +23,8 @@ if(WIN32)
 endif()
 
 
-# debug vs. release (Windows only)
-if(WIN32)
+# debug vs. release (MSVC only)
+if(MSVC)
   if(CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-release")
   else()
