@@ -45,11 +45,8 @@ if(Qt5Quick_FOUND)
     gammaray_quickinspector_shared
     gammaray_core Qt5::Quick
   )
-endif()
 
-
-# ui plugin
-if(HAVE_QT_QUICK1)
+  # ui plugin
   set(gammaray_quickinspector_ui_srcs
     quickinspectorclient.cpp
     quickinspectorwidget.cpp
@@ -79,6 +76,6 @@ if(HAVE_QT_QUICK1)
   target_link_libraries(gammaray_quickinspector_ui
     gammaray_quickinspector_shared
     gammaray_ui
-    ${QT_QTDECLARATIVE_LIBRARIES}
+    Qt5::Quick
   )
 endif()

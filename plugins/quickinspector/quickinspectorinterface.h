@@ -52,6 +52,7 @@ public slots:
   virtual void renderScene() = 0;
   virtual void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1) = 0;
   virtual void sendMouseEvent(int type, const QPointF & localPos, int button, int buttons, int modifiers) = 0;
+  virtual void sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers) = 0;
   virtual void setVisualizeOverdraw(bool visualizeOverdraw) = 0;
   virtual void checkFeatures() = 0;
 

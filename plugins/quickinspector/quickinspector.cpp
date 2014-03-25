@@ -286,6 +286,14 @@ void QuickInspector::sendMouseEvent(int type, const QPointF& localPos, int butto
   QCoreApplication::sendEvent(m_window, new QMouseEvent((QEvent::Type)type, localPos, (Qt::MouseButton)button, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers));
 }
 
+void QuickInspector::sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers)
+{
+  if (!m_clientConnected || !m_window)
+    return;
+
+  QCoreApplication::sendEvent(m_window, new QWheelEvent(localPos, m_window->mapToGlobal(localPos.toPoint()), pixelDelta, angleDelta, 0 /*not used*/, Qt::Vertical/*not used*/, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers));
+}
+
 void QuickInspector::setVisualizeOverdraw(bool visualizeOverdraw)
 {
 #if defined(HAVE_SG_INSPECTOR) && QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)

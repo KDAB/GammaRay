@@ -24,11 +24,12 @@
 #ifndef QUICKITEMOVERLAY_H
 #define QUICKITEMOVERLAY_H
 
-#include <QDeclarativeItem>
+#include <QQuickPaintedItem>
+#include <QTransform>
 
 namespace GammaRay {
 
-class QuickItemOverlay : public QDeclarativeItem
+class QuickItemOverlay : public QQuickPaintedItem
 {
     Q_OBJECT
     Q_PROPERTY(QVariantMap geometryData READ geometryData WRITE setGeometryData)
@@ -36,9 +37,9 @@ class QuickItemOverlay : public QDeclarativeItem
     Q_PROPERTY(QRectF imageRect READ imageRect WRITE setImageRect)
 
 public:
-    QuickItemOverlay(QDeclarativeItem *parent = 0);
+    QuickItemOverlay(QQuickItem *parent = 0);
     virtual ~QuickItemOverlay();
-    virtual void paint(QPainter* p, const QStyleOptionGraphicsItem*, QWidget* );
+    virtual void paint(QPainter* p);
 
     QVariantMap geometryData() const;
     qreal zoom() const;

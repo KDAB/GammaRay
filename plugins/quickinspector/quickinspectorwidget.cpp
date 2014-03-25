@@ -38,19 +38,20 @@
 
 #include <QLabel>
 #include <QTimer>
-#include <QGraphicsScene>
 #include <qmath.h>
-#include <QDeclarativeImageProvider>
-#include <QDeclarativeEngine>
-#include <QDeclarativeItem>
-#include <QDeclarativeContext>
+#include <QQuickImageProvider>
 #include <QRectF>
+#include <QQuickView>
+#include <QQuickItem>
+#include <QPainter>
+#include <QQmlContext>
+#include <QtCore/qglobal.h>
 
 namespace GammaRay {
-class QuickSceneImageProvider : public QDeclarativeImageProvider
+class QuickSceneImageProvider : public QQuickImageProvider
 {
   public:
-    explicit QuickSceneImageProvider() : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap) {}
+    explicit QuickSceneImageProvider() : QQuickImageProvider(QQuickImageProvider::Pixmap) {}
     ~QuickSceneImageProvider() {}
 
     QPixmap requestPixmap(const QString & id, QSize * size, const QSize & requestedSize)
@@ -101,7 +102,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   m_renderTimer(new QTimer(this)),
   m_sceneChangedSinceLastRequest(false),
   m_waitingForImage(false),
-  m_imageProvider(new QuickSceneImageProvider)
+  m_imageProvider(new QuickSceneImageProvider),
+  m_preview(new QQuickView)
 {
   ui->setupUi(this);
 
@@ -145,11 +147,14 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   qmlRegisterType<QuickItemOverlay>("com.kdab.GammaRay", 1, 0, "QuickItemOverlay");
   qmlRegisterType<QuickItemOverlay>();
 
-  ui->sceneView->engine()->addImageProvider("quicksceneprovider", m_imageProvider);
-  ui->sceneView->setSource(QUrl("qrc:/gammaray/plugins/quickinspector/quickpreview.qml"));
-  m_rootItem = qobject_cast< QDeclarativeItem* >(ui->sceneView->rootObject());
-  ui->sceneView->engine()->rootContext()->setContextProperty("inspectorInterface", m_interface);
-  ui->previewTreeSplitter->setSizes(QList<int>() << 1 << 1);
+  QWidget *previewWidget = QWidget::createWindowContainer(m_preview, ui->previewTreeSplitter);
+  m_preview->show();
+  m_preview->setResizeMode(QQuickView::SizeRootObjectToView);
+  m_preview->engine()->addImageProvider("quicksceneprovider", m_imageProvider);
+  m_preview->setSource(QUrl("qrc:/gammaray/plugins/quickinspector/quickpreview.qml"));
+  m_rootItem = qobject_cast< QQuickItem* >(m_preview->rootObject());
+  m_preview->engine()->rootContext()->setContextProperty("inspectorInterface", m_interface);
+  QTimer::singleShot(0, this, SLOT(setSplitterSizes()));
 
   m_renderTimer->setInterval(100);
   m_renderTimer->setSingleShot(true);
@@ -162,6 +167,13 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
 
 QuickInspectorWidget::~QuickInspectorWidget()
 {
+}
+
+void QuickInspectorWidget::setSplitterSizes()
+{
+  ui->previewTreeSplitter->setSizes(QList<int>()
+                                    << (ui->previewTreeSplitter->height() - ui->previewTreeSplitter->handleWidth()) /2
+                                    << (ui->previewTreeSplitter->height() - ui->previewTreeSplitter->handleWidth()) /2);
 }
 
 void QuickInspectorWidget::sceneChanged()

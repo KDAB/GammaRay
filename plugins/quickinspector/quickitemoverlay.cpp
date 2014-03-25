@@ -27,9 +27,8 @@
 
 using namespace GammaRay;
 
-QuickItemOverlay::QuickItemOverlay(QDeclarativeItem* parent): QDeclarativeItem(parent)
+QuickItemOverlay::QuickItemOverlay(QQuickItem* parent): QQuickPaintedItem(parent)
 {
-  setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
 }
 
 QuickItemOverlay::~QuickItemOverlay()
@@ -37,7 +36,7 @@ QuickItemOverlay::~QuickItemOverlay()
 
 }
 
-void QuickItemOverlay::paint(QPainter* p, const QStyleOptionGraphicsItem* , QWidget* )
+void QuickItemOverlay::paint(QPainter* p )
 {
     if (m_geometryData.isEmpty())
       return;

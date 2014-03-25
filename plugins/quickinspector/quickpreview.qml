@@ -1,4 +1,6 @@
-import QtQuick 1.1
+import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Controls.Styles 1.0
 import com.kdab.GammaRay 1.0
 
 Image {
@@ -46,6 +48,24 @@ Image {
     oldHeight = height;
   }
 
+  Component {
+    id: buttonStyle
+
+    ButtonStyle {
+      id: styleEl
+      background: Rectangle {
+        color: styleEl.control.hovered ? "#22ffffff" : "transparent"
+        border.color: "grey"
+      }
+      label: Text {
+        color: "grey"
+        text: styleEl.control.text
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+      }
+    }
+  }
+
   // Toolbar (top-left)
   Rectangle {
     color: "#aa333333"
@@ -58,29 +78,18 @@ Image {
       id: toolbarRow
       x: 3
 
-      Rectangle {
-        color: visualizeOverdrawMA.containsMouse || checked ? "#22ffffff" : "transparent"
-        border.color: "grey"
-        width: visualizeOverdrawText.width + 10; height: 20
+      Button {
+        height: 20
         visible: canVisualizeOverdraw
         property bool checked: false
 
-        Text {
-          id: visualizeOverdrawText
-          text: "Show 3D Box Model"
-          color: "lightgrey"
-          anchors.centerIn: parent
-        }
+        text: "Show 3D Box Model"
+        style: buttonStyle
 
-        MouseArea {
-          id: visualizeOverdrawMA
-          anchors.fill: parent
-          hoverEnabled: true
-          onClicked: {
-            parent.checked = !parent.checked;
-            inspectorInterface.setVisualizeOverdraw(parent.checked);
-            geometryOverlay.visible = !parent.checked;
-          }
+        onClicked: {
+          checked = !checked;
+          inspectorInterface.setVisualizeOverdraw(checked);
+          geometryOverlay.visible = !checked;
         }
       }
     }
@@ -108,12 +117,27 @@ Image {
   // Scene preview
   Image {
     id: image
-    property real zoom: 1
     cache: false
+    smooth: false
+    property real zoom: 1
 
-    onZoomChanged: {
-      x += (width - sourceSize.width * zoom) / 2; // zoom to image center
-      y += (height - sourceSize.height * zoom) / 2;
+    function zoomIn(zoomToX, zoomToY) {
+      var oldZoom = zoom;
+      zoom = zoom < 1
+            ? 1 / (1 / zoom - 1)
+            : zoom + 1;
+      x += zoomToX * (1 - zoom / oldZoom);
+      y += zoomToY * (1 - zoom / oldZoom);
+      width = sourceSize.width * zoom;
+      height = sourceSize.height * zoom;
+    }
+    function zoomOut(zoomToX, zoomToY) {
+      var oldZoom = zoom;
+      zoom = zoom <= 1
+            ? 1 / (1 / zoom + 1)
+            : zoom - 1;
+      x += zoomToX * (1 - zoom / oldZoom);
+      y += zoomToY * (1 - zoom / oldZoom);
       width = sourceSize.width * zoom;
       height = sourceSize.height * zoom;
     }
@@ -163,6 +187,14 @@ Image {
     onDoubleClicked: { // event-forwarding
       if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
         inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+    }
+    onWheel: { // event-forwarding
+      if (wheel.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
+        inspectorInterface.sendWheelEvent(Qt.point((wheel.x - image.x) / image.zoom, (wheel.y - image.y) / image.zoom), wheel.pixelDelta, wheel.angleDelta, wheel.buttons, wheel.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+      else if (wheel.angleDelta.y > 0)
+        image.zoomIn(wheel.x - image.x, wheel.y - image.y);
+      else if (wheel.angleDelta.y < 0)
+        image.zoomOut(wheel.x - image.x, wheel.y - image.y);
     }
   }
 
@@ -252,42 +284,28 @@ Image {
   Row {
     anchors { right: parent.right; top: bottomRuler.top }
 
-    Rectangle {
-      color: decrementZoomMA.containsMouse ? "#22ffffff" : "transparent"
-      border.color: "grey"
+    Button {
       width: 20; height: width
+      style: buttonStyle
+      text: "-"
 
-      Text {
-        text: "-"
-        color: "grey"
-        anchors.centerIn: parent
-      }
-
-      MouseArea {
-        id: decrementZoomMA
-        anchors.fill: parent
-        hoverEnabled: true
-        onPressed: decrementZoomTimer.start();
-        onReleased: decrementZoomTimer.stop();
+      onPressedChanged: {
+        if (pressed)
+          decrementZoomTimer.start();
+        else
+          decrementZoomTimer.stop();
       }
     }
-    Rectangle {
-      color: incrementZoomMA.containsMouse ? "#22ffffff" : "transparent"
-      border.color: "grey"
+    Button {
       width: 20; height: width
+      style: buttonStyle
+      text: "+"
 
-      Text {
-        text: "+"
-        color: "grey"
-        anchors.centerIn: parent
-      }
-
-      MouseArea {
-        id: incrementZoomMA
-        anchors.fill: parent
-        hoverEnabled: true
-        onPressed: incrementZoomTimer.start();
-        onReleased: incrementZoomTimer.stop();
+      onPressedChanged: {
+        if (pressed)
+          incrementZoomTimer.start();
+        else
+          incrementZoomTimer.stop();
       }
     }
   }
@@ -297,13 +315,13 @@ Image {
     interval: 100
     repeat: true
     triggeredOnStart: true
-    onTriggered: image.zoom = image.zoom < 1 ? 1 / (1 / image.zoom - 1) : image.zoom + 1;
+    onTriggered: image.zoomIn(image.width / 2, image.height / 2);
   }
   Timer {
     id: decrementZoomTimer
     interval: 100
     repeat: true
     triggeredOnStart: true
-    onTriggered: image.zoom = image.zoom <= 1 ? 1 / (1 / image.zoom + 1) : image.zoom - 1;
+    onTriggered: image.zoomOut(image.width / 2, image.height / 2);
   }
 }

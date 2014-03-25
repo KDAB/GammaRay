@@ -65,11 +65,6 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QDeclarativeView" name="sceneView">
-       <property name="resizeMode">
-        <enum>QDeclarativeView::SizeRootObjectToView</enum>
-       </property>
-      </widget>
      </widget>
      <widget class="QStackedWidget" name="stackedWidget">
       <widget class="QWidget" name="page_13">
@@ -92,11 +87,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>QDeclarativeView</class>
-   <extends>QGraphicsView</extends>
-   <header>QtDeclarative/QDeclarativeView</header>
-  </customwidget>
   <customwidget>
    <class>KFilterProxySearchLine</class>
    <extends>QWidget</extends>
