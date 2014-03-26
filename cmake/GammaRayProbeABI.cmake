@@ -57,7 +57,12 @@ elseif(APPLE)
   endif()
 
 else()
-  set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
+  # uname reports different ARM versions, unlike ELF, so map all this to "arm"
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-arm")
+  else()
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
+  endif()
 endif()
 
 
