@@ -24,6 +24,8 @@
 #include "processmodel.h"
 #include "probeabimodel.h"
 
+#include <probefinder.h>
+
 #include <QDebug>
 
 using namespace GammaRay;
@@ -47,6 +49,7 @@ QDebug operator<<(QDebug d, const ProcData &data) {
 ProcessModel::ProcessModel(QObject *parent)
 : QAbstractTableModel(parent)
 {
+  m_availableABIs = ProbeFinder::listProbeABIs();
 }
 
 ProcessModel::~ProcessModel()
@@ -169,11 +172,13 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
       return data.user;
     }
   } else if (role == Qt::ToolTipRole) {
-    return tr("Name: %1\nPID: %2\nOwner: %3\nQt ABI: %4")
+    const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(data.abi, m_availableABIs);
+    return tr("Name: %1\nPID: %2\nOwner: %3\nQt ABI: %4\nProbe available: %5")
       .arg(data.image.isEmpty() ? data.name : data.image)
       .arg(data.ppid)
       .arg(data.user)
-      .arg(data.abi.displayString());
+      .arg(data.abi.displayString())
+      .arg(bestABI.isValid() ? tr("yes") : tr("no"));
   } else if (role == PIDRole) {
     return data.ppid.toInt(); // why is this a QString in the first place!?
   } else if (role == NameRole) {
@@ -202,4 +207,15 @@ int ProcessModel::rowCount(const QModelIndex &parent) const
 ProcDataList ProcessModel::processes() const
 {
   return m_data;
+}
+
+Qt::ItemFlags ProcessModel::flags(const QModelIndex& index) const
+{
+  const ProbeABI abi = index.data(ABIRole).value<ProbeABI>();
+  const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(abi, m_availableABIs);
+
+  const Qt::ItemFlags f = QAbstractItemModel::flags(index);
+  if (!bestABI.isValid())
+    return f & ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+  return f;
 }
