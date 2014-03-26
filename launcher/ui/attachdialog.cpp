@@ -26,7 +26,7 @@
 #include "launchoptions.h"
 #include "processfiltermodel.h"
 #include "processmodel.h"
-#include <probefinder.h>
+#include "probeabimodel.h"
 
 #include <QPushButton>
 #include <QStandardItemModel>
@@ -41,7 +41,8 @@
 using namespace GammaRay;
 
 AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
-: QWidget(parent, f)
+: QWidget(parent, f),
+  m_abiModel(new ProbeABIModel(this))
 {
   ui.setupUi(this);
 
@@ -63,17 +64,16 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   ui.view->setSelectionMode(QAbstractItemView::SingleSelection);
   connect(ui.view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
           this, SIGNAL(updateButtonState()));
+  connect(ui.view->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+          this, SLOT(selectABI(QModelIndex)));
 
   connect(ui.view, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
 
   ui.filter->setProxy(m_proxyModel);
 
-  QStringListModel *probeABIModel = new QStringListModel(this);
-  probeABIModel->setStringList(ProbeFinder::listProbeABIIds());
-  ui.probeBox->setModel(probeABIModel);
+  ui.probeBox->setModel(m_abiModel);
 
   QSettings settings;
-  ui.probeBox->setCurrentIndex(settings.value(QLatin1String("Launcher/AttachProbeABI")).toInt());
   ui.accessMode->setCurrentIndex(settings.value(QLatin1String("Launcher/AttachAccessMode")).toInt());
 
   setWindowTitle(tr("GammaRay - Attach to Process"));
@@ -96,7 +96,6 @@ bool AttachDialog::isValid() const
 void AttachDialog::writeSettings()
 {
   QSettings settings;
-  settings.setValue(QLatin1String("Launcher/AttachProbeABI"), ui.probeBox->currentIndex());
   settings.setValue(QLatin1String("Launcher/AttachAccessMode"), ui.accessMode->currentIndex());
 }
 
@@ -104,7 +103,7 @@ LaunchOptions AttachDialog::launchOptions() const
 {
   LaunchOptions opt;
   opt.setPid(pid());
-  opt.setProbeABI(ui.probeBox->currentText());
+  opt.setProbeABI(ui.probeBox->itemData(ui.probeBox->currentIndex()).value<ProbeABI>().id());
 
   switch (ui.accessMode->currentIndex()) {
     case 0: // local, out-of-process
@@ -150,3 +149,13 @@ void AttachDialog::updateProcessesFinished()
   watcher->deleteLater();
 }
 
+void AttachDialog::selectABI(const QModelIndex& processIndex)
+{
+  if (!processIndex.isValid())
+    return;
+
+  const ProbeABI abi = processIndex.data(ProcessModel::ABIRole).value<ProbeABI>();
+  const int abiIndex = m_abiModel->indexOfBestMatchingABI(abi);
+  if (abiIndex >= 0)
+    ui.probeBox->setCurrentIndex(abiIndex);
+}

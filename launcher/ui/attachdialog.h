@@ -34,6 +34,7 @@ namespace GammaRay {
 class LaunchOptions;
 class ProcessModel;
 class ProcessFilterModel;
+class ProbeABIModel;
 
 class AttachDialog : public QWidget
 {
@@ -56,12 +57,14 @@ class AttachDialog : public QWidget
   private slots:
     void updateProcesses();
     void updateProcessesFinished();
+    void selectABI(const QModelIndex &processIndex);
 
   private:
     Ui::AttachDialog ui;
     ProcessModel *m_model;
     ProcessFilterModel *m_proxyModel;
     QTimer *m_timer;
+    ProbeABIModel *m_abiModel;
 };
 
 } // namespace GammaRay
