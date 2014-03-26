@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_LAUNCHOPTIONS_H
 #define GAMMARAY_LAUNCHOPTIONS_H
 
+#include <common/probeabi.h>
+
 #include <QHash>
 #include <QStringList>
 
@@ -78,8 +80,8 @@ public:
   void setInjectorType(const QString &injectorType);
 
   /** Probe ABI. */
-  QString probeABI() const;
-  void setProbeABI(const QString &abi);
+  ProbeABI probeABI() const;
+  void setProbeABI(const ProbeABI &abi);
 
   /** execute this launch options with the given command-line launcher. */
   bool execute(const QString& launcherPath) const;
@@ -87,7 +89,7 @@ public:
 private:
   QStringList m_launchArguments;
   QString m_injectorType;
-  QString m_probeABI;
+  ProbeABI m_probeABI;
   int m_pid;
   UiMode m_uiMode;
   QHash<QByteArray, QByteArray> m_probeSettings;

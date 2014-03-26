@@ -103,7 +103,7 @@ LaunchOptions AttachDialog::launchOptions() const
 {
   LaunchOptions opt;
   opt.setPid(pid());
-  opt.setProbeABI(ui.probeBox->itemData(ui.probeBox->currentIndex()).value<ProbeABI>().id());
+  opt.setProbeABI(ui.probeBox->itemData(ui.probeBox->currentIndex()).value<ProbeABI>());
 
   switch (ui.accessMode->currentIndex()) {
     case 0: // local, out-of-process

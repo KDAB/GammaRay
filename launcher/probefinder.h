@@ -38,7 +38,7 @@ namespace ProbeFinder {
   /**
    * Attempts to find the full path of the probe DLL.
    */
-  QString findProbe(const QString& baseName, const QString& probeAbi);
+  QString findProbe(const QString& baseName, const ProbeABI& probeAbi);
 
   /**
    * Find the best matching probe for the given @p targetABI.
@@ -51,11 +51,6 @@ namespace ProbeFinder {
    * List all available probe ABIs.
    */
   QVector<ProbeABI> listProbeABIs();
-
-  /**
-   * @deprecated porting aid
-   */
-  QStringList listProbeABIIds();
 
   /**
    * Returns the platform-specific file name extenstion.

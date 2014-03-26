@@ -98,7 +98,7 @@ LaunchOptions LaunchPage::launchOptions() const
   l.push_back(ui->progEdit->text());
   l.append(notEmptyString(m_argsModel->stringList()));
   opt.setLaunchArguments(l);
-  opt.setProbeABI(ui->probeBox->currentText());
+  opt.setProbeABI(ui->probeBox->itemData(ui->probeBox->currentIndex()).value<ProbeABI>());
 
   switch (ui->accessMode->currentIndex()) {
     case 0: // local, out-of-process

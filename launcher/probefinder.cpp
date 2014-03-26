@@ -38,10 +38,10 @@ namespace GammaRay {
 
 namespace ProbeFinder {
 
-QString findProbe(const QString &baseName, const QString &probeAbi)
+QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
 {
   const QString probePath =
-    Paths::probePath(probeAbi) %
+    Paths::probePath(probeAbi.id()) %
     QDir::separator() %
     baseName %
     fileExtension();
@@ -87,12 +87,6 @@ QVector<ProbeABI> listProbeABIs()
       abis.push_back(abi);
   }
   return abis;
-}
-
-QStringList listProbeABIIds()
-{
-  const QDir dir(Paths::probePath(QString()));
-  return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 }
 
 QString fileExtension()

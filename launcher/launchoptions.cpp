@@ -111,12 +111,12 @@ void LaunchOptions::setInjectorType(const QString& injectorType)
   m_injectorType = injectorType;
 }
 
-QString LaunchOptions::probeABI() const
+ProbeABI LaunchOptions::probeABI() const
 {
   return m_probeABI;
 }
 
-void LaunchOptions::setProbeABI(const QString& abi)
+void LaunchOptions::setProbeABI(const ProbeABI& abi)
 {
   m_probeABI = abi;
 }
@@ -164,9 +164,9 @@ bool LaunchOptions::execute(const QString& launcherPath) const
       break;
   }
 
-  if (!m_probeABI.isEmpty()) {
+  if (m_probeABI.isValid()) {
     args.push_back("--probe");
-    args.push_back(m_probeABI);
+    args.push_back(m_probeABI.id());
   }
 
   if (m_probeSettings.contains("TCPServer")) {

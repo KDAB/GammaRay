@@ -154,9 +154,13 @@ int main(int argc, char **argv)
       return 0;
     }
     if ( arg == QLatin1String("--probe") && !args.isEmpty()) {
-      const QString abi = args.takeFirst();
+      const ProbeABI abi = ProbeABI::fromString(args.takeFirst());
+      if (!abi.isValid()) {
+        out << "Invalid probe ABI specified, see --list-probes for valid ones." << endl;
+        return 1;
+      }
       if (ProbeFinder::findProbe("gammaray_probe", abi).isEmpty()) {
-        out << abi << "is not a known probe, see --list-probes." << endl;
+        out << abi.id() << "is not a known probe, see --list-probes." << endl;
         return 1;
       }
       options.setProbeABI(abi);
@@ -206,33 +210,33 @@ int main(int argc, char **argv)
   Q_ASSERT(options.isValid());
 
   // attempt to autodetect probe ABI, if not set explicitly
-  if (options.probeABI().isEmpty()) {
+  if (!options.probeABI().isValid()) {
     ProbeABIDetector detector;
     if (options.isLaunch()) {
-      options.setProbeABI(detector.abiForExecutable(options.absoluteExecutablePath()).id());
+      options.setProbeABI(detector.abiForExecutable(options.absoluteExecutablePath()));
     } else {
-      options.setProbeABI(detector.abiForProcess(options.pid()).id());
+      options.setProbeABI(detector.abiForProcess(options.pid()));
     }
   }
 
   // find a compatible probe
-  if (!options.probeABI().isEmpty()) {
-    const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(ProbeABI::fromString(options.probeABI()));
+  if (options.probeABI().isValid()) {
+    const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(options.probeABI());
     if (!bestABI.isValid()) {
-      out << "No probe found for ABI " << options.probeABI() << endl;
+      out << "No probe found for ABI " << options.probeABI().id() << endl;
       return 1;
     }
-    out << "Detected ABI " << options.probeABI() << ", using ABI " << bestABI.id() << "." << endl;
-    options.setProbeABI(bestABI.id());
+    out << "Detected ABI " << options.probeABI().id() << ", using ABI " << bestABI.id() << "." << endl;
+    options.setProbeABI(bestABI);
   } else {
-    const QStringList availableProbes = ProbeFinder::listProbeABIIds();
+    const QVector<ProbeABI> availableProbes = ProbeFinder::listProbeABIs();
     if (availableProbes.isEmpty()) {
       out << "No probes found, this is likely an installation problem." << endl;
       return 1;
     }
     if (availableProbes.size() > 1) {
-      out << "No probe ABI specified and ABI auto-detection not implemented yet, picking " << availableProbes.first() << " at random." << endl;
-      out << "To specify the probe ABI explicitly use --probe <abi>, available probes are: " << availableProbes.join(", ") << endl;
+      out << "No probe ABI specified and ABI auto-detection failed, picking " << availableProbes.first().id() << " at random." << endl;
+      out << "To specify the probe ABI explicitly use --probe <abi>, available probes are listed using the --list-probes option." << endl;
     }
     options.setProbeABI(availableProbes.first());
   }
