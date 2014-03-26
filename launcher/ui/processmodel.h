@@ -61,7 +61,8 @@ class ProcessModel : public QAbstractTableModel
       PIDRole = Qt::UserRole,
       NameRole,
       StateRole,
-      UserRole
+      UserRole,
+      ABIRole
     };
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

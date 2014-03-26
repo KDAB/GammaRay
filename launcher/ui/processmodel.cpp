@@ -22,6 +22,8 @@
 */
 
 #include "processmodel.h"
+#include "probeabimodel.h"
+
 #include <QDebug>
 
 using namespace GammaRay;
@@ -166,6 +168,12 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
     } else if (index.column() == UserColumn) {
       return data.user;
     }
+  } else if (role == Qt::ToolTipRole) {
+    return tr("Name: %1\nPID: %2\nOwner: %3\nQt ABI: %4")
+      .arg(data.image.isEmpty() ? data.name : data.image)
+      .arg(data.ppid)
+      .arg(data.user)
+      .arg(data.abi.displayString());
   } else if (role == PIDRole) {
     return data.ppid.toInt(); // why is this a QString in the first place!?
   } else if (role == NameRole) {
@@ -174,6 +182,8 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
     return data.state;
   } else if (role == UserRole) {
     return data.user;
+  } else if (role == ABIRole) {
+    return QVariant::fromValue(data.abi);
   }
 
   return QVariant();
