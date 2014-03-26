@@ -150,8 +150,10 @@ static QString archFromELFHeader(const uchar *data, qint64 size)
   switch (hdr->e_machine) {
     case EM_386: return "i686";
     case EM_X86_64: return "x86_64";
+    case EM_ARM: return "arm";
   }
 
+  qWarning() << "Unsupported ELF machine type:" << hdr->e_machine;
   return QString();
 }
 #endif
