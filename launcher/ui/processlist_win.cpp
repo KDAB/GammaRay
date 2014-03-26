@@ -32,6 +32,8 @@
 
 #include "processlist.h"
 
+#include <common/probeabidetector.h>
+
 #include <QLibrary>
 
 // Enable Win API of XP SP1 and later
@@ -45,6 +47,9 @@
 
 #include <tlhelp32.h>
 #include <psapi.h>
+
+static GammaRay::ProbeABIDetector s_abiDetector;
+
 // Resolve QueryFullProcessImageNameW out of kernel32.dll due
 // to incomplete MinGW import libs and it not being present
 // on Windows XP.
@@ -124,41 +129,6 @@ static inline ProcessInfo processInfo(DWORD processId)
   return pi;
 }
 
-static inline bool isQtApp(DWORD processId)
-{
-  MODULEENTRY32 me;
-  me.dwSize = sizeof(MODULEENTRY32);
-  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processId);
-  if (snapshot == INVALID_HANDLE_VALUE) {
-    return false;
-  }
-
-  for (bool hasNext = Module32First(snapshot, &me);
-       hasNext;
-       hasNext = Module32Next(snapshot, &me)) {
-    const QString module = QString::fromUtf16(reinterpret_cast<ushort*>(me.szModule));
-//TODO: Do this check properly, probe does not need to have the same type
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#ifdef NDEBUG
-    if (module == QLatin1String("QtCore4.dll")) {
-#else
-    if (module == QLatin1String("QtCored4.dll")) {
-#endif
-#else
-#ifdef NDEBUG
-    if (module == QLatin1String("Qt5Core.dll")) {
-#else
-    if (module == QLatin1String("Qt5Cored.dll")) {
-#endif
-#endif
-        CloseHandle(snapshot);
-        return true;
-    }
-  }
-  CloseHandle(snapshot);
-  return false;
-}
-
 ProcDataList processList(const ProcDataList &/*previous*/)
 {
   ProcDataList rc;
@@ -179,11 +149,7 @@ ProcDataList processList(const ProcDataList &/*previous*/)
     const ProcessInfo processInf = processInfo(pe.th32ProcessID);
     procData.image = processInf.imageName;
     procData.user = processInf.processOwner;
-    if (isQtApp(pe.th32ProcessID)) {
-      procData.type = ProcData::QtApp;
-    } else {
-      procData.type = ProcData::NoQtApp;
-    }
+    procData.abi = s_abiDetector.abiForProcess(pe.th32ProcessID);
     rc.push_back(procData);
   }
   CloseHandle(snapshot);
