@@ -215,10 +215,6 @@ void QuickInspector::renderScene()
   if (m_window->windowState() != Qt::WindowMinimized)
     img = m_window->grabWindow();
   if (m_currentItem) {
-#ifdef HAVE_SG_INSPECTOR
-    QQuickAnchors *anchors = m_currentItem->property("anchors").value<QQuickAnchors*>();
-    QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
-#endif
     QQuickItem *parent = m_currentItem->parentItem();
 
     QVariantMap geometryData;
@@ -230,21 +226,25 @@ void QuickInspector::renderScene()
     geometryData.insert("childrenRect", m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
     geometryData.insert("transformOriginPoint", m_currentItem->mapToScene(m_currentItem->transformOriginPoint()));
 #ifdef HAVE_SG_INSPECTOR
-    geometryData.insert("left", (bool)(usedAnchors & QQuickAnchors::LeftAnchor) || anchors->fill());
-    geometryData.insert("right", (bool)(usedAnchors & QQuickAnchors::RightAnchor) || anchors->fill());
-    geometryData.insert("top", (bool)(usedAnchors & QQuickAnchors::TopAnchor) || anchors->fill());
-    geometryData.insert("bottom", (bool)(usedAnchors & QQuickAnchors::BottomAnchor) || anchors->fill());
-    geometryData.insert("baseline", (bool)(usedAnchors & QQuickAnchors::BaselineAnchor));
-    geometryData.insert("horizontalCenter", (bool)(usedAnchors & QQuickAnchors::HCenterAnchor) || anchors->centerIn());
-    geometryData.insert("verticalCenter", (bool)(usedAnchors & QQuickAnchors::VCenterAnchor) || anchors->centerIn());
-    geometryData.insert("leftMargin", anchors->leftMargin());
-    geometryData.insert("rightMargin", anchors->rightMargin());
-    geometryData.insert("topMargin", anchors->topMargin());
-    geometryData.insert("bottomMargin", anchors->bottomMargin());
-    geometryData.insert("horizontalCenterOffset", anchors->horizontalCenterOffset());
-    geometryData.insert("verticalCenterOffset", anchors->verticalCenterOffset());
-    geometryData.insert("baselineOffset", anchors->baselineOffset());
-    geometryData.insert("margins", anchors->margins());
+    QQuickAnchors *anchors = m_currentItem->property("anchors").value<QQuickAnchors*>();
+    if (anchors) {
+      QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
+      geometryData.insert("left", (bool)(usedAnchors & QQuickAnchors::LeftAnchor) || anchors->fill());
+      geometryData.insert("right", (bool)(usedAnchors & QQuickAnchors::RightAnchor) || anchors->fill());
+      geometryData.insert("top", (bool)(usedAnchors & QQuickAnchors::TopAnchor) || anchors->fill());
+      geometryData.insert("bottom", (bool)(usedAnchors & QQuickAnchors::BottomAnchor) || anchors->fill());
+      geometryData.insert("baseline", (bool)(usedAnchors & QQuickAnchors::BaselineAnchor));
+      geometryData.insert("horizontalCenter", (bool)(usedAnchors & QQuickAnchors::HCenterAnchor) || anchors->centerIn());
+      geometryData.insert("verticalCenter", (bool)(usedAnchors & QQuickAnchors::VCenterAnchor) || anchors->centerIn());
+      geometryData.insert("leftMargin", anchors->leftMargin());
+      geometryData.insert("rightMargin", anchors->rightMargin());
+      geometryData.insert("topMargin", anchors->topMargin());
+      geometryData.insert("bottomMargin", anchors->bottomMargin());
+      geometryData.insert("horizontalCenterOffset", anchors->horizontalCenterOffset());
+      geometryData.insert("verticalCenterOffset", anchors->verticalCenterOffset());
+      geometryData.insert("baselineOffset", anchors->baselineOffset());
+      geometryData.insert("margins", anchors->margins());
+    }
 #endif
     geometryData.insert("x", m_currentItem->x());
     geometryData.insert("y", m_currentItem->y());
