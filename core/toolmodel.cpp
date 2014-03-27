@@ -38,11 +38,11 @@
 #include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
+#include "metaobjectrepository.h"
+#include "metaobject.h"
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include "tools/standardpaths/standardpaths.h"
 #include "tools/mimetypes/mimetypes.h"
-#include "metaobjectrepository.h"
-#include "metaobject.h"
 #endif
 
 #include <common/pluginmanager.h>

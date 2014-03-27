@@ -210,6 +210,7 @@ void QuickInspector::selectItem(QQuickItem* item)
 
 void QuickInspector::selectSGNode(QSGNode* node)
 {
+#ifdef HAVE_SG_INSPECTOR
   const QAbstractItemModel *model = m_sgModel;
   const QModelIndexList indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole,
     QVariant::fromValue(node), 1, Qt::MatchExactly | Qt::MatchRecursive);
@@ -219,6 +220,7 @@ void QuickInspector::selectSGNode(QSGNode* node)
   const QModelIndex index = indexList.first();
   m_sgSelectionModel->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
+#endif
 }
 
 void QuickInspector::objectSelected(QObject *object)
@@ -230,8 +232,10 @@ void QuickInspector::objectSelected(QObject *object)
 
 void QuickInspector::objectSelected(void* object, const QString& typeName)
 {
-  if (MetaObjectRepository::instance()->metaObject(typeName)->inherits("QSGNode"));
+#ifdef HAVE_SG_INSPECTOR
+  if (MetaObjectRepository::instance()->metaObject(typeName)->inherits("QSGNode"))
     selectSGNode(reinterpret_cast<QSGNode*>(object));
+#endif
 }
 
 void QuickInspector::renderScene()
