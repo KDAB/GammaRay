@@ -39,6 +39,7 @@ class PropertiesExtensionClient : public PropertiesExtensionInterface
   public slots:
 //     virtual void activateMethod();
 //     virtual void invokeMethod(Qt::ConnectionType type);
+    virtual void navigateToValue(int modelRow);
     virtual void setProperty(const QString& name, const QVariant& value);
     virtual void resetProperty(const QString& name);
 };

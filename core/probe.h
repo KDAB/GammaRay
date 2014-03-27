@@ -33,6 +33,7 @@
 #include <QSet>
 #include <QVector>
 
+class QItemSelectionModel;
 class QThread;
 class QPoint;
 class QTimer;
@@ -82,6 +83,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     /*override*/ bool hasReliableObjectTracking() const;
     /*override*/ void discoverObject(QObject* object);
     /*override*/ void selectObject(QObject* object, const QPoint& pos = QPoint());
+    /*override*/ void selectObject(void* object, const QString& typeName);
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -114,6 +116,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
      * Emitted when the user selected @p object at position @p pos in the probed application.
      */
     void objectSelected(QObject *object, const QPoint &pos);
+    void nonQObjectSelected(void *object, const QString &typeName);
 
     void objectCreated(QObject *obj);
     void objectDestroyed(QObject *obj);
@@ -148,6 +151,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     MetaObjectTreeModel *m_metaObjectTreeModel;
     ConnectionModel *m_connectionModel;
     ToolModel *m_toolModel;
+    QItemSelectionModel *m_toolSelectionModel;
     QObject *m_window;
     QSet<QObject*> m_validObjects;
     QQueue<QObject*> m_queuedObjects;

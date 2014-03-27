@@ -24,6 +24,10 @@
 #include "objectstaticpropertymodel.h"
 #include "varianthandler.h"
 #include "util.h"
+#include "probe.h"
+#include "toolmodel.h"
+#include "toolfactory.h"
+#include "metaobjectrepository.h"
 
 #include <common/propertymodel.h>
 
@@ -50,13 +54,13 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
   }
 
   const QMetaProperty prop = m_obj.data()->metaObject()->property(index.row());
+  const QVariant value = prop.read(m_obj.data());
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
       return prop.name();
     } else if (index.column() == 1) {
       // QMetaProperty::read sets QVariant::typeName to int for enums,
       // so we need to handle that separately here
-      const QVariant value = prop.read(m_obj.data());
       const QString enumStr = Util::enumToString(value, prop.typeName(), m_obj.data());
       if (!enumStr.isEmpty()) {
         return enumStr;
@@ -73,16 +77,32 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
     }
   } else if (role == Qt::DecorationRole) {
     if (index.column() == 1) {
-      return VariantHandler::decoration(prop.read(m_obj.data()));
+      return VariantHandler::decoration(value);
     }
   } else if (role == Qt::EditRole) {
     if (index.column() == 1) {
-      return prop.read(m_obj.data());
+      return value;
     }
   } else if (role == Qt::ToolTipRole) {
     return detailString(prop);
   } else if (role == PropertyModel::ActionRole) {
-    return prop.isResettable() ? PropertyModel::Reset : PropertyModel::NoAction;
+    return (prop.isResettable() ? PropertyModel::Reset : PropertyModel::NoAction)
+         | ((MetaObjectRepository::instance()->metaObject(value.typeName()) && *reinterpret_cast<void* const*>(value.data())) || value.value<QObject*>()
+            ? PropertyModel::NavigateTo
+            : PropertyModel::NoAction);
+  } else if (role == PropertyModel::ValueRole) {
+    return value;
+  } else if (role == PropertyModel::AppropriateToolRole) {
+    ToolModel *toolModel = Probe::instance()->toolModel();
+    ToolFactory *factory;
+    if (value.canConvert<QObject*>())
+      factory = toolModel->data(toolModel->toolForObject(value.value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+    else
+      factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void* const*>(value.data()), value.typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+    if (factory) {
+      return factory->name();
+    }
+    return QVariant();
   }
 
   return QVariant();

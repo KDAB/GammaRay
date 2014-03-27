@@ -135,6 +135,13 @@ class ProbeInterface
      * @since 2.0
      */
     virtual void selectObject(QObject *object, const QPoint &pos = QPoint()) = 0;
+
+    /**
+     * Notify the probe about the user selecting one of "your" objects.
+     *
+     * @since 2.1
+     */
+    virtual void selectObject(void* object, const QString& typeName) = 0;
 };
 
 }

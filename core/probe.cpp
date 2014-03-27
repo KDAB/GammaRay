@@ -40,6 +40,7 @@
 #include "remote/remotemodelserver.h"
 #include "remote/selectionmodelserver.h"
 #include "toolpluginerrormodel.h"
+#include "toolfactory.h"
 
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
@@ -174,6 +175,8 @@ Probe::Probe(QObject *parent):
   registerModel(QLatin1String("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), m_toolModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ConnectionModel"), m_connectionModel);
+
+  m_toolSelectionModel = ObjectBroker::selectionModel(m_toolModel);
 
   ToolPluginModel *toolPluginModel = new ToolPluginModel(m_toolModel->plugins(), this);
   registerModel(QLatin1String("com.kdab.GammaRay.ToolPluginModel"), toolPluginModel);
@@ -739,6 +742,17 @@ bool Probe::hasReliableObjectTracking() const
 void Probe::selectObject(QObject* object, const QPoint& pos)
 {
   emit objectSelected(object, pos);
+
+  m_toolSelectionModel->select( m_toolModel->toolForObject(object), QItemSelectionModel::Select | QItemSelectionModel::Clear |
+    QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
+void Probe::selectObject(void* object, const QString& typeName)
+{
+  emit nonQObjectSelected(object, typeName);
+
+  m_toolSelectionModel->select( m_toolModel->toolForObject(object, typeName), QItemSelectionModel::Select | QItemSelectionModel::Clear |
+    QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
 //BEGIN: SignalSlotsLocationStore

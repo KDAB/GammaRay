@@ -299,7 +299,13 @@ void MetaObjectRepository::addMetaObject(MetaObject *mo)
 
 MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
 {
-  return m_metaObjects.value(typeName);
+  QString typeName_ = typeName;
+  typeName_.remove('*');
+  typeName_.remove('&');
+  typeName_.remove("const ");
+  typeName_.remove(" const");
+  typeName_.remove(' ');
+  return m_metaObjects.value(typeName_);
 }
 
 bool MetaObjectRepository::hasMetaObject(const QString &typeName) const

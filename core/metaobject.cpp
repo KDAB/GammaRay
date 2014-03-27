@@ -92,3 +92,19 @@ void *MetaObject::castForPropertyAt(void *object, int index) const
   }
   return object; // our own property
 }
+
+MetaObject* MetaObject::superClass(int index) const
+{
+  return m_baseClasses[index];
+}
+
+bool MetaObject::inherits(const QString& className) const
+{
+  if (className == m_className)
+    return true;
+  foreach (MetaObject *metaObject, m_baseClasses) {
+    if (metaObject->inherits(className))
+      return true;
+  }
+  return false;
+}

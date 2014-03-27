@@ -23,6 +23,10 @@
 
 #include "objectdynamicpropertymodel.h"
 #include "varianthandler.h"
+#include "toolmodel.h"
+#include "probe.h"
+#include "toolfactory.h"
+#include "metaobjectrepository.h"
 
 #include <common/propertymodel.h>
 
@@ -48,9 +52,9 @@ QVariant ObjectDynamicPropertyModel::data(const QModelIndex &index, int role) co
   }
 
   const QByteArray propName = propNames.at(index.row());
+  const QVariant propValue = m_obj.data()->property(propName);
 
   if (role == Qt::DisplayRole || role == Qt::EditRole) {
-    const QVariant propValue = m_obj.data()->property(propName);
     if (index.column() == 0) {
       return QString::fromUtf8(propName);
     } else if (index.column() == 1) {
@@ -61,7 +65,23 @@ QVariant ObjectDynamicPropertyModel::data(const QModelIndex &index, int role) co
       return tr("<dynamic>");
     }
   } else if (role == PropertyModel::ActionRole) {
-    return PropertyModel::Delete;
+    return PropertyModel::Delete
+         | ((MetaObjectRepository::instance()->metaObject(propValue.typeName()) && *reinterpret_cast<void* const*>(propValue.data())) || propValue.value<QObject*>()
+            ? PropertyModel::NavigateTo
+            : PropertyModel::NoAction);
+  } else if (role == PropertyModel::ValueRole) {
+    return propValue;
+  } else if (role == PropertyModel::AppropriateToolRole) {
+    ToolModel *toolModel = Probe::instance()->toolModel();
+    ToolFactory *factory;
+    if (propValue.canConvert<QObject*>())
+      factory = toolModel->data(toolModel->toolForObject(propValue.value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+    else
+      factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void* const*>(propValue.data()), propValue.typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+    if (factory) {
+      return factory->name();
+    }
+    return QVariant();
   }
 
   return QVariant();

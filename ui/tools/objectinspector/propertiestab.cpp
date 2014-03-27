@@ -135,6 +135,10 @@ void PropertiesTab::propertyContextMenu(const QPoint& pos)
     QAction *action = contextMenu.addAction(tr("Reset"));
     action->setData(PropertyModel::Reset);
   }
+  if (actions & PropertyModel::NavigateTo) {
+    QAction *action = contextMenu.addAction(tr("Show in %1").arg(index.data(PropertyModel::AppropriateToolRole).toString()));
+    action->setData(PropertyModel::NavigateTo);
+  }
 
   if (QAction *action = contextMenu.exec(m_ui->propertyView->viewport()->mapToGlobal(pos))) {
     const QString propertyName = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
@@ -144,6 +148,15 @@ void PropertiesTab::propertyContextMenu(const QPoint& pos)
         break;
       case PropertyModel::Reset:
         m_interface->resetProperty(propertyName);
+        break;
+      case PropertyModel::NavigateTo:
+        QSortFilterProxyModel *proxy = qobject_cast<QSortFilterProxyModel*>(m_ui->propertyView->model());
+        QModelIndex sourceIndex = index;
+        while (proxy) {
+          sourceIndex = proxy->mapToSource(sourceIndex);
+          proxy = qobject_cast<QSortFilterProxyModel*>(proxy->sourceModel());
+        }
+        m_interface->navigateToValue(sourceIndex.row());
         break;
     }
   }

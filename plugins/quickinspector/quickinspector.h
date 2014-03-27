@@ -74,10 +74,13 @@ private slots:
   void sgSelectionChanged(const QItemSelection &selection);
   void clientConnectedChanged(bool connected);
   void sgNodeDeleted(QSGNode *node);
+  void objectSelected(QObject *object);
+  void objectSelected(void *object, const QString &typeName);
 
 private:
   void selectWindow(QQuickWindow* window);
   void selectItem(QQuickItem *item);
+  void selectSGNode(QSGNode *node);
   void registerMetaTypes();
   void registerVariantHandlers();
   void registerPCExtensions();

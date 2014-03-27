@@ -41,6 +41,8 @@
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include "tools/standardpaths/standardpaths.h"
 #include "tools/mimetypes/mimetypes.h"
+#include "metaobjectrepository.h"
+#include "metaobject.h"
 #endif
 
 #include <common/pluginmanager.h>
@@ -182,6 +184,41 @@ QVector< ToolFactory* > ToolModel::plugins() const
 PluginLoadErrors ToolModel::pluginErrors() const
 {
   return m_pluginManager->errors();
+}
+
+QModelIndex ToolModel::toolForObject(QObject* object) const
+{
+  if (!object)
+    return QModelIndex();
+  const QMetaObject *metaObject = object->metaObject();
+  while (metaObject) {
+    for (int i = 0; i < m_tools.size(); i++) {
+      const ToolFactory *factory = m_tools.at(i);
+      if (factory && factory->supportedTypes().contains(metaObject->className())) {
+        qDebug() << "Found tool" << factory->name() << "\n";
+        return index(i, 0);
+      }
+    }
+    metaObject = metaObject->superClass();
+  }
+  return QModelIndex();
+}
+
+QModelIndex ToolModel::toolForObject(const void* object, const QString typeName) const
+{
+  if (!object)
+    return QModelIndex();
+  const MetaObject *metaObject = MetaObjectRepository::instance()->metaObject(typeName);
+  while (metaObject) {
+    for (int i = 0; i < m_tools.size(); i++) {
+      const ToolFactory *factory = m_tools.at(i);
+      if (factory && factory->supportedTypes().contains(metaObject->className())) {
+        return index(i, 0);
+      }
+    }
+    metaObject = metaObject->superClass();
+  }
+  return QModelIndex();
 }
 
 void ToolModel::addToolFactory(ToolFactory* tool)

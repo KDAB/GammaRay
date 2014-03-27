@@ -28,6 +28,8 @@
 #include "objectdynamicpropertymodel.h"
 #include "objectstaticpropertymodel.h"
 #include "propertycontroller.h"
+#include <probe.h>
+#include <common/propertymodel.h>
 #include <QMetaProperty>
 
 using namespace GammaRay;
@@ -65,6 +67,16 @@ bool PropertiesExtension::setObject(void* object, const QString& typeName)
   m_object = 0;
   m_metaPropertyModel->setObject(object, typeName);
   return true;
+}
+
+void PropertiesExtension::navigateToValue(int modelRow)
+{
+  QModelIndex index = m_aggregatedPropertyModel->index(modelRow, 2);
+  QVariant propertyValue = index.data(PropertyModel::ValueRole);
+  if (propertyValue.canConvert<QObject*>())
+    Probe::instance()->selectObject(propertyValue.value<QObject*>());
+  else
+    Probe::instance()->selectObject(*reinterpret_cast<void**>(propertyValue.data()), index.data(Qt::DisplayRole).toString());
 }
 
 void PropertiesExtension::setProperty(const QString& name, const QVariant& value)

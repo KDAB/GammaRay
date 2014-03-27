@@ -150,6 +150,8 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_itemModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_itemModel, SLOT(objectRemoved(QObject*)));
+  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+  connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)), SLOT(objectSelected(void*,QString)));
 
   m_itemSelectionModel = ObjectBroker::selectionModel(m_itemModel);
   connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
@@ -204,6 +206,32 @@ void QuickInspector::selectItem(QQuickItem* item)
   const QModelIndex index = indexList.first();
   m_itemSelectionModel->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
+void QuickInspector::selectSGNode(QSGNode* node)
+{
+  const QAbstractItemModel *model = m_sgModel;
+  const QModelIndexList indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole,
+    QVariant::fromValue(node), 1, Qt::MatchExactly | Qt::MatchRecursive);
+  if (indexList.isEmpty())
+    return;
+
+  const QModelIndex index = indexList.first();
+  m_sgSelectionModel->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear |
+    QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
+void QuickInspector::objectSelected(QObject *object)
+{
+  QQuickItem *item = qobject_cast<QQuickItem*>(object);
+  if (item)
+    selectItem(item);
+}
+
+void QuickInspector::objectSelected(void* object, const QString& typeName)
+{
+  if (MetaObjectRepository::instance()->metaObject(typeName)->inherits("QSGNode"));
+    selectSGNode(reinterpret_cast<QSGNode*>(object));
 }
 
 void QuickInspector::renderScene()
@@ -387,7 +415,6 @@ bool QuickInspector::eventFilter(QObject *receiver, QEvent *event)
       if (window && window->contentItem()) {
         QQuickItem *item = recursiveChiltAt(window->contentItem(), mouseEv->pos());
         m_probe->selectObject(item);
-        selectItem(item);
       }
     }
   }

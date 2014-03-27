@@ -25,6 +25,10 @@
 #include "metaobjectrepository.h"
 #include "metaobject.h"
 #include "varianthandler.h"
+#include "toolmodel.h"
+#include "probe.h"
+#include "toolfactory.h"
+#include <common/propertymodel.h>
 
 using namespace GammaRay;
 
@@ -93,6 +97,14 @@ QVariant MetaPropertyModel::headerData(int section, Qt::Orientation orientation,
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+QMap< int, QVariant > MetaPropertyModel::itemData(const QModelIndex& index) const
+{
+  QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
+  d.insert(PropertyModel::ActionRole, data(index, PropertyModel::ActionRole));
+  d.insert(PropertyModel::AppropriateToolRole, data(index, PropertyModel::AppropriateToolRole));
+  return d;
+}
+
 QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
 {
   if (!m_metaObject || !index.isValid()) {
@@ -126,6 +138,25 @@ QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
     case Qt::EditRole:
       return value;
     }
+  }
+
+  if (role == PropertyModel::ActionRole) {
+    return (MetaObjectRepository::instance()->metaObject(property->typeName()) && *reinterpret_cast<void**>(property->value(m_object).data())) || property->value(m_object).value<QObject*>()
+            ? PropertyModel::NavigateTo
+            : PropertyModel::NoAction;
+  } else if (role == PropertyModel::ValueRole) {
+      return property->value(m_object);
+  } else if (role == PropertyModel::AppropriateToolRole) {
+    ToolModel *toolModel = Probe::instance()->toolModel();
+    ToolFactory *factory;
+    if (property->value(m_object).canConvert<QObject*>())
+      factory = toolModel->data(toolModel->toolForObject(property->value(m_object).value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+    else
+      factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void**>(property->value(m_object).data()), property->typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+
+    if (factory)
+      return factory->name();
+    return QVariant();
   }
   return QVariant();
 }

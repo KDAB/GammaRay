@@ -114,8 +114,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   proxyModel->setSourceModel(model);
   proxyModel->sort(0);
   ui->toolSelector->setModel(proxyModel);
+  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(proxyModel);
+  ui->toolSelector->setSelectionModel(selectionModel);
   ui->toolSelector->resize(ui->toolSelector->minimumSize());
-  connect(ui->toolSelector->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(toolSelected()));
 
   // hide unused tool bar for now
@@ -215,7 +217,10 @@ void MainWindow::selectInitialTool()
 void MainWindow::toolSelected()
 {
   ui->actionsMenu->clear();
-  const int row = ui->toolSelector->currentIndex().row();
+  QModelIndexList list = ui->toolSelector->selectionModel()->selectedRows();
+  int row = -1;
+  if (list.count())
+    row = list[0].row();
   if (row == -1) {
     return;
   }

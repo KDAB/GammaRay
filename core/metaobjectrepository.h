@@ -59,7 +59,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
     /**
      * Returns the introspection information for the type with the given name.
      */
-    MetaObject *metaObject(const QString &typeName) const;
+    MetaObject *metaObject(const QString& typeName) const;
 
     /**
      * Returns whether a meta object is known for the given type name.

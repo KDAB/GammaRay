@@ -66,6 +66,9 @@ class GAMMARAY_CORE_EXPORT MetaObject
 
     void setClassName(const QString &className);
 
+    MetaObject *superClass(int index = 0) const;
+    bool inherits(const QString &className) const;
+
   protected:
     /** Casts down to base class @p baseClassIndex.
      * This is important when traversing multi-inheritance trees.

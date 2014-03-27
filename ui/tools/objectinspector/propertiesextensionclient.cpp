@@ -40,6 +40,11 @@ PropertiesExtensionClient::~PropertiesExtensionClient()
 
 }
 
+void PropertiesExtensionClient::navigateToValue(int modelRow)
+{
+  Endpoint::instance()->invokeObject(name(), "selectProperty", QVariantList() << QVariant::fromValue(modelRow));
+}
+
 void PropertiesExtensionClient::setProperty(const QString& propertyName, const QVariant& value)
 {
   Endpoint::instance()->invokeObject(name(), "setProperty", QVariantList() << QVariant::fromValue(propertyName) << VariantWrapper(value));
