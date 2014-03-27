@@ -121,12 +121,12 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 
   // version
   DWORD pointlessHandle;
-  DWORD fileVersionInfoSize = GetFileVersionInfoSize(path.toStdWString().c_str(), &pointlessHandle);
+  DWORD fileVersionInfoSize = GetFileVersionInfoSize(reinterpret_cast<LPCWSTR>(path.utf16()), &pointlessHandle);
   if (!fileVersionInfoSize)
     return ProbeABI();
 
   BYTE *buffer = new BYTE[fileVersionInfoSize];
-  if (GetFileVersionInfo(path.toStdWString().c_str(), pointlessHandle, fileVersionInfoSize, buffer)) {
+  if (GetFileVersionInfoW(reinterpret_cast<LPCWSTR>(path.utf16()), pointlessHandle, fileVersionInfoSize, buffer)) {
     void* versionInfoData;
     unsigned int versionInfoSize;
     if (VerQueryValue(buffer, TEXT("\\"), &versionInfoData, &versionInfoSize) && versionInfoSize) {
