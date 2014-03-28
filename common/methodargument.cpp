@@ -32,14 +32,14 @@ using namespace GammaRay;
 class GammaRay::MethodArgumentPrivate : public QSharedData
 {
   public:
-    MethodArgumentPrivate() : QSharedData(), data(0) {}
+    MethodArgumentPrivate() : QSharedData(), data(0), unwrapVariant(true) {}
 
     MethodArgumentPrivate(const MethodArgumentPrivate &other) : QSharedData(other)
     {
       value = other.value;
       name = other.name;
       data = 0;
-      unwrapVariant = true;
+      unwrapVariant = other.unwrapVariant;
     }
 
     ~MethodArgumentPrivate()
