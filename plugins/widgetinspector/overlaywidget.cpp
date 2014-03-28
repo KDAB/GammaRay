@@ -45,7 +45,8 @@ static QWidget *toplevelWidget(QWidget *widget)
 
 OverlayWidget::OverlayWidget()
   : m_currentToplevelWidget(0),
-    m_currentWidget(0)
+    m_currentWidget(0),
+    m_drawLayoutOutlineOnly(true)
 {
   setAttribute(Qt::WA_TransparentForMouseEvents);
   setFocusPolicy(Qt::NoFocus);
