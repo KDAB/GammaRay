@@ -42,7 +42,7 @@ PropertiesExtensionClient::~PropertiesExtensionClient()
 
 void PropertiesExtensionClient::navigateToValue(int modelRow)
 {
-  Endpoint::instance()->invokeObject(name(), "selectProperty", QVariantList() << QVariant::fromValue(modelRow));
+  Endpoint::instance()->invokeObject(name(), "navigateToValue", QVariantList() << QVariant::fromValue(modelRow));
 }
 
 void PropertiesExtensionClient::setProperty(const QString& propertyName, const QVariant& value)
