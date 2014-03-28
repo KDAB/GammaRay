@@ -195,7 +195,6 @@ QModelIndex ToolModel::toolForObject(QObject* object) const
     for (int i = 0; i < m_tools.size(); i++) {
       const ToolFactory *factory = m_tools.at(i);
       if (factory && factory->supportedTypes().contains(metaObject->className())) {
-        qDebug() << "Found tool" << factory->name() << "\n";
         return index(i, 0);
       }
     }
