@@ -81,6 +81,7 @@ QMap< int, QVariant > ObjectPropertyModel::itemData(const QModelIndex& index) co
 {
   QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
   d.insert(PropertyModel::ActionRole, data(index, PropertyModel::ActionRole));
+  d.insert(PropertyModel::AppropriateToolRole, data(index, PropertyModel::AppropriateToolRole));
   return d;
 }
 
