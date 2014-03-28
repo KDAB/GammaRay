@@ -48,6 +48,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
   Q_INTERFACES(GammaRay::WidgetInspectorInterface)
   public:
     explicit WidgetInspectorServer(ProbeInterface *probe, QObject *parent = 0);
+    ~WidgetInspectorServer();
 
     void selectDefaultItem();
 
@@ -66,7 +67,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void widgetSelected(QWidget *widget);
     void objectCreated(QObject *object);
 
-    void handleOverlayWidgetDestroyed(QObject*);
+    void recreateOverlayWidget();
 
     void saveAsImage(const QString &fileName);
     void saveAsSvg(const QString &fileName);
@@ -82,7 +83,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void checkFeatures();
 
   private:
-    OverlayWidget *m_overlayWidget;
+    QPointer<OverlayWidget> m_overlayWidget;
     QLibrary m_externalExportActions;
     PropertyController *m_propertyController;
     QItemSelectionModel *m_widgetSelectionModel;
