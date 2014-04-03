@@ -247,7 +247,6 @@ QPixmap WidgetInspectorServer::pixmapForWidget(QWidget *widget)
 
 void WidgetInspectorServer::recreateOverlayWidget()
 {
-  Q_ASSERT(!m_overlayWidget);
   m_overlayWidget = new OverlayWidget;
   m_overlayWidget->hide();
 
