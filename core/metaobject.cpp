@@ -95,6 +95,8 @@ void *MetaObject::castForPropertyAt(void *object, int index) const
 
 MetaObject* MetaObject::superClass(int index) const
 {
+  if (m_baseClasses.size() <= index)
+    return 0;
   return m_baseClasses[index];
 }
 
