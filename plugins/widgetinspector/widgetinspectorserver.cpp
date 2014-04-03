@@ -73,7 +73,6 @@ using namespace std;
 
 WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *parent)
   : WidgetInspectorInterface(parent)
-  , m_overlayWidget(new OverlayWidget)
   , m_propertyController(new PropertyController(objectName(), this))
   , m_updatePreviewTimer(new QTimer(this))
   , m_paintBufferModel(0)
@@ -92,9 +91,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   m_paintAnalyzerTimer->setInterval(100);
   connect(m_paintAnalyzerTimer, SIGNAL(timeout()), SLOT(updatePaintAnalyzer()));
 
-  m_overlayWidget->hide();
-  connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
-          SLOT(handleOverlayWidgetDestroyed(QObject*)));
+  recreateOverlayWidget();
 
   WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
   widgetFilterProxy->setSourceModel(probe->objectTreeModel());
@@ -119,6 +116,13 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
     discoverObjects();
   }
+}
+
+WidgetInspectorServer::~WidgetInspectorServer()
+{
+  disconnect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
+             this, SLOT(recreateOverlayWidget()));
+  delete m_overlayWidget.data();
 }
 
 static bool isMainWindowSubclassAcceptor(const QVariant &v)
@@ -241,13 +245,16 @@ QPixmap WidgetInspectorServer::pixmapForWidget(QWidget *widget)
 #endif
 }
 
-void WidgetInspectorServer::handleOverlayWidgetDestroyed(QObject *)
+void WidgetInspectorServer::recreateOverlayWidget()
 {
+  m_overlayWidget = new OverlayWidget;
+  m_overlayWidget->hide();
+
   // the target application might have destroyed the overlay widget
   // (e.g. because the parent of the overlay got destroyed).
   // just recreate a new one in this case
-  m_overlayWidget = new OverlayWidget;
-  m_overlayWidget->hide();
+  connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
+          this, SLOT(recreateOverlayWidget()));
 }
 
 void WidgetInspectorServer::widgetSelected(QWidget *widget)

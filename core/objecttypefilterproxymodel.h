@@ -71,8 +71,7 @@ class ObjectFilterProxyModelBase : public QSortFilterProxyModel
       }
 
       QObject *obj = source_index.data(ObjectModel::ObjectRole).value<QObject*>();
-      Q_ASSERT(obj);
-      if (!filterAcceptsObject(obj)) {
+      if (!obj || !filterAcceptsObject(obj)) {
         return false;
       }
 
