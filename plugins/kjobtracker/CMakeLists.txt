@@ -5,12 +5,6 @@ if(NOT Qt5Core_FOUND)
   set(CMAKE_INSTALL_RPATH ${_old_CMAKE_INSTALL_RPATH})
 endif()
 
-if(KDE4_FOUND AND NOT Qt5Core_FOUND)
-  set(_KDE4_USABLE TRUE)
-else()
-  set(_KDE4_USABLE FALSE)
-endif()
-
 set_package_properties(KDE4 PROPERTIES
   TYPE OPTIONAL
   DESCRIPTION "KDE libraries"
