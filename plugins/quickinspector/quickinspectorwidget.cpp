@@ -147,8 +147,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   qmlRegisterType<QuickItemOverlay>("com.kdab.GammaRay", 1, 0, "QuickItemOverlay");
   qmlRegisterType<QuickItemOverlay>();
 
-  QWidget *previewWidget = QWidget::createWindowContainer(m_preview, ui->previewTreeSplitter);
-  m_preview->show();
+  QWidget::createWindowContainer(m_preview, ui->previewTreeSplitter);
   m_preview->setResizeMode(QQuickView::SizeRootObjectToView);
   m_preview->engine()->addImageProvider("quicksceneprovider", m_imageProvider);
   m_preview->setSource(QUrl("qrc:/gammaray/plugins/quickinspector/quickpreview.qml"));
