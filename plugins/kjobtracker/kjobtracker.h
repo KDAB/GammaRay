@@ -48,6 +48,7 @@ class KJobTrackerFactory : public QObject, public StandardToolFactory<KJob, KJob
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.KJobTracker")
 
   public:
     explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent)
