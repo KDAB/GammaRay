@@ -21,6 +21,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef GAMMARAY_SHAREDMEMORYLOCKER_H
+#define GAMMARAY_SHAREDMEMORYLOCKER_H
+
 #include <QSharedMemory>
 
 namespace GammaRay
@@ -50,3 +53,5 @@ private:
 #endif
 
 }
+
+#endif

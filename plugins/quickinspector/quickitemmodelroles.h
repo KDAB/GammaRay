@@ -21,6 +21,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef GAMMARAY_QUICKITEMMODELROLES_H
+#define GAMMARAY_QUICKITEMMODELROLES_H
+
 #include <common/objectmodel.h>
 
 namespace GammaRay {
@@ -33,3 +36,5 @@ namespace QuickItemModelRole {
 }
 
 }
+
+#endif
