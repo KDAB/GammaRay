@@ -141,7 +141,7 @@ static ProbeABI qtVersionFromExec(const QString &path)
 
 #ifdef HAVE_ELF_H
 template <typename ElfEHdr>
-static QString archFromELFHeader(const uchar *data, qint64 size)
+static QString archFromELFHeader(const uchar *data, quint64 size)
 {
   if (size <= sizeof(ElfEHdr))
     return QString();
@@ -178,6 +178,8 @@ static QString archFromELF(const QString &path)
     case ELFCLASS64:
       return archFromELFHeader<Elf64_Ehdr>(data, f.size());
   }
+#else
+  Q_UNUSED(path);
 #endif
   return QString();
 }

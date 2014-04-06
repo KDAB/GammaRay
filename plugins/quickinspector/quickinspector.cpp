@@ -332,6 +332,8 @@ void QuickInspector::setVisualizeOverdraw(bool visualizeOverdraw)
   QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
   winPriv->customRenderMode = visualizeOverdraw ? "overdraw" : "";
   m_window->update();
+#else
+  Q_UNUSED(visualizeOverdraw);
 #endif
 }
 

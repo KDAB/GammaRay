@@ -143,5 +143,7 @@ void ProbeSettings::sendPort(quint16 port)
 
   QSystemSemaphore sem("gammaray-semaphore-" + QString::number(launcherIdentifier()), QSystemSemaphore::Open);
   sem.release();
+#else
+  Q_UNUSED(port);
 #endif
 }
