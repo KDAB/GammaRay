@@ -38,7 +38,6 @@
 #include <cassert>
 
 #ifdef Q_OS_MAC
-#include <dlfcn.h>
 #include <inttypes.h>
 #include <sys/mman.h>
 #include <sys/types.h>
