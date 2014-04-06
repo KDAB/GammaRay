@@ -298,12 +298,12 @@ void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QMo
 
 void SGWireframeWidget::onHighlightDataChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
-  foreach (QModelIndex index, deselected.indexes()) {
+  foreach (const QModelIndex &index, deselected.indexes()) {
     int i = m_highlightedVertices.indexOf(index.row());
     if (i != -1)
       m_highlightedVertices.remove(i);
   }
-  foreach (QModelIndex index, selected.indexes()) {
+  foreach (const QModelIndex &index, selected.indexes()) {
     if (!m_highlightedVertices.contains(index.row()))
       m_highlightedVertices << index.row();
   }

@@ -61,7 +61,7 @@ void MaterialTab::setShaders(const QStringList& shaderSources)
   m_ui->shaderEdit->setText("");
   m_ui->shaderList->clear();
   if (shaderSources.size() > 0) {
-    foreach (QString fileName, shaderSources) {
+    foreach (const QString &fileName, shaderSources) {
       new QListWidgetItem(fileName, m_ui->shaderList);
     }
   }

@@ -68,7 +68,7 @@ bool MaterialExtension::setObject(void* object, const QString& typeName)
     QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
 
     QStringList sourceFiles;
-    foreach (QStringList fileList, shaderSources) {
+    foreach (const QStringList &fileList, shaderSources) {
       sourceFiles << fileList;
     }
 
