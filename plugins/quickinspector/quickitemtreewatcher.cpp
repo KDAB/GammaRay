@@ -35,7 +35,7 @@ QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView* itemView, QTreeView* sgVie
     m_sgView(sgView)
 {
   connect(itemView->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-          this, SLOT(itemModelDataChanged(QModelIndex, QModelIndex)));
+          this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex)));
   connect(sgView->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
           this, SLOT(sgModelDataChanged(QModelIndex,QModelIndex)));
 }

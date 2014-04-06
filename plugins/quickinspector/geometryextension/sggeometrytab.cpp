@@ -65,5 +65,5 @@ void SGGeometryTab::setObjectBaseName(const QString &baseName)
 
   m_ui->wireframeWidget->setModel(m_model);
   m_ui->wireframeWidget->setHighlightModel(selectionModel);
-  connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)), m_ui->wireframeWidget, SLOT(onGeometryChanged(uint, QByteArray,int)));
+  connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)), m_ui->wireframeWidget, SLOT(onGeometryChanged(uint,QByteArray,int)));
 }

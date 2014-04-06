@@ -256,7 +256,7 @@ void SGWireframeWidget::setHighlightModel(QItemSelectionModel* selectionModel)
 
   m_highlightModel = selectionModel;
 
-  connect(m_highlightModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(onHighlightDataChanged(QItemSelection,QItemSelection)));
+  connect(m_highlightModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(onHighlightDataChanged(QItemSelection,QItemSelection)));
 }
 
 void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
