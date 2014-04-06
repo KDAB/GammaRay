@@ -37,5 +37,4 @@ SGGeometryExtensionClient::SGGeometryExtensionClient(const QString &name, QObjec
 
 SGGeometryExtensionClient::~SGGeometryExtensionClient()
 {
-
 }
