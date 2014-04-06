@@ -177,7 +177,7 @@ QString ProbeABI::id() const
 
 ProbeABI ProbeABI::fromString(const QString& id)
 {
-  QStringList idParts = id.split("-");
+  QStringList idParts = id.split('-');
   if (idParts.size() < 2)
     return ProbeABI();
 
