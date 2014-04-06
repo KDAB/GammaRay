@@ -29,7 +29,7 @@
 
 using namespace GammaRay;
 
-QuickClientItemModel::QuickClientItemModel(QObject* parent): QSortFilterProxyModel(parent)
+QuickClientItemModel::QuickClientItemModel(QObject* parent): KRecursiveFilterProxyModel(parent)
 {
 }
 
@@ -44,5 +44,5 @@ QVariant QuickClientItemModel::data(const QModelIndex& index, int role) const
     if (!visible)
       return qApp->palette().color(QPalette::Disabled, QPalette::Text);
   }
-  return QSortFilterProxyModel::data(index, role);
+  return KRecursiveFilterProxyModel::data(index, role);
 }

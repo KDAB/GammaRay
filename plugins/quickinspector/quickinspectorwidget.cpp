@@ -36,6 +36,8 @@
 #include <common/objectbroker.h>
 #include <ui/deferredresizemodesetter.h>
 
+#include <kde/krecursivefilterproxymodel.h>
+
 #include <QLabel>
 #include <QTimer>
 #include <qmath.h>
@@ -128,7 +130,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
 
-  QSortFilterProxyModel *sgProxy = new QSortFilterProxyModel(this);
+  QSortFilterProxyModel *sgProxy = new KRecursiveFilterProxyModel(this);
   sgProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel"));
   sgProxy->setDynamicSortFilter(true);
   ui->sgTreeView->setModel(sgProxy);
