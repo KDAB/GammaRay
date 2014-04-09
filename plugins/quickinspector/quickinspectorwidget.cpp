@@ -29,7 +29,6 @@
 #include "geometryextension/sggeometrytab.h"
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
-#include "quickpreviewscene.h"
 #include "quickitemoverlay.h"
 #include "ui_quickinspectorwidget.h"
 

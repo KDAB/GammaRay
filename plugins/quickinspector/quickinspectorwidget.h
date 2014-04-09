@@ -43,8 +43,6 @@ namespace GammaRay {
 
 class QuickSceneImageProvider;
 
-class QuickPreviewScene;
-
 namespace Ui {
   class QuickInspectorWidget;
 }
