@@ -106,7 +106,7 @@ Image {
         visible: canVisualizeOverdraw
         property bool checked: false
 
-        text: "Show 3D Box Model"
+        text: "Show Overdraw"
         style: buttonStyle
 
         onClicked: {
