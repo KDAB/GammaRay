@@ -49,7 +49,7 @@ StyleElementStateTablePage::StyleElementStateTablePage(QWidget *parent)
 
   connect(ui->widthBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setCellWidth(int)));
   connect(ui->widthBox, SIGNAL(valueChanged(int)), SLOT(updateCellSize()));
-  connect(ui->heightBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setCellWidth(int)));
+  connect(ui->heightBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setCellHeight(int)));
   connect(ui->heightBox, SIGNAL(valueChanged(int)), SLOT(updateCellSize()));
   connect(ui->zoomSlider, SIGNAL(valueChanged(int)), m_interface, SLOT(setCellZoom(int)));
   connect(ui->zoomSlider, SIGNAL(valueChanged(int)), SLOT(updateCellSize()));
