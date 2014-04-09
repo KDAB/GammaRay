@@ -8,7 +8,7 @@
 #include <ui/deferredtreeviewconfiguration.h>
 
 #include <sme/core/element.h>
-#include <sme/core/layoutinformation.h>
+#include <sme/core/layoutitem.h>
 #include <sme/core/view.h>
 #include <sme/view/statemachinetoolbar.h>
 #include <sme/view/statemachineview.h>
