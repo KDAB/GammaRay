@@ -121,7 +121,11 @@ QVariant FontModel::data(const QModelIndex &index, int role) const
     }
   } else if (index.column() == 1) {
     if (role == Qt::DisplayRole) {
+#if QT_VERSION >= 0x040800
       return m_fonts.at(index.row()).styleName();
+#else
+      return tr("N/A");
+#endif
     }
   } else if (index.column() == 2) {
     if (role == Qt::DecorationRole || role == Qt::SizeHintRole) {

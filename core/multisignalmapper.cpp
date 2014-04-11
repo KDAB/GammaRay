@@ -44,10 +44,12 @@ class MultiSignalMapperPrivate : public QObject
 
       if (call == QMetaObject::InvokeMetaMethod) {
         if (methodId == 0) {
+#if QT_VERSION >= 0x040800
           Q_ASSERT(sender());
           Q_ASSERT(senderSignalIndex() != -1);
           const QVector<QVariant> v = convertArguments(sender(), senderSignalIndex(), args);
           emit q->signalEmitted(sender(), senderSignalIndex(), v);
+#endif
         }
         --methodId; // our method offset is 1
       }
