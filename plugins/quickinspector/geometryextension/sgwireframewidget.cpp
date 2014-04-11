@@ -93,6 +93,8 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
     if (i == 0)
       firstIndex = index;
 
+    if (index >= m_vertices.size())
+      continue;
 
     // Draw highlighted faces
     if ((m_drawingMode == GL_TRIANGLES && i % 3 == 2) || (m_drawingMode == GL_TRIANGLE_STRIP && i >= 2))
