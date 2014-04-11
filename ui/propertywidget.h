@@ -26,7 +26,7 @@
 
 #include <QTabWidget>
 #include <QPointer>
-#include <QMap>
+#include <QHash>
 
 #include "gammaray_ui_export.h"
 #include <common/enums.h>
@@ -54,24 +54,30 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
     template<typename T> static void registerTab(QString name, QString label)
     {
       s_tabFactories << new PropertyWidgetTabFactory<T>(name, label);
+      foreach (PropertyWidget *widget, s_propertyWidgets)
+        widget->createWidgets();
     }
 
   signals:
     void objectBaseNameChanged(const QString &baseName);
 
+  private:
+    void createWidgets();
+
   private slots:
-    void updateShownTabs(QStringList availableExtensions);
+    void updateShownTabs(const QStringList& availableExtensions);
 
 
   private:
     QString m_objectBaseName;
 
     // Contains all tab widgets
-    QVector<QWidget *> m_tabWidgets;
+    QHash<PropertyWidgetTabFactoryBase*, QWidget*> m_tabWidgets;
 
     PropertyControllerInterface *m_controller;
 
     static QVector<PropertyWidgetTabFactoryBase*> s_tabFactories;
+    static QVector<PropertyWidget*> s_propertyWidgets;
 };
 
 }

@@ -30,20 +30,21 @@
 using namespace GammaRay;
 
 QVector<PropertyWidgetTabFactoryBase*> PropertyWidget::s_tabFactories = QVector<PropertyWidgetTabFactoryBase*>();
+QVector<PropertyWidget*> PropertyWidget::s_propertyWidgets;
 
 PropertyWidget::PropertyWidget(QWidget *parent)
   : QTabWidget(parent),
     m_controller(0)
 {
-  foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
-    QWidget *widget = factory->createWidget(this);
-    m_tabWidgets.append(widget);
-    addTab(widget, factory->label());
-  }
+  createWidgets();
+  s_propertyWidgets.push_back(this);
 }
 
 PropertyWidget::~PropertyWidget()
 {
+  const int index = s_propertyWidgets.indexOf(this);
+  if (index >= 0)
+    s_propertyWidgets.remove(index);
 }
 
 void PropertyWidget::setObjectBaseName(const QString &baseName)
@@ -66,16 +67,27 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
           this, SLOT(updateShownTabs(QStringList)));
 }
 
-void PropertyWidget::updateShownTabs(QStringList availableExtensions)
+void PropertyWidget::createWidgets()
+{
+  foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
+    if (!m_tabWidgets.contains(factory)) {
+      QWidget *widget = factory->createWidget(this);
+      m_tabWidgets.insert(factory, widget);
+      addTab(widget, factory->label());
+    }
+  }
+}
+
+void PropertyWidget::updateShownTabs(const QStringList &availableExtensions)
 {
   setUpdatesEnabled(false);
 
-  for (int i = 0; i < m_tabWidgets.count(); i++) {
-    QWidget *widget = m_tabWidgets[i];
-    int index = indexOf(widget);
-    if (availableExtensions.contains(m_objectBaseName + '.' + s_tabFactories.at(i)->name())) {
+  for (QHash<PropertyWidgetTabFactoryBase*, QWidget*>::const_iterator it = m_tabWidgets.constBegin(); it != m_tabWidgets.constEnd(); ++it) {
+    QWidget *widget = it.value();
+    const int index = indexOf(widget);
+    if (availableExtensions.contains(m_objectBaseName + '.' + it.key()->name())) {
       if (index == -1)
-        addTab(widget, s_tabFactories.at(i)->label());
+        addTab(widget, it.key()->label());
     } else if (index != -1) {
       removeTab(index);
     }
