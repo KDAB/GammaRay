@@ -10,7 +10,7 @@
 #  GRAPHVIZ_PATCH_VERSION = The library patch version number
 #  GRAPHVIZ_COMPILE_FLAGS = List of compile flags needed by the GraphViz installation headers
 #
-# This module reads hints about search locations from the following env variables:
+# This module reads hints about search locations from the following env or cache variables:
 #  GRAPHVIZ_ROOT          - Graphviz installation prefix
 #                           (containing bin/, include/, etc.)
 
@@ -35,7 +35,11 @@ if(GRAPHVIZ_INCLUDE_DIR AND GRAPHVIZ_CDT_LIBRARY
   set(GRAPHVIZ_FIND_QUIETLY TRUE)
 endif()
 
-set(_GRAPHVIZ_ROOT $ENV{GRAPHVIZ_ROOT})
+if (GRAPHVIZ_ROOT)
+    set(_GRAPHVIZ_ROOT ${GRAPHVIZ_ROOT})
+else()
+    set(_GRAPHVIZ_ROOT $ENV{GRAPHVIZ_ROOT})
+endif()
 
 if(NOT _GRAPHVIZ_ROOT)
   if(WIN32)
