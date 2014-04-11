@@ -34,7 +34,7 @@ SGGeometryExtension::SGGeometryExtension(PropertyController* controller) :
   PropertyControllerExtension(controller->objectBaseName() + ".sgGeometry"),
   SGGeometryExtensionInterface(controller->objectBaseName() + ".sgGeometry", controller),
   m_node(0),
-  m_model(new SGGeometryModel)
+  m_model(new SGGeometryModel(this))
 {
   controller->registerModel(m_model, "sgGeometryModel");
 }
