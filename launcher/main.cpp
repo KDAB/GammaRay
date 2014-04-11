@@ -40,6 +40,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QStringList>
+#include <QVariant>
 
 using namespace GammaRay;
 
