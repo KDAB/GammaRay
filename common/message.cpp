@@ -28,7 +28,7 @@
 
 static const QDataStream::Version StreamVersion = QDataStream::Qt_4_7;
 
-#if QT_VERSION <= 0x040700
+#if QT_VERSION < 0x040800
 // This template-specialization is missing in qendian.h, required for qFromBigEndian
 template<> inline quint8 qbswap<quint8>(quint8 source)
 {
