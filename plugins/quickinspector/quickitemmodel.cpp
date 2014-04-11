@@ -58,8 +58,22 @@ QVariant QuickItemModel::data(const QModelIndex& index, int role) const
 
   QQuickItem *item = reinterpret_cast<QQuickItem*>(index.internalPointer());
 
-  if (role == QuickItemModelRole::Visibility)
-    return item->isVisible();
+  if (role == QuickItemModelRole::ItemFlags) {
+    QQuickItem *ancestor = item;
+    bool outOfView = false;
+    while ((ancestor = ancestor->parentItem())) {
+      QPointF pos = ancestor->mapFromItem(item, QPointF(0, 0));
+      if ((ancestor == m_window->contentItem() || ancestor->clip()) && (-pos.x() > item->width() || -pos.y() > item->height() || pos.x() > ancestor->width() || pos.y() > ancestor->height())) {
+        outOfView = true;
+        break;
+      }
+    }
+    return (!item->isVisible() || item->opacity() == 0 ? QuickItemModelRole::Invisible : QuickItemModelRole::None)
+            | (item->width() == 0 || item->height() == 0 ? QuickItemModelRole::ZeroSize : QuickItemModelRole::None)
+            | (outOfView ? QuickItemModelRole::OutOfView : QuickItemModelRole::None)
+            | (item->hasFocus() ? QuickItemModelRole::HasFocus : QuickItemModelRole::None)
+            | (item->hasActiveFocus() ? QuickItemModelRole::HasActiveFocus : QuickItemModelRole::None);
+  }
   if (role == Qt::DisplayRole && index.column() == 0) {
     QQmlContext *ctx = QQmlEngine::contextForObject(item);
     QString id = ctx ? ctx->nameForObject(item) : "";
@@ -98,7 +112,7 @@ QModelIndex QuickItemModel::index(int row, int column, const QModelIndex& parent
 QMap<int, QVariant> QuickItemModel::itemData(const QModelIndex& index) const
 {
   QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
-  d.insert(QuickItemModelRole::Visibility, data(index, QuickItemModelRole::Visibility));
+  d.insert(QuickItemModelRole::ItemFlags, data(index, QuickItemModelRole::ItemFlags));
   return d;
 }
 
@@ -131,13 +145,18 @@ void QuickItemModel::connectItem(QQuickItem* item)
   connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
   connect(item, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(itemWindowChanged()));
   connect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
+  connect(item, SIGNAL(focusChanged(bool)), this, SLOT(itemUpdated()));
+  connect(item, SIGNAL(activeFocusChanged(bool)), this, SLOT(itemUpdated()));
+  connect(item, SIGNAL(widthChanged()), this, SLOT(itemUpdated()));
+  connect(item, SIGNAL(heightChanged()), this, SLOT(itemUpdated()));
+  connect(item, SIGNAL(xChanged()), this, SLOT(itemUpdated()));
+  connect(item, SIGNAL(yChanged()), this, SLOT(itemUpdated()));
+  item->installEventFilter(new QuickEventMonitor(this));
 }
 
 void QuickItemModel::disconnectItem(QQuickItem* item)
 {
-  disconnect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
-  disconnect(item, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(itemWindowChanged()));
-  disconnect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
+  disconnect(item, 0, this, 0);
 }
 
 QModelIndex QuickItemModel::indexForItem(QQuickItem* item) const
@@ -295,10 +314,25 @@ void QuickItemModel::itemWindowChanged()
 
 void QuickItemModel::itemUpdated()
 {
-  QQuickItem *item = qobject_cast<QQuickItem*>(sender());
+  updateItem(qobject_cast<QQuickItem*>(sender()));
+}
+
+void QuickItemModel::updateItem(QQuickItem* item)
+{
   Q_ASSERT(item && item->window() == m_window);
 
   const QModelIndex left = indexForItem(item);
   const QModelIndex right = left.sibling(left.row(), columnCount() - 1);
   emit dataChanged(left, right);
+}
+
+QuickEventMonitor::QuickEventMonitor(QuickItemModel* parent)
+  : QObject(parent),
+  m_model(parent)
+{}
+
+bool QuickEventMonitor::eventFilter(QObject* obj, QEvent* event)
+{
+    m_model->updateItem(qobject_cast<QQuickItem*>(obj));
+    return false;
 }

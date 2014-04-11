@@ -61,6 +61,7 @@ class QuickInspectorWidget : public QWidget
     void requestRender();
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void setSplitterSizes();
+    void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;

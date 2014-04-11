@@ -30,6 +30,7 @@
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
 #include "quickitemoverlay.h"
+#include "quickitemdelegatewidget.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
@@ -47,6 +48,7 @@
 #include <QPainter>
 #include <QQmlContext>
 #include <QtCore/qglobal.h>
+#include <QPropertyAnimation>
 
 namespace GammaRay {
 class QuickSceneImageProvider : public QQuickImageProvider
@@ -128,6 +130,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ui->itemTreeView->setSelectionModel(selectionModel);
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
+  connect(proxy, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex)));
 
   QSortFilterProxyModel *sgProxy = new KRecursiveFilterProxyModel(this);
   sgProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel"));
@@ -224,6 +227,31 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
     return;
   const QModelIndex &index = selection.first().topLeft();
   ui->itemTreeView->scrollTo(index);
+}
+
+void QuickInspectorWidget::itemModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
+    QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
+    QuickItemDelegateWidget *widget = qobject_cast<QuickItemDelegateWidget*>(ui->itemTreeView->indexWidget(index));
+
+    if (!widget) {
+      widget = new QuickItemDelegateWidget(index, ui->itemTreeView);
+      widget->setAutoFillBackground(true);
+      ui->itemTreeView->setIndexWidget(index, widget);
+    }
+
+    QPropertyAnimation *colorAnimation = new QPropertyAnimation(widget);
+    colorAnimation->setTargetObject(widget);
+    colorAnimation->setPropertyName("textColor");
+    colorAnimation->setStartValue(QColor(255, 0, 0));
+    QVariant endValue = index.data(Qt::ForegroundRole);
+    if (!endValue.isValid())
+      endValue = widget->palette().text().color();
+    colorAnimation->setEndValue(endValue);
+    colorAnimation->setDuration(2000);
+    colorAnimation->start();
+  }
 }
 
 void QuickInspectorUiFactory::initUi()

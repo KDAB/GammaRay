@@ -30,6 +30,7 @@
 #include <QPointer>
 #include <QVector>
 
+class QSignalMapper;
 class QQuickItem;
 class QQuickWindow;
 
@@ -61,6 +62,8 @@ private slots:
   void itemUpdated();
 
 private:
+  friend class QuickEventMonitor;
+  void updateItem(QQuickItem *item);
   void clear();
   void populateFromItem(QQuickItem *item);
   /// Track all changes to item @p item in this model (parentChanged, windowChanged, ...)
@@ -83,6 +86,19 @@ private:
 
   QHash<QQuickItem*, QQuickItem*> m_childParentMap;
   QHash<QQuickItem*, QVector<QQuickItem*> > m_parentChildMap;
+};
+
+class QuickEventMonitor : public QObject
+{
+  Q_OBJECT
+public:
+  explicit QuickEventMonitor(QuickItemModel *parent);
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+
+private:
+  QuickItemModel *m_model;
 };
 }
 

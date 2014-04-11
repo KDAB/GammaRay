@@ -51,6 +51,7 @@ if(Qt5Quick_FOUND)
     quickinspectorclient.cpp
     quickinspectorwidget.cpp
     quickclientitemmodel.cpp
+    quickitemdelegatewidget.cpp
     quickitemtreewatcher.cpp
     quickitemoverlay.cpp
 
@@ -60,7 +61,7 @@ if(Qt5Quick_FOUND)
     geometryextension/sggeometrytab.cpp
     geometryextension/sgwireframewidget.cpp
   )
-  qt4_add_resources(gammaray_quickinspector_ui_srcs quickinspector.qrc)
+  qt4_add_resources(gammaray_quickinspector_ui_srcs resources/quickinspector.qrc)
 
   qt4_wrap_ui(gammaray_quickinspector_ui_srcs
     quickinspectorwidget.ui

@@ -31,10 +31,20 @@ namespace GammaRay {
 /** Model roles shared between client and server. */
 namespace QuickItemModelRole {
   enum Roles {
-    Visibility = ObjectModel::UserRole
+    ItemFlags = ObjectModel::UserRole
+  };
+  enum ItemFlag {
+    None = 0,
+    Invisible = 1,
+    ZeroSize = 2,
+    OutOfView = 4,
+    HasFocus = 8,
+    HasActiveFocus = 16,
+    JustRecievedEvent = 32
   };
 }
-
 }
+
+Q_DECLARE_METATYPE(GammaRay::QuickItemModelRole::ItemFlag);
 
 #endif

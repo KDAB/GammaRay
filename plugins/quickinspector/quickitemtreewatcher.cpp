@@ -48,8 +48,8 @@ void QuickItemTreeWatcher::itemModelDataChanged(const QModelIndex& topLeft, cons
 {
   for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
     const QModelIndex index = topLeft.sibling(row, 0);
-    const bool visible = index.data(QuickItemModelRole::Visibility).toBool();
-    if (visible) {
+    const bool invisible = index.data(QuickItemModelRole::ItemFlags).value<int>() & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
+    if (!invisible) {
       m_itemView->setExpanded(index, true);
     }
   }
