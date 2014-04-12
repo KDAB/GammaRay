@@ -57,7 +57,7 @@ private:
   QHash<QString, ToolUiFactory*> m_factories; // ToolId -> ToolUiFactory
   mutable QHash<QString, QWidget*> m_widgets; // ToolId -> Widget
   QPointer<QWidget> m_parentWidget;
-  QSet<ToolUiFactory*> m_inactiveTools;
+  mutable QSet<ToolUiFactory*> m_inactiveTools;
 };
 
 }

@@ -108,6 +108,10 @@ QVariant ClientToolModel::data(const QModelIndex& index, int role) const
       ToolUiFactory *factory = m_factories.value(toolId);
       if (!factory)
         return QVariant();
+      if (m_inactiveTools.contains(factory)) {
+        factory->initUi();
+        m_inactiveTools.remove(factory);
+      }
       QWidget *widget = factory->createWidget(m_parentWidget);
       m_widgets.insert(toolId, widget);
       return QVariant::fromValue(widget);
