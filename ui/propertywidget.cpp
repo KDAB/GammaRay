@@ -36,7 +36,6 @@ PropertyWidget::PropertyWidget(QWidget *parent)
   : QTabWidget(parent),
     m_controller(0)
 {
-  createWidgets();
   s_propertyWidgets.push_back(this);
 }
 
@@ -49,6 +48,7 @@ PropertyWidget::~PropertyWidget()
 
 void PropertyWidget::setObjectBaseName(const QString &baseName)
 {
+  Q_ASSERT(m_objectBaseName.isEmpty()); // ideally the object base name would be a ctor argument, but then this doesn't work in Designer anymore
   m_objectBaseName = baseName;
 
   if (Endpoint::instance()->objectAddress(baseName + ".controller") == Protocol::InvalidObjectAddress)
@@ -65,10 +65,14 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
     ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
   connect(m_controller, SIGNAL(availableExtensionsChanged(QStringList)),
           this, SLOT(updateShownTabs(QStringList)));
+
+  createWidgets();
 }
 
 void PropertyWidget::createWidgets()
 {
+  if (m_objectBaseName.isEmpty())
+    return;
   foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
     if (!m_tabWidgets.contains(factory)) {
       QWidget *widget = factory->createWidget(this);
