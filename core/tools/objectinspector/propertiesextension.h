@@ -40,6 +40,7 @@ class AggregatedPropertyModel;
 class PropertiesExtension : public PropertiesExtensionInterface, public PropertyControllerExtension
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::PropertiesExtensionInterface)
 
   public:
     explicit PropertiesExtension(PropertyController *controller);

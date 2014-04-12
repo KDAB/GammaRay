@@ -38,6 +38,9 @@ class SGGeometryModel;
 
 class SGGeometryExtension : public SGGeometryExtensionInterface, public PropertyControllerExtension
 {
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::SGGeometryExtensionInterface)
+
   public:
     explicit SGGeometryExtension(PropertyController *controller);
     ~SGGeometryExtension();

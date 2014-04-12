@@ -36,6 +36,9 @@ class ObjectEnumModel;
 
 class MaterialExtension : public MaterialExtensionInterface, public PropertyControllerExtension
 {
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::MaterialExtensionInterface)
+
   public:
     explicit MaterialExtension(PropertyController *controller);
     ~MaterialExtension();

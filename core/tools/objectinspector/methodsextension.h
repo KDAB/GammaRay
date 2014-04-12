@@ -40,6 +40,7 @@ class MultiSignalMapper;
 class MethodsExtension : public MethodsExtensionInterface, public PropertyControllerExtension
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::MethodsExtensionInterface)
 
   public:
     explicit MethodsExtension(PropertyController *controller);
