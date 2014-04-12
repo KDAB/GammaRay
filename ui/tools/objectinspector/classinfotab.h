@@ -38,7 +38,7 @@ public:
   explicit ClassInfoTab(PropertyWidget *parent);
   virtual ~ClassInfoTab();
 
-private slots:
+private:
   void setObjectBaseName(const QString &baseName);
 
 private:

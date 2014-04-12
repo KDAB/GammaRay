@@ -42,8 +42,10 @@ class PropertiesTab : public QWidget
     explicit PropertiesTab(PropertyWidget *parent);
     virtual ~PropertiesTab();
 
-  private slots:
+  private:
     void setObjectBaseName(const QString &baseName);
+
+  private slots:
     void updateNewPropertyValueEditor();
     void validateNewProperty();
     void propertyContextMenu(const QPoint &pos);

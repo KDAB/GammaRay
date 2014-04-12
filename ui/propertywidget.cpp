@@ -46,6 +46,12 @@ PropertyWidget::~PropertyWidget()
     s_propertyWidgets.remove(index);
 }
 
+QString PropertyWidget::objectBaseName() const
+{
+  Q_ASSERT(!m_objectBaseName.isEmpty());
+  return m_objectBaseName;
+}
+
 void PropertyWidget::setObjectBaseName(const QString &baseName)
 {
   Q_ASSERT(m_objectBaseName.isEmpty()); // ideally the object base name would be a ctor argument, but then this doesn't work in Designer anymore
@@ -53,8 +59,6 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
 
   if (Endpoint::instance()->objectAddress(baseName + ".controller") == Protocol::InvalidObjectAddress)
     return; // unknown property controller, likely disabled/not supported on the server
-
-  emit objectBaseNameChanged(baseName);
 
   if (m_controller) {
     disconnect(m_controller,

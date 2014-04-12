@@ -42,8 +42,10 @@ public:
   explicit MaterialTab(PropertyWidget *parent);
   virtual ~MaterialTab();
 
-private slots:
+private:
   void setObjectBaseName(const QString &baseName);
+
+private slots:
   void setShaders(const QStringList &shaderSources);
   void onShaderSelected(QListWidgetItem *item);
   void showShader(const QString &shaderSource);

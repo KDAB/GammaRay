@@ -42,8 +42,10 @@ class MethodsTab : public QWidget
     explicit MethodsTab(PropertyWidget *parent);
     virtual ~MethodsTab();
 
-  private slots:
+  private:
     void setObjectBaseName(const QString &baseName);
+
+  private slots:
     void methodActivated(const QModelIndex &index);
     void methodContextMenu(const QPoint &pos);
 

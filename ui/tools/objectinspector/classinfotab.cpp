@@ -35,7 +35,7 @@ ClassInfoTab::ClassInfoTab(PropertyWidget *parent) : QWidget(parent),
   m_ui(new Ui_ClassInfoTab)
 {
   m_ui->setupUi(this);
-  connect(parent, SIGNAL(objectBaseNameChanged(QString)), this, SLOT(setObjectBaseName(QString)));
+  setObjectBaseName(parent->objectBaseName());
 }
 
 ClassInfoTab::~ClassInfoTab()

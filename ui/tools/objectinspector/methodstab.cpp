@@ -43,7 +43,7 @@ MethodsTab::MethodsTab(PropertyWidget *parent) : QWidget(parent),
   m_interface(0)
 {
   m_ui->setupUi(this);
-  connect(parent, SIGNAL(objectBaseNameChanged(QString)), this, SLOT(setObjectBaseName(QString)));
+  setObjectBaseName(parent->objectBaseName());
 }
 
 MethodsTab::~MethodsTab()

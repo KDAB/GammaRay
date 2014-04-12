@@ -49,6 +49,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
     explicit PropertyWidget(QWidget *parent = 0);
     virtual ~PropertyWidget();
 
+    QString objectBaseName() const;
     void setObjectBaseName(const QString &baseName);
 
     template<typename T> static void registerTab(QString name, QString label)
@@ -57,9 +58,6 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
       foreach (PropertyWidget *widget, s_propertyWidgets)
         widget->createWidgets();
     }
-
-  signals:
-    void objectBaseNameChanged(const QString &baseName);
 
   private:
     void createWidgets();

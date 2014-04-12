@@ -38,7 +38,7 @@ public:
   explicit EnumsTab(PropertyWidget *parent);
   virtual ~EnumsTab();
 
-private slots:
+private:
   void setObjectBaseName(const QString &baseName);
 
 private:

@@ -35,7 +35,7 @@ OutboundConnectionsTab::OutboundConnectionsTab(PropertyWidget *parent) : QWidget
   m_ui(new Ui_OutboundConnectionsTab)
 {
   m_ui->setupUi(this);
-  connect(parent, SIGNAL(objectBaseNameChanged(QString)), this, SLOT(setObjectBaseName(QString)));
+  setObjectBaseName(parent->objectBaseName());
 }
 
 OutboundConnectionsTab::~OutboundConnectionsTab()

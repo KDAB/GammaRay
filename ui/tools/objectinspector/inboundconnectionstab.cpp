@@ -35,7 +35,7 @@ InboundConnectionsTab::InboundConnectionsTab(PropertyWidget *parent) : QWidget(p
   m_ui(new Ui_InboundConnectionsTab)
 {
   m_ui->setupUi(this);
-  connect(parent, SIGNAL(objectBaseNameChanged(QString)), this, SLOT(setObjectBaseName(QString)));
+  setObjectBaseName(parent->objectBaseName());
 }
 
 InboundConnectionsTab::~InboundConnectionsTab()

@@ -38,7 +38,7 @@ public:
   explicit InboundConnectionsTab(PropertyWidget *parent);
   virtual ~InboundConnectionsTab();
 
-private slots:
+private:
   void setObjectBaseName(const QString &baseName);
 
 private:

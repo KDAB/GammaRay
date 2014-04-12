@@ -39,7 +39,7 @@ SGGeometryTab::SGGeometryTab(PropertyWidget *parent) : QWidget(parent),
 {
   m_ui->setupUi(this);
 
-  connect(parent, SIGNAL(objectBaseNameChanged(QString)), this, SLOT(setObjectBaseName(QString)));
+  setObjectBaseName(parent->objectBaseName());
 }
 
 SGGeometryTab::~SGGeometryTab()

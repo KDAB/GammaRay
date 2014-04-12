@@ -43,7 +43,7 @@ public:
   explicit SGGeometryTab(PropertyWidget *parent);
   virtual ~SGGeometryTab();
 
-private slots:
+private:
   void setObjectBaseName(const QString &baseName);
 
 private:
