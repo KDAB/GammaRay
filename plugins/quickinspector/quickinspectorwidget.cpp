@@ -228,10 +228,10 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
 
 void QuickInspectorUiFactory::initUi()
 {
-    PropertyWidget::registerTab<MaterialTab>("material", QObject::tr("Shaders"));
-    ObjectBroker::registerClientObjectFactoryCallback<MaterialExtensionInterface*>(createMaterialExtension);
-    PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", QObject::tr("Geometry"));
-    ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface*>(createSGGeometryExtension);
+  ObjectBroker::registerClientObjectFactoryCallback<MaterialExtensionInterface*>(createMaterialExtension);
+  PropertyWidget::registerTab<MaterialTab>("material", QObject::tr("Shaders"));
+  ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface*>(createSGGeometryExtension);
+  PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", QObject::tr("Geometry"));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
