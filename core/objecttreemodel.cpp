@@ -29,6 +29,7 @@
 #include <QEvent>
 #include <QThread>
 
+#include <algorithm>
 #include <iostream>
 
 #define IF_DEBUG(x)

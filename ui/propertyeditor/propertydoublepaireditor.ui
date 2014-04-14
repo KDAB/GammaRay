@@ -19,6 +19,12 @@
      <property name="frame">
       <bool>false</bool>
      </property>
+     <property name="minimum">
+      <double>-999999999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999999999.000000000000000</double>
+     </property>
     </widget>
    </item>
    <item>
@@ -35,6 +41,12 @@
     <widget class="QDoubleSpinBox" name="yBox">
      <property name="frame">
       <bool>false</bool>
+     </property>
+     <property name="minimum">
+      <double>-999999999.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>999999999.000000000000000</double>
      </property>
     </widget>
    </item>

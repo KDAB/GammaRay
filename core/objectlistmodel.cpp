@@ -28,6 +28,7 @@
 #include <QThread>
 #include "probe.h"
 
+#include <algorithm>
 #include <iostream>
 
 using namespace GammaRay;

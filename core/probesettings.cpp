@@ -64,7 +64,11 @@ void ProbeSettings::receiveSettings()
 #ifdef HAVE_SHM
   QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
   if (!shm.attach()) {
+#if QT_VERSION < 0x040800
+    qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << ", error is:" << shm.errorString();
+#else
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
+#endif
     qWarning() << "Continueing anyway, with default settings.";
     return;
   }
@@ -117,7 +121,11 @@ void ProbeSettings::sendPort(quint16 port)
 #ifdef HAVE_SHM
   QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
   if (!shm.attach()) {
+#if QT_VERSION < 0x040800
+    qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << ", error is:" << shm.errorString();
+#else
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
+#endif
     qWarning() << "Continueing anyway, with default settings.";
     return;
   }

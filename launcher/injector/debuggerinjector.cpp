@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <dlfcn.h>
+#include <stdlib.h>
 
 using namespace GammaRay;
 

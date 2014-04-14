@@ -29,6 +29,8 @@
 #include <QUdpSocket>
 #include <QTimer>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 bool NetworkDiscoveryModel::ServerInfo::operator==(const NetworkDiscoveryModel::ServerInfo& other)
