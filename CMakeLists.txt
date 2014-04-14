@@ -131,7 +131,7 @@ endif()
 # Finding Qt
 #
 
-set(QT_MIN_VERSION "4.8.0")
+set(QT_MIN_VERSION "4.7.0")
 
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
