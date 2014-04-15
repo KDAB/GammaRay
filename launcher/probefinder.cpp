@@ -34,6 +34,8 @@
 #include <QString>
 #include <QStringBuilder>
 
+#include <algorithm>
+
 namespace GammaRay {
 
 namespace ProbeFinder {
