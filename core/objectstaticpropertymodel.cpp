@@ -171,9 +171,13 @@ void ObjectStaticPropertyModel::unmonitorObject(QObject* obj)
 
 void ObjectStaticPropertyModel::propertyUpdated()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(4, 8, 0)
   Q_ASSERT(senderSignalIndex() >= 0);
   const int propertyIndex = m_notifyToPropertyMap.value(senderSignalIndex());
   emit dataChanged(index(propertyIndex, 1), index(propertyIndex, 1));
+#else
+  emit dataChanged(index(0,1), index(rowCount() - 1, 1));
+#endif
 }
 
 QString ObjectStaticPropertyModel::detailString(const QMetaProperty& prop) const
