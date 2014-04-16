@@ -25,6 +25,7 @@
 #define GAMMARAY_MULTISIGNALMAPPER_H
 
 #include <QObject>
+#include <QVariant>
 
 namespace GammaRay {
 
