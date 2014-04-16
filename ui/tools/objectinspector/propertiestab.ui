@@ -74,9 +74,6 @@
            <property name="text">
             <string>Add</string>
            </property>
-           <property name="icon">
-            <iconset theme="list-add"/>
-           </property>
           </widget>
          </item>
         </layout>
