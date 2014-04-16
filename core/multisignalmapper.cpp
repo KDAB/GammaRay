@@ -43,15 +43,13 @@ class MultiSignalMapperPrivate : public QObject
         return methodId;
 
       if (call == QMetaObject::InvokeMetaMethod) {
-        if (methodId == 0) {
+        Q_ASSERT(sender());
 #if QT_VERSION >= 0x040800
-          Q_ASSERT(sender());
-          Q_ASSERT(senderSignalIndex() != -1);
-          const QVector<QVariant> v = convertArguments(sender(), senderSignalIndex(), args);
-          emit q->signalEmitted(sender(), senderSignalIndex(), v);
+        Q_ASSERT(senderSignalIndex() == methodId);
 #endif
-        }
-        --methodId; // our method offset is 1
+        const QVector<QVariant> v = convertArguments(sender(), methodId, args);
+        emit q->signalEmitted(sender(), methodId, v);
+        return -1; // indicates we handled the call
       }
       return methodId;
     }
@@ -96,5 +94,5 @@ MultiSignalMapper::~MultiSignalMapper()
 
 void MultiSignalMapper::connectToSignal(QObject *sender, const QMetaMethod &signal)
 {
-  QMetaObject::connect(sender, signal.methodIndex(), d, QObject::metaObject()->methodCount(), Qt::AutoConnection | Qt::UniqueConnection, 0);
+  QMetaObject::connect(sender, signal.methodIndex(), d, QObject::metaObject()->methodCount() + signal.methodIndex(), Qt::AutoConnection | Qt::UniqueConnection, 0);
 }
