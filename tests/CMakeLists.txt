@@ -1,5 +1,6 @@
 ### BENCH SUITE
 
+
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_executable(benchsuite benchsuite.cpp)
 
@@ -84,5 +85,9 @@ if(UNIX AND NOT APPLE)
     endif()
   endif()
 endif()
+
+add_executable(multisignalmappertest multisignalmappertest.cpp ../core/multisignalmapper.cpp)
+target_link_libraries(multisignalmappertest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
+add_test(multisignalmappertest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/multisignalmappertest)
 
 add_subdirectory(manual)
