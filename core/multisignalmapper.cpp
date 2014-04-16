@@ -48,7 +48,7 @@ class MultiSignalMapperPrivate : public QObject
         Q_ASSERT(senderSignalIndex() == methodId);
 #endif
         const QVector<QVariant> v = convertArguments(sender(), methodId, args);
-        emit q->signalEmitted(sender(), senderSignalIndex(), v);
+        emit q->signalEmitted(sender(), methodId, v);
         return -1; // indicates we handled the call
       }
       return methodId;
