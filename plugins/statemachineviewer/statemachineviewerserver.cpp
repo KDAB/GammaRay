@@ -296,7 +296,7 @@ void StateMachineViewerServer::stateConfigurationChanged()
   emit stateConfigurationChanged(config);
 }
 
-void StateMachineViewerServer::addState(QAbstractState *state)
+void StateMachineViewerServer::addStateOnly(QAbstractState *state)
 {
   if (!mayAddState(state)) {
     return;
@@ -307,7 +307,7 @@ void StateMachineViewerServer::addState(QAbstractState *state)
 
   QState *parentState = state->parentState();
   if (parentState) {
-    addState(parentState); // be sure that parent is added first
+    addStateOnly(parentState); // be sure that parent is added first
   }
 
   const bool hasChildren = state->findChild<QAbstractState*>();
@@ -327,14 +327,28 @@ void StateMachineViewerServer::addState(QAbstractState *state)
   emit stateAdded(StateId(state), StateId(parentState),
                   hasChildren, label, type, connectToInitial);
 
-  // add transitions
-  Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition*>()) {
-    addTransition(transition);
-  }
-
   // recursive call to add children
   Q_FOREACH (QAbstractState* child, state->findChildren<QAbstractState*>()) {
-    addState(child);
+    addStateOnly(child);
+  }
+}
+
+
+void StateMachineViewerServer::addState(QAbstractState *state)
+{
+  // first ensure all states are added
+  addStateOnly(state);
+
+  QSet<QAbstractTransition*> transitions;
+  Q_FOREACH(QAbstractState *s, m_recursionGuard) {
+    const QList<QAbstractTransition*> all = s->findChildren<QAbstractTransition*>();
+    Q_FOREACH(QAbstractTransition *t, all) {
+        transitions << t;
+    }
+  }
+
+  Q_FOREACH (QAbstractTransition *transition, transitions) {
+      addTransition(transition);
   }
 }
 
@@ -342,8 +356,10 @@ void StateMachineViewerServer::addTransition(QAbstractTransition *transition)
 {
   QState *sourceState = transition->sourceState();
   QAbstractState *targetState = transition->targetState();
-  addState(sourceState);
-  addState(targetState);
+
+  // TODO also show targetless transitions
+  if (!targetState)
+      return;
 
   QString label = transition->objectName();
   if (label.isEmpty()) {
