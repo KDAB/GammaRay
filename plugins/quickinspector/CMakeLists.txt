@@ -51,7 +51,7 @@ if(Qt5Quick_FOUND)
     quickinspectorclient.cpp
     quickinspectorwidget.cpp
     quickclientitemmodel.cpp
-    quickitemdelegatewidget.cpp
+    quickitemdelegate.cpp
     quickitemtreewatcher.cpp
     quickitemoverlay.cpp
 

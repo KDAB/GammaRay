@@ -30,7 +30,7 @@
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
 #include "quickitemoverlay.h"
-#include "quickitemdelegatewidget.h"
+#include "quickitemdelegate.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
@@ -128,6 +128,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ui->itemTreeSearchLine->setProxy(proxy);
   QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(proxy);
   ui->itemTreeView->setSelectionModel(selectionModel);
+  ui->itemTreeView->setItemDelegate(new QuickItemDelegate(ui->itemTreeView));
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
   connect(proxy, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex)));
@@ -233,24 +234,15 @@ void QuickInspectorWidget::itemModelDataChanged(const QModelIndex& topLeft, cons
 {
   for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
     QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
-    QuickItemDelegateWidget *widget = qobject_cast<QuickItemDelegateWidget*>(ui->itemTreeView->indexWidget(index));
 
-    if (!widget) {
-      widget = new QuickItemDelegateWidget(index, ui->itemTreeView);
-      widget->setAutoFillBackground(true);
-      ui->itemTreeView->setIndexWidget(index, widget);
-    }
+    QVariantAnimation *colorAnimation = new QVariantAnimation(this);
+    colorAnimation->setProperty("index", QVariant::fromValue(index));
+    connect(colorAnimation, SIGNAL(valueChanged(QVariant)), ui->itemTreeView->itemDelegate(), SLOT(setTextColor(QVariant)));
 
-    QPropertyAnimation *colorAnimation = new QPropertyAnimation(widget);
-    colorAnimation->setTargetObject(widget);
-    colorAnimation->setPropertyName("textColor");
     colorAnimation->setStartValue(QColor(255, 0, 0));
-    QVariant endValue = index.data(Qt::ForegroundRole);
-    if (!endValue.isValid())
-      endValue = widget->palette().text().color();
-    colorAnimation->setEndValue(endValue);
+    colorAnimation->setEndValue(QColor(255, 0, 0, 0));
     colorAnimation->setDuration(2000);
-    colorAnimation->start();
+    colorAnimation->start(QAbstractAnimation::DeleteWhenStopped);
   }
 }
 
