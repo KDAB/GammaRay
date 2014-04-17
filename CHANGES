@@ -1,6 +1,12 @@
 Release Highlights
 ==================
 
+Version 2.0.2:
+ * Restore compatibility with Qt4.7
+ * Avoid leaking shared-memory in case of crashes of gammaray-client
+ * Fix various crashes
+ * Fix various crashes with heavily multithreaded debuggees
+
 Version 2.0.1:
 -------------
  * LLDB injector (enables Mac OSX 10.9 support)
