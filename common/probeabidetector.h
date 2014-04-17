@@ -31,8 +31,6 @@
 
 namespace GammaRay {
 
-class ProbeABI;
-
 /** @brief Detect the probe ABI required for a given target.
  *  A target can be specified as either a process id or a path to an executable to be launched.
  */
@@ -47,6 +45,9 @@ public:
 
     /** Detect the ABI of the process running with PID @p pid. */
     ProbeABI abiForProcess(qint64 pid) const;
+
+    /** Check if the given line contains a mention of the QtCore library. */
+    static bool containsQtCore(const QByteArray &line);
 
 private:
     /** Returns the ABI of the given QtCore DLL.

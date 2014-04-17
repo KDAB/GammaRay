@@ -48,7 +48,7 @@ static QString qtCoreFromOtool(const QString &path)
     if (line.isEmpty())
       break;
 
-    if (line.contains("QtCore") || line.contains("Qt5Core")) {
+    if (ProbeABIDetector::containsQtCore(line)) {
       const int pos = line.lastIndexOf(" (");
       if (pos <= 0)
         continue;

@@ -66,10 +66,67 @@ QString ProbeABIDetector::qtCoreFromLsof(qint64 pid) const
     if (line.isEmpty())
       break;
 
-    if (line.contains("QtCore") || line.contains("Qt5Core")) {
+    if (containsQtCore(line)) {
       return QString::fromLocal8Bit(line.mid(1).trimmed()); // strip the field identifier
     }
   }
 
   return QString();
+}
+
+static bool checkQtCorePrefix(const QByteArray &line, int index)
+{
+  Q_ASSERT(index >= 0);
+  if (index == 0)
+    return true;
+
+  // we either have a "lib" prefix, or some sort of separator
+  if (index >= 3 && line.indexOf("lib", index - 3) == index - 3)
+    return true;
+
+  if (line.at(index - 1) >= 'a' && line.at(index - 1) <= 'z' || line.at(index - 1) >= 'A' && line.at(index - 1) <= 'Z')
+    return false;
+
+  return true;
+}
+
+static bool checkQtCoreSuffix(const QByteArray &line, int index)
+{
+  if (index >= line.size())
+    return false;
+  Q_ASSERT(line.at(index - 2) == 'Q' && line.at(index - 1) == 't');
+
+  // skip version numbers
+  while (index < line.size() && line.at(index) >= '0' && line.at(index) <= '9')
+    ++index;
+
+  if (line.indexOf("Core", index) != index)
+    return false;
+
+  // deal with the "d" and "_debug" debug suffixes
+  index += 4;
+  if (index < line.size() && line.at(index) == 'd')
+     ++index;
+
+  // "Core" must not be followed by another part of the name, so we don't trigger on eg. "QtCoreAddon"
+  if (index < line.size() && (line.at(index) >= 'a' && line.at(index) <= 'z' || line.at(index) >= 'A' && line.at(index) <= 'Z'))
+    return false;
+
+  return true;
+}
+
+bool ProbeABIDetector::containsQtCore(const QByteArray& line)
+{
+  // Unix: libQt[X]Core.so[.X.Y.Z]$
+  // Mac: [^/]Qt[X]Core[_debug]$, [lib]Qt[X]Core[_debug].dylib[.X.Y.Z]$
+  // Windows Qt[X]Core[d].dll
+
+  for (int index = 0; (index = line.indexOf("Qt", index)) >= 0; ++index) {
+    if (!checkQtCorePrefix(line, index))
+      continue;
+    if (checkQtCoreSuffix(line, index + 2))
+      return true;
+  }
+
+  return false;
 }

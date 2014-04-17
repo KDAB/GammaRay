@@ -51,7 +51,7 @@ static QString qtCoreFromLdd(const QString &path)
     if (line.isEmpty())
       break;
 
-    if (line.contains("QtCore") || line.contains("Qt5Core")) {
+    if (ProbeABIDetector::containsQtCore(line)) {
       const int begin = line.indexOf("=> ");
       const int end = line.lastIndexOf(" (");
       if (begin <= 0 || end <= 0 || end <= begin)
@@ -85,7 +85,7 @@ static QString qtCoreFromProc(qint64 pid)
     const QByteArray line = f.readLine();
     if (line.isEmpty())
       break;
-    if (line.contains("QtCore") || line.contains("Qt5Core")) {
+    if (ProbeABIDetector::containsQtCore(line)) {
       const int pos = line.indexOf('/');
       if (pos <= 0)
         continue;
