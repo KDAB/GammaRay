@@ -87,7 +87,8 @@ bool ProcessFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sou
     return false;
   }
 
-  if (data.ppid == m_currentProcId) {
+  // hide ourselves as well as the process that launched us
+  if (data.ppid == m_currentProcId || data.name == QLatin1String("gammaray")) {
     return false;
   }
 
