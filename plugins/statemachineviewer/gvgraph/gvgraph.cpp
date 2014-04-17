@@ -345,6 +345,7 @@ QList<GVNodePair> GVGraph::gvNodes() const
 
   Q_FOREACH (Agnode_t *node, _nodeMap.keys()) { //krazy:exclude=foreach
     GVNode object = _nodeMap[node];
+    object.m_font = _font;
 
     //Set the name of the node
     object.m_name = agget(node, const_cast<char *>("label"));
@@ -387,6 +388,7 @@ QList<GVEdgePair> GVGraph::gvEdges() const
 
   Q_FOREACH (Agedge_t *edge, _edgeMap.keys()) { //krazy:exclude=foreach
     GVEdge object = _edgeMap[edge];
+    object.m_font = _font;
 
     //Fill the source and target node names
     if (ED_tail_label(edge))

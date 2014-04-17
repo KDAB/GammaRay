@@ -69,7 +69,7 @@ GVNodeItem::GVNodeItem(const GVNode &node, QGraphicsItem *parent)
   }
 
   m_textItem = new QGraphicsTextItem(node.name(), this);
-  m_textItem->setFont(QFont("Helvetica [Cronxy]", 6));
+  m_textItem->setFont(node.m_font);
 
   setPos(m_node.centerPos());
   setToolTip(QObject::tr("State: %1").arg(node.name()));
@@ -129,7 +129,7 @@ GVEdgeItem::GVEdgeItem(const GVEdge &edge, QGraphicsItem *parent)
   setPen(m_pathItem->pen());
 
   m_textItem = new QGraphicsTextItem(edge.m_label, this);
-  m_textItem->setFont(QFont("Helvetica [Cronxy]", 6));
+  m_textItem->setFont(edge.m_font);
   // init text item child
   {
     QGraphicsTextItem *item = m_textItem;

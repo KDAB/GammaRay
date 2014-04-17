@@ -23,6 +23,7 @@
 #define GAMMARAY_GVGRAPHELEMENTS_H
 
 #include <QColor>
+#include <QFont>
 #include <QPainterPath>
 
 namespace GammaRay {
@@ -34,7 +35,9 @@ class GVElement
   public:
     friend class GVGraph;
 
-    explicit GVElement(const QString &name) : m_name(name)
+    explicit GVElement(const QString &name)
+      : m_name(name)
+      , m_font(QFont("Helvetica [Cronxy]", 6))
     {
     }
 
@@ -46,6 +49,9 @@ class GVElement
     {
       return m_name;
     }
+
+    /// Font for rendering any text owned by this item
+    QFont m_font;
 
   private:
     /// The unique identifier of the element in the graph
