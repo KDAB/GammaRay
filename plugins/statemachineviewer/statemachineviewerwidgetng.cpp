@@ -7,6 +7,7 @@
 #include <ui/deferredresizemodesetter.h>
 #include <ui/deferredtreeviewconfiguration.h>
 
+#include <sme/core/configurationcontroller.h>
 #include <sme/core/element.h>
 #include <sme/core/layoutitem.h>
 #include <sme/core/view.h>
@@ -30,9 +31,9 @@ QObject* createStateMachineViewerClient(const QString &/*name*/, QObject *parent
   return new StateMachineViewerClient(parent);
 }
 
-ConfigurationWatcher::Configuration toSmeConfiguration(const StateMachineConfiguration& config, const QHash<StateId, State*>& map)
+ConfigurationController::Configuration toSmeConfiguration(const StateMachineConfiguration& config, const QHash<StateId, State*>& map)
 {
-  ConfigurationWatcher::Configuration result;
+  ConfigurationController::Configuration result;
   foreach (const StateId& id, config) {
     result << map[id];
   }
@@ -141,7 +142,7 @@ void StateMachineViewerWidgetNG::showMessage(const QString& message)
 
 void StateMachineViewerWidgetNG::stateConfigurationChanged(const StateMachineConfiguration& config)
 {
-  m_currentView->configurationWatcher()->setActiveConfiguration(toSmeConfiguration(config, m_idToStateMap));
+  m_stateMachineView->configurationController()->setActiveConfiguration(toSmeConfiguration(config, m_idToStateMap));
 }
 
 void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId parentId, const bool hasChildren,
@@ -199,7 +200,7 @@ void StateMachineViewerWidgetNG::transitionAdded(const TransitionId transitionId
 
 void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, const bool running)
 {
-  m_currentView->configurationWatcher()->setIsRunning(running);
+  m_stateMachineView->configurationController()->setIsRunning(running);
 
   if (!running) {
     m_ui->startStopButton->setChecked(false);
@@ -213,7 +214,7 @@ void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, cons
 
 void StateMachineViewerWidgetNG::transitionTriggered(TransitionId transitionId, const QString& label)
 {
-  m_currentView->configurationWatcher()->setLastTransition(m_idToTransitionMap.value(transitionId));
+  m_stateMachineView->configurationController()->setLastTransition(m_idToTransitionMap.value(transitionId));
 }
 
 void StateMachineViewerWidgetNG::clearGraph()
@@ -240,7 +241,7 @@ void StateMachineViewerWidgetNG::repopulateView()
 void StateMachineViewerWidgetNG::stateModelReset()
 {
   m_ui->singleStateMachineView->expandAll();
-  m_currentView->configurationWatcher()->clear();
+  m_stateMachineView->configurationController()->clear();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
