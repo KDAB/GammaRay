@@ -196,7 +196,7 @@ ProcDataList processList(const ProcDataList &previous)
       QByteArray cmd = cmdFile.readAll();
       cmd.replace('\0', ' ');
       if (!cmd.isEmpty()) {
-        proc.name = QString::fromLocal8Bit(cmd);
+        proc.name = QString::fromLocal8Bit(cmd).trimmed();
       }
     }
     cmdFile.close();
