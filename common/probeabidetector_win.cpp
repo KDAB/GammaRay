@@ -53,7 +53,7 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
 
   for (bool hasNext = Module32First(snapshot, &me); hasNext; hasNext = Module32Next(snapshot, &me)) {
     const QString module = QString::fromUtf16(reinterpret_cast<const ushort*>(me.szModule));
-    if (containsQtCore(module.toUtf8()) {
+    if (containsQtCore(module.toUtf8())) {
       const QString path = QString::fromUtf16(reinterpret_cast<const ushort*>(me.szExePath));
       CloseHandle(snapshot);
       return abiForQtCore(path);
