@@ -96,3 +96,7 @@ void ObjectPropertyModel::doEmitChanged()
   emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
+void ObjectPropertyModel::slotReset()
+{
+  reset();
+}
