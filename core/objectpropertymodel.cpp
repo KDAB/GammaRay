@@ -38,6 +38,9 @@ ObjectPropertyModel::ObjectPropertyModel(QObject *parent)
 
 void ObjectPropertyModel::setObject(QObject *object)
 {
+  if (m_obj == object)
+    return;
+
   if (m_obj) {
     unmonitorObject(m_obj.data());
     disconnect(m_obj.data(), 0, this, SLOT(updateAll()));

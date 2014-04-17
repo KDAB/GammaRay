@@ -37,6 +37,9 @@ MetaPropertyModel::MetaPropertyModel(QObject *parent)
 
 void MetaPropertyModel::setObject(void *object, const QString &typeName)
 {
+  if (m_object == object)
+    return;
+
   beginResetModel();
   m_object = object;
   m_metaObject = MetaObjectRepository::instance()->metaObject(typeName);
@@ -45,6 +48,9 @@ void MetaPropertyModel::setObject(void *object, const QString &typeName)
 
 void MetaPropertyModel::setObject(QObject *object)
 {
+  if (m_object == object)
+    return;
+
   beginResetModel();
   m_object = 0;
   m_metaObject = 0;
