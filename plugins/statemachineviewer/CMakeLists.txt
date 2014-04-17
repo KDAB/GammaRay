@@ -44,7 +44,7 @@ set(gammaray_statemachineviewer_ui_plugin_srcs
 )
 
 find_package(SME)
-if (SME_FOUND)
+if (SME_FOUND AND Qt5Quick_FOUND)
   list(APPEND gammaray_statemachineviewer_ui_plugin_srcs
     statemachineviewerwidgetng.cpp
   )
