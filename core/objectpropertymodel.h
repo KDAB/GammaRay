@@ -53,7 +53,7 @@ class ObjectPropertyModel : public QAbstractTableModel
     void updateAll();
 
   private slots:
-    void slotReset() { reset(); }
+    void slotReset();
     void doEmitChanged();
 
   private:

@@ -87,7 +87,11 @@ if(UNIX AND NOT APPLE)
 endif()
 
 add_executable(multisignalmappertest multisignalmappertest.cpp ../core/multisignalmapper.cpp)
-target_link_libraries(multisignalmappertest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
+target_link_libraries(multisignalmappertest
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTTEST_LIBRARIES}
+)
 add_test(multisignalmappertest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/multisignalmappertest)
 
 ### Probe ABI test

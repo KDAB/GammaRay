@@ -40,6 +40,10 @@ ObjectPropertyModel::ObjectPropertyModel(QObject *parent)
 
 void ObjectPropertyModel::setObject(QObject *object)
 {
+  if (m_obj == object)
+    return;
+
+  beginResetModel();
   if (m_obj) {
     unmonitorObject(m_obj.data());
     disconnect(m_obj.data(), 0, this, SLOT(slotReset()));
@@ -49,7 +53,7 @@ void ObjectPropertyModel::setObject(QObject *object)
     connect(object, SIGNAL(destroyed(QObject*)), SLOT(slotReset()));
     monitorObject(object);
   }
-  reset();
+  endResetModel();
 }
 
 int ObjectPropertyModel::columnCount(const QModelIndex& parent) const
@@ -98,3 +102,7 @@ void ObjectPropertyModel::doEmitChanged()
   emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
+void ObjectPropertyModel::slotReset()
+{
+  reset();
+}
