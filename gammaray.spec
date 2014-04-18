@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        2.0.1
+Version:        2.0.2
 Release:        2
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -11,7 +11,7 @@ Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
 %define rel 2.0
-%define sover 2.0.1
+%define sover 2.0.2
 %define qtver qt4.8
 %define this_arch %(uname -p)
 %if %{this_arch} == "athlon"
@@ -197,6 +197,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/cmake/GammaRay/
 
 %changelog
+* Fri Apr 18 2014 Allen Winter <allen.winter@kdab.com> 2.0.2
+  2.0.2 final
 * Fri Feb 28 2014 Allen Winter <allen.winter@kdab.com> 2.0.1
   2.0.1 final
 * Fri Jan 17 2014 Allen Winter <allen.winter@kdab.com> 2.0.0
