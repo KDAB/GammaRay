@@ -169,7 +169,8 @@ void ToolModel::objectAdded(const QMetaObject *mo)
     if (factory->supportedTypes().contains(mo->className())) {
       m_inactiveTools.remove(factory);
       factory->init(Probe::instance());
-      emit dataChanged(index(0, 0), index(rowCount() - 1, 0));
+      const int row = m_tools.indexOf(factory);
+      emit dataChanged(index(row, 0), index(row, 0));
     }
   }
   if (mo->superClass()) {
