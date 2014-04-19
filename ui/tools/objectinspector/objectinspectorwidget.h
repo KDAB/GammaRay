@@ -30,8 +30,6 @@
 #include "propertiestab.h"
 #include "methodstab.h"
 #include "connectionstab.h"
-#include "inboundconnectionstab.h"
-#include "outboundconnectionstab.h"
 #include "enumstab.h"
 #include "classinfotab.h"
 #include "propertiesextensionclient.h"
@@ -82,8 +80,6 @@ public:
     PropertyWidget::registerTab<MethodsTab>("methods", QObject::tr("Methods"));
     ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createMethodsExtension);
     PropertyWidget::registerTab<ConnectionsTab>("connections", QObject::tr("Connections"));
-    PropertyWidget::registerTab<InboundConnectionsTab>("inboundConnections", QObject::tr("Inbound Connections"));
-    PropertyWidget::registerTab<OutboundConnectionsTab>("outboundConnections", QObject::tr("Outbound Connections"));
     PropertyWidget::registerTab<EnumsTab>("enums", QObject::tr("Enums"));
     PropertyWidget::registerTab<ClassInfoTab>("classInfo", QObject::tr("Class Info"));
   }

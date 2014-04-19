@@ -29,8 +29,6 @@
 #include "enumsextension.h"
 #include "propertiesextension.h"
 #include "connectionsextension.h"
-#include "inboundconnectionsextension.h"
-#include "outboundconnectionsextension.h"
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -119,6 +117,4 @@ void ObjectInspector::registerPCExtensions()
   PropertyController::registerExtension<EnumsExtension>();
   PropertyController::registerExtension<PropertiesExtension>();
   PropertyController::registerExtension<ConnectionsExtension>();
-  PropertyController::registerExtension<InboundConnectionsExtension>();
-  PropertyController::registerExtension<OutboundConnectionsExtension>();
 }

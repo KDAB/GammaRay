@@ -72,8 +72,6 @@ set(gammaray_ui_internal_srcs
   tools/objectinspector/methodsextensionclient.cpp
   tools/objectinspector/methodstab.cpp
   tools/objectinspector/connectionstab.cpp
-  tools/objectinspector/inboundconnectionstab.cpp
-  tools/objectinspector/outboundconnectionstab.cpp
   tools/objectinspector/enumstab.cpp
   tools/objectinspector/classinfotab.cpp
   tools/objectinspector/methodstab.cpp
@@ -106,8 +104,6 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/objectinspector/propertiestab.ui
   tools/objectinspector/methodstab.ui
   tools/objectinspector/connectionstab.ui
-  tools/objectinspector/inboundconnectionstab.ui
-  tools/objectinspector/outboundconnectionstab.ui
   tools/objectinspector/enumstab.ui
   tools/objectinspector/classinfotab.ui
   tools/objectinspector/methodstab.ui

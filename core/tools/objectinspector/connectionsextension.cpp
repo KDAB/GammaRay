@@ -40,8 +40,8 @@ ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
   m_inboundModel->setSourceModel(Probe::instance()->connectionModel());
   m_outboundModel->setSourceModel(Probe::instance()->connectionModel());
 
-  controller->registerModel(m_inboundModel, "inboundConnections2"); // TODO fix name once the old ones are gone
-  controller->registerModel(m_outboundModel, "outboundConnections2");
+  controller->registerModel(m_inboundModel, "inboundConnections");
+  controller->registerModel(m_outboundModel, "outboundConnections");
 }
 
 ConnectionsExtension::~ConnectionsExtension()

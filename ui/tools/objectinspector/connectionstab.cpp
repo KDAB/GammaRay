@@ -40,14 +40,14 @@ ConnectionsTab::ConnectionsTab(PropertyWidget* parent):
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + '.' + "inboundConnections2"));
+  proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + '.' + "inboundConnections"));
   ui->inboundView->setModel(proxy);
   ui->inboundView->sortByColumn(0, Qt::AscendingOrder);
   ui->inboundSearchLine->setProxy(proxy);
 
   proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + '.' + "outboundConnections2"));
+  proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + '.' + "outboundConnections"));
   ui->outboundView->setModel(proxy);
   ui->outboundView->sortByColumn(0, Qt::AscendingOrder);
   ui->outboundSearchLine->setProxy(proxy);
