@@ -28,6 +28,7 @@
 #include "classinfoextension.h"
 #include "enumsextension.h"
 #include "propertiesextension.h"
+#include "connectionsextension.h"
 #include "inboundconnectionsextension.h"
 #include "outboundconnectionsextension.h"
 
@@ -117,7 +118,7 @@ void ObjectInspector::registerPCExtensions()
   PropertyController::registerExtension<MethodsExtension>();
   PropertyController::registerExtension<EnumsExtension>();
   PropertyController::registerExtension<PropertiesExtension>();
+  PropertyController::registerExtension<ConnectionsExtension>();
   PropertyController::registerExtension<InboundConnectionsExtension>();
   PropertyController::registerExtension<OutboundConnectionsExtension>();
 }
-
