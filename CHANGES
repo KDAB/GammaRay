@@ -2,10 +2,13 @@ Release Highlights
 ==================
 
 Version 2.0.2:
+-------------
  * Restore compatibility with Qt4.7
  * Avoid leaking shared-memory in case of crashes of gammaray-client
  * Fix various crashes
  * Fix various crashes with heavily multithreaded debuggees
+ * Fix unecessary value limits in property editor for QPointF, QSizeF, etc
+ * Improve property editor value loading performance
 
 Version 2.0.1:
 -------------
