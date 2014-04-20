@@ -29,6 +29,7 @@
 namespace GammaRay {
 
 class ConnectionFilterProxyModel;
+class InboundConnectionsModel;
 
 class ConnectionsExtension : public PropertyControllerExtension
 {
@@ -39,10 +40,12 @@ class ConnectionsExtension : public PropertyControllerExtension
     bool setQObject(QObject* object);
 
   private:
-// #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     ConnectionFilterProxyModel *m_inboundModel;
+#else
+    InboundConnectionsModel *m_inboundModel;
+#endif
     ConnectionFilterProxyModel *m_outboundModel;
-// #endif
 };
 
 }

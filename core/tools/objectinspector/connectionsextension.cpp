@@ -22,6 +22,7 @@
 */
 
 #include "connectionsextension.h"
+#include "inboundconnectionsmodel.h"
 
 #include <core/connectionfilterproxymodel.h>
 #include <core/probe.h>
@@ -30,15 +31,21 @@
 using namespace GammaRay;
 
 ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
-  PropertyControllerExtension(controller->objectBaseName() + ".connections"),
-  m_inboundModel(new ConnectionFilterProxyModel(controller)),
-  m_outboundModel(new ConnectionFilterProxyModel(controller))
+  PropertyControllerExtension(controller->objectBaseName() + ".connections")
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  m_inboundModel = new ConnectionFilterProxyModel(controller);
+  m_outboundModel = new ConnectionFilterProxyModel(controller);
+
   m_inboundModel->setFilterOnReceiver(true);
   m_outboundModel->setFilterOnSender(true);
 
   m_inboundModel->setSourceModel(Probe::instance()->connectionModel());
   m_outboundModel->setSourceModel(Probe::instance()->connectionModel());
+#else
+  m_inboundModel = new InboundConnectionsModel(controller);
+  m_outboundModel = new ConnectionFilterProxyModel(controller); // ### FIXME
+#endif
 
   controller->registerModel(m_inboundModel, "inboundConnections");
   controller->registerModel(m_outboundModel, "outboundConnections");
@@ -50,8 +57,12 @@ ConnectionsExtension::~ConnectionsExtension()
 
 bool ConnectionsExtension::setQObject(QObject* object)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   m_inboundModel->filterReceiver(object);
   m_outboundModel->filterSender(object);
+#else
+  m_inboundModel->setObject(object);
+#endif
 
   return true;
 }
