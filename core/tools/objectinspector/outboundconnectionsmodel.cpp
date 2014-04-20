@@ -23,6 +23,8 @@
 
 #include "outboundconnectionsmodel.h"
 
+#include <core/probe.h>
+
 #include <QDebug>
 #include <private/qobject_p.h>
 
@@ -55,7 +57,7 @@ void OutboundConnectionsModel::setObject(QObject* object)
     for (int signalIndex = 0; signalIndex < cl->count(); ++signalIndex) {
       const QObjectPrivate::Connection *c = cl->at(signalIndex).first;
       while (c) {
-        if (!c->receiver) {
+        if (!c->receiver || Probe::instance()->filterObject(c->receiver)) {
           c = c->nextConnectionList;
           continue;
         }

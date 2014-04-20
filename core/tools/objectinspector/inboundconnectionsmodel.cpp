@@ -23,6 +23,8 @@
 
 #include "inboundconnectionsmodel.h"
 
+#include <core/probe.h>
+
 #include <QDebug>
 #include <private/qobject_p.h>
 
@@ -51,6 +53,9 @@ void InboundConnectionsModel::setObject(QObject* object)
   QObjectPrivate *d = QObjectPrivate::get(object);
   if (d->senders) {
     for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
+      if (s->sender && Probe::instance()->filterObject(s->sender))
+        continue;
+
       Connection conn;
       conn.endpoint = s->sender;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
