@@ -59,6 +59,7 @@ void InboundConnectionsModel::setObject(QObject* object)
       conn.signalIndex = -1; // ### FIXME
 #endif
       conn.slotIndex = s->method();
+      conn.type = s->connectionType;
       m_connections.push_back(conn);
     }
   }

@@ -64,6 +64,7 @@ void OutboundConnectionsModel::setObject(QObject* object)
         conn.endpoint = c->receiver;
         conn.signalIndex = signalIndex;
         conn.slotIndex = c->method();
+        conn.type = c->connectionType;
         c = c->nextConnectionList;
         m_connections.push_back(conn);
       }

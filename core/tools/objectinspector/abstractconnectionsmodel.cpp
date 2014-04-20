@@ -40,7 +40,7 @@ AbstractConnectionsModel::~AbstractConnectionsModel()
 int AbstractConnectionsModel::columnCount(const QModelIndex& parent) const
 {
   Q_UNUSED(parent);
-  return 3;
+  return 4;
 }
 
 int AbstractConnectionsModel::rowCount(const QModelIndex& parent) const
@@ -52,9 +52,27 @@ int AbstractConnectionsModel::rowCount(const QModelIndex& parent) const
 
 QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) const
 {
-  Q_UNUSED(index);
-  Q_UNUSED(role);
+  if (!index.isValid())
+    return QVariant();
+
+  if (role == Qt::DisplayRole && index.column() == 3) {
+    const Connection &conn = m_connections.at(index.row());
+    switch (conn.type) { // see qobject_p.h
+      case 0: return tr("Auto");
+      case 1: return tr("Direct");
+      case 2: return tr("Queued");
+      case 3: return tr("Blocking");
+    }
+  }
+
   return QVariant();
+}
+
+QVariant AbstractConnectionsModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (section == 3 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    return tr("Type");
+  return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 QString AbstractConnectionsModel::displayString(QObject *object, int methodIndex)

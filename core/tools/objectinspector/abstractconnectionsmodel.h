@@ -44,6 +44,7 @@ public:
     int columnCount(const QModelIndex& parent) const;
     int rowCount(const QModelIndex& parent) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 protected:
     static QString displayString(QObject *object, int methodIndex);
@@ -55,6 +56,7 @@ protected:
       QPointer<QObject> endpoint;
       int signalIndex;
       int slotIndex;
+      int type;
     };
     QVector<Connection> m_connections;
 };
