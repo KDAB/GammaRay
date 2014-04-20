@@ -23,25 +23,13 @@
 
 #include "inboundconnectionsmodel.h"
 
-#include <core/util.h>
-
 #include <QDebug>
-#include <QMetaMethod>
 #include <private/qobject_p.h>
 
 using namespace GammaRay;
 
-static QString displayString(const QMetaMethod &method)
-{
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  return method.methodSignature();
-#else
-  return method.signature();
-#endif
-}
-
 InboundConnectionsModel::InboundConnectionsModel(QObject* parent):
-  QAbstractTableModel(parent)
+  AbstractConnectionsModel(parent)
 {
 }
 
@@ -64,7 +52,7 @@ void InboundConnectionsModel::setObject(QObject* object)
   if (d->senders) {
     for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
       Connection conn;
-      conn.sender = s->sender;
+      conn.endpoint = s->sender;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
       conn.signalIndex = s->signal_index;
 #else
@@ -87,40 +75,15 @@ QVariant InboundConnectionsModel::data(const QModelIndex& index, int role) const
     const Connection &conn = m_connections.at(index.row());
     switch (index.column()) {
       case 0:
-        if (!conn.sender)
-          return tr("<destroyed>");
-        return Util::displayString(conn.sender);
+        return displayString(conn.endpoint);
       case 1:
-      {
-        if (!conn.sender)
-          return tr("<destroyed>");
-        if (conn.signalIndex < 0)
-          return tr("<unknown>");
-        const QMetaMethod signal = conn.sender->metaObject()->method(conn.signalIndex);
-        return displayString(signal);
-      }
+        return displayString(conn.endpoint, conn.signalIndex);
       case 2:
-      {
-        const QMetaMethod slot = m_object->metaObject()->method(conn.slotIndex);
-        return displayString(slot);
-      }
+        return displayString(m_object, conn.slotIndex);
     }
   }
 
-  return QVariant();
-}
-
-int InboundConnectionsModel::columnCount(const QModelIndex& parent) const
-{
-  Q_UNUSED(parent);
-  return 3;
-}
-
-int InboundConnectionsModel::rowCount(const QModelIndex& parent) const
-{
-  if (parent.isValid())
-    return 0;
-  return m_connections.size();
+  return AbstractConnectionsModel::data(index, role);
 }
 
 QVariant InboundConnectionsModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -132,5 +95,5 @@ QVariant InboundConnectionsModel::headerData(int section, Qt::Orientation orient
       case 2: return tr("Slot");
     }
   }
-  return QAbstractItemModel::headerData(section, orientation, role);
+  return AbstractConnectionsModel::headerData(section, orientation, role);
 }

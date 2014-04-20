@@ -23,25 +23,13 @@
 
 #include "outboundconnectionsmodel.h"
 
-#include <core/util.h>
-
 #include <QDebug>
-#include <QMetaMethod>
 #include <private/qobject_p.h>
 
 using namespace GammaRay;
 
-static QString displayString(const QMetaMethod &method)
-{
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  return method.methodSignature();
-#else
-  return method.signature();
-#endif
-}
-
 OutboundConnectionsModel::OutboundConnectionsModel(QObject* parent):
-  QAbstractTableModel(parent)
+  AbstractConnectionsModel(parent)
 {
 }
 
@@ -73,7 +61,7 @@ void OutboundConnectionsModel::setObject(QObject* object)
         }
 
         Connection conn;
-        conn.receiver = c->receiver;
+        conn.endpoint = c->receiver;
         conn.signalIndex = signalIndex;
         conn.slotIndex = c->method();
         c = c->nextConnectionList;
@@ -94,40 +82,15 @@ QVariant OutboundConnectionsModel::data(const QModelIndex& index, int role) cons
     const Connection &conn = m_connections.at(index.row());
     switch (index.column()) {
       case 0:
-      {
-        if (conn.signalIndex < 0)
-          return tr("<unknown>");
-        const QMetaMethod signal = m_object->metaObject()->method(conn.signalIndex);
-        return displayString(signal);
-      }
+        return displayString(m_object, conn.signalIndex);
       case 1:
-        if (!conn.receiver)
-          return tr("<destroyed>");
-        return Util::displayString(conn.receiver);
+        return displayString(conn.endpoint);
       case 2:
-      {
-        if (!conn.receiver)
-          return tr("<destroyed>");
-        const QMetaMethod slot = conn.receiver->metaObject()->method(conn.slotIndex);
-        return displayString(slot);
-      }
+        return displayString(conn.endpoint, conn.slotIndex);
     }
   }
 
-  return QVariant();
-}
-
-int OutboundConnectionsModel::columnCount(const QModelIndex& parent) const
-{
-  Q_UNUSED(parent);
-  return 3;
-}
-
-int OutboundConnectionsModel::rowCount(const QModelIndex& parent) const
-{
-  if (parent.isValid())
-    return 0;
-  return m_connections.size();
+  return AbstractConnectionsModel::data(index, role);
 }
 
 QVariant OutboundConnectionsModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -139,5 +102,5 @@ QVariant OutboundConnectionsModel::headerData(int section, Qt::Orientation orien
       case 2: return tr("Slot");
     }
   }
-  return QAbstractItemModel::headerData(section, orientation, role);
+  return AbstractConnectionsModel::headerData(section, orientation, role);
 }

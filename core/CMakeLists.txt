@@ -53,6 +53,7 @@ set(gammaray_srcs
   tools/objectinspector/propertiesextension.cpp
   tools/objectinspector/methodsextension.cpp
   tools/objectinspector/connectionsextension.cpp
+  tools/objectinspector/abstractconnectionsmodel.cpp
   tools/objectinspector/inboundconnectionsmodel.cpp
   tools/objectinspector/outboundconnectionsmodel.cpp
   tools/objectinspector/enumsextension.cpp

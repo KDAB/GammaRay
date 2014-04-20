@@ -24,14 +24,12 @@
 #ifndef GAMMARAY_OUTBOUNDCONNECTIONMODEL_H
 #define GAMMARAY_OUTBOUNDCONNECTIONMODEL_H
 
-#include <QAbstractItemModel>
-#include <QPointer>
-#include <QVector>
+#include "abstractconnectionsmodel.h"
 
 namespace GammaRay {
 
 /** Lists outgoing connections from a given QObject. */
-class OutboundConnectionsModel : public QAbstractTableModel
+class OutboundConnectionsModel : public AbstractConnectionsModel
 {
     Q_OBJECT
 public:
@@ -41,18 +39,7 @@ public:
     void setObject(QObject* object);
 
     QVariant data(const QModelIndex& index, int role) const;
-    int columnCount(const QModelIndex& parent) const;
-    int rowCount(const QModelIndex& parent) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-
-private:
-    QPointer<QObject> m_object;
-    struct Connection {
-      int signalIndex;
-      QPointer<QObject> receiver;
-      int slotIndex;
-    };
-    QVector<Connection> m_connections;
 };
 
 }
