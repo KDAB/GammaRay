@@ -54,6 +54,7 @@ set(gammaray_srcs
   tools/objectinspector/methodsextension.cpp
   tools/objectinspector/connectionsextension.cpp
   tools/objectinspector/inboundconnectionsmodel.cpp
+  tools/objectinspector/outboundconnectionsmodel.cpp
   tools/objectinspector/enumsextension.cpp
   tools/objectinspector/classinfoextension.cpp
   tools/resourcebrowser/resourcebrowser.cpp

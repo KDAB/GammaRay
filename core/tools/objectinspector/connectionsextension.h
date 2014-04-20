@@ -30,6 +30,7 @@ namespace GammaRay {
 
 class ConnectionFilterProxyModel;
 class InboundConnectionsModel;
+class OutboundConnectionsModel;
 
 class ConnectionsExtension : public PropertyControllerExtension
 {
@@ -42,10 +43,11 @@ class ConnectionsExtension : public PropertyControllerExtension
   private:
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     ConnectionFilterProxyModel *m_inboundModel;
+    ConnectionFilterProxyModel *m_outboundModel;
 #else
     InboundConnectionsModel *m_inboundModel;
+    OutboundConnectionsModel *m_outboundModel;
 #endif
-    ConnectionFilterProxyModel *m_outboundModel;
 };
 
 }

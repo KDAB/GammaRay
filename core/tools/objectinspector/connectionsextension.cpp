@@ -23,6 +23,7 @@
 
 #include "connectionsextension.h"
 #include "inboundconnectionsmodel.h"
+#include "outboundconnectionsmodel.h"
 
 #include <core/connectionfilterproxymodel.h>
 #include <core/probe.h>
@@ -44,7 +45,7 @@ ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
   m_outboundModel->setSourceModel(Probe::instance()->connectionModel());
 #else
   m_inboundModel = new InboundConnectionsModel(controller);
-  m_outboundModel = new ConnectionFilterProxyModel(controller); // ### FIXME
+  m_outboundModel = new OutboundConnectionsModel(controller);
 #endif
 
   controller->registerModel(m_inboundModel, "inboundConnections");
@@ -62,6 +63,7 @@ bool ConnectionsExtension::setQObject(QObject* object)
   m_outboundModel->filterSender(object);
 #else
   m_inboundModel->setObject(object);
+  m_outboundModel->setObject(object);
 #endif
 
   return true;
