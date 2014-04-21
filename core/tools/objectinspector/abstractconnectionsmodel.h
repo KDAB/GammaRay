@@ -50,6 +50,8 @@ protected:
     static QString displayString(QObject *object, int methodIndex);
     static QString displayString(QObject *object);
 
+    static int signalIndexToMethodIndex(QObject *object, int signalIndex);
+
 protected:
     QPointer<QObject> m_object;
     struct Connection {

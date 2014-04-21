@@ -27,6 +27,10 @@
 
 #include <QMetaMethod>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <private/qmetaobject_p.h>
+#endif
+
 using namespace GammaRay;
 
 AbstractConnectionsModel::AbstractConnectionsModel(QObject* parent): QAbstractTableModel(parent)
@@ -95,4 +99,14 @@ QString AbstractConnectionsModel::displayString(QObject* object)
   if (!object)
     return QObject::tr("<destroyed>");
   return Util::displayString(object);
+}
+
+int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int signalIndex)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  return QMetaObjectPrivate::signal(object->metaObject(), signalIndex).methodIndex();
+#else
+  Q_UNUSED(object);
+  return signalIndex;
+#endif
 }
