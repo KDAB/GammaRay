@@ -27,9 +27,8 @@
 
 #include <QMetaMethod>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <private/qobject_p.h>
 #include <private/qmetaobject_p.h>
-#endif
 
 using namespace GammaRay;
 
@@ -101,12 +100,39 @@ QString AbstractConnectionsModel::displayString(QObject* object)
   return Util::displayString(object);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+// from Qt4's qobject.cpp
+static void computeOffsets(const QMetaObject *mo, int *signalOffset, int *methodOffset)
+{
+  *signalOffset = *methodOffset = 0;
+  const QMetaObject *m = mo->superClass();
+  while (m) {
+    const QMetaObjectPrivate *d = QMetaObjectPrivate::get(m);
+    *methodOffset += d->methodCount;
+    *signalOffset += d->signalCount;
+    m = m->superClass();
+  }
+}
+#endif
+
 int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int signalIndex)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   return QMetaObjectPrivate::signal(object->metaObject(), signalIndex).methodIndex();
 #else
-  Q_UNUSED(object);
-  return signalIndex;
+
+  if (signalIndex < 0)
+    return signalIndex;
+  Q_ASSERT(object);
+
+  const QMetaObject *mo = object->metaObject();
+  int signalOffset, methodOffset;
+  computeOffsets(mo, &signalOffset, &methodOffset);
+  while (signalOffset > signalIndex) {
+    mo = mo->superClass();
+    computeOffsets(mo, &signalOffset, &methodOffset);
+  }
+  const int offset = methodOffset - signalOffset;
+  return object->metaObject()->method(signalIndex + offset).methodIndex();
 #endif
 }
