@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_ABSTRACTCONNECTIONSMODEL_H
 #define GAMMARAY_ABSTRACTCONNECTIONSMODEL_H
 
+#include <common/modelroles.h>
+
 #include <QAbstractTableModel>
 
 #include <QPointer>
@@ -36,6 +38,10 @@ class AbstractConnectionsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
+    enum Roles {
+      WarningFlagRole = UserRole
+    };
+
     explicit AbstractConnectionsModel(QObject* parent = 0);
     ~AbstractConnectionsModel();
 
@@ -45,6 +51,7 @@ public:
     int rowCount(const QModelIndex& parent) const;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QMap< int, QVariant > itemData(const QModelIndex& index) const;
 
 protected:
     static QString displayString(QObject *object, int methodIndex);
@@ -61,6 +68,9 @@ protected:
       int type;
     };
     QVector<Connection> m_connections;
+
+private:
+    bool isDuplicate(const Connection& conn) const;
 };
 
 }

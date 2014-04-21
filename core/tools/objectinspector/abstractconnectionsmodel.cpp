@@ -58,8 +58,8 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
   if (!index.isValid())
     return QVariant();
 
+  const Connection &conn = m_connections.at(index.row());
   if (role == Qt::DisplayRole && index.column() == 3) {
-    const Connection &conn = m_connections.at(index.row());
     switch (conn.type) { // see qobject_p.h
       case 0: return tr("Auto");
       case 1: return tr("Direct");
@@ -69,6 +69,15 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
           return tr("Blocking");
       default: return tr("Unknown: %1").arg(conn.type);
     }
+  }
+
+  if (role == WarningFlagRole && index.column() == 0) {
+    return isDuplicate(conn);
+  }
+
+  if (role == Qt::ToolTipRole) {
+    if (isDuplicate(conn))
+      return tr("Connections exists multiple times.\nThe connected slot is called multiple times when the signal is emitted.");
   }
 
   return QVariant();
@@ -138,4 +147,24 @@ int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int sign
   const int offset = methodOffset - signalOffset;
   return object->metaObject()->method(signalIndex + offset).methodIndex();
 #endif
+}
+
+QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex& index) const
+{
+  QMap<int, QVariant> d = QAbstractTableModel::itemData(index);
+  d.insert(WarningFlagRole, data(index, WarningFlagRole));
+  return d;
+}
+
+bool AbstractConnectionsModel::isDuplicate(const Connection& conn) const
+{
+  foreach (const Connection &c, m_connections) {
+    if (&c == &conn)
+      continue;
+    if (c.endpoint == conn.endpoint &&
+        c.slotIndex >= 0 && c.slotIndex == conn.slotIndex &&
+        c.signalIndex >= 0 && c.signalIndex == conn.signalIndex)
+      return true;
+  }
+  return false;
 }

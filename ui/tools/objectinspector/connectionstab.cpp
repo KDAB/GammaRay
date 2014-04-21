@@ -23,12 +23,11 @@
 
 #include "connectionstab.h"
 #include "ui_connectionstab.h"
+#include "connectionsclientproxymodel.h"
 
 #include <ui/propertywidget.h>
 
 #include <common/objectbroker.h>
-
-#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
@@ -38,14 +37,14 @@ ConnectionsTab::ConnectionsTab(PropertyWidget* parent):
 {
   ui->setupUi(this);
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  QSortFilterProxyModel *proxy = new ConnectionsClientProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + '.' + "inboundConnections"));
   ui->inboundView->setModel(proxy);
   ui->inboundView->sortByColumn(0, Qt::AscendingOrder);
   ui->inboundSearchLine->setProxy(proxy);
 
-  proxy = new QSortFilterProxyModel(this);
+  proxy = new ConnectionsClientProxyModel(this);
   proxy->setDynamicSortFilter(true);
   proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + '.' + "outboundConnections"));
   ui->outboundView->setModel(proxy);
