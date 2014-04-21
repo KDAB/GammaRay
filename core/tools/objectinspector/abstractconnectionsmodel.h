@@ -71,6 +71,7 @@ protected:
 
 private:
     bool isDuplicate(const Connection& conn) const;
+    bool isDirectCrossThreadConnection(const Connection &conn) const;
 };
 
 }

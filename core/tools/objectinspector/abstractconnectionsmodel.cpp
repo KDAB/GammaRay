@@ -26,6 +26,7 @@
 #include <core/util.h>
 
 #include <QMetaMethod>
+#include <QStringList>
 
 #include <private/qobject_p.h>
 #include <private/qmetaobject_p.h>
@@ -72,12 +73,17 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
   }
 
   if (role == WarningFlagRole && index.column() == 0) {
-    return isDuplicate(conn);
+    return isDuplicate(conn) || isDirectCrossThreadConnection(conn);
   }
 
   if (role == Qt::ToolTipRole) {
+    QStringList tips;
     if (isDuplicate(conn))
-      return tr("Connections exists multiple times.\nThe connected slot is called multiple times when the signal is emitted.");
+      tips << tr("Connections exists multiple times.\nThe connected slot is called multiple times when the signal is emitted.");
+    if (isDirectCrossThreadConnection(conn))
+      tips << tr("Direct cross-thread connection.\nThe connected slot is called in the context of the emitting thread.");
+    if (!tips.isEmpty())
+      return tips.join("\n\n");
   }
 
   return QVariant();
@@ -167,4 +173,11 @@ bool AbstractConnectionsModel::isDuplicate(const Connection& conn) const
       return true;
   }
   return false;
+}
+
+bool AbstractConnectionsModel::isDirectCrossThreadConnection(const Connection& conn) const
+{
+  if (!conn.endpoint || !m_object || conn.endpoint->thread() == m_object->thread())
+    return false;
+  return conn.type == 1; // direct
 }
