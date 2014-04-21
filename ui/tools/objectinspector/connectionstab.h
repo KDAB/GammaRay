@@ -28,6 +28,7 @@
 
 namespace GammaRay {
 
+class ConnectionsExtensionInterface;
 class PropertyWidget;
 namespace Ui {
 class ConnectionsTab;
@@ -40,8 +41,13 @@ class ConnectionsTab : public QWidget
     explicit ConnectionsTab(PropertyWidget *parent = 0);
     ~ConnectionsTab();
 
+  private slots:
+    void inboundContextMenu(const QPoint &pos);
+    void outboundContextMenu(const QPoint &pos);
+
   private:
     QScopedPointer<Ui::ConnectionsTab> ui;
+    ConnectionsExtensionInterface *m_interface;
 };
 }
 
