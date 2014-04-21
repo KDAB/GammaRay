@@ -39,6 +39,29 @@ InboundConnectionsModel::~InboundConnectionsModel()
 {
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+static int signalIndexForConnection(QObjectPrivate::Connection *connection, QObject *sender)
+{
+  QObjectPrivate *d = QObjectPrivate::get(sender);
+  if (!d->connectionLists)
+    return -1;
+
+  // HACK: the declaration of d->connectionsLists is not accessible for us...
+  const QVector<QObjectPrivate::ConnectionList> *cl = reinterpret_cast<QVector<QObjectPrivate::ConnectionList>*>(d->connectionLists);
+  for (int signalIndex = 0; signalIndex < cl->count(); ++signalIndex) {
+    const QObjectPrivate::Connection *c = cl->at(signalIndex).first;
+    while (c) {
+      if (c == connection)
+        return signalIndex;
+      c = c->nextConnectionList;
+      continue;
+    }
+  }
+
+  return -1;
+}
+#endif
+
 void InboundConnectionsModel::setObject(QObject* object)
 {
   beginResetModel();
@@ -64,7 +87,7 @@ void InboundConnectionsModel::setObject(QObject* object)
       if (s->isSlotObject)
         conn.slotIndex = -1;
 #else
-      conn.signalIndex = -1; // ### FIXME
+      conn.signalIndex = signalIndexToMethodIndex(s->sender, signalIndexForConnection(s, s->sender));
 #endif
       conn.type = s->connectionType;
       m_connections.push_back(conn);
