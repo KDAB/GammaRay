@@ -20,6 +20,7 @@
 */
 
 #include <QCoreApplication>
+#include <QThread>
 
 class MyTestObject : public QObject
 {
@@ -53,6 +54,27 @@ int main(int argc, char** argv)
     sender.setObjectName("sender");
     receiver.setObjectName("receiver");
     connectObjects(&sender, &receiver);
+
+    MyTestObject selfConnect;
+    selfConnect.setObjectName("selfConnect");
+    connectObjects(&selfConnect, &selfConnect);
+
+    QThread thread;
+    thread.setObjectName("thread");
+    thread.start();
+
+    MyTestObject threadSender, threadReceiver;
+    threadSender.setObjectName("threadSender");
+    threadReceiver.setObjectName("threadReceiver");
+    threadSender.moveToThread(&thread);
+    threadReceiver.moveToThread(&thread);
+
+    MyTestObject localSender, localReceiver;
+    localSender.setObjectName("localSender");
+    localReceiver.setObjectName("localReceiver");
+
+    connectObjects(&localSender, &threadReceiver);
+    connectObjects(&threadSender, &localReceiver);
 
     return app.exec();
 }
