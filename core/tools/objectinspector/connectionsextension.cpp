@@ -34,7 +34,7 @@ using namespace GammaRay;
 ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
   PropertyControllerExtension(controller->objectBaseName() + ".connections")
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#ifndef USE_QT_CONNECTIONS_LIST
   m_inboundModel = new ConnectionFilterProxyModel(controller);
   m_outboundModel = new ConnectionFilterProxyModel(controller);
 
@@ -58,7 +58,7 @@ ConnectionsExtension::~ConnectionsExtension()
 
 bool ConnectionsExtension::setQObject(QObject* object)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#ifndef USE_QT_CONNECTIONS_LIST
   m_inboundModel->filterReceiver(object);
   m_outboundModel->filterSender(object);
 #else

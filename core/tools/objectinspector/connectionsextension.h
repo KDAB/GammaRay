@@ -26,6 +26,10 @@
 
 #include <core/propertycontrollerextension.h>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#define USE_QT_CONNECTIONS_LIST
+#endif
+
 namespace GammaRay {
 
 class ConnectionFilterProxyModel;
@@ -41,7 +45,7 @@ class ConnectionsExtension : public PropertyControllerExtension
     bool setQObject(QObject* object);
 
   private:
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#ifndef USE_QT_CONNECTIONS_LIST
     ConnectionFilterProxyModel *m_inboundModel;
     ConnectionFilterProxyModel *m_outboundModel;
 #else
