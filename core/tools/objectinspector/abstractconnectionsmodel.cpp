@@ -89,6 +89,10 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
       return tips.join("\n\n");
   }
 
+  if (role == EndpointRole) {
+    return QVariant::fromValue(conn.endpoint.data());
+  }
+
   return QVariant();
 }
 

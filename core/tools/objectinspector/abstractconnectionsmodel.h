@@ -39,7 +39,8 @@ class AbstractConnectionsModel : public QAbstractTableModel
     Q_OBJECT
 public:
     enum Roles {
-      WarningFlagRole = UserRole
+      WarningFlagRole = UserRole,
+      EndpointRole
     };
 
     explicit AbstractConnectionsModel(QObject* parent = 0);

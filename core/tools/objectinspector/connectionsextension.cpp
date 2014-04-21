@@ -72,10 +72,18 @@ bool ConnectionsExtension::setQObject(QObject* object)
 
 void ConnectionsExtension::navigateToSender(int modelRow)
 {
-  // TODO
+  const QModelIndex index = m_inboundModel->index(modelRow, 0);
+  QObject* sender = index.data(AbstractConnectionsModel::EndpointRole).value<QObject*>();
+  if (!sender)
+    return;
+  Probe::instance()->selectObject(sender);
 }
 
 void ConnectionsExtension::navigateToReceiver(int modelRow)
 {
-  // TODO
+  const QModelIndex index = m_outboundModel->index(modelRow, 0);
+  QObject* receiver = index.data(AbstractConnectionsModel::EndpointRole).value<QObject*>();
+  if (!receiver)
+    return;
+  Probe::instance()->selectObject(receiver);
 }
