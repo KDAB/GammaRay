@@ -62,7 +62,10 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
   const Connection &conn = m_connections.at(index.row());
   if (role == Qt::DisplayRole && index.column() == 3) {
     switch (conn.type) { // see qobject_p.h
-      case 0: return tr("Auto");
+      case 0:
+        if (!conn.endpoint || !m_object)
+          return tr("Auto");
+        return tr("Auto (%1)").arg(conn.endpoint->thread() == m_object->thread() ? "Direct" : "Queued");
       case 1: return tr("Direct");
       case 2: return tr("Queued");
       case 3: // Qt5
