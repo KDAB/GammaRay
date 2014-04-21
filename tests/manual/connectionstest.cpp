@@ -46,6 +46,12 @@ static void connectObjects(QObject *sender, QObject *receiver)
     QObject::connect(sender, SIGNAL(mySignal4()), receiver, SLOT(mySlot4()), Qt::BlockingQueuedConnection);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+static void dummyFunction()
+{
+}
+#endif
+
 int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
@@ -75,6 +81,20 @@ int main(int argc, char** argv)
 
     connectObjects(&localSender, &threadReceiver);
     connectObjects(&threadSender, &localReceiver);
+
+    MyTestObject doubleSender, doubleReceiver;
+    doubleSender.setObjectName("doubleSender");
+    doubleReceiver.setObjectName("doubleReceiver");
+    connectObjects(&doubleSender, &doubleReceiver);
+    connectObjects(&doubleSender, &doubleReceiver);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    MyTestObject lambdaSender, lambdaContext;
+    lambdaSender.setObjectName("lambdaSender");
+    lambdaContext.setObjectName("lambdaContext");
+    QObject::connect(&lambdaSender, &MyTestObject::mySignal1, &dummyFunction);
+    QObject::connect(&lambdaSender, &MyTestObject::mySignal2, &lambdaContext, &dummyFunction);
+#endif
 
     return app.exec();
 }
