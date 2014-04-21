@@ -64,7 +64,10 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
       case 0: return tr("Auto");
       case 1: return tr("Direct");
       case 2: return tr("Queued");
-      case 3: return tr("Blocking");
+      case 3: // Qt5
+      case 4: // Qt4
+          return tr("Blocking");
+      default: return tr("Unknown: %1").arg(conn.type);
     }
   }
 
