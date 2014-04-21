@@ -66,6 +66,10 @@ void OutboundConnectionsModel::setObject(QObject* object)
         conn.endpoint = c->receiver;
         conn.signalIndex = signalIndexToMethodIndex(m_object, signalIndex);
         conn.slotIndex = c->method();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        if (c->isSlotObject)
+          conn.slotIndex = -1;
+#endif
         conn.type = c->connectionType;
         c = c->nextConnectionList;
         m_connections.push_back(conn);
@@ -89,6 +93,8 @@ QVariant OutboundConnectionsModel::data(const QModelIndex& index, int role) cons
       case 1:
         return displayString(conn.endpoint);
       case 2:
+        if (conn.slotIndex < 0)
+          return tr("<slot object>");
         return displayString(conn.endpoint, conn.slotIndex);
     }
   }

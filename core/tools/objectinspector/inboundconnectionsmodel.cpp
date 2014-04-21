@@ -58,12 +58,14 @@ void InboundConnectionsModel::setObject(QObject* object)
 
       Connection conn;
       conn.endpoint = s->sender;
+      conn.slotIndex = s->method();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
       conn.signalIndex = signalIndexToMethodIndex(s->sender, s->signal_index);
+      if (s->isSlotObject)
+        conn.slotIndex = -1;
 #else
       conn.signalIndex = -1; // ### FIXME
 #endif
-      conn.slotIndex = s->method();
       conn.type = s->connectionType;
       m_connections.push_back(conn);
     }
@@ -85,6 +87,8 @@ QVariant InboundConnectionsModel::data(const QModelIndex& index, int role) const
       case 1:
         return displayString(conn.endpoint, conn.signalIndex);
       case 2:
+        if (conn.slotIndex < 0)
+          return tr("<slot object context>");
         return displayString(m_object, conn.slotIndex);
     }
   }
