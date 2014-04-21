@@ -46,6 +46,7 @@ set(gammaray_common_internal_srcs
 
   tools/objectinspector/propertiesextensioninterface.cpp
   tools/objectinspector/methodsextensioninterface.cpp
+  tools/objectinspector/connectionsextensioninterface.cpp
 )
 
 if(WIN32)

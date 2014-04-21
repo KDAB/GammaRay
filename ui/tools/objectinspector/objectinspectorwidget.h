@@ -34,6 +34,8 @@
 #include "classinfotab.h"
 #include "propertiesextensionclient.h"
 #include "methodsextensionclient.h"
+#include "connectionsextensionclient.h"
+
 #include <common/objectbroker.h>
 
 class QItemSelection;
@@ -44,14 +46,10 @@ namespace Ui {
   class ObjectInspectorWidget;
 }
 
-static QObject* createPropertiesExtension(const QString &name, QObject *parent)
+template <typename T>
+static QObject* createExtension(const QString &name, QObject *parent)
 {
-  return new PropertiesExtensionClient(name, parent);
-}
-
-static QObject* createMethodsExtension(const QString &name, QObject *parent)
-{
-  return new MethodsExtensionClient(name, parent);
+  return new T(name, parent);
 }
 
 class ObjectInspectorWidget : public QWidget
@@ -76,10 +74,11 @@ public:
   virtual void initUi()
   {
     PropertyWidget::registerTab<PropertiesTab>("properties", QObject::tr("Properties"));
-    ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createPropertiesExtension);
+    ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createExtension<PropertiesExtensionClient>);
     PropertyWidget::registerTab<MethodsTab>("methods", QObject::tr("Methods"));
-    ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createMethodsExtension);
+    ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createExtension<MethodsExtensionClient>);
     PropertyWidget::registerTab<ConnectionsTab>("connections", QObject::tr("Connections"));
+    ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface*>(createExtension<ConnectionsExtensionClient>);
     PropertyWidget::registerTab<EnumsTab>("enums", QObject::tr("Enums"));
     PropertyWidget::registerTab<ClassInfoTab>("classInfo", QObject::tr("Class Info"));
   }

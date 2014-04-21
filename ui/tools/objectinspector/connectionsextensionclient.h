@@ -1,5 +1,5 @@
 /*
-  connectionsextension.h
+  connectionsextensionclient.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,47 +21,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CONNECTIONSEXTENSION_H
-#define GAMMARAY_CONNECTIONSEXTENSION_H
+#ifndef GAMMARAY_CONNECTIONSEXTENSIONCLIENT_H
+#define GAMMARAY_CONNECTIONSEXTENSIONCLIENT_H
 
 #include <common/tools/objectinspector/connectionsextensioninterface.h>
 
-#include <core/propertycontrollerextension.h>
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#define USE_QT_CONNECTIONS_LIST
-#endif
-
 namespace GammaRay {
 
-class ConnectionFilterProxyModel;
-class InboundConnectionsModel;
-class OutboundConnectionsModel;
-
-class ConnectionsExtension : public ConnectionsExtensionInterface, public PropertyControllerExtension
+class ConnectionsExtensionClient : public ConnectionsExtensionInterface
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
   public:
-    explicit ConnectionsExtension(PropertyController* controller);
-    ~ConnectionsExtension();
-
-    bool setQObject(QObject* object);
+    explicit ConnectionsExtensionClient(const QString &name, QObject *parent = 0);
+    virtual ~ConnectionsExtensionClient();
 
   public slots:
     void navigateToReceiver(int modelRow);
     void navigateToSender(int modelRow);
-
-  private:
-#ifndef USE_QT_CONNECTIONS_LIST
-    ConnectionFilterProxyModel *m_inboundModel;
-    ConnectionFilterProxyModel *m_outboundModel;
-#else
-    InboundConnectionsModel *m_inboundModel;
-    OutboundConnectionsModel *m_outboundModel;
-#endif
 };
 
 }
 
-#endif // GAMMARAY_CONNECTIONSEXTENSION_H
+#endif // GAMMARAY_CONNECTIONSEXTENSIONCLIENT_H

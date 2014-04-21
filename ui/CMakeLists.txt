@@ -73,6 +73,7 @@ set(gammaray_ui_internal_srcs
   tools/objectinspector/methodstab.cpp
   tools/objectinspector/connectionstab.cpp
   tools/objectinspector/connectionsclientproxymodel.cpp
+  tools/objectinspector/connectionsextensionclient.cpp
   tools/objectinspector/enumstab.cpp
   tools/objectinspector/classinfotab.cpp
   tools/objectinspector/methodstab.cpp

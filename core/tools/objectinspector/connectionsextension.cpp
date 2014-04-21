@@ -32,6 +32,7 @@
 using namespace GammaRay;
 
 ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
+  ConnectionsExtensionInterface(controller->objectBaseName() + ".connectionsExtension", controller),
   PropertyControllerExtension(controller->objectBaseName() + ".connections")
 {
 #ifndef USE_QT_CONNECTIONS_LIST
@@ -67,4 +68,14 @@ bool ConnectionsExtension::setQObject(QObject* object)
 #endif
 
   return true;
+}
+
+void ConnectionsExtension::navigateToSender(int modelRow)
+{
+  // TODO
+}
+
+void ConnectionsExtension::navigateToReceiver(int modelRow)
+{
+  // TODO
 }
