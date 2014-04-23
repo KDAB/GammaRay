@@ -45,6 +45,6 @@ namespace QuickItemModelRole {
 }
 }
 
-Q_DECLARE_METATYPE(GammaRay::QuickItemModelRole::ItemFlag);
+Q_DECLARE_METATYPE(GammaRay::QuickItemModelRole::ItemFlag)
 
 #endif

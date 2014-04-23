@@ -54,6 +54,7 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
 QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+  Q_UNUSED(option);
   QSize textSize = m_view->fontMetrics().size(Qt::TextSingleLine, index.data(Qt::DisplayRole).toString());
   QSize decorationSize;
 

@@ -333,6 +333,7 @@ QuickEventMonitor::QuickEventMonitor(QuickItemModel* parent)
 
 bool QuickEventMonitor::eventFilter(QObject* obj, QEvent* event)
 {
+    Q_UNUSED(event);
     m_model->updateItem(qobject_cast<QQuickItem*>(obj));
     return false;
 }
