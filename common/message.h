@@ -44,16 +44,17 @@ class GAMMARAY_COMMON_EXPORT Message
 {
   public:
     /**
+     * Construct an empty message for reading.
+     *
+     * Ideally this would be private and we'd have a static read method returning the message
+     * so that you never can construct an invalid message objects, but that requires a move
+     * ctor and thus C++11 support (see Git history, but doesn't work for everyone yet, unfortunately).
+     */
+    Message();
+    /**
      * Construct a new message to/from @p address and message type @p type.
      */
     explicit Message(Protocol::ObjectAddress address, Protocol::MessageType type);
-#ifdef Q_COMPILER_RVALUE_REFS
-    Message(Message &&other); //krazy:exclude=explicit
-#else
-    // this is only needed to make readMessage compile (due to RVO there is no actual copy though)
-    // semantically we don't want to support copying, due to the datastream state
-    Message(const Message &other);
-#endif
     ~Message();
 
     Protocol::ObjectAddress address() const;
@@ -67,14 +68,12 @@ class GAMMARAY_COMMON_EXPORT Message
     /** Checks if there is a full message waiting in @p device. */
     static bool canReadMessage(QIODevice *device);
     /** Read the next message from @p device. */
-    static Message readMessage(QIODevice *device);
+    void read(QIODevice *device);
 
     /** Write this message to @p device. */
     void write(QIODevice *device) const;
 
   private:
-    Message();
-
     mutable QByteArray m_buffer;
     mutable QScopedPointer<QDataStream> m_stream;
 

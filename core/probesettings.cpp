@@ -79,7 +79,8 @@ void ProbeSettings::receiveSettings()
   buffer.open(QIODevice::ReadOnly);
 
   while (Message::canReadMessage(&buffer)) {
-    const Message msg = Message::readMessage(&buffer);
+    Message msg;
+    msg.read(&buffer);
     switch (msg.type()) {
       case Protocol::ServerVersion:
       {

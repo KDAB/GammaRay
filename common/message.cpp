@@ -67,16 +67,6 @@ Message::Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType ty
 {
 }
 
-#ifdef Q_COMPILER_RVALUE_REFS
-Message::Message(Message&& other) :
-  m_buffer(std::move(other.m_buffer)),
-  m_objectAddress(other.m_objectAddress),
-  m_messageType(other.m_messageType)
-{
-  m_stream.swap(other.m_stream);
-}
-#endif
-
 Message::~Message()
 {
 }
@@ -121,24 +111,21 @@ bool Message::canReadMessage(QIODevice* device)
   return device->bytesAvailable() >= payloadSize + minimumSize;
 }
 
-Message Message::readMessage(QIODevice* device)
+void Message::read(QIODevice* device)
 {
-  Message msg;
   QDataStream stream(device);
 
   const Protocol::PayloadSize payloadSize = readNumber<qint32>(device);
   Q_ASSERT(payloadSize >= 0);
 
-  msg.m_objectAddress = readNumber<Protocol::ObjectAddress>(device);
-  msg.m_messageType = readNumber<Protocol::MessageType>(device);
-  Q_ASSERT(msg.m_messageType != Protocol::InvalidMessageType);
-  Q_ASSERT(msg.m_objectAddress != Protocol::InvalidObjectAddress);
+  m_objectAddress = readNumber<Protocol::ObjectAddress>(device);
+  m_messageType = readNumber<Protocol::MessageType>(device);
+  Q_ASSERT(m_messageType != Protocol::InvalidMessageType);
+  Q_ASSERT(m_objectAddress != Protocol::InvalidObjectAddress);
 
   if (payloadSize)
-    msg.m_buffer = device->read(payloadSize);
-  Q_ASSERT(payloadSize == msg.m_buffer.size());
-
-  return msg;
+    m_buffer = device->read(payloadSize);
+  Q_ASSERT(payloadSize == m_buffer.size());
 }
 
 void Message::write(QIODevice* device) const
