@@ -29,6 +29,8 @@
 #include <core/probe.h>
 #include <core/propertycontroller.h>
 
+#include <common/tools/objectinspector/connectionsmodelroles.h>
+
 using namespace GammaRay;
 
 ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
@@ -73,7 +75,7 @@ bool ConnectionsExtension::setQObject(QObject* object)
 void ConnectionsExtension::navigateToSender(int modelRow)
 {
   const QModelIndex index = m_inboundModel->index(modelRow, 0);
-  QObject* sender = index.data(AbstractConnectionsModel::EndpointRole).value<QObject*>();
+  QObject* sender = index.data(ConnectionsModelRoles::EndpointRole).value<QObject*>();
   if (!sender)
     return;
   Probe::instance()->selectObject(sender);
@@ -82,7 +84,7 @@ void ConnectionsExtension::navigateToSender(int modelRow)
 void ConnectionsExtension::navigateToReceiver(int modelRow)
 {
   const QModelIndex index = m_outboundModel->index(modelRow, 0);
-  QObject* receiver = index.data(AbstractConnectionsModel::EndpointRole).value<QObject*>();
+  QObject* receiver = index.data(ConnectionsModelRoles::EndpointRole).value<QObject*>();
   if (!receiver)
     return;
   Probe::instance()->selectObject(receiver);

@@ -24,8 +24,6 @@
 #ifndef GAMMARAY_ABSTRACTCONNECTIONSMODEL_H
 #define GAMMARAY_ABSTRACTCONNECTIONSMODEL_H
 
-#include <common/modelroles.h>
-
 #include <QAbstractTableModel>
 
 #include <QPointer>
@@ -38,11 +36,6 @@ class AbstractConnectionsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    enum Roles {
-      WarningFlagRole = UserRole,
-      EndpointRole
-    };
-
     explicit AbstractConnectionsModel(QObject* parent = 0);
     ~AbstractConnectionsModel();
 

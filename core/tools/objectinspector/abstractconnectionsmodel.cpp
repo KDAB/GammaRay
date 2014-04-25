@@ -25,6 +25,8 @@
 
 #include <core/util.h>
 
+#include <common/tools/objectinspector/connectionsmodelroles.h>
+
 #include <QMetaMethod>
 #include <QStringList>
 
@@ -75,7 +77,7 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
     }
   }
 
-  if (role == WarningFlagRole && index.column() == 0) {
+  if (role == ConnectionsModelRoles::WarningFlagRole && index.column() == 0) {
     return isDuplicate(conn) || isDirectCrossThreadConnection(conn);
   }
 
@@ -89,8 +91,14 @@ QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) cons
       return tips.join("\n\n");
   }
 
-  if (role == EndpointRole) {
+  if (role == ConnectionsModelRoles::EndpointRole) {
     return QVariant::fromValue(conn.endpoint.data());
+  }
+
+  if (role == ConnectionsModelRoles::ActionRole) {
+    if (conn.endpoint && conn.endpoint != m_object)
+      return ConnectionsModelActions::NavigateToEndpoint;
+    return ConnectionsModelActions::NoAction;
   }
 
   return QVariant();
@@ -165,7 +173,8 @@ int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int sign
 QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex& index) const
 {
   QMap<int, QVariant> d = QAbstractTableModel::itemData(index);
-  d.insert(WarningFlagRole, data(index, WarningFlagRole));
+  d.insert(ConnectionsModelRoles::WarningFlagRole, data(index, ConnectionsModelRoles::WarningFlagRole));
+  d.insert(ConnectionsModelRoles::ActionRole, data(index, ConnectionsModelRoles::ActionRole));
   return d;
 }
 

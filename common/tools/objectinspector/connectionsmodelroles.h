@@ -1,5 +1,5 @@
 /*
-  connectionsclientproxymodel.cpp
+  modelroles.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,29 +21,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "connectionsclientproxymodel.h"
+#ifndef GAMMARAY_CONNECTIONSMODELROLES_H
+#define GAMMARAY_CONNECTIONSMODELROLES_H
 
-#include <common/tools/objectinspector/connectionsmodelroles.h>
+#include <common/modelroles.h>
 
-#include <QApplication>
-#include <QStyle>
+namespace GammaRay {
 
-using namespace GammaRay;
-
-ConnectionsClientProxyModel::ConnectionsClientProxyModel(QObject* parent): QSortFilterProxyModel(parent)
-{
+/** @brief Roles for the object inspector connections models. */
+namespace ConnectionsModelRoles {
+  enum Role {
+    WarningFlagRole = UserRole + 1,
+    EndpointRole,
+    ActionRole
+  };
 }
 
-ConnectionsClientProxyModel::~ConnectionsClientProxyModel()
-{
+/** @brief Connection actions.
+ * Returns via ActionRole from the connections models.
+ */
+namespace ConnectionsModelActions {
+  enum Action {
+    NoAction = 0,
+    NavigateToEndpoint = 1
+  };
 }
 
-QVariant ConnectionsClientProxyModel::data(const QModelIndex& index, int role) const
-{
-  if (role == Qt::DecorationRole && index.column() == 0) {
-    const bool warning = data(index, ConnectionsModelRoles::WarningFlagRole).toBool();
-    if (warning)
-      return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
-  }
-  return QSortFilterProxyModel::data(index, role);
 }
+
+#endif

@@ -29,6 +29,7 @@
 
 #include <common/objectbroker.h>
 #include <common/tools/objectinspector/connectionsextensioninterface.h>
+#include <common/tools/objectinspector/connectionsmodelroles.h>
 
 #include <QDebug>
 #include <QMenu>
@@ -76,7 +77,7 @@ static int mapToSourceRow(const QModelIndex &index)
 void ConnectionsTab::inboundContextMenu(const QPoint& pos)
 {
   const QModelIndex index = ui->inboundView->currentIndex();
-  if (!index.isValid())
+  if (!index.isValid() || index.data(ConnectionsModelRoles::ActionRole).toInt() == 0)
     return;
 
   QMenu menu;
@@ -89,7 +90,7 @@ void ConnectionsTab::inboundContextMenu(const QPoint& pos)
 void ConnectionsTab::outboundContextMenu(const QPoint& pos)
 {
   const QModelIndex index = ui->outboundView->currentIndex();
-  if (!index.isValid())
+  if (!index.isValid() || index.data(ConnectionsModelRoles::ActionRole).toInt() == 0)
     return;
 
   QMenu menu;
