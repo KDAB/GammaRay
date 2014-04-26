@@ -93,6 +93,8 @@ int main(int argc, char** argv)
     lambdaSender.setObjectName("lambdaSender");
     lambdaContext.setObjectName("lambdaContext");
     QObject::connect(&lambdaSender, &MyTestObject::mySignal1, &dummyFunction);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     QObject::connect(&lambdaSender, &MyTestObject::mySignal2, &lambdaContext, &dummyFunction);
 #endif
 
