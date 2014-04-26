@@ -21,12 +21,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "inboundconnectionsmodel.h"
 
 #include <core/probe.h>
 
 #include <QDebug>
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>
+#endif
 
 using namespace GammaRay;
 
@@ -39,7 +43,7 @@ InboundConnectionsModel::~InboundConnectionsModel()
 {
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0) && defined(HAVE_PRIVATE_QT_HEADERS)
 static int signalIndexForConnection(QObjectPrivate::Connection *connection, QObject *sender)
 {
   QObjectPrivate *d = QObjectPrivate::get(sender);
@@ -73,6 +77,7 @@ void InboundConnectionsModel::setObject(QObject* object)
     return;
   }
 
+#ifdef HAVE_PRIVATE_QT_HEADERS
   QObjectPrivate *d = QObjectPrivate::get(object);
   if (d->senders) {
     for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
@@ -93,6 +98,7 @@ void InboundConnectionsModel::setObject(QObject* object)
       m_connections.push_back(conn);
     }
   }
+#endif
 
   endResetModel();
 }

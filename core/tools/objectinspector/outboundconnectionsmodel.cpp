@@ -21,12 +21,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "outboundconnectionsmodel.h"
 
 #include <core/probe.h>
 
 #include <QDebug>
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>
+#endif
 
 using namespace GammaRay;
 
@@ -50,6 +54,7 @@ void OutboundConnectionsModel::setObject(QObject* object)
     endResetModel();
   }
 
+#ifdef HAVE_PRIVATE_QT_HEADERS
   QObjectPrivate *d = QObjectPrivate::get(object);
   if (d->connectionLists) {
     // HACK: the declaration of d->connectionsLists is not accessible for us...
@@ -76,6 +81,7 @@ void OutboundConnectionsModel::setObject(QObject* object)
       }
     }
   }
+#endif
 
   endResetModel();
 }

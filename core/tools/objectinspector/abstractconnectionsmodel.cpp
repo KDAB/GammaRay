@@ -21,6 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "abstractconnectionsmodel.h"
 
 #include <core/util.h>
@@ -30,8 +31,10 @@
 #include <QMetaMethod>
 #include <QStringList>
 
+#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>
 #include <private/qmetaobject_p.h>
+#endif
 
 using namespace GammaRay;
 
@@ -133,7 +136,7 @@ QString AbstractConnectionsModel::displayString(QObject* object)
   return Util::displayString(object);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0) && defined(HAVE_PRIVATE_QT_HEADERS)
 // from Qt4's qobject.cpp
 static void computeOffsets(const QMetaObject *mo, int *signalOffset, int *methodOffset)
 {
@@ -152,7 +155,7 @@ int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int sign
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   return QMetaObjectPrivate::signal(object->metaObject(), signalIndex).methodIndex();
-#else
+#elif defined(HAVE_PRIVATE_QT_HEADERS)
 
   if (signalIndex < 0)
     return signalIndex;
@@ -167,6 +170,8 @@ int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int sign
   }
   const int offset = methodOffset - signalOffset;
   return object->metaObject()->method(signalIndex + offset).methodIndex();
+#else
+  return -1;
 #endif
 }
 
