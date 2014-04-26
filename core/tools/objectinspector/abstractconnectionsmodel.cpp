@@ -153,9 +153,10 @@ static void computeOffsets(const QMetaObject *mo, int *signalOffset, int *method
 
 int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int signalIndex)
 {
+#ifdef HAVE_PRIVATE_QT_HEADERS
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   return QMetaObjectPrivate::signal(object->metaObject(), signalIndex).methodIndex();
-#elif defined(HAVE_PRIVATE_QT_HEADERS)
+#else
 
   if (signalIndex < 0)
     return signalIndex;
@@ -170,6 +171,7 @@ int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int sign
   }
   const int offset = methodOffset - signalOffset;
   return object->metaObject()->method(signalIndex + offset).methodIndex();
+#endif
 #else
   return -1;
 #endif
