@@ -81,8 +81,8 @@ const char* gammaray_flagLocation(const char* method)
   return method;
 }
 
-#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-void overwriteQtFunctions()
+#ifdef GAMMARAY_USE_FUNCTION_OVERWRITE
+static void overwriteQtFunctions()
 {
   functionsOverwritten = true;
   AbstractFunctionOverwriter *overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
@@ -112,17 +112,23 @@ void overwriteQtFunctions()
 }
 #endif
 
-#ifdef Q_OS_WIN
-extern "C" Q_DECL_EXPORT void gammaray_probe_inject();
+void Hooks::installHooks()
+{
+  if (hooksInstalled())
+    return;
 
+#ifdef GAMMARAY_USE_FUNCTION_OVERWRITE
+  overwriteQtFunctions();
+#endif
+}
+
+#ifdef Q_OS_WIN
 extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
 {
   switch(dwReason) {
   case DLL_THREAD_ATTACH:
   {
-    if (!functionsOverwritten) {
-      overwriteQtFunctions();
-    }
+    installHooks();
     if (!Probe::isInitialized()) {
       gammaray_probe_inject();
     }
@@ -157,7 +163,7 @@ class HitMeBabyOneMoreTime
   public:
     HitMeBabyOneMoreTime()
     {
-      overwriteQtFunctions();
+      Hooks::installHooks();
     }
 
 };

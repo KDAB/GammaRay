@@ -28,11 +28,18 @@
 
 class QObject;
 
+#if (defined(Q_OS_WIN) || defined(Q_OS_MAC)) && !defined(GAMMARAY_USE_QHOOKS)
+#define GAMMARAY_USE_FUNCTION_OVERWRITE
+#endif
+
 extern "C" {
 
 extern Q_DECL_EXPORT void gammaray_startup_hook();
 extern Q_DECL_EXPORT void gammaray_addObject(QObject* obj);
 extern Q_DECL_EXPORT void gammaray_removeObject(QObject* obj);
+
+/** Entry point for runtime attaching. */
+extern Q_DECL_EXPORT void gammaray_probe_inject();
 
 }
 
@@ -46,6 +53,9 @@ namespace Hooks {
    *  This is useful to avoid loops from preloaded hooks for example.
    */
   bool hooksInstalled();
+
+  /** Install hooks, either by function overwriting or using qhooks. */
+  void installHooks();
 }
 
 }
