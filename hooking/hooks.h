@@ -28,6 +28,10 @@
 
 class QObject;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+#define GAMMARAY_USE_QHOOKS
+#endif
+
 #if (defined(Q_OS_WIN) || defined(Q_OS_MAC)) && !defined(GAMMARAY_USE_QHOOKS)
 #define GAMMARAY_USE_FUNCTION_OVERWRITE
 #endif

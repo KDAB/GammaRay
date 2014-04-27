@@ -3,7 +3,7 @@ set(gammaray_probe_srcs
   hooks.cpp
 )
 
-if(UNIX)
+if(UNIX AND Qt5Core_VERSION VERSION_LESS 5.4.0)
   list(APPEND gammaray_probe_srcs preload.cpp)
 endif()
 
@@ -22,7 +22,7 @@ if(WIN32)
   )
 endif()
 
-if(APPLE)
+if(APPLE OR NOT Qt5Core_VERSION VERSION_LESS 5.4.0)
   list(APPEND gammaray_probe_srcs entry_unix.cpp)
 endif()
 

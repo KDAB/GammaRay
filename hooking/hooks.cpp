@@ -31,7 +31,8 @@
 
 #include <QCoreApplication>
 
-#ifdef Q_OS_WIN
+#ifdef GAMMARAY_USE_QHOOKS
+#include <private/qhooks_p.h>
 #endif
 
 #include <stdio.h>
@@ -47,13 +48,6 @@
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
-
-static bool functionsOverwritten = false;
-
-bool Hooks::hooksInstalled()
-{
-  return functionsOverwritten;
-}
 
 extern "C" Q_DECL_EXPORT void gammaray_startup_hook()
 {
@@ -78,7 +72,24 @@ const char* gammaray_flagLocation(const char* method)
   return method;
 }
 
+#ifdef GAMMARAY_USE_QHOOKS
+static void installQHooks()
+{
+  Q_ASSERT(qtHookData[QHooks::HookDataVersion] >= 1);
+  Q_ASSERT(qtHookData[QHooks::HookDataSize] >= 6);
+
+  if (qtHookData[QHooks::AddQObject] || qtHookData[QHooks::RemoveQObject] || qtHookData[QHooks::Startup])
+    qFatal("There is another debugging tool using QHooks already, this is not yet supported!\n");
+
+  qtHookData[QHooks::AddQObject] = reinterpret_cast<quintptr>(&gammaray_addObject);
+  qtHookData[QHooks::RemoveQObject] = reinterpret_cast<quintptr>(&gammaray_removeObject);
+  qtHookData[QHooks::Startup] = reinterpret_cast<quintptr>(&gammaray_startup_hook);
+}
+#endif
+
 #ifdef GAMMARAY_USE_FUNCTION_OVERWRITE
+static bool functionsOverwritten = false;
+
 static void overwriteQtFunctions()
 {
   functionsOverwritten = true;
@@ -109,12 +120,25 @@ static void overwriteQtFunctions()
 }
 #endif
 
+bool Hooks::hooksInstalled()
+{
+#ifdef GAMMARAY_USE_QHOOKS
+  return qtHookData[QHooks::AddQObject] == reinterpret_cast<quintptr>(&gammaray_addObject);
+#elif defined(GAMMARAY_USE_FUNCTION_OVERWRITE)
+  return functionsOverwritten;
+#else
+  return false;
+#endif
+}
+
 void Hooks::installHooks()
 {
   if (hooksInstalled())
     return;
 
-#ifdef GAMMARAY_USE_FUNCTION_OVERWRITE
+#ifdef GAMMARAY_USE_QHOOKS
+  installQHooks();
+#elif defined(GAMMARAY_USE_FUNCTION_OVERWRITE)
   overwriteQtFunctions();
 #endif
 }
