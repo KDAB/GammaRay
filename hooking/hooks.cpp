@@ -128,18 +128,3 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
   // make it possible to re-attach
   new ProbeCreator(ProbeCreator::CreateAndFindExisting);
 }
-
-#ifdef Q_OS_MAC
-// we need a way to execute some code upon load, so let's abuse
-// static initialization
-class HitMeBabyOneMoreTime
-{
-  public:
-    HitMeBabyOneMoreTime()
-    {
-      Hooks::installHooks();
-    }
-
-};
-static HitMeBabyOneMoreTime britney;
-#endif
