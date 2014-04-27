@@ -24,8 +24,6 @@
 
 #include <QtGlobal>
 
-#ifdef Q_OS_WIN
-
 #include "abstractfunctionoverwriter.h"
 #include <Windows.h>
 
@@ -54,7 +52,5 @@ class WinFunctionOverwriter : public AbstractFunctionOverwriter
 };
 
 }
-
-#endif // Q_OS_WIN
 
 #endif // WINFUNCTIONOVERWRITER_H

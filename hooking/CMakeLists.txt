@@ -12,10 +12,17 @@ if(WIN32 OR APPLE)
     ${gammaray_probe_srcs}
     abstractfunctionoverwriter.cpp
     functionoverwriterfactory.cpp
-    winfunctionoverwriter.cpp
     unixfunctionoverwriter.cpp
   )
 endif()
+
+if(WIN32)
+  list(APPEND gammaray_probe_srcs
+    entry_win.cpp
+    winfunctionoverwriter.cpp
+  )
+endif()
+
 
 # probe lib
 if(APPLE) # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules

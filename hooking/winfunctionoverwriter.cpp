@@ -22,8 +22,6 @@
 
 #include "winfunctionoverwriter.h"
 
-#ifdef Q_OS_WIN
-
 #include <iostream>
 
 using namespace std;
@@ -118,5 +116,3 @@ long WinFunctionOverwriter::pagesize() const
   GetSystemInfo(&si);
   return si.dwPageSize;
 }
-
-#endif // Q_OS_WIN

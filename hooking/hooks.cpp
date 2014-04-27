@@ -31,10 +31,7 @@
 
 #include <QCoreApplication>
 
-#ifndef Q_OS_WIN
-#include <dlfcn.h>
-#else
-#include <windows.h>
+#ifdef Q_OS_WIN
 #endif
 
 #include <stdio.h>
@@ -121,29 +118,6 @@ void Hooks::installHooks()
   overwriteQtFunctions();
 #endif
 }
-
-#ifdef Q_OS_WIN
-extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
-{
-  switch(dwReason) {
-  case DLL_THREAD_ATTACH:
-  {
-    installHooks();
-    if (!Probe::isInitialized()) {
-      gammaray_probe_inject();
-    }
-    break;
-  }
-  case DLL_PROCESS_DETACH:
-  {
-      //Unloading does not work, because we overwrite existing code
-      exit(-1);
-      break;
-  }
-  };
-  return TRUE; //krazy:exclude=captruefalse
-}
-#endif
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 {
