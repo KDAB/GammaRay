@@ -22,9 +22,12 @@
 */
 
 #include <config-gammaray.h>
-#include "core/probe.h"
+
+#include "hooks.h"
 #include "functionoverwriterfactory.h"
 #include "probecreator.h"
+
+#include <core/probe.h>
 
 #include <QCoreApplication>
 
@@ -48,69 +51,35 @@
 
 using namespace GammaRay;
 
-bool functionsOverwritten = false;
+static bool functionsOverwritten = false;
 
-extern "C" Q_DECL_EXPORT void qt_startup_hook()
+bool Hooks::hooksInstalled()
+{
+  return functionsOverwritten;
+}
+
+extern "C" Q_DECL_EXPORT void gammaray_startup_hook()
 {
   Probe::startupHookReceived();
 
   new ProbeCreator(ProbeCreator::CreateOnly);
-#if !defined Q_OS_WIN && !defined Q_OS_MAC
-  if (!functionsOverwritten) {
-    static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
-    next_qt_startup_hook();
-  }
-#endif
 }
 
-extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
+extern "C" Q_DECL_EXPORT void gammaray_addObject(QObject *obj)
 {
   Probe::objectAdded(obj, true);
-
-#if !defined Q_OS_WIN && !defined Q_OS_MAC
-  if (!functionsOverwritten) {
-    static void (*next_qt_addObject)(QObject *obj) =
-      (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
-    next_qt_addObject(obj);
-  }
-#endif
 }
 
-extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
+extern "C" Q_DECL_EXPORT void gammaray_removeObject(QObject *obj)
 {
   Probe::objectRemoved(obj);
-
-#if !defined Q_OS_WIN && !defined Q_OS_MAC
-  if (!functionsOverwritten) {
-    static void (*next_qt_removeObject)(QObject *obj) =
-      (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
-    next_qt_removeObject(obj);
-  }
-#endif
 }
 
-#ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
-#ifndef Q_OS_WIN
-Q_DECL_EXPORT const char *qFlagLocation(const char *method)
-#else
-Q_DECL_EXPORT const char *myFlagLocation(const char *method)
-#endif
+const char* gammaray_flagLocation(const char* method)
 {
   SignalSlotsLocationStore::flagLocation(method);
-
-#ifndef Q_OS_WIN
-  static const char *(*next_qFlagLocation)(const char *method) =
-    (const char * (*)(const char *method)) dlsym(RTLD_NEXT, "_Z13qFlagLocationPKc");
-
-  Q_ASSERT_X(next_qFlagLocation, "",
-             "Recompile with GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES enabled, "
-             "your compiler uses an unsupported C++ name mangling scheme");
-  return next_qFlagLocation(method);
-#else
   return method;
-#endif
 }
-#endif
 
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
 void overwriteQtFunctions()
@@ -118,25 +87,25 @@ void overwriteQtFunctions()
   functionsOverwritten = true;
   AbstractFunctionOverwriter *overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
 
-  overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)qt_startup_hook);
-  overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)qt_addObject);
-  overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)qt_removeObject);
+  overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)gammaray_startup_hook);
+  overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)gammaray_addObject);
+  overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)gammaray_removeObject);
 #if defined(Q_OS_WIN)
 #ifdef ARCH_64
 #ifdef __MINGW32__
   overwriter->overwriteFunction(
-    QLatin1String("_Z13qFlagLocationPKc"), (void*)myFlagLocation);
+    QLatin1String("_Z13qFlagLocationPKc"), (void*)gammaray_flagLocation);
 #else
   overwriter->overwriteFunction(
-    QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)myFlagLocation);
+    QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)gammaray_flagLocation);
 #endif
 #else
 # ifdef __MINGW32__
   overwriter->overwriteFunction(
-    QLatin1String("_Z13qFlagLocationPKc"), (void*)myFlagLocation);
+    QLatin1String("_Z13qFlagLocationPKc"), (void*)gammaray_flagLocation);
 # else
   overwriter->overwriteFunction(
-    QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)myFlagLocation);
+    QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)gammaray_flagLocation);
 # endif
 #endif
 #endif

@@ -3,6 +3,10 @@ set(gammaray_probe_srcs
   hooks.cpp
 )
 
+if(UNIX)
+  list(APPEND gammaray_probe_srcs preload.cpp)
+endif()
+
 if(WIN32 OR APPLE)
   set(gammaray_probe_srcs
     ${gammaray_probe_srcs}
