@@ -64,6 +64,8 @@ private slots:
 private:
   friend class QuickEventMonitor;
   void updateItem(QQuickItem *item);
+  void recursivelyUpdateItem(QQuickItem *item);
+  void updateItemFlags(QQuickItem *item);
   void clear();
   void populateFromItem(QQuickItem *item);
   /// Track all changes to item @p item in this model (parentChanged, windowChanged, ...)
@@ -86,6 +88,7 @@ private:
 
   QHash<QQuickItem*, QQuickItem*> m_childParentMap;
   QHash<QQuickItem*, QVector<QQuickItem*> > m_parentChildMap;
+  QHash<QQuickItem*, int> m_itemFlags;
 };
 
 class QuickEventMonitor : public QObject

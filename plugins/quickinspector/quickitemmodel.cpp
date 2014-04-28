@@ -59,20 +59,7 @@ QVariant QuickItemModel::data(const QModelIndex& index, int role) const
   QQuickItem *item = reinterpret_cast<QQuickItem*>(index.internalPointer());
 
   if (role == QuickItemModelRole::ItemFlags) {
-    QQuickItem *ancestor = item;
-    bool outOfView = false;
-    while ((ancestor = ancestor->parentItem())) {
-      QPointF pos = ancestor->mapFromItem(item, QPointF(0, 0));
-      if ((ancestor == m_window->contentItem() || ancestor->clip()) && (-pos.x() > item->width() || -pos.y() > item->height() || pos.x() > ancestor->width() || pos.y() > ancestor->height())) {
-        outOfView = true;
-        break;
-      }
-    }
-    return (!item->isVisible() || item->opacity() == 0 ? QuickItemModelRole::Invisible : QuickItemModelRole::None)
-            | (item->width() == 0 || item->height() == 0 ? QuickItemModelRole::ZeroSize : QuickItemModelRole::None)
-            | (outOfView ? QuickItemModelRole::OutOfView : QuickItemModelRole::None)
-            | (item->hasFocus() ? QuickItemModelRole::HasFocus : QuickItemModelRole::None)
-            | (item->hasActiveFocus() ? QuickItemModelRole::HasActiveFocus : QuickItemModelRole::None);
+    return m_itemFlags[item];
   }
   if (role == Qt::DisplayRole && index.column() == 0) {
     QQmlContext *ctx = QQmlEngine::contextForObject(item);
@@ -130,6 +117,7 @@ void QuickItemModel::populateFromItem(QQuickItem* item)
     return;
 
   connectItem(item);
+  updateItemFlags(item);
   m_childParentMap[item] = item->parentItem();
   m_parentChildMap[item->parentItem()].push_back(item);
 
@@ -314,7 +302,21 @@ void QuickItemModel::itemWindowChanged()
 
 void QuickItemModel::itemUpdated()
 {
-  updateItem(qobject_cast<QQuickItem*>(sender()));
+  QQuickItem *item = qobject_cast<QQuickItem*>(sender());
+
+  recursivelyUpdateItem(item);
+}
+
+void QuickItemModel::recursivelyUpdateItem(QQuickItem* item)
+{
+  int oldFlags = m_itemFlags[item];
+  updateItemFlags(item);
+  if (oldFlags != m_itemFlags[item])
+    updateItem(item);
+
+
+  foreach (QQuickItem *child, item->childItems())
+    recursivelyUpdateItem(child);
 }
 
 void QuickItemModel::updateItem(QQuickItem* item)
@@ -324,6 +326,24 @@ void QuickItemModel::updateItem(QQuickItem* item)
   const QModelIndex left = indexForItem(item);
   const QModelIndex right = left.sibling(left.row(), columnCount() - 1);
   emit dataChanged(left, right);
+}
+
+void QuickItemModel::updateItemFlags(QQuickItem* item)
+{
+  QQuickItem *ancestor = item;
+  bool outOfView = false;
+  while ((ancestor = ancestor->parentItem())) {
+    QPointF pos = ancestor->mapFromItem(item, QPointF(0, 0));
+    if ((ancestor == m_window->contentItem() || ancestor->clip()) && (-pos.x() > item->width() || -pos.y() > item->height() || pos.x() > ancestor->width() || pos.y() > ancestor->height())) {
+      outOfView = true;
+      break;
+    }
+  }
+  m_itemFlags[item] = (!item->isVisible() || item->opacity() == 0 ? QuickItemModelRole::Invisible : QuickItemModelRole::None)
+                        | (item->width() == 0 || item->height() == 0 ? QuickItemModelRole::ZeroSize : QuickItemModelRole::None)
+                        | (outOfView ? QuickItemModelRole::OutOfView : QuickItemModelRole::None)
+                        | (item->hasFocus() ? QuickItemModelRole::HasFocus : QuickItemModelRole::None)
+                        | (item->hasActiveFocus() ? QuickItemModelRole::HasActiveFocus : QuickItemModelRole::None);
 }
 
 QuickEventMonitor::QuickEventMonitor(QuickItemModel* parent)
