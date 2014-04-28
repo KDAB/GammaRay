@@ -1,13 +1,13 @@
 #ifndef QUICKITEMDELEGATE_H
 #define QUICKITEMDELEGATE_H
 
-#include <QItemDelegate>
+#include <QStyledItemDelegate>
 #include <QModelIndex>
 
 class QTreeView;
 namespace GammaRay {
 
-class QuickItemDelegate : public QItemDelegate
+class QuickItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 

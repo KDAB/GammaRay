@@ -4,11 +4,12 @@
 #include <QIcon>
 #include <QVariant>
 #include <QTreeView>
+#include <QApplication>
 
 using namespace GammaRay;
 
 QuickItemDelegate::QuickItemDelegate(QTreeView* view)
-  : QItemDelegate(view),
+  : QStyledItemDelegate(view),
     m_view(view)
 {
 }
@@ -17,7 +18,14 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 {
   int flags = index.data(QuickItemModelRole::ItemFlags).value<int>();
 
-  drawBackground(painter, option, index);
+  QStyleOptionViewItem opt = option;
+  initStyleOption(&opt, index);
+
+  // Disable foreground painting so we can do ourself
+  opt.text = "";
+  opt.icon = QIcon();
+
+  QApplication::style()->drawControl(QStyle::CE_ItemViewItem, &opt, painter);
 
   QRect drawRect = option.rect;
 
