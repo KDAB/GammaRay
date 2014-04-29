@@ -20,8 +20,12 @@
 */
 
 #include "functionoverwriterfactory.h"
+
+#ifdef Q_OS_WIN
 #include "winfunctionoverwriter.h"
+#else
 #include "unixfunctionoverwriter.h"
+#endif
 
 using namespace GammaRay;
 
