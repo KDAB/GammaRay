@@ -330,14 +330,15 @@ void QuickItemModel::updateItem(QQuickItem* item)
 
 void QuickItemModel::updateItemFlags(QQuickItem* item)
 {
-  QQuickItem *ancestor = item;
+  QQuickItem *ancestor = item->parentItem();
   bool outOfView = false;
-  while ((ancestor = ancestor->parentItem())) {
+  while (ancestor && ancestor != m_window->contentItem()) {
     QPointF pos = ancestor->mapFromItem(item, QPointF(0, 0));
-    if ((ancestor == m_window->contentItem() || ancestor->clip()) && (-pos.x() > item->width() || -pos.y() > item->height() || pos.x() > ancestor->width() || pos.y() > ancestor->height())) {
+    if ((ancestor->parentItem() == m_window->contentItem() || ancestor->clip()) && (-pos.x() > item->width() || -pos.y() > item->height() || pos.x() > ancestor->width() || pos.y() > ancestor->height())) {
       outOfView = true;
       break;
     }
+    ancestor = ancestor->parentItem();
   }
   m_itemFlags[item] = (!item->isVisible() || item->opacity() == 0 ? QuickItemModelRole::Invisible : QuickItemModelRole::None)
                         | (item->width() == 0 || item->height() == 0 ? QuickItemModelRole::ZeroSize : QuickItemModelRole::None)

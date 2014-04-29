@@ -230,10 +230,13 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
   ui->itemTreeView->scrollTo(index);
 }
 
-void QuickInspectorWidget::itemModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
+  qDebug() << "==========================";
+  qDebug() << "Parent:" << topLeft.parent().model();
   for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
     QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
+    qDebug() << index.model() << index.data(Qt::DisplayRole).toString();
 
     QVariantAnimation *colorAnimation = new QVariantAnimation(this);
     colorAnimation->setProperty("index", QVariant::fromValue(index));
