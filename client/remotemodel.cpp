@@ -126,14 +126,15 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
 
-  if (node->loading.contains(index.column())) { // still waiting for data
+  const NodeStates state = stateForColumn(node, index.column());
+  if ((state & Outdated) && ((state & Loading) == 0)) {
+    requestDataAndFlags(index);
+  }
+
+  if (state & Empty) { // still waiting for data
     if (role == Qt::DisplayRole)
       return tr("Loading...");
     return QVariant();
-  }
-
-  if (!node->data.contains(index.column())) {
-    requestDataAndFlags(index);
   }
 
   // note .value returns good defaults otherwise
@@ -241,7 +242,8 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Protocol::ModelIndex index;
       msg.payload() >> index;
       Node *node = nodeForIndex(index);
-      if (!node || !node->loading.contains(index.last().second))
+      const NodeStates state = node ? stateForColumn(node, index.last().second) : NoState;
+      if ((state & Loading) == 0)
         break; // we didn't ask for this, probably outdated response for a moved cell
       typedef QHash<int, QVariant> ItemData;
       ItemData itemData;
@@ -249,7 +251,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> itemData >> flags;
       node->data[index.last().second] = itemData;
       node->flags[index.last().second] = static_cast<Qt::ItemFlags>(flags);
-      node->loading.remove(index.last().second);
+      node->state.insert(index.last().second, state & ~(Loading | Empty | Outdated));
       const QModelIndex qmi = modelIndexForNode(node, index.last().second);
       emit dataChanged(qmi, qmi);
       break;
@@ -280,12 +282,13 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(beginIndex.last().first <= endIndex.last().first);
       Q_ASSERT(beginIndex.last().second <= endIndex.last().second);
 
-      // reset content for refetching
+      // mark content as outdated (will be refetched on next request)
       for (int row = beginIndex.last().first; row <= endIndex.last().first; ++row) {
         Node *currentRow = node->parent->children.at(row);
         for (int col = beginIndex.last().second; col <= endIndex.last().second; ++col) {
-          currentRow->data.remove(col);
-          currentRow->flags.remove(col);
+          const NodeStates state = stateForColumn(currentRow, col);
+          if ((state & Outdated) == 0)
+            currentRow->state.insert(col, state | Outdated);
         }
       }
 
@@ -434,6 +437,15 @@ QModelIndex RemoteModel::modelIndexForNode(Node* node, int column) const
   return createIndex(node->parent->children.indexOf(node), column, node);
 }
 
+RemoteModel::NodeStates RemoteModel::stateForColumn(RemoteModel::Node* node, int columnIndex) const
+{
+  Q_ASSERT(node);
+  const QHash<int, NodeStates>::const_iterator it = node->state.constFind(columnIndex);
+  if (it == node->state.constEnd())
+    return Empty | Outdated;
+  return it.value();
+}
+
 void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
 {
   Node *node = nodeForIndex(index);
@@ -453,11 +465,13 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
 {
   Node *node = nodeForIndex(index);
   Q_ASSERT(node);
-  Q_ASSERT(!node->data.contains(index.column()));
-  Q_ASSERT(!node->flags.contains(index.column()));
-  Q_ASSERT(!node->loading.contains(index.column()));
 
-  node->loading.insert(index.column()); // mark pending request
+  const NodeStates state = stateForColumn(node, index.column());
+  Q_ASSERT(!node->data.contains(index.column()) || state & Outdated);
+  Q_ASSERT(!node->flags.contains(index.column()) || state & Outdated);
+  Q_ASSERT((state & Loading) == 0);
+
+  node->state.insert(index.column(), state | Loading); // mark pending request
 
   Message msg(m_myAddress, Protocol::ModelContentRequest);
   msg.payload() << Protocol::fromQModelIndex(index);
@@ -517,7 +531,10 @@ void RemoteModel::resetLoadingState(RemoteModel::Node* node, int startRow) const
   Q_ASSERT(node->children.size() == node->rowCount);
   for (int row = startRow; row < node->rowCount; ++row) {
     Node *child = node->children[row];
-    child->loading.clear();
+    for (QHash<int, NodeStates>::iterator it = child->state.begin(); it != child->state.end(); ++it) {
+      if (it.value() & Loading)
+        it.value() = it.value() & ~Loading;
+    }
     resetLoadingState(child, 0);
   }
 }
