@@ -73,9 +73,9 @@ void QuickInspectorClient::sendWheelEvent(const QPointF& localPos, QPoint pixelD
                                                                                     << QVariant::fromValue(modifiers));
 }
 
-void QuickInspectorClient::setVisualizeOverdraw(bool visualizeOverdraw)
+void QuickInspectorClient::setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
-  Endpoint::instance()->invokeObject(objectName(), "setVisualizeOverdraw", QVariantList() << QVariant::fromValue(visualizeOverdraw));
+  Endpoint::instance()->invokeObject(objectName(), "setCustomRenderMode", QVariantList() << QVariant::fromValue(customRenderMode));
 }
 
 void QuickInspectorClient::checkFeatures()

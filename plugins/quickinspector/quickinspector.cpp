@@ -326,14 +326,18 @@ void QuickInspector::sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, 
   QCoreApplication::sendEvent(m_window, new QWheelEvent(localPos, m_window->mapToGlobal(localPos.toPoint()), pixelDelta, angleDelta, 0 /*not used*/, Qt::Vertical/*not used*/, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers));
 }
 
-void QuickInspector::setVisualizeOverdraw(bool visualizeOverdraw)
+void QuickInspector::setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
 #if defined(HAVE_SG_INSPECTOR) && QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
   QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
-  winPriv->customRenderMode = visualizeOverdraw ? "overdraw" : "";
+  winPriv->customRenderMode = customRenderMode == VisualizeClipping ? "clip"     :
+                              customRenderMode == VisualizeOverdraw ? "overdraw" :
+                              customRenderMode == VisualizeBatches  ? "batches"  :
+                              customRenderMode == VisualizeChanges  ? "changes"  :
+                              "";
   m_window->update();
 #else
-  Q_UNUSED(visualizeOverdraw);
+  Q_UNUSED(customRenderMode);
 #endif
 }
 
@@ -344,7 +348,7 @@ void QuickInspector::checkFeatures()
 #ifdef HAVE_SG_INSPECTOR
     SGInspector
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    | VisualizeOverdraw
+    | CustomRenderModes
 #endif // QT_VERSION >= 5.3.0
 #endif // HAVE_SG_INSPECTOR
     )

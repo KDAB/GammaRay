@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_QUICKINSPECTORINTERFACE_H
 #define GAMMARAY_QUICKINSPECTORINTERFACE_H
 
+#include <common/streamoperators.h>
+
 #include <QObject>
 #include <QRectF>
 #include <QVariantMap>
@@ -39,8 +41,16 @@ class QuickInspectorInterface : public QObject
 public:
   enum Feature {
     SGInspector = 1,
-    VisualizeOverdraw = 2
+    CustomRenderModes = 2
   };
+  enum RenderMode {
+    NormalRendering,
+    VisualizeClipping,
+    VisualizeOverdraw,
+    VisualizeBatches,
+    VisualizeChanges
+  };
+  Q_ENUMS(RenderMode)
   Q_DECLARE_FLAGS(Features, Feature)
 
   explicit QuickInspectorInterface(QObject *parent = 0);
@@ -53,7 +63,7 @@ public slots:
   virtual void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1) = 0;
   virtual void sendMouseEvent(int type, const QPointF & localPos, int button, int buttons, int modifiers) = 0;
   virtual void sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers) = 0;
-  virtual void setVisualizeOverdraw(bool visualizeOverdraw) = 0;
+  virtual void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) = 0;
   virtual void checkFeatures() = 0;
 
 signals:
@@ -66,6 +76,7 @@ signals:
 }
 
 Q_DECLARE_METATYPE(GammaRay::QuickInspectorInterface::Features)
+Q_DECLARE_METATYPE(GammaRay::QuickInspectorInterface::RenderMode)
 Q_DECLARE_INTERFACE(GammaRay::QuickInspectorInterface, "com.kdab.GammaRay.QuickInspectorInterface/1.0")
 
 #endif // GAMMARAY_QUICKINSPECTORINTERFACE_H

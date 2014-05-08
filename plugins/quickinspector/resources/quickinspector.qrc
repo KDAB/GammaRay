@@ -3,5 +3,9 @@
     <file>quickpreview.qml</file>
     <file>focus.png</file>
     <file>active-focus.png</file>
+    <file>object-group.png</file>
+    <file>object-order-lower.png</file>
+    <file>transform-crop.png</file>
+    <file>transform-rotate.png</file>
   </qresource>
 </RCC>

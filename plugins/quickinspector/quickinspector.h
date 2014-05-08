@@ -62,7 +62,7 @@ public slots:
   void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1);
   void sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers);
   void sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers);
-  void setVisualizeOverdraw(bool visualizeOverdraw);
+  void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode);
   void checkFeatures();
 
 protected:

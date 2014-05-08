@@ -34,7 +34,7 @@ Image {
   property real oldHeight: 0
   property variant geometryData: {}
   property bool isFirstFrame: true
-  property bool canVisualizeOverdraw: true
+  property bool supportsCustomRenderModes: true
 
   focus: true
 
@@ -88,6 +88,22 @@ Image {
       }
     }
   }
+  Component {
+    id: toolButtonStyle
+
+    ButtonStyle {
+      id: styleEl
+      background: Rectangle {
+        color: styleEl.control.hovered ? "#22ffffff" : styleEl.control.checked ? "#220000" : "transparent"
+        border.color: "grey"
+      }
+      label: Image {
+        source: styleEl.control.iconSource
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+      }
+    }
+  }
 
   // Toolbar (top-left)
   Rectangle {
@@ -100,18 +116,65 @@ Image {
     Row {
       id: toolbarRow
       x: 3
+      property int currentRenderMode: -1
 
       Button {
         height: 20
-        visible: canVisualizeOverdraw
-        property bool checked: false
+        visible: supportsCustomRenderModes
+        property bool checked: parent.currentRenderMode == 0
 
-        text: "Show Overdraw"
-        style: buttonStyle
+        iconSource: "qrc:///gammaray/plugins/quickinspector/transform-crop.png"
+        tooltip: "Visualize Clipping"
+        style: toolButtonStyle
 
         onClicked: {
-          checked = !checked;
-          inspectorInterface.setVisualizeOverdraw(checked);
+          parent.currentRenderMode = checked ? -1 : 0;
+          inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeClipping : QuickInspectorInterface.NormalRendering);
+          geometryOverlay.visible = !checked;
+        }
+      }
+      Button {
+        height: 20
+        visible: supportsCustomRenderModes
+        property bool checked: parent.currentRenderMode == 1
+
+        iconSource: "qrc:///gammaray/plugins/quickinspector/object-order-lower.png"
+        tooltip: "Visualize Overdraw"
+        style: toolButtonStyle
+
+        onClicked: {
+          parent.currentRenderMode = checked ? -1 : 1;
+          inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeOverdraw : QuickInspectorInterface.NormalRendering);
+          geometryOverlay.visible = !checked;
+        }
+      }
+      Button {
+        height: 20
+        visible: supportsCustomRenderModes
+        property bool checked: parent.currentRenderMode == 2
+
+        iconSource: "qrc:///gammaray/plugins/quickinspector/object-group.png"
+        tooltip: "Visualize Batches"
+        style: toolButtonStyle
+
+        onClicked: {
+          parent.currentRenderMode = checked ? -1 : 2;
+          inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeBatches : QuickInspectorInterface.NormalRendering);
+          geometryOverlay.visible = !checked;
+        }
+      }
+      Button {
+        height: 20
+        visible: supportsCustomRenderModes
+        property bool checked: parent.currentRenderMode == 3
+
+        iconSource: "qrc:///gammaray/plugins/quickinspector/transform-rotate.png"
+        tooltip: "Visualize Changes"
+        style: toolButtonStyle
+
+        onClicked: {
+          parent.currentRenderMode = checked ? -1 : 3;
+          inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeChanges : QuickInspectorInterface.NormalRendering);
           geometryOverlay.visible = !checked;
         }
       }

@@ -158,6 +158,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   m_preview->engine()->addImageProvider("quicksceneprovider", m_imageProvider);
   m_preview->setSource(QUrl("qrc:/gammaray/plugins/quickinspector/quickpreview.qml"));
   m_rootItem = qobject_cast< QQuickItem* >(m_preview->rootObject());
+  qmlRegisterUncreatableType<QuickInspectorInterface>("com.kdab.GammaRay", 1, 0, "QuickInspectorInterface", "Can't create. Only for enums.");
   m_preview->engine()->rootContext()->setContextProperty("inspectorInterface", m_interface);
   QTimer::singleShot(0, this, SLOT(setSplitterSizes()));
 
@@ -220,7 +221,7 @@ void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features feature
     ui->tabWidget->removeTab(1);
   }
 
-  m_rootItem->setProperty("canVisualizeOverdraw", (bool)(features & QuickInspectorInterface::VisualizeOverdraw));
+  m_rootItem->setProperty("supportsCustomRenderModes", (bool)(features & QuickInspectorInterface::CustomRenderModes));
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
