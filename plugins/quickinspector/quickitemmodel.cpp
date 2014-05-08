@@ -322,7 +322,8 @@ void QuickItemModel::recursivelyUpdateItem(QQuickItem* item)
 
 void QuickItemModel::updateItem(QQuickItem* item)
 {
-  Q_ASSERT(item && item->window() == m_window);
+  if (item && item->window() == m_window)
+    return;
 
   const QModelIndex left = indexForItem(item);
   const QModelIndex right = left.sibling(left.row(), columnCount() - 1);
