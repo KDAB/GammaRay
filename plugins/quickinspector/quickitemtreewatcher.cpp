@@ -49,7 +49,8 @@ void QuickItemTreeWatcher::itemModelDataChanged(const QModelIndex& topLeft, cons
   for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
     const QModelIndex index = topLeft.sibling(row, 0);
     const bool invisible = index.data(QuickItemModelRole::ItemFlags).value<int>() & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
-    if (!invisible) {
+    const int siblingCount = index.model()->rowCount(index.parent());
+    if (!invisible && siblingCount < 5) {
       m_itemView->setExpanded(index, true);
     }
   }
@@ -59,7 +60,10 @@ void QuickItemTreeWatcher::sgModelDataChanged(const QModelIndex& topLeft, const 
 {
   for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
     const QModelIndex index = topLeft.sibling(row, 0);
-    m_sgView->setExpanded(index, true);
+    const int siblingCount = index.model()->rowCount(index.parent());
+    if (siblingCount < 5) {
+      m_sgView->setExpanded(index, true);
+    }
   }
   m_sgView->resizeColumnToContents(0);
 }
