@@ -131,6 +131,10 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
     requestDataAndFlags(index);
   }
 
+  if (role == LoadingState) {
+    return QVariant::fromValue(state);
+  }
+
   if (state & Empty) { // still waiting for data
     if (role == Qt::DisplayRole)
       return tr("Loading...");

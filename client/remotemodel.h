@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_REMOTEMODEL_H
 #define GAMMARAY_REMOTEMODEL_H
 
+#include <common/objectmodel.h>
 #include <common/protocol.h>
 
 #include <QAbstractItemModel>
@@ -58,6 +59,9 @@ class RemoteModel : public QAbstractItemModel
     void serverUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress);
 
   public:
+    enum Roles {
+      LoadingState = ObjectModel::UserRole + 128 // TODO: Tidy up roles in general (and give loading state a proper id)
+    };
     enum NodeState {
       NoState = 0,
       Empty = 1,
@@ -118,5 +122,6 @@ class RemoteModel : public QAbstractItemModel
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::RemoteModel::NodeStates)
+Q_DECLARE_METATYPE(GammaRay::RemoteModel::NodeStates)
 
 #endif
