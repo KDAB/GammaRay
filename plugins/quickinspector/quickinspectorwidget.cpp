@@ -37,6 +37,7 @@
 #include <ui/deferredresizemodesetter.h>
 
 #include <kde/krecursivefilterproxymodel.h>
+#include <client/remotemodel.h>
 
 #include <QLabel>
 #include <QTimer>
@@ -232,11 +233,11 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
 
 void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-  qDebug() << "==========================";
-  qDebug() << "Parent:" << topLeft.parent().model();
   for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
     QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
-    qDebug() << index.model() << index.data(Qt::DisplayRole).toString();
+    RemoteModel::NodeStates state = index.data(RemoteModel::LoadingState).value<RemoteModel::NodeStates>();
+    if (state & RemoteModel::Empty || ~state & RemoteModel::Outdated)
+      continue;
 
     QVariantAnimation *colorAnimation = new QVariantAnimation(this);
     colorAnimation->setProperty("index", QVariant::fromValue(index));
