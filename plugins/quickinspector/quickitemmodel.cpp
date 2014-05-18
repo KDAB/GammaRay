@@ -29,6 +29,7 @@
 #include <QThread>
 #include <QQmlEngine>
 #include <QQmlContext>
+#include <QEvent>
 
 #include <algorithm>
 
@@ -354,7 +355,7 @@ QuickEventMonitor::QuickEventMonitor(QuickItemModel* parent)
 
 bool QuickEventMonitor::eventFilter(QObject* obj, QEvent* event)
 {
-    Q_UNUSED(event);
+  if (event->type() != QEvent::DeferredDelete && event->type() != QEvent::Destroy) // exclude some unsafe event types
     m_model->updateItem(qobject_cast<QQuickItem*>(obj));
-    return false;
+  return false;
 }
