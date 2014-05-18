@@ -25,6 +25,7 @@
 
 #include <QVariant>
 #include <QProcess>
+#include <QFileInfo>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QStandardPaths>
 #endif
@@ -73,10 +74,16 @@ QString LaunchOptions::absoluteExecutablePath() const
     return QString();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  return QStandardPaths::findExecutable(m_launchArguments.first());
-#else
-  return m_launchArguments.first();
+  QString path = m_launchArguments.first();
+  const QFileInfo fi(path);
+  if (fi.isFile() && fi.isExecutable())
+    return path;
+  path = QStandardPaths::findExecutable(m_launchArguments.first());
+  if (!path.isEmpty())
+    return path;
 #endif
+
+  return m_launchArguments.first();
 }
 
 int LaunchOptions::pid() const
