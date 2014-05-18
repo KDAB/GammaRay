@@ -28,4 +28,6 @@ private:
 
 }
 
+Q_DECLARE_METATYPE(QPersistentModelIndex)
+
 #endif // QUICKITEMDELEGATE_H

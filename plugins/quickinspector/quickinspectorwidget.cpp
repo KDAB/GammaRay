@@ -234,13 +234,13 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection& selection)
 void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
   for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
-    QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
+    const QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
     RemoteModel::NodeStates state = index.data(RemoteModel::LoadingState).value<RemoteModel::NodeStates>();
     if (state & RemoteModel::Empty || ~state & RemoteModel::Outdated)
       continue;
 
     QVariantAnimation *colorAnimation = new QVariantAnimation(this);
-    colorAnimation->setProperty("index", QVariant::fromValue(index));
+    colorAnimation->setProperty("index", QVariant::fromValue(QPersistentModelIndex(index)));
     connect(colorAnimation, SIGNAL(valueChanged(QVariant)), ui->itemTreeView->itemDelegate(), SLOT(setTextColor(QVariant)));
 
     colorAnimation->setStartValue(QColor(255, 0, 0));

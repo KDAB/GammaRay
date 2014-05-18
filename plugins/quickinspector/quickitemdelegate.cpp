@@ -81,7 +81,10 @@ QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
 
 void QuickItemDelegate::setTextColor(const QVariant& textColor)
 {
-  QModelIndex index = sender()->property("index").value<QModelIndex>();
+  const QPersistentModelIndex index = sender()->property("index").value<QPersistentModelIndex>();
+  if (!index.isValid())
+    return;
+
   m_colors[index] = textColor.value<QColor>();
 
   for (int i = 0; i < m_view->model()->columnCount(); i++)
