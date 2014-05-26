@@ -40,8 +40,8 @@ public:
     ~QuickItemTreeWatcher();
 
 private slots:
-    void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-    void sgModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void itemModelRowsInserted(const QModelIndex &parent, int start, int end);
+    void sgModelRowsInserted(const QModelIndex& parent, int start, int end);
 
 private:
     QTreeView *m_itemView;

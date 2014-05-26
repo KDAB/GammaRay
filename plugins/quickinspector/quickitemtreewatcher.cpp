@@ -23,6 +23,7 @@
 
 #include "quickitemtreewatcher.h"
 #include "quickitemmodelroles.h"
+#include <client/remotemodel.h>
 
 #include <QAbstractItemModel>
 #include <QTreeView>
@@ -34,33 +35,34 @@ QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView* itemView, QTreeView* sgVie
     m_itemView(itemView),
     m_sgView(sgView)
 {
-  connect(itemView->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-          this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex)));
-  connect(sgView->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-          this, SLOT(sgModelDataChanged(QModelIndex,QModelIndex)));
+  connect(itemView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+          this, SLOT(itemModelRowsInserted(QModelIndex,int,int)));
+  connect(sgView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+          this, SLOT(sgModelRowsInserted(QModelIndex,int,int)));
 }
 
 QuickItemTreeWatcher::~QuickItemTreeWatcher()
 {
 }
 
-void QuickItemTreeWatcher::itemModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+void QuickItemTreeWatcher::itemModelRowsInserted(const QModelIndex& parent, int start, int end)
 {
-  for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
-    const QModelIndex index = topLeft.sibling(row, 0);
+  for (int row = start; row <= end; ++row) {
+    const QModelIndex index = m_itemView->model()->index(row, 0, parent);
     const bool invisible = index.data(QuickItemModelRole::ItemFlags).value<int>() & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
-    const int siblingCount = index.model()->rowCount(index.parent());
+    const int siblingCount = m_itemView->model()->rowCount(parent);
+
     if (!invisible && siblingCount < 5) {
       m_itemView->setExpanded(index, true);
     }
   }
 }
 
-void QuickItemTreeWatcher::sgModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+void QuickItemTreeWatcher::sgModelRowsInserted(const QModelIndex& parent, int start, int end)
 {
-  for (int row = topLeft.row(); row <= bottomRight.row(); ++row) {
-    const QModelIndex index = topLeft.sibling(row, 0);
-    const int siblingCount = index.model()->rowCount(index.parent());
+  for (int row = start; row <= end; ++row) {
+    const QModelIndex index = m_sgView->model()->index(row, 0, parent);
+    const int siblingCount = m_sgView->model()->rowCount(parent);
     if (siblingCount < 5) {
       m_sgView->setExpanded(index, true);
     }
