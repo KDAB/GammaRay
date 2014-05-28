@@ -53,7 +53,7 @@ if(Qt5Quick_FOUND)
     quickclientitemmodel.cpp
     quickitemdelegate.cpp
     quickitemtreewatcher.cpp
-    quickitemoverlay.cpp
+    annotatedscenepreview.cpp
 
     materialextension/materialextensionclient.cpp
     materialextension/materialtab.cpp

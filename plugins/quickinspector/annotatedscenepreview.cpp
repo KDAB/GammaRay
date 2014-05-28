@@ -21,27 +21,34 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "quickitemoverlay.h"
+#include "annotatedscenepreview.h"
 #include <QPainter>
 #include <QVector2D>
 
 using namespace GammaRay;
 
-QuickItemOverlay::QuickItemOverlay(QQuickItem* parent): QQuickPaintedItem(parent)
+AnnotatedScenePreview::AnnotatedScenePreview(QQuickItem* parent): QQuickPaintedItem(parent),
+  m_zoom(1),
+  m_annotate(true)
 {
 }
 
-QuickItemOverlay::~QuickItemOverlay()
+AnnotatedScenePreview::~AnnotatedScenePreview()
 {
 
 }
 
-void QuickItemOverlay::paint(QPainter* p )
+void AnnotatedScenePreview::paint(QPainter* p )
 {
-    if (m_geometryData.isEmpty())
-      return;
+    if (m_previewData.isEmpty())
+        return;
 
-    p->setTransform(QTransform::fromTranslate(m_imageRect.x(), m_imageRect.y()), true);
+    p->setTransform(QTransform::fromTranslate(m_margin.width() / 2, m_margin.height() / 2));
+
+    p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom), m_image);
+
+    if (!m_annotate)
+        return;
 
     // bounding box
     p->setPen(QColor(232, 87, 82, 170));
@@ -70,7 +77,7 @@ void QuickItemOverlay::paint(QPainter* p )
 
     // x and y values
     p->setPen(QColor(136, 136, 136));
-    if (!m_geometryData.value("left").toBool() && !m_geometryData.value("horizontalCenter").toBool() && !m_geometryData.value("right").toBool() && m_x != 0) {
+    if (!m_previewData.value("left").toBool() && !m_previewData.value("horizontalCenter").toBool() && !m_previewData.value("right").toBool() && m_x != 0) {
         QPointF parentEnd = (QPointF(m_itemRect.x() - m_x, m_itemRect.y()));
         QPointF itemEnd = m_itemRect.topLeft();
         drawArrow(p, parentEnd, itemEnd);
@@ -78,7 +85,7 @@ void QuickItemOverlay::paint(QPainter* p )
                     Qt::AlignHCenter | Qt::TextDontClip,
                     QString("x: %1px").arg(m_x / m_zoom));
     }
-    if (!m_geometryData.value("top").toBool() && !m_geometryData.value("verticalCenter").toBool() && !m_geometryData.value("bottom").toBool() && !m_geometryData.value("baseline").toBool() && m_y != 0) {
+    if (!m_previewData.value("top").toBool() && !m_previewData.value("verticalCenter").toBool() && !m_previewData.value("bottom").toBool() && !m_previewData.value("baseline").toBool() && m_y != 0) {
         QPointF parentEnd = (QPointF(m_itemRect.x(), m_itemRect.y() - m_y));
         QPointF itemEnd = m_itemRect.topLeft();
         drawArrow(p, parentEnd, itemEnd);
@@ -88,23 +95,23 @@ void QuickItemOverlay::paint(QPainter* p )
     }
 
     // anchors
-    if (m_geometryData.value("left").toBool())
+    if (m_previewData.value("left").toBool())
       drawAnchor(p, Qt::Horizontal, m_itemRect.left(), m_leftMargin, QString("margin: %1px").arg(m_leftMargin / m_zoom));
-    if (m_geometryData.value("horizontalCenter").toBool())
+    if (m_previewData.value("horizontalCenter").toBool())
       drawAnchor(p, Qt::Horizontal, (m_itemRect.left() + m_itemRect.right()) / 2, m_horizonalCenterOffset, QString("offset: %1px").arg(m_horizonalCenterOffset / m_zoom));
-    if (m_geometryData.value("right").toBool())
+    if (m_previewData.value("right").toBool())
       drawAnchor(p, Qt::Horizontal, m_itemRect.right(), -m_rightMargin, QString("margin: %1px").arg(m_rightMargin / m_zoom));
-    if (m_geometryData.value("top").toBool())
+    if (m_previewData.value("top").toBool())
       drawAnchor(p, Qt::Vertical, m_itemRect.top(), m_topMargin, QString("margin: %1px").arg(m_topMargin / m_zoom));
-    if (m_geometryData.value("verticalCenter").toBool())
+    if (m_previewData.value("verticalCenter").toBool())
       drawAnchor(p, Qt::Vertical, (m_itemRect.top() + m_itemRect.bottom()) / 2, m_verticalCenterOffset, QString("offset: %1px").arg(m_verticalCenterOffset / m_zoom));
-    if (m_geometryData.value("bottom").toBool())
+    if (m_previewData.value("bottom").toBool())
       drawAnchor(p, Qt::Vertical, m_itemRect.bottom(), -m_bottomMargin, QString("margin: %1px").arg(m_bottomMargin / m_zoom));
-    if (m_geometryData.value("baseline").toBool())
+    if (m_previewData.value("baseline").toBool())
       drawAnchor(p, Qt::Vertical, m_itemRect.top(), m_baselineOffset, QString("offset: %1px").arg(m_baselineOffset / m_zoom));
 }
 
-void QuickItemOverlay::drawArrow(QPainter* p, QPointF first, QPointF second)
+void AnnotatedScenePreview::drawArrow(QPainter* p, QPointF first, QPointF second)
 {
   p->drawLine(first, second);
   QPointF vector(second - first);
@@ -119,7 +126,7 @@ void QuickItemOverlay::drawArrow(QPainter* p, QPointF first, QPointF second)
   p->drawLine(second, second - v2.toPointF());
 }
 
-void QuickItemOverlay::drawAnchor(QPainter* p, Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label)
+void AnnotatedScenePreview::drawAnchor(QPainter* p, Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label)
 {
     qreal foreignAnchorLine = ownAnchorLine - offset;
     QPen pen(QColor(139, 179, 0));
@@ -155,66 +162,94 @@ void QuickItemOverlay::drawAnchor(QPainter* p, Qt::Orientation orientation, qrea
     pen.setStyle(Qt::DotLine);
     p->setPen(pen);
     if (orientation == Qt::Horizontal)
-      p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, m_imageRect.height());
+      p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, m_image.height());
     else
-      p->drawLine(0, foreignAnchorLine, m_imageRect.width(), foreignAnchorLine);
+      p->drawLine(0, foreignAnchorLine, m_image.width(), foreignAnchorLine);
 }
 
-QVariantMap QuickItemOverlay::geometryData() const
+QVariantMap AnnotatedScenePreview::previewData() const
 {
-    return m_geometryData;
+    return m_previewData;
 }
 
-void QuickItemOverlay::setGeometryData(QVariantMap geometryData)
+void AnnotatedScenePreview::setPreviewData(QVariantMap previewData)
 {
-    m_geometryData = geometryData;
+    m_previewData = previewData;
 
-    updateGeometryData();
-
+    updatePreviewData();
     update();
+
+    emit previewDataChanged();
 }
 
-void QuickItemOverlay::updateGeometryData()
+void AnnotatedScenePreview::updatePreviewData()
 {
-    m_itemRect = m_geometryData.value("itemRect").value<QRectF>();
+    QImage oldImage = m_image;
+    m_image = m_previewData.value("image").value<QImage>();
+
+    if (m_image.size() != oldImage.size()) {
+        emit sourceSizeChanged();
+        setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
+        setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
+    }
+
+    m_itemRect = m_previewData.value("itemRect").value<QRectF>();
     m_itemRect = QRectF(m_itemRect.topLeft() * m_zoom, m_itemRect.bottomRight() * m_zoom);
-    m_boundingRect = m_geometryData.value("boundingRect").value<QRectF>();
+    m_boundingRect = m_previewData.value("boundingRect").value<QRectF>();
     m_boundingRect = QRectF(m_boundingRect.topLeft() * m_zoom, m_boundingRect.bottomRight() * m_zoom);
-    m_childrenRect = m_geometryData.value("childrenRect").value<QRectF>();
+    m_childrenRect = m_previewData.value("childrenRect").value<QRectF>();
     m_childrenRect = QRectF(m_childrenRect.topLeft() * m_zoom, m_childrenRect.bottomRight() * m_zoom);
-    m_transformOriginPoint = m_geometryData.value("transformOriginPoint").value<QPointF>() * m_zoom;
-    m_transform = m_geometryData.value("transform").value<QTransform>();
-    m_parentTransform = m_geometryData.value("parentTransform").value<QTransform>();
-    m_leftMargin = m_geometryData.value("leftMargin").toReal() * m_zoom;
-    m_horizonalCenterOffset = m_geometryData.value("horizontalCenterOffset").toReal() * m_zoom;
-    m_rightMargin = m_geometryData.value("rightMargin").toReal() * m_zoom;
-    m_topMargin = m_geometryData.value("topMargin").toReal() * m_zoom;
-    m_verticalCenterOffset = m_geometryData.value("verticalCenterOffset").toReal() * m_zoom;
-    m_bottomMargin = m_geometryData.value("bottomMargin").toReal() * m_zoom;
-    m_baselineOffset = m_geometryData.value("baselineOffset").toReal() * m_zoom;
-    m_x = m_geometryData.value("x").value<qreal>() * m_zoom;
-    m_y = m_geometryData.value("y").value<qreal>() * m_zoom;
+    m_transformOriginPoint = m_previewData.value("transformOriginPoint").value<QPointF>() * m_zoom;
+    m_transform = m_previewData.value("transform").value<QTransform>();
+    m_parentTransform = m_previewData.value("parentTransform").value<QTransform>();
+    m_leftMargin = m_previewData.value("leftMargin").toReal() * m_zoom;
+    m_horizonalCenterOffset = m_previewData.value("horizontalCenterOffset").toReal() * m_zoom;
+    m_rightMargin = m_previewData.value("rightMargin").toReal() * m_zoom;
+    m_topMargin = m_previewData.value("topMargin").toReal() * m_zoom;
+    m_verticalCenterOffset = m_previewData.value("verticalCenterOffset").toReal() * m_zoom;
+    m_bottomMargin = m_previewData.value("bottomMargin").toReal() * m_zoom;
+    m_baselineOffset = m_previewData.value("baselineOffset").toReal() * m_zoom;
+    m_x = m_previewData.value("x").value<qreal>() * m_zoom;
+    m_y = m_previewData.value("y").value<qreal>() * m_zoom;
 }
 
-qreal QuickItemOverlay::zoom() const
+qreal AnnotatedScenePreview::zoom() const
 {
     return m_zoom;
 }
 
-void QuickItemOverlay::setZoom(qreal zoom)
+void AnnotatedScenePreview::setZoom(qreal zoom)
 {
     m_zoom = zoom;
-    updateGeometryData();
+    updatePreviewData();
     update();
+    emit zoomChanged();
+    setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
+    setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
 }
 
-QRectF QuickItemOverlay::imageRect() const
+QSize AnnotatedScenePreview::sourceSize() const
 {
-    return m_imageRect;
+    return m_image.size();
 }
 
-void QuickItemOverlay::setImageRect(QRectF imageRect)
+QSize AnnotatedScenePreview::margin() const
 {
-    m_imageRect = imageRect;
-    update();
+    return m_margin;
+}
+
+void AnnotatedScenePreview::setMargin(QSize margin)
+{
+    m_margin = margin;
+}
+
+bool AnnotatedScenePreview::annotate() const
+{
+    return m_annotate;
+}
+
+void AnnotatedScenePreview::setAnnotate(bool annotate)
+{
+    m_annotate = annotate;
+    emit marginChanged();
 }

@@ -56,7 +56,7 @@ class QuickInspectorWidget : public QWidget
 
   private slots:
     void sceneChanged();
-    void sceneRendered(const QImage &img, const QVariantMap &geometryData);
+    void sceneRendered(const QVariantMap &previewData);
     void itemSelectionChanged(const QItemSelection &selection);
     void requestRender();
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);

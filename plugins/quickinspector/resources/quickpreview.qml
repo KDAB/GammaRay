@@ -32,7 +32,7 @@ Image {
   fillMode: Image.Tile
   property real oldWidth: 0
   property real oldHeight: 0
-  property variant geometryData: {}
+  property variant previewData: {}
   property bool isFirstFrame: true
   property bool supportsCustomRenderModes: true
 
@@ -45,29 +45,14 @@ Image {
     inspectorInterface.sendKeyEvent(7, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
   }
 
-  function updatePreview()
-  {
-    image.source = ""; // needed in order to get quicksceneprovider/scene to get refreshed.
-    image.source = "image://quicksceneprovider/scene";
-    image.width = image.sourceSize.width * image.zoom;
-    image.height = image.sourceSize.height * image.zoom;
-
-    // Align image to center
-    if (isFirstFrame) {
-      image.x = (root.width - image.width - rightRuler.width) / 2;
-      image.y = (root.height - image.height - bottomRuler.height) / 2;
-      isFirstFrame = false;
-    }
-  }
-
   onWidthChanged: {
     // Make scene preview stay centered when resizing
-    image.x += (width - oldWidth) / 2;
+    sceneFlickable.contentX -= (width - oldWidth) / 2;
     oldWidth = width;
   }
   onHeightChanged: {
     // Make scene preview stay centered when resizing
-    image.y += (height - oldHeight) / 2;
+    sceneFlickable.contentY -= (height - oldHeight) / 2;
     oldHeight = height;
   }
 
@@ -88,94 +73,91 @@ Image {
       }
     }
   }
-  Component {
-    id: toolButtonStyle
-
-    ButtonStyle {
-      id: styleEl
-      background: Rectangle {
-        color: styleEl.control.hovered ? "#22ffffff" : styleEl.control.checked ? "#220000" : "transparent"
-        border.color: "grey"
-      }
-      label: Image {
-        source: styleEl.control.iconSource
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-      }
-    }
-  }
 
   // Toolbar (top-left)
   Rectangle {
     color: "#aa333333"
-    width: toolbarRow.width + 7; height: toolbarRow.height + 1
+    border.color: "grey"
+    width: toolbarRow.width + 8; height: toolbarRow.height
     x: 5; y: 5; z: 1
     radius: 4
     visible: toolbarRow.width
 
     Row {
       id: toolbarRow
-      x: 3
-      property int currentRenderMode: -1
+      x: 4
 
-      Button {
+      ExclusiveGroup {
+        id: renderModeGroup
+        property QtObject oldCurrent
+      }
+
+      ToolButton {
+        id: clippingButton
         height: 20
         visible: supportsCustomRenderModes
-        property bool checked: parent.currentRenderMode == 0
+        exclusiveGroup: renderModeGroup
+        checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/transform-crop.png"
         tooltip: "Visualize Clipping"
-        style: toolButtonStyle
 
         onClicked: {
-          parent.currentRenderMode = checked ? -1 : 0;
+          if (renderModeGroup.oldCurrent == clippingButton)
+            checked = false;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeClipping : QuickInspectorInterface.NormalRendering);
-          geometryOverlay.visible = !checked;
+          renderModeGroup.oldCurrent = renderModeGroup.current;
         }
       }
-      Button {
+      ToolButton {
+        id: overdrawButton
         height: 20
         visible: supportsCustomRenderModes
-        property bool checked: parent.currentRenderMode == 1
+        exclusiveGroup: renderModeGroup
+        checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/object-order-lower.png"
         tooltip: "Visualize Overdraw"
-        style: toolButtonStyle
 
         onClicked: {
-          parent.currentRenderMode = checked ? -1 : 1;
+          if (renderModeGroup.oldCurrent == overdrawButton)
+            checked = false;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeOverdraw : QuickInspectorInterface.NormalRendering);
-          geometryOverlay.visible = !checked;
+          renderModeGroup.oldCurrent = renderModeGroup.current;
         }
       }
-      Button {
+      ToolButton {
+        id: batchesButton
         height: 20
         visible: supportsCustomRenderModes
-        property bool checked: parent.currentRenderMode == 2
+        exclusiveGroup: renderModeGroup
+        checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/object-group.png"
         tooltip: "Visualize Batches"
-        style: toolButtonStyle
 
-        onClicked: {
-          parent.currentRenderMode = checked ? -1 : 2;
+        onClicked:  {
+          if (renderModeGroup.oldCurrent == batchesButton)
+            checked = false;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeBatches : QuickInspectorInterface.NormalRendering);
-          geometryOverlay.visible = !checked;
+          renderModeGroup.oldCurrent = renderModeGroup.current;
         }
       }
-      Button {
+      ToolButton {
+        id: changesButton
         height: 20
         visible: supportsCustomRenderModes
-        property bool checked: parent.currentRenderMode == 3
+        exclusiveGroup: renderModeGroup
+        checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/transform-rotate.png"
         tooltip: "Visualize Changes"
-        style: toolButtonStyle
 
         onClicked: {
-          parent.currentRenderMode = checked ? -1 : 3;
+          if (renderModeGroup.oldCurrent == changesButton)
+            checked = false;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeChanges : QuickInspectorInterface.NormalRendering);
-          geometryOverlay.visible = !checked;
+          renderModeGroup.oldCurrent = renderModeGroup.current;
         }
       }
     }
@@ -192,95 +174,141 @@ Image {
     Text {
       id: overlayText
       color: "lightgrey"
-      text: imageMA.pressed && imageMA.modifiers == Qt.ControlModifier
-            ? Math.floor((imageMA.oldMouseX - image.x) / image.zoom) + ", " + Math.floor((imageMA.oldMouseY - image.y) / image.zoom) + " - "
-              + Math.floor((imageMA.mouseX - image.x) / image.zoom) + ", " + Math.floor((imageMA.mouseY - image.y) / image.zoom) + " -> "
-              + Math.floor(Math.sqrt( Math.pow(imageMA.mouseX - imageMA.oldMouseX, 2) + Math.pow(imageMA.mouseY - imageMA.oldMouseY, 2) ) / image.zoom) + "px"
-            : Math.floor((imageMA.mouseX - image.x) / image.zoom) + "x" + Math.floor((imageMA.mouseY - image.y) / image.zoom)
     }
   }
 
   // Scene preview
-  Image {
-    id: image
-    cache: false
-    smooth: false
-    property real zoom: 1
-
-    function zoomIn(zoomToX, zoomToY) {
-      var oldZoom = zoom;
-      zoom = zoom < 1
-            ? 1 / (1 / zoom - 1)
-            : zoom + 1;
-      x += zoomToX * (1 - zoom / oldZoom);
-      y += zoomToY * (1 - zoom / oldZoom);
-      width = sourceSize.width * zoom;
-      height = sourceSize.height * zoom;
-    }
-    function zoomOut(zoomToX, zoomToY) {
-      var oldZoom = zoom;
-      zoom = zoom <= 1
-            ? 1 / (1 / zoom + 1)
-            : zoom - 1;
-      x += zoomToX * (1 - zoom / oldZoom);
-      y += zoomToY * (1 - zoom / oldZoom);
-      width = sourceSize.width * zoom;
-      height = sourceSize.height * zoom;
-    }
-  }
-
-  // Geometry overlay
-  QuickItemOverlay {
-    id: geometryOverlay
+  Flickable {
+    id: sceneFlickable
     anchors.fill: parent
-    zoom: image.zoom
-    geometryData: root.geometryData
-    imageRect: Qt.rect(image.x, image.y, image.width, image.height);
-  }
+    contentWidth: image.width
+    contentHeight: image.height
+    boundsBehavior: Flickable.StopAtBounds
 
-  MouseArea {
-    id: imageMA
-    anchors.fill: parent
-    hoverEnabled: true
-    property int oldMouseX
-    property int oldMouseY
-    property int modifiers: 0
+    AnnotatedScenePreview {
+      id: image
+      anchors.centerIn: parent
+      previewData: root.previewData
+      margin: Qt.size(root.width, root.height)
+      annotate: renderModeGroup.current === null
 
-
-    onReleased: { // event-forwarding
-      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-        inspectorInterface.sendMouseEvent(3, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-    }
-    onPressed: { // event-forwarding
-      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-        inspectorInterface.sendMouseEvent(2, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-      oldMouseX = mouse.x;
-      oldMouseY = mouse.y;
-    }
-    onPositionChanged: { // move image / event-forwarding
-      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier)) // event-forwarding
-        inspectorInterface.sendMouseEvent(5, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-      else if (pressed) { // move image
-        modifiers = mouse.modifiers
-        if (modifiers !== Qt.ControlModifier) {
-          image.x += mouse.x - oldMouseX;
-          image.y += mouse.y - oldMouseY;
-          oldMouseX = mouse.x;
-          oldMouseY = mouse.y;
+      onPreviewDataChanged: {
+        // Align image to center
+        if (isFirstFrame) {
+          sceneFlickable.contentX = -(root.width - sceneFlickable.contentWidth - rightRuler.width) / 2;
+          sceneFlickable.contentY = -(root.height - sceneFlickable.contentHeight - bottomRuler.height) / 2;
+          isFirstFrame = false;
         }
       }
-    }
-    onDoubleClicked: { // event-forwarding
-      if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-        inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.x) / image.zoom, (mouse.y - image.y) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-    }
-    onWheel: { // event-forwarding
-      if (wheel.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-        inspectorInterface.sendWheelEvent(Qt.point((wheel.x - image.x) / image.zoom, (wheel.y - image.y) / image.zoom), wheel.pixelDelta, wheel.angleDelta, wheel.buttons, wheel.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-      else if (wheel.angleDelta.y > 0)
-        image.zoomIn(wheel.x - image.x, wheel.y - image.y);
-      else if (wheel.angleDelta.y < 0)
-        image.zoomOut(wheel.x - image.x, wheel.y - image.y);
+
+      function zoomIn(zoomToX, zoomToY) {
+        var oldZoom = zoom;
+        zoom = zoom < 1
+              ? 1 / (1 / zoom - 1)
+              : zoom + 1;
+        sceneFlickable.contentX -= zoomToX * (1 - zoom / oldZoom);
+        sceneFlickable.contentY -= zoomToY * (1 - zoom / oldZoom);
+      }
+      function zoomOut(zoomToX, zoomToY) {
+        var oldZoom = zoom;
+        zoom = zoom <= 1
+              ? 1 / (1 / zoom + 1)
+              : zoom - 1;
+        sceneFlickable.contentX -= zoomToX * (1 - zoom / oldZoom);
+        sceneFlickable.contentY -= zoomToY * (1 - zoom / oldZoom);
+      }
+
+      Canvas {
+        id: canvas
+        anchors.centerIn: parent
+        width: parent.width - parent.margin.width
+        height: parent.height - parent.margin.height
+        property point start
+        property point end
+
+        onPaint: {
+          var ctx = getContext("2d");
+          ctx.reset();
+          if (start == end)
+            return;
+
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+
+          ctx.moveTo(start.x - 5, start.y);
+          ctx.lineTo(start.x + 5, start.y);
+          ctx.moveTo(start.x, start.y - 5);
+          ctx.lineTo(start.x, start.y + 5);
+
+          ctx.moveTo(start.x, start.y);
+          ctx.lineTo(end.x, end.y);
+
+          ctx.moveTo(end.x - 5, end.y);
+          ctx.lineTo(end.x + 5, end.y);
+          ctx.moveTo(end.x, end.y - 5);
+          ctx.lineTo(end.x, end.y + 5);
+
+          ctx.stroke();
+          ctx.closePath();
+        }
+      }
+
+      MouseArea {
+        id: imageMA
+        anchors.fill: parent
+        hoverEnabled: true
+        preventStealing: true
+
+
+        onReleased: { // event-forwarding
+          canvas.start = canvas.end = Qt.point(0,0);
+          canvas.requestPaint();
+          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
+            inspectorInterface.sendMouseEvent(3, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+          else
+            mouse.accepted = false;
+        }
+        onPressed: { // event-forwarding
+          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
+            inspectorInterface.sendMouseEvent(2, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+          else if (mouse.modifiers == Qt.ControlModifier)
+            canvas.start = Qt.point(Math.round((mouse.x - image.margin.width / 2) / image.zoom) * image.zoom, Math.round((mouse.y - image.margin.height / 2) / image.zoom) * image.zoom);
+          else
+            mouse.accepted = false;
+        }
+        onPositionChanged: { // move image / event-forwarding
+          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier)) { // event-forwarding
+            inspectorInterface.sendMouseEvent(5, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+          } else if (mouse.buttons !== 0 && mouse.modifiers == Qt.ControlModifier) {
+            canvas.end = Qt.point(Math.round((mouse.x - image.margin.width / 2) / image.zoom) * image.zoom, Math.round((mouse.y - image.margin.height / 2) / image.zoom) * image.zoom);
+            overlayText.text = Math.floor(canvas.start.x / image.zoom) + ", " + Math.floor(canvas.start.y / image.zoom) + " - "
+                  + Math.floor(canvas.end.x / image.zoom) + ", " + Math.floor(canvas.end.y / image.zoom) + " -> "
+                  + (Math.sqrt( Math.pow(canvas.end.x - canvas.start.x, 2) + Math.pow(canvas.end.y - canvas.start.y, 2) ) / image.zoom).toFixed(3) + "px";
+            canvas.requestPaint();
+          } else {
+            overlayText.text = Math.floor((mouse.x - image.margin.width / 2) / image.zoom) + ", " + Math.floor((mouse.y - image.margin.height / 2) / image.zoom);
+            mouse.accepted = false;
+          }
+        }
+        onDoubleClicked: { // event-forwarding
+          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
+            inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+          else
+            mouse.accepted = false;
+        }
+        onWheel: { // event-forwarding
+          if (wheel.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
+            inspectorInterface.sendWheelEvent(Qt.point((wheel.x - image.margin.width / 2) / image.zoom, (wheel.y - image.margin.height / 2) / image.zoom), wheel.pixelDelta, wheel.angleDelta, wheel.buttons, wheel.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+          else if (wheel.angleDelta.y > 0) {
+            var point = mapToItem(image, (wheel.x - image.margin.width / 2), (wheel.y - image.margin.height / 2));
+            image.zoomIn(point.x, point.y);
+          } else if (wheel.angleDelta.y < 0) {
+            var point = mapToItem(image, (wheel.x - image.margin.width / 2), (wheel.y - image.margin.height / 2));
+            image.zoomOut(point.x, point.y);
+          } else
+            wheel.accepted = false;
+        }
+      }
     }
   }
 
@@ -298,7 +326,7 @@ Image {
       clip: true
 
       Row {
-        x: image.x
+        x: sceneFlickable.width / 2 - sceneFlickable.contentX
         spacing: image.zoom > 1 ? image.zoom - 1 : 1
         Repeater {
           // We always create as many elements as the image has pixels. We *could* change it according to
@@ -338,7 +366,7 @@ Image {
       clip: true
 
       Column {
-        y: image.y
+        y: sceneFlickable.height / 2 - sceneFlickable.contentY
         spacing: image.zoom > 1 ? image.zoom - 1 : 1
         Repeater {
           // We always create as many elements as the image has pixels. We *could* change it according to
@@ -370,7 +398,7 @@ Image {
   Row {
     anchors { right: parent.right; top: bottomRuler.top }
 
-    Button {
+    ToolButton {
       width: 20; height: width
       style: buttonStyle
       text: "-"
@@ -382,7 +410,7 @@ Image {
           decrementZoomTimer.stop();
       }
     }
-    Button {
+    ToolButton {
       width: 20; height: width
       style: buttonStyle
       text: "+"

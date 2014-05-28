@@ -29,7 +29,7 @@
 #include "geometryextension/sggeometrytab.h"
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
-#include "quickitemoverlay.h"
+#include "annotatedscenepreview.h"
 #include "quickitemdelegate.h"
 #include "ui_quickinspectorwidget.h"
 
@@ -115,7 +115,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ObjectBroker::registerClientObjectFactoryCallback<QuickInspectorInterface*>(createQuickInspectorClient);
   m_interface = ObjectBroker::object<QuickInspectorInterface*>();
   connect(m_interface, SIGNAL(sceneChanged()), this, SLOT(sceneChanged()));
-  connect(m_interface, SIGNAL(sceneRendered(QImage,QVariantMap)), this, SLOT(sceneRendered(QImage,QVariantMap)));
+  connect(m_interface, SIGNAL(sceneRendered(QVariantMap)), this, SLOT(sceneRendered(QVariantMap)));
 
   ui->windowComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel"));
   connect(ui->windowComboBox, SIGNAL(currentIndexChanged(int)), m_interface, SLOT(selectWindow(int)));
@@ -150,8 +150,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget* parent) :
   ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
   ui->sgPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickSceneGraph");
 
-  qmlRegisterType<QuickItemOverlay>("com.kdab.GammaRay", 1, 0, "QuickItemOverlay");
-  qmlRegisterType<QuickItemOverlay>();
+  qmlRegisterType<AnnotatedScenePreview>("com.kdab.GammaRay", 1, 0, "AnnotatedScenePreview");
 
   QWidget::createWindowContainer(m_preview, ui->previewTreeSplitter);
   m_preview->setResizeMode(QQuickView::SizeRootObjectToView);
@@ -188,15 +187,12 @@ void QuickInspectorWidget::sceneChanged()
     m_renderTimer->start();
 }
 
-void QuickInspectorWidget::sceneRendered(const QImage& img, const QVariantMap &geometryData)
+void QuickInspectorWidget::sceneRendered(const QVariantMap &previewData)
 {
   m_waitingForImage = false;
 
-  m_imageProvider->setPixmap(QPixmap::fromImage(img));
-
   if (m_rootItem) {
-    QMetaObject::invokeMethod(m_rootItem, "updatePreview");
-    m_rootItem->setProperty("geometryData", geometryData);
+    m_rootItem->setProperty("previewData", previewData);
   }
 
   if (m_sceneChangedSinceLastRequest) {
