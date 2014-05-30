@@ -52,6 +52,7 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent) :
 
 ClientConnectionManager::~ClientConnectionManager()
 {
+  delete m_mainWindow;
 }
 
 void ClientConnectionManager::connectToHost(const QString& hostname, quint16 port)
