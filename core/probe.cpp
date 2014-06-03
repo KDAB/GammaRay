@@ -272,6 +272,8 @@ void Probe::createProbe(bool findExisting)
   s_listener()->filterThread = 0;
   IF_DEBUG(cout << "done setting up new probe instance" << endl;)
 
+  connect(qApp, SIGNAL(aboutToQuit()), probe, SLOT(deleteLater()));
+
   // now we can get the lock and add items which where added before this point in time
   {
     QWriteLocker lock(s_lock());
