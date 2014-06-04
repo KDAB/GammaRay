@@ -29,7 +29,9 @@
 #include <core/toolfactory.h>
 
 #include <QQuickWindow>
+#include <QImage>
 
+class QQuickShaderEffectSource;
 class QAbstractItemModel;
 class QItemSelection;
 class QItemSelectionModel;
@@ -69,7 +71,7 @@ protected:
   bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;
 
 private slots:
-  void emitSceneChanged();
+  void slotSceneChanged();
   void itemSelectionChanged(const QItemSelection &selection);
   void sgSelectionChanged(const QItemSelection &selection);
   void clientConnectedChanged(bool connected);
@@ -88,6 +90,7 @@ private:
 
   QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
 
+  QQuickShaderEffectSource *m_source;
   ProbeInterface* m_probe;
   QPointer<QQuickWindow> m_window;
   QPointer<QQuickItem> m_currentItem;
@@ -100,6 +103,7 @@ private:
   PropertyController *m_itemPropertyController;
   PropertyController *m_sgPropertyController;
   bool m_clientConnected;
+  QImage m_currentFrame;
 };
 
 class QuickInspectorFactory : public QObject, public StandardToolFactory<QQuickWindow, QuickInspector>

@@ -45,7 +45,8 @@ void AnnotatedScenePreview::paint(QPainter* p )
 
     p->setTransform(QTransform::fromTranslate(m_margin.width() / 2, m_margin.height() / 2));
 
-    p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom), m_image);
+    p->fillRect(QRect(QPoint(0, 0), m_image.size() * m_zoom), Qt::white);
+    p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom), m_image.transformed(QTransform::fromScale(1, -1)));
 
     if (!m_annotate)
         return;

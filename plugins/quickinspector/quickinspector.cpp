@@ -39,6 +39,7 @@
 #include <core/varianthandler.h>
 
 #include <QQuickItem>
+#include <QQuickWindow>
 #include <QQuickView>
 
 #include <QQmlContext>
@@ -53,6 +54,7 @@
 #include <QSGNode>
 #include <QSGGeometry>
 #include <QSGMaterial>
+#include <private/qquickshadereffectsource_p.h>
 #include <QMatrix4x4>
 #include <QCoreApplication>
 
@@ -124,6 +126,7 @@ static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags) {
 
 QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   QuickInspectorInterface(parent),
+  m_source(0),
   m_probe(probe),
   m_itemModel(new QuickItemModel(this)),
   m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
@@ -189,10 +192,23 @@ void QuickInspector::selectWindow(QQuickWindow* window)
 #endif
 
   if (m_window) {
-    connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::emitSceneChanged);
-  }
+    // Insert a ShaderEffectSource to the scene, with the contentItem as its source, in
+    // order to use it to generate a preview of the window as QImage to show on the client.
+    QQuickItem *contentItem = m_window->contentItem();
+    if (m_source)
+      delete m_source;
+    m_source = new QQuickShaderEffectSource(contentItem);
+    m_source->setParent(this); // Needed to hide the item in the object tree (note: parent != parentItem)
+    QQuickItemPrivate::get(m_source)->anchors()->setFill(contentItem);
+    m_source->setScale(0); // The item isn't supposed to be visible in the original scene, but still needs
+                           // to be rendered. (setVisible(false) would cause it to not be rendered anymore)
+    m_source->setRecursive(true);
+    m_source->setSourceItem(contentItem);
 
-  emitSceneChanged();
+    connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::slotSceneChanged, Qt::DirectConnection);
+
+    m_window->update();
+  }
 }
 
 void QuickInspector::selectItem(QQuickItem* item)
@@ -244,11 +260,7 @@ void QuickInspector::renderScene()
     return;
 
   QVariantMap previewData;
-  QImage img;
-  if (m_window->windowState() != Qt::WindowMinimized) {
-    img = m_window->grabWindow();
-    previewData.insert("image", QVariant::fromValue(img));
-  }
+  previewData.insert("image", QVariant::fromValue(m_currentFrame));
   if (m_currentItem) {
     QQuickItem *parent = m_currentItem->parentItem();
 
@@ -294,10 +306,20 @@ void QuickInspector::renderScene()
   emit sceneRendered(previewData);
 }
 
-void QuickInspector::emitSceneChanged()
+void QuickInspector::slotSceneChanged()
 {
-  if (m_clientConnected && m_window)
-    emit sceneChanged();
+  if (!m_clientConnected || !m_window)
+    return;
+
+  const QSGTextureProvider *provider = m_source->textureProvider();
+  Q_ASSERT(provider);
+  const QQuickShaderEffectTexture *texture = qobject_cast<QQuickShaderEffectTexture*>(provider->texture());
+  Q_ASSERT(texture);
+  QOpenGLContext *ctx = QQuickItemPrivate::get(m_source)->sceneGraphRenderContext()->openglContext();
+  if (ctx->makeCurrent(ctx->surface()))
+    m_currentFrame = texture->toImage();
+
+  emit sceneChanged();
 }
 
 void QuickInspector::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
@@ -371,7 +393,8 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
   }
 #endif
 
-  emitSceneChanged();
+  if (m_window)
+    m_window->update();
 }
 
 void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
@@ -401,7 +424,9 @@ void QuickInspector::sgNodeDeleted(QSGNode *node)
 void QuickInspector::clientConnectedChanged(bool connected)
 {
   m_clientConnected = connected;
-  emitSceneChanged();
+
+  if (connected && m_window)
+    m_window->update();
 }
 
 QQuickItem* QuickInspector::recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const
