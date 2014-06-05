@@ -40,8 +40,7 @@ class QuickInspectorInterface : public QObject
   Q_OBJECT
 public:
   enum Feature {
-    SGInspector = 1,
-    CustomRenderModes = 2
+    CustomRenderModes = 1
   };
   enum RenderMode {
     NormalRendering,

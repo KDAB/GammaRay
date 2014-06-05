@@ -23,8 +23,6 @@
 
 #include "quickscenegraphmodel.h"
 
-#ifdef HAVE_SG_INSPECTOR
-
 #include <private/qquickitem_p.h> //krazy:exclude=camelcase
 #include "quickitemmodelroles.h"
 
@@ -250,5 +248,3 @@ QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
     node = m_childParentMap[node];
   return m_itemNodeItemMap[node];
 }
-
-#endif // HAVE_SG_INSPECTOR

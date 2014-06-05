@@ -26,8 +26,6 @@
 
 #include "config-gammaray.h"
 
-#ifdef HAVE_SG_INSPECTOR
-
 #include <core/objectmodelbase.h>
 
 #include <QHash>
@@ -80,7 +78,5 @@ private:
   QHash<QSGNode*, QQuickItem*> m_itemNodeItemMap;
 };
 }
-
-#endif // HAVE_SG_INSPECTOR
 
 #endif // GAMMARAY_QUICKSCENEGRAPHMODEL_H

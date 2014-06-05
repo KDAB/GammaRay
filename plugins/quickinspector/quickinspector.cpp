@@ -58,10 +58,8 @@
 #include <QMatrix4x4>
 #include <QCoreApplication>
 
-#ifdef HAVE_SG_INSPECTOR
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
-#endif
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -130,10 +128,8 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   m_probe(probe),
   m_itemModel(new QuickItemModel(this)),
   m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
-#ifdef HAVE_SG_INSPECTOR
   m_sgModel(new QuickSceneGraphModel(this)),
   m_sgPropertyController(new PropertyController("com.kdab.GammaRay.QuickSceneGraph", this)),
-#endif
   m_clientConnected(false)
 {
   registerPCExtensions();
@@ -159,13 +155,11 @@ QuickInspector::QuickInspector(ProbeInterface* probe, QObject* parent) :
   m_itemSelectionModel = ObjectBroker::selectionModel(m_itemModel);
   connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::itemSelectionChanged);
 
-#ifdef HAVE_SG_INSPECTOR
   probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", m_sgModel);
 
   m_sgSelectionModel = ObjectBroker::selectionModel(m_sgModel);
   connect(m_sgSelectionModel, &QItemSelectionModel::selectionChanged, this, &QuickInspector::sgSelectionChanged);
   connect(m_sgModel, &QuickSceneGraphModel::nodeDeleted, this, &QuickInspector::sgNodeDeleted);
-#endif
 }
 
 QuickInspector::~QuickInspector()
@@ -187,9 +181,7 @@ void QuickInspector::selectWindow(QQuickWindow* window)
 
   m_window = window;
   m_itemModel->setWindow(window);
-#ifdef HAVE_SG_INSPECTOR
   m_sgModel->setWindow(window);
-#endif
 
   if (m_window) {
     // Insert a ShaderEffectSource to the scene, with the contentItem as its source, in
@@ -226,7 +218,6 @@ void QuickInspector::selectItem(QQuickItem* item)
 
 void QuickInspector::selectSGNode(QSGNode* node)
 {
-#ifdef HAVE_SG_INSPECTOR
   const QAbstractItemModel *model = m_sgModel;
   const QModelIndexList indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole,
     QVariant::fromValue(node), 1, Qt::MatchExactly | Qt::MatchRecursive);
@@ -236,7 +227,6 @@ void QuickInspector::selectSGNode(QSGNode* node)
   const QModelIndex index = indexList.first();
   m_sgSelectionModel->select( index, QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
-#endif
 }
 
 void QuickInspector::objectSelected(QObject *object)
@@ -248,10 +238,8 @@ void QuickInspector::objectSelected(QObject *object)
 
 void QuickInspector::objectSelected(void* object, const QString& typeName)
 {
-#ifdef HAVE_SG_INSPECTOR
   if (MetaObjectRepository::instance()->metaObject(typeName)->inherits("QSGNode"))
     selectSGNode(reinterpret_cast<QSGNode*>(object));
-#endif
 }
 
 void QuickInspector::renderScene()
@@ -271,7 +259,6 @@ void QuickInspector::renderScene()
     previewData.insert("boundingRect", m_currentItem->mapRectToScene(m_currentItem->boundingRect()));
     previewData.insert("childrenRect", m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
     previewData.insert("transformOriginPoint", m_currentItem->mapToScene(m_currentItem->transformOriginPoint()));
-#ifdef HAVE_SG_INSPECTOR
     QQuickAnchors *anchors = m_currentItem->property("anchors").value<QQuickAnchors*>();
     if (anchors) {
       QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
@@ -291,17 +278,14 @@ void QuickInspector::renderScene()
       previewData.insert("baselineOffset", anchors->baselineOffset());
       previewData.insert("margins", anchors->margins());
     }
-#endif
     previewData.insert("x", m_currentItem->x());
     previewData.insert("y", m_currentItem->y());
-#ifdef HAVE_SG_INSPECTOR
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(m_currentItem);
     previewData.insert("transform", itemPriv->itemToWindowTransform());
     if (parent) {
       QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
       previewData.insert("parentTransform", parentPriv->itemToWindowTransform());
     }
-#endif
   }
   emit sceneRendered(previewData);
 }
@@ -348,7 +332,7 @@ void QuickInspector::sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, 
 
 void QuickInspector::setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
-#if defined(HAVE_SG_INSPECTOR) && QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
   QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
   winPriv->customRenderMode = customRenderMode == VisualizeClipping ? "clip"     :
                               customRenderMode == VisualizeOverdraw ? "overdraw" :
@@ -365,12 +349,9 @@ void QuickInspector::checkFeatures()
 {
   emit features(
     Features(
-#ifdef HAVE_SG_INSPECTOR
-    SGInspector
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    | CustomRenderModes
-#endif // QT_VERSION >= 5.3.0
-#endif // HAVE_SG_INSPECTOR
+    CustomRenderModes
+#endif
     )
   );
 }
@@ -383,7 +364,6 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
   m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem*>();
   m_itemPropertyController->setObject(m_currentItem);
 
-#ifdef HAVE_SG_INSPECTOR
   // It might be that a sg-node is already selected that belongs to this item, but isn't the root
   // node of the Item. In this case we don't want to overwrite that selection.
   if (m_sgModel->itemForSgNode(m_currentSgNode) != m_currentItem) {
@@ -391,7 +371,6 @@ void QuickInspector::itemSelectionChanged(const QItemSelection& selection)
     m_sgSelectionModel->select(m_sgModel->indexForNode(m_currentSgNode), QItemSelectionModel::Select |
       QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
   }
-#endif
 
   if (m_window)
     m_window->update();
@@ -401,24 +380,18 @@ void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
 {
   if (selection.isEmpty())
     return;
-#ifdef HAVE_SG_INSPECTOR
   const QModelIndex index = selection.first().topLeft();
   m_currentSgNode = index.data(ObjectModel::ObjectRole).value<QSGNode*>();
   m_sgPropertyController->setObject(m_currentSgNode, findSGNodeType(m_currentSgNode));
 
   m_currentItem = m_sgModel->itemForSgNode(m_currentSgNode);
   selectItem(m_currentItem);
-#endif
 }
 
 void QuickInspector::sgNodeDeleted(QSGNode *node)
 {
-#ifdef HAVE_SG_INSPECTOR
   if (m_currentSgNode == node)
     m_sgPropertyController->setObject(0);
-#else
-  Q_UNUSED(node);
-#endif
 }
 
 void QuickInspector::clientConnectedChanged(bool connected)

@@ -213,10 +213,6 @@ void QuickInspectorWidget::requestRender()
 
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
 {
-  if (!(features & QuickInspectorInterface::SGInspector)) {
-    ui->tabWidget->removeTab(1);
-  }
-
   m_rootItem->setProperty("supportsCustomRenderModes", (bool)(features & QuickInspectorInterface::CustomRenderModes));
 }
 
