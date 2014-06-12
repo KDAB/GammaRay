@@ -382,6 +382,8 @@ void QuickInspector::sgSelectionChanged(const QItemSelection& selection)
     return;
   const QModelIndex index = selection.first().topLeft();
   m_currentSgNode = index.data(ObjectModel::ObjectRole).value<QSGNode*>();
+  if (!m_sgModel->verifyNodeValidity(m_currentSgNode))
+    return; // Apparently the node has been deleted meanwhile, so don't access it.
   m_sgPropertyController->setObject(m_currentSgNode, findSGNodeType(m_currentSgNode));
 
   m_currentItem = m_sgModel->itemForSgNode(m_currentSgNode);

@@ -48,6 +48,9 @@ void QuickSceneGraphModel::setWindow(QQuickWindow* window)
 {
   beginResetModel();
   clear();
+  if (m_window) {
+    disconnect(window, SIGNAL(beforeRendering()), this, SLOT(updateSGTree()));
+  }
   m_window = window;
   QQuickItem *item = window->contentItem();
   QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
@@ -154,9 +157,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
   QVector<QSGNode*> &oldChildList  = m_oldParentChildMap[node];
   QVector<QSGNode*> newChildList;
 
-  for (int i = 0; i < node->childCount(); i++) {
-    QSGNode *childNode = node->childAtIndex(i);
-
+  for (QSGNode *childNode = node->firstChild(); childNode; childNode = childNode->nextSibling()) {
     newChildList.append(childNode);
   }
 
@@ -247,4 +248,23 @@ QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
   while (node && !m_itemNodeItemMap.contains(node)) // If there's no entry for node, take its parent
     node = m_childParentMap[node];
   return m_itemNodeItemMap[node];
+}
+
+bool QuickSceneGraphModel::verifyNodeValidity(QSGNode* node)
+{
+  QQuickItem *item = itemForSgNode(node);
+  QSGNode *itemNode = QQuickItemPrivate::get(item)->itemNode();
+  bool valid = itemNode == node || recursivelyFindChild(itemNode, node);
+  if (!valid)
+    setWindow(m_window); // The tree got dirty without us noticing. Expecting more to be invalid, so update the whole tree to ensure it's current.
+  return valid;
+}
+
+bool QuickSceneGraphModel::recursivelyFindChild(QSGNode* root, QSGNode* child) const
+{
+  for (QSGNode *childNode = root->firstChild(); childNode; childNode = childNode->nextSibling()) {
+    if (childNode == child || recursivelyFindChild(childNode, child))
+      return true;
+  }
+  return false;
 }

@@ -55,6 +55,7 @@ public:
     QModelIndex indexForNode(QSGNode *node) const;
     QSGNode *sgNodeForItem(QQuickItem *item) const;
     QQuickItem *itemForSgNode(QSGNode *node) const;
+    bool verifyNodeValidity(QSGNode *node);
 
 signals:
     void nodeDeleted(QSGNode *node);
@@ -66,6 +67,7 @@ private:
   void clear();
   void populateFromNode(QSGNode *node);
   void collectItemNodes(QQuickItem *item);
+  bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
 
   QPointer<QQuickWindow> m_window;
 
