@@ -166,10 +166,24 @@ if(Qt5Core_FOUND)
     WebKitWidgets
     Widgets)
 
-  include("cmake/ECMQt4To5Porting.cmake")
+  #HACK: CMake with broken Qt5Qml_PRIVATE_INCLUDE_DIRS, Qt5Quick_PRIVATE_INCLUDE_DIRS
+  if(${Qt5Qml_FOUND})
+    if(NOT "${Qt5Qml_PRIVATE_INCLUDE_DIRS}" MATCHES "/QtQml/")
+      string(REPLACE "/QtCore" "/QtQml" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
+      list(APPEND Qt5Qml_PRIVATE_INCLUDE_DIRS ${replaceme})
+      list(REMOVE_DUPLICATES Qt5Qml_PRIVATE_INCLUDE_DIRS)
+    endif()
+  endif()
+  if(${Qt5Quick_FOUND})
+    if(NOT "${Qt5Quick_PRIVATE_INCLUDE_DIRS}" MATCHES "/QtQuick/")
+      string(REPLACE "/QtCore" "/QtQuick" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
+      list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
+      list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS ${replaceme})
+      list(REMOVE_DUPLICATES Qt5Quick_PRIVATE_INCLUDE_DIRS)
+    endif()
+  endif()
 
-  # only needed for Qt <= 5.1 and/or some older CMake versions (exact combination unknown unfortunately)
-  include_directories(${QT_INCLUDES} ${Qt5Qml_INCLUDE_DIRS} ${Qt5Quick_INCLUDE_DIRS})
+  include("cmake/ECMQt4To5Porting.cmake")
 
   set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
   set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
