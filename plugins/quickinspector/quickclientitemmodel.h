@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKCLIENTITEMMODEL_H
-#define GAMMARAY_QUICKCLIENTITEMMODEL_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKCLIENTITEMMODEL_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKCLIENTITEMMODEL_H
 
 #include <kde/krecursivefilterproxymodel.h>
 

@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef FONTBROWSERINTERFACE_H
-#define FONTBROWSERINTERFACE_H
+#ifndef GAMMARAY_FONTBROWSER_FONTBROWSERINTERFACE_H
+#define GAMMARAY_FONTBROWSER_FONTBROWSERINTERFACE_H
 
 #include <QObject>
 

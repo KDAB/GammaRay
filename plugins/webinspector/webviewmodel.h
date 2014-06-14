@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WEBVIEWMODEL_H
-#define GAMMARAY_WEBVIEWMODEL_H
+#ifndef GAMMARAY_WEBINSPECTOR_WEBVIEWMODEL_H
+#define GAMMARAY_WEBINSPECTOR_WEBVIEWMODEL_H
 
 #include <core/objecttypefilterproxymodel.h>
 

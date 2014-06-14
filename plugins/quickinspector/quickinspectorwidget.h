@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKINSPECTORWIDGET_H
-#define GAMMARAY_QUICKINSPECTORWIDGET_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKINSPECTORWIDGET_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKINSPECTORWIDGET_H
 
 #include <ui/tooluifactory.h>
 #include <ui/propertywidget.h>

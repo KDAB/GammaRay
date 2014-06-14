@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SGWIREFRAMEWIDGET_H
-#define SGWIREFRAMEWIDGET_H
+#ifndef GAMMARAY_QUICKINSPECTOR_SGWIREFRAMEWIDGET_H
+#define GAMMARAY_QUICKINSPECTOR_SGWIREFRAMEWIDGET_H
 
 #include <QWidget>
 

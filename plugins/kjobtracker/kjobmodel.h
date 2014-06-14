@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_KJOBMODEL_H
-#define GAMMARAY_KJOBMODEL_H
+#ifndef GAMMARAY_KJOBTRACKER_KJOBMODEL_H
+#define GAMMARAY_KJOBTRACKER_KJOBMODEL_H
 
 #include <QAbstractItemModel>
 #include <QVector>

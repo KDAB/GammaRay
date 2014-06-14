@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKITEMMODEL_H
-#define GAMMARAY_QUICKITEMMODEL_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKITEMMODEL_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKITEMMODEL_H
 
 #include <core/objectmodelbase.h>
 

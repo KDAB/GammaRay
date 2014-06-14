@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SCENEINSPECTORCLIENT_H
-#define GAMMARAY_SCENEINSPECTORCLIENT_H
+#ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORCLIENT_H
+#define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORCLIENT_H
 
 #include "sceneinspectorinterface.h"
 

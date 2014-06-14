@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PAINTBUFFERVIEWER_H
-#define GAMMARAY_PAINTBUFFERVIEWER_H
+#ifndef GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERVIEWER_H
+#define GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERVIEWER_H
 
 #include "config-gammaray.h"
 

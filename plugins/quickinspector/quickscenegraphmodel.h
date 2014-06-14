@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKSCENEGRAPHMODEL_H
-#define GAMMARAY_QUICKSCENEGRAPHMODEL_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKSCENEGRAPHMODEL_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKSCENEGRAPHMODEL_H
 
 #include "config-gammaray.h"
 

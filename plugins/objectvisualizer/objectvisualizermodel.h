@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OBJECTVISUALIZERMODEL_H
-#define GAMMARAY_OBJECTVISUALIZERMODEL_H
+#ifndef GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERMODEL_H
+#define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERMODEL_H
 
 #include <QtGlobal>
 

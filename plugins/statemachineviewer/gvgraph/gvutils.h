@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_GVUTILS_H
-#define GAMMARAY_GVUTILS_H
+#ifndef GAMMARAY_STATEMACHINEVIEWER_GVUTILS_H
+#define GAMMARAY_STATEMACHINEVIEWER_GVUTILS_H
 
 #include <graphviz/types.h>
 

@@ -22,8 +22,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WIDGETINSPECTORSERVER_H
-#define GAMMARAY_WIDGETINSPECTORSERVER_H
+#ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORSERVER_H
+#define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORSERVER_H
 
 #include <widgetinspectorinterface.h>
 

@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_KJOBTRACKERWIDGET_H
-#define GAMMARAY_KJOBTRACKERWIDGET_H
+#ifndef GAMMARAY_KJOBTRACKER_KJOBTRACKERWIDGET_H
+#define GAMMARAY_KJOBTRACKER_KJOBTRACKERWIDGET_H
 
 #include <ui/tooluifactory.h>
 

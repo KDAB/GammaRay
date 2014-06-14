@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKITEMDELEGATE_H
-#define GAMMARAY_QUICKITEMDELEGATE_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKITEMDELEGATE_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
 #include <QModelIndex>

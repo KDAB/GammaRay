@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKITEMTREEWATCHER_H
-#define GAMMARAY_QUICKITEMTREEWATCHER_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKITEMTREEWATCHER_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKITEMTREEWATCHER_H
 
 #include <QObject>
 

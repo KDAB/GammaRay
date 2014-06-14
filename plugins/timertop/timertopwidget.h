@@ -20,8 +20,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_TIMERTOPWIDGET_H
-#define GAMMARAY_TIMERTOPWIDGET_H
+#ifndef GAMMARAY_TIMERTOP_TIMERTOPWIDGET_H
+#define GAMMARAY_TIMERTOP_TIMERTOPWIDGET_H
 
 #include <ui/tooluifactory.h>
 

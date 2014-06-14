@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ANNOTATEDSCENEPREVIEW_H
-#define ANNOTATEDSCENEPREVIEW_H
+#ifndef GAMMARAY_QUICKINSPECTOR_ANNOTATEDSCENEPREVIEW_H
+#define GAMMARAY_QUICKINSPECTOR_ANNOTATEDSCENEPREVIEW_H
 
 #include <QQuickPaintedItem>
 #include <QTransform>

@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_GVGRAPHITEMS_H
-#define GAMMARAY_GVGRAPHITEMS_H
+#ifndef GAMMARAY_STATEMACHINEVIEWER_GVGRAPHITEMS_H
+#define GAMMARAY_STATEMACHINEVIEWER_GVGRAPHITEMS_H
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsPathItem>

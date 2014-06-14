@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MATERIALTAB_H
-#define MATERIALTAB_H
+#ifndef GAMMARAY_QUICKINSPECTOR_MATERIALTAB_H
+#define GAMMARAY_QUICKINSPECTOR_MATERIALTAB_H
 
 #include <QWidget>
 

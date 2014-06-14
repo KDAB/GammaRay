@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SGGEOMETRYMODEL_H
-#define GAMMARAY_SGGEOMETRYMODEL_H
+#ifndef GAMMARAY_QUICKINSPECTOR_SGGEOMETRYMODEL_H
+#define GAMMARAY_QUICKINSPECTOR_SGGEOMETRYMODEL_H
 
 #include <QAbstractTableModel>
 #include <QStringList>

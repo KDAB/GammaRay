@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MATERIALEXTENSION_H
-#define MATERIALEXTENSION_H
+#ifndef GAMMARAY_QUICKINSPECTOR_MATERIALEXTENSION_H
+#define GAMMARAY_QUICKINSPECTOR_MATERIALEXTENSION_H
 
 #include <core/propertycontrollerextension.h>
 #include "materialextensioninterface.h"

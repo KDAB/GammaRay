@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKINSPECTOR_H
-#define GAMMARAY_QUICKINSPECTOR_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKINSPECTOR_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKINSPECTOR_H
 
 #include "quickinspectorinterface.h"
 

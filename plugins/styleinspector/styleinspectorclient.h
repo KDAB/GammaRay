@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STYLEINSPECTORCLIENT_H
-#define GAMMARAY_STYLEINSPECTORCLIENT_H
+#ifndef GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORCLIENT_H
+#define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORCLIENT_H
 
 #include "styleinspectorinterface.h"
 

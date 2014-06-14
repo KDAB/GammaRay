@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_FONTBROWSERCLIENT_H
-#define GAMMARAY_FONTBROWSERCLIENT_H
+#ifndef GAMMARAY_FONTBROWSER_FONTBROWSERCLIENT_H
+#define GAMMARAY_FONTBROWSER_FONTBROWSERCLIENT_H
 
 #include "fontbrowserinterface.h"
 

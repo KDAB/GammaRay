@@ -20,8 +20,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STATEMACHINEVIEWERWIDGET_H
-#define GAMMARAY_STATEMACHINEVIEWERWIDGET_H
+#ifndef GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWERWIDGET_H
+#define GAMMARAY_STATEMACHINEVIEWER_STATEMACHINEVIEWERWIDGET_H
 
 #include <ui/tooluifactory.h>
 #include "statemachineviewerinterface.h"

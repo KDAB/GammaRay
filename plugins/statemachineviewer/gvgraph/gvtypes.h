@@ -19,8 +19,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_GVTYPES_H
-#define GAMMARAY_GVTYPES_H
+#ifndef GAMMARAY_STATEMACHINEVIEWER_GVTYPES_H
+#define GAMMARAY_STATEMACHINEVIEWER_GVTYPES_H
 
 #include <qglobal.h>
 

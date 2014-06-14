@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SGGEOMETRYEXTENSION_H
-#define SGGEOMETRYEXTENSION_H
+#ifndef GAMMARAY_QUICKINSPECTOR_SGGEOMETRYEXTENSION_H
+#define GAMMARAY_QUICKINSPECTOR_SGGEOMETRYEXTENSION_H
 
 #include <core/propertycontrollerextension.h>
 #include "sggeometryextensioninterface.h"

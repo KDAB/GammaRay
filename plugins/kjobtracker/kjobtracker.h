@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_KJOBTRACKER_H
-#define GAMMARAY_KJOBTRACKER_H
+#ifndef GAMMARAY_KJOBTRACKER_KJOBTRACKER_H
+#define GAMMARAY_KJOBTRACKER_KJOBTRACKER_H
 
 #include <core/toolfactory.h>
 

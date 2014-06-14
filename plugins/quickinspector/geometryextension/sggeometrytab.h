@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SGGEOMETRYTAB_H
-#define SGGEOMETRYTAB_H
+#ifndef GAMMARAY_QUICKINSPECTOR_SGGEOMETRYTAB_H
+#define GAMMARAY_QUICKINSPECTOR_SGGEOMETRYTAB_H
 
 #include <QWidget>
 #include <QModelIndex>

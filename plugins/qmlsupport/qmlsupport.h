@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QMLSUPPORT_H
-#define GAMMARAY_QMLSUPPORT_H
+#ifndef GAMMARAY_QMLSUPPORT_QMLSUPPORT_H
+#define GAMMARAY_QMLSUPPORT_QMLSUPPORT_H
 
 #include <core/toolfactory.h>
 
