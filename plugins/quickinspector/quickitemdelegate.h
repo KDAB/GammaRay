@@ -35,7 +35,7 @@ class QuickItemDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    QuickItemDelegate(QTreeView* view);
+    explicit QuickItemDelegate(QTreeView* view);
 
 public Q_SLOTS:
     void setTextColor(const QVariant& textColor);

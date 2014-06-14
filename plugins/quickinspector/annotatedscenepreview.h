@@ -40,7 +40,7 @@ class AnnotatedScenePreview : public QQuickPaintedItem
     Q_PROPERTY(bool annotate READ annotate WRITE setAnnotate)
 
 public:
-    AnnotatedScenePreview(QQuickItem *parent = 0);
+    explicit AnnotatedScenePreview(QQuickItem *parent = 0);
     virtual ~AnnotatedScenePreview();
     virtual void paint(QPainter* p);
 

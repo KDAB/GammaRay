@@ -36,7 +36,7 @@ class ProbeABIModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    ProbeABIModel(QObject *parent = 0);
+    explicit ProbeABIModel(QObject *parent = 0);
     ~ProbeABIModel();
 
     QVariant data(const QModelIndex& index, int role) const;
