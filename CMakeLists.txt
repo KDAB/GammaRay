@@ -1,5 +1,20 @@
 # This is the top-level CMakeLists.txt file for the GammaRay project.
 #
+# Pass the following variables to cmake to control the build:
+# (See Install.txt for more information)
+#
+# -DGAMMARAY_ENFORCE_QT4_BUILD=[true|false]
+#  Force building against Qt4, even if Qt5 is found.
+#  Default=false
+#
+# -DGAMMARAY_PROBE_ONLY_BUILD=[true|false]
+#  Build only the probe, not the host tools (client, launcher, etc).
+#  Default=false
+#
+# -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[true|false]
+#  Enable if your compiler uses an unsupported C++ name mangling scheme.
+#  Default=false
+#
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
 # Not available on Windows.
@@ -35,7 +50,6 @@ include(FeatureSummary)
 
 enable_testing()
 
-
 # Version setup
 set(GAMMARAY_VERSION_MAJOR "2")
 set(GAMMARAY_VERSION_MINOR "0")
@@ -66,7 +80,6 @@ configure_file(
 
 message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
 
-
 #
 # Build options
 #
@@ -89,7 +102,6 @@ option(
   "Enable if your compiler uses an unsupported C++ name mangling scheme"
   OFF
 )
-
 
 #
 # Compiler & linker settings
@@ -126,7 +138,6 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
   endif()
 endif()
 
-
 #
 # Finding Qt
 #
@@ -156,6 +167,7 @@ if(Qt5Core_FOUND)
     Widgets)
 
   include("cmake/ECMQt4To5Porting.cmake")
+
   # only needed for Qt <= 5.1 and/or some older CMake versions (exact combination unknown unfortunately)
   include_directories(${QT_INCLUDES} ${Qt5Qml_INCLUDE_DIRS} ${Qt5Quick_INCLUDE_DIRS})
 
@@ -244,7 +256,6 @@ add_feature_info("QtScript debugger" QT_QTSCRIPTTOOLS_FOUND "Requires QtScript a
 add_feature_info("Web inspector" HAVE_QT_WEBKIT1 "Requires QtWebKit.")
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
 
-
 #
 # Installation settings
 #
@@ -290,7 +301,6 @@ set(
 gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/GAMMARAY_PROBE_ABI_DUMMY")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
-
 
 #
 # Additional dependencies
@@ -353,11 +363,10 @@ set(HAVE_VTK ${VTK_FOUND})
 
 # ELF header for ABI detection
 find_file(ELF_H elf.h)
-if (ELF_H)
+if(ELF_H)
   set(HAVE_ELF_H TRUE)
-endif ()
+endif()
 add_feature_info("ELF ABI detection" HAVE_ELF_H "Automatic probe ABI detection on ELF-based systems. Requires elf.h.")
-
 
 #
 # actually build the stuff
@@ -403,7 +412,6 @@ if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(FILES License.txt ReadMe.txt DESTINATION ${DOC_INSTALL_DIR})
 endif()
 
-
 #
 # cppcheck
 #
@@ -429,18 +437,23 @@ if(CPPCHECK_EXECUTABLE)
   )
 endif()
 
-
 #
 # CMake package config file generation
 #
 include(CMakePackageConfigHelpers)
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in
-                              ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
-                              INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-                              PATH_VARS INCLUDE_INSTALL_DIR)
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
-                                 VERSION ${GAMMARAY_VERSION}
-                                 COMPATIBILITY SameMajorVersion)
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+  INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+  PATH_VARS INCLUDE_INSTALL_DIR
+)
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+  VERSION ${GAMMARAY_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
@@ -453,6 +466,5 @@ install(
   FILE GammaRayTarget.cmake
 #     NAMESPACE GammaRay::
 )
-
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
