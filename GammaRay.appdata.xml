@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+  <id type="desktop">GammayRay.desktop</id>
+  <metadata_license>GFDL-1.3</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>GammaRay</name>
+  <summary>Qt-application inspection and manipulation tool</summary>
+  <description>
+    <p>GammaRay is a tool to poke around in a Qt-application and also to
+       manipulate the application to some extent. GammaRay uses various
+       DLL injection techniques to hook into an application at runtime and
+       provide access to a lot of interesting information.</p>
+    <p>GammaRay provides the following capabilities to help your Qt application development efforts:</p>
+    <ul>
+      <li>Browse the QObject tree with live updates</li>
+      <li>View, and to some extent, edit QObject static and dynamic properties</li>
+      <li>View and call slots of a QObject (similar to qdbusviewer)</li>
+      <li>View other QObject elements such as signals, enums and class info introspectively</li>
+      <li>List all QObject inbound and outbound signal/slot connections</li>
+      <li>Provide live widget preview. Useful for finding layout issues</li>
+      <li>View the content of any QAbstractItemModel (QAIM)</li>
+      <li>Browse the QAbstractProxyModel (QAPM) hierarchy</li>
+      <li>Browse the QGraphicsView (QGV) item tree of any QGV scene</li>
+      <li>... and much, much more</li>
+    </ul>
+  </description>
+
+  <screenshots>
+    <screenshot type="default" width="500" height="273">http://www.kdab.com/wp-content/uploads/stories/software/gammaray2.png</screenshot>
+    <screenshot width="500" height="281">http://www.kdab.com/wp-content/uploads/stories/software/gammaray1.png</screenshot>
+    <screenshot width="500" height="281">http://www.kdab.com/wp-content/uploads/stories/software/gammaray4_text.png</screenshot>
+    <screenshot width="500" height="273">http://www.kdab.com/wp-content/uploads/stories/software/gammaray-traffic-light.png</screenshot>
+  </screenshots>
+
+  <url type="homepage">http://www.kdab.com/kdab-products/gammaray/</url>
+
+  <updatecontact>allen.winter@kdab.com</updatecontact>
+
+  <project_group>KDAB</project_group>
+</application>
