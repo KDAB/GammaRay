@@ -90,7 +90,7 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
       return toStringList<uint>(index.internalPointer(), attrInfo->tupleSize).join(", ");
     case GL_FLOAT:
       return toStringList<float>(index.internalPointer(), attrInfo->tupleSize).join(", ");
-#if GL_FLOAT_DOUBLE != GL_FLOAT
+#if GL_DOUBLE != GL_FLOAT
     case GL_DOUBLE:
       return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(", ");
 #endif
