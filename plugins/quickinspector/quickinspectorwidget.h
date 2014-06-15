@@ -40,7 +40,6 @@ class QImage;
 class QItemSelection;
 
 namespace GammaRay {
-
 class QuickSceneImageProvider;
 
 namespace Ui {
@@ -65,12 +64,12 @@ class QuickInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
-    QuickInspectorInterface* m_interface;
+    QuickInspectorInterface *m_interface;
     QTimer *m_renderTimer;
     bool m_sceneChangedSinceLastRequest;
     bool m_waitingForImage;
-    QuickSceneImageProvider* m_imageProvider;
-    QQuickItem* m_rootItem;
+    QuickSceneImageProvider *m_imageProvider;
+    QQuickItem *m_rootItem;
     QQuickView *m_preview;
 };
 

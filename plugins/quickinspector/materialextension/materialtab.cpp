@@ -36,7 +36,8 @@ MaterialTab::MaterialTab(PropertyWidget *parent) : QWidget(parent),
 {
   m_ui->setupUi(this);
   setObjectBaseName(parent->objectBaseName());
-  connect(m_ui->shaderList, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(onShaderSelected(QListWidgetItem*)));
+  connect(m_ui->shaderList, SIGNAL(itemActivated(QListWidgetItem*)),
+          this, SLOT(onShaderSelected(QListWidgetItem*)));
 }
 
 MaterialTab::~MaterialTab()
@@ -45,9 +46,9 @@ MaterialTab::~MaterialTab()
 
 void MaterialTab::setObjectBaseName(const QString &baseName)
 {
-  if (m_interface)
+  if (m_interface) {
     disconnect(m_interface, 0, this, 0);
-
+  }
 
   m_interface =
     ObjectBroker::object<MaterialExtensionInterface*>(baseName + ".material");
@@ -55,7 +56,7 @@ void MaterialTab::setObjectBaseName(const QString &baseName)
   connect(m_interface, SIGNAL(gotShader(QString)), this, SLOT(showShader(QString)));
 }
 
-void MaterialTab::setShaders(const QStringList& shaderSources)
+void MaterialTab::setShaders(const QStringList &shaderSources)
 {
   m_shaderSources = shaderSources;
   m_ui->shaderEdit->setText("");
@@ -67,12 +68,12 @@ void MaterialTab::setShaders(const QStringList& shaderSources)
   }
 }
 
-void MaterialTab::onShaderSelected(QListWidgetItem* item)
+void MaterialTab::onShaderSelected(QListWidgetItem *item)
 {
   m_interface->getShader(item->text());
 }
 
-void MaterialTab::showShader(const QString& shaderSource)
+void MaterialTab::showShader(const QString &shaderSource)
 {
   m_ui->shaderEdit->setText(shaderSource);
 }

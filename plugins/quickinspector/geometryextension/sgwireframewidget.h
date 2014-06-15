@@ -45,7 +45,7 @@ class SGWireframeWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit SGWireframeWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+    explicit SGWireframeWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~SGWireframeWidget();
 
     QAbstractItemModel *model() const;
@@ -60,12 +60,12 @@ class SGWireframeWidget : public QWidget
     void mouseReleaseEvent(QMouseEvent*);
 
   private slots:
-    void onModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
-    void onHighlightDataChanged(const QItemSelection& selected, const QItemSelection& deselected);
+    void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onHighlightDataChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
-    void drawWire(QPainter* painter, int vertexIndex1, int vertexIndex2);
-    void drawHighlightedFace(QPainter* painter, QVector< int > vertexIndices);
+    void drawWire(QPainter *painter, int vertexIndex1, int vertexIndex2);
+    void drawHighlightedFace(QPainter *painter, QVector< int > vertexIndices);
 
   private:
     QAbstractItemModel *m_model;

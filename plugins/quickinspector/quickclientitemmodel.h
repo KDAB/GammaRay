@@ -31,12 +31,12 @@ namespace GammaRay {
 /** UI-dependent (and thus client-side) bits of the item tree model. */
 class QuickClientItemModel : public KRecursiveFilterProxyModel
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     explicit QuickClientItemModel(QObject *parent = 0);
     ~QuickClientItemModel();
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 };
 
 }

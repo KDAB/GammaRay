@@ -22,97 +22,137 @@
 */
 
 #include "annotatedscenepreview.h"
+
 #include <QPainter>
 #include <QVector2D>
 
 using namespace GammaRay;
 
-AnnotatedScenePreview::AnnotatedScenePreview(QQuickItem* parent): QQuickPaintedItem(parent),
-  m_zoom(1),
-  m_annotate(true)
+AnnotatedScenePreview::AnnotatedScenePreview(QQuickItem *parent)
+  : QQuickPaintedItem(parent),
+    m_zoom(1),
+    m_annotate(true)
 {
 }
 
 AnnotatedScenePreview::~AnnotatedScenePreview()
 {
-
 }
 
-void AnnotatedScenePreview::paint(QPainter* p )
+void AnnotatedScenePreview::paint(QPainter *p)
 {
-    if (m_previewData.isEmpty())
-        return;
+  if (m_previewData.isEmpty()) {
+    return;
+  }
 
-    p->setTransform(QTransform::fromTranslate(m_margin.width() / 2, m_margin.height() / 2));
+  p->setTransform(QTransform::fromTranslate(m_margin.width() / 2, m_margin.height() / 2));
 
-    p->fillRect(QRect(QPoint(0, 0), m_image.size() * m_zoom), Qt::white);
-    p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom), m_image.transformed(QTransform::fromScale(1, -1)));
+  p->fillRect(QRect(QPoint(0, 0), m_image.size() * m_zoom), Qt::white);
+  p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom),
+               m_image.transformed(QTransform::fromScale(1, -1)));
 
-    if (!m_annotate)
-        return;
+  if (!m_annotate) {
+    return;
+  }
 
-    // bounding box
-    p->setPen(QColor(232, 87, 82, 170));
-    p->setBrush(QBrush(QColor(232, 87, 82, 95)));
-    p->drawRect(m_boundingRect);
+  // bounding box
+  p->setPen(QColor(232, 87, 82, 170));
+  p->setBrush(QBrush(QColor(232, 87, 82, 95)));
+  p->drawRect(m_boundingRect);
 
-    // original geometry
-    if (m_itemRect != m_boundingRect) {
-      p->setPen(Qt::gray);
-      p->setBrush(QBrush(Qt::gray, Qt::BDiagPattern));
-      p->drawRect(m_itemRect);
-    }
+  // original geometry
+  if (m_itemRect != m_boundingRect) {
+    p->setPen(Qt::gray);
+    p->setBrush(QBrush(Qt::gray, Qt::BDiagPattern));
+    p->drawRect(m_itemRect);
+  }
 
-    // children rect
-    if (m_itemRect != m_boundingRect && m_transform.isIdentity()) { // If this item is transformed the children rect will be painted wrongly, so for now skip painting it.
-      p->setPen(QColor(0, 99, 193, 170));
-      p->setBrush(QBrush(QColor(0, 99, 193, 95)));
-      p->drawRect(m_childrenRect);
-    }
+  // children rect
+  if (m_itemRect != m_boundingRect && m_transform.isIdentity()) {
+    // If this item is transformed the children rect will be painted wrongly,
+    // so for now skip painting it.
+    p->setPen(QColor(0, 99, 193, 170));
+    p->setBrush(QBrush(QColor(0, 99, 193, 95)));
+    p->drawRect(m_childrenRect);
+  }
 
-    // transform origin
-    p->setPen(QColor(156, 15, 86, 170));
-    p->drawEllipse(m_transformOriginPoint, 2.5, 2.5);
-    p->drawLine(m_transformOriginPoint - QPointF(0, 6), m_transformOriginPoint + QPointF(0, 6));
-    p->drawLine(m_transformOriginPoint - QPointF(6, 0), m_transformOriginPoint + QPointF(6, 0));
+  // transform origin
+  p->setPen(QColor(156, 15, 86, 170));
+  p->drawEllipse(m_transformOriginPoint, 2.5, 2.5);
+  p->drawLine(m_transformOriginPoint - QPointF(0, 6), m_transformOriginPoint + QPointF(0, 6));
+  p->drawLine(m_transformOriginPoint - QPointF(6, 0), m_transformOriginPoint + QPointF(6, 0));
 
-    // x and y values
-    p->setPen(QColor(136, 136, 136));
-    if (!m_previewData.value("left").toBool() && !m_previewData.value("horizontalCenter").toBool() && !m_previewData.value("right").toBool() && m_x != 0) {
-        QPointF parentEnd = (QPointF(m_itemRect.x() - m_x, m_itemRect.y()));
-        QPointF itemEnd = m_itemRect.topLeft();
-        drawArrow(p, parentEnd, itemEnd);
-        p->drawText(QRectF(parentEnd.x(), parentEnd.y() + 10, itemEnd.x() - parentEnd.x(), 50),
-                    Qt::AlignHCenter | Qt::TextDontClip,
-                    QString("x: %1px").arg(m_x / m_zoom));
-    }
-    if (!m_previewData.value("top").toBool() && !m_previewData.value("verticalCenter").toBool() && !m_previewData.value("bottom").toBool() && !m_previewData.value("baseline").toBool() && m_y != 0) {
-        QPointF parentEnd = (QPointF(m_itemRect.x(), m_itemRect.y() - m_y));
-        QPointF itemEnd = m_itemRect.topLeft();
-        drawArrow(p, parentEnd, itemEnd);
-        p->drawText(QRectF(parentEnd.x() + 10, parentEnd.y(), 100, itemEnd.y() - parentEnd.y()),
-                    Qt::AlignVCenter | Qt::TextDontClip,
-                    QString("y: %1px").arg(m_y / m_zoom));
-    }
+  // x and y values
+  p->setPen(QColor(136, 136, 136));
+  if (!m_previewData.value("left").toBool() &&
+      !m_previewData.value("horizontalCenter").toBool() &&
+      !m_previewData.value("right").toBool() &&
+      m_x != 0) {
+    QPointF parentEnd = (QPointF(m_itemRect.x() - m_x, m_itemRect.y()));
+    QPointF itemEnd = m_itemRect.topLeft();
+    drawArrow(p, parentEnd, itemEnd);
+    p->drawText(QRectF(parentEnd.x(), parentEnd.y() + 10, itemEnd.x() - parentEnd.x(), 50),
+                Qt::AlignHCenter | Qt::TextDontClip,
+                QString("x: %1px").arg(m_x / m_zoom));
+  }
+  if (!m_previewData.value("top").toBool() &&
+      !m_previewData.value("verticalCenter").toBool() &&
+      !m_previewData.value("bottom").toBool() &&
+      !m_previewData.value("baseline").toBool() &&
+      m_y != 0) {
+    QPointF parentEnd = (QPointF(m_itemRect.x(), m_itemRect.y() - m_y));
+    QPointF itemEnd = m_itemRect.topLeft();
+    drawArrow(p, parentEnd, itemEnd);
+    p->drawText(QRectF(parentEnd.x() + 10, parentEnd.y(), 100, itemEnd.y() - parentEnd.y()),
+                Qt::AlignVCenter | Qt::TextDontClip,
+                QString("y: %1px").arg(m_y / m_zoom));
+  }
 
-    // anchors
-    if (m_previewData.value("left").toBool())
-      drawAnchor(p, Qt::Horizontal, m_itemRect.left(), m_leftMargin, QString("margin: %1px").arg(m_leftMargin / m_zoom));
-    if (m_previewData.value("horizontalCenter").toBool())
-      drawAnchor(p, Qt::Horizontal, (m_itemRect.left() + m_itemRect.right()) / 2, m_horizonalCenterOffset, QString("offset: %1px").arg(m_horizonalCenterOffset / m_zoom));
-    if (m_previewData.value("right").toBool())
-      drawAnchor(p, Qt::Horizontal, m_itemRect.right(), -m_rightMargin, QString("margin: %1px").arg(m_rightMargin / m_zoom));
-    if (m_previewData.value("top").toBool())
-      drawAnchor(p, Qt::Vertical, m_itemRect.top(), m_topMargin, QString("margin: %1px").arg(m_topMargin / m_zoom));
-    if (m_previewData.value("verticalCenter").toBool())
-      drawAnchor(p, Qt::Vertical, (m_itemRect.top() + m_itemRect.bottom()) / 2, m_verticalCenterOffset, QString("offset: %1px").arg(m_verticalCenterOffset / m_zoom));
-    if (m_previewData.value("bottom").toBool())
-      drawAnchor(p, Qt::Vertical, m_itemRect.bottom(), -m_bottomMargin, QString("margin: %1px").arg(m_bottomMargin / m_zoom));
-    if (m_previewData.value("baseline").toBool())
-      drawAnchor(p, Qt::Vertical, m_itemRect.top(), m_baselineOffset, QString("offset: %1px").arg(m_baselineOffset / m_zoom));
+  // anchors
+  if (m_previewData.value("left").toBool()) {
+    drawAnchor(p, Qt::Horizontal,
+               m_itemRect.left(), m_leftMargin,
+               QString("margin: %1px").arg(m_leftMargin / m_zoom));
+  }
+
+  if (m_previewData.value("horizontalCenter").toBool()) {
+    drawAnchor(p, Qt::Horizontal,
+               (m_itemRect.left() + m_itemRect.right()) / 2, m_horizonalCenterOffset,
+               QString("offset: %1px").arg(m_horizonalCenterOffset / m_zoom));
+  }
+
+  if (m_previewData.value("right").toBool()) {
+    drawAnchor(p, Qt::Horizontal,
+               m_itemRect.right(), -m_rightMargin,
+               QString("margin: %1px").arg(m_rightMargin / m_zoom));
+  }
+
+  if (m_previewData.value("top").toBool()) {
+    drawAnchor(p, Qt::Vertical,
+               m_itemRect.top(), m_topMargin,
+               QString("margin: %1px").arg(m_topMargin / m_zoom));
+  }
+
+  if (m_previewData.value("verticalCenter").toBool()) {
+    drawAnchor(p, Qt::Vertical,
+               (m_itemRect.top() + m_itemRect.bottom()) / 2, m_verticalCenterOffset,
+               QString("offset: %1px").arg(m_verticalCenterOffset / m_zoom));
+  }
+
+  if (m_previewData.value("bottom").toBool()) {
+    drawAnchor(p, Qt::Vertical,
+               m_itemRect.bottom(), -m_bottomMargin,
+               QString("margin: %1px").arg(m_bottomMargin / m_zoom));
+  }
+
+  if (m_previewData.value("baseline").toBool()) {
+    drawAnchor(p, Qt::Vertical,
+               m_itemRect.top(), m_baselineOffset,
+               QString("offset: %1px").arg(m_baselineOffset / m_zoom));
+  }
 }
 
-void AnnotatedScenePreview::drawArrow(QPainter* p, QPointF first, QPointF second)
+void AnnotatedScenePreview::drawArrow(QPainter *p, QPointF first, QPointF second)
 {
   p->drawLine(first, second);
   QPointF vector(second - first);
@@ -127,130 +167,144 @@ void AnnotatedScenePreview::drawArrow(QPainter* p, QPointF first, QPointF second
   p->drawLine(second, second - v2.toPointF());
 }
 
-void AnnotatedScenePreview::drawAnchor(QPainter* p, Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label)
+void AnnotatedScenePreview::drawAnchor(QPainter *p, Qt::Orientation orientation,
+                                       qreal ownAnchorLine, qreal offset,
+                                       const QString &label)
 {
-    qreal foreignAnchorLine = ownAnchorLine - offset;
-    QPen pen(QColor(139, 179, 0));
+  qreal foreignAnchorLine = ownAnchorLine - offset;
+  QPen pen(QColor(139, 179, 0));
 
-    // Margin arrow
-    if (offset) {
-        p->setPen(pen);
-        if (orientation == Qt::Horizontal)
-          drawArrow(p, QPointF(foreignAnchorLine, (m_itemRect.top() + m_itemRect.bottom()) / 2), QPointF(ownAnchorLine, (m_itemRect.top() + m_itemRect.bottom()) / 2));
-        else
-          drawArrow(p, QPointF((m_itemRect.left() + m_itemRect.right()) / 2, foreignAnchorLine), QPointF((m_itemRect.left() + m_itemRect.right()) / 2, ownAnchorLine));
-
-        // Margin text
-        if (orientation == Qt::Horizontal)
-          p->drawText(QRectF(foreignAnchorLine, (m_itemRect.top() + m_itemRect.bottom()) / 2 + 10, offset, 50),
-                      Qt::AlignHCenter | Qt::TextDontClip,
-                      label);
-        else
-          p->drawText(QRectF((m_itemRect.left() + m_itemRect.right()) / 2 + 10, foreignAnchorLine, 100, offset),
-                      Qt::AlignVCenter | Qt::TextDontClip,
-                      label);
+  // Margin arrow
+  if (offset) {
+    p->setPen(pen);
+    if (orientation == Qt::Horizontal) {
+      drawArrow(p,
+                QPointF(foreignAnchorLine, (m_itemRect.top() + m_itemRect.bottom()) / 2),
+                QPointF(ownAnchorLine, (m_itemRect.top() + m_itemRect.bottom()) / 2));
+    } else {
+      drawArrow(p,
+                QPointF((m_itemRect.left() + m_itemRect.right()) / 2, foreignAnchorLine),
+                QPointF((m_itemRect.left() + m_itemRect.right()) / 2, ownAnchorLine));
     }
 
-    // Own Anchor line
-    pen.setWidth(2);
-    p->setPen(pen);
-    if (orientation == Qt::Horizontal)
-      p->drawLine(ownAnchorLine, m_itemRect.top(), ownAnchorLine, m_itemRect.bottom());
-    else
-      p->drawLine(m_itemRect.left(), ownAnchorLine, m_itemRect.right(), ownAnchorLine);
+    // Margin text
+    if (orientation == Qt::Horizontal) {
+      p->drawText(
+        QRectF(foreignAnchorLine,
+               (m_itemRect.top() + m_itemRect.bottom()) / 2 + 10, offset, 50),
+        Qt::AlignHCenter | Qt::TextDontClip,
+        label);
+    } else {
+      p->drawText(
+        QRectF((m_itemRect.left() + m_itemRect.right()) / 2 + 10,
+               foreignAnchorLine, 100, offset),
+        Qt::AlignVCenter | Qt::TextDontClip,
+        label);
+    }
+  }
 
-    // Foreign Anchor line
-    pen.setStyle(Qt::DotLine);
-    p->setPen(pen);
-    if (orientation == Qt::Horizontal)
-      p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, m_image.height());
-    else
-      p->drawLine(0, foreignAnchorLine, m_image.width(), foreignAnchorLine);
+  // Own Anchor line
+  pen.setWidth(2);
+  p->setPen(pen);
+  if (orientation == Qt::Horizontal) {
+    p->drawLine(ownAnchorLine, m_itemRect.top(), ownAnchorLine, m_itemRect.bottom());
+  } else {
+    p->drawLine(m_itemRect.left(), ownAnchorLine, m_itemRect.right(), ownAnchorLine);
+  }
+
+  // Foreign Anchor line
+  pen.setStyle(Qt::DotLine);
+  p->setPen(pen);
+  if (orientation == Qt::Horizontal) {
+    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, m_image.height());
+  } else {
+    p->drawLine(0, foreignAnchorLine, m_image.width(), foreignAnchorLine);
+  }
 }
 
 QVariantMap AnnotatedScenePreview::previewData() const
 {
-    return m_previewData;
+  return m_previewData;
 }
 
 void AnnotatedScenePreview::setPreviewData(QVariantMap previewData)
 {
-    m_previewData = previewData;
+  m_previewData = previewData;
 
-    updatePreviewData();
-    update();
+  updatePreviewData();
+  update();
 
-    emit previewDataChanged();
+  emit previewDataChanged();
 }
 
 void AnnotatedScenePreview::updatePreviewData()
 {
-    QImage oldImage = m_image;
-    m_image = m_previewData.value("image").value<QImage>();
+  QImage oldImage = m_image;
+  m_image = m_previewData.value("image").value<QImage>();
 
-    if (m_image.size() != oldImage.size()) {
-        emit sourceSizeChanged();
-        setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
-        setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
-    }
+  if (m_image.size() != oldImage.size()) {
+    emit sourceSizeChanged();
+    setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
+    setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
+  }
 
-    m_itemRect = m_previewData.value("itemRect").value<QRectF>();
-    m_itemRect = QRectF(m_itemRect.topLeft() * m_zoom, m_itemRect.bottomRight() * m_zoom);
-    m_boundingRect = m_previewData.value("boundingRect").value<QRectF>();
-    m_boundingRect = QRectF(m_boundingRect.topLeft() * m_zoom, m_boundingRect.bottomRight() * m_zoom);
-    m_childrenRect = m_previewData.value("childrenRect").value<QRectF>();
-    m_childrenRect = QRectF(m_childrenRect.topLeft() * m_zoom, m_childrenRect.bottomRight() * m_zoom);
-    m_transformOriginPoint = m_previewData.value("transformOriginPoint").value<QPointF>() * m_zoom;
-    m_transform = m_previewData.value("transform").value<QTransform>();
-    m_parentTransform = m_previewData.value("parentTransform").value<QTransform>();
-    m_leftMargin = m_previewData.value("leftMargin").toReal() * m_zoom;
-    m_horizonalCenterOffset = m_previewData.value("horizontalCenterOffset").toReal() * m_zoom;
-    m_rightMargin = m_previewData.value("rightMargin").toReal() * m_zoom;
-    m_topMargin = m_previewData.value("topMargin").toReal() * m_zoom;
-    m_verticalCenterOffset = m_previewData.value("verticalCenterOffset").toReal() * m_zoom;
-    m_bottomMargin = m_previewData.value("bottomMargin").toReal() * m_zoom;
-    m_baselineOffset = m_previewData.value("baselineOffset").toReal() * m_zoom;
-    m_x = m_previewData.value("x").value<qreal>() * m_zoom;
-    m_y = m_previewData.value("y").value<qreal>() * m_zoom;
+  m_itemRect = m_previewData.value("itemRect").value<QRectF>();
+  m_itemRect = QRectF(m_itemRect.topLeft() * m_zoom, m_itemRect.bottomRight() * m_zoom);
+  m_boundingRect = m_previewData.value("boundingRect").value<QRectF>();
+  m_boundingRect = QRectF(m_boundingRect.topLeft() * m_zoom, m_boundingRect.bottomRight() * m_zoom);
+  m_childrenRect = m_previewData.value("childrenRect").value<QRectF>();
+  m_childrenRect = QRectF(m_childrenRect.topLeft() * m_zoom, m_childrenRect.bottomRight() * m_zoom);
+  m_transformOriginPoint = m_previewData.value("transformOriginPoint").value<QPointF>() * m_zoom;
+  m_transform = m_previewData.value("transform").value<QTransform>();
+  m_parentTransform = m_previewData.value("parentTransform").value<QTransform>();
+  m_leftMargin = m_previewData.value("leftMargin").toReal() * m_zoom;
+  m_horizonalCenterOffset = m_previewData.value("horizontalCenterOffset").toReal() * m_zoom;
+  m_rightMargin = m_previewData.value("rightMargin").toReal() * m_zoom;
+  m_topMargin = m_previewData.value("topMargin").toReal() * m_zoom;
+  m_verticalCenterOffset = m_previewData.value("verticalCenterOffset").toReal() * m_zoom;
+  m_bottomMargin = m_previewData.value("bottomMargin").toReal() * m_zoom;
+  m_baselineOffset = m_previewData.value("baselineOffset").toReal() * m_zoom;
+  m_x = m_previewData.value("x").value<qreal>() * m_zoom;
+  m_y = m_previewData.value("y").value<qreal>() * m_zoom;
 }
 
 qreal AnnotatedScenePreview::zoom() const
 {
-    return m_zoom;
+  return m_zoom;
 }
 
 void AnnotatedScenePreview::setZoom(qreal zoom)
 {
-    m_zoom = zoom;
-    updatePreviewData();
-    update();
-    emit zoomChanged();
-    setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
-    setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
+  m_zoom = zoom;
+  updatePreviewData();
+  update();
+  emit zoomChanged();
+  setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
+  setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
 }
 
 QSize AnnotatedScenePreview::sourceSize() const
 {
-    return m_image.size();
+  return m_image.size();
 }
 
 QSize AnnotatedScenePreview::margin() const
 {
-    return m_margin;
+  return m_margin;
 }
 
 void AnnotatedScenePreview::setMargin(QSize margin)
 {
-    m_margin = margin;
+  m_margin = margin;
 }
 
 bool AnnotatedScenePreview::annotate() const
 {
-    return m_annotate;
+  return m_annotate;
 }
 
 void AnnotatedScenePreview::setAnnotate(bool annotate)
 {
-    m_annotate = annotate;
-    emit marginChanged();
+  m_annotate = annotate;
+  emit marginChanged();
 }

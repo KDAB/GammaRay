@@ -32,17 +32,17 @@ namespace GammaRay {
 
 class AnnotatedScenePreview : public QQuickPaintedItem
 {
-    Q_OBJECT
-    Q_PROPERTY(QVariantMap previewData READ previewData WRITE setPreviewData NOTIFY previewDataChanged)
-    Q_PROPERTY(qreal zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
-    Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged)
-    Q_PROPERTY(QSize margin READ margin WRITE setMargin NOTIFY marginChanged)
-    Q_PROPERTY(bool annotate READ annotate WRITE setAnnotate)
+  Q_OBJECT
+  Q_PROPERTY(QVariantMap previewData READ previewData WRITE setPreviewData NOTIFY previewDataChanged)
+  Q_PROPERTY(qreal zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
+  Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged)
+  Q_PROPERTY(QSize margin READ margin WRITE setMargin NOTIFY marginChanged)
+  Q_PROPERTY(bool annotate READ annotate WRITE setAnnotate)
 
-public:
+  public:
     explicit AnnotatedScenePreview(QQuickItem *parent = 0);
     virtual ~AnnotatedScenePreview();
-    virtual void paint(QPainter* p);
+    virtual void paint(QPainter *p);
 
     QVariantMap previewData() const;
     qreal zoom() const;
@@ -54,22 +54,23 @@ public:
     bool annotate() const;
     void setAnnotate(bool annotate);
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void zoomChanged();
     void sourceSizeChanged();
     void previewDataChanged();
     void marginChanged();
 
-public Q_SLOTS:
+  public Q_SLOTS:
     void setPreviewData(QVariantMap previewData);
     void setZoom(qreal zoom);
 
-private:
-    void drawArrow(QPainter* p, QPointF first, QPointF second);
-    void drawAnchor(QPainter* p, Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString& label);
+  private:
+    void drawArrow(QPainter *p, QPointF first, QPointF second);
+    void drawAnchor(QPainter *p, Qt::Orientation orientation,
+                    qreal ownAnchorLine, qreal offset, const QString &label);
     void updatePreviewData();
 
-private:
+  private:
     QVariantMap m_previewData;
     QImage m_image;
     bool m_annotate;

@@ -31,7 +31,7 @@
 
 using namespace GammaRay;
 
-SGWireframeWidget::SGWireframeWidget(QWidget* parent, Qt::WindowFlags f)
+SGWireframeWidget::SGWireframeWidget(QWidget *parent, Qt::WindowFlags f)
   : QWidget(parent, f),
     m_model(0),
     m_positionColumn(-1),
@@ -46,13 +46,13 @@ SGWireframeWidget::SGWireframeWidget(QWidget* parent, Qt::WindowFlags f)
 
 SGWireframeWidget::~SGWireframeWidget()
 {
-
 }
 
-void SGWireframeWidget::paintEvent(QPaintEvent* )
+void SGWireframeWidget::paintEvent(QPaintEvent *)
 {
-  if (!m_model || m_vertices.isEmpty() || m_positionColumn == -1)
+  if (!m_model || m_vertices.isEmpty() || m_positionColumn == -1) {
     return;
+  }
 
   // Prepare painting
   m_zoom = qMin((width() - 20) / m_geometryWidth, (height() - 20) / m_geometryHeight);
@@ -70,12 +70,13 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
 
   // Calculate the size of one VBO index
   int indexSize = 0;
-  if (m_indexType == GL_UNSIGNED_INT)
+  if (m_indexType == GL_UNSIGNED_INT) {
     indexSize = sizeof(quint32);
-  else if (m_indexType == GL_UNSIGNED_SHORT)
+  } else if (m_indexType == GL_UNSIGNED_SHORT) {
     indexSize = sizeof(quint16);
-  else if (m_indexType == GL_UNSIGNED_BYTE)
+  } else if (m_indexType == GL_UNSIGNED_BYTE) {
     indexSize = sizeof(quint8);
+  }
 
   const int count = m_indexData.isEmpty() ? m_vertices.count() : m_indexData.size() / indexSize;
 
@@ -83,34 +84,41 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
     // Calculate the index of the vertex we're supposed to draw a line from
     int index = i;
     if (!m_indexData.isEmpty()) {
-      if (m_indexType == GL_UNSIGNED_INT)
+      if (m_indexType == GL_UNSIGNED_INT) {
         index = *reinterpret_cast<const quint32*>(m_indexData.constData() + i * indexSize);
-      else if (m_indexType == GL_UNSIGNED_SHORT)
+      } else if (m_indexType == GL_UNSIGNED_SHORT) {
         index = *reinterpret_cast<const quint16*>(m_indexData.constData() + i * indexSize);
-      else if (m_indexType == GL_UNSIGNED_BYTE)
+      } else if (m_indexType == GL_UNSIGNED_BYTE) {
         index = *reinterpret_cast<const quint8*>(m_indexData.constData() + i * indexSize);
+      }
     }
-    if (i == 0)
+    if (i == 0) {
       firstIndex = index;
+    }
 
-    if (index >= m_vertices.size())
+    if (index >= m_vertices.size()) {
       continue;
+    }
 
     // Draw highlighted faces
-    if ((m_drawingMode == GL_TRIANGLES && i % 3 == 2) || (m_drawingMode == GL_TRIANGLE_STRIP && i >= 2))
+    if ((m_drawingMode == GL_TRIANGLES && i % 3 == 2) ||
+        (m_drawingMode == GL_TRIANGLE_STRIP && i >= 2)) {
       drawHighlightedFace(&painter, QVector<int>() << index << prevIndex1 << prevIndex2);
-
-    else if (m_drawingMode == GL_TRIANGLE_FAN && i >= 2)
+    } else if (m_drawingMode == GL_TRIANGLE_FAN && i >= 2) {
       drawHighlightedFace(&painter, QVector<int>() << index << prevIndex1 << firstIndex);
+    }
 
 #ifndef QT_OPENGL_ES_2
-    else if ((m_drawingMode == GL_QUADS || m_drawingMode == GL_QUAD_STRIP) && i % 4 == 3)
-      drawHighlightedFace(&painter, QVector<int>() << index << prevIndex1 << prevIndex2 << prevIndex3);
+    else if ((m_drawingMode == GL_QUADS || m_drawingMode == GL_QUAD_STRIP) && i % 4 == 3) {
+      drawHighlightedFace(&painter,
+                          QVector<int>() << index << prevIndex1 << prevIndex2 << prevIndex3);
+    }
 
     else if (m_drawingMode == GL_POLYGON && i == count - 1) {
       QVector<int> vertices;
-      for (int j = 0; j < count; j++)
+      for (int j = 0; j < count; j++) {
         vertices << j;
+      }
       drawHighlightedFace(&painter, vertices);
     }
 #endif
@@ -118,25 +126,24 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
     // Draw wires
 
     // Draw a connection to the previous vertex
-    if (((m_drawingMode == GL_LINES && i % 2)
-      || m_drawingMode == GL_LINE_LOOP
-      || m_drawingMode == GL_LINE_STRIP
-      ||(m_drawingMode == GL_TRIANGLES && i % 3)
-      || m_drawingMode == GL_TRIANGLE_STRIP
-      || m_drawingMode == GL_TRIANGLE_FAN
+    if (((m_drawingMode == GL_LINES && i % 2) ||
+         m_drawingMode == GL_LINE_LOOP ||
+         m_drawingMode == GL_LINE_STRIP ||
+         (m_drawingMode == GL_TRIANGLES && i % 3) ||
+         m_drawingMode == GL_TRIANGLE_STRIP ||
+         m_drawingMode == GL_TRIANGLE_FAN
 #ifndef QT_OPENGL_ES_2
-      ||(m_drawingMode == GL_QUADS && i % 4 != 0)
-      ||(m_drawingMode == GL_QUAD_STRIP && i % 2)
-      || m_drawingMode == GL_POLYGON
+      || (m_drawingMode == GL_QUADS && i % 4 != 0) ||
+         (m_drawingMode == GL_QUAD_STRIP && i % 2) ||
+         m_drawingMode == GL_POLYGON
 #endif
     ) && i > 0) {
       drawWire(&painter, index, prevIndex1);
     }
 
-
     // Draw a connection to the second previous vertex
-    if ((m_drawingMode == GL_TRIANGLE_STRIP
-      ||(m_drawingMode == GL_TRIANGLES && i % 3 == 2)
+    if ((m_drawingMode == GL_TRIANGLE_STRIP ||
+         (m_drawingMode == GL_TRIANGLES && i % 3 == 2)
 #ifndef QT_OPENGL_ES_2
       || m_drawingMode == GL_QUAD_STRIP
 #endif
@@ -144,14 +151,12 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
       drawWire(&painter, index, prevIndex2);
     }
 
-
     // draw a connection to the third previous vertex
 #ifndef QT_OPENGL_ES_2
     if (m_drawingMode == GL_QUADS && i % 4 == 3) {
       drawWire(&painter, index, prevIndex3);
     }
 #endif
-
 
     // Draw a connection to the very first vertex
     if ((m_drawingMode == GL_LINE_LOOP && i == count - 1)
@@ -205,28 +210,33 @@ void SGWireframeWidget::paintEvent(QPaintEvent* )
                         m_drawingMode == GL_TRIANGLE_STRIP      ? "GL_TRIANGLE_STRIP" :
                         m_drawingMode == GL_TRIANGLE_FAN        ? "GL_TRIANGLE_FAN" : "Unknown";
   QString text = QObject::tr("Drawing mode: %1").arg(drawingMode);
-  painter.drawText(contentsRect().width() - painter.fontMetrics().width(text), contentsRect().height() - painter.fontMetrics().height(), text);
+  painter.drawText(contentsRect().width() - painter.fontMetrics().width(text),
+                   contentsRect().height() - painter.fontMetrics().height(), text);
 }
 
-void SGWireframeWidget::drawWire(QPainter* painter, int vertexIndex1, int vertexIndex2)
+void SGWireframeWidget::drawWire(QPainter *painter, int vertexIndex1, int vertexIndex2)
 {
-    // Draw wire
-    if (m_highlightedVertices.contains(vertexIndex1) && m_highlightedVertices.contains(vertexIndex2)) {
-      painter->save();
-      painter->setPen(qApp->palette().color(QPalette::Highlight));
-      painter->drawLine(m_vertices[vertexIndex1] * m_zoom + m_offset, m_vertices[vertexIndex2] * m_zoom + m_offset);
-      painter->restore();
-    } else if (vertexIndex1 != -1 && vertexIndex2 != -1) {
-      painter->drawLine(m_vertices[vertexIndex1] * m_zoom + m_offset, m_vertices[vertexIndex2] * m_zoom + m_offset);
-    }
+  // Draw wire
+  if (m_highlightedVertices.contains(vertexIndex1) &&
+      m_highlightedVertices.contains(vertexIndex2)) {
+    painter->save();
+    painter->setPen(qApp->palette().color(QPalette::Highlight));
+    painter->drawLine(m_vertices[vertexIndex1] * m_zoom + m_offset,
+                      m_vertices[vertexIndex2] * m_zoom + m_offset);
+    painter->restore();
+  } else if (vertexIndex1 != -1 && vertexIndex2 != -1) {
+    painter->drawLine(m_vertices[vertexIndex1] * m_zoom + m_offset,
+                      m_vertices[vertexIndex2] * m_zoom + m_offset);
+  }
 }
 
-void SGWireframeWidget::drawHighlightedFace(QPainter* painter, QVector<int> vertexIndices)
+void SGWireframeWidget::drawHighlightedFace(QPainter *painter, QVector<int> vertexIndices)
 {
   QVector<QPointF> vertices;
   foreach (int index, vertexIndices) {
-    if (!m_highlightedVertices.contains(index))
+    if (!m_highlightedVertices.contains(index)) {
       return; // There is one vertex that is not highlighted. Don't highlight the face.
+    }
     vertices << m_vertices[index] * m_zoom + m_offset;
   }
   painter->save();
@@ -245,32 +255,40 @@ QAbstractItemModel *SGWireframeWidget::model() const
 
 void SGWireframeWidget::setModel(QAbstractItemModel *model)
 {
-  if (m_model)
+  if (m_model) {
     disconnect(m_model, 0, this, 0);
+  }
   m_model = model;
-  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
+  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+          this, SLOT(onModelDataChanged(QModelIndex,QModelIndex)));
 }
 
-void SGWireframeWidget::setHighlightModel(QItemSelectionModel* selectionModel)
+void SGWireframeWidget::setHighlightModel(QItemSelectionModel *selectionModel)
 {
-  if (m_highlightModel)
+  if (m_highlightModel) {
     disconnect(m_highlightModel, 0, this, 0);
+  }
 
   m_highlightModel = selectionModel;
 
-  connect(m_highlightModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(onHighlightDataChanged(QItemSelection,QItemSelection)));
+  connect(m_highlightModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(onHighlightDataChanged(QItemSelection,QItemSelection)));
 }
 
-void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+void SGWireframeWidget::onModelDataChanged(const QModelIndex &topLeft,
+                                           const QModelIndex &bottomRight)
 {
-  if (!topLeft.isValid() || !bottomRight.isValid() || m_positionColumn == -1 || (topLeft.column() <= m_positionColumn && bottomRight.column() >= m_positionColumn)) {
+  if (!topLeft.isValid() ||
+      !bottomRight.isValid() ||
+      m_positionColumn == -1 ||
+      (topLeft.column() <= m_positionColumn && bottomRight.column() >= m_positionColumn)) {
     // Get the column in which the vertex position data is stored in
     if (m_positionColumn == -1) {
-      for(int j = 0; j < m_model->columnCount(); j++) {
-          if (m_model->data(m_model->index(0, j), SGGeometryModel::IsCoordinateRole).toBool()) {
-            m_positionColumn = j;
-            break;
-          }
+      for (int j = 0; j < m_model->columnCount(); j++) {
+        if (m_model->data(m_model->index(0, j), SGGeometryModel::IsCoordinateRole).toBool()) {
+          m_positionColumn = j;
+          break;
+        }
       }
     }
 
@@ -281,16 +299,21 @@ void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QMo
     for (int i = 0; i < m_model->rowCount(); i++) {
       const QModelIndex index = m_model->index(i, m_positionColumn);
       const QVariantList data = m_model->data(index, SGGeometryModel::RenderRole).toList();
-      if (data.isEmpty()) // Data is incomplete, so no need to render the wireframe yet. It will be repainted as soon as the data is available.
+      if (data.isEmpty()) {
+        // Data is incomplete, so no need to render the wireframe yet.
+        // It will be repainted as soon as the data is available.
         return;
+      }
       if (data.size() >= 2) {
         const qreal x = data[0].toReal();
         const qreal y = data[1].toReal();
         m_vertices << QPointF(x, y);
-        if (x > m_geometryWidth)
+        if (x > m_geometryWidth) {
           m_geometryWidth = x;
-        if (y > m_geometryHeight)
+        }
+        if (y > m_geometryHeight) {
           m_geometryHeight = y;
+        }
       }
     }
 
@@ -298,16 +321,19 @@ void SGWireframeWidget::onModelDataChanged(const QModelIndex& topLeft, const QMo
   }
 }
 
-void SGWireframeWidget::onHighlightDataChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void SGWireframeWidget::onHighlightDataChanged(const QItemSelection &selected,
+                                               const QItemSelection &deselected)
 {
   foreach (const QModelIndex &index, deselected.indexes()) {
     int i = m_highlightedVertices.indexOf(index.row());
-    if (i != -1)
+    if (i != -1) {
       m_highlightedVertices.remove(i);
+    }
   }
   foreach (const QModelIndex &index, selected.indexes()) {
-    if (!m_highlightedVertices.contains(index.row()))
+    if (!m_highlightedVertices.contains(index.row())) {
       m_highlightedVertices << index.row();
+    }
   }
 
   update();
@@ -328,14 +354,17 @@ void SGWireframeWidget::mouseReleaseEvent(QMouseEvent *e)
   if (~e->modifiers() & Qt::ControlModifier) {
     m_highlightModel->clear();
   }
+
   for (int i = 0; i < m_vertices.size(); i++) {
     int distance = QLineF(e->pos(), m_vertices[i] * m_zoom + m_offset).length();
     if (distance <= 5) {
-      if (e->modifiers() & Qt::ControlModifier)
+      if (e->modifiers() & Qt::ControlModifier) {
         m_highlightModel->select(m_model->index(i, m_positionColumn), QItemSelectionModel::Toggle);
-      else
+      } else {
         m_highlightModel->select(m_model->index(i, m_positionColumn), QItemSelectionModel::Select);
+      }
     }
   }
+
   QWidget::mouseReleaseEvent(e);
 }

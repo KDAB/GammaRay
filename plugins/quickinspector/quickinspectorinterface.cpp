@@ -22,7 +22,6 @@
 */
 
 #include "quickinspectorinterface.h"
-
 #include <common/objectbroker.h>
 
 #include <QDataStream>
@@ -57,7 +56,7 @@ QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::RenderMode &va
   return in;
 }
 
-QuickInspectorInterface::QuickInspectorInterface(QObject* parent) : QObject(parent)
+QuickInspectorInterface::QuickInspectorInterface(QObject * parent) : QObject(parent)
 {
   ObjectBroker::registerObject<QuickInspectorInterface*>(this);
   qRegisterMetaTypeStreamOperators<Features>();

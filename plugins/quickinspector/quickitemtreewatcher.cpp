@@ -30,7 +30,7 @@
 
 using namespace GammaRay;
 
-QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView* itemView, QTreeView* sgView, QObject *parent)
+QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView *itemView, QTreeView *sgView, QObject *parent)
   : QObject(parent),
     m_itemView(itemView),
     m_sgView(sgView)
@@ -45,11 +45,12 @@ QuickItemTreeWatcher::~QuickItemTreeWatcher()
 {
 }
 
-void QuickItemTreeWatcher::itemModelRowsInserted(const QModelIndex& parent, int start, int end)
+void QuickItemTreeWatcher::itemModelRowsInserted(const QModelIndex &parent, int start, int end)
 {
   for (int row = start; row <= end; ++row) {
     const QModelIndex index = m_itemView->model()->index(row, 0, parent);
-    const bool invisible = index.data(QuickItemModelRole::ItemFlags).value<int>() & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
+    const bool invisible = index.data(QuickItemModelRole::ItemFlags).value<int>() &
+                           (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
     const int siblingCount = m_itemView->model()->rowCount(parent);
 
     if (!invisible && siblingCount < 5) {
@@ -58,7 +59,7 @@ void QuickItemTreeWatcher::itemModelRowsInserted(const QModelIndex& parent, int 
   }
 }
 
-void QuickItemTreeWatcher::sgModelRowsInserted(const QModelIndex& parent, int start, int end)
+void QuickItemTreeWatcher::sgModelRowsInserted(const QModelIndex &parent, int start, int end)
 {
   for (int row = start; row <= end; ++row) {
     const QModelIndex index = m_sgView->model()->index(row, 0, parent);

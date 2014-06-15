@@ -27,12 +27,14 @@
 #include "quickinspectorinterface.h"
 
 class QEvent;
+
 namespace GammaRay {
 
 class QuickInspectorClient : public QuickInspectorInterface
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::QuickInspectorInterface)
+
 public:
   explicit QuickInspectorClient(QObject *parent = 0);
   ~QuickInspectorClient();
@@ -40,10 +42,18 @@ public:
 public slots:
   void selectWindow(int index);
   void renderScene();
-  void sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count);
-  void sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers);
-  void sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers);
+
+  void sendKeyEvent(int type, int key, int modifiers, const QString &text,
+                    bool autorep, ushort count);
+
+  void sendMouseEvent(int type, const QPointF &localPos,
+                      int button, int buttons, int modifiers);
+
+  void sendWheelEvent(const QPointF &localPos, QPoint pixelDelta,
+                      QPoint angleDelta, int buttons, int modifiers);
+
   void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode);
+
   void checkFeatures();
 };
 }

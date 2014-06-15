@@ -39,70 +39,78 @@ namespace GammaRay {
 /** QQ2 item tree model. */
 class QuickItemModel : public ObjectModelBase<QAbstractItemModel>
 {
-    Q_OBJECT
-public:
+  Q_OBJECT
+
+  public:
     explicit QuickItemModel(QObject *parent = 0);
     ~QuickItemModel();
 
-    void setWindow(QQuickWindow* window);
+    void setWindow(QQuickWindow *window);
 
-    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex& parent) const Q_DECL_OVERRIDE;
-    QMap< int, QVariant > itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QMap< int, QVariant > itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-public slots:
-  void objectAdded(QObject *obj);
-  void objectRemoved(QObject *obj);
+  public slots:
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
 
-private slots:
-  void itemReparented();
-  void itemWindowChanged();
-  void itemUpdated();
+  private slots:
+    void itemReparented();
+    void itemWindowChanged();
+    void itemUpdated();
 
-private:
-  friend class QuickEventMonitor;
-  void updateItem(QQuickItem *item);
-  void recursivelyUpdateItem(QQuickItem *item);
-  void updateItemFlags(QQuickItem *item);
-  void clear();
-  void populateFromItem(QQuickItem *item);
-  /// Track all changes to item @p item in this model (parentChanged, windowChanged, ...)
-  void connectItem(QQuickItem *item);
-  /// Untrack item @p item
-  void disconnectItem(QQuickItem *item);
-  QModelIndex indexForItem(QQuickItem *item) const;
+  private:
+    friend class QuickEventMonitor;
+    void updateItem(QQuickItem *item);
+    void recursivelyUpdateItem(QQuickItem *item);
+    void updateItemFlags(QQuickItem *item);
+    void clear();
+    void populateFromItem(QQuickItem *item);
 
-  /// Add item @p item to this model
-  void addItem(QQuickItem* item);
-  /// Remove item @p item from this model. Set @p danglingPointer to true if the item has already been destructed
-  void removeItem(QQuickItem* item, bool danglingPointer = false);
-  /**
-   * Remove item @p item from the internal data set. This function won't cause rowsRemoved to be emitted.
-   * Set @p danglingPointer to true if the item has already been destructed.
-   */
-  void doRemoveSubtree(QQuickItem* item, bool danglingPointer = false);
+    /// Track all changes to item @p item in this model (parentChanged, windowChanged, ...)
+    void connectItem(QQuickItem *item);
 
-  QPointer<QQuickWindow> m_window;
+    /// Untrack item @p item
+    void disconnectItem(QQuickItem *item);
+    QModelIndex indexForItem(QQuickItem *item) const;
 
-  QHash<QQuickItem*, QQuickItem*> m_childParentMap;
-  QHash<QQuickItem*, QVector<QQuickItem*> > m_parentChildMap;
-  QHash<QQuickItem*, int> m_itemFlags;
+    /// Add item @p item to this model
+    void addItem(QQuickItem *item);
+
+    /// Remove item @p item from this model.
+    /// Set @p danglingPointer to true if the item has already been destructed
+    void removeItem(QQuickItem *item, bool danglingPointer = false);
+
+    /**
+     * Remove item @p item from the internal data set.
+     * This function won't cause rowsRemoved to be emitted.
+     * Set @p danglingPointer to true if the item has already been destructed.
+     */
+    void doRemoveSubtree(QQuickItem *item, bool danglingPointer = false);
+
+    QPointer<QQuickWindow> m_window;
+
+    QHash<QQuickItem*, QQuickItem*> m_childParentMap;
+    QHash<QQuickItem*, QVector<QQuickItem*> > m_parentChildMap;
+    QHash<QQuickItem*, int> m_itemFlags;
 };
 
 class QuickEventMonitor : public QObject
 {
   Q_OBJECT
-public:
-  explicit QuickEventMonitor(QuickItemModel *parent);
+  public:
+    explicit QuickEventMonitor(QuickItemModel *parent);
 
-protected:
+  protected:
     bool eventFilter(QObject *obj, QEvent *event);
 
-private:
-  QuickItemModel *m_model;
+  private:
+    QuickItemModel *m_model;
 };
+
 }
 
 #endif // GAMMARAY_QUICKITEMMODEL_H

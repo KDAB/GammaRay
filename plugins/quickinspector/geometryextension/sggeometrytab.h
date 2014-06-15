@@ -39,17 +39,18 @@ class PropertyWidget;
 class SGGeometryTab : public QWidget
 {
   Q_OBJECT
-public:
-  explicit SGGeometryTab(PropertyWidget *parent);
-  virtual ~SGGeometryTab();
 
-private:
-  void setObjectBaseName(const QString &baseName);
+  public:
+    explicit SGGeometryTab(PropertyWidget *parent);
+    virtual ~SGGeometryTab();
 
-private:
-  Ui_SGGeometryTab *m_ui;
-  SGGeometryExtensionInterface *m_interface;
-  QAbstractItemModel *m_model;
+  private:
+    void setObjectBaseName(const QString &baseName);
+
+  private:
+    Ui_SGGeometryTab *m_ui;
+    SGGeometryExtensionInterface *m_interface;
+    QAbstractItemModel *m_model;
 };
 
 }

@@ -54,70 +54,80 @@ class QuickInspector : public QuickInspectorInterface
   Q_OBJECT
   Q_INTERFACES(GammaRay::QuickInspectorInterface)
 
-public:
-  explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
-  ~QuickInspector();
+  public:
+    explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
+    ~QuickInspector();
 
-public slots:
-  void selectWindow(int index) Q_DECL_OVERRIDE;
-  void renderScene();
-  void sendKeyEvent(int type, int key, int modifiers, const QString & text = QString(), bool autorep = false, ushort count = 1);
-  void sendMouseEvent(int type, const QPointF& localPos, int button, int buttons, int modifiers);
-  void sendWheelEvent(const QPointF& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers);
-  void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode);
-  void checkFeatures();
+  public slots:
+    void selectWindow(int index) Q_DECL_OVERRIDE;
+    void renderScene();
 
-protected:
-  bool eventFilter(QObject *receiver, QEvent* event) Q_DECL_OVERRIDE;
+    void sendKeyEvent(int type, int key, int modifiers,
+                      const QString &text = QString(), bool autorep = false,
+                      ushort count = 1);
 
-private slots:
-  void slotSceneChanged();
-  void itemSelectionChanged(const QItemSelection &selection);
-  void sgSelectionChanged(const QItemSelection &selection);
-  void clientConnectedChanged(bool connected);
-  void sgNodeDeleted(QSGNode *node);
-  void objectSelected(QObject *object);
-  void objectSelected(void *object, const QString &typeName);
+    void sendMouseEvent(int type, const QPointF &localPos,
+                        int button, int buttons, int modifiers);
 
-private:
-  void selectWindow(QQuickWindow* window);
-  void selectItem(QQuickItem *item);
-  void selectSGNode(QSGNode *node);
-  void registerMetaTypes();
-  void registerVariantHandlers();
-  void registerPCExtensions();
-  QString findSGNodeType(QSGNode *node) const;
+    void sendWheelEvent(const QPointF &localPos, QPoint pixelDelta,
+                        QPoint angleDelta, int buttons, int modifiers);
 
-  QQuickItem* recursiveChiltAt(QQuickItem* parent, const QPointF& pos) const;
+    void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode);
 
-  QQuickShaderEffectSource *m_source;
-  ProbeInterface* m_probe;
-  QPointer<QQuickWindow> m_window;
-  QPointer<QQuickItem> m_currentItem;
-  QSGNode *m_currentSgNode;
-  QAbstractItemModel *m_windowModel;
-  QuickItemModel *m_itemModel;
-  QItemSelectionModel *m_itemSelectionModel;
-  QuickSceneGraphModel *m_sgModel;
-  QItemSelectionModel *m_sgSelectionModel;
-  PropertyController *m_itemPropertyController;
-  PropertyController *m_sgPropertyController;
-  bool m_clientConnected;
-  QImage m_currentFrame;
+    void checkFeatures();
+
+  protected:
+    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+
+  private slots:
+    void slotSceneChanged();
+    void itemSelectionChanged(const QItemSelection &selection);
+    void sgSelectionChanged(const QItemSelection &selection);
+    void clientConnectedChanged(bool connected);
+    void sgNodeDeleted(QSGNode *node);
+    void objectSelected(QObject *object);
+    void objectSelected(void *object, const QString &typeName);
+
+  private:
+    void selectWindow(QQuickWindow *window);
+    void selectItem(QQuickItem *item);
+    void selectSGNode(QSGNode *node);
+    void registerMetaTypes();
+    void registerVariantHandlers();
+    void registerPCExtensions();
+    QString findSGNodeType(QSGNode *node) const;
+
+    QQuickItem *recursiveChiltAt(QQuickItem *parent, const QPointF &pos) const;
+
+    QQuickShaderEffectSource *m_source;
+    ProbeInterface *m_probe;
+    QPointer<QQuickWindow> m_window;
+    QPointer<QQuickItem> m_currentItem;
+    QSGNode *m_currentSgNode;
+    QAbstractItemModel *m_windowModel;
+    QuickItemModel *m_itemModel;
+    QItemSelectionModel *m_itemSelectionModel;
+    QuickSceneGraphModel *m_sgModel;
+    QItemSelectionModel *m_sgSelectionModel;
+    PropertyController *m_itemPropertyController;
+    PropertyController *m_sgPropertyController;
+    bool m_clientConnected;
+    QImage m_currentFrame;
 };
 
-class QuickInspectorFactory : public QObject, public StandardToolFactory<QQuickWindow, QuickInspector>
+class QuickInspectorFactory : public QObject,
+                              public StandardToolFactory<QQuickWindow, QuickInspector>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.QuickInspector")
 
-public:
-  explicit QuickInspectorFactory(QObject *parent = 0) : QObject(parent)
-  {
-  }
+  public:
+    explicit QuickInspectorFactory(QObject *parent = 0) : QObject(parent)
+    {
+    }
 
-  QString name() const Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

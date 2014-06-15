@@ -23,10 +23,9 @@
 
 #include "sggeometrytab.h"
 #include "sggeometryextensioninterface.h"
-#include "ui_sggeometrytab.h"
-#include <ui/propertywidget.h>
-
 #include "common/objectbroker.h"
+#include "ui/propertywidget.h"
+#include "ui_sggeometrytab.h"
 
 #include <QSortFilterProxyModel>
 
@@ -48,8 +47,9 @@ SGGeometryTab::~SGGeometryTab()
 
 void SGGeometryTab::setObjectBaseName(const QString &baseName)
 {
-  if (m_interface)
+  if (m_interface) {
     disconnect(m_interface, 0, m_ui->wireframeWidget, 0);
+  }
   m_model = ObjectBroker::model(baseName + '.' + "sgGeometryModel");
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
@@ -59,11 +59,11 @@ void SGGeometryTab::setObjectBaseName(const QString &baseName)
   QItemSelectionModel *selectionModel = new QItemSelectionModel(proxy);
   m_ui->tableView->setSelectionModel(selectionModel);
 
-
   m_interface =
     ObjectBroker::object<SGGeometryExtensionInterface*>(baseName + ".sgGeometry");
 
   m_ui->wireframeWidget->setModel(m_model);
   m_ui->wireframeWidget->setHighlightModel(selectionModel);
-  connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)), m_ui->wireframeWidget, SLOT(onGeometryChanged(uint,QByteArray,int)));
+  connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)),
+          m_ui->wireframeWidget, SLOT(onGeometryChanged(uint,QByteArray,int)));
 }

@@ -35,17 +35,17 @@ using namespace GammaRay;
 
 class SGMaterialShaderThief : public QSGMaterialShader
 {
-public:
-  QHash<QOpenGLShader::ShaderType, QStringList> getShaderSources()
-  {
-    return d_func()->m_sourceFiles;
-  }
+  public:
+    QHash<QOpenGLShader::ShaderType, QStringList> getShaderSources()
+    {
+      return d_func()->m_sourceFiles;
+    }
 };
 
-MaterialExtension::MaterialExtension(PropertyController* controller) :
-  PropertyControllerExtension(controller->objectBaseName() + ".material"),
-  MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
-  m_node(0)
+MaterialExtension::MaterialExtension(PropertyController *controller)
+  : PropertyControllerExtension(controller->objectBaseName() + ".material"),
+    MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
+    m_node(0)
 {
 }
 
@@ -53,7 +53,7 @@ MaterialExtension::~MaterialExtension()
 {
 }
 
-bool MaterialExtension::setObject(void* object, const QString& typeName)
+bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
   if (typeName == "QSGGeometryNode") {
     m_node = static_cast<QSGGeometryNode*>(object);
@@ -73,14 +73,16 @@ bool MaterialExtension::setObject(void* object, const QString& typeName)
   return false;
 }
 
-void MaterialExtension::getShader(const QString& fileName)
+void MaterialExtension::getShader(const QString &fileName)
 {
   QFile shaderFile(fileName);
-  if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text))
+  if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
     return;
+  }
 
   QString source(shaderFile.readAll());
 
-  if (!source.isEmpty())
+  if (!source.isEmpty()) {
     emit gotShader(source);
+  }
 }

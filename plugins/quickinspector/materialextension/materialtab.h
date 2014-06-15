@@ -38,22 +38,22 @@ class PropertyWidget;
 class MaterialTab : public QWidget
 {
   Q_OBJECT
-public:
-  explicit MaterialTab(PropertyWidget *parent);
-  virtual ~MaterialTab();
+  public:
+    explicit MaterialTab(PropertyWidget *parent);
+    virtual ~MaterialTab();
 
-private:
-  void setObjectBaseName(const QString &baseName);
+  private:
+    void setObjectBaseName(const QString &baseName);
 
-private slots:
-  void setShaders(const QStringList &shaderSources);
-  void onShaderSelected(QListWidgetItem *item);
-  void showShader(const QString &shaderSource);
+  private slots:
+    void setShaders(const QStringList &shaderSources);
+    void onShaderSelected(QListWidgetItem *item);
+    void showShader(const QString &shaderSource);
 
-private:
-  Ui_MaterialTab *m_ui;
-  MaterialExtensionInterface *m_interface;
-  QStringList m_shaderSources;
+  private:
+    Ui_MaterialTab *m_ui;
+    MaterialExtensionInterface *m_interface;
+    QStringList m_shaderSources;
 };
 
 }

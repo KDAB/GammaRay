@@ -41,44 +41,45 @@ namespace GammaRay {
 /** QQ2 scene graph model. */
 class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
 {
-    Q_OBJECT
-public:
+  Q_OBJECT
+  public:
     explicit QuickSceneGraphModel(QObject *parent = 0);
     ~QuickSceneGraphModel();
 
-    void setWindow(QQuickWindow* window);
+    void setWindow(QQuickWindow *window);
 
-    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex& parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const Q_DECL_OVERRIDE;
     QModelIndex indexForNode(QSGNode *node) const;
     QSGNode *sgNodeForItem(QQuickItem *item) const;
     QQuickItem *itemForSgNode(QSGNode *node) const;
     bool verifyNodeValidity(QSGNode *node);
 
-signals:
+  signals:
     void nodeDeleted(QSGNode *node);
 
-private slots:
-  void updateSGTree();
+  private slots:
+    void updateSGTree();
 
-private:
-  void clear();
-  void populateFromNode(QSGNode *node);
-  void collectItemNodes(QQuickItem *item);
-  bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
+  private:
+    void clear();
+    void populateFromNode(QSGNode *node);
+    void collectItemNodes(QQuickItem *item);
+    bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
 
-  QPointer<QQuickWindow> m_window;
+    QPointer<QQuickWindow> m_window;
 
-  QSGNode *m_rootNode;
-  QHash<QSGNode*, QSGNode*> m_childParentMap;
-  QHash<QSGNode*, QVector<QSGNode*> > m_parentChildMap;
-  QHash<QSGNode*, QSGNode*> m_oldChildParentMap;
-  QHash<QSGNode*, QVector<QSGNode*> > m_oldParentChildMap;
-  QHash<QQuickItem*, QSGNode*> m_itemItemNodeMap;
-  QHash<QSGNode*, QQuickItem*> m_itemNodeItemMap;
+    QSGNode *m_rootNode;
+    QHash<QSGNode*, QSGNode*> m_childParentMap;
+    QHash<QSGNode*, QVector<QSGNode*> > m_parentChildMap;
+    QHash<QSGNode*, QSGNode*> m_oldChildParentMap;
+    QHash<QSGNode*, QVector<QSGNode*> > m_oldParentChildMap;
+    QHash<QQuickItem*, QSGNode*> m_itemItemNodeMap;
+    QHash<QSGNode*, QQuickItem*> m_itemNodeItemMap;
 };
+
 }
 
 #endif // GAMMARAY_QUICKSCENEGRAPHMODEL_H

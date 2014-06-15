@@ -27,15 +27,13 @@
 using namespace GammaRay;
 
 SGGeometryExtensionInterface::SGGeometryExtensionInterface(const QString &name, QObject *parent)
-  : QObject(parent)
-  , m_name(name)
+  : QObject(parent), m_name(name)
 {
   ObjectBroker::registerObject(name, this);
 }
 
 SGGeometryExtensionInterface::~SGGeometryExtensionInterface()
 {
-
 }
 
 const QString &SGGeometryExtensionInterface::name() const

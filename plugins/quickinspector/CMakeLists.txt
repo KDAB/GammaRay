@@ -28,8 +28,10 @@ if(Qt5Quick_FOUND AND Qt5Quick_PRIVATE_INCLUDE_DIRS AND NOT ${Qt5Quick_VERSION} 
     geometryextension/sggeometrymodel.cpp
   )
 
-
-  gammaray_add_plugin(gammaray_quickinspector gammaray_quickinspector.desktop ${gammaray_quickinspector_srcs})
+  gammaray_add_plugin(gammaray_quickinspector
+    gammaray_quickinspector.desktop
+    ${gammaray_quickinspector_srcs}
+  )
 
   target_link_libraries(gammaray_quickinspector
     gammaray_quickinspector_shared
@@ -51,7 +53,10 @@ if(Qt5Quick_FOUND AND Qt5Quick_PRIVATE_INCLUDE_DIRS AND NOT ${Qt5Quick_VERSION} 
     geometryextension/sggeometrytab.cpp
     geometryextension/sgwireframewidget.cpp
   )
-  qt4_add_resources(gammaray_quickinspector_ui_srcs resources/quickinspector.qrc)
+
+  qt4_add_resources(gammaray_quickinspector_ui_srcs
+    resources/quickinspector.qrc
+  )
 
   qt4_wrap_ui(gammaray_quickinspector_ui_srcs
     quickinspectorwidget.ui
@@ -71,4 +76,8 @@ if(Qt5Quick_FOUND AND Qt5Quick_PRIVATE_INCLUDE_DIRS AND NOT ${Qt5Quick_VERSION} 
   )
 endif()
 
-add_feature_info("QtQuick 2 inspector" HAVE_QUICK_INSPECTOR "Requires private Qt headers and Qt >= 5.2.0 to be available.")
+add_feature_info(
+  "QtQuick 2 inspector"
+  HAVE_QUICK_INSPECTOR
+  "Requires private Qt headers and Qt >= 5.2.0 to be available."
+)

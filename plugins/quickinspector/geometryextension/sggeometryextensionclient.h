@@ -32,6 +32,7 @@ class SGGeometryExtensionClient : public SGGeometryExtensionInterface
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::SGGeometryExtensionInterface)
+
   public:
     explicit SGGeometryExtensionClient(const QString &name, QObject *parent = 0);
     virtual ~SGGeometryExtensionClient();

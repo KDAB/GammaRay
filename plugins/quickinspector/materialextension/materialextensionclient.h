@@ -32,6 +32,7 @@ class MaterialExtensionClient : public MaterialExtensionInterface
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::MaterialExtensionInterface)
+
   public:
     explicit MaterialExtensionClient(const QString &name, QObject *parent = 0);
     virtual ~MaterialExtensionClient();

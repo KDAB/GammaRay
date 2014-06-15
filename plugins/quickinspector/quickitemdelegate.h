@@ -24,29 +24,32 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKITEMDELEGATE_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKITEMDELEGATE_H
 
-#include <QStyledItemDelegate>
 #include <QModelIndex>
+#include <QStyledItemDelegate>
 
 class QTreeView;
+
 namespace GammaRay {
 
 class QuickItemDelegate : public QStyledItemDelegate
 {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    explicit QuickItemDelegate(QTreeView* view);
+  public:
+    explicit QuickItemDelegate(QTreeView *view);
 
-public Q_SLOTS:
-    void setTextColor(const QVariant& textColor);
+  public Q_SLOTS:
+    void setTextColor(const QVariant &textColor);
 
-protected:
-    void paint( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+  protected:
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const;
+
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-private:
-  QHash<QModelIndex, QColor> m_colors;
-  QTreeView *m_view;
+  private:
+    QHash<QModelIndex, QColor> m_colors;
+    QTreeView *m_view;
 };
 
 }

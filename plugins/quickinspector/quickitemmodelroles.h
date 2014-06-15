@@ -33,6 +33,7 @@ namespace QuickItemModelRole {
   enum Roles {
     ItemFlags = ObjectModel::UserRole
   };
+
   enum ItemFlag {
     None = 0,
     Invisible = 1,
@@ -43,6 +44,7 @@ namespace QuickItemModelRole {
     JustRecievedEvent = 32
   };
 }
+
 }
 
 Q_DECLARE_METATYPE(GammaRay::QuickItemModelRole::ItemFlag)
