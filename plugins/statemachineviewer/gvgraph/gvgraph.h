@@ -112,7 +112,6 @@ class GVGraph
     GVC_t *_context;
     Agraph_t *_graph;
     QFont _font;
-    qreal _dpi;
 
     QString _name;
 
