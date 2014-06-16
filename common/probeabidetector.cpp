@@ -84,8 +84,10 @@ static bool checkQtCorePrefix(const QByteArray &line, int index)
   if (index >= 3 && line.indexOf("lib", index - 3) == index - 3)
     return true;
 
-  if (line.at(index - 1) >= 'a' && line.at(index - 1) <= 'z' || line.at(index - 1) >= 'A' && line.at(index - 1) <= 'Z')
+  if ((line.at(index - 1) >= 'a' && line.at(index - 1) <= 'z') ||
+      (line.at(index - 1) >= 'A' && line.at(index - 1) <= 'Z')) {
     return false;
+  }
 
   return true;
 }
