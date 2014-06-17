@@ -50,8 +50,8 @@ void OutboundConnectionsModel::setObject(QObject* object)
   m_object = object;
 
   if (!object) {
-    return;
     endResetModel();
+    return;
   }
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
