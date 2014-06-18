@@ -173,7 +173,8 @@ private:
   struct ObjectInfo
   {
     ObjectInfo()
-      : object(0)
+      : address(Protocol::InvalidObjectAddress)
+      , object(0)
       , receiver(0)
     {
     }
