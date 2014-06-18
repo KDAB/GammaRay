@@ -35,7 +35,7 @@
 using namespace GammaRay;
 
 ObjectDynamicPropertyModel::ObjectDynamicPropertyModel(QObject *parent)
-  : ObjectPropertyModel(parent)
+  : ObjectPropertyModel(parent), m_propertyCount(0)
 {
   connect(this, SIGNAL(modelReset()), SLOT(updatePropertyCount()));
 }
