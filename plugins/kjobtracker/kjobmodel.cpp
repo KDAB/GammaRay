@@ -26,7 +26,11 @@
 
 #include <KJob>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
+#else
+#include <QGuiApplication>
+#endif
 #include <QPalette>
 
 using namespace GammaRay;
@@ -66,11 +70,11 @@ QVariant KJobModel::data(const QModelIndex &index, int role) const
     switch (job.state) {
     case KJobInfo::Finished:
     case KJobInfo::Deleted:
-      return QApplication::palette().brush(QPalette::Disabled, QPalette::Foreground);
+      return qApp->palette().brush(QPalette::Disabled, QPalette::Foreground);
     case KJobInfo::Error:
       return QVariant::fromValue<QColor>(Qt::red);
     case KJobInfo::Killed:
-      return QApplication::palette().link();
+      return qApp->palette().link();
     default:
       return QVariant();
     }
