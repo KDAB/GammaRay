@@ -252,7 +252,7 @@ QModelIndex StateModel::index(int row, int column, const QModelIndex &parent) co
     return QModelIndex();
   }
 
-  QObject *internalPointer = reinterpret_cast<QObject*>(parent.internalPointer());
+  QObject *internalPointer = 0;
   if (!parent.isValid()) {
     internalPointer = d->m_stateMachine;
   } else {
