@@ -40,7 +40,7 @@ Q_DECLARE_METATYPE(QVector<float>)
 Q_DECLARE_METATYPE(QVector<double>)
 
 GammaRay::SGGeometryModel::SGGeometryModel(QObject *parent)
-  : QAbstractTableModel(parent), m_geometry(0)
+  : QAbstractTableModel(parent), m_geometry(0), m_node(0)
 {
 }
 
