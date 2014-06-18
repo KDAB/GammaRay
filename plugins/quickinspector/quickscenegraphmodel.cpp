@@ -37,7 +37,7 @@ Q_DECLARE_METATYPE(QSGNode*)
 using namespace GammaRay;
 
 QuickSceneGraphModel::QuickSceneGraphModel(QObject *parent)
-  : ObjectModelBase<QAbstractItemModel>(parent)
+  : ObjectModelBase<QAbstractItemModel>(parent), m_rootNode(0)
 {
 }
 
