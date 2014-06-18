@@ -355,6 +355,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
       painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
       return p;
     }
+    break;
   }
   case QVariant::Color:
   {
@@ -366,6 +367,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
       painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
       return p;
     }
+    break;
   }
 #ifndef QT_NO_CURSOR
   case QVariant::Cursor:
@@ -374,6 +376,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
     if (!c.pixmap().isNull()) {
       return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
     }
+    break;
   }
 #endif
   case QVariant::Icon:
@@ -392,6 +395,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
       painter.drawLine(0, 0, p.width(), 0);
       return p;
     }
+    break;
   }
   case QVariant::Pixmap:
   {
@@ -399,6 +403,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
     if(!p.isNull()) {
       return QVariant::fromValue(p.scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation));
     }
+    break;
   }
   default: break;
   }
