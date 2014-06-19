@@ -31,6 +31,15 @@ using namespace GammaRay;
 AnnotatedScenePreview::AnnotatedScenePreview(QQuickItem *parent)
   : QQuickPaintedItem(parent),
     m_zoom(1),
+    m_leftMargin(0),
+    m_horizonalCenterOffset(0),
+    m_rightMargin(0),
+    m_topMargin(0),
+    m_verticalCenterOffset(0),
+    m_bottomMargin(0),
+    m_baselineOffset(0),
+    m_x(0),
+    m_y(0),
     m_annotate(true)
 {
 }
