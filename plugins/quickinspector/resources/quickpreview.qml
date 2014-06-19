@@ -111,7 +111,7 @@ Image {
 
         onClicked: {
           if (renderModeGroup.oldCurrent == clippingButton)
-            checked = false;
+            renderModeGroup.current = null;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeClipping : QuickInspectorInterface.NormalRendering);
           renderModeGroup.oldCurrent = renderModeGroup.current;
         }
@@ -136,7 +136,7 @@ Image {
 
         onClicked: {
           if (renderModeGroup.oldCurrent == overdrawButton)
-            checked = false;
+            renderModeGroup.current = null;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeOverdraw : QuickInspectorInterface.NormalRendering);
           renderModeGroup.oldCurrent = renderModeGroup.current;
         }
@@ -164,7 +164,7 @@ Image {
 
         onClicked:  {
           if (renderModeGroup.oldCurrent == batchesButton)
-            checked = false;
+            renderModeGroup.current = null;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeBatches : QuickInspectorInterface.NormalRendering);
           renderModeGroup.oldCurrent = renderModeGroup.current;
         }
@@ -187,7 +187,7 @@ Image {
 
         onClicked: {
           if (renderModeGroup.oldCurrent == changesButton)
-            checked = false;
+            renderModeGroup.current = null;
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeChanges : QuickInspectorInterface.NormalRendering);
           renderModeGroup.oldCurrent = renderModeGroup.current;
         }
