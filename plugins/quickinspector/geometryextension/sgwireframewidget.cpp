@@ -51,7 +51,10 @@ SGWireframeWidget::~SGWireframeWidget()
 
 void SGWireframeWidget::paintEvent(QPaintEvent *)
 {
-  if (!m_model || m_vertices.isEmpty() || m_positionColumn == -1) {
+  if (!m_model || m_vertices.isEmpty() || m_positionColumn == -1
+      || !(m_indexType == GL_UNSIGNED_INT
+           || m_indexType == GL_UNSIGNED_SHORT
+           || m_indexType == GL_UNSIGNED_BYTE)) {
     return;
   }
 
