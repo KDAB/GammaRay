@@ -67,9 +67,9 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
   painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
 
   // Paint
-  int prevIndex1;
-  int prevIndex2;
-  int prevIndex3;
+  int prevIndex1 = -1; // Magic value: The initial value should never used, we set it for
+  int prevIndex2 = -1; // detection only, just in case something goes terribly wrong.
+  int prevIndex3 = -1;
   int firstIndex;
 
   // Calculate the size of one VBO index
