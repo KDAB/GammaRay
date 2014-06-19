@@ -36,6 +36,7 @@ SGWireframeWidget::SGWireframeWidget(QWidget *parent, Qt::WindowFlags f)
     m_model(0),
     m_positionColumn(-1),
     m_drawingMode(0),
+    m_indexType(0),
     m_highlightModel(0),
     m_geometryWidth(0),
     m_geometryHeight(0),
