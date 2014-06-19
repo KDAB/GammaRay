@@ -99,7 +99,7 @@ Image {
         exclusiveGroup: renderModeGroup
         checkable: true
 
-        iconSource: "qrc:///gammaray/plugins/quickinspector/transform-crop.png"
+        iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-clipping.png"
         tooltip: "Visualize Clipping"
 
         onClicked: {
@@ -116,7 +116,7 @@ Image {
         exclusiveGroup: renderModeGroup
         checkable: true
 
-        iconSource: "qrc:///gammaray/plugins/quickinspector/object-order-lower.png"
+        iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-overdraw.png"
         tooltip: "Visualize Overdraw"
 
         onClicked: {
@@ -133,7 +133,7 @@ Image {
         exclusiveGroup: renderModeGroup
         checkable: true
 
-        iconSource: "qrc:///gammaray/plugins/quickinspector/object-group.png"
+        iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-batches.png"
         tooltip: "Visualize Batches"
 
         onClicked:  {
@@ -150,7 +150,7 @@ Image {
         exclusiveGroup: renderModeGroup
         checkable: true
 
-        iconSource: "qrc:///gammaray/plugins/quickinspector/transform-rotate.png"
+        iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-changes.png"
         tooltip: "Visualize Changes"
 
         onClicked: {
