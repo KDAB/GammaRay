@@ -87,14 +87,14 @@ Image {
         checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-clipping.png"
-        tooltip: "<b>Visualize Clipping</b><br/>"
+        tooltip: qsTr("<b>Visualize Clipping</b><br/>"
                + "Items with the property <i>clip</i> set to true, will cut off their and their "
                + "children's rendering at the items' bounds. While this is a handy feature it "
                + "comes with quite some cost, like disabling some performance optimizations.<br/>"
                + "With this tool enabled the QtQuick renderer highlights items, that have clipping "
                + "enabled, so you can check for items, that have clipping enabled unnecessarily. "
                + "<br/><br/><i>Note: The visualization happens on the application, not in the "
-               + "GammaRay preview panel.</i>"
+               + "GammaRay preview panel.</i>")
 
         onClicked: {
           if (renderModeGroup.oldCurrent == clippingButton)
@@ -111,7 +111,7 @@ Image {
         checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-overdraw.png"
-        tooltip: "<b>Visualize Overdraw</b><br/>"
+        tooltip: qsTr("<b>Visualize Overdraw</b><br/>"
                + "The QtQuick renderer doesn't detect if an item is obscured by another "
                + "opaque item, is completely outside the scene or outside a clipped ancestor and "
                + "thus doesn't need to be rendered. You thus need to take care of setting "
@@ -119,7 +119,7 @@ Image {
                + "With this tool enabled the QtQuick renderer draws a 3D-Box visualizing the "
                + "layers of items that are drawn."
                + "<br/><br/><i>Note: The visualization happens on the application, not in the "
-               + "GammaRay preview panel.</i>"
+               + "GammaRay preview panel.</i>")
 
         onClicked: {
           if (renderModeGroup.oldCurrent == overdrawButton)
@@ -136,7 +136,7 @@ Image {
         checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-batches.png"
-        tooltip: "<b>Visualize Batches</b><br/>"
+        tooltip: qsTr("<b>Visualize Batches</b><br/>"
                + "Where a traditional 2D API, such as QPainter, Cairo or Context2D, is written to "
                + "handle thousands of individual draw calls per frame, OpenGL is a pure hardware "
                + "API and performs best when the number of draw calls is very low and state "
@@ -147,7 +147,7 @@ Image {
                + "renderer visualizes those batches, by drawing all items that are batched using "
                + "the same color. The fewer colors you see in this mode the better."
                + "<br/><br/><i>Note: The visualization happens on the application, not in the "
-               + "GammaRay preview panel.</i>"
+               + "GammaRay preview panel.</i>")
 
         onClicked:  {
           if (renderModeGroup.oldCurrent == batchesButton)
@@ -164,13 +164,13 @@ Image {
         checkable: true
 
         iconSource: "qrc:///gammaray/plugins/quickinspector/visualize-changes.png"
-        tooltip: "<b>Visualize Changes</b><br>"
+        tooltip: qsTr("<b>Visualize Changes</b><br>"
                + "The QtQuick scene is only repainted, if some item changes in a visual manner. "
                + "Unnecessary repaints can have a bad impact on the performance. With this tool "
                + "enabled, the QtQuick renderer will thus on each repaint highlight the item(s), "
                + "that caused the repaint."
                + "<br/><br/><i>Note: The visualization happens on the application, not in the "
-               + "GammaRay preview panel.</i>"
+               + "GammaRay preview panel.</i>")
 
         onClicked: {
           if (renderModeGroup.oldCurrent == changesButton)
