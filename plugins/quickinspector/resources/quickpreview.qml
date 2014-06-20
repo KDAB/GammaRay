@@ -30,8 +30,6 @@ Image {
   id: root
   source: "image://quicksceneprovider/background"
   fillMode: Image.Tile
-  property real oldWidth: 0
-  property real oldHeight: 0
   property variant previewData: {}
   property bool isFirstFrame: true
   property bool supportsCustomRenderModes: true
@@ -43,17 +41,6 @@ Image {
   }
   Keys.onReleased: { // event-forwarding
     inspectorInterface.sendKeyEvent(7, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
-  }
-
-  onWidthChanged: {
-    // Make scene preview stay centered when resizing
-    sceneFlickable.contentX -= (width - oldWidth) / 2;
-    oldWidth = width;
-  }
-  onHeightChanged: {
-    // Make scene preview stay centered when resizing
-    sceneFlickable.contentY -= (height - oldHeight) / 2;
-    oldHeight = height;
   }
 
   Component {
@@ -221,7 +208,7 @@ Image {
       id: image
       anchors.centerIn: parent
       previewData: root.previewData
-      margin: Qt.size(root.width, root.height)
+      margin { width: root.width; height: root.height }
       annotate: renderModeGroup.current === null
 
       onPreviewDataChanged: {

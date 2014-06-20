@@ -305,6 +305,9 @@ QSize AnnotatedScenePreview::margin() const
 void AnnotatedScenePreview::setMargin(QSize margin)
 {
   m_margin = margin;
+  setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
+  setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
+  emit marginChanged();
 }
 
 bool AnnotatedScenePreview::annotate() const
