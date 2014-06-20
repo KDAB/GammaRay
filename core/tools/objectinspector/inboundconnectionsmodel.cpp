@@ -81,7 +81,7 @@ void InboundConnectionsModel::setObject(QObject* object)
   QObjectPrivate *d = QObjectPrivate::get(object);
   if (d->senders) {
     for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
-      if (s->sender && Probe::instance()->filterObject(s->sender))
+      if (!s->sender || Probe::instance()->filterObject(s->sender))
         continue;
 
       Connection conn;
