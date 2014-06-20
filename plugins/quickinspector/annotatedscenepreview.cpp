@@ -39,8 +39,7 @@ AnnotatedScenePreview::AnnotatedScenePreview(QQuickItem *parent)
     m_bottomMargin(0),
     m_baselineOffset(0),
     m_x(0),
-    m_y(0),
-    m_annotate(true)
+    m_y(0)
 {
 }
 
@@ -59,10 +58,6 @@ void AnnotatedScenePreview::paint(QPainter *p)
   p->fillRect(QRect(QPoint(0, 0), m_image.size() * m_zoom), Qt::white);
   p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom),
                m_image.transformed(QTransform::fromScale(1, -1)));
-
-  if (!m_annotate) {
-    return;
-  }
 
   // bounding box
   p->setPen(QColor(232, 87, 82, 170));
@@ -307,16 +302,5 @@ void AnnotatedScenePreview::setMargin(QSize margin)
   m_margin = margin;
   setImplicitHeight(m_zoom * m_image.height() + m_margin.height());
   setImplicitWidth(m_zoom * m_image.width() + m_margin.width());
-  emit marginChanged();
-}
-
-bool AnnotatedScenePreview::annotate() const
-{
-  return m_annotate;
-}
-
-void AnnotatedScenePreview::setAnnotate(bool annotate)
-{
-  m_annotate = annotate;
   emit marginChanged();
 }

@@ -209,7 +209,6 @@ Image {
       anchors.centerIn: parent
       previewData: root.previewData
       margin { width: root.width; height: root.height }
-      annotate: renderModeGroup.current === null
 
       onPreviewDataChanged: {
         // Align image to center

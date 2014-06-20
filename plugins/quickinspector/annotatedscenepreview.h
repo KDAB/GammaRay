@@ -37,7 +37,6 @@ class AnnotatedScenePreview : public QQuickPaintedItem
   Q_PROPERTY(qreal zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
   Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged)
   Q_PROPERTY(QSize margin READ margin WRITE setMargin NOTIFY marginChanged)
-  Q_PROPERTY(bool annotate READ annotate WRITE setAnnotate)
 
   public:
     explicit AnnotatedScenePreview(QQuickItem *parent = 0);
@@ -50,9 +49,6 @@ class AnnotatedScenePreview : public QQuickPaintedItem
 
     QSize margin() const;
     void setMargin(QSize margin);
-
-    bool annotate() const;
-    void setAnnotate(bool annotate);
 
   Q_SIGNALS:
     void zoomChanged();
@@ -73,7 +69,6 @@ class AnnotatedScenePreview : public QQuickPaintedItem
   private:
     QVariantMap m_previewData;
     QImage m_image;
-    bool m_annotate;
     QSize m_margin;
     qreal m_zoom;
     QRectF m_itemRect;
