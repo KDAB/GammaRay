@@ -220,9 +220,9 @@ void AnnotatedScenePreview::drawAnchor(QPainter *p, Qt::Orientation orientation,
   pen.setStyle(Qt::DotLine);
   p->setPen(pen);
   if (orientation == Qt::Horizontal) {
-    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, m_image.height());
+    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, m_image.height() * m_zoom);
   } else {
-    p->drawLine(0, foreignAnchorLine, m_image.width(), foreignAnchorLine);
+    p->drawLine(0, foreignAnchorLine, m_image.width() * m_zoom, foreignAnchorLine);
   }
 }
 
