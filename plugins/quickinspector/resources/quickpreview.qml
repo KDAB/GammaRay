@@ -299,8 +299,8 @@ Image {
             inspectorInterface.sendMouseEvent(5, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
           } else if (mouse.buttons !== 0 && mouse.modifiers == Qt.ControlModifier) {
             canvas.end = Qt.point(Math.round((mouse.x - image.margin.width / 2) / image.zoom) * image.zoom, Math.round((mouse.y - image.margin.height / 2) / image.zoom) * image.zoom);
-            overlayText.text = Math.floor(canvas.start.x / image.zoom) + ", " + Math.floor(canvas.start.y / image.zoom) + " - "
-                  + Math.floor(canvas.end.x / image.zoom) + ", " + Math.floor(canvas.end.y / image.zoom) + " -> "
+            overlayText.text = "(" + Math.floor(canvas.start.x / image.zoom) + ", " + Math.floor(canvas.start.y / image.zoom) + ") - ("
+                  + Math.floor(canvas.end.x / image.zoom) + ", " + Math.floor(canvas.end.y / image.zoom) + ") -> "
                   + (Math.sqrt( Math.pow(canvas.end.x - canvas.start.x, 2) + Math.pow(canvas.end.y - canvas.start.y, 2) ) / image.zoom).toFixed(3) + "px";
             canvas.requestPaint();
           } else {
