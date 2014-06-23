@@ -109,6 +109,7 @@ void dumpObject(QObject *obj)
     return;
   }
 
+  const std::ios::fmtflags oldFlags(cout.flags());
   do {
     cout << obj->metaObject()->className() << "(" << hex << obj << ")";
     obj = obj->parent();
@@ -117,6 +118,7 @@ void dumpObject(QObject *obj)
     }
   } while(obj);
   cout << endl;
+  cout.flags(oldFlags);
 }
 
 struct Listener
