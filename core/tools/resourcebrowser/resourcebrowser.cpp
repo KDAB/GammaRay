@@ -55,8 +55,12 @@ void ResourceBrowser::currentChanged(const QModelIndex &current)
       emit resourceSelected(QPixmap(fi.absoluteFilePath()));
     } else {
       QFile f(fi.absoluteFilePath());
-      f.open(QFile::ReadOnly | QFile::Text);
-      emit resourceSelected(f.readAll());
+      if (f.open(QFile::ReadOnly | QFile::Text)) {
+        emit resourceSelected(f.readAll());
+      } else {
+        qWarning() << "Failed to open" << fi.absoluteFilePath();
+        emit resourceDeselected();
+      }
     }
   } else {
     emit resourceDeselected();
