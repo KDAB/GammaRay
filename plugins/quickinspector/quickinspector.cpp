@@ -223,7 +223,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     m_source->setRecursive(true);
     m_source->setSourceItem(contentItem);
 
-    connect(window, &QQuickWindow::frameSwapped,
+    connect(window, &QQuickWindow::afterRendering,
             this, &QuickInspector::slotSceneChanged, Qt::DirectConnection);
 
     m_window->update();
