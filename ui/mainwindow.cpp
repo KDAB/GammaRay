@@ -21,17 +21,18 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray-version.h"
 #include "mainwindow.h"
+#include <config-gammaray-version.h>
+
 #include "ui_mainwindow.h"
 #include "aboutpluginsdialog.h"
 #include "aboutdialog.h"
 #include "clienttoolmodel.h"
 
-#include <common/objectbroker.h>
-#include <common/modelroles.h>
-#include <common/endpoint.h>
-#include <common/probecontrollerinterface.h>
+#include "common/objectbroker.h"
+#include "common/modelroles.h"
+#include "common/endpoint.h"
+#include "common/probecontrollerinterface.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -114,7 +115,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   proxyModel->setSourceModel(model);
   proxyModel->sort(0);
   ui->toolSelector->setModel(proxyModel);
-  QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(proxyModel);
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxyModel);
   ui->toolSelector->setSelectionModel(selectionModel);
   ui->toolSelector->resize(ui->toolSelector->minimumSize());
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -187,11 +188,11 @@ void MainWindow::aboutKDAB()
     tr("<qt><p>%1 is supported and maintained by KDAB</p>"
        "KDAB, the Qt experts, provide consulting and mentoring for developing "
        "Qt applications from scratch and in porting from all popular and legacy "
-       "frameworks to Qt. Our software products increase Qt productivity and our "
-       "Qt trainers have trained 50% of commercial Qt developers globally.</p>"
+       "frameworks to Qt. We continue to help develop parts of Qt and are one "
+       "of the major contributors to the Qt Project. We can give advanced or "
+       "standard trainings anywhere around the globe.</p>"
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
-       "to meet the people who write code like this. "
-       "We also offer Qt training courses."
+       "to meet the people who write code like this."
        "</p></qt>").arg(progName));
   dialog.setLogo(":gammaray/kdablogo160.png");
   dialog.setWindowIcon(QPixmap(":gammaray/kdablogo160.png"));
@@ -219,8 +220,9 @@ void MainWindow::toolSelected()
   ui->actionsMenu->clear();
   QModelIndexList list = ui->toolSelector->selectionModel()->selectedRows();
   int row = -1;
-  if (list.count())
+  if (list.count()) {
     row = list[0].row();
+  }
   if (row == -1) {
     return;
   }
@@ -254,7 +256,7 @@ void MainWindow::toolSelected()
   ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
 }
 
-QWidget* MainWindow::createErrorPage(const QModelIndex& index)
+QWidget *MainWindow::createErrorPage(const QModelIndex &index)
 {
   QLabel *page = new QLabel(this);
   page->setAlignment(Qt::AlignCenter);
