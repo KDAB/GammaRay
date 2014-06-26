@@ -79,12 +79,12 @@ public:
     };
 
     ResourceModelPrivate(ResourceModel *qq)
-        : resolveSymlinks(true),
+        : q_ptr(qq),
+          resolveSymlinks(true),
           readOnly(true),
           lazyChildCount(false),
           allowAppendChild(true),
-          shouldStat(true), // ### This is set to false by QFileDialog
-          q_ptr(qq)
+          shouldStat(true) // ### This is set to false by QFileDialog
     { }
 
     bool indexValid(const QModelIndex &index) const { return index.isValid(); }

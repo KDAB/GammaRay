@@ -41,10 +41,11 @@
 
 using namespace GammaRay;
 
-PropertiesTab::PropertiesTab(PropertyWidget *parent) : QWidget(parent),
-  m_ui(new Ui_PropertiesTab),
-  m_newPropertyValue(0),
-  m_interface(0)
+PropertiesTab::PropertiesTab(PropertyWidget *parent)
+ : QWidget(parent),
+   m_ui(new Ui_PropertiesTab),
+   m_interface(0),
+   m_newPropertyValue(0)
 {
   m_ui->setupUi(this);
 
@@ -95,9 +96,10 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
     ObjectBroker::object<PropertiesExtensionInterface*>(baseName + ".propertiesExtension");
 }
 
-static PropertyEditorFactory::TypeId selectedTypeId(QComboBox* box)
+static PropertyEditorFactory::TypeId selectedTypeId(QComboBox *box)
 {
-  return static_cast<PropertyEditorFactory::TypeId>(box->itemData(box->currentIndex(), Qt::UserRole).toInt());
+  return static_cast<PropertyEditorFactory::TypeId>(
+    box->itemData(box->currentIndex(), Qt::UserRole).toInt());
 }
 
 void PropertiesTab::updateNewPropertyValueEditor()
@@ -117,7 +119,7 @@ void PropertiesTab::validateNewProperty()
  m_ui->newPropertyButton->setEnabled(!m_ui->newPropertyName->text().isEmpty());
 }
 
-void PropertiesTab::propertyContextMenu(const QPoint& pos)
+void PropertiesTab::propertyContextMenu(const QPoint &pos)
 {
   const QModelIndex index = m_ui->propertyView->indexAt(pos);
   if (!index.isValid()) {
@@ -125,8 +127,9 @@ void PropertiesTab::propertyContextMenu(const QPoint& pos)
   }
 
   const int actions = index.data(PropertyModel::ActionRole).toInt();
-  if (actions == PropertyModel::NoAction)
+  if (actions == PropertyModel::NoAction) {
     return;
+  }
 
   // TODO: check if this is a dynamic property
   QMenu contextMenu;
@@ -139,7 +142,9 @@ void PropertiesTab::propertyContextMenu(const QPoint& pos)
     action->setData(PropertyModel::Reset);
   }
   if (actions & PropertyModel::NavigateTo) {
-    QAction *action = contextMenu.addAction(tr("Show in %1").arg(index.data(PropertyModel::AppropriateToolRole).toString()));
+    QAction *action =
+      contextMenu.addAction(tr("Show in %1").
+        arg(index.data(PropertyModel::AppropriateToolRole).toString()));
     action->setData(PropertyModel::NavigateTo);
   }
 
@@ -153,7 +158,8 @@ void PropertiesTab::propertyContextMenu(const QPoint& pos)
         m_interface->resetProperty(propertyName);
         break;
       case PropertyModel::NavigateTo:
-        QSortFilterProxyModel *proxy = qobject_cast<QSortFilterProxyModel*>(m_ui->propertyView->model());
+        QSortFilterProxyModel *proxy =
+          qobject_cast<QSortFilterProxyModel*>(m_ui->propertyView->model());
         QModelIndex sourceIndex = index;
         while (proxy) {
           sourceIndex = proxy->mapToSource(sourceIndex);

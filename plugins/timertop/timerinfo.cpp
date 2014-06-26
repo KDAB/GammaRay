@@ -33,17 +33,17 @@ static const int maxTimeSpan = 10000;
 
 TimerInfo::TimerInfo(QTimer *timer)
   : m_type(QTimerType),
+    m_totalWakeups(0),
     m_timer(timer),
     m_timerId(timer->timerId()),
-    m_totalWakeups(0),
     m_lastReceiver(0)
 {
 }
 
 TimerInfo::TimerInfo(int timerId)
   : m_type(QObjectType),
-    m_timerId(timerId),
-    m_totalWakeups(0)
+    m_totalWakeups(0),
+    m_timerId(timerId)
 {
 }
 

@@ -40,8 +40,8 @@ class StateModelPrivate
 {
   StateModelPrivate(StateModel *qq)
     : q_ptr(qq),
-      m_stateMachine(0),
-      m_stateMachineWatcher(new StateMachineWatcher(qq))
+      m_stateMachineWatcher(new StateMachineWatcher(qq)),
+      m_stateMachine(0)
   {
     Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
                          qq, SLOT(stateConfigurationChanged())));
@@ -121,14 +121,14 @@ void StateModelPrivate::stateConfigurationChanged()
 
   QSet<QAbstractState *> newConfig = m_stateMachine->configuration();
   // states which became active
-  foreach(QAbstractState *state, (newConfig - m_lastConfiguration)) {
+  foreach (QAbstractState *state, (newConfig - m_lastConfiguration)) {
     const QModelIndex source = indexForState(state);
     if (source.isValid()) {
       q->dataChanged(source, source);
     }
   }
   // states which became inactive
-  foreach(QAbstractState *state, (m_lastConfiguration - newConfig)) {
+  foreach (QAbstractState *state, (m_lastConfiguration - newConfig)) {
     const QModelIndex source = indexForState(state);
     if (source.isValid()) {
       q->dataChanged(source, source);
@@ -168,7 +168,8 @@ void StateModel::setStateMachine(QStateMachine *stateMachine)
   }
 
   if (d->m_stateMachine) {
-    disconnect(d->m_stateMachine, SIGNAL(destroyed(QObject*)), this, SLOT(handleMachineDestroyed(QObject*)));
+    disconnect(d->m_stateMachine, SIGNAL(destroyed(QObject*)),
+               this, SLOT(handleMachineDestroyed(QObject*)));
   }
 
   beginResetModel();
@@ -177,7 +178,8 @@ void StateModel::setStateMachine(QStateMachine *stateMachine)
   endResetModel();
 
   if (d->m_stateMachine) {
-    connect(d->m_stateMachine, SIGNAL(destroyed(QObject*)), this, SLOT(handleMachineDestroyed(QObject*)));
+    connect(d->m_stateMachine, SIGNAL(destroyed(QObject*)),
+            this, SLOT(handleMachineDestroyed(QObject*)));
   }
 
   d->m_stateMachineWatcher->setWatchedStateMachine(stateMachine);

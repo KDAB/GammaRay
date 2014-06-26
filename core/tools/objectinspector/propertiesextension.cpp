@@ -34,13 +34,13 @@
 
 using namespace GammaRay;
 
-PropertiesExtension::PropertiesExtension(PropertyController* controller) :
+PropertiesExtension::PropertiesExtension(PropertyController *controller) :
   PropertiesExtensionInterface(controller->objectBaseName() + ".propertiesExtension", controller),
   PropertyControllerExtension(controller->objectBaseName() + ".properties"),
-  m_aggregatedPropertyModel(new AggregatedPropertyModel(this)),
   m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
   m_dynamicPropertyModel(new ObjectDynamicPropertyModel(this)),
-  m_metaPropertyModel(new MetaPropertyModel(this))
+  m_metaPropertyModel(new MetaPropertyModel(this)),
+  m_aggregatedPropertyModel(new AggregatedPropertyModel(this))
 {
   controller->registerModel(m_aggregatedPropertyModel, "properties");
 
@@ -53,7 +53,7 @@ PropertiesExtension::~PropertiesExtension()
 {
 }
 
-bool PropertiesExtension::setQObject(QObject* object)
+bool PropertiesExtension::setQObject(QObject *object)
 {
   m_object = object;
   m_staticPropertyModel->setObject(object);
@@ -62,7 +62,7 @@ bool PropertiesExtension::setQObject(QObject* object)
   return true;
 }
 
-bool PropertiesExtension::setObject(void* object, const QString& typeName)
+bool PropertiesExtension::setObject(void *object, const QString &typeName)
 {
   m_object = 0;
   m_metaPropertyModel->setObject(object, typeName);
@@ -73,23 +73,27 @@ void PropertiesExtension::navigateToValue(int modelRow)
 {
   QModelIndex index = m_aggregatedPropertyModel->index(modelRow, 2);
   QVariant propertyValue = index.data(PropertyModel::ValueRole);
-  if (propertyValue.canConvert<QObject*>())
+  if (propertyValue.canConvert<QObject*>()) {
     Probe::instance()->selectObject(propertyValue.value<QObject*>());
-  else
-    Probe::instance()->selectObject(*reinterpret_cast<void**>(propertyValue.data()), index.data(Qt::DisplayRole).toString());
+  } else {
+    Probe::instance()->selectObject(*reinterpret_cast<void**>(propertyValue.data()),
+                                    index.data(Qt::DisplayRole).toString());
+  }
 }
 
-void PropertiesExtension::setProperty(const QString& name, const QVariant& value)
+void PropertiesExtension::setProperty(const QString &name, const QVariant &value)
 {
-  if (!m_object)
+  if (!m_object) {
     return;
+  }
   m_object->setProperty(name.toUtf8(), value);
 }
 
-void PropertiesExtension::resetProperty(const QString& name)
+void PropertiesExtension::resetProperty(const QString &name)
 {
-  if (!m_object || name.isEmpty())
+  if (!m_object || name.isEmpty()) {
     return;
+  }
 
   const int index = m_object->metaObject()->indexOfProperty(name.toUtf8());
   const QMetaProperty prop = m_object->metaObject()->property(index);

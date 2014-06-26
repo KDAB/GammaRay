@@ -36,8 +36,8 @@ class GVElement
     friend class GVGraph;
 
     explicit GVElement(const QString &name)
-      : m_name(name)
-      , m_font(QFont("Helvetica [Cronxy]", 6))
+      : m_font(QFont("Helvetica [Cronxy]", 6)),
+        m_name(name)
     {
     }
 
