@@ -73,7 +73,7 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     icons << index.data(Qt::DecorationRole).value<QPixmap>();
 
     if ((flags & QuickItemModelRole::OutOfView) && (~flags & QuickItemModelRole::Invisible)) {
-      icons << QIcon::fromTheme("dialog-warning").pixmap(16, 16);
+      icons << QIcon(":/gammaray/plugins/quickinspector/warning.png").pixmap(16, 16);
     }
 
     if (flags & QuickItemModelRole::HasActiveFocus) {
