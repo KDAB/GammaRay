@@ -255,8 +255,8 @@ void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,
     connect(colorAnimation, SIGNAL(valueChanged(QVariant)),
             ui->itemTreeView->itemDelegate(), SLOT(setTextColor(QVariant)));
 
-    colorAnimation->setStartValue(QColor(255, 0, 0));
-    colorAnimation->setEndValue(QColor(255, 0, 0, 0));
+    colorAnimation->setStartValue(QColor(129, 0, 129));
+    colorAnimation->setEndValue(QColor(129, 0, 129, 0));
     colorAnimation->setDuration(2000);
     colorAnimation->start(QAbstractAnimation::DeleteWhenStopped);
   }
