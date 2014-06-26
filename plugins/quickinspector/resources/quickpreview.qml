@@ -37,10 +37,25 @@ Image {
   focus: true
 
   Keys.onPressed: { // event-forwarding
-    inspectorInterface.sendKeyEvent(6, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
+    if (mouseToolGroup.current == moveModeButton && event.modifiers == Qt.ControlModifier) {
+      mouseToolGroup.current = measureModeButton;
+      mouseToolGroup.modifierDriven = true;
+    } else if (mouseToolGroup.current == moveModeButton && event.modifiers == Qt.ShiftModifier) {
+      mouseToolGroup.current = redirectInputModeButton;
+      mouseToolGroup.modifierDriven = true;
+    } else {
+      inspectorInterface.sendKeyEvent(6, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
+    }
   }
   Keys.onReleased: { // event-forwarding
-    inspectorInterface.sendKeyEvent(7, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
+    if (mouseToolGroup.modifierDriven == true && mouseToolGroup.current == measureModeButton && event.key == Qt.Key_Control
+        || mouseToolGroup.modifierDriven == true && mouseToolGroup.current == redirectInputModeButton && event.key == Qt.Key_Shift
+        || event.key == Qt.Key_Escape) {
+      mouseToolGroup.current = moveModeButton;
+      mouseToolGroup.modifierDriven = false;
+    } else {
+      inspectorInterface.sendKeyEvent(7, event.key, event.modifiers, event.text, event.isAutoRepeat, event.count);
+    }
   }
 
   Component {
@@ -77,6 +92,10 @@ Image {
       ExclusiveGroup {
         id: renderModeGroup
         property QtObject oldCurrent
+      }
+      ExclusiveGroup {
+        id: mouseToolGroup
+        property bool modifierDriven: false
       }
 
       ToolButton {
@@ -178,6 +197,52 @@ Image {
           inspectorInterface.setCustomRenderMode(checked ? QuickInspectorInterface.VisualizeChanges : QuickInspectorInterface.NormalRendering);
           renderModeGroup.oldCurrent = renderModeGroup.current;
         }
+      }
+
+      Item {
+        width: 5; height: parent.height - 4
+        anchors.verticalCenter: parent.verticalCenter
+
+        Rectangle {
+          width: 1; height: parent.height
+          anchors.horizontalCenter: parent.horizontalCenter
+          color: "grey"
+        }
+      }
+      ToolButton {
+        id: moveModeButton
+        height: 20
+        checkable: true
+        checked: true
+        exclusiveGroup: mouseToolGroup
+
+        iconSource: "qrc:///gammaray/plugins/quickinspector/move-preview.png"
+        tooltip: qsTr("<b>Move preview</b><br>"
+               + "Default mode. Click and drag to move the preview. Won't impact the original "
+               + "application in any way. ")
+      }
+      ToolButton {
+        id: measureModeButton
+        height: 20
+        checkable: true
+        exclusiveGroup: mouseToolGroup
+
+        iconSource: "qrc:///gammaray/plugins/quickinspector/measure-pixels.png"
+        tooltip: qsTr("<b>Measure pixel-sizes</b> (Ctrl)<br>"
+               + "Choose this mode, click somewhere and drag to measure the distance between the "
+               + "point you clicked and the point where your mouse pointer is. (Measured in scene "
+               + "coordinates).")
+      }
+      ToolButton {
+        id: redirectInputModeButton
+        height: 20
+        checkable: true
+        exclusiveGroup: mouseToolGroup
+
+        iconSource: "qrc:///gammaray/plugins/quickinspector/redirect-input.png"
+        tooltip: qsTr("<b>Redirect Input</b> (Shift)<br>"
+               + "In this mode all mouse input is redirected directly to the original application,"
+               + "so you can control the application directly from within GammaRay.")
       }
     }
   }
@@ -281,23 +346,26 @@ Image {
         onReleased: { // event-forwarding
           canvas.start = canvas.end = Qt.point(0,0);
           canvas.requestPaint();
-          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-            inspectorInterface.sendMouseEvent(3, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+          if (mouseToolGroup.current == redirectInputModeButton)
+            inspectorInterface.sendMouseEvent(3, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom),
+                                              mouse.button, mouse.buttons, mouseToolGroup.modifierDriven ? mouse.modifiers & ~Qt.ShiftModifier : mouse.modifiers);
           else
             mouse.accepted = false;
         }
-        onPressed: { // event-forwarding
-          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-            inspectorInterface.sendMouseEvent(2, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-          else if (mouse.modifiers == Qt.ControlModifier)
+        onPressed: { // event-forwarding / measure
+          if (mouseToolGroup.current == redirectInputModeButton)
+            inspectorInterface.sendMouseEvent(2, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom),
+                                              mouse.button, mouse.buttons, mouseToolGroup.modifierDriven ? mouse.modifiers & ~Qt.ShiftModifier : mouse.modifiers);
+          else if (mouseToolGroup.current == measureModeButton)
             canvas.start = Qt.point(Math.round((mouse.x - image.margin.width / 2) / image.zoom) * image.zoom, Math.round((mouse.y - image.margin.height / 2) / image.zoom) * image.zoom);
           else
             mouse.accepted = false;
         }
-        onPositionChanged: { // move image / event-forwarding
-          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier)) { // event-forwarding
-            inspectorInterface.sendMouseEvent(5, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
-          } else if (mouse.buttons !== 0 && mouse.modifiers == Qt.ControlModifier) {
+        onPositionChanged: { // event-forwarding / measure
+          if (mouseToolGroup.current == redirectInputModeButton) {
+            inspectorInterface.sendMouseEvent(5, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom),
+                                              mouse.button, mouse.buttons, mouseToolGroup.modifierDriven ? mouse.modifiers & ~Qt.ShiftModifier : mouse.modifiers);
+          } else if (pressed && mouseToolGroup.current == measureModeButton) {
             canvas.end = Qt.point(Math.round((mouse.x - image.margin.width / 2) / image.zoom) * image.zoom, Math.round((mouse.y - image.margin.height / 2) / image.zoom) * image.zoom);
             overlayText.text = "(" + Math.floor(canvas.start.x / image.zoom) + ", " + Math.floor(canvas.start.y / image.zoom) + ") - ("
                   + Math.floor(canvas.end.x / image.zoom) + ", " + Math.floor(canvas.end.y / image.zoom) + ") -> "
@@ -309,14 +377,16 @@ Image {
           }
         }
         onDoubleClicked: { // event-forwarding
-          if (mouse.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-            inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom), mouse.button, mouse.buttons, mouse.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+          if (mouseToolGroup.current == redirectInputModeButton)
+            inspectorInterface.sendMouseEvent(4, Qt.point((mouse.x - image.margin.width / 2) / image.zoom, (mouse.y - image.margin.height / 2) / image.zoom),
+                                              mouse.button, mouse.buttons, mouseToolGroup.modifierDriven ? mouse.modifiers & ~Qt.ShiftModifier : mouse.modifiers);
           else
             mouse.accepted = false;
         }
-        onWheel: { // event-forwarding
-          if (wheel.modifiers == (Qt.ControlModifier | Qt.ShiftModifier))
-            inspectorInterface.sendWheelEvent(Qt.point((wheel.x - image.margin.width / 2) / image.zoom, (wheel.y - image.margin.height / 2) / image.zoom), wheel.pixelDelta, wheel.angleDelta, wheel.buttons, wheel.modifiers & ~(Qt.ControlModifier | Qt.ShiftModifier));
+        onWheel: { // event-forwarding / zoom
+          if (mouseToolGroup.current == redirectInputModeButton)
+            inspectorInterface.sendWheelEvent(Qt.point((wheel.x - image.margin.width / 2) / image.zoom, (wheel.y - image.margin.height / 2) / image.zoom),
+                                              wheel.pixelDelta, wheel.angleDelta, wheel.buttons, mouseToolGroup.modifierDriven ? wheel.modifiers & ~Qt.ShiftModifier : wheel.modifiers);
           else if (wheel.angleDelta.y > 0) {
             var point = mapToItem(image, (wheel.x - image.margin.width / 2), (wheel.y - image.margin.height / 2));
             image.zoomIn(point.x, point.y);
