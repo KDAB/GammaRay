@@ -1,13 +1,28 @@
 Release Highlights
 ==================
 
+Version 2.1.0:
+-------------
+ * Aggregated property view combining static, dynamic and non-QObject property views.
+ * Qt5Qml/Qt5Quick support
+   (see http://github.com/KDAB/GammaRay/wiki/QtQuick2-Support-Status)
+ * Probe ABI auto-detection on Linux, Mac and Windows.
+ * Support to navigate to objects that are property values.
+ * Plug-ins can now add specialized tabs to the property view.
+ * Support adding and deleting dynamic QObject properties.
+ * Support for "hidden" plug-ins, i.e. plug-ins that only provide type support
+   but no own tool view.
+ * Support KF5 in the KJob tracker plug-in.
+ * Support for Qt 5.4 object creation/destruction callbacks.
+ * Improved connection view, and support for viewing connections in Qt5 applications.
+
 Version 2.0.2:
 -------------
  * Restore compatibility with Qt4.7
  * Avoid leaking shared-memory in case of crashes of gammaray-client
  * Fix various crashes
  * Fix various crashes with heavily multithreaded debuggees
- * Fix unecessary value limits in property editor for QPointF, QSizeF, etc
+ * Fix unnecessary value limits in property editor for QPointF, QSizeF, etc
  * Improve property editor value loading performance
 
 Version 2.0.1:
