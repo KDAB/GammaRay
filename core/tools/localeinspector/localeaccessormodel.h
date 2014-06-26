@@ -22,9 +22,10 @@
 #ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEACCESSORMODEL_H
 #define GAMMARAY_LOCALEINSPECTOR_LOCALEACCESSORMODEL_H
 
+#include "common/modelroles.h"
+
 #include <QAbstractTableModel>
 #include <QVector>
-#include <common/modelroles.h>
 
 namespace GammaRay {
 

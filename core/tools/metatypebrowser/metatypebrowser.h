@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_METATYPEBROWSER_H
-#define GAMMARAY_METATYPEBROWSER_H
+#ifndef GAMMARAY_METATYPEBROWSER_METATYPEBROWSER_H
+#define GAMMARAY_METATYPEBROWSER_METATYPEBROWSER_H
 
 #include "toolfactory.h"
 

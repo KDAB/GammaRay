@@ -21,11 +21,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ENUMSEXTENSION_H
-#define ENUMSEXTENSION_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_ENUMSEXTENSION_H
+#define GAMMARAY_OBJECTINSPECTOR_ENUMSEXTENSION_H
 
-#include <propertycontrollerextension.h>
-#include <QPointer>
+#include "propertycontrollerextension.h"
 
 namespace GammaRay {
 

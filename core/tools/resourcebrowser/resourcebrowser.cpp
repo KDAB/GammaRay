@@ -25,7 +25,7 @@
 #include "resourcefiltermodel.h"
 
 #include "qt/resourcemodel.h"
-#include <common/objectbroker.h>
+#include "common/objectbroker.h"
 
 #include <QDebug>
 #include <QItemSelectionModel>

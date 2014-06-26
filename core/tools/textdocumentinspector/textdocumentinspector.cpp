@@ -29,7 +29,7 @@
 #include "objecttypefilterproxymodel.h"
 #include "probeinterface.h"
 
-#include <common/objectbroker.h>
+#include "common/objectbroker.h"
 
 #include <QItemSelection>
 #include <QTextDocument>

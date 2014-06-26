@@ -26,8 +26,8 @@
 
 #include "backtrace.h"
 
-#include <common/objectbroker.h>
-#include <common/endpoint.h>
+#include "common/objectbroker.h"
+#include "common/endpoint.h"
 
 #include <QCoreApplication>
 #include <QDebug>

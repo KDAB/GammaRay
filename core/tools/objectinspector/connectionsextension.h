@@ -21,12 +21,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CONNECTIONSEXTENSION_H
-#define GAMMARAY_CONNECTIONSEXTENSION_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_CONNECTIONSEXTENSION_H
+#define GAMMARAY_OBJECTINSPECTOR_CONNECTIONSEXTENSION_H
 
-#include <common/tools/objectinspector/connectionsextensioninterface.h>
-
-#include <core/propertycontrollerextension.h>
+#include "common/tools/objectinspector/connectionsextensioninterface.h"
+#include "core/propertycontrollerextension.h"
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #define USE_QT_CONNECTIONS_LIST
@@ -38,15 +37,16 @@ class ConnectionFilterProxyModel;
 class InboundConnectionsModel;
 class OutboundConnectionsModel;
 
-class ConnectionsExtension : public ConnectionsExtensionInterface, public PropertyControllerExtension
+class ConnectionsExtension : public ConnectionsExtensionInterface,
+                             public PropertyControllerExtension
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
   public:
-    explicit ConnectionsExtension(PropertyController* controller);
+    explicit ConnectionsExtension(PropertyController *controller);
     ~ConnectionsExtension();
 
-    bool setQObject(QObject* object);
+    bool setQObject(QObject *object);
 
   public slots:
     void navigateToReceiver(int modelRow);

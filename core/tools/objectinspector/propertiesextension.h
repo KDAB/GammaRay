@@ -21,11 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROPERTIESEXTENSION_H
-#define PROPERTIESEXTENSION_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_PROPERTIESEXTENSION_H
+#define GAMMARAY_OBJECTINSPECTOR_PROPERTIESEXTENSION_H
 
 #include "common/tools/objectinspector/propertiesextensioninterface.h"
-#include <propertycontrollerextension.h>
+#include "core/propertycontrollerextension.h"
+
 #include <QPointer>
 
 namespace GammaRay {
@@ -47,14 +48,14 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
     ~PropertiesExtension();
 
     void navigateToValue(int modelRow);
-    void setProperty(const QString& name, const QVariant& value);
-    void resetProperty(const QString& name);
+    void setProperty(const QString &name, const QVariant &value);
+    void resetProperty(const QString &name);
 
     bool setObject(void *object, const QString &typeName);
     bool setQObject(QObject *object);
 
   private:
-   ObjectStaticPropertyModel *m_staticPropertyModel;
+    ObjectStaticPropertyModel *m_staticPropertyModel;
     ObjectDynamicPropertyModel *m_dynamicPropertyModel;
     MetaPropertyModel *m_metaPropertyModel;
 

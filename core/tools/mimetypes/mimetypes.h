@@ -21,16 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MIMETYPES_H
-#define GAMMARAY_MIMETYPES_H
+#ifndef GAMMARAY_MIMETYPES_MIMETYPES_H
+#define GAMMARAY_MIMETYPES_MIMETYPES_H
 
-#include <core/toolfactory.h>
-
-#include <QMimeData>
-#include <QMimeDatabase>
+#include "core/toolfactory.h"
 
 class QStandardItemModel;
-class QStandardItem;
 
 namespace GammaRay {
 

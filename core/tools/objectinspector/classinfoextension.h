@@ -21,11 +21,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLASSINFOEXTENSION_H
-#define CLASSINFOEXTENSION_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_CLASSINFOEXTENSION_H
+#define GAMMARAY_OBJECTINSPECTOR_CLASSINFOEXTENSION_H
 
-#include <propertycontrollerextension.h>
-#include <QPointer>
+#include "propertycontrollerextension.h"
 
 namespace GammaRay {
 

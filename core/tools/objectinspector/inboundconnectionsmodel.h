@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_INBOUNDCONNECTIONSMODEL_H
-#define GAMMARAY_INBOUNDCONNECTIONSMODEL_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_INBOUNDCONNECTIONSMODEL_H
+#define GAMMARAY_OBJECTINSPECTOR_INBOUNDCONNECTIONSMODEL_H
 
 #include "abstractconnectionsmodel.h"
 
@@ -31,14 +31,14 @@ namespace GammaRay {
 /** List of inbound connections on a given QObject. */
 class InboundConnectionsModel : public AbstractConnectionsModel
 {
-    Q_OBJECT
-public:
+  Q_OBJECT
+  public:
     explicit InboundConnectionsModel(QObject *parent = 0);
     ~InboundConnectionsModel();
 
     void setObject(QObject *object);
 
-    QVariant data(const QModelIndex& index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 };
 

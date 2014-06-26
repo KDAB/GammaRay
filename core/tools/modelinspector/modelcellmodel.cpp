@@ -23,9 +23,7 @@
 
 #include "modelcellmodel.h"
 
-#include <core/varianthandler.h>
-
-#include <QDebug>
+#include "core/varianthandler.h"
 
 using namespace GammaRay;
 

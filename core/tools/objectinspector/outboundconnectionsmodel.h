@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OUTBOUNDCONNECTIONMODEL_H
-#define GAMMARAY_OUTBOUNDCONNECTIONMODEL_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_OUTBOUNDCONNECTIONSMODEL_H
+#define GAMMARAY_OBJECTINSPECTOR_OUTBOUNDCONNECTIONSMODEL_H
 
 #include "abstractconnectionsmodel.h"
 
@@ -31,14 +31,15 @@ namespace GammaRay {
 /** Lists outgoing connections from a given QObject. */
 class OutboundConnectionsModel : public AbstractConnectionsModel
 {
-    Q_OBJECT
-public:
-    explicit OutboundConnectionsModel(QObject* parent = 0);
+  Q_OBJECT
+
+  public:
+    explicit OutboundConnectionsModel(QObject *parent = 0);
     ~OutboundConnectionsModel();
 
-    void setObject(QObject* object);
+    void setObject(QObject *object);
 
-    QVariant data(const QModelIndex& index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 };
 

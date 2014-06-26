@@ -24,9 +24,10 @@
 #ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTMODEL_H
 #define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTMODEL_H
 
+#include "common/modelroles.h"
+
 #include <QStandardItemModel>
 #include <QTextObject>
-#include <common/modelroles.h>
 
 class QTextTable;
 class QTextBlock;

@@ -21,11 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef METHODSEXTENSION_H
-#define METHODSEXTENSION_H
+#ifndef GAMMARAY_OBJECTINSPECTOR_METHODSEXTENSION_H
+#define GAMMARAY_OBJECTINSPECTOR_METHODSEXTENSION_H
 
 #include "common/tools/objectinspector/methodsextensioninterface.h"
-#include <propertycontrollerextension.h>
+#include "core/propertycontrollerextension.h"
+
 #include <QPointer>
 
 class QStandardItemModel;

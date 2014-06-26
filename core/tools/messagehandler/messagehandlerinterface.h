@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MESSAGEHANDLERINTERFACE_H
-#define GAMMARAY_MESSAGEHANDLERINTERFACE_H
+#ifndef GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLERINTERFACE_H
+#define GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLERINTERFACE_H
 
 #include <QObject>
 
@@ -38,7 +38,8 @@ class MessageHandlerInterface : public QObject
     virtual ~MessageHandlerInterface();
 
   signals:
-    void fatalMessageReceived(const QString &app, const QString &message, const QTime &time, const QStringList &backtrace);
+    void fatalMessageReceived(const QString &app, const QString &message,
+                              const QTime &time, const QStringList &backtrace);
 };
 
 }

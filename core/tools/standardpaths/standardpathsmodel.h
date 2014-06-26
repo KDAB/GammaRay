@@ -21,8 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_STANDARDPATHSMODEL_H
-#define GAMMARAY_STANDARDPATHSMODEL_H
+#ifndef GAMMARAY_STANDARDPATHS_STANDARDPATHSMODEL_H
+#define GAMMARAY_STANDARDPATHS_STANDARDPATHSMODEL_H
 
 #include <QAbstractItemModel>
 

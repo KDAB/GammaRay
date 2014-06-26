@@ -21,12 +21,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "outboundconnectionsmodel.h"
-
-#include <core/probe.h>
-
-#include <QDebug>
+#include "core/probe.h"
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>

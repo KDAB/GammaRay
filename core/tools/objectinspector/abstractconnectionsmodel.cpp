@@ -21,12 +21,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "abstractconnectionsmodel.h"
 
-#include <core/util.h>
-
-#include <common/tools/objectinspector/connectionsmodelroles.h>
+#include "common/tools/objectinspector/connectionsmodelroles.h"
+#include "core/util.h"
 
 #include <QMetaMethod>
 #include <QStringList>
@@ -38,7 +37,7 @@
 
 using namespace GammaRay;
 
-AbstractConnectionsModel::AbstractConnectionsModel(QObject* parent): QAbstractTableModel(parent)
+AbstractConnectionsModel::AbstractConnectionsModel(QObject *parent): QAbstractTableModel(parent)
 {
 }
 
@@ -46,16 +45,17 @@ AbstractConnectionsModel::~AbstractConnectionsModel()
 {
 }
 
-int AbstractConnectionsModel::columnCount(const QModelIndex& parent) const
+int AbstractConnectionsModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return 4;
 }
 
-int AbstractConnectionsModel::rowCount(const QModelIndex& parent) const
+int AbstractConnectionsModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
+  if (parent.isValid()) {
     return 0;
+  }
   return m_connections.size();
 }
 

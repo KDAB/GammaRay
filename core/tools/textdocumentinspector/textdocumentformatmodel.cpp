@@ -22,8 +22,7 @@
 */
 
 #include "textdocumentformatmodel.h"
-
-#include <core/varianthandler.h>
+#include "core/varianthandler.h"
 
 #include <QMetaEnum>
 #include <QMetaObject>

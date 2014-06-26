@@ -22,8 +22,7 @@
 */
 
 #include "messagehandlerinterface.h"
-
-#include <common/objectbroker.h>
+#include "common/objectbroker.h"
 
 using namespace GammaRay;
 

@@ -26,7 +26,7 @@
 
 #include "toolfactory.h"
 
-#include <common/modelinspectorinterface.h>
+#include "common/modelinspectorinterface.h"
 
 class QItemSelection;
 class QItemSelectionModel;

@@ -29,11 +29,9 @@
 
 #include "probeinterface.h"
 
-#include <common/objectbroker.h>
-#include <remote/remotemodelserver.h>
-#include <remote/selectionmodelserver.h>
-
-#include <QDebug>
+#include "common/objectbroker.h"
+#include "remote/remotemodelserver.h"
+#include "remote/selectionmodelserver.h"
 
 using namespace GammaRay;
 
