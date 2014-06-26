@@ -119,6 +119,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %files
 %defattr(-,root,root)
 %{_prefix}/share/applications/GammaRay.desktop
+%dir %{_prefix}/share/appdata/
 %{_prefix}/share/appdata/GammaRay.appdata.xml
 %{_prefix}/share/icons/hicolor
 %{_prefix}/share/doc/gammaray
