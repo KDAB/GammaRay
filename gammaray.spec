@@ -22,7 +22,7 @@ Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 %if %{defined suse_version}
 BuildRequires:  libqt4-devel libQtWebKit-devel cmake graphviz-devel update-desktop-files libkde4-devel
 %if 0%{?suse_version} >= 1220
-BuildRequires:  vtk-devel
+BuildRequires:  vtk-devel libxml2-devel
 %endif
 # missing dependency for VTK in openSUSE Factory
 %if 0%{?suse_version} > 1230
