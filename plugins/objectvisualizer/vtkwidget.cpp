@@ -345,8 +345,7 @@ bool VtkWidget::removeObjectInternal(qulonglong objectId)
 
   // Remove object from our map
   if (size > m_graph->GetNumberOfVertices()) {
-    const bool count = m_objectIdMap.remove(objectId);
-    Q_ASSERT(count == 1);
+    Q_ASSERT(m_objectIdMap.remove(objectId) == 1);
   } else {
     DEBUG("Warning: Should not happen: Could not remove vertice with id: " << type)
   }

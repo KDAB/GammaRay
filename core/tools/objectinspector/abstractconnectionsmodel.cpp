@@ -173,6 +173,8 @@ int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int sign
   return object->metaObject()->method(signalIndex + offset).methodIndex();
 #endif
 #else
+  Q_UNUSED(object);
+  Q_UNUSED(signalIndex);
   return -1;
 #endif
 }
