@@ -40,6 +40,9 @@ BuildRequires:  vtk-devel
 %if 0%{?fedora} >= 19
 BuildRequires:  java-1.8.0-openjdk
 %endif
+%if 0%{?fedora} >= 20
+BuildRequires:  libxml2-devel libfreetype-devel
+%endif
 # for pod2man
 %if 0%{?fedora} >= 19
 BuildRequires: perl-podlators
