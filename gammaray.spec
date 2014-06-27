@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        2.0.98
+Version:        2.1.0
 Release:        2
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -39,9 +39,6 @@ BuildRequires:  vtk-devel
 # dependency ambiguity for vtk-java needed by vtk-devel in Fedora >= 19
 %if 0%{?fedora} >= 19
 BuildRequires:  java-1.8.0-openjdk
-%endif
-%if 0%{?fedora} >= 20
-BuildRequires:  libxml2-devel libfreetype-devel
 %endif
 # for pod2man
 %if 0%{?fedora} >= 19
@@ -202,6 +199,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/cmake/GammaRay/
 
 %changelog
+* Fri Jun 27 2014 Allen Winter <allen.winter@kdab.com> 2.1.0
+  2.1.0 final
 * Thu Jun 26 2014 Allen Winter <allen.winter@kdab.com> 2.0.98
   2.1.0 release candidate 1
 * Fri Apr 18 2014 Allen Winter <allen.winter@kdab.com> 2.0.2
