@@ -39,7 +39,8 @@ LaunchPage::LaunchPage(QWidget *parent)
   : QWidget(parent),
     ui(new Ui::LaunchPage),
     m_argsModel(new QStringListModel(this)),
-    m_abiModel(new ProbeABIModel(this))
+    m_abiModel(new ProbeABIModel(this)),
+    m_abiIsValid(true)
 {
   ui->setupUi(this);
   connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
@@ -156,7 +157,7 @@ void LaunchPage::removeArgument()
 
 bool LaunchPage::isValid()
 {
-  if (ui->progEdit->text().isEmpty()) {
+  if (ui->progEdit->text().isEmpty() || !m_abiIsValid) {
     return false;
   }
 
@@ -182,5 +183,6 @@ void LaunchPage::detectABI(const QString &path)
   const int index = m_abiModel->indexOfBestMatchingABI(abi);
   if (index >= 0)
     ui->probeBox->setCurrentIndex(index);
-  // TODO show warning icon if we can't detect the ABI, or don't have a matching probe
+  m_abiIsValid = index >= 0;
+  emit updateButtonState();
 }

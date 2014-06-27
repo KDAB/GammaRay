@@ -68,6 +68,7 @@ class LaunchPage : public QWidget
     QStringListModel *m_argsModel;
     ProbeABIModel *m_abiModel;
     ProbeABIDetector m_abiDetector;
+    bool m_abiIsValid;
 };
 
 }
