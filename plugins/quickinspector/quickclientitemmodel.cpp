@@ -85,8 +85,8 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
           flagStrings << tr("is out of view");
         }
 
-        if (flags & QuickItemModelRole::HasFocus) {
-          flagStrings << tr("has focus");
+        if (flags & QuickItemModelRole::HasFocus && ~flags & QuickItemModelRole::HasActiveFocus) {
+          flagStrings << tr("has inactive focus");
         }
 
         if (flags & QuickItemModelRole::HasActiveFocus) {
