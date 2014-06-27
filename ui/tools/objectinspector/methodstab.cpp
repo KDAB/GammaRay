@@ -81,7 +81,7 @@ void MethodsTab::methodActivated(const QModelIndex &index)
 
   const QMetaMethod::MethodType methodType =
     index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
-  if (methodType == QMetaMethod::Slot) {
+  if (methodType == QMetaMethod::Slot || methodType == QMetaMethod::Method) {
     MethodInvocationDialog dlg(this);
     dlg.setArgumentModel(ObjectBroker::model(m_objectBaseName + '.' + "methodArguments"));
     if (dlg.exec()) {
@@ -100,10 +100,12 @@ void MethodsTab::methodContextMenu(const QPoint &pos)
   const QMetaMethod::MethodType methodType =
     index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
   QMenu contextMenu;
-  if (methodType == QMetaMethod::Slot) {
+  if (methodType == QMetaMethod::Slot || methodType == QMetaMethod::Method) {
     contextMenu.addAction(tr("Invoke"));
   } else if (methodType == QMetaMethod::Signal) {
     contextMenu.addAction(tr("Connect to"));
+  } else {
+    return; // Can't do any action, so don't try to show an empty context menu.
   }
 
   if (contextMenu.exec(m_ui->methodView->viewport()->mapToGlobal(pos))) {

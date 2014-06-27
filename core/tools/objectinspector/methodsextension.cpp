@@ -129,10 +129,10 @@ void MethodsExtension::invokeMethod(Qt::ConnectionType connectionType)
     method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
   }
 
-  if (method.methodType() != QMetaMethod::Slot) {
+  if (method.methodType() == QMetaMethod::Constructor) {
     m_methodLogModel->appendRow(
       new QStandardItem(
-        tr("%1: Invocation failed: Invalid method (not a slot?).").
+        tr("%1: Invocation failed: Can't invoke constructors.").
         arg(QTime::currentTime().toString("HH:mm:ss.zzz"))));
     return;
   }
