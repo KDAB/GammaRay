@@ -81,10 +81,12 @@ void AnnotatedScenePreview::paint(QPainter *p)
   }
 
   // transform origin
-  p->setPen(QColor(156, 15, 86, 170));
-  p->drawEllipse(m_transformOriginPoint, 2.5, 2.5);
-  p->drawLine(m_transformOriginPoint - QPointF(0, 6), m_transformOriginPoint + QPointF(0, 6));
-  p->drawLine(m_transformOriginPoint - QPointF(6, 0), m_transformOriginPoint + QPointF(6, 0));
+  if (m_itemRect != m_boundingRect) {
+    p->setPen(QColor(156, 15, 86, 170));
+    p->drawEllipse(m_transformOriginPoint, 2.5, 2.5);
+    p->drawLine(m_transformOriginPoint - QPointF(0, 6), m_transformOriginPoint + QPointF(0, 6));
+    p->drawLine(m_transformOriginPoint - QPointF(6, 0), m_transformOriginPoint + QPointF(6, 0));
+  }
 
   // x and y values
   p->setPen(QColor(136, 136, 136));
