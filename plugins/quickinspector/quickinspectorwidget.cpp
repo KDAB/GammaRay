@@ -160,7 +160,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
   qmlRegisterType<AnnotatedScenePreview>("com.kdab.GammaRay", 1, 0, "AnnotatedScenePreview");
 
-  QWidget::createWindowContainer(m_preview, ui->previewTreeSplitter);
+  QWidget *previewContainter = QWidget::createWindowContainer(m_preview, ui->previewTreeSplitter);
+  previewContainter->setFocusPolicy(Qt::StrongFocus);
   m_preview->setResizeMode(QQuickView::SizeRootObjectToView);
   m_preview->engine()->addImageProvider("quicksceneprovider", m_imageProvider);
   m_preview->setSource(QUrl("qrc:/gammaray/plugins/quickinspector/quickpreview.qml"));
