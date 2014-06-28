@@ -40,8 +40,8 @@ SGWireframeWidget::SGWireframeWidget(QWidget *parent, Qt::WindowFlags f)
     m_highlightModel(0),
     m_geometryWidth(0),
     m_geometryHeight(0),
-    m_offset(10, 10),
-    m_zoom(1)
+    m_zoom(1),
+    m_offset(10, 10)
 {
 }
 

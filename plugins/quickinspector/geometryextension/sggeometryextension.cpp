@@ -31,8 +31,8 @@
 using namespace GammaRay;
 
 SGGeometryExtension::SGGeometryExtension(PropertyController *controller)
-  : PropertyControllerExtension(controller->objectBaseName() + ".sgGeometry"),
-    SGGeometryExtensionInterface(controller->objectBaseName() + ".sgGeometry", controller),
+  : SGGeometryExtensionInterface(controller->objectBaseName() + ".sgGeometry", controller),
+    PropertyControllerExtension(controller->objectBaseName() + ".sgGeometry"),
     m_node(0),
     m_model(new SGGeometryModel(this))
 {
