@@ -557,7 +557,6 @@ void Probe::objectFullyConstructed(QObject *obj)
     connect(obj, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(objectParentChanged()));
   }
 
-  m_objectListModel->objectAdded(obj);
   m_metaObjectTreeModel->objectAdded(obj);
 
   m_toolModel->objectAdded(obj);
@@ -598,8 +597,6 @@ void Probe::objectRemoved(QObject *obj)
   }
 
   instance()->m_queuedObjects.removeOne(obj);
-
-  instance()->m_objectListModel->objectRemoved(obj);
 
   instance()->connectionRemoved(obj, 0, 0, 0);
   instance()->connectionRemoved(0, 0, obj, 0);
