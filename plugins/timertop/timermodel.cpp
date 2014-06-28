@@ -251,13 +251,6 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
 void TimerModel::setProbe(ProbeInterface *probe)
 {
   m_probe = probe;
-}
-
-void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
-{
-  Q_ASSERT(!m_sourceModel);
-  m_sourceModel = sourceModel;
-  qApp->installEventFilter(this);
 
   QSignalSpyCallbackSet callbacks;
   callbacks.slot_begin_callback = 0;
@@ -265,7 +258,14 @@ void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
   callbacks.signal_begin_callback = signal_begin_callback;
   callbacks.signal_end_callback = signal_end_callback;
 
-  qt_register_signal_spy_callbacks(callbacks);
+  probe->registerSignalSpyCallbackSet(callbacks);
+}
+
+void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
+{
+  Q_ASSERT(!m_sourceModel);
+  m_sourceModel = sourceModel;
+  qApp->installEventFilter(this);
 
   connect(m_sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
           this, SLOT(slotBeginInsertRows(QModelIndex,int,int)));

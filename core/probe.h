@@ -33,6 +33,8 @@
 #include <QSet>
 #include <QVector>
 
+#include <private/qobject_p.h> //krazy:exclude=camelcase
+
 class QItemSelectionModel;
 class QThread;
 class QPoint;
@@ -84,6 +86,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     /*override*/ void discoverObject(QObject* object);
     /*override*/ void selectObject(QObject* object, const QPoint& pos = QPoint());
     /*override*/ void selectObject(void* object, const QString& typeName);
+    /*override*/ void registerSignalSpyCallbackSet(const QSignalSpyCallbackSet& callbacks);
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -110,6 +113,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     /// internal
     static void startupHookReceived();
+    template <typename Func>  static void executeSignalCallback(const Func &func);
 
   signals:
     /**
@@ -157,6 +161,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;
     QVector<QObject*> m_globalEventFilters;
+    QVector<QSignalSpyCallbackSet> m_signalSpyCallbacks;
 };
 
 class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore

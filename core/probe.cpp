@@ -56,6 +56,7 @@
 #include <QThread>
 #include <QTimer>
 
+#include <algorithm>
 #include <iostream>
 #include <cstdio>
 
@@ -92,6 +93,40 @@ static bool probeDisconnectCallback(void ** args)
 }
 
 #endif // QT_VERSION
+
+
+static void signal_begin_callback(QObject *caller, int method_index, void **argv)
+{
+  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &set){
+    if (set.signal_begin_callback)
+      set.signal_begin_callback(caller, method_index, argv);
+  });
+}
+
+static void signal_end_callback(QObject *caller, int method_index)
+{
+  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &set){
+    if (set.signal_end_callback)
+      set.signal_end_callback(caller, method_index);
+  });
+}
+
+static void slot_begin_callback(QObject *caller, int method_index, void **argv)
+{
+  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &set){
+    if (set.slot_begin_callback)
+      set.slot_begin_callback(caller, method_index, argv);
+  });
+}
+
+static void slot_end_callback(QObject *caller, int method_index)
+{
+  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &set){
+    if (set.slot_end_callback)
+      set.slot_end_callback(caller, method_index);
+  });
+}
+
 
 static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
 {
@@ -201,6 +236,17 @@ Probe::Probe(QObject *parent):
   m_queueTimer->setInterval(0);
   connect(m_queueTimer, SIGNAL(timeout()),
           this, SLOT(queuedObjectsFullyConstructed()));
+
+  QSignalSpyCallbackSet callbacks;
+  callbacks.signal_begin_callback = signal_begin_callback;
+  callbacks.signal_end_callback = signal_end_callback;
+  callbacks.slot_begin_callback = slot_begin_callback;
+  callbacks.slot_end_callback = slot_end_callback;
+  if (qt_signal_spy_callback_set.signal_begin_callback || qt_signal_spy_callback_set.signal_end_callback ||
+      qt_signal_spy_callback_set.slot_begin_callback || qt_signal_spy_callback_set.slot_end_callback) {
+    m_signalSpyCallbacks.push_back(qt_signal_spy_callback_set); // daisy-chain existing callbacks
+  }
+  qt_register_signal_spy_callbacks(callbacks);
 }
 
 Probe::~Probe()
@@ -758,6 +804,18 @@ void Probe::selectObject(void* object, const QString& typeName)
   m_toolSelectionModel->select( m_toolModel->toolForObject(object, typeName), QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
+
+void Probe::registerSignalSpyCallbackSet(const QSignalSpyCallbackSet& callbacks)
+{
+  m_signalSpyCallbacks.push_back(callbacks);
+}
+
+template <typename Func>
+void Probe::executeSignalCallback(const Func& func)
+{
+  std::for_each(instance()->m_signalSpyCallbacks.constBegin(), instance()->m_signalSpyCallbacks.constEnd(), func);
+}
+
 
 //BEGIN: SignalSlotsLocationStore
 

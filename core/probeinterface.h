@@ -38,6 +38,7 @@
 class QObject;
 class QAbstractItemModel;
 class QString;
+struct QSignalSpyCallbackSet;
 
 namespace GammaRay {
 
@@ -142,6 +143,13 @@ class ProbeInterface
      * @since 2.1
      */
     virtual void selectObject(void* object, const QString& typeName) = 0;
+
+    /**
+     * Register a signal spy callback set.
+     *
+     * @since 2.2
+     */
+    virtual void registerSignalSpyCallbackSet(const QSignalSpyCallbackSet &callbacks) = 0;
 };
 
 }
