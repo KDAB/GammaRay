@@ -24,13 +24,8 @@
 
 project(GammaRay)
 
-if(WIN32)
-  # needed for automoc and QtMain to work correctly
-  cmake_minimum_required(VERSION 2.8.11)
-  cmake_policy(SET CMP0020 NEW)
-else()
-  cmake_minimum_required(VERSION 2.8.9)
-endif()
+cmake_minimum_required(VERSION 2.8.11)
+cmake_policy(SET CMP0020 NEW)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 set(CMAKE_AUTOMOC ON)
