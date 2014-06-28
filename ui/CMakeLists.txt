@@ -80,6 +80,8 @@ set(gammaray_ui_internal_srcs
   tools/resourcebrowser/clientresourcemodel.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp
+  tools/signalmonitor/signalhistorydelegate.cpp
+  tools/signalmonitor/signalmonitorwidget.cpp
   tools/standardpaths/standardpathswidget.cpp
   tools/textdocumentinspector/textdocumentinspectorwidget.cpp
   tools/textdocumentinspector/textdocumentcontentview.cpp
@@ -110,6 +112,7 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/objectinspector/classinfotab.ui
   tools/objectinspector/methodstab.ui
   tools/resourcebrowser/resourcebrowserwidget.ui
+  tools/signalmonitor/signalmonitorwidget.ui
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )

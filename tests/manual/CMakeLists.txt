@@ -51,6 +51,16 @@ if(Qt5WebKit_FOUND)
   target_link_libraries(wk2application Qt5::Quick)
 endif()
 
+add_executable(signalmonitortest signalmonitortest.cpp)
+
+target_link_libraries(signalmonitortest
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  gammaray_ui
+  gammaray_core
+  gammaray_common
+)
+
 if(QNXNTO)
   target_link_libraries(propertywidgettest cpp)
   target_link_libraries(messagemodeltest cpp)

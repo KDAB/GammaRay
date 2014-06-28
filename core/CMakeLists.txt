@@ -60,6 +60,8 @@ set(gammaray_srcs
   tools/objectinspector/classinfoextension.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
+  tools/signalmonitor/signalhistorymodel.cpp
+  tools/signalmonitor/signalmonitor.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
 
   remote/server.cpp

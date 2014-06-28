@@ -34,6 +34,7 @@
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
 #include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
+#include <ui/tools/signalmonitor/signalmonitorwidget.h>
 
 #include <common/modelroles.h>
 #include <common/pluginmanager.h>
@@ -65,6 +66,7 @@ MAKE_FACTORY(ModelInspector, true);
 MAKE_FACTORY(ResourceBrowser, true);
 MAKE_FACTORY(StandardPaths, true);
 MAKE_FACTORY(TextDocumentInspector, false);
+MAKE_FACTORY(SignalMonitor, true);
 
 ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent)
 {
@@ -79,6 +81,7 @@ ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent
   insertFactory(new ResourceBrowserFactory);
   insertFactory(new StandardPathsFactory);
   insertFactory(new TextDocumentInspectorFactory);
+  insertFactory(new SignalMonitorFactory);
 
   PluginManager<ToolUiFactory, ProxyToolUiFactory> pm;
   foreach(ToolUiFactory* factory, pm.plugins())
