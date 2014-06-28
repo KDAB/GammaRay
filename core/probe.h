@@ -162,6 +162,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QTimer *m_queueTimer;
     QVector<QObject*> m_globalEventFilters;
     QVector<QSignalSpyCallbackSet> m_signalSpyCallbacks;
+    QSignalSpyCallbackSet m_previousSignalSpyCallbackSet;
 };
 
 class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore

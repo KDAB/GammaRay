@@ -242,6 +242,7 @@ Probe::Probe(QObject *parent):
   callbacks.signal_end_callback = signal_end_callback;
   callbacks.slot_begin_callback = slot_begin_callback;
   callbacks.slot_end_callback = slot_end_callback;
+  m_previousSignalSpyCallbackSet = qt_signal_spy_callback_set;
   if (qt_signal_spy_callback_set.signal_begin_callback || qt_signal_spy_callback_set.signal_end_callback ||
       qt_signal_spy_callback_set.slot_begin_callback || qt_signal_spy_callback_set.slot_end_callback) {
     m_signalSpyCallbacks.push_back(qt_signal_spy_callback_set); // daisy-chain existing callbacks
@@ -252,6 +253,8 @@ Probe::Probe(QObject *parent):
 Probe::~Probe()
 {
   IF_DEBUG(cerr << "detaching GammaRay probe" << endl;)
+
+  qt_register_signal_spy_callbacks(m_previousSignalSpyCallbackSet);
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   QInternal::unregisterCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
