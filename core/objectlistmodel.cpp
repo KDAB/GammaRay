@@ -23,10 +23,10 @@
 
 #include "objectlistmodel.h"
 
+#include "probe.h"
 #include "readorwritelocker.h"
 
 #include <QThread>
-#include "probe.h"
 
 #include <algorithm>
 #include <iostream>
@@ -34,17 +34,21 @@
 using namespace GammaRay;
 using namespace std;
 
-ObjectListModel::ObjectListModel(QObject *parent)
-  : ObjectModelBase< QAbstractTableModel >(parent)
+ObjectListModel::ObjectListModel(Probe *probe)
+  : ObjectModelBase< QAbstractTableModel >(probe)
 {
+  connect(probe, SIGNAL(objectCreated(QObject*)),
+          this, SLOT(objectAdded(QObject*)));
+  connect(probe, SIGNAL(objectDestroyed(QObject*)),
+          this, SLOT(objectRemoved(QObject*)));
 }
 
 QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
-  QMutexLocker lock(&m_mutex);
+  ReadOrWriteLocker lock(Probe::instance()->objectLock());
   if (index.row() >= 0 && index.row() < m_objects.size()) {
     QObject *obj = m_objects.at(index.row());
-    if (!m_invalidatedObjects.contains(obj)) {
+    if (Probe::instance()->isValidObject(obj)) {
       return dataForObject(obj, index, role);
     }
   }
@@ -70,30 +74,12 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
 
 void ObjectListModel::objectAdded(QObject *obj)
 {
-  // when called from background, delay into foreground, otherwise call directly
-  if (thread() != QThread::currentThread()) {
-    {
-      // revalidate data
-      QMutexLocker lock(&m_mutex);
-      m_invalidatedObjects.remove(obj);
-    }
-    QMetaObject::invokeMethod(this, "objectAddedMainThread", Qt::QueuedConnection,
-                              Q_ARG(QObject*, obj));
-  } else {
-    objectAddedMainThread(obj);
-  }
-}
-
-void ObjectListModel::objectAddedMainThread(QObject *obj)
-{
-  {
-    QMutexLocker lock(&m_mutex);
-    if (m_invalidatedObjects.contains(obj)) {
-      return;
-    }
-  }
-
+  Q_ASSERT(QThread::currentThread() == thread());
   Q_ASSERT(obj);
+
+  ReadOrWriteLocker lock(Probe::instance()->objectLock());
+  if (!Probe::instance()->isValidObject(obj))
+    return;
 
   QVector<QObject*>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
   Q_ASSERT(it == m_objects.end() || *it != obj);
@@ -109,44 +95,7 @@ void ObjectListModel::objectAddedMainThread(QObject *obj)
 
 void ObjectListModel::objectRemoved(QObject *obj)
 {
-  // when called from background, delay into foreground, otherwise call directly
-  if (thread() != QThread::currentThread()) {
-    {
-      // invalidate data
-      QMutexLocker lock(&m_mutex);
-      m_invalidatedObjects.insert(obj);
-    }
-    QMetaObject::invokeMethod(this, "objectRemovedMainThread", Qt::QueuedConnection,
-                              Q_ARG(QObject*, obj), Q_ARG(bool, true));
-  } else {
-    objectRemovedMainThread(obj, false);
-  }
-}
-
-void ObjectListModel::objectRemovedMainThread(QObject *obj, bool fromBackground)
-{
   Q_ASSERT(thread() == QThread::currentThread());
-
-  {
-    QMutexLocker lock(&m_mutex);
-    bool removed = m_invalidatedObjects.remove(obj);
-
-#ifndef NDEBUG
-    if (fromBackground) {
-      if (!removed) {
-        Q_ASSERT(!m_objects.contains(obj));
-        return;
-      }
-    }
-#else
-    Q_UNUSED(fromBackground);
-    Q_UNUSED(removed);
-#endif
-  }
-
-  if (m_objects.isEmpty()) {
-    return;
-  }
 
   QVector<QObject*>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
   if (it == m_objects.end() || *it != obj) {

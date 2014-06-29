@@ -38,19 +38,35 @@ static QTextStream cerr(stdout);
 
 using namespace GammaRay;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+typedef QtMsgHandler MessageHandlerCallback;
+static MessageHandlerCallback (*installMessageHandler)(MessageHandlerCallback) = qInstallMsgHandler;
+#else
+typedef QtMessageHandler MessageHandlerCallback;
+static MessageHandlerCallback (*installMessageHandler)(MessageHandlerCallback) = qInstallMessageHandler;
+#endif
+
 static MessageModel *s_model = 0;
-static QtMsgHandler s_handler = 0;
+static MessageHandlerCallback s_handler = 0;
 static bool s_handlerDisabled = false;
 static QMutex s_mutex(QMutex::Recursive);
 
-void handleMessage(QtMsgType type, const char *msg)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+static void handleMessage(QtMsgType type, const char *rawMsg)
+#else
+static void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+#endif
 {
   ///WARNING: do not trigger *any* kind of debug output here
   ///         this would trigger an infinite loop and hence crash!
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  const QString msg = QString::fromLocal8Bit(rawMsg);
+#endif
+
   DebugMessage message;
   message.type = type;
-  message.message = QString::fromLocal8Bit(msg);
+  message.message = msg;
   message.time = QTime::currentTime();
 
   if (type == QtCriticalMsg || type == QtFatalMsg || type == QtWarningMsg) {
@@ -94,14 +110,21 @@ void handleMessage(QtMsgType type, const char *msg)
   // handler during that time
   QMutexLocker lock(&s_mutex);
   s_handlerDisabled = true;
-  qInstallMsgHandler(s_handler);
-#if (QT_VERSION >= QT_VERSION_CHECK(5,0,0))
-  static QMessageLogContext context;
-  qt_message_output(type, context, msg);
+  if (s_handler) { // try a direct call to the previous handler first, that avoids triggering the recursion detection in Qt5
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    s_handler(type, context, msg);
 #else
-  qt_message_output(type, msg);
+    s_handler(type, rawMsg);
 #endif
-  qInstallMsgHandler(handleMessage);
+  } else {
+    installMessageHandler(s_handler);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    qt_message_output(type, context, msg);
+#else
+    qt_message_output(type, rawMsg);
+#endif
+    installMessageHandler(handleMessage);
+  }
   s_handlerDisabled = false;
   lock.unlock();
 
@@ -136,10 +159,10 @@ MessageHandler::~MessageHandler()
   QMutexLocker lock(&s_mutex);
 
   s_model = 0;
-  QtMsgHandler oldHandler = qInstallMsgHandler(s_handler);
+  MessageHandlerCallback oldHandler = installMessageHandler(s_handler);
   if (oldHandler != handleMessage) {
     // ups, the app installed it's own handler after ours...
-    qInstallMsgHandler(oldHandler);
+    installMessageHandler(oldHandler);
   }
   s_handler = 0;
 }
@@ -152,7 +175,7 @@ void MessageHandler::ensureHandlerInstalled()
     return;
   }
 
-  QtMsgHandler prevHandler = qInstallMsgHandler(handleMessage);
+  MessageHandlerCallback prevHandler = installMessageHandler(handleMessage);
 
   if (prevHandler != handleMessage) {
     s_handler = prevHandler;

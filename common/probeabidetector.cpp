@@ -111,7 +111,7 @@ static bool checkQtCoreSuffix(const QByteArray &line, int index)
      ++index;
 
   // "Core" must not be followed by another part of the name, so we don't trigger on eg. "QtCoreAddon"
-  if (index < line.size() && (line.at(index) >= 'a' && line.at(index) <= 'z' || line.at(index) >= 'A' && line.at(index) <= 'Z'))
+  if (index < line.size() && ((line.at(index) >= 'a' && line.at(index) <= 'z') || (line.at(index) >= 'A' && line.at(index) <= 'Z')))
     return false;
 
   return true;

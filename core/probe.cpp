@@ -593,9 +593,12 @@ void Probe::objectFullyConstructed(QObject *obj)
 
   IF_DEBUG(cout << "fully constructed: " << hex << obj << endl;)
 
-  // ensure we know the parent already
-  if (obj->parent() && !m_validObjects.contains(obj->parent())) {
-    objectAdded(obj->parent());
+  // ensure we know all our ancestors already
+  for (QObject *parent = obj->parent(); parent; parent = parent->parent()) {
+    if (!m_validObjects.contains(parent)) {
+      objectAdded(parent); // will also handle any further ancestors
+      break;
+    }
   }
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
 
@@ -606,7 +609,6 @@ void Probe::objectFullyConstructed(QObject *obj)
     connect(obj, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(objectParentChanged()));
   }
 
-  m_objectListModel->objectAdded(obj);
   m_metaObjectTreeModel->objectAdded(obj);
 
   m_toolModel->objectAdded(obj);
@@ -647,8 +649,6 @@ void Probe::objectRemoved(QObject *obj)
   }
 
   instance()->m_queuedObjects.removeOne(obj);
-
-  instance()->m_objectListModel->objectRemoved(obj);
 
   instance()->connectionRemoved(obj, 0, 0, 0);
   instance()->connectionRemoved(0, 0, obj, 0);

@@ -32,6 +32,8 @@
 
 namespace GammaRay {
 
+class Probe;
+
 /**
  * NOTE: Making the model itself threadsafe works in theory,
  * but as soon as we put a proxymodel on top everything breaks.
@@ -47,26 +49,20 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
 {
   Q_OBJECT
   public:
-    explicit ObjectListModel(QObject *parent = 0);
+    explicit ObjectListModel(Probe *probe);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
+  private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
-
-  private slots:
-    void objectAddedMainThread(QObject *obj);
-    void objectRemovedMainThread(QObject *obj, bool fromBackground);
 
   private:
     void removeObject(QObject *obj);
 
     // sorted vector for stable iterators/indexes, esp. for the model methods
     QVector<QObject*> m_objects;
-
-    mutable QMutex m_mutex;
-    QSet<QObject*> m_invalidatedObjects;
 };
 
 }

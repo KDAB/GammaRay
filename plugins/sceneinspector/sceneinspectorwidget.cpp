@@ -107,6 +107,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
   if (selection->currentIndex().isValid()) {
     sceneSelected(selection->currentIndex().row());
+  } else if (ui->sceneComboBox->currentIndex() >= 0) { // no server-side selection yet, but there's data available
+    sceneSelected(ui->sceneComboBox->currentIndex());
   }
 
   // limit fps to prevent bad performance, and to group update requests which is esp. required

@@ -43,8 +43,8 @@ class SGMaterialShaderThief : public QSGMaterialShader
 };
 
 MaterialExtension::MaterialExtension(PropertyController *controller)
-  : PropertyControllerExtension(controller->objectBaseName() + ".material"),
-    MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
+  : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
+    PropertyControllerExtension(controller->objectBaseName() + ".material"),
     m_node(0)
 {
 }

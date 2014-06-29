@@ -50,24 +50,9 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
           this, SLOT(objectReparented(QObject*)));
 }
 
-static QObject *parentObject(QObject *obj)
+static inline QObject *parentObject(QObject *obj)
 {
-  if (obj->parent()) {
-    return obj->parent();
-  }
-
-  // FIXME: this is still valid, but way too unstable since we miss reparentings
-  // so for now rather live with the wrong hierarchy than crashes/asserts
-#if 0
-  // QQuickItem does very ugly things with its parent, so we have to try harder to get hold of it...
-  if (obj->inherits("QQuickItem")) {
-    QObject *p = obj->property("parent").value<QObject*>();
-    if (Probe::instance()->isValidObject(p))
-      return p;
-  }
-#endif
-
-  return 0;
+  return  obj->parent();
 }
 
 void ObjectTreeModel::objectAdded(QObject *obj)
