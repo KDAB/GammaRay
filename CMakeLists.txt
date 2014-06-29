@@ -163,7 +163,6 @@ if(Qt5Core_FOUND)
   find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Concurrent
     Designer
-    Location # workaround for 5.1 webkit that tries to find a qtlocation with a matching version if none (with any version) has been found before...
     PrintSupport
     Qml
     Quick
