@@ -195,6 +195,16 @@ QVariant SignalHistoryModel::headerData(int section, Qt::Orientation orientation
   return QVariant();
 }
 
+QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex& index) const
+{
+  QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
+  d.insert(ItemTypeNameRole, data(index, ItemTypeNameRole));
+  d.insert(EventsRole, data(index, EventsRole));
+  d.insert(StartTimeRole, data(index, StartTimeRole));
+  d.insert(EndTimeRole, data(index, EndTimeRole));
+  return d;
+}
+
 void SignalHistoryModel::onRowsInserted(const QModelIndex &otherParent, int first, int last)
 {
   beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size() + last - first);
