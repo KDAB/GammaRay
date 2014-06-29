@@ -56,9 +56,6 @@ add_executable(signalmonitortest signalmonitortest.cpp)
 target_link_libraries(signalmonitortest
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
-  gammaray_ui
-  gammaray_core
-  gammaray_common
 )
 
 if(QNXNTO)
