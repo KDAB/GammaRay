@@ -118,7 +118,36 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     void objectSelected(QObject *object, const QPoint &pos);
     void nonQObjectSelected(void *object, const QString &typeName);
 
+    /**
+     * Emitted for newly created QObjects.
+     *
+     * Note:
+     * - This signal is always emitted from the thread the probe exists in.
+     * - The signal is emitted delayed enough for the QObject to have been fully constructed,
+     *   i.e. on the next event loop re-entry.
+     * - The signal is not emitted if the object has been destroyed completely again meanwhile,
+     *   e.g. for objects that only existed on the stack.
+     * - For objects created and destroyed in other threads, this signal might be emitted after
+     *   its dtor has been entered (in case of short-lived objects), but before it has been finished.
+     *   At this point the dtor might have already emitted the destroyed() signal and informed smart
+     *   pointers about the destruction. This means you must not rely on any of this for object lifetime
+     *   tracking for objects from other threads. Use objectDestroyed() instead.
+     * - Do not put @p obj into a QWeakPointer, even if it's exclusively handled in the same thread as
+     *   the Probe instance. Qt4 asserts if target code tries to put @p obj into a QSharedPointer afterwards.
+     */
     void objectCreated(QObject *obj);
+
+    /**
+     * Emitted for destroyed objects.
+     *
+     * Note:
+     * - This signal is emitted from the thread calling the dtor of @p obj, so make sure to use
+     *   the correct connection type when connecting to it.
+     * - The signal is emitted from the end of the QObject dtor, dereferencing @p obj is no longer
+     *   safe at this point.
+     * - When using a queued connection on this signal (relevant for e.g. models), see isValidObject()
+     *   for a way to check if the object has not yet been deleted when accessing it.
+     */
     void objectDestroyed(QObject *obj);
     void objectReparented(QObject *obj);
 
