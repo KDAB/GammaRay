@@ -24,8 +24,8 @@
 #include "signalmonitorwidget.h"
 #include "ui_signalmonitorwidget.h"
 #include "signalhistorydelegate.h"
+#include "signalhistorymodel.h"
 
-#include <core/tools/signalmonitor/signalhistorymodel.h>
 #include <common/objectbroker.h>
 #include <kde/krecursivefilterproxymodel.h>
 
@@ -105,3 +105,6 @@ void SignalMonitorWidget::eventDelegateIsActiveChanged(bool active)
   ui->pauseButton->setChecked(not active);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(SignalMonitorUiFactory)
+#endif

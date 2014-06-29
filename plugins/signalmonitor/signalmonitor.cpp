@@ -1,5 +1,5 @@
 /*
-  signalmonitorwidget.h
+  signalmonitor.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,35 +21,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SIGNALMONITORWIDGET_H
-#define GAMMARAY_SIGNALMONITORWIDGET_H
+#include "signalmonitor.h"
+#include "signalhistorymodel.h"
 
-#include <QWidget>
+using namespace GammaRay;
 
-namespace GammaRay {
-
-namespace Ui {
-  class SignalMonitorWidget;
+SignalMonitor::SignalMonitor(ProbeInterface *probe, QObject *parent)
+  : QObject(parent)
+{
+  SignalHistoryModel *model = new SignalHistoryModel(probe, this);
+  probe->registerModel("com.kdab.GammaRay.SignalHistoryModel", model);
 }
 
-class SignalMonitorWidget : public QWidget
+SignalMonitor::~SignalMonitor()
 {
-  Q_OBJECT
-  public:
-    explicit SignalMonitorWidget(QWidget *parent = 0);
-    ~SignalMonitorWidget();
+}
 
-  private slots:
-    void intervalScaleValueChanged(int value);
-    void adjustEventScrollBarSize();
-    void pauseAndResume(bool pause);
-    void eventDelegateIsActiveChanged(bool active);
-
-  private:
-    static const QString ITEM_TYPE_NAME_OBJECT;
-    QScopedPointer<Ui::SignalMonitorWidget> ui;
-};
-
-} // namespace GammaRay
-
-#endif // GAMMARAY_SIGNALMONITORWIDGET_H
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(SignalMonitorFactory)
+#endif

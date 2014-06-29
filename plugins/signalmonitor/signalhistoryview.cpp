@@ -23,8 +23,8 @@
 
 #include "signalhistoryview.h"
 #include "signalhistorydelegate.h"
+#include "signalhistorymodel.h"
 
-#include <core/tools/signalmonitor/signalhistorymodel.h>
 #include <ui/deferredresizemodesetter.h>
 
 #include <QHelpEvent>

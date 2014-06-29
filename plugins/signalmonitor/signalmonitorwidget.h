@@ -1,5 +1,5 @@
 /*
-  signalmonitor.h
+  signalmonitorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,36 +21,44 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SIGNALMONITOR_H
-#define GAMMARAY_SIGNALMONITOR_H
+#ifndef GAMMARAY_SIGNALMONITORWIDGET_H
+#define GAMMARAY_SIGNALMONITORWIDGET_H
 
-#include <core/toolfactory.h>
+#include "ui/tooluifactory.h"
+
+#include <QWidget>
 
 namespace GammaRay {
 
-class SignalMonitor : public QObject
+namespace Ui {
+  class SignalMonitorWidget;
+}
+
+class SignalMonitorWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit SignalMonitor(ProbeInterface *probe, QObject *parent = 0);
-    ~SignalMonitor();
+    explicit SignalMonitorWidget(QWidget *parent = 0);
+    ~SignalMonitorWidget();
+
+  private slots:
+    void intervalScaleValueChanged(int value);
+    void adjustEventScrollBarSize();
+    void pauseAndResume(bool pause);
+    void eventDelegateIsActiveChanged(bool active);
+
+  private:
+    static const QString ITEM_TYPE_NAME_OBJECT;
+    QScopedPointer<Ui::SignalMonitorWidget> ui;
 };
 
-class SignalMonitorFactory : public QObject, public StandardToolFactory<QObject, SignalMonitor>
+class SignalMonitorUiFactory : public QObject, public StandardToolUiFactory<SignalMonitorWidget>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit SignalMonitorFactory(QObject *parent) : QObject(parent)
-    {
-    }
-
-    virtual inline QString name() const
-    {
-      return tr("Signals");
-    }
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SignalMonitorUi")
 };
 
 } // namespace GammaRay
 
-#endif // GAMMARAY_SIGNALMONITOR_H
+#endif // GAMMARAY_SIGNALMONITORWIDGET_H

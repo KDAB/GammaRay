@@ -22,9 +22,8 @@
 */
 
 #include "signalhistorydelegate.h"
-
-#include <core/relativeclock.h>
-#include <core/tools/signalmonitor/signalhistorymodel.h>
+#include "signalhistorymodel.h"
+#include "relativeclock.h"
 
 #include <QPainter>
 #include <QSortFilterProxyModel>

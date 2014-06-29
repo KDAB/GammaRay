@@ -120,7 +120,7 @@
   <customwidget>
    <class>GammaRay::SignalHistoryView</class>
    <extends>QTreeView</extends>
-   <header>ui/tools/signalmonitor/signalhistoryview.h</header>
+   <header>signalhistoryview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

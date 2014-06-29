@@ -22,10 +22,10 @@
 */
 
 #include "signalhistorymodel.h"
-
-#include "multisignalmapper.h"
-#include "probeinterface.h"
 #include "relativeclock.h"
+
+#include <core/multisignalmapper.h>
+#include <core/probeinterface.h>
 
 #include <QLocale>
 #include <QSet>

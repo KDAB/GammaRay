@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_MULTISIGNALMAPPER_H
 #define GAMMARAY_MULTISIGNALMAPPER_H
 
+#include "gammaray_core_export.h"
+
 #include <QObject>
 #include <QVariant>
 
@@ -34,7 +36,7 @@ class MultiSignalMapperPrivate;
 /**
  * A signal mapper that can deal with multiple signals from the same sender.
  */
-class MultiSignalMapper : public QObject
+class GAMMARAY_CORE_EXPORT MultiSignalMapper : public QObject
 {
   Q_OBJECT
   public:
