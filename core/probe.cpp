@@ -544,9 +544,12 @@ void Probe::objectFullyConstructed(QObject *obj)
 
   IF_DEBUG(cout << "fully constructed: " << hex << obj << endl;)
 
-  // ensure we know the parent already
-  if (obj->parent() && !m_validObjects.contains(obj->parent())) {
-    objectAdded(obj->parent());
+  // ensure we know all our ancestors already
+  for (QObject *parent = obj->parent(); parent; parent = parent->parent()) {
+    if (!m_validObjects.contains(parent)) {
+      objectAdded(parent); // will also handle any further ancestors
+      break;
+    }
   }
   Q_ASSERT(!obj->parent() || m_validObjects.contains(obj->parent()));
 
