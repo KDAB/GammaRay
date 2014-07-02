@@ -81,23 +81,14 @@ class ObjectModelBase : public Base
     {
       if (role == Qt::DisplayRole) {
         if (index.column() == 0) {
-          return
-            object->objectName().isEmpty() ?
-              Util::addressToString(object) :
-              object->objectName();
+          return Util::shortDisplayString(object);
         } else if (index.column() == 1) {
           return object->metaObject()->className();
         }
       } else if (role == ObjectModel::ObjectRole) {
         return QVariant::fromValue(object);
       } else if (role == Qt::ToolTipRole) {
-          return
-            QObject::tr("<p style='white-space:pre'>Object name: %1\nType: %2\nParent: %3 (Address: %4)\nNumber of children: %5</p>").
-              arg(object->objectName().isEmpty() ? "&lt;Not set&gt;" : object->objectName()).
-              arg(object->metaObject()->className()).
-              arg(object->parent() ? object->parent()->metaObject()->className() : "<No parent>").
-              arg(Util::addressToString(object->parent())).
-              arg(object->children().size());
+          return Util::tooltipForObject(object);
       } else if (role == Qt::DecorationRole && index.column() == 0) {
         return Util::iconForObject(object);
       }

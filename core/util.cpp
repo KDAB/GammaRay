@@ -61,6 +61,15 @@ QString Util::displayString(const QObject *object)
   return object->objectName();
 }
 
+QString Util::shortDisplayString(const QObject* object)
+{
+  if (!object)
+    return "0x0";
+  if (object->objectName().isEmpty())
+    return addressToString(object);
+  return object->objectName();
+}
+
 QString Util::addressToString(const void *p)
 {
   return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
@@ -222,6 +231,16 @@ QVariant Util::iconForObject(QObject *obj)
     return GammaRay::iconForObject(obj->metaObject(), obj);
   }
   return QVariant();
+}
+
+QString Util::tooltipForObject(QObject* object)
+{
+  return QObject::tr("<p style='white-space:pre'>Object name: %1\nType: %2\nParent: %3 (Address: %4)\nNumber of children: %5</p>").
+    arg(object->objectName().isEmpty() ? "&lt;Not set&gt;" : object->objectName()).
+    arg(object->metaObject()->className()).
+    arg(object->parent() ? object->parent()->metaObject()->className() : "<No parent>").
+    arg(Util::addressToString(object->parent())).
+    arg(object->children().size());
 }
 
 void Util::drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize)

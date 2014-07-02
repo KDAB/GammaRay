@@ -52,11 +52,19 @@ namespace Util {
 
   /**
    * Returns a human readable string name of the specified QObject.
-   * @param object is a pointer to a valid QObject.
+   * This does include the type name.
+   * @param object is a pointer to a valid or null QObject.
    *
    * @return a QString containing the human readable display string.
    */
   GAMMARAY_CORE_EXPORT QString displayString(const QObject *object);
+
+  /**
+   * Short display string for a QObject, either the object name or the address.
+   * This does not include the type name.
+   * @param object valid or 0 QObject
+   */
+  GAMMARAY_CORE_EXPORT QString shortDisplayString(const QObject *object);
 
   /**
    * Returns a string version (as a hex number starting with "0x") of the
@@ -117,6 +125,12 @@ namespace Util {
    * @return on failure QVariant() is returned; else a QIcon
    */
   GAMMARAY_CORE_EXPORT QVariant iconForObject(QObject *object);
+
+  /**
+   * Returns a suitable rich text tooltip string for @p object.
+   * @param object a pointer to a valid or null QObject.
+   */
+  GAMMARAY_CORE_EXPORT QString tooltipForObject(QObject *object);
 
   /**
    * Draws a transparency pattern, i.e. the common checkerboard pattern into @p rect.
