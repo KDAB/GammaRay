@@ -26,9 +26,11 @@
 
 #include <core/multisignalmapper.h>
 #include <core/probeinterface.h>
+#include <core/util.h>
 
 #include <QLocale>
 #include <QSet>
+#include <QThread>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QVector<qint64>)
@@ -41,13 +43,12 @@ const QString SignalHistoryModel::ITEM_TYPE_NAME_EVENT = "Event";
 
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
   : QAbstractItemModel(parent)
-  , m_objectTreeModel(probe->objectListModel())
   , m_signalMapper(new MultiSignalMapper(this))
 {
-  connect(m_objectTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-          this, SLOT(onRowsInserted(QModelIndex,int,int)));
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
           this, SLOT(onSignalEmitted(QObject*,int)));
+
+  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
 }
 
 SignalHistoryModel::~SignalHistoryModel()
@@ -205,26 +206,24 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex& index) con
   return d;
 }
 
-void SignalHistoryModel::onRowsInserted(const QModelIndex &otherParent, int first, int last)
+void SignalHistoryModel::onObjectAdded(QObject* object)
 {
-  beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size() + last - first);
+  Q_ASSERT(thread() == QThread::currentThread());
 
-  for (int i = first; i <= last; ++i) {
-    Item *const data = new Item(m_objectTreeModel->index(i, 0, otherParent));
+  // blacklist event dispatchers
+  if (QString(object->metaObject()->className()).startsWith("QPAEventDispatcher"))
+    return;
 
-    // blacklist event dispatchers
-    if (data->objectType.startsWith("QPAEventDispatcher"))
-      continue;
+  beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
 
-    for (int i = 0, l = data->metaObject->methodCount(); i < l; ++i) {
-      const QMetaMethod &method = data->metaObject->method(i);
+  Item *const data = new Item(object);
 
-      if (method.methodType() == QMetaMethod::Signal)
-        m_signalMapper->connectToSignal(data->object, method);
-    }
-
-    m_tracedObjects.append(data);
+  for (int i = 0, l = data->metaObject->methodCount(); i < l; ++i) {
+    const QMetaMethod &method = data->metaObject->method(i);
+    if (method.methodType() == QMetaMethod::Signal)
+      m_signalMapper->connectToSignal(data->object, method);
   }
+  m_tracedObjects.push_back(data);
 
   endInsertRows();
 }
@@ -266,17 +265,15 @@ static QString internString(const QString &str)
   return str;
 }
 
-SignalHistoryModel::Item::Item(const QModelIndex &index)
-  : object(index.model()->data(index, ObjectModel::ObjectRole).value<QObject *>())
+SignalHistoryModel::Item::Item(QObject *obj)
+  : object(obj)
   , metaObject(object->metaObject()) // FIXME: how about non-static meta objects?
   , startTime(RelativeClock::sinceAppStart()->mSecs())
 {
-  const QAbstractItemModel *const model = index.model();
-
-  objectName = internString(model->data(model->index(index.row(), 0, index.parent()), Qt::DisplayRole).toString());
-  objectType = internString(model->data(model->index(index.row(), 1, index.parent()), Qt::DisplayRole).toString());
-  toolTip = model->data(model->index(index.row(), 0, index.parent()), Qt::ToolTipRole).toString();
-  decoration = model->data(model->index(index.row(), 0, index.parent()), Qt::DecorationRole).value<QIcon>();
+  objectName = Util::shortDisplayString(object);
+  objectType = internString(metaObject->className());
+  toolTip = Util::tooltipForObject(object);
+  decoration = Util::iconForObject(object).value<QIcon>();
 }
 
 qint64 SignalHistoryModel::Item::endTime(/*qint64 now*/) const

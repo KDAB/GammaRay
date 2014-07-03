@@ -43,7 +43,7 @@ class SignalHistoryModel : public QAbstractItemModel
   private:
     struct Item
     {
-      Item(const QModelIndex &index);
+      Item(QObject *obj);
 
       const QPointer<QObject> object;
       const QMetaObject *const metaObject;
@@ -110,11 +110,10 @@ class SignalHistoryModel : public QAbstractItemModel
     static Item *item(const QModelIndex &index);
 
   private slots:
-    void onRowsInserted(const QModelIndex &otherParent, int first, int last);
+    void onObjectAdded(QObject *object);
     void onSignalEmitted(QObject *sender, int signalIndex);
 
   private:
-    QAbstractItemModel *const m_objectTreeModel;
     MultiSignalMapper *const m_signalMapper;
     QVector<Item *> m_tracedObjects;
 };
