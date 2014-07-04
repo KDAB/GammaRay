@@ -105,7 +105,7 @@ void MethodsExtension::activateMethod()
   const QModelIndex index = selectionModel->selectedRows().first();
 
   const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
-  if (method.methodType() == QMetaMethod::Slot) {
+  if (method.methodType() == QMetaMethod::Slot || method.methodType() == QMetaMethod::Method) {
     m_methodArgumentModel->setMethod(method);
   } else if (method.methodType() == QMetaMethod::Signal) {
     m_signalMapper->connectToSignal(m_object, method);
