@@ -53,6 +53,7 @@ class MethodsExtension : public MethodsExtensionInterface, public PropertyContro
   public slots:
     void activateMethod();
     void invokeMethod(Qt::ConnectionType type);
+    void connectToSignal();
 
   private slots:
     void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);

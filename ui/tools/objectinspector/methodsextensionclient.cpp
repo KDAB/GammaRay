@@ -49,3 +49,8 @@ void MethodsExtensionClient::invokeMethod(Qt::ConnectionType type)
 {
   Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << QVariant::fromValue(type));
 }
+
+void MethodsExtensionClient::connectToSignal()
+{
+  Endpoint::instance()->invokeObject(name(), "connectToSignal");
+}

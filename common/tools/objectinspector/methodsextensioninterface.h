@@ -41,6 +41,7 @@ class MethodsExtensionInterface : public QObject
   public slots:
     virtual void activateMethod() = 0;
     virtual void invokeMethod(Qt::ConnectionType type) = 0;
+    virtual void connectToSignal() = 0;
 
   private:
     QString m_name;

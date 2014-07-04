@@ -34,11 +34,12 @@ class MethodsExtensionClient : public MethodsExtensionInterface
   Q_INTERFACES(GammaRay::MethodsExtensionInterface)
   public:
     explicit MethodsExtensionClient(const QString &name, QObject *parent = 0);
-    virtual ~MethodsExtensionClient();
+    ~MethodsExtensionClient();
 
   public slots:
-    virtual void activateMethod();
-    virtual void invokeMethod(Qt::ConnectionType type);
+    void activateMethod();
+    void invokeMethod(Qt::ConnectionType type);
+    void connectToSignal();
 };
 
 }
