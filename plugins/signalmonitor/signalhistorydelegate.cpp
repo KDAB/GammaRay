@@ -36,7 +36,7 @@
 using namespace GammaRay;
 
 SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
-  : QAbstractItemDelegate(parent)
+  : QStyledItemDelegate(parent)
   , m_updateTimer(new QTimer(this))
   , m_visibleOffset(0)
   , m_visibleInterval(15000)
@@ -49,6 +49,8 @@ SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
 
 void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+  QStyledItemDelegate::paint(painter, option, index);
+
   const qint64 interval = m_visibleInterval;
   const qint64 startTime = m_visibleOffset;
   const qint64 endTime = startTime + interval;
@@ -67,10 +69,6 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
   const int x2 = dx * dt / interval + 1;
 
   const bool selected = option.state & QStyle::State_Selected;
-
-  if (selected) {
-    painter->fillRect(option.rect, option.palette.highlight());
-  }
 
   if (t1 >= 0) {
     painter->fillRect(x1, y0 + 1, x2, dy - 2,

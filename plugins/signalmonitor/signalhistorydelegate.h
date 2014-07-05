@@ -24,11 +24,11 @@
 #ifndef GAMMARAY_SIGNALHISTORYDELEGATE_H
 #define GAMMARAY_SIGNALHISTORYDELEGATE_H
 
-#include <QAbstractItemDelegate>
+#include <QStyledItemDelegate>
 
 namespace GammaRay {
 
-class SignalHistoryDelegate : public QAbstractItemDelegate
+class SignalHistoryDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
   Q_PROPERTY(qint64 visibleInterval READ visibleInterval WRITE setVisibleInterval NOTIFY visibleIntervalChanged)
