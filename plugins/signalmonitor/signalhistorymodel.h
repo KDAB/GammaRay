@@ -27,6 +27,7 @@
 #include <common/objectmodel.h>
 
 #include <QAbstractItemModel>
+#include <QHash>
 #include <QIcon>
 #include <QMetaMethod>
 #include <QPointer>
@@ -116,6 +117,7 @@ class SignalHistoryModel : public QAbstractItemModel
   private:
     MultiSignalMapper *const m_signalMapper;
     QVector<Item *> m_tracedObjects;
+    QHash<QObject*, int> m_itemIndex;
 };
 
 template<SignalHistoryModel::ItemType type>

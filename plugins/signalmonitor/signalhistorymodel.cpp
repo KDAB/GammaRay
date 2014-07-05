@@ -223,6 +223,7 @@ void SignalHistoryModel::onObjectAdded(QObject* object)
     if (method.methodType() == QMetaMethod::Signal)
       m_signalMapper->connectToSignal(data->object, method);
   }
+  m_itemIndex.insert(object, m_tracedObjects.size());
   m_tracedObjects.push_back(data);
 
   endInsertRows();
@@ -230,20 +231,21 @@ void SignalHistoryModel::onObjectAdded(QObject* object)
 
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 {
-  // FIXME: optimize this linear lookup
   const qint64 timestamp = RelativeClock::sinceAppStart()->mSecs();
 
-  for (int i = 0, l = m_tracedObjects.size(); i < l; ++i) {
-    Item *const data = m_tracedObjects.at(i);
+  const auto it = m_itemIndex.constFind(sender);
+  if (it == m_itemIndex.constEnd())
+    return;
+  const int itemIndex = *it;
 
-    if (data->object == sender) {
-      const int newRow = data->events.size();
-      beginInsertRows(index(i, EventColumn), newRow, newRow);
-      data->events.push_back((timestamp << 16) | signalIndex);
-      endInsertRows();
-      break;
-    }
-  }
+  Item *const data = m_tracedObjects.at(itemIndex);
+  if (!data->object) return; // ### temporary, remove once we removed the QPointer usage
+  Q_ASSERT(data->object == sender);
+  const int newRow = data->events.size();
+  beginInsertRows(index(itemIndex, EventColumn), newRow, newRow);
+  data->events.push_back((timestamp << 16) | signalIndex);
+  endInsertRows();
+  emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
 
 /// Tries to reuse an already existing instances of \param str by checking
