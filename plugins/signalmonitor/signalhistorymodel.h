@@ -30,7 +30,6 @@
 #include <QHash>
 #include <QIcon>
 #include <QMetaMethod>
-#include <QPointer>
 
 namespace GammaRay {
 
@@ -46,7 +45,7 @@ class SignalHistoryModel : public QAbstractItemModel
     {
       Item(QObject *obj);
 
-      const QPointer<QObject> object;
+      QObject* object; // never dereference, might be invalid!
       const QMetaObject *const metaObject;
       QString objectName;
       QString objectType;
@@ -112,6 +111,7 @@ class SignalHistoryModel : public QAbstractItemModel
 
   private slots:
     void onObjectAdded(QObject *object);
+    void onObjectRemoved(QObject *object);
     void onSignalEmitted(QObject *sender, int signalIndex);
 
   private:

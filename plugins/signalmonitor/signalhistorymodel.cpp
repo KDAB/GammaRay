@@ -49,6 +49,7 @@ SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
           this, SLOT(onSignalEmitted(QObject*,int)));
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
+  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), this, SLOT(onObjectRemoved(QObject*)));
 }
 
 SignalHistoryModel::~SignalHistoryModel()
@@ -229,6 +230,22 @@ void SignalHistoryModel::onObjectAdded(QObject* object)
   endInsertRows();
 }
 
+void SignalHistoryModel::onObjectRemoved(QObject* object)
+{
+  Q_ASSERT(thread() == QThread::currentThread());
+
+  const auto it = m_itemIndex.find(object);
+  if (it == m_itemIndex.end())
+    return;
+  const int itemIndex = *it;
+  m_itemIndex.erase(it);
+
+  Item *data = m_tracedObjects.at(itemIndex);
+  Q_ASSERT(data->object == object);
+  data->object = 0;
+  emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
+}
+
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 {
   const qint64 timestamp = RelativeClock::sinceAppStart()->mSecs();
@@ -239,7 +256,6 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
   const int itemIndex = *it;
 
   Item *const data = m_tracedObjects.at(itemIndex);
-  if (!data->object) return; // ### temporary, remove once we removed the QPointer usage
   Q_ASSERT(data->object == sender);
   const int newRow = data->events.size();
   beginInsertRows(index(itemIndex, EventColumn), newRow, newRow);
