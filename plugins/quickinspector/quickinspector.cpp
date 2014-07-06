@@ -144,8 +144,8 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_probe(probe),
     m_currentSgNode(0),
     m_itemModel(new QuickItemModel(this)),
-    m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
     m_sgModel(new QuickSceneGraphModel(this)),
+    m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
     m_sgPropertyController(new PropertyController("com.kdab.GammaRay.QuickSceneGraph", this)),
     m_clientConnected(false)
 {
