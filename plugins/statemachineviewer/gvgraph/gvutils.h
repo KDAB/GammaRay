@@ -22,9 +22,10 @@
 #ifndef GAMMARAY_STATEMACHINEVIEWER_GVUTILS_H
 #define GAMMARAY_STATEMACHINEVIEWER_GVUTILS_H
 
-#include <graphviz/types.h>
-
 #include <QString>
+
+#include <graphviz/types.h> //must include after QString to avoid possible
+                            //conflicting declarations for strcmp(), memcmp()...
 
 namespace GammaRay {
 
