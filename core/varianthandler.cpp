@@ -54,6 +54,7 @@ namespace GammaRay
 struct VariantHandlerRepository
 {
   QHash<int, VariantHandler::Converter<QString>*> stringConverters;
+  QVector<VariantHandler::GenericStringConverter> genericStringConverters;
 };
 
 }
@@ -338,6 +339,14 @@ QString VariantHandler::displayString(const QVariant &value)
   }
 #endif
 
+  // generic converters
+  foreach (GenericStringConverter converter, s_variantHandlerRepository()->genericStringConverters) {
+    bool ok = false;
+    const QString s = converter(value, &ok);
+    if (ok)
+      return s;
+  }
+
   return value.toString();
 }
 
@@ -414,4 +423,9 @@ QVariant VariantHandler::decoration(const QVariant &value)
 void VariantHandler::registerStringConverter(int type, Converter<QString> *converter)
 {
   s_variantHandlerRepository()->stringConverters.insert(type, converter);
+}
+
+void VariantHandler::registerGenericStringConverter(VariantHandler::GenericStringConverter converter)
+{
+  s_variantHandlerRepository()->genericStringConverters.push_back(converter);
 }

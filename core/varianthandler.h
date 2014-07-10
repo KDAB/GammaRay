@@ -80,6 +80,17 @@ namespace VariantHandler
     Converter<QString> *converter = new ConverterImpl<QString, T, FuncT>(f);
     registerStringConverter(qMetaTypeId<T>(), converter);
   }
+
+  typedef QString(*GenericStringConverter)(const QVariant &value, bool *ok);
+  /**
+   * Register a generic string conversion function for various variant types.
+   * This can be used when you have a converter that can dynamically check if
+   * it can handle a given variant, and the types it can handle aren't known
+   * at compile time (example: QQmlListProperty).
+   * @param converter The converter function. It's second paramter is used to
+   * indicate if the value could be handled.
+   */
+  GAMMARAY_CORE_EXPORT void registerGenericStringConverter(GenericStringConverter converter);
 }
 
 }

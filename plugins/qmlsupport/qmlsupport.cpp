@@ -26,10 +26,13 @@
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/varianthandler.h>
+#include <core/util.h>
 
+#include <QDebug>
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlError>
+#include <QQmlListProperty>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -42,6 +45,25 @@ static QString qmlErrorToString(const QQmlError &error)
     .arg(error.line())
     .arg(error.column())
     .arg(error.description());
+}
+
+static QString qmlListPropertyToString(const QVariant &value, bool *ok)
+{
+  if (qstrncmp(value.typeName(), "QQmlListProperty<", 17) != 0 || !value.isValid())
+    return QString();
+
+  *ok = true;
+  QQmlListProperty<QObject> *prop = reinterpret_cast<QQmlListProperty<QObject>*>(const_cast<void*>(value.data()));
+  const int count = prop->count(prop);
+  if (!count)
+    return QObject::tr("<empty>");
+
+  QStringList l;
+  l.reserve(count);
+  for (int i = 0; i < prop->count(prop); ++i) {
+    l.push_back(Util::displayString(prop->at(prop, i)));
+  }
+  return l.join(QLatin1String(", "));
 }
 
 QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
@@ -72,6 +94,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   MO_ADD_PROPERTY_RO(QQmlEngine, QQmlContext*, rootContext);
 
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
+  VariantHandler::registerGenericStringConverter(qmlListPropertyToString);
 }
 
 QString QmlSupportFactory::name() const
