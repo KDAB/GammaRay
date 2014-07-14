@@ -1,0 +1,16 @@
+gammaray_add_plugin(gammaray_translator_inspector translatorinspector.desktop
+  translatorinspector.cpp
+  translatorinspectorinterface.cpp
+  translatorwrapper.cpp
+  translatorsproxymodel.cpp
+)
+target_link_libraries(gammaray_translator_inspector gammaray_core Qt5::Core Qt5::Gui)
+
+qt5_wrap_ui(translator_inspector_ui_srcs
+  translatorinspectorwidget.ui
+)
+gammaray_add_plugin(gammaray_translator_inspector_ui translatorinspector_ui.desktop translatorinspectorwidget.cpp translatorinspectorinterface.cpp ${translator_inspector_ui_srcs})
+target_link_libraries(gammaray_translator_inspector_ui gammaray_ui)
+
+add_executable(translator_test main.cpp)
+qt5_use_modules(translator_test Widgets)
