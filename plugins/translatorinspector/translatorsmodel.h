@@ -1,5 +1,5 @@
 /*
-  translatorsproxymodel.h
+  translatorsmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,38 +21,45 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSLATORSPROXYMODEL_H
-#define TRANSLATORSPROXYMODEL_H
+#ifndef TRANSLATORSMODEL_H
+#define TRANSLATORSMODEL_H
 
-#include <QIdentityProxyModel>
+#include <QAbstractTableModel>
 
 namespace GammaRay {
 class TranslatorWrapper;
 
-class TranslatorsProxyModel : public QIdentityProxyModel
+class TranslatorsModel : public QAbstractTableModel
 {
   Q_OBJECT
 
   public:
-    TranslatorsProxyModel(QObject *parent = 0);
+    TranslatorsModel(QObject *parent = 0);
 
-    void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    enum ExtraRoles
+    {
+      TranslatorRole = Qt::UserRole
+    };
+
     int columnCount(
             const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &proxyIndex, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role) const Q_DECL_OVERRIDE;
-    QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     TranslatorWrapper *translator(const QModelIndex &index) const;
 
+  public slots:
+    void registerTranslator(TranslatorWrapper *translator);
+    void unregisterTranslator(TranslatorWrapper *translator);
+
   private slots:
     void sourceDataChanged();
-    void translatorsAdded(const QModelIndex &, const int start, const int end);
-    void translatorsRemoved(const QModelIndex &, const int start, const int end);
+
+  private:
+    QList<TranslatorWrapper *> m_translators;
 };
 
 }

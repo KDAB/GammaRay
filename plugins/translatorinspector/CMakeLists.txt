@@ -2,7 +2,7 @@ gammaray_add_plugin(gammaray_translatorinspector gammaray_translatorinspector.de
   translatorinspector.cpp
   translatorinspectorinterface.cpp
   translatorwrapper.cpp
-  translatorsproxymodel.cpp
+  translatorsmodel.cpp
 )
 target_link_libraries(gammaray_translatorinspector gammaray_core Qt5::Core Qt5::Gui)
 

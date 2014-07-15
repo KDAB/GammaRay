@@ -25,6 +25,7 @@
 
 #include <QCoreApplication>
 #include <QItemSelectionModel>
+#include <QIdentityProxyModel>
 #include <private/qcoreapplication_p.h>
 
 #include <core/probeinterface.h>
@@ -33,7 +34,7 @@
 #include <core/objecttypefilterproxymodel.h>
 
 #include "translatorwrapper.h"
-#include "translatorsproxymodel.h"
+#include "translatorsmodel.h"
 
 using namespace GammaRay;
 
@@ -43,11 +44,7 @@ TranslatorInspector::TranslatorInspector(ProbeInterface *probe,
                                   parent),
       m_probe(probe)
 {
-  QAbstractProxyModel *model =
-      new ObjectTypeFilterProxyModel<TranslatorWrapper>(this);
-  model->setSourceModel(probe->objectListModel());
-  m_translatorsModel = new TranslatorsProxyModel(this);
-  m_translatorsModel->setSourceModel(model);
+  m_translatorsModel = new TranslatorsModel(this);
   probe->registerModel("com.kdab.GammaRay.TranslatorsModel",
                        m_translatorsModel);
 
@@ -107,7 +104,11 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
         TranslatorWrapper *wrapper =
             new TranslatorWrapper(obj->translators[i], obj->translators[i]);
         obj->translators[i] = wrapper;
-        m_probe->discoverObject(wrapper); // ensure that we know about it
+        m_probe->discoverObject(wrapper);
+        m_translatorsModel->registerTranslator(wrapper);
+        connect(wrapper,
+                &TranslatorWrapper::destroyed,
+                [wrapper, this](QObject *) { m_translatorsModel->unregisterTranslator(wrapper); });
       }
     }
   }

@@ -38,7 +38,7 @@ class QAbstractProxyModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class TranslatorsProxyModel;
+class TranslatorsModel;
 
 class TranslatorInspector : public TranslatorInspectorInterface
 {
@@ -62,7 +62,7 @@ class TranslatorInspector : public TranslatorInspectorInterface
   private:
     QItemSelectionModel *m_selectionModel;
     QItemSelectionModel *m_translationsSelectionModel;
-    TranslatorsProxyModel *m_translatorsModel;
+    TranslatorsModel *m_translatorsModel;
     QAbstractProxyModel *m_translationsModel;
     ProbeInterface *m_probe;
 };
