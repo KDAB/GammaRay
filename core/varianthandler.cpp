@@ -35,6 +35,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QIcon>
+#include <QMatrix4x4>
 #include <QMetaEnum>
 #include <QMetaObject>
 #include <QObject>
@@ -56,6 +57,26 @@ struct VariantHandlerRepository
   QHash<int, VariantHandler::Converter<QString>*> stringConverters;
   QVector<VariantHandler::GenericStringConverter> genericStringConverters;
 };
+
+static QString displayMatrix4x4(const QMatrix4x4 &matrix)
+{
+  QStringList rows;
+  for (int i = 0; i < 4; ++i) {
+    QStringList cols;
+    for (int j = 0; j < 4; ++j) {
+      cols.push_back(QString::number(matrix(i, j)));
+    }
+    rows.push_back(cols.join(" "));
+  }
+  return "[" + rows.join(", ") + "]";
+}
+
+static QString displayMatrix4x4(const QMatrix4x4 *matrix)
+{
+  if (matrix)
+    return displayMatrix4x4(*matrix);
+  return "<null>";
+}
 
 }
 
@@ -212,6 +233,11 @@ QString VariantHandler::displayString(const QVariant &value)
   if (value.canConvert<QObject*>()) {
     return Util::displayString(value.value<QObject*>());
   }
+
+  if (value.userType() == qMetaTypeId<QMatrix4x4>())
+    return displayMatrix4x4(value.value<QMatrix4x4>());
+  if (value.userType() == qMetaTypeId<const QMatrix4x4*>())
+    return displayMatrix4x4(value.value<const QMatrix4x4*>());
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
