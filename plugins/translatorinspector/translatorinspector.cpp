@@ -102,7 +102,7 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
          * translator
          */
         TranslatorWrapper *wrapper =
-            new TranslatorWrapper(obj->translators[i], obj->translators[i]);
+            new TranslatorWrapper(obj->translators[i], this);
         obj->translators[i] = wrapper;
         m_probe->discoverObject(wrapper);
         m_translatorsModel->registerTranslator(wrapper);
