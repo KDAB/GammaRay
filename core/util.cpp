@@ -105,6 +105,28 @@ QString Util::enumToString(const QVariant &value, const char *typeName, QObject 
   return me.valueToKeys(value.toInt());
 }
 
+QString Util::prettyMethodSignature(const QMetaMethod& method)
+{
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  return method.signature();
+#else
+  QString signature = method.typeName();
+  signature += ' ' + method.name() + '(';
+  QStringList args;
+  args.reserve(method.parameterCount());
+  const QList<QByteArray> paramTypes = method.parameterTypes();
+  const QList<QByteArray> paramNames = method.parameterNames();
+  for (int i = 0; i < method.parameterCount(); ++i) {
+    QString arg = paramTypes.at(i);
+    if (!paramNames.at(i).isEmpty())
+      arg += ' ' + paramNames.at(i);
+    args.push_back(arg);
+  }
+  signature += args.join(", ") + ')';
+  return signature;
+#endif
+}
+
 bool Util::descendantOf(const QObject *ascendant, const QObject *obj)
 {
   QObject *parent = obj->parent();

@@ -90,6 +90,12 @@ namespace Util {
                                        QObject *object = 0);
 
   /**
+   * Returns a display string for @p method.
+   * This includes return types and argument names, if available.
+   */
+  GAMMARAY_CORE_EXPORT QString prettyMethodSignature(const QMetaMethod &method);
+
+  /**
    * Determines if the QObject @p obj is a descendant of the QObject @p ascendant.
    * @param ascendant is a pointer to a QObject.
    * @param object is a pointer to a QObject.

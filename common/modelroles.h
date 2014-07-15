@@ -54,7 +54,8 @@ namespace ToolModelRole {
 namespace ObjectMethodModelRole {
   enum Role {
     MetaMethod = UserRole + 1,
-    MetaMethodType
+    MetaMethodType,
+    MethodSignature
   };
 }
 

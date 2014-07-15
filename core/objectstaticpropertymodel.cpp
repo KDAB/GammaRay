@@ -187,11 +187,7 @@ QString ObjectStaticPropertyModel::detailString(const QMetaProperty& prop) const
   s << tr("Designable: %1").arg(translateBool(prop.isDesignable(m_obj.data())));
   s << tr("Final: %1").arg(translateBool(prop.isFinal()));
   if (prop.hasNotifySignal()) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    s << tr("Notification: %1").arg(prop.notifySignal().signature());
-#else
-    s << tr("Notification: %1").arg(QString::fromUtf8(prop.notifySignal().methodSignature()));
-#endif
+    s << tr("Notification: %1").arg(Util::prettyMethodSignature(prop.notifySignal()));
   } else {
     s << tr("Notification: no");
   }

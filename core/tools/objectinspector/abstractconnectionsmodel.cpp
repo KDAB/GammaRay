@@ -122,11 +122,7 @@ QString AbstractConnectionsModel::displayString(QObject *object, int methodIndex
     return QObject::tr("<unknown>");
 
   const QMetaMethod method = object->metaObject()->method(methodIndex);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  return method.methodSignature();
-#else
-  return method.signature();
-#endif
+  return Util::prettyMethodSignature(method);
 }
 
 QString AbstractConnectionsModel::displayString(QObject* object)

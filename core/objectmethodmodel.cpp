@@ -22,6 +22,7 @@
 */
 
 #include "objectmethodmodel.h"
+#include "util.h"
 
 using namespace GammaRay;
 
@@ -46,11 +47,7 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index,
 {
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-      return method.signature();
-#else
-      return method.methodSignature();
-#endif
+      return Util::prettyMethodSignature(method);
     }
     if (index.column() == 1) {
       switch (method.methodType()) {
@@ -90,6 +87,12 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index,
     return QVariant::fromValue(method);
   } else if (role == ObjectMethodModelRole::MetaMethodType) {
     return QVariant::fromValue(method.methodType());
+  } else if (role == ObjectMethodModelRole::MethodSignature) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    return method.signature();
+#else
+    return method.methodSignature();
+#endif
   }
   return QVariant();
 }
@@ -115,5 +118,6 @@ QMap< int, QVariant > ObjectMethodModel::itemData(const QModelIndex& index) cons
 {
   QMap<int, QVariant> m = super::itemData(index);
   m.insert(ObjectMethodModelRole::MetaMethodType, data(index, ObjectMethodModelRole::MetaMethodType));
+  m.insert(ObjectMethodModelRole::MethodSignature, data(index, ObjectMethodModelRole::MethodSignature));
   return m;
 }
