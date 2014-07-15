@@ -29,13 +29,12 @@
 
 #include "translatorinspectorinterface.h"
 
-// TODO put this inside GammaRay as well
+namespace GammaRay {
+
 namespace Ui
 {
 class TranslatorInspectorWidget;
 }
-
-namespace GammaRay {
 
 class TranslatorInspectorClient : public TranslatorInspectorInterface
 {

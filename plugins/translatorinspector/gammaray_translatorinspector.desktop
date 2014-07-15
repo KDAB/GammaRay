@@ -2,4 +2,4 @@
 Name=Translators
 X-GammaRay-Types=QTranslator
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=gammaray_translator_injector
+Exec=gammaray_translatorinspector

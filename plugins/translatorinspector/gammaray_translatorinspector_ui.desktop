@@ -1,0 +1,4 @@
+[Desktop Entry]
+X-GammaRay-Id=gammaray_translatorinspector
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
+Exec=gammaray_translatorinspector_ui
