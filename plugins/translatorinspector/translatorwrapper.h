@@ -37,7 +37,7 @@ class TranslationsModel : public QAbstractListModel
   public:
     TranslationsModel(TranslatorWrapper *translator);
 
-    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     bool setData(const QModelIndex &index, const QVariant &value,
@@ -50,6 +50,8 @@ class TranslationsModel : public QAbstractListModel
     QString translation(const QByteArray &context, const QByteArray &sourceText,
                         const QByteArray &disambiguation, const int n,
                         const QString &default_);
+
+    void resetAllUnchanged();
 
   signals:
     void rowCountChanged();
@@ -96,6 +98,28 @@ class TranslatorWrapper : public QTranslator
 
     QString translateInternal(const char *context, const char *sourceText,
                               const char *disambiguation, int n) const;
+};
+
+class FallbackTranslator : public QTranslator
+{
+  Q_OBJECT
+
+  public:
+    FallbackTranslator(QObject *parent = 0);
+
+    bool isEmpty() const Q_DECL_OVERRIDE
+    {
+      return false;
+    }
+
+    QString translate(const char *context, const char *sourceText,
+                      const char *disambiguation, int n) const Q_DECL_OVERRIDE;
+
+  private:
+#ifndef Q_NO_USING_KEYWORD
+    // hide
+    using QTranslator::load;
+#endif
 };
 
 }

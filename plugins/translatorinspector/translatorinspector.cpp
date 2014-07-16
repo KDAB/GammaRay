@@ -60,6 +60,12 @@ TranslatorInspector::TranslatorInspector(ProbeInterface *probe,
   m_translationsSelectionModel =
       ObjectBroker::selectionModel(m_translationsModel);
 
+  m_fallbackWrapper = new TranslatorWrapper(new FallbackTranslator(this), this);
+  m_translatorsModel->registerTranslator(m_fallbackWrapper);
+  QCoreApplicationPrivate *obj = static_cast<QCoreApplicationPrivate *>(
+      QCoreApplicationPrivate::get(qApp));
+  obj->translators.append(m_fallbackWrapper);
+
   qApp->installEventFilter(this);
   sendLanguageChangeEvent();
 }
@@ -104,12 +110,17 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
         TranslatorWrapper *wrapper =
             new TranslatorWrapper(obj->translators[i], this);
         obj->translators[i] = wrapper;
-        m_probe->discoverObject(wrapper);
         m_translatorsModel->registerTranslator(wrapper);
         connect(wrapper,
                 &TranslatorWrapper::destroyed,
                 [wrapper, this](QObject *) { m_translatorsModel->unregisterTranslator(wrapper); });
       }
+    }
+    for (auto it = obj->translators.begin(); it != obj->translators.end(); ++it)
+    {
+      TranslatorWrapper *wrapper = qobject_cast<TranslatorWrapper *>(*it);
+      Q_ASSERT(wrapper);
+      wrapper->model()->resetAllUnchanged();
     }
   }
   return QObject::eventFilter(object, event);

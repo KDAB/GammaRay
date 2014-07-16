@@ -39,6 +39,8 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class TranslatorsModel;
+class TranslatorWrapper;
+class FallbackTranslator;
 
 class TranslatorInspector : public TranslatorInspectorInterface
 {
@@ -65,6 +67,7 @@ class TranslatorInspector : public TranslatorInspectorInterface
     TranslatorsModel *m_translatorsModel;
     QAbstractProxyModel *m_translationsModel;
     ProbeInterface *m_probe;
+    TranslatorWrapper *m_fallbackWrapper;
 };
 
 class TranslatorInspectorFactory

@@ -140,6 +140,23 @@ QString TranslationsModel::translation(const QByteArray &context,
   }
   return row.translation;
 }
+void TranslationsModel::resetAllUnchanged()
+{
+  QModelIndex current;
+  for (int i = 0; i < rowCount(); ++i) {
+    if (m_nodes.at(i).isOverriden) {
+      if (!current.isValid()) {
+        current = index(i);
+      }
+    } else if (current.isValid()) {
+      resetTranslations(current, index(i));
+      current = QModelIndex();
+    }
+  }
+  if (current.isValid()) {
+    resetTranslations(current, index(rowCount()-1));
+  }
+}
 void TranslationsModel::setTranslation(const QModelIndex &index,
                                        const QString &translation)
 {
@@ -219,4 +236,14 @@ QString TranslatorWrapper::translateInternal(const char *context,
 const QTranslator *TranslatorWrapper::translator() const
 {
   return m_wrapped == 0 ? this : m_wrapped;
+}
+
+FallbackTranslator::FallbackTranslator(QObject *parent)
+  : QTranslator(parent)
+{
+  setObjectName("Fallback Translator");
+}
+QString FallbackTranslator::translate(const char *context, const char *sourceText, const char *disambiguation, int n) const
+{
+  return QString::fromUtf8(sourceText);
 }

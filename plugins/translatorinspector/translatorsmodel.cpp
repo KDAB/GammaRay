@@ -68,17 +68,15 @@ QVariant TranslatorsModel::headerData(int section,
                                            Qt::Orientation orientation,
                                            int role) const
 {
-  if (orientation == Qt::Horizontal && section >= 2) {
-    if (role == Qt::DisplayRole) {
-      if (section == 0) {
-        return tr("Address");
-      } else if (section == 1) {
-        return tr("Object Name");
-      } else if (section == 2) {
-        return tr("Name");
-      } else if (section == 3) {
-        return tr("Translations");
-      }
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (section == 0) {
+      return tr("Address");
+    } else if (section == 1) {
+      return tr("Object Name");
+    } else if (section == 2) {
+      return tr("Name");
+    } else if (section == 3) {
+      return tr("Translations");
     }
   }
   return QVariant();
@@ -117,7 +115,8 @@ void TranslatorsModel::unregisterTranslator(TranslatorWrapper *translator)
 {
   const int index = m_translators.indexOf(translator);
   if (index == -1) {
-    qWarning("TranslatorsModel::unregisterTranslator: translator not registered");
+    qWarning("TranslatorsModel::unregisterTranslator: translator %s is not registered",
+             qPrintable(Util::addressToString(translator)));
     return;
   }
   disconnect(translator->model(), 0, this, 0);
