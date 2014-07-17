@@ -75,13 +75,12 @@ bool TranslationsModel::setData(const QModelIndex &index, const QVariant &value,
                                 int role)
 {
   if (role == Qt::EditRole && index.column() == 3) {
-    Row node = m_nodes.at(index.row());
+    Row &node = m_nodes[index.row()];
     if (node.translation == value.toString()) {
       return true;
     }
     node.translation = value.toString();
     node.isOverriden = true;
-    m_nodes.replace(index.row(), node);
     emit dataChanged(index, index, QVector<int>() << Qt::DisplayRole
                                                   << Qt::EditRole);
     return true;

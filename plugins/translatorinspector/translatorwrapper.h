@@ -53,6 +53,11 @@ class TranslationsModel : public QAbstractListModel
 
     void resetAllUnchanged();
 
+    TranslatorWrapper *translator() const
+    {
+      return m_translator;
+    }
+
   signals:
     void rowCountChanged();
 
@@ -69,7 +74,7 @@ class TranslationsModel : public QAbstractListModel
       QString translation;
       bool isOverriden;
     };
-    QList<Row> m_nodes;
+    QVector<Row> m_nodes;
 
     QModelIndex findNode(const QByteArray &context, const QByteArray &sourceText,
                          const QByteArray &disambiguation, const int n,

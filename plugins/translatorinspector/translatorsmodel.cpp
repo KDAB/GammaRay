@@ -35,7 +35,7 @@ TranslatorsModel::TranslatorsModel(QObject *parent)
 }
 int TranslatorsModel::columnCount(const QModelIndex &) const
 {
-  return 4;
+  return 3;
 }
 int TranslatorsModel::rowCount(const QModelIndex &parent) const
 {
@@ -53,14 +53,14 @@ QVariant TranslatorsModel::data(const QModelIndex &index, int role) const
   Q_ASSERT(trans);
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
-      return Util::addressToString(trans->translator());
+      return Util::shortDisplayString(trans);
     } else if (index.column() == 1) {
       return QString(trans->translator()->metaObject()->className());
     } else if (index.column() == 2) {
-      return trans->translator()->objectName();
-    } else if (index.column() == 3) {
       return trans->model()->rowCount(QModelIndex());
     }
+  } else if (role == Qt::ToolTipRole) {
+    return Util::tooltipForObject(trans);
   }
   return QVariant();
 }
@@ -70,12 +70,10 @@ QVariant TranslatorsModel::headerData(int section,
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
     if (section == 0) {
-      return tr("Address");
+      return tr("Object");
     } else if (section == 1) {
-      return tr("Object Name");
+      return tr("Type");
     } else if (section == 2) {
-      return tr("Name");
-    } else if (section == 3) {
       return tr("Translations");
     }
   }
@@ -93,14 +91,16 @@ TranslatorWrapper *TranslatorsModel::translator(const QModelIndex &index)
 }
 void TranslatorsModel::sourceDataChanged()
 {
-  const QModelIndex
-      tl = index(0, 2, QModelIndex()),
-      br = index(rowCount()-1, 3, QModelIndex());
-  if (!tl.isValid() || !br.isValid()) {
+  const int row = m_translators.indexOf(qobject_cast<TranslationsModel *>(sender())->translator());
+  if (row == -1) {
+    return;
+  }
+  const QModelIndex index = this->index(row, 2, QModelIndex());
+  if (!index.isValid()) {
     return;
   }
   // needed to make sure these things also update
-  emit dataChanged(tl, br,
+  emit dataChanged(index, index,
                    QVector<int>() << Qt::DisplayRole << Qt::EditRole);
 }
 
