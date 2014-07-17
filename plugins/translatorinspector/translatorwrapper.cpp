@@ -205,6 +205,7 @@ TranslatorWrapper::TranslatorWrapper(QTranslator *wrapped, QObject *parent)
     : QTranslator(parent), m_wrapped(wrapped),
       m_model(new TranslationsModel(this))
 {
+	connect(wrapped, SIGNAL(destroyed()), SLOT(deleteLater()));
 }
 bool TranslatorWrapper::isEmpty() const
 {

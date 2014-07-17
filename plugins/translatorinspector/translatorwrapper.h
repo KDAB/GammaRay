@@ -124,6 +124,4 @@ class FallbackTranslator : public QTranslator
 
 }
 
-Q_DECLARE_METATYPE(GammaRay::TranslatorWrapper *)
-
 #endif
