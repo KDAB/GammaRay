@@ -83,6 +83,7 @@ QVariant TranslatorsModel::headerData(int section,
 }
 Qt::ItemFlags TranslatorsModel::flags(const QModelIndex &index) const
 {
+  Q_UNUSED(index);
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 TranslatorWrapper *TranslatorsModel::translator(const QModelIndex &index)

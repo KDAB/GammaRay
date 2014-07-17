@@ -174,6 +174,7 @@ QModelIndex TranslationsModel::findNode(const QByteArray &context,
                                         const QByteArray &disambiguation,
                                         const int n, const bool create)
 {
+  Q_UNUSED(n);
   // QUESTION make use of n?
   for (int i = 0; i < m_nodes.size(); ++i) {
     const Row node = m_nodes.at(i);
@@ -245,5 +246,8 @@ FallbackTranslator::FallbackTranslator(QObject *parent)
 }
 QString FallbackTranslator::translate(const char *context, const char *sourceText, const char *disambiguation, int n) const
 {
+  Q_UNUSED(context);
+  Q_UNUSED(disambiguation);
+  Q_UNUSED(n);
   return QString::fromUtf8(sourceText);
 }
