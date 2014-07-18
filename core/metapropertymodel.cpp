@@ -143,7 +143,7 @@ QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole:
       return VariantHandler::decoration(value);
     case Qt::EditRole:
-      return value;
+      return property->isReadOnly() ? QVariant() : value;
     }
   }
 
