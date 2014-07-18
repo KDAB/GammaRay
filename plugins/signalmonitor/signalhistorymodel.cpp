@@ -24,13 +24,14 @@
 #include "signalhistorymodel.h"
 #include "relativeclock.h"
 
-#include <core/multisignalmapper.h>
 #include <core/probeinterface.h>
 #include <core/util.h>
 
 #include <QLocale>
 #include <QSet>
 #include <QThread>
+
+#include <private/qobject_p.h>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QVector<qint64>)
@@ -41,19 +42,31 @@ using namespace GammaRay;
 const QString SignalHistoryModel::ITEM_TYPE_NAME_OBJECT = "Object";
 const QString SignalHistoryModel::ITEM_TYPE_NAME_EVENT = "Event";
 
+static SignalHistoryModel *s_historyModel = 0;
+
+static void signal_begin_callback(QObject *caller, int method_index, void **argv)
+{
+  Q_UNUSED(argv);
+  if (s_historyModel)
+    QMetaObject::invokeMethod(s_historyModel, "onSignalEmitted", Qt::AutoConnection, Q_ARG(QObject*, caller), Q_ARG(int, method_index));
+}
+
+
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
   : QAbstractItemModel(parent)
-  , m_signalMapper(new MultiSignalMapper(this))
 {
-  connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
-          this, SLOT(onSignalEmitted(QObject*,int)));
-
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), this, SLOT(onObjectRemoved(QObject*)));
+
+  QSignalSpyCallbackSet spy = { signal_begin_callback, 0, 0, 0 };
+  probe->registerSignalSpyCallbackSet(spy);
+
+  s_historyModel = this;
 }
 
 SignalHistoryModel::~SignalHistoryModel()
 {
+  s_historyModel = 0;
 }
 
 int SignalHistoryModel::rowCount(const QModelIndex &parent) const
@@ -218,12 +231,6 @@ void SignalHistoryModel::onObjectAdded(QObject* object)
   beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
 
   Item *const data = new Item(object);
-
-  for (int i = 0, l = data->metaObject->methodCount(); i < l; ++i) {
-    const QMetaMethod &method = data->metaObject->method(i);
-    if (method.methodType() == QMetaMethod::Signal)
-      m_signalMapper->connectToSignal(data->object, method);
-  }
   m_itemIndex.insert(object, m_tracedObjects.size());
   m_tracedObjects.push_back(data);
 

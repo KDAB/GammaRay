@@ -33,7 +33,6 @@
 
 namespace GammaRay {
 
-class MultiSignalMapper;
 class ProbeInterface;
 
 class SignalHistoryModel : public QAbstractItemModel
@@ -115,7 +114,6 @@ class SignalHistoryModel : public QAbstractItemModel
     void onSignalEmitted(QObject *sender, int signalIndex);
 
   private:
-    MultiSignalMapper *const m_signalMapper;
     QVector<Item *> m_tracedObjects;
     QHash<QObject*, int> m_itemIndex;
 };
