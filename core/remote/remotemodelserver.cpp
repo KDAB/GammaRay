@@ -28,6 +28,7 @@
 
 #include <QAbstractItemModel>
 #include <QDataStream>
+#include <QDebug>
 #include <QBuffer>
 #include <QIcon>
 
@@ -176,7 +177,9 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant 
 {
   QMap<int, QVariant> itemData(data);
   for (QMap<int, QVariant>::iterator it = itemData.begin(); it != itemData.end();) {
-    if (it.value().userType() == qMetaTypeId<QIcon>()) {
+    if (!it.value().isValid()) {
+      it = itemData.erase(it);
+    } else if (it.value().userType() == qMetaTypeId<QIcon>()) {
       // see also: https://bugreports.qt-project.org/browse/QTBUG-33321
       const QIcon icon = it.value().value<QIcon>();
       ///TODO: what size to use? icon.availableSizes is empty...
@@ -186,6 +189,7 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant 
     } else if (canSerialize(it.value())) {
       ++it;
     } else {
+      qWarning() << "Cannot serialize QVariant of type" << it.value().typeName();
       it = itemData.erase(it);
     }
   }
