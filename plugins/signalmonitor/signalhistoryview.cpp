@@ -128,5 +128,3 @@ bool SignalHistoryView::viewportEvent(QEvent *event)
 
   return QTreeView::viewportEvent(event);
 }
-
-#include "signalhistoryview.moc"
