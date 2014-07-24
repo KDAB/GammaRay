@@ -43,6 +43,19 @@ include(GammaRayMacros)
 include(GammaRayMacrosInternal)
 include(FeatureSummary)
 
+# Exit for blacklisted compilers (those that don't support C++11 very well)
+#  MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
+set(BAD_CXX_MESSAGE "")
+if(MSVC)
+  if(MSVC_VERSION LESS 1500)
+    set(BAD_CXX_MESSAGE "MSVC 2008 or higher")
+  endif()
+endif()
+if(BAD_CXX_MESSAGE)
+  message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a modern compiler that supports C++11 lambdas.")
+endif()
+
+# Enable the test harness
 enable_testing()
 
 # Version setup
