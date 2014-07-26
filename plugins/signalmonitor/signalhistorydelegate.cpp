@@ -23,10 +23,12 @@
 
 #include "signalhistorydelegate.h"
 #include "signalhistorymodel.h"
-#include "relativeclock.h"
+#include "signalmonitorinterface.h"
 
 #include <common/metatypedeclarations.h>
+#include <common/objectbroker.h>
 
+#include <QDebug>
 #include <QPainter>
 #include <QSortFilterProxyModel>
 #include <QTimer>
@@ -45,6 +47,9 @@ SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
   connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
   m_updateTimer->start(1000 / 25);
   onUpdateTimeout();
+
+  SignalMonitorInterface *iface = ObjectBroker::object<SignalMonitorInterface*>();
+  connect(iface, SIGNAL(clock(qint64)), this, SLOT(onServerClockChanged(qint64)));
 }
 
 void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -115,17 +120,14 @@ void SignalHistoryDelegate::setVisibleOffset(qint64 offset)
 
 void SignalHistoryDelegate::onUpdateTimeout()
 {
-#warning port to remote access!
-#if 0
-  // extend the tracked time interval
-  m_totalInterval = RelativeClock::sinceAppStart()->mSecs(m_updateTimer->interval());
-#else
-  m_totalInterval += m_updateTimer->interval();
-#endif
-
   // move the visible region to show the most recent samples
   m_visibleOffset = m_totalInterval - m_visibleInterval;
   emit visibleOffsetChanged(m_visibleOffset);
+}
+
+void SignalHistoryDelegate::onServerClockChanged(qint64 msecs)
+{
+  m_totalInterval = msecs;
 }
 
 void SignalHistoryDelegate::setActive(bool active)

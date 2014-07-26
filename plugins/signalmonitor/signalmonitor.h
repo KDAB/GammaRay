@@ -24,16 +24,22 @@
 #ifndef GAMMARAY_SIGNALMONITOR_H
 #define GAMMARAY_SIGNALMONITOR_H
 
+#include "signalmonitorinterface.h"
+
 #include <core/toolfactory.h>
 
 namespace GammaRay {
 
-class SignalMonitor : public QObject
+class SignalMonitor : public SignalMonitorInterface
 {
   Q_OBJECT
+  Q_INTERFACES(GammaRay::SignalMonitorInterface)
   public:
     explicit SignalMonitor(ProbeInterface *probe, QObject *parent = 0);
     ~SignalMonitor();
+
+  public slots:
+    void timeout();
 };
 
 class SignalMonitorFactory : public QObject, public StandardToolFactory<QObject, SignalMonitor>
