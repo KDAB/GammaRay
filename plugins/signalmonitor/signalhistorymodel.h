@@ -30,6 +30,7 @@
 #include <QHash>
 #include <QIcon>
 #include <QMetaMethod>
+#include <QByteArray>
 
 namespace GammaRay {
 
@@ -45,9 +46,9 @@ class SignalHistoryModel : public QAbstractItemModel
       Item(QObject *obj);
 
       QObject* object; // never dereference, might be invalid!
-      const QMetaObject *const metaObject;
+      QHash<int, QByteArray> signalNames;
       QString objectName;
-      QString objectType;
+      QByteArray objectType;
       QString toolTip;
       QIcon decoration;
       QVector<qint64> events;

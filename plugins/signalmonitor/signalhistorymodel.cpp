@@ -37,6 +37,26 @@
 
 using namespace GammaRay;
 
+/// Tries to reuse an already existing instances of \param str by checking
+/// a global string pool. If no instance of \param str is interned yet the
+/// string will be added to the pool.
+template <typename T>
+static T internString(const T &str)
+{
+  static QSet<T> pool;
+
+  // Check if the pool already contains the string...
+  const typename QSet<T>::const_iterator it = pool.find(str);
+
+  //  ...and return it if possible.
+  if (it != pool.end())
+    return *it;
+
+  // Otherwise add the string to the pool.
+  pool.insert(str);
+  return str;
+}
+
 const QString SignalHistoryModel::ITEM_TYPE_NAME_OBJECT = "Object";
 const QString SignalHistoryModel::ITEM_TYPE_NAME_EVENT = "Event";
 
@@ -245,8 +265,19 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
     return;
   const int itemIndex = *it;
 
-  Item *const data = m_tracedObjects.at(itemIndex);
+  Item *data = m_tracedObjects.at(itemIndex);
   Q_ASSERT(data->object == sender);
+  // ensure the item is known
+  if (signalIndex > 0 && !data->signalNames.contains(signalIndex)) {
+    const QByteArray signalName = sender->metaObject()->method(signalIndex - 1)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+      .signature();
+#else
+      .methodSignature();
+#endif
+    data->signalNames.insert(signalIndex, internString(signalName));
+  }
+
   const int newRow = data->events.size();
   beginInsertRows(index(itemIndex, EventColumn), newRow, newRow);
   data->events.push_back((timestamp << 16) | signalIndex);
@@ -254,32 +285,13 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
   emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
 
-/// Tries to reuse an already existing instances of \param str by checking
-/// a global string pool. If no instance of \param str is interned yet the
-/// string will be added to the pool.
-static QString internString(const QString &str)
-{
-  static QSet<QString> pool;
-
-  // Check if the pool already contains the string...
-  const QSet<QString>::const_iterator it = pool.find(str);
-
-  //  ...and return it if possible.
-  if (it != pool.end())
-    return *it;
-
-  // Otherwise add the string to the pool.
-  pool.insert(str);
-  return str;
-}
 
 SignalHistoryModel::Item::Item(QObject *obj)
   : object(obj)
-  , metaObject(object->metaObject()) // FIXME: how about non-static meta objects?
   , startTime(RelativeClock::sinceAppStart()->mSecs())
 {
   objectName = Util::shortDisplayString(object);
-  objectType = internString(metaObject->className());
+  objectType = internString(QByteArray(obj->metaObject()->className()));
   toolTip = Util::tooltipForObject(object);
   decoration = Util::iconForObject(object).value<QIcon>();
 }
@@ -296,12 +308,11 @@ qint64 SignalHistoryModel::Item::endTime() const
 
 QByteArray SignalHistoryModel::Item::signalName(int i) const
 {
-  const int index = signalIndex(i) - 1; // see above, we store this with offset 1 to fit unknown ones into an unsigned value
-  if (index < 0)
+  const int index = signalIndex(i);
+  if (index <= 0)  // see above, we store this with offset 1 to fit unknown ones into an unsigned value
     return "<unknown>";
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  return metaObject->method(index).signature();
-#else
-  return metaObject->method(index).methodSignature();
-#endif
+  const auto it = signalNames.constFind(index);
+  if (it == signalNames.constEnd() || it.value().isEmpty())
+    return "<unknown>";
+  return it.value();
 }
