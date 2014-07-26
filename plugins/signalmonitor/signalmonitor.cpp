@@ -35,11 +35,10 @@ SignalMonitor::SignalMonitor(ProbeInterface *probe, QObject *parent)
   SignalHistoryModel *model = new SignalHistoryModel(probe, this);
   probe->registerModel("com.kdab.GammaRay.SignalHistoryModel", model);
 
-  QTimer *clock = new QTimer(this);
-  clock->setInterval(1000/25); // update frequency of the delegate, we could slow this down a lot, and let the client interpolate, if necessary
-  clock->setSingleShot(false);
-  connect(clock, SIGNAL(timeout()), this, SLOT(timeout()));
-  clock->start();
+  m_clock = new QTimer(this);
+  m_clock->setInterval(1000/25); // update frequency of the delegate, we could slow this down a lot, and let the client interpolate, if necessary
+  m_clock->setSingleShot(false);
+  connect(m_clock, SIGNAL(timeout()), this, SLOT(timeout()));
 }
 
 SignalMonitor::~SignalMonitor()
@@ -49,6 +48,14 @@ SignalMonitor::~SignalMonitor()
 void SignalMonitor::timeout()
 {
   emit clock(RelativeClock::sinceAppStart()->mSecs());
+}
+
+void SignalMonitor::sendClockUpdates(bool enabled)
+{
+  if (enabled)
+    m_clock->start();
+  else
+    m_clock->stop();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

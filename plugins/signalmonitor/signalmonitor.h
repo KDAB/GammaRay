@@ -28,6 +28,8 @@
 
 #include <core/toolfactory.h>
 
+class QTimer;
+
 namespace GammaRay {
 
 class SignalMonitor : public SignalMonitorInterface
@@ -39,7 +41,14 @@ class SignalMonitor : public SignalMonitorInterface
     ~SignalMonitor();
 
   public slots:
+    void sendClockUpdates(bool enabled) /*Q_DECL_OVERRIDE*/;
+
+  private slots:
     void timeout();
+
+  private:
+    QTimer *m_clock;
+
 };
 
 class SignalMonitorFactory : public QObject, public StandardToolFactory<QObject, SignalMonitor>

@@ -23,6 +23,8 @@
 
 #include "signalmonitorclient.h"
 
+#include <common/endpoint.h>
+
 using namespace GammaRay;
 
 SignalMonitorClient::SignalMonitorClient(QObject* parent): SignalMonitorInterface(parent)
@@ -31,4 +33,9 @@ SignalMonitorClient::SignalMonitorClient(QObject* parent): SignalMonitorInterfac
 
 SignalMonitorClient::~SignalMonitorClient()
 {
+}
+
+void SignalMonitorClient::sendClockUpdates(bool enabled)
+{
+  Endpoint::instance()->invokeObject(objectName(), "sendClockUpdates", QVariantList() << QVariant::fromValue(enabled));
 }

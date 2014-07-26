@@ -35,6 +35,9 @@ public:
     explicit SignalMonitorInterface(QObject *parent = 0);
     ~SignalMonitorInterface();
 
+public slots:
+    virtual void sendClockUpdates(bool enabled) = 0;
+
 signals:
     void clock(qint64 msecs);
 };

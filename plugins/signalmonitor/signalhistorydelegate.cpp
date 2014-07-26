@@ -50,6 +50,7 @@ SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
 
   SignalMonitorInterface *iface = ObjectBroker::object<SignalMonitorInterface*>();
   connect(iface, SIGNAL(clock(qint64)), this, SLOT(onServerClockChanged(qint64)));
+  iface->sendClockUpdates(true);
 }
 
 void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

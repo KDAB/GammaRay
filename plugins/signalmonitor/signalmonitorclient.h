@@ -35,6 +35,9 @@ class SignalMonitorClient : public SignalMonitorInterface
 public:
     explicit SignalMonitorClient(QObject* parent = 0);
     ~SignalMonitorClient();
+
+public slots:
+    void sendClockUpdates(bool enabled) /*Q_DECL_OVERRIDE*/;
 };
 
 }
