@@ -21,6 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
+
 #include "util.h"
 #include <common/metatypedeclarations.h>
 #include "varianthandler.h"
@@ -32,6 +34,11 @@
 #include <QMetaObject>
 #include <QObject>
 #include <QPainter>
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
+#include <private/qobject_p.h>
+#include <private/qmetaobject_p.h>
+#endif
 
 #include <iostream>
 
@@ -276,4 +283,46 @@ void Util::drawTransparencyPattern(QPainter *painter, const QRect &rect, int squ
   QBrush bgBrush;
   bgBrush.setTexture(bgPattern);
   painter->fillRect(rect, bgBrush);
+}
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0) && defined(HAVE_PRIVATE_QT_HEADERS)
+// from Qt4's qobject.cpp
+static void computeOffsets(const QMetaObject *mo, int *signalOffset, int *methodOffset)
+{
+  *signalOffset = *methodOffset = 0;
+  const QMetaObject *m = mo->superClass();
+  while (m) {
+    const QMetaObjectPrivate *d = QMetaObjectPrivate::get(m);
+    *methodOffset += d->methodCount;
+    *signalOffset += d->signalCount;
+    m = m->superClass();
+  }
+}
+#endif
+
+int Util::signalIndexToMethodIndex(const QMetaObject* metaObject, int signalIndex)
+{
+#ifdef HAVE_PRIVATE_QT_HEADERS
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  return QMetaObjectPrivate::signal(metaObject, signalIndex).methodIndex();
+#else
+
+  if (signalIndex < 0)
+    return signalIndex;
+  Q_ASSERT(metaObject);
+
+  int signalOffset, methodOffset;
+  computeOffsets(metaObject, &signalOffset, &methodOffset);
+  while (signalOffset > signalIndex) {
+    metaObject = metaObject->superClass();
+    computeOffsets(metaObject, &signalOffset, &methodOffset);
+  }
+  const int offset = methodOffset - signalOffset;
+  return metaObject->method(signalIndex + offset).methodIndex();
+#endif
+#else
+  Q_UNUSED(metaObject);
+  Q_UNUSED(signalIndex);
+  return -1;
+#endif
 }

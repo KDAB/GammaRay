@@ -144,6 +144,18 @@ namespace Util {
    * @p size The size of the individual checkerboard squares.
    */
   GAMMARAY_CORE_EXPORT void drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize = 8);
+
+  /**
+   * Turns a signal index into a method index.
+   * Signals indexes are used internally by QObject as an optimization and are
+   * usually not exposed in public API. If you get them nevertheless, by using
+   * internals of QObject this method turns them into method indexes that work
+   * with public QMetaObject API.
+   *
+   * @param metaObject The meta object the signal belongs so
+   * @since 2.2
+   */
+  GAMMARAY_CORE_EXPORT int signalIndexToMethodIndex(const QMetaObject* metaObject, int signalIndex);
 }
 
 }
