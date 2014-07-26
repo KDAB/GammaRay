@@ -58,7 +58,10 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
   const QAbstractItemModel *const model = index.model();
   const QVector<qint64> &events = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
   const qint64 t0 = qMax(0LL, model->data(index, SignalHistoryModel::StartTimeRole).value<qint64>() - startTime);
-  const qint64 t1 = model->data(index, SignalHistoryModel::EndTimeRole).value<qint64>() - startTime;
+  qint64 t1 = model->data(index, SignalHistoryModel::EndTimeRole).value<qint64>();
+  if (t1 < 0) // still alive
+    t1 = endTime;
+  t1 -= startTime;
   const qint64 dt = qMax(0LL, t1) - t0;
 
   const int x0 = option.rect.x() + 1;

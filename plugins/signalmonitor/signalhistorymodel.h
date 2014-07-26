@@ -52,7 +52,7 @@ class SignalHistoryModel : public QAbstractItemModel
       QIcon decoration;
       QVector<qint64> events;
       const qint64 startTime; // FIXME: make them all methods
-      qint64 endTime(/*qint64 now*/) const;
+      qint64 endTime() const;
 
       qint64 timestamp(int i) const { return SignalHistoryModel::timestamp(events.at(i)); }
       int signalIndex(int i) const { return SignalHistoryModel::signalIndex(events.at(i)); }

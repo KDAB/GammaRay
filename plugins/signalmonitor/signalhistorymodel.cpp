@@ -299,12 +299,10 @@ SignalHistoryModel::Item::Item(QObject *obj)
   decoration = Util::iconForObject(object).value<QIcon>();
 }
 
-qint64 SignalHistoryModel::Item::endTime(/*qint64 now*/) const
+qint64 SignalHistoryModel::Item::endTime() const
 {
-  const qint64 now = RelativeClock::sinceAppStart()->mSecs(); // FIXME
-
   if (object)
-    return now;
+    return -1; // still alive
   if (not events.isEmpty())
     return timestamp(events.size() - 1);
 
