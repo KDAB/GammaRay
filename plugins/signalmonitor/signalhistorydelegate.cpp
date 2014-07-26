@@ -129,6 +129,7 @@ void SignalHistoryDelegate::onUpdateTimeout()
 void SignalHistoryDelegate::onServerClockChanged(qint64 msecs)
 {
   m_totalInterval = msecs;
+  emit totalIntervalChanged();
 }
 
 void SignalHistoryDelegate::setActive(bool active)

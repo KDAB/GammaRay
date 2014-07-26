@@ -46,6 +46,7 @@ SignalHistoryView::SignalHistoryView(QWidget *parent)
 
   connect(m_eventDelegate, SIGNAL(visibleOffsetChanged(qint64)), this, SLOT(eventDelegateChanged()));
   connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)), this, SLOT(eventDelegateChanged()));
+  connect(m_eventDelegate, SIGNAL(totalIntervalChanged()), this, SLOT(eventDelegateChanged()));
 }
 
 void SignalHistoryView::eventDelegateChanged()

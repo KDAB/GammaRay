@@ -58,6 +58,7 @@ class SignalHistoryDelegate : public QStyledItemDelegate
     void visibleIntervalChanged(qint64 value);
     void visibleOffsetChanged(qint64 value);
     void isActiveChanged(bool value);
+    void totalIntervalChanged();
 
   private slots:
     void onUpdateTimeout();
