@@ -128,17 +128,6 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
             return item(index)->decoration;
 
           break;
-
-        case EventItem:
-          if (role == Qt::DisplayRole) {
-            const qint64 t = item(index)->timestamp(index.row());
-            return tr("%1 ms").arg(QLocale().toString(t));
-          }
-
-          if (role == Qt::TextAlignmentRole)
-            return Qt::AlignRight;
-
-          break;
       }
 
       break;
@@ -150,12 +139,6 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
             return item(index)->objectType;
           if (role == Qt::ToolTipRole)
             return item(index)->toolTip;
-
-          break;
-
-        case EventItem:
-          if (role == Qt::DisplayRole)
-            return item(index)->signalName(index.row());
 
           break;
       }
