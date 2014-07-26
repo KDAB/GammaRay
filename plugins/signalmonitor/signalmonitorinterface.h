@@ -39,7 +39,7 @@ public slots:
     virtual void sendClockUpdates(bool enabled) = 0;
 
 signals:
-    void clock(qint64 msecs);
+    void clock(qlonglong msecs);
 };
 
 }

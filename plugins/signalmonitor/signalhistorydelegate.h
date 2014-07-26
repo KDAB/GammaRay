@@ -62,7 +62,7 @@ class SignalHistoryDelegate : public QStyledItemDelegate
 
   private slots:
     void onUpdateTimeout();
-    void onServerClockChanged(qint64 msecs);
+    void onServerClockChanged(qlonglong msecs);
 
   private:
     QTimer *const m_updateTimer;

@@ -49,7 +49,7 @@ SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
   onUpdateTimeout();
 
   SignalMonitorInterface *iface = ObjectBroker::object<SignalMonitorInterface*>();
-  connect(iface, SIGNAL(clock(qint64)), this, SLOT(onServerClockChanged(qint64)));
+  connect(iface, SIGNAL(clock(qlonglong)), this, SLOT(onServerClockChanged(qlonglong)));
   iface->sendClockUpdates(true);
 }
 
