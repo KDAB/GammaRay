@@ -45,8 +45,10 @@ static SignalHistoryModel *s_historyModel = 0;
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
   Q_UNUSED(argv);
-  if (s_historyModel)
-    QMetaObject::invokeMethod(s_historyModel, "onSignalEmitted", Qt::AutoConnection, Q_ARG(QObject*, caller), Q_ARG(int, method_index));
+  if (s_historyModel) {
+    const int signalIndex = qMax(Util::signalIndexToMethodIndex(caller->metaObject(), method_index) + 1, 0); // offset of 1, so unknown signals end up at 0
+    QMetaObject::invokeMethod(s_historyModel, "onSignalEmitted", Qt::AutoConnection, Q_ARG(QObject*, caller), Q_ARG(int, signalIndex));
+  }
 }
 
 
@@ -309,3 +311,14 @@ qint64 SignalHistoryModel::Item::endTime() const
   return startTime;
 }
 
+QByteArray SignalHistoryModel::Item::signalName(int i) const
+{
+  const int index = signalIndex(i) - 1; // see above, we store this with offset 1 to fit unknown ones into an unsigned value
+  if (index < 0)
+    return "<unknown>";
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  return metaObject->method(index).signature();
+#else
+  return metaObject->method(index).methodSignature();
+#endif
+}
