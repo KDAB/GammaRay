@@ -133,7 +133,7 @@ QString TranslationsModel::translation(const QByteArray &context,
 {
   QModelIndex existingIndex =
       findNode(context, sourceText, disambiguation, n, true);
-  Row row = m_nodes.at(existingIndex.row());
+  Row &row = m_nodes[existingIndex.row()];
   if (!row.isOverriden) {
     setTranslation(existingIndex, default_);
   }
@@ -141,19 +141,10 @@ QString TranslationsModel::translation(const QByteArray &context,
 }
 void TranslationsModel::resetAllUnchanged()
 {
-  QModelIndex current;
-  for (int i = 0; i < rowCount(); ++i) {
-    if (m_nodes.at(i).isOverriden) {
-      if (!current.isValid()) {
-        current = index(i);
-      }
-    } else if (current.isValid()) {
-      resetTranslations(current, index(i));
-      current = QModelIndex();
+  for (int i = 0; i < m_nodes.size(); ++i) {
+    if (!m_nodes[i].isOverriden) {
+      resetTranslations(index(i), index(i));
     }
-  }
-  if (current.isValid()) {
-    resetTranslations(current, index(rowCount()-1));
   }
 }
 void TranslationsModel::setTranslation(const QModelIndex &index,
