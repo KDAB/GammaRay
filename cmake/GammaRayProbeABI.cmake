@@ -16,12 +16,10 @@ else()
   set(GAMMARAY_PROBE_ABI "qt${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}")
 endif()
 
-
 # on Windows, the compiler also matters
 if(WIN32)
   set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_CXX_COMPILER_ID}")
 endif()
-
 
 # debug vs. release (MSVC only)
 if(MSVC)
@@ -31,7 +29,6 @@ if(MSVC)
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-debug")
   endif()
 endif()
-
 
 # processor architecture
 # this is a bit messy since CMAKE_SYSTEM_PROCESSOR seems to contain the host CPU rather than the target architecture sometimes
@@ -64,6 +61,5 @@ else()
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
   endif()
 endif()
-
 
 message(STATUS "Building probe for ABI: ${GAMMARAY_PROBE_ABI}")

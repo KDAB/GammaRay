@@ -1,6 +1,5 @@
 ### BENCH SUITE
 
-
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_executable(benchsuite benchsuite.cpp)
 
@@ -103,6 +102,5 @@ add_test(probeabitest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabitest)
 add_executable(probeabidetectortest probeabidetectortest.cpp)
 target_link_libraries(probeabidetectortest gammaray_common_internal ${QT_QTTEST_LIBRARIES})
 add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
-
 
 add_subdirectory(manual)

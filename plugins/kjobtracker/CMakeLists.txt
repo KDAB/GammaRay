@@ -20,7 +20,6 @@ else()
   )
 endif()
 
-
 # probe part
 if(KDE4_FOUND OR KF5CoreAddons_FOUND)
   include_directories(${KDE4_INCLUDES})
@@ -36,7 +35,7 @@ if(KDE4_FOUND OR KF5CoreAddons_FOUND)
     ${gammaray_kjob_plugin_srcs}
   )
 
-  if (KDE4_FOUND)
+  if(KDE4_FOUND)
     target_link_libraries(gammaray_kjobtracker_plugin
       ${KDE4_KDECORE_LIBS}
       gammaray_core

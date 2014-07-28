@@ -68,13 +68,14 @@ static QString displayMatrix4x4(const QMatrix4x4 &matrix)
     }
     rows.push_back(cols.join(" "));
   }
-  return "[" + rows.join(", ") + "]";
+  return '[' + rows.join(", ") + ']';
 }
 
 static QString displayMatrix4x4(const QMatrix4x4 *matrix)
 {
-  if (matrix)
+  if (matrix) {
     return displayMatrix4x4(*matrix);
+  }
   return "<null>";
 }
 
@@ -234,10 +235,13 @@ QString VariantHandler::displayString(const QVariant &value)
     return Util::displayString(value.value<QObject*>());
   }
 
-  if (value.userType() == qMetaTypeId<QMatrix4x4>())
+  if (value.userType() == qMetaTypeId<QMatrix4x4>()) {
     return displayMatrix4x4(value.value<QMatrix4x4>());
-  if (value.userType() == qMetaTypeId<const QMatrix4x4*>())
+  }
+
+  if (value.userType() == qMetaTypeId<const QMatrix4x4*>()) {
     return displayMatrix4x4(value.value<const QMatrix4x4*>());
+  }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
@@ -353,24 +357,29 @@ QString VariantHandler::displayString(const QVariant &value)
     int emptyStrings = 0;
     foreach (const QVariant &v, it) {
       s.push_back(displayString(v));
-      if (s.last().isEmpty())
+      if (s.last().isEmpty()) {
         ++emptyStrings;
+      }
     }
-    if (it.size() == 0)
+    if (it.size() == 0) {
       return QObject::tr("<empty>");
-    else if (it.size() == emptyStrings) // we don't know the content either
+    } else if (it.size() == emptyStrings) { // we don't know the content either
       return QObject::tr("%1 entries").arg(emptyStrings);
-    else
+    } else {
       return s.join(", ");
+    }
   }
 #endif
 
   // generic converters
-  foreach (GenericStringConverter converter, s_variantHandlerRepository()->genericStringConverters) {
+  QVector<VariantHandler::GenericStringConverter> genStrConverters =
+    s_variantHandlerRepository()->genericStringConverters;
+  foreach (const GenericStringConverter &converter, genStrConverters) {
     bool ok = false;
     const QString s = converter(value, &ok);
-    if (ok)
+    if (ok) {
       return s;
+    }
   }
 
   return value.toString();
@@ -451,7 +460,8 @@ void VariantHandler::registerStringConverter(int type, Converter<QString> *conve
   s_variantHandlerRepository()->stringConverters.insert(type, converter);
 }
 
-void VariantHandler::registerGenericStringConverter(VariantHandler::GenericStringConverter converter)
+void VariantHandler::registerGenericStringConverter(
+  VariantHandler::GenericStringConverter converter)
 {
   s_variantHandlerRepository()->genericStringConverters.push_back(converter);
 }

@@ -39,10 +39,18 @@ namespace VariantHandler
     virtual RetT operator() (const QVariant &v) = 0;
   };
 
-  template <typename RetT, typename InputT, typename FuncT> struct ConverterImpl : public Converter<RetT>
+  template <typename RetT, typename InputT, typename FuncT> struct ConverterImpl
+    : public Converter<RetT>
   {
-    explicit inline ConverterImpl(FuncT converter) : f(converter) {}
-    /*override*/ inline RetT operator() (const QVariant &v) { return f(v.value<InputT>()); }
+    explicit inline ConverterImpl(FuncT converter) : f(converter)
+    {
+    }
+
+    /*override*/
+    inline RetT operator() (const QVariant &v)
+    {
+      return f(v.value<InputT>());
+    }
     FuncT f;
   };
   ///@endcond
@@ -87,7 +95,7 @@ namespace VariantHandler
    * This can be used when you have a converter that can dynamically check if
    * it can handle a given variant, and the types it can handle aren't known
    * at compile time (example: QQmlListProperty).
-   * @param converter The converter function. It's second paramter is used to
+   * @param converter The converter function. It's second parameter is used to
    * indicate if the value could be handled.
    */
   GAMMARAY_CORE_EXPORT void registerGenericStringConverter(GenericStringConverter converter);

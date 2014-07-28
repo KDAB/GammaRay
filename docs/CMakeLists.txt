@@ -1,7 +1,7 @@
 #
 # man page
 #
-if (UNIX)
+if(UNIX)
   find_program(POD2MAN_EXECUTABLE pod2man)
   gammaray_add_dummy_package(pod2man POD2MAN_EXECUTABLE)
   set_package_properties(pod2man PROPERTIES
