@@ -24,6 +24,7 @@
 #include "signalmonitor.h"
 #include "signalhistorymodel.h"
 #include "relativeclock.h"
+#include "signalmonitorcommon.h"
 
 #include <QTimer>
 
@@ -32,6 +33,8 @@ using namespace GammaRay;
 SignalMonitor::SignalMonitor(ProbeInterface *probe, QObject *parent)
   : SignalMonitorInterface(parent)
 {
+  StreamOperators::registerSignalMonitorStreamOperators();
+
   SignalHistoryModel *model = new SignalHistoryModel(probe, this);
   probe->registerModel("com.kdab.GammaRay.SignalHistoryModel", model);
 

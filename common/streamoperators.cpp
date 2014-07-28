@@ -57,6 +57,4 @@ void StreamOperators::registerOperators()
   qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
 
   qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
-
-  qRegisterMetaTypeStreamOperators<QVector<qlonglong> >();
 }

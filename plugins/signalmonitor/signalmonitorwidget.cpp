@@ -26,6 +26,7 @@
 #include "signalhistorydelegate.h"
 #include "signalhistorymodel.h"
 #include "signalmonitorclient.h"
+#include "signalmonitorcommon.h"
 
 #include <common/objectbroker.h>
 #include <kde/krecursivefilterproxymodel.h>
@@ -40,6 +41,8 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::SignalMonitorWidget)
 {
+  StreamOperators::registerSignalMonitorStreamOperators();
+
   ObjectBroker::registerClientObjectFactoryCallback<SignalMonitorInterface*>(
     [](const QString&, QObject* parent) -> QObject* { return new SignalMonitorClient(parent); }
   );

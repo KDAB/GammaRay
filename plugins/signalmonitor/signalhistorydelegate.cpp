@@ -24,8 +24,8 @@
 #include "signalhistorydelegate.h"
 #include "signalhistorymodel.h"
 #include "signalmonitorinterface.h"
+#include "signalmonitorcommon.h"
 
-#include <common/metatypedeclarations.h>
 #include <common/objectbroker.h>
 
 #include <QDebug>

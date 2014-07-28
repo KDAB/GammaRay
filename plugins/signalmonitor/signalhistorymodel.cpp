@@ -23,11 +23,10 @@
 
 #include "signalhistorymodel.h"
 #include "relativeclock.h"
+#include "signalmonitorcommon.h"
 
 #include <core/probeinterface.h>
 #include <core/util.h>
-
-#include <common/metatypedeclarations.h>
 
 #include <QLocale>
 #include <QSet>
@@ -176,6 +175,8 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
             return item(index)->startTime;
           if (role == EndTimeRole)
             return item(index)->endTime();
+          if (role == SignalMapRole)
+            return QVariant::fromValue(item(index)->signalNames);
 
           break;
 
@@ -220,6 +221,7 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex& index) con
   d.insert(EventsRole, data(index, EventsRole));
   d.insert(StartTimeRole, data(index, StartTimeRole));
   d.insert(EndTimeRole, data(index, EndTimeRole));
+  d.insert(SignalMapRole, data(index, SignalMapRole));
   return d;
 }
 

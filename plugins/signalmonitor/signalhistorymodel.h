@@ -82,7 +82,8 @@ class SignalHistoryModel : public QAbstractItemModel
       ItemTypeNameRole = ObjectModel::UserRole + 1,
       EventsRole,
       StartTimeRole,
-      EndTimeRole
+      EndTimeRole,
+      SignalMapRole
     };
 
     explicit SignalHistoryModel(ProbeInterface *probe, QObject *parent = 0);

@@ -1,6 +1,7 @@
 # shared part
 set(gammaray_signalmonitor_shared_srcs
   signalmonitorinterface.cpp
+  signalmonitorcommon.cpp
 )
 add_library(gammaray_signalmonitor_shared STATIC ${gammaray_signalmonitor_shared_srcs})
 target_link_libraries(gammaray_signalmonitor_shared LINK_PRIVATE gammaray_common)
