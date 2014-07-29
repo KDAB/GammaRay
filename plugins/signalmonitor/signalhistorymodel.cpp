@@ -183,12 +183,6 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
         case EventItem:
           if (role == ItemTypeNameRole)
             return ITEM_TYPE_NAME_EVENT;
-          if (role == Qt::ToolTipRole) {
-            const Item *const data = item(index);
-            const QString &ts = QLocale().toString(data->timestamp(index.row()));
-            return tr("%1 at %2 ms").arg(data->signalName(index.row()), ts);
-          }
-
           break;
       }
 
@@ -306,15 +300,4 @@ qint64 SignalHistoryModel::Item::endTime() const
     return timestamp(events.size() - 1);
 
   return startTime;
-}
-
-QByteArray SignalHistoryModel::Item::signalName(int i) const
-{
-  const int index = signalIndex(i);
-  if (index <= 0)  // see above, we store this with offset 1 to fit unknown ones into an unsigned value
-    return "<unknown>";
-  const auto it = signalNames.constFind(index);
-  if (it == signalNames.constEnd() || it.value().isEmpty())
-    return "<unknown>";
-  return it.value();
 }

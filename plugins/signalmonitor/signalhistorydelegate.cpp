@@ -30,7 +30,6 @@
 
 #include <QDebug>
 #include <QPainter>
-#include <QSortFilterProxyModel>
 #include <QTimer>
 
 #include <limits>
@@ -157,34 +156,32 @@ QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position,
 
   const qint64 t = m_visibleInterval * position / width + m_visibleOffset;
   qint64 dtMin = std::numeric_limits<qint64>::max();
-  int toolTipIndex = -1;
+  int signalIndex = -1;
+  qint64 signalTimestamp = -1;
 
   for (int i = 0; i < events.size(); ++i) {
-    const qint64 dt = qAbs(SignalHistoryModel::timestamp(events.at(i)) - t);
+    signalTimestamp = SignalHistoryModel::timestamp(events.at(i));
+    const qint64 dt = qAbs(signalTimestamp - t);
 
     if (dt < dtMin) {
-      toolTipIndex = i;
+      signalIndex = SignalHistoryModel::signalIndex(events.at(i));
       dtMin = dt;
     }
   }
 
-  if (toolTipIndex >= 0) {
-    QModelIndex parent = index;
+  if (signalIndex < 0)
+    return QString();
 
-    forever {
-      const QSortFilterProxyModel *const filter =
-          qobject_cast<const QSortFilterProxyModel *>(parent.model());
+  const auto signalNames = index.data(SignalHistoryModel::SignalMapRole).value<QHash<int, QByteArray> >();
+  const auto it = signalNames.constFind(signalIndex);
+  QString signalName;
+  // see SignalHistoryModel, we store this with offset 1 to fit unknown ones into an unsigned value
+  if (signalIndex == 0 || it == signalNames.constEnd() || it.value().isEmpty())
+    signalName = tr("<unknown>");
+  else
+    signalName = it.value();
 
-      if (filter == 0)
-        break;
-
-      parent = filter->mapToSource(parent);
-    }
-
-    return parent.model()->data(parent.model()->index(toolTipIndex, SignalHistoryModel::EventColumn, parent),
-                                Qt::ToolTipRole).toString();
-  }
-
-  return QString();
+  const QString &ts = QLocale().toString(signalTimestamp);
+  return tr("%1 at %2 ms").arg(signalName, ts);
 }
 

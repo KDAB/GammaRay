@@ -57,7 +57,6 @@ class SignalHistoryModel : public QAbstractItemModel
 
       qint64 timestamp(int i) const { return SignalHistoryModel::timestamp(events.at(i)); }
       int signalIndex(int i) const { return SignalHistoryModel::signalIndex(events.at(i)); }
-      QByteArray signalName(int i) const;
     };
 
   public:
