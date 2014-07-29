@@ -242,7 +242,7 @@ qint64 SignalHistoryModel::Item::endTime() const
 {
   if (object)
     return -1; // still alive
-  if (not events.isEmpty())
+  if (!events.isEmpty())
     return timestamp(events.size() - 1);
 
   return startTime;

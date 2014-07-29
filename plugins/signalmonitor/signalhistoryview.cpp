@@ -116,7 +116,7 @@ bool SignalHistoryView::viewportEvent(QEvent *event)
       const int dx = eventColumnWidth();
       const QString &toolTipText = m_eventDelegate->toolTipAt(index, x0, dx);
 
-      if (not toolTipText.isEmpty()) {
+      if (!toolTipText.isEmpty()) {
         QToolTip::showText(help->globalPos(), toolTipText);
       } else {
         QToolTip::hideText();

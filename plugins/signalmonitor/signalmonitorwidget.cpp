@@ -98,12 +98,12 @@ void SignalMonitorWidget::adjustEventScrollBarSize()
 
 void SignalMonitorWidget::pauseAndResume(bool pause)
 {
-  ui->objectTreeView->eventDelegate()->setActive(not pause);
+  ui->objectTreeView->eventDelegate()->setActive(!pause);
 }
 
 void SignalMonitorWidget::eventDelegateIsActiveChanged(bool active)
 {
-  ui->pauseButton->setChecked(not active);
+  ui->pauseButton->setChecked(!active);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
