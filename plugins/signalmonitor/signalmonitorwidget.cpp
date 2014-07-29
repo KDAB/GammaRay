@@ -35,15 +35,18 @@
 
 using namespace GammaRay;
 
+static QObject* signalMonitorClientFactory(const QString&, QObject *parent)
+{
+  return new SignalMonitorClient(parent);
+}
+
 SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::SignalMonitorWidget)
 {
   StreamOperators::registerSignalMonitorStreamOperators();
 
-  ObjectBroker::registerClientObjectFactoryCallback<SignalMonitorInterface*>(
-    [](const QString&, QObject* parent) -> QObject* { return new SignalMonitorClient(parent); }
-  );
+  ObjectBroker::registerClientObjectFactoryCallback<SignalMonitorInterface*>(signalMonitorClientFactory);
 
   ui->setupUi(this);
 
