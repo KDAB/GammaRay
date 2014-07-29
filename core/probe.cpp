@@ -33,6 +33,7 @@
 #include "probesettings.h"
 #include "probecontroller.h"
 #include "toolpluginmodel.h"
+#include "util.h"
 
 #include "tools/modelinspector/modeltest.h"
 
@@ -96,6 +97,9 @@ static bool probeDisconnectCallback(void ** args)
 
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
+#endif
   Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
     if (qt_signal_spy_callback_set.signal_begin_callback) {
       qt_signal_spy_callback_set.signal_begin_callback(caller, method_index, argv);
@@ -105,6 +109,9 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 
 static void signal_end_callback(QObject *caller, int method_index)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
+#endif
   Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
     if (qt_signal_spy_callback_set.signal_end_callback) {
       qt_signal_spy_callback_set.signal_end_callback(caller, method_index);

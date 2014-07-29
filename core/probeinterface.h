@@ -146,6 +146,8 @@ class ProbeInterface
 
     /**
      * Register a signal spy callback set.
+     * Signal indexes provided as arguments are mapped to method indexes, ie. argument semantics
+     * are the same with Qt4 and Qt5.
      *
      * @since 2.2
      */
