@@ -35,8 +35,6 @@
 
 using namespace GammaRay;
 
-const QString SignalMonitorWidget::ITEM_TYPE_NAME_OBJECT = "Object";
-
 SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::SignalMonitorWidget)
@@ -50,14 +48,9 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   ui->setupUi(this);
 
   QAbstractItemModel *const signalHistory = ObjectBroker::model("com.kdab.GammaRay.SignalHistoryModel");
-  QSortFilterProxyModel *const objectProxy = new QSortFilterProxyModel(this);
-  objectProxy->setSourceModel(signalHistory);
-  objectProxy->setFilterKeyColumn(SignalHistoryModel::EventColumn);
-  objectProxy->setFilterRole(SignalHistoryModel::ItemTypeNameRole);
-  objectProxy->setFilterFixedString(ITEM_TYPE_NAME_OBJECT);
 
   QSortFilterProxyModel *const searchProxy = new KRecursiveFilterProxyModel(this);
-  searchProxy->setSourceModel(objectProxy);
+  searchProxy->setSourceModel(signalHistory);
   searchProxy->setDynamicSortFilter(true);
   ui->objectSearchLine->setProxy(searchProxy);
 

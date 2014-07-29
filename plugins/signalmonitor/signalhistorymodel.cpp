@@ -56,9 +56,6 @@ static T internString(const T &str)
   return str;
 }
 
-const QString SignalHistoryModel::ITEM_TYPE_NAME_OBJECT = "Object";
-const QString SignalHistoryModel::ITEM_TYPE_NAME_EVENT = "Event";
-
 static SignalHistoryModel *s_historyModel = 0;
 
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
@@ -72,7 +69,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 
 
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
-  : QAbstractItemModel(parent)
+  : QAbstractTableModel(parent)
 {
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), this, SLOT(onObjectRemoved(QObject*)));
@@ -90,15 +87,9 @@ SignalHistoryModel::~SignalHistoryModel()
 
 int SignalHistoryModel::rowCount(const QModelIndex &parent) const
 {
-  if (!parent.isValid()) {
-    return m_tracedObjects.size();
-  }
-
-  if (itemType(parent) == ObjectItem) {
-    return m_tracedObjects.at(parent.row())->events.size();
-  }
-
-  return 0;
+  if (parent.isValid())
+    return 0;
+  return m_tracedObjects.size();
 }
 
 int SignalHistoryModel::columnCount(const QModelIndex &) const
@@ -106,87 +97,45 @@ int SignalHistoryModel::columnCount(const QModelIndex &) const
   return 3;
 }
 
-QModelIndex SignalHistoryModel::parent(const QModelIndex &child) const
+SignalHistoryModel::Item* SignalHistoryModel::item(const QModelIndex& index) const
 {
-  if (itemType(child) == EventItem) {
-    const int row = m_tracedObjects.indexOf(item(child));
-
-    if (row >= 0)
-      return index(row, child.column());
-  }
-
-  return QModelIndex();
-}
-
-QModelIndex SignalHistoryModel::index(int row, int column, const QModelIndex &parent) const
-{
-  if (!parent.isValid()) {
-    if (row >= 0 && row < m_tracedObjects.size() && column >= 0 && column < columnCount()) {
-      return createIndex(row, column, itemPointer<ObjectItem>(m_tracedObjects.at(row)));
-    }
-  } else if (!parent.parent().isValid()) {
-    if (row >= 0 && row < item(parent)->events.count() && column >= 0 && column < columnCount()) {
-      return createIndex(row, column, itemPointer<EventItem>(item(parent)));
-    }
-  }
-
-  return QModelIndex();
+  if (!index.isValid())
+    return 0;
+  return m_tracedObjects.at(index.row());
 }
 
 QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
 {
   switch (static_cast<ColumnId>(index.column())) {
     case ObjectColumn:
-      switch(itemType(index)) {
-        case ObjectItem:
-          if (role == Qt::DisplayRole)
-            return item(index)->objectName;
-          if (role == Qt::ToolTipRole)
-            return item(index)->toolTip;
-          if (role == Qt::DecorationRole)
-            return item(index)->decoration;
+        if (role == Qt::DisplayRole)
+          return item(index)->objectName;
+        if (role == Qt::ToolTipRole)
+          return item(index)->toolTip;
+        if (role == Qt::DecorationRole)
+          return item(index)->decoration;
 
-          break;
-      }
-
-      break;
+        break;
 
     case TypeColumn:
-      switch(itemType(index)) {
-        case ObjectItem:
-          if (role == Qt::DisplayRole)
-            return item(index)->objectType;
-          if (role == Qt::ToolTipRole)
-            return item(index)->toolTip;
+        if (role == Qt::DisplayRole)
+          return item(index)->objectType;
+        if (role == Qt::ToolTipRole)
+          return item(index)->toolTip;
 
-          break;
-      }
-
-      break;
+        break;
 
     case EventColumn:
-      switch(itemType(index)) {
-        case ObjectItem:
-          if (role == ItemTypeNameRole)
-            return ITEM_TYPE_NAME_OBJECT;
-          if (role == EventsRole)
-            return QVariant::fromValue(item(index)->events);
-          if (role == StartTimeRole)
-            return item(index)->startTime;
-          if (role == EndTimeRole)
-            return item(index)->endTime();
-          if (role == SignalMapRole)
-            return QVariant::fromValue(item(index)->signalNames);
+        if (role == EventsRole)
+          return QVariant::fromValue(item(index)->events);
+        if (role == StartTimeRole)
+          return item(index)->startTime;
+        if (role == EndTimeRole)
+          return item(index)->endTime();
+        if (role == SignalMapRole)
+          return QVariant::fromValue(item(index)->signalNames);
 
-          break;
-
-        case EventItem:
-          if (role == ItemTypeNameRole)
-            return ITEM_TYPE_NAME_EVENT;
-          break;
-      }
-
-      break;
+        break;
   }
 
   return QVariant();
@@ -211,7 +160,6 @@ QVariant SignalHistoryModel::headerData(int section, Qt::Orientation orientation
 QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex& index) const
 {
   QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
-  d.insert(ItemTypeNameRole, data(index, ItemTypeNameRole));
   d.insert(EventsRole, data(index, EventsRole));
   d.insert(StartTimeRole, data(index, StartTimeRole));
   d.insert(EndTimeRole, data(index, EndTimeRole));
@@ -274,10 +222,7 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
     data->signalNames.insert(signalIndex, internString(signalName));
   }
 
-  const int newRow = data->events.size();
-  beginInsertRows(index(itemIndex, EventColumn), newRow, newRow);
   data->events.push_back((timestamp << 16) | signalIndex);
-  endInsertRows();
   emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
 
