@@ -99,7 +99,7 @@ message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TY
 #
 option(
   GAMMARAY_ENFORCE_QT4_BUILD
-  "Enable if you want to enfore a build with Qt4"
+  "Enable if you want to enforce a build with Qt4"
   OFF
 )
 
