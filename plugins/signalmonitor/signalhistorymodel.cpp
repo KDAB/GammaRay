@@ -63,7 +63,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
   Q_UNUSED(argv);
   if (s_historyModel) {
     const int signalIndex = method_index + 1; // offset 1, so unknown signals end up at 0
-    QMetaObject::invokeMethod(s_historyModel, "onSignalEmitted", Qt::AutoConnection, Q_ARG(QObject*, caller), Q_ARG(int, signalIndex));
+    QMetaObject::invokeMethod(s_historyModel, "onSignalEmitted", Qt::DirectConnection, Q_ARG(QObject*, caller), Q_ARG(int, signalIndex));
   }
 }
 
