@@ -70,9 +70,12 @@ TranslatorInspectorWidget::~TranslatorInspectorWidget()
 {
 }
 
+static QObject* translatorInspectorClientFactory(const QString &name, QObject *parent)
+{
+  return new TranslatorInspectorClient(name, parent);
+}
+
 void TranslatorInspectorWidgetFactory::initUi()
 {
-  ObjectBroker::registerClientObjectFactoryCallback<TranslatorInspectorInterface *>(
-        [](const QString &name, QObject *parent)
-  { return qobject_cast<QObject *>(new TranslatorInspectorClient(name, parent)); });
+  ObjectBroker::registerClientObjectFactoryCallback<TranslatorInspectorInterface *>(translatorInspectorClientFactory);
 }
