@@ -122,7 +122,7 @@ void TranslationsModel::resetTranslations(const QModelIndex &first,
   int bottom = last.row();
   beginRemoveRows(QModelIndex(), top, bottom);
   for (int i = 0; i < (bottom - top + 1); ++i) {
-    m_nodes.removeAt(top);
+    m_nodes.remove(top);
   }
   endRemoveRows();
 }
