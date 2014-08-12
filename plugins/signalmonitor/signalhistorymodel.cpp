@@ -27,6 +27,8 @@
 
 #include <core/probeinterface.h>
 #include <core/util.h>
+#include <core/probe.h>
+#include <core/readorwritelocker.h>
 
 #include <QLocale>
 #include <QSet>
@@ -203,6 +205,7 @@ void SignalHistoryModel::onObjectRemoved(QObject* object)
 
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 {
+  Q_ASSERT(thread() == QThread::currentThread());
   const qint64 timestamp = RelativeClock::sinceAppStart()->mSecs();
 
   const auto it = m_itemIndex.constFind(sender);
@@ -214,6 +217,10 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
   Q_ASSERT(data->object == sender);
   // ensure the item is known
   if (signalIndex > 0 && !data->signalNames.contains(signalIndex)) {
+    // protect dereferencing of sender here
+    ReadOrWriteLocker lock(Probe::instance()->objectLock());
+    if (!Probe::instance()->isValidObject(sender))
+      return;
     const QByteArray signalName = sender->metaObject()->method(signalIndex - 1)
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       .signature();
