@@ -9,6 +9,10 @@ add_subdirectory(statemachineviewer)
 add_subdirectory(timertop)
 add_subdirectory(webinspector)
 
+if(Qt5Core_FOUND)
+  add_subdirectory(translatorinspector)
+endif()
+
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(actioninspector)
   add_subdirectory(widgetinspector)

@@ -55,6 +55,12 @@ bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QPr
     newArgs << "--args";
     newArgs += args;
     args = newArgs;
+  } else if (env.contains("GAMMARAY_GDBSERVER")) {
+    QStringList newArgs;
+    newArgs << "gdbserver"
+            << env.value("GAMMARAY_GDBSERVER");
+    newArgs += args;
+    args = newArgs;
   } else if (env.value("GAMMARAY_MEMCHECK").toInt()) {
     QStringList newArgs;
     newArgs << "valgrind"

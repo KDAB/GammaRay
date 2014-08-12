@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Translators
+X-GammaRay-Types=QTranslator
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
+Exec=gammaray_translatorinspector
