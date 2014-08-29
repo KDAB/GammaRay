@@ -55,12 +55,17 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   env.insert("GAMMARAY_UNSET_PRELOAD", "1");
 
   PreloadCheck check;
-  bool success = check.test("qt_startup_hook");
+  const bool success = check.test("qt_startup_hook");
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0) // before 5.4 this is fatal, after that we have the built-in hooks and DLL initialization as an even better way
   if (!success) {
     mExitCode = 1;
     mErrorString = check.errorString();
     return false;
   }
+#else
+  Q_UNUSED(success);
+#endif
+
 #endif
 
   return launchProcess(programAndArgs, env);
