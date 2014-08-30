@@ -1,80 +1,86 @@
+gammaray (2.1.1) final; urgency=low
+
+  * 2.1.1 first 2.1 bugfix release
+
+ -- Allen Winter <allen.winter@kdab.com>  Sat, 30 Aug 2014 12:00:00 -0500
+
 gammaray (2.1.0) final; urgency=low
 
   * 2.1.0 final release
 
- -- Allen Winter <allen.winter@kdab.com> Fri, 27 Jun 2014 09:30:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Fri, 27 Jun 2014 09:30:00 -0500
 
 gammaray (2.0.98) final; urgency=low
 
   * 2.1.0 rc1 release
 
- -- Allen Winter <allen.winter@kdab.com> Thu, 26 Jun 2014 15:30:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Thu, 26 Jun 2014 15:30:00 -0500
 
 gammaray (2.0.2) final; urgency=low
 
   * 2.0.2 final release
 
- -- Allen Winter <allen.winter@kdab.com> Fri, 18 Apr 2014 11:30:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Fri, 18 Apr 2014 11:30:00 -0500
 
 gammaray (2.0.1) final; urgency=low
 
   * 2.0.1 final release
 
- -- Allen Winter <allen.winter@kdab.com> Fri, 28 Feb 2014 11:30:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Fri, 28 Feb 2014 11:30:00 -0500
 
 gammaray (2.0.0) final; urgency=low
 
   * 2.0.0 final release
 
- -- Allen Winter <allen.winter@kdab.com> Fri, 17 Jan 2014 11:00:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Fri, 17 Jan 2014 11:00:00 -0500
 
 gammaray (1.9.96) final; urgency=low
 
   * 2.0.0 beta2 release
 
- -- Allen Winter <allen.winter@kdab.com> Sat, 11 Jan 2014 11:00:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Sat, 11 Jan 2014 11:00:00 -0500
 
 gammaray (1.9.95) final; urgency=low
 
   * 2.0.0 beta1 release
 
- -- Allen Winter <allen.winter@kdab.com> Fri, 20 Dec 2013 11:00:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Fri, 20 Dec 2013 11:00:00 -0500
 
 gammaray (1.3.2) final; urgency=low
 
   * 1.3.2 patch release
 
- -- Allen Winter <allen.winter@kdab.com> Thu, 03 Oct 2013 11:00:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Thu, 03 Oct 2013 11:00:00 -0500
 
 gammaray (1.3.1) final; urgency=low
 
   * 1.3.1 patch release
 
- -- Allen Winter <allen.winter@kdab.com> Tues, 30 Apr 2013 16:30:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Tues, 30 Apr 2013 16:30:00 -0500
 
 gammaray (1.3.0) final; urgency=low
 
   * 1.3.0 final release
 
- -- Allen Winter <allen.winter@kdab.com> Sun, 27 Jan 2013 18:00:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Sun, 27 Jan 2013 18:00:00 -0500
 
 gammaray (1.2.2) patch; urgency=low
 
   * 1.2.2 patch release
 
- -- Allen Winter <allen.winter@kdab.com> Fri, 21 Dec 2012 14:33:00 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Fri, 21 Dec 2012 14:33:00 -0500
 
 gammaray (1.2.1) patch; urgency=low
 
   * 1.2.1 patch release
 
- -- Allen Winter <allen.winter@kdab.com> Thu, 16 Aug 2012 10:17:14 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Thu, 16 Aug 2012 10:17:14 -0500
 
 gammaray (1.2.0) final; urgency=low
 
   * 1.2.0 final release
 
- -- Allen Winter <allen.winter@kdab.com> Thu, 05 Jul 2012 10:19:14 -0500
+ -- Allen Winter <allen.winter@kdab.com>  Thu, 05 Jul 2012 10:19:14 -0500
 
 gammaray (1.1.99) beta2; urgency=low
 
