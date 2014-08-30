@@ -362,9 +362,14 @@ void QuickInspector::slotSceneChanged()
   const QSGTextureProvider *provider = m_source->textureProvider();
   Q_ASSERT(provider);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
   const QQuickShaderEffectTexture *texture =
     qobject_cast<QQuickShaderEffectTexture*>(provider->texture());
   Q_ASSERT(texture);
+#else
+  const QSGLayer *texture = qobject_cast<QSGLayer*>(provider->texture());
+  Q_ASSERT(texture);
+#endif
 
   QOpenGLContext *ctx =
     QQuickItemPrivate::get(m_source)->sceneGraphRenderContext()->openglContext();

@@ -1,6 +1,17 @@
 Release Highlights
 ==================
 
+Version 2.1.1:
+-------------
+ * Fix invoking non-slot methods with arguments.
+ * Fix QtQuick2 preview not showing any content with Qt 5.2 or older.
+ * Fix crash when encountering tooltips in Qt5 targets.
+ * Fix deadlock in object list model.
+ * Fix QGraphicsView scene selection in in-process mode.
+ * Fix debug message handler for Qt5.
+ * A missing relocatable startup hook is no longer fatal with Qt 5.4.
+ * Fix Qt 5.4 compatibility of the QtQuick2 preview.
+
 Version 2.1.0:
 -------------
  * Aggregated property view combining static, dynamic and non-QObject property views.
