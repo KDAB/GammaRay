@@ -18,6 +18,10 @@ target_link_libraries(gammaray_timertop_plugin
   gammaray_core
 )
 
+if (LINUX)
+  target_link_libraries(pthread)
+endif()
+
 if(NOT WIN32 AND NOT APPLE)
   target_link_libraries(gammaray_timertop_plugin rt)
 endif()
