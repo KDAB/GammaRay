@@ -51,7 +51,8 @@ static void portableGetTimeUnix(timespec &t)
 #endif
 
 FunctionCallTimer::FunctionCallTimer()
-  : m_active(false)
+  : m_startTime()
+  , m_active(false)
 {
 }
 
