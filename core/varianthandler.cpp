@@ -107,13 +107,13 @@ QString VariantHandler::displayString(const QVariant &value)
   }
   case QVariant::Line:
     return
-      QString::fromUtf8("%1 x %2 → %3 x %4").
+      QString::fromUtf8("%1, %2 → %3, %4").
         arg(value.toLine().x1()).arg(value.toLine().y1()).
         arg(value.toLine().x2()).arg(value.toLine().y2());
 
   case QVariant::LineF:
     return
-      QString::fromUtf8("%1 x %2 → %3 x %4").
+      QString::fromUtf8("%1, %2 → %3, %4").
         arg(value.toLineF().x1()).arg(value.toLineF().y1()).
         arg(value.toLineF().x2()).arg(value.toLineF().y2());
 
@@ -122,19 +122,19 @@ QString VariantHandler::displayString(const QVariant &value)
 
   case QVariant::Point:
     return
-      QString::fromLatin1("%1x%2").
+      QString::fromLatin1("%1, %2").
         arg(value.toPoint().x()).
         arg(value.toPoint().y());
 
   case QVariant::PointF:
     return
-      QString::fromLatin1("%1x%2").
+      QString::fromLatin1("%1, %2").
         arg(value.toPointF().x()).
         arg(value.toPointF().y());
 
   case QVariant::Rect:
     return
-      QString::fromLatin1("%1x%2 %3x%4").
+      QString::fromLatin1("%1, %2 %3 x %4").
         arg(value.toRect().x()).
         arg(value.toRect().y()).
         arg(value.toRect().width()).
@@ -142,7 +142,7 @@ QString VariantHandler::displayString(const QVariant &value)
 
   case QVariant::RectF:
     return
-      QString::fromLatin1("%1x%2 %3x%4").
+      QString::fromLatin1("%1, %2 %3 x %4").
         arg(value.toRectF().x()).
         arg(value.toRectF().y()).
         arg(value.toRectF().width()).
@@ -172,13 +172,13 @@ QString VariantHandler::displayString(const QVariant &value)
 
   case QVariant::Size:
     return
-      QString::fromLatin1("%1x%2").
+      QString::fromLatin1("%1 x %2").
         arg(value.toSize().width()).
         arg(value.toSize().height());
 
   case QVariant::SizeF:
     return
-      QString::fromLatin1("%1x%2").
+      QString::fromLatin1("%1 x %2").
         arg(value.toSizeF().width()).
         arg(value.toSizeF().height());
 
