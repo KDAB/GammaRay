@@ -33,11 +33,11 @@
 using namespace GammaRay;
 
 WinDllInjector::WinDllInjector() :
-  m_destProcess(NULL),
-  m_destThread(NULL),
   mExitCode(-1),
   mProcessError(QProcess::UnknownError),
-  mExitStatus(QProcess::NormalExit)
+  mExitStatus(QProcess::NormalExit),
+  m_destProcess(NULL),
+  m_destThread(NULL)
 {
 }
 
