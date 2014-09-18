@@ -90,7 +90,7 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
       return toStringList<uint>(index.internalPointer(), attrInfo->tupleSize).join(", ");
     case GL_FLOAT:
       return toStringList<float>(index.internalPointer(), attrInfo->tupleSize).join(", ");
-#if GL_DOUBLE != GL_FLOAT
+#if defined(GL_DOUBLE) && GL_DOUBLE != GL_FLOAT
     case GL_DOUBLE:
       return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(", ");
 #endif
@@ -130,7 +130,7 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
       return toVariantList<uint>(index.internalPointer(), attrInfo->tupleSize);
     case GL_FLOAT:
       return toVariantList<float>(index.internalPointer(), attrInfo->tupleSize);
-#if GL_DOUBLE != GL_FLOAT
+#if defined(GL_DOUBLE) && GL_DOUBLE != GL_FLOAT
     case GL_DOUBLE:
       return toVariantList<double>(index.internalPointer(), attrInfo->tupleSize);
 #endif
@@ -214,7 +214,7 @@ QModelIndex GammaRay::SGGeometryModel::index(int row, int column, const QModelIn
   case GL_FLOAT:
     tupleItemSize = sizeof(float);
     break;
-#if GL_DOUBLE != GL_FLOAT
+#if defined(GL_DOUBLE) && GL_DOUBLE != GL_FLOAT
   case GL_DOUBLE:
     tupleItemSize = sizeof(double);
     break;
