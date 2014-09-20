@@ -31,6 +31,7 @@
 #include "materialextension/materialtab.h"
 #include "annotatedscenepreview.h"
 #include "quickitemdelegate.h"
+#include "transferimage.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/objectbroker.h>
@@ -206,7 +207,10 @@ void QuickInspectorWidget::sceneRendered(const QVariantMap &previewData)
   m_waitingForImage = false;
 
   if (m_rootItem) {
-    m_rootItem->setProperty("previewData", previewData);
+    QVariantMap data(previewData);
+    const TransferImage transfer = data.value("rawImage").value<TransferImage>();
+    data.insert("image", QVariant::fromValue(transfer.image())); // unwrap for usage in QML
+    m_rootItem->setProperty("previewData", data);
   }
 
   if (m_sceneChangedSinceLastRequest) {

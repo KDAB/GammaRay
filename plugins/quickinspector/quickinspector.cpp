@@ -24,6 +24,7 @@
 #include "quickinspector.h"
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
+#include "transferimage.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
 
@@ -294,7 +295,7 @@ void QuickInspector::renderScene()
   }
 
   QVariantMap previewData;
-  previewData.insert("image", QVariant::fromValue(m_currentFrame));
+  previewData.insert("rawImage", QVariant::fromValue(TransferImage(m_currentFrame))); // wrap to allow bypassing expensive PNG compression
   if (m_currentItem) {
     QQuickItem *parent = m_currentItem->parentItem();
 

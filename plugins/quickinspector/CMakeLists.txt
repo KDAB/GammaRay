@@ -8,12 +8,13 @@ if(Qt5Quick_FOUND AND Qt5Quick_PRIVATE_INCLUDE_DIRS AND NOT ${Qt5Quick_VERSION} 
   # shared stuff
   set(gammaray_quickinspector_shared_srcs
         quickinspectorinterface.cpp
+        transferimage.cpp
         materialextension/materialextensioninterface.cpp
         geometryextension/sggeometryextensioninterface.cpp
       )
 
   add_library(gammaray_quickinspector_shared STATIC ${gammaray_quickinspector_shared_srcs})
-  target_link_libraries(gammaray_quickinspector_shared gammaray_common)
+  target_link_libraries(gammaray_quickinspector_shared gammaray_common Qt5::Gui)
   set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
   include_directories(${Qt5Quick_PRIVATE_INCLUDE_DIRS})
