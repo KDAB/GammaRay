@@ -76,6 +76,8 @@ class QuickInspector : public QuickInspectorInterface
 
     void checkFeatures() Q_DECL_OVERRIDE;
 
+    void setSceneViewActive(bool active) Q_DECL_OVERRIDE;
+
   protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
@@ -111,7 +113,7 @@ class QuickInspector : public QuickInspectorInterface
     QItemSelectionModel *m_sgSelectionModel;
     PropertyController *m_itemPropertyController;
     PropertyController *m_sgPropertyController;
-    bool m_clientConnected;
+    bool m_clientViewActive;
     QImage m_currentFrame;
 };
 

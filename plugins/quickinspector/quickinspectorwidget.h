@@ -53,6 +53,10 @@ class QuickInspectorWidget : public QWidget
     explicit QuickInspectorWidget(QWidget *parent = 0);
     ~QuickInspectorWidget();
 
+  private:
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
+
   private slots:
     void sceneChanged();
     void sceneRendered(const QVariantMap &previewData);

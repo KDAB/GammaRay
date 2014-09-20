@@ -147,7 +147,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_sgModel(new QuickSceneGraphModel(this)),
     m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
     m_sgPropertyController(new PropertyController("com.kdab.GammaRay.QuickSceneGraph", this)),
-    m_clientConnected(false)
+    m_clientViewActive(false)
 {
   registerPCExtensions();
   Server::instance()->registerMonitorNotifier(
@@ -289,7 +289,7 @@ void QuickInspector::objectSelected(void *object, const QString &typeName)
 
 void QuickInspector::renderScene()
 {
-  if (!m_clientConnected || !m_window) {
+  if (!m_clientViewActive || !m_window) {
     return;
   }
 
@@ -355,7 +355,7 @@ void QuickInspector::renderScene()
 
 void QuickInspector::slotSceneChanged()
 {
-  if (!m_clientConnected || !m_window) {
+  if (!m_clientViewActive || !m_window) {
     return;
   }
 
@@ -383,7 +383,7 @@ void QuickInspector::slotSceneChanged()
 void QuickInspector::sendKeyEvent(int type, int key, int modifiers, const QString &text,
                                   bool autorep, ushort count)
 {
-  if (!m_clientConnected || !m_window) {
+  if (!m_window) {
     return;
   }
 
@@ -399,7 +399,7 @@ void QuickInspector::sendKeyEvent(int type, int key, int modifiers, const QStrin
 void QuickInspector::sendMouseEvent(int type, const QPointF &localPos, int button,
                                     int buttons, int modifiers)
 {
-  if (!m_clientConnected || !m_window) {
+  if (!m_window) {
     return;
   }
 
@@ -414,7 +414,7 @@ void QuickInspector::sendMouseEvent(int type, const QPointF &localPos, int butto
 void QuickInspector::sendWheelEvent(const QPointF &localPos, QPoint pixelDelta, QPoint angleDelta,
                                     int buttons, int modifiers)
 {
-  if (!m_clientConnected || !m_window) {
+  if (!m_window) {
     return;
   }
 
@@ -509,9 +509,15 @@ void QuickInspector::sgNodeDeleted(QSGNode *node)
 
 void QuickInspector::clientConnectedChanged(bool connected)
 {
-  m_clientConnected = connected;
+  if (!connected)
+    m_clientViewActive = false;
+}
 
-  if (connected && m_window) {
+void QuickInspector::setSceneViewActive(bool active)
+{
+  m_clientViewActive = active;
+
+  if (active && m_window) {
     m_window->update();
   }
 }

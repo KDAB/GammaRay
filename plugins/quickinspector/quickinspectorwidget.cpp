@@ -39,6 +39,7 @@
 #include <kde/krecursivefilterproxymodel.h>
 #include <client/remotemodel.h>
 
+#include <QEvent>
 #include <QLabel>
 #include <QTimer>
 #include <qmath.h>
@@ -179,7 +180,6 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
           this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
 
   m_interface->checkFeatures();
-  m_interface->renderScene();
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
@@ -276,3 +276,16 @@ void QuickInspectorUiFactory::initUi()
   PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", QObject::tr("Geometry"));
 }
 
+void QuickInspectorWidget::showEvent(QShowEvent* event)
+{
+  QWidget::showEvent(event);
+  m_waitingForImage = false;
+  m_sceneChangedSinceLastRequest = true;
+  m_interface->setSceneViewActive(true);
+}
+
+void QuickInspectorWidget::hideEvent(QHideEvent* event)
+{
+  m_interface->setSceneViewActive(false);
+  QWidget::hideEvent(event);
+}

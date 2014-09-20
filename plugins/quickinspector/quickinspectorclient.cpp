@@ -99,3 +99,8 @@ void QuickInspectorClient::checkFeatures()
 {
   Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
 }
+
+void QuickInspectorClient::setSceneViewActive(bool active)
+{
+  Endpoint::instance()->invokeObject(objectName(), "setSceneViewActive", QVariantList() << QVariant::fromValue(active));
+}

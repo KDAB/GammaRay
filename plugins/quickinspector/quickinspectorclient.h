@@ -55,6 +55,8 @@ public slots:
   void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) Q_DECL_OVERRIDE;
 
   void checkFeatures() Q_DECL_OVERRIDE;
+
+  void setSceneViewActive(bool active) Q_DECL_OVERRIDE;
 };
 }
 
