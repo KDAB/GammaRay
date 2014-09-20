@@ -81,7 +81,7 @@ class QuickInspectorInterface : public QObject
   signals:
     /// Emitted when the view has been newly rendered, for the client to request an update.
     void sceneChanged();
-    void sceneRendered(QVariantMap previewData);
+    void sceneRendered(const QVariantMap &previewData);
     void features(GammaRay::QuickInspectorInterface::Features features);
 
 };
