@@ -76,21 +76,17 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
   const int x1 = x0 + dx * t0 / interval;
   const int x2 = dx * dt / interval + 1;
 
-  const bool selected = option.state & QStyle::State_Selected;
-
   if (t1 >= 0) {
-    painter->fillRect(x1, y0 + 1, x2, dy - 2,
-                      selected ? option.palette.highlightedText()
-                               : option.palette.midlight());
+    painter->fillRect(x1, y0 + 1, x2, dy - 2, option.palette.midlight());
   }
 
-  painter->setPen(option.palette.color(selected ? QPalette::Highlight : QPalette::WindowText));
+  painter->setPen(option.palette.color(QPalette::WindowText));
 
   foreach (qint64 ev, events) {
     const qint64 ts = SignalHistoryModel::timestamp(ev);
     if (ts >= startTime && ts < endTime) {
       const int x = x0 + dx * (ts - startTime) / interval;
-      painter->drawLine(x, y0, x, y0 + dy);
+      painter->drawLine(x, y0 + 1, x, y0 + dy - 2);
     }
   }
 }
