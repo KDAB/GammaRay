@@ -20,7 +20,7 @@ SKIP /processlist_unix.cpp|/processlist_win.cpp|/processlist.h
 SKIP /launcher/processlist.h|/launcher/injector/interactiveprocess.cpp|/launcher/injector/interactiveprocess.h
 SKIP StackWalker
 #if you have a build subdir, skip it
-SKIP /build
+SKIP /build-
 SKIP Doxyfile.cmake
 
 #skip the borrowed code in the cmake subdir
