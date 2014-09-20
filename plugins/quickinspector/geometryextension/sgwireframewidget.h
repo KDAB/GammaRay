@@ -25,12 +25,7 @@
 #define GAMMARAY_QUICKINSPECTOR_SGWIREFRAMEWIDGET_H
 
 #include <QWidget>
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <qopengl.h>
-#else
-#include <QtOpenGL/qgl.h>
-#endif
 
 class QItemSelection;
 class QPainter;

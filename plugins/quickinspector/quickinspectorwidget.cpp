@@ -276,6 +276,3 @@ void QuickInspectorUiFactory::initUi()
   PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", QObject::tr("Geometry"));
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(QuickInspectorUiFactory)
-#endif
