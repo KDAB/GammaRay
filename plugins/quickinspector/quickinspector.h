@@ -83,6 +83,7 @@ class QuickInspector : public QuickInspectorInterface
 
   private slots:
     void slotSceneChanged();
+    void sendRenderedScene();
     void itemSelectionChanged(const QItemSelection &selection);
     void sgSelectionChanged(const QItemSelection &selection);
     void clientConnectedChanged(bool connected);
@@ -113,8 +114,9 @@ class QuickInspector : public QuickInspectorInterface
     QItemSelectionModel *m_sgSelectionModel;
     PropertyController *m_itemPropertyController;
     PropertyController *m_sgPropertyController;
-    bool m_clientViewActive;
     QImage m_currentFrame;
+    bool m_clientViewActive;
+    bool m_needsNewFrame;
 };
 
 class QuickInspectorFactory : public QObject,

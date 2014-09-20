@@ -148,7 +148,8 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_sgModel(new QuickSceneGraphModel(this)),
     m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
     m_sgPropertyController(new PropertyController("com.kdab.GammaRay.QuickSceneGraph", this)),
-    m_clientViewActive(false)
+    m_clientViewActive(false),
+    m_needsNewFrame(false)
 {
   registerPCExtensions();
   Server::instance()->registerMonitorNotifier(
@@ -294,6 +295,12 @@ void QuickInspector::renderScene()
     return;
   }
 
+  m_needsNewFrame = true;
+  m_window->update();
+}
+
+void QuickInspector::sendRenderedScene()
+{
   QVariantMap previewData;
   previewData.insert("rawImage", QVariant::fromValue(TransferImage(m_currentFrame))); // wrap to allow bypassing expensive PNG compression
   if (m_currentItem) {
@@ -360,6 +367,11 @@ void QuickInspector::slotSceneChanged()
     return;
   }
 
+  if (!m_needsNewFrame) {
+    emit sceneChanged();
+    return;
+  }
+
   const QSGTextureProvider *provider = m_source->textureProvider();
   Q_ASSERT(provider);
 
@@ -378,7 +390,8 @@ void QuickInspector::slotSceneChanged()
     m_currentFrame = texture->toImage();
   }
 
-  emit sceneChanged();
+  m_needsNewFrame = false;
+  QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::AutoConnection); // we are in the render thread here
 }
 
 void QuickInspector::sendKeyEvent(int type, int key, int modifiers, const QString &text,
