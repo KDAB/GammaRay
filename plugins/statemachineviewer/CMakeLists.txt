@@ -43,14 +43,14 @@ set(gammaray_statemachineviewer_ui_plugin_srcs
   gvgraph/gvutils.cpp
 )
 
-find_package(SME)
-if (SME_FOUND AND Qt5Quick_FOUND)
+find_package(KDSME CONFIG)
+if (KDSME_FOUND AND Qt5Quick_FOUND)
   list(APPEND gammaray_statemachineviewer_ui_plugin_srcs
     statemachineviewerwidgetng.cpp
   )
   list(APPEND gammaray_statemachineviewer_ui_plugin_libs
-    SME::sme_core
-    SME::sme_view
+    kdstatemachineeditor_core
+    kdstatemachineeditor_view
   )
 else()
   list(APPEND gammaray_statemachineviewer_ui_plugin_srcs

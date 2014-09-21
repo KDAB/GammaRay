@@ -7,12 +7,12 @@
 #include <ui/deferredresizemodesetter.h>
 #include <ui/deferredtreeviewconfiguration.h>
 
-#include <sme/core/configurationcontroller.h>
-#include <sme/core/element.h>
-#include <sme/core/layoutitem.h>
-#include <sme/core/view.h>
-#include <sme/view/statemachinetoolbar.h>
-#include <sme/view/statemachineview.h>
+#include <kdstatemachineeditor/core/configurationcontroller.h>
+#include <kdstatemachineeditor/core/element.h>
+#include <kdstatemachineeditor/core/layoutitem.h>
+#include <kdstatemachineeditor/core/view.h>
+#include <kdstatemachineeditor/view/statemachinetoolbar.h>
+#include <kdstatemachineeditor/view/statemachineview.h>
 
 #include <QDebug>
 #include <QLayout>
@@ -22,7 +22,7 @@
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
-using namespace SME;
+using namespace KDSME;
 
 namespace {
 
@@ -84,14 +84,13 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   connect(m_ui->maxMegaPixelsSpinBox, SIGNAL(valueChanged(int)), SLOT(setMaximumMegaPixels(int)));
 
   m_currentView = new View(this);
-  m_stateMachineView = new SME::StateMachineView;
+  m_stateMachineView = new KDSME::StateMachineView;
   m_stateMachineView->setView(m_currentView);
-  QWidget* container = QWidget::createWindowContainer(m_stateMachineView, this);
-  container->setMinimumWidth(300);
 
   // FIXME: Do it properly
   delete m_ui->graphicsView;
-  m_ui->verticalSplitter->addWidget(container);
+  m_ui->verticalSplitter->setChildrenCollapsible(false);
+  m_ui->verticalSplitter->addWidget(m_stateMachineView);
 
   connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
   connect(m_interface, SIGNAL(stateConfigurationChanged(GammaRay::StateMachineConfiguration)),
@@ -159,9 +158,7 @@ void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId
   if (type == StateMachineState) {
     state = m_machine = new StateMachine;
   } else if (type == GammaRay::FinalState) {
-    state = new SME::FinalState(parentState);
-  } else if (hasChildren) {
-    state = new CompositeState(parentState);
+    state = new KDSME::FinalState(parentState);
   } else {
     state = new State(parentState);
   }

@@ -6,7 +6,7 @@
 
 #include <QWidget>
 
-namespace SME {
+namespace KDSME {
 class State;
 class StateMachine;
 class StateMachineView;
@@ -48,13 +48,13 @@ private:
 
   QScopedPointer<Ui::StateMachineViewer> m_ui;
 
-  SME::StateMachineView* m_stateMachineView;
-  SME::View* m_currentView;
+  KDSME::StateMachineView* m_stateMachineView;
+  KDSME::View* m_currentView;
   StateMachineViewerInterface *m_interface;
 
-  QHash<StateId, SME::State*> m_idToStateMap;
-  QHash<TransitionId, SME::Transition*> m_idToTransitionMap;
-  SME::StateMachine* m_machine;
+  QHash<StateId, KDSME::State*> m_idToStateMap;
+  QHash<TransitionId, KDSME::Transition*> m_idToTransitionMap;
+  KDSME::StateMachine* m_machine;
 };
 
 class StateMachineViewerUiFactory : public QObject, public StandardToolUiFactory<StateMachineViewerWidgetNG>
