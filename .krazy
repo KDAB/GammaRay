@@ -4,7 +4,8 @@ CHECKSETS qt4,c++,foss
 EXTRA kdabcopyright
 
 #additional checks
-EXTRA defines,null,style
+EXTRA defines,null
+#EXTRA style
 
 #coding style settings
 STYLE_CPPSTYLE kde
