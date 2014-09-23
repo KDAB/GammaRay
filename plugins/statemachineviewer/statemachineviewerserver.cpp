@@ -232,9 +232,6 @@ void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
 
 void StateMachineViewerServer::stateSelectionChanged()
 {
-  // FIXME: ignore state selection changes. we're going to handle that in the UI
-  return;
-
   const QModelIndexList& selection = ObjectBroker::selectionModel(m_stateModel)->selectedRows();
   QVector<QAbstractState*> filter;
   filter.reserve(selection.size());

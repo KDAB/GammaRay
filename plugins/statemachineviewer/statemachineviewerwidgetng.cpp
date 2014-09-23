@@ -90,7 +90,6 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   connect(stateModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
 
   m_ui->singleStateMachineView->setModel(stateModel);
-  m_ui->singleStateMachineView->setSelectionModel(ObjectBroker::selectionModel(stateModel));
   m_ui->singleStateMachineView->setSelectionMode(QAbstractItemView::ExtendedSelection);
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 1, QHeaderView::ResizeToContents);
