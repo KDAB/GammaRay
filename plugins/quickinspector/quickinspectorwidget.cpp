@@ -209,6 +209,7 @@ void QuickInspectorWidget::sceneRendered(const QVariantMap &previewData)
   if (m_rootItem) {
     QVariantMap data(previewData);
     const TransferImage transfer = data.value("rawImage").value<TransferImage>();
+    data.remove("rawImage");
     data.insert("image", QVariant::fromValue(transfer.image())); // unwrap for usage in QML
     m_rootItem->setProperty("previewData", data);
   }
