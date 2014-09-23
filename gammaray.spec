@@ -28,6 +28,11 @@ BuildRequires:  vtk-devel libxml2-devel
 %if 0%{?suse_version} > 1230
 BuildRequires:  python-devel
 %endif
+%if 0%{?suse_version} > 1310
+# dependency ambiguity for vtk-java needed by vtk-devel in openSUSE > 13.1
+#!BuildIgnore:  java-1_7_0-openjdk-bootstrap-headless
+#!BuildIgnore:  java-1_7_0-openjdk-headless
+%endif
 Requires:       graphviz
 %endif
 
