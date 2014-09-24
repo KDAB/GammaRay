@@ -226,8 +226,14 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     m_source->setScale(0); // The item shouldn't be visible in the original scene, but it still
                            // needs to be rendered. (i.e. setVisible(false) would cause it to
                            // not be rendered anymore)
-    m_source->setRecursive(true);
-    m_source->setSourceItem(contentItem);
+
+    const QList<QQuickItem*> children = contentItem->childItems();
+    if (children.size() == 2) { // prefer non-recursive shader sources, then we don't re-render all the time
+      m_source->setSourceItem(children.at(children.indexOf(m_source) == 1 ? 0 : 1));
+    } else {
+      m_source->setRecursive(true);
+      m_source->setSourceItem(contentItem);
+    }
 
     connect(window, &QQuickWindow::afterRendering,
             this, &QuickInspector::slotSceneChanged, Qt::DirectConnection);
