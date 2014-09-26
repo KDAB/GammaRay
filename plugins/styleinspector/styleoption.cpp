@@ -34,7 +34,7 @@ struct style_state_t {
 
 #define MAKE_STATE( state ) { #state, QStyle:: state }
 
-static style_state_t styleStates[] = {
+static const style_state_t styleStates[] = {
   MAKE_STATE(State_None),
   MAKE_STATE(State_Enabled),
   MAKE_STATE(State_Raised),

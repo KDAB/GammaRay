@@ -34,7 +34,7 @@ struct cmd_t {
 
 #define CMD(cmd) { QPaintBufferPrivate::Cmd_ ## cmd, #cmd }
 
-static cmd_t cmdTypes[] =  {
+static const cmd_t cmdTypes[] =  {
   CMD(Save),
   CMD(Restore),
   CMD(SetBrush),

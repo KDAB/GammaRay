@@ -42,7 +42,7 @@ struct complex_control_element_t {
 #define MAKE_CC2( control, factory ) { #control, QStyle:: control, &StyleOption:: factory, 0 }
 #define MAKE_CC3( control, factory, subControls ) { #control, QStyle:: control, &StyleOption:: factory, subControls }
 
-static complex_control_element_t complexControlElements[] =  {
+static const complex_control_element_t complexControlElements[] =  {
   MAKE_CC3(CC_SpinBox, makeSpinBoxStyleOption, QStyle::SC_SpinBoxUp | QStyle::SC_SpinBoxDown | QStyle::SC_SpinBoxFrame | QStyle::SC_SpinBoxEditField),
   MAKE_CC3(CC_ComboBox, makeComboBoxStyleOption, QStyle::SC_ComboBoxFrame | QStyle::SC_ComboBoxArrow | QStyle::SC_ComboBoxEditField | QStyle::SC_ComboBoxListBoxPopup),
   MAKE_CC3(CC_ScrollBar, makeSliderStyleOption, QStyle::SC_ScrollBarAddLine | QStyle::SC_ScrollBarSubLine | QStyle::SC_ScrollBarAddPage | QStyle::SC_ScrollBarSubPage | QStyle::SC_ScrollBarFirst | QStyle::SC_ScrollBarLast | QStyle::SC_ScrollBarSlider | QStyle::SC_ScrollBarGroove),

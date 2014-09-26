@@ -35,7 +35,7 @@ struct pixel_metric_t {
 
 #define MAKE_PM(metric) { #metric, QStyle:: metric }
 
-static pixel_metric_t pixelMetrics[] = {
+static const pixel_metric_t pixelMetrics[] = {
   MAKE_PM(PM_ButtonMargin),
   MAKE_PM(PM_ButtonDefaultIndicator),
   MAKE_PM(PM_MenuButtonIndicator),

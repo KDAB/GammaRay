@@ -41,7 +41,7 @@ struct primitive_element_t {
 #define MAKE_PE( primitive ) { #primitive , QStyle:: primitive, &StyleOption::makeStyleOption }
 #define MAKE_PE_X( primitive, factory ) { #primitive, QStyle:: primitive, &StyleOption:: factory }
 
-static primitive_element_t primititveElements[] =  {
+static const primitive_element_t primititveElements[] =  {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   MAKE_PE(PE_Q3CheckListController),
   MAKE_PE(PE_Q3CheckListExclusiveIndicator),

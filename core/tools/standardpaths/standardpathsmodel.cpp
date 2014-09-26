@@ -34,7 +34,7 @@ struct standard_path_t {
 
 #define P(x) { QStandardPaths:: x, #x }
 
-static standard_path_t standard_paths[] = {
+static const standard_path_t standard_paths[] = {
   P(DesktopLocation),
   P(DocumentsLocation),
   P(FontsLocation),
@@ -55,7 +55,7 @@ static standard_path_t standard_paths[] = {
 
 #undef P
 
-static int standard_path_count = sizeof(standard_paths) / sizeof(standard_path_t);
+static const int standard_path_count = sizeof(standard_paths) / sizeof(standard_path_t);
 
 StandardPathsModel::StandardPathsModel(QObject *parent)
   : QAbstractTableModel(parent)

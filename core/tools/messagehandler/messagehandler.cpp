@@ -40,10 +40,10 @@ using namespace GammaRay;
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 typedef QtMsgHandler MessageHandlerCallback;
-static MessageHandlerCallback (*installMessageHandler)(MessageHandlerCallback) = qInstallMsgHandler;
+static MessageHandlerCallback (*const installMessageHandler)(MessageHandlerCallback) = qInstallMsgHandler;
 #else
 typedef QtMessageHandler MessageHandlerCallback;
-static MessageHandlerCallback (*installMessageHandler)(MessageHandlerCallback) = qInstallMessageHandler;
+static MessageHandlerCallback (*const installMessageHandler)(MessageHandlerCallback) = qInstallMessageHandler;
 #endif
 
 static MessageModel *s_model = 0;

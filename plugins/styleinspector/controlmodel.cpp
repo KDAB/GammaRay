@@ -41,7 +41,7 @@ struct control_element_t {
 #define MAKE_CE( control ) { #control , QStyle:: control, &StyleOption::makeStyleOption }
 #define MAKE_CE_X( control, factory ) { #control, QStyle:: control, &StyleOption:: factory }
 
-static control_element_t controlElements[] =  {
+static const control_element_t controlElements[] =  {
   MAKE_CE_X(CE_PushButton, makeButtonStyleOption),
   MAKE_CE_X(CE_PushButtonBevel, makeButtonStyleOption),
   MAKE_CE_X(CE_PushButtonLabel, makeButtonStyleOption),
