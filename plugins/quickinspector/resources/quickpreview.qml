@@ -30,7 +30,7 @@ Image {
   id: root
   source: "image://quicksceneprovider/background"
   fillMode: Image.Tile
-  property variant previewData: {}
+  property alias previewData: image.previewData
   property bool isFirstFrame: true
   property bool supportsCustomRenderModes: true
 
@@ -272,7 +272,6 @@ Image {
     AnnotatedScenePreview {
       id: image
       anchors.centerIn: parent
-      previewData: root.previewData
       margin { width: root.width; height: root.height }
 
       onPreviewDataChanged: {
