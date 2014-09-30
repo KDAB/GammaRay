@@ -67,11 +67,12 @@ void OutboundConnectionsModel::setObject(QObject* object)
         Connection conn;
         conn.endpoint = c->receiver;
         conn.signalIndex = signalIndexToMethodIndex(m_object, signalIndex);
-        conn.slotIndex = c->method();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         if (c->isSlotObject)
           conn.slotIndex = -1;
+        else
 #endif
+          conn.slotIndex = c->method();
         conn.type = c->connectionType;
         c = c->nextConnectionList;
         m_connections.push_back(conn);
