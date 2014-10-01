@@ -77,7 +77,7 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
   const int x2 = dx * dt / interval + 1;
 
   if (t1 >= 0) {
-    painter->fillRect(x1, y0 + 1, x2, dy - 2, option.palette.midlight());
+    painter->fillRect(x1, y0 + 1, x2, dy - 2, option.palette.window());
   }
 
   painter->setPen(option.palette.color(QPalette::WindowText));
