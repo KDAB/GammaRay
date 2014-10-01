@@ -49,8 +49,8 @@ if (KDSME_FOUND AND Qt5Quick_FOUND)
     statemachineviewerwidgetng.cpp
   )
   list(APPEND gammaray_statemachineviewer_ui_plugin_libs
-    kdstatemachineeditor_core
-    kdstatemachineeditor_view
+    KDSME::Core
+    KDSME::View
   )
 else()
   list(APPEND gammaray_statemachineviewer_ui_plugin_srcs
