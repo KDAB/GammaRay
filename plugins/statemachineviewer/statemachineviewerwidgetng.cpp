@@ -113,6 +113,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   delete m_ui->graphicsView;
   m_ui->verticalSplitter->setChildrenCollapsible(false);
   m_ui->verticalSplitter->addWidget(m_stateMachineView);
+  m_ui->verticalSplitter->setStretchFactor(m_ui->verticalSplitter->indexOf(m_stateMachineView), 3);
 
   connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
   connect(m_interface, SIGNAL(stateConfigurationChanged(GammaRay::StateMachineConfiguration)),
