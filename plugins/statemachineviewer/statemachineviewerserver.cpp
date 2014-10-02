@@ -45,6 +45,28 @@
 using namespace GammaRay;
 using namespace std;
 
+namespace {
+
+QString labelForTransition(QAbstractTransition *transition)
+{
+  const QString objectName = transition->objectName();
+  if (!objectName.isEmpty()) {
+    return objectName;
+  }
+
+  // Try to get a label for the transition if it is a QSignalTransition.
+  QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
+  if (signalTransition) {
+      return QString::fromLatin1("%1::%2").
+                  arg(Util::displayString(signalTransition->senderObject())).
+                  arg(QString::fromLatin1(signalTransition->signal().mid(1)));
+  }
+
+  return Util::displayString(transition);
+}
+
+}
+
 StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObject *parent)
   : StateMachineViewerInterface(parent),
     m_stateModel(new StateModel(this)),
@@ -345,19 +367,7 @@ void StateMachineViewerServer::addTransition(QAbstractTransition *transition)
   addState(sourceState);
   addState(targetState);
 
-  QString label = transition->objectName();
-  if (label.isEmpty()) {
-    // Try to get a label for the transition if it is a QSignalTransition.
-    QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
-    if (signalTransition) {
-        label = QString::fromLatin1("%1::%2").
-                    arg(Util::displayString(signalTransition->senderObject())).
-                    arg(QString::fromLatin1(signalTransition->signal().mid(1)));
-    } else {
-      label = Util::displayString(transition);
-    }
-  }
-
+  const QString label = labelForTransition(transition);
   emit transitionAdded(TransitionId(transition), StateId(sourceState),
                        StateId(targetState), label);
 }
