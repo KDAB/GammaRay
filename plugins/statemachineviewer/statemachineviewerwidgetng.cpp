@@ -182,6 +182,8 @@ void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId
     state = m_machine = new StateMachine;
   } else if (type == GammaRay::FinalState) {
     state = new KDSME::FinalState(parentState);
+  } else if (type == GammaRay::HistoryState) {
+    state = new KDSME::HistoryState(parentState);
   } else {
     state = new State(parentState);
   }
