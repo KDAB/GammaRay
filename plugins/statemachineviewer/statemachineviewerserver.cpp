@@ -318,8 +318,8 @@ void StateMachineViewerServer::addState(QAbstractState *state)
   StateType type = OtherState;
   if (qobject_cast<QFinalState*>(state)) {
     type = FinalState;
-  } else if (qobject_cast<QHistoryState*>(state)) {
-    type = HistoryState;
+  } else if (auto historyState = qobject_cast<QHistoryState*>(state)) {
+    type = historyState->historyType() == QHistoryState::ShallowHistory ? ShallowHistoryState : DeepHistoryState;
   } else if (qobject_cast<QStateMachine*>(state)) {
     type = StateMachineState;
   }

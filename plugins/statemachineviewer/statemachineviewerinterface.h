@@ -91,7 +91,8 @@ inline QDataStream &operator>>(QDataStream &in, StateId &value)
 enum StateType {
   OtherState,
   FinalState,
-  HistoryState,
+  ShallowHistoryState,
+  DeepHistoryState,
   StateMachineState
 };
 

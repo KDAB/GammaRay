@@ -340,9 +340,14 @@ void StateMachineViewerWidget::stateAdded(const StateId state, const StateId par
       m_graph->setNodeAttribute(nodeId, "heigh", "0.15");
       m_graph->setNodeAttribute(nodeId, "width", "0.15");
       break;
-    case HistoryState:
-      m_graph->setNodeAttribute(nodeId, "GammaRayStateType", "history");
+    case ShallowHistoryState:
+      m_graph->setNodeAttribute(nodeId, "GammaRayStateType", "shallowhistory");
       m_graph->setNodeAttribute(nodeId, "label", "H");
+      m_graph->setNodeAttribute(nodeId, "shape", "circle");
+      break;
+    case DeepHistoryState:
+      m_graph->setNodeAttribute(nodeId, "GammaRayStateType", "deephistory");
+      m_graph->setNodeAttribute(nodeId, "label", "H*");
       m_graph->setNodeAttribute(nodeId, "shape", "circle");
       break;
     case StateMachineState:
