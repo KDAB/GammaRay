@@ -26,6 +26,7 @@
 #include "timermodel.h"
 
 #include <common/objectbroker.h>
+#include <ui/deferredresizemodesetter.h>
 
 #include <QSortFilterProxyModel>
 #include <QTimer>
@@ -45,6 +46,8 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
   ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1,
                               Qt::DescendingOrder);
 
+  new DeferredResizeModeSetter(ui->timerView->header(), 0, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(ui->timerView->header(), 1, QHeaderView::ResizeToContents);
   // TODO is this even necessary? for sure it wont work remotely since model data is cached, would need to be put into the model itself in that case
   m_updateTimer->setObjectName("GammaRay update timer");
   m_updateTimer->setSingleShot(false);
