@@ -160,20 +160,36 @@ int TimerInfo::totalWakeups() const
 
 QString TimerInfo::state() const
 {
-  const QTimer *t = timer();
-  if (!t){
-    return QObject::tr("None");
-  }
-
-  if (!t->isActive()) {
-    return QObject::tr("Inactive");
-  } else {
-    if (t->isSingleShot()) {
-      return QObject::tr("Singleshot (%1 ms)").arg(t->interval());
-    } else {
+  switch (type()) {
+    case QTimerType:
+    {
+      const QTimer *t = timer();
+      if (!t)
+        return QObject::tr("None");
+      if (!t->isActive())
+        return QObject::tr("Inactive");
+      if (t->isSingleShot())
+        return QObject::tr("Singleshot (%1 ms)").arg(t->interval());
       return QObject::tr("Repeating (%1 ms)").arg(t->interval());
     }
+    case QQmlTimerType:
+    {
+      const QObject *obj = timerObject();
+      if (!obj)
+        return QObject::tr("None");
+      const int interval = obj->property("interval").toInt();
+      if (!obj->property("running").toBool())
+        return QObject::tr("Inactive (%1 ms)").arg(interval);
+      if (obj->property("repeat").toBool())
+        return QObject::tr("Repeating (%1 ms)").arg(interval);
+      return QObject::tr("Singleshot (%1 ms)").arg(interval);
+    }
+    case QObjectType:
+      return "N/A";
   }
+
+  Q_ASSERT(false);
+  return QString();
 }
 
 void TimerInfo::removeOldEvents()
