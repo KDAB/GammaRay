@@ -25,6 +25,7 @@
 #include "timermodel.h"
 
 #include <core/probeinterface.h>
+#include <core/objecttypefilterproxymodel.h>
 
 #include <QtPlugin>
 

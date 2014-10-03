@@ -23,6 +23,7 @@
 #include "timermodel.h"
 
 #include <core/probeinterface.h>
+#include <common/objectmodel.h>
 
 #include <private/qobject_p.h> //krazy:exclude=camelcase
 
@@ -265,7 +266,7 @@ void TimerModel::setProbe(ProbeInterface *probe)
   probe->registerSignalSpyCallbackSet(callbacks);
 }
 
-void TimerModel::setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel)
+void TimerModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
   Q_ASSERT(!m_sourceModel);
   m_sourceModel = sourceModel;

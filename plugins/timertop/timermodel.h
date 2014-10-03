@@ -25,7 +25,6 @@
 
 #include "timerinfo.h"
 
-#include <core/objecttypefilterproxymodel.h>
 #include <common/modelroles.h>
 
 #include <QAbstractTableModel>
@@ -67,7 +66,7 @@ class TimerModel : public QAbstractTableModel
     /// if set, filters out object owned by the probe
     void setProbe(ProbeInterface *probe);
 
-    void setSourceModel(ObjectTypeFilterProxyModel<QTimer> *sourceModel);
+    void setSourceModel(QAbstractItemModel *sourceModel);
 
     /* reimp */
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -111,7 +110,7 @@ class TimerModel : public QAbstractTableModel
     int rowFor(QTimer *timer) ;
     void emitFreeTimerChanged(int row);
 
-    ObjectTypeFilterProxyModel<QTimer> *m_sourceModel;
+    QAbstractItemModel *m_sourceModel;
     QList<TimerInfoPtr> m_freeTimers;
     ProbeInterface *m_probe;
     // current timer signals that are being processed
