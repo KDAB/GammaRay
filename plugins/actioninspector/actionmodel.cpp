@@ -52,6 +52,8 @@ ActionModel::ActionModel(QObject *parent)
     SLOT(handleRowsRemoved(QModelIndex,int,int)));
 
   connect(this, SIGNAL(modelReset()), SLOT(handleModelReset()));
+
+  m_duplicateFinder->setActions(actions());
 }
 
 ActionModel::~ActionModel()
