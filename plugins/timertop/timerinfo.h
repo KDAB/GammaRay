@@ -38,7 +38,8 @@ class TimerInfo
   public:
     enum Type {
         QTimerType,
-        QObjectType
+        QObjectType,
+        QQmlTimerType
     };
 
     struct TimeoutEvent
@@ -47,12 +48,14 @@ class TimerInfo
       int executionTime;
     };
 
-    explicit TimerInfo(QTimer *timer);
+    explicit TimerInfo(QObject *timer);
     explicit TimerInfo(int timerId);
+    Type type() const;
     void addEvent(const TimeoutEvent &timeoutEvent);
     void setLastReceiver(QObject *receiver);
     int numEvents() const;
     QTimer *timer() const;
+    QObject *timerObject() const;
     int timerId() const;
     FunctionCallTimer *functionCallTimer();
     QString wakeupsPerSec() const;

@@ -123,7 +123,7 @@ TimerInfoPtr TimerModel::findOrCreateFreeTimerInfo(int timerId)
   return timerInfo;
 }
 
-TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(QTimer *timer)
+TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(QObject *timer)
 {
   if (!timer) {
     return TimerInfoPtr();
@@ -137,7 +137,7 @@ TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(QTimer *timer)
   }
 
   const TimerInfoPtr timerInfo = timerInfoVariant.value<TimerInfoPtr>();
-  Q_ASSERT(timerInfo->timer() == timer);
+  Q_ASSERT(timerInfo->timerObject() == timer);
   return timerInfo;
 }
 
@@ -160,7 +160,7 @@ TimerInfoPtr TimerModel::findOrCreateTimerInfo(const QModelIndex &index)
   if (index.row() < m_sourceModel->rowCount()){
     const QModelIndex sourceIndex = m_sourceModel->index(index.row(), 0);
     QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject*>();
-    return findOrCreateQTimerTimerInfo(qobject_cast<QTimer*>(timerObject));
+    return findOrCreateQTimerTimerInfo(timerObject);
   } else {
     const int freeListIndex = index.row() - m_sourceModel->rowCount();
     Q_ASSERT(freeListIndex >= 0);

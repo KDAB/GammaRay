@@ -102,7 +102,7 @@ class TimerModel : public QAbstractTableModel
     TimerInfoPtr findOrCreateTimerInfo(const QModelIndex &index);
 
     // Finds QTimer timers
-    TimerInfoPtr findOrCreateQTimerTimerInfo(QTimer *timer);
+    TimerInfoPtr findOrCreateQTimerTimerInfo(QObject* timer);
 
     // Finds QObject timers
     TimerInfoPtr findOrCreateFreeTimerInfo(int timerId);

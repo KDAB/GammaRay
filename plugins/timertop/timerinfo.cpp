@@ -31,13 +31,17 @@ using namespace GammaRay;
 static const int maxTimeoutEvents = 1000;
 static const int maxTimeSpan = 10000;
 
-TimerInfo::TimerInfo(QTimer *timer)
-  : m_type(QTimerType),
+TimerInfo::TimerInfo(QObject* timer) :
+    m_type(QQmlTimerType),
     m_totalWakeups(0),
     m_timer(timer),
-    m_timerId(timer->timerId()),
+    m_timerId(-1),
     m_lastReceiver(0)
 {
+  if (QTimer *t = qobject_cast<QTimer*>(timer)) {
+    m_type = QTimerType;
+    m_timerId = t->timerId();
+  }
 }
 
 TimerInfo::TimerInfo(int timerId)
@@ -45,6 +49,11 @@ TimerInfo::TimerInfo(int timerId)
     m_totalWakeups(0),
     m_timerId(timerId)
 {
+}
+
+TimerInfo::Type TimerInfo::type() const
+{
+  return m_type;
 }
 
 void TimerInfo::addEvent(const TimeoutEvent &timeoutEvent)
@@ -57,6 +66,11 @@ void TimerInfo::addEvent(const TimeoutEvent &timeoutEvent)
 int TimerInfo::numEvents() const
 {
   return m_timeoutEvents.size();
+}
+
+QObject* TimerInfo::timerObject() const
+{
+  return m_timer;
 }
 
 QTimer *TimerInfo::timer() const
@@ -176,13 +190,18 @@ void TimerInfo::setLastReceiver(QObject *receiver)
 
 QString TimerInfo::displayName() const
 {
-  if (timer()) {
-    return Util::displayString(timer());
-  } else {
-    if (m_lastReceiver) {
-      return Util::displayString(m_lastReceiver);
-    } else {
-      return QObject::tr("Unknown QObject");
-    }
+  switch (m_type) {
+    case QTimerType:
+    case QQmlTimerType:
+      return Util::displayString(timerObject());
+    case QObjectType:
+      if (m_lastReceiver) {
+        return Util::displayString(m_lastReceiver);
+      } else {
+        return QObject::tr("Unknown QObject");
+      }
   }
+
+  Q_ASSERT(false);
+  return QString();
 }
