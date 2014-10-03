@@ -30,6 +30,8 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 
+#include <ui/deferredresizemodesetter.h>
+
 #include <kde/krecursivefilterproxymodel.h>
 #include <QDebug>
 
@@ -60,6 +62,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   connect(ui->modelView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(modelSelected(QItemSelection)));
+  new DeferredResizeModeSetter(ui->modelView->header(), 0, QHeaderView::ResizeToContents);
 
   ui->modelCellView->setModel(ObjectBroker::model("com.kdab.GammaRay.ModelCellModel"));
 
