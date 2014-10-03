@@ -113,6 +113,9 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
         m_translatorsModel->registerTranslator(wrapper);
         connect(wrapper,
                 &TranslatorWrapper::destroyed,
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+                m_translationsModel,
+#endif
                 [wrapper, this](QObject *) { m_translatorsModel->unregisterTranslator(wrapper); });
       }
     }
