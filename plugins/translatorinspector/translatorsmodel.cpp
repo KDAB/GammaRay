@@ -53,14 +53,14 @@ QVariant TranslatorsModel::data(const QModelIndex &index, int role) const
   Q_ASSERT(trans);
   if (role == Qt::DisplayRole) {
     if (index.column() == 0) {
-      return Util::shortDisplayString(trans);
+      return Util::shortDisplayString(trans->translator());
     } else if (index.column() == 1) {
       return QString(trans->translator()->metaObject()->className());
     } else if (index.column() == 2) {
       return trans->model()->rowCount(QModelIndex());
     }
   } else if (role == Qt::ToolTipRole) {
-    return Util::tooltipForObject(trans);
+    return Util::tooltipForObject(trans->translator());
   }
   return QVariant();
 }
