@@ -29,6 +29,7 @@
 #include <common/modelroles.h>
 
 #include <QAbstractTableModel>
+#include <QSet>
 
 class QTimer;
 
@@ -90,6 +91,7 @@ class TimerModel : public QAbstractTableModel
     void slotEndInsertRows();
     void slotBeginReset();
     void slotEndReset();
+    void flushEmitPendingChangedRows();
 
   private:
     explicit TimerModel(QObject *parent = 0);
@@ -107,12 +109,16 @@ class TimerModel : public QAbstractTableModel
     TimerInfoPtr findOrCreateFreeTimerInfo(int timerId);
 
     int rowFor(QTimer *timer) ;
+    void emitFreeTimerChanged(int row);
 
     ObjectTypeFilterProxyModel<QTimer> *m_sourceModel;
     QList<TimerInfoPtr> m_freeTimers;
     ProbeInterface *m_probe;
     // current timer signals that are being processed
     QHash<QObject*, TimerInfoPtr> m_currentSignals;
+    // pending dataChanged() signals
+    QSet<int> m_pendingChangedFreeTimers;
+    QTimer *m_pendingChanedRowsTimer;
     // the method index of the timeout() signal of a QTimer
     const int m_timeoutIndex;
 };

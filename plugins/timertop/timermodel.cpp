@@ -78,8 +78,12 @@ TimerModel::TimerModel(QObject *parent)
   : QAbstractTableModel(parent),
     m_sourceModel(0),
     m_probe(0),
+    m_pendingChanedRowsTimer(new QTimer(this)),
     m_timeoutIndex(QTimer::staticMetaObject.indexOfSignal("timeout()"))
 {
+  m_pendingChanedRowsTimer->setInterval(5000);
+  m_pendingChanedRowsTimer->setSingleShot(true);
+  connect(m_pendingChanedRowsTimer, SIGNAL(timeout()), this, SLOT(flushEmitPendingChangedRows()));
 }
 
 TimerModel::~TimerModel()
@@ -370,6 +374,7 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
     timerInfo->addEvent(timeoutEvent);
 
     timerInfo->setLastReceiver(watched);
+    emitFreeTimerChanged(m_freeTimers.indexOf(timerInfo));
   }
   return false;
 }
@@ -398,10 +403,29 @@ void TimerModel::slotEndInsertRows()
 
 void TimerModel::slotBeginReset()
 {
+  m_pendingChangedFreeTimers.clear();
   beginResetModel();
 }
 
 void TimerModel::slotEndReset()
 {
   endResetModel();
+}
+
+void TimerModel::emitFreeTimerChanged(int row)
+{
+  if (row < 0 || row >= m_freeTimers.count())
+    return;
+
+  m_pendingChangedFreeTimers.insert(row);
+  if (!m_pendingChanedRowsTimer->isActive())
+    m_pendingChanedRowsTimer->start();
+}
+
+void TimerModel::flushEmitPendingChangedRows()
+{
+  foreach (int row, m_pendingChangedFreeTimers) {
+    emit dataChanged(index(m_sourceModel->rowCount() + row, 0), index(m_sourceModel->rowCount() + row, LastRole - FirstRole - 2));
+  }
+  m_pendingChangedFreeTimers.clear();
 }
