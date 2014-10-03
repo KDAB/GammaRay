@@ -83,12 +83,15 @@ void InboundConnectionsModel::setObject(QObject* object)
 
       Connection conn;
       conn.endpoint = s->sender;
-      conn.slotIndex = s->method();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
       conn.signalIndex = signalIndexToMethodIndex(s->sender, s->signal_index);
-      if (s->isSlotObject)
+      if (s->isSlotObject) {
         conn.slotIndex = -1;
+      } else {
+        conn.slotIndex = s->method();
+      }
 #else
+      conn.slotIndex = s->method();
       conn.signalIndex = signalIndexToMethodIndex(s->sender, signalIndexForConnection(s, s->sender));
 #endif
       conn.type = s->connectionType;
