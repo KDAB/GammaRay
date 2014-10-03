@@ -267,7 +267,8 @@ void MetaObjectRepository::initOpenGLTypes()
   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, bool, isLinked);
   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, QString, log);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
-  MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, maxGeometryOutputVertices);
+// FIXME calling this asserts in debug builds of some newer Qt versions
+//   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, maxGeometryOutputVertices);
   MO_ADD_PROPERTY   (QOpenGLShaderProgram, int, patchVertexCount, setPatchVertexCount);
 #endif
   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, uint, programId);
