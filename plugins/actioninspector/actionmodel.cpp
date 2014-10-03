@@ -71,7 +71,7 @@ QAction *ActionModel::actionForIndex(const QModelIndex &index) const
 QList<QAction *> ActionModel::actions(const QModelIndex &parent, int start, int end)
 {
   QList<QAction *> actions;
-  for (int i = start; i < end; ++i) {
+  for (int i = start; i <= end; ++i) {
     const QModelIndex modelIndex = index(i, 0, parent);
     actions << actionForIndex(modelIndex);
   }
