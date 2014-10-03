@@ -257,9 +257,7 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
   event.executionTime = timerInfo->functionCallTimer()->stop();
   timerInfo->addEvent(event);
   const int row = rowFor(timerInfo->timerObject());
-  if (row != -1) {
-    emit dataChanged(index(row, 0), index(row, columnCount() - 1));
-  }
+  emitTimerObjectChanged(row);
 }
 
 void TimerModel::setProbe(ProbeInterface *probe)
@@ -392,6 +390,7 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
 void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int end)
 {
   Q_UNUSED(parent);
+  flushEmitPendingChangedRows();
   beginRemoveRows(QModelIndex(), start, end);
 }
 
@@ -403,6 +402,7 @@ void TimerModel::slotEndRemoveRows()
 void TimerModel::slotBeginInsertRows(const QModelIndex &parent, int start, int end)
 {
   Q_UNUSED(parent);
+  flushEmitPendingChangedRows();
   beginInsertRows(QModelIndex(), start, end);
 }
 
@@ -413,6 +413,7 @@ void TimerModel::slotEndInsertRows()
 
 void TimerModel::slotBeginReset()
 {
+  m_pendingChangedTimerObjects.clear();
   m_pendingChangedFreeTimers.clear();
   beginResetModel();
 }
@@ -420,6 +421,16 @@ void TimerModel::slotBeginReset()
 void TimerModel::slotEndReset()
 {
   endResetModel();
+}
+
+void TimerModel::emitTimerObjectChanged(int row)
+{
+  if (row < 0 || row >= rowCount())
+    return;
+
+  m_pendingChangedTimerObjects.insert(row);
+  if (!m_pendingChanedRowsTimer->isActive())
+    m_pendingChanedRowsTimer->start();
 }
 
 void TimerModel::emitFreeTimerChanged(int row)
@@ -434,6 +445,11 @@ void TimerModel::emitFreeTimerChanged(int row)
 
 void TimerModel::flushEmitPendingChangedRows()
 {
+  foreach (int row, m_pendingChangedTimerObjects) {
+    emit dataChanged(index(row, 0), index(row, LastRole - FirstRole - 2));
+  }
+  m_pendingChangedTimerObjects.clear();
+
   foreach (int row, m_pendingChangedFreeTimers) {
     emit dataChanged(index(m_sourceModel->rowCount() + row, 0), index(m_sourceModel->rowCount() + row, LastRole - FirstRole - 2));
   }

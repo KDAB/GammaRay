@@ -108,6 +108,7 @@ class TimerModel : public QAbstractTableModel
     TimerInfoPtr findOrCreateFreeTimerInfo(int timerId);
 
     int rowFor(QObject *timer) ;
+    void emitTimerObjectChanged(int row);
     void emitFreeTimerChanged(int row);
 
     QAbstractItemModel *m_sourceModel;
@@ -116,6 +117,7 @@ class TimerModel : public QAbstractTableModel
     // current timer signals that are being processed
     QHash<QObject*, TimerInfoPtr> m_currentSignals;
     // pending dataChanged() signals
+    QSet<int> m_pendingChangedTimerObjects;
     QSet<int> m_pendingChangedFreeTimers;
     QTimer *m_pendingChanedRowsTimer;
     // the method index of the timeout() signal of a QTimer
