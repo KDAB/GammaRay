@@ -87,7 +87,7 @@ namespace Util {
    */
   GAMMARAY_CORE_EXPORT QString enumToString(const QVariant &value,
                                        const char *typeName = 0,
-                                       QObject *object = 0);
+                                       const QObject *object = 0);
 
   /**
    * Returns a display string for @p method.
@@ -130,13 +130,13 @@ namespace Util {
    *
    * @return on failure QVariant() is returned; else a QIcon
    */
-  GAMMARAY_CORE_EXPORT QVariant iconForObject(QObject *object);
+  GAMMARAY_CORE_EXPORT QVariant iconForObject(const QObject *object);
 
   /**
    * Returns a suitable rich text tooltip string for @p object.
    * @param object a pointer to a valid or null QObject.
    */
-  GAMMARAY_CORE_EXPORT QString tooltipForObject(QObject *object);
+  GAMMARAY_CORE_EXPORT QString tooltipForObject(const QObject *object);
 
   /**
    * Draws a transparency pattern, i.e. the common checkerboard pattern into @p rect.

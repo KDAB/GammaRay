@@ -82,7 +82,7 @@ QString Util::addressToString(const void *p)
   return (QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16));
 }
 
-QString Util::enumToString(const QVariant &value, const char *typeName, QObject *object)
+QString Util::enumToString(const QVariant &value, const char *typeName, const QObject *object)
 {
   QByteArray enumTypeName(typeName);
   if (enumTypeName.isEmpty()) {
@@ -147,7 +147,7 @@ bool Util::descendantOf(const QObject *ascendant, const QObject *obj)
 }
 
 namespace GammaRay {
-static QString stringifyProperty(QObject *obj, const QString &propName)
+static QString stringifyProperty(const QObject *obj, const QString &propName)
 {
   const QVariant value = obj->property(propName.toLatin1());
   const QMetaProperty mp =
@@ -222,7 +222,7 @@ static IconDatabase readIconData()
   return data;
 }
 
-static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
+static QVariant iconForObject(const QMetaObject *mo, const QObject *obj)
 {
   static const IconDatabase iconDataBase = readIconData();
   // stupid Qt convention to use int for sizes... the static cast shuts down warnings about conversion from size_t to int.
@@ -254,7 +254,7 @@ static QVariant iconForObject(const QMetaObject *mo, QObject *obj)
 
 }
 
-QVariant Util::iconForObject(QObject *obj)
+QVariant Util::iconForObject(const QObject *obj)
 {
   if (obj) {
     return GammaRay::iconForObject(obj->metaObject(), obj);
@@ -262,7 +262,7 @@ QVariant Util::iconForObject(QObject *obj)
   return QVariant();
 }
 
-QString Util::tooltipForObject(QObject* object)
+QString Util::tooltipForObject(const QObject* object)
 {
   return QObject::tr("<p style='white-space:pre'>Object name: %1\nType: %2\nParent: %3 (Address: %4)\nNumber of children: %5</p>").
     arg(object->objectName().isEmpty() ? "&lt;Not set&gt;" : object->objectName()).
