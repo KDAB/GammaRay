@@ -61,7 +61,9 @@ int TimerInfo::numEvents() const
 
 QTimer *TimerInfo::timer() const
 {
-  return m_timer;
+  if (m_type != QTimerType)
+    return 0;
+  return qobject_cast<QTimer*>(m_timer);
 }
 
 int TimerInfo::timerId() const
@@ -144,17 +146,18 @@ int TimerInfo::totalWakeups() const
 
 QString TimerInfo::state() const
 {
-  if (!m_timer){
+  const QTimer *t = timer();
+  if (!t){
     return QObject::tr("None");
   }
 
-  if (!m_timer->isActive()) {
+  if (!t->isActive()) {
     return QObject::tr("Inactive");
   } else {
-    if (m_timer->isSingleShot()) {
-      return QObject::tr("Singleshot (%1 ms)").arg(m_timer->interval());
+    if (t->isSingleShot()) {
+      return QObject::tr("Singleshot (%1 ms)").arg(t->interval());
     } else {
-      return QObject::tr("Repeating (%1 ms)").arg(m_timer->interval());
+      return QObject::tr("Repeating (%1 ms)").arg(t->interval());
     }
   }
 }

@@ -66,8 +66,8 @@ class TimerInfo
     Type m_type;
     int m_totalWakeups;
 
-    // Only for QTimer timers
-    QPointer<QTimer> m_timer;
+    // Only for QTimer/QQmlTimers timers
+    QPointer<QObject> m_timer;
 
     int m_timerId;
     FunctionCallTimer m_functionCallTimer;
