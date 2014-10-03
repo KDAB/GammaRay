@@ -48,21 +48,10 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
 
   new DeferredResizeModeSetter(ui->timerView->header(), 0, QHeaderView::ResizeToContents);
   new DeferredResizeModeSetter(ui->timerView->header(), 1, QHeaderView::ResizeToContents);
-  // TODO is this even necessary? for sure it wont work remotely since model data is cached, would need to be put into the model itself in that case
-  m_updateTimer->setObjectName("GammaRay update timer");
-  m_updateTimer->setSingleShot(false);
-  m_updateTimer->setInterval(500);
-  m_updateTimer->start();
-  connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(slotUpdateView()));
 }
 
 TimerTopWidget::~TimerTopWidget()
 {
-}
-
-void TimerTopWidget::slotUpdateView()
-{
-  ui->timerView->viewport()->update();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

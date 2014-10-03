@@ -195,10 +195,6 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
     return;
   }
 
-  if (caller->objectName().toLower().startsWith(QLatin1String("gammaray"))) {
-    return;
-  }
-
   const TimerInfoPtr timerInfo = findOrCreateQTimerTimerInfo(caller);
 
   if (!timerInfo) {

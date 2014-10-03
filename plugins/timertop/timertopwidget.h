@@ -42,9 +42,6 @@ class TimerTopWidget : public QWidget
     explicit TimerTopWidget(QWidget *parent = 0);
     ~TimerTopWidget();
 
-  private slots:
-    void slotUpdateView();
-
   private:
     QScopedPointer<Ui::TimerTopWidget> ui;
     QTimer *m_updateTimer;
