@@ -80,7 +80,8 @@ TimerModel::TimerModel(QObject *parent)
     m_sourceModel(0),
     m_probe(0),
     m_pendingChanedRowsTimer(new QTimer(this)),
-    m_timeoutIndex(QTimer::staticMetaObject.indexOfSignal("timeout()"))
+    m_timeoutIndex(QTimer::staticMetaObject.indexOfSignal("timeout()")),
+    m_qmlTimerTriggeredIndex(-1)
 {
   m_pendingChanedRowsTimer->setInterval(5000);
   m_pendingChanedRowsTimer->setSingleShot(true);
@@ -131,7 +132,11 @@ TimerInfoPtr TimerModel::findOrCreateQTimerTimerInfo(QObject *timer)
 
   QVariant timerInfoVariant = timer->property(timerInfoPropertyName);
   if (!timerInfoVariant.isValid()) {
-    timerInfoVariant.setValue(TimerInfoPtr(new TimerInfo(timer)));
+    const TimerInfoPtr info = TimerInfoPtr(new TimerInfo(timer));
+    if (m_qmlTimerTriggeredIndex < 0 && info->type() == TimerInfo::QQmlTimerType) {
+      m_qmlTimerTriggeredIndex = timer->metaObject()->indexOfMethod("triggered()");
+    }
+    timerInfoVariant.setValue(info);
     if (timer->thread() == QThread::currentThread()) // ### FIXME: we shouldn't use setProperty() in the first place...
       timer->setProperty(timerInfoPropertyName, timerInfoVariant);
   }
@@ -171,11 +176,11 @@ TimerInfoPtr TimerModel::findOrCreateTimerInfo(const QModelIndex &index)
   return TimerInfoPtr();
 }
 
-int TimerModel::rowFor(QTimer *timer)
+int TimerModel::rowFor(QObject *timer)
 {
   for (int i = 0; i < rowCount(); i++) {
     const TimerInfoPtr timerInfo = findOrCreateTimerInfo(index(i, 0));
-    if (timerInfo && timerInfo->timer() == timer) {
+    if (timerInfo && timerInfo->timerObject() == timer) {
       return i;
     }
   }
@@ -184,16 +189,17 @@ int TimerModel::rowFor(QTimer *timer)
 
 void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
 {
-  if (methodIndex != m_timeoutIndex) {
+  if (!(methodIndex == m_timeoutIndex && qobject_cast<QTimer*>(caller)) &&
+      !(methodIndex == m_qmlTimerTriggeredIndex && caller->inherits("QQmlTimer")))
+  {
     return;
   }
 
-  QTimer *timer = qobject_cast<QTimer*>(caller);
-  if (!timer || timer->objectName().toLower().startsWith(QLatin1String("gammaray"))) {
+  if (caller->objectName().toLower().startsWith(QLatin1String("gammaray"))) {
     return;
   }
 
-  const TimerInfoPtr timerInfo = findOrCreateQTimerTimerInfo(timer);
+  const TimerInfoPtr timerInfo = findOrCreateQTimerTimerInfo(caller);
 
   if (!timerInfo) {
     // Ok, likely a GammaRay timer
@@ -204,7 +210,7 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
 
   if (!timerInfo->functionCallTimer()->start()) {
     cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
-         << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+         << (void*)caller << " (" << caller->objectName().toStdString() << ")!" << endl;
     return;
   }
 
@@ -214,28 +220,31 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
 
 void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
 {
-  if (methodIndex != m_timeoutIndex) {
-    return;
-  }
   QHash<QObject*, TimerInfoPtr>::iterator it = m_currentSignals.find(caller);
   if (it == m_currentSignals.end()) {
     // Ok, likely a GammaRay timer
-    //cout << "TimerModel::postSignalActivate(): Unable to find timer "
-    //     << (void*)timer << " (" << timer->objectName().toStdString() << ")!" << endl;
+    // cout << "TimerModel::postSignalActivate(): Unable to find timer "
+    //      << (void*)caller << " (" << caller->objectName().toStdString() << ")!" << endl;
     return;
   }
 
   const TimerInfoPtr timerInfo = *it;
   Q_ASSERT(timerInfo);
 
+  if (!(timerInfo->type() == TimerInfo::QTimerType && methodIndex == m_timeoutIndex) &&
+      !(timerInfo->type() == TimerInfo::QQmlTimerType && methodIndex == m_qmlTimerTriggeredIndex))
+  {
+    return;
+  }
+
   m_currentSignals.erase(it);
 
-  if (!timerInfo->timer()) {
+  if (!timerInfo->timerObject()) {
     // timer got killed in a slot
     return;
   }
 
-  Q_ASSERT(static_cast<QTimer*>(caller) == timerInfo->timer());
+  Q_ASSERT(caller == timerInfo->timerObject());
 
   if (!timerInfo->functionCallTimer()->active()) {
     cout << "TimerModel::postSignalActivate(): Timer not active: "
@@ -247,7 +256,7 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
   event.timeStamp = QTime::currentTime();
   event.executionTime = timerInfo->functionCallTimer()->stop();
   timerInfo->addEvent(event);
-  const int row = rowFor(timerInfo->timer());
+  const int row = rowFor(timerInfo->timerObject());
   if (row != -1) {
     emit dataChanged(index(row, 0), index(row, columnCount() - 1));
   }

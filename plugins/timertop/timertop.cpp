@@ -58,14 +58,27 @@ using namespace GammaRay;
 // Flash delegate when timer triggered
 // Color cell in view redish, depending on how active the timer is
 
+class TimerFilterModel : public ObjectTypeFilterProxyModel<QTimer>
+{
+  public:
+    explicit TimerFilterModel(QObject *parent) : ObjectTypeFilterProxyModel<QTimer>(parent) {}
+
+    bool filterAcceptsObject(QObject *object) const
+    {
+      if (object && object->inherits("QQmlTimer"))
+        return true;
+      return ObjectTypeFilterProxyModel<QTimer>::filterAcceptsObject(object);
+    }
+};
+
+
 TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
   : QObject(parent),
     m_updateTimer(new QTimer(this))
 {
   Q_ASSERT(probe);
 
-  ObjectTypeFilterProxyModel<QTimer> * const filterModel =
-      new ObjectTypeFilterProxyModel<QTimer>(this);
+  QSortFilterProxyModel* const filterModel = new TimerFilterModel(this);
   filterModel->setDynamicSortFilter(true);
   filterModel->setSourceModel(probe->objectListModel());
   TimerModel::instance()->setParent(this); // otherwise it's not filtered out
