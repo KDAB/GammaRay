@@ -154,6 +154,9 @@ void QuickSceneGraphModel::clear()
   m_parentChildMap.clear();
 }
 
+// indexForNode() is expensive, so only use it when really needed
+#define GET_INDEX if (!hasMyIndex) { myIndex = indexForNode(node); hasMyIndex = true; }
+
 void QuickSceneGraphModel::populateFromNode(QSGNode *node)
 {
   if (!node) {
@@ -168,7 +171,8 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
     newChildList.append(childNode);
   }
 
-  QModelIndex myIndex = indexForNode(node);
+  QModelIndex myIndex; // don't call indexForNode(node) here yet, in the common case of few changes we waste a lot of time here
+  bool hasMyIndex = false;
 
   std::sort(newChildList.begin(), newChildList.end());
 
@@ -177,11 +181,13 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
 
   while (i != oldChildList.end() && j != newChildList.constEnd()) {
     if (*i < *j) { // We don't have to do anything but inform the client about the change
+      GET_INDEX
       beginRemoveRows(myIndex, childList.size(), childList.size());
       endRemoveRows();
       emit nodeDeleted(*i);
       i++;
     } else if (*i > *j) { // Add to new list and inform the client about the change
+      GET_INDEX
       beginInsertRows(myIndex, childList.size(), childList.size());
       m_childParentMap.insert(*j, node);
       childList.append(*j);
@@ -198,6 +204,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
   }
   if (i == oldChildList.end() && j != newChildList.constEnd()) {
     // Add remaining new items to list and inform the client
+    GET_INDEX
     beginInsertRows(myIndex, childList.size(),
                     childList.size() + std::distance(j, newChildList.constEnd()) - 1);
     for (;j != newChildList.constEnd(); j++) {
@@ -207,6 +214,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
     }
     endInsertRows();
   } else if (i != oldChildList.end()) { // Inform the client about the removed rows
+    GET_INDEX
     beginRemoveRows(myIndex, childList.size(),
                     childList.size() + std::distance(i, oldChildList.end()) - 1);
     endRemoveRows();
@@ -215,6 +223,8 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
     }
   }
 }
+
+#undef GET_INDEX
 
 void QuickSceneGraphModel::collectItemNodes(QQuickItem *item)
 {
