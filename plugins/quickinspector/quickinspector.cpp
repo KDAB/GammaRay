@@ -226,19 +226,24 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     m_source->setScale(0); // The item shouldn't be visible in the original scene, but it still
                            // needs to be rendered. (i.e. setVisible(false) would cause it to
                            // not be rendered anymore)
-
-    const QList<QQuickItem*> children = contentItem->childItems();
-    if (children.size() == 2) { // prefer non-recursive shader sources, then we don't re-render all the time
-      m_source->setSourceItem(children.at(children.indexOf(m_source) == 1 ? 0 : 1));
-    } else {
-      m_source->setRecursive(true);
-      m_source->setSourceItem(contentItem);
-    }
-
+    setupPreviewSource();
     connect(window, &QQuickWindow::afterRendering,
             this, &QuickInspector::slotSceneChanged, Qt::DirectConnection);
 
     m_window->update();
+  }
+}
+
+void QuickInspector::setupPreviewSource()
+{
+  Q_ASSERT(m_window);
+  QQuickItem *contentItem = m_window->contentItem();
+  const QList<QQuickItem*> children = contentItem->childItems();
+  if (children.size() == 2) { // prefer non-recursive shader sources, then we don't re-render all the time
+    m_source->setSourceItem(children.at(children.indexOf(m_source) == 1 ? 0 : 1));
+  } else {
+    m_source->setRecursive(true);
+    m_source->setSourceItem(contentItem);
   }
 }
 
@@ -530,7 +535,7 @@ void QuickInspector::sgNodeDeleted(QSGNode *node)
 void QuickInspector::clientConnectedChanged(bool connected)
 {
   if (!connected)
-    m_clientViewActive = false;
+    setSceneViewActive(false);
 }
 
 void QuickInspector::setSceneViewActive(bool active)
@@ -538,8 +543,12 @@ void QuickInspector::setSceneViewActive(bool active)
   m_clientViewActive = active;
 
   if (active && m_window) {
+    if (m_source)
+      setupPreviewSource();
     m_window->update();
   }
+  if (!active && m_source)
+    m_source->setSourceItem(0); // no need to render the screenshot as well if nobody is watching
 }
 
 QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &pos) const
