@@ -27,6 +27,10 @@ project(GammaRay)
 cmake_minimum_required(VERSION 2.8.11)
 cmake_policy(SET CMP0020 NEW)
 
+if( ${CMAKE_MAJOR_VERSION} EQUAL 3)
+  cmake_policy(SET CMP0043 OLD)
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
