@@ -281,6 +281,9 @@ QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
 
 bool QuickSceneGraphModel::verifyNodeValidity(QSGNode *node)
 {
+  if (node == m_rootNode)
+    return true;
+
   QQuickItem *item = itemForSgNode(node);
   QSGNode *itemNode = QQuickItemPrivate::get(item)->itemNode();
   bool valid = itemNode == node || recursivelyFindChild(itemNode, node);
