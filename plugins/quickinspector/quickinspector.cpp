@@ -99,6 +99,8 @@ static QString qSGNodeFlagsToString(QSGNode::Flags flags)
   if (flags & QSGNode::OwnsOpaqueMaterial) {
     list << "OwnsOpaqueMaterial";
   }
+  if (list.isEmpty())
+    return "<none>";
   return list.join(" | ");
 }
 static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags)
@@ -136,6 +138,8 @@ static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags)
   if (flags & QSGNode::DirtyPropagationMask) {
     list << "DirtyPropagationMask";
   }
+  if (list.isEmpty())
+    return "Clean";
   return list.join(" | ");
 }
 
