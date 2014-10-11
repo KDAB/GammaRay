@@ -627,8 +627,8 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_PROPERTY_RO(QSGClipNode, const QSGClipNode *, clipList);
 
   MO_ADD_METAOBJECT1(QSGTransformNode, QSGNode);
-//  MO_ADD_PROPERTY   (QSGTransformNode, const QMatrix4x4&, matrix, setMatrix);
-//  MO_ADD_PROPERTY   (QSGTransformNode, const QMatrix4x4&, combinedMatrix, setCombinedMatrix);
+  MO_ADD_PROPERTY   (QSGTransformNode, const QMatrix4x4&, matrix, setMatrix);
+  MO_ADD_PROPERTY   (QSGTransformNode, const QMatrix4x4&, combinedMatrix, setCombinedMatrix);
 
   MO_ADD_METAOBJECT1(QSGRootNode, QSGNode);
 
