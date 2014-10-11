@@ -605,6 +605,7 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_PROPERTY_RO(QSGNode, QSGNode *, parent);
   MO_ADD_PROPERTY_RO(QSGNode, int, childCount);
   MO_ADD_PROPERTY_RO(QSGNode, QSGNode::Flags, flags);
+  MO_ADD_PROPERTY_RO(QSGNode, bool, isSubtreeBlocked);
   MO_ADD_PROPERTY   (QSGNode, QSGNode::DirtyState, dirtyState, markDirty);
 
   MO_ADD_METAOBJECT1(QSGBasicGeometryNode, QSGNode);
@@ -634,7 +635,6 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_METAOBJECT1(QSGOpacityNode, QSGNode);
   MO_ADD_PROPERTY   (QSGOpacityNode, qreal, opacity, setOpacity);
   MO_ADD_PROPERTY   (QSGOpacityNode, qreal, combinedOpacity, setCombinedOpacity);
-  MO_ADD_PROPERTY_RO(QSGOpacityNode, bool, isSubtreeBlocked);
 }
 
 void QuickInspector::registerVariantHandlers()
