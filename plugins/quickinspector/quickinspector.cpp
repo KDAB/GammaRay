@@ -643,11 +643,16 @@ void QuickInspector::registerVariantHandlers()
   VariantHandler::registerStringConverter<QSGBasicGeometryNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGGeometryNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGClipNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<const QSGClipNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGTransformNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGRootNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGOpacityNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGNode::Flags>(qSGNodeFlagsToString);
   VariantHandler::registerStringConverter<QSGNode::DirtyState>(qSGNodeDirtyStateToString);
+  VariantHandler::registerStringConverter<const QSGClipNode*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGGeometry*>(Util::addressToString);
+  VariantHandler::registerStringConverter<const QSGGeometry*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGMaterial*>(Util::addressToString);
 }
 
 void QuickInspector::registerPCExtensions()
