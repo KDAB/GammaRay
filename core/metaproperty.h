@@ -65,6 +65,7 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     MetaObject *m_class;
 };
 
+///@cond internal
 namespace detail {
 
 template <typename T>
@@ -74,6 +75,7 @@ template <typename T>
 struct strip_const_ref<const T&> { typedef T type; };
 
 }
+///@endcond
 
 /** @brief Template-ed implementation of MetaProperty. */
 template <typename Class, typename GetterReturnType, typename SetterArgType = GetterReturnType>
