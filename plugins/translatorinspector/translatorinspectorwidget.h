@@ -42,7 +42,7 @@ class TranslatorInspectorClient : public TranslatorInspectorInterface
   Q_INTERFACES(GammaRay::TranslatorInspectorInterface)
 
   public:
-    TranslatorInspectorClient(const QString &name, QObject *parent = 0);
+    explicit TranslatorInspectorClient(const QString &name, QObject *parent = 0);
 
   public slots:
     void sendLanguageChangeEvent() Q_DECL_OVERRIDE;

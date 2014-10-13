@@ -35,7 +35,7 @@ class TranslationsModel : public QAbstractListModel
   Q_OBJECT
 
   public:
-    TranslationsModel(TranslatorWrapper *translator);
+    explicit TranslationsModel(TranslatorWrapper *translator);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &) const Q_DECL_OVERRIDE;

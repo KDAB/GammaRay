@@ -34,7 +34,7 @@ class TranslatorsModel : public QAbstractTableModel
   Q_OBJECT
 
   public:
-    TranslatorsModel(QObject *parent = 0);
+    explicit TranslatorsModel(QObject *parent = 0);
 
     enum ExtraRoles
     {
