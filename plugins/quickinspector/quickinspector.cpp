@@ -55,6 +55,9 @@
 #include <QSGNode>
 #include <QSGGeometry>
 #include <QSGMaterial>
+#include <QSGFlatColorMaterial>
+#include <QSGTextureMaterial>
+#include <QSGVertexColorMaterial>
 #include <private/qquickshadereffectsource_p.h>
 #include <QMatrix4x4>
 #include <QCoreApplication>
@@ -79,6 +82,9 @@ Q_DECLARE_METATYPE(const QMatrix4x4 *)
 Q_DECLARE_METATYPE(const QSGClipNode *)
 Q_DECLARE_METATYPE(const QSGGeometry *)
 Q_DECLARE_METATYPE(QSGMaterial *)
+Q_DECLARE_METATYPE(QSGMaterial::Flags)
+Q_DECLARE_METATYPE(QSGTexture::WrapMode)
+Q_DECLARE_METATYPE(QSGTexture::Filtering)
 using namespace GammaRay;
 
 static QString qSGNodeFlagsToString(QSGNode::Flags flags)
@@ -141,6 +147,41 @@ static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags)
   if (list.isEmpty())
     return "Clean";
   return list.join(" | ");
+}
+
+static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
+{
+  QStringList list;
+#define F(f) if (flags & QSGMaterial::f) list.push_back(#f);
+  F(Blending)
+  F(RequiresDeterminant)
+  F(RequiresFullMatrixExceptTranslate)
+  F(RequiresFullMatrix)
+  F(CustomCompileStep)
+#undef F
+
+  if (list.isEmpty())
+    return "<none>";
+  return list.join(" | ");
+}
+
+static QString qsgTextureFilteringToString(QSGTexture::Filtering filtering)
+{
+  switch (filtering) {
+    case QSGTexture::None: return "None";
+    case QSGTexture::Nearest: return "Nearest";
+    case QSGTexture::Linear: return "Linear";
+  }
+  return QString("Unknown: %1").arg(filtering);
+}
+
+static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
+{
+  switch (wrapMode) {
+    case QSGTexture::Repeat: return "Repeat";
+    case QSGTexture::ClampToEdge: return "ClampToEdge";
+  }
+  return QString("Unknown: %1").arg(wrapMode);
 }
 
 QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
@@ -635,6 +676,22 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_METAOBJECT1(QSGOpacityNode, QSGNode);
   MO_ADD_PROPERTY   (QSGOpacityNode, qreal, opacity, setOpacity);
   MO_ADD_PROPERTY   (QSGOpacityNode, qreal, combinedOpacity, setCombinedOpacity);
+
+  MO_ADD_METAOBJECT0(QSGMaterial);
+  MO_ADD_PROPERTY_RO(QSGMaterial, QSGMaterial::Flags, flags);
+
+  MO_ADD_METAOBJECT1(QSGFlatColorMaterial, QSGMaterial);
+  MO_ADD_PROPERTY   (QSGFlatColorMaterial, const QColor&, color, setColor);
+
+  MO_ADD_METAOBJECT1(QSGOpaqueTextureMaterial, QSGMaterial);
+  MO_ADD_PROPERTY   (QSGOpaqueTextureMaterial, QSGTexture::Filtering, filtering, setFiltering);
+  MO_ADD_PROPERTY   (QSGOpaqueTextureMaterial, QSGTexture::WrapMode, horizontalWrapMode, setHorizontalWrapMode);
+  MO_ADD_PROPERTY   (QSGOpaqueTextureMaterial, QSGTexture::Filtering, mipmapFiltering, setMipmapFiltering);
+  MO_ADD_PROPERTY   (QSGOpaqueTextureMaterial, QSGTexture*, texture, setTexture);
+  MO_ADD_PROPERTY   (QSGOpaqueTextureMaterial, QSGTexture::WrapMode, verticalWrapMode, setVerticalWrapMode);
+  MO_ADD_METAOBJECT1(QSGTextureMaterial, QSGOpaqueTextureMaterial);
+
+  MO_ADD_METAOBJECT1(QSGVertexColorMaterial, QSGMaterial);
 }
 
 void QuickInspector::registerVariantHandlers()
@@ -653,6 +710,9 @@ void QuickInspector::registerVariantHandlers()
   VariantHandler::registerStringConverter<QSGGeometry*>(Util::addressToString);
   VariantHandler::registerStringConverter<const QSGGeometry*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGMaterial*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QSGMaterial::Flags>(qsgMaterialFlagsToString);
+  VariantHandler::registerStringConverter<QSGTexture::Filtering>(qsgTextureFilteringToString);
+  VariantHandler::registerStringConverter<QSGTexture::WrapMode>(qsgTextureWrapModeToString);
 }
 
 void QuickInspector::registerPCExtensions()
