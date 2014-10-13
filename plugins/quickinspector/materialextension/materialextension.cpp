@@ -23,6 +23,7 @@
 
 #include "materialextension.h"
 
+#include <core/metapropertymodel.h>
 #include <core/propertycontroller.h>
 #include <core/varianthandler.h>
 #include <common/metatypedeclarations.h>
@@ -31,6 +32,9 @@
 #include <QStandardItemModel>
 #include <QSGNode>
 #include <QSGMaterial>
+#include <QSGFlatColorMaterial>
+#include <QSGTextureMaterial>
+#include <QSGVertexColorMaterial>
 
 #include "config-gammaray.h"
 
@@ -51,8 +55,10 @@ MaterialExtension::MaterialExtension(PropertyController *controller)
   : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
     PropertyControllerExtension(controller->objectBaseName() + ".material"),
     m_node(0),
+    m_materialPropertyModel(new MetaPropertyModel(this)),
     m_shaderModel(new QStandardItemModel(this))
 {
+  controller->registerModel(m_materialPropertyModel, "materialPropertyModel");
   controller->registerModel(m_shaderModel, "shaderModel");
 }
 
@@ -60,10 +66,26 @@ MaterialExtension::~MaterialExtension()
 {
 }
 
+#include <iostream>
+
+static const char* typeForMaterial(QSGMaterial *material)
+{
+  std::cerr << typeid(*material).name() << std::endl;
+#define MT(type) if (dynamic_cast<type*>(material)) return #type;
+  MT(QSGFlatColorMaterial)
+  MT(QSGTextureMaterial)
+  MT(QSGOpaqueTextureMaterial)
+  MT(QSGVertexColorMaterial)
+#undef MT
+  return "QSGMaterial";
+}
+
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
   if (typeName == "QSGGeometryNode") {
     m_node = static_cast<QSGGeometryNode*>(object);
+
+    m_materialPropertyModel->setObject(m_node->material(), typeForMaterial(m_node->material()));
 
     QSGMaterialShader *materialShader = m_node->material()->createShader();
     SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief*>(materialShader);
@@ -82,6 +104,8 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
 
     return true;
   }
+
+  m_materialPropertyModel->setObject(0);
   return false;
 }
 

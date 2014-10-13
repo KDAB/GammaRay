@@ -38,6 +38,9 @@ MaterialTab::MaterialTab(PropertyWidget *parent) : QWidget(parent),
   setObjectBaseName(parent->objectBaseName());
   connect(m_ui->shaderList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(shaderSelectionChanged(QItemSelection)));
+
+  m_ui->splitter->setStretchFactor(0, 1);
+  m_ui->splitter->setStretchFactor(1, 3);
 }
 
 MaterialTab::~MaterialTab()
@@ -54,6 +57,7 @@ void MaterialTab::setObjectBaseName(const QString &baseName)
     ObjectBroker::object<MaterialExtensionInterface*>(baseName + ".material");
   connect(m_interface, SIGNAL(gotShader(QString)), this, SLOT(showShader(QString)));
 
+  m_ui->materialPropertyView->setModel(ObjectBroker::model(baseName + ".materialPropertyModel"));
   m_ui->shaderList->setModel(ObjectBroker::model(baseName + ".shaderModel"));
 }
 
