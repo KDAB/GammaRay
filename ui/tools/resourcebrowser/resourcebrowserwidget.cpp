@@ -32,7 +32,9 @@
 #include <common/objectbroker.h>
 
 #include <QDebug>
+#include <QFileDialog>
 #include <QFileInfo>
+#include <QMenu>
 #include <QTimer>
 
 using namespace GammaRay;
@@ -53,6 +55,8 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   connect(m_interface, SIGNAL(resourceDeselected()), this, SLOT(resourceDeselected()));
   connect(m_interface, SIGNAL(resourceSelected(QPixmap)), this, SLOT(resourceSelected(QPixmap)));
   connect(m_interface, SIGNAL(resourceSelected(QByteArray)), this, SLOT(resourceSelected(QByteArray)));
+  connect(m_interface, SIGNAL(resourceDownloaded(QString,QPixmap)), this, SLOT(resourceDownloaded(QString,QPixmap)));
+  connect(m_interface, SIGNAL(resourceDownloaded(QString,QByteArray)), this, SLOT(resourceDownloaded(QString,QByteArray)));
 
   ui->setupUi(this);
   ClientResourceModel* model = new ClientResourceModel(this);
@@ -65,6 +69,9 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   config->hideColumn(3);
   connect(ui->treeView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
           SLOT(rowsInserted()));
+
+  ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui->treeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(handleCustomContextMenu(QPoint)));
 
   ui->resourceLabel->setText(tr("Select a Resource to Preview"));
   ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
@@ -126,3 +133,101 @@ void ResourceBrowserWidget::resourceSelected(const QByteArray &contents)
   ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
 }
 
+void ResourceBrowserWidget::resourceDownloaded(const QString &targetFilePath, const QPixmap &pixmap)
+{
+  if (!pixmap.save(targetFilePath)) {
+    qWarning("Unable to write resource content to %s", qPrintable(targetFilePath));
+    return;
+  }
+}
+
+void ResourceBrowserWidget::resourceDownloaded(const QString &targetFilePath, const QByteArray &contents)
+{
+  QFile file(targetFilePath);
+  if (!file.open(QIODevice::WriteOnly)) {
+    qWarning("Unable to write resource content to %s", qPrintable(targetFilePath));
+    return;
+  }
+
+  file.write(contents);
+  file.close();
+}
+
+static QStringList collectDirectories(const QModelIndex &index, const QString &baseDirectory)
+{
+  QStringList result;
+
+  const QAbstractItemModel *model = index.model();
+  const QString directoryPath = index.data(ResourceModel::FilePathRole).toString();
+
+  const QString relativeDirectory = directoryPath.mid(baseDirectory.size());
+  result << relativeDirectory;
+
+  for (int row = 0; row < model->rowCount(index); ++row) {
+    const QModelIndex childIndex = model->index(row, 0, index);
+    if (model->hasChildren(childIndex))
+      result += collectDirectories(childIndex, baseDirectory);
+  }
+
+  return result;
+}
+
+static QStringList collectFiles(const QModelIndex &index, const QString &baseDirectory)
+{
+  QStringList result;
+
+  const QAbstractItemModel *model = index.model();
+  for (int row = 0; row < model->rowCount(index); ++row) {
+    const QModelIndex childIndex = model->index(row, 0, index);
+    if (model->hasChildren(childIndex)) {
+      result += collectFiles(childIndex, baseDirectory);
+    } else {
+      const QString filePath = childIndex.data(ResourceModel::FilePathRole).toString();
+      const QString relativeFilePath = filePath.mid(baseDirectory.size());
+      result << relativeFilePath;
+    }
+  }
+
+  return result;
+}
+
+void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
+{
+  const QModelIndex selectedIndex = ui->treeView->indexAt(pos);
+  if (!selectedIndex.isValid())
+    return;
+
+  QMenu menu;
+  menu.addAction(tr("Save As..."));
+  if (!menu.exec(ui->treeView->mapToGlobal(pos)))
+    return;
+
+  if (selectedIndex.model()->hasChildren(selectedIndex)) {
+    const QString sourceDirectory = selectedIndex.data(ResourceModel::FilePathRole).toString();
+    const QString targetDirectory = QFileDialog::getExistingDirectory(this, tr("Save As"));
+
+    // create local target directory tree
+    foreach (const QString &directoryPath, collectDirectories(selectedIndex, sourceDirectory)) {
+      if (directoryPath.isEmpty())
+        continue;
+
+      QDir dir(targetDirectory + "/" + directoryPath);
+      dir.mkpath(".");
+    }
+
+    // request all resource files
+    foreach (const QString &filePath, collectFiles(selectedIndex, sourceDirectory)) {
+      m_interface->downloadResource(sourceDirectory + filePath, targetDirectory + filePath);
+    }
+
+  } else {
+    const QString sourceFilePath = selectedIndex.data(ResourceModel::FilePathRole).toString();
+    const QString sourceFileName = sourceFilePath.mid(sourceFilePath.lastIndexOf('/') + 1);
+
+    const QString targetFilePath = QFileDialog::getSaveFileName(this, tr("Save As"), sourceFileName);
+    if (targetFilePath.isEmpty())
+      return;
+
+    m_interface->downloadResource(sourceFilePath, targetFilePath);
+  }
+}

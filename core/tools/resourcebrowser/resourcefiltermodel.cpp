@@ -44,3 +44,7 @@ bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex &so
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
+QMap<int, QVariant> ResourceFilterModel::itemData(const QModelIndex &index) const
+{
+  return sourceModel()->itemData(mapToSource(index));
+}

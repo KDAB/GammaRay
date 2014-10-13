@@ -437,6 +437,14 @@ QVariant ResourceModel::headerData(int section, Qt::Orientation orientation, int
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+QMap<int, QVariant> ResourceModel::itemData(const QModelIndex &index) const
+{
+    QMap<int, QVariant> map = QAbstractItemModel::itemData(index);
+    map.insert(ResourceModel::FilePathRole, data(index, ResourceModel::FilePathRole));
+    map.insert(ResourceModel::FileNameRole, data(index, ResourceModel::FileNameRole));
+    return map;
+}
+
 /*!
   Returns true if the \a parent model item has children; otherwise
   returns false.

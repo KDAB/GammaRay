@@ -45,6 +45,25 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
           this, SLOT(currentChanged(QModelIndex)));
 }
 
+void ResourceBrowser::downloadResource(const QString &sourceFilePath, const QString &targetFilePath)
+{
+  const QFileInfo fi(sourceFilePath);
+
+  if (fi.isFile()) {
+    static const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
+    if (l.contains(fi.suffix())) {
+      emit resourceDownloaded(targetFilePath, QPixmap(fi.absoluteFilePath()));
+    } else {
+      QFile f(fi.absoluteFilePath());
+      if (f.open(QFile::ReadOnly | QFile::Text)) {
+        emit resourceDownloaded(targetFilePath, f.readAll());
+      } else {
+        qWarning() << "Failed to open" << fi.absoluteFilePath();
+      }
+    }
+  }
+}
+
 void ResourceBrowser::currentChanged(const QModelIndex &current)
 {
   const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());

@@ -38,6 +38,9 @@ class ResourceBrowser : public ResourceBrowserInterface
   public:
     explicit ResourceBrowser(ProbeInterface *probe, QObject *parent = 0);
 
+  public slots:
+    void downloadResource(const QString &sourceFilePath, const QString &targetFilePath);
+
   private slots:
     void currentChanged(const QModelIndex &current);
 };

@@ -24,6 +24,8 @@
 
 #include "resourcebrowserclient.h"
 
+#include <common/endpoint.h>
+
 using namespace GammaRay;
 
 ResourceBrowserClient::ResourceBrowserClient(QObject *parent)
@@ -33,6 +35,9 @@ ResourceBrowserClient::ResourceBrowserClient(QObject *parent)
 
 ResourceBrowserClient::~ResourceBrowserClient()
 {
-
 }
 
+void ResourceBrowserClient::downloadResource(const QString &sourceFilePath, const QString &targetFilePath)
+{
+  Endpoint::instance()->invokeObject(objectName(), "downloadResource", QVariantList() << sourceFilePath << targetFilePath);
+}

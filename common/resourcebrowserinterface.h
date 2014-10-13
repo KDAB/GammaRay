@@ -37,10 +37,16 @@ class ResourceBrowserInterface : public QObject
     explicit ResourceBrowserInterface(QObject *parent = 0);
     virtual ~ResourceBrowserInterface();
 
+  public slots:
+    virtual void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) = 0;
+
   signals:
     void resourceDeselected();
     void resourceSelected(const QPixmap &pixmap);
     void resourceSelected(const QByteArray &contents);
+
+    void resourceDownloaded(const QString &targetFilePath, const QPixmap &pixmap);
+    void resourceDownloaded(const QString &targetFilePath, const QByteArray &contents);
 };
 
 }

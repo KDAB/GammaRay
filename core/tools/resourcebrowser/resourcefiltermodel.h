@@ -34,6 +34,7 @@ class ResourceFilterModel : public QSortFilterProxyModel
   public:
     explicit ResourceFilterModel(QObject *parent = 0);
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    virtual QMap<int, QVariant> itemData(const QModelIndex &index) const;
 };
 
 }

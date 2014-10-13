@@ -36,6 +36,8 @@ class ResourceBrowserClient : public ResourceBrowserInterface
   public:
     explicit ResourceBrowserClient(QObject *parent);
     virtual ~ResourceBrowserClient();
+
+    void downloadResource(const QString &sourceFilePath, const QString &targetFilePath);
 };
 
 }
