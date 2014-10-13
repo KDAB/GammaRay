@@ -90,6 +90,16 @@ namespace Util {
                                        const QObject *object = 0);
 
   /**
+   * Convenience wrapper for the above, in case the enum value is not available
+   * in a QVariant already.
+   */
+  template <typename T>
+  inline QString enumToString(T value, const char *typeName = 0, const QObject *object = 0)
+  {
+    return enumToString(QVariant::fromValue<T>(value), typeName, object);
+  }
+
+  /**
    * Returns a display string for @p method.
    * This includes return types and argument names, if available.
    */

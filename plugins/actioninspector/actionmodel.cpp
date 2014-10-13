@@ -29,6 +29,8 @@
 #include <QAction>
 #include <QDebug>
 
+Q_DECLARE_METATYPE(QAction::Priority)
+
 using namespace GammaRay;
 
 template<class T>
@@ -165,7 +167,7 @@ QVariant ActionModel::data(const QModelIndex &proxyIndex, int role) const
     case CheckedPropColumn:
       return VariantHandler::displayString(action->isChecked());
     case PriorityPropColumn:
-      return VariantHandler::displayString(action->priority());
+      return Util::enumToString(action->priority(), 0, action);
     case ShortcutsPropColumn:
       return toString(action->shortcuts());
     default:

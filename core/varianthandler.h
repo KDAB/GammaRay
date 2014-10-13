@@ -65,6 +65,15 @@ namespace VariantHandler
   GAMMARAY_CORE_EXPORT QString displayString(const QVariant &value);
 
   /**
+   * Returns a human readable string version of the given value.
+   * Thihs is a convenience overload of the QVariant-based version above.
+   *
+   * @return a QString containing the human readable string.
+   */
+  template <typename T>
+  inline QString displayString(T value) { return displayString(QVariant::fromValue<T>(value)); }
+
+  /**
    * Returns a value representing @p value in a itemview decoration role.
    * @param value is a QVariant.
    *
