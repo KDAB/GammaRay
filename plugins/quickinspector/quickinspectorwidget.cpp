@@ -273,7 +273,7 @@ void QuickInspectorUiFactory::initUi()
   ObjectBroker::registerClientObjectFactoryCallback<MaterialExtensionInterface*>(
     createMaterialExtension);
 
-  PropertyWidget::registerTab<MaterialTab>("material", QObject::tr("Shaders"));
+  PropertyWidget::registerTab<MaterialTab>("material", QObject::tr("Material"));
 
   ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface*>(
     createSGGeometryExtension);
