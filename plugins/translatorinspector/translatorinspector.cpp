@@ -54,7 +54,7 @@ TranslatorInspector::TranslatorInspector(ProbeInterface *probe,
 
   m_selectionModel = ObjectBroker::selectionModel(m_translatorsModel);
   connect(m_selectionModel,
-          SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(selectionChanged(QItemSelection)));
 
   m_translationsSelectionModel =

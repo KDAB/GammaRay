@@ -65,7 +65,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
   connect(ui->intervalScale, SIGNAL(valueChanged(int)), this, SLOT(intervalScaleValueChanged(int)));
   connect(ui->objectTreeView->eventDelegate(), SIGNAL(isActiveChanged(bool)),  this, SLOT(eventDelegateIsActiveChanged(bool)));
-  connect(ui->objectTreeView->header(), SIGNAL(sectionResized(int, int, int)), this, SLOT(adjustEventScrollBarSize()));
+  connect(ui->objectTreeView->header(), SIGNAL(sectionResized(int,int,int)), this, SLOT(adjustEventScrollBarSize()));
 }
 
 SignalMonitorWidget::~SignalMonitorWidget()
