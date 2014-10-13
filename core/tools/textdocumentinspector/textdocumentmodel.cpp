@@ -43,8 +43,10 @@ void TextDocumentModel::setDocument(QTextDocument *doc)
   }
 
   m_document = doc;
-  connect(m_document, SIGNAL(contentsChanged()), SLOT(documentChanged()));
   fillModel();
+
+  if (m_document)
+    connect(m_document, SIGNAL(contentsChanged()), SLOT(documentChanged()));
 }
 
 void TextDocumentModel::documentChanged()
