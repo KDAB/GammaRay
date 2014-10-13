@@ -63,7 +63,6 @@ GENERATE_DEPRECATEDLIST = YES
 ENABLED_SECTIONS       = 
 MAX_INITIALIZER_LINES  = 30
 SHOW_USED_FILES        = YES
-SHOW_DIRECTORIES       = NO
 FILE_VERSION_FILTER    = 
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
@@ -136,7 +135,6 @@ HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
 HTML_FOOTER            = @CMAKE_SOURCE_DIR@/docs/footer.html
 HTML_STYLESHEET        =
-HTML_ALIGN_MEMBERS     = YES
 GENERATE_HTMLHELP      = NO
 CHM_FILE               =
 HHC_LOCATION           =
