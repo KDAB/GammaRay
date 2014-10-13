@@ -642,6 +642,18 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_PROPERTY_RO(QQuickView, QQmlContext *, rootContext);
   MO_ADD_PROPERTY_RO(QQuickView, QQuickItem *, rootObject);
 
+  MO_ADD_METAOBJECT1(QSGTexture, QObject);
+  MO_ADD_PROPERTY   (QSGTexture, QSGTexture::Filtering, filtering, setFiltering);
+  MO_ADD_PROPERTY_RO(QSGTexture, bool, hasAlphaChannel);
+  MO_ADD_PROPERTY_RO(QSGTexture, bool, hasMipmaps);
+  MO_ADD_PROPERTY   (QSGTexture, QSGTexture::WrapMode, horizontalWrapMode, setHorizontalWrapMode);
+  MO_ADD_PROPERTY_RO(QSGTexture, bool, isAtlasTexture);
+  MO_ADD_PROPERTY   (QSGTexture, QSGTexture::Filtering, mipmapFiltering, setMipmapFiltering);
+  MO_ADD_PROPERTY_RO(QSGTexture, QRectF, normalizedTextureSubRect);
+  MO_ADD_PROPERTY_RO(QSGTexture, int, textureId);
+  MO_ADD_PROPERTY_RO(QSGTexture, QSize, textureSize);
+  MO_ADD_PROPERTY   (QSGTexture, QSGTexture::WrapMode, verticalWrapMode, setVerticalWrapMode);
+
   MO_ADD_METAOBJECT0(QSGNode);
   MO_ADD_PROPERTY_RO(QSGNode, QSGNode *, parent);
   MO_ADD_PROPERTY_RO(QSGNode, int, childCount);
