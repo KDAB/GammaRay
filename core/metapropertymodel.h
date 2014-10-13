@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_METAPROPERTYMODEL_H
 #define GAMMARAY_METAPROPERTYMODEL_H
 
+#include "gammaray_core_export.h"
+
 #include <QAbstractTableModel>
 
 namespace GammaRay {
@@ -34,7 +36,7 @@ class MetaObject;
  * @todo needs better name, but ObjectPropertyModel is already in use...
  * @todo maybe it's a good to merge those to anyway?
  */
-class MetaPropertyModel : public QAbstractTableModel
+class GAMMARAY_CORE_EXPORT MetaPropertyModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
