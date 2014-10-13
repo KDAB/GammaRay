@@ -39,7 +39,6 @@ class MaterialExtensionInterface : public QObject
     const QString &name() const;
 
   signals:
-    void shaderListChanged(const QStringList &materialList);
     void gotShader(const QString &shaderSource);
 
   public slots:

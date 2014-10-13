@@ -22,8 +22,13 @@
 */
 
 #include "materialextension.h"
+
 #include <core/propertycontroller.h>
+#include <core/varianthandler.h>
+#include <common/metatypedeclarations.h>
+
 #include <QFile>
+#include <QStandardItemModel>
 #include <QSGNode>
 #include <QSGMaterial>
 
@@ -45,8 +50,10 @@ class SGMaterialShaderThief : public QSGMaterialShader
 MaterialExtension::MaterialExtension(PropertyController *controller)
   : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
     PropertyControllerExtension(controller->objectBaseName() + ".material"),
-    m_node(0)
+    m_node(0),
+    m_shaderModel(new QStandardItemModel(this))
 {
+  controller->registerModel(m_shaderModel, "shaderModel");
 }
 
 MaterialExtension::~MaterialExtension()
@@ -60,14 +67,19 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
 
     QSGMaterialShader *materialShader = m_node->material()->createShader();
     SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief*>(materialShader);
-    QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
+    const QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
 
-    QStringList sourceFiles;
-    foreach (const QStringList &fileList, shaderSources) {
-      sourceFiles << fileList;
+    m_shaderModel->clear();
+    m_shaderModel->setHorizontalHeaderLabels(QStringList() << "Shader");
+    for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
+      foreach (const QString &source, it.value()) {
+        auto *item = new QStandardItem(source);
+        item->setEditable(false);
+        item->setToolTip(tr("Shader type: %1").arg(VariantHandler::displayString(it.key())));
+        m_shaderModel->appendRow(item);
+      }
     }
 
-    emit shaderListChanged(sourceFiles);
     return true;
   }
   return false;

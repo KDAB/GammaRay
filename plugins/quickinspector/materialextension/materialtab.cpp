@@ -36,8 +36,8 @@ MaterialTab::MaterialTab(PropertyWidget *parent) : QWidget(parent),
 {
   m_ui->setupUi(this);
   setObjectBaseName(parent->objectBaseName());
-  connect(m_ui->shaderList, SIGNAL(itemActivated(QListWidgetItem*)),
-          this, SLOT(onShaderSelected(QListWidgetItem*)));
+  connect(m_ui->shaderList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(shaderSelectionChanged(QItemSelection)));
 }
 
 MaterialTab::~MaterialTab()
@@ -52,25 +52,20 @@ void MaterialTab::setObjectBaseName(const QString &baseName)
 
   m_interface =
     ObjectBroker::object<MaterialExtensionInterface*>(baseName + ".material");
-  connect(m_interface, SIGNAL(shaderListChanged(QStringList)), this, SLOT(setShaders(QStringList)));
   connect(m_interface, SIGNAL(gotShader(QString)), this, SLOT(showShader(QString)));
+
+  m_ui->shaderList->setModel(ObjectBroker::model(baseName + ".shaderModel"));
 }
 
-void MaterialTab::setShaders(const QStringList &shaderSources)
+void MaterialTab::shaderSelectionChanged(const QItemSelection& selection)
 {
-  m_shaderSources = shaderSources;
-  m_ui->shaderEdit->setText("");
-  m_ui->shaderList->clear();
-  if (shaderSources.size() > 0) {
-    foreach (const QString &fileName, shaderSources) {
-      new QListWidgetItem(fileName, m_ui->shaderList);
-    }
-  }
-}
-
-void MaterialTab::onShaderSelected(QListWidgetItem *item)
-{
-  m_interface->getShader(item->text());
+  m_ui->shaderEdit->clear();
+  if (selection.isEmpty())
+    return;
+  const QModelIndex index = selection.first().topLeft();
+  if (!index.isValid())
+    return;
+  m_interface->getShader(index.data(Qt::DisplayRole).toString());
 }
 
 void MaterialTab::showShader(const QString &shaderSource)

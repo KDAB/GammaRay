@@ -28,6 +28,7 @@
 #include "materialextensioninterface.h"
 
 class QSGGeometryNode;
+class QStandardItemModel;
 
 namespace GammaRay {
 
@@ -50,6 +51,7 @@ class MaterialExtension : public MaterialExtensionInterface, public PropertyCont
 
   private:
     QSGGeometryNode *m_node;
+    QStandardItemModel *m_shaderModel;
 };
 
 }

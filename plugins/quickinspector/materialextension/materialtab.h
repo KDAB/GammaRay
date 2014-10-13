@@ -26,7 +26,7 @@
 
 #include <QWidget>
 
-class QListWidgetItem;
+class QItemSelection;
 
 namespace GammaRay {
 
@@ -46,14 +46,12 @@ class MaterialTab : public QWidget
     void setObjectBaseName(const QString &baseName);
 
   private slots:
-    void setShaders(const QStringList &shaderSources);
-    void onShaderSelected(QListWidgetItem *item);
+    void shaderSelectionChanged(const QItemSelection &selection);
     void showShader(const QString &shaderSource);
 
   private:
-    Ui_MaterialTab *m_ui;
+    QScopedPointer<Ui_MaterialTab> m_ui;
     MaterialExtensionInterface *m_interface;
-    QStringList m_shaderSources;
 };
 
 }
