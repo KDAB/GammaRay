@@ -79,6 +79,27 @@ static QString displayMatrix4x4(const QMatrix4x4 *matrix)
   return "<null>";
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+static QString displayShaderType(const QOpenGLShader::ShaderType type)
+{
+  QStringList types;
+#define ST(t) if (type & QOpenGLShader::t) types.push_back(#t);
+  ST(Vertex)
+  ST(Fragment)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+  ST(Geometry)
+  ST(TessellationControl)
+  ST(TessellationEvaluation)
+  ST(Compute)
+#endif
+#undef ST
+
+  if (types.isEmpty())
+    return "<none>";
+  return types.join(" | ");
+}
+#endif
+
 }
 
 Q_GLOBAL_STATIC(VariantHandlerRepository, s_variantHandlerRepository)
@@ -334,7 +355,10 @@ QString VariantHandler::displayString(const QVariant &value)
     }
   }
 
-#endif
+  if (value.userType() == qMetaTypeId<QOpenGLShader::ShaderType>())
+    return displayShaderType(value.value<QOpenGLShader::ShaderType>());
+
+#endif // Qt5
 
   // enums
   const QString enumStr = Util::enumToString(value);

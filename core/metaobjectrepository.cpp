@@ -248,10 +248,6 @@ void MetaObjectRepository::initGuiTypes()
 #endif
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)
-#endif
-
 void MetaObjectRepository::initOpenGLTypes()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)

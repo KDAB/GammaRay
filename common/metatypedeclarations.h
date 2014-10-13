@@ -39,6 +39,7 @@
 #include <QMatrix4x4>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QOpenGLShader>
 #include <QSurface>
 #include <QSurfaceFormat>
 #endif
@@ -57,6 +58,7 @@ Q_DECLARE_METATYPE(Qt::WindowState)
 Q_DECLARE_METATYPE(const QMatrix4x4*)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)
 Q_DECLARE_METATYPE(QSurfaceFormat)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
