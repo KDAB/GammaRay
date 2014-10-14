@@ -132,15 +132,24 @@ StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved.
 
 =head1 AUTHORS
 
- Volker Krause <volker.krause@kdab.com> (Head Engineer)
  Allen Winter <allen.winter@kdab.com>
  Andreas Holzammer <andreas.holzammer@kdab.com>
+ Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
  David Faure <david.faure@kdab.com>
+ Frank Osterfeld <frank.osterfeld@kdab.com>
+ James Turner <james.turner@kdab.com>
+ Jan Dalheimer <jan.dalheimer@kdab.com>
  Kevin Funk <kevin.funk@kdab.com>
+ Laurent Montel <laurent.montel@kdab.com>
+ Mathias Hasselmann <mathias.hasselmann@kdab.com>
  Milian Wolff <milian.wolff@kdab.com>
  Patrick Spendrin <patrick.spendrin@kdab.com>
+ Peter Kuemmel <syntheticpp@gmx.net>
+ Rafael Roquetto <rafael.roquetto@kdab.com>
  Stephen Kelly <stephen.kelly@kdab.com>
+ Thomas McGuire <thomas.mcguire@kdab.com>
  Till Adam <till@kdab.com>
  Tobias Koenig <tobias.koenig@kdab.com>
+ Volker Krause <volker.krause@kdab.com>
 
 =cut
