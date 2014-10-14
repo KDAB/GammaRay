@@ -34,6 +34,7 @@
 #include <QPen>
 #include <QSocketNotifier>
 #include <QTcpServer>
+#include <QThread>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QOpenGLContext>
@@ -82,12 +83,27 @@ void MetaObjectRepository::initBuiltInTypes()
   initOpenGLTypes();
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QThread*)
+#endif
+Q_DECLARE_METATYPE(QThread::Priority)
+
 void MetaObjectRepository::initQObjectTypes()
 {
   MetaObject *mo = 0;
   MO_ADD_METAOBJECT0(QObject);
   MO_ADD_PROPERTY_RO(QObject, QObject*, parent);
   MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
+  MO_ADD_PROPERTY_RO(QObject, QThread*, thread);
+
+  MO_ADD_METAOBJECT1(QThread, QObject)
+  MO_ADD_PROPERTY_RO(QThread, bool, isFinished);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  MO_ADD_PROPERTY_RO(QThread, bool, isInterruptionRequested);
+#endif
+  MO_ADD_PROPERTY_RO(QThread, bool, isRunning);
+  MO_ADD_PROPERTY   (QThread, QThread::Priority, priority, setPriority);
+  MO_ADD_PROPERTY   (QThread, uint, stackSize, setStackSize);
 
   MO_ADD_METAOBJECT0(QPaintDevice);
   MO_ADD_PROPERTY_RO(QPaintDevice, int, colorCount);
