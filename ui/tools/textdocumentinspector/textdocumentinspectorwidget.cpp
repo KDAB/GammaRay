@@ -27,6 +27,7 @@
 
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
+#include <common/endpoint.h>
 
 #include <QTextDocument>
 
@@ -50,6 +51,9 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent):
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(documentElementSelected(QItemSelection,QItemSelection)));
   ui->documentFormatView->setModel(ObjectBroker::model("com.kdab.GammaRay.TextDocumentFormatModel"));
+
+  if (Endpoint::instance()->isRemoteClient()) // FIXME: content preview doesn't work remotely yet
+    ui->tabWidget->hide();
 }
 
 TextDocumentInspectorWidget::~TextDocumentInspectorWidget()

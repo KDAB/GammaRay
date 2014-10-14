@@ -64,7 +64,7 @@ MAKE_FACTORY(MimeTypes, true);
 MAKE_FACTORY(ModelInspector, true);
 MAKE_FACTORY(ResourceBrowser, true);
 MAKE_FACTORY(StandardPaths, true);
-MAKE_FACTORY(TextDocumentInspector, false);
+MAKE_FACTORY(TextDocumentInspector, true);
 
 ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent)
 {
