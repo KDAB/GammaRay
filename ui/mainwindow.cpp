@@ -22,12 +22,12 @@
 */
 
 #include "mainwindow.h"
-#include <config-gammaray-version.h>
 
 #include "ui_mainwindow.h"
 #include "aboutpluginsdialog.h"
 #include "aboutdialog.h"
 #include "clienttoolmodel.h"
+#include "aboutdata.h"
 
 #include "common/objectbroker.h"
 #include "common/modelroles.h"
@@ -49,11 +49,6 @@
 #include <QStyleFactory>
 
 using namespace GammaRay;
-
-static const char progName[] = "GammaRay";
-static const char progVersion[] = GAMMARAY_VERSION_STRING;
-static const char progDesc[] = "The Qt application inspection and manipulation tool";
-static const char progURL[] = "http://www.kdab.com/gammaray";
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -116,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   // hide unused tool bar for now
   ui->mainToolBar->setHidden(true);
 
-  setWindowTitle(tr("%1 (%2)").arg(progName).arg(Endpoint::instance()->label()));
+  setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
   selectInitialTool();
   connect(ui->toolSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectInitialTool()));
@@ -138,27 +133,9 @@ MainWindow::~MainWindow()
 void MainWindow::about()
 {
   AboutDialog dialog(this);
-  dialog.setWindowTitle(tr("About %1").arg(progName));
-  dialog.setTitle(tr("<b>%1 %2</b><p>%3").arg(progName).arg(progVersion).arg(progDesc));
-  dialog.setText(
-    trUtf8("<qt>"
-           "<p>Copyright (C) 2010-2014 Klarälvdalens Datakonsult AB, "
-           "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
-           "<p><u>Authors:</u><br>"
-           "Allen Winter &lt;allen.winter@kdab.com&gt;<br>"
-           "Andreas Holzammer &lt;andreas.holzammer@kdab.com&gt;<br>"
-           "David Faure &lt;david.faure@kdab.com&gt;<br>"
-           "Kevin Funk &lt;kevin.funk@kdab.com&gt;<br>"
-           "Laurent Montel &lt;laurent.montel@kdab.com&gt;<br>"
-           "Milian Wolff &lt;milian.wolff@kdab.com&gt;<br>"
-           "Patrick Spendrin &lt;patrick.spendrin@kdab.com&gt;<br>"
-           "Stephen Kelly &lt;stephen.kelly@kdab.com&gt;<br>"
-           "Till Adam &lt;till@kdab.com&gt;<br>"
-           "Thomas McGuire &lt;thomas.mcguire@kdab.com&gt;<br>"
-           "Tobias Koenig &lt;tobias.koenig@kdab.com&gt;<br>"
-           "Volker Krause &lt;volker.krause@kdab.com&gt;<br></p>"
-           "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>"
-           "</qt>"));
+  dialog.setWindowTitle(tr("About GammaRay"));
+  dialog.setTitle(AboutData::aboutTitle());
+  dialog.setText(AboutData::aboutBody());
   dialog.setLogo(":gammaray/GammaRay-128x128.png");
   dialog.setWindowIcon(QPixmap(":gammaray/GammaRay-128x128.png"));
   dialog.exec();
@@ -177,7 +154,7 @@ void MainWindow::aboutKDAB()
   dialog.setWindowTitle(tr("About KDAB"));
   dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
   dialog.setText(
-    tr("<qt><p>%1 is supported and maintained by KDAB</p>"
+    tr("<qt><p>GammaRay is supported and maintained by KDAB</p>"
        "KDAB, the Qt experts, provide consulting and mentoring for developing "
        "Qt applications from scratch and in porting from all popular and legacy "
        "frameworks to Qt. We continue to help develop parts of Qt and are one "
@@ -185,7 +162,7 @@ void MainWindow::aboutKDAB()
        "standard trainings anywhere around the globe.</p>"
        "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
        "to meet the people who write code like this."
-       "</p></qt>").arg(progName));
+       "</p></qt>"));
   dialog.setLogo(":gammaray/kdablogo160.png");
   dialog.setWindowIcon(QPixmap(":gammaray/kdablogo160.png"));
   dialog.exec();

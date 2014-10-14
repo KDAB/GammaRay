@@ -23,8 +23,9 @@
 
 #include "launcherwindow.h"
 #include "ui_launcherwindow.h"
-#include "config-gammaray-version.h"
 #include "launchoptions.h"
+
+#include <ui/aboutdata.h>
 
 #include <QPushButton>
 #include <QSettings>
@@ -35,7 +36,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
   : QDialog(parent), ui(new Ui::LauncherWindow)
 {
   ui->setupUi(this);
-  ui->aboutLabel->setText(ui->aboutLabel->text().arg(GAMMARAY_VERSION_STRING));
+  ui->aboutLabel->setText(AboutData::aboutText());
   connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="gammaray">
+    <file>authors</file>
     <file>GammaRay-512x512.png</file>
     <file>GammaRay-256x256.png</file>
     <file>GammaRay-128x128.png</file>
