@@ -31,6 +31,19 @@
 
 using namespace GammaRay;
 
+static QString formatTypeToString(int type)
+{
+  switch (type) {
+    case QTextFormat::InvalidFormat: return "Invalid";
+    case QTextFormat::BlockFormat: return "Block";
+    case QTextFormat::CharFormat: return "Char";
+    case QTextFormat::ListFormat: return "List";
+    case QTextFormat::FrameFormat: return "Frame";
+    case QTextFormat::UserFormat: return "User";
+  }
+  return QString("Unknown format: %1").arg(type);
+}
+
 TextDocumentModel::TextDocumentModel(QObject *parent)
   : QStandardItemModel(parent), m_document(0)
 {
@@ -138,7 +151,7 @@ QStandardItem *TextDocumentModel::formatItem(const QTextFormat &format)
     const QTextImageFormat imgformat = format.toImageFormat();
     item->setText(tr("Image: %1").arg(imgformat.name()));
   } else {
-    item->setText(tr("Format type: %1").arg(format.type()));
+    item->setText(formatTypeToString(format.type()));
   }
   item->setEditable(false);
   return item;
