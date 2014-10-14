@@ -65,6 +65,7 @@ void TextDocumentModel::fillModel()
   QStandardItem *item = new QStandardItem(tr("Root Frame"));
   const QTextFormat f = m_document->rootFrame()->frameFormat();
   item->setData(QVariant::fromValue(f), FormatRole);
+  item->setEditable(false);
   QStandardItemModel::appendRow(QList<QStandardItem*>()
                                 << item
                                 << formatItem(m_document->rootFrame()->frameFormat()));
@@ -139,6 +140,7 @@ QStandardItem *TextDocumentModel::formatItem(const QTextFormat &format)
   } else {
     item->setText(tr("Format type: %1").arg(format.type()));
   }
+  item->setEditable(false);
   return item;
 }
 
@@ -147,6 +149,7 @@ void TextDocumentModel::appendRow(QStandardItem *parent, QStandardItem *item,
 {
   item->setData(QVariant::fromValue(format), FormatRole);
   item->setData(boundingBox, BoundingBoxRole);
+  item->setEditable(false);
   parent->appendRow(QList<QStandardItem*>() << item << formatItem(format));
 }
 
