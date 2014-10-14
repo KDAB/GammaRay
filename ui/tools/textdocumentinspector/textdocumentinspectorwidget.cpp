@@ -25,6 +25,8 @@
 #include "ui_textdocumentinspectorwidget.h"
 #include "core/tools/textdocumentinspector/textdocumentmodel.h"
 
+#include <ui/deferredresizemodesetter.h>
+
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
@@ -51,6 +53,7 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent):
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(documentElementSelected(QItemSelection,QItemSelection)));
   ui->documentFormatView->setModel(ObjectBroker::model("com.kdab.GammaRay.TextDocumentFormatModel"));
+  new DeferredResizeModeSetter(ui->documentFormatView->header(), 0, QHeaderView::ResizeToContents);
 
   if (Endpoint::instance()->isRemoteClient()) // FIXME: content preview doesn't work remotely yet
     ui->tabWidget->hide();
