@@ -1,9 +1,15 @@
 Introduction
 ============
-GammaRay is a tool to poke around in a Qt-application and also to manipulate the
-application to some extent. GammaRay uses various DLL injection techniques to
-hook into an application at runtime and provide access to a lot of interesting
-information.
+
+GammaRay is a free software introspection tool for Qt applications developed by
+KDAB. Leveraging the QObject introspection mechanism it allows you to observe
+and manipulate your application at runtime. This works both locally on your
+workstation and remotely on an embedded target.
+
+Augmenting your instruction-level debugger, GammaRay allows you to work on a
+much higher level, with the same concepts as the frameworks you use. This is
+especially useful for the more complex Qt frameworks such as model/view, state
+machines or scene graphs.
 
 GammaRay can:
 
@@ -11,27 +17,36 @@ GammaRay can:
 
  * View, and to some extent, edit QObject static and dynamic properties.
 
- * View and call slots of a QObject (similar to qdbusviewer).
+ * View and call slots of a QObject.
 
- * View other QObject elements such as signals, enums and class infos
-   introspectively.
+ * View other QObject elements such as signals, enums and class infos.
 
  * List all QObject inbound and outbound signal/slot connections.
 
- * Provide live widget preview. Useful for finding layout issues).
+ * Provide a layout information overlay for QWidget applications.
 
- * View the content of any QAbstractItemModel (QAIM). Very useful when
+ * Inspect all QPainter operations used to draw a specific widget.
+
+ * Browse the QtQuick2 item tree and scenegraph.
+
+ * Plot object lifetime and emitted signals.
+
+ * View the content of any QAbstractItemModel. Very useful when
    debugging a proxy model chain for example.
 
- * Browse the QAbstractProxyModel (QAPM) hierarchy.
+ * Browse the QAbstractProxyModel hierarchy.
 
- * Browse the QGraphicsView (QGV) item tree of any QGV scene.
+ * Browse the item tree of any QGraphicsView scene.
 
- * Show a live preview of QGV items, including showing their coordinate system,
+ * Show a live preview of QGraphicsView items, including showing their coordinate system,
    transformation origin, rotate/zoom/pan, etc.
 
+ * Intercept translations and change them at runtime.
+
+ * Inspect all building blocks of a QStyle.
+
  * Act as a complete java script debugger, attachable to any QScriptEngine
-  (including the usually not accessible one used by QML internally).
+  (including the usually not accessible one used by QtQuick1 internally).
 
  * Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage,
    thanks to QWebInspector.
@@ -51,7 +66,6 @@ GammaRay can:
 
  * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
 
-Head Engineer for GammaRay is Volker Krause <volker.krause@kdab.com>
 
 Contact
 =======
