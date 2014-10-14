@@ -43,18 +43,10 @@
 #include <private/qguiapplication_p.h>    //krazy:exclude=camelcase
 #endif
 
-#include <QComboBox>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QHBoxLayout>
 #include <QLabel>
-#include <QMessageBox>
-#include <QStringListModel>
 #include <QStyleFactory>
-#include <QTextCodec>
-#include <QTreeView>
-#include <QTextBrowser>
-#include <QDialogButtonBox>
 
 using namespace GammaRay;
 
@@ -274,4 +266,3 @@ void MainWindow::detachProbe()
 {
   ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
 }
-
