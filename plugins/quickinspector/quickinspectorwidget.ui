@@ -40,6 +40,9 @@
          </item>
          <item>
           <widget class="QTreeView" name="itemTreeView">
+           <property name="indentation">
+            <number>10</number>
+           </property>
            <attribute name="headerShowSortIndicator" stdset="0">
             <bool>true</bool>
            </attribute>
@@ -57,6 +60,9 @@
          </item>
          <item>
           <widget class="QTreeView" name="sgTreeView">
+           <property name="indentation">
+            <number>10</number>
+           </property>
            <attribute name="headerShowSortIndicator" stdset="0">
             <bool>true</bool>
            </attribute>
