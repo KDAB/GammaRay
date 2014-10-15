@@ -30,6 +30,7 @@
 #include "config-gammaray.h"
 
 #include <private/qsgmaterialshader_p.h> //krazy:exclude=camelcase
+#include <typeinfo>
 
 using namespace GammaRay;
 
