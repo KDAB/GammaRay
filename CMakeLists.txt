@@ -388,20 +388,19 @@ find_path(VTK_DIR VTKConfig.cmake
   /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
 )
 find_package(VTK)
-set(VTK_MESSAGE "Needed for the object visualizer plugin.")
+set_package_properties(VTK PROPERTIES
+  TYPE OPTIONAL
+  DESCRIPTION "Visualization Toolkit"
+  PURPOSE "Needed for the object visualizer plugin."
+  URL "http://www.vtk.org"
+)
 if(VTK_FOUND)
   find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
   if(NOT VTK_QT_INCLUDE_DIR)
     set(VTK_FOUND FALSE)
-    set(VTK_MESSAGE "Looks like VTK was not built with Qt (QVTKWidget is missing). Object visualizer plugin will not be built.")
+    add_feature_info("QVTKWidget header" VTK_FOUND "Object visualizer plugin requires QVTKWidget.h header.")
   endif()
 endif()
-set_package_properties(VTK PROPERTIES
-  TYPE OPTIONAL
-  DESCRIPTION "Visualization Toolkit."
-  PURPOSE ${VTK_MESSAGE}
-  URL "http://www.vtk.org"
-)
 set(HAVE_VTK ${VTK_FOUND})
 
 # ELF header for ABI detection
