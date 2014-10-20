@@ -397,6 +397,7 @@ set_package_properties(VTK PROPERTIES
 if(VTK_FOUND)
   find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
   if(NOT VTK_QT_INCLUDE_DIR)
+    message(STATUS "Cannot locate QVTKWidget.h in ${VTK_INCLUDE_DIRS}")
     set(VTK_FOUND FALSE)
     add_feature_info("QVTKWidget header" VTK_FOUND "Object visualizer plugin requires QVTKWidget.h header.")
   endif()
