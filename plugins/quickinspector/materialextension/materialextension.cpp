@@ -39,7 +39,6 @@
 #include "config-gammaray.h"
 
 #include <private/qsgmaterialshader_p.h> //krazy:exclude=camelcase
-#include <typeinfo>
 
 using namespace GammaRay;
 
@@ -71,7 +70,6 @@ MaterialExtension::~MaterialExtension()
 
 static const char* typeForMaterial(QSGMaterial *material)
 {
-  std::cerr << typeid(*material).name() << std::endl;
 #define MT(type) if (dynamic_cast<type*>(material)) return #type;
   MT(QSGFlatColorMaterial)
   MT(QSGTextureMaterial)
