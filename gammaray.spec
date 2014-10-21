@@ -4,7 +4,7 @@ Release:        2
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
 Url:            http://github.com/KDAB/GammaRay
-Group:          Development/Tools/Debuggers
+Group:          Development/Tools
 License:        GPL-2.0+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
@@ -67,7 +67,7 @@ Authors:
 
 %package kde4-plugins
 Summary:        GammaRay plug-ins to introspect KDE4 applications
-Group:          Development/Tools/Debuggers
+Group:          Development/Tools
 Requires:       %{name} = %{version}
 
 %description kde4-plugins
@@ -77,7 +77,7 @@ such as a KJob tracker.
 %if 0%{?suse_version} >= 1220 || 0%{?fedora} >= 17
 %package vtk-plugins
 Summary:        GammaRay visualization plug-ins using VTK
-Group:          Development/Tools/Debuggers
+Group:          Development/Tools
 Requires:       %{name} = %{version}
 
 %description vtk-plugins
@@ -86,7 +86,7 @@ Visualization plug-ins for the GammaRay introspection tool that depend on VTK.
 
 %package devel
 Summary:        Development files for %{name}
-Group:          Development/Libraries/C and C++
+Group:          Development/Libraries
 Requires:       %{name} = %{version}
 
 %description devel
