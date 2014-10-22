@@ -1,6 +1,11 @@
 Release Highlights
 ==================
 
+Version 2.1.2 (not released yet):
+-------------
+ * Fix build issues with Qt5.4 and Clang
+ * Fix minor compiler warnings and Coverity Scan issues
+
 Version 2.1.1:
 -------------
  * Fix invoking non-slot methods with arguments.
