@@ -149,7 +149,9 @@ static QString archFromELFHeader(const uchar *data, quint64 size)
 
   switch (hdr->e_machine) {
     case EM_386: return "i686";
+#ifdef EM_X86_64
     case EM_X86_64: return "x86_64";
+#endif
     case EM_ARM: return "arm";
   }
 
