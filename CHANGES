@@ -1,7 +1,7 @@
 Release Highlights
 ==================
 
-Version 2.1.2 (not released yet):
+Version 2.1.2:
 -------------
  * Fix crash when selecting the scene graph root node.
  * Fix two asserts in Qt 5.4 when dealing with connections to slot objects.
