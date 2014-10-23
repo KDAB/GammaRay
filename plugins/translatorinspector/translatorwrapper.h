@@ -87,8 +87,8 @@ class TranslatorWrapper : public QTranslator
   Q_OBJECT
 
   public:
-    TranslatorWrapper(QObject *parent = 0);
-    TranslatorWrapper(QTranslator *wrapped, QObject *parent = 0);
+    explicit TranslatorWrapper(QObject *parent = 0);
+    explicit TranslatorWrapper(QTranslator *wrapped, QObject *parent = 0);
 
     TranslationsModel *model() const { return m_model; }
 
@@ -110,7 +110,7 @@ class FallbackTranslator : public QTranslator
   Q_OBJECT
 
   public:
-    FallbackTranslator(QObject *parent = 0);
+    explicit FallbackTranslator(QObject *parent = 0);
 
     bool isEmpty() const Q_DECL_OVERRIDE
     {
