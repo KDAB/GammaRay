@@ -204,7 +204,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/cmake/GammaRay/
 
 %changelog
-* Mon Oct 20 2014 Allen Winter <allen.winter@kdab.com> 2.1.2
+* Thu Oct 23 2014 Allen Winter <allen.winter@kdab.com> 2.1.2
   2.1.2 final
 * Sat Aug 30 2014 Allen Winter <allen.winter@kdab.com> 2.1.1
   2.1.1 final
