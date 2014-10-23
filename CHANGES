@@ -3,8 +3,12 @@ Release Highlights
 
 Version 2.1.2 (not released yet):
 -------------
- * Fix build issues with Qt5.4 and Clang
- * Fix minor compiler warnings and Coverity Scan issues
+ * Fix crash when selecting the scene graph root node.
+ * Fix two asserts in Qt 5.4 when dealing with connections to slot objects.
+ * Fix build with Vivante OpenGL ES2 stack.
+ * Build fixes for Android.
+ * Fix build issues with Qt5.4 and Clang.
+ * Fix minor compiler warnings and Coverity Scan issues.
 
 Version 2.1.1:
 -------------
