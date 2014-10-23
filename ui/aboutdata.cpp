@@ -24,6 +24,7 @@
 #include "aboutdata.h"
 #include <config-gammaray-version.h>
 
+#include <QDebug>
 #include <QFile>
 #include <QTextDocument>
 
@@ -32,9 +33,12 @@ using namespace GammaRay;
 QStringList AboutData::authors()
 {
     QFile f(":/gammaray/authors");
-    f.open(QFile::ReadOnly);
-    Q_ASSERT(f.isOpen());
-    return QString::fromUtf8(f.readAll()).split('\n', QString::SkipEmptyParts);
+    if (f.open(QFile::ReadOnly)) {
+      return QString::fromUtf8(f.readAll()).split('\n', QString::SkipEmptyParts);
+    } else {
+      qWarning() << "Failed to open the authors resource file";
+      return QStringList(QObject::tr("Unable to read the Authors list"));
+    }
 }
 
 QStringList AboutData::authorsAsHtml()
