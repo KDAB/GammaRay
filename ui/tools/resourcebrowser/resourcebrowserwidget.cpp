@@ -211,7 +211,7 @@ void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
       if (directoryPath.isEmpty())
         continue;
 
-      QDir dir(targetDirectory + "/" + directoryPath);
+      QDir dir(targetDirectory + '/' + directoryPath);
       dir.mkpath(".");
     }
 
