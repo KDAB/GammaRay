@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 2.2.0: (not released yet)
+--------------
+TODO
+
 Version 2.1.2:
 -------------
  * Fix crash when selecting the scene graph root node.
