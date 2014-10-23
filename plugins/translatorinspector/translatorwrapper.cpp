@@ -208,7 +208,7 @@ QString TranslatorWrapper::translate(const char *context,
   const QString translation =
       translateInternal(context, sourceText, disambiguation, n);
 
-  if (QByteArray(context).startsWith("GammaRay::")) {
+  if (QByteArray(context).startsWith("GammaRay::")) { //krazy:exclude=strings
     return translation;
   }
   // it's not for this translator

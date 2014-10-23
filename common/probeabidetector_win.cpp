@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #include "probeabidetector.h"
 #include "probeabi.h"
@@ -99,7 +99,7 @@ static const uchar* rvaToFile(const IMAGE_FILE_HEADER *hdr, DWORD rva, const uch
 static QString compilerFromLibraries(const QStringList &libraries)
 {
   foreach (const QString &lib, libraries) {
-    if (lib.toLower().startsWith("libgcc"))
+    if (lib.toLower().startsWith(QLatin1String("libgcc")))
       return "GNU";
   }
 
@@ -109,8 +109,8 @@ static QString compilerFromLibraries(const QStringList &libraries)
 static bool isDebugRuntime(const QStringList &libraries)
 {
   foreach (const QString &lib, libraries) {
-    if (lib.toLower().startsWith("msvcr"))
-      return lib.toLower().endsWith("d.dll");
+    if (lib.toLower().startsWith(QLatin1String("msvcr")))
+      return lib.toLower().endsWith(QLatin1String("d.dll"));
   }
   return false;
 }
