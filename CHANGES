@@ -3,7 +3,18 @@ Release Highlights
 
 Version 2.2.0: (not released yet)
 --------------
-TODO
+ * New translation inspector plug-in.
+ * New signal monitor and object lifetime plotter plug-in.
+ * Support displaying of QQmlListProperty contents.
+ * Expose signal/slot spy callback API to plug-ins.
+ * Improved state machine visualization using KDSME.
+ * Support for QQmlTimer in the timertop plug-in.
+ * Support exporting of QResource data.
+ * Improved QSGMaterial viewer.
+ * Various performance improvements for the QtQuick2 remote preview.
+ * Improved Qt 5.4 compatibility.
+ * Fix handling of large images in the resource browser.
+ * Support for manually emitting signals, and improved method display.
 
 Version 2.1.2:
 -------------
