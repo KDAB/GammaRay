@@ -170,6 +170,7 @@ void StateMachineViewerWidgetNG::stateConfigurationChanged(const StateMachineCon
 void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId parentId, const bool hasChildren,
                                             const QString& label, const StateType type, const bool connectToInitial)
 {
+  Q_UNUSED(hasChildren);
   IF_DEBUG(qDebug() << "stateAdded" << stateId << parentId << label << type);
 
   if (m_idToStateMap.contains(stateId)) {
@@ -238,6 +239,7 @@ void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, cons
 
 void StateMachineViewerWidgetNG::transitionTriggered(TransitionId transitionId, const QString& label)
 {
+  Q_UNUSED(label);
   m_stateMachineView->configurationController()->setLastTransition(m_idToTransitionMap.value(transitionId));
 }
 
