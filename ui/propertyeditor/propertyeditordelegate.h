@@ -43,9 +43,12 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
 private:
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex &index, const QMatrix4x4 &matrix) const;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex &index, const QMatrix4x4 &matrix) const;
-    int columnWidth(const QStyleOptionViewItem& option, const QMatrix4x4& matrix, int column) const;
+    template <typename Matrix>
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex &index, const Matrix &matrix) const;
+    template <typename Matrix>
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex &index, const Matrix &matrix) const;
+    template <typename Matrix>
+    int columnWidth(const QStyleOptionViewItem& option, const Matrix& matrix, int column) const;
 };
 
 }

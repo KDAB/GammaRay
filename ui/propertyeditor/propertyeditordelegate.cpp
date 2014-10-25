@@ -28,8 +28,41 @@
 #include <QDebug>
 #include <QMatrix4x4>
 #include <QPainter>
+#include <QVector2D>
+#include <QVector3D>
+#include <QVector4D>
 
 using namespace GammaRay;
+
+namespace {
+template <typename T> struct matrix_trait {};
+template <> struct matrix_trait<QMatrix4x4> {
+    static const int rows = 4;
+    static const int columns = 4;
+    static qreal value(const QMatrix4x4 &matrix, int r, int c) { return matrix(r, c); }
+};
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+template <> struct matrix_trait<QVector2D> {
+    static const int rows = 2;
+    static const int columns = 1;
+    static qreal value(const QVector3D &vec, int r, int) { return vec[r]; }
+};
+
+template <> struct matrix_trait<QVector3D> {
+  static const int rows = 3;
+  static const int columns = 1;
+  static qreal value(const QVector3D &vec, int r, int) { return vec[r]; }
+};
+
+template <> struct matrix_trait<QVector4D> {
+  static const int rows = 4;
+  static const int columns = 1;
+  static qreal value(const QVector3D &vec, int r, int) { return vec[r]; }
+};
+#endif
+
+}
 
 PropertyEditorDelegate::PropertyEditorDelegate(QObject* parent): QStyledItemDelegate(parent)
 {
@@ -51,6 +84,14 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         paint(painter, option, index, value.value<QMatrix4x4>());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    } else if (value.canConvert<QVector2D>()) {
+        paint(painter, option, index, value.value<QVector3D>());
+    } else if (value.canConvert<QVector3D>()) {
+      paint(painter, option, index, value.value<QVector3D>());
+    } else if (value.canConvert<QVector4D>()) {
+      paint(painter, option, index, value.value<QVector3D>());
+#endif
     } else {
         QStyledItemDelegate::paint(painter, option, index);
     }
@@ -61,11 +102,20 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         return sizeHint(option, index, value.value<QMatrix4x4>());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    } else if (value.canConvert<QVector2D>()) {
+        return sizeHint(option, index, value.value<QVector3D>());
+    } else if (value.canConvert<QVector3D>()) {
+      return sizeHint(option, index, value.value<QVector3D>());
+    } else if (value.canConvert<QVector4D>()) {
+      return sizeHint(option, index, value.value<QVector3D>());
+#endif
     }
     return QStyledItemDelegate::sizeHint(option, index);
 }
 
-void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex &index, const QMatrix4x4& matrix) const
+template <typename Matrix>
+void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex &index, const Matrix& matrix) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QStyleOptionViewItem opt = option;
@@ -94,11 +144,11 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     painter->drawLine(xOffset, 0, xOffset + parenthesisWidth, 0);
     painter->drawLine(xOffset, textRect.height() - 1, xOffset + parenthesisWidth, textRect.height() - 1);
     xOffset += matrixHMargin + parenthesisLineWidth;
-    for (int col = 0; col < 4; ++col) {
+    for (int col = 0; col < matrix_trait<Matrix>::columns; ++col) {
         const int colWidth = columnWidth(opt, matrix, col);
-        for (int row = 0; row < 4; ++row) {
+        for (int row = 0; row < matrix_trait<Matrix>::rows; ++row) {
             const QRect r(xOffset, row * opt.fontMetrics.lineSpacing(), colWidth, opt.fontMetrics.lineSpacing());
-            painter->drawText(r, Qt::AlignHCenter | Qt::AlignRight, QString::number(matrix(row, col)));
+            painter->drawText(r, Qt::AlignHCenter | Qt::AlignRight, QString::number(matrix_trait<Matrix>::value(matrix, row, col)));
         }
         xOffset += colWidth + matrixSpacing;
     }
@@ -109,7 +159,8 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     painter->restore();
 }
 
-QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex &index, const QMatrix4x4& matrix) const
+template <typename Matrix>
+QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex &index, const Matrix& matrix) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QStyleOptionViewItem opt = option;
@@ -122,19 +173,20 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
     const int textMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, opt.widget) + 1;
 
     int width = 0;
-    for (int col = 0; col < 4; ++col)
+    for (int col = 0; col < matrix_trait<Matrix>::columns; ++col)
         width += columnWidth(opt, matrix, col);
-    width += opt.fontMetrics.width("x") * 4 + 2 * parenthesisLineWidth + 2 * textMargin;
+    width += opt.fontMetrics.width("x") * matrix_trait<Matrix>::columns + 2 * parenthesisLineWidth + 2 * textMargin;
 
-    const int height = opt.fontMetrics.lineSpacing() * 4;
+    const int height = opt.fontMetrics.lineSpacing() * matrix_trait<Matrix>::rows;
 
     return QSize(width, height);
 }
 
-int PropertyEditorDelegate::columnWidth(const QStyleOptionViewItem& option, const QMatrix4x4 &matrix, int column) const
+template <typename Matrix>
+int PropertyEditorDelegate::columnWidth(const QStyleOptionViewItem& option, const Matrix &matrix, int column) const
 {
     int width = 0;
-    for (int row = 0; row < 4; ++row)
-        width = qMax(width, option.fontMetrics.width(QString::number(matrix(row, column))));
+    for (int row = 0; row < matrix_trait<Matrix>::rows; ++row)
+        width = qMax(width, option.fontMetrics.width(QString::number(matrix_trait<Matrix>::value(matrix, row, column))));
     return width;
 }
