@@ -80,7 +80,7 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
       return VariantHandler::decoration(value);
     }
   } else if (role == Qt::EditRole) {
-    if (index.column() == 1 && prop.isWritable()) {
+    if (index.column() == 1) {
       return value;
     }
   } else if (role == Qt::ToolTipRole) {
