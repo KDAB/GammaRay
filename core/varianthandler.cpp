@@ -46,6 +46,9 @@
 #include <QSize>
 #include <QStringList>
 #include <QTextFormat>
+#include <QVector2D>
+#include <QVector3D>
+#include <QVector4D>
 
 using namespace GammaRay;
 
@@ -77,6 +80,15 @@ static QString displayMatrix4x4(const QMatrix4x4 *matrix)
     return displayMatrix4x4(*matrix);
   }
   return "<null>";
+}
+
+template <int Dim, typename T>
+static QString displayVector(const T &vector)
+{
+  QStringList v;
+  for (int i = 0; i < Dim; ++i)
+    v.push_back(QString::number(vector[i]));
+  return '[' + v.join(", ") + ']';
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -263,6 +275,15 @@ QString VariantHandler::displayString(const QVariant &value)
   if (value.userType() == qMetaTypeId<const QMatrix4x4*>()) {
     return displayMatrix4x4(value.value<const QMatrix4x4*>());
   }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  if (value.userType() == qMetaTypeId<QVector2D>())
+    return displayVector<2>(value.value<QVector2D>());
+  if (value.userType() == qMetaTypeId<QVector3D>())
+    return displayVector<3>(value.value<QVector3D>());
+  if (value.userType() == qMetaTypeId<QVector4D>())
+    return displayVector<4>(value.value<QVector4D>());
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
