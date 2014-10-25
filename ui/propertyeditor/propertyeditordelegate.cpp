@@ -127,8 +127,9 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     QApplication::style()->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
 
     QRect textRect = QApplication::style()->subElementRect(QStyle::SE_ItemViewItemText, &opt, opt.widget);
-    const int textMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, opt.widget) + 1;
-    textRect = textRect.adjusted(textMargin, 0, -textMargin, 0);
+    const int textHMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, opt.widget) + 1;
+    static const int textVMargin = 1;
+    textRect = textRect.adjusted(textHMargin, textVMargin, -textHMargin, -textVMargin);
 
     static const int parenthesisLineWidth = 1;
     const int matrixSpacing = opt.fontMetrics.width("x");
@@ -170,14 +171,15 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
     initStyleOption(&opt, index);
 
     static const int parenthesisLineWidth = 1;
-    const int textMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, opt.widget) + 1;
+    const int textHMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, opt.widget) + 1;
+    static const int textVMargin = 1;
 
     int width = 0;
     for (int col = 0; col < matrix_trait<Matrix>::columns; ++col)
         width += columnWidth(opt, matrix, col);
-    width += opt.fontMetrics.width("x") * matrix_trait<Matrix>::columns + 2 * parenthesisLineWidth + 2 * textMargin;
+    width += opt.fontMetrics.width("x") * matrix_trait<Matrix>::columns + 2 * parenthesisLineWidth + 2 * textHMargin;
 
-    const int height = opt.fontMetrics.lineSpacing() * matrix_trait<Matrix>::rows;
+    const int height = opt.fontMetrics.lineSpacing() * matrix_trait<Matrix>::rows + 2* textVMargin;
 
     return QSize(width, height);
 }
