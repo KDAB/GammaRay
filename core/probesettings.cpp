@@ -70,6 +70,12 @@ void ProbeSettings::receiveSettings()
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
 #endif
     qWarning() << "Continueing anyway, with default settings.";
+
+    // see if we got fallback data via environment variables
+    const QString probePath = value("ProbePath").toString();
+    if (!probePath.isEmpty())
+      Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+
     return;
   }
   SharedMemoryLocker locker(&shm);
