@@ -49,6 +49,9 @@ BuildRequires:  java-1.8.0-openjdk
 %if 0%{?fedora} >= 19
 BuildRequires: perl-podlators
 %endif
+%if 0%{?fedora} >= 20
+BuildRequires: hdf5-devel libxml2-devel
+%endif
 Requires:       graphviz
 %endif
 
