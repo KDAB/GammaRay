@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        2.1.2
+Version:        2.2.0
 Release:        2
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -10,8 +10,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
-%define rel 2.1
-%define sover 2.1.0
+%define rel 2.2
+%define sover 2.2.0
 %define qtver qt4.8
 %define this_arch %(uname -p)
 %if %{this_arch} == "athlon"
@@ -154,6 +154,10 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_selectionmodelinspector.desktop
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_selectionmodelinspector_ui_plugin.so
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_selectionmodelinspector_ui.desktop
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor.so
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor.desktop
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor_ui.so
+%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor_ui.desktop
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_statemachineviewer_plugin.so
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_statemachineviewer.desktop
 %{_libdir}/gammaray/%{rel}/%{abi}/gammaray_statemachineviewer_ui_plugin.so
@@ -204,6 +208,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %{_libdir}/cmake/GammaRay/
 
 %changelog
+* Fri Oct 31 2014 Allen Winter <allen.winter@kdab.com> 2.2.0
+  2.2.0 final
 * Thu Oct 23 2014 Allen Winter <allen.winter@kdab.com> 2.1.2
   2.1.2 final
 * Sat Aug 30 2014 Allen Winter <allen.winter@kdab.com> 2.1.1
