@@ -66,3 +66,7 @@ void StyleInspectorWidget::styleSelected(int index)
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->styleSelector->model());
   selectionModel->select(ui->styleSelector->model()->index(index, 0), QItemSelectionModel::ClearAndSelect);
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(StyleInspectorUiFactory)
+#endif

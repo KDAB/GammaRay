@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORWIDGET_H
 #define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTORWIDGET_H
 
+#include <ui/tooluifactory.h>
 #include <QWidget>
 
 namespace GammaRay {
@@ -44,6 +45,13 @@ class StyleInspectorWidget : public QWidget
 
   private:
     Ui::StyleInspectorWidget *ui;
+};
+
+class StyleInspectorUiFactory : public QObject, public StandardToolUiFactory<StyleInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StyleInspectorUi")
 };
 
 }

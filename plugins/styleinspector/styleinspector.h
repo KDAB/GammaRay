@@ -25,7 +25,6 @@
 #define GAMMARAY_STYLEINSPECTOR_STYLEINSPECTOR_H
 
 #include <core/toolfactory.h>
-#include "styleinspectorwidget.h"
 #include "styleinspectorinterface.h"
 
 #include <QStyle>
@@ -62,10 +61,10 @@ class StyleInspector : public StyleInspectorInterface
     PaletteModel *m_standardPaletteModel;
 };
 
-class StyleInspectorFactory : public QObject, public StandardToolFactory2<QStyle, StyleInspector, StyleInspectorWidget>
+class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StyleInspector")
 
   public:
