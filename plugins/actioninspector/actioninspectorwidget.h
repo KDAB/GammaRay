@@ -25,6 +25,8 @@
 #include <QAction>
 #include <QWidget>
 
+#include <ui/tooluifactory.h>
+
 class QAbstractProxyModel;
 class QTreeView;
 class QModelIndex;
@@ -45,6 +47,13 @@ class ActionInspectorWidget : public QWidget
   private:
     QTreeView *mObjectTreeView;
     QAbstractProxyModel *m_proxy;
+};
+
+class ActionInspectorUiFactory : public QObject, public StandardToolUiFactory<ActionInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ActionInspectorUi")
 };
 
 }

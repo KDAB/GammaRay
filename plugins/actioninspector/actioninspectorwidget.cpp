@@ -76,3 +76,7 @@ void ActionInspectorWidget::triggerAction(const QModelIndex &index)
   Endpoint::instance()->invokeObject("com.kdab.GammaRay.ActionInspector", "triggerAction",
                                      QVariantList() << m_proxy->mapToSource(index).row());
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(ActionInspectorUiFactory)
+#endif

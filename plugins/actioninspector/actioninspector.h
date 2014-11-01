@@ -23,7 +23,6 @@
 #define GAMMARAY_ACTIONINSPECTOR_ACTIONINSPECTOR_H
 
 #include <core/toolfactory.h>
-#include "actioninspectorwidget.h"
 
 #include <QAction>
 
@@ -41,11 +40,10 @@ class ActionInspector : public QObject
     void triggerAction(int row);
 };
 
-class ActionInspectorFactory : public QObject,
-    public StandardToolFactory2<QAction, ActionInspector, ActionInspectorWidget>
+class ActionInspectorFactory : public QObject, public StandardToolFactory<QAction, ActionInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ActionInspector")
 
   public:
