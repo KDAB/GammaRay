@@ -1,5 +1,5 @@
 [Desktop Entry]
 Name=Graphics Scenes
 X-GammaRay-Types=QGraphicsScene;
-X-GammaRay-ServiceTypes="com.kdab.GammaRay.ToolFactory;com.kdab.GammaRay.ToolUiFactory"
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
 Exec=gammaray_sceneinspector_plugin

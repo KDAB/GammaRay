@@ -25,6 +25,7 @@
 #ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
 #define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
 
+#include <ui/tooluifactory.h>
 #include <QWidget>
 
 class QGraphicsPixmapItem;
@@ -64,6 +65,13 @@ class SceneInspectorWidget : public QWidget
     QGraphicsScene *m_scene;
     QGraphicsPixmapItem *m_pixmap;
     QTimer *m_updateTimer;
+};
+
+class SceneInspectorUiFactory : public QObject, public StandardToolUiFactory<SceneInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SceneInspectorUi")
 };
 
 }

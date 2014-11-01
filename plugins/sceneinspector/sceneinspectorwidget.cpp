@@ -218,3 +218,7 @@ void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
     ui->sceneTreeView->scrollTo(index); // in case selection does not come from us
   }
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(SceneInspectorUiFactory)
+#endif

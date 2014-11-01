@@ -26,7 +26,6 @@
 #define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTOR_H
 
 #include <core/toolfactory.h>
-#include "sceneinspectorwidget.h"
 #include "sceneinspectorinterface.h"
 
 #include <QGraphicsScene>
@@ -73,10 +72,10 @@ class SceneInspector : public SceneInspectorInterface
 };
 
 class SceneInspectorFactory : public QObject,
-                              public StandardToolFactory2<QGraphicsScene, SceneInspector, SceneInspectorWidget>
+                              public StandardToolFactory<QGraphicsScene, SceneInspector>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SceneInspector")
   public:
     explicit SceneInspectorFactory(QObject *parent = 0) : QObject(parent)
