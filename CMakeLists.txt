@@ -171,11 +171,13 @@ endif()
 # Finding Qt
 #
 
-set(QT_MIN_VERSION "4.7.0")
+set(QT_MIN_VERSION "4.8.0")
 
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
   find_package(Qt5Core 5.1 QUIET)
+else()
+  set(Qt5Core_FOUND FALSE)
 endif()
 
 if(Qt5Core_FOUND)
@@ -420,7 +422,6 @@ configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
 )
-
 include_directories(
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/3rdparty
