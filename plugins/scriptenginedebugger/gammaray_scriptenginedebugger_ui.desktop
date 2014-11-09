@@ -1,0 +1,5 @@
+[Desktop Entry]
+X-GammaRay-Id=gammaray_scriptenginedebugger
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
+Exec=gammaray_scriptenginedebugger_ui_plugin
+X-GammaRay-Remote=false

@@ -24,7 +24,6 @@
 #ifndef GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGER_H
 #define GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGER_H
 
-#include "scriptenginedebuggerwidget.h"
 #include <core/toolfactory.h>
 
 #include <QScriptEngine>
@@ -39,11 +38,10 @@ class ScriptEngineDebugger : public QObject
     virtual ~ScriptEngineDebugger();
 };
 
-class ScriptEngineDebuggerFactory
-  : public QObject, public StandardToolFactory2<QScriptEngine, ScriptEngineDebugger, ScriptEngineDebuggerWidget>
+class ScriptEngineDebuggerFactory : public QObject, public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "org.qt-project.Qt.ScriptEngineDebugger")
 
   public:

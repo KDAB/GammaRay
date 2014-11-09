@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGERWIDGET_H
 #define GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGERWIDGET_H
 
+#include <ui/tooluifactory.h>
 #include <QWidget>
 #include <QScriptEngine>
 
@@ -47,6 +48,13 @@ class ScriptEngineDebuggerWidget : public QWidget
   private:
     QScopedPointer<Ui::ScriptEngineDebuggerWidget> ui;
     QScriptEngineDebugger *debugger;
+};
+
+class ScriptEngineDebuggerUiFactory : public QObject, public StandardToolUiFactory<ScriptEngineDebuggerWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ScriptEngineDebuggerUi")
 };
 
 }
