@@ -24,18 +24,19 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTOR_H
 
+#include "widgetinspectorserver.h"
+
 #include <core/toolfactory.h>
 
-#include "widgetinspectorwidget.h"
-#include "widgetinspectorserver.h"
+#include <QWidget>
 
 namespace GammaRay {
 
 class WidgetInspectorFactory
-  : public QObject, public StandardToolFactory2<QWidget, WidgetInspectorServer, WidgetInspectorWidget>
+  : public QObject, public StandardToolFactory<QWidget, WidgetInspectorServer>
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory GammaRay::ToolUiFactory)
+  Q_INTERFACES(GammaRay::ToolFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.gammaray.WidgetInspector")
   public:
     explicit WidgetInspectorFactory(QObject *parent = 0) : QObject(parent)

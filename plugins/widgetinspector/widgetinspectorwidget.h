@@ -24,6 +24,7 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORWIDGET_H
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORWIDGET_H
 
+#include <ui/tooluifactory.h>
 #include <QWidget>
 
 class QItemSelection;
@@ -61,6 +62,13 @@ class WidgetInspectorWidget : public QWidget
   private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;
     WidgetInspectorInterface *m_inspector;
+};
+
+class WidgetInspectorUiFactory : public QObject, public StandardToolUiFactory<WidgetInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.WidgetInspectorUi")
 };
 
 }

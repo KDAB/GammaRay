@@ -1,13 +1,10 @@
+# probe plugin
 set(gammaray_widgetinspector_plugin_srcs
   widgetinspector.cpp
   widgetinspectorinterface.cpp
   widgetinspectorserver.cpp
-  widgetinspectorclient.cpp
-  widgetinspectorwidget.cpp
   overlaywidget.cpp
   widgettreemodel.cpp
-  widgetpreviewwidget.cpp
-  paintbufferviewer.cpp
   paintbufferreplaywidget.cpp
 )
 
@@ -18,23 +15,18 @@ if(HAVE_PRIVATE_QT_HEADERS)
   )
 endif()
 
-qt4_wrap_ui(gammaray_widgetinspector_plugin_srcs
-  widgetinspectorwidget.ui
-  paintbufferviewer.ui
-)
-
 gammaray_add_plugin(gammaray_widgetinspector_plugin
   gammaray_widgetinspector.desktop
   ${gammaray_widgetinspector_plugin_srcs}
 )
 
 target_link_libraries(gammaray_widgetinspector_plugin
-  ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   gammaray_core
   gammaray_ui
 )
 
+# probe export actions
 add_library(gammaray_widget_export_actions SHARED
   widgetinspector_export_actions.cpp
   uiextractor.cpp
@@ -59,3 +51,28 @@ target_link_libraries(gammaray_widget_export_actions
 )
 
 install(TARGETS gammaray_widget_export_actions DESTINATION ${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI})
+
+# UI plugin
+set(gammaray_widgetinspector_ui_plugin_srcs
+  widgetinspectorinterface.cpp
+  widgetinspectorclient.cpp
+  widgetinspectorwidget.cpp
+  widgetpreviewwidget.cpp
+  paintbufferviewer.cpp
+  paintbufferreplaywidget.cpp
+)
+
+qt4_wrap_ui(gammaray_widgetinspector_ui_plugin_srcs
+  widgetinspectorwidget.ui
+  paintbufferviewer.ui
+)
+
+gammaray_add_plugin(gammaray_widgetinspector_ui_plugin
+  gammaray_widgetinspector_ui.desktop
+  ${gammaray_widgetinspector_ui_plugin_srcs}
+)
+
+target_link_libraries(gammaray_widgetinspector_ui_plugin
+  ${QT_QTGUI_LIBRARIES}
+  gammaray_ui
+)
