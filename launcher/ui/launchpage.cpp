@@ -43,6 +43,12 @@ LaunchPage::LaunchPage(QWidget *parent)
     m_abiIsValid(true)
 {
   ui->setupUi(this);
+#if defined(Q_OS_MAC)
+  QMargins margins = ui->formLayout->contentsMargins();
+  margins.setRight(margins.right() +2);
+  margins.setBottom(margins.bottom() +2);
+  ui->formLayout->setContentsMargins(margins);
+#endif
   connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
   connect(ui->addArgButton, SIGNAL(clicked()), SLOT(addArgument()));
   connect(ui->removeArgButton, SIGNAL(clicked()), SLOT(removeArgument()));

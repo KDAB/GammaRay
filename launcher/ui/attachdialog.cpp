@@ -45,6 +45,12 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   m_abiModel(new ProbeABIModel(this))
 {
   ui.setupUi(this);
+#if defined(Q_OS_MAC)
+  QMargins margins = ui.formLayout->contentsMargins();
+  margins.setRight(margins.right() +2);
+  margins.setBottom(margins.bottom() +2);
+  ui.formLayout->setContentsMargins(margins);
+#endif
 
   m_model = new ProcessModel(this);
 
