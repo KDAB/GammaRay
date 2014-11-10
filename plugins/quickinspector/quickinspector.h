@@ -125,7 +125,7 @@ class QuickInspectorFactory : public QObject,
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.QuickInspector")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
 
   public:
     explicit QuickInspectorFactory(QObject *parent = 0) : QObject(parent)

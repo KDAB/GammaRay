@@ -49,7 +49,7 @@ class KJobTrackerUiFactory : public QObject, public StandardToolUiFactory<KJobTr
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.KJobTrackerUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }

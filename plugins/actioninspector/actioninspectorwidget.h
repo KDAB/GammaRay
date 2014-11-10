@@ -53,7 +53,7 @@ class ActionInspectorUiFactory : public QObject, public StandardToolUiFactory<Ac
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ActionInspectorUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }

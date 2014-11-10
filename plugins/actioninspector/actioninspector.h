@@ -44,7 +44,7 @@ class ActionInspectorFactory : public QObject, public StandardToolFactory<QActio
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ActionInspector")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
 
   public:
     explicit ActionInspectorFactory(QObject *parent = 0) : QObject(parent)

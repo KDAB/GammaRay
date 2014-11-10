@@ -56,7 +56,7 @@ class SignalMonitorUiFactory : public QObject, public StandardToolUiFactory<Sign
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SignalMonitorUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 } // namespace GammaRay

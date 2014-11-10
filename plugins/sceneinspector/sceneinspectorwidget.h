@@ -71,7 +71,7 @@ class SceneInspectorUiFactory : public QObject, public StandardToolUiFactory<Sce
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.SceneInspectorUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }

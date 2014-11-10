@@ -84,7 +84,7 @@ class StateMachineViewerUiFactory : public QObject, public StandardToolUiFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.StateMachineViewerNGUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }

@@ -53,7 +53,7 @@ class WebInspectorUiFactory : public QObject, public StandardToolUiFactory<WebIn
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.WebInspectorUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }

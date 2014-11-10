@@ -54,7 +54,7 @@ class ObjectVisualizerUiFactory : public QObject, public StandardToolUiFactory<G
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ObjectVisualizerUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }

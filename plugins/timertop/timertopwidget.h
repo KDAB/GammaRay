@@ -51,7 +51,7 @@ class TimerTopUiFactory : public QObject, public StandardToolUiFactory<TimerTopW
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.TimerTopUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }

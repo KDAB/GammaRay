@@ -41,7 +41,7 @@ class QmlSupportFactory : public QObject, public StandardToolFactory<QQmlEngine,
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.QmlSupport")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
 
 public:
   explicit QmlSupportFactory(QObject *parent = 0) : QObject(parent)

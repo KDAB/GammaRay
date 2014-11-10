@@ -54,7 +54,7 @@ class ScriptEngineDebuggerUiFactory : public QObject, public StandardToolUiFacto
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.gammaray.ScriptEngineDebuggerUi")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
 };
 
 }
