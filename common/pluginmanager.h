@@ -24,6 +24,8 @@
 #ifndef GAMMARAY_PLUGINMANAGER_H
 #define GAMMARAY_PLUGINMANAGER_H
 
+#include "plugininfo.h"
+
 #include <QVector>
 #include <QList>
 #include <QFileInfo>
@@ -70,7 +72,7 @@ class PluginManagerBase
     }
 
   protected:
-    virtual bool createProxyFactory(const QString& desktopFilePath, QObject* parent) = 0;
+    virtual bool createProxyFactory(const PluginInfo& pluginInfo, QObject* parent) = 0;
 
     void scan(const QString& serviceType);
     QStringList pluginPaths() const;
@@ -99,12 +101,12 @@ public:
     }
 
 protected:
-    bool createProxyFactory(const QString& desktopFilePath, QObject* parent)
+    bool createProxyFactory(const PluginInfo& pluginInfo, QObject* parent)
     {
-      Proxy *proxy = new Proxy(desktopFilePath, parent);
+      Proxy *proxy = new Proxy(pluginInfo, parent);
       if (!proxy->isValid()) {
-        m_errors << PluginLoadError(desktopFilePath, QObject::tr("Failed to load plugin: %1").arg(proxy->errorString()));
-        std::cerr << "invalid plugin " << qPrintable(desktopFilePath) << std::endl;
+        m_errors << PluginLoadError(pluginInfo.path(), QObject::tr("Failed to load plugin: %1").arg(proxy->errorString()));
+        std::cerr << "invalid plugin " << qPrintable(pluginInfo.path()) << std::endl;
         delete proxy;
       } else {
         m_plugins.push_back(proxy);

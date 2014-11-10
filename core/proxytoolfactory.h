@@ -42,7 +42,7 @@ class ProxyToolFactory : public ProxyFactory<ToolFactory>
     /**
      * @param path Path to the plugin spec file
      */
-    explicit ProxyToolFactory(const QString &path, QObject *parent = 0);
+    explicit ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent = 0);
 
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
@@ -52,11 +52,6 @@ class ProxyToolFactory : public ProxyFactory<ToolFactory>
     bool isHidden() const;
 
     virtual void init(ProbeInterface *probe);
-
-  private:
-    QString m_name;
-    QStringList m_supportedTypes;
-    bool m_hidden;
 };
 
 }

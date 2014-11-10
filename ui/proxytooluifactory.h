@@ -37,7 +37,7 @@ class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
     /**
      * @param path Path to the plugin spec file
      */
-    explicit ProxyToolUiFactory(const QString &path, QObject *parent = 0);
+    explicit ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent = 0);
 
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
@@ -45,9 +45,6 @@ class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
     /*override*/ bool remotingSupported() const;
     /*override*/ QWidget *createWidget(QWidget *parentWidget);
     void initUi();
-
-private:
-  bool m_remotingSupported;
 };
 
 }

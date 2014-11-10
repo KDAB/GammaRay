@@ -25,23 +25,19 @@
 
 using namespace GammaRay;
 
-ProxyToolUiFactory::ProxyToolUiFactory(const QString &path, QObject *parent)
-  : ProxyFactory<ToolUiFactory>(path, parent)
-  , m_remotingSupported(false)
+ProxyToolUiFactory::ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent)
+  : ProxyFactory<ToolUiFactory>(pluginInfo, parent)
 {
-  m_remotingSupported = value(QLatin1String("X-GammaRay-Remote"), true).toBool();
 }
 
 bool ProxyToolUiFactory::isValid() const
 {
-  return
-    !id().isEmpty() &&
-    !m_pluginPath.isEmpty();
+  return pluginInfo().isValid();
 }
 
 bool ProxyToolUiFactory::remotingSupported() const
 {
-  return m_remotingSupported;
+  return pluginInfo().remoteSupport();
 }
 
 QWidget *ProxyToolUiFactory::createWidget(QWidget *parentWidget)
@@ -49,7 +45,7 @@ QWidget *ProxyToolUiFactory::createWidget(QWidget *parentWidget)
   loadPlugin();
   ToolUiFactory *fac = factory();
   if (!fac) {
-    return new QLabel(tr("Plugin '%1' could not be loaded.").arg(m_pluginPath), parentWidget);
+    return new QLabel(tr("Plugin '%1' could not be loaded.").arg(pluginInfo().path()), parentWidget);
   }
   Q_ASSERT(fac);
   return fac->createWidget(parentWidget);

@@ -28,9 +28,7 @@
 #include <QStringList>
 #include <QDebug>
 #include <QDir>
-#include <QLibrary>
 #include <QPluginLoader>
-#include <QSettings>
 
 #include <iostream>
 
@@ -64,23 +62,19 @@ void PluginManagerBase::scan(const QString &serviceType)
     IF_DEBUG(cout << "checking plugin path: " << qPrintable(dir.absolutePath()) << endl);
     foreach (const QString &plugin, dir.entryList(QStringList() << "*.desktop", QDir::Files)) {
       const QString pluginFile = dir.absoluteFilePath(plugin);
-      const QFileInfo pluginInfo(pluginFile);
-      const QString pluginName = pluginInfo.baseName();
+      const PluginInfo pluginInfo(pluginFile);
 
-      if (loadedPluginNames.contains(pluginName)) {
+      if (loadedPluginNames.contains(pluginInfo.id())) {
         continue;
       }
 
-      QSettings desktopFile(pluginFile, QSettings::IniFormat);
-      desktopFile.beginGroup("Desktop Entry");
-      const QStringList serviceTypes = desktopFile.value("X-GammaRay-ServiceTypes", QString()).toString().split(';', QString::SkipEmptyParts);
-      if (!serviceTypes.contains(serviceType)) {
-        IF_DEBUG(qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << serviceTypes;)
+      if (pluginInfo.interface() != serviceType) {
+        IF_DEBUG(qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << pluginInfo.interface();)
         continue;
       }
 
-      if (createProxyFactory(pluginFile, m_parent))
-        loadedPluginNames.push_back(pluginName);
+      if (createProxyFactory(pluginInfo, m_parent))
+        loadedPluginNames.push_back(pluginInfo.id());
     }
   }
 }
