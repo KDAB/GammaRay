@@ -64,7 +64,7 @@ void PluginManagerBase::scan(const QString &serviceType)
       const QString pluginFile = dir.absoluteFilePath(plugin);
       const PluginInfo pluginInfo(pluginFile);
 
-      if (loadedPluginNames.contains(pluginInfo.id())) {
+      if (!pluginInfo.isValid() || loadedPluginNames.contains(pluginInfo.id())) {
         continue;
       }
 
