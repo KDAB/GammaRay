@@ -81,7 +81,7 @@ class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<Qui
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_quickinspector.json")
 
   void initUi();
 };

@@ -48,7 +48,7 @@ class TimerTopFactory : public QObject,
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_timertop.json")
 
   public:
     explicit TimerTopFactory(QObject *parent = 0) : QObject(parent)

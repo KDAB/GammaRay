@@ -52,7 +52,7 @@ class CodecBrowserUiFactory : public QObject, public StandardToolUiFactory<Codec
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_codecbrowser.json")
 };
 
 }

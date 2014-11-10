@@ -1,0 +1,6 @@
+{
+    "id": "gammaray_qmlsupport",
+    "name": "QML Support",
+    "types": [ "QQmlEngine" ],
+    "hidden": true
+}

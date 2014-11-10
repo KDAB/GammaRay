@@ -42,7 +42,7 @@ class WebInspectorFactory : public QObject, public ToolFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_webinspector.json")
 
   public:
     explicit WebInspectorFactory(QObject *parent = 0);

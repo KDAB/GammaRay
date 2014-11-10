@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_selectionmodelinspector",
+    "name": "Selection Models",
+    "types": [ "QItemSelectionModel" ]
+}

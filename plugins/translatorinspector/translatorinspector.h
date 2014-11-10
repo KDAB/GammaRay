@@ -76,7 +76,7 @@ class TranslatorInspectorFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_translatorinspector.json")
 
   public:
     explicit TranslatorInspectorFactory(QObject *parent = 0) : QObject(parent) {}

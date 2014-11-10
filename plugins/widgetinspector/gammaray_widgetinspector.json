@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_widgetinspector",
+    "name": "Widgets",
+    "types": [ "QWidget", "QApplication" ]
+}

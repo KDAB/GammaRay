@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_statemachineviewer",
+    "name": "State Machines",
+    "types": [ "QAbstractState" ]
+}

@@ -76,7 +76,7 @@ class SceneInspectorFactory : public QObject,
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_sceneinspector.json")
   public:
     explicit SceneInspectorFactory(QObject *parent = 0) : QObject(parent)
     {

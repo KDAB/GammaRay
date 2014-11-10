@@ -51,7 +51,7 @@ class SelectionModelInspectorUiFactory : public QObject, public StandardToolUiFa
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_selectionmodelinspector.json")
 };
 
 

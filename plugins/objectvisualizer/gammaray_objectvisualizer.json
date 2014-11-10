@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_objectvisualizer",
+    "name": "Object Visualization",
+    "types": [ "QObject" ]
+}

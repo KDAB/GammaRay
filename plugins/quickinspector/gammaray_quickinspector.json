@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_quickinspector",
+    "name": "Quick Scenes",
+    "types": [ "QQuickWindow", "QQuickItem", "QSGNode" ]
+}

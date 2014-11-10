@@ -65,7 +65,7 @@ class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle,
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory")
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_styleinspector.json")
 
   public:
     explicit StyleInspectorFactory(QObject *parent = 0) : QObject(parent)

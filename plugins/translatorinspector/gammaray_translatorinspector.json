@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_translationinspector",
+    "name": "Translations",
+    "types": [ "QTranslator" ]
+}

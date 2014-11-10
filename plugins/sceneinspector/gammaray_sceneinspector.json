@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_sceneinspector",
+    "name": "Graphics Scenes",
+    "types": [ "QGraphicsScene" ]
+}
