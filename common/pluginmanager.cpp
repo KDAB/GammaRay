@@ -52,6 +52,17 @@ QStringList PluginManagerBase::pluginPaths() const
   return pluginPaths;
 }
 
+QStringList PluginManagerBase::pluginFilter() const
+{
+  QStringList filter;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  filter.push_back("*.desktop");
+#else
+  filter.push_back(QLatin1String("*") + Paths::pluginExtension());
+#endif
+  return filter;
+}
+
 void PluginManagerBase::scan(const QString &serviceType)
 {
   m_errors.clear();
@@ -60,7 +71,7 @@ void PluginManagerBase::scan(const QString &serviceType)
   foreach (const QString &pluginPath, pluginPaths()) {
     const QDir dir(pluginPath);
     IF_DEBUG(cout << "checking plugin path: " << qPrintable(dir.absolutePath()) << endl);
-    foreach (const QString &plugin, dir.entryList(QStringList() << "*.desktop", QDir::Files)) {
+    foreach (const QString &plugin, dir.entryList(pluginFilter(), QDir::Files)) {
       const QString pluginFile = dir.absoluteFilePath(plugin);
       const PluginInfo pluginInfo(pluginFile);
 

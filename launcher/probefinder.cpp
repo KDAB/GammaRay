@@ -46,7 +46,7 @@ QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
     Paths::probePath(probeAbi.id()) %
     QDir::separator() %
     baseName %
-    fileExtension();
+    Paths::libraryExtension();
 
   const QFileInfo fi(probePath);
   const QString canonicalPath = fi.canonicalFilePath();
@@ -89,17 +89,6 @@ QVector<ProbeABI> listProbeABIs()
       abis.push_back(abi);
   }
   return abis;
-}
-
-QString fileExtension()
-{
-#ifdef Q_OS_WIN
-  return QLatin1String(".dll");
-#elif defined(Q_OS_MAC)
-  return QLatin1String(".dylib");
-#else
-  return QLatin1String(".so");
-#endif
 }
 
 }

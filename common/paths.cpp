@@ -78,5 +78,26 @@ QString currentProbePath()
   return probePath(GAMMARAY_PROBE_ABI);
 }
 
+QString libraryExtension()
+{
+#ifdef Q_OS_WIN
+  return QLatin1String(".dll");
+#elif defined(Q_OS_MAC)
+  return QLatin1String(".dylib");
+#else
+  return QLatin1String(".so");
+#endif
 }
+
+QString pluginExtension()
+{
+#ifdef Q_OS_MAC
+  return QLatin1String(".so");
+#else
+  return libraryExtension();
+#endif
+}
+
+}
+
 }

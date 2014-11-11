@@ -76,6 +76,7 @@ class PluginManagerBase
 
     void scan(const QString& serviceType);
     QStringList pluginPaths() const;
+    QStringList pluginFilter() const;
 
     QList<PluginLoadError> m_errors;
     QObject *m_parent;

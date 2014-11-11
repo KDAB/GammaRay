@@ -51,11 +51,6 @@ namespace ProbeFinder {
    * List all available probe ABIs.
    */
   QVector<ProbeABI> listProbeABIs();
-
-  /**
-   * Returns the platform-specific file name extenstion.
-   */
-  QString fileExtension();
 }
 
 }
