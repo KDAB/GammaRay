@@ -24,3 +24,7 @@ if(UNIX AND NOT APPLE AND GAMMARAY_BUILD_UI)
     DESTINATION share/icons/hicolor/512x512/apps RENAME GammaRay.png
   )
 endif()
+
+if(APPLE)
+  install(FILES GammaRay.icns DESTINATION "${RESOURCES_INSTALL_DIR}")
+endif()
