@@ -407,6 +407,13 @@ include(GammaRayProbeABI)
 # Installation settings
 #
 if(APPLE)
+  # Make sure default prefix on mac is /Applications, dunnow why but it does not default to it
+  # probably because we do not enabled built in bundle support in the main project
+  string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr/local" CMP_RESULT)
+  if(CMP_RESULT)
+    set(CMAKE_INSTALL_PREFIX "/Applications")
+  endif()
+
   set(BUNDLE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
   set(BUNDLE_NAME "GammaRay.app")
   set(BIN_INSTALL_DIR "${BUNDLE_NAME}/Contents/MacOS")
