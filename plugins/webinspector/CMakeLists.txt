@@ -20,24 +20,26 @@ if(HAVE_QT_WEBKIT1)
     ${Qt5WebKitWidgets_LIBRARIES}
   )
 
-  # ui part
-  set(gammaray_webinspector_ui_plugin_srcs
-    webinspectorwidget.cpp
-  )
+  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+    # ui part
+    set(gammaray_webinspector_ui_plugin_srcs
+      webinspectorwidget.cpp
+    )
 
-  qt4_wrap_ui(gammaray_webinspector_ui_plugin_srcs webinspectorwidget.ui)
+    qt4_wrap_ui(gammaray_webinspector_ui_plugin_srcs webinspectorwidget.ui)
 
-  gammaray_add_plugin(gammaray_webinspector_ui_plugin
-    gammaray_webinspector_ui.desktop
-    ${gammaray_webinspector_ui_plugin_srcs}
-  )
+    gammaray_add_plugin(gammaray_webinspector_ui_plugin
+      gammaray_webinspector_ui.desktop
+      ${gammaray_webinspector_ui_plugin_srcs}
+    )
 
-  target_link_libraries(gammaray_webinspector_ui_plugin
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
-    ${QT_QTWEBKIT_LIBRARIES}
-    ${Qt5WebKitWidgets_LIBRARIES}
-    gammaray_common
-  )
+    target_link_libraries(gammaray_webinspector_ui_plugin
+      ${QT_QTCORE_LIBRARIES}
+      ${QT_QTGUI_LIBRARIES}
+      ${QT_QTWEBKIT_LIBRARIES}
+      ${Qt5WebKitWidgets_LIBRARIES}
+      gammaray_common
+    )
+  endif()
 
 endif()
