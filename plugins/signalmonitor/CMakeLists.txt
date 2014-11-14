@@ -27,24 +27,26 @@ if (Qt5_FOUND)
   target_link_libraries(gammaray_signalmonitor Qt5::Gui)
 endif ()
 
-# ui plugin
-set(gammaray_signalmonitor_ui_srcs
-  signalhistorydelegate.cpp
-  signalhistoryview.cpp
-  signalmonitorwidget.cpp
-  signalmonitorclient.cpp
-)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  # ui plugin
+  set(gammaray_signalmonitor_ui_srcs
+    signalhistorydelegate.cpp
+    signalhistoryview.cpp
+    signalmonitorwidget.cpp
+    signalmonitorclient.cpp
+  )
 
-qt4_wrap_ui(gammaray_signalmonitor_ui_srcs
-  signalmonitorwidget.ui
-)
+  qt4_wrap_ui(gammaray_signalmonitor_ui_srcs
+    signalmonitorwidget.ui
+  )
 
-gammaray_add_plugin(gammaray_signalmonitor_ui
-  gammaray_signalmonitor_ui.desktop
-  ${gammaray_signalmonitor_ui_srcs}
-)
+  gammaray_add_plugin(gammaray_signalmonitor_ui
+    gammaray_signalmonitor_ui.desktop
+    ${gammaray_signalmonitor_ui_srcs}
+  )
 
-target_link_libraries(gammaray_signalmonitor_ui
-  gammaray_ui
-  gammaray_signalmonitor_shared
-)
+  target_link_libraries(gammaray_signalmonitor_ui
+    gammaray_ui
+    gammaray_signalmonitor_shared
+  )
+endif()
