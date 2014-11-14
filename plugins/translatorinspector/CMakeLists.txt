@@ -18,10 +18,12 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   target_link_libraries(gammaray_translatorinspector_ui gammaray_ui)
 endif()
 
-add_executable(translator_test main.cpp)
-qt5_use_modules(translator_test Widgets)
+if(Qt5Widgets_FOUND)
+  add_executable(translator_test main.cpp)
+  qt5_use_modules(translator_test Widgets)
 
-add_custom_target(translator_test_qm
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/translation.qm ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translation.qm
-)
-add_dependencies(translator_test translator_test_qm)
+  add_custom_target(translator_test_qm
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/translation.qm ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/translation.qm
+  )
+  add_dependencies(translator_test translator_test_qm)
+endif()
