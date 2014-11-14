@@ -30,24 +30,26 @@ endif()
 
 
 # ui part
-set(gammaray_styleinspector_ui_plugin_srcs
-  styleinspectorwidget.cpp
-  styleelementstatetablepage.cpp
-  styleinspectorinterface.cpp
-  styleinspectorclient.cpp
-)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  set(gammaray_styleinspector_ui_plugin_srcs
+    styleinspectorwidget.cpp
+    styleelementstatetablepage.cpp
+    styleinspectorinterface.cpp
+    styleinspectorclient.cpp
+  )
 
-qt4_wrap_ui(gammaray_styleinspector_ui_plugin_srcs
-  styleinspectorwidget.ui
-  styleelementstatetablepage.ui
-)
+  qt4_wrap_ui(gammaray_styleinspector_ui_plugin_srcs
+    styleinspectorwidget.ui
+    styleelementstatetablepage.ui
+  )
 
-gammaray_add_plugin(gammaray_styleinspector_ui_plugin
-  gammaray_styleinspector_ui.desktop
-  ${gammaray_styleinspector_ui_plugin_srcs}
-)
+  gammaray_add_plugin(gammaray_styleinspector_ui_plugin
+    gammaray_styleinspector_ui.desktop
+    ${gammaray_styleinspector_ui_plugin_srcs}
+  )
 
-target_link_libraries(gammaray_styleinspector_ui_plugin
-  ${QT_QTGUI_LIBRARIES}
-  gammaray_ui
-)
+  target_link_libraries(gammaray_styleinspector_ui_plugin
+    ${QT_QTGUI_LIBRARIES}
+    gammaray_ui
+  )
+endif()

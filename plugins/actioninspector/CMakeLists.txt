@@ -17,16 +17,18 @@ target_link_libraries(gammaray_actioninspector_plugin
 )
 
 # ui part
-set(gammaray_actioninspector_ui_plugin_srcs
-  actioninspectorwidget.cpp
-)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  set(gammaray_actioninspector_ui_plugin_srcs
+    actioninspectorwidget.cpp
+  )
 
-gammaray_add_plugin(gammaray_actioninspector_ui_plugin
-  gammaray_actioninspector_ui.desktop
-  ${gammaray_actioninspector_ui_plugin_srcs}
-)
+  gammaray_add_plugin(gammaray_actioninspector_ui_plugin
+    gammaray_actioninspector_ui.desktop
+    ${gammaray_actioninspector_ui_plugin_srcs}
+  )
 
-target_link_libraries(gammaray_actioninspector_ui_plugin
-  ${QT_QTGUI_LIBRARIES}
-  gammaray_ui
-)
+  target_link_libraries(gammaray_actioninspector_ui_plugin
+    ${QT_QTGUI_LIBRARIES}
+    gammaray_ui
+  )
+endif()

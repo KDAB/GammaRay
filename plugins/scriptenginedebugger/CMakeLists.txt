@@ -15,20 +15,22 @@ target_link_libraries(gammaray_scriptenginedebugger_plugin
 )
 
 # UI plugin
-set(gammaray_scriptenginedebugger_ui_plugin_srcs
-  scriptenginedebuggerwidget.cpp
-)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  set(gammaray_scriptenginedebugger_ui_plugin_srcs
+    scriptenginedebuggerwidget.cpp
+  )
 
-qt4_wrap_ui(gammaray_scriptenginedebugger_ui_plugin_srcs scriptenginedebuggerwidget.ui)
+  qt4_wrap_ui(gammaray_scriptenginedebugger_ui_plugin_srcs scriptenginedebuggerwidget.ui)
 
-gammaray_add_plugin(gammaray_scriptenginedebugger_ui_plugin
-  gammaray_scriptenginedebugger_ui.desktop
-  ${gammaray_scriptenginedebugger_ui_plugin_srcs}
-)
+  gammaray_add_plugin(gammaray_scriptenginedebugger_ui_plugin
+    gammaray_scriptenginedebugger_ui.desktop
+    ${gammaray_scriptenginedebugger_ui_plugin_srcs}
+  )
 
-target_link_libraries(gammaray_scriptenginedebugger_ui_plugin
-  ${QT_QTGUI_LIBRARIES}
-  ${QT_QTSCRIPT_LIBRARIES}
-  ${QT_QTSCRIPTTOOLS_LIBRARIES}
-  gammaray_core
-)
+  target_link_libraries(gammaray_scriptenginedebugger_ui_plugin
+    ${QT_QTGUI_LIBRARIES}
+    ${QT_QTSCRIPT_LIBRARIES}
+    ${QT_QTSCRIPTTOOLS_LIBRARIES}
+    gammaray_core
+  )
+endif()
