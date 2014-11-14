@@ -194,7 +194,11 @@ if(Qt5Core_FOUND)
     ScriptTools
     Test
     WebKitWidgets
-    Widgets)
+    Widgets
+  )
+  if(NOT GAMMARAY_PROBE_ONLY_BUILD) # widgets are required for the UI
+    find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
+  endif()
 
   #HACK: CMake with broken Qt5Qml_PRIVATE_INCLUDE_DIRS, Qt5Quick_PRIVATE_INCLUDE_DIRS
   if(${Qt5Qml_FOUND})
