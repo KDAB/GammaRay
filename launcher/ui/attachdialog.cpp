@@ -79,10 +79,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   setWindowTitle(tr("GammaRay - Attach to Process"));
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
-  m_timer = new QTimer(this);
-  connect(m_timer, SIGNAL(timeout()), this, SLOT(updateProcesses()));
-  m_timer->start(1000);
-
   ui.stackedWidget->setCurrentWidget(ui.loadingLabel);
   emit updateButtonState();
   updateProcesses();
@@ -147,6 +143,8 @@ void AttachDialog::updateProcessesFinished()
     ui.view->setCurrentIndex(QModelIndex());
   }
   watcher->deleteLater();
+
+  QTimer::singleShot(1000, this, SLOT(updateProcesses()));
 }
 
 void AttachDialog::selectABI(const QModelIndex& processIndex)

@@ -63,7 +63,6 @@ class AttachDialog : public QWidget
     Ui::AttachDialog ui;
     ProcessModel *m_model;
     ProcessFilterModel *m_proxyModel;
-    QTimer *m_timer;
     ProbeABIModel *m_abiModel;
 };
 
