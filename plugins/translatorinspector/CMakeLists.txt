@@ -6,7 +6,7 @@ gammaray_add_plugin(gammaray_translatorinspector gammaray_translatorinspector.de
 )
 target_link_libraries(gammaray_translatorinspector gammaray_core Qt5::Core Qt5::Gui)
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
   qt5_wrap_ui(translatorinspector_ui_srcs
     translatorinspectorwidget.ui
   )

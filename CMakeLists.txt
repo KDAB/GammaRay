@@ -7,8 +7,12 @@
 #  Force building against Qt4, even if Qt5 is found.
 #  Default=false
 #
+# -DGAMMARAY_BUILD_UI=[true|false]
+#  Build the client and in-process UI.
+#  Default=true
+#
 # -DGAMMARAY_PROBE_ONLY_BUILD=[true|false]
-#  Build only the probe, not the host tools (client, launcher, etc).
+#  Build only an additional probe configuration for an already existing launcher.
 #  Default=false
 #
 # -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[true|false]
@@ -104,8 +108,14 @@ option(
 )
 
 option(
+  GAMMARAY_BUILD_UI
+  "Build the GammaRay client and in-process UI."
+  ON
+)
+
+option(
   GAMMARAY_PROBE_ONLY_BUILD
-  "Build only the probe, not the host tools (client, launcher, etc)."
+  "Build only an additional probe configuration for an already existing launcher."
   OFF
 )
 
@@ -196,7 +206,7 @@ if(Qt5Core_FOUND)
     WebKitWidgets
     Widgets
   )
-  if(NOT GAMMARAY_PROBE_ONLY_BUILD) # widgets are required for the UI
+  if(GAMMARAY_BUILD_UI) # widgets are required for the UI
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
   endif()
 
@@ -442,8 +452,10 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 endif()
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(ui)
-  add_subdirectory(inprocessui)
-  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  if(GAMMARAY_BUILD_UI)
+    add_subdirectory(inprocessui)
+  endif()
+  if(GAMMARAY_BUILD_UI AND NOT GAMMARAY_PROBE_ONLY_BUILD)
     add_subdirectory(client)
   endif()
 endif()
@@ -454,7 +466,7 @@ add_subdirectory(plugins)
 add_subdirectory(resources)
 
 if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
-  if(UNIX)
+  if(UNIX AND GAMMARAY_BUILD_UI)
     install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
     install(FILES GammaRay.appdata.xml DESTINATION ${APPDATA_INSTALL_DIR})
   endif()

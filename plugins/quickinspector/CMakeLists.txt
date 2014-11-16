@@ -39,7 +39,7 @@ if(Qt5Quick_FOUND AND Qt5Quick_PRIVATE_INCLUDE_DIRS AND NOT ${Qt5Quick_VERSION} 
     gammaray_core Qt5::Quick
   )
 
-  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  if(GAMMARAY_BUILD_UI)
     # ui plugin
     set(gammaray_quickinspector_ui_srcs
       quickinspectorclient.cpp

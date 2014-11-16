@@ -27,7 +27,7 @@ if (Qt5_FOUND)
   target_link_libraries(gammaray_signalmonitor Qt5::Gui)
 endif ()
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
   # ui plugin
   set(gammaray_signalmonitor_ui_srcs
     signalhistorydelegate.cpp

@@ -23,7 +23,7 @@ target_link_libraries(gammaray_statemachineviewer_plugin
 )
 
 ############ BEGIN GRAPHVIZ GUI
-if(GRAPHVIZ_FOUND AND NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GRAPHVIZ_FOUND AND GAMMARAY_BUILD_UI)
 
 set(gammaray_statemachineviewer_ui_plugin_libs
   ${QT_QTCORE_LIBRARIES}
