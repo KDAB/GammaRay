@@ -54,6 +54,7 @@
 #include <QDir>
 #include <QLibrary>
 #include <QMouseEvent>
+#include <QUrl>
 #include <QThread>
 #include <QTimer>
 
@@ -209,7 +210,7 @@ Probe::Probe(QObject *parent):
   m_toolModel = new ToolModel(this);
 
   Server *server = new Server(this);
-  ProbeSettings::sendPort(server->port());
+  ProbeSettings::sendPort(server->externalAddress().port());
 
   StreamOperators::registerOperators();
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);

@@ -36,6 +36,7 @@ class QTimer;
 namespace GammaRay {
 
 class MultiSignalMapper;
+class ServerDevice;
 
 /** Server side connection endpoint. */
 class GAMMARAY_CORE_EXPORT Server : public Endpoint
@@ -74,7 +75,12 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
 
     bool isRemoteClient() const;
     QUrl serverAddress() const Q_DECL_OVERRIDE;
-    quint16 port() const;
+    /**
+     * Returns an address suitable to connect to this server.
+     * In contrast to serverAddress(), which returns the listening address, which might not
+     * be identical for all protocols (such as TCP).
+     */
+    QUrl externalAddress() const;
   protected:
     void messageReceived(const Message& msg);
     void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
@@ -93,13 +99,12 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     void sendServerGreeting();
 
   private:
-    QTcpServer *m_tcpServer;
+    ServerDevice *m_serverDevice;
     QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> > m_monitorNotifiers;
     Protocol::ObjectAddress m_nextAddress;
 
     QString m_label;
     QTimer* m_broadcastTimer;
-    QUdpSocket* m_broadcastSocket;
 
     MultiSignalMapper* m_signalMapper;
 };

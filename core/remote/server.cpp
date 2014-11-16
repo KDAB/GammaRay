@@ -22,6 +22,7 @@
 */
 
 #include "server.h"
+#include "serverdevice.h"
 #include "probe.h"
 #include "probesettings.h"
 #include "multisignalmapper.h"
@@ -29,12 +30,9 @@
 #include <common/protocol.h>
 #include <common/message.h>
 
-#include <QTcpServer>
-#include <QTcpSocket>
-#include <QUdpSocket>
+#include <QDebug>
 #include <QTimer>
 #include <QMetaMethod>
-#include <QNetworkInterface>
 
 #include <iostream>
 
@@ -43,35 +41,29 @@ using namespace std;
 
 Server::Server(QObject *parent) :
   Endpoint(parent),
-  m_tcpServer(new QTcpServer(this)),
+  m_serverDevice(0),
   m_nextAddress(endpointAddress()),
   m_broadcastTimer(new QTimer(this)),
-  m_broadcastSocket(new QUdpSocket(this)),
   m_signalMapper(new MultiSignalMapper(this))
 {
   if (!ProbeSettings::value("RemoteAccessEnabled", true).toBool())
     return;
 
-  const QHostAddress address(ProbeSettings::value("TCPServer", QLatin1String("0.0.0.0")).toString());
+  m_serverDevice = ServerDevice::create(serverAddress(), this);
+  if (!m_serverDevice)
+    return;
 
-  connect(m_tcpServer, SIGNAL(newConnection()), SLOT(newConnection()));
-
-  // try the default port first, and fall back to a random port otherwise
-  if (!m_tcpServer->listen(address, defaultPort()))
-    m_tcpServer->listen(address, 0);
-
-  // broadcast announcement only if we are actually listinging to remote connections
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  if (address.toString() != "127.0.0.1" && address.toString() != "::1") {
-#else
-  if (!address.isLoopback()) {
-#endif
-    m_broadcastTimer->setInterval(5 * 1000);
-    m_broadcastTimer->setSingleShot(false);
-    m_broadcastTimer->start();
-    connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
-    connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(start()));
+  connect(m_serverDevice, SIGNAL(newConnection()), this, SLOT(newConnection()));
+  if (!m_serverDevice->listen()) {
+    qWarning() << "Failed to start server:" << m_serverDevice->errorString();
+    return;
   }
+
+  m_broadcastTimer->setInterval(5 * 1000);
+  m_broadcastTimer->setSingleShot(false);
+  m_broadcastTimer->start();
+  connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
+  connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(start()));
 
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
           this, SLOT(forwardSignal(QObject*,int,QVector<QVariant>)));
@@ -105,12 +97,12 @@ void Server::newConnection()
 {
   if (isConnected()) {
     cerr << Q_FUNC_INFO << " connected already, refusing incoming connection." << endl;
-    m_tcpServer->nextPendingConnection()->close();
+    m_serverDevice->nextPendingConnection()->close();
     return;
   }
 
   m_broadcastTimer->stop();
-  setDevice(m_tcpServer->nextPendingConnection());
+  setDevice(m_serverDevice->nextPendingConnection());
 
   sendServerGreeting();
 }
@@ -267,25 +259,19 @@ void Server::objectDestroyed(Protocol::ObjectAddress /*objectAddress*/, const QS
 
 void Server::broadcast()
 {
-  QString myAddress;
-  foreach (const QHostAddress &addr, QNetworkInterface::allAddresses()) {
-    if (addr == QHostAddress::LocalHost || addr == QHostAddress::LocalHostIPv6 || !addr.scopeId().isEmpty())
-      continue;
-    myAddress = addr.toString();
-    break;
-  }
-
   QByteArray datagram;
   QDataStream stream(&datagram, QIODevice::WriteOnly);
   stream << Protocol::broadcastFormatVersion();
   stream << Protocol::version();
-  stream << myAddress;
-  stream << port();
+  stream << externalAddress().host();
+  stream << (quint16)externalAddress().port();
   stream << label(); // TODO integrate hostname
-  m_broadcastSocket->writeDatagram(datagram.data(), datagram.size(), QHostAddress::Broadcast, broadcastPort());
+  m_serverDevice->broadcast(datagram);
 }
 
-quint16 Server::port() const
+QUrl Server::externalAddress() const
 {
-  return m_tcpServer->serverPort();
+  if (!m_serverDevice)
+    return QUrl();
+  return m_serverDevice->externalAddress();
 }
