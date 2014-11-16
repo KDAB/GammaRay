@@ -17,7 +17,7 @@ target_link_libraries(gammaray_actioninspector_plugin
 )
 
 # ui part
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
   set(gammaray_actioninspector_ui_plugin_srcs
     actioninspectorwidget.cpp
   )

@@ -53,7 +53,7 @@ target_link_libraries(gammaray_widget_export_actions
 install(TARGETS gammaray_widget_export_actions DESTINATION ${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI})
 
 # UI plugin
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
   set(gammaray_widgetinspector_ui_plugin_srcs
     widgetinspectorinterface.cpp
     widgetinspectorclient.cpp

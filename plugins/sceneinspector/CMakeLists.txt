@@ -16,7 +16,7 @@ target_link_libraries(gammaray_sceneinspector_plugin
 )
 
 # ui part
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
   set(gammaray_sceneinspector_ui_plugin_srcs
     graphicsview.cpp
     graphicssceneview.cpp

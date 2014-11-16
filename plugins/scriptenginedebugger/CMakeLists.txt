@@ -15,7 +15,7 @@ target_link_libraries(gammaray_scriptenginedebugger_plugin
 )
 
 # UI plugin
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
   set(gammaray_scriptenginedebugger_ui_plugin_srcs
     scriptenginedebuggerwidget.cpp
   )
