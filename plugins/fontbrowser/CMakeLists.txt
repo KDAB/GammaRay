@@ -19,7 +19,7 @@ else()
 endif()
 
 # ui part
-if((Qt5Widgets_FOUND OR QT_QTGUI_FOUND) AND GAMMARAY_BUILD_UI)
+if(GAMMARAY_BUILD_UI)
 
   set(gammaray_fontbrowser_plugin_ui_srcs
     fontbrowserinterface.cpp

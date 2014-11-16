@@ -14,7 +14,7 @@ target_link_libraries(gammaray_selectionmodelinspector_plugin
 )
 
 # ui part
-if((Qt5Widgets_FOUND OR QT_QTGUI_FOUND) AND GAMMARAY_BUILD_UI)
+if(GAMMARAY_BUILD_UI)
 
   set(gammaray_selectionmodelinspector_plugin_ui_srcs
     selectionmodelinspectorwidget.cpp
