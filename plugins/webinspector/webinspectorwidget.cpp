@@ -59,12 +59,15 @@ void WebInspectorWidget::webPageSelected(int index)
   }
 
   else if (ui->webPageComboBox->itemData(index, WebViewModel::WebKitVersionRole).toInt() == 2) {
-    QUrl url;
-    url.setScheme("http");
-    url.setHost(Endpoint::instance()->serverAddress());
-    url.setPort(Endpoint::defaultPort() + 1);
-    ui->webView->setUrl(url);
-    ui->stack->setCurrentWidget(ui->wk2Page);
+    const QUrl serverUrl = Endpoint::instance()->serverAddress();
+    if (serverUrl.scheme() == QLatin1String("tcp")) {
+      QUrl inspectorUrl;
+      inspectorUrl.setScheme("http");
+      inspectorUrl.setHost(serverUrl.host());
+      inspectorUrl.setPort(Endpoint::defaultPort() + 1);
+      ui->webView->setUrl(inspectorUrl);
+      ui->stack->setCurrentWidget(ui->wk2Page);
+    }
   }
 
   // WK1, remote

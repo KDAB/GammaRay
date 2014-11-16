@@ -73,7 +73,7 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     virtual void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const;
 
     bool isRemoteClient() const;
-    QString serverAddress() const;
+    QUrl serverAddress() const Q_DECL_OVERRIDE;
     quint16 port() const;
   protected:
     void messageReceived(const Message& msg);

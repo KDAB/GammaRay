@@ -31,6 +31,7 @@
 #include <QPointer>
 
 class QIODevice;
+class QUrl;
 
 namespace GammaRay {
 
@@ -102,10 +103,10 @@ public:
   virtual bool isRemoteClient() const = 0;
 
   /**
-   * Returns the address of the server, in case you need to connect to a different service there
+   * Returns the listening address of the server, in case you need to connect to a different service there
    * (such as the web inspector server).
    */
-  virtual QString serverAddress() const = 0;
+  virtual QUrl serverAddress() const = 0;
 
 signals:
   /** Emitted when we lost the connection to the other endpoint. */

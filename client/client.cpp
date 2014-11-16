@@ -28,6 +28,7 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <QDebug>
+#include <QUrl>
 
 using namespace GammaRay;
 
@@ -51,9 +52,9 @@ bool Client::isRemoteClient() const
   return true;
 }
 
-QString Client::serverAddress() const
+QUrl Client::serverAddress() const
 {
-  return m_hostName;
+  return m_serverAddress;
 }
 
 void Client::connectToHost(const QString &hostName, quint16 port)
@@ -63,7 +64,10 @@ void Client::connectToHost(const QString &hostName, quint16 port)
   connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()));
   sock->connectToHost(hostName, port);
   m_initState = 0;
-  m_hostName = hostName;
+
+  m_serverAddress.setScheme("tcp");
+  m_serverAddress.setHost(hostName);
+  m_serverAddress.setPort(port);
 }
 
 void Client::socketConnected()

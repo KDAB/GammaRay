@@ -28,6 +28,7 @@
 #include <common/endpoint.h>
 
 #include <QAbstractSocket>
+#include <QUrl>
 
 namespace GammaRay {
 
@@ -61,7 +62,7 @@ public:
   static Client* instance();
 
   bool isRemoteClient() const;
-  QString serverAddress() const;
+  QUrl serverAddress() const Q_DECL_OVERRIDE;
 
 signals:
   /** Emitted when we successfully established a connection and passed the protocol version handshake step. */
@@ -90,7 +91,7 @@ private:
 
     InitComplete = VersionChecked | ObjectMapReceived | ServerInfoReceived
   };
-  QString m_hostName;
+  QUrl m_serverAddress;
   int m_initState;
 };
 

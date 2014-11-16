@@ -92,9 +92,13 @@ bool Server::isRemoteClient() const
   return false;
 }
 
-QString Server::serverAddress() const
+QUrl Server::serverAddress() const
 {
-  return QHostAddress(QHostAddress::LocalHost).toString();
+    QUrl url;
+    url.setScheme("tcp");
+    url.setHost(ProbeSettings::value("TCPServer", QLatin1String("0.0.0.0")).toString());
+    url.setPort(defaultPort());
+    return url;
 }
 
 void Server::newConnection()
