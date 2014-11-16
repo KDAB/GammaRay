@@ -20,7 +20,7 @@ if(HAVE_QT_WEBKIT1)
     ${Qt5WebKitWidgets_LIBRARIES}
   )
 
-  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  if(GAMMARAY_BUILD_UI)
     # ui part
     set(gammaray_webinspector_ui_plugin_srcs
       webinspectorwidget.cpp

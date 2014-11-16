@@ -29,7 +29,7 @@ endif()
 endif()
 
 # ui part
-if((Qt5Widgets_FOUND OR QT_QTGUI_FOUND) AND NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
 
   set(gammaray_timertop_plugin_ui_srcs
     timertopwidget.cpp

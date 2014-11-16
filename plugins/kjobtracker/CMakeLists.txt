@@ -50,7 +50,7 @@ if(KDE4_FOUND OR KF5CoreAddons_FOUND)
 endif()
 
 # ui part
-if((Qt5Widgets_FOUND OR QT_QTGUI_FOUND) AND NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_BUILD_UI)
   set(gammaray_kjob_ui_plugin_srcs
     kjobtrackerwidget.cpp
   )

@@ -56,6 +56,6 @@ gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 # UI launcher
-if(HAVE_QT_CONCURRENT AND HAVE_QT_WIDGETS)
+if(HAVE_QT_CONCURRENT AND GAMMARAY_BUILD_UI)
   add_subdirectory(ui)
 endif()
