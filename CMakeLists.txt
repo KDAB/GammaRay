@@ -297,6 +297,8 @@ else()
     "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
   )
 
+  # C++11 compatibility with Qt5
+  add_definitions(-DQ_DECL_OVERRIDE=)
 endif()
 
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
