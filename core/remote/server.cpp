@@ -108,6 +108,11 @@ void Server::newConnection()
   m_broadcastTimer->stop();
   setDevice(m_tcpServer->nextPendingConnection());
 
+  sendServerGreeting();
+}
+
+void Server::sendServerGreeting()
+{
   // send greeting message for protocol version check
   {
     Message msg(endpointAddress(), Protocol::ServerVersion);

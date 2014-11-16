@@ -90,6 +90,9 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     void forwardSignal(QObject* sender, int signalIndex, const QVector<QVariant> &args);
 
   private:
+    void sendServerGreeting();
+
+  private:
     QTcpServer *m_tcpServer;
     QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> > m_monitorNotifiers;
     Protocol::ObjectAddress m_nextAddress;
