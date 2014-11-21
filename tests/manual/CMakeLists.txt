@@ -32,7 +32,7 @@ if(QT_QTWEBKIT_FOUND)
   )
 endif()
 
-if(Qt5WebKit_FOUND)
+if(Qt5WebKit_FOUND AND Qt5Quick_FOUND)
   set(wk2application_srcs wk2application.cpp)
   qt4_add_resources(wk2application_srcs wk2application.qrc)
   add_executable(wk2application ${wk2application_srcs})
