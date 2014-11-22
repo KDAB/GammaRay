@@ -27,6 +27,7 @@
 #include <QAbstractItemModel>
 #include <QVector>
 #include <QDateTime>
+#include <QUrl>
 
 class QUdpSocket;
 
@@ -61,8 +62,7 @@ private:
   struct ServerInfo {
     bool operator==(const ServerInfo &other);
     qint32 version;
-    QString host;
-    quint16 port;
+    QUrl url;
     QString label;
     QDateTime lastSeen;
   };

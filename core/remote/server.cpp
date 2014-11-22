@@ -263,8 +263,7 @@ void Server::broadcast()
   QDataStream stream(&datagram, QIODevice::WriteOnly);
   stream << Protocol::broadcastFormatVersion();
   stream << Protocol::version();
-  stream << externalAddress().host();
-  stream << (quint16)externalAddress().port();
+  stream << externalAddress();
   stream << label(); // TODO integrate hostname
   m_serverDevice->broadcast(datagram);
 }

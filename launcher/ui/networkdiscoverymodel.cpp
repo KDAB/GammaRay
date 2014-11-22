@@ -35,7 +35,7 @@ using namespace GammaRay;
 
 bool NetworkDiscoveryModel::ServerInfo::operator==(const NetworkDiscoveryModel::ServerInfo& other)
 {
-  return host == other.host && port == other.port;
+  return url == other.url;
 }
 
 NetworkDiscoveryModel::NetworkDiscoveryModel(QObject* parent):
@@ -70,7 +70,7 @@ void NetworkDiscoveryModel::processPendingDatagrams()
       continue;
 
     ServerInfo info;
-    stream >> info.version >> info.host >> info.port >> info.label;
+    stream >> info.version >> info.url >> info.label;
     info.lastSeen = QDateTime::currentDateTime();
 
     QVector<ServerInfo>::iterator it = std::find(m_data.begin(), m_data.end(), info);
@@ -108,15 +108,15 @@ QVariant NetworkDiscoveryModel::data(const QModelIndex& index, int role) const
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
       case 0: return info.label;
-      case 1: return QVariant(info.host + QLatin1Char(':') + QString::number(info.port));
+      case 1: return info.url.toString();
     }
   } else if (role == Qt::ToolTipRole) {
     if (info.version != Protocol::version())
       return tr("Incompatible GammaRay version.");
   } else if (role == HostNameRole) {
-    return info.host;
+    return info.url.host();
   } else if (role == PortRole) {
-    return info.port;
+    return info.url.port();
   }
 
   return QVariant();

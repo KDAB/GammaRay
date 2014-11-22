@@ -57,7 +57,7 @@ qint32 version()
 
 qint32 broadcastFormatVersion()
 {
-  return 1;
+  return 2;
 }
 
 }
