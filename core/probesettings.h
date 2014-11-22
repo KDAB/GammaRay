@@ -28,6 +28,8 @@
 
 #include <QVariant>
 
+class QUrl;
+
 namespace GammaRay {
 
 /** General purpose settings of the probe provided by the launcher. */
@@ -41,8 +43,8 @@ namespace ProbeSettings
   /** Identifier used for finding the communication channels to the launcher. */
   qint64 launcherIdentifier();
 
-  /** Sends the TCP port used for communication with the client back to the launcher. */
-  void sendPort(quint16 port);
+  /** Sends the server address used for communication with the client back to the launcher. */
+  void sendServerAddress(const QUrl &addr);
 }
 
 }

@@ -32,6 +32,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
+#include <QUrl>
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 
@@ -122,7 +123,7 @@ qint64 ProbeSettings::launcherIdentifier()
   return QCoreApplication::applicationPid();
 }
 
-void ProbeSettings::sendPort(quint16 port)
+void ProbeSettings::sendServerAddress(const QUrl& addr)
 {
 #ifdef HAVE_SHM
   QSharedMemory shm(QLatin1String("gammaray-") + QString::number(launcherIdentifier()));
@@ -140,8 +141,8 @@ void ProbeSettings::sendPort(quint16 port)
   QBuffer buffer(&ba);
   buffer.open(QIODevice::WriteOnly);
   {
-    Message msg(Protocol::LauncherAddress, Protocol::ServerPort);
-    msg.payload() << port;
+    Message msg(Protocol::LauncherAddress, Protocol::ServerAddress);
+    msg.payload() << addr;
     msg.write(&buffer);
   }
   buffer.close();
@@ -158,6 +159,6 @@ void ProbeSettings::sendPort(quint16 port)
   QSystemSemaphore sem("gammaray-semaphore-" + QString::number(launcherIdentifier()), QSystemSemaphore::Open);
   sem.release();
 #else
-  Q_UNUSED(port);
+  Q_UNUSED(addr);
 #endif
 }

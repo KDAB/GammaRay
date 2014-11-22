@@ -36,6 +36,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFileInfo>
+#include <QUrl>
 #include <QSharedMemory>
 #include <QSystemSemaphore>
 #include <QThread>
@@ -223,7 +224,7 @@ void Launcher::sendProbeSettings()
   buffer.close();
 
   m_shm = new QSharedMemory(QLatin1String("gammaray-") + QString::number(instanceIdentifier()), this);
-  if (!m_shm->create(ba.size())) {
+  if (!m_shm->create(qMax(ba.size(), 1024))) { // make sure we have enough space for the answer
     qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << m_shm->errorString()
       << "- error code (QSharedMemory::SharedMemoryError):" << m_shm->error();
     delete m_shm;
@@ -252,8 +253,8 @@ void Launcher::semaphoreReleased()
 {
   m_safetyTimer.stop();
 
+  QUrl serverAddress;
 #ifdef HAVE_SHM
-  quint16 port = 0;
   {
     SharedMemoryLocker locker(m_shm);
     QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(m_shm->data()), m_shm->size());
@@ -263,9 +264,9 @@ void Launcher::semaphoreReleased()
     while (Message::canReadMessage(&buffer)) {
       const Message msg = Message::readMessage(&buffer);
       switch (msg.type()) {
-        case Protocol::ServerPort:
+        case Protocol::ServerAddress:
         {
-          msg.payload() >> port;
+          msg.payload() >> serverAddress;
           break;
         }
         default:
@@ -276,21 +277,23 @@ void Launcher::semaphoreReleased()
   delete m_shm;
   m_shm = 0;
 
-  if (port == 0) {
-    qWarning() << "Unable to receive port number.";
+  if (serverAddress.isEmpty()) {
+    qWarning() << "Unable to receive server address.";
     QCoreApplication::exit(1);
     return;
   }
 #else
-  quint16 port = Endpoint::defaultPort();
+  serverAddress.setScheme("tcp");
+  serverAddress.setHost("127.0.0.1");
+  serverAddress.setPort(Endpoint::defaultPort());
 #endif
 
-  std::cout << "GammaRay server listening on port: " << port << std::endl;
+  std::cout << "GammaRay server listening on: " << qPrintable(serverAddress.toString()) << std::endl;
 
   if (m_options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
     return;
 
-  if (!m_client.launch("127.0.0.1", port)) {
+  if (!m_client.launch("127.0.0.1", serverAddress.port())) {
     qCritical("Unable to launch gammaray-client!");
     QCoreApplication::exit(1);
   }

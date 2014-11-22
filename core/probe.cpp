@@ -210,7 +210,7 @@ Probe::Probe(QObject *parent):
   m_toolModel = new ToolModel(this);
 
   Server *server = new Server(this);
-  ProbeSettings::sendPort(server->externalAddress().port());
+  ProbeSettings::sendServerAddress(server->externalAddress());
 
   StreamOperators::registerOperators();
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);

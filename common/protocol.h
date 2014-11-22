@@ -89,7 +89,7 @@ enum BuildInMessageType {
 
   // probe settings provided by the launcher
   ProbeSettings,
-  ServerPort
+  ServerAddress
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
