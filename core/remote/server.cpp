@@ -86,10 +86,11 @@ bool Server::isRemoteClient() const
 
 QUrl Server::serverAddress() const
 {
-    QUrl url;
-    url.setScheme("tcp");
-    url.setHost(ProbeSettings::value("TCPServer", QLatin1String("0.0.0.0")).toString());
-    url.setPort(defaultPort());
+    QUrl url(ProbeSettings::value("ServerAddress", QLatin1String("tcp://0.0.0.0/")).toString());
+    if (url.scheme().isEmpty())
+        url.setScheme("tcp");
+    if (url.port() <= 0)
+        url.setPort(defaultPort());
     return url;
 }
 

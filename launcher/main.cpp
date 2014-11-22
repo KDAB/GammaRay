@@ -41,6 +41,7 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QUrl>
 #include <QStringList>
 #include <QVariant>
 
@@ -143,7 +144,13 @@ int main(int argc, char **argv)
       options.setUiMode(LaunchOptions::NoUi);
     }
     if (arg == QLatin1String("--listen") && !args.isEmpty()) {
-      options.setProbeSetting("TCPServer", args.takeFirst());
+      QUrl serverUrl(args.takeFirst());
+      if (serverUrl.scheme().isEmpty()) { // backward compat: map input without a scheme to tcp + hostname
+        serverUrl.setScheme("tcp");
+        serverUrl.setHost(serverUrl.path());
+        serverUrl.setPath(QString());
+      }
+      options.setProbeSetting("ServerAddress", serverUrl.toString());
     }
     if ( arg == QLatin1String("--no-listen")) {
       options.setProbeSetting("RemoteAccessEnabled", false);

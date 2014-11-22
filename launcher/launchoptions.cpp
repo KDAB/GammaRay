@@ -176,9 +176,9 @@ bool LaunchOptions::execute(const QString& launcherPath) const
     args.push_back(m_probeABI.id());
   }
 
-  if (m_probeSettings.contains("TCPServer")) {
+  if (m_probeSettings.contains("ServerAddress")) {
     args.push_back("--listen");
-    args.push_back(m_probeSettings.value("TCPServer"));
+    args.push_back(m_probeSettings.value("ServerAddress"));
   }
   if (m_probeSettings.value("RemoteAccessEnabled") == "false")
     args.push_back("--no-listen");

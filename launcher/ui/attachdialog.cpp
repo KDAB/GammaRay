@@ -109,11 +109,11 @@ LaunchOptions AttachDialog::launchOptions() const
 
   switch (ui.accessMode->currentIndex()) {
     case 0: // local, out-of-process
-      opt.setProbeSetting("TCPServer", "127.0.0.1");
+      opt.setProbeSetting("ServerAddress", "tcp://127.0.0.1/");
       opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 1: // remote, out-of-process
-      opt.setProbeSetting("TCPServer", "0.0.0.0");
+      opt.setProbeSetting("ServerAddress", "tcp://0.0.0.0/");
       opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 2: // in-process
