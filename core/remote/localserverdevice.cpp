@@ -1,5 +1,5 @@
 /*
-  serverdevice.cpp
+  localserverdevice.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,46 +21,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "serverdevice.h"
-
-#include "tcpserverdevice.h"
 #include "localserverdevice.h"
 
-#include <QDebug>
-#include <QUrl>
+#include <QLocalServer>
+#include <QLocalSocket>
 
 using namespace GammaRay;
 
-ServerDevice::ServerDevice(QObject* parent): QObject(parent)
+LocalServerDevice::LocalServerDevice(QObject* parent):
+    ServerDeviceImpl<QLocalServer>(parent)
 {
+    m_server = new QLocalServer(this);
+    connect(m_server, SIGNAL(newConnection()), this, SIGNAL(newConnection()));
 }
 
-ServerDevice::~ServerDevice()
+bool LocalServerDevice::listen()
 {
+    QLocalServer::removeServer(m_address.path());
+    return m_server->listen(m_address.path());
 }
 
-void ServerDevice::setServerAddress(const QUrl& serverAddress)
+QUrl LocalServerDevice::externalAddress() const
 {
-    m_address = serverAddress;
-}
-
-void ServerDevice::broadcast(const QByteArray& data)
-{
-    Q_UNUSED(data);
-}
-
-ServerDevice* ServerDevice::create(const QUrl& serverAddress, QObject* parent)
-{
-    ServerDevice *device = 0;
-    if (serverAddress.scheme() == QLatin1String("tcp"))
-        device = new TcpServerDevice(parent);
-    else if (serverAddress.scheme() == QLatin1String("local"))
-        device = new LocalServerDevice(parent);
-
-    if (!device) {
-        qWarning() << "Unsupported transport protocol:" << serverAddress.toString();
-        return 0;
-    }
-    device->setServerAddress(serverAddress);
-    return device;
+    return m_address;
 }
