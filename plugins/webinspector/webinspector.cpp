@@ -28,8 +28,9 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
-#include <core/probesettings.h>
 
+#include <QDebug>
+#include <QUrl>
 #include <QtPlugin>
 
 using namespace GammaRay;
@@ -43,7 +44,10 @@ WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
 
-  const QString serverAddress = ProbeSettings::value("TCPServer", QLatin1String("0.0.0.0")).toString();
+  const QUrl serverUrl = Endpoint::instance()->serverAddress();
+  QString serverAddress("0.0.0.0");
+  if (serverUrl.scheme() == "tcp")
+    serverAddress = serverUrl.host();
   qputenv("QTWEBKIT_INSPECTOR_SERVER", serverAddress.toLocal8Bit() + ':' + QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
