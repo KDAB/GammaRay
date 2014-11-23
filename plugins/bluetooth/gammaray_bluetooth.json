@@ -1,0 +1,6 @@
+{
+    "id": "gammaray_bluetooth",
+    "name": "Bluetooth",
+    "types": [ "QBluetoothDeviceDiscoveryAgent", "QBluetoothLocalDevice", "QBluetoothServiceDiscoveryAgent", "QBluetoothSocket" ],
+    "hidden": true
+}

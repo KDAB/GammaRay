@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Bluetooth
+X-GammaRay-Types=QBluetoothDeviceDiscoveryAgent;QBluetoothLocalDevice;QBluetoothServiceDiscoveryAgent;QBluetoothSocket;
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
+Exec=gammaray_bluetooth
+Hidden=true
