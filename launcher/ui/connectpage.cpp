@@ -60,7 +60,11 @@ bool ConnectPage::isValid() const
 
 void ConnectPage::launchClient()
 {
-  ClientLauncher::launchDetached(ui->host->text(), ui->port->value());
+  QUrl url;
+  url.setScheme("tcp");
+  url.setHost(ui->host->text());
+  url.setPort(ui->port->value());
+  ClientLauncher::launchDetached(url);
 }
 
 void ConnectPage::writeSettings()

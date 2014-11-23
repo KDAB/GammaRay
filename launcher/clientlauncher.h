@@ -26,6 +26,8 @@
 
 #include <QProcess>
 
+class QUrl;
+
 namespace GammaRay {
 
 /** Launching/monitoring of the GammaRay client for out-of-process use. */
@@ -35,15 +37,15 @@ public:
   ClientLauncher();
   ~ClientLauncher();
 
-  bool launch(const QString &hostName, quint16 port = 0);
+  bool launch(const QUrl &url);
   void terminate();
   void waitForFinished();
 
-  static void launchDetached(const QString &hostName, quint16 port = 0);
+  static void launchDetached(const QUrl &url);
 
 private:
   static QString clientPath();
-  static QStringList makeArgs(const QString &hostName, quint16 port);
+  static QStringList makeArgs(const QUrl &url);
 
 private:
   QProcess m_process;

@@ -293,7 +293,11 @@ void Launcher::semaphoreReleased()
   if (m_options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
     return;
 
-  if (!m_client.launch("127.0.0.1", serverAddress.port())) {
+  // safer, since we will always be running locally, and the server might give us an external address
+  if (serverAddress.scheme() == "tcp")
+    serverAddress.setHost("127.0.0.1");
+
+  if (!m_client.launch(serverAddress)) {
     qCritical("Unable to launch gammaray-client!");
     QCoreApplication::exit(1);
   }

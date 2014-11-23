@@ -24,6 +24,8 @@
 #include "clientlauncher.h"
 #include "launcherfinder.h"
 
+#include <QUrl>
+
 using namespace GammaRay;
 
 ClientLauncher::ClientLauncher()
@@ -40,24 +42,24 @@ QString ClientLauncher::clientPath()
   return LauncherFinder::findLauncher(LauncherFinder::Client);
 }
 
-QStringList ClientLauncher::makeArgs(const QString& hostName, quint16 port)
+QStringList ClientLauncher::makeArgs(const QUrl &url)
 {
   QStringList args;
-  args.push_back(hostName);
-  if (port > 0)
-    args.push_back(QString::number(port));
+  args.push_back(url.host());
+  if (url.port() > 0)
+    args.push_back(QString::number(url.port()));
   return args;
 }
 
-bool ClientLauncher::launch(const QString& hostName, quint16 port)
+bool ClientLauncher::launch(const QUrl &url)
 {
-  m_process.start(clientPath(), makeArgs(hostName, port));
+  m_process.start(clientPath(), makeArgs(url));
   return m_process.waitForStarted();
 }
 
-void ClientLauncher::launchDetached(const QString& hostName, quint16 port)
+void ClientLauncher::launchDetached(const QUrl &url)
 {
-  QProcess::startDetached(clientPath(), makeArgs(hostName, port));
+  QProcess::startDetached(clientPath(), makeArgs(url));
 }
 
 void ClientLauncher::terminate()

@@ -190,7 +190,7 @@ int main(int argc, char **argv)
     if ( arg == QLatin1String("--connect") && !args.isEmpty()) {
       const QUrl url = urlFromUserInput(args.takeFirst());
       ClientLauncher client;
-      client.launch(url.host(), url.port());
+      client.launch(url);
       client.waitForFinished();
       return 0;
     }
