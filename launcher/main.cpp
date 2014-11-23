@@ -95,6 +95,26 @@ static bool startLauncher()
   return proc.exitCode() == 0;
 }
 
+static QUrl urlFromUserInput(const QString &s)
+{
+  QUrl url(s);
+  if (url.scheme().isEmpty()) { // backward compat: map input without a scheme to tcp + hostname
+    url.setScheme("tcp");
+    QString host = url.path();
+    int port = -1;
+    const int pos = host.lastIndexOf(":");
+    if (pos > 0) {
+      port = host.mid(pos + 1).toUShort();
+      host = host.left(pos);
+    }
+    url.setHost(host);
+    url.setPort(port);
+    url.setPath(QString());
+  }
+
+  return url;
+}
+
 int main(int argc, char **argv)
 {
   QCoreApplication::setOrganizationName("KDAB");
@@ -144,13 +164,7 @@ int main(int argc, char **argv)
       options.setUiMode(LaunchOptions::NoUi);
     }
     if (arg == QLatin1String("--listen") && !args.isEmpty()) {
-      QUrl serverUrl(args.takeFirst());
-      if (serverUrl.scheme().isEmpty()) { // backward compat: map input without a scheme to tcp + hostname
-        serverUrl.setScheme("tcp");
-        serverUrl.setHost(serverUrl.path());
-        serverUrl.setPath(QString());
-      }
-      options.setProbeSetting("ServerAddress", serverUrl.toString());
+      options.setProbeSetting("ServerAddress", urlFromUserInput(args.takeFirst()).toString());
     }
     if ( arg == QLatin1String("--no-listen")) {
       options.setProbeSetting("RemoteAccessEnabled", false);
@@ -174,15 +188,9 @@ int main(int argc, char **argv)
       options.setProbeABI(abi);
     }
     if ( arg == QLatin1String("--connect") && !args.isEmpty()) {
-      QString host = args.takeFirst();
-      quint16 port = 0;
-      const int pos = host.lastIndexOf(":");
-      if (pos > 0) {
-        port = host.mid(pos + 1).toUShort();
-        host = host.left(pos);
-      }
+      const QUrl url = urlFromUserInput(args.takeFirst());
       ClientLauncher client;
-      client.launch(host, port);
+      client.launch(url.host(), url.port());
       client.waitForFinished();
       return 0;
     }
