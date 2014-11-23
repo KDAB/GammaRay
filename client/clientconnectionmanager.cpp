@@ -64,7 +64,7 @@ void ClientConnectionManager::connectToHost(const QUrl &url)
 
 void ClientConnectionManager::connectToHost()
 {
-  m_client->connectToHost(m_serverUrl.host(), m_serverUrl.port(Client::defaultPort()));
+  m_client->connectToHost(m_serverUrl);
 }
 
 void ClientConnectionManager::connectionEstablished()

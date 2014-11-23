@@ -40,8 +40,8 @@ public:
   explicit Client(QObject *parent = 0);
   ~Client();
 
-  /** Connect to @p hostName on port @p port. */
-  void connectToHost(const QString &hostName, quint16 port);
+  /** Connect to a server reachable on @p url. */
+  void connectToHost(const QUrl &url);
 
   /**
    * Register a client-side QObject to send/receive messages to/from the server side.

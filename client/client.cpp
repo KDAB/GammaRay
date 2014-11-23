@@ -57,17 +57,15 @@ QUrl Client::serverAddress() const
   return m_serverAddress;
 }
 
-void Client::connectToHost(const QString &hostName, quint16 port)
+void Client::connectToHost(const QUrl &url)
 {
+  m_serverAddress = url;
+
   QTcpSocket *sock = new QTcpSocket(this);
   connect(sock, SIGNAL(connected()), SLOT(socketConnected()));
   connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()));
-  sock->connectToHost(hostName, port);
+  sock->connectToHost(url.host(), url.port(defaultPort()));
   m_initState = 0;
-
-  m_serverAddress.setScheme("tcp");
-  m_serverAddress.setHost(hostName);
-  m_serverAddress.setPort(port);
 }
 
 void Client::socketConnected()
