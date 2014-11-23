@@ -27,7 +27,6 @@
 #include <common/protocol.h>
 #include <common/endpoint.h>
 
-#include <QAbstractSocket>
 #include <QUrl>
 
 namespace GammaRay {
@@ -67,8 +66,14 @@ public:
 signals:
   /** Emitted when we successfully established a connection and passed the protocol version handshake step. */
   void connectionEstablished();
-  /** Emitted on connection errors. */
-  void connectionError(QAbstractSocket::SocketError error, const QString &msg);
+  /** Emitted on transient connection errors.
+   *  That is, on errors it's worth re-trying, e.g. because the target wasn't up yet.
+   */
+  void transientConnectionError();
+  /** Emitted on persistent connection errors.
+   *  That is, any error that is not a transient one.
+   */
+  void persisitentConnectionError(const QString &msg);
 
 protected:
   void messageReceived(const Message& msg);

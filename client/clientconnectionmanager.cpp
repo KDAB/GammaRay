@@ -47,7 +47,8 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent) :
 
   connect(m_client, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
   connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
-  connect(m_client, SIGNAL(connectionError(QAbstractSocket::SocketError,QString)), SLOT(connectionError(QAbstractSocket::SocketError,QString)));
+  connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
+  connect(m_client, SIGNAL(persisitentConnectionError(QString)), SLOT(persistentConnectionError(QString)));
 }
 
 ClientConnectionManager::~ClientConnectionManager()
@@ -92,14 +93,18 @@ void ClientConnectionManager::toolModelPopulated()
   hideSplashScreen();
 }
 
-void ClientConnectionManager::connectionError(QAbstractSocket::SocketError error, const QString& msg)
+void ClientConnectionManager::transientConnectionError()
 {
-  if (m_connectionTimeout.elapsed() < 60 * 1000 && error == QAbstractSocket::ConnectionRefusedError) {
+  if (m_connectionTimeout.elapsed() < 60 * 1000) {
     // client wasn't up yet, keep trying
     QTimer::singleShot(1000, this, SLOT(connectToHost()));
-    return;
+  } else {
+    persistentConnectionError(tr("Connection refused."));
   }
+}
 
+void ClientConnectionManager::persistentConnectionError(const QString& msg)
+{
   hideSplashScreen();
 
   QString errorMsg;
@@ -111,4 +116,3 @@ void ClientConnectionManager::connectionError(QAbstractSocket::SocketError error
   QMessageBox::critical(m_mainWindow, tr("GammaRay - Connection Error"), errorMsg);
   QApplication::exit(1);
 }
-

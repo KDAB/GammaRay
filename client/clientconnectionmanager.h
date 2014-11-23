@@ -25,7 +25,6 @@
 #define GAMMARAY_CLIENTCONNECTIONMANAGER_H
 
 #include <QObject>
-#include <QAbstractSocket>
 #include <QTime>
 #include <QUrl>
 
@@ -49,7 +48,8 @@ class ClientConnectionManager : public QObject
   private slots:
     void connectToHost();
     void connectionEstablished();
-    void connectionError(QAbstractSocket::SocketError error, const QString &msg);
+    void transientConnectionError();
+    void persistentConnectionError( const QString &msg);
 
     void toolModelPopulated();
 

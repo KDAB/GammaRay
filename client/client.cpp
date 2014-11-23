@@ -78,7 +78,10 @@ void Client::socketError()
 {
   QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
   Q_ASSERT(socket);
-  emit connectionError(socket->error(), socket->errorString());
+  if (socket->error() == QAbstractSocket::ConnectionRefusedError)
+    emit transientConnectionError();
+  else
+    emit persisitentConnectionError(socket->errorString());
   socket->deleteLater();
 }
 
