@@ -31,6 +31,8 @@
 
 namespace GammaRay {
 
+class ClientDevice;
+
 /** Client-side connection endpoint. */
 class Client : public Endpoint
 {
@@ -97,6 +99,7 @@ private:
     InitComplete = VersionChecked | ObjectMapReceived | ServerInfoReceived
   };
   QUrl m_serverAddress;
+  ClientDevice *m_clientDevice;
   int m_initState;
 };
 

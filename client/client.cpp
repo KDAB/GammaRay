@@ -22,6 +22,7 @@
 */
 
 #include "client.h"
+#include "clientdevice.h"
 
 #include <common/message.h>
 
@@ -34,6 +35,7 @@ using namespace GammaRay;
 
 Client::Client(QObject* parent)
   : Endpoint(parent)
+  , m_clientDevice(0)
   , m_initState(0)
 {
 }
@@ -60,29 +62,32 @@ QUrl Client::serverAddress() const
 void Client::connectToHost(const QUrl &url)
 {
   m_serverAddress = url;
-
-  QTcpSocket *sock = new QTcpSocket(this);
-  connect(sock, SIGNAL(connected()), SLOT(socketConnected()));
-  connect(sock, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()));
-  sock->connectToHost(url.host(), url.port(defaultPort()));
   m_initState = 0;
+
+  m_clientDevice = ClientDevice::create(m_serverAddress, this);
+  if (!m_clientDevice) {
+    emit persisitentConnectionError(tr("Unsupported transport protocol."));
+    return;
+  }
+
+  connect(m_clientDevice, SIGNAL(connected()), this, SLOT(socketConnected()));
+  connect(m_clientDevice, SIGNAL(transientError()), this, SIGNAL(transientConnectionError()));
+  connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SIGNAL(persisitentConnectionError(QString)));
+  connect(m_clientDevice, SIGNAL(transientError()), this, SLOT(socketError()));
+  connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SLOT(socketError()));
+  m_clientDevice->connectToHost();
 }
 
 void Client::socketConnected()
 {
-  Q_ASSERT(qobject_cast<QIODevice*>(sender()));
-  setDevice(qobject_cast<QIODevice*>(sender()));
+  Q_ASSERT(m_clientDevice->device());
+  setDevice(m_clientDevice->device());
 }
 
 void Client::socketError()
 {
-  QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
-  Q_ASSERT(socket);
-  if (socket->error() == QAbstractSocket::ConnectionRefusedError)
-    emit transientConnectionError();
-  else
-    emit persisitentConnectionError(socket->errorString());
-  socket->deleteLater();
+  m_clientDevice->deleteLater();
+  m_clientDevice = 0;
 }
 
 void Client::messageReceived(const Message& msg)

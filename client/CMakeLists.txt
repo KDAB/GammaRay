@@ -6,6 +6,8 @@ set(gammaray_client_srcs
   clientconnectionmanager.cpp
   propertycontrollerclient.cpp
   probecontrollerclient.cpp
+  clientdevice.cpp
+  tcpclientdevice.cpp
 )
 
 qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
