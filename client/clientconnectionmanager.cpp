@@ -31,6 +31,7 @@
 #include <ui/splashscreen.h>
 
 #include <QApplication>
+#include <QDebug>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -38,7 +39,6 @@ using namespace GammaRay;
 
 ClientConnectionManager::ClientConnectionManager(QObject* parent) :
   QObject(parent),
-  m_port(0),
   m_client(new Client(this)),
   m_mainWindow(0),
   m_toolModel(0)
@@ -55,17 +55,16 @@ ClientConnectionManager::~ClientConnectionManager()
   delete m_mainWindow;
 }
 
-void ClientConnectionManager::connectToHost(const QString& hostname, quint16 port)
+void ClientConnectionManager::connectToHost(const QUrl &url)
 {
-  m_hostname = hostname;
-  m_port = port;
+  m_serverUrl = url;
   m_connectionTimeout.start();
   connectToHost();
 }
 
 void ClientConnectionManager::connectToHost()
 {
-  m_client->connectToHost(m_hostname, m_port);
+  m_client->connectToHost(m_serverUrl.host(), m_serverUrl.port(Client::defaultPort()));
 }
 
 void ClientConnectionManager::connectionEstablished()

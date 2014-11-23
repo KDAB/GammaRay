@@ -67,14 +67,13 @@ int main(int argc, char** argv)
 
   StreamOperators::registerOperators();
 
-  QString hostName = QLatin1String("localhost");
-  quint16 port = Client::defaultPort();
-
+  QUrl serverUrl;
   if (app.arguments().size() == 2) {
-    hostName = app.arguments().at(1);
-  } else if (app.arguments().size() == 3) {
-    hostName = app.arguments().at(1);
-    port = app.arguments().at(2).toUShort();
+    serverUrl = app.arguments().at(1);
+  } else {
+    serverUrl.setScheme("tcp");
+    serverUrl.setHost("127.0.0.1");
+    serverUrl.setPort(Client::defaultPort());
   }
 
   ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
@@ -83,6 +82,6 @@ int main(int argc, char** argv)
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
   ClientConnectionManager conMan;
-  conMan.connectToHost(hostName, port);
+  conMan.connectToHost(serverUrl);
   return app.exec();
 }

@@ -45,9 +45,7 @@ QString ClientLauncher::clientPath()
 QStringList ClientLauncher::makeArgs(const QUrl &url)
 {
   QStringList args;
-  args.push_back(url.host());
-  if (url.port() > 0)
-    args.push_back(QString::number(url.port()));
+  args.push_back(url.toString());
   return args;
 }
 

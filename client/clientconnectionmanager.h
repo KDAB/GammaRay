@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QAbstractSocket>
 #include <QTime>
+#include <QUrl>
 
 class QAbstractItemModel;
 
@@ -43,7 +44,7 @@ class ClientConnectionManager : public QObject
     explicit ClientConnectionManager(QObject* parent = 0);
     ~ClientConnectionManager();
 
-    void connectToHost(const QString &hostname, quint16 port);
+    void connectToHost(const QUrl &url);
 
   private slots:
     void connectToHost();
@@ -53,8 +54,7 @@ class ClientConnectionManager : public QObject
     void toolModelPopulated();
 
   private:
-    QString m_hostname;
-    quint16 m_port;
+    QUrl m_serverUrl;
     Client *m_client;
     MainWindow *m_mainWindow;
     QAbstractItemModel *m_toolModel;
