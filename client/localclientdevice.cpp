@@ -1,5 +1,5 @@
 /*
-  clientdevice.cpp
+  localclientdevice.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -21,35 +21,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "clientdevice.h"
-#include "tcpclientdevice.h"
 #include "localclientdevice.h"
-
-#include <QDebug>
 
 using namespace GammaRay;
 
-ClientDevice::ClientDevice(QObject* parent): QObject(parent)
+LocalClientDevice::LocalClientDevice(QObject* parent):
+    ClientDeviceImpl<QLocalSocket>(parent)
 {
+    m_socket = new QLocalSocket(this);
+    connect(m_socket, SIGNAL(connected()), this, SIGNAL(connected()));
+    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), this, SLOT(socketError()));
 }
 
-ClientDevice::~ClientDevice()
+void LocalClientDevice::connectToHost()
 {
+    m_socket->connectToServer(m_serverAddress.path());
 }
 
-ClientDevice* ClientDevice::create(const QUrl& url, QObject *parent)
+void LocalClientDevice::socketError()
 {
-    ClientDevice* device = 0;
-    if (url.scheme() == "tcp")
-        device = new TcpClientDevice(parent);
-    else if (url.scheme() == "local")
-        device = new LocalClientDevice(parent);
-
-    if (!device) {
-        qWarning() << "Unsupported transport protocol:" << url.toString();
-        return 0;
-    }
-
-    device->m_serverAddress = url;
-    return device;
+    emit persistentError(m_socket->errorString());
 }
