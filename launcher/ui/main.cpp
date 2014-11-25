@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "launcherwindow.h"
 #include "launchoptions.h"
 #include "launcherfinder.h"
 
-#include <common/paths.h>
+#include "common/paths.h"
 
 #include <QApplication>
 

@@ -21,10 +21,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "webviewmodel.h"
 
-#include <common/objectmodel.h>
+#include "common/objectmodel.h"
 
 #ifdef HAVE_QT_WEBKIT1
 #include <QWebPage>

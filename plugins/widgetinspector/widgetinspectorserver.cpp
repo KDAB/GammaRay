@@ -22,27 +22,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include "widgetinspectorserver.h"
 
-#include "config-gammaray.h"
 #include "overlaywidget.h"
 #include "paintbufferviewer.h"
 #include "widgettreemodel.h"
 #include "paintbuffermodel.h"
 
-#include <core/propertycontroller.h>
-#include <core/metaobject.h>
-#include <core/metaobjectrepository.h>
-#include <core/varianthandler.h>
-#include <core/probesettings.h>
-#include <core/objecttypefilterproxymodel.h>
-#include <core/probeinterface.h>
+#include "core/propertycontroller.h"
+#include "core/metaobject.h"
+#include "core/metaobjectrepository.h"
+#include "core/varianthandler.h"
+#include "core/probesettings.h"
+#include "core/objecttypefilterproxymodel.h"
+#include "core/probeinterface.h"
 
-#include <common/objectbroker.h>
-#include <common/settempvalue.h>
-#include <common/metatypedeclarations.h>
-#include <common/objectmodel.h>
-#include <common/paths.h>
+#include "common/objectbroker.h"
+#include "common/settempvalue.h"
+#include "common/metatypedeclarations.h"
+#include "common/objectmodel.h"
+#include "common/paths.h"
 
 #include "other/modelutils.h"
 

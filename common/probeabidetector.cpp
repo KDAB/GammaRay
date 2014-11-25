@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #include "probeabidetector.h"
 

@@ -21,12 +21,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "probesettings.h"
 
-#include <common/sharedmemorylocker.h>
-#include <common/message.h>
-#include <common/paths.h>
+#include "common/sharedmemorylocker.h"
+#include "common/message.h"
+#include "common/paths.h"
 
 #include <QBuffer>
 #include <QCoreApplication>

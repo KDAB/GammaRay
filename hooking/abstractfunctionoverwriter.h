@@ -22,7 +22,7 @@
 #ifndef GAMMARAY_ABSTRACTFUNCTIONOVERWRITER_H
 #define GAMMARAY_ABSTRACTFUNCTIONOVERWRITER_H
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #include <QList>
 #include <QString>

@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERVIEWER_H
 #define GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERVIEWER_H
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #include <QDialog>
 

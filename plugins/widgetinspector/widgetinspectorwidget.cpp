@@ -20,20 +20,20 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <config-gammaray.h>
 
 #include "widgetinspectorwidget.h"
-#include "config-gammaray.h"
 #include "paintbufferviewer.h"
-#include "ui_widgetinspectorwidget.h"
 #include "widgetinspectorinterface.h"
 #include "widgetinspectorclient.h"
+#include "ui_widgetinspectorwidget.h"
 
-#include <common/objectbroker.h>
-#include <common/objectmodel.h>
+#include "common/objectbroker.h"
+#include "common/objectmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
 #include "other/modelutils.h"
-#include <ui/deferredresizemodesetter.h>
+#include "ui/deferredresizemodesetter.h"
 
 #include <QDebug>
 #include <QFileDialog>

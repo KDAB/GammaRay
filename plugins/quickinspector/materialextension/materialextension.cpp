@@ -21,12 +21,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include "materialextension.h"
 
-#include <core/metapropertymodel.h>
-#include <core/propertycontroller.h>
-#include <core/varianthandler.h>
-#include <common/metatypedeclarations.h>
+#include "core/metapropertymodel.h"
+#include "core/propertycontroller.h"
+#include "core/varianthandler.h"
+#include "common/metatypedeclarations.h"
 
 #include <QFile>
 #include <QStandardItemModel>
@@ -35,8 +37,6 @@
 #include <QSGFlatColorMaterial>
 #include <QSGTextureMaterial>
 #include <QSGVertexColorMaterial>
-
-#include "config-gammaray.h"
 
 #include <private/qsgmaterialshader_p.h> //krazy:exclude=camelcase
 

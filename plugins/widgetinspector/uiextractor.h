@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_UIEXTRACTOR_H
 #define GAMMARAY_WIDGETINSPECTOR_UIEXTRACTOR_H
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #ifdef HAVE_QT_DESIGNER
 #include <QFormBuilder>

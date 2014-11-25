@@ -24,9 +24,9 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKSCENEGRAPHMODEL_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKSCENEGRAPHMODEL_H
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
-#include <core/objectmodelbase.h>
+#include "core/objectmodelbase.h"
 
 #include <QHash>
 #include <QPointer>

@@ -26,7 +26,7 @@
  * dlopen hack to avoid dependencies on QtSvg and QtDesigner in the main probe.
  */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "uiextractor.h"
 
 #ifdef HAVE_QT_SVG

@@ -21,7 +21,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "config-gammaray-version.h"
 #include "injector/injectorfactory.h"
 #include "launchoptions.h"
@@ -29,9 +29,9 @@
 #include "launcher.h"
 #include "probefinder.h"
 
-#include <common/paths.h>
-#include <common/probeabi.h>
-#include <common/probeabidetector.h>
+#include "common/paths.h"
+#include "common/probeabi.h"
+#include "common/probeabidetector.h"
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>

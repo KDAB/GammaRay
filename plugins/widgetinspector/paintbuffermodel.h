@@ -24,7 +24,7 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERMODEL_H
 #define GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERMODEL_H
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <QAbstractItemModel>
