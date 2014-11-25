@@ -50,7 +50,7 @@ PluginInfo::PluginInfo(const QString& path) :
 {
     if (QLibrary::isLibrary(path)) {
         initFromJSON(path);
-    } else if (path.endsWith(".desktop")) {
+    } else if (path.endsWith(QLatin1String(".desktop"))) {
         initFromDesktopFile(path);
     }
 }
