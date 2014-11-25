@@ -1,11 +1,11 @@
 Name:           gammaray
-Version:        2.2.0
-Release:        2
+Version:        2.2.1
+Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
 Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools
-License:        GPL-2.0+
+License:        GPLv2+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
