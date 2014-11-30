@@ -43,6 +43,7 @@ ConnectPage::ConnectPage(QWidget* parent): QWidget(parent), ui(new Ui::ConnectPa
   NetworkDiscoveryModel* model = new NetworkDiscoveryModel(this);
   ui->instanceView->setModel(model);
   connect(ui->instanceView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(instanceSelected()));
+  connect(ui->instanceView, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
 
   QSettings settings;
   ui->host->setText(settings.value("Connect/Host", QString()).toString());

@@ -48,6 +48,7 @@ public slots:
 
 signals:
   void updateButtonState();
+  void activate();
 
 private slots:
   void instanceSelected();
