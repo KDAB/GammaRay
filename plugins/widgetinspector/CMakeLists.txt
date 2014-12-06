@@ -8,6 +8,8 @@ set(gammaray_widgetinspector_plugin_srcs
   paintbufferreplaywidget.cpp
 )
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 if(HAVE_PRIVATE_QT_HEADERS)
   set(gammaray_widgetinspector_plugin_srcs
     ${gammaray_widgetinspector_plugin_srcs}
