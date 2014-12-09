@@ -256,6 +256,11 @@ if(Qt5Core_FOUND)
     set(HAVE_PRIVATE_QT_HEADERS true)
   endif()
 
+  find_path(_Qt5Quick_PRIVATE_INCLUDE_DIR private/qquickitem_p.h PATHS ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
+  if(_Qt5Quick_PRIVATE_INCLUDE_DIR)
+    set(HAVE_PRIVATE_Qt5Quick_HEADERS true)
+  endif()
+
   set_package_properties(Qt5 PROPERTIES URL "http://qt-project.org/")
   set_package_properties(Qt5Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
   set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
