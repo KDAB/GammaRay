@@ -30,6 +30,9 @@ project(GammaRay)
 
 cmake_minimum_required(VERSION 2.8.11)
 cmake_policy(SET CMP0020 NEW)
+if(POLICY CMP0043)
+  cmake_policy(SET CMP0043 NEW)
+endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 set(CMAKE_AUTOMOC ON)
@@ -252,6 +255,11 @@ if(Qt5Core_FOUND)
   find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${Qt5Core_PRIVATE_INCLUDE_DIRS})
   if(QT_PRIVATE_INCLUDE_DIR)
     set(HAVE_PRIVATE_QT_HEADERS true)
+  endif()
+
+  find_path(_Qt5Quick_PRIVATE_INCLUDE_DIR private/qquickitem_p.h PATHS ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
+  if(_Qt5Quick_PRIVATE_INCLUDE_DIR)
+    set(HAVE_PRIVATE_Qt5Quick_HEADERS true)
   endif()
 
   set_package_properties(Qt5 PROPERTIES URL "http://qt-project.org/")

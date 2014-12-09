@@ -43,6 +43,8 @@ LauncherWindow::LauncherWindow(QWidget *parent)
   connect(ui->connectPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
   connect(ui->attachPage, SIGNAL(activate()),
           ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
+  connect(ui->connectPage, SIGNAL(activate()),
+          ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
 
   setWindowTitle(tr("GammaRay Launcher"));
 
