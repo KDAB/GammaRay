@@ -34,7 +34,6 @@ class State;
 class StateMachine;
 class StateMachineView;
 class Transition;
-class View;
 }
 
 namespace GammaRay {
@@ -72,7 +71,6 @@ private:
   QScopedPointer<Ui::StateMachineViewer> m_ui;
 
   KDSME::StateMachineView* m_stateMachineView;
-  KDSME::View* m_currentView;
   StateMachineViewerInterface *m_interface;
 
   QHash<StateId, KDSME::State*> m_idToStateMap;

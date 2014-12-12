@@ -31,9 +31,10 @@
 #include <ui/deferredtreeviewconfiguration.h>
 
 #include <kdstatemachineeditor/core/configurationcontroller.h>
-#include <kdstatemachineeditor/core/element.h>
+#include <kdstatemachineeditor/core/state.h>
+#include <kdstatemachineeditor/core/transition.h>
 #include <kdstatemachineeditor/core/layoutitem.h>
-#include <kdstatemachineeditor/core/view.h>
+#include <kdstatemachineeditor/view/statemachinescene.h>
 #include <kdstatemachineeditor/view/statemachinetoolbar.h>
 #include <kdstatemachineeditor/view/statemachineview.h>
 
@@ -105,9 +106,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   m_ui->maxMegaPixelsSpinBox->setValue(maximumMegaPixels());
   connect(m_ui->maxMegaPixelsSpinBox, SIGNAL(valueChanged(int)), SLOT(setMaximumMegaPixels(int)));
 
-  m_currentView = new View(this);
   m_stateMachineView = new KDSME::StateMachineView;
-  m_stateMachineView->setView(m_currentView);
 
   // FIXME: Do it properly
   delete m_ui->graphicsView;
@@ -247,7 +246,7 @@ void StateMachineViewerWidgetNG::clearGraph()
 {
   IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
-  m_currentView->setStateMachine(0);
+  m_stateMachineView->scene()->setStateMachine(0);
 
   m_idToStateMap.clear();
   m_idToTransitionMap.clear();
@@ -257,8 +256,8 @@ void StateMachineViewerWidgetNG::repopulateView()
 {
   IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
-  m_currentView->setStateMachine(m_machine);
-  m_currentView->layout();
+  m_stateMachineView->scene()->setStateMachine(m_machine);
+  m_stateMachineView->scene()->layout();
 
   IF_DEBUG(m_machine->dumpObjectTree();)
 
