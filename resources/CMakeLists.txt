@@ -1,4 +1,4 @@
-if(UNIX AND NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(UNIX AND NOT APPLE AND GAMMARAY_BUILD_UI)
   install(
     FILES GammaRay-16x16.png
     DESTINATION share/icons/hicolor/16x16/apps RENAME GammaRay.png
