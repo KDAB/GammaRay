@@ -58,7 +58,9 @@ ConfigurationController::Configuration toSmeConfiguration(const StateMachineConf
 {
   ConfigurationController::Configuration result;
   foreach (const StateId& id, config) {
-    result << map[id];
+    if (auto state = map.value(id)) {
+      result << state;
+    }
   }
   return result;
 }
