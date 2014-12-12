@@ -30,10 +30,9 @@
 #include <ui/deferredresizemodesetter.h>
 #include <ui/deferredtreeviewconfiguration.h>
 
-#include <kdstatemachineeditor/core/configurationcontroller.h>
 #include <kdstatemachineeditor/core/state.h>
 #include <kdstatemachineeditor/core/transition.h>
-#include <kdstatemachineeditor/core/layoutitem.h>
+#include <kdstatemachineeditor/view/configurationcontroller.h>
 #include <kdstatemachineeditor/view/statemachinescene.h>
 #include <kdstatemachineeditor/view/statemachinetoolbar.h>
 #include <kdstatemachineeditor/view/statemachineview.h>
