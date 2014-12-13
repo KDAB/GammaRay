@@ -39,6 +39,7 @@
 
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"
+#include "remote/serverproxymodel.h"
 #include "remote/selectionmodelserver.h"
 #include "toolpluginerrormodel.h"
 #include "toolfactory.h"
@@ -207,6 +208,10 @@ Probe::Probe(QObject *parent):
 
   ProbeSettings::receiveSettings();
   m_toolModel = new ToolModel(this);
+  auto sortedToolModel = new ServerProxyModel(this);
+  sortedToolModel->setSourceModel(m_toolModel);
+  sortedToolModel->setDynamicSortFilter(true);
+  sortedToolModel->sort(0);
 
   Server *server = new Server(this);
   ProbeSettings::sendPort(server->port());
@@ -218,7 +223,7 @@ Probe::Probe(QObject *parent):
   registerModel(QLatin1String("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ObjectList"), m_objectListModel);
   registerModel(QLatin1String("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
-  registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), m_toolModel);
+  registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), sortedToolModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ConnectionModel"), m_connectionModel);
 
   m_toolSelectionModel = ObjectBroker::selectionModel(m_toolModel);
