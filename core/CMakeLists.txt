@@ -70,6 +70,8 @@ set(gammaray_srcs
   remote/localserverdevice.cpp
 )
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 if(Qt5Core_FOUND)
   set(gammaray_srcs
     ${gammaray_srcs}

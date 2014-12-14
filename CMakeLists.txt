@@ -214,6 +214,24 @@ if(Qt5Core_FOUND)
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
   endif()
 
+  set(INCLUDE_DIRS
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5Gui_INCLUDE_DIRS}
+    ${Qt5Network_INCLUDE_DIRS}
+    ${Qt5Concurrent_INCLUDE_DIRS}
+    ${Qt5Designer_INCLUDE_DIRS}
+    ${Qt5PrintSupport_INCLUDE_DIRS}
+    ${Qt5Qml_INCLUDE_DIRS}
+    ${Qt5Quick_INCLUDE_DIRS}
+    ${Qt5Svg_INCLUDE_DIRS}
+    ${Qt5Script_INCLUDE_DIRS}
+    ${Qt5ScriptTools_INCLUDE_DIRS}
+    ${Qt5Test_INCLUDE_DIRS}
+    ${Qt5WebKitWidgets_INCLUDE_DIRS}
+    ${Qt5Widgets_INCLUDE_DIRS})
+  list(REMOVE_DUPLICATES INCLUDE_DIRS)
+  include_directories(${INCLUDE_DIRS})
+
   #HACK: CMake with broken Qt5Qml_PRIVATE_INCLUDE_DIRS, Qt5Quick_PRIVATE_INCLUDE_DIRS
   if(${Qt5Qml_FOUND})
     if(NOT "${Qt5Qml_PRIVATE_INCLUDE_DIRS}" MATCHES "/QtQml/")
