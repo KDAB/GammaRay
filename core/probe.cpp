@@ -170,14 +170,11 @@ void dumpObject(QObject *obj)
 
 struct Listener
 {
-  Listener()
-    : filterThread(0), trackDestroyed(true)
+  Listener() : trackDestroyed(true)
   {
   }
 
-  QThread *filterThread;
   bool trackDestroyed;
-
   QVector<QObject*> addedBeforeProbeInstance;
 };
 
@@ -331,9 +328,11 @@ void Probe::createProbe(bool findExisting)
   // with other QObject's we create and other threads are using. One
   // example are QAbstractSocketEngine.
   IF_DEBUG(cout << "setting up new probe instance" << endl;)
-  s_listener()->filterThread = QThread::currentThread();
-  Probe *probe = new Probe;
-  s_listener()->filterThread = 0;
+  Probe *probe = 0;
+  {
+    ProbeGuard guard;
+    probe = new Probe;
+  }
   IF_DEBUG(cout << "done setting up new probe instance" << endl;)
 
   connect(qApp, SIGNAL(aboutToQuit()), probe, SLOT(deleteLater()));
@@ -403,7 +402,7 @@ void Probe::showInProcessUi()
   }
 
   IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
-  s_listener()->filterThread = QThread::currentThread();
+  ProbeGuard guard;
 
   QString path = Paths::currentProbePath();
   if (!path.isEmpty()) {
@@ -426,7 +425,6 @@ void Probe::showInProcessUi()
     }
   }
 
-  s_listener()->filterThread = 0;
   IF_DEBUG(cout << "creation done" << endl;)
 }
 
@@ -492,14 +490,6 @@ QReadWriteLock *Probe::objectLock()
 void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
   QWriteLocker lock(s_lock());
-  if (s_listener()->filterThread == obj->thread()) {
-    // Ignore
-    IF_DEBUG(cout
-             << "objectAdded Ignore: "
-             << hex << obj
-             << (fromCtor ? " (from ctor)" : "") << endl;)
-    return;
-  }
 
   // attempt to ignore objects created by GammaRay itself, especially short-lived ones
   if (fromCtor && ProbeGuard::insideProbe() && obj->thread() == QThread::currentThread()) {
@@ -696,8 +686,7 @@ void Probe::objectParentChanged()
 void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiver,
                             const char *method, Qt::ConnectionType type)
 {
-  if (!isInitialized() || !sender || !receiver ||
-      s_listener()->filterThread == QThread::currentThread())
+  if (!isInitialized() || !sender || !receiver || ProbeGuard::insideProbe())
   {
     return;
   }
@@ -713,8 +702,7 @@ void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiv
 void Probe::connectionRemoved(QObject *sender, const char *signal,
                               QObject *receiver, const char *method)
 {
-  if (!isInitialized() || !s_listener() ||
-      s_listener()->filterThread == QThread::currentThread())
+  if (!isInitialized() || !s_listener() || ProbeGuard::insideProbe())
   {
     return;
   }
@@ -730,7 +718,7 @@ void Probe::connectionRemoved(QObject *sender, const char *signal,
 
 bool Probe::eventFilter(QObject *receiver, QEvent *event)
 {
-  if (s_listener()->filterThread == receiver->thread()) {
+  if (ProbeGuard::insideProbe() && receiver->thread() == QThread::currentThread()) {
     return QObject::eventFilter(receiver, event);
   }
 
