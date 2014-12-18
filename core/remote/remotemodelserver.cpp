@@ -23,6 +23,7 @@
 
 #include "remotemodelserver.h"
 #include "server.h"
+#include <core/probeguard.h>
 #include <common/protocol.h>
 #include <common/message.h>
 
@@ -104,6 +105,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
   if (!m_model && msg.type() != Protocol::ModelSyncBarrier)
     return;
 
+  ProbeGuard g;
   switch (msg.type()) {
     case Protocol::ModelRowColumnCountRequest:
     {
