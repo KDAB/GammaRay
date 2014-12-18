@@ -26,6 +26,8 @@
 
 #include "backtrace.h"
 
+#include <core/probeguard.h>
+
 #include "common/objectbroker.h"
 #include "common/endpoint.h"
 
@@ -69,7 +71,7 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
   message.message = msg;
   message.time = QTime::currentTime();
 
-  if (type == QtCriticalMsg || type == QtFatalMsg || type == QtWarningMsg) {
+  if (type == QtCriticalMsg || type == QtFatalMsg || (type == QtWarningMsg && !ProbeGuard::insideProbe())) {
     message.backtrace = getBacktrace(50);
     // remove trailing internal functions
     // be a bit careful and first make sure that we find this function...
