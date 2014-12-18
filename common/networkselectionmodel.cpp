@@ -108,7 +108,7 @@ void NetworkSelectionModel::newMessage(const Message& msg)
 void NetworkSelectionModel::slotCurrentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
   Q_UNUSED(previous);
-  if (m_handlingRemoteMessage || !Endpoint::isConnected())
+  if (m_handlingRemoteMessage || !Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
   Message msg(m_myAddress, Protocol::SelectionModelCurrent);
   msg.payload() << qint32(QItemSelectionModel::Current) << Protocol::fromQModelIndex(current);
@@ -118,7 +118,7 @@ void NetworkSelectionModel::slotCurrentChanged(const QModelIndex& current, const
 void NetworkSelectionModel::slotCurrentColumnChanged(const QModelIndex& current, const QModelIndex& previous)
 {
   Q_UNUSED(previous);
-  if (m_handlingRemoteMessage ||!Endpoint::isConnected())
+  if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
   Message msg(m_myAddress, Protocol::SelectionModelCurrent);
   msg.payload() << qint32(QItemSelectionModel::Current|QItemSelectionModel::Columns) << Protocol::fromQModelIndex(current);
@@ -128,7 +128,7 @@ void NetworkSelectionModel::slotCurrentColumnChanged(const QModelIndex& current,
 void NetworkSelectionModel::slotCurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
 {
   Q_UNUSED(previous);
-  if (m_handlingRemoteMessage ||!Endpoint::isConnected())
+  if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
   Message msg(m_myAddress, Protocol::SelectionModelCurrent);
   msg.payload() << qint32(QItemSelectionModel::Current|QItemSelectionModel::Rows) << Protocol::fromQModelIndex(current);
@@ -137,7 +137,7 @@ void NetworkSelectionModel::slotCurrentRowChanged(const QModelIndex& current, co
 
 void NetworkSelectionModel::slotSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
-  if (m_handlingRemoteMessage ||!Endpoint::isConnected())
+  if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
 
   Message msg(m_myAddress, Protocol::SelectionModelSelect);

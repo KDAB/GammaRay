@@ -68,6 +68,7 @@ set(gammaray_srcs
   remote/serverdevice.cpp
   remote/tcpserverdevice.cpp
   remote/localserverdevice.cpp
+  remote/serverproxymodel.cpp
 )
 
 if(Qt5Core_FOUND)

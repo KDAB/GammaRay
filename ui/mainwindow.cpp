@@ -96,13 +96,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
 
   QAbstractItemModel *model = ObjectBroker::model("com.kdab.GammaRay.ToolModel");
-  ClientToolModel *proxyModel = new ClientToolModel(this);
-  proxyModel->setData(QModelIndex(), QVariant::fromValue<QWidget*>(this), ToolModelRole::ToolWidgetParent);
-  proxyModel->setDynamicSortFilter(true);
-  proxyModel->setSourceModel(model);
-  proxyModel->sort(0);
-  ui->toolSelector->setModel(proxyModel);
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxyModel);
+  ClientToolModel *toolModel = new ClientToolModel(this);
+  toolModel->setData(QModelIndex(), QVariant::fromValue<QWidget*>(this), ToolModelRole::ToolWidgetParent);
+  toolModel->setSourceModel(model);
+  ui->toolSelector->setModel(toolModel);
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(toolModel);
   ui->toolSelector->setSelectionModel(selectionModel);
   ui->toolSelector->resize(ui->toolSelector->minimumSize());
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

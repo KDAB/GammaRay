@@ -151,6 +151,9 @@ void KLinkItemSelectionModel::select(const QItemSelection &selection, QItemSelec
 void KLinkItemSelectionModelPrivate::slotCurrentChanged(const QModelIndex& current)
 {
     const QModelIndex mappedCurrent = m_indexMapper->mapLeftToRight(current);
+    if (!mappedCurrent.isValid()) {
+        return;
+    }
     m_linkedItemSelectionModel->setCurrentIndex(mappedCurrent, QItemSelectionModel::NoUpdate);
 }
 
@@ -177,6 +180,9 @@ void KLinkItemSelectionModelPrivate::sourceCurrentChanged(const QModelIndex& cur
 {
     Q_Q(KLinkItemSelectionModel);
     const QModelIndex mappedCurrent = m_indexMapper->mapRightToLeft(current);
+    if (!mappedCurrent.isValid()) {
+        return;
+    }
     q->setCurrentIndex(mappedCurrent, QItemSelectionModel::NoUpdate);
 }
 
