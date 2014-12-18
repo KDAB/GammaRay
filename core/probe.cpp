@@ -284,11 +284,6 @@ Probe::~Probe()
   s_instance = QAtomicPointer<Probe>(0);
 }
 
-QThread *Probe::filteredThread()
-{
-  return s_listener()->filterThread;
-}
-
 void Probe::setWindow(QObject *window)
 {
   m_window = window;

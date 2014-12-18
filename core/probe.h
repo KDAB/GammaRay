@@ -168,8 +168,6 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     friend class ProbeCreator;
     friend class BenchSuite;
 
-    static QThread* filteredThread();
-
     void objectFullyConstructed(QObject *obj);
     void findExistingObjects();
     void showInProcessUi();
