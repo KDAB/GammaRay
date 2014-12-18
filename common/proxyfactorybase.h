@@ -76,7 +76,7 @@ protected:
         QObject::tr("Plugin does not provide an instance of %1.").
         arg(qobject_interface_iid<IFace*>());
       std::cerr << "Failed to cast object from " << qPrintable(pluginInfo().path())
-                << " to " << qobject_interface_iid<IFace*>();
+                << " to " << qobject_interface_iid<IFace*>() << std::endl;
     }
     return iface;
   }
