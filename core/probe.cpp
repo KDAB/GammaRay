@@ -43,6 +43,7 @@
 #include "remote/selectionmodelserver.h"
 #include "toolpluginerrormodel.h"
 #include "toolfactory.h"
+#include "probeguard.h"
 
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
@@ -502,6 +503,11 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
              << "objectAdded Ignore: "
              << hex << obj
              << (fromCtor ? " (from ctor)" : "") << endl;)
+    return;
+  }
+
+  // attempt to ignore objects created by GammaRay itself, especially short-lived ones
+  if (fromCtor && ProbeGuard::insideProbe() && obj->thread() == QThread::currentThread()) {
     return;
   }
 
