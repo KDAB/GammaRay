@@ -8,6 +8,7 @@ set(gammaray_srcs
   metaproperty.cpp
   metapropertymodel.cpp
   probe.cpp
+  probeguard.cpp
   probesettings.cpp
   probecontroller.cpp
 #  proxydetacher.cpp
