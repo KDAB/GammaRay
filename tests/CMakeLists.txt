@@ -103,4 +103,14 @@ add_executable(probeabidetectortest probeabidetectortest.cpp)
 target_link_libraries(probeabidetectortest gammaray_common_internal ${QT_QTTEST_LIBRARIES})
 add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
 
+### Remote model tests
+
+add_executable(remotemodeltest
+  remotemodeltest.cpp
+  modeltest.cpp
+  ../core/remote/remotemodelserver.cpp
+)
+target_link_libraries(remotemodeltest gammaray_core gammaray_client_internal ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+add_test(NAME remotemodeltest COMMAND remotemodeltest)
+
 add_subdirectory(manual)
