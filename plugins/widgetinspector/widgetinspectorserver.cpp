@@ -170,19 +170,20 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     }
     const QModelIndex index = selection.first().topLeft();
 
+    QLayout *layout = 0;
     QWidget *widget = 0;
     if (index.isValid()) {
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
         m_propertyController->setObject(obj);
         widget = qobject_cast<QWidget *>(obj);
-        QLayout *layout = qobject_cast<QLayout *>(obj);
+        layout = qobject_cast<QLayout *>(obj);
         if (!widget && layout)
             widget = layout->parentWidget();
     } else {
         m_propertyController->setObject(0);
     }
 
-    if (m_selectedWidget == widget)
+    if (m_selectedWidget == widget && !layout)
         return;
 
     if (!m_selectedWidget || !widget || m_selectedWidget->window() != widget->window())
@@ -195,7 +196,7 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     if (m_selectedWidget
         && (qobject_cast<QDesktopWidget *>(m_selectedWidget)
             || m_selectedWidget->inherits("QDesktopScreenWidget"))) {
-        m_overlayWidget->placeOn(0);
+        m_overlayWidget->placeOn(WidgetOrLayoutFacade());
         return;
     }
     if (m_selectedWidget == m_overlayWidget) {
@@ -203,7 +204,10 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
         return;
     }
 
-    m_overlayWidget->placeOn(m_selectedWidget);
+    if (layout)
+        m_overlayWidget->placeOn(layout);
+    else
+        m_overlayWidget->placeOn(widget);
 
     if (!m_selectedWidget)
         return;
