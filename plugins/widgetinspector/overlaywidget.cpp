@@ -33,6 +33,7 @@ using namespace GammaRay;
 
 static QWidget *toplevelWidget(QWidget *widget)
 {
+  Q_ASSERT(widget);
   QWidget *parent = widget;
   while (parent->parentWidget() &&
          (qobject_cast<QDialog*>(parent->parentWidget()) == 0) &&
@@ -45,18 +46,17 @@ static QWidget *toplevelWidget(QWidget *widget)
 
 OverlayWidget::OverlayWidget()
   : m_currentToplevelWidget(0),
-    m_currentWidget(0),
     m_drawLayoutOutlineOnly(true)
 {
   setAttribute(Qt::WA_TransparentForMouseEvents);
   setFocusPolicy(Qt::NoFocus);
 }
 
-void OverlayWidget::placeOn(QWidget *widget)
+void OverlayWidget::placeOn(WidgetOrLayoutFacade item)
 {
-  if (widget == 0) {
-    if (m_currentWidget) {
-      m_currentWidget->removeEventFilter(this);
+  if (item.isNull()) {
+    if (!m_currentItem.isNull()) {
+      m_currentItem->removeEventFilter(this);
     }
 
     if (m_currentToplevelWidget) {
@@ -64,22 +64,22 @@ void OverlayWidget::placeOn(QWidget *widget)
     }
 
     m_currentToplevelWidget = 0;
-    m_currentWidget = 0;
-    m_widgetRect = QRect();
+    m_currentItem.clear();
+    m_outerRect = QRect();
     m_layoutPath = QPainterPath();
 
     update();
     return;
   }
 
-  QWidget *toplevel = toplevelWidget(widget);
-  Q_ASSERT(toplevel);
-
-  if (m_currentWidget) {
-    m_currentWidget->removeEventFilter(this);
+  if (!m_currentItem.isNull()) {
+    m_currentItem->removeEventFilter(this);
   }
 
-  m_currentWidget = widget;
+  m_currentItem = item;
+
+  QWidget *toplevel = toplevelWidget(item.widget());
+  Q_ASSERT(toplevel);
 
   if (toplevel != m_currentToplevelWidget) {
     if (m_currentToplevelWidget) {
@@ -97,7 +97,7 @@ void OverlayWidget::placeOn(QWidget *widget)
     show();
   }
 
-  m_currentWidget->installEventFilter(this);
+  m_currentItem->installEventFilter(this);
 
   updatePositions();
 }
@@ -109,7 +109,7 @@ bool OverlayWidget::eventFilter(QObject *receiver, QEvent *event)
       resizeOverlay();
       updatePositions();
     }
-  } else if (receiver == m_currentWidget) {
+  } else if (receiver == m_currentItem.data()) {
     if (event->type() == QEvent::Resize || event->type() == QEvent::Move) {
       resizeOverlay();
       updatePositions();
@@ -121,41 +121,41 @@ bool OverlayWidget::eventFilter(QObject *receiver, QEvent *event)
 
 void OverlayWidget::updatePositions()
 {
-  if (!m_currentWidget || !m_currentToplevelWidget) {
+  if (m_currentItem.isNull()|| !m_currentToplevelWidget) {
     return;
   }
 
-  if (!m_currentWidget->isVisible() || m_currentWidget->isHidden()) {
-    m_widgetColor = Qt::green;
+  if (m_currentItem.widget() && m_currentItem.widget()->isVisible()) {
+    m_outerRectColor = Qt::red;
   } else {
-    m_widgetColor = Qt::red;
+    m_outerRectColor = Qt::green;
   }
 
-  const QPoint parentPos = m_currentWidget->mapTo(m_currentToplevelWidget, QPoint(0, 0));
-  m_widgetRect = QRect(parentPos.x(), parentPos.y(),
-                       m_currentWidget->width(),
-                       m_currentWidget->height()).adjusted(0, 0, -1, -1);
+  const QPoint parentPos = m_currentItem.widget()->mapTo(m_currentToplevelWidget, m_currentItem.pos());
+  m_outerRect = QRect(parentPos.x(), parentPos.y(),
+                      m_currentItem.geometry().width(),
+                      m_currentItem.geometry().height()).adjusted(0, 0, -1, -1);
 
   m_layoutPath = QPainterPath();
 
-  if (m_currentWidget->layout() &&
-      qstrcmp(m_currentWidget->layout()->metaObject()->className(), "QMainWindowLayout") != 0) {
-    const QRect layoutGeometry = m_currentWidget->layout()->geometry();
+  if (m_currentItem.layout() &&
+      qstrcmp(m_currentItem.layout()->metaObject()->className(), "QMainWindowLayout") != 0) {
+    const QRect layoutGeometry = m_currentItem.layout()->geometry();
 
     const QRect mappedOuterRect =
-      QRect(m_currentWidget->mapTo(m_currentToplevelWidget,
+      QRect(m_currentItem.widget()->mapTo(m_currentToplevelWidget,
                                    layoutGeometry.topLeft()), layoutGeometry.size());
 
     QPainterPath outerPath;
     outerPath.addRect(mappedOuterRect.adjusted(1, 1, -2, -2));
 
     QPainterPath innerPath;
-    for (int i = 0; i < m_currentWidget->layout()->count(); ++i) {
-      QLayoutItem *item = m_currentWidget->layout()->itemAt(i);
+    for (int i = 0; i < m_currentItem.layout()->count(); ++i) {
+      QLayoutItem *item = m_currentItem.layout()->itemAt(i);
       if (item->widget() && !item->widget()->isVisible())
         continue;
       const QRect mappedInnerRect =
-        QRect(m_currentWidget->mapTo(m_currentToplevelWidget,
+        QRect(m_currentItem.widget()->mapTo(m_currentToplevelWidget,
                                      item->geometry().topLeft()), item->geometry().size());
       innerPath.addRect(mappedInnerRect);
     }
@@ -186,8 +186,8 @@ void OverlayWidget::resizeOverlay()
 void OverlayWidget::paintEvent(QPaintEvent *)
 {
   QPainter p(this);
-  p.setPen(m_widgetColor);
-  p.drawRect(m_widgetRect);
+  p.setPen(m_outerRectColor);
+  p.drawRect(m_outerRect);
 
   QBrush brush(Qt::BDiagPattern);
   brush.setColor(Qt::blue);
