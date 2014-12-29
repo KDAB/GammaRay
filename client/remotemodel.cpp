@@ -162,7 +162,7 @@ Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
   const QHash<int, Qt::ItemFlags>::const_iterator it = node->flags.constFind(index.column());
   if (it == node->flags.constEnd()) {
     // default flags if we don't know better, otherwise we can't select into non-expanded branches
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    return index.isValid() ? Qt::ItemIsSelectable | Qt::ItemIsEnabled : Qt::NoItemFlags;
   }
   return it.value();
 }
