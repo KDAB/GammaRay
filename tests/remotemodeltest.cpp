@@ -125,6 +125,41 @@ private slots:
         QCOMPARE(client.rowCount(), 0);
         QCOMPARE(client.hasChildren(), false);
     }
+
+    void testListRemoteModel()
+    {
+        auto listModel = new QStandardItemModel(this);
+        listModel->appendRow(new QStandardItem("entry0"));
+        listModel->appendRow(new QStandardItem("entry2"));
+        listModel->appendRow(new QStandardItem("entry3"));
+        listModel->appendRow(new QStandardItem("entry4"));
+
+        FakeRemoteModelServer server("com.kdab.GammaRay.UnitTest.ListModel", this);
+        server.setModel(listModel);
+        server.modelMonitored(true);
+
+        FakeRemoteModel client("com.kdab.GammaRay.UnitTest.ListModel", this);
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
+
+        ModelTest modelTest(&client);
+        QTest::qWait(10); // ModelTest is going to fetch stuff for us already
+
+        QCOMPARE(client.rowCount(), 4);
+        QCOMPARE(client.hasChildren(), true);
+
+        auto index = client.index(1, 0);
+        QCOMPARE(index.data().toString(), QString("entry2"));
+        QCOMPARE(client.rowCount(index), 0);
+
+        listModel->insertRow(1, new QStandardItem("entry1"));
+        QCOMPARE(client.rowCount(), 5);
+        index =client.index(1, 0);
+        QCOMPARE(index.data().toString(), QString("entry1"));
+
+        listModel->takeRow(3);
+        QCOMPARE(client.rowCount(), 4);
+    }
 };
 
 QTEST_MAIN(RemoteModelTest)
