@@ -117,6 +117,12 @@ class RemoteModel : public QAbstractItemModel
     Protocol::ObjectAddress m_myAddress;
 
     qint32 m_currentSyncBarrier, m_targetSyncBarrier;
+
+    // hooks for unit tests
+    static void (*s_registerClientCallback)();
+    void registerClient(const QString &serverObject);
+    virtual void sendMessage(const Message &msg) const;
+    friend class FakeRemoteModel;
 };
 
 }

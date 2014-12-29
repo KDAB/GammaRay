@@ -31,6 +31,8 @@
 
 using namespace GammaRay;
 
+void (*RemoteModel::s_registerClientCallback)() = 0;
+
 RemoteModel::Node::~Node()
 {
   qDeleteAll(children);
@@ -45,11 +47,7 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   m_targetSyncBarrier(0)
 {
   m_root = new Node;
-
-  m_myAddress = Client::instance()->objectAddress(serverObject);
-  connect(Client::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)), SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
-  connect(Client::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)), SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
-
+  registerClient(serverObject);
   connectToServer();
 }
 
@@ -152,7 +150,7 @@ bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int r
 
   Message msg(m_myAddress, Protocol::ModelSetDataRequest);
   msg.payload() << Protocol::fromQModelIndex(index) << role << value;
-  Client::send(msg);
+  sendMessage(msg);
   return false;
 }
 
@@ -462,7 +460,7 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
 
   Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
   msg.payload() << Protocol::fromQModelIndex(index);
-  Client::send(msg);
+  sendMessage(msg);
 }
 
 void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
@@ -479,7 +477,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
 
   Message msg(m_myAddress, Protocol::ModelContentRequest);
   msg.payload() << Protocol::fromQModelIndex(index);
-  Client::send(msg);
+  sendMessage(msg);
 }
 
 void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) const
@@ -490,7 +488,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 
   Message msg(m_myAddress, Protocol::ModelHeaderRequest);
   msg.payload() << qint8(orientation) << qint32(section);
-  Client::send(msg);
+  sendMessage(msg);
 }
 
 void RemoteModel::clear()
@@ -499,7 +497,7 @@ void RemoteModel::clear()
 
   Message msg(m_myAddress, Protocol::ModelSyncBarrier);
   msg.payload() << ++m_targetSyncBarrier;
-  Client::send(msg);
+  sendMessage(msg);
 
   delete m_root;
   m_root = new Node;
@@ -628,4 +626,20 @@ void RemoteModel::doMoveRows(RemoteModel::Node* sourceParentNode, int sourceStar
   endMoveRows();
   resetLoadingState(sourceParentNode, sourceStart);
   resetLoadingState(destParentNode, destEnd);
+}
+
+void RemoteModel::registerClient(const QString &serverObject)
+{
+  if (Q_UNLIKELY(s_registerClientCallback)) { // called from ctor, so we can't use virtuals here
+    s_registerClientCallback();
+    return;
+  }
+  m_myAddress = Endpoint::instance()->objectAddress(serverObject);
+  connect(Endpoint::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)), SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
+  connect(Endpoint::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)), SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
+}
+
+void RemoteModel::sendMessage(const Message& msg) const
+{
+  Endpoint::send(msg);
 }
