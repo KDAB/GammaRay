@@ -160,6 +160,52 @@ private slots:
         listModel->takeRow(3);
         QCOMPARE(client.rowCount(), 4);
     }
+
+    void testTreeRemoteModel()
+    {
+        auto treeModel = new QStandardItemModel(this);
+        auto e0 = new QStandardItem("entry0");
+        e0->appendRow(new QStandardItem("entry00"));
+        e0->appendRow(new QStandardItem("entry01"));
+        treeModel->appendRow(e0);
+        auto e1 = new QStandardItem("entry1");
+        e1->appendRow(new QStandardItem("entry10"));
+        e1->appendRow(new QStandardItem("entry12"));
+        treeModel->appendRow(e1);
+
+        FakeRemoteModelServer server("com.kdab.GammaRay.UnitTest.TreeModel", this);
+        server.setModel(treeModel);
+        server.modelMonitored(true);
+
+        FakeRemoteModel client("com.kdab.GammaRay.UnitTest.TreeModel", this);
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
+
+        ModelTest modelTest(&client);
+        QTest::qWait(10); // ModelTest is going to fetch stuff for us already
+
+        QCOMPARE(client.rowCount(), 2);
+        QCOMPARE(client.hasChildren(), true);
+
+        auto i1 = client.index(1, 0);
+        QCOMPARE(i1.data().toString(), QString("entry1"));
+        QCOMPARE(client.rowCount(i1), 2);
+
+        auto i12 = client.index(1, 0, i1);
+        QCOMPARE(i12.data().toString(), QString("entry12"));
+        QCOMPARE(client.rowCount(i12), 0);
+
+        e1->insertRow(1, new QStandardItem("entry11"));
+        QCOMPARE(client.rowCount(i1), 3);
+        auto i11 = client.index(1, 0, i1);
+        QCOMPARE(i11.data().toString(), QString("entry11"));
+        QCOMPARE(client.rowCount(i11), 0);
+
+        e1->takeRow(0);
+        QCOMPARE(client.rowCount(i1), 2);
+        i11 = client.index(0, 0, i1);
+        QCOMPARE(i11.data().toString(), QString("entry11"));
+    }
 };
 
 QTEST_MAIN(RemoteModelTest)
