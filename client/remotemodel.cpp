@@ -97,9 +97,8 @@ int RemoteModel::rowCount(const QModelIndex &index) const
   if (node->rowCount < 0) {
     if (node->columnCount < 0) // not yet requested vs. in the middle of insertion
       requestRowColumnCount(index);
-    return 0;
   }
-  return node->rowCount;
+  return qMax(0, node->rowCount); // if requestRowColumnCount is synchronoous, ie. changes rowCount (as in simple unit test), returning 0 above would cause ModelTest to see inconsistent data
 }
 
 int RemoteModel::columnCount(const QModelIndex &index) const
