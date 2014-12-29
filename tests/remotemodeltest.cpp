@@ -29,6 +29,7 @@
 #include <QDebug>
 #include <QtTest/qtest.h>
 #include <QObject>
+#include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 
 using namespace GammaRay;
@@ -205,6 +206,57 @@ private slots:
         QCOMPARE(client.rowCount(i1), 2);
         i11 = client.index(0, 0, i1);
         QCOMPARE(i11.data().toString(), QString("entry11"));
+    }
+
+    // this should not make a difference if the above works, however it broke massively with Qt 5.4...
+    void testSortProxy()
+    {
+        auto treeModel = new QStandardItemModel(this);
+        auto e0 = new QStandardItem("entry1");
+        e0->appendRow(new QStandardItem("entry10"));
+        e0->appendRow(new QStandardItem("entry11"));
+        treeModel->appendRow(e0);
+        auto e1 = new QStandardItem("entry0");
+        e1->appendRow(new QStandardItem("entry00"));
+        e1->appendRow(new QStandardItem("entry01"));
+        e1->appendRow(new QStandardItem("entry02"));
+        e1->appendRow(new QStandardItem("entry03"));
+        treeModel->appendRow(e1);
+
+        FakeRemoteModelServer server("com.kdab.GammaRay.UnitTest.TreeModel2", this);
+        server.setModel(treeModel);
+        server.modelMonitored(true);
+
+        FakeRemoteModel client("com.kdab.GammaRay.UnitTest.TreeModel2", this);
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
+
+        QSortFilterProxyModel proxy;
+        proxy.setDynamicSortFilter(true);
+        proxy.sort(0);
+        proxy.setSourceModel(&client);
+
+        ModelTest modelTest(&proxy);
+        QTest::qWait(10); // ModelTest is going to fetch stuff for us already
+
+        QCOMPARE(client.rowCount(), 2);
+        QCOMPARE(proxy.rowCount(), 2);
+
+        auto pi0 = proxy.index(0, 0);
+        QCOMPARE(pi0.data().toString(), QString("entry0"));
+        QCOMPARE(proxy.rowCount(pi0), 4);
+
+        auto pi03 = proxy.index(3, 0, pi0);
+        QCOMPARE(pi03.data().toString(), QString("entry03"));
+
+        auto ci0 = client.index(0, 0);
+        QCOMPARE(ci0.data().toString(), QString("entry1"));
+        QCOMPARE(client.rowCount(ci0), 2);
+
+        auto pi1 = proxy.index(1, 0);
+        QCOMPARE(pi1.data().toString(), QString("entry1"));
+        QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
+        QCOMPARE(proxy.rowCount(pi1), 2);
     }
 };
 
