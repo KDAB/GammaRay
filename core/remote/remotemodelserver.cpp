@@ -38,6 +38,8 @@
 using namespace GammaRay;
 using namespace std;
 
+void (*RemoteModelServer::s_registerServerCallback)() = 0;
+
 RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent) :
   QObject(parent),
   m_model(0),
@@ -45,10 +47,8 @@ RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent)
   m_monitored(false)
 {
   setObjectName(objectName);
-  m_myAddress = Server::instance()->registerObject(objectName, this, "newRequest");
-  Server::instance()->registerMonitorNotifier(m_myAddress, this, "modelMonitored");
   m_dummyBuffer->open(QIODevice::WriteOnly);
-  connect(Server::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
+  registerServer();
 }
 
 RemoteModelServer::~RemoteModelServer()
@@ -115,7 +115,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
       Message msg(m_myAddress, Protocol::ModelRowColumnCountReply);
       msg.payload() << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
-      Server::send(msg);
+      sendMessage(msg);
       break;
     }
 
@@ -129,7 +129,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
       Message msg(m_myAddress, Protocol::ModelContentReply);
       msg.payload() << index << filterItemData(m_model->itemData(qmIndex)) << qint32(m_model->flags(qmIndex));
-      Server::send(msg);
+      sendMessage(msg);
       break;
     }
 
@@ -148,7 +148,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
       Message msg(m_myAddress, Protocol::ModelHeaderReply);
       msg.payload() << orientation << section << data;
-      Server::send(msg);
+      sendMessage(msg);
       break;
     }
 
@@ -169,7 +169,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       msg.payload() >> barrierId;
       Message reply(m_myAddress, Protocol::ModelSyncBarrier);
       reply.payload() << barrierId;
-      Server::send(reply);
+      sendMessage(reply);
       break;
     }
   }
@@ -222,20 +222,20 @@ void RemoteModelServer::modelMonitored(bool monitored)
 void RemoteModelServer::dataChanged(const QModelIndex& begin, const QModelIndex& end)
 {
   // TODO check if somebody is listening (here or in Server?)
-  if (!Server::isConnected())
+  if (!isConnected())
     return;
   Message msg(m_myAddress, Protocol::ModelContentChanged);
   msg.payload() << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end);
-  Server::send(msg);
+  sendMessage(msg);
 }
 
 void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first, int last)
 {
-  if (!Server::isConnected())
+  if (!isConnected())
     return;
   Message msg(m_myAddress, Protocol::ModelHeaderChanged);
   msg.payload() <<  qint8(orientation) << first << last;
-  Server::send(msg);
+  sendMessage(msg);
 }
 
 void RemoteModelServer::rowsInserted(const QModelIndex& parent, int start, int end)
@@ -270,37 +270,36 @@ void RemoteModelServer::columnsRemoved(const QModelIndex& parent, int start, int
 
 void RemoteModelServer::layoutChanged()
 {
-  if (!Server::isConnected())
+  if (!isConnected())
     return;
-  Server::send(Message(m_myAddress, Protocol::ModelLayoutChanged));
+  sendMessage(Message(m_myAddress, Protocol::ModelLayoutChanged));
 }
 
 void RemoteModelServer::modelReset()
 {
-  if (!Server::isConnected())
+  if (!isConnected())
     return;
-  Server::send(Message(m_myAddress, Protocol::ModelReset));
+  sendMessage(Message(m_myAddress, Protocol::ModelReset));
 }
 
 void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const QModelIndex& parent, int start, int end)
 {
-  if (!Server::isConnected())
+  if (!isConnected())
     return;
   Message msg(m_myAddress, type);
   msg.payload() << Protocol::fromQModelIndex(parent) << start << end;
-  Server::send(msg);
-
+  sendMessage(msg);
 }
 
 void RemoteModelServer::sendMoveMessage(Protocol::MessageType type, const QModelIndex& sourceParent, int sourceStart, int sourceEnd,
                                         const QModelIndex& destinationParent, int destinationIndex)
 {
-  if (!Server::isConnected())
+  if (!isConnected())
     return;
   Message msg(m_myAddress, type);
   msg.payload() << Protocol::fromQModelIndex(sourceParent) << qint32(sourceStart) << qint32(sourceEnd)
                << Protocol::fromQModelIndex(destinationParent) << qint32(destinationIndex);
-  Server::send(msg);
+  sendMessage(msg);
 }
 
 void RemoteModelServer::modelDeleted()
@@ -310,3 +309,23 @@ void RemoteModelServer::modelDeleted()
     modelReset();
 }
 
+void RemoteModelServer::registerServer()
+{
+  if (Q_UNLIKELY(s_registerServerCallback)) { // called from the ctor, so we can't rely on virtuals
+    s_registerServerCallback();
+    return;
+  }
+  m_myAddress = Server::instance()->registerObject(objectName(), this, "newRequest");
+  Server::instance()->registerMonitorNotifier(m_myAddress, this, "modelMonitored");
+  connect(Endpoint::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
+}
+
+bool RemoteModelServer::isConnected() const
+{
+  return Endpoint::isConnected();
+}
+
+void RemoteModelServer::sendMessage(const Message& msg) const
+{
+  Endpoint::send(msg);
+}

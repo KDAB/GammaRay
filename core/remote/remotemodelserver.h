@@ -63,6 +63,13 @@ class RemoteModelServer : public QObject
     QMap< int, QVariant > filterItemData(const QMap< int, QVariant >& data) const;
     bool canSerialize(const QVariant &value) const;
 
+    // unit test hooks
+    static void (*s_registerServerCallback)();
+    void registerServer();
+    virtual bool isConnected() const;
+    virtual void sendMessage(const Message &msg) const;
+    friend class FakeRemoteModelServer;
+
   private slots:
     void dataChanged(const QModelIndex &begin, const QModelIndex &end);
     void headerDataChanged(Qt::Orientation orientation, int first, int last);
