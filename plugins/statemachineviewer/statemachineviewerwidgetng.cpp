@@ -258,6 +258,8 @@ void StateMachineViewerWidgetNG::repopulateView()
   IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
   m_stateMachineView->scene()->setStateMachine(m_machine);
+  if (!m_machine)
+    return;
   m_stateMachineView->scene()->layout();
 
   IF_DEBUG(m_machine->dumpObjectTree();)
