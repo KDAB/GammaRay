@@ -118,8 +118,7 @@ QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
   }
 
   MetaProperty *property = m_metaObject->propertyAt(index.row());
-  // TODO: cache this, to make this more robust against m_object becoming invalid
-  const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
+  // TODO: cache values, to make this more robust against m_object becoming invalid
 
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
@@ -137,6 +136,7 @@ QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
       return QVariant();
     }
 
+    const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
     switch (role) {
     case Qt::DisplayRole:
       return VariantHandler::displayString(value);
@@ -148,14 +148,17 @@ QVariant MetaPropertyModel::data(const QModelIndex &index, int role) const
   }
 
   if (role == PropertyModel::ActionRole) {
+    const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
     return (MetaObjectRepository::instance()->metaObject(property->typeName()) && *reinterpret_cast<void* const*>(value.data())) || value.value<QObject*>()
             ? PropertyModel::NavigateTo
             : PropertyModel::NoAction;
   } else if (role == PropertyModel::ValueRole) {
+      const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
       return value;
   } else if (role == PropertyModel::AppropriateToolRole) {
     ToolModel *toolModel = Probe::instance()->toolModel();
     ToolFactory *factory;
+    const QVariant value = property->value(m_metaObject->castForPropertyAt(m_object, index.row()));
     if (value.canConvert<QObject*>())
       factory = toolModel->data(toolModel->toolForObject(value.value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
     else
