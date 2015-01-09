@@ -76,6 +76,9 @@ endif()
 if(WIN32)
   target_link_libraries(gammaray_common_internal version)
 endif()
+if(APPLE)
+  target_link_libraries(gammaray_common_internal "-framework CoreFoundation")
+endif()
 
 gammaray_install_headers(
   gammaray_common_export.h
