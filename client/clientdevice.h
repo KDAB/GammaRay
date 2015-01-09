@@ -27,6 +27,8 @@
 #include <QObject>
 #include <QUrl>
 
+class QIODevice;
+
 namespace GammaRay {
 
 /** Adapter for the various different client socket classes (TCP, local, etc). */
