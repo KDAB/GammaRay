@@ -117,7 +117,7 @@ QVariant MetaTypesModel::headerData(int section, Qt::Orientation orientation, in
   case 2:
     return tr("Size");
   case 3:
-    return tr("QObject-derived");
+    return tr("Meta Object");
   case 4:
     return tr("Type Flags");
   }
