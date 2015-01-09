@@ -74,6 +74,7 @@ static inline bool hasDynamicMetaObject(const QObject* object)
 MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
   : QAbstractItemModel(parent)
 {
+  scanMetaTypes();
 }
 
 QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -165,6 +166,20 @@ void MetaObjectTreeModel::objectAdded(QObject *obj)
 
   const QMetaObject *metaObject = obj->metaObject();
   addMetaObject(metaObject);
+}
+
+void MetaObjectTreeModel::scanMetaTypes()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
+    if (!QMetaType::isRegistered(mtId))
+      continue;
+    const auto *mt = QMetaType::metaObjectForType(mtId);
+    if (mt) {
+      addMetaObject(mt);
+    }
+  }
+#endif
 }
 
 void MetaObjectTreeModel::addMetaObject(const QMetaObject *metaObject)

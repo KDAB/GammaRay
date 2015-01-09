@@ -66,6 +66,7 @@ class MetaObjectTreeModel : public QAbstractItemModel
     void objectRemoved(QObject *obj);
 
   private:
+    void scanMetaTypes();
     void addMetaObject(const QMetaObject *metaObject);
     void removeMetaObject(const QMetaObject *metaObject);
 
