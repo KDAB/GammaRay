@@ -70,6 +70,9 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
     F(WeakPointerToQObject);
     F(TrackingPointerToQObject);
     F(WasDeclaredAsMetaType);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    F(IsGadget);
+#endif
     #undef F
 
     return l.join(", ");
