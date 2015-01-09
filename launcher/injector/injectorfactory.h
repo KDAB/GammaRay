@@ -28,11 +28,13 @@
 
 namespace GammaRay {
 
+class ProbeABI;
+
 namespace InjectorFactory {
 
    AbstractInjector::Ptr createInjector(const QString &name);
 
-   AbstractInjector::Ptr defaultInjectorForLaunch();
+   AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi);
 
    AbstractInjector::Ptr defaultInjectorForAttach();
 

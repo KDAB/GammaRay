@@ -83,7 +83,7 @@ public:
       if (m_options.isAttach()) {
         return InjectorFactory::defaultInjectorForAttach();
       } else {
-        return InjectorFactory::defaultInjectorForLaunch();
+        return InjectorFactory::defaultInjectorForLaunch(m_options.probeABI());
       }
     }
     return InjectorFactory::createInjector(m_options.injectorType());

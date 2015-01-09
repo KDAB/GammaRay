@@ -29,6 +29,8 @@
 #include "styleinjector.h"
 #include "windllinjector.h"
 
+#include <common/probeabi.h>
+
 #include <QString>
 
 namespace GammaRay {
@@ -70,9 +72,11 @@ static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types)
   return AbstractInjector::Ptr(0);
 }
 
-AbstractInjector::Ptr defaultInjectorForLaunch()
+AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi)
 {
 #if defined(Q_OS_MAC)
+  if (abi.majorQtVersion() >= 5 && abi.minorQtVersion() >= 4)
+    return QLatin1String("preload");
   return findFirstWorkingInjector(QStringList() << QLatin1String("gdb") << QLatin1String("lldb"));
 #elif defined(Q_OS_UNIX)
   return createInjector(QLatin1String("preload"));
