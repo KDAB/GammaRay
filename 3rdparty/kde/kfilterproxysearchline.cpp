@@ -69,7 +69,9 @@ KFilterProxySearchLine::KFilterProxySearchLine( QWidget* parent )
         : QWidget( parent ), d( new Private( this ) )
 {
     d->searchLine = new QLineEdit( this );
-//    d->searchLine->setClearButtonShown( true );
+#if QT_VERSION >= 0x050200
+    d->searchLine->setClearButtonEnabled(true);
+#endif
 #if QT_VERSION >= 0x040700
     d->searchLine->setPlaceholderText(tr("Search"));
 #endif
