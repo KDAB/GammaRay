@@ -326,53 +326,6 @@ add_feature_info("Web inspector" HAVE_QT_WEBKIT1 "Requires QtWebKit.")
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
 
 #
-# Installation settings
-#
-set(BIN_INSTALL_DIR "bin")
-set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
-set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
-set(INCLUDE_INSTALL_DIR "include/gammaray")
-set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
-set(XDG_APPS_INSTALL_DIR share/applications)
-set(APPDATA_INSTALL_DIR share/appdata)
-if(WIN32)
-  set(PLUGIN_INSTALL_DIR "plugins")
-  set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
-else()
-  set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
-  set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
-endif()
-if(UNIX AND NOT APPLE)
-  set(DOC_INSTALL_DIR share/doc/gammaray/)
-else()
-  set(DOC_INSTALL_DIR .)
-endif()
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
-
-# set RPATH only when installing to a non-default location
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" _isSystemPlatformLibDir)
-list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" _isSystemCLibDir)
-list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
-if(${_isSystemPlatformLibDir} EQUAL -1 AND ${_isSystemCLibDir} EQUAL -1 AND ${_isSystemCxxLibDir} EQUAL -1)
-  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
-endif()
-
-set(
-  INSTALL_TARGETS_DEFAULT_ARGS
-  RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-  LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-  ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
-  BUNDLE DESTINATION "/Applications/Qt4"
-)
-
-# "inverse" install dirs, to find the base location again
-gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
-gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/GAMMARAY_PROBE_ABI_DUMMY")
-gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
-
-#
 # Additional dependencies
 #
 
@@ -439,10 +392,60 @@ endif()
 add_feature_info("ELF ABI detection" HAVE_ELF_H "Automatic probe ABI detection on ELF-based systems. Requires elf.h.")
 
 #
+# Determine probe ABI
+# this needs to be run after we know exactly what we are building, but is needed for that installation settings
+include(GammaRayProbeABI)
+
+#
+# Installation settings
+#
+set(BIN_INSTALL_DIR "bin")
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
+set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
+set(INCLUDE_INSTALL_DIR "include/gammaray")
+set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
+set(XDG_APPS_INSTALL_DIR share/applications)
+set(APPDATA_INSTALL_DIR share/appdata)
+if(WIN32)
+  set(PLUGIN_INSTALL_DIR "plugins")
+  set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
+else()
+  set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
+  set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
+endif()
+if(UNIX AND NOT APPLE)
+  set(DOC_INSTALL_DIR share/doc/gammaray/)
+else()
+  set(DOC_INSTALL_DIR .)
+endif()
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
+
+# set RPATH only when installing to a non-default location
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" _isSystemPlatformLibDir)
+list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" _isSystemCLibDir)
+list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
+if(${_isSystemPlatformLibDir} EQUAL -1 AND ${_isSystemCLibDir} EQUAL -1 AND ${_isSystemCxxLibDir} EQUAL -1)
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
+endif()
+
+set(
+  INSTALL_TARGETS_DEFAULT_ARGS
+  RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+  LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+  ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
+  BUNDLE DESTINATION "/Applications/Qt4"
+)
+
+# "inverse" install dirs, to find the base location again
+gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
+gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/GAMMARAY_PROBE_ABI_DUMMY")
+gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
+
+#
 # actually build the stuff
 #
-include(GammaRayProbeABI) # this needs to be run after we know what exactly we are building
-
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
