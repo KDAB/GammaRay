@@ -48,13 +48,13 @@ static QString translateBool(bool value)
 
 QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid() || !m_obj || index.row() < 0 ||
-      index.row() >= m_obj.data()->metaObject()->propertyCount()) {
+  if (!index.isValid() || !m_metaObject || index.row() < 0 ||
+      index.row() >= m_metaObject->propertyCount()) {
     return QVariant();
   }
 
-  const QMetaProperty prop = m_obj.data()->metaObject()->property(index.row());
-  const QVariant value = prop.read(m_obj.data());
+  const QMetaProperty prop = m_metaObject->property(index.row());
+  const QVariant value = m_obj ? prop.read(m_obj.data()) : QVariant();
   if (role == Qt::DisplayRole) {
     if (index.column() == propertyColumnIndex()) {
       return prop.name();
@@ -69,7 +69,7 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
     } else if (index.column() == typeColumnIndex()) {
       return prop.typeName();
     } else if (index.column() == classColumnIndex()) {
-      const QMetaObject *mo = m_obj.data()->metaObject();
+      const QMetaObject *mo = m_metaObject;
       while (mo->propertyOffset() > index.row()) {
         mo = mo->superClass();
       }
@@ -124,10 +124,10 @@ bool ObjectStaticPropertyModel::setData(const QModelIndex &index, const QVariant
 
 int ObjectStaticPropertyModel::rowCount(const QModelIndex &parent) const
 {
-  if (!m_obj || parent.isValid()) {
+  if (!m_metaObject || parent.isValid()) {
     return 0;
   }
-  return m_obj.data()->metaObject()->propertyCount();
+  return m_metaObject->propertyCount();
 }
 
 int ObjectStaticPropertyModel::columnCount(const QModelIndex& parent) const
