@@ -47,6 +47,7 @@ class ObjectPropertyModel : public QAbstractTableModel
     virtual void unmonitorObject(QObject* obj) = 0;
 
     QPointer<QObject> m_obj;
+    const QMetaObject* m_metaObject;
 
   protected slots:
     void updateAll();

@@ -32,6 +32,7 @@ using namespace GammaRay;
 
 ObjectPropertyModel::ObjectPropertyModel(QObject *parent)
   : QAbstractTableModel(parent),
+    m_metaObject(0),
     m_updateTimer(new QTimer(this))
 {
   connect(m_updateTimer, SIGNAL(timeout()), SLOT(doEmitChanged()));
@@ -49,6 +50,7 @@ void ObjectPropertyModel::setObject(QObject *object)
     disconnect(m_obj.data(), 0, this, SLOT(slotReset()));
   }
   m_obj = object;
+  m_metaObject = object ? object->metaObject() : 0;
   if (object) {
     connect(object, SIGNAL(destroyed(QObject*)), SLOT(slotReset()));
     monitorObject(object);
