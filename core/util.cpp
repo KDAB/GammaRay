@@ -27,6 +27,7 @@
 #include <common/metatypedeclarations.h>
 #include "varianthandler.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QIcon>
@@ -181,6 +182,9 @@ typedef QHash<QByteArray, IconCacheEntry> IconDatabase;
 static IconDatabase readIconData()
 {
   IconDatabase data;
+  // we can't load icons due to their QPixmap dependency in a QCoreApplication
+  if (!qApp->inherits("QGuiApplication") && !qApp->inherits("QApplication"))
+    return data;
 
   const QString basePath = QLatin1String(":/gammaray/classes/");
   QDir dir(basePath);
