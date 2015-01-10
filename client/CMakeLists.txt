@@ -1,5 +1,4 @@
-set(gammaray_client_srcs
-  main.cpp
+set(gammaray_client_internal_srcs
   client.cpp
   remotemodel.cpp
   selectionmodelclient.cpp
@@ -11,17 +10,28 @@ set(gammaray_client_srcs
   localclientdevice.cpp
 )
 
+add_library(gammaray_client_internal STATIC ${gammaray_client_internal_srcs})
+target_link_libraries(gammaray_client_internal
+  LINK_PUBLIC
+  ${QT_QTCORE_LIBRARIES}
+
+  LINK_PRIVATE
+  gammaray_ui
+  gammaray_ui_internal
+  gammaray_common
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTNETWORK_LIBRARIES}
+)
+
+
+set(gammaray_client_srcs main.cpp)
 qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_executable(gammaray-client WIN32 ${gammaray_client_srcs})
 
 target_link_libraries(gammaray-client
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  ${QT_QTNETWORK_LIBRARIES}
+  gammaray_client_internal
   gammaray_common
-  gammaray_ui
-  gammaray_ui_internal
 )
 
 if(QNXNTO)
