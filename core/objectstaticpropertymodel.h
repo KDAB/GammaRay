@@ -34,6 +34,8 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
   public:
     explicit ObjectStaticPropertyModel(QObject *parent = 0);
 
+    void setMetaObject(const QMetaObject *mo);
+
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

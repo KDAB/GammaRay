@@ -51,8 +51,9 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
     void setProperty(const QString &name, const QVariant &value);
     void resetProperty(const QString &name);
 
-    bool setObject(void *object, const QString &typeName);
-    bool setQObject(QObject *object);
+    bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setMetaObject(const QMetaObject* metaObject) Q_DECL_OVERRIDE;
 
   private:
     ObjectStaticPropertyModel *m_staticPropertyModel;

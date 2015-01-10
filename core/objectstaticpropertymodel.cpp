@@ -46,6 +46,17 @@ static QString translateBool(bool value)
   return value ? QObject::tr("yes") : QObject::tr("no");
 }
 
+void ObjectStaticPropertyModel::setMetaObject(const QMetaObject* mo)
+{
+  setObject(0);
+  if (mo == m_metaObject)
+    return;
+
+  beginResetModel();
+  m_metaObject = mo;
+  endResetModel();
+}
+
 QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid() || !m_metaObject || index.row() < 0 ||
