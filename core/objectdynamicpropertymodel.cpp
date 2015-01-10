@@ -127,6 +127,14 @@ int ObjectDynamicPropertyModel::rowCount(const QModelIndex &parent) const
   return m_obj.data()->dynamicPropertyNames().size();
 }
 
+int ObjectDynamicPropertyModel::columnCount(const QModelIndex& parent) const
+{
+  if (parent.isValid()) {
+    return 0;
+  }
+  return 4;
+}
+
 QVariant ObjectDynamicPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {

@@ -130,6 +130,14 @@ int ObjectStaticPropertyModel::rowCount(const QModelIndex &parent) const
   return m_obj.data()->metaObject()->propertyCount();
 }
 
+int ObjectStaticPropertyModel::columnCount(const QModelIndex& parent) const
+{
+  if (parent.isValid()) {
+    return 0;
+  }
+  return 4;
+}
+
 Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
 {
   const Qt::ItemFlags flags = ObjectPropertyModel::flags(index);

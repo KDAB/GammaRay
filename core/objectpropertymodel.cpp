@@ -56,14 +56,6 @@ void ObjectPropertyModel::setObject(QObject *object)
   endResetModel();
 }
 
-int ObjectPropertyModel::columnCount(const QModelIndex& parent) const
-{
-  if (parent.isValid()) {
-    return 0;
-  }
-  return 4;
-}
-
 QMap< int, QVariant > ObjectPropertyModel::itemData(const QModelIndex& index) const
 {
   QMap<int, QVariant> d = QAbstractItemModel::itemData(index);

@@ -31,6 +31,7 @@ class QTimer;
 
 namespace GammaRay {
 
+// ### very little value left in here, dissolve into sub-classes?
 class ObjectPropertyModel : public QAbstractTableModel
 {
   Q_OBJECT
@@ -38,7 +39,6 @@ class ObjectPropertyModel : public QAbstractTableModel
     explicit ObjectPropertyModel(QObject *parent = 0);
     void setObject(QObject *object);
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QMap<int, QVariant> itemData(const QModelIndex& index) const;
 
   protected:
