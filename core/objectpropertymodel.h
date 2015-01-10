@@ -39,7 +39,6 @@ class ObjectPropertyModel : public QAbstractTableModel
     void setObject(QObject *object);
 
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     QMap<int, QVariant> itemData(const QModelIndex& index) const;
 
   protected:

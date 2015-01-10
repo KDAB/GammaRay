@@ -127,6 +127,23 @@ int ObjectDynamicPropertyModel::rowCount(const QModelIndex &parent) const
   return m_obj.data()->dynamicPropertyNames().size();
 }
 
+QVariant ObjectDynamicPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    switch (section) {
+      case 0:
+        return tr("Property");
+      case 1:
+        return tr("Value");
+      case 2:
+        return tr("Type");
+      case 3:
+        return tr("Class");
+    }
+  }
+  return QAbstractItemModel::headerData(section, orientation, role);
+}
+
 void ObjectDynamicPropertyModel::monitorObject(QObject* obj)
 {
   obj->installEventFilter(this);

@@ -38,6 +38,7 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     void monitorObject(QObject* obj);
     void unmonitorObject(QObject* obj);

@@ -64,23 +64,6 @@ int ObjectPropertyModel::columnCount(const QModelIndex& parent) const
   return 4;
 }
 
-QVariant ObjectPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    switch (section) {
-    case 0:
-      return tr("Property");
-    case 1:
-      return tr("Value");
-    case 2:
-      return tr("Type");
-    case 3:
-      return tr("Class");
-    }
-  }
-  return QAbstractItemModel::headerData(section, orientation, role);
-}
-
 QMap< int, QVariant > ObjectPropertyModel::itemData(const QModelIndex& index) const
 {
   QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
