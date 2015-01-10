@@ -33,7 +33,7 @@ add_library(gammaray_widget_export_actions SHARED
 )
 
 set_target_properties(gammaray_widget_export_actions PROPERTIES
-  LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}"
+  LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}"
 )
 
 set(EXTRA_LIBS)
@@ -50,7 +50,7 @@ target_link_libraries(gammaray_widget_export_actions
   ${EXTRA_LIBS}
 )
 
-install(TARGETS gammaray_widget_export_actions DESTINATION ${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI})
+install(TARGETS gammaray_widget_export_actions DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
 
 # UI plugin
 if(GAMMARAY_BUILD_UI)

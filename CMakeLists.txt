@@ -413,6 +413,7 @@ else()
   set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
   set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
 endif()
+set(PROBE_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}")
 if(UNIX AND NOT APPLE)
   set(DOC_INSTALL_DIR share/doc/gammaray/)
 else()
@@ -440,7 +441,7 @@ set(
 
 # "inverse" install dirs, to find the base location again
 gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
-gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/GAMMARAY_PROBE_ABI_DUMMY")
+gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PROBE_PLUGIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 
 #
