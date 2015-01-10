@@ -49,6 +49,12 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
 
   private:
     QString detailString(const QMetaProperty& prop) const;
+
+    int propertyColumnIndex() const;
+    int valueColumnIndex() const;
+    int typeColumnIndex() const;
+    int classColumnIndex() const;
+
     QHash<int, int> m_notifyToPropertyMap;
 };
 

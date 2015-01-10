@@ -56,9 +56,9 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
   const QMetaProperty prop = m_obj.data()->metaObject()->property(index.row());
   const QVariant value = prop.read(m_obj.data());
   if (role == Qt::DisplayRole) {
-    if (index.column() == 0) {
+    if (index.column() == propertyColumnIndex()) {
       return prop.name();
-    } else if (index.column() == 1) {
+    } else if (index.column() == valueColumnIndex()) {
       // QMetaProperty::read sets QVariant::typeName to int for enums,
       // so we need to handle that separately here
       const QString enumStr = Util::enumToString(value, prop.typeName(), m_obj.data());
@@ -66,9 +66,9 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
         return enumStr;
       }
       return VariantHandler::displayString(value);
-    } else if (index.column() == 2) {
+    } else if (index.column() == typeColumnIndex()) {
       return prop.typeName();
-    } else if (index.column() == 3) {
+    } else if (index.column() == classColumnIndex()) {
       const QMetaObject *mo = m_obj.data()->metaObject();
       while (mo->propertyOffset() > index.row()) {
         mo = mo->superClass();
@@ -76,11 +76,11 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
       return mo->className();
     }
   } else if (role == Qt::DecorationRole) {
-    if (index.column() == 1) {
+    if (index.column() == valueColumnIndex()) {
       return VariantHandler::decoration(value);
     }
   } else if (role == Qt::EditRole) {
-    if (index.column() == 1) {
+    if (index.column() == valueColumnIndex()) {
       return value;
     }
   } else if (role == Qt::ToolTipRole) {
@@ -110,7 +110,7 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
 
 bool ObjectStaticPropertyModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-  if (index.isValid() && m_obj && index.column() == 1 && index.row() >= 0 &&
+  if (index.isValid() && m_obj && index.column() == valueColumnIndex() && index.row() >= 0 &&
       index.row() < m_obj.data()->metaObject()->propertyCount() && role == Qt::EditRole) {
     const QMetaProperty prop = m_obj.data()->metaObject()->property(index.row());
     const bool result = prop.write(m_obj.data(), value);
@@ -135,14 +135,14 @@ int ObjectStaticPropertyModel::columnCount(const QModelIndex& parent) const
   if (parent.isValid()) {
     return 0;
   }
-  return 4;
+  return m_obj ? 4 : 3;
 }
 
 Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
 {
   const Qt::ItemFlags flags = ObjectPropertyModel::flags(index);
 
-  if (!index.isValid() || !m_obj || index.column() != 1 || index.row() < 0 ||
+  if (!index.isValid() || !m_obj || index.column() != valueColumnIndex() || index.row() < 0 ||
       index.row() >= m_obj.data()->metaObject()->propertyCount()) {
     return flags;
   }
@@ -157,16 +157,14 @@ Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
 QVariant ObjectStaticPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    switch (section) {
-      case 0:
-        return tr("Property");
-      case 1:
-        return tr("Value");
-      case 2:
-        return tr("Type");
-      case 3:
-        return tr("Class");
-    }
+    if (section == propertyColumnIndex())
+      return tr("Property");
+    if (section == valueColumnIndex())
+      return tr("Value");
+    if (section == typeColumnIndex())
+      return tr("Type");
+    if (section == classColumnIndex())
+      return tr("Class");
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
@@ -199,9 +197,9 @@ void ObjectStaticPropertyModel::propertyUpdated()
 #if QT_VERSION >= QT_VERSION_CHECK(4, 8, 0)
   Q_ASSERT(senderSignalIndex() >= 0);
   const int propertyIndex = m_notifyToPropertyMap.value(senderSignalIndex());
-  emit dataChanged(index(propertyIndex, 1), index(propertyIndex, 1));
+  emit dataChanged(index(propertyIndex, valueColumnIndex()), index(propertyIndex, valueColumnIndex()));
 #else
-  emit dataChanged(index(0,1), index(rowCount() - 1, 1));
+  emit dataChanged(index(0,valueColumnIndex()), index(rowCount() - 1, valueColumnIndex()));
 #endif
 }
 
@@ -225,4 +223,24 @@ QString ObjectStaticPropertyModel::detailString(const QMetaProperty& prop) const
   s << tr("User: %1").arg(translateBool(prop.isUser(m_obj.data())));
   s << tr("Writable: %1").arg(translateBool(prop.isWritable()));
   return s.join("\n");
+}
+
+int ObjectStaticPropertyModel::propertyColumnIndex() const
+{
+  return 0;
+}
+
+int ObjectStaticPropertyModel::valueColumnIndex() const
+{
+  return m_obj ? 1: -1;
+}
+
+int ObjectStaticPropertyModel::typeColumnIndex() const
+{
+  return m_obj ? 2 : 1;
+}
+
+int ObjectStaticPropertyModel::classColumnIndex() const
+{
+  return m_obj ? 3 : 2;
 }
