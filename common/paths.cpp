@@ -57,10 +57,15 @@ void setRelativeRootPath(const char* relativeRootPath)
 
 QString probePath(const QString& probeABI)
 {
+#ifndef Q_OS_ANDROID
   return rootPath() + QDir::separator()
     + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR) + QDir::separator()
     + QLatin1String(GAMMARAY_PLUGIN_VERSION) + QDir::separator()
     + probeABI;
+#else
+  Q_UNUSED(probeABI);
+  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR);
+#endif
 }
 
 QString binPath()
