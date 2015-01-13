@@ -15,9 +15,8 @@ set(gammaray_common_srcs
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
 set_target_properties(gammaray_common PROPERTIES
+  ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB
-  SOVERSION ${GAMMARAY_SOVERSION}
-  VERSION ${GAMMARAY_SOVERSION}
   OUTPUT_NAME gammaray_common-${GAMMARAY_PROBE_ABI}
 )
 

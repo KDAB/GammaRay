@@ -34,9 +34,8 @@ qt4_wrap_ui(gammaray_ui_srcs
 
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
 set_target_properties(gammaray_ui PROPERTIES
+  ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   DEFINE_SYMBOL MAKE_GAMMARAY_UI_LIB
-  SOVERSION ${GAMMARAY_SOVERSION}
-  VERSION ${GAMMARAY_SOVERSION}
   OUTPUT_NAME gammaray_ui-${GAMMARAY_PROBE_ABI}
 )
 

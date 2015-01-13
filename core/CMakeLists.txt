@@ -107,8 +107,7 @@ target_link_libraries(gammaray_core
   LINK_PRIVATE gammaray_common_internal
 )
 set_target_properties(gammaray_core PROPERTIES
-  SOVERSION ${GAMMARAY_SOVERSION}
-  VERSION ${GAMMARAY_SOVERSION}
+  ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_core-${GAMMARAY_PROBE_ABI}
 )
 
