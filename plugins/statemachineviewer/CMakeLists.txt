@@ -43,7 +43,7 @@ set(gammaray_statemachineviewer_ui_plugin_srcs
   gvgraph/gvutils.cpp
 )
 
-set_package_properties(KDSME PROPERTIES URL "https://github.com/KDAB/KDStateMachineEditor" DESCRIPTION "KDAB State Machine eEditor framework" TYPE OPTIONAL PURPOSE "Provide Next-gen graphical state machine viewer for the statmeachineviewer plugin.")
+set_package_properties(KDSME PROPERTIES URL "https://github.com/KDAB/KDStateMachineEditor" DESCRIPTION "KDAB State Machine Editor framework" TYPE OPTIONAL PURPOSE "Provide Next-gen graphical state machine viewer for the statmeachineviewer plugin.")
 if (Qt5_FOUND)
   find_package(KDSME CONFIG QUIET)
 else()

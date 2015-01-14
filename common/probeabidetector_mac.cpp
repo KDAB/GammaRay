@@ -28,12 +28,38 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QProcess>
 #include <QString>
 
+#include <CoreFoundation/CoreFoundation.h>
 #include <mach-o/loader.h>
 
 using namespace GammaRay;
+
+static QString resolveBundlePath(const QString &bundlePath)
+{
+  const QFileInfo fi(bundlePath);
+  if (!fi.isBundle())
+    return bundlePath;
+
+  const QByteArray utf8Bundle = fi.absoluteFilePath().toUtf8();
+  CFURLRef bundleUrl = CFURLCreateFromFileSystemRepresentation(NULL, reinterpret_cast<const UInt8*>(utf8Bundle.data()), utf8Bundle.length(), true);
+  CFBundleRef bundle = CFBundleCreate(NULL, bundleUrl);
+  if (bundle) {
+    CFURLRef url = CFBundleCopyExecutableURL(bundle);
+    char executableFile[FILENAME_MAX];
+    CFURLGetFileSystemRepresentation(url, true, reinterpret_cast<UInt8*>(executableFile), FILENAME_MAX);
+    CFRelease(url);
+    CFRelease(bundle);
+    CFRelease(bundleUrl);
+    return QString::fromUtf8(executableFile);
+  }
+  CFRelease(bundle);
+  CFRelease(bundleUrl);
+
+  return bundlePath;
+}
 
 static QString qtCoreFromOtool(const QString &path)
 {
@@ -61,7 +87,7 @@ static QString qtCoreFromOtool(const QString &path)
 
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
-  const QString qtCorePath = qtCoreFromOtool(path);
+  const QString qtCorePath = qtCoreFromOtool(resolveBundlePath(path));
   if (qtCorePath.isEmpty())
     return ProbeABI();
 

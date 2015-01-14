@@ -188,6 +188,10 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant 
       if (!icon.isNull())
         it.value() = icon.pixmap(QSize(16, 16));
       ++it;
+    } else if (qstrcmp(it.value().typeName(), "QJSValue") == 0) {
+      // QJSValue tries to serialize nested elements and asserts if that fails
+      // too bad it can contain QObject* as nested element, which obviously can't be serialized...
+      it = itemData.erase(it);
     } else if (canSerialize(it.value())) {
       ++it;
     } else {
