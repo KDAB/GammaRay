@@ -28,7 +28,9 @@
 #include <core/varianthandler.h>
 #include <core/util.h>
 
+#include <QDateTime>
 #include <QDebug>
+#include <QJSValue>
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlError>
@@ -66,6 +68,38 @@ static QString qmlListPropertyToString(const QVariant &value, bool *ok)
   return l.join(QLatin1String(", "));
 }
 
+static QString qjsValueToString(const QJSValue &v)
+{
+  if (v.isArray()) {
+    return "<array>";
+  } else if (v.isBool()) {
+    return v.toBool() ? "true" : "false";
+  } else if (v.isCallable()) {
+    return "<callable>";
+  } else if (v.isDate()) {
+    return v.toDateTime().toString();
+  } else if (v.isError()) {
+    return "<error>";
+  } else if (v.isNull()) {
+    return "<null>";
+  } else if (v.isNumber()) {
+    return QString::number(v.toNumber());
+  } else if (v.isObject()) {
+    return "<object>";
+  } else if (v.isQObject()) {
+    return Util::displayString(v.toQObject());
+  } else if (v.isRegExp()) {
+    return "<regexp>";
+  } else if (v.isString()) {
+    return v.toString();
+  } else if (v.isUndefined()) {
+    return "<undefined>";
+  } else if (v.isVariant()) {
+    return VariantHandler::displayString(v.toVariant());
+  }
+  return "<unknown QJSValue>";
+}
+
 QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   QObject(parent)
 {
@@ -93,6 +127,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   MO_ADD_PROPERTY_CR(QQmlEngine, QStringList, pluginPathList, setPluginPathList);
   MO_ADD_PROPERTY_RO(QQmlEngine, QQmlContext*, rootContext);
 
+  VariantHandler::registerStringConverter<QJSValue>(qjsValueToString);
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
   VariantHandler::registerGenericStringConverter(qmlListPropertyToString);
 }
