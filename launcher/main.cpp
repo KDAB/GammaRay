@@ -181,7 +181,7 @@ int main(int argc, char **argv)
         out << "Invalid probe ABI specified, see --list-probes for valid ones." << endl;
         return 1;
       }
-      if (ProbeFinder::findProbe("gammaray_probe", abi).isEmpty()) {
+      if (ProbeFinder::findProbe(GAMMARAY_PROBE_NAME, abi).isEmpty()) {
         out << abi.id() << "is not a known probe, see --list-probes." << endl;
         return 1;
       }
