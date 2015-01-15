@@ -41,7 +41,10 @@ if(NOT WIN32 AND NOT QNXNTO)
 endif()
 
 set_target_properties(gammaray_probe PROPERTIES
-  PREFIX ""
   LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}"
 )
+if(NOT ANDROID)
+  set_target_properties(gammaray_probe PROPERTIES PREFIX "")
+endif()
+
 install(TARGETS gammaray_probe DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})

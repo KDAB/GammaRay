@@ -14,7 +14,11 @@
 #define GAMMARAY_INVERSE_LIBEXEC_DIR "${GAMMARAY_INVERSE_LIBEXEC_DIR}"
 
 // probe name
+#ifdef Q_OS_ANDROID
+#define GAMMARAY_PROBE_NAME "libgammaray_probe"
+#else
 #define GAMMARAY_PROBE_NAME "gammaray_probe"
+#endif
 
 // build options
 #cmakedefine BUILD_TIMER_PLUGIN
