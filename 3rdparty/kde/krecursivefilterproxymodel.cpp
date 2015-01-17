@@ -19,6 +19,8 @@
 
 #include "krecursivefilterproxymodel.h"
 
+#include <QMetaMethod>
+
 // Maintainability note:
 // This class invokes some Q_PRIVATE_SLOTs in QSortFilterProxyModel which are
 // private API and could be renamed or removed at any time.
@@ -52,6 +54,14 @@ public:
         qRegisterMetaType<QModelIndex>("QModelIndex");
     }
 
+    inline QMetaMethod findMethod(const char* signature) const
+    {
+        Q_Q(const KRecursiveFilterProxyModel);
+        const int idx = q->metaObject()->indexOfMethod(signature);
+        Q_ASSERT(idx != -1);
+        return q->metaObject()->method(idx);
+    }
+
     // Convenience methods for invoking the QSFPM Q_SLOTS. Those slots must be invoked with invokeMethod
     // because they are Q_PRIVATE_SLOTs
     inline void invokeDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>())
@@ -60,13 +70,15 @@ public:
         bool success = false;
         if (passRolesToDataChanged()) {
             // required for Qt 5.5 and upwards, see commit f96baeb75fc in qtbase
-            success = QMetaObject::invokeMethod(q, "_q_sourceDataChanged", Qt::DirectConnection,
+            static const QMetaMethod m = findMethod("_q_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)");
+            success = m.invoke(q, Qt::DirectConnection,
                         Q_ARG(QModelIndex, topLeft),
                         Q_ARG(QModelIndex, bottomRight),
                         Q_ARG(QVector<int>, roles));
         } else {
             // backwards compatibility
-            success = QMetaObject::invokeMethod(q, "_q_sourceDataChanged", Qt::DirectConnection,
+            static const QMetaMethod m = findMethod("_q_sourceDataChanged(QModelIndex,QModelIndex)");
+            success = m.invoke(q, Qt::DirectConnection,
                         Q_ARG(QModelIndex, topLeft),
                         Q_ARG(QModelIndex, bottomRight));
         }
@@ -77,7 +89,8 @@ public:
     inline void invokeRowsInserted(const QModelIndex &source_parent, int start, int end)
     {
         Q_Q(KRecursiveFilterProxyModel);
-        bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsInserted", Qt::DirectConnection,
+        static const QMetaMethod m = findMethod("_q_sourceRowsInserted(QModelIndex,int,int)");
+        bool success = m.invoke(q, Qt::DirectConnection,
                        Q_ARG(QModelIndex, source_parent),
                        Q_ARG(int, start),
                        Q_ARG(int, end));
@@ -88,7 +101,8 @@ public:
     inline void invokeRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
     {
         Q_Q(KRecursiveFilterProxyModel);
-        bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsAboutToBeInserted", Qt::DirectConnection,
+        static const QMetaMethod m = findMethod("_q_sourceRowsAboutToBeInserted(QModelIndex,int,int)");
+        bool success = m.invoke(q, Qt::DirectConnection,
                        Q_ARG(QModelIndex, source_parent),
                        Q_ARG(int, start),
                        Q_ARG(int, end));
@@ -99,7 +113,8 @@ public:
     inline void invokeRowsRemoved(const QModelIndex &source_parent, int start, int end)
     {
         Q_Q(KRecursiveFilterProxyModel);
-        bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsRemoved", Qt::DirectConnection,
+        static const QMetaMethod m = findMethod("_q_sourceRowsRemoved(QModelIndex,int,int)");
+        bool success = m.invoke(q, Qt::DirectConnection,
                        Q_ARG(QModelIndex, source_parent),
                        Q_ARG(int, start),
                        Q_ARG(int, end));
@@ -110,7 +125,8 @@ public:
     inline void invokeRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
     {
         Q_Q(KRecursiveFilterProxyModel);
-        bool success = QMetaObject::invokeMethod(q, "_q_sourceRowsAboutToBeRemoved", Qt::DirectConnection,
+        static const QMetaMethod m = findMethod("_q_sourceRowsAboutToBeRemoved(QModelIndex,int,int)");
+        bool success = m.invoke(q, Qt::DirectConnection,
                        Q_ARG(QModelIndex, source_parent),
                        Q_ARG(int, start),
                        Q_ARG(int, end));
