@@ -122,7 +122,7 @@ public:
         errorMessage = tr("Failed to attach to target with PID %1.").arg(m_options.pid());
       if (!injector->errorString().isEmpty())
         errorMessage += tr("\nError: %1").arg(injector->errorString());
-      emit error(injector->exitCode(), errorMessage);
+      emit error(injector->exitCode() ? injector->exitCode() : 1, errorMessage);
     }
   }
 
