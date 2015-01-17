@@ -105,8 +105,11 @@ void ConnectionModel::connectionAdded(QObject *sender, const char *signal,
   //and use verktygs heuristics to detect likely misconnects
 
   // when called from background, delay into foreground, otherwise call directly
-  QMetaObject::invokeMethod(this, "connectionAddedMainThread", Qt::AutoConnection,
-                            Q_ARG(GammaRay::Connection, c));
+  static const QMetaMethod m = metaObject()->method(metaObject()->indexOfMethod("connectionAddedMainThread(Connection)"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  Q_ASSERT(m.isValid());
+#endif
+  m.invoke(this, Qt::AutoConnection, Q_ARG(GammaRay::Connection, c));
 }
 
 void ConnectionModel::connectionAddedMainThread(const Connection& connection)
@@ -142,9 +145,13 @@ void ConnectionModel::connectionRemoved(QObject *sender, const char *signal,
   }
 
   // when called from background, delay into foreground, otherwise call directly
-  QMetaObject::invokeMethod(this, "connectionRemovedMainThread", Qt::AutoConnection,
-                            Q_ARG(QObject*, sender), Q_ARG(QByteArray, normalizedSignal),
-                            Q_ARG(QObject*, receiver), Q_ARG(QByteArray, normalizedMethod));
+  static const QMetaMethod m = metaObject()->method(metaObject()->indexOfMethod("connectionRemovedMainThread(QObject*,QByteArray,QObject*,QByteArray)"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  Q_ASSERT(m.isValid());
+#endif
+  m.invoke(this, Qt::AutoConnection,
+           Q_ARG(QObject*, sender), Q_ARG(QByteArray, normalizedSignal),
+           Q_ARG(QObject*, receiver), Q_ARG(QByteArray, normalizedMethod));
 }
 
 void ConnectionModel::connectionRemovedMainThread(QObject *sender, const QByteArray &normalizedSignal,

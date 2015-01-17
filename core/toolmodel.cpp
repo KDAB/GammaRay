@@ -51,6 +51,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QLibrary>
+#include <QMetaMethod>
 #include <QThread>
 
 using namespace GammaRay;
@@ -148,8 +149,11 @@ QMap<int, QVariant> ToolModel::itemData(const QModelIndex& index) const
 void ToolModel::objectAdded(QObject *obj)
 {
   // delay to main thread if required
-  QMetaObject::invokeMethod(this, "objectAddedMainThread",
-                            Qt::AutoConnection, Q_ARG(QObject*, obj));
+  static const QMetaMethod m = metaObject()->method(metaObject()->indexOfMethod("objectAddedMainThread(QObject*)"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  Q_ASSERT(m.isValid());
+#endif
+  m.invoke(this, Qt::AutoConnection, Q_ARG(QObject*, obj));
 }
 
 void ToolModel::objectAddedMainThread(QObject *obj)
