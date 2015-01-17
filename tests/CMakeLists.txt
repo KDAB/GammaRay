@@ -85,6 +85,8 @@ if(UNIX AND NOT APPLE)
   endif()
 endif()
 
+### MultiSignalMapper test
+
 add_executable(multisignalmappertest multisignalmappertest.cpp ../core/multisignalmapper.cpp)
 target_link_libraries(multisignalmappertest
   ${QT_QTCORE_LIBRARIES}
@@ -112,5 +114,15 @@ add_executable(remotemodeltest
 )
 target_link_libraries(remotemodeltest gammaray_core gammaray_client_internal ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
 add_test(NAME remotemodeltest COMMAND remotemodeltest)
+
+### QSignalSpyCallback tests
+
+add_executable(signalspycallbacktest
+  signalspycallbacktest.cpp
+  ../hooking/probecreator.cpp
+)
+target_link_libraries(signalspycallbacktest gammaray_core ${QT_QTTEST_LIBRARIES})
+add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
+
 
 add_subdirectory(manual)

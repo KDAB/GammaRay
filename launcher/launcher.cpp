@@ -123,7 +123,7 @@ public:
         errorMessage = tr("Failed to attach to target with PID %1.").arg(m_options.pid());
       if (!injector->errorString().isEmpty())
         errorMessage += tr("\nError: %1").arg(injector->errorString());
-      emit error(injector->exitCode(), errorMessage);
+      emit error(injector->exitCode() ? injector->exitCode() : 1, errorMessage);
     }
   }
 
@@ -308,12 +308,14 @@ void Launcher::semaphoreReleased()
 
 void Launcher::injectorFinished()
 {
-  m_state |= InjectorFinished;
+  if ((m_state & InjectorFailed) == 0)
+    m_state |= InjectorFinished;
   checkDone();
 }
 
 void Launcher::injectorError(int exitCode, const QString& errorMessage)
 {
+  m_state |= InjectorFailed;
   std::cerr << qPrintable(errorMessage) << std::endl;
   std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;
   QCoreApplication::exit(exitCode);

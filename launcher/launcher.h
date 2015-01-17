@@ -69,7 +69,8 @@ private:
   enum State {
     Initial = 0,
     InjectorFinished = 1,
-    ClientStarted = 2,
+    InjectorFailed = 2,
+    ClientStarted = 4,
     Complete = InjectorFinished | ClientStarted
   };
   int m_state;
