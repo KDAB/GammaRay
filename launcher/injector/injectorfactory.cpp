@@ -79,8 +79,10 @@ AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi)
     return createInjector(QLatin1String("preload"));
   return findFirstWorkingInjector(QStringList() << QLatin1String("gdb") << QLatin1String("lldb"));
 #elif defined(Q_OS_UNIX)
+  Q_UNUSED(abi);
   return createInjector(QLatin1String("preload"));
 #else
+  Q_UNUSED(abi);
   return createInjector(QLatin1String("windll"));
 #endif
 }
