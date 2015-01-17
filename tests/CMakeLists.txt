@@ -85,6 +85,8 @@ if(UNIX AND NOT APPLE)
   endif()
 endif()
 
+### MultiSignalMapper test
+
 add_executable(multisignalmappertest multisignalmappertest.cpp ../core/multisignalmapper.cpp)
 target_link_libraries(multisignalmappertest
   ${QT_QTCORE_LIBRARIES}
@@ -102,5 +104,15 @@ add_test(probeabitest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabitest)
 add_executable(probeabidetectortest probeabidetectortest.cpp)
 target_link_libraries(probeabidetectortest gammaray_common_internal ${QT_QTTEST_LIBRARIES})
 add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
+
+### QSignalSpyCallback tests
+
+add_executable(signalspycallbacktest
+  signalspycallbacktest.cpp
+  ../hooking/probecreator.cpp
+)
+target_link_libraries(signalspycallbacktest gammaray_core ${QT_QTTEST_LIBRARIES})
+add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
+
 
 add_subdirectory(manual)
