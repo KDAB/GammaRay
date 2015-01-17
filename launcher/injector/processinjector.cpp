@@ -25,6 +25,8 @@
 #include "processinjector.h"
 #include "interactiveprocess.h"
 
+#include <QDebug>
+
 using namespace GammaRay;
 
 ProcessInjector::ProcessInjector() :
@@ -46,33 +48,20 @@ bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QPr
 
   QStringList args = programAndArgs;
 
-  if (env.value("GAMMARAY_GDB").toInt()) {
+  if (!env.value("GAMMARAY_TARGET_WRAPPER").isEmpty()) {
+    const QString fullWrapperCmd = env.value("GAMMARAY_TARGET_WRAPPER");
+    // ### TODO properly handle quoted arguments!
+    QStringList newArgs = fullWrapperCmd.split(' ');
+    newArgs += args;
+    args = newArgs;
+    qDebug() << "Launching with target wrapper:" << args;
+  } else if (env.value("GAMMARAY_GDB").toInt()) {
     QStringList newArgs;
     newArgs << "gdb";
 #ifndef Q_OS_MAC
     newArgs << "--eval-command" << "run";
 #endif
     newArgs << "--args";
-    newArgs += args;
-    args = newArgs;
-  } else if (env.contains("GAMMARAY_GDBSERVER")) {
-    QStringList newArgs;
-    newArgs << "gdbserver"
-            << env.value("GAMMARAY_GDBSERVER");
-    newArgs += args;
-    args = newArgs;
-  } else if (env.value("GAMMARAY_MEMCHECK").toInt()) {
-    QStringList newArgs;
-    newArgs << "valgrind"
-            << "--tool=memcheck"
-            << "--track-origins=yes"
-            << "--num-callers=25"
-            << "--leak-check=full";
-    newArgs += args;
-    args = newArgs;
-  } else if (env.value("GAMMARAY_HELGRIND").toInt()) {
-    QStringList newArgs;
-    newArgs << "valgrind" << "--tool=helgrind";
     newArgs += args;
     args = newArgs;
   }
