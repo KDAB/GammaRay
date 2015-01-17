@@ -33,8 +33,9 @@ inline static bool passRolesToDataChanged()
 {
     // runtime check to ensure a KF5 built against Qt < 5.5 keeps working when Qt is updated to 5.5 and above but KF5 is not rebuild
     // TODO: remove once Qt 5.5 or above is required for frameworks
-    return QT_VERSION >= 0x050500 // no runtime check required when we built against Qt 5.5 or higher
+    static const bool passRoles = QT_VERSION >= 0x050500 // no runtime check required when we built against Qt 5.5 or higher
         || KRecursiveFilterProxyModel::staticMetaObject.indexOfMethod("_q_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)") != -1;
+    return passRoles;
 }
 
 class KRecursiveFilterProxyModelPrivate
