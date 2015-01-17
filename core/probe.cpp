@@ -98,6 +98,9 @@ static bool probeDisconnectCallback(void ** args)
 
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
+  if (Probe::instance()->filterObject(caller))
+    return;
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
 #endif
@@ -111,7 +114,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 static void signal_end_callback(QObject *caller, int method_index)
 {
   ReadOrWriteLocker locker(Probe::objectLock());
-  if (!Probe::instance()->isValidObject(caller))
+  if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
     return; // deleted in the slot
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -126,6 +129,9 @@ static void signal_end_callback(QObject *caller, int method_index)
 
 static void slot_begin_callback(QObject *caller, int method_index, void **argv)
 {
+  if (Probe::instance()->filterObject(caller))
+    return;
+
   Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
     if (qt_signal_spy_callback_set.slot_begin_callback) {
       qt_signal_spy_callback_set.slot_begin_callback(caller, method_index, argv);
@@ -136,7 +142,7 @@ static void slot_begin_callback(QObject *caller, int method_index, void **argv)
 static void slot_end_callback(QObject *caller, int method_index)
 {
   ReadOrWriteLocker locker(Probe::objectLock());
-  if (!Probe::instance()->isValidObject(caller))
+  if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
     return; // deleted in the slot
 
   Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
