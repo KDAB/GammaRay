@@ -148,20 +148,11 @@ QMap<int, QVariant> ToolModel::itemData(const QModelIndex& index) const
 
 void ToolModel::objectAdded(QObject *obj)
 {
-  // delay to main thread if required
-  static const QMetaMethod m = metaObject()->method(metaObject()->indexOfMethod("objectAddedMainThread(QObject*)"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  Q_ASSERT(m.isValid());
-#endif
-  m.invoke(this, Qt::AutoConnection, Q_ARG(QObject*, obj));
-}
-
-void ToolModel::objectAddedMainThread(QObject *obj)
-{
-  ReadOrWriteLocker lock(Probe::instance()->objectLock());
+  Q_ASSERT(QThread::currentThread() == thread());
+  Q_ASSERT(Probe::instance()->isValidObject(obj));
 
   // m_knownMetaObjects allows us to skip the expensive recursive search for matching tools
-  if (Probe::instance()->isValidObject(obj) && !m_knownMetaObjects.contains(obj->metaObject())) {
+  if (!m_knownMetaObjects.contains(obj->metaObject())) {
     objectAdded(obj->metaObject());
     m_knownMetaObjects.insert(obj->metaObject());
   }

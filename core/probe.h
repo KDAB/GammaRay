@@ -138,6 +138,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
      *   tracking for objects from other threads. Use objectDestroyed() instead.
      * - Do not put @p obj into a QWeakPointer, even if it's exclusively handled in the same thread as
      *   the Probe instance. Qt4 asserts if target code tries to put @p obj into a QSharedPointer afterwards.
+     * - The objectLock() is locked.
      */
     void objectCreated(QObject *obj);
 

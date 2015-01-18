@@ -67,7 +67,6 @@ class ToolModel : public QAbstractListModel
   public slots:
     /** Check if we have to activate tools for this type */
     void objectAdded(QObject *obj);
-    void objectAddedMainThread(QObject *obj);
 
   private:
     /**
