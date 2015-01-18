@@ -112,10 +112,7 @@ void DebuggerInjector::waitForMain()
 #else
   loadSymbols("Qt5Core");
 #endif
-  // either this
   addMethodBreakpoint("QCoreApplication::exec");
-  // or this for unit tests should hit
-  addMethodBreakpoint("QTest::qExec");
   execCmd("continue");
 }
 
