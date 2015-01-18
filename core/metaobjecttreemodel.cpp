@@ -181,17 +181,14 @@ void MetaObjectTreeModel::scanMetaTypes()
 
 void MetaObjectTreeModel::addMetaObject(const QMetaObject *metaObject)
 {
-  if (indexForMetaObject(metaObject).isValid()) {
+  if (isKnownMetaObject(metaObject)) {
     return;
   }
 
   const QMetaObject *parentMetaObject = metaObject->superClass();
-  if (parentMetaObject) {
-    const QModelIndex parentIndex = indexForMetaObject(parentMetaObject);
-    if (!parentIndex.isValid()) {
+  if (parentMetaObject && !isKnownMetaObject(parentMetaObject)) {
       // add parent first
       addMetaObject(metaObject->superClass());
-    }
   }
 
   const QModelIndex parentIndex = indexForMetaObject(parentMetaObject);
@@ -217,6 +214,11 @@ void MetaObjectTreeModel::objectRemoved(QObject *obj)
 {
   Q_UNUSED(obj);
   // TODO
+}
+
+bool MetaObjectTreeModel::isKnownMetaObject(const QMetaObject* metaObject) const
+{
+  return m_childParentMap.contains(metaObject);
 }
 
 QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject *metaObject) const

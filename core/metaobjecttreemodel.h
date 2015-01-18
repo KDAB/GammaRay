@@ -70,6 +70,7 @@ class MetaObjectTreeModel : public QAbstractItemModel
     void addMetaObject(const QMetaObject *metaObject);
     void removeMetaObject(const QMetaObject *metaObject);
 
+    bool isKnownMetaObject(const QMetaObject *metaObject) const;
     QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
     const QMetaObject *metaObjectForIndex(const QModelIndex &index) const;
 
