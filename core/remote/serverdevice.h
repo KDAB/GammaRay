@@ -66,7 +66,7 @@ template <typename ServerT>
 class ServerDeviceImpl : public ServerDevice
 {
 public:
-    explicit inline ServerDeviceImpl(QObject *parent = 0) : ServerDevice(parent)
+    explicit inline ServerDeviceImpl(QObject *parent = 0) : ServerDevice(parent), m_server(0)
     {
     }
 
