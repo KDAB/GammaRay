@@ -150,13 +150,10 @@ QModelIndex MetaObjectTreeModel::index(int row, int column, const QModelIndex &p
 
 void MetaObjectTreeModel::objectAdded(QObject *obj)
 {
-  // slot, hence should always land in main thread due to auto connection
+  // Probe::objectFullyConstructed calls us and ensures this already
   Q_ASSERT(thread() == QThread::currentThread());
+  Q_ASSERT(Probe::instance()->isValidObject(obj));
 
-  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
-  if (!Probe::instance()->isValidObject(obj)) {
-    return;
-  }
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
   if (hasDynamicMetaObject(obj)) {
