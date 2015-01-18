@@ -454,9 +454,14 @@ bool Probe::filterObject(QObject *obj) const
     // shortcut, never filter objects from a different thread
     return false;
   }
-  return obj == this || obj == window() ||
-          Util::descendantOf(this, obj) ||
-          Util::descendantOf(window(), obj);
+
+  QObject *o = obj;
+  do {
+    if (o == this || o == window())
+      return true;
+    o = o->parent();
+  } while (o);
+  return false;
 }
 
 void Probe::registerModel(const QString &objectName, QAbstractItemModel *model)
