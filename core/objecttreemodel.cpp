@@ -57,14 +57,10 @@ static inline QObject *parentObject(QObject *obj)
 
 void ObjectTreeModel::objectAdded(QObject *obj)
 {
-  // slot, hence should always land in main thread due to auto connection
+  // see Probe::objectCreated, that promises a valid object in the main thread here
   Q_ASSERT(thread() == QThread::currentThread());
+  Q_ASSERT(Probe::instance()->isValidObject(obj));
 
-  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
-  if (!Probe::instance()->isValidObject(obj)) {
-    IF_DEBUG(cout << "tree invalid obj added: " << hex << obj << endl;)
-    return;
-  }
   IF_DEBUG(cout << "tree obj added: " << hex << obj << " p: " << parentObject(obj) << endl;)
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(parentObject(obj)));
 

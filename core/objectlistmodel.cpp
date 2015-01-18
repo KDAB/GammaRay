@@ -74,12 +74,10 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
 
 void ObjectListModel::objectAdded(QObject *obj)
 {
+  // see Probe::objectCreated, that promises a valid object in the main thread
   Q_ASSERT(QThread::currentThread() == thread());
   Q_ASSERT(obj);
-
-  ReadOrWriteLocker lock(Probe::instance()->objectLock());
-  if (!Probe::instance()->isValidObject(obj))
-    return;
+  Q_ASSERT(Probe::instance()->isValidObject(obj));
 
   QVector<QObject*>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
   Q_ASSERT(it == m_objects.end() || *it != obj);
