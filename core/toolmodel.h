@@ -82,6 +82,7 @@ class ToolModel : public QAbstractListModel
   private:
     QVector<ToolFactory*> m_tools;
     QSet<ToolFactory*> m_inactiveTools;
+    QSet<const QMetaObject*> m_knownMetaObjects;
     QPointer<QWidget> m_parentWidget;
     QScopedPointer<ToolPluginManager> m_pluginManager;
 };

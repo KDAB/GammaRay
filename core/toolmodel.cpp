@@ -160,8 +160,10 @@ void ToolModel::objectAddedMainThread(QObject *obj)
 {
   ReadOrWriteLocker lock(Probe::instance()->objectLock());
 
-  if (Probe::instance()->isValidObject(obj)) {
+  // m_knownMetaObjects allows us to skip the expensive recursive search for matching tools
+  if (Probe::instance()->isValidObject(obj) && !m_knownMetaObjects.contains(obj->metaObject())) {
     objectAdded(obj->metaObject());
+    m_knownMetaObjects.insert(obj->metaObject());
   }
 }
 
