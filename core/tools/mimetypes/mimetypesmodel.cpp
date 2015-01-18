@@ -29,9 +29,9 @@
 using namespace GammaRay;
 
 MimeTypesModel::MimeTypesModel(QObject* parent):
-  QStandardItemModel(parent)
+  QStandardItemModel(parent),
+  m_modelFilled(false)
 {
-  fillModel();
 }
 
 MimeTypesModel::~MimeTypesModel()
@@ -72,6 +72,12 @@ QVariant MimeTypesModel::data(const QModelIndex& index, int role) const
 Qt::ItemFlags MimeTypesModel::flags(const QModelIndex& index) const
 {
   return QStandardItemModel::flags(index) & ~Qt::ItemIsEditable;
+}
+
+int MimeTypesModel::rowCount(const QModelIndex& parent) const
+{
+  const_cast<MimeTypesModel*>(this)->fillModel();
+  return QStandardItemModel::rowCount(parent);
 }
 
 QVector<QStandardItem*> MimeTypesModel::itemsForType(const QString &mimeTypeName)
@@ -154,7 +160,10 @@ QList<QStandardItem*> MimeTypesModel::makeRowForType(const QMimeType &mt)
 
 void MimeTypesModel::fillModel()
 {
-  clear();
+  if (m_modelFilled)
+    return;
+  m_modelFilled = true;
+
   setHorizontalHeaderLabels(QStringList() << tr("Name")
                                           << tr("Comment")
                                           << tr("Glob Patterns")

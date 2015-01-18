@@ -43,8 +43,9 @@ class MimeTypesModel : public QStandardItemModel
     explicit MimeTypesModel(QObject *parent = 0);
     ~MimeTypesModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
   private:
     void fillModel();
@@ -55,6 +56,7 @@ class MimeTypesModel : public QStandardItemModel
 
     QHash<QString, QVector<QStandardItem*> > m_mimeTypeNodes;
     QMimeDatabase m_db;
+    bool m_modelFilled;
 };
 
 }
