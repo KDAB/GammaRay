@@ -146,7 +146,7 @@ int ObjectStaticPropertyModel::columnCount(const QModelIndex& parent) const
   if (parent.isValid()) {
     return 0;
   }
-  return m_obj ? 4 : 3;
+  return isObjectMode() ? 4 : 3;
 }
 
 Qt::ItemFlags ObjectStaticPropertyModel::flags(const QModelIndex &index) const
@@ -236,6 +236,11 @@ QString ObjectStaticPropertyModel::detailString(const QMetaProperty& prop) const
   return s.join("\n");
 }
 
+bool ObjectStaticPropertyModel::isObjectMode() const
+{
+  return m_obj || !m_metaObject;
+}
+
 int ObjectStaticPropertyModel::propertyColumnIndex() const
 {
   return 0;
@@ -243,15 +248,15 @@ int ObjectStaticPropertyModel::propertyColumnIndex() const
 
 int ObjectStaticPropertyModel::valueColumnIndex() const
 {
-  return m_obj ? 1: -1;
+  return isObjectMode() ? 1: -1;
 }
 
 int ObjectStaticPropertyModel::typeColumnIndex() const
 {
-  return m_obj ? 2 : 1;
+  return isObjectMode() ? 2 : 1;
 }
 
 int ObjectStaticPropertyModel::classColumnIndex() const
 {
-  return m_obj ? 3 : 2;
+  return isObjectMode() ? 3 : 2;
 }

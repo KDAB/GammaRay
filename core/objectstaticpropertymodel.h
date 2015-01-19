@@ -52,6 +52,8 @@ class ObjectStaticPropertyModel : public ObjectPropertyModel
   private:
     QString detailString(const QMetaProperty& prop) const;
 
+    /// object mode: show all 4 columns, meta object mode: hide the value column
+    bool isObjectMode() const;
     int propertyColumnIndex() const;
     int valueColumnIndex() const;
     int typeColumnIndex() const;
