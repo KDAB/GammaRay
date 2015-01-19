@@ -38,7 +38,7 @@ if(QNXNTO)
   target_link_libraries(attachhelper cpp)
 endif()
 
-if(UNIX AND NOT APPLE)
+if(UNIX)
   add_test(connectiontest-preload
     ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -i preload
     ${PROJECT_BINARY_DIR}/bin/connectiontest
