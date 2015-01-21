@@ -38,9 +38,10 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
 {
   ObjectBroker::registerObject("com.kdab.GammaRay.ActionInspector", this);
 
-  ActionModel *actionFilterProxy = new ActionModel(this);
-  actionFilterProxy->setSourceModel(probe->objectListModel());
-  probe->registerModel("com.kdab.GammaRay.ActionModel", actionFilterProxy);
+  ActionModel *actionModel = new ActionModel(this);
+  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), actionModel, SLOT(objectAdded(QObject*)));
+  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), actionModel, SLOT(objectRemoved(QObject*)));
+  probe->registerModel("com.kdab.GammaRay.ActionModel", actionModel);
 }
 
 ActionInspector::~ActionInspector()

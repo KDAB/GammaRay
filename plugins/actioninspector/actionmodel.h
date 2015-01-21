@@ -24,7 +24,8 @@
 #ifndef GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
 #define GAMMARAY_ACTIONINSPECTOR_ACTIONMODEL_H
 
-#include <core/objecttypefilterproxymodel.h>
+#include <QAbstractTableModel>
+#include <QVector>
 
 class QAction;
 
@@ -32,13 +33,7 @@ namespace GammaRay {
 
 class ActionValidator;
 
-/**
- * This QSFPM additionally overwrites index(...) and flags(...)
- * to support additional columns
- *
- * @see http://www.koders.com/cpp/fid78857CC6C2407C42429B1F9AC7F65F292F59CA9E.aspx?s=search
- */
-class ActionModel : public ObjectFilterProxyModelBase
+class ActionModel : public QAbstractTableModel
 {
   Q_OBJECT
 
@@ -55,34 +50,20 @@ class ActionModel : public ObjectFilterProxyModelBase
     };
 
     explicit ActionModel(QObject *parent = 0);
+    ~ActionModel();
 
-    virtual ~ActionModel();
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-
-    virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
-
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-  protected:
-    virtual bool filterAcceptsObject(QObject *object) const;
-
-  private Q_SLOTS:
-    void handleRowsInserted(const QModelIndex &, int, int);
-    void handleRowsRemoved(const QModelIndex &, int, int);
-    void handleModelReset();
+  public slots:
+    void objectAdded(QObject *object);
+    void objectRemoved(QObject *object);
 
   private:
-    int sourceColumnCount(const QModelIndex &parent) const;
-
-    QAction *actionForIndex(const QModelIndex &index) const;
-    QList<QAction*> actions() const;
-    QList<QAction*> actions(const QModelIndex &parent, int start, int end);
+    // sorted vector of QActions
+    QVector<QAction*> m_actions;
 
     ActionValidator *m_duplicateFinder;
 };

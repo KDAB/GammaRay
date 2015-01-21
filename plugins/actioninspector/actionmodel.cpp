@@ -24,10 +24,15 @@
 #include "actionmodel.h"
 #include "actionvalidator.h"
 
+#include <core/probe.h>
+#include <core/readorwritelocker.h>
+#include <core/util.h>
 #include <core/varianthandler.h>
+#include <common/objectmodel.h>
 
 #include <QAction>
 #include <QDebug>
+#include <QThread>
 
 Q_DECLARE_METATYPE(QAction::Priority)
 
@@ -44,81 +49,68 @@ static QString toString(QList<T> list)
 }
 
 ActionModel::ActionModel(QObject *parent)
-  : ObjectFilterProxyModelBase(parent),
+  : QAbstractTableModel(parent),
   m_duplicateFinder(new ActionValidator(this))
 {
-  connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
-    SLOT(handleRowsInserted(QModelIndex,int,int)));
-
-  connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-    SLOT(handleRowsRemoved(QModelIndex,int,int)));
-
-  connect(this, SIGNAL(modelReset()), SLOT(handleModelReset()));
-
-  m_duplicateFinder->setActions(actions());
 }
 
 ActionModel::~ActionModel()
 {
 }
 
-QAction *ActionModel::actionForIndex(const QModelIndex &index) const
+void ActionModel::objectAdded(QObject* object)
 {
-  QObject *object = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  Q_ASSERT(object);
-  QAction *action = qobject_cast<QAction*>(object);
-  return action;
-}
+    // see Probe::objectCreated, that promises a valid object in the main thread
+    Q_ASSERT(QThread::currentThread() == thread());
+    Q_ASSERT(object);
 
-QList<QAction *> ActionModel::actions(const QModelIndex &parent, int start, int end)
-{
-  QList<QAction *> actions;
-  for (int i = start; i <= end; ++i) {
-    const QModelIndex modelIndex = index(i, 0, parent);
-    actions << actionForIndex(modelIndex);
-  }
-  return actions;
-}
+    QAction* const action = qobject_cast<QAction*>(object);
+    if (!action)
+        return;
 
-void ActionModel::handleModelReset()
-{
-  m_duplicateFinder->setActions(actions());
-}
+    QVector<QAction*>::iterator it = std::lower_bound(m_actions.begin(), m_actions.end(), action);
+    Q_ASSERT(it == m_actions.end() || *it != action);
 
-void ActionModel::handleRowsInserted(const QModelIndex &parent, int start, int end)
-{
-  Q_FOREACH (QAction *action, actions(parent, start, end)) {
+    const int row = std::distance(m_actions.begin(), it);
+    Q_ASSERT(row >= 0 && row <= m_actions.size());
+
+    beginInsertRows(QModelIndex(), row, row);
+    m_actions.insert(it, action);
+    Q_ASSERT(m_actions.at(row) == action);
     m_duplicateFinder->insert(action);
-  }
+    endInsertRows();
 }
 
-void ActionModel::handleRowsRemoved(const QModelIndex &parent, int start, int end)
+void ActionModel::objectRemoved(QObject* object)
 {
-  Q_FOREACH (QAction *action, actions(parent, start, end)) {
+    Q_ASSERT(thread() == QThread::currentThread());
+    QAction* const action = reinterpret_cast<QAction*>(object); // never dereference this, just use for comparison
+
+    QVector<QAction*>::iterator it = std::lower_bound(m_actions.begin(), m_actions.end(), reinterpret_cast<QAction*>(object));
+    if (it == m_actions.end() || *it != action)
+        return;
+
+    const int row = std::distance(m_actions.begin(), it);
+    Q_ASSERT(row >= 0 && row < m_actions.size());
+    Q_ASSERT(m_actions.at(row) == action);
+
+    beginRemoveRows(QModelIndex(), row, row);
+    m_actions.erase(it);
     m_duplicateFinder->remove(action);
-  }
-}
-
-QList<QAction*> ActionModel::actions() const
-{
-  QList<QAction*> actions;
-  for (int i = 0; i < rowCount(); ++i) {
-    const QModelIndex &modelIndex = index(i, 0);
-    QAction *action = actionForIndex(modelIndex);
-    actions << action;
-  }
-  return actions;
-}
-
-int ActionModel::sourceColumnCount(const QModelIndex &parent) const
-{
-  return sourceModel()->columnCount(mapToSource(parent));
+    endRemoveRows();
 }
 
 int ActionModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
   return ColumnCount;
+}
+
+int ActionModel::rowCount(const QModelIndex& parent) const
+{
+    if (parent.isValid())
+        return 0;
+    return m_actions.size();
 }
 
 QVariant ActionModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -144,18 +136,20 @@ QVariant ActionModel::headerData(int section, Qt::Orientation orientation, int r
     }
   }
 
-  return ObjectFilterProxyModelBase::headerData(section, orientation, role);
+  return QAbstractTableModel::headerData(section, orientation, role);
 }
 
-QVariant ActionModel::data(const QModelIndex &proxyIndex, int role) const
+QVariant ActionModel::data(const QModelIndex &index, int role) const
 {
-  const QModelIndex sourceIndex = mapToSource(proxyIndex.sibling(proxyIndex.row(), 0));
-  QAction *action = actionForIndex(sourceIndex);
-  if (!action) {
+  if (!index.isValid())
     return QVariant();
-  }
 
-  const int column = proxyIndex.column();
+  ReadOrWriteLocker lock(Probe::instance()->objectLock());
+  QAction *action = m_actions.at(index.row());
+  if (!Probe::instance()->isValidObject(action))
+    return QVariant();
+
+  const int column = index.column();
   if (role == Qt::DisplayRole) {
     switch (column) {
     case AddressColumn:
@@ -188,39 +182,9 @@ QVariant ActionModel::data(const QModelIndex &proxyIndex, int role) const
     if (column == ShortcutsPropColumn && m_duplicateFinder->hasAmbiguousShortcut(action)) {
       return tr("Warning: Ambiguous shortcut detected.");
     }
+  } else if (role == ObjectModel::ObjectRole) {
+    return QVariant::fromValue<QObject*>(action);
   }
 
-  return ObjectFilterProxyModelBase::data(proxyIndex, role);
-}
-
-Qt::ItemFlags ActionModel::flags(const QModelIndex &index) const
-{
-  if (index.column() >= sourceColumnCount(index.parent())) {
-    return
-      QSortFilterProxyModel::flags(index.sibling(index.row(), 0)) &
-      (Qt::ItemIsSelectable | Qt::ItemIsDragEnabled |
-       Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
-  }
-
-  return QSortFilterProxyModel::flags(index);
-}
-
-QModelIndex ActionModel::index(int row, int column, const QModelIndex &parent) const
-{
-  if (!hasIndex(row, column, parent)) {
-    return QModelIndex();
-  }
-
-  int sourceColumn = column;
-  if (column >= sourceColumnCount(parent)) {
-    sourceColumn = 0;
-  }
-
-  QModelIndex i = QSortFilterProxyModel::index(row, sourceColumn, parent);
-  return createIndex(i.row(), column, i.internalPointer());
-}
-
-bool ActionModel::filterAcceptsObject(QObject *object) const
-{
-  return qobject_cast<QAction*>(object);
+  return QVariant();
 }
