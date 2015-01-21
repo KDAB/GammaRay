@@ -68,6 +68,25 @@ private slots:
         delete a2;
         QTest::qWait(1); // event loop re-entry
     }
+
+    void testConflictDetection()
+    {
+      createProbe();
+
+      QAction *a1 = new QAction("Action 1", this);
+      a1->setShortcut(QKeySequence("Ctrl+K"));
+      QAction *a2 = new QAction("Action 2", this);
+      a2->setShortcut(QKeySequence("Ctrl+K"));
+      QTest::qWait(1); // event loop re-entry
+
+      auto *model = ObjectBroker::model("com.kdab.GammaRay.ActionModel");
+      QVERIFY(model);
+      QCOMPARE(model->rowCount(), 2);
+
+      const auto index = model->index(0, 5);
+      QCOMPARE(index.data(Qt::DisplayRole).toString(), QString("Ctrl+K"));
+    }
+
 };
 
 QTEST_MAIN(ActionTest)
