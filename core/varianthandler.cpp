@@ -510,3 +510,15 @@ void VariantHandler::registerGenericStringConverter(
 {
   s_variantHandlerRepository()->genericStringConverters.push_back(converter);
 }
+
+QVariant VariantHandler::serializableVariant(const QVariant& value)
+{
+  if (value.userType() == qMetaTypeId<const QMatrix4x4*>()) {
+    const QMatrix4x4 *m = value.value<const QMatrix4x4*>();
+    if (!m)
+      return QVariant();
+    return QVariant::fromValue(QMatrix4x4(*m));
+  }
+
+  return value;
+}

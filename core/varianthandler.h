@@ -108,6 +108,14 @@ namespace VariantHandler
    * indicate if the value could be handled.
    */
   GAMMARAY_CORE_EXPORT void registerGenericStringConverter(GenericStringConverter converter);
+
+  /**
+   * Converts the given variant into an variant of a different type that can be transferred
+   * to another process.
+   * This is most prominently needed for pointer types, e.g. const QMatrix4x4* -> QMatrix4x4,
+   * primarily for the fancy display delegate on the client side.
+   */
+  GAMMARAY_CORE_EXPORT QVariant serializableVariant(const QVariant &value);
 }
 
 }
