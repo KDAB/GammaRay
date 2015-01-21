@@ -133,7 +133,7 @@ add_executable(actiontest
 )
 target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 
-if(Qt5Core_FOUND AND NOT QT_MINOR_VERSION LESS 4) # requires QHooks
+if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   add_test(NAME actiontest COMMAND actiontest)
 endif()
 
