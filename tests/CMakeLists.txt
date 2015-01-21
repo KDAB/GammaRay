@@ -124,5 +124,17 @@ add_executable(signalspycallbacktest
 target_link_libraries(signalspycallbacktest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
 
+### QAction test
+
+add_executable(actiontest
+  actiontest.cpp
+  ../hooking/probecreator.cpp
+  ../hooking/hooks.cpp
+)
+target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+
+if(Qt5Core_FOUND AND NOT QT_MINOR_VERSION LESS 4) # requires QHooks
+  add_test(NAME actiontest COMMAND actiontest)
+endif()
 
 add_subdirectory(manual)
