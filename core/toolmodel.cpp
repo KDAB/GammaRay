@@ -26,7 +26,6 @@
 #include "toolfactory.h"
 #include "proxytoolfactory.h"
 #include "probe.h"
-#include "readorwritelocker.h"
 #include "probesettings.h"
 
 #include "tools/connectioninspector/connectioninspector.h"

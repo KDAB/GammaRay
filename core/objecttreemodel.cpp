@@ -23,10 +23,10 @@
 
 #include "objecttreemodel.h"
 
-#include "readorwritelocker.h"
 #include "probe.h"
 
 #include <QEvent>
+#include <QMutex>
 #include <QThread>
 
 #include <algorithm>
@@ -144,7 +144,7 @@ void ObjectTreeModel::objectReparented(QObject *obj)
   // slot, hence should always land in main thread due to auto connection
   Q_ASSERT(thread() == QThread::currentThread());
 
-  ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
+  QMutexLocker objectLock(Probe::objectLock());
   if (Probe::instance()->isValidObject(obj)) {
     objectAdded(obj);
   }
@@ -160,7 +160,7 @@ QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 
   QObject *obj = reinterpret_cast<QObject*>(index.internalPointer());
 
-  ReadOrWriteLocker lock(Probe::instance()->objectLock());
+  QMutexLocker lock(Probe::objectLock());
   if (Probe::instance()->isValidObject(obj)) {
     return dataForObject(obj, index, role);
   } else if (role == Qt::DisplayRole) {

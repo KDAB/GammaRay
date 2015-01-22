@@ -23,7 +23,6 @@
 
 #include "connectionmodel.h"
 #include "probe.h"
-#include "readorwritelocker.h"
 
 #include <common/metatypedeclarations.h>
 #include "util.h"
@@ -32,6 +31,7 @@
 #include <QDebug>
 #include <QMetaMethod>
 #include <QMetaObject>
+#include <QMutex>
 #include <QThread>
 
 using namespace GammaRay;
@@ -117,7 +117,7 @@ void ConnectionModel::connectionAddedMainThread(const Connection& connection)
   Q_ASSERT(thread() == QThread::currentThread());
 
   {
-    ReadOrWriteLocker objectLock(Probe::instance()->objectLock());
+    QMutexLocker objectLock(Probe::objectLock());
     if (!Probe::instance()->isValidObject(connection.sender) ||
         !Probe::instance()->isValidObject(connection.receiver)) {
       return;
@@ -199,7 +199,7 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
 
   Connection con = m_connections.at(index.row());
 
-  ReadOrWriteLocker probeLock(Probe::instance()->objectLock());
+  QMutexLocker probeLock(Probe::objectLock());
   if (!Probe::instance()->isValidObject(con.sender)) {
     con.sender = 0;
   }

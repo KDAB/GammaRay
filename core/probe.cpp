@@ -29,7 +29,6 @@
 #include "metaobjecttreemodel.h"
 #include "connectionmodel.h"
 #include "toolmodel.h"
-#include "readorwritelocker.h"
 #include "probesettings.h"
 #include "probecontroller.h"
 #include "toolpluginmodel.h"
@@ -118,7 +117,7 @@ static void signal_end_callback(QObject *caller, int method_index)
   if (method_index == 0)
     return;
 
-  ReadOrWriteLocker locker(Probe::objectLock());
+  QMutexLocker locker(Probe::objectLock());
   if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
     return; // deleted in the slot
 
@@ -149,7 +148,7 @@ static void slot_end_callback(QObject *caller, int method_index)
   if (method_index == 0)
     return;
 
-  ReadOrWriteLocker locker(Probe::objectLock());
+  QMutexLocker locker(Probe::objectLock());
   if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
     return; // deleted in the slot
 
@@ -202,15 +201,7 @@ Q_GLOBAL_STATIC(Listener, s_listener)
 
 // ensures proper information is returned by isValidObject by
 // locking it in objectAdded/Removed
-class ObjectLock : public QReadWriteLock
-{
-  public:
-    ObjectLock()
-      : QReadWriteLock(QReadWriteLock::Recursive)
-    {
-    }
-};
-Q_GLOBAL_STATIC(ObjectLock, s_lock)
+Q_GLOBAL_STATIC_WITH_ARGS(QMutex, s_lock, (QMutex::Recursive))
 
 Probe::Probe(QObject *parent):
   QObject(parent),
@@ -359,7 +350,7 @@ void Probe::createProbe(bool findExisting)
 
   // now we can get the lock and add items which where added before this point in time
   {
-    QWriteLocker lock(s_lock());
+    QMutexLocker lock(s_lock());
     // now we set the instance while holding the lock,
     // all future calls to object{Added,Removed} will
     // act directly on the data structures there instead
@@ -507,14 +498,14 @@ bool Probe::isValidObject(QObject *obj) const
   return m_validObjects.contains(obj);
 }
 
-QReadWriteLock *Probe::objectLock()
+QMutex *Probe::objectLock()
 {
   return s_lock();
 }
 
 void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
-  QWriteLocker lock(s_lock());
+  QMutexLocker lock(s_lock());
 
   // attempt to ignore objects created by GammaRay itself, especially short-lived ones
   if (fromCtor && ProbeGuard::insideProbe() && obj->thread() == QThread::currentThread()) {
@@ -590,7 +581,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
 void Probe::queuedObjectsFullyConstructed()
 {
-  QWriteLocker lock(s_lock());
+  QMutexLocker lock(s_lock());
 
   IF_DEBUG(cout << Q_FUNC_INFO << " " << m_queuedObjects.size() << endl;)
 
@@ -612,9 +603,6 @@ void Probe::queuedObjectsFullyConstructed()
 
 void Probe::objectFullyConstructed(QObject *obj)
 {
-  // must be write locked
-  Q_ASSERT(!s_lock()->tryLockForRead());
-
   if (!m_validObjects.contains(obj)) {
     // deleted already
     IF_DEBUG(cout << "stale fully constructed: " << hex << obj << endl;)
@@ -657,7 +645,7 @@ void Probe::objectFullyConstructed(QObject *obj)
 
 void Probe::objectRemoved(QObject *obj)
 {
-  QWriteLocker lock(s_lock());
+  QMutexLocker lock(s_lock());
 
   if (!isInitialized()) {
     IF_DEBUG(cout
@@ -716,7 +704,7 @@ void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiv
     return;
   }
 
-  ReadOrWriteLocker lock(s_lock());
+  QMutexLocker lock(s_lock());
   if (instance()->filterObject(sender) || instance()->filterObject(receiver)) {
     return;
   }
@@ -732,7 +720,7 @@ void Probe::connectionRemoved(QObject *sender, const char *signal,
     return;
   }
 
-  ReadOrWriteLocker lock(s_lock());
+  QMutexLocker lock(s_lock());
   if ((sender && instance()->filterObject(sender)) ||
       (receiver && instance()->filterObject(receiver))) {
     return;
@@ -751,7 +739,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     QChildEvent *childEvent = static_cast<QChildEvent*>(event);
     QObject *obj = childEvent->child();
 
-    QWriteLocker lock(s_lock());
+    QMutexLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(obj);
     const bool filtered = filterObject(obj);
 
@@ -783,7 +771,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
       event->type() != QEvent::Destroy &&
       event->type() != QEvent::WinIdChange && // unsafe since emitted from dtors
       !filterObject(receiver)) {
-    QWriteLocker lock(s_lock());
+    QMutexLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(receiver);
     if (!tracked) {
       discoverObject(receiver);
@@ -811,7 +799,7 @@ void Probe::discoverObject(QObject *obj)
     return;
   }
 
-  QWriteLocker lock(s_lock());
+  QMutexLocker lock(s_lock());
   if (m_validObjects.contains(obj)) {
     return;
   }

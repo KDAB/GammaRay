@@ -28,9 +28,9 @@
 #include <core/probeinterface.h>
 #include <core/util.h>
 #include <core/probe.h>
-#include <core/readorwritelocker.h>
 
 #include <QLocale>
+#include <QMutex>
 #include <QSet>
 #include <QThread>
 
@@ -222,7 +222,7 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
   // ensure the item is known
   if (signalIndex > 0 && !data->signalNames.contains(signalIndex)) {
     // protect dereferencing of sender here
-    ReadOrWriteLocker lock(Probe::instance()->objectLock());
+    QMutexLocker lock(Probe::objectLock());
     if (!Probe::instance()->isValidObject(sender))
       return;
     const QByteArray signalName = sender->metaObject()->method(signalIndex - 1)

@@ -29,7 +29,6 @@
 
 #include <QObject>
 #include <QQueue>
-#include <QReadWriteLock>
 #include <QSet>
 #include <QVector>
 
@@ -39,6 +38,7 @@ class QItemSelectionModel;
 class QThread;
 class QPoint;
 class QTimer;
+class QMutex;
 
 namespace GammaRay {
 
@@ -97,7 +97,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
      * Lock this to check the validity of a QObject
      * and to access it safely afterwards.
      */
-    static QReadWriteLock *objectLock();
+    static QMutex *objectLock();
 
     /**
      * check whether @p obj is still valid

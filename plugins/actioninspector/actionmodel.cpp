@@ -25,13 +25,13 @@
 #include "actionvalidator.h"
 
 #include <core/probe.h>
-#include <core/readorwritelocker.h>
 #include <core/util.h>
 #include <core/varianthandler.h>
 #include <common/objectmodel.h>
 
 #include <QAction>
 #include <QDebug>
+#include <QMutex>
 #include <QThread>
 
 Q_DECLARE_METATYPE(QAction::Priority)
@@ -144,7 +144,7 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
   if (!index.isValid())
     return QVariant();
 
-  ReadOrWriteLocker lock(Probe::instance()->objectLock());
+  QMutexLocker lock(Probe::objectLock());
   QAction *action = m_actions.at(index.row());
   if (!Probe::instance()->isValidObject(action))
     return QVariant();

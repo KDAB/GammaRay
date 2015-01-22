@@ -24,7 +24,6 @@
 #include "objectlistmodel.h"
 
 #include "probe.h"
-#include "readorwritelocker.h"
 
 #include <QThread>
 
@@ -45,7 +44,7 @@ ObjectListModel::ObjectListModel(Probe *probe)
 
 QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
-  ReadOrWriteLocker lock(Probe::instance()->objectLock());
+  QMutexLocker lock(Probe::objectLock());
   if (index.row() >= 0 && index.row() < m_objects.size()) {
     QObject *obj = m_objects.at(index.row());
     if (Probe::instance()->isValidObject(obj)) {

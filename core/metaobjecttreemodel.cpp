@@ -24,7 +24,6 @@
 #include "metaobjecttreemodel.h"
 
 #include "probe.h"
-#include "readorwritelocker.h"
 
 #include <QDebug>
 #include <QThread>
