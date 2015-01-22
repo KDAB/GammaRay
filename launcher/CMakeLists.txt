@@ -9,11 +9,9 @@ set(gammaray_launcher_shared_srcs
   injector/abstractinjector.cpp
   injector/processinjector.cpp
   injector/injectorfactory.cpp
-  injector/preloadinjector.cpp
   injector/styleinjector.cpp
   injector/windllinjector.cpp
   injector/interactiveprocess.cpp
-  injector/preloadcheck.cpp
 
   probefinder.cpp
   launchoptions.cpp
@@ -25,6 +23,8 @@ if(NOT WIN32)
     injector/debuggerinjector.cpp
     injector/gdbinjector.cpp
     injector/lldbinjector.cpp
+    injector/preloadcheck.cpp
+    injector/preloadinjector.cpp
   )
 endif()
 add_library(gammaray_launcher_shared STATIC ${gammaray_launcher_shared_srcs})
