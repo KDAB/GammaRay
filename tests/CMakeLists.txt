@@ -40,12 +40,12 @@ endif()
 
 if(UNIX)
   add_test(connectiontest-preload
-    ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -i preload
-    ${PROJECT_BINARY_DIR}/bin/connectiontest
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i preload
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
   add_test(connectiontest-style
-    ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -i style
-    ${PROJECT_BINARY_DIR}/bin/connectiontest
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i style
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
 
   set(RUN_FILTER_TESTS OFF
@@ -53,33 +53,33 @@ if(UNIX)
   )
   if(RUN_FILTER_TESTS)
     add_test(connectiontest-preload-filter
-      ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -filtertest -i preload
-      ${PROJECT_BINARY_DIR}/bin/connectiontest
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i preload
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
     )
     add_test(connectiontest-preload-filter-modeltest
-      ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -modeltest -filtertest -i preload
-      ${PROJECT_BINARY_DIR}/bin/connectiontest
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -modeltest -filtertest -i preload
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
     )
     add_test(connectiontest-style-filter
-      ${PROJECT_BINARY_DIR}/bin/gammaray -unittest -filtertest -i style
-      ${PROJECT_BINARY_DIR}/bin/connectiontest
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i style
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
     )
   endif()
 
   find_program(GDB_EXECUTABLE gdb)
   if(GDB_EXECUTABLE)
     add_test(connectiontest-gdb
-      ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -i gdb
-      ${PROJECT_BINARY_DIR}/bin/connectiontest
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i gdb
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
     )
     add_test(attachtest-gdb
-      ${PROJECT_BINARY_DIR}/bin/attachhelper ${PROJECT_BINARY_DIR}/bin/gammaray gdb
-      ${PROJECT_BINARY_DIR}/bin/connectiontest
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray gdb
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
     )
     if(RUN_FILTER_TESTS)
       add_test(connectiontest-gdb-filter
-        ${PROJECT_BINARY_DIR}/bin/gammaray --inprocess -unittest -filtertest -i gdb
-        ${PROJECT_BINARY_DIR}/bin/connectiontest
+        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -filtertest -i gdb
+        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
       )
     endif()
   endif()
