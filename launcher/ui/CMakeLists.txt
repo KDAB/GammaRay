@@ -1,5 +1,4 @@
-set(gammaray_launcher_ui_srcs
-  main.cpp
+set(gammaray_launcher_ui_internal_srcs
   promolabel.cpp
   launcherwindow.cpp
   launchpage.cpp
@@ -12,30 +11,42 @@ set(gammaray_launcher_ui_srcs
   probeabimodel.cpp
 )
 if(NOT WIN32)
-  list(APPEND gammaray_launcher_ui_srcs processlist_unix.cpp)
+  list(APPEND gammaray_launcher_ui_internal_srcs processlist_unix.cpp)
 else()
-  list(APPEND gammaray_launcher_ui_srcs processlist_win.cpp)
+  list(APPEND gammaray_launcher_ui_internal_srcs processlist_win.cpp)
 endif()
 
-qt4_wrap_ui(gammaray_launcher_ui_srcs
+qt4_wrap_ui(gammaray_launcher_ui_internal_srcs
   attachdialog.ui
   launcherwindow.ui
   launchpage.ui
   selftestpage.ui
   connectpage.ui
 )
+
+add_library(gammaray_launcher_ui_internal STATIC ${gammaray_launcher_ui_internal_srcs})
+target_link_libraries(gammaray_launcher_ui_internal
+  LINK_PUBLIC
+  gammaray_launcher_shared
+
+  LINK_PRIVATE
+  ${QT_QTCORE_LIBRARIES}
+  ${QT_QTCONCURRENT_LIBRARIES}
+  ${QT_QTGUI_LIBRARIES}
+  ${QT_QTNETWORK_LIBRARIES}
+  gammaray_ui
+)
+
+set(gammaray_launcher_ui_srcs main.cpp)
 # TODO we don't need all the class icons here, so split the qrc file accordingly
 qt4_add_resources(gammaray_launcher_ui_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
 
 target_link_libraries(gammaray-launcher
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTCONCURRENT_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   gammaray_common_internal
-  gammaray_ui
-  gammaray_launcher_shared
+  gammaray_launcher_ui_internal
 )
 
 if(QNXNTO)
