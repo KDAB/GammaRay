@@ -17,6 +17,7 @@ set(gammaray_launcher_shared_srcs
   launchoptions.cpp
   clientlauncher.cpp
   launcherfinder.cpp
+  launcher.cpp
 )
 if(NOT WIN32)
   list(APPEND gammaray_launcher_shared_srcs
@@ -38,7 +39,6 @@ endif()
 
 # command line launcher
 set(gammaray_runner_srcs
-  launcher.cpp
   main.cpp
 )
 
