@@ -32,6 +32,9 @@ target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES} gammaray_c
 if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray_launcher_shared ${QT_QTGUI_LIBRARIES})
 endif()
+if(UNIX AND NOT APPLE AND NOT QNXNTO)
+  target_link_libraries(gammaray_launcher_shared dl) # for preload check
+endif()
 
 # command line launcher
 set(gammaray_runner_srcs
@@ -45,10 +48,6 @@ target_link_libraries(gammaray gammaray_launcher_shared)
 
 if(QNXNTO)
   target_link_libraries(gammaray cpp)
-endif()
-
-if(UNIX AND NOT APPLE AND NOT QNXNTO)
-  target_link_libraries(gammaray dl) # for preload check
 endif()
 
 gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
