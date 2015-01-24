@@ -45,6 +45,9 @@ public:
   /** This is used to identify the communication channels used by the launcher and the target process. */
   qint64 instanceIdentifier() const;
 
+protected:
+  virtual void startClient(const QUrl &serverAddress);
+
 private slots:
   void delayedInit();
   void semaphoreReleased();

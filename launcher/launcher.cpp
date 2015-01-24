@@ -297,13 +297,17 @@ void Launcher::semaphoreReleased()
   if (serverAddress.scheme() == "tcp")
     serverAddress.setHost("127.0.0.1");
 
+  startClient(serverAddress);
+  m_state |= ClientStarted;
+  checkDone();
+}
+
+void Launcher::startClient(const QUrl& serverAddress)
+{
   if (!m_client.launch(serverAddress)) {
     qCritical("Unable to launch gammaray-client!");
     QCoreApplication::exit(1);
   }
-
-  m_state |= ClientStarted;
-  checkDone();
 }
 
 void Launcher::injectorFinished()
