@@ -18,7 +18,7 @@ if(UNIX)
     )
     add_custom_target(man ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray.1)
 
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gammaray.1 DESTINATION share/man/man1)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gammaray.1 DESTINATION ${MAN_INSTALL_DIR})
   endif()
 endif()
 
