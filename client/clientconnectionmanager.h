@@ -45,6 +45,9 @@ class ClientConnectionManager : public QObject
 
     void connectToHost(const QUrl &url);
 
+    /** One-time initialization of stream operators and factory callbacks. */
+    static void init();
+
   private slots:
     void connectToHost();
     void connectionEstablished();

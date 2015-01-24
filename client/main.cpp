@@ -22,50 +22,23 @@
 */
 
 #include <config-gammaray.h>
-#include "remotemodel.h"
-#include "client.h"
-#include "selectionmodelclient.h"
-#include "clientconnectionmanager.h"
-#include "propertycontrollerclient.h"
-#include "probecontrollerclient.h"
 
-#include "common/objectbroker.h"
-#include "common/streamoperators.h"
-#include "common/paths.h"
+#include "client.h"
+#include "clientconnectionmanager.h"
+
+#include <common/objectbroker.h>
+#include <common/paths.h>
 
 #include <QApplication>
 #include <QStringList>
 
 using namespace GammaRay;
 
-static QAbstractItemModel* modelFactory(const QString &name)
-{
-  return new RemoteModel(name, qApp);
-}
-
-static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
-{
-  return new SelectionModelClient(model->objectName() + ".selection", model, qApp);
-}
-
-static QObject* createPropertyController(const QString &name, QObject *parent)
-{
-  return new PropertyControllerClient(name, parent);
-}
-
-static QObject* createProbeController(const QString &name, QObject *parent)
-{
-  QObject *o = new ProbeControllerClient(parent);
-  ObjectBroker::registerObject(name, o);
-  return o;
-}
-
 int main(int argc, char** argv)
 {
   QApplication app(argc, argv);
   Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
-
-  StreamOperators::registerOperators();
+  ClientConnectionManager::init();
 
   QUrl serverUrl;
   if (app.arguments().size() == 2) {
@@ -75,11 +48,6 @@ int main(int argc, char** argv)
     serverUrl.setHost("127.0.0.1");
     serverUrl.setPort(Client::defaultPort());
   }
-
-  ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
-  ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface*>(createProbeController);
-  ObjectBroker::setModelFactoryCallback(modelFactory);
-  ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 
   ClientConnectionManager conMan;
   conMan.connectToHost(serverUrl);

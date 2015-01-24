@@ -24,8 +24,13 @@
 #include "clientconnectionmanager.h"
 
 #include "client.h"
+#include "remotemodel.h"
+#include "selectionmodelclient.h"
+#include "propertycontrollerclient.h"
+#include "probecontrollerclient.h"
 
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 #include <ui/mainwindow.h>
 #include <ui/splashscreen.h>
@@ -36,6 +41,38 @@
 #include <QTimer>
 
 using namespace GammaRay;
+
+static QAbstractItemModel* modelFactory(const QString &name)
+{
+  return new RemoteModel(name, qApp);
+}
+
+static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
+{
+  return new SelectionModelClient(model->objectName() + ".selection", model, qApp);
+}
+
+static QObject* createPropertyController(const QString &name, QObject *parent)
+{
+  return new PropertyControllerClient(name, parent);
+}
+
+static QObject* createProbeController(const QString &name, QObject *parent)
+{
+  QObject *o = new ProbeControllerClient(parent);
+  ObjectBroker::registerObject(name, o);
+  return o;
+}
+
+void ClientConnectionManager::init()
+{
+  StreamOperators::registerOperators();
+
+  ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
+  ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface*>(createProbeController);
+  ObjectBroker::setModelFactoryCallback(modelFactory);
+  ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
+}
 
 ClientConnectionManager::ClientConnectionManager(QObject* parent) :
   QObject(parent),
