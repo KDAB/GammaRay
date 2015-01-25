@@ -15,11 +15,11 @@
 #                           (containing bin/, include/, etc.)
 
 # Copyright (c) 2009, Adrien Bustany, <madcat@mymadcat.com>
-# Copyright (c) 2013-2014 Kevin Funk <kevin.funk@kdab.com>
+# Copyright (c) 2013-2015 Kevin Funk <kevin.funk@kdab.com>
 
 # Version computation and some cleanups by Allen Winter <allen.winter@kdab.com>
 # Bug fixing for WIN32 by Guillaume Jacquenot <guillaume.jacquenot@gmail.com>
-# Copyright (c) 2012-2014 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (c) 2012-2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Redistribution and use is allowed according to the terms of the GPLv3+ license.
 

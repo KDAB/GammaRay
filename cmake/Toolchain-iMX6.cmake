@@ -2,7 +2,7 @@
 # Assumptions: toolchain is in path, $SYSROOT points to the sysroot
 #
 
-#  Copyright (c) 2013-2014 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#  Copyright (c) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Author: Volker Krause <volker.krause@kdab.com>
 #
