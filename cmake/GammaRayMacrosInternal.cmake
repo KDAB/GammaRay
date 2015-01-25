@@ -1,6 +1,6 @@
 # GammaRay-specific CMake macros that don't make sense outside of the GammaRay source tree.
 
-#  Copyright (c) 2013-2014 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#  Copyright (c) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Author: Volker Krause <volker.krause@kdab.com>
 #

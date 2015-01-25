@@ -5,7 +5,7 @@
   manipulation tool.
 
   Copyright (C) 2010 Ariya Hidayat <ariya.hidayat@gmail.com>
-  Copyright (C) 2012-2014 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2012-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   This program is free software; you can redistribute it and/or modify

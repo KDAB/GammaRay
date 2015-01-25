@@ -1,7 +1,7 @@
 # Toolchain file for 32bit builds on 64bit hosts
 #
 
-#  Copyright (c) 2013-2014 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#  Copyright (c) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Author: Volker Krause <volker.krause@kdab.com>
 #

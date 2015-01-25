@@ -1,6 +1,6 @@
 # Basic cmake toolchain file for BlackBerry 10
 
-#  Copyright (c) 2013-2014 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#  Copyright (c) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Author: Rafael Roquetto <rafael.roquetto@kdab.com>
 #
