@@ -16,6 +16,7 @@ target_link_libraries(gammaray-app
 
 set_target_properties(gammaray-app PROPERTIES
   OUTPUT_NAME "GammaRay"
+  INSTALL_RPATH "@executable_path/../Frameworks"
   MACOSX_BUNDLE_INFO_STRING "GammaRay ${GAMMARAY_VERSION}"
   MACOSX_BUNDLE_ICON_FILE "GammaRay.icns"
   MACOSX_BUNDLE_GUI_IDENTIFIER "com.kdab.gammaray"

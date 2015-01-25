@@ -463,10 +463,6 @@ if(${_isSystemPlatformLibDir} EQUAL -1 AND ${_isSystemCLibDir} EQUAL -1 AND ${_i
   set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
 endif()
 
-if(APPLE)
-  set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
-endif()
-
 set(
   INSTALL_TARGETS_DEFAULT_ARGS
   RUNTIME DESTINATION ${BIN_INSTALL_DIR}
