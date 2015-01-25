@@ -155,6 +155,9 @@ background-position:bottom right;
    <property name="toolTip">
     <string>Retract probe from application.</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::ApplicationSpecificRole</enum>
+   </property>
   </action>
   <action name="actionQuit">
    <property name="text">
@@ -162,6 +165,9 @@ background-position:bottom right;
    </property>
    <property name="toolTip">
     <string>Quit probed application.</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
    </property>
   </action>
   <action name="actionAboutGammaRay">
@@ -172,20 +178,29 @@ background-position:bottom right;
    <property name="text">
     <string>About &amp;GammaRay</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
     <string>About &amp;Qt</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
    </property>
   </action>
   <action name="actionAboutKDAB">
    <property name="text">
     <string>About &amp;KDAB</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
   </action>
   <action name="actionPlugins">
    <property name="text">
-    <string>Plugins...</string>
+    <string>&amp;Plugins...</string>
    </property>
   </action>
  </widget>
