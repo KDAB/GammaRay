@@ -12,6 +12,9 @@ STYLE_CPPSTYLE kde
 STYLE_OFFSET 2
 STYLE_LINEMAX 100
 
+#skip non-desktop, desktop files
+SKIP /plugins/.*/.*\.desktop$
+
 #no need to check 3rdparty stuff
 SKIP /3rdparty/
 #nor Nokia's stuff
