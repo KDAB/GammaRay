@@ -1,8 +1,21 @@
 Release Highlights
 ==================
 
+Version 2.2.1:
+-------------
+ * Fix spawning a large number of threads in the process list.
+ * Add GAMMARAY_BUILD_UI build option to only build the non-UI parts,
+   useful for embedded targets.
+ * Add workaround for QSortFilterProxyModel regression introduced
+   in qtbase commit bec1854cc0.
+ * Follow kdstatemachineeditor KDSME API changes.
+ * Use the preload injector by default on Mac for Qt >= 5.4.
+ * Fix probe ABI detection on Mac bundles.
+ * Fix asserts caused by icon loading in QCoreApplication-only targets.
+ * Fix crash when target deletes a signal sender in a slot.
+
 Version 2.2.0:
---------------
+-------------
  * New translation inspector plug-in.
  * New signal monitor and object lifetime plotter plug-in.
  * Support displaying of QQmlListProperty contents.
