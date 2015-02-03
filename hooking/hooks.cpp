@@ -20,6 +20,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+//krazy:excludeall=cpp due to low-level stuff in here
 
 #include <config-gammaray.h>
 

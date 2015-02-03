@@ -44,6 +44,7 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
+//krazy:excludeall=cpp since lots of low-level stuff in here
 
 #include "backtrace.h"
 
