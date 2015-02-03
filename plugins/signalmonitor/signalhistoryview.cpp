@@ -58,9 +58,8 @@ void SignalHistoryView::eventDelegateChanged()
 
     // With 31 bits we cover more than 24 days when counting milliseconds.
     // That's much more time than this tool can handle. IMHO.
-    m_eventScrollBar->setMaximum(qMax(m_eventDelegate->totalInterval() -
-                                      m_eventDelegate->visibleInterval(),
-                                      0LL));
+    m_eventScrollBar->setMaximum(
+      qMax(m_eventDelegate->totalInterval() - m_eventDelegate->visibleInterval(), 0LL));
 
     m_eventScrollBar->setSingleStep(m_eventDelegate->visibleInterval() / 10);
     m_eventScrollBar->setPageStep(m_eventDelegate->visibleInterval());

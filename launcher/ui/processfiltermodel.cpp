@@ -26,7 +26,7 @@
 
 #include <QCoreApplication>
 
-#if defined(_WIN32)
+#if defined(Q_OS_WIN)
 #include <windows.h>
 #include <lmcons.h>
 static QString qGetLogin() {
