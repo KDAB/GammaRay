@@ -74,12 +74,14 @@ ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 }
 
 
-static QString qtCoreFromProc(qint64 pid)
+static bool qtCoreFromProc(qint64 pid, QString &path)
 {
   const QString mapsPath = QString("/proc/%1/maps").arg(pid);
   QFile f(mapsPath);
-  if (!f.open(QFile::ReadOnly))
-    return QString();
+  if (!f.open(QFile::ReadOnly)) {
+    path.clear();
+    return false;
+  }
 
   forever {
     const QByteArray line = f.readLine();
@@ -89,17 +91,19 @@ static QString qtCoreFromProc(qint64 pid)
       const int pos = line.indexOf('/');
       if (pos <= 0)
         continue;
-      return QString::fromLocal8Bit(line.mid(pos).trimmed());
+      path = QString::fromLocal8Bit(line.mid(pos).trimmed());
+      return true;
     }
   }
 
-  return QString();
+  path.clear();
+  return true;
 }
 
 ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
 {
-  QString qtCorePath = qtCoreFromProc(pid);
-  if (qtCorePath.isEmpty())
+  QString qtCorePath;
+  if (!qtCoreFromProc(pid, qtCorePath))
     qtCorePath = qtCoreFromLsof(pid);
 
   return abiForQtCore(qtCorePath);
