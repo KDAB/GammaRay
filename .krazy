@@ -13,7 +13,7 @@ STYLE_OFFSET 2
 STYLE_LINEMAX 100
 
 #skip over known invalid desktop files
-SKIP plugins/.*/.*\.desktop$
+SKIP /plugins/.*/.*\.desktop$
 
 #no need to check 3rdparty stuff
 SKIP /3rdparty/
