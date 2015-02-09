@@ -247,7 +247,7 @@ void StateMachineViewerWidgetNG::clearGraph()
 {
   IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
-  m_stateMachineView->scene()->setStateMachine(0);
+  m_stateMachineView->scene()->setRootState(0);
 
   m_idToStateMap.clear();
   m_idToTransitionMap.clear();
@@ -257,7 +257,7 @@ void StateMachineViewerWidgetNG::repopulateView()
 {
   IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
-  m_stateMachineView->scene()->setStateMachine(m_machine);
+  m_stateMachineView->scene()->setRootState(m_machine);
   if (!m_machine)
     return;
   m_stateMachineView->scene()->layout();
