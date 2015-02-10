@@ -193,13 +193,16 @@ void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId
 
   if (connectToInitial && parentState) {
     State* initialState = new PseudoState(PseudoState::InitialState, parentState);
+    initialState->setFlags(Element::ElementIsSelectable);
     Transition* transition = new Transition(initialState);
     transition->setTargetState(state);
+    transition->setFlags(Element::ElementIsSelectable);
   }
 
   Q_ASSERT(state);
   state->setLabel(label);
   state->setInternalId(stateId);
+  state->setFlags(Element::ElementIsSelectable);
   m_idToStateMap[stateId] = state;
 }
 
@@ -220,6 +223,7 @@ void StateMachineViewerWidgetNG::transitionAdded(const TransitionId transitionId
   Transition* transition = new Transition(source);
   transition->setTargetState(target);
   transition->setLabel(label);
+  transition->setFlags(Element::ElementIsSelectable);
   m_idToTransitionMap[transitionId] = transition;
 }
 
