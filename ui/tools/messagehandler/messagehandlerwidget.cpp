@@ -107,11 +107,11 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
     }
     layout->addWidget(backtraceWidget, 1, 0, 1, 2);
 
-    QPushButton *copyBacktraceButton = new QPushButton(tr("Copy backtrace"));
+    QPushButton *copyBacktraceButton = new QPushButton(tr("Copy Backtrace"));
     buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
 
     QSignalMapper *mapper = new QSignalMapper(this);
-    mapper->setMapping(copyBacktraceButton, backtrace.join('\n'));
+    mapper->setMapping(copyBacktraceButton, backtrace.join(QLatin1Char('\n')));
 
     connect(copyBacktraceButton, SIGNAL(clicked()), mapper, SLOT(map()));
     connect(mapper, SIGNAL(mapped(QString)), this, SLOT(copyToClipboard(QString)));
