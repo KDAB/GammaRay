@@ -34,6 +34,10 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QTime>
+#include <QPushButton>
+#include <QClipboard>
+#include <QApplication>
+#include <QSignalMapper>
 
 using namespace GammaRay;
 
@@ -94,15 +98,25 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
   errorLabel->setText(message);
   layout->addWidget(errorLabel, 0, 1);
 
+  QDialogButtonBox *buttons = new QDialogButtonBox;
+
   if (!backtrace.isEmpty()) {
     QListWidget *backtraceWidget = new QListWidget;
     foreach (const QString &frame, backtrace) {
       backtraceWidget->addItem(frame);
     }
     layout->addWidget(backtraceWidget, 1, 0, 1, 2);
+
+    QPushButton *copyBacktraceButton = new QPushButton(tr("Copy backtrace"));
+    buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
+
+    QSignalMapper *mapper = new QSignalMapper(this);
+    mapper->setMapping(copyBacktraceButton, backtrace.join('\n'));
+
+    connect(copyBacktraceButton, SIGNAL(clicked()), mapper, SLOT(map()));
+    connect(mapper, SIGNAL(mapped(QString)), this, SLOT(copyToClipboard(QString)));
   }
 
-  QDialogButtonBox *buttons = new QDialogButtonBox;
   buttons->addButton(QDialogButtonBox::Close);
   QObject::connect(buttons, SIGNAL(accepted()),
                     &dlg, SLOT(accept()));
@@ -113,5 +127,10 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
   dlg.setLayout(layout);
   dlg.adjustSize();
   dlg.exec();
+}
+
+void MessageHandlerWidget::copyToClipboard(const QString &message)
+{
+    QApplication::clipboard()->setText(message);
 }
 

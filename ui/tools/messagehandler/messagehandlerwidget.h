@@ -43,6 +43,7 @@ class MessageHandlerWidget : public QWidget
   private slots:
     void fatalMessageReceived(const QString &app, const QString &message,
                               const QTime &time, const QStringList &backtrace);
+    void copyToClipboard(const QString &message);
 
   private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
