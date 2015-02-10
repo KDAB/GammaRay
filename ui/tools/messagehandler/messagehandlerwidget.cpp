@@ -111,7 +111,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
     buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
 
     QSignalMapper *mapper = new QSignalMapper(this);
-    mapper->setMapping(copyBacktraceButton, backtrace.join(QLatin1Char('\n')));
+    mapper->setMapping(copyBacktraceButton, backtrace.join(QLatin1String("\n")));
 
     connect(copyBacktraceButton, SIGNAL(clicked()), mapper, SLOT(map()));
     connect(mapper, SIGNAL(mapped(QString)), this, SLOT(copyToClipboard(QString)));
