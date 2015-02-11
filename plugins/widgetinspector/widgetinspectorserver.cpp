@@ -64,7 +64,7 @@
 #include <iostream>
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
-#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
+#include <private/qpaintbuffer_p.h>
 #endif
 
 Q_DECLARE_METATYPE(const QStyle *)

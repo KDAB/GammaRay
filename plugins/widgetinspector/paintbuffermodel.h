@@ -29,7 +29,7 @@
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <QAbstractItemModel>
 
-#include <private/qpaintbuffer_p.h> //krazy:exclude=camelcase
+#include <private/qpaintbuffer_p.h>
 
 class QPaintBuffer;
 

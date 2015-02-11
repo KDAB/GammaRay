@@ -23,7 +23,7 @@
 
 #include "quickscenegraphmodel.h"
 
-#include <private/qquickitem_p.h> //krazy:exclude=camelcase
+#include <private/qquickitem_p.h>
 #include "quickitemmodelroles.h"
 
 #include <QQuickWindow>

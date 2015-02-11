@@ -38,7 +38,7 @@
 #include <QSGTextureMaterial>
 #include <QSGVertexColorMaterial>
 
-#include <private/qsgmaterialshader_p.h> //krazy:exclude=camelcase
+#include <private/qsgmaterialshader_p.h>
 
 using namespace GammaRay;
 

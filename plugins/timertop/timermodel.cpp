@@ -22,10 +22,10 @@
 */
 #include "timermodel.h"
 
-#include <core/probeinterface.h>
-#include <common/objectmodel.h>
+#include "core/probeinterface.h"
+#include "common/objectmodel.h"
 
-#include <private/qobject_p.h> //krazy:exclude=camelcase
+#include <private/qobject_p.h>
 
 #include <QMetaMethod>
 #include <QCoreApplication>

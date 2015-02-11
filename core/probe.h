@@ -32,7 +32,7 @@
 #include <QSet>
 #include <QVector>
 
-#include <private/qobject_p.h> //krazy:exclude=camelcase
+#include <private/qobject_p.h>
 
 class QItemSelectionModel;
 class QThread;
