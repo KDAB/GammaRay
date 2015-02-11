@@ -195,10 +195,10 @@ void GVGraph::removeNode(NodeId nodeId)
 
 void GVGraph::clearNodes()
 {
-  Q_FOREACH (Agnode_t *node, _nodeMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agnode_t *node, _nodeMap.keys()) {
     removeNode(id(node));
   }
-  Q_FOREACH (Agraph_t *graph, _graphMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agraph_t *graph, _graphMap.keys()) {
     removeGraph(id(graph));
   }
   Q_ASSERT(_graphMap.isEmpty());
@@ -343,7 +343,7 @@ QList<GVNodePair> GVGraph::gvNodes() const
   QList<GVNodePair> list;
   const qreal dpi  = dpiForGraph(_graph);
 
-  Q_FOREACH (Agnode_t *node, _nodeMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agnode_t *node, _nodeMap.keys()) {
     GVNode object = _nodeMap[node];
     object.m_font = _font;
 
@@ -386,7 +386,7 @@ QList<GVEdgePair> GVGraph::gvEdges() const
   QList<GVEdgePair> list;
   const qreal dpi = dpiForGraph(_graph);
 
-  Q_FOREACH (Agedge_t *edge, _edgeMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agedge_t *edge, _edgeMap.keys()) {
     GVEdge object = _edgeMap[edge];
     object.m_font = _font;
 
@@ -462,7 +462,7 @@ QList<GVSubGraphPair> GVGraph::gvSubGraphs() const
 {
   QList<GVSubGraphPair> list;
 
-  Q_FOREACH (Agraph_t *subGraph, _graphMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (Agraph_t *subGraph, _graphMap.keys()) {
     if (subGraph == _graph) {
       continue;
     }

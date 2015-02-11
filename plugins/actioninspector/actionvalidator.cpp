@@ -88,7 +88,7 @@ void ActionValidator::remove(QAction *action)
 
 void ActionValidator::safeRemove(QAction *action)
 {
-  Q_FOREACH (const QKeySequence &sequence, m_shortcutActionMap.keys()) { //krazy:exclude=foreach
+  Q_FOREACH (const QKeySequence &sequence, m_shortcutActionMap.keys()) {
     if (!m_shortcutActionMap.values(sequence).contains(action)) {
       continue;
     }
