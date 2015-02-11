@@ -59,7 +59,7 @@ template <typename ClientT>
 class ClientDeviceImpl : public ClientDevice
 {
 public:
-    explicit ClientDeviceImpl(QObject *parent = 0) : ClientDevice(parent)
+    explicit ClientDeviceImpl(QObject *parent = 0) : ClientDevice(parent), m_socket(0)
     {
     }
 
