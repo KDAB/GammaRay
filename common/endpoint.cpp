@@ -128,21 +128,18 @@ Protocol::ObjectAddress Endpoint::registerObject(const QString &name, QObject *o
   Q_ASSERT(obj);
   Q_ASSERT(!obj->object);
   Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
-  if(obj) {
-    if(!obj->object && obj->address != Protocol::InvalidObjectAddress) {
-      obj->object = object;
-
-      Q_ASSERT(!m_objectMap.contains(object));
-      if(!m_objectMap.contains(object)) {
-        m_objectMap[object] = obj;
-      }
-
-      connect(object, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
-
-      return obj->address;
-    }
+  if (!obj || obj->object || obj->address == Protocol::InvalidObjectAddress) {
+    return 0;
   }
-  return 0;
+
+  obj->object = object;
+
+  Q_ASSERT(!m_objectMap.contains(object));
+  m_objectMap[object] = obj;
+
+  connect(object, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
+
+  return obj->address;
 }
 
 void Endpoint::invokeObject(const QString &objectName, const char *method, const QVariantList &args) const
@@ -154,14 +151,15 @@ void Endpoint::invokeObject(const QString &objectName, const char *method, const
   ObjectInfo* obj = m_nameMap.value(objectName, 0);
   Q_ASSERT(obj);
   Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
-
-  if(obj && obj->address != Protocol::InvalidObjectAddress) {
-    Message msg(obj->address, Protocol::MethodCall);
-    const QByteArray name(method);
-    Q_ASSERT(!name.isEmpty());
-    msg.payload() << name << args;
-    send(msg);
+  if (!obj || obj->address == Protocol::InvalidObjectAddress) {
+    return;
   }
+
+  Message msg(obj->address, Protocol::MethodCall);
+  const QByteArray name(method);
+  Q_ASSERT(!name.isEmpty());
+  msg.payload() << name << args;
+  send(msg);
 }
 
 void Endpoint::invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const
@@ -227,11 +225,13 @@ void Endpoint::objectDestroyed(QObject *obj)
   ObjectInfo* info = m_objectMap.value(obj, 0);
   Q_ASSERT(info);
   Q_ASSERT(info->object == obj);
-  if(info && info->object == obj) {
-    info->object = 0;
-    m_objectMap.remove(obj);
-    objectDestroyed(info->address, QString(info->name), obj); // copy the name, in case unregisterMessageHandlerInternal() is called inside
+  if (!info || info->object != obj) {
+    return;
   }
+
+  info->object = 0;
+  m_objectMap.remove(obj);
+  objectDestroyed(info->address, QString(info->name), obj); // copy the name, in case unregisterMessageHandlerInternal() is called inside
 }
 
 void Endpoint::handlerDestroyed(QObject* obj)
