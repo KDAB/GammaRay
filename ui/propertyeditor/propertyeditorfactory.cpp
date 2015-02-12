@@ -56,7 +56,7 @@ QWidget *PropertyEditorFactory::createEditor(TypeId type, QWidget *parent) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (type == QMetaType::Float)
-    type = (QVariant::Type)QVariant::Double;
+    type = QVariant::Double;
 #endif
 
   QWidget *w = QItemEditorFactory::createEditor(type, parent);
