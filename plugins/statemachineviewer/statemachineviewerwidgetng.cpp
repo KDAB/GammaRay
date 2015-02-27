@@ -45,7 +45,6 @@
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
-using namespace KDSME;
 
 namespace {
 
@@ -54,9 +53,10 @@ QObject* createStateMachineViewerClient(const QString &/*name*/, QObject *parent
   return new StateMachineViewerClient(parent);
 }
 
-ConfigurationController::Configuration toSmeConfiguration(const StateMachineConfiguration& config, const QHash<StateId, State*>& map)
+KDSME::ConfigurationController::Configuration toSmeConfiguration(const StateMachineConfiguration& config,
+                                                                 const QHash<StateId, KDSME::State*>& map)
 {
-  ConfigurationController::Configuration result;
+  KDSME::ConfigurationController::Configuration result;
   foreach (const StateId& id, config) {
     if (auto state = map.value(id)) {
       result << state;
@@ -130,7 +130,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   connect(m_interface, SIGNAL(graphRepopulated()), this, SLOT(repopulateView()));
 
   // append actions for the state machine view
-  StateMachineToolBar* toolBar = new StateMachineToolBar(m_stateMachineView, this);
+  KDSME::StateMachineToolBar* toolBar = new KDSME::StateMachineToolBar(m_stateMachineView, this);
   toolBar->setHidden(true);
   addActions(toolBar->actions());
 
@@ -177,32 +177,32 @@ void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId
     return;
   }
 
-  State* parentState = m_idToStateMap.value(parentId);
-  State* state = 0;
+  KDSME::State* parentState = m_idToStateMap.value(parentId);
+  KDSME::State* state = 0;
   if (type == StateMachineState) {
-    state = m_machine = new StateMachine;
+    state = m_machine = new KDSME::StateMachine;
   } else if (type == GammaRay::FinalState) {
     state = new KDSME::FinalState(parentState);
   } else if (type == GammaRay::ShallowHistoryState) {
-    state = new KDSME::HistoryState(HistoryState::ShallowHistory, parentState);
+    state = new KDSME::HistoryState(KDSME::HistoryState::ShallowHistory, parentState);
   } else if (type == GammaRay::DeepHistoryState) {
-    state = new KDSME::HistoryState(HistoryState::DeepHistory, parentState);
+    state = new KDSME::HistoryState(KDSME::HistoryState::DeepHistory, parentState);
   } else {
-    state = new State(parentState);
+    state = new KDSME::State(parentState);
   }
 
   if (connectToInitial && parentState) {
-    State* initialState = new PseudoState(PseudoState::InitialState, parentState);
-    initialState->setFlags(Element::ElementIsSelectable);
-    Transition* transition = new Transition(initialState);
+    KDSME::State* initialState = new KDSME::PseudoState(KDSME::PseudoState::InitialState, parentState);
+    initialState->setFlags(KDSME::Element::ElementIsSelectable);
+    KDSME::Transition* transition = new KDSME::Transition(initialState);
     transition->setTargetState(state);
-    transition->setFlags(Element::ElementIsSelectable);
+    transition->setFlags(KDSME::Element::ElementIsSelectable);
   }
 
   Q_ASSERT(state);
   state->setLabel(label);
   state->setInternalId(stateId);
-  state->setFlags(Element::ElementIsSelectable);
+  state->setFlags(KDSME::Element::ElementIsSelectable);
   m_idToStateMap[stateId] = state;
 }
 
@@ -213,17 +213,17 @@ void StateMachineViewerWidgetNG::transitionAdded(const TransitionId transitionId
 
   IF_DEBUG(qDebug() << "transitionAdded" << transitionId << label << sourceId << targetId);
 
-  State* source = m_idToStateMap.value(sourceId);
-  State* target = m_idToStateMap.value(targetId);
+  KDSME::State* source = m_idToStateMap.value(sourceId);
+  KDSME::State* target = m_idToStateMap.value(targetId);
   if (!source || !target) {
     qDebug() << "Null source or target for transition:" <<  transitionId;
     return;
   }
 
-  Transition* transition = new Transition(source);
+  KDSME::Transition* transition = new KDSME::Transition(source);
   transition->setTargetState(target);
   transition->setLabel(label);
-  transition->setFlags(Element::ElementIsSelectable);
+  transition->setFlags(KDSME::Element::ElementIsSelectable);
   m_idToTransitionMap[transitionId] = transition;
 }
 
