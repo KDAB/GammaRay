@@ -160,3 +160,8 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
         ProbeCreator::Create | ProbeCreator::FindExistingObjects
         | ProbeCreator::ResendServerAddress);
 }
+
+extern "C" Q_DECL_EXPORT void gammaray_install_hooks()
+{
+    Hooks::installHooks();
+}

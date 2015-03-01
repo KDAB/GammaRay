@@ -58,6 +58,10 @@ extern Q_DECL_EXPORT void gammaray_probe_inject();
  *  on the other side.
  */
 extern Q_DECL_EXPORT void gammaray_probe_attach();
+
+/** Entry point for static injections. */
+extern Q_DECL_EXPORT void gammaray_install_hooks();
+
 }
 
 namespace GammaRay {
