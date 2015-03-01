@@ -63,11 +63,14 @@ macro(gammaray_add_plugin _target_name)
       set_source_files_properties("${mainSourceFile}" PROPERTIES SKIP_AUTOMOC TRUE)
   endif()
 
-  add_library(${_target_name} MODULE ${_gammaray_add_plugin_SOURCES})
+  add_library(${_target_name} ${GAMMARAY_PLUGIN_TYPE} ${_gammaray_add_plugin_SOURCES})
   set_target_properties(${_target_name} PROPERTIES
     PREFIX ""
     LIBRARY_OUTPUT_DIRECTORY ${_build_target_dir}
   )
+  if(GAMMARAY_STATIC_PROBE)
+    set_target_properties(${_target_name} PROPERTIES COMPILE_DEFINITIONS QT_STATICPLUGIN)
+  endif()
 
   if(GAMMARAY_INSTALL_QT_LAYOUT)
     set_target_properties(${_target_name} PROPERTIES OUTPUT_NAME ${_target_name}-${GAMMARAY_PROBE_ABI})

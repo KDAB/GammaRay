@@ -32,6 +32,11 @@
 #include <QString>
 #include <QStringList>
 #include <QVector>
+#include <qplugin.h>
+
+QT_BEGIN_NAMESPACE
+class QJsonObject;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 /** Meta-data about a specific plugin.
@@ -42,6 +47,9 @@ class PluginInfo
 public:
     PluginInfo();
     explicit PluginInfo(const QString &path);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    explicit PluginInfo(const QStaticPlugin &staticPlugin);
+#endif
 
     QString path() const;
     QString id() const;
@@ -53,12 +61,22 @@ public:
     QVector<QByteArray> selectableTypes() const;
 
     bool isValid() const;
+    bool isStatic() const;
+
+    QObject* staticInstance() const;
 
 private:
+    void init();
     void initFromJSON(const QString &path);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    void initFromJSON(const QJsonObject& metaData);
+#endif
     void initFromDesktopFile(const QString &path);
 
     QString m_path;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    QStaticPlugin m_staticPlugin;
+#endif
     QString m_id;
     QString m_interface;
     QStringList m_supportedTypes;

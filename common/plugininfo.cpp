@@ -47,15 +47,13 @@
 using namespace GammaRay;
 
 PluginInfo::PluginInfo()
-    : m_remoteSupport(true)
-    , m_hidden(false)
 {
+  init();
 }
 
-PluginInfo::PluginInfo(const QString &path)
-    : m_remoteSupport(true)
-    , m_hidden(false)
+PluginInfo::PluginInfo(const QString& path)
 {
+    init();
     // OSX has broken QLibrary::isLibrary() - QTBUG-50446
     if (QLibrary::isLibrary(path) || path.endsWith(Paths::pluginExtension(), Qt::CaseInsensitive))
         initFromJSON(path);
@@ -63,6 +61,25 @@ PluginInfo::PluginInfo(const QString &path)
         initFromDesktopFile(path);
     else
         qDebug("%s: %s not a library, nor a .desktop file.", Q_FUNC_INFO, qPrintable(path));
+}
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+PluginInfo::PluginInfo(const QStaticPlugin &staticPlugin)
+{
+    init();
+    m_staticPlugin = staticPlugin;
+    initFromJSON(staticPlugin.metaData());
+}
+#endif
+
+void PluginInfo::init()
+{
+    m_remoteSupport = true;
+    m_hidden = false;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    m_staticPlugin.instance = Q_NULLPTR;
+    m_staticPlugin.rawMetaData = Q_NULLPTR;
+#endif
 }
 
 QString PluginInfo::path() const
@@ -107,7 +124,7 @@ QVector<QByteArray> PluginInfo::selectableTypes() const
 
 bool PluginInfo::isValid() const
 {
-    return !m_id.isEmpty() && !m_path.isEmpty() && !m_interface.isEmpty();
+    return !m_id.isEmpty() && (isStatic() || !m_path.isEmpty()) && !m_interface.isEmpty();
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -147,15 +164,42 @@ static QString readLocalized(const QLocale &locale, const QJsonObject &obj, cons
 
     return obj.value(baseKey).toString();
 }
-
 #endif
+
+bool PluginInfo::isStatic() const
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    return m_staticPlugin.instance && m_staticPlugin.rawMetaData;
+#else
+    return false;
+#endif
+}
+
+QObject* PluginInfo::staticInstance() const
+{
+    Q_ASSERT(isStatic());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    return m_staticPlugin.instance();
+#else
+    return Q_NULLPTR;
+#endif
+}
 
 void PluginInfo::initFromJSON(const QString &path)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     const QPluginLoader loader(path);
     const QJsonObject metaData = loader.metaData();
+    initFromJSON(metaData);
+    m_path = path;
+#else
+    Q_UNUSED(path);
+#endif
+}
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+void PluginInfo::initFromJSON(const QJsonObject &metaData)
+{
     m_interface = metaData.value(QStringLiteral("IID")).toString();
     const QJsonObject customData = metaData.value(QStringLiteral("MetaData")).toObject();
 
@@ -173,12 +217,8 @@ void PluginInfo::initFromJSON(const QString &path)
     m_selectableTypes.reserve(selectable.size());
     for (auto it = selectable.begin(); it != selectable.end(); ++it)
         m_selectableTypes.push_back((*it).toString().toUtf8());
-
-    m_path = path;
-#else
-    Q_UNUSED(path);
-#endif
 }
+#endif
 
 void PluginInfo::initFromDesktopFile(const QString &path)
 {

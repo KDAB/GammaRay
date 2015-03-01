@@ -57,13 +57,19 @@ void ProxyFactoryBase::loadPlugin()
 {
     if (m_factory)
         return;
-    QPluginLoader loader(pluginInfo().path(), this);
-    m_factory = loader.instance();
-    if (m_factory) {
-        m_factory->setParent(this);
+
+    if (!pluginInfo().isStatic()) {
+        QPluginLoader loader(pluginInfo().path(), this);
+        m_factory = loader.instance();
+        if (!m_factory) {
+            m_errorString = loader.errorString();
+            std::cerr << "error loading plugin " << qPrintable(pluginInfo().path())
+                      << ": " << qPrintable(loader.errorString()) << std::endl;
+        }
     } else {
-        m_errorString = loader.errorString();
-        std::cerr << "error loading plugin " << qPrintable(pluginInfo().path())
-                  << ": " << qPrintable(loader.errorString()) << std::endl;
+        m_factory = pluginInfo().staticInstance();
     }
+
+    if (m_factory)
+        m_factory->setParent(this);
 }
