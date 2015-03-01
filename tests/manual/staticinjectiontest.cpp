@@ -23,10 +23,13 @@
 
 #include <QApplication>
 #include <QLabel>
+#include <QtPlugin>
 
 extern "C" {
     extern void gammaray_install_hooks();
 }
+
+Q_IMPORT_PLUGIN(WidgetInspectorFactory)
 
 int main(int argc, char** argv)
 {
