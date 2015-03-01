@@ -5,8 +5,6 @@ set(gammaray_ui_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
 
-  ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
-
   aboutdata.cpp
   palettemodel.cpp
   propertywidget.cpp
