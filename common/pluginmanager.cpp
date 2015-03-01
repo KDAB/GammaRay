@@ -54,7 +54,11 @@ PluginManagerBase::~PluginManagerBase()
 
 QStringList PluginManagerBase::pluginPaths() const
 {
+#ifndef GAMMARAY_STATIC_PROBE
     return Paths::pluginPaths(GAMMARAY_PROBE_ABI);
+#else
+    return QStringList();
+#endif
 }
 
 QStringList PluginManagerBase::pluginFilter() const
