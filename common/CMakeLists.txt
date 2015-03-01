@@ -28,7 +28,7 @@ set(gammaray_common_srcs
   transferimage.cpp
 )
 
-add_library(gammaray_common SHARED ${gammaray_common_srcs})
+add_library(gammaray_common ${GAMMARAY_LIBRARY_TYPE} ${gammaray_common_srcs})
 generate_export_header(gammaray_common)
 set_target_properties(gammaray_common PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}

@@ -152,6 +152,26 @@ if(${GAMMARAY_PROBE_ONLY_BUILD})
   set(GAMMARAY_BUILD_DOCS_DEFAULT OFF)
 endif()
 option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
+option(
+  GAMMARAY_STATIC_PROBE
+  "Build the probe as static library for compile-time injection (requires Qt 5.4 or newer)."
+  OFF
+)
+
+#
+# Static probe setup
+#
+if(GAMMARAY_STATIC_PROBE)
+  set(GAMMARAY_BUILD_UI OFF)
+  set(GAMMARAY_PROBE_ONLY_BUILD ON)
+  set(GAMMARAY_ENFORCE_QT4_BUILD OFF)
+
+  set(GAMMARAY_LIBRARY_TYPE STATIC)
+  set(GAMMARAY_PLUGIN_TYPE STATIC)
+else()
+  set(GAMMARAY_LIBRARY_TYPE SHARED)
+  set(GAMMARAY_PLUGIN_TYPE MODULE)
+endif()
 
 #
 # Compiler & linker settings
@@ -219,7 +239,12 @@ endif()
 
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
-  find_package(Qt5Core 5.1 QUIET)
+  if(GAMMARAY_STATIC_PROBE)
+    # static probes are only available with Qt 5.4 or newer
+    find_package(Qt5Core 5.4 NO_MODULE REQUIRED)
+  else()
+    find_package(Qt5Core 5.1 QUIET)
+  endif()
 else()
   set(Qt5Core_FOUND FALSE)
 endif()

@@ -109,7 +109,9 @@ endif()
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 # core lib
-add_library(gammaray_core SHARED ${gammaray_srcs})
+add_library(gammaray_core ${GAMMARAY_LIBRARY_TYPE}
+  ${gammaray_srcs}
+)
 generate_export_header(gammaray_core)
 
 gammaray_target_relocatable_interfaces(gammaray_core_ipaths)
