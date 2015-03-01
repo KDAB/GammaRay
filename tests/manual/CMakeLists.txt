@@ -67,3 +67,8 @@ if(Qt5QuickWidgets_FOUND)
   add_executable(quickwidgettest ${quickwidgettest_srcs})
   target_link_libraries(quickwidgettest Qt5::QuickWidgets)
 endif()
+
+if(GAMMARAY_STATIC_PROBE)
+  add_executable(staticinjectiontest staticinjectiontest.cpp)
+  target_link_libraries(staticinjectiontest gammaray_probe Qt5::Widgets)
+endif()
