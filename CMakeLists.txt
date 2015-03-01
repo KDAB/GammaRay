@@ -195,8 +195,6 @@ endif()
 # Finding Qt
 #
 
-set(QT_MIN_VERSION "4.8.0")
-
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
   find_package(Qt5Core 5.1 QUIET)
@@ -283,8 +281,8 @@ if(Qt5Core_FOUND)
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
-  find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtNetwork)
-  find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
+  find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork)
+  find_package(Qt4 4.8.0 QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
 
   include(${QT_USE_FILE})
   set(HAVE_QT_CONCURRENT true)
