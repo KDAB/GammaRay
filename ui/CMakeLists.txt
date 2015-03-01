@@ -126,7 +126,6 @@ gammaray_install_headers(
   gammaray_ui_export.h
   deferredresizemodesetter.h
   deferredtreeviewconfiguration.h
-  palettemodel.h
   propertywidget.h
   propertywidgettab.h
   tooluifactory.h
