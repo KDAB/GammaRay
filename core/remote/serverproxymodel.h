@@ -38,7 +38,7 @@ public:
 
     void addRole(int role);
 
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const;
 
 private:
     QVector<int> m_extraRoles;
