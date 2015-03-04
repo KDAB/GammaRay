@@ -45,6 +45,7 @@ set(gammaray_srcs
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagehandlerinterface.cpp
   tools/messagehandler/messagemodel.cpp
+  tools/messagehandler/backtracemodel.cpp
   tools/connectioninspector/connectioninspector.cpp
   tools/localeinspector/localeinspector.cpp
   tools/metaobjectbrowser/metaobjectbrowser.cpp

@@ -66,7 +66,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   ui->messageView->setSortingEnabled(true);
 
   ///FIXME: implement this
-  ui->backtraceView->hide();
+  //ui->backtraceView->hide();
 }
 
 MessageHandlerWidget::~MessageHandlerWidget()
