@@ -39,6 +39,7 @@ class BacktraceModel : public QAbstractTableModel
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
     void setBacktrace(QStringList &backtrace);
+    QStringList parseStackFrame(QString stackFrame) const;
 
     enum Columns {
       AddressColumn,

@@ -117,6 +117,8 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
                   "<dt><b>Message:</b></dt><dd>%3</dd>"
                 "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message);
     }
+  } else if (role == Qt::UserRole) {
+      return msg.backtrace;
   }
 
   return QVariant();

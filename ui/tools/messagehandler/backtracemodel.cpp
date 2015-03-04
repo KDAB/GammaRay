@@ -45,6 +45,41 @@ int BacktraceModel::columnCount(const QModelIndex &parent) const
     return COLUMN_COUNT;
 }
 
+QStringList BacktraceModel::parseStackFrame(QString stackFrame) const
+{
+  QStringList row;
+  for (int i = 0; i < COLUMN_COUNT; ++i)
+    row.append(QString());
+  QStringList parts = stackFrame.split("::");
+  if (parts.count() == 2)
+  {
+    row[FunctionColumn] = parts.at(1);
+    parts = parts.at(0).split(": ");
+    if (parts.count() != 2 && parts.count() != 3)
+      return row;
+    row[ClassColumn] = parts.at(parts.count()-1);
+    if (parts.count() == 2)
+    {
+      parts = parts.at(0).split(" (");
+      if (parts.count() != 2)
+        return row;
+      row[FileColumn] = parts.at(0);
+      row[LineColumn] = parts.at(1).left(parts.at(1).count()-1);
+
+    } else
+    {
+      row[FileColumn] = parts.at(1);
+      parts = parts.at(0).split(" (");
+      if (parts.count() != 2)
+        return row;
+      row[AddressColumn] = parts.at(0);
+      row[DllColumn] = parts.at(1).left(parts.at(1).count()-1);
+    }
+  }
+
+  return row;
+}
+
 QVariant BacktraceModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() > rowCount() || index.column() > columnCount()) {
@@ -52,24 +87,7 @@ QVariant BacktraceModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::DisplayRole){
         QString stackFrame = m_backtrace.at(index.row());
-        QStringList row;
-        row.reserve(COLUMN_COUNT);
-        QStringList parts = stackFrame.split("::");//2
-        row[FunctionColumn] = parts.at(1);
-        parts = parts.at(0).split(": "); //2 or 3
-        row[ClassColumn] = parts.at(parts.count()-1);
-        if (parts.count() == 2)
-        {
-          parts = parts.at(0).split(" ("); //2
-          row[FileColumn] = parts.at(0);
-          row[LineColumn] = parts.at(1).left(parts.at(1).count()-1);
-        } else
-        {
-            row[FileColumn] = parts.at(1);
-            parts = parts.at(0).split(" ("); //2
-            row[AddressColumn] = parts.at(0);
-            row[DllColumn] = parts.at(1).left(parts.at(1).count()-1);
-        }
+        QStringList row = parseStackFrame(stackFrame);
         return row.at(index.column());
     }
     return QVariant();
@@ -100,4 +118,5 @@ QVariant BacktraceModel::headerData(int section, Qt::Orientation orientation, in
 void BacktraceModel::setBacktrace(QStringList &backtrace)
 {
     m_backtrace = backtrace;
+    emit layoutChanged ();
 }

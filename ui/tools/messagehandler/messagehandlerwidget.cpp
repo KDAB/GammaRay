@@ -38,6 +38,7 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QSignalMapper>
+#include <QTreeView>
 
 using namespace GammaRay;
 
@@ -58,15 +59,18 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
   ui->setupUi(this);
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  proxy = new QSortFilterProxyModel(this);
   proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.MessageModel"));
   ui->messageSearchLine->setProxy(proxy);
   ui->messageView->setModel(proxy);
   ui->messageView->setIndentation(0);
   ui->messageView->setSortingEnabled(true);
 
-  ///FIXME: implement this
-  //ui->backtraceView->hide();
+  m_backtraceModel.reset(new BacktraceModel);
+  ui->backtraceView->setModel(m_backtraceModel.data());
+
+  QItemSelectionModel *selectionModel = ui->messageView->selectionModel();
+  connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(selectionChanged(QModelIndex,QModelIndex)));
 }
 
 MessageHandlerWidget::~MessageHandlerWidget()
@@ -131,6 +135,14 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
 
 void MessageHandlerWidget::copyToClipboard(const QString &message)
 {
-    QApplication::clipboard()->setText(message);
+  QApplication::clipboard()->setText(message);
+}
+
+void MessageHandlerWidget::selectionChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+  Q_UNUSED(previous);
+  m_backtraceModel->setBacktrace(proxy->data(current, Qt::UserRole).toStringList());
+  for (int i = 0; i < m_backtraceModel->columnCount(); ++i)
+    ui->backtraceView->resizeColumnToContents(i);
 }
 
