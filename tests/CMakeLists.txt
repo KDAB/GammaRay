@@ -113,7 +113,7 @@ if(GAMMARAY_BUILD_UI)
     modeltest.cpp
     ../core/remote/remotemodelserver.cpp
   )
-  target_link_libraries(remotemodeltest gammaray_core gammaray_client_internal ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+  target_link_libraries(remotemodeltest gammaray_core gammaray_client ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
   add_test(NAME remotemodeltest COMMAND remotemodeltest)
 endif()
 

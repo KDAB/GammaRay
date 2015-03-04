@@ -11,7 +11,7 @@ target_link_libraries(gammaray-app
   gammaray_common_internal
   gammaray_launcher_shared
   gammaray_launcher_ui_internal
-  gammaray_client_internal
+  gammaray_client
 )
 
 set_target_properties(gammaray-app PROPERTIES

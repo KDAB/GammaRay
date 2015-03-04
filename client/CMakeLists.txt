@@ -1,4 +1,4 @@
-set(gammaray_client_internal_srcs
+set(gammaray_clientlib_srcs
   client.cpp
   remotemodel.cpp
   selectionmodelclient.cpp
@@ -10,8 +10,13 @@ set(gammaray_client_internal_srcs
   localclientdevice.cpp
 )
 
-add_library(gammaray_client_internal STATIC ${gammaray_client_internal_srcs})
-target_link_libraries(gammaray_client_internal
+add_library(gammaray_client SHARED ${gammaray_clientlib_srcs})
+set_target_properties(gammaray_client PROPERTIES
+  ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
+  DEFINE_SYMBOL MAKE_GAMMARAY_CLIENT_LIB
+)
+
+target_link_libraries(gammaray_client
   LINK_PUBLIC
   ${QT_QTCORE_LIBRARIES}
 
@@ -30,8 +35,9 @@ qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qr
 add_executable(gammaray-client WIN32 ${gammaray_client_srcs})
 
 target_link_libraries(gammaray-client
-  gammaray_client_internal
+  gammaray_client
   gammaray_common
+  ${QT_QTGUI_LIBRARIES}
 )
 
 if(QNXNTO)
@@ -43,4 +49,11 @@ set_target_properties(gammaray-client PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"
 )
 
+install(TARGETS gammaray_client EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(TARGETS gammaray-client DESTINATION ${LIBEXEC_INSTALL_DIR})
+
+
+gammaray_install_headers(
+  gammaray_client_export.h
+  clientconnectionmanager.h
+)
