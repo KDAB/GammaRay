@@ -44,9 +44,6 @@ class MessageHandlerWidget : public QWidget
     ~MessageHandlerWidget();
 
   private slots:
-    void fatalMessageReceived(const QString &app, const QString &message,
-                              const QTime &time, const QStringList &backtrace);
-    void copyToClipboard(const QString &message);
     void selectionChanged(const QModelIndex &current, const QModelIndex & previous );
 
   private:

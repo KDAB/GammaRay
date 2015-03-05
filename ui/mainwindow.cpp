@@ -47,8 +47,26 @@
 #include <QDebug>
 #include <QLabel>
 #include <QStyleFactory>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QListWidget>
+#include <QTime>
+#include <QPushButton>
+#include <QClipboard>
+#include <QApplication>
+#include <QSignalMapper>
+
+#include "ui/tools/messagehandler/messagehandlerclient.h"
 
 using namespace GammaRay;
+
+
+static QObject *createClientMessageHandler(const QString &/*name*/, QObject *parent)
+{
+  return new MessageHandlerClient(parent);
+}
+
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -122,6 +140,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
   // get some sane size on startup
   resize(1024, 768);
+
+  ObjectBroker::registerClientObjectFactoryCallback<MessageHandlerInterface*>(createClientMessageHandler);
+  MessageHandlerInterface *handler = ObjectBroker::object<MessageHandlerInterface*>();
+
+  connect(handler, SIGNAL(fatalMessageReceived(QString,QString,QTime,QStringList)),
+          this, SLOT(fatalMessageReceived(QString,QString,QTime,QStringList)));
+
 }
 
 MainWindow::~MainWindow()
@@ -240,4 +265,65 @@ void MainWindow::quitHost()
 void MainWindow::detachProbe()
 {
   ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
+}
+
+void MainWindow::fatalMessageReceived(const QString &app, const QString &message,
+                                                const QTime &time, const QStringList &backtrace)
+{
+  if (Endpoint::isConnected() && !qobject_cast<MessageHandlerClient*>(ObjectBroker::object<MessageHandlerInterface*>())) {
+    // only show on remote side
+    return;
+  }
+  QDialog *dlg = new QDialog(this);
+  dlg->setWindowTitle(QObject::tr("QFatal in %1 at %2").arg(app).arg(time.toString()));
+
+  QGridLayout *layout = new QGridLayout;
+
+  QLabel *iconLabel = new QLabel;
+  QIcon icon = dlg->style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, dlg);
+  int iconSize = dlg->style()->pixelMetric(QStyle::PM_MessageBoxIconSize, 0, dlg);
+  iconLabel->setPixmap(icon.pixmap(iconSize, iconSize));
+  iconLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  layout->addWidget(iconLabel, 0, 0);
+
+  QLabel *errorLabel = new QLabel;
+  errorLabel->setTextFormat(Qt::PlainText);
+  errorLabel->setWordWrap(true);
+  errorLabel->setText(message);
+  layout->addWidget(errorLabel, 0, 1);
+
+  QDialogButtonBox *buttons = new QDialogButtonBox;
+
+  if (!backtrace.isEmpty()) {
+    QListWidget *backtraceWidget = new QListWidget;
+    foreach (const QString &frame, backtrace) {
+      backtraceWidget->addItem(frame);
+    }
+    layout->addWidget(backtraceWidget, 1, 0, 1, 2);
+
+    QPushButton *copyBacktraceButton = new QPushButton(tr("Copy Backtrace"));
+    buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
+
+    QSignalMapper *mapper = new QSignalMapper(this);
+    mapper->setMapping(copyBacktraceButton, backtrace.join(QLatin1String("\n")));
+
+    connect(copyBacktraceButton, SIGNAL(clicked()), mapper, SLOT(map()));
+    connect(mapper, SIGNAL(mapped(QString)), this, SLOT(copyToClipboard(QString)));
+  }
+
+  buttons->addButton(QDialogButtonBox::Close);
+  QObject::connect(buttons, SIGNAL(accepted()),
+                    dlg, SLOT(accept()));
+  QObject::connect(buttons, SIGNAL(rejected()),
+                    dlg, SLOT(reject()));
+  layout->addWidget(buttons, 2, 0, 1, 2);
+
+  dlg->setLayout(layout);
+  dlg->adjustSize();
+  dlg->exec();
+}
+
+void MainWindow::copyToClipboard(const QString &message)
+{
+  QApplication::clipboard()->setText(message);
 }
