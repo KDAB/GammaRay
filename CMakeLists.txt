@@ -50,6 +50,7 @@ include(CheckLibraryExists)
 include(GammaRayMacros)
 include(GammaRayMacrosInternal)
 include(FeatureSummary)
+include(ECMGeneratePriFile)
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
 #  MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
@@ -80,6 +81,7 @@ set(GAMMARAY_VERSION "${GAMMARAY_VERSION_MAJOR}.${GAMMARAY_VERSION_MINOR}.${GAMM
 set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION}")
 set(GAMMARAY_SOVERSION "2.3.0")
 set(GAMMARAY_PLUGIN_VERSION "2.3")
+set(PROJECT_VERSION_STRING "${GAMMARAY_VERSION_STRING}")
 if(ANDROID)
   # non-rooted Android doesn't like .so versions...
   set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES "")
