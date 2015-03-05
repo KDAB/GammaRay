@@ -111,9 +111,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
   setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
-  selectInitialTool();
   connect(ui->toolSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectInitialTool()));
   connect(ui->toolSelector->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(selectInitialTool()));
+  selectInitialTool();
 
 #ifdef Q_OS_MAC
   ui->groupBox->setFlat(true);
