@@ -59,6 +59,7 @@ set(gammaray_ui_internal_srcs
   tools/connectioninspector/connectioninspectorwidget.cpp
   tools/localeinspector/localeinspectorwidget.cpp
   tools/messagehandler/messagehandlerwidget.cpp
+  tools/messagehandler/messagehandlerdialog.cpp
   tools/messagehandler/messagehandlerclient.cpp
   tools/messagehandler/backtracemodel.cpp
   ../core/tools/messagehandler/messagehandlerinterface.cpp
@@ -100,6 +101,7 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
   tools/connectioninspector/connectioninspectorwidget.ui
   tools/localeinspector/localeinspectorwidget.ui
   tools/messagehandler/messagehandlerwidget.ui
+  tools/messagehandler/messagehandlerdialog.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
   tools/mimetypes/mimetypeswidget.ui
   tools/modelinspector/modelinspectorwidget.ui

@@ -52,7 +52,6 @@ class MainWindow : public QMainWindow
 
     void fatalMessageReceived(const QString &app, const QString &message,
                               const QTime &time, const QStringList &backtrace);
-    void copyToClipboard(const QString &message);
 
   private:
     QWidget* createErrorPage(const QModelIndex &index);
