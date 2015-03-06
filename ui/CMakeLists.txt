@@ -61,7 +61,6 @@ set(gammaray_ui_internal_srcs
   tools/messagehandler/messagehandlerwidget.cpp
   tools/messagehandler/messagehandlerdialog.cpp
   tools/messagehandler/messagehandlerclient.cpp
-  tools/messagehandler/backtracemodel.cpp
   ../core/tools/messagehandler/messagehandlerinterface.cpp
   tools/metaobjectbrowser/metaobjectbrowserwidget.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
