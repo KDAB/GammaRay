@@ -44,8 +44,6 @@ template <> struct matrix_trait<QMatrix4x4> {
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 template <> struct matrix_trait<QVector2D> {
-    static const int rows = 2;
-    static const int columns = 1;
     static qreal value(const QVector3D &vec, int r, int) { return vec[r]; }
 };
 
@@ -56,8 +54,6 @@ template <> struct matrix_trait<QVector3D> {
 };
 
 template <> struct matrix_trait<QVector4D> {
-  static const int rows = 4;
-  static const int columns = 1;
   static qreal value(const QVector3D &vec, int r, int) { return vec[r]; }
 };
 #endif
