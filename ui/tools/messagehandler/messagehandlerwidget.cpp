@@ -66,5 +66,8 @@ void MessageHandlerWidget::currentRowChanged(const QModelIndex &current, const Q
 {
   Q_UNUSED(previous);
   m_handler->selectMessage(current.row());
+  int columnCount = ui->backtraceView->model()->columnCount();
+  for (int i = 0; i < columnCount; ++i)
+    ui->backtraceView->resizeColumnToContents(i);
 }
 
