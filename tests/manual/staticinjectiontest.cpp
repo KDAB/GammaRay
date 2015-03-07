@@ -21,19 +21,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <core/staticprobe.h>
+
 #include <QApplication>
 #include <QLabel>
-#include <QtPlugin>
 
-extern "C" {
-    extern void gammaray_install_hooks();
-}
-
-Q_IMPORT_PLUGIN(WidgetInspectorFactory)
+GAMMARAY_STATIC_INJECT
 
 int main(int argc, char** argv)
 {
-    gammaray_install_hooks(); // TODO turn this into a macro in a GammaRay header, including the forward decl. above
     QApplication app(argc, argv);
     QLabel label("Hello World");
     label.show();
