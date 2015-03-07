@@ -57,7 +57,7 @@ class MessageModel : public QAbstractTableModel
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
-
+    Backtrace getBacktrace(int idx);
     enum Columns {
       TypeColumn,
       TimeColumn,

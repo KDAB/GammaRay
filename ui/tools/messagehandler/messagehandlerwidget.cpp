@@ -30,6 +30,9 @@
 #include <QSortFilterProxyModel>
 #include <QTreeView>
 
+
+#include <core/tools/messagehandler/messagehandlerinterface.h>
+
 using namespace GammaRay;
 
 MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
@@ -38,18 +41,19 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  proxy = new QSortFilterProxyModel(this);
+  m_handler = ObjectBroker::object<MessageHandlerInterface*>();
+
+  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.MessageModel"));
   ui->messageSearchLine->setProxy(proxy);
   ui->messageView->setModel(proxy);
   ui->messageView->setIndentation(0);
   ui->messageView->setSortingEnabled(true);
 
-  m_backtraceModel.reset(new BacktraceModel);
-  ui->backtraceView->setModel(m_backtraceModel.data());
+  ui->backtraceView->setModel(ObjectBroker::model("com.kdab.GammaRay.BacktraceModel"));
 
   QItemSelectionModel *selectionModel = ui->messageView->selectionModel();
-  connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(selectionChanged(QModelIndex,QModelIndex)));
+  connect(selectionModel, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(currentRowChanged(QModelIndex,QModelIndex)));
 }
 
 MessageHandlerWidget::~MessageHandlerWidget()
@@ -58,11 +62,9 @@ MessageHandlerWidget::~MessageHandlerWidget()
 
 
 
-void MessageHandlerWidget::selectionChanged(const QModelIndex &current, const QModelIndex &previous)
+void MessageHandlerWidget::currentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
   Q_UNUSED(previous);
-  m_backtraceModel->setBacktrace(proxy->data(current, Qt::UserRole).toStringList());
-  for (int i = 0; i < m_backtraceModel->columnCount(); ++i)
-    ui->backtraceView->resizeColumnToContents(i);
+  m_handler->selectMessage(current.row());
 }
 

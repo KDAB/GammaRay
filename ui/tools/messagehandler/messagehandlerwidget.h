@@ -25,12 +25,14 @@
 
 #include <QWidget>
 
-#include "backtracemodel.h"
 
 class QTime;
 class QSortFilterProxyModel;
+class QAbstractItemModel;
 
 namespace GammaRay {
+
+class MessageHandlerInterface;
 
 namespace Ui {
   class MessageHandlerWidget;
@@ -44,12 +46,11 @@ class MessageHandlerWidget : public QWidget
     ~MessageHandlerWidget();
 
   private slots:
-    void selectionChanged(const QModelIndex &current, const QModelIndex & previous );
+    void currentRowChanged(const QModelIndex &current, const QModelIndex & previous );
 
   private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
-    QScopedPointer<BacktraceModel> m_backtraceModel;
-    QSortFilterProxyModel *proxy;
+    MessageHandlerInterface *m_handler;
 };
 
 }

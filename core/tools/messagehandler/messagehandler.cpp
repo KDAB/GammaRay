@@ -23,6 +23,7 @@
 
 #include "messagehandler.h"
 #include "messagemodel.h"
+#include "backtracemodel.h"
 
 #include "backtrace.h"
 
@@ -139,13 +140,15 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
 
 MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   : MessageHandlerInterface(parent),
-  m_messageModel(new MessageModel(this))
+  m_messageModel(new MessageModel(this)),
+  m_backtraceModel(new BacktraceModel(this))
 {
 
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
 
   probe->registerModel("com.kdab.GammaRay.MessageModel", m_messageModel);
+  probe->registerModel("com.kdab.GammaRay.BacktraceModel", m_backtraceModel);
 
   // install handler directly, catches most cases,
   // i.e. user has no special handler or the handler
@@ -167,6 +170,11 @@ MessageHandler::~MessageHandler()
     installMessageHandler(oldHandler);
   }
   s_handler = 0;
+}
+
+void MessageHandler::selectMessage(int idx)
+{
+  m_backtraceModel->setBacktrace(m_messageModel->getBacktrace(idx));
 }
 
 void MessageHandler::ensureHandlerInstalled()

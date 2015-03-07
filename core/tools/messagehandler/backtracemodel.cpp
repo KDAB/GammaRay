@@ -115,7 +115,7 @@ QVariant BacktraceModel::headerData(int section, Qt::Orientation orientation, in
 
 }
 
-void BacktraceModel::setBacktrace(QStringList &backtrace)
+void BacktraceModel::setBacktrace(Backtrace &backtrace)
 {
     m_backtrace = backtrace;
     emit layoutChanged ();

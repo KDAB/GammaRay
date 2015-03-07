@@ -36,7 +36,7 @@ class MessageHandlerInterface : public QObject
   public:
     explicit MessageHandlerInterface(QObject *parent = 0);
     virtual ~MessageHandlerInterface();
-
+    virtual void selectMessage(int idx) {}
   signals:
     void fatalMessageReceived(const QString &app, const QString &message,
                               const QTime &time, const QStringList &backtrace);

@@ -25,6 +25,8 @@
 
 #include <QAbstractTableModel>
 
+#include "backtrace.h"
+
 namespace GammaRay {
 
 class BacktraceModel : public QAbstractTableModel
@@ -38,7 +40,7 @@ class BacktraceModel : public QAbstractTableModel
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
-    void setBacktrace(QStringList &backtrace);
+    void setBacktrace(Backtrace &backtrace);
     QStringList parseStackFrame(QString stackFrame) const;
 
     enum Columns {
@@ -51,7 +53,7 @@ class BacktraceModel : public QAbstractTableModel
       COLUMN_COUNT
     };
 private:
-    QStringList m_backtrace;
+    Backtrace m_backtrace;
 };
 
 }

@@ -117,8 +117,6 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
                   "<dt><b>Message:</b></dt><dd>%3</dd>"
                 "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message);
     }
-  } else if (role == Qt::UserRole) {
-      return msg.backtrace;
   }
 
   return QVariant();
@@ -137,5 +135,10 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
   }
 
   return QVariant();
+}
+
+Backtrace MessageModel::getBacktrace(int idx)
+{
+    return m_messages.at(idx).backtrace;
 }
 
