@@ -25,6 +25,10 @@
 
 #include <QDebug>
 
+
+#include <tuple>
+
+using namespace std;
 using namespace GammaRay;
 
 
@@ -45,36 +49,46 @@ int BacktraceModel::columnCount(const QModelIndex &parent) const
     return COLUMN_COUNT;
 }
 
+//Parses input in "aaa (bbb)" format into a tuple of "aaa" and "bbb".
+tuple<QString, QString> parseParenthesis(QString str)
+{
+    QStringList parts = str.split(" (");
+    if (parts.count() != 2)
+      return tuple<QString, QString>();
+    QString second = parts.at(1).left(parts.at(1).count()-1);
+    return make_tuple(parts.at(0), second);
+}
+
+//The input either contains a function name only,
+//or is in the ClassName::FunctionName format.
+tuple<QString, QString> parseClassAndFunctionName(QString str)
+{
+    QStringList parts = str.split("::");
+    if (parts.count() == 2)
+      return make_tuple(parts.at(0), parts.at(1));
+    return make_tuple(QString(), str);
+}
+
 QStringList BacktraceModel::parseStackFrame(QString stackFrame) const
 {
   QStringList row;
   for (int i = 0; i < COLUMN_COUNT; ++i)
     row.append(QString());
-  QStringList parts = stackFrame.split("::");
+
+  QStringList parts = stackFrame.split(": ");
+  if (parts.count() != 2 && parts.count() != 3)
+    return row;
+
+  QString functionStr = parts.at(parts.count()-1);
+  tie(row[ClassColumn], row[FunctionColumn]) = parseClassAndFunctionName(functionStr);
+
   if (parts.count() == 2)
   {
-    row[FunctionColumn] = parts.at(1);
-    parts = parts.at(0).split(": ");
-    if (parts.count() != 2 && parts.count() != 3)
-      return row;
-    row[ClassColumn] = parts.at(parts.count()-1);
-    if (parts.count() == 2)
-    {
-      parts = parts.at(0).split(" (");
-      if (parts.count() != 2)
-        return row;
-      row[FileColumn] = parts.at(0);
-      row[LineColumn] = parts.at(1).left(parts.at(1).count()-1);
-
-    } else
-    {
-      row[FileColumn] = parts.at(1);
-      parts = parts.at(0).split(" (");
-      if (parts.count() != 2)
-        return row;
-      row[AddressColumn] = parts.at(0);
-      row[DllColumn] = parts.at(1).left(parts.at(1).count()-1);
-    }
+    tie(row[FileColumn], row[LineColumn]) = parseParenthesis(parts.at(0));
+  } else
+  {
+    row[FileColumn] = parts.at(1);
+    tie(row[AddressColumn], row[DllColumn]) = parseParenthesis(parts.at(0));
   }
 
   return row;
