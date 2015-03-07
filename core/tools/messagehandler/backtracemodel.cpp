@@ -40,7 +40,7 @@ BacktraceModel::BacktraceModel(QObject *parent)
 int BacktraceModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return m_backtrace.count();
+    return m_data.count();
 }
 
 int BacktraceModel::columnCount(const QModelIndex &parent) const
@@ -69,7 +69,7 @@ tuple<QString, QString> parseClassAndFunctionName(QString str)
     return make_tuple(QString(), str);
 }
 
-QStringList BacktraceModel::parseStackFrame(QString stackFrame) const
+QStringList BacktraceModel::parseStackFrame(QString &stackFrame) const
 {
   QStringList row;
   for (int i = 0; i < COLUMN_COUNT; ++i)
@@ -100,9 +100,7 @@ QVariant BacktraceModel::data(const QModelIndex &index, int role) const
       return QVariant();
     }
     if (role == Qt::DisplayRole){
-        QString stackFrame = m_backtrace.at(index.row());
-        QStringList row = parseStackFrame(stackFrame);
-        return row.at(index.column());
+        return m_data.at(index.row()).at(index.column());
     }
     return QVariant();
 }
@@ -131,6 +129,10 @@ QVariant BacktraceModel::headerData(int section, Qt::Orientation orientation, in
 
 void BacktraceModel::setBacktrace(Backtrace &backtrace)
 {
-    m_backtrace = backtrace;
+    m_data.clear();
+    foreach (QString stackFrame, backtrace) {
+        m_data.push_back(parseStackFrame(stackFrame));
+    }
+
     emit layoutChanged ();
 }

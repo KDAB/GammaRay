@@ -24,6 +24,8 @@
 #define GAMMARAY_MESSAGEHANDLER_BACKTRACEMODEL_H
 
 #include <QAbstractTableModel>
+#include <QVector>
+#include <QStringList>
 
 #include "backtrace.h"
 
@@ -41,7 +43,7 @@ class BacktraceModel : public QAbstractTableModel
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
     void setBacktrace(Backtrace &backtrace);
-    QStringList parseStackFrame(QString stackFrame) const;
+    QStringList parseStackFrame(QString &stackFrame) const;
 
     enum Columns {
       AddressColumn,
@@ -53,7 +55,7 @@ class BacktraceModel : public QAbstractTableModel
       COLUMN_COUNT
     };
 private:
-    Backtrace m_backtrace;
+    QVector<QStringList> m_data;
 };
 
 }
