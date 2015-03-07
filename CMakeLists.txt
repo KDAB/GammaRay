@@ -178,6 +178,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
   endif()
 endif()
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments")
+endif()
 
 if(WIN32)
   add_definitions(-DUNICODE -D_UNICODE)
@@ -194,8 +197,6 @@ endif()
 #
 # Finding Qt
 #
-
-set(QT_MIN_VERSION "4.8.0")
 
 # try Qt5 first, and prefer that (if found), but only if not disabled via option
 if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
@@ -283,8 +284,8 @@ if(Qt5Core_FOUND)
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
-  find_package(Qt4 ${QT_MIN_VERSION} REQUIRED QtCore QtGui QtNetwork)
-  find_package(Qt4 ${QT_MIN_VERSION} QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
+  find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork)
+  find_package(Qt4 4.8.0 QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
 
   include(${QT_USE_FILE})
   set(HAVE_QT_CONCURRENT true)
@@ -501,12 +502,10 @@ add_subdirectory(hooking)
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   add_subdirectory(launcher)
 endif()
-if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(GAMMARAY_BUILD_UI AND (Qt5Widgets_FOUND OR QT_QTGUI_FOUND))
   add_subdirectory(ui)
-  if(GAMMARAY_BUILD_UI)
-    add_subdirectory(inprocessui)
-  endif()
-  if(GAMMARAY_BUILD_UI AND NOT GAMMARAY_PROBE_ONLY_BUILD)
+  add_subdirectory(inprocessui)
+  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     add_subdirectory(client)
     add_subdirectory(app)
   endif()

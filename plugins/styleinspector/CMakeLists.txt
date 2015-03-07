@@ -11,6 +11,8 @@ set(gammaray_styleinspector_plugin_srcs
   complexcontrolmodel.cpp
   dynamicproxystyle.cpp
   styleinspectorinterface.cpp
+
+  ${CMAKE_SOURCE_DIR}/ui/palettemodel.cpp
 )
 
 gammaray_add_plugin(gammaray_styleinspector_plugin
@@ -21,7 +23,6 @@ gammaray_add_plugin(gammaray_styleinspector_plugin
 target_link_libraries(gammaray_styleinspector_plugin
   ${QT_QTGUI_LIBRARIES}
   gammaray_core
-  gammaray_ui
 )
 
 if(QNXNTO)

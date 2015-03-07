@@ -46,7 +46,7 @@ template <> struct matrix_trait<QMatrix4x4> {
 template <> struct matrix_trait<QVector2D> {
     static const int rows = 2;
     static const int columns = 1;
-    static qreal value(const QVector3D &vec, int r, int) { return vec[r]; }
+    static qreal value(const QVector2D &vec, int r, int) { return vec[r]; }
 };
 
 template <> struct matrix_trait<QVector3D> {
@@ -58,7 +58,7 @@ template <> struct matrix_trait<QVector3D> {
 template <> struct matrix_trait<QVector4D> {
   static const int rows = 4;
   static const int columns = 1;
-  static qreal value(const QVector3D &vec, int r, int) { return vec[r]; }
+  static qreal value(const QVector4D &vec, int r, int) { return vec[r]; }
 };
 #endif
 
@@ -86,11 +86,11 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
         paint(painter, option, index, value.value<QMatrix4x4>());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     } else if (value.canConvert<QVector2D>()) {
-        paint(painter, option, index, value.value<QVector3D>());
+        paint(painter, option, index, value.value<QVector2D>());
     } else if (value.canConvert<QVector3D>()) {
       paint(painter, option, index, value.value<QVector3D>());
     } else if (value.canConvert<QVector4D>()) {
-      paint(painter, option, index, value.value<QVector3D>());
+      paint(painter, option, index, value.value<QVector4D>());
 #endif
     } else {
         QStyledItemDelegate::paint(painter, option, index);
@@ -104,11 +104,11 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
         return sizeHint(option, index, value.value<QMatrix4x4>());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     } else if (value.canConvert<QVector2D>()) {
-        return sizeHint(option, index, value.value<QVector3D>());
+        return sizeHint(option, index, value.value<QVector2D>());
     } else if (value.canConvert<QVector3D>()) {
       return sizeHint(option, index, value.value<QVector3D>());
     } else if (value.canConvert<QVector4D>()) {
-      return sizeHint(option, index, value.value<QVector3D>());
+      return sizeHint(option, index, value.value<QVector4D>());
 #endif
     }
     return QStyledItemDelegate::sizeHint(option, index);

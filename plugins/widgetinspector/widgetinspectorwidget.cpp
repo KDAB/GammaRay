@@ -32,7 +32,6 @@
 #include "common/objectmodel.h"
 
 #include "kde/krecursivefilterproxymodel.h"
-#include "other/modelutils.h"
 #include "ui/deferredresizemodesetter.h"
 
 #include <QDebug>

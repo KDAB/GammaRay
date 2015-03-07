@@ -107,13 +107,15 @@ add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetector
 
 ### Remote model tests
 
-add_executable(remotemodeltest
-  remotemodeltest.cpp
-  modeltest.cpp
-  ../core/remote/remotemodelserver.cpp
-)
-target_link_libraries(remotemodeltest gammaray_core gammaray_client_internal ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
-add_test(NAME remotemodeltest COMMAND remotemodeltest)
+if(GAMMARAY_BUILD_UI)
+  add_executable(remotemodeltest
+    remotemodeltest.cpp
+    modeltest.cpp
+    ../core/remote/remotemodelserver.cpp
+  )
+  target_link_libraries(remotemodeltest gammaray_core gammaray_client_internal ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+  add_test(NAME remotemodeltest COMMAND remotemodeltest)
+endif()
 
 ### QSignalSpyCallback tests
 

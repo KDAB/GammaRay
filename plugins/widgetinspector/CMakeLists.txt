@@ -6,6 +6,8 @@ set(gammaray_widgetinspector_plugin_srcs
   overlaywidget.cpp
   widgettreemodel.cpp
   paintbufferreplaywidget.cpp
+
+  ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
 )
 
 if(HAVE_PRIVATE_QT_HEADERS)
@@ -23,7 +25,6 @@ gammaray_add_plugin(gammaray_widgetinspector_plugin
 target_link_libraries(gammaray_widgetinspector_plugin
   ${QT_QTGUI_LIBRARIES}
   gammaray_core
-  gammaray_ui
 )
 
 # probe export actions
