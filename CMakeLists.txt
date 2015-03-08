@@ -497,7 +497,6 @@ include_directories(
 add_subdirectory(cmake)
 add_subdirectory(common)
 add_subdirectory(core)
-add_subdirectory(docs)
 add_subdirectory(hooking)
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   add_subdirectory(launcher)
@@ -515,6 +514,7 @@ if((Qt5Test_FOUND OR QT_QTTEST_FOUND) AND NOT CMAKE_CROSSCOMPILING)
 endif()
 add_subdirectory(plugins)
 add_subdirectory(resources)
+add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
 
 set(LICENSE_FILE "License.txt")
 set(README_FILE "ReadMe.txt")
