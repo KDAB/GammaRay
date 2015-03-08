@@ -105,16 +105,16 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
         ++i;
       }
       return tr("<qt><dl>"
-                "<dt><b>Type:</b></dt><dd>%1</dd>"
-                "<dt><b>Time:</b></dt><dd>%2</dd>"
-                "<dt><b>Message:</b></dt><dd>%3</dd>"
-                "<dt><b>Backtrace:</b></dt><dd><pre>%4</pre></dd>"
+                  "<dt><b>Type:</b></dt><dd>%1</dd>"
+                  "<dt><b>Time:</b></dt><dd>%2</dd>"
+                  "<dt><b>Message:</b></dt><dd>%3</dd>"
+                  "<dt><b>Backtrace:</b></dt><dd><pre>%4</pre></dd>"
                 "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message, bt);
     } else {
       return tr("<qt><dl>"
-                "<dt><b>Type:</b></dt><dd>%1</dd>"
-                "<dt><b>Time:</b></dt><dd>%2</dd>"
-                "<dt><b>Message:</b></dt><dd>%3</dd>"
+                  "<dt><b>Type:</b></dt><dd>%1</dd>"
+                  "<dt><b>Time:</b></dt><dd>%2</dd>"
+                  "<dt><b>Message:</b></dt><dd>%3</dd>"
                 "</dl></qt>").arg(typeToString(msg.type), msg.time.toString(), msg.message);
     }
   }

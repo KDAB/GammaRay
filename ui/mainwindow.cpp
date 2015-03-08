@@ -47,10 +47,6 @@
 #include <QDebug>
 #include <QLabel>
 #include <QStyleFactory>
-#include <QDialog>
-#include <QDialogButtonBox>
-#include <QListWidget>
-#include <QTime>
 
 #include "ui/tools/messagehandler/messagehandlerclient.h"
 #include "ui/tools/messagehandler/messagehandlerdialog.h"

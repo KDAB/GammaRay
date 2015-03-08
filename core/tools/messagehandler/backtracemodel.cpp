@@ -23,15 +23,10 @@
 
 #include "backtracemodel.h"
 
-#include <QDebug>
-
-
 #include <tuple>
 
 using namespace std;
 using namespace GammaRay;
-
-
 
 BacktraceModel::BacktraceModel(QObject *parent)
 {
