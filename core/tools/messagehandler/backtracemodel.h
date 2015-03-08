@@ -5,7 +5,7 @@
   manipulation tool.
 
   Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Milian Wolff <milian.wolff@kdab.com>
+  Author: Gábor Angyal <angyalgabor@outlook.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #ifndef GAMMARAY_MESSAGEHANDLER_BACKTRACEMODEL_H
 #define GAMMARAY_MESSAGEHANDLER_BACKTRACEMODEL_H
 

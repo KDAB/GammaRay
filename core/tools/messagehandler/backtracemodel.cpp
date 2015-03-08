@@ -5,7 +5,7 @@
   manipulation tool.
 
   Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Milian Wolff <milian.wolff@kdab.com>
+  Author: Gábor Angyal <angyalgabor@outlook.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,34 +39,34 @@ BacktraceModel::BacktraceModel(QObject *parent)
 
 int BacktraceModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
-    return m_data.count();
+  Q_UNUSED(parent);
+  return m_data.count();
 }
 
 int BacktraceModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
-    return COLUMN_COUNT;
+  Q_UNUSED(parent);
+  return COLUMN_COUNT;
 }
 
 //Parses input in "aaa (bbb)" format into a tuple of "aaa" and "bbb".
 tuple<QString, QString> parseParenthesis(QString str)
 {
-    QStringList parts = str.split(" (");
-    if (parts.count() != 2)
-      return tuple<QString, QString>();
-    QString second = parts.at(1).left(parts.at(1).count()-1);
-    return make_tuple(parts.at(0), second);
+  QStringList parts = str.split(" (");
+  if (parts.count() != 2)
+    return tuple<QString, QString>();
+  QString second = parts.at(1).left(parts.at(1).count()-1);
+  return make_tuple(parts.at(0), second);
 }
 
 //The input either contains a function name only,
 //or is in the ClassName::FunctionName format.
 tuple<QString, QString> parseClassAndFunctionName(QString str)
 {
-    QStringList parts = str.split("::");
-    if (parts.count() == 2)
-      return make_tuple(parts.at(0), parts.at(1));
-    return make_tuple(QString(), str);
+  QStringList parts = str.split("::");
+  if (parts.count() == 2)
+    return make_tuple(parts.at(0), parts.at(1));
+  return make_tuple(QString(), str);
 }
 
 QStringList BacktraceModel::parseStackFrame(QString &stackFrame) const
@@ -82,11 +82,9 @@ QStringList BacktraceModel::parseStackFrame(QString &stackFrame) const
   QString functionStr = parts.at(parts.count()-1);
   tie(row[ClassColumn], row[FunctionColumn]) = parseClassAndFunctionName(functionStr);
 
-  if (parts.count() == 2)
-  {
+  if (parts.count() == 2) {
     tie(row[FileColumn], row[LineColumn]) = parseParenthesis(parts.at(0));
-  } else
-  {
+  } else {
     row[FileColumn] = parts.at(1);
     tie(row[AddressColumn], row[DllColumn]) = parseParenthesis(parts.at(0));
   }
@@ -96,43 +94,43 @@ QStringList BacktraceModel::parseStackFrame(QString &stackFrame) const
 
 QVariant BacktraceModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() > rowCount() || index.column() > columnCount()) {
-      return QVariant();
-    }
-    if (role == Qt::DisplayRole){
-        return m_data.at(index.row()).at(index.column());
-    }
+  if (!index.isValid() || index.row() > rowCount() || index.column() > columnCount()) {
     return QVariant();
+  }
+  if (role == Qt::DisplayRole) {
+    return m_data.at(index.row()).at(index.column());
+  }
+  return QVariant();
 }
 
 QVariant BacktraceModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-      if (section == AddressColumn) {
+  if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+    switch (section) {
+      case AddressColumn:
         return tr("Address");
-      } else if (section == DllColumn) {
+      case DllColumn:
         return tr("Dll");
-      } else if (section == FileColumn) {
+      case FileColumn:
         return tr("File");
-      } else if (section == LineColumn) {
+      case LineColumn:
         return tr("Line");
-      } else if (section == ClassColumn) {
+      case ClassColumn:
         return tr("Class");
-      } else if (section == FunctionColumn) {
+      case FunctionColumn:
         return tr("Function");
-      }
     }
+  }
 
-    return QVariant();
-
+  return QVariant();
 }
 
 void BacktraceModel::setBacktrace(Backtrace &backtrace)
 {
-    m_data.clear();
-    foreach (QString stackFrame, backtrace) {
-        m_data.push_back(parseStackFrame(stackFrame));
-    }
+  m_data.clear();
+  foreach (QString stackFrame, backtrace) {
+    m_data.push_back(parseStackFrame(stackFrame));
+  }
 
-    emit layoutChanged ();
+  emit layoutChanged ();
 }

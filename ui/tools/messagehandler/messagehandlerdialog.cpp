@@ -5,7 +5,7 @@
   manipulation tool.
 
   Copyright (C) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ MessageHandlerDialog::MessageHandlerDialog(QWidget* parent): QDialog(parent),
   QPushButton *copyBacktraceButton = new QPushButton(tr("Copy Backtrace"));
   ui->buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
   connect(copyBacktraceButton, SIGNAL(clicked()), this, SLOT(copyBacktraceToClipboard()));
+
   QIcon icon = style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, this);
   int iconSize = style()->pixelMetric(QStyle::PM_MessageBoxIconSize, 0, this);
   ui->iconLabel->setPixmap(icon.pixmap(iconSize, iconSize));
