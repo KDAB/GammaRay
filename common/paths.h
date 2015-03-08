@@ -30,7 +30,7 @@ class QString;
 
 namespace GammaRay {
 
-/** Methods to determine install locations of the various bits of GammaRay. */
+/** @brief Methods to determine install locations of the various bits of GammaRay. */
 namespace Paths
 {
   /** Absolute path to the root of the GammaRay installation, anything else

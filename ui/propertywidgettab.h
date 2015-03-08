@@ -31,6 +31,7 @@ namespace GammaRay {
 
 class PropertyWidget;
 
+/** @brief Interface for tabs in the property widget. */
 class PropertyWidgetTabFactoryBase
 {
   public:
@@ -40,6 +41,7 @@ class PropertyWidgetTabFactoryBase
     virtual const QString &label() const = 0;
 };
 
+/** @brief Template implementation of PropertyWidgetTabFactoryBase. */
 template <typename T>
 class PropertyWidgetTabFactory : public PropertyWidgetTabFactoryBase
 {
