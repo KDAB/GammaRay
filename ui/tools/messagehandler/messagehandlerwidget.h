@@ -25,10 +25,7 @@
 
 #include <QWidget>
 
-
 class QTime;
-class QSortFilterProxyModel;
-class QAbstractItemModel;
 
 namespace GammaRay {
 

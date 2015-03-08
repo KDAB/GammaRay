@@ -127,5 +127,5 @@ void BacktraceModel::setBacktrace(Backtrace &backtrace)
     m_data.push_back(parseStackFrame(stackFrame));
   }
 
-  emit layoutChanged ();
+  emit layoutChanged();
 }

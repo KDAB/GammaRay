@@ -28,8 +28,6 @@
 #include <common/objectbroker.h>
 
 #include <QSortFilterProxyModel>
-#include <QTreeView>
-
 
 #include <core/tools/messagehandler/messagehandlerinterface.h>
 
