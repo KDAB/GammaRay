@@ -37,7 +37,12 @@ namespace GammaRay {
 class Client;
 class MainWindow;
 
-/** Pre-MainWindow connection setup logic. */
+/** @brief Pre-MainWindow connection setup logic.
+ *
+ * This is useful for embedding the GammaRay client into another application
+ *
+ * @since 2.3
+ */
 class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
 {
   Q_OBJECT
@@ -45,6 +50,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     explicit ClientConnectionManager(QObject* parent = 0);
     ~ClientConnectionManager();
 
+    /** Connect to a GammaRay probe at @p url. */
     void connectToHost(const QUrl &url);
 
     /** One-time initialization of stream operators and factory callbacks. */
