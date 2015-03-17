@@ -10,6 +10,7 @@ set(gammaray_clientlib_srcs
   localclientdevice.cpp
 )
 
+qt4_add_resources(gammaray_clientlib_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 add_library(gammaray_client SHARED ${gammaray_clientlib_srcs})
 set_target_properties(gammaray_client PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
@@ -30,7 +31,6 @@ target_link_libraries(gammaray_client
 
 
 set(gammaray_client_srcs main.cpp)
-qt4_add_resources(gammaray_client_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_executable(gammaray-client WIN32 ${gammaray_client_srcs})
 

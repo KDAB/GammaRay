@@ -2,7 +2,6 @@
 if(APPLE)
 
 set(gammaray_app_srcs main.cpp)
-qt4_add_resources(gammaray_app_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_executable(gammaray-app MACOSX_BUNDLE ${gammaray_app_srcs})
 
