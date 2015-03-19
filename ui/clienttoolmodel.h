@@ -48,9 +48,9 @@ public:
   explicit ClientToolModel(QObject* parent = 0);
   ~ClientToolModel();
 
-  virtual QVariant data(const QModelIndex& index, int role) const;
-  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-  virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+  QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
+  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+  Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
   void insertFactory(ToolUiFactory* factory);
