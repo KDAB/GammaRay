@@ -138,8 +138,8 @@ void ModelTest::nonDestructiveBasicTest()
     fetchingMore = false;
 #if !defined(NDEBUG)
     Qt::ItemFlags flags = model->flags ( QModelIndex() );
-#endif
     Q_ASSERT ( flags == Qt::ItemIsDropEnabled || flags == 0 );
+#endif
     model->hasChildren ( QModelIndex() );
     model->hasIndex ( 0, 0 );
     model->headerData ( 0, Qt::Horizontal );
@@ -220,12 +220,12 @@ void ModelTest::hasIndex()
 #if !defined(NDEBUG)
     int rows = model->rowCount();
     int columns = model->columnCount();
-#endif
     // check out of bounds
     Q_ASSERT ( model->hasIndex ( rows, columns ) == false );
     Q_ASSERT ( model->hasIndex ( rows + 1, columns + 1 ) == false );
 
     Q_ASSERT ( model->hasIndex ( 0, 0 ) == ( rows > 0 ) );
+#endif
 
     // hasIndex() is tested more extensively in checkChildren(),
     // but this catches the big mistakes
@@ -247,17 +247,15 @@ void ModelTest::index()
         return;
 #if !defined(NDEBUG)
     int columns = model->columnCount();
-#endif
     // Catch off by one errors
     Q_ASSERT ( model->index ( rows, columns ) == QModelIndex() );
     Q_ASSERT ( model->index ( 0, 0 ).isValid() == true );
 
     // Make sure that the same index is *always* returned
-#if !defined(NDEBUG)
     QModelIndex a = model->index ( 0, 0 );
     QModelIndex b = model->index ( 0, 0 );
-#endif
     Q_ASSERT ( a == b );
+#endif
 
     // index() is tested more extensively in checkChildren(),
     // but this catches the big mistakes
@@ -303,8 +301,8 @@ void ModelTest::parent()
 #if !defined(NDEBUG)
         QModelIndex childIndex = model->index ( 0, 0, topIndex );
         QModelIndex childIndex1 = model->index ( 0, 0, topIndex1 );
-#endif
         Q_ASSERT ( childIndex != childIndex1 );
+#endif
     }
 
     // Full test, walk n levels deep through the model making sure that all
@@ -372,15 +370,15 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
             // index() should always return the same index when called twice in a row
 #if !defined(NDEBUG)
             QModelIndex modifiedIndex = model->index ( r, c, parent );
-#endif
             Q_ASSERT ( index == modifiedIndex );
+#endif
 
             // Make sure we get the same index if we request it twice in a row
 #if !defined(NDEBUG)
             QModelIndex a = model->index ( r, c, parent );
             QModelIndex b = model->index ( r, c, parent );
-#endif
             Q_ASSERT ( a == b );
+#endif
 
             // Some basic checking on the index that is returned
             Q_ASSERT ( index.model() == model );
@@ -418,8 +416,8 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
             // make sure that after testing the children that the index doesn't change.
 #if !defined(NDEBUG)
             QModelIndex newerIndex = model->index ( r, c, parent );
-#endif
             Q_ASSERT ( index == newerIndex );
+#endif
         }
     }
 }
@@ -472,8 +470,8 @@ void ModelTest::data()
     if ( textAlignmentVariant.isValid() ) {
 #if !defined(NDEBUG)
         int alignment = textAlignmentVariant.toInt();
-#endif
         Q_ASSERT ( alignment == ( alignment & ( Qt::AlignHorizontal_Mask | Qt::AlignVertical_Mask ) ) );
+#endif
     }
 
     // General Purpose roles that should return a QColor
@@ -492,10 +490,10 @@ void ModelTest::data()
     if ( checkStateVariant.isValid() ) {
 #if !defined(NDEBUG)
         int state = checkStateVariant.toInt();
-#endif
         Q_ASSERT ( state == Qt::Unchecked ||
                    state == Qt::PartiallyChecked ||
                    state == Qt::Checked );
+#endif
     }
 }
 
