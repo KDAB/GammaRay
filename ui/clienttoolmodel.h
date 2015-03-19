@@ -37,7 +37,10 @@ namespace GammaRay {
 
 class ToolUiFactory;
 
-/** Tool model for the client that implements the custom roles that return widget/factory pointers. */
+/** @brief Tool model for the client that implements the custom roles that return widget/factory pointers.
+ *
+ *  This is needed when implementing your own client UI embedded into a different application.
+ */
 class GAMMARAY_UI_EXPORT ClientToolModel : public QSortFilterProxyModel
 {
   Q_OBJECT
