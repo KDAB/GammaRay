@@ -56,6 +56,19 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     /** One-time initialization of stream operators and factory callbacks. */
     static void init();
 
+  signals:
+    /** Emitted when the connection is established and the tool model is populated.
+     *  If you want to bring up the standard main window, connect this to createMainWindow(),
+     *  otherwise use this to show your own UI at this point.
+     */
+    void ready();
+
+  public slots:
+    /** Brings up a client main window for the current connection.
+     *  If you want to use this, connect this slot to ready().
+     */
+    void createMainWindow();
+
   private slots:
     void connectToHost();
     void connectionEstablished();
@@ -63,6 +76,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     void persistentConnectionError( const QString &msg);
 
     void toolModelPopulated();
+    void delayedHideSplashScreen();
 
   private:
     QUrl m_serverUrl;

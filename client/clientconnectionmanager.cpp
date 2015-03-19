@@ -124,10 +124,14 @@ void ClientConnectionManager::toolModelPopulated()
     return;
 
   disconnect(m_toolModel, 0, this, 0);
+  QTimer::singleShot(0, this, SLOT(delayedHideSplashScreen()));
+  emit ready();
+}
 
+void ClientConnectionManager::createMainWindow()
+{
   m_mainWindow = new MainWindow;
   m_mainWindow->show();
-  hideSplashScreen();
 }
 
 void ClientConnectionManager::transientConnectionError()
@@ -152,4 +156,9 @@ void ClientConnectionManager::persistentConnectionError(const QString& msg)
 
   QMessageBox::critical(m_mainWindow, tr("GammaRay - Connection Error"), errorMsg);
   QApplication::exit(1);
+}
+
+void ClientConnectionManager::delayedHideSplashScreen()
+{
+  hideSplashScreen();
 }

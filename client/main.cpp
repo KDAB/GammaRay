@@ -50,6 +50,7 @@ int main(int argc, char** argv)
   }
 
   ClientConnectionManager conMan;
+  QObject::connect(&conMan, SIGNAL(ready()), &conMan, SLOT(createMainWindow()));
   conMan.connectToHost(serverUrl);
   return app.exec();
 }

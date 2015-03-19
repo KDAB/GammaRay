@@ -85,6 +85,7 @@ public slots:
     void startClient(const QUrl &serverAddress)
     {
         auto *conMan = new ClientConnectionManager(this);
+        connect(conMan, SIGNAL(ready()), conMan, SLOT(createMainWindow()));
         conMan->connectToHost(serverAddress);
     }
 
