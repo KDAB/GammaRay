@@ -63,17 +63,27 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
      */
     void ready();
 
+    /** Emitted when there has been a persistent connection error.
+     *  You can connect this to handlePersistentConnectionError() for a standard
+     *  message box and application exit handling.
+     */
+    void persistentConnectionError(const QString &msg);
+
   public slots:
     /** Brings up a client main window for the current connection.
      *  If you want to use this, connect this slot to ready().
      */
     void createMainWindow();
 
+    /** Standard persistent connection error handler.
+     *  @see persistentConnectionError()
+     */
+    void handlePersistentConnectionError(const QString &msg);
+
   private slots:
     void connectToHost();
     void connectionEstablished();
     void transientConnectionError();
-    void persistentConnectionError( const QString &msg);
 
     void toolModelPopulated();
     void delayedHideSplashScreen();

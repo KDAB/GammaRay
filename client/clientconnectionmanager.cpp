@@ -85,7 +85,8 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent) :
   connect(m_client, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
   connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
   connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
-  connect(m_client, SIGNAL(persisitentConnectionError(QString)), SLOT(persistentConnectionError(QString)));
+  connect(m_client, SIGNAL(persisitentConnectionError(QString)), SIGNAL(persistentConnectionError(QString)));
+  connect(this, SIGNAL(persistentConnectionError(QString)), SLOT(delayedHideSplashScreen()));
 }
 
 ClientConnectionManager::~ClientConnectionManager()
@@ -140,14 +141,12 @@ void ClientConnectionManager::transientConnectionError()
     // client wasn't up yet, keep trying
     QTimer::singleShot(1000, this, SLOT(connectToHost()));
   } else {
-    persistentConnectionError(tr("Connection refused."));
+    emit persistentConnectionError(tr("Connection refused."));
   }
 }
 
-void ClientConnectionManager::persistentConnectionError(const QString& msg)
+void ClientConnectionManager::handlePersistentConnectionError(const QString& msg)
 {
-  hideSplashScreen();
-
   QString errorMsg;
   if (m_mainWindow)
     errorMsg = tr("Lost connection to remote host: %1").arg(msg);
