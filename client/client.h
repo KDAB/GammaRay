@@ -88,6 +88,7 @@ private:
 private slots:
   void socketConnected();
   void socketError();
+  void socketDisconnected();
 
 private:
   enum InitState {

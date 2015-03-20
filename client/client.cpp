@@ -38,6 +38,7 @@ Client::Client(QObject* parent)
   , m_clientDevice(0)
   , m_initState(0)
 {
+  connect(this, SIGNAL(disconnected()), SLOT(socketDisconnected()));
 }
 
 Client::~Client()
@@ -88,6 +89,13 @@ void Client::socketError()
 {
   m_clientDevice->deleteLater();
   m_clientDevice = 0;
+}
+
+void Client::socketDisconnected()
+{
+  foreach (const auto &objInfo, objectAddresses()) {
+    unregisterObjectInternal(objInfo.second);
+  }
 }
 
 void Client::messageReceived(const Message& msg)
