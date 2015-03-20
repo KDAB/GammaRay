@@ -52,17 +52,12 @@ public:
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
   Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-private:
-  void insertFactory(ToolUiFactory* factory);
-
 private slots:
   void updateToolInitialization(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 
 private:
-  QHash<QString, ToolUiFactory*> m_factories; // ToolId -> ToolUiFactory
   mutable QHash<QString, QWidget*> m_widgets; // ToolId -> Widget
   QPointer<QWidget> m_parentWidget;
-  mutable QSet<ToolUiFactory*> m_inactiveTools;
 };
 
 }
