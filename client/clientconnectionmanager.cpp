@@ -78,7 +78,8 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent) :
   QObject(parent),
   m_client(new Client(this)),
   m_mainWindow(0),
-  m_toolModel(0)
+  m_toolModel(0),
+  m_ignorePersistentError(false)
 {
   showSplashScreen();
 
@@ -132,6 +133,8 @@ void ClientConnectionManager::toolModelPopulated()
 void ClientConnectionManager::createMainWindow()
 {
   m_mainWindow = new MainWindow;
+  connect(m_mainWindow, SIGNAL(targetQuitRequested()), this, SLOT(targetQuitRequested()));
+  m_ignorePersistentError = false;
   m_mainWindow->show();
 }
 
@@ -147,6 +150,9 @@ void ClientConnectionManager::transientConnectionError()
 
 void ClientConnectionManager::handlePersistentConnectionError(const QString& msg)
 {
+  if (m_ignorePersistentError)
+    return;
+
   QString errorMsg;
   if (m_mainWindow)
     errorMsg = tr("Lost connection to remote host: %1").arg(msg);
@@ -160,4 +166,9 @@ void ClientConnectionManager::handlePersistentConnectionError(const QString& msg
 void ClientConnectionManager::delayedHideSplashScreen()
 {
   hideSplashScreen();
+}
+
+void ClientConnectionManager::targetQuitRequested()
+{
+  m_ignorePersistentError = true;
 }

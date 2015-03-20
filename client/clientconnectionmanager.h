@@ -92,6 +92,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
 
     void toolModelPopulated();
     void delayedHideSplashScreen();
+    void targetQuitRequested();
 
   private:
     QUrl m_serverUrl;
@@ -99,6 +100,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     MainWindow *m_mainWindow;
     QAbstractItemModel *m_toolModel;
     QTime m_connectionTimeout;
+    bool m_ignorePersistentError;
 };
 
 }
