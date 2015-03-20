@@ -494,9 +494,11 @@ void RemoteModel::clear()
 {
   beginResetModel();
 
-  Message msg(m_myAddress, Protocol::ModelSyncBarrier);
-  msg.payload() << ++m_targetSyncBarrier;
-  sendMessage(msg);
+  if (isConnected()) {
+    Message msg(m_myAddress, Protocol::ModelSyncBarrier);
+    msg.payload() << ++m_targetSyncBarrier;
+    sendMessage(msg);
+  }
 
   delete m_root;
   m_root = new Node;
