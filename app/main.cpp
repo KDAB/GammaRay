@@ -86,6 +86,7 @@ public slots:
     {
         auto *conMan = new ClientConnectionManager(this);
         connect(conMan, SIGNAL(ready()), conMan, SLOT(createMainWindow()));
+        connect(conMan, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
         connect(conMan, SIGNAL(persistentConnectionError(QString)), conMan, SLOT(handlePersistentConnectionError(QString)));
         conMan->connectToHost(serverAddress);
     }

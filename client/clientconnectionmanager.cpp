@@ -82,7 +82,7 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent) :
 {
   showSplashScreen();
 
-  connect(m_client, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
+  connect(m_client, SIGNAL(disconnected()), SIGNAL(disconnected()));
   connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
   connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
   connect(m_client, SIGNAL(persisitentConnectionError(QString)), SIGNAL(persistentConnectionError(QString)));

@@ -69,6 +69,11 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
      */
     void persistentConnectionError(const QString &msg);
 
+    /** Emitted when the connection to the target has been closed, for whatever reason.
+     *  For a stand-alone client you probably want to connect this to QApplication::quit().
+     */
+    void disconnected();
+
   public slots:
     /** Brings up a client main window for the current connection.
      *  If you want to use this, connect this slot to ready().
