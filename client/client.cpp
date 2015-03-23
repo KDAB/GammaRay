@@ -25,6 +25,7 @@
 #include "clientdevice.h"
 
 #include <common/message.h>
+#include <common/objectbroker.h>
 
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -96,6 +97,7 @@ void Client::socketDisconnected()
   foreach (const auto &objInfo, objectAddresses()) {
     unregisterObjectInternal(objInfo.second);
   }
+  ObjectBroker::clear();
 }
 
 void Client::messageReceived(const Message& msg)
