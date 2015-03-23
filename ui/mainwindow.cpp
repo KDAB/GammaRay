@@ -240,5 +240,6 @@ void MainWindow::quitHost()
 
 void MainWindow::detachProbe()
 {
+  emit targetQuitRequested();
   ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
 }
