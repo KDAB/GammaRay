@@ -44,6 +44,9 @@ PropertyController::PropertyController(const QString &baseName, QObject *parent)
 
 PropertyController::~PropertyController()
 {
+  const auto i = s_instances.indexOf(this);
+  if (i >= 0)
+    s_instances.remove(i);
 }
 
 void PropertyController::loadExtension(PropertyControllerExtensionFactoryBase* factory)
