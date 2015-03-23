@@ -309,11 +309,15 @@ void Endpoint::removeObjectInfo(Endpoint::ObjectInfo* oi)
   Q_ASSERT(m_nameMap.contains(oi->name));
   m_nameMap.remove(oi->name);
 
-  if (oi->receiver)
+  if (oi->receiver) {
+    disconnect(oi->receiver, SIGNAL(destroyed(QObject*)), this, SLOT(handlerDestroyed(QObject*)));
     m_handlerMap.remove(oi->receiver, oi);
+  }
 
-  if (oi->object)
+  if (oi->object) {
+    disconnect(oi->object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
     m_objectMap.remove(oi->object);
+  }
 
   delete oi;
 }
