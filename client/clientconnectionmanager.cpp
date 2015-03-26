@@ -130,12 +130,14 @@ void ClientConnectionManager::toolModelPopulated()
   emit ready();
 }
 
-void ClientConnectionManager::createMainWindow()
+QWidget *ClientConnectionManager::createMainWindow()
 {
+  delete m_mainWindow;
   m_mainWindow = new MainWindow;
   connect(m_mainWindow, SIGNAL(targetQuitRequested()), this, SLOT(targetQuitRequested()));
   m_ignorePersistentError = false;
   m_mainWindow->show();
+  return m_mainWindow;
 }
 
 void ClientConnectionManager::transientConnectionError()
