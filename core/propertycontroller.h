@@ -58,7 +58,9 @@ public:
   template<typename T>
   static void registerExtension()
   {
-    PropertyControllerExtensionFactoryBase *factory = new PropertyControllerExtensionFactory<T>();
+    PropertyControllerExtensionFactoryBase *factory = PropertyControllerExtensionFactory<T>::instance();
+    if (s_extensionFactories.indexOf(factory) >= 0)
+      return;
     s_extensionFactories << factory;
     foreach (PropertyController *instance, s_instances)
       instance->loadExtension(factory);
