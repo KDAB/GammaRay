@@ -78,7 +78,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     /** Brings up a client main window for the current connection.
      *  If you want to use this, connect this slot to ready().
      */
-    void createMainWindow();
+    QWidget *createMainWindow();
 
     /** Standard persistent connection error handler.
      *  @see persistentConnectionError()
