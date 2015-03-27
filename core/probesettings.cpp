@@ -123,6 +123,13 @@ qint64 ProbeSettings::launcherIdentifier()
   return QCoreApplication::applicationPid();
 }
 
+void ProbeSettings::resetLauncherIdentifier()
+{
+  // if we were launch by GammaRay, and we later try to re-attach, we need to make sure
+  // to not end up with an outdated launcher id
+  qputenv("GAMMARAY_LAUNCHER_ID", "");
+}
+
 void ProbeSettings::sendServerAddress(const QUrl& addr)
 {
 #ifdef HAVE_SHM

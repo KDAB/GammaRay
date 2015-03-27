@@ -288,6 +288,7 @@ Probe::~Probe()
 #endif
 
   ObjectBroker::clear();
+  ProbeSettings::resetLauncherIdentifier();
 
   s_instance = QAtomicPointer<Probe>(0);
 }
