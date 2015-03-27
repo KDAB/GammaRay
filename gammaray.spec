@@ -50,10 +50,11 @@ BuildRequires:  java-1.8.0-openjdk
 BuildRequires: perl-podlators
 %endif
 %if 0%{?fedora} >= 20
-BuildRequires: hdf5-devel libxml2-devel
+BuildRequires: hdf5-devel libxml2-devel netcdf
 %endif
 Requires:       graphviz
 %endif
+
 
 %description
 GammaRay is a tool for examining the internals of a Qt application
