@@ -30,6 +30,7 @@
 
 #include <QAbstractItemModel>
 #include <QSet>
+#include <QTimer>
 #include <QVector>
 
 namespace GammaRay {
@@ -111,9 +112,16 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     /// execute a rowsMoved() operation
     void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node* destParentNode, int destStart);
 
+private slots:
+    void doRequestDataAndFlags() const;
+
+private:
     Node* m_root;
 
     mutable QHash<Qt::Orientation, QHash<int, QHash<int, QVariant> > > m_headers; // orientation -> section -> role -> data
+
+    mutable QVector<Protocol::ModelIndex> m_pendingDataRequests;
+    QTimer* m_pendingDataRequestsTimer;
 
     QString m_serverObject;
     Protocol::ObjectAddress m_myAddress;

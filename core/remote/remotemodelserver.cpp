@@ -121,14 +121,29 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
     case Protocol::ModelContentRequest:
     {
-      Protocol::ModelIndex index;
-      msg.payload() >> index;
-      const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
-      if (!qmIndex.isValid())
+      quint32 size;
+      msg.payload() >> size;
+      Q_ASSERT(size > 0);
+
+      QVector<QModelIndex> indexes;
+      indexes.reserve(size);
+      for (quint32 i = 0; i < size; ++i) {
+        Protocol::ModelIndex index;
+        msg.payload() >> index;
+        const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
+        if (!qmIndex.isValid())
+          continue;
+        indexes.push_back(qmIndex);
+      }
+      if (indexes.isEmpty())
         break;
 
       Message msg(m_myAddress, Protocol::ModelContentReply);
-      msg.payload() << index << filterItemData(m_model->itemData(qmIndex)) << qint32(m_model->flags(qmIndex));
+      msg.payload() << quint32(indexes.size());
+      foreach (const auto &qmIndex, indexes) {
+        msg.payload() << Protocol::fromQModelIndex(qmIndex) << filterItemData(m_model->itemData(qmIndex)) << qint32(m_model->flags(qmIndex));
+      }
+
       sendMessage(msg);
       break;
     }
