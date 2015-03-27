@@ -287,7 +287,8 @@ void MetaObjectRepository::initOpenGLTypes()
 
   MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
   MO_ADD_PROPERTY_RO(QOpenGLContext, uint, defaultFramebufferObject);
-  MO_ADD_PROPERTY_RO(QOpenGLContext, QSet<QByteArray>, extensions);
+  // crashes if context isn't current
+//   MO_ADD_PROPERTY_RO(QOpenGLContext, QSet<QByteArray>, extensions);
   MO_ADD_PROPERTY_RO(QOpenGLContext, QSurfaceFormat, format);
   MO_ADD_PROPERTY_RO(QOpenGLContext, bool, isValid);
   MO_ADD_PROPERTY_RO(QOpenGLContext, QScreen*, screen);
