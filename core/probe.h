@@ -26,13 +26,12 @@
 
 #include "gammaray_core_export.h"
 #include "probeinterface.h"
+#include "signalspycallbackset.h"
 
 #include <QObject>
 #include <QQueue>
 #include <QSet>
 #include <QVector>
-
-#include <private/qobject_p.h>
 
 class QItemSelectionModel;
 class QThread;
@@ -86,7 +85,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     void discoverObject(QObject* object) Q_DECL_OVERRIDE;
     void selectObject(QObject* object, const QPoint& pos = QPoint()) Q_DECL_OVERRIDE;
     void selectObject(void* object, const QString& typeName) Q_DECL_OVERRIDE;
-    void registerSignalSpyCallbackSet(const QSignalSpyCallbackSet& callbacks) Q_DECL_OVERRIDE;
+    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet& callbacks) Q_DECL_OVERRIDE;
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -189,8 +188,8 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;
     QVector<QObject*> m_globalEventFilters;
-    QVector<QSignalSpyCallbackSet> m_signalSpyCallbacks;
-    QSignalSpyCallbackSet m_previousSignalSpyCallbackSet;
+    QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
+    SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
 };
 
 class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore

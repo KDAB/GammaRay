@@ -24,6 +24,7 @@ set(gammaray_srcs
   connectionfilterproxymodel.cpp
   methodargumentmodel.cpp
   multisignalmapper.cpp
+  signalspycallbackset.cpp
   toolmodel.cpp
   toolpluginmodel.cpp
   toolpluginerrormodel.cpp
@@ -132,6 +133,7 @@ gammaray_install_headers(
   probeinterface.h
   propertycontroller.h
   propertycontrollerextension.h
+  signalspycallbackset.h
   singlecolumnobjectproxymodel.h
   toolfactory.h
   util.h

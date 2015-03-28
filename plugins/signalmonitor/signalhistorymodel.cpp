@@ -80,7 +80,8 @@ SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), this, SLOT(onObjectRemoved(QObject*)));
 
-  QSignalSpyCallbackSet spy = { signal_begin_callback, 0, 0, 0 };
+  SignalSpyCallbackSet spy;
+  spy.signalBeginCallback = signal_begin_callback;
   probe->registerSignalSpyCallbackSet(spy);
 
   s_historyModel = this;

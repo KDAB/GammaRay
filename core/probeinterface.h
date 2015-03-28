@@ -38,9 +38,10 @@
 class QObject;
 class QAbstractItemModel;
 class QString;
-struct QSignalSpyCallbackSet;
 
 namespace GammaRay {
+
+struct SignalSpyCallbackSet;
 
 /**
  * @brief An abstract interface for accessing the core GammaRay probe.
@@ -151,7 +152,7 @@ class ProbeInterface
      *
      * @since 2.2
      */
-    virtual void registerSignalSpyCallbackSet(const QSignalSpyCallbackSet &callbacks) = 0;
+    virtual void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) = 0;
 };
 
 }
