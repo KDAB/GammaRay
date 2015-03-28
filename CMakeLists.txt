@@ -312,7 +312,7 @@ else()
   else()
     set(HAVE_PRIVATE_QT_HEADERS FALSE)
     # needs to go before Qt includes, in case we have non-working headers with the same name there
-    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
+    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt/4.8)
   endif()
 
   set_package_properties(Qt4 PROPERTIES URL "http://qt-project.org/")
