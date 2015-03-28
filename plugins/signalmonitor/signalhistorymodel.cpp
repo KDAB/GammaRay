@@ -34,8 +34,6 @@
 #include <QSet>
 #include <QThread>
 
-#include <private/qobject_p.h>
-
 using namespace GammaRay;
 
 /// Tries to reuse an already existing instances of \param str by checking
