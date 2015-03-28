@@ -546,7 +546,7 @@ if(CPPCHECK_EXECUTABLE)
   endforeach()
 
   add_custom_target(cppcheck
-    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
+    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all --inconclusive -f --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
       -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
       -i${CMAKE_CURRENT_SOURCE_DIR}/tests
     ${CMAKE_CURRENT_SOURCE_DIR}
