@@ -107,9 +107,6 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     bool filterObject(QObject *obj) const Q_DECL_OVERRIDE;
 
-    /** Check if we are capable of showing widgets. */
-    static bool canShowWidgets();
-
     /// internal
     static void startupHookReceived();
     template <typename Func>  static void executeSignalCallback(const Func &func);
@@ -170,6 +167,9 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     void objectFullyConstructed(QObject *obj);
     void findExistingObjects();
+
+    /** Check if we are capable of showing widgets. */
+    static bool canShowWidgets();
     void showInProcessUi();
 
     static void createProbe(bool findExisting);
