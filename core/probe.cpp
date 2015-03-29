@@ -279,19 +279,11 @@ Probe::Probe(QObject *parent):
   connect(m_queueTimer, SIGNAL(timeout()),
           this, SLOT(queuedObjectsFullyConstructed()));
 
-  QSignalSpyCallbackSet callbacks;
-  callbacks.signal_begin_callback = signal_begin_callback;
-  callbacks.signal_end_callback = signal_end_callback;
-  callbacks.slot_begin_callback = slot_begin_callback;
-  callbacks.slot_end_callback = slot_end_callback;
   m_previousSignalSpyCallbackSet.signalBeginCallback = qt_signal_spy_callback_set.signal_begin_callback;
   m_previousSignalSpyCallbackSet.signalEndCallback =qt_signal_spy_callback_set.signal_end_callback;
   m_previousSignalSpyCallbackSet.slotBeginCallback = qt_signal_spy_callback_set.slot_begin_callback;
   m_previousSignalSpyCallbackSet.slotEndCallback = qt_signal_spy_callback_set.slot_end_callback;
-  if (!m_previousSignalSpyCallbackSet.isNull()) {
-    m_signalSpyCallbacks.push_back(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
-  }
-  qt_register_signal_spy_callbacks(callbacks);
+  registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
 }
 
 Probe::~Probe()
@@ -870,7 +862,22 @@ void Probe::selectObject(void *object, const QString &typeName)
 
 void Probe::registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks)
 {
+  if (callbacks.isNull())
+    return;
   m_signalSpyCallbacks.push_back(callbacks);
+  setupSignalSpyCallbacks();
+}
+
+void Probe::setupSignalSpyCallbacks()
+{
+  QSignalSpyCallbackSet cbs = { 0, 0, 0, 0 };
+  foreach (const auto &it, m_signalSpyCallbacks) {
+    if (it.signalBeginCallback) cbs.signal_begin_callback = signal_begin_callback;
+    if (it.signalEndCallback) cbs.signal_end_callback = signal_end_callback;
+    if (it.slotBeginCallback) cbs.slot_begin_callback = slot_begin_callback;
+    if (it.slotEndCallback) cbs.slot_end_callback = slot_end_callback;
+  }
+  qt_register_signal_spy_callbacks(cbs);
 }
 
 template <typename Func>

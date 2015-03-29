@@ -177,6 +177,9 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     explicit Probe(QObject *parent = 0);
     static QAtomicPointer<Probe> s_instance;
 
+    /** Set up all needed signal spy callbacks. */
+    void setupSignalSpyCallbacks();
+
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
     MetaObjectTreeModel *m_metaObjectTreeModel;
