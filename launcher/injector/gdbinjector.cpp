@@ -54,6 +54,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
     return -1;
   }
 
+  execCmd("set confirm off");
   waitForMain();
   return injectAndDetach(probeDll, probeFunc);
 }
