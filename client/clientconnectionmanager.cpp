@@ -106,6 +106,11 @@ void ClientConnectionManager::connectToHost(const QUrl &url)
   connectToHost();
 }
 
+void ClientConnectionManager::disconnectFromHost()
+{
+    m_client->disconnectFromHost();
+}
+
 void ClientConnectionManager::connectToHost()
 {
   m_client->connectToHost(m_serverUrl);

@@ -42,6 +42,7 @@ public:
     static ClientDevice* create(const QUrl& url, QObject* parent);
 
     virtual void connectToHost() = 0;
+    virtual void disconnectFromHost() = 0;
     virtual QIODevice *device() const = 0;
 
 signals:

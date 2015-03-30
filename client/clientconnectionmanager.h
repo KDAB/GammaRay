@@ -78,6 +78,9 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     void disconnected();
 
   public slots:
+    /** Disconnect GammaRay. */
+    void disconnectFromHost();
+
     /** Brings up a client main window for the current connection.
      *  If you want to use this, connect this slot to ready().
      */

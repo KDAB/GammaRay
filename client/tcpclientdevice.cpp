@@ -40,6 +40,11 @@ void TcpClientDevice::connectToHost()
     m_socket->connectToHost(m_serverAddress.host(), m_serverAddress.port(Client::defaultPort()));
 }
 
+void TcpClientDevice::disconnectFromHost()
+{
+    m_socket->disconnectFromHost();
+}
+
 void TcpClientDevice::socketError()
 {
     if (m_socket->error() == QAbstractSocket::ConnectionRefusedError)

@@ -80,6 +80,12 @@ void Client::connectToHost(const QUrl &url)
   m_clientDevice->connectToHost();
 }
 
+void Client::disconnectFromHost()
+{
+    if (m_clientDevice)
+        m_clientDevice->disconnectFromHost();
+}
+
 void Client::socketConnected()
 {
   Q_ASSERT(m_clientDevice->device());

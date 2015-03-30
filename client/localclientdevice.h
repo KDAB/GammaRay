@@ -36,6 +36,7 @@ class LocalClientDevice : public ClientDeviceImpl<QLocalSocket>
 public:
     explicit LocalClientDevice(QObject* parent = 0);
     void connectToHost();
+    void disconnectFromHost();
 
 private slots:
     void socketError();

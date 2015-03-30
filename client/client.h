@@ -43,6 +43,7 @@ public:
 
   /** Connect to a server reachable on @p url. */
   void connectToHost(const QUrl &url);
+  void disconnectFromHost();
 
   /**
    * Register a client-side QObject to send/receive messages to/from the server side.
