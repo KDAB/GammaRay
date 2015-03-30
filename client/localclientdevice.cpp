@@ -38,6 +38,11 @@ void LocalClientDevice::connectToHost()
     m_socket->connectToServer(m_serverAddress.path());
 }
 
+void LocalClientDevice::disconnectFromHost()
+{
+    m_socket->disconnectFromServer();
+}
+
 void LocalClientDevice::socketError()
 {
     emit persistentError(m_socket->errorString());
