@@ -36,7 +36,6 @@
 #include <ui/splashscreen.h>
 
 #include <QApplication>
-#include <QDebug>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -74,15 +73,15 @@ void ClientConnectionManager::init()
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 }
 
-ClientConnectionManager::ClientConnectionManager(QObject* parent) :
+ClientConnectionManager::ClientConnectionManager(QObject* parent, bool showSplashScreenOnStartUp) :
   QObject(parent),
   m_client(new Client(this)),
   m_mainWindow(0),
   m_toolModel(0),
   m_ignorePersistentError(false)
 {
-  showSplashScreen();
-
+  if (showSplashScreenOnStartUp)
+     showSplashScreen();
   connect(m_client, SIGNAL(disconnected()), SIGNAL(disconnected()));
   connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
   connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
@@ -93,6 +92,11 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent) :
 ClientConnectionManager::~ClientConnectionManager()
 {
   delete m_mainWindow;
+}
+
+QMainWindow *ClientConnectionManager::mainWindow() const
+{
+  return m_mainWindow;
 }
 
 void ClientConnectionManager::connectToHost(const QUrl &url)
@@ -130,7 +134,7 @@ void ClientConnectionManager::toolModelPopulated()
   emit ready();
 }
 
-QWidget *ClientConnectionManager::createMainWindow()
+QMainWindow *ClientConnectionManager::createMainWindow()
 {
   delete m_mainWindow;
   m_mainWindow = new MainWindow;

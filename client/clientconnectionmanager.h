@@ -31,6 +31,7 @@
 #include <QUrl>
 
 class QAbstractItemModel;
+class QMainWindow;
 
 namespace GammaRay {
 
@@ -47,8 +48,10 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
 {
   Q_OBJECT
   public:
-    explicit ClientConnectionManager(QObject* parent = 0);
+    explicit ClientConnectionManager(QObject* parent = 0, bool showSplashScreenOnStartUp = true);
     ~ClientConnectionManager();
+
+    QMainWindow *mainWindow() const;
 
     /** Connect to a GammaRay probe at @p url. */
     void connectToHost(const QUrl &url);
@@ -78,7 +81,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     /** Brings up a client main window for the current connection.
      *  If you want to use this, connect this slot to ready().
      */
-    QWidget *createMainWindow();
+    QMainWindow *createMainWindow();
 
     /** Standard persistent connection error handler.
      *  @see persistentConnectionError()
