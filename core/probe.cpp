@@ -23,7 +23,7 @@
 */
 //krazy:excludeall=null,captruefalse,staticobjects
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #include "probe.h"
 #include "objectlistmodel.h"
@@ -918,4 +918,3 @@ const char *SignalSlotsLocationStore::extractLocation(const char *member)
 }
 
 //END
-

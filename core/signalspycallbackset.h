@@ -30,7 +30,7 @@ class QObject;
 
 namespace GammaRay {
 
-/** @brief Callbacks for tracing signal emissions and slot invokation.
+/** @brief Callbacks for tracing signal emissions and slot invocation.
  *
  *  @since 2.3
  */
