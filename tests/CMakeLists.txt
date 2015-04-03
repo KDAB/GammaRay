@@ -139,4 +139,11 @@ target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI
 add_test(NAME actiontest COMMAND actiontest)
 endif()
 
+### MetaObject test
+
+add_executable(metaobjecttest metaobjecttest.cpp)
+target_link_libraries(metaobjecttest gammaray_core ${QT_QTTEST_LIBRARIES})
+add_test(NAME metaobjecttest COMMAND metaobjecttest)
+
+
 add_subdirectory(manual)
