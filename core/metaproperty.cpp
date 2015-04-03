@@ -29,12 +29,17 @@
 
 using namespace GammaRay;
 
-MetaProperty::MetaProperty() : m_class(0)
+MetaProperty::MetaProperty(const QString& name) : m_class(0), m_name(name)
 {
 }
 
 MetaProperty::~MetaProperty()
 {
+}
+
+QString MetaProperty::name() const
+{
+  return m_name;
 }
 
 MetaObject *MetaProperty::metaObject() const

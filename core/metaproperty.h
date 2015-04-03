@@ -37,11 +37,11 @@ class MetaObject;
 class GAMMARAY_CORE_EXPORT MetaProperty
 {
   public:
-    MetaProperty();
+    MetaProperty(const QString &name);
     virtual ~MetaProperty();
 
     /// User-readable name of that property
-    virtual QString name() const = 0;
+    QString name() const;
 
     /// Current value of the property for object @p object.
     virtual QVariant value(void *object) const = 0;
@@ -63,6 +63,7 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     void setMetaObject(MetaObject *om);
 
     MetaObject *m_class;
+    QString m_name;
 };
 
 ///@cond internal
@@ -88,13 +89,8 @@ class MetaPropertyImpl : public MetaProperty
     inline MetaPropertyImpl(
       const QString &name,
       GetterReturnType (Class::*getter)() const, void (Class::*setter)(SetterArgType) = 0)
-      : m_name(name), m_getter(getter), m_setter(setter)
+      : MetaProperty(name), m_getter(getter), m_setter(setter)
     {
-    }
-
-    inline QString name() const Q_DECL_OVERRIDE
-    {
-      return m_name;
     }
 
     inline bool isReadOnly() const Q_DECL_OVERRIDE
@@ -125,7 +121,6 @@ class MetaPropertyImpl : public MetaProperty
     }
 
   private:
-    QString m_name;
     GetterReturnType (Class::*m_getter)() const;
     void (Class::*m_setter)(SetterArgType);
 };
