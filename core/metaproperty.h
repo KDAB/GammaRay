@@ -105,28 +105,18 @@ class MetaPropertyImpl : public MetaProperty
     inline QVariant value(void *object) const Q_DECL_OVERRIDE
     {
       Q_ASSERT(object);
-      return value(static_cast<Class*>(object));
+      Q_ASSERT(m_getter);
+      const ValueType v = (static_cast<Class*>(object)->*(m_getter))();
+      return QVariant::fromValue(v);
     }
 
     inline void setValue(void *object, const QVariant &value) Q_DECL_OVERRIDE
     {
-      setValue(static_cast<Class*>(object), value);
-    }
-
-  private:
-    inline QVariant value(Class *object) const
-    {
-      Q_ASSERT(object);
-      const ValueType v = (object->*(m_getter))();
-      return QVariant::fromValue(v);
-    }
-
-    inline void setValue(Class *object, const QVariant &value)
-    {
-      if (isReadOnly()) {
+      if (isReadOnly())
         return;
-      }
-      (object->*(m_setter))(value.value<ValueType>());
+      Q_ASSERT(object);
+      Q_ASSERT(m_setter);
+      (static_cast<Class*>(object)->*(m_setter))(value.value<ValueType>());
     }
 
     inline QString typeName() const Q_DECL_OVERRIDE
