@@ -41,11 +41,11 @@ class AbstractConnectionsModel : public QAbstractTableModel
 
     virtual void setObject(QObject *object) = 0;
 
-    int columnCount(const QModelIndex &parent) const;
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    QMap< int, QVariant > itemData(const QModelIndex &index) const;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap< int, QVariant > itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
   protected:
     static QString displayString(QObject *object, int methodIndex);

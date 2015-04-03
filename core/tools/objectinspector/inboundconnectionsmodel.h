@@ -36,10 +36,10 @@ class InboundConnectionsModel : public AbstractConnectionsModel
     explicit InboundConnectionsModel(QObject *parent = 0);
     ~InboundConnectionsModel();
 
-    void setObject(QObject *object);
+    void setObject(QObject *object) Q_DECL_OVERRIDE;
 
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
 
 }
