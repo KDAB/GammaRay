@@ -92,23 +92,23 @@ class MetaPropertyImpl : public MetaProperty
     {
     }
 
-    inline QString name() const
+    inline QString name() const Q_DECL_OVERRIDE
     {
       return m_name;
     }
 
-    inline bool isReadOnly() const
+    inline bool isReadOnly() const Q_DECL_OVERRIDE
     {
       return m_setter == 0 ;
     }
 
-    inline QVariant value(void *object) const
+    inline QVariant value(void *object) const Q_DECL_OVERRIDE
     {
       Q_ASSERT(object);
       return value(static_cast<Class*>(object));
     }
 
-    inline void setValue(void *object, const QVariant &value)
+    inline void setValue(void *object, const QVariant &value) Q_DECL_OVERRIDE
     {
       setValue(static_cast<Class*>(object), value);
     }
@@ -129,7 +129,7 @@ class MetaPropertyImpl : public MetaProperty
       (object->*(m_setter))(value.value<ValueType>());
     }
 
-    inline QString typeName() const
+    inline QString typeName() const Q_DECL_OVERRIDE
     {
       return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
     }
