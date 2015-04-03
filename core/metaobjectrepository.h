@@ -138,4 +138,10 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
     QLatin1String(#Getter), \
     &Class::Getter));
 
+/** Register a static property for class @p Class. */
+#define MO_ADD_PROPERTY_ST(Class, Type, Getter) \
+  mo->addProperty(new GammaRay::MetaStaticPropertyImpl<Class, Type>( \
+    QLatin1String(#Getter), \
+    &Class::Getter));
+
 #endif // GAMMARAY_METAOBJECTREPOSITORY_H

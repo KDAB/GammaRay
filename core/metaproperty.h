@@ -50,7 +50,7 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     virtual bool isReadOnly() const = 0;
 
     /// Allows changing the property value, assuming it's not read-only, for the instance @p object.
-    virtual void setValue(void *object, const QVariant &value) = 0;
+    virtual void setValue(void *object, const QVariant &value);
 
     /// Returns the name of the data type of this property.
     virtual QString typeName() const = 0;
@@ -78,7 +78,7 @@ struct strip_const_ref<const T&> { typedef T type; };
 }
 ///@endcond
 
-/** @brief Template-ed implementation of MetaProperty. */
+/** @brief Template-ed implementation of MetaProperty for member properties. */
 template <typename Class, typename GetterReturnType, typename SetterArgType = GetterReturnType>
 class MetaPropertyImpl : public MetaProperty
 {
@@ -123,6 +123,42 @@ class MetaPropertyImpl : public MetaProperty
   private:
     GetterReturnType (Class::*m_getter)() const;
     void (Class::*m_setter)(SetterArgType);
+};
+
+
+/** @brief Template-ed implementation of MetaProperty for static properties. */
+template <typename Class, typename GetterReturnType>
+class MetaStaticPropertyImpl : public MetaProperty
+{
+  private:
+    typedef typename detail::strip_const_ref<GetterReturnType>::type ValueType;
+
+  public:
+    inline MetaStaticPropertyImpl(const QString &name, GetterReturnType (*getter)())
+      : MetaProperty(name), m_getter(getter)
+    {
+    }
+
+    inline bool isReadOnly() const Q_DECL_OVERRIDE
+    {
+      return true;
+    }
+
+    inline QVariant value(void *object) const Q_DECL_OVERRIDE
+    {
+      Q_UNUSED(object);
+      Q_ASSERT(m_getter);
+      const ValueType v = m_getter();
+      return QVariant::fromValue(v);
+    }
+
+    inline QString typeName() const Q_DECL_OVERRIDE
+    {
+      return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
+    }
+
+  private:
+    GetterReturnType (*m_getter)();
 };
 
 }

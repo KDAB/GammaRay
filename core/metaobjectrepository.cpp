@@ -27,7 +27,9 @@
 #include <common/metatypedeclarations.h>
 
 #include <QAbstractSocket>
+#include <QCoreApplication>
 #include <QFile>
+#include <QFont>
 #include <QNetworkProxy>
 #include <QObject>
 #include <QPalette>
@@ -37,6 +39,7 @@
 #include <QThread>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QGuiApplication>
 #include <QOpenGLContext>
 #include <QOpenGLShader>
 #include <QScreen>
@@ -114,6 +117,34 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiX);
   MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiY);
   MO_ADD_PROPERTY_RO(QPaintDevice, int, widthMM);
+
+  MO_ADD_METAOBJECT1(QCoreApplication, QObject);
+  MO_ADD_PROPERTY_ST(QCoreApplication, QStringList, arguments);
+  MO_ADD_PROPERTY_ST(QCoreApplication, bool, closingDown);
+  MO_ADD_PROPERTY_ST(QCoreApplication, bool, hasPendingEvents);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+  MO_ADD_PROPERTY_ST(QCoreApplication, bool, isSetuidAllowed);
+#endif
+  MO_ADD_PROPERTY_ST(QCoreApplication, QStringList, libraryPaths);
+  MO_ADD_PROPERTY_ST(QCoreApplication, bool, startingUp);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_METAOBJECT1(QGuiApplication, QCoreApplication);
+  MO_ADD_PROPERTY_ST(QGuiApplication, Qt::ApplicationState, applicationState);
+  MO_ADD_PROPERTY_ST(QGuiApplication, bool, desktopSettingsAware);
+  MO_ADD_PROPERTY_RO(QGuiApplication, qreal, devicePixelRatio);
+  MO_ADD_PROPERTY_ST(QGuiApplication, QObject*, focusObject);
+  MO_ADD_PROPERTY_ST(QGuiApplication, QWindow*, focusWindow);
+  MO_ADD_PROPERTY_ST(QGuiApplication, QFont, font);
+  MO_ADD_PROPERTY_ST(QGuiApplication, bool, isLeftToRight);
+  MO_ADD_PROPERTY_ST(QGuiApplication, bool, isRightToLeft);
+  MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSavingSession);
+  MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSessionRestored);
+  MO_ADD_PROPERTY_ST(QGuiApplication, QPalette, palette);
+  MO_ADD_PROPERTY_ST(QGuiApplication, QScreen*, primaryScreen);
+  MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionId);
+  MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionKey);
+#endif
 }
 
 

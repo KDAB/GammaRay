@@ -60,6 +60,7 @@ private slots:
       MetaProperty *prop = 0;
       for (int i = 0; i < mo->propertyCount(); ++i) {
         prop = mo->propertyAt(i);
+        QVERIFY(prop);
         if (prop->name() == "priority")
           break;
       }
@@ -71,6 +72,27 @@ private slots:
       QThread t;
       QCOMPARE(prop->value(&t).value<QThread::Priority>(), t.priority());
       QCOMPARE(prop->isReadOnly(), false);
+    }
+
+    void testStaticProperty()
+    {
+      auto *mo = MetaObjectRepository::instance()->metaObject("QCoreApplication");
+      QVERIFY(mo);
+      QVERIFY(mo->propertyCount() >= 8); // depends on Qt version
+
+      MetaProperty *prop = 0;
+      for (int i = 0; i < mo->propertyCount(); ++i) {
+        prop = mo->propertyAt(i);
+        QVERIFY(prop);
+        if (prop->name() == "libraryPaths")
+          break;
+      }
+
+      QVERIFY(prop);
+      QCOMPARE(prop->name(), QString("libraryPaths"));
+      QCOMPARE(prop->typeName(), QString("QStringList"));
+      QCOMPARE(prop->isReadOnly(), true);
+      QCOMPARE(prop->value(0).toStringList(), QCoreApplication::libraryPaths());
     }
 
 };
