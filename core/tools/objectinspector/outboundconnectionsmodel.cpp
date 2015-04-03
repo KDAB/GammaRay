@@ -42,15 +42,12 @@ OutboundConnectionsModel::~OutboundConnectionsModel()
 
 void OutboundConnectionsModel::setObject(QObject* object)
 {
-  beginResetModel();
-  m_connections.clear();
+  clear();
   m_object = object;
-
-  if (!object) {
-    endResetModel();
+  if (!object)
     return;
-  }
 
+  QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
   QObjectPrivate *d = QObjectPrivate::get(object);
   if (d->connectionLists) {
@@ -75,13 +72,12 @@ void OutboundConnectionsModel::setObject(QObject* object)
           conn.slotIndex = c->method();
         conn.type = c->connectionType;
         c = c->nextConnectionList;
-        m_connections.push_back(conn);
+        connections.push_back(conn);
       }
     }
   }
 #endif
-
-  endResetModel();
+  setConnections(connections);
 }
 
 QVariant OutboundConnectionsModel::data(const QModelIndex& index, int role) const

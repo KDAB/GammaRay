@@ -48,19 +48,23 @@ class AbstractConnectionsModel : public QAbstractTableModel
     QMap< int, QVariant > itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
   protected:
-    static QString displayString(QObject *object, int methodIndex);
-    static QString displayString(QObject *object);
-
-    static int signalIndexToMethodIndex(QObject *object, int signalIndex);
-
-  protected:
-    QPointer<QObject> m_object;
     struct Connection {
       QPointer<QObject> endpoint;
       int signalIndex;
       int slotIndex;
       int type;
     };
+
+    static QString displayString(QObject *object, int methodIndex);
+    static QString displayString(QObject *object);
+
+    static int signalIndexToMethodIndex(QObject *object, int signalIndex);
+
+    void clear();
+    void setConnections(const QVector<Connection>& connections);
+
+  protected:
+    QPointer<QObject> m_object;
     QVector<Connection> m_connections;
 
   private:

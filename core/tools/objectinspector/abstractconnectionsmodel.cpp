@@ -163,3 +163,24 @@ bool AbstractConnectionsModel::isDirectCrossThreadConnection(const Connection& c
     return false;
   return conn.type == 1; // direct
 }
+
+void AbstractConnectionsModel::clear()
+{
+  if (m_connections.isEmpty())
+    return;
+
+  beginRemoveRows(QModelIndex(), 0, m_connections.size() - 1);
+  m_connections.clear();
+  endRemoveRows();
+}
+
+void AbstractConnectionsModel::setConnections(const QVector<Connection>& connections)
+{
+  Q_ASSERT(m_connections.isEmpty());
+  if (connections.isEmpty())
+    return;
+
+  beginInsertRows(QModelIndex(), 0, connections.size() - 1);
+  m_connections = connections;
+  endInsertRows();
+}
