@@ -66,7 +66,8 @@ bool MethodsExtension::setQObject(QObject* object)
   m_signalMapper = new MultiSignalMapper(this);
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)), SLOT(signalEmitted(QObject*,int,QVector<QVariant>)));
 
-  m_methodLogModel->clear();
+  if (m_methodLogModel->rowCount() > 0)
+    m_methodLogModel->clear();
   return true;
 }
 
