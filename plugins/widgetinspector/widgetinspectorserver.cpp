@@ -422,6 +422,17 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
   MO_ADD_METAOBJECT1(QStyle, QObject);
   MO_ADD_PROPERTY_RO(QStyle, const QStyle*, proxy);
   MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_METAOBJECT1(QApplication, QGuiApplication);
+  MO_ADD_PROPERTY_ST(QApplication, QWidget*, activeModalWidget);
+  MO_ADD_PROPERTY_ST(QApplication, QWidget*, activePopupWidget);
+  MO_ADD_PROPERTY_ST(QApplication, QWidget*, activeWindow);
+  MO_ADD_PROPERTY_ST(QApplication, int, colorSpec);
+  MO_ADD_PROPERTY_ST(QApplication, QDesktopWidget*, desktop);
+  MO_ADD_PROPERTY_ST(QApplication, QWidget*, focusWidget);
+  MO_ADD_PROPERTY_ST(QApplication, QStyle*, style);
+#endif
 }
 
 static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
