@@ -37,7 +37,7 @@ class MetaObject;
 class GAMMARAY_CORE_EXPORT MetaProperty
 {
   public:
-    MetaProperty(const QString &name);
+    explicit MetaProperty(const QString &name);
     virtual ~MetaProperty();
 
     /// User-readable name of that property
