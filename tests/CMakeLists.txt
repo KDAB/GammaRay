@@ -151,4 +151,13 @@ add_executable(propertysyncertest propertysyncertest.cpp)
 target_link_libraries(propertysyncertest gammaray_common ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
 add_test(NAME propertysyncertest COMMAND propertysyncertest)
 
+### PropertyBinder test
+
+if(GAMMARAY_BUILD_UI)
+add_executable(propertybindertest propertybindertest.cpp)
+target_link_libraries(propertybindertest gammaray_ui ${QT_QTTEST_LIBRARIES})
+add_test(NAME propertybindertest COMMAND propertybindertest)
+endif()
+
+
 add_subdirectory(manual)

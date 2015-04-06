@@ -12,6 +12,7 @@ set(gammaray_ui_srcs
   editabletypesmodel.cpp
   methodinvocationdialog.cpp
   palettemodel.cpp
+  propertybinder.cpp
   propertywidget.cpp
   proxytooluifactory.cpp
   splashscreen.cpp
