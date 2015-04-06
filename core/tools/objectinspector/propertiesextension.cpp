@@ -55,10 +55,13 @@ PropertiesExtension::~PropertiesExtension()
 
 bool PropertiesExtension::setQObject(QObject *object)
 {
+  if (m_object == object)
+    return true;
   m_object = object;
   m_staticPropertyModel->setObject(object);
   m_dynamicPropertyModel->setObject(object);
   m_metaPropertyModel->setObject(object);
+  setCanAddProperty(true);
   return true;
 }
 
@@ -68,6 +71,7 @@ bool PropertiesExtension::setObject(void *object, const QString &typeName)
   m_staticPropertyModel->setObject(0);
   m_dynamicPropertyModel->setObject(0);
   m_metaPropertyModel->setObject(object, typeName);
+  setCanAddProperty(false);
   return true;
 }
 
@@ -77,6 +81,7 @@ bool PropertiesExtension::setMetaObject(const QMetaObject* metaObject)
   m_staticPropertyModel->setMetaObject(metaObject);
   m_dynamicPropertyModel->setObject(0);
   m_metaPropertyModel->setObject(0);
+  setCanAddProperty(false);
   return true;
 }
 

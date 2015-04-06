@@ -29,6 +29,7 @@ using namespace GammaRay;
 PropertiesExtensionInterface::PropertiesExtensionInterface(const QString &name, QObject *parent)
   : QObject(parent)
   , m_name(name)
+  , m_canAddProperty(false)
 {
   ObjectBroker::registerObject(name, this);
 }
@@ -41,4 +42,17 @@ PropertiesExtensionInterface::~PropertiesExtensionInterface()
 const QString &PropertiesExtensionInterface::name() const
 {
   return m_name;
+}
+
+bool PropertiesExtensionInterface::canAddProperty() const
+{
+  return m_canAddProperty;
+}
+
+void PropertiesExtensionInterface::setCanAddProperty(bool canAdd)
+{
+  if (m_canAddProperty == canAdd)
+    return;
+  m_canAddProperty = canAdd;
+  emit canAddPropertyChanged();
 }

@@ -32,19 +32,27 @@ namespace GammaRay {
 class PropertiesExtensionInterface : public QObject
 {
   Q_OBJECT
+  Q_PROPERTY(bool canAddProperty READ canAddProperty WRITE setCanAddProperty NOTIFY canAddPropertyChanged)
   public:
     explicit PropertiesExtensionInterface(const QString &name, QObject *parent = 0);
     virtual ~PropertiesExtensionInterface();
 
     const QString &name() const;
 
+    bool canAddProperty() const;
+    void setCanAddProperty(bool canAdd);
+
   public slots:
     virtual void navigateToValue(int modelRow) = 0;
     virtual void setProperty(const QString &name, const QVariant &value) = 0;
     virtual void resetProperty(const QString &name) = 0;
 
+  signals:
+    void canAddPropertyChanged();
+
   private:
     QString m_name;
+    bool m_canAddProperty;
 };
 
 }

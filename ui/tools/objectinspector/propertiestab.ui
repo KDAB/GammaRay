@@ -10,75 +10,80 @@
     <height>300</height>
    </rect>
   </property>
-      <layout class="QVBoxLayout" name="verticalLayout_10">
-       <item>
-        <widget class="KFilterProxySearchLine" name="propertySearchLine"/>
-       </item>
-       <item>
-        <widget class="QTreeView" name="propertyView">
-         <property name="rootIsDecorated">
-          <bool>false</bool>
-         </property>
-         <property name="sortingEnabled">
-          <bool>true</bool>
-         </property>
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
-         </property>
-         <property name="contextMenuPolicy">
-          <enum>Qt::CustomContextMenu</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="newPropertyLayout">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>&amp;New Dynamic Property:</string>
-           </property>
-           <property name="buddy">
-            <cstring>newPropertyName</cstring>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="newPropertyName">
-           <property name="placeholderText">
-            <string>Name</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>&amp;Type:</string>
-           </property>
-           <property name="buddy">
-            <cstring>newPropertyType</cstring>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="newPropertyType"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="newPropertyValueLabel">
-           <property name="text">
-            <string>&amp;Value:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="newPropertyButton">
-           <property name="text">
-            <string>Add</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="KFilterProxySearchLine" name="propertySearchLine"/>
+   </item>
+   <item>
+    <widget class="QTreeView" name="propertyView">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="newPropertyBar" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>&amp;New Dynamic Property:</string>
+        </property>
+        <property name="buddy">
+         <cstring>newPropertyName</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="newPropertyName">
+        <property name="placeholderText">
+         <string>Name</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>&amp;Type:</string>
+        </property>
+        <property name="buddy">
+         <cstring>newPropertyType</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="newPropertyType"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="newPropertyValueLabel">
+        <property name="text">
+         <string>&amp;Value:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="newPropertyButton">
+        <property name="text">
+         <string>Add</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>
