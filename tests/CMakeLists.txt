@@ -145,5 +145,10 @@ add_executable(metaobjecttest metaobjecttest.cpp)
 target_link_libraries(metaobjecttest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME metaobjecttest COMMAND metaobjecttest)
 
+### PropertySyncer test
+
+add_executable(propertysyncertest propertysyncertest.cpp)
+target_link_libraries(propertysyncertest gammaray_common ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
+add_test(NAME propertysyncertest COMMAND propertysyncertest)
 
 add_subdirectory(manual)

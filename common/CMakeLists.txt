@@ -11,6 +11,7 @@ set(gammaray_common_srcs
   message.cpp
   endpoint.cpp
   paths.cpp
+  propertysyncer.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
