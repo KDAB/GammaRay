@@ -24,6 +24,7 @@
 #include "endpoint.h"
 #include "message.h"
 #include "methodargument.h"
+#include "propertysyncer.h"
 
 #include <iostream>
 
@@ -32,7 +33,11 @@ using namespace std;
 
 Endpoint* Endpoint::s_instance = 0;
 
-Endpoint::Endpoint(QObject* parent): QObject(parent), m_socket(0), m_myAddress(Protocol::InvalidObjectAddress +1)
+Endpoint::Endpoint(QObject* parent):
+  QObject(parent),
+  m_propertySyncer(new PropertySyncer(this)),
+  m_socket(0),
+  m_myAddress(Protocol::InvalidObjectAddress +1)
 {
   Q_ASSERT(!s_instance);
   s_instance = this;
@@ -42,6 +47,8 @@ Endpoint::Endpoint(QObject* parent): QObject(parent), m_socket(0), m_myAddress(P
   endpointObj->name = QLatin1String("com.kdab.GammaRay.Server");
   // TODO: we could set this as message handler here and use the same dispatch mechanism
   insertObjectInfo(endpointObj);
+
+  connect(m_propertySyncer, SIGNAL(message(GammaRay::Message)), this, SLOT(sendMessage(GammaRay::Message)));
 }
 
 Endpoint::~Endpoint()
@@ -62,6 +69,11 @@ void Endpoint::send(const Message& msg)
   Q_ASSERT(s_instance);
   Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
   msg.write(s_instance->m_socket);
+}
+
+void Endpoint::sendMessage(const Message& msg)
+{
+  send(msg);
 }
 
 void Endpoint::waitForMessagesWritten()

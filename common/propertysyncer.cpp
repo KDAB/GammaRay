@@ -31,6 +31,11 @@
 
 using namespace GammaRay;
 
+static int qobjectPropertyOffset()
+{
+    return QObject::staticMetaObject.propertyCount();
+}
+
 PropertySyncer::PropertySyncer(QObject* parent) :
     QObject(parent),
     m_address(Protocol::InvalidObjectAddress),
@@ -53,7 +58,7 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject* obj)
     Q_ASSERT(obj);
 
     bool hasProperties = false;
-    for (int i = obj->metaObject()->propertyOffset(); i < obj->metaObject()->propertyCount(); ++i) {
+    for (int i = qobjectPropertyOffset(); i < obj->metaObject()->propertyCount(); ++i) {
         const auto prop = obj->metaObject()->property(i);
         if (!prop.hasNotifySignal())
             continue;
@@ -67,8 +72,11 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject* obj)
         hasProperties = true;
     }
 
-    if (!hasProperties)
+    if (!hasProperties) {
+        qDebug() << "no properties" << obj;
         return;
+    }
+    qDebug() << "found properties in" << obj << obj->metaObject()->propertyOffset() << obj->metaObject()->propertyCount();
 
     connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
 
@@ -122,8 +130,9 @@ void PropertySyncer::handleMessage(const GammaRay::Message& msg)
             if (it == m_objects.constEnd())
                 break;
 
+            qDebug() << "sync request for" << (*it).obj << (*it).obj->metaObject()->propertyOffset() << (*it).obj->metaObject()->propertyCount();
             QVector<QPair<QString, QVariant> > values;
-            for (int i = (*it).obj->metaObject()->propertyOffset(); i < (*it).obj->metaObject()->propertyCount(); ++i) {
+            for (int i = qobjectPropertyOffset(); i < (*it).obj->metaObject()->propertyCount(); ++i) {
                 const auto prop = (*it).obj->metaObject()->property(i);
                 values.push_back(qMakePair(QString(prop.name()), prop.read((*it).obj)));
             }
@@ -180,7 +189,7 @@ void PropertySyncer::propertyChanged()
 
     const auto sigIndex = senderSignalIndex();
     QVector<QPair<QString, QVariant> > changes;
-    for (int i = obj->metaObject()->propertyOffset(); i < obj->metaObject()->propertyCount(); ++i) {
+    for (int i = qobjectPropertyOffset(); i < obj->metaObject()->propertyCount(); ++i) {
         const auto prop = obj->metaObject()->property(i);
         if (prop.notifySignalIndex() != sigIndex)
             continue;

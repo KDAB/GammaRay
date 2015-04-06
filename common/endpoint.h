@@ -36,6 +36,7 @@ class QUrl;
 namespace GammaRay {
 
 class Message;
+class PropertySyncer;
 
 /** @brief Network protocol endpoint.
  *
@@ -108,6 +109,10 @@ public:
    */
   virtual QUrl serverAddress() const = 0;
 
+public slots:
+  /** Convenience overload of send(), to directly send message delivered via signals. */
+  void sendMessage(const GammaRay::Message &msg);
+
 signals:
   /** Emitted when we lost the connection to the other endpoint. */
   void disconnected();
@@ -163,6 +168,8 @@ protected:
    * This is invokes the method directly on the local object.
    */
   void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const;
+
+  PropertySyncer *m_propertySyncer;
 
 private slots:
   void readyRead();

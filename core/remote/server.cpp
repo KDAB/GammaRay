@@ -29,6 +29,7 @@
 
 #include <common/protocol.h>
 #include <common/message.h>
+#include <common/propertysyncer.h>
 
 #include <QDebug>
 #include <QTimer>
@@ -67,6 +68,11 @@ Server::Server(QObject *parent) :
 
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
           this, SLOT(forwardSignal(QObject*,int,QVector<QVariant>)));
+
+  Endpoint::registerObjectInternal("com.kdab.GammaRay.PropertySyncer", ++m_nextAddress);
+  m_propertySyncer->setAddress(m_nextAddress);
+  Endpoint::registerObject("com.kdab.GammaRay.PropertySyncer", m_propertySyncer);
+  registerMessageHandlerInternal(m_nextAddress, m_propertySyncer, "handleMessage");
 }
 
 Server::~Server()
@@ -140,6 +146,7 @@ void Server::messageReceived(const Message& msg)
         Protocol::ObjectAddress addr;
         msg.payload() >> addr;
         Q_ASSERT(addr > Protocol::InvalidObjectAddress);
+        m_propertySyncer->setObjectEnabled(addr, msg.type() == Protocol::ObjectMonitored);
         const QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> >::const_iterator it = m_monitorNotifiers.constFind(addr);
         if (it == m_monitorNotifiers.constEnd())
           break;
@@ -182,6 +189,7 @@ Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *obj
       m_signalMapper->connectToSignal(object, method);
     }
   }
+  m_propertySyncer->addObject(address, object);
 
   return address;
 }
