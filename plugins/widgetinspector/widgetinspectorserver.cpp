@@ -63,7 +63,7 @@
 
 #include <iostream>
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_PRIVATE_PAINTBUFFER
 #include <private/qpaintbuffer_p.h>
 #endif
 
@@ -103,7 +103,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_PRIVATE_PAINTBUFFER
   m_paintBufferModel = new PaintBufferModel(this);
   probe->registerModel("com.kdab.GammaRay.PaintBufferModel", m_paintBufferModel);
   connect(ObjectBroker::selectionModel(m_paintBufferModel), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
@@ -347,7 +347,7 @@ void WidgetInspectorServer::analyzePainting()
   if (!m_selectedWidget) {
     return;
   }
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_PRIVATE_PAINTBUFFER
   QPaintBuffer buffer;
   m_overlayWidget->hide();
   buffer.setBoundingRect(m_selectedWidget->rect());
@@ -360,14 +360,14 @@ void WidgetInspectorServer::analyzePainting()
 
 void WidgetInspectorServer::eventuallyUpdatePaintAnalyzer()
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_PRIVATE_PAINTBUFFER
   m_paintAnalyzerTimer->start();
 #endif
 }
 
 void WidgetInspectorServer::updatePaintAnalyzer()
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_PRIVATE_PAINTBUFFER
   // didn't manage painting on the widget directly, even with the correct
   // translation it is always clipping as if the widget was at 0,0 of its parent
   const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
@@ -405,7 +405,7 @@ void WidgetInspectorServer::checkFeatures()
 #else
     false,
 #endif
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_PRIVATE_PAINTBUFFER
     true
 #else
     false

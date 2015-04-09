@@ -24,6 +24,7 @@
 #cmakedefine BUILD_TIMER_PLUGIN
 
 #cmakedefine HAVE_PRIVATE_QT_HEADERS
+#cmakedefine HAVE_PRIVATE_PAINTBUFFER
 
 #cmakedefine HAVE_STDINT_H
 

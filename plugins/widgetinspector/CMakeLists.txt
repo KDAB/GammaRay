@@ -14,7 +14,7 @@ set(gammaray_widgetinspector_plugin_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
 )
 
-if(HAVE_PRIVATE_QT_HEADERS)
+if(HAVE_PRIVATE_PAINTBUFFER)
   set(gammaray_widgetinspector_plugin_srcs
     ${gammaray_widgetinspector_plugin_srcs}
     paintbuffermodel.cpp

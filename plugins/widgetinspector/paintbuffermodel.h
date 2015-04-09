@@ -26,7 +26,7 @@
 
 #include <config-gammaray.h>
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
+#ifdef HAVE_PRIVATE_PAINTBUFFER
 #include <QAbstractItemModel>
 
 #include <private/qpaintbuffer_p.h>
