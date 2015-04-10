@@ -21,6 +21,8 @@
 **
 ****************************************************************************/
 
+#define QT_FORCE_ASSERTS
+
 #include <QtCore/QAbstractEventDispatcher>
 #include <QtCore/QTimer>
 #include <QtGui/QtGui>
