@@ -62,7 +62,7 @@ class ToolModel : public QAbstractListModel
     /** returns the tool that is best suited to show information about \p object. */
     QModelIndex toolForObject(QObject *object) const;
     /** returns the tool that is best suited to show information about \p object. */
-    QModelIndex toolForObject(const void *object, const QString typeName) const;
+    QModelIndex toolForObject(const void *object, const QString &typeName) const;
 
   public slots:
     /** Check if we have to activate tools for this type */
