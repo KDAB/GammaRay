@@ -113,7 +113,7 @@ if(GAMMARAY_BUILD_UI)
     modeltest.cpp
     ../core/remote/remotemodelserver.cpp
   )
-  target_link_libraries(remotemodeltest gammaray_core gammaray_client_internal ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+  target_link_libraries(remotemodeltest gammaray_core gammaray_client ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
   add_test(NAME remotemodeltest COMMAND remotemodeltest)
 endif()
 
@@ -138,5 +138,26 @@ target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI
 
 add_test(NAME actiontest COMMAND actiontest)
 endif()
+
+### MetaObject test
+
+add_executable(metaobjecttest metaobjecttest.cpp)
+target_link_libraries(metaobjecttest gammaray_core ${QT_QTTEST_LIBRARIES})
+add_test(NAME metaobjecttest COMMAND metaobjecttest)
+
+### PropertySyncer test
+
+add_executable(propertysyncertest propertysyncertest.cpp)
+target_link_libraries(propertysyncertest gammaray_common ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
+add_test(NAME propertysyncertest COMMAND propertysyncertest)
+
+### PropertyBinder test
+
+if(GAMMARAY_BUILD_UI)
+add_executable(propertybindertest propertybindertest.cpp)
+target_link_libraries(propertybindertest gammaray_ui ${QT_QTTEST_LIBRARIES})
+add_test(NAME propertybindertest COMMAND propertybindertest)
+endif()
+
 
 add_subdirectory(manual)

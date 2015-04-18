@@ -24,18 +24,21 @@
 #ifndef GAMMARAY_REMOTEMODEL_H
 #define GAMMARAY_REMOTEMODEL_H
 
+#include "gammaray_client_export.h"
 #include <common/objectmodel.h>
 #include <common/protocol.h>
 
 #include <QAbstractItemModel>
 #include <QSet>
+#include <QTimer>
 #include <QVector>
 
 namespace GammaRay {
 
 class Message;
 
-class RemoteModel : public QAbstractItemModel
+/** @internal Exported for unit test use only. */
+class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
 {
   Q_OBJECT
   public:
@@ -109,9 +112,16 @@ class RemoteModel : public QAbstractItemModel
     /// execute a rowsMoved() operation
     void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node* destParentNode, int destStart);
 
+private slots:
+    void doRequestDataAndFlags() const;
+
+private:
     Node* m_root;
 
     mutable QHash<Qt::Orientation, QHash<int, QHash<int, QVariant> > > m_headers; // orientation -> section -> role -> data
+
+    mutable QVector<Protocol::ModelIndex> m_pendingDataRequests;
+    QTimer* m_pendingDataRequestsTimer;
 
     QString m_serverObject;
     Protocol::ObjectAddress m_myAddress;

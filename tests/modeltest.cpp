@@ -21,6 +21,8 @@
 **
 ****************************************************************************/
 
+#define QT_FORCE_ASSERTS
+
 #include <QtCore/QAbstractEventDispatcher>
 #include <QtCore/QTimer>
 #include <QtGui/QtGui>
@@ -136,9 +138,7 @@ void ModelTest::nonDestructiveBasicTest()
     fetchingMore = true;
     model->fetchMore ( QModelIndex() );
     fetchingMore = false;
-#if !defined(NDEBUG)
     Qt::ItemFlags flags = model->flags ( QModelIndex() );
-#endif
     Q_ASSERT ( flags == Qt::ItemIsDropEnabled || flags == 0 );
     model->hasChildren ( QModelIndex() );
     model->hasIndex ( 0, 0 );
@@ -217,10 +217,9 @@ void ModelTest::hasIndex()
     Q_ASSERT ( model->hasIndex ( -2, 0 ) == false );
     Q_ASSERT ( model->hasIndex ( 0, -2 ) == false );
 
-#if !defined(NDEBUG)
     int rows = model->rowCount();
     int columns = model->columnCount();
-#endif
+
     // check out of bounds
     Q_ASSERT ( model->hasIndex ( rows, columns ) == false );
     Q_ASSERT ( model->hasIndex ( rows + 1, columns + 1 ) == false );
@@ -243,20 +242,18 @@ void ModelTest::index()
     Q_ASSERT ( model->index ( 0, -2 ) == QModelIndex() );
 
     int rows = model->rowCount();
+    int columns = model->columnCount();
+
     if ( rows == 0 )
         return;
-#if !defined(NDEBUG)
-    int columns = model->columnCount();
-#endif
+
     // Catch off by one errors
     Q_ASSERT ( model->index ( rows, columns ) == QModelIndex() );
     Q_ASSERT ( model->index ( 0, 0 ).isValid() == true );
 
     // Make sure that the same index is *always* returned
-#if !defined(NDEBUG)
     QModelIndex a = model->index ( 0, 0 );
     QModelIndex b = model->index ( 0, 0 );
-#endif
     Q_ASSERT ( a == b );
 
     // index() is tested more extensively in checkChildren(),
@@ -300,10 +297,8 @@ void ModelTest::parent()
     // Usually the second column shouldn't have children.
     QModelIndex topIndex1 = model->index ( 0, 1, QModelIndex() );
     if ( model->rowCount ( topIndex1 ) > 0 ) {
-#if !defined(NDEBUG)
         QModelIndex childIndex = model->index ( 0, 0, topIndex );
         QModelIndex childIndex1 = model->index ( 0, 0, topIndex1 );
-#endif
         Q_ASSERT ( childIndex != childIndex1 );
     }
 
@@ -370,16 +365,12 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
             Q_ASSERT ( index.isValid() == true );
 
             // index() should always return the same index when called twice in a row
-#if !defined(NDEBUG)
             QModelIndex modifiedIndex = model->index ( r, c, parent );
-#endif
             Q_ASSERT ( index == modifiedIndex );
 
             // Make sure we get the same index if we request it twice in a row
-#if !defined(NDEBUG)
             QModelIndex a = model->index ( r, c, parent );
             QModelIndex b = model->index ( r, c, parent );
-#endif
             Q_ASSERT ( a == b );
 
             // Some basic checking on the index that is returned
@@ -416,9 +407,7 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
             }/* else { if (currentDepth >= 10) qDebug() << "checked 10 deep"; };*/
 
             // make sure that after testing the children that the index doesn't change.
-#if !defined(NDEBUG)
             QModelIndex newerIndex = model->index ( r, c, parent );
-#endif
             Q_ASSERT ( index == newerIndex );
         }
     }
@@ -470,9 +459,7 @@ void ModelTest::data()
     // Check that the alignment is one we know about
     QVariant textAlignmentVariant = model->data ( model->index ( 0, 0 ), Qt::TextAlignmentRole );
     if ( textAlignmentVariant.isValid() ) {
-#if !defined(NDEBUG)
         int alignment = textAlignmentVariant.toInt();
-#endif
         Q_ASSERT ( alignment == ( alignment & ( Qt::AlignHorizontal_Mask | Qt::AlignVertical_Mask ) ) );
     }
 
@@ -490,9 +477,7 @@ void ModelTest::data()
     // Check that the "check state" is one we know about.
     QVariant checkStateVariant = model->data ( model->index ( 0, 0 ), Qt::CheckStateRole );
     if ( checkStateVariant.isValid() ) {
-#if !defined(NDEBUG)
         int state = checkStateVariant.toInt();
-#endif
         Q_ASSERT ( state == Qt::Unchecked ||
                    state == Qt::PartiallyChecked ||
                    state == Qt::Checked );

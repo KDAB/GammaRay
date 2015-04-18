@@ -251,11 +251,13 @@ QWidget *MainWindow::createErrorPage(const QModelIndex &index)
 
 void MainWindow::quitHost()
 {
+  emit targetQuitRequested();
   ObjectBroker::object<ProbeControllerInterface*>()->quitHost();
 }
 
 void MainWindow::detachProbe()
 {
+  emit targetQuitRequested();
   ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
 }
 

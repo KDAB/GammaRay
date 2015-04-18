@@ -84,6 +84,8 @@ enum BuildInMessageType {
   SelectionModelCurrent,
 
   MethodCall,
+  PropertySyncRequest,
+  PropertyValuesChanged,
 
   ServerInfo,
 

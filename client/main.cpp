@@ -50,6 +50,9 @@ int main(int argc, char** argv)
   }
 
   ClientConnectionManager conMan;
+  QObject::connect(&conMan, SIGNAL(ready()), &conMan, SLOT(createMainWindow()));
+  QObject::connect(&conMan, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
+  QObject::connect(&conMan, SIGNAL(persistentConnectionError(QString)), &conMan, SLOT(handlePersistentConnectionError(QString)));
   conMan.connectToHost(serverUrl);
   return app.exec();
 }

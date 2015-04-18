@@ -36,7 +36,6 @@
 #include <ui/splashscreen.h>
 
 #include <QApplication>
-#include <QDebug>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -74,18 +73,20 @@ void ClientConnectionManager::init()
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 }
 
-ClientConnectionManager::ClientConnectionManager(QObject* parent) :
+ClientConnectionManager::ClientConnectionManager(QObject* parent, bool showSplashScreenOnStartUp) :
   QObject(parent),
   m_client(new Client(this)),
   m_mainWindow(0),
-  m_toolModel(0)
+  m_toolModel(0),
+  m_ignorePersistentError(false)
 {
-  showSplashScreen();
-
-  connect(m_client, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
+  if (showSplashScreenOnStartUp)
+     showSplashScreen();
+  connect(m_client, SIGNAL(disconnected()), SIGNAL(disconnected()));
   connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
   connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
-  connect(m_client, SIGNAL(persisitentConnectionError(QString)), SLOT(persistentConnectionError(QString)));
+  connect(m_client, SIGNAL(persisitentConnectionError(QString)), SIGNAL(persistentConnectionError(QString)));
+  connect(this, SIGNAL(persistentConnectionError(QString)), SLOT(delayedHideSplashScreen()));
 }
 
 ClientConnectionManager::~ClientConnectionManager()
@@ -93,11 +94,21 @@ ClientConnectionManager::~ClientConnectionManager()
   delete m_mainWindow;
 }
 
+QMainWindow *ClientConnectionManager::mainWindow() const
+{
+  return m_mainWindow;
+}
+
 void ClientConnectionManager::connectToHost(const QUrl &url)
 {
   m_serverUrl = url;
   m_connectionTimeout.start();
   connectToHost();
+}
+
+void ClientConnectionManager::disconnectFromHost()
+{
+    m_client->disconnectFromHost();
 }
 
 void ClientConnectionManager::connectToHost()
@@ -124,10 +135,18 @@ void ClientConnectionManager::toolModelPopulated()
     return;
 
   disconnect(m_toolModel, 0, this, 0);
+  QTimer::singleShot(0, this, SLOT(delayedHideSplashScreen()));
+  emit ready();
+}
 
+QMainWindow *ClientConnectionManager::createMainWindow()
+{
+  delete m_mainWindow;
   m_mainWindow = new MainWindow;
+  connect(m_mainWindow, SIGNAL(targetQuitRequested()), this, SLOT(targetQuitRequested()));
+  m_ignorePersistentError = false;
   m_mainWindow->show();
-  hideSplashScreen();
+  return m_mainWindow;
 }
 
 void ClientConnectionManager::transientConnectionError()
@@ -136,13 +155,14 @@ void ClientConnectionManager::transientConnectionError()
     // client wasn't up yet, keep trying
     QTimer::singleShot(1000, this, SLOT(connectToHost()));
   } else {
-    persistentConnectionError(tr("Connection refused."));
+    emit persistentConnectionError(tr("Connection refused."));
   }
 }
 
-void ClientConnectionManager::persistentConnectionError(const QString& msg)
+void ClientConnectionManager::handlePersistentConnectionError(const QString& msg)
 {
-  hideSplashScreen();
+  if (m_ignorePersistentError)
+    return;
 
   QString errorMsg;
   if (m_mainWindow)
@@ -152,4 +172,14 @@ void ClientConnectionManager::persistentConnectionError(const QString& msg)
 
   QMessageBox::critical(m_mainWindow, tr("GammaRay - Connection Error"), errorMsg);
   QApplication::exit(1);
+}
+
+void ClientConnectionManager::delayedHideSplashScreen()
+{
+  hideSplashScreen();
+}
+
+void ClientConnectionManager::targetQuitRequested()
+{
+  m_ignorePersistentError = true;
 }

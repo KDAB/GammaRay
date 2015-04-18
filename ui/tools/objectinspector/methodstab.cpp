@@ -25,7 +25,8 @@
 #include "ui_methodstab.h"
 #include "propertywidget.h"
 
-#include "ui/methodinvocationdialog.h"
+#include <ui/methodinvocationdialog.h>
+#include <ui/propertybinder.h>
 
 #include "common/objectbroker.h"
 #include "common/metatypedeclarations.h"
@@ -70,13 +71,13 @@ void MethodsTab::setObjectBaseName(const QString &baseName)
           SLOT(methodContextMenu(QPoint)));
   m_ui->methodLog->setModel(ObjectBroker::model(baseName + '.' + "methodLog"));
 
-  m_interface =
-    ObjectBroker::object<MethodsExtensionInterface*>(baseName + ".methodsExtension");
+  m_interface = ObjectBroker::object<MethodsExtensionInterface*>(baseName + ".methodsExtension");
+  new PropertyBinder(m_interface, "hasObject", m_ui->methodLog, "visible");
 }
 
 void MethodsTab::methodActivated(const QModelIndex &index)
 {
-  if (!index.isValid()) {
+  if (!index.isValid() || !m_interface->hasObject()) {
     return;
   }
   m_interface->activateMethod();
@@ -91,7 +92,7 @@ void MethodsTab::methodActivated(const QModelIndex &index)
 void MethodsTab::methodContextMenu(const QPoint &pos)
 {
   const QModelIndex index = m_ui->methodView->indexAt(pos);
-  if (!index.isValid()) {
+  if (!index.isValid() || !m_interface->hasObject()) {
     return;
   }
 

@@ -129,6 +129,8 @@ int DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &pr
     execCmd("detach");
     execCmd("quit");
   } else {
+    // delete all breakpoints before we continue, so we don't hit another one and abort there
+    execCmd("delete");
     execCmd("continue");
     // if we hit a crash or anything, print backtrace and quit
     execCmd("backtrace", false);

@@ -43,6 +43,9 @@ namespace ProbeSettings
   /** Identifier used for finding the communication channels to the launcher. */
   qint64 launcherIdentifier();
 
+  /** Reset the launcher Identifier. Call this when detaching the probe. */
+  void resetLauncherIdentifier();
+
   /** Sends the server address used for communication with the client back to the launcher. */
   void sendServerAddress(const QUrl &addr);
 }

@@ -130,7 +130,12 @@ namespace ObjectBroker {
   /** Set a callback for the case that a selection model was requested but had not been registered before. */
   GAMMARAY_COMMON_EXPORT void setSelectionModelFactoryCallback(selectionModelFactoryCallback callback);
 
-  /** Clear all registered objects. Useful when the probe is deleted. */
+  /** @brief Clear all registered objects.
+   *
+   * This also destroys all objects created by factory methods registered here, but not externally
+   * created objects that have just been registered here.
+   * Useful when the probe is deleted, or the client lost the connection.
+   */
   GAMMARAY_COMMON_EXPORT void clear();
 }
 }

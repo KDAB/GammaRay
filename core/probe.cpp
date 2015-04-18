@@ -23,6 +23,8 @@
 */
 //krazy:excludeall=null,captruefalse,staticobjects
 
+#include <config-gammaray.h>
+
 #include "probe.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
@@ -58,6 +60,22 @@
 #include <QUrl>
 #include <QThread>
 #include <QTimer>
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
+#include <private/qobject_p.h>
+#else
+struct QSignalSpyCallbackSet
+{
+  typedef void (*BeginCallback)(QObject *caller, int method_index, void **argv);
+  typedef void (*EndCallback)(QObject *caller, int method_index);
+  BeginCallback signal_begin_callback,
+  slot_begin_callback;
+  EndCallback signal_end_callback,
+  slot_end_callback;
+};
+extern void qt_register_signal_spy_callbacks(const QSignalSpyCallbackSet &callback_set);
+extern QSignalSpyCallbackSet qt_signal_spy_callback_set;
+#endif
 
 #include <algorithm>
 #include <iostream>
@@ -105,9 +123,9 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
 #endif
-  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
-    if (qt_signal_spy_callback_set.signal_begin_callback) {
-      qt_signal_spy_callback_set.signal_begin_callback(caller, method_index, argv);
+  Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
+    if (callbacks.signalBeginCallback) {
+      callbacks.signalBeginCallback(caller, method_index, argv);
     }
   });
 }
@@ -124,9 +142,9 @@ static void signal_end_callback(QObject *caller, int method_index)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
 #endif
-  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
-    if (qt_signal_spy_callback_set.signal_end_callback) {
-      qt_signal_spy_callback_set.signal_end_callback(caller, method_index);
+  Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
+    if (callbacks.signalEndCallback) {
+      callbacks.signalEndCallback(caller, method_index);
     }
   });
 }
@@ -136,9 +154,9 @@ static void slot_begin_callback(QObject *caller, int method_index, void **argv)
   if (method_index == 0 || Probe::instance()->filterObject(caller))
     return;
 
-  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
-    if (qt_signal_spy_callback_set.slot_begin_callback) {
-      qt_signal_spy_callback_set.slot_begin_callback(caller, method_index, argv);
+  Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
+    if (callbacks.slotBeginCallback) {
+            callbacks.slotBeginCallback(caller, method_index, argv);
     }
   });
 }
@@ -152,9 +170,9 @@ static void slot_end_callback(QObject *caller, int method_index)
   if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
     return; // deleted in the slot
 
-  Probe::executeSignalCallback([=](const QSignalSpyCallbackSet &qt_signal_spy_callback_set) {
-    if (qt_signal_spy_callback_set.slot_end_callback) {
-      qt_signal_spy_callback_set.slot_end_callback(caller, method_index);
+  Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
+    if (callbacks.slotEndCallback) {
+            callbacks.slotEndCallback(caller, method_index);
     }
   });
 }
@@ -261,26 +279,24 @@ Probe::Probe(QObject *parent):
   connect(m_queueTimer, SIGNAL(timeout()),
           this, SLOT(queuedObjectsFullyConstructed()));
 
-  QSignalSpyCallbackSet callbacks;
-  callbacks.signal_begin_callback = signal_begin_callback;
-  callbacks.signal_end_callback = signal_end_callback;
-  callbacks.slot_begin_callback = slot_begin_callback;
-  callbacks.slot_end_callback = slot_end_callback;
-  m_previousSignalSpyCallbackSet = qt_signal_spy_callback_set;
-  if (qt_signal_spy_callback_set.signal_begin_callback ||
-      qt_signal_spy_callback_set.signal_end_callback ||
-      qt_signal_spy_callback_set.slot_begin_callback ||
-      qt_signal_spy_callback_set.slot_end_callback) {
-    m_signalSpyCallbacks.push_back(qt_signal_spy_callback_set); // daisy-chain existing callbacks
-  }
-  qt_register_signal_spy_callbacks(callbacks);
+  m_previousSignalSpyCallbackSet.signalBeginCallback = qt_signal_spy_callback_set.signal_begin_callback;
+  m_previousSignalSpyCallbackSet.signalEndCallback =qt_signal_spy_callback_set.signal_end_callback;
+  m_previousSignalSpyCallbackSet.slotBeginCallback = qt_signal_spy_callback_set.slot_begin_callback;
+  m_previousSignalSpyCallbackSet.slotEndCallback = qt_signal_spy_callback_set.slot_end_callback;
+  registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
 }
 
 Probe::~Probe()
 {
   IF_DEBUG(cerr << "detaching GammaRay probe" << endl;)
 
-  qt_register_signal_spy_callbacks(m_previousSignalSpyCallbackSet);
+  const QSignalSpyCallbackSet prevCallbacks = {
+    m_previousSignalSpyCallbackSet.signalBeginCallback,
+    m_previousSignalSpyCallbackSet.slotBeginCallback,
+    m_previousSignalSpyCallbackSet.signalEndCallback,
+    m_previousSignalSpyCallbackSet.slotEndCallback
+  };
+  qt_register_signal_spy_callbacks(prevCallbacks);
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   QInternal::unregisterCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
@@ -288,6 +304,7 @@ Probe::~Probe()
 #endif
 
   ObjectBroker::clear();
+  ProbeSettings::resetLauncherIdentifier();
 
   s_instance = QAtomicPointer<Probe>(0);
 }
@@ -843,9 +860,24 @@ void Probe::selectObject(void *object, const QString &typeName)
                                QItemSelectionModel::Current);
 }
 
-void Probe::registerSignalSpyCallbackSet(const QSignalSpyCallbackSet &callbacks)
+void Probe::registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks)
 {
+  if (callbacks.isNull())
+    return;
   m_signalSpyCallbacks.push_back(callbacks);
+  setupSignalSpyCallbacks();
+}
+
+void Probe::setupSignalSpyCallbacks()
+{
+  QSignalSpyCallbackSet cbs = { 0, 0, 0, 0 };
+  foreach (const auto &it, m_signalSpyCallbacks) {
+    if (it.signalBeginCallback) cbs.signal_begin_callback = signal_begin_callback;
+    if (it.signalEndCallback) cbs.signal_end_callback = signal_end_callback;
+    if (it.slotBeginCallback) cbs.slot_begin_callback = slot_begin_callback;
+    if (it.slotEndCallback) cbs.slot_end_callback = slot_end_callback;
+  }
+  qt_register_signal_spy_callbacks(cbs);
 }
 
 template <typename Func>
@@ -886,4 +918,3 @@ const char *SignalSlotsLocationStore::extractLocation(const char *member)
 }
 
 //END
-

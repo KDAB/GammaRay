@@ -97,6 +97,8 @@ QVariant ObjectStaticPropertyModel::data(const QModelIndex &index, int role) con
   } else if (role == Qt::ToolTipRole) {
     return detailString(prop);
   } else if (role == PropertyModel::ActionRole) {
+    if (!m_obj)
+      return PropertyModel::NoAction;
     return (prop.isResettable() ? PropertyModel::Reset : PropertyModel::NoAction)
          | ((MetaObjectRepository::instance()->metaObject(value.typeName()) && *reinterpret_cast<void* const*>(value.data())) || value.value<QObject*>()
             ? PropertyModel::NavigateTo

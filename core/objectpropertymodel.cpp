@@ -47,7 +47,7 @@ void ObjectPropertyModel::setObject(QObject *object)
   beginResetModel();
   if (m_obj) {
     unmonitorObject(m_obj.data());
-    disconnect(m_obj.data(), 0, this, SLOT(slotReset()));
+    disconnect(m_obj.data(), SIGNAL(destroyed(QObject*)), this, SLOT(slotReset()));
   }
   m_obj = object;
   m_metaObject = object ? object->metaObject() : 0;

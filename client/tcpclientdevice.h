@@ -36,6 +36,7 @@ class TcpClientDevice : public ClientDeviceImpl<QTcpSocket>
 public:
     explicit TcpClientDevice(QObject* parent = 0);
     void connectToHost() Q_DECL_OVERRIDE;
+    void disconnectFromHost();
 
 private slots:
     void socketError();

@@ -24,37 +24,81 @@
 #ifndef GAMMARAY_CLIENTCONNECTIONMANAGER_H
 #define GAMMARAY_CLIENTCONNECTIONMANAGER_H
 
+#include "gammaray_client_export.h"
+
 #include <QObject>
 #include <QTime>
 #include <QUrl>
 
 class QAbstractItemModel;
+class QMainWindow;
 
 namespace GammaRay {
 
 class Client;
 class MainWindow;
 
-/** Pre-MainWindow connection setup logic. */
-class ClientConnectionManager : public QObject
+/** @brief Pre-MainWindow connection setup logic.
+ *
+ * This is useful for embedding the GammaRay client into another application
+ *
+ * @since 2.3
+ */
+class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
 {
   Q_OBJECT
   public:
-    explicit ClientConnectionManager(QObject* parent = 0);
+    explicit ClientConnectionManager(QObject* parent = 0, bool showSplashScreenOnStartUp = true);
     ~ClientConnectionManager();
 
+    QMainWindow *mainWindow() const;
+
+    /** Connect to a GammaRay probe at @p url. */
     void connectToHost(const QUrl &url);
 
     /** One-time initialization of stream operators and factory callbacks. */
     static void init();
 
+  signals:
+    /** Emitted when the connection is established and the tool model is populated.
+     *  If you want to bring up the standard main window, connect this to createMainWindow(),
+     *  otherwise use this to show your own UI at this point.
+     */
+    void ready();
+
+    /** Emitted when there has been a persistent connection error.
+     *  You can connect this to handlePersistentConnectionError() for a standard
+     *  message box and application exit handling.
+     */
+    void persistentConnectionError(const QString &msg);
+
+    /** Emitted when the connection to the target has been closed, for whatever reason.
+     *  For a stand-alone client you probably want to connect this to QApplication::quit().
+     */
+    void disconnected();
+
+  public slots:
+    /** Disconnect GammaRay. */
+    void disconnectFromHost();
+
+    /** Brings up a client main window for the current connection.
+     *  If you want to use this, connect this slot to ready().
+     */
+    QMainWindow *createMainWindow();
+
+    /** Standard persistent connection error handler.
+     *  @see persistentConnectionError()
+     */
+    void handlePersistentConnectionError(const QString &msg);
+
   private slots:
     void connectToHost();
     void connectionEstablished();
     void transientConnectionError();
-    void persistentConnectionError( const QString &msg);
 
     void toolModelPopulated();
+    void delayedHideSplashScreen();
+    void targetQuitRequested();
 
   private:
     QUrl m_serverUrl;
@@ -62,6 +106,7 @@ class ClientConnectionManager : public QObject
     MainWindow *m_mainWindow;
     QAbstractItemModel *m_toolModel;
     QTime m_connectionTimeout;
+    bool m_ignorePersistentError;
 };
 
 }

@@ -39,6 +39,9 @@ class MainWindow : public QMainWindow
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+  signals:
+    void targetQuitRequested();
+
   private slots:
     void about();
     void aboutPlugins();

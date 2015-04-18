@@ -1,3 +1,7 @@
+if(NOT Qt5Gui_VERSION VERSION_LESS 5.5.0) # QPaintBuffer was removed in 5.5
+  include_directories(${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
+endif()
+
 # probe plugin
 set(gammaray_widgetinspector_plugin_srcs
   widgetinspector.cpp
@@ -15,6 +19,10 @@ if(HAVE_PRIVATE_QT_HEADERS)
     ${gammaray_widgetinspector_plugin_srcs}
     paintbuffermodel.cpp
   )
+endif()
+
+if(NOT Qt5Gui_VERSION VERSION_LESS 5.5.0)
+  list(APPEND gammaray_widgetinspector_plugin_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/private/qpaintbuffer.cpp)
 endif()
 
 gammaray_add_plugin(gammaray_widgetinspector_plugin

@@ -200,7 +200,7 @@ QModelIndex ToolModel::toolForObject(QObject* object) const
   return QModelIndex();
 }
 
-QModelIndex ToolModel::toolForObject(const void* object, const QString typeName) const
+QModelIndex ToolModel::toolForObject(const void* object, const QString& typeName) const
 {
   if (!object)
     return QModelIndex();

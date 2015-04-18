@@ -22,10 +22,9 @@
 */
 #include "timermodel.h"
 
-#include "core/probeinterface.h"
-#include "common/objectmodel.h"
-
-#include <private/qobject_p.h>
+#include <core/probeinterface.h>
+#include <core/signalspycallbackset.h>
+#include <common/objectmodel.h>
 
 #include <QMetaMethod>
 #include <QCoreApplication>
@@ -260,11 +259,9 @@ void TimerModel::setProbe(ProbeInterface *probe)
 {
   m_probe = probe;
 
-  QSignalSpyCallbackSet callbacks;
-  callbacks.slot_begin_callback = 0;
-  callbacks.slot_end_callback = 0;
-  callbacks.signal_begin_callback = signal_begin_callback;
-  callbacks.signal_end_callback = signal_end_callback;
+  SignalSpyCallbackSet callbacks;
+  callbacks.signalBeginCallback = signal_begin_callback;
+  callbacks.signalEndCallback = signal_end_callback;
 
   probe->registerSignalSpyCallbackSet(callbacks);
 }

@@ -32,11 +32,18 @@ namespace GammaRay {
 class MethodsExtensionInterface : public QObject
 {
   Q_OBJECT
+  Q_PROPERTY(bool hasObject READ hasObject WRITE setHasObject NOTIFY hasObjectChanged)
   public:
     explicit MethodsExtensionInterface(const QString &name, QObject *parent = 0);
     virtual ~MethodsExtensionInterface();
 
     const QString &name() const;
+
+    bool hasObject() const;
+    void setHasObject(bool hasObject);
+
+  signals:
+    void hasObjectChanged();
 
   public slots:
     virtual void activateMethod() = 0;
@@ -45,6 +52,7 @@ class MethodsExtensionInterface : public QObject
 
   private:
     QString m_name;
+    bool m_hasObject;
 };
 
 }

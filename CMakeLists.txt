@@ -50,6 +50,7 @@ include(CheckLibraryExists)
 include(GammaRayMacros)
 include(GammaRayMacrosInternal)
 include(FeatureSummary)
+include(ECMGeneratePriFile)
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
 #  MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
@@ -80,6 +81,7 @@ set(GAMMARAY_VERSION "${GAMMARAY_VERSION_MAJOR}.${GAMMARAY_VERSION_MINOR}.${GAMM
 set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION}")
 set(GAMMARAY_SOVERSION "2.3.0")
 set(GAMMARAY_PLUGIN_VERSION "2.3")
+set(PROJECT_VERSION_STRING "${GAMMARAY_VERSION_STRING}")
 if(ANDROID)
   # non-rooted Android doesn't like .so versions...
   set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES "")
@@ -310,7 +312,7 @@ else()
   else()
     set(HAVE_PRIVATE_QT_HEADERS FALSE)
     # needs to go before Qt includes, in case we have non-working headers with the same name there
-    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt)
+    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt/4.8)
   endif()
 
   set_package_properties(Qt4 PROPERTIES URL "http://qt-project.org/")
@@ -436,9 +438,11 @@ else()
   set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
   set(INCLUDE_INSTALL_DIR "include/gammaray")
   set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
-  set(XDG_APPS_INSTALL_DIR share/applications)
-  set(APPDATA_INSTALL_DIR share/appdata)
-  set(MAN_INSTALL_DIR "share/man/man1")
+  set(DATAROOTDIR share CACHE PATH "Define install directory for read-only architecture-independent data")
+  set(XDG_APPS_INSTALL_DIR "${DATAROOTDIR}/applications")
+  set(APPDATA_INSTALL_DIR "${DATAROOTDIR}/appdata")
+  set(ICON_INSTALL_DIR "${DATAROOTDIR}/icons")
+  set(MAN_INSTALL_DIR "${DATAROOTDIR}/man/man1")
   if(WIN32)
     set(PLUGIN_INSTALL_DIR "plugins")
     set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
@@ -446,7 +450,7 @@ else()
   else()
     set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
     set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
-    set(DOC_INSTALL_DIR share/doc/gammaray/)
+    set(DOC_INSTALL_DIR "${DATAROOTDIR}/doc/gammaray/")
   endif()
 endif()
 if(ANDROID)
@@ -542,7 +546,7 @@ if(CPPCHECK_EXECUTABLE)
   endforeach()
 
   add_custom_target(cppcheck
-    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all -j 4 --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
+    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all --inconclusive -f --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
       -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
       -i${CMAKE_CURRENT_SOURCE_DIR}/tests
     ${CMAKE_CURRENT_SOURCE_DIR}

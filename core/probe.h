@@ -26,13 +26,12 @@
 
 #include "gammaray_core_export.h"
 #include "probeinterface.h"
+#include "signalspycallbackset.h"
 
 #include <QObject>
 #include <QQueue>
 #include <QSet>
 #include <QVector>
-
-#include <private/qobject_p.h>
 
 class QItemSelectionModel;
 class QThread;
@@ -55,7 +54,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
   Q_OBJECT
   public:
-    virtual ~Probe();
+    ~Probe();
 
     /**
      * NOTE: You must hold the object lock when operating on the instance!
@@ -75,23 +74,23 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     static void connectionRemoved(QObject *sender, const char *signal,
                                   QObject *receiver, const char *method);
 
-    QAbstractItemModel *objectListModel() const;
-    QAbstractItemModel *objectTreeModel() const;
+    QAbstractItemModel *objectListModel() const Q_DECL_OVERRIDE;
+    QAbstractItemModel *objectTreeModel() const Q_DECL_OVERRIDE;
     QAbstractItemModel *metaObjectModel() const;
-    QAbstractItemModel *connectionModel() const;
+    QAbstractItemModel *connectionModel() const Q_DECL_OVERRIDE;
     ToolModel *toolModel() const;
-    void registerModel(const QString& objectName, QAbstractItemModel* model);
-    /*override*/ void installGlobalEventFilter(QObject* filter);
-    /*override*/ bool hasReliableObjectTracking() const;
-    /*override*/ void discoverObject(QObject* object);
-    /*override*/ void selectObject(QObject* object, const QPoint& pos = QPoint());
-    /*override*/ void selectObject(void* object, const QString& typeName);
-    /*override*/ void registerSignalSpyCallbackSet(const QSignalSpyCallbackSet& callbacks);
+    void registerModel(const QString& objectName, QAbstractItemModel* model) Q_DECL_OVERRIDE;
+    void installGlobalEventFilter(QObject* filter) Q_DECL_OVERRIDE;
+    bool hasReliableObjectTracking() const Q_DECL_OVERRIDE;
+    void discoverObject(QObject* object) Q_DECL_OVERRIDE;
+    void selectObject(QObject* object, const QPoint& pos = QPoint()) Q_DECL_OVERRIDE;
+    void selectObject(void* object, const QString& typeName) Q_DECL_OVERRIDE;
+    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet& callbacks) Q_DECL_OVERRIDE;
 
     QObject *window() const;
     void setWindow(QObject *window);
 
-    QObject *probe() const;
+    QObject *probe() const Q_DECL_OVERRIDE;
 
     /**
      * Lock this to check the validity of a QObject
@@ -106,10 +105,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
      */
     bool isValidObject(QObject *obj) const;
 
-    bool filterObject(QObject *obj) const;
-
-    /** Check if we are capable of showing widgets. */
-    static bool canShowWidgets();
+    bool filterObject(QObject *obj) const Q_DECL_OVERRIDE;
 
     /// internal
     static void startupHookReceived();
@@ -171,12 +167,18 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     void objectFullyConstructed(QObject *obj);
     void findExistingObjects();
+
+    /** Check if we are capable of showing widgets. */
+    static bool canShowWidgets();
     void showInProcessUi();
 
     static void createProbe(bool findExisting);
 
     explicit Probe(QObject *parent = 0);
     static QAtomicPointer<Probe> s_instance;
+
+    /** Set up all needed signal spy callbacks. */
+    void setupSignalSpyCallbacks();
 
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
@@ -189,8 +191,8 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QQueue<QObject*> m_queuedObjects;
     QTimer *m_queueTimer;
     QVector<QObject*> m_globalEventFilters;
-    QVector<QSignalSpyCallbackSet> m_signalSpyCallbacks;
-    QSignalSpyCallbackSet m_previousSignalSpyCallbackSet;
+    QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
+    SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
 };
 
 class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore

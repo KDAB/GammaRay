@@ -21,6 +21,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include "webinspector.h"
 #include "webviewmodel.h"
 
@@ -32,6 +34,10 @@
 #include <QDebug>
 #include <QUrl>
 #include <QtPlugin>
+
+#ifdef HAVE_QT_WEBKIT1
+#include <QWebPage>
+#endif
 
 using namespace GammaRay;
 
@@ -92,7 +98,7 @@ QStringList WebInspectorFactory::supportedTypes() const
 {
   QStringList types;
 #ifdef HAVE_QT_WEBKIT1
-  types.push_back(QWebPage::staticMetaObject.className();
+  types.push_back(QWebPage::staticMetaObject.className());
 #endif
   types.push_back("QQuickWebView");
   return types;

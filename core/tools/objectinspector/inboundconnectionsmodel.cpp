@@ -65,15 +65,12 @@ static int signalIndexForConnection(QObjectPrivate::Connection *connection, QObj
 
 void InboundConnectionsModel::setObject(QObject* object)
 {
-  beginResetModel();
-  m_connections.clear();
+  clear();
   m_object = object;
-
-  if (!object) {
-    endResetModel();
+  if (!object)
     return;
-  }
 
+  QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
   QObjectPrivate *d = QObjectPrivate::get(object);
   if (d->senders) {
@@ -95,12 +92,11 @@ void InboundConnectionsModel::setObject(QObject* object)
       conn.signalIndex = signalIndexToMethodIndex(s->sender, signalIndexForConnection(s, s->sender));
 #endif
       conn.type = s->connectionType;
-      m_connections.push_back(conn);
+      connections.push_back(conn);
     }
   }
 #endif
-
-  endResetModel();
+  setConnections(connections);
 }
 
 QVariant InboundConnectionsModel::data(const QModelIndex& index, int role) const

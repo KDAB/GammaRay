@@ -90,12 +90,25 @@ template <typename T>
 class PropertyControllerExtensionFactory : public PropertyControllerExtensionFactoryBase
 {
   public:
-    explicit PropertyControllerExtensionFactory() {}
+    static PropertyControllerExtensionFactoryBase* instance()
+    {
+      if (!s_instance)
+        s_instance = new PropertyControllerExtensionFactory<T>();
+      return s_instance;
+    }
+
     PropertyControllerExtension *create(PropertyController *controller)
     {
       return new T(controller);
     }
+
+  private:
+    explicit PropertyControllerExtensionFactory() {}
+    static PropertyControllerExtensionFactory<T>* s_instance;
 };
+
+template <typename T>
+PropertyControllerExtensionFactory<T>* PropertyControllerExtensionFactory<T>::s_instance = 0;
 ///@endcond
 
 }

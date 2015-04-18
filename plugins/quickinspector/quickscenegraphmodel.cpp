@@ -185,7 +185,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
       beginRemoveRows(myIndex, childList.size(), childList.size());
       endRemoveRows();
       emit nodeDeleted(*i);
-      i++;
+      ++i;
     } else if (*i > *j) { // Add to new list and inform the client about the change
       GET_INDEX
       beginInsertRows(myIndex, childList.size(), childList.size());
@@ -193,13 +193,13 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
       childList.append(*j);
       endInsertRows();
       populateFromNode(*j);
-      j++;
+      ++j;
     } else { // Adopt to new list, without informing the client (as nothing really changed)
       m_childParentMap.insert(*j, node);
       childList.append(*j);
       populateFromNode(*j);
-      j++;
-      i++;
+      ++j;
+      ++i;
     }
   }
   if (i == oldChildList.end() && j != newChildList.constEnd()) {
@@ -207,7 +207,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
     GET_INDEX
     beginInsertRows(myIndex, childList.size(),
                     childList.size() + std::distance(j, newChildList.constEnd()) - 1);
-    for (;j != newChildList.constEnd(); j++) {
+    for (;j != newChildList.constEnd(); ++j) {
       m_childParentMap.insert(*j, node);
       childList.append(*j);
       populateFromNode(*j);
@@ -218,7 +218,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
     beginRemoveRows(myIndex, childList.size(),
                     childList.size() + std::distance(i, oldChildList.end()) - 1);
     endRemoveRows();
-    for (; i != oldChildList.end(); i++) {
+    for (; i != oldChildList.end(); ++i) {
       emit nodeDeleted(*i);
     }
   }

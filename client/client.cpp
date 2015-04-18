@@ -25,6 +25,8 @@
 #include "clientdevice.h"
 
 #include <common/message.h>
+#include <common/objectbroker.h>
+#include <common/propertysyncer.h>
 
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -38,6 +40,9 @@ Client::Client(QObject* parent)
   , m_clientDevice(0)
   , m_initState(0)
 {
+  connect(this, SIGNAL(disconnected()), SLOT(socketDisconnected()));
+
+  m_propertySyncer->setRequestInitialSync(true);
 }
 
 Client::~Client()
@@ -78,6 +83,12 @@ void Client::connectToHost(const QUrl &url)
   m_clientDevice->connectToHost();
 }
 
+void Client::disconnectFromHost()
+{
+    if (m_clientDevice)
+        m_clientDevice->disconnectFromHost();
+}
+
 void Client::socketConnected()
 {
   Q_ASSERT(m_clientDevice->device());
@@ -88,6 +99,14 @@ void Client::socketError()
 {
   m_clientDevice->deleteLater();
   m_clientDevice = 0;
+}
+
+void Client::socketDisconnected()
+{
+  foreach (const auto &objInfo, objectAddresses()) {
+    unregisterObjectInternal(objInfo.second);
+  }
+  ObjectBroker::clear();
 }
 
 void Client::messageReceived(const Message& msg)
@@ -131,6 +150,11 @@ void Client::messageReceived(const Message& msg)
           if (it->first != endpointAddress())
             registerObjectInternal(it->second, it->first);
         }
+
+        m_propertySyncer->setAddress(objectAddress("com.kdab.GammaRay.PropertySyncer"));
+        Q_ASSERT(m_propertySyncer->address() != Protocol::InvalidObjectAddress  );
+        registerMessageHandlerInternal(m_propertySyncer->address(), m_propertySyncer, "handleMessage");
+
         m_initState |= ObjectMapReceived;
         break;
       }
@@ -159,6 +183,8 @@ Protocol::ObjectAddress Client::registerObject(const QString &name, QObject *obj
 {
   Q_ASSERT(isConnected());
   Protocol::ObjectAddress address = Endpoint::registerObject(name, object);
+  m_propertySyncer->addObject(address, object);
+  m_propertySyncer->setObjectEnabled(address, true);
 
   Message msg(endpointAddress(), Protocol::ObjectMonitored);
   msg.payload() << address;

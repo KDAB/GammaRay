@@ -155,7 +155,9 @@ private slots:
 
         listModel->insertRow(1, new QStandardItem("entry1"));
         QCOMPARE(client.rowCount(), 5);
-        index =client.index(1, 0);
+        index = client.index(1, 0);
+        index.data(); // need an event loop entry for the data retrieval
+        QTest::qWait(1);
         QCOMPARE(index.data().toString(), QString("entry1"));
 
         listModel->takeRow(3);
@@ -199,6 +201,8 @@ private slots:
         e1->insertRow(1, new QStandardItem("entry11"));
         QCOMPARE(client.rowCount(i1), 3);
         auto i11 = client.index(1, 0, i1);
+        i11.data(); // need an event loop entry for the data retrieval
+        QTest::qWait(1);
         QCOMPARE(i11.data().toString(), QString("entry11"));
         QCOMPARE(client.rowCount(i11), 0);
 
@@ -255,7 +259,8 @@ private slots:
 
         auto pi1 = proxy.index(1, 0);
         QCOMPARE(pi1.data().toString(), QString("entry1"));
-        QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
+        // this fails with data() call batching sizes close to 1
+//         QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);
     }
 };

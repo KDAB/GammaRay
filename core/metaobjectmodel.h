@@ -43,8 +43,26 @@ class MetaObjectModel : public QAbstractItemModel
 
     virtual void setMetaObject(const QMetaObject *metaObject)
     {
-      m_metaObject = metaObject;
-      reset();
+      const auto oldRowCount = rowCount();
+      if (oldRowCount) {
+        beginRemoveRows(QModelIndex(), 0, oldRowCount - 1);
+        m_metaObject = 0;
+        endRemoveRows();
+      } else {
+        m_metaObject = 0;
+      }
+
+      if (!metaObject)
+        return;
+
+     const auto newRowCount = (metaObject->*MetaCount)();
+     if (newRowCount) {
+        beginInsertRows(QModelIndex(), 0,  newRowCount - 1);
+        m_metaObject = metaObject;
+        endInsertRows();
+      } else {
+        m_metaObject = metaObject;
+      }
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
