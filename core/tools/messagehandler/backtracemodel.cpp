@@ -34,13 +34,15 @@ BacktraceModel::BacktraceModel(QObject *parent)
 
 int BacktraceModel::rowCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
+  if (parent.isValid())
+    return 0;
   return m_data.count();
 }
 
 int BacktraceModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
+  if (parent.isValid())
+    return 0;
   return COLUMN_COUNT;
 }
 
