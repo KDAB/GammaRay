@@ -108,11 +108,15 @@ set(gammaray_ui_internal_srcs
   aboutpluginsdialog.cpp
   mainwindow.cpp
   aboutdialog.cpp
+  tools/messagehandler/messagehandlerdialog.cpp
+  tools/messagehandler/messagehandlerclient.cpp
+  ../core/tools/messagehandler/messagehandlerinterface.cpp
 )
 
 qt4_wrap_ui(gammaray_ui_internal_srcs
   mainwindow.ui
   aboutdialog.ui
+  tools/messagehandler/messagehandlerdialog.ui
 )
 
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
