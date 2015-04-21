@@ -46,27 +46,19 @@ int BacktraceModel::columnCount(const QModelIndex &parent) const
   return COLUMN_COUNT;
 }
 
-//Parses input in "aaa (bbb)" format into a tuple of "aaa" and "bbb".
-tuple<QString, QString> parseParenthesis(QString str)
+namespace
 {
-  QStringList parts = str.split(" (");
-  if (parts.count() != 2)
-    return tuple<QString, QString>();
-  QString second = parts.at(1).left(parts.at(1).count()-1);
-  return make_tuple(parts.at(0), second);
-}
+
+//Parses input in "aaa (bbb)" format into a tuple of "aaa" and "bbb".
+tuple<QString, QString> parseParenthesis(const QString &str);
 
 //The input either contains a function name only,
 //or is in the ClassName::FunctionName format.
-tuple<QString, QString> parseClassAndFunctionName(QString str)
-{
-  QStringList parts = str.split("::");
-  if (parts.count() == 2)
-    return make_tuple(parts.at(0), parts.at(1));
-  return make_tuple(QString(), str);
+tuple<QString, QString> parseClassAndFunctionName(const QString &str);
+
 }
 
-QStringList BacktraceModel::parseStackFrame(QString &stackFrame) const
+QStringList BacktraceModel::parseStackFrame(const QString &stackFrame) const
 {
   QStringList row;
   for (int i = 0; i < COLUMN_COUNT; ++i)
@@ -76,7 +68,7 @@ QStringList BacktraceModel::parseStackFrame(QString &stackFrame) const
   if (parts.count() != 2 && parts.count() != 3)
     return row;
 
-  QString functionStr = parts.at(parts.count()-1);
+  QString functionStr = parts.at(parts.count() - 1);
   tie(row[ClassColumn], row[FunctionColumn]) = parseClassAndFunctionName(functionStr);
 
   if (parts.count() == 2) {
@@ -122,7 +114,7 @@ QVariant BacktraceModel::headerData(int section, Qt::Orientation orientation, in
   return QVariant();
 }
 
-void BacktraceModel::setBacktrace(Backtrace &backtrace)
+void BacktraceModel::setBacktrace(const Backtrace &backtrace)
 {
   m_data.clear();
   foreach (QString stackFrame, backtrace) {
@@ -130,4 +122,26 @@ void BacktraceModel::setBacktrace(Backtrace &backtrace)
   }
 
   emit layoutChanged();
+}
+
+
+
+namespace
+{
+tuple<QString, QString> parseParenthesis(const QString &str)
+{
+  QStringList parts = str.split(" (");
+  if (parts.count() != 2)
+    return tuple<QString, QString>();
+  QString second = parts.at(1).left(parts.at(1).count() - 1);
+  return make_tuple(parts.at(0), second);
+}
+
+tuple<QString, QString> parseClassAndFunctionName(const QString &str)
+{
+  QStringList parts = str.split("::");
+  if (parts.count() == 2)
+    return make_tuple(parts.at(0), parts.at(1));
+  return make_tuple(QString(), str);
+}
 }

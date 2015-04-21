@@ -174,7 +174,7 @@ MessageHandler::~MessageHandler()
 
 void MessageHandler::selectMessage(int idx)
 {
-  m_backtraceModel->setBacktrace(m_messageModel->getBacktrace(idx));
+  m_backtraceModel->setBacktrace(m_messageModel->backtrace(idx));
 }
 
 void MessageHandler::ensureHandlerInstalled()
