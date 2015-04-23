@@ -41,10 +41,10 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
   m_handler = ObjectBroker::object<MessageHandlerInterface*>();
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.MessageModel"));
-  ui->messageSearchLine->setProxy(proxy);
-  ui->messageView->setModel(proxy);
+  m_proxy = new QSortFilterProxyModel(this);
+  m_proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.MessageModel"));
+  ui->messageSearchLine->setProxy(m_proxy);
+  ui->messageView->setModel(m_proxy);
   ui->messageView->setIndentation(0);
   ui->messageView->setSortingEnabled(true);
 
@@ -63,7 +63,8 @@ MessageHandlerWidget::~MessageHandlerWidget()
 void MessageHandlerWidget::currentRowChanged(const QModelIndex &current, const QModelIndex &previous)
 {
   Q_UNUSED(previous);
-  m_handler->selectMessage(current.row());
+  QModelIndex originalIndex = m_proxy->mapToSource(current);
+  m_handler->selectMessage(originalIndex.row());
   int columnCount = ui->backtraceView->model()->columnCount();
   for (int i = 0; i < columnCount; ++i)
     ui->backtraceView->resizeColumnToContents(i);

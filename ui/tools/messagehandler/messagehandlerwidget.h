@@ -26,6 +26,7 @@
 #include <QWidget>
 
 class QTime;
+class QSortFilterProxyModel;
 
 namespace GammaRay {
 
@@ -48,6 +49,7 @@ class MessageHandlerWidget : public QWidget
   private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
     MessageHandlerInterface *m_handler;
+    QSortFilterProxyModel *m_proxy;
 };
 
 }
