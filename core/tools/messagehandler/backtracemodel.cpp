@@ -29,6 +29,7 @@ using namespace std;
 using namespace GammaRay;
 
 BacktraceModel::BacktraceModel(QObject *parent)
+  : QAbstractTableModel(parent)
 {
 }
 
