@@ -32,7 +32,7 @@
 
 #include <kdstatemachineeditor/core/state.h>
 #include <kdstatemachineeditor/core/transition.h>
-#include <kdstatemachineeditor/view/configurationcontroller.h>
+#include <kdstatemachineeditor/core/runtimecontroller.h>
 #include <kdstatemachineeditor/view/statemachinescene.h>
 #include <kdstatemachineeditor/view/statemachinetoolbar.h>
 #include <kdstatemachineeditor/view/statemachineview.h>
@@ -53,10 +53,10 @@ QObject* createStateMachineViewerClient(const QString &/*name*/, QObject *parent
   return new StateMachineViewerClient(parent);
 }
 
-KDSME::ConfigurationController::Configuration toSmeConfiguration(const StateMachineConfiguration& config,
+KDSME::RuntimeController::Configuration toSmeConfiguration(const StateMachineConfiguration& config,
                                                                  const QHash<StateId, KDSME::State*>& map)
 {
-  KDSME::ConfigurationController::Configuration result;
+  KDSME::RuntimeController::Configuration result;
   foreach (const StateId& id, config) {
     if (auto state = map.value(id)) {
       result << state;
@@ -164,7 +164,9 @@ void StateMachineViewerWidgetNG::showMessage(const QString& message)
 
 void StateMachineViewerWidgetNG::stateConfigurationChanged(const StateMachineConfiguration& config)
 {
-  m_stateMachineView->configurationController()->setActiveConfiguration(toSmeConfiguration(config, m_idToStateMap));
+  if (m_machine) {
+    m_machine->runtimeController()->setActiveConfiguration(toSmeConfiguration(config, m_idToStateMap));
+  }
 }
 
 void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId parentId, const bool hasChildren,
@@ -229,7 +231,9 @@ void StateMachineViewerWidgetNG::transitionAdded(const TransitionId transitionId
 
 void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, const bool running)
 {
-  m_stateMachineView->configurationController()->setIsRunning(running);
+  if (m_machine) {
+    m_machine->runtimeController()->setIsRunning(running);
+  }
 
   if (!running) {
     m_ui->startStopButton->setChecked(false);
@@ -244,7 +248,9 @@ void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, cons
 void StateMachineViewerWidgetNG::transitionTriggered(TransitionId transitionId, const QString& label)
 {
   Q_UNUSED(label);
-  m_stateMachineView->configurationController()->setLastTransition(m_idToTransitionMap.value(transitionId));
+  if (m_machine) {
+    m_machine->runtimeController()->setLastTransition(m_idToTransitionMap.value(transitionId));
+  }
 }
 
 void StateMachineViewerWidgetNG::clearGraph()
@@ -274,6 +280,8 @@ void StateMachineViewerWidgetNG::repopulateView()
 void StateMachineViewerWidgetNG::stateModelReset()
 {
   m_ui->singleStateMachineView->expandAll();
-  m_stateMachineView->configurationController()->clear();
+  if (m_machine) {
+    m_machine->runtimeController()->clear();
+  }
 }
 
