@@ -176,7 +176,10 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     return;
   }
 
-  m_overlayWidget->placeOn(m_selectedWidget);
+  {
+    FilterNextObjects filter(m_probe);
+    m_overlayWidget->placeOn(m_selectedWidget);
+  }
 
   if (!m_selectedWidget) {
     return;
@@ -248,7 +251,10 @@ QPixmap WidgetInspectorServer::pixmapForWidget(QWidget *widget)
 
 void WidgetInspectorServer::recreateOverlayWidget()
 {
-  m_overlayWidget = new OverlayWidget;
+  {
+    FilterNextObjects filter(m_probe);
+    m_overlayWidget = new OverlayWidget;
+  }
   m_overlayWidget->hide();
 
   // the target application might have destroyed the overlay widget

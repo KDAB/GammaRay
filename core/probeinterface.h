@@ -86,6 +86,21 @@ class ProbeInterface
      */
     virtual bool filterObject(QObject *object) const = 0;
 
+
+    /**
+     * Set whether all future QObjects should be filtered out.
+     *
+     * This is useful to hide internal GammaRay objects from the user.
+     */
+    virtual void setFilterNextObjects(bool filter) = 0;
+
+    /**
+     * Determines if all future QObject instances will be filtered out.
+     *
+     * @return true if all future QObjects will be hidden, false otherwise.
+     */
+    virtual bool filterNextObjects() const = 0;
+
     /**
      * Returns the probe QObject for connecting signals.
      * @return a pointer to a QObject instance.
@@ -153,6 +168,32 @@ class ProbeInterface
      * @since 2.2
      */
     virtual void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) = 0;
+};
+
+/**
+ * Use this class to filter out all QObjects created during the lifetime of
+ * the FilterNextObjects object.
+ *
+ * This is useful to hide internal GammaRay objects from the user.
+ */
+class FilterNextObjects
+{
+public:
+  FilterNextObjects(ProbeInterface *probe)
+    : m_probe(probe)
+    , m_wasFiltered(probe->filterNextObjects())
+  {
+    m_probe->setFilterNextObjects(true);
+  }
+
+  ~FilterNextObjects()
+  {
+    m_probe->setFilterNextObjects(m_wasFiltered);
+  }
+
+private:
+  ProbeInterface *m_probe;
+  bool m_wasFiltered;
 };
 
 }
