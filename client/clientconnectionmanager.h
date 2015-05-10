@@ -29,6 +29,7 @@
 #include <QObject>
 #include <QTime>
 #include <QUrl>
+#include <QPointer>
 
 class QAbstractItemModel;
 class QMainWindow;
@@ -103,7 +104,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
   private:
     QUrl m_serverUrl;
     Client *m_client;
-    MainWindow *m_mainWindow;
+    QPointer<MainWindow> m_mainWindow;
     QAbstractItemModel *m_toolModel;
     QTime m_connectionTimeout;
     bool m_ignorePersistentError;

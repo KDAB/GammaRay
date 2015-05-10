@@ -301,7 +301,7 @@ bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelInd
     Q_ASSERT(source_index.isValid());
     bool accepted = false;
 
-    for (int row = 0; row < sourceModel()->rowCount(source_index); ++row) {
+    for (int row = 0, rows = sourceModel()->rowCount(source_index); row < rows; ++row) {
         if (filterAcceptsRow(row, source_index)) {
             accepted = true;
             break;
