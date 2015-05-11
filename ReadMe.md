@@ -1,9 +1,8 @@
 Introduction
 ============
-
-GammaRay is a free software introspection tool for Qt applications developed by
-KDAB. Leveraging the QObject introspection mechanism it allows you to observe
-and manipulate your application at runtime. This works both locally on your
+GammaRay is a software introspection tool for Qt applications developed by KDAB.
+Leveraging the QObject introspection mechanism it allows you to observe and
+manipulate your application at runtime. This works both locally on your
 workstation and remotely on an embedded target.
 
 Augmenting your instruction-level debugger, GammaRay allows you to work on a
@@ -11,7 +10,7 @@ much higher level, with the same concepts as the frameworks you use. This is
 especially useful for the more complex Qt frameworks such as model/view, state
 machines or scene graphs.
 
-GammaRay can:
+Among other things GammaRay can:
 
  * Browse the QObject tree with live updates.
 
@@ -66,39 +65,32 @@ GammaRay can:
 
  * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
 
-
 Contact
 =======
-
 * Feel free to visit us on IRC: Channel is #gammaray on Freenode (irc://irc.freenode.net/gammaray)
-* Or send a mail to our mailing list: https://mail.kdab.com/mailman/listinfo/gammaray-interest
+* Or send mail to our mailing list: https://mail.kdab.com/mailman/listinfo/gammaray-interest
 
 Get Involved
 =================
-
 If you want to contribute, please check out: https://github.com/KDAB/GammaRay/wiki/Get-Involved
+
+Contributing
+============
+KDAB will happily accept external contributions, but substantial
+contributions will require a signed Copyright Assignment Agreement.
+Contact support@kdab.com for more information.
 
 License
 =======
-Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
+The GammaRay Software is (C) 2010-2015 Klarälvdalens Datakonsult AB (KDAB),
+and is available under the terms of the GPL version 2 (or any later version,
+at your option).  See LICENSE.GPL.txt for license details.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along
-with this program; if not, write to the Free Software Foundation, Inc.,
-51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+Commercial use is also permitted as described in ReadMe-commercial.txt.
 
 About KDAB
 ==========
-GammaRay is supported and maintained by Klarälvdalens Datakonsult AB (KDAB)
+GammaRay is supported and maintained by Klarälvdalens Datakonsult AB (KDAB).
 
 KDAB, the Qt experts, provide consulting and mentoring for developing
 Qt applications from scratch and in porting from all popular and legacy
