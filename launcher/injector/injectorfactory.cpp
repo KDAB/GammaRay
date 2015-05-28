@@ -77,7 +77,7 @@ AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi)
 #if defined(Q_OS_MAC)
   if (abi.majorQtVersion() >= 5 && abi.minorQtVersion() >= 4)
     return createInjector(QLatin1String("preload"));
-  return findFirstWorkingInjector(QStringList() << QLatin1String("gdb") << QLatin1String("lldb"));
+  return findFirstWorkingInjector(QStringList() << QLatin1String("lldb") << QLatin1String("gdb"));
 #elif defined(Q_OS_UNIX)
   Q_UNUSED(abi);
   return createInjector(QLatin1String("preload"));
@@ -89,7 +89,9 @@ AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi)
 
 AbstractInjector::Ptr defaultInjectorForAttach()
 {
-#ifndef Q_OS_WIN
+#if defined(Q_OS_MAC)
+  return findFirstWorkingInjector(QStringList() << QLatin1String("lldb") << QLatin1String("gdb"));
+#elif !defined(Q_OS_WIN)
   return findFirstWorkingInjector(QStringList() << QLatin1String("gdb") << QLatin1String("lldb"));
 #else
   return createInjector(QLatin1String("windll"));
