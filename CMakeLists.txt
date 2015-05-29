@@ -402,7 +402,7 @@ endif()
 set(HAVE_VTK ${VTK_FOUND})
 
 # ELF header for ABI detection
-find_file(ELF_H elf.h)
+find_file(ELF_H elf.h PATH_SUFFIXES sys)
 if(ELF_H)
   set(HAVE_ELF_H TRUE)
 endif()
