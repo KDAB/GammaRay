@@ -255,6 +255,9 @@ void QuickInspector::selectWindow(QQuickWindow *window)
   m_sgModel->setWindow(window);
 
   if (m_window) {
+    // make sure we have selected something for the property editor to not be entirely empty
+    selectItem(m_window->contentItem());
+
     // Insert a ShaderEffectSource to the scene, with the contentItem as its source, in
     // order to use it to generate a preview of the window as QImage to show on the client.
     QQuickItem *contentItem = m_window->contentItem();
