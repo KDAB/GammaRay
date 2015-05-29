@@ -187,6 +187,9 @@ endif()
 if(WIN32)
   add_definitions(-DUNICODE -D_UNICODE)
 endif()
+if(QNXNTO)
+  add_definitions(-D_QNX_SOURCE)
+endif()
 
 # linker flags
 if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
