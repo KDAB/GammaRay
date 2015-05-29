@@ -150,7 +150,7 @@ void PropertySyncer::handleMessage(const GammaRay::Message& msg)
             Q_ASSERT(addr != Protocol::InvalidObjectAddress);
             Q_ASSERT(changeSize > 0);
 
-            const auto it = std::find_if(m_objects.begin(), m_objects.end(), [addr](const ObjectInfo &info) {
+            auto it = std::find_if(m_objects.begin(), m_objects.end(), [addr](const ObjectInfo &info) {
                 return info.addr == addr;
             });
             if (it == m_objects.end())
@@ -162,6 +162,12 @@ void PropertySyncer::handleMessage(const GammaRay::Message& msg)
                 msg.payload() >> propName >> propValue;
                 (*it).recursionLock = true;
                 (*it).obj->setProperty(propName.toUtf8(), propValue);
+
+                // it can be invalid if as a result of the above call new objects have been registered for example
+                it = std::find_if(m_objects.begin(), m_objects.end(), [addr](const ObjectInfo &info) {
+                    return info.addr == addr;
+                });
+                Q_ASSERT(it != m_objects.end());
                 (*it).recursionLock = false;
             }
             break;
