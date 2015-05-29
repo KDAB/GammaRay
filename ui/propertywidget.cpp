@@ -75,9 +75,10 @@ void PropertyWidget::createWidgets()
   if (m_objectBaseName.isEmpty())
     return;
   foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
-    if (!m_tabWidgets.contains(factory)) {
+    if (!m_usedFactories.contains(factory)) {
       QWidget *widget = factory->createWidget(this);
-      m_tabWidgets.insert(factory, widget);
+      m_usedFactories.push_back(factory);
+      m_tabWidgets.push_back(widget);
       addTab(widget, factory->label());
     }
   }
@@ -87,12 +88,14 @@ void PropertyWidget::updateShownTabs()
 {
   setUpdatesEnabled(false);
 
-  for (QHash<PropertyWidgetTabFactoryBase*, QWidget*>::const_iterator it = m_tabWidgets.constBegin(); it != m_tabWidgets.constEnd(); ++it) {
-    QWidget *widget = it.value();
+  Q_ASSERT(m_tabWidgets.size() == m_usedFactories.size());
+  for (int i = 0; i < m_tabWidgets.size(); ++i) {
+    QWidget *widget = m_tabWidgets.at(i);
     const int index = indexOf(widget);
-    if (m_controller->availableExtensions().contains(m_objectBaseName + '.' + it.key()->name())) {
+    auto factory = m_usedFactories.at(i);
+    if (m_controller->availableExtensions().contains(m_objectBaseName + '.' + factory->name())) {
       if (index == -1)
-        addTab(widget, it.key()->label());
+        addTab(widget, factory->label());
     } else if (index != -1) {
       removeTab(index);
     }
