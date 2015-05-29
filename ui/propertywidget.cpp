@@ -66,7 +66,6 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
   m_controller = ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
   connect(m_controller, SIGNAL(availableExtensionsChanged()), this, SLOT(updateShownTabs()));
 
-  createWidgets();
   updateShownTabs();
 }
 
@@ -75,7 +74,7 @@ void PropertyWidget::createWidgets()
   if (m_objectBaseName.isEmpty())
     return;
   foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
-    if (!m_usedFactories.contains(factory)) {
+    if (!m_usedFactories.contains(factory) && extensionAvailable(factory)) {
       QWidget *widget = factory->createWidget(this);
       m_usedFactories.push_back(factory);
       m_tabWidgets.push_back(widget);
@@ -87,13 +86,14 @@ void PropertyWidget::createWidgets()
 void PropertyWidget::updateShownTabs()
 {
   setUpdatesEnabled(false);
+  createWidgets();
 
   Q_ASSERT(m_tabWidgets.size() == m_usedFactories.size());
   for (int i = 0; i < m_tabWidgets.size(); ++i) {
     QWidget *widget = m_tabWidgets.at(i);
     const int index = indexOf(widget);
     auto factory = m_usedFactories.at(i);
-    if (m_controller->availableExtensions().contains(m_objectBaseName + '.' + factory->name())) {
+    if (extensionAvailable(factory)) {
       if (index == -1)
         addTab(widget, factory->label());
     } else if (index != -1) {
@@ -102,4 +102,9 @@ void PropertyWidget::updateShownTabs()
   }
 
   setUpdatesEnabled(true);
+}
+
+bool PropertyWidget::extensionAvailable(PropertyWidgetTabFactoryBase* factory) const
+{
+  return m_controller->availableExtensions().contains(m_objectBaseName + '.' + factory->name());
 }

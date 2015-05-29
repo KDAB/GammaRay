@@ -61,6 +61,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 
   private:
     void createWidgets();
+    bool extensionAvailable(PropertyWidgetTabFactoryBase *factory) const;
 
   private slots:
     void updateShownTabs();
