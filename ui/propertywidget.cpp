@@ -61,16 +61,13 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
     return; // unknown property controller, likely disabled/not supported on the server
 
   if (m_controller) {
-    disconnect(m_controller,
-               SIGNAL(availableExtensionsChanged(QStringList)),
-               this, SLOT(updateShownTabs(QStringList)));
+    disconnect(m_controller, SIGNAL(availableExtensionsChanged()), this, SLOT(updateShownTabs()));
   }
-  m_controller =
-    ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
-  connect(m_controller, SIGNAL(availableExtensionsChanged(QStringList)),
-          this, SLOT(updateShownTabs(QStringList)));
+  m_controller = ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
+  connect(m_controller, SIGNAL(availableExtensionsChanged()), this, SLOT(updateShownTabs()));
 
   createWidgets();
+  updateShownTabs();
 }
 
 void PropertyWidget::createWidgets()
@@ -86,14 +83,14 @@ void PropertyWidget::createWidgets()
   }
 }
 
-void PropertyWidget::updateShownTabs(const QStringList &availableExtensions)
+void PropertyWidget::updateShownTabs()
 {
   setUpdatesEnabled(false);
 
   for (QHash<PropertyWidgetTabFactoryBase*, QWidget*>::const_iterator it = m_tabWidgets.constBegin(); it != m_tabWidgets.constEnd(); ++it) {
     QWidget *widget = it.value();
     const int index = indexOf(widget);
-    if (availableExtensions.contains(m_objectBaseName + '.' + it.key()->name())) {
+    if (m_controller->availableExtensions().contains(m_objectBaseName + '.' + it.key()->name())) {
       if (index == -1)
         addTab(widget, it.key()->label());
     } else if (index != -1) {

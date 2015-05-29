@@ -80,7 +80,7 @@ void PropertyController::setObject(QObject *object)
       availableExtensions << extension->name();
   }
 
-  emit availableExtensionsChanged(availableExtensions);
+  setAvailableExtensions(availableExtensions);
 }
 
 void PropertyController::setObject(void *object, const QString &className)
@@ -94,7 +94,7 @@ void PropertyController::setObject(void *object, const QString &className)
       availableExtensions << extension->name();
   }
 
-  emit availableExtensionsChanged(availableExtensions);
+  setAvailableExtensions(availableExtensions);
 }
 
 void PropertyController::setMetaObject(const QMetaObject *metaObject)
@@ -108,7 +108,7 @@ void PropertyController::setMetaObject(const QMetaObject *metaObject)
       availableExtensions << extension->name();
   }
 
-  emit availableExtensionsChanged(availableExtensions);
+  setAvailableExtensions(availableExtensions);
 }
 
 void PropertyController::objectDestroyed()

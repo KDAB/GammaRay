@@ -63,7 +63,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
     void createWidgets();
 
   private slots:
-    void updateShownTabs(const QStringList& availableExtensions);
+    void updateShownTabs();
 
 
   private:

@@ -42,3 +42,16 @@ QString PropertyControllerInterface::name() const
 {
   return m_name;
 }
+
+QStringList PropertyControllerInterface::availableExtensions() const
+{
+  return m_availableExtensions;
+}
+
+void PropertyControllerInterface::setAvailableExtensions(const QStringList& availableExtensions)
+{
+  if (m_availableExtensions == availableExtensions)
+    return;
+  m_availableExtensions = availableExtensions;
+  emit availableExtensionsChanged();
+}

@@ -25,27 +25,32 @@
 #define GAMMARAY_PROPERTYCONTROLLERINTERFACE_H
 
 #include <QObject>
+#include <QStringList>
 
 #include "enums.h"
 
-class QStringList;
 namespace GammaRay {
 
 /** @brief Client/Server interface of the property editor. */
 class PropertyControllerInterface : public QObject
 {
   Q_OBJECT
+  Q_PROPERTY(QStringList availableExtensions READ availableExtensions WRITE setAvailableExtensions NOTIFY availableExtensionsChanged)
   public:
     explicit PropertyControllerInterface(const QString &name, QObject *parent = 0);
     virtual ~PropertyControllerInterface();
 
     QString name() const;
 
+    QStringList availableExtensions() const;
+    void setAvailableExtensions(const QStringList &availableExtensions);
+
   signals:
-    void availableExtensionsChanged(const QStringList &availableExtensions);
+    void availableExtensionsChanged();
 
   private:
     QString m_name;
+    QStringList m_availableExtensions;
 };
 
 }
