@@ -73,10 +73,8 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject* obj)
     }
 
     if (!hasProperties) {
-        qDebug() << "no properties" << obj;
         return;
     }
-    qDebug() << "found properties in" << obj << obj->metaObject()->propertyOffset() << obj->metaObject()->propertyCount();
 
     connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
 
@@ -130,7 +128,6 @@ void PropertySyncer::handleMessage(const GammaRay::Message& msg)
             if (it == m_objects.constEnd())
                 break;
 
-            qDebug() << "sync request for" << (*it).obj << (*it).obj->metaObject()->propertyOffset() << (*it).obj->metaObject()->propertyCount();
             QVector<QPair<QString, QVariant> > values;
             for (int i = qobjectPropertyOffset(); i < (*it).obj->metaObject()->propertyCount(); ++i) {
                 const auto prop = (*it).obj->metaObject()->property(i);
@@ -163,7 +160,6 @@ void PropertySyncer::handleMessage(const GammaRay::Message& msg)
                 QString propName;
                 QVariant propValue;
                 msg.payload() >> propName >> propValue;
-                qDebug() << propName << propValue;
                 (*it).recursionLock = true;
                 (*it).obj->setProperty(propName.toUtf8(), propValue);
                 (*it).recursionLock = false;
@@ -193,7 +189,6 @@ void PropertySyncer::propertyChanged()
         const auto prop = obj->metaObject()->property(i);
         if (prop.notifySignalIndex() != sigIndex)
             continue;
-        qDebug() << prop.name() << "changed";
         changes.push_back(qMakePair(QString(prop.name()), prop.read(obj)));
     }
     Q_ASSERT(!changes.isEmpty());
