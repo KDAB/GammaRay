@@ -34,6 +34,7 @@
 #include "transferimage.h"
 #include "ui_quickinspectorwidget.h"
 
+#include <common/endpoint.h>
 #include <common/objectbroker.h>
 #include <ui/deferredresizemodesetter.h>
 
@@ -291,6 +292,7 @@ void QuickInspectorWidget::showEvent(QShowEvent* event)
 
 void QuickInspectorWidget::hideEvent(QHideEvent* event)
 {
-  m_interface->setSceneViewActive(false);
+  if (Endpoint::isConnected())
+    m_interface->setSceneViewActive(false);
   QWidget::hideEvent(event);
 }
