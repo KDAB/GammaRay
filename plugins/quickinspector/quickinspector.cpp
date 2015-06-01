@@ -603,7 +603,16 @@ QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &
 {
   Q_ASSERT(parent);
 
-  QQuickItem *child = parent->childAt(pos.x(), pos.y());
+  // we can't use childAt() as that will find m_source, but that's not what we are looking for
+  QQuickItem *child = Q_NULLPTR;
+  foreach (QQuickItem *c, parent->childItems()) {
+    const QPointF p = parent->mapToItem(c, pos);
+    if (c != m_source && c->isVisible() && p.x() >= 0 && c->width() >= p.x() && c->y() >= 0 && c->height() >= p.y()) {
+      child = c;
+      break;
+    }
+  }
+
   if (child) {
     return recursiveChiltAt(child, parent->mapToItem(child, pos));
   }
