@@ -56,7 +56,8 @@ private slots:
   void updateToolInitialization(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 
 private:
-  mutable QHash<QString, QWidget*> m_widgets; // ToolId -> Widget
+  typedef QHash<QString, QPointer<QWidget>> WidgetsHash;
+  mutable WidgetsHash m_widgets; // ToolId -> Widget
   QPointer<QWidget> m_parentWidget;
 };
 

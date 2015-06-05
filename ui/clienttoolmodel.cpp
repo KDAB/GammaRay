@@ -127,8 +127,8 @@ QVariant ClientToolModel::data(const QModelIndex& index, int role) const
     if (role == ToolModelRole::ToolFactory)
       return QVariant::fromValue(s_pluginRepository()->factories.value(toolId));
     if (role == ToolModelRole::ToolWidget) {
-      const QHash<QString, QWidget*>::const_iterator it = m_widgets.constFind(toolId);
-      if (it != m_widgets.constEnd())
+      const WidgetsHash::const_iterator it = m_widgets.constFind(toolId);
+      if (it != m_widgets.constEnd() && it.value())
         return QVariant::fromValue(it.value());
       ToolUiFactory *factory = s_pluginRepository()->factories.value(toolId);
       if (!factory)
