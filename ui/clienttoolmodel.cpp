@@ -129,7 +129,7 @@ QVariant ClientToolModel::data(const QModelIndex& index, int role) const
     if (role == ToolModelRole::ToolWidget) {
       const WidgetsHash::const_iterator it = m_widgets.constFind(toolId);
       if (it != m_widgets.constEnd() && it.value())
-        return QVariant::fromValue(it.value());
+        return QVariant::fromValue<QWidget*>(it.value());
       ToolUiFactory *factory = s_pluginRepository()->factories.value(toolId);
       if (!factory)
         return QVariant();
