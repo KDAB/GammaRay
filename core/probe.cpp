@@ -179,6 +179,7 @@ static void slot_end_callback(QObject *caller, int method_index)
 
 static QItemSelectionModel *selectionModelFactory(QAbstractItemModel *model)
 {
+  Q_ASSERT(!model->objectName().isEmpty());
   return new SelectionModelServer(model->objectName() + ".selection", model, Probe::instance());
 }
 
@@ -254,7 +255,7 @@ Probe::Probe(QObject *parent):
   registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), sortedToolModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ConnectionModel"), m_connectionModel);
 
-  m_toolSelectionModel = ObjectBroker::selectionModel(m_toolModel);
+  m_toolSelectionModel = ObjectBroker::selectionModel(sortedToolModel);
 
   ToolPluginModel *toolPluginModel = new ToolPluginModel(m_toolModel->plugins(), this);
   registerModel(QLatin1String("com.kdab.GammaRay.ToolPluginModel"), toolPluginModel);
@@ -842,8 +843,10 @@ void Probe::selectObject(QObject *object, const QPoint &pos)
 {
   emit objectSelected(object, pos);
 
-  m_toolSelectionModel->select(m_toolModel->toolForObject(object),
-                               QItemSelectionModel::Select |
+  const auto srcIdx = m_toolModel->toolForObject(object);
+  const auto idx = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model())->mapFromSource(srcIdx);
+
+  m_toolSelectionModel->select(idx, QItemSelectionModel::Select |
                                QItemSelectionModel::Clear |
                                QItemSelectionModel::Rows |
                                QItemSelectionModel::Current);
@@ -853,8 +856,10 @@ void Probe::selectObject(void *object, const QString &typeName)
 {
   emit nonQObjectSelected(object, typeName);
 
-  m_toolSelectionModel->select(m_toolModel->toolForObject(object, typeName),
-                               QItemSelectionModel::Select |
+  const auto srcIdx = m_toolModel->toolForObject(object, typeName);
+  const auto idx = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model())->mapFromSource(srcIdx);
+
+  m_toolSelectionModel->select(idx, QItemSelectionModel::Select |
                                QItemSelectionModel::Clear |
                                QItemSelectionModel::Rows |
                                QItemSelectionModel::Current);
