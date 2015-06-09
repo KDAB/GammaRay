@@ -210,7 +210,7 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant 
     } else if (canSerialize(it.value())) {
       ++it;
     } else {
-      qWarning() << "Cannot serialize QVariant of type" << it.value().typeName();
+//      qWarning() << "Cannot serialize QVariant of type" << it.value().typeName();
       it = itemData.erase(it);
     }
   }
