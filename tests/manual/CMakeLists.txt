@@ -60,3 +60,6 @@ endif()
 
 add_executable(gadgettest gadgettest.cpp)
 target_link_libraries(gadgettest ${QT_QTCORE_LIBRARIES})
+
+add_executable(objectreparenttest objectreparenttest.cpp)
+target_link_libraries(objectreparenttest ${QT_QTCORE_LIBRARIES})
