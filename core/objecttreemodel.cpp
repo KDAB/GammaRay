@@ -145,11 +145,10 @@ void ObjectTreeModel::objectReparented(QObject *obj)
   Q_ASSERT(thread() == QThread::currentThread());
 
   QMutexLocker objectLock(Probe::objectLock());
+  objectRemoved(obj);
   if (Probe::instance()->isValidObject(obj)) {
     objectAdded(obj);
   }
-
-  objectRemoved(obj);
 }
 
 QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
