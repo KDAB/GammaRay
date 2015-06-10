@@ -143,12 +143,45 @@ void ObjectTreeModel::objectReparented(QObject *obj)
 {
   // slot, hence should always land in main thread due to auto connection
   Q_ASSERT(thread() == QThread::currentThread());
+  IF_DEBUG(cout << "object reparented: " << hex << obj << dec << endl;)
 
   QMutexLocker objectLock(Probe::objectLock());
-  objectRemoved(obj);
-  if (Probe::instance()->isValidObject(obj)) {
-    objectAdded(obj);
+  if (!Probe::instance()->isValidObject(obj)) {
+    objectRemoved(obj);
+    return;
   }
+
+  // we didn't know obj yet
+  if (!m_childParentMap.contains(obj)) {
+    Q_ASSERT(!m_parentChildMap.contains(obj));
+    objectAdded(obj);
+    return;
+  }
+
+  QObject *oldParent = m_childParentMap.value(obj);
+  const auto sourceParent = indexForObject(oldParent);
+  if (oldParent && !sourceParent.isValid() || oldParent == parentObject(obj))
+    return;
+
+  QVector<QObject*> &oldSiblings = m_parentChildMap[oldParent];
+  QVector<QObject*>::iterator oldIt = std::lower_bound(oldSiblings.begin(), oldSiblings.end(), obj);
+  if (oldIt == oldSiblings.end() || *oldIt != obj)
+    return;
+  const int sourceRow = std::distance(oldSiblings.begin(), oldIt);
+
+  IF_DEBUG(cout << "actually reparenting! " << hex << obj << dec << endl;)
+  const auto destParent = indexForObject(parentObject(obj));
+  Q_ASSERT(destParent.isValid() || !parentObject(obj));
+
+  QVector<QObject*> &newSiblings = m_parentChildMap[parentObject(obj)];
+  QVector<QObject*>::iterator newIt = std::lower_bound(newSiblings.begin(), newSiblings.end(), obj);
+  const int destRow = std::distance(newSiblings.begin(), newIt);
+
+  beginMoveRows(sourceParent, sourceRow, sourceRow, destParent, destRow);
+  oldSiblings.erase(oldIt);
+  newSiblings.insert(newIt, obj);
+  m_childParentMap.insert(obj, parentObject(obj));
+  endMoveRows();
 }
 
 QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
