@@ -169,7 +169,7 @@ void ObjectTreeModel::objectReparented(QObject *obj)
     return;
   const int sourceRow = std::distance(oldSiblings.begin(), oldIt);
 
-  IF_DEBUG(cout << "actually reparenting! " << hex << obj << dec << endl;)
+  IF_DEBUG(cout << "actually reparenting! " << hex << obj << " old parent: " << oldParent << " new parent: " << parentObject(obj) << dec << endl;)
   const auto destParent = indexForObject(parentObject(obj));
   Q_ASSERT(destParent.isValid() || !parentObject(obj));
 
