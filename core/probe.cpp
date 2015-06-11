@@ -619,7 +619,12 @@ void Probe::queuedObjectsFullyConstructed()
   m_queuedObjects.clear();
 
   foreach (QObject *obj, m_pendingReparents) {
-    emit objectReparented(obj);
+    if (!isValidObject(obj))
+      continue;
+    if (filterObject(obj)) // the move might have put it under a hidden parent
+      objectRemoved(obj);
+    else
+      emit objectReparented(obj);
   }
   m_pendingReparents.clear();
 }
