@@ -33,6 +33,8 @@ public:
         p1(new QObject(this)),
         p2(new QObject(this))
     {
+        c->setObjectName("MovingSubtree");
+
         auto t = new QTimer(this);
         t->start(10000);
         connect(t, SIGNAL(timeout()), SLOT(reparent()));
@@ -46,6 +48,8 @@ public slots:
     {
         if (c->parent() == p1)
           c->setParent(p2);
+        else if (c->parent() == p2)
+          c->setParent(0);
         else
           c->setParent(p1);
     }
