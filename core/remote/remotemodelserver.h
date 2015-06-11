@@ -59,7 +59,7 @@ class RemoteModelServer : public QObject
     void connectModel();
     void disconnectModel();
     void sendAddRemoveMessage(Protocol::MessageType type, const QModelIndex &parent, int start, int end);
-    void sendMoveMessage(Protocol::MessageType type, const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationIndex);
+    void sendMoveMessage(Protocol::MessageType type, const Protocol::ModelIndex &sourceParent, int sourceStart, int sourceEnd, const Protocol::ModelIndex &destinationParent, int destinationIndex);
     QMap< int, QVariant > filterItemData(const QMap< int, QVariant >& data) const;
     bool canSerialize(const QVariant &value) const;
 
@@ -74,6 +74,7 @@ class RemoteModelServer : public QObject
     void dataChanged(const QModelIndex &begin, const QModelIndex &end);
     void headerDataChanged(Qt::Orientation orientation, int first, int last);
     void rowsInserted(const QModelIndex &parent, int start, int end);
+    void rowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow);
     void rowsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow);
     void rowsRemoved(const QModelIndex &parent, int start, int end);
     void columnsInserted(const QModelIndex &parent, int start, int end);
@@ -90,6 +91,10 @@ class RemoteModelServer : public QObject
     // especially since being a QObject triggers all kind of GammaRay internals
     QByteArray m_dummyData;
     QBuffer *m_dummyBuffer;
+    // converted model indexes from aboutToBeX signals, needed in cases where the operation changes
+    // the serialized index (move to sub-tree of source parent for example)
+    // as operations can occur nested, we need to have a stack for this
+    QList<Protocol::ModelIndex> m_preOpIndexes;
     Protocol::ObjectAddress m_myAddress;
     bool m_monitored;
 };

@@ -74,6 +74,7 @@ void RemoteModelServer::connectModel()
   connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
   connect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), SLOT(headerDataChanged(Qt::Orientation,int,int)));
   connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(rowsInserted(QModelIndex,int,int)));
+  connect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
   connect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
   connect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(rowsRemoved(QModelIndex,int,int)));
   connect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)), SLOT(columnsInserted(QModelIndex,int,int)));
@@ -90,6 +91,7 @@ void RemoteModelServer::disconnectModel()
   disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
   disconnect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), this, SLOT(headerDataChanged(Qt::Orientation,int,int)));
   disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)));
+  disconnect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
   disconnect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
   disconnect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(rowsRemoved(QModelIndex,int,int)));
   disconnect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)), this, SLOT(columnsInserted(QModelIndex,int,int)));
@@ -262,9 +264,23 @@ void RemoteModelServer::rowsInserted(const QModelIndex& parent, int start, int e
   sendAddRemoveMessage(Protocol::ModelRowsAdded, parent, start, end);
 }
 
+void RemoteModelServer::rowsAboutToBeMoved(const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationRow)
+{
+  Q_UNUSED(sourceStart);
+  Q_UNUSED(sourceEnd);
+  Q_UNUSED(destinationRow);
+  m_preOpIndexes.push_back(Protocol::fromQModelIndex(sourceParent));
+  m_preOpIndexes.push_back(Protocol::fromQModelIndex(destinationParent));
+}
+
 void RemoteModelServer::rowsMoved(const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationRow)
 {
-  sendMoveMessage(Protocol::ModelRowsMoved, sourceParent, sourceStart, sourceEnd, destinationParent, destinationRow);
+  Q_UNUSED(sourceParent);
+  Q_UNUSED(destinationParent);
+  Q_ASSERT(m_preOpIndexes.size() >= 2);
+  const auto destParentIdx = m_preOpIndexes.takeLast();
+  const auto sourceParentIdx = m_preOpIndexes.takeLast();
+  sendMoveMessage(Protocol::ModelRowsMoved, sourceParentIdx, sourceStart, sourceEnd, destParentIdx, destinationRow);
 }
 
 void RemoteModelServer::rowsRemoved(const QModelIndex& parent, int start, int end)
@@ -279,7 +295,9 @@ void RemoteModelServer::columnsInserted(const QModelIndex& parent, int start, in
 
 void RemoteModelServer::columnsMoved(const QModelIndex& sourceParent, int sourceStart, int sourceEnd, const QModelIndex& destinationParent, int destinationColumn)
 {
-  sendMoveMessage(Protocol::ModelColumnsMoved, sourceParent, sourceStart, sourceEnd, destinationParent, destinationColumn);
+  sendMoveMessage(Protocol::ModelColumnsMoved,
+                  Protocol::fromQModelIndex(sourceParent), sourceStart, sourceEnd,
+                  Protocol::fromQModelIndex(destinationParent), destinationColumn);
 }
 
 void RemoteModelServer::columnsRemoved(const QModelIndex& parent, int start, int end)
@@ -310,14 +328,14 @@ void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const Q
   sendMessage(msg);
 }
 
-void RemoteModelServer::sendMoveMessage(Protocol::MessageType type, const QModelIndex& sourceParent, int sourceStart, int sourceEnd,
-                                        const QModelIndex& destinationParent, int destinationIndex)
+void RemoteModelServer::sendMoveMessage(Protocol::MessageType type, const Protocol::ModelIndex& sourceParent, int sourceStart, int sourceEnd,
+                                        const Protocol::ModelIndex& destinationParent, int destinationIndex)
 {
   if (!isConnected())
     return;
   Message msg(m_myAddress, type);
-  msg.payload() << Protocol::fromQModelIndex(sourceParent) << qint32(sourceStart) << qint32(sourceEnd)
-               << Protocol::fromQModelIndex(destinationParent) << qint32(destinationIndex);
+  msg.payload() << sourceParent << qint32(sourceStart) << qint32(sourceEnd)
+               << destinationParent << qint32(destinationIndex);
   sendMessage(msg);
 }
 
