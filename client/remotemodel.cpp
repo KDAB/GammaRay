@@ -621,6 +621,8 @@ void RemoteModel::doMoveRows(RemoteModel::Node* sourceParentNode, int sourceStar
 {
   Q_ASSERT(sourceParentNode->rowCount == sourceParentNode->children.size());
   Q_ASSERT(destParentNode->rowCount == destParentNode->children.size());
+  Q_ASSERT(sourceEnd >= sourceStart);
+  Q_ASSERT(sourceParentNode->rowCount > sourceEnd);
 
   const int destEnd = destStart + sourceEnd - sourceStart;
   const int amount = sourceEnd - sourceStart + 1;
