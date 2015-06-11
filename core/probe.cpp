@@ -617,6 +617,11 @@ void Probe::queuedObjectsFullyConstructed()
   IF_DEBUG(cout << Q_FUNC_INFO << " done" << endl;)
 
   m_queuedObjects.clear();
+
+  foreach (QObject *obj, m_pendingReparents) {
+    emit objectReparented(obj);
+  }
+  m_pendingReparents.clear();
 }
 
 void Probe::objectFullyConstructed(QObject *obj)
@@ -776,16 +781,37 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
         // object is known already, just update the position in the tree
         // BUT: only when we did not queue this item before
         IF_DEBUG(cout << "update pos: " << hex << obj << endl;)
+        m_pendingReparents.removeAll(obj);
         emit objectReparented(obj);
       }
     } else if (tracked) {
-      objectRemoved(obj);
+      if (hasReliableObjectTracking()) { // defer processing this until we know its final location
+        m_pendingReparents.push_back(obj);
+        if (!m_queueTimer->isActive()) {
+          // timers must not be started from a different thread
+          QMetaObject::invokeMethod(instance()->m_queueTimer, "start", Qt::AutoConnection);
+        }
+      } else {
+        objectRemoved(obj);
+      }
+    }
+  }
+
+  // widget only unfortunately, but more precise than ChildAdded/Removed...
+  if (event->type() == QEvent::ParentChange) {
+    QMutexLocker lock(s_lock());
+    const bool tracked = m_validObjects.contains(receiver);
+    const bool filtered = filterObject(receiver);
+    if (!filtered && tracked) {
+      m_pendingReparents.removeAll(receiver);
+      emit objectReparented(receiver);
     }
   }
 
   // we have no preloading hooks, so recover all objects we see
   if (!hasReliableObjectTracking() && event->type() != QEvent::ChildAdded &&
-      event->type() != QEvent::ChildRemoved && // already handled above
+      event->type() != QEvent::ChildRemoved &&
+      event->type() != QEvent::ParentChange && // already handled above
       event->type() != QEvent::Destroy &&
       event->type() != QEvent::WinIdChange && // unsafe since emitted from dtors
       !filterObject(receiver)) {

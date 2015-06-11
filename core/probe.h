@@ -189,6 +189,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QObject *m_window;
     QSet<QObject*> m_validObjects;
     QQueue<QObject*> m_queuedObjects;
+    QList<QObject*> m_pendingReparents;
     QTimer *m_queueTimer;
     QVector<QObject*> m_globalEventFilters;
     QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
