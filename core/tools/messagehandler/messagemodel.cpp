@@ -137,3 +137,8 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
   return QVariant();
 }
 
+Backtrace MessageModel::backtrace(int idx)
+{
+  return m_messages.at(idx).backtrace;
+}
+

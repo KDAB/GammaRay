@@ -26,8 +26,11 @@
 #include <QWidget>
 
 class QTime;
+class QSortFilterProxyModel;
 
 namespace GammaRay {
+
+class MessageHandlerInterface;
 
 namespace Ui {
   class MessageHandlerWidget;
@@ -41,12 +44,12 @@ class MessageHandlerWidget : public QWidget
     ~MessageHandlerWidget();
 
   private slots:
-    void fatalMessageReceived(const QString &app, const QString &message,
-                              const QTime &time, const QStringList &backtrace);
-    void copyToClipboard(const QString &message);
+    void currentRowChanged(const QModelIndex &current, const QModelIndex & previous );
 
   private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
+    MessageHandlerInterface *m_handler;
+    QSortFilterProxyModel *m_proxy;
 };
 
 }

@@ -53,6 +53,9 @@ class MainWindow : public QMainWindow
     void quitHost();
     void detachProbe();
 
+    void fatalMessageReceived(const QString &app, const QString &message,
+                              const QTime &time, const QStringList &backtrace);
+
   private:
     QWidget* createErrorPage(const QModelIndex &index);
 

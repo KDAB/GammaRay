@@ -31,6 +31,7 @@ namespace GammaRay {
 
 struct DebugMessage;
 class MessageModel;
+class BacktraceModel;
 
 namespace Ui {
   class MessageHandler;
@@ -44,12 +45,16 @@ class MessageHandler : public MessageHandlerInterface
     explicit MessageHandler(ProbeInterface *probe, QObject *parent = 0);
     ~MessageHandler();
 
+    void selectMessage(int idx);
+
   private slots:
     void ensureHandlerInstalled();
     void handleFatalMessage(const GammaRay::DebugMessage &message);
 
   private:
     MessageModel *m_messageModel;
+    BacktraceModel *m_backtraceModel;
+
 };
 
 class MessageHandlerFactory : public QObject, public StandardToolFactory<QObject, MessageHandler>

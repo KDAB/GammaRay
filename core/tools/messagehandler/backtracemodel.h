@@ -1,11 +1,11 @@
 /*
-  messagemodel.h
+  backtracemodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Milian Wolff <milian.wolff@kdab.com>
+  Author: Gábor Angyal <angyalgabor@outlook.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,58 +20,45 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_MESSAGEHANDLER_MESSAGEMODEL_H
-#define GAMMARAY_MESSAGEHANDLER_MESSAGEMODEL_H
+
+#ifndef GAMMARAY_MESSAGEHANDLER_BACKTRACEMODEL_H
+#define GAMMARAY_MESSAGEHANDLER_BACKTRACEMODEL_H
+
+#include <QAbstractTableModel>
+#include <QVector>
+#include <QStringList>
 
 #include "backtrace.h"
 
-#include <QAbstractTableModel>
-#include <QTime>
-#include <QVector>
-
 namespace GammaRay {
 
-struct DebugMessage {
-  QtMsgType type;
-  QString message;
-  QTime time;
-  Backtrace backtrace;
-};
-
-}
-
-Q_DECLARE_METATYPE(GammaRay::DebugMessage)
-Q_DECLARE_TYPEINFO(GammaRay::DebugMessage, Q_MOVABLE_TYPE);
-
-namespace GammaRay {
-
-class MessageModel : public QAbstractTableModel
+class BacktraceModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    explicit MessageModel(QObject *parent = 0);
-    virtual ~MessageModel();
+    explicit BacktraceModel(QObject *parent = 0);
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const;
-    Backtrace backtrace(int idx);
+    void setBacktrace(const Backtrace &backtrace);
+    QStringList parseStackFrame(const QString &stackFrame) const;
+
     enum Columns {
-      TypeColumn,
-      TimeColumn,
-      MessageColumn,
+      AddressColumn,
+      DllColumn,
+      FileColumn,
+      LineColumn,
+      ClassColumn,
+      FunctionColumn,
       COLUMN_COUNT
     };
-
-  public slots:
-    void addMessage(const GammaRay::DebugMessage &message);
-
-  private:
-    QVector<DebugMessage> m_messages;
+private:
+    QVector<QStringList> m_data;
 };
 
 }
 
-#endif // MESSAGEMODEL_H
+#endif // BACKTRACEMODEL_H
