@@ -807,7 +807,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     QMutexLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(receiver);
     const bool filtered = filterObject(receiver);
-    if (!filtered && tracked) {
+    if (!filtered && tracked && !m_queuedObjects.contains(receiver)) {
       m_pendingReparents.removeAll(receiver);
       emit objectReparented(receiver);
     }
