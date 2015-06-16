@@ -174,6 +174,10 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     m_overlayWidget->placeOn(0);
     return;
   }
+  if (m_selectedWidget == m_overlayWidget) {
+    // this should not happen, but apparently our object recovery is slightly too good sometimes ;)
+    return;
+  }
 
   m_overlayWidget->placeOn(m_selectedWidget);
 
