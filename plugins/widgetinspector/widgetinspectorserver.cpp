@@ -30,6 +30,7 @@
 #include "paintbufferviewer.h"
 #include "widgettreemodel.h"
 #include "paintbuffermodel.h"
+#include "modelutils.h"
 
 #include "core/propertycontroller.h"
 #include "core/metaobject.h"
@@ -44,8 +45,6 @@
 #include "common/metatypedeclarations.h"
 #include "common/objectmodel.h"
 #include "common/paths.h"
-
-#include "other/modelutils.h"
 
 #include <QAbstractItemView>
 #include <QApplication>

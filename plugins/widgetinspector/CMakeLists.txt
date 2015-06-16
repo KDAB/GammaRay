@@ -10,8 +10,7 @@ set(gammaray_widgetinspector_plugin_srcs
   overlaywidget.cpp
   widgettreemodel.cpp
   paintbufferreplaywidget.cpp
-
-  ${CMAKE_SOURCE_DIR}/3rdparty/other/modelutils.cpp
+  modelutils.cpp
 )
 
 if(HAVE_PRIVATE_QT_HEADERS)
