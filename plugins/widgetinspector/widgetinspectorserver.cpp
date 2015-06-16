@@ -39,6 +39,7 @@
 #include "core/probesettings.h"
 #include "core/objecttypefilterproxymodel.h"
 #include "core/probeinterface.h"
+#include "core/probeguard.h"
 
 #include "common/objectbroker.h"
 #include "common/settempvalue.h"
@@ -145,6 +146,8 @@ void WidgetInspectorServer::selectDefaultItem()
 
 void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
 {
+  ProbeGuard guard;
+
   m_propertyController->setObject(0);
 
   if (selection.isEmpty())
@@ -251,6 +254,7 @@ QPixmap WidgetInspectorServer::pixmapForWidget(QWidget *widget)
 
 void WidgetInspectorServer::recreateOverlayWidget()
 {
+  ProbeGuard guard;
   m_overlayWidget = new OverlayWidget;
   m_overlayWidget->hide();
 
