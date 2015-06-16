@@ -106,6 +106,8 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     bool isValidObject(QObject *obj) const;
 
     bool filterObject(QObject *obj) const Q_DECL_OVERRIDE;
+    void setFilterNextObjects(bool filter) Q_DECL_OVERRIDE;
+    bool filterNextObjects() const Q_DECL_OVERRIDE;
 
     /// internal
     static void startupHookReceived();
@@ -194,6 +196,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QVector<QObject*> m_globalEventFilters;
     QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
     SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
+    bool m_filterNextObjects;
 };
 
 class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore

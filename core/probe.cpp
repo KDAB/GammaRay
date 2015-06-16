@@ -230,7 +230,8 @@ Probe::Probe(QObject *parent):
   m_connectionModel(new ConnectionModel(this)),
   m_toolModel(0),
   m_window(0),
-  m_queueTimer(new QTimer(this))
+  m_queueTimer(new QTimer(this)),
+  m_filterNextObjects(false)
 {
   Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
@@ -464,6 +465,10 @@ bool Probe::filterObject(QObject *obj) const
     return false;
   }
 
+  if (m_filterNextObjects) {
+    return true;
+  }
+
   QObject *o = obj;
   do {
     if (o == this || o == window())
@@ -471,6 +476,16 @@ bool Probe::filterObject(QObject *obj) const
     o = o->parent();
   } while (o);
   return false;
+}
+
+void Probe::setFilterNextObjects(bool filter)
+{
+  m_filterNextObjects = filter;
+}
+
+bool Probe::filterNextObjects() const
+{
+  return m_filterNextObjects;
 }
 
 void Probe::registerModel(const QString &objectName, QAbstractItemModel *model)
