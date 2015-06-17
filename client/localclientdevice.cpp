@@ -45,5 +45,22 @@ void LocalClientDevice::disconnectFromHost()
 
 void LocalClientDevice::socketError()
 {
-    emit persistentError(m_socket->errorString());
+    switch (m_socket->error()) {
+    case QLocalSocket::ConnectionRefusedError:
+    case QLocalSocket::ServerNotFoundError:
+    case QLocalSocket::SocketAccessError:
+    case QLocalSocket::SocketTimeoutError:
+    case QLocalSocket::ConnectionError:
+    case QLocalSocket::UnknownSocketError:
+        emit transientError();
+        break;
+    default:
+        if (m_tries) {
+            --m_tries;
+            emit transientError();
+        } else {
+            emit persistentError(m_socket->errorString());
+        }
+        break;
+    }
 }

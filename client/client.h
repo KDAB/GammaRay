@@ -42,7 +42,7 @@ public:
   ~Client();
 
   /** Connect to a server reachable on @p url. */
-  void connectToHost(const QUrl &url);
+  void connectToHost(const QUrl &url, int tryAgain = 0);
   void disconnectFromHost();
 
   /**

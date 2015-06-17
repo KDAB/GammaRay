@@ -32,6 +32,7 @@ LocalServerDevice::LocalServerDevice(QObject* parent):
     ServerDeviceImpl<QLocalServer>(parent)
 {
     m_server = new QLocalServer(this);
+    m_server->setSocketOptions(QLocalServer::WorldAccessOption);
     connect(m_server, SIGNAL(newConnection()), this, SIGNAL(newConnection()));
 }
 

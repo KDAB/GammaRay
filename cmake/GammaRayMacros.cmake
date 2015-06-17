@@ -19,11 +19,8 @@ macro(gammaray_add_plugin _target_name _desktop_file)
     PREFIX ""
     LIBRARY_OUTPUT_DIRECTORY ${_build_target_dir}
   )
-  if(ANDROID)
-    # on Android anything in lib/ needs to have a "lib" prefix, and since everything
-    # is mixed in there, we also should have a somewhat unique prefix over all.
-    set_target_properties(${_target_name} PROPERTIES OUTPUT_NAME "libgammaray_plugin_${_target_name}")
-  elseif(APPLE)
+
+  if(APPLE)
     set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "@loader_path/../../../Frameworks")
   endif()
 

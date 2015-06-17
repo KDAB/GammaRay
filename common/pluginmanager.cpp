@@ -58,7 +58,7 @@ QStringList PluginManagerBase::pluginFilter() const
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   filter.push_back("*.desktop");
 #elif defined(Q_OS_ANDROID)
-  filter.push_back(QLatin1String("libgammaray_plugin_*") + Paths::pluginExtension());
+  filter.push_back(QLatin1String("libplugins_gammaray_gammaray_*") + Paths::pluginExtension());
 #else
   filter.push_back(QLatin1String("*") + Paths::pluginExtension());
 #endif

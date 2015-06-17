@@ -55,7 +55,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     QMainWindow *mainWindow() const;
 
     /** Connect to a GammaRay probe at @p url. */
-    void connectToHost(const QUrl &url);
+    void connectToHost(const QUrl &url, int tryAgain = 0);
 
     /** One-time initialization of stream operators and factory callbacks. */
     static void init();
@@ -108,6 +108,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     QAbstractItemModel *m_toolModel;
     QTime m_connectionTimeout;
     bool m_ignorePersistentError;
+    int m_tries;
 };
 
 }

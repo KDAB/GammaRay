@@ -41,6 +41,7 @@ public:
 
     static ClientDevice* create(const QUrl& url, QObject* parent);
 
+    void setTryAgain(int tries);
     virtual void connectToHost() = 0;
     virtual void disconnectFromHost() = 0;
     virtual QIODevice *device() const = 0;
@@ -54,6 +55,7 @@ signals:
 
 protected:
     QUrl m_serverAddress;
+    int m_tries;
 };
 
 template <typename ClientT>
