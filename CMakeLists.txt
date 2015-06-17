@@ -459,10 +459,10 @@ else()
     set(DOC_INSTALL_DIR "${DATAROOTDIR}/doc/gammaray/")
   endif()
 endif()
+
 if(ANDROID)
   # Android doesn't support sub-directories in lib/
-  set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}")
-  set(PROBE_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}")
+  set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
 else()
   set(PROBE_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}")
 endif()

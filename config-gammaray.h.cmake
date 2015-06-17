@@ -1,7 +1,11 @@
 #include <qglobal.h>
 
 // relative install dirs
-#define GAMMARAY_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}"
+#ifdef Q_OS_ANDROID
+# define GAMMARAY_PLUGIN_INSTALL_DIR "lib"
+#else
+# define GAMMARAY_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}"
+#endif
 #define GAMMARAY_LIBEXEC_INSTALL_DIR "${LIBEXEC_INSTALL_DIR}"
 #define GAMMARAY_BIN_INSTALL_DIR "${BIN_INSTALL_DIR}"
 
@@ -37,7 +41,7 @@
 #cmakedefine HAVE_GRAPHVIZ
 #cmakedefine HAVE_ELF_H
 
-#if !defined(QT_NO_SHAREDMEMORY) && !defined(QT_NO_SYSTEMSEMAPHORE)
+#if !defined(QT_NO_SHAREDMEMORY) && !defined(QT_NO_SYSTEMSEMAPHORE) && !defined(Q_OS_ANDROID)
 #define HAVE_SHM
 #endif
 

@@ -64,7 +64,7 @@ QUrl Client::serverAddress() const
   return m_serverAddress;
 }
 
-void Client::connectToHost(const QUrl &url)
+void Client::connectToHost(const QUrl &url, int tryAgain)
 {
   m_serverAddress = url;
   m_initState = 0;
@@ -80,6 +80,7 @@ void Client::connectToHost(const QUrl &url)
   connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SIGNAL(persisitentConnectionError(QString)));
   connect(m_clientDevice, SIGNAL(transientError()), this, SLOT(socketError()));
   connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SLOT(socketError()));
+  m_clientDevice->setTryAgain(tryAgain);
   m_clientDevice->connectToHost();
 }
 

@@ -31,6 +31,10 @@
 #include <common/message.h>
 #include <common/propertysyncer.h>
 
+#ifdef Q_OS_ANDROID
+# include <QDir>
+#endif
+
 #include <QDebug>
 #include <QTimer>
 #include <QMetaMethod>
@@ -62,7 +66,9 @@ Server::Server(QObject *parent) :
 
   m_broadcastTimer->setInterval(5 * 1000);
   m_broadcastTimer->setSingleShot(false);
+#ifndef Q_OS_ANDROID
   m_broadcastTimer->start();
+#endif
   connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
   connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(start()));
 
@@ -92,11 +98,15 @@ bool Server::isRemoteClient() const
 
 QUrl Server::serverAddress() const
 {
-    QUrl url(ProbeSettings::value("ServerAddress", QLatin1String("tcp://0.0.0.0/")).toString());
+#ifdef Q_OS_ANDROID
+    QUrl url(QString(QLatin1String("local://%1/+gammaray_socket")).arg(QDir::homePath()));
+#else
+    QUrl url(ProbeSettings::value("ServerAddress", QLatin1String("tcp://0.0.0.0/")).toString().toUtf8().constData());
     if (url.scheme().isEmpty())
         url.setScheme("tcp");
     if (url.port() <= 0)
         url.setPort(defaultPort());
+#endif
     return url;
 }
 

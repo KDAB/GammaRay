@@ -78,7 +78,8 @@ ClientConnectionManager::ClientConnectionManager(QObject* parent, bool showSplas
   m_client(new Client(this)),
   m_mainWindow(0),
   m_toolModel(0),
-  m_ignorePersistentError(false)
+  m_ignorePersistentError(false),
+  m_tries(0)
 {
   if (showSplashScreenOnStartUp)
      showSplashScreen();
@@ -99,10 +100,11 @@ QMainWindow *ClientConnectionManager::mainWindow() const
   return m_mainWindow;
 }
 
-void ClientConnectionManager::connectToHost(const QUrl &url)
+void ClientConnectionManager::connectToHost(const QUrl &url, int tryAgain)
 {
   m_serverUrl = url;
   m_connectionTimeout.start();
+  m_tries = tryAgain;
   connectToHost();
 }
 
@@ -113,7 +115,7 @@ void ClientConnectionManager::disconnectFromHost()
 
 void ClientConnectionManager::connectToHost()
 {
-  m_client->connectToHost(m_serverUrl);
+  m_client->connectToHost(m_serverUrl, m_tries ? m_tries-- : 0);
 }
 
 void ClientConnectionManager::connectionEstablished()

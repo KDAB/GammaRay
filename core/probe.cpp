@@ -396,6 +396,11 @@ void Probe::createProbe(bool findExisting)
 
 void Probe::startupHookReceived()
 {
+#ifdef Q_OS_ANDROID
+  QDir root = QDir::home();
+  root.cdUp();
+  Paths::setRootPath(root.absolutePath());
+#endif
   s_listener()->trackDestroyed = false;
 }
 

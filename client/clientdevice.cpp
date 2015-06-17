@@ -29,7 +29,9 @@
 
 using namespace GammaRay;
 
-ClientDevice::ClientDevice(QObject* parent): QObject(parent)
+ClientDevice::ClientDevice(QObject* parent)
+    : QObject(parent)
+    , m_tries(0)
 {
 }
 
@@ -52,4 +54,9 @@ ClientDevice* ClientDevice::create(const QUrl& url, QObject *parent)
 
     device->m_serverAddress = url;
     return device;
+}
+
+void ClientDevice::setTryAgain(int tries)
+{
+    m_tries = tries;
 }

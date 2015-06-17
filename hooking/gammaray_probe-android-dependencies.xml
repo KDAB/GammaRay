@@ -1,0 +1,3 @@
+<rules><dependencies><lib name="Qt5Network"><depends>
+<bundled file="plugins/gammaray" />
+</depends></lib></dependencies></rules>
