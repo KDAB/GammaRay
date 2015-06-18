@@ -9,6 +9,7 @@ set(gammaray_common_srcs
   objectbroker.cpp
   protocol.cpp
   message.cpp
+  lz4/lz4.c
   endpoint.cpp
   paths.cpp
   propertysyncer.cpp
@@ -79,6 +80,10 @@ if(WIN32)
 endif()
 if(APPLE)
   target_link_libraries(gammaray_common_internal "-framework CoreFoundation")
+endif()
+
+if (ANDROID)
+    add_definitions(-DENABLE_MESSAGE_COMPRESSSION)
 endif()
 
 gammaray_install_headers(
