@@ -44,8 +44,10 @@ QStringList AboutData::authors()
 
 QStringList AboutData::authorsAsHtml()
 {
+    const auto plainAuthors = authors();
     QStringList a;
-    foreach (const QString &author, authors()) {
+    a.reserve(plainAuthors.size());
+    foreach (const QString &author, plainAuthors) {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         a.push_back(Qt::escape(author));
 #else

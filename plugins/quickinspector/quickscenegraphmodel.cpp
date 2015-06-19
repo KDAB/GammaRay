@@ -167,6 +167,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
   QVector<QSGNode*> &oldChildList  = m_oldParentChildMap[node];
   QVector<QSGNode*> newChildList;
 
+  newChildList.reserve(node->childCount());
   for (QSGNode *childNode = node->firstChild(); childNode; childNode = childNode->nextSibling()) {
     newChildList.append(childNode);
   }

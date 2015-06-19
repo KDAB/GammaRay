@@ -79,8 +79,10 @@ FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
 
 void FontBrowserServer::updateFonts()
 {
+  const auto rows = m_fontSelectionModel->selectedRows();
   QList<QFont> currentFonts;
-  foreach (const QModelIndex &index, m_fontSelectionModel->selectedRows()) {
+  currentFonts.reserve(rows.size());
+  foreach (const QModelIndex &index, rows) {
     currentFonts << index.data(Qt::UserRole + 1).value<QFont>();
   }
   m_selectedFontModel->updateFonts(currentFonts);

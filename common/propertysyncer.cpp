@@ -134,7 +134,9 @@ void PropertySyncer::handleMessage(const GammaRay::Message& msg)
                 break;
 
             QVector<QPair<QString, QVariant> > values;
-            for (int i = qobjectPropertyOffset(); i < (*it).obj->metaObject()->propertyCount(); ++i) {
+            const auto propCount = (*it).obj->metaObject()->propertyCount();
+            values.reserve(propCount);
+            for (int i = qobjectPropertyOffset(); i < propCount; ++i) {
                 const auto prop = (*it).obj->metaObject()->property(i);
                 values.push_back(qMakePair(QString(prop.name()), prop.read((*it).obj)));
             }

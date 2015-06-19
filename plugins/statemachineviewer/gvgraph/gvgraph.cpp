@@ -170,6 +170,7 @@ NodeId GVGraph::addNode(const QString &name)
 QList< NodeId > GVGraph::addNodes(const QStringList &names)
 {
   QList<NodeId> ids;
+  ids.reserve(names.size());
   for (int i=0; i<names.size(); ++i) {
     ids << addNode(names.at(i));
   }
@@ -341,6 +342,7 @@ QRectF GVGraph::boundingRect() const
 QList<GVNodePair> GVGraph::gvNodes() const
 {
   QList<GVNodePair> list;
+  list.reserve(_nodeMap.size());
   const qreal dpi  = dpiForGraph(_graph);
 
   Q_FOREACH (Agnode_t *node, _nodeMap.keys()) {
@@ -384,6 +386,7 @@ QList<GVNodePair> GVGraph::gvNodes() const
 QList<GVEdgePair> GVGraph::gvEdges() const
 {
   QList<GVEdgePair> list;
+  list.reserve(_edgeMap.size());
   const qreal dpi = dpiForGraph(_graph);
 
   Q_FOREACH (Agedge_t *edge, _edgeMap.keys()) {

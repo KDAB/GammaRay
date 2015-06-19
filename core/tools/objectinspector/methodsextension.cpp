@@ -88,6 +88,7 @@ void MethodsExtension::signalEmitted(QObject* sender, int signalIndex, const QVe
   Q_ASSERT(m_object == sender);
 
   QStringList prettyArgs;
+  prettyArgs.reserve(args.size());
   foreach (const QVariant &v, args)
     prettyArgs.push_back(VariantHandler::displayString(v));
 

@@ -223,6 +223,7 @@ void Server::forwardSignal(QObject* sender, int signalIndex, const QVector< QVar
   name = name.mid(0, name.indexOf('('));
 
   QVariantList v;
+  v.reserve(args.size());
   foreach(const QVariant &arg, args)
     v.push_back(arg);
   Endpoint::invokeObject(sender->objectName(), name, v);

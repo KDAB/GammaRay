@@ -59,8 +59,10 @@ void CodecBrowser::updateCodecs(const QItemSelection &selected,
   Q_UNUSED(selected);
   Q_UNUSED(deselected);
 
+  const auto rows = m_codecSelectionModel->selectedRows();
   QStringList currentCodecNames;
-  foreach (const QModelIndex &index, m_codecSelectionModel->selectedRows()) {
+  currentCodecNames.reserve(rows.size());
+  foreach (const QModelIndex &index, rows) {
     const QString codecName = index.data().toString();
     currentCodecNames.append(codecName);
   }

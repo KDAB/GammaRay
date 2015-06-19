@@ -206,6 +206,7 @@ QVariant StateModel::data(const QModelIndex &index, int role) const
       Q_ASSERT(l.contains(state));
       QStringList nums;
       QList<QAbstractTransition*> trs = state->transitions();
+      nums.reserve(trs.size());
       foreach (QAbstractTransition *t, trs) {
         QAbstractState *child = t->targetState();
         Q_ASSERT(l.contains(child));

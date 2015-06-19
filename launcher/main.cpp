@@ -122,6 +122,7 @@ int main(int argc, char **argv)
   QCoreApplication::setApplicationName("GammaRay");
 
   QStringList args;
+  args.reserve(argc);
   for (int i = 1; i < argc; ++i) {
     args.push_back(QString::fromLocal8Bit(argv[i]));
   }

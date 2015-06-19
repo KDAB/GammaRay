@@ -64,8 +64,10 @@ struct VariantHandlerRepository
 static QString displayMatrix4x4(const QMatrix4x4 &matrix)
 {
   QStringList rows;
+  rows.reserve(4);
   for (int i = 0; i < 4; ++i) {
     QStringList cols;
+    cols.reserve(4);
     for (int j = 0; j < 4; ++j) {
       cols.push_back(QString::number(matrix(i, j)));
     }
@@ -132,8 +134,10 @@ QString VariantHandler::displayString(const QVariant &value)
     if (icon.isNull()) {
       return QObject::tr("<no icon>");
     }
+    const auto sizes = icon.availableSizes();
     QStringList l;
-    foreach (const QSize &size, icon.availableSizes()) {
+    l.reserve(sizes.size());
+    foreach (const QSize &size, sizes) {
       l.push_back(displayString(size));
     }
     return l.join(QLatin1String(", "));
@@ -289,6 +293,7 @@ QString VariantHandler::displayString(const QVariant &value)
   if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
     const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
     QStringList l;
+    l.reserve(set.size());
     foreach (const QByteArray &b, set) {
       l.push_back(QString::fromUtf8(b));
     }
@@ -399,6 +404,7 @@ QString VariantHandler::displayString(const QVariant &value)
   if (value.canConvert<QVariantList>()) {
     QStringList s;
     QSequentialIterable it = value.value<QSequentialIterable>();
+    s.reserve(it.size());
     int emptyStrings = 0;
     foreach (const QVariant &v, it) {
       s.push_back(displayString(v));

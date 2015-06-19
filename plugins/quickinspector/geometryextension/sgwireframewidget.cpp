@@ -120,6 +120,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
 
     else if (m_drawingMode == GL_POLYGON && i == count - 1) {
       QVector<int> vertices;
+      vertices.reserve(count);
       for (int j = 0; j < count; j++) {
         vertices << j;
       }
