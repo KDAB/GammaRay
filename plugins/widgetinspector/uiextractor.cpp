@@ -58,7 +58,7 @@ bool UiExtractor::checkProperty(QObject *obj, const QString &prop) const
     if (value.type() == QVariant::String) {
       return !value.toString().isEmpty();
     } else if (value.type() == QVariant::Locale) {
-      return value.value<QLocale>() != QLocale::system();
+      return value.toLocale() != QLocale::system();
     }
 
     return true;

@@ -155,7 +155,7 @@ QString VariantHandler::displayString(const QVariant &value)
         arg(value.toLineF().x2()).arg(value.toLineF().y2());
 
   case QVariant::Locale:
-    return value.value<QLocale>().name();
+    return value.toLocale().name();
 
   case QVariant::Point:
     return
