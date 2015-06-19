@@ -109,7 +109,7 @@ void MethodsExtension::activateMethod()
   if (selectionModel->selectedRows().size() != 1) {
     return;
   }
-  const QModelIndex index = selectionModel->selectedRows().first();
+  const QModelIndex index = selectionModel->selectedRows().at(0);
 
   const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
   m_methodArgumentModel->setMethod(method);
@@ -121,7 +121,7 @@ void MethodsExtension::connectToSignal()
   if (selectionModel->selectedRows().size() != 1) {
     return;
   }
-  const QModelIndex index = selectionModel->selectedRows().first();
+  const QModelIndex index = selectionModel->selectedRows().at(0);
 
   const QMetaMethod method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
   if (method.methodType() == QMetaMethod::Signal) {
@@ -142,7 +142,7 @@ void MethodsExtension::invokeMethod(Qt::ConnectionType connectionType)
   QMetaMethod method;
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_model);
   if (selectionModel->selectedRows().size() == 1) {
-    const QModelIndex index = selectionModel->selectedRows().first();
+    const QModelIndex index = selectionModel->selectedRows().at(0);
     method = index.data(ObjectMethodModelRole::MetaMethod).value<QMetaMethod>();
   }
 

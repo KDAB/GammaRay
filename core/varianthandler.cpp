@@ -192,7 +192,7 @@ QString VariantHandler::displayString(const QVariant &value)
       return QLatin1String("<empty>");
     }
     if (region.rectCount() == 1) {
-      return displayString(region.rects().first());
+      return displayString(region.rects().at(0));
     } else {
       return QString::fromLatin1("<%1 rects>").arg(region.rectCount());
     }
