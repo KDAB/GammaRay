@@ -39,9 +39,9 @@ public:
       WebKitVersionRole = ObjectModel::UserRole
     };
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    QMap< int, QVariant > itemData(const QModelIndex& index) const;
-    bool filterAcceptsObject(QObject* object) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap< int, QVariant > itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    bool filterAcceptsObject(QObject* object) const Q_DECL_OVERRIDE;
 };
 
 }

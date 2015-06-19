@@ -36,12 +36,12 @@ class FontBrowserClient : public FontBrowserInterface
     explicit FontBrowserClient(QObject *parent = 0);
 
   public slots:
-    virtual void setPointSize(int size);
-    virtual void toggleBoldFont(bool bold);
-    virtual void toggleItalicFont(bool italic);
-    virtual void toggleUnderlineFont(bool underline);
-    virtual void updateText(const QString &text);
-    virtual void setColors(const QColor &foreground, const QColor &background);
+    void setPointSize(int size) Q_DECL_OVERRIDE;
+    void toggleBoldFont(bool bold) Q_DECL_OVERRIDE;
+    void toggleItalicFont(bool italic) Q_DECL_OVERRIDE;
+    void toggleUnderlineFont(bool underline) Q_DECL_OVERRIDE;
+    void updateText(const QString &text) Q_DECL_OVERRIDE;
+    void setColors(const QColor &foreground, const QColor &background) Q_DECL_OVERRIDE;
 };
 
 }

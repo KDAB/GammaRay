@@ -42,9 +42,9 @@ class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 
-    /*override*/ bool remotingSupported() const;
-    /*override*/ QWidget *createWidget(QWidget *parentWidget);
-    void initUi();
+    bool remotingSupported() const Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE;
+    void initUi() Q_DECL_OVERRIDE;
 };
 
 }

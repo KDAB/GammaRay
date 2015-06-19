@@ -34,15 +34,15 @@ class LldbInjector : public DebuggerInjector
     LldbInjector();
     ~LldbInjector();
 
-    QString name() const;
-    bool launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc);
-    bool attach(int pid, const QString& probeDll, const QString& probeFunc);
+    QString name() const Q_DECL_OVERRIDE;
+    bool launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc) Q_DECL_OVERRIDE;
+    bool attach(int pid, const QString& probeDll, const QString& probeFunc) Q_DECL_OVERRIDE;
 
   protected:
-    QString debuggerExecutable() const;
-    void execCmd(const QByteArray& cmd, bool waitForWritten = true);
-    void addFunctionBreakpoint(const QByteArray& function);
-    void addMethodBreakpoint(const QByteArray& method);
+    QString debuggerExecutable() const Q_DECL_OVERRIDE;
+    void execCmd(const QByteArray& cmd, bool waitForWritten = true) Q_DECL_OVERRIDE;
+    void addFunctionBreakpoint(const QByteArray& function) Q_DECL_OVERRIDE;
+    void addMethodBreakpoint(const QByteArray& method) Q_DECL_OVERRIDE;
 };
 }
 

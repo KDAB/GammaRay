@@ -36,20 +36,20 @@ class GdbInjector : public DebuggerInjector
     QString name() const {
       return QString("gdb");
     }
-    virtual bool launch(const QStringList &programAndArgs,
-                       const QString &probeDll, const QString &probeFunc);
-    virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
+    bool launch(const QStringList &programAndArgs,
+                const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
+    bool attach(int pid, const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
 
   protected:
-    QString debuggerExecutable() const;
-    void execCmd(const QByteArray &cmd, bool waitForWritten = true);
-    void addFunctionBreakpoint(const QByteArray& function);
-    void addMethodBreakpoint(const QByteArray& method);
-    void loadSymbols(const QByteArray& library);
+    QString debuggerExecutable() const Q_DECL_OVERRIDE;
+    void execCmd(const QByteArray &cmd, bool waitForWritten = true) Q_DECL_OVERRIDE;
+    void addFunctionBreakpoint(const QByteArray& function) Q_DECL_OVERRIDE;
+    void addMethodBreakpoint(const QByteArray& method) Q_DECL_OVERRIDE;
+    void loadSymbols(const QByteArray& library) Q_DECL_OVERRIDE;
 
   private slots:
-    void readyReadStandardError();
-    void readyReadStandardOutput();
+    void readyReadStandardError() Q_DECL_OVERRIDE;
+    void readyReadStandardOutput() Q_DECL_OVERRIDE;
 };
 
 }

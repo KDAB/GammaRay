@@ -36,7 +36,7 @@ public:
     explicit ConnectionsClientProxyModel(QObject* parent = 0);
     virtual ~ConnectionsClientProxyModel();
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
 
 }

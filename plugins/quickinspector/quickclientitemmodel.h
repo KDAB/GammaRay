@@ -36,7 +36,7 @@ class QuickClientItemModel : public KRecursiveFilterProxyModel
     explicit QuickClientItemModel(QObject *parent = 0);
     ~QuickClientItemModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
 
 }

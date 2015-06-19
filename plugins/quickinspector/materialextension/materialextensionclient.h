@@ -38,7 +38,7 @@ class MaterialExtensionClient : public MaterialExtensionInterface
     virtual ~MaterialExtensionClient();
 
   public slots:
-    void getShader(const QString &fileName);
+    void getShader(const QString &fileName) Q_DECL_OVERRIDE;
 };
 
 }

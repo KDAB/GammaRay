@@ -40,10 +40,10 @@ class ConnectionFilterProxyModel : public QSortFilterProxyModel
     void filterSender(QObject *sender);
 
   protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
-    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 
   private:
     QObject *m_receiver;

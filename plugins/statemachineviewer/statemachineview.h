@@ -37,7 +37,7 @@ class StateMachineView : public QGraphicsView
     void zoomBy(qreal scaleFactor);
 
   protected:
-    virtual void wheelEvent(QWheelEvent *event);
+    void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
 };
 
 }

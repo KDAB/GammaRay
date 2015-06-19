@@ -41,7 +41,7 @@ class AnnotatedScenePreview : public QQuickPaintedItem
   public:
     explicit AnnotatedScenePreview(QQuickItem *parent = 0);
     virtual ~AnnotatedScenePreview();
-    virtual void paint(QPainter *p);
+    void paint(QPainter *p) Q_DECL_OVERRIDE;
 
     QVariantMap previewData() const;
     qreal zoom() const;

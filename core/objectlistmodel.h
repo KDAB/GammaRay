@@ -50,9 +50,9 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
   Q_OBJECT
   public:
     explicit ObjectListModel(Probe *probe);
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
   private slots:
     void objectAdded(QObject *obj);

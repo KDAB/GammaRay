@@ -33,13 +33,13 @@ class SidePane : public QListView
   Q_OBJECT
   public:
     explicit SidePane(QWidget *parent = 0);
-    virtual ~SidePane();
+    ~SidePane();
 
-    virtual QSize sizeHint() const;
-    virtual void setModel(QAbstractItemModel* model);
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
 
   protected:
-    virtual void resizeEvent(QResizeEvent *e);
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
   private slots:
     void updateSizeHint();

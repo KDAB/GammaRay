@@ -43,7 +43,7 @@ class LauncherWindow : public QDialog
     /// returns all information required to perform the launch/attach
     LaunchOptions launchOptions() const;
 
-    void accept();
+    void accept() Q_DECL_OVERRIDE;
 
   private slots:
     void tabChanged();

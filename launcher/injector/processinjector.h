@@ -38,10 +38,10 @@ class ProcessInjector : public AbstractInjector
     ProcessInjector();
     ~ProcessInjector();
 
-    int exitCode();
-    QProcess::ExitStatus exitStatus();
-    QProcess::ProcessError processError();
-    QString errorString();
+    int exitCode() Q_DECL_OVERRIDE;
+    QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
+    QProcess::ProcessError processError() Q_DECL_OVERRIDE;
+    QString errorString() Q_DECL_OVERRIDE;
 
   protected:
     bool launchProcess(const QStringList &programAndArgs, const QProcessEnvironment &env);

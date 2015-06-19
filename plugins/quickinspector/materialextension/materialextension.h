@@ -45,10 +45,10 @@ class MaterialExtension : public MaterialExtensionInterface, public PropertyCont
     explicit MaterialExtension(PropertyController *controller);
     ~MaterialExtension();
 
-    bool setObject(void *object, const QString &typeName);
+    bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
 
   public slots:
-    void getShader(const QString &fileName);
+    void getShader(const QString &fileName) Q_DECL_OVERRIDE;
 
   private:
     QSGGeometryNode *m_node;

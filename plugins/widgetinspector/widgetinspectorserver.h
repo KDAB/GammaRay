@@ -53,7 +53,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void selectDefaultItem();
 
   protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
   private:
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
@@ -69,18 +69,18 @@ class WidgetInspectorServer : public WidgetInspectorInterface
 
     void recreateOverlayWidget();
 
-    void saveAsImage(const QString &fileName);
-    void saveAsSvg(const QString &fileName);
-    void saveAsPdf(const QString &fileName);
-    void saveAsUiFile(const QString &fileName);
+    void saveAsImage(const QString &fileName) Q_DECL_OVERRIDE;
+    void saveAsSvg(const QString &fileName) Q_DECL_OVERRIDE;
+    void saveAsPdf(const QString &fileName) Q_DECL_OVERRIDE;
+    void saveAsUiFile(const QString &fileName) Q_DECL_OVERRIDE;
 
-    void analyzePainting();
+    void analyzePainting() Q_DECL_OVERRIDE;
     void eventuallyUpdatePaintAnalyzer();
     void updatePaintAnalyzer();
 
     void updateWidgetPreview();
 
-    void checkFeatures();
+    void checkFeatures() Q_DECL_OVERRIDE;
 
   private:
     QPointer<OverlayWidget> m_overlayWidget;

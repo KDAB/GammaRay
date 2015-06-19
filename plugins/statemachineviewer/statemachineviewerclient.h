@@ -33,9 +33,9 @@ class StateMachineViewerClient : public StateMachineViewerInterface
   public:
     explicit StateMachineViewerClient(QObject *parent = 0);
 
-    void setMaximumDepth(int depth);
-    void toggleRunning();
-    void repopulateGraph();
+    void setMaximumDepth(int depth) Q_DECL_OVERRIDE;
+    void toggleRunning() Q_DECL_OVERRIDE;
+    void repopulateGraph() Q_DECL_OVERRIDE;
 };
 
 }

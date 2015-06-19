@@ -37,10 +37,10 @@ class OverlayWidget : public QWidget
 
     void placeOn(QWidget *widget);
 
-    virtual bool eventFilter(QObject *receiver, QEvent *event);
+    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
   protected:
-    virtual void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
   private:
     void resizeOverlay();

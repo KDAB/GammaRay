@@ -48,7 +48,7 @@ class StyleElementStateTablePage : public QWidget
     void setModel(QAbstractItemModel *model);
 
   protected:
-    virtual void showEvent(QShowEvent *show);
+    void showEvent(QShowEvent *show) Q_DECL_OVERRIDE;
 
   private slots:
     void updateCellSize();

@@ -58,7 +58,7 @@ class SceneInspectorWidget : public QWidget
     void itemSelected(const QRectF &boundingRect);
 
   private:
-    virtual bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
     QScopedPointer<Ui::SceneInspectorWidget> ui;
     SceneInspectorInterface *m_interface;

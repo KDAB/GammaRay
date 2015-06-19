@@ -33,8 +33,8 @@ class ResourceFilterModel : public QSortFilterProxyModel
   Q_OBJECT
   public:
     explicit ResourceFilterModel(QObject *parent = 0);
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
-    virtual QMap<int, QVariant> itemData(const QModelIndex &index) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 }

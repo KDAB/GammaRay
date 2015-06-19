@@ -48,12 +48,12 @@ class ToolModel : public QAbstractListModel
   public:
     explicit ToolModel(QObject *parent = 0);
     ~ToolModel();
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
-    virtual QMap<int, QVariant> itemData(const QModelIndex& index) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
     /** returns all tools provided by plugins for the ToolPluginModel. */
     QVector<ToolFactory*> plugins() const;

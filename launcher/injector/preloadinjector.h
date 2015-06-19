@@ -38,8 +38,8 @@ class PreloadInjector : public ProcessInjector
     QString name() const {
       return QString("preload");
     }
-    virtual bool launch(const QStringList &programAndArgs,
-                       const QString &probeDll, const QString &probeFunc);
+    bool launch(const QStringList &programAndArgs,
+                const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
 };
 
 }

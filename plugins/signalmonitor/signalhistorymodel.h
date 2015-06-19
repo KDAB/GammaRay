@@ -76,11 +76,11 @@ class SignalHistoryModel : public QAbstractTableModel
     explicit SignalHistoryModel(ProbeInterface *probe, QObject *parent = 0);
     ~SignalHistoryModel();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     static qint64 timestamp(qint64 ev) { return ev >> 16; }
     static int signalIndex(qint64 ev) { return ev & 0xffff; }

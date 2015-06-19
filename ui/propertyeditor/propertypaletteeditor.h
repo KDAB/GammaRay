@@ -35,7 +35,7 @@ class PropertyPaletteEditor : public PropertyExtendedEditor
     explicit PropertyPaletteEditor(QWidget *parent = 0);
 
   protected:
-    virtual void edit();
+    void edit() Q_DECL_OVERRIDE;
 };
 
 }

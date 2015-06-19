@@ -37,8 +37,8 @@ class ConnectionsExtensionClient : public ConnectionsExtensionInterface
     virtual ~ConnectionsExtensionClient();
 
   public slots:
-    void navigateToReceiver(int modelRow);
-    void navigateToSender(int modelRow);
+    void navigateToReceiver(int modelRow) Q_DECL_OVERRIDE;
+    void navigateToSender(int modelRow) Q_DECL_OVERRIDE;
 };
 
 }

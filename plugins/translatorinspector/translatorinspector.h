@@ -59,7 +59,7 @@ class TranslatorInspector : public TranslatorInspectorInterface
     void selectionChanged(const QItemSelection &selection);
 
   protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
   private:
     QItemSelectionModel *m_selectionModel;

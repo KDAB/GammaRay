@@ -36,9 +36,9 @@ class ObjectClassInfoModel : public MetaObjectModel<QMetaClassInfo,
 {
   public:
     explicit ObjectClassInfoModel(QObject *parent = 0);
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant metaData(const QModelIndex &index, const QMetaClassInfo &classInfo, int role) const;
-    QString columnHeader(int index) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant metaData(const QModelIndex &index, const QMetaClassInfo &classInfo, int role) const Q_DECL_OVERRIDE;
+    QString columnHeader(int index) const Q_DECL_OVERRIDE;
 };
 
 }

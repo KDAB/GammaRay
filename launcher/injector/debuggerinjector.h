@@ -39,12 +39,12 @@ class DebuggerInjector : public QObject, public AbstractInjector
     DebuggerInjector();
     ~DebuggerInjector();
 
-    bool selfTest();
+    bool selfTest() Q_DECL_OVERRIDE;
 
-    QString errorString();
-    int exitCode();
-    QProcess::ExitStatus exitStatus();
-    QProcess::ProcessError processError();
+    QString errorString() Q_DECL_OVERRIDE;
+    int exitCode() Q_DECL_OVERRIDE;
+    QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
+    QProcess::ProcessError processError() Q_DECL_OVERRIDE;
 
   protected:
     virtual QString debuggerExecutable() const = 0;

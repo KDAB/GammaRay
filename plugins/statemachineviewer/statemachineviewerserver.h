@@ -71,13 +71,13 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     void stateSelectionChanged();
 
     void setFilteredStates(const QVector<QAbstractState*> &states);
-    void setMaximumDepth(int depth);
+    void setMaximumDepth(int depth) Q_DECL_OVERRIDE;
     void setSelectedStateMachine(QStateMachine* machine);
 
     void updateStartStop();
-    void toggleRunning();
+    void toggleRunning() Q_DECL_OVERRIDE;
 
-    void repopulateGraph();
+    void repopulateGraph() Q_DECL_OVERRIDE;
 
   private:
 

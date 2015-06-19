@@ -39,7 +39,7 @@ class ResourceBrowser : public ResourceBrowserInterface
     explicit ResourceBrowser(ProbeInterface *probe, QObject *parent = 0);
 
   public slots:
-    void downloadResource(const QString &sourceFilePath, const QString &targetFilePath);
+    void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) Q_DECL_OVERRIDE;
 
   private slots:
     void currentChanged(const QModelIndex &current);

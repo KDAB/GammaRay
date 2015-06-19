@@ -44,8 +44,8 @@ class DynamicProxyStyle : public QProxyStyle
 
     void setPixelMetric(PixelMetric metric, int value);
 
-    virtual int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
-                            const QWidget *widget = 0) const;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
+                    const QWidget *widget = 0) const Q_DECL_OVERRIDE;
 
   private:
     QHash<QStyle::PixelMetric, int> m_pixelMetrics;

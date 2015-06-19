@@ -39,14 +39,14 @@ class PaintBufferReplayWidget : public QWidget
   public:
     explicit PaintBufferReplayWidget(QWidget *parent = 0);
 
-    virtual QSize sizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
   public slots:
     void setZoomFactor(int zoom);
     void setPixmap(const QPixmap &pixmap);
 
   protected:
-    virtual void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
   private:
     QPixmap m_pixmap;

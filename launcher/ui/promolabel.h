@@ -38,8 +38,8 @@ class PromoLabel : public QLabel
     static QImage tintedImage(const QString &image, const QColor &color);
 
   protected:
-    virtual bool event(QEvent *e);
-    virtual void mouseReleaseEvent(QMouseEvent *ev);
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
 
   private:
     void updatePixmap();

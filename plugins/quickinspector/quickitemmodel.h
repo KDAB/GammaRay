@@ -105,7 +105,7 @@ class QuickEventMonitor : public QObject
     explicit QuickEventMonitor(QuickItemModel *parent);
 
   protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
   private:
     QuickItemModel *m_model;

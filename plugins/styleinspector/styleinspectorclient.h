@@ -34,11 +34,11 @@ class StyleInspectorClient : public StyleInspectorInterface
   Q_INTERFACES(GammaRay::StyleInspectorInterface)
   public:
     explicit StyleInspectorClient(QObject *parent = 0);
-    virtual ~StyleInspectorClient();
+    ~StyleInspectorClient();
 
-    virtual void setCellHeight(int height);
-    virtual void setCellWidth(int width);
-    virtual void setCellZoom(int zoom);
+    void setCellHeight(int height) Q_DECL_OVERRIDE;
+    void setCellWidth(int width) Q_DECL_OVERRIDE;
+    void setCellZoom(int zoom) Q_DECL_OVERRIDE;
 };
 
 }

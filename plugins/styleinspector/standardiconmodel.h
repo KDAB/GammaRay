@@ -39,13 +39,13 @@ class StandardIconModel : public AbstractStyleElementModel
   public:
     explicit StandardIconModel(QObject *parent = 0);
 
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
   protected:
-    virtual QVariant doData(int row, int column, int role) const;
-    virtual int doColumnCount() const;
-    virtual int doRowCount() const;
+    QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
+    int doColumnCount() const Q_DECL_OVERRIDE;
+    int doRowCount() const Q_DECL_OVERRIDE;
 
   private:
     QVariant dataForStandardIcon(QStyle::StandardPixmap stdPix,

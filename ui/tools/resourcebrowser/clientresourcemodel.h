@@ -44,7 +44,7 @@ public:
   explicit ClientResourceModel(QObject *parent = 0);
   ~ClientResourceModel();
 
-  /*override*/ QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 private:
   QFileIconProvider m_iconProvider;

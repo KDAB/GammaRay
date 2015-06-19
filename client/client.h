@@ -48,7 +48,7 @@ public:
   /**
    * Register a client-side QObject to send/receive messages to/from the server side.
    */
-  Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
+  Protocol::ObjectAddress registerObject(const QString &name, QObject *object) Q_DECL_OVERRIDE;
 
   /** Register a message handler for @p objectAddress on object @p handler.
    *  Once a message for this object is received, @p slot is called.
@@ -63,7 +63,7 @@ public:
   /** Singleton accessor. */
   static Client* instance();
 
-  bool isRemoteClient() const;
+  bool isRemoteClient() const Q_DECL_OVERRIDE;
   QUrl serverAddress() const Q_DECL_OVERRIDE;
 
 signals:
@@ -79,9 +79,9 @@ signals:
   void persisitentConnectionError(const QString &msg);
 
 protected:
-  void messageReceived(const Message& msg);
-  void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object);
-  void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
+  void messageReceived(const Message& msg) Q_DECL_OVERRIDE;
+  void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object) Q_DECL_OVERRIDE;
+  void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName) Q_DECL_OVERRIDE;
 
 private:
   void unmonitorObject(Protocol::ObjectAddress objectAddress);

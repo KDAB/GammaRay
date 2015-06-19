@@ -54,8 +54,8 @@ class QuickInspectorWidget : public QWidget
     ~QuickInspectorWidget();
 
   private:
-    void showEvent(QShowEvent *event);
-    void hideEvent(QHideEvent *event);
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+    void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 
   private slots:
     void sceneChanged();
@@ -83,7 +83,7 @@ class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<Qui
   Q_INTERFACES(GammaRay::ToolUiFactory)
   Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_quickinspector.json")
 
-  void initUi();
+  void initUi() Q_DECL_OVERRIDE;
 };
 
 }

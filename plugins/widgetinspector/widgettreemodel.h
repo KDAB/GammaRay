@@ -36,10 +36,10 @@ class WidgetTreeModel : public ObjectFilterProxyModelBase
   Q_OBJECT
   public:
     explicit WidgetTreeModel(QObject *parent = 0);
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
   protected:
-    virtual bool filterAcceptsObject(QObject *object) const;
+    bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE;
 };
 
 }

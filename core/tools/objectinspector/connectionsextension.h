@@ -46,11 +46,11 @@ class ConnectionsExtension : public ConnectionsExtensionInterface,
     explicit ConnectionsExtension(PropertyController *controller);
     ~ConnectionsExtension();
 
-    bool setQObject(QObject *object);
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
 
   public slots:
-    void navigateToReceiver(int modelRow);
-    void navigateToSender(int modelRow);
+    void navigateToReceiver(int modelRow) Q_DECL_OVERRIDE;
+    void navigateToSender(int modelRow) Q_DECL_OVERRIDE;
 
   private:
 #ifndef USE_QT_CONNECTIONS_LIST

@@ -39,12 +39,12 @@ class WidgetInspectorClient : public WidgetInspectorInterface
     ~WidgetInspectorClient();
 
   private:
-    virtual void saveAsImage(const QString &fileName);
-    virtual void saveAsSvg(const QString &fileName);
-    virtual void saveAsPdf(const QString &fileName);
-    virtual void saveAsUiFile(const QString &fileName);
-    virtual void analyzePainting();
-    virtual void checkFeatures();
+    void saveAsImage(const QString &fileName) Q_DECL_OVERRIDE;
+    void saveAsSvg(const QString &fileName) Q_DECL_OVERRIDE;
+    void saveAsPdf(const QString &fileName) Q_DECL_OVERRIDE;
+    void saveAsUiFile(const QString &fileName) Q_DECL_OVERRIDE;
+    void analyzePainting() Q_DECL_OVERRIDE;
+    void checkFeatures() Q_DECL_OVERRIDE;
 };
 }
 

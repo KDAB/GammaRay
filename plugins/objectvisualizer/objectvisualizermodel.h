@@ -53,8 +53,8 @@ public:
     explicit ObjectVisualizerModel(QObject *parent);
     ~ObjectVisualizerModel();
 
-    QVariant data(const QModelIndex& proxyIndex, int role = Qt::DisplayRole) const;
-    QMap<int, QVariant> itemData(const QModelIndex& index) const;
+    QVariant data(const QModelIndex& proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 };
 }
 

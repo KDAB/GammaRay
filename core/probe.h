@@ -153,7 +153,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     void objectReparented(QObject *obj);
 
   protected:
-    bool eventFilter(QObject *receiver, QEvent *event);
+    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
   private slots:
     void delayedInit();

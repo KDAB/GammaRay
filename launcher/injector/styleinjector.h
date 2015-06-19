@@ -38,10 +38,10 @@ class StyleInjector : public GammaRay::ProcessInjector
       return QString("style");
     }
 
-    virtual bool launch(const QStringList &programAndArgs,
-                        const QString &probeDll, const QString &probeFunc);
+    bool launch(const QStringList &programAndArgs,
+                const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
 
-    virtual bool selfTest();
+    bool selfTest() Q_DECL_OVERRIDE;
 };
 
 }

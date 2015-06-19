@@ -37,7 +37,7 @@ public:
     ~SignalMonitorClient();
 
 public slots:
-    void sendClockUpdates(bool enabled) /*Q_DECL_OVERRIDE*/;
+    void sendClockUpdates(bool enabled) Q_DECL_OVERRIDE;
 };
 
 }

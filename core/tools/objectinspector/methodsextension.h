@@ -47,13 +47,13 @@ class MethodsExtension : public MethodsExtensionInterface, public PropertyContro
     explicit MethodsExtension(PropertyController *controller);
     ~MethodsExtension();
 
-    bool setQObject(QObject *object);
-    bool setMetaObject(const QMetaObject *metaObject);
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
 
   public slots:
-    void activateMethod();
-    void invokeMethod(Qt::ConnectionType type);
-    void connectToSignal();
+    void activateMethod() Q_DECL_OVERRIDE;
+    void invokeMethod(Qt::ConnectionType type) Q_DECL_OVERRIDE;
+    void connectToSignal() Q_DECL_OVERRIDE;
 
   private slots:
     void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);

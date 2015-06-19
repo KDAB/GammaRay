@@ -45,12 +45,12 @@ class AbstractStyleElementStateTable : public GammaRay::AbstractStyleElementMode
   public:
     explicit AbstractStyleElementStateTable(QObject *parent = 0);
 
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
   protected:
-    virtual int doColumnCount() const;
-    virtual QVariant doData(int row, int column, int role) const;
+    int doColumnCount() const Q_DECL_OVERRIDE;
+    QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
 
     /// standard setup for the style option used in a cell in column @p column
     void fillStyleOption(QStyleOption *option, int column) const;

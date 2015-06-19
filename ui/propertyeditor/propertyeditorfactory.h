@@ -43,7 +43,7 @@ class GAMMARAY_UI_EXPORT PropertyEditorFactory : public QItemEditorFactory
     typedef int TypeId;
 #endif
 
-    QWidget *createEditor(TypeId type, QWidget *parent) const;
+    QWidget *createEditor(TypeId type, QWidget *parent) const Q_DECL_OVERRIDE;
 
     static QVector<int> supportedTypes();
 

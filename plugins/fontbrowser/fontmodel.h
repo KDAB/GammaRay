@@ -39,20 +39,19 @@ class FontModel : public QAbstractItemModel
     void updateFonts(const QList<QFont> &fonts);
     QList<QFont> currentFonts() const;
 
-    virtual QVariant headerData(int section,
-                                Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual QVariant data(const QModelIndex &index,
-                          int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index,
+                  int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual QModelIndex index(int row, int column,
-                              const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    virtual QModelIndex parent(const QModelIndex &child) const;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
   public slots:
     void updateText(const QString &text);

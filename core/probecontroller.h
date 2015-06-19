@@ -36,8 +36,8 @@ public:
     explicit ProbeController(QObject *parent = 0);
 
 public slots:
-    void detachProbe();
-    void quitHost();
+    void detachProbe() Q_DECL_OVERRIDE;
+    void quitHost() Q_DECL_OVERRIDE;
 };
 
 }

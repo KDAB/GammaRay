@@ -51,8 +51,8 @@ class SGWireframeWidget : public QWidget
     void onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType);
 
   protected:
-    void paintEvent(QPaintEvent*);
-    void mouseReleaseEvent(QMouseEvent*);
+    void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent*) Q_DECL_OVERRIDE;
 
   private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

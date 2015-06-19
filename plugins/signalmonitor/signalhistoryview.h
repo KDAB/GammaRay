@@ -50,7 +50,7 @@ class SignalHistoryView : public QTreeView
     void eventScrollBarChanged(QScrollBar *scrollBar);
 
   protected:
-    bool viewportEvent(QEvent *event);
+    bool viewportEvent(QEvent *event) Q_DECL_OVERRIDE;
 
   private slots:
     void eventDelegateChanged();

@@ -60,8 +60,7 @@ class TimerTopFactory : public QObject,
       return tr("Timers");
     }
 
-    /* reimp */
-    QStringList supportedTypes() const;
+    QStringList supportedTypes() const Q_DECL_OVERRIDE;
 };
 
 }

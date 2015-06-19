@@ -39,7 +39,7 @@ class ObjectPropertyModel : public QAbstractTableModel
     explicit ObjectPropertyModel(QObject *parent = 0);
     void setObject(QObject *object);
 
-    QMap<int, QVariant> itemData(const QModelIndex& index) const;
+    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
   protected:
     /** Reimplement to set up watching property change notifications. */

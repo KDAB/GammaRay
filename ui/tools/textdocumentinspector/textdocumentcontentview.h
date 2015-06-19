@@ -37,7 +37,7 @@ class TextDocumentContentView : public QTextEdit
     void setShowBoundingBox(const QRectF &boundingBox);
 
   protected:
-    virtual void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
   private:
     QRectF m_boundingBox;

@@ -41,13 +41,13 @@ public:
 
   void addModel(QAbstractItemModel* model);
 
-  QVariant data(const QModelIndex& index, int role) const;
-  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-  int columnCount(const QModelIndex& parent) const;
-  int rowCount(const QModelIndex& parent) const;
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  Qt::ItemFlags flags(const QModelIndex& index) const;
-  QMap<int, QVariant> itemData(const QModelIndex& index) const;
+  QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
+  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+  int columnCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
+  int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+  Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
+  QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
 private:
   QModelIndex mapToSource(const QModelIndex &aggregatedIndex) const;

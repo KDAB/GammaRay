@@ -49,7 +49,7 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     /**
      * Register a server-side QObject to send/receive messages to/from the client side.
      */
-    virtual Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
+    Protocol::ObjectAddress registerObject(const QString &name, QObject *object) Q_DECL_OVERRIDE;
 
     /** Register a new object with name @p objectName as a destination for messages.
      *  New messages to that object are passed to the slot @p messageHandlerName on @p receiver.
@@ -71,9 +71,9 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     /**
      * Call @p method on the remote client and also directly on the local object identified by @p objectName.
      */
-    virtual void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const;
+    void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const Q_DECL_OVERRIDE;
 
-    bool isRemoteClient() const;
+    bool isRemoteClient() const Q_DECL_OVERRIDE;
     QUrl serverAddress() const Q_DECL_OVERRIDE;
     /**
      * Returns an address suitable to connect to this server.
@@ -82,9 +82,9 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
      */
     QUrl externalAddress() const;
   protected:
-    void messageReceived(const Message& msg);
-    void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName);
-    void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object);
+    void messageReceived(const Message& msg) Q_DECL_OVERRIDE;
+    void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName) Q_DECL_OVERRIDE;
+    void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object) Q_DECL_OVERRIDE;
 
   private slots:
     void newConnection();

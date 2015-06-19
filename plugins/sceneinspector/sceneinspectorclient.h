@@ -34,11 +34,11 @@ class SceneInspectorClient : public SceneInspectorInterface
   Q_INTERFACES(GammaRay::SceneInspectorInterface)
   public:
     explicit SceneInspectorClient(QObject *parent = 0);
-    virtual ~SceneInspectorClient();
+    ~SceneInspectorClient();
 
-    virtual void initializeGui();
-    virtual void renderScene(const QTransform &transform, const QSize &size);
-    virtual void sceneClicked(const QPointF &pos);
+    void initializeGui() Q_DECL_OVERRIDE;
+    void renderScene(const QTransform &transform, const QSize &size) Q_DECL_OVERRIDE;
+    void sceneClicked(const QPointF &pos) Q_DECL_OVERRIDE;
 };
 
 }

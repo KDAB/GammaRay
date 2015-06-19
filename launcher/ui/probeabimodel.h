@@ -39,8 +39,8 @@ public:
     explicit ProbeABIModel(QObject *parent = 0);
     ~ProbeABIModel();
 
-    QVariant data(const QModelIndex& index, int role) const;
-    int rowCount(const QModelIndex& parent) const;
+    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
 
     int indexOfBestMatchingABI(const ProbeABI &targetABI) const;
 

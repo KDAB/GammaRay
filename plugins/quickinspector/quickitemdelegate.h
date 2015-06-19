@@ -43,9 +43,9 @@ class QuickItemDelegate : public QStyledItemDelegate
 
   protected:
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-               const QModelIndex &index) const;
+               const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
   private:
     QHash<QModelIndex, QColor> m_colors;

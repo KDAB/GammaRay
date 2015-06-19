@@ -47,14 +47,14 @@ class SceneInspector : public SceneInspectorInterface
     explicit SceneInspector(ProbeInterface *probe, QObject *parent = 0);
 
   private slots:
-    virtual void initializeGui();
-    virtual void renderScene(const QTransform &transform, const QSize &size);
+    void initializeGui() Q_DECL_OVERRIDE;
+    void renderScene(const QTransform &transform, const QSize &size) Q_DECL_OVERRIDE;
 
     void sceneSelected(const QItemSelection &selection);
     void sceneItemSelected(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
     void objectSelected(QObject *object, const QPoint &pos);
-    void sceneClicked(const QPointF &pos);
+    void sceneClicked(const QPointF &pos) Q_DECL_OVERRIDE;
 
     void clientConnectedChanged(bool clientConnected);
 

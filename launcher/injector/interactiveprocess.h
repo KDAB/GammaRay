@@ -33,7 +33,7 @@ class InteractiveProcess : public QProcess
     InteractiveProcess(QObject *parent = 0);
 
   protected:
-    void setupChildProcess();
+    void setupChildProcess() Q_DECL_OVERRIDE;
 
   private:
     static int stdinClone;

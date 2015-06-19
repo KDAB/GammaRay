@@ -37,8 +37,8 @@ class ClassInfoExtension : public PropertyControllerExtension
     explicit ClassInfoExtension(PropertyController *controller);
     ~ClassInfoExtension();
 
-    bool setQObject(QObject *object);
-    bool setMetaObject(const QMetaObject *metaObject);
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
 
   private:
     ObjectClassInfoModel *m_model;

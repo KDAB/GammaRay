@@ -37,10 +37,10 @@ public:
     explicit ToolPluginModel(const QVector<ToolFactory*> &plugins, QObject *parent = 0);
     ~ToolPluginModel();
 
-    QVariant data(const QModelIndex& index, int role) const;
-    int columnCount(const QModelIndex& parent) const;
-    int rowCount(const QModelIndex& parent) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 private:
     QVector<ToolFactory*> m_tools;

@@ -41,7 +41,7 @@ class SignalMonitor : public SignalMonitorInterface
     ~SignalMonitor();
 
   public slots:
-    void sendClockUpdates(bool enabled) /*Q_DECL_OVERRIDE*/;
+    void sendClockUpdates(bool enabled) Q_DECL_OVERRIDE;
 
   private slots:
     void timeout();

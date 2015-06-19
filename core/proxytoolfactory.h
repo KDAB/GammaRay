@@ -47,11 +47,11 @@ class ProxyToolFactory : public ProxyFactory<ToolFactory>
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 
-    virtual QString name() const;
-    virtual QStringList supportedTypes() const;
-    bool isHidden() const;
+    QString name() const Q_DECL_OVERRIDE;
+    QStringList supportedTypes() const Q_DECL_OVERRIDE;
+    bool isHidden() const Q_DECL_OVERRIDE;
 
-    virtual void init(ProbeInterface *probe);
+    void init(ProbeInterface *probe) Q_DECL_OVERRIDE;
 };
 
 }

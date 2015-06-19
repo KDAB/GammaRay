@@ -72,7 +72,7 @@ class ModelInspectorFactory : public QObject, public StandardToolFactory<QAbstra
     {
     }
 
-    QString name() const;
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

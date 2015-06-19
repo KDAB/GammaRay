@@ -37,7 +37,7 @@ class WidgetPreviewWidget : public QWidget
     void setPixmap(const QPixmap &pixmap);
 
   protected:
-    virtual void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
   private:
     QPixmap m_pixmap;

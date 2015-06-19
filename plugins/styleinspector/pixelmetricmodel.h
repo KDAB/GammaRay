@@ -37,17 +37,17 @@ class PixelMetricModel : public AbstractStyleElementModel
   public:
     explicit PixelMetricModel(QObject *parent = 0);
 
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
   protected:
-    virtual QVariant doData(int row, int column, int role) const;
-    virtual int doColumnCount() const;
-    virtual int doRowCount() const;
+    QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
+    int doColumnCount() const Q_DECL_OVERRIDE;
+    int doRowCount() const Q_DECL_OVERRIDE;
 };
 
 }

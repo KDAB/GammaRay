@@ -43,9 +43,9 @@ class GraphicsView : public QGraphicsView
     void transformChanged();
 
   protected:
-    void keyPressEvent(QKeyEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void drawForeground(QPainter *painter, const QRectF &rect);
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void drawForeground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
 
   private:
     QGraphicsItem *m_currentItem;
