@@ -221,6 +221,18 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant 
 
 bool RemoteModelServer::canSerialize(const QVariant& value) const
 {
+  // recurse into containers
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  if (value.canConvert<QVariantList>()) {
+    QSequentialIterable it = value.value<QSequentialIterable>();
+    foreach (const QVariant &v, it) {
+      if (!canSerialize(v))
+        return false;
+    }
+    return true;
+  }
+#endif
+
   // ugly, but there doesn't seem to be a better way atm to find out without trying
   m_dummyBuffer->seek(0);
   QDataStream stream(m_dummyBuffer);
