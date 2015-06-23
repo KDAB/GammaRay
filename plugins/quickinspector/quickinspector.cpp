@@ -607,7 +607,7 @@ QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &
   QQuickItem *child = Q_NULLPTR;
   foreach (QQuickItem *c, parent->childItems()) {
     const QPointF p = parent->mapToItem(c, pos);
-    if (c != m_source && c->isVisible() && p.x() >= 0 && c->width() >= p.x() && c->y() >= 0 && c->height() >= p.y()) {
+    if (c != m_source && c->isVisible() && p.x() >= 0 && c->width() >= p.x() && p.y() >= 0 && c->height() >= p.y()) {
       child = c;
       break;
     }
