@@ -605,7 +605,10 @@ QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &
 
   // we can't use childAt() as that will find m_source, but that's not what we are looking for
   QQuickItem *child = Q_NULLPTR;
-  foreach (QQuickItem *c, parent->childItems()) {
+  auto children = parent->childItems();
+  std::stable_sort(children.begin(), children.end(), [](QQuickItem *lhs, QQuickItem *rhs) { return lhs->z() < rhs->z(); });
+  std::reverse(children.begin(), children.end());
+  foreach (QQuickItem *c, children) {
     const QPointF p = parent->mapToItem(c, pos);
     if (c != m_source && c->isVisible() && p.x() >= 0 && c->width() >= p.x() && p.y() >= 0 && c->height() >= p.y()) {
       child = c;
