@@ -90,7 +90,7 @@ elseif(MINGW)
 else()
   set(gammaray_srcs ${gammaray_srcs}
     tools/messagehandler/backtrace_win.cpp
-    tools/messagehandler/StackWalker.cpp)
+    ${CMAKE_SOURCE_DIR}/3rdparty/StackWalker/StackWalker.cpp)
 endif()
 
 qt4_wrap_cpp(gammaray_srcs tools/modelinspector/modeltest.h)

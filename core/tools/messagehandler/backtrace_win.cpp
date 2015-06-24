@@ -28,7 +28,7 @@
 */
 
 #include "backtrace.h"
-#include "StackWalker.h"
+#include <StackWalker/StackWalker.h>
 
 class StackWalkerToQStringList : public StackWalker
 {
