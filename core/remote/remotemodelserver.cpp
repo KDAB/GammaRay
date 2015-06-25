@@ -62,15 +62,18 @@ RemoteModelServer::~RemoteModelServer()
 
 void RemoteModelServer::setModel(QAbstractItemModel *model)
 {
-  if (m_model) {
+  if (model == m_model)
+    return;
+
+  if (m_model)
     disconnectModel();
-    if (m_monitored)
-      modelReset();
-  }
 
   m_model = model;
   if (m_model && m_monitored)
     connectModel();
+
+  if (m_monitored)
+    modelReset();
 }
 
 void RemoteModelServer::connectModel()
