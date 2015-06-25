@@ -31,6 +31,7 @@
 #include "modelmodel.h"
 #include "modelcellmodel.h"
 #include "modeltester.h"
+#include "safetyfilterproxymodel.h"
 
 #include "probeinterface.h"
 
@@ -47,6 +48,7 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   m_modelModel(0),
   m_modelContentServer(0),
   m_modelContentSelectionModel(0),
+  m_safetyFilterProxyModel(0),
   m_modelTester(0)
 {
   m_modelModel = new ModelModel(this);
@@ -93,9 +95,17 @@ void ModelInspector::modelSelected(const QItemSelection& selected)
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
     QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
-    m_modelContentServer->setModel(model);
 
-    m_modelContentSelectionModel = new SelectionModelServer("com.kdab.GammaRay.ModelContent.selection", model, this);
+    if (model->inherits("QQmlListModel")) {
+      if (!m_safetyFilterProxyModel)
+        m_safetyFilterProxyModel = new SafetyFilterProxyModel(this);
+      m_safetyFilterProxyModel->setSourceModel(model);
+      m_modelContentServer->setModel(m_safetyFilterProxyModel);
+    } else {
+      m_modelContentServer->setModel(model);
+    }
+
+    m_modelContentSelectionModel = new SelectionModelServer("com.kdab.GammaRay.ModelContent.selection", m_modelContentServer->model(), this);
     ObjectBroker::registerSelectionModel(m_modelContentSelectionModel);
     connect(m_modelContentSelectionModel,
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

@@ -35,6 +35,7 @@
 
 class QItemSelection;
 class QItemSelectionModel;
+class SafetyFilterProxyModel;
 
 namespace GammaRay {
 
@@ -62,6 +63,7 @@ class ModelInspector : public ModelInspectorInterface
 
     RemoteModelServer *m_modelContentServer;
     QItemSelectionModel *m_modelContentSelectionModel;
+    SafetyFilterProxyModel *m_safetyFilterProxyModel;
 
     ModelCellModel *m_cellModel;
 

@@ -51,6 +51,7 @@ set(gammaray_srcs
   tools/metaobjectbrowser/metaobjectbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/modelinspector/modelinspector.cpp
+  tools/modelinspector/safetyfilterproxymodel.cpp
   tools/objectinspector/objectinspector.cpp
   tools/objectinspector/propertiesextension.cpp
   tools/objectinspector/methodsextension.cpp
