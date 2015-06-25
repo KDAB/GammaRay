@@ -124,9 +124,15 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_RO(QPaintDevice, int, widthMM);
 
   MO_ADD_METAOBJECT1(QCoreApplication, QObject);
+  MO_ADD_PROPERTY_ST(QCoreApplication, QString, applicationDirPath);
+  MO_ADD_PROPERTY_ST(QCoreApplication, QString, applicationFilePath);
+  MO_ADD_PROPERTY_ST(QCoreApplication, qint64, applicationPid);
   MO_ADD_PROPERTY_ST(QCoreApplication, QStringList, arguments);
   MO_ADD_PROPERTY_ST(QCoreApplication, bool, closingDown);
   MO_ADD_PROPERTY_ST(QCoreApplication, bool, hasPendingEvents);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_PROPERTY_ST(QCoreApplication, bool, isQuitLockEnabled);
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
   MO_ADD_PROPERTY_ST(QCoreApplication, bool, isSetuidAllowed);
 #endif
