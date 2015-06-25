@@ -50,6 +50,8 @@ class RemoteModelServer : public QObject
     explicit RemoteModelServer(const QString &objectName, QObject *parent = 0);
     ~RemoteModelServer();
 
+    /** Returns the source model. */
+    QAbstractItemModel* model() const;
     /** Set the source model for this model server instance. */
     void setModel(QAbstractItemModel *model);
 

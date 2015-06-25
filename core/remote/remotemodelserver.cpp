@@ -60,6 +60,11 @@ RemoteModelServer::~RemoteModelServer()
 {
 }
 
+QAbstractItemModel* RemoteModelServer::model() const
+{
+  return m_model;
+}
+
 void RemoteModelServer::setModel(QAbstractItemModel *model)
 {
   if (model == m_model)
