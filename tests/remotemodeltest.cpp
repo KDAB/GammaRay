@@ -150,6 +150,8 @@ private slots:
         QCOMPARE(client.hasChildren(), true);
 
         auto index = client.index(1, 0);
+        index.data(); // need an event loop entry for the data retrieval
+        QTest::qWait(1);
         QCOMPARE(index.data().toString(), QString("entry2"));
         QCOMPARE(client.rowCount(index), 0);
 
@@ -191,10 +193,14 @@ private slots:
         QCOMPARE(client.hasChildren(), true);
 
         auto i1 = client.index(1, 0);
+        i1.data(); // need an event loop entry for the data retrieval
+        QTest::qWait(1);
         QCOMPARE(i1.data().toString(), QString("entry1"));
         QCOMPARE(client.rowCount(i1), 2);
 
         auto i12 = client.index(1, 0, i1);
+        i12.data(); // need an event loop entry for the data retrieval
+        QTest::qWait(1);
         QCOMPARE(i12.data().toString(), QString("entry12"));
         QCOMPARE(client.rowCount(i12), 0);
 
