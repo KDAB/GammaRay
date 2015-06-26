@@ -110,7 +110,7 @@ add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetector
 if(GAMMARAY_BUILD_UI)
   add_executable(remotemodeltest
     remotemodeltest.cpp
-    modeltest.cpp
+    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
     ../core/remote/remotemodelserver.cpp
   )
   target_link_libraries(remotemodeltest gammaray_core gammaray_client ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})

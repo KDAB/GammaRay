@@ -19,7 +19,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "modeltest.h"
+#include <3rdparty/qt/modeltest.h>
 
 #include <core/remote/remotemodelserver.h>
 #include <client/remotemodel.h>
