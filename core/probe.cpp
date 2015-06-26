@@ -41,7 +41,7 @@
 #include "toolpluginmodel.h"
 #include "util.h"
 
-#include "tools/modelinspector/modeltest.h"
+#include <3rdparty/qt/modeltest.h>
 
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"

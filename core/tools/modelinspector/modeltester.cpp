@@ -27,7 +27,7 @@
 */
 
 #include "modeltester.h"
-#include "modeltest.h"
+#include <3rdparty/qt/modeltest.h>
 
 #include "util.h"
 
@@ -99,14 +99,17 @@ void ModelTester::failure(QAbstractItemModel *model, const char *file, int line,
 }
 
 // inplace build of modeltest, with some slight modificatins:
-// - change Q_ASSERT to non-fatal reporting
+// - change QVERIFY to non-fatal reporting
 // - suppress qDebug etc, since those trigger qobject creating and thus
 // infinite loops when model-testing the object model
 //krazy:cond=includes
-#include <QtGui> // avoid interference with any include used by modeltest
-#undef Q_ASSERT
-#define Q_ASSERT(x) (!(x) ? static_cast<GammaRay::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __FILE__, __LINE__, #x) : qt_noop())
+#include <QtCore> // avoid interference with any include used by modeltest
+#define QT_QTTEST_MODULE_H
+#undef QVERIFY
+#undef QCOMPARE
+#define QVERIFY(x) (!(x) ? static_cast<GammaRay::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __FILE__, __LINE__, #x) : qt_noop())
+#define QCOMPARE(x, y) ((x != y) ? static_cast<GammaRay::ModelTester*>(static_cast<QObject*>(this)->parent())->failure(this->model, __FILE__, __LINE__, #x) : qt_noop())
 #undef qDebug
 #define qDebug() QNoDebug()
-#include "modeltest.cpp"
+#include <3rdparty/qt/modeltest.cpp>
 //krazy:endcond=includes

@@ -94,7 +94,7 @@ else()
     ${CMAKE_SOURCE_DIR}/3rdparty/StackWalker/StackWalker.cpp)
 endif()
 
-qt4_wrap_cpp(gammaray_srcs tools/modelinspector/modeltest.h)
+qt4_wrap_cpp(gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.h)
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 add_definitions(-DMAKE_GAMMARAY_CORE_LIB)
