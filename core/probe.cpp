@@ -474,8 +474,24 @@ bool Probe::filterObject(QObject *obj) const
     return false;
   }
 
+  QSet<QObject *> visitedObjects;
+  int iteration = 0;
   QObject *o = obj;
   do {
+    if (iteration > 100) {
+      // Probably we have a loop in the tree. Do loop detection.
+      if (visitedObjects.contains(o)) {
+        std::cerr << "We detected a loop in the object tree for object " << o;
+        if (!o->objectName().isEmpty()) {
+          std::cerr << " \"" << qPrintable(o->objectName()) << "\"";
+        }
+        std::cerr << " (" << o->metaObject()->className() << ")." << std::endl;
+        return true;
+      }
+      visitedObjects << o;
+    }
+    ++iteration;
+
     if (o == this || o == window())
       return true;
     o = o->parent();
