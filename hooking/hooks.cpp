@@ -55,21 +55,34 @@
 
 using namespace GammaRay;
 
+// previously installed Qt hooks, for daisy-chaining
+static QHooks::StartupCallback gammaray_next_startup_hook = 0;
+static QHooks::AddQObjectCallback gammaray_next_addObject = 0;
+static QHooks::RemoveQObjectCallback gammaray_next_removeObject = 0;
+
 extern "C" Q_DECL_EXPORT void gammaray_startup_hook()
 {
   Probe::startupHookReceived();
-
   new ProbeCreator(ProbeCreator::CreateOnly);
+
+  if (gammaray_next_startup_hook)
+    gammaray_next_startup_hook();
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_addObject(QObject *obj)
 {
   Probe::objectAdded(obj, true);
+
+  if (gammaray_next_addObject)
+    gammaray_next_addObject(obj);
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_removeObject(QObject *obj)
 {
   Probe::objectRemoved(obj);
+
+  if (gammaray_next_removeObject)
+    gammaray_next_removeObject(obj);
 }
 
 const char* gammaray_flagLocation(const char* method)
@@ -84,8 +97,9 @@ static void installQHooks()
   Q_ASSERT(qtHookData[QHooks::HookDataVersion] >= 1);
   Q_ASSERT(qtHookData[QHooks::HookDataSize] >= 6);
 
-  if (qtHookData[QHooks::AddQObject] || qtHookData[QHooks::RemoveQObject] || qtHookData[QHooks::Startup])
-    qFatal("There is another debugging tool using QHooks already, this is not yet supported!\n");
+  gammaray_next_addObject = reinterpret_cast<QHooks::AddQObjectCallback>(qtHookData[QHooks::AddQObject]);
+  gammaray_next_removeObject = reinterpret_cast<QHooks::RemoveQObjectCallback>(qtHookData[QHooks::RemoveQObject]);
+  gammaray_next_startup_hook = reinterpret_cast<QHooks::StartupCallback>(qtHookData[QHooks::Startup]);
 
   qtHookData[QHooks::AddQObject] = reinterpret_cast<quintptr>(&gammaray_addObject);
   qtHookData[QHooks::RemoveQObject] = reinterpret_cast<quintptr>(&gammaray_removeObject);
