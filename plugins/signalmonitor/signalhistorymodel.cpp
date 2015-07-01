@@ -183,7 +183,8 @@ void SignalHistoryModel::onObjectAdded(QObject* object)
 
   // blacklist event dispatchers
   if (qstrncmp(object->metaObject()->className(), "QPAEventDispatcher", 18) == 0
-    || qstrncmp(object->metaObject()->className(), "QGuiEventDispatcher", 19) == 0)
+    || qstrncmp(object->metaObject()->className(), "QGuiEventDispatcher", 19) == 0
+    || qstrncmp(object->metaObject()->className(), "QEventDispatcher", 16) == 0)
     return;
 
   beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
