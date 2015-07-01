@@ -56,9 +56,9 @@
 using namespace GammaRay;
 
 // previously installed Qt hooks, for daisy-chaining
-static QHooks::StartupCallback gammaray_next_startup_hook = 0;
-static QHooks::AddQObjectCallback gammaray_next_addObject = 0;
-static QHooks::RemoveQObjectCallback gammaray_next_removeObject = 0;
+static void(*gammaray_next_startup_hook)() = 0;
+static void(*gammaray_next_addObject)(QObject*) = 0;
+static void(*gammaray_next_removeObject)(QObject*) = 0;
 
 extern "C" Q_DECL_EXPORT void gammaray_startup_hook()
 {
