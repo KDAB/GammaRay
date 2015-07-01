@@ -46,9 +46,10 @@ StyleInjector::StyleInjector() : ProcessInjector()
 }
 
 bool StyleInjector::launch(const QStringList &programAndArgs,
+                           const QProcessEnvironment &e,
                           const QString &probeDll, const QString &probeFunc)
 {
-  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  QProcessEnvironment env = !e.isEmpty() ? e: QProcessEnvironment::systemEnvironment();
   env.insert("GAMMARAY_STYLEINJECTOR_PROBEDLL", probeDll);
   env.insert("GAMMARAY_STYLEINJECTOR_PROBEFUNC", probeFunc);
 

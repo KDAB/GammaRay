@@ -31,6 +31,8 @@
 
 #include <QSharedDataPointer>
 
+#include "gammaray_common_export.h"
+
 namespace GammaRay {
 
 class ProbeABIPrivate;
@@ -39,7 +41,7 @@ class ProbeABIPrivate;
  *  The probe ABI is everything that determines if a probe is compatible
  *  with a given target or not.
  */
-class ProbeABI
+class GAMMARAY_COMMON_EXPORT ProbeABI
 {
 public:
   ProbeABI();

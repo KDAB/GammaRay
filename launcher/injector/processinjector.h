@@ -25,6 +25,7 @@
 #define GAMMARAY_PROCESSINJECTOR_H
 
 #include "abstractinjector.h"
+#include "interactiveprocess.h"
 
 namespace GammaRay {
 
@@ -38,6 +39,8 @@ class ProcessInjector : public AbstractInjector
     ProcessInjector();
     ~ProcessInjector();
 
+    void stop();
+
     int exitCode();
     QProcess::ExitStatus exitStatus();
     QProcess::ProcessError processError();
@@ -48,9 +51,13 @@ class ProcessInjector : public AbstractInjector
     int mExitCode;
     QString mErrorString;
 
+  private slots:
+    void processFinished();
+
   private:
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
+    InteractiveProcess m_proc;
 };
 }
 

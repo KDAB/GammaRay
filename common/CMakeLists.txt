@@ -12,6 +12,7 @@ set(gammaray_common_srcs
   lz4/lz4.c
   endpoint.cpp
   paths.cpp
+  probeabi.cpp
   propertysyncer.cpp
 )
 
@@ -43,7 +44,6 @@ set(gammaray_common_internal_srcs
   resourcebrowserinterface.cpp
   networkselectionmodel.cpp
   streamoperators.cpp
-  probeabi.cpp
   probeabidetector.cpp
 
   tools/objectinspector/propertiesextensioninterface.cpp

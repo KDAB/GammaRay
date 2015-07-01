@@ -23,6 +23,8 @@
 
 #include "launchoptions.h"
 
+#include <common/probeabi.h>
+
 #include <QVariant>
 #include <QProcess>
 #include <QFileInfo>
@@ -30,21 +32,38 @@
 #include <QStandardPaths>
 #endif
 
-using namespace GammaRay;
+namespace GammaRay {
+
+class LaunchOptionsPrivate {
+public:
+    LaunchOptionsPrivate()
+        : m_pid(-1)
+        , m_uiMode(LaunchOptions::OutOfProcessUi)
+    {}
+
+public:
+    QString m_probePath;
+    QStringList m_launchArguments;
+    QString m_injectorType;
+    ProbeABI m_probeABI;
+    int m_pid;
+    LaunchOptions::UiMode m_uiMode;
+    QHash<QByteArray, QByteArray> m_probeSettings;
+};
 
 LaunchOptions::LaunchOptions() :
-  m_pid(-1),
-  m_uiMode(OutOfProcessUi)
+  p(new LaunchOptionsPrivate)
 {
 }
 
 LaunchOptions::~LaunchOptions()
 {
+    delete p;
 }
 
 bool LaunchOptions::isLaunch() const
 {
-  return !m_launchArguments.isEmpty();
+  return !p->m_launchArguments.isEmpty();
 }
 
 bool LaunchOptions::isAttach() const
@@ -57,75 +76,85 @@ bool LaunchOptions::isValid() const
   return isLaunch() != isAttach();
 }
 
+void LaunchOptions::setProbePath(const QString &path)
+{
+  p->m_probePath = path;
+}
+
+const QString &LaunchOptions::probePath() const
+{
+  return p->m_probePath;
+}
+
 QStringList LaunchOptions::launchArguments() const
 {
-  return m_launchArguments;
+  return p->m_launchArguments;
 }
 
 void LaunchOptions::setLaunchArguments(const QStringList& args)
 {
-  m_launchArguments = args;
-  Q_ASSERT(m_pid <= 0 || m_launchArguments.isEmpty());
+  p->m_launchArguments = args;
+  Q_ASSERT(p->m_pid <= 0 || p->m_launchArguments.isEmpty());
 }
 
 QString LaunchOptions::absoluteExecutablePath() const
 {
-  if (m_launchArguments.isEmpty())
+  if (p->m_launchArguments.isEmpty())
     return QString();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  QString path = m_launchArguments.first();
+  QString path = p->m_launchArguments.first();
   const QFileInfo fi(path);
   if (fi.isFile() && fi.isExecutable())
     return path;
-  path = QStandardPaths::findExecutable(m_launchArguments.first());
+  path = QStandardPaths::findExecutable(p->m_launchArguments.first());
   if (!path.isEmpty())
     return path;
 #endif
 
-  return m_launchArguments.first();
+  return p->m_launchArguments.first();
 }
 
 int LaunchOptions::pid() const
 {
-  return m_pid;
+  return p->m_pid;
 }
 
 void LaunchOptions::setPid(int pid)
 {
-  m_pid = pid;
-  Q_ASSERT(m_pid <= 0 || m_launchArguments.isEmpty());
+  p->m_pid = pid;
+  Q_ASSERT(p->m_pid <= 0 || p->m_launchArguments.isEmpty());
 }
 
 LaunchOptions::UiMode LaunchOptions::uiMode() const
 {
-  return m_uiMode;
+  return p->m_uiMode;
 }
 
 void LaunchOptions::setUiMode(LaunchOptions::UiMode mode)
 {
-  m_uiMode = mode;
+  p->m_uiMode = mode;
   setProbeSetting("InProcessUi", mode == InProcessUi);
 }
 
 QString LaunchOptions::injectorType() const
 {
-  return m_injectorType;
+  return p->m_injectorType;
 }
 
 void LaunchOptions::setInjectorType(const QString& injectorType)
 {
-  m_injectorType = injectorType;
+  p->m_injectorType = injectorType;
 }
 
-ProbeABI LaunchOptions::probeABI() const
+const ProbeABI &LaunchOptions::probeABI() const
 {
-  return m_probeABI;
+  return p->m_probeABI;
 }
 
 void LaunchOptions::setProbeABI(const ProbeABI& abi)
 {
-  m_probeABI = abi;
+  p->m_probeABI = abi;
 }
 
 void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
@@ -145,12 +174,12 @@ void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
       qFatal("unsupported probe settings type");
   }
 
-  m_probeSettings.insert(key.toUtf8(), v);
+  p->m_probeSettings.insert(key.toUtf8(), v);
 }
 
 QHash< QByteArray, QByteArray > LaunchOptions::probeSettings() const
 {
-  return m_probeSettings;
+  return p->m_probeSettings;
 }
 
 bool LaunchOptions::execute(const QString& launcherPath) const
@@ -171,16 +200,16 @@ bool LaunchOptions::execute(const QString& launcherPath) const
       break;
   }
 
-  if (m_probeABI.isValid()) {
+  if (p->m_probeABI.isValid()) {
     args.push_back("--probe");
-    args.push_back(m_probeABI.id());
+    args.push_back(p->m_probeABI.id());
   }
 
-  if (m_probeSettings.contains("ServerAddress")) {
+  if (p->m_probeSettings.contains("ServerAddress")) {
     args.push_back("--listen");
-    args.push_back(m_probeSettings.value("ServerAddress"));
+    args.push_back(p->m_probeSettings.value("ServerAddress"));
   }
-  if (m_probeSettings.value("RemoteAccessEnabled") == "false")
+  if (p->m_probeSettings.value("RemoteAccessEnabled") == "false")
     args.push_back("--no-listen");
 
   if (isAttach()) {
@@ -190,4 +219,18 @@ bool LaunchOptions::execute(const QString& launcherPath) const
     args += launchArguments();
   }
   return QProcess::startDetached(launcherPath, args);
+}
+
+LaunchOptions::LaunchOptions(const LaunchOptions &other)
+    : p(new LaunchOptionsPrivate)
+{
+    *p = *other.p;
+}
+
+LaunchOptions &LaunchOptions::operator=(const LaunchOptions &other)
+{
+    *p = *other.p;
+    return *this;
+}
+
 }

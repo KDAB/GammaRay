@@ -32,8 +32,10 @@ class QStringList;
 
 namespace GammaRay {
 
-class AbstractInjector
+class AbstractInjector : public QObject
 {
+  Q_OBJECT
+
   public:
     typedef QSharedPointer<AbstractInjector> Ptr;
     virtual ~AbstractInjector();
@@ -49,6 +51,7 @@ class AbstractInjector
      * @return True if the launch succeeded, false otherwise.
      */
     virtual bool launch(const QStringList &programAndArgs,
+                        const QProcessEnvironment &env,
                        const QString &probeDll, const QString &probeFunc);
 
     /**
@@ -86,6 +89,12 @@ class AbstractInjector
      * @note Make sure to set errorString() when returning @c false.
      */
     virtual bool selfTest();
+
+    virtual void stop();
+
+signals:
+    void started();
+    void finished();
 };
 
 }

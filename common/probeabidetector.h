@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_PROBEABIDETECTOR_H
 #define GAMMARAY_PROBEABIDETECTOR_H
 
+#include "gammaray_common_export.h"
+
 #include "probeabi.h"
 
 #include <QHash>
@@ -39,7 +41,7 @@ namespace GammaRay {
 /** @brief Detect the probe ABI required for a given target.
  *  A target can be specified as either a process id or a path to an executable to be launched.
  */
-class ProbeABIDetector
+class GAMMARAY_COMMON_EXPORT ProbeABIDetector
 {
 public:
     ProbeABIDetector();

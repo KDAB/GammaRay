@@ -15,6 +15,12 @@
 #  Build only an additional probe configuration for an already existing launcher.
 #  Default=false
 #
+# -DGAMMARAY_INSTALL_QT_LAYOUT=[true|false]
+#  Install GammaRay in Qt folder using Qt layout folders:
+#    - plugins will go in <qt_filder>/plugins/gammaray
+#    - all the other libs, including probe library will go in <qt_filder>/lib
+#    - qmake mkspecs file
+#
 # -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[true|false]
 #  Enable if your compiler uses an unsupported C++ name mangling scheme.
 #  Default=false
@@ -51,6 +57,14 @@ include(GammaRayMacros)
 include(GammaRayMacrosInternal)
 include(FeatureSummary)
 include(ECMGeneratePriFile)
+
+if (ANDROID)
+    set(GAMMARAY_INSTALL_QT_LAYOUT ON)
+endif()
+
+if (GAMMARAY_INSTALL_QT_LAYOUT)
+    add_definitions(-DGAMMARAY_INSTALL_QT_LAYOUT)
+endif()
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
 #  MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
@@ -460,8 +474,7 @@ else()
   endif()
 endif()
 
-if(ANDROID)
-  # Android doesn't support sub-directories in lib/
+if(GAMMARAY_INSTALL_QT_LAYOUT)
   set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
 else()
   set(PROBE_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}")
@@ -488,7 +501,11 @@ set(
 
 # "inverse" install dirs, to find the base location again
 gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
-gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PROBE_PLUGIN_INSTALL_DIR}")
+if (GAMMARAY_INSTALL_QT_LAYOUT)
+    gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${LIB_INSTALL_DIR}")
+else()
+    gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PROBE_PLUGIN_INSTALL_DIR}")
+endif()
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 
 #

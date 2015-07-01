@@ -51,7 +51,7 @@ void setRootPath(const QString& rootPath)
   Q_ASSERT(QDir(rootPath).exists());
   Q_ASSERT(QDir(rootPath).isAbsolute());
 
-  s_rootPath = rootPath;
+  s_rootPath = QFileInfo(rootPath).absoluteFilePath();
 }
 
 void setRelativeRootPath(const char* relativeRootPath)
@@ -60,16 +60,29 @@ void setRelativeRootPath(const char* relativeRootPath)
   setRootPath(QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String(relativeRootPath));
 }
 
+QString pluginsPath(const QString& probeABI)
+{
+#ifndef GAMMARAY_INSTALL_QT_LAYOUT
+  return rootPath() + QDir::separator()
+    + QLatin1String(GAMMARAY_PROBE_INSTALL_DIR) + QDir::separator()
+    + QLatin1String(GAMMARAY_PLUGIN_VERSION) + QDir::separator()
+    + probeABI;
+#else
+  Q_UNUSED(probeABI);
+  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR);
+#endif
+}
+
 QString probePath(const QString& probeABI)
 {
-#ifndef Q_OS_ANDROID
+#ifndef GAMMARAY_INSTALL_QT_LAYOUT
   return rootPath() + QDir::separator()
     + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR) + QDir::separator()
     + QLatin1String(GAMMARAY_PLUGIN_VERSION) + QDir::separator()
     + probeABI;
 #else
   Q_UNUSED(probeABI);
-  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR);
+  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PROBE_INSTALL_DIR);
 #endif
 }
 
@@ -86,6 +99,11 @@ QString libexecPath()
 QString currentProbePath()
 {
   return probePath(GAMMARAY_PROBE_ABI);
+}
+
+QString currentPluginsPath()
+{
+    return pluginsPath(GAMMARAY_PROBE_ABI);
 }
 
 QString libraryExtension()

@@ -30,13 +30,16 @@ using namespace GammaRay;
 
 AbstractInjector::~AbstractInjector()
 {
+    stop();
 }
 
 bool AbstractInjector::launch(const QStringList &programAndArgs,
-                             const QString &probeDll,
-                             const QString &probeFunc)
+                              const QProcessEnvironment &env,
+                              const QString &probeDll,
+                              const QString &probeFunc)
 {
   Q_UNUSED(programAndArgs);
+  Q_UNUSED(env);
   Q_UNUSED(probeDll);
   Q_UNUSED(probeFunc);
   qWarning() << "Injection on launch not supported by this injector.";
@@ -54,5 +57,10 @@ bool AbstractInjector::attach(int pid, const QString &probeDll, const QString &p
 
 bool AbstractInjector::selfTest()
 {
-  return true;
+    return true;
+}
+
+void AbstractInjector::stop()
+{
+
 }

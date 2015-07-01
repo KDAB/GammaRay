@@ -38,7 +38,7 @@ class StyleInjector : public GammaRay::ProcessInjector
       return QString("style");
     }
 
-    virtual bool launch(const QStringList &programAndArgs,
+    virtual bool launch(const QStringList &programAndArgs, const QProcessEnvironment &env,
                         const QString &probeDll, const QString &probeFunc);
 
     virtual bool selfTest();

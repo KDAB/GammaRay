@@ -26,6 +26,8 @@
 
 #include <QString>
 
+#include "gammaray_launcher_export.h"
+
 namespace GammaRay {
 
 /** Utility function to find the various executables related to the launcher. */
@@ -37,7 +39,7 @@ namespace LauncherFinder
     Client
   };
 
-  QString findLauncher(Type type);
+  GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type);
 }
 
 }

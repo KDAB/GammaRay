@@ -40,12 +40,13 @@ PreloadInjector::PreloadInjector() : ProcessInjector()
 }
 
 bool PreloadInjector::launch(const QStringList &programAndArgs,
-                            const QString &probeDll,
-                            const QString &probeFunc)
+                             const QProcessEnvironment &e,
+                             const QString &probeDll,
+                             const QString &probeFunc)
 {
   Q_UNUSED(probeFunc);
 
-  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  QProcessEnvironment env = !e.isEmpty()? e : QProcessEnvironment::systemEnvironment();
 #ifdef Q_OS_MAC
   env.insert("DYLD_FORCE_FLAT_NAMESPACE", QLatin1String("1"));
   env.insert("DYLD_INSERT_LIBRARIES", probeDll);

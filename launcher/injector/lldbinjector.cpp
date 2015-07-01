@@ -72,8 +72,9 @@ void LldbInjector::addMethodBreakpoint(const QByteArray& method)
   execCmd("breakpoint set -M " + method);
 }
 
-bool LldbInjector::launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc)
+bool LldbInjector::launch(const QStringList& programAndArgs, const QProcessEnvironment &env, const QString& probeDll, const QString& probeFunc)
 {
+  Q_UNUSED(env);
   QStringList args;
   args.push_back(QLatin1String("--"));
   args.append(programAndArgs);

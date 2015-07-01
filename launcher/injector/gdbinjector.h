@@ -36,7 +36,7 @@ class GdbInjector : public DebuggerInjector
     QString name() const {
       return QString("gdb");
     }
-    virtual bool launch(const QStringList &programAndArgs,
+    virtual bool launch(const QStringList &programAndArgs, const QProcessEnvironment &env,
                        const QString &probeDll, const QString &probeFunc);
     virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
 

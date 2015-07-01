@@ -35,7 +35,7 @@ class LldbInjector : public DebuggerInjector
     ~LldbInjector();
 
     QString name() const;
-    bool launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc);
+    bool launch(const QStringList& programAndArgs, const QProcessEnvironment &env, const QString& probeDll, const QString& probeFunc);
     bool attach(int pid, const QString& probeDll, const QString& probeFunc);
 
   protected:

@@ -26,16 +26,17 @@
 
 #include <QObject>
 #include <QTimer>
-
-#include "launchoptions.h"
-#include "clientlauncher.h"
+#include "gammaray_launcher_export.h"
 
 class QSharedMemory;
+class QProcessEnvironment;
 
 namespace GammaRay {
 
+class LaunchOptions;
+struct LauncherPrivate;
 /** The actual launcher logic of gammaray.exe. */
-class Launcher : public QObject
+class GAMMARAY_LAUNCHER_EXPORT Launcher : public QObject
 {
   Q_OBJECT
 public:
@@ -44,15 +45,18 @@ public:
 
   /** This is used to identify the communication channels used by the launcher and the target process. */
   qint64 instanceIdentifier() const;
+  bool start();
+  void stop();
+  void setProcessEnvironment(const QProcessEnvironment &env);
 
 signals:
+  void started();
   void finished();
 
 protected:
   virtual void startClient(const QUrl &serverAddress);
 
 private slots:
-  void delayedInit();
   void semaphoreReleased();
   void injectorError(int exitCode, const QString &errorMessage);
   void injectorFinished();
@@ -66,20 +70,8 @@ private:
   void checkDone();
 
 private:
-  LaunchOptions m_options;
-#ifndef QT_NO_SHAREDMEMORY
-  QSharedMemory *m_shm;
-#endif
-  ClientLauncher m_client;
-  QTimer m_safetyTimer;
-  enum State {
-    Initial = 0,
-    InjectorFinished = 1,
-    InjectorFailed = 2,
-    ClientStarted = 4,
-    Complete = InjectorFinished | ClientStarted
-  };
-  int m_state;
+  Q_DISABLE_COPY(Launcher)
+  LauncherPrivate *p;
 };
 }
 

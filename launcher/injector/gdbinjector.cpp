@@ -44,8 +44,10 @@ QString GdbInjector::debuggerExecutable() const
 }
 
 bool GdbInjector::launch(const QStringList &programAndArgs,
+                         const QProcessEnvironment &env,
                         const QString &probeDll, const QString &probeFunc)
 {
+  Q_UNUSED(env);
   QStringList gdbArgs;
   gdbArgs.push_back(QLatin1String("--args"));
   gdbArgs.append(programAndArgs);

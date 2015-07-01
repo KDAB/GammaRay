@@ -53,7 +53,7 @@ PluginManagerBase::~PluginManagerBase()
 QStringList PluginManagerBase::pluginPaths() const
 {
   QStringList pluginPaths;
-  pluginPaths.push_back(Paths::currentProbePath());
+  pluginPaths.push_back(Paths::currentPluginsPath());
   return pluginPaths;
 }
 

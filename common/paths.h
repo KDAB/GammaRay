@@ -58,6 +58,11 @@ namespace Paths
   /** Returns the probe and plugin base path for the given probe ABI.
    * If @p probeABI is empty, the path containing the probes is returned.
    */
+  GAMMARAY_COMMON_EXPORT QString pluginsPath(const QString& probeABI);
+
+  /** Returns the probe and plugin base path for the given probe ABI.
+   * If @p probeABI is empty, the path containing the probes is returned.
+   */
   GAMMARAY_COMMON_EXPORT QString probePath(const QString& probeABI);
 
   /** Returns the path containing the GammaRay injector executable. */
@@ -68,6 +73,9 @@ namespace Paths
 
   /** Returns the path to the current probe location, probePath(GAMMARAY_PROBE_ABI). */
   GAMMARAY_COMMON_EXPORT QString currentProbePath();
+
+  /** Returns the path to the current plugins location, pluginsPath(GAMMARAY_PROBE_ABI). */
+  GAMMARAY_COMMON_EXPORT QString currentPluginsPath();
 
   /** Returns the file extension used on the current platform for libraries. */
   GAMMARAY_COMMON_EXPORT QString libraryExtension();

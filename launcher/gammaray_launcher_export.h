@@ -1,11 +1,11 @@
 /*
-  preloadinjector.h
+  gammaray_core_export.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2012-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Kevin Funk <kevin.funk@kdab.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,29 +21,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PRELOADINJECTOR_H
-#define GAMMARAY_PRELOADINJECTOR_H
+#ifndef GAMMARAY_LAUNCHER_EXPORT_H
+#define GAMMARAY_LAUNCHER_EXPORT_H
 
-#include "processinjector.h"
-#include <qglobal.h>
+#include <QtCore/qglobal.h>
 
-#ifndef Q_OS_WIN
-
-namespace GammaRay {
-
-class PreloadInjector : public ProcessInjector
-{
-  public:
-    PreloadInjector();
-    QString name() const {
-      return QString("preload");
-    }
-    virtual bool launch(const QStringList &programAndArgs, const QProcessEnvironment &env,
-                       const QString &probeDll, const QString &probeFunc);
-};
-
-}
-
+#ifdef GAMMARAY_LAUNCHER_STATICLIB
+#  undef GAMMARAY_LAUNCHER_SHAREDLIB
+#  define GAMMARAY_LAUNCHER_EXPORT
+#else
+#  ifdef MAKE_GAMMARAY_LAUNCHER_LIB
+#    define GAMMARAY_LAUNCHER_EXPORT Q_DECL_EXPORT
+#  else
+#    define GAMMARAY_LAUNCHER_EXPORT Q_DECL_IMPORT
+#  endif
 #endif
 
-#endif // GAMMARAY_PRELOADINJECTOR_H
+#endif /* GAMMARAY_LAUNCHER_EXPORT_H */

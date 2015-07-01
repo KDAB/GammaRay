@@ -33,6 +33,8 @@
 #include "common/probeabi.h"
 #include "common/probeabidetector.h"
 
+#include "clientlauncher.h"
+
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>
 #else
@@ -259,5 +261,6 @@ int main(int argc, char **argv)
 
   Launcher launcher(options);
   QObject::connect(&launcher, SIGNAL(finished()), &app, SLOT(quit()));
+  launcher.start();
   return app.exec();
 }

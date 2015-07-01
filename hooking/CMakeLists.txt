@@ -41,14 +41,14 @@ if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
   target_link_libraries(gammaray_probe dl)
 endif()
 
-if(NOT ANDROID)
+if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
   set_target_properties(gammaray_probe PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}"
   )
   set_target_properties(gammaray_probe PROPERTIES PREFIX "")
 endif()
 
-if(ANDROID)
+if(GAMMARAY_INSTALL_QT_LAYOUT)
   install(TARGETS gammaray_probe EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
   ecm_generate_pri_file(BASE_NAME GammaRayProbe
                       LIB_NAME gammaray_probe

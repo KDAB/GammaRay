@@ -24,17 +24,19 @@
 #ifndef GAMMARAY_LAUNCHOPTIONS_H
 #define GAMMARAY_LAUNCHOPTIONS_H
 
-#include <common/probeabi.h>
-
 #include <QHash>
 #include <QStringList>
+
+#include "gammaray_launcher_export.h"
 
 class QVariant;
 
 namespace GammaRay {
 
+class LaunchOptionsPrivate;
+class ProbeABI;
 /** Describes the injection and probe options used for launching/attacing to a host process. */
-class LaunchOptions
+class GAMMARAY_LAUNCHER_EXPORT LaunchOptions
 {
 public:
   LaunchOptions();
@@ -54,6 +56,9 @@ public:
 
   /** Returns @c true if no valid launch arguments or process id are set. */
   bool isValid() const;
+
+  void setProbePath(const QString &path);
+  const QString &probePath() const;
 
   /** Generic key/value settings send to the probe. */
   void setProbeSetting(const QString &key, const QVariant &value);
@@ -80,19 +85,16 @@ public:
   void setInjectorType(const QString &injectorType);
 
   /** Probe ABI. */
-  ProbeABI probeABI() const;
+  const ProbeABI& probeABI() const;
   void setProbeABI(const ProbeABI &abi);
 
   /** execute this launch options with the given command-line launcher. */
   bool execute(const QString& launcherPath) const;
 
+  LaunchOptions(const LaunchOptions &other);
+  LaunchOptions &operator=(const LaunchOptions &);
 private:
-  QStringList m_launchArguments;
-  QString m_injectorType;
-  ProbeABI m_probeABI;
-  int m_pid;
-  UiMode m_uiMode;
-  QHash<QByteArray, QByteArray> m_probeSettings;
+  LaunchOptionsPrivate *p;
 };
 }
 
