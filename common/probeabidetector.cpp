@@ -32,6 +32,9 @@
 
 #include <QFileInfo>
 #include <QProcess>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QStandardPaths>
+#endif
 
 using namespace GammaRay;
 
@@ -60,10 +63,20 @@ ProbeABI ProbeABIDetector::abiForQtCore(const QString& path) const
 
 QString ProbeABIDetector::qtCoreFromLsof(qint64 pid) const
 {
+  QString lsofExe;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  lsofExe = QStandardPaths::findExecutable("lsof");
+  // on OSX it's in sbin, which usually but not always is in PATH...
+  if (lsofExe.isEmpty())
+    lsofExe = QStandardPaths::findExecutable("lsof", QStringList() << "/usr/sbin" << "/sbin");
+#endif
+  if (lsofExe.isEmpty())
+    lsofExe = "lsof"; // maybe QProcess has more luck
+
   QProcess proc;
   proc.setProcessChannelMode(QProcess::SeparateChannels);
   proc.setReadChannel(QProcess::StandardOutput);
-  proc.start("lsof", QStringList() << "-Fn" << "-n" << "-p" << QString::number(pid));
+  proc.start(lsofExe, QStringList() << "-Fn" << "-n" << "-p" << QString::number(pid));
   proc.waitForFinished();
 
   forever {
