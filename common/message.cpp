@@ -28,9 +28,10 @@
 
 #include "message.h"
 
+#include "lz4/lz4.h" //3rdparty
+
 #include <QDebug>
 #include <qendian.h>
-#include "lz4/lz4.h"
 
 inline QByteArray compress(const QByteArray &src)
 {
@@ -59,7 +60,9 @@ inline QByteArray uncompress(const QByteArray &src)
 }
 
 static const QDataStream::Version StreamVersion = QDataStream::Qt_4_7;
+#ifdef ENABLE_MESSAGE_COMPRESSSION
 static const int minimumUncompressedSize = 32;
+#endif
 
 #if QT_VERSION < 0x040800
 // This template-specialization is missing in qendian.h, required for qFromBigEndian
