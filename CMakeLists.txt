@@ -151,8 +151,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   check_cxx_compiler_flag(-std=gnu++0x HAVE_GXX_GNUXX11)
   check_cxx_compiler_flag(-std=c++0x HAVE_GXX_CXX11)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wextra -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wno-div-by-zero -Wundef -Wpointer-arith -Wmissing-noreturn -Werror=return-type")
-  if(APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++") # required in C++11 mode
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    check_cxx_compiler_flag(-stdlib=libc++ HAVE_GXX_LIBCXX)
+    if(HAVE_GXX_LIBCXX)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++") # required in C++11 mode
+    endif()
   endif()
   if(HAVE_GXX_GNUXX11) # QNX needs gnu++0x rather than c++0x for compiling QML V4 private headers
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
@@ -528,7 +531,7 @@ add_subdirectory(docs) # needs to go last, so see all installed headers for the 
 
 set(LICENSE_FILE "LICENSE.GPL.txt")
 set(README_FILE "ReadMe.txt")
-list(APPEND DOCS  ${LICENSE_FILE} ${README_FILE} "LICENSE.txt" "LICENSE.US.txt" "ReadMe-commercial.txt")
+list(APPEND DOCS ${LICENSE_FILE} ${README_FILE} "LICENSE.txt" "LICENSE.US.txt" "ReadMe-commercial.txt")
 if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   if(UNIX AND GAMMARAY_BUILD_UI)
     install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
