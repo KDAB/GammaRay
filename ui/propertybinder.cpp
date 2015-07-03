@@ -63,7 +63,10 @@ PropertyBinder::PropertyBinder(QObject* source, const char* sourceProp, QObject*
 
     // initial sync
     const auto value = m_sourceProperty.read(source);
-    const auto result = m_destinationProperty.write(destination, value);
+#if !defined(NDEBUG)
+    const auto result =
+#endif
+    m_destinationProperty.write(destination, m_sourceProperty.read(source));
     Q_ASSERT(result);
 
     // notification for reverse direction changes
@@ -88,9 +91,11 @@ void PropertyBinder::sourceChanged()
     if (!m_destination || m_lock)
         return;
 
-    const auto value = m_sourceProperty.read(m_source);
     m_lock = true;
-    const auto result = m_destinationProperty.write(m_destination, value);
+#if !defined(NDEBUG)
+    const auto result =
+#endif
+    m_destinationProperty.write(m_destination, m_sourceProperty.read(m_source));
     Q_ASSERT(result);
     m_lock = false;
 }
@@ -100,9 +105,11 @@ void PropertyBinder::destinationChanged()
     if (m_lock)
       return;
 
-    const auto value = m_destinationProperty.read(m_destination);
     m_lock = true;
-    const auto result = m_sourceProperty.write(m_source, value);
+#if !defined(NDEBUG)
+    const auto result =
+#endif
+    m_sourceProperty.write(m_source, m_destinationProperty.read(m_destination));
     Q_ASSERT(result);
     m_lock = false;
 }
