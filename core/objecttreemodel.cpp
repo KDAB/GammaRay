@@ -165,7 +165,7 @@ void ObjectTreeModel::objectReparented(QObject *obj)
 
   QObject *oldParent = m_childParentMap.value(obj);
   const auto sourceParent = indexForObject(oldParent);
-  if (oldParent && !sourceParent.isValid() || oldParent == parentObject(obj))
+  if ((oldParent && !sourceParent.isValid()) || (oldParent == parentObject(obj)))
     return;
 
   QVector<QObject*> &oldSiblings = m_parentChildMap[oldParent];
@@ -255,4 +255,3 @@ QModelIndex ObjectTreeModel::indexForObject(QObject *object) const
   const int row = std::distance(siblings.constBegin(), it);
   return index(row, 0, parentIndex);
 }
-
