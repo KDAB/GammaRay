@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_STYLEINSPECTOR_ABSTRACTSTYLEELEMENTMODEL_H
 #define GAMMARAY_STYLEINSPECTOR_ABSTRACTSTYLEELEMENTMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractTableModel>
 #include <QPointer>
 
 class QStyle;
