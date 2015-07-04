@@ -242,7 +242,6 @@ bool RemoteModelServer::canSerialize(const QVariant& value) const
       if (!canSerialize(v))
         return false;
     }
-    return true;
   }
 #endif
 
