@@ -28,19 +28,28 @@
 #include "actionmodel.h"
 
 #include <common/objectmodel.h>
-#include <core/probeinterface.h>
 #include <common/objectbroker.h>
+#include <core/probeinterface.h>
+#include <core/metaobject.h>
+#include <core/metaobjectrepository.h>
 
 #include <QtPlugin>
+#include <QMenu>
 
 #include <iostream>
 
 using namespace GammaRay;
 using namespace std;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QActionGroup*)
+Q_DECLARE_METATYPE(QMenu*)
+#endif
+
 ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
+  registerMetaTypes();
   ObjectBroker::registerObject("com.kdab.GammaRay.ActionInspector", this);
 
   ActionModel *actionModel = new ActionModel(this);
@@ -67,6 +76,17 @@ void ActionInspector::triggerAction(int row)
   if (action) {
     action->trigger();
   }
+}
+
+void ActionInspector::registerMetaTypes()
+{
+  MetaObject *mo = 0;
+  MO_ADD_METAOBJECT1(QAction, QObject);
+  MO_ADD_PROPERTY_RO(QAction, QActionGroup*, actionGroup);
+  MO_ADD_PROPERTY_CR(QAction, QVariant, data, setData);
+  MO_ADD_PROPERTY   (QAction, bool, isSeparator, setSeparator);
+  MO_ADD_PROPERTY_RO(QAction, QMenu*, menu);
+  MO_ADD_PROPERTY_RO(QAction, QWidget*, parentWidget);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

@@ -43,6 +43,9 @@ class ActionInspector : public QObject
 
   public Q_SLOTS:
     void triggerAction(int row);
+
+  private:
+    void registerMetaTypes();
 };
 
 class ActionInspectorFactory : public QObject, public StandardToolFactory<QAction, ActionInspector>
