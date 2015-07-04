@@ -81,7 +81,6 @@ QString ModelInspectorFactory::name() const
 
 void ModelInspector::modelSelected(const QItemSelection& selected)
 {
-  qDebug() << selected;
   if (m_modelContentSelectionModel && m_modelContentSelectionModel->model())
     ObjectBroker::unregisterSelectionModel(m_modelContentSelectionModel);
   delete m_modelContentSelectionModel;
@@ -90,7 +89,6 @@ void ModelInspector::modelSelected(const QItemSelection& selected)
   QModelIndex index;
   if (selected.size() >= 1)
     index = selected.first().topLeft();
-  qDebug() << index << index.isValid();
 
   if (index.isValid()) {
     QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
