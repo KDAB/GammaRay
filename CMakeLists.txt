@@ -370,19 +370,6 @@ endif()
 
 check_include_files(stdint.h HAVE_STDINT_H)
 
-set(GRAPHVIZ_MIN_VERSION "2.20")
-find_package(Graphviz)
-set_package_properties(Graphviz PROPERTIES
-  TYPE RECOMMENDED
-  DESCRIPTION "Graph visualization software"
-  URL "http://www.graphviz.org/"
-  PURPOSE "Needed for the state machine visualizer plugin."
-)
-set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
-if(GRAPHVIZ_FOUND)
-  add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
-endif()
-
 #VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
 find_path(VTK_DIR VTKConfig.cmake
   /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
