@@ -1,5 +1,6 @@
 add_subdirectory(injector)
 
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
@@ -57,4 +58,5 @@ install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 # UI launcher
 if(HAVE_QT_CONCURRENT AND GAMMARAY_BUILD_UI)
   add_subdirectory(ui)
+endif()
 endif()
