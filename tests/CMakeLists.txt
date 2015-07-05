@@ -107,7 +107,7 @@ add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetector
 
 ### Remote model tests
 
-if(GAMMARAY_BUILD_UI)
+if(GAMMARAY_BUILD_UI AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   add_executable(remotemodeltest
     remotemodeltest.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
