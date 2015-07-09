@@ -38,7 +38,9 @@
 
 // Enable Win API of XP SP1 and later
 #ifdef Q_OS_WIN
-#    define _WIN32_WINNT 0x0502
+#    if !defined(_WIN32_WINNT)
+#        define _WIN32_WINNT 0x0502
+#    endif
 #    include <windows.h>
 #    if !defined(PROCESS_SUSPEND_RESUME) // Check flag for MinGW
 #        define PROCESS_SUSPEND_RESUME (0x0800)
