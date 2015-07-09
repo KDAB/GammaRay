@@ -44,6 +44,7 @@ using namespace GammaRay;
 
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
+  Q_UNUSED(path);
   return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
 }
 
