@@ -67,7 +67,7 @@ AbstractInjector::Ptr createInjector(const QString &name)
   return AbstractInjector::Ptr(0);
 }
 
-#if defined(Q_OS_MAC) || !defined(Q_OS_WIN)
+#if !defined(Q_OS_WIN)
 static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types)
 {
   foreach (const QString &type, types) {
