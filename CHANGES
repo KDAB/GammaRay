@@ -1,9 +1,28 @@
 Release Highlights
 ==================
 
-Version 2.3.0: (not released yet)
+Version 2.3.0:
 --------------
-TBD
+ * Add QtBluetooth support.
+ * Support local sockets next to TCP for connecting to the probe.
+ * Change probe plugin loading to be compatible with Android .apk restrictions.
+ * Don't generate backtraces for GammaRay-caused qWarnings.
+ * Also show properties defined in a meta object in the meta object browser.
+ * Add non-QObject meta object found via QMetaType to the meta object browser (finds Q_GADGETs with Qt 5.5).
+ * Performance improvements in object tracking, remote model, property view, signal spy and several other places.
+ * Ongoing refactoring work to enable embedding the GammaRay client and launcher components into other host applications.
+ * Add copy backtrace feature in the message browser.
+ * Improved UI-less build option for embedded targets.
+ * Fix various crashes, including when interacting with QOpenGLContext, QDBusAdapter, QML ListModels or Qt containers containing types that cannot be serialized.
+ * Make paint analyzing also work with Qt 5.5 despite the necessary functionality being removed in Qt.
+ * Add support for static properties in the property view.
+ * Qt 5.5 compatibility.
+ * Initial support for QNX 6.6.
+ * Improved QtQuick2 in-app item picking.
+ * Fixed/improved tracking of object reparenting in the object tree model.
+ * Fix widget layout overlay widget leaking into object/widget tree.
+ * Optional compression support for the client/server communication, speeds up debugging over slow USB connections.
+ * Fix initial selection in the model browser having no effect.
 
 Version 2.2.1:
 -------------
