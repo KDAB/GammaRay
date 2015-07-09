@@ -69,6 +69,7 @@
 
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
+#include <private/qsgbatchrenderer_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -518,6 +519,22 @@ void QuickInspector::setCustomRenderMode(
                               customRenderMode == VisualizeChanges  ? "changes"  :
                               "";
   m_window->update();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+  if (customRenderMode == VisualizeBatches) {
+    // Work around a performance optimization done in Qt 5.5, that breaks batch
+    // visualization completely. Because it breaks batch visualization,
+    // QSGBatchRenderer will only apply it if no batch visualization is applied.
+    // This workaround forces the batch renderer to reevaluate that, so that it
+    // recognizes it now is applied.
+    QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
+    QSGNode *rootNode = contentPriv->itemNode();
+    while(rootNode->type() != QSGNode::RootNodeType)
+        rootNode = rootNode->parent();
+    winPriv->renderer->nodeChanged(rootNode, QSGNode::DirtyNodeRemoved);
+    winPriv->renderer->nodeChanged(rootNode, QSGNode::DirtyNodeAdded);
+  }
+#endif
+
 #else
   Q_UNUSED(customRenderMode);
 #endif
