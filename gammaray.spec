@@ -10,51 +10,20 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
-%define rel 2.3
-%define sover 2.3.0
-%define qtver qt4.8
-%define this_arch %(uname -p)
-%if %{this_arch} == "athlon"
-%define this_arch i686
-%endif
-%define abi %{qtver}-%{this_arch}
+BuildRequires: cmake
+BuildRequires: libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel
+# TODO: this seems only to be in the update repo?
+# libqt5-qtconnectivity-devel
+BuildRequires: kdstatemachineeditor-devel
+BuildRequires: kcoreaddons-devel
 
 %if %{defined suse_version}
-BuildRequires:  libqt4-devel libQtWebKit-devel cmake graphviz-devel update-desktop-files libkde4-devel
-%if 0%{?suse_version} >= 1220
-BuildRequires:  vtk-devel libxml2-devel
-%endif
-# missing dependency for VTK in openSUSE Factory
-%if 0%{?suse_version} > 1230
-BuildRequires:  python-devel
-%endif
-%if 0%{?suse_version} > 1310
-# dependency ambiguity for vtk-java needed by vtk-devel in openSUSE > 13.1
-#!BuildIgnore:  java-1_7_0-openjdk-bootstrap-headless
-#!BuildIgnore:  java-1_7_0-openjdk-headless
-%endif
-Requires:       graphviz
+BuildRequires: update-desktop-files
 %endif
 
 %if %{defined fedora}
-BuildRequires:  gcc-c++ qt-devel qtwebkit-devel cmake desktop-file-utils graphviz-devel kdelibs-devel
-%if 0%{?fedora} >= 17
-BuildRequires:  vtk-devel
+BuildRequires: desktop-file-utils
 %endif
-# dependency ambiguity for vtk-java needed by vtk-devel in Fedora >= 19
-%if 0%{?fedora} >= 19
-BuildRequires:  java-1.8.0-openjdk
-%endif
-# for pod2man
-%if 0%{?fedora} >= 19
-BuildRequires: perl-podlators
-%endif
-%if 0%{?fedora} >= 20
-BuildRequires: hdf5-devel libxml2-devel netcdf
-%endif
-Requires:       graphviz
-%endif
-
 
 %description
 GammaRay is a tool for examining the internals of a Qt application
@@ -69,24 +38,14 @@ Authors:
 --------
      The GammaRay Team <gammaray-interest@kdab.com>
 
-%package kde4-plugins
-Summary:        GammaRay plug-ins to introspect KDE4 applications
+%package kf5-plugins
+Summary:        GammaRay plug-ins to introspect KF5 applications
 Group:          Development/Tools
 Requires:       %{name} = %{version}
 
-%description kde4-plugins
-Plug-ins for the GammaRay introspection tool to debug KDE4 applications,
+%description kf5-plugins
+Plug-ins for the GammaRay introspection tool to debug KF5 applications,
 such as a KJob tracker.
-
-%if 0%{?suse_version} >= 1220 || 0%{?fedora} >= 17
-%package vtk-plugins
-Summary:        GammaRay visualization plug-ins using VTK
-Group:          Development/Tools
-Requires:       %{name} = %{version}
-
-%description vtk-plugins
-Visualization plug-ins for the GammaRay introspection tool that depend on VTK.
-%endif
 
 %package devel
 Summary:        Development files for %{name}
@@ -102,12 +61,12 @@ developing GammaRay plug-ins.
 
 %build
 %if %{defined fedora}
-%cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+%cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
 %else
 %if "%{_lib}"=="lib64"
-cmake . -DLIB_SUFFIX=64 -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+cmake . -DLIB_SUFFIX=64 -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
 %else
-cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
 %endif
 %endif
 %__make %{?_smp_mflags}
@@ -137,85 +96,52 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 %dir %{_libdir}/gammaray/libexec/
 %{_libdir}/gammaray/libexec/gammaray-client
 %{_libdir}/gammaray/libexec/gammaray-launcher
-%{_libdir}/libgammaray_common-%{abi}.so.%{sover}
-%{_libdir}/libgammaray_core-%{abi}.so.%{sover}
-%{_libdir}/libgammaray_ui-%{abi}.so.%{sover}
+%{_libdir}/libgammaray_common-*.so.*
+%{_libdir}/libgammaray_core-*.so.*
+%{_libdir}/libgammaray_ui-*.so.*
+%{_libdir}/libgammaray_client.so.*
 %dir %{_libdir}/gammaray/
-%dir %{_libdir}/gammaray/%{rel}/
-%dir %{_libdir}/gammaray/%{rel}/%{abi}/
-%{_libdir}/gammaray/%{rel}/%{abi}/libgammaray_widget_export_actions.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_probe.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_inprocessui.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_codecbrowser_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_codecbrowser.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_codecbrowser_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_codecbrowser_ui.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_fontbrowser_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_fontbrowser.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_fontbrowser_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_fontbrowser_ui.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_selectionmodelinspector_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_selectionmodelinspector.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_selectionmodelinspector_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_selectionmodelinspector_ui.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor_ui.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_signalmonitor_ui.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_statemachineviewer_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_statemachineviewer.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_statemachineviewer_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_statemachineviewer_ui.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_timertop_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_timertop.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_timertop_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_timertop_ui.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_actioninspector_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_actioninspector.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_widgetinspector_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_widgetinspector.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_sceneinspector_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_sceneinspector.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_styleinspector_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_styleinspector.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_scriptenginedebugger_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_scriptenginedebugger.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_webinspector_ui.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/styles/
+%dir %{_libdir}/gammaray/*/
+%dir %{_libdir}/gammaray/*/*/
+%{_libdir}/gammaray/*/*/libgammaray_widget_export_actions.so
+%{_libdir}/gammaray/*/*/gammaray_probe.so
+%{_libdir}/gammaray/*/*/gammaray_inprocessui.so
+%{_libdir}/gammaray/*/*/gammaray_actioninspector*
+%{_libdir}/gammaray/*/*/gammaray_codecbrowser*
+%{_libdir}/gammaray/*/*/gammaray_fontbrowser*
+%{_libdir}/gammaray/*/*/gammaray_selectionmodelinspector*
+%{_libdir}/gammaray/*/*/gammaray_signalmonitor*
+%{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
+%{_libdir}/gammaray/*/*/gammaray_timertop*
+%{_libdir}/gammaray/*/*/gammaray_widgetinspector*
+%{_libdir}/gammaray/*/*/gammaray_sceneinspector*
+%{_libdir}/gammaray/*/*/gammaray_styleinspector*
+%{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
+%{_libdir}/gammaray/*/*/gammaray_webinspector*
+%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
+%{_libdir}/gammaray/*/*/gammaray_qmlsupport*
+%{_libdir}/gammaray/*/*/gammaray_quickinspector*
+%{_libdir}/gammaray/*/*/gammaray_translatorinspector*
+%{_libdir}/gammaray/*/*/styles/
 
-%files kde4-plugins
+%files kf5-plugins
 %defattr(-,root,root)
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_kjobtracker_ui.desktop
+%{_libdir}/gammaray/*/*/gammaray_kjobtracker*
 
-
-%if 0%{?suse_version} >= 1220 || 0%{?fedora} >= 17
-%files vtk-plugins
-%defattr(-,root,root)
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_objectvisualizer_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_objectvisualizer.desktop
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_objectvisualizer_ui_plugin.so
-%{_libdir}/gammaray/%{rel}/%{abi}/gammaray_objectvisualizer_ui.desktop
-%endif
 
 %files devel
 %defattr(-,root,root)
 %{_includedir}/gammaray
-%{_libdir}/libgammaray_common-%{abi}.so
-%{_libdir}/libgammaray_core-%{abi}.so
-%{_libdir}/libgammaray_ui-%{abi}.so
+%{_libdir}/libgammaray_common-*.so
+%{_libdir}/libgammaray_core-*.so
+%{_libdir}/libgammaray_ui-*.so
+%{_libdir}/libgammaray_client.so
 %{_libdir}/cmake/GammaRay/
+%{_libdir}/qt5/mkspecs/modules/*
 
 %changelog
 * Fri Jul 10 2015 Allen Winter <allen.winter@kdab.com> 2.3.0
   2.3.0 final
-* Tue Jan 27 2015 Allen Winter <allen.winter@kdab.com> 2.2.1
-  2.2.1 final
 * Tue Jan 27 2015 Allen Winter <allen.winter@kdab.com> 2.2.1
   2.2.1 final
 * Fri Oct 31 2014 Allen Winter <allen.winter@kdab.com> 2.2.0
