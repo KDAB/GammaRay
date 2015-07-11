@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_LAUNCHER_H
 #define GAMMARAY_LAUNCHER_H
 
+#include "gammaray_launcher_export.h"
+
 #include <QObject>
 #include <QTimer>
 
@@ -40,7 +42,7 @@ class QSharedMemory;
 namespace GammaRay {
 
 /** The actual launcher logic of gammaray.exe. */
-class Launcher : public QObject
+class GAMMARAY_LAUNCHER_EXPORT Launcher : public QObject
 {
   Q_OBJECT
 public:

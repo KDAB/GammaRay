@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_INJECTORFACTORY_H
 #define GAMMARAY_INJECTORFACTORY_H
 
+#include "gammaray_launcher_export.h"
+
 #include "abstractinjector.h"
 
 namespace GammaRay {
@@ -37,7 +39,7 @@ class ProbeABI;
 
 namespace InjectorFactory {
 
-   AbstractInjector::Ptr createInjector(const QString &name);
+   GAMMARAY_LAUNCHER_EXPORT AbstractInjector::Ptr createInjector(const QString &name);
 
    AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi);
 
@@ -46,7 +48,7 @@ namespace InjectorFactory {
    /**
     * Returns the list of available injector types.
     */
-   QStringList availableInjectors();
+   GAMMARAY_LAUNCHER_EXPORT QStringList availableInjectors();
 }
 
 }

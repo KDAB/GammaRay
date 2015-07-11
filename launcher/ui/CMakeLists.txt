@@ -27,7 +27,7 @@ qt4_wrap_ui(gammaray_launcher_ui_internal_srcs
 add_library(gammaray_launcher_ui_internal STATIC ${gammaray_launcher_ui_internal_srcs})
 target_link_libraries(gammaray_launcher_ui_internal
   LINK_PUBLIC
-  gammaray_launcher_shared
+  gammaray_launcher
 
   LINK_PRIVATE
   ${QT_QTCORE_LIBRARIES}

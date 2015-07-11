@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_LAUNCHOPTIONS_H
 #define GAMMARAY_LAUNCHOPTIONS_H
 
+#include "gammaray_launcher_export.h"
+
 #include "probeabi.h"
 
 #include <QHash>
@@ -39,7 +41,7 @@ class QVariant;
 namespace GammaRay {
 
 /** Describes the injection and probe options used for launching/attacing to a host process. */
-class LaunchOptions
+class GAMMARAY_LAUNCHER_EXPORT LaunchOptions
 {
 public:
   LaunchOptions();

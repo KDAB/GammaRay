@@ -1,10 +1,10 @@
 /*
-  launcherfinder.h
+  gammaray_launcher_export.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,27 +26,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LAUNCHERFINDER_H
-#define GAMMARAY_LAUNCHERFINDER_H
+#ifndef GAMMARAY_LAUNCHER_EXPORT_H
+#define GAMMARAY_LAUNCHER_EXPORT_H
 
-#include "gammaray_launcher_export.h"
+#include <QtCore/qglobal.h>
 
-#include <QString>
+#ifdef GAMMARAY_LAUNCHER_STATICLIB
+#  undef GAMMARAY_LAUNCHER_SHAREDLIB
+#  define GAMMARAY_LAUNCHER_EXPORT
+#else
+#  ifdef MAKE_GAMMARAY_LAUNCHER_LIB
+#    define GAMMARAY_LAUNCHER_EXPORT Q_DECL_EXPORT
+#  else
+#    define GAMMARAY_LAUNCHER_EXPORT Q_DECL_IMPORT
+#  endif
+#endif
 
-namespace GammaRay {
-
-/** Utility function to find the various executables related to the launcher. */
-namespace LauncherFinder
-{
-  enum Type {
-    Injector,
-    LauncherUI,
-    Client
-  };
-
-  GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type);
-}
-
-}
-
-#endif // GAMMARAY_LAUNCHERFINDER_H
+#endif /* GAMMARAY_LAUNCHER_EXPORT_H */
