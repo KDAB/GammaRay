@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_LAUNCHOPTIONS_H
 #define GAMMARAY_LAUNCHOPTIONS_H
 
-#include <common/probeabi.h>
+#include "probeabi.h"
 
 #include <QHash>
 #include <QStringList>

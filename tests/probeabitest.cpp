@@ -26,7 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <common/probeabi.h>
+#include <launcher/probeabi.h>
 
 #include <QtTest/qtest.h>
 #include <QObject>

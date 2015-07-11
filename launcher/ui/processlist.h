@@ -33,7 +33,7 @@
 #ifndef GAMMARAY_PROCESSLIST_H
 #define GAMMARAY_PROCESSLIST_H
 
-#include <common/probeabi.h>
+#include <launcher/probeabi.h>
 
 #include <QString>
 #include <QList>

@@ -14,13 +14,18 @@ set(gammaray_launcher_shared_srcs
   injector/windllinjector.cpp
   injector/interactiveprocess.cpp
 
+  probeabi.cpp
+  probeabidetector.cpp
   probefinder.cpp
   launchoptions.cpp
   clientlauncher.cpp
   launcherfinder.cpp
   launcher.cpp
 )
-if(NOT WIN32)
+
+if(WIN32)
+  list(APPEND gammaray_launcher_shared_srcs probeabidetector_win.cpp)
+else()
   list(APPEND gammaray_launcher_shared_srcs
     injector/debuggerinjector.cpp
     injector/gdbinjector.cpp
@@ -28,11 +33,25 @@ if(NOT WIN32)
     injector/preloadcheck.cpp
     injector/preloadinjector.cpp
   )
+  if(APPLE)
+    list(APPEND gammaray_launcher_shared_srcs probeabidetector_mac.cpp)
+  elseif(UNIX AND NOT QNXNTO)
+    list(APPEND gammaray_launcher_shared_srcs probeabidetector_elf.cpp)
+  else()
+    list(APPEND gammaray_launcher_shared_srcs probeabidetector_dummy.cpp)
+  endif()
 endif()
+
 add_library(gammaray_launcher_shared STATIC ${gammaray_launcher_shared_srcs})
-target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES} gammaray_common_internal)
+
+target_link_libraries(gammaray_launcher_shared ${QT_QTCORE_LIBRARIES} gammaray_common)
 if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray_launcher_shared ${QT_QTGUI_LIBRARIES})
+endif()
+if(WIN32)
+  target_link_libraries(gammaray_launcher_shared version)
+elseif(APPLE)
+  target_link_libraries(gammaray_launcher_shared "-framework CoreFoundation")
 endif()
 if(UNIX AND NOT APPLE AND NOT QNXNTO)
   target_link_libraries(gammaray_launcher_shared dl) # for preload check

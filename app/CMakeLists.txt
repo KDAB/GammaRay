@@ -7,7 +7,7 @@ add_executable(gammaray-app MACOSX_BUNDLE ${gammaray_app_srcs})
 
 target_link_libraries(gammaray-app
   ${QT_QTGUI_LIBRARIES}
-  gammaray_common_internal
+  gammaray_common
   gammaray_launcher_shared
   gammaray_launcher_ui_internal
   gammaray_client

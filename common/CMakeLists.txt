@@ -43,23 +43,11 @@ set(gammaray_common_internal_srcs
   resourcebrowserinterface.cpp
   networkselectionmodel.cpp
   streamoperators.cpp
-  probeabi.cpp
-  probeabidetector.cpp
 
   tools/objectinspector/propertiesextensioninterface.cpp
   tools/objectinspector/methodsextensioninterface.cpp
   tools/objectinspector/connectionsextensioninterface.cpp
 )
-
-if(WIN32)
-  list(APPEND gammaray_common_internal_srcs probeabidetector_win.cpp)
-elseif(APPLE)
-  list(APPEND gammaray_common_internal_srcs probeabidetector_mac.cpp)
-elseif(UNIX AND NOT QNXNTO)
-  list(APPEND gammaray_common_internal_srcs probeabidetector_elf.cpp)
-else()
-  list(APPEND gammaray_common_internal_srcs probeabidetector_dummy.cpp)
-endif()
 
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -73,13 +61,6 @@ else()
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTNETWORK_LIBRARIES}
   )
-endif()
-
-if(WIN32)
-  target_link_libraries(gammaray_common_internal version)
-endif()
-if(APPLE)
-  target_link_libraries(gammaray_common_internal "-framework CoreFoundation")
 endif()
 
 if (ANDROID)

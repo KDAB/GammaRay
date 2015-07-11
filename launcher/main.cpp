@@ -34,9 +34,9 @@
 #include "launcher.h"
 #include "probefinder.h"
 
-#include "common/paths.h"
-#include "common/probeabi.h"
-#include "common/probeabidetector.h"
+#include <common/paths.h>
+#include <launcher/probeabi.h>
+#include <launcher/probeabidetector.h>
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>

@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_LAUNCHPAGE_H
 #define GAMMARAY_LAUNCHPAGE_H
 
-#include <common/probeabidetector.h>
+#include <launcher/probeabidetector.h>
 
 #include <QWidget>
 

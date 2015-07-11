@@ -34,7 +34,7 @@
 #include "styleinjector.h"
 #include "windllinjector.h"
 
-#include <common/probeabi.h>
+#include <launcher/probeabi.h>
 
 #include <QString>
 

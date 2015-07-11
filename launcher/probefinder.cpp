@@ -27,9 +27,9 @@
 */
 
 #include "probefinder.h"
+#include "probeabi.h"
 
 #include <common/paths.h>
-#include <common/probeabi.h>
 
 #include <qglobal.h>
 #include <QCoreApplication>

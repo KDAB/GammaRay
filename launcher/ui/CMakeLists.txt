@@ -45,7 +45,7 @@ add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
 
 target_link_libraries(gammaray-launcher
   ${QT_QTGUI_LIBRARIES}
-  gammaray_common_internal
+  gammaray_common
   gammaray_launcher_ui_internal
 )
 

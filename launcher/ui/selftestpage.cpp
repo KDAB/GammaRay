@@ -34,7 +34,7 @@
 
 #include "injector/injectorfactory.h"
 
-#include <common/probeabi.h>
+#include <launcher/probeabi.h>
 
 #include <QFileInfo>
 #include <QStandardItemModel>
