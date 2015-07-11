@@ -15,6 +15,28 @@ target_link_libraries(gammaray_objectvisualizer_plugin
 )
 
 ######## START VTK VISUALIZATION
+
+#VTK discovery works a lot better if you give CMake a hint using the VTK_DIR variable
+find_path(VTK_DIR VTKConfig.cmake
+  /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
+)
+find_package(VTK)
+set_package_properties(VTK PROPERTIES
+  TYPE OPTIONAL
+  DESCRIPTION "Visualization Toolkit"
+  PURPOSE "Needed for the object visualizer plugin."
+  URL "http://www.vtk.org"
+)
+if(VTK_FOUND)
+  find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
+  if(NOT VTK_QT_INCLUDE_DIR)
+    message(STATUS "Cannot locate QVTKWidget.h in ${VTK_INCLUDE_DIRS}")
+    set(VTK_FOUND FALSE)
+    add_feature_info("QVTKWidget header" VTK_FOUND "Object visualizer plugin requires QVTKWidget.h header.")
+  endif()
+endif()
+set(HAVE_VTK ${VTK_FOUND})
+
 # VTK includes QtGui/... stuff => breaks compilation with Qt5
 if(VTK_FOUND AND NOT Qt5Core_FOUND AND GAMMARAY_BUILD_UI)
 
