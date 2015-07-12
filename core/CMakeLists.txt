@@ -34,6 +34,10 @@ set(gammaray_srcs
   util.cpp
   varianthandler.cpp
 
+  propertyadaptor.cpp
+  propertydata.cpp
+  objectinstance.cpp
+
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
