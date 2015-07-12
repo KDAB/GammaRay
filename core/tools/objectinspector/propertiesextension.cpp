@@ -33,6 +33,7 @@
 #include "objectdynamicpropertymodel.h"
 #include "objectstaticpropertymodel.h"
 #include "propertycontroller.h"
+#include "objectinstance.h"
 #include <probe.h>
 #include <common/propertymodel.h>
 #include <QMetaProperty>
@@ -49,9 +50,9 @@ PropertiesExtension::PropertiesExtension(PropertyController *controller) :
 {
   controller->registerModel(m_aggregatedPropertyModel, "properties");
 
-  m_aggregatedPropertyModel->addModel(m_staticPropertyModel);
-  m_aggregatedPropertyModel->addModel(m_metaPropertyModel);
-  m_aggregatedPropertyModel->addModel(m_dynamicPropertyModel);
+//   m_aggregatedPropertyModel->addModel(m_staticPropertyModel);
+//   m_aggregatedPropertyModel->addModel(m_metaPropertyModel);
+//   m_aggregatedPropertyModel->addModel(m_dynamicPropertyModel);
 }
 
 PropertiesExtension::~PropertiesExtension()
@@ -63,9 +64,10 @@ bool PropertiesExtension::setQObject(QObject *object)
   if (m_object == object)
     return true;
   m_object = object;
-  m_staticPropertyModel->setObject(object);
-  m_dynamicPropertyModel->setObject(object);
-  m_metaPropertyModel->setObject(object);
+//   m_staticPropertyModel->setObject(object);
+//   m_dynamicPropertyModel->setObject(object);
+//   m_metaPropertyModel->setObject(object);
+  m_aggregatedPropertyModel->setObject(object);
   setCanAddProperty(true);
   return true;
 }
@@ -73,9 +75,10 @@ bool PropertiesExtension::setQObject(QObject *object)
 bool PropertiesExtension::setObject(void *object, const QString &typeName)
 {
   m_object = 0;
-  m_staticPropertyModel->setObject(0);
-  m_dynamicPropertyModel->setObject(0);
-  m_metaPropertyModel->setObject(object, typeName);
+//   m_staticPropertyModel->setObject(0);
+//   m_dynamicPropertyModel->setObject(0);
+//   m_metaPropertyModel->setObject(object, typeName);
+  m_aggregatedPropertyModel->setObject(ObjectInstance(object, typeName.toUtf8()));
   setCanAddProperty(false);
   return true;
 }
@@ -86,6 +89,7 @@ bool PropertiesExtension::setMetaObject(const QMetaObject* metaObject)
   m_staticPropertyModel->setMetaObject(metaObject);
   m_dynamicPropertyModel->setObject(0);
   m_metaPropertyModel->setObject(0);
+  m_aggregatedPropertyModel->setObject(ObjectInstance(0, metaObject));
   setCanAddProperty(false);
   return true;
 }

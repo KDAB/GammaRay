@@ -29,42 +29,49 @@
 #ifndef GAMMARAY_AGGREGATEDPROPERTYMODEL_H
 #define GAMMARAY_AGGREGATEDPROPERTYMODEL_H
 
+#include "gammaray_core_export.h"
+
 #include <QAbstractItemModel>
+#include <QHash>
 #include <QVector>
 
 namespace GammaRay {
 
-/** Model that aggregates static and dynamic QObject properties and properties
- *  from our own meta-type system.
- */
-class AggregatedPropertyModel : public QAbstractTableModel
+class PropertyAdaptor;
+class ObjectInstance;
+
+/** Generic property model. */
+class GAMMARAY_CORE_EXPORT AggregatedPropertyModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AggregatedPropertyModel(QObject *parent = 0);
-  ~AggregatedPropertyModel();
+    explicit AggregatedPropertyModel(QObject *parent = 0);
+    ~AggregatedPropertyModel();
 
-  void addModel(QAbstractItemModel* model);
+    void setObject(const ObjectInstance &oi);
 
-  QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
-  int columnCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-  int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-  Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
-  QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
 private:
-  QModelIndex mapToSource(const QModelIndex &aggregatedIndex) const;
-  QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
+    PropertyAdaptor* adaptorForIndex(const QModelIndex &index) const;
+    void addPropertyAdaptor(PropertyAdaptor *adaptor) const;
 
 private slots:
-  void sourceModelReset();
-  void sourceDataChanged(const QModelIndex &sourceTopLeft, const QModelIndex &sourceBottomRight);
+    void propertyChanged(int first, int last);
+    void propertyAdded(int first, int last);
+    void propertyRemoved(int first, int last);
 
 private:
-  QVector<QAbstractItemModel*> m_models;
-
+    PropertyAdaptor *m_rootAdaptor;
+    mutable QHash<PropertyAdaptor*, QVector<PropertyAdaptor*> > m_parentChildrenMap;
 };
 
 }
