@@ -39,6 +39,8 @@ set(gammaray_srcs
   dynamicpropertyadaptor.cpp
   qmetapropertyadaptor.cpp
   metapropertyadaptor.cpp
+  associativepropertyadaptor.cpp
+  sequentialpropertyadaptor.cpp
   objectinstance.cpp
 
   tools/modelinspector/modeltester.cpp
