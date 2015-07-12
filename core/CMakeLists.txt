@@ -35,6 +35,7 @@ set(gammaray_srcs
   varianthandler.cpp
 
   propertyadaptor.cpp
+  propertyaggregator.cpp
   propertydata.cpp
   dynamicpropertyadaptor.cpp
   qmetapropertyadaptor.cpp
