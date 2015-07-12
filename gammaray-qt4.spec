@@ -19,6 +19,9 @@ BuildRequires: libqt4-devel libQtWebKit-devel libkde4-devel
 
 %if %{defined fedora}
 BuildRequires: qt-devel qtwebkit-devel kdelibs-devel
+%if 0%{?fedora} >= 22
+BuildRequires: qca
+%endif
 %endif
 
 
@@ -47,7 +50,7 @@ Plug-ins for the GammaRay introspection tool to debug KDE4 applications,
 such as a KJob tracker.
 
 %prep
-%setup -q
+%setup -n gammaray-%{version}
 
 %build
 %if %{defined fedora}
