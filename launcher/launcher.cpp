@@ -29,6 +29,7 @@
 #include <config-gammaray.h>
 #include "launcher.h"
 #include "probefinder.h"
+#include "probeabi.h"
 #include "injector/abstractinjector.h"
 #include "injector/injectorfactory.h"
 

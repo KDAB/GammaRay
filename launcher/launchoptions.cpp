@@ -27,6 +27,7 @@
 */
 
 #include "launchoptions.h"
+#include "probeabi.h"
 
 #include <QVariant>
 #include <QProcess>
@@ -35,11 +36,30 @@
 #include <QStandardPaths>
 #endif
 
+namespace GammaRay {
+
+class LaunchOptionsPrivate : public QSharedData
+{
+public:
+    LaunchOptionsPrivate() :
+        pid(-1),
+        uiMode(LaunchOptions::OutOfProcessUi)
+    {}
+
+    QStringList launchArguments;
+    QString injectorType;
+    ProbeABI probeABI;
+    int pid;
+    LaunchOptions::UiMode uiMode;
+    QHash<QByteArray, QByteArray> probeSettings;
+};
+
+}
+
 using namespace GammaRay;
 
 LaunchOptions::LaunchOptions() :
-  m_pid(-1),
-  m_uiMode(OutOfProcessUi)
+    d(new LaunchOptionsPrivate)
 {
 }
 
@@ -47,9 +67,20 @@ LaunchOptions::~LaunchOptions()
 {
 }
 
+LaunchOptions::LaunchOptions(const LaunchOptions& other) :
+    d(other.d)
+{
+}
+
+LaunchOptions& LaunchOptions::operator=(const LaunchOptions& other)
+{
+    d = other.d;
+    return *this;
+}
+
 bool LaunchOptions::isLaunch() const
 {
-  return !m_launchArguments.isEmpty();
+  return !d->launchArguments.isEmpty();
 }
 
 bool LaunchOptions::isAttach() const
@@ -64,73 +95,73 @@ bool LaunchOptions::isValid() const
 
 QStringList LaunchOptions::launchArguments() const
 {
-  return m_launchArguments;
+  return d->launchArguments;
 }
 
 void LaunchOptions::setLaunchArguments(const QStringList& args)
 {
-  m_launchArguments = args;
-  Q_ASSERT(m_pid <= 0 || m_launchArguments.isEmpty());
+  d->launchArguments = args;
+  Q_ASSERT(d->pid <= 0 || d->launchArguments.isEmpty());
 }
 
 QString LaunchOptions::absoluteExecutablePath() const
 {
-  if (m_launchArguments.isEmpty())
+  if (d->launchArguments.isEmpty())
     return QString();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  QString path = m_launchArguments.first();
+  QString path = d->launchArguments.first();
   const QFileInfo fi(path);
   if (fi.isFile() && fi.isExecutable())
     return path;
-  path = QStandardPaths::findExecutable(m_launchArguments.first());
+  path = QStandardPaths::findExecutable(d->launchArguments.first());
   if (!path.isEmpty())
     return path;
 #endif
 
-  return m_launchArguments.first();
+  return d->launchArguments.first();
 }
 
 int LaunchOptions::pid() const
 {
-  return m_pid;
+  return d->pid;
 }
 
 void LaunchOptions::setPid(int pid)
 {
-  m_pid = pid;
-  Q_ASSERT(m_pid <= 0 || m_launchArguments.isEmpty());
+  d->pid = pid;
+  Q_ASSERT(d->pid <= 0 || d->launchArguments.isEmpty());
 }
 
 LaunchOptions::UiMode LaunchOptions::uiMode() const
 {
-  return m_uiMode;
+  return d->uiMode;
 }
 
 void LaunchOptions::setUiMode(LaunchOptions::UiMode mode)
 {
-  m_uiMode = mode;
+  d->uiMode = mode;
   setProbeSetting("InProcessUi", mode == InProcessUi);
 }
 
 QString LaunchOptions::injectorType() const
 {
-  return m_injectorType;
+  return d->injectorType;
 }
 
 void LaunchOptions::setInjectorType(const QString& injectorType)
 {
-  m_injectorType = injectorType;
+  d->injectorType = injectorType;
 }
 
 ProbeABI LaunchOptions::probeABI() const
 {
-  return m_probeABI;
+  return d->probeABI;
 }
 
 void LaunchOptions::setProbeABI(const ProbeABI& abi)
 {
-  m_probeABI = abi;
+  d->probeABI = abi;
 }
 
 void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
@@ -150,12 +181,12 @@ void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
       qFatal("unsupported probe settings type");
   }
 
-  m_probeSettings.insert(key.toUtf8(), v);
+  d->probeSettings.insert(key.toUtf8(), v);
 }
 
 QHash< QByteArray, QByteArray > LaunchOptions::probeSettings() const
 {
-  return m_probeSettings;
+  return d->probeSettings;
 }
 
 bool LaunchOptions::execute(const QString& launcherPath) const
@@ -176,16 +207,16 @@ bool LaunchOptions::execute(const QString& launcherPath) const
       break;
   }
 
-  if (m_probeABI.isValid()) {
+  if (d->probeABI.isValid()) {
     args.push_back("--probe");
-    args.push_back(m_probeABI.id());
+    args.push_back(d->probeABI.id());
   }
 
-  if (m_probeSettings.contains("ServerAddress")) {
+  if (d->probeSettings.contains("ServerAddress")) {
     args.push_back("--listen");
-    args.push_back(m_probeSettings.value("ServerAddress"));
+    args.push_back(d->probeSettings.value("ServerAddress"));
   }
-  if (m_probeSettings.value("RemoteAccessEnabled") == "false")
+  if (d->probeSettings.value("RemoteAccessEnabled") == "false")
     args.push_back("--no-listen");
 
   if (isAttach()) {

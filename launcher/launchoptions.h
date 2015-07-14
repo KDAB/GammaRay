@@ -31,21 +31,25 @@
 
 #include "gammaray_launcher_export.h"
 
-#include "probeabi.h"
-
 #include <QHash>
-#include <QStringList>
+#include <QSharedDataPointer>
 
+class QStringList;
 class QVariant;
 
 namespace GammaRay {
+
+class ProbeABI;
+class LaunchOptionsPrivate;
 
 /** Describes the injection and probe options used for launching/attacing to a host process. */
 class GAMMARAY_LAUNCHER_EXPORT LaunchOptions
 {
 public:
   LaunchOptions();
+  LaunchOptions(const LaunchOptions &other);
   ~LaunchOptions();
+  LaunchOptions &operator=(const LaunchOptions &other);
 
   enum UiMode {
     InProcessUi,
@@ -94,12 +98,7 @@ public:
   bool execute(const QString& launcherPath) const;
 
 private:
-  QStringList m_launchArguments;
-  QString m_injectorType;
-  ProbeABI m_probeABI;
-  int m_pid;
-  UiMode m_uiMode;
-  QHash<QByteArray, QByteArray> m_probeSettings;
+  QSharedDataPointer<LaunchOptionsPrivate> d;
 };
 }
 
