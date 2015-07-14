@@ -47,8 +47,11 @@ WinDllInjector::WinDllInjector() :
 }
 
 bool WinDllInjector::launch(const QStringList &programAndArgs,
-                           const QString &probeDll, const QString &/*probeFunc*/)
+                            const QString &probeDll, const QString &/*probeFunc*/,
+                            const QProcessEnvironment &env)
 {
+  // TODO: apply env
+
   DWORD dwCreationFlags = CREATE_NO_WINDOW;
   dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
   dwCreationFlags |= CREATE_SUSPENDED;

@@ -38,12 +38,14 @@ AbstractInjector::~AbstractInjector()
 }
 
 bool AbstractInjector::launch(const QStringList &programAndArgs,
-                             const QString &probeDll,
-                             const QString &probeFunc)
+                              const QString &probeDll,
+                              const QString &probeFunc,
+                              const QProcessEnvironment& env)
 {
   Q_UNUSED(programAndArgs);
   Q_UNUSED(probeDll);
   Q_UNUSED(probeFunc);
+  Q_UNUSED(env);
   qWarning() << "Injection on launch not supported by this injector.";
   return false;
 }

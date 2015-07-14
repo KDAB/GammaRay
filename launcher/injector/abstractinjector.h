@@ -32,6 +32,7 @@
 #include <QProcess>
 #include <QSharedPointer>
 
+class QProcessEnvironment;
 class QString;
 class QStringList;
 
@@ -50,11 +51,14 @@ class AbstractInjector
 
     /**
      * Launch the application @p program and inject @p probeDll and call @p probeFunc on it.
+     * Assuming the launcher supports this, @p env allows you to customize the environment
+     * variables of the started application.
      *
      * @return True if the launch succeeded, false otherwise.
      */
     virtual bool launch(const QStringList &programAndArgs,
-                       const QString &probeDll, const QString &probeFunc);
+                        const QString &probeDll, const QString &probeFunc,
+                        const QProcessEnvironment &env);
 
     /**
      * Attach to the running application with process id @p pid

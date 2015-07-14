@@ -63,7 +63,7 @@ class DebuggerInjector : public QObject, public AbstractInjector
     virtual void loadSymbols(const QByteArray &library);
 
     /** Start the debugger with the given command line arguments. */
-    bool startDebugger(const QStringList &args);
+    bool startDebugger(const QStringList &args, const QProcessEnvironment &env = QProcessEnvironment());
     /** Add a breakpoint in common entry points and wait until they are hit. */
     void waitForMain();
     /** Given an interrupted process, this injects the probe and continues the process. */

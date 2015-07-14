@@ -51,6 +51,8 @@ public:
 
   /** This is used to identify the communication channels used by the launcher and the target process. */
   qint64 instanceIdentifier() const;
+  /** Process environment for the launched target. By default the environment of the launcher process is used. */
+  void setProcessEnvironment(const QProcessEnvironment &env);
 
 signals:
   void finished();
@@ -79,6 +81,7 @@ private:
 #endif
   ClientLauncher m_client;
   QTimer m_safetyTimer;
+  QProcessEnvironment m_env;
   enum State {
     Initial = 0,
     InjectorFinished = 1,

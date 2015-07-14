@@ -47,8 +47,9 @@ class WinDllInjector : public AbstractInjector
     QString name() const {
       return QString("windll");
     }
-    virtual bool launch(const QStringList &programAndArgs,
-                       const QString &probeDll, const QString &probeFunc);
+    bool launch(const QStringList &programAndArgs,
+                const QString &probeDll, const QString &probeFunc
+                const QProcessEnvironment &env) Q_DECL_OVERRIDE;
     virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
     virtual int exitCode();
     virtual QProcess::ExitStatus exitStatus();

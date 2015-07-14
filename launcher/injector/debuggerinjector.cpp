@@ -78,9 +78,11 @@ void DebuggerInjector::readyReadStandardError()
   std::cerr << qPrintable(error) << std::endl;
 }
 
-bool DebuggerInjector::startDebugger(const QStringList& args)
+bool DebuggerInjector::startDebugger(const QStringList& args, const QProcessEnvironment &env)
 {
   m_process.reset(new QProcess);
+  if (!env.isEmpty())
+    m_process->setProcessEnvironment(env);
   connect(m_process.data(), SIGNAL(readyReadStandardError()),
           this, SLOT(readyReadStandardError()));
   connect(m_process.data(), SIGNAL(readyReadStandardOutput()),

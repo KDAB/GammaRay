@@ -77,8 +77,8 @@ class InjectorThread : public QThread
 {
   Q_OBJECT
 public:
-  explicit InjectorThread(const LaunchOptions &options, const QString &probeDll, QObject *parent = 0)
-    : QThread(parent), m_options(options), m_probeDll(probeDll)
+  explicit InjectorThread(const LaunchOptions &options, const QString &probeDll, const QProcessEnvironment &env, QObject *parent = 0)
+    : QThread(parent), m_options(options), m_probeDll(probeDll), m_env(env)
   {
     Q_ASSERT(options.isValid());
   }
@@ -115,7 +115,7 @@ public:
 
     bool success = false;
     if (m_options.isLaunch()) {
-      success = injector->launch(m_options.launchArguments(), m_probeDll, QLatin1String("gammaray_probe_inject"));
+      success = injector->launch(m_options.launchArguments(), m_probeDll, QLatin1String("gammaray_probe_inject"), m_env.isEmpty() ? QProcessEnvironment::systemEnvironment() : m_env);
     }
     if (m_options.isAttach()) {
       success = injector->attach(m_options.pid(), m_probeDll, QLatin1String("gammaray_probe_inject"));
@@ -139,6 +139,7 @@ signals:
 private:
   LaunchOptions m_options;
   QString m_probeDll;
+  QProcessEnvironment m_env;
 };
 
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
@@ -171,6 +172,11 @@ qint64 Launcher::instanceIdentifier() const
   return QCoreApplication::applicationPid();
 }
 
+void Launcher::setProcessEnvironment(const QProcessEnvironment& env)
+{
+  m_env = env;
+}
+
 void Launcher::delayedInit()
 {
   const QString probeDll = ProbeFinder::findProbe(QLatin1String(GAMMARAY_PROBE_NAME), m_options.probeABI());
@@ -188,7 +194,7 @@ void Launcher::delayedInit()
     m_safetyTimer.start();
   }
 
-  InjectorThread *injector = new InjectorThread(m_options, probeDll, this);
+  InjectorThread *injector = new InjectorThread(m_options, probeDll, m_env, this);
   connect(injector, SIGNAL(finished()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
   connect(injector, SIGNAL(error(int,QString)), this, SLOT(injectorError(int,QString)), Qt::QueuedConnection);
   injector->start();
