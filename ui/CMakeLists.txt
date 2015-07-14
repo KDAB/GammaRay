@@ -81,11 +81,6 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )
-if(NOT Qt5Core_VERSION VERSION_LESS 5.2.0)
-  list(APPEND gammaray_ui_srcs
-    variantcontainermodel.cpp
-  )
-endif()
 
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
 set_target_properties(gammaray_ui PROPERTIES

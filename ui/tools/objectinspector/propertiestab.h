@@ -54,7 +54,6 @@ class PropertiesTab : public QWidget
     void updateNewPropertyValueEditor();
     void validateNewProperty();
     void propertyContextMenu(const QPoint &pos);
-    void onDoubleClick(const QModelIndex &index);
     void addNewProperty();
 
   private:

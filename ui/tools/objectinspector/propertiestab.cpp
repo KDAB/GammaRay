@@ -30,7 +30,6 @@
 #include "ui_propertiestab.h"
 #include "propertywidget.h"
 #include "editabletypesmodel.h"
-#include "variantcontainermodel.h"
 
 #include "ui/propertyeditor/propertyeditordelegate.h"
 #include "ui/propertyeditor/propertyeditorfactory.h"
@@ -78,10 +77,6 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
   m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
   connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
           this, SLOT(propertyContextMenu(QPoint)));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  connect(m_ui->propertyView, SIGNAL(doubleClicked(QModelIndex)),
-          SLOT(onDoubleClick(QModelIndex)));
-#endif
 
   EditableTypesModel *typesModel = new EditableTypesModel(this);
   proxy = new QSortFilterProxyModel(this);
@@ -174,29 +169,6 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
         break;
     }
   }
-}
-
-void PropertiesTab::onDoubleClick(const QModelIndex &index)
-{
-  if (index.column() != 0) {
-    return;
-  }
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  QVariant var = index.sibling(index.row(), 1).data(Qt::EditRole);
-
-  if (!var.canConvert<QVariantList>() && !var.canConvert<QVariantHash>()) {
-    return;
-  }
-
-  QTreeView *v = new QTreeView;
-
-  VariantContainerModel *m = new VariantContainerModel(v);
-  m->setVariant(var);
-
-  v->setModel(m);
-  v->show();
-#endif
 }
 
 void PropertiesTab::addNewProperty()
