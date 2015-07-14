@@ -44,17 +44,15 @@ class WinDllInjector : public AbstractInjector
 {
   public:
     WinDllInjector();
-    QString name() const {
-      return QString("windll");
-    }
+    QString name() const Q_DECL_OVERRIDE;
     bool launch(const QStringList &programAndArgs,
                 const QString &probeDll, const QString &probeFunc
                 const QProcessEnvironment &env) Q_DECL_OVERRIDE;
-    virtual bool attach(int pid, const QString &probeDll, const QString &probeFunc);
-    virtual int exitCode();
-    virtual QProcess::ExitStatus exitStatus();
-    virtual QProcess::ProcessError processError();
-    virtual QString errorString();
+    bool attach(int pid, const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
+    int exitCode() Q_DECL_OVERRIDE;
+    QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
+    QProcess::ProcessError processError() Q_DECL_OVERRIDE;
+    QString errorString() Q_DECL_OVERRIDE;
 
   private:
     int mExitCode;

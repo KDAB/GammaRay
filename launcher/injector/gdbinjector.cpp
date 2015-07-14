@@ -43,6 +43,11 @@ GdbInjector::GdbInjector()
 {
 }
 
+QString GdbInjector::name() const
+{
+  return QString("gdb");
+}
+
 QString GdbInjector::debuggerExecutable() const
 {
   return QLatin1String("gdb");

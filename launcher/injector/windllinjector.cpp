@@ -46,6 +46,11 @@ WinDllInjector::WinDllInjector() :
 {
 }
 
+QString WinDllInjector::name() const
+{
+  return QString("windll");
+}
+
 bool WinDllInjector::launch(const QStringList &programAndArgs,
                             const QString &probeDll, const QString &/*probeFunc*/,
                             const QProcessEnvironment &env)

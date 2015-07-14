@@ -50,6 +50,11 @@ StyleInjector::StyleInjector() : ProcessInjector()
 {
 }
 
+QString StyleInjector::name() const
+{
+  return QString("style");
+}
+
 bool StyleInjector::launch(const QStringList &programAndArgs,
                            const QString &probeDll, const QString &probeFunc,
                            const QProcessEnvironment &e)

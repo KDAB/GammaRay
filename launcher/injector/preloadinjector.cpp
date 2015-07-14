@@ -44,6 +44,11 @@ PreloadInjector::PreloadInjector() : ProcessInjector()
 {
 }
 
+QString PreloadInjector::name() const
+{
+  return QString("preload");
+}
+
 bool PreloadInjector::launch(const QStringList &programAndArgs,
                             const QString &probeDll,
                             const QString &probeFunc,
