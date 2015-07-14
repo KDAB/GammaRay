@@ -49,7 +49,6 @@ public:
     void resetProperty(int index) Q_DECL_OVERRIDE;
 
 private:
-    const QMetaObject* qtMetaObject() const;
     QString detailString(const QMetaProperty &prop) const;
 
 private slots:

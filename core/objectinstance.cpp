@@ -64,6 +64,21 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
     m_type(QtVariant)
 {
     m_variant = value;
+    if (value.canConvert<QObject*>()) {
+        m_payload.qtObj = value.value<QObject*>();
+        if (m_payload.qtObj) {
+            m_metaObj = m_payload.qtObj->metaObject();
+            m_type = QtObject;
+        }
+    } else {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        m_metaObj = QMetaType::metaObjectForType(value.userType());
+        if (m_metaObj) {
+            m_payload.obj = const_cast<void*>(value.data());
+            m_type = QtGadget;
+        }
+#endif
+    }
 }
 
 ObjectInstance::Type ObjectInstance::type() const
@@ -93,7 +108,6 @@ QVariant ObjectInstance::variant() const
 
 const QMetaObject* ObjectInstance::metaObject() const
 {
-    Q_ASSERT(m_type == QtObject || m_type == QtGadget);
     return m_metaObj;
 }
 

@@ -48,7 +48,7 @@ void QMetaPropertyAdaptor::setObject(const ObjectInstance& oi)
 {
     m_oi = oi;
 
-    auto mo = qtMetaObject();
+    auto mo = m_oi.metaObject();
     if (!mo || m_oi.type() != ObjectInstance::QtObject || !m_oi.qtObject())
         return;
 
@@ -67,16 +67,9 @@ void QMetaPropertyAdaptor::setObject(const ObjectInstance& oi)
     }
 }
 
-const QMetaObject* QMetaPropertyAdaptor::qtMetaObject() const
-{
-    if (m_oi.type() != ObjectInstance::QtObject && m_oi.type() != ObjectInstance::QtGadget)
-        return 0;
-    return m_oi.metaObject();
-}
-
 int QMetaPropertyAdaptor::count() const
 {
-    auto mo = qtMetaObject();
+    auto mo = m_oi.metaObject();
     if (!mo)
         return 0;
     return mo->propertyCount();
@@ -112,7 +105,7 @@ QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
 
 PropertyData QMetaPropertyAdaptor::propertyData(int index) const
 {
-    const auto mo = qtMetaObject();
+    const auto mo = m_oi.metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
@@ -153,7 +146,7 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
 
 void QMetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
 {
-    const auto mo = qtMetaObject();
+    const auto mo = m_oi.metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
@@ -178,7 +171,7 @@ void QMetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
 
 void QMetaPropertyAdaptor::resetProperty(int index)
 {
-    const auto mo = qtMetaObject();
+    const auto mo = m_oi.metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
