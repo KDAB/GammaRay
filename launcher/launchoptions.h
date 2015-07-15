@@ -94,6 +94,12 @@ public:
   ProbeABI probeABI() const;
   void setProbeABI(const ProbeABI &abi);
 
+  /** Full path to the probe being used. This overrides specifying a probe ABI and
+   *  can be useful on non-standard installation layouts of the probes.
+   */
+  void setProbePath(const QString &path);
+  QString probePath() const;
+
   /** execute this launch options with the given command-line launcher. */
   bool execute(const QString& launcherPath) const;
 

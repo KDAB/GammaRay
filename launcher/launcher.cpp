@@ -179,8 +179,11 @@ void Launcher::setProcessEnvironment(const QProcessEnvironment& env)
 
 void Launcher::delayedInit()
 {
-  const QString probeDll = ProbeFinder::findProbe(QLatin1String(GAMMARAY_PROBE_NAME), m_options.probeABI());
-  m_options.setProbeSetting("ProbePath", QFileInfo(probeDll).absolutePath());
+  auto probeDll = m_options.probePath();
+  if (probeDll.isEmpty()) {
+    probeDll = ProbeFinder::findProbe(QLatin1String(GAMMARAY_PROBE_NAME), m_options.probeABI());
+    m_options.setProbePath(QFileInfo(probeDll).absolutePath());
+  }
 
   sendLauncherId();
   sendProbeSettings();

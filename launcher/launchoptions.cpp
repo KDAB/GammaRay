@@ -164,6 +164,16 @@ void LaunchOptions::setProbeABI(const ProbeABI& abi)
   d->probeABI = abi;
 }
 
+QString LaunchOptions::probePath() const
+{
+  return d->probeSettings.value("ProbePath");
+}
+
+void LaunchOptions::setProbePath(const QString& path)
+{
+  setProbeSetting("ProbePath", path);
+}
+
 void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
 {
   QByteArray v;
