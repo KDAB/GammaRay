@@ -43,7 +43,7 @@ endif()
 
 if(NOT ANDROID)
   set_target_properties(gammaray_probe PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}"
+    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_INSTALL_DIR}"
   )
   set_target_properties(gammaray_probe PROPERTIES PREFIX "")
 endif()
@@ -58,5 +58,5 @@ if(ANDROID)
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gammaray_probe-android-dependencies.xml DESTINATION ${LIB_INSTALL_DIR})
 else()
-  install(TARGETS gammaray_probe DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
+  install(TARGETS gammaray_probe DESTINATION ${PROBE_INSTALL_DIR})
 endif()

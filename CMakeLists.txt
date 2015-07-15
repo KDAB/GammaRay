@@ -429,8 +429,10 @@ endif()
 if(ANDROID)
   # Android doesn't support sub-directories in lib/
   set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
+  set(PROBE_INSTALL_DIR ${LIB_INSTALL_DIR})
 else()
-  set(PROBE_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}")
+  set(PROBE_INSTALL_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}")
+  set(PROBE_PLUGIN_INSTALL_DIR ${PROBE_INSTALL_DIR})
 endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
@@ -454,7 +456,7 @@ set(
 
 # "inverse" install dirs, to find the base location again
 gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
-gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PROBE_PLUGIN_INSTALL_DIR}")
+gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PROBE_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 
 #
