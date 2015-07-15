@@ -42,7 +42,7 @@ namespace GammaRay {
 class ProbeABI;
 class LaunchOptionsPrivate;
 
-/** Describes the injection and probe options used for launching/attacing to a host process. */
+/** @brief Describes the injection and probe options used for launching/attacing to a host process. */
 class GAMMARAY_LAUNCHER_EXPORT LaunchOptions
 {
 public:

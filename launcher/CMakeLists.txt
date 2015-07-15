@@ -72,6 +72,11 @@ ecm_generate_pri_file(BASE_NAME GammaRayLauncher
 )
 
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+gammaray_install_headers(
+    gammaray_launcher_export.h
+    launcher.h
+    launchoptions.h
+)
 
 
 # command line launcher

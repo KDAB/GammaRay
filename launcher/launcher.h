@@ -43,7 +43,7 @@ namespace GammaRay {
 class LaunchOptions;
 struct LauncherPrivate;
 
-/** The actual launcher logic of gammaray.exe. */
+/** @brief Manages launching a target process, injecting the probe and if needed also starting the client application. */
 class GAMMARAY_LAUNCHER_EXPORT Launcher : public QObject
 {
   Q_OBJECT
