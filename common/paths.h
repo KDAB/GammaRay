@@ -69,6 +69,12 @@ namespace Paths
   /** Returns the path to the current probe location, probePath(GAMMARAY_PROBE_ABI). */
   GAMMARAY_COMMON_EXPORT QString currentProbePath();
 
+  /** Returns the path to the current plugins location.
+   *  This is the same as currentProbePath() when using the GammaRay installation layout,
+   *  but differs with e.g. the Android installation layout.
+   */
+  GAMMARAY_COMMON_EXPORT QString currentPluginsPath();
+
   /** Returns the file extension used on the current platform for libraries. */
   GAMMARAY_COMMON_EXPORT QString libraryExtension();
 

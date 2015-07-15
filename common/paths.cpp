@@ -69,7 +69,7 @@ QString probePath(const QString& probeABI)
     + probeABI;
 #else
   Q_UNUSED(probeABI);
-  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR);
+  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PROBE_INSTALL_DIR);
 #endif
 }
 
@@ -86,6 +86,16 @@ QString libexecPath()
 QString currentProbePath()
 {
   return probePath(GAMMARAY_PROBE_ABI);
+}
+
+QString currentPluginsPath()
+{
+#ifndef Q_OS_ANDROID
+  return currentProbePath();
+#else
+  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR);
+#endif
+
 }
 
 QString libraryExtension()
