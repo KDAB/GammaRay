@@ -30,6 +30,8 @@
 #include "launcher.h"
 #include "probefinder.h"
 #include "probeabi.h"
+#include "clientlauncher.h"
+#include "launchoptions.h"
 #include "injector/abstractinjector.h"
 #include "injector/injectorfactory.h"
 
@@ -48,6 +50,38 @@
 #include <QThread>
 
 #include <iostream>
+
+namespace GammaRay {
+
+enum State {
+  Initial = 0,
+  InjectorFinished = 1,
+  InjectorFailed = 2,
+  ClientStarted = 4,
+  Complete = InjectorFinished | ClientStarted
+};
+
+struct LauncherPrivate
+{
+  LauncherPrivate(const LaunchOptions& options) :
+    options(options),
+#ifdef HAVE_SHM
+    shm(0),
+#endif
+    state(Initial)
+  {}
+
+  LaunchOptions options;
+#ifndef QT_NO_SHAREDMEMORY
+  QSharedMemory *shm;
+#endif
+  ClientLauncher client;
+  QTimer safetyTimer;
+  QProcessEnvironment env;
+  int state;
+};
+
+}
 
 using namespace GammaRay;
 
@@ -144,17 +178,13 @@ private:
 
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
   QObject(parent),
-  m_options(options),
-#ifdef HAVE_SHM
-  m_shm(0),
-#endif
-  m_state(Initial)
+  d(new LauncherPrivate(options))
 {
   Q_ASSERT(options.isValid());
 
-  m_safetyTimer.setSingleShot(true);
-  m_safetyTimer.setInterval(60 * 1000);
-  connect(&m_safetyTimer, SIGNAL(timeout()), SLOT(timeout()));
+  d->safetyTimer.setSingleShot(true);
+  d->safetyTimer.setInterval(60 * 1000);
+  connect(&d->safetyTimer, SIGNAL(timeout()), SLOT(timeout()));
 
   // wait for the event loop to be available
   QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
@@ -162,42 +192,43 @@ Launcher::Launcher(const LaunchOptions& options, QObject* parent):
 
 Launcher::~Launcher()
 {
-  m_client.waitForFinished();
+  d->client.waitForFinished();
+  delete d;
 }
 
 qint64 Launcher::instanceIdentifier() const
 {
-  if (m_options.isAttach())
-    return m_options.pid();
+  if (d->options.isAttach())
+    return d->options.pid();
   return QCoreApplication::applicationPid();
 }
 
 void Launcher::setProcessEnvironment(const QProcessEnvironment& env)
 {
-  m_env = env;
+  d->env = env;
 }
 
 void Launcher::delayedInit()
 {
-  auto probeDll = m_options.probePath();
+  auto probeDll = d->options.probePath();
   if (probeDll.isEmpty()) {
-    probeDll = ProbeFinder::findProbe(QLatin1String(GAMMARAY_PROBE_NAME), m_options.probeABI());
-    m_options.setProbePath(QFileInfo(probeDll).absolutePath());
+    probeDll = ProbeFinder::findProbe(QLatin1String(GAMMARAY_PROBE_NAME), d->options.probeABI());
+    d->options.setProbePath(QFileInfo(probeDll).absolutePath());
   }
 
   sendLauncherId();
   sendProbeSettings();
   sendProbeSettingsFallback();
 
-  if (m_options.uiMode() != LaunchOptions::InProcessUi) {
+  if (d->options.uiMode() != LaunchOptions::InProcessUi) {
     SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
     connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::QueuedConnection);
     semWaiter->start();
 
-    m_safetyTimer.start();
+    d->safetyTimer.start();
   }
 
-  InjectorThread *injector = new InjectorThread(m_options, probeDll, m_env, this);
+  InjectorThread *injector = new InjectorThread(d->options, probeDll, d->env, this);
   connect(injector, SIGNAL(finished()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
   connect(injector, SIGNAL(error(int,QString)), this, SLOT(injectorError(int,QString)), Qt::QueuedConnection);
   injector->start();
@@ -206,7 +237,7 @@ void Launcher::delayedInit()
 void Launcher::sendLauncherId()
 {
   // if we are launching a new process, make sure it knows how to talk to us
-  if (m_options.isLaunch()) {
+  if (d->options.isLaunch()) {
     qputenv("GAMMARAY_LAUNCHER_ID", QByteArray::number(instanceIdentifier()));
   } else {
 #if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
@@ -232,47 +263,47 @@ void Launcher::sendProbeSettings()
 
   {
     Message msg(Protocol::LauncherAddress, Protocol::ProbeSettings);
-    msg.payload() << m_options.probeSettings();
+    msg.payload() << d->options.probeSettings();
     msg.write(&buffer);
   }
 
   buffer.close();
 
-  m_shm = new QSharedMemory(QLatin1String("gammaray-") + QString::number(instanceIdentifier()), this);
-  if (!m_shm->create(qMax(ba.size(), 1024))) { // make sure we have enough space for the answer
-    qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << m_shm->errorString()
-      << "- error code (QSharedMemory::SharedMemoryError):" << m_shm->error();
-    delete m_shm;
-    m_shm = 0;
+  d->shm = new QSharedMemory(QLatin1String("gammaray-") + QString::number(instanceIdentifier()), this);
+  if (!d->shm->create(qMax(ba.size(), 1024))) { // make sure we have enough space for the answer
+    qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << d->shm->errorString()
+      << "- error code (QSharedMemory::SharedMemoryError):" << d->shm->error();
+    delete d->shm;
+    d->shm = 0;
     return;
   }
 
-  SharedMemoryLocker locker(m_shm);
-  qMemCopy(m_shm->data(), ba.constData(), ba.size());
-  if (m_shm->size() > ba.size()) // Windows...
-    qMemSet(static_cast<char*>(m_shm->data()) + ba.size(), 0xff, m_shm->size() - ba.size());
+  SharedMemoryLocker locker(d->shm);
+  qMemCopy(d->shm->data(), ba.constData(), ba.size());
+  if (d->shm->size() > ba.size()) // Windows...
+    qMemSet(static_cast<char*>(d->shm->data()) + ba.size(), 0xff, d->shm->size() - ba.size());
 #endif
 }
 
 void Launcher::sendProbeSettingsFallback()
 {
-  if (!m_options.isAttach())
+  if (!d->options.isAttach())
     return;
 
-  const QHash<QByteArray, QByteArray> probeSettings = m_options.probeSettings();
+  const QHash<QByteArray, QByteArray> probeSettings = d->options.probeSettings();
   for (QHash<QByteArray, QByteArray>::const_iterator it = probeSettings.constBegin(); it != probeSettings.constEnd(); ++it)
     qputenv("GAMMARAY_" + it.key(), it.value());
 }
 
 void Launcher::semaphoreReleased()
 {
-  m_safetyTimer.stop();
+  d->safetyTimer.stop();
 
   QUrl serverAddress;
 #ifdef HAVE_SHM
   {
-    SharedMemoryLocker locker(m_shm);
-    QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(m_shm->data()), m_shm->size());
+    SharedMemoryLocker locker(d->shm);
+    QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(d->shm->data()), d->shm->size());
     QBuffer buffer(&ba);
     buffer.open(QIODevice::ReadOnly);
 
@@ -289,8 +320,8 @@ void Launcher::semaphoreReleased()
       }
     }
   }
-  delete m_shm;
-  m_shm = 0;
+  delete d->shm;
+  d->shm = 0;
 
   if (serverAddress.isEmpty()) {
     qWarning() << "Unable to receive server address.";
@@ -305,7 +336,7 @@ void Launcher::semaphoreReleased()
 
   std::cout << "GammaRay server listening on: " << qPrintable(serverAddress.toString()) << std::endl;
 
-  if (m_options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
+  if (d->options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
     return;
 
   // safer, since we will always be running locally, and the server might give us an external address
@@ -313,13 +344,13 @@ void Launcher::semaphoreReleased()
     serverAddress.setHost("127.0.0.1");
 
   startClient(serverAddress);
-  m_state |= ClientStarted;
+  d->state |= ClientStarted;
   checkDone();
 }
 
 void Launcher::startClient(const QUrl& serverAddress)
 {
-  if (!m_client.launch(serverAddress)) {
+  if (!d->client.launch(serverAddress)) {
     qCritical("Unable to launch gammaray-client!");
     QCoreApplication::exit(1);
   }
@@ -327,14 +358,14 @@ void Launcher::startClient(const QUrl& serverAddress)
 
 void Launcher::injectorFinished()
 {
-  if ((m_state & InjectorFailed) == 0)
-    m_state |= InjectorFinished;
+  if ((d->state & InjectorFailed) == 0)
+    d->state |= InjectorFinished;
   checkDone();
 }
 
 void Launcher::injectorError(int exitCode, const QString& errorMessage)
 {
-  m_state |= InjectorFailed;
+  d->state |= InjectorFailed;
   std::cerr << qPrintable(errorMessage) << std::endl;
   std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;
   QCoreApplication::exit(exitCode);
@@ -344,13 +375,13 @@ void Launcher::timeout()
 {
   std::cerr << "Target not responding - timeout." << std::endl;
   std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;
-  m_client.terminate();
+  d->client.terminate();
   QCoreApplication::exit(1);
 }
 
 void Launcher::checkDone()
 {
-  if (m_state == Complete || (m_options.uiMode() != LaunchOptions::OutOfProcessUi && m_state == InjectorFinished)) {
+  if (d->state == Complete || (d->options.uiMode() != LaunchOptions::OutOfProcessUi && d->state == InjectorFinished)) {
     emit finished();
   }
 }

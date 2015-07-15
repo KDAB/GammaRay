@@ -34,12 +34,14 @@
 #include <QObject>
 #include <QTimer>
 
-#include "launchoptions.h"
-#include "clientlauncher.h"
-
+class QProcessEnvironment;
 class QSharedMemory;
+class QUrl;
 
 namespace GammaRay {
+
+class LaunchOptions;
+struct LauncherPrivate;
 
 /** The actual launcher logic of gammaray.exe. */
 class GAMMARAY_LAUNCHER_EXPORT Launcher : public QObject
@@ -75,22 +77,9 @@ private:
   void checkDone();
 
 private:
-  LaunchOptions m_options;
-#ifndef QT_NO_SHAREDMEMORY
-  QSharedMemory *m_shm;
-#endif
-  ClientLauncher m_client;
-  QTimer m_safetyTimer;
-  QProcessEnvironment m_env;
-  enum State {
-    Initial = 0,
-    InjectorFinished = 1,
-    InjectorFailed = 2,
-    ClientStarted = 4,
-    Complete = InjectorFinished | ClientStarted
-  };
-  int m_state;
+  LauncherPrivate* const d;
 };
+
 }
 
 #endif // GAMMARAY_LAUNCHER_H

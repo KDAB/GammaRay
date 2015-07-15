@@ -29,6 +29,7 @@
 #include <config-gammaray.h>
 #include "config-gammaray-version.h"
 #include "injector/injectorfactory.h"
+#include "clientlauncher.h"
 #include "launchoptions.h"
 #include "launcherfinder.h"
 #include "launcher.h"
