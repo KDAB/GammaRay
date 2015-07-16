@@ -15,6 +15,14 @@
 #  Build only an additional probe configuration for an already existing launcher.
 #  Default=false
 #
+# -DGAMMARAY_INSTALL_QT_LAYOUT=[true|false]
+#  Install GammaRay in Qt folder using Qt layout folders:
+#    - plugins will go in <qt_filder>/plugins/gammaray
+#    - all the other libs, including probe library will go in <qt_filder>/lib
+#    - qmake mkspecs file
+#  Default=false
+#  Only use for Android or when you know what you are doing.
+#
 # -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[true|false]
 #  Enable if your compiler uses an unsupported C++ name mangling scheme.
 #  Default=false
@@ -385,6 +393,9 @@ include(GammaRayProbeABI)
 #
 # Installation settings
 #
+if(ANDROID)
+  set(GAMMARAY_INSTALL_QT_LAYOUT ON)
+endif()
 if(APPLE)
   # Make sure default prefix on mac is /Applications, dunnow why but it does not default to it
   # probably because we do not enabled built in bundle support in the main project
@@ -426,7 +437,7 @@ else()
   endif()
 endif()
 
-if(ANDROID)
+if(GAMMARAY_INSTALL_QT_LAYOUT)
   # Android doesn't support sub-directories in lib/
   set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
   set(PROBE_INSTALL_DIR ${LIB_INSTALL_DIR})

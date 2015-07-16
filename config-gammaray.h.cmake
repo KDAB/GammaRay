@@ -1,8 +1,10 @@
 #include <qglobal.h>
 
+#cmakedefine GAMMARAY_INSTALL_QT_LAYOUT
+
 // relative install dirs
-#ifdef Q_OS_ANDROID
-# define GAMMARAY_PLUGIN_INSTALL_DIR "lib"
+#ifdef GAMMARAY_INSTALL_QT_LAYOUT
+# define GAMMARAY_PLUGIN_INSTALL_DIR "${PROBE_PLUGIN_INSTALL_DIR}"
 #else
 # define GAMMARAY_PLUGIN_INSTALL_DIR "${PLUGIN_INSTALL_DIR}"
 #endif
@@ -19,7 +21,7 @@
 #define GAMMARAY_INVERSE_LIBEXEC_DIR "${GAMMARAY_INVERSE_LIBEXEC_DIR}"
 
 // probe name
-#ifdef Q_OS_ANDROID
+#ifdef GAMMARAY_INSTALL_QT_LAYOUT
 #define GAMMARAY_PROBE_NAME "libgammaray_probe"
 #else
 #define GAMMARAY_PROBE_NAME "gammaray_probe"

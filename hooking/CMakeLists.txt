@@ -45,7 +45,7 @@ set_target_properties(gammaray_probe PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_INSTALL_DIR}"
 )
 
-if(NOT ANDROID)
+if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
   set_target_properties(gammaray_probe PROPERTIES PREFIX "")
   install(TARGETS gammaray_probe DESTINATION ${PROBE_INSTALL_DIR})
 else()
