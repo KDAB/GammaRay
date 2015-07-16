@@ -41,14 +41,14 @@ if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
   target_link_libraries(gammaray_probe dl)
 endif()
 
-if(NOT ANDROID)
-  set_target_properties(gammaray_probe PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_INSTALL_DIR}"
-  )
-  set_target_properties(gammaray_probe PROPERTIES PREFIX "")
-endif()
+set_target_properties(gammaray_probe PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_INSTALL_DIR}"
+)
 
-if(ANDROID)
+if(NOT ANDROID)
+  set_target_properties(gammaray_probe PROPERTIES PREFIX "")
+  install(TARGETS gammaray_probe DESTINATION ${PROBE_INSTALL_DIR})
+else()
   install(TARGETS gammaray_probe EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
   ecm_generate_pri_file(BASE_NAME GammaRayProbe
                       LIB_NAME gammaray_probe
@@ -57,6 +57,4 @@ if(ANDROID)
                       INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}/..)
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gammaray_probe-android-dependencies.xml DESTINATION ${LIB_INSTALL_DIR})
-else()
-  install(TARGETS gammaray_probe DESTINATION ${PROBE_INSTALL_DIR})
 endif()
