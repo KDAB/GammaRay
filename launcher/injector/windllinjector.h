@@ -61,7 +61,6 @@ class WinDllInjector : public AbstractInjector
     QString mErrorString;
 
     bool inject();
-    bool inject2();
     HANDLE m_destProcess;
     HANDLE m_destThread;
     QString m_dllPath;
