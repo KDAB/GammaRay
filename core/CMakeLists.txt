@@ -43,6 +43,7 @@ set(gammaray_srcs
   associativepropertyadaptor.cpp
   sequentialpropertyadaptor.cpp
   objectinstance.cpp
+  propertyadaptorfactory.cpp
 
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
