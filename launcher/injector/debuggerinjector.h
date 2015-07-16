@@ -67,7 +67,7 @@ class DebuggerInjector : public QObject, public AbstractInjector
     /** Add a breakpoint in common entry points and wait until they are hit. */
     void waitForMain();
     /** Given an interrupted process, this injects the probe and continues the process. */
-    int injectAndDetach(const QString &probeDll, const QString &probeFunc);
+    bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
   protected slots:
     virtual void readyReadStandardError();

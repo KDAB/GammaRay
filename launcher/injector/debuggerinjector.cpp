@@ -123,7 +123,7 @@ void DebuggerInjector::waitForMain()
   execCmd("continue");
 }
 
-int DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
+bool DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(m_process);
   loadSymbols("dl");
