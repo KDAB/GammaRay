@@ -17,7 +17,7 @@ add_executable(minimalcoreapplication minimalcoreapplication.cpp)
 target_link_libraries(minimalcoreapplication ${QT_QTCORE_LIBRARIES})
 
 add_executable(propertytest propertytest.cpp)
-target_link_libraries(propertytest ${QT_QTCORE_LIBRARIES})
+target_link_libraries(propertytest ${QT_QTCORE_LIBRARIES} gammaray_shared_test_data)
 
 add_executable(connectionstest connectionstest.cpp)
 target_link_libraries(connectionstest ${QT_QTCORE_LIBRARIES})
@@ -49,17 +49,6 @@ target_link_libraries(signalmonitortest
 if(QNXNTO)
   target_link_libraries(messagemodeltest cpp)
 endif()
-
-if(Qt5Widgets_FOUND AND NOT Qt5Widgets_VERSION VERSION_LESS 5.2.0)
-  add_executable(variantinspectortest
-    variantinspector.cpp
-    variantinspectorapplication.cpp
-  )
-  target_link_libraries(variantinspectortest Qt5::Widgets)
-endif()
-
-add_executable(gadgettest gadgettest.cpp)
-target_link_libraries(gadgettest ${QT_QTCORE_LIBRARIES})
 
 add_executable(objectreparenttest objectreparenttest.cpp)
 target_link_libraries(objectreparenttest ${QT_QTCORE_LIBRARIES})

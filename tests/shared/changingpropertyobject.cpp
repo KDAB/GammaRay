@@ -1,11 +1,11 @@
 /*
-  variantinspectorapplication.cpp
+  changingpropertyobject.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Stephen Kelly <stephen.kelly@kdab.com>
+  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,22 +26,4 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#include <QApplication>
-
-#include "variantinspector.h"
-
-int main(int argc, char **argv)
-{
-  QApplication app(argc, argv);
-
-  VariantInspector vi;
-
-  QHash<QString, int> mapping;
-  mapping.insert("One", 1);
-  mapping.insert("Two", 2);
-
-  vi.setProperty("dynamicProperty", QVariant::fromValue(mapping));
-
-  return app.exec();
-}
+#include "changingpropertyobject.h"

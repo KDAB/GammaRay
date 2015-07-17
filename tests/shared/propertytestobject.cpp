@@ -1,11 +1,11 @@
 /*
-  variantinspector.cpp
+  propertytestobject.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Stephen Kelly <stephen.kelly@kdab.com>
+  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,33 +26,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "propertytestobject.h"
 
-#include "variantinspector.h"
+#include <QDebug>
 
-#include <QWidget>
-
-VariantInspector::VariantInspector(QObject *parent)
-  : QObject(parent)
+void Gadget::someMethod()
 {
-  m_widget.reset(new QWidget);
-}
-
-QSharedPointer<QWidget> VariantInspector::sharedWidget() const
-{
-  return m_widget;
-}
-
-QPointer<QWidget> VariantInspector::trackingWidget() const
-{
-  return m_widget.data();
-}
-
-QVector<int> VariantInspector::widgetVector() const
-{
-  QVector<int> vec;
-  vec << 5;
-  vec << 6;
-  vec << 7;
-  vec << 8;
-  return vec;
+  qDebug() << Q_FUNC_INFO;
 }

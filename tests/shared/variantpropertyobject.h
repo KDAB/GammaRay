@@ -31,23 +31,26 @@
 #define VARIANTINSPECTOR_H
 
 #include <QPointer>
-#include <QWidget>
+#include <QObject>
+#include <QVector>
+#include <QSharedPointer>
 
-class VariantInspector : public QObject
+class VariantPropertyObject : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(QSharedPointer<QWidget> sharedWidget READ sharedWidget CONSTANT)
-  Q_PROPERTY(QPointer<QWidget> trackingWidget READ trackingWidget CONSTANT)
-  Q_PROPERTY(QVector<int> widgetVector READ widgetVector CONSTANT)
+    Q_OBJECT
+    Q_PROPERTY(QSharedPointer<QObject> sharedObject READ sharedObject CONSTANT)
+    Q_PROPERTY(QPointer<QObject> trackingObject READ trackingObject CONSTANT)
+    Q_PROPERTY(QVector<int> intVector READ widgetVector CONSTANT)
 public:
-  explicit VariantInspector(QObject *parent = 0);
+    explicit VariantPropertyObject(QObject *parent = 0);
+    ~VariantPropertyObject();
 
-  QSharedPointer<QWidget> sharedWidget() const;
-  QPointer<QWidget> trackingWidget() const;
-  QVector<int> widgetVector() const;
+    QSharedPointer<QObject> sharedObject() const;
+    QPointer<QObject> trackingObject() const;
+    QVector<int> widgetVector() const;
 
 private:
-  QSharedPointer<QWidget> m_widget;
+    QSharedPointer<QObject> m_object;
 };
 
 #endif
