@@ -166,7 +166,7 @@ int PixelMetricModel::doColumnCount() const
 
 int PixelMetricModel::doRowCount() const
 {
-  return QStyle::PM_SubMenuOverlap + 1;
+  return sizeof(pixelMetrics) / sizeof(pixel_metric_t);
 }
 
 QVariant PixelMetricModel::headerData(int section, Qt::Orientation orientation, int role) const
