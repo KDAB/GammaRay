@@ -89,6 +89,35 @@ private slots:
 #endif
     }
 
+    void testChangeNotification()
+    {
+        ChangingPropertyObject obj;
+        AggregatedPropertyModel model;
+//         ModelTest modelTest(&model);
+        model.setObject(&obj);
+        QVERIFY(model.rowCount() >= 4);
+
+        QSignalSpy changeSpy(&model, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QVERIFY(changeSpy.isValid());
+        QSignalSpy addSpy(&model, SIGNAL(rowsInserted(QModelIndex,int,int)));
+        QVERIFY(addSpy.isValid());
+        QSignalSpy removeSpy(&model, SIGNAL(rowsRemoved(QModelIndex,int,int)));
+        QVERIFY(removeSpy.isValid());
+
+        obj.changeProperties();
+
+        QCOMPARE(changeSpy.size(), 1);
+        QCOMPARE(addSpy.size(), 1);
+
+        obj.changeProperties();
+        QCOMPARE(changeSpy.size(), 3);
+
+        obj.setProperty("dynamicChangingProperty", QVariant());
+        QCOMPARE(changeSpy.size(), 3);
+        QCOMPARE(addSpy.size(), 1);
+        QCOMPARE(removeSpy.size(), 1);
+    }
+
 };
 
 QTEST_MAIN(PropertyModelTest)
