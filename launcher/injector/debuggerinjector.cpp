@@ -55,6 +55,7 @@ void DebuggerInjector::stop()
         if (!m_process->waitForFinished(1000))
             m_process->kill(); // kill it softly
     }
+    emit finished();
 }
 
 QString DebuggerInjector::errorString()
@@ -89,7 +90,6 @@ void DebuggerInjector::processFinished()
       mProcessError = m_process->error();
       mErrorString = m_process->errorString();
     }
-    emit finished();
 }
 
 void DebuggerInjector::readyReadStandardError()
