@@ -62,7 +62,6 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
 
   private:
     ObjectStaticPropertyModel *m_staticPropertyModel;
-    ObjectDynamicPropertyModel *m_dynamicPropertyModel;
     MetaPropertyModel *m_metaPropertyModel;
 
     AggregatedPropertyModel *m_aggregatedPropertyModel;

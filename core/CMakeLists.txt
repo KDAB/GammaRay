@@ -14,7 +14,6 @@ set(gammaray_srcs
 #  proxydetacher.cpp
   objectlistmodel.cpp
   objectpropertymodel.cpp
-  objectdynamicpropertymodel.cpp
   objectstaticpropertymodel.cpp
   objectclassinfomodel.cpp
   objectmethodmodel.cpp
