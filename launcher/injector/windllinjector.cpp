@@ -55,7 +55,15 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
                             const QString &probeDll, const QString &/*probeFunc*/,
                             const QProcessEnvironment &env)
 {
-  // TODO: apply env
+  // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx
+  QByteArray buffer;
+  char null[2]= {0,0};
+  foreach(const QString &kv, env.toStringList()) {
+    buffer.append((const char*)kv.utf16(), kv.size() * sizeof(ushort));
+    buffer.append(null, 2);
+  }
+  if (!buffer.isEmpty())
+    buffer.append(null, 2); // windows needs double \0 at the end of env vars
 
   DWORD dwCreationFlags = CREATE_NO_WINDOW;
   dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
@@ -74,7 +82,7 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
   const QString applicationName = programAndArgs.join(" ");
   BOOL success = CreateProcess(0, (wchar_t *)applicationName.utf16(),
                                0, 0, TRUE, dwCreationFlags,
-                               0, 0,
+                               buffer.isEmpty() ? 0 : buffer.data(), 0,
                                &startupInfo, &pid);
   if (!success) {
     return false;
