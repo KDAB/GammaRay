@@ -438,12 +438,18 @@ else()
 endif()
 
 if(GAMMARAY_INSTALL_QT_LAYOUT)
-  # Android doesn't support sub-directories in lib/
-  set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
   set(PROBE_INSTALL_DIR ${LIB_INSTALL_DIR})
+  # Android doesn't support sub-directories in lib/
+  if (ANDROID)
+    set(PROBE_PLUGIN_INSTALL_DIR "lib")
+  else()
+    set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
+  endif()
+  set(PROBE_NAME "libgammaray_probe")
 else()
   set(PROBE_INSTALL_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}")
   set(PROBE_PLUGIN_INSTALL_DIR ${PROBE_INSTALL_DIR})
+  set(PROBE_NAME "gammaray_probe")
 endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
