@@ -36,6 +36,7 @@
 
 class QStringList;
 class QVariant;
+class QProcessEnvironment;
 
 namespace GammaRay {
 
@@ -99,6 +100,10 @@ public:
    */
   void setProbePath(const QString &path);
   QString probePath() const;
+
+  /** Process environment for the launched target. By default the environment of the launcher process is used. */
+  void setProcessEnvironment(const QProcessEnvironment &env);
+  QProcessEnvironment processEnvironment() const;
 
   /** execute this launch options with the given command-line launcher. */
   bool execute(const QString& launcherPath) const;

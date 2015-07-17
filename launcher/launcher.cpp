@@ -77,7 +77,6 @@ struct LauncherPrivate
 #endif
   ClientLauncher client;
   QTimer safetyTimer;
-  QProcessEnvironment env;
   int state;
 };
 
@@ -111,8 +110,8 @@ class InjectorThread : public QThread
 {
   Q_OBJECT
 public:
-  explicit InjectorThread(const LaunchOptions &options, const QString &probeDll, const QProcessEnvironment &env, QObject *parent = 0)
-    : QThread(parent), m_options(options), m_probeDll(probeDll), m_env(env)
+  explicit InjectorThread(const LaunchOptions &options, const QString &probeDll, QObject *parent = 0)
+    : QThread(parent), m_options(options), m_probeDll(probeDll)
   {
     Q_ASSERT(options.isValid());
   }
@@ -149,7 +148,7 @@ public:
 
     bool success = false;
     if (m_options.isLaunch()) {
-      success = injector->launch(m_options.launchArguments(), m_probeDll, QLatin1String("gammaray_probe_inject"), m_env.isEmpty() ? QProcessEnvironment::systemEnvironment() : m_env);
+      success = injector->launch(m_options.launchArguments(), m_probeDll, QLatin1String("gammaray_probe_inject"), m_options.processEnvironment());
     }
     if (m_options.isAttach()) {
       success = injector->attach(m_options.pid(), m_probeDll, QLatin1String("gammaray_probe_inject"));
@@ -173,7 +172,6 @@ signals:
 private:
   LaunchOptions m_options;
   QString m_probeDll;
-  QProcessEnvironment m_env;
 };
 
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
@@ -203,11 +201,6 @@ qint64 Launcher::instanceIdentifier() const
   return QCoreApplication::applicationPid();
 }
 
-void Launcher::setProcessEnvironment(const QProcessEnvironment& env)
-{
-  d->env = env;
-}
-
 void Launcher::delayedInit()
 {
   auto probeDll = d->options.probePath();
@@ -218,7 +211,6 @@ void Launcher::delayedInit()
 
   sendLauncherId();
   sendProbeSettings();
-  sendProbeSettingsFallback();
 
   if (d->options.uiMode() != LaunchOptions::InProcessUi) {
     SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
@@ -228,7 +220,7 @@ void Launcher::delayedInit()
     d->safetyTimer.start();
   }
 
-  InjectorThread *injector = new InjectorThread(d->options, probeDll, d->env, this);
+  InjectorThread *injector = new InjectorThread(d->options, probeDll, this);
   connect(injector, SIGNAL(finished()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
   connect(injector, SIGNAL(error(int,QString)), this, SLOT(injectorError(int,QString)), Qt::QueuedConnection);
   injector->start();
@@ -238,13 +230,7 @@ void Launcher::sendLauncherId()
 {
   // if we are launching a new process, make sure it knows how to talk to us
   if (d->options.isLaunch()) {
-    qputenv("GAMMARAY_LAUNCHER_ID", QByteArray::number(instanceIdentifier()));
-  } else {
-#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
-    qputenv("GAMMARAY_LAUNCHER_ID", "");
-#else
-    qunsetenv("GAMMARAY_LAUNCHER_ID");
-#endif
+      d->options.setProbeSetting("LAUNCHER_ID", instanceIdentifier());
   }
 }
 
@@ -283,16 +269,6 @@ void Launcher::sendProbeSettings()
   if (d->shm->size() > ba.size()) // Windows...
     qMemSet(static_cast<char*>(d->shm->data()) + ba.size(), 0xff, d->shm->size() - ba.size());
 #endif
-}
-
-void Launcher::sendProbeSettingsFallback()
-{
-  if (!d->options.isAttach())
-    return;
-
-  const QHash<QByteArray, QByteArray> probeSettings = d->options.probeSettings();
-  for (QHash<QByteArray, QByteArray>::const_iterator it = probeSettings.constBegin(); it != probeSettings.constEnd(); ++it)
-    qputenv("GAMMARAY_" + it.key(), it.value());
 }
 
 void Launcher::semaphoreReleased()
