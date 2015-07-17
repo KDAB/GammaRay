@@ -30,9 +30,6 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/objectinstance.h>
 #include <core/propertydata.h>
-#include <core/aggregatedpropertymodel.h>
-
-#include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
 #include <QtTest/qtest.h>
@@ -133,15 +130,6 @@ private:
         return -1;
     }
 
-    QModelIndex findRowByName(QAbstractItemModel* model, const char* name)
-    {
-        for (int i = 0; i < model->rowCount(); ++i) {
-            auto index = model->index(i, 0);
-            if (index.data(Qt::DisplayRole).toString() == QLatin1String(name))
-                return index;
-        }
-        return QModelIndex();
-    }
 private slots:
     void testQtGadget()
     {
@@ -314,43 +302,6 @@ private slots:
         QCOMPARE(removeSpy.size(), 1);
         QCOMPARE(addSpy.size(), 1);
     }
-
-    void testPropertyModel()
-    {
-        MyObject obj;
-        obj.setProperty("dynamicProperty", 5);
-
-        AggregatedPropertyModel model;
-        ModelTest modelTest(&model);
-        model.setObject(&obj);
-
-        QVERIFY(model.rowCount() > 7);
-        auto dynRow = findRowByName(&model, "dynamicProperty");
-        QVERIFY(dynRow.isValid());
-        QCOMPARE(dynRow.data(Qt::DisplayRole).toString(), QString("dynamicProperty"));
-        QVERIFY(dynRow.sibling(dynRow.row(), 1).flags() & Qt::ItemIsEditable);
-        QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::DisplayRole).toString(), QString("5"));
-        QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::EditRole), QVariant(5));
-
-        auto qmoRow = findRowByName(&model, "intProp");
-        QVERIFY(qmoRow.isValid());
-        QCOMPARE(qmoRow.data(Qt::DisplayRole).toString(), QString("intProp"));
-        auto qmoRow2 = qmoRow.sibling(qmoRow.row(), 1);
-        QVERIFY(qmoRow2.flags() & Qt::ItemIsEditable);
-        QCOMPARE(qmoRow2.data(Qt::DisplayRole).toString(), QString("0"));
-        QCOMPARE(qmoRow2.data(Qt::EditRole), QVariant(0));
-        model.setData(qmoRow2, 12);
-        QCOMPARE(obj.intProp(), 12);
-
-        auto moRow = findRowByName(&model, "thread");
-        QVERIFY(moRow.isValid());
-        QCOMPARE(moRow.data(Qt::DisplayRole).toString(), QString("thread"));
-        QVERIFY((moRow.sibling(moRow.row(), 1).flags() & Qt::ItemIsEditable) == 0);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        QVERIFY(!moRow.sibling(moRow.row(), 1).data(Qt::DisplayRole).toString().isEmpty());
-#endif
-    }
-
 };
 
 QTEST_MAIN(PropertyAdaptorTest)
