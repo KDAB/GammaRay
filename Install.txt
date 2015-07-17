@@ -39,6 +39,34 @@ Building on Windows with mingw:
 % mingw32-make
 % mingw32-make install
 
+Build on Android:
+$ mkdir android-build
+$ cd android-build
+$ export ANDROID_NDK=~/path/to/android-ndk
+$ cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-android.cmake \
+        -DGAMMARAY_PROBE_ONLY_BUILD=true \
+        -DCMAKE_PREFIX_PATH=/android/qt5/install/path \
+        -DCMAKE_INSTALL_PREFIX=/android/qt5/install/path ..
+$ make [-j CPU_NUMBER+2]
+$ make install
+
+Using GammaRay on Android:
+ - add GammaRay probe to your android .pro file
+myproject.pro
+....
+android: QT += GammaRayProbe
+...
+- build & deploy and run your project
+- forward GammaRay's socket
+$ adb forward tcp:11732 localfilesystem:/data/data/YOUR_ANDROID_PACKAGE_NAME(e.g. com.kdab.example)/files/+gammaray_socket
+- run GammaRay GUI and connect to localhost:11732
+- after you've finished, remove the forward:
+$ adb forward --remove tcp:11732
+or
+$ adb forward --remove-all
+to remove all forwards
+
+
 == Building with Private Qt Headers ==
 To build against private Qt headers (necessary for painter debugging/profiling)
 you must have a developer build version of Qt available (i.e. Qt must be
