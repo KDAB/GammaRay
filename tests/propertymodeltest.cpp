@@ -27,6 +27,8 @@
 #include <core/objectinstance.h>
 #include <core/aggregatedpropertymodel.h>
 
+#include "shared/propertytestobject.h"
+
 #include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
@@ -34,58 +36,6 @@
 #include <QObject>
 #include <QThread>
 #include <QSignalSpy>
-
-class MyGadget
-{
-    Q_GADGET
-    Q_PROPERTY(int prop1 READ prop1 WRITE setProp1 RESET resetProp1)
-
-public:
-    MyGadget() : m_prop1(42) {}
-    int prop1() const { return m_prop1; }
-    void setProp1(int v) { m_prop1 = v; }
-    void resetProp1() { m_prop1 = 5; }
-private:
-    int m_prop1;
-};
-
-Q_DECLARE_METATYPE(MyGadget)
-
-class MyObject : public QObject
-{
-    Q_PROPERTY(int intProp READ intProp WRITE setIntProp NOTIFY intPropChanged)
-    Q_PROPERTY(int readOnlyProp READ intProp RESET resetIntProp)
-    Q_PROPERTY(MyGadget gadget READ gadget)
-    Q_OBJECT
-public:
-    explicit MyObject(QObject *parent = 0) : QObject(parent), p1(0) {}
-    int intProp() { return p1; }
-    void setIntProp(int i)
-    {
-        if (p1 == i)
-            return;
-        p1 = i;
-        emit intPropChanged();
-    }
-    void resetIntProp()
-    {
-        setIntProp(5);
-    }
-
-    MyGadget gadget() const { return MyGadget(); }
-
-signals:
-    void intPropChanged();
-
-private:
-    int p1;
-};
-
-Q_DECLARE_METATYPE(QVector<int>)
-#if QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
-typedef QHash<QString, int> StringIntHash;
-Q_DECLARE_METATYPE(StringIntHash)
-#endif
 
 using namespace GammaRay;
 
@@ -105,14 +55,14 @@ private:
 private slots:
     void testPropertyModel()
     {
-        MyObject obj;
+        PropertyTestObject obj;
         obj.setProperty("dynamicProperty", 5);
 
         AggregatedPropertyModel model;
         ModelTest modelTest(&model);
         model.setObject(&obj);
 
-        QVERIFY(model.rowCount() > 7);
+        QVERIFY(model.rowCount() > 9);
         auto dynRow = findRowByName(&model, "dynamicProperty");
         QVERIFY(dynRow.isValid());
         QCOMPARE(dynRow.data(Qt::DisplayRole).toString(), QString("dynamicProperty"));

@@ -31,57 +31,13 @@
 #include <core/objectinstance.h>
 #include <core/propertydata.h>
 
+#include <shared/propertytestobject.h>
+
 #include <QDebug>
 #include <QtTest/qtest.h>
 #include <QObject>
 #include <QThread>
 #include <QSignalSpy>
-
-class MyGadget
-{
-    Q_GADGET
-    Q_PROPERTY(int prop1 READ prop1 WRITE setProp1 RESET resetProp1)
-
-public:
-    MyGadget() : m_prop1(42) {}
-    int prop1() const { return m_prop1; }
-    void setProp1(int v) { m_prop1 = v; }
-    void resetProp1() { m_prop1 = 5; }
-private:
-    int m_prop1;
-};
-
-Q_DECLARE_METATYPE(MyGadget)
-
-class MyObject : public QObject
-{
-    Q_PROPERTY(int intProp READ intProp WRITE setIntProp NOTIFY intPropChanged)
-    Q_PROPERTY(int readOnlyProp READ intProp RESET resetIntProp)
-    Q_PROPERTY(MyGadget gadget READ gadget)
-    Q_OBJECT
-public:
-    explicit MyObject(QObject *parent = 0) : QObject(parent), p1(0) {}
-    int intProp() { return p1; }
-    void setIntProp(int i)
-    {
-        if (p1 == i)
-            return;
-        p1 = i;
-        emit intPropChanged();
-    }
-    void resetIntProp()
-    {
-        setIntProp(5);
-    }
-
-    MyGadget gadget() const { return MyGadget(); }
-
-signals:
-    void intPropChanged();
-
-private:
-    int p1;
-};
 
 Q_DECLARE_METATYPE(QVector<int>)
 #if QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
@@ -133,13 +89,13 @@ private:
 private slots:
     void testQtGadget()
     {
-        MyGadget gadget;
+        Gadget gadget;
 
-        auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(&gadget, &MyGadget::staticMetaObject), this);
+        auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(&gadget, &Gadget::staticMetaObject), this);
         QVERIFY(adaptor);
         QCOMPARE(adaptor->count(), 1);
         verifyPropertyData(adaptor);
-        testProperty(adaptor, "prop1", "int", "MyGadget", PropertyData::Writable | PropertyData::Resettable);
+        testProperty(adaptor, "prop1", "int", "Gadget", PropertyData::Writable | PropertyData::Resettable);
         QVERIFY(!adaptor->canAddProperty());
 
         QSignalSpy spy(adaptor, SIGNAL(propertyChanged(int,int)));
@@ -161,7 +117,7 @@ private slots:
 
     void testROMetaObject()
     {
-        MyObject obj;
+        PropertyTestObject obj;
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(&obj, "QObject"), this);
         QVERIFY(adaptor);
 
@@ -232,18 +188,18 @@ private slots:
 
     void testQtObject()
     {
-        MyObject obj;
+        PropertyTestObject obj;
         obj.setProperty("dynamicProperty", 5);
 
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(&obj), this);
         QVERIFY(adaptor);
 
-        QVERIFY(adaptor->count() > 7);
+        QVERIFY(adaptor->count() > 9);
         verifyPropertyData(adaptor);
 
         testProperty(adaptor, "signalsBlocked", "bool", "QObject", PropertyData::Readable);
-        testProperty(adaptor, "intProp", "int", "MyObject", PropertyData::Writable);
-        testProperty(adaptor, "readOnlyProp", "int", "MyObject", PropertyData::Resettable);
+        testProperty(adaptor, "intProp", "int", "PropertyTestObject", PropertyData::Writable);
+        testProperty(adaptor, "readOnlyProp", "int", "PropertyTestObject", PropertyData::Resettable);
         testProperty(adaptor, "dynamicProperty", "int", "<dynamic>", PropertyData::Writable | PropertyData::Deletable);
 
         QSignalSpy changeSpy(adaptor, SIGNAL(propertyChanged(int,int)));
