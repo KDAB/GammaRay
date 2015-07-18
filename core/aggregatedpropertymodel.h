@@ -65,7 +65,7 @@ private:
     void clear();
     PropertyAdaptor* adaptorForIndex(const QModelIndex &index) const;
     void addPropertyAdaptor(PropertyAdaptor *adaptor) const;
-    QVariant data(const PropertyData &d, int column, int role) const;
+    QVariant data(PropertyAdaptor *adaptor, const PropertyData &d, int column, int role) const;
     bool hasLoop(PropertyAdaptor* adaptor, const QVariant &v) const;
 
 private slots:

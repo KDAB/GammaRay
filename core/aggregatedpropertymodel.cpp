@@ -36,6 +36,7 @@
 #include "toolfactory.h"
 #include "toolmodel.h"
 #include "varianthandler.h"
+#include "util.h"
 
 #include <common/propertymodel.h>
 
@@ -93,7 +94,7 @@ QVariant AggregatedPropertyModel::data(const QModelIndex& index, int role) const
 
     const auto adaptor = adaptorForIndex(index);
     const auto d = adaptor->propertyData(index.row());
-    return data(d, index.column(), role);
+    return data(adaptor, d, index.column(), role);
 }
 
 QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) const
@@ -105,18 +106,18 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) 
     const auto adaptor = adaptorForIndex(index);
     const auto d = adaptor->propertyData(index.row());
 
-    res.insert(Qt::DisplayRole, data(d, index.column(), Qt::DisplayRole));
-    res.insert(Qt::ToolTipRole, data(d, index.column(), Qt::ToolTipRole));
-    res.insert(PropertyModel::ActionRole, data(d, index.column(), PropertyModel::ActionRole));
-    res.insert(PropertyModel::AppropriateToolRole, data(d, index.column(), PropertyModel::AppropriateToolRole));
+    res.insert(Qt::DisplayRole, data(adaptor, d, index.column(), Qt::DisplayRole));
+    res.insert(Qt::ToolTipRole, data(adaptor, d, index.column(), Qt::ToolTipRole));
+    res.insert(PropertyModel::ActionRole, data(adaptor, d, index.column(), PropertyModel::ActionRole));
+    res.insert(PropertyModel::AppropriateToolRole, data(adaptor, d, index.column(), PropertyModel::AppropriateToolRole));
     if (index.column() == 1) {
-        res.insert(Qt::EditRole, data(d, index.column(), Qt::EditRole));
-        res.insert(Qt::DecorationRole, data(d, index.column(), Qt::DecorationRole));
+        res.insert(Qt::EditRole, data(adaptor, d, index.column(), Qt::EditRole));
+        res.insert(Qt::DecorationRole, data(adaptor, d, index.column(), Qt::DecorationRole));
     }
     return res;
 }
 
-QVariant AggregatedPropertyModel::data(const PropertyData& d, int column, int role) const
+QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyData& d, int column, int role) const
 {
     switch (role) {
         case Qt::DisplayRole:
@@ -124,7 +125,14 @@ QVariant AggregatedPropertyModel::data(const PropertyData& d, int column, int ro
                 case 0:
                     return d.name();
                 case 1:
+                {
+                    // QMetaProperty::read sets QVariant::typeName to int for enums,
+                    // so we need to handle that separately here
+                    const QString enumStr = Util::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().qtObject());
+                    if (!enumStr.isEmpty())
+                        return enumStr;
                     return VariantHandler::displayString(d.value());
+                }
                 case 2:
                     return d.typeName();
                 case 3:
