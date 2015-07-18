@@ -152,7 +152,7 @@ QVariant AggregatedPropertyModel::data(const PropertyData& d, int column, int ro
 
 bool AggregatedPropertyModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if (!index.isValid() || !m_rootAdaptor || role != Qt::EditRole)
+    if (!index.isValid() || !m_rootAdaptor || role != Qt::EditRole || index.column() != 1)
         return false;
 
     const auto adaptor = adaptorForIndex(index);

@@ -40,7 +40,6 @@ class PropertyController;
 
 class ObjectDynamicPropertyModel;
 class ObjectStaticPropertyModel;
-class MetaPropertyModel;
 class AggregatedPropertyModel;
 
 class PropertiesExtension : public PropertiesExtensionInterface, public PropertyControllerExtension
@@ -62,7 +61,6 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
 
   private:
     ObjectStaticPropertyModel *m_staticPropertyModel;
-    MetaPropertyModel *m_metaPropertyModel;
 
     AggregatedPropertyModel *m_aggregatedPropertyModel;
     QPointer<QObject> m_object;

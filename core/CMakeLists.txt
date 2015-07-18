@@ -6,7 +6,6 @@ set(gammaray_srcs
   metaobjecttreemodel.cpp
   metaobjectrepository.cpp
   metaproperty.cpp
-  metapropertymodel.cpp
   probe.cpp
   probeguard.cpp
   probesettings.cpp
