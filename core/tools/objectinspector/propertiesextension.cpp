@@ -29,7 +29,6 @@
 #include "propertiesextension.h"
 
 #include "aggregatedpropertymodel.h"
-#include "metapropertymodel.h"
 #include "objectstaticpropertymodel.h"
 #include "propertycontroller.h"
 #include "objectinstance.h"

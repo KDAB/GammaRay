@@ -30,10 +30,11 @@
 
 #include "materialextension.h"
 
-#include "core/metapropertymodel.h"
-#include "core/propertycontroller.h"
-#include "core/varianthandler.h"
-#include "common/metatypedeclarations.h"
+#include <core/aggregatedpropertymodel.h>
+#include <core/objectinstance.h>
+#include <core/propertycontroller.h>
+#include <core/varianthandler.h>
+#include <common/metatypedeclarations.h>
 
 #include <QFile>
 #include <QStandardItemModel>
@@ -60,7 +61,7 @@ MaterialExtension::MaterialExtension(PropertyController *controller)
   : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
     PropertyControllerExtension(controller->objectBaseName() + ".material"),
     m_node(0),
-    m_materialPropertyModel(new MetaPropertyModel(this)),
+    m_materialPropertyModel(new AggregatedPropertyModel(this)),
     m_shaderModel(new QStandardItemModel(this))
 {
   controller->registerModel(m_materialPropertyModel, "materialPropertyModel");
@@ -89,7 +90,7 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
   if (typeName == "QSGGeometryNode") {
     m_node = static_cast<QSGGeometryNode*>(object);
 
-    m_materialPropertyModel->setObject(m_node->material(), typeForMaterial(m_node->material()));
+    m_materialPropertyModel->setObject(ObjectInstance(m_node->material(), typeForMaterial(m_node->material())));
 
     QSGMaterialShader *materialShader = m_node->material()->createShader();
     SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief*>(materialShader);

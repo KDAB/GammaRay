@@ -37,7 +37,7 @@ class QStandardItemModel;
 
 namespace GammaRay {
 
-class MetaPropertyModel;
+class AggregatedPropertyModel;
 class PropertyController;
 class ObjectEnumModel;
 
@@ -57,7 +57,7 @@ class MaterialExtension : public MaterialExtensionInterface, public PropertyCont
 
   private:
     QSGGeometryNode *m_node;
-    MetaPropertyModel *m_materialPropertyModel;
+    AggregatedPropertyModel *m_materialPropertyModel;
     QStandardItemModel *m_shaderModel;
 };
 
