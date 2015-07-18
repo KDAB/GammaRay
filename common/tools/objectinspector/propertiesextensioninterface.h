@@ -38,6 +38,7 @@ class PropertiesExtensionInterface : public QObject
 {
   Q_OBJECT
   Q_PROPERTY(bool canAddProperty READ canAddProperty WRITE setCanAddProperty NOTIFY canAddPropertyChanged)
+  Q_PROPERTY(bool hasPropertyValues READ hasPropertyValues WRITE setHasPropertyValues NOTIFY hasPropertyValuesChanged)
   public:
     explicit PropertiesExtensionInterface(const QString &name, QObject *parent = 0);
     virtual ~PropertiesExtensionInterface();
@@ -47,6 +48,9 @@ class PropertiesExtensionInterface : public QObject
     bool canAddProperty() const;
     void setCanAddProperty(bool canAdd);
 
+    bool hasPropertyValues() const;
+    void setHasPropertyValues(bool hasValues);
+
   public slots:
     virtual void navigateToValue(int modelRow) = 0;
     virtual void setProperty(const QString &name, const QVariant &value) = 0;
@@ -54,10 +58,12 @@ class PropertiesExtensionInterface : public QObject
 
   signals:
     void canAddPropertyChanged();
+    void hasPropertyValuesChanged();
 
   private:
     QString m_name;
     bool m_canAddProperty;
+    bool m_hasPropertyValues;
 };
 
 }

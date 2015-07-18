@@ -55,6 +55,7 @@ class PropertiesTab : public QWidget
     void validateNewProperty();
     void propertyContextMenu(const QPoint &pos);
     void addNewProperty();
+    void hasValuesChanged();
 
   private:
     Ui_PropertiesTab *m_ui;

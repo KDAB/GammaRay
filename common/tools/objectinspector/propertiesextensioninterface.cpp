@@ -35,6 +35,7 @@ PropertiesExtensionInterface::PropertiesExtensionInterface(const QString &name, 
   : QObject(parent)
   , m_name(name)
   , m_canAddProperty(false)
+  , m_hasPropertyValues(true)
 {
   ObjectBroker::registerObject(name, this);
 }
@@ -60,4 +61,17 @@ void PropertiesExtensionInterface::setCanAddProperty(bool canAdd)
     return;
   m_canAddProperty = canAdd;
   emit canAddPropertyChanged();
+}
+
+bool PropertiesExtensionInterface::hasPropertyValues() const
+{
+  return m_hasPropertyValues;
+}
+
+void PropertiesExtensionInterface::setHasPropertyValues(bool hasValues)
+{
+  if (m_hasPropertyValues == hasValues)
+    return;
+  m_hasPropertyValues = hasValues;
+  emit hasPropertyValuesChanged();
 }

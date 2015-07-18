@@ -95,6 +95,8 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
 
   m_interface = ObjectBroker::object<PropertiesExtensionInterface*>(baseName + ".propertiesExtension");
   new PropertyBinder(m_interface, "canAddProperty", m_ui->newPropertyBar, "visible");
+  m_ui->propertyView->header()->setSectionHidden(1, !m_interface->hasPropertyValues());
+  connect(m_interface, SIGNAL(hasPropertyValuesChanged()), this, SLOT(hasValuesChanged()));
 }
 
 static PropertyEditorFactory::TypeId selectedTypeId(QComboBox *box)
@@ -182,4 +184,9 @@ void PropertiesTab::addNewProperty()
 
   m_ui->newPropertyName->clear();
   updateNewPropertyValueEditor();
+}
+
+void PropertiesTab::hasValuesChanged()
+{
+  m_ui->propertyView->header()->setSectionHidden(1, !m_interface->hasPropertyValues());
 }

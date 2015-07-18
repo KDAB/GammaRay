@@ -61,6 +61,7 @@ bool PropertiesExtension::setQObject(QObject *object)
 //   m_staticPropertyModel->setObject(object);
   m_aggregatedPropertyModel->setObject(object);
   setCanAddProperty(true);
+  setHasPropertyValues(true);
   return true;
 }
 
@@ -70,6 +71,7 @@ bool PropertiesExtension::setObject(void *object, const QString &typeName)
 //   m_staticPropertyModel->setObject(0);
   m_aggregatedPropertyModel->setObject(ObjectInstance(object, typeName.toUtf8()));
   setCanAddProperty(false);
+  setHasPropertyValues(true);
   return true;
 }
 
@@ -79,6 +81,7 @@ bool PropertiesExtension::setMetaObject(const QMetaObject* metaObject)
 //   m_staticPropertyModel->setMetaObject(metaObject);
   m_aggregatedPropertyModel->setObject(ObjectInstance(0, metaObject));
   setCanAddProperty(false);
+  setHasPropertyValues(false);
   return true;
 }
 
