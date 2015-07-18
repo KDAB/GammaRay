@@ -114,8 +114,9 @@ const QMetaObject* ObjectInstance::metaObject() const
 
 QByteArray ObjectInstance::typeName() const
 {
-    Q_ASSERT(m_type == QtObject || m_type == QtGadget || m_type == Object);
     if (m_metaObj)
         return m_metaObj->className();
+    if (m_variant.isValid() && m_typeName.isEmpty())
+        return m_variant.typeName();
     return m_typeName;
 }
