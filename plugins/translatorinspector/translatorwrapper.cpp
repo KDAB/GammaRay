@@ -158,10 +158,12 @@ void TranslationsModel::setTranslation(const QModelIndex &index,
   if (!index.isValid()) {
     return;
   }
-  if (m_nodes[index.row()].isOverriden) {
+
+  auto& row = m_nodes[index.row()];
+  if (row.isOverriden || row.translation == translation) {
     return;
   }
-  m_nodes[index.row()].translation = translation;
+  row.translation = translation;
   emit dataChanged(index, index);
 }
 
