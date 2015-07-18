@@ -198,10 +198,13 @@ int AggregatedPropertyModel::rowCount(const QModelIndex& parent) const
     auto adaptor = adaptorForIndex(parent);
     auto& siblings = m_parentChildrenMap[adaptor];
     if (!siblings.at(parent.row())) {
-      // TODO: remember we tried if this returns 0
-      auto a = PropertyAdaptorFactory::create(adaptor->propertyData(parent.row()).value(), adaptor);
-      siblings[parent.row()] = a;
-      addPropertyAdaptor(a);
+        // TODO: remember we tried any of this
+        auto pd = adaptor->propertyData(parent.row());
+        if (!hasLoop(adaptor, pd.value())) {
+            auto a = PropertyAdaptorFactory::create(pd.value(), adaptor);
+            siblings[parent.row()] = a;
+            addPropertyAdaptor(a);
+        }
     }
     auto childAdaptor = siblings.at(parent.row());
     if (!childAdaptor)
@@ -322,4 +325,19 @@ void AggregatedPropertyModel::propertyRemoved(int first, int last)
     auto &children = m_parentChildrenMap[adaptor];
     children.remove(first, last - first + 1);
     endRemoveRows();
+}
+
+bool AggregatedPropertyModel::hasLoop(PropertyAdaptor* adaptor, const QVariant& v) const
+{
+    auto newObj = v.value<QObject*>();
+    if (!newObj)
+        return false;
+
+    while (adaptor) {
+        if (adaptor->object().qtObject() == newObj)
+            return true;
+        adaptor = qobject_cast<PropertyAdaptor*>(adaptor->parent());
+    }
+
+    return false;
 }
