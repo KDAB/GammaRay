@@ -96,6 +96,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
   m_interface = ObjectBroker::object<PropertiesExtensionInterface*>(baseName + ".propertiesExtension");
   new PropertyBinder(m_interface, "canAddProperty", m_ui->newPropertyBar, "visible");
   m_ui->propertyView->header()->setSectionHidden(1, !m_interface->hasPropertyValues());
+  m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
   connect(m_interface, SIGNAL(hasPropertyValuesChanged()), this, SLOT(hasValuesChanged()));
 }
 
@@ -189,4 +190,5 @@ void PropertiesTab::addNewProperty()
 void PropertiesTab::hasValuesChanged()
 {
   m_ui->propertyView->header()->setSectionHidden(1, !m_interface->hasPropertyValues());
+  m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
 }
