@@ -155,7 +155,7 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
     const QString propertyName = index.sibling(index.row(), 0).data(Qt::DisplayRole).toString();
     switch (action->data().toInt()) {
       case PropertyModel::Delete:
-        m_interface->setProperty(propertyName, QVariant());
+        m_ui->propertyView->model()->setData(index, QVariant(), Qt::EditRole);
         break;
       case PropertyModel::Reset:
         m_ui->propertyView->model()->setData(index, QVariant(), PropertyModel::ResetActionRole);
