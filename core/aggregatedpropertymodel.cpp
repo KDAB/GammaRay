@@ -70,51 +70,76 @@ QVariant AggregatedPropertyModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const auto adaptor = adaptorForIndex(index);
-    const auto data = adaptor->propertyData(index.row()); // FIXME too expensive
+    const auto d = adaptor->propertyData(index.row());
+    return data(d, index.column(), role);
+}
+
+QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) const
+{
+    QMap<int, QVariant> res;
+    if (!index.isValid() || !m_rootAdaptor)
+        return res;
+
+    const auto adaptor = adaptorForIndex(index);
+    const auto d = adaptor->propertyData(index.row());
+
+    res.insert(Qt::DisplayRole, data(d, index.column(), Qt::DisplayRole));
+    res.insert(Qt::ToolTipRole, data(d, index.column(), Qt::ToolTipRole));
+    res.insert(PropertyModel::ActionRole, data(d, index.column(), PropertyModel::ActionRole));
+    res.insert(PropertyModel::AppropriateToolRole, data(d, index.column(), PropertyModel::AppropriateToolRole));
+    if (index.column() == 1) {
+        res.insert(Qt::EditRole, data(d, index.column(), Qt::EditRole));
+        res.insert(Qt::DecorationRole, data(d, index.column(), Qt::DecorationRole));
+    }
+    return res;
+}
+
+QVariant AggregatedPropertyModel::data(const PropertyData& d, int column, int role) const
+{
     switch (role) {
         case Qt::DisplayRole:
-            switch (index.column()) {
+            switch (column) {
                 case 0:
-                    return data.name();
+                    return d.name();
                 case 1:
-                    return VariantHandler::displayString(data.value());
+                    return VariantHandler::displayString(d.value());
                 case 2:
-                    return data.typeName();
+                    return d.typeName();
                 case 3:
-                    return data.className();
+                    return d.className();
             }
             break;
         case Qt::EditRole:
-            if (index.column() == 1)
-                return VariantHandler::serializableVariant(data.value());
+            if (column == 1)
+                return VariantHandler::serializableVariant(d.value());
             break;
         case Qt::ToolTipRole:
-            return data.details();
+            return d.details();
         case Qt::DecorationRole:
-            if (index.column() == 1)
-                return VariantHandler::decoration(data.value());
+            if (column == 1)
+                return VariantHandler::decoration(d.value());
             break;
         case PropertyModel::ActionRole:
         {
             int actions = PropertyModel::NoAction;
-            if (data.flags() & PropertyData::Resettable)
+            if (d.flags() & PropertyData::Resettable)
                 actions |= PropertyModel::Reset;
-            if (data.flags() & PropertyData::Deletable)
+            if (d.flags() & PropertyData::Deletable)
                 actions |= PropertyModel::Delete;
-            if ((MetaObjectRepository::instance()->metaObject(data.typeName()) && *reinterpret_cast<void* const*>(data.value().data())) || data.value().value<QObject*>())
+            if ((MetaObjectRepository::instance()->metaObject(d.typeName()) && *reinterpret_cast<void* const*>(d.value().data())) || d.value().value<QObject*>())
                 actions |= PropertyModel::NavigateTo;
             return actions;
         }
         case PropertyModel::ValueRole:
-            return data.value();
+            return d.value();
         case PropertyModel::AppropriateToolRole:
         {
             ToolModel *toolModel = Probe::instance()->toolModel();
             ToolFactory *factory;
-            if (data.value().canConvert<QObject*>())
-                factory = toolModel->data(toolModel->toolForObject(data.value().value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+            if (d.value().canConvert<QObject*>())
+                factory = toolModel->data(toolModel->toolForObject(d.value().value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
             else
-                factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void* const*>(data.value().data()), data.value().typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+                factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void* const*>(d.value().data()), d.value().typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
             if (factory) {
                 return factory->name();
             }
@@ -209,14 +234,6 @@ QModelIndex AggregatedPropertyModel::index(int row, int column, const QModelInde
         return createIndex(row, column, m_rootAdaptor);
     auto adaptor = adaptorForIndex(parent);
     return createIndex(row, column, m_parentChildrenMap.value(adaptor).at(parent.row()));
-}
-
-QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) const
-{
-    QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
-    d.insert(PropertyModel::ActionRole, data(index, PropertyModel::ActionRole));
-    d.insert(PropertyModel::AppropriateToolRole, data(index, PropertyModel::AppropriateToolRole));
-    return d;
 }
 
 PropertyAdaptor* AggregatedPropertyModel::adaptorForIndex(const QModelIndex& index) const

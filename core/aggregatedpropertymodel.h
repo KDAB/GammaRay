@@ -38,6 +38,7 @@
 namespace GammaRay {
 
 class PropertyAdaptor;
+class PropertyData;
 class ObjectInstance;
 
 /** Generic property model. */
@@ -63,6 +64,7 @@ public:
 private:
     PropertyAdaptor* adaptorForIndex(const QModelIndex &index) const;
     void addPropertyAdaptor(PropertyAdaptor *adaptor) const;
+    QVariant data(const PropertyData &d, int column, int role) const;
 
 private slots:
     void propertyChanged(int first, int last);
