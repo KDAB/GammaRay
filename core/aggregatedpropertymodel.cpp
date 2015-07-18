@@ -55,13 +55,35 @@ AggregatedPropertyModel::~AggregatedPropertyModel()
 
 void AggregatedPropertyModel::setObject(const ObjectInstance& oi)
 {
-    // TODO avoid needless resets
-    beginResetModel();
+    clear();
+
     auto adaptor = PropertyAdaptorFactory::create(oi, this);
-    delete m_rootAdaptor;
+    auto count = adaptor->count();
+    if (count)
+        beginInsertRows(QModelIndex(), 0, count -1);
+
     m_rootAdaptor = adaptor;
     addPropertyAdaptor(m_rootAdaptor);
-    endResetModel();
+
+    if (count)
+        endInsertRows();
+}
+
+void AggregatedPropertyModel::clear()
+{
+    if (!m_rootAdaptor)
+        return;
+
+    const auto count = m_parentChildrenMap.value(m_rootAdaptor).size();
+    if (count)
+        beginRemoveRows(QModelIndex(), 0, count - 1);
+
+    m_parentChildrenMap.clear();
+    delete m_rootAdaptor;
+    m_rootAdaptor = 0;
+
+    if (count)
+        endRemoveRows();
 }
 
 QVariant AggregatedPropertyModel::data(const QModelIndex& index, int role) const

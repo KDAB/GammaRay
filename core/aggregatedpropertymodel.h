@@ -62,6 +62,7 @@ public:
     QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
 private:
+    void clear();
     PropertyAdaptor* adaptorForIndex(const QModelIndex &index) const;
     void addPropertyAdaptor(PropertyAdaptor *adaptor) const;
     QVariant data(const PropertyData &d, int column, int role) const;
