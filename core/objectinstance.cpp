@@ -88,8 +88,9 @@ ObjectInstance::Type ObjectInstance::type() const
 
 QObject* ObjectInstance::qtObject() const
 {
-    Q_ASSERT(m_type == QtObject);
-    return m_payload.qtObj;
+    if (m_type == QtObject)
+        return m_payload.qtObj;
+    return 0;
 }
 
 void* ObjectInstance::object() const
