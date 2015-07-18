@@ -45,8 +45,6 @@ public:
     explicit PropertyAggregator(QObject* parent = 0);
     ~PropertyAggregator();
 
-    void setObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
-
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
     void writeProperty(int index, const QVariant& value) Q_DECL_OVERRIDE;
@@ -55,6 +53,9 @@ public:
     void resetProperty(int index) Q_DECL_OVERRIDE;
 
     void addPropertyAdaptor(PropertyAdaptor *adaptor);
+
+protected:
+    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
 
 private slots:
     void slotPropertyChanged(int first, int last);

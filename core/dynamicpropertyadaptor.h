@@ -41,7 +41,6 @@ public:
     explicit DynamicPropertyAdaptor(QObject* parent = 0);
     ~DynamicPropertyAdaptor();
 
-    void setObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
     void writeProperty(int index, const QVariant& value) Q_DECL_OVERRIDE;
@@ -49,6 +48,7 @@ public:
     void addProperty(const PropertyData& data) Q_DECL_OVERRIDE;
 
 protected:
+    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
 private:

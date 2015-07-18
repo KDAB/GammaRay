@@ -45,7 +45,7 @@ AssociativePropertyAdaptor::~AssociativePropertyAdaptor()
 {
 }
 
-void AssociativePropertyAdaptor::setObject(const ObjectInstance& oi)
+void AssociativePropertyAdaptor::doSetObject(const ObjectInstance& oi)
 {
     if (oi.type() == ObjectInstance::QtVariant)
         m_value = oi.variant();

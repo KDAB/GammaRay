@@ -44,7 +44,7 @@ SequentialPropertyAdaptor::~SequentialPropertyAdaptor()
 {
 }
 
-void SequentialPropertyAdaptor::setObject(const ObjectInstance& oi)
+void SequentialPropertyAdaptor::doSetObject(const ObjectInstance& oi)
 {
     if (oi.type() == ObjectInstance::QtVariant)
         m_value = oi.variant();

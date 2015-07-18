@@ -47,7 +47,7 @@ MetaPropertyAdaptor::~MetaPropertyAdaptor()
 {
 }
 
-void MetaPropertyAdaptor::setObject(const ObjectInstance& oi)
+void MetaPropertyAdaptor::doSetObject(const ObjectInstance& oi)
 {
     Q_ASSERT(m_metaObj == 0);
     Q_ASSERT(m_obj == 0);

@@ -43,11 +43,13 @@ public:
     explicit SequentialPropertyAdaptor(QObject* parent = 0);
     ~SequentialPropertyAdaptor();
 
-    void setObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
 #endif
+
+protected:
+    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
 
 private:
     QVariant m_value;

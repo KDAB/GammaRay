@@ -30,13 +30,13 @@
 #define GAMMARAY_PROPERTYADAPTOR_H
 
 #include "gammaray_core_export.h"
+#include "objectinstance.h"
 
 #include <QObject>
 #include <QVector>
 
 namespace GammaRay {
 
-class ObjectInstance;
 class PropertyData;
 
 /** Generic interface for accessing properties from various sources of an object. */
@@ -47,8 +47,10 @@ public:
     explicit PropertyAdaptor(QObject* parent = 0);
     ~PropertyAdaptor();
 
+    /** Returns the object instance who's properties this accesses. */
+    const ObjectInstance& object() const;
     /** Set the object instance who's properties we want to access. */
-    virtual void setObject(const ObjectInstance &oi) = 0;
+    void setObject(const ObjectInstance &oi);
 
     /** Number of properties. */
     virtual int count() const = 0;
@@ -72,6 +74,12 @@ signals:
     void propertyAdded(int first, int last);
     void propertyRemoved(int first, int last);
     void propertyChanged(int first, int last);
+
+protected:
+    virtual void doSetObject(const ObjectInstance &oi) = 0;
+
+private:
+    ObjectInstance m_oi;
 };
 
 }

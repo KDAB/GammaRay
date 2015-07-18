@@ -44,18 +44,16 @@ QMetaPropertyAdaptor::~QMetaPropertyAdaptor()
 {
 }
 
-void QMetaPropertyAdaptor::setObject(const ObjectInstance& oi)
+void QMetaPropertyAdaptor::doSetObject(const ObjectInstance& oi)
 {
-    m_oi = oi;
-
-    auto mo = m_oi.metaObject();
-    if (!mo || m_oi.type() != ObjectInstance::QtObject || !m_oi.qtObject())
+    auto mo = oi.metaObject();
+    if (!mo || oi.type() != ObjectInstance::QtObject || !oi.qtObject())
         return;
 
     for (int i = 0; i < mo->propertyCount(); ++i) {
         const QMetaProperty prop = mo->property(i);
         if (prop.hasNotifySignal()) {
-            connect(m_oi.qtObject(), QByteArray("2") +
+            connect(oi.qtObject(), QByteArray("2") +
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
                 prop.notifySignal().signature()
 #else
@@ -69,7 +67,7 @@ void QMetaPropertyAdaptor::setObject(const ObjectInstance& oi)
 
 int QMetaPropertyAdaptor::count() const
 {
-    auto mo = m_oi.metaObject();
+    auto mo = object().metaObject();
     if (!mo)
         return 0;
     return mo->propertyCount();
@@ -84,7 +82,7 @@ static QString translateBool(bool value)
 
 QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
 {
-    QObject *obj = m_oi.type() == ObjectInstance::QtObject ? m_oi.qtObject() : 0;
+    QObject *obj = object().type() == ObjectInstance::QtObject ? object().qtObject() : 0;
     QStringList s;
     s << tr("Constant: %1").arg(translateBool(prop.isConstant()));
     s << tr("Designable: %1").arg(translateBool(prop.isDesignable(obj)));
@@ -107,7 +105,7 @@ QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
 
 PropertyData QMetaPropertyAdaptor::propertyData(int index) const
 {
-    const auto mo = m_oi.metaObject();
+    const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
@@ -121,15 +119,15 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
         pmo = pmo->superClass();
     data.setClassName(pmo->className());
 
-    switch (m_oi.type()) {
+    switch (object().type()) {
         case ObjectInstance::QtObject:
-            if (m_oi.qtObject())
-                data.setValue(prop.read(m_oi.qtObject()));
+            if (object().qtObject())
+                data.setValue(prop.read(object().qtObject()));
             break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         case ObjectInstance::QtGadget:
-            if (m_oi.object())
-                data.setValue(prop.readOnGadget(m_oi.object()));
+            if (object().object())
+                data.setValue(prop.readOnGadget(object().object()));
             break;
 #endif
     }
@@ -148,22 +146,22 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
 
 void QMetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
 {
-    const auto mo = m_oi.metaObject();
+    const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
-    switch (m_oi.type()) {
+    switch (object().type()) {
         case ObjectInstance::QtObject:
-            if (m_oi.qtObject()) {
-                prop.write(m_oi.qtObject(), value);
+            if (object().qtObject()) {
+                prop.write(object().qtObject(), value);
                 if (!prop.hasNotifySignal())
                     emit propertyChanged(index, index);
             }
             break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         case ObjectInstance::QtGadget:
-            if (m_oi.object()) {
-                prop.writeOnGadget(m_oi.object(), value);
+            if (object().object()) {
+                prop.writeOnGadget(object().object(), value);
                 emit propertyChanged(index, index);
             }
             break;
@@ -173,22 +171,22 @@ void QMetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
 
 void QMetaPropertyAdaptor::resetProperty(int index)
 {
-    const auto mo = m_oi.metaObject();
+    const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
-    switch (m_oi.type()) {
+    switch (object().type()) {
         case ObjectInstance::QtObject:
-            if (m_oi.qtObject()) {
-                prop.reset(m_oi.qtObject());
+            if (object().qtObject()) {
+                prop.reset(object().qtObject());
                 if (!prop.hasNotifySignal())
                     emit propertyChanged(index, index);
             }
             break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         case ObjectInstance::QtGadget:
-            if (m_oi.object()) {
-                prop.resetOnGadget(m_oi.object());
+            if (object().object()) {
+                prop.resetOnGadget(object().object());
                 emit propertyChanged(index, index);
             }
             break;

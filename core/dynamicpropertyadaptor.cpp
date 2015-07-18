@@ -45,7 +45,7 @@ DynamicPropertyAdaptor::~DynamicPropertyAdaptor()
 {
 }
 
-void DynamicPropertyAdaptor::setObject(const ObjectInstance& oi)
+void DynamicPropertyAdaptor::doSetObject(const ObjectInstance& oi)
 {
     m_obj = oi.type() == ObjectInstance::QtObject ? oi.qtObject() : 0;
     if (m_obj) {

@@ -43,10 +43,12 @@ public:
     explicit MetaPropertyAdaptor(QObject* parent = 0);
     ~MetaPropertyAdaptor();
 
-    void setObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
     void writeProperty(int index, const QVariant& value) Q_DECL_OVERRIDE;
+
+protected:
+    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
 
 private:
     MetaObject *m_metaObj;

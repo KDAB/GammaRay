@@ -39,6 +39,17 @@ PropertyAdaptor::~PropertyAdaptor()
 {
 }
 
+const ObjectInstance& PropertyAdaptor::object() const
+{
+    return m_oi;
+}
+
+void PropertyAdaptor::setObject(const ObjectInstance& oi)
+{
+    m_oi = oi;
+    doSetObject(oi);
+}
+
 void PropertyAdaptor::writeProperty(int index, const QVariant& value)
 {
     Q_UNUSED(index);
