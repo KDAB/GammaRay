@@ -42,6 +42,12 @@
 
 using namespace GammaRay;
 
+Q_GLOBAL_STATIC(QVector<AbstractPropertyAdaptorFactory*>, s_propertyAdaptorFactories)
+
+AbstractPropertyAdaptorFactory::~AbstractPropertyAdaptorFactory()
+{
+}
+
 PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObject *parent)
 {
     QVector<PropertyAdaptor*> adaptors;
@@ -63,7 +69,11 @@ PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObjec
     }
 #endif
 
-    // TODO external factories
+    foreach (auto factory, *s_propertyAdaptorFactories()) {
+        auto a = factory->create(oi, parent);
+        if (a)
+            adaptors.push_back(a);
+    }
 
     if (adaptors.isEmpty())
         return 0;
@@ -79,4 +89,9 @@ PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObjec
     aggregator->setObject(oi);
 
     return aggregator;
+}
+
+void PropertyAdaptorFactory::registerFactory(AbstractPropertyAdaptorFactory* factory)
+{
+    s_propertyAdaptorFactories()->push_back(factory);
 }
