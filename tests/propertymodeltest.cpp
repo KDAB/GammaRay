@@ -89,6 +89,17 @@ private slots:
 #endif
     }
 
+    void testMetaObject()
+    {
+        AggregatedPropertyModel model;
+        model.setObject(ObjectInstance(0, &Gadget::staticMetaObject));
+        ModelTest modelTest(&model);
+
+        QCOMPARE(model.rowCount(), 1);
+        auto qmoRow = findRowByName(&model, "prop1");
+        QVERIFY(qmoRow.isValid());
+    }
+
     void testChangeNotification()
     {
         ChangingPropertyObject obj;
