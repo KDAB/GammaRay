@@ -213,7 +213,7 @@ QString TranslatorWrapper::translate(const char *context,
   const QString translation =
       translateInternal(context, sourceText, disambiguation, n);
 
-  if (QByteArray(context).startsWith("GammaRay::")) { //krazy:exclude=strings
+  if (strncmp(context, "GammaRay::", 10) == 0) {
     return translation;
   }
   // it's not for this translator
