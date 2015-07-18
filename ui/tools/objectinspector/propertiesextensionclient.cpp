@@ -54,8 +54,3 @@ void PropertiesExtensionClient::setProperty(const QString& propertyName, const Q
 {
   Endpoint::instance()->invokeObject(name(), "setProperty", QVariantList() << QVariant::fromValue(propertyName) << VariantWrapper(value));
 }
-
-void PropertiesExtensionClient::resetProperty(const QString& propertyName)
-{
-  Endpoint::instance()->invokeObject(name(), "resetProperty", QVariantList() << QVariant::fromValue(propertyName));
-}

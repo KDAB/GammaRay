@@ -158,7 +158,7 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
         m_interface->setProperty(propertyName, QVariant());
         break;
       case PropertyModel::Reset:
-        m_interface->resetProperty(propertyName);
+        m_ui->propertyView->model()->setData(index, QVariant(), PropertyModel::ResetActionRole);
         break;
       case PropertyModel::NavigateTo:
         QSortFilterProxyModel *proxy =

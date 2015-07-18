@@ -54,7 +54,6 @@ class PropertiesExtensionInterface : public QObject
   public slots:
     virtual void navigateToValue(int modelRow) = 0;
     virtual void setProperty(const QString &name, const QVariant &value) = 0;
-    virtual void resetProperty(const QString &name) = 0;
 
   signals:
     void canAddPropertyChanged();

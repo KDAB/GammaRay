@@ -174,12 +174,20 @@ QVariant AggregatedPropertyModel::data(const PropertyData& d, int column, int ro
 
 bool AggregatedPropertyModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if (!index.isValid() || !m_rootAdaptor || role != Qt::EditRole || index.column() != 1)
+    if (!index.isValid() || !m_rootAdaptor)
         return false;
 
     const auto adaptor = adaptorForIndex(index);
-    adaptor->writeProperty(index.row(), value);
-    return true;
+    switch (role) {
+        case Qt::EditRole:
+            adaptor->writeProperty(index.row(), value);
+            return true;
+        case PropertyModel::ResetActionRole:
+            adaptor->resetProperty(index.row());
+            return true;
+    }
+
+    return false;
 }
 
 int AggregatedPropertyModel::columnCount(const QModelIndex& parent) const

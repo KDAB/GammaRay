@@ -104,14 +104,3 @@ void PropertiesExtension::setProperty(const QString &name, const QVariant &value
   }
   m_object->setProperty(name.toUtf8(), value);
 }
-
-void PropertiesExtension::resetProperty(const QString &name)
-{
-  if (!m_object || name.isEmpty()) {
-    return;
-  }
-
-  const int index = m_object->metaObject()->indexOfProperty(name.toUtf8());
-  const QMetaProperty prop = m_object->metaObject()->property(index);
-  prop.reset(m_object);
-}

@@ -53,7 +53,6 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
 
     void navigateToValue(int modelRow) Q_DECL_OVERRIDE;
     void setProperty(const QString &name, const QVariant &value) Q_DECL_OVERRIDE;
-    void resetProperty(const QString &name) Q_DECL_OVERRIDE;
 
     bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
     bool setQObject(QObject *object) Q_DECL_OVERRIDE;

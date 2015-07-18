@@ -43,7 +43,8 @@ namespace PropertyModel {
       ActionRole = 256 + 1, /**< the property action role */
       UserRole ,             /**< the UserRole, as defined by Qt */
       ValueRole,
-      AppropriateToolRole
+      AppropriateToolRole,
+      ResetActionRole
     };
 
     /** Available property actions. */
