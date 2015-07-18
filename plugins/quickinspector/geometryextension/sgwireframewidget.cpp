@@ -219,7 +219,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
                         m_drawingMode == GL_TRIANGLES           ? "GL_TRIANGLES" :
                         m_drawingMode == GL_TRIANGLE_STRIP      ? "GL_TRIANGLE_STRIP" :
                         m_drawingMode == GL_TRIANGLE_FAN        ? "GL_TRIANGLE_FAN" : "Unknown";
-  QString text = QObject::tr("Drawing mode: %1").arg(drawingMode);
+  QString text = tr("Drawing mode: %1").arg(drawingMode);
   painter.drawText(contentsRect().width() - painter.fontMetrics().width(text),
                    contentsRect().height() - painter.fontMetrics().height(), text);
 }

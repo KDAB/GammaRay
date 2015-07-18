@@ -48,7 +48,7 @@ ObjectStaticPropertyModel::ObjectStaticPropertyModel(QObject *parent)
 
 static QString translateBool(bool value)
 {
-  return value ? QObject::tr("yes") : QObject::tr("no");
+  return value ? ObjectStaticPropertyModel::tr("yes") : ObjectStaticPropertyModel::tr("no");
 }
 
 void ObjectStaticPropertyModel::setMetaObject(const QMetaObject* mo)
