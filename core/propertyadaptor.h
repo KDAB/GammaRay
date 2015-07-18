@@ -76,7 +76,7 @@ signals:
     void propertyChanged(int first, int last);
 
 protected:
-    virtual void doSetObject(const ObjectInstance &oi) = 0;
+    virtual void doSetObject(const ObjectInstance &oi);
 
 private:
     ObjectInstance m_oi;

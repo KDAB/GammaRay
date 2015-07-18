@@ -72,3 +72,8 @@ void PropertyAdaptor::resetProperty(int index)
     Q_UNUSED(index);
     Q_ASSERT(false);
 }
+
+void PropertyAdaptor::doSetObject(const ObjectInstance& oi)
+{
+    Q_UNUSED(oi);
+}
