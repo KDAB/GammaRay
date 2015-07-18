@@ -27,11 +27,13 @@
 */
 
 #include "qmlsupport.h"
+#include "qmllistpropertyadaptor.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/varianthandler.h>
 #include <core/util.h>
+#include <core/propertyadaptorfactory.h>
 
 #include <QDateTime>
 #include <QDebug>
@@ -135,6 +137,8 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   VariantHandler::registerStringConverter<QJSValue>(qjsValueToString);
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
   VariantHandler::registerGenericStringConverter(qmlListPropertyToString);
+
+  PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
 }
 
 QString QmlSupportFactory::name() const

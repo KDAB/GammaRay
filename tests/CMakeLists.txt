@@ -176,5 +176,16 @@ add_executable(propertymodeltest
 target_link_libraries(propertymodeltest gammaray_core ${QT_QTTEST_LIBRARIES} gammaray_shared_test_data)
 add_test(NAME propertymodeltest COMMAND propertymodeltest)
 
+### QML support
+
+if(Qt5Quick_FOUND)
+  add_executable(qmlsupporttest
+    qmlsupporttest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmllistpropertyadaptor.cpp
+  )
+  target_link_libraries(qmlsupporttest gammaray_core Qt5::Quick Qt5::Test)
+  add_test(NAME qmlsupporttest COMMAND qmlsupporttest)
+endif()
+
 
 add_subdirectory(manual)
