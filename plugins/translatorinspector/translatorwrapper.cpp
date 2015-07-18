@@ -172,7 +172,7 @@ QModelIndex TranslationsModel::findNode(const QByteArray &context,
   Q_UNUSED(n);
   // QUESTION make use of n?
   for (int i = 0; i < m_nodes.size(); ++i) {
-    const Row node = m_nodes.at(i);
+    const Row &node = m_nodes.at(i);
     if (node.context == context && node.sourceText == sourceText &&
         node.disambiguation == disambiguation) {
       return index(i, 0);
