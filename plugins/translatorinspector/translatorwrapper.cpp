@@ -131,9 +131,9 @@ void TranslationsModel::resetTranslations(const QModelIndex &first,
   }
   endRemoveRows();
 }
-QString TranslationsModel::translation(const QByteArray &context,
-                                       const QByteArray &sourceText,
-                                       const QByteArray &disambiguation,
+QString TranslationsModel::translation(const char *context,
+                                       const char *sourceText,
+                                       const char *disambiguation,
                                        const int n, const QString &default_)
 {
   QModelIndex existingIndex =
@@ -164,9 +164,10 @@ void TranslationsModel::setTranslation(const QModelIndex &index,
   m_nodes[index.row()].translation = translation;
   emit dataChanged(index, index);
 }
-QModelIndex TranslationsModel::findNode(const QByteArray &context,
-                                        const QByteArray &sourceText,
-                                        const QByteArray &disambiguation,
+
+QModelIndex TranslationsModel::findNode(const char *context,
+                                        const char *sourceText,
+                                        const char *disambiguation,
                                         const int n, const bool create)
 {
   Q_UNUSED(n);
