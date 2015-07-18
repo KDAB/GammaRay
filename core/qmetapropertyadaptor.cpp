@@ -77,7 +77,7 @@ int QMetaPropertyAdaptor::count() const
 
 static QString translateBool(bool value)
 {
-    return value ? QObject::tr("yes") : QObject::tr("no");
+    return value ? QMetaPropertyAdaptor::tr("yes") : QMetaPropertyAdaptor::tr("no");
 }
 
 QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
