@@ -59,8 +59,6 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
     bool setMetaObject(const QMetaObject* metaObject) Q_DECL_OVERRIDE;
 
   private:
-    ObjectStaticPropertyModel *m_staticPropertyModel;
-
     AggregatedPropertyModel *m_aggregatedPropertyModel;
     QPointer<QObject> m_object;
 };

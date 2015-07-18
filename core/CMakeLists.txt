@@ -12,8 +12,6 @@ set(gammaray_srcs
   probecontroller.cpp
 #  proxydetacher.cpp
   objectlistmodel.cpp
-  objectpropertymodel.cpp
-  objectstaticpropertymodel.cpp
   objectclassinfomodel.cpp
   objectmethodmodel.cpp
   objectenummodel.cpp

@@ -29,7 +29,6 @@
 #include "propertiesextension.h"
 
 #include "aggregatedpropertymodel.h"
-#include "objectstaticpropertymodel.h"
 #include "propertycontroller.h"
 #include "objectinstance.h"
 #include <probe.h>
@@ -41,12 +40,9 @@ using namespace GammaRay;
 PropertiesExtension::PropertiesExtension(PropertyController *controller) :
   PropertiesExtensionInterface(controller->objectBaseName() + ".propertiesExtension", controller),
   PropertyControllerExtension(controller->objectBaseName() + ".properties"),
-  m_staticPropertyModel(new ObjectStaticPropertyModel(this)),
   m_aggregatedPropertyModel(new AggregatedPropertyModel(this))
 {
   controller->registerModel(m_aggregatedPropertyModel, "properties");
-
-//   m_aggregatedPropertyModel->addModel(m_staticPropertyModel);
 }
 
 PropertiesExtension::~PropertiesExtension()
@@ -58,7 +54,6 @@ bool PropertiesExtension::setQObject(QObject *object)
   if (m_object == object)
     return true;
   m_object = object;
-//   m_staticPropertyModel->setObject(object);
   m_aggregatedPropertyModel->setObject(object);
   setCanAddProperty(true);
   setHasPropertyValues(true);
@@ -68,7 +63,6 @@ bool PropertiesExtension::setQObject(QObject *object)
 bool PropertiesExtension::setObject(void *object, const QString &typeName)
 {
   m_object = 0;
-//   m_staticPropertyModel->setObject(0);
   m_aggregatedPropertyModel->setObject(ObjectInstance(object, typeName.toUtf8()));
   setCanAddProperty(false);
   setHasPropertyValues(true);
@@ -78,7 +72,6 @@ bool PropertiesExtension::setObject(void *object, const QString &typeName)
 bool PropertiesExtension::setMetaObject(const QMetaObject* metaObject)
 {
   m_object = 0;
-//   m_staticPropertyModel->setMetaObject(metaObject);
   m_aggregatedPropertyModel->setObject(ObjectInstance(0, metaObject));
   setCanAddProperty(false);
   setHasPropertyValues(false);
