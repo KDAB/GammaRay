@@ -126,6 +126,7 @@ void PropertyAggregator::addPropertyAdaptor(PropertyAdaptor* adaptor)
     connect(adaptor, SIGNAL(propertyChanged(int,int)), this, SLOT(slotPropertyChanged(int,int)));
     connect(adaptor, SIGNAL(propertyAdded(int,int)), this, SLOT(slotPropertyAdded(int,int)));
     connect(adaptor, SIGNAL(propertyRemoved(int,int)), this, SLOT(slotPropertyRemoved(int,int)));
+    connect(adaptor, SIGNAL(objectInvalidated()), this, SIGNAL(objectInvalidated()));
 }
 
 void PropertyAggregator::slotPropertyChanged(int first, int last)

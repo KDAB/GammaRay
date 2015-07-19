@@ -75,6 +75,11 @@ signals:
     void propertyRemoved(int first, int last);
     void propertyChanged(int first, int last);
 
+    /** Emit this when you noticed that the object who's properties we are
+     * looking at became invalid.
+     */
+    void objectInvalidated();
+
 protected:
     virtual void doSetObject(const ObjectInstance &oi);
 

@@ -188,10 +188,10 @@ private slots:
 
     void testQtObject()
     {
-        PropertyTestObject obj;
-        obj.setProperty("dynamicProperty", 5);
+        auto obj = new PropertyTestObject;
+        obj->setProperty("dynamicProperty", 5);
 
-        auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(&obj), this);
+        auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(obj), this);
         QVERIFY(adaptor);
 
         QVERIFY(adaptor->count() > 9);
@@ -215,7 +215,7 @@ private slots:
         QCOMPARE(changeSpy.at(0).at(0).toInt(), propIdx);
         QCOMPARE(changeSpy.at(0).at(1).toInt(), propIdx);
 
-        obj.setIntProp(5);
+        obj->setIntProp(5);
         QCOMPARE(changeSpy.size(), 2);
         QCOMPARE(changeSpy.at(1).at(0).toInt(), propIdx);
         QCOMPARE(changeSpy.at(1).at(1).toInt(), propIdx);
@@ -225,7 +225,7 @@ private slots:
         QVERIFY(propIdx >= 0);
         QVERIFY(!adaptor->propertyData(propIdx).details().isEmpty());
         adaptor->resetProperty(propIdx);
-        QCOMPARE(obj.intProp(), 5);
+        QCOMPARE(obj->intProp(), 5);
         QVERIFY(changeSpy.size() >= 3);
 
         propIdx = indexOfProperty(adaptor, "dynamicProperty");
@@ -235,7 +235,7 @@ private slots:
         QCOMPARE(changeSpy.size(), 1);
         QCOMPARE(changeSpy.at(0).at(0).toInt(), propIdx);
         QCOMPARE(changeSpy.at(0).at(1).toInt(), propIdx);
-        QCOMPARE(obj.property("dynamicProperty").toInt(), 12);
+        QCOMPARE(obj->property("dynamicProperty").toInt(), 12);
 
         QSignalSpy addSpy(adaptor, SIGNAL(propertyAdded(int,int)));
         QVERIFY(addSpy.isValid());
@@ -257,6 +257,11 @@ private slots:
         QCOMPARE(oldPropCount, adaptor->count());
         QCOMPARE(removeSpy.size(), 1);
         QCOMPARE(addSpy.size(), 1);
+
+        QSignalSpy invalidatedSpy(adaptor, SIGNAL(objectInvalidated()));
+        QVERIFY(invalidatedSpy.isValid());
+        delete obj;
+        QVERIFY(invalidatedSpy.size() > 0);
     }
 };
 
