@@ -58,7 +58,12 @@ void AggregatedPropertyModel::setObject(const ObjectInstance& oi)
 {
     clear();
 
+    if (!oi.isValid())
+        return;
     auto adaptor = PropertyAdaptorFactory::create(oi, this);
+    if (!adaptor)
+        return;
+
     auto count = adaptor->count();
     if (count)
         beginInsertRows(QModelIndex(), 0, count -1);
