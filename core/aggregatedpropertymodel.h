@@ -74,6 +74,7 @@ private slots:
     void propertyAdded(int first, int last);
     void propertyRemoved(int first, int last);
     void objectInvalidated();
+    void objectInvalidated(GammaRay::PropertyAdaptor *adaptor);
 
 private:
     PropertyAdaptor *m_rootAdaptor;

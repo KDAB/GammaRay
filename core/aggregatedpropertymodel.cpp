@@ -48,6 +48,7 @@ AggregatedPropertyModel::AggregatedPropertyModel(QObject* parent) :
     QAbstractItemModel(parent),
     m_rootAdaptor(0)
 {
+    qRegisterMetaType<GammaRay::PropertyAdaptor*>();
 }
 
 AggregatedPropertyModel::~AggregatedPropertyModel()
@@ -98,6 +99,11 @@ QVariant AggregatedPropertyModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     const auto adaptor = adaptorForIndex(index);
+    if (!adaptor->object().isValid()) {
+        QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel*>(this), "objectInvalidated", Qt::QueuedConnection, Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
+        return QVariant();
+    }
+
     const auto d = adaptor->propertyData(index.row());
     return data(adaptor, d, index.column(), role);
 }
@@ -109,6 +115,10 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) 
         return res;
 
     const auto adaptor = adaptorForIndex(index);
+    if (!adaptor->object().isValid()) {
+        QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel*>(this), "objectInvalidated", Qt::QueuedConnection, Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
+        return res;
+    }
     const auto d = adaptor->propertyData(index.row());
 
     res.insert(Qt::DisplayRole, data(adaptor, d, index.column(), Qt::DisplayRole));
@@ -353,8 +363,15 @@ void AggregatedPropertyModel::propertyRemoved(int first, int last)
 void AggregatedPropertyModel::objectInvalidated()
 {
     auto adaptor = qobject_cast<PropertyAdaptor*>(sender());
+    objectInvalidated(adaptor);
+}
+
+void AggregatedPropertyModel::objectInvalidated(PropertyAdaptor* adaptor)
+{
     Q_ASSERT(adaptor);
-    Q_ASSERT(m_parentChildrenMap.contains(adaptor));
+    if (!m_parentChildrenMap.contains(adaptor)) // already handled
+        return;
+
     if (adaptor == m_rootAdaptor) {
         clear();
         return;

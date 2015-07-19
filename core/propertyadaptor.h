@@ -89,4 +89,6 @@ private:
 
 }
 
+Q_DECLARE_METATYPE(GammaRay::PropertyAdaptor*)
+
 #endif // GAMMARAY_PROPERTYADAPTOR_H
