@@ -182,7 +182,9 @@ if(Qt5Quick_FOUND)
   add_executable(qmlsupporttest
     qmlsupporttest.cpp
     ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmllistpropertyadaptor.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlattachedpropertyadaptor.cpp
   )
+  include_directories(${Qt5Qml_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(qmlsupporttest gammaray_core Qt5::Quick Qt5::Test)
   add_test(NAME qmlsupporttest COMMAND qmlsupporttest)
 endif()

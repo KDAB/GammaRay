@@ -28,6 +28,7 @@
 
 #include "qmlsupport.h"
 #include "qmllistpropertyadaptor.h"
+#include "qmlattachedpropertyadaptor.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -139,6 +140,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   VariantHandler::registerGenericStringConverter(qmlListPropertyToString);
 
   PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
+  PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
 }
 
 QString QmlSupportFactory::name() const

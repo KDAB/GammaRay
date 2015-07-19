@@ -27,6 +27,7 @@
 */
 
 #include <plugins/qmlsupport/qmllistpropertyadaptor.h>
+#include <plugins/qmlsupport/qmlattachedpropertyadaptor.h>
 
 #include <core/propertyadaptor.h>
 #include <core/propertyadaptorfactory.h>
@@ -62,6 +63,7 @@ private slots:
     void initTestCase()
     {
         PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
+        PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
     }
 
     void testQmlListProperty()
@@ -89,6 +91,29 @@ private slots:
         QVERIFY(!data.name().isEmpty());
         QVERIFY(data.value().canConvert<QObject*>());
         QVERIFY(!data.typeName().isEmpty());
+        QVERIFY(!data.className().isEmpty());
+    }
+
+    void testAttachedProperty()
+    {
+        QQmlEngine engine;
+        QQmlComponent component(&engine);
+        component.setData("import QtQuick 2.0\nRectangle { Keys.enabled: true }", QUrl());
+        auto obj = component.create();
+        QVERIFY(obj);
+
+        auto adaptor = PropertyAdaptorFactory::create(obj, this);
+        QVERIFY(adaptor);
+        QVERIFY(adaptor->count() > 20);
+
+        auto idx = indexOfProperty(adaptor, "Keys");
+        QVERIFY(idx >= 0);
+
+        auto data = adaptor->propertyData(idx);
+        QCOMPARE(data.name(), QString("Keys"));
+        QVERIFY(!data.typeName().isEmpty());
+        QVERIFY(data.value().isValid());
+        QVERIFY(data.value().canConvert<QObject*>());
         QVERIFY(!data.className().isEmpty());
     }
 };
