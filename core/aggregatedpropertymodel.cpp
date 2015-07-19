@@ -180,11 +180,13 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
         case PropertyModel::AppropriateToolRole:
         {
             ToolModel *toolModel = Probe::instance()->toolModel();
-            ToolFactory *factory;
-            if (d.value().canConvert<QObject*>())
+            ToolFactory *factory = 0;
+            if (d.value().canConvert<QObject*>()) {
                 factory = toolModel->data(toolModel->toolForObject(d.value().value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
-            else
-                factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void* const*>(d.value().data()), d.value().typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+            } else if (d.value().isValid()) {
+                const auto v = d.value();
+                factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void* const*>(v.data()), v.typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+            }
             if (factory) {
                 return factory->name();
             }
