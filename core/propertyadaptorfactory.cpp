@@ -60,7 +60,7 @@ PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObjec
         adaptors.push_back(new MetaPropertyAdaptor(parent));
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-    if (oi.type() == ObjectInstance::QtVariant) {
+    if (oi.type() == ObjectInstance::QtVariant && oi.typeName() != "QJSValue") {
         const auto v = oi.variant();
         if (v.canConvert<QVariantList>())
             adaptors.push_back(new SequentialPropertyAdaptor(parent));

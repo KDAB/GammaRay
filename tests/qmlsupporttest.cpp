@@ -116,6 +116,36 @@ private slots:
         QVERIFY(data.value().canConvert<QObject*>());
         QVERIFY(!data.className().isEmpty());
     }
+
+    void testJSValue()
+    {
+        QQmlEngine engine;
+        QQmlComponent component(&engine);
+        component.setData("import QtQuick 2.0\nRectangle { property var a1: []; property var a2: [\"hello\", \"world\"] }", QUrl());
+        auto obj = component.create();
+        QVERIFY(obj);
+
+        auto adaptor = PropertyAdaptorFactory::create(obj, this);
+        QVERIFY(adaptor);
+
+        auto idx = indexOfProperty(adaptor, "a1");
+        QVERIFY(idx >= 0);
+
+        auto data = adaptor->propertyData(idx);
+        auto jsValueAdaptor = PropertyAdaptorFactory::create(data.value(), this);
+        QEXPECT_FAIL("", "not yet implemented", Continue);
+        QVERIFY(jsValueAdaptor);
+        //QCOMPARE(jsValueAdaptor->count(), 0);
+
+        idx = indexOfProperty(adaptor, "a2");
+        QVERIFY(idx >= 0);
+
+        data = adaptor->propertyData(idx);
+        jsValueAdaptor = PropertyAdaptorFactory::create(data.value(), this);
+        QEXPECT_FAIL("", "not yet implemented", Continue);
+        QVERIFY(jsValueAdaptor);
+        //QCOMPARE(jsValueAdaptor->count(), 2);
+    }
 };
 
 QTEST_MAIN(QmlSupportTest)
