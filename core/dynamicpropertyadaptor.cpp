@@ -36,8 +36,7 @@
 using namespace GammaRay;
 
 DynamicPropertyAdaptor::DynamicPropertyAdaptor(QObject* parent):
-    PropertyAdaptor(parent),
-    m_obj(0)
+    PropertyAdaptor(parent)
 {
 }
 
@@ -47,30 +46,32 @@ DynamicPropertyAdaptor::~DynamicPropertyAdaptor()
 
 void DynamicPropertyAdaptor::doSetObject(const ObjectInstance& oi)
 {
-    m_obj = oi.type() == ObjectInstance::QtObject ? oi.qtObject() : 0;
-    if (m_obj) {
-        m_propNames = m_obj->dynamicPropertyNames();
-        m_obj->installEventFilter(this);
-        connect(m_obj, SIGNAL(destroyed(QObject*)), this, SIGNAL(objectInvalidated()));
+    auto obj = oi.qtObject();
+    if (obj) {
+        m_propNames = obj->dynamicPropertyNames();
+        obj->installEventFilter(this);
+        connect(obj, SIGNAL(destroyed(QObject*)), this, SIGNAL(objectInvalidated()));
     }
 }
 
 int DynamicPropertyAdaptor::count() const
 {
-    if (!m_obj)
+    if (!object().isValid())
         return 0;
-    Q_ASSERT(m_propNames.size() == m_obj->dynamicPropertyNames().size());
+    Q_ASSERT(m_propNames.size() == object().qtObject()->dynamicPropertyNames().size());
     return m_propNames.size();
 }
 
 PropertyData DynamicPropertyAdaptor::propertyData(int index) const
 {
-    Q_ASSERT(m_obj);
-    Q_ASSERT(m_propNames.size() == m_obj->dynamicPropertyNames().size());
-
     PropertyData data;
+    if (!object().isValid())
+        return data;
+
+    Q_ASSERT(m_propNames.size() == object().qtObject()->dynamicPropertyNames().size());
+
     data.setName(m_propNames.at(index));
-    data.setValue(m_obj->property(m_propNames.at(index)));
+    data.setValue(object().qtObject()->property(m_propNames.at(index)));
     data.setClassName("<dynamic>");
     data.setFlags(PropertyData::Writable | PropertyData::Deletable);
     return data;
@@ -78,41 +79,44 @@ PropertyData DynamicPropertyAdaptor::propertyData(int index) const
 
 void DynamicPropertyAdaptor::writeProperty(int index, const QVariant& value)
 {
-    Q_ASSERT(m_obj);
+    if (!object().isValid())
+        return;
     Q_ASSERT(index < m_propNames.size());
 
     const auto propName = m_propNames.at(index);
-    m_obj->setProperty(propName, value);
+    object().qtObject()->setProperty(propName, value);
 }
 
 bool DynamicPropertyAdaptor::canAddProperty() const
 {
-    return m_obj;
+    return object().qtObject();
 }
 
 void DynamicPropertyAdaptor::addProperty(const PropertyData& data)
 {
-    Q_ASSERT(m_obj);
+    if (!object().isValid())
+        return;
     Q_ASSERT(!m_propNames.contains(data.name().toUtf8()));
 
-    m_obj->setProperty(data.name().toUtf8(), data.value());
+    object().qtObject()->setProperty(data.name().toUtf8(), data.value());
 }
 
 bool DynamicPropertyAdaptor::eventFilter(QObject* receiver, QEvent* event)
 {
-    if (receiver == m_obj && event->type() == QEvent::DynamicPropertyChange) {
+    auto obj = object().qtObject();
+    if (receiver == obj && event->type() == QEvent::DynamicPropertyChange) {
         const auto changeEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
         const auto oldIdx = m_propNames.indexOf(changeEvent->propertyName());
-        const auto newIdx = m_obj->dynamicPropertyNames().indexOf(changeEvent->propertyName());
+        const auto newIdx = obj->dynamicPropertyNames().indexOf(changeEvent->propertyName());
         if (oldIdx >= 0 && newIdx >= 0) {
             Q_ASSERT(oldIdx == newIdx);
             emit propertyChanged(oldIdx, oldIdx);
         } else if (newIdx >= 0) {
-            m_propNames = m_obj->dynamicPropertyNames();
+            m_propNames = obj->dynamicPropertyNames();
             emit propertyAdded(newIdx, newIdx);
         } else {
             Q_ASSERT(oldIdx >= 0);
-            m_propNames = m_obj->dynamicPropertyNames();
+            m_propNames = obj->dynamicPropertyNames();
             emit propertyRemoved(oldIdx, oldIdx);
         }
     }

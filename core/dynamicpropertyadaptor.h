@@ -52,7 +52,6 @@ protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    QObject *m_obj;
     QList<QByteArray> m_propNames;
 };
 

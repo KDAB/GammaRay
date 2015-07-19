@@ -32,6 +32,7 @@
 #include "gammaray_core_export.h"
 
 #include <QByteArray>
+#include <QPointer>
 #include <QVariant>
 
 class QObject;
@@ -46,6 +47,7 @@ public:
     enum Type {
         Invalid,
         QtObject,
+        QtMetaObject,
         QtGadget,
         QtVariant,
         Object,
@@ -72,11 +74,12 @@ public:
     /// only valid for [Qt]Object and QtGadget
     QByteArray typeName() const;
 
+    /// Returns @c false if this instance is known to be invalid.
+    bool isValid() const;
+
 private:
-    union {
-        void *obj;
-        QObject *qtObj;
-    } m_payload;
+    void *m_obj;
+    QPointer<QObject> m_qtObj;
     QVariant m_variant;
     const QMetaObject *m_metaObj;
     QByteArray m_typeName;

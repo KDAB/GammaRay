@@ -54,6 +54,8 @@ void PropertyAggregator::doSetObject(const ObjectInstance& oi)
 
 int PropertyAggregator::count() const
 {
+    if (!object().isValid())
+        return 0;
     return std::accumulate(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(), 0, [](int lhs, PropertyAdaptor *rhs) {
         return lhs + rhs->count();
     });
@@ -61,6 +63,9 @@ int PropertyAggregator::count() const
 
 PropertyData PropertyAggregator::propertyData(int index) const
 {
+    if (!object().isValid())
+        return PropertyData();
+
     int offset = 0;
     foreach (const auto adaptor, m_propertyAdaptors) {
         if (index < offset + adaptor->count())
@@ -74,6 +79,9 @@ PropertyData PropertyAggregator::propertyData(int index) const
 
 void PropertyAggregator::writeProperty(int index, const QVariant& value)
 {
+    if (!object().isValid())
+        return;
+
     int offset = 0;
     foreach (const auto adaptor, m_propertyAdaptors) {
         if (index < offset + adaptor->count())
@@ -94,6 +102,9 @@ bool PropertyAggregator::canAddProperty() const
 
 void PropertyAggregator::addProperty(const PropertyData& data)
 {
+    if (!object().isValid())
+        return;
+
     Q_ASSERT(canAddProperty());
 
     foreach (const auto adaptor, m_propertyAdaptors) {
@@ -108,6 +119,9 @@ void PropertyAggregator::addProperty(const PropertyData& data)
 
 void PropertyAggregator::resetProperty(int index)
 {
+    if (!object().isValid())
+        return;
+
     int offset = 0;
     foreach (const auto adaptor, m_propertyAdaptors) {
         if (index < offset + adaptor->count()) {

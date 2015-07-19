@@ -72,7 +72,7 @@ void MetaPropertyAdaptor::doSetObject(const ObjectInstance& oi)
 
 int MetaPropertyAdaptor::count() const
 {
-    if (!m_metaObj)
+    if (!m_metaObj || !object().isValid())
         return 0;
     return m_metaObj->propertyCount();
 }
@@ -80,10 +80,12 @@ int MetaPropertyAdaptor::count() const
 PropertyData MetaPropertyAdaptor::propertyData(int index) const
 {
     Q_ASSERT(m_metaObj);
+    PropertyData data;
+    if (!object().isValid())
+        return data;
 
     const auto property = m_metaObj->propertyAt(index);
 
-    PropertyData data;
     data.setName(property->name());
     data.setTypeName(property->typeName());
     data.setClassName(property->metaObject()->className());
@@ -99,6 +101,9 @@ PropertyData MetaPropertyAdaptor::propertyData(int index) const
 
 void MetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
 {
+    if (!object().isValid())
+        return;
+
     Q_ASSERT(m_metaObj && m_obj);
     const auto prop = m_metaObj->propertyAt(index);
     prop->setValue(m_obj, value);

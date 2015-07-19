@@ -64,6 +64,9 @@ int QmlAttachedPropertyAdaptor::count() const
 PropertyData QmlAttachedPropertyAdaptor::propertyData(int index) const
 {
     PropertyData pd;
+    if (!object().isValid())
+        return pd;
+
     Q_ASSERT(index >= 0);
     Q_ASSERT(index < m_attachedTypes.size());
 

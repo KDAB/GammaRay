@@ -31,50 +31,52 @@
 using namespace GammaRay;
 
 ObjectInstance::ObjectInstance() :
+    m_obj(0),
     m_metaObj(0),
     m_type(Invalid)
 {
-    m_payload.obj = 0;
 }
 
 ObjectInstance::ObjectInstance(QObject* obj) :
+    m_obj(0),
+    m_qtObj(obj),
     m_type(QtObject)
 {
-    m_payload.qtObj = obj;
     m_metaObj = obj ? obj->metaObject() : 0;
 }
 
 ObjectInstance::ObjectInstance(void* obj, const QMetaObject* metaObj) :
-    m_metaObj(metaObj),
-    m_type(QtGadget)
+    m_obj(obj),
+    m_metaObj(metaObj)
 {
-    m_payload.obj = obj;
+    m_type = obj ? QtGadget : QtMetaObject;
 }
 
 ObjectInstance::ObjectInstance(void* obj, const char* typeName) :
+    m_obj(obj),
     m_metaObj(0),
     m_typeName(typeName),
     m_type(Object)
 {
-    m_payload.obj = obj;
 }
 
 ObjectInstance::ObjectInstance(const QVariant& value) :
+    m_obj(0),
     m_metaObj(0),
     m_type(QtVariant)
 {
     m_variant = value;
     if (value.canConvert<QObject*>()) {
-        m_payload.qtObj = value.value<QObject*>();
-        if (m_payload.qtObj) {
-            m_metaObj = m_payload.qtObj->metaObject();
+        m_qtObj = value.value<QObject*>();
+        if (m_qtObj) {
+            m_metaObj = m_qtObj->metaObject();
             m_type = QtObject;
         }
     } else {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         m_metaObj = QMetaType::metaObjectForType(value.userType());
         if (m_metaObj) {
-            m_payload.obj = const_cast<void*>(value.data());
+            m_obj = const_cast<void*>(value.data());
             m_type = QtGadget;
         }
 #endif
@@ -88,17 +90,15 @@ ObjectInstance::Type ObjectInstance::type() const
 
 QObject* ObjectInstance::qtObject() const
 {
-    if (m_type == QtObject)
-        return m_payload.qtObj;
-    return 0;
+    return m_qtObj;
 }
 
 void* ObjectInstance::object() const
 {
     Q_ASSERT(m_type == QtObject || m_type == QtGadget || m_type == Object);
     if (m_type == QtObject)
-        return m_payload.qtObj;
-    return m_payload.obj;
+        return m_qtObj;
+    return m_obj;
 }
 
 QVariant ObjectInstance::variant() const
@@ -119,4 +119,17 @@ QByteArray ObjectInstance::typeName() const
     if (m_variant.isValid() && m_typeName.isEmpty())
         return m_variant.typeName();
     return m_typeName;
+}
+
+bool ObjectInstance::isValid() const
+{
+    switch (m_type) {
+        case Invalid:
+            return false;
+        case QtObject:
+            return m_qtObj;
+        case QtMetaObject:
+            return m_metaObj;
+    }
+    return true;
 }

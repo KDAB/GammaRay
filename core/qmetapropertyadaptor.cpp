@@ -69,6 +69,9 @@ void QMetaPropertyAdaptor::doSetObject(const ObjectInstance& oi)
 
 int QMetaPropertyAdaptor::count() const
 {
+    if (!object().isValid())
+        return 0;
+
     auto mo = object().metaObject();
     if (!mo)
         return 0;
@@ -84,7 +87,7 @@ static QString translateBool(bool value)
 
 QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
 {
-    QObject *obj = object().type() == ObjectInstance::QtObject ? object().qtObject() : 0;
+    QObject *obj = object().qtObject();
     QStringList s;
     s << tr("Constant: %1").arg(translateBool(prop.isConstant()));
     s << tr("Designable: %1").arg(translateBool(prop.isDesignable(obj)));
@@ -107,12 +110,15 @@ QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
 
 PropertyData QMetaPropertyAdaptor::propertyData(int index) const
 {
+    PropertyData data;
+    if (!object().isValid())
+        return data;
+
     const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
 
-    PropertyData data;
     data.setName(prop.name());
     data.setTypeName(prop.typeName());
 
