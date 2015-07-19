@@ -263,6 +263,13 @@ private slots:
         delete obj;
         QVERIFY(invalidatedSpy.size() > 0);
     }
+
+    void testQtMetaObject()
+    {
+        auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(0, &PropertyTestObject::staticMetaObject), this);
+        QVERIFY(adaptor);
+        QVERIFY(adaptor->count() >= 5);
+    }
 };
 
 QTEST_MAIN(PropertyAdaptorTest)
