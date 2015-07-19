@@ -67,6 +67,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
 {
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
+  proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
   QAbstractItemModel *model = ObjectBroker::model(baseName + '.' + "properties");
   proxy->setSourceModel(model);
   m_ui->propertyView->setModel(proxy);
