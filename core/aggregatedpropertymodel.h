@@ -67,11 +67,13 @@ private:
     void addPropertyAdaptor(PropertyAdaptor *adaptor) const;
     QVariant data(PropertyAdaptor *adaptor, const PropertyData &d, int column, int role) const;
     bool hasLoop(PropertyAdaptor* adaptor, const QVariant &v) const;
+    void reloadSubTree(PropertyAdaptor *parentAdaptor, int index);
 
 private slots:
     void propertyChanged(int first, int last);
     void propertyAdded(int first, int last);
     void propertyRemoved(int first, int last);
+    void objectInvalidated();
 
 private:
     PropertyAdaptor *m_rootAdaptor;

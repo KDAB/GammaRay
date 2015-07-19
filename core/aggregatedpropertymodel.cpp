@@ -306,6 +306,8 @@ void AggregatedPropertyModel::propertyChanged(int first, int last)
     Q_ASSERT(last < adaptor->count());
 
     emit dataChanged(createIndex(first, 0, adaptor), createIndex(last, columnCount() - 1, adaptor));
+    for (int i = first; i <= last; ++i)
+        reloadSubTree(adaptor, i);
 }
 
 void AggregatedPropertyModel::propertyAdded(int first, int last)
@@ -343,6 +345,22 @@ void AggregatedPropertyModel::propertyRemoved(int first, int last)
     endRemoveRows();
 }
 
+void AggregatedPropertyModel::objectInvalidated()
+{
+    auto adaptor = qobject_cast<PropertyAdaptor*>(sender());
+    Q_ASSERT(adaptor);
+    Q_ASSERT(m_parentChildrenMap.contains(adaptor));
+    if (adaptor == m_rootAdaptor) {
+        clear();
+        return;
+    }
+
+    auto parentAdaptor = qobject_cast<PropertyAdaptor*>(adaptor->parent());
+    Q_ASSERT(parentAdaptor);
+    Q_ASSERT(m_parentChildrenMap.contains(parentAdaptor));
+    reloadSubTree(parentAdaptor, m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor));
+}
+
 bool AggregatedPropertyModel::hasLoop(PropertyAdaptor* adaptor, const QVariant& v) const
 {
     auto newObj = v.value<QObject*>();
@@ -356,4 +374,41 @@ bool AggregatedPropertyModel::hasLoop(PropertyAdaptor* adaptor, const QVariant& 
     }
 
     return false;
+}
+
+void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor* parentAdaptor, int index)
+{
+    Q_ASSERT(parentAdaptor);
+    Q_ASSERT(m_parentChildrenMap.contains(parentAdaptor));
+    Q_ASSERT(index >= 0);
+    Q_ASSERT(index < m_parentChildrenMap.value(parentAdaptor).size());
+
+    // remove the old sub-tree, if present
+    auto oldAdaptor = m_parentChildrenMap.value(parentAdaptor).at(index);
+    if (oldAdaptor) {
+        auto oldRowCount = m_parentChildrenMap.value(oldAdaptor).size();
+        if (oldRowCount > 0)
+            beginRemoveRows(createIndex(index, 0, parentAdaptor), 0, oldRowCount - 1);
+        m_parentChildrenMap[parentAdaptor][index] = 0;
+        m_parentChildrenMap.remove(oldAdaptor);
+        delete oldAdaptor;
+        if (oldRowCount)
+            endRemoveRows();
+    }
+
+    // re-add the sub-tree
+    // TODO consolidate with code in rowCount()
+    auto pd = parentAdaptor->propertyData(index);
+    if (hasLoop(parentAdaptor, pd.value()))
+        return;
+    auto newAdaptor = PropertyAdaptorFactory::create(pd.value(), parentAdaptor);
+    if (!newAdaptor)
+        return;
+    auto newRowCount = newAdaptor->count();
+    if (newRowCount > 0)
+        beginInsertRows(createIndex(index, 0, parentAdaptor), 0, newRowCount - 1);
+    m_parentChildrenMap[parentAdaptor][index] = newAdaptor;
+    addPropertyAdaptor(newAdaptor);
+    if (newRowCount > 0)
+        endInsertRows();
 }
