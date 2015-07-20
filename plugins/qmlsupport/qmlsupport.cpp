@@ -67,13 +67,7 @@ static QString qmlListPropertyToString(const QVariant &value, bool *ok)
   const int count = prop->count(prop);
   if (!count)
     return QmlSupport::tr("<empty>");
-
-  QStringList l;
-  l.reserve(count);
-  for (int i = 0; i < prop->count(prop); ++i) {
-    l.push_back(Util::displayString(prop->at(prop, i)));
-  }
-  return l.join(QLatin1String(", "));
+  return QmlSupport::tr("<%1 entries>").arg(count);
 }
 
 static QString qjsValueToString(const QJSValue &v)

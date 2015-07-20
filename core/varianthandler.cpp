@@ -225,7 +225,18 @@ QString VariantHandler::displayString(const QVariant &value)
         arg(value.toSizeF().height());
 
   case QVariant::StringList:
-    return value.toStringList().join(", ");
+  {
+    const auto l = value.toStringList();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    if (l.isEmpty())
+      return QLatin1String("<empty>");
+    if (l.size() == 1)
+      return l.at(0);
+    return QString::fromLatin1("<%1 entries>").arg(l.size());
+#else
+    return l.join(", ");
+#endif
+  }
 
   case QVariant::Transform:
   {
@@ -404,25 +415,21 @@ QString VariantHandler::displayString(const QVariant &value)
     return (*it.value())(value);
   }
 
-  // recurse into sequences
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
   if (value.canConvert<QVariantList>()) {
-    QStringList s;
     QSequentialIterable it = value.value<QSequentialIterable>();
-    s.reserve(it.size());
-    int emptyStrings = 0;
-    foreach (const QVariant &v, it) {
-      s.push_back(displayString(v));
-      if (s.last().isEmpty()) {
-        ++emptyStrings;
-      }
-    }
     if (it.size() == 0) {
-      return QObject::tr("<empty>");
-    } else if (it.size() == emptyStrings) { // we don't know the content either
-      return QObject::tr("%1 entries").arg(emptyStrings);
+      return QLatin1String("<empty>");
     } else {
-      return s.join(", ");
+      return QString::fromLatin1("<%1 entries>").arg(it.size());
+    }
+  }
+  if (value.canConvert<QVariantHash>()) {
+    auto it = value.value<QAssociativeIterable>();
+    if (it.size() == 0) {
+      return QLatin1String("<empty>");
+    } else {
+      return QString::fromLatin1("<%1 entries>").arg(it.size());
     }
   }
 #endif
