@@ -36,15 +36,15 @@ QString typeToString(QtMsgType type)
 {
   switch(type) {
     case QtDebugMsg:
-      return QObject::tr("Debug");
+      return MessageModel::tr("Debug");
     case QtWarningMsg:
-      return QObject::tr("Warning");
+      return MessageModel::tr("Warning");
     case QtCriticalMsg:
-      return QObject::tr("Critical");
+      return MessageModel::tr("Critical");
     case QtFatalMsg:
-      return QObject::tr("Fatal");
+      return MessageModel::tr("Fatal");
     default:
-      return QObject::tr("Unknown"); // never reached in theory
+      return MessageModel::tr("Unknown"); // never reached in theory
   }
 }
 

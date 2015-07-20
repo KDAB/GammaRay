@@ -86,7 +86,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
     return;
   }
   QDialog dlg;
-  dlg.setWindowTitle(QObject::tr("QFatal in %1 at %2").arg(app).arg(time.toString()));
+  dlg.setWindowTitle(tr("QFatal in %1 at %2").arg(app).arg(time.toString()));
 
   QGridLayout *layout = new QGridLayout;
 

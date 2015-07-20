@@ -279,12 +279,12 @@ void QuickInspectorUiFactory::initUi()
   ObjectBroker::registerClientObjectFactoryCallback<MaterialExtensionInterface*>(
     createMaterialExtension);
 
-  PropertyWidget::registerTab<MaterialTab>("material", QObject::tr("Material"));
+  PropertyWidget::registerTab<MaterialTab>("material", tr("Material"));
 
   ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface*>(
     createSGGeometryExtension);
 
-  PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", QObject::tr("Geometry"));
+  PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", tr("Geometry"));
 }
 
 void QuickInspectorWidget::showEvent(QShowEvent* event)

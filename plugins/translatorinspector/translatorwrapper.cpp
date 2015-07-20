@@ -131,9 +131,9 @@ void TranslationsModel::resetTranslations(const QModelIndex &first,
   }
   endRemoveRows();
 }
-QString TranslationsModel::translation(const QByteArray &context,
-                                       const QByteArray &sourceText,
-                                       const QByteArray &disambiguation,
+QString TranslationsModel::translation(const char *context,
+                                       const char *sourceText,
+                                       const char *disambiguation,
                                        const int n, const QString &default_)
 {
   QModelIndex existingIndex =
@@ -158,21 +158,24 @@ void TranslationsModel::setTranslation(const QModelIndex &index,
   if (!index.isValid()) {
     return;
   }
-  if (m_nodes[index.row()].isOverriden) {
+
+  auto& row = m_nodes[index.row()];
+  if (row.isOverriden || row.translation == translation) {
     return;
   }
-  m_nodes[index.row()].translation = translation;
+  row.translation = translation;
   emit dataChanged(index, index);
 }
-QModelIndex TranslationsModel::findNode(const QByteArray &context,
-                                        const QByteArray &sourceText,
-                                        const QByteArray &disambiguation,
+
+QModelIndex TranslationsModel::findNode(const char *context,
+                                        const char *sourceText,
+                                        const char *disambiguation,
                                         const int n, const bool create)
 {
   Q_UNUSED(n);
   // QUESTION make use of n?
   for (int i = 0; i < m_nodes.size(); ++i) {
-    const Row node = m_nodes.at(i);
+    const Row &node = m_nodes.at(i);
     if (node.context == context && node.sourceText == sourceText &&
         node.disambiguation == disambiguation) {
       return index(i, 0);
@@ -213,7 +216,7 @@ QString TranslatorWrapper::translate(const char *context,
   const QString translation =
       translateInternal(context, sourceText, disambiguation, n);
 
-  if (QByteArray(context).startsWith("GammaRay::")) { //krazy:exclude=strings
+  if (strncmp(context, "GammaRay::", 10) == 0) {
     return translation;
   }
   // it's not for this translator

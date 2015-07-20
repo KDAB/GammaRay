@@ -117,9 +117,9 @@ QVariant AbstractConnectionsModel::headerData(int section, Qt::Orientation orien
 QString AbstractConnectionsModel::displayString(QObject *object, int methodIndex)
 {
   if (!object)
-    return QObject::tr("<destroyed>");
+    return tr("<destroyed>");
   if (methodIndex < 0)
-    return QObject::tr("<unknown>");
+    return tr("<unknown>");
 
   const QMetaMethod method = object->metaObject()->method(methodIndex);
   return Util::prettyMethodSignature(method);
@@ -128,7 +128,7 @@ QString AbstractConnectionsModel::displayString(QObject *object, int methodIndex
 QString AbstractConnectionsModel::displayString(QObject* object)
 {
   if (!object)
-    return QObject::tr("<destroyed>");
+    return tr("<destroyed>");
   return Util::displayString(object);
 }
 

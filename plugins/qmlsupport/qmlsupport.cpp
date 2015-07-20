@@ -63,7 +63,7 @@ static QString qmlListPropertyToString(const QVariant &value, bool *ok)
   QQmlListProperty<QObject> *prop = reinterpret_cast<QQmlListProperty<QObject>*>(const_cast<void*>(value.data()));
   const int count = prop->count(prop);
   if (!count)
-    return QObject::tr("<empty>");
+    return QmlSupport::tr("<empty>");
 
   QStringList l;
   l.reserve(count);

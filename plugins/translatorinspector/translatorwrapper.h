@@ -52,8 +52,8 @@ class TranslationsModel : public QAbstractListModel
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     void resetTranslations(const QModelIndex &first, const QModelIndex &last);
-    QString translation(const QByteArray &context, const QByteArray &sourceText,
-                        const QByteArray &disambiguation, const int n,
+    QString translation(const char *context, const char *sourceText,
+                        const char *disambiguation, const int n,
                         const QString &default_);
 
     void resetAllUnchanged();
@@ -81,8 +81,8 @@ class TranslationsModel : public QAbstractListModel
     };
     QVector<Row> m_nodes;
 
-    QModelIndex findNode(const QByteArray &context, const QByteArray &sourceText,
-                         const QByteArray &disambiguation, const int n,
+    QModelIndex findNode(const char *context, const char *sourceText,
+                         const char *disambiguation, const int n,
                          const bool create);
     void setTranslation(const QModelIndex &index, const QString &translation);
 };
