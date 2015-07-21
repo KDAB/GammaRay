@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_DEBUGGERINJECTOR_H
 #define GAMMARAY_DEBUGGERINJECTOR_H
 
-#include "injector/abstractinjector.h"
+#include "abstractinjector.h"
 
 #include <QObject>
 #include <QProcess>
@@ -37,12 +37,13 @@
 namespace GammaRay {
 
 /** Base class for debugger-based injectors. */
-class DebuggerInjector : public QObject, public AbstractInjector
+class DebuggerInjector : public AbstractInjector
 {
   Q_OBJECT
   public:
     DebuggerInjector();
     ~DebuggerInjector();
+    void stop();
 
     bool selfTest() Q_DECL_OVERRIDE;
 
@@ -72,6 +73,9 @@ class DebuggerInjector : public QObject, public AbstractInjector
   protected slots:
     virtual void readyReadStandardError();
     virtual void readyReadStandardOutput();
+
+  private slots:
+    void processFinished();
 
   protected:
     QScopedPointer<QProcess> m_process;

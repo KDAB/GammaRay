@@ -35,6 +35,7 @@ using namespace GammaRay;
 
 AbstractInjector::~AbstractInjector()
 {
+    stop();
 }
 
 bool AbstractInjector::launch(const QStringList &programAndArgs,
@@ -61,5 +62,9 @@ bool AbstractInjector::attach(int pid, const QString &probeDll, const QString &p
 
 bool AbstractInjector::selfTest()
 {
-  return true;
+    return true;
+}
+
+void AbstractInjector::stop()
+{
 }

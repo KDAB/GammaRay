@@ -53,15 +53,17 @@ public:
 
   /** This is used to identify the communication channels used by the launcher and the target process. */
   qint64 instanceIdentifier() const;
+  bool start();
+  void stop();
 
 signals:
+  void started();
   void finished();
 
 protected:
   virtual void startClient(const QUrl &serverAddress);
 
 private slots:
-  void delayedInit();
   void semaphoreReleased();
   void injectorError(int exitCode, const QString &errorMessage);
   void injectorFinished();

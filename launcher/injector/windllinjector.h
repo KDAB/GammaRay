@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_WINDLLINJECTOR_H
 #define GAMMARAY_WINDLLINJECTOR_H
 
-#include "injector/abstractinjector.h"
+#include "abstractinjector.h"
 
 #include <qglobal.h>
 
@@ -39,11 +39,12 @@
 #include <windows.h>
 
 namespace GammaRay {
-
+class FinishWaiter;
 class WinDllInjector : public AbstractInjector
 {
   public:
     WinDllInjector();
+    ~WinDllInjector();
     QString name() const Q_DECL_OVERRIDE;
     bool launch(const QStringList &programAndArgs,
                 const QString &probeDll, const QString &probeFunc,
@@ -53,17 +54,19 @@ class WinDllInjector : public AbstractInjector
     QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
     QProcess::ProcessError processError() Q_DECL_OVERRIDE;
     QString errorString() Q_DECL_OVERRIDE;
-
+    void stop();
   private:
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
     QString mErrorString;
 
-    bool inject();
+    void inject();
     HANDLE m_destProcess;
     HANDLE m_destThread;
     QString m_dllPath;
+    FinishWaiter *m_injectThread;
+    friend class FinishWaiter;
 };
 
 }
