@@ -493,7 +493,7 @@ include_directories(
 add_subdirectory(cmake)
 add_subdirectory(common)
 add_subdirectory(core)
-add_subdirectory(hooking)
+add_subdirectory(probe)
 add_subdirectory(launcher)
 if(GAMMARAY_BUILD_UI AND (Qt5Widgets_FOUND OR QT_QTGUI_FOUND))
   add_subdirectory(ui)
