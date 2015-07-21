@@ -266,6 +266,7 @@ int main(int argc, char **argv)
 
   Launcher launcher(options);
   QObject::connect(&launcher, SIGNAL(finished()), &app, SLOT(quit()));
+  QObject::connect(&launcher, SIGNAL(attached()), &app, SLOT(quit()));
   launcher.start();
   return app.exec();
 }

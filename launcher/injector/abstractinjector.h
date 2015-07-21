@@ -103,6 +103,7 @@ class AbstractInjector : public QObject
 signals:
     void started();
     void finished();
+    void attached();
 };
 
 }

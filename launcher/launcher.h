@@ -59,6 +59,7 @@ public:
 signals:
   void started();
   void finished();
+  void attached();
 
 protected:
   virtual void startClient(const QUrl &serverAddress);

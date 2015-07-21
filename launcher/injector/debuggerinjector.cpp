@@ -90,6 +90,7 @@ void DebuggerInjector::processFinished()
       mProcessError = m_process->error();
       mErrorString = m_process->errorString();
     }
+    emit attached();
 }
 
 void DebuggerInjector::readyReadStandardError()
@@ -169,6 +170,7 @@ bool DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &p
     // if we hit a crash or anything, print backtrace and quit
     execCmd("backtrace", false);
     execCmd("quit", false);
+
   }
 
   return true;
