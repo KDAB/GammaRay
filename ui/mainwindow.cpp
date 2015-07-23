@@ -53,7 +53,15 @@
 #include <QLabel>
 #include <QStyleFactory>
 
+#include "ui/tools/messagehandler/messagehandlerclient.h"
+#include "ui/tools/messagehandler/messagehandlerdialog.h"
+
 using namespace GammaRay;
+
+static QObject *createClientMessageHandler(const QString &/*name*/, QObject *parent)
+{
+  return new MessageHandlerClient(parent);
+}
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -127,6 +135,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
   // get some sane size on startup
   resize(1024, 768);
+
+  ObjectBroker::registerClientObjectFactoryCallback<MessageHandlerInterface*>(createClientMessageHandler);
+  MessageHandlerInterface *handler = ObjectBroker::object<MessageHandlerInterface*>();
+
+  connect(handler, SIGNAL(fatalMessageReceived(QString,QString,QTime,QStringList)),
+          this, SLOT(fatalMessageReceived(QString,QString,QTime,QStringList)));
 }
 
 MainWindow::~MainWindow()
@@ -247,4 +261,18 @@ void MainWindow::detachProbe()
 {
   emit targetQuitRequested();
   ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
+}
+
+void MainWindow::fatalMessageReceived(const QString &app, const QString &message,
+                                                const QTime &time, const QStringList &backtrace)
+{
+  if (Endpoint::isConnected() && !qobject_cast<MessageHandlerClient*>(ObjectBroker::object<MessageHandlerInterface*>())) {
+    // only show on remote side
+    return;
+  }
+  MessageHandlerDialog *dlg = new MessageHandlerDialog(this);
+  dlg->setTitleData(app, time);
+  dlg->setMessage(message);
+  dlg->setBacktrace(backtrace);
+  dlg->exec();
 }

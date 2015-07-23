@@ -1,11 +1,11 @@
 /*
-  mainwindow.h
+  messagehandlerdialog.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,45 +26,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MAINWINDOW_H
-#define GAMMARAY_MAINWINDOW_H
+#ifndef GAMMARAY_MESSAGEHANDLERDIALOG_H
+#define GAMMARAY_MESSAGEHANDLERDIALOG_H
 
-#include <QMainWindow>
-
-class QModelIndex;
+#include <QDialog>
 
 namespace GammaRay {
 
-namespace Ui { class MainWindow; }
-
-class MainWindow : public QMainWindow
+namespace Ui
 {
-  Q_OBJECT
-  public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
-  signals:
-    void targetQuitRequested();
-
-  private slots:
-    void about();
-    void aboutPlugins();
-    void aboutKDAB();
-
-    void toolSelected();
-    void selectInitialTool();
-
-    void quitHost();
-    void detachProbe();
-    void fatalMessageReceived(const QString &app, const QString &message,
-                                                  const QTime &time, const QStringList &backtrace);
-  private:
-    QWidget* createErrorPage(const QModelIndex &index);
-
-    QScopedPointer<Ui::MainWindow> ui;
-};
-
+class MessageHandlerDialog;
 }
 
-#endif // MAINWINDOW_H
+class MessageHandlerDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit MessageHandlerDialog(QWidget* parent = 0);
+    ~MessageHandlerDialog();
+    void setTitleData(const QString &app, const QTime &time);
+    void setMessage(const QString &message);
+    void setBacktrace(const QStringList &backtrace);
+private slots:
+    void copyBacktraceToClipboard();
+private:
+    QScopedPointer<Ui::MessageHandlerDialog> ui;
+    QStringList m_backtrace;
+};
+}
+
+#endif // GAMMARAY_MESSAGEHANDLERDIALOG_H
