@@ -59,7 +59,7 @@ MessageHandlerDialog::~MessageHandlerDialog()
 
 void MessageHandlerDialog::setTitleData(const QString &app, const QTime &time)
 {
-    setWindowTitle(QObject::tr("QFatal in %1 at %2").arg(app).arg(time.toString()));
+    setWindowTitle(tr("QFatal in %1 at %2").arg(app).arg(time.toString()));
 }
 
 void MessageHandlerDialog::setMessage(const QString &message)
