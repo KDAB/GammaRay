@@ -28,7 +28,6 @@
 
 
 #include "processinjector.h"
-#include "interactiveprocess.h"
 
 #include <QDebug>
 
@@ -39,17 +38,24 @@ ProcessInjector::ProcessInjector() :
   mProcessError(QProcess::UnknownError),
   mExitStatus(QProcess::NormalExit)
 {
+    connect(&m_proc, SIGNAL(finished(int)), this, SIGNAL(finished()));
 }
 
 ProcessInjector::~ProcessInjector()
 {
 }
 
+void ProcessInjector::stop()
+{
+    m_proc.terminate();
+    if (!m_proc.waitForFinished(1000))
+        m_proc.kill(); // kill it softly
+}
+
 bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QProcessEnvironment& env)
 {
-  InteractiveProcess proc;
-  proc.setProcessEnvironment(env);
-  proc.setProcessChannelMode(QProcess::ForwardedChannels);
+  m_proc.setProcessEnvironment(env);
+  m_proc.setProcessChannelMode(QProcess::ForwardedChannels);
 
   QStringList args = programAndArgs;
 
@@ -72,20 +78,28 @@ bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QPr
   }
 
   const QString program = args.takeFirst();
-  proc.start(program, args);
-  proc.waitForFinished(-1);
+  m_proc.start(program, args);
 
-  mExitCode = proc.exitCode();
-  mProcessError = proc.error();
-  mExitStatus = proc.exitStatus();
-  mErrorString = proc.errorString();
+  bool ret = m_proc.waitForStarted(-1);
+  if (ret)
+    emit started();
 
-  if (mProcessError == QProcess::FailedToStart) {
-    mErrorString.prepend(QString("Could not start '%1': ").arg(program));
-  }
+  return ret;
+}
 
-  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit
-          && mProcessError == QProcess::UnknownError;
+void ProcessInjector::processFinished()
+{
+    mExitCode = m_proc.exitCode();
+    mProcessError = m_proc.error();
+    mExitStatus = m_proc.exitStatus();
+    mErrorString = m_proc.errorString();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    if (mProcessError == QProcess::FailedToStart) {
+      mErrorString.prepend(QString("Could not start '%1': ").arg(m_proc.program()));
+    }
+#endif
+    emit finished();
 }
 
 int ProcessInjector::exitCode()

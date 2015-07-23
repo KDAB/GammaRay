@@ -26,8 +26,8 @@
 
 #include <config-gammaray.h>
 
-#include <hooking/hooks.h>
-#include <hooking/probecreator.h>
+#include <probe/hooks.h>
+#include <probe/probecreator.h>
 #include <core/probe.h>
 #include <common/paths.h>
 #include <common/objectbroker.h>

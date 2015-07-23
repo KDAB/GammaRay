@@ -24,7 +24,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <hooking/probecreator.h>
+#include <probe/probecreator.h>
 
 #include <QtTest/qtest.h>
 #include <QObject>

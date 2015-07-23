@@ -43,7 +43,8 @@ class LaunchOptionsPrivate : public QSharedData
 public:
     LaunchOptionsPrivate() :
         pid(-1),
-        uiMode(LaunchOptions::OutOfProcessUi)
+        uiMode(LaunchOptions::OutOfProcessUi),
+        env(QProcessEnvironment::systemEnvironment())
     {}
 
     QStringList launchArguments;
@@ -52,6 +53,7 @@ public:
     int pid;
     LaunchOptions::UiMode uiMode;
     QHash<QByteArray, QByteArray> probeSettings;
+    QProcessEnvironment env;
 };
 
 }
@@ -164,14 +166,37 @@ void LaunchOptions::setProbeABI(const ProbeABI& abi)
   d->probeABI = abi;
 }
 
-QString LaunchOptions::probePath() const
+void LaunchOptions::setRootPath(const QString &path)
 {
-  return d->probeSettings.value("ProbePath");
+    setProbeSetting("RootPath", path);
+}
+
+QString LaunchOptions::rootPath() const
+{
+    return d->probeSettings.value("RootPath");
+}
+
+void LaunchOptions::setProcessEnvironment(const QProcessEnvironment &env)
+{
+    d->env = env;
+}
+
+QProcessEnvironment LaunchOptions::processEnvironment() const
+{
+    QProcessEnvironment env = d->env;
+    for (auto it = d->probeSettings.constBegin(); it!= d->probeSettings.constEnd(); ++it)
+        env.insert("GAMMARAY_" + it.key(), it.value());
+    return env;
 }
 
 void LaunchOptions::setProbePath(const QString& path)
 {
   setProbeSetting("ProbePath", path);
+}
+
+QString LaunchOptions::probePath() const
+{
+    return d->probeSettings.value("ProbePath");
 }
 
 void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
@@ -185,6 +210,9 @@ void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)
       v = value.toBool() ? "true" : "false";
       break;
     case QVariant::Int:
+    case QVariant::UInt:
+    case QVariant::LongLong:
+    case QVariant::ULongLong:
       v = QByteArray::number(value.toInt());
       break;
     default:

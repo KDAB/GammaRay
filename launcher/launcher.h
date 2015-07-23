@@ -53,17 +53,18 @@ public:
 
   /** This is used to identify the communication channels used by the launcher and the target process. */
   qint64 instanceIdentifier() const;
-  /** Process environment for the launched target. By default the environment of the launcher process is used. */
-  void setProcessEnvironment(const QProcessEnvironment &env);
+  bool start();
+  void stop();
 
 signals:
+  void started();
   void finished();
+  void attached();
 
 protected:
   virtual void startClient(const QUrl &serverAddress);
 
 private slots:
-  void delayedInit();
   void semaphoreReleased();
   void injectorError(int exitCode, const QString &errorMessage);
   void injectorFinished();
@@ -72,8 +73,6 @@ private slots:
 private:
   void sendLauncherId();
   void sendProbeSettings();
-  // in case shared memory isn't available
-  void sendProbeSettingsFallback();
   void checkDone();
 
 private:

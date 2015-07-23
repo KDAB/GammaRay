@@ -48,6 +48,16 @@ DebuggerInjector::~DebuggerInjector()
 {
 }
 
+void DebuggerInjector::stop()
+{
+    if (m_process) {
+        m_process->terminate();
+        if (!m_process->waitForFinished(1000))
+            m_process->kill(); // kill it softly
+    }
+    emit finished();
+}
+
 QString DebuggerInjector::errorString()
 {
   return mErrorString;
@@ -72,6 +82,17 @@ void DebuggerInjector::readyReadStandardOutput()
 {
 }
 
+void DebuggerInjector::processFinished()
+{
+    mExitCode = m_process->exitCode();
+    mExitStatus = m_process->exitStatus();
+    if (!mManualError) {
+      mProcessError = m_process->error();
+      mErrorString = m_process->errorString();
+    }
+    emit attached();
+}
+
 void DebuggerInjector::readyReadStandardError()
 {
   const QString error = m_process->readAllStandardError();
@@ -87,17 +108,24 @@ bool DebuggerInjector::startDebugger(const QStringList& args, const QProcessEnvi
           this, SLOT(readyReadStandardError()));
   connect(m_process.data(), SIGNAL(readyReadStandardOutput()),
           this, SLOT(readyReadStandardOutput()));
+  connect(m_process.data(), SIGNAL(started()),
+          this, SIGNAL(started()));
+  connect(m_process.data(), SIGNAL(finished(int)),
+          this, SLOT(processFinished()));
   m_process->setProcessChannelMode(QProcess::SeparateChannels);
   m_process->start(debuggerExecutable(), args);
   bool status = m_process->waitForStarted(-1);
 
-  mExitCode = m_process->exitCode();
-  mExitStatus = m_process->exitStatus();
-  if (!mManualError) {
-    mProcessError = m_process->error();
-    mErrorString = m_process->errorString();
+  if (!status) {
+    mExitCode = m_process->exitCode();
+    mExitStatus = m_process->exitStatus();
+    if (!mManualError) {
+      mProcessError = m_process->error();
+      mErrorString = m_process->errorString();
+    }
+  } else {
+      emit started();
   }
-
   return status;
 }
 
@@ -142,18 +170,10 @@ bool DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &p
     // if we hit a crash or anything, print backtrace and quit
     execCmd("backtrace", false);
     execCmd("quit", false);
+
   }
 
-  m_process->waitForFinished(-1);
-
-  mExitCode = m_process->exitCode();
-  mExitStatus = m_process->exitStatus();
-  if (!mManualError) {
-    mProcessError = m_process->error();
-    mErrorString = m_process->errorString();
-  }
-
-  return mExitCode == EXIT_SUCCESS && mExitStatus == QProcess::NormalExit;
+  return true;
 }
 
 void DebuggerInjector::loadSymbols(const QByteArray& library)

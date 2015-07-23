@@ -30,20 +30,59 @@
 #include "windllinjector.h"
 
 #include <QDebug>
+#include <QThread>
 
 #ifdef Q_OS_WIN
 #include <windows.h>
 #include <cstdlib>
 
-using namespace GammaRay;
+namespace GammaRay {
+
+class FinishWaiter : public QThread {
+public:
+    FinishWaiter(WinDllInjector *injector)
+        : m_injector(injector) {}
+    ~FinishWaiter()
+    {
+        stop();
+    }
+
+    void stop()
+    {
+        if (isRunning()) {
+            terminate();
+            wait();
+        }
+    }
+
+protected:
+    void run()
+    {
+        WaitForSingleObject(m_injector->m_destProcess, INFINITE);
+        DWORD exitCode;
+        GetExitCodeProcess(m_injector->m_destProcess, &exitCode);
+
+        m_injector->mExitCode = exitCode;
+        emit m_injector->finished();
+    }
+
+private:
+    WinDllInjector *m_injector;
+};
 
 WinDllInjector::WinDllInjector() :
   mExitCode(-1),
   mProcessError(QProcess::UnknownError),
   mExitStatus(QProcess::NormalExit),
   m_destProcess(NULL),
-  m_destThread(NULL)
+  m_destThread(NULL),
+  m_injectThread(new FinishWaiter(this))
 {
+}
+
+WinDllInjector::~WinDllInjector()
+{
+    delete m_injectThread;
 }
 
 QString WinDllInjector::name() const
@@ -55,7 +94,15 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
                             const QString &probeDll, const QString &/*probeFunc*/,
                             const QProcessEnvironment &env)
 {
-  // TODO: apply env
+  // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx
+  QByteArray buffer;
+  char null[2]= {0,0};
+  foreach(const QString &kv, env.toStringList()) {
+    buffer.append((const char*)kv.utf16(), kv.size() * sizeof(ushort));
+    buffer.append(null, 2);
+  }
+  if (!buffer.isEmpty())
+    buffer.append(null, 2); // windows needs double \0 at the end of env vars
 
   DWORD dwCreationFlags = CREATE_NO_WINDOW;
   dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
@@ -74,7 +121,7 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
   const QString applicationName = programAndArgs.join(" ");
   BOOL success = CreateProcess(0, (wchar_t *)applicationName.utf16(),
                                0, 0, TRUE, dwCreationFlags,
-                               0, 0,
+                               buffer.isEmpty() ? 0 : buffer.data(), 0,
                                &startupInfo, &pid);
   if (!success) {
     return false;
@@ -85,17 +132,11 @@ bool WinDllInjector::launch(const QStringList &programAndArgs,
   m_dllPath = probeDll;
   m_dllPath.replace('/', '\\');
   inject();
+  m_injectThread->stop();
+  emit started();
   ResumeThread(pid.hThread);
-  WaitForSingleObject(pid.hProcess, INFINITE);
-  DWORD exitCode;
-  GetExitCodeProcess(pid.hProcess, &exitCode);
-
-  mExitCode = exitCode;
-  //TODO mProcessError = proc.error();
-  //TODO mExitStatus = proc.exitStatus();
-  //TODO mErrorString = proc.errorString();
-
-  return mExitCode == EXIT_SUCCESS;
+  m_injectThread->start();
+  return m_injectThread->isRunning();
 }
 
 bool WinDllInjector::attach(int pid, const QString &probeDll, const QString &/*probeFunc*/)
@@ -109,7 +150,11 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString &/*p
     return false;
   }
 
-  return inject();
+  inject();
+  m_injectThread->stop();
+  emit started();
+  m_injectThread->start();
+  return m_injectThread->isRunning();
 }
 
 int WinDllInjector::exitCode()
@@ -127,7 +172,7 @@ QProcess::ExitStatus WinDllInjector::exitStatus()
   return mExitStatus;
 }
 
-bool WinDllInjector::inject()
+void WinDllInjector::inject()
 {
   int strsize = (m_dllPath.size() * 2) + 2;
   void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
@@ -145,7 +190,6 @@ bool WinDllInjector::inject()
 
   CloseHandle(m_destThread);
   VirtualFreeEx(m_destProcess, mem, strsize, MEM_RELEASE);
-  return true;
 }
 
 QString WinDllInjector::errorString()
@@ -153,4 +197,10 @@ QString WinDllInjector::errorString()
   return mErrorString;
 }
 
+void WinDllInjector::stop()
+{
+    TerminateProcess(m_destProcess, 0xff);
+}
+
+}// namespace GammaRay
 #endif

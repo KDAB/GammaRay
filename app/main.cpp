@@ -85,6 +85,7 @@ public slots:
         m_launcher = new InternalLauncher(opts, this);
         connect(m_launcher, SIGNAL(launchClient(QUrl)), this, SLOT(startClient(QUrl)));
         connect(m_launcher, SIGNAL(finished()), this, SLOT(launcherFinished()));
+        m_launcher->start();
     }
 
     void startClient(const QUrl &serverAddress)

@@ -78,10 +78,14 @@ void ProbeSettings::receiveSettings()
     qWarning() << "Continueing anyway, with default settings.";
 
     // see if we got fallback data via environment variables
-    const QString probePath = value("ProbePath").toString();
-    if (!probePath.isEmpty())
-      Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
-
+    const QString rootPath = value("RootPath").toString();
+    if (!rootPath.isEmpty())
+      Paths::setRootPath(rootPath);
+    else {
+        const QString probePath = value("ProbePath").toString();
+        if (!probePath.isEmpty())
+            Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+    }
     return;
   }
   SharedMemoryLocker locker(&shm);
@@ -108,9 +112,14 @@ void ProbeSettings::receiveSettings()
       {
         msg.payload() >> s_probeSettings;
         //qDebug() << Q_FUNC_INFO << s_probeSettings;
-        const QString probePath = value("ProbePath").toString();
-        if (!probePath.isEmpty())
-          Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+        const QString rootPath = value("RootPath").toString();
+        if (!rootPath.isEmpty())
+          Paths::setRootPath(rootPath);
+        else {
+            const QString probePath = value("ProbePath").toString();
+            if (!probePath.isEmpty())
+              Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+        }
       }
       default:
         continue;

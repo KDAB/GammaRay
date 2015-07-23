@@ -13,57 +13,33 @@ machines or scene graphs.
 Among other things GammaRay can:
 
  * Browse the QObject tree with live updates.
-
- * View, and to some extent, edit QObject static and dynamic properties.
-
- * View and call slots of a QObject.
-
- * View other QObject elements such as signals, enums and class infos.
-
+ * View and edit object properties.
+ * View and invoke slots of a QObject, and monitor its signals.
  * List all QObject inbound and outbound signal/slot connections.
-
- * Provide a layout information overlay for QWidget applications.
-
+ * Provide a layout information overlay for QWidget and QtQuick2 applications.
  * Inspect all QPainter operations used to draw a specific widget.
-
  * Browse the QtQuick2 item tree and scenegraph.
-
+ * Inspect shaders and geometry data of QtQuick2 items.
  * Plot object lifetime and emitted signals.
-
- * View the content of any QAbstractItemModel. Very useful when
-   debugging a proxy model chain for example.
-
- * Browse the QAbstractProxyModel hierarchy.
-
+ * Browse the QAbstractProxyModel hierarchy and inspect intermediate
+   results in a proxy model chain.
+ * Visual live inspection of QStateMachines.
  * Browse the item tree of any QGraphicsView scene.
-
  * Show a live preview of QGraphicsView items, including showing their coordinate system,
    transformation origin, rotate/zoom/pan, etc.
-
  * Intercept translations and change them at runtime.
-
  * Inspect all building blocks of a QStyle.
-
- * Act as a complete java script debugger, attachable to any QScriptEngine
-  (including the usually not accessible one used by QtQuick1 internally).
-
- * Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage,
-   thanks to QWebInspector.
-
- * Browse the QResource tree and its content.
-
- * Browse QStateMachines, along with their states and transitions.
-
- * Show all registered meta types.
-
- * Show all installed fonts.
-
- * Show all available codecs.
-
+ * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
  * Browse all QTextDocuments, along with the ability to edit them and view
    their internal structures.
-
- * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
+ * Act as a complete java script debugger, attachable to any QScriptEngine
+  (including the usually not accessible one used by QtQuick1 internally).
+ * Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage,
+   thanks to QWebInspector.
+ * Browse the QResource tree and its content.
+ * Show all registered meta types.
+ * Show all installed fonts.
+ * Show all available codecs.
 
 Contact
 =======
@@ -71,11 +47,9 @@ Contact
 * Or send mail to our mailing list: https://mail.kdab.com/mailman/listinfo/gammaray-interest
 
 Get Involved
-=================
+============
 If you want to contribute, please check out: https://github.com/KDAB/GammaRay/wiki/Get-Involved
 
-Contributing
-============
 KDAB will happily accept external contributions, but substantial
 contributions will require a signed Copyright Assignment Agreement.
 Contact support@kdab.com for more information.
@@ -98,4 +72,8 @@ frameworks to Qt. We continue to help develop parts of Qt and are one
 of the major contributors to the Qt Project. We can give advanced or
 standard trainings anywhere around the globe.
 
-Please visit http://www.kdab.com to meet the people who write code like this.
+If you would like to have a custom plugin for GammaRay to visualize, profile
+or debug your own specific components or applications, get in touch with us
+via http://www.kdab.com/contact. KDAB engineers have a lot of experience
+writing GammaRay plugins and can be contracted to help you get yours working
+and improve your development efficiency.

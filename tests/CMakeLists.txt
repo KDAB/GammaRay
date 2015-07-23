@@ -121,7 +121,7 @@ endif()
 
 add_executable(signalspycallbacktest
   signalspycallbacktest.cpp
-  ../hooking/probecreator.cpp
+  ../probe/probecreator.cpp
 )
 target_link_libraries(signalspycallbacktest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
@@ -131,8 +131,8 @@ add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
 if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(actiontest
   actiontest.cpp
-  ../hooking/probecreator.cpp
-  ../hooking/hooks.cpp
+  ../probe/probecreator.cpp
+  ../probe/hooks.cpp
 )
 target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 
