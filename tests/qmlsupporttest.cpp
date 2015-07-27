@@ -131,6 +131,8 @@ private slots:
         auto idx = indexOfProperty(adaptor, "a1");
         QVERIFY(idx >= 0);
 
+        // Qt < 5.4 returned a QVariant here
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
         auto data = adaptor->propertyData(idx);
         auto jsValueAdaptor = PropertyAdaptorFactory::create(data.value(), this);
         QEXPECT_FAIL("", "not yet implemented", Continue);
@@ -145,6 +147,7 @@ private slots:
         QEXPECT_FAIL("", "not yet implemented", Continue);
         QVERIFY(jsValueAdaptor);
         //QCOMPARE(jsValueAdaptor->count(), 2);
+#endif
     }
 };
 
