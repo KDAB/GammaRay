@@ -53,12 +53,12 @@ public:
         Object,
     };
     ObjectInstance();
-    ObjectInstance(QObject *obj);
+    ObjectInstance(QObject *obj); //krazy:exclude=explicit
     /// use this for Q_GADGETs
     ObjectInstance(void *obj, const QMetaObject *metaObj);
     /// use for things that only exist as GammaRay meta objects
     ObjectInstance(void *obj, const char* typeName);
-    ObjectInstance(const QVariant &value);
+    ObjectInstance(const QVariant &value); //krazy:exclude=explicit
 
     Type type() const;
 
