@@ -26,9 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-#ifndef VARIANTINSPECTOR_H
-#define VARIANTINSPECTOR_H
+#ifndef VARIANTPROPERTYOBJECT_H
+#define VARIANTPROPERTYOBJECT_H
 
 #include <QPointer>
 #include <QObject>
