@@ -56,8 +56,10 @@ class ModelInspector : public ModelInspectorInterface
     void selectionChanged(const QItemSelection &selected);
 
     void objectSelected(QObject* object);
+    void objectCreated(QObject *object);
 
   private:
+    ProbeInterface *m_probe;
     ModelModel *m_modelModel;
     QItemSelectionModel *m_modelSelectionModel;
 

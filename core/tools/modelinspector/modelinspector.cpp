@@ -45,6 +45,7 @@ using namespace GammaRay;
 
 ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   ModelInspectorInterface(parent),
+  m_probe(probe),
   m_modelModel(0),
   m_modelContentServer(0),
   m_modelContentSelectionModel(0),
@@ -72,6 +73,10 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   m_modelTester = new ModelTester(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
           m_modelTester, SLOT(objectAdded(QObject*)));
+
+  if (!m_probe->hasReliableObjectTracking()) {
+    connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+  }
 }
 
 QString ModelInspectorFactory::name() const
@@ -145,3 +150,11 @@ void ModelInspector::selectionChanged(const QItemSelection& selected)
   emit cellSelected(index.row(), index.column(), QString::number(index.internalId()), Util::addressToString(index.internalPointer()));
 }
 
+void ModelInspector::objectCreated(QObject* object)
+{
+  if (!object)
+    return;
+
+  if (auto proxy = qobject_cast<QAbstractProxyModel*>(object))
+    m_probe->discoverObject(proxy->sourceModel());
+}
