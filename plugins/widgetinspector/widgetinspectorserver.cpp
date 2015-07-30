@@ -444,6 +444,11 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
   MO_ADD_PROPERTY_ST(QApplication, QDesktopWidget*, desktop);
   MO_ADD_PROPERTY_ST(QApplication, QWidget*, focusWidget);
   MO_ADD_PROPERTY_ST(QApplication, QStyle*, style);
+
+  MO_ADD_METAOBJECT1(QFrame, QWidget);
+  MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
+  MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
+  MO_ADD_PROPERTY_RO(QAbstractItemView, QAbstractItemModel*, model);
 #endif
 }
 
