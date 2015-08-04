@@ -56,6 +56,17 @@ private:
         QTest::qWait(1); // event loop re-entry
     }
 
+    int visibleRowCount(QAbstractItemModel *model)
+    {
+        int count = 0;
+        for (int i = 0; i < model->rowCount(); ++i) {
+            auto idx = model->index(i, 1);
+            if (!idx.data(Qt::DisplayRole).toString().startsWith("QDesktop"))
+                ++count;
+        }
+        return count;
+    }
+
 private slots:
     void testWidgetReparent()
     {
@@ -71,32 +82,32 @@ private slots:
 
         auto w2 = new QWidget;
         QTest::qWait(1); // event loop re-entry
-        QCOMPARE(model->rowCount(), 2);
+        QCOMPARE(visibleRowCount(model), 2);
 
         w2->setParent(w1);
         QTest::qWait(1); // event loop re-entry
-        QCOMPARE(model->rowCount(), 1);
+        QCOMPARE(visibleRowCount(model), 1);
 
         w2->setParent(w1);
         QTest::qWait(1); // event loop re-entry
-        QCOMPARE(model->rowCount(), 1);
+        QCOMPARE(visibleRowCount(model), 1);
 
         auto w3 = new QWidget;
         w2->setParent(w3); // reparent without event loop reentry!
         QTest::qWait(1); // event loop re-entry
-        QCOMPARE(model->rowCount(), 2);
+        QCOMPARE(visibleRowCount(model), 2);
 
         delete w2;
         QTest::qWait(1); // event loop re-entry
-        QCOMPARE(model->rowCount(), 2);
+        QCOMPARE(visibleRowCount(model), 2);
 
         delete w1;
         QTest::qWait(1); // event loop re-entry
-        QCOMPARE(model->rowCount(), 1);
+        QCOMPARE(visibleRowCount(model), 1);
 
         delete w3;
         QTest::qWait(1); // event loop re-entry
-        QCOMPARE(model->rowCount(), 0);
+        QCOMPARE(visibleRowCount(model), 0);
     }
 };
 
