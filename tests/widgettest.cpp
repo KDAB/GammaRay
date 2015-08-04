@@ -61,11 +61,14 @@ private slots:
     {
         createProbe();
 
+        // we need one widget for the plugin to activate, otherwise the model will not be available
+        auto w1 = new QWidget;
+        QTest::qWait(1); // event loop re-entry
+
         auto *model = ObjectBroker::model("com.kdab.GammaRay.WidgetTree");
         QVERIFY(model);
         ModelTest modelTest(model);
 
-        auto w1 = new QWidget;
         auto w2 = new QWidget;
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(model->rowCount(), 2);
