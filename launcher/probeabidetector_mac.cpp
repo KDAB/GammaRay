@@ -43,6 +43,9 @@
 
 using namespace GammaRay;
 
+template <typename T>
+static QString readMachOHeader(const uchar* data, quint64 size, quint32 &offset, qint32 &ncmds, qint32 &cmdsize);
+
 static QString resolveBundlePath(const QString &bundlePath)
 {
   const QFileInfo fi(bundlePath);
@@ -91,9 +94,63 @@ static QString qtCoreFromOtool(const QString &path)
   return QString();
 }
 
+static QStringList readRPaths(const QString &path)
+{
+  QStringList rpaths;
+  QFile f(path);
+  if (!f.open(QFile::ReadOnly))
+    return rpaths;
+
+  auto size = f.size();
+  const uchar* data = f.map(0, size);
+  if (!data || (uint)size <= sizeof(quint32))
+    return rpaths;
+
+  quint32 offset = 0;
+  qint32 ncmds = 0;
+  qint32 cmdsize = 0;
+
+  const quint32 magic = *reinterpret_cast<const quint32*>(data);
+  switch (magic) {
+    case MH_MAGIC:
+      readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize);
+      break;
+    case MH_MAGIC_64:
+      readMachOHeader<mach_header_64>(data, size, offset, ncmds, cmdsize);
+      break;
+  }
+
+  if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
+    return rpaths;
+
+  // read load commands
+  for (int i = 0; i < ncmds; ++i) {
+    const load_command* cmd = reinterpret_cast<const load_command*>(data + offset);
+    if (cmd->cmd == LC_RPATH) {
+        const rpath_command *rpcmd = reinterpret_cast<const rpath_command*>(data + offset);
+        rpaths.push_back(QString::fromUtf8(reinterpret_cast<const char*>(rpcmd) + rpcmd->path.offset));
+    }
+    offset += cmd->cmdsize;
+  }
+
+  return rpaths;
+}
+
+static QString resolveRPath(const QString &path, const QStringList &rpaths)
+{
+  foreach (const auto& rpath, rpaths) {
+    auto resolvedPath = path;
+    resolvedPath.replace("@rpath", rpath);
+    if (QFile::exists(resolvedPath))
+      return resolvedPath;
+  }
+  return path;
+}
+
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
-  const QString qtCorePath = qtCoreFromOtool(resolveBundlePath(path));
+  auto qtCorePath = qtCoreFromOtool(resolveBundlePath(path));
+  qtCorePath = resolveRPath(qtCorePath, readRPaths(path));
   if (qtCorePath.isEmpty())
     return ProbeABI();
 
