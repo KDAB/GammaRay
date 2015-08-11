@@ -29,6 +29,7 @@
 #include "qmlsupport.h"
 #include "qmllistpropertyadaptor.h"
 #include "qmlattachedpropertyadaptor.h"
+#include "qjsvaluepropertyadaptor.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -135,6 +136,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
 
   PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
   PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
+  PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
 }
 
 QString QmlSupportFactory::name() const

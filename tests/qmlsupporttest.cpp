@@ -28,6 +28,7 @@
 
 #include <plugins/qmlsupport/qmllistpropertyadaptor.h>
 #include <plugins/qmlsupport/qmlattachedpropertyadaptor.h>
+#include <plugins/qmlsupport/qjsvaluepropertyadaptor.h>
 
 #include <core/propertyadaptor.h>
 #include <core/propertyadaptorfactory.h>
@@ -64,6 +65,7 @@ private slots:
     {
         PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
+        PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
     }
 
     void testQmlListProperty()
@@ -135,18 +137,19 @@ private slots:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
         auto data = adaptor->propertyData(idx);
         auto jsValueAdaptor = PropertyAdaptorFactory::create(data.value(), this);
-        QEXPECT_FAIL("", "not yet implemented", Continue);
         QVERIFY(jsValueAdaptor);
-        //QCOMPARE(jsValueAdaptor->count(), 0);
+        QCOMPARE(jsValueAdaptor->count(), 0);
 
         idx = indexOfProperty(adaptor, "a2");
         QVERIFY(idx >= 0);
 
         data = adaptor->propertyData(idx);
         jsValueAdaptor = PropertyAdaptorFactory::create(data.value(), this);
-        QEXPECT_FAIL("", "not yet implemented", Continue);
         QVERIFY(jsValueAdaptor);
-        //QCOMPARE(jsValueAdaptor->count(), 2);
+        QCOMPARE(jsValueAdaptor->count(), 2);
+        data = jsValueAdaptor->propertyData(1);
+        QCOMPARE(data.name(), QString("1"));
+        QCOMPARE(data.value(), QVariant("world"));
 #endif
     }
 };
