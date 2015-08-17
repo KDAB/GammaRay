@@ -61,7 +61,7 @@ private:
         int count = 0;
         for (int i = 0; i < model->rowCount(); ++i) {
             auto idx = model->index(i, 1);
-            if (!idx.data(Qt::DisplayRole).toString().startsWith("QDesktop"))
+            if (!idx.data(Qt::DisplayRole).toString().startsWith(QLatin1String("QDesktop")))
                 ++count;
         }
         return count;
