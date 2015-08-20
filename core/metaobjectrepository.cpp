@@ -149,12 +149,14 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_ST(QGuiApplication, QFont, font);
   MO_ADD_PROPERTY_ST(QGuiApplication, bool, isLeftToRight);
   MO_ADD_PROPERTY_ST(QGuiApplication, bool, isRightToLeft);
-  MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSavingSession);
-  MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSessionRestored);
   MO_ADD_PROPERTY_ST(QGuiApplication, QPalette, palette);
   MO_ADD_PROPERTY_ST(QGuiApplication, QScreen*, primaryScreen);
+#ifndef QT_NO_SESSIONMANAGER
+  MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSavingSession);
+  MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSessionRestored);
   MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionId);
   MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionKey);
+#endif
 #endif
 }
 
