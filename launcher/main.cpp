@@ -51,6 +51,40 @@
 #include <QStringList>
 #include <QVariant>
 
+#include <csignal>
+
+namespace {
+void shutdownGracefully(int sig)
+{
+    static volatile std::sig_atomic_t handlingSignal = 0;
+
+    if ( !handlingSignal ) {
+        handlingSignal = 1;
+        qDebug() << "Signal" << sig << "received, shutting down gracefully.";
+        QCoreApplication* app = QCoreApplication::instance();
+        app->quit();
+        return;
+    }
+
+    // re-raise signal with default handler and trigger program termination
+    std::signal(sig, SIG_DFL);
+    std::raise(sig);
+}
+
+void installSignalHandler()
+{
+#ifdef SIGHUP
+    std::signal(SIGHUP, shutdownGracefully);
+#endif
+#ifdef SIGINT
+    std::signal(SIGINT, shutdownGracefully);
+#endif
+#ifdef SIGTERM
+    std::signal(SIGTERM, shutdownGracefully);
+#endif
+}
+}
+
 using namespace GammaRay;
 
 QTextStream out(stdout);
@@ -126,6 +160,8 @@ int main(int argc, char **argv)
   QCoreApplication::setOrganizationName("KDAB");
   QCoreApplication::setOrganizationDomain("kdab.com");
   QCoreApplication::setApplicationName("GammaRay");
+
+  installSignalHandler();
 
   QStringList args;
   args.reserve(argc);
