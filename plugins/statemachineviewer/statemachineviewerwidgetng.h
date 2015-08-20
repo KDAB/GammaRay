@@ -56,11 +56,15 @@ public:
 
 private slots:
   void showMessage(const QString &message);
+  //cppcheck-suppress passedByValue
   void stateAdded(const GammaRay::StateId stateId, const GammaRay::StateId parentId, const bool hasChildren,
                   const QString& label, const GammaRay::StateType type, const bool connectToInitial);
   void stateConfigurationChanged(const GammaRay::StateMachineConfiguration &config);
+  //cppcheck-suppress passedByValue
   void transitionAdded(const GammaRay::TransitionId transitionId, const GammaRay::StateId source,
-                       const GammaRay::StateId target, const QString& label);
+                         //cppcheck-suppress passedByValue
+                         const GammaRay::StateId target, const QString& label);
+  //cppcheck-suppress passedByValue
   void statusChanged(const bool haveStateMachine, const bool running);
   void transitionTriggered(GammaRay::TransitionId transition, const QString &label);
   void stateModelReset();

@@ -210,6 +210,7 @@ void QuickItemModel::addItem(QQuickItem *item)
   }
 
   QQuickItem *parentItem = item->parentItem();
+  //cppcheck-suppress nullPointerRedundantCheck
   if (parentItem) {
     // add parent first, if we don't know that yet
     if (!m_childParentMap.contains(parentItem)) {
@@ -253,6 +254,7 @@ void QuickItemModel::removeItem(QQuickItem *item, bool danglingPointer)
 
   QQuickItem *parentItem = m_childParentMap[item];
   const QModelIndex parentIndex = indexForItem(parentItem);
+  //cppcheck-suppress nullPointerRedundantCheck
   if (parentItem && !parentIndex.isValid()) {
     return;
   }

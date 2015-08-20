@@ -63,9 +63,11 @@ class StateMachineViewerWidget : public QWidget
     void clearView();
     void repopulateView();
     void clearGraph();
+    //cppcheck-suppress passedByValue
     void stateAdded(const GammaRay::StateId state, const GammaRay::StateId parent, const bool hasChildren,
                     const QString &label, const GammaRay::StateType type, const bool connectToInitial);
     void stateConfigurationChanged(const GammaRay::StateMachineConfiguration &config);
+    //cppcheck-suppress passedByValue
     void transitionAdded(const GammaRay::TransitionId transition, const GammaRay::StateId source, const GammaRay::StateId target,
                          const QString &label);
     void transitionTriggered(GammaRay::TransitionId transition, const QString &label);

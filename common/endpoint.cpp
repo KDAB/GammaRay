@@ -143,8 +143,12 @@ Protocol::ObjectAddress Endpoint::registerObject(const QString &name, QObject *o
 {
   ObjectInfo* obj = m_nameMap.value(name, 0);
   Q_ASSERT(obj);
+
   Q_ASSERT(!obj->object);
+
   Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
+
+  //cppcheck-suppress nullPointerRedundantCheck
   if (!obj || obj->object || obj->address == Protocol::InvalidObjectAddress) {
     return 0;
   }
@@ -167,7 +171,10 @@ void Endpoint::invokeObject(const QString &objectName, const char *method, const
 
   ObjectInfo* obj = m_nameMap.value(objectName, 0);
   Q_ASSERT(obj);
+
   Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
+
+  //cppcheck-suppress nullPointerRedundantCheck
   if (!obj || obj->address == Protocol::InvalidObjectAddress) {
     return;
   }
@@ -241,7 +248,10 @@ void Endpoint::objectDestroyed(QObject *obj)
 {
   ObjectInfo* info = m_objectMap.value(obj, 0);
   Q_ASSERT(info);
+
   Q_ASSERT(info->object == obj);
+
+  //cppcheck-suppress nullPointerRedundantCheck
   if (!info || info->object != obj) {
     return;
   }
@@ -348,4 +358,3 @@ void Endpoint::setLabel(const QString &label)
 {
   m_label = label;
 }
-
