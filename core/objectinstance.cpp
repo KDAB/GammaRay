@@ -130,6 +130,8 @@ bool ObjectInstance::isValid() const
             return m_qtObj;
         case QtMetaObject:
             return m_metaObj;
+        default:
+            break;
     }
     return true;
 }

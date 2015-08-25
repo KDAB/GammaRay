@@ -138,6 +138,8 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
                 data.setValue(prop.readOnGadget(object().object()));
             break;
 #endif
+        default:
+            break;
     }
 
     data.setDetails(detailString(prop));
@@ -174,6 +176,8 @@ void QMetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
             }
             break;
 #endif
+        default:
+            break;
     }
 }
 
@@ -199,6 +203,8 @@ void QMetaPropertyAdaptor::resetProperty(int index)
             }
             break;
 #endif
+        default:
+            break;
     }
 }
 
