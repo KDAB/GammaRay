@@ -196,7 +196,7 @@ if("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
 endif()
 
 if(WIN32)
-  add_definitions(-DUNICODE -D_UNICODE)
+  add_definitions(-DUNICODE -D_UNICODE -D_USING_V110_SDK71_=1)
 endif()
 if(QNXNTO)
   add_definitions(-D_QNX_SOURCE)
