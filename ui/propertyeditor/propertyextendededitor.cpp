@@ -30,6 +30,7 @@
 #include "ui_propertyextendededitor.h"
 
 #include <QColorDialog>
+#include <QKeyEvent>
 using namespace GammaRay;
 
 PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
@@ -55,5 +56,14 @@ void PropertyExtendedEditor::setValue(const QVariant &value)
   m_value = value;
   const QString displayValue = property("displayString").toString();
   ui->valueLabel->setText(displayValue.isEmpty() ? value.toString() : displayValue);
+}
+
+void PropertyExtendedEditor::save(const QVariant &value)
+{
+  setValue(value);
+
+  // The user already pressed Apply, don't force her/him to do again
+  QKeyEvent event(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
+  QApplication::sendEvent(this, &event);
 }
 

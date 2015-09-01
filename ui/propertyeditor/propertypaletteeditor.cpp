@@ -40,7 +40,7 @@ void PropertyPaletteEditor::edit()
 {
   PaletteDialog dlg(value().value<QPalette>(), this);
   if (dlg.exec() == QDialog::Accepted) {
-    setValue(dlg.editedPalette());
+    save(dlg.editedPalette());
   }
 }
 
