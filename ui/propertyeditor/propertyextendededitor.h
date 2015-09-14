@@ -50,6 +50,8 @@ class PropertyExtendedEditor : public QWidget
     QVariant value() const;
     void setValue(const QVariant &value);
 
+    void save(const QVariant &value);
+
   protected slots:
     virtual void edit() = 0;
 

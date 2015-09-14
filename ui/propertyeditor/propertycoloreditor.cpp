@@ -41,7 +41,7 @@ void PropertyColorEditor::edit()
 {
   const QColor color = QColorDialog::getColor(value().value<QColor>(), this);
   if (color.isValid()) {
-    setValue(QVariant::fromValue(color));
+    save(QVariant::fromValue(color));
   }
 }
 

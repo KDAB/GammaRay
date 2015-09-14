@@ -42,7 +42,7 @@ void PropertyFontEditor::edit()
   bool ok = false;
   const QFont font = QFontDialog::getFont(&ok, value().value<QFont>(), this);
   if (ok) {
-    setValue(font);
+    save(font);
   }
 }
 
