@@ -31,6 +31,7 @@
 
 #include <common/metatypedeclarations.h>
 
+#include <QAbstractItemModel>
 #include <QAbstractSocket>
 #include <QCoreApplication>
 #include <QFile>
@@ -157,6 +158,13 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionId);
   MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionKey);
 #endif
+#endif
+
+  MO_ADD_METAOBJECT1(QAbstractItemModel, QObject);
+  MO_ADD_PROPERTY_RO(QAbstractItemModel, QStringList, mimeTypes);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+  MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDragActions);
+  MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDropActions);
 #endif
 }
 
