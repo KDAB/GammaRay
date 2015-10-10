@@ -44,7 +44,7 @@ class ProcessInjector : public AbstractInjector
     ProcessInjector();
     ~ProcessInjector();
 
-    void stop();
+    void stop() Q_DECL_OVERRIDE;
     int exitCode() Q_DECL_OVERRIDE;
     QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
     QProcess::ProcessError processError() Q_DECL_OVERRIDE;

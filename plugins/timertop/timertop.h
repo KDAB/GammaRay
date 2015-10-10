@@ -60,7 +60,7 @@ class TimerTopFactory : public QObject,
     {
     }
 
-    inline QString name() const
+    inline QString name() const Q_DECL_OVERRIDE
     {
       return tr("Timers");
     }

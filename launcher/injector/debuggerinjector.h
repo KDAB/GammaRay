@@ -43,7 +43,7 @@ class DebuggerInjector : public AbstractInjector
   public:
     DebuggerInjector();
     ~DebuggerInjector();
-    void stop();
+    void stop() Q_DECL_OVERRIDE;
 
     bool selfTest() Q_DECL_OVERRIDE;
 
