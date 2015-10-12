@@ -35,6 +35,7 @@ namespace GammaRay {
 
 class StyleInjector : public GammaRay::ProcessInjector
 {
+  Q_OBJECT
   public:
     StyleInjector();
 

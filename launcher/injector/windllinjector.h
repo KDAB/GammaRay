@@ -42,6 +42,7 @@ namespace GammaRay {
 class FinishWaiter;
 class WinDllInjector : public AbstractInjector
 {
+  Q_OBJECT
   public:
     WinDllInjector();
     ~WinDllInjector();

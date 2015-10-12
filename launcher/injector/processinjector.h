@@ -40,6 +40,7 @@ namespace GammaRay {
  */
 class ProcessInjector : public AbstractInjector
 {
+  Q_OBJECT
   public:
     ProcessInjector();
     ~ProcessInjector();

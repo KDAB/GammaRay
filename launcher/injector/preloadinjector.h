@@ -38,6 +38,7 @@ namespace GammaRay {
 
 class PreloadInjector : public ProcessInjector
 {
+  Q_OBJECT
   public:
     PreloadInjector();
     QString name() const Q_DECL_OVERRIDE;

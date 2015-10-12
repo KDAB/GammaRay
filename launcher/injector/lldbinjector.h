@@ -35,6 +35,7 @@ namespace GammaRay {
 
 class LldbInjector : public DebuggerInjector
 {
+  Q_OBJECT
   public:
     LldbInjector();
     ~LldbInjector();
