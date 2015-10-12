@@ -38,7 +38,7 @@ ProcessInjector::ProcessInjector() :
   mProcessError(QProcess::UnknownError),
   mExitStatus(QProcess::NormalExit)
 {
-    connect(&m_proc, SIGNAL(finished(int)), this, SIGNAL(finished()));
+    connect(&m_proc, SIGNAL(finished(int)), this, SLOT(processFinished()));
 }
 
 ProcessInjector::~ProcessInjector()
