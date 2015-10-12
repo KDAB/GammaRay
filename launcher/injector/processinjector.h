@@ -57,6 +57,7 @@ class ProcessInjector : public AbstractInjector
     QString mErrorString;
 
   private slots:
+    void processFailed();
     void processFinished();
 
   private:

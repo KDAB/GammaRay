@@ -38,6 +38,7 @@ ProcessInjector::ProcessInjector() :
   mProcessError(QProcess::UnknownError),
   mExitStatus(QProcess::NormalExit)
 {
+    connect(&m_proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
     connect(&m_proc, SIGNAL(finished(int)), this, SLOT(processFinished()));
 }
 
@@ -87,12 +88,16 @@ bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QPr
   return ret;
 }
 
+void ProcessInjector::processFailed()
+{
+    mProcessError = m_proc.error();
+    mErrorString = m_proc.errorString();
+}
+
 void ProcessInjector::processFinished()
 {
     mExitCode = m_proc.exitCode();
-    mProcessError = m_proc.error();
     mExitStatus = m_proc.exitStatus();
-    mErrorString = m_proc.errorString();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (mProcessError == QProcess::FailedToStart) {
