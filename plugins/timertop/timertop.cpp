@@ -93,6 +93,11 @@ TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
   probe->registerModel("com.kdab.GammaRay.TimerModel", TimerModel::instance());
 }
 
+QString TimerTopFactory::name() const
+{
+  return tr("Timers");
+}
+
 QStringList TimerTopFactory::supportedTypes() const
 {
   return QStringList() << "QObject" << "QTimer";
