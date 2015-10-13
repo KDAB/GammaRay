@@ -68,7 +68,8 @@ struct LauncherPrivate
 #ifdef HAVE_SHM
     shm(0),
 #endif
-    state(Initial)
+    state(Initial),
+    exitCode(0)
   {}
 
   AbstractInjector::Ptr createInjector() const
@@ -90,7 +91,9 @@ struct LauncherPrivate
   ClientLauncher client;
   QTimer safetyTimer;
   AbstractInjector::Ptr injector;
+  QString errorMessage;
   int state;
+  int exitCode;
 };
 
 }
@@ -206,6 +209,16 @@ bool Launcher::start()
   return true;
 }
 
+int Launcher::exitCode() const
+{
+  return d->exitCode;
+}
+
+QString Launcher::errorMessage() const
+{
+  return d->errorMessage;
+}
+
 void Launcher::sendLauncherId()
 {
   // if we are launching a new process, make sure it knows how to talk to us
@@ -314,6 +327,13 @@ void Launcher::startClient(const QUrl& serverAddress)
 
 void Launcher::injectorFinished()
 {
+  d->exitCode = d->injector->exitCode();
+  if (d->errorMessage.isEmpty()) {
+    d->errorMessage = d->injector->errorString();
+    if (!d->errorMessage.isEmpty())
+      std::cerr << "Injector error: " << qPrintable(d->errorMessage) << std::endl;
+  }
+
   if ((d->state & InjectorFailed) == 0)
     d->state |= InjectorFinished;
   checkDone();
@@ -321,6 +341,9 @@ void Launcher::injectorFinished()
 
 void Launcher::injectorError(int exitCode, const QString& errorMessage)
 {
+  d->exitCode = exitCode;
+  d->errorMessage = errorMessage;
+
   d->state |= InjectorFailed;
   std::cerr << qPrintable(errorMessage) << std::endl;
   std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;

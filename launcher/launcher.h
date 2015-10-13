@@ -56,6 +56,11 @@ public:
   bool start();
   void stop();
 
+  /** Target exit code, in case we launched it. */
+  int exitCode() const;
+  /** Error message from attaching/launching the target, if any. */
+  QString errorMessage() const;
+
 signals:
   void started();
   void finished();
