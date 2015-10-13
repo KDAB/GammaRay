@@ -347,20 +347,27 @@ void Launcher::injectorError(int exitCode, const QString& errorMessage)
   d->state |= InjectorFailed;
   std::cerr << qPrintable(errorMessage) << std::endl;
   std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;
-  QCoreApplication::exit(exitCode);
+  checkDone();
 }
 
 void Launcher::timeout()
 {
+  d->state |= InjectorFailed;
+
   std::cerr << "Target not responding - timeout." << std::endl;
   std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting" <<  std::endl;
-  d->client.terminate();
-  QCoreApplication::exit(1);
+  checkDone();
 }
 
 void Launcher::checkDone()
 {
   if (d->state == Complete || (d->options.uiMode() != LaunchOptions::OutOfProcessUi && d->state == InjectorFinished)) {
+    emit finished();
+  }
+  else if ((d->state & InjectorFailed) != 0) {
+    d->client.terminate();
+    if (d->exitCode == 0)
+      d->exitCode = 1;
     emit finished();
   }
 }
