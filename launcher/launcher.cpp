@@ -84,7 +84,7 @@ struct LauncherPrivate
   }
 
   LaunchOptions options;
-#ifndef QT_NO_SHAREDMEMORY
+#ifdef HAVE_SHM
   QSharedMemory *shm;
 #endif
   ClientLauncher client;
