@@ -303,7 +303,8 @@ int main(int argc, char **argv)
   Launcher launcher(options);
   QObject::connect(&launcher, SIGNAL(finished()), &app, SLOT(quit()));
   QObject::connect(&launcher, SIGNAL(attached()), &app, SLOT(quit()));
-  launcher.start();
+  if (!launcher.start())
+    return launcher.exitCode();
   auto result = app.exec();
   return result == 0 ? launcher.exitCode() : result;
 }
