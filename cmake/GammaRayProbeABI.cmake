@@ -4,6 +4,7 @@
 #  Copyright (c) 2011-2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Author: Volker Krause <volker.krause@kdab.com>
+# Author: Filipe Azevedo <filipe.azevedo@kdab.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 
@@ -49,6 +50,8 @@ if(WIN32)
 elseif(APPLE)
   if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
+  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
   else()
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
   endif()
