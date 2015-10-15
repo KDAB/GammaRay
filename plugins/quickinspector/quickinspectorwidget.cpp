@@ -30,6 +30,7 @@
 #include "quickinspectorclient.h"
 #include "quickclientitemmodel.h"
 #include "quickitemtreewatcher.h"
+#include "quickitemmodelroles.h"
 #include "geometryextension/sggeometryextensionclient.h"
 #include "geometryextension/sggeometrytab.h"
 #include "materialextension/materialextensionclient.h"
@@ -43,10 +44,13 @@
 #include <common/objectbroker.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
+#include <ui/uiintegration.h>
+
 #include <client/remotemodel.h>
 
 #include <QEvent>
 #include <QLabel>
+#include <QMenu>
 #include <QTimer>
 #include <qmath.h>
 #include <QQuickImageProvider>
@@ -183,6 +187,9 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   connect(m_interface, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)),
           this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
 
+  connect(ui->itemTreeView, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(itemContextMenu(QPoint)));
+
   m_interface->checkFeatures();
 }
 
@@ -297,4 +304,33 @@ void QuickInspectorWidget::hideEvent(QHideEvent* event)
   if (Endpoint::isConnected())
     m_interface->setSceneViewActive(false);
   QWidget::hideEvent(event);
+}
+
+void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
+{
+  const QModelIndex index = ui->itemTreeView->indexAt(pos);
+  if (!index.isValid() || !UiIntegration::instance()) {
+    return;
+  }
+
+  QMenu contextMenu;
+  QAction *action =
+    contextMenu.addAction(tr("Show Code: %1:%2:%3").
+      arg(index.data(QuickItemModelRole::SourceFileRole).toString(),
+          index.data(QuickItemModelRole::SourceLineRole).toString(),
+          index.data(QuickItemModelRole::SourceColumnRole).toString()));
+  action->setData(QuickInspectorWidget::NavigateToCode);
+
+
+  if (QAction *action = contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos))) {
+    UiIntegration *integ = 0;
+    switch (action->data().toInt()) {
+      case QuickInspectorWidget::NavigateToCode:
+        integ = UiIntegration::instance();
+        emit integ->navigateToCode(index.data(QuickItemModelRole::SourceFileRole).toString(),
+                                   index.data(QuickItemModelRole::SourceLineRole).toInt(),
+                                   index.data(QuickItemModelRole::SourceColumnRole).toInt());
+        break;
+    }
+  }
 }

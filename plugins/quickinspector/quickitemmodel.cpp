@@ -38,6 +38,9 @@
 
 #include <algorithm>
 
+#include <private/qqmldata_p.h>
+#include <private/qqmlcontext_p.h>
+
 using namespace GammaRay;
 
 QuickItemModel::QuickItemModel(QObject *parent) : ObjectModelBase<QAbstractItemModel>(parent)
@@ -67,6 +70,45 @@ QVariant QuickItemModel::data(const QModelIndex &index, int role) const
 
   if (role == QuickItemModelRole::ItemFlags) {
     return m_itemFlags[item];
+  }
+  if (role == QuickItemModelRole::SourceFileRole) {
+    QQmlData *objectData = QQmlData::get(item);
+    if (!objectData) {
+      return QVariant();
+    }
+
+    QQmlContextData *context = objectData->outerContext;
+    if (!context) {
+      return QVariant();
+    }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    return context->url().scheme() == QStringLiteral("file")
+            ? context->url().path()
+            : context->url().toString(); // Most editors don't understand paths with the file://
+                                         // scheme, still we need the scheme for anything else
+                                         // but file (e.g. qrc:/)
+#else
+    return context->url.scheme() == QStringLiteral("file")
+            ? context->url.path()
+            : context->url.toString(); // same as above
+#endif
+  }
+  if (role == QuickItemModelRole::SourceLineRole) {
+    QQmlData *objectData = QQmlData::get(item);
+    if (!objectData) {
+      return QVariant();
+    }
+
+    return objectData->lineNumber;
+  }
+  if (role == QuickItemModelRole::SourceColumnRole) {
+    QQmlData *objectData = QQmlData::get(item);
+    if (!objectData) {
+      return QVariant();
+    }
+
+    return objectData->columnNumber;
   }
   if (role == Qt::DisplayRole && index.column() == 0) {
     QQmlContext *ctx = QQmlEngine::contextForObject(item);
@@ -110,6 +152,9 @@ QMap<int, QVariant> QuickItemModel::itemData(const QModelIndex &index) const
 {
   QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
   d.insert(QuickItemModelRole::ItemFlags, data(index, QuickItemModelRole::ItemFlags));
+  d.insert(QuickItemModelRole::SourceFileRole, data(index, QuickItemModelRole::SourceFileRole));
+  d.insert(QuickItemModelRole::SourceLineRole, data(index, QuickItemModelRole::SourceLineRole));
+  d.insert(QuickItemModelRole::SourceColumnRole, data(index, QuickItemModelRole::SourceColumnRole));
   return d;
 }
 

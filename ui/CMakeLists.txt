@@ -16,6 +16,7 @@ set(gammaray_ui_srcs
   proxytooluifactory.cpp
   splashscreen.cpp
   searchlinecontroller.cpp
+  uiintegration.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
@@ -126,6 +127,7 @@ gammaray_install_headers(
   propertywidget.h
   propertywidgettab.h
   tooluifactory.h
+  uiintegration.h
 )
 
 ecm_generate_pri_file(BASE_NAME GammaRayUi

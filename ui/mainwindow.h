@@ -57,6 +57,8 @@ class MainWindow : public QMainWindow
 
     void quitHost();
     void detachProbe();
+    void navigateToCode(QString filePath, int lineNumber, int columnNumber);
+    void setCodeNavigationIDE(QAction *action);
 
   private:
     QWidget* createErrorPage(const QModelIndex &index);

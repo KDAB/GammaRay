@@ -33,6 +33,7 @@
 #include "aboutdialog.h"
 #include "clienttoolmodel.h"
 #include "aboutdata.h"
+#include "uiintegration.h"
 
 #include "common/objectbroker.h"
 #include "common/modelroles.h"
@@ -48,12 +49,47 @@
 #include <private/qguiapplication_p.h>
 #endif
 
+#include <QAction>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDesktopServices>
+#include <QInputDialog>
 #include <QLabel>
+#include <QMenu>
+#include <QProcess>
+#include <QSettings>
 #include <QStyleFactory>
+#include <QUrl>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QStandardPaths>
+#endif
+
+class QDesktopServices;
 using namespace GammaRay;
+struct IdeSettings {
+    const char* const app;
+    const char* const args;
+    const char* const name;
+    const char* const icon;
+};
+
+static const IdeSettings ideSettings[] = {
+#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
+    {"",            "",                         "",                       ""          } // Dummy content, because we can't have empty arrays.
+#else
+    { "kdevelop",   "%f:%l:%c",                 QT_TR_NOOP("KDevelop"),   "kdevelop"  },
+    { "kate",       "%f --line %l --column %c", QT_TR_NOOP("Kate"),       "kate"      },
+    { "kwrite",     "%f --line %l --column %c", QT_TR_NOOP("KWrite"),     nullptr     },
+    { "qtcreator",  "%f",                       QT_TR_NOOP("Qt Creator"), nullptr     }
+#endif
+};
+#if defined(Q_OS_WIN) || defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
+    static const int ideSettingsSize = 0;
+#else
+    static const int ideSettingsSize = sizeof(ideSettings) / sizeof(IdeSettings);
+#endif
+
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -127,6 +163,62 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
   // get some sane size on startup
   resize(1024, 768);
+
+  // Code Navigation
+  QAction *configAction = new QAction(QIcon::fromTheme("applications-development"), QObject::tr("Code Navigation"), this);
+  auto menu = new QMenu(this);
+  auto group = new QActionGroup(this);
+  group->setExclusive(true);
+
+  QSettings settings("KDAB", "GammaRay");
+  settings.beginGroup("CodeNavigation");
+  const auto currentIdx = settings.value("IDE", -1).toInt();
+
+  for (int i = 0; i < ideSettingsSize; ++i) {
+      auto action = new QAction(menu);
+      action->setText(QObject::tr(ideSettings[i].name));
+      if (ideSettings[i].icon)
+          action->setIcon(QIcon::fromTheme(ideSettings[i].icon));
+      action->setCheckable(true);
+      action->setChecked(currentIdx == i);
+      action->setData(i);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0) // It's not worth it to reimplement missing findExecutable for Qt4.
+      action->setEnabled(!QStandardPaths::findExecutable(ideSettings[i].app).isEmpty());
+#endif
+      group->addAction(action);
+      menu->addAction(action);
+  }
+  menu->addSeparator();
+
+  QAction *action = new QAction(menu);
+  action->setText(QObject::tr("Custom..."));
+  action->setCheckable(true);
+  action->setChecked(currentIdx == -1);
+  action->setData(-1);
+  group->addAction(action);
+  menu->addAction(action);
+
+#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
+  // This is a workaround for the cases, where we can't safely do assumptions
+  // about the install location of the IDE
+  action = new QAction(menu);
+  action->setText(QObject::tr("Automatic (No Line numbers)"));
+  action->setCheckable(true);
+  action->setChecked(currentIdx == -2);
+  action->setData(-2);
+  group->addAction(action);
+  menu->addAction(action);
+#endif
+
+  QObject::connect(group, SIGNAL(triggered()), this, SLOT(setCodeNavigationIDE()));
+
+  configAction->setMenu(menu);
+  ui->menuSettings->addMenu(menu);
+
+  // Initialize UiIntegration singleton
+  new UiIntegration(this);
+
+  connect(UiIntegration::instance(), SIGNAL(navigateToCode(QString, int, int)), this, SLOT(navigateToCode(QString, int, int)));
 }
 
 MainWindow::~MainWindow()
@@ -227,6 +319,54 @@ void MainWindow::toolSelected()
   }
   ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
 }
+
+void MainWindow::navigateToCode(QString filePath, int lineNumber, int columnNumber)
+{
+  QSettings settings("KDAB", "GammaRay");
+  settings.beginGroup("CodeNavigation");
+  const auto ideIdx = settings.value("IDE", -1).toInt();
+
+  QString command;
+  if (ideIdx >= 0 && ideIdx < ideSettingsSize) {
+      command += ideSettings[ideIdx].app;
+      command += ' ';
+      command += ideSettings[ideIdx].args;
+  } else if (ideIdx == -1) {
+      command = settings.value("CustomCommand").toString();
+  } else {
+      QDesktopServices::openUrl(QUrl(filePath));
+  }
+
+  command.replace("%f", filePath);
+  command.replace("%l", QString::number(std::max(0, lineNumber)));
+  command.replace("%c", QString::number(std::max(0, columnNumber)));
+
+  if (!command.isEmpty())
+      QProcess::startDetached(command);
+}
+
+void GammaRay::MainWindow::setCodeNavigationIDE(QAction* action)
+{
+    QSettings settings("KDAB", "GammaRay");
+    settings.beginGroup("CodeNavigation");
+
+    if (action->data() == -1) {
+        const auto customCmd = QInputDialog::getText(
+            this, QObject::tr("Custom Code Navigation"),
+            QObject::tr("Specify command to use for code navigation, '%f' will be replaced by the file name, '%l' by the line number and '%c' by the column number."),
+            QLineEdit::Normal, settings.value("CustomCommand").toString()
+        );
+        if (!customCmd.isEmpty()) {
+            settings.setValue("CustomCommand", customCmd);
+            settings.setValue("IDE", -1);
+        }
+        return;
+    }
+
+    const auto defaultIde = action->data().toInt();
+    settings.setValue("IDE", defaultIde);
+}
+
 
 QWidget *MainWindow::createErrorPage(const QModelIndex &index)
 {

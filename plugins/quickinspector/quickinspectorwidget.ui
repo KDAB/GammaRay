@@ -40,6 +40,9 @@
          </item>
          <item>
           <widget class="QTreeView" name="itemTreeView">
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
            <property name="indentation">
             <number>10</number>
            </property>
