@@ -267,12 +267,13 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     // Insert a ShaderEffectSource to the scene, with the contentItem as its source, in
     // order to use it to generate a preview of the window as QImage to show on the client.
     QQuickItem *contentItem = m_window->contentItem();
-#if QT_VERSION < QT_VERSION_CHECK(5, 3, 0) // working around the 0-sized contentItem in older Qt
+
+    // working around the 0-sized contentItem in older Qt or QQuickWidget
     if (contentItem->height() == 0 && contentItem->width() == 0) {
       contentItem->setWidth(contentItem->childrenRect().width());
       contentItem->setHeight(contentItem->childrenRect().height());
     }
-#endif
+
     delete m_source;
     m_source = new QQuickShaderEffectSource(contentItem);
     m_source->setParent(this); // hides the item in the object tree (note: parent != parentItem)
