@@ -229,7 +229,8 @@ void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddr
   obj->messageHandler = messageHandlerName;
   Q_ASSERT(!m_handlerMap.contains(receiver, obj));
   m_handlerMap.insert(receiver, obj);
-  connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(handlerDestroyed(QObject*)));
+  if (obj->receiver != obj->object)
+    connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(handlerDestroyed(QObject*)));
 }
 
 void Endpoint::unregisterMessageHandlerInternal(Protocol::ObjectAddress objectAddress)
