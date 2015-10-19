@@ -114,6 +114,14 @@ public:
    */
   virtual QUrl serverAddress() const = 0;
 
+  /** Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
+   *  @see dispatchMessage()
+   */
+  virtual void registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject *receiver, const char* messageHandlerName);
+
+  /** Unregister the message handler for @p objectAddress. */
+  virtual void unregisterMessageHandler(Protocol::ObjectAddress objectAddress);
+
 public slots:
   /** Convenience overload of send(), to directly send message delivered via signals. */
   void sendMessage(const GammaRay::Message &msg);
@@ -143,14 +151,6 @@ protected:
   void addObjectNameAddressMapping(const QString &objectName, Protocol::ObjectAddress objectAddress);
   /** Call this when learning about a dissolved object <-> address mapping. */
   void removeObjectNameAddressMapping(const QString& objectName);
-
-  /** Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
-   *  @see dispatchMessage()
-   */
-  void registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject *receiver, const char* messageHandlerName);
-
-  /** Unregister the message handler for @p objectAddress. */
-  void unregisterMessageHandlerInternal(Protocol::ObjectAddress objectAddress);
 
   /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
   virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName) = 0;

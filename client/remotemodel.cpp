@@ -544,7 +544,7 @@ void RemoteModel::connectToServer()
     return;
 
   beginResetModel();
-  Client::instance()->registerForObject(m_myAddress, this, "newMessage");
+  Client::instance()->registerMessageHandler(m_myAddress, this, "newMessage");
   endResetModel();
 }
 

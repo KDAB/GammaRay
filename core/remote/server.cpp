@@ -83,7 +83,7 @@ Server::Server(QObject *parent) :
   Endpoint::addObjectNameAddressMapping("com.kdab.GammaRay.PropertySyncer", ++m_nextAddress);
   m_propertySyncer->setAddress(m_nextAddress);
   Endpoint::registerObject("com.kdab.GammaRay.PropertySyncer", m_propertySyncer);
-  registerMessageHandlerInternal(m_nextAddress, m_propertySyncer, "handleMessage");
+  registerMessageHandler(m_nextAddress, m_propertySyncer, "handleMessage");
 }
 
 Server::~Server()
@@ -242,14 +242,6 @@ void Server::forwardSignal(QObject* sender, int signalIndex, const QVector< QVar
   foreach(const QVariant &arg, args)
     v.push_back(arg);
   Endpoint::invokeObject(sender->objectName(), name, v);
-}
-
-Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)
-{
-  auto address = registerObject(objectName, receiver, ExportNothing);
-  Q_ASSERT(address != Protocol::InvalidObjectAddress);
-  registerMessageHandlerInternal(m_nextAddress, receiver, messageHandlerName);
-  return address;
 }
 
 void Server::registerMonitorNotifier(Protocol::ObjectAddress address, QObject* receiver, const char* monitorNotifier)

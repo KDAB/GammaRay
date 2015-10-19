@@ -159,7 +159,7 @@ void Client::messageReceived(const Message& msg)
 
         m_propertySyncer->setAddress(objectAddress("com.kdab.GammaRay.PropertySyncer"));
         Q_ASSERT(m_propertySyncer->address() != Protocol::InvalidObjectAddress  );
-        registerMessageHandlerInternal(m_propertySyncer->address(), m_propertySyncer, "handleMessage");
+        Endpoint::registerMessageHandler(m_propertySyncer->address(), m_propertySyncer, "handleMessage");
 
         m_initState |= ObjectMapReceived;
         break;
@@ -196,17 +196,16 @@ Protocol::ObjectAddress Client::registerObject(const QString &name, QObject *obj
   return address;
 }
 
-/// TODO: get rid of this
-void Client::registerForObject(Protocol::ObjectAddress objectAddress, QObject* handler, const char* slot)
+void Client::registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject* receiver, const char* messageHandlerName)
 {
   Q_ASSERT(isConnected());
-  registerMessageHandlerInternal(objectAddress, handler, slot);
+  Endpoint::registerMessageHandler(objectAddress, receiver, messageHandlerName);
   monitorObject(objectAddress);
 }
 
-void Client::unregisterForObject(Protocol::ObjectAddress objectAddress)
+void Client::unregisterMessageHandler(Protocol::ObjectAddress objectAddress)
 {
-  unregisterMessageHandlerInternal(objectAddress);
+  Endpoint::unregisterMessageHandler(objectAddress);
   unmonitorObject(objectAddress);
 }
 

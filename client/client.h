@@ -55,21 +55,14 @@ public:
    */
   Protocol::ObjectAddress registerObject(const QString &name, QObject *object) Q_DECL_OVERRIDE;
 
-  /** Register a message handler for @p objectAddress on object @p handler.
-   *  Once a message for this object is received, @p slot is called.
-   *
-   * TODO: get rid of this
-   */
-  void registerForObject(Protocol::ObjectAddress objectAddress, QObject *handler, const char* slot);
-
-  /** Unregister the message handler for @p objectAddress. */
-  void unregisterForObject(Protocol::ObjectAddress objectAddress);
-
   /** Singleton accessor. */
   static Client* instance();
 
   bool isRemoteClient() const Q_DECL_OVERRIDE;
   QUrl serverAddress() const Q_DECL_OVERRIDE;
+
+  void registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject* receiver, const char* messageHandlerName) Q_DECL_OVERRIDE;
+  void unregisterMessageHandler(Protocol::ObjectAddress objectAddress) Q_DECL_OVERRIDE;
 
 signals:
   /** Emitted when we successfully established a connection and passed the protocol version handshake step. */

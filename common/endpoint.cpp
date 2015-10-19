@@ -218,7 +218,7 @@ void Endpoint::removeObjectNameAddressMapping(const QString& objectName)
   removeObjectInfo(obj);
 }
 
-void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddress, QObject* receiver, const char* messageHandlerName)
+void Endpoint::registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject* receiver, const char* messageHandlerName)
 {
   Q_ASSERT(m_addressMap.contains(objectAddress));
   ObjectInfo *obj = m_addressMap.value(objectAddress);
@@ -233,7 +233,7 @@ void Endpoint::registerMessageHandlerInternal(Protocol::ObjectAddress objectAddr
     connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(handlerDestroyed(QObject*)));
 }
 
-void Endpoint::unregisterMessageHandlerInternal(Protocol::ObjectAddress objectAddress)
+void Endpoint::unregisterMessageHandler(Protocol::ObjectAddress objectAddress)
 {
   Q_ASSERT(m_addressMap.contains(objectAddress));
   ObjectInfo *obj = m_addressMap.value(objectAddress);

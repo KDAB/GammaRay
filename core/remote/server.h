@@ -71,11 +71,6 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
      */
     Protocol::ObjectAddress registerObject(const QString &name, QObject *object, ObjectExportOptions exportOptions);
 
-    /** Register a new object with name @p objectName as a destination for messages.
-     *  New messages to that object are passed to the slot @p messageHandlerName on @p receiver.
-     */
-    Protocol::ObjectAddress registerObject(const QString &objectName, QObject* receiver, const char* messageHandlerName);
-
     /**
      * Register a callback slot @p monitorNotifier on object @p receiver that is called if the usage
      * of an object with address @p address changes on the client side.

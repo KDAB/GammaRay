@@ -48,7 +48,7 @@ void SelectionModelClient::connectToServer()
 {
   if (m_myAddress == Protocol::InvalidObjectAddress)
     return;
-  Client::instance()->registerForObject(m_myAddress, this, "newMessage");
+  Client::instance()->registerMessageHandler(m_myAddress, this, "newMessage");
   // TODO: send initial selection?
 }
 
