@@ -197,7 +197,7 @@ void Endpoint::invokeObjectLocal(QObject *object, const char *method, const QVar
   QMetaObject::invokeMethod(object, method, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
 }
 
-void Endpoint::registerObjectInternal(const QString& objectName, Protocol::ObjectAddress objectAddress)
+void Endpoint::addObjectNameAddressMapping(const QString& objectName, Protocol::ObjectAddress objectAddress)
 {
   Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);
 
@@ -209,7 +209,7 @@ void Endpoint::registerObjectInternal(const QString& objectName, Protocol::Objec
   emit objectRegistered(objectName, objectAddress);
 }
 
-void Endpoint::unregisterObjectInternal(const QString& objectName)
+void Endpoint::removeObjectNameAddressMapping(const QString& objectName)
 {
   Q_ASSERT(m_nameMap.contains(objectName));
   ObjectInfo *obj = m_nameMap.value(objectName);

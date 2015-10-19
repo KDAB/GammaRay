@@ -110,7 +110,7 @@ void Client::socketError()
 void Client::socketDisconnected()
 {
   foreach (const auto &objInfo, objectAddresses()) {
-    unregisterObjectInternal(objInfo.second);
+    removeObjectNameAddressMapping(objInfo.second);
   }
   ObjectBroker::clear();
 }
@@ -138,14 +138,14 @@ void Client::messageReceived(const Message& msg)
         QString name;
         Protocol::ObjectAddress addr;
         msg.payload() >> name >> addr;
-        registerObjectInternal(name, addr);
+        addObjectNameAddressMapping(name, addr);
         break;
       }
       case Protocol::ObjectRemoved:
       {
         QString name;
         msg.payload() >> name;
-        unregisterObjectInternal(name);
+        removeObjectNameAddressMapping(name);
         break;
       }
       case Protocol::ObjectMapReply:
@@ -154,7 +154,7 @@ void Client::messageReceived(const Message& msg)
         msg.payload() >> objects;
         for (QVector<QPair<Protocol::ObjectAddress, QString> >::const_iterator it = objects.constBegin(); it != objects.constEnd(); ++it) {
           if (it->first != endpointAddress())
-            registerObjectInternal(it->second, it->first);
+            addObjectNameAddressMapping(it->second, it->first);
         }
 
         m_propertySyncer->setAddress(objectAddress("com.kdab.GammaRay.PropertySyncer"));

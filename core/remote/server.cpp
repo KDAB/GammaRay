@@ -80,7 +80,7 @@ Server::Server(QObject *parent) :
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
           this, SLOT(forwardSignal(QObject*,int,QVector<QVariant>)));
 
-  Endpoint::registerObjectInternal("com.kdab.GammaRay.PropertySyncer", ++m_nextAddress);
+  Endpoint::addObjectNameAddressMapping("com.kdab.GammaRay.PropertySyncer", ++m_nextAddress);
   m_propertySyncer->setAddress(m_nextAddress);
   Endpoint::registerObject("com.kdab.GammaRay.PropertySyncer", m_propertySyncer);
   registerMessageHandlerInternal(m_nextAddress, m_propertySyncer, "handleMessage");
@@ -187,7 +187,7 @@ void Server::invokeObject(const QString &objectName, const char *method, const Q
 
 Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *object)
 {
-  registerObjectInternal(name, ++m_nextAddress);
+  addObjectNameAddressMapping(name, ++m_nextAddress);
   Protocol::ObjectAddress address = Endpoint::registerObject(name, object);
   Q_ASSERT(m_nextAddress);
 
@@ -236,7 +236,7 @@ void Server::forwardSignal(QObject* sender, int signalIndex, const QVector< QVar
 
 Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)
 {
-  registerObjectInternal(objectName, ++m_nextAddress);
+  addObjectNameAddressMapping(objectName, ++m_nextAddress);
   Q_ASSERT(m_nextAddress);
   registerMessageHandlerInternal(m_nextAddress, receiver, messageHandlerName);
 
@@ -260,7 +260,7 @@ void Server::registerMonitorNotifier(Protocol::ObjectAddress address, QObject* r
 
 void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName)
 {
-  unregisterObjectInternal(objectName);
+  removeObjectNameAddressMapping(objectName);
   m_monitorNotifiers.remove(objectAddress);
 
   if (isConnected()) {
@@ -273,7 +273,7 @@ void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QStri
 void Server::objectDestroyed(Protocol::ObjectAddress /*objectAddress*/, const QString &objectName, QObject *object)
 {
   Q_UNUSED(object);
-  unregisterObjectInternal(objectName);
+  removeObjectNameAddressMapping(objectName);
 
   if (isConnected()) {
     Message msg(endpointAddress(), Protocol::ObjectRemoved);

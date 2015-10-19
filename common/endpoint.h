@@ -140,9 +140,9 @@ protected:
   virtual void messageReceived(const Message &msg) = 0;
 
   /** Call this when learning about a new object <-> address mapping. */
-  void registerObjectInternal(const QString &objectName, Protocol::ObjectAddress objectAddress);
+  void addObjectNameAddressMapping(const QString &objectName, Protocol::ObjectAddress objectAddress);
   /** Call this when learning about a dissolved object <-> address mapping. */
-  void unregisterObjectInternal(const QString& objectName);
+  void removeObjectNameAddressMapping(const QString& objectName);
 
   /** Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
    *  @see dispatchMessage()
