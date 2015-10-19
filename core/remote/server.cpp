@@ -187,9 +187,15 @@ void Server::invokeObject(const QString &objectName, const char *method, const Q
 
 Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *object)
 {
+  return registerObject(name, object, ExportEverything);
+}
+
+Protocol::ObjectAddress Server::registerObject(const QString& name, QObject* object, Server::ObjectExportOptions exportOptions)
+{
   addObjectNameAddressMapping(name, ++m_nextAddress);
   Protocol::ObjectAddress address = Endpoint::registerObject(name, object);
   Q_ASSERT(m_nextAddress);
+  Q_ASSERT(m_nextAddress == address);
 
   if (isConnected()) {
     Message msg(endpointAddress(), Protocol::ObjectAdded);
@@ -197,14 +203,18 @@ Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *obj
     send(msg);
   }
 
-  const QMetaObject *meta = object->metaObject();
-  for(int i = 0; i < meta->methodCount(); ++i) {
-    const QMetaMethod method = meta->method(i);
-    if (method.methodType() == QMetaMethod::Signal) {
-      m_signalMapper->connectToSignal(object, method);
+  if (exportOptions & ExportSignals) {
+    const QMetaObject *meta = object->metaObject();
+    for(int i = 0; i < meta->methodCount(); ++i) {
+      const QMetaMethod method = meta->method(i);
+      if (method.methodType() == QMetaMethod::Signal) {
+        m_signalMapper->connectToSignal(object, method);
+      }
     }
   }
-  m_propertySyncer->addObject(address, object);
+
+  if (exportOptions & ExportProperties)
+    m_propertySyncer->addObject(address, object);
 
   return address;
 }
@@ -236,17 +246,10 @@ void Server::forwardSignal(QObject* sender, int signalIndex, const QVector< QVar
 
 Protocol::ObjectAddress Server::registerObject(const QString& objectName, QObject* receiver, const char* messageHandlerName)
 {
-  addObjectNameAddressMapping(objectName, ++m_nextAddress);
-  Q_ASSERT(m_nextAddress);
+  auto address = registerObject(objectName, receiver, ExportNothing);
+  Q_ASSERT(address != Protocol::InvalidObjectAddress);
   registerMessageHandlerInternal(m_nextAddress, receiver, messageHandlerName);
-
-  if (isConnected()) {
-    Message msg(endpointAddress(), Protocol::ObjectAdded);
-    msg.payload() <<  objectName << m_nextAddress;
-    send(msg);
-  }
-
-  return m_nextAddress;
+  return address;
 }
 
 void Server::registerMonitorNotifier(Protocol::ObjectAddress address, QObject* receiver, const char* monitorNotifier)
