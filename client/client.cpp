@@ -192,10 +192,7 @@ Protocol::ObjectAddress Client::registerObject(const QString &name, QObject *obj
   m_propertySyncer->addObject(address, object);
   m_propertySyncer->setObjectEnabled(address, true);
 
-  Message msg(endpointAddress(), Protocol::ObjectMonitored);
-  msg.payload() << address;
-  send(msg);
-
+  monitorObject(address);
   return address;
 }
 
@@ -204,9 +201,7 @@ void Client::registerForObject(Protocol::ObjectAddress objectAddress, QObject* h
 {
   Q_ASSERT(isConnected());
   registerMessageHandlerInternal(objectAddress, handler, slot);
-  Message msg(endpointAddress(), Protocol::ObjectMonitored);
-  msg.payload() << objectAddress;
-  send(msg);
+  monitorObject(objectAddress);
 }
 
 void Client::unregisterForObject(Protocol::ObjectAddress objectAddress)
@@ -223,6 +218,15 @@ void Client::objectDestroyed(Protocol::ObjectAddress objectAddress, const QStrin
 void Client::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& /*objectName*/)
 {
   unmonitorObject(objectAddress);
+}
+
+void Client::monitorObject(Protocol::ObjectAddress objectAddress)
+{
+  if (!isConnected())
+    return;
+  Message msg(endpointAddress(), Protocol::ObjectMonitored);
+  msg.payload() << objectAddress;
+  send(msg);
 }
 
 void Client::unmonitorObject(Protocol::ObjectAddress objectAddress)

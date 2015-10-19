@@ -89,6 +89,7 @@ protected:
   void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName) Q_DECL_OVERRIDE;
 
 private:
+  void monitorObject(Protocol::ObjectAddress objectAddress);
   void unmonitorObject(Protocol::ObjectAddress objectAddress);
 
 private slots:
