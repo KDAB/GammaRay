@@ -76,6 +76,8 @@ gammaray_install_headers(
     gammaray_launcher_export.h
     launcher.h
     launchoptions.h
+    probeabi.h
+    probeabidetector.h
 )
 
 
