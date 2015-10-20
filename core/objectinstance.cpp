@@ -73,7 +73,7 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
             m_type = QtObject;
         }
     } else {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         if (QMetaType::typeFlags(value.userType()) & QMetaType::IsGadget) {
             m_metaObj = QMetaType::metaObjectForType(value.userType());
             if (m_metaObj) {
