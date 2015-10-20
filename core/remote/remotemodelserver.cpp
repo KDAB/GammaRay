@@ -376,7 +376,7 @@ void RemoteModelServer::registerServer()
     s_registerServerCallback();
     return;
   }
-  m_myAddress = Server::instance()->registerObject(objectName(), this, Server::ExportNothing);
+  m_myAddress = Server::instance()->registerObject(objectName(), this, Server::ExportProperties);
   Server::instance()->registerMessageHandler(m_myAddress, this, "newRequest");
   Server::instance()->registerMonitorNotifier(m_myAddress, this, "modelMonitored");
   connect(Endpoint::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
