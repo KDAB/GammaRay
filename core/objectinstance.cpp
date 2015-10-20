@@ -74,10 +74,12 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
         }
     } else {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        m_metaObj = QMetaType::metaObjectForType(value.userType());
-        if (m_metaObj) {
-            m_obj = const_cast<void*>(value.data());
-            m_type = QtGadget;
+        if (QMetaType::typeFlags(value.userType()) & QMetaType::IsGadget) {
+            m_metaObj = QMetaType::metaObjectForType(value.userType());
+            if (m_metaObj) {
+                m_obj = const_cast<void*>(value.data());
+                m_type = QtGadget;
+            }
         }
 #endif
     }
