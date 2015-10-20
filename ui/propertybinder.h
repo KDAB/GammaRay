@@ -34,6 +34,7 @@
 #include <QMetaProperty>
 #include <QObject>
 #include <QPointer>
+#include <QVector>
 
 namespace GammaRay {
 
@@ -43,10 +44,16 @@ class GAMMARAY_UI_EXPORT PropertyBinder : public QObject
     Q_OBJECT
 public:
     /** Keeps @p sourceProp of @p source in sync with @p destProp of @p destination.
-     *  At least one property must have a change notification signal.
+     *  At least the source property must have a change notification signal.
      */
     explicit PropertyBinder(QObject *source, const char *sourceProp, QObject *destination, const char *destProp);
     ~PropertyBinder();
+
+private:
+    /** Adds another binding between @p sourceProp and @p destProp.
+     *  At least the source property must have a change notification signal.
+     */
+    void add(const char *sourceProp, const char *destProp);
 
 private slots:
     void sourceChanged();
@@ -55,8 +62,11 @@ private slots:
 private:
     QObject* m_source;
     QPointer<QObject> m_destination;
-    QMetaProperty m_sourceProperty;
-    QMetaProperty m_destinationProperty;
+    struct Binding {
+      QMetaProperty sourceProperty;
+      QMetaProperty destinationProperty;
+    };
+    QVector<Binding> m_properties;
     bool m_lock;
 };
 }

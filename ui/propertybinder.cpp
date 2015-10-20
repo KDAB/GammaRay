@@ -44,42 +44,47 @@ PropertyBinder::PropertyBinder(QObject* source, const char* sourceProp, QObject*
     Q_ASSERT(destination);
     Q_ASSERT(destProp);
 
-    const auto sourceIndex = source->metaObject()->indexOfProperty(sourceProp);
-    m_sourceProperty = source->metaObject()->property(sourceIndex);
-    Q_ASSERT(m_sourceProperty.isValid());
-    Q_ASSERT(m_sourceProperty.hasNotifySignal());
-    connect(source, QByteArray("2") +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        m_sourceProperty.notifySignal().signature()
-#else
-        m_sourceProperty.notifySignal().methodSignature()
-#endif
-        , this, SLOT(sourceChanged()));
-
-    const auto destIndex = destination->metaObject()->indexOfProperty(destProp);
-    m_destinationProperty = destination->metaObject()->property(destIndex);
-    Q_ASSERT(m_destinationProperty.isValid());
-    Q_ASSERT(m_destinationProperty.isWritable());
-
-    // initial sync
-    const auto value = m_sourceProperty.read(source);
-    m_destinationProperty.write(destination, m_sourceProperty.read(source));
-
-    // notification for reverse direction changes
-    if (!m_destinationProperty.hasNotifySignal() || !m_sourceProperty.isWritable())
-        return;
-
-    connect(destination, QByteArray("2") +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        m_destinationProperty.notifySignal().signature()
-#else
-        m_destinationProperty.notifySignal().methodSignature()
-#endif
-        , this, SLOT(destinationChanged()));
+    add(sourceProp, destProp);
+    sourceChanged();
 }
 
 PropertyBinder::~PropertyBinder()
 {
+}
+
+void PropertyBinder::add(const char* sourceProp, const char* destProp)
+{
+    Binding b;
+    const auto sourceIndex = m_source->metaObject()->indexOfProperty(sourceProp);
+    b.sourceProperty = m_source->metaObject()->property(sourceIndex);
+    Q_ASSERT(b.sourceProperty.isValid());
+    Q_ASSERT(b.sourceProperty.hasNotifySignal());
+    connect(m_source, QByteArray("2") +
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+        b.sourceProperty.notifySignal().signature()
+#else
+        b.sourceProperty.notifySignal().methodSignature()
+#endif
+        , this, SLOT(sourceChanged()));
+
+    const auto destIndex = m_destination->metaObject()->indexOfProperty(destProp);
+    b.destinationProperty = m_destination->metaObject()->property(destIndex);
+    Q_ASSERT(b.destinationProperty.isValid());
+    Q_ASSERT(b.destinationProperty.isWritable());
+
+    m_properties.push_back(b);
+
+    // notification for reverse direction changes, if present
+    if (!b.destinationProperty.hasNotifySignal() || !b.sourceProperty.isWritable())
+        return;
+
+    connect(m_destination, QByteArray("2") +
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+        b.destinationProperty.notifySignal().signature()
+#else
+        b.destinationProperty.notifySignal().methodSignature()
+#endif
+        , this, SLOT(destinationChanged()));
 }
 
 void PropertyBinder::sourceChanged()
@@ -88,7 +93,9 @@ void PropertyBinder::sourceChanged()
         return;
 
     m_lock = true;
-    m_destinationProperty.write(m_destination, m_sourceProperty.read(m_source));
+    foreach (const auto &b, m_properties) {
+      b.destinationProperty.write(m_destination, b.sourceProperty.read(m_source));
+    }
     m_lock = false;
 }
 
@@ -98,6 +105,8 @@ void PropertyBinder::destinationChanged()
       return;
 
     m_lock = true;
-    m_sourceProperty.write(m_source, m_destinationProperty.read(m_destination));
+    foreach (const auto &b, m_properties) {
+      b.sourceProperty.write(m_source, b.destinationProperty.read(m_destination));
+    }
     m_lock = false;
 }
