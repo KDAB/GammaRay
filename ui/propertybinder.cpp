@@ -33,6 +33,16 @@
 
 using namespace GammaRay;
 
+PropertyBinder::PropertyBinder(QObject* source, QObject* destination):
+    QObject(source),
+    m_source(source),
+    m_destination(destination),
+    m_lock(false)
+{
+    Q_ASSERT(source);
+    Q_ASSERT(destination);
+}
+
 PropertyBinder::PropertyBinder(QObject* source, const char* sourceProp, QObject* destination, const char* destProp):
     QObject(source),
     m_source(source),
@@ -40,12 +50,10 @@ PropertyBinder::PropertyBinder(QObject* source, const char* sourceProp, QObject*
     m_lock(false)
 {
     Q_ASSERT(source);
-    Q_ASSERT(sourceProp);
     Q_ASSERT(destination);
-    Q_ASSERT(destProp);
 
     add(sourceProp, destProp);
-    sourceChanged();
+    syncSourceToDestination();
 }
 
 PropertyBinder::~PropertyBinder()
@@ -54,6 +62,9 @@ PropertyBinder::~PropertyBinder()
 
 void PropertyBinder::add(const char* sourceProp, const char* destProp)
 {
+    Q_ASSERT(sourceProp);
+    Q_ASSERT(destProp);
+
     Binding b;
     const auto sourceIndex = m_source->metaObject()->indexOfProperty(sourceProp);
     b.sourceProperty = m_source->metaObject()->property(sourceIndex);
@@ -65,7 +76,7 @@ void PropertyBinder::add(const char* sourceProp, const char* destProp)
 #else
         b.sourceProperty.notifySignal().methodSignature()
 #endif
-        , this, SLOT(sourceChanged()));
+        , this, SLOT(syncSourceToDestination()));
 
     const auto destIndex = m_destination->metaObject()->indexOfProperty(destProp);
     b.destinationProperty = m_destination->metaObject()->property(destIndex);
@@ -84,29 +95,31 @@ void PropertyBinder::add(const char* sourceProp, const char* destProp)
 #else
         b.destinationProperty.notifySignal().methodSignature()
 #endif
-        , this, SLOT(destinationChanged()));
+        , this, SLOT(syncDestinationToSource()));
 }
 
-void PropertyBinder::sourceChanged()
+void PropertyBinder::syncSourceToDestination()
 {
     if (!m_destination || m_lock)
         return;
 
     m_lock = true;
     foreach (const auto &b, m_properties) {
-      b.destinationProperty.write(m_destination, b.sourceProperty.read(m_source));
+        b.destinationProperty.write(m_destination, b.sourceProperty.read(m_source));
     }
     m_lock = false;
 }
 
-void PropertyBinder::destinationChanged()
+void PropertyBinder::syncDestinationToSource()
 {
     if (m_lock)
       return;
 
     m_lock = true;
     foreach (const auto &b, m_properties) {
-      b.sourceProperty.write(m_source, b.destinationProperty.read(m_destination));
+        if (!b.sourceProperty.isWritable())
+            continue;
+        b.sourceProperty.write(m_source, b.destinationProperty.read(m_destination));
     }
     m_lock = false;
 }

@@ -84,6 +84,29 @@ private slots:
         new PropertyBinder(obj1, "intProp", obj2, "intProp");
         QCOMPARE(obj2->intProp(), 18);
     }
+
+    void testMultiBinding()
+    {
+        MyObject *obj1 = new MyObject(this);
+        obj1->setIntProp(18);
+        obj1->setObjectName("hello");
+        MyObject *obj2 = new MyObject(this);
+
+        auto binder = new PropertyBinder(obj1, obj2);
+        binder->add("intProp", "intProp");
+        binder->add("objectName", "objectName");
+
+        QVERIFY(obj1->intProp() != obj2->intProp());
+        QVERIFY(obj1->objectName() != obj2->objectName());
+
+        binder->syncSourceToDestination();
+
+        QCOMPARE(obj2->intProp(), 18);
+        QCOMPARE(obj2->objectName(), QString("hello"));
+
+        obj2->setIntProp(23);
+        QCOMPARE(obj1->intProp(), 23);
+    }
 };
 
 QTEST_MAIN(PropertyBinderTest)
