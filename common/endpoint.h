@@ -197,7 +197,6 @@ private:
     QObject *object;
 
     // custom message handling support
-    // TODO: obsolete this
     QObject *receiver;
     QByteArray messageHandler;
   };
