@@ -32,11 +32,11 @@
 #include <common/objectbroker.h>
 
 #include <ui/deferredresizemodesetter.h>
-
-#include <kde/krecursivefilterproxymodel.h>
+#include <ui/searchlinecontroller.h>
 
 #include <QLineEdit>
 #include <QItemSelectionModel>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -47,13 +47,11 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
   ui->setupUi(this);
   ui->objectPropertyWidget->setObjectBaseName("com.kdab.GammaRay.ObjectInspector");
 
-  QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
-  objectFilter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ObjectTree"));
-  objectFilter->setDynamicSortFilter(true);
-  ui->objectTreeView->setModel(objectFilter);
+  auto model = ObjectBroker::model("com.kdab.GammaRay.ObjectInspectorTree");
+  ui->objectTreeView->setModel(model);
   new DeferredResizeModeSetter(ui->objectTreeView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(ui->objectTreeView->header(), 1, QHeaderView::Interactive);
-  ui->objectSearchLine->setProxy(objectFilter);
+  new SearchLineController(ui->objectSearchLine, model);
 
   QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(ui->objectTreeView->model());
   ui->objectTreeView->setSelectionModel(selectionModel);
@@ -61,7 +59,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
           this, SLOT(objectSelectionChanged(QItemSelection)));
 
   if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
-    QMetaObject::invokeMethod(ui->objectSearchLine->lineEdit(), "setText",
+    QMetaObject::invokeMethod(ui->objectSearchLine, "setText",
                               Qt::QueuedConnection,
                               Q_ARG(QString, QLatin1String("Object")));
   }
