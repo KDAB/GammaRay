@@ -61,8 +61,9 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject* obj)
 {
     Q_ASSERT(addr != Protocol::InvalidObjectAddress);
     Q_ASSERT(obj);
+    if (qobjectPropertyOffset() == obj->metaObject()->propertyCount())
+        return; // no properties we could sync
 
-    bool hasProperties = false;
     for (int i = qobjectPropertyOffset(); i < obj->metaObject()->propertyCount(); ++i) {
         const auto prop = obj->metaObject()->property(i);
         if (!prop.hasNotifySignal())
@@ -74,11 +75,6 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject* obj)
           prop.notifySignal().methodSignature()
 #endif
           , this, SLOT(propertyChanged()));
-        hasProperties = true;
-    }
-
-    if (!hasProperties) {
-        return;
     }
 
     connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
