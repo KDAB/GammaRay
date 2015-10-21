@@ -128,8 +128,9 @@ Launcher::Launcher(const LaunchOptions& options, QObject* parent):
 {
   Q_ASSERT(options.isValid());
 
+  const auto timeout = qgetenv("GAMMARAY_LAUNCHER_TIMEOUT").toInt();
+  d->safetyTimer.setInterval(std::max(60, timeout) * 1000);
   d->safetyTimer.setSingleShot(true);
-  d->safetyTimer.setInterval(60 * 1000);
   connect(&d->safetyTimer, SIGNAL(timeout()), SLOT(timeout()));
 }
 
