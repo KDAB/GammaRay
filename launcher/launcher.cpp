@@ -330,8 +330,10 @@ void Launcher::injectorFinished()
   d->exitCode = d->injector->exitCode();
   if (d->errorMessage.isEmpty()) {
     d->errorMessage = d->injector->errorString();
-    if (!d->errorMessage.isEmpty())
+    if (!d->errorMessage.isEmpty()) {
+      d->state |= InjectorFailed;
       std::cerr << "Injector error: " << qPrintable(d->errorMessage) << std::endl;
+    }
   }
 
   if ((d->state & InjectorFailed) == 0)
