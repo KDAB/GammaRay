@@ -50,7 +50,10 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   m_serverObject(serverObject),
   m_myAddress(Protocol::InvalidObjectAddress),
   m_currentSyncBarrier(0),
-  m_targetSyncBarrier(0)
+  m_targetSyncBarrier(0),
+  m_proxyDynamicSortFilter(false),
+  m_proxyCaseSensitivity(Qt::CaseSensitive),
+  m_proxyKeyColumn(0)
 {
   m_root = new Node;
 
@@ -678,4 +681,56 @@ void RemoteModel::registerClient(const QString &serverObject)
 void RemoteModel::sendMessage(const Message& msg) const
 {
   Endpoint::send(msg);
+}
+
+bool RemoteModel::proxyDynamicSortFilter() const
+{
+  return m_proxyDynamicSortFilter;
+}
+
+void RemoteModel::setProxyDynamicSortFilter(bool dynamicSortFilter)
+{
+  if (m_proxyDynamicSortFilter == dynamicSortFilter)
+    return;
+  m_proxyDynamicSortFilter = dynamicSortFilter;
+  emit proxyDynamicSortFilterChanged();
+}
+
+Qt::CaseSensitivity RemoteModel::proxyFilterCaseSensitivity() const
+{
+  return m_proxyCaseSensitivity;
+}
+
+void RemoteModel::setProxyFilterCaseSensitivity(Qt::CaseSensitivity caseSensitivity)
+{
+  if (m_proxyCaseSensitivity == caseSensitivity)
+    return;
+  m_proxyCaseSensitivity = caseSensitivity;
+  emit proxyFilterCaseSensitivityChanged();
+}
+
+int RemoteModel::proxyFilterKeyColumn() const
+{
+  return m_proxyKeyColumn;
+}
+
+void RemoteModel::setProxyFilterKeyColumn(int column)
+{
+  if (m_proxyKeyColumn == column)
+    return;
+  m_proxyKeyColumn = column;
+  emit proxyFilterKeyColumnChanged();
+}
+
+QRegExp RemoteModel::proxyFilterRegExp() const
+{
+  return m_proxyFilterRegExp;
+}
+
+void RemoteModel::setProxyFilterRegExp(const QRegExp& regExp)
+{
+  if (m_proxyFilterRegExp == regExp)
+    return;
+  m_proxyFilterRegExp = regExp;
+  emit proxyFilterRegExpChanged();
 }

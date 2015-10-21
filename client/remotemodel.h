@@ -34,6 +34,7 @@
 #include <common/protocol.h>
 
 #include <QAbstractItemModel>
+#include <QRegExp>
 #include <QSet>
 #include <QTimer>
 #include <QVector>
@@ -46,6 +47,11 @@ class Message;
 class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
 {
   Q_OBJECT
+  Q_PROPERTY(bool dynamicSortFilter READ proxyDynamicSortFilter WRITE setProxyDynamicSortFilter NOTIFY proxyDynamicSortFilterChanged)
+  Q_PROPERTY(Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity NOTIFY proxyFilterCaseSensitivityChanged)
+  Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn NOTIFY proxyFilterKeyColumnChanged)
+  Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp NOTIFY proxyFilterRegExpChanged)
+
   public:
     explicit RemoteModel(const QString &serverObject, QObject *parent = 0);
     ~RemoteModel();
@@ -77,6 +83,12 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
       Outdated = 4
     };
     Q_DECLARE_FLAGS(NodeStates, NodeState)
+
+  signals:
+    void proxyDynamicSortFilterChanged();
+    void proxyFilterCaseSensitivityChanged();
+    void proxyFilterKeyColumnChanged();
+    void proxyFilterRegExpChanged();
 
   private:
     struct Node { // represents one row
@@ -117,6 +129,16 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     /// execute a rowsMoved() operation
     void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node* destParentNode, int destStart);
 
+    // sort/filter proxy model settings
+    bool proxyDynamicSortFilter() const;
+    void setProxyDynamicSortFilter(bool dynamicSortFilter);
+    Qt::CaseSensitivity proxyFilterCaseSensitivity() const;
+    void setProxyFilterCaseSensitivity(Qt::CaseSensitivity caseSensitivity);
+    int proxyFilterKeyColumn() const;
+    void setProxyFilterKeyColumn(int column);
+    QRegExp proxyFilterRegExp() const;
+    void setProxyFilterRegExp(const QRegExp &regExp);
+
 private slots:
     void doRequestDataAndFlags() const;
 
@@ -132,6 +154,12 @@ private:
     Protocol::ObjectAddress m_myAddress;
 
     qint32 m_currentSyncBarrier, m_targetSyncBarrier;
+
+    // proxy model properties
+    bool m_proxyDynamicSortFilter;
+    Qt::CaseSensitivity m_proxyCaseSensitivity;
+    int m_proxyKeyColumn;
+    QRegExp m_proxyFilterRegExp;
 
     // hooks for unit tests
     static void (*s_registerClientCallback)();

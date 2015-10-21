@@ -33,6 +33,7 @@
 #include <common/message.h>
 
 #include <QAbstractItemModel>
+#include <QSortFilterProxyModel>
 #include <QDataStream>
 #include <QDebug>
 #include <QBuffer>
@@ -390,4 +391,56 @@ bool RemoteModelServer::isConnected() const
 void RemoteModelServer::sendMessage(const Message& msg) const
 {
   Endpoint::send(msg);
+}
+
+bool RemoteModelServer::proxyDynamicSortFilter() const
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->dynamicSortFilter();
+  return false;
+}
+
+void RemoteModelServer::setProxyDynamicSortFilter(bool dynamicSortFilter)
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->setDynamicSortFilter(dynamicSortFilter);
+}
+
+Qt::CaseSensitivity RemoteModelServer::proxyFilterCaseSensitivity() const
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->filterCaseSensitivity();
+  return Qt::CaseSensitive;
+}
+
+void RemoteModelServer::setProxyFilterCaseSensitivity(Qt::CaseSensitivity caseSensitivity)
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->setFilterCaseSensitivity(caseSensitivity);
+}
+
+int RemoteModelServer::proxyFilterKeyColumn() const
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->filterKeyColumn();
+  return 0;
+}
+
+void RemoteModelServer::setProxyFilterKeyColumn(int column)
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->setFilterKeyColumn(column);
+}
+
+QRegExp RemoteModelServer::proxyFilterRegExp() const
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->filterRegExp();
+  return QRegExp();
+}
+
+void RemoteModelServer::setProxyFilterRegExp(const QRegExp& regExp)
+{
+  if (auto proxy = qobject_cast<QSortFilterProxyModel*>(m_model))
+    return proxy->setFilterRegExp(regExp);
 }
