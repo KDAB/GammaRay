@@ -2,7 +2,6 @@
 # Shared code between in-process and out-of-process UI
 #
 set(gammaray_ui_srcs
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kfilterproxysearchline.cpp
 
   aboutdata.cpp

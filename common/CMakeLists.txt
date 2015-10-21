@@ -4,6 +4,7 @@
 set(gammaray_common_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/klinkitemselectionmodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/lz4/lz4.c
 
   methodargument.cpp
