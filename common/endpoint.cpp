@@ -44,6 +44,8 @@ Endpoint::Endpoint(QObject* parent):
   m_socket(0),
   m_myAddress(Protocol::InvalidObjectAddress +1)
 {
+  if (s_instance)
+    qCritical("Found existing GammaRay::Endpoint instance - trying to attach to a GammaRay client?");
   Q_ASSERT(!s_instance);
   s_instance = this;
 
