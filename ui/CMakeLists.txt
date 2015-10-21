@@ -16,6 +16,7 @@ set(gammaray_ui_srcs
   propertywidget.cpp
   proxytooluifactory.cpp
   splashscreen.cpp
+  searchlinecontroller.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
