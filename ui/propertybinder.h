@@ -51,7 +51,7 @@ public:
 
     /** Keeps @p sourceProp of @p source in sync with @p destProp of @p destination.
      *  At least the source property must have a change notification signal.
-     *  This is a convenience overload for syncing a single property pair, intital synchronization
+     *  This is a convenience overload for syncing a single property pair, initial synchronization
      *  from source to destination happens automatically.
      */
     explicit PropertyBinder(QObject *source, const char *sourceProp, QObject *destination, const char *destProp);
@@ -64,7 +64,7 @@ public:
     void add(const char *sourceProp, const char *destProp);
 
 public slots:
-    /** Use this for intial/explicit source to destination synchronization. */
+    /** Use this for initial/explicit source to destination synchronization. */
     void syncSourceToDestination();
 
 private slots:
