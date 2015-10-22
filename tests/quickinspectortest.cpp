@@ -57,7 +57,7 @@ private:
     }
 
 private slots:
-    void testModels()
+    void testModelsReparent()
     {
         createProbe();
 
@@ -85,14 +85,56 @@ private slots:
         QTest::qWait(1);
 
         view->setSource(QUrl("qrc:/manual/reparenttest.qml"));
-        QTest::qWait(1);
+        QTest::qWait(20); // wait at least one frame
 
         QTest::keyClick(view, Qt::Key_Right);
-        QTest::qWait(1);
+        QTest::qWait(20);
         QTest::keyClick(view, Qt::Key_Left);
-        QTest::qWait(1);
+        QTest::qWait(20);
         QTest::keyClick(view, Qt::Key_Right);
+        QTest::qWait(20);
+
+        delete view;
         QTest::qWait(1);
+    }
+
+    void testModelsCreateDestroy()
+    {
+        createProbe();
+
+        // we need one view for the plugin to activate, otherwise the model will not be available
+        auto view = new QQuickView;
+        view->show();
+        QTest::qWait(1); // event loop re-entry
+
+        auto windowModel = ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel");
+        QVERIFY(windowModel);
+        ModelTest windowModelTest(windowModel);
+        QCOMPARE(windowModel->rowCount(), 1);
+
+        auto itemModel = ObjectBroker::model("com.kdab.GammaRay.QuickItemModel");
+        QVERIFY(itemModel);
+        ModelTest itemModelTest(itemModel);
+
+        auto sgModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel");
+        QVERIFY(sgModel);
+        ModelTest sgModelTest(sgModel);
+
+        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
+        QVERIFY(inspector);
+        inspector->selectWindow(0);
+        QTest::qWait(1);
+
+        view->setSource(QUrl("qrc:/manual/quickitemcreatedestroytest.qml"));
+        QTest::qWait(20); // wait at least one frame
+
+        // scroll through the list, to trigger creations/destructions
+        for (int i = 0; i < 30; ++i)
+            QTest::keyClick(view, Qt::Key_Down);
+        QTest::qWait(20);
+        for (int i = 0; i < 30; ++i)
+            QTest::keyClick(view, Qt::Key_Up);
+        QTest::qWait(20);
 
         delete view;
         QTest::qWait(1);

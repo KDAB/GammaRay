@@ -36,6 +36,7 @@ Rectangle {
     anchors { fill: parent; margins: 20 }
     objectName: "bububu"
     model: 255
+    focus: true
     delegate: Rectangle {
       color: Qt.rgba(model.index/ListView.view.count, (ListView.view.count-model.index)/ListView.view.count, 0.5, 1.0)
       implicitHeight: 20

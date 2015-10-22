@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
     <file>manual/reparenttest.qml</file>
+    <file>manual/quickitemcreatedestroytest.qml</file>
   </qresource>
 </RCC>
