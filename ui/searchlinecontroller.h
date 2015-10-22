@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_SEARCHLINECONTROLLER_H
 #define GAMMARAY_SEARCHLINECONTROLLER_H
 
+#include "gammaray_ui_export.h"
+
 #include <QAbstractItemModel>
 #include <QObject>
 #include <QPointer>
@@ -38,7 +40,7 @@ class QLineEdit;
 namespace GammaRay {
 
 /** Couples a line edit to a QSortFilterProxyModel for as-you-type filtering. */
-class SearchLineController : public QObject
+class GAMMARAY_UI_EXPORT SearchLineController : public QObject
 {
     Q_OBJECT
 public:
