@@ -58,12 +58,7 @@ void QuickSceneGraphModel::setWindow(QQuickWindow *window)
     disconnect(window, SIGNAL(beforeRendering()), this, SLOT(updateSGTree()));
   }
   m_window = window;
-  QQuickItem *item = window->contentItem();
-  QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
-  m_rootNode = itemPriv->itemNode();
-  while (m_rootNode->parent()) { // Ensure that we really get the very root node.
-    m_rootNode = m_rootNode->parent();
-  }
+  m_rootNode = currentRootNode();
   updateSGTree();
   connect(window, SIGNAL(beforeRendering()), this, SLOT(updateSGTree()));
 
@@ -72,21 +67,38 @@ void QuickSceneGraphModel::setWindow(QQuickWindow *window)
 
 void QuickSceneGraphModel::updateSGTree()
 {
+  auto root = currentRootNode();
+  if (root != m_rootNode) { // everything changed, reset
+    beginResetModel();
+    clear();
+    m_rootNode = root;
+    updateSGTree();
+    endResetModel();
+  } else {
+    m_oldChildParentMap = m_childParentMap;
+    m_oldParentChildMap = m_parentChildMap;
+    m_childParentMap.clear();
+    m_parentChildMap.clear();
+    m_childParentMap[m_rootNode] = 0;
+    m_parentChildMap[0].append(m_rootNode);
+
+    populateFromNode(m_rootNode);
+    collectItemNodes(m_window->contentItem());
+  }
+}
+
+QSGNode* QuickSceneGraphModel::currentRootNode() const
+{
+  if (!m_window)
+    return Q_NULLPTR;
+
   QQuickItem *item = m_window->contentItem();
   QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
-  QSGNode *rootNode = itemPriv->itemNode();
-  while (rootNode->parent()) { // Ensure that we really get the very root node.
-    rootNode = rootNode->parent();
+  QSGNode* root = itemPriv->itemNode();
+  while (root->parent()) { // Ensure that we really get the very root node.
+    root = root->parent();
   }
-  m_oldChildParentMap = m_childParentMap;
-  m_oldParentChildMap = m_parentChildMap;
-  m_childParentMap = QHash<QSGNode*, QSGNode*>();
-  m_parentChildMap = QHash<QSGNode*, QVector<QSGNode*> >();
-  m_childParentMap[m_rootNode] = 0;
-  m_parentChildMap[0].append(m_rootNode);
-
-  populateFromNode(m_rootNode);
-  collectItemNodes(m_window->contentItem());
+  return root;
 }
 
 QVariant QuickSceneGraphModel::data(const QModelIndex &index, int role) const

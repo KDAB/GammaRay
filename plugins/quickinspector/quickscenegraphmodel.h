@@ -70,6 +70,7 @@ class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
 
   private:
     void clear();
+    QSGNode* currentRootNode() const;
     void populateFromNode(QSGNode *node);
     void collectItemNodes(QQuickItem *item);
     bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
