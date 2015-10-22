@@ -204,5 +204,22 @@ if(Qt5Quick_FOUND)
   add_test(NAME qmlsupporttest COMMAND qmlsupporttest)
 endif()
 
+### Quick inspector
+
+if(Qt5Quick_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+set(quickinspectortest_srcs
+  quickinspectortest.cpp
+  ../probe/probecreator.cpp
+  ../probe/hooks.cpp
+  ../plugins/quickinspector/quickinspectorinterface.cpp
+  ../plugins/quickinspector/transferimage.cpp
+    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+qt4_add_resources(quickinspectortest_srcs quickinspectortest.qrc)
+add_executable(quickinspectortest ${quickinspectortest_srcs})
+target_link_libraries(quickinspectortest gammaray_core Qt5::Test Qt5::Quick)
+add_test(NAME quickinspectortest COMMAND quickinspectortest)
+endif()
+
 
 add_subdirectory(manual)

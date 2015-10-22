@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/">
+    <file>manual/reparenttest.qml</file>
+  </qresource>
+</RCC>
