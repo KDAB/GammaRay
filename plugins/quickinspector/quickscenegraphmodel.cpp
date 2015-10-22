@@ -74,7 +74,8 @@ void QuickSceneGraphModel::updateSGTree()
     beginResetModel();
     clear();
     m_rootNode = root;
-    updateSGTree();
+    if (m_window && m_rootNode)
+      updateSGTree();
     endResetModel();
   } else {
     m_oldParentChildMap = m_parentChildMap;
