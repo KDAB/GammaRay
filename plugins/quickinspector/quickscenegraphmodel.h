@@ -80,7 +80,6 @@ class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
     QSGNode *m_rootNode;
     QHash<QSGNode*, QSGNode*> m_childParentMap;
     QHash<QSGNode*, QVector<QSGNode*> > m_parentChildMap;
-    QHash<QSGNode*, QSGNode*> m_oldChildParentMap;
     QHash<QSGNode*, QVector<QSGNode*> > m_oldParentChildMap;
     QHash<QQuickItem*, QSGNode*> m_itemItemNodeMap;
     QHash<QSGNode*, QQuickItem*> m_itemNodeItemMap;
