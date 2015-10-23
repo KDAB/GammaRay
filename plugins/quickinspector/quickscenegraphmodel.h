@@ -74,13 +74,13 @@ class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
     void populateFromNode(QSGNode *node);
     void collectItemNodes(QQuickItem *item);
     bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
+    void pruneSubTree(QSGNode* node);
 
     QPointer<QQuickWindow> m_window;
 
     QSGNode *m_rootNode;
     QHash<QSGNode*, QSGNode*> m_childParentMap;
     QHash<QSGNode*, QVector<QSGNode*> > m_parentChildMap;
-    QHash<QSGNode*, QVector<QSGNode*> > m_oldParentChildMap;
     QHash<QQuickItem*, QSGNode*> m_itemItemNodeMap;
     QHash<QSGNode*, QQuickItem*> m_itemNodeItemMap;
 };

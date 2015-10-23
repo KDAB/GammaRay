@@ -78,11 +78,9 @@ void QuickSceneGraphModel::updateSGTree()
       updateSGTree();
     endResetModel();
   } else {
-    m_oldParentChildMap = m_parentChildMap;
-    m_childParentMap.clear();
-    m_parentChildMap.clear();
     m_childParentMap[m_rootNode] = 0;
-    m_parentChildMap[0].append(m_rootNode);
+    m_parentChildMap[0].resize(1);
+    m_parentChildMap[0][0] = m_rootNode;
 
     populateFromNode(m_rootNode);
     collectItemNodes(m_window->contentItem());
@@ -183,7 +181,6 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
   }
 
   QVector<QSGNode*> &childList  = m_parentChildMap[node];
-  QVector<QSGNode*> &oldChildList  = m_oldParentChildMap[node];
   QVector<QSGNode*> newChildList;
 
   newChildList.reserve(node->childCount());
@@ -196,52 +193,97 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
 
   std::sort(newChildList.begin(), newChildList.end());
 
-  QVector<QSGNode*>::iterator i = oldChildList.begin();
+  QVector<QSGNode*>::iterator i = childList.begin();
   QVector<QSGNode*>::const_iterator j = newChildList.constBegin();
 
-  while (i != oldChildList.end() && j != newChildList.constEnd()) {
-    if (*i < *j) { // We don't have to do anything but inform the client about the change
+  while (i != childList.end() && j != newChildList.constEnd()) {
+    if (*i < *j) { // handle deleted node
+      emit nodeDeleted(*i);
       GET_INDEX
-      beginRemoveRows(myIndex, childList.size(), childList.size());
+      const auto idx = std::distance(childList.begin(), i);
+      beginRemoveRows(myIndex, idx, idx);
+      pruneSubTree(*i);
+      i = childList.erase(i);
       endRemoveRows();
-      emit nodeDeleted(*i);
-      ++i;
-    } else if (*i > *j) { // Add to new list and inform the client about the change
+    } else if (*i > *j) { // handle added node
       GET_INDEX
-      beginInsertRows(myIndex, childList.size(), childList.size());
-      m_childParentMap.insert(*j, node);
-      childList.append(*j);
-      endInsertRows();
+      const auto idx = std::distance(childList.begin(), i);
+      if (m_childParentMap.contains(*j)) { // move from elsewhere in our tree
+        const auto sourceIdx = indexForNode(*j);
+        Q_ASSERT(sourceIdx.isValid());
+        beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex, idx);
+        m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
+        m_childParentMap.insert(*j, node);
+        i = childList.insert(i, *j);
+        endMoveRows();
+      } else { // entirely new
+        beginInsertRows(myIndex, idx, idx);
+        m_childParentMap.insert(*j, node);
+        i = childList.insert(i, *j);
+        endInsertRows();
+      }
       populateFromNode(*j);
-      ++j;
-    } else { // Adopt to new list, without informing the client (as nothing really changed)
-      m_childParentMap.insert(*j, node);
-      childList.append(*j);
-      populateFromNode(*j);
-      ++j;
       ++i;
-    }
-  }
-  if (i == oldChildList.end() && j != newChildList.constEnd()) {
-    // Add remaining new items to list and inform the client
-    GET_INDEX
-    beginInsertRows(myIndex, childList.size(),
-                    childList.size() + std::distance(j, newChildList.constEnd()) - 1);
-    for (;j != newChildList.constEnd(); ++j) {
-      m_childParentMap.insert(*j, node);
-      childList.append(*j);
+      ++j;
+    } else { // already known node, no change
       populateFromNode(*j);
-    }
-    endInsertRows();
-  } else if (i != oldChildList.end()) { // Inform the client about the removed rows
-    GET_INDEX
-    beginRemoveRows(myIndex, childList.size(),
-                    childList.size() + std::distance(i, oldChildList.end()) - 1);
-    endRemoveRows();
-    for (; i != oldChildList.end(); ++i) {
-      emit nodeDeleted(*i);
+      ++i;
+      ++j;
     }
   }
+  if (i == childList.end() && j != newChildList.constEnd()) {
+    // Add remaining new items to list and inform the client
+    // process the remaining items in pairs of n entirely new ones and 0-1 moved ones
+    GET_INDEX
+    while (j != newChildList.constEnd()) {
+      const auto newBegin = j;
+      while (j != newChildList.constEnd() && !m_childParentMap.contains(*j))
+        ++j;
+
+      // newBegin to j - 1 is new, j is either moved or end
+      if (newBegin != j) { // new elements
+        const auto idx = childList.size();
+        const auto count = std::distance(newBegin, j);
+        beginInsertRows(myIndex, idx, idx + count - 1);
+        for (auto it = newBegin; it != j; ++it) {
+          m_childParentMap.insert(*it, node);
+          childList.append(*it);
+        }
+        endInsertRows();
+        for (auto it = newBegin; it != j; ++it)
+          populateFromNode(*it);
+      }
+
+      if (j != newChildList.constEnd() && m_childParentMap.contains(*j)) { // one moved element, important to recheck if this is still a move, in case the above has removed it meanwhile...
+        const auto idx = childList.size();
+        const auto sourceIdx = indexForNode(*j);
+        Q_ASSERT(sourceIdx.isValid());
+        beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex, idx);
+        m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
+        m_childParentMap.insert(*j, node);
+        childList.append(*j);
+        endMoveRows();
+        populateFromNode(*j);
+        ++j;
+      }
+    }
+  } else if (i != childList.end()) { // Inform the client about the removed rows
+    GET_INDEX
+    const auto idx = std::distance(childList.begin(), i);
+    const auto count = std::distance(i, childList.end());
+
+    for (auto it = i; it != childList.end(); ++it) {
+      emit nodeDeleted(*it);
+    }
+
+    beginRemoveRows(myIndex, idx, idx + count - 1);
+    for (; i != childList.end(); ++i)
+      pruneSubTree(*i);
+    childList.remove(idx, count);
+    endRemoveRows();
+  }
+
+  Q_ASSERT(childList == newChildList);
 }
 
 #undef GET_INDEX
@@ -324,4 +366,12 @@ bool QuickSceneGraphModel::recursivelyFindChild(QSGNode *root, QSGNode *child) c
     }
   }
   return false;
+}
+
+void QuickSceneGraphModel::pruneSubTree(QSGNode* node)
+{
+  foreach (auto child, m_parentChildMap.value(node))
+    pruneSubTree(child);
+  m_parentChildMap.remove(node);
+  m_childParentMap.remove(node);
 }
