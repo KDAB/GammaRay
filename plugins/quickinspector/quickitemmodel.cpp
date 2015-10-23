@@ -337,6 +337,9 @@ void QuickItemModel::itemUpdated()
 
 void QuickItemModel::recursivelyUpdateItem(QQuickItem *item)
 {
+  if (item->parent() == QObject::parent()) // skip items injected by ourselves
+    return;
+
   int oldFlags = m_itemFlags[item];
   updateItemFlags(item);
 
