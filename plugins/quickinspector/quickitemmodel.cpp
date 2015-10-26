@@ -359,7 +359,12 @@ void QuickItemModel::updateItem(QQuickItem *item)
   }
 
   const QModelIndex left = indexForItem(item);
+  if (!left.isValid())
+    return;
   const QModelIndex right = left.sibling(left.row(), columnCount() - 1);
+
+  Q_ASSERT(left.isValid());
+  Q_ASSERT(right.isValid());
   emit dataChanged(left, right);
 }
 
