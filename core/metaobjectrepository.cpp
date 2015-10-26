@@ -41,6 +41,7 @@
 #include <QPalette>
 #include <QPen>
 #include <QSocketNotifier>
+#include <QSortFilterProxyModel>
 #include <QTcpServer>
 #include <QThread>
 
@@ -166,6 +167,9 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDragActions);
   MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDropActions);
 #endif
+  MO_ADD_METAOBJECT1(QAbstractProxyModel, QAbstractItemModel);
+  MO_ADD_METAOBJECT1(QSortFilterProxyModel, QAbstractProxyModel);
+  MO_ADD_PROPERTY_RO(QSortFilterProxyModel, Qt::SortOrder, sortOrder);
 }
 
 
