@@ -60,14 +60,14 @@ void QuickSceneGraphModel::setWindow(QQuickWindow *window)
   m_window = window;
   m_rootNode = currentRootNode();
   if (m_window && m_rootNode) {
-    updateSGTree();
+    updateSGTree(false);
     connect(window, SIGNAL(beforeRendering()), this, SLOT(updateSGTree()));
   }
 
   endResetModel();
 }
 
-void QuickSceneGraphModel::updateSGTree()
+void QuickSceneGraphModel::updateSGTree(bool emitSignals)
 {
   auto root = currentRootNode();
   if (root != m_rootNode) { // everything changed, reset
@@ -75,14 +75,14 @@ void QuickSceneGraphModel::updateSGTree()
     clear();
     m_rootNode = root;
     if (m_window && m_rootNode)
-      updateSGTree();
+      updateSGTree(false);
     endResetModel();
   } else {
     m_childParentMap[m_rootNode] = 0;
     m_parentChildMap[0].resize(1);
     m_parentChildMap[0][0] = m_rootNode;
 
-    populateFromNode(m_rootNode);
+    populateFromNode(m_rootNode, emitSignals);
     collectItemNodes(m_window->contentItem());
   }
 }
@@ -172,9 +172,9 @@ void QuickSceneGraphModel::clear()
 }
 
 // indexForNode() is expensive, so only use it when really needed
-#define GET_INDEX if (!hasMyIndex) { myIndex = indexForNode(node); hasMyIndex = true; }
+#define GET_INDEX if (emitSignals && !hasMyIndex) { myIndex = indexForNode(node); hasMyIndex = true; }
 
-void QuickSceneGraphModel::populateFromNode(QSGNode *node)
+void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
 {
   if (!node) {
     return;
@@ -200,33 +200,41 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
     if (*i < *j) { // handle deleted node
       emit nodeDeleted(*i);
       GET_INDEX
-      const auto idx = std::distance(childList.begin(), i);
-      beginRemoveRows(myIndex, idx, idx);
+      if (emitSignals) {
+        const auto idx = std::distance(childList.begin(), i);
+        beginRemoveRows(myIndex, idx, idx);
+      }
       pruneSubTree(*i);
       i = childList.erase(i);
-      endRemoveRows();
+      if (emitSignals)
+        endRemoveRows();
     } else if (*i > *j) { // handle added node
       GET_INDEX
       const auto idx = std::distance(childList.begin(), i);
       if (m_childParentMap.contains(*j)) { // move from elsewhere in our tree
         const auto sourceIdx = indexForNode(*j);
         Q_ASSERT(sourceIdx.isValid());
-        beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex, idx);
+        if (emitSignals)
+          beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex, idx);
         m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
         m_childParentMap.insert(*j, node);
         i = childList.insert(i, *j);
-        endMoveRows();
+        if (emitSignals)
+          endMoveRows();
+        populateFromNode(*j, emitSignals);
       } else { // entirely new
-        beginInsertRows(myIndex, idx, idx);
+        if (emitSignals)
+          beginInsertRows(myIndex, idx, idx);
         m_childParentMap.insert(*j, node);
         i = childList.insert(i, *j);
-        endInsertRows();
+        populateFromNode(*j, false);
+        if (emitSignals)
+          endInsertRows();
       }
-      populateFromNode(*j);
       ++i;
       ++j;
     } else { // already known node, no change
-      populateFromNode(*j);
+      populateFromNode(*j, emitSignals);
       ++i;
       ++j;
     }
@@ -242,28 +250,34 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
 
       // newBegin to j - 1 is new, j is either moved or end
       if (newBegin != j) { // new elements
-        const auto idx = childList.size();
-        const auto count = std::distance(newBegin, j);
-        beginInsertRows(myIndex, idx, idx + count - 1);
+        if (emitSignals) {
+          const auto idx = childList.size();
+          const auto count = std::distance(newBegin, j);
+          beginInsertRows(myIndex, idx, idx + count - 1);
+        }
         for (auto it = newBegin; it != j; ++it) {
           m_childParentMap.insert(*it, node);
           childList.append(*it);
         }
-        endInsertRows();
         for (auto it = newBegin; it != j; ++it)
-          populateFromNode(*it);
+          populateFromNode(*it, false);
+        if (emitSignals)
+          endInsertRows();
       }
 
       if (j != newChildList.constEnd() && m_childParentMap.contains(*j)) { // one moved element, important to recheck if this is still a move, in case the above has removed it meanwhile...
-        const auto idx = childList.size();
         const auto sourceIdx = indexForNode(*j);
         Q_ASSERT(sourceIdx.isValid());
-        beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex, idx);
+        if (emitSignals) {
+          const auto idx = childList.size();
+          beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex, idx);
+        }
         m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
         m_childParentMap.insert(*j, node);
         childList.append(*j);
-        endMoveRows();
-        populateFromNode(*j);
+        if (emitSignals)
+          endMoveRows();
+        populateFromNode(*j, emitSignals);
         ++j;
       }
     }
@@ -276,11 +290,13 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node)
       emit nodeDeleted(*it);
     }
 
-    beginRemoveRows(myIndex, idx, idx + count - 1);
+    if (emitSignals)
+      beginRemoveRows(myIndex, idx, idx + count - 1);
     for (; i != childList.end(); ++i)
       pruneSubTree(*i);
     childList.remove(idx, count);
-    endRemoveRows();
+    if (emitSignals)
+      endRemoveRows();
   }
 
   Q_ASSERT(childList == newChildList);

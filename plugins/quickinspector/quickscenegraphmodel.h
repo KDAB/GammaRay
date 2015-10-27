@@ -66,12 +66,12 @@ class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
     void nodeDeleted(QSGNode *node);
 
   private slots:
-    void updateSGTree();
+    void updateSGTree(bool emitSignals = true);
 
   private:
     void clear();
     QSGNode* currentRootNode() const;
-    void populateFromNode(QSGNode *node);
+    void populateFromNode(QSGNode *node, bool emitSignals);
     void collectItemNodes(QQuickItem *item);
     bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
     void pruneSubTree(QSGNode* node);
