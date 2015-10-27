@@ -29,12 +29,12 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKCLIENTITEMMODEL_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKCLIENTITEMMODEL_H
 
-#include <kde/krecursivefilterproxymodel.h>
+#include <QIdentityProxyModel>
 
 namespace GammaRay {
 
 /** UI-dependent (and thus client-side) bits of the item tree model. */
-class QuickClientItemModel : public KRecursiveFilterProxyModel
+class QuickClientItemModel : public QIdentityProxyModel
 {
   Q_OBJECT
   public:

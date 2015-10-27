@@ -37,7 +37,7 @@
 using namespace GammaRay;
 
 QuickClientItemModel::QuickClientItemModel(QObject *parent)
-  : KRecursiveFilterProxyModel(parent)
+  : QIdentityProxyModel(parent)
 {
 }
 
@@ -52,7 +52,7 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
   }
 
   if (role & (Qt::ForegroundRole | Qt::ToolTipRole)) {
-    int flags = QSortFilterProxyModel::data(index, QuickItemModelRole::ItemFlags).value<int>();
+    int flags = QIdentityProxyModel::data(index, QuickItemModelRole::ItemFlags).value<int>();
 
     // Grey out invisible items
     if (role == Qt::ForegroundRole &&
@@ -61,7 +61,7 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
     }
     // Adjust tooltip to show information about items
     if (role == Qt::ToolTipRole && flags) {
-      QString tooltip = QSortFilterProxyModel::data(index, role).toString();
+      QString tooltip = QIdentityProxyModel::data(index, role).toString();
       tooltip.append("<p style='white-space:pre'>");
       if ((flags & QuickItemModelRole::OutOfView) &&
           (~flags & QuickItemModelRole::Invisible)) {
@@ -113,5 +113,5 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
       return tooltip;
     }
   }
-  return KRecursiveFilterProxyModel::data(index, role);
+  return QIdentityProxyModel::data(index, role);
 }

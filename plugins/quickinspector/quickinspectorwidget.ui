@@ -36,7 +36,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="KFilterProxySearchLine" name="itemTreeSearchLine"/>
+          <widget class="QLineEdit" name="itemTreeSearchLine"/>
          </item>
          <item>
           <widget class="QTreeView" name="itemTreeView">
@@ -56,7 +56,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="KFilterProxySearchLine" name="sgTreeSearchLine"/>
+          <widget class="QLineEdit" name="sgTreeSearchLine"/>
          </item>
          <item>
           <widget class="QTreeView" name="sgTreeView">
@@ -99,11 +99,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
-  </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>

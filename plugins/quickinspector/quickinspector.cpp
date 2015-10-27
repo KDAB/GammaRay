@@ -44,6 +44,8 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
 
+#include <3rdparty/kde/krecursivefilterproxymodel.h>
+
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QQuickView>
@@ -216,7 +218,10 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   proxy->setSourceModel(windowModel);
   m_windowModel = proxy;
   probe->registerModel("com.kdab.GammaRay.QuickWindowModel", m_windowModel);
-  probe->registerModel("com.kdab.GammaRay.QuickItemModel", m_itemModel);
+
+  auto filterProxy = new KRecursiveFilterProxyModel(this);
+  filterProxy->setSourceModel(m_itemModel);
+  probe->registerModel("com.kdab.GammaRay.QuickItemModel", filterProxy);
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
           m_itemModel, SLOT(objectAdded(QObject*)));
@@ -227,13 +232,15 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)),
           SLOT(objectSelected(void*,QString)));
 
-  m_itemSelectionModel = ObjectBroker::selectionModel(m_itemModel);
+  m_itemSelectionModel = ObjectBroker::selectionModel(filterProxy);
   connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
           this, &QuickInspector::itemSelectionChanged);
 
-  probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", m_sgModel);
+  filterProxy = new KRecursiveFilterProxyModel(this);
+  filterProxy->setSourceModel(m_sgModel);
+  probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", filterProxy);
 
-  m_sgSelectionModel = ObjectBroker::selectionModel(m_sgModel);
+  m_sgSelectionModel = ObjectBroker::selectionModel(filterProxy);
   connect(m_sgSelectionModel, &QItemSelectionModel::selectionChanged,
           this, &QuickInspector::sgSelectionChanged);
   connect(m_sgModel, &QuickSceneGraphModel::nodeDeleted, this, &QuickInspector::sgNodeDeleted);
@@ -304,7 +311,7 @@ void QuickInspector::setupPreviewSource()
 
 void QuickInspector::selectItem(QQuickItem *item)
 {
-  const QAbstractItemModel *model = m_itemModel;
+  const QAbstractItemModel *model = m_itemSelectionModel->model();
   const QModelIndexList indexList =
     model->match(model->index(0, 0),
                  ObjectModel::ObjectRole,
@@ -324,7 +331,7 @@ void QuickInspector::selectItem(QQuickItem *item)
 
 void QuickInspector::selectSGNode(QSGNode *node)
 {
-  const QAbstractItemModel *model = m_sgModel;
+  const QAbstractItemModel *model = m_sgSelectionModel->model();
 
   const QModelIndexList indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole,
     QVariant::fromValue(node), 1, Qt::MatchExactly | Qt::MatchRecursive);
@@ -566,7 +573,9 @@ void QuickInspector::itemSelectionChanged(const QItemSelection &selection)
   // node of the Item. In this case we don't want to overwrite that selection.
   if (m_sgModel->itemForSgNode(m_currentSgNode) != m_currentItem) {
     m_currentSgNode = m_sgModel->sgNodeForItem(m_currentItem);
-    m_sgSelectionModel->select(m_sgModel->indexForNode(m_currentSgNode),
+    const auto sourceIdx = m_sgModel->indexForNode(m_currentSgNode);
+    auto proxy = qobject_cast<const QAbstractProxyModel*>(m_sgSelectionModel->model());
+    m_sgSelectionModel->select(proxy->mapFromSource(sourceIdx),
                                QItemSelectionModel::Select |
                                QItemSelectionModel::Clear |
                                QItemSelectionModel::Rows |

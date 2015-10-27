@@ -42,8 +42,7 @@
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
 #include <ui/deferredresizemodesetter.h>
-
-#include <kde/krecursivefilterproxymodel.h>
+#include <ui/searchlinecontroller.h>
 #include <client/remotemodel.h>
 
 #include <QEvent>
@@ -137,11 +136,11 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_interface->selectWindow(ui->windowComboBox->currentIndex());
   }
 
-  QSortFilterProxyModel *proxy = new QuickClientItemModel(this);
-  proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickItemModel"));
-  proxy->setDynamicSortFilter(true);
+  auto model = ObjectBroker::model("com.kdab.GammaRay.QuickItemModel");
+  auto proxy = new QuickClientItemModel(this);
+  proxy->setSourceModel(model);
   ui->itemTreeView->setModel(proxy);
-  ui->itemTreeSearchLine->setProxy(proxy);
+  new SearchLineController(ui->itemTreeSearchLine, model);
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
   ui->itemTreeView->setSelectionModel(selectionModel);
   ui->itemTreeView->setItemDelegate(new QuickItemDelegate(ui->itemTreeView));
@@ -150,12 +149,10 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   connect(proxy, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
           this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex)));
 
-  QSortFilterProxyModel *sgProxy = new KRecursiveFilterProxyModel(this);
-  sgProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel"));
-  sgProxy->setDynamicSortFilter(true);
-  ui->sgTreeView->setModel(sgProxy);
-  ui->sgTreeSearchLine->setProxy(sgProxy);
-  QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(sgProxy);
+  model = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel");
+  ui->sgTreeView->setModel(model);
+  new SearchLineController(ui->sgTreeSearchLine, model);
+  QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(model);
   ui->sgTreeView->setSelectionModel(sgSelectionModel);
   connect(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
