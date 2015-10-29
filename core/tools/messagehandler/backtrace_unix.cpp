@@ -48,11 +48,6 @@
 
 #include "backtrace.h"
 
-#ifdef IN_KDEVELOP_PARSER
-#define HAVE_BACKTRACE
-#define HAVE_BACKTRACE_DEMANGLE
-#endif
-
 //NOTE: we don't have check_function_exists, so lets just hardcode some OS'es
 #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID) && !defined(__UCLIBC__)
 #define HAVE_BACKTRACE (1)
@@ -63,15 +58,6 @@
 
 #include <QString>
 #include <stdlib.h>
-
-#ifdef Q_OS_SOLARIS
-// For the purposes of KDebug Solaris has a GNU-libc-compatible
-// backtrace() function. This isn't detected by the CMake checks
-// normally (check_function_exists fails), but we know it's there.
-// For better results, we would use walk_context(), but that's
-// a little more code -- see also the crash handler in kcrash.cpp .
-#define HAVE_BACKTRACE (1)
-#endif
 
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>
@@ -110,38 +96,6 @@ static QString maybeDemangledName(char *name)
   return QString::fromLatin1(name);
 }
 #endif
-
-QString kRealBacktrace(int levels)
-{
-  QString s;
-#ifdef HAVE_BACKTRACE
-  void *trace[256];
-  int n = backtrace(trace, 256);
-  if (!n) {
-    return s;
-  }
-  char **strings = backtrace_symbols(trace, n);
-
-  if (levels != -1) {
-    n = qMin(n, levels);
-  }
-  s = QLatin1String("[\n");
-
-  for (int i = 0; i < n; ++i) {
-    s += QString::number(i) +
-         QLatin1String(": ") +
-         maybeDemangledName(strings[i]) +
-         QLatin1Char('\n');
-  }
-  s += QLatin1String("]\n");
-  if (strings) {
-    free (strings);
-  }
-#else
-  Q_UNUSED(levels);
-#endif
-  return s;
-}
 
 ///END kdebug.cpp
 
