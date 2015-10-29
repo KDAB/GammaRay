@@ -12,7 +12,6 @@ set(gammaray_launcher_shared_srcs
   injector/injectorfactory.cpp
   injector/styleinjector.cpp
   injector/windllinjector.cpp
-  injector/interactiveprocess.cpp
 
   probeabi.cpp
   probeabidetector.cpp

@@ -29,7 +29,6 @@
 #include <config-gammaray.h>
 
 #include "styleinjector.h"
-#include "interactiveprocess.h"
 
 #include <common/paths.h>
 

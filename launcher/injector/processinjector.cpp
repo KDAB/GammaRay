@@ -38,6 +38,9 @@ ProcessInjector::ProcessInjector() :
   mProcessError(QProcess::UnknownError),
   mExitStatus(QProcess::NormalExit)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    m_proc.setInputChannelMode(QProcess::ForwardedInputChannel);
+#endif
     connect(&m_proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
     connect(&m_proc, SIGNAL(finished(int)), this, SLOT(processFinished()));
 }

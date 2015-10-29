@@ -27,8 +27,6 @@
 */
 
 #include "preloadinjector.h"
-
-#include "interactiveprocess.h"
 #include "preloadcheck.h"
 
 #ifndef Q_OS_WIN
