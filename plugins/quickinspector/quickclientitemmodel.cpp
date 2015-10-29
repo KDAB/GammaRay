@@ -51,7 +51,7 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
     return QVariant();
   }
 
-  if (role & (Qt::ForegroundRole | Qt::ToolTipRole)) {
+  if (role == Qt::ForegroundRole || role == Qt::ToolTipRole) {
     int flags = QIdentityProxyModel::data(index, QuickItemModelRole::ItemFlags).value<int>();
 
     // Grey out invisible items
