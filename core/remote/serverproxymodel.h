@@ -34,20 +34,34 @@
 
 namespace GammaRay {
 
-/** Sort/filter proxy model for server-side use to pass through extra roles in itemData(). */
-class ServerProxyModel : public QSortFilterProxyModel
+/** Sort/filter proxy model for server-side use to pass through extra roles in itemData().
+ *  Every remoted proxy model should be wrapped into this template, unless you already have
+ *  a special implementation for itemData() handling this.
+ */
+template <typename BaseProxy> class ServerProxyModel : public BaseProxy
 {
-    Q_OBJECT
 public:
-    explicit ServerProxyModel(QObject *parent = 0);
+    explicit ServerProxyModel(QObject *parent = 0) : BaseProxy(parent) {}
 
-    void addRole(int role);
+    void addRole(int role)
+    {
+        m_extraRoles.push_back(role);
+    }
 
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE
+    {
+        const QModelIndex sourceIndex = BaseProxy::mapToSource(index);
+        auto d = BaseProxy::sourceModel()->itemData(sourceIndex);
+        foreach (int role, m_extraRoles) {
+            d.insert(role, sourceIndex.data(role));
+        }
+        return d;
+    }
 
 private:
     QVector<int> m_extraRoles;
 };
+
 }
 
 #endif // GAMMARAY_SERVERPROXYMODEL_H

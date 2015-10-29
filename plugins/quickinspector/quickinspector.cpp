@@ -41,6 +41,7 @@
 #include <core/probeinterface.h>
 #include <core/propertycontroller.h>
 #include <core/remote/server.h>
+#include <core/remote/serverproxymodel.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
 
@@ -219,7 +220,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   m_windowModel = proxy;
   probe->registerModel("com.kdab.GammaRay.QuickWindowModel", m_windowModel);
 
-  auto filterProxy = new KRecursiveFilterProxyModel(this);
+  auto filterProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   filterProxy->setSourceModel(m_itemModel);
   probe->registerModel("com.kdab.GammaRay.QuickItemModel", filterProxy);
 
@@ -236,7 +237,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
           this, &QuickInspector::itemSelectionChanged);
 
-  filterProxy = new KRecursiveFilterProxyModel(this);
+  filterProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   filterProxy->setSourceModel(m_sgModel);
   probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", filterProxy);
 

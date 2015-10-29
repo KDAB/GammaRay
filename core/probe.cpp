@@ -242,7 +242,7 @@ Probe::Probe(QObject *parent):
 
   ProbeSettings::receiveSettings();
   m_toolModel = new ToolModel(this);
-  auto sortedToolModel = new ServerProxyModel(this);
+  auto sortedToolModel = new ServerProxyModel<QSortFilterProxyModel>(this);
   sortedToolModel->setSourceModel(m_toolModel);
   sortedToolModel->setDynamicSortFilter(true);
   sortedToolModel->sort(0);
