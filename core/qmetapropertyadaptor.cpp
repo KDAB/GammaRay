@@ -36,7 +36,9 @@
 
 using namespace GammaRay;
 
-QMetaPropertyAdaptor::QMetaPropertyAdaptor(QObject* parent): PropertyAdaptor(parent)
+QMetaPropertyAdaptor::QMetaPropertyAdaptor(QObject* parent):
+    PropertyAdaptor(parent),
+    m_notifyGuard(false)
 {
 }
 
@@ -114,6 +116,7 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
     if (!object().isValid())
         return data;
 
+    m_notifyGuard = true;
     const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
@@ -151,6 +154,7 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
         flags |= PropertyData::Resettable;
     data.setFlags(flags);
 
+    m_notifyGuard = false;
     return data;
 }
 
@@ -211,6 +215,9 @@ void QMetaPropertyAdaptor::resetProperty(int index)
 void QMetaPropertyAdaptor::propertyUpdated()
 {
     Q_ASSERT(senderSignalIndex() >= 0);
+    if (m_notifyGuard) // do not emit change notifications during reading (happens for eg. lazy computed properties like QQItem::childrenRect, that confuses the hell out of QSFPM)
+        return;
+
     const int propertyIndex = m_notifyToPropertyMap.value(senderSignalIndex());
     emit propertyChanged(propertyIndex, propertyIndex);
 }

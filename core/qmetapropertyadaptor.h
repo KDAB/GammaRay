@@ -58,6 +58,7 @@ private slots:
 
 private:
     QHash<int, int> m_notifyToPropertyMap;
+    mutable bool m_notifyGuard;
 };
 
 }
