@@ -74,8 +74,12 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
   }
 
   if (index.column() == 0) {
+    auto deco = index.data(Qt::DecorationRole);
     QVector<QPixmap> icons;
-    icons << index.data(Qt::DecorationRole).value<QPixmap>();
+    if (deco.canConvert<QPixmap>())
+      icons.push_back(deco.value<QPixmap>());
+    else if (deco.canConvert<QIcon>())
+      icons.push_back(deco.value<QIcon>().pixmap(16, 16));
 
     if ((flags & QuickItemModelRole::OutOfView) && (~flags & QuickItemModelRole::Invisible)) {
       icons << QIcon(":/gammaray/plugins/quickinspector/warning.png").pixmap(16, 16);
