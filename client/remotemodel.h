@@ -94,6 +94,9 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     struct Node { // represents one row
       Node() : parent(0), rowCount(-1), columnCount(-1) {}
       ~Node();
+      // delete all children and pretend we don't know anything about them
+      void clearChildren();
+
       Node* parent;
       QVector<Node*> children;
       qint32 rowCount;
@@ -111,6 +114,9 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     Node* nodeForIndex(const QModelIndex &index) const;
     Node* nodeForIndex(const Protocol::ModelIndex &index) const;
     QModelIndex modelIndexForNode(GammaRay::RemoteModel::Node* node, int column) const;
+
+    /** Checks if @p ancestor is a (grand)parent of @p child. */
+    bool isAncestor(Node *ancestor, Node *child) const;
 
     NodeStates stateForColumn(Node* node, int columnIndex) const;
 

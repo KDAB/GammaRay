@@ -43,6 +43,14 @@ RemoteModel::Node::~Node()
   qDeleteAll(children);
 }
 
+void RemoteModel::Node::clearChildren()
+{
+  qDeleteAll(children);
+  children.clear();
+  rowCount = -1;
+  columnCount = -1;
+}
+
 
 RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   QAbstractItemModel(parent),
@@ -413,10 +421,38 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       QVector<Protocol::ModelIndex> parents;
       quint32 hint;
       msg.payload() >> parents >> hint;
-      qDebug() << "layoutChanged" << parents << hint;
 
-      // TODO - be less aggressive than reset
-      clear();
+      if (parents.isEmpty()) { // everything changed (or Qt4)
+        clear(); // TODO we could still keep headers, and skip the sync barrier
+        break;
+      }
+
+      QVector<Node*> parentNodes;
+      parentNodes.reserve(parents.size());
+      foreach (const auto &p, parents) {
+        auto node = nodeForIndex(p);
+        if (!node)
+          continue;
+        parentNodes.push_back(node);
+      }
+      if (parentNodes.isEmpty())
+        break; // no currently loaded node changed, nothing to do
+
+      emit layoutAboutToBeChanged(); // TODO Qt5 support with exact sub-trees
+      foreach (const auto &persistentIndex, persistentIndexList()) {
+        auto persistentNode = nodeForIndex(persistentIndex);
+        Q_ASSERT(persistentNode);
+        foreach (auto node, parentNodes) {
+          if (!isAncestor(node, persistentNode))
+            continue;
+          changePersistentIndex(persistentIndex, QModelIndex());
+          break;
+        }
+      }
+      foreach (auto node, parentNodes) {
+        node->clearChildren();
+      }
+      emit layoutChanged(); // TODO Qt5 support with exact sub-trees
       break;
     }
 
@@ -469,6 +505,20 @@ QModelIndex RemoteModel::modelIndexForNode(Node* node, int column) const
   if (node == m_root)
     return QModelIndex();
   return createIndex(node->parent->children.indexOf(node), column, node);
+}
+
+bool RemoteModel::isAncestor(RemoteModel::Node* ancestor, RemoteModel::Node* child) const
+{
+  Q_ASSERT(ancestor);
+  Q_ASSERT(child);
+  Q_ASSERT(m_root);
+
+  if (child == m_root)
+    return false;
+  Q_ASSERT(child->parent);
+  if (child->parent == ancestor)
+    return true;
+  return isAncestor(ancestor, child->parent);
 }
 
 RemoteModel::NodeStates RemoteModel::stateForColumn(RemoteModel::Node* node, int columnIndex) const
