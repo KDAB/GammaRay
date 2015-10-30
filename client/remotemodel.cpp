@@ -401,10 +401,23 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelColumnsAdded:
     case Protocol::ModelColumnsMoved:
     case Protocol::ModelColumnsRemoved:
-    case Protocol::ModelLayoutChanged:
     {
       // TODO
       qWarning() << Q_FUNC_INFO << "not implemented yet" << msg.type() << m_serverObject;
+      clear();
+      break;
+    }
+
+    case Protocol::ModelLayoutChanged:
+    {
+      QVector<Protocol::ModelIndex> parents;
+      quint32 hint;
+      msg.payload() >> parents >> hint;
+      qDebug() << "layoutChanged" << parents << hint;
+
+      // TODO - be less aggressive than reset
+      clear();
+      break;
     }
 
     case Protocol::ModelReset:

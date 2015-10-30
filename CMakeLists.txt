@@ -340,6 +340,8 @@ else()
 
   # C++11 compatibility with Qt5
   add_definitions(-DQ_DECL_OVERRIDE=)
+  # Qt4 moc limitation workaround (Qt4 moc cannot evaluate QT_VERSION preprocessor conditionals
+  add_definitions(-DQT4_MOC_WORKAROUND)
 endif()
 
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
