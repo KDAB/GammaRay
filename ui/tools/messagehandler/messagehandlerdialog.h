@@ -1,5 +1,5 @@
 /*
-  messagehandlerwidget.cpp
+  messagehandlerdialog.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,34 +26,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "messagehandlerwidget.h"
-#include "ui_messagehandlerwidget.h"
+#ifndef GAMMARAY_MESSAGEHANDLERDIALOG_H
+#define GAMMARAY_MESSAGEHANDLERDIALOG_H
 
-#include <common/endpoint.h>
-#include <common/objectbroker.h>
-#include "messagehandlerclient.h"
+#include <QDialog>
 
-#include <QSortFilterProxyModel>
+namespace GammaRay {
 
-using namespace GammaRay;
-
-MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::MessageHandlerWidget)
+namespace Ui
 {
-  ui->setupUi(this);
-
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.MessageModel"));
-  ui->messageSearchLine->setProxy(proxy);
-  ui->messageView->setModel(proxy);
-  ui->messageView->setIndentation(0);
-  ui->messageView->setSortingEnabled(true);
-
-  ///FIXME: implement this
-  ui->backtraceView->hide();
+class MessageHandlerDialog;
 }
 
-MessageHandlerWidget::~MessageHandlerWidget()
+class MessageHandlerDialog : public QDialog
 {
+    Q_OBJECT
+public:
+    explicit MessageHandlerDialog(QWidget* parent = 0);
+    ~MessageHandlerDialog();
+    void setTitleData(const QString &app, const QTime &time);
+    void setMessage(const QString &message);
+    void setBacktrace(const QStringList &backtrace);
+private slots:
+    void copyBacktraceToClipboard();
+private:
+    QScopedPointer<Ui::MessageHandlerDialog> ui;
+    QStringList m_backtrace;
+};
 }
+
+#endif // GAMMARAY_MESSAGEHANDLERDIALOG_H
