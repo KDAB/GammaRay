@@ -140,8 +140,8 @@ background-position:bottom right;
    </widget>
    <addaction name="menu_GammaRay"/>
    <addaction name="actionsMenu"/>
-   <addaction name="menu_Help"/>
    <addaction name="menuSettings"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="windowTitle">
