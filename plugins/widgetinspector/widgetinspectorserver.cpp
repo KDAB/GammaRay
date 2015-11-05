@@ -449,6 +449,9 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
   MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
   MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
   MO_ADD_PROPERTY_RO(QAbstractItemView, QAbstractItemModel*, model);
+
+  MO_ADD_METAOBJECT1(QComboBox, QWidget);
+  MO_ADD_PROPERTY_RO(QComboBox, QAbstractItemModel*, model);
 #endif
 }
 
