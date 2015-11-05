@@ -210,7 +210,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   menu->addAction(action);
 #endif
 
-  QObject::connect(group, SIGNAL(triggered()), this, SLOT(setCodeNavigationIDE()));
+  QObject::connect(group, SIGNAL(triggered(QAction*)), this, SLOT(setCodeNavigationIDE(QAction*)));
 
   configAction->setMenu(menu);
   ui->menuSettings->addMenu(menu);
