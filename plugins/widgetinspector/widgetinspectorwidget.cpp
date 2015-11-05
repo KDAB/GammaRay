@@ -36,8 +36,8 @@
 #include "common/objectbroker.h"
 #include "common/objectmodel.h"
 
-#include "kde/krecursivefilterproxymodel.h"
-#include "ui/deferredresizemodesetter.h"
+#include <ui/deferredresizemodesetter.h>
+#include <ui/searchlinecontroller.h>
 
 #include <QDebug>
 #include <QFileDialog>
@@ -61,13 +61,12 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   ui->setupUi(this);
   ui->widgetPropertyWidget->setObjectBaseName(m_inspector->objectName());
 
-  KRecursiveFilterProxyModel *widgetSearchProxy = new KRecursiveFilterProxyModel(this);
-  widgetSearchProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.WidgetTree"));
-  ui->widgetTreeView->setModel(widgetSearchProxy);
-  ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetSearchProxy));
+  auto widgetModel = ObjectBroker::model("com.kdab.GammaRay.WidgetTree");
+  ui->widgetTreeView->setModel(widgetModel);
+  ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetModel));
   new DeferredResizeModeSetter(ui->widgetTreeView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(ui->widgetTreeView->header(), 1, QHeaderView::Interactive);
-  ui->widgetSearchLine->setProxy(widgetSearchProxy);
+  new SearchLineController(ui->widgetSearchLine, widgetModel);
   connect(ui->widgetTreeView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));

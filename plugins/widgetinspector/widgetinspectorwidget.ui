@@ -23,7 +23,7 @@
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="KFilterProxySearchLine" name="widgetSearchLine"/>
+         <widget class="QLineEdit" name="widgetSearchLine"/>
         </item>
         <item>
          <widget class="QTreeView" name="widgetTreeView"/>
@@ -84,11 +84,6 @@
   </action>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
-  </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>

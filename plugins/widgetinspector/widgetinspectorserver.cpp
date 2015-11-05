@@ -52,6 +52,8 @@
 #include "common/objectmodel.h"
 #include "common/paths.h"
 
+#include <3rdparty/kde/krecursivefilterproxymodel.h>
+
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QComboBox>
@@ -101,9 +103,13 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
   WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
   widgetFilterProxy->setSourceModel(probe->objectTreeModel());
-  probe->registerModel("com.kdab.GammaRay.WidgetTree", widgetFilterProxy);
 
-  m_widgetSelectionModel = ObjectBroker::selectionModel(widgetFilterProxy);
+  auto widgetSearchProxy = new KRecursiveFilterProxyModel(this);
+  widgetSearchProxy->setSourceModel(widgetFilterProxy);
+
+  probe->registerModel("com.kdab.GammaRay.WidgetTree", widgetSearchProxy);
+
+  m_widgetSelectionModel = ObjectBroker::selectionModel(widgetSearchProxy);
   connect(m_widgetSelectionModel,
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
