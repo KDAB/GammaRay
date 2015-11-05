@@ -313,10 +313,14 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
     return;
   }
 
+  const auto sourceFile = index.data(QuickItemModelRole::SourceFileRole).toString();
+  if (sourceFile.isEmpty())
+    return;
+
   QMenu contextMenu;
   QAction *action =
     contextMenu.addAction(tr("Show Code: %1:%2:%3").
-      arg(index.data(QuickItemModelRole::SourceFileRole).toString(),
+      arg(sourceFile,
           index.data(QuickItemModelRole::SourceLineRole).toString(),
           index.data(QuickItemModelRole::SourceColumnRole).toString()));
   action->setData(QuickInspectorWidget::NavigateToCode);
@@ -327,7 +331,7 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
     switch (action->data().toInt()) {
       case QuickInspectorWidget::NavigateToCode:
         integ = UiIntegration::instance();
-        emit integ->navigateToCode(index.data(QuickItemModelRole::SourceFileRole).toString(),
+        emit integ->navigateToCode(sourceFile,
                                    index.data(QuickItemModelRole::SourceLineRole).toInt(),
                                    index.data(QuickItemModelRole::SourceColumnRole).toInt());
         break;
