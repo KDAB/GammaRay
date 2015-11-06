@@ -94,8 +94,10 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     struct Node { // represents one row
       Node() : parent(0), rowCount(-1), columnCount(-1) {}
       ~Node();
-      // delete all children and pretend we don't know anything about them
-      void clearChildren();
+      // delete all cached children data, but assume row/column count on this level is still accurate
+      void clearChildrenData();
+      // forget everything we know about our children, including row/column counts
+      void clearChildrenStructure();
 
       Node* parent;
       QVector<Node*> children;

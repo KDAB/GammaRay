@@ -43,14 +43,23 @@ RemoteModel::Node::~Node()
   qDeleteAll(children);
 }
 
-void RemoteModel::Node::clearChildren()
+void RemoteModel::Node::clearChildrenData()
+{
+  foreach (auto child, children) {
+    child->clearChildrenStructure();
+    child->data.clear();
+    child->flags.clear();
+    child->state.clear();
+  }
+}
+
+void RemoteModel::Node::clearChildrenStructure()
 {
   qDeleteAll(children);
   children.clear();
   rowCount = -1;
   columnCount = -1;
 }
-
 
 RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   QAbstractItemModel(parent),
@@ -423,7 +432,15 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> parents >> hint;
 
       if (parents.isEmpty()) { // everything changed (or Qt4)
-        clear(); // TODO we could still keep headers, and skip the sync barrier
+        emit layoutAboutToBeChanged();
+        foreach (const auto &persistentIndex, persistentIndexList()) {
+          changePersistentIndex(persistentIndex, QModelIndex());
+        }
+        if (hint == 0)
+          m_root->clearChildrenStructure();
+        else
+          m_root->clearChildrenData();
+        emit layoutChanged();
         break;
       }
 
@@ -450,7 +467,10 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         }
       }
       foreach (auto node, parentNodes) {
-        node->clearChildren();
+        if (hint == 0)
+          node->clearChildrenStructure();
+        else
+          node->clearChildrenData();
       }
       emit layoutChanged(); // TODO Qt5 support with exact sub-trees
       break;
