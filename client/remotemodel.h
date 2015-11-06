@@ -66,6 +66,7 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
 
   public slots:
     void newMessage(const GammaRay::Message &msg);

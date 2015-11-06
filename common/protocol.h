@@ -67,6 +67,7 @@ enum BuildInMessageType {
   ModelContentRequest,
   ModelHeaderRequest,
   ModelSetDataRequest,
+  ModelSortRequest,
   ModelSyncBarrier,
 
   // server -> client

@@ -208,6 +208,13 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
   return m_headers.value(orientation).value(section).value(role);
 }
 
+void RemoteModel::sort(int column, Qt::SortOrder order)
+{
+  Message msg(m_myAddress, Protocol::ModelSortRequest);
+  msg.payload() << (quint32)column << (quint32)order;
+  sendMessage(msg);
+}
+
 void RemoteModel::newMessage(const GammaRay::Message& msg)
 {
   if (!checkSyncBarrier(msg))

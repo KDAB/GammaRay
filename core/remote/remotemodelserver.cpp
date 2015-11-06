@@ -204,6 +204,14 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       break;
     }
 
+    case Protocol::ModelSortRequest:
+    {
+      quint32 column, order;
+      msg.payload() >> column >> order;
+      m_model->sort(column, (Qt::SortOrder)order);
+      break;
+    }
+
     case Protocol::ModelSyncBarrier:
     {
       qint32 barrierId;
