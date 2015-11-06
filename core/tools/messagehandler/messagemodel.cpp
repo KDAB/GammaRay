@@ -101,6 +101,12 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     } else if (index.column() == TimeColumn) {
       return msg.time.toString();
     }
+  } else if (role == SortRole) {
+    switch (index.column()) {
+      case TypeColumn: return msg.type;
+      case TimeColumn: return msg.time;
+      case MessageColumn: return msg.message;
+    }
   } else if (role == Qt::ToolTipRole) {
     if (!msg.backtrace.isEmpty()) {
       QString bt;

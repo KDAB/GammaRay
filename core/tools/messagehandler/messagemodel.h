@@ -54,6 +54,9 @@ class MessageModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
+    enum Roles {
+      SortRole = Qt::UserRole + 1 // not for remote usage!
+    };
     explicit MessageModel(QObject *parent = 0);
     ~MessageModel();
 

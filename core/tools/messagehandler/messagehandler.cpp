@@ -153,6 +153,7 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
 
   auto proxy = new QSortFilterProxyModel(this);
   proxy->setSourceModel(m_messageModel);
+  proxy->setSortRole(MessageModel::SortRole);
   probe->registerModel("com.kdab.GammaRay.MessageModel", proxy);
 
   // install handler directly, catches most cases,
