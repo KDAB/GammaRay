@@ -43,6 +43,10 @@ QString typeToString(QtMsgType type)
       return MessageModel::tr("Critical");
     case QtFatalMsg:
       return MessageModel::tr("Fatal");
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    case QtInfoMsg:
+      return MessageModel::tr("Info");
+#endif
     default:
       return MessageModel::tr("Unknown"); // never reached in theory
   }
