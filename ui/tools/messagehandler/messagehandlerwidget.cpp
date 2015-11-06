@@ -28,10 +28,12 @@
 
 #include "messagehandlerwidget.h"
 #include "ui_messagehandlerwidget.h"
+#include "messagehandlerclient.h"
+
+#include <ui/searchlinecontroller.h>
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
-#include "messagehandlerclient.h"
 
 #include <QSortFilterProxyModel>
 #include <QDialog>
@@ -63,12 +65,9 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
   ui->setupUi(this);
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.MessageModel"));
-  ui->messageSearchLine->setProxy(proxy);
-  ui->messageView->setModel(proxy);
-  ui->messageView->setIndentation(0);
-  ui->messageView->setSortingEnabled(true);
+  auto messageModel = ObjectBroker::model("com.kdab.GammaRay.MessageModel");
+  new SearchLineController(ui->messageSearchLine, messageModel);
+  ui->messageView->setModel(messageModel);
 
   ///FIXME: implement this
   ui->backtraceView->hide();

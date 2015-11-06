@@ -39,6 +39,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMutex>
+#include <QSortFilterProxyModel>
 #include <QThread>
 
 static QTextStream cerr(stdout);
@@ -150,7 +151,9 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
 
-  probe->registerModel("com.kdab.GammaRay.MessageModel", m_messageModel);
+  auto proxy = new QSortFilterProxyModel(this);
+  proxy->setSourceModel(m_messageModel);
+  probe->registerModel("com.kdab.GammaRay.MessageModel", proxy);
 
   // install handler directly, catches most cases,
   // i.e. user has no special handler or the handler
