@@ -76,7 +76,11 @@ void MessageModel::addMessage(const DebugMessage &message)
 int MessageModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  return 3;
+#else
   return COLUMN_COUNT;
+#endif
 }
 
 int MessageModel::rowCount(const QModelIndex &parent) const
@@ -97,19 +101,32 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
   const DebugMessage &msg = m_messages.at(index.row());
 
   if (role == Qt::DisplayRole) {
-    if (index.column() == TypeColumn) {
-      return typeToString(msg.type);
-    } else if (index.column() == MessageColumn) {
-      ///TODO: elide
-      return msg.message;
-    } else if (index.column() == TimeColumn) {
-      return msg.time.toString();
+    switch (index.column()) {
+      case TypeColumn:
+        return typeToString(msg.type);
+      case MessageColumn:
+        return msg.message;
+      case TimeColumn:
+        return msg.time.toString();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+      case CategoryColumn:
+        return msg.category;
+      case FunctionColumn:
+        return msg.function;
+      case FileColumn:
+        return static_cast<QString>(QString::fromUtf8(msg.file) + ':' + QString::number(msg.line));
+#endif
     }
   } else if (role == SortRole) {
     switch (index.column()) {
       case TypeColumn: return msg.type;
       case TimeColumn: return msg.time;
       case MessageColumn: return msg.message;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+      case CategoryColumn: return msg.category;
+      case FunctionColumn: return msg.function;
+      case FileColumn: return static_cast<QString>(QString::fromUtf8(msg.file) + ':' + QString::number(msg.line));
+#endif
     }
   } else if (role == Qt::ToolTipRole) {
     if (!msg.backtrace.isEmpty()) {
@@ -140,12 +157,13 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
 QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-    if (section == TypeColumn) {
-      return tr("Type");
-    } else if (section == MessageColumn) {
-      return tr("Message");
-    } else if (section == TimeColumn) {
-      return tr("Time");
+    switch (section) {
+      case TypeColumn: return tr("Type");
+      case MessageColumn: return tr("Message");
+      case TimeColumn: return tr("Time");
+      case CategoryColumn: return tr("Category");
+      case FunctionColumn: return tr("Function");
+      case FileColumn: return tr("Source");
     }
   }
 

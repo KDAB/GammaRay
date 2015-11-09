@@ -76,6 +76,12 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
   message.type = type;
   message.message = msg;
   message.time = QTime::currentTime();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  message.category = context.category;
+  message.file = context.file;
+  message.function = context.function;
+  message.line = context.line;
+#endif
 
   if (type == QtCriticalMsg || type == QtFatalMsg || (type == QtWarningMsg && !ProbeGuard::insideProbe())) {
     message.backtrace = getBacktrace(50);

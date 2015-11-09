@@ -41,6 +41,12 @@ struct DebugMessage {
   QString message;
   QTime time;
   Backtrace backtrace;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  const char *category;
+  const char *file;
+  const char *function;
+  int line;
+#endif
 };
 
 }
@@ -70,6 +76,9 @@ class MessageModel : public QAbstractTableModel
       TypeColumn,
       TimeColumn,
       MessageColumn,
+      CategoryColumn,
+      FunctionColumn,
+      FileColumn,
       COLUMN_COUNT
     };
 
