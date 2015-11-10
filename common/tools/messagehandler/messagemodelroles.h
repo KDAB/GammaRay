@@ -37,6 +37,7 @@ namespace GammaRay {
 namespace MessageModelRole {
     enum Role {
         Sort = UserRole + 1, // not for remoting
+        Type,
         File,
         Line,
         Backtrace
@@ -46,7 +47,6 @@ namespace MessageModelRole {
 /** Column indexes of MessageModel. */
 namespace MessageModelColumn {
     enum Columns {
-        Type,
         Time,
         Message,
         Category,

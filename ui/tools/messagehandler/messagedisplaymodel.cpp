@@ -30,9 +30,24 @@
 
 #include <common/tools/messagehandler/messagemodelroles.h>
 
-#include <QIcon>
+#include <QApplication>
+#include <QStyle>
 
 using namespace GammaRay;
+
+QString typeToString(int type)
+{
+    switch(type) {
+        case QtDebugMsg: return MessageDisplayModel::tr("Debug");
+        case QtWarningMsg: return MessageDisplayModel::tr("Warning");
+        case QtCriticalMsg: return MessageDisplayModel::tr("Critical");
+        case QtFatalMsg: return MessageDisplayModel::tr("Fatal");
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        case QtInfoMsg: return MessageDisplayModel::tr("Info");
+#endif
+        default: return MessageDisplayModel::tr("Unknown"); // never reached in theory
+    }
+}
 
 MessageDisplayModel::MessageDisplayModel(QObject* parent): QIdentityProxyModel(parent)
 {
@@ -67,7 +82,7 @@ QVariant MessageDisplayModel::data(const QModelIndex& proxyIndex, int role) cons
             const auto srcIdx = mapToSource(proxyIndex);
             Q_ASSERT(srcIdx.isValid());
 
-            const auto msgType = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Type).data().toString();
+            const auto msgType = typeToString(srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Type).toInt());
             const auto msgTime = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Time).data().toString();
             const auto msgText = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Message).data().toString();
             const auto backtrace = srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Backtrace).toStringList();
@@ -91,6 +106,26 @@ QVariant MessageDisplayModel::data(const QModelIndex& proxyIndex, int role) cons
                   "<dt><b>Message:</b></dt><dd>%3</dd>"
                   "</dl></qt>").arg(msgType, msgTime, msgText);
             }
+        }
+        case Qt::DecorationRole:
+        {
+            if (proxyIndex.column() == 0) {
+                const auto srcIdx = mapToSource(proxyIndex);
+                Q_ASSERT(srcIdx.isValid());
+
+                const auto msgType = srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Type).toInt();
+                auto style = qApp->style();
+                switch (msgType) {
+                    case QtDebugMsg:
+                        return style->standardIcon(QStyle::SP_MessageBoxInformation);
+                    case QtWarningMsg:
+                        return style->standardIcon(QStyle::SP_MessageBoxWarning);
+                    case QtCriticalMsg:
+                    case QtFatalMsg:
+                        return style->standardIcon(QStyle::SP_MessageBoxCritical);
+                }
+            }
+            break;
         }
     }
 

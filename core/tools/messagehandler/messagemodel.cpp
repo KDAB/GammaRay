@@ -34,26 +34,6 @@
 
 using namespace GammaRay;
 
-QString typeToString(QtMsgType type)
-{
-  switch(type) {
-    case QtDebugMsg:
-      return MessageModel::tr("Debug");
-    case QtWarningMsg:
-      return MessageModel::tr("Warning");
-    case QtCriticalMsg:
-      return MessageModel::tr("Critical");
-    case QtFatalMsg:
-      return MessageModel::tr("Fatal");
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    case QtInfoMsg:
-      return MessageModel::tr("Info");
-#endif
-    default:
-      return MessageModel::tr("Unknown"); // never reached in theory
-  }
-}
-
 MessageModel::MessageModel(QObject *parent)
   : QAbstractTableModel(parent)
 {
@@ -79,7 +59,7 @@ int MessageModel::columnCount(const QModelIndex &parent) const
 {
   Q_UNUSED(parent);
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  return 3;
+  return 2;
 #else
   return MessageModelColumn::COUNT;
 #endif
@@ -104,8 +84,6 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
 
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
-      case MessageModelColumn::Type:
-        return typeToString(msg.type);
       case MessageModelColumn::Message:
         return msg.message;
       case MessageModelColumn::Time:
@@ -119,7 +97,6 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     }
   } else if (role == MessageModelRole::Sort) {
     switch (index.column()) {
-      case MessageModelColumn::Type: return msg.type;
       case MessageModelColumn::Time: return msg.time;
       case MessageModelColumn::Message: return msg.message;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -128,6 +105,8 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
       case MessageModelColumn::File: return static_cast<QString>(QString::fromUtf8(msg.file) + ':' + QString::number(msg.line));
 #endif
     }
+  } else if (role == MessageModelRole::Type && index.column() == 0) {
+      return static_cast<int>(msg.type);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   } else if (role == MessageModelRole::File && index.column() == MessageModelColumn::File) {
     return QString::fromUtf8(msg.file);
@@ -145,7 +124,6 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
 {
   if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
     switch (section) {
-      case MessageModelColumn::Type: return tr("Type");
       case MessageModelColumn::Message: return tr("Message");
       case MessageModelColumn::Time: return tr("Time");
       case MessageModelColumn::Category: return tr("Category");

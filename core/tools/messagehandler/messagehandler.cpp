@@ -159,6 +159,7 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   s_model = m_messageModel;
 
   auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+  proxy->addRole(MessageModelRole::Type);
   proxy->addRole(MessageModelRole::File);
   proxy->addRole(MessageModelRole::Line);
   proxy->addRole(MessageModelRole::Backtrace);
