@@ -48,3 +48,7 @@ UiIntegration * UiIntegration::instance()
     return s_uiIntegrationInstance;
 }
 
+void UiIntegration::requestNavigateToCode(const QString& filePath, int lineNumber, int columnNumber)
+{
+    emit UiIntegration::instance()->navigateToCode(filePath, lineNumber, columnNumber);
+}

@@ -34,6 +34,10 @@
 
 namespace GammaRay {
 
+/** Interface for UI plugins to integrate with the client UI.
+ *  This is especially relevant when the client is embedded inside another application
+ *  such as an IDE.
+ */
 class GAMMARAY_UI_EXPORT UiIntegration : public QObject
 {
     Q_OBJECT
@@ -43,6 +47,12 @@ public:
     virtual ~UiIntegration();
 
     static UiIntegration* instance();
+
+    /** Show the source code at the given position.
+     *  The stand-alone client will launch a text editor for this,
+     *  if the client is embedded in an IDE it can chose to navigate directly.
+     */
+    static void requestNavigateToCode(const QString &filePath, int lineNumber, int columnNumber = 0);
 
 Q_SIGNALS:
     void navigateToCode(QString filePath, int lineNumber, int columnNumber);
