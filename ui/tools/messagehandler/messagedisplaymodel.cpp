@@ -62,6 +62,36 @@ QVariant MessageDisplayModel::data(const QModelIndex& proxyIndex, int role) cons
             }
             break;
         }
+        case Qt::ToolTipRole:
+        {
+            const auto srcIdx = mapToSource(proxyIndex);
+            Q_ASSERT(srcIdx.isValid());
+
+            const auto msgType = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Type).data().toString();
+            const auto msgTime = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Time).data().toString();
+            const auto msgText = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Message).data().toString();
+            const auto backtrace = srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Backtrace).toStringList();
+            if (!backtrace.isEmpty()) {
+                QString bt;
+                int i = 0;
+                foreach (const auto &frame, backtrace) {
+                    bt += QString("#%1: %2\n").arg(i, 2).arg(frame.trimmed());
+                    ++i;
+                }
+                return tr("<qt><dl>"
+                  "<dt><b>Type:</b></dt><dd>%1</dd>"
+                  "<dt><b>Time:</b></dt><dd>%2</dd>"
+                  "<dt><b>Message:</b></dt><dd>%3</dd>"
+                  "<dt><b>Backtrace:</b></dt><dd><pre>%4</pre></dd>"
+                  "</dl></qt>").arg(msgType, msgTime, msgText, bt);
+            } else {
+                return tr("<qt><dl>"
+                  "<dt><b>Type:</b></dt><dd>%1</dd>"
+                  "<dt><b>Time:</b></dt><dd>%2</dd>"
+                  "<dt><b>Message:</b></dt><dd>%3</dd>"
+                  "</dl></qt>").arg(msgType, msgTime, msgText);
+            }
+        }
     }
 
     return QAbstractProxyModel::data(proxyIndex, role);
