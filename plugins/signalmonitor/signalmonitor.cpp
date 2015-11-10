@@ -31,6 +31,8 @@
 #include "relativeclock.h"
 #include "signalmonitorcommon.h"
 
+#include <core/remote/serverproxymodel.h>
+
 #include <QTimer>
 
 using namespace GammaRay;
@@ -41,7 +43,10 @@ SignalMonitor::SignalMonitor(ProbeInterface *probe, QObject *parent)
   StreamOperators::registerSignalMonitorStreamOperators();
 
   SignalHistoryModel *model = new SignalHistoryModel(probe, this);
-  probe->registerModel("com.kdab.GammaRay.SignalHistoryModel", model);
+  auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+  proxy->setDynamicSortFilter(true);
+  proxy->setSourceModel(model);
+  probe->registerModel("com.kdab.GammaRay.SignalHistoryModel", proxy);
 
   m_clock = new QTimer(this);
   m_clock->setInterval(1000/25); // update frequency of the delegate, we could slow this down a lot, and let the client interpolate, if necessary

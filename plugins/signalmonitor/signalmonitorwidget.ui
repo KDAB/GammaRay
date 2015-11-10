@@ -23,7 +23,7 @@
       <number>6</number>
      </property>
      <item>
-      <widget class="KFilterProxySearchLine" name="objectSearchLine" native="true"/>
+      <widget class="QLineEdit" name="objectSearchLine"/>
      </item>
      <item>
       <widget class="QToolButton" name="pauseButton">
@@ -112,11 +112,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
-  </customwidget>
   <customwidget>
    <class>GammaRay::SignalHistoryView</class>
    <extends>QTreeView</extends>
