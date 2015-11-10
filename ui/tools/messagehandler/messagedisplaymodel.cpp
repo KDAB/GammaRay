@@ -69,7 +69,7 @@ QVariant MessageDisplayModel::data(const QModelIndex& proxyIndex, int role) cons
                 const auto srcIdx = mapToSource(proxyIndex);
                 Q_ASSERT(srcIdx.isValid());
 
-                const auto fileName = srcIdx.data(MessageModelRole::File).toString();
+                const auto fileName = srcIdx.data().toString();
                 const auto line = srcIdx.data(MessageModelRole::Line).toInt();
                 if (line <= 0)
                     return fileName;
@@ -126,6 +126,12 @@ QVariant MessageDisplayModel::data(const QModelIndex& proxyIndex, int role) cons
                 }
             }
             break;
+        }
+        case MessageModelRole::File:
+        {
+            const auto srcIdx = mapToSource(proxyIndex);
+            Q_ASSERT(srcIdx.isValid());
+            return srcIdx.sibling(srcIdx.row(), MessageModelColumn::File).data();
         }
     }
 
