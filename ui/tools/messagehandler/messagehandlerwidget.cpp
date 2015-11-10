@@ -32,15 +32,18 @@
 #include "messagedisplaymodel.h"
 
 #include <ui/searchlinecontroller.h>
+#include <ui/uiintegration.h>
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
+#include <common/tools/messagehandler/messagemodelroles.h>
 
 #include <QSortFilterProxyModel>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListWidget>
+#include <QMenu>
 #include <QTime>
 #include <QPushButton>
 #include <QClipboard>
@@ -71,6 +74,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   displayModel->setSourceModel(messageModel);
   new SearchLineController(ui->messageSearchLine, messageModel);
   ui->messageView->setModel(displayModel);
+  connect(ui->messageView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(messageContextMenu(QPoint)));
 
   ///FIXME: implement this
   ui->backtraceView->hide();
@@ -141,3 +145,22 @@ void MessageHandlerWidget::copyToClipboard(const QString &message)
     QApplication::clipboard()->setText(message);
 }
 
+void MessageHandlerWidget::messageContextMenu(const QPoint &pos)
+{
+  auto index = ui->messageView->indexAt(pos);
+  if (!index.isValid())
+    return;
+  index = index.sibling(index.row(), MessageModelColumn::File);
+  if (!index.isValid())
+    return;
+
+  const auto fileName = index.data(MessageModelRole::File).toString();
+  if (fileName.isEmpty())
+    return;
+  const auto line = index.data(MessageModelRole::Line).toInt();
+
+  QMenu contextMenu;
+  contextMenu.addAction(tr("Show source: %1:%2").arg(fileName).arg(line));
+  if (contextMenu.exec(ui->messageView->viewport()->mapToGlobal(pos)))
+    UiIntegration::requestNavigateToCode(fileName, line, 0);
+}
