@@ -28,6 +28,8 @@
 
 #include "messagemodel.h"
 
+#include <common/tools/messagehandler/messagemodelroles.h>
+
 #include <QDebug>
 
 using namespace GammaRay;
@@ -79,7 +81,7 @@ int MessageModel::columnCount(const QModelIndex &parent) const
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
   return 3;
 #else
-  return COLUMN_COUNT;
+  return MessageModelColumn::COUNT;
 #endif
 }
 
@@ -102,32 +104,36 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
 
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
-      case TypeColumn:
+      case MessageModelColumn::Type:
         return typeToString(msg.type);
-      case MessageColumn:
+      case MessageModelColumn::Message:
         return msg.message;
-      case TimeColumn:
+      case MessageModelColumn::Time:
         return msg.time.toString();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-      case CategoryColumn:
+      case MessageModelColumn::Category:
         return msg.category;
-      case FunctionColumn:
+      case MessageModelColumn::Function:
         return msg.function;
-      case FileColumn:
-        return static_cast<QString>(QString::fromUtf8(msg.file) + ':' + QString::number(msg.line));
 #endif
     }
-  } else if (role == SortRole) {
+  } else if (role == MessageModelRole::Sort) {
     switch (index.column()) {
-      case TypeColumn: return msg.type;
-      case TimeColumn: return msg.time;
-      case MessageColumn: return msg.message;
+      case MessageModelColumn::Type: return msg.type;
+      case MessageModelColumn::Time: return msg.time;
+      case MessageModelColumn::Message: return msg.message;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-      case CategoryColumn: return msg.category;
-      case FunctionColumn: return msg.function;
-      case FileColumn: return static_cast<QString>(QString::fromUtf8(msg.file) + ':' + QString::number(msg.line));
+      case MessageModelColumn::Category: return msg.category;
+      case MessageModelColumn::Function: return msg.function;
+      case MessageModelColumn::File: return static_cast<QString>(QString::fromUtf8(msg.file) + ':' + QString::number(msg.line));
 #endif
     }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  } else if (role == MessageModelRole::File && index.column() == MessageModelColumn::File) {
+    return QString::fromUtf8(msg.file);
+  } else if (role == MessageModelRole::Line && index.column() == MessageModelColumn::File) {
+    return msg.line;
+#endif
   } else if (role == Qt::ToolTipRole) {
     if (!msg.backtrace.isEmpty()) {
       QString bt;
@@ -158,12 +164,12 @@ QVariant MessageModel::headerData(int section, Qt::Orientation orientation, int 
 {
   if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
     switch (section) {
-      case TypeColumn: return tr("Type");
-      case MessageColumn: return tr("Message");
-      case TimeColumn: return tr("Time");
-      case CategoryColumn: return tr("Category");
-      case FunctionColumn: return tr("Function");
-      case FileColumn: return tr("Source");
+      case MessageModelColumn::Type: return tr("Type");
+      case MessageModelColumn::Message: return tr("Message");
+      case MessageModelColumn::Time: return tr("Time");
+      case MessageModelColumn::Category: return tr("Category");
+      case MessageModelColumn::Function: return tr("Function");
+      case MessageModelColumn::File: return tr("Source");
     }
   }
 

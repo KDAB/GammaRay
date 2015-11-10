@@ -30,6 +30,7 @@ set(gammaray_ui_srcs
 
   tools/connectioninspector/connectioninspectorwidget.cpp
   tools/localeinspector/localeinspectorwidget.cpp
+  tools/messagehandler/messagedisplaymodel.cpp
   tools/messagehandler/messagehandlerwidget.cpp
   tools/messagehandler/messagehandlerclient.cpp
   tools/metaobjectbrowser/metaobjectbrowserwidget.cpp

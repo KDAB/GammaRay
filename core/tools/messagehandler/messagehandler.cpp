@@ -32,6 +32,7 @@
 #include "backtrace.h"
 
 #include <core/probeguard.h>
+#include <core/remote/serverproxymodel.h>
 
 #include "common/objectbroker.h"
 #include "common/endpoint.h"
@@ -157,9 +158,12 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
 
-  auto proxy = new QSortFilterProxyModel(this);
+  auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+  proxy->addRole(MessageModelRole::File);
+  proxy->addRole(MessageModelRole::Line);
+  proxy->addRole(MessageModelRole::Backtrace);
   proxy->setSourceModel(m_messageModel);
-  proxy->setSortRole(MessageModel::SortRole);
+  proxy->setSortRole(MessageModelRole::Sort);
   probe->registerModel("com.kdab.GammaRay.MessageModel", proxy);
 
   // install handler directly, catches most cases,

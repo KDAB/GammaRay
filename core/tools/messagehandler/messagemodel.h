@@ -30,6 +30,8 @@
 
 #include "backtrace.h"
 
+#include <common/tools/messagehandler/messagemodelroles.h>
+
 #include <QAbstractTableModel>
 #include <QTime>
 #include <QVector>
@@ -60,9 +62,6 @@ class MessageModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
-    enum Roles {
-      SortRole = Qt::UserRole + 1 // not for remote usage!
-    };
     explicit MessageModel(QObject *parent = 0);
     ~MessageModel();
 
@@ -71,16 +70,6 @@ class MessageModel : public QAbstractTableModel
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-
-    enum Columns {
-      TypeColumn,
-      TimeColumn,
-      MessageColumn,
-      CategoryColumn,
-      FunctionColumn,
-      FileColumn,
-      COLUMN_COUNT
-    };
 
   public slots:
     void addMessage(const GammaRay::DebugMessage &message);

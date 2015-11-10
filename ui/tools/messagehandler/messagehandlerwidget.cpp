@@ -29,6 +29,7 @@
 #include "messagehandlerwidget.h"
 #include "ui_messagehandlerwidget.h"
 #include "messagehandlerclient.h"
+#include "messagedisplaymodel.h"
 
 #include <ui/searchlinecontroller.h>
 
@@ -66,8 +67,10 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   ui->setupUi(this);
 
   auto messageModel = ObjectBroker::model("com.kdab.GammaRay.MessageModel");
+  auto displayModel = new MessageDisplayModel(this);
+  displayModel->setSourceModel(messageModel);
   new SearchLineController(ui->messageSearchLine, messageModel);
-  ui->messageView->setModel(messageModel);
+  ui->messageView->setModel(displayModel);
 
   ///FIXME: implement this
   ui->backtraceView->hide();
