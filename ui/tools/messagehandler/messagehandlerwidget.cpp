@@ -49,6 +49,7 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QSignalMapper>
+#include <QStringListModel>
 
 using namespace GammaRay;
 
@@ -59,7 +60,8 @@ static QObject *createClientMessageHandler(const QString &/*name*/, QObject *par
 
 MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   : QWidget(parent),
-    ui(new Ui::MessageHandlerWidget)
+    ui(new Ui::MessageHandlerWidget),
+    m_backtraceModel(new QStringListModel(this))
 {
   ObjectBroker::registerClientObjectFactoryCallback<MessageHandlerInterface*>(createClientMessageHandler);
   MessageHandlerInterface *handler = ObjectBroker::object<MessageHandlerInterface*>();
@@ -75,9 +77,11 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   new SearchLineController(ui->messageSearchLine, messageModel);
   ui->messageView->setModel(displayModel);
   connect(ui->messageView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(messageContextMenu(QPoint)));
+  connect(ui->messageView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+          this, SLOT(messageSelected(QItemSelection)));
 
-  ///FIXME: implement this
   ui->backtraceView->hide();
+  ui->backtraceView->setModel(m_backtraceModel);
 }
 
 MessageHandlerWidget::~MessageHandlerWidget()
@@ -163,4 +167,22 @@ void MessageHandlerWidget::messageContextMenu(const QPoint &pos)
   contextMenu.addAction(tr("Show source: %1:%2").arg(fileName).arg(line));
   if (contextMenu.exec(ui->messageView->viewport()->mapToGlobal(pos)))
     UiIntegration::requestNavigateToCode(fileName, line, 0);
+}
+
+void MessageHandlerWidget::messageSelected(const QItemSelection& selection)
+{
+  if (selection.isEmpty())
+    return;
+
+  auto index = selection.first().topLeft();
+  if (!index.isValid())
+    return;
+
+  const auto bt = index.sibling(index.row(), 0).data(MessageModelRole::Backtrace).toStringList();
+  if (bt.isEmpty()) {
+    ui->backtraceView->hide();
+  } else {
+    ui->backtraceView->show();
+    m_backtraceModel->setStringList(bt);
+  }
 }

@@ -39,7 +39,17 @@
        </item>
       </layout>
      </widget>
-     <widget class="QTreeView" name="backtraceView"/>
+     <widget class="QTreeView" name="backtraceView">
+      <property name="rootIsDecorated">
+       <bool>false</bool>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <attribute name="headerVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
     </widget>
    </item>
   </layout>

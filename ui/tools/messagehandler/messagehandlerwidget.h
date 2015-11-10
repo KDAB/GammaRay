@@ -30,6 +30,8 @@
 
 #include <QWidget>
 
+class QItemSelection;
+class QStringListModel;
 class QTime;
 
 namespace GammaRay {
@@ -50,9 +52,11 @@ class MessageHandlerWidget : public QWidget
                               const QTime &time, const QStringList &backtrace);
     void copyToClipboard(const QString &message);
     void messageContextMenu(const QPoint &pos);
+    void messageSelected(const QItemSelection &selection);
 
   private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
+    QStringListModel *m_backtraceModel;
 };
 
 }
