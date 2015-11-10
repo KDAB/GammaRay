@@ -379,64 +379,56 @@ void QuickInspector::renderScene()
 
 void QuickInspector::sendRenderedScene()
 {
-  QVariantMap previewData;
-  previewData.insert("rawImage", QVariant::fromValue(TransferImage(m_currentFrame))); // wrap to allow bypassing expensive PNG compression
+  QuickItemGeometry itemGeometry;
+  TransferImage rawImage = TransferImage(m_currentFrame); // wrap to allow bypassing expensive PNG compression
   if (m_currentItem) {
     QQuickItem *parent = m_currentItem->parentItem();
 
     if (parent) {
-      previewData.insert("itemRect",
-                         m_currentItem->parentItem()->mapRectToScene(
+      itemGeometry.itemRect =  m_currentItem->parentItem()->mapRectToScene(
                            QRectF(m_currentItem->x(), m_currentItem->y(),
-                                  m_currentItem->width(), m_currentItem->height())));
+                                  m_currentItem->width(), m_currentItem->height()));
     } else {
-      previewData.insert("itemRect", QRectF(0, 0, m_currentItem->width(), m_currentItem->height()));
+      itemGeometry.itemRect =  QRectF(0, 0, m_currentItem->width(), m_currentItem->height());
     }
 
-    previewData.insert("boundingRect",
-                       m_currentItem->mapRectToScene(m_currentItem->boundingRect()));
-    previewData.insert("childrenRect",
-                       m_currentItem->mapRectToScene(m_currentItem->childrenRect()));
-    previewData.insert("transformOriginPoint",
-                       m_currentItem->mapToScene(m_currentItem->transformOriginPoint()));
+    itemGeometry.boundingRect =
+                       m_currentItem->mapRectToScene(m_currentItem->boundingRect());
+    itemGeometry.childrenRect =
+                       m_currentItem->mapRectToScene(m_currentItem->childrenRect());
+    itemGeometry.transformOriginPoint =
+                       m_currentItem->mapToScene(m_currentItem->transformOriginPoint());
 
     QQuickAnchors *anchors = m_currentItem->property("anchors").value<QQuickAnchors*>();
 
     if (anchors) {
       QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
-      previewData.insert("left",
-                         (bool)(usedAnchors & QQuickAnchors::LeftAnchor) || anchors->fill());
-      previewData.insert("right",
-                         (bool)(usedAnchors & QQuickAnchors::RightAnchor) || anchors->fill());
-      previewData.insert("top",
-                         (bool)(usedAnchors & QQuickAnchors::TopAnchor) || anchors->fill());
-      previewData.insert("bottom",
-                         (bool)(usedAnchors & QQuickAnchors::BottomAnchor) || anchors->fill());
-      previewData.insert("baseline",
-                         (bool)(usedAnchors & QQuickAnchors::BaselineAnchor));
-      previewData.insert("horizontalCenter",
-                         (bool)(usedAnchors & QQuickAnchors::HCenterAnchor) || anchors->centerIn());
-      previewData.insert("verticalCenter",
-                         (bool)(usedAnchors & QQuickAnchors::VCenterAnchor) || anchors->centerIn());
-      previewData.insert("leftMargin", anchors->leftMargin());
-      previewData.insert("rightMargin", anchors->rightMargin());
-      previewData.insert("topMargin", anchors->topMargin());
-      previewData.insert("bottomMargin", anchors->bottomMargin());
-      previewData.insert("horizontalCenterOffset", anchors->horizontalCenterOffset());
-      previewData.insert("verticalCenterOffset", anchors->verticalCenterOffset());
-      previewData.insert("baselineOffset", anchors->baselineOffset());
-      previewData.insert("margins", anchors->margins());
+      itemGeometry.left = (bool)(usedAnchors & QQuickAnchors::LeftAnchor) || anchors->fill();
+      itemGeometry.right = (bool)(usedAnchors & QQuickAnchors::RightAnchor) || anchors->fill();
+      itemGeometry.top = (bool)(usedAnchors & QQuickAnchors::TopAnchor) || anchors->fill();
+      itemGeometry.bottom = (bool)(usedAnchors & QQuickAnchors::BottomAnchor) || anchors->fill();
+      itemGeometry.baseline = (bool)(usedAnchors & QQuickAnchors::BaselineAnchor);
+      itemGeometry.horizontalCenter = (bool)(usedAnchors & QQuickAnchors::HCenterAnchor) || anchors->centerIn();
+      itemGeometry.verticalCenter = (bool)(usedAnchors & QQuickAnchors::VCenterAnchor) || anchors->centerIn();
+      itemGeometry.leftMargin =  anchors->leftMargin();
+      itemGeometry.rightMargin =  anchors->rightMargin();
+      itemGeometry.topMargin =  anchors->topMargin();
+      itemGeometry.bottomMargin =  anchors->bottomMargin();
+      itemGeometry.horizontalCenterOffset =  anchors->horizontalCenterOffset();
+      itemGeometry.verticalCenterOffset =  anchors->verticalCenterOffset();
+      itemGeometry.baselineOffset =  anchors->baselineOffset();
+      itemGeometry.margins = anchors->margins();
     }
-    previewData.insert("x", m_currentItem->x());
-    previewData.insert("y", m_currentItem->y());
+    itemGeometry.x =  m_currentItem->x();
+    itemGeometry.y =  m_currentItem->y();
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(m_currentItem);
-    previewData.insert("transform", itemPriv->itemToWindowTransform());
+    itemGeometry.transform =  itemPriv->itemToWindowTransform();
     if (parent) {
       QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
-      previewData.insert("parentTransform", parentPriv->itemToWindowTransform());
+      itemGeometry.parentTransform =  parentPriv->itemToWindowTransform();
     }
   }
-  emit sceneRendered(previewData);
+  emit sceneRendered(rawImage, itemGeometry);
 }
 
 void QuickInspector::slotSceneChanged()

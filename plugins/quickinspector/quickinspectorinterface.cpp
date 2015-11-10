@@ -27,7 +27,6 @@
 */
 
 #include "quickinspectorinterface.h"
-#include "transferimage.h"
 
 #include <common/objectbroker.h>
 
@@ -68,6 +67,7 @@ QuickInspectorInterface::QuickInspectorInterface(QObject * parent) : QObject(par
   ObjectBroker::registerObject<QuickInspectorInterface*>(this);
   qRegisterMetaTypeStreamOperators<Features>();
   qRegisterMetaTypeStreamOperators<RenderMode>();
+  qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
   qRegisterMetaTypeStreamOperators<TransferImage>();
 }
 

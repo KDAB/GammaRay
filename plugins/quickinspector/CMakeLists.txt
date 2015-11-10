@@ -8,6 +8,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
   # shared stuff
   set(gammaray_quickinspector_shared_srcs
         quickinspectorinterface.cpp
+        quickitemgeometry.cpp
         transferimage.cpp
         materialextension/materialextensioninterface.cpp
         geometryextension/sggeometryextensioninterface.cpp
@@ -47,7 +48,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       quickclientitemmodel.cpp
       quickitemdelegate.cpp
       quickitemtreewatcher.cpp
-      annotatedscenepreview.cpp
+      quickscenepreviewwidget.cpp
 
       materialextension/materialextensionclient.cpp
       materialextension/materialtab.cpp

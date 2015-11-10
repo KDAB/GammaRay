@@ -225,6 +225,7 @@ set(quickinspectortest_srcs
   ../probe/hooks.cpp
   ../plugins/quickinspector/quickinspectorinterface.cpp
   ../plugins/quickinspector/transferimage.cpp
+  ../plugins/quickinspector/quickitemgeometry.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
 )
 qt4_add_resources(quickinspectortest_srcs quickinspectortest.qrc)
