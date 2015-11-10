@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_MESSAGEHANDLERCLIENT_H
 #define GAMMARAY_MESSAGEHANDLERCLIENT_H
 
-#include <core/tools/messagehandler/messagehandlerinterface.h>
+#include <common/tools/messagehandler/messagehandlerinterface.h>
 
 namespace GammaRay {
 

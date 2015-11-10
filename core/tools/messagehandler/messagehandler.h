@@ -30,7 +30,7 @@
 
 #include "toolfactory.h"
 
-#include "messagehandlerinterface.h"
+#include <common/tools/messagehandler/messagehandlerinterface.h>
 
 namespace GammaRay {
 
