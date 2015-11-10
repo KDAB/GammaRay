@@ -30,9 +30,6 @@
        <property name="text">
         <string>Pause</string>
        </property>
-       <property name="icon">
-        <iconset theme="gtk-media-pause"/>
-       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
