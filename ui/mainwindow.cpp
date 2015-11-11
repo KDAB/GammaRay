@@ -320,7 +320,7 @@ void MainWindow::toolSelected()
   ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
 }
 
-void MainWindow::navigateToCode(QString filePath, int lineNumber, int columnNumber)
+void MainWindow::navigateToCode(const QString &filePath, int lineNumber, int columnNumber)
 {
   QSettings settings("KDAB", "GammaRay");
   settings.beginGroup("CodeNavigation");

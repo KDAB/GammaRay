@@ -44,7 +44,7 @@ class SGGeometryExtensionInterface : public QObject
     const QString &name() const;
 
   signals:
-    void geometryChanged(uint drawingMode, QByteArray indices, int indexType);
+    void geometryChanged(uint drawingMode, const QByteArray &indices, int indexType);
 
   private:
     QString m_name;

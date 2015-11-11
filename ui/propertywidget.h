@@ -57,7 +57,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
     QString objectBaseName() const;
     void setObjectBaseName(const QString &baseName);
 
-    template<typename T> static void registerTab(QString name, QString label)
+    template<typename T> static void registerTab(const QString &name, const QString &label)
     {
       s_tabFactories << new PropertyWidgetTabFactory<T>(name, label);
       foreach (PropertyWidget *widget, s_propertyWidgets)

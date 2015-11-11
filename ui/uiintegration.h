@@ -55,7 +55,7 @@ public:
     static void requestNavigateToCode(const QString &filePath, int lineNumber, int columnNumber = 0);
 
 Q_SIGNALS:
-    void navigateToCode(QString filePath, int lineNumber, int columnNumber);
+    void navigateToCode(const QString &filePath, int lineNumber, int columnNumber);
 
 private:
     /** Singleton instance. */

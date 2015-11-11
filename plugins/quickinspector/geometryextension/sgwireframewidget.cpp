@@ -240,7 +240,7 @@ void SGWireframeWidget::drawWire(QPainter *painter, int vertexIndex1, int vertex
   }
 }
 
-void SGWireframeWidget::drawHighlightedFace(QPainter *painter, QVector<int> vertexIndices)
+void SGWireframeWidget::drawHighlightedFace(QPainter* painter, const QVector<int> &vertexIndices)
 {
   QVector<QPointF> vertices;
   foreach (int index, vertexIndices) {
@@ -349,7 +349,7 @@ void SGWireframeWidget::onHighlightDataChanged(const QItemSelection &selected,
   update();
 }
 
-void SGWireframeWidget::onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType)
+void SGWireframeWidget::onGeometryChanged(uint drawingMode, const QByteArray &indexData, int indexType)
 {
   m_drawingMode = drawingMode;
   m_indexData = indexData;

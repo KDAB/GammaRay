@@ -53,7 +53,7 @@ class SGWireframeWidget : public QWidget
     void setHighlightModel(QItemSelectionModel *selectionModel);
 
   public slots:
-    void onGeometryChanged(uint drawingMode, QByteArray indexData, int indexType);
+    void onGeometryChanged(uint drawingMode, const QByteArray &indexData, int indexType);
 
   protected:
     void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
@@ -65,7 +65,7 @@ class SGWireframeWidget : public QWidget
 
   private:
     void drawWire(QPainter *painter, int vertexIndex1, int vertexIndex2);
-    void drawHighlightedFace(QPainter *painter, QVector< int > vertexIndices);
+    void drawHighlightedFace(QPainter *painter, const QVector<int> &vertexIndices);
 
   private:
     QAbstractItemModel *m_model;

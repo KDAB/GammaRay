@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow
 
     void quitHost();
     void detachProbe();
-    void navigateToCode(QString filePath, int lineNumber, int columnNumber);
+    void navigateToCode(const QString &filePath, int lineNumber, int columnNumber);
     void setCodeNavigationIDE(QAction *action);
 
   private:
