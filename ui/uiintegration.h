@@ -43,7 +43,7 @@ class GAMMARAY_UI_EXPORT UiIntegration : public QObject
     Q_OBJECT
 public:
 
-    UiIntegration(QObject *parent = 0);
+    explicit UiIntegration(QObject *parent = 0);
     virtual ~UiIntegration();
 
     static UiIntegration* instance();
