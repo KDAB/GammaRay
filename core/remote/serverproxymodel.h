@@ -29,6 +29,9 @@
 #ifndef GAMMARAY_SERVERPROXYMODEL_H
 #define GAMMARAY_SERVERPROXYMODEL_H
 
+#include <common/modelevent.h>
+
+#include <QCoreApplication>
 #include <QSortFilterProxyModel>
 #include <QVector>
 
@@ -58,8 +61,29 @@ public:
         return d;
     }
 
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE
+    {
+        m_sourceModel = sourceModel;
+    }
+
+protected:
+    void customEvent(QEvent* event) Q_DECL_OVERRIDE
+    {
+        if (event->type() == ModelEvent::eventType()) {
+            auto mev = static_cast<ModelEvent*>(event);
+            QCoreApplication::sendEvent(m_sourceModel, event);
+            if (mev->used() && m_sourceModel && BaseProxy::sourceModel() != m_sourceModel) {
+                BaseProxy::setSourceModel(m_sourceModel);
+            } else if (!mev->used()) {
+                BaseProxy::setSourceModel(0);
+            }
+        }
+        BaseProxy::customEvent(event);
+    }
+
 private:
     QVector<int> m_extraRoles;
+    QAbstractItemModel *m_sourceModel;
 };
 
 }
