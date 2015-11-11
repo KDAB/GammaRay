@@ -121,7 +121,7 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole)
           return item(index)->objectName;
         if (role == Qt::ToolTipRole)
-          return item(index)->toolTip;
+          return tr("Address: %1").arg(Util::addressToString(item(index)->object));
         if (role == Qt::DecorationRole)
           return item(index)->decoration;
 
@@ -130,9 +130,6 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
     case TypeColumn:
         if (role == Qt::DisplayRole)
           return item(index)->objectType;
-        if (role == Qt::ToolTipRole)
-          return item(index)->toolTip;
-
         break;
 
     case EventColumn:
@@ -250,7 +247,6 @@ SignalHistoryModel::Item::Item(QObject *obj)
 {
   objectName = Util::shortDisplayString(object);
   objectType = internString(QByteArray(obj->metaObject()->className()));
-  toolTip = Util::tooltipForObject(object);
   decoration = Util::iconForObject(object).value<QIcon>();
 }
 

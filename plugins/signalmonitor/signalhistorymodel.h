@@ -54,7 +54,6 @@ class SignalHistoryModel : public QAbstractTableModel
       QHash<int, QByteArray> signalNames;
       QString objectName;
       QByteArray objectType;
-      QString toolTip;
       QIcon decoration;
       QVector<qint64> events;
       const qint64 startTime; // FIXME: make them all methods
