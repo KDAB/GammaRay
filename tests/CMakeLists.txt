@@ -190,6 +190,16 @@ add_executable(propertymodeltest
 target_link_libraries(propertymodeltest gammaray_core ${QT_QTTEST_LIBRARIES} gammaray_shared_test_data)
 add_test(NAME propertymodeltest COMMAND propertymodeltest)
 
+### Font plugin
+
+add_executable(fontdatabasemodeltest
+  fontdatabasemodeltest.cpp
+  ${CMAKE_SOURCE_DIR}/plugins/fontbrowser/fontdatabasemodel.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+target_link_libraries(fontdatabasemodeltest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
+add_test(NAME fontdatabasemodeltest COMMAND fontdatabasemodeltest)
+
 ### QML support
 
 if(Qt5Quick_FOUND)

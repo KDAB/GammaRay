@@ -30,12 +30,12 @@
 #include "fontbrowserserver.h"
 
 #include "fontmodel.h"
+#include "fontdatabasemodel.h"
 
 #include <common/objectbroker.h>
 #include <core/probeinterface.h>
 
 #include <QItemSelectionModel>
-#include <QStandardItemModel>
 #include <QFontDatabase>
 
 using namespace GammaRay;
@@ -44,37 +44,7 @@ FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
   : FontBrowserInterface(parent)
   , m_selectedFontModel(new FontModel(this))
 {
-  QStandardItemModel *model = new QStandardItemModel(this);
-  model->setHorizontalHeaderLabels(QStringList() << tr("Fonts") << tr("Smooth sizes"));
-  QFontDatabase database;
-  foreach (const QString &family, database.families()) {
-    QStandardItem *familyItem = new QStandardItem;
-    familyItem->setText(family);
-    familyItem->setEditable(false);
-    familyItem->setData(QFont(family));
-
-    foreach (const QString &style, database.styles(family)) {
-      QStandardItem *styleItem0 = new QStandardItem;
-      styleItem0->setText(style);
-      styleItem0->setEditable(false);
-      styleItem0->setData(database.font(family, style, 10));
-
-      QString sizes;
-      foreach (int points, database.smoothSizes(family, style)) {
-        sizes += QString::number(points) + ' ';
-      }
-
-      QStandardItem *styleItem1 = new QStandardItem;
-      styleItem1->setText(sizes.trimmed());
-      styleItem1->setEditable(false);
-      styleItem1->setToolTip(sizes.trimmed());
-
-      familyItem->appendRow(QList<QStandardItem*>() << styleItem0 << styleItem1);
-    }
-
-    model->appendRow(familyItem);
-  }
-
+  auto model = new FontDatabaseModel(this);
   probe->registerModel("com.kdab.GammaRay.FontModel", model);
   m_fontSelectionModel = ObjectBroker::selectionModel(model);
   connect(m_fontSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

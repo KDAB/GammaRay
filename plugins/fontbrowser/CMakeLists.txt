@@ -3,6 +3,7 @@ set(gammaray_fontbrowser_plugin_srcs
   fontbrowserinterface.cpp
   fontbrowser.cpp
   fontmodel.cpp
+  fontdatabasemodel.cpp
   fontbrowserserver.cpp
 )
 
