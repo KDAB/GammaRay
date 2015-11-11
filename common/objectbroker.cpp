@@ -28,6 +28,7 @@
 
 #include "objectbroker.h"
 #include "endpoint.h"
+#include "modelevent.h"
 
 #include <kde/klinkitemselectionmodel.h>
 
@@ -110,9 +111,12 @@ void ObjectBroker::registerModelInternal(const QString& name, QAbstractItemModel
 
 QAbstractItemModel* ObjectBroker::model(const QString& name)
 {
+  ModelEvent event(true);
   const QHash<QString, QAbstractItemModel*>::const_iterator it = s_objectBroker()->models.constFind(name);
-  if (it != s_objectBroker()->models.constEnd())
+  if (it != s_objectBroker()->models.constEnd()) {
+    QCoreApplication::sendEvent(it.value(), &event);
     return it.value();
+  }
 
   if (s_objectBroker()->modelCallback) {
     QAbstractItemModel* model = s_objectBroker()->modelCallback(name);
@@ -120,6 +124,7 @@ QAbstractItemModel* ObjectBroker::model(const QString& name)
       model->setObjectName(name);
       s_objectBroker()->models.insert(name, model);
       s_objectBroker()->ownedObjects.push_back(model);
+      QCoreApplication::sendEvent(model, &event);
       return model;
     }
   }
