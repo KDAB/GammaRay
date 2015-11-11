@@ -218,7 +218,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   // Initialize UiIntegration singleton
   new UiIntegration(this);
 
-  connect(UiIntegration::instance(), SIGNAL(navigateToCode(QString, int, int)), this, SLOT(navigateToCode(QString, int, int)));
+  connect(UiIntegration::instance(), SIGNAL(navigateToCode(QString,int,int)), this, SLOT(navigateToCode(QString,int,int)));
 }
 
 MainWindow::~MainWindow()
