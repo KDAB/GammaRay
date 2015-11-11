@@ -14,6 +14,7 @@ set(gammaray_common_srcs
   endpoint.cpp
   paths.cpp
   propertysyncer.cpp
+  modelevent.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
