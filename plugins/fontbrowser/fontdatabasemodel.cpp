@@ -29,6 +29,7 @@
 #include "fontdatabasemodel.h"
 
 #include <QDebug>
+#include <QFontDatabase>
 #include <QStringList>
 
 #include <limits>
@@ -96,7 +97,8 @@ QVariant FontDatabaseModel::data(const QModelIndex& index, int role) const
         if (index.internalId() == TopLevelId) {
             return QFont(m_families.at(family));
         } else {
-            return m_database.font(m_families.at(family), m_styles.at(family).at(index.row()), 10);
+            QFontDatabase database;
+            return database.font(m_families.at(family), m_styles.at(family).at(index.row()), 10);
         }
     }
 
@@ -136,7 +138,8 @@ QModelIndex FontDatabaseModel::parent(const QModelIndex& child) const
 
 QString FontDatabaseModel::smoothSizeString(const QString& family, const QString& style) const
 {
-    const auto smoothSizes = m_database.smoothSizes(family, style);
+    QFontDatabase database;
+    const auto smoothSizes = database.smoothSizes(family, style);
     QStringList sizes;
     sizes.reserve(smoothSizes.size());
     foreach (auto points, smoothSizes)
@@ -154,16 +157,17 @@ void FontDatabaseModel::ensureModelPopulated() const
 
 void FontDatabaseModel::populateModel()
 {
-    const auto families = m_database.families();
+    QFontDatabase database;
+    const auto families = database.families();
     m_families.reserve(families.size());
     m_styles.resize(families.size());
     for (int i = 0; i < families.size(); ++i) {
         const auto &family = families.at(i);
         m_families.push_back(family);
 
-        const auto styles = m_database.styles(family);
+        const auto styles = database.styles(family);
         m_styles[i].reserve(styles.size());
-        foreach (const auto &style, m_database.styles(family)) {
+        foreach (const auto &style, database.styles(family)) {
             m_styles[i].push_back(style);
         }
     }

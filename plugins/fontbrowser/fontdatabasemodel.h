@@ -30,7 +30,6 @@
 #define GAMMARAY_FONTDATABASEMODEL_H
 
 #include <QAbstractItemModel>
-#include <QFontDatabase>
 #include <QString>
 #include <QVector>
 
@@ -57,7 +56,6 @@ private:
 
     QString smoothSizeString(const QString &family, const QString &style) const;
 
-    mutable QFontDatabase m_database;
     QVector<QString> m_families;
     QVector<QVector<QString> > m_styles;
 };
