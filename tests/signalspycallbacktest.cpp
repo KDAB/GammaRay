@@ -25,6 +25,7 @@
 */
 
 #include <probe/probecreator.h>
+#include <core/probe.h>
 
 #include <QtTest/qtest.h>
 #include <QObject>
@@ -79,6 +80,15 @@ private slots:
         connect(s2, SIGNAL(mySignal()), &r, SLOT(senderDeletingSlot()));
         s2->emitSignal(); // must not crash
         QVERIFY(s2.isNull());
+    }
+
+    void cleanupTestCase()
+    {
+        // explicitly delete the probe as our usual cleanup doesn't work since we will
+        // not get qApp::aboutToQuit() from QTest::qExec(), and then we end up with
+        // still alive QSFPM when the static deleter kills the source model null object
+        // used by them internally, which then crashes with Qt4...
+        delete Probe::instance();
     }
 };
 
