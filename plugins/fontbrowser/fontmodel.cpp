@@ -50,6 +50,9 @@ QList<QFont> FontModel::currentFonts() const
 
 void FontModel::updateFonts(const QList<QFont> &fonts)
 {
+  beginResetModel();
+  m_fonts = fonts;
+
   for (int i = 0; i < m_fonts.size(); ++i) {
     QFont &font = m_fonts[i];
     font.setPointSize(m_size);
@@ -58,8 +61,6 @@ void FontModel::updateFonts(const QList<QFont> &fonts)
     font.setUnderline(m_underline);
   }
 
-  beginResetModel();
-  m_fonts = fonts;
   endResetModel();
 }
 
