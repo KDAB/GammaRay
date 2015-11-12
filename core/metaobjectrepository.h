@@ -75,6 +75,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
     MetaObjectRepository();
 
   private:
+    Q_DISABLE_COPY(MetaObjectRepository)
     void initBuiltInTypes();
     void initQObjectTypes();
     void initIOTypes();

@@ -51,6 +51,7 @@ public:
   static void launchDetached(const QUrl &url);
 
 private:
+  Q_DISABLE_COPY(ClientLauncher)
   static QString clientPath();
   static QStringList makeArgs(const QUrl &url);
 

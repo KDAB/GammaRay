@@ -53,6 +53,7 @@ public:
   }
 
 private:
+  Q_DISABLE_COPY(SharedMemoryLocker)
   QSharedMemory *m_shm;
 };
 #endif

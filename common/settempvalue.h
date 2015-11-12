@@ -27,6 +27,8 @@
 #ifndef GAMMARAY_SETTEMPVALUE_H
 #define GAMMARAY_SETTEMPVALUE_H
 
+#include <qglobal.h>
+
 namespace GammaRay {
 
 /**
@@ -51,6 +53,7 @@ namespace Util {
     {
       obj = oldValue;
     }
+    Q_DISABLE_COPY(SetTempValue)
     T& obj;
     T oldValue;
   };

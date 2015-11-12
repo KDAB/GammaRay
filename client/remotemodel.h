@@ -95,6 +95,7 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     struct Node { // represents one row
       Node() : parent(0), rowCount(-1), columnCount(-1) {}
       ~Node();
+      Q_DISABLE_COPY(Node)
       // delete all cached children data, but assume row/column count on this level is still accurate
       void clearChildrenData();
       // forget everything we know about our children, including row/column counts

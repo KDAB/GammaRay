@@ -71,6 +71,8 @@ MAKE_FACTORY(StandardPaths, true);
 MAKE_FACTORY(TextDocumentInspector, true);
 
 struct PluginRepository {
+    PluginRepository() {}
+    Q_DISABLE_COPY(PluginRepository)
     ~PluginRepository() {
         qDeleteAll(factories.values());
     }
