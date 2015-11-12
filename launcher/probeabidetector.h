@@ -45,7 +45,6 @@ class GAMMARAY_LAUNCHER_EXPORT ProbeABIDetector
 {
 public:
     ProbeABIDetector();
-    ~ProbeABIDetector();
 
     /** Detect the ABI of the executable at @p path. */
     ProbeABI abiForExecutable(const QString &path) const;

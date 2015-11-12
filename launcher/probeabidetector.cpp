@@ -42,10 +42,6 @@ ProbeABIDetector::ProbeABIDetector()
 {
 }
 
-ProbeABIDetector::~ProbeABIDetector()
-{
-}
-
 ProbeABI ProbeABIDetector::abiForQtCore(const QString& path) const
 {
   QFileInfo fi(path);

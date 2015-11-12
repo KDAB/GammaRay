@@ -41,9 +41,6 @@ namespace GammaRay {
 // to the meta type system)...
 struct TransitionId
 {
-  TransitionId(const TransitionId &id)
-  : id(id.id)
-  {}
   explicit TransitionId(QAbstractTransition *transition = 0)
   : id(reinterpret_cast<quint64>(transition))
   {}
@@ -68,9 +65,6 @@ inline QDataStream &operator>>(QDataStream &in, TransitionId &value)
 
 struct StateId
 {
-  StateId(const StateId &id)
-  : id(id.id)
-  {}
   explicit StateId(QAbstractState *state= 0)
   : id(reinterpret_cast<quint64>(state))
   {}

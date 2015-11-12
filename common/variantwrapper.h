@@ -40,7 +40,6 @@ class VariantWrapper
 public:
   inline VariantWrapper() {}
   explicit inline VariantWrapper(const QVariant &variant) : m_variant(variant) {}
-  inline ~VariantWrapper() {}
 
   inline QVariant variant() const { return m_variant; }
   inline void setVariant(const QVariant &v) { m_variant = v; }
