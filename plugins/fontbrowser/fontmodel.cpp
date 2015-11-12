@@ -50,7 +50,16 @@ QList<QFont> FontModel::currentFonts() const
 
 void FontModel::updateFonts(const QList<QFont> &fonts)
 {
-  beginResetModel();
+  if (!m_fonts.isEmpty()) {
+    beginRemoveRows(QModelIndex(), 0, m_fonts.size() - 1);
+    m_fonts.clear();
+    endRemoveRows();
+  }
+
+  if (fonts.isEmpty())
+    return;
+
+  beginInsertRows(QModelIndex(), 0, fonts.size() - 1);
   m_fonts = fonts;
 
   for (int i = 0; i < m_fonts.size(); ++i) {
@@ -61,7 +70,7 @@ void FontModel::updateFonts(const QList<QFont> &fonts)
     font.setUnderline(m_underline);
   }
 
-  endResetModel();
+  endInsertRows();
 }
 
 void FontModel::updateText(const QString &text)
