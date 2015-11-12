@@ -35,7 +35,7 @@
 using namespace GammaRay;
 
 FontModel::FontModel(QObject *parent)
-  : QAbstractItemModel(parent)
+  : QAbstractTableModel(parent)
   , m_size(12)
   , m_bold(false)
   , m_italic(false)
@@ -84,7 +84,7 @@ QVariant FontModel::headerData(int section, Qt::Orientation orientation, int rol
       return "Text Preview";
     }
   }
-  return QAbstractItemModel::headerData(section, orientation, role);
+  return QAbstractTableModel::headerData(section, orientation, role);
 }
 
 int FontModel::rowCount(const QModelIndex &parent) const
@@ -93,23 +93,6 @@ int FontModel::rowCount(const QModelIndex &parent) const
     return 0;
   }
   return m_fonts.size();
-}
-
-QModelIndex FontModel::index(int row, int column, const QModelIndex &parent) const
-{
-  if (parent.isValid()) {
-    return QModelIndex();
-  }
-  if (!hasIndex(row, column, parent)) {
-    return QModelIndex();
-  }
-  return createIndex(row, column);
-}
-
-QModelIndex FontModel::parent(const QModelIndex &child) const
-{
-  Q_UNUSED(child);
-  return QModelIndex();
 }
 
 int FontModel::columnCount(const QModelIndex &parent) const

@@ -29,13 +29,13 @@
 #ifndef GAMMARAY_FONTBROWSER_FONTMODEL_H
 #define GAMMARAY_FONTBROWSER_FONTMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractTableModel>
 #include <QFont>
 #include <QColor>
 
 namespace GammaRay {
 
-class FontModel : public QAbstractItemModel
+class FontModel : public QAbstractTableModel
 {
   Q_OBJECT
   public:
@@ -49,11 +49,6 @@ class FontModel : public QAbstractItemModel
 
     QVariant data(const QModelIndex &index,
                   int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
