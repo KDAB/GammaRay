@@ -68,9 +68,8 @@ void FontModel::updateText(const QString &text)
   if (text == m_text) {
     return;
   }
-  beginResetModel();
   m_text = text;
-  endResetModel();
+  fontDataChanged();
 }
 
 QVariant FontModel::headerData(int section, Qt::Orientation orientation, int role) const
