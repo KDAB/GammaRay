@@ -27,12 +27,11 @@
 */
 
 #include "metatypebrowserwidget.h"
-#include <deferredresizemodesetter.h>
 #include "ui_metatypebrowserwidget.h"
 
+#include <ui/deferredresizemodesetter.h>
+#include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
-
-#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
@@ -45,11 +44,9 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
   QAbstractItemModel *mtm = ObjectBroker::model("com.kdab.GammaRay.MetaTypeModel");
   Q_ASSERT(mtm);
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setSourceModel(mtm);
-  ui->metaTypeView->setModel(proxy);
+  ui->metaTypeView->setModel(mtm);
   new DeferredResizeModeSetter(ui->metaTypeView->header(), 0, QHeaderView::ResizeToContents);
-  ui->metaTypeSearchLine->setProxy(proxy);
+  new SearchLineController(ui->metaTypeSearchLine, mtm);
   ui->metaTypeView->header()->setSortIndicator(1, Qt::AscendingOrder); // sort by type id
 }
 

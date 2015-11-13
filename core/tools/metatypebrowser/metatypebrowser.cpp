@@ -29,7 +29,10 @@
 #include "metatypebrowser.h"
 #include "metatypesmodel.h"
 
-#include "common/objectbroker.h"
+#include <common/objectbroker.h>
+#include <core/remote/serverproxymodel.h>
+
+#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
@@ -37,6 +40,8 @@ MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
   MetaTypesModel *mtm = new MetaTypesModel(this);
-  probe->registerModel("com.kdab.GammaRay.MetaTypeModel", mtm);
+  auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+  proxy->setSourceModel(mtm);
+  probe->registerModel("com.kdab.GammaRay.MetaTypeModel", proxy);
 }
 
