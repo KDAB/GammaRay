@@ -112,8 +112,7 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
          * and make sure we use the TranslatorWrapper instead of the original
          * translator
          */
-        TranslatorWrapper *wrapper =
-            new TranslatorWrapper(obj->translators[i], this);
+        auto wrapper = new TranslatorWrapper(obj->translators.at(i), this);
         obj->translators[i] = wrapper;
         m_translatorsModel->registerTranslator(wrapper);
         connect(wrapper,
@@ -124,7 +123,7 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
                 [wrapper, this](QObject *) { m_translatorsModel->unregisterTranslator(wrapper); });
       }
     }
-    for (auto it = obj->translators.begin(); it != obj->translators.end(); ++it)
+    for (auto it = obj->translators.constBegin(); it != obj->translators.constEnd(); ++it)
     {
       TranslatorWrapper *wrapper = qobject_cast<TranslatorWrapper *>(*it);
       Q_ASSERT(wrapper);

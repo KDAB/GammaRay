@@ -93,13 +93,13 @@ MethodArgument& MethodArgument::operator=(const MethodArgument& other)
 MethodArgument::operator QGenericArgument() const
 {
   if (!d->unwrapVariant) {
-    return QGenericArgument(d->name.data(), &d->value);
+    return QGenericArgument(d->name.constData(), &d->value);
   }
 
   if (d->value.isValid()) {
     d->data = QMetaType::construct(d->value.userType(), d->value.constData());
     Q_ASSERT(d->data);
-    return QGenericArgument(d->name.data(), d->data);
+    return QGenericArgument(d->name.constData(), d->data);
   }
 
   return QGenericArgument();

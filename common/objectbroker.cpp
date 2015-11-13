@@ -81,7 +81,7 @@ QObject* ObjectBroker::objectInternal(const QString& name, const QByteArray &typ
 
   if (!type.isEmpty()) {
     Q_ASSERT(s_objectBroker()->clientObjectFactories.contains(type));
-    obj = s_objectBroker()->clientObjectFactories[type](name, qApp);
+    obj = s_objectBroker()->clientObjectFactories.value(type)(name, qApp);
   } else {
     // fallback
     obj = new QObject(qApp);

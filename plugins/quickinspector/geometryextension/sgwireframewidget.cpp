@@ -188,21 +188,21 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
       painter.save();
 
       // Glow
-      QRadialGradient radialGrad(m_vertices[i] * m_zoom + m_offset, 6);
+      QRadialGradient radialGrad(m_vertices.at(i) * m_zoom + m_offset, 6);
       radialGrad.setColorAt(0, qApp->palette().color(QPalette::Highlight));
       radialGrad.setColorAt(1, Qt::transparent);
 
       painter.setBrush(QBrush(radialGrad));
       painter.setPen(Qt::NoPen);
-      painter.drawEllipse(m_vertices[i] * m_zoom + m_offset, 12, 12);
+      painter.drawEllipse(m_vertices.at(i) * m_zoom + m_offset, 12, 12);
 
       // Highlighted point
       painter.setBrush(QBrush(qApp->palette().color(QPalette::Highlight)));
-      painter.drawEllipse(m_vertices[i] * m_zoom + m_offset, 3, 3);
+      painter.drawEllipse(m_vertices.at(i) * m_zoom + m_offset, 3, 3);
       painter.restore();
     } else {
       // Normal unhighlighted point
-      painter.drawEllipse(m_vertices[i] * m_zoom + m_offset, 3, 3);
+      painter.drawEllipse(m_vertices.at(i) * m_zoom + m_offset, 3, 3);
     }
   }
 
@@ -231,12 +231,12 @@ void SGWireframeWidget::drawWire(QPainter *painter, int vertexIndex1, int vertex
       m_highlightedVertices.contains(vertexIndex2)) {
     painter->save();
     painter->setPen(qApp->palette().color(QPalette::Highlight));
-    painter->drawLine(m_vertices[vertexIndex1] * m_zoom + m_offset,
-                      m_vertices[vertexIndex2] * m_zoom + m_offset);
+    painter->drawLine(m_vertices.at(vertexIndex1) * m_zoom + m_offset,
+                      m_vertices.at(vertexIndex2) * m_zoom + m_offset);
     painter->restore();
   } else if (vertexIndex1 != -1 && vertexIndex2 != -1) {
-    painter->drawLine(m_vertices[vertexIndex1] * m_zoom + m_offset,
-                      m_vertices[vertexIndex2] * m_zoom + m_offset);
+    painter->drawLine(m_vertices.at(vertexIndex1) * m_zoom + m_offset,
+                      m_vertices.at(vertexIndex2) * m_zoom + m_offset);
   }
 }
 
@@ -247,7 +247,7 @@ void SGWireframeWidget::drawHighlightedFace(QPainter* painter, const QVector<int
     if (!m_highlightedVertices.contains(index)) {
       return; // There is one vertex that is not highlighted. Don't highlight the face.
     }
-    vertices << m_vertices[index] * m_zoom + m_offset;
+    vertices << m_vertices.at(index) * m_zoom + m_offset;
   }
   painter->save();
   QColor color = qApp->palette().color(QPalette::Highlight).lighter();
@@ -366,7 +366,7 @@ void SGWireframeWidget::mouseReleaseEvent(QMouseEvent *e)
   }
 
   for (int i = 0; i < m_vertices.size(); i++) {
-    int distance = QLineF(e->pos(), m_vertices[i] * m_zoom + m_offset).length();
+    int distance = QLineF(e->pos(), m_vertices.at(i) * m_zoom + m_offset).length();
     if (distance <= 5) {
       if (e->modifiers() & Qt::ControlModifier) {
         m_highlightModel->select(m_model->index(i, m_positionColumn), QItemSelectionModel::Toggle);
