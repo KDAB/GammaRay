@@ -28,7 +28,6 @@ set(gammaray_ui_srcs
   propertyeditor/palettedialog.cpp
   propertyeditor/propertyeditordelegate.cpp
 
-  tools/connectioninspector/connectioninspectorwidget.cpp
   tools/localeinspector/localeinspectorwidget.cpp
   tools/messagehandler/messagedisplaymodel.cpp
   tools/messagehandler/messagehandlerwidget.cpp
@@ -65,7 +64,6 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/propertyintpaireditor.ui
   propertyeditor/palettedialog.ui
 
-  tools/connectioninspector/connectioninspectorwidget.ui
   tools/localeinspector/localeinspectorwidget.ui
   tools/messagehandler/messagehandlerwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui

@@ -16,8 +16,6 @@ set(gammaray_srcs
   objectmethodmodel.cpp
   objectenummodel.cpp
   objecttreemodel.cpp
-  connectionmodel.cpp
-  connectionfilterproxymodel.cpp
   methodargumentmodel.cpp
   multisignalmapper.cpp
   signalspycallbackset.cpp
@@ -52,7 +50,6 @@ set(gammaray_srcs
   tools/textdocumentinspector/textdocumentformatmodel.cpp
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp
-  tools/connectioninspector/connectioninspector.cpp
   tools/localeinspector/localeinspector.cpp
   tools/metaobjectbrowser/metaobjectbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp

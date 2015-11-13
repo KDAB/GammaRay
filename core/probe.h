@@ -48,7 +48,6 @@ namespace GammaRay {
 
 class ProbeCreator;
 class MetaObjectTreeModel;
-class ConnectionModel;
 class ObjectListModel;
 class ObjectTreeModel;
 class ToolModel;
@@ -73,16 +72,10 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     static void objectAdded(QObject *obj, bool fromCtor = false);
     static void objectRemoved(QObject *obj);
-    static void connectionAdded(QObject *sender, const char *signal,
-                                QObject *receiver, const char *method,
-                                Qt::ConnectionType type);
-    static void connectionRemoved(QObject *sender, const char *signal,
-                                  QObject *receiver, const char *method);
 
     QAbstractItemModel *objectListModel() const Q_DECL_OVERRIDE;
     QAbstractItemModel *objectTreeModel() const Q_DECL_OVERRIDE;
     QAbstractItemModel *metaObjectModel() const;
-    QAbstractItemModel *connectionModel() const Q_DECL_OVERRIDE;
     ToolModel *toolModel() const;
     void registerModel(const QString& objectName, QAbstractItemModel* model) Q_DECL_OVERRIDE;
     void installGlobalEventFilter(QObject* filter) Q_DECL_OVERRIDE;
@@ -188,7 +181,6 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
     MetaObjectTreeModel *m_metaObjectTreeModel;
-    ConnectionModel *m_connectionModel;
     ToolModel *m_toolModel;
     QItemSelectionModel *m_toolSelectionModel;
     QObject *m_window;

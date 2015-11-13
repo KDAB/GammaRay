@@ -34,7 +34,6 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "metaobjecttreemodel.h"
-#include "connectionmodel.h"
 #include "toolmodel.h"
 #include "probesettings.h"
 #include "probecontroller.h"
@@ -94,31 +93,6 @@ using namespace std;
 QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(0);
 
 namespace GammaRay {
-
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-
-static bool probeConnectCallback(void ** args)
-{
-  QObject *sender = reinterpret_cast<QObject*>(args[0]);
-  const char *signal = reinterpret_cast<const char*>(args[1]);
-  QObject *receiver = reinterpret_cast<QObject*>(args[2]);
-  const char *method = reinterpret_cast<const char*>(args[3]);
-  const Qt::ConnectionType *type = reinterpret_cast<Qt::ConnectionType*>(args[4]);
-  Probe::connectionAdded(sender, signal, receiver, method, *type);
-  return false;
-}
-
-static bool probeDisconnectCallback(void ** args)
-{
-  QObject *sender = reinterpret_cast<QObject*>(args[0]);
-  const char *signal = reinterpret_cast<const char*>(args[1]);
-  QObject *receiver = reinterpret_cast<QObject*>(args[2]);
-  const char *method = reinterpret_cast<const char*>(args[3]);
-  Probe::connectionRemoved(sender, signal, receiver, method);
-  return false;
-}
-
-#endif // QT_VERSION
 
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
@@ -232,7 +206,6 @@ Probe::Probe(QObject *parent):
   m_objectListModel(new ObjectListModel(this)),
   m_objectTreeModel(new ObjectTreeModel(this)),
   m_metaObjectTreeModel(new MetaObjectTreeModel(this)),
-  m_connectionModel(new ConnectionModel(this)),
   m_toolModel(0),
   m_window(0),
   m_queueTimer(new QTimer(this))
@@ -258,7 +231,6 @@ Probe::Probe(QObject *parent):
   registerModel(QLatin1String("com.kdab.GammaRay.ObjectList"), m_objectListModel);
   registerModel(QLatin1String("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
   registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), sortedToolModel);
-  registerModel(QLatin1String("com.kdab.GammaRay.ConnectionModel"), m_connectionModel);
 
   m_toolSelectionModel = ObjectBroker::selectionModel(sortedToolModel);
 
@@ -271,14 +243,8 @@ Probe::Probe(QObject *parent):
   if (qgetenv("GAMMARAY_MODELTEST") == "1") {
     new ModelTest(m_objectListModel, m_objectListModel);
     new ModelTest(m_objectTreeModel, m_objectTreeModel);
-    new ModelTest(m_connectionModel, m_connectionModel);
     new ModelTest(m_toolModel, m_toolModel);
   }
-
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-  QInternal::registerCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
-  QInternal::registerCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
-#endif
 
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);
@@ -303,11 +269,6 @@ Probe::~Probe()
     m_previousSignalSpyCallbackSet.slotEndCallback
   };
   qt_register_signal_spy_callbacks(prevCallbacks);
-
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-  QInternal::unregisterCallback(QInternal::ConnectCallback, &GammaRay::probeConnectCallback);
-  QInternal::unregisterCallback(QInternal::DisconnectCallback, &GammaRay::probeDisconnectCallback);
-#endif
 
   ObjectBroker::clear();
   ProbeSettings::resetLauncherIdentifier();
@@ -521,11 +482,6 @@ QAbstractItemModel *Probe::metaObjectModel() const
   return m_metaObjectTreeModel;
 }
 
-QAbstractItemModel *Probe::connectionModel() const
-{
-  return m_connectionModel;
-}
-
 ToolModel *Probe::toolModel() const
 {
   return m_toolModel;
@@ -732,9 +688,6 @@ void Probe::objectRemoved(QObject *obj)
 
   instance()->m_queuedObjects.removeOne(obj);
 
-  instance()->connectionRemoved(obj, 0, 0, 0);
-  instance()->connectionRemoved(0, 0, obj, 0);
-
   emit instance()->objectDestroyed(obj);
 }
 
@@ -748,39 +701,6 @@ void Probe::objectParentChanged()
   if (sender()) {
     emit objectReparented(sender());
   }
-}
-
-void Probe::connectionAdded(QObject *sender, const char *signal, QObject *receiver,
-                            const char *method, Qt::ConnectionType type)
-{
-  if (!isInitialized() || !sender || !receiver || ProbeGuard::insideProbe())
-  {
-    return;
-  }
-
-  QMutexLocker lock(s_lock());
-  if (instance()->filterObject(sender) || instance()->filterObject(receiver)) {
-    return;
-  }
-
-  instance()->m_connectionModel->connectionAdded(sender, signal, receiver, method, type);
-}
-
-void Probe::connectionRemoved(QObject *sender, const char *signal,
-                              QObject *receiver, const char *method)
-{
-  if (!isInitialized() || !s_listener() || ProbeGuard::insideProbe())
-  {
-    return;
-  }
-
-  QMutexLocker lock(s_lock());
-  if ((sender && instance()->filterObject(sender)) ||
-      (receiver && instance()->filterObject(receiver))) {
-    return;
-  }
-
-  instance()->m_connectionModel->connectionRemoved(sender, signal, receiver, method);
 }
 
 bool Probe::eventFilter(QObject *receiver, QEvent *event)

@@ -74,12 +74,6 @@ class ProbeInterface
     virtual QAbstractItemModel *objectTreeModel() const = 0;
 
     /**
-     * Returns the connection model.
-     * @return a pointer to a QAbstractItemModel instance.
-     */
-    virtual QAbstractItemModel *connectionModel() const = 0;
-
-    /**
      * Determines if the specified QObject belongs to the GammaRay Probe or Window.
      *
      * These objects should not be tracked or shown to the user,

@@ -41,8 +41,6 @@ class QAbstractItemModel;
 
 namespace GammaRay {
 
-class ConnectionFilterProxyModel;
-
 /** @brief Non-UI part of the property widget. */
 class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterface
 {

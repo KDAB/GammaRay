@@ -32,13 +32,8 @@
 #include "common/tools/objectinspector/connectionsextensioninterface.h"
 #include "core/propertycontrollerextension.h"
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#define USE_QT_CONNECTIONS_LIST
-#endif
-
 namespace GammaRay {
 
-class ConnectionFilterProxyModel;
 class InboundConnectionsModel;
 class OutboundConnectionsModel;
 
@@ -58,13 +53,8 @@ class ConnectionsExtension : public ConnectionsExtensionInterface,
     void navigateToSender(int modelRow) Q_DECL_OVERRIDE;
 
   private:
-#ifndef USE_QT_CONNECTIONS_LIST
-    ConnectionFilterProxyModel *m_inboundModel;
-    ConnectionFilterProxyModel *m_outboundModel;
-#else
     InboundConnectionsModel *m_inboundModel;
     OutboundConnectionsModel *m_outboundModel;
-#endif
 };
 
 }

@@ -27,7 +27,6 @@
 */
 
 #include "classinfoextension.h"
-#include "connectionfilterproxymodel.h"
 #include "propertycontroller.h"
 #include "probe.h"
 #include "objectclassinfomodel.h"

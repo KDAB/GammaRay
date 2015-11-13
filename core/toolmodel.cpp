@@ -33,7 +33,6 @@
 #include "probe.h"
 #include "probesettings.h"
 
-#include "tools/connectioninspector/connectioninspector.h"
 #include "tools/localeinspector/localeinspector.h"
 #include "tools/metatypebrowser/metatypebrowser.h"
 #include "tools/modelinspector/modelinspector.h"
@@ -65,9 +64,6 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   // built-in tools
   addToolFactory(new ObjectInspectorFactory(this));
   addToolFactory(new ModelInspectorFactory(this));
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  addToolFactory(new ConnectionInspectorFactory(this));
-#endif
   addToolFactory(new ResourceBrowserFactory(this));
   addToolFactory(new MetaObjectBrowserFactory(this));
   addToolFactory(new MetaTypeBrowserFactory(this));
