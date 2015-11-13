@@ -74,33 +74,33 @@ static QString qmlListPropertyToString(const QVariant &value, bool *ok)
 static QString qjsValueToString(const QJSValue &v)
 {
   if (v.isArray()) {
-    return "<array>";
+    return QStringLiteral("<array>");
   } else if (v.isBool()) {
-    return v.toBool() ? "true" : "false";
+    return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
   } else if (v.isCallable()) {
-    return "<callable>";
+    return QStringLiteral("<callable>");
   } else if (v.isDate()) {
     return v.toDateTime().toString();
   } else if (v.isError()) {
-    return "<error>";
+    return QStringLiteral("<error>");
   } else if (v.isNull()) {
-    return "<null>";
+    return QStringLiteral("<null>");
   } else if (v.isNumber()) {
     return QString::number(v.toNumber());
   } else if (v.isObject()) {
-    return "<object>";
+    return QStringLiteral("<object>");
   } else if (v.isQObject()) {
     return Util::displayString(v.toQObject());
   } else if (v.isRegExp()) {
-    return "<regexp>";
+    return QStringLiteral("<regexp>");
   } else if (v.isString()) {
     return v.toString();
   } else if (v.isUndefined()) {
-    return "<undefined>";
+    return QStringLiteral("<undefined>");
   } else if (v.isVariant()) {
     return VariantHandler::displayString(v.toVariant());
   }
-  return "<unknown QJSValue>";
+  return QStringLiteral("<unknown QJSValue>");
 }
 
 QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :

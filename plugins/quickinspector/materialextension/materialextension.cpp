@@ -64,8 +64,8 @@ MaterialExtension::MaterialExtension(PropertyController *controller)
     m_materialPropertyModel(new AggregatedPropertyModel(this)),
     m_shaderModel(new QStandardItemModel(this))
 {
-  controller->registerModel(m_materialPropertyModel, "materialPropertyModel");
-  controller->registerModel(m_shaderModel, "shaderModel");
+  controller->registerModel(m_materialPropertyModel, QStringLiteral("materialPropertyModel"));
+  controller->registerModel(m_shaderModel, QStringLiteral("shaderModel"));
 }
 
 MaterialExtension::~MaterialExtension()
@@ -87,7 +87,7 @@ static const char* typeForMaterial(QSGMaterial *material)
 
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
-  if (typeName == "QSGGeometryNode") {
+  if (typeName == QStringLiteral("QSGGeometryNode")) {
     m_node = static_cast<QSGGeometryNode*>(object);
 
     m_materialPropertyModel->setObject(ObjectInstance(m_node->material(), typeForMaterial(m_node->material())));
@@ -97,7 +97,7 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
     const QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
 
     m_shaderModel->clear();
-    m_shaderModel->setHorizontalHeaderLabels(QStringList() << "Shader");
+    m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
     for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
       foreach (const QString &source, it.value()) {
         auto *item = new QStandardItem(source);

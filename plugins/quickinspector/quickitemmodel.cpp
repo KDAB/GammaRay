@@ -112,7 +112,7 @@ QVariant QuickItemModel::data(const QModelIndex &index, int role) const
   }
   if (role == Qt::DisplayRole && index.column() == 0) {
     QQmlContext *ctx = QQmlEngine::contextForObject(item);
-    QString id = ctx ? ctx->nameForObject(item) : "";
+    QString id = ctx ? ctx->nameForObject(item) : QString();
     if (!id.isEmpty()) {
       return id;
     }

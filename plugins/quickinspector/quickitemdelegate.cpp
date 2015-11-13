@@ -51,7 +51,7 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
   initStyleOption(&opt, index);
 
   // Disable foreground painting so we can do ourself
-  opt.text = "";
+  opt.text.clear();
   opt.icon = QIcon();
 
   QApplication::style()->drawControl(QStyle::CE_ItemViewItem, &opt, painter);
@@ -82,15 +82,15 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
       icons.push_back(deco.value<QIcon>().pixmap(16, 16));
 
     if ((flags & QuickItemModelRole::OutOfView) && (~flags & QuickItemModelRole::Invisible)) {
-      icons << QIcon(":/gammaray/plugins/quickinspector/warning.png").pixmap(16, 16);
+      icons << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/warning.png")).pixmap(16, 16);
     }
 
     if (flags & QuickItemModelRole::HasActiveFocus) {
-      icons << QIcon(":/gammaray/plugins/quickinspector/active-focus.png").pixmap(16, 16);
+      icons << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/active-focus.png")).pixmap(16, 16);
     }
 
     if (flags & QuickItemModelRole::HasFocus && ~flags & QuickItemModelRole::HasActiveFocus) {
-      icons << QIcon(":/gammaray/plugins/quickinspector/focus.png").pixmap(16, 16);
+      icons << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/focus.png")).pixmap(16, 16);
     }
 
     for (int i = 0; i < icons.size(); i++) {

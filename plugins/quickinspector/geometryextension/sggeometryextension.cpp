@@ -41,7 +41,7 @@ SGGeometryExtension::SGGeometryExtension(PropertyController *controller)
     m_node(0),
     m_model(new SGGeometryModel(this))
 {
-  controller->registerModel(m_model, "sgGeometryModel");
+  controller->registerModel(m_model, QStringLiteral("sgGeometryModel"));
 }
 
 SGGeometryExtension::~SGGeometryExtension()
@@ -50,7 +50,7 @@ SGGeometryExtension::~SGGeometryExtension()
 
 bool SGGeometryExtension::setObject(void *object, const QString &typeName)
 {
-  if (typeName == "QSGGeometryNode") {
+  if (typeName == QStringLiteral("QSGGeometryNode")) {
     m_node = static_cast<QSGGeometryNode*>(object);
     m_model->setNode(m_node);
 

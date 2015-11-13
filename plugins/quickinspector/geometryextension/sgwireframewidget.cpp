@@ -207,18 +207,18 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
   }
 
   // Paint hint about which draw mode is used
-  QString drawingMode = m_drawingMode == GL_POINTS              ? "GL_POINTS" :
-                        m_drawingMode == GL_LINES               ? "GL_LINES" :
-                        m_drawingMode == GL_LINE_STRIP          ? "GL_LINE_STRIP" :
-                        m_drawingMode == GL_LINE_LOOP           ? "GL_LINE_LOOP" :
+  QString drawingMode = m_drawingMode == GL_POINTS              ? QStringLiteral("GL_POINTS") :
+                        m_drawingMode == GL_LINES               ? QStringLiteral("GL_LINES") :
+                        m_drawingMode == GL_LINE_STRIP          ? QStringLiteral("GL_LINE_STRIP") :
+                        m_drawingMode == GL_LINE_LOOP           ? QStringLiteral("GL_LINE_LOOP") :
 #ifndef QT_OPENGL_ES_2
-                        m_drawingMode == GL_POLYGON             ? "GL_POLYGON" :
-                        m_drawingMode == GL_QUADS               ? "GL_QUADS" :
-                        m_drawingMode == GL_QUAD_STRIP          ? "GL_QUAD_STRIP" :
+                        m_drawingMode == GL_POLYGON             ? QStringLiteral("GL_POLYGON") :
+                        m_drawingMode == GL_QUADS               ? QStringLiteral("GL_QUADS") :
+                        m_drawingMode == GL_QUAD_STRIP          ? QStringLiteral("GL_QUAD_STRIP") :
 #endif
-                        m_drawingMode == GL_TRIANGLES           ? "GL_TRIANGLES" :
-                        m_drawingMode == GL_TRIANGLE_STRIP      ? "GL_TRIANGLE_STRIP" :
-                        m_drawingMode == GL_TRIANGLE_FAN        ? "GL_TRIANGLE_FAN" : "Unknown";
+                        m_drawingMode == GL_TRIANGLES           ? QStringLiteral("GL_TRIANGLES") :
+                        m_drawingMode == GL_TRIANGLE_STRIP      ? QStringLiteral("GL_TRIANGLE_STRIP") :
+                        m_drawingMode == GL_TRIANGLE_FAN        ? QStringLiteral("GL_TRIANGLE_FAN") : tr("Unknown");
   QString text = tr("Drawing mode: %1").arg(drawingMode);
   painter.drawText(contentsRect().width() - painter.fontMetrics().width(text),
                    contentsRect().height() - painter.fontMetrics().height(), text);

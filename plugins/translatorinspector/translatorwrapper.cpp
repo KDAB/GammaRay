@@ -241,7 +241,7 @@ const QTranslator *TranslatorWrapper::translator() const
 FallbackTranslator::FallbackTranslator(QObject *parent)
   : QTranslator(parent)
 {
-  setObjectName("Fallback Translator");
+  setObjectName(QStringLiteral("Fallback Translator"));
 }
 QString FallbackTranslator::translate(const char *context, const char *sourceText, const char *disambiguation, int n) const
 {

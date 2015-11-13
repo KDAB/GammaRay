@@ -100,68 +100,68 @@ static QString qSGNodeFlagsToString(QSGNode::Flags flags)
 {
   QStringList list;
   if (flags & QSGNode::OwnedByParent) {
-    list << "OwnedByParent";
+    list << QStringLiteral("OwnedByParent");
   }
   if (flags & QSGNode::UsePreprocess) {
-    list << "UsePreprocess";
+    list << QStringLiteral("UsePreprocess");
   }
   if (flags & QSGNode::OwnsGeometry) {
-    list << "OwnsGeometry";
+    list << QStringLiteral("OwnsGeometry");
   }
   if (flags & QSGNode::OwnsMaterial) {
-    list << "OwnsMaterial";
+    list << QStringLiteral("OwnsMaterial");
   }
   if (flags & QSGNode::OwnsOpaqueMaterial) {
-    list << "OwnsOpaqueMaterial";
+    list << QStringLiteral("OwnsOpaqueMaterial");
   }
   if (list.isEmpty())
-    return "<none>";
-  return list.join(" | ");
+    return QStringLiteral("<none>");
+  return list.join(QStringLiteral(" | "));
 }
 static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags)
 {
   QStringList list;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
   if (flags & QSGNode::DirtySubtreeBlocked) {
-    list << "DirtySubtreeBlocked";
+    list << QStringLiteral("DirtySubtreeBlocked");
   }
 #endif
   if (flags & QSGNode::DirtyMatrix) {
-    list << "DirtyMatrix";
+    list << QStringLiteral("DirtyMatrix");
   }
   if (flags & QSGNode::DirtyNodeAdded) {
-    list << "DirtyNodeAdded";
+    list << QStringLiteral("DirtyNodeAdded");
   }
   if (flags & QSGNode::DirtyNodeRemoved) {
-    list << "DirtyNodeRemoved";
+    list << QStringLiteral("DirtyNodeRemoved");
   }
   if (flags & QSGNode::DirtyGeometry) {
-    list << "DirtyGeometry";
+    list << QStringLiteral("DirtyGeometry");
   }
   if (flags & QSGNode::DirtyMaterial) {
-    list << "DirtyMaterial";
+    list << QStringLiteral("DirtyMaterial");
   }
   if (flags & QSGNode::DirtyOpacity) {
-    list << "DirtyOpacity";
+    list << QStringLiteral("DirtyOpacity");
   }
   if (flags & QSGNode::DirtyForceUpdate) {
-    list << "DirtyForceUpdate";
+    list << QStringLiteral("DirtyForceUpdate");
   }
   if (flags & QSGNode::DirtyUsePreprocess) {
-    list << "DirtyUsePreprocess";
+    list << QStringLiteral("DirtyUsePreprocess");
   }
   if (flags & QSGNode::DirtyPropagationMask) {
-    list << "DirtyPropagationMask";
+    list << QStringLiteral("DirtyPropagationMask");
   }
   if (list.isEmpty())
-    return "Clean";
-  return list.join(" | ");
+    return QStringLiteral("Clean");
+  return list.join(QStringLiteral(" | "));
 }
 
 static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
 {
   QStringList list;
-#define F(f) if (flags & QSGMaterial::f) list.push_back(#f);
+#define F(f) if (flags & QSGMaterial::f) list.push_back(QStringLiteral(#f));
   F(Blending)
   F(RequiresDeterminant)
   F(RequiresFullMatrixExceptTranslate)
@@ -170,16 +170,16 @@ static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
 #undef F
 
   if (list.isEmpty())
-    return "<none>";
-  return list.join(" | ");
+    return QStringLiteral("<none>");
+  return list.join(QStringLiteral(" | "));
 }
 
 static QString qsgTextureFilteringToString(QSGTexture::Filtering filtering)
 {
   switch (filtering) {
-    case QSGTexture::None: return "None";
-    case QSGTexture::Nearest: return "Nearest";
-    case QSGTexture::Linear: return "Linear";
+    case QSGTexture::None: return QStringLiteral("None");
+    case QSGTexture::Nearest: return QStringLiteral("Nearest");
+    case QSGTexture::Linear: return QStringLiteral("Linear");
   }
   return QString("Unknown: %1").arg(filtering);
 }
@@ -187,8 +187,8 @@ static QString qsgTextureFilteringToString(QSGTexture::Filtering filtering)
 static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
 {
   switch (wrapMode) {
-    case QSGTexture::Repeat: return "Repeat";
-    case QSGTexture::ClampToEdge: return "ClampToEdge";
+    case QSGTexture::Repeat: return QStringLiteral("Repeat");
+    case QSGTexture::ClampToEdge: return QStringLiteral("ClampToEdge");
   }
   return QString("Unknown: %1").arg(wrapMode);
 }
@@ -200,8 +200,8 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_currentSgNode(0),
     m_itemModel(new QuickItemModel(this)),
     m_sgModel(new QuickSceneGraphModel(this)),
-    m_itemPropertyController(new PropertyController("com.kdab.GammaRay.QuickItem", this)),
-    m_sgPropertyController(new PropertyController("com.kdab.GammaRay.QuickSceneGraph", this)),
+    m_itemPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickItem"), this)),
+    m_sgPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"), this)),
     m_clientViewActive(false),
     m_needsNewFrame(false)
 {
@@ -218,11 +218,11 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   QAbstractProxyModel * proxy = new SingleColumnObjectProxyModel(this);
   proxy->setSourceModel(windowModel);
   m_windowModel = proxy;
-  probe->registerModel("com.kdab.GammaRay.QuickWindowModel", m_windowModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"), m_windowModel);
 
   auto filterProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   filterProxy->setSourceModel(m_itemModel);
-  probe->registerModel("com.kdab.GammaRay.QuickItemModel", filterProxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickItemModel"), filterProxy);
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
           m_itemModel, SLOT(objectAdded(QObject*)));
@@ -239,7 +239,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
 
   filterProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   filterProxy->setSourceModel(m_sgModel);
-  probe->registerModel("com.kdab.GammaRay.QuickSceneGraphModel", filterProxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"), filterProxy);
 
   m_sgSelectionModel = ObjectBroker::selectionModel(filterProxy);
   connect(m_sgSelectionModel, &QItemSelectionModel::selectionChanged,

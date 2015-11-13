@@ -45,16 +45,16 @@ using namespace GammaRay;
 
 TranslatorInspector::TranslatorInspector(ProbeInterface *probe,
                                        QObject *parent)
-    : TranslatorInspectorInterface("com.kdab.GammaRay.TranslatorInspector",
+    : TranslatorInspectorInterface(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"),
                                   parent),
       m_probe(probe)
 {
   m_translatorsModel = new TranslatorsModel(this);
-  probe->registerModel("com.kdab.GammaRay.TranslatorsModel",
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"),
                        m_translatorsModel);
 
   m_translationsModel = new QIdentityProxyModel(this);
-  probe->registerModel("com.kdab.GammaRay.TranslationsModel",
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslationsModel"),
                        m_translationsModel);
 
   m_selectionModel = ObjectBroker::selectionModel(m_translatorsModel);

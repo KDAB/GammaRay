@@ -133,14 +133,14 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   connect(m_interface, SIGNAL(sceneRendered(QVariantMap)),
           this, SLOT(sceneRendered(QVariantMap)));
 
-  ui->windowComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel"));
+  ui->windowComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickWindowModel")));
   connect(ui->windowComboBox, SIGNAL(currentIndexChanged(int)),
           m_interface, SLOT(selectWindow(int)));
   if (ui->windowComboBox->currentIndex() >= 0) {
     m_interface->selectWindow(ui->windowComboBox->currentIndex());
   }
 
-  auto model = ObjectBroker::model("com.kdab.GammaRay.QuickItemModel");
+  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
   auto proxy = new QuickClientItemModel(this);
   proxy->setSourceModel(model);
   ui->itemTreeView->setModel(proxy);
@@ -153,7 +153,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   connect(proxy, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
           this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex)));
 
-  model = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel");
+  model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
   ui->sgTreeView->setModel(model);
   new SearchLineController(ui->sgTreeSearchLine, model);
   QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(model);
@@ -164,8 +164,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   new QuickItemTreeWatcher(ui->itemTreeView, ui->sgTreeView, this);
   new DeferredResizeModeSetter(ui->itemTreeView->header(), 0, QHeaderView::ResizeToContents);
 
-  ui->itemPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickItem");
-  ui->sgPropertyWidget->setObjectBaseName("com.kdab.GammaRay.QuickSceneGraph");
+  ui->itemPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickItem"));
+  ui->sgPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"));
 
   qmlRegisterType<AnnotatedScenePreview>("com.kdab.GammaRay", 1, 0, "AnnotatedScenePreview");
 
@@ -283,12 +283,12 @@ void QuickInspectorUiFactory::initUi()
   ObjectBroker::registerClientObjectFactoryCallback<MaterialExtensionInterface*>(
     createMaterialExtension);
 
-  PropertyWidget::registerTab<MaterialTab>("material", tr("Material"));
+  PropertyWidget::registerTab<MaterialTab>(QStringLiteral("material"), tr("Material"));
 
   ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface*>(
     createSGGeometryExtension);
 
-  PropertyWidget::registerTab<SGGeometryTab>("sgGeometry", tr("Geometry"));
+  PropertyWidget::registerTab<SGGeometryTab>(QStringLiteral("sgGeometry"), tr("Geometry"));
 }
 
 void QuickInspectorWidget::showEvent(QShowEvent* event)

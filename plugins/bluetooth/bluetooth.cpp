@@ -60,8 +60,8 @@ static QString bluetoothAddressToString(const QBluetoothAddress &addr)
 static QString bluetoothInquiryTypeToString(QBluetoothDeviceDiscoveryAgent::InquiryType type)
 {
     switch (type) {
-        case QBluetoothDeviceDiscoveryAgent::GeneralUnlimitedInquiry: return "Unlimited";
-        case QBluetoothDeviceDiscoveryAgent::LimitedInquiry: return "Limited";
+        case QBluetoothDeviceDiscoveryAgent::GeneralUnlimitedInquiry: return QStringLiteral("Unlimited");
+        case QBluetoothDeviceDiscoveryAgent::LimitedInquiry: return QStringLiteral("Limited");
     }
     Q_UNREACHABLE();
     return QString();
