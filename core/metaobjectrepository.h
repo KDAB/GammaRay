@@ -125,7 +125,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 /** Register a read/write property for class @p Class. */
 #define MO_ADD_PROPERTY(Class, Type, Getter, Setter) \
   mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type>( \
-    QLatin1String(#Getter), \
+    #Getter, \
     &Class::Getter, \
     static_cast<void (Class::*)(Type)>(&Class::Setter)) \
   );
@@ -133,7 +133,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 /** Register a read/write property for class @p Class with a type that is passed as const reference. */
 #define MO_ADD_PROPERTY_CR(Class, Type, Getter, Setter) \
   mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type, const Type&>( \
-    QLatin1String(#Getter), \
+    #Getter, \
     &Class::Getter, \
     static_cast<void (Class::*)(const Type&)>(&Class::Setter)) \
   );
@@ -141,13 +141,13 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 /** Register a read-only property for class @p Class. */
 #define MO_ADD_PROPERTY_RO(Class, Type, Getter) \
   mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type>( \
-    QLatin1String(#Getter), \
+    #Getter, \
     &Class::Getter));
 
 /** Register a static property for class @p Class. */
 #define MO_ADD_PROPERTY_ST(Class, Type, Getter) \
   mo->addProperty(new GammaRay::MetaStaticPropertyImpl<Class, Type>( \
-    QLatin1String(#Getter), \
+    #Getter, \
     &Class::Getter));
 
 #endif // GAMMARAY_METAOBJECTREPOSITORY_H

@@ -31,7 +31,6 @@
 
 #include "gammaray_core_export.h"
 
-#include <QString>
 #include <QVariant>
 
 namespace GammaRay {
@@ -42,11 +41,11 @@ class MetaObject;
 class GAMMARAY_CORE_EXPORT MetaProperty
 {
   public:
-    explicit MetaProperty(const QString &name);
+    explicit MetaProperty(const char *name);
     virtual ~MetaProperty();
 
     /// User-readable name of that property
-    QString name() const;
+    const char* name() const;
 
     /// Current value of the property for object @p object.
     virtual QVariant value(void *object) const = 0;
@@ -58,7 +57,7 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     virtual void setValue(void *object, const QVariant &value);
 
     /// Returns the name of the data type of this property.
-    virtual QString typeName() const = 0;
+    virtual const char* typeName() const = 0;
 
     /// Returns the class this property belongs to.
     MetaObject *metaObject() const;
@@ -68,7 +67,7 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     void setMetaObject(MetaObject *om);
 
     MetaObject *m_class;
-    QString m_name;
+    const char *m_name;
 };
 
 ///@cond internal
@@ -92,7 +91,7 @@ class MetaPropertyImpl : public MetaProperty
 
   public:
     inline MetaPropertyImpl(
-      const QString &name,
+      const char *name,
       GetterReturnType (Class::*getter)() const, void (Class::*setter)(SetterArgType) = 0)
       : MetaProperty(name), m_getter(getter), m_setter(setter)
     {
@@ -120,7 +119,7 @@ class MetaPropertyImpl : public MetaProperty
       (static_cast<Class*>(object)->*(m_setter))(value.value<ValueType>());
     }
 
-    inline QString typeName() const
+    inline const char* typeName() const
     {
       return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
     }
@@ -139,7 +138,7 @@ class MetaStaticPropertyImpl : public MetaProperty
     typedef typename detail::strip_const_ref<GetterReturnType>::type ValueType;
 
   public:
-    inline MetaStaticPropertyImpl(const QString &name, GetterReturnType (*getter)())
+    inline MetaStaticPropertyImpl(const char *name, GetterReturnType (*getter)())
       : MetaProperty(name), m_getter(getter)
     {
     }
@@ -157,7 +156,7 @@ class MetaStaticPropertyImpl : public MetaProperty
       return QVariant::fromValue(v);
     }
 
-    inline QString typeName() const
+    inline const char* typeName() const
     {
       return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
     }

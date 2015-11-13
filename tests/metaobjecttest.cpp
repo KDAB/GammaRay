@@ -66,13 +66,13 @@ private slots:
       for (int i = 0; i < mo->propertyCount(); ++i) {
         prop = mo->propertyAt(i);
         QVERIFY(prop);
-        if (prop->name() == "priority")
+        if (strcmp(prop->name(), "priority") == 0)
           break;
       }
 
       QVERIFY(prop);
-      QCOMPARE(prop->name(), QString("priority"));
-      QCOMPARE(prop->typeName(), QString("QThread::Priority"));
+      QCOMPARE(prop->name(), "priority");
+      QCOMPARE(prop->typeName(), "QThread::Priority");
 
       QThread t;
       QCOMPARE(prop->value(&t).value<QThread::Priority>(), t.priority());
@@ -89,13 +89,13 @@ private slots:
       for (int i = 0; i < mo->propertyCount(); ++i) {
         prop = mo->propertyAt(i);
         QVERIFY(prop);
-        if (prop->name() == "libraryPaths")
+        if (strcmp(prop->name(), "libraryPaths") == 0)
           break;
       }
 
       QVERIFY(prop);
-      QCOMPARE(prop->name(), QString("libraryPaths"));
-      QCOMPARE(prop->typeName(), QString("QStringList"));
+      QCOMPARE(prop->name(), "libraryPaths");
+      QCOMPARE(prop->typeName(), "QStringList");
       QCOMPARE(prop->isReadOnly(), true);
       QCOMPARE(prop->value(0).toStringList(), QCoreApplication::libraryPaths());
     }

@@ -29,12 +29,11 @@
 #include "metaproperty.h"
 #include "metaobject.h"
 
-#include <QString>
 #include <QVariant>
 
 using namespace GammaRay;
 
-MetaProperty::MetaProperty(const QString& name) : m_class(0), m_name(name)
+MetaProperty::MetaProperty(const char *name) : m_class(0), m_name(name)
 {
 }
 
@@ -42,7 +41,7 @@ MetaProperty::~MetaProperty()
 {
 }
 
-QString MetaProperty::name() const
+const char* MetaProperty::name() const
 {
   return m_name;
 }
