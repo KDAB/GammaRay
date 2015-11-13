@@ -99,6 +99,7 @@ add_test(multisignalmappertest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/multisignalmapp
 
 ### Probe ABI test
 
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 add_executable(probeabitest probeabitest.cpp)
 target_link_libraries(probeabitest gammaray_launcher ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(probeabitest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabitest)
@@ -106,6 +107,7 @@ add_test(probeabitest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabitest)
 add_executable(probeabidetectortest probeabidetectortest.cpp)
 target_link_libraries(probeabidetectortest gammaray_launcher ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
+endif()
 
 ### Remote model tests
 
