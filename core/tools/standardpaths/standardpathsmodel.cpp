@@ -96,7 +96,7 @@ QVariant StandardPathsModel::data(const QModelIndex &index, int role) const
     case 1:
       return QStandardPaths::displayName(loc);
     case 2:
-      return QStandardPaths::standardLocations(loc).join(QLatin1String("\n"));
+      return QStandardPaths::standardLocations(loc).join(QLatin1Char('\n'));
     case 3:
       return QStandardPaths::writableLocation(loc);
     }

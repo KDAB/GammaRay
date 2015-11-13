@@ -35,7 +35,7 @@ StandardPaths::StandardPaths(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
   StandardPathsModel *model = new StandardPathsModel(this);
-  probe->registerModel("com.kdab.GammaRay.StandardPathsModel", model);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StandardPathsModel"), model);
 }
 
 StandardPaths::~StandardPaths()

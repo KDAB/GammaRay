@@ -139,7 +139,7 @@ QList<QStandardItem*> MimeTypesModel::makeRowForType(const QMimeType &mt)
   row.push_back(item);
 
   item = new QStandardItem;
-  item->setText(mt.globPatterns().join(QLatin1String(", ")));
+  item->setText(mt.globPatterns().join(QStringLiteral(", ")));
   row.push_back(item);
 
   item = new QStandardItem;
@@ -149,7 +149,7 @@ QList<QStandardItem*> MimeTypesModel::makeRowForType(const QMimeType &mt)
   row.push_back(item);
 
   item = new QStandardItem;
-  QString s = mt.suffixes().join(QLatin1String(", "));
+  QString s = mt.suffixes().join(QStringLiteral(", "));
   if (!mt.preferredSuffix().isEmpty() && mt.suffixes().size() > 1) {
     s += QLatin1String(" (") + mt.preferredSuffix() + QLatin1Char(')');
   }
@@ -157,7 +157,7 @@ QList<QStandardItem*> MimeTypesModel::makeRowForType(const QMimeType &mt)
   row.push_back(item);
 
   item = new QStandardItem;
-  item->setText(mt.aliases().join(QLatin1String(", ")));
+  item->setText(mt.aliases().join(QStringLiteral(", ")));
   row.push_back(item);
 
   return row;
