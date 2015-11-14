@@ -67,16 +67,16 @@ private slots:
         view->show();
         QTest::qWait(1); // event loop re-entry
 
-        auto windowModel = ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel");
+        auto windowModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"));
         QVERIFY(windowModel);
         ModelTest windowModelTest(windowModel);
         QCOMPARE(windowModel->rowCount(), 1);
 
-        auto itemModel = ObjectBroker::model("com.kdab.GammaRay.QuickItemModel");
+        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
         QVERIFY(itemModel);
         ModelTest itemModelTest(itemModel);
 
-        auto sgModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel");
+        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
         QVERIFY(sgModel);
         ModelTest sgModelTest(sgModel);
 
@@ -85,7 +85,7 @@ private slots:
         inspector->selectWindow(0);
         QTest::qWait(1);
 
-        view->setSource(QUrl("qrc:/manual/reparenttest.qml"));
+        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
         QTest::qWait(20); // wait at least one frame
 
         QTest::keyClick(view, Qt::Key_Right);
@@ -108,16 +108,16 @@ private slots:
         view->show();
         QTest::qWait(1); // event loop re-entry
 
-        auto windowModel = ObjectBroker::model("com.kdab.GammaRay.QuickWindowModel");
+        auto windowModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"));
         QVERIFY(windowModel);
         ModelTest windowModelTest(windowModel);
         QCOMPARE(windowModel->rowCount(), 1);
 
-        auto itemModel = ObjectBroker::model("com.kdab.GammaRay.QuickItemModel");
+        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
         QVERIFY(itemModel);
         ModelTest itemModelTest(itemModel);
 
-        auto sgModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel");
+        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
         QVERIFY(sgModel);
         ModelTest sgModelTest(sgModel);
 
@@ -126,7 +126,7 @@ private slots:
         inspector->selectWindow(0);
         QTest::qWait(1);
 
-        view->setSource(QUrl("qrc:/manual/quickitemcreatedestroytest.qml"));
+        view->setSource(QUrl(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
         QTest::qWait(20); // wait at least one frame
 
         // scroll through the list, to trigger creations/destructions
@@ -150,11 +150,11 @@ private slots:
         view->show();
         QTest::qWait(1); // event loop re-entry
 
-        auto itemModel = ObjectBroker::model("com.kdab.GammaRay.QuickItemModel");
+        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
         QVERIFY(itemModel);
         ModelTest itemModelTest(itemModel);
 
-        auto sgModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraphModel");
+        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
         QVERIFY(sgModel);
         ModelTest sgModelTest(sgModel);
 
@@ -163,7 +163,7 @@ private slots:
         inspector->selectWindow(0);
         QTest::qWait(1);
 
-        view->setSource(QUrl("qrc:/manual/quickitemcreatedestroytest.qml"));
+        view->setSource(QUrl(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
         QTest::qWait(20); // wait at least one frame
         QVERIFY(itemModel->rowCount() > 0);
         QVERIFY(sgModel->rowCount() > 0);

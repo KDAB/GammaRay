@@ -83,7 +83,7 @@ private slots:
         auto idx = indexOfProperty(adaptor, "data");
         QVERIFY(idx >= 0);
         auto pd = adaptor->propertyData(idx);
-        QCOMPARE(pd.className(), QString("QQuickItem"));
+        QCOMPARE(pd.className(), QStringLiteral("QQuickItem"));
 
         auto listAdaptor = PropertyAdaptorFactory::create(pd.value(), this);
         QVERIFY(listAdaptor);
@@ -112,7 +112,7 @@ private slots:
         QVERIFY(idx >= 0);
 
         auto data = adaptor->propertyData(idx);
-        QCOMPARE(data.name(), QString("Keys"));
+        QCOMPARE(data.name(), QStringLiteral("Keys"));
         QVERIFY(!data.typeName().isEmpty());
         QVERIFY(data.value().isValid());
         QVERIFY(data.value().canConvert<QObject*>());
@@ -148,7 +148,7 @@ private slots:
         QVERIFY(jsValueAdaptor);
         QCOMPARE(jsValueAdaptor->count(), 2);
         data = jsValueAdaptor->propertyData(1);
-        QCOMPARE(data.name(), QString("1"));
+        QCOMPARE(data.name(), QStringLiteral("1"));
         QCOMPARE(data.value(), QVariant("world"));
 #endif
     }

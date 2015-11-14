@@ -358,7 +358,7 @@ void QuickInspector::objectSelected(QObject *object)
 
 void QuickInspector::objectSelected(void *object, const QString &typeName)
 {
-  if (MetaObjectRepository::instance()->metaObject(typeName)->inherits("QSGNode")) {
+  if (MetaObjectRepository::instance()->metaObject(typeName)->inherits(QStringLiteral("QSGNode"))) {
     selectSGNode(reinterpret_cast<QSGNode*>(object));
   }
 }
@@ -782,8 +782,8 @@ void QuickInspector::registerPCExtensions()
 }
 
 #define QSG_CHECK_TYPE(Class) \
-  if(dynamic_cast<Class*>(node) && MetaObjectRepository::instance()->hasMetaObject(#Class)) \
-    return QLatin1String(#Class)
+  if(dynamic_cast<Class*>(node) && MetaObjectRepository::instance()->hasMetaObject(QStringLiteral(#Class))) \
+    return QStringLiteral(#Class)
 
 QString QuickInspector::findSGNodeType(QSGNode *node) const
 {
@@ -795,7 +795,7 @@ QString QuickInspector::findSGNodeType(QSGNode *node) const
     QSG_CHECK_TYPE(QSGRootNode);
     QSG_CHECK_TYPE(QSGOpacityNode);
 
-    return QLatin1String("QSGNode");
+    return QStringLiteral("QSGNode");
 }
 
 QString QuickInspectorFactory::name() const

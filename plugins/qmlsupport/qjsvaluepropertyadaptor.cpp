@@ -62,7 +62,7 @@ PropertyData QJSValuePropertyAdaptor::propertyData(int index) const
             return pd;
         pd.setName(QString::number(index));
         pd.setValue(list.at(index));
-        pd.setClassName("QJSValue");
+        pd.setClassName(QStringLiteral("QJSValue"));
     }
 
     return pd;

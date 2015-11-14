@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     QGuiApplication app(argc, argv);
 
     QQuickView view;
-    view.setSource(QUrl("qrc:/wk2application.qml"));
+    view.setSource(QUrl(QStringLiteral("qrc:/wk2application.qml")));
     view.show();
 
     return app.exec();
