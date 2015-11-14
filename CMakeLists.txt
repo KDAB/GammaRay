@@ -338,8 +338,13 @@ else()
     "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
   )
 
-  # C++11 compatibility with Qt5
-  add_definitions(-DQ_DECL_OVERRIDE=)
+  # C++11/Qt5 compatibility
+  if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI\"${CMAKE_SOURCE_DIR}\\compat\\qt4compat.h\"")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include \"${CMAKE_SOURCE_DIR}/compat/qt4compat.h\"")
+  endif()
+
   # Qt4 moc limitation workaround (Qt4 moc cannot evaluate QT_VERSION preprocessor conditionals
   add_definitions(-DQT4_MOC_WORKAROUND)
 endif()
