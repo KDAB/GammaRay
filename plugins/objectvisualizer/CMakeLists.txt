@@ -23,9 +23,7 @@ set(OPTIONAL_VTK_LIBRARIES
 
 add_definitions(-DVTKGUI_ENABLED -DVTK_EXCLUDE_STRSTREAM_HEADERS)
 
-include_directories(
-  ${VTK_INCLUDE_DIRS}
-)
+include_directories(SYSTEM ${VTK_INCLUDE_DIRS})
 
 include(${VTK_USE_FILE})
 

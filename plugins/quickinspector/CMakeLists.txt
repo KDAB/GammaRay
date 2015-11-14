@@ -17,7 +17,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
   target_link_libraries(gammaray_quickinspector_shared gammaray_common Qt5::Gui)
   set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-  include_directories(${Qt5Quick_PRIVATE_INCLUDE_DIRS})
+  include_directories(SYSTEM ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
 
   set(gammaray_quickinspector_srcs
     quickinspector.cpp
