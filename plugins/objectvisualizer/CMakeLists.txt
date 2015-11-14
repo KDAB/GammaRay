@@ -20,7 +20,7 @@ target_link_libraries(gammaray_objectvisualizer_plugin
 find_path(VTK_DIR VTKConfig.cmake
   /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
 )
-find_package(VTK)
+find_package(VTK QUIET)
 set_package_properties(VTK PROPERTIES
   TYPE OPTIONAL
   DESCRIPTION "Visualization Toolkit"
