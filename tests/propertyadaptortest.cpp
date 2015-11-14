@@ -154,10 +154,10 @@ private slots:
 
     void testSequentialContainer()
     {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         auto v = QVector<int>() << 2 << 3 << 5 << 12;
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(QVariant::fromValue(v)), this);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         QVERIFY(adaptor);
         QCOMPARE(adaptor->count(), 4);
         verifyPropertyData(adaptor);
@@ -169,6 +169,7 @@ private slots:
 
     void testAssociativeContainer()
     {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         QHash<QString, int> h;
         h["A"] = 2;
         h["B"] = 3;
@@ -176,7 +177,6 @@ private slots:
 
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(QVariant::fromValue(h)), this);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         QVERIFY(adaptor);
         QCOMPARE(adaptor->count(), 3);
         verifyPropertyData(adaptor);
