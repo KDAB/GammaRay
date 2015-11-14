@@ -56,15 +56,15 @@ class PropertyWidgetTabFactory : public PropertyWidgetTabFactoryBase
       m_label(label)
     {
     }
-    QWidget *createWidget(PropertyWidget *parent)
+    QWidget *createWidget(PropertyWidget *parent) Q_DECL_OVERRIDE
     {
       return new T(parent);
     }
-    const QString &name() const
+    const QString &name() const Q_DECL_OVERRIDE
     {
       return m_name;
     }
-    const QString &label() const
+    const QString &label() const Q_DECL_OVERRIDE
     {
       return m_label;
     }

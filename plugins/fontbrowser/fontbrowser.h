@@ -60,10 +60,7 @@ class FontBrowserFactory : public QObject
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Fonts");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

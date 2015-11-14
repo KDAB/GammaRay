@@ -42,3 +42,7 @@ MimeTypes::~MimeTypes()
 {
 }
 
+QString MimeTypesFactory::name() const
+{
+  return tr("Mime Types");
+}

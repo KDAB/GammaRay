@@ -61,10 +61,7 @@ class SelectionModelInspectorFactory :
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Selection Models");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

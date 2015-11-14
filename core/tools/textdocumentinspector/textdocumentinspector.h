@@ -66,10 +66,7 @@ class TextDocumentInspectorFactory
     {
     }
 
-    inline QString name() const
-    {
-      return tr("Text Documents");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

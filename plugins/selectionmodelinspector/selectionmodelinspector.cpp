@@ -74,3 +74,8 @@ void SelectionModelInspector::currentChanged(const QModelIndex &current)
     m_current->setSourceModel(0);
   }
 }
+
+QString SelectionModelInspectorFactory::name() const
+{
+  return tr("Selection Models");
+}

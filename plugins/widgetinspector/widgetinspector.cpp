@@ -32,6 +32,11 @@
 
 using namespace GammaRay;
 
+QString WidgetInspectorFactory::name() const
+{
+    return tr("Widgets");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(WidgetInspectorFactory)
 #endif

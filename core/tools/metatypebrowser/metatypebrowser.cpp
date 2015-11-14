@@ -45,3 +45,7 @@ MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
   probe->registerModel("com.kdab.GammaRay.MetaTypeModel", proxy);
 }
 
+QString MetaTypeBrowserFactory::name() const
+{
+  return tr("Meta Types");
+}

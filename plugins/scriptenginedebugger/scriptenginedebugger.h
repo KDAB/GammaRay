@@ -54,10 +54,7 @@ class ScriptEngineDebuggerFactory : public QObject, public StandardToolFactory<Q
     {
     }
 
-    inline QString name() const
-    {
-      return tr("Script Engines");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

@@ -102,7 +102,7 @@ class PropertyControllerExtensionFactory : public PropertyControllerExtensionFac
       return s_instance;
     }
 
-    PropertyControllerExtension *create(PropertyController *controller)
+    PropertyControllerExtension *create(PropertyController *controller) Q_DECL_OVERRIDE
     {
       return new T(controller);
     }

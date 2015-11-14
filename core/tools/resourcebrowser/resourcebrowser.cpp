@@ -91,3 +91,7 @@ void ResourceBrowser::currentChanged(const QModelIndex &current)
   }
 }
 
+QString ResourceBrowserFactory::name() const
+{
+  return tr("Resources");
+}

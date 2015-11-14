@@ -106,7 +106,7 @@ class SemaphoreWaiter : public QThread
 public:
   explicit SemaphoreWaiter(qint64 id, QObject *parent = 0) : QThread(parent), m_id(id) {}
   ~SemaphoreWaiter() {}
-  void run()
+  void run() Q_DECL_OVERRIDE
   {
 #ifdef HAVE_SHM
     QSystemSemaphore sem("gammaray-semaphore-" + QString::number(m_id), 0, QSystemSemaphore::Create);

@@ -48,10 +48,7 @@ class WidgetInspectorFactory
     {
     }
 
-    inline QString name() const
-    {
-      return tr("Widgets");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

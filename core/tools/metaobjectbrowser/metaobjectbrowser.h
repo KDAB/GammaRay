@@ -62,10 +62,7 @@ class MetaObjectBrowserFactory : public QObject,
     {
     }
 
-    inline QString name() const
-    {
-      return tr("Meta Objects");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

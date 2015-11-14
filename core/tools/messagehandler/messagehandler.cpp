@@ -218,3 +218,7 @@ MessageHandlerFactory::MessageHandlerFactory(QObject* parent): QObject(parent)
 {
 }
 
+QString MessageHandlerFactory::name() const
+{
+  return tr("Messages");
+}

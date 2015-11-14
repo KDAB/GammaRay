@@ -76,7 +76,7 @@ class Widget : public QWidget
     }
 
   protected:
-    bool eventFilter(QObject *object, QEvent *event)
+    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE
     {
       if (event->type() == QEvent::LanguageChange) {
         retranslate();

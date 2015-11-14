@@ -68,7 +68,7 @@ class ObjectFilterProxyModelBase : public QSortFilterProxyModel
      * @return true if the item in the row can be included in the model;
      *         otherwise returns false.
      */
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE
     {
       const QModelIndex source_index = sourceModel()->index(source_row, 0, source_parent);
       if (!source_index.isValid()) {
@@ -108,7 +108,7 @@ class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
     }
 
   protected:
-    virtual bool filterAcceptsObject(QObject *object) const
+    bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE
     {
       return qobject_cast<T*>(object);
     }

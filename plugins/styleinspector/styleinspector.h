@@ -77,10 +77,7 @@ class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle,
     {
     }
 
-    virtual QString name() const
-    {
-      return tr("Style");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

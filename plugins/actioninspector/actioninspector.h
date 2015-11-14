@@ -59,10 +59,7 @@ class ActionInspectorFactory : public QObject, public StandardToolFactory<QActio
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Action Inspector");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

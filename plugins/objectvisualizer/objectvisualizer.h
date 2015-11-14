@@ -51,10 +51,7 @@ class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, G
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Object Visualizer");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

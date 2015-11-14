@@ -43,6 +43,11 @@ GraphViewer::~GraphViewer()
 {
 }
 
+QString GraphViewerFactory::name() const
+{
+  return tr("Object Visualizer");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(GraphViewerFactory)
 #endif

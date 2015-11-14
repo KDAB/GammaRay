@@ -129,3 +129,8 @@ void ObjectInspector::registerPCExtensions()
   PropertyController::registerExtension<PropertiesExtension>();
   PropertyController::registerExtension<ConnectionsExtension>();
 }
+
+QString ObjectInspectorFactory::name() const
+{
+  return tr("Objects");
+}

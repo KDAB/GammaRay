@@ -69,10 +69,7 @@ class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, 
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Text Codecs");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

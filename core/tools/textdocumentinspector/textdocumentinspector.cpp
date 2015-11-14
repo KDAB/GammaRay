@@ -92,3 +92,7 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
   m_textDocumentFormatModel->setFormat(f);
 }
 
+QString TextDocumentInspectorFactory::name() const
+{
+  return tr("Text Documents");
+}

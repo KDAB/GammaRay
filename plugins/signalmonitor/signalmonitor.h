@@ -66,10 +66,7 @@ class SignalMonitorFactory : public QObject, public StandardToolFactory<QObject,
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Signals");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 } // namespace GammaRay

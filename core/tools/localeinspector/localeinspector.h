@@ -47,10 +47,7 @@ class LocaleInspectorFactory : public QObject, public StandardToolFactory<QObjec
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Locales");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

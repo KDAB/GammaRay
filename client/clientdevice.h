@@ -71,7 +71,7 @@ public:
     {
     }
 
-    inline QIODevice* device() const
+    QIODevice* device() const Q_DECL_OVERRIDE
     {
         return m_socket;
     }

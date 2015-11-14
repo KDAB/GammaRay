@@ -55,10 +55,7 @@ class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, Mim
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Mime Types");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

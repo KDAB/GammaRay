@@ -79,12 +79,12 @@ public:
     {
     }
 
-    inline QString errorString() const
+    QString errorString() const Q_DECL_OVERRIDE
     {
         return m_server->errorString();
     }
 
-    inline QIODevice* nextPendingConnection()
+    QIODevice* nextPendingConnection() Q_DECL_OVERRIDE
     {
         Q_ASSERT(m_server->hasPendingConnections());
         return m_server->nextPendingConnection();

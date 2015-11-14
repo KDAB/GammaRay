@@ -59,10 +59,7 @@ class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObjec
     {
     }
 
-    inline QString name() const
-    {
-      return tr("Resources");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

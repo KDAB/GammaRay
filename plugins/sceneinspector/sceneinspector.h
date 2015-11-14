@@ -87,10 +87,7 @@ class SceneInspectorFactory : public QObject,
     {
     }
 
-    inline QString name() const
-    {
-      return tr("Graphics Scenes");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

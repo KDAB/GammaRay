@@ -393,6 +393,11 @@ void SceneInspector::registerVariantHandlers()
 #endif
 }
 
+QString SceneInspectorFactory::name() const
+{
+  return tr("Graphics Scenes");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(SceneInspectorFactory)
 #endif

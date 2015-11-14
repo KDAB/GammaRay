@@ -60,10 +60,7 @@ class KJobTrackerFactory : public QObject, public StandardToolFactory<KJob, KJob
     {
     }
 
-    inline QString name() const
-    {
-      return tr("KJobs");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

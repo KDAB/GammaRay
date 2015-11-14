@@ -91,6 +91,11 @@ void StyleInspector::styleSelected(const QItemSelection &selection)
   m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
 }
 
+QString StyleInspectorFactory::name() const
+{
+  return tr("Style");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(StyleInspectorFactory)
 #endif

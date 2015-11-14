@@ -71,6 +71,11 @@ void SignalMonitor::sendClockUpdates(bool enabled)
     m_clock->stop();
 }
 
+QString SignalMonitorFactory::name() const
+{
+  return tr("Signals");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(SignalMonitorFactory)
 #endif

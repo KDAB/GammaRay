@@ -114,10 +114,7 @@ public QObject, public StandardToolFactory<QStateMachine, StateMachineViewerServ
     {
     }
 
-    inline QString name() const
-    {
-      return tr("State Machine Viewer");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

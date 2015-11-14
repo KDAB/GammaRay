@@ -105,22 +105,22 @@ template <typename Type, typename Tool>
 class StandardToolFactory : public ToolFactory
 {
 public:
-  virtual inline QStringList supportedTypes() const
+  QStringList supportedTypes() const Q_DECL_OVERRIDE
   {
     return QStringList(Type::staticMetaObject.className());
   }
 
-  virtual inline QString id() const
+  QString id() const Q_DECL_OVERRIDE
   {
     return Tool::staticMetaObject.className();
   }
 
-  virtual inline void init(ProbeInterface *probe)
+  void init(ProbeInterface *probe) Q_DECL_OVERRIDE
   {
     new Tool(probe, probe->probe());
   }
 
-  inline bool isHidden() const
+  bool isHidden() const Q_DECL_OVERRIDE
   {
     return false;
   }

@@ -97,12 +97,12 @@ class MetaPropertyImpl : public MetaProperty
     {
     }
 
-    inline bool isReadOnly() const
+    bool isReadOnly() const Q_DECL_OVERRIDE
     {
       return m_setter == 0 ;
     }
 
-    inline QVariant value(void *object) const
+    QVariant value(void *object) const Q_DECL_OVERRIDE
     {
       Q_ASSERT(object);
       Q_ASSERT(m_getter);
@@ -110,7 +110,7 @@ class MetaPropertyImpl : public MetaProperty
       return QVariant::fromValue(v);
     }
 
-    inline void setValue(void *object, const QVariant &value)
+    void setValue(void *object, const QVariant &value) Q_DECL_OVERRIDE
     {
       if (isReadOnly())
         return;
@@ -119,7 +119,7 @@ class MetaPropertyImpl : public MetaProperty
       (static_cast<Class*>(object)->*(m_setter))(value.value<ValueType>());
     }
 
-    inline const char* typeName() const
+    const char* typeName() const Q_DECL_OVERRIDE
     {
       return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
     }
@@ -143,12 +143,12 @@ class MetaStaticPropertyImpl : public MetaProperty
     {
     }
 
-    inline bool isReadOnly() const
+    bool isReadOnly() const Q_DECL_OVERRIDE
     {
       return true;
     }
 
-    inline QVariant value(void *object) const
+    QVariant value(void *object) const Q_DECL_OVERRIDE
     {
       Q_UNUSED(object);
       Q_ASSERT(m_getter);
@@ -156,7 +156,7 @@ class MetaStaticPropertyImpl : public MetaProperty
       return QVariant::fromValue(v);
     }
 
-    inline const char* typeName() const
+    const char* typeName() const Q_DECL_OVERRIDE
     {
       return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
     }

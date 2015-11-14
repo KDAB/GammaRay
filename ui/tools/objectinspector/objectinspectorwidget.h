@@ -73,10 +73,10 @@ class ObjectInspectorWidget : public QWidget
 
 class ObjectInspectorFactory : public ToolUiFactory {
 public:
-  virtual inline QString id() const { return "GammaRay::ObjectInspector"; }
-  virtual inline QWidget *createWidget(QWidget *parentWidget) { return new ObjectInspectorWidget(parentWidget); }
-  virtual inline bool remotingSupported() const { return true; }
-  virtual void initUi()
+  QString id() const Q_DECL_OVERRIDE { return "GammaRay::ObjectInspector"; }
+  QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE { return new ObjectInspectorWidget(parentWidget); }
+  bool remotingSupported() const Q_DECL_OVERRIDE { return true; }
+  void initUi() Q_DECL_OVERRIDE
   {
     PropertyWidget::registerTab<PropertiesTab>("properties", QObject::tr("Properties"));
     ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createExtension<PropertiesExtensionClient>);

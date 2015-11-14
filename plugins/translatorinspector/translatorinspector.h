@@ -86,7 +86,7 @@ class TranslatorInspectorFactory
   public:
     explicit TranslatorInspectorFactory(QObject *parent = 0) : QObject(parent) {}
 
-    inline QString name() const { return tr("Translators"); }
+    QString name() const Q_DECL_OVERRIDE;
 };
 }
 

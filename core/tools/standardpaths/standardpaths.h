@@ -50,10 +50,7 @@ class StandardPathsFactory : public QObject, public StandardToolFactory<QObject,
     {
     }
 
-    virtual inline QString name() const
-    {
-      return tr("Standard Paths");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

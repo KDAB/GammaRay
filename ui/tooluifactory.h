@@ -80,17 +80,17 @@ template <typename ToolUi>
 class StandardToolUiFactory : public ToolUiFactory
 {
 public:
-  virtual inline QString id() const
+  QString id() const Q_DECL_OVERRIDE
   {
     return QString(); // TODO is this a problem??
   }
 
-  virtual inline QWidget *createWidget(QWidget *parentWidget)
+  QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE
   {
     return new ToolUi(parentWidget);
   }
 
-  virtual bool remotingSupported() const
+  bool remotingSupported() const Q_DECL_OVERRIDE
   {
     return true;
   }

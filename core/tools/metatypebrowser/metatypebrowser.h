@@ -49,10 +49,7 @@ class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObjec
     {
     }
 
-    inline QString name() const
-    {
-      return tr("Meta Types");
-    }
+    QString name() const Q_DECL_OVERRIDE;
 };
 
 }

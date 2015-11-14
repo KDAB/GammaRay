@@ -51,6 +51,11 @@ KJobTracker::~KJobTracker()
 {
 }
 
+QString KJobTrackerFactory::name() const
+{
+  return tr("KJobs");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(KJobTrackerFactory)
 #endif

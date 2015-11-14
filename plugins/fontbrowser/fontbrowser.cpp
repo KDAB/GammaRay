@@ -33,6 +33,11 @@
 
 using namespace GammaRay;
 
+QString FontBrowserFactory::name() const
+{
+    return tr("Fonts");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(FontBrowserFactory)
 #endif

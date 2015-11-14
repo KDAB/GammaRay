@@ -89,6 +89,11 @@ void ActionInspector::registerMetaTypes()
   MO_ADD_PROPERTY_RO(QAction, QWidget*, parentWidget);
 }
 
+QString ActionInspectorFactory::name() const
+{
+  return tr("Action Inspector");
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(ActionInspectorFactory)
 #endif

@@ -73,7 +73,7 @@ class SingleColumnObjectProxyModel : public QIdentityProxyModel
      * @return on success, a QVariant containing the data;
      *         QVariant() if some anamoly occurs.
      */
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
       if (proxyIndex.isValid() && role == Qt::DisplayRole && proxyIndex.column() == 0) {
         const QObject *obj = proxyIndex.data(ObjectModel::ObjectRole).value<QObject*>();

@@ -42,3 +42,7 @@ StandardPaths::~StandardPaths()
 {
 }
 
+QString StandardPathsFactory::name() const
+{
+  return tr("Standard Paths");
+}

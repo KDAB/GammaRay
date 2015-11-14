@@ -107,7 +107,7 @@ public:
     }
 
 protected:
-    bool createProxyFactory(const PluginInfo& pluginInfo, QObject* parent)
+    bool createProxyFactory(const PluginInfo& pluginInfo, QObject* parent) Q_DECL_OVERRIDE
     {
       Proxy *proxy = new Proxy(pluginInfo, parent);
       if (!proxy->isValid()) {

@@ -71,3 +71,7 @@ void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
   }
 }
 
+QString MetaObjectBrowserFactory::name() const
+{
+  return tr("Meta Objects");
+}

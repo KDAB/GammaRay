@@ -143,3 +143,8 @@ void TranslatorInspector::selectionChanged(const QItemSelection &selection)
     }
   }
 }
+
+QString TranslatorInspectorFactory::name() const
+{
+  return tr("Translators");
+}
