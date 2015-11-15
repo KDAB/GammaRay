@@ -470,10 +470,8 @@ static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
 
 static QString sizePolicyToString(const QSizePolicy &policy)
 {
-  return QStringLiteral("%1 x %2").
-    arg(sizePolicyPolicyToString(policy.horizontalPolicy())).
-    arg(sizePolicyPolicyToString(policy.verticalPolicy()));
-
+  return sizePolicyPolicyToString(policy.horizontalPolicy()) + " x "
+       + sizePolicyPolicyToString(policy.verticalPolicy());
 }
 
 void WidgetInspectorServer::registerVariantHandlers()

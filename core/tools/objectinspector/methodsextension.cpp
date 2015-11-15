@@ -98,14 +98,14 @@ void MethodsExtension::signalEmitted(QObject* sender, int signalIndex, const QVe
     prettyArgs.push_back(VariantHandler::displayString(v));
 
   m_methodLogModel->appendRow(
-  new QStandardItem(tr("%1: Signal %2 emitted, arguments: %3").
-  arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz"))).
+  new QStandardItem(tr("%1: Signal %2 emitted, arguments: %3").arg(
+    QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")),
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  arg(sender->metaObject()->method(signalIndex).signature())
+    sender->metaObject()->method(signalIndex).signature(),
 #else
-  arg(QString(sender->metaObject()->method(signalIndex).methodSignature()))
+    QString(sender->metaObject()->method(signalIndex).methodSignature()),
 #endif
-  .arg(prettyArgs.join(QStringLiteral(", ")))));
+    prettyArgs.join(QStringLiteral(", ")))));
 }
 
 void MethodsExtension::activateMethod()

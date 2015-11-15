@@ -79,7 +79,7 @@ void SelfTestPage::testProbe()
       continue;
     }
 
-    information(tr("Found valid probe for ABI %1 at %2.").arg(abi.id()).arg(probePath));
+    information(tr("Found valid probe for ABI %1 at %2.").arg(abi.id(), probePath));
     ++validProbeCount;
   }
 

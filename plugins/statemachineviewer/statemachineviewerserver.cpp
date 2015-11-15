@@ -62,9 +62,7 @@ QString labelForTransition(QAbstractTransition *transition)
   // Try to get a label for the transition if it is a QSignalTransition.
   QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
   if (signalTransition) {
-      return QStringLiteral("%1::%2").
-                  arg(Util::displayString(signalTransition->senderObject())).
-                  arg(QString::fromLatin1(signalTransition->signal().mid(1)));
+      return Util::displayString(signalTransition->senderObject()) + "::" + signalTransition->signal().mid(1);
   }
 
   return Util::displayString(transition);

@@ -67,9 +67,7 @@ QString Util::displayString(const QObject *object)
     return QStringLiteral("QObject(0x0)");
   }
   if (object->objectName().isEmpty()) {
-    return QStringLiteral("%1[this=%2]").
-      arg(object->metaObject()->className()).
-      arg(addressToString(object));
+    return QStringLiteral("%1[this=%2]").arg(object->metaObject()->className(), addressToString(object));
   }
   return object->objectName();
 }
@@ -273,12 +271,13 @@ QVariant Util::iconForObject(const QObject *obj)
 
 QString Util::tooltipForObject(const QObject* object)
 {
-  return QObject::tr("<p style='white-space:pre'>Object name: %1\nType: %2\nParent: %3 (Address: %4)\nNumber of children: %5</p>").
-    arg(object->objectName().isEmpty() ? QStringLiteral("&lt;Not set&gt;") : object->objectName()).
-    arg(object->metaObject()->className()).
-    arg(object->parent() ? object->parent()->metaObject()->className() : QStringLiteral("<No parent>")).
-    arg(Util::addressToString(object->parent())).
-    arg(object->children().size());
+  return QObject::tr("<p style='white-space:pre'>Object name: %1\nType: %2\nParent: %3 (Address: %4)\nNumber of children: %5</p>").arg(
+      object->objectName().isEmpty() ? QStringLiteral("&lt;Not set&gt;") : object->objectName(),
+      object->metaObject()->className(),
+      object->parent() ? object->parent()->metaObject()->className() : QStringLiteral("<No parent>"),
+      Util::addressToString(object->parent()),
+      QString::number(object->children().size())
+    );
 }
 
 void Util::drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize)
