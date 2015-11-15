@@ -53,7 +53,7 @@ ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface *probe, QObject *paren
     new SingleColumnObjectProxyModel(this);
   singleColumnProxy->setSourceModel(scriptEngineFilter);
 
-  probe->registerModel("com.kdab.GammaRay.ScriptEngines", singleColumnProxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ScriptEngines"), singleColumnProxy);
 }
 
 ScriptEngineDebugger::~ScriptEngineDebugger()

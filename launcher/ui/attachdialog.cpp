@@ -85,10 +85,10 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
   ui.probeBox->setModel(m_abiModel);
 
   QSettings settings;
-  ui.accessMode->setCurrentIndex(settings.value(QLatin1String("Launcher/AttachAccessMode")).toInt());
+  ui.accessMode->setCurrentIndex(settings.value(QStringLiteral("Launcher/AttachAccessMode")).toInt());
 
   setWindowTitle(tr("GammaRay - Attach to Process"));
-  setWindowIcon(QIcon(":gammaray/GammaRay-128x128.png"));
+  setWindowIcon(QIcon(QStringLiteral(":gammaray/GammaRay-128x128.png")));
 
   ui.stackedWidget->setCurrentWidget(ui.loadingLabel);
   emit updateButtonState();
@@ -103,7 +103,7 @@ bool AttachDialog::isValid() const
 void AttachDialog::writeSettings()
 {
   QSettings settings;
-  settings.setValue(QLatin1String("Launcher/AttachAccessMode"), ui.accessMode->currentIndex());
+  settings.setValue(QStringLiteral("Launcher/AttachAccessMode"), ui.accessMode->currentIndex());
 }
 
 LaunchOptions AttachDialog::launchOptions() const
@@ -114,15 +114,15 @@ LaunchOptions AttachDialog::launchOptions() const
 
   switch (ui.accessMode->currentIndex()) {
     case 0: // local, out-of-process
-      opt.setProbeSetting("ServerAddress", "tcp://127.0.0.1/");
+      opt.setProbeSetting(QStringLiteral("ServerAddress"), "tcp://127.0.0.1/");
       opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 1: // remote, out-of-process
-      opt.setProbeSetting("ServerAddress", "tcp://0.0.0.0/");
+      opt.setProbeSetting(QStringLiteral("ServerAddress"), "tcp://0.0.0.0/");
       opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 2: // in-process
-      opt.setProbeSetting("RemoteAccessEnabled", false);
+      opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), false);
       opt.setUiMode(LaunchOptions::InProcessUi);
       break;
   }

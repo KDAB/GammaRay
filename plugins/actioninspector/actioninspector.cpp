@@ -50,12 +50,12 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
   registerMetaTypes();
-  ObjectBroker::registerObject("com.kdab.GammaRay.ActionInspector", this);
+  ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.ActionInspector"), this);
 
   ActionModel *actionModel = new ActionModel(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), actionModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), actionModel, SLOT(objectRemoved(QObject*)));
-  probe->registerModel("com.kdab.GammaRay.ActionModel", actionModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ActionModel"), actionModel);
 }
 
 ActionInspector::~ActionInspector()
@@ -64,7 +64,7 @@ ActionInspector::~ActionInspector()
 
 void ActionInspector::triggerAction(int row)
 {
-  QAbstractItemModel *model = ObjectBroker::model("com.kdab.GammaRay.ActionModel");
+  QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
   const QModelIndex index = model->index(row, 0);
   if (!index.isValid()) {
     return;

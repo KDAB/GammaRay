@@ -54,7 +54,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
   setWindowTitle(tr("GammaRay Launcher"));
 
   QSettings settings;
-  ui->tabWidget->setCurrentIndex(settings.value(QLatin1String("Launcher/TabIndex")).toInt());
+  ui->tabWidget->setCurrentIndex(settings.value(QStringLiteral("Launcher/TabIndex")).toInt());
 }
 
 LauncherWindow::~LauncherWindow()
@@ -92,7 +92,7 @@ void LauncherWindow::tabChanged()
 void LauncherWindow::accept()
 {
   QSettings settings;
-  settings.setValue(QLatin1String("Launcher/TabIndex"), ui->tabWidget->currentIndex());
+  settings.setValue(QStringLiteral("Launcher/TabIndex"), ui->tabWidget->currentIndex());
 
   ui->launchPage->writeSettings();
   ui->attachPage->writeSettings();

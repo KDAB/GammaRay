@@ -40,7 +40,7 @@ class ChangingPropertyObject : public QObject
 public:
   explicit ChangingPropertyObject(QObject *parent = 0) : QObject(parent), m_count(0)
   {
-    setObjectName("changingPropertyObject");
+    setObjectName(QStringLiteral("changingPropertyObject"));
   }
 
   int staticChangingProperty() { return m_count; }

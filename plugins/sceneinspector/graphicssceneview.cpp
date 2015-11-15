@@ -38,8 +38,8 @@ GraphicsSceneView::GraphicsSceneView(QWidget *parent)
   ui->setupUi(this);
 
   QFontMetrics fm(ui->sceneCoordLabel->font());
-  ui->sceneCoordLabel->setFixedWidth(fm.width("00000.00 x 00000.00"));
-  ui->itemCoordLabel->setFixedWidth(fm.width("00000.00 x 00000.00"));
+  ui->sceneCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
+  ui->itemCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
 
   connect(ui->graphicsView, SIGNAL(sceneCoordinatesChanged(QPointF)),
           SLOT(sceneCoordinatesChanged(QPointF)));
@@ -69,14 +69,14 @@ void GraphicsSceneView::setGraphicsScene(QGraphicsScene *scene)
 
 void GraphicsSceneView::sceneCoordinatesChanged(const QPointF &coord)
 {
-  ui->sceneCoordLabel->setText(QString::fromLatin1("%1 x %2").
+  ui->sceneCoordLabel->setText(QStringLiteral("%1 x %2").
                                arg(coord.x(), 0, 'f', 2).
                                arg(coord.y(), 0, 'f', 2));
 }
 
 void GraphicsSceneView::itemCoordinatesChanged(const QPointF &coord)
 {
-  ui->itemCoordLabel->setText(QString::fromLatin1("%1 x %2").
+  ui->itemCoordLabel->setText(QStringLiteral("%1 x %2").
                               arg(coord.x(), 0, 'f', 2).
                               arg(coord.y(), 0, 'f', 2));
 }

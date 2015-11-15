@@ -51,7 +51,7 @@ Endpoint::Endpoint(QObject* parent):
 
   ObjectInfo *endpointObj = new ObjectInfo;
   endpointObj->address = m_myAddress;
-  endpointObj->name = QLatin1String("com.kdab.GammaRay.Server");
+  endpointObj->name = QStringLiteral("com.kdab.GammaRay.Server");
   // TODO: we could set this as message handler here and use the same dispatch mechanism
   insertObjectInfo(endpointObj);
 

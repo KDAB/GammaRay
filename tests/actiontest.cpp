@@ -59,11 +59,11 @@ private slots:
     {
         createProbe();
 
-        QAction *a1 = new QAction("Action 1", this);
-        QAction *a2 = new QAction("Action 2", this);
+        QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+        QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
         QTest::qWait(1); // event loop re-entry
 
-        auto *model = ObjectBroker::model("com.kdab.GammaRay.ActionModel");
+        auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
         QVERIFY(model);
         QCOMPARE(model->rowCount(), 2);
 
@@ -78,18 +78,18 @@ private slots:
     {
       createProbe();
 
-      QAction *a1 = new QAction("Action 1", this);
-      a1->setShortcut(QKeySequence("Ctrl+K"));
-      QAction *a2 = new QAction("Action 2", this);
-      a2->setShortcut(QKeySequence("Ctrl+K"));
+      QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+      a1->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
+      QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
+      a2->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
       QTest::qWait(1); // event loop re-entry
 
-      auto *model = ObjectBroker::model("com.kdab.GammaRay.ActionModel");
+      auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
       QVERIFY(model);
       QCOMPARE(model->rowCount(), 2);
 
       const auto index = model->index(0, 5);
-      QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence("Ctrl+K").toString(QKeySequence::NativeText));
+      QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::NativeText));
     }
 
 };

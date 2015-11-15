@@ -50,7 +50,7 @@ static QString toString(QList<T> list)
   Q_FOREACH (const T &item, list) {
     items << item;
   }
-  return items.join(", ");
+  return items.join(QStringLiteral(", "));
 }
 
 ActionModel::ActionModel(QObject *parent)
@@ -176,7 +176,7 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
     if (column == NameColumn) {
       return action->icon();
     } else if (column == ShortcutsPropColumn && m_duplicateFinder->hasAmbiguousShortcut(action)) {
-      QIcon icon = QIcon::fromTheme("dialog-warning");
+      QIcon icon = QIcon::fromTheme(QStringLiteral("dialog-warning"));
       if (!icon.isNull()) {
         return icon;
       } else {

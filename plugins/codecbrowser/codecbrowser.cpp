@@ -40,17 +40,17 @@ using namespace GammaRay;
 CodecBrowser::CodecBrowser(ProbeInterface* probe, QObject* parent)
   : QObject(parent)
 {
-  ObjectBroker::registerObject("com.kdab.GammaRay.CodecBrowser", this);
+  ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.CodecBrowser"), this);
 
   AllCodecsModel* model = new AllCodecsModel(this);
-  probe->registerModel("com.kdab.GammaRay.AllCodecsModel", model);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.AllCodecsModel"), model);
 
   m_codecSelectionModel = ObjectBroker::selectionModel(model);
   connect(m_codecSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(updateCodecs(QItemSelection,QItemSelection)));
 
   m_selectedCodecsModel = new SelectedCodecsModel(this);
-  probe->registerModel("com.kdab.GammaRay.SelectedCodecsModel", m_selectedCodecsModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectedCodecsModel"), m_selectedCodecsModel);
 }
 
 void CodecBrowser::textChanged(const QString &text)

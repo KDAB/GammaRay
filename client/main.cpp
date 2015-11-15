@@ -49,8 +49,8 @@ int main(int argc, char** argv)
   if (app.arguments().size() == 2) {
     serverUrl = app.arguments().at(1);
   } else {
-    serverUrl.setScheme("tcp");
-    serverUrl.setHost("127.0.0.1");
+    serverUrl.setScheme(QStringLiteral("tcp"));
+    serverUrl.setHost(QStringLiteral("127.0.0.1"));
     serverUrl.setPort(Client::defaultPort());
   }
 

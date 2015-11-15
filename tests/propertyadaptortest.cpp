@@ -244,8 +244,8 @@ private slots:
 
         QVERIFY(adaptor->canAddProperty());
         PropertyData newProp;
-        newProp.setName("newProperty");
-        newProp.setValue(QString("value"));
+        newProp.setName(QStringLiteral("newProperty"));
+        newProp.setValue(QStringLiteral("value"));
         auto oldPropCount = adaptor->count();
         adaptor->addProperty(newProp);
         QCOMPARE(oldPropCount + 1, adaptor->count());

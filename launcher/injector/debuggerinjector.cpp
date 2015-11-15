@@ -131,7 +131,7 @@ bool DebuggerInjector::startDebugger(const QStringList& args, const QProcessEnvi
 
 bool DebuggerInjector::selfTest()
 {
-  if (startDebugger(QStringList() << QLatin1String("--version"))) {
+  if (startDebugger(QStringList() << QStringLiteral("--version"))) {
     return m_process->waitForFinished(-1);
   }
   return false;
@@ -155,10 +155,10 @@ bool DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &p
 {
   Q_ASSERT(m_process);
   loadSymbols("dl");
-  execCmd(QString::fromLatin1("call (void) dlopen(\"%1\", %2)").
+  execCmd(QStringLiteral("call (void) dlopen(\"%1\", %2)").
           arg(probeDll).arg(RTLD_NOW).toUtf8());
   loadSymbols(probeDll.toUtf8());
-  execCmd(QString::fromLatin1("call (void) %1()").arg(probeFunc).toUtf8());
+  execCmd(QStringLiteral("call (void) %1()").arg(probeFunc).toUtf8());
 
   if (qgetenv("GAMMARAY_UNITTEST") != "1") {
     execCmd("detach");

@@ -72,7 +72,7 @@ PropertyData DynamicPropertyAdaptor::propertyData(int index) const
 
     data.setName(m_propNames.at(index));
     data.setValue(object().qtObject()->property(m_propNames.at(index)));
-    data.setClassName("<dynamic>");
+    data.setClassName(tr("<dynamic>"));
     data.setFlags(PropertyData::Writable | PropertyData::Deletable);
     return data;
 }

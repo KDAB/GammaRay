@@ -55,13 +55,13 @@ SelectionModelInspector::SelectionModelInspector(ProbeInterface *probe, QObject 
   ObjectTypeFilterProxyModel<QItemSelectionModel> *selectionModelProxy =
     new ObjectTypeFilterProxyModel<QItemSelectionModel>(this);
   selectionModelProxy->setSourceModel(probe->objectListModel());
-  probe->registerModel("com.kdab.GammaRay.SelectionModelsModel", selectionModelProxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectionModelsModel"), selectionModelProxy);
 
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(selectionModelProxy);
   connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(currentChanged(QModelIndex)));
 
-  probe->registerModel("com.kdab.GammaRay.CurrentSelectionModel", m_current);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel"), m_current);
 }
 
 void SelectionModelInspector::currentChanged(const QModelIndex &current)

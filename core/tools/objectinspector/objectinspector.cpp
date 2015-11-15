@@ -50,11 +50,11 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QObject *parent)
 {
   registerPCExtensions();
 
-  m_propertyController = new PropertyController("com.kdab.GammaRay.ObjectInspector", this);
+  m_propertyController = new PropertyController(QStringLiteral("com.kdab.GammaRay.ObjectInspector"), this);
 
   auto proxy = new KRecursiveFilterProxyModel(this);
   proxy->setSourceModel(probe->objectTreeModel());
-  probe->registerModel("com.kdab.GammaRay.ObjectInspectorTree", proxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"), proxy);
 
   m_selectionModel = ObjectBroker::selectionModel(proxy);
 

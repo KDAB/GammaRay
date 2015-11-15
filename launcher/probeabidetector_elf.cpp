@@ -48,7 +48,7 @@ static QString qtCoreFromLdd(const QString &path)
   QProcess proc;
   proc.setProcessChannelMode(QProcess::SeparateChannels);
   proc.setReadChannel(QProcess::StandardOutput);
-  proc.start("ldd", QStringList() << path);
+  proc.start(QStringLiteral("ldd"), QStringList() << path);
   proc.waitForFinished();
 
   forever {
@@ -81,7 +81,7 @@ ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 
 static bool qtCoreFromProc(qint64 pid, QString &path)
 {
-  const QString mapsPath = QString("/proc/%1/maps").arg(pid);
+  const QString mapsPath = QStringLiteral("/proc/%1/maps").arg(pid);
   QFile f(mapsPath);
   if (!f.open(QFile::ReadOnly)) {
     path.clear();
@@ -120,7 +120,7 @@ static ProbeABI qtVersionFromFileName(const QString &path)
   ProbeABI abi;
 
   const QStringList parts = path.split('.');
-  if (parts.size() < 4 || parts.at(parts.size() - 4) != "so")
+  if (parts.size() < 4 || parts.at(parts.size() - 4) != QLatin1String("so"))
     return abi;
 
   abi.setQtVersion(parts.at(parts.size() - 3).toInt(), parts.at(parts.size() - 2).toInt());
@@ -157,11 +157,11 @@ static QString archFromELFHeader(const uchar *data, quint64 size)
   const ElfEHdr *hdr = reinterpret_cast<const ElfEHdr*>(data);
 
   switch (hdr->e_machine) {
-    case EM_386: return "i686";
+    case EM_386: return QStringLiteral("i686");
 #ifdef EM_X86_64
-    case EM_X86_64: return "x86_64";
+    case EM_X86_64: return QStringLiteral("x86_64");
 #endif
-    case EM_ARM: return "arm";
+    case EM_ARM: return QStringLiteral("arm");
   }
 
   qWarning() << "Unsupported ELF machine type:" << hdr->e_machine;

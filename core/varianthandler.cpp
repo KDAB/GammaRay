@@ -76,9 +76,9 @@ static QString displayMatrix4x4(const QMatrix4x4 &matrix)
     for (int j = 0; j < 4; ++j) {
       cols.push_back(QString::number(matrix(i, j)));
     }
-    rows.push_back(cols.join(" "));
+    rows.push_back(cols.join(QStringLiteral(" ")));
   }
-  return '[' + rows.join(", ") + ']';
+  return '[' + rows.join(QStringLiteral(", ")) + ']';
 }
 
 static QString displayMatrix4x4(const QMatrix4x4 *matrix)
@@ -86,7 +86,7 @@ static QString displayMatrix4x4(const QMatrix4x4 *matrix)
   if (matrix) {
     return displayMatrix4x4(*matrix);
   }
-  return "<null>";
+  return QStringLiteral("<null>");
 }
 
 template <int Dim, typename T>
@@ -95,14 +95,14 @@ static QString displayVector(const T &vector)
   QStringList v;
   for (int i = 0; i < Dim; ++i)
     v.push_back(QString::number(vector[i]));
-  return '[' + v.join(", ") + ']';
+  return '[' + v.join(QStringLiteral(", ")) + ']';
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static QString displayShaderType(const QOpenGLShader::ShaderType type)
 {
   QStringList types;
-#define ST(t) if (type & QOpenGLShader::t) types.push_back(#t);
+#define ST(t) if (type & QOpenGLShader::t) types.push_back(QStringLiteral(#t));
   ST(Vertex)
   ST(Fragment)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
@@ -114,8 +114,8 @@ static QString displayShaderType(const QOpenGLShader::ShaderType type)
 #undef ST
 
   if (types.isEmpty())
-    return "<none>";
-  return types.join(" | ");
+    return QStringLiteral("<none>");
+  return types.join(QStringLiteral(" | "));
 }
 #endif
 
@@ -145,17 +145,17 @@ QString VariantHandler::displayString(const QVariant &value)
     foreach (const QSize &size, sizes) {
       l.push_back(displayString(size));
     }
-    return l.join(QLatin1String(", "));
+    return l.join(QStringLiteral(", "));
   }
   case QVariant::Line:
     return
-      QString::fromUtf8("%1, %2 → %3, %4").
+      QStringLiteral("%1, %2 → %3, %4").
         arg(value.toLine().x1()).arg(value.toLine().y1()).
         arg(value.toLine().x2()).arg(value.toLine().y2());
 
   case QVariant::LineF:
     return
-      QString::fromUtf8("%1, %2 → %3, %4").
+      QStringLiteral("%1, %2 → %3, %4").
         arg(value.toLineF().x1()).arg(value.toLineF().y1()).
         arg(value.toLineF().x2()).arg(value.toLineF().y2());
 
@@ -164,19 +164,19 @@ QString VariantHandler::displayString(const QVariant &value)
 
   case QVariant::Point:
     return
-      QString::fromLatin1("%1, %2").
+      QStringLiteral("%1, %2").
         arg(value.toPoint().x()).
         arg(value.toPoint().y());
 
   case QVariant::PointF:
     return
-      QString::fromLatin1("%1, %2").
+      QStringLiteral("%1, %2").
         arg(value.toPointF().x()).
         arg(value.toPointF().y());
 
   case QVariant::Rect:
     return
-      QString::fromLatin1("%1, %2 %3 x %4").
+      QStringLiteral("%1, %2 %3 x %4").
         arg(value.toRect().x()).
         arg(value.toRect().y()).
         arg(value.toRect().width()).
@@ -184,7 +184,7 @@ QString VariantHandler::displayString(const QVariant &value)
 
   case QVariant::RectF:
     return
-      QString::fromLatin1("%1, %2 %3 x %4").
+      QStringLiteral("%1, %2 %3 x %4").
         arg(value.toRectF().x()).
         arg(value.toRectF().y()).
         arg(value.toRectF().width()).
@@ -194,12 +194,12 @@ QString VariantHandler::displayString(const QVariant &value)
   {
     const QRegion region = value.value<QRegion>();
     if (region.isEmpty()) {
-      return QLatin1String("<empty>");
+      return QStringLiteral("<empty>");
     }
     if (region.rectCount() == 1) {
       return displayString(region.rects().at(0));
     } else {
-      return QString::fromLatin1("<%1 rects>").arg(region.rectCount());
+      return QStringLiteral("<%1 rects>").arg(region.rectCount());
     }
   }
 
@@ -207,20 +207,20 @@ QString VariantHandler::displayString(const QVariant &value)
   {
     const QPalette pal = value.value<QPalette>();
     if (pal == qApp->palette()) {
-      return QLatin1String("<inherited>");
+      return QStringLiteral("<inherited>");
     }
-    return QLatin1String("<custom>");
+    return QStringLiteral("<custom>");
   }
 
   case QVariant::Size:
     return
-      QString::fromLatin1("%1 x %2").
+      QStringLiteral("%1 x %2").
         arg(value.toSize().width()).
         arg(value.toSize().height());
 
   case QVariant::SizeF:
     return
-      QString::fromLatin1("%1 x %2").
+      QStringLiteral("%1 x %2").
         arg(value.toSizeF().width()).
         arg(value.toSizeF().height());
 
@@ -229,10 +229,10 @@ QString VariantHandler::displayString(const QVariant &value)
     const auto l = value.toStringList();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     if (l.isEmpty())
-      return QLatin1String("<empty>");
+      return QStringLiteral("<empty>");
     if (l.size() == 1)
       return l.at(0);
-    return QString::fromLatin1("<%1 entries>").arg(l.size());
+    return QStringLiteral("<%1 entries>").arg(l.size());
 #else
     return l.join(", ");
 #endif
@@ -242,7 +242,7 @@ QString VariantHandler::displayString(const QVariant &value)
   {
     const QTransform t = value.value<QTransform>();
     return
-      QString::fromLatin1("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").
+      QStringLiteral("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").
         arg(t.m11()).arg(t.m12()).arg(t.m13()).
         arg(t.m21()).arg(t.m22()).arg(t.m23()).
         arg(t.m31()).arg(t.m32()).arg(t.m33());
@@ -266,7 +266,7 @@ QString VariantHandler::displayString(const QVariant &value)
       typeStr = QObject::tr("percentage");
       break;
     }
-    return QString::fromLatin1("%1 (%2)").arg(l.rawValue()).arg(typeStr);
+    return QStringLiteral("%1 (%2)").arg(l.rawValue()).arg(typeStr);
   }
 
   if (value.userType() == qMetaTypeId<QPainterPath>()) {
@@ -313,7 +313,7 @@ QString VariantHandler::displayString(const QVariant &value)
     foreach (const QByteArray &b, set) {
       l.push_back(QString::fromUtf8(b));
     }
-    return l.join(", ");
+    return l.join(QStringLiteral(", "));
   }
 
   if (value.userType() == qMetaTypeId<QSurfaceFormat>()) {
@@ -321,16 +321,16 @@ QString VariantHandler::displayString(const QVariant &value)
     QString s;
     switch (format.renderableType()) {
     case QSurfaceFormat::DefaultRenderableType:
-      s += "Default";
+      s += QStringLiteral("Default");
       break;
     case QSurfaceFormat::OpenGL:
-      s += "OpenGL";
+      s += QStringLiteral("OpenGL");
       break;
     case QSurfaceFormat::OpenGLES:
-      s += "OpenGL ES";
+      s += QStringLiteral("OpenGL ES");
       break;
     case QSurfaceFormat::OpenVG:
-      s += "OpenVG";
+      s += QStringLiteral("OpenVG");
       break;
     }
 
@@ -338,10 +338,10 @@ QString VariantHandler::displayString(const QVariant &value)
          '.' + QString::number(format.minorVersion());
     switch (format.profile()) {
     case QSurfaceFormat::CoreProfile:
-      s += " core";
+      s += QStringLiteral(" core");
       break;
     case QSurfaceFormat::CompatibilityProfile:
-      s += " compat";
+      s += QStringLiteral(" compat");
       break;
     case QSurfaceFormat::NoProfile:
       break;
@@ -356,22 +356,22 @@ QString VariantHandler::displayString(const QVariant &value)
     s += " Depth: " + QString::number(format.depthBufferSize());
     s += " Stencil: " + QString::number(format.stencilBufferSize());
 
-    s += " Buffer: ";
+    s += QStringLiteral(" Buffer: ");
     switch (format.swapBehavior()) {
     case QSurfaceFormat::DefaultSwapBehavior:
-      s += "default";
+      s += QStringLiteral("default");
       break;
     case QSurfaceFormat::SingleBuffer:
-      s += "single";
+      s += QStringLiteral("single");
       break;
     case QSurfaceFormat::DoubleBuffer:
-      s += "double";
+      s += QStringLiteral("double");
       break;
     case QSurfaceFormat::TripleBuffer:
-      s += "triple";
+      s += QStringLiteral("triple");
       break;
     default:
-      s += "unknown";
+      s += QStringLiteral("unknown");
     }
 
     return s;
@@ -419,17 +419,17 @@ QString VariantHandler::displayString(const QVariant &value)
   if (value.canConvert<QVariantList>()) {
     QSequentialIterable it = value.value<QSequentialIterable>();
     if (it.size() == 0) {
-      return QLatin1String("<empty>");
+      return QStringLiteral("<empty>");
     } else {
-      return QString::fromLatin1("<%1 entries>").arg(it.size());
+      return QStringLiteral("<%1 entries>").arg(it.size());
     }
   }
   if (value.canConvert<QVariantHash>()) {
     auto it = value.value<QAssociativeIterable>();
     if (it.size() == 0) {
-      return QLatin1String("<empty>");
+      return QStringLiteral("<empty>");
     } else {
-      return QString::fromLatin1("<%1 entries>").arg(it.size());
+      return QStringLiteral("<%1 entries>").arg(it.size());
     }
   }
 #endif

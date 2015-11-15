@@ -45,7 +45,7 @@ KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
   ui->setupUi(this);
 
   QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
-  filter->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.KJobModel"));
+  filter->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.KJobModel")));
   ui->searchLine->setProxy(filter);
   ui->jobView->setModel(filter);
 }

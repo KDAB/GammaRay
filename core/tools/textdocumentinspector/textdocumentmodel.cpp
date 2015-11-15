@@ -39,14 +39,14 @@ using namespace GammaRay;
 static QString formatTypeToString(int type)
 {
   switch (type) {
-    case QTextFormat::InvalidFormat: return "Invalid";
-    case QTextFormat::BlockFormat: return "Block";
-    case QTextFormat::CharFormat: return "Char";
-    case QTextFormat::ListFormat: return "List";
-    case QTextFormat::FrameFormat: return "Frame";
-    case QTextFormat::UserFormat: return "User";
+    case QTextFormat::InvalidFormat: return QStringLiteral("Invalid");
+    case QTextFormat::BlockFormat: return QStringLiteral("Block");
+    case QTextFormat::CharFormat: return QStringLiteral("Char");
+    case QTextFormat::ListFormat: return QStringLiteral("List");
+    case QTextFormat::FrameFormat: return QStringLiteral("Frame");
+    case QTextFormat::UserFormat: return QStringLiteral("User");
   }
-  return QString("Unknown format: %1").arg(type);
+  return QStringLiteral("Unknown format: %1").arg(type);
 }
 
 TextDocumentModel::TextDocumentModel(QObject *parent)

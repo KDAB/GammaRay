@@ -45,7 +45,7 @@ using namespace GammaRay;
 MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   : QWidget(parent)
 {
-  QAbstractItemModel *model = ObjectBroker::model("com.kdab.GammaRay.MetaObjectBrowserTreeModel");
+  QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
 
   QTreeView *treeView = new QTreeView(this);
   treeView->setIndentation(10);
@@ -60,7 +60,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
 
   PropertyWidget *propertyWidget = new PropertyWidget(this);
   m_propertyWidget = propertyWidget;
-  m_propertyWidget->setObjectBaseName("com.kdab.GammaRay.MetaObjectBrowser");
+  m_propertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"));
 
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(objectSearchLine);

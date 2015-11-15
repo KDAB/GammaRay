@@ -39,19 +39,19 @@ MessageGenerator::MessageGenerator()
 {
   QVBoxLayout *layout  = new QVBoxLayout;
 
-  QPushButton *button = new QPushButton("debug");
+  QPushButton *button = new QPushButton(QStringLiteral("debug"));
   connect(button, SIGNAL(clicked(bool)), SLOT(generateDebug()));
   layout->addWidget(button);
 
-  button = new QPushButton("warning");
+  button = new QPushButton(QStringLiteral("warning"));
   connect(button, SIGNAL(clicked(bool)), SLOT(generateWarning()));
   layout->addWidget(button);
 
-  button = new QPushButton("critical");
+  button = new QPushButton(QStringLiteral("critical"));
   connect(button, SIGNAL(clicked(bool)), SLOT(generateCritical()));
   layout->addWidget(button);
 
-  button = new QPushButton("fatal");
+  button = new QPushButton(QStringLiteral("fatal"));
   connect(button, SIGNAL(clicked(bool)), SLOT(generateFatal()));
   layout->addWidget(button);
 

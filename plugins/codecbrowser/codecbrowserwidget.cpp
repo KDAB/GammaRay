@@ -42,11 +42,11 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
   ui->setupUi(this);
 
   ui->codecList->setRootIsDecorated(false);
-  ui->codecList->setModel(ObjectBroker::model("com.kdab.GammaRay.AllCodecsModel"));
+  ui->codecList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.AllCodecsModel")));
   ui->codecList->setSelectionModel(ObjectBroker::selectionModel(ui->codecList->model()));
   ui->codecList->setSelectionMode(QAbstractItemView::ExtendedSelection);
   ui->selectedCodecs->setRootIsDecorated(false);
-  ui->selectedCodecs->setModel(ObjectBroker::model("com.kdab.GammaRay.SelectedCodecsModel"));
+  ui->selectedCodecs->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectedCodecsModel")));
 
   new DeferredResizeModeSetter(ui->codecList->header(), 0, QHeaderView::ResizeToContents);
   new DeferredResizeModeSetter(ui->selectedCodecs->header(), 0, QHeaderView::ResizeToContents);
@@ -60,7 +60,7 @@ CodecBrowserWidget::~CodecBrowserWidget()
 
 void CodecBrowserWidget::textChanged(const QString& text)
 {
-  Endpoint::instance()->invokeObject("com.kdab.GammaRay.CodecBrowser", "textChanged", QVariantList() << text);
+  Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.CodecBrowser"), "textChanged", QVariantList() << text);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

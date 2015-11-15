@@ -45,11 +45,11 @@ FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
   , m_selectedFontModel(new FontModel(this))
 {
   auto model = new FontDatabaseModel(this);
-  probe->registerModel("com.kdab.GammaRay.FontModel", model);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.FontModel"), model);
   m_fontSelectionModel = ObjectBroker::selectionModel(model);
   connect(m_fontSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(updateFonts()));
-  probe->registerModel("com.kdab.GammaRay.SelectedFontModel", m_selectedFontModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectedFontModel"), m_selectedFontModel);
 }
 
 void FontBrowserServer::updateFonts()

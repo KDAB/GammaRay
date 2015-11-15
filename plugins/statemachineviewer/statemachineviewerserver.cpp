@@ -62,7 +62,7 @@ QString labelForTransition(QAbstractTransition *transition)
   // Try to get a label for the transition if it is a QSignalTransition.
   QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
   if (signalTransition) {
-      return QString::fromLatin1("%1::%2").
+      return QStringLiteral("%1::%2").
                   arg(Util::displayString(signalTransition->senderObject())).
                   arg(QString::fromLatin1(signalTransition->signal().mid(1)));
   }
@@ -79,7 +79,7 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
     m_maximumDepth(0),
     m_stateMachineWatcher(new StateMachineWatcher(this))
 {
-  probe->registerModel("com.kdab.GammaRay.StateModel", m_stateModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateModel"), m_stateModel);
   QItemSelectionModel *stateSelectionModel = ObjectBroker::selectionModel(m_stateModel);
   connect(stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(stateSelectionChanged()));
@@ -87,7 +87,7 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
   ObjectTypeFilterProxyModel<QStateMachine> *stateMachineFilter =
     new ObjectTypeFilterProxyModel<QStateMachine>(this);
   stateMachineFilter->setSourceModel(probe->objectListModel());
-  probe->registerModel("com.kdab.GammaRay.StateMachineModel", stateMachineFilter);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateMachineModel"), stateMachineFilter);
   QItemSelectionModel *stateMachineSelectionModel = ObjectBroker::selectionModel(stateMachineFilter);
   connect(stateMachineSelectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(handleMachineClicked(QModelIndex)));
@@ -202,7 +202,7 @@ void StateMachineViewerServer::setFilteredStates(const QVector<QAbstractState*>&
     foreach(QAbstractState* state, states) {
       stateNames << Util::displayString(state);
     }
-    emit message(tr("Setting filter on: %1").arg(stateNames.join(", ")));
+    emit message(tr("Setting filter on: %1").arg(stateNames.join(QStringLiteral(", "))));
   }
 
   m_filteredStates = states;

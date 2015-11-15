@@ -144,7 +144,7 @@ QString FontDatabaseModel::smoothSizeString(const QString& family, const QString
     sizes.reserve(smoothSizes.size());
     foreach (auto points, smoothSizes)
         sizes.push_back(QString::number(points));
-    return sizes.join(" ");
+    return sizes.join(QStringLiteral(" "));
 }
 
 void FontDatabaseModel::ensureModelPopulated() const

@@ -49,7 +49,7 @@ ScriptEngineDebuggerWidget::ScriptEngineDebuggerWidget(QWidget *parent)
   : QWidget(parent), ui(new Ui::ScriptEngineDebuggerWidget), debugger(new QScriptEngineDebugger(this))
 {
   ui->setupUi(this);
-  ui->scriptEngineComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.ScriptEngines"));
+  ui->scriptEngineComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ScriptEngines")));
   connect(ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)));
 
   ui->verticalLayout_10->addWidget(debugger->standardWindow());

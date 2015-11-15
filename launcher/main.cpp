@@ -102,7 +102,7 @@ static void usage(const char *argv0)
   out << "" << endl;
   out << "Options:" << endl;
   out << " -i, --injector <injector>  \tset injection type, possible values:" << endl;
-  out << "                            \t" << InjectorFactory::availableInjectors().join(", ")
+  out << "                            \t" << InjectorFactory::availableInjectors().join(QStringLiteral(", "))
       << endl;
   out << " -p, --pid <pid>            \tattach to running Qt application" << endl;
   out << "     --inprocess            \tuse in-process UI" << endl;
@@ -139,10 +139,10 @@ static QUrl urlFromUserInput(const QString &s)
 {
   QUrl url(s);
   if (url.scheme().isEmpty()) { // backward compat: map input without a scheme to tcp + hostname
-    url.setScheme("tcp");
+    url.setScheme(QStringLiteral("tcp"));
     QString host = url.path();
     int port = -1;
-    const int pos = host.lastIndexOf(":");
+    const int pos = host.lastIndexOf(':');
     if (pos > 0) {
       port = host.mid(pos + 1).toUShort();
       host = host.left(pos);
@@ -157,9 +157,9 @@ static QUrl urlFromUserInput(const QString &s)
 
 int main(int argc, char **argv)
 {
-  QCoreApplication::setOrganizationName("KDAB");
-  QCoreApplication::setOrganizationDomain("kdab.com");
-  QCoreApplication::setApplicationName("GammaRay");
+  QCoreApplication::setOrganizationName(QStringLiteral("KDAB"));
+  QCoreApplication::setOrganizationDomain(QStringLiteral("kdab.com"));
+  QCoreApplication::setApplicationName(QStringLiteral("GammaRay"));
 
   installSignalHandler();
 
@@ -175,9 +175,9 @@ int main(int argc, char **argv)
 #endif
   Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
 
-  QStringList builtInArgs = QStringList() << QLatin1String("-style")
-                                          << QLatin1String("-stylesheet")
-                                          << QLatin1String("-graphicssystem");
+  QStringList builtInArgs = QStringList() << QStringLiteral("-style")
+                                          << QStringLiteral("-stylesheet")
+                                          << QStringLiteral("-graphicssystem");
 
   LaunchOptions options;
   while (!args.isEmpty() && args.first().startsWith('-')) {
@@ -207,10 +207,10 @@ int main(int argc, char **argv)
       options.setUiMode(LaunchOptions::NoUi);
     }
     if (arg == QLatin1String("--listen") && !args.isEmpty()) {
-      options.setProbeSetting("ServerAddress", urlFromUserInput(args.takeFirst()).toString());
+      options.setProbeSetting(QStringLiteral("ServerAddress"), urlFromUserInput(args.takeFirst()).toString());
     }
     if ( arg == QLatin1String("--no-listen")) {
-      options.setProbeSetting("RemoteAccessEnabled", false);
+      options.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), false);
       options.setUiMode(LaunchOptions::InProcessUi);
     }
     if ( arg == QLatin1String("--list-probes")) {
@@ -224,7 +224,7 @@ int main(int argc, char **argv)
         out << "Invalid probe ABI specified, see --list-probes for valid ones." << endl;
         return 1;
       }
-      if (ProbeFinder::findProbe(GAMMARAY_PROBE_NAME, abi).isEmpty()) {
+      if (ProbeFinder::findProbe(QStringLiteral(GAMMARAY_PROBE_NAME), abi).isEmpty()) {
         out << abi.id() << "is not a known probe, see --list-probes." << endl;
         return 1;
       }

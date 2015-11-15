@@ -227,18 +227,18 @@ Probe::Probe(QObject *parent):
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
   ObjectBroker::registerObject<ProbeControllerInterface*>(new ProbeController(this));
 
-  registerModel(QLatin1String("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
-  registerModel(QLatin1String("com.kdab.GammaRay.ObjectList"), m_objectListModel);
-  registerModel(QLatin1String("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
-  registerModel(QLatin1String("com.kdab.GammaRay.ToolModel"), sortedToolModel);
+  registerModel(QStringLiteral("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
+  registerModel(QStringLiteral("com.kdab.GammaRay.ObjectList"), m_objectListModel);
+  registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
+  registerModel(QStringLiteral("com.kdab.GammaRay.ToolModel"), sortedToolModel);
 
   m_toolSelectionModel = ObjectBroker::selectionModel(sortedToolModel);
 
   ToolPluginModel *toolPluginModel = new ToolPluginModel(m_toolModel->plugins(), this);
-  registerModel(QLatin1String("com.kdab.GammaRay.ToolPluginModel"), toolPluginModel);
+  registerModel(QStringLiteral("com.kdab.GammaRay.ToolPluginModel"), toolPluginModel);
   ToolPluginErrorModel *toolPluginErrorModel =
     new ToolPluginErrorModel(m_toolModel->pluginErrors(), this);
-  registerModel(QLatin1String("com.kdab.GammaRay.ToolPluginErrorModel"), toolPluginErrorModel);
+  registerModel(QStringLiteral("com.kdab.GammaRay.ToolPluginErrorModel"), toolPluginErrorModel);
 
   if (qgetenv("GAMMARAY_MODELTEST") == "1") {
     new ModelTest(m_objectListModel, m_objectListModel);
@@ -389,7 +389,7 @@ void Probe::delayedInit()
   }
   Server::instance()->setLabel(appName);
 
-  if (ProbeSettings::value("InProcessUi", false).toBool()) {
+  if (ProbeSettings::value(QStringLiteral("InProcessUi"), false).toBool()) {
     showInProcessUi();
   }
 }
@@ -408,7 +408,7 @@ void Probe::showInProcessUi()
   if (!path.isEmpty()) {
     path += QDir::separator();
   }
-  path += "gammaray_inprocessui";
+  path += QStringLiteral("gammaray_inprocessui");
   QLibrary lib;
   lib.setFileName(path);
   if (!lib.load()) {

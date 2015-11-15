@@ -86,14 +86,14 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   m_ui->graphicsView->setScene(new QGraphicsScene(this));
   m_ui->graphicsView->setRenderHint(QPainter::Antialiasing);
 
-  QAbstractItemModel *stateMachineModel = ObjectBroker::model("com.kdab.GammaRay.StateMachineModel");
+  QAbstractItemModel *stateMachineModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateMachineModel"));
   m_ui->stateMachinesView->setModel(stateMachineModel);
   m_ui->stateMachinesView->setSelectionModel(ObjectBroker::selectionModel(stateMachineModel));
   new DeferredResizeModeSetter(m_ui->stateMachinesView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(m_ui->stateMachinesView->header(), 1, QHeaderView::ResizeToContents);
   new DeferredTreeViewConfiguration(m_ui->stateMachinesView, false);
 
-  QAbstractItemModel *stateModel = ObjectBroker::model("com.kdab.GammaRay.StateModel");
+  QAbstractItemModel *stateModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateModel"));
   connect(stateModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
 
   m_ui->singleStateMachineView->setModel(stateModel);
@@ -148,12 +148,12 @@ StateMachineViewerWidgetNG::~StateMachineViewerWidgetNG()
 
 int StateMachineViewerWidgetNG::maximumMegaPixels() const
 {
-  return QSettings().value("StateMachineViewerServer/maximumMegaPixels", 10).toInt();
+  return QSettings().value(QStringLiteral("StateMachineViewerServer/maximumMegaPixels"), 10).toInt();
 }
 
 void StateMachineViewerWidgetNG::setMaximumMegaPixels(int megaPixels)
 {
-  QSettings().setValue("StateMachineViewerServer/maximumMegaPixels", megaPixels);
+  QSettings().setValue(QStringLiteral("StateMachineViewerServer/maximumMegaPixels"), megaPixels);
 }
 
 void StateMachineViewerWidgetNG::showMessage(const QString& message)

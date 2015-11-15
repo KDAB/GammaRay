@@ -51,13 +51,13 @@ WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
 {
   WebViewModel *webViewModel = new WebViewModel(this);
   webViewModel->setSourceModel(probe->objectListModel());
-  probe->registerModel("com.kdab.GammaRay.WebPages", webViewModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.WebPages"), webViewModel);
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
 
   const QUrl serverUrl = Endpoint::instance()->serverAddress();
-  QString serverAddress("0.0.0.0");
-  if (serverUrl.scheme() == "tcp")
+  QString serverAddress(QStringLiteral("0.0.0.0"));
+  if (serverUrl.scheme() == QLatin1String("tcp"))
     serverAddress = serverUrl.host();
   qputenv("QTWEBKIT_INSPECTOR_SERVER", serverAddress.toLocal8Bit() + ':' + QByteArray::number(Endpoint::defaultPort() + 1));
 }
@@ -105,7 +105,7 @@ QStringList WebInspectorFactory::supportedTypes() const
 #ifdef HAVE_QT_WEBKIT1
   types.push_back(QWebPage::staticMetaObject.className());
 #endif
-  types.push_back("QQuickWebView");
+  types.push_back(QStringLiteral("QQuickWebView"));
   return types;
 }
 

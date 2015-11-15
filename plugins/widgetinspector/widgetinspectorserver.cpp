@@ -107,7 +107,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   auto widgetSearchProxy = new KRecursiveFilterProxyModel(this);
   widgetSearchProxy->setSourceModel(widgetFilterProxy);
 
-  probe->registerModel("com.kdab.GammaRay.WidgetTree", widgetSearchProxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.WidgetTree"), widgetSearchProxy);
 
   m_widgetSelectionModel = ObjectBroker::selectionModel(widgetSearchProxy);
   connect(m_widgetSelectionModel,
@@ -116,7 +116,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
   m_paintBufferModel = new PaintBufferModel(this);
-  probe->registerModel("com.kdab.GammaRay.PaintBufferModel", m_paintBufferModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.PaintBufferModel"), m_paintBufferModel);
   connect(ObjectBroker::selectionModel(m_paintBufferModel), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           this, SLOT(eventuallyUpdatePaintAnalyzer()));
 #endif
@@ -470,7 +470,7 @@ static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
 
 static QString sizePolicyToString(const QSizePolicy &policy)
 {
-  return QString::fromLatin1("%1 x %2").
+  return QStringLiteral("%1 x %2").
     arg(sizePolicyPolicyToString(policy.horizontalPolicy())).
     arg(sizePolicyPolicyToString(policy.verticalPolicy()));
 

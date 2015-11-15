@@ -35,7 +35,7 @@ MimeTypes::MimeTypes(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
   m_model = new MimeTypesModel(this);
-  probe->registerModel("com.kdab.GammaRay.MimeTypeModel", m_model);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"), m_model);
 }
 
 MimeTypes::~MimeTypes()

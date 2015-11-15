@@ -39,11 +39,11 @@ SelectionModelInspectorWidget::SelectionModelInspectorWidget(QWidget *widget)
 {
   ui->setupUi(this);
 
-  ui->selectionModelView->setModel(ObjectBroker::model("com.kdab.GammaRay.SelectionModelsModel"));
+  ui->selectionModelView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectionModelsModel")));
   ui->selectionModelView->setRootIsDecorated(false);
   ui->selectionModelView->setSelectionModel(ObjectBroker::selectionModel(ui->selectionModelView->model()));
   ui->selectionModelVisualizer->setRootIsDecorated(false);
-  ui->selectionModelVisualizer->setModel(ObjectBroker::model("com.kdab.GammaRay.CurrentSelectionModel"));
+  ui->selectionModelVisualizer->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel")));
 }
 
 SelectionModelInspectorWidget::~SelectionModelInspectorWidget()

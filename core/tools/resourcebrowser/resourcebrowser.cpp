@@ -44,7 +44,7 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
   ResourceModel *resourceModel = new ResourceModel(this);
   ResourceFilterModel *proxy = new ResourceFilterModel(this);
   proxy->setSourceModel(resourceModel);
-  probe->registerModel("com.kdab.GammaRay.ResourceModel", proxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ResourceModel"), proxy);
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
   connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           this, SLOT(currentChanged(QModelIndex)));
@@ -55,7 +55,7 @@ void ResourceBrowser::downloadResource(const QString &sourceFilePath, const QStr
   const QFileInfo fi(sourceFilePath);
 
   if (fi.isFile()) {
-    static const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
+    static const QStringList l = QStringList() << QStringLiteral("jpg") << QStringLiteral("png") << QStringLiteral("jpeg");
     if (l.contains(fi.suffix())) {
       emit resourceDownloaded(targetFilePath, QPixmap(fi.absoluteFilePath()));
     } else {
@@ -74,7 +74,7 @@ void ResourceBrowser::currentChanged(const QModelIndex &current)
   const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());
 
   if (fi.isFile()) {
-    static const QStringList l = QStringList() << "jpg" << "png" << "jpeg";
+    static const QStringList l = QStringList() << QStringLiteral("jpg") << QStringLiteral("png") << QStringLiteral("jpeg");
     if (l.contains(fi.suffix())) {
       emit resourceSelected(QPixmap(fi.absoluteFilePath()));
     } else {

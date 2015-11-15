@@ -116,13 +116,13 @@ QString TimerInfo::wakeupsPerSec() const
     const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
     return QString::number(wakeupsPerSec, 'f', 1);
   }
-  return "0";
+  return QStringLiteral("0");
 }
 
 QString TimerInfo::timePerWakeup() const
 {
   if (m_type == QObjectType) {
-    return "N/A";
+    return QStringLiteral("N/A");
   }
 
   int totalWakeups = 0;
@@ -139,13 +139,13 @@ QString TimerInfo::timePerWakeup() const
   if (totalWakeups > 0) {
     return QString::number(totalTime / (float)totalWakeups, 'f', 1);
   }
-  return "N/A";
+  return QStringLiteral("N/A");
 }
 
 QString TimerInfo::maxWakeupTime() const
 {
   if (m_type == QObjectType) {
-    return "N/A";
+    return QStringLiteral("N/A");
   }
 
   int max = 0;
@@ -190,7 +190,7 @@ QString TimerInfo::state() const
       return QObject::tr("Singleshot (%1 ms)").arg(interval);
     }
     case QObjectType:
-      return "N/A";
+      return QStringLiteral("N/A");
   }
 
   Q_ASSERT(false);

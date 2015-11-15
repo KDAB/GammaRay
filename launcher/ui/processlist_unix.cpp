@@ -80,8 +80,8 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
   ProcDataList rc;
   QProcess psProcess;
   QStringList args;
-  args << QLatin1String("-e") << QLatin1String("-o") << QLatin1String(formatC);
-  psProcess.start(QLatin1String("ps"), args);
+  args << QStringLiteral("-e") << QStringLiteral("-o") << QLatin1String(formatC);
+  psProcess.start(QStringLiteral("ps"), args);
   if (!psProcess.waitForStarted()) {
     return rc;
   }
@@ -123,7 +123,7 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
 // it does not exist
 ProcDataList processList(const ProcDataList &previous)
 {
-  const QDir procDir(QLatin1String("/proc/"));
+  const QDir procDir(QStringLiteral("/proc/"));
   if (!procDir.exists()) {
     return unixProcessListPS(previous);
   }
@@ -136,7 +136,7 @@ ProcDataList processList(const ProcDataList &previous)
     if (!isUnixProcessId(procId)) {
       continue;
     }
-    QString filename = QLatin1String("/proc/");
+    QString filename = QStringLiteral("/proc/");
     filename += procId;
     filename += QLatin1String("/stat");
     QFile file(filename);

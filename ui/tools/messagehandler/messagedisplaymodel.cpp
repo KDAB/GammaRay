@@ -90,7 +90,7 @@ QVariant MessageDisplayModel::data(const QModelIndex& proxyIndex, int role) cons
                 QString bt;
                 int i = 0;
                 foreach (const auto &frame, backtrace) {
-                    bt += QString("#%1: %2\n").arg(i, 2).arg(frame.trimmed());
+                    bt += QStringLiteral("#%1: %2\n").arg(i, 2).arg(frame.trimmed());
                     ++i;
                 }
                 return tr("<qt><dl>"

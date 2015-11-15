@@ -51,7 +51,7 @@ using namespace GammaRay;
 
 static QString qmlErrorToString(const QQmlError &error)
 {
-  return QString::fromLatin1("%1:%2:%3: %4")
+  return QStringLiteral("%1:%2:%3: %4")
     .arg(error.url().toString())
     .arg(error.line())
     .arg(error.column())

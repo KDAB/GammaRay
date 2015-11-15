@@ -103,7 +103,7 @@ QStyleOption *StyleOption::makeButtonStyleOption()
 {
   QStyleOptionButton *opt = new QStyleOptionButton;
   opt->features = QStyleOptionButton::None;
-  opt->text = QLatin1String("Label");
+  opt->text = QStringLiteral("Label");
   return opt;
 }
 
@@ -111,7 +111,7 @@ QStyleOption *StyleOption::makeComboBoxStyleOption()
 {
   QStyleOptionComboBox *opt = new QStyleOptionComboBox;
   opt->frame = true;
-  opt->currentText = QLatin1String("Current Text");
+  opt->currentText = QStringLiteral("Current Text");
   return opt;
 }
 
@@ -129,7 +129,7 @@ QStyleOption *StyleOption::makeGroupBoxStyleOption()
   QStyleOptionGroupBox *opt = new QStyleOptionGroupBox;
   opt->lineWidth = 1;
   opt->midLineWidth = 0;
-  opt->text = QLatin1String("Label");
+  opt->text = QStringLiteral("Label");
   return opt;
 }
 
@@ -137,14 +137,14 @@ QStyleOption *StyleOption::makeHeaderStyleOption()
 {
   QStyleOptionHeader *opt = new QStyleOptionHeader;
   opt->orientation = Qt::Horizontal;
-  opt->text = QLatin1String("Label");
+  opt->text = QStringLiteral("Label");
   return opt;
 }
 
 QStyleOption *StyleOption::makeItemViewStyleOption()
 {
   QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
-  opt->text = QLatin1String("Text");
+  opt->text = QStringLiteral("Text");
   opt->features = QStyleOptionViewItemV2::HasDisplay;
   return opt;
 }
@@ -152,7 +152,7 @@ QStyleOption *StyleOption::makeItemViewStyleOption()
 QStyleOption *StyleOption::makeMenuStyleOption()
 {
   QStyleOptionMenuItem *opt = new QStyleOptionMenuItem;
-  opt->text = QLatin1String("Label");
+  opt->text = QStringLiteral("Label");
   return opt;
 }
 
@@ -185,7 +185,7 @@ QStyleOption *StyleOption::makeSpinBoxStyleOption()
 QStyleOption *StyleOption::makeTabStyleOption()
 {
   QStyleOptionTabV3 *opt = new QStyleOptionTabV3;
-  opt->text = QLatin1String("Label");
+  opt->text = QStringLiteral("Label");
   return opt;
 }
 
@@ -204,7 +204,7 @@ QStyleOption *StyleOption::makeTabWidgetFrameStyleOption()
 QStyleOption *StyleOption::makeTitleBarStyleOption()
 {
   QStyleOptionTitleBar *opt = new QStyleOptionTitleBar;
-  opt->text = QLatin1String("Title");
+  opt->text = QStringLiteral("Title");
   opt->titleBarFlags = Qt::WindowMinMaxButtonsHint |
                        Qt::WindowTitleHint |
                        Qt::WindowSystemMenuHint |
@@ -215,14 +215,14 @@ QStyleOption *StyleOption::makeTitleBarStyleOption()
 QStyleOption *StyleOption::makeToolBoxStyleOption()
 {
   QStyleOptionToolBoxV2 *opt = new QStyleOptionToolBoxV2;
-  opt->text = QLatin1String("Label");
+  opt->text = QStringLiteral("Label");
   return opt;
 }
 
 QStyleOption * StyleOption::makeToolButtonStyleOption()
 {
   QStyleOptionToolButton *opt = new QStyleOptionToolButton;
-  opt->text = QLatin1String("Label");
+  opt->text = QStringLiteral("Label");
   opt->toolButtonStyle = Qt::ToolButtonFollowStyle;
   return opt;
 }

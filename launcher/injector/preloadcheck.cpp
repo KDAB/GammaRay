@@ -63,10 +63,10 @@ bool PreloadCheck::test(const QString &symbol)
   }
 
   QStringList args;
-  args << "--relocs" << "--wide" << fileName;
+  args << QStringLiteral("--relocs") << QStringLiteral("--wide") << fileName;
   QProcess proc;
   proc.setProcessChannelMode(QProcess::MergedChannels);
-  proc.start("readelf", args, QIODevice::ReadOnly);
+  proc.start(QStringLiteral("readelf"), args, QIODevice::ReadOnly);
   if (!proc.waitForFinished()) {
     // TODO: Find out if we want to error out if 'readelf' is missing
     // The question is: Do all (major) distributions ship binutils by default?

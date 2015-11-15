@@ -57,17 +57,17 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
           m_modelModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
           m_modelModel, SLOT(objectRemoved(QObject*)));
-  probe->registerModel("com.kdab.GammaRay.ModelModel", m_modelModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelModel"), m_modelModel);
 
   m_modelSelectionModel = ObjectBroker::selectionModel(m_modelModel);
   connect(m_modelSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(modelSelected(QItemSelection)));
   connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)) );
 
-  m_modelContentServer = new RemoteModelServer("com.kdab.GammaRay.ModelContent", this);
+  m_modelContentServer = new RemoteModelServer(QStringLiteral("com.kdab.GammaRay.ModelContent"), this);
 
   m_cellModel = new ModelCellModel(this);
-  probe->registerModel("com.kdab.GammaRay.ModelCellModel", m_cellModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelCellModel"), m_cellModel);
   selectionChanged(QItemSelection());
 
   m_modelTester = new ModelTester(this);
@@ -108,7 +108,7 @@ void ModelInspector::modelSelected(const QItemSelection& selected)
       m_modelContentServer->setModel(model);
     }
 
-    m_modelContentSelectionModel = new SelectionModelServer("com.kdab.GammaRay.ModelContent.selection", m_modelContentServer->model(), this);
+    m_modelContentSelectionModel = new SelectionModelServer(QStringLiteral("com.kdab.GammaRay.ModelContent.selection"), m_modelContentServer->model(), this);
     ObjectBroker::registerSelectionModel(m_modelContentSelectionModel);
     connect(m_modelContentSelectionModel,
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

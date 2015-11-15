@@ -37,8 +37,8 @@ LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
   : QWidget(parent),
     ui(new Ui::LocaleInspectorWidget)
 {
-  QAbstractItemModel *localeModel = ObjectBroker::model("com.kdab.GammaRay.LocaleModel");
-  QAbstractItemModel *accessorModel = ObjectBroker::model("com.kdab.GammaRay.LocaleAccessorModel");
+  QAbstractItemModel *localeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleModel"));
+  QAbstractItemModel *accessorModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"));
 
   QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
   proxy->setSourceModel(localeModel);

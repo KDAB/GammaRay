@@ -56,7 +56,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
 
   ui->setupUi(this);
 
-  m_selectedFontModel = ObjectBroker::model("com.kdab.GammaRay.SelectedFontModel");
+  m_selectedFontModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectedFontModel"));
 
   ui->selectedFontsView->setModel(m_selectedFontModel);
   ui->selectedFontsView->setRootIsDecorated(false);
@@ -73,7 +73,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
   connect(ui->pointSize, SIGNAL(valueChanged(int)),
           m_fontBrowser, SLOT(setPointSize(int)));
 
-  QAbstractItemModel *fontModel = ObjectBroker::model("com.kdab.GammaRay.FontModel");
+  QAbstractItemModel *fontModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.FontModel"));
   ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
   ui->fontTree->setModel(fontModel);
   ui->fontTree->setSelectionModel(ObjectBroker::selectionModel(fontModel));

@@ -42,16 +42,16 @@ class MetaObjectTest : public QObject
 private slots:
     void testMetaObject()
     {
-      QVERIFY(MetaObjectRepository::instance()->hasMetaObject("QThread"));
-      auto *mo = MetaObjectRepository::instance()->metaObject("QThread");
+      QVERIFY(MetaObjectRepository::instance()->hasMetaObject(QStringLiteral("QThread")));
+      auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
 
       QVERIFY(mo);
-      QCOMPARE(mo->className(), QString("QThread"));
-      QVERIFY(mo->inherits("QObject"));
+      QCOMPARE(mo->className(), QStringLiteral("QThread"));
+      QVERIFY(mo->inherits(QStringLiteral("QObject")));
 
       auto *superMo = mo->superClass(0);
       QVERIFY(superMo);
-      QCOMPARE(superMo->className(), QString("QObject"));
+      QCOMPARE(superMo->className(), QStringLiteral("QObject"));
 
       QVERIFY(!mo->superClass(1));
       QVERIFY(!superMo->superClass(0));
@@ -59,7 +59,7 @@ private slots:
 
     void testMemberProperty()
     {
-      auto *mo = MetaObjectRepository::instance()->metaObject("QThread");
+      auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
       QVERIFY(mo->propertyCount() >= 7); // depends on Qt version
 
       MetaProperty *prop = 0;
@@ -81,7 +81,7 @@ private slots:
 
     void testStaticProperty()
     {
-      auto *mo = MetaObjectRepository::instance()->metaObject("QCoreApplication");
+      auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QCoreApplication"));
       QVERIFY(mo);
       QVERIFY(mo->propertyCount() >= 8); // depends on Qt version
 

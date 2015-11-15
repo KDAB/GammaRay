@@ -71,7 +71,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
   ui->setupUi(this);
 
-  auto messageModel = ObjectBroker::model("com.kdab.GammaRay.MessageModel");
+  auto messageModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageModel"));
   auto displayModel = new MessageDisplayModel(this);
   displayModel->setSourceModel(messageModel);
   new SearchLineController(ui->messageSearchLine, messageModel);
@@ -126,7 +126,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
     buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
 
     QSignalMapper *mapper = new QSignalMapper(this);
-    mapper->setMapping(copyBacktraceButton, backtrace.join(QLatin1String("\n")));
+    mapper->setMapping(copyBacktraceButton, backtrace.join(QStringLiteral("\n")));
 
     connect(copyBacktraceButton, SIGNAL(clicked()), mapper, SLOT(map()));
     connect(mapper, SIGNAL(mapped(QString)), this, SLOT(copyToClipboard(QString)));

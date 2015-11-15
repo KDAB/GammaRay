@@ -44,14 +44,14 @@ private slots:
   {
     ProbeABIDetector detector;
     const ProbeABI abi = detector.abiForExecutable(QCoreApplication::applicationFilePath());
-    QCOMPARE(abi.id(), QString(GAMMARAY_PROBE_ABI));
+    QCOMPARE(abi.id(), QStringLiteral(GAMMARAY_PROBE_ABI));
   }
 
   void testDetectProcess()
   {
     ProbeABIDetector detector;
     const ProbeABI abi = detector.abiForProcess(QCoreApplication::applicationPid());
-    QCOMPARE(abi.id(), QString(GAMMARAY_PROBE_ABI));
+    QCOMPARE(abi.id(), QStringLiteral(GAMMARAY_PROBE_ABI));
   }
 
   void testContainsQtCore_data()

@@ -60,7 +60,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
           SLOT(cellSelected(int,int,QString,QString)));
 
   KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel(this);
-  modelFilterProxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ModelModel"));
+  modelFilterProxy->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelModel")));
   ui->modelView->setModel(modelFilterProxy);
   ui->modelView->setSelectionModel(ObjectBroker::selectionModel(modelFilterProxy));
   ui->modelSearchLine->setProxy(modelFilterProxy);
@@ -69,7 +69,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
           SLOT(modelSelected(QItemSelection)));
   new DeferredResizeModeSetter(ui->modelView->header(), 0, QHeaderView::ResizeToContents);
 
-  ui->modelCellView->setModel(ObjectBroker::model("com.kdab.GammaRay.ModelCellModel"));
+  ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelCellModel")));
 
   cellSelected(-1, -1, QString(), QString());
 }
@@ -96,7 +96,7 @@ void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
               this, SLOT(objectRegistered(QString)), Qt::UniqueConnection);
     } else {
       // we are on the client side
-      model = ObjectBroker::model("com.kdab.GammaRay.ModelContent");
+      model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelContent"));
       ui->modelContentView->setModel(model);
       setupModelContentSelectionModel();
     }
@@ -122,7 +122,7 @@ void ModelInspectorWidget::cellSelected(int row, int column, const QString &inte
 
 void ModelInspectorWidget::objectRegistered(const QString& objectName)
 {
-  if (objectName == "com.kdab.GammaRay.ModelContent.selection")
+  if (objectName == QLatin1String("com.kdab.GammaRay.ModelContent.selection"))
     // delay, since it's not registered yet when the signal is emitted
     QMetaObject::invokeMethod(this, "setupModelContentSelectionModel", Qt::QueuedConnection);
 }

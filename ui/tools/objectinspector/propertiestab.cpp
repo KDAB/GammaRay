@@ -54,7 +54,7 @@ PropertiesTab::PropertiesTab(PropertyWidget *parent)
 {
   m_ui->setupUi(this);
 
-  m_ui->newPropertyButton->setIcon(QIcon::fromTheme("list-add"));
+  m_ui->newPropertyButton->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
 
   setObjectBaseName(parent->objectBaseName());
 }

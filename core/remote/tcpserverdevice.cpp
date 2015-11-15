@@ -67,7 +67,7 @@ QUrl TcpServerDevice::externalAddress() const
     }
 
     QUrl url;
-    url.setScheme(QLatin1String("tcp"));
+    url.setScheme(QStringLiteral("tcp"));
     url.setHost(myHost);
     url.setPort(m_server->serverPort());
 

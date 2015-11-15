@@ -73,19 +73,19 @@ class ObjectInspectorWidget : public QWidget
 
 class ObjectInspectorFactory : public ToolUiFactory {
 public:
-  QString id() const Q_DECL_OVERRIDE { return "GammaRay::ObjectInspector"; }
+  QString id() const Q_DECL_OVERRIDE { return QStringLiteral("GammaRay::ObjectInspector"); }
   QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE { return new ObjectInspectorWidget(parentWidget); }
   bool remotingSupported() const Q_DECL_OVERRIDE { return true; }
   void initUi() Q_DECL_OVERRIDE
   {
-    PropertyWidget::registerTab<PropertiesTab>("properties", QObject::tr("Properties"));
+    PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), QObject::tr("Properties"));
     ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createExtension<PropertiesExtensionClient>);
-    PropertyWidget::registerTab<MethodsTab>("methods", QObject::tr("Methods"));
+    PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), QObject::tr("Methods"));
     ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createExtension<MethodsExtensionClient>);
-    PropertyWidget::registerTab<ConnectionsTab>("connections", QObject::tr("Connections"));
+    PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), QObject::tr("Connections"));
     ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface*>(createExtension<ConnectionsExtensionClient>);
-    PropertyWidget::registerTab<EnumsTab>("enums", QObject::tr("Enums"));
-    PropertyWidget::registerTab<ClassInfoTab>("classInfo", QObject::tr("Class Info"));
+    PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), QObject::tr("Enums"));
+    PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), QObject::tr("Class Info"));
   }
 };
 

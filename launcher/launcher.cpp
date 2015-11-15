@@ -157,7 +157,7 @@ bool Launcher::start()
 {
   auto probeDll = d->options.probePath();
   if (probeDll.isEmpty()) {
-    probeDll = ProbeFinder::findProbe(QLatin1String(GAMMARAY_PROBE_NAME), d->options.probeABI());
+    probeDll = ProbeFinder::findProbe(QStringLiteral(GAMMARAY_PROBE_NAME), d->options.probeABI());
     d->options.setProbePath(QFileInfo(probeDll).absolutePath());
   }
 
@@ -191,15 +191,15 @@ bool Launcher::start()
 
   bool success = false;
   if (d->options.isLaunch()) {
-    success = d->injector->launch(d->options.launchArguments(), probeDll, QLatin1String("gammaray_probe_inject"), d->options.processEnvironment());
+    success = d->injector->launch(d->options.launchArguments(), probeDll, QStringLiteral("gammaray_probe_inject"), d->options.processEnvironment());
   } else if (d->options.isAttach()) {
-    success = d->injector->attach(d->options.pid(), probeDll, QLatin1String("gammaray_probe_inject"));
+    success = d->injector->attach(d->options.pid(), probeDll, QStringLiteral("gammaray_probe_inject"));
   }
 
   if (!success) {
     QString errorMessage;
     if (d->options.isLaunch())
-      errorMessage = tr("Failed to launch target '%1'.").arg(d->options.launchArguments().join(" "));
+      errorMessage = tr("Failed to launch target '%1'.").arg(d->options.launchArguments().join(QStringLiteral(" ")));
     if (d->options.isAttach())
       errorMessage = tr("Failed to attach to target with PID %1.").arg(d->options.pid());
     if (!d->injector->errorString().isEmpty())
@@ -224,7 +224,7 @@ void Launcher::sendLauncherId()
 {
   // if we are launching a new process, make sure it knows how to talk to us
   if (d->options.isLaunch()) {
-      d->options.setProbeSetting("LAUNCHER_ID", instanceIdentifier());
+      d->options.setProbeSetting(QStringLiteral("LAUNCHER_ID"), instanceIdentifier());
   }
 }
 
@@ -249,7 +249,7 @@ void Launcher::sendProbeSettings()
 
   buffer.close();
 
-  d->shm = new QSharedMemory(QLatin1String("gammaray-") + QString::number(instanceIdentifier()), this);
+  d->shm = new QSharedMemory(QStringLiteral("gammaray-") + QString::number(instanceIdentifier()), this);
   if (!d->shm->create(qMax(ba.size(), 1024))) { // make sure we have enough space for the answer
     qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << d->shm->errorString()
       << "- error code (QSharedMemory::SharedMemoryError):" << d->shm->error();
@@ -310,8 +310,8 @@ void Launcher::semaphoreReleased()
     return;
 
   // safer, since we will always be running locally, and the server might give us an external address
-  if (serverAddress.scheme() == "tcp")
-    serverAddress.setHost("127.0.0.1");
+  if (serverAddress.scheme() == QStringLiteral("tcp"))
+    serverAddress.setHost(QStringLiteral("127.0.0.1"));
 
   startClient(serverAddress);
   d->state |= ClientStarted;

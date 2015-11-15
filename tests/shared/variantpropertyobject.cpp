@@ -42,8 +42,8 @@ VariantPropertyObject::VariantPropertyObject(QObject *parent):
     m_object(new QObject)
 {
     QHash<QString, int> mapping;
-    mapping.insert("One", 1);
-    mapping.insert("Two", 2);
+    mapping.insert(QStringLiteral("One"), 1);
+    mapping.insert(QStringLiteral("Two"), 2);
 
     setProperty("dynamicProperty", QVariant::fromValue(mapping));
 }

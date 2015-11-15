@@ -137,7 +137,7 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     textRect = textRect.adjusted(textHMargin, textVMargin, -textHMargin, -textVMargin);
 
     static const int parenthesisLineWidth = 1;
-    const int matrixSpacing = opt.fontMetrics.width("x");
+    const int matrixSpacing = opt.fontMetrics.width(QStringLiteral("x"));
     const int matrixHMargin = matrixSpacing / 2;
     const int parenthesisWidth = qMax(matrixHMargin, 3);
 
@@ -182,7 +182,7 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
     int width = 0;
     for (int col = 0; col < matrix_trait<Matrix>::columns; ++col)
         width += columnWidth(opt, matrix, col);
-    width += opt.fontMetrics.width("x") * matrix_trait<Matrix>::columns + 2 * parenthesisLineWidth + 2 * textHMargin;
+    width += opt.fontMetrics.width(QStringLiteral("x")) * matrix_trait<Matrix>::columns + 2 * parenthesisLineWidth + 2 * textHMargin;
 
     const int height = opt.fontMetrics.lineSpacing() * matrix_trait<Matrix>::rows + 2* textVMargin;
 

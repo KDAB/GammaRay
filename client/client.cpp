@@ -157,7 +157,7 @@ void Client::messageReceived(const Message& msg)
             addObjectNameAddressMapping(it->second, it->first);
         }
 
-        m_propertySyncer->setAddress(objectAddress("com.kdab.GammaRay.PropertySyncer"));
+        m_propertySyncer->setAddress(objectAddress(QStringLiteral("com.kdab.GammaRay.PropertySyncer")));
         Q_ASSERT(m_propertySyncer->address() != Protocol::InvalidObjectAddress  );
         Endpoint::registerMessageHandler(m_propertySyncer->address(), m_propertySyncer, "handleMessage");
 

@@ -85,7 +85,7 @@ QString libexecPath()
 
 QString currentProbePath()
 {
-  return probePath(GAMMARAY_PROBE_ABI);
+  return probePath(QStringLiteral(GAMMARAY_PROBE_ABI));
 }
 
 QString currentPluginsPath()
@@ -93,7 +93,7 @@ QString currentPluginsPath()
 #ifndef GAMMARAY_INSTALL_QT_LAYOUT
   return currentProbePath();
 #else
-  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR);
+  return rootPath() + QDir::separator() + QStringLiteral(GAMMARAY_PLUGIN_INSTALL_DIR);
 #endif
 
 }
@@ -101,18 +101,18 @@ QString currentPluginsPath()
 QString libraryExtension()
 {
 #ifdef Q_OS_WIN
-  return QLatin1String(".dll");
+  return QStringLiteral(".dll");
 #elif defined(Q_OS_MAC)
-  return QLatin1String(".dylib");
+  return QStringLiteral(".dylib");
 #else
-  return QLatin1String(".so");
+  return QStringLiteral(".so");
 #endif
 }
 
 QString pluginExtension()
 {
 #ifdef Q_OS_MAC
-  return QLatin1String(".so");
+  return QStringLiteral(".so");
 #else
   return libraryExtension();
 #endif

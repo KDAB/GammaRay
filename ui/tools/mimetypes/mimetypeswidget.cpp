@@ -43,7 +43,7 @@ MimeTypesWidget::MimeTypesWidget(QWidget *parent)
 
   QSortFilterProxyModel *proxy = new KRecursiveFilterProxyModel(this);
   proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.MimeTypeModel"));
+  proxy->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MimeTypeModel")));
   ui->mimeTypeView->setModel(proxy);
   new DeferredResizeModeSetter(ui->mimeTypeView->header(), 0, QHeaderView::ResizeToContents);
   new DeferredResizeModeSetter(ui->mimeTypeView->header(), 1, QHeaderView::ResizeToContents);

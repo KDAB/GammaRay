@@ -63,20 +63,20 @@ bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QPr
 
   QStringList args = programAndArgs;
 
-  if (!env.value("GAMMARAY_TARGET_WRAPPER").isEmpty()) {
-    const QString fullWrapperCmd = env.value("GAMMARAY_TARGET_WRAPPER");
+  if (!env.value(QStringLiteral("GAMMARAY_TARGET_WRAPPER")).isEmpty()) {
+    const QString fullWrapperCmd = env.value(QStringLiteral("GAMMARAY_TARGET_WRAPPER"));
     // ### TODO properly handle quoted arguments!
     QStringList newArgs = fullWrapperCmd.split(' ');
     newArgs += args;
     args = newArgs;
     qDebug() << "Launching with target wrapper:" << args;
-  } else if (env.value("GAMMARAY_GDB").toInt()) {
+  } else if (env.value(QStringLiteral("GAMMARAY_GDB")).toInt()) {
     QStringList newArgs;
-    newArgs << "gdb";
+    newArgs << QStringLiteral("gdb");
 #ifndef Q_OS_MAC
-    newArgs << "--eval-command" << "run";
+    newArgs << QStringLiteral("--eval-command") << QStringLiteral("run");
 #endif
-    newArgs << "--args";
+    newArgs << QStringLiteral("--args");
     newArgs += args;
     args = newArgs;
   }
@@ -104,7 +104,7 @@ void ProcessInjector::processFinished()
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (mProcessError == QProcess::FailedToStart) {
-      mErrorString.prepend(QString("Could not start '%1': ").arg(m_proc.program()));
+      mErrorString.prepend(QStringLiteral("Could not start '%1': ").arg(m_proc.program()));
     }
 #endif
     emit finished();

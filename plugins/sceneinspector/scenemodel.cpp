@@ -38,7 +38,7 @@ using namespace GammaRay;
 #define QGV_ITEMTYPE(Type) \
 { \
   Type t; \
-  m_typeNames.insert(t.type(), QLatin1String(#Type)); \
+  m_typeNames.insert(t.type(), QStringLiteral(#Type)); \
 }
 
 SceneModel::SceneModel(QObject *parent)
@@ -81,7 +81,7 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
         return obj->objectName();
       }
       return
-        QString::fromLatin1("0x%1").
+        QStringLiteral("0x%1").
           arg(QString::number(reinterpret_cast<qlonglong>(item), 16));
     } else if (index.column() == 1) {
       if (obj) {
@@ -189,11 +189,11 @@ QString SceneModel::typeName(int itemType) const
     return it.value();
   }
   if (itemType == QGraphicsItem::UserType) {
-    return QLatin1String("UserType");
+    return QStringLiteral("UserType");
   }
   if (itemType > QGraphicsItem::UserType) {
     return
-      QString::fromLatin1("UserType + %1").
+      QStringLiteral("UserType + %1").
         arg(itemType - static_cast<int>(QGraphicsItem::UserType));
   }
   return QString::number(itemType);

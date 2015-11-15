@@ -44,7 +44,7 @@ using namespace GammaRay;
 ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
   : QWidget(parent)
 {
-  QAbstractItemModel *actionModel = ObjectBroker::model("com.kdab.GammaRay.ActionModel");
+  QAbstractItemModel *actionModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
 
   QSortFilterProxyModel *searchFilterProxy = new KRecursiveFilterProxyModel(this);
   searchFilterProxy->setSourceModel(actionModel);
@@ -78,7 +78,7 @@ void ActionInspectorWidget::triggerAction(const QModelIndex &index)
   }
 
   Q_ASSERT(index.model() == m_proxy);
-  Endpoint::instance()->invokeObject("com.kdab.GammaRay.ActionInspector", "triggerAction",
+  Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.ActionInspector"), "triggerAction",
                                      QVariantList() << m_proxy->mapToSource(index).row());
 }
 

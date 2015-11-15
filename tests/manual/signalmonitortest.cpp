@@ -47,7 +47,7 @@ SignalMonitorTest::SignalMonitorTest(QObject *parent)
 
 QString SignalMonitorTest::nextTimerName()
 {
-  return QString::fromLatin1("SignalMonitorTest_t%1").arg(++m_timerCount);
+  return QStringLiteral("SignalMonitorTest_t%1").arg(++m_timerCount);
 }
 
 void SignalMonitorTest::onTimeout()

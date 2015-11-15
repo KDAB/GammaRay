@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     QCoreApplication app(argc, argv);
 
     QObject obj;
-    obj.setObjectName("myTestObject");
+    obj.setObjectName(QStringLiteral("myTestObject"));
 
     return app.exec();
 }

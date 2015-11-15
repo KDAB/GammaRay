@@ -42,11 +42,11 @@
 using namespace GammaRay;
 
 MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
-  : QObject(parent), m_propertyController(new PropertyController("com.kdab.GammaRay.MetaObjectBrowser", this))
+  : QObject(parent), m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this))
 {
   auto model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   model->setSourceModel(Probe::instance()->metaObjectModel());
-  probe->registerModel("com.kdab.GammaRay.MetaObjectBrowserTreeModel", model);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"), model);
 
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(model);
 

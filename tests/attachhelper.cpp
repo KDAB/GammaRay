@@ -82,13 +82,13 @@ void AttachHelper::attach()
   qDebug() << "attaching gammaray";
   QProcess gammaray;
   QStringList args;
-  args << "--inprocess" << "-i" << m_injector;
+  args << QStringLiteral("--inprocess") << QStringLiteral("-i") << m_injector;
 #ifdef Q_OS_WIN32
-  args << "-p" << QString::number(m_proc->pid()->dwProcessId);
+  args << QStringLiteral("-p") << QString::number(m_proc->pid()->dwProcessId);
 #else
-  args << "-p" << QString::number(m_proc->pid());
+  args << QStringLiteral("-p") << QString::number(m_proc->pid());
 #endif
-  args << "-nodialogs";
+  args << QStringLiteral("-nodialogs");
   const int ret = gammaray.execute(m_gammaray, args);
   if (ret != 0) {
     m_proc->kill();

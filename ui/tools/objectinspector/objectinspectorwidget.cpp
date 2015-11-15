@@ -45,9 +45,9 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     ui(new Ui::ObjectInspectorWidget)
 {
   ui->setupUi(this);
-  ui->objectPropertyWidget->setObjectBaseName("com.kdab.GammaRay.ObjectInspector");
+  ui->objectPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.ObjectInspector"));
 
-  auto model = ObjectBroker::model("com.kdab.GammaRay.ObjectInspectorTree");
+  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
   ui->objectTreeView->setModel(model);
   new DeferredResizeModeSetter(ui->objectTreeView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(ui->objectTreeView->header(), 1, QHeaderView::Interactive);
@@ -61,7 +61,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
   if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
     QMetaObject::invokeMethod(ui->objectSearchLine, "setText",
                               Qt::QueuedConnection,
-                              Q_ARG(QString, QLatin1String("Object")));
+                              Q_ARG(QString, QStringLiteral("Object")));
   }
 }
 

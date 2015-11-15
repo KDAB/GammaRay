@@ -375,8 +375,8 @@ MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
   QString typeName_ = typeName;
   typeName_.remove('*');
   typeName_.remove('&');
-  typeName_.remove("const ");
-  typeName_.remove(" const");
+  typeName_.remove(QStringLiteral("const "));
+  typeName_.remove(QStringLiteral(" const"));
   typeName_.remove(' ');
   return m_metaObjects.value(typeName_);
 }

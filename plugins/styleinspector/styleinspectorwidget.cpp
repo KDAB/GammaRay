@@ -39,20 +39,20 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  ui->styleSelector->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleList"));
+  ui->styleSelector->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleList")));
   connect(ui->styleSelector, SIGNAL(currentIndexChanged(int)), SLOT(styleSelected(int)));
 
-  ui->primitivePage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PrimitiveModel"));
-  ui->controlPage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.ControlModel"));
-  ui->complexControlPage->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.ComplexControlModel"));
+  ui->primitivePage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PrimitiveModel")));
+  ui->controlPage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.ControlModel")));
+  ui->complexControlPage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.ComplexControlModel")));
 
-  ui->pixelMetricView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PixelMetricModel"));
+  ui->pixelMetricView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PixelMetricModel")));
   ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
-  ui->standardIconView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.StandardIconModel"));
+  ui->standardIconView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.StandardIconModel")));
   ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
-  ui->standardPaletteView->setModel(ObjectBroker::model("com.kdab.GammaRay.StyleInspector.PaletteModel"));
+  ui->standardPaletteView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PaletteModel")));
   ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   // TODO this will fail due to lazy model population

@@ -37,7 +37,7 @@ using namespace GammaRay;
 
 QStringList AboutData::authors()
 {
-    QFile f(":/gammaray/authors");
+    QFile f(QStringLiteral(":/gammaray/authors"));
     if (f.open(QFile::ReadOnly)) {
       return QString::fromUtf8(f.readAll()).split('\n', QString::SkipEmptyParts);
     } else {
@@ -64,7 +64,7 @@ QStringList AboutData::authorsAsHtml()
 
 QString AboutData::aboutTitle()
 {
-    return QObject::trUtf8("<b>GammaRay %1</b>").arg(GAMMARAY_VERSION_STRING);
+    return QObject::tr("<b>GammaRay %1</b>").arg(QStringLiteral(GAMMARAY_VERSION_STRING));
 }
 
 QString AboutData::aboutBody()
@@ -76,7 +76,7 @@ QString AboutData::aboutBody()
         "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
         "<p><u>Authors:</u><br>%1<br></p>"
         "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>")
-        .arg(authorsAsHtml().join("<br>"));
+        .arg(authorsAsHtml().join(QStringLiteral("<br>")));
 }
 
 QString AboutData::aboutText()

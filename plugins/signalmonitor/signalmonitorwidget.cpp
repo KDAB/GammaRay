@@ -57,7 +57,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   ui->setupUi(this);
   ui->pauseButton->setIcon(qApp->style()->standardIcon(QStyle::SP_MediaPause));
 
-  QAbstractItemModel *const signalHistory = ObjectBroker::model("com.kdab.GammaRay.SignalHistoryModel");
+  QAbstractItemModel *const signalHistory = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"));
   new SearchLineController(ui->objectSearchLine, signalHistory);
 
   ui->objectTreeView->setModel(signalHistory);

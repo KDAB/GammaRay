@@ -41,7 +41,7 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  QAbstractItemModel *mtm = ObjectBroker::model("com.kdab.GammaRay.MetaTypeModel");
+  QAbstractItemModel *mtm = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"));
   Q_ASSERT(mtm);
 
   ui->metaTypeView->setModel(mtm);

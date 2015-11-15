@@ -47,21 +47,21 @@ TextDocumentInspector::TextDocumentInspector(ProbeInterface *probe, QObject *par
   ObjectTypeFilterProxyModel<QTextDocument> *documentFilter =
     new ObjectTypeFilterProxyModel<QTextDocument>(this);
   documentFilter->setSourceModel(probe->objectListModel());
-  probe->registerModel("com.kdab.GammaRay.TextDocumentsModel", documentFilter);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentsModel"), documentFilter);
 
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(documentFilter);
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(documentSelected(QItemSelection,QItemSelection)));
 
   m_textDocumentModel = new TextDocumentModel(this);
-  probe->registerModel("com.kdab.GammaRay.TextDocumentModel", m_textDocumentModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentModel"), m_textDocumentModel);
 
   selectionModel = ObjectBroker::selectionModel(m_textDocumentModel);
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(documentElementSelected(QItemSelection,QItemSelection)));
 
   m_textDocumentFormatModel = new TextDocumentFormatModel(this);
-  probe->registerModel("com.kdab.GammaRay.TextDocumentFormatModel", m_textDocumentFormatModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentFormatModel"), m_textDocumentFormatModel);
 }
 
 void TextDocumentInspector::documentSelected(const QItemSelection &selected,

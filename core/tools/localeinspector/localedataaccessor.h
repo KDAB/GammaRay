@@ -90,7 +90,7 @@ struct LocaleDataAccessor
 struct Locale##NAME##Accessor : LocaleDataAccessor \
 { \
   Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor(registry) {} \
-  QString accessorName() { return #NAME; } \
+  QString accessorName() { return QStringLiteral(#NAME); } \
   QString display(const QLocale &locale) \
   { \
 
@@ -101,7 +101,7 @@ struct Locale##NAME##Accessor : LocaleDataAccessor \
   \
   QString accessorName()                 \
   {                                      \
-    return #NAME;                        \
+    return QStringLiteral(#NAME);        \
   }                                      \
   QString display(const QLocale &locale) \
   { \

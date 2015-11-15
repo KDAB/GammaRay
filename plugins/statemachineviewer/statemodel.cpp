@@ -217,7 +217,7 @@ QVariant StateModel::data(const QModelIndex &index, int role) const
         Q_ASSERT(l.contains(child));
         nums << QString::number(l.indexOf(child) - l.indexOf(state));
       }
-      return nums.join(",");
+      return nums.join(QStringLiteral(","));
     }
   }
   if (role == IsInitialStateRole) {

@@ -135,7 +135,7 @@ void ProbeABI::setIsDebug(bool debug)
 
 bool ProbeABI::isDebugRelevant() const
 {
-  return compiler() == "MSVC";
+  return compiler() == QLatin1String("MSVC");
 }
 
 bool ProbeABI::isValid() const
@@ -166,18 +166,18 @@ QString ProbeABI::id() const
     return QString();
 
   QStringList idParts;
-  idParts.push_back(QString("qt%1.%2").arg(majorQtVersion()).arg(minorQtVersion()));
+  idParts.push_back(QStringLiteral("qt%1.%2").arg(majorQtVersion()).arg(minorQtVersion()));
 
 #ifdef Q_OS_WIN
   idParts.push_back(compiler());
 #endif
 
   if (isDebugRelevant())
-    idParts.push_back(isDebug() ? "debug" : "release");
+    idParts.push_back(isDebug() ? QStringLiteral("debug") : QStringLiteral("release"));
 
   idParts.push_back(architecture());
 
-  return idParts.join("-");
+  return idParts.join(QStringLiteral("-"));
 }
 
 ProbeABI ProbeABI::fromString(const QString& id)
@@ -205,9 +205,9 @@ ProbeABI ProbeABI::fromString(const QString& id)
     if (idParts.size() <= index)
       return ProbeABI();
     const QString s = idParts.value(index++);
-    if (s != "release" && s != "debug")
+    if (s != QLatin1String("release") && s != QLatin1String("debug"))
       return ProbeABI();
-    abi.setIsDebug(s == "debug");
+    abi.setIsDebug(s == QLatin1String("debug"));
   }
 
   // architecture
@@ -233,7 +233,7 @@ QString ProbeABI::displayString() const
   return QObject::tr("Qt %1.%2 (%3)")
     .arg(majorQtVersion())
     .arg(minorQtVersion())
-    .arg(details.join(", "));
+    .arg(details.join(QStringLiteral(", ")));
 }
 
 bool ProbeABI::operator==(const ProbeABI& rhs) const

@@ -66,7 +66,7 @@ QStyle *InjectorStylePlugin::create(const QString &)
 
 QStringList InjectorStylePlugin::keys() const
 {
-  return QStringList() << QLatin1String("gammaray-injector");
+  return QStringList() << QStringLiteral("gammaray-injector");
 }
 
 void InjectorStylePlugin::inject()

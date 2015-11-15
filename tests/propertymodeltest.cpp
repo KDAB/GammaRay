@@ -65,24 +65,24 @@ private slots:
         QVERIFY(model.rowCount() > 9);
         auto dynRow = findRowByName(&model, "dynamicProperty");
         QVERIFY(dynRow.isValid());
-        QCOMPARE(dynRow.data(Qt::DisplayRole).toString(), QString("dynamicProperty"));
+        QCOMPARE(dynRow.data(Qt::DisplayRole).toString(), QStringLiteral("dynamicProperty"));
         QVERIFY(dynRow.sibling(dynRow.row(), 1).flags() & Qt::ItemIsEditable);
-        QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::DisplayRole).toString(), QString("5"));
+        QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::DisplayRole).toString(), QStringLiteral("5"));
         QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::EditRole), QVariant(5));
 
         auto qmoRow = findRowByName(&model, "intProp");
         QVERIFY(qmoRow.isValid());
-        QCOMPARE(qmoRow.data(Qt::DisplayRole).toString(), QString("intProp"));
+        QCOMPARE(qmoRow.data(Qt::DisplayRole).toString(), QStringLiteral("intProp"));
         auto qmoRow2 = qmoRow.sibling(qmoRow.row(), 1);
         QVERIFY(qmoRow2.flags() & Qt::ItemIsEditable);
-        QCOMPARE(qmoRow2.data(Qt::DisplayRole).toString(), QString("0"));
+        QCOMPARE(qmoRow2.data(Qt::DisplayRole).toString(), QStringLiteral("0"));
         QCOMPARE(qmoRow2.data(Qt::EditRole), QVariant(0));
         model.setData(qmoRow2, 12);
         QCOMPARE(obj.intProp(), 12);
 
         auto moRow = findRowByName(&model, "thread");
         QVERIFY(moRow.isValid());
-        QCOMPARE(moRow.data(Qt::DisplayRole).toString(), QString("thread"));
+        QCOMPARE(moRow.data(Qt::DisplayRole).toString(), QStringLiteral("thread"));
         QVERIFY((moRow.sibling(moRow.row(), 1).flags() & Qt::ItemIsEditable) == 0);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QVERIFY(!moRow.sibling(moRow.row(), 1).data(Qt::DisplayRole).toString().isEmpty());

@@ -40,7 +40,7 @@ WebInspectorWidget::WebInspectorWidget(QWidget* parent)
   : QWidget(parent), ui(new Ui::WebInspectorWidget)
 {
   ui->setupUi(this);
-  ui->webPageComboBox->setModel(ObjectBroker::model("com.kdab.GammaRay.WebPages"));
+  ui->webPageComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WebPages")));
   connect(ui->webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)));
 }
 
@@ -67,7 +67,7 @@ void WebInspectorWidget::webPageSelected(int index)
     const QUrl serverUrl = Endpoint::instance()->serverAddress();
     if (serverUrl.scheme() == QLatin1String("tcp")) {
       QUrl inspectorUrl;
-      inspectorUrl.setScheme("http");
+      inspectorUrl.setScheme(QStringLiteral("http"));
       inspectorUrl.setHost(serverUrl.host());
       inspectorUrl.setPort(Endpoint::defaultPort() + 1);
       ui->webView->setUrl(inspectorUrl);

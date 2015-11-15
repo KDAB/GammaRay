@@ -44,7 +44,7 @@ PreloadInjector::PreloadInjector() : ProcessInjector()
 
 QString PreloadInjector::name() const
 {
-  return QString("preload");
+  return QStringLiteral("preload");
 }
 
 bool PreloadInjector::launch(const QStringList &programAndArgs,
@@ -56,15 +56,15 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
 
   QProcessEnvironment env(e);
 #ifdef Q_OS_MAC
-  env.insert("DYLD_FORCE_FLAT_NAMESPACE", QLatin1String("1"));
-  env.insert("DYLD_INSERT_LIBRARIES", probeDll);
-  env.insert("GAMMARAY_UNSET_DYLD", "1");
+  env.insert(QStringLiteral("DYLD_FORCE_FLAT_NAMESPACE"), QStringLiteral("1"));
+  env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), probeDll);
+  env.insert(QStringLiteral("GAMMARAY_UNSET_DYLD"), QStringLiteral("1"));
 #else
-  env.insert("LD_PRELOAD", probeDll);
-  env.insert("GAMMARAY_UNSET_PRELOAD", "1");
+  env.insert(QStringLiteral("LD_PRELOAD"), probeDll);
+  env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
 
   PreloadCheck check;
-  const bool success = check.test("qt_startup_hook");
+  const bool success = check.test(QStringLiteral("qt_startup_hook"));
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0) // before 5.4 this is fatal, after that we have the built-in hooks and DLL initialization as an even better way
   if (!success) {
     mExitCode = 1;

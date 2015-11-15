@@ -38,7 +38,7 @@ StandardPathsWidget::StandardPathsWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  ui->pathView->setModel(ObjectBroker::model("com.kdab.GammaRay.StandardPathsModel"));
+  ui->pathView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StandardPathsModel")));
 
   ui->pathView->header()->setResizeMode(QHeaderView::ResizeToContents);
 }

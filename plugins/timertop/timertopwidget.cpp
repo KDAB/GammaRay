@@ -45,7 +45,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
 {
   ui->setupUi(this);
   QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
-  sortModel->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.TimerModel"));
+  sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
   sortModel->setDynamicSortFilter(true);
   ui->timerView->setModel(sortModel);
   ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1,

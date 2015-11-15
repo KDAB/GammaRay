@@ -61,7 +61,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   ui->setupUi(this);
   ui->widgetPropertyWidget->setObjectBaseName(m_inspector->objectName());
 
-  auto widgetModel = ObjectBroker::model("com.kdab.GammaRay.WidgetTree");
+  auto widgetModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
   ui->widgetTreeView->setModel(widgetModel);
   ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetModel));
   new DeferredResizeModeSetter(ui->widgetTreeView->header(), 0, QHeaderView::Stretch);

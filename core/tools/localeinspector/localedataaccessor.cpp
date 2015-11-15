@@ -100,7 +100,7 @@ LOCALE_SIMPLE_ACCESSOR(Currency,
 
 #endif
 LOCALE_SIMPLE_ACCESSOR(TextDirection,
-  return locale.textDirection() == Qt::LeftToRight ? "LTR" : "RTL";
+  return locale.textDirection() == Qt::LeftToRight ? QStringLiteral("LTR") : QStringLiteral("RTL");
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(TimeFormatLong,
@@ -140,7 +140,7 @@ LOCALE_SIMPLE_ACCESSOR(DateTimeFormatNarrow,
 )
 
 LOCALE_SIMPLE_DEFAULT_ACCESSOR(MeasurementSystem,
-  return locale.measurementSystem() == QLocale::ImperialSystem ? "Imperial" : "Metric";
+  return locale.measurementSystem() == QLocale::ImperialSystem ? QStringLiteral("Imperial") : QStringLiteral("Metric");
 )
 
 LOCALE_SIMPLE_ACCESSOR(AmText,

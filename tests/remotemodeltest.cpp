@@ -116,11 +116,11 @@ private slots:
     {
         auto emptyModel = new QStandardItemModel(this);
 
-        FakeRemoteModelServer server("com.kdab.GammaRay.UnitTest.EmptyModel", this);
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.EmptyModel"), this);
         server.setModel(emptyModel);
         server.modelMonitored(true);
 
-        FakeRemoteModel client("com.kdab.GammaRay.UnitTest.EmptyModel", this);
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.EmptyModel"), this);
         connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
         connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
 
@@ -135,16 +135,16 @@ private slots:
     void testListRemoteModel()
     {
         auto listModel = new QStandardItemModel(this);
-        listModel->appendRow(new QStandardItem("entry0"));
-        listModel->appendRow(new QStandardItem("entry2"));
-        listModel->appendRow(new QStandardItem("entry3"));
-        listModel->appendRow(new QStandardItem("entry4"));
+        listModel->appendRow(new QStandardItem(QStringLiteral("entry0")));
+        listModel->appendRow(new QStandardItem(QStringLiteral("entry2")));
+        listModel->appendRow(new QStandardItem(QStringLiteral("entry3")));
+        listModel->appendRow(new QStandardItem(QStringLiteral("entry4")));
 
-        FakeRemoteModelServer server("com.kdab.GammaRay.UnitTest.ListModel", this);
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
         server.setModel(listModel);
         server.modelMonitored(true);
 
-        FakeRemoteModel client("com.kdab.GammaRay.UnitTest.ListModel", this);
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
         connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
         connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
 
@@ -157,15 +157,15 @@ private slots:
         auto index = client.index(1, 0);
         index.data(); // need an event loop entry for the data retrieval
         QTest::qWait(1);
-        QCOMPARE(index.data().toString(), QString("entry2"));
+        QCOMPARE(index.data().toString(), QStringLiteral("entry2"));
         QCOMPARE(client.rowCount(index), 0);
 
-        listModel->insertRow(1, new QStandardItem("entry1"));
+        listModel->insertRow(1, new QStandardItem(QStringLiteral("entry1")));
         QCOMPARE(client.rowCount(), 5);
         index = client.index(1, 0);
         index.data(); // need an event loop entry for the data retrieval
         QTest::qWait(1);
-        QCOMPARE(index.data().toString(), QString("entry1"));
+        QCOMPARE(index.data().toString(), QStringLiteral("entry1"));
 
         listModel->takeRow(3);
         QCOMPARE(client.rowCount(), 4);
@@ -174,20 +174,20 @@ private slots:
     void testTreeRemoteModel()
     {
         auto treeModel = new QStandardItemModel(this);
-        auto e0 = new QStandardItem("entry0");
-        e0->appendRow(new QStandardItem("entry00"));
-        e0->appendRow(new QStandardItem("entry01"));
+        auto e0 = new QStandardItem(QStringLiteral("entry0"));
+        e0->appendRow(new QStandardItem(QStringLiteral("entry00")));
+        e0->appendRow(new QStandardItem(QStringLiteral("entry01")));
         treeModel->appendRow(e0);
-        auto e1 = new QStandardItem("entry1");
-        e1->appendRow(new QStandardItem("entry10"));
-        e1->appendRow(new QStandardItem("entry12"));
+        auto e1 = new QStandardItem(QStringLiteral("entry1"));
+        e1->appendRow(new QStandardItem(QStringLiteral("entry10")));
+        e1->appendRow(new QStandardItem(QStringLiteral("entry12")));
         treeModel->appendRow(e1);
 
-        FakeRemoteModelServer server("com.kdab.GammaRay.UnitTest.TreeModel", this);
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel"), this);
         server.setModel(treeModel);
         server.modelMonitored(true);
 
-        FakeRemoteModel client("com.kdab.GammaRay.UnitTest.TreeModel", this);
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel"), this);
         connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
         connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
 
@@ -200,49 +200,49 @@ private slots:
         auto i1 = client.index(1, 0);
         i1.data(); // need an event loop entry for the data retrieval
         QTest::qWait(1);
-        QCOMPARE(i1.data().toString(), QString("entry1"));
+        QCOMPARE(i1.data().toString(), QStringLiteral("entry1"));
         QCOMPARE(client.rowCount(i1), 2);
 
         auto i12 = client.index(1, 0, i1);
         i12.data(); // need an event loop entry for the data retrieval
         QTest::qWait(1);
-        QCOMPARE(i12.data().toString(), QString("entry12"));
+        QCOMPARE(i12.data().toString(), QStringLiteral("entry12"));
         QCOMPARE(client.rowCount(i12), 0);
 
-        e1->insertRow(1, new QStandardItem("entry11"));
+        e1->insertRow(1, new QStandardItem(QStringLiteral("entry11")));
         QCOMPARE(client.rowCount(i1), 3);
         auto i11 = client.index(1, 0, i1);
         i11.data(); // need an event loop entry for the data retrieval
         QTest::qWait(1);
-        QCOMPARE(i11.data().toString(), QString("entry11"));
+        QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
         QCOMPARE(client.rowCount(i11), 0);
 
         e1->takeRow(0);
         QCOMPARE(client.rowCount(i1), 2);
         i11 = client.index(0, 0, i1);
-        QCOMPARE(i11.data().toString(), QString("entry11"));
+        QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
     }
 
     // this should not make a difference if the above works, however it broke massively with Qt 5.4...
     void testSortProxy()
     {
         auto treeModel = new QStandardItemModel(this);
-        auto e0 = new QStandardItem("entry1");
-        e0->appendRow(new QStandardItem("entry10"));
-        e0->appendRow(new QStandardItem("entry11"));
+        auto e0 = new QStandardItem(QStringLiteral("entry1"));
+        e0->appendRow(new QStandardItem(QStringLiteral("entry10")));
+        e0->appendRow(new QStandardItem(QStringLiteral("entry11")));
         treeModel->appendRow(e0);
-        auto e1 = new QStandardItem("entry0");
-        e1->appendRow(new QStandardItem("entry00"));
-        e1->appendRow(new QStandardItem("entry01"));
-        e1->appendRow(new QStandardItem("entry02"));
-        e1->appendRow(new QStandardItem("entry03"));
+        auto e1 = new QStandardItem(QStringLiteral("entry0"));
+        e1->appendRow(new QStandardItem(QStringLiteral("entry00")));
+        e1->appendRow(new QStandardItem(QStringLiteral("entry01")));
+        e1->appendRow(new QStandardItem(QStringLiteral("entry02")));
+        e1->appendRow(new QStandardItem(QStringLiteral("entry03")));
         treeModel->appendRow(e1);
 
-        FakeRemoteModelServer server("com.kdab.GammaRay.UnitTest.TreeModel2", this);
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel2"), this);
         server.setModel(treeModel);
         server.modelMonitored(true);
 
-        FakeRemoteModel client("com.kdab.GammaRay.UnitTest.TreeModel2", this);
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel2"), this);
         connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
         connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
 
@@ -258,18 +258,18 @@ private slots:
         QCOMPARE(proxy.rowCount(), 2);
 
         auto pi0 = proxy.index(0, 0);
-        QCOMPARE(pi0.data().toString(), QString("entry0"));
+        QCOMPARE(pi0.data().toString(), QStringLiteral("entry0"));
         QCOMPARE(proxy.rowCount(pi0), 4);
 
         auto pi03 = proxy.index(3, 0, pi0);
-        QCOMPARE(pi03.data().toString(), QString("entry03"));
+        QCOMPARE(pi03.data().toString(), QStringLiteral("entry03"));
 
         auto ci0 = client.index(0, 0);
-        QCOMPARE(ci0.data().toString(), QString("entry1"));
+        QCOMPARE(ci0.data().toString(), QStringLiteral("entry1"));
         QCOMPARE(client.rowCount(ci0), 2);
 
         auto pi1 = proxy.index(1, 0);
-        QCOMPARE(pi1.data().toString(), QString("entry1"));
+        QCOMPARE(pi1.data().toString(), QStringLiteral("entry1"));
         // this fails with data() call batching sizes close to 1
 //         QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);

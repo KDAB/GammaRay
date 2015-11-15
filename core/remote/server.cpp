@@ -56,7 +56,7 @@ Server::Server(QObject *parent) :
   m_broadcastTimer(new QTimer(this)),
   m_signalMapper(new MultiSignalMapper(this))
 {
-  if (!ProbeSettings::value("RemoteAccessEnabled", true).toBool())
+  if (!ProbeSettings::value(QStringLiteral("RemoteAccessEnabled"), true).toBool())
     return;
 
   m_serverDevice = ServerDevice::create(serverAddress(), this);
@@ -80,9 +80,9 @@ Server::Server(QObject *parent) :
   connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
           this, SLOT(forwardSignal(QObject*,int,QVector<QVariant>)));
 
-  Endpoint::addObjectNameAddressMapping("com.kdab.GammaRay.PropertySyncer", ++m_nextAddress);
+  Endpoint::addObjectNameAddressMapping(QStringLiteral("com.kdab.GammaRay.PropertySyncer"), ++m_nextAddress);
   m_propertySyncer->setAddress(m_nextAddress);
-  Endpoint::registerObject("com.kdab.GammaRay.PropertySyncer", m_propertySyncer);
+  Endpoint::registerObject(QStringLiteral("com.kdab.GammaRay.PropertySyncer"), m_propertySyncer);
   registerMessageHandler(m_nextAddress, m_propertySyncer, "handleMessage");
 }
 
@@ -106,9 +106,9 @@ QUrl Server::serverAddress() const
 #ifdef Q_OS_ANDROID
     QUrl url(QString(QLatin1String("local://%1/+gammaray_socket")).arg(QDir::homePath()));
 #else
-    QUrl url(ProbeSettings::value("ServerAddress", QLatin1String("tcp://0.0.0.0/")).toString().toUtf8().constData());
+    QUrl url(ProbeSettings::value(QStringLiteral("ServerAddress"), QStringLiteral("tcp://0.0.0.0/")).toString());
     if (url.scheme().isEmpty())
-        url.setScheme("tcp");
+        url.setScheme(QStringLiteral("tcp"));
     if (url.port() <= 0)
         url.setPort(defaultPort());
 #endif

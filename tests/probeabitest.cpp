@@ -45,14 +45,14 @@ private slots:
     abi.setQtVersion(5, 2);
     QVERIFY(!abi.isValid());
 
-    abi.setArchitecture("x86_64");
+    abi.setArchitecture(QStringLiteral("x86_64"));
 #ifndef Q_OS_WIN
     QVERIFY(abi.isValid());
 #else
     QVERIFY(!abi.isValid());
 #endif
 
-    abi.setCompiler("MSVC");
+    abi.setCompiler(QStringLiteral("MSVC"));
     QVERIFY(abi.isValid());
   }
 
@@ -168,12 +168,12 @@ private slots:
   void testProbeABICompat()
   {
 #ifndef Q_OS_WIN
-    const ProbeABI targetABI = ProbeABI::fromString("qt5.2-x86_64");
-    const ProbeABI probeABI = ProbeABI::fromString("qt5.1-x86_64");
+    const ProbeABI targetABI = ProbeABI::fromString(QStringLiteral("qt5.2-x86_64"));
+    const ProbeABI probeABI = ProbeABI::fromString(QStringLiteral("qt5.1-x86_64"));
     const bool compilerAbiMatters = false;
 #else
-    const ProbeABI targetABI = ProbeABI::fromString("qt5.2-MSVC-release-x86_64");
-    const ProbeABI probeABI = ProbeABI::fromString("qt5.1-MSVC-release-x86_64");
+    const ProbeABI targetABI = ProbeABI::fromString(QStringLiteral("qt5.2-MSVC-release-x86_64"));
+    const ProbeABI probeABI = ProbeABI::fromString(QStringLiteral("qt5.1-MSVC-release-x86_64"));
     const bool compilerAbiMatters = true;
 #endif
 
@@ -193,7 +193,7 @@ private slots:
 
     // different architecture
     incompatABI = targetABI;
-    incompatABI.setArchitecture("i686");
+    incompatABI.setArchitecture(QStringLiteral("i686"));
     QVERIFY(!targetABI.isCompatible(incompatABI));
 
     // different debug/release mode
@@ -203,7 +203,7 @@ private slots:
 
     // different compiler
     incompatABI = targetABI;
-    incompatABI.setCompiler("Clang");
+    incompatABI.setCompiler(QStringLiteral("Clang"));
     QCOMPARE(targetABI.isCompatible(incompatABI), !compilerAbiMatters);
   }
 

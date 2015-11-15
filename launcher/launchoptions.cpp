@@ -143,7 +143,7 @@ LaunchOptions::UiMode LaunchOptions::uiMode() const
 void LaunchOptions::setUiMode(LaunchOptions::UiMode mode)
 {
   d->uiMode = mode;
-  setProbeSetting("InProcessUi", mode == InProcessUi);
+  setProbeSetting(QStringLiteral("InProcessUi"), mode == InProcessUi);
 }
 
 QString LaunchOptions::injectorType() const
@@ -168,7 +168,7 @@ void LaunchOptions::setProbeABI(const ProbeABI& abi)
 
 void LaunchOptions::setRootPath(const QString &path)
 {
-    setProbeSetting("RootPath", path);
+    setProbeSetting(QStringLiteral("RootPath"), path);
 }
 
 QString LaunchOptions::rootPath() const
@@ -191,7 +191,7 @@ QProcessEnvironment LaunchOptions::processEnvironment() const
 
 void LaunchOptions::setProbePath(const QString& path)
 {
-  setProbeSetting("ProbePath", path);
+  setProbeSetting(QStringLiteral("ProbePath"), path);
 }
 
 QString LaunchOptions::probePath() const
@@ -235,30 +235,30 @@ bool LaunchOptions::execute(const QString& launcherPath) const
   QStringList args;
   switch (uiMode()) {
     case InProcessUi:
-      args.push_back("--inprocess");
+      args.push_back(QStringLiteral("--inprocess"));
       break;
     case OutOfProcessUi:
-      args.push_back("--no-inprocess");
+      args.push_back(QStringLiteral("--no-inprocess"));
       break;
     case NoUi:
-      args.push_back("--inject-only");
+      args.push_back(QStringLiteral("--inject-only"));
       break;
   }
 
   if (d->probeABI.isValid()) {
-    args.push_back("--probe");
+    args.push_back(QStringLiteral("--probe"));
     args.push_back(d->probeABI.id());
   }
 
   if (d->probeSettings.contains("ServerAddress")) {
-    args.push_back("--listen");
+    args.push_back(QStringLiteral("--listen"));
     args.push_back(d->probeSettings.value("ServerAddress"));
   }
   if (d->probeSettings.value("RemoteAccessEnabled") == "false")
-    args.push_back("--no-listen");
+    args.push_back(QStringLiteral("--no-listen"));
 
   if (isAttach()) {
-    args.push_back("--pid");
+    args.push_back(QStringLiteral("--pid"));
     args.push_back(QString::number(pid()));
   } else {
     args += launchArguments();

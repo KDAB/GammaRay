@@ -107,7 +107,7 @@ QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
     s << tr("Stored: %1").arg(translateBool(prop.isStored(obj)));
     s << tr("User: %1").arg(translateBool(prop.isUser(obj)));
     s << tr("Writable: %1").arg(translateBool(prop.isWritable()));
-    return s.join("\n");
+    return s.join(QStringLiteral("\n"));
 }
 
 PropertyData QMetaPropertyAdaptor::propertyData(int index) const

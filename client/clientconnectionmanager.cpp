@@ -125,7 +125,7 @@ void ClientConnectionManager::connectToHost()
 
 void ClientConnectionManager::connectionEstablished()
 {
-  m_toolModel = ObjectBroker::model("com.kdab.GammaRay.ToolModel");
+  m_toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
 
   if (m_toolModel->rowCount() <= 0) {
     connect(m_toolModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(toolModelPopulated()));

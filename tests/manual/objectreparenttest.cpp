@@ -38,7 +38,7 @@ public:
         p1(new QObject(this)),
         p2(new QObject(this))
     {
-        c->setObjectName("MovingSubtree");
+        c->setObjectName(QStringLiteral("MovingSubtree"));
 
         auto t = new QTimer(this);
         t->start(10000);
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     QCoreApplication app(argc, argv);
 
     MyObject obj;
-    obj.setObjectName("MyObject");
+    obj.setObjectName(QStringLiteral("MyObject"));
 
     return app.exec();
 }

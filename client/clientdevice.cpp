@@ -47,9 +47,9 @@ ClientDevice::~ClientDevice()
 ClientDevice* ClientDevice::create(const QUrl& url, QObject *parent)
 {
     ClientDevice* device = 0;
-    if (url.scheme() == "tcp")
+    if (url.scheme() == QLatin1String("tcp"))
         device = new TcpClientDevice(parent);
-    else if (url.scheme() == "local")
+    else if (url.scheme() == QLatin1String("local"))
         device = new LocalClientDevice(parent);
 
     if (!device) {

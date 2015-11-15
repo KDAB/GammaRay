@@ -42,7 +42,7 @@ static qint64 appStartTime()
 #ifdef Q_OS_LINUX
 
   // On Linux the application start time can be read by procfs.
-  const QString &self = QString::fromLatin1("/proc/%1").arg(qApp->applicationPid());
+  const QString &self = QStringLiteral("/proc/%1").arg(qApp->applicationPid());
   return QFileInfo(self).lastModified().toMSecsSinceEpoch();
 
 #else // !Q_OS_LINUX

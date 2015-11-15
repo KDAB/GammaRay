@@ -42,12 +42,12 @@ LldbInjector::~LldbInjector()
 
 QString LldbInjector::name() const
 {
-  return QLatin1String("lldb");
+  return QStringLiteral("lldb");
 }
 
 QString LldbInjector::debuggerExecutable() const
 {
-  return QLatin1String("lldb");
+  return QStringLiteral("lldb");
 }
 
 void LldbInjector::execCmd(const QByteArray& cmd, bool waitForWritten)
@@ -80,7 +80,7 @@ void LldbInjector::addMethodBreakpoint(const QByteArray& method)
 bool LldbInjector::launch(const QStringList& programAndArgs, const QString& probeDll, const QString& probeFunc, const QProcessEnvironment &env)
 {
   QStringList args;
-  args.push_back(QLatin1String("--"));
+  args.push_back(QStringLiteral("--"));
   args.append(programAndArgs);
 
   if (!startDebugger(args, env)) {
@@ -94,7 +94,7 @@ bool LldbInjector::launch(const QStringList& programAndArgs, const QString& prob
 bool LldbInjector::attach(int pid, const QString& probeDll, const QString& probeFunc)
 {
   Q_ASSERT(pid > 0);
-  if (!startDebugger(QStringList() << QLatin1String("-p") << QString::number(pid))) {
+  if (!startDebugger(QStringList() << QStringLiteral("-p") << QString::number(pid))) {
     return false;
   }
   return injectAndDetach(probeDll, probeFunc);

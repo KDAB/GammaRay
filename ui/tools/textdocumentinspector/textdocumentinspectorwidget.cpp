@@ -46,18 +46,18 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent):
 {
   ui->setupUi(this);
 
-  ui->documentList->setModel(ObjectBroker::model("com.kdab.GammaRay.TextDocumentsModel"));
+  ui->documentList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentsModel")));
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->documentList->model());
   ui->documentList->setSelectionModel(selectionModel);
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(documentSelected(QItemSelection,QItemSelection)));
 
-  ui->documentTree->setModel(ObjectBroker::model("com.kdab.GammaRay.TextDocumentModel"));
+  ui->documentTree->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentModel")));
   selectionModel = ObjectBroker::selectionModel(ui->documentTree->model());
   ui->documentTree->setSelectionModel(selectionModel);
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(documentElementSelected(QItemSelection,QItemSelection)));
-  ui->documentFormatView->setModel(ObjectBroker::model("com.kdab.GammaRay.TextDocumentFormatModel"));
+  ui->documentFormatView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentFormatModel")));
   new DeferredResizeModeSetter(ui->documentFormatView->header(), 0, QHeaderView::ResizeToContents);
 
   if (Endpoint::instance()->isRemoteClient()) // FIXME: content preview doesn't work remotely yet

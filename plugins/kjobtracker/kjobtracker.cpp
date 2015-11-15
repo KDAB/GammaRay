@@ -44,7 +44,7 @@ KJobTracker::KJobTracker(ProbeInterface *probe, QObject *parent)
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
           m_jobModel, SLOT(objectRemoved(QObject*)));
 
-  probe->registerModel("com.kdab.GammaRay.KJobModel", m_jobModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.KJobModel"), m_jobModel);
 }
 
 KJobTracker::~KJobTracker()

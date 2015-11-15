@@ -62,41 +62,41 @@ int main(int argc, char** argv)
     QCoreApplication app(argc, argv);
 
     MyTestObject sender, receiver;
-    sender.setObjectName("sender");
-    receiver.setObjectName("receiver");
+    sender.setObjectName(QStringLiteral("sender"));
+    receiver.setObjectName(QStringLiteral("receiver"));
     connectObjects(&sender, &receiver);
 
     MyTestObject selfConnect;
-    selfConnect.setObjectName("selfConnect");
+    selfConnect.setObjectName(QStringLiteral("selfConnect"));
     connectObjects(&selfConnect, &selfConnect);
 
     QThread thread;
-    thread.setObjectName("thread");
+    thread.setObjectName(QStringLiteral("thread"));
     thread.start();
 
     MyTestObject threadSender, threadReceiver;
-    threadSender.setObjectName("threadSender");
-    threadReceiver.setObjectName("threadReceiver");
+    threadSender.setObjectName(QStringLiteral("threadSender"));
+    threadReceiver.setObjectName(QStringLiteral("threadReceiver"));
     threadSender.moveToThread(&thread);
     threadReceiver.moveToThread(&thread);
 
     MyTestObject localSender, localReceiver;
-    localSender.setObjectName("localSender");
-    localReceiver.setObjectName("localReceiver");
+    localSender.setObjectName(QStringLiteral("localSender"));
+    localReceiver.setObjectName(QStringLiteral("localReceiver"));
 
     connectObjects(&localSender, &threadReceiver);
     connectObjects(&threadSender, &localReceiver);
 
     MyTestObject doubleSender, doubleReceiver;
-    doubleSender.setObjectName("doubleSender");
-    doubleReceiver.setObjectName("doubleReceiver");
+    doubleSender.setObjectName(QStringLiteral("doubleSender"));
+    doubleReceiver.setObjectName(QStringLiteral("doubleReceiver"));
     connectObjects(&doubleSender, &doubleReceiver);
     connectObjects(&doubleSender, &doubleReceiver);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MyTestObject lambdaSender, lambdaContext;
-    lambdaSender.setObjectName("lambdaSender");
-    lambdaContext.setObjectName("lambdaContext");
+    lambdaSender.setObjectName(QStringLiteral("lambdaSender"));
+    lambdaContext.setObjectName(QStringLiteral("lambdaContext"));
     QObject::connect(&lambdaSender, &MyTestObject::mySignal1, &dummyFunction);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)

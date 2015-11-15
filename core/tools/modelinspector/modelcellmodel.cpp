@@ -59,7 +59,7 @@ void ModelCellModel::setModelIndex(const QModelIndex &index)
     // add built-in roles
     const auto hasDefaultRoles = !sourceIsQQmlListModel(index.model());
     if (hasDefaultRoles) {
-      #define R(x) qMakePair<int, QString>(x, QLatin1String(#x))
+      #define R(x) qMakePair<int, QString>(x, QStringLiteral(#x))
       m_roles << R(Qt::DisplayRole)
               << R(Qt::DecorationRole)
               << R(Qt::EditRole)

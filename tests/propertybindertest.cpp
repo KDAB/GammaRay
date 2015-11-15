@@ -89,7 +89,7 @@ private slots:
     {
         MyObject *obj1 = new MyObject(this);
         obj1->setIntProp(18);
-        obj1->setObjectName("hello");
+        obj1->setObjectName(QStringLiteral("hello"));
         MyObject *obj2 = new MyObject(this);
 
         auto binder = new PropertyBinder(obj1, obj2);
@@ -102,7 +102,7 @@ private slots:
         binder->syncSourceToDestination();
 
         QCOMPARE(obj2->intProp(), 18);
-        QCOMPARE(obj2->objectName(), QString("hello"));
+        QCOMPARE(obj2->objectName(), QStringLiteral("hello"));
 
         obj2->setIntProp(23);
         QCOMPARE(obj1->intProp(), 23);

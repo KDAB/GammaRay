@@ -55,7 +55,7 @@ bool PromoLabel::event(QEvent *e)
 void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
 {
   if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
-    QDesktopServices::openUrl(QUrl("http://www.kdab.com"));
+    QDesktopServices::openUrl(QUrl(QStringLiteral("http://www.kdab.com")));
     ev->accept();
     return;
   }
@@ -78,7 +78,7 @@ QImage PromoLabel::tintedImage(const QString &image, const QColor &color)
 void PromoLabel::updatePixmap()
 {
   // load image and adapt it to user's foreground color
-  setPixmap(QPixmap::fromImage(tintedImage(QString(":gammaray/kdabproducts.png"),
+  setPixmap(QPixmap::fromImage(tintedImage(QStringLiteral(":gammaray/kdabproducts.png"),
                                            palette().foreground().color())));
 }
 

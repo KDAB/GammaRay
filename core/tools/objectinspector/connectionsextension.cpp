@@ -46,8 +46,8 @@ ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
   m_inboundModel = new InboundConnectionsModel(controller);
   m_outboundModel = new OutboundConnectionsModel(controller);
 
-  controller->registerModel(m_inboundModel, "inboundConnections");
-  controller->registerModel(m_outboundModel, "outboundConnections");
+  controller->registerModel(m_inboundModel, QStringLiteral("inboundConnections"));
+  controller->registerModel(m_outboundModel, QStringLiteral("outboundConnections"));
 }
 
 ConnectionsExtension::~ConnectionsExtension()

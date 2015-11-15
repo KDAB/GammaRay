@@ -41,7 +41,7 @@ PaintBufferViewer::PaintBufferViewer(QWidget *parent)
 {
   ui->setupUi(this);
 
-  ui->commandView->setModel(ObjectBroker::model("com.kdab.GammaRay.PaintBufferModel"));
+  ui->commandView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PaintBufferModel")));
   ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
 
   ui->splitter->setStretchFactor(0, 0);

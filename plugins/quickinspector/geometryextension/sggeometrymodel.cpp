@@ -108,7 +108,7 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
       return "4Bytes";
 #endif
     default:
-      return QString("Unknown %1 byte data: 0x").
+      return QStringLiteral("Unknown %1 byte data: 0x").
         arg(attrInfo->tupleSize).
           append(QByteArray((char*)index.internalPointer(), attrInfo->tupleSize).
             toHex());

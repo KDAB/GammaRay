@@ -58,18 +58,18 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
   styleFilter->setSourceModel(probe->objectListModel());
   SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
   singleColumnProxy->setSourceModel(styleFilter);
-  probe->registerModel("com.kdab.GammaRay.StyleList", singleColumnProxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleList"), singleColumnProxy);
 
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(singleColumnProxy);
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(styleSelected(QItemSelection)));
 
-  probe->registerModel("com.kdab.GammaRay.StyleInspector.PrimitiveModel", m_primitiveModel);
-  probe->registerModel("com.kdab.GammaRay.StyleInspector.ControlModel", m_controlModel);
-  probe->registerModel("com.kdab.GammaRay.StyleInspector.ComplexControlModel", m_complexControlModel);
-  probe->registerModel("com.kdab.GammaRay.StyleInspector.PixelMetricModel", m_pixelMetricModel);
-  probe->registerModel("com.kdab.GammaRay.StyleInspector.StandardIconModel", m_standardIconModel);
-  probe->registerModel("com.kdab.GammaRay.StyleInspector.PaletteModel", m_standardPaletteModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.PrimitiveModel"), m_primitiveModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.ControlModel"), m_controlModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.ComplexControlModel"), m_complexControlModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.PixelMetricModel"), m_pixelMetricModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.StandardIconModel"), m_standardIconModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.PaletteModel"), m_standardPaletteModel);
 }
 
 StyleInspector::~StyleInspector()

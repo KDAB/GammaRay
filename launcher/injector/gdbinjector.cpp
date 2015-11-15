@@ -45,12 +45,12 @@ GdbInjector::GdbInjector()
 
 QString GdbInjector::name() const
 {
-  return QString("gdb");
+  return QStringLiteral("gdb");
 }
 
 QString GdbInjector::debuggerExecutable() const
 {
-  return QLatin1String("gdb");
+  return QStringLiteral("gdb");
 }
 
 bool GdbInjector::launch(const QStringList &programAndArgs,
@@ -58,7 +58,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
                          const QProcessEnvironment &env)
 {
   QStringList gdbArgs;
-  gdbArgs.push_back(QLatin1String("--args"));
+  gdbArgs.push_back(QStringLiteral("--args"));
   gdbArgs.append(programAndArgs);
 
   if (!startDebugger(gdbArgs, env)) {
@@ -73,7 +73,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
 bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
   Q_ASSERT(pid > 0);
-  if (!startDebugger(QStringList() << QLatin1String("-pid") << QString::number(pid))) {
+  if (!startDebugger(QStringList() << QStringLiteral("-pid") << QString::number(pid))) {
     return false;
   }
   return injectAndDetach(probeDll, probeFunc);

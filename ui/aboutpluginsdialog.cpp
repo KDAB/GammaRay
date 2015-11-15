@@ -50,7 +50,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
     toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
     toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     toolView->verticalHeader()->hide();
-    toolView->setModel(ObjectBroker::model("com.kdab.GammaRay.ToolPluginModel"));
+    toolView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolPluginModel")));
 
     QGroupBox *toolBox = new QGroupBox(tr("Loaded Plugins"), this);
     layout = new QHBoxLayout(toolBox);
@@ -62,7 +62,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
     QTableView *errorView = new QTableView(this);
     errorView->setShowGrid(false);
     errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    errorView->setModel(ObjectBroker::model("com.kdab.GammaRay.ToolPluginErrorModel"));
+    errorView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolPluginErrorModel")));
     errorView->verticalHeader()->hide();
     errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 

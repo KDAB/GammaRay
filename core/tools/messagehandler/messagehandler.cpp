@@ -164,7 +164,7 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   proxy->addRole(MessageModelRole::Backtrace);
   proxy->setSourceModel(m_messageModel);
   proxy->setSortRole(MessageModelRole::Sort);
-  probe->registerModel("com.kdab.GammaRay.MessageModel", proxy);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MessageModel"), proxy);
 
   // install handler directly, catches most cases,
   // i.e. user has no special handler or the handler

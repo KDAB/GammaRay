@@ -91,8 +91,8 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
 }
 ///@cond internal
 #define MO_ADD_BASECLASS(Base) \
-  Q_ASSERT(GammaRay::MetaObjectRepository::instance()->hasMetaObject(QLatin1String(#Base))); \
-  mo->addBaseClass(GammaRay::MetaObjectRepository::instance()->metaObject(QLatin1String(#Base)));
+  Q_ASSERT(GammaRay::MetaObjectRepository::instance()->hasMetaObject(QStringLiteral(#Base))); \
+  mo->addBaseClass(GammaRay::MetaObjectRepository::instance()->metaObject(QStringLiteral(#Base)));
 ///@endcond
 
 /** Register @p Class with the MetaObjectRepository.
@@ -100,7 +100,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
  */
 #define MO_ADD_METAOBJECT0(Class) \
   mo = new GammaRay::MetaObjectImpl<Class>; \
-  mo->setClassName(QLatin1String(#Class)); \
+  mo->setClassName(QStringLiteral(#Class)); \
   GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
 /** Register @p Class with the MetaObjectRepository.
@@ -108,7 +108,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
  */
 #define MO_ADD_METAOBJECT1(Class, Base1) \
   mo = new GammaRay::MetaObjectImpl<Class, Base1>; \
-  mo->setClassName(QLatin1String(#Class)); \
+  mo->setClassName(QStringLiteral(#Class)); \
   MO_ADD_BASECLASS(Base1) \
   GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
@@ -117,7 +117,7 @@ class GAMMARAY_CORE_EXPORT MetaObjectRepository
  */
 #define MO_ADD_METAOBJECT2(Class, Base1, Base2) \
   mo = new GammaRay::MetaObjectImpl<Class, Base1, Base2>; \
-  mo->setClassName(QLatin1String(#Class)); \
+  mo->setClassName(QStringLiteral(#Class)); \
   MO_ADD_BASECLASS(Base1) \
   MO_ADD_BASECLASS(Base2) \
   GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);

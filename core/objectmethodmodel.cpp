@@ -78,7 +78,7 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index,
     }
   } else if (role == Qt::ToolTipRole) {
     QString tt = Util::prettyMethodSignature(method);
-    tt += tr("\nTag: %1\n").arg(qstrlen(method.tag()) > 0 ? method.tag() : "<none>");
+    tt += tr("\nTag: %1\n").arg(qstrlen(method.tag()) > 0 ? method.tag() : tr("<none>"));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     tt += tr("Revision: %1").arg(method.revision());
 #endif

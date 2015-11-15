@@ -42,7 +42,7 @@ PropertiesExtension::PropertiesExtension(PropertyController *controller) :
   PropertyControllerExtension(controller->objectBaseName() + ".properties"),
   m_aggregatedPropertyModel(new AggregatedPropertyModel(this))
 {
-  controller->registerModel(m_aggregatedPropertyModel, "properties");
+  controller->registerModel(m_aggregatedPropertyModel, QStringLiteral("properties"));
 }
 
 PropertiesExtension::~PropertiesExtension()

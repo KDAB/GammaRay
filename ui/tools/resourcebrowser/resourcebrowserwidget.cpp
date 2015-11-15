@@ -65,7 +65,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 
   ui->setupUi(this);
   ClientResourceModel* model = new ClientResourceModel(this);
-  model->setSourceModel(ObjectBroker::model("com.kdab.GammaRay.ResourceModel"));
+  model->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel")));
   ui->treeView->setModel(model);
   ui->treeView->setSelectionModel(ObjectBroker::selectionModel(ui->treeView->model()));
   ui->searchLine->setProxy(model);
@@ -217,7 +217,7 @@ void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
         continue;
 
       QDir dir(targetDirectory + '/' + directoryPath);
-      dir.mkpath(".");
+      dir.mkpath(QStringLiteral("."));
     }
 
     // request all resource files

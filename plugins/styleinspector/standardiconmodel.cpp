@@ -56,7 +56,7 @@ QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix,
 
 #define MAKE_SP(stdPix) \
 if (row == QStyle:: stdPix) \
-  return dataForStandardIcon(QStyle:: stdPix, QLatin1String(#stdPix), column, role)
+  return dataForStandardIcon(QStyle:: stdPix, QStringLiteral(#stdPix), column, role)
 
 QVariant StandardIconModel::doData(int row, int column, int role) const
 {

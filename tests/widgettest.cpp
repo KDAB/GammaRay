@@ -76,7 +76,7 @@ private slots:
         auto w1 = new QWidget;
         QTest::qWait(1); // event loop re-entry
 
-        auto *model = ObjectBroker::model("com.kdab.GammaRay.WidgetTree");
+        auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
         QVERIFY(model);
         ModelTest modelTest(model);
 
