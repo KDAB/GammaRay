@@ -148,7 +148,7 @@ void KJobModel::objectRemoved(QObject *obj)
   // We however seem to get here for very short-lived jobs that emit before objectAdded()
   // is called (while we wait for the vtable to be complete), so we only see the result
   // of their deleteLater().
-  if (m_data[pos].state == KJobInfo::Running) {
+  if (m_data.at(pos).state == KJobInfo::Running) {
     m_data[pos].state = KJobInfo::Deleted;
     m_data[pos].statusText = tr("Deleted");
     emit dataChanged(index(pos, 0), index(pos, columnCount() - 1));

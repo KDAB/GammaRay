@@ -521,7 +521,7 @@ RemoteModel::Node* RemoteModel::nodeForIndex(const Protocol::ModelIndex &index) 
   for (int i = 0; i < index.size(); ++i) {
     if (node->children.size() <= index[i].first)
       return 0;
-    node = node->children[index[i].first];
+    node = node->children.at(index[i].first);
   }
   return node;
 }
@@ -659,7 +659,7 @@ void RemoteModel::resetLoadingState(RemoteModel::Node* node, int startRow) const
 
   Q_ASSERT(node->children.size() == node->rowCount);
   for (int row = startRow; row < node->rowCount; ++row) {
-    Node *child = node->children[row];
+    Node *child = node->children.at(row);
     for (QHash<int, NodeStates>::iterator it = child->state.begin(); it != child->state.end(); ++it) {
       if (it.value() & Loading)
         it.value() = it.value() & ~Loading;

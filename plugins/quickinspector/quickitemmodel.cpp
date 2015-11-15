@@ -297,7 +297,7 @@ void QuickItemModel::removeItem(QQuickItem *item, bool danglingPointer)
     disconnectItem(item);
   }
 
-  QQuickItem *parentItem = m_childParentMap[item];
+  QQuickItem *parentItem = m_childParentMap.value(item);
   const QModelIndex parentIndex = indexForItem(parentItem);
   //cppcheck-suppress nullPointerRedundantCheck
   if (parentItem && !parentIndex.isValid()) {
@@ -385,10 +385,10 @@ void QuickItemModel::recursivelyUpdateItem(QQuickItem *item)
   if (item->parent() == QObject::parent()) // skip items injected by ourselves
     return;
 
-  int oldFlags = m_itemFlags[item];
+  int oldFlags = m_itemFlags.value(item);
   updateItemFlags(item);
 
-  if (oldFlags != m_itemFlags[item]) {
+  if (oldFlags != m_itemFlags.value(item)) {
     updateItem(item);
   }
 
