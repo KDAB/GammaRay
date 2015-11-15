@@ -114,6 +114,7 @@ Backtrace backtraceList(int levels)
     n = qMin(n, levels);
   }
 
+  s.reserve(n);
   for (int i = 0; i < n; ++i) {
     s << maybeDemangledName(strings[i]);
   }
