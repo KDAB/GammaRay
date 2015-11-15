@@ -72,7 +72,7 @@ struct PluginRepository {
     PluginRepository() {}
     Q_DISABLE_COPY(PluginRepository)
     ~PluginRepository() {
-        qDeleteAll(factories.values());
+        qDeleteAll(factories);
     }
 
     // ToolId -> ToolUiFactory
