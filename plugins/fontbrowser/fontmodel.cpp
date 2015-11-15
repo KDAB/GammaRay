@@ -43,12 +43,12 @@ FontModel::FontModel(QObject *parent)
 {
 }
 
-QList<QFont> FontModel::currentFonts() const
+QVector<QFont> FontModel::currentFonts() const
 {
   return m_fonts;
 }
 
-void FontModel::updateFonts(const QList<QFont> &fonts)
+void FontModel::updateFonts(const QVector<QFont> &fonts)
 {
   if (!m_fonts.isEmpty()) {
     beginRemoveRows(QModelIndex(), 0, m_fonts.size() - 1);

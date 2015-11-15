@@ -30,6 +30,7 @@
 #include <QObject>
 #include <QMetaType>
 #include <QDataStream>
+#include <QVector>
 
 class QAbstractState;
 class QAbstractTransition;
@@ -109,7 +110,7 @@ inline QDataStream &operator>>(QDataStream &in, StateType &value)
   return in;
 }
 
-typedef QList<StateId> StateMachineConfiguration;
+typedef QVector<StateId> StateMachineConfiguration;
 
 class StateMachineViewerInterface : public QObject
 {
@@ -143,6 +144,7 @@ class StateMachineViewerInterface : public QObject
 }
 
 Q_DECLARE_METATYPE(GammaRay::StateId)
+Q_DECLARE_TYPEINFO(GammaRay::StateId, Q_PRIMITIVE_TYPE);
 Q_DECLARE_METATYPE(GammaRay::TransitionId)
 Q_DECLARE_METATYPE(GammaRay::StateMachineConfiguration)
 Q_DECLARE_METATYPE(GammaRay::StateType)
