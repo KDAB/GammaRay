@@ -267,10 +267,11 @@ void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,
     }
 
     QVariantAnimation *colorAnimation = new QVariantAnimation(this);
-    colorAnimation->setProperty("index", QVariant::fromValue(QPersistentModelIndex(index)));
-    connect(colorAnimation, SIGNAL(valueChanged(QVariant)),
-            ui->itemTreeView->itemDelegate(), SLOT(setTextColor(QVariant)));
-
+    QPersistentModelIndex persistentIndex(index);
+    connect(colorAnimation, &QVariantAnimation::valueChanged,
+            ui->itemTreeView->itemDelegate(), [persistentIndex, this](const QVariant& value) {
+                qobject_cast<QuickItemDelegate*>(ui->itemTreeView->itemDelegate())->setTextColor(value, persistentIndex);
+            });
     colorAnimation->setStartValue(QColor(129, 0, 129));
     colorAnimation->setEndValue(QColor(129, 0, 129, 0));
     colorAnimation->setDuration(2000);

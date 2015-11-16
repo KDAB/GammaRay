@@ -130,9 +130,8 @@ QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                qMax(textSize.height(), decorationSize.height()));
 }
 
-void QuickItemDelegate::setTextColor(const QVariant &textColor)
+void QuickItemDelegate::setTextColor(const QVariant &textColor, const QPersistentModelIndex &index)
 {
-  const QPersistentModelIndex index = sender()->property("index").value<QPersistentModelIndex>();
   if (!index.isValid()) {
     return;
   }
