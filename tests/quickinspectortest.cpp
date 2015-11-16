@@ -59,6 +59,10 @@ private:
     }
 
 private slots:
+    void initTestCase()
+    {
+        qRegisterMetaType<QItemSelection>();
+    }
     void testModelsReparent()
     {
         createProbe();
