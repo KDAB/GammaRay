@@ -821,7 +821,10 @@ void Probe::selectObject(QObject *object, const QPoint &pos)
   emit objectSelected(object, pos);
 
   const auto srcIdx = m_toolModel->toolForObject(object);
-  const auto idx = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model())->mapFromSource(srcIdx);
+  const auto proxy = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model());
+  if (!proxy->sourceModel()) // still detached, ie. no client connected
+    return;
+  const auto idx = proxy->mapFromSource(srcIdx);
 
   m_toolSelectionModel->select(idx, QItemSelectionModel::Select |
                                QItemSelectionModel::Clear |
@@ -834,7 +837,10 @@ void Probe::selectObject(void *object, const QString &typeName)
   emit nonQObjectSelected(object, typeName);
 
   const auto srcIdx = m_toolModel->toolForObject(object, typeName);
-  const auto idx = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model())->mapFromSource(srcIdx);
+  const auto proxy = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model());
+  if (!proxy->sourceModel()) // still detached, ie. no client connected
+    return;
+  const auto idx = proxy->mapFromSource(srcIdx);
 
   m_toolSelectionModel->select(idx, QItemSelectionModel::Select |
                                QItemSelectionModel::Clear |
