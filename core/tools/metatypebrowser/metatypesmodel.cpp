@@ -32,6 +32,8 @@
 #include <QMetaType>
 #include <QStringList>
 
+using namespace GammaRay;
+
 MetaTypesModel::MetaTypesModel(QObject *parent)
   : QAbstractTableModel(parent)
 {

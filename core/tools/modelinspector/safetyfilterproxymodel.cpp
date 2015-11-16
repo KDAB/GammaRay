@@ -28,6 +28,8 @@
 
 #include "safetyfilterproxymodel.h"
 
+using namespace GammaRay;
+
 SafetyFilterProxyModel::SafetyFilterProxyModel(QObject* parent): QIdentityProxyModel(parent)
 {
 }

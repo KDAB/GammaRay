@@ -32,6 +32,8 @@
 #include <QAbstractTableModel>
 #include <QVector>
 
+namespace GammaRay {
+
 class MetaTypesModel : public QAbstractTableModel
 {
   Q_OBJECT
@@ -51,5 +53,7 @@ class MetaTypesModel : public QAbstractTableModel
 
     QVector<int> m_metaTypes;
 };
+
+}
 
 #endif
