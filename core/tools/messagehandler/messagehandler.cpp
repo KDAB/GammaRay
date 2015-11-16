@@ -43,7 +43,7 @@
 #include <QSortFilterProxyModel>
 #include <QThread>
 
-static QTextStream cerr(stdout);
+#include <iostream>
 
 using namespace GammaRay;
 
@@ -103,14 +103,14 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
 
   if (!message.backtrace.isEmpty() && (qgetenv("GAMMARAY_UNITTEST") == "1" || type == QtFatalMsg)) {
     if (type == QtFatalMsg) {
-      cerr << "QFatal in " << qPrintable(qApp->applicationName()) << " (" << qPrintable(qApp->applicationFilePath()) << ')' << endl;
+      std::cerr << "QFatal in " << qPrintable(qApp->applicationName()) << " (" << qPrintable(qApp->applicationFilePath()) << ')' << std::endl;
     }
-    cerr << "START BACKTRACE:" << endl;
+    std::cerr << "START BACKTRACE:" << std::endl;
     int i = 0;
     foreach (const QString &frame, message.backtrace) {
-      cerr << (++i) << "\t" << frame << endl;
+      std::cerr << (++i) << "\t" << qPrintable(frame) << std::endl;
     }
-    cerr << "END BACKTRACE" << endl;
+    std::cerr << "END BACKTRACE" << std::endl;
   }
 
   if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1" && qgetenv("GAMMARAY_UNITTEST") != "1") {
