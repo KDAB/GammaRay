@@ -33,6 +33,7 @@
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
 
+#include <common/modelevent.h>
 #include <common/objectbroker.h>
 
 #include <core/metaobject.h>
@@ -313,6 +314,8 @@ void QuickInspector::setupPreviewSource()
 void QuickInspector::selectItem(QQuickItem *item)
 {
   const QAbstractItemModel *model = m_itemSelectionModel->model();
+  Model::used(model);
+
   const QModelIndexList indexList =
     model->match(model->index(0, 0),
                  ObjectModel::ObjectRole,
@@ -333,6 +336,7 @@ void QuickInspector::selectItem(QQuickItem *item)
 void QuickInspector::selectSGNode(QSGNode *node)
 {
   const QAbstractItemModel *model = m_sgSelectionModel->model();
+  Model::used(model);
 
   const QModelIndexList indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole,
     QVariant::fromValue(node), 1, Qt::MatchExactly | Qt::MatchRecursive);

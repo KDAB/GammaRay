@@ -34,7 +34,6 @@
 #include <common/modelevent.h>
 
 #include <QAbstractItemModel>
-#include <QCoreApplication>
 #include <QSortFilterProxyModel>
 #include <QDataStream>
 #include <QDebug>
@@ -87,8 +86,7 @@ void RemoteModelServer::setModel(QAbstractItemModel *model)
 void RemoteModelServer::connectModel()
 {
   Q_ASSERT(m_model);
-  ModelEvent event(true);
-  QCoreApplication::sendEvent(m_model, &event);
+  Model::used(m_model);
 
   connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
   connect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), SLOT(headerDataChanged(Qt::Orientation,int,int)));
@@ -112,8 +110,7 @@ void RemoteModelServer::connectModel()
 void RemoteModelServer::disconnectModel()
 {
   Q_ASSERT(m_model);
-  ModelEvent event(false);
-  QCoreApplication::sendEvent(m_model, &event);
+  Model::unused(m_model);
 
   disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
   disconnect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), this, SLOT(headerDataChanged(Qt::Orientation,int,int)));

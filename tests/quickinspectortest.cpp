@@ -40,6 +40,7 @@
 #include <QQuickView>
 #include <QItemSelectionModel>
 #include <QRegExp>
+#include <QSignalSpy>
 
 using namespace GammaRay;
 
@@ -183,6 +184,58 @@ private slots:
         itemModel->setProperty("filterRegExp", QRegExp());
         sgModel->setProperty("filterRegExp", QRegExp());
         QTest::qWait(20);
+
+        delete view;
+        QTest::qWait(1);
+    }
+
+    void testItemPicking()
+    {
+        createProbe();
+
+        // we need one view for the plugin to activate, otherwise the model will not be available
+        auto view = new QQuickView;
+        view->show();
+        QTest::qWait(1); // event loop re-entry
+
+        auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
+        QVERIFY(toolModel);
+
+        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
+        QVERIFY(itemModel);
+
+        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
+        QVERIFY(sgModel);
+
+        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
+        QVERIFY(inspector);
+        inspector->selectWindow(0);
+        QTest::qWait(1);
+
+        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
+        QTest::qWait(20); // wait at least one frame
+
+        auto toolSelectionModel = ObjectBroker::selectionModel(toolModel);
+        QVERIFY(toolSelectionModel);
+        QSignalSpy toolSpy(toolSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QVERIFY(toolSpy.isValid());
+
+        auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
+        QVERIFY(itemSelectionModel);
+        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QVERIFY(itemSpy.isValid());
+
+        auto sgSelectionModel = ObjectBroker::selectionModel(sgModel);
+        QVERIFY(sgModel);
+        QSignalSpy sgSpy(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QVERIFY(sgSpy.isValid());
+
+        QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier); // clicks on center of window
+        QTest::qWait(20);
+
+        QCOMPARE(toolSpy.size(), 1);
+        QCOMPARE(itemSpy.size(), 1);
+        QCOMPARE(sgSpy.size(), 1);
 
         delete view;
         QTest::qWait(1);

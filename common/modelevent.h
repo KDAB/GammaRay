@@ -33,6 +33,8 @@
 
 #include <QEvent>
 
+class QAbstractItemModel;
+
 namespace GammaRay {
 
 /** Custom event to notify models about them being used/unused.
@@ -53,6 +55,15 @@ public:
 private:
     bool m_used;
 };
+
+namespace Model {
+
+/** Convenience function to send a ModelEvent indicating @p model is in use. */
+void GAMMARAY_COMMON_EXPORT used(const QAbstractItemModel* model);
+/** Convenience function to send a ModelEvent indicating nobody is using @p model. */
+void GAMMARAY_COMMON_EXPORT unused(QAbstractItemModel *model);
+
+}
 
 }
 

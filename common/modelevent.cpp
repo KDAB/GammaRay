@@ -28,6 +28,9 @@
 
 #include "modelevent.h"
 
+#include <QAbstractItemModel>
+#include <QCoreApplication>
+
 using namespace GammaRay;
 
 ModelEvent::ModelEvent(bool modelUsed):
@@ -51,4 +54,18 @@ QEvent::Type ModelEvent::eventType()
     if (id < 0)
         id = registerEventType();
     return static_cast<QEvent::Type>(id);
+}
+
+void Model::used(const QAbstractItemModel* model)
+{
+    Q_ASSERT(model);
+    ModelEvent ev(true);
+    QCoreApplication::sendEvent(const_cast<QAbstractItemModel*>(model), &ev); // const_cast hack is needed since QItemSelectionModel gives us const*...
+}
+
+void Model::unused(QAbstractItemModel* model)
+{
+    Q_ASSERT(model);
+    ModelEvent ev(false);
+    QCoreApplication::sendEvent(model, &ev);
 }
