@@ -238,7 +238,8 @@ private slots:
         QSignalSpy sgSpy(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
         QVERIFY(sgSpy.isValid());
 
-        QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier); // clicks on center of window
+        // auto center-click is broken before https://codereview.qt-project.org/141085/
+        QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier, QPoint(view->width()/2, view->height()/2));
         QTest::qWait(20);
 
         QCOMPARE(toolSpy.size(), 1);
