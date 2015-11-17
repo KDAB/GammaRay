@@ -74,7 +74,7 @@ class QuickInspectorWidget : public QWidget
     void requestRender();
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void setSplitterSizes();
-    void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);
 
   private:

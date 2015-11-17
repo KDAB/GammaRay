@@ -69,7 +69,7 @@ class QuickItemModel : public ObjectModelBase<QAbstractItemModel>
 
   private:
     friend class QuickEventMonitor;
-    void updateItem(QQuickItem *item);
+    void updateItem(QQuickItem *item, int role);
     void recursivelyUpdateItem(QQuickItem *item);
     void updateItemFlags(QQuickItem *item);
     void clear();

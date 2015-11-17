@@ -151,7 +151,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
   connect(proxy, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-          this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex)));
+          this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex,QVector<int>)));
 
   model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
   ui->sgTreeView->setModel(model);
@@ -255,9 +255,11 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection &selection)
   ui->itemTreeView->scrollTo(index);
 }
 
-void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,
-                                                const QModelIndex &bottomRight)
+void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
 {
+  if (!roles.contains(QuickItemModelRole::ItemEvent))
+    return;
+
   for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
     const QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
     RemoteModel::NodeStates state =

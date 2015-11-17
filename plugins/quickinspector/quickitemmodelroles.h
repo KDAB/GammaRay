@@ -39,7 +39,8 @@ namespace QuickItemModelRole {
     ItemFlags = ObjectModel::UserRole,
     SourceFileRole,
     SourceLineRole,
-    SourceColumnRole
+    SourceColumnRole,
+    ItemEvent
   };
 
   enum ItemFlag {

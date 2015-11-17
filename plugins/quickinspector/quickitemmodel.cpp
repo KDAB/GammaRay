@@ -389,7 +389,7 @@ void QuickItemModel::recursivelyUpdateItem(QQuickItem *item)
   updateItemFlags(item);
 
   if (oldFlags != m_itemFlags.value(item)) {
-    updateItem(item);
+    updateItem(item, QuickItemModelRole::ItemFlags);
   }
 
   foreach (QQuickItem *child, item->childItems()) {
@@ -397,7 +397,7 @@ void QuickItemModel::recursivelyUpdateItem(QQuickItem *item)
   }
 }
 
-void QuickItemModel::updateItem(QQuickItem *item)
+void QuickItemModel::updateItem(QQuickItem *item, int role)
 {
   if (!item || item->window() != m_window) {
     return;
@@ -410,7 +410,7 @@ void QuickItemModel::updateItem(QQuickItem *item)
 
   Q_ASSERT(left.isValid());
   Q_ASSERT(right.isValid());
-  emit dataChanged(left, right);
+  emit dataChanged(left, right, QVector<int>() << role);
 }
 
 void QuickItemModel::updateItemFlags(QQuickItem *item)
@@ -449,7 +449,7 @@ bool QuickEventMonitor::eventFilter(QObject *obj, QEvent *event)
 {
   if (event->type() != QEvent::DeferredDelete && event->type() != QEvent::Destroy) {
     // exclude some unsafe event types
-    m_model->updateItem(qobject_cast<QQuickItem*>(obj));
+    m_model->updateItem(qobject_cast<QQuickItem*>(obj), QuickItemModelRole::ItemEvent);
   }
 
   return false;
