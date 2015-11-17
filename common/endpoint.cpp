@@ -226,9 +226,17 @@ void Endpoint::registerMessageHandler(Protocol::ObjectAddress objectAddress, QOb
   ObjectInfo *obj = m_addressMap.value(objectAddress);
   Q_ASSERT(obj);
   Q_ASSERT(!obj->receiver);
-  Q_ASSERT(obj->messageHandler.isEmpty());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0 ,0)
+  Q_ASSERT(!obj->messageHandler.isValid());
+#endif
   obj->receiver = receiver;
-  obj->messageHandler = messageHandlerName;
+
+  QByteArray signature(messageHandlerName);
+  signature += "(GammaRay::Message)";
+  auto idx = receiver->metaObject()->indexOfMethod(signature);
+  Q_ASSERT(idx >= 0);
+  obj->messageHandler = receiver->metaObject()->method(idx);
+
   Q_ASSERT(!m_handlerMap.contains(receiver, obj));
   m_handlerMap.insert(receiver, obj);
   if (obj->receiver != obj->object)
@@ -244,7 +252,7 @@ void Endpoint::unregisterMessageHandler(Protocol::ObjectAddress objectAddress)
   disconnect(obj->receiver, SIGNAL(destroyed(QObject*)), this, SLOT(handlerDestroyed(QObject*)));
   m_handlerMap.remove(obj->receiver, obj);
   obj->receiver = 0;
-  obj->messageHandler.clear();
+  obj->messageHandler = QMetaMethod();
 }
 
 void Endpoint::objectDestroyed(QObject *obj)
@@ -270,7 +278,7 @@ void Endpoint::handlerDestroyed(QObject* obj)
   m_handlerMap.remove(obj);
   foreach (ObjectInfo *obj, objs) {
     obj->receiver = 0;
-    obj->messageHandler.clear();
+    obj->messageHandler = QMetaMethod();
     handlerDestroyed(obj->address, QString(obj->name)); // copy the name, in case unregisterMessageHandlerInternal() is called inside
   }
 }
@@ -300,7 +308,7 @@ void Endpoint::dispatchMessage(const Message& msg)
   }
 
   if (obj->receiver) {
-    QMetaObject::invokeMethod(obj->receiver, obj->messageHandler, Q_ARG(GammaRay::Message, msg));
+    obj->messageHandler.invoke(obj->receiver, Q_ARG(GammaRay::Message, msg));
   }
 
   if (!obj->receiver && (msg.type() != Protocol::MethodCall || !obj->object)) {

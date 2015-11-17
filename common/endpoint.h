@@ -32,6 +32,7 @@
 #include "gammaray_common_export.h"
 #include "protocol.h"
 
+#include <QMetaMethod>
 #include <QObject>
 #include <QPointer>
 
@@ -198,7 +199,7 @@ private:
 
     // custom message handling support
     QObject *receiver;
-    QByteArray messageHandler;
+    QMetaMethod messageHandler;
   };
 
   /** Inserts @p oi into all maps. */
