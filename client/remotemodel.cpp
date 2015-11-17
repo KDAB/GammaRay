@@ -319,7 +319,8 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     case Protocol::ModelContentChanged:
     {
       Protocol::ModelIndex beginIndex, endIndex;
-      msg.payload() >> beginIndex >> endIndex;
+      QVector<int> roles;
+      msg.payload() >> beginIndex >> endIndex >> roles;
       Node *node = nodeForIndex(beginIndex);
       if (!node || node == m_root)
         break;
@@ -340,7 +341,11 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       const QModelIndex qmiBegin = modelIndexForNode(node, beginIndex.last().second);
       const QModelIndex qmiEnd = qmiBegin.sibling(endIndex.last().first, endIndex.last().second);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
       emit dataChanged(qmiBegin, qmiEnd);
+#else
+      emit dataChanged(qmiBegin, qmiEnd, roles);
+#endif
       break;
     }
 

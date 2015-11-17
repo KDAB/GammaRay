@@ -98,7 +98,7 @@ class RemoteModelServer : public QObject
     friend class FakeRemoteModelServer;
 
   private slots:
-    void dataChanged(const QModelIndex &begin, const QModelIndex &end);
+    void dataChanged(const QModelIndex &begin, const QModelIndex &end, const QVector<int> &roles = QVector<int>());
     void headerDataChanged(Qt::Orientation orientation, int first, int last);
     void rowsInserted(const QModelIndex &parent, int start, int end);
     void rowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow);

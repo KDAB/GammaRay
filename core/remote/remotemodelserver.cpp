@@ -88,7 +88,6 @@ void RemoteModelServer::connectModel()
   Q_ASSERT(m_model);
   Model::used(m_model);
 
-  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
   connect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), SLOT(headerDataChanged(Qt::Orientation,int,int)));
   connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(rowsInserted(QModelIndex,int,int)));
   connect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
@@ -98,8 +97,10 @@ void RemoteModelServer::connectModel()
   connect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
   connect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), SLOT(columnsRemoved(QModelIndex,int,int)));
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)));
   connect(m_model, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
 #else
+  connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
   connect(m_model, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
           this, SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
 #endif
@@ -112,7 +113,6 @@ void RemoteModelServer::disconnectModel()
   Q_ASSERT(m_model);
   Model::unused(m_model);
 
-  disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
   disconnect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), this, SLOT(headerDataChanged(Qt::Orientation,int,int)));
   disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)));
   disconnect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
@@ -122,11 +122,13 @@ void RemoteModelServer::disconnectModel()
   disconnect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
   disconnect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), this, SLOT(columnsRemoved(QModelIndex,int,int)));
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+  disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
   disconnect(m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()));
 #else
   disconnect(m_model, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
              this, SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
 #endif
+  disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
   disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
   disconnect(m_model, SIGNAL(destroyed(QObject*)), this, SLOT(modelDeleted()));
 }
@@ -288,13 +290,12 @@ void RemoteModelServer::modelMonitored(bool monitored)
   }
 }
 
-void RemoteModelServer::dataChanged(const QModelIndex& begin, const QModelIndex& end)
+void RemoteModelServer::dataChanged(const QModelIndex& begin, const QModelIndex& end, const QVector<int> &roles)
 {
-  // TODO check if somebody is listening (here or in Server?)
   if (!isConnected())
     return;
   Message msg(m_myAddress, Protocol::ModelContentChanged);
-  msg.payload() << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end);
+  msg.payload() << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end) << roles;
   sendMessage(msg);
 }
 
