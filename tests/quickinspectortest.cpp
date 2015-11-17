@@ -249,6 +249,65 @@ private slots:
         delete view;
         QTest::qWait(1);
     }
+
+    void testCustomRenderModes()
+    {
+        createProbe();
+
+        // we need one view for the plugin to activate, otherwise the model will not be available
+        auto view = new QQuickView;
+        view->show();
+        QTest::qWait(1); // event loop re-entry
+
+        auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
+        QVERIFY(toolModel);
+
+        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
+        QVERIFY(itemModel);
+
+        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
+        QVERIFY(sgModel);
+
+        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
+        QVERIFY(inspector);
+        inspector->selectWindow(0);
+        QTest::qWait(1);
+
+        QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
+        QVERIFY(renderSpy.isValid());
+
+        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
+        renderSpy.wait(1000);
+
+        // We can't do more than making sure, it doesn't crash. Let's wait some frames
+        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
+        for (int i = 0; i < 3; i++) {
+          renderSpy.wait(1000);
+        }
+
+        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
+        for (int i = 0; i < 3; i++) {
+          renderSpy.wait(1000);
+        }
+
+        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
+        for (int i = 0; i < 3; i++) {
+          renderSpy.wait(1000);
+        }
+
+        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
+        for (int i = 0; i < 3; i++) {
+          renderSpy.wait(1000);
+        }
+
+        inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
+        for (int i = 0; i < 3; i++) {
+          renderSpy.wait(1000);
+        }
+
+        delete view;
+        QTest::qWait(1);
+    }
 };
 
 QTEST_MAIN(QuickInspectorTest)

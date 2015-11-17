@@ -531,22 +531,23 @@ void QuickInspector::setCustomRenderMode(
                               customRenderMode == VisualizeBatches  ? "batches"  :
                               customRenderMode == VisualizeChanges  ? "changes"  :
                               "";
-  m_window->update();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-  if (customRenderMode == VisualizeBatches) {
-    // Work around a performance optimization done in Qt 5.5, that breaks batch
-    // visualization completely. Because it breaks batch visualization,
-    // QSGBatchRenderer will only apply it if no batch visualization is applied.
-    // This workaround forces the batch renderer to reevaluate that, so that it
-    // recognizes it now is applied.
-    QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
-    QSGNode *rootNode = contentPriv->itemNode();
-    while(rootNode->type() != QSGNode::RootNodeType)
-        rootNode = rootNode->parent();
-    winPriv->renderer->nodeChanged(rootNode, QSGNode::DirtyNodeRemoved);
-    winPriv->renderer->nodeChanged(rootNode, QSGNode::DirtyNodeAdded);
+  // Qt does some performance optimizations that break custom render modes.
+  // Thus the optimizations are only applied if there is no custom render mode set.
+  // So we need to make the scenegraph recheck wether a custom render mode is set.
+  // We do this by simply recreating the renderer.
+
+  QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
+  QSGNode *rootNode = contentPriv->itemNode();
+  while(rootNode->parent()) {
+      rootNode = rootNode->parent();
   }
+
+  delete winPriv->renderer;
+  winPriv->renderer = winPriv->context->createRenderer();
+  winPriv->renderer->setRootNode(static_cast<QSGRootNode*>(rootNode));
 #endif
+  m_window->update();
 
 #else
   Q_UNUSED(customRenderMode);
