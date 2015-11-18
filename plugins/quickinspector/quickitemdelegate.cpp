@@ -28,6 +28,9 @@
 
 #include "quickitemdelegate.h"
 #include "quickitemmodelroles.h"
+
+#include <client/remotemodel.h>
+
 #include <QPainter>
 #include <QIcon>
 #include <QVariant>
@@ -106,6 +109,13 @@ QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
   Q_UNUSED(option);
+
+  // don't load content just for the sizeHint, only when we actually display
+  auto state = index.data(RemoteModel::LoadingState).value<RemoteModel::NodeStates>();
+  if (state & RemoteModel::Empty) {
+    static const auto loadingSize = m_view->fontMetrics().size(Qt::TextSingleLine, tr("Loading..."));
+    return QSize(loadingSize.width(), std::max(loadingSize.height(), 16));
+  }
 
   QSize textSize =
     m_view->fontMetrics().size(Qt::TextSingleLine, index.data(Qt::DisplayRole).toString());
