@@ -237,7 +237,9 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       }
       int rowCount, columnCount;
       msg.payload() >> rowCount >> columnCount;
-      Q_ASSERT(rowCount >= 0 && columnCount >= 0);
+      // we get -1/-1 if we requested for an invalid index, e.g. due to not having processed
+      // all structure changes yet. This will automatically trigger a retry.
+      Q_ASSERT((rowCount >= 0 && columnCount >= 0) || (rowCount == -1 && columnCount == -1));
       if (rowCount == node->rowCount && columnCount == node->columnCount) {
         // This can happen in similar racy conditions as below, when we request the row/col count
         // for two different Node* at the same index (one was deleted inbetween and then the other
@@ -252,15 +254,15 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
 
-      if (columnCount) {
+      if (columnCount > 0) {
         beginInsertColumns(qmi, 0, columnCount - 1);
         node->columnCount = columnCount;
         endInsertColumns();
       } else {
-        node->columnCount = 0;
+        node->columnCount = columnCount;
       }
 
-      if (rowCount) {
+      if (rowCount > 0) {
         beginInsertRows(qmi, 0, rowCount - 1);
         node->children.reserve(rowCount);
         for (int i = 0; i < rowCount; ++i) {
@@ -271,7 +273,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         node->rowCount = rowCount;
         endInsertRows();
       } else {
-        node->rowCount = 0;
+        node->rowCount = rowCount;
       }
       break;
     }

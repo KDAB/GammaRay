@@ -146,8 +146,14 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
       msg.payload() >> index;
       const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
 
+      qint32 rowCount = -1, columnCount = -1;
+      if (index.isEmpty() || qmIndex.isValid()) {
+        rowCount = m_model->rowCount(qmIndex);
+        columnCount = m_model->columnCount(qmIndex);
+      }
+
       Message msg(m_myAddress, Protocol::ModelRowColumnCountReply);
-      msg.payload() << index << m_model->rowCount(qmIndex) << m_model->columnCount(qmIndex);
+      msg.payload() << index << rowCount << columnCount;
       sendMessage(msg);
       break;
     }
