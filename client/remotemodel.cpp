@@ -235,15 +235,16 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         // the object may already have been invalidated.
         break;
       }
-      int rowCount, columnCount;
+      qint32 rowCount, columnCount;
       msg.payload() >> rowCount >> columnCount;
       // we get -1/-1 if we requested for an invalid index, e.g. due to not having processed
       // all structure changes yet. This will automatically trigger a retry.
       Q_ASSERT((rowCount >= 0 && columnCount >= 0) || (rowCount == -1 && columnCount == -1));
-      if (rowCount == node->rowCount && columnCount == node->columnCount) {
+      if (node->rowCount >= 0 || node->columnCount >= 0) {
         // This can happen in similar racy conditions as below, when we request the row/col count
         // for two different Node* at the same index (one was deleted inbetween and then the other
-        // was created). Anyhow, since the data is equal we can/should ignore it anyways.
+        // was created). We ignore the new data as the node it is intended for will request it again
+        // after processing all structure changes.
         break;
       }
 
