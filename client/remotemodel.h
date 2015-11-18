@@ -165,6 +165,10 @@ private:
 
     qint32 m_currentSyncBarrier, m_targetSyncBarrier;
 
+    // default data() values for empty cells
+    static QVariant s_emptyDisplayValue;
+    static QVariant s_emptySizeHintValue;
+
     // proxy model properties
     bool m_proxyDynamicSortFilter;
     Qt::CaseSensitivity m_proxyCaseSensitivity;

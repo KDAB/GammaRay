@@ -31,8 +31,11 @@
 
 #include <common/message.h>
 
+#include <QApplication>
 #include <QDataStream>
 #include <QDebug>
+#include <QStyle>
+#include <QStyleOptionViewItem>
 
 using namespace GammaRay;
 
@@ -61,6 +64,9 @@ void RemoteModel::Node::clearChildrenStructure()
   columnCount = -1;
 }
 
+QVariant RemoteModel::s_emptyDisplayValue;
+QVariant RemoteModel::s_emptySizeHintValue;
+
 RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   QAbstractItemModel(parent),
   m_pendingDataRequestsTimer(new QTimer(this)),
@@ -72,6 +78,19 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent) :
   m_proxyCaseSensitivity(Qt::CaseSensitive),
   m_proxyKeyColumn(0)
 {
+  if (s_emptyDisplayValue.isNull()) {
+    s_emptyDisplayValue = tr("Loading...");
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    QStyleOptionViewItemV4 opt;
+    opt.features |= QStyleOptionViewItemV4::HasDisplay;
+#else
+    QStyleOptionViewItem opt;
+    opt.features |= QStyleOptionViewItem::HasDisplay;
+#endif
+    opt.text = s_emptyDisplayValue.toString();
+    s_emptySizeHintValue = QApplication::style()->sizeFromContents(QStyle::CT_ItemViewItem, &opt, QSize(), Q_NULLPTR);
+  }
+
   m_root = new Node;
 
   m_pendingDataRequestsTimer->setInterval(0);
@@ -159,13 +178,19 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
     return QVariant::fromValue(state);
   }
 
+  // for size hint we don't want to trigger loading, as that's largely used for item view layouting
+  if (state & Empty) {
+    if (role == Qt::SizeHintRole)
+      return s_emptySizeHintValue;
+  }
+
   if ((state & Outdated) && ((state & Loading) == 0)) {
     requestDataAndFlags(index);
   }
 
   if (state & Empty) { // still waiting for data
     if (role == Qt::DisplayRole)
-      return tr("Loading...");
+      return s_emptyDisplayValue;
     return QVariant();
   }
 

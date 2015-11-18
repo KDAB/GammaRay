@@ -29,8 +29,6 @@
 #include "quickitemdelegate.h"
 #include "quickitemmodelroles.h"
 
-#include <client/remotemodel.h>
-
 #include <QPainter>
 #include <QIcon>
 #include <QVariant>
@@ -110,12 +108,10 @@ QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
   Q_UNUSED(option);
 
-  // don't load content just for the sizeHint, only when we actually display
-  auto state = index.data(RemoteModel::LoadingState).value<RemoteModel::NodeStates>();
-  if (state & RemoteModel::Empty) {
-    static const auto loadingSize = m_view->fontMetrics().size(Qt::TextSingleLine, tr("Loading..."));
-    return QSize(loadingSize.width(), std::max(loadingSize.height(), 16));
-  }
+  // this gets us the cached value for empty cells
+  const auto sh = index.data(Qt::SizeHintRole);
+  if (sh.isValid())
+    return sh.toSize();
 
   QSize textSize =
     m_view->fontMetrics().size(Qt::TextSingleLine, index.data(Qt::DisplayRole).toString());
