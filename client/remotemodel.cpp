@@ -155,12 +155,12 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
   Q_ASSERT(node);
 
   const NodeStates state = stateForColumn(node, index.column());
-  if ((state & Outdated) && ((state & Loading) == 0)) {
-    requestDataAndFlags(index);
-  }
-
   if (role == LoadingState) {
     return QVariant::fromValue(state);
+  }
+
+  if ((state & Outdated) && ((state & Loading) == 0)) {
+    requestDataAndFlags(index);
   }
 
   if (state & Empty) { // still waiting for data
