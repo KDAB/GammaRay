@@ -65,6 +65,8 @@ void QuickItemTreeWatcher::itemModelRowsInserted(const QModelIndex &parent, int 
       m_itemView->setExpanded(index, true);
     }
   }
+
+  m_itemView->resizeColumnToContents(0);
 }
 
 void QuickItemTreeWatcher::sgModelRowsInserted(const QModelIndex &parent, int start, int end)
