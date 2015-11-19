@@ -35,17 +35,17 @@
 #include <core/metaobjectrepository.h>
 #include <core/propertycontroller.h>
 #include <core/varianthandler.h>
-
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/server.h>
 
-#include <kde/krecursivefilterproxymodel.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
 #include <common/metatypedeclarations.h>
 #include <common/objectmodel.h>
+
+#include <kde/krecursivefilterproxymodel.h>
 
 #include <QGraphicsEffect>
 #include <QGraphicsItem>
@@ -94,8 +94,10 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
           this, SLOT(sceneSelected(QItemSelection)));
 
   m_sceneModel = new SceneModel(this);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"), m_sceneModel);
-  m_itemSelectionModel = ObjectBroker::selectionModel(m_sceneModel);
+  auto sceneProxy = new KRecursiveFilterProxyModel(this);
+  sceneProxy->setSourceModel(m_sceneModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"), sceneProxy);
+  m_itemSelectionModel = ObjectBroker::selectionModel(sceneProxy);
   connect(m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(sceneItemSelected(QItemSelection)));
 
@@ -230,11 +232,11 @@ void SceneInspector::objectSelected(QObject *object, const QPoint &pos)
 
 void SceneInspector::sceneItemSelected(QGraphicsItem *item)
 {
-  const QModelIndexList indexList =
-    m_sceneModel->match(m_sceneModel->index(0, 0),
-                 SceneModel::SceneItemRole,
-                 QVariant::fromValue<QGraphicsItem*>(item), 1,
-                 Qt::MatchExactly | Qt::MatchRecursive);
+  const auto indexList = m_itemSelectionModel->model()->match(
+        m_itemSelectionModel->model()->index(0, 0),
+        SceneModel::SceneItemRole,
+        QVariant::fromValue<QGraphicsItem*>(item), 1,
+        Qt::MatchExactly | Qt::MatchRecursive);
   if (indexList.isEmpty()) {
     return;
   }
