@@ -120,12 +120,14 @@ void Client::messageReceived(const Message& msg)
   // server version must be the very first message we get
   if (!(m_initState & VersionChecked)) {
     if (msg.address() != endpointAddress() || msg.type() != Protocol::ServerVersion) {
-      qFatal("Protocol violation - first message is not the server version.\n");
+      emit persisitentConnectionError(tr("Protocol violation, first message is not the server version."));
+      disconnectFromHost();
     }
     qint32 serverVersion;
     msg.payload() >> serverVersion;
     if (serverVersion != Protocol::version()) {
-      qFatal("Server version is %d, was expecting %d - aborting.\n", serverVersion, Protocol::version());
+      emit persisitentConnectionError(tr("Server version is %1, was expecting %2.").arg(serverVersion).arg(Protocol::version()));
+      disconnectFromHost();
     }
     m_initState |= VersionChecked;
     return;
