@@ -125,10 +125,10 @@ void RemoteModelServer::disconnectModel()
   disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
   disconnect(m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()));
 #else
+  disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
   disconnect(m_model, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
              this, SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
 #endif
-  disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
   disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
   disconnect(m_model, SIGNAL(destroyed(QObject*)), this, SLOT(modelDeleted()));
 }
