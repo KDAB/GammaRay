@@ -641,7 +641,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 {
   Q_ASSERT(section >= 0);
   Q_ASSERT(!m_headers.value(orientation).contains(section));
-  m_headers[orientation][section][Qt::DisplayRole] = tr("Loading...");
+  m_headers[orientation][section][Qt::DisplayRole] = s_emptyDisplayValue;
 
   Message msg(m_myAddress, Protocol::ModelHeaderRequest);
   msg.payload() << qint8(orientation) << qint32(section);
