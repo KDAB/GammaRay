@@ -169,6 +169,7 @@ void MimeTypesModel::fillModel()
     return;
   m_modelFilled = true;
 
+  blockSignals(true);
   setHorizontalHeaderLabels(QStringList() << tr("Name")
                                           << tr("Comment")
                                           << tr("Glob Patterns")
@@ -183,5 +184,6 @@ void MimeTypesModel::fillModel()
   }
 
   m_mimeTypeNodes.clear();
+  blockSignals(false);
 }
 

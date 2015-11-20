@@ -41,9 +41,6 @@ class MimeTypes : public QObject
   public:
     explicit MimeTypes(ProbeInterface *probe, QObject *parent = 0);
     ~MimeTypes();
-
-  private:
-    QStandardItemModel *m_model;
 };
 
 class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, MimeTypes>

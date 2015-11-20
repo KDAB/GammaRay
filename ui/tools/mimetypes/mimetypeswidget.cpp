@@ -30,9 +30,9 @@
 #include "ui_mimetypeswidget.h"
 
 #include <ui/deferredresizemodesetter.h>
-#include <common/objectbroker.h>
+#include <ui/searchlinecontroller.h>
 
-#include <kde/krecursivefilterproxymodel.h>
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 
@@ -41,14 +41,12 @@ MimeTypesWidget::MimeTypesWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  QSortFilterProxyModel *proxy = new KRecursiveFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MimeTypeModel")));
-  ui->mimeTypeView->setModel(proxy);
+  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"));
+  ui->mimeTypeView->setModel(model);
   new DeferredResizeModeSetter(ui->mimeTypeView->header(), 0, QHeaderView::ResizeToContents);
   new DeferredResizeModeSetter(ui->mimeTypeView->header(), 1, QHeaderView::ResizeToContents);
   ui->mimeTypeView->sortByColumn(0, Qt::AscendingOrder);
-  ui->searchLine->setProxy(proxy);
+  new SearchLineController(ui->searchLine, model);
 }
 
 MimeTypesWidget::~MimeTypesWidget()

@@ -29,13 +29,17 @@
 #include "mimetypes.h"
 #include "mimetypesmodel.h"
 
+#include <3rdparty/kde/krecursivefilterproxymodel.h>
+
 using namespace GammaRay;
 
 MimeTypes::MimeTypes(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
-  m_model = new MimeTypesModel(this);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"), m_model);
+  auto model = new MimeTypesModel(this);
+  auto proxy = new KRecursiveFilterProxyModel(this);
+  proxy->setSourceModel(model);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"), proxy);
 }
 
 MimeTypes::~MimeTypes()
