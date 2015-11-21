@@ -95,7 +95,7 @@ public:
     {
       const QString iid = QString::fromLatin1(qobject_interface_iid<IFace*>());
       Q_ASSERT(!iid.isEmpty());
-      const QString serviceType = iid.split('/').first();
+      const QString serviceType = iid.split(QLatin1Char('/')).first();
       scan(serviceType);
     }
 
