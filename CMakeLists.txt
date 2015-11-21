@@ -349,7 +349,7 @@ else()
   add_definitions(-DQT4_MOC_WORKAROUND)
 endif()
 
-add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
+add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS -DQT_NO_URL_CAST_FROM_STRING)
 # disable QT_STRICT_ITERATORS on the Qt5+Windows combo
 # see: https://bugreports.qt-project.org/browse/QTBUG-29608
 if(NOT (Qt5Core_FOUND AND WIN32))
