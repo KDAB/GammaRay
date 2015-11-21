@@ -77,7 +77,6 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
         if (QMetaType::typeFlags(value.userType()) & QMetaType::IsGadget) {
             m_metaObj = QMetaType::metaObjectForType(value.userType());
             if (m_metaObj) {
-                m_obj = const_cast<void*>(value.data());
                 m_type = QtGadget;
             }
         }
@@ -98,9 +97,13 @@ QObject* ObjectInstance::qtObject() const
 void* ObjectInstance::object() const
 {
     Q_ASSERT(m_type == QtObject || m_type == QtGadget || m_type == Object);
-    if (m_type == QtObject)
-        return m_qtObj;
-    return m_obj;
+    switch (m_type) {
+        case QtObject: return m_qtObj;
+        case QtGadget: return m_obj ? m_obj : const_cast<void*>(m_variant.constData());
+        default: return m_obj;
+    }
+    Q_ASSERT(false);
+    return Q_NULLPTR;
 }
 
 QVariant ObjectInstance::variant() const
