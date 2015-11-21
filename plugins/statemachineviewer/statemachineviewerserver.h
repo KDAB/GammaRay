@@ -61,11 +61,11 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     explicit StateMachineViewerServer(ProbeInterface *probe, QObject *parent = 0);
 
     void addState(QAbstractState *state);
-    void addTransition(QAbstractTransition *transition);
 
     QStateMachine *selectedStateMachine() const;
 
     using StateMachineViewerInterface::stateConfigurationChanged;
+
   private slots:
     void stateEntered(QAbstractState *state);
     void stateExited(QAbstractState *state);
@@ -85,6 +85,9 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     void repopulateGraph() Q_DECL_OVERRIDE;
 
   private:
+
+    void addStateOnly(QAbstractState *state);
+    void addTransition(QAbstractTransition *transition);
 
     void updateStateItems();
 
