@@ -39,6 +39,7 @@
 #ifndef GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 #define GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
 
+#include "gammaray_core_export.h"
 #include "objectmodelbase.h"
 
 #include <QSortFilterProxyModel>
@@ -48,17 +49,15 @@ namespace GammaRay {
 /**
  * @brief A QSortFilterProxyModel for generic Objects.
  */
-class ObjectFilterProxyModelBase : public QSortFilterProxyModel
+class GAMMARAY_CORE_EXPORT ObjectFilterProxyModelBase : public QSortFilterProxyModel
 {
+  Q_OBJECT
   public:
     /**
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit ObjectFilterProxyModelBase(QObject *parent = 0) : QSortFilterProxyModel(parent)
-    {
-      setDynamicSortFilter(true);
-    }
+    explicit ObjectFilterProxyModelBase(QObject *parent = Q_NULLPTR);
 
   protected:
     /**
@@ -68,20 +67,7 @@ class ObjectFilterProxyModelBase : public QSortFilterProxyModel
      * @return true if the item in the row can be included in the model;
      *         otherwise returns false.
      */
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE
-    {
-      const QModelIndex source_index = sourceModel()->index(source_row, 0, source_parent);
-      if (!source_index.isValid()) {
-        return false;
-      }
-
-      QObject *obj = source_index.data(ObjectModel::ObjectRole).value<QObject*>();
-      if (!obj || !filterAcceptsObject(obj)) {
-        return false;
-      }
-
-      return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
-    }
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 
     /**
      * Determines if the specified QObject can be included in the model.
