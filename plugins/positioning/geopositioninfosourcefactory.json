@@ -1,0 +1,9 @@
+{
+    "Keys": ["gammaray"],
+    "Provider": "gammaray",
+    "Position": true,
+    "Satellite": false,
+    "Monitor" : false,
+    "Priority": 999999,
+    "Testable": false
+}
