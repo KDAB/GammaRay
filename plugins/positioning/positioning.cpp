@@ -30,17 +30,35 @@
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/varianthandler.h>
 
 #include <QGeoPositionInfoSource>
 #include <QGeoSatelliteInfoSource>
 #include <QGeoAreaMonitorSource>
 
 Q_DECLARE_METATYPE(QGeoPositionInfoSource::Error)
+Q_DECLARE_METATYPE(QGeoPositionInfoSource::PositioningMethods)
 Q_DECLARE_METATYPE(QGeoSatelliteInfoSource::Error)
 Q_DECLARE_METATYPE(QGeoAreaMonitorSource::Error)
 Q_DECLARE_METATYPE(QGeoAreaMonitorSource::AreaMonitorFeatures)
 
 using namespace GammaRay;
+
+static QString positioningMethodsToString(QGeoPositionInfoSource::PositioningMethods methods)
+{
+    if (methods == QGeoPositionInfoSource::NoPositioningMethods)
+        return QStringLiteral("NoPositioningMethods");
+    if (methods == QGeoPositionInfoSource::AllPositioningMethods)
+        return QStringLiteral("AllPositioningMethods");
+
+    QStringList l;
+    if (methods & QGeoPositionInfoSource::SatellitePositioningMethods)
+        l.push_back(QStringLiteral("SatellitePositioningMethods"));
+    if (methods & QGeoPositionInfoSource::NonSatellitePositioningMethods)
+        l.push_back(QStringLiteral("NonSatellitePositioningMethods"));
+
+  return l.join(QLatin1Char('|'));
+}
 
 Positioning::Positioning(ProbeInterface* probe, QObject* parent): QObject(parent)
 {
@@ -49,6 +67,8 @@ Positioning::Positioning(ProbeInterface* probe, QObject* parent): QObject(parent
     MetaObject *mo = 0;
     MO_ADD_METAOBJECT1(QGeoPositionInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::Error, error);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods, preferredPositioningMethods);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods, supportedPositioningMethods);
 
     MO_ADD_METAOBJECT1(QGeoSatelliteInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoSatelliteInfoSource, QGeoSatelliteInfoSource::Error, error);
@@ -58,6 +78,8 @@ Positioning::Positioning(ProbeInterface* probe, QObject* parent): QObject(parent
     MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QGeoAreaMonitorSource::Error, error);
     MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QString, sourceName);
     MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QGeoAreaMonitorSource::AreaMonitorFeatures, supportedAreaMonitorFeatures);
+
+    VariantHandler::registerStringConverter<QGeoPositionInfoSource::PositioningMethods>(positioningMethodsToString);
 }
 
 QString PositioningFactory::name() const
