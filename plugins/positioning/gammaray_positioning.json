@@ -1,0 +1,6 @@
+{
+    "id": "gammaray_positioning",
+    "name": "Positioning",
+    "types": [ "QGeoPositionInfoSource", "QGeoSatelliteInfoSource" ],
+    "hidden": true
+}

@@ -232,6 +232,7 @@ if(Qt5Core_FOUND)
     Bluetooth
     Concurrent
     Designer
+    Positioning
     PrintSupport
     Qml
     Quick

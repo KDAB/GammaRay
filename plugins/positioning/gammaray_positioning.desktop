@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Positioning
+X-GammaRay-Types=QGeoPositionInfoSource;
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
+Exec=gammaray_positioning
+Hidden=true

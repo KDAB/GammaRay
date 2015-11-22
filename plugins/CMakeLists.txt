@@ -32,3 +32,7 @@ endif()
 if(Qt5Bluetooth_FOUND)
   add_subdirectory(bluetooth)
 endif()
+
+if(Qt5Positioning_FOUND)
+  add_subdirectory(positioning)
+endif()
