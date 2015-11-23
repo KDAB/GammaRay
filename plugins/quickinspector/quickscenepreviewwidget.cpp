@@ -67,7 +67,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
   QActionGroup *visualizeGroup = new QActionGroup(this);
   visualizeGroup->setExclusive(true);
-  m_toolBar.visualizeClipping = new QAction(QIcon(":/gammaray/plugins/quickinspector/visualize-clipping.png"), "Visualize Clipping", this);
+  m_toolBar.visualizeClipping = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-clipping.png")), tr("Visualize Clipping"), this);
   m_toolBar.visualizeClipping->setActionGroup(visualizeGroup);
   m_toolBar.visualizeClipping->setCheckable(true);
   m_toolBar.visualizeClipping->setToolTip(tr("<b>Visualize Clipping</b><br/>"
@@ -81,7 +81,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeClipping);
   connect(m_toolBar.visualizeClipping, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
-  m_toolBar.visualizeOverdraw = new QAction(QIcon(":/gammaray/plugins/quickinspector/visualize-overdraw.png"), "Visualize Overdraw", this);
+  m_toolBar.visualizeOverdraw = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-overdraw.png")), tr("Visualize Overdraw"), this);
   m_toolBar.visualizeOverdraw->setActionGroup(visualizeGroup);
   m_toolBar.visualizeOverdraw->setCheckable(true);
   m_toolBar.visualizeOverdraw->setToolTip(tr("<b>Visualize Overdraw</b><br/>"
@@ -96,7 +96,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeOverdraw);
   connect(m_toolBar.visualizeOverdraw, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
-  m_toolBar.visualizeBatches = new QAction(QIcon(":/gammaray/plugins/quickinspector/visualize-batches.png"), "Visualize Batches", this);
+  m_toolBar.visualizeBatches = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-batches.png")), tr("Visualize Batches"), this);
   m_toolBar.visualizeBatches->setActionGroup(visualizeGroup);
   m_toolBar.visualizeBatches->setCheckable(true);
   m_toolBar.visualizeBatches->setToolTip(tr("<b>Visualize Batches</b><br/>"
@@ -114,7 +114,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeBatches);
   connect(m_toolBar.visualizeBatches, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
-  m_toolBar.visualizeChanges = new QAction(QIcon(":/gammaray/plugins/quickinspector/visualize-changes.png"), "Visualize Changes", this);
+  m_toolBar.visualizeChanges = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-changes.png")), tr("Visualize Changes"), this);
   m_toolBar.visualizeChanges->setActionGroup(visualizeGroup);
   m_toolBar.visualizeChanges->setCheckable(true);
   m_toolBar.visualizeChanges->setToolTip(tr("<b>Visualize Changes</b><br>"
@@ -134,7 +134,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   mouseToolGroup->setExclusive(true);
   connect(mouseToolGroup, SIGNAL(triggered(QAction*)), this, SLOT(setMouseTool(QAction*)));
 
-  m_toolBar.movePreview = new QAction(QIcon(":/gammaray/plugins/quickinspector/move-preview.png"), tr("Move Preview"), this);
+  m_toolBar.movePreview = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/move-preview.png")), tr("Move Preview"), this);
   m_toolBar.movePreview->setActionGroup(mouseToolGroup);
   m_toolBar.movePreview->setToolTip(tr("<b>Move preview</b><br>"
       "Default mode. Click and drag to move the preview. Won't impact the original "
@@ -143,7 +143,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.movePreview->setChecked(true);
   m_toolBar.toolbarWidget->addAction(m_toolBar.movePreview);
 
-  m_toolBar.measurePixels = new QAction(QIcon(":/gammaray/plugins/quickinspector/measure-pixels.png"), tr("Measure Pizel Sizes"), this);
+  m_toolBar.measurePixels = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pizel Sizes"), this);
   m_toolBar.measurePixels->setActionGroup(mouseToolGroup);
   m_toolBar.measurePixels->setToolTip(tr("<b>Measure pixel-sizes</b> (Ctrl)<br>"
       "Choose this mode, click somewhere and drag to measure the distance between the "
@@ -152,7 +152,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.measurePixels->setCheckable(true);
   m_toolBar.toolbarWidget->addAction(m_toolBar.measurePixels);
 
-  m_toolBar.redirectInput = new QAction(QIcon(":/gammaray/plugins/quickinspector/redirect-input.png"), tr("Redirect Input"), this);
+  m_toolBar.redirectInput = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/redirect-input.png")), tr("Redirect Input"), this);
   m_toolBar.redirectInput->setActionGroup(mouseToolGroup);
   m_toolBar.redirectInput->setToolTip(tr("<b>Redirect Input</b> (Shift)<br>"
       "In this mode all mouse input is redirected directly to the original application,"
@@ -164,19 +164,19 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
 
   m_toolBar.zoomCombobox = new QComboBox(this);
-  m_toolBar.zoomCombobox->addItem("12.5 %", .125);
-  m_toolBar.zoomCombobox->addItem("20 %", .2);
-  m_toolBar.zoomCombobox->addItem("25 %", .25);
-  m_toolBar.zoomCombobox->addItem("33 %", 1.0/3);
-  m_toolBar.zoomCombobox->addItem("50 %", .5);
-  m_toolBar.zoomCombobox->addItem("100 %", 1);
+  m_toolBar.zoomCombobox->addItem(tr("12.5 %"), .125);
+  m_toolBar.zoomCombobox->addItem(tr("20 %"), .2);
+  m_toolBar.zoomCombobox->addItem(tr("25 %"), .25);
+  m_toolBar.zoomCombobox->addItem(tr("33 %"), 1.0/3);
+  m_toolBar.zoomCombobox->addItem(tr("50 %"), .5);
+  m_toolBar.zoomCombobox->addItem(tr("100 %"), 1);
   m_toolBar.zoomCombobox->setCurrentIndex(m_toolBar.zoomCombobox->count() - 1);
-  m_toolBar.zoomCombobox->addItem("200 %", 2);
-  m_toolBar.zoomCombobox->addItem("300 %", 3);
-  m_toolBar.zoomCombobox->addItem("400 %", 4);
-  m_toolBar.zoomCombobox->addItem("500 %", 5);
-  m_toolBar.zoomCombobox->addItem("1000 %", 10);
-  m_toolBar.zoomCombobox->addItem("2000 %", 20);
+  m_toolBar.zoomCombobox->addItem(tr("200 %"), 2);
+  m_toolBar.zoomCombobox->addItem(tr("300 %"), 3);
+  m_toolBar.zoomCombobox->addItem(tr("400 %"), 4);
+  m_toolBar.zoomCombobox->addItem(tr("500 %"), 5);
+  m_toolBar.zoomCombobox->addItem(tr("1000 %"), 10);
+  m_toolBar.zoomCombobox->addItem(tr("2000 %"), 20);
   connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomFromCombobox(int)));
 
   m_toolBar.toolbarWidget->addWidget(m_toolBar.zoomCombobox);
@@ -272,7 +272,7 @@ void QuickScenePreviewWidget::drawGeometry(QPainter* p)
     drawArrow(p, parentEnd, itemEnd);
     p->drawText(QRectF(parentEnd.x(), parentEnd.y() + 10, itemEnd.x() - parentEnd.x(), 50),
                 Qt::AlignHCenter | Qt::TextDontClip,
-                QString("x: %1px").arg(m_effectiveGeometry.x / m_zoom));
+                QStringLiteral("x: %1px").arg(m_effectiveGeometry.x / m_zoom));
   }
   if (!m_effectiveGeometry.top &&
       !m_effectiveGeometry.verticalCenter &&
@@ -284,50 +284,50 @@ void QuickScenePreviewWidget::drawGeometry(QPainter* p)
     drawArrow(p, parentEnd, itemEnd);
     p->drawText(QRectF(parentEnd.x() + 10, parentEnd.y(), 100, itemEnd.y() - parentEnd.y()),
                 Qt::AlignVCenter | Qt::TextDontClip,
-                QString("y: %1px").arg(m_effectiveGeometry.y / m_zoom));
+                QStringLiteral("y: %1px").arg(m_effectiveGeometry.y / m_zoom));
   }
 
   // anchors
   if (m_effectiveGeometry.left) {
     drawAnchor(p, Qt::Horizontal,
                m_effectiveGeometry.itemRect.left(), m_effectiveGeometry.leftMargin,
-               QString("margin: %1px").arg(m_effectiveGeometry.leftMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.leftMargin / m_zoom));
   }
 
   if (m_effectiveGeometry.horizontalCenter) {
     drawAnchor(p, Qt::Horizontal,
                (m_effectiveGeometry.itemRect.left() + m_effectiveGeometry.itemRect.right()) / 2, m_effectiveGeometry.horizontalCenterOffset,
-               QString("offset: %1px").arg(m_effectiveGeometry.horizontalCenterOffset / m_zoom));
+               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.horizontalCenterOffset / m_zoom));
   }
 
   if (m_effectiveGeometry.right) {
     drawAnchor(p, Qt::Horizontal,
                m_effectiveGeometry.itemRect.right(), -m_effectiveGeometry.rightMargin,
-               QString("margin: %1px").arg(m_effectiveGeometry.rightMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.rightMargin / m_zoom));
   }
 
   if (m_effectiveGeometry.top) {
     drawAnchor(p, Qt::Vertical,
                m_effectiveGeometry.itemRect.top(), m_effectiveGeometry.topMargin,
-               QString("margin: %1px").arg(m_effectiveGeometry.topMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.topMargin / m_zoom));
   }
 
   if (m_effectiveGeometry.verticalCenter) {
     drawAnchor(p, Qt::Vertical,
                (m_effectiveGeometry.itemRect.top() + m_effectiveGeometry.itemRect.bottom()) / 2, m_effectiveGeometry.verticalCenterOffset,
-               QString("offset: %1px").arg(m_effectiveGeometry.verticalCenterOffset / m_zoom));
+               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.verticalCenterOffset / m_zoom));
   }
 
   if (m_effectiveGeometry.bottom) {
     drawAnchor(p, Qt::Vertical,
                m_effectiveGeometry.itemRect.bottom(), -m_effectiveGeometry.bottomMargin,
-               QString("margin: %1px").arg(m_effectiveGeometry.bottomMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.bottomMargin / m_zoom));
   }
 
   if (m_effectiveGeometry.baseline) {
     drawAnchor(p, Qt::Vertical,
                m_effectiveGeometry.itemRect.top(), m_effectiveGeometry.baselineOffset,
-               QString("offset: %1px").arg(m_effectiveGeometry.baselineOffset / m_zoom));
+               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.baselineOffset / m_zoom));
   }
 
   p->restore();
@@ -405,7 +405,7 @@ void QuickScenePreviewWidget::drawRuler(QPainter* p)
 
     p->setPen(QColor(255, 255, 255, 170));
     p->drawText(QRect(width() - vRulerWidth, height() - hRulerHeight, vRulerWidth, hRulerHeight),
-                QString("%1x\n%2").arg(m_zoomedMousePosition.x()).arg(m_zoomedMousePosition.y()),
+                QStringLiteral("%1x\n%2").arg(m_zoomedMousePosition.x()).arg(m_zoomedMousePosition.y()),
                 Qt::AlignHCenter | Qt::AlignVCenter
                );
 
@@ -527,7 +527,7 @@ void QuickScenePreviewWidget::mouseMoveEvent(QMouseEvent* e)
   } else if (m_mouseMode == MeasurePixels && e->buttons()) {
     int x = m_zoomedMouseGrabPosition.x() - m_zoomedMousePosition.x(); // the division is on integer-precision by purpose
     int y = m_zoomedMouseGrabPosition.y() - m_zoomedMousePosition.y();
-    m_toolBar.measureLabel->setText(QString(" %1px").arg(std::sqrt((qreal)(x*x + y*y)), 0, 'f', 2));
+    m_toolBar.measureLabel->setText(QStringLiteral(" %1px").arg(std::sqrt((qreal)(x*x + y*y)), 0, 'f', 2));
   } else if (m_mouseMode == RedirectInput) { // here we want hover also
     m_inspectorInterface->sendMouseEvent(e->type(), (e->pos() - QPoint(m_x, m_y)) / m_zoom, e->button(), e->buttons(), e->modifiers());
   }
@@ -551,7 +551,7 @@ void QuickScenePreviewWidget::mouseReleaseEvent(QMouseEvent* e)
 {
   m_mousePressed = false;
   m_mouseGrabPosition = QPoint();
-  m_toolBar.measureLabel->setText("");
+  m_toolBar.measureLabel->setText(QString());
   update();
 
   if (m_mouseMode == RedirectInput) {

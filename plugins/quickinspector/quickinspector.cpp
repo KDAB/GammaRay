@@ -182,7 +182,7 @@ static QString qsgTextureFilteringToString(QSGTexture::Filtering filtering)
     case QSGTexture::Nearest: return QStringLiteral("Nearest");
     case QSGTexture::Linear: return QStringLiteral("Linear");
   }
-  return QString("Unknown: %1").arg(filtering);
+  return QStringLiteral("Unknown: %1").arg(filtering);
 }
 
 static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
@@ -191,7 +191,7 @@ static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
     case QSGTexture::Repeat: return QStringLiteral("Repeat");
     case QSGTexture::ClampToEdge: return QStringLiteral("ClampToEdge");
   }
-  return QString("Unknown: %1").arg(wrapMode);
+  return QStringLiteral("Unknown: %1").arg(wrapMode);
 }
 
 QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
