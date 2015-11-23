@@ -31,6 +31,9 @@
 
 #include <common/streamoperators.h>
 
+#include "quickitemgeometry.h"
+#include "transferimage.h"
+
 #include <QObject>
 #include <QRectF>
 #include <QVariantMap>
@@ -88,7 +91,7 @@ class QuickInspectorInterface : public QObject
   signals:
     /// Emitted when the view has been newly rendered, for the client to request an update.
     void sceneChanged();
-    void sceneRendered(const QVariantMap &previewData);
+    void sceneRendered(const GammaRay::TransferImage &image, const GammaRay::QuickItemGeometry &itemGeometry);
     void features(GammaRay::QuickInspectorInterface::Features features);
 
 };
