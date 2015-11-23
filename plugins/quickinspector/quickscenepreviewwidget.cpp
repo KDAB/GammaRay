@@ -177,7 +177,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.zoomCombobox->addItem("500 %", 5);
   m_toolBar.zoomCombobox->addItem("1000 %", 10);
   m_toolBar.zoomCombobox->addItem("2000 %", 20);
-  connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomFromCombo(int)));
+  connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomFromCombobox(int)));
 
   m_toolBar.toolbarWidget->addWidget(m_toolBar.zoomCombobox);
 
