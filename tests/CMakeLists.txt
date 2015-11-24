@@ -132,27 +132,27 @@ add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
 
 ### QWidget test
 
-if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+if(Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(widgettest
   widgettest.cpp
   ../probe/probecreator.cpp
   ../probe/hooks.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
 )
-target_link_libraries(widgettest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+target_link_libraries(widgettest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
 
 add_test(NAME widgettest COMMAND widgettest)
 endif()
 
 ### QAction test
 
-if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+if(Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(actiontest
   actiontest.cpp
   ../probe/probecreator.cpp
   ../probe/hooks.cpp
 )
-target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
 
 add_test(NAME actiontest COMMAND actiontest)
 endif()

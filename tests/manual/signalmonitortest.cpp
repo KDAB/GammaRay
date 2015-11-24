@@ -28,7 +28,7 @@
 
 #include "signalmonitortest.h"
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QTimer>
 
 SignalMonitorTest::SignalMonitorTest(QObject *parent)
@@ -60,7 +60,7 @@ void SignalMonitorTest::onTimeout()
 
 int main(int argc, char **argv)
 {
-  QApplication app(argc, argv);
+  QCoreApplication app(argc, argv);
   new SignalMonitorTest(&app);
   return app.exec();
 }
