@@ -37,8 +37,8 @@
 #include <QtTest/qtest.h>
 
 #include <QAbstractItemModel>
-#include <QAction>
 #include <QObject>
+#include <QWidget>
 
 using namespace GammaRay;
 
