@@ -38,6 +38,7 @@ namespace GammaRay {
  */
 class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
 {
+  Q_OBJECT
   public:
     /**
      * @param path Path to the plugin spec file

@@ -40,6 +40,7 @@ namespace GammaRay {
 
 class ProcessModel : public QAbstractTableModel
 {
+  Q_OBJECT
   public:
     explicit ProcessModel(QObject *parent = 0);
     virtual ~ProcessModel();

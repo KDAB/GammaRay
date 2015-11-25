@@ -36,6 +36,7 @@ namespace GammaRay {
 
 class QmlAttachedPropertyAdaptor : public PropertyAdaptor
 {
+    Q_OBJECT
 public:
     explicit QmlAttachedPropertyAdaptor(QObject* parent = 0);
     ~QmlAttachedPropertyAdaptor();

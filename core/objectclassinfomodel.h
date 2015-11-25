@@ -39,6 +39,7 @@ class ObjectClassInfoModel : public MetaObjectModel<QMetaClassInfo,
                                                     &QMetaObject::classInfoCount,
                                                     &QMetaObject::classInfoOffset>
 {
+  Q_OBJECT
   public:
     explicit ObjectClassInfoModel(QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

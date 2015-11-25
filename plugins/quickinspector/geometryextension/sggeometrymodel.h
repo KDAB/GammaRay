@@ -39,6 +39,7 @@ namespace GammaRay {
 
 class SGGeometryModel : public QAbstractTableModel
 {
+  Q_OBJECT
   public:
 
     enum Role {

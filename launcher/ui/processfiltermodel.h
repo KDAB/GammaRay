@@ -36,6 +36,7 @@ namespace GammaRay {
 // A filterable and sortable process model
 class ProcessFilterModel : public QSortFilterProxyModel
 {
+  Q_OBJECT
   public:
     explicit ProcessFilterModel(QObject *parent);
 

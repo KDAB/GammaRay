@@ -39,6 +39,7 @@ class TransitionModelPrivate;
 
 class TransitionModel : public ObjectModelBase<QAbstractItemModel>
 {
+  Q_OBJECT
   public:
     explicit TransitionModel(QObject *parent = 0);
     ~TransitionModel();
