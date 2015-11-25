@@ -146,7 +146,9 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
 
 void MessageHandlerWidget::copyToClipboard(const QString &message)
 {
+#ifndef QT_NO_CLIPBOARD
     QApplication::clipboard()->setText(message);
+#endif
 }
 
 void MessageHandlerWidget::messageContextMenu(const QPoint &pos)
