@@ -32,6 +32,8 @@
 #include "qt/resourcemodel.h"
 #include "common/objectbroker.h"
 
+#include <core/remote/serverproxymodel.h>
+
 #include <QDebug>
 #include <QItemSelectionModel>
 #include <QPixmap>
@@ -42,7 +44,7 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
   : ResourceBrowserInterface(parent)
 {
   ResourceModel *resourceModel = new ResourceModel(this);
-  ResourceFilterModel *proxy = new ResourceFilterModel(this);
+  auto proxy = new ServerProxyModel<ResourceFilterModel>(this);
   proxy->setSourceModel(resourceModel);
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.ResourceModel"), proxy);
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);

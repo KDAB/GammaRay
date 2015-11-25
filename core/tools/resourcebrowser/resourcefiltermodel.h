@@ -29,17 +29,16 @@
 #ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
 #define GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
 
-#include <QSortFilterProxyModel>
+#include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 namespace GammaRay {
 
-class ResourceFilterModel : public QSortFilterProxyModel
+class ResourceFilterModel : public KRecursiveFilterProxyModel
 {
   Q_OBJECT
   public:
     explicit ResourceFilterModel(QObject *parent = 0);
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 }

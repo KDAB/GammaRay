@@ -35,7 +35,7 @@
 using namespace GammaRay;
 
 ResourceFilterModel::ResourceFilterModel(QObject *parent)
-  : QSortFilterProxyModel(parent)
+  : KRecursiveFilterProxyModel(parent)
 {
 }
 
@@ -46,10 +46,5 @@ bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex &so
   if (path == QLatin1String(":/gammaray") || path.startsWith(QLatin1String(":/gammaray/"))) {
     return false;
   }
-  return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
-}
-
-QMap<int, QVariant> ResourceFilterModel::itemData(const QModelIndex &index) const
-{
-  return sourceModel()->itemData(mapToSource(index));
+  return KRecursiveFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }

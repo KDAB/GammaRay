@@ -32,7 +32,7 @@
 
 using namespace GammaRay;
 
-ClientResourceModel::ClientResourceModel(QObject* parent): KRecursiveFilterProxyModel(parent)
+ClientResourceModel::ClientResourceModel(QObject* parent): QIdentityProxyModel(parent)
 {
 }
 
@@ -62,6 +62,6 @@ QVariant ClientResourceModel::data(const QModelIndex& index, int role) const
 #endif
     return m_iconProvider.icon(QFileIconProvider::File);
   }
-  return QSortFilterProxyModel::data(index, role);
+  return QIdentityProxyModel::data(index, role);
 }
 
