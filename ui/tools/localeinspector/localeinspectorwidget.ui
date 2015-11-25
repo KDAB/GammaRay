@@ -39,7 +39,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="KFilterProxySearchLine" name="localeSearchLine"/>
+        <widget class="QLineEdit" name="localeSearchLine"/>
        </item>
        <item>
         <widget class="QTableView" name="localeTable">
@@ -57,13 +57,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
