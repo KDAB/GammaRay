@@ -42,6 +42,7 @@ class ObjectMethodModel :
     public MetaObjectModel<QMetaMethod, &QMetaObject::method,
                            &QMetaObject::methodCount, &QMetaObject::methodOffset>
 {
+  Q_OBJECT
   public:
     explicit ObjectMethodModel(QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
