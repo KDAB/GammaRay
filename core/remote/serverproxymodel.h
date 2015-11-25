@@ -44,7 +44,12 @@ namespace GammaRay {
 template <typename BaseProxy> class ServerProxyModel : public BaseProxy
 {
 public:
-    explicit ServerProxyModel(QObject *parent = 0) : BaseProxy(parent) {}
+    explicit ServerProxyModel(QObject *parent = 0) :
+        BaseProxy(parent),
+        m_sourceModel(Q_NULLPTR),
+        m_active(false)
+    {
+    }
 
     void addRole(int role)
     {
@@ -64,6 +69,10 @@ public:
     void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE
     {
         m_sourceModel = sourceModel;
+        if (m_active && sourceModel) {
+            Model::used(sourceModel);
+            BaseProxy::setSourceModel(sourceModel);
+        }
     }
 
 protected:
@@ -71,11 +80,14 @@ protected:
     {
         if (event->type() == ModelEvent::eventType()) {
             auto mev = static_cast<ModelEvent*>(event);
-            QCoreApplication::sendEvent(m_sourceModel, event);
-            if (mev->used() && m_sourceModel && BaseProxy::sourceModel() != m_sourceModel) {
-                BaseProxy::setSourceModel(m_sourceModel);
-            } else if (!mev->used()) {
-                BaseProxy::setSourceModel(0);
+            m_active = mev->used();
+            if (m_sourceModel) {
+                QCoreApplication::sendEvent(m_sourceModel, event);
+                if (mev->used() && BaseProxy::sourceModel() != m_sourceModel) {
+                    BaseProxy::setSourceModel(m_sourceModel);
+                } else if (!mev->used()) {
+                    BaseProxy::setSourceModel(0);
+                }
             }
         }
         BaseProxy::customEvent(event);
@@ -84,6 +96,7 @@ protected:
 private:
     QVector<int> m_extraRoles;
     QAbstractItemModel *m_sourceModel;
+    bool m_active;
 };
 
 }
