@@ -70,7 +70,7 @@ QString PluginInfo::id() const
     return m_id;
 }
 
-QString PluginInfo::interface() const
+QString PluginInfo::interfaceId() const
 {
     return m_interface;
 }

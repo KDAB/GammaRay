@@ -45,7 +45,7 @@ public:
 
     QString path() const;
     QString id() const;
-    QString interface() const;
+    QString interfaceId() const;
     QStringList supportedTypes() const;
     QString name() const;
     bool remoteSupport() const;
