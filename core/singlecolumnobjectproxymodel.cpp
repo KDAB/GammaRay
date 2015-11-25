@@ -25,49 +25,27 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
-  @file
-  This file is part of the GammaRay Plugin API and declares the SingleColumnObjectProxyModel class.
 
-  @brief
-  Declares the SingleColumnObjectProxyModel class.
+#include "singlecolumnobjectproxymodel.h"
 
-  @author Volker Krause \<volker.krause@kdab.com\>
-*/
+#include <core/util.h>
+#include <common/objectmodel.h>
 
-#ifndef GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
-#define GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
+using namespace GammaRay;
 
-#include "gammaray_core_export.h"
-
-#include <QIdentityProxyModel>
-
-namespace GammaRay {
-
-/**
- * @brief A QIdentityProxyModel for generic Objects.
- */
-class GAMMARAY_CORE_EXPORT SingleColumnObjectProxyModel : public QIdentityProxyModel
+SingleColumnObjectProxyModel::SingleColumnObjectProxyModel(QObject *parent) :
+    QIdentityProxyModel(parent)
 {
-  Q_OBJECT
-  public:
-    /**
-     * Constructor.
-     * @param parent is the parent object for this instance.
-     */
-    explicit SingleColumnObjectProxyModel(QObject *parent = Q_NULLPTR);
-
-    /**
-     * Returns the data for the specified model.
-     * @param proxyIndex is a QModelIndex.
-     * @param role is a Qt role.
-     *
-     * @return on success, a QVariant containing the data;
-     *         QVariant() if some anamoly occurs.
-     */
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif // GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H
+QVariant SingleColumnObjectProxyModel::data(const QModelIndex &proxyIndex, int role) const
+{
+    if (proxyIndex.isValid() && role == Qt::DisplayRole && proxyIndex.column() == 0) {
+        const QObject *obj = proxyIndex.data(ObjectModel::ObjectRole).value<QObject*>();
+        if (obj) {
+            return Util::displayString(obj);
+        }
+    }
+
+    return QIdentityProxyModel::data(proxyIndex, role);
+}
