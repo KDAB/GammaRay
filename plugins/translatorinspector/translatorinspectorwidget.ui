@@ -23,7 +23,7 @@
      <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="KFilterProxySearchLine" name="translationsSearchLine" native="true"/>
+        <widget class="QLineEdit" name="translationsSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="translationsView">
@@ -55,13 +55,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

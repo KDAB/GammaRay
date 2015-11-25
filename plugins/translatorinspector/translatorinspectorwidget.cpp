@@ -31,6 +31,7 @@
 
 #include <QSortFilterProxyModel>
 
+#include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
 
@@ -64,11 +65,10 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent) :
 
   // searching for translations
   {
-    QSortFilterProxyModel *translationsFilter = new QSortFilterProxyModel(this);
-    translationsFilter->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel")));
-    ui->translationsView->setModel(translationsFilter);
-    ui->translationsSearchLine->setProxy(translationsFilter);
-    ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(translationsFilter));
+    auto translationsModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel"));
+    ui->translationsView->setModel(translationsModel);
+    new SearchLineController(ui->translationsSearchLine, translationsModel);
+    ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(translationsModel));
   }
 }
 TranslatorInspectorWidget::~TranslatorInspectorWidget()

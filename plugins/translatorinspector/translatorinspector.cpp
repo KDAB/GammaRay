@@ -27,19 +27,18 @@
 */
 
 #include "translatorinspector.h"
+#include "translatorwrapper.h"
+#include "translatorsmodel.h"
+
+#include <core/probeinterface.h>
+#include <core/objecttypefilterproxymodel.h>
+#include <core/remote/serverproxymodel.h>
+#include <common/objectbroker.h>
+#include <common/objectmodel.h>
 
 #include <QCoreApplication>
 #include <QItemSelectionModel>
-#include <QIdentityProxyModel>
 #include <private/qcoreapplication_p.h>
-
-#include <core/probeinterface.h>
-#include <common/objectbroker.h>
-#include <common/objectmodel.h>
-#include <core/objecttypefilterproxymodel.h>
-
-#include "translatorwrapper.h"
-#include "translatorsmodel.h"
 
 using namespace GammaRay;
 
@@ -53,7 +52,7 @@ TranslatorInspector::TranslatorInspector(ProbeInterface *probe,
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"),
                        m_translatorsModel);
 
-  m_translationsModel = new QIdentityProxyModel(this);
+  m_translationsModel = new ServerProxyModel<QSortFilterProxyModel>(this);
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslationsModel"),
                        m_translationsModel);
 
