@@ -205,7 +205,7 @@ void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
     return;
 
   QMenu menu;
-  menu.addAction(tr("Save As..."));
+  menu.addAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save As..."));
   if (!menu.exec(ui->treeView->mapToGlobal(pos)))
     return;
 
