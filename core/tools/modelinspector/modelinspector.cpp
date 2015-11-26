@@ -39,6 +39,7 @@
 #include "remote/remotemodelserver.h"
 #include "remote/selectionmodelserver.h"
 
+#include <3rdparty/kde/krecursivefilterproxymodel.h>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -52,11 +53,15 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   m_safetyFilterProxyModel(0),
   m_modelTester(0)
 {
-  m_modelModel = new ModelModel(this);
+  auto modelModelSource = new ModelModel(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
-          m_modelModel, SLOT(objectAdded(QObject*)));
+          modelModelSource, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
-          m_modelModel, SLOT(objectRemoved(QObject*)));
+          modelModelSource, SLOT(objectRemoved(QObject*)));
+
+  auto modelModelProxy = new KRecursiveFilterProxyModel(this);
+  modelModelProxy->setSourceModel(modelModelSource);
+  m_modelModel = modelModelProxy;
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelModel"), m_modelModel);
 
   m_modelSelectionModel = ObjectBroker::selectionModel(m_modelModel);

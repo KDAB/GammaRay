@@ -28,16 +28,14 @@
 
 #include "modelinspectorwidget.h"
 #include "ui_modelinspectorwidget.h"
-
 #include "modelinspectorclient.h"
 
+#include <ui/deferredresizemodesetter.h>
+#include <ui/searchlinecontroller.h>
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 
-#include <ui/deferredresizemodesetter.h>
-
-#include <kde/krecursivefilterproxymodel.h>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -59,11 +57,10 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   connect(m_interface, SIGNAL(cellSelected(int,int,QString,QString)),
           SLOT(cellSelected(int,int,QString,QString)));
 
-  KRecursiveFilterProxyModel *modelFilterProxy = new KRecursiveFilterProxyModel(this);
-  modelFilterProxy->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelModel")));
-  ui->modelView->setModel(modelFilterProxy);
-  ui->modelView->setSelectionModel(ObjectBroker::selectionModel(modelFilterProxy));
-  ui->modelSearchLine->setProxy(modelFilterProxy);
+  auto modelModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelModel"));
+  ui->modelView->setModel(modelModel);
+  ui->modelView->setSelectionModel(ObjectBroker::selectionModel(modelModel));
+  new SearchLineController(ui->modelSearchLine, modelModel);
   connect(ui->modelView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(modelSelected(QItemSelection)));

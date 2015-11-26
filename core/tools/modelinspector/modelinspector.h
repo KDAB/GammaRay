@@ -33,12 +33,12 @@
 
 #include "common/modelinspectorinterface.h"
 
+class QAbstractItemModel;
 class QItemSelection;
 class QItemSelectionModel;
 
 namespace GammaRay {
 
-class ModelModel;
 class ModelCellModel;
 class ModelTester;
 class RemoteModelServer;
@@ -60,7 +60,7 @@ class ModelInspector : public ModelInspectorInterface
 
   private:
     ProbeInterface *m_probe;
-    ModelModel *m_modelModel;
+    QAbstractItemModel *m_modelModel;
     QItemSelectionModel *m_modelSelectionModel;
 
     RemoteModelServer *m_modelContentServer;

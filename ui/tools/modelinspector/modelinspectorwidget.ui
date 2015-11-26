@@ -19,7 +19,7 @@
      <widget class="QWidget" name="layoutWidget_3">
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="KFilterProxySearchLine" name="modelSearchLine"/>
+        <widget class="QLineEdit" name="modelSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="modelView">
@@ -117,13 +117,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
