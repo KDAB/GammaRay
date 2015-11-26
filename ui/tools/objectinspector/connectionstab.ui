@@ -32,7 +32,7 @@
         </widget>
        </item>
        <item>
-        <widget class="KFilterProxySearchLine" name="inboundSearchLine"/>
+        <widget class="QLineEdit" name="inboundSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="inboundView">
@@ -65,7 +65,7 @@
         </widget>
        </item>
        <item>
-        <widget class="KFilterProxySearchLine" name="outboundSearchLine"/>
+        <widget class="QLineEdit" name="outboundSearchLine"/>
        </item>
        <item>
         <widget class="QTreeView" name="outboundView">
@@ -89,13 +89,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kde/kfilterproxysearchline.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

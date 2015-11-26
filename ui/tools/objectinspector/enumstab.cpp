@@ -30,7 +30,8 @@
 #include "ui_enumstab.h"
 #include "propertywidget.h"
 
-#include "common/objectbroker.h"
+#include <ui/searchlinecontroller.h>
+#include <common/objectbroker.h>
 
 #include "kde/krecursivefilterproxymodel.h"
 
@@ -57,5 +58,5 @@ void EnumsTab::setObjectBaseName(const QString &baseName)
   m_ui->enumView->setModel(proxy);
   m_ui->enumView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  m_ui->enumSearchLine->setProxy(proxy);
+  new SearchLineController(m_ui->enumSearchLine, proxy);
 }

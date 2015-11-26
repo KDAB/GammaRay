@@ -32,6 +32,7 @@
 
 #include <ui/methodinvocationdialog.h>
 #include <ui/propertybinder.h>
+#include <ui/searchlinecontroller.h>
 
 #include "common/objectbroker.h"
 #include "common/metatypedeclarations.h"
@@ -69,7 +70,7 @@ void MethodsTab::setObjectBaseName(const QString &baseName)
   m_ui->methodView->sortByColumn(0, Qt::AscendingOrder);
   m_ui->methodView->setSelectionModel(ObjectBroker::selectionModel(proxy));
   m_ui->methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  m_ui->methodSearchLine->setProxy(proxy);
+  new SearchLineController(m_ui->methodSearchLine, proxy);
   connect(m_ui->methodView, SIGNAL(doubleClicked(QModelIndex)),
           SLOT(methodActivated(QModelIndex)));
   connect(m_ui->methodView, SIGNAL(customContextMenuRequested(QPoint)),

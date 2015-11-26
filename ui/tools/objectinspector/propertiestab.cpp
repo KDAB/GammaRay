@@ -31,14 +31,15 @@
 #include "propertywidget.h"
 #include "editabletypesmodel.h"
 
-#include "ui/propertyeditor/propertyeditordelegate.h"
-#include "ui/propertyeditor/propertyeditorfactory.h"
-#include "ui/deferredresizemodesetter.h"
+#include <ui/propertyeditor/propertyeditordelegate.h>
+#include <ui/propertyeditor/propertyeditorfactory.h>
+#include <ui/deferredresizemodesetter.h>
+#include <ui/searchlinecontroller.h>
 #include <propertybinder.h>
 
-#include "common/objectbroker.h"
+#include <common/objectbroker.h>
 #include <common/propertymodel.h>
-#include "common/tools/objectinspector/propertiesextensioninterface.h"
+#include <common/tools/objectinspector/propertiesextensioninterface.h>
 
 #include <QSortFilterProxyModel>
 #include <QMenu>
@@ -74,7 +75,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
   m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
   new DeferredResizeModeSetter(
     m_ui->propertyView->header(), 0, QHeaderView::ResizeToContents);
-  m_ui->propertySearchLine->setProxy(proxy);
+  new SearchLineController(m_ui->propertySearchLine, proxy);
   m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
   connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
           this, SLOT(propertyContextMenu(QPoint)));

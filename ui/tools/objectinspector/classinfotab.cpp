@@ -30,7 +30,8 @@
 #include "ui_classinfotab.h"
 #include "propertywidget.h"
 
-#include "common/objectbroker.h"
+#include <ui/searchlinecontroller.h>
+#include <common/objectbroker.h>
 
 #include <QSortFilterProxyModel>
 
@@ -49,11 +50,11 @@ ClassInfoTab::~ClassInfoTab()
 
 void ClassInfoTab::setObjectBaseName(const QString &baseName)
 {
- QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
- proxy->setDynamicSortFilter(true);
- proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "classInfo"));
- m_ui->classInfoView->setModel(proxy);
- m_ui->classInfoView->sortByColumn(0, Qt::AscendingOrder);
- m_ui->classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
- m_ui->classInfoSearchLine->setProxy(proxy);
+  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+  proxy->setDynamicSortFilter(true);
+  proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "classInfo"));
+  m_ui->classInfoView->setModel(proxy);
+  m_ui->classInfoView->sortByColumn(0, Qt::AscendingOrder);
+  m_ui->classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
+  new SearchLineController(m_ui->classInfoSearchLine, proxy);
 }

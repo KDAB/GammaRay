@@ -31,6 +31,7 @@
 #include "connectionsclientproxymodel.h"
 
 #include <ui/propertywidget.h>
+#include <ui/searchlinecontroller.h>
 
 #include <common/objectbroker.h>
 #include <common/tools/objectinspector/connectionsextensioninterface.h>
@@ -54,7 +55,7 @@ ConnectionsTab::ConnectionsTab(PropertyWidget* parent):
   proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + ".inboundConnections"));
   ui->inboundView->setModel(proxy);
   ui->inboundView->sortByColumn(0, Qt::AscendingOrder);
-  ui->inboundSearchLine->setProxy(proxy);
+  new SearchLineController(ui->inboundSearchLine, proxy);
   connect(ui->inboundView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(inboundContextMenu(QPoint)));
 
   proxy = new ConnectionsClientProxyModel(this);
@@ -62,7 +63,7 @@ ConnectionsTab::ConnectionsTab(PropertyWidget* parent):
   proxy->setSourceModel(ObjectBroker::model(parent->objectBaseName() + ".outboundConnections"));
   ui->outboundView->setModel(proxy);
   ui->outboundView->sortByColumn(0, Qt::AscendingOrder);
-  ui->outboundSearchLine->setProxy(proxy);
+  new SearchLineController(ui->outboundSearchLine, proxy);
   connect(ui->outboundView, SIGNAL(customContextMenuRequested(QPoint)), SLOT(outboundContextMenu(QPoint)));
 }
 
