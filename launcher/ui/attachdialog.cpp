@@ -33,6 +33,8 @@
 #include "processmodel.h"
 #include "probeabimodel.h"
 
+#include <ui/searchlinecontroller.h>
+
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QListView>
@@ -80,7 +82,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 
   connect(ui.view, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
 
-  ui.filter->setProxy(m_proxyModel);
+  new SearchLineController(ui.filter, m_proxyModel);
 
   ui.probeBox->setModel(m_abiModel);
 

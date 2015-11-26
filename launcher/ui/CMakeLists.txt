@@ -1,4 +1,5 @@
 set(gammaray_launcher_ui_internal_srcs
+  ${CMAKE_SOURCE_DIR}/ui/searchlinecontroller.cpp
   promolabel.cpp
   launcherwindow.cpp
   launchpage.cpp
