@@ -32,8 +32,6 @@
 
 #include <ui/tooluifactory.h>
 
-class QAbstractProxyModel;
-class QTreeView;
 class QModelIndex;
 
 namespace GammaRay {
@@ -48,10 +46,6 @@ class ActionInspectorWidget : public QWidget
 
   private Q_SLOTS:
     void triggerAction(const QModelIndex &index);
-
-  private:
-    QTreeView *mObjectTreeView;
-    QAbstractProxyModel *m_proxy;
 };
 
 class ActionInspectorUiFactory : public QObject, public StandardToolUiFactory<ActionInspectorWidget>

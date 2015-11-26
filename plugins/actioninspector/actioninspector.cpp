@@ -32,6 +32,7 @@
 #include <core/probeinterface.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/remote/serverproxymodel.h>
 
 #include <QtPlugin>
 #include <QMenu>
@@ -55,7 +56,10 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
   ActionModel *actionModel = new ActionModel(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), actionModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), actionModel, SLOT(objectRemoved(QObject*)));
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ActionModel"), actionModel);
+
+  auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+  proxy->setSourceModel(actionModel);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ActionModel"), proxy);
 }
 
 ActionInspector::~ActionInspector()

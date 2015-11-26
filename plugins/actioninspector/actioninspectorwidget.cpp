@@ -27,16 +27,14 @@
 #include "actioninspectorwidget.h"
 #include "actionmodel.h" // for column enum only
 
+#include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
-
-#include "kde/kfilterproxysearchline.h"
-#include "kde/krecursivefilterproxymodel.h"
 
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QHeaderView>
-#include <QSortFilterProxyModel>
+#include <QLineEdit>
 #include <QTreeView>
 
 using namespace GammaRay;
@@ -46,25 +44,18 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
 {
   QAbstractItemModel *actionModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
 
-  QSortFilterProxyModel *searchFilterProxy = new KRecursiveFilterProxyModel(this);
-  searchFilterProxy->setSourceModel(actionModel);
-  searchFilterProxy->setDynamicSortFilter(true);
-  m_proxy = searchFilterProxy;
-
   QVBoxLayout *vbox = new QVBoxLayout(this);
-
-  KFilterProxySearchLine *objectSearchLine = new KFilterProxySearchLine(this);
-  objectSearchLine->setProxy(searchFilterProxy);
-  vbox->addWidget(objectSearchLine);
+  auto actionSearchLine = new QLineEdit(this);
+  new SearchLineController(actionSearchLine, actionModel);
+  vbox->addWidget(actionSearchLine);
 
   QTreeView *objectTreeView = new QTreeView(this);
-  objectTreeView->setModel(searchFilterProxy);
+  objectTreeView->setModel(actionModel);
   objectTreeView->setSortingEnabled(true);
   objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
   objectTreeView->setRootIsDecorated(false);
   vbox->addWidget(objectTreeView);
   connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
-  mObjectTreeView = objectTreeView;
 }
 
 ActionInspectorWidget::~ActionInspectorWidget()
@@ -77,9 +68,8 @@ void ActionInspectorWidget::triggerAction(const QModelIndex &index)
     return;
   }
 
-  Q_ASSERT(index.model() == m_proxy);
   Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.ActionInspector"), "triggerAction",
-                                     QVariantList() << m_proxy->mapToSource(index).row());
+                                     QVariantList() << index.row());
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
