@@ -27,6 +27,8 @@
 #include "objectvisualizer.h"
 #include "objectvisualizermodel.h"
 
+#include <core/remote/serverproxymodel.h>
+
 #include <QtPlugin>
 
 using namespace GammaRay;
@@ -34,8 +36,11 @@ using namespace GammaRay;
 GraphViewer::GraphViewer(ProbeInterface *probe, QObject *parent)
   : QObject(parent)
 {
-  ObjectVisualizerModel *model = new ObjectVisualizerModel(this);
+  auto model = new ServerProxyModel<ObjectVisualizerModel>(this);
   model->setSourceModel(probe->objectTreeModel());
+  model->addProxyRole(ObjectVisualizerModel::ObjectId);
+  model->addProxyRole(ObjectVisualizerModel::ObjectDisplayName);
+  model->addProxyRole(ObjectVisualizerModel::ClassName);
   probe->registerModel("com.kdab.GammaRay.ObjectVisualizerModel", model);
 }
 

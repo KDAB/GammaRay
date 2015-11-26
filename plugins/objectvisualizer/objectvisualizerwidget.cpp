@@ -29,17 +29,15 @@
 #include "vtkpanel.h"
 #include "vtkwidget.h"
 
-#include "kde/kfilterproxysearchline.h"
-#include "kde/krecursivefilterproxymodel.h"
+#include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QHBoxLayout>
-#include <QSortFilterProxyModel>
+#include <QLineEdit>
 #include <QSplitter>
-#include <QStateMachine>
 #include <QTreeView>
 
 using namespace GammaRay;
@@ -50,16 +48,12 @@ GraphViewerWidget::GraphViewerWidget(QWidget *parent)
 {
   mModel = ObjectBroker::model("com.kdab.GammaRay.ObjectVisualizerModel");
 
-  QSortFilterProxyModel *objectFilter = new KRecursiveFilterProxyModel(this);
-  objectFilter->setSourceModel(mModel);
-  objectFilter->setDynamicSortFilter(true);
-
   QVBoxLayout *vbox = new QVBoxLayout;
-  KFilterProxySearchLine *objectSearchLine = new KFilterProxySearchLine(this);
-  objectSearchLine->setProxy(objectFilter);
+  auto objectSearchLine = new QLineEdit(this);
+  new SearchLineController(objectSearchLine, mModel);
   vbox->addWidget(objectSearchLine);
   QTreeView *objectTreeView = new QTreeView(this);
-  objectTreeView->setModel(objectFilter);
+  objectTreeView->setModel(mModel);
   objectTreeView->setSortingEnabled(true);
   vbox->addWidget(objectTreeView);
 

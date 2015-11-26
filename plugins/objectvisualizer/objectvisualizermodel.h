@@ -29,23 +29,15 @@
 #ifndef GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERMODEL_H
 #define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERMODEL_H
 
-#include <QtGlobal>
-
-#if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
-#include <QSortFilterProxyModel>
-typedef QSortFilterProxyModel QIdentityProxyModel;
-#else
-#include <QIdentityProxyModel>
-#endif
-
 #include <common/objectmodel.h>
+#include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 namespace GammaRay {
 
 /** Augment the regular object tree by some information needed for the visualization
  * on the client side.
  */
-class ObjectVisualizerModel : public QIdentityProxyModel
+class ObjectVisualizerModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 public:
@@ -59,8 +51,8 @@ public:
     ~ObjectVisualizerModel();
 
     QVariant data(const QModelIndex& proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 };
+
 }
 
 #endif // GAMMARAY_OBJECTVISUALIZERMODEL_H

@@ -32,7 +32,7 @@
 
 using namespace GammaRay;
 
-ObjectVisualizerModel::ObjectVisualizerModel(QObject* parent) : QIdentityProxyModel(parent)
+ObjectVisualizerModel::ObjectVisualizerModel(QObject* parent) : KRecursiveFilterProxyModel(parent)
 {
 }
 
@@ -56,14 +56,5 @@ QVariant ObjectVisualizerModel::data(const QModelIndex& proxyIndex, int role) co
     return obj->metaObject()->className();
   }
 
-  return QIdentityProxyModel::data(proxyIndex, role);
-}
-
-QMap< int, QVariant > ObjectVisualizerModel::itemData(const QModelIndex& index) const
-{
-  QMap<int, QVariant> d = QIdentityProxyModel::itemData(index);
-  d.insert(ObjectId, data(index, ObjectId));
-  d.insert(ObjectDisplayName, data(index, ObjectDisplayName));
-  d.insert(ClassName, data(index, ClassName));
-  return d;
+  return KRecursiveFilterProxyModel::data(proxyIndex, role);
 }
