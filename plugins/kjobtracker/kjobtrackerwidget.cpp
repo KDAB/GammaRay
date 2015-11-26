@@ -29,6 +29,7 @@
 #include "kjobtrackerwidget.h"
 #include "ui_kjobtrackerwidget.h"
 
+#include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 
 using namespace GammaRay;
@@ -44,10 +45,9 @@ KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
-  filter->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.KJobModel")));
-  ui->searchLine->setProxy(filter);
-  ui->jobView->setModel(filter);
+  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.KJobModel"));
+  new SearchLineController(ui->searchLine, model);
+  ui->jobView->setModel(model);
 }
 
 KJobTrackerWidget::~KJobTrackerWidget()
