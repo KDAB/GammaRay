@@ -67,33 +67,36 @@ private slots:
     {
         qRegisterMetaType<QItemSelection>();
     }
-    void testModelsReparent()
+    void init()
     {
         createProbe();
 
         // we need one view for the plugin to activate, otherwise the model will not be available
-        auto view = new QQuickView;
+        view = new QQuickView;
         view->show();
         QTest::qWait(1); // event loop re-entry
 
-        auto windowModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"));
-        QVERIFY(windowModel);
-        ModelTest windowModelTest(windowModel);
-        QCOMPARE(windowModel->rowCount(), 1);
-
-        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
+        itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
         QVERIFY(itemModel);
         ModelTest itemModelTest(itemModel);
 
-        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
+        sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
         QVERIFY(sgModel);
         ModelTest sgModelTest(sgModel);
 
-        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
+        inspector = ObjectBroker::object<QuickInspectorInterface*>();
         QVERIFY(inspector);
         inspector->selectWindow(0);
         QTest::qWait(1);
+    }
+    void cleanup()
+    {
+        delete view;
+        QTest::qWait(1);
+    }
 
+    void testModelsReparent()
+    {
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
         QTest::qWait(20); // wait at least one frame
 
@@ -103,38 +106,10 @@ private slots:
         QTest::qWait(20);
         QTest::keyClick(view, Qt::Key_Right);
         QTest::qWait(20);
-
-        delete view;
-        QTest::qWait(1);
     }
 
     void testModelsCreateDestroy()
     {
-        createProbe();
-
-        // we need one view for the plugin to activate, otherwise the model will not be available
-        auto view = new QQuickView;
-        view->show();
-        QTest::qWait(1); // event loop re-entry
-
-        auto windowModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"));
-        QVERIFY(windowModel);
-        ModelTest windowModelTest(windowModel);
-        QCOMPARE(windowModel->rowCount(), 1);
-
-        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
-        QVERIFY(itemModel);
-        ModelTest itemModelTest(itemModel);
-
-        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
-        QVERIFY(sgModel);
-        ModelTest sgModelTest(sgModel);
-
-        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
-        QVERIFY(inspector);
-        inspector->selectWindow(0);
-        QTest::qWait(1);
-
         view->setSource(QUrl(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
         QTest::qWait(20); // wait at least one frame
 
@@ -145,33 +120,10 @@ private slots:
         for (int i = 0; i < 30; ++i)
             QTest::keyClick(view, Qt::Key_Up);
         QTest::qWait(20);
-
-        delete view;
-        QTest::qWait(1);
     }
 
     void testModelsCreateDestroyProxy()
     {
-        createProbe();
-
-        // we need one view for the plugin to activate, otherwise the model will not be available
-        auto view = new QQuickView;
-        view->show();
-        QTest::qWait(1); // event loop re-entry
-
-        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
-        QVERIFY(itemModel);
-        ModelTest itemModelTest(itemModel);
-
-        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
-        QVERIFY(sgModel);
-        ModelTest sgModelTest(sgModel);
-
-        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
-        QVERIFY(inspector);
-        inspector->selectWindow(0);
-        QTest::qWait(1);
-
         view->setSource(QUrl(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
         QTest::qWait(20); // wait at least one frame
         QVERIFY(itemModel->rowCount() > 0);
@@ -192,33 +144,12 @@ private slots:
         itemModel->setProperty("filterRegExp", QRegExp());
         sgModel->setProperty("filterRegExp", QRegExp());
         QTest::qWait(20);
-
-        delete view;
-        QTest::qWait(1);
     }
 
     void testItemPicking()
     {
-        createProbe();
-
-        // we need one view for the plugin to activate, otherwise the model will not be available
-        auto view = new QQuickView;
-        view->show();
-        QTest::qWait(1); // event loop re-entry
-
         auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
         QVERIFY(toolModel);
-
-        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
-        QVERIFY(itemModel);
-
-        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
-        QVERIFY(sgModel);
-
-        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
-        QVERIFY(inspector);
-        inspector->selectWindow(0);
-        QTest::qWait(1);
 
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
         QTest::qWait(20); // wait at least one frame
@@ -245,34 +176,10 @@ private slots:
         QCOMPARE(toolSpy.size(), 1);
         QCOMPARE(itemSpy.size(), 1);
         QCOMPARE(sgSpy.size(), 1);
-
-        delete view;
-        QTest::qWait(1);
     }
 
     void testCustomRenderModes()
     {
-        createProbe();
-
-        // we need one view for the plugin to activate, otherwise the model will not be available
-        auto view = new QQuickView;
-        view->show();
-        QTest::qWait(1); // event loop re-entry
-
-        auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
-        QVERIFY(toolModel);
-
-        auto itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
-        QVERIFY(itemModel);
-
-        auto sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
-        QVERIFY(sgModel);
-
-        auto inspector = ObjectBroker::object<QuickInspectorInterface*>();
-        QVERIFY(inspector);
-        inspector->selectWindow(0);
-        QTest::qWait(1);
-
         QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());
 
@@ -304,10 +211,13 @@ private slots:
         for (int i = 0; i < 3; i++) {
           renderSpy.wait(1000);
         }
-
-        delete view;
-        QTest::qWait(1);
     }
+
+private:
+    QQuickView *view;
+    QAbstractItemModel *itemModel;
+    QAbstractItemModel *sgModel;
+    QuickInspectorInterface *inspector;
 };
 
 QTEST_MAIN(QuickInspectorTest)
