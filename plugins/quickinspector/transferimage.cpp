@@ -40,7 +40,7 @@ TransferImage::TransferImage(const QImage& image) : m_image(image)
 {
 }
 
-QImage TransferImage::image() const
+const QImage &TransferImage::image() const
 {
     return m_image;
 }

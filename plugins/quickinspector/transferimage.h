@@ -42,7 +42,7 @@ public:
     TransferImage();
     explicit TransferImage(const QImage &image);
 
-    QImage image() const;
+    const QImage &image() const;
     void setImage(const QImage &image);
 
     enum Format {
