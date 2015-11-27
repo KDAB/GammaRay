@@ -50,7 +50,7 @@ class GammaRay::MethodArgumentPrivate : public QSharedData
     ~MethodArgumentPrivate()
     {
       if (data)
-        QMetaType::destroy(value.type(), data);
+        QMetaType::destroy(value.userType(), data);
     }
 
     QVariant value;
