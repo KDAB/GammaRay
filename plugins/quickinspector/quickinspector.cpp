@@ -196,7 +196,6 @@ static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
 
 QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   : QuickInspectorInterface(parent),
-    m_source(0),
     m_probe(probe),
     m_currentSgNode(0),
     m_itemModel(new QuickItemModel(this)),
@@ -273,41 +272,10 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     // make sure we have selected something for the property editor to not be entirely empty
     selectItem(m_window->contentItem());
 
-    // Insert a ShaderEffectSource to the scene, with the contentItem as its source, in
-    // order to use it to generate a preview of the window as QImage to show on the client.
-    QQuickItem *contentItem = m_window->contentItem();
-
-    // working around the 0-sized contentItem in older Qt or QQuickWidget
-    if (contentItem->height() == 0 && contentItem->width() == 0) {
-      contentItem->setWidth(contentItem->childrenRect().width());
-      contentItem->setHeight(contentItem->childrenRect().height());
-    }
-
-    delete m_source;
-    m_source = new QQuickShaderEffectSource(contentItem);
-    m_source->setParent(this); // hides the item in the object tree (note: parent != parentItem)
-    QQuickItemPrivate::get(m_source)->anchors()->setFill(contentItem);
-    m_source->setScale(0); // The item shouldn't be visible in the original scene, but it still
-                           // needs to be rendered. (i.e. setVisible(false) would cause it to
-                           // not be rendered anymore)
-    setupPreviewSource();
-    connect(window, &QQuickWindow::afterRendering,
+    connect(window, &QQuickWindow::frameSwapped,
             this, &QuickInspector::slotSceneChanged, Qt::DirectConnection);
 
     m_window->update();
-  }
-}
-
-void QuickInspector::setupPreviewSource()
-{
-  Q_ASSERT(m_window);
-  QQuickItem *contentItem = m_window->contentItem();
-  const QList<QQuickItem*> children = contentItem->childItems();
-  if (children.size() == 2) { // prefer non-recursive shader sources, then we don't re-render all the time
-    m_source->setSourceItem(children.at(children.indexOf(m_source) == 1 ? 0 : 1));
-  } else {
-    m_source->setRecursive(true);
-    m_source->setSourceItem(contentItem);
   }
 }
 
@@ -442,23 +410,7 @@ void QuickInspector::slotSceneChanged()
     return;
   }
 
-  const QSGTextureProvider *provider = m_source->textureProvider();
-  Q_ASSERT(provider);
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-  const QQuickShaderEffectTexture *texture =
-    qobject_cast<QQuickShaderEffectTexture*>(provider->texture());
-  Q_ASSERT(texture);
-#else
-  const QSGLayer *texture = qobject_cast<QSGLayer*>(provider->texture());
-  Q_ASSERT(texture);
-#endif
-
-  QOpenGLContext *ctx =
-    QQuickItemPrivate::get(m_source)->sceneGraphRenderContext()->openglContext();
-  if (ctx->makeCurrent(ctx->surface())) {
-    m_currentFrame = texture->toImage();
-  }
+  m_currentFrame = m_window->grabWindow();
 
   m_needsNewFrame = false;
   QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::AutoConnection); // we are in the render thread here
@@ -621,30 +573,15 @@ void QuickInspector::setSceneViewActive(bool active)
   m_clientViewActive = active;
 
   if (active && m_window) {
-    if (m_source)
-      setupPreviewSource();
     m_window->update();
   }
-  if (!active && m_source)
-    m_source->setSourceItem(0); // no need to render the screenshot as well if nobody is watching
 }
 
 QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &pos) const
 {
   Q_ASSERT(parent);
 
-  // we can't use childAt() as that will find m_source, but that's not what we are looking for
-  QQuickItem *child = Q_NULLPTR;
-  auto children = parent->childItems();
-  std::stable_sort(children.begin(), children.end(), [](QQuickItem *lhs, QQuickItem *rhs) { return lhs->z() < rhs->z(); });
-  std::reverse(children.begin(), children.end());
-  foreach (QQuickItem *c, children) {
-    const QPointF p = parent->mapToItem(c, pos);
-    if (c != m_source && c->isVisible() && p.x() >= 0 && c->width() >= p.x() && p.y() >= 0 && c->height() >= p.y()) {
-      child = c;
-      break;
-    }
-  }
+  QQuickItem *child = parent->childAt(pos.x(), pos.y());
 
   if (child) {
     return recursiveChiltAt(child, parent->mapToItem(child, pos));

@@ -229,8 +229,7 @@ void QuickScenePreviewWidget::drawGeometry(QPainter* p)
                     // but need to be able to see single pixels when zoomed in.
     p->setRenderHint(QPainter::SmoothPixmapTransform);
   }
-  p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom),
-               m_image.transformed(QTransform::fromScale(1, -1)));
+  p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom), m_image);
 
   // bounding box
   p->setPen(QColor(232, 87, 82, 170));
