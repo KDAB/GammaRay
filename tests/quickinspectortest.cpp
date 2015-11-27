@@ -178,6 +178,33 @@ private slots:
         QCOMPARE(sgSpy.size(), 1);
     }
 
+    void testFetchingPreview()
+    {
+        inspector->setSceneViewActive(true);
+
+        QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
+        QVERIFY(renderSpy.isValid());
+
+        QSignalSpy gotFrameSpy(inspector, SIGNAL(sceneRendered(GammaRay::TransferImage, GammaRay::QuickItemGeometry)));
+        QVERIFY(gotFrameSpy.isValid());
+
+        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
+
+        inspector->renderScene();
+        renderSpy.wait(1000);
+        gotFrameSpy.wait(1000);
+
+        QVERIFY(renderSpy.size() >= 1);
+        QVERIFY(gotFrameSpy.size() >= 1);
+        TransferImage tImg = gotFrameSpy.first().first().value<TransferImage>();
+        QImage img = tImg.image();
+
+        QVERIFY(!img.isNull());
+        QCOMPARE(img.width(), 320);
+        QCOMPARE(img.height(), 160);
+        QCOMPARE(img.pixel(1,1), QColor(QStringLiteral("lightsteelblue")).rgb());
+    }
+
     void testCustomRenderModes()
     {
         QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
