@@ -203,7 +203,8 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_itemPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickItem"), this)),
     m_sgPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"), this)),
     m_clientViewActive(false),
-    m_needsNewFrame(false)
+    m_needsNewFrame(false),
+    m_isGrabbingWindow(false)
 {
   registerPCExtensions();
   Server::instance()->registerMonitorNotifier(
@@ -401,7 +402,7 @@ void QuickInspector::sendRenderedScene()
 
 void QuickInspector::slotSceneChanged()
 {
-  if (!m_clientViewActive || !m_window) {
+  if (!m_clientViewActive || !m_window || m_isGrabbingWindow) {
     return;
   }
 
@@ -410,7 +411,9 @@ void QuickInspector::slotSceneChanged()
     return;
   }
 
+  m_isGrabbingWindow = true;
   m_currentFrame = m_window->grabWindow();
+  m_isGrabbingWindow = false;
 
   m_needsNewFrame = false;
   QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::AutoConnection); // we are in the render thread here

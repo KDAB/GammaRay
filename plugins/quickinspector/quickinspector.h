@@ -121,6 +121,7 @@ class QuickInspector : public QuickInspectorInterface
     QImage m_currentFrame;
     bool m_clientViewActive;
     bool m_needsNewFrame;
+    bool m_isGrabbingWindow;
 };
 
 class QuickInspectorFactory : public QObject,
