@@ -340,23 +340,23 @@ void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel *model)
     if (sourceModel()) {
         if (passRolesToDataChanged()) {
             disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-                      this, SLOT(sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+                    this, SLOT(sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
         } else {
             disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                      this, SLOT(sourceDataChanged(QModelIndex,QModelIndex)));
+                    this, SLOT(sourceDataChanged(QModelIndex,QModelIndex)));
         }
 
         disconnect(sourceModel(), SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-                  this, SLOT(sourceRowsAboutToBeInserted(QModelIndex,int,int)));
+                this, SLOT(sourceRowsAboutToBeInserted(QModelIndex,int,int)));
 
         disconnect(sourceModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-                  this, SLOT(sourceRowsInserted(QModelIndex,int,int)));
+                this, SLOT(sourceRowsInserted(QModelIndex,int,int)));
 
         disconnect(sourceModel(), SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-                  this, SLOT(sourceRowsAboutToBeRemoved(QModelIndex,int,int)));
+                this, SLOT(sourceRowsAboutToBeRemoved(QModelIndex,int,int)));
 
         disconnect(sourceModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
-                  this, SLOT(sourceRowsRemoved(QModelIndex,int,int)));
+                this, SLOT(sourceRowsRemoved(QModelIndex,int,int)));
     }
 
     QSortFilterProxyModel::setSourceModel(model);

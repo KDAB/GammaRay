@@ -22,9 +22,9 @@
 #ifndef KMODELINDEXPROXYMAPPER_H
 #define KMODELINDEXPROXYMAPPER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
-#include "kdeui_export.h"
+#include "kitemmodels_export.h"
 
 class QAbstractItemModel;
 class QModelIndex;
@@ -76,42 +76,42 @@ class KModelIndexProxyMapperPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  *
  */
-class KDEUI_EXPORT KModelIndexProxyMapper : public QObject
+class KITEMMODELS_EXPORT KModelIndexProxyMapper : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KModelIndexProxyMapper(const QAbstractItemModel *leftModel, const QAbstractItemModel *rightModel, QObject* parent = 0);
+    /**
+     * Constructor
+     */
+    KModelIndexProxyMapper(const QAbstractItemModel *leftModel, const QAbstractItemModel *rightModel, QObject *parent = 0);
 
-  ~KModelIndexProxyMapper();
+    ~KModelIndexProxyMapper();
 
-  /**
-   * Maps the @p index from the left model to the right model.
-   */
-  QModelIndex mapLeftToRight(const QModelIndex &index) const;
+    /**
+     * Maps the @p index from the left model to the right model.
+     */
+    QModelIndex mapLeftToRight(const QModelIndex &index) const;
 
-  /**
-   * Maps the @p index from the right model to the left model.
-   */
-  QModelIndex mapRightToLeft(const QModelIndex &index) const;
+    /**
+     * Maps the @p index from the right model to the left model.
+     */
+    QModelIndex mapRightToLeft(const QModelIndex &index) const;
 
-  /**
-   * Maps the @p selection from the left model to the right model.
-   */
-  QItemSelection mapSelectionLeftToRight(const QItemSelection &selection) const;
+    /**
+     * Maps the @p selection from the left model to the right model.
+     */
+    QItemSelection mapSelectionLeftToRight(const QItemSelection &selection) const;
 
-  /**
-   * Maps the @p selection from the right model to the left model.
-   */
-  QItemSelection mapSelectionRightToLeft(const QItemSelection &selection) const;
+    /**
+     * Maps the @p selection from the right model to the left model.
+     */
+    QItemSelection mapSelectionRightToLeft(const QItemSelection &selection) const;
 
 private:
-  //@cond PRIVATE
-  Q_DECLARE_PRIVATE(KModelIndexProxyMapper)
-  KModelIndexProxyMapperPrivate * const d_ptr;
-  //@endcond
+    //@cond PRIVATE
+    Q_DECLARE_PRIVATE(KModelIndexProxyMapper)
+    KModelIndexProxyMapperPrivate *const d_ptr;
+    //@endcond
 };
 
 #endif

@@ -19,55 +19,53 @@
     02110-1301, USA.
 */
 
-
 #include "klinkitemselectionmodel.h"
 
 #include "kmodelindexproxymapper.h"
 
-#include "kdebug.h"
-
 #include <QItemSelection>
+#include <QDebug>
 
 class KLinkItemSelectionModelPrivate
 {
 public:
     KLinkItemSelectionModelPrivate(KLinkItemSelectionModel *proxySelectionModel, QAbstractItemModel *model,
-                                    QItemSelectionModel *linkedItemSelectionModel)
-      : q_ptr(proxySelectionModel),
-        m_model(model),
-        m_linkedItemSelectionModel(linkedItemSelectionModel),
-        m_ignoreCurrentChanged(false),
-        m_indexMapper(new KModelIndexProxyMapper(model, linkedItemSelectionModel->model(), proxySelectionModel))
+                                   QItemSelectionModel *linkedItemSelectionModel)
+        : q_ptr(proxySelectionModel),
+          m_model(model),
+          m_linkedItemSelectionModel(linkedItemSelectionModel),
+          m_ignoreCurrentChanged(false),
+          m_indexMapper(new KModelIndexProxyMapper(model, linkedItemSelectionModel->model(), proxySelectionModel))
     {
     }
 
     Q_DECLARE_PUBLIC(KLinkItemSelectionModel)
-    KLinkItemSelectionModel * const q_ptr;
+    KLinkItemSelectionModel *const q_ptr;
 
-
-    bool assertSelectionValid(const QItemSelection &selection) const {
-      foreach(const QItemSelectionRange &range, selection) {
-        if (!range.isValid()) {
-          kDebug() << selection;
+    bool assertSelectionValid(const QItemSelection &selection) const
+    {
+        Q_FOREACH (const QItemSelectionRange &range, selection) {
+            if (!range.isValid()) {
+                qDebug() << selection;
+            }
+            Q_ASSERT(range.isValid());
         }
-        Q_ASSERT(range.isValid());
-      }
-      return true;
+        return true;
     }
 
-    void sourceSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-    void sourceCurrentChanged(const QModelIndex& current);
-    void slotCurrentChanged(const QModelIndex& current);
+    void sourceSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void sourceCurrentChanged(const QModelIndex &current);
+    void slotCurrentChanged(const QModelIndex &current);
 
-    QAbstractItemModel * const m_model;
-    QItemSelectionModel * const m_linkedItemSelectionModel;
+    QAbstractItemModel *const m_model;
+    QItemSelectionModel *const m_linkedItemSelectionModel;
     bool m_ignoreCurrentChanged;
-    KModelIndexProxyMapper * const m_indexMapper;
+    KModelIndexProxyMapper *const m_indexMapper;
 };
 
 KLinkItemSelectionModel::KLinkItemSelectionModel(QAbstractItemModel *model, QItemSelectionModel *proxySelector, QObject *parent)
-        : QItemSelectionModel(model, parent),
-        d_ptr(new KLinkItemSelectionModelPrivate(this, model, proxySelector))
+    : QItemSelectionModel(model, parent),
+      d_ptr(new KLinkItemSelectionModelPrivate(this, model, proxySelector))
 {
     connect(proxySelector, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(sourceSelectionChanged(QItemSelection,QItemSelection)));
     connect(proxySelector, SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(sourceCurrentChanged(QModelIndex)));
@@ -102,9 +100,9 @@ void KLinkItemSelectionModel::select(const QModelIndex &index, QItemSelectionMod
     // When this happens and the selection flags include Toggle, it causes the
     // selection to be toggled twice.
     QItemSelectionModel::select(QItemSelection(index, index), command);
-    if (index.isValid())
+    if (index.isValid()) {
         d->m_linkedItemSelectionModel->select(d->m_indexMapper->mapSelectionLeftToRight(QItemSelection(index, index)), command);
-    else {
+    } else {
         d->m_linkedItemSelectionModel->clearSelection();
     }
 }
@@ -120,14 +118,14 @@ void KLinkItemSelectionModel::select(const QModelIndex &index, QItemSelectionMod
 #ifdef RANGE_FIX_HACK
 static QItemSelection klink_removeInvalidRanges(const QItemSelection &selection)
 {
-  QItemSelection result;
-  Q_FOREACH(const QItemSelectionRange &range, selection)
-  {
-    if (!range.isValid())
-      continue;
-    result << range;
-  }
-  return result;
+    QItemSelection result;
+    Q_FOREACH (const QItemSelectionRange &range, selection) {
+        if (!range.isValid()) {
+            continue;
+        }
+        result << range;
+    }
+    return result;
 }
 #endif
 
@@ -148,7 +146,7 @@ void KLinkItemSelectionModel::select(const QItemSelection &selection, QItemSelec
     d->m_ignoreCurrentChanged = false;
 }
 
-void KLinkItemSelectionModelPrivate::slotCurrentChanged(const QModelIndex& current)
+void KLinkItemSelectionModelPrivate::slotCurrentChanged(const QModelIndex &current)
 {
     const QModelIndex mappedCurrent = m_indexMapper->mapLeftToRight(current);
     if (!mappedCurrent.isValid()) {
@@ -157,7 +155,7 @@ void KLinkItemSelectionModelPrivate::slotCurrentChanged(const QModelIndex& curre
     m_linkedItemSelectionModel->setCurrentIndex(mappedCurrent, QItemSelectionModel::NoUpdate);
 }
 
-void KLinkItemSelectionModelPrivate::sourceSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void KLinkItemSelectionModelPrivate::sourceSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     Q_Q(KLinkItemSelectionModel);
 #ifdef RANGE_FIX_HACK
@@ -176,7 +174,7 @@ void KLinkItemSelectionModelPrivate::sourceSelectionChanged(const QItemSelection
     q->QItemSelectionModel::select(mappedSelection, QItemSelectionModel::Select);
 }
 
-void KLinkItemSelectionModelPrivate::sourceCurrentChanged(const QModelIndex& current)
+void KLinkItemSelectionModelPrivate::sourceCurrentChanged(const QModelIndex &current)
 {
     Q_Q(KLinkItemSelectionModel);
     const QModelIndex mappedCurrent = m_indexMapper->mapRightToLeft(current);

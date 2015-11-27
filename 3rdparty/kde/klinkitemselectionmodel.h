@@ -25,7 +25,7 @@
 #include <QItemSelectionModel>
 #include <QAbstractProxyModel>
 
-#include "kdeui_export.h"
+#include "kitemmodels_export.h"
 
 class KLinkItemSelectionModelPrivate;
 
@@ -92,7 +92,7 @@ class KLinkItemSelectionModelPrivate;
   @author Stephen Kelly <steveire@gmail.com>
 
 */
-class KDEUI_EXPORT KLinkItemSelectionModel : public QItemSelectionModel
+class KITEMMODELS_EXPORT KLinkItemSelectionModel : public QItemSelectionModel
 {
     Q_OBJECT
 public:
@@ -101,17 +101,17 @@ public:
     */
     KLinkItemSelectionModel(QAbstractItemModel *targetModel, QItemSelectionModel *linkedItemSelectionModel, QObject *parent = 0);
     ~KLinkItemSelectionModel();
-    /* reimp */ void select(const QModelIndex &index, QItemSelectionModel::SelectionFlags command);
-    /* reimp */ void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command);
+    void select(const QModelIndex &index, QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
+    void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
 
 protected:
-    KLinkItemSelectionModelPrivate * const d_ptr;
+    KLinkItemSelectionModelPrivate *const d_ptr;
 
 private:
     Q_DECLARE_PRIVATE(KLinkItemSelectionModel)
-    Q_PRIVATE_SLOT( d_func(), void sourceSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected))
-    Q_PRIVATE_SLOT( d_func(), void sourceCurrentChanged(const QModelIndex &current))
-    Q_PRIVATE_SLOT( d_func(), void slotCurrentChanged(const QModelIndex &current))
+    Q_PRIVATE_SLOT(d_func(), void sourceSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected))
+    Q_PRIVATE_SLOT(d_func(), void sourceCurrentChanged(const QModelIndex &current))
+    Q_PRIVATE_SLOT(d_func(), void slotCurrentChanged(const QModelIndex &current))
 };
 
 #endif

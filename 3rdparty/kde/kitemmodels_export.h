@@ -17,11 +17,9 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KDEUI_EXPORT_H
-#define KDEUI_EXPORT_H
+#ifndef KDEITEMMODELS_EXPORT_H
+#define KDEITEMMODELS_EXPORT_H
 
-#include "ui/gammaray_ui_export.h"
-
-#define KDEUI_EXPORT
+#define KITEMMODELS_EXPORT
 
 #endif
