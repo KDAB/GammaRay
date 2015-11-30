@@ -56,16 +56,14 @@
 
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>
-#ifdef __GNUC__
-#define HAVE_BACKTRACE_DEMANGLE
+
+#ifdef HAVE_CXA_DEMANGLE
 #include <cxxabi.h>
 #endif
-#endif
 
-#ifdef HAVE_BACKTRACE
 static QString maybeDemangledName(char *name)
 {
-#ifdef HAVE_BACKTRACE_DEMANGLE
+#ifdef HAVE_CXA_DEMANGLE
   const int len = strlen(name);
   QByteArray in = QByteArray::fromRawData(name, len);
   const int mangledNameStart = in.indexOf("(_");

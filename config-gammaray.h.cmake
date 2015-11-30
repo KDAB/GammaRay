@@ -26,6 +26,7 @@
 
 #cmakedefine HAVE_STDINT_H
 #cmakedefine HAVE_BACKTRACE
+#cmakedefine HAVE_CXA_DEMANGLE
 
 #cmakedefine HAVE_QT_WIDGETS
 #cmakedefine HAVE_QT_SVG

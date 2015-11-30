@@ -57,6 +57,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 include(CheckCXXCompilerFlag)
+include(CheckCXXSymbolExists)
 include(CheckIncludeFiles)
 include(CheckLibraryExists)
 include(CheckSymbolExists)
@@ -391,6 +392,7 @@ endif()
 
 check_include_files(stdint.h HAVE_STDINT_H)
 check_symbol_exists(backtrace execinfo.h HAVE_BACKTRACE)
+check_cxx_symbol_exists(abi::__cxa_demangle cxxabi.h HAVE_CXA_DEMANGLE)
 
 # ELF header for ABI detection
 find_file(ELF_H elf.h PATH_SUFFIXES sys)
