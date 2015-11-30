@@ -34,10 +34,12 @@
 class MyObject : public QObject
 {
     Q_PROPERTY(int intProp READ intProp WRITE setIntProp NOTIFY intPropChanged)
+    Q_PROPERTY(int intProp2 READ intProp2 WRITE setIntProp2 NOTIFY intProp2Changed)
     Q_OBJECT
 public:
-    explicit MyObject(QObject *parent = 0) : QObject(parent), p1(0) {}
+    explicit MyObject(QObject *parent = 0) : QObject(parent), p1(0), p2(23) {}
     int intProp() { return p1; }
+    int intProp2() { return p2; }
     void setIntProp(int i)
     {
         if (p1 == i)
@@ -45,12 +47,20 @@ public:
         p1 = i;
         emit intPropChanged();
     }
+    void setIntProp2(int i)
+    {
+        if (p2 == i)
+            return;
+        p2 = i;
+        emit intProp2Changed();
+    }
 
 signals:
     void intPropChanged();
+    void intProp2Changed();
 
 private:
-    int p1;
+    int p1, p2;
 };
 
 using namespace GammaRay;
@@ -89,20 +99,20 @@ private slots:
     {
         MyObject *obj1 = new MyObject(this);
         obj1->setIntProp(18);
-        obj1->setObjectName(QStringLiteral("hello"));
+        obj1->setIntProp2(133);
         MyObject *obj2 = new MyObject(this);
 
         auto binder = new PropertyBinder(obj1, obj2);
         binder->add("intProp", "intProp");
-        binder->add("objectName", "objectName");
+        binder->add("intProp2", "intProp2");
 
         QVERIFY(obj1->intProp() != obj2->intProp());
-        QVERIFY(obj1->objectName() != obj2->objectName());
+        QVERIFY(obj1->intProp2() != obj2->intProp2());
 
         binder->syncSourceToDestination();
 
         QCOMPARE(obj2->intProp(), 18);
-        QCOMPARE(obj2->objectName(), QStringLiteral("hello"));
+        QCOMPARE(obj2->intProp2(), 133);
 
         obj2->setIntProp(23);
         QCOMPARE(obj1->intProp(), 23);
