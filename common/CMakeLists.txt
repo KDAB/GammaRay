@@ -2,9 +2,6 @@
 # Shared non-UI code between probe and client
 #
 set(gammaray_common_srcs
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/klinkitemselectionmodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/kmodelindexproxymapper.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/kde/krecursivefilterproxymodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/lz4/lz4.c
 
   methodargument.cpp
@@ -25,11 +22,11 @@ set_target_properties(gammaray_common PROPERTIES
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network)
+  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network gammaray_kitemmodels)
 else()
   target_link_libraries(gammaray_common
     LINK_PUBLIC ${QT_QTCORE_LIBRARIES}
-    LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES}
+    LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_kitemmodels
   )
 endif()
 

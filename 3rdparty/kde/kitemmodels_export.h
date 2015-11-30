@@ -20,6 +20,17 @@
 #ifndef KDEITEMMODELS_EXPORT_H
 #define KDEITEMMODELS_EXPORT_H
 
-#define KITEMMODELS_EXPORT
+#include <QtCore/qglobal.h>
+
+#ifdef KITEMMODELS_STATICLIB
+#  undef KITEMMMODELS_SHAREDLIB
+#  define KITEMMODELS_EXPORT
+#else
+#  ifdef MAKE_KITEMMODELS_LIB
+#    define KITEMMODELS_EXPORT Q_DECL_EXPORT
+#  else
+#    define KITEMMODELS_EXPORT Q_DECL_IMPORT
+#  endif
+#endif
 
 #endif

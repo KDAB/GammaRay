@@ -23,8 +23,7 @@
 #include <QSortFilterProxyModel>
 #include <QVector>
 
-#include "common/gammaray_common_export.h"
-#define KITEMMODELS_EXPORT GAMMARAY_COMMON_EXPORT
+#include "kitemmodels_export.h"
 
 class KRecursiveFilterProxyModelPrivate;
 

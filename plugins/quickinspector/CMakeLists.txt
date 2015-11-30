@@ -38,6 +38,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
   target_link_libraries(gammaray_quickinspector
     gammaray_quickinspector_shared
     gammaray_core Qt5::Quick
+    gammaray_kitemmodels
   )
 
   if(GAMMARAY_BUILD_UI)

@@ -111,7 +111,7 @@ add_library(gammaray_core SHARED
 
 target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
-  LINK_PRIVATE gammaray_common_internal
+  LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
 )
 set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}

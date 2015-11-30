@@ -505,6 +505,7 @@ include_directories(
 )
 
 add_subdirectory(cmake)
+add_subdirectory(3rdparty/kde)
 add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(probe)

@@ -11,6 +11,7 @@ gammaray_add_plugin(gammaray_objectvisualizer_plugin
 
 target_link_libraries(gammaray_objectvisualizer_plugin
   ${QT_QTCORE_LIBRARIES}
+  gammaray_kitemmodels
   gammaray_core
 )
 
