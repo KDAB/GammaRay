@@ -273,8 +273,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     // make sure we have selected something for the property editor to not be entirely empty
     selectItem(m_window->contentItem());
 
-    connect(window, &QQuickWindow::frameSwapped,
-            this, &QuickInspector::slotSceneChanged, Qt::DirectConnection);
+    connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::slotSceneChanged);
 
     m_window->update();
   }
@@ -411,6 +410,7 @@ void QuickInspector::slotSceneChanged()
     return;
   }
 
+  Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
   m_isGrabbingWindow = true;
   m_currentFrame = m_window->grabWindow();
   m_isGrabbingWindow = false;
