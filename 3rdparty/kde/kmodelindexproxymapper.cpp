@@ -114,7 +114,7 @@ void KModelIndexProxyMapperPrivate::createProxyChain()
     }
 
     QList<QPointer<const QAbstractProxyModel> > proxyChainDown;
-    QPointer<const QAbstractProxyModel> selectionTargetProxyModel = qobject_cast<const QAbstractProxyModel *>(targetModel);
+    QPointer<const QAbstractProxyModel> selectionTargetProxyModel = qobject_cast<const QAbstractProxyModel *>(targetModel.data());
     while (selectionTargetProxyModel) {
         proxyChainDown.prepend(selectionTargetProxyModel);
 
@@ -127,7 +127,7 @@ void KModelIndexProxyMapperPrivate::createProxyChain()
     }
 
     QPointer<const QAbstractItemModel> sourceModel = m_leftModel;
-    QPointer<const QAbstractProxyModel> sourceProxyModel = qobject_cast<const QAbstractProxyModel *>(sourceModel);
+    QPointer<const QAbstractProxyModel> sourceProxyModel = qobject_cast<const QAbstractProxyModel *>(sourceModel.data());
 
     while (sourceProxyModel) {
         m_proxyChainUp.append(sourceProxyModel);
