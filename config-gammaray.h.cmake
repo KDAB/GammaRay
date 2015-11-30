@@ -25,6 +25,7 @@
 #cmakedefine HAVE_PRIVATE_QT_HEADERS
 
 #cmakedefine HAVE_STDINT_H
+#cmakedefine HAVE_BACKTRACE
 
 #cmakedefine HAVE_QT_WIDGETS
 #cmakedefine HAVE_QT_SVG

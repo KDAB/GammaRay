@@ -46,13 +46,8 @@
 */
 //krazy:excludeall=cpp since lots of low-level stuff in here
 
+#include <config-gammaray.h>
 #include "backtrace.h"
-
-//NOTE: we don't have check_function_exists, so lets just hardcode some OS'es
-#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID) && !defined(__UCLIBC__)
-#define HAVE_BACKTRACE (1)
-#endif
-///TODO: what else is supported? what about mac?
 
 ///BEGIN kdebug.cpp
 

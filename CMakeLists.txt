@@ -59,6 +59,7 @@ endif()
 include(CheckCXXCompilerFlag)
 include(CheckIncludeFiles)
 include(CheckLibraryExists)
+include(CheckSymbolExists)
 include(GammaRayMacros)
 include(GammaRayMacrosInternal)
 include(FeatureSummary)
@@ -389,6 +390,7 @@ else()
 endif()
 
 check_include_files(stdint.h HAVE_STDINT_H)
+check_symbol_exists(backtrace execinfo.h HAVE_BACKTRACE)
 
 # ELF header for ABI detection
 find_file(ELF_H elf.h PATH_SUFFIXES sys)
