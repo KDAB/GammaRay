@@ -36,5 +36,10 @@
 
   <updatecontact>allen.winter@kdab.com</updatecontact>
 
+  <kudos>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>ModernToolkit</kudo>
+  </kudos>
+
   <project_group>KDAB</project_group>
 </application>
