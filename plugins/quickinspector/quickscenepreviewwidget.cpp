@@ -50,6 +50,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setMouseTracking(true);
   setAttribute(Qt::WA_OpaquePaintEvent);
+  setMinimumSize(QSize(400, 300));
 
 
   // Background
