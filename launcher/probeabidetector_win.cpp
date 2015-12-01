@@ -74,6 +74,26 @@ static QStringList dllSearchPaths(const QString &exePath)
   return paths;
 }
 
+/** Check if PE headers are valid, and advance @p data beyond them. */
+static bool checkPEHeader(const uchar*& data, const uchar *const end)
+{
+  const IMAGE_DOS_HEADER *dosHdr = reinterpret_cast<const IMAGE_DOS_HEADER*>(data);
+  if (dosHdr->e_magic != IMAGE_DOS_SIGNATURE)
+    return false;
+  data += dosHdr->e_lfanew;
+  if (data + sizeof(quint32) >= end)
+    return false;
+
+  const quint32 *peHdr = reinterpret_cast<const quint32*>(data);
+  if (*peHdr != IMAGE_NT_SIGNATURE)
+    return false;
+  data += sizeof(quint32);
+  if (data + sizeof(IMAGE_FILE_HEADER) >= end)
+    return false;
+  return true;
+}
+
+
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
   const auto searchPaths = dllSearchPaths(path);
@@ -189,18 +209,7 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
   if (!data || f.size() < sizeof(IMAGE_DOS_HEADER))
     return ProbeABI();
 
-  const IMAGE_DOS_HEADER *dosHdr = reinterpret_cast<const IMAGE_DOS_HEADER*>(data);
-  if (dosHdr->e_magic != IMAGE_DOS_SIGNATURE)
-    return ProbeABI();
-  data += dosHdr->e_lfanew;
-  if (data + sizeof(quint32) >= end)
-    return ProbeABI();
-
-  const quint32 *peHdr = reinterpret_cast<const quint32*>(data);
-  if (*peHdr != IMAGE_NT_SIGNATURE)
-    return ProbeABI();
-  data += sizeof(quint32);
-  if (data + sizeof(IMAGE_FILE_HEADER) >= end)
+  if (!checkPEHeader(data, end))
     return ProbeABI();
 
   // architecture
