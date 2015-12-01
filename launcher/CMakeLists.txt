@@ -23,7 +23,7 @@ set(gammaray_launcher_shared_srcs
 )
 
 if(WIN32)
-  list(APPEND gammaray_launcher_shared_srcs probeabidetector_win.cpp)
+  list(APPEND gammaray_launcher_shared_srcs probeabidetector_win.cpp pefile.cpp)
 else()
   list(APPEND gammaray_launcher_shared_srcs
     injector/debuggerinjector.cpp
