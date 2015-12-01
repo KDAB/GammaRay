@@ -75,19 +75,48 @@ static QStringList dllSearchPaths(const QString &exePath)
   return paths;
 }
 
+/** Resolves imports given a list of search paths. */
+static QString resolveImport(const QString &import, const QStringList &searchPaths)
+{
+  foreach (const auto &path, searchPaths) {
+    const QString absPath = path + '/' + import;
+    if (QFile::exists(absPath)) {
+      return absPath;
+    }
+  }
+  qDebug() << "Could not resolve import" << import << "in" << searchPaths;
+  return QString();
+}
+
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
-  // TODO
   const auto searchPaths = dllSearchPaths(path);
-  qDebug() << "DLL search paths:" << searchPaths;
+  QStringList resolvedImports = QStringList(path);
+  QSet<QString> checkedImports;
 
-  PEFile f(path);
-  if (!f.isValid())
-    return ProbeABI();
+  while (!resolvedImports.isEmpty()) {
+    foreach (const auto &import, resolvedImports) {
+      if (containsQtCore(import.toUtf8()))
+        return abiForQtCore(import);
+    }
 
-  qDebug() << "imports:" << f.imports();
+    QStringList resolvedSubImports;
+    foreach (const auto &import, resolvedImports) {
+      PEFile f(import);
+      if (!f.isValid())
+        continue;
 
-  return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
+      foreach (const auto &import, f.imports()) {
+        const auto absPath = resolveImport(import, searchPaths);
+        if (!absPath.isEmpty() && !checkedImports.contains(import))
+          resolvedSubImports.push_back(absPath);
+        checkedImports.insert(import);
+      }
+    }
+    resolvedImports = resolvedSubImports;
+  }
+
+  return ProbeABI();
 }
 
 ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
