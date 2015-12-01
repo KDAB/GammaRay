@@ -32,7 +32,9 @@
 #include "probeabi.h"
 
 #include <QDebug>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QString>
 #include <QStringList>
 
@@ -42,9 +44,41 @@
 
 using namespace GammaRay;
 
+// see https://msdn.microsoft.com/en-us/library/ms682586%28v=vs.85%29.aspx
+static QStringList dllSearchPaths(const QString &exePath)
+{
+  QStringList paths;
+
+  // (1) directory containing the executable
+  QFileInfo fi(exePath);
+  paths.push_back(fi.absolutePath());
+
+  // (2) system directory
+  wchar_t path[256];
+  auto len = GetSystemDirectoryW(path, sizeof(path));
+  Q_ASSERT(len <= sizeof(path) && len > 0);
+  paths.push_back(QString::fromWCharArray(path, len));
+
+  // (3) windows directory
+  len = GetWindowsDirectoryW(path, sizeof(path));
+  Q_ASSERT(len <= sizeof(path));
+  paths.push_back(QString::fromWCharArray(path, len));
+
+  // (4) current working dir
+  paths.push_back(QDir::currentPath());
+
+  // (5) PATH
+  const auto envPaths = QString::fromLocal8Bit(qgetenv("PATH"));
+  paths += envPaths.split(";");
+
+  return paths;
+}
+
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
-  Q_UNUSED(path);
+  const auto searchPaths = dllSearchPaths(path);
+  qDebug() << "DLL search paths:" << searchPaths;
+  // TODO
   return ProbeABI::fromString(GAMMARAY_PROBE_ABI);
 }
 
