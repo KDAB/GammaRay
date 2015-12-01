@@ -93,6 +93,23 @@ static bool checkPEHeader(const uchar*& data, const uchar *const end)
   return true;
 }
 
+/** Read the architecture from a PE header. @p data is assumed to be positioned on the file header.
+ *  An empty string is returned on error, @p data is advanced to after the file header.
+ */
+static QString architectureFromPEHeader(const uchar*& data, const uchar *const end)
+{
+  const IMAGE_FILE_HEADER* coffHdr = reinterpret_cast<const IMAGE_FILE_HEADER*>(data);
+  data += sizeof(IMAGE_FILE_HEADER);
+  if (data + sizeof(IMAGE_OPTIONAL_HEADER64) >= end)
+    return QString();
+
+  switch(coffHdr->Machine) {
+    case IMAGE_FILE_MACHINE_I386: return QStringLiteral("i686");
+    case IMAGE_FILE_MACHINE_AMD64: return QStringLiteral("x86_64");
+  }
+
+  return QString();
+}
 
 ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
 {
@@ -124,16 +141,6 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
   return ProbeABI();
 }
 
-
-static QString archFromPEHeader(const IMAGE_FILE_HEADER *coffHdr)
-{
-  switch(coffHdr->Machine) {
-    case IMAGE_FILE_MACHINE_I386: return "i686";
-    case IMAGE_FILE_MACHINE_AMD64: return "x86_64";
-  }
-
-  return QString();
-}
 
 static const IMAGE_SECTION_HEADER* sectionForRVA(const IMAGE_FILE_HEADER *hdr, DWORD rva, const uchar *end)
 {
@@ -213,10 +220,8 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
     return ProbeABI();
 
   // architecture
-  const IMAGE_FILE_HEADER* coffHdr = reinterpret_cast<const IMAGE_FILE_HEADER*>(data);
-  abi.setArchitecture(archFromPEHeader(coffHdr));
-  data += sizeof(IMAGE_FILE_HEADER);
-  if (data + sizeof(IMAGE_OPTIONAL_HEADER64) >= end)
+  abi.setArchitecture(architectureFromPEHeader(data, end));
+  if (abi.architecture().isEmpty())
     return ProbeABI();
 
   // import table
