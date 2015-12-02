@@ -222,6 +222,9 @@ void StateMachineViewerServer::setMaximumDepth(int depth)
 void StateMachineViewerServer::setSelectedStateMachine(QStateMachine* machine)
 {
   QStateMachine* oldMachine = selectedStateMachine();
+  if (oldMachine == machine)
+    return;
+
   if (oldMachine) {
     disconnect(oldMachine, SIGNAL(started()), this, SLOT(updateStartStop()));
     disconnect(oldMachine, SIGNAL(stopped()), this, SLOT(updateStartStop()));
