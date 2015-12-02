@@ -108,7 +108,9 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
 
   // TODO: Re-enable?
   //connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
-  m_ui->exportButton->setDisabled(true);
+  m_ui->exportButton->hide();
+  m_ui->maxMegaPixelsLabel->hide();
+  m_ui->maxMegaPixelsSpinBox->hide();
 
   m_ui->maxMegaPixelsSpinBox->setValue(maximumMegaPixels());
   connect(m_ui->maxMegaPixelsSpinBox, SIGNAL(valueChanged(int)), SLOT(setMaximumMegaPixels(int)));
