@@ -45,12 +45,12 @@ class PreloadCheck
      * via LD_PRELOAD
      *
      * On Linux the 'readelf' binary is called to find out whether
-     * @p symbol is marked as relocatable
+     * @p symbol in library @p fileName is marked as relocatable.
      *
      * @return True in case it's possible to overwrite @p symbol, otherwise false
      * @sa errorString()
      */
-    bool test(const QString &symbol);
+    bool test(const QString &fileName, const QString &symbol);
 
     QString errorString() const;
 

@@ -29,10 +29,15 @@
 #include "preloadinjector.h"
 #include "preloadcheck.h"
 
+#include <probeabidetector.h>
+
 #ifndef Q_OS_WIN
 
 #include <QProcess>
 #include <QDebug>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QStandardPaths>
+#endif
 
 #include <cstdlib>
 
@@ -63,10 +68,17 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   env.insert(QStringLiteral("LD_PRELOAD"), probeDll);
   env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
 
+  auto exePath = programAndArgs.first();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  exePath = QStandardPaths::findExecutable(exePath);
+#endif
+
+  ProbeABIDetector abiDetector;
+  const auto qtCorePath = abiDetector.qtCoreForExecutable(exePath);
   PreloadCheck check;
-  const bool success = check.test(QStringLiteral("qt_startup_hook"));
+  const bool success = check.test(qtCorePath, QStringLiteral("qt_startup_hook"));
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0) // before 5.4 this is fatal, after that we have the built-in hooks and DLL initialization as an even better way
-  if (!success) {
+  if (!success  && !qtCorePath.isEmpty()) {
     mExitCode = 1;
     mErrorString = check.errorString();
     return false;

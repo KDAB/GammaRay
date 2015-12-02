@@ -30,28 +30,12 @@
 #include <QString>
 #include <QProcess>
 
-#include <dlfcn.h>
-
-static QString findSharedObjectFile(const QString &symbol)
-{
-  void *sym = dlsym(RTLD_NEXT, qPrintable(symbol));
-  if (!sym) {
-    return QString();
-  }
-
-  Dl_info info;
-  dladdr(sym, &info);
-  const QString fileName = info.dli_fname;
-  return fileName;
-}
-
 PreloadCheck::PreloadCheck()
 {
 }
 
-bool PreloadCheck::test(const QString &symbol)
+bool PreloadCheck::test(const QString &fileName, const QString &symbol)
 {
-  const QString fileName = findSharedObjectFile(symbol);
   if (fileName.isEmpty()) {
     setErrorString(QObject::tr("Cannot find file containing symbol: %1").arg(symbol));
     return false;
