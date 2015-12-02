@@ -81,6 +81,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   m_interface = ObjectBroker::object<StateMachineViewerInterface*>();
 
   m_ui->setupUi(this);
+  m_ui->depthGroupBox->hide(); // we have that in the KDSME view already
 
   m_ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
   m_ui->graphicsView->setScene(new QGraphicsScene(this));
