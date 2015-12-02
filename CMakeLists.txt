@@ -145,6 +145,8 @@ option(
   OFF
 )
 
+option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
+
 # TODO: find a nicer way for all this. ideally auto-detect the name mangling
 # format, but at least guess a default based on OS + compiler.
 option(

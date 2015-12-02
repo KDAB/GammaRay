@@ -24,6 +24,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "preloadcheck.h"
 
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
@@ -89,7 +90,7 @@ bool PreloadCheck::test(const QString &fileName, const QString &symbol)
     }
   }
 
-#ifdef __mips__
+#if defined(__mips__) && defined(GAMMARAY_ENABLE_GPL_ONLY_FEATURES)
   // Mips, besides the plt, has another method of
   // calling functions from .so files, and this method doesn't need JUMP_SLOT
   // relocations (in fact, it doesn't need any relocations). This method uses .got
@@ -115,6 +116,8 @@ void PreloadCheck::setErrorString(const QString &err)
   m_errorString = err;
 }
 
+#ifdef GAMMARAY_ENABLE_GPL_ONLY_FEATURES
 #include "preloadcheck_mips.cpp"
+#endif
 
 #endif
