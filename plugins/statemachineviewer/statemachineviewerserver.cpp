@@ -31,9 +31,9 @@
 #include "statemachinewatcher.h"
 #include "transitionmodel.h"
 
-
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
+#include <core/singlecolumnobjectproxymodel.h>
 #include <common/objectbroker.h>
 
 #include <QAbstractTransition>
@@ -82,11 +82,12 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
   connect(stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(stateSelectionChanged()));
 
-  ObjectTypeFilterProxyModel<QStateMachine> *stateMachineFilter =
-    new ObjectTypeFilterProxyModel<QStateMachine>(this);
+  auto stateMachineFilter = new ObjectTypeFilterProxyModel<QStateMachine>(this);
   stateMachineFilter->setSourceModel(probe->objectListModel());
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateMachineModel"), stateMachineFilter);
-  QItemSelectionModel *stateMachineSelectionModel = ObjectBroker::selectionModel(stateMachineFilter);
+  auto stateMachineModel = new SingleColumnObjectProxyModel(this);
+  stateMachineModel->setSourceModel(stateMachineFilter);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateMachineModel"), stateMachineModel);
+  QItemSelectionModel *stateMachineSelectionModel = ObjectBroker::selectionModel(stateMachineModel);
   connect(stateMachineSelectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
           SLOT(handleMachineClicked(QModelIndex)));
 
