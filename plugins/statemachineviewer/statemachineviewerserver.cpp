@@ -84,12 +84,9 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
 
   auto stateMachineFilter = new ObjectTypeFilterProxyModel<QStateMachine>(this);
   stateMachineFilter->setSourceModel(probe->objectListModel());
-  auto stateMachineModel = new SingleColumnObjectProxyModel(this);
-  stateMachineModel->setSourceModel(stateMachineFilter);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateMachineModel"), stateMachineModel);
-  QItemSelectionModel *stateMachineSelectionModel = ObjectBroker::selectionModel(stateMachineModel);
-  connect(stateMachineSelectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(handleMachineClicked(QModelIndex)));
+  m_stateMachinesModel = new SingleColumnObjectProxyModel(this);
+  m_stateMachinesModel->setSourceModel(stateMachineFilter);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateMachineModel"), m_stateMachinesModel);
 
   connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
           SLOT(stateEntered(QAbstractState*)));
@@ -97,8 +94,6 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
           SLOT(stateExited(QAbstractState*)));
   connect(m_stateMachineWatcher, SIGNAL(transitionTriggered(QAbstractTransition*)),
           SLOT(handleTransitionTriggered(QAbstractTransition*)));
-
-
 
   setMaximumDepth(3);
   updateStartStop();
@@ -247,8 +242,10 @@ void StateMachineViewerServer::setSelectedStateMachine(QStateMachine* machine)
   updateStartStop();
 }
 
-void StateMachineViewerServer::handleMachineClicked(const QModelIndex &index)
+void StateMachineViewerServer::selectStateMachine(int row)
 {
+  Q_ASSERT(m_stateMachinesModel);
+  const auto index = m_stateMachinesModel->index(row, 0);
   if (!index.isValid()) {
     setSelectedStateMachine(0);
     return;

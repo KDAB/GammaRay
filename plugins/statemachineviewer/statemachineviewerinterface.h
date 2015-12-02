@@ -120,6 +120,7 @@ class StateMachineViewerInterface : public QObject
     virtual ~StateMachineViewerInterface();
 
   public slots:
+    virtual void selectStateMachine(int index) = 0;
     virtual void toggleRunning() = 0;
     virtual void setMaximumDepth(int depth) = 0;
 

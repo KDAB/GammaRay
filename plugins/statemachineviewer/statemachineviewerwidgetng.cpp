@@ -89,10 +89,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
 
   QAbstractItemModel *stateMachineModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateMachineModel"));
   m_ui->stateMachinesView->setModel(stateMachineModel);
-  m_ui->stateMachinesView->setSelectionModel(ObjectBroker::selectionModel(stateMachineModel));
-  new DeferredResizeModeSetter(m_ui->stateMachinesView->header(), 0, QHeaderView::Stretch);
-  new DeferredResizeModeSetter(m_ui->stateMachinesView->header(), 1, QHeaderView::ResizeToContents);
-  new DeferredTreeViewConfiguration(m_ui->stateMachinesView, false);
+  connect(m_ui->stateMachinesView, SIGNAL(currentIndexChanged(int)), m_interface, SLOT(selectStateMachine(int)));
 
   QAbstractItemModel *stateModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateModel"));
   connect(stateModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
