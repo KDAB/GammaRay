@@ -36,7 +36,10 @@
 
 #cmakedefine HAVE_VTK
 #cmakedefine HAVE_GRAPHVIZ
+
 #cmakedefine HAVE_ELF_H
+#cmakedefine HAVE_SYS_ELF_H
+#cmakedefine HAVE_ELF
 
 #if !defined(QT_NO_SHAREDMEMORY) && !defined(QT_NO_SYSTEMSEMAPHORE) && !defined(Q_OS_ANDROID)
 #define HAVE_SHM

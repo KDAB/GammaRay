@@ -40,6 +40,10 @@
 #ifdef HAVE_ELF_H
 #include <elf.h>
 #endif
+// on Linux sys/elf.h is not what we want, on QNX we cannot add "sys" to the include dir without messing other stuff up...
+#if defined(HAVE_SYS_ELF_H) && !defined(HAVE_ELF_H)
+#include <sys/elf.h>
+#endif
 
 using namespace GammaRay;
 
@@ -148,7 +152,7 @@ static ProbeABI qtVersionFromExec(const QString &path)
   return abi;
 }
 
-#ifdef HAVE_ELF_H
+#ifdef HAVE_ELF
 template <typename ElfEHdr>
 static QString archFromELFHeader(const uchar *data, quint64 size)
 {
@@ -171,7 +175,7 @@ static QString archFromELFHeader(const uchar *data, quint64 size)
 
 static QString archFromELF(const QString &path)
 {
-#ifdef HAVE_ELF_H
+#ifdef HAVE_ELF
   QFile f(path);
   if (!f.open(QFile::ReadOnly))
     return QString();

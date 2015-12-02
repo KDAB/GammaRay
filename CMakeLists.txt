@@ -395,11 +395,12 @@ check_symbol_exists(backtrace execinfo.h HAVE_BACKTRACE)
 check_cxx_symbol_exists(abi::__cxa_demangle cxxabi.h HAVE_CXA_DEMANGLE)
 
 # ELF header for ABI detection
-find_file(ELF_H elf.h PATH_SUFFIXES sys)
-if(ELF_H)
-  set(HAVE_ELF_H TRUE)
+find_file(HAVE_ELF_H elf.h)
+find_file(HAVE_SYS_ELF_H sys/elf.h)
+if(HAVE_ELF_H OR HAVE_SYS_ELF_H)
+  set(HAVE_ELF TRUE)
 endif()
-add_feature_info("ELF ABI detection" HAVE_ELF_H "Automatic probe ABI detection on ELF-based systems. Requires elf.h.")
+add_feature_info("ELF ABI detection" HAVE_ELF "Automatic probe ABI detection on ELF-based systems. Requires elf.h.")
 
 #
 # Determine probe ABI
