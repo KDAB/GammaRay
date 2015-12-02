@@ -147,26 +147,17 @@ static QString resolveRPath(const QString &path, const QStringList &rpaths)
   return path;
 }
 
-ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString& path) const
 {
   auto qtCorePath = qtCoreFromOtool(resolveBundlePath(path));
   qtCorePath = resolveRPath(qtCorePath, readRPaths(path));
-  if (qtCorePath.isEmpty())
-    return ProbeABI();
-
-  return abiForQtCore(qtCorePath);
+  return qtCorePath;
 }
 
-
-ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
+QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 {
-  const QString qtCorePath = qtCoreFromLsof(pid);
-  if (qtCorePath.isEmpty())
-    return ProbeABI();
-
-  return abiForQtCore(qtCorePath);
+  return qtCoreFromLsof(pid);
 }
-
 
 template <typename T>
 static QString readMachOHeader(const uchar* data, quint64 size, quint32 &offset, qint32 &ncmds, qint32 &cmdsize)
@@ -225,6 +216,9 @@ static ProbeABI abiFromMachO(const uchar* data, qint64 size)
 
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
+  if (path.isEmpty())
+    return ProbeABI();
+
   QFile f(path);
   if (!f.open(QFile::ReadOnly))
     return ProbeABI();

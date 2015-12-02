@@ -42,6 +42,16 @@ ProbeABIDetector::ProbeABIDetector()
 {
 }
 
+ProbeABI ProbeABIDetector::abiForExecutable(const QString &path) const
+{
+  return abiForQtCore(qtCoreForExecutable(path));
+}
+
+ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
+{
+  return abiForQtCore(qtCoreForProcess(pid));
+}
+
 ProbeABI ProbeABIDetector::abiForQtCore(const QString& path) const
 {
   QFileInfo fi(path);

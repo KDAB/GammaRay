@@ -88,7 +88,7 @@ static QString resolveImport(const QString &import, const QStringList &searchPat
   return QString();
 }
 
-ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString& path) const
 {
   const auto searchPaths = dllSearchPaths(path);
   QStringList resolvedImports = QStringList(path);
@@ -97,7 +97,7 @@ ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
   while (!resolvedImports.isEmpty()) {
     foreach (const auto &import, resolvedImports) {
       if (containsQtCore(import.toUtf8()))
-        return abiForQtCore(import);
+        return import;
     }
 
     QStringList resolvedSubImports;
@@ -116,16 +116,16 @@ ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
     resolvedImports = resolvedSubImports;
   }
 
-  return ProbeABI();
+  return QString();
 }
 
-ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
+QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 {
   MODULEENTRY32 me;
   me.dwSize = sizeof(MODULEENTRY32);
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
   if (snapshot == INVALID_HANDLE_VALUE) {
-    return ProbeABI();
+    return QString();
   }
 
   for (bool hasNext = Module32First(snapshot, &me); hasNext; hasNext = Module32Next(snapshot, &me)) {
@@ -133,12 +133,12 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
     if (containsQtCore(module.toUtf8())) {
       const QString path = QString::fromUtf16(reinterpret_cast<const ushort*>(me.szExePath));
       CloseHandle(snapshot);
-      return abiForQtCore(path);
+      return path;
     }
   }
 
   CloseHandle(snapshot);
-  return ProbeABI();
+  return QString();
 }
 
 static QString compilerFromLibraries(const QStringList &libraries)
@@ -163,6 +163,8 @@ static bool isDebugRuntime(const QStringList &libraries)
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
   ProbeABI abi;
+  if (path.isEmpty())
+    return abi;
 
   // version
   DWORD pointlessHandle;

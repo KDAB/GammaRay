@@ -52,7 +52,15 @@ public:
     /** Detect the ABI of the process running with PID @p pid. */
     ProbeABI abiForProcess(qint64 pid) const;
 
-    /** Check if the given line contains a mention of the QtCore library. */
+    /** Returns the full path to QtCore used by the given executable. */
+    QString qtCoreForExecutable(const QString &path) const;
+
+    /** Returns the full path to QtCore used by the process with PID @p pid. */
+    QString qtCoreForProcess(quint64 pid) const;
+
+    /** Check if the given line contains a mention of the QtCore library.
+     *  @internal
+     */
     static bool containsQtCore(const QByteArray &line);
 
 private:

@@ -72,16 +72,11 @@ static QString qtCoreFromLdd(const QString &path)
   return QString();
 }
 
-ProbeABI ProbeABIDetector::abiForExecutable(const QString& path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString& path) const
 {
   // TODO: add fast version reading the ELF file directly?
-  const QString qtCorePath = qtCoreFromLdd(path);
-  if (!qtCorePath.isEmpty())
-    return abiForQtCore(qtCorePath);
-
-  return ProbeABI();
+  return qtCoreFromLdd(path);
 }
-
 
 static bool qtCoreFromProc(qint64 pid, QString &path)
 {
@@ -109,15 +104,13 @@ static bool qtCoreFromProc(qint64 pid, QString &path)
   return true;
 }
 
-ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
+QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 {
   QString qtCorePath;
   if (!qtCoreFromProc(pid, qtCorePath))
     qtCorePath = qtCoreFromLsof(pid);
-
-  return abiForQtCore(qtCorePath);
+  return qtCorePath;
 }
-
 
 static ProbeABI qtVersionFromFileName(const QString &path)
 {
@@ -201,6 +194,9 @@ static QString archFromELF(const QString &path)
 
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
 {
+  if (path.isEmpty())
+    return ProbeABI();
+
   // try to find the version
   ProbeABI abi = qtVersionFromFileName(path);
   if (!abi.hasQtVersion())
