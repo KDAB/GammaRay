@@ -58,7 +58,6 @@ class PreloadCheck
     void setErrorString(const QString &err);
 
   private:
-#ifdef __mips__
     /**
      * Additional method for testing whether the call to the function will go
      * through .got and lazy binding stub (MIPS specific)
@@ -66,7 +65,6 @@ class PreloadCheck
      * @see https://github.com/KDAB/GammaRay/issues/63
      */
     bool testMips(const QString &symbol, const QString &fileName);
-#endif
 
     QString m_errorString;
 };

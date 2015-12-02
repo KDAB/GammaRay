@@ -115,8 +115,6 @@ void PreloadCheck::setErrorString(const QString &err)
   m_errorString = err;
 }
 
-#ifdef __mips__
 #include "preloadcheck_mips.cpp"
-#endif
 
 #endif
