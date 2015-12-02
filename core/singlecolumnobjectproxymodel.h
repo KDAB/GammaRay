@@ -57,6 +57,8 @@ class GAMMARAY_CORE_EXPORT SingleColumnObjectProxyModel : public QIdentityProxyM
      */
     explicit SingleColumnObjectProxyModel(QObject *parent = Q_NULLPTR);
 
+    int columnCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
     /**
      * Returns the data for the specified model.
      * @param proxyIndex is a QModelIndex.

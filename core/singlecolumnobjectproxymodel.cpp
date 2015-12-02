@@ -38,6 +38,11 @@ SingleColumnObjectProxyModel::SingleColumnObjectProxyModel(QObject *parent) :
 {
 }
 
+int SingleColumnObjectProxyModel::columnCount(const QModelIndex& parent) const
+{
+    return std::min(QIdentityProxyModel::columnCount(parent), 1);
+}
+
 QVariant SingleColumnObjectProxyModel::data(const QModelIndex &proxyIndex, int role) const
 {
     if (proxyIndex.isValid() && role == Qt::DisplayRole && proxyIndex.column() == 0) {
