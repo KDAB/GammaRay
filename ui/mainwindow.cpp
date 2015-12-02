@@ -316,6 +316,7 @@ void MainWindow::toolSelected()
     ui->actionsMenu->addAction(action);
   }
   ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
+  ui->actionsMenu->setTitle(mi.data().toString());
 }
 
 void MainWindow::navigateToCode(const QString &filePath, int lineNumber, int columnNumber)
