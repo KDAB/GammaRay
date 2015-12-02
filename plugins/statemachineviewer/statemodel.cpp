@@ -295,4 +295,15 @@ QModelIndex StateModel::parent(const QModelIndex &index) const
   return createIndex(row, 0, grandParent);
 }
 
+QVariant StateModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+    switch (section) {
+      case 0: return tr("State");
+      case 1: return tr("Type");
+    }
+  }
+  return QAbstractItemModel::headerData(section, orientation, role);
+}
+
 #include "moc_statemodel.cpp"
