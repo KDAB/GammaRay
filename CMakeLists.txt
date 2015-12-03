@@ -487,6 +487,13 @@ gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PROBE_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 
+# debug suffixes for qmake compatibility
+if(WIN32)
+  set(CMAKE_DEBUG_POSTFIX "d")
+elseif(APPLE)
+  set(CMAKE_DEBUG_POSTFIX "_debug")
+endif()
+
 #
 # actually build the stuff
 #
