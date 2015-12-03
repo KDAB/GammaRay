@@ -30,6 +30,7 @@
 #include "ui_statemachineviewer.h"
 
 #include "statemachineviewerclient.h"
+#include "statemodeldelegate.h"
 
 #include <common/objectbroker.h>
 #include <ui/deferredresizemodesetter.h>
@@ -99,6 +100,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 1, QHeaderView::ResizeToContents);
   new DeferredTreeViewConfiguration(m_ui->singleStateMachineView, true, false);
+  m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
 
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setMaximumDepth(int)));
   connect(m_ui->startStopButton, SIGNAL(clicked()), m_interface, SLOT(toggleRunning()));

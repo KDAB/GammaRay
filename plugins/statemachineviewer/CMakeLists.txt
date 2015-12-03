@@ -63,6 +63,7 @@ if (KDSME_FOUND AND Qt5Quick_FOUND)
   # new KDSME varaint
   list(APPEND gammaray_statemachineviewer_ui_plugin_srcs
     statemachineviewerwidgetng.cpp
+    statemodeldelegate.cpp
   )
   list(APPEND gammaray_statemachineviewer_ui_plugin_libs
     KDSME::Core
