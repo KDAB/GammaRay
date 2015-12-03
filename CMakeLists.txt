@@ -23,10 +23,6 @@
 #  Default=false
 #  Only use for Android or when you know what you are doing.
 #
-# -DGAMMARAY_UNKNOWN_CXX_MANGLED_NAMES=[true|false]
-#  Enable if your compiler uses an unsupported C++ name mangling scheme.
-#  Default=false
-#
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
 # Not available on Windows.
@@ -147,13 +143,6 @@ option(
 
 option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
 
-# TODO: find a nicer way for all this. ideally auto-detect the name mangling
-# format, but at least guess a default based on OS + compiler.
-option(
-  GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
-  "Enable if your compiler uses an unsupported C++ name mangling scheme"
-  OFF
-)
 
 #
 # Compiler & linker settings

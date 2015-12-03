@@ -193,16 +193,6 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
 };
 
-class GAMMARAY_CORE_EXPORT SignalSlotsLocationStore
-{
-public:
-  /// store the location of @p method
-  static void flagLocation(const char *method);
-
-  /// retrieve the location of @p member
-  static const char *extractLocation(const char *member);
-};
-
 }
 
 #endif // GAMMARAY_PROBE_H

@@ -52,8 +52,6 @@ extern Q_DECL_EXPORT void gammaray_probe_inject();
 
 }
 
-extern Q_DECL_EXPORT const char *gammaray_flagLocation(const char *method);
-
 namespace GammaRay {
 
 namespace Hooks {

@@ -71,19 +71,3 @@ extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
   }
 #endif
 }
-
-#ifndef GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
-Q_DECL_EXPORT const char *qFlagLocation(const char *method)
-{
-  gammaray_flagLocation(method);
-
-  static const char *(*next_qFlagLocation)(const char *method) =
-  (const char * (*)(const char *method)) dlsym(RTLD_NEXT, "_Z13qFlagLocationPKc");
-
-  Q_ASSERT_X(next_qFlagLocation, "",
-             "Recompile with GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES enabled, "
-             "your compiler uses an unsupported C++ name mangling scheme");
-  return next_qFlagLocation(method);
-}
-#endif
-

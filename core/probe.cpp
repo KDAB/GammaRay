@@ -875,34 +875,3 @@ void Probe::executeSignalCallback(const Func &func)
                 instance()->m_signalSpyCallbacks.constEnd(),
                 func);
 }
-
-//BEGIN: SignalSlotsLocationStore
-
-// taken from qobject.cpp
-const int gammaray_flagged_locations_count = 2;
-const char *gammaray_flagged_locations[gammaray_flagged_locations_count] = {0};
-
-static int gammaray_idx = 0;
-
-void SignalSlotsLocationStore::flagLocation(const char *method)
-{
-  gammaray_flagged_locations[gammaray_idx] = method;
-  gammaray_idx = (gammaray_idx+1) % gammaray_flagged_locations_count;
-}
-
-const char *SignalSlotsLocationStore::extractLocation(const char *member)
-{
-  for (int i = 0; i < gammaray_flagged_locations_count; ++i) {
-    if (member == gammaray_flagged_locations[i]) {
-      // signature includes location information after the first null-terminator
-      const char *location = member + qstrlen(member) + 1;
-      if (*location != '\0') {
-        return location;
-      }
-      return 0;
-    }
-  }
-  return 0;
-}
-
-//END

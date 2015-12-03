@@ -85,12 +85,6 @@ extern "C" Q_DECL_EXPORT void gammaray_removeObject(QObject *obj)
     gammaray_next_removeObject(obj);
 }
 
-const char* gammaray_flagLocation(const char* method)
-{
-  SignalSlotsLocationStore::flagLocation(method);
-  return method;
-}
-
 #ifdef GAMMARAY_USE_QHOOKS
 static void installQHooks()
 {
@@ -118,25 +112,6 @@ static void overwriteQtFunctions()
   overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void*)gammaray_startup_hook);
   overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void*)gammaray_addObject);
   overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void*)gammaray_removeObject);
-#if defined(Q_OS_WIN)
-#ifdef ARCH_64
-#ifdef __MINGW32__
-  overwriter->overwriteFunction(
-    QLatin1String("_Z13qFlagLocationPKc"), (void*)gammaray_flagLocation);
-#else
-  overwriter->overwriteFunction(
-    QLatin1String("?qFlagLocation@@YAPEBDPEBD@Z"), (void*)gammaray_flagLocation);
-#endif
-#else
-# ifdef __MINGW32__
-  overwriter->overwriteFunction(
-    QLatin1String("_Z13qFlagLocationPKc"), (void*)gammaray_flagLocation);
-# else
-  overwriter->overwriteFunction(
-    QLatin1String("?qFlagLocation@@YAPBDPBD@Z"), (void*)gammaray_flagLocation);
-# endif
-#endif
-#endif
 }
 #endif
 

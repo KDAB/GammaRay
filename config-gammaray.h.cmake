@@ -45,6 +45,4 @@
 #define HAVE_SHM
 #endif
 
-#cmakedefine GAMMARAY_UNKNOWN_CXX_MANGLED_NAMES
-
 #cmakedefine GAMMARAY_ENABLE_GPL_ONLY_FEATURES
