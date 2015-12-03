@@ -10,7 +10,6 @@ set(gammaray_srcs
   probeguard.cpp
   probesettings.cpp
   probecontroller.cpp
-#  proxydetacher.cpp
   objectlistmodel.cpp
   objectclassinfomodel.cpp
   objectmethodmodel.cpp
