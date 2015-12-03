@@ -131,8 +131,6 @@ QModelIndex StateModelPrivate::indexForState(QAbstractState *state) const
 
 void StateModelPrivate::stateConfigurationChanged()
 {
-  Q_Q(StateModel);
-
   QSet<QAbstractState *> newConfig = m_stateMachine->configuration();
   // states which became active
   foreach (QAbstractState *state, (newConfig - m_lastConfiguration)) {
