@@ -54,6 +54,15 @@ class StateModelPrivate
                          qq, SLOT(stateConfigurationChanged())));
   }
 
+  void emitDataChangedForState(QAbstractState *state)
+  {
+    const auto left = indexForState(state);
+    const auto right = left.sibling(left.row(), q_ptr->columnCount() - 1);
+    if (!left.isValid() || !right.isValid())
+      return;
+    emit q_ptr->dataChanged(left, right);
+  }
+
   Q_DECLARE_PUBLIC(StateModel)
   StateModel * const q_ptr;
   StateMachineWatcher * const m_stateMachineWatcher;
@@ -127,17 +136,11 @@ void StateModelPrivate::stateConfigurationChanged()
   QSet<QAbstractState *> newConfig = m_stateMachine->configuration();
   // states which became active
   foreach (QAbstractState *state, (newConfig - m_lastConfiguration)) {
-    const QModelIndex source = indexForState(state);
-    if (source.isValid()) {
-      q->dataChanged(source, source);
-    }
+    emitDataChangedForState(state);
   }
   // states which became inactive
   foreach (QAbstractState *state, (m_lastConfiguration - newConfig)) {
-    const QModelIndex source = indexForState(state);
-    if (source.isValid()) {
-      q->dataChanged(source, source);
-    }
+    emitDataChangedForState(state);
   }
   m_lastConfiguration = newConfig;
 }
