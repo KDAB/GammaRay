@@ -103,7 +103,8 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
 
   connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setMaximumDepth(int)));
-  connect(m_ui->startStopButton, SIGNAL(clicked()), m_interface, SLOT(toggleRunning()));
+  connect(m_ui->actionStartStopStateMachine, SIGNAL(triggered()), m_interface, SLOT(toggleRunning()));
+  addAction(m_ui->actionStartStopStateMachine);
 
   // TODO: Re-enable?
   //connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
@@ -242,14 +243,14 @@ void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, cons
     m_machine->runtimeController()->setIsRunning(running);
   }
 
+  m_ui->actionStartStopStateMachine->setEnabled(haveStateMachine);
   if (!running) {
-    m_ui->startStopButton->setChecked(false);
-    m_ui->startStopButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    m_ui->actionStartStopStateMachine->setText(tr("Start State Machine"));
+    m_ui->actionStartStopStateMachine->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
   } else {
-    m_ui->startStopButton->setChecked(true);
-    m_ui->startStopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+    m_ui->actionStartStopStateMachine->setText(tr("Stop State Machine"));
+    m_ui->actionStartStopStateMachine->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
   }
-  m_ui->startStopButton->setEnabled(haveStateMachine);
 }
 
 void StateMachineViewerWidgetNG::transitionTriggered(TransitionId transitionId, const QString& label)
