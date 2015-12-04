@@ -97,6 +97,8 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
     m_maximumDepth(0),
     m_stateMachineWatcher(new StateMachineWatcher(this))
 {
+  registerTypes();
+
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateModel"), m_stateModel);
   QItemSelectionModel *stateSelectionModel = ObjectBroker::selectionModel(m_stateModel);
   connect(stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -412,6 +414,17 @@ void StateMachineViewerServer::toggleRunning()
     selectedStateMachine()->start();
   }
 }
+
+void StateMachineViewerServer::registerTypes()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+  // moc auto-registration fails as this is only forward-declared and thus not seen by moc
+  qRegisterMetaType<QAbstractState*>();
+  qRegisterMetaType<QState*>();
+  qRegisterMetaType<QList<QAbstractState*> >();
+#endif
+}
+
 
 QString StateMachineViewerFactory::name() const
 {

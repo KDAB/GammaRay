@@ -86,7 +86,7 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     void repopulateGraph() Q_DECL_OVERRIDE;
 
   private:
-
+    void registerTypes();
     void updateStateItems();
 
     bool mayAddState(QAbstractState *state);
