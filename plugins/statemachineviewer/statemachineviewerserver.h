@@ -90,6 +90,7 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     void updateStateItems();
 
     bool mayAddState(QAbstractState *state);
+    static QString labelForTransition(QAbstractTransition *transition);
 
     QAbstractProxyModel *m_stateMachinesModel;
     StateModel *m_stateModel;

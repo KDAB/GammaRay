@@ -39,6 +39,7 @@
 #include <QAbstractTransition>
 #include <QFinalState>
 #include <QHistoryState>
+#include <QMetaEnum>
 #include <QSignalTransition>
 #include <QStateMachine>
 #include <QItemSelectionModel>
@@ -47,27 +48,46 @@
 
 #include <iostream>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(Qt::KeyboardModifiers)
+#endif
+
 using namespace GammaRay;
 using namespace std;
 
-namespace {
-
-QString labelForTransition(QAbstractTransition *transition)
+QString StateMachineViewerServer::labelForTransition(QAbstractTransition* transition)
 {
   const QString objectName = transition->objectName();
   if (!objectName.isEmpty()) {
     return objectName;
   }
 
-  // Try to get a label for the transition if it is a QSignalTransition.
-  QSignalTransition *signalTransition = qobject_cast<QSignalTransition*>(transition);
-  if (signalTransition) {
-      return Util::displayString(signalTransition->senderObject()) + "::" + signalTransition->signal().mid(1);
+  // try to find descriptive labels for built-in transitions
+  if (auto signalTransition = qobject_cast<QSignalTransition*>(transition)) {
+    return Util::displayString(signalTransition->senderObject()) + "::" + signalTransition->signal().mid(1);
+  }
+  // QKeyEventTransition is in QtWidgets, so this is a bit dirty to avoid a hard dependency
+  else if (transition->inherits("QKeyEventTransition")) {
+    QString s;
+    const auto modifiers = transition->property("modifierMask").value<Qt::KeyboardModifiers>();
+    if (modifiers != Qt::NoModifier) {
+      const auto modIdx = staticQtMetaObject.indexOfEnumerator("KeyboardModifiers");
+      if (modIdx < 0)
+        return Util::displayString(transition);
+      const auto modEnum = staticQtMetaObject.enumerator(modIdx);
+      s += modEnum.valueToKey(modifiers) + QStringLiteral(" + ");
+    }
+
+    const auto key = transition->property("key").toInt();
+    const auto keyIdx = staticQtMetaObject.indexOfEnumerator("Key");
+    if (keyIdx < 0)
+      return Util::displayString(transition);
+    const auto keyEnum = staticQtMetaObject.enumerator(keyIdx);
+    s += keyEnum.valueToKey(key);
+    return s;
   }
 
   return Util::displayString(transition);
-}
-
 }
 
 StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObject *parent)
