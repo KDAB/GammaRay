@@ -181,6 +181,7 @@ void MetaObjectTreeModel::scanMetaTypes()
     }
   }
 #endif
+  addMetaObject(&staticQtMetaObject);
 }
 
 void MetaObjectTreeModel::addMetaObject(const QMetaObject *metaObject)
