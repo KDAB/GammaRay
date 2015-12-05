@@ -61,7 +61,7 @@ static QString positioningMethodsToString(QGeoPositionInfoSource::PositioningMet
 }
 
 Positioning::Positioning(Probe *probe, QObject *parent)
-    : QObject(parent)
+    : PositioningInterface(parent)
 {
     Q_UNUSED(probe);
 

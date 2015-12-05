@@ -1,10 +1,10 @@
 /*
-  positioning.h
+  positioningwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,37 +26,42 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_POSITIONING_H
-#define GAMMARAY_POSITIONING_H
+#ifndef GAMMARAY_POSITIONINGWIDGET_H
+#define GAMMARAY_POSITIONINGWIDGET_H
 
-#include "positioninginterface.h"
+#include <ui/tooluifactory.h>
 
-#include <core/toolfactory.h>
-
-#include <QGeoPositionInfoSource>
-#include <QObject>
+#include <QScopedPointer>
+#include <QWidget>
 
 namespace GammaRay {
 
-class Positioning : public PositioningInterface
+namespace Ui
 {
-    Q_OBJECT
-public:
-    explicit Positioning(Probe *probe, QObject *parent = nullptr);
-};
-
-class PositioningFactory : public QObject,
-    public StandardToolFactory<QGeoPositionInfoSource, Positioning>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_positioning.json")
-public:
-    explicit PositioningFactory(QObject *parent = nullptr)
-        : QObject(parent)
-    {
-    }
-};
+class PositioningWidget;
 }
 
-#endif // GAMMARAY_POSITIONING_H
+class PositioningInterface;
+
+class PositioningWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PositioningWidget(QWidget *parent = Q_NULLPTR);
+    ~PositioningWidget();
+
+private:
+    QScopedPointer<Ui::PositioningWidget> ui;
+    PositioningInterface *m_interface;
+};
+
+class PositioningUiFactory : public QObject, public StandardToolUiFactory<PositioningWidget>
+{
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_positioning.json")
+};
+
+}
+
+#endif // GAMMARAY_POSITIONINGWIDGET_H

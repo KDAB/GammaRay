@@ -1,10 +1,10 @@
 /*
-  positioning.h
+  positioninginterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,37 +26,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_POSITIONING_H
-#define GAMMARAY_POSITIONING_H
+#ifndef GAMMARAY_POSITIONINGINTERFACE_H
+#define GAMMARAY_POSITIONINGINTERFACE_H
 
-#include "positioninginterface.h"
-
-#include <core/toolfactory.h>
-
-#include <QGeoPositionInfoSource>
 #include <QObject>
 
 namespace GammaRay {
 
-class Positioning : public PositioningInterface
+class PositioningInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool positioningOverrideEnabled READ positioningOverrideEnabled WRITE setPositioningOverrideEnabled NOTIFY positioningOverrideEnabledChanged)
 public:
-    explicit Positioning(Probe *probe, QObject *parent = nullptr);
+    explicit PositioningInterface(QObject* parent = Q_NULLPTR);
+
+    bool positioningOverrideEnabled() const;
+    void setPositioningOverrideEnabled(bool enabled);
+
+signals:
+    void positioningOverrideEnabledChanged();
+
+private:
+    bool m_positioningOverrideEnabled;
 };
 
-class PositioningFactory : public QObject,
-    public StandardToolFactory<QGeoPositionInfoSource, Positioning>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_positioning.json")
-public:
-    explicit PositioningFactory(QObject *parent = nullptr)
-        : QObject(parent)
-    {
-    }
-};
 }
 
-#endif // GAMMARAY_POSITIONING_H
+Q_DECLARE_INTERFACE(GammaRay::PositioningInterface, "com.kdab.GammaRay.PositioningInterface")
+
+#endif // GAMMARAY_POSITIONINGINTERFACE_H
