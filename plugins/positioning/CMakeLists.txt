@@ -12,10 +12,12 @@ endif()
 set(gammaray_geopositioninfosource_srcs
   geopositioninfosourcefactory.cpp
   geopositioninfosource.cpp
+  positioninginterface.cpp
 )
 
 add_library(gammaray_geopositioninfosource MODULE ${gammaray_geopositioninfosource_srcs})
 target_link_libraries(gammaray_geopositioninfosource
+  gammaray_common
   Qt5::Positioning
 )
 install(TARGETS gammaray_geopositioninfosource DESTINATION ${PROBE_PLUGIN_INSTALL_DIR}/position)

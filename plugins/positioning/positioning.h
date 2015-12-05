@@ -35,6 +35,9 @@
 
 #include <QGeoPositionInfoSource>
 #include <QObject>
+#include <QVector>
+
+class QGeoPositionInfoSource;
 
 namespace GammaRay {
 
@@ -43,6 +46,14 @@ class Positioning : public PositioningInterface
     Q_OBJECT
 public:
     explicit Positioning(Probe *probe, QObject *parent = nullptr);
+
+private slots:
+    void objectAdded(QObject *obj);
+
+private:
+    void registerMetaTypes();
+
+    QVector<QGeoPositionInfoSource*> m_positionInfoSources;
 };
 
 class PositioningFactory : public QObject,

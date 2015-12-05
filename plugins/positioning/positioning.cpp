@@ -63,8 +63,22 @@ static QString positioningMethodsToString(QGeoPositionInfoSource::PositioningMet
 Positioning::Positioning(Probe *probe, QObject *parent)
     : PositioningInterface(parent)
 {
-    Q_UNUSED(probe);
+    registerMetaTypes();
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
+}
 
+void Positioning::objectAdded(QObject* obj)
+{
+    if (auto geoInfoSource = qobject_cast<QGeoPositionInfoSource*>(obj)) {
+        if (geoInfoSource->sourceName() != QLatin1Literal("gammaray"))
+            return;
+        m_positionInfoSources.push_back(geoInfoSource);
+        QMetaObject::invokeMethod(geoInfoSource, "setInterface", Q_ARG(PositioningInterface*, this));
+    }
+}
+
+void Positioning::registerMetaTypes()
+{
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QGeoPositionInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, error);

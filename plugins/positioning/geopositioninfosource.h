@@ -33,6 +33,8 @@
 
 namespace GammaRay {
 
+class PositioningInterface;
+
 class GeoPositionInfoSource : public QGeoPositionInfoSource
 {
     Q_OBJECT
@@ -54,8 +56,19 @@ public slots:
     void startUpdates() Q_DECL_OVERRIDE;
     void stopUpdates() Q_DECL_OVERRIDE;
 
+    void setInterface(PositioningInterface* iface);
+
+private:
+    bool overrideEnabled() const;
+    void connectSource();
+    void disconnectSource();
+
+private slots:
+    void overrideChanged();
+
 private:
     QGeoPositionInfoSource *m_source;
+    PositioningInterface *m_interface;
 };
 
 }

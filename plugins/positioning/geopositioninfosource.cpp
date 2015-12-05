@@ -27,12 +27,16 @@
 */
 
 #include "geopositioninfosource.h"
+#include "positioninginterface.h"
+
+#include <QDebug>
 
 using namespace GammaRay;
 
 GeoPositionInfoSource::GeoPositionInfoSource(QObject* parent) :
     QGeoPositionInfoSource(parent),
-    m_source(Q_NULLPTR)
+    m_source(Q_NULLPTR),
+    m_interface(Q_NULLPTR)
 {
 }
 
@@ -44,13 +48,8 @@ void GeoPositionInfoSource::setSource(QGeoPositionInfoSource* source)
 {
     Q_ASSERT(!m_source);
     m_source = source;
-    if (source) {
-        connect(source, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SIGNAL(error(QGeoPositionInfoSource::Error)));
-        connect(source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SIGNAL(positionUpdated(QGeoPositionInfo)));
-        connect(source, SIGNAL(updateTimeout()), this, SIGNAL(updateTimeout()));
-        QGeoPositionInfoSource::setPreferredPositioningMethods(source->preferredPositioningMethods());
-        QGeoPositionInfoSource::setUpdateInterval(source->updateInterval());
-    }
+    if (source && !overrideEnabled())
+        connectSource();
 }
 
 QGeoPositionInfoSource::Error GeoPositionInfoSource::error() const
@@ -62,7 +61,7 @@ QGeoPositionInfoSource::Error GeoPositionInfoSource::error() const
 
 QGeoPositionInfo GeoPositionInfoSource::lastKnownPosition(bool fromSatellitePositioningMethodsOnly) const
 {
-    if (m_source)
+    if (m_source && !overrideEnabled())
         return m_source->lastKnownPosition(fromSatellitePositioningMethodsOnly);
 
     QGeoPositionInfo info;
@@ -121,4 +120,47 @@ void GeoPositionInfoSource::stopUpdates()
 {
     if (m_source)
         m_source->stopUpdates();
+}
+
+void GeoPositionInfoSource::setInterface(PositioningInterface* iface)
+{
+    Q_ASSERT(iface);
+    m_interface = iface;
+    connect(m_interface, SIGNAL(positioningOverrideEnabledChanged()), this, SLOT(overrideChanged()));
+    if (overrideEnabled())
+        emit positionUpdated(lastKnownPosition());
+}
+
+bool GeoPositionInfoSource::overrideEnabled() const
+{
+    return m_interface && m_interface->positioningOverrideEnabled();
+}
+
+void GeoPositionInfoSource::overrideChanged()
+{
+    if (!overrideEnabled())
+        connectSource();
+    else
+        disconnectSource();
+    emit positionUpdated(lastKnownPosition());
+}
+
+void GeoPositionInfoSource::connectSource()
+{
+    if (!m_source)
+        return;
+    connect(m_source, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SIGNAL(error(QGeoPositionInfoSource::Error)), Qt::UniqueConnection);
+    connect(m_source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SIGNAL(positionUpdated(QGeoPositionInfo)), Qt::UniqueConnection);
+    connect(m_source, SIGNAL(updateTimeout()), this, SIGNAL(updateTimeout()), Qt::UniqueConnection);
+    QGeoPositionInfoSource::setPreferredPositioningMethods(m_source->preferredPositioningMethods());
+    QGeoPositionInfoSource::setUpdateInterval(m_source->updateInterval());
+}
+
+void GeoPositionInfoSource::disconnectSource()
+{
+    if (!m_source)
+        return;
+    disconnect(m_source, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SIGNAL(error(QGeoPositionInfoSource::Error)));
+    disconnect(m_source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SIGNAL(positionUpdated(QGeoPositionInfo)));
+    disconnect(m_source, SIGNAL(updateTimeout()), this, SIGNAL(updateTimeout()));
 }
