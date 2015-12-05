@@ -17,8 +17,8 @@
 #
 # -DGAMMARAY_INSTALL_QT_LAYOUT=[true|false]
 #  Install GammaRay in Qt folder using Qt layout folders:
-#    - plugins will go in <qt_filder>/plugins/gammaray
-#    - all the other libs, including probe library will go in <qt_filder>/lib
+#    - plugins will go in <qt_folder>/plugins/gammaray
+#    - all the other libs, including probe library will go in <qt_folder>/lib
 #    - qmake mkspecs file
 #  Default=false
 #  Only use for Android or when you know what you are doing.
