@@ -70,7 +70,7 @@ static QStringList dllSearchPaths(const QString &exePath)
 
   // (5) PATH
   const auto envPaths = QString::fromLocal8Bit(qgetenv("PATH"));
-  paths += envPaths.split(";");
+  paths += envPaths.split(';');
 
   return paths;
 }
