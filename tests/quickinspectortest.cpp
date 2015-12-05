@@ -185,7 +185,7 @@ private slots:
         QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());
 
-        QSignalSpy gotFrameSpy(inspector, SIGNAL(sceneRendered(GammaRay::TransferImage, GammaRay::QuickItemGeometry)));
+        QSignalSpy gotFrameSpy(inspector, SIGNAL(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)));
         QVERIFY(gotFrameSpy.isValid());
 
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
