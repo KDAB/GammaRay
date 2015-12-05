@@ -88,8 +88,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
   m_interface = ObjectBroker::object<QuickInspectorInterface*>();
   connect(m_interface, SIGNAL(sceneChanged()), this, SLOT(sceneChanged()));
-  connect(m_interface, SIGNAL(sceneRendered(GammaRay::TransferImage, GammaRay::QuickItemGeometry)),
-          this, SLOT(sceneRendered(GammaRay::TransferImage, GammaRay::QuickItemGeometry)));
+  connect(m_interface, SIGNAL(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)),
+          this, SLOT(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)));
 
   ui->windowComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickWindowModel")));
   connect(ui->windowComboBox, SIGNAL(currentIndexChanged(int)),
