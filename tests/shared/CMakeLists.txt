@@ -1,3 +1,8 @@
+#changingpropertyobject doesn't have any symbols. Quiet MSVC warnings.
+if(WIN32)
+  set(CMAKE_STATIC_LINKER_FLAGS "/ignore:4221 ${CMAKE_SHARED_LINKER_FLAGS}")
+endif()
+
 set(gammaray_shared_test_srcs
     variantpropertyobject.cpp
     changingpropertyobject.cpp
