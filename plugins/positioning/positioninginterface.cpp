@@ -51,3 +51,16 @@ void PositioningInterface::setPositioningOverrideEnabled(bool enabled)
     m_positioningOverrideEnabled = enabled;
     emit positioningOverrideEnabledChanged();
 }
+
+QGeoPositionInfo PositioningInterface::positionInfoOverride() const
+{
+    return m_postionInfo;
+}
+
+void PositioningInterface::setPositionInfoOverride(const QGeoPositionInfo& info)
+{
+    if (m_postionInfo == info)
+        return;
+    m_postionInfo = info;
+    emit positionInfoOverrideChanged();
+}

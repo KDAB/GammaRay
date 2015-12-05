@@ -33,6 +33,7 @@
 #include <ui/propertybinder.h>
 #include <common/objectbroker.h>
 
+#include <QDateTime>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -49,14 +50,26 @@ PositioningWidget::PositioningWidget(QWidget* parent):
 {
     ui->setupUi(this);
 
+    qRegisterMetaTypeStreamOperators<QGeoPositionInfo>("QGeoPositionInfo");
     ObjectBroker::registerClientObjectFactoryCallback<PositioningInterface*>(createPositioningClient);
 
     m_interface = ObjectBroker::object<PositioningInterface*>();
     Q_ASSERT(m_interface);
 
     new PropertyBinder(m_interface, "positioningOverrideEnabled", ui->overrideBox, "checked");
+
+    connect(ui->latitudeBox, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+    connect(ui->longitudeBox, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
 }
 
 PositioningWidget::~PositioningWidget()
 {
+}
+
+void PositioningWidget::updatePosition()
+{
+    QGeoPositionInfo info;
+    info.setCoordinate(QGeoCoordinate(ui->latitudeBox->value(), ui->longitudeBox->value()));
+    info.setTimestamp(QDateTime::currentDateTime());
+    m_interface->setPositionInfoOverride(info);
 }

@@ -50,6 +50,9 @@ public:
     explicit PositioningWidget(QWidget *parent = Q_NULLPTR);
     ~PositioningWidget();
 
+private slots:
+    void updatePosition();
+
 private:
     QScopedPointer<Ui::PositioningWidget> ui;
     PositioningInterface *m_interface;

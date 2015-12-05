@@ -64,10 +64,9 @@ QGeoPositionInfo GeoPositionInfoSource::lastKnownPosition(bool fromSatellitePosi
     if (m_source && !overrideEnabled())
         return m_source->lastKnownPosition(fromSatellitePositioningMethodsOnly);
 
-    QGeoPositionInfo info;
-    info.setCoordinate(QGeoCoordinate(52.5, 13.5));
-    info.setTimestamp(QDateTime::currentDateTime());
-    return info;
+    if (m_interface)
+        return m_interface->positionInfoOverride();
+    return QGeoPositionInfo();
 }
 
 int GeoPositionInfoSource::minimumUpdateInterval() const
@@ -127,6 +126,7 @@ void GeoPositionInfoSource::setInterface(PositioningInterface* iface)
     Q_ASSERT(iface);
     m_interface = iface;
     connect(m_interface, SIGNAL(positioningOverrideEnabledChanged()), this, SLOT(overrideChanged()));
+    connect(m_interface, SIGNAL(positionInfoOverrideChanged()), this, SLOT(positionInfoOverrideChanged()));
     if (overrideEnabled())
         emit positionUpdated(lastKnownPosition());
 }
@@ -143,6 +143,12 @@ void GeoPositionInfoSource::overrideChanged()
     else
         disconnectSource();
     emit positionUpdated(lastKnownPosition());
+}
+
+void GeoPositionInfoSource::positionInfoOverrideChanged()
+{
+    if (overrideEnabled())
+        emit positionUpdated(lastKnownPosition());
 }
 
 void GeoPositionInfoSource::connectSource()

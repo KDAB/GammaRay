@@ -65,6 +65,7 @@ private:
 
 private slots:
     void overrideChanged();
+    void positionInfoOverrideChanged();
 
 private:
     QGeoPositionInfoSource *m_source;
