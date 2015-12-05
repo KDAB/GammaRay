@@ -24,7 +24,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 #include "preloadcheck.h"
 
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
