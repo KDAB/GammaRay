@@ -190,6 +190,7 @@ private slots:
 
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
+        QTest::qWait(20); // wait at least one frame
         inspector->renderScene();
         renderSpy.wait(1000);
         gotFrameSpy.wait(1000);
