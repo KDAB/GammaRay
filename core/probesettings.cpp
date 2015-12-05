@@ -75,7 +75,7 @@ void ProbeSettings::receiveSettings()
 #else
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
 #endif
-    qWarning() << "Continueing anyway, with default settings.";
+    qWarning() << "Continuing anyway, with default settings.";
 
     // see if we got fallback data via environment variables
     const QString rootPath = value(QStringLiteral("RootPath")).toString();
@@ -103,7 +103,7 @@ void ProbeSettings::receiveSettings()
         msg.payload() >> version;
         if (version != Protocol::version()) {
           qWarning() << "Unable to receive probe settings, mismatching protocol versions (expected:" << Protocol::version() << "got:" << version << ")";
-          qWarning() << "Continueing anyway, but this is likely going to fail.";
+          qWarning() << "Continuing anyway, but this is likely going to fail.";
           return;
         }
         break;
@@ -154,7 +154,7 @@ void ProbeSettings::sendServerAddress(const QUrl& addr)
 #else
     qWarning() << "Unable to receive probe settings, cannot attach to shared memory region" << shm.key() << shm.nativeKey() << ", error is:" << shm.errorString();
 #endif
-    qWarning() << "Continueing anyway, with default settings.";
+    qWarning() << "Continuing anyway, with default settings.";
     return;
   }
 
