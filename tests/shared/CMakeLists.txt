@@ -1,5 +1,5 @@
 #changingpropertyobject doesn't have any symbols. Quiet MSVC warnings.
-if(WIN32)
+if(MSVC)
   set(CMAKE_STATIC_LINKER_FLAGS "/ignore:4221 ${CMAKE_SHARED_LINKER_FLAGS}")
 endif()
 
