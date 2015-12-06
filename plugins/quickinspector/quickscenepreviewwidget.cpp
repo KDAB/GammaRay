@@ -43,10 +43,10 @@ using namespace GammaRay;
 QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent)
   : QWidget(parent),
     m_inspectorInterface(inspector),
+    m_mouseMode(MovePreview),
     m_zoom(1),
     m_x(0),
-    m_y(0),
-    m_mouseMode(MovePreview)
+    m_y(0)
 {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setMouseTracking(true);
