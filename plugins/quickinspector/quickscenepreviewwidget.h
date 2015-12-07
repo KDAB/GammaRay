@@ -30,6 +30,7 @@
 #define GAMMARAY_QUICKINSPECTOR_QUICKSCENEPREVIEWWIDGET_H
 
 #include "quickitemgeometry.h"
+#include "quickinspectorinterface.h"
 
 #include <QtWidgets/QWidget>
 
@@ -59,7 +60,7 @@ class QuickScenePreviewWidget : public QWidget
     void setItemGeometry(const QuickItemGeometry &itemGeometry);
     void setImage(const QImage &image);
 
-    void setSupportsCustomRenderModes(bool supportsCustomRenderModes);
+    void setSupportsCustomRenderModes(QuickInspectorInterface::Features  supportedCustomRenderModes);
 
     void setZoom(qreal zoom);
 

@@ -185,7 +185,7 @@ void QuickInspectorWidget::requestRender()
 
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
 {
-  m_previewWidget->setSupportsCustomRenderModes(features & QuickInspectorInterface::CustomRenderModes);
+  m_previewWidget->setSupportsCustomRenderModes(features);
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection &selection)

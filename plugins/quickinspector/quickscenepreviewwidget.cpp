@@ -653,10 +653,10 @@ void QuickScenePreviewWidget::setMouseTool(QAction *action)
               : MovePreview;
 }
 
-void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(bool supportsCustomRenderModes)
+void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes)
 {
-  m_toolBar.visualizeClipping->setEnabled(supportsCustomRenderModes);
-  m_toolBar.visualizeBatches->setEnabled(supportsCustomRenderModes);
-  m_toolBar.visualizeOverdraw->setEnabled(supportsCustomRenderModes);
-  m_toolBar.visualizeChanges->setEnabled(supportsCustomRenderModes);
+  m_toolBar.visualizeClipping->setEnabled(supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeClipping);
+  m_toolBar.visualizeBatches->setEnabled(supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeBatches);
+  m_toolBar.visualizeOverdraw->setEnabled(supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeOverdraw);
+  m_toolBar.visualizeChanges->setEnabled(supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeChanges);
 }

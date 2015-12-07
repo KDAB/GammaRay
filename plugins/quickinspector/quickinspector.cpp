@@ -506,7 +506,7 @@ void QuickInspector::checkFeatures()
   emit features(
     Features(
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    CustomRenderModes
+    AllCustomRenderModes
 #endif
     )
   );
