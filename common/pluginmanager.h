@@ -69,7 +69,7 @@ class PluginManagerBase
      * @param parent This is the parent object for all objects created by the plugins
      */
     explicit PluginManagerBase(QObject *parent = 0);
-    ~PluginManagerBase();
+    virtual ~PluginManagerBase();
 
     QList<PluginLoadError> errors() const
     {

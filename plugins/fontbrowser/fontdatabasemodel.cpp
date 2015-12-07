@@ -142,8 +142,9 @@ QString FontDatabaseModel::smoothSizeString(const QString& family, const QString
     const auto smoothSizes = database.smoothSizes(family, style);
     QStringList sizes;
     sizes.reserve(smoothSizes.size());
-    foreach (auto points, smoothSizes)
+    foreach (auto points, smoothSizes) { //krazy:exclude=foreach
         sizes.push_back(QString::number(points));
+    }
     return sizes.join(QStringLiteral(" "));
 }
 

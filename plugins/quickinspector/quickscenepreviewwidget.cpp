@@ -46,7 +46,8 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
     m_mouseMode(MovePreview),
     m_zoom(1),
     m_x(0),
-    m_y(0)
+    m_y(0),
+    m_mousePressed(false)
 {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   setMouseTracking(true);

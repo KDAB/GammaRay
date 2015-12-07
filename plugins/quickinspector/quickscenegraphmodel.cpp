@@ -386,8 +386,9 @@ bool QuickSceneGraphModel::recursivelyFindChild(QSGNode *root, QSGNode *child) c
 
 void QuickSceneGraphModel::pruneSubTree(QSGNode* node)
 {
-  foreach (auto child, m_parentChildMap.value(node))
+  foreach (auto child, m_parentChildMap.value(node)) { //krazy:exclude=foreach
     pruneSubTree(child);
+  }
   m_parentChildMap.remove(node);
   m_childParentMap.remove(node);
 }
