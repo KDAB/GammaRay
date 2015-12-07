@@ -224,6 +224,7 @@ private slots:
             // We can't do more than making sure, it doesn't crash. Let's wait some frames
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
             for (int i = 0; i < 3; i++) {
+                view->update();
                 renderSpy.wait(1000);
             }
         }
@@ -238,6 +239,7 @@ private slots:
         if (features & QuickInspectorInterface::CustomRenderModeBatches) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
             for (int i = 0; i < 3; i++) {
+                view->update();
                 renderSpy.wait(1000);
             }
         }
@@ -245,12 +247,14 @@ private slots:
         if (features & QuickInspectorInterface::CustomRenderModeChanges) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
             for (int i = 0; i < 3; i++) {
+                view->update();
                 renderSpy.wait(1000);
             }
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
         for (int i = 0; i < 3; i++) {
+            view->update();
           renderSpy.wait(1000);
         }
     }
