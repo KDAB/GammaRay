@@ -81,6 +81,20 @@ private:
         return result;
     }
 
+    bool showSource(const QString &sourceFile)
+    {
+        QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
+        Q_ASSERT(renderSpy.isValid());
+
+        view->setSource(QUrl(sourceFile));
+        view->show();
+        // wait at least two frames so we have the final window size with all render loop/driver combinations...
+        QTest::qWait(20);
+        waitForSignal(&renderSpy);
+        view->update();
+        return waitForSignal(&renderSpy);
+    }
+
 private slots:
     void initTestCase()
     {
@@ -92,7 +106,7 @@ private slots:
 
         // we need one view for the plugin to activate, otherwise the model will not be available
         view = new QQuickView;
-        view->show();
+        view->setResizeMode(QQuickView::SizeViewToRootObject);
         QTest::qWait(1); // event loop re-entry
 
         itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
@@ -116,8 +130,7 @@ private slots:
 
     void testModelsReparent()
     {
-        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
-        QTest::qWait(20); // wait at least one frame
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
         QTest::keyClick(view, Qt::Key_Right);
         QTest::qWait(20);
@@ -129,8 +142,7 @@ private slots:
 
     void testModelsCreateDestroy()
     {
-        view->setSource(QUrl(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
-        QTest::qWait(20); // wait at least one frame
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
 
         // scroll through the list, to trigger creations/destructions
         for (int i = 0; i < 30; ++i)
@@ -143,8 +155,7 @@ private slots:
 
     void testModelsCreateDestroyProxy()
     {
-        view->setSource(QUrl(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
-        QTest::qWait(20); // wait at least one frame
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
         QVERIFY(itemModel->rowCount() > 0);
         QVERIFY(sgModel->rowCount() > 0);
 
@@ -170,8 +181,7 @@ private slots:
         auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
         QVERIFY(toolModel);
 
-        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
-        QTest::qWait(20); // wait at least one frame
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
         auto toolSelectionModel = ObjectBroker::selectionModel(toolModel);
         QVERIFY(toolSelectionModel);
@@ -207,9 +217,7 @@ private slots:
         QSignalSpy gotFrameSpy(inspector, SIGNAL(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)));
         QVERIFY(gotFrameSpy.isValid());
 
-        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
-        QTest::qWait(20); // wait at least one frame so we have the final window size
-        QVERIFY(waitForSignal(&renderSpy, true));
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
         inspector->renderScene();
         QVERIFY(waitForSignal(&gotFrameSpy, true));
@@ -236,8 +244,7 @@ private slots:
         QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());
 
-        view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
-        QVERIFY(waitForSignal(&renderSpy));
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
         if (features & QuickInspectorInterface::CustomRenderModeClipping) {
             // We can't do more than making sure, it doesn't crash. Let's wait some frames
