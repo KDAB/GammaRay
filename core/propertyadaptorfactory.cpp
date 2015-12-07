@@ -69,7 +69,7 @@ PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObjec
     }
 #endif
 
-    foreach (auto factory, *s_propertyAdaptorFactories()) { //krazy:exclude=foreach
+    foreach (auto factory, *s_propertyAdaptorFactories()) {
         auto a = factory->create(oi, parent);
         if (a)
             adaptors.push_back(a);

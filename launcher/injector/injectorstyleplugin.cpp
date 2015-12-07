@@ -31,7 +31,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <private/qguiplatformplugin_p.h>
 #else
-#include <qpa/qplatformtheme.h>           //krazy:exclude=camelcase
+#include <qpa/qplatformtheme.h>
 #include <private/qguiapplication_p.h>
 #endif
 
@@ -101,4 +101,3 @@ void InjectorStylePlugin::inject()
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN2(gammaray_injector_style, GammaRay::InjectorStylePlugin)
 #endif
-

@@ -48,7 +48,7 @@ RemoteModel::Node::~Node()
 
 void RemoteModel::Node::clearChildrenData()
 {
-  foreach (auto child, children) { //krazy:exclude=foreach
+  foreach (auto child, children) {
     child->clearChildrenStructure();
     child->data.clear();
     child->flags.clear();
@@ -499,14 +499,14 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       foreach (const auto &persistentIndex, persistentIndexList()) {
         auto persistentNode = nodeForIndex(persistentIndex);
         Q_ASSERT(persistentNode);
-        foreach (auto node, parentNodes) { //krazy:exclude=foreach
+        foreach (auto node, parentNodes) {
           if (!isAncestor(node, persistentNode))
             continue;
           changePersistentIndex(persistentIndex, QModelIndex());
           break;
         }
       }
-      foreach (auto node, parentNodes) { //krazy:exclude=foreach
+      foreach (auto node, parentNodes) {
         if (hint == 0)
           node->clearChildrenStructure();
         else

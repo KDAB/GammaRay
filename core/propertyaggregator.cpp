@@ -67,7 +67,7 @@ PropertyData PropertyAggregator::propertyData(int index) const
         return PropertyData();
 
     int offset = 0;
-    foreach (const auto adaptor, m_propertyAdaptors) {  //krazy:exclude=foreach
+    foreach (const auto adaptor, m_propertyAdaptors) {
         if (index < offset + adaptor->count())
             return adaptor->propertyData(index - offset);
         offset += adaptor->count();
@@ -83,7 +83,7 @@ void PropertyAggregator::writeProperty(int index, const QVariant& value)
         return;
 
     int offset = 0;
-    foreach (const auto adaptor, m_propertyAdaptors) {  //krazy:exclude=foreach
+    foreach (const auto adaptor, m_propertyAdaptors) {
         if (index < offset + adaptor->count())
             return adaptor->writeProperty(index - offset, value);
         offset += adaptor->count();
@@ -107,7 +107,7 @@ void PropertyAggregator::addProperty(const PropertyData& data)
 
     Q_ASSERT(canAddProperty());
 
-    foreach (const auto adaptor, m_propertyAdaptors) {  //krazy:exclude=foreach
+    foreach (const auto adaptor, m_propertyAdaptors) {
         if (adaptor->canAddProperty()) {
             adaptor->addProperty(data);
             return;
@@ -123,7 +123,7 @@ void PropertyAggregator::resetProperty(int index)
         return;
 
     int offset = 0;
-    foreach (const auto adaptor, m_propertyAdaptors) {  //krazy:exclude=foreach
+    foreach (const auto adaptor, m_propertyAdaptors) {
         if (index < offset + adaptor->count()) {
             adaptor->resetProperty(index - offset);
             return;
@@ -149,7 +149,7 @@ void PropertyAggregator::slotPropertyChanged(int first, int last)
     Q_ASSERT(source);
 
     int offset = 0;
-    foreach (auto pa, m_propertyAdaptors) {  //krazy:exclude=foreach
+    foreach (auto pa, m_propertyAdaptors) {
         if (pa == source) {
             emit propertyChanged(first + offset, last + offset);
             return;
@@ -165,7 +165,7 @@ void PropertyAggregator::slotPropertyAdded(int first, int last)
     Q_ASSERT(source);
 
     int offset = 0;
-    foreach (auto pa, m_propertyAdaptors) {  //krazy:exclude=foreach
+    foreach (auto pa, m_propertyAdaptors) {
         if (pa == source) {
             emit propertyAdded(first + offset, last + offset);
             return;
@@ -181,7 +181,7 @@ void PropertyAggregator::slotPropertyRemoved(int first, int last)
     Q_ASSERT(source);
 
     int offset = 0;
-    foreach (auto pa, m_propertyAdaptors) {  //krazy:exclude=foreach
+    foreach (auto pa, m_propertyAdaptors) {
         if (pa == source) {
             emit propertyRemoved(first + offset, last + offset);
             return;
