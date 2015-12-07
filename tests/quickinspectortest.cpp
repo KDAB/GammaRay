@@ -225,14 +225,14 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
             for (int i = 0; i < 3; i++) {
                 view->update();
-                renderSpy.wait(1000);
+                QVERIFY(renderSpy.wait(1000));
             }
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeOverdraw) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
             for (int i = 0; i < 3; i++) {
-                renderSpy.wait(1000);
+                QVERIFY(renderSpy.wait(1000));
             }
         }
 
@@ -240,7 +240,7 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
             for (int i = 0; i < 3; i++) {
                 view->update();
-                renderSpy.wait(1000);
+                QVERIFY(renderSpy.wait(1000));
             }
         }
 
@@ -248,14 +248,14 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
             for (int i = 0; i < 3; i++) {
                 view->update();
-                renderSpy.wait(1000);
+                QVERIFY(renderSpy.wait(1000));
             }
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
         for (int i = 0; i < 3; i++) {
             view->update();
-          renderSpy.wait(1000);
+            QVERIFY(renderSpy.wait(1000));
         }
     }
 
