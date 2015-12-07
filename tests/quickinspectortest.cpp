@@ -62,6 +62,15 @@ private:
         QTest::qWait(1); // event loop re-entry
     }
 
+    void triggerSceneChange()
+    {
+        QTest::keyClick(view, Qt::Key_Right);
+        QTest::qWait(20);
+        QTest::keyClick(view, Qt::Key_Left);
+        QTest::qWait(20);
+        QTest::keyClick(view, Qt::Key_Right);
+    }
+
 private slots:
     void initTestCase()
     {
@@ -223,7 +232,7 @@ private slots:
             // We can't do more than making sure, it doesn't crash. Let's wait some frames
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
             for (int i = 0; i < 3; i++) {
-                view->update();
+                triggerSceneChange();
                 QVERIFY(renderSpy.wait(1000));
             }
         }
@@ -231,6 +240,7 @@ private slots:
         if (features & QuickInspectorInterface::CustomRenderModeOverdraw) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
             for (int i = 0; i < 3; i++) {
+                triggerSceneChange();
                 QVERIFY(renderSpy.wait(1000));
             }
         }
@@ -238,7 +248,7 @@ private slots:
         if (features & QuickInspectorInterface::CustomRenderModeBatches) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
             for (int i = 0; i < 3; i++) {
-                view->update();
+                triggerSceneChange();
                 QVERIFY(renderSpy.wait(1000));
             }
         }
@@ -246,14 +256,14 @@ private slots:
         if (features & QuickInspectorInterface::CustomRenderModeChanges) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
             for (int i = 0; i < 3; i++) {
-                view->update();
+                triggerSceneChange();
                 QVERIFY(renderSpy.wait(1000));
             }
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
         for (int i = 0; i < 3; i++) {
-            view->update();
+            triggerSceneChange();
             QVERIFY(renderSpy.wait(1000));
         }
     }
