@@ -39,6 +39,7 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
+#include <core/probe.h>
 #include <core/remote/server.h>
 
 #include <kde/krecursivefilterproxymodel.h>
@@ -188,7 +189,11 @@ void SceneInspector::renderScene(const QTransform &transform, const QSize &size)
 
   QGraphicsItem *currentItem = m_itemSelectionModel->currentIndex().data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
   if (currentItem) {
-    paintItemDecoration(currentItem, transform, &painter);
+    // protect against deleted, QObject-based QGIs
+    QObject* currentItemAsQObject = dynamic_cast<QObject*>(currentItem);
+    if (!currentItemAsQObject || Probe::instance()->isValidObject(currentItemAsQObject)) {
+      paintItemDecoration(currentItem, transform, &painter);
+    }
   }
 
   emit sceneRendered(view);
