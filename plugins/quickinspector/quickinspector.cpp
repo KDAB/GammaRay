@@ -505,8 +505,10 @@ void QuickInspector::checkFeatures()
 {
   emit features(
     Features(
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    AllCustomRenderModes
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 1) // batching crashes when enabled at runtime >= 5.5.1
+      CustomRenderModeChanges | CustomRenderModeClipping | CustomRenderModeOverdraw
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+      AllCustomRenderModes
 #endif
     )
   );
