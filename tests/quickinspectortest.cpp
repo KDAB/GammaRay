@@ -71,6 +71,16 @@ private:
         QTest::keyClick(view, Qt::Key_Right);
     }
 
+    bool waitForSignal(QSignalSpy *spy, bool keepResult = false)
+    {
+        if (spy->isEmpty())
+          spy->wait(1000);
+        bool result = !spy->isEmpty();
+        if (!keepResult)
+            spy->clear();
+        return result;
+    }
+
 private slots:
     void initTestCase()
     {
@@ -198,10 +208,10 @@ private slots:
         QVERIFY(gotFrameSpy.isValid());
 
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
-        QVERIFY(renderSpy.wait(1000)); // wait at least one frame so we have the final window size
+        QVERIFY(waitForSignal(&renderSpy, true)); // wait at least one frame so we have the final window size
 
         inspector->renderScene();
-        QVERIFY(gotFrameSpy.wait(1000));
+        QVERIFY(waitForSignal(&gotFrameSpy, true));
 
         QVERIFY(renderSpy.size() >= 1);
         QVERIFY(gotFrameSpy.size() >= 1);
@@ -226,14 +236,14 @@ private slots:
         QVERIFY(renderSpy.isValid());
 
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
-        renderSpy.wait(1000);
+        QVERIFY(waitForSignal(&renderSpy));
 
         if (features & QuickInspectorInterface::CustomRenderModeClipping) {
             // We can't do more than making sure, it doesn't crash. Let's wait some frames
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(renderSpy.wait(1000));
+                QVERIFY(waitForSignal(&renderSpy));
             }
         }
 
@@ -241,7 +251,7 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(renderSpy.wait(1000));
+                QVERIFY(waitForSignal(&renderSpy));
             }
         }
 
@@ -249,7 +259,7 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(renderSpy.wait(1000));
+                QVERIFY(waitForSignal(&renderSpy));
             }
         }
 
@@ -257,14 +267,14 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(renderSpy.wait(1000));
+                QVERIFY(waitForSignal(&renderSpy));
             }
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
         for (int i = 0; i < 3; i++) {
             triggerSceneChange();
-            QVERIFY(renderSpy.wait(1000));
+            QVERIFY(waitForSignal(&renderSpy));
         }
     }
 
