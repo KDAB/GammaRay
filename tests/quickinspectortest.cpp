@@ -208,7 +208,8 @@ private slots:
         QVERIFY(gotFrameSpy.isValid());
 
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
-        QVERIFY(waitForSignal(&renderSpy, true)); // wait at least one frame so we have the final window size
+        QTest::qWait(20); // wait at least one frame so we have the final window size
+        QVERIFY(waitForSignal(&renderSpy, true));
 
         inspector->renderScene();
         QVERIFY(waitForSignal(&gotFrameSpy, true));
