@@ -48,6 +48,7 @@ class QuickInspectorInterface : public QObject
   Q_OBJECT
   public:
     enum Feature {
+      NoFeatures = 0,
       CustomRenderModeClipping = 1,
       CustomRenderModeOverdraw = 2,
       CustomRenderModeBatches = 4,
