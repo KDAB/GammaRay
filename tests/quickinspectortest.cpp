@@ -208,31 +208,45 @@ private slots:
 
     void testCustomRenderModes()
     {
+        QSignalSpy featureSpy(inspector, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)));
+        QVERIFY(featureSpy.isValid());
+        inspector->checkFeatures();
+        QCOMPARE(featureSpy.size(), 1);
+        auto features = featureSpy.at(0).at(0).value<GammaRay::QuickInspectorInterface::Features>();
+
         QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());
 
         view->setSource(QUrl(QStringLiteral("qrc:/manual/reparenttest.qml")));
         renderSpy.wait(1000);
 
-        // We can't do more than making sure, it doesn't crash. Let's wait some frames
-        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
-        for (int i = 0; i < 3; i++) {
-          renderSpy.wait(1000);
+        if (features & QuickInspectorInterface::CustomRenderModeClipping) {
+            // We can't do more than making sure, it doesn't crash. Let's wait some frames
+            inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
+            for (int i = 0; i < 3; i++) {
+                renderSpy.wait(1000);
+            }
         }
 
-        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
-        for (int i = 0; i < 3; i++) {
-          renderSpy.wait(1000);
+        if (features & QuickInspectorInterface::CustomRenderModeOverdraw) {
+            inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
+            for (int i = 0; i < 3; i++) {
+                renderSpy.wait(1000);
+            }
         }
 
-        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
-        for (int i = 0; i < 3; i++) {
-          renderSpy.wait(1000);
+        if (features & QuickInspectorInterface::CustomRenderModeBatches) {
+            inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
+            for (int i = 0; i < 3; i++) {
+                renderSpy.wait(1000);
+            }
         }
 
-        inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
-        for (int i = 0; i < 3; i++) {
-          renderSpy.wait(1000);
+        if (features & QuickInspectorInterface::CustomRenderModeChanges) {
+            inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
+            for (int i = 0; i < 3; i++) {
+                renderSpy.wait(1000);
+            }
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
