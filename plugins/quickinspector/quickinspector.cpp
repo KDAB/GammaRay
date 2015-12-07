@@ -478,7 +478,7 @@ void QuickInspector::setCustomRenderMode(
                               customRenderMode == VisualizeBatches  ? "batches"  :
                               customRenderMode == VisualizeChanges  ? "changes"  :
                               "";
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0) && 0 // FIXME this crashes on scene updates with Qt >= 5.5.1 and the multithreaded renderer
   // Qt does some performance optimizations that break custom render modes.
   // Thus the optimizations are only applied if there is no custom render mode set.
   // So we need to make the scenegraph recheck whether a custom render mode is set.
