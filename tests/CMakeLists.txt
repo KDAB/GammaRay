@@ -130,6 +130,18 @@ add_executable(signalspycallbacktest
 target_link_libraries(signalspycallbacktest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
 
+### multi-threading test
+
+if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+add_executable(multithreadingtest
+  multithreadingtest.cpp
+  ../probe/probecreator.cpp
+  ../probe/hooks.cpp
+)
+target_link_libraries(multithreadingtest gammaray_core ${QT_QTTEST_LIBRARIES})
+add_test(NAME multithreadingtest COMMAND multithreadingtest)
+endif()
+
 ### QWidget test
 
 if(Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
