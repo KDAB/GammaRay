@@ -253,39 +253,39 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(waitForSignal(&renderSpy));
             }
+            QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeOverdraw) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(waitForSignal(&renderSpy));
             }
+            QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeBatches) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(waitForSignal(&renderSpy));
             }
+            QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeChanges) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
-                QVERIFY(waitForSignal(&renderSpy));
             }
+            QVERIFY(&renderSpy);
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
         for (int i = 0; i < 3; i++) {
             triggerSceneChange();
-            QVERIFY(waitForSignal(&renderSpy));
         }
+        QVERIFY(waitForSignal(&renderSpy));
     }
 
 private:
