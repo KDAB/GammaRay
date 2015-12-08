@@ -78,9 +78,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
       "children's rendering at the items' bounds. While this is a handy feature it "
       "comes with quite some cost, like disabling some performance optimizations.<br/>"
       "With this tool enabled the QtQuick renderer highlights items, that have clipping "
-      "enabled, so you can check for items, that have clipping enabled unnecessarily. "
-      "<br/><br/><i>Note: The visualization happens on the application, not in the "
-      "GammaRay preview panel.</i>"));
+      "enabled, so you can check for items, that have clipping enabled unnecessarily. "));
   m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeClipping);
   connect(m_toolBar.visualizeClipping, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
@@ -93,9 +91,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
       "thus doesn't need to be rendered. You thus need to take care of setting "
       "<i>visible: false</i> for hidden items, yourself.<br/>"
       "With this tool enabled the QtQuick renderer draws a 3D-Box visualizing the "
-      "layers of items that are drawn."
-      "<br/><br/><i>Note: The visualization happens on the application, not in the "
-      "GammaRay preview panel.</i>"));
+      "layers of items that are drawn."));
   m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeOverdraw);
   connect(m_toolBar.visualizeOverdraw, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
@@ -111,9 +107,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
       "Some settings (like <i>clip: true</i>) will cause the batching to fail, though, "
       "causing items to be rendered separately. With this tool enabled the QtQuick "
       "renderer visualizes those batches, by drawing all items that are batched using "
-      "the same color. The fewer colors you see in this mode the better."
-      "<br/><br/><i>Note: The visualization happens on the application, not in the "
-      "GammaRay preview panel.</i>"));
+      "the same color. The fewer colors you see in this mode the better."));
   m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeBatches);
   connect(m_toolBar.visualizeBatches, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
@@ -124,9 +118,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
       "The QtQuick scene is only repainted, if some item changes in a visual manner. "
       "Unnecessary repaints can have a bad impact on the performance. With this tool "
       "enabled, the QtQuick renderer will thus on each repaint highlight the item(s), "
-      "that caused the repaint."
-      "<br/><br/><i>Note: The visualization happens on the application, not in the "
-      "GammaRay preview panel.</i>"));
+      "that caused the repaint."));
   m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeChanges);
   connect(m_toolBar.visualizeChanges, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
@@ -148,7 +140,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
   m_toolBar.measurePixels = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pizel Sizes"), this);
   m_toolBar.measurePixels->setActionGroup(mouseToolGroup);
-  m_toolBar.measurePixels->setToolTip(tr("<b>Measure pixel-sizes</b> (Ctrl)<br>"
+  m_toolBar.measurePixels->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
       "Choose this mode, click somewhere and drag to measure the distance between the "
       "point you clicked and the point where your mouse pointer is. (Measured in scene "
       "coordinates)."));
@@ -157,7 +149,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
   m_toolBar.redirectInput = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/redirect-input.png")), tr("Redirect Input"), this);
   m_toolBar.redirectInput->setActionGroup(mouseToolGroup);
-  m_toolBar.redirectInput->setToolTip(tr("<b>Redirect Input</b> (Shift)<br>"
+  m_toolBar.redirectInput->setToolTip(tr("<b>Redirect Input</b><br>"
       "In this mode all mouse input is redirected directly to the original application,"
       "so you can control the application directly from within GammaRay."));
   m_toolBar.redirectInput->setCheckable(true);

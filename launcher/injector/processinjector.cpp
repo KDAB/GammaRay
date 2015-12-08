@@ -30,6 +30,8 @@
 #include "processinjector.h"
 
 #include <QDebug>
+#include <iostream>
+
 
 using namespace GammaRay;
 
@@ -43,6 +45,8 @@ ProcessInjector::ProcessInjector() :
 #endif
     connect(&m_proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
     connect(&m_proc, SIGNAL(finished(int)), this, SLOT(processFinished()));
+    connect(&m_proc, SIGNAL(readyReadStandardError()), this, SLOT(readStdErr()));
+    connect(&m_proc, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut()));
 }
 
 ProcessInjector::~ProcessInjector()
@@ -59,7 +63,6 @@ void ProcessInjector::stop()
 bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QProcessEnvironment& env)
 {
   m_proc.setProcessEnvironment(env);
-  m_proc.setProcessChannelMode(QProcess::ForwardedChannels);
 
   QStringList args = programAndArgs;
 
@@ -128,4 +131,18 @@ QProcess::ProcessError ProcessInjector::processError()
 QString ProcessInjector::errorString()
 {
   return mErrorString;
+}
+
+void ProcessInjector::readStdErr()
+{
+  QString error = m_proc.readAllStandardError();
+  std::cerr << qPrintable(error) << std::endl;
+  emit stderrMessage(error);
+}
+
+void ProcessInjector::readStdOut()
+{
+  QString message = m_proc.readAllStandardOutput();
+  std::cout << qPrintable(message) << std::endl;
+  emit stdoutMessage(message);
 }

@@ -92,6 +92,7 @@ void GdbInjector::readyReadStandardError()
 {
   const QString error = m_process->readAllStandardError();
   cerr << error << flush;
+  emit stderrMessage(error);
 
   if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
     mManualError = true;
@@ -116,9 +117,11 @@ void GdbInjector::readyReadStandardError()
 
 void GdbInjector::readyReadStandardOutput()
 {
+  QString message = m_process->readAllStandardOutput();
   if (qgetenv("GAMMARAY_UNITTEST") == "1") {
-    cout << m_process->readAllStandardOutput() << flush;
+    cout << message << flush;
   }
+  emit stderrMessage(message);
 }
 
 void GdbInjector::addFunctionBreakpoint(const QByteArray& function)

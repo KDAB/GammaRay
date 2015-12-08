@@ -104,6 +104,9 @@ signals:
     void started();
     void finished();
     void attached();
+
+    void stdoutMessage(const QString &message);
+    void stderrMessage(const QString &message);
 };
 
 }

@@ -59,6 +59,8 @@ class ProcessInjector : public AbstractInjector
   private slots:
     void processFailed();
     void processFinished();
+    void readStdOut();
+    void readStdErr();
 
   private:
     QProcess::ProcessError mProcessError;

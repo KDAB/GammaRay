@@ -188,6 +188,8 @@ bool Launcher::start()
   connect(d->injector.data(), SIGNAL(started()), this, SIGNAL(started()));
   connect(d->injector.data(), SIGNAL(finished()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
   connect(d->injector.data(), SIGNAL(attached()), this, SIGNAL(attached()), Qt::QueuedConnection);
+  connect(d->injector.data(), SIGNAL(stderrMessage(QString)), this, SIGNAL(stderrMessage(QString)));
+  connect(d->injector.data(), SIGNAL(stdoutMessage(QString)), this, SIGNAL(stdoutMessage(QString)));
 
   bool success = false;
   if (d->options.isLaunch()) {

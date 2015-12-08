@@ -80,6 +80,7 @@ QProcess::ProcessError DebuggerInjector::processError()
 
 void DebuggerInjector::readyReadStandardOutput()
 {
+  emit stdoutMessage(m_process->readAllStandardOutput());
 }
 
 void DebuggerInjector::processFinished()
@@ -97,6 +98,7 @@ void DebuggerInjector::readyReadStandardError()
 {
   const QString error = m_process->readAllStandardError();
   std::cerr << qPrintable(error) << std::endl;
+  emit stderrMessage(error);
 }
 
 bool DebuggerInjector::startDebugger(const QStringList& args, const QProcessEnvironment &env)
