@@ -503,6 +503,23 @@ QMutex *Probe::objectLock()
   return s_lock();
 }
 
+/*
+ * We need to handle 4 different cases in here:
+ * (1) our thread, from ctor:
+ * - wait until next event-loop re-entry of our thread
+ * - emit objectCreated if object still valid
+ * (2) our thread, after ctor:
+ * - emit objectCreated right away
+ * (3) other thread, from ctor:
+ * - wait until next event-loop re-entry in other thread (FIXME: we do not currently do this!!)
+ * - post information to our thread
+ * - emit objectCreated right away if object still valid
+ * (4) other thread, after ctor:
+ * - post information to our thread
+ * - emit objectCreated there right away if object still valid
+ *
+ * Pre-conditions: lock may or may not be held already, arbitrary thread
+ */
 void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
   QMutexLocker lock(s_lock());
@@ -579,6 +596,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
   }
 }
 
+// pre-conditions: lock may or may not be held already, our thread
 void Probe::queuedObjectsFullyConstructed()
 {
   QMutexLocker lock(s_lock());
@@ -611,8 +629,11 @@ void Probe::queuedObjectsFullyConstructed()
   m_pendingReparents.clear();
 }
 
+// pre-condition: lock is held already, our thread
 void Probe::objectFullyConstructed(QObject *obj)
 {
+  Q_ASSERT(thread() == QThread::currentThread());
+
   if (!m_validObjects.contains(obj)) {
     // deleted already
     IF_DEBUG(cout << "stale fully constructed: " << hex << obj << endl;)
@@ -653,6 +674,15 @@ void Probe::objectFullyConstructed(QObject *obj)
   emit objectCreated(obj);
 }
 
+/*
+ * We have two cases to consider here:
+ * (1) our thread:
+ * - emit objectDestroyed() right away
+ * (2) other thread:
+ * - post information to our thread, emit objectDestroyed() there
+ *
+ * pre-conditions: arbitrary thread, lock may or may not be held already
+ */
 void Probe::objectRemoved(QObject *obj)
 {
   QMutexLocker lock(s_lock());

@@ -140,12 +140,12 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
      * Emitted for destroyed objects.
      *
      * Note:
-     * - This signal is emitted from the thread calling the dtor of @p obj, so make sure to use
-     *   the correct connection type when connecting to it.
+     * - This signal is emitted from the thread the probe exists in.
      * - The signal is emitted from the end of the QObject dtor, dereferencing @p obj is no longer
      *   safe at this point.
-     * - When using a queued connection on this signal (relevant for e.g. models), see isValidObject()
-     *   for a way to check if the object has not yet been deleted when accessing it.
+     * - In a multi-threaded application, this signal might reach you way after @p obj has been
+     *   destroyed, see isValidObject() for a way to check if the object is still valid before accessing it.
+     * - The objectLock() is locked.
      */
     void objectDestroyed(QObject *obj);
     void objectReparented(QObject *obj);
