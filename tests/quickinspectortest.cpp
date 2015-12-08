@@ -88,6 +88,8 @@ private:
 
         view->setSource(QUrl(sourceFile));
         view->show();
+        QTest::qWaitForWindowExposed(view);
+
         // wait at least two frames so we have the final window size with all render loop/driver combinations...
         QTest::qWait(20);
         waitForSignal(&renderSpy);
