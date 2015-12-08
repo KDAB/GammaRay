@@ -518,12 +518,12 @@ void QuickScenePreviewWidget::mouseMoveEvent(QMouseEvent* e)
 
     if (m_x > width() / 2) {
       m_x = width() / 2;
-    } else if (m_x + m_image.width() * m_zoom < width() / 2) {
+    } else if (m_x + m_image.width() * m_zoom < width() / 2.0) {
       m_x = width() / 2 - m_image.width() * m_zoom;
     }
     if (m_y > height() / 2) {
       m_y = height() / 2;
-    } else if (m_y + m_image.height() * m_zoom < height() / 2) {
+    } else if (m_y + m_image.height() * m_zoom < height() / 2.0) {
       m_y = height() / 2 - m_image.height() * m_zoom;
     }
   } else if (m_mouseMode == MeasurePixels && e->buttons()) {
