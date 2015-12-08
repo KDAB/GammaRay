@@ -34,7 +34,7 @@
 #include "signalspycallbackset.h"
 
 #include <QObject>
-#include <QQueue>
+#include <QList>
 #include <QSet>
 #include <QVector>
 
@@ -155,7 +155,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
   private slots:
     void delayedInit();
-    void queuedObjectsFullyConstructed();
+    void processQueuedObjectChanges();
     void handleObjectDestroyed(QObject *obj);
     void objectParentChanged();
 
@@ -164,6 +164,13 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     friend class BenchSuite;
 
     void objectFullyConstructed(QObject *obj);
+
+    void queueCreatedObject(QObject *obj);
+    void queueDestroyedObject(QObject *obj);
+    bool isObjectCreationQueued(QObject *obj) const;
+    void purgeChangesForObject(QObject *obj);
+    void notifyQueuedObjectChanges();
+
     void findExistingObjects();
 
     /** Check if we are capable of showing widgets. */
@@ -185,7 +192,17 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QItemSelectionModel *m_toolSelectionModel;
     QObject *m_window;
     QSet<QObject*> m_validObjects;
-    QQueue<QObject*> m_queuedObjects;
+
+    // all delayed object changes need to go through a single queue, as the order is crucial
+    struct ObjectChange {
+      QObject *obj;
+      enum Type {
+        Create,
+        Destroy
+      } type;
+    };
+    QVector<ObjectChange> m_queuedObjectChanges;
+
     QList<QObject*> m_pendingReparents;
     QTimer *m_queueTimer;
     QVector<QObject*> m_globalEventFilters;

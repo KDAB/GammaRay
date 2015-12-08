@@ -249,7 +249,7 @@ Probe::Probe(QObject *parent):
   m_queueTimer->setSingleShot(true);
   m_queueTimer->setInterval(0);
   connect(m_queueTimer, SIGNAL(timeout()),
-          this, SLOT(queuedObjectsFullyConstructed()));
+          this, SLOT(processQueuedObjectChanges()));
 
   m_previousSignalSpyCallbackSet.signalBeginCallback = qt_signal_spy_callback_set.signal_begin_callback;
   m_previousSignalSpyCallbackSet.signalEndCallback =qt_signal_spy_callback_set.signal_end_callback;
@@ -573,7 +573,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
             Qt::DirectConnection);
   }
 
-  if (!fromCtor && obj->parent() && instance()->m_queuedObjects.contains(obj->parent())) {
+  if (!fromCtor && obj->parent() && instance()->isObjectCreationQueued(obj->parent())) {
     // when a child event triggers a call to objectAdded while inside the ctor
     // the parent is already tracked but it's call to objectFullyConstructed
     // was delayed. hence we must do the same for the child for integrity
@@ -585,38 +585,36 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
                 << ", p: " << obj->parent() << endl;)
 
   if (fromCtor) {
-    Q_ASSERT(!instance()->m_queuedObjects.contains(obj));
-    instance()->m_queuedObjects << obj;
-    if (!instance()->m_queueTimer->isActive()) {
-      // timers must not be started from a different thread
-      QMetaObject::invokeMethod(instance()->m_queueTimer, "start", Qt::AutoConnection);
-    }
+    instance()->queueCreatedObject(obj);
   } else {
     instance()->objectFullyConstructed(obj);
   }
 }
 
 // pre-conditions: lock may or may not be held already, our thread
-void Probe::queuedObjectsFullyConstructed()
+void Probe::processQueuedObjectChanges()
 {
   QMutexLocker lock(s_lock());
 
-  IF_DEBUG(cout << Q_FUNC_INFO << " " << m_queuedObjects.size() << endl;)
+  IF_DEBUG(cout << Q_FUNC_INFO << " " << m_queuedObjectChanges.size() << endl;)
 
   // must be called from the main thread via timeout
   Q_ASSERT(QThread::currentThread() == thread());
 
-  // when this is called no object must be in the queue twice
-  // otherwise the cleanup procedures failed
-  Q_ASSERT(m_queuedObjects.size() == m_queuedObjects.toSet().size());
-
-  foreach (QObject *obj, m_queuedObjects) {
-    objectFullyConstructed(obj);
+  foreach (const auto &change, m_queuedObjectChanges) {
+    switch (change.type) {
+      case ObjectChange::Create:
+        objectFullyConstructed(change.obj);
+        break;
+      case ObjectChange::Destroy:
+        emit objectDestroyed(change.obj);
+        break;
+    }
   }
 
   IF_DEBUG(cout << Q_FUNC_INFO << " done" << endl;)
 
-  m_queuedObjects.clear();
+  m_queuedObjectChanges.clear();
 
   foreach (QObject *obj, m_pendingReparents) {
     if (!isValidObject(obj))
@@ -716,9 +714,13 @@ void Probe::objectRemoved(QObject *obj)
     return;
   }
 
-  instance()->m_queuedObjects.removeOne(obj);
+  instance()->purgeChangesForObject(obj);
 
-  emit instance()->objectDestroyed(obj);
+  if (instance()->thread() == QThread::currentThread()) {
+    emit instance()->objectDestroyed(obj);
+  } else {
+    instance()->queueDestroyedObject(obj);
+  }
 }
 
 void Probe::handleObjectDestroyed(QObject *obj)
@@ -730,6 +732,67 @@ void Probe::objectParentChanged()
 {
   if (sender()) {
     emit objectReparented(sender());
+  }
+}
+
+// pre-condition: we have the lock, arbitrary thread
+void Probe::queueCreatedObject(QObject* obj)
+{
+  Q_ASSERT(!isObjectCreationQueued(obj));
+
+  ObjectChange c;
+  c.obj = obj;
+  c.type = ObjectChange::Create;
+  m_queuedObjectChanges.push_back(c);
+  notifyQueuedObjectChanges();
+}
+
+// pre-condition: we have the lock, arbitrary thread
+void Probe::queueDestroyedObject(QObject* obj)
+{
+  ObjectChange c;
+  c.obj = obj;
+  c.type = ObjectChange::Destroy;
+  m_queuedObjectChanges.push_back(c);
+  notifyQueuedObjectChanges();
+}
+
+// pre-condition: we have the lock, arbitrary thread
+bool Probe::isObjectCreationQueued(QObject* obj) const
+{
+  return std::find_if(m_queuedObjectChanges.begin(), m_queuedObjectChanges.end(), [obj](const ObjectChange &c) {
+      return c.obj == obj && c.type == ObjectChange::Create;
+    }) != m_queuedObjectChanges.end();
+}
+
+// pre-condition: we have the lock, arbitrary thread
+void Probe::purgeChangesForObject(QObject* obj)
+{
+  for (auto it = m_queuedObjectChanges.begin(); it != m_queuedObjectChanges.end();) {
+    if ((*it).obj == obj)
+      it = m_queuedObjectChanges.erase(it);
+    else
+      ++it;
+  }
+}
+
+// pre-condition: we have the lock, arbitrary thread
+void Probe::notifyQueuedObjectChanges()
+{
+  if (m_queueTimer->isActive())
+    return;
+
+  if (thread() == QThread::currentThread()) {
+    m_queueTimer->start();
+  } else {
+    static QMetaMethod m;
+    if (m.methodIndex() < 0) {
+      const auto idx = QTimer::staticMetaObject.indexOfMethod("start()");
+      Q_ASSERT(idx >= 0);
+      m = QTimer::staticMetaObject.method(idx);
+      Q_ASSERT(m.methodIndex() >= 0);
+    }
+    m.invoke(m_queueTimer, Qt::QueuedConnection);
   }
 }
 
@@ -758,7 +821,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
         // child added events are sent before qt_addObject is called,
         // so we assumes this comes from the ctor
         objectAdded(obj, true);
-      } else if (!m_queuedObjects.contains(obj) && !m_queuedObjects.contains(obj->parent())) {
+      } else if (!isObjectCreationQueued(obj) && !isObjectCreationQueued(obj->parent())) {
         // object is known already, just update the position in the tree
         // BUT: only when we did not queue this item before
         IF_DEBUG(cout << "update pos: " << hex << obj << endl;)
@@ -768,10 +831,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     } else if (tracked) {
       if (hasReliableObjectTracking()) { // defer processing this until we know its final location
         m_pendingReparents.push_back(obj);
-        if (!m_queueTimer->isActive()) {
-          // timers must not be started from a different thread
-          QMetaObject::invokeMethod(instance()->m_queueTimer, "start", Qt::AutoConnection);
-        }
+        notifyQueuedObjectChanges();
       } else {
         objectRemoved(obj);
       }
@@ -783,7 +843,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     QMutexLocker lock(s_lock());
     const bool tracked = m_validObjects.contains(receiver);
     const bool filtered = filterObject(receiver);
-    if (!filtered && tracked && !m_queuedObjects.contains(receiver) && !m_queuedObjects.contains(receiver->parent())) {
+    if (!filtered && tracked && !isObjectCreationQueued(receiver) && !isObjectCreationQueued(receiver->parent())) {
       m_pendingReparents.removeAll(receiver);
       emit objectReparented(receiver);
     }
