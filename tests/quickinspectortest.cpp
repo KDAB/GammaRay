@@ -278,7 +278,7 @@ private slots:
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
             }
-            QVERIFY(&renderSpy);
+            QVERIFY(waitForSignal(&renderSpy));
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
