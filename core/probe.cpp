@@ -769,7 +769,7 @@ bool Probe::isObjectCreationQueued(QObject* obj) const
 void Probe::purgeChangesForObject(QObject* obj)
 {
   for (int i = 0; i < m_queuedObjectChanges.size(); ++i) {
-    if (m_queuedObjectChanges.at(i).obj == obj) {
+    if (m_queuedObjectChanges.at(i).obj == obj && m_queuedObjectChanges.at(i).type == ObjectChange::Create) {
       m_queuedObjectChanges.remove(i);
       return;
     }
