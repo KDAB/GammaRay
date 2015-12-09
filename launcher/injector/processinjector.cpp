@@ -136,13 +136,13 @@ QString ProcessInjector::errorString()
 void ProcessInjector::readStdErr()
 {
   QString error = m_proc.readAllStandardError();
-  std::cerr << qPrintable(error) << std::endl;
+  std::cerr << qPrintable(error);
   emit stderrMessage(error);
 }
 
 void ProcessInjector::readStdOut()
 {
   QString message = m_proc.readAllStandardOutput();
-  std::cout << qPrintable(message) << std::endl;
+  std::cout << qPrintable(message);
   emit stdoutMessage(message);
 }
