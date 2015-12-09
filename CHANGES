@@ -1,6 +1,29 @@
 Release Highlights
 ==================
 
+Version 2.4.0:
+--------------
+ * Recursive property editor for accessing composite property types.
+ * Support for QML attached properties.
+ * Server-side object search for considerably speeding up as-you-type searches.
+ * Code navigation for QtQuick 2 items and Qt5 debug/warning messages.
+ * Support for Qt5 logging categories in the message view.
+ * Improved backtrace display for warning/error messages in the message view.
+ * Support ABI detection on PE executables.
+ * On-demand population of the font browser for improved performance.
+ * Optimized performance of the QtQuick 2 inspector on item change storms.
+ * Add support for QtPositioning data types.
+ * Add OSX backtrace support in the message handler plug-in.
+ * Improved integration of KDSME in the state machine plug-in.
+ * Improved QMake compatibility when embedding the GammaRay client into a host application.
+ * Fix object construction/destruction reordering issue in multi-threaded targets.
+ * Fix QQ2 preview of QQuickWidget content.
+ * Support rpath resolution for OSX probe ABI detection.
+ * Fix crash on widget reparenting.
+ * Fix crash in QStyle inspector with Windows Vista style.
+ * Improve performance of the translation inspector.
+ * Fix 32bit OSX support.
+
 Version 2.3.0:
 --------------
  * Add QtBluetooth support.
