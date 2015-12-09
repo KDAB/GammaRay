@@ -769,7 +769,7 @@ void Probe::queueDestroyedObject(QObject* obj)
 bool Probe::isObjectCreationQueued(QObject* obj) const
 {
   return std::find_if(m_queuedObjectChanges.begin(), m_queuedObjectChanges.end(), [obj](const ObjectChange &c) {
-      return c.obj == obj && c.type == ObjectChange::Create;
+      return c.obj == obj && c.type == Probe::ObjectChange::Create;
     }) != m_queuedObjectChanges.end();
 }
 
