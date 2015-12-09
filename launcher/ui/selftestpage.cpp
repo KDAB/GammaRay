@@ -84,7 +84,7 @@ void SelfTestPage::testProbe()
   }
 
   if (validProbeCount == 0) {
-    error(tr("No probes found - GammaRay no functional."));
+    error(tr("No probes found - GammaRay not functional."));
   }
 }
 
