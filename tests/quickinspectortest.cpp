@@ -88,13 +88,15 @@ private:
 
         view->setSource(QUrl(sourceFile));
         view->show();
-        QTest::qWaitForWindowExposed(view);
+        exposed = QTest::qWaitForWindowExposed(view);
+        if (!exposed)
+            qWarning() << "Unable to expose window, probably running tests on a headless system - ignoring all following render failures.";
 
         // wait at least two frames so we have the final window size with all render loop/driver combinations...
         QTest::qWait(20);
         waitForSignal(&renderSpy);
         view->update();
-        return waitForSignal(&renderSpy);
+        return !exposed || waitForSignal(&renderSpy);
     }
 
 private slots:
@@ -206,6 +208,8 @@ private slots:
 
         QCOMPARE(toolSpy.size(), 1);
         QCOMPARE(itemSpy.size(), 1);
+        if (!exposed)
+            return;
         QCOMPARE(sgSpy.size(), 1);
     }
 
@@ -222,6 +226,8 @@ private slots:
         QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
         inspector->renderScene();
+        if (!exposed)
+            return;
         QVERIFY(waitForSignal(&gotFrameSpy, true));
 
         QVERIFY(renderSpy.size() >= 1);
@@ -254,7 +260,8 @@ private slots:
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
             }
-            QVERIFY(waitForSignal(&renderSpy));
+            if (exposed)
+                QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeOverdraw) {
@@ -262,7 +269,8 @@ private slots:
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
             }
-            QVERIFY(waitForSignal(&renderSpy));
+            if (exposed)
+                QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeBatches) {
@@ -270,7 +278,8 @@ private slots:
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
             }
-            QVERIFY(waitForSignal(&renderSpy));
+            if (exposed)
+                QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeChanges) {
@@ -278,14 +287,16 @@ private slots:
             for (int i = 0; i < 3; i++) {
                 triggerSceneChange();
             }
-            QVERIFY(waitForSignal(&renderSpy));
+            if (exposed)
+                QVERIFY(waitForSignal(&renderSpy));
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
         for (int i = 0; i < 3; i++) {
             triggerSceneChange();
         }
-        QVERIFY(waitForSignal(&renderSpy));
+        if (exposed)
+            QVERIFY(waitForSignal(&renderSpy));
     }
 
 private:
@@ -293,6 +304,7 @@ private:
     QAbstractItemModel *itemModel;
     QAbstractItemModel *sgModel;
     QuickInspectorInterface *inspector;
+    bool exposed;
 };
 
 QTEST_MAIN(QuickInspectorTest)
