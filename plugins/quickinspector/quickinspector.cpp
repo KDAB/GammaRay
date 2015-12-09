@@ -507,7 +507,7 @@ void QuickInspector::checkFeatures()
     Features(
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0) // FIXME any render mode crashes on first scene change
       NoFeatures
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 5, 1) // batching crashes when enabled at runtime >= 5.5.1
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 5, 0) // batching crashes when enabled at runtime >= 5.5.0
       CustomRenderModeChanges | CustomRenderModeClipping | CustomRenderModeOverdraw
 #elif QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
       AllCustomRenderModes
