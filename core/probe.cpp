@@ -768,11 +768,11 @@ bool Probe::isObjectCreationQueued(QObject* obj) const
 // pre-condition: we have the lock, arbitrary thread
 void Probe::purgeChangesForObject(QObject* obj)
 {
-  for (auto it = m_queuedObjectChanges.begin(); it != m_queuedObjectChanges.end();) {
-    if ((*it).obj == obj)
-      it = m_queuedObjectChanges.erase(it);
-    else
-      ++it;
+  for (int i = 0; i < m_queuedObjectChanges.size(); ++i) {
+    if (m_queuedObjectChanges.at(i).obj == obj) {
+      m_queuedObjectChanges.remove(i);
+      return;
+    }
   }
 }
 
