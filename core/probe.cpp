@@ -87,6 +87,12 @@ extern QSignalSpyCallbackSet qt_signal_spy_callback_set;
 
 #define IF_DEBUG(x)
 
+#ifdef ENABLE_EXPENSIVE_ASSERTS
+#define EXPENSIVE_ASSERT(x) Q_ASSERT(x)
+#else
+#define EXPENSIVE_ASSERT(x)
+#endif
+
 using namespace GammaRay;
 using namespace std;
 
@@ -711,10 +717,12 @@ void Probe::objectRemoved(QObject *obj)
   bool success = instance()->m_validObjects.remove(obj);
   if (!success) {
     // object was not tracked by the probe, probably a gammaray object
+    EXPENSIVE_ASSERT(!instance()->isObjectCreationQueued(obj));
     return;
   }
 
   instance()->purgeChangesForObject(obj);
+  EXPENSIVE_ASSERT(!instance()->isObjectCreationQueued(obj));
 
   if (instance()->thread() == QThread::currentThread()) {
     emit instance()->objectDestroyed(obj);
@@ -738,7 +746,7 @@ void Probe::objectParentChanged()
 // pre-condition: we have the lock, arbitrary thread
 void Probe::queueCreatedObject(QObject* obj)
 {
-  Q_ASSERT(!isObjectCreationQueued(obj));
+  EXPENSIVE_ASSERT(!isObjectCreationQueued(obj));
 
   ObjectChange c;
   c.obj = obj;
