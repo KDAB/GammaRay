@@ -24,7 +24,7 @@ target_link_libraries(gammaray_statemachineviewer_plugin
 )
 
 # UI part - dependencies
-# There is on 64-bit Graphviz available for Windows.
+# There is no 64-bit Graphviz available for Windows.
 include(CheckTypeSize)
 check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
 if(WIN32 AND SIZEOF_VOID_P EQUAL 8)
