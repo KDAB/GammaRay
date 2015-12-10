@@ -79,4 +79,4 @@ via http://www.kdab.com/contact. KDAB engineers have a lot of experience
 writing GammaRay plugins and can be contracted to help you get yours working
 and improve your development efficiency.
 
-GammaRay and the GammaRay image are trademarks of Klarälvdalens Datakonsult AB.
+GammaRay and the GammaRay logo are trademarks of Klarälvdalens Datakonsult AB.

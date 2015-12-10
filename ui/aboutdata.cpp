@@ -74,9 +74,10 @@ QString AboutData::aboutBody()
         "Learn more at <a href=\"http://www.kdab.com/gammaray\">http://www.kdab.com/gammaray/</a>.</p>"
         "<p>Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, "
         "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
-        "<p><u>Authors:</u><br>%1<br></p>"
-        "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>")
-        .arg(authorsAsHtml().join(QStringLiteral("<br>")));
+        "<p><u>Authors:</u><br>%1</p>"
+        "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>"
+        "<p>GammaRay and the GammaRay logo are trademarks of Klarälvdalens Datakonsult AB.</p>"
+        "<br>").arg(authorsAsHtml().join(QStringLiteral("<br>")));
 }
 
 QString AboutData::aboutText()
