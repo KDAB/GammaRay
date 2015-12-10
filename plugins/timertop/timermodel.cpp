@@ -214,7 +214,6 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
     return;
   }
 
-  Q_ASSERT(!m_currentSignals.contains(caller));
   m_currentSignals[caller] = timerInfo;
 }
 
