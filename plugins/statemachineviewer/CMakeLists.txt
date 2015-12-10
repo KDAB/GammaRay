@@ -23,17 +23,24 @@ target_link_libraries(gammaray_statemachineviewer_plugin
   gammaray_core
 )
 
-
 # UI part - dependencies
-set(GRAPHVIZ_MIN_VERSION "2.20")
-find_package(Graphviz)
-set_package_properties(Graphviz PROPERTIES
-  TYPE RECOMMENDED
-  DESCRIPTION "Graph visualization software"
-  URL "http://www.graphviz.org/"
-  PURPOSE "Needed for the state machine visualizer plugin."
-)
-set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
+# There is on 64-bit Graphviz available for Windows.
+include(CheckTypeSize)
+check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
+if(WIN32 AND SIZEOF_VOID_P EQUAL 8)
+  set(GRAPHVIZ_FOUND FALSE)
+  add_feature_info("Graph visualization software" FALSE "A 64-bit Graphviz library does not exist for Windows at this time.")
+else()
+  set(GRAPHVIZ_MIN_VERSION "2.20")
+  find_package(Graphviz)
+  set_package_properties(Graphviz PROPERTIES
+    TYPE RECOMMENDED
+    DESCRIPTION "Graph visualization software"
+    URL "http://www.graphviz.org/"
+    PURPOSE "Needed for the state machine visualizer plugin."
+  )
+  set(HAVE_GRAPHVIZ ${GRAPHVIZ_FOUND})
+endif()
 if(GRAPHVIZ_FOUND)
   add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
 endif()
