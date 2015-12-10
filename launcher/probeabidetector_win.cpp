@@ -41,7 +41,6 @@
 
 #include <windows.h>
 #include <tlhelp32.h>
-#include <winnt.h>
 
 using namespace GammaRay;
 
@@ -54,16 +53,25 @@ static QStringList dllSearchPaths(const QString &exePath)
   QFileInfo fi(exePath);
   paths.push_back(fi.absolutePath());
 
+  /* We don't want use wchar because Qt on Windows with MSVC can be built
+     optionally with or without /Zc:wchar_t. And we can't know which.
+     http://stackoverflow.com/questions/4521252/qt-msvc-and-zcwchar-t-i-want-to-blow-up-the-world
+     has a long discussion and options. We chose option3: don't use wchar.
+  */
+
+  /* This code assumes UNICODE is defined */
+
   // (2) system directory
-  wchar_t path[256];
-  auto len = GetSystemDirectoryW(path, sizeof(path));
-  Q_ASSERT(len <= sizeof(path) && len > 0);
-  paths.push_back(QString::fromWCharArray(path, len));
+  TCHAR syspath[256];
+  UINT len = GetSystemDirectoryW(syspath, sizeof(syspath));
+  Q_ASSERT(len <= sizeof(syspath) && len > 0);
+  paths.push_back(QString::fromUtf16(reinterpret_cast<const ushort*>(syspath), len));
 
   // (3) windows directory
-  len = GetWindowsDirectoryW(path, sizeof(path));
-  Q_ASSERT(len <= sizeof(path));
-  paths.push_back(QString::fromWCharArray(path, len));
+  TCHAR dirpath[256];
+  len = GetWindowsDirectoryW(dirpath, sizeof(dirpath));
+  Q_ASSERT(len <= sizeof(dirpath));
+  paths.push_back(QString::fromUtf16(reinterpret_cast<const ushort*>(dirpath), len));
 
   // (4) current working dir
   paths.push_back(QDir::currentPath());
