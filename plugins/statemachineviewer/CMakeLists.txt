@@ -45,9 +45,11 @@ if(GRAPHVIZ_FOUND)
   add_definitions(-DGRAPHVIZ_MAJOR_VERSION=${GRAPHVIZ_MAJOR_VERSION} -DGRAPHVIZ_MINOR_VERSION=${GRAPHVIZ_MINOR_VERSION})
 endif()
 
-set_package_properties(KDSME PROPERTIES URL "https://github.com/KDAB/KDStateMachineEditor" DESCRIPTION "KDAB State Machine Editor framework" TYPE OPTIONAL PURPOSE "Provide Next-gen graphical state machine viewer for the statmeachineviewer plugin.")
+set_package_properties(KDSME PROPERTIES URL "https://github.com/KDAB/KDStateMachineEditor" DESCRIPTION "KDAB State Machine Editor framework" TYPE OPTIONAL PURPOSE "Provide Next-gen graphical state machine viewer for the statemachineviewer plugin.")
 if (Qt5_FOUND)
   find_package(KDSME CONFIG QUIET)
+else()
+  add_feature_info("KDAB State Machine Editor framework" FALSE "KDStateMachineEditor is not available when building with Qt4.")
 endif()
 
 # UI part
