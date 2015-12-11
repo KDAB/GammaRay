@@ -53,7 +53,8 @@ class LocaleModel : public QAbstractTableModel
     void init();
 
   private slots:
-    void reinit();
+    void accessorAdded();
+    void accessorRemoved(int idx);
 
   private:
     QVector<QLocale> m_locales;

@@ -36,7 +36,8 @@ LocaleModel::LocaleModel(LocaleDataAccessorRegistry *registry, QObject *parent)
   : QAbstractTableModel(parent), m_registry(registry)
 {
   init();
-  connect(registry, SIGNAL(accessorsChanged()), SLOT(reinit()));
+  connect(registry, SIGNAL(accessorAdded()), SLOT(accessorAdded()));
+  connect(registry, SIGNAL(accessorRemoved(int)), SLOT(accessorRemoved(int)));
 }
 
 int LocaleModel::columnCount(const QModelIndex &parent) const
@@ -78,11 +79,20 @@ void LocaleModel::init()
   m_locales = QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript, QLocale::AnyCountry).toVector();
 }
 
-void LocaleModel::reinit()
+void LocaleModel::accessorAdded()
 {
-  beginResetModel();
-  init();
-  endResetModel();
+  Q_ASSERT(m_localeData.size() + 1 == m_registry->enabledAccessors().size());
+  beginInsertColumns(QModelIndex(), m_localeData.size(), m_localeData.size());
+  m_localeData = m_registry->enabledAccessors();
+  endInsertColumns();
+}
+
+void LocaleModel::accessorRemoved(int idx)
+{
+  Q_ASSERT(m_localeData.size() - 1 == m_registry->enabledAccessors().size());
+  beginRemoveColumns(QModelIndex(), idx, idx);
+  m_localeData = m_registry->enabledAccessors();
+  endRemoveColumns();
 }
 
 int LocaleModel::rowCount(const QModelIndex &parent) const

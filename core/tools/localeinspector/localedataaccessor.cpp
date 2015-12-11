@@ -79,13 +79,14 @@ void LocaleDataAccessorRegistry::setAccessorEnabled(LocaleDataAccessor *accessor
   QVector< LocaleDataAccessor * > &accessors = m_enabledAccessors;
   if (enabled && !accessors.contains(accessor)) {
     accessors.push_back(accessor);
+    emit accessorAdded();
   } else {
     int idx = accessors.indexOf(accessor);
     if (idx >= 0) {
       accessors.remove(idx);
+      emit accessorRemoved(idx);
     }
   }
-  emit accessorsChanged();
 }
 
 void LocaleDataAccessorRegistry::init()

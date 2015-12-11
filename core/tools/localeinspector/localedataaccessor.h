@@ -50,7 +50,8 @@ class LocaleDataAccessorRegistry : public QObject
     QVector<LocaleDataAccessor*> enabledAccessors();
 
   Q_SIGNALS:
-    void accessorsChanged();
+    void accessorAdded();
+    void accessorRemoved(int idx);
 
   private:
     void init();
