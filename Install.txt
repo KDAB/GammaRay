@@ -15,7 +15,7 @@ To build GammaRay you will need:
  - a C++ compiler with C++11 lambda support
  - Qt 4.8 or higher
 
-Optional FOSS packages (eg. VTK, Graphviz, etc) provide extra functionality.
+Optional FOSS packages (eg. KDSME, etc) provide extra functionality.
 See the "Optional Dependencies" section below for more details.
 
 Building on Unix with gcc or clang:
@@ -66,6 +66,9 @@ or
 $ adb forward --remove-all
 to remove all forwards
 
+== Cross-compiling GammaRay ==
+You'll find more information on this in the wiki:
+https://github.com/KDAB/GammaRay/wiki/Cross-compiling-GammaRay
 
 == Building with Private Qt Headers ==
 To build against private Qt headers (necessary for painter debugging/profiling)
@@ -86,9 +89,7 @@ to CMake, as in:
 
 == Optional Dependencies ==
 GammaRay relies on optional (FOSS) dependencies to help provide some of its
-functionality.  For example, you'll need VTK (http://www.vtk.org) to build
-the object visualizer and Graphviz (http://www.graphviz.org) for the state
-machine visualizer.
+functionality, most prominently KDSME (https://github.com/KDAB/KDStateMachineEditor).
 
 When you run cmake it will inform you about these missing dependencies.
 
