@@ -82,11 +82,6 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   m_interface = ObjectBroker::object<StateMachineViewerInterface*>();
 
   m_ui->setupUi(this);
-  m_ui->depthGroupBox->hide(); // we have that in the KDSME view already
-
-  m_ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
-  m_ui->graphicsView->setScene(new QGraphicsScene(this));
-  m_ui->graphicsView->setRenderHint(QPainter::Antialiasing);
 
   QAbstractItemModel *stateMachineModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateMachineModel"));
   m_ui->stateMachinesView->setModel(stateMachineModel);
@@ -102,23 +97,10 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   new DeferredTreeViewConfiguration(m_ui->singleStateMachineView, true, false);
   m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
 
-  connect(m_ui->depthSpinBox, SIGNAL(valueChanged(int)), m_interface, SLOT(setMaximumDepth(int)));
   connect(m_ui->actionStartStopStateMachine, SIGNAL(triggered()), m_interface, SLOT(toggleRunning()));
   addAction(m_ui->actionStartStopStateMachine);
 
-  // TODO: Re-enable?
-  //connect(m_ui->exportButton, SIGNAL(clicked()), SLOT(exportAsImage()));
-  m_ui->exportButton->hide();
-  m_ui->maxMegaPixelsLabel->hide();
-  m_ui->maxMegaPixelsSpinBox->hide();
-
-  m_ui->maxMegaPixelsSpinBox->setValue(maximumMegaPixels());
-  connect(m_ui->maxMegaPixelsSpinBox, SIGNAL(valueChanged(int)), SLOT(setMaximumMegaPixels(int)));
-
   m_stateMachineView = new KDSME::StateMachineView;
-
-  // FIXME: Do it properly
-  delete m_ui->graphicsView;
   m_ui->verticalSplitter->setChildrenCollapsible(false);
   m_ui->verticalSplitter->addWidget(m_stateMachineView);
   m_ui->verticalSplitter->setStretchFactor(m_ui->verticalSplitter->indexOf(m_stateMachineView), 3);
@@ -147,16 +129,6 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
 
 StateMachineViewerWidgetNG::~StateMachineViewerWidgetNG()
 {
-}
-
-int StateMachineViewerWidgetNG::maximumMegaPixels() const
-{
-  return QSettings().value(QStringLiteral("StateMachineViewerServer/maximumMegaPixels"), 10).toInt();
-}
-
-void StateMachineViewerWidgetNG::setMaximumMegaPixels(int megaPixels)
-{
-  QSettings().setValue(QStringLiteral("StateMachineViewerServer/maximumMegaPixels"), megaPixels);
 }
 
 void StateMachineViewerWidgetNG::showMessage(const QString& message)

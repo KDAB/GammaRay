@@ -72,11 +72,7 @@ private slots:
   void repopulateView();
   void clearGraph();
 
-  void setMaximumMegaPixels(int);
-
 private:
-  int maximumMegaPixels() const;
-
   QScopedPointer<Ui::StateMachineViewer> m_ui;
 
   KDSME::StateMachineView* m_stateMachineView;
