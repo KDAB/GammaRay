@@ -75,22 +75,7 @@ void LocaleModel::init()
 {
   m_localeData = m_registry->enabledAccessors();
 
-#if QT_VERSION >= QT_VERSION_CHECK(4, 8, 0)
-  m_locales =
-    QLocale::matchingLocales(QLocale::AnyLanguage,
-                             QLocale::AnyScript, QLocale::AnyCountry).toVector();
-#else
-  m_locales.clear();
-  QLocale::Language l = QLocale::C;
-  while (QLocale::languageToString(l) != QLatin1String("Unknown"))
-  {
-    QList<QLocale::Country> countries = QLocale::countriesForLanguage(l);
-    Q_FOREACH (const QLocale::Country &c, countries) {
-      m_locales.append(QLocale(l, c));
-    }
-    l = (QLocale::Language)((int)(l) + 1);
-  }
-#endif
+  m_locales = QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript, QLocale::AnyCountry).toVector();
 }
 
 void LocaleModel::reinit()
