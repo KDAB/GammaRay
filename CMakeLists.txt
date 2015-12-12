@@ -386,6 +386,7 @@ if(Qt5Core_FOUND)
     Bluetooth
     Concurrent
     Designer
+    Location
     Positioning
     PrintSupport
     Qml

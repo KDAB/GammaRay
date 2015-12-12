@@ -35,6 +35,8 @@
 
 #include <QDateTime>
 #include <QDebug>
+#include <QQuickWidget>
+#include <QQmlContext>
 
 using namespace GammaRay;
 
@@ -49,6 +51,8 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     ui(new Ui::PositioningWidget)
 {
     ui->setupUi(this);
+    auto mapView = new QQuickWidget;
+    ui->topLayout->addWidget(mapView);
 
     qRegisterMetaTypeStreamOperators<QGeoPositionInfo>("QGeoPositionInfo");
     ObjectBroker::registerClientObjectFactoryCallback<PositioningInterface*>(createPositioningClient);
@@ -60,6 +64,10 @@ PositioningWidget::PositioningWidget(QWidget* parent):
 
     connect(ui->latitudeBox, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
     connect(ui->longitudeBox, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+    connect(ui->altitudeBox, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
+
+    mapView->setResizeMode(QQuickWidget::SizeRootObjectToView);
+    mapView->setSource(QUrl(QStringLiteral("qrc:/gammaray/positioning/mapview.qml")));
 }
 
 PositioningWidget::~PositioningWidget()
@@ -69,7 +77,7 @@ PositioningWidget::~PositioningWidget()
 void PositioningWidget::updatePosition()
 {
     QGeoPositionInfo info;
-    info.setCoordinate(QGeoCoordinate(ui->latitudeBox->value(), ui->longitudeBox->value()));
+    info.setCoordinate(QGeoCoordinate(ui->latitudeBox->value(), ui->longitudeBox->value(), ui->altitudeBox->value()));
     info.setTimestamp(QDateTime::currentDateTime());
     m_interface->setPositionInfoOverride(info);
 }

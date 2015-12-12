@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="gammaray/positioning">
+    <file>mapview.qml</file>
+  </qresource>
+</RCC>

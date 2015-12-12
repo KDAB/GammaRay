@@ -23,7 +23,7 @@ target_link_libraries(gammaray_geopositioninfosource
 install(TARGETS gammaray_geopositioninfosource DESTINATION ${PROBE_PLUGIN_INSTALL_DIR}/position)
 
 # ui plugin
-if(GAMMARAY_BUILD_UI)
+if(GAMMARAY_BUILD_UI AND Qt5Location_FOUND AND Qt5QuickWidgets_FOUND)
   set(gammaray_positioning_ui_srcs
     positioningwidget.cpp
     positioninginterface.cpp
@@ -33,6 +33,7 @@ if(GAMMARAY_BUILD_UI)
   qt4_wrap_ui(gammaray_positioning_ui_srcs
     positioningwidget.ui
   )
+  qt4_add_resources(gammaray_positioning_ui_srcs positioningwidget.qrc)
 
   gammaray_add_plugin(gammaray_positioning_ui
     gammaray_positioning_ui.desktop
@@ -43,5 +44,7 @@ if(GAMMARAY_BUILD_UI)
     gammaray_ui
     Qt5::Widgets
     Qt5::Positioning
+    Qt5::Location
+    Qt5::QuickWidgets
   )
 endif()
