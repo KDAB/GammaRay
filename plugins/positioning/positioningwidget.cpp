@@ -102,7 +102,12 @@ void PositioningWidget::updatePosition()
     QGeoPositionInfo info;
     info.setCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value(), ui->altitude->value()));
     info.setTimestamp(QDateTime::currentDateTime());
+    info.setAttribute(QGeoPositionInfo::Direction, ui->direction->value());
+    info.setAttribute(QGeoPositionInfo::GroundSpeed, ui->horizontalSpeed->value());
+    info.setAttribute(QGeoPositionInfo::VerticalSpeed, ui->verticalSpeed->value());
+    info.setAttribute(QGeoPositionInfo::MagneticVariation, ui->magneticVariation->value());
     info.setAttribute(QGeoPositionInfo::HorizontalAccuracy, ui->horizontalAccuracy->value());
+    info.setAttribute(QGeoPositionInfo::VerticalAccuracy, ui->verticalAccuracy->value());
     m_interface->setPositionInfoOverride(info);
 
     m_mapController->setOverrideCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value()));
@@ -114,16 +119,26 @@ void PositioningWidget::replayPosition()
     m_updateLock = true;
 
     const auto pos = m_replaySource->lastKnownPosition();
-    ui->latitude->setValue(pos.coordinate().latitude());
-    ui->longitude->setValue(pos.coordinate().longitude());
-    ui->altitude->setValue(pos.coordinate().altitude());
+
+    if (pos.coordinate().type() != QGeoCoordinate::InvalidCoordinate) {
+        ui->latitude->setValue(pos.coordinate().latitude());
+        ui->longitude->setValue(pos.coordinate().longitude());
+    }
+    if (pos.coordinate().type() == QGeoCoordinate::Coordinate3D)
+        ui->altitude->setValue(pos.coordinate().altitude());
 
     if (pos.hasAttribute(QGeoPositionInfo::Direction))
         ui->direction->setValue(pos.attribute(QGeoPositionInfo::Direction));
     if (pos.hasAttribute(QGeoPositionInfo::GroundSpeed))
       ui->horizontalSpeed->setValue(pos.attribute(QGeoPositionInfo::GroundSpeed));
+    if (pos.hasAttribute(QGeoPositionInfo::VerticalSpeed))
+      ui->verticalSpeed->setValue(pos.attribute(QGeoPositionInfo::VerticalSpeed));
+    if (pos.hasAttribute(QGeoPositionInfo::MagneticVariation))
+      ui->magneticVariation->setValue(pos.attribute(QGeoPositionInfo::MagneticVariation));
     if (pos.hasAttribute(QGeoPositionInfo::HorizontalAccuracy))
       ui->horizontalAccuracy->setValue(pos.attribute(QGeoPositionInfo::HorizontalAccuracy));
+    if (pos.hasAttribute(QGeoPositionInfo::VerticalAccuracy))
+      ui->verticalAccuracy->setValue(pos.attribute(QGeoPositionInfo::VerticalAccuracy));
 
     m_updateLock = false;
     updatePosition();
