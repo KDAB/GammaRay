@@ -34,6 +34,8 @@
 #include <QScopedPointer>
 #include <QWidget>
 
+class QNmeaPositionInfoSource;
+
 namespace GammaRay {
 
 namespace Ui
@@ -53,11 +55,15 @@ public:
 
 private slots:
     void updatePosition();
+    void replayPosition();
+    void loadNmeaFile();
 
 private:
     QScopedPointer<Ui::PositioningWidget> ui;
     PositioningInterface *m_interface;
     MapController *m_mapController;
+    QNmeaPositionInfoSource *m_replaySource;
+    bool m_updateLock;
 };
 
 class PositioningUiFactory : public QObject, public StandardToolUiFactory<PositioningWidget>

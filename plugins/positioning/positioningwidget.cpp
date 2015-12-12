@@ -34,8 +34,12 @@
 #include <ui/propertybinder.h>
 #include <common/objectbroker.h>
 
+#include <QAction>
 #include <QDateTime>
 #include <QDebug>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QNmeaPositionInfoSource>
 #include <QQuickWidget>
 #include <QQmlContext>
 
@@ -50,7 +54,9 @@ static QObject *createPositioningClient(const QString &name, QObject *parent)
 PositioningWidget::PositioningWidget(QWidget* parent):
     QWidget(parent),
     ui(new Ui::PositioningWidget),
-    m_mapController(new MapController(this))
+    m_mapController(new MapController(this)),
+    m_replaySource(Q_NULLPTR),
+    m_updateLock(false)
 {
     ui->setupUi(this);
     auto mapView = new QQuickWidget;
@@ -78,6 +84,10 @@ PositioningWidget::PositioningWidget(QWidget* parent):
 
     mapView->setResizeMode(QQuickWidget::SizeRootObjectToView);
     mapView->setSource(QUrl(QStringLiteral("qrc:/gammaray/positioning/mapview.qml")));
+
+    auto loadAction = new QAction(tr("Load NMEA file..."), this);
+    connect(loadAction, &QAction::triggered, this, &PositioningWidget::loadNmeaFile);
+    addAction(loadAction);
 }
 
 PositioningWidget::~PositioningWidget()
@@ -86,6 +96,9 @@ PositioningWidget::~PositioningWidget()
 
 void PositioningWidget::updatePosition()
 {
+    if (m_updateLock)
+        return;
+
     QGeoPositionInfo info;
     info.setCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value(), ui->altitude->value()));
     info.setTimestamp(QDateTime::currentDateTime());
@@ -94,4 +107,53 @@ void PositioningWidget::updatePosition()
 
     m_mapController->setOverrideCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value()));
     m_mapController->setOverrideHorizontalAccuracy(ui->horizontalAccuracy->value());
+}
+
+void PositioningWidget::replayPosition()
+{
+    m_updateLock = true;
+
+    const auto pos = m_replaySource->lastKnownPosition();
+    ui->latitude->setValue(pos.coordinate().latitude());
+    ui->longitude->setValue(pos.coordinate().longitude());
+    ui->altitude->setValue(pos.coordinate().altitude());
+
+    if (pos.hasAttribute(QGeoPositionInfo::Direction))
+        ui->direction->setValue(pos.attribute(QGeoPositionInfo::Direction));
+    if (pos.hasAttribute(QGeoPositionInfo::GroundSpeed))
+      ui->horizontalSpeed->setValue(pos.attribute(QGeoPositionInfo::GroundSpeed));
+    if (pos.hasAttribute(QGeoPositionInfo::HorizontalAccuracy))
+      ui->horizontalAccuracy->setValue(pos.attribute(QGeoPositionInfo::HorizontalAccuracy));
+
+    m_updateLock = false;
+    updatePosition();
+}
+
+void PositioningWidget::loadNmeaFile()
+{
+    auto fileName = QFileDialog::getOpenFileName(this, tr("Load NMEA file"));
+    if (fileName.isEmpty())
+        return;
+
+    QScopedPointer<QFile> file(new QFile(fileName, this));
+    if (!file->open(QFile::ReadOnly)) {
+        QMessageBox::critical(this, tr("Failed to open NMEA file"), tr("Could not open '%1': %2.").arg(fileName, file->errorString()));
+        return;
+    }
+
+    if (m_replaySource) {
+        auto dev = m_replaySource->device();
+        delete m_replaySource;
+        delete dev;
+    }
+
+    m_replaySource = new QNmeaPositionInfoSource(QNmeaPositionInfoSource::SimulationMode, this);
+    m_replaySource->setDevice(file.take());
+    connect(m_replaySource, &QGeoPositionInfoSource::positionUpdated, this, &PositioningWidget::replayPosition);
+    m_replaySource->startUpdates();
+
+    // TODO error handling
+    connect(m_replaySource, &QNmeaPositionInfoSource::updateTimeout, this, []() {
+        qDebug() << "NMEA source update timeout!";
+    });
 }
