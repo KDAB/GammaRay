@@ -65,9 +65,16 @@ PositioningWidget::PositioningWidget(QWidget* parent):
 
     new PropertyBinder(m_interface, "positioningOverrideEnabled", ui->overrideBox, "checked");
 
-    connect(ui->latitudeBox, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
-    connect(ui->longitudeBox, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
-    connect(ui->altitudeBox, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
+    connect(ui->overrideBox, SIGNAL(toggled(bool)), this, SLOT(updatePosition()));
+    connect(ui->latitude, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+    connect(ui->longitude, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+    connect(ui->horizontalSpeed, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+    connect(ui->horizontalAccuracy, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
+    connect(ui->altitude, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
+    connect(ui->verticalSpeed, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
+    connect(ui->verticalAccuracy, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
+    connect(ui->direction, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
+    connect(ui->magneticVariation, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
 
     mapView->setResizeMode(QQuickWidget::SizeRootObjectToView);
     mapView->setSource(QUrl(QStringLiteral("qrc:/gammaray/positioning/mapview.qml")));
@@ -80,9 +87,11 @@ PositioningWidget::~PositioningWidget()
 void PositioningWidget::updatePosition()
 {
     QGeoPositionInfo info;
-    info.setCoordinate(QGeoCoordinate(ui->latitudeBox->value(), ui->longitudeBox->value(), ui->altitudeBox->value()));
+    info.setCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value(), ui->altitude->value()));
     info.setTimestamp(QDateTime::currentDateTime());
+    info.setAttribute(QGeoPositionInfo::HorizontalAccuracy, ui->horizontalAccuracy->value());
     m_interface->setPositionInfoOverride(info);
 
-    m_mapController->setOverrideCoordinate(QGeoCoordinate(ui->latitudeBox->value(), ui->longitudeBox->value()));
+    m_mapController->setOverrideCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value()));
+    m_mapController->setOverrideHorizontalAccuracy(ui->horizontalAccuracy->value());
 }

@@ -47,7 +47,7 @@ Item {
             anchorPoint { x: overrideMarker.width / 2; y: overrideMarker.height / 2 }
             sourceItem: Rectangle {
                 id: overrideMarker
-                width: Math.abs(map.fromCoordinate(_controller.overrideCoordinate, false).x - map.fromCoordinate(_controller.overrideCoordinate.atDistanceAndAzimuth(5000, 90), false).x) + 0 * map.zoomLevel
+                width: Math.abs(map.fromCoordinate(_controller.overrideCoordinate, false).x - map.fromCoordinate(_controller.overrideCoordinate.atDistanceAndAzimuth(_controller.overrideHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
                 height: width
                 color: "red"
                 opacity: 0.5
