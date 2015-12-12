@@ -29,6 +29,7 @@
 #include "positioningwidget.h"
 #include "ui_positioningwidget.h"
 #include "positioningclient.h"
+#include "mapcontroller.h"
 
 #include <ui/propertybinder.h>
 #include <common/objectbroker.h>
@@ -48,10 +49,12 @@ static QObject *createPositioningClient(const QString &name, QObject *parent)
 
 PositioningWidget::PositioningWidget(QWidget* parent):
     QWidget(parent),
-    ui(new Ui::PositioningWidget)
+    ui(new Ui::PositioningWidget),
+    m_mapController(new MapController(this))
 {
     ui->setupUi(this);
     auto mapView = new QQuickWidget;
+    mapView->rootContext()->setContextProperty(QStringLiteral("_controller"), m_mapController);
     ui->topLayout->addWidget(mapView);
 
     qRegisterMetaTypeStreamOperators<QGeoPositionInfo>("QGeoPositionInfo");
@@ -80,4 +83,6 @@ void PositioningWidget::updatePosition()
     info.setCoordinate(QGeoCoordinate(ui->latitudeBox->value(), ui->longitudeBox->value(), ui->altitudeBox->value()));
     info.setTimestamp(QDateTime::currentDateTime());
     m_interface->setPositionInfoOverride(info);
+
+    m_mapController->setOverrideCoordinate(QGeoCoordinate(ui->latitudeBox->value(), ui->longitudeBox->value()));
 }

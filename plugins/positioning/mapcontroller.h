@@ -1,5 +1,5 @@
 /*
-  positioningwidget.h
+  mapcontroller.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,47 +26,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_POSITIONINGWIDGET_H
-#define GAMMARAY_POSITIONINGWIDGET_H
+#ifndef GAMMARAY_MAPCONTROLLER_H
+#define GAMMARAY_MAPCONTROLLER_H
 
-#include <ui/tooluifactory.h>
-
-#include <QScopedPointer>
-#include <QWidget>
+#include <QObject>
+#include <QGeoCoordinate>
 
 namespace GammaRay {
 
-namespace Ui
-{
-class PositioningWidget;
-}
-
-class MapController;
-class PositioningInterface;
-
-class PositioningWidget : public QWidget
+class MapController : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QGeoCoordinate overrideCoordinate READ overrideCoordinate WRITE setOverrideCoordinate NOTIFY overrideCoordinateChanged)
 public:
-    explicit PositioningWidget(QWidget *parent = Q_NULLPTR);
-    ~PositioningWidget();
+    explicit MapController(QObject *parent = Q_NULLPTR);
+    ~MapController();
 
-private slots:
-    void updatePosition();
+    QGeoCoordinate overrideCoordinate() const;
+    void setOverrideCoordinate(const QGeoCoordinate &coord);
+
+signals:
+    void overrideCoordinateChanged();
 
 private:
-    QScopedPointer<Ui::PositioningWidget> ui;
-    PositioningInterface *m_interface;
-    MapController *m_mapController;
+    QGeoCoordinate m_overrideCoordinate;
 };
-
-class PositioningUiFactory : public QObject, public StandardToolUiFactory<PositioningWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_positioning.json")
-};
-
 }
 
-#endif // GAMMARAY_POSITIONINGWIDGET_H
+#endif // GAMMARAY_MAPCONTROLLER_H

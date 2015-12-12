@@ -28,6 +28,7 @@ if(GAMMARAY_BUILD_UI AND Qt5Location_FOUND AND Qt5QuickWidgets_FOUND)
     positioningwidget.cpp
     positioninginterface.cpp
     positioningclient.cpp
+    mapcontroller.cpp
   )
 
   qt4_wrap_ui(gammaray_positioning_ui_srcs

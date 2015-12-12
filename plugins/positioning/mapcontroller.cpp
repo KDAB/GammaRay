@@ -1,5 +1,5 @@
 /*
-  positioningwidget.h
+  mapcontroller.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,47 +26,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_POSITIONINGWIDGET_H
-#define GAMMARAY_POSITIONINGWIDGET_H
+#include "mapcontroller.h"
 
-#include <ui/tooluifactory.h>
+using namespace GammaRay;
 
-#include <QScopedPointer>
-#include <QWidget>
-
-namespace GammaRay {
-
-namespace Ui
+MapController::MapController(QObject* parent):
+    QObject(parent)
 {
-class PositioningWidget;
 }
 
-class MapController;
-class PositioningInterface;
-
-class PositioningWidget : public QWidget
+MapController::~MapController()
 {
-    Q_OBJECT
-public:
-    explicit PositioningWidget(QWidget *parent = Q_NULLPTR);
-    ~PositioningWidget();
-
-private slots:
-    void updatePosition();
-
-private:
-    QScopedPointer<Ui::PositioningWidget> ui;
-    PositioningInterface *m_interface;
-    MapController *m_mapController;
-};
-
-class PositioningUiFactory : public QObject, public StandardToolUiFactory<PositioningWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_positioning.json")
-};
-
 }
 
-#endif // GAMMARAY_POSITIONINGWIDGET_H
+QGeoCoordinate MapController::overrideCoordinate() const
+{
+    return m_overrideCoordinate;
+}
+
+void MapController::setOverrideCoordinate(const QGeoCoordinate& coord)
+{
+    if (m_overrideCoordinate == coord)
+        return;
+    m_overrideCoordinate = coord;
+    emit overrideCoordinateChanged();
+}
