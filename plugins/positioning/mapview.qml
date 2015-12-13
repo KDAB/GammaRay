@@ -65,5 +65,16 @@ Item {
                 }
             }
         }
+
+        MapPolyline {
+            id: overrideTrace
+            line { width: 3; color: "red" }
+            opacity: 0.5
+            Connections {
+                target: _controller
+                onOverrideCoordinateChanged: overrideTrace.addCoordinate(_controller.overrideCoordinate)
+            }
+        }
+
     }
 }
