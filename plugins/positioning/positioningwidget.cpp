@@ -82,6 +82,14 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     connect(ui->direction, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
     connect(ui->magneticVariation, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
 
+    connect(m_mapController, &MapController::overrideCoordinateChanged, this, [this]() {
+        m_updateLock = true;
+        ui->latitude->setValue(m_mapController->overrideCoordinate().latitude());
+        ui->longitude->setValue(m_mapController->overrideCoordinate().longitude());
+        m_updateLock = false;
+        updatePosition();
+    });
+
     mapView->setResizeMode(QQuickWidget::SizeRootObjectToView);
     mapView->setSource(QUrl(QStringLiteral("qrc:/gammaray/positioning/mapview.qml")));
 

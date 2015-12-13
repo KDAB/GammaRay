@@ -76,5 +76,10 @@ Item {
             }
         }
 
+        MouseArea {
+            acceptedButtons: Qt.LeftButton
+            anchors.fill: parent
+            onClicked: _controller.overrideCoordinate = map.toCoordinate(Qt.point(mouseX, mouseY), false);
+        }
     }
 }
