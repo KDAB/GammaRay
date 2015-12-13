@@ -43,29 +43,6 @@ Item {
         plugin: mapPlugin
         onCopyrightLinkActivated: Qt.openUrlExternally(link)
 
-        MapQuickItem {
-            coordinate: _controller.overrideCoordinate
-            anchorPoint { x: overrideMarker.width / 2; y: overrideMarker.height / 2 }
-            sourceItem: Rectangle {
-                id: overrideMarker
-                width: Math.abs(map.fromCoordinate(_controller.overrideCoordinate, false).x - map.fromCoordinate(_controller.overrideCoordinate.atDistanceAndAzimuth(_controller.overrideHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
-                height: width
-                color: "red"
-                opacity: 0.5
-                radius: width/2
-                border { width: 2; color: "red" }
-
-                Rectangle {
-                  anchors.centerIn: parent
-                  color: parent.color
-                  width: 5
-                  height: width
-                  opacity: 1
-                  radius: width / 2
-                }
-            }
-        }
-
         MapPolyline {
             id: overrideTrace
             line { width: 3; color: "red" }
@@ -73,6 +50,51 @@ Item {
             Connections {
                 target: _controller
                 onOverrideCoordinateChanged: overrideTrace.addCoordinate(_controller.overrideCoordinate)
+            }
+        }
+
+        MapQuickItem {
+            coordinate: _controller.overrideCoordinate
+            anchorPoint { x: overrideMarker.width / 2; y: overrideMarker.height / 2 }
+            sourceItem: Item {
+                id: overrideMarker
+                property color color: "red"
+                width: Math.abs(map.fromCoordinate(_controller.overrideCoordinate, false).x - map.fromCoordinate(_controller.overrideCoordinate.atDistanceAndAzimuth(_controller.overrideHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
+                height: width
+
+                Rectangle {
+                    id: accuracyBackground
+                    anchors.fill: parent
+                    color: parent.color
+                    opacity: 0.25
+                    radius: width/2
+                }
+                Rectangle {
+                    id: accuracyBorder
+                    anchors.fill: parent
+                    color: "transparent"
+                    opacity: 0.75
+                    radius: width/2
+                    border.width: 1
+                    border.color: parent.color
+                }
+                Rectangle {
+                    id: positionMarker
+                    anchors.centerIn: parent
+                    color: parent.color
+                    width: 16
+                    height: width
+                    opacity: 1
+                    radius: width / 2
+
+                    Image {
+                        id: directionMarker
+                        anchors.fill: positionMarker
+                        source: "qrc:/gammaray/positioning/direction_marker.png"
+                        smooth: true
+                        rotation: _controller.overrideDirection
+                    }
+                }
             }
         }
 

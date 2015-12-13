@@ -39,6 +39,7 @@ class MapController : public QObject
     Q_OBJECT
     Q_PROPERTY(QGeoCoordinate overrideCoordinate READ overrideCoordinate WRITE setOverrideCoordinate NOTIFY overrideCoordinateChanged)
     Q_PROPERTY(double overrideHorizontalAccuracy READ overrideHorizontalAccuracy WRITE setOverrideHorizontalAccuracy NOTIFY overrideHorizontalAccuracyChanged)
+    Q_PROPERTY(double overrideDirection READ overrideDirection WRITE setOverrideDirection NOTIFY overrideDirectionChanged)
 public:
     explicit MapController(QObject *parent = Q_NULLPTR);
     ~MapController();
@@ -49,13 +50,18 @@ public:
     double overrideHorizontalAccuracy() const;
     void setOverrideHorizontalAccuracy(double accu);
 
+    double overrideDirection() const;
+    void setOverrideDirection(double dir);
+
 signals:
     void overrideCoordinateChanged();
     void overrideHorizontalAccuracyChanged();
+    void overrideDirectionChanged();
 
 private:
     QGeoCoordinate m_overrideCoordinate;
-    double m_horizontalAccuracy;
+    double m_overrideHorizontalAccuracy;
+    double m_overrideDirection;
 };
 }
 

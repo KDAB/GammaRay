@@ -120,6 +120,7 @@ void PositioningWidget::updatePosition()
 
     m_mapController->setOverrideCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value()));
     m_mapController->setOverrideHorizontalAccuracy(ui->horizontalAccuracy->value());
+    m_mapController->setOverrideDirection(ui->direction->value());
 }
 
 void PositioningWidget::replayPosition()

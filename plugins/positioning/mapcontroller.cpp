@@ -32,7 +32,8 @@ using namespace GammaRay;
 
 MapController::MapController(QObject* parent):
     QObject(parent),
-    m_horizontalAccuracy(.0)
+    m_overrideHorizontalAccuracy(.0),
+    m_overrideDirection(.0)
 {
 }
 
@@ -55,13 +56,26 @@ void MapController::setOverrideCoordinate(const QGeoCoordinate& coord)
 
 double MapController::overrideHorizontalAccuracy() const
 {
-    return m_horizontalAccuracy;
+    return m_overrideHorizontalAccuracy;
 }
 
 void MapController::setOverrideHorizontalAccuracy(double accu)
 {
-    if (m_horizontalAccuracy == accu)
+    if (m_overrideHorizontalAccuracy == accu)
         return;
-    m_horizontalAccuracy = accu;
+    m_overrideHorizontalAccuracy = accu;
     emit overrideHorizontalAccuracyChanged();
+}
+
+double MapController::overrideDirection() const
+{
+    return m_overrideDirection;
+}
+
+void MapController::setOverrideDirection(double dir)
+{
+    if (m_overrideDirection == dir)
+        return;
+    m_overrideDirection = dir;
+    emit overrideDirectionChanged();
 }

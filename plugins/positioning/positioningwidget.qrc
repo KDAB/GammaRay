@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="gammaray/positioning">
     <file>mapview.qml</file>
+    <file>direction_marker.png</file>
   </qresource>
 </RCC>

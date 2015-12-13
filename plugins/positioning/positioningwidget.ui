@@ -115,7 +115,7 @@
         <string>°</string>
        </property>
        <property name="decimals">
-        <number>4</number>
+        <number>6</number>
        </property>
        <property name="minimum">
         <double>-90.000000000000000</double>
@@ -152,6 +152,9 @@
        </property>
        <property name="maximum">
         <number>360</number>
+       </property>
+       <property name="singleStep">
+        <number>5</number>
        </property>
       </widget>
      </item>
@@ -223,7 +226,7 @@
         <string>°</string>
        </property>
        <property name="decimals">
-        <number>4</number>
+        <number>6</number>
        </property>
        <property name="minimum">
         <double>-180.000000000000000</double>
