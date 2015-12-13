@@ -102,6 +102,12 @@ Item {
             acceptedButtons: Qt.LeftButton
             anchors.fill: parent
             onClicked: _controller.overrideCoordinate = map.toCoordinate(Qt.point(mouseX, mouseY), false);
+            onWheel: {
+                if (wheel.modifiers & Qt.ControlModifier)
+                    _controller.overrideDirection += wheel.angleDelta.y/24
+                else
+                    wheel.accepted = false
+            }
         }
     }
 }

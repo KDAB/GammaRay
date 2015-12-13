@@ -89,6 +89,12 @@ PositioningWidget::PositioningWidget(QWidget* parent):
         m_updateLock = false;
         updatePosition();
     });
+    connect(m_mapController, &MapController::overrideDirectionChanged, this, [this]() {
+        m_updateLock = true;
+        ui->direction->setValue(m_mapController->overrideDirection());
+        m_updateLock = false;
+        updatePosition();
+    });
 
     mapView->setResizeMode(QQuickWidget::SizeRootObjectToView);
     mapView->setSource(QUrl(QStringLiteral("qrc:/gammaray/positioning/mapview.qml")));
