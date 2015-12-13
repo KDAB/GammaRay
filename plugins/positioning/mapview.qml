@@ -41,6 +41,7 @@ Item {
         id: map
         anchors.fill: parent
         plugin: mapPlugin
+        onCopyrightLinkActivated: Qt.openUrlExternally(link)
 
         MapQuickItem {
             coordinate: _controller.overrideCoordinate
