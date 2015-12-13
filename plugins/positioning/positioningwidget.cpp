@@ -179,4 +179,10 @@ void PositioningWidget::loadNmeaFile()
     connect(m_replaySource, &QNmeaPositionInfoSource::updateTimeout, this, []() {
         qDebug() << "NMEA source update timeout!";
     });
+    connect(m_replaySource, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SLOT(nmeaError()));
+}
+
+void PositioningWidget::nmeaError()
+{
+    qDebug() << m_replaySource->error();
 }

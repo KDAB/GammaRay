@@ -57,6 +57,7 @@ private slots:
     void updatePosition();
     void replayPosition();
     void loadNmeaFile();
+    void nmeaError();
 
 private:
     QScopedPointer<Ui::PositioningWidget> ui;
