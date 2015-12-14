@@ -786,18 +786,11 @@ void RemoteModel::doInsertRows(RemoteModel::Node* parentNode, int first, int las
   beginInsertRows(qmiParent, first, last);
 
   // if necessary, update vertical headers
-  if (parentNode == m_root && m_verticalHeaders.size()) {
-    if (first == m_verticalHeaders.size())
-      m_verticalHeaders.resize(m_verticalHeaders.size() + 1 + last - first);
-    else
-      m_verticalHeaders.insert(first, last - first + 1, QHash<int, QVariant>());
-  }
+  if (parentNode == m_root && m_verticalHeaders.size())
+    m_verticalHeaders.insert(first, last - first + 1, QHash<int, QVariant>());
 
   // allocate rows in the right spot
-  if (first == parentNode->children.size())
-    parentNode->children.resize(parentNode->children.size() + 1 + last - first);
-  else
-    parentNode->children.insert(first, last - first + 1, 0);
+  parentNode->children.insert(first, last - first + 1, 0);
 
   // create nodes for the new rows
   for (int i = first; i <= last; ++i) {
@@ -854,10 +847,7 @@ void RemoteModel::doMoveRows(RemoteModel::Node* sourceParentNode, int sourceStar
   beginMoveRows(qmiSourceParent, sourceStart, sourceEnd, qmiDestParent, destStart);
 
   // make room in the destination
-  if (destStart == destParentNode->children.size())
-    destParentNode->children.resize(destParentNode->children.size() + amount);
-  else
-    destParentNode->children.insert(destStart, amount, 0);
+  destParentNode->children.insert(destStart, amount, 0);
 
   // move nodes
   for (int i = 0; i < amount; ++i) {
