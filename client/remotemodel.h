@@ -144,6 +144,11 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     /// execute a rowsMoved() operation
     void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node* destParentNode, int destStart);
 
+    /// execute a insertColumns() operation
+    void doInsertColumns(Node *parentNode, int first, int last);
+    /// execute a removeColumns() operation
+    void doRemoveColumns(Node *parentNode, int first, int last);
+
     // sort/filter proxy model settings
     bool proxyDynamicSortFilter() const;
     void setProxyDynamicSortFilter(bool dynamicSortFilter);

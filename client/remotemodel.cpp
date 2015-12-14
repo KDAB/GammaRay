@@ -501,8 +501,37 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
     }
 
     case Protocol::ModelColumnsAdded:
-    case Protocol::ModelColumnsMoved:
+    {
+      Protocol::ModelIndex parentIndex;
+      int first, last;
+      msg.payload() >> parentIndex >> first >> last;
+      Q_ASSERT(last >= first);
+
+      Node *parentNode = nodeForIndex(parentIndex);
+      if (!parentNode || parentNode->rowCount < 0)
+        return; // we don't know the parent yet, so we don't care about changes to it either
+
+      doInsertColumns(parentNode, first, last);
+      break;
+
+    }
+
     case Protocol::ModelColumnsRemoved:
+    {
+      Protocol::ModelIndex parentIndex;
+      int first, last;
+      msg.payload() >> parentIndex >> first >> last;
+      Q_ASSERT(last >= first);
+
+      Node *parentNode = nodeForIndex(parentIndex);
+      if (!parentNode || parentNode->rowCount < 0)
+        return; // we don't know the parent yet, so we don't care about changes to it either
+
+      doRemoveColumns(parentNode, first, last);
+      break;
+    }
+
+    case Protocol::ModelColumnsMoved:
     {
       // TODO
       qWarning() << Q_FUNC_INFO << "not implemented yet" << msg.type() << m_serverObject;
@@ -855,6 +884,60 @@ void RemoteModel::doMoveRows(RemoteModel::Node* sourceParentNode, int sourceStar
   endMoveRows();
   resetLoadingState(sourceParentNode, sourceStart);
   resetLoadingState(destParentNode, destEnd);
+}
+
+void RemoteModel::doInsertColumns(RemoteModel::Node* parentNode, int first, int last)
+{
+  const auto newColCount = last - first + 1;
+  const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
+  beginInsertColumns(qmiParent, first, last);
+
+  // if necessary, update horizontal headers
+  if (parentNode == m_root && m_horizontalHeaders.size()) {
+    m_horizontalHeaders.insert(first, newColCount, QHash<int, QVariant>());
+  }
+
+  // adjust column data in all child nodes, if available
+  foreach (auto node, parentNode->children) {
+    if (!node->hasColumnData())
+      continue;
+
+    // allocate new columns
+    node->data.insert(first, newColCount, QHash<int, QVariant>());
+    node->flags.insert(first, newColCount, Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    node->state.insert(first, newColCount, Empty | Outdated);
+  }
+
+  // adjust column count
+  parentNode->columnCount += newColCount;
+
+  endInsertColumns();
+}
+
+void RemoteModel::doRemoveColumns(RemoteModel::Node* parentNode, int first, int last)
+{
+  const auto delColCount = last - first + 1;
+  const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
+  beginRemoveColumns(qmiParent, first, last);
+
+  // if necessary update vertical headers
+  if (parentNode == m_root && m_horizontalHeaders.size()) {
+    m_horizontalHeaders.remove(first, delColCount);
+  }
+
+  // adjust column data in all child nodes, if available
+  foreach (auto node, parentNode->children) {
+    if (!node->hasColumnData())
+      continue;
+    node->data.remove(first, delColCount);
+    node->flags.remove(first, delColCount);
+    node->state.remove(first, delColCount);
+  }
+
+  // adjust column count
+  parentNode->columnCount -= delColCount;
+
+  endRemoveColumns();
 }
 
 void RemoteModel::registerClient(const QString &serverObject)
