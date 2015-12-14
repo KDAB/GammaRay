@@ -160,7 +160,8 @@ private slots:
 private:
     Node* m_root;
 
-    mutable QHash<Qt::Orientation, QHash<int, QHash<int, QVariant> > > m_headers; // orientation -> section -> role -> data
+    mutable QVector<QHash<int, QVariant> > m_horizontalHeaders; // section -> role -> data
+    mutable QVector<QHash<int, QVariant> > m_verticalHeaders; // section -> role -> data
 
     mutable QVector<Protocol::ModelIndex> m_pendingDataRequests;
     QTimer* m_pendingDataRequestsTimer;

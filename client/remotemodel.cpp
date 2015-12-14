@@ -251,10 +251,13 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
   if (!isConnected())
     return QVariant();
 
-  if (!m_headers.contains(orientation) || !m_headers.value(orientation).contains(section))
+  auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
+  if (headers.isEmpty())
+    return QVariant();
+  if (headers.at(section).isEmpty())
     requestHeaderData(orientation, section);
 
-  return m_headers.value(orientation).value(section).value(role);
+  return headers.at(section).value(role);
 }
 
 void RemoteModel::sort(int column, Qt::SortOrder order)
@@ -303,6 +306,11 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(node->rowCount < -1 && node->columnCount == -1);
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
+
+      if (node == m_root) {
+        m_horizontalHeaders.resize(columnCount);
+        m_verticalHeaders.resize(rowCount);
+      }
 
       if (columnCount > 0) {
         beginInsertColumns(qmi, 0, columnCount - 1);
@@ -366,7 +374,10 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       msg.payload() >> orientation >> section >> data;
       Q_ASSERT(orientation == Qt::Horizontal || orientation == Qt::Vertical);
       Q_ASSERT(section >= 0);
-      m_headers[static_cast<Qt::Orientation>(orientation)][section] = data;
+      auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
+      if (headers.isEmpty())
+        break;
+      headers[section] = data;
       if ((orientation == Qt::Horizontal && m_root->columnCount > section) || (orientation == Qt::Vertical && m_root->rowCount > section))
         emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
       break;
@@ -415,9 +426,10 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       int first, last;
       msg.payload() >> ori >> first >> last;
       const Qt::Orientation orientation = static_cast<Qt::Orientation>(ori);
+      auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
 
       for (int i = first; i < last; ++i)
-        m_headers[orientation].remove(i);
+        headers[i].clear();
 
       emit headerDataChanged(orientation, first, last);
       break;
@@ -672,8 +684,11 @@ void RemoteModel::doRequestDataAndFlags() const
 void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) const
 {
   Q_ASSERT(section >= 0);
-  Q_ASSERT(!m_headers.value(orientation).contains(section));
-  m_headers[orientation][section][Qt::DisplayRole] = s_emptyDisplayValue;
+  auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
+  if (headers.isEmpty())
+    return;
+  Q_ASSERT(headers.at(section).isEmpty());
+  headers[section][Qt::DisplayRole] = s_emptyDisplayValue;
 
   Message msg(m_myAddress, Protocol::ModelHeaderRequest);
   msg.payload() << qint8(orientation) << qint32(section);
@@ -692,7 +707,8 @@ void RemoteModel::clear()
 
   delete m_root;
   m_root = new Node;
-  m_headers.clear();
+  m_horizontalHeaders.clear();
+  m_verticalHeaders.clear();
   endResetModel();
 }
 
