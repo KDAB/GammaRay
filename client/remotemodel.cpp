@@ -64,6 +64,29 @@ void RemoteModel::Node::clearChildrenStructure()
   columnCount = -1;
 }
 
+void RemoteModel::Node::allocateColumns()
+{
+  if (hasColumnData() || !parent || parent->columnCount < 0)
+      return;
+  data.resize(parent->columnCount);
+  flags.resize(parent->columnCount);
+  flags.fill(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+  state.resize(parent->columnCount);
+  state.fill(RemoteModel::Empty | RemoteModel::Outdated);
+}
+
+bool RemoteModel::Node::hasColumnData() const
+{
+  if (!parent)
+    return false;
+  Q_ASSERT(data.size() == flags.size());
+  Q_ASSERT(data.size() == state.size());
+  Q_ASSERT(data.isEmpty() || data.size() == parent->columnCount || parent->columnCount < 0);
+
+  return data.size() == parent->columnCount && parent->columnCount > 0;
+}
+
+
 QVariant RemoteModel::s_emptyDisplayValue;
 QVariant RemoteModel::s_emptySizeHintValue;
 
@@ -195,7 +218,8 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
   }
 
   // note .value returns good defaults otherwise
-  return node->data.value(index.column()).value(role);
+  Q_ASSERT(node->data.size() > index.column());
+  return node->data.at(index.column()).value(role);
 }
 
 bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -211,15 +235,15 @@ bool RemoteModel::setData(const QModelIndex& index, const QVariant& value, int r
 
 Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
 {
+  if (!index.isValid())
+    return Qt::NoItemFlags;
+
   Node* node = nodeForIndex(index);
   Q_ASSERT(node);
-
-  const QHash<int, Qt::ItemFlags>::const_iterator it = node->flags.constFind(index.column());
-  if (it == node->flags.constEnd()) {
-    // default flags if we don't know better, otherwise we can't select into non-expanded branches
-    return index.isValid() ? Qt::ItemIsSelectable | Qt::ItemIsEnabled : Qt::NoItemFlags;
-  }
-  return it.value();
+  if (!node->hasColumnData())
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  Q_ASSERT(node->flags.size() > index.column());
+  return node->flags.at(index.column());
 }
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -313,18 +337,22 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         Protocol::ModelIndex index;
         msg.payload() >> index;
         Node *node = nodeForIndex(index);
-        const NodeStates state = node ? stateForColumn(node, index.last().second) : NoState;
+        const auto column = index.last().second;
+        const NodeStates state = node ? stateForColumn(node, column) : NoState;
         typedef QHash<int, QVariant> ItemData;
         ItemData itemData;
         qint32 flags;
         msg.payload() >> itemData >> flags;
         if ((state & Loading) == 0)
           continue; // we didn't ask for this, probably outdated response for a moved cell
-        node->data[index.last().second] = itemData;
-        node->flags[index.last().second] = static_cast<Qt::ItemFlags>(flags);
-        node->state.insert(index.last().second, state & ~(Loading | Empty | Outdated));
+
+        node->allocateColumns();
+        Q_ASSERT(node->data.size() > column);
+        node->data[column] = itemData;
+        node->flags[column] = static_cast<Qt::ItemFlags>(flags);
+        node->state[column] = state & ~(Loading | Empty | Outdated);
         // TODO we could do some range compression here
-        const QModelIndex qmi = modelIndexForNode(node, index.last().second);
+        const QModelIndex qmi = modelIndexForNode(node, column);
         emit dataChanged(qmi, qmi);
       }
       break;
@@ -359,10 +387,14 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       // mark content as outdated (will be refetched on next request)
       for (int row = beginIndex.last().first; row <= endIndex.last().first; ++row) {
         Node *currentRow = node->parent->children.at(row);
+        if (!currentRow->hasColumnData())
+          continue;
         for (int col = beginIndex.last().second; col <= endIndex.last().second; ++col) {
           const NodeStates state = stateForColumn(currentRow, col);
-          if ((state & Outdated) == 0)
-            currentRow->state.insert(col, state | Outdated);
+          if ((state & Outdated) == 0) {
+            Q_ASSERT(currentRow->state.size() > col);
+            currentRow->state[col] = state | Outdated;
+          }
         }
       }
 
@@ -584,10 +616,10 @@ bool RemoteModel::isAncestor(RemoteModel::Node* ancestor, RemoteModel::Node* chi
 RemoteModel::NodeStates RemoteModel::stateForColumn(RemoteModel::Node* node, int columnIndex) const
 {
   Q_ASSERT(node);
-  const QHash<int, NodeStates>::const_iterator it = node->state.constFind(columnIndex);
-  if (it == node->state.constEnd())
+  if (!node->hasColumnData())
     return Empty | Outdated;
-  return it.value();
+  Q_ASSERT(node->state.size() > columnIndex);
+  return node->state.at(columnIndex);
 }
 
 void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
@@ -611,11 +643,11 @@ void RemoteModel::requestDataAndFlags(const QModelIndex& index) const
   Q_ASSERT(node);
 
   const NodeStates state = stateForColumn(node, index.column());
-  Q_ASSERT(!node->data.contains(index.column()) || state & Outdated);
-  Q_ASSERT(!node->flags.contains(index.column()) || state & Outdated);
   Q_ASSERT((state & Loading) == 0);
 
-  node->state.insert(index.column(), state | Loading); // mark pending request
+  node->allocateColumns();
+  Q_ASSERT(node->state.size() > index.column());
+  node->state[index.column()] = state | Loading; // mark pending request
 
   m_pendingDataRequests.push_back(Protocol::fromQModelIndex(index));
   if (m_pendingDataRequests.size() > 100) {
@@ -693,9 +725,9 @@ void RemoteModel::resetLoadingState(RemoteModel::Node* node, int startRow) const
   Q_ASSERT(node->children.size() == node->rowCount);
   for (int row = startRow; row < node->rowCount; ++row) {
     Node *child = node->children.at(row);
-    for (QHash<int, NodeStates>::iterator it = child->state.begin(); it != child->state.end(); ++it) {
-      if (it.value() & Loading)
-        it.value() = it.value() & ~Loading;
+    for (auto it = child->state.begin(); it != child->state.end(); ++it) {
+      if ((*it) & Loading)
+        (*it) = (*it) & ~Loading;
     }
     resetLoadingState(child, 0);
   }

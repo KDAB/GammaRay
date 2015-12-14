@@ -101,13 +101,18 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
       // forget everything we know about our children, including row/column counts
       void clearChildrenStructure();
 
+      // resize the initialize the column vectors
+      void allocateColumns();
+      // returns whether columns are allocated
+      bool hasColumnData() const;
+
       Node* parent;
       QVector<Node*> children;
       qint32 rowCount;
       qint32 columnCount;
-      QHash<int, QHash<int, QVariant> > data; // column -> role -> data
-      QHash<int, Qt::ItemFlags> flags;        // column -> flags
-      QHash<int, NodeStates> state;           // column -> state (cache outdated, waiting for data, etc)
+      QVector<QHash<int, QVariant> > data; // column -> role -> data
+      QVector<Qt::ItemFlags> flags;        // column -> flags
+      QVector<NodeStates> state;           // column -> state (cache outdated, waiting for data, etc)
     };
 
     void clear();
