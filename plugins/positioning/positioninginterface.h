@@ -37,24 +37,35 @@ namespace GammaRay {
 class PositioningInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QGeoPositionInfo positionInfo READ positionInfo WRITE setPositionInfo NOTIFY positionInfoChanged)
     Q_PROPERTY(bool positioningOverrideEnabled READ positioningOverrideEnabled WRITE setPositioningOverrideEnabled NOTIFY positioningOverrideEnabledChanged)
     Q_PROPERTY(QGeoPositionInfo positionInfoOverride READ positionInfoOverride WRITE setPositionInfoOverride NOTIFY positionInfoOverrideChanged)
 public:
     explicit PositioningInterface(QObject* parent = Q_NULLPTR);
 
+    /** Position info from the source. */
+    QGeoPositionInfo positionInfo() const;
+
+    /** Override source position info with the override provided by the client. */
     bool positioningOverrideEnabled() const;
     void setPositioningOverrideEnabled(bool enabled);
 
+    /** Override position info provided by the client. */
     QGeoPositionInfo positionInfoOverride() const;
     void setPositionInfoOverride(const QGeoPositionInfo &info);
 
+public slots:
+    void setPositionInfo(const QGeoPositionInfo &info);
+
 signals:
+    void positionInfoChanged();
     void positioningOverrideEnabledChanged();
     void positionInfoOverrideChanged();
 
 private:
-    bool m_positioningOverrideEnabled;
     QGeoPositionInfo m_postionInfo;
+    bool m_positioningOverrideEnabled;
+    QGeoPositionInfo m_postionInfoOverride;
 };
 
 }

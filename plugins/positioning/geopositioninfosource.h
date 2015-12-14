@@ -62,6 +62,7 @@ private:
     bool overrideEnabled() const;
     void connectSource();
     void disconnectSource();
+    void setupSourceUpdate();
 
 private slots:
     void overrideChanged();

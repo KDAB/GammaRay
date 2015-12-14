@@ -50,6 +50,7 @@ void GeoPositionInfoSource::setSource(QGeoPositionInfoSource* source)
     m_source = source;
     if (source && !overrideEnabled())
         connectSource();
+    setupSourceUpdate();
 }
 
 QGeoPositionInfoSource::Error GeoPositionInfoSource::error() const
@@ -129,6 +130,7 @@ void GeoPositionInfoSource::setInterface(PositioningInterface* iface)
     connect(m_interface, SIGNAL(positionInfoOverrideChanged()), this, SLOT(positionInfoOverrideChanged()));
     if (overrideEnabled())
         emit positionUpdated(lastKnownPosition());
+    setupSourceUpdate();
 }
 
 bool GeoPositionInfoSource::overrideEnabled() const
@@ -169,4 +171,11 @@ void GeoPositionInfoSource::disconnectSource()
     disconnect(m_source, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SIGNAL(error(QGeoPositionInfoSource::Error)));
     disconnect(m_source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SIGNAL(positionUpdated(QGeoPositionInfo)));
     disconnect(m_source, SIGNAL(updateTimeout()), this, SIGNAL(updateTimeout()));
+}
+
+void GeoPositionInfoSource::setupSourceUpdate()
+{
+    if (!m_source || !m_interface)
+        return;
+    connect(m_source, &QGeoPositionInfoSource::positionUpdated, m_interface, &PositioningInterface::setPositionInfo);
 }

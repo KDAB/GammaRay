@@ -39,6 +39,19 @@ PositioningInterface::PositioningInterface(QObject* parent):
     ObjectBroker::registerObject<PositioningInterface*>(this);
 }
 
+QGeoPositionInfo PositioningInterface::positionInfo() const
+{
+    return m_postionInfo;
+}
+
+void PositioningInterface::setPositionInfo(const QGeoPositionInfo& info)
+{
+    if (m_postionInfo == info)
+        return;
+    m_postionInfo = info;
+    emit positionInfoChanged();
+}
+
 bool PositioningInterface::positioningOverrideEnabled() const
 {
     return m_positioningOverrideEnabled;
@@ -54,13 +67,13 @@ void PositioningInterface::setPositioningOverrideEnabled(bool enabled)
 
 QGeoPositionInfo PositioningInterface::positionInfoOverride() const
 {
-    return m_postionInfo;
+    return m_postionInfoOverride;
 }
 
 void PositioningInterface::setPositionInfoOverride(const QGeoPositionInfo& info)
 {
-    if (m_postionInfo == info)
+    if (m_postionInfoOverride == info)
         return;
-    m_postionInfo = info;
+    m_postionInfoOverride = info;
     emit positionInfoOverrideChanged();
 }
