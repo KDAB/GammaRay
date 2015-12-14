@@ -252,8 +252,13 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
     return QVariant();
 
   auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
-  if (headers.isEmpty())
-    return QVariant();
+  if (headers.isEmpty()) { // allocate on demand
+    const auto count = orientation == Qt::Horizontal ? m_root->columnCount : m_root->rowCount;
+    if (count <= 0)
+      return QVariant();
+    headers.resize(count);
+  }
+  Q_ASSERT(headers.size() > section);
   if (headers.at(section).isEmpty())
     requestHeaderData(orientation, section);
 
@@ -306,11 +311,6 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       Q_ASSERT(node->rowCount < -1 && node->columnCount == -1);
 
       const QModelIndex qmi = modelIndexForNode(node, 0);
-
-      if (node == m_root) {
-        m_horizontalHeaders.resize(columnCount);
-        m_verticalHeaders.resize(rowCount);
-      }
 
       if (columnCount > 0) {
         beginInsertColumns(qmi, 0, columnCount - 1);
@@ -377,6 +377,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
       if (headers.isEmpty())
         break;
+      Q_ASSERT(headers.size() > section);
       headers[section] = data;
       if ((orientation == Qt::Horizontal && m_root->columnCount > section) || (orientation == Qt::Vertical && m_root->rowCount > section))
         emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);
@@ -428,7 +429,7 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       const Qt::Orientation orientation = static_cast<Qt::Orientation>(ori);
       auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
 
-      for (int i = first; i < last; ++i)
+      for (int i = first; i < last && i < headers.size(); ++i)
         headers[i].clear();
 
       emit headerDataChanged(orientation, first, last);
@@ -685,8 +686,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
 {
   Q_ASSERT(section >= 0);
   auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
-  if (headers.isEmpty())
-    return;
+  Q_ASSERT(!headers.isEmpty());
   Q_ASSERT(headers.at(section).isEmpty());
   headers[section][Qt::DisplayRole] = s_emptyDisplayValue;
 
@@ -756,6 +756,14 @@ void RemoteModel::doInsertRows(RemoteModel::Node* parentNode, int first, int las
   const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
   beginInsertRows(qmiParent, first, last);
 
+  // if necessary, update vertical headers
+  if (parentNode == m_root && m_verticalHeaders.size()) {
+    if (first == m_verticalHeaders.size())
+      m_verticalHeaders.resize(m_verticalHeaders.size() + 1 + last - first);
+    else
+      m_verticalHeaders.insert(first, last - first + 1, QHash<int, QVariant>());
+  }
+
   // allocate rows in the right spot
   if (first == parentNode->children.size())
     parentNode->children.resize(parentNode->children.size() + 1 + last - first);
@@ -783,6 +791,11 @@ void RemoteModel::doRemoveRows(RemoteModel::Node* parentNode, int first, int las
 
   const QModelIndex qmiParent = modelIndexForNode(parentNode, 0);
   beginRemoveRows(qmiParent, first, last);
+
+  // if necessary update vertical headers
+  if (parentNode == m_root && m_verticalHeaders.size()) {
+    m_verticalHeaders.remove(first, last - first + 1);
+  }
 
   // delete nodes
   for (int i = first; i <= last; ++i)
@@ -832,6 +845,12 @@ void RemoteModel::doMoveRows(RemoteModel::Node* sourceParentNode, int sourceStar
   destParentNode->rowCount += amount;
   Q_ASSERT(sourceParentNode->rowCount == sourceParentNode->children.size());
   Q_ASSERT(destParentNode->rowCount == destParentNode->children.size());
+
+  // FIXME: we could insert/remove just the affected rows, but this is currently not hit anyway
+  // update vertical headers if we move to/from top-level
+  if (sourceParentNode == m_root || destParentNode == m_root) {
+    m_verticalHeaders.clear();
+  }
 
   endMoveRows();
   resetLoadingState(sourceParentNode, sourceStart);
