@@ -17,6 +17,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+//krazy:excludeall=kdabcopyright,kdabcommercial
 
 // The way to determine whether the call to function will go
 // through .got and lazy binding stub is:
