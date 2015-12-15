@@ -77,6 +77,8 @@
 
 Q_DECLARE_METATYPE(QQmlError)
 
+Q_DECLARE_METATYPE(QQuickItem::Flags)
+Q_DECLARE_METATYPE(QQuickPaintedItem::PerformanceHints)
 Q_DECLARE_METATYPE(QSGNode *)
 Q_DECLARE_METATYPE(QSGBasicGeometryNode *)
 Q_DECLARE_METATYPE(QSGGeometryNode *)
@@ -96,6 +98,34 @@ Q_DECLARE_METATYPE(QSGMaterial::Flags)
 Q_DECLARE_METATYPE(QSGTexture::WrapMode)
 Q_DECLARE_METATYPE(QSGTexture::Filtering)
 using namespace GammaRay;
+
+static QString qQuickItemFlagsToString(QQuickItem::Flags flags)
+{
+  QStringList list;
+  if (flags & QQuickItem::ItemClipsChildrenToShape)
+    list << QStringLiteral("ItemClipsChildrenToShape");
+  if (flags & QQuickItem::ItemAcceptsInputMethod)
+    list << QStringLiteral("ItemAcceptsInputMethod");
+  if (flags & QQuickItem::ItemIsFocusScope)
+    list << QStringLiteral("ItemIsFocusScope");
+  if (flags & QQuickItem::ItemHasContents)
+    list << QStringLiteral("ItemHasContents");
+  if (flags & QQuickItem::ItemAcceptsDrops)
+    list << QStringLiteral("ItemAcceptsDrops");
+  if (list.isEmpty())
+    return QStringLiteral("<none>");
+  return list.join(QStringLiteral(" | "));
+}
+
+static QString qQuickPaintedItemPerformanceHintsToString(QQuickPaintedItem::PerformanceHints hints)
+{
+  QStringList list;
+  if (hints & QQuickPaintedItem::FastFBOResizing)
+    list << QStringLiteral("FastFBOResizing");
+  if (list.isEmpty())
+    return QStringLiteral("<none>");
+  return list.join(QStringLiteral(" | "));
+}
 
 static QString qSGNodeFlagsToString(QSGNode::Flags flags)
 {
@@ -631,6 +661,26 @@ void QuickInspector::registerMetaTypes()
   MO_ADD_PROPERTY_RO(QQuickView, QQmlContext *, rootContext);
   MO_ADD_PROPERTY_RO(QQuickView, QQuickItem *, rootObject);
 
+  MO_ADD_METAOBJECT1(QQuickItem, QObject);
+  MO_ADD_PROPERTY   (QQuickItem, bool, acceptHoverEvents, setAcceptHoverEvents);
+  MO_ADD_PROPERTY   (QQuickItem, Qt::MouseButtons, acceptedMouseButtons, setAcceptedMouseButtons);
+  MO_ADD_PROPERTY_CR(QQuickItem, QCursor, cursor, setCursor);
+  MO_ADD_PROPERTY   (QQuickItem, bool, filtersChildMouseEvents, setFiltersChildMouseEvents);
+  MO_ADD_PROPERTY   (QQuickItem, QQuickItem::Flags, flags, setFlags);
+  MO_ADD_PROPERTY_RO(QQuickItem, bool, isFocusScope);
+  MO_ADD_PROPERTY_RO(QQuickItem, bool, isTextureProvider);
+  MO_ADD_PROPERTY   (QQuickItem, bool, keepMouseGrab, setKeepMouseGrab);
+  MO_ADD_PROPERTY   (QQuickItem, bool, keepTouchGrab, setKeepTouchGrab);
+  //MO_ADD_PROPERTY_RO(QQuickItem, QQuickItem*, nextItemInFocusChain); // FIXME fails on the default argument
+  MO_ADD_PROPERTY_RO(QQuickItem, QQuickItem*, scopedFocusItem);
+  MO_ADD_PROPERTY_RO(QQuickItem, QQuickWindow*, window);
+
+  MO_ADD_METAOBJECT1(QQuickPaintedItem, QQuickItem);
+  MO_ADD_PROPERTY_RO(QQuickPaintedItem, QRectF, contentsBoundingRect);
+  MO_ADD_PROPERTY   (QQuickPaintedItem, bool, mipmap, setMipmap);
+  MO_ADD_PROPERTY   (QQuickPaintedItem, bool, opaquePainting, setOpaquePainting);
+  MO_ADD_PROPERTY   (QQuickPaintedItem, QQuickPaintedItem::PerformanceHints, performanceHints, setPerformanceHints);
+
   MO_ADD_METAOBJECT1(QSGTexture, QObject);
   MO_ADD_PROPERTY   (QSGTexture, QSGTexture::Filtering, filtering, setFiltering);
   MO_ADD_PROPERTY_RO(QSGTexture, bool, hasAlphaChannel);
@@ -697,6 +747,8 @@ void QuickInspector::registerMetaTypes()
 
 void QuickInspector::registerVariantHandlers()
 {
+  VariantHandler::registerStringConverter<QQuickItem::Flags>(qQuickItemFlagsToString);
+  VariantHandler::registerStringConverter<QQuickPaintedItem::PerformanceHints>(qQuickPaintedItemPerformanceHintsToString);
   VariantHandler::registerStringConverter<QSGNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGBasicGeometryNode*>(Util::addressToString);
   VariantHandler::registerStringConverter<QSGGeometryNode*>(Util::addressToString);
