@@ -27,6 +27,7 @@
 */
 
 #include "quickinspectorinterface.h"
+#include "quickitemmodelroles.h"
 
 #include <common/objectbroker.h>
 
@@ -62,11 +63,26 @@ QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::RenderMode &va
   return in;
 }
 
+QDataStream &operator<<(QDataStream &out, QuickItemActions value)
+{
+  out << qint32(value);
+  return out;
+}
+
+QDataStream &operator>>(QDataStream &in, QuickItemActions &value)
+{
+  qint32 t;
+  in >> t;
+  value = static_cast<QuickItemActions>(t);
+  return in;
+}
+
 QuickInspectorInterface::QuickInspectorInterface(QObject * parent) : QObject(parent)
 {
   ObjectBroker::registerObject<QuickInspectorInterface*>(this);
   qRegisterMetaTypeStreamOperators<Features>();
   qRegisterMetaTypeStreamOperators<RenderMode>();
+  qRegisterMetaTypeStreamOperators<QuickItemActions>();
   qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
   qRegisterMetaTypeStreamOperators<TransferImage>();
 }

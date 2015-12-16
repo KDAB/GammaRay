@@ -29,8 +29,11 @@
 #include "quickitemmodel.h"
 #include "quickitemmodelroles.h"
 
+#include <core/paintanalyzer.h>
+
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <QQuickPaintedItem>
 #include <QThread>
 #include <QQmlEngine>
 #include <QQmlContext>
@@ -117,6 +120,10 @@ QVariant QuickItemModel::data(const QModelIndex &index, int role) const
       return id;
     }
   }
+  if (role == QuickItemModelRole::ItemActions && index.column() == 0) {
+    if (qobject_cast<QQuickPaintedItem*>(item) && PaintAnalyzer::isAvailable())
+      return QVariant::fromValue<QuickItemActions>(QuickItemAction::AnalyzePainting);
+  }
 
   return dataForObject(item, index, role);
 }
@@ -155,6 +162,7 @@ QMap<int, QVariant> QuickItemModel::itemData(const QModelIndex &index) const
   d.insert(QuickItemModelRole::SourceFileRole, data(index, QuickItemModelRole::SourceFileRole));
   d.insert(QuickItemModelRole::SourceLineRole, data(index, QuickItemModelRole::SourceLineRole));
   d.insert(QuickItemModelRole::SourceColumnRole, data(index, QuickItemModelRole::SourceColumnRole));
+  d.insert(QuickItemModelRole::ItemActions, data(index, QuickItemModelRole::ItemActions));
   return d;
 }
 

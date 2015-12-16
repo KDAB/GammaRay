@@ -35,7 +35,7 @@
 
 class QPaintBuffer;
 class QPaintDevice;
-class QRect;
+class QRectF;
 class QTimer;
 
 namespace GammaRay {
@@ -53,7 +53,7 @@ public:
 
     // call the following 4 methods in this order to trigger a paint analysis
     void beginAnalyzePainting();
-    void setBoundingRect(const QRect &boundingBox);
+    void setBoundingRect(const QRectF &boundingBox);
     QPaintDevice* paintDevice() const;
     void endAnalyzePainting();
 

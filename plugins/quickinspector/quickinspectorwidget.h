@@ -52,11 +52,6 @@ namespace Ui {
 class QuickInspectorWidget : public QWidget
 {
   Q_OBJECT
-
-  enum Action {
-      NavigateToCode
-  };
-
   public:
     explicit QuickInspectorWidget(QWidget *parent = 0);
     ~QuickInspectorWidget();

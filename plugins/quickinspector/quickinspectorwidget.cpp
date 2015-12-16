@@ -45,6 +45,7 @@
 #include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 #include <ui/uiintegration.h>
+#include <ui/paintbufferviewer.h>
 
 #include <client/remotemodel.h>
 
@@ -254,31 +255,42 @@ void QuickInspectorWidget::hideEvent(QHideEvent* event)
 void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
 {
   const QModelIndex index = ui->itemTreeView->indexAt(pos);
-  if (!index.isValid() || !UiIntegration::instance()) {
+  if (!index.isValid()) {
     return;
   }
 
-  const auto sourceFile = index.data(QuickItemModelRole::SourceFileRole).toString();
-  if (sourceFile.isEmpty())
-    return;
-
   QMenu contextMenu;
-  QAction *action =
-    contextMenu.addAction(tr("Show Code: %1:%2:%3").
+
+  const auto sourceFile = index.data(QuickItemModelRole::SourceFileRole).toString();
+  if (!sourceFile.isEmpty() && UiIntegration::instance()) {
+    QAction *action = contextMenu.addAction(tr("Show Code: %1:%2:%3").
       arg(sourceFile,
           index.data(QuickItemModelRole::SourceLineRole).toString(),
           index.data(QuickItemModelRole::SourceColumnRole).toString()));
-  action->setData(QuickInspectorWidget::NavigateToCode);
+    action->setData(QuickItemAction::NavigateToCode);
+  }
 
+  if (index.sibling(index.row(), 0).data(QuickItemModelRole::ItemActions).value<QuickItemActions>() & QuickItemAction::AnalyzePainting) {
+    auto action = contextMenu.addAction(tr("Analyze Painting..."));
+    action->setData(QuickItemAction::AnalyzePainting);
+  }
+
+  if (contextMenu.isEmpty())
+    return;
 
   if (QAction *action = contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos))) {
     UiIntegration *integ = 0;
     switch (action->data().toInt()) {
-      case QuickInspectorWidget::NavigateToCode:
+      case QuickItemAction::NavigateToCode:
         integ = UiIntegration::instance();
         emit integ->navigateToCode(sourceFile,
                                    index.data(QuickItemModelRole::SourceLineRole).toInt(),
                                    index.data(QuickItemModelRole::SourceColumnRole).toInt());
+        break;
+      case QuickItemAction::AnalyzePainting:
+        m_interface->analyzePainting();
+        PaintBufferViewer *viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this);
+        viewer->show();
         break;
     }
   }

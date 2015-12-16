@@ -53,6 +53,7 @@ namespace GammaRay {
 class PropertyController;
 class QuickItemModel;
 class QuickSceneGraphModel;
+class PaintAnalyzer;
 
 class QuickInspector : public QuickInspectorInterface
 {
@@ -82,6 +83,8 @@ class QuickInspector : public QuickInspectorInterface
     void checkFeatures() Q_DECL_OVERRIDE;
 
     void setSceneViewActive(bool active) Q_DECL_OVERRIDE;
+
+    void analyzePainting() Q_DECL_OVERRIDE;
 
   protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
@@ -118,6 +121,7 @@ class QuickInspector : public QuickInspectorInterface
     QItemSelectionModel *m_sgSelectionModel;
     PropertyController *m_itemPropertyController;
     PropertyController *m_sgPropertyController;
+    PaintAnalyzer *m_paintAnalyzer;
     QImage m_currentFrame;
     bool m_clientViewActive;
     bool m_needsNewFrame;

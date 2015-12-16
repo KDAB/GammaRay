@@ -40,7 +40,8 @@ namespace QuickItemModelRole {
     SourceFileRole,
     SourceLineRole,
     SourceColumnRole,
-    ItemEvent
+    ItemEvent,
+    ItemActions
   };
 
   enum ItemFlag {
@@ -54,8 +55,20 @@ namespace QuickItemModelRole {
   };
 }
 
+/** Context menu actions for QQuickItems, returned by QuickItemModelRole::ItemActions. */
+namespace QuickItemAction {
+  enum Action {
+    NoAction = 0,
+    NavigateToCode = 1,
+    AnalyzePainting = 2
+  };
+
+}
+Q_DECLARE_FLAGS(QuickItemActions, QuickItemAction::Action)
+
 }
 
 Q_DECLARE_METATYPE(GammaRay::QuickItemModelRole::ItemFlag)
+Q_DECLARE_METATYPE(GammaRay::QuickItemActions)
 
 #endif

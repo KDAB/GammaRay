@@ -93,6 +93,8 @@ class QuickInspectorInterface : public QObject
 
     virtual void setSceneViewActive(bool active) = 0;
 
+    virtual void analyzePainting() = 0;
+
   signals:
     /// Emitted when the view has been newly rendered, for the client to request an update.
     void sceneChanged();

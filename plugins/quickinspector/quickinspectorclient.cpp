@@ -109,3 +109,8 @@ void QuickInspectorClient::setSceneViewActive(bool active)
 {
   Endpoint::instance()->invokeObject(objectName(), "setSceneViewActive", QVariantList() << QVariant::fromValue(active));
 }
+
+void QuickInspectorClient::analyzePainting()
+{
+  Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
+}

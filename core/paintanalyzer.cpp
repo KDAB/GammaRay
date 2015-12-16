@@ -94,7 +94,7 @@ void PaintAnalyzer::beginAnalyzePainting()
 #endif
 }
 
-void PaintAnalyzer::setBoundingRect(const QRect& boundingBox)
+void PaintAnalyzer::setBoundingRect(const QRectF& boundingBox)
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(m_paintBuffer);

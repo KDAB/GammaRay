@@ -62,6 +62,8 @@ public slots:
   void checkFeatures() Q_DECL_OVERRIDE;
 
   void setSceneViewActive(bool active) Q_DECL_OVERRIDE;
+
+  void analyzePainting() Q_DECL_OVERRIDE;
 };
 }
 
