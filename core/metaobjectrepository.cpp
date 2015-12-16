@@ -288,6 +288,8 @@ void MetaObjectRepository::initNetworkTypes()
 void MetaObjectRepository::initGuiTypes()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  qRegisterMetaType<QScreen*>();
+
   MetaObject *mo = 0;
   MO_ADD_METAOBJECT0(QSurface);
   MO_ADD_PROPERTY_RO(QSurface, QSurfaceFormat, format);

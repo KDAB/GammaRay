@@ -470,6 +470,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
     if (c.isValid()) {
       QPixmap p(16, 16);
       QPainter painter(&p);
+      Util::drawTransparencyPattern(&painter, p.rect(), 4);
       painter.setBrush(QBrush(c));
       painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
       return p;
