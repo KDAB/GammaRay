@@ -28,8 +28,6 @@
 #include <config-gammaray.h>
 
 #include "widgetinspectorwidget.h"
-#include "paintbufferviewer.h"
-#include "paintanalyzerclient.h"
 #include "widgetinspectorinterface.h"
 #include "widgetinspectorclient.h"
 #include "ui_widgetinspectorwidget.h"
@@ -38,6 +36,7 @@
 #include "common/objectmodel.h"
 
 #include <ui/deferredresizemodesetter.h>
+#include <ui/paintbufferviewer.h>
 #include <ui/searchlinecontroller.h>
 
 #include <QDebug>
@@ -51,18 +50,12 @@ static QObject* createWidgetInspectorClient(const QString &/*name*/, QObject *pa
   return new WidgetInspectorClient(parent);
 }
 
-static QObject* createPaintAnalyzerClient(const QString &name, QObject *parent)
-{
-  return new PaintAnalyzerClient(name, parent);
-}
-
 WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::WidgetInspectorWidget)
   , m_inspector(0)
 {
   ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface*>(createWidgetInspectorClient);
-  ObjectBroker::registerClientObjectFactoryCallback<PaintAnalyzerInterface*>(createPaintAnalyzerClient);
   m_inspector = ObjectBroker::object<WidgetInspectorInterface*>();
 
   ui->setupUi(this);
@@ -218,9 +211,6 @@ void WidgetInspectorWidget::analyzePainting()
   m_inspector->analyzePainting();
 
   PaintBufferViewer *viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this);
-  viewer->setWindowTitle(tr("Analyze Painting"));
-  viewer->setAttribute(Qt::WA_DeleteOnClose);
-  viewer->setModal(true);
   viewer->show();
 }
 

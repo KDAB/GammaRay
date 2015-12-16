@@ -12,6 +12,7 @@ set(gammaray_common_srcs
   paths.cpp
   propertysyncer.cpp
   modelevent.cpp
+  paintanalyzerinterface.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})

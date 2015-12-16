@@ -30,7 +30,7 @@
 
 #include "ui_paintbufferviewer.h"
 
-#include "paintanalyzerinterface.h"
+#include <common/paintanalyzerinterface.h>
 #include <common/objectbroker.h>
 
 using namespace GammaRay;
@@ -40,6 +40,10 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   , ui(new Ui::PaintBufferViewer)
 {
   ui->setupUi(this);
+
+  setWindowTitle(tr("Analyze Painting"));
+  setAttribute(Qt::WA_DeleteOnClose);
+  setModal(true);
 
   auto model = ObjectBroker::model(name + QStringLiteral(".paintBufferModel"));
   ui->commandView->setModel(model);

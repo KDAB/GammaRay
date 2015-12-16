@@ -33,6 +33,7 @@
 #include "selectionmodelclient.h"
 #include "propertycontrollerclient.h"
 #include "probecontrollerclient.h"
+#include "paintanalyzerclient.h"
 
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
@@ -68,12 +69,19 @@ static QObject* createProbeController(const QString &name, QObject *parent)
   return o;
 }
 
+static QObject* createPaintAnalyzerClient(const QString &name, QObject *parent)
+{
+  return new PaintAnalyzerClient(name, parent);
+}
+
 void ClientConnectionManager::init()
 {
   StreamOperators::registerOperators();
 
   ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
   ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface*>(createProbeController);
+  ObjectBroker::registerClientObjectFactoryCallback<PaintAnalyzerInterface*>(createPaintAnalyzerClient);
+
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 }

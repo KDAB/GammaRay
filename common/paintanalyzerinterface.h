@@ -29,13 +29,16 @@
 #ifndef GAMMARAY_PAINTANALYZERINTERFACE_H
 #define GAMMARAY_PAINTANALYZERINTERFACE_H
 
+#include "gammaray_common_export.h"
+
 #include <QObject>
 
 class QImage;
 
 namespace GammaRay {
 
-class PaintAnalyzerInterface : public QObject
+/** Communication interface for GammaRay::PaintAnalyzer. */
+class GAMMARAY_COMMON_EXPORT PaintAnalyzerInterface : public QObject
 {
     Q_OBJECT
 public:

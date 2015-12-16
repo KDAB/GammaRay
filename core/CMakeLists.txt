@@ -40,6 +40,9 @@ set(gammaray_srcs
   objectinstance.cpp
   propertyadaptorfactory.cpp
 
+  paintbuffermodel.cpp
+  paintanalyzer.cpp
+
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp
@@ -86,6 +89,11 @@ if(Qt5Core_FOUND)
     tools/standardpaths/standardpaths.cpp
     tools/standardpaths/standardpathsmodel.cpp
   )
+endif()
+
+if(NOT Qt5Gui_VERSION VERSION_LESS 5.5.0) # QPaintBuffer was removed in 5.5
+  include_directories(${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
+  list(APPEND gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/private/qpaintbuffer.cpp)
 endif()
 
 if(NOT WIN32)

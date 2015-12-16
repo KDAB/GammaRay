@@ -34,7 +34,6 @@
 #include "overlaywidget.h"
 #include "widgettreemodel.h"
 #include "modelutils.h"
-#include "paintanalyzer.h"
 
 #include "core/propertycontroller.h"
 #include "core/metaobject.h"
@@ -44,6 +43,7 @@
 #include "core/objecttypefilterproxymodel.h"
 #include "core/probeinterface.h"
 #include "core/probeguard.h"
+#include <core/paintanalyzer.h>
 
 #include "common/objectbroker.h"
 #include "common/settempvalue.h"

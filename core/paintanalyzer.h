@@ -29,7 +29,9 @@
 #ifndef GAMMARAY_PAINTANALYZER_H
 #define GAMMARAY_PAINTANALYZER_H
 
-#include "paintanalyzerinterface.h"
+#include "gammaray_core_export.h"
+
+#include <common/paintanalyzerinterface.h>
 
 class QPaintBuffer;
 class QPaintDevice;
@@ -41,7 +43,7 @@ namespace GammaRay {
 class PaintBufferModel;
 
 /** Inspects individual operations on a QPainter. */
-class PaintAnalyzer : public PaintAnalyzerInterface
+class GAMMARAY_CORE_EXPORT PaintAnalyzer : public PaintAnalyzerInterface
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::PaintAnalyzerInterface)

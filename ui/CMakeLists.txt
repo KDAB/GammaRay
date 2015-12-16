@@ -16,6 +16,9 @@ set(gammaray_ui_srcs
   searchlinecontroller.cpp
   uiintegration.cpp
 
+  paintbufferviewer.cpp
+  paintbufferreplaywidget.cpp
+
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp
   propertyeditor/propertyeditorfactory.cpp
@@ -56,6 +59,8 @@ set(gammaray_ui_srcs
 
 qt4_wrap_ui(gammaray_ui_srcs
   methodinvocationdialog.ui
+
+  paintbufferviewer.ui
 
   propertyeditor/propertydoublepaireditor.ui
   propertyeditor/propertyextendededitor.ui
