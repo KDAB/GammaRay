@@ -48,13 +48,13 @@ class PaintBufferReplayWidget : public QWidget
 
   public slots:
     void setZoomFactor(int zoom);
-    void setPixmap(const QPixmap &pixmap);
+    void setImage(const QImage &image);
 
   protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
   private:
-    QPixmap m_pixmap;
+    QImage m_image;
     int m_zoomFactor;
 };
 

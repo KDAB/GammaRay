@@ -32,10 +32,9 @@
 #include "widgetinspectorserver.h"
 
 #include "overlaywidget.h"
-#include "paintbufferviewer.h"
 #include "widgettreemodel.h"
-#include "paintbuffermodel.h"
 #include "modelutils.h"
+#include "paintanalyzer.h"
 
 #include "core/propertycontroller.h"
 #include "core/metaobject.h"
@@ -58,6 +57,7 @@
 #include <QApplication>
 #include <QComboBox>
 #include <QDesktopWidget>
+#include <QDialog>
 #include <QLayout>
 #include <QItemSelectionModel>
 #include <QPainter>
@@ -70,10 +70,6 @@
 
 #include <iostream>
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
-#include <private/qpaintbuffer_p.h>
-#endif
-
 Q_DECLARE_METATYPE(const QStyle *)
 
 using namespace GammaRay;
@@ -83,8 +79,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   : WidgetInspectorInterface(parent)
   , m_propertyController(new PropertyController(objectName(), this))
   , m_updatePreviewTimer(new QTimer(this))
-  , m_paintBufferModel(0)
-  , m_paintAnalyzerTimer(new QTimer(this))
+  , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this))
   , m_probe(probe)
 {
   registerWidgetMetaTypes();
@@ -94,10 +89,6 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   m_updatePreviewTimer->setSingleShot(true);
   m_updatePreviewTimer->setInterval(100);
   connect(m_updatePreviewTimer, SIGNAL(timeout()), SLOT(updateWidgetPreview()));
-
-  m_paintAnalyzerTimer->setSingleShot(true);
-  m_paintAnalyzerTimer->setInterval(100);
-  connect(m_paintAnalyzerTimer, SIGNAL(timeout()), SLOT(updatePaintAnalyzer()));
 
   recreateOverlayWidget();
 
@@ -113,13 +104,6 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   connect(m_widgetSelectionModel,
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
-
-#ifdef HAVE_PRIVATE_QT_HEADERS
-  m_paintBufferModel = new PaintBufferModel(this);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.PaintBufferModel"), m_paintBufferModel);
-  connect(ObjectBroker::selectionModel(m_paintBufferModel), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          this, SLOT(eventuallyUpdatePaintAnalyzer()));
-#endif
 
   // TODO this needs to be delayed until there actually is something to select
   selectDefaultItem();
@@ -362,47 +346,16 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
 
 void WidgetInspectorServer::analyzePainting()
 {
-  if (!m_selectedWidget) {
+  if (!m_selectedWidget || !PaintAnalyzer::isAvailable()) {
     return;
   }
-#ifdef HAVE_PRIVATE_QT_HEADERS
-  QPaintBuffer buffer;
+
   m_overlayWidget->hide();
-  buffer.setBoundingRect(m_selectedWidget->rect());
-  m_selectedWidget->render(&buffer);
+  m_paintAnalyzer->beginAnalyzePainting();
+  m_paintAnalyzer->setBoundingRect(m_selectedWidget->rect());
+  m_selectedWidget->render(m_paintAnalyzer->paintDevice());
+  m_paintAnalyzer->endAnalyzePainting();
   m_overlayWidget->show();
-  m_paintBufferModel->setPaintBuffer(buffer);
-  eventuallyUpdatePaintAnalyzer();
-#endif
-}
-
-void WidgetInspectorServer::eventuallyUpdatePaintAnalyzer()
-{
-#ifdef HAVE_PRIVATE_QT_HEADERS
-  m_paintAnalyzerTimer->start();
-#endif
-}
-
-void WidgetInspectorServer::updatePaintAnalyzer()
-{
-#ifdef HAVE_PRIVATE_QT_HEADERS
-  // didn't manage painting on the widget directly, even with the correct
-  // translation it is always clipping as if the widget was at 0,0 of its parent
-  const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
-  QPixmap pixmap(sourceSize);
-  QPainter painter(&pixmap);
-  Util::drawTransparencyPattern(&painter, QRect(QPoint(0, 0), sourceSize));
-  int start = m_paintBufferModel->buffer().frameStartIndex(0);
-  // include selected row or paint all if nothing is selected
-  const QModelIndex index = ObjectBroker::selectionModel(m_paintBufferModel)->currentIndex();
-  int end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();
-  int depth = m_paintBufferModel->buffer().processCommands(&painter, start, start + end);
-  for (; depth > 0; --depth) {
-    painter.restore();
-  }
-  painter.end();
-  emit paintAnalyzed(pixmap);
-#endif
 }
 
 void WidgetInspectorServer::checkFeatures()
@@ -423,11 +376,7 @@ void WidgetInspectorServer::checkFeatures()
 #else
     false,
 #endif
-#ifdef HAVE_PRIVATE_QT_HEADERS
-    true
-#else
-    false
-#endif
+    PaintAnalyzer::isAvailable()
   );
 }
 

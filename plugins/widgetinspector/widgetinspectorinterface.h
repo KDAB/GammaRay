@@ -53,7 +53,6 @@ class WidgetInspectorInterface : public QObject
 
   signals:
     void widgetPreviewAvailable(const QPixmap &pixmap);
-    void paintAnalyzed(const QPixmap &pixmap);
     void features(bool svg, bool print, bool designer, bool privateHeaders);
 };
 

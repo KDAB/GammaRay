@@ -45,16 +45,16 @@ void PaintBufferReplayWidget::setZoomFactor(int zoom)
   update();
 }
 
-void PaintBufferReplayWidget::setPixmap(const QPixmap &pixmap)
+void PaintBufferReplayWidget::setImage(const QImage &image)
 {
-  m_pixmap = pixmap;
+  m_image = image;
   resize(sizeHint());
   update();
 }
 
 QSize PaintBufferReplayWidget::sizeHint() const
 {
-  const QSize size = m_pixmap.size();
+  const QSize size = m_image.size();
   return QSize(size.width() * m_zoomFactor,
                size.height() * m_zoomFactor);
 }
@@ -64,5 +64,5 @@ void PaintBufferReplayWidget::paintEvent(QPaintEvent * /*event*/)
   QPainter p(this);
   p.setRenderHint(QPainter::SmoothPixmapTransform, false);
   p.scale(m_zoomFactor, m_zoomFactor);
-  p.drawPixmap(QPoint(0, 0), m_pixmap);
+  p.drawImage(QPoint(0, 0), m_image);
 }

@@ -30,25 +30,26 @@
 
 #include "ui_paintbufferviewer.h"
 
-#include "widgetinspectorinterface.h"
+#include "paintanalyzerinterface.h"
 #include <common/objectbroker.h>
 
 using namespace GammaRay;
 
-PaintBufferViewer::PaintBufferViewer(QWidget *parent)
+PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   : QDialog(parent)
   , ui(new Ui::PaintBufferViewer)
 {
   ui->setupUi(this);
 
-  ui->commandView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PaintBufferModel")));
+  auto model = ObjectBroker::model(name + QStringLiteral(".paintBufferModel"));
+  ui->commandView->setModel(model);
   ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
 
   ui->splitter->setStretchFactor(0, 0);
   ui->splitter->setStretchFactor(1, 1);
 
-  connect(ObjectBroker::object<WidgetInspectorInterface*>(), SIGNAL(paintAnalyzed(QPixmap)),
-          ui->replayWidget, SLOT(setPixmap(QPixmap)));
+  auto controller = ObjectBroker::object<PaintAnalyzerInterface*>(name);
+  connect(controller, SIGNAL(paintingAnalyzed(QImage)), ui->replayWidget, SLOT(setImage(QImage)));
   connect(ui->zoomSlider, SIGNAL(valueChanged(int)), ui->replayWidget, SLOT(setZoomFactor(int)));
 }
 

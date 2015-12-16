@@ -1,10 +1,10 @@
 /*
-  paintbufferviewer.h
+  paintanalyzerinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2012-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,37 +26,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERVIEWER_H
-#define GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERVIEWER_H
+#ifndef GAMMARAY_PAINTANALYZERINTERFACE_H
+#define GAMMARAY_PAINTANALYZERINTERFACE_H
 
-#include <config-gammaray.h>
+#include <QObject>
 
-#include <QDialog>
-
-class QAbstractItemModel;
+class QImage;
 
 namespace GammaRay {
 
-class WidgetInspectorInterface;
-
-namespace Ui {
-  class PaintBufferViewer;
-}
-
-/**
- * A widget to look at the command list in a QPaintBuffer.
- */
-class PaintBufferViewer : public QDialog
+class PaintAnalyzerInterface : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit PaintBufferViewer(const QString &name, QWidget *parent = 0);
-    virtual ~PaintBufferViewer();
+    Q_OBJECT
+public:
+    explicit PaintAnalyzerInterface(const QString &name, QObject *parent = Q_NULLPTR);
+    QString name() const;
 
-  private:
-    QScopedPointer<Ui::PaintBufferViewer> ui;
+signals:
+    void paintingAnalyzed(const QImage &image);
+
+private:
+    QString m_name;
 };
 
 }
 
-#endif
+Q_DECLARE_INTERFACE(GammaRay::PaintAnalyzerInterface, "com.kdab.GammaRay.PaintAnalyzer/1.0")
+
+#endif // GAMMARAY_PAINTANALYZERINTERFACE_H

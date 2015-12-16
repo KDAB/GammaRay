@@ -9,6 +9,8 @@ set(gammaray_widgetinspector_plugin_srcs
   widgetinspectorserver.cpp
   overlaywidget.cpp
   widgettreemodel.cpp
+  paintanalyzerinterface.cpp
+  paintanalyzer.cpp
   paintbufferreplaywidget.cpp
   modelutils.cpp
 )
@@ -73,6 +75,8 @@ if(GAMMARAY_BUILD_UI)
     widgetinspectorclient.cpp
     widgetinspectorwidget.cpp
     widgetpreviewwidget.cpp
+    paintanalyzerinterface.cpp
+    paintanalyzerclient.cpp
     paintbufferviewer.cpp
     paintbufferreplaywidget.cpp
   )
