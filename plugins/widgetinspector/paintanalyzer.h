@@ -64,7 +64,7 @@ private slots:
 
 private:
     PaintBufferModel *m_paintBufferModel;
-    QScopedPointer<QPaintBuffer> m_paintBuffer;
+    QPaintBuffer* m_paintBuffer;
     QTimer *m_repaintTimer;
 };
 

@@ -43,6 +43,7 @@ using namespace GammaRay;
 PaintAnalyzer::PaintAnalyzer(const QString& name, QObject* parent):
     PaintAnalyzerInterface(name, parent),
     m_paintBufferModel(Q_NULLPTR),
+    m_paintBuffer(Q_NULLPTR),
     m_repaintTimer(new QTimer(this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
@@ -89,7 +90,7 @@ void PaintAnalyzer::beginAnalyzePainting()
 {
     Q_ASSERT(!m_paintBuffer);
 #ifdef HAVE_PRIVATE_QT_HEADERS
-    m_paintBuffer.reset(new QPaintBuffer);
+    m_paintBuffer = new QPaintBuffer;
 #endif
 }
 
@@ -107,7 +108,7 @@ QPaintDevice* PaintAnalyzer::paintDevice() const
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(m_paintBuffer);
-    return m_paintBuffer.data();
+    return m_paintBuffer;
 #else
     return Q_NULLPTR;
 #endif
@@ -120,7 +121,8 @@ void PaintAnalyzer::endAnalyzePainting()
     Q_ASSERT(m_paintBufferModel);
     m_paintBufferModel->setPaintBuffer(*m_paintBuffer);
 #endif
-    m_paintBuffer.reset();
+    delete m_paintBuffer;
+    m_paintBuffer = 0;
     update();
 }
 
