@@ -140,6 +140,17 @@ add_executable(multithreadingtest
 )
 target_link_libraries(multithreadingtest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME multithreadingtest COMMAND multithreadingtest)
+
+### QTranslator test
+add_executable(translatortest
+  translatortest.cpp
+  ../probe/probecreator.cpp
+  ../probe/hooks.cpp
+    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+target_link_libraries(translatortest gammaray_core ${QT_QTTEST_LIBRARIES})
+add_test(NAME translatortest COMMAND translatortest)
+
 endif()
 
 ### QWidget test
