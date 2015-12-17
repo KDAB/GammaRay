@@ -52,7 +52,6 @@ class TranslatorsModel : public QAbstractTableModel
     QVariant data(const QModelIndex &proxyIndex, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     TranslatorWrapper *translator(const QModelIndex &index) const;
 
