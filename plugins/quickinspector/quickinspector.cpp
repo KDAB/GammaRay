@@ -632,6 +632,15 @@ void QuickInspector::analyzePainting()
   m_paintAnalyzer->endAnalyzePainting();
 }
 
+void QuickInspector::pickItemAt(const QPointF& pos)
+{
+  if (!m_window)
+    return;
+  QQuickItem *item = recursiveChiltAt(m_window->contentItem(), pos);
+  if (item)
+    m_probe->selectObject(item);
+}
+
 QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &pos) const
 {
   Q_ASSERT(parent);

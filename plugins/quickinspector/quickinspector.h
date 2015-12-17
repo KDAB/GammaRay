@@ -86,6 +86,8 @@ class QuickInspector : public QuickInspectorInterface
 
     void analyzePainting() Q_DECL_OVERRIDE;
 
+    void pickItemAt(const QPointF& pos) Q_DECL_OVERRIDE;
+
   protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 

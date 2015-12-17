@@ -114,3 +114,8 @@ void QuickInspectorClient::analyzePainting()
 {
   Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
 }
+
+void QuickInspectorClient::pickItemAt(const QPointF& pos)
+{
+  Endpoint::instance()->invokeObject(objectName(), "pickItemAt", QVariantList() << QVariant::fromValue(pos));
+}

@@ -536,7 +536,9 @@ void QuickScenePreviewWidget::mousePressEvent(QMouseEvent* e)
 
   m_zoomedMouseGrabPosition = (e->pos() - QPoint(m_x, m_y)) / m_zoom;
 
-  if (m_mouseMode == RedirectInput) {
+  if (m_mouseMode == MovePreview && e->modifiers() & Qt::ControlModifier) { // TODO: make this easier to discover!
+    m_inspectorInterface->pickItemAt(m_zoomedMouseGrabPosition);
+  } else if (m_mouseMode == RedirectInput) {
     m_inspectorInterface->sendMouseEvent(e->type(), (e->pos() - QPoint(m_x, m_y)) / m_zoom, e->button(), e->buttons(), e->modifiers());
   }
 }

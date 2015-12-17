@@ -95,6 +95,8 @@ class QuickInspectorInterface : public QObject
 
     virtual void analyzePainting() = 0;
 
+    virtual void pickItemAt(const QPointF &pos) = 0;
+
   signals:
     /// Emitted when the view has been newly rendered, for the client to request an update.
     void sceneChanged();
