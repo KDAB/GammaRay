@@ -51,15 +51,12 @@
 #include <private/qtextengine_p.h>
 #include <QDebug>
 
-#undef Q_GUI_EXPORT
-#define Q_GUI_EXPORT
-
 QT_BEGIN_NAMESPACE
 
 class QPaintBufferPrivate;
 class QPaintBufferPlayback;
 
-class Q_GUI_EXPORT QPaintBuffer : public QPaintDevice
+class QPaintBuffer : public QPaintDevice
 {
     Q_DECLARE_PRIVATE(QPaintBuffer)
 public:
@@ -94,14 +91,14 @@ private:
     friend class QPainterReplayer;
     friend class QOpenGLReplayer;
 
-    friend Q_GUI_EXPORT QDataStream &operator<<(QDataStream &stream, const QPaintBuffer &buffer);
-    friend Q_GUI_EXPORT QDataStream &operator>>(QDataStream &stream, QPaintBuffer &buffer);
+    friend QDataStream &operator<<(QDataStream &stream, const QPaintBuffer &buffer);
+    friend QDataStream &operator>>(QDataStream &stream, QPaintBuffer &buffer);
 
     QPaintBufferPrivate *d_ptr;
 };
 
-Q_GUI_EXPORT QDataStream &operator<<(QDataStream &stream, const QPaintBuffer &buffer);
-Q_GUI_EXPORT QDataStream &operator>>(QDataStream &stream, QPaintBuffer &buffer);
+QDataStream &operator<<(QDataStream &stream, const QPaintBuffer &buffer);
+QDataStream &operator>>(QDataStream &stream, QPaintBuffer &buffer);
 
 class QPaintBufferEngine;
 
@@ -311,7 +308,7 @@ struct QVectorPathCmd
 };
 
 
-class Q_GUI_EXPORT QPainterReplayer
+class QPainterReplayer
 {
 public:
     QPainterReplayer() { }
@@ -329,7 +326,7 @@ protected:
     QPainter *painter;
 };
 
-class Q_GUI_EXPORT QPaintEngineExReplayer : public QPainterReplayer
+class QPaintEngineExReplayer : public QPainterReplayer
 {
 public:
     QPaintEngineExReplayer() { }
