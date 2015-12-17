@@ -103,8 +103,7 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
     QCoreApplicationPrivate *obj = static_cast<QCoreApplicationPrivate *>(
         QCoreApplicationPrivate::get(qApp));
     for (int i = 0; i < obj->translators.size(); ++i) {
-      if (obj->translators.at(i)->metaObject()->className() ==
-          TranslatorWrapper::staticMetaObject.className()) {
+      if (obj->translators.at(i)->metaObject() == &TranslatorWrapper::staticMetaObject) {
         continue; // it's already setup correctly
       } else {
         /* wrap the translator set with installTranslator in a TranslatorWrapper
