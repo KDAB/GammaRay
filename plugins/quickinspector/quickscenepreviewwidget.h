@@ -79,15 +79,15 @@ class QuickScenePreviewWidget : public QWidget
     void updateEffectiveGeometry();
 
   private:
-    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
-    virtual void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    virtual void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    virtual void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
 
-    virtual void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    virtual void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    virtual void wheelEvent(QWheelEvent *e) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent *e) Q_DECL_OVERRIDE;
 
     struct {
         QToolBar *toolbarWidget;
