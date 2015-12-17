@@ -370,7 +370,7 @@ void QuickScenePreviewWidget::drawRuler(QPainter* p)
         }
 
         if (x % 100 == 0 && x >= 0 && x <= m_image.width() * m_zoom) {
-            auto nearestTick = round(x / m_zoom * 0.2) * 5;
+            auto nearestTick = qRound(x / m_zoom * 0.2) * 5;
             auto xOffset = (nearestTick - (x/m_zoom)) * m_zoom;
             p->drawText(m_x + x + xOffset - 20, height() - (hRulerHeight - 2 * lineLength),
                         40, hRulerHeight - 2 * lineLength,
@@ -398,7 +398,7 @@ void QuickScenePreviewWidget::drawRuler(QPainter* p)
         }
 
         if (y % 100 == 0 && y >= 0 && y <= m_image.height() * m_zoom) {
-            auto nearestTick = round(y / m_zoom * 0.2) * 5;
+            auto nearestTick = qRound(y / m_zoom * 0.2) * 5;
             auto yOffset = (nearestTick - (y/m_zoom)) * m_zoom;
             p->drawText(width() - (vRulerWidth - 2 * lineLength), m_y + y + yOffset - 20,
                         vRulerWidth - 2 * lineLength, 40,
