@@ -233,10 +233,13 @@ QString TranslatorWrapper::translateInternal(const char *context,
 {
   return translator()->translate(context, sourceText, disambiguation, n);
 }
+
 const QTranslator *TranslatorWrapper::translator() const
 {
-  return m_wrapped == 0 ? this : m_wrapped;
+    Q_ASSERT(m_wrapped);
+    return m_wrapped;
 }
+
 
 FallbackTranslator::FallbackTranslator(QObject *parent)
   : QTranslator(parent)
