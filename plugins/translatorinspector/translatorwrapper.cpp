@@ -199,8 +199,12 @@ TranslatorWrapper::TranslatorWrapper(QTranslator *wrapped, QObject *parent)
     : QTranslator(parent), m_wrapped(wrapped),
       m_model(new TranslationsModel(this))
 {
-	connect(wrapped, SIGNAL(destroyed()), SLOT(deleteLater()));
+    Q_ASSERT(wrapped);
+
+    // not deleteLater(), otherwise we end up with a dangling pointer in here!
+    connect(wrapped, &QObject::destroyed, this, [this]() { delete this; });
 }
+
 bool TranslatorWrapper::isEmpty() const
 {
   return translator()->isEmpty();
