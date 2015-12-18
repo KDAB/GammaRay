@@ -51,6 +51,9 @@ int TranslatorsModel::rowCount(const QModelIndex &parent) const
 }
 QVariant TranslatorsModel::data(const QModelIndex &index, int role) const
 {
+  if (!index.isValid())
+    return QVariant();
+
   if (role == TranslatorRole) {
     return QVariant::fromValue(m_translators.at(index.row()));
   }
@@ -84,11 +87,7 @@ QVariant TranslatorsModel::headerData(int section,
   }
   return QVariant();
 }
-Qt::ItemFlags TranslatorsModel::flags(const QModelIndex &index) const
-{
-  Q_UNUSED(index);
-  return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
-}
+
 TranslatorWrapper *TranslatorsModel::translator(const QModelIndex &index)
     const
 {
@@ -111,12 +110,13 @@ void TranslatorsModel::sourceDataChanged()
 
 void TranslatorsModel::registerTranslator(TranslatorWrapper *translator)
 {
-  beginInsertRows(QModelIndex(), m_translators.size(), m_translators.size());
-  m_translators.append(translator);
+  beginInsertRows(QModelIndex(), 0, 0);
+  m_translators.prepend(translator);
   endInsertRows();
   connect(translator->model(), SIGNAL(rowCountChanged()),
           SLOT(sourceDataChanged()));
 }
+
 void TranslatorsModel::unregisterTranslator(TranslatorWrapper *translator)
 {
   const int index = m_translators.indexOf(translator);

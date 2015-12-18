@@ -195,16 +195,16 @@ QModelIndex TranslationsModel::findNode(const char *context,
   return QModelIndex();
 }
 
-TranslatorWrapper::TranslatorWrapper(QObject *parent)
-    : QTranslator(parent), m_wrapped(0), m_model(new TranslationsModel(this))
-{
-}
 TranslatorWrapper::TranslatorWrapper(QTranslator *wrapped, QObject *parent)
     : QTranslator(parent), m_wrapped(wrapped),
       m_model(new TranslationsModel(this))
 {
-	connect(wrapped, SIGNAL(destroyed()), SLOT(deleteLater()));
+    Q_ASSERT(wrapped);
+
+    // not deleteLater(), otherwise we end up with a dangling pointer in here!
+    connect(wrapped, &QObject::destroyed, this, [this]() { delete this; });
 }
+
 bool TranslatorWrapper::isEmpty() const
 {
   return translator()->isEmpty();
@@ -233,10 +233,13 @@ QString TranslatorWrapper::translateInternal(const char *context,
 {
   return translator()->translate(context, sourceText, disambiguation, n);
 }
+
 const QTranslator *TranslatorWrapper::translator() const
 {
-  return m_wrapped == 0 ? this : m_wrapped;
+    Q_ASSERT(m_wrapped);
+    return m_wrapped;
 }
+
 
 FallbackTranslator::FallbackTranslator(QObject *parent)
   : QTranslator(parent)

@@ -90,7 +90,7 @@ signals:
     void message(const GammaRay::Message &msg);
 
 private:
-    virtual void sendMessage(const Message& msg) const Q_DECL_OVERRIDE
+    void sendMessage(const Message& msg) const Q_DECL_OVERRIDE
     {
         QByteArray ba;
         QBuffer buffer(&ba);

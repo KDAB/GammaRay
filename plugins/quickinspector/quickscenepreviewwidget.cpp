@@ -327,6 +327,17 @@ void QuickScenePreviewWidget::drawGeometry(QPainter* p)
   p->restore();
 }
 
+static int tickLength(int pos, int lineLength, qreal zoom)
+{
+    if (pos % 100 == 0) // the one getting a label
+      return lineLength * 2;
+    if ((int)(pos / zoom) % 10 == 0)
+      return lineLength + 2;
+    if ((int)(pos / zoom) % 5 == 0)
+      return lineLength + 1;
+    return lineLength;
+}
+
 void QuickScenePreviewWidget::drawRuler(QPainter* p)
 {
     p->save();
@@ -334,70 +345,73 @@ void QuickScenePreviewWidget::drawRuler(QPainter* p)
     const int hRulerHeight = 35;
     const int vRulerWidth = 50;
     const int lineLength = 8;
-    const int pixelSteps = 2;
+    const int pixelSteps = std::max<int>(2, m_zoom);
 
     p->setPen(Qt::NoPen);
     p->setBrush(QBrush(QColor(51, 51, 51, 170)));
     p->drawRect(QRect(0, height() - hRulerHeight, width(), hRulerHeight));
     p->drawRect(QRect(width() - vRulerWidth, 0, vRulerWidth, height() - hRulerHeight));
 
+    const auto activePen = QPen(QColor(255, 255, 255, 170));
+    const auto inactivePen = QPen(QColor(0, 0, 0, 170));
 
     // horizontal ruler at the bottom
     if (m_x <= 0) {
-      p->setPen(QColor(255, 255, 255, 170));
+      p->setPen(activePen);
     } else {
-      p->setPen(QColor(0, 0, 0, 170));
+      p->setPen(inactivePen);
     }
-    for (int x = (m_x % 2 == 0 ? -m_x : -m_x + 1); x < width() - m_x - vRulerWidth; x += pixelSteps) {
+    for (int x = -m_x; x < width() - m_x - vRulerWidth; ++x) {
         if (x == 0) {
-            p->setPen(QColor(255, 255, 255, 170));
+            p->setPen(activePen);
         }
-        p->drawLine(m_x + x, height() - hRulerHeight, m_x + x, height() - hRulerHeight + (x % 100 == 0 ? lineLength * 2
-                                                                                          : x % 50 == 0 ? lineLength + 2
-                                                                                          : x % 10 == 0 ? lineLength + 1
-                                                                                          : lineLength) );
+        if (x % pixelSteps == 0) {
+            p->drawLine(m_x + x, height() - hRulerHeight, m_x + x, height() - hRulerHeight + tickLength(x, lineLength, m_zoom));
+        }
 
         if (x % 100 == 0 && x >= 0 && x <= m_image.width() * m_zoom) {
-            p->drawText(m_x + x - 20, height() - (hRulerHeight - 2 * lineLength),
+            auto nearestTick = qRound(x / m_zoom * 0.2) * 5;
+            auto xOffset = (nearestTick - (x/m_zoom)) * m_zoom;
+            p->drawText(m_x + x + xOffset - 20, height() - (hRulerHeight - 2 * lineLength),
                         40, hRulerHeight - 2 * lineLength,
-                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number(x / m_zoom));
+                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number((int)nearestTick));
         }
 
 
-        if (m_image.width() * m_zoom - x < pixelSteps) {
-            p->setPen(QColor(0, 0, 0, 170));
+        if (m_image.width() * m_zoom - x < 1) {
+            p->setPen(inactivePen);
         }
     }
 
     // vertical ruler on the right
     if (m_y <= 0) {
-      p->setPen(QColor(255, 255, 255, 170));
+      p->setPen(activePen);
     } else {
-      p->setPen(QColor(0, 0, 0, 170));
+      p->setPen(inactivePen);
     }
-    for (int y = (m_y % 2 == 0 ? -m_y : -m_y + 1); y < height() - m_y - hRulerHeight; y += pixelSteps) {
+    for (int y = -m_y; y < height() - m_y - hRulerHeight; ++y) {
         if (y == 0) {
-            p->setPen(QColor(255, 255, 255, 170));
+            p->setPen(activePen);
         }
-        p->drawLine(width() - vRulerWidth, m_y + y, width() - vRulerWidth + (y % 100 == 0 ? lineLength * 2
-                                                                              : y % 50 == 0 ? lineLength + 2
-                                                                              : y % 10 == 0 ?  lineLength + 1
-                                                                              : lineLength),
-                    m_y + y);
+        if (y % pixelSteps == 0) {
+            p->drawLine(width() - vRulerWidth, m_y + y, width() - vRulerWidth + tickLength(y, lineLength, m_zoom), m_y + y);
+        }
 
         if (y % 100 == 0 && y >= 0 && y <= m_image.height() * m_zoom) {
-            p->drawText(width() - (vRulerWidth - 2 * lineLength), m_y + y - 20,
+            auto nearestTick = qRound(y / m_zoom * 0.2) * 5;
+            auto yOffset = (nearestTick - (y/m_zoom)) * m_zoom;
+            p->drawText(width() - (vRulerWidth - 2 * lineLength), m_y + y + yOffset - 20,
                         vRulerWidth - 2 * lineLength, 40,
-                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number(y / m_zoom));
+                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number((int)nearestTick));
         }
 
 
-        if (m_image.height() * m_zoom - y < pixelSteps) {
-            p->setPen(QColor(0, 0, 0, 170));
+        if (m_image.height() * m_zoom - y < 1) {
+            p->setPen(inactivePen);
         }
     }
 
-    p->setPen(QColor(255, 255, 255, 170));
+    p->setPen(activePen);
     p->drawText(QRect(width() - vRulerWidth, height() - hRulerHeight, vRulerWidth, hRulerHeight),
                 QStringLiteral("%1x\n%2").arg(m_zoomedMousePosition.x()).arg(m_zoomedMousePosition.y()),
                 Qt::AlignHCenter | Qt::AlignVCenter
