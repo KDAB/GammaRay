@@ -92,7 +92,6 @@ class TranslatorWrapper : public QTranslator
   Q_OBJECT
 
   public:
-    explicit TranslatorWrapper(QObject *parent = 0);
     explicit TranslatorWrapper(QTranslator *wrapped, QObject *parent = 0);
 
     TranslationsModel *model() const { return m_model; }

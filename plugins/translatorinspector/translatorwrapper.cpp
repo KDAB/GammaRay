@@ -195,10 +195,6 @@ QModelIndex TranslationsModel::findNode(const char *context,
   return QModelIndex();
 }
 
-TranslatorWrapper::TranslatorWrapper(QObject *parent)
-    : QTranslator(parent), m_wrapped(0), m_model(new TranslationsModel(this))
-{
-}
 TranslatorWrapper::TranslatorWrapper(QTranslator *wrapped, QObject *parent)
     : QTranslator(parent), m_wrapped(wrapped),
       m_model(new TranslationsModel(this))
