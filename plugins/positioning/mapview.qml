@@ -55,6 +55,7 @@ Item {
 
         MapPolyline {
             id: overrideTrace
+            visible: _controller.overrideEnabled
             line { width: 3; color: "red" }
             opacity: 0.5
             Connections {
@@ -153,6 +154,7 @@ Item {
         MouseArea {
             acceptedButtons: Qt.LeftButton
             anchors.fill: parent
+            enabled: _controller.overrideEnabled
             onClicked: _controller.overrideCoordinate = map.toCoordinate(Qt.point(mouseX, mouseY), false);
             onWheel: {
                 if (wheel.modifiers & Qt.ControlModifier)
