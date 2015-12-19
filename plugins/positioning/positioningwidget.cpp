@@ -68,8 +68,9 @@ PositioningWidget::PositioningWidget(QWidget* parent):
 
     m_interface = ObjectBroker::object<PositioningInterface*>();
     Q_ASSERT(m_interface);
-
-    new PropertyBinder(m_interface, "positioningOverrideEnabled", ui->overrideBox, "checked");
+    connect(m_interface, &PositioningInterface::positionInfoChanged, this, [this]() {
+        m_mapController->setSourceCoordinate(m_interface->positionInfo().coordinate());
+    });
 
     connect(ui->overrideBox, SIGNAL(toggled(bool)), this, SLOT(updatePosition()));
     connect(ui->latitude, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
@@ -102,6 +103,9 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     auto loadAction = new QAction(tr("Load NMEA file..."), this);
     connect(loadAction, &QAction::triggered, this, &PositioningWidget::loadNmeaFile);
     addAction(loadAction);
+
+    new PropertyBinder(m_interface, "positioningOverrideEnabled", ui->overrideBox, "checked");
+    new PropertyBinder(m_interface, "positioningOverrideEnabled", m_mapController, "overrideEnabled");
 }
 
 PositioningWidget::~PositioningWidget()

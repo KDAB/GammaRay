@@ -44,12 +44,63 @@ Item {
         onCopyrightLinkActivated: Qt.openUrlExternally(link)
 
         MapPolyline {
+            id: sourceTrace
+            line { width: 3; color: "blue" }
+            opacity: 0.5
+            Connections {
+                target: _controller
+                onOverrideCoordinateChanged: sourceTrace.addCoordinate(_controller.sourceCoordinate)
+            }
+        }
+
+        MapPolyline {
             id: overrideTrace
             line { width: 3; color: "red" }
             opacity: 0.5
             Connections {
                 target: _controller
                 onOverrideCoordinateChanged: overrideTrace.addCoordinate(_controller.overrideCoordinate)
+            }
+        }
+
+        MapQuickItem {
+            coordinate: _controller.sourceCoordinate
+            anchorPoint { x: sourceMarker.width / 2; y: sourceMarker.height / 2 }
+            sourceItem: Item {
+                id: sourceMarker
+                property color color: "blue"
+                width: Math.abs(map.fromCoordinate(_controller.souceCoordinate, false).x - map.fromCoordinate(_controller.sourceCoordinate.atDistanceAndAzimuth(_controller.sourceeHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
+                height: width
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: parent.color
+                    opacity: 0.25
+                    radius: width/2
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
+                    opacity: 0.75
+                    radius: width/2
+                    border.width: 1
+                    border.color: parent.color
+                }
+                Rectangle {
+                    anchors.centerIn: parent
+                    color: parent.color
+                    width: 16
+                    height: width
+                    opacity: 1
+                    radius: width / 2
+
+                    Image {
+                        anchors.fill: parent
+                        source: "qrc:/gammaray/positioning/direction_marker.png"
+                        smooth: true
+                        rotation: _controller.sourceDirection
+                    }
+                }
             }
         }
 
@@ -61,6 +112,7 @@ Item {
                 property color color: "red"
                 width: Math.abs(map.fromCoordinate(_controller.overrideCoordinate, false).x - map.fromCoordinate(_controller.overrideCoordinate.atDistanceAndAzimuth(_controller.overrideHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
                 height: width
+                visible: _controller.overrideEnabled
 
                 Rectangle {
                     id: accuracyBackground
