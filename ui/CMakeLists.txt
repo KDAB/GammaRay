@@ -15,6 +15,7 @@ set(gammaray_ui_srcs
   splashscreen.cpp
   searchlinecontroller.cpp
   uiintegration.cpp
+  remoteviewwidget.cpp
 
   paintbufferviewer.cpp
   paintbufferreplaywidget.cpp
