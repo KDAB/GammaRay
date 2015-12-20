@@ -52,7 +52,6 @@ if(GAMMARAY_BUILD_UI)
     widgetinspectorinterface.cpp
     widgetinspectorclient.cpp
     widgetinspectorwidget.cpp
-    widgetpreviewwidget.cpp
   )
 
   qt4_wrap_ui(gammaray_widgetinspector_ui_plugin_srcs

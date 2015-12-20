@@ -31,7 +31,7 @@
 
 #include <QObject>
 
-class QPixmap;
+class QImage;
 
 namespace GammaRay {
 
@@ -52,7 +52,7 @@ class WidgetInspectorInterface : public QObject
     virtual void analyzePainting() = 0;
 
   signals:
-    void widgetPreviewAvailable(const QPixmap &pixmap);
+    void widgetPreviewAvailable(const QImage &image);
     void features(bool svg, bool print, bool designer, bool privateHeaders);
 };
 

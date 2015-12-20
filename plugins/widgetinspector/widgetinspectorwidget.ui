@@ -30,16 +30,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Preview</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="GammaRay::WidgetPreviewWidget" name="widgetPreviewWidget" native="true"/>
-        </item>
-       </layout>
-      </widget>
+      <widget class="GammaRay::RemoteViewWidget" name="widgetPreviewWidget" native="true"/>
      </widget>
      <widget class="GammaRay::PropertyWidget" name="widgetPropertyWidget" native="true"/>
     </widget>
@@ -87,13 +78,13 @@
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>
-   <header>ui/propertywidget.h</header>
+   <header location="global">ui/propertywidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>GammaRay::WidgetPreviewWidget</class>
+   <class>GammaRay::RemoteViewWidget</class>
    <extends>QWidget</extends>
-   <header>widgetpreviewwidget.h</header>
+   <header location="global">ui/remoteviewwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

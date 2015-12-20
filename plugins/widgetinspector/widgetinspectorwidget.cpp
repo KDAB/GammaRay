@@ -76,7 +76,8 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
   connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
-  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QPixmap)), SLOT(widgetPreviewAvailable(QPixmap)));
+  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), ui->widgetPreviewWidget, SLOT(setImage(QImage)));
+  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), ui->widgetPreviewWidget, SLOT(fitToView()));
 
   connect(m_inspector, SIGNAL(features(bool,bool,bool,bool)),
           this, SLOT(setFeatures(bool,bool,bool,bool)));
@@ -132,11 +133,6 @@ void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
   } else {
     setActionsEnabled(false);
   }
-}
-
-void WidgetInspectorWidget::widgetPreviewAvailable(const QPixmap &preview)
-{
-  ui->widgetPreviewWidget->setPixmap(preview);
 }
 
 void WidgetInspectorWidget::setActionsEnabled(bool enabled)

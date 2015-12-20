@@ -60,7 +60,6 @@ class WidgetInspectorWidget : public QWidget
     void saveAsSvg();
     void saveAsPdf();
     void saveAsUiFile();
-    void widgetPreviewAvailable(const QPixmap &preview);
     void analyzePainting();
     void setFeatures(bool svg, bool print, bool designer, bool privateHeaders);
 

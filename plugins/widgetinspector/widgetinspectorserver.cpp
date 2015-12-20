@@ -233,18 +233,17 @@ void WidgetInspectorServer::updateWidgetPreview()
     return;
   }
 
-  emit widgetPreviewAvailable(pixmapForWidget(m_selectedWidget));
+  emit widgetPreviewAvailable(imageForWidget(m_selectedWidget));
 }
 
-QPixmap WidgetInspectorServer::pixmapForWidget(QWidget *widget)
+QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
 {
   // prevent "recursion", i.e. infinite update loop, in our eventFilter
   Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, 0);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  return QPixmap::grabWidget(widget);
-#else
-  return widget->grab();
-#endif
+  QImage img(widget->size(), QImage::Format_ARGB32);
+  img.fill(Qt::transparent);
+  widget->render(&img);
+  return img;
 }
 
 void WidgetInspectorServer::recreateOverlayWidget()
@@ -287,9 +286,9 @@ void WidgetInspectorServer::saveAsImage(const QString& fileName)
   }
 
   m_overlayWidget->hide();
-  QPixmap pixmap = pixmapForWidget(m_selectedWidget);
+  QImage img = imageForWidget(m_selectedWidget);
   m_overlayWidget->show();
-  pixmap.save(fileName);
+    img.save(fileName);
 }
 
 void WidgetInspectorServer::saveAsSvg(const QString &fileName)
