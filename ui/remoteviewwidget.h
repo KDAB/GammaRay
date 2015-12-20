@@ -59,6 +59,8 @@ public:
 public slots:
     void setImage(const QImage &image);
     void setZoom(double zoom);
+    void zoomIn();
+    void zoomOut();
     void fitToView();
 
 protected:
@@ -67,6 +69,9 @@ protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void drawRuler(QPainter *p);
@@ -85,6 +90,7 @@ private:
 private:
     QImage m_sourceImage;
     QBrush m_backgroundBrush;
+    QVector<double> m_zoomLevels;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;

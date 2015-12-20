@@ -45,6 +45,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setMouseTracking(true);
     setMinimumSize(QSize(400, 300));
+    setFocusPolicy(Qt::StrongFocus);
 
     // Background
     QPixmap bgPattern(20, 20);
@@ -53,6 +54,9 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     bgPainter.fillRect(10, 0, 10, 10, Qt::gray);
     bgPainter.fillRect(0, 10, 10, 10, Qt::gray);
     m_backgroundBrush.setTexture(bgPattern);
+
+    m_zoomLevels.reserve(8);
+    m_zoomLevels <<  .125 << .25 << .5 << 1.0 << 2.0 << 4.0 << 8.0 << 16.0;
 }
 
 void RemoteViewWidget::setImage(const QImage& image)
@@ -68,12 +72,52 @@ void RemoteViewWidget::setImage(const QImage& image)
 
 void RemoteViewWidget::setZoom(double zoom)
 {
-    // TODO: snap to fixed set of zoom levels, for use with combobox/sliders
+    Q_ASSERT(!m_zoomLevels.isEmpty());
+    const auto oldZoom = m_zoom;
+
+    // snap to nearest zoom level
+    auto it = std::lower_bound(m_zoomLevels.constBegin(), m_zoomLevels.constEnd(), zoom);
+    if (it == m_zoomLevels.constEnd()) {
+        m_zoom = m_zoomLevels.last();
+    } else if (it == m_zoomLevels.constBegin()) {
+        m_zoom = *it;
+    } else {
+        auto delta = (*it) - zoom;
+        m_zoom = *it;
+        --it;
+        if (zoom - (*it) < delta)
+            m_zoom = *it;
+    }
+
+    if (oldZoom == m_zoom)
+        return;
     // TODO: emit changed signal, for updating external UI
-    m_x = contentWidth() / 2 - (contentWidth() / 2 - m_x) * zoom / m_zoom ;
-    m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * zoom / m_zoom ;
-    m_zoom = zoom;
+
+    m_x = contentWidth() / 2 - (contentWidth() / 2 - m_x) * zoom / oldZoom;
+    m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * zoom / oldZoom;
     update();
+}
+
+void RemoteViewWidget::zoomIn()
+{
+    Q_ASSERT(!m_zoomLevels.isEmpty());
+    auto it = std::lower_bound(m_zoomLevels.constBegin(), m_zoomLevels.constEnd(), m_zoom);
+    if (it == m_zoomLevels.constEnd())
+        return;
+    ++it;
+    if (it == m_zoomLevels.constEnd())
+        return;
+    setZoom(*it);
+}
+
+void RemoteViewWidget::zoomOut()
+{
+    Q_ASSERT(!m_zoomLevels.isEmpty());
+    auto it = std::lower_bound(m_zoomLevels.constBegin(), m_zoomLevels.constEnd(), m_zoom);
+    if (it == m_zoomLevels.constBegin())
+        return;
+    --it;
+    setZoom(*it);
 }
 
 void RemoteViewWidget::fitToView()
@@ -295,6 +339,54 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
   update();
+}
+
+void RemoteViewWidget::wheelEvent(QWheelEvent *event)
+{
+    switch (m_interactionMode) {
+        case ViewInteraction:
+        case ElementPicking:
+            // TODO pan if Ctrl isn't pressed
+            if (event->modifiers() & Qt::ControlModifier && event->orientation() == Qt::Vertical) {
+                if (event->delta() > 0)
+                    zoomIn();
+                else
+                    zoomOut();
+            }
+            break;
+        case InputRedirection:
+            // TODO
+            break;
+    }
+
+    QWidget::wheelEvent(event);
+}
+
+void RemoteViewWidget::keyPressEvent(QKeyEvent* event)
+{
+    switch (m_interactionMode) {
+        case ViewInteraction:
+        case ElementPicking:
+            if (event->key() == Qt::Key_Plus && event->modifiers() & Qt::ControlModifier)
+                zoomIn();
+            if (event->key() == Qt::Key_Minus && event->modifiers() & Qt::ControlModifier)
+                zoomOut();
+            break;
+        case InputRedirection:
+            // TODO
+            break;
+    }
+    QWidget::keyPressEvent(event);
+}
+
+void RemoteViewWidget::keyReleaseEvent(QKeyEvent* event)
+{
+    switch (m_interactionMode) {
+        case InputRedirection:
+            // TODO
+            break;
+    }
+    QWidget::keyReleaseEvent(event);
 }
 
 int RemoteViewWidget::contentWidth() const
