@@ -77,7 +77,9 @@ private:
     void drawRuler(QPainter *p);
     void drawMeasureOverlay(QPainter *p);
     // translate from view coordinates to source coordinates
-    QPoint mapToSource(QPoint pos);
+    QPoint mapToSource(QPoint pos) const;
+    // translates from source coordinates to view coordinates
+    QPoint mapFromSource(QPoint pos) const;
 
     // size of the content area, ie. excluding the rulers
     int contentWidth() const;

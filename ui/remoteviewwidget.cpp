@@ -256,12 +256,34 @@ void RemoteViewWidget::drawRuler(QPainter* p)
 
 void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
 {
-    // TODO
+    p->save();
+
+    p->setPen(QColor(0, 0, 0, 170));
+
+    const auto startPos =  mapFromSource(m_mouseDownPosition);
+    const auto endPos = mapFromSource(m_currentMousePosition);
+    const QPoint hOffset(5, 0);
+    const QPoint vOffset(0, 5);
+
+    p->drawLine(startPos - hOffset, startPos + hOffset);
+    p->drawLine(startPos - vOffset, startPos + vOffset);
+
+    p->drawLine(startPos, endPos);
+
+    p->drawLine(endPos - hOffset, endPos + hOffset);
+    p->drawLine(endPos - vOffset, endPos + vOffset);
+
+    p->restore();
 }
 
-QPoint RemoteViewWidget::mapToSource(QPoint pos)
+QPoint RemoteViewWidget::mapToSource(QPoint pos) const
 {
     return (pos - QPoint(m_x, m_y)) / m_zoom;
+}
+
+QPoint RemoteViewWidget::mapFromSource(QPoint pos) const
+{
+    return pos * m_zoom + QPoint(m_x, m_y);
 }
 
 void RemoteViewWidget::resizeEvent(QResizeEvent* event)
@@ -346,6 +368,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
     switch (m_interactionMode) {
         case ViewInteraction:
         case ElementPicking:
+        case Measuring:
             // TODO pan if Ctrl isn't pressed
             if (event->modifiers() & Qt::ControlModifier && event->orientation() == Qt::Vertical) {
                 if (event->delta() > 0)
@@ -367,6 +390,7 @@ void RemoteViewWidget::keyPressEvent(QKeyEvent* event)
     switch (m_interactionMode) {
         case ViewInteraction:
         case ElementPicking:
+        case Measuring:
             if (event->key() == Qt::Key_Plus && event->modifiers() & Qt::ControlModifier)
                 zoomIn();
             if (event->key() == Qt::Key_Minus && event->modifiers() & Qt::ControlModifier)
