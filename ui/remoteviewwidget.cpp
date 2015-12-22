@@ -409,6 +409,10 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
                 m_y = height() / 2 - m_sourceImage.height() * m_zoom;
             }
             break;
+        case Measuring:
+            if (m_mouseDown)
+                emit measurementChanged(QRectF(m_mouseDownPosition, m_currentMousePosition));
+            break;
         case InputRedirection:
             // TODO
             break;
