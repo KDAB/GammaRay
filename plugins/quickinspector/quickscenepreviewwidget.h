@@ -35,6 +35,7 @@
 #include <QtWidgets/QWidget>
 
 class QAction;
+class QActionGroup;
 class QComboBox;
 class QLabel;
 class QToolBar;
@@ -92,6 +93,7 @@ class QuickScenePreviewWidget : public QWidget
     struct {
         QToolBar *toolbarWidget;
         QComboBox *zoomCombobox;
+        QActionGroup *visualizeGroup;
         QAction *visualizeClipping;
         QAction *visualizeOverdraw;
         QAction *visualizeBatches;
