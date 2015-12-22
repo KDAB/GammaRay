@@ -64,6 +64,8 @@ public:
     /// Model containing the supported zoom levels, for use with a combo box
     QAbstractItemModel* zoomLevelModel() const;
 
+    const QImage& image() const;
+
 public slots:
     void setImage(const QImage &image);
     /// Sets the zoom level to the closest level to @p zoom.
@@ -76,6 +78,11 @@ signals:
     void zoomChanged();
 
 protected:
+    /** Override this to draw element decorations.
+     *  @P p is translated to that 0,0 is the top left corner of the source image, but not scaled
+     */
+    virtual void drawDecoration(QPainter *p);
+
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

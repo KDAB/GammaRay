@@ -69,6 +69,11 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     setInteractionMode(ViewInteraction);
 }
 
+const QImage& RemoteViewWidget::image() const
+{
+    return m_sourceImage;
+}
+
 void RemoteViewWidget::setImage(const QImage& image)
 {
     if (m_sourceImage.isNull()) {
@@ -187,6 +192,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent* event)
         p.setRenderHint(QPainter::SmoothPixmapTransform);
     }
     p.drawImage(QRect(QPoint(0, 0), m_sourceImage.size() * m_zoom), m_sourceImage);
+    drawDecoration(&p);
     p.restore();
 
     drawRuler(&p);
@@ -194,6 +200,11 @@ void RemoteViewWidget::paintEvent(QPaintEvent* event)
     if (m_interactionMode == Measuring && m_mouseDown) {
         drawMeasureOverlay(&p);
     }
+}
+
+void RemoteViewWidget::drawDecoration(QPainter* p)
+{
+    Q_UNUSED(p);
 }
 
 static int tickLength(int pos, int lineLength, qreal zoom)
