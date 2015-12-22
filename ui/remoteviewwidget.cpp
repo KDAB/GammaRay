@@ -31,11 +31,13 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QStandardItemModel>
 
 using namespace GammaRay;
 
 RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     QWidget(parent),
+    m_zoomLevelModel(new QStandardItemModel(this)),
     m_zoom(1.0),
     m_x(0),
     m_y(0),
@@ -57,6 +59,12 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
 
     m_zoomLevels.reserve(8);
     m_zoomLevels <<  .125 << .25 << .5 << 1.0 << 2.0 << 4.0 << 8.0 << 16.0;
+    foreach (const auto level, m_zoomLevels) {
+        auto item = new QStandardItem;
+        item->setText(QString::number(level * 100.0) + locale().percent());
+        item->setData(level, Qt::UserRole);
+        m_zoomLevelModel->appendRow(item);
+    }
 
     setInteractionMode(ViewInteraction);
 }
@@ -70,6 +78,11 @@ void RemoteViewWidget::setImage(const QImage& image)
 
     m_sourceImage = image;
     update();
+}
+
+double RemoteViewWidget::zoom() const
+{
+    return m_zoom;
 }
 
 void RemoteViewWidget::setZoom(double zoom)
@@ -93,7 +106,7 @@ void RemoteViewWidget::setZoom(double zoom)
 
     if (oldZoom == m_zoom)
         return;
-    // TODO: emit changed signal, for updating external UI
+    emit zoomChanged();
 
     m_x = contentWidth() / 2 - (contentWidth() / 2 - m_x) * zoom / oldZoom;
     m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * zoom / oldZoom;
@@ -129,6 +142,11 @@ void RemoteViewWidget::fitToView()
     m_x = 0.5 * (contentWidth() - m_sourceImage.width() * m_zoom);
     m_y = 0.5 * (contentHeight() - m_sourceImage.height() * m_zoom);
     update();
+}
+
+QAbstractItemModel* RemoteViewWidget::zoomLevelModel() const
+{
+    return m_zoomLevelModel;
 }
 
 void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode)

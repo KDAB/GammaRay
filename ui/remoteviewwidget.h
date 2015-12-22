@@ -34,6 +34,9 @@
 
 #include <QWidget>
 
+class QAbstractItemModel;
+class QStandardItemModel;
+
 namespace GammaRay {
 
 /** Widget showing remote screen content and providing both visual inspection
@@ -56,12 +59,21 @@ public:
     };
     void setInteractionMode(InteractionMode mode);
 
+    /// Returns the current zoom level
+    double zoom() const;
+    /// Model containing the supported zoom levels, for use with a combo box
+    QAbstractItemModel* zoomLevelModel() const;
+
 public slots:
     void setImage(const QImage &image);
+    /// Sets the zoom level to the closest level to @p zoom.
     void setZoom(double zoom);
     void zoomIn();
     void zoomOut();
     void fitToView();
+
+signals:
+    void zoomChanged();
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
@@ -93,6 +105,7 @@ private:
     QImage m_sourceImage;
     QBrush m_backgroundBrush;
     QVector<double> m_zoomLevels;
+    QStandardItemModel *m_zoomLevelModel;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;
