@@ -29,7 +29,8 @@
 #include "quickscenepreviewwidget.h"
 #include "quickinspectorinterface.h"
 
-#include <QPaintEvent>
+#include <QDebug>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QAction>
 #include <QComboBox>
@@ -41,29 +42,9 @@
 using namespace GammaRay;
 
 QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent)
-  : QWidget(parent),
-    m_inspectorInterface(inspector),
-    m_mouseMode(MovePreview),
-    m_zoom(1),
-    m_x(0),
-    m_y(0),
-    m_mousePressed(false)
+  : RemoteViewWidget(parent),
+    m_inspectorInterface(inspector)
 {
-  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  setMouseTracking(true);
-  setAttribute(Qt::WA_OpaquePaintEvent);
-  setMinimumSize(QSize(400, 300));
-
-
-  // Background
-  QPixmap bgPattern(20, 20);
-  bgPattern.fill(Qt::lightGray);
-  QPainter bgPainter(&bgPattern);
-  bgPainter.fillRect(10, 0, 10, 10, Qt::gray);
-  bgPainter.fillRect(0, 10, 10, 10, Qt::gray);
-  m_backgroundBrush.setTexture(bgPattern);
-
-
   // Toolbar
   m_toolBar.toolbarWidget = new QToolBar(this);
   m_toolBar.toolbarWidget->setAutoFillBackground(true);
@@ -159,73 +140,41 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
 
   m_toolBar.zoomCombobox = new QComboBox(this);
-  m_toolBar.zoomCombobox->addItem(tr("12.5 %"), .125);
-  m_toolBar.zoomCombobox->addItem(tr("20 %"), .2);
-  m_toolBar.zoomCombobox->addItem(tr("25 %"), .25);
-  m_toolBar.zoomCombobox->addItem(tr("33 %"), 1.0/3);
-  m_toolBar.zoomCombobox->addItem(tr("50 %"), .5);
-  m_toolBar.zoomCombobox->addItem(tr("100 %"), 1);
-  m_toolBar.zoomCombobox->setCurrentIndex(m_toolBar.zoomCombobox->count() - 1);
-  m_toolBar.zoomCombobox->addItem(tr("200 %"), 2);
-  m_toolBar.zoomCombobox->addItem(tr("300 %"), 3);
-  m_toolBar.zoomCombobox->addItem(tr("400 %"), 4);
-  m_toolBar.zoomCombobox->addItem(tr("500 %"), 5);
-  m_toolBar.zoomCombobox->addItem(tr("1000 %"), 10);
-  m_toolBar.zoomCombobox->addItem(tr("2000 %"), 20);
+  m_toolBar.zoomCombobox->setModel(zoomLevelModel());
   connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomFromCombobox(int)));
+  connect(this, &RemoteViewWidget::zoomChanged, this, &QuickScenePreviewWidget::updateEffectiveGeometry);
 
   m_toolBar.toolbarWidget->addWidget(m_toolBar.zoomCombobox);
 
   m_toolBar.measureLabel = new QLabel(this);
   m_toolBar.toolbarWidget->addWidget(m_toolBar.measureLabel);
+  connect(this, &RemoteViewWidget::measurementChanged, this, [this](const QRectF &r) {
+      m_toolBar.measureLabel->setText(QStringLiteral(" %1px").arg(std::sqrt((qreal)(r.width()*r.width() + r.height()*r.height())), 0, 'f', 2));
+  });
 }
 
 QuickScenePreviewWidget::~QuickScenePreviewWidget()
 {
 }
 
-void QuickScenePreviewWidget::paintEvent(QPaintEvent *)
-{
-  QPainter p(this);
-
-  p.fillRect(rect(), m_backgroundBrush);
-
-  drawGeometry(&p);
-
-  drawRuler(&p);
-
-  if (m_mouseMode == MeasurePixels && m_mousePressed) {
-    drawMeasureLine(&p);
-  }
-}
-
 void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
 {
     m_toolBar.toolbarWidget->setGeometry(0, 0, width(), m_toolBar.toolbarWidget->sizeHint().height());
-
-    m_x += 0.5 * (e->size().width() - e->oldSize().width());
-    m_y += 0.5 * (e->size().height() - e->oldSize().height());
+    RemoteViewWidget::resizeEvent(e);
 }
 
-void QuickScenePreviewWidget::drawGeometry(QPainter* p)
+void QuickScenePreviewWidget::drawDecoration(QPainter* p)
 {
   p->save();
 
+#if 0 // TODO support custom message text
   if (m_image.isNull()) {
     p->drawText(rect(), Qt::AlignHCenter | Qt::AlignVCenter, tr("No Preview available.\n"
                 "(This happens e.g. when the window is minimized or the scene is hidden)"));
     p->restore();
     return;
   }
-
-  p->setTransform(QTransform::fromTranslate(m_x, m_y));
-  p->fillRect(QRect(QPoint(0, 0), m_image.size() * m_zoom), Qt::white);
-  if (m_zoom < 1) { // We want the preview to look nice when zoomed out,
-                    // but need to be able to see single pixels when zoomed in.
-    p->setRenderHint(QPainter::SmoothPixmapTransform);
-  }
-  p->drawImage(QRect(QPoint(0, 0), m_image.size() * m_zoom), m_image);
-
+#endif
   // bounding box
   p->setPen(QColor(232, 87, 82, 170));
   p->setBrush(QBrush(QColor(232, 87, 82, 95)));
@@ -266,7 +215,7 @@ void QuickScenePreviewWidget::drawGeometry(QPainter* p)
     drawArrow(p, parentEnd, itemEnd);
     p->drawText(QRectF(parentEnd.x(), parentEnd.y() + 10, itemEnd.x() - parentEnd.x(), 50),
                 Qt::AlignHCenter | Qt::TextDontClip,
-                QStringLiteral("x: %1px").arg(m_effectiveGeometry.x / m_zoom));
+                QStringLiteral("x: %1px").arg(m_effectiveGeometry.x / zoom()));
   }
   if (!m_effectiveGeometry.top &&
       !m_effectiveGeometry.verticalCenter &&
@@ -278,148 +227,54 @@ void QuickScenePreviewWidget::drawGeometry(QPainter* p)
     drawArrow(p, parentEnd, itemEnd);
     p->drawText(QRectF(parentEnd.x() + 10, parentEnd.y(), 100, itemEnd.y() - parentEnd.y()),
                 Qt::AlignVCenter | Qt::TextDontClip,
-                QStringLiteral("y: %1px").arg(m_effectiveGeometry.y / m_zoom));
+                QStringLiteral("y: %1px").arg(m_effectiveGeometry.y / zoom()));
   }
 
   // anchors
   if (m_effectiveGeometry.left) {
     drawAnchor(p, Qt::Horizontal,
                m_effectiveGeometry.itemRect.left(), m_effectiveGeometry.leftMargin,
-               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.leftMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.leftMargin / zoom()));
   }
 
   if (m_effectiveGeometry.horizontalCenter) {
     drawAnchor(p, Qt::Horizontal,
                (m_effectiveGeometry.itemRect.left() + m_effectiveGeometry.itemRect.right()) / 2, m_effectiveGeometry.horizontalCenterOffset,
-               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.horizontalCenterOffset / m_zoom));
+               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.horizontalCenterOffset / zoom()));
   }
 
   if (m_effectiveGeometry.right) {
     drawAnchor(p, Qt::Horizontal,
                m_effectiveGeometry.itemRect.right(), -m_effectiveGeometry.rightMargin,
-               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.rightMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.rightMargin / zoom()));
   }
 
   if (m_effectiveGeometry.top) {
     drawAnchor(p, Qt::Vertical,
                m_effectiveGeometry.itemRect.top(), m_effectiveGeometry.topMargin,
-               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.topMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.topMargin / zoom()));
   }
 
   if (m_effectiveGeometry.verticalCenter) {
     drawAnchor(p, Qt::Vertical,
                (m_effectiveGeometry.itemRect.top() + m_effectiveGeometry.itemRect.bottom()) / 2, m_effectiveGeometry.verticalCenterOffset,
-               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.verticalCenterOffset / m_zoom));
+               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.verticalCenterOffset / zoom()));
   }
 
   if (m_effectiveGeometry.bottom) {
     drawAnchor(p, Qt::Vertical,
                m_effectiveGeometry.itemRect.bottom(), -m_effectiveGeometry.bottomMargin,
-               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.bottomMargin / m_zoom));
+               QStringLiteral("margin: %1px").arg(m_effectiveGeometry.bottomMargin / zoom()));
   }
 
   if (m_effectiveGeometry.baseline) {
     drawAnchor(p, Qt::Vertical,
                m_effectiveGeometry.itemRect.top(), m_effectiveGeometry.baselineOffset,
-               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.baselineOffset / m_zoom));
+               QStringLiteral("offset: %1px").arg(m_effectiveGeometry.baselineOffset / zoom()));
   }
 
   p->restore();
 }
-
-static int tickLength(int pos, int lineLength, qreal zoom)
-{
-    if (pos % 100 == 0) // the one getting a label
-      return lineLength * 2;
-    if ((int)(pos / zoom) % 10 == 0)
-      return lineLength + 2;
-    if ((int)(pos / zoom) % 5 == 0)
-      return lineLength + 1;
-    return lineLength;
-}
-
-void QuickScenePreviewWidget::drawRuler(QPainter* p)
-{
-    p->save();
-
-    const int hRulerHeight = 35;
-    const int vRulerWidth = 50;
-    const int lineLength = 8;
-    const int pixelSteps = std::max<int>(2, m_zoom);
-
-    p->setPen(Qt::NoPen);
-    p->setBrush(QBrush(QColor(51, 51, 51, 170)));
-    p->drawRect(QRect(0, height() - hRulerHeight, width(), hRulerHeight));
-    p->drawRect(QRect(width() - vRulerWidth, 0, vRulerWidth, height() - hRulerHeight));
-
-    const auto activePen = QPen(QColor(255, 255, 255, 170));
-    const auto inactivePen = QPen(QColor(0, 0, 0, 170));
-
-    // horizontal ruler at the bottom
-    if (m_x <= 0) {
-      p->setPen(activePen);
-    } else {
-      p->setPen(inactivePen);
-    }
-    for (int x = -m_x; x < width() - m_x - vRulerWidth; ++x) {
-        if (x == 0) {
-            p->setPen(activePen);
-        }
-        if (x % pixelSteps == 0) {
-            p->drawLine(m_x + x, height() - hRulerHeight, m_x + x, height() - hRulerHeight + tickLength(x, lineLength, m_zoom));
-        }
-
-        if (x % 100 == 0 && x >= 0 && x <= m_image.width() * m_zoom) {
-            auto nearestTick = qRound(x / m_zoom * 0.2) * 5;
-            auto xOffset = (nearestTick - (x/m_zoom)) * m_zoom;
-            p->drawText(m_x + x + xOffset - 20, height() - (hRulerHeight - 2 * lineLength),
-                        40, hRulerHeight - 2 * lineLength,
-                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number((int)nearestTick));
-        }
-
-
-        if (m_image.width() * m_zoom - x < 1) {
-            p->setPen(inactivePen);
-        }
-    }
-
-    // vertical ruler on the right
-    if (m_y <= 0) {
-      p->setPen(activePen);
-    } else {
-      p->setPen(inactivePen);
-    }
-    for (int y = -m_y; y < height() - m_y - hRulerHeight; ++y) {
-        if (y == 0) {
-            p->setPen(activePen);
-        }
-        if (y % pixelSteps == 0) {
-            p->drawLine(width() - vRulerWidth, m_y + y, width() - vRulerWidth + tickLength(y, lineLength, m_zoom), m_y + y);
-        }
-
-        if (y % 100 == 0 && y >= 0 && y <= m_image.height() * m_zoom) {
-            auto nearestTick = qRound(y / m_zoom * 0.2) * 5;
-            auto yOffset = (nearestTick - (y/m_zoom)) * m_zoom;
-            p->drawText(width() - (vRulerWidth - 2 * lineLength), m_y + y + yOffset - 20,
-                        vRulerWidth - 2 * lineLength, 40,
-                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number((int)nearestTick));
-        }
-
-
-        if (m_image.height() * m_zoom - y < 1) {
-            p->setPen(inactivePen);
-        }
-    }
-
-    p->setPen(activePen);
-    p->drawText(QRect(width() - vRulerWidth, height() - hRulerHeight, vRulerWidth, hRulerHeight),
-                QStringLiteral("%1x\n%2").arg(m_zoomedMousePosition.x()).arg(m_zoomedMousePosition.y()),
-                Qt::AlignHCenter | Qt::AlignVCenter
-               );
-
-    p->restore();
-}
-
 
 void QuickScenePreviewWidget::drawArrow(QPainter *p, QPointF first, QPointF second)
 {
@@ -485,119 +340,60 @@ void QuickScenePreviewWidget::drawAnchor(QPainter *p, Qt::Orientation orientatio
   pen.setStyle(Qt::DotLine);
   p->setPen(pen);
   if (orientation == Qt::Horizontal) {
-    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, m_image.height() * m_zoom);
+    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, image().height() * zoom());
   } else {
-    p->drawLine(0, foreignAnchorLine, m_image.width() * m_zoom, foreignAnchorLine);
+    p->drawLine(0, foreignAnchorLine, image().width() * zoom(), foreignAnchorLine);
   }
-}
-
-void QuickScenePreviewWidget::drawMeasureLine(QPainter *p)
-{
-  p->save();
-
-  p->setPen(QColor(0, 0, 0, 170));
-
-  // We use zoomedMousePosition and "unzoom" it, by purpose, in order to snap it to the nearest pixel
-  QPoint grabPos = QPoint(m_x, m_y) + m_zoomedMouseGrabPosition * m_zoom;
-  QPoint pos = QPoint(m_x, m_y) + m_zoomedMousePosition * m_zoom;
-  QPoint hOffset(5, 0);
-  QPoint vOffset(0, 5);
-
-  p->drawLine(grabPos - hOffset, grabPos + hOffset);
-  p->drawLine(grabPos - vOffset, grabPos + vOffset);
-
-  p->drawLine(grabPos, pos);
-
-  p->drawLine(pos - hOffset, pos + hOffset);
-  p->drawLine(pos - vOffset, pos + vOffset);
-
-  p->restore();
 }
 
 void QuickScenePreviewWidget::mouseMoveEvent(QMouseEvent* e)
 {
-  m_zoomedMousePosition = (e->pos() - QPoint(m_x, m_y)) / m_zoom;
-
-  if (m_mouseMode == MovePreview && e->buttons()) {
-    m_x = e->x() - m_mouseGrabPosition.x();
-    m_y = e->y() - m_mouseGrabPosition.y();
-
-    if (m_x > width() / 2) {
-      m_x = width() / 2;
-    } else if (m_x + m_image.width() * m_zoom < width() / 2.0) {
-      m_x = width() / 2 - m_image.width() * m_zoom;
-    }
-    if (m_y > height() / 2) {
-      m_y = height() / 2;
-    } else if (m_y + m_image.height() * m_zoom < height() / 2.0) {
-      m_y = height() / 2 - m_image.height() * m_zoom;
-    }
-  } else if (m_mouseMode == MeasurePixels && e->buttons()) {
-    int x = m_zoomedMouseGrabPosition.x() - m_zoomedMousePosition.x(); // the division is on integer-precision by purpose
-    int y = m_zoomedMouseGrabPosition.y() - m_zoomedMousePosition.y();
-    m_toolBar.measureLabel->setText(QStringLiteral(" %1px").arg(std::sqrt((qreal)(x*x + y*y)), 0, 'f', 2));
-  } else if (m_mouseMode == RedirectInput) { // here we want hover also
-    m_inspectorInterface->sendMouseEvent(e->type(), (e->pos() - QPoint(m_x, m_y)) / m_zoom, e->button(), e->buttons(), e->modifiers());
+  if (interactionMode() == InputRedirection) {
+    m_inspectorInterface->sendMouseEvent(e->type(), mapToSource(e->pos()), e->button(), e->buttons(), e->modifiers());
   }
-
-  update();
+  RemoteViewWidget::mouseMoveEvent(e);
 }
 
 void QuickScenePreviewWidget::mousePressEvent(QMouseEvent* e)
 {
-  m_mousePressed = true;
-  m_mouseGrabPosition = e->pos() - QPoint(m_x, m_y);
-
-  m_zoomedMouseGrabPosition = (e->pos() - QPoint(m_x, m_y)) / m_zoom;
-
-  if (m_mouseMode == MovePreview && e->modifiers() & Qt::ControlModifier) { // TODO: make this easier to discover!
-    m_inspectorInterface->pickItemAt(m_zoomedMouseGrabPosition);
-  } else if (m_mouseMode == RedirectInput) {
-    m_inspectorInterface->sendMouseEvent(e->type(), (e->pos() - QPoint(m_x, m_y)) / m_zoom, e->button(), e->buttons(), e->modifiers());
+  if (interactionMode() == ViewInteraction && e->modifiers() & Qt::ControlModifier) { // TODO: make this easier to discover!
+    m_inspectorInterface->pickItemAt(mapToSource(e->pos()));
+  } else if (interactionMode() == InputRedirection) {
+     m_inspectorInterface->sendMouseEvent(e->type(), mapToSource(e->pos()), e->button(), e->buttons(), e->modifiers());
   }
+  RemoteViewWidget::mousePressEvent(e);
 }
 
 void QuickScenePreviewWidget::mouseReleaseEvent(QMouseEvent* e)
 {
-  m_mousePressed = false;
-  m_mouseGrabPosition = QPoint();
-  m_toolBar.measureLabel->setText(QString());
-  update();
-
-  if (m_mouseMode == RedirectInput) {
-    m_inspectorInterface->sendMouseEvent(e->type(), (e->pos() - QPoint(m_x, m_y)) / m_zoom, e->button(), e->buttons(), e->modifiers());
+  if (interactionMode() == InputRedirection) {
+    m_inspectorInterface->sendMouseEvent(e->type(), mapToSource(e->pos()), e->button(), e->buttons(), e->modifiers());
   }
+  RemoteViewWidget::mouseReleaseEvent(e);
 }
 
 void QuickScenePreviewWidget::keyPressEvent(QKeyEvent* e)
 {
-  if (m_mouseMode == RedirectInput) {
+  if (interactionMode() == InputRedirection) {
     m_inspectorInterface->sendKeyEvent(e->type(), e->key(), e->modifiers(), e->text(), e->isAutoRepeat(), e->count());
   }
+  RemoteViewWidget::keyPressEvent(e);
 }
 
 void QuickScenePreviewWidget::keyReleaseEvent(QKeyEvent* e)
 {
-  if (m_mouseMode == RedirectInput) {
+  if (interactionMode() == InputRedirection) {
     m_inspectorInterface->sendKeyEvent(e->type(), e->key(), e->modifiers(), e->text(), e->isAutoRepeat(), e->count());
   }
+  RemoteViewWidget::keyReleaseEvent(e);
 }
 
 void QuickScenePreviewWidget::wheelEvent(QWheelEvent* e)
 {
-  if (m_mouseMode == RedirectInput) {
-    m_inspectorInterface->sendWheelEvent((e->pos() - QPoint(m_x, m_y)) / m_zoom, e->pixelDelta(), e->angleDelta(), e->buttons(), e->modifiers());
+  if (interactionMode() == InputRedirection) {
+    m_inspectorInterface->sendWheelEvent(mapToSource(e->pos()), e->pixelDelta(), e->angleDelta(), e->buttons(), e->modifiers());
   }
-}
-
-void QuickScenePreviewWidget::setImage(const QImage& image)
-{
-  if (m_image.isNull()) {
-    m_x = 0.5 * (width() - image.width());
-    m_y = 0.5 * (height() - image.height());
-  }
-  m_image = image;
-  update();
+  RemoteViewWidget::wheelEvent(e);
 }
 
 void QuickScenePreviewWidget::setItemGeometry(const QuickItemGeometry &itemGeometry)
@@ -612,28 +408,19 @@ void QuickScenePreviewWidget::updateEffectiveGeometry()
 {
   m_effectiveGeometry = m_itemGeometry;
 
-  m_effectiveGeometry.itemRect               = QRectF(m_itemGeometry.itemRect.topLeft() * m_zoom, m_itemGeometry.itemRect.bottomRight() * m_zoom);
-  m_effectiveGeometry.boundingRect           = QRectF(m_itemGeometry.boundingRect.topLeft() * m_zoom, m_itemGeometry.boundingRect.bottomRight() * m_zoom);
-  m_effectiveGeometry.childrenRect           = QRectF(m_itemGeometry.childrenRect.topLeft() * m_zoom, m_itemGeometry.childrenRect.bottomRight() * m_zoom);
-  m_effectiveGeometry.transformOriginPoint   = m_itemGeometry.transformOriginPoint * m_zoom;
-  m_effectiveGeometry.leftMargin             = m_itemGeometry.leftMargin * m_zoom;
-  m_effectiveGeometry.horizontalCenterOffset = m_itemGeometry.horizontalCenterOffset * m_zoom;
-  m_effectiveGeometry.rightMargin            = m_itemGeometry.rightMargin * m_zoom;
-  m_effectiveGeometry.topMargin              = m_itemGeometry.topMargin * m_zoom;
-  m_effectiveGeometry.verticalCenterOffset   = m_itemGeometry.verticalCenterOffset * m_zoom;
-  m_effectiveGeometry.bottomMargin           = m_itemGeometry.bottomMargin * m_zoom;
-  m_effectiveGeometry.baselineOffset         = m_itemGeometry.baselineOffset * m_zoom;
-  m_effectiveGeometry.x                      = m_itemGeometry.x * m_zoom;
-  m_effectiveGeometry.y                      = m_itemGeometry.y * m_zoom;
-}
-
-void QuickScenePreviewWidget::setZoom(qreal zoom)
-{
-  m_x = width() / 2 - (width() / 2 - m_x) * zoom / m_zoom ;
-  m_y = height() / 2 - (height() / 2 - m_y) * zoom / m_zoom ;
-  m_zoom = zoom;
-  updateEffectiveGeometry();
-  update();
+  m_effectiveGeometry.itemRect               = QRectF(m_itemGeometry.itemRect.topLeft() * zoom(), m_itemGeometry.itemRect.bottomRight() * zoom());
+  m_effectiveGeometry.boundingRect           = QRectF(m_itemGeometry.boundingRect.topLeft() * zoom(), m_itemGeometry.boundingRect.bottomRight() * zoom());
+  m_effectiveGeometry.childrenRect           = QRectF(m_itemGeometry.childrenRect.topLeft() * zoom(), m_itemGeometry.childrenRect.bottomRight() * zoom());
+  m_effectiveGeometry.transformOriginPoint   = m_itemGeometry.transformOriginPoint * zoom();
+  m_effectiveGeometry.leftMargin             = m_itemGeometry.leftMargin * zoom();
+  m_effectiveGeometry.horizontalCenterOffset = m_itemGeometry.horizontalCenterOffset * zoom();
+  m_effectiveGeometry.rightMargin            = m_itemGeometry.rightMargin * zoom();
+  m_effectiveGeometry.topMargin              = m_itemGeometry.topMargin * zoom();
+  m_effectiveGeometry.verticalCenterOffset   = m_itemGeometry.verticalCenterOffset * zoom();
+  m_effectiveGeometry.bottomMargin           = m_itemGeometry.bottomMargin * zoom();
+  m_effectiveGeometry.baselineOffset         = m_itemGeometry.baselineOffset * zoom();
+  m_effectiveGeometry.x                      = m_itemGeometry.x * zoom();
+  m_effectiveGeometry.y                      = m_itemGeometry.y * zoom();
 }
 
 void QuickScenePreviewWidget::setZoomFromCombobox(int)
@@ -669,9 +456,9 @@ void QuickScenePreviewWidget::visualizeActionTriggered(bool checked)
 
 void QuickScenePreviewWidget::setMouseTool(QAction *action)
 {
-  m_mouseMode = action == m_toolBar.measurePixels ? MeasurePixels
-              : action == m_toolBar.redirectInput ? RedirectInput
-              : MovePreview;
+  setInteractionMode(action == m_toolBar.measurePixels ? Measuring
+              : action == m_toolBar.redirectInput ? InputRedirection
+              : ViewInteraction);
 }
 
 void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes)

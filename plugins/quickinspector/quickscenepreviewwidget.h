@@ -32,7 +32,7 @@
 #include "quickitemgeometry.h"
 #include "quickinspectorinterface.h"
 
-#include <QtWidgets/QWidget>
+#include <ui/remoteviewwidget.h>
 
 class QAction;
 class QActionGroup;
@@ -44,43 +44,31 @@ namespace GammaRay {
 
 class QuickInspectorInterface;
 
-class QuickScenePreviewWidget : public QWidget
+class QuickScenePreviewWidget : public RemoteViewWidget
 {
   Q_OBJECT
-
-  enum MouseMode {
-      MovePreview,
-      MeasurePixels,
-      RedirectInput
-  };
 
   public:
     explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = 0);
     ~QuickScenePreviewWidget();
 
     void setItemGeometry(const QuickItemGeometry &itemGeometry);
-    void setImage(const QImage &image);
 
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features  supportedCustomRenderModes);
-
-    void setZoom(qreal zoom);
 
   private Q_SLOTS:
     void setZoomFromCombobox(int index);
     void visualizeActionTriggered(bool checked);
     void setMouseTool(QAction *action);
-
-  private:
-    void drawGeometry(QPainter *p);
-    void drawRuler(QPainter *p);
-    void drawArrow(QPainter *p, QPointF first, QPointF second);
-    void drawAnchor(QPainter *p, Qt::Orientation orientation,
-                    qreal ownAnchorLine, qreal offset, const QString &label);
-    void drawMeasureLine(QPainter *p);
     void updateEffectiveGeometry();
 
   private:
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void drawArrow(QPainter *p, QPointF first, QPointF second);
+    void drawAnchor(QPainter *p, Qt::Orientation orientation,
+                    qreal ownAnchorLine, qreal offset, const QString &label);
+
+  private:
+    void drawDecoration(QPainter* p) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
@@ -107,22 +95,9 @@ class QuickScenePreviewWidget : public QWidget
     } m_toolBar;
 
     QuickInspectorInterface *m_inspectorInterface;
-    MouseMode m_mouseMode;
-
-    qreal m_zoom;
-    int m_x;
-    int m_y;
-    QImage m_image;
-
-    QPoint m_mouseGrabPosition; // position where the mouse was pressed down, relative to image but in widget scale
-    QPoint m_zoomedMousePosition; // current mouse position, in scene coordinates
-    QPoint m_zoomedMouseGrabPosition; // position in scene coordinates where the mouse was pressed down
-    bool m_mousePressed;
 
     QuickItemGeometry m_itemGeometry;
     QuickItemGeometry m_effectiveGeometry; // scaled and translated
-
-    QBrush m_backgroundBrush;
 };
 
 } // namespace GammaRay
