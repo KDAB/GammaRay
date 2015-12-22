@@ -39,7 +39,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     m_zoom(1.0),
     m_x(0),
     m_y(0),
-    m_interactionMode(ViewInteraction),
+    m_interactionMode(NoInteraction),
     m_mouseDown(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -57,6 +57,8 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
 
     m_zoomLevels.reserve(8);
     m_zoomLevels <<  .125 << .25 << .5 << 1.0 << 2.0 << 4.0 << 8.0 << 16.0;
+
+    setInteractionMode(ViewInteraction);
 }
 
 void RemoteViewWidget::setImage(const QImage& image)
@@ -131,6 +133,20 @@ void RemoteViewWidget::fitToView()
 
 void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode)
 {
+    if (m_interactionMode == mode)
+        return;
+
+    switch (mode) {
+        case Measuring:
+            setCursor(Qt::CrossCursor);
+            break;
+        case ViewInteraction:
+            setCursor(Qt::OpenHandCursor);
+            break;
+        default:
+            setCursor(QCursor());
+            break;
+    }
     m_interactionMode = mode;
 }
 
@@ -304,6 +320,7 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
             m_mouseDownPosition = event->pos() - QPoint(m_x, m_y);
             // if (e->modifiers() Qt::ControlModifier)
                 // pickElement(mapToSource(event->pos());
+            setCursor(Qt::ClosedHandCursor);
              break;
         case Measuring:
             m_mouseDownPosition = mapToSource(event->pos());
@@ -325,6 +342,9 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent* event)
     m_currentMousePosition = mapToSource(event->pos());
 
     switch (m_interactionMode) {
+        case ViewInteraction:
+            setCursor(Qt::OpenHandCursor);
+            break;
         case InputRedirection:
             // TODO
             break;
