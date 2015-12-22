@@ -154,6 +154,11 @@ QAbstractItemModel* RemoteViewWidget::zoomLevelModel() const
     return m_zoomLevelModel;
 }
 
+RemoteViewWidget::InteractionMode RemoteViewWidget::interactionMode() const
+{
+    return m_interactionMode;
+}
+
 void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode)
 {
     if (m_interactionMode == mode)

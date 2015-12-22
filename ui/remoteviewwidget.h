@@ -57,6 +57,7 @@ public:
         ElementPicking,
         NoInteraction ///< use this for disabling all built-in interaction if you are adding custom interaction modes
     };
+    InteractionMode interactionMode() const;
     void setInteractionMode(InteractionMode mode);
 
     /// Returns the current zoom level
@@ -83,6 +84,11 @@ protected:
      */
     virtual void drawDecoration(QPainter *p);
 
+    // translate from view coordinates to source coordinates
+    QPoint mapToSource(QPoint pos) const;
+    // translates from source coordinates to view coordinates
+    QPoint mapFromSource(QPoint pos) const;
+
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -95,10 +101,6 @@ protected:
 private:
     void drawRuler(QPainter *p);
     void drawMeasureOverlay(QPainter *p);
-    // translate from view coordinates to source coordinates
-    QPoint mapToSource(QPoint pos) const;
-    // translates from source coordinates to view coordinates
-    QPoint mapFromSource(QPoint pos) const;
 
     // size of the content area, ie. excluding the rulers
     int contentWidth() const;
