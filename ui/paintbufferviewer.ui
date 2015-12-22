@@ -24,7 +24,7 @@
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
@@ -34,25 +34,12 @@
             <string>&amp;Zoom:</string>
            </property>
            <property name="buddy">
-            <cstring>zoomSlider</cstring>
+            <cstring>zoom</cstring>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="zoomSlider">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>8</number>
-           </property>
-           <property name="pageStep">
-            <number>1</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
+          <widget class="QComboBox" name="zoom"/>
          </item>
          <item>
           <spacer name="horizontalSpacer">
@@ -70,24 +57,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <widget class="GammaRay::PaintBufferReplayWidget" name="replayWidget">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>227</width>
-            <height>341</height>
-           </rect>
-          </property>
-         </widget>
-        </widget>
+        <widget class="GammaRay::RemoteViewWidget" name="replayWidget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -97,10 +67,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GammaRay::PaintBufferReplayWidget</class>
+   <class>GammaRay::RemoteViewWidget</class>
    <extends>QWidget</extends>
-   <header>paintbufferreplaywidget.h</header>
-   <container>1</container>
+   <header>remoteviewwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

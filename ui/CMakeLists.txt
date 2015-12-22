@@ -18,7 +18,6 @@ set(gammaray_ui_srcs
   remoteviewwidget.cpp
 
   paintbufferviewer.cpp
-  paintbufferreplaywidget.cpp
 
   propertyeditor/propertycoloreditor.cpp
   propertyeditor/propertydoublepaireditor.cpp

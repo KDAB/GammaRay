@@ -53,6 +53,10 @@ class GAMMARAY_UI_EXPORT PaintBufferViewer : public QDialog
     explicit PaintBufferViewer(const QString &name, QWidget *parent = 0);
     virtual ~PaintBufferViewer();
 
+  private slots:
+    void zoomComboChanged();
+    void viewZoomChanged();
+
   private:
     QScopedPointer<Ui::PaintBufferViewer> ui;
 };

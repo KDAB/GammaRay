@@ -33,6 +33,8 @@
 #include <common/paintanalyzerinterface.h>
 #include <common/objectbroker.h>
 
+#include <QDebug>
+
 using namespace GammaRay;
 
 PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
@@ -49,14 +51,34 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   ui->commandView->setModel(model);
   ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
 
+  ui->zoom->setModel(ui->replayWidget->zoomLevelModel());
+
   ui->splitter->setStretchFactor(0, 0);
   ui->splitter->setStretchFactor(1, 1);
 
   auto controller = ObjectBroker::object<PaintAnalyzerInterface*>(name);
   connect(controller, SIGNAL(paintingAnalyzed(QImage)), ui->replayWidget, SLOT(setImage(QImage)));
-  connect(ui->zoomSlider, SIGNAL(valueChanged(int)), ui->replayWidget, SLOT(setZoomFactor(int)));
+  connect(ui->zoom, SIGNAL(currentIndexChanged(int)), this, SLOT(zoomComboChanged()));
+  connect(ui->replayWidget, SIGNAL(zoomChanged()), this, SLOT(viewZoomChanged()));
+
+  viewZoomChanged();
 }
 
 PaintBufferViewer::~PaintBufferViewer()
 {
+}
+
+void PaintBufferViewer::zoomComboChanged()
+{
+    ui->replayWidget->setZoom(ui->zoom->itemData(ui->zoom->currentIndex(), Qt::UserRole).toDouble());
+}
+
+void PaintBufferViewer::viewZoomChanged()
+{
+    for (int i = 0; i < ui->zoom->count(); ++i) {
+        if (ui->zoom->itemData(i, Qt::UserRole).toDouble() == ui->replayWidget->zoom()) {
+            ui->zoom->setCurrentIndex(i);
+            return;
+        }
+    }
 }

@@ -32,7 +32,6 @@
 #include "paintbuffermodel.h"
 
 #include <core/probe.h>
-#include <core/util.h>
 #include <common/objectbroker.h>
 
 #include <QItemSelectionModel>
@@ -71,8 +70,8 @@ void PaintAnalyzer::repaint()
 #ifdef HAVE_PRIVATE_QT_HEADERS
     const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
     QImage image(sourceSize, QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
     QPainter painter(&image);
-    Util::drawTransparencyPattern(&painter, QRect(QPoint(0, 0), sourceSize));
     const auto start = m_paintBufferModel->buffer().frameStartIndex(0);
 
     // include selected row or paint all if nothing is selected
