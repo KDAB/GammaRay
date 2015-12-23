@@ -59,9 +59,8 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   auto controller = ObjectBroker::object<PaintAnalyzerInterface*>(name);
   connect(controller, SIGNAL(paintingAnalyzed(QImage)), ui->replayWidget, SLOT(setImage(QImage)));
   connect(ui->zoom, SIGNAL(currentIndexChanged(int)), this, SLOT(zoomComboChanged()));
-  connect(ui->replayWidget, SIGNAL(zoomChanged()), this, SLOT(viewZoomChanged()));
-
-  viewZoomChanged();
+  connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), ui->zoom, SLOT(setCurrentIndex(int)));
+  ui->zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
 }
 
 PaintBufferViewer::~PaintBufferViewer()
@@ -71,14 +70,4 @@ PaintBufferViewer::~PaintBufferViewer()
 void PaintBufferViewer::zoomComboChanged()
 {
     ui->replayWidget->setZoom(ui->zoom->itemData(ui->zoom->currentIndex(), Qt::UserRole).toDouble());
-}
-
-void PaintBufferViewer::viewZoomChanged()
-{
-    for (int i = 0; i < ui->zoom->count(); ++i) {
-        if (ui->zoom->itemData(i, Qt::UserRole).toDouble() == ui->replayWidget->zoom()) {
-            ui->zoom->setCurrentIndex(i);
-            return;
-        }
-    }
 }

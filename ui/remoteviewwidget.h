@@ -62,6 +62,8 @@ public:
 
     /// Returns the current zoom level
     double zoom() const;
+    /// Returns the index of the current zoom level, useful for updating a combo box using the zoomLevelModel.
+    int zoomLevelIndex() const;
     /// Model containing the supported zoom levels, for use with a combo box
     QAbstractItemModel* zoomLevelModel() const;
 
@@ -77,6 +79,7 @@ public slots:
 
 signals:
     void zoomChanged();
+    void zoomLevelChanged(int zoomLevelIndex);
     /// currently measured area, in source coordinates
     void measurementChanged(const QRectF &rect);
 

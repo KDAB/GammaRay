@@ -90,31 +90,39 @@ double RemoteViewWidget::zoom() const
     return m_zoom;
 }
 
+int RemoteViewWidget::zoomLevelIndex() const
+{
+    const auto it = std::lower_bound(m_zoomLevels.begin(), m_zoomLevels.end(), m_zoom);
+    return std::distance(m_zoomLevels.begin(), it);
+}
+
 void RemoteViewWidget::setZoom(double zoom)
 {
     Q_ASSERT(!m_zoomLevels.isEmpty());
     const auto oldZoom = m_zoom;
 
     // snap to nearest zoom level
+    int index = 0;
     auto it = std::lower_bound(m_zoomLevels.constBegin(), m_zoomLevels.constEnd(), zoom);
     if (it == m_zoomLevels.constEnd()) {
-        m_zoom = m_zoomLevels.last();
-    } else if (it == m_zoomLevels.constBegin()) {
-        m_zoom = *it;
-    } else {
-        auto delta = (*it) - zoom;
-        m_zoom = *it;
+        index = m_zoomLevels.size() - 1;
+    } else if (it != m_zoomLevels.constBegin()) {
+        const auto delta = (*it) - zoom;
+        index = std::distance(m_zoomLevels.constBegin(), it);
         --it;
-        if (zoom - (*it) < delta)
-            m_zoom = *it;
+        if (zoom - (*it) < delta) {
+            --index;
+        }
     }
 
-    if (oldZoom == m_zoom)
+    if (m_zoomLevels.at(index) == oldZoom)
         return;
+    m_zoom = m_zoomLevels.at(index);
     emit zoomChanged();
+    emit zoomLevelChanged(index);
 
-    m_x = contentWidth() / 2 - (contentWidth() / 2 - m_x) * zoom / oldZoom;
-    m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * zoom / oldZoom;
+    m_x = contentWidth() / 2 - (contentWidth() / 2 - m_x) * m_zoom / oldZoom;
+    m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * m_zoom / oldZoom;
     update();
 }
 

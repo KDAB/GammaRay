@@ -143,6 +143,8 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.zoomCombobox->setModel(zoomLevelModel());
   connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomFromCombobox(int)));
   connect(this, &RemoteViewWidget::zoomChanged, this, &QuickScenePreviewWidget::updateEffectiveGeometry);
+  connect(this, &RemoteViewWidget::zoomLevelChanged, m_toolBar.zoomCombobox, &QComboBox::setCurrentIndex);
+  m_toolBar.zoomCombobox->setCurrentIndex(zoomLevelIndex());
 
   m_toolBar.toolbarWidget->addWidget(m_toolBar.zoomCombobox);
 

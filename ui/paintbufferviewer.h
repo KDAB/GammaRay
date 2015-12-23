@@ -55,7 +55,6 @@ class GAMMARAY_UI_EXPORT PaintBufferViewer : public QDialog
 
   private slots:
     void zoomComboChanged();
-    void viewZoomChanged();
 
   private:
     QScopedPointer<Ui::PaintBufferViewer> ui;
