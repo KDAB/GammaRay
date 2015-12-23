@@ -38,6 +38,7 @@ using namespace GammaRay;
 RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     QWidget(parent),
     m_zoomLevelModel(new QStandardItemModel(this)),
+    m_unavailableText(tr("No remote view available.")),
     m_zoom(1.0),
     m_x(0),
     m_y(0),
@@ -82,6 +83,12 @@ void RemoteViewWidget::setImage(const QImage& image)
     }
 
     m_sourceImage = image;
+    update();
+}
+
+void RemoteViewWidget::setUnavailableText(const QString& msg)
+{
+    m_unavailableText = msg;
     update();
 }
 
@@ -189,14 +196,15 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
 void RemoteViewWidget::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
-
     QPainter p(this);
-    p.fillRect(rect(), m_backgroundBrush);
 
     if (m_sourceImage.isNull()) {
-        p.drawText(rect(), Qt::AlignHCenter | Qt::AlignVCenter, tr("No Preview available.")); // TODO customizable text by tool
+        QWidget::paintEvent(event);
+        p.drawText(rect(), Qt::AlignHCenter | Qt::AlignVCenter, m_unavailableText);
         return;
     }
+
+    p.fillRect(rect(), m_backgroundBrush);
 
     p.save();
     p.setTransform(QTransform::fromTranslate(m_x, m_y));

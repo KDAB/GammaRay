@@ -69,6 +69,9 @@ public:
 
     const QImage& image() const;
 
+    /// Set the message that is shown when remote view is unavailable.
+    void setUnavailableText(const QString &msg);
+
 public slots:
     void setImage(const QImage &image);
     /// Sets the zoom level to the closest level to @p zoom.
@@ -120,6 +123,7 @@ private:
     QBrush m_backgroundBrush;
     QVector<double> m_zoomLevels;
     QStandardItemModel *m_zoomLevelModel;
+    QString m_unavailableText;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;

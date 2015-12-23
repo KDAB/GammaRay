@@ -153,6 +153,8 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   connect(this, &RemoteViewWidget::measurementChanged, this, [this](const QRectF &r) {
       m_toolBar.measureLabel->setText(QStringLiteral(" %1px").arg(std::sqrt((qreal)(r.width()*r.width() + r.height()*r.height())), 0, 'f', 2));
   });
+
+  setUnavailableText(tr("No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
 }
 
 QuickScenePreviewWidget::~QuickScenePreviewWidget()
@@ -169,14 +171,6 @@ void QuickScenePreviewWidget::drawDecoration(QPainter* p)
 {
   p->save();
 
-#if 0 // TODO support custom message text
-  if (m_image.isNull()) {
-    p->drawText(rect(), Qt::AlignHCenter | Qt::AlignVCenter, tr("No Preview available.\n"
-                "(This happens e.g. when the window is minimized or the scene is hidden)"));
-    p->restore();
-    return;
-  }
-#endif
   // bounding box
   p->setPen(QColor(232, 87, 82, 170));
   p->setBrush(QBrush(QColor(232, 87, 82, 95)));
