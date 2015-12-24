@@ -97,7 +97,6 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
   connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
   connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), m_remoteView, SLOT(setImage(QImage)));
-  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), m_remoteView, SLOT(fitToView()));
 
   connect(m_inspector, SIGNAL(features(bool,bool,bool,bool)),
           this, SLOT(setFeatures(bool,bool,bool,bool)));
@@ -141,6 +140,8 @@ void WidgetInspectorWidget::setFeatures(bool svg, bool print, bool designer, boo
 
 void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
 {
+  m_remoteView->reset();
+
   QModelIndex index;
   if (selection.size() > 0)
     index = selection.first().topLeft();

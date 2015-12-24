@@ -78,11 +78,17 @@ const QImage& RemoteViewWidget::image() const
 void RemoteViewWidget::setImage(const QImage& image)
 {
     if (m_sourceImage.isNull()) {
-        m_x = 0.5 * (contentWidth() - image.width() * m_zoom);
-        m_y = 0.5 * (contentHeight() - image.height() * m_zoom);
+        m_sourceImage = image;
+        fitToView();
+    } else {
+        m_sourceImage = image;
+        update();
     }
+}
 
-    m_sourceImage = image;
+void RemoteViewWidget::reset()
+{
+    m_sourceImage = QImage();
     update();
 }
 
