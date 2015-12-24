@@ -57,7 +57,6 @@ class QuickScenePreviewWidget : public RemoteViewWidget
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features  supportedCustomRenderModes);
 
   private Q_SLOTS:
-    void setZoomFromCombobox(int index);
     void visualizeActionTriggered(bool checked);
     void setMouseTool(QAction *action);
     void updateEffectiveGeometry();

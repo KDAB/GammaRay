@@ -133,6 +133,12 @@ void RemoteViewWidget::setZoom(double zoom)
     update();
 }
 
+void RemoteViewWidget::setZoomLevel(int index)
+{
+    Q_ASSERT(index >= 0 && index < m_zoomLevels.size());
+    setZoom(m_zoomLevels.at(index));
+}
+
 void RemoteViewWidget::zoomIn()
 {
     Q_ASSERT(!m_zoomLevels.isEmpty());

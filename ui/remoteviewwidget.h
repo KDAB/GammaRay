@@ -76,6 +76,8 @@ public slots:
     void setImage(const QImage &image);
     /// Sets the zoom level to the closest level to @p zoom.
     void setZoom(double zoom);
+    /// Sets the zoom level to the level at @p index in the zoom level model.
+    void setZoomLevel(int index);
     void zoomIn();
     void zoomOut();
     void fitToView();

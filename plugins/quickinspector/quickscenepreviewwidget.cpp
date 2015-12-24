@@ -141,7 +141,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
   m_toolBar.zoomCombobox = new QComboBox(this);
   m_toolBar.zoomCombobox->setModel(zoomLevelModel());
-  connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomFromCombobox(int)));
+  connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomLevel(int)));
   connect(this, &RemoteViewWidget::zoomChanged, this, &QuickScenePreviewWidget::updateEffectiveGeometry);
   connect(this, &RemoteViewWidget::zoomLevelChanged, m_toolBar.zoomCombobox, &QComboBox::setCurrentIndex);
   m_toolBar.zoomCombobox->setCurrentIndex(zoomLevelIndex());
@@ -417,11 +417,6 @@ void QuickScenePreviewWidget::updateEffectiveGeometry()
   m_effectiveGeometry.baselineOffset         = m_itemGeometry.baselineOffset * zoom();
   m_effectiveGeometry.x                      = m_itemGeometry.x * zoom();
   m_effectiveGeometry.y                      = m_itemGeometry.y * zoom();
-}
-
-void QuickScenePreviewWidget::setZoomFromCombobox(int)
-{
-  setZoom(m_toolBar.zoomCombobox->currentData().toReal());
 }
 
 void QuickScenePreviewWidget::visualizeActionTriggered(bool checked)
