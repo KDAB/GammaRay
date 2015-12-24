@@ -43,6 +43,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     m_x(0),
     m_y(0),
     m_interactionMode(NoInteraction),
+    m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection),
     m_mouseDown(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -188,7 +189,7 @@ RemoteViewWidget::InteractionMode RemoteViewWidget::interactionMode() const
 
 void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode)
 {
-    if (m_interactionMode == mode)
+    if (m_interactionMode == mode || !(mode & m_supportedInteractionModes))
         return;
 
     switch (mode) {
@@ -203,6 +204,11 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
             break;
     }
     m_interactionMode = mode;
+}
+
+void RemoteViewWidget::setSupportedInteractionModes(RemoteViewWidget::InteractionModes modes)
+{
+    m_supportedInteractionModes = modes;
 }
 
 void RemoteViewWidget::paintEvent(QPaintEvent* event)
@@ -396,9 +402,10 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
     switch (m_interactionMode) {
         case ViewInteraction:
             m_mouseDownPosition = event->pos() - QPoint(m_x, m_y);
-            // if (e->modifiers() Qt::ControlModifier)
+            // if (e->modifiers() & Qt::ControlModifier && m_supportedInteractionModes & ElementPicking)
                 // pickElement(mapToSource(event->pos());
-            setCursor(Qt::ClosedHandCursor);
+            if (event->buttons() & Qt::LeftButton)
+                setCursor(Qt::ClosedHandCursor);
              break;
         case Measuring:
             m_mouseDownPosition = mapToSource(event->pos());

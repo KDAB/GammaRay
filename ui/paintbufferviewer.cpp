@@ -52,6 +52,7 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
 
   ui->zoom->setModel(ui->replayWidget->zoomLevelModel());
+  ui->replayWidget->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
 
   ui->splitter->setStretchFactor(0, 0);
   ui->splitter->setStretchFactor(1, 1);

@@ -51,14 +51,17 @@ public:
     explicit RemoteViewWidget(QWidget *parent = Q_NULLPTR);
 
     enum InteractionMode {
-        ViewInteraction, ///< panning, zooming, etc
-        Measuring,
-        InputRedirection,
-        ElementPicking,
-        NoInteraction ///< use this for disabling all built-in interaction if you are adding custom interaction modes
+        NoInteraction = 0, ///< use this for disabling all built-in interaction if you are adding custom interaction modes
+        ViewInteraction = 1, ///< panning, zooming, etc
+        Measuring = 2,
+        InputRedirection = 4,
+        ElementPicking = 8
     };
     InteractionMode interactionMode() const;
     void setInteractionMode(InteractionMode mode);
+
+    Q_DECLARE_FLAGS(InteractionModes, InteractionMode)
+    void setSupportedInteractionModes(InteractionModes modes);
 
     /// Returns the current zoom level
     double zoom() const;
@@ -135,11 +138,14 @@ private:
     int m_x; // view translation before zoom
     int m_y;
     InteractionMode m_interactionMode;
+    InteractionModes m_supportedInteractionModes;
     QPoint m_mouseDownPosition; // semantics depend on interaction mode
     QPoint m_currentMousePosition; // in view coordinates
     bool m_mouseDown;
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::RemoteViewWidget::InteractionModes)
 
 #endif // GAMMARAY_REMOTEVIEWWIDGET_H
