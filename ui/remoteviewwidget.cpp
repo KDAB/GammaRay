@@ -515,10 +515,10 @@ int RemoteViewWidget::contentHeight() const
 
 int RemoteViewWidget::verticalRulerWidth() const
 {
-    return 50; // TODO depends on font and longest tick label
+    return fontMetrics().width(QString::number(m_sourceImage.height())) + 24; // 2* tick length + some margin
 }
 
 int RemoteViewWidget::horizontalRulerHeight() const
 {
-    return 35; // TODO depends on font size
+    return fontMetrics().height() + 20; // 2 * tick length + some margin
 }
