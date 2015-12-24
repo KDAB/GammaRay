@@ -30,7 +30,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="GammaRay::RemoteViewWidget" name="widgetPreviewWidget" native="true"/>
+      <widget class="QWidget" name="widgetPreviewContainer" native="true"/>
      </widget>
      <widget class="GammaRay::PropertyWidget" name="widgetPropertyWidget" native="true"/>
     </widget>
@@ -79,12 +79,6 @@
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>
    <header location="global">ui/propertywidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>GammaRay::RemoteViewWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">ui/remoteviewwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

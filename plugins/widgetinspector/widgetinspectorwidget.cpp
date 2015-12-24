@@ -37,11 +37,15 @@
 
 #include <ui/deferredresizemodesetter.h>
 #include <ui/paintbufferviewer.h>
+#include <ui/remoteviewwidget.h>
 #include <ui/searchlinecontroller.h>
 
+#include <QComboBox>
 #include <QDebug>
 #include <QFileDialog>
+#include <QLabel>
 #include <QtPlugin>
+#include <QToolBar>
 
 using namespace GammaRay;
 
@@ -54,6 +58,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::WidgetInspectorWidget)
   , m_inspector(0)
+  , m_remoteView(new RemoteViewWidget(this))
 {
   ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface*>(createWidgetInspectorClient);
   m_inspector = ObjectBroker::object<WidgetInspectorInterface*>();
@@ -71,13 +76,28 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
 
+  auto layout = new QVBoxLayout;
+  layout->setMargin(0);
+  auto toolbar = new QToolBar(this);
+  toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+  layout->addWidget(toolbar);
+  ui->widgetPreviewContainer->setLayout(layout);
+  layout->addWidget(m_remoteView);
+
+  toolbar->addWidget(new QLabel(tr("Zoom:")));
+  auto zoom = new QComboBox;
+  zoom->setModel(m_remoteView->zoomLevelModel());
+  toolbar->addWidget(zoom);
+  connect(zoom, SIGNAL(currentIndexChanged(int)), m_remoteView, SLOT(setZoomLevel(int)));
+  connect(m_remoteView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
+
   connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
   connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
-  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), ui->widgetPreviewWidget, SLOT(setImage(QImage)));
-  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), ui->widgetPreviewWidget, SLOT(fitToView()));
+  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), m_remoteView, SLOT(setImage(QImage)));
+  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), m_remoteView, SLOT(fitToView()));
 
   connect(m_inspector, SIGNAL(features(bool,bool,bool,bool)),
           this, SLOT(setFeatures(bool,bool,bool,bool)));

@@ -37,6 +37,7 @@ class QModelIndex;
 
 namespace GammaRay {
 
+class RemoteViewWidget;
 class WidgetInspectorInterface;
 
 namespace Ui {
@@ -66,6 +67,7 @@ class WidgetInspectorWidget : public QWidget
   private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;
     WidgetInspectorInterface *m_inspector;
+    RemoteViewWidget *m_remoteView;
 };
 
 class WidgetInspectorUiFactory : public QObject, public StandardToolUiFactory<WidgetInspectorWidget>
