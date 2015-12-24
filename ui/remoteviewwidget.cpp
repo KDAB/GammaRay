@@ -248,7 +248,7 @@ void RemoteViewWidget::drawRuler(QPainter* p)
     const int vRulerWidth = verticalRulerWidth();
 
     const int viewTickStep = std::max<int>(2, m_zoom);
-    const int viewLabelDist = 100; // TODO use font metrics
+    const int viewLabelDist = viewTickLabelDistance();
     const int sourceLabelDist = sourceTickLabelDistance(viewLabelDist);
 
     const auto activePen = QPen(QColor(255, 255, 255, 170));
@@ -313,13 +313,19 @@ void RemoteViewWidget::drawRuler(QPainter* p)
     p->restore();
 }
 
+int RemoteViewWidget::viewTickLabelDistance() const
+{
+    const auto maxLabel = std::max(m_sourceImage.width(), m_sourceImage.height());
+    return 2 * fontMetrics().width(QString::number(maxLabel));
+}
+
 int RemoteViewWidget::sourceTickLabelDistance(int viewDistance)
 {
     Q_ASSERT(viewDistance > 0);
 
     if (m_tickLabelDists.isEmpty()) {
-        m_tickLabelDists.reserve(13);
-        m_tickLabelDists << 1 << 2 << 5 << 10 << 20 << 25 << 50 << 100 << 200 << 250 << 500 << 1000 << 2000;
+        m_tickLabelDists.reserve(11);
+        m_tickLabelDists << 5 << 10 << 20 << 25 << 50 << 100 << 200 << 250 << 500 << 1000 << 2000;
     }
     const int sourceDist = viewDistance / m_zoom;
     while (sourceDist > *m_tickLabelDists.constEnd()) {

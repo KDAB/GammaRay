@@ -109,6 +109,7 @@ protected:
 private:
     void drawRuler(QPainter *p);
     int sourceTickLabelDistance(int viewDistance);
+    int viewTickLabelDistance() const;
     void drawMeasureOverlay(QPainter *p);
 
     // size of the content area, ie. excluding the rulers
