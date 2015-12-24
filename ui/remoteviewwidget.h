@@ -108,6 +108,7 @@ protected:
 
 private:
     void drawRuler(QPainter *p);
+    int sourceTickLabelDistance(int viewDistance);
     void drawMeasureOverlay(QPainter *p);
 
     // size of the content area, ie. excluding the rulers
@@ -124,6 +125,7 @@ private:
     QVector<double> m_zoomLevels;
     QStandardItemModel *m_zoomLevelModel;
     QString m_unavailableText;
+    QVector<int> m_tickLabelDists;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;

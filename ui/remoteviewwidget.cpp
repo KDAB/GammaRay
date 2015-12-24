@@ -228,15 +228,16 @@ void RemoteViewWidget::drawDecoration(QPainter* p)
     Q_UNUSED(p);
 }
 
-static int tickLength(int pos, int lineLength, qreal zoom)
+static int tickLength(int sourcePos, int labelDistance)
 {
-    if (pos % 100 == 0) // the one getting a label
-      return lineLength * 2;
-    if ((int)(pos / zoom) % 10 == 0)
-      return lineLength + 2;
-    if ((int)(pos / zoom) % 5 == 0)
-      return lineLength + 1;
-    return lineLength;
+    int l = 8;
+    if (sourcePos % labelDistance == 0)
+        return 2 * l;
+    if (sourcePos % 10 == 0)
+        return l + 2;
+    else if (sourcePos % 5 == 0)
+        return l + 1;
+    return l;
 }
 
 void RemoteViewWidget::drawRuler(QPainter* p)
@@ -245,72 +246,64 @@ void RemoteViewWidget::drawRuler(QPainter* p)
 
     const int hRulerHeight = horizontalRulerHeight();
     const int vRulerWidth = verticalRulerWidth();
-    const int lineLength = 8;
-    const int pixelSteps = std::max<int>(2, m_zoom);
 
+    const int viewTickStep = std::max<int>(2, m_zoom);
+    const int viewLabelDist = 100; // TODO use font metrics
+    const int sourceLabelDist = sourceTickLabelDistance(viewLabelDist);
+
+    const auto activePen = QPen(QColor(255, 255, 255, 170));
+    const auto inactivePen = QPen(QColor(0, 0, 0, 170));
+    const auto selectedPen = QPen(palette().color(QPalette::Highlight));
+
+    // background
     p->setPen(Qt::NoPen);
     p->setBrush(QBrush(QColor(51, 51, 51, 170)));
     p->drawRect(QRect(0, height() - hRulerHeight, width(), hRulerHeight));
     p->drawRect(QRect(width() - vRulerWidth, 0, vRulerWidth, height() - hRulerHeight));
 
-    const auto activePen = QPen(QColor(255, 255, 255, 170));
-    const auto inactivePen = QPen(QColor(0, 0, 0, 170));
-
     // horizontal ruler at the bottom
-    if (m_x <= 0) {
-      p->setPen(activePen);
-    } else {
-      p->setPen(inactivePen);
-    }
-    for (int x = -m_x; x < width() - m_x - vRulerWidth; ++x) {
-        if (x == 0) {
-            p->setPen(activePen);
-        }
-        if (x % pixelSteps == 0) {
-            p->drawLine(m_x + x, height() - hRulerHeight, m_x + x, height() - hRulerHeight + tickLength(x, lineLength, m_zoom));
-        }
-
-        if (x % 100 == 0 && x >= 0 && x <= m_sourceImage.width() * m_zoom) {
-            auto nearestTick = qRound(x / m_zoom * 0.2) * 5;
-            auto xOffset = (nearestTick - (x/m_zoom)) * m_zoom;
-            p->drawText(m_x + x + xOffset - 20, height() - (hRulerHeight - 2 * lineLength),
-                        40, hRulerHeight - 2 * lineLength,
-                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number((int)nearestTick));
-        }
-
-
-        if (m_sourceImage.width() * m_zoom - x < 1) {
+    p->save();
+    p->translate(0, height() - hRulerHeight);
+    for (int i = (m_x % viewTickStep); i < contentWidth(); i += viewTickStep) {
+        const int sourcePos = (i - m_x) / m_zoom;
+        if (sourcePos == m_currentMousePosition.x())
+            p->setPen(selectedPen);
+        else if (sourcePos < 0 || sourcePos > m_sourceImage.width())
             p->setPen(inactivePen);
+        else
+            p->setPen(activePen);
+
+        const int tickSize = tickLength(sourcePos, sourceLabelDist);
+        p->drawLine(i, 0, i, tickSize);
+
+        if (sourcePos >= 0 && sourcePos <= m_sourceImage.width() && sourcePos % sourceLabelDist == 0) {
+            p->setPen(activePen);
+            p->drawText(i - viewLabelDist / 2, tickSize, viewLabelDist, hRulerHeight - tickSize, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(sourcePos));
         }
     }
+    p->restore();
 
     // vertical ruler on the right
-    if (m_y <= 0) {
-      p->setPen(activePen);
-    } else {
-      p->setPen(inactivePen);
-    }
-    for (int y = -m_y; y < height() - m_y - hRulerHeight; ++y) {
-        if (y == 0) {
-            p->setPen(activePen);
-        }
-        if (y % pixelSteps == 0) {
-            p->drawLine(width() - vRulerWidth, m_y + y, width() - vRulerWidth + tickLength(y, lineLength, m_zoom), m_y + y);
-        }
-
-        if (y % 100 == 0 && y >= 0 && y <= m_sourceImage.height() * m_zoom) {
-            auto nearestTick = qRound(y / m_zoom * 0.2) * 5;
-            auto yOffset = (nearestTick - (y/m_zoom)) * m_zoom;
-            p->drawText(width() - (vRulerWidth - 2 * lineLength), m_y + y + yOffset - 20,
-                        vRulerWidth - 2 * lineLength, 40,
-                        Qt::AlignHCenter | Qt::AlignVCenter, QString::number((int)nearestTick));
-        }
-
-
-        if (m_sourceImage.height() * m_zoom - y < 1) {
+    p->save();
+    p->translate(width() - vRulerWidth, 0);
+    for (int i = (m_y % viewTickStep); i < contentHeight(); i += viewTickStep) {
+        const int sourcePos = (i - m_y) / m_zoom;
+        if (sourcePos == m_currentMousePosition.y())
+            p->setPen(selectedPen);
+        else if (sourcePos < 0 || sourcePos > m_sourceImage.height())
             p->setPen(inactivePen);
+        else
+            p->setPen(activePen);
+
+        const int tickSize = tickLength(sourcePos, sourceLabelDist);
+        p->drawLine(0, i, tickSize, i);
+
+        if (sourcePos >= 0 && sourcePos <= m_sourceImage.height() && sourcePos % sourceLabelDist == 0) {
+            p->setPen(activePen);
+            p->drawText(tickSize, i - viewLabelDist / 2, vRulerWidth - tickSize, viewLabelDist, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(sourcePos));
         }
     }
+    p->restore();
 
     p->setPen(activePen);
     p->drawText(QRect(width() - vRulerWidth, height() - hRulerHeight, vRulerWidth, hRulerHeight),
@@ -318,6 +311,23 @@ void RemoteViewWidget::drawRuler(QPainter* p)
                 Qt::AlignHCenter | Qt::AlignVCenter
                );
     p->restore();
+}
+
+int RemoteViewWidget::sourceTickLabelDistance(int viewDistance)
+{
+    Q_ASSERT(viewDistance > 0);
+
+    if (m_tickLabelDists.isEmpty()) {
+        m_tickLabelDists.reserve(13);
+        m_tickLabelDists << 1 << 2 << 5 << 10 << 20 << 25 << 50 << 100 << 200 << 250 << 500 << 1000 << 2000;
+    }
+    const int sourceDist = viewDistance / m_zoom;
+    while (sourceDist > *m_tickLabelDists.constEnd()) {
+        m_tickLabelDists.push_back(m_tickLabelDists.at(m_tickLabelDists.size() - 4) * 10);
+    }
+
+    const auto it = std::lower_bound(m_tickLabelDists.constBegin(), m_tickLabelDists.constEnd(), sourceDist);
+    return *it;
 }
 
 void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
