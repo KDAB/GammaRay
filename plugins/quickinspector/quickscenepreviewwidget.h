@@ -58,7 +58,6 @@ class QuickScenePreviewWidget : public RemoteViewWidget
 
   private Q_SLOTS:
     void visualizeActionTriggered(bool checked);
-    void setMouseTool(QAction *action);
     void updateEffectiveGeometry();
 
   private:
@@ -85,10 +84,6 @@ class QuickScenePreviewWidget : public RemoteViewWidget
         QAction *visualizeOverdraw;
         QAction *visualizeBatches;
         QAction *visualizeChanges;
-
-        QAction *movePreview;
-        QAction *measurePixels;
-        QAction *redirectInput;
 
         QLabel *measureLabel;
     } m_toolBar;

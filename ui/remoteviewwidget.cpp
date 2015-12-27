@@ -28,6 +28,8 @@
 
 #include "remoteviewwidget.h"
 
+#include <QAction>
+#include <QActionGroup>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QPainter>
@@ -39,6 +41,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     QWidget(parent),
     m_zoomLevelModel(new QStandardItemModel(this)),
     m_unavailableText(tr("No remote view available.")),
+    m_interactionModeActions(new QActionGroup(this)),
     m_zoom(1.0),
     m_x(0),
     m_y(0),
@@ -68,7 +71,49 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
         m_zoomLevelModel->appendRow(item);
     }
 
+    setupActions();
+    connect(m_interactionModeActions, SIGNAL(triggered(QAction*)), this, SLOT(interactionActionTriggered(QAction*)));
+
     setInteractionMode(ViewInteraction);
+}
+
+void RemoteViewWidget::setupActions()
+{
+    m_interactionModeActions->setExclusive(true);
+
+    // FIXME: move the icons here!
+    auto action = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/move-preview.png")), tr("Move Preview"), this);
+    action->setCheckable(true);
+    action->setToolTip(tr("<b>Move preview</b><br>"
+        "Default mode. Click and drag to move the preview. Won't impact the original application in any way."));
+    action->setData(ViewInteraction);
+    action->setActionGroup(m_interactionModeActions);
+
+    action = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
+    action->setCheckable(true);
+    action->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
+        "Choose this mode, click somewhere and drag to measure the distance between the "
+        "point you clicked and the point where your mouse pointer is. (Measured in scene "
+        "coordinates)."));
+    action->setData(Measuring);
+    action->setActionGroup(m_interactionModeActions);
+
+    // TODO: icon
+    action = new QAction(tr("Pick Element"), this);
+    action->setIconText(tr("Pick"));
+    action->setCheckable(true);
+    action->setToolTip(tr("<b>Pick Element</b><br>"
+        "Select an element for inspection by clicking on it."));
+    action->setData(ElementPicking);
+    action->setActionGroup(m_interactionModeActions);
+
+    action = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/redirect-input.png")), tr("Redirect Input"), this);
+    action->setCheckable(true);
+    action->setToolTip(tr("<b>Redirect Input</b><br>"
+        "In this mode all mouse input is redirected directly to the original application,"
+        "so you can control the application directly from within GammaRay."));
+    action->setData(InputRedirection);
+    action->setActionGroup(m_interactionModeActions);
 }
 
 const QImage& RemoteViewWidget::image() const
@@ -97,6 +142,11 @@ void RemoteViewWidget::setUnavailableText(const QString& msg)
 {
     m_unavailableText = msg;
     update();
+}
+
+QActionGroup* RemoteViewWidget::interactionModeActions() const
+{
+    return m_interactionModeActions;
 }
 
 double RemoteViewWidget::zoom() const
@@ -203,12 +253,20 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
             setCursor(QCursor());
             break;
     }
+
     m_interactionMode = mode;
+    foreach (auto action, m_interactionModeActions->actions()) {
+        if (action->data() == mode)
+            action->setChecked(true);
+    }
 }
 
 void RemoteViewWidget::setSupportedInteractionModes(RemoteViewWidget::InteractionModes modes)
 {
     m_supportedInteractionModes = modes;
+    foreach (auto action, m_interactionModeActions->actions()) {
+        action->setVisible(action->data().toInt() & modes);
+    }
 }
 
 void RemoteViewWidget::paintEvent(QPaintEvent* event)
@@ -540,4 +598,10 @@ int RemoteViewWidget::verticalRulerWidth() const
 int RemoteViewWidget::horizontalRulerHeight() const
 {
     return fontMetrics().height() + 20; // 2 * tick length + some margin
+}
+
+void RemoteViewWidget::interactionActionTriggered(QAction* action)
+{
+    Q_ASSERT(action);
+    setInteractionMode(static_cast<InteractionMode>(action->data().toInt()));
 }

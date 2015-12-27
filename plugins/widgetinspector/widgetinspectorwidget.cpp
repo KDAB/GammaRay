@@ -84,6 +84,10 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   ui->widgetPreviewContainer->setLayout(layout);
   layout->addWidget(m_remoteView);
 
+  foreach (auto action, m_remoteView->interactionModeActions()->actions())
+    toolbar->addAction(action);
+  toolbar->addSeparator();
+
   toolbar->addWidget(new QLabel(tr("Zoom:")));
   auto zoom = new QComboBox;
   zoom->setModel(m_remoteView->zoomLevelModel());

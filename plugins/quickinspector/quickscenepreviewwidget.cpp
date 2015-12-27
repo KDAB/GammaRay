@@ -105,39 +105,9 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
   m_toolBar.toolbarWidget->addSeparator();
 
-
-  QActionGroup *mouseToolGroup = new QActionGroup(this);
-  mouseToolGroup->setExclusive(true);
-  connect(mouseToolGroup, SIGNAL(triggered(QAction*)), this, SLOT(setMouseTool(QAction*)));
-
-  m_toolBar.movePreview = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/move-preview.png")), tr("Move Preview"), this);
-  m_toolBar.movePreview->setActionGroup(mouseToolGroup);
-  m_toolBar.movePreview->setToolTip(tr("<b>Move preview</b><br>"
-      "Default mode. Click and drag to move the preview. Won't impact the original "
-      "application in any way. "));
-  m_toolBar.movePreview->setCheckable(true);
-  m_toolBar.movePreview->setChecked(true);
-  m_toolBar.toolbarWidget->addAction(m_toolBar.movePreview);
-
-  m_toolBar.measurePixels = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
-  m_toolBar.measurePixels->setActionGroup(mouseToolGroup);
-  m_toolBar.measurePixels->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
-      "Choose this mode, click somewhere and drag to measure the distance between the "
-      "point you clicked and the point where your mouse pointer is. (Measured in scene "
-      "coordinates)."));
-  m_toolBar.measurePixels->setCheckable(true);
-  m_toolBar.toolbarWidget->addAction(m_toolBar.measurePixels);
-
-  m_toolBar.redirectInput = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/redirect-input.png")), tr("Redirect Input"), this);
-  m_toolBar.redirectInput->setActionGroup(mouseToolGroup);
-  m_toolBar.redirectInput->setToolTip(tr("<b>Redirect Input</b><br>"
-      "In this mode all mouse input is redirected directly to the original application,"
-      "so you can control the application directly from within GammaRay."));
-  m_toolBar.redirectInput->setCheckable(true);
-  m_toolBar.toolbarWidget->addAction(m_toolBar.redirectInput);
-
+  foreach (auto action, interactionModeActions()->actions())
+    m_toolBar.toolbarWidget->addAction(action);
   m_toolBar.toolbarWidget->addSeparator();
-
 
   m_toolBar.zoomCombobox = new QComboBox(this);
   m_toolBar.zoomCombobox->setModel(zoomLevelModel());
@@ -443,13 +413,6 @@ void QuickScenePreviewWidget::visualizeActionTriggered(bool checked)
                                             : QuickInspectorInterface::NormalRendering
     );
   }
-}
-
-void QuickScenePreviewWidget::setMouseTool(QAction *action)
-{
-  setInteractionMode(action == m_toolBar.measurePixels ? Measuring
-              : action == m_toolBar.redirectInput ? InputRedirection
-              : ViewInteraction);
 }
 
 void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes)

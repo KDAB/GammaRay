@@ -58,6 +58,10 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
   ui->replayContainer->insertWidget(0, toolbar);
 
+  foreach (auto action, ui->replayWidget->interactionModeActions()->actions())
+    toolbar->addAction(action);
+  toolbar->addSeparator();
+
   toolbar->addWidget(new QLabel(tr("Zoom:")));
   auto zoom = new QComboBox;
   zoom->setModel(ui->replayWidget->zoomLevelModel());

@@ -35,6 +35,7 @@
 #include <QWidget>
 
 class QAbstractItemModel;
+class QActionGroup;
 class QStandardItemModel;
 
 namespace GammaRay {
@@ -75,6 +76,9 @@ public:
     /// Set the message that is shown when remote view is unavailable.
     void setUnavailableText(const QString &msg);
 
+    /// Action group containing all interaction mode switch actions
+    QActionGroup* interactionModeActions() const;
+
 public slots:
     void setImage(const QImage &image);
     /// Clears the current view content.
@@ -114,6 +118,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    void setupActions();
     void drawRuler(QPainter *p);
     int sourceTickLabelDistance(int viewDistance);
     int viewTickLabelDistance() const;
@@ -127,6 +132,9 @@ private:
     int horizontalRulerHeight() const;
     int verticalRulerWidth() const;
 
+private slots:
+    void interactionActionTriggered(QAction* action);
+
 private:
     QImage m_sourceImage;
     QBrush m_backgroundBrush;
@@ -134,6 +142,7 @@ private:
     QStandardItemModel *m_zoomLevelModel;
     QString m_unavailableText;
     QVector<int> m_tickLabelDists;
+    QActionGroup *m_interactionModeActions;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;
