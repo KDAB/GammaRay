@@ -488,7 +488,8 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
             m_mouseDownPosition = mapToSource(event->pos());
             break;
         case ElementPicking:
-            m_interface->pickElementAt(mapToSource(event->pos()));
+            if (event->buttons() & Qt::LeftButton)
+                m_interface->pickElementAt(mapToSource(event->pos()));
             break;
         case InputRedirection:
             //TODO
