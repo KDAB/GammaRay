@@ -244,6 +244,7 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
 
     switch (mode) {
         case Measuring:
+        case ElementPicking:
             setCursor(Qt::CrossCursor);
             break;
         case ViewInteraction:
