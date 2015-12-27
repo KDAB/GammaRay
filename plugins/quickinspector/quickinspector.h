@@ -54,6 +54,7 @@ class PropertyController;
 class QuickItemModel;
 class QuickSceneGraphModel;
 class PaintAnalyzer;
+class RemoteViewServer;
 
 class QuickInspector : public QuickInspectorInterface
 {
@@ -86,7 +87,7 @@ class QuickInspector : public QuickInspectorInterface
 
     void analyzePainting() Q_DECL_OVERRIDE;
 
-    void pickItemAt(const QPointF& pos) Q_DECL_OVERRIDE;
+    void pickItemAt(const QPoint& pos);
 
   protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
@@ -124,6 +125,7 @@ class QuickInspector : public QuickInspectorInterface
     PropertyController *m_itemPropertyController;
     PropertyController *m_sgPropertyController;
     PaintAnalyzer *m_paintAnalyzer;
+    RemoteViewServer *m_remoteView;
     QImage m_currentFrame;
     bool m_clientViewActive;
     bool m_needsNewFrame;

@@ -45,6 +45,8 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   : RemoteViewWidget(parent),
     m_inspectorInterface(inspector)
 {
+  setName(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
+
   // Toolbar
   m_toolBar.toolbarWidget = new QToolBar(this);
   m_toolBar.toolbarWidget->setAutoFillBackground(true);
@@ -322,9 +324,7 @@ void QuickScenePreviewWidget::mouseMoveEvent(QMouseEvent* e)
 
 void QuickScenePreviewWidget::mousePressEvent(QMouseEvent* e)
 {
-  if (interactionMode() == ViewInteraction && e->modifiers() & Qt::ControlModifier) { // TODO: make this easier to discover!
-    m_inspectorInterface->pickItemAt(mapToSource(e->pos()));
-  } else if (interactionMode() == InputRedirection) {
+  if (interactionMode() == InputRedirection) {
      m_inspectorInterface->sendMouseEvent(e->type(), mapToSource(e->pos()), e->button(), e->buttons(), e->modifiers());
   }
   RemoteViewWidget::mousePressEvent(e);

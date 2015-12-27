@@ -64,8 +64,6 @@ public slots:
   void setSceneViewActive(bool active) Q_DECL_OVERRIDE;
 
   void analyzePainting() Q_DECL_OVERRIDE;
-
-  void pickItemAt(const QPointF& pos) Q_DECL_OVERRIDE;
 };
 }
 

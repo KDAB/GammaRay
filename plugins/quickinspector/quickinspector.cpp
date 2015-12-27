@@ -46,6 +46,7 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
 #include <core/paintanalyzer.h>
+#include <core/remoteviewserver.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -237,6 +238,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_itemPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickItem"), this)),
     m_sgPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"), this)),
     m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this)),
+    m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this)),
     m_clientViewActive(false),
     m_needsNewFrame(false),
     m_isGrabbingWindow(false)
@@ -281,6 +283,8 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   connect(m_sgSelectionModel, &QItemSelectionModel::selectionChanged,
           this, &QuickInspector::sgSelectionChanged);
   connect(m_sgModel, &QuickSceneGraphModel::nodeDeleted, this, &QuickInspector::sgNodeDeleted);
+
+  connect(m_remoteView, &RemoteViewServer::doPickElement, this, &QuickInspector::pickItemAt);
 }
 
 QuickInspector::~QuickInspector()
@@ -632,7 +636,7 @@ void QuickInspector::analyzePainting()
   m_paintAnalyzer->endAnalyzePainting();
 }
 
-void QuickInspector::pickItemAt(const QPointF& pos)
+void QuickInspector::pickItemAt(const QPoint& pos)
 {
   if (!m_window)
     return;
