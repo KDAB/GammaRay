@@ -33,7 +33,10 @@
 #include <common/paintanalyzerinterface.h>
 #include <common/objectbroker.h>
 
+#include <QComboBox>
 #include <QDebug>
+#include <QLabel>
+#include <QToolBar>
 
 using namespace GammaRay;
 
@@ -51,7 +54,15 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   ui->commandView->setModel(model);
   ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
 
-  ui->zoom->setModel(ui->replayWidget->zoomLevelModel());
+  auto toolbar = new QToolBar;
+  toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+  ui->replayContainer->insertWidget(0, toolbar);
+
+  toolbar->addWidget(new QLabel(tr("Zoom:")));
+  auto zoom = new QComboBox;
+  zoom->setModel(ui->replayWidget->zoomLevelModel());
+  toolbar->addWidget(zoom);
+
   ui->replayWidget->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
 
   ui->splitter->setStretchFactor(0, 0);
@@ -59,9 +70,9 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
 
   auto controller = ObjectBroker::object<PaintAnalyzerInterface*>(name);
   connect(controller, SIGNAL(paintingAnalyzed(QImage)), ui->replayWidget, SLOT(setImage(QImage)));
-  connect(ui->zoom, SIGNAL(currentIndexChanged(int)), ui->replayWidget, SLOT(setZoomLevel(int)));
-  connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), ui->zoom, SLOT(setCurrentIndex(int)));
-  ui->zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
+  connect(zoom, SIGNAL(currentIndexChanged(int)), ui->replayWidget, SLOT(setZoomLevel(int)));
+  connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
+  zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
 }
 
 PaintBufferViewer::~PaintBufferViewer()
