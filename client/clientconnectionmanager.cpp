@@ -34,6 +34,7 @@
 #include "propertycontrollerclient.h"
 #include "probecontrollerclient.h"
 #include "paintanalyzerclient.h"
+#include "remoteviewclient.h"
 
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
@@ -74,6 +75,11 @@ static QObject* createPaintAnalyzerClient(const QString &name, QObject *parent)
   return new PaintAnalyzerClient(name, parent);
 }
 
+static QObject* createRemoteViewClient(const QString &name, QObject *parent)
+{
+  return new RemoteViewClient(name, parent);
+}
+
 void ClientConnectionManager::init()
 {
   StreamOperators::registerOperators();
@@ -81,6 +87,7 @@ void ClientConnectionManager::init()
   ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
   ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface*>(createProbeController);
   ObjectBroker::registerClientObjectFactoryCallback<PaintAnalyzerInterface*>(createPaintAnalyzerClient);
+  ObjectBroker::registerClientObjectFactoryCallback<RemoteViewInterface*>(createRemoteViewClient);
 
   ObjectBroker::setModelFactoryCallback(modelFactory);
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);

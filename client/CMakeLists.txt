@@ -9,6 +9,7 @@ set(gammaray_clientlib_srcs
   tcpclientdevice.cpp
   localclientdevice.cpp
   paintanalyzerclient.cpp
+  remoteviewclient.cpp
 )
 
 qt4_add_resources(gammaray_clientlib_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)

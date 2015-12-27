@@ -40,6 +40,8 @@ class QStandardItemModel;
 
 namespace GammaRay {
 
+class RemoteViewInterface;
+
 /** Widget showing remote screen content and providing both visual inspection
  *  capabilities as well as input redirection.
  *
@@ -50,6 +52,10 @@ class GAMMARAY_UI_EXPORT RemoteViewWidget : public QWidget
     Q_OBJECT
 public:
     explicit RemoteViewWidget(QWidget *parent = Q_NULLPTR);
+    ~RemoteViewWidget();
+
+    /// Set the object name for connecting to the server.
+    void setName(const QString &name);
 
     enum InteractionMode {
         NoInteraction = 0, ///< use this for disabling all built-in interaction if you are adding custom interaction modes
@@ -143,6 +149,7 @@ private:
     QString m_unavailableText;
     QVector<int> m_tickLabelDists;
     QActionGroup *m_interactionModeActions;
+    RemoteViewInterface *m_interface;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;

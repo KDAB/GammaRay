@@ -76,6 +76,8 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
 
+  m_remoteView->setName(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"));
+
   auto layout = new QVBoxLayout;
   layout->setMargin(0);
   auto toolbar = new QToolBar(this);

@@ -43,6 +43,8 @@ set(gammaray_srcs
   paintbuffermodel.cpp
   paintanalyzer.cpp
 
+  remoteviewserver.cpp
+
   tools/modelinspector/modeltester.cpp
   tools/modelinspector/modelmodel.cpp
   tools/modelinspector/modelcellmodel.cpp

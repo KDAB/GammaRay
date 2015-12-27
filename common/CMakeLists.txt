@@ -13,6 +13,7 @@ set(gammaray_common_srcs
   propertysyncer.cpp
   modelevent.cpp
   paintanalyzerinterface.cpp
+  remoteviewinterface.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})

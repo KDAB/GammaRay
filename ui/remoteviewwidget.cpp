@@ -28,6 +28,9 @@
 
 #include "remoteviewwidget.h"
 
+#include <common/remoteviewinterface.h>
+#include <common/objectbroker.h>
+
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
@@ -43,6 +46,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     m_zoomLevelModel(new QStandardItemModel(this)),
     m_unavailableText(tr("No remote view available.")),
     m_interactionModeActions(new QActionGroup(this)),
+    m_interface(Q_NULLPTR),
     m_zoom(1.0),
     m_x(0),
     m_y(0),
@@ -75,6 +79,15 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     connect(m_interactionModeActions, SIGNAL(triggered(QAction*)), this, SLOT(interactionActionTriggered(QAction*)));
 
     setInteractionMode(ViewInteraction);
+}
+
+RemoteViewWidget::~RemoteViewWidget()
+{
+}
+
+void RemoteViewWidget::setName(const QString& name)
+{
+    m_interface = ObjectBroker::object<RemoteViewInterface*>(name);
 }
 
 void RemoteViewWidget::setupActions()
@@ -466,8 +479,8 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
     switch (m_interactionMode) {
         case ViewInteraction:
             m_mouseDownPosition = event->pos() - QPoint(m_x, m_y);
-            // if (e->modifiers() & Qt::ControlModifier && m_supportedInteractionModes & ElementPicking)
-                // pickElement(mapToSource(event->pos());
+            if ((event->modifiers() & Qt::ControlModifier) && (m_supportedInteractionModes & ElementPicking))
+                m_interface->pickElementAt(mapToSource(event->pos()));
             if (event->buttons() & Qt::LeftButton)
                 setCursor(Qt::ClosedHandCursor);
              break;
@@ -475,7 +488,7 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
             m_mouseDownPosition = mapToSource(event->pos());
             break;
         case ElementPicking:
-            // pickElement(mapToSource(event->pos()));
+            m_interface->pickElementAt(mapToSource(event->pos()));
             break;
         case InputRedirection:
             //TODO

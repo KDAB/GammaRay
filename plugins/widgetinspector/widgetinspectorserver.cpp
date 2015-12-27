@@ -44,6 +44,7 @@
 #include "core/probeinterface.h"
 #include "core/probeguard.h"
 #include <core/paintanalyzer.h>
+#include <core/remoteviewserver.h>
 
 #include "common/objectbroker.h"
 #include "common/settempvalue.h"
@@ -81,6 +82,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   , m_propertyController(new PropertyController(objectName(), this))
   , m_updatePreviewTimer(new QTimer(this))
   , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this))
+  , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"), this))
   , m_probe(probe)
 {
   registerWidgetMetaTypes();
@@ -113,6 +115,8 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
     discoverObjects();
   }
+
+  connect(m_remoteView, SIGNAL(doPickElement(QPoint)), this, SLOT(pickElement(QPoint)));
 }
 
 WidgetInspectorServer::~WidgetInspectorServer()
@@ -262,6 +266,9 @@ void WidgetInspectorServer::recreateOverlayWidget()
 
 void WidgetInspectorServer::widgetSelected(QWidget *widget)
 {
+  if (m_selectedWidget == widget)
+    return;
+
   const QAbstractItemModel *model = m_widgetSelectionModel->model();
   const QModelIndexList indexList =
     model->match(model->index(0, 0),
@@ -356,6 +363,14 @@ void WidgetInspectorServer::analyzePainting()
   m_selectedWidget->render(m_paintAnalyzer->paintDevice());
   m_paintAnalyzer->endAnalyzePainting();
   m_overlayWidget->show();
+}
+
+void WidgetInspectorServer::pickElement(const QPoint& pos)
+{
+    if (!m_selectedWidget)
+        return;
+    auto child = m_selectedWidget->childAt(pos);
+    widgetSelected(child);
 }
 
 void WidgetInspectorServer::checkFeatures()

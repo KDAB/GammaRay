@@ -39,6 +39,7 @@ class QModelIndex;
 class QItemSelection;
 class QItemSelectionModel;
 class QTimer;
+class QPoint;
 
 namespace GammaRay {
 
@@ -46,6 +47,7 @@ class ProbeInterface;
 class PropertyController;
 class OverlayWidget;
 class PaintAnalyzer;
+class RemoteViewServer;
 
 class WidgetInspectorServer : public WidgetInspectorInterface
 {
@@ -82,6 +84,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void analyzePainting() Q_DECL_OVERRIDE;
 
     void updateWidgetPreview();
+    void pickElement(const QPoint &pos);
 
     void checkFeatures() Q_DECL_OVERRIDE;
 
@@ -93,6 +96,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     QPointer<QWidget> m_selectedWidget;
     QTimer *m_updatePreviewTimer;
     PaintAnalyzer *m_paintAnalyzer;
+    RemoteViewServer *m_remoteView;
     ProbeInterface *m_probe;
 };
 
