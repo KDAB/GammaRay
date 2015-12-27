@@ -84,6 +84,8 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )
 
+qt4_add_resources(gammaray_ui_srcs resources/ui.qrc)
+
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
 set_target_properties(gammaray_ui PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}

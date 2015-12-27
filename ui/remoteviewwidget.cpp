@@ -81,15 +81,14 @@ void RemoteViewWidget::setupActions()
 {
     m_interactionModeActions->setExclusive(true);
 
-    // FIXME: move the icons here!
-    auto action = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/move-preview.png")), tr("Move Preview"), this);
+    auto action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/move-preview.png")), tr("Move Preview"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Move preview</b><br>"
         "Default mode. Click and drag to move the preview. Won't impact the original application in any way."));
     action->setData(ViewInteraction);
     action->setActionGroup(m_interactionModeActions);
 
-    action = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
+    action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
         "Choose this mode, click somewhere and drag to measure the distance between the "
@@ -107,7 +106,7 @@ void RemoteViewWidget::setupActions()
     action->setData(ElementPicking);
     action->setActionGroup(m_interactionModeActions);
 
-    action = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/redirect-input.png")), tr("Redirect Input"), this);
+    action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/redirect-input.png")), tr("Redirect Input"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Redirect Input</b><br>"
         "In this mode all mouse input is redirected directly to the original application,"

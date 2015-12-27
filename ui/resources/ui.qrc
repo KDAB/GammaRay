@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="gammaray/ui">
+    <file>measure-pixels.png</file>
+    <file>redirect-input.png</file>
+    <file>move-preview.png</file>
+  </qresource>
+</RCC>
