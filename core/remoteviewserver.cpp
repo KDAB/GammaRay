@@ -28,14 +28,51 @@
 
 #include "remoteviewserver.h"
 
+#include <QCoreApplication>
+#include <QDebug>
+#include <QMouseEvent>
+
 using namespace GammaRay;
 
 RemoteViewServer::RemoteViewServer(const QString& name, QObject* parent):
-    RemoteViewInterface(name, parent)
+    RemoteViewInterface(name, parent),
+    m_eventReceiver(Q_NULLPTR)
 {
+}
+
+void RemoteViewServer::setEventReceiver(QObject* receiver)
+{
+    m_eventReceiver = receiver;
 }
 
 void RemoteViewServer::pickElementAt(const QPoint& pos)
 {
     emit doPickElement(pos);
+}
+
+void RemoteViewServer::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
+{
+    if (!m_eventReceiver)
+        return;
+
+    auto event = new QKeyEvent((QEvent::Type)type, key, (Qt::KeyboardModifiers)modifiers, text, autorep, count);
+    QCoreApplication::postEvent(m_eventReceiver, event);
+}
+
+void RemoteViewServer::sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers)
+{
+    if (!m_eventReceiver)
+        return;
+
+    auto event = new QMouseEvent((QEvent::Type)type, localPos, (Qt::MouseButton)button, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
+    QCoreApplication::postEvent(m_eventReceiver, event);
+}
+
+void RemoteViewServer::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers)
+{
+    if (!m_eventReceiver)
+        return;
+
+    auto event = new QWheelEvent(localPos, localPos /*FIXME*/, pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical, /*not used*/ (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
+    QCoreApplication::sendEvent(m_eventReceiver, event);
 }

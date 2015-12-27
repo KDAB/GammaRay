@@ -35,18 +35,27 @@
 
 namespace GammaRay {
 
+/** Server part of the remote view widget. */
 class GAMMARAY_CORE_EXPORT RemoteViewServer : public RemoteViewInterface
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::RemoteViewInterface)
 public:
     explicit RemoteViewServer(const QString& name, QObject* parent = Q_NULLPTR);
+    /// event receiver for input redirection
+    void setEventReceiver(QObject *receiver);
 
 signals:
     void doPickElement(const QPoint &pos);
 
 private:
     void pickElementAt(const QPoint& pos) Q_DECL_OVERRIDE;
+    void sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count) Q_DECL_OVERRIDE;
+    void sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers) Q_DECL_OVERRIDE;
+    void sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers) Q_DECL_OVERRIDE;
+
+private:
+    QObject *m_eventReceiver;
 };
 
 }

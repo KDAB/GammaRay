@@ -48,6 +48,16 @@ public:
 public slots:
     virtual void pickElementAt(const QPoint &pos) = 0;
 
+    virtual void sendKeyEvent(int type, int key, int modifiers,
+                              const QString &text = QString(),
+                              bool autorep = false, ushort count = 1) = 0;
+
+    virtual void sendMouseEvent(int type, const QPoint &localPos,
+                                int button, int buttons, int modifiers) = 0;
+
+    virtual void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
+                                QPoint angleDelta, int buttons, int modifiers) = 0;
+
 private:
     QString m_name;
 };

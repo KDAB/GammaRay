@@ -170,6 +170,7 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
   }
 
   m_selectedWidget = widget;
+  m_remoteView->setEventReceiver(m_selectedWidget);
 
   if (m_selectedWidget &&
       (qobject_cast<QDesktopWidget*>(m_selectedWidget) ||

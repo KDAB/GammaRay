@@ -41,3 +41,34 @@ void RemoteViewClient::pickElementAt(const QPoint& pos)
 {
     Endpoint::instance()->invokeObject(name(), "pickElementAt", QVariantList() << pos);
 }
+
+void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
+{
+    Endpoint::instance()->invokeObject(objectName(), "sendKeyEvent", QVariantList()
+                                       << QVariant::fromValue(type)
+                                       << QVariant::fromValue(key)
+                                       << QVariant::fromValue(modifiers)
+                                       << QVariant::fromValue(text)
+                                       << QVariant::fromValue(autorep)
+                                       << QVariant::fromValue(count));
+}
+
+void RemoteViewClient::sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers)
+{
+    Endpoint::instance()->invokeObject(objectName(), "sendMouseEvent", QVariantList()
+                                      << QVariant::fromValue(type)
+                                      << QVariant::fromValue(localPos)
+                                      << QVariant::fromValue(button)
+                                      << QVariant::fromValue(buttons)
+                                      << QVariant::fromValue(modifiers));
+}
+
+void RemoteViewClient::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers)
+{
+    Endpoint::instance()->invokeObject(objectName(), "sendWheelEvent", QVariantList()
+                                       << QVariant::fromValue(localPos)
+                                       << QVariant::fromValue(pixelDelta)
+                                       << QVariant::fromValue(angleDelta)
+                                       << QVariant::fromValue(buttons)
+                                       << QVariant::fromValue(modifiers));
+}

@@ -307,6 +307,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
   m_window = window;
   m_itemModel->setWindow(window);
   m_sgModel->setWindow(window);
+  m_remoteView->setEventReceiver(m_window);
 
   if (m_window) {
     // make sure we have selected something for the property editor to not be entirely empty
@@ -456,55 +457,6 @@ void QuickInspector::slotSceneChanged()
 
   m_needsNewFrame = false;
   QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::AutoConnection); // we are in the render thread here
-}
-
-void QuickInspector::sendKeyEvent(int type, int key, int modifiers, const QString &text,
-                                  bool autorep, ushort count)
-{
-  if (!m_window) {
-    return;
-  }
-
-  QCoreApplication::sendEvent(m_window,
-                              new QKeyEvent((QEvent::Type)type,
-                                            key,
-                                            (Qt::KeyboardModifiers)modifiers,
-                                            text,
-                                            autorep,
-                                            count));
-}
-
-void QuickInspector::sendMouseEvent(int type, const QPointF &localPos, int button,
-                                    int buttons, int modifiers)
-{
-  if (!m_window) {
-    return;
-  }
-
-  QCoreApplication::sendEvent(m_window,
-                              new QMouseEvent((QEvent::Type)type,
-                                              localPos,
-                                              (Qt::MouseButton)button,
-                                              (Qt::MouseButtons)buttons,
-                                              (Qt::KeyboardModifiers)modifiers));
-}
-
-void QuickInspector::sendWheelEvent(const QPointF &localPos, QPoint pixelDelta, QPoint angleDelta,
-                                    int buttons, int modifiers)
-{
-  if (!m_window) {
-    return;
-  }
-
-  QCoreApplication::sendEvent(m_window,
-                              new QWheelEvent(localPos,
-                                              m_window->mapToGlobal(localPos.toPoint()),
-                                              pixelDelta,
-                                              angleDelta,
-                                              0, /*not used*/
-                                              Qt::Vertical, /*not used*/
-                                              (Qt::MouseButtons)buttons,
-                                              (Qt::KeyboardModifiers)modifiers));
 }
 
 void QuickInspector::setCustomRenderMode(

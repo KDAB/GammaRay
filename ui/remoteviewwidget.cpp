@@ -492,7 +492,7 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
                 m_interface->pickElementAt(mapToSource(event->pos()));
             break;
         case InputRedirection:
-            //TODO
+            sendMouseEvent(event);
             break;
     }
 
@@ -508,7 +508,7 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent* event)
             setCursor(Qt::OpenHandCursor);
             break;
         case InputRedirection:
-            // TODO
+            sendMouseEvent(event);
             break;
     }
 
@@ -542,7 +542,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
                 emit measurementChanged(QRectF(m_mouseDownPosition, m_currentMousePosition));
             break;
         case InputRedirection:
-            // TODO
+            sendMouseEvent(event);
             break;
     }
 
@@ -564,7 +564,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             }
             break;
         case InputRedirection:
-            // TODO
+            m_interface->sendWheelEvent(mapToSource(event->pos()), event->pixelDelta(), event->angleDelta(), event->buttons(), event->modifiers());
             break;
     }
 
@@ -583,7 +583,7 @@ void RemoteViewWidget::keyPressEvent(QKeyEvent* event)
                 zoomOut();
             break;
         case InputRedirection:
-            // TODO
+            sendKeyEvent(event);
             break;
     }
     QWidget::keyPressEvent(event);
@@ -593,7 +593,7 @@ void RemoteViewWidget::keyReleaseEvent(QKeyEvent* event)
 {
     switch (m_interactionMode) {
         case InputRedirection:
-            // TODO
+            sendKeyEvent(event);
             break;
     }
     QWidget::keyReleaseEvent(event);
@@ -623,4 +623,14 @@ void RemoteViewWidget::interactionActionTriggered(QAction* action)
 {
     Q_ASSERT(action);
     setInteractionMode(static_cast<InteractionMode>(action->data().toInt()));
+}
+
+void RemoteViewWidget::sendMouseEvent(QMouseEvent* event)
+{
+    m_interface->sendMouseEvent(event->type(), mapToSource(event->pos()), event->button(), event->buttons(), event->modifiers());
+}
+
+void RemoteViewWidget::sendKeyEvent(QKeyEvent* event)
+{
+    m_interface->sendKeyEvent(event->type(), event->key(), event->modifiers(), event->text(), event->isAutoRepeat(), event->count());
 }

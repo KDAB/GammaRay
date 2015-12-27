@@ -40,6 +40,9 @@ class RemoteViewClient : public RemoteViewInterface
 public:
     explicit RemoteViewClient(const QString& name, QObject* parent = Q_NULLPTR);
     void pickElementAt(const QPoint& pos) Q_DECL_OVERRIDE;
+    void sendKeyEvent(int type, int key, int modifiers, const QString& text = QString(), bool autorep = false, ushort count = 1) Q_DECL_OVERRIDE;
+    void sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers) Q_DECL_OVERRIDE;
+    void sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers) Q_DECL_OVERRIDE;
 };
 
 }

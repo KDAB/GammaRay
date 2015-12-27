@@ -48,15 +48,6 @@ public slots:
   void selectWindow(int index) Q_DECL_OVERRIDE;
   void renderScene() Q_DECL_OVERRIDE;
 
-  void sendKeyEvent(int type, int key, int modifiers, const QString &text,
-                    bool autorep, ushort count) Q_DECL_OVERRIDE;
-
-  void sendMouseEvent(int type, const QPointF &localPos,
-                      int button, int buttons, int modifiers) Q_DECL_OVERRIDE;
-
-  void sendWheelEvent(const QPointF &localPos, QPoint pixelDelta,
-                      QPoint angleDelta, int buttons, int modifiers) Q_DECL_OVERRIDE;
-
   void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) Q_DECL_OVERRIDE;
 
   void checkFeatures() Q_DECL_OVERRIDE;

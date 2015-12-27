@@ -130,6 +130,9 @@ private:
     int viewTickLabelDistance() const;
     void drawMeasureOverlay(QPainter *p);
 
+    void sendMouseEvent(QMouseEvent *event);
+    void sendKeyEvent(QKeyEvent *event);
+
     // size of the content area, ie. excluding the rulers
     int contentWidth() const;
     int contentHeight() const;

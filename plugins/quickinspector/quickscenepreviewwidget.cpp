@@ -314,54 +314,6 @@ void QuickScenePreviewWidget::drawAnchor(QPainter *p, Qt::Orientation orientatio
   }
 }
 
-void QuickScenePreviewWidget::mouseMoveEvent(QMouseEvent* e)
-{
-  if (interactionMode() == InputRedirection) {
-    m_inspectorInterface->sendMouseEvent(e->type(), mapToSource(e->pos()), e->button(), e->buttons(), e->modifiers());
-  }
-  RemoteViewWidget::mouseMoveEvent(e);
-}
-
-void QuickScenePreviewWidget::mousePressEvent(QMouseEvent* e)
-{
-  if (interactionMode() == InputRedirection) {
-     m_inspectorInterface->sendMouseEvent(e->type(), mapToSource(e->pos()), e->button(), e->buttons(), e->modifiers());
-  }
-  RemoteViewWidget::mousePressEvent(e);
-}
-
-void QuickScenePreviewWidget::mouseReleaseEvent(QMouseEvent* e)
-{
-  if (interactionMode() == InputRedirection) {
-    m_inspectorInterface->sendMouseEvent(e->type(), mapToSource(e->pos()), e->button(), e->buttons(), e->modifiers());
-  }
-  RemoteViewWidget::mouseReleaseEvent(e);
-}
-
-void QuickScenePreviewWidget::keyPressEvent(QKeyEvent* e)
-{
-  if (interactionMode() == InputRedirection) {
-    m_inspectorInterface->sendKeyEvent(e->type(), e->key(), e->modifiers(), e->text(), e->isAutoRepeat(), e->count());
-  }
-  RemoteViewWidget::keyPressEvent(e);
-}
-
-void QuickScenePreviewWidget::keyReleaseEvent(QKeyEvent* e)
-{
-  if (interactionMode() == InputRedirection) {
-    m_inspectorInterface->sendKeyEvent(e->type(), e->key(), e->modifiers(), e->text(), e->isAutoRepeat(), e->count());
-  }
-  RemoteViewWidget::keyReleaseEvent(e);
-}
-
-void QuickScenePreviewWidget::wheelEvent(QWheelEvent* e)
-{
-  if (interactionMode() == InputRedirection) {
-    m_inspectorInterface->sendWheelEvent(mapToSource(e->pos()), e->pixelDelta(), e->angleDelta(), e->buttons(), e->modifiers());
-  }
-  RemoteViewWidget::wheelEvent(e);
-}
-
 void QuickScenePreviewWidget::setItemGeometry(const QuickItemGeometry &itemGeometry)
 {
   m_itemGeometry = itemGeometry;
