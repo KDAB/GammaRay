@@ -30,6 +30,7 @@
 
 #include <QAction>
 #include <QActionGroup>
+#include <QApplication>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QPainter>
@@ -46,8 +47,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     m_x(0),
     m_y(0),
     m_interactionMode(NoInteraction),
-    m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection),
-    m_mouseDown(false)
+    m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setMouseTracking(true);
@@ -81,12 +81,13 @@ void RemoteViewWidget::setupActions()
 {
     m_interactionModeActions->setExclusive(true);
 
-    auto action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/move-preview.png")), tr("Move Preview"), this);
+    auto action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/move-preview.png")), tr("Pan View"), this);
     action->setCheckable(true);
-    action->setToolTip(tr("<b>Move preview</b><br>"
+    action->setToolTip(tr("<b>Pan view</b><br>"
         "Default mode. Click and drag to move the preview. Won't impact the original application in any way."));
     action->setData(ViewInteraction);
     action->setActionGroup(m_interactionModeActions);
+    addAction(action);
 
     action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
     action->setCheckable(true);
@@ -96,6 +97,7 @@ void RemoteViewWidget::setupActions()
         "coordinates)."));
     action->setData(Measuring);
     action->setActionGroup(m_interactionModeActions);
+    addAction(action);
 
     // TODO: icon
     action = new QAction(tr("Pick Element"), this);
@@ -105,6 +107,7 @@ void RemoteViewWidget::setupActions()
         "Select an element for inspection by clicking on it."));
     action->setData(ElementPicking);
     action->setActionGroup(m_interactionModeActions);
+    addAction(action);
 
     action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/redirect-input.png")), tr("Redirect Input"), this);
     action->setCheckable(true);
@@ -113,6 +116,7 @@ void RemoteViewWidget::setupActions()
         "so you can control the application directly from within GammaRay."));
     action->setData(InputRedirection);
     action->setActionGroup(m_interactionModeActions);
+    addAction(action);
 }
 
 const QImage& RemoteViewWidget::image() const
@@ -241,6 +245,7 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
     if (m_interactionMode == mode || !(mode & m_supportedInteractionModes))
         return;
 
+    setContextMenuPolicy(Qt::ActionsContextMenu);
     switch (mode) {
         case Measuring:
         case ElementPicking:
@@ -249,6 +254,8 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
         case ViewInteraction:
             setCursor(Qt::OpenHandCursor);
             break;
+        case InputRedirection:
+            setContextMenuPolicy(Qt::PreventContextMenu);
         default:
             setCursor(QCursor());
             break;
@@ -294,7 +301,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent* event)
 
     drawRuler(&p);
 
-    if (m_interactionMode == Measuring && m_mouseDown) {
+    if (m_interactionMode == Measuring && (QApplication::mouseButtons() & Qt::LeftButton)) {
         drawMeasureOverlay(&p);
     }
 }
@@ -454,7 +461,6 @@ void RemoteViewWidget::resizeEvent(QResizeEvent* event)
 
 void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
 {
-    m_mouseDown = true;
     m_currentMousePosition = mapToSource(event->pos());
 
     switch (m_interactionMode) {
@@ -481,7 +487,6 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
 
 void RemoteViewWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-    m_mouseDown = false;
     m_currentMousePosition = mapToSource(event->pos());
 
     switch (m_interactionMode) {
@@ -519,7 +524,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
             }
             break;
         case Measuring:
-            if (m_mouseDown)
+            if (event->buttons() & Qt::LeftButton)
                 emit measurementChanged(QRectF(m_mouseDownPosition, m_currentMousePosition));
             break;
         case InputRedirection:

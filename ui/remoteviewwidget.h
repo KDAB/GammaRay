@@ -150,7 +150,6 @@ private:
     InteractionModes m_supportedInteractionModes;
     QPoint m_mouseDownPosition; // semantics depend on interaction mode
     QPoint m_currentMousePosition; // in view coordinates
-    bool m_mouseDown;
 };
 
 }
