@@ -50,6 +50,11 @@ void RemoteViewServer::pickElementAt(const QPoint& pos)
     emit doPickElement(pos);
 }
 
+void RemoteViewServer::resetView()
+{
+    emit reset();
+}
+
 void RemoteViewServer::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
 {
     if (!m_eventReceiver)

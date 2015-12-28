@@ -88,6 +88,7 @@ RemoteViewWidget::~RemoteViewWidget()
 void RemoteViewWidget::setName(const QString& name)
 {
     m_interface = ObjectBroker::object<RemoteViewInterface*>(name);
+    connect(m_interface, SIGNAL(reset()), this, SLOT(reset()));
 }
 
 void RemoteViewWidget::setupActions()

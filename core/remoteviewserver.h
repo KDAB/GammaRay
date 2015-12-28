@@ -45,6 +45,9 @@ public:
     /// event receiver for input redirection
     void setEventReceiver(QObject *receiver);
 
+    /// resets the client view if the window selection changed
+    void resetView();
+
 signals:
     void doPickElement(const QPoint &pos);
 
