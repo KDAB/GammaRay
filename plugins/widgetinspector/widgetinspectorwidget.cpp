@@ -96,6 +96,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   toolbar->addWidget(zoom);
   connect(zoom, SIGNAL(currentIndexChanged(int)), m_remoteView, SLOT(setZoomLevel(int)));
   connect(m_remoteView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
+  zoom->setCurrentIndex(m_remoteView->zoomLevelIndex());
 
   connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
