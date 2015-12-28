@@ -169,8 +169,10 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     return;
   }
 
+  if (!m_selectedWidget || !widget || m_selectedWidget->window() != widget->window())
+      m_remoteView->resetView();
   m_selectedWidget = widget;
-  m_remoteView->setEventReceiver(m_selectedWidget);
+  m_remoteView->setEventReceiver(m_selectedWidget->window());
 
   if (m_selectedWidget &&
       (qobject_cast<QDesktopWidget*>(m_selectedWidget) ||
@@ -239,7 +241,7 @@ void WidgetInspectorServer::updateWidgetPreview()
     return;
   }
 
-  emit widgetPreviewAvailable(imageForWidget(m_selectedWidget));
+  emit widgetPreviewAvailable(imageForWidget(m_selectedWidget->window()));
 }
 
 QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
@@ -370,8 +372,11 @@ void WidgetInspectorServer::pickElement(const QPoint& pos)
 {
     if (!m_selectedWidget)
         return;
-    auto child = m_selectedWidget->childAt(pos);
-    widgetSelected(child);
+    auto child = m_selectedWidget->window()->childAt(pos);
+    if (!child && m_selectedWidget->window()->rect().contains(pos))
+        widgetSelected(m_selectedWidget->window());
+    else
+        widgetSelected(child);
 }
 
 void WidgetInspectorServer::checkFeatures()

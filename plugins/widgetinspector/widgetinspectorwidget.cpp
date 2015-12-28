@@ -146,8 +146,6 @@ void WidgetInspectorWidget::setFeatures(bool svg, bool print, bool designer, boo
 
 void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
 {
-  m_remoteView->reset();
-
   QModelIndex index;
   if (selection.size() > 0)
     index = selection.first().topLeft();
