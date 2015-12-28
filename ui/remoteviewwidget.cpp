@@ -442,7 +442,8 @@ void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
 {
     p->save();
 
-    p->setPen(QColor(0, 0, 0, 170));
+    p->setCompositionMode(QPainter::CompositionMode_Difference);
+    p->setPen(QColor(255, 255, 255, 170));
 
     const auto startPos =  mapFromSource(m_mouseDownPosition);
     const auto endPos = mapFromSource(m_currentMousePosition);
