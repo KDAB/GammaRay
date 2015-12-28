@@ -68,6 +68,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void registerWidgetMetaTypes();
     void registerVariantHandlers();
     void discoverObjects();
+    void checkFeatures();
 
   private slots:
     void widgetSelected(const QItemSelection &selection);
@@ -85,8 +86,6 @@ class WidgetInspectorServer : public WidgetInspectorInterface
 
     void updateWidgetPreview();
     void pickElement(const QPoint &pos);
-
-    void checkFeatures() Q_DECL_OVERRIDE;
 
   private:
     QPointer<OverlayWidget> m_overlayWidget;

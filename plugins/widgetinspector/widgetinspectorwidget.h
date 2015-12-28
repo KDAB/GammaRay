@@ -51,9 +51,6 @@ class WidgetInspectorWidget : public QWidget
     explicit WidgetInspectorWidget(QWidget *parent = 0);
     ~WidgetInspectorWidget();
 
-  private:
-    void setActionsEnabled(bool enabled);
-
   private slots:
     void widgetSelected(const QItemSelection &selection);
 
@@ -62,7 +59,7 @@ class WidgetInspectorWidget : public QWidget
     void saveAsPdf();
     void saveAsUiFile();
     void analyzePainting();
-    void setFeatures(bool svg, bool print, bool designer, bool privateHeaders);
+    void updateActions();
 
   private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;

@@ -30,15 +30,45 @@
 
 #include <common/objectbroker.h>
 
+#include <QDataStream>
+#include <QMetaType>
+
 using namespace GammaRay;
+
+QDataStream &operator<<(QDataStream &out, WidgetInspectorInterface::Features value)
+{
+  out << qint32(value);
+  return out;
+}
+
+QDataStream &operator>>(QDataStream &in, WidgetInspectorInterface::Features &value)
+{
+  qint32 t;
+  in >> t;
+  value = static_cast<WidgetInspectorInterface::Features>(t);
+  return in;
+}
 
 WidgetInspectorInterface::WidgetInspectorInterface(QObject *parent)
   : QObject(parent)
 {
-  ObjectBroker::registerObject<WidgetInspectorInterface*>(this);
+    qRegisterMetaTypeStreamOperators<Features>();
+    ObjectBroker::registerObject<WidgetInspectorInterface*>(this);
 }
 
 WidgetInspectorInterface::~WidgetInspectorInterface()
 {
+}
 
+WidgetInspectorInterface::Features WidgetInspectorInterface::features() const
+{
+    return m_features;
+}
+
+void WidgetInspectorInterface::setFeatures(WidgetInspectorInterface::Features features)
+{
+    if (features == m_features)
+        return;
+    m_features = features;
+    emit featuresChanged();
 }

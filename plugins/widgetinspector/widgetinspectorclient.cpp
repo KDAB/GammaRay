@@ -56,8 +56,3 @@ void WidgetInspectorClient::analyzePainting()
 {
   Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
 }
-
-void WidgetInspectorClient::checkFeatures()
-{
-  Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
-}

@@ -104,44 +104,35 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
   connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), m_remoteView, SLOT(setImage(QImage)));
 
-  connect(m_inspector, SIGNAL(features(bool,bool,bool,bool)),
-          this, SLOT(setFeatures(bool,bool,bool,bool)));
+  connect(m_inspector, SIGNAL(featuresChanged()), this, SLOT(updateActions()));
 
-  // NOTE: we must add actions in the ctor...
   addAction(ui->actionSaveAsImage);
   addAction(ui->actionSaveAsSvg);
   addAction(ui->actionSaveAsPdf);
   addAction(ui->actionSaveAsUiFile);
   addAction(ui->actionAnalyzePainting);
-  setActionsEnabled(false);
 
-  m_inspector->checkFeatures();
+  updateActions();
 }
 
 WidgetInspectorWidget::~WidgetInspectorWidget()
 {
 }
 
-void WidgetInspectorWidget::setFeatures(bool svg, bool print, bool designer, bool privateHeaders)
+void WidgetInspectorWidget::updateActions()
 {
-  if (!svg) {
-    delete ui->actionSaveAsSvg;
-    ui->actionSaveAsSvg = 0;
-  }
-  if (!print) {
-    delete ui->actionSaveAsPdf;
-    ui->actionSaveAsPdf = 0;
-  }
-  if (!designer) {
-    delete ui->actionSaveAsUiFile;
-    ui->actionSaveAsUiFile = 0;
-  }
-  if (!privateHeaders) {
-    delete ui->actionAnalyzePainting;
-    ui->actionAnalyzePainting = 0;
-  }
+    const auto model = ui->widgetTreeView->selectionModel()->selectedRows();
+    const auto selection = !model.isEmpty() && model.first().isValid();
 
-  setActionsEnabled(ui->widgetTreeView->selectionModel()->hasSelection());
+    ui->actionSaveAsSvg->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::SvgExport);
+    ui->actionSaveAsPdf->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::PdfExport);
+    ui->actionSaveAsUiFile->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::UiExport);
+    ui->actionAnalyzePainting->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::AnalyzePainting);
+
+    auto f = m_remoteView->supportedInteractionModes() & ~ RemoteViewWidget::InputRedirection;
+    if (m_inspector->features() & WidgetInspectorInterface::InputRedirection)
+        f |= RemoteViewWidget::InputRedirection;
+    m_remoteView->setSupportedInteractionModes(f);
 }
 
 void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
@@ -151,20 +142,11 @@ void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
     index = selection.first().topLeft();
 
   if (index.isValid()) {
-    setActionsEnabled(true);
-
     // in case selection was triggered remotely
     ui->widgetTreeView->scrollTo(index);
-  } else {
-    setActionsEnabled(false);
   }
-}
 
-void WidgetInspectorWidget::setActionsEnabled(bool enabled)
-{
-  foreach (QAction *action, actions()) {
-    action->setEnabled(enabled);
-  }
+  updateActions();
 }
 
 void WidgetInspectorWidget::saveAsImage()

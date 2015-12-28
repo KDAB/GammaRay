@@ -30,6 +30,7 @@
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORINTERFACE_H
 
 #include <QObject>
+#include <QMetaType>
 
 class QImage;
 
@@ -38,12 +39,25 @@ namespace GammaRay {
 class WidgetInspectorInterface : public QObject
 {
   Q_OBJECT
+  Q_PROPERTY(GammaRay::WidgetInspectorInterface::Features features READ features WRITE setFeatures NOTIFY featuresChanged)
   public:
+    enum Feature {
+        NoFeature = 0,
+        InputRedirection = 1,
+        AnalyzePainting = 2,
+        SvgExport = 4,
+        PdfExport = 8,
+        UiExport = 16
+    };
+    Q_DECLARE_FLAGS(Features, Feature)
+
     explicit WidgetInspectorInterface(QObject *parent = 0);
     virtual ~WidgetInspectorInterface();
 
+    Features features() const;
+    void setFeatures(Features features);
+
   public slots:
-    virtual void checkFeatures() = 0;
     virtual void saveAsImage(const QString &fileName) = 0;
     virtual void saveAsSvg(const QString &fileName) = 0;
     virtual void saveAsPdf(const QString &fileName) = 0;
@@ -53,11 +67,16 @@ class WidgetInspectorInterface : public QObject
 
   signals:
     void widgetPreviewAvailable(const QImage &image);
-    void features(bool svg, bool print, bool designer, bool privateHeaders);
+    void featuresChanged();
+
+  private:
+    Features m_features;
 };
 
 }
 
+Q_DECLARE_METATYPE(GammaRay::WidgetInspectorInterface::Features)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::WidgetInspectorInterface::Features)
 Q_DECLARE_INTERFACE(GammaRay::WidgetInspectorInterface, "com.kdab.GammaRay.WidgetInspector")
 
 #endif // GAMMARAY_WIDGETINSPECTORINTERFACE_H

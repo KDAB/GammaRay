@@ -49,7 +49,6 @@ class WidgetInspectorClient : public WidgetInspectorInterface
     void saveAsPdf(const QString &fileName) Q_DECL_OVERRIDE;
     void saveAsUiFile(const QString &fileName) Q_DECL_OVERRIDE;
     void analyzePainting() Q_DECL_OVERRIDE;
-    void checkFeatures() Q_DECL_OVERRIDE;
 };
 }
 

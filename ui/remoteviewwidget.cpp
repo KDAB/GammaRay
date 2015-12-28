@@ -282,6 +282,11 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
     }
 }
 
+RemoteViewWidget::InteractionModes RemoteViewWidget::supportedInteractionModes() const
+{
+    return m_supportedInteractionModes;
+}
+
 void RemoteViewWidget::setSupportedInteractionModes(RemoteViewWidget::InteractionModes modes)
 {
     m_supportedInteractionModes = modes;

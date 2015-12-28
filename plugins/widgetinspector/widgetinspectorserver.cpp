@@ -69,6 +69,7 @@
 #include <QEvent>
 #include <QTimer>
 #include <QStyle>
+// #include <QWindow>
 
 #include <iostream>
 
@@ -117,6 +118,8 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   }
 
   connect(m_remoteView, SIGNAL(doPickElement(QPoint)), this, SLOT(pickElement(QPoint)));
+
+  checkFeatures();
 }
 
 WidgetInspectorServer::~WidgetInspectorServer()
@@ -381,24 +384,22 @@ void WidgetInspectorServer::pickElement(const QPoint& pos)
 
 void WidgetInspectorServer::checkFeatures()
 {
-  emit features(
+    Features f = NoFeature;
 #ifdef HAVE_QT_SVG
-    true,
-#else
-    false,
+    f |= SvgExport;
 #endif
 #ifdef HAVE_QT_PRINTSUPPORT
-    true,
-#else
-    false,
+    f |= PdfExport;
 #endif
 #ifdef HAVE_QT_DESIGNER
-    true,
-#else
-    false,
+    f |= UiExport;
 #endif
-    PaintAnalyzer::isAvailable()
-  );
+    if (PaintAnalyzer::isAvailable())
+        f |= AnalyzePainting;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    f |= InputRedirection;
+#endif
+    setFeatures(f);
 }
 
 void WidgetInspectorServer::registerWidgetMetaTypes()

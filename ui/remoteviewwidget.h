@@ -68,6 +68,7 @@ public:
     void setInteractionMode(InteractionMode mode);
 
     Q_DECLARE_FLAGS(InteractionModes, InteractionMode)
+    InteractionModes supportedInteractionModes() const;
     void setSupportedInteractionModes(InteractionModes modes);
 
     /// Returns the current zoom level
