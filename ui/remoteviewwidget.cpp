@@ -564,7 +564,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             }
             break;
         case InputRedirection:
-            m_interface->sendWheelEvent(mapToSource(event->pos()), event->pixelDelta(), event->angleDelta(), event->buttons(), event->modifiers());
+            sendWheelEvent(event);
             break;
     }
 
@@ -633,4 +633,20 @@ void RemoteViewWidget::sendMouseEvent(QMouseEvent* event)
 void RemoteViewWidget::sendKeyEvent(QKeyEvent* event)
 {
     m_interface->sendKeyEvent(event->type(), event->key(), event->modifiers(), event->text(), event->isAutoRepeat(), event->count());
+}
+
+void RemoteViewWidget::sendWheelEvent(QWheelEvent* event)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    auto angleDelta = event->angleDelta();
+    auto pixelDelta = event->pixelDelta();
+#else
+    QPoint angleDelta;
+    if (event->orientation() == Qt::Horizontal)
+        angleDelta.setX(event->delta());
+    else
+        angleDelta.setY(event->delta());
+    QPoint pixelDelta;
+#endif
+    m_interface->sendWheelEvent(mapToSource(event->pos()), pixelDelta, angleDelta, event->buttons(), event->modifiers());
 }

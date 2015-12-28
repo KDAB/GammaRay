@@ -73,6 +73,13 @@ void RemoteViewServer::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta,
     if (!m_eventReceiver)
         return;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     auto event = new QWheelEvent(localPos, localPos /*FIXME*/, pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical, /*not used*/ (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
+#else
+    Q_UNUSED(pixelDelta);
+    auto orientation = angleDelta.x() == 0 ? Qt::Vertical : Qt::Horizontal;
+    auto delta = orientation == Qt::Horizontal ? angleDelta.x() :angleDelta.y();
+    auto event = new QWheelEvent(localPos, delta, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers, orientation);
+#endif
     QCoreApplication::sendEvent(m_eventReceiver, event);
 }

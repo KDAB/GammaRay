@@ -132,6 +132,7 @@ private:
 
     void sendMouseEvent(QMouseEvent *event);
     void sendKeyEvent(QKeyEvent *event);
+    void sendWheelEvent(QWheelEvent *event);
 
     // size of the content area, ie. excluding the rulers
     int contentWidth() const;
