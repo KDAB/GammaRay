@@ -33,6 +33,8 @@
 
 #include <common/remoteviewinterface.h>
 
+class QWindow;
+
 namespace GammaRay {
 
 /** Server part of the remote view widget. */
@@ -42,8 +44,14 @@ class GAMMARAY_CORE_EXPORT RemoteViewServer : public RemoteViewInterface
     Q_INTERFACES(GammaRay::RemoteViewInterface)
 public:
     explicit RemoteViewServer(const QString& name, QObject* parent = Q_NULLPTR);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    typedef QWindow EventReceiver;
+#else
+    typedef QObject EventReceiver;
+#endif
     /// event receiver for input redirection
-    void setEventReceiver(QObject *receiver);
+    void setEventReceiver(EventReceiver *receiver);
 
     /// resets the client view if the window selection changed
     void resetView();
@@ -58,7 +66,7 @@ private:
     void sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers) Q_DECL_OVERRIDE;
 
 private:
-    QObject *m_eventReceiver;
+    EventReceiver *m_eventReceiver;
 };
 
 }

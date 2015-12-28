@@ -175,7 +175,9 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
   if (!m_selectedWidget || !widget || m_selectedWidget->window() != widget->window())
       m_remoteView->resetView();
   m_selectedWidget = widget;
-  m_remoteView->setEventReceiver(m_selectedWidget->window());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  m_remoteView->setEventReceiver(m_selectedWidget->window()->windowHandle());
+#endif
 
   if (m_selectedWidget &&
       (qobject_cast<QDesktopWidget*>(m_selectedWidget) ||

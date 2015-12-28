@@ -32,6 +32,10 @@
 #include <QDebug>
 #include <QMouseEvent>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QWindow>
+#endif
+
 using namespace GammaRay;
 
 RemoteViewServer::RemoteViewServer(const QString& name, QObject* parent):
@@ -40,7 +44,7 @@ RemoteViewServer::RemoteViewServer(const QString& name, QObject* parent):
 {
 }
 
-void RemoteViewServer::setEventReceiver(QObject* receiver)
+void RemoteViewServer::setEventReceiver(EventReceiver* receiver)
 {
     m_eventReceiver = receiver;
 }
@@ -79,7 +83,7 @@ void RemoteViewServer::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta,
         return;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    auto event = new QWheelEvent(localPos, localPos /*FIXME*/, pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical, /*not used*/ (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
+    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical, /*not used*/ (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
 #else
     Q_UNUSED(pixelDelta);
     auto orientation = angleDelta.x() == 0 ? Qt::Vertical : Qt::Horizontal;
