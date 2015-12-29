@@ -281,6 +281,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   connect(m_sgModel, &QuickSceneGraphModel::nodeDeleted, this, &QuickInspector::sgNodeDeleted);
 
   connect(m_remoteView, &RemoteViewServer::doPickElement, this, &QuickInspector::pickItemAt);
+  connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &QuickInspector::slotSceneChanged);
 }
 
 QuickInspector::~QuickInspector()
@@ -555,17 +556,6 @@ void QuickInspector::sgNodeDeleted(QSGNode *node)
     m_sgPropertyController->setObject(0);
   }
 }
-
-#if 0
-void QuickInspector::setSceneViewActive(bool active)
-{
-  m_clientViewActive = active;
-
-  if (active && m_window) {
-    m_window->update();
-  }
-}
-#endif
 
 void QuickInspector::analyzePainting()
 {
