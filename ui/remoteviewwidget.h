@@ -161,6 +161,9 @@ private:
     InteractionModes m_supportedInteractionModes;
     QPoint m_mouseDownPosition; // semantics depend on interaction mode
     QPoint m_currentMousePosition; // in view coordinates
+    QPoint m_measurementStartPosition; // in source coordinates
+    QPoint m_measurementEndPosition; // in source coordinates
+    bool m_hasMeasurement;
 };
 
 }

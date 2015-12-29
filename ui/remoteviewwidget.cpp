@@ -53,7 +53,8 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     m_x(0),
     m_y(0),
     m_interactionMode(NoInteraction),
-    m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection)
+    m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection),
+    m_hasMeasurement(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setMouseTracking(true);
@@ -154,6 +155,7 @@ void RemoteViewWidget::setImage(const QImage& image)
 void RemoteViewWidget::reset()
 {
     m_sourceImage = QImage();
+    m_hasMeasurement = false;
     update();
 }
 
@@ -282,6 +284,8 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
         if (action->data() == mode)
             action->setChecked(true);
     }
+
+    update();
 }
 
 RemoteViewWidget::InteractionModes RemoteViewWidget::supportedInteractionModes() const
@@ -322,7 +326,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent* event)
 
     drawRuler(&p);
 
-    if (m_interactionMode == Measuring && (QApplication::mouseButtons() & Qt::LeftButton)) {
+    if (m_interactionMode == Measuring && m_hasMeasurement) {
         drawMeasureOverlay(&p);
     }
 }
@@ -448,8 +452,8 @@ void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
     auto pen = QPen(QColor(255, 255, 255, 170));
     p->setPen(pen);
 
-    const auto startPos =  mapFromSource(m_mouseDownPosition);
-    const auto endPos = mapFromSource(m_currentMousePosition);
+    const auto startPos =  mapFromSource(m_measurementStartPosition);
+    const auto endPos = mapFromSource(m_measurementEndPosition);
     const QPoint hOffset(5, 0);
     const QPoint vOffset(0, 5);
 
@@ -470,13 +474,13 @@ void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
     // start and end labels
     const QPoint startLabelDir(startPos.x() < endPos.x() ? -1 : 1, startPos.y() < endPos.y() ? -1 : 1);
     const QPoint endLabelDir(-startLabelDir.x(), -startLabelDir.y());
-    drawMeasurementLabel(p, startPos, startLabelDir, QStringLiteral("x: %1 y: %2").arg(m_mouseDownPosition.x()).arg(m_mouseDownPosition.y()));
-    drawMeasurementLabel(p, endPos, endLabelDir, QStringLiteral("x: %1 y: %2").arg(m_currentMousePosition.x()).arg(m_currentMousePosition.y()));
+    drawMeasurementLabel(p, startPos, startLabelDir, QStringLiteral("x: %1 y: %2").arg(m_measurementStartPosition.x()).arg(m_measurementStartPosition.y()));
+    drawMeasurementLabel(p, endPos, endLabelDir, QStringLiteral("x: %1 y: %2").arg(m_measurementEndPosition.x()).arg(m_measurementEndPosition.y()));
 
     // distance label
     const auto dPos = QPoint(startPos + endPos) / 2;
     const QPoint dDir(startLabelDir.x(), endLabelDir.y());
-    const auto d = QLineF(m_mouseDownPosition, m_currentMousePosition).length();
+    const auto d = QLineF(m_measurementStartPosition, m_measurementEndPosition).length();
     drawMeasurementLabel(p, dPos, dDir, QStringLiteral("%1px").arg(d, 0, 'f', 2));
 
     // x/y length labels, if there is enough space
@@ -484,14 +488,14 @@ void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
     if (xDiff > fontMetrics().height() * 2) {
         const auto xPos = QPoint(dPos.x(), startPos.y());
         const QPoint xDir = QPoint(-startLabelDir.x(), startLabelDir.y());
-        drawMeasurementLabel(p, xPos, xDir, QStringLiteral("x: %1px").arg(std::abs(m_mouseDownPosition.x() - m_currentMousePosition.x())));
+        drawMeasurementLabel(p, xPos, xDir, QStringLiteral("x: %1px").arg(std::abs(m_measurementStartPosition.x() - m_measurementEndPosition.x())));
     }
 
     const auto yDiff = std::abs(endPos.y() - startPos.y());
     if (yDiff > fontMetrics().height() * 2) {
         const auto yPos = QPoint(endPos.x(), dPos.y());
         const QPoint yDir = QPoint(endLabelDir.x(), -endLabelDir.y());
-        drawMeasurementLabel(p, yPos, yDir, QStringLiteral("y: %1px").arg(std::abs(m_mouseDownPosition.y() - m_currentMousePosition.y())));
+        drawMeasurementLabel(p, yPos, yDir, QStringLiteral("y: %1px").arg(std::abs(m_measurementStartPosition.y() - m_measurementEndPosition.y())));
     }
 }
 
@@ -544,7 +548,12 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
                 setCursor(Qt::ClosedHandCursor);
              break;
         case Measuring:
-            m_mouseDownPosition = mapToSource(event->pos());
+            if (event->buttons() & Qt::LeftButton) {
+                m_hasMeasurement = true;
+                m_measurementStartPosition = mapToSource(event->pos());
+                m_measurementEndPosition = mapToSource(event->pos());
+                update();
+            }
             break;
         case ElementPicking:
             if (event->buttons() & Qt::LeftButton)
@@ -565,6 +574,10 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent* event)
     switch (m_interactionMode) {
         case ViewInteraction:
             setCursor(Qt::OpenHandCursor);
+            break;
+        case Measuring:
+            if (event->buttons() & Qt::LeftButton)
+                m_measurementEndPosition = mapToSource(event->pos());
             break;
         case InputRedirection:
             sendMouseEvent(event);
@@ -597,6 +610,8 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
             }
             break;
         case Measuring:
+            if (event->buttons() & Qt::LeftButton)
+                m_measurementEndPosition = mapToSource(event->pos());
             break;
         case InputRedirection:
             sendMouseEvent(event);
