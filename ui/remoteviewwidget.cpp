@@ -510,9 +510,9 @@ void RemoteViewWidget::drawMeasurementLabel(QPainter* p, QPoint pos, QPoint dir,
     r = r.normalized();
     r = r.translated(dir * 5);
 
-    p->setPen(Qt::NoPen);
-    p->fillRect(r, palette().background());
     p->setPen(palette().color(QPalette::Text));
+    p->setBrush(palette().background());
+    p->drawRect(r);
     p->drawText(r, Qt::AlignCenter, text);
     p->restore();
 }
