@@ -32,6 +32,7 @@
 #include "paintbuffermodel.h"
 
 #include <core/probe.h>
+#include <core/remoteviewserver.h>
 #include <common/objectbroker.h>
 
 #include <QItemSelectionModel>
@@ -43,7 +44,8 @@ PaintAnalyzer::PaintAnalyzer(const QString& name, QObject* parent):
     PaintAnalyzerInterface(name, parent),
     m_paintBufferModel(Q_NULLPTR),
     m_paintBuffer(Q_NULLPTR),
-    m_repaintTimer(new QTimer(this))
+    m_repaintTimer(new QTimer(this)),
+    m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
@@ -122,6 +124,7 @@ void PaintAnalyzer::endAnalyzePainting()
 #endif
     delete m_paintBuffer;
     m_paintBuffer = 0;
+    m_remoteView->resetView();
     update();
 }
 

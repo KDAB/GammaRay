@@ -67,6 +67,7 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   zoom->setModel(ui->replayWidget->zoomLevelModel());
   toolbar->addWidget(zoom);
 
+  ui->replayWidget->setName(name + QStringLiteral(".remoteView"));
   ui->replayWidget->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
 
   ui->splitter->setStretchFactor(0, 0);

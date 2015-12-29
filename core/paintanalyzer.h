@@ -41,6 +41,7 @@ class QTimer;
 namespace GammaRay {
 
 class PaintBufferModel;
+class RemoteViewServer;
 
 /** Inspects individual operations on a QPainter. */
 class GAMMARAY_CORE_EXPORT PaintAnalyzer : public PaintAnalyzerInterface
@@ -68,6 +69,7 @@ private:
     PaintBufferModel *m_paintBufferModel;
     QPaintBuffer* m_paintBuffer;
     QTimer *m_repaintTimer;
+    RemoteViewServer *m_remoteView;
 };
 
 }
