@@ -242,14 +242,6 @@ void QuickInspectorWidget::showEvent(QShowEvent* event)
   QWidget::showEvent(event);
   m_waitingForImage = false;
   m_sceneChangedSinceLastRequest = true;
-  m_interface->setSceneViewActive(true);
-}
-
-void QuickInspectorWidget::hideEvent(QHideEvent* event)
-{
-  if (Endpoint::isConnected())
-    m_interface->setSceneViewActive(false);
-  QWidget::hideEvent(event);
 }
 
 void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)

@@ -32,6 +32,7 @@
 #include <core/probe.h>
 #include <common/paths.h>
 #include <common/objectbroker.h>
+#include <common/remoteviewinterface.h>
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -215,7 +216,9 @@ private slots:
 
     void testFetchingPreview()
     {
-        inspector->setSceneViewActive(true);
+        auto remoteView = ObjectBroker::object<RemoteViewInterface*>(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
+        QVERIFY(remoteView);
+        remoteView->setViewActive(true);
 
         QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());

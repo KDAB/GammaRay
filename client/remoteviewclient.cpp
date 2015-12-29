@@ -44,7 +44,7 @@ void RemoteViewClient::pickElementAt(const QPoint& pos)
 
 void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
 {
-    Endpoint::instance()->invokeObject(objectName(), "sendKeyEvent", QVariantList()
+    Endpoint::instance()->invokeObject(name(), "sendKeyEvent", QVariantList()
                                        << QVariant::fromValue(type)
                                        << QVariant::fromValue(key)
                                        << QVariant::fromValue(modifiers)
@@ -55,7 +55,7 @@ void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QStr
 
 void RemoteViewClient::sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers)
 {
-    Endpoint::instance()->invokeObject(objectName(), "sendMouseEvent", QVariantList()
+    Endpoint::instance()->invokeObject(name(), "sendMouseEvent", QVariantList()
                                       << QVariant::fromValue(type)
                                       << QVariant::fromValue(localPos)
                                       << QVariant::fromValue(button)
@@ -65,10 +65,15 @@ void RemoteViewClient::sendMouseEvent(int type, const QPoint& localPos, int butt
 
 void RemoteViewClient::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers)
 {
-    Endpoint::instance()->invokeObject(objectName(), "sendWheelEvent", QVariantList()
+    Endpoint::instance()->invokeObject(name(), "sendWheelEvent", QVariantList()
                                        << QVariant::fromValue(localPos)
                                        << QVariant::fromValue(pixelDelta)
                                        << QVariant::fromValue(angleDelta)
                                        << QVariant::fromValue(buttons)
                                        << QVariant::fromValue(modifiers));
+}
+
+void RemoteViewClient::setViewActive(bool active)
+{
+    Endpoint::instance()->invokeObject(name(), "setViewActive", QVariantList() << active);
 }

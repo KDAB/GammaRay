@@ -239,14 +239,10 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_sgPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"), this)),
     m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this)),
     m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this)),
-    m_clientViewActive(false),
     m_needsNewFrame(false),
     m_isGrabbingWindow(false)
 {
   registerPCExtensions();
-  Server::instance()->registerMonitorNotifier(
-    Endpoint::instance()->objectAddress(objectName()), this, "clientConnectedChanged");
-
   registerMetaTypes();
   registerVariantHandlers();
   probe->installGlobalEventFilter(this);
@@ -377,7 +373,7 @@ void QuickInspector::objectSelected(void *object, const QString &typeName)
 
 void QuickInspector::renderScene()
 {
-  if (!m_clientViewActive || !m_window) {
+  if (!m_remoteView->isActive() || !m_window) {
     return;
   }
 
@@ -441,7 +437,7 @@ void QuickInspector::sendRenderedScene()
 
 void QuickInspector::slotSceneChanged()
 {
-  if (!m_clientViewActive || !m_window || m_isGrabbingWindow) {
+  if (!m_remoteView->isActive() || !m_window || m_isGrabbingWindow) {
     return;
   }
 
@@ -560,12 +556,7 @@ void QuickInspector::sgNodeDeleted(QSGNode *node)
   }
 }
 
-void QuickInspector::clientConnectedChanged(bool connected)
-{
-  if (!connected)
-    setSceneViewActive(false);
-}
-
+#if 0
 void QuickInspector::setSceneViewActive(bool active)
 {
   m_clientViewActive = active;
@@ -574,6 +565,7 @@ void QuickInspector::setSceneViewActive(bool active)
     m_window->update();
   }
 }
+#endif
 
 void QuickInspector::analyzePainting()
 {

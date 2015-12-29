@@ -73,8 +73,6 @@ class QuickInspector : public QuickInspectorInterface
 
     void checkFeatures() Q_DECL_OVERRIDE;
 
-    void setSceneViewActive(bool active) Q_DECL_OVERRIDE;
-
     void analyzePainting() Q_DECL_OVERRIDE;
 
     void pickItemAt(const QPoint& pos);
@@ -87,7 +85,6 @@ class QuickInspector : public QuickInspectorInterface
     void sendRenderedScene();
     void itemSelectionChanged(const QItemSelection &selection);
     void sgSelectionChanged(const QItemSelection &selection);
-    void clientConnectedChanged(bool connected);
     void sgNodeDeleted(QSGNode *node);
     void objectSelected(QObject *object);
     void objectSelected(void *object, const QString &typeName);
@@ -117,7 +114,6 @@ class QuickInspector : public QuickInspectorInterface
     PaintAnalyzer *m_paintAnalyzer;
     RemoteViewServer *m_remoteView;
     QImage m_currentFrame;
-    bool m_clientViewActive;
     bool m_needsNewFrame;
     bool m_isGrabbingWindow;
 };

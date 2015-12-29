@@ -69,6 +69,9 @@ void PaintAnalyzer::update()
 
 void PaintAnalyzer::repaint()
 {
+    if (!m_remoteView->isActive())
+        return;
+
 #ifdef HAVE_PRIVATE_QT_HEADERS
     const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
     QImage image(sourceSize, QImage::Format_ARGB32);

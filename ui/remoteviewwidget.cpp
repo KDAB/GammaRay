@@ -30,6 +30,7 @@
 
 #include <common/remoteviewinterface.h>
 #include <common/objectbroker.h>
+#include <common/endpoint.h>
 
 #include <QAction>
 #include <QActionGroup>
@@ -669,6 +670,19 @@ void RemoteViewWidget::keyReleaseEvent(QKeyEvent* event)
             break;
     }
     QWidget::keyReleaseEvent(event);
+}
+
+void RemoteViewWidget::showEvent(QShowEvent* event)
+{
+    m_interface->setViewActive(true);
+    QWidget::showEvent(event);
+}
+
+void RemoteViewWidget::hideEvent(QHideEvent* event)
+{
+    if (Endpoint::isConnected())
+        m_interface->setViewActive(false);
+    QWidget::hideEvent(event);
 }
 
 int RemoteViewWidget::contentWidth() const

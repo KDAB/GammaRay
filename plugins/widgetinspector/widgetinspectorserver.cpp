@@ -242,7 +242,7 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
 
 void WidgetInspectorServer::updateWidgetPreview()
 {
-  if (!m_selectedWidget) {
+  if (!m_remoteView->isActive() || !m_selectedWidget) {
     return;
   }
 

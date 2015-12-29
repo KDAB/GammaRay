@@ -58,6 +58,8 @@ public slots:
     virtual void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
                                 QPoint angleDelta, int buttons, int modifiers) = 0;
 
+    virtual void setViewActive(bool active) = 0;
+
 signals:
     void reset();
 

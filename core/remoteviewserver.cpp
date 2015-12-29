@@ -28,6 +28,8 @@
 
 #include "remoteviewserver.h"
 
+#include <core/remote/server.h>
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMouseEvent>
@@ -40,8 +42,10 @@ using namespace GammaRay;
 
 RemoteViewServer::RemoteViewServer(const QString& name, QObject* parent):
     RemoteViewInterface(name, parent),
-    m_eventReceiver(Q_NULLPTR)
+    m_eventReceiver(Q_NULLPTR),
+    m_clientActive(false)
 {
+    Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(name), this, "clientConnectedChanged");
 }
 
 void RemoteViewServer::setEventReceiver(EventReceiver* receiver)
@@ -57,6 +61,11 @@ void RemoteViewServer::pickElementAt(const QPoint& pos)
 void RemoteViewServer::resetView()
 {
     emit reset();
+}
+
+bool RemoteViewServer::isActive() const
+{
+    return m_clientActive;
 }
 
 void RemoteViewServer::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
@@ -91,4 +100,15 @@ void RemoteViewServer::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta,
     auto event = new QWheelEvent(localPos, delta, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers, orientation);
 #endif
     QCoreApplication::sendEvent(m_eventReceiver, event);
+}
+
+void RemoteViewServer::setViewActive(bool active)
+{
+    m_clientActive = active;
+}
+
+void RemoteViewServer::clientConnectedChanged(bool connected)
+{
+    if (!connected)
+        setViewActive(false);
 }
