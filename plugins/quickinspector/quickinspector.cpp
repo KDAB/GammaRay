@@ -239,7 +239,6 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_sgPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"), this)),
     m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this)),
     m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this)),
-    m_needsNewFrame(false),
     m_isGrabbingWindow(false)
 {
   registerPCExtensions();
@@ -310,7 +309,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     // make sure we have selected something for the property editor to not be entirely empty
     selectItem(m_window->contentItem());
 
-    connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::slotSceneChanged);
+    connect(window, &QQuickWindow::frameSwapped, m_remoteView, &RemoteViewServer::sourceChanged);
 
     m_window->update();
   }
@@ -370,16 +369,6 @@ void QuickInspector::objectSelected(void *object, const QString &typeName)
   if (MetaObjectRepository::instance()->metaObject(typeName)->inherits(QStringLiteral("QSGNode"))) {
     selectSGNode(reinterpret_cast<QSGNode*>(object));
   }
-}
-
-void QuickInspector::renderScene()
-{
-  if (!m_remoteView->isActive() || !m_window) {
-    return;
-  }
-
-  m_needsNewFrame = true;
-  m_window->update();
 }
 
 void QuickInspector::sendRenderedScene()
@@ -442,17 +431,11 @@ void QuickInspector::slotSceneChanged()
     return;
   }
 
-  if (!m_needsNewFrame) {
-    emit sceneChanged();
-    return;
-  }
-
   Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
   m_isGrabbingWindow = true;
   m_currentFrame = m_window->grabWindow();
   m_isGrabbingWindow = false;
 
-  m_needsNewFrame = false;
   QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::AutoConnection); // we are in the render thread here
 }
 

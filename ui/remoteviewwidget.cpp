@@ -93,6 +93,7 @@ void RemoteViewWidget::setName(const QString& name)
 {
     m_interface = ObjectBroker::object<RemoteViewInterface*>(name);
     connect(m_interface, SIGNAL(reset()), this, SLOT(reset()));
+    m_interface->clientViewUpdated();
 }
 
 void RemoteViewWidget::setupActions()
@@ -151,6 +152,8 @@ void RemoteViewWidget::setImage(const QImage& image)
         m_sourceImage = image;
         update();
     }
+
+    QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
 }
 
 void RemoteViewWidget::reset()

@@ -67,7 +67,6 @@ class QuickInspector : public QuickInspectorInterface
 
   public slots:
     void selectWindow(int index) Q_DECL_OVERRIDE;
-    void renderScene() Q_DECL_OVERRIDE;
 
     void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) Q_DECL_OVERRIDE;
 
@@ -114,7 +113,6 @@ class QuickInspector : public QuickInspectorInterface
     PaintAnalyzer *m_paintAnalyzer;
     RemoteViewServer *m_remoteView;
     QImage m_currentFrame;
-    bool m_needsNewFrame;
     bool m_isGrabbingWindow;
 };
 

@@ -46,11 +46,6 @@ void QuickInspectorClient::selectWindow(int index)
   Endpoint::instance()->invokeObject(objectName(), "selectWindow", QVariantList() << index);
 }
 
-void QuickInspectorClient::renderScene()
-{
-  Endpoint::instance()->invokeObject(objectName(), "renderScene");
-}
-
 void QuickInspectorClient::setCustomRenderMode(
   GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {

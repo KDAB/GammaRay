@@ -44,6 +44,7 @@ public:
     void sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers) Q_DECL_OVERRIDE;
     void sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers) Q_DECL_OVERRIDE;
     void setViewActive(bool active) Q_DECL_OVERRIDE;
+    void clientViewUpdated() Q_DECL_OVERRIDE;
 };
 
 }

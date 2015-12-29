@@ -45,13 +45,15 @@ RemoteViewServer::RemoteViewServer(const QString& name, QObject* parent):
     RemoteViewInterface(name, parent),
     m_eventReceiver(Q_NULLPTR),
     m_updateTimer(new QTimer(this)),
-    m_clientActive(false)
+    m_clientActive(false),
+    m_sourceChanged(false),
+    m_clientReady(true)
 {
     Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(name), this, "clientConnectedChanged");
 
     m_updateTimer->setSingleShot(true);
     m_updateTimer->setInterval(100);
-    connect(m_updateTimer, SIGNAL(timeout()), this, SIGNAL(requestUpdate()));
+    connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(requestUpdateTimeout()));
 }
 
 void RemoteViewServer::setEventReceiver(EventReceiver* receiver)
@@ -76,9 +78,19 @@ bool RemoteViewServer::isActive() const
 
 void RemoteViewServer::sourceChanged()
 {
-    if (!isActive())
-        return;
-    if (!m_updateTimer->isActive())
+    m_sourceChanged = true;
+    checkRequestUpdate();
+}
+
+void RemoteViewServer::clientViewUpdated()
+{
+    m_clientReady = true;
+    checkRequestUpdate();
+}
+
+void RemoteViewServer::checkRequestUpdate()
+{
+    if (isActive() && !m_updateTimer->isActive() && m_clientReady && m_sourceChanged)
         m_updateTimer->start();
 }
 
@@ -119,6 +131,7 @@ void RemoteViewServer::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta,
 void RemoteViewServer::setViewActive(bool active)
 {
     m_clientActive = active;
+    m_clientReady = active;
     if (active)
         sourceChanged();
     else
@@ -129,4 +142,11 @@ void RemoteViewServer::clientConnectedChanged(bool connected)
 {
     if (!connected)
         setViewActive(false);
+}
+
+void RemoteViewServer::requestUpdateTimeout()
+{
+    emit requestUpdate();
+    m_clientReady = false;
+    m_sourceChanged = false;
 }

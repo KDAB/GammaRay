@@ -60,6 +60,9 @@ public slots:
 
     virtual void setViewActive(bool active) = 0;
 
+    /// Tell the server we are ready for the next frame.
+    virtual void clientViewUpdated() = 0;
+
 signals:
     void reset();
 

@@ -75,14 +75,20 @@ private:
     void sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers) Q_DECL_OVERRIDE;
     void sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers) Q_DECL_OVERRIDE;
     void setViewActive(bool active) Q_DECL_OVERRIDE;
+    void clientViewUpdated() Q_DECL_OVERRIDE;
+
+    void checkRequestUpdate();
 
 private slots:
     void clientConnectedChanged(bool connected);
+    void requestUpdateTimeout();
 
 private:
     EventReceiver *m_eventReceiver;
     QTimer *m_updateTimer;
     bool m_clientActive;
+    bool m_sourceChanged;
+    bool m_clientReady;
 };
 
 }

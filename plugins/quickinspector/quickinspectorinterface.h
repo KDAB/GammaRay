@@ -73,9 +73,6 @@ class QuickInspectorInterface : public QObject
   public slots:
     virtual void selectWindow(int index) = 0;
 
-    /// Ask for a new screenshot of the scene.
-    virtual void renderScene() = 0;
-
     virtual void setCustomRenderMode(
       GammaRay::QuickInspectorInterface::RenderMode customRenderMode) = 0;
 
@@ -84,11 +81,8 @@ class QuickInspectorInterface : public QObject
     virtual void analyzePainting() = 0;
 
   signals:
-    /// Emitted when the view has been newly rendered, for the client to request an update.
-    void sceneChanged();
     void sceneRendered(const GammaRay::TransferImage &image, const GammaRay::QuickItemGeometry &itemGeometry);
     void features(GammaRay::QuickInspectorInterface::Features features);
-
 };
 
 }

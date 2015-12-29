@@ -52,7 +52,6 @@
 #include <QEvent>
 #include <QLabel>
 #include <QMenu>
-#include <QTimer>
 #include <qmath.h>
 #include <QRectF>
 #include <QtCore/qglobal.h>
@@ -77,10 +76,7 @@ static QObject *createSGGeometryExtension(const QString &name, QObject *parent)
 
 QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   : QWidget(parent),
-    ui(new Ui::QuickInspectorWidget),
-    m_renderTimer(new QTimer(this)),
-    m_sceneChangedSinceLastRequest(false),
-    m_waitingForImage(false)
+    ui(new Ui::QuickInspectorWidget)
 {
   ui->setupUi(this);
 
@@ -88,7 +84,6 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     createQuickInspectorClient);
 
   m_interface = ObjectBroker::object<QuickInspectorInterface*>();
-  connect(m_interface, SIGNAL(sceneChanged()), this, SLOT(sceneChanged()));
   connect(m_interface, SIGNAL(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)),
           this, SLOT(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)));
 
@@ -129,10 +124,6 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
   ui->previewTreeSplitter->addWidget(m_previewWidget);
 
-  m_renderTimer->setInterval(100);
-  m_renderTimer->setSingleShot(true);
-  connect(m_renderTimer, SIGNAL(timeout()), this, SLOT(requestRender()));
-
   connect(m_interface, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)),
           this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
 
@@ -154,34 +145,10 @@ void QuickInspectorWidget::setSplitterSizes()
       << (ui->previewTreeSplitter->height() - ui->previewTreeSplitter->handleWidth()) / 2);
 }
 
-void QuickInspectorWidget::sceneChanged()
-{
-  if (!m_renderTimer->isActive()) {
-    m_renderTimer->start();
-  }
-}
-
 void QuickInspectorWidget::sceneRendered(const GammaRay::TransferImage &transfer, const GammaRay::QuickItemGeometry &itemGeometry)
 {
-  m_waitingForImage = false;
-
   m_previewWidget->setImage(transfer.image());
   m_previewWidget->setItemGeometry(itemGeometry);
-
-  if (m_sceneChangedSinceLastRequest) {
-    m_sceneChangedSinceLastRequest = false;
-    sceneChanged();
-  }
-}
-
-void QuickInspectorWidget::requestRender()
-{
-  if (!m_waitingForImage) {
-    m_waitingForImage = true;
-    m_interface->renderScene();
-  } else {
-    m_sceneChangedSinceLastRequest = true;
-  }
 }
 
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
@@ -235,13 +202,6 @@ void QuickInspectorUiFactory::initUi()
     createSGGeometryExtension);
 
   PropertyWidget::registerTab<SGGeometryTab>(QStringLiteral("sgGeometry"), tr("Geometry"));
-}
-
-void QuickInspectorWidget::showEvent(QShowEvent* event)
-{
-  QWidget::showEvent(event);
-  m_waitingForImage = false;
-  m_sceneChangedSinceLastRequest = true;
 }
 
 void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)

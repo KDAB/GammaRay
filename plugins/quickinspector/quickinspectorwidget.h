@@ -37,7 +37,6 @@
 #include <QWidget>
 #include <QVariant>
 
-class QTimer;
 class QLabel;
 class QImage;
 class QItemSelection;
@@ -56,14 +55,9 @@ class QuickInspectorWidget : public QWidget
     explicit QuickInspectorWidget(QWidget *parent = 0);
     ~QuickInspectorWidget();
 
-  private:
-    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
-
   private slots:
-    void sceneChanged();
     void sceneRendered (const GammaRay::TransferImage &image, const GammaRay::QuickItemGeometry &itemGeometry);
     void itemSelectionChanged(const QItemSelection &selection);
-    void requestRender();
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void setSplitterSizes();
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
@@ -73,9 +67,6 @@ class QuickInspectorWidget : public QWidget
     QScopedPointer<Ui::QuickInspectorWidget> ui;
     QuickScenePreviewWidget *m_previewWidget;
     QuickInspectorInterface *m_interface;
-    QTimer *m_renderTimer;
-    bool m_sceneChangedSinceLastRequest;
-    bool m_waitingForImage;
 };
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>

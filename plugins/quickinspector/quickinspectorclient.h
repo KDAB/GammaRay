@@ -46,7 +46,6 @@ public:
 
 public slots:
   void selectWindow(int index) Q_DECL_OVERRIDE;
-  void renderScene() Q_DECL_OVERRIDE;
 
   void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) Q_DECL_OVERRIDE;
 

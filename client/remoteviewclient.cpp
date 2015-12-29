@@ -77,3 +77,8 @@ void RemoteViewClient::setViewActive(bool active)
 {
     Endpoint::instance()->invokeObject(name(), "setViewActive", QVariantList() << active);
 }
+
+void RemoteViewClient::clientViewUpdated()
+{
+    Endpoint::instance()->invokeObject(name(), "clientViewUpdated");
+}

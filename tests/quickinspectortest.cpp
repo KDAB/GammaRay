@@ -228,7 +228,7 @@ private slots:
 
         QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
-        inspector->renderScene();
+        remoteView->clientViewUpdated();
         if (!exposed)
             return;
         QVERIFY(waitForSignal(&gotFrameSpy, true));
