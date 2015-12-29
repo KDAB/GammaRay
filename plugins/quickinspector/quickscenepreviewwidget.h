@@ -77,8 +77,6 @@ class QuickScenePreviewWidget : public RemoteViewWidget
         QAction *visualizeOverdraw;
         QAction *visualizeBatches;
         QAction *visualizeChanges;
-
-        QLabel *measureLabel;
     } m_toolBar;
 
     QuickInspectorInterface *m_inspectorInterface;

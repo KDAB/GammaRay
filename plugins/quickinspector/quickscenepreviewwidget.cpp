@@ -120,12 +120,6 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
   m_toolBar.toolbarWidget->addWidget(m_toolBar.zoomCombobox);
 
-  m_toolBar.measureLabel = new QLabel(this);
-  m_toolBar.toolbarWidget->addWidget(m_toolBar.measureLabel);
-  connect(this, &RemoteViewWidget::measurementChanged, this, [this](const QRectF &r) {
-      m_toolBar.measureLabel->setText(QStringLiteral(" %1px").arg(std::sqrt((qreal)(r.width()*r.width() + r.height()*r.height())), 0, 'f', 2));
-  });
-
   setUnavailableText(tr("No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
 }
 

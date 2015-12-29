@@ -597,8 +597,6 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
             }
             break;
         case Measuring:
-            if (event->buttons() & Qt::LeftButton)
-                emit measurementChanged(QRectF(m_mouseDownPosition, m_currentMousePosition));
             break;
         case InputRedirection:
             sendMouseEvent(event);

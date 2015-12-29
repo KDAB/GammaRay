@@ -101,8 +101,6 @@ public slots:
 signals:
     void zoomChanged();
     void zoomLevelChanged(int zoomLevelIndex);
-    /// currently measured area, in source coordinates
-    void measurementChanged(const QRectF &rect);
 
 protected:
     /** Override this to draw element decorations.
