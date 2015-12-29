@@ -67,9 +67,7 @@
 #include <QMainWindow>
 #include <QMouseEvent>
 #include <QEvent>
-#include <QTimer>
 #include <QStyle>
-// #include <QWindow>
 
 #include <iostream>
 
@@ -81,7 +79,6 @@ using namespace std;
 WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *parent)
   : WidgetInspectorInterface(parent)
   , m_propertyController(new PropertyController(objectName(), this))
-  , m_updatePreviewTimer(new QTimer(this))
   , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this))
   , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"), this))
   , m_probe(probe)
@@ -90,9 +87,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   registerVariantHandlers();
   probe->installGlobalEventFilter(this);
 
-  m_updatePreviewTimer->setSingleShot(true);
-  m_updatePreviewTimer->setInterval(100);
-  connect(m_updatePreviewTimer, SIGNAL(timeout()), SLOT(updateWidgetPreview()));
+  connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(updateWidgetPreview()));
 
   recreateOverlayWidget();
 
@@ -202,11 +197,7 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
 bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
 {
   if (object == m_selectedWidget && event->type() == QEvent::Paint) {
-    // delay pixmap grabbing such that the object can update itself beforehand
-    // also use a timer to prevent aggregation of previews
-    if (!m_updatePreviewTimer->isActive()) {
-      m_updatePreviewTimer->start();
-    }
+    m_remoteView->sourceChanged();
   }
 
   // make modal dialogs non-modal so that the gammaray window is still reachable

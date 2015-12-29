@@ -36,7 +36,6 @@
 class QPaintBuffer;
 class QPaintDevice;
 class QRectF;
-class QTimer;
 
 namespace GammaRay {
 
@@ -62,13 +61,11 @@ public:
     static bool isAvailable();
 
 private slots:
-    void update();
     void repaint();
 
 private:
     PaintBufferModel *m_paintBufferModel;
     QPaintBuffer* m_paintBuffer;
-    QTimer *m_repaintTimer;
     RemoteViewServer *m_remoteView;
 };
 

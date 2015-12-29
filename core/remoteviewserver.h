@@ -33,6 +33,7 @@
 
 #include <common/remoteviewinterface.h>
 
+class QTimer;
 class QWindow;
 
 namespace GammaRay {
@@ -59,8 +60,14 @@ public:
     /// returns @c true if there is a client displaying our content
     bool isActive() const;
 
+public slots:
+    /// call this to indicate the source has changed and the client reuqires an update
+    void sourceChanged();
+
 signals:
     void doPickElement(const QPoint &pos);
+    /// when receiving this signal, obtain a new frame and send it to the client
+    void requestUpdate();
 
 private:
     void pickElementAt(const QPoint& pos) Q_DECL_OVERRIDE;
@@ -74,6 +81,7 @@ private slots:
 
 private:
     EventReceiver *m_eventReceiver;
+    QTimer *m_updateTimer;
     bool m_clientActive;
 };
 

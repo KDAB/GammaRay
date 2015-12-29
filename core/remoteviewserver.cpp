@@ -33,6 +33,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QTimer>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QWindow>
@@ -43,9 +44,14 @@ using namespace GammaRay;
 RemoteViewServer::RemoteViewServer(const QString& name, QObject* parent):
     RemoteViewInterface(name, parent),
     m_eventReceiver(Q_NULLPTR),
+    m_updateTimer(new QTimer(this)),
     m_clientActive(false)
 {
     Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(name), this, "clientConnectedChanged");
+
+    m_updateTimer->setSingleShot(true);
+    m_updateTimer->setInterval(100);
+    connect(m_updateTimer, SIGNAL(timeout()), this, SIGNAL(requestUpdate()));
 }
 
 void RemoteViewServer::setEventReceiver(EventReceiver* receiver)
@@ -66,6 +72,14 @@ void RemoteViewServer::resetView()
 bool RemoteViewServer::isActive() const
 {
     return m_clientActive;
+}
+
+void RemoteViewServer::sourceChanged()
+{
+    if (!isActive())
+        return;
+    if (!m_updateTimer->isActive())
+        m_updateTimer->start();
 }
 
 void RemoteViewServer::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
@@ -105,6 +119,10 @@ void RemoteViewServer::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta,
 void RemoteViewServer::setViewActive(bool active)
 {
     m_clientActive = active;
+    if (active)
+        sourceChanged();
+    else
+        m_updateTimer->stop();
 }
 
 void RemoteViewServer::clientConnectedChanged(bool connected)

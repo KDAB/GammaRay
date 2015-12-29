@@ -38,7 +38,6 @@
 class QModelIndex;
 class QItemSelection;
 class QItemSelectionModel;
-class QTimer;
 class QPoint;
 
 namespace GammaRay {
@@ -93,7 +92,6 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     PropertyController *m_propertyController;
     QItemSelectionModel *m_widgetSelectionModel;
     QPointer<QWidget> m_selectedWidget;
-    QTimer *m_updatePreviewTimer;
     PaintAnalyzer *m_paintAnalyzer;
     RemoteViewServer *m_remoteView;
     ProbeInterface *m_probe;

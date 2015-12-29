@@ -36,7 +36,6 @@
 #include <common/objectbroker.h>
 
 #include <QItemSelectionModel>
-#include <QTimer>
 
 using namespace GammaRay;
 
@@ -44,27 +43,19 @@ PaintAnalyzer::PaintAnalyzer(const QString& name, QObject* parent):
     PaintAnalyzerInterface(name, parent),
     m_paintBufferModel(Q_NULLPTR),
     m_paintBuffer(Q_NULLPTR),
-    m_repaintTimer(new QTimer(this)),
     m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
     Probe::instance()->registerModel(name + QStringLiteral(".paintBufferModel"), m_paintBufferModel);
-    connect(ObjectBroker::selectionModel(m_paintBufferModel), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(update()));
+    connect(ObjectBroker::selectionModel(m_paintBufferModel), SIGNAL(currentChanged(QModelIndex,QModelIndex)), m_remoteView, SLOT(sourceChanged()));
 #endif
 
-    m_repaintTimer->setSingleShot(true);
-    m_repaintTimer->setInterval(100);
-    connect(m_repaintTimer, SIGNAL(timeout()), SLOT(repaint()));
+    connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(repaint()));
 }
 
 PaintAnalyzer::~PaintAnalyzer()
 {
-}
-
-void PaintAnalyzer::update()
-{
-    m_repaintTimer->start();
 }
 
 void PaintAnalyzer::repaint()
@@ -128,7 +119,7 @@ void PaintAnalyzer::endAnalyzePainting()
     delete m_paintBuffer;
     m_paintBuffer = 0;
     m_remoteView->resetView();
-    update();
+    m_remoteView->sourceChanged();
 }
 
 bool PaintAnalyzer::isAvailable()
