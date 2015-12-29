@@ -39,6 +39,8 @@
 #include <QPainter>
 #include <QStandardItemModel>
 
+#include <cstdlib>
+
 using namespace GammaRay;
 
 RemoteViewWidget::RemoteViewWidget(QWidget* parent):
@@ -443,7 +445,8 @@ void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
     p->save();
 
     p->setCompositionMode(QPainter::CompositionMode_Difference);
-    p->setPen(QColor(255, 255, 255, 170));
+    auto pen = QPen(QColor(255, 255, 255, 170));
+    p->setPen(pen);
 
     const auto startPos =  mapFromSource(m_mouseDownPosition);
     const auto endPos = mapFromSource(m_currentMousePosition);
@@ -453,11 +456,60 @@ void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
     p->drawLine(startPos - hOffset, startPos + hOffset);
     p->drawLine(startPos - vOffset, startPos + vOffset);
 
-    p->drawLine(startPos, endPos);
-
     p->drawLine(endPos - hOffset, endPos + hOffset);
     p->drawLine(endPos - vOffset, endPos + vOffset);
 
+    p->drawLine(startPos, endPos);
+
+    pen.setStyle(Qt::DotLine);
+    p->setPen(pen);
+    p->drawLine(startPos, QPoint(endPos.x(), startPos.y()));
+    p->drawLine(QPoint(endPos.x(), startPos.y()), endPos);
+    p->restore();
+
+    // start and end labels
+    const QPoint startLabelDir(startPos.x() < endPos.x() ? -1 : 1, startPos.y() < endPos.y() ? -1 : 1);
+    const QPoint endLabelDir(-startLabelDir.x(), -startLabelDir.y());
+    drawMeasurementLabel(p, startPos, startLabelDir, QStringLiteral("x: %1 y: %2").arg(m_mouseDownPosition.x()).arg(m_mouseDownPosition.y()));
+    drawMeasurementLabel(p, endPos, endLabelDir, QStringLiteral("x: %1 y: %2").arg(m_currentMousePosition.x()).arg(m_currentMousePosition.y()));
+
+    // distance label
+    const auto dPos = QPoint(startPos + endPos) / 2;
+    const QPoint dDir(startLabelDir.x(), endLabelDir.y());
+    const auto d = QLineF(m_mouseDownPosition, m_currentMousePosition).length();
+    drawMeasurementLabel(p, dPos, dDir, QStringLiteral("%1px").arg(d, 0, 'f', 2));
+
+    // x/y length labels, if there is enough space
+    const auto xDiff = std::abs(endPos.x() - startPos.x());
+    if (xDiff > fontMetrics().height() * 2) {
+        const auto xPos = QPoint(dPos.x(), startPos.y());
+        const QPoint xDir = QPoint(-startLabelDir.x(), startLabelDir.y());
+        drawMeasurementLabel(p, xPos, xDir, QStringLiteral("x: %1px").arg(std::abs(m_mouseDownPosition.x() - m_currentMousePosition.x())));
+    }
+
+    const auto yDiff = std::abs(endPos.y() - startPos.y());
+    if (yDiff > fontMetrics().height() * 2) {
+        const auto yPos = QPoint(endPos.x(), dPos.y());
+        const QPoint yDir = QPoint(endLabelDir.x(), -endLabelDir.y());
+        drawMeasurementLabel(p, yPos, yDir, QStringLiteral("y: %1px").arg(std::abs(m_mouseDownPosition.y() - m_currentMousePosition.y())));
+    }
+}
+
+void RemoteViewWidget::drawMeasurementLabel(QPainter* p, QPoint pos, QPoint dir, const QString& text)
+{
+    p->save();
+    static const auto margin = 2;
+    const auto height = fontMetrics().height() + 2*margin;
+    const auto width = fontMetrics().width(text) + 2*margin;
+
+    QRect r(pos.x(), pos.y(), width * dir.x(), height * dir.y());
+    r = r.normalized();
+    r = r.translated(dir * 5);
+
+    p->setPen(Qt::NoPen);
+    p->fillRect(r, palette().background());
+    p->setPen(palette().color(QPalette::Text));
+    p->drawText(r, Qt::AlignCenter, text);
     p->restore();
 }
 

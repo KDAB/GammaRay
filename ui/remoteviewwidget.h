@@ -130,6 +130,7 @@ private:
     int sourceTickLabelDistance(int viewDistance);
     int viewTickLabelDistance() const;
     void drawMeasureOverlay(QPainter *p);
+    void drawMeasurementLabel(QPainter *p, QPoint pos, QPoint dir, const QString &text);
 
     void sendMouseEvent(QMouseEvent *event);
     void sendKeyEvent(QKeyEvent *event);
