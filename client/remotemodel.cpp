@@ -786,7 +786,7 @@ void RemoteModel::doInsertRows(RemoteModel::Node* parentNode, int first, int las
   beginInsertRows(qmiParent, first, last);
 
   // if necessary, update vertical headers
-  if (parentNode == m_root && m_verticalHeaders.size())
+  if (parentNode == m_root && !m_verticalHeaders.isEmpty())
     m_verticalHeaders.insert(first, last - first + 1, QHash<int, QVariant>());
 
   // allocate rows in the right spot
@@ -815,7 +815,7 @@ void RemoteModel::doRemoveRows(RemoteModel::Node* parentNode, int first, int las
   beginRemoveRows(qmiParent, first, last);
 
   // if necessary update vertical headers
-  if (parentNode == m_root && m_verticalHeaders.size()) {
+  if (parentNode == m_root && !m_verticalHeaders.isEmpty()) {
     m_verticalHeaders.remove(first, last - first + 1);
   }
 
@@ -883,7 +883,7 @@ void RemoteModel::doInsertColumns(RemoteModel::Node* parentNode, int first, int 
   beginInsertColumns(qmiParent, first, last);
 
   // if necessary, update horizontal headers
-  if (parentNode == m_root && m_horizontalHeaders.size()) {
+  if (parentNode == m_root && !m_horizontalHeaders.isEmpty()) {
     m_horizontalHeaders.insert(first, newColCount, QHash<int, QVariant>());
   }
 
@@ -911,7 +911,7 @@ void RemoteModel::doRemoveColumns(RemoteModel::Node* parentNode, int first, int 
   beginRemoveColumns(qmiParent, first, last);
 
   // if necessary update vertical headers
-  if (parentNode == m_root && m_horizontalHeaders.size()) {
+  if (parentNode == m_root && !m_horizontalHeaders.isEmpty()) {
     m_horizontalHeaders.remove(first, delColCount);
   }
 
