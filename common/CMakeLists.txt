@@ -13,7 +13,9 @@ set(gammaray_common_srcs
   propertysyncer.cpp
   modelevent.cpp
   paintanalyzerinterface.cpp
+
   remoteviewinterface.cpp
+  remoteviewframe.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
@@ -24,7 +26,7 @@ set_target_properties(gammaray_common PROPERTIES
 )
 
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network gammaray_kitemmodels)
+  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui gammaray_kitemmodels)
 else()
   target_link_libraries(gammaray_common
     LINK_PUBLIC ${QT_QTCORE_LIBRARIES}

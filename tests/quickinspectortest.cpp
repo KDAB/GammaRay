@@ -33,6 +33,7 @@
 #include <common/paths.h>
 #include <common/objectbroker.h>
 #include <common/remoteviewinterface.h>
+#include <common/remoteviewframe.h>
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -223,7 +224,7 @@ private slots:
         QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());
 
-        QSignalSpy gotFrameSpy(inspector, SIGNAL(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)));
+        QSignalSpy gotFrameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
         QVERIFY(gotFrameSpy.isValid());
 
         QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
@@ -235,13 +236,15 @@ private slots:
 
         QVERIFY(renderSpy.size() >= 1);
         QVERIFY(gotFrameSpy.size() >= 1);
-        TransferImage tImg = gotFrameSpy.first().first().value<TransferImage>();
-        QImage img = tImg.image();
+        const auto frame = gotFrameSpy.at(0).at(0).value<RemoteViewFrame>();
+        QImage img = frame.image();
 
         QVERIFY(!img.isNull());
         QCOMPARE(img.width(), 320);
         QCOMPARE(img.height(), 160);
         QCOMPARE(img.pixel(1,1), QColor(QStringLiteral("lightsteelblue")).rgb());
+
+        remoteView->setViewActive(false);
     }
 
     void testCustomRenderModes()

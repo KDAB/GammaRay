@@ -76,6 +76,12 @@ bool RemoteViewServer::isActive() const
     return m_clientActive;
 }
 
+void RemoteViewServer::sendFrame(const RemoteViewFrame& frame)
+{
+    m_clientReady = false;
+    emit frameUpdated(frame);
+}
+
 void RemoteViewServer::sourceChanged()
 {
     m_sourceChanged = true;
@@ -147,6 +153,5 @@ void RemoteViewServer::clientConnectedChanged(bool connected)
 void RemoteViewServer::requestUpdateTimeout()
 {
     emit requestUpdate();
-    m_clientReady = false;
     m_sourceChanged = false;
 }

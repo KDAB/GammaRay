@@ -84,7 +84,6 @@ QuickInspectorInterface::QuickInspectorInterface(QObject * parent) : QObject(par
   qRegisterMetaTypeStreamOperators<RenderMode>();
   qRegisterMetaTypeStreamOperators<QuickItemActions>();
   qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
-  qRegisterMetaTypeStreamOperators<TransferImage>();
 }
 
 QuickInspectorInterface::~QuickInspectorInterface()

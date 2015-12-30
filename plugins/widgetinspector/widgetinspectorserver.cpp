@@ -51,6 +51,7 @@
 #include "common/metatypedeclarations.h"
 #include "common/objectmodel.h"
 #include "common/paths.h"
+#include <common/remoteviewframe.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -237,7 +238,9 @@ void WidgetInspectorServer::updateWidgetPreview()
     return;
   }
 
-  emit widgetPreviewAvailable(imageForWidget(m_selectedWidget->window()));
+  RemoteViewFrame frame;
+  frame.setImage(imageForWidget(m_selectedWidget->window()));
+  m_remoteView->sendFrame(frame);
 }
 
 QImage WidgetInspectorServer::imageForWidget(QWidget *widget)

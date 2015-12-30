@@ -103,7 +103,6 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
   connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
   connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
-  connect(m_inspector, SIGNAL(widgetPreviewAvailable(QImage)), m_remoteView, SLOT(setImage(QImage)));
 
   connect(m_inspector, SIGNAL(featuresChanged()), this, SLOT(updateActions()));
 

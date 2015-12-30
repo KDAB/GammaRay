@@ -1,5 +1,5 @@
 /*
-  remoteviewinterface.cpp
+  remoteviewframe.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,22 +26,69 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "remoteviewinterface.h"
+#include "remoteviewframe.h"
 
-#include <common/objectbroker.h>
-#include <common/remoteviewframe.h>
+#include <QDataStream>
 
 using namespace GammaRay;
 
-RemoteViewInterface::RemoteViewInterface(const QString& name, QObject* parent):
-    QObject(parent),
-    m_name(name)
+RemoteViewFrame::RemoteViewFrame()
 {
-    ObjectBroker::registerObject(name, this);
-    qRegisterMetaTypeStreamOperators<RemoteViewFrame>();
 }
 
-QString RemoteViewInterface::name() const
+RemoteViewFrame::~RemoteViewFrame()
 {
-    return m_name;
+}
+
+bool RemoteViewFrame::isValid() const
+{
+    return !m_image.isNull();
+}
+
+QSize RemoteViewFrame::size() const
+{
+    return m_image.size();
+}
+
+int RemoteViewFrame::width() const
+{
+    return m_image.width();
+}
+
+int RemoteViewFrame::height() const
+{
+    return m_image.height();
+}
+
+QImage RemoteViewFrame::image() const
+{
+    return m_image;
+}
+
+void RemoteViewFrame::setImage(const QImage& image)
+{
+    m_image = image;
+}
+
+QVariant RemoteViewFrame::data() const
+{
+    return m_data;
+}
+
+void RemoteViewFrame::setData(const QVariant& data)
+{
+    m_data = data;
+}
+
+QDataStream& operator<<(QDataStream& stream, const RemoteViewFrame& frame)
+{
+    stream << frame.image() << frame.data();
+    return stream;
+}
+
+QDataStream& operator>>(QDataStream& stream, RemoteViewFrame& frame)
+{
+    stream >> frame.m_image;
+    stream >> frame.m_data;
+    return stream;
 }

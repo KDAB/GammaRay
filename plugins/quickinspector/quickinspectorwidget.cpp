@@ -84,8 +84,6 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     createQuickInspectorClient);
 
   m_interface = ObjectBroker::object<QuickInspectorInterface*>();
-  connect(m_interface, SIGNAL(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)),
-          this, SLOT(sceneRendered(GammaRay::TransferImage,GammaRay::QuickItemGeometry)));
 
   ui->windowComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickWindowModel")));
   connect(ui->windowComboBox, SIGNAL(currentIndexChanged(int)),
@@ -143,12 +141,6 @@ void QuickInspectorWidget::setSplitterSizes()
     QList<int>()
       << (ui->previewTreeSplitter->height() - ui->previewTreeSplitter->handleWidth()) / 2
       << (ui->previewTreeSplitter->height() - ui->previewTreeSplitter->handleWidth()) / 2);
-}
-
-void QuickInspectorWidget::sceneRendered(const GammaRay::TransferImage &transfer, const GammaRay::QuickItemGeometry &itemGeometry)
-{
-  m_previewWidget->setImage(transfer.image());
-  m_previewWidget->setItemGeometry(itemGeometry);
 }
 
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)

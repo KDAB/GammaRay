@@ -45,9 +45,6 @@ public:
     explicit PaintAnalyzerInterface(const QString &name, QObject *parent = Q_NULLPTR);
     QString name() const;
 
-signals:
-    void paintingAnalyzed(const QImage &image);
-
 private:
     QString m_name;
 };

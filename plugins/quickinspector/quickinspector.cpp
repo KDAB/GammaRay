@@ -35,6 +35,7 @@
 
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
+#include <common/remoteviewframe.h>
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -374,8 +375,9 @@ void QuickInspector::objectSelected(void *object, const QString &typeName)
 
 void QuickInspector::sendRenderedScene()
 {
+  RemoteViewFrame frame;
+  frame.setImage(m_currentFrame);
   QuickItemGeometry itemGeometry;
-  TransferImage rawImage = TransferImage(m_currentFrame); // wrap to allow bypassing expensive PNG compression
   if (m_currentItem) {
     QQuickItem *parent = m_currentItem->parentItem();
 
@@ -423,7 +425,8 @@ void QuickInspector::sendRenderedScene()
       itemGeometry.parentTransform =  parentPriv->itemToWindowTransform();
     }
   }
-  emit sceneRendered(rawImage, itemGeometry);
+  frame.setData(QVariant::fromValue(itemGeometry));
+  m_remoteView->sendFrame(frame);
 }
 
 void QuickInspector::slotSceneChanged()

@@ -93,6 +93,7 @@ void RemoteViewWidget::setName(const QString& name)
 {
     m_interface = ObjectBroker::object<RemoteViewInterface*>(name);
     connect(m_interface, SIGNAL(reset()), this, SLOT(reset()));
+    connect(m_interface, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)), this, SLOT(frameUpdated(GammaRay::RemoteViewFrame)));
     m_interface->clientViewUpdated();
 }
 
@@ -138,18 +139,18 @@ void RemoteViewWidget::setupActions()
     addAction(action);
 }
 
-const QImage& RemoteViewWidget::image() const
+const RemoteViewFrame& RemoteViewWidget::frame() const
 {
-    return m_sourceImage;
+    return m_frame;
 }
 
-void RemoteViewWidget::setImage(const QImage& image)
+void RemoteViewWidget::frameUpdated(const RemoteViewFrame& frame)
 {
-    if (m_sourceImage.isNull()) {
-        m_sourceImage = image;
+    if (!m_frame.isValid()) {
+        m_frame = frame;
         fitToView();
     } else {
-        m_sourceImage = image;
+        m_frame = frame;
         update();
     }
 
@@ -158,7 +159,7 @@ void RemoteViewWidget::setImage(const QImage& image)
 
 void RemoteViewWidget::reset()
 {
-    m_sourceImage = QImage();
+    m_frame = RemoteViewFrame();
     m_hasMeasurement = false;
     update();
 }
@@ -245,10 +246,10 @@ void RemoteViewWidget::zoomOut()
 
 void RemoteViewWidget::fitToView()
 {
-    const auto scale = std::min<double>(1.0, std::min((double)contentWidth() / (double)m_sourceImage.width(), (double)contentHeight() / (double)m_sourceImage.height()));
+    const auto scale = std::min<double>(1.0, std::min((double)contentWidth() / (double)m_frame.width(), (double)contentHeight() / (double)m_frame.height()));
     setZoom(scale);
-    m_x = 0.5 * (contentWidth() - m_sourceImage.width() * m_zoom);
-    m_y = 0.5 * (contentHeight() - m_sourceImage.height() * m_zoom);
+    m_x = 0.5 * (contentWidth() - m_frame.width() * m_zoom);
+    m_y = 0.5 * (contentHeight() - m_frame.height() * m_zoom);
     update();
 }
 
@@ -310,7 +311,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent* event)
     Q_UNUSED(event);
     QPainter p(this);
 
-    if (m_sourceImage.isNull()) {
+    if (!m_frame.isValid()) {
         QWidget::paintEvent(event);
         p.drawText(rect(), Qt::AlignHCenter | Qt::AlignVCenter, m_unavailableText);
         return;
@@ -324,7 +325,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent* event)
                         // but need to be able to see single pixels when zoomed in.
         p.setRenderHint(QPainter::SmoothPixmapTransform);
     }
-    p.drawImage(QRect(QPoint(0, 0), m_sourceImage.size() * m_zoom), m_sourceImage);
+    p.drawImage(QRect(QPoint(0, 0), m_frame.size() * m_zoom), m_frame.image());
     drawDecoration(&p);
     p.restore();
 
@@ -380,7 +381,7 @@ void RemoteViewWidget::drawRuler(QPainter* p)
         const int sourcePos = (i - m_x) / m_zoom;
         if (sourcePos == m_currentMousePosition.x())
             p->setPen(selectedPen);
-        else if (sourcePos < 0 || sourcePos > m_sourceImage.width())
+        else if (sourcePos < 0 || sourcePos > m_frame.width())
             p->setPen(inactivePen);
         else
             p->setPen(activePen);
@@ -388,7 +389,7 @@ void RemoteViewWidget::drawRuler(QPainter* p)
         const int tickSize = tickLength(sourcePos, sourceLabelDist);
         p->drawLine(i, 0, i, tickSize);
 
-        if (sourcePos >= 0 && sourcePos <= m_sourceImage.width() && sourcePos % sourceLabelDist == 0) {
+        if (sourcePos >= 0 && sourcePos <= m_frame.width() && sourcePos % sourceLabelDist == 0) {
             p->setPen(activePen);
             p->drawText(i - viewLabelDist / 2, tickSize, viewLabelDist, hRulerHeight - tickSize, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(sourcePos));
         }
@@ -402,7 +403,7 @@ void RemoteViewWidget::drawRuler(QPainter* p)
         const int sourcePos = (i - m_y) / m_zoom;
         if (sourcePos == m_currentMousePosition.y())
             p->setPen(selectedPen);
-        else if (sourcePos < 0 || sourcePos > m_sourceImage.height())
+        else if (sourcePos < 0 || sourcePos > m_frame.height())
             p->setPen(inactivePen);
         else
             p->setPen(activePen);
@@ -410,7 +411,7 @@ void RemoteViewWidget::drawRuler(QPainter* p)
         const int tickSize = tickLength(sourcePos, sourceLabelDist);
         p->drawLine(0, i, tickSize, i);
 
-        if (sourcePos >= 0 && sourcePos <= m_sourceImage.height() && sourcePos % sourceLabelDist == 0) {
+        if (sourcePos >= 0 && sourcePos <= m_frame.height() && sourcePos % sourceLabelDist == 0) {
             p->setPen(activePen);
             p->drawText(tickSize, i - viewLabelDist / 2, vRulerWidth - tickSize, viewLabelDist, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(sourcePos));
         }
@@ -427,7 +428,7 @@ void RemoteViewWidget::drawRuler(QPainter* p)
 
 int RemoteViewWidget::viewTickLabelDistance() const
 {
-    const auto maxLabel = std::max(m_sourceImage.width(), m_sourceImage.height());
+    const auto maxLabel = std::max(m_frame.width(), m_frame.height());
     return 2 * fontMetrics().width(QString::number(maxLabel));
 }
 
@@ -612,13 +613,13 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 
             if (m_x > width() / 2) {
                 m_x = width() / 2;
-            } else if (m_x + m_sourceImage.width() * m_zoom < width() / 2.0) {
-                m_x = width() / 2 - m_sourceImage.width() * m_zoom;
+            } else if (m_x + m_frame.width() * m_zoom < width() / 2.0) {
+                m_x = width() / 2 - m_frame.width() * m_zoom;
             }
             if (m_y > height() / 2) {
                 m_y = height() / 2;
-            } else if (m_y + m_sourceImage.height() * m_zoom < height() / 2.0) {
-                m_y = height() / 2 - m_sourceImage.height() * m_zoom;
+            } else if (m_y + m_frame.height() * m_zoom < height() / 2.0) {
+                m_y = height() / 2 - m_frame.height() * m_zoom;
             }
             break;
         case Measuring:
@@ -714,7 +715,7 @@ int RemoteViewWidget::contentHeight() const
 
 int RemoteViewWidget::verticalRulerWidth() const
 {
-    return fontMetrics().width(QString::number(m_sourceImage.height())) + 24; // 2* tick length + some margin
+    return fontMetrics().width(QString::number(m_frame.height())) + 24; // 2* tick length + some margin
 }
 
 int RemoteViewWidget::horizontalRulerHeight() const

@@ -32,7 +32,6 @@
 #include <common/streamoperators.h>
 
 #include "quickitemgeometry.h"
-#include "transferimage.h"
 
 #include <QObject>
 #include <QRectF>
@@ -81,7 +80,6 @@ class QuickInspectorInterface : public QObject
     virtual void analyzePainting() = 0;
 
   signals:
-    void sceneRendered(const GammaRay::TransferImage &image, const GammaRay::QuickItemGeometry &itemGeometry);
     void features(GammaRay::QuickInspectorInterface::Features features);
 };
 

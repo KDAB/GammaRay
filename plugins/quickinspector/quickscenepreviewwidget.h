@@ -52,8 +52,6 @@ class QuickScenePreviewWidget : public RemoteViewWidget
     explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = 0);
     ~QuickScenePreviewWidget();
 
-    void setItemGeometry(const QuickItemGeometry &itemGeometry);
-
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features  supportedCustomRenderModes);
 
   private Q_SLOTS:
@@ -80,8 +78,6 @@ class QuickScenePreviewWidget : public RemoteViewWidget
     } m_toolBar;
 
     QuickInspectorInterface *m_inspectorInterface;
-
-    QuickItemGeometry m_itemGeometry;
     QuickItemGeometry m_effectiveGeometry; // scaled and translated
 };
 

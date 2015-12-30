@@ -66,7 +66,6 @@ class WidgetInspectorInterface : public QObject
     virtual void analyzePainting() = 0;
 
   signals:
-    void widgetPreviewAvailable(const QImage &image);
     void featuresChanged();
 
   private:

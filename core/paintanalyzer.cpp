@@ -33,7 +33,9 @@
 
 #include <core/probe.h>
 #include <core/remoteviewserver.h>
+
 #include <common/objectbroker.h>
+#include <common/remoteviewframe.h>
 
 #include <QItemSelectionModel>
 
@@ -77,7 +79,10 @@ void PaintAnalyzer::repaint()
     for (; depth > 0; --depth)
         painter.restore();
     painter.end();
-    emit paintingAnalyzed(image);
+
+    RemoteViewFrame frame;
+    frame.setImage(image);
+    m_remoteView->sendFrame(frame);
 #endif
 }
 

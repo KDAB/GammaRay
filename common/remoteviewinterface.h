@@ -36,6 +36,8 @@
 
 namespace GammaRay {
 
+class RemoteViewFrame;
+
 /** Communication interface for the remote view widget. */
 class GAMMARAY_COMMON_EXPORT RemoteViewInterface : public QObject
 {
@@ -65,6 +67,7 @@ public slots:
 
 signals:
     void reset();
+    void frameUpdated(const GammaRay::RemoteViewFrame &frame);
 
 private:
     QString m_name;

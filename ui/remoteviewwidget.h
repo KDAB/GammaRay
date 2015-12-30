@@ -32,6 +32,8 @@
 
 #include "gammaray_ui_export.h"
 
+#include <common/remoteviewframe.h>
+
 #include <QWidget>
 
 class QAbstractItemModel;
@@ -78,8 +80,6 @@ public:
     /// Model containing the supported zoom levels, for use with a combo box
     QAbstractItemModel* zoomLevelModel() const;
 
-    const QImage& image() const;
-
     /// Set the message that is shown when remote view is unavailable.
     void setUnavailableText(const QString &msg);
 
@@ -87,7 +87,6 @@ public:
     QActionGroup* interactionModeActions() const;
 
 public slots:
-    void setImage(const QImage &image);
     /// Clears the current view content.
     void reset();
     /// Sets the zoom level to the closest level to @p zoom.
@@ -103,6 +102,9 @@ signals:
     void zoomLevelChanged(int zoomLevelIndex);
 
 protected:
+    /** Current frame data. */
+    const RemoteViewFrame& frame() const;
+
     /** Override this to draw element decorations.
      *  @P p is translated to that 0,0 is the top left corner of the source image, but not scaled
      */
@@ -146,9 +148,10 @@ private:
 
 private slots:
     void interactionActionTriggered(QAction* action);
+    void frameUpdated(const GammaRay::RemoteViewFrame &frame);
 
 private:
-    QImage m_sourceImage;
+    RemoteViewFrame m_frame;
     QBrush m_backgroundBrush;
     QVector<double> m_zoomLevels;
     QStandardItemModel *m_zoomLevelModel;

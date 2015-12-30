@@ -73,8 +73,6 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
   ui->splitter->setStretchFactor(0, 0);
   ui->splitter->setStretchFactor(1, 1);
 
-  auto controller = ObjectBroker::object<PaintAnalyzerInterface*>(name);
-  connect(controller, SIGNAL(paintingAnalyzed(QImage)), ui->replayWidget, SLOT(setImage(QImage)));
   connect(zoom, SIGNAL(currentIndexChanged(int)), ui->replayWidget, SLOT(setZoomLevel(int)));
   connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
   zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());

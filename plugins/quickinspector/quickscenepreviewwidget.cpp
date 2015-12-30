@@ -114,7 +114,6 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.zoomCombobox = new QComboBox(this);
   m_toolBar.zoomCombobox->setModel(zoomLevelModel());
   connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomLevel(int)));
-  connect(this, &RemoteViewWidget::zoomChanged, this, &QuickScenePreviewWidget::updateEffectiveGeometry);
   connect(this, &RemoteViewWidget::zoomLevelChanged, m_toolBar.zoomCombobox, &QComboBox::setCurrentIndex);
   m_toolBar.zoomCombobox->setCurrentIndex(zoomLevelIndex());
 
@@ -135,6 +134,7 @@ void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
 
 void QuickScenePreviewWidget::drawDecoration(QPainter* p)
 {
+  updateEffectiveGeometry();
   p->save();
 
   // bounding box
@@ -302,37 +302,30 @@ void QuickScenePreviewWidget::drawAnchor(QPainter *p, Qt::Orientation orientatio
   pen.setStyle(Qt::DotLine);
   p->setPen(pen);
   if (orientation == Qt::Horizontal) {
-    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, image().height() * zoom());
+    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, frame().height() * zoom());
   } else {
-    p->drawLine(0, foreignAnchorLine, image().width() * zoom(), foreignAnchorLine);
+    p->drawLine(0, foreignAnchorLine, frame().width() * zoom(), foreignAnchorLine);
   }
-}
-
-void QuickScenePreviewWidget::setItemGeometry(const QuickItemGeometry &itemGeometry)
-{
-  m_itemGeometry = itemGeometry;
-
-  updateEffectiveGeometry();
-  update();
 }
 
 void QuickScenePreviewWidget::updateEffectiveGeometry()
 {
-  m_effectiveGeometry = m_itemGeometry;
+  const auto itemGeometry = frame().data().value<QuickItemGeometry>();
+  m_effectiveGeometry = itemGeometry;
 
-  m_effectiveGeometry.itemRect               = QRectF(m_itemGeometry.itemRect.topLeft() * zoom(), m_itemGeometry.itemRect.bottomRight() * zoom());
-  m_effectiveGeometry.boundingRect           = QRectF(m_itemGeometry.boundingRect.topLeft() * zoom(), m_itemGeometry.boundingRect.bottomRight() * zoom());
-  m_effectiveGeometry.childrenRect           = QRectF(m_itemGeometry.childrenRect.topLeft() * zoom(), m_itemGeometry.childrenRect.bottomRight() * zoom());
-  m_effectiveGeometry.transformOriginPoint   = m_itemGeometry.transformOriginPoint * zoom();
-  m_effectiveGeometry.leftMargin             = m_itemGeometry.leftMargin * zoom();
-  m_effectiveGeometry.horizontalCenterOffset = m_itemGeometry.horizontalCenterOffset * zoom();
-  m_effectiveGeometry.rightMargin            = m_itemGeometry.rightMargin * zoom();
-  m_effectiveGeometry.topMargin              = m_itemGeometry.topMargin * zoom();
-  m_effectiveGeometry.verticalCenterOffset   = m_itemGeometry.verticalCenterOffset * zoom();
-  m_effectiveGeometry.bottomMargin           = m_itemGeometry.bottomMargin * zoom();
-  m_effectiveGeometry.baselineOffset         = m_itemGeometry.baselineOffset * zoom();
-  m_effectiveGeometry.x                      = m_itemGeometry.x * zoom();
-  m_effectiveGeometry.y                      = m_itemGeometry.y * zoom();
+  m_effectiveGeometry.itemRect               = QRectF(itemGeometry.itemRect.topLeft() * zoom(), itemGeometry.itemRect.bottomRight() * zoom());
+  m_effectiveGeometry.boundingRect           = QRectF(itemGeometry.boundingRect.topLeft() * zoom(), itemGeometry.boundingRect.bottomRight() * zoom());
+  m_effectiveGeometry.childrenRect           = QRectF(itemGeometry.childrenRect.topLeft() * zoom(), itemGeometry.childrenRect.bottomRight() * zoom());
+  m_effectiveGeometry.transformOriginPoint   = itemGeometry.transformOriginPoint * zoom();
+  m_effectiveGeometry.leftMargin             = itemGeometry.leftMargin * zoom();
+  m_effectiveGeometry.horizontalCenterOffset = itemGeometry.horizontalCenterOffset * zoom();
+  m_effectiveGeometry.rightMargin            = itemGeometry.rightMargin * zoom();
+  m_effectiveGeometry.topMargin              = itemGeometry.topMargin * zoom();
+  m_effectiveGeometry.verticalCenterOffset   = itemGeometry.verticalCenterOffset * zoom();
+  m_effectiveGeometry.bottomMargin           = itemGeometry.bottomMargin * zoom();
+  m_effectiveGeometry.baselineOffset         = itemGeometry.baselineOffset * zoom();
+  m_effectiveGeometry.x                      = itemGeometry.x * zoom();
+  m_effectiveGeometry.y                      = itemGeometry.y * zoom();
 }
 
 void QuickScenePreviewWidget::visualizeActionTriggered(bool checked)

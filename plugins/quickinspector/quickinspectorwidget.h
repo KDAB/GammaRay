@@ -56,7 +56,6 @@ class QuickInspectorWidget : public QWidget
     ~QuickInspectorWidget();
 
   private slots:
-    void sceneRendered (const GammaRay::TransferImage &image, const GammaRay::QuickItemGeometry &itemGeometry);
     void itemSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void setSplitterSizes();

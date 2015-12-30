@@ -60,6 +60,9 @@ public:
     /// returns @c true if there is a client displaying our content
     bool isActive() const;
 
+    /// sends a new frame to the client
+    void sendFrame(const RemoteViewFrame &frame);
+
 public slots:
     /// call this to indicate the source has changed and the client reuqires an update
     void sourceChanged();
