@@ -1,8 +1,8 @@
 Name:           gammaray
-Version:        2.2.50+git20150705
+Version:        2.3.99
 Release:        1
 Summary:        An introspection tool for Qt applications
-Source:         %{name}-%{version}.tar.bz2
+Source:         %{name}-%{version}.tar.gz
 Url:            http://github.com/KDAB/GammaRay
 Group:          Development/Tools
 License:        GPL-2.0+
@@ -11,11 +11,21 @@ Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
 BuildRequires: cmake
-BuildRequires: libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel
+%if %{defined suse_version}
+BuildRequires: libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel graphviz-devel
+%if 0%{?suse_version} > 1320
+BuildRequires: libqt5-qtconnectivity-devel
+%endif
 # TODO: this seems only to be in the update repo?
-# libqt5-qtconnectivity-devel
-BuildRequires: kdstatemachineeditor-devel
 BuildRequires: kcoreaddons-devel
+%endif
+
+%if %{defined fedora}
+BuildRequires: qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-devel qt5-qtsvg-devel qt5-qtscript-devel qt5-qtwebkit-devel graphviz-devel
+%if 0%{?fedora} >= 21
+BuildRequires:  kf5-kcoreaddons-devel
+%endif
+%endif
 
 %if %{defined suse_version}
 BuildRequires: update-desktop-files
@@ -123,6 +133,9 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_quickinspector*
 %{_libdir}/gammaray/*/*/gammaray_translatorinspector*
 %{_libdir}/gammaray/*/*/styles/
+%if 0%{?suse_version} > 1320|| 0%{?fedora}
+%{_libdir}/gammaray/*/*/gammaray_bluetooth*
+%endif
 
 %files kf5-plugins
 %defattr(-,root,root)
@@ -140,6 +153,10 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/qt5/mkspecs/modules/*
 
 %changelog
+* Sun Dec 20 2015 Allen Winter <allen.winter@kdab.com> 2.3.99
+  2.4.0 release candidate 1
+* Fri Jul 10 2015 Allen Winter <allen.winter@kdab.com> 2.3.0
+  2.3.0 final
 * Tue Jan 27 2015 Allen Winter <allen.winter@kdab.com> 2.2.1
   2.2.1 final
 * Fri Oct 31 2014 Allen Winter <allen.winter@kdab.com> 2.2.0

@@ -68,10 +68,10 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.toolbarWidget = new QToolBar(this);
   m_toolBar.toolbarWidget->setAutoFillBackground(true);
 
-  QActionGroup *visualizeGroup = new QActionGroup(this);
-  visualizeGroup->setExclusive(true);
+  m_toolBar.visualizeGroup = new QActionGroup(this);
+  m_toolBar.visualizeGroup->setExclusive(false); // we need 0 or 1 selected, not exactly 1
   m_toolBar.visualizeClipping = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-clipping.png")), tr("Visualize Clipping"), this);
-  m_toolBar.visualizeClipping->setActionGroup(visualizeGroup);
+  m_toolBar.visualizeClipping->setActionGroup(m_toolBar.visualizeGroup);
   m_toolBar.visualizeClipping->setCheckable(true);
   m_toolBar.visualizeClipping->setToolTip(tr("<b>Visualize Clipping</b><br/>"
       "Items with the property <i>clip</i> set to true, will cut off their and their "
@@ -83,7 +83,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   connect(m_toolBar.visualizeClipping, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
   m_toolBar.visualizeOverdraw = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-overdraw.png")), tr("Visualize Overdraw"), this);
-  m_toolBar.visualizeOverdraw->setActionGroup(visualizeGroup);
+  m_toolBar.visualizeOverdraw->setActionGroup(m_toolBar.visualizeGroup);
   m_toolBar.visualizeOverdraw->setCheckable(true);
   m_toolBar.visualizeOverdraw->setToolTip(tr("<b>Visualize Overdraw</b><br/>"
       "The QtQuick renderer doesn't detect if an item is obscured by another "
@@ -96,7 +96,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   connect(m_toolBar.visualizeOverdraw, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
   m_toolBar.visualizeBatches = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-batches.png")), tr("Visualize Batches"), this);
-  m_toolBar.visualizeBatches->setActionGroup(visualizeGroup);
+  m_toolBar.visualizeBatches->setActionGroup(m_toolBar.visualizeGroup);
   m_toolBar.visualizeBatches->setCheckable(true);
   m_toolBar.visualizeBatches->setToolTip(tr("<b>Visualize Batches</b><br/>"
       "Where a traditional 2D API, such as QPainter, Cairo or Context2D, is written to "
@@ -112,7 +112,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   connect(m_toolBar.visualizeBatches, SIGNAL(triggered(bool)), this, SLOT(visualizeActionTriggered(bool)));
 
   m_toolBar.visualizeChanges = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-changes.png")), tr("Visualize Changes"), this);
-  m_toolBar.visualizeChanges->setActionGroup(visualizeGroup);
+  m_toolBar.visualizeChanges->setActionGroup(m_toolBar.visualizeGroup);
   m_toolBar.visualizeChanges->setCheckable(true);
   m_toolBar.visualizeChanges->setToolTip(tr("<b>Visualize Changes</b><br>"
       "The QtQuick scene is only repainted, if some item changes in a visual manner. "
@@ -138,7 +138,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.movePreview->setChecked(true);
   m_toolBar.toolbarWidget->addAction(m_toolBar.movePreview);
 
-  m_toolBar.measurePixels = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pizel Sizes"), this);
+  m_toolBar.measurePixels = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
   m_toolBar.measurePixels->setActionGroup(mouseToolGroup);
   m_toolBar.measurePixels->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
       "Choose this mode, click somewhere and drag to measure the distance between the "
@@ -643,13 +643,25 @@ void QuickScenePreviewWidget::setZoomFromCombobox(int)
 
 void QuickScenePreviewWidget::visualizeActionTriggered(bool checked)
 {
+  static bool recursionGuard = false;
+  if (recursionGuard)
+      return;
+
   if (!checked) {
     m_inspectorInterface->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
   } else {
-    m_inspectorInterface->setCustomRenderMode(sender() == m_toolBar.visualizeClipping ? QuickInspectorInterface::VisualizeClipping
-                                            : sender() == m_toolBar.visualizeBatches ? QuickInspectorInterface::VisualizeBatches
-                                            : sender() == m_toolBar.visualizeOverdraw ? QuickInspectorInterface::VisualizeOverdraw
-                                            : sender() == m_toolBar.visualizeChanges ? QuickInspectorInterface::VisualizeChanges
+    // QActionGroup requires exactly one selected, but we need 0 or 1 selected
+    const auto current = sender();
+    recursionGuard = true;
+    foreach (auto action, m_toolBar.visualizeGroup->actions()) {
+      if (action != current)
+        action->setChecked(false);
+    }
+    recursionGuard = false;
+    m_inspectorInterface->setCustomRenderMode(current == m_toolBar.visualizeClipping ? QuickInspectorInterface::VisualizeClipping
+                                            : current == m_toolBar.visualizeBatches ? QuickInspectorInterface::VisualizeBatches
+                                            : current == m_toolBar.visualizeOverdraw ? QuickInspectorInterface::VisualizeOverdraw
+                                            : current == m_toolBar.visualizeChanges ? QuickInspectorInterface::VisualizeChanges
                                             : QuickInspectorInterface::NormalRendering
     );
   }

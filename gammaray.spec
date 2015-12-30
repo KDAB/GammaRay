@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        2.3.0
+Version:        2.4.0
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -10,9 +10,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
-BuildRequires: cmake
+BuildRequires: cmake kdstatemachineeditor-devel graphviz-devel
 %if %{defined suse_version}
-BuildRequires: libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel graphviz-devel
+BuildRequires: libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel
 %if 0%{?suse_version} > 1320
 BuildRequires: libqt5-qtconnectivity-devel
 %endif
@@ -21,7 +21,7 @@ BuildRequires: kcoreaddons-devel
 %endif
 
 %if %{defined fedora}
-BuildRequires: qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-devel qt5-qtsvg-devel qt5-qtscript-devel qt5-qtwebkit-devel graphviz-devel
+BuildRequires: qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-devel qt5-qtsvg-devel qt5-qtscript-devel qt5-qtwebkit-devel
 %if 0%{?fedora} >= 21
 BuildRequires:  kf5-kcoreaddons-devel
 %endif
@@ -103,13 +103,14 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_prefix}/share/doc/gammaray
 %{_mandir}/man1/gammaray.1.gz
 %{_bindir}/gammaray
-%dir %{_libdir}/gammaray/libexec/
 %{_libdir}/gammaray/libexec/gammaray-client
 %{_libdir}/gammaray/libexec/gammaray-launcher
 %{_libdir}/libgammaray_common-*.so.*
 %{_libdir}/libgammaray_core-*.so.*
 %{_libdir}/libgammaray_ui-*.so.*
 %{_libdir}/libgammaray_client.so.*
+%{_libdir}/libgammaray_kitemmodels*
+%{_libdir}/libgammaray_launcher*
 %dir %{_libdir}/gammaray/
 %dir %{_libdir}/gammaray/*/
 %dir %{_libdir}/gammaray/*/*/
@@ -117,6 +118,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_probe.so
 %{_libdir}/gammaray/*/*/gammaray_inprocessui.so
 %{_libdir}/gammaray/*/*/gammaray_actioninspector*
+%{_libdir}/gammaray/*/*/gammaray_bluetooth.so
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
 %{_libdir}/gammaray/*/*/gammaray_selectionmodelinspector*
@@ -128,14 +130,10 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_styleinspector*
 %{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
 %{_libdir}/gammaray/*/*/gammaray_webinspector*
-%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
 %{_libdir}/gammaray/*/*/gammaray_qmlsupport*
 %{_libdir}/gammaray/*/*/gammaray_quickinspector*
 %{_libdir}/gammaray/*/*/gammaray_translatorinspector*
 %{_libdir}/gammaray/*/*/styles/
-%if 0%{?suse_version} > 1320|| 0%{?fedora}
-%{_libdir}/gammaray/*/*/gammaray_bluetooth*
-%endif
 
 %files kf5-plugins
 %defattr(-,root,root)
@@ -153,8 +151,10 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/qt5/mkspecs/modules/*
 
 %changelog
-* Fri Jul 10 2015 Allen Winter <allen.winter@kdab.com> 2.3.0
-  2.3.0 final
+* Tue Dec 22 2015 Allen Winter <allen.winter@kdab.com> 2.4.0
+  2.4.0 final
+* Sun Dec 20 2015 Allen Winter <allen.winter@kdab.com> 2.3.99
+  2.4.0 release candidate 1
 * Tue Jan 27 2015 Allen Winter <allen.winter@kdab.com> 2.2.1
   2.2.1 final
 * Fri Oct 31 2014 Allen Winter <allen.winter@kdab.com> 2.2.0

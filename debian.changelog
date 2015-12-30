@@ -1,3 +1,15 @@
+gammaray (2.4.0) final; urgency=low
+
+  * 2.4.0 final release
+
+ -- Allen Winter <allen.winter@kdab.com>  Tue, 22 Dec 2015 09:30:00 -0500
+
+gammaray (2.3.99) final; urgency=low
+
+  * 2.4.0 rc1 release
+
+ -- Allen Winter <allen.winter@kdab.com>  Sun, 20 Dec 2015 12:30:00 -0500
+
 gammaray (2.3.0) final; urgency=low
 
   * 2.3.0 final release
