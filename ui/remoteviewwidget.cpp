@@ -544,6 +544,8 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent* event)
     m_currentMousePosition = mapToSource(event->pos());
 
     switch (m_interactionMode) {
+        case NoInteraction:
+            break;
         case ViewInteraction:
             m_mouseDownPosition = event->pos() - QPoint(m_x, m_y);
             if ((event->modifiers() & Qt::ControlModifier) && (m_supportedInteractionModes & ElementPicking))
@@ -576,6 +578,9 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent* event)
     m_currentMousePosition = mapToSource(event->pos());
 
     switch (m_interactionMode) {
+        case NoInteraction:
+        case ElementPicking:
+            break;
         case ViewInteraction:
             setCursor(Qt::OpenHandCursor);
             break;
@@ -596,6 +601,9 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
     m_currentMousePosition = mapToSource(event->pos());
 
     switch (m_interactionMode) {
+        case NoInteraction:
+        case ElementPicking:
+            break;
         case ViewInteraction:
             if (event->buttons() != Qt::LeftButton)
                 break;
@@ -628,6 +636,8 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 void RemoteViewWidget::wheelEvent(QWheelEvent *event)
 {
     switch (m_interactionMode) {
+        case NoInteraction:
+            break;
         case ViewInteraction:
         case ElementPicking:
         case Measuring:
@@ -650,6 +660,8 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
 void RemoteViewWidget::keyPressEvent(QKeyEvent* event)
 {
     switch (m_interactionMode) {
+        case NoInteraction:
+            break;
         case ViewInteraction:
         case ElementPicking:
         case Measuring:
@@ -670,6 +682,8 @@ void RemoteViewWidget::keyReleaseEvent(QKeyEvent* event)
     switch (m_interactionMode) {
         case InputRedirection:
             sendKeyEvent(event);
+            break;
+        default:
             break;
     }
     QWidget::keyReleaseEvent(event);
