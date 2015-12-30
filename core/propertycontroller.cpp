@@ -42,6 +42,7 @@ PropertyController::PropertyController(const QString &baseName, QObject *parent)
   m_objectBaseName(baseName)
 {
   s_instances << this;
+  m_extensions.reserve(s_extensionFactories.size());
   foreach (PropertyControllerExtensionFactoryBase *factory, s_extensionFactories) {
     m_extensions << factory->create(this);
   }
