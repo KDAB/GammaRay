@@ -3,5 +3,8 @@
     <file>measure-pixels.png</file>
     <file>redirect-input.png</file>
     <file>move-preview.png</file>
+    <file>pick-element.png</file>
+    <file>zoom-in.png</file>
+    <file>zoom-out.png</file>
   </qresource>
 </RCC>

@@ -118,9 +118,9 @@ void RemoteViewWidget::setupActions()
     action->setActionGroup(m_interactionModeActions);
     addAction(action);
 
-    // TODO: icon
     action = new QAction(tr("Pick Element"), this);
     action->setIconText(tr("Pick"));
+    action->setIcon(QIcon(QStringLiteral(":/gammaray/ui/pick-element.png")));
     action->setCheckable(true);
     action->setToolTip(tr("<b>Pick Element</b><br>"
         "Select an element for inspection by clicking on it."));
