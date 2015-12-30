@@ -63,6 +63,7 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     MetaObject *metaObject() const;
 
   private:
+    Q_DISABLE_COPY(MetaProperty)
     friend class MetaObject;
     void setMetaObject(MetaObject *om);
 

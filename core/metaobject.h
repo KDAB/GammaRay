@@ -84,6 +84,7 @@ class GAMMARAY_CORE_EXPORT MetaObject
     QVector<MetaObject*> m_baseClasses;
 
   private:
+    Q_DISABLE_COPY(MetaObject)
     QVector<MetaProperty*> m_properties;
     QString m_className;
 };

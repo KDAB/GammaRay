@@ -145,6 +145,7 @@ class AbstractFunctionOverwriter
     virtual size_t blocksize();
 
   private:
+    Q_DISABLE_COPY(AbstractFunctionOverwriter)
     void *page_align(void *addr) const;
     size_t roundToNextPage(size_t addr) const;
 

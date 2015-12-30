@@ -57,6 +57,7 @@ struct SignalSpyCallbackSet;
 class ProbeInterface
 {
   public:
+    ProbeInterface() {}
     virtual inline ~ProbeInterface()
     {
     }
@@ -152,6 +153,9 @@ class ProbeInterface
      * @since 2.2
      */
     virtual void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) = 0;
+
+private:
+    Q_DISABLE_COPY(ProbeInterface)
 };
 
 }

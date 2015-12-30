@@ -53,6 +53,7 @@ public:
     static QEvent::Type eventType();
 
 private:
+    Q_DISABLE_COPY(ModelEvent)
     bool m_used;
 };
 

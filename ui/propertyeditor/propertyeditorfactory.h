@@ -56,6 +56,7 @@ class GAMMARAY_UI_EXPORT PropertyEditorFactory : public QItemEditorFactory
     PropertyEditorFactory();
 
   private:
+    Q_DISABLE_COPY(PropertyEditorFactory)
     void initBuiltInTypes();
     void addEditor(TypeId type, QItemEditorCreatorBase *creator);
 

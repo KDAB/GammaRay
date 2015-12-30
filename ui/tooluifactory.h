@@ -43,6 +43,7 @@ namespace GammaRay {
 class ToolUiFactory
 {
   public:
+    ToolUiFactory() {}
     virtual inline ~ToolUiFactory()
     {
     }
@@ -71,6 +72,9 @@ class ToolUiFactory
      * the actual widget.
      */
     virtual void initUi() {}
+
+  private:
+    Q_DISABLE_COPY(ToolUiFactory)
 };
 
 /**

@@ -30,6 +30,10 @@
 
 using namespace GammaRay;
 
+ProbeControllerInterface::ProbeControllerInterface()
+{
+}
+
 ProbeControllerInterface::~ProbeControllerInterface()
 {
 }

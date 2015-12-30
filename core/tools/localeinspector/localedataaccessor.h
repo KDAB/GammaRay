@@ -85,6 +85,8 @@ struct LocaleDataAccessor
   {
     return QString();
   }
+
+  Q_DISABLE_COPY(LocaleDataAccessor)
 };
 
 #define LOCALE_DISPLAY_ACCESSOR(NAME) \

@@ -44,6 +44,10 @@ using namespace GammaRay;
 
 Q_GLOBAL_STATIC(QVector<AbstractPropertyAdaptorFactory*>, s_propertyAdaptorFactories)
 
+AbstractPropertyAdaptorFactory::AbstractPropertyAdaptorFactory()
+{
+}
+
 AbstractPropertyAdaptorFactory::~AbstractPropertyAdaptorFactory()
 {
 }

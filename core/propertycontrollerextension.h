@@ -81,6 +81,7 @@ public:
   QString name() const;
 
 private:
+  Q_DISABLE_COPY(PropertyControllerExtension)
   QString m_name;
 };
 
@@ -89,6 +90,8 @@ class PropertyControllerExtensionFactoryBase {
   public:
     explicit PropertyControllerExtensionFactoryBase() {}
     virtual PropertyControllerExtension *create(PropertyController *controller) = 0;
+  private:
+    Q_DISABLE_COPY(PropertyControllerExtensionFactoryBase)
 };
 
 template <typename T>

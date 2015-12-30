@@ -42,10 +42,14 @@ class PropertyAdaptor;
 class GAMMARAY_CORE_EXPORT AbstractPropertyAdaptorFactory
 {
 public:
+    AbstractPropertyAdaptorFactory();
     virtual ~AbstractPropertyAdaptorFactory();
 
     /** Create a custom property adaptor if it can handle @p oi, return @c nullptr otherwise. */
     virtual PropertyAdaptor* create(const ObjectInstance &oi, QObject *parent = 0) const = 0;
+
+private:
+    Q_DISABLE_COPY(AbstractPropertyAdaptorFactory)
 };
 
 /** Factory for property adaptors. */

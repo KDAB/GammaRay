@@ -44,6 +44,9 @@ class PropertyWidgetTabFactoryBase
     virtual QWidget *createWidget(PropertyWidget *parent) = 0;
     virtual const QString &name() const = 0;
     virtual const QString &label() const = 0;
+
+  private:
+    Q_DISABLE_COPY(PropertyWidgetTabFactoryBase)
 };
 
 /** @brief Template implementation of PropertyWidgetTabFactoryBase. */

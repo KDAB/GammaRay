@@ -85,6 +85,8 @@ class PluginManagerBase
 
     QList<PluginLoadError> m_errors;
     QObject *m_parent;
+  private:
+    Q_DISABLE_COPY(PluginManagerBase)
 };
 
 template <typename IFace, typename Proxy>

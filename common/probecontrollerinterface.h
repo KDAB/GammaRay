@@ -37,6 +37,7 @@ namespace GammaRay {
 class ProbeControllerInterface
 {
 public:
+  ProbeControllerInterface();
   virtual ~ProbeControllerInterface();
 
   /** Terminate host application. */
@@ -44,6 +45,9 @@ public:
 
   /** Detach GammaRay but keep host application running. */
   virtual void detachProbe() = 0;
+
+private:
+  Q_DISABLE_COPY(ProbeControllerInterface)
 };
 
 }

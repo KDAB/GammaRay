@@ -57,6 +57,7 @@ class ProbeInterface;
 class ToolFactory
 {
   public:
+    ToolFactory() {}
     virtual inline ~ToolFactory()
     {
     }
@@ -96,6 +97,9 @@ class ToolFactory
      * @since 2.1
      */
     virtual bool isHidden() const = 0;
+
+  private:
+    Q_DISABLE_COPY(ToolFactory)
 };
 
 /**
