@@ -37,7 +37,6 @@
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
 #include "quickitemdelegate.h"
-#include "transferimage.h"
 #include "ui_quickinspectorwidget.h"
 
 #include <common/endpoint.h>

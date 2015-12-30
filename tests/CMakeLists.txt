@@ -247,7 +247,6 @@ set(quickinspectortest_srcs
   ../probe/probecreator.cpp
   ../probe/hooks.cpp
   ../plugins/quickinspector/quickinspectorinterface.cpp
-  ../plugins/quickinspector/transferimage.cpp
   ../plugins/quickinspector/quickitemgeometry.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
 )

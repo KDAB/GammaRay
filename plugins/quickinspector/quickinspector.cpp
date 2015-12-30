@@ -29,7 +29,6 @@
 #include "quickinspector.h"
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
-#include "transferimage.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
 

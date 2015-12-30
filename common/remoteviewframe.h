@@ -30,6 +30,7 @@
 #define GAMMARAY_REMOTEVIEWFRAME_H
 
 #include "gammaray_common_export.h"
+#include "transferimage.h"
 
 #include <QDataStream>
 #include <QImage>
@@ -64,8 +65,9 @@ public:
     void setData(const QVariant &data);
 
 private:
+    friend QDataStream& ::operator<<(QDataStream &stream, const RemoteViewFrame &frame);
     friend QDataStream& ::operator>>(QDataStream &stream, RemoteViewFrame &frame);
-    QImage m_image;
+    TransferImage m_image;
     QVariant m_data;
 };
 

@@ -16,6 +16,7 @@ set(gammaray_common_srcs
 
   remoteviewinterface.cpp
   remoteviewframe.cpp
+  transferimage.cpp
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
