@@ -304,6 +304,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
   m_itemModel->setWindow(window);
   m_sgModel->setWindow(window);
   m_remoteView->setEventReceiver(m_window);
+  m_remoteView->resetView();
 
   if (m_window) {
     // make sure we have selected something for the property editor to not be entirely empty
