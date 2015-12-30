@@ -138,7 +138,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.movePreview->setChecked(true);
   m_toolBar.toolbarWidget->addAction(m_toolBar.movePreview);
 
-  m_toolBar.measurePixels = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pizel Sizes"), this);
+  m_toolBar.measurePixels = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
   m_toolBar.measurePixels->setActionGroup(mouseToolGroup);
   m_toolBar.measurePixels->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
       "Choose this mode, click somewhere and drag to measure the distance between the "
