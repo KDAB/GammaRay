@@ -37,6 +37,10 @@ const long worstSizeForLongJump = 14;
 
 using namespace GammaRay;
 
+AbstractFunctionOverwriter::AbstractFunctionOverwriter()
+{
+}
+
 bool AbstractFunctionOverwriter::writeShortJump(void *target, void *const func)
 {
   quint8 *cur = (quint8 *) target;

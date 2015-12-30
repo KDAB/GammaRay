@@ -48,6 +48,7 @@ namespace GammaRay {
 class AbstractFunctionOverwriter
 {
   public:
+    AbstractFunctionOverwriter();
     virtual ~AbstractFunctionOverwriter();
 
     /**
