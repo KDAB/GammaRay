@@ -139,6 +139,8 @@ private:
     void drawMeasureOverlay(QPainter *p);
     void drawMeasurementLabel(QPainter *p, QPoint pos, QPoint dir, const QString &text);
 
+    void clampPanPosition();
+
     void sendMouseEvent(QMouseEvent *event);
     void sendKeyEvent(QKeyEvent *event);
     void sendWheelEvent(QWheelEvent *event);

@@ -571,6 +571,20 @@ QPoint RemoteViewWidget::mapFromSource(QPoint pos) const
     return pos * m_zoom + QPoint(m_x, m_y);
 }
 
+void RemoteViewWidget::clampPanPosition()
+{
+    if (m_x > width() / 2) {
+        m_x = width() / 2;
+    } else if (m_x + m_frame.width() * m_zoom < width() / 2.0) {
+        m_x = width() / 2 - m_frame.width() * m_zoom;
+    }
+    if (m_y > height() / 2) {
+        m_y = height() / 2;
+    } else if (m_y + m_frame.height() * m_zoom < height() / 2.0) {
+        m_y = height() / 2 - m_frame.height() * m_zoom;
+    }
+}
+
 void RemoteViewWidget::resizeEvent(QResizeEvent* event)
 {
     m_x += 0.5 * (event->size().width() - event->oldSize().width());
@@ -649,17 +663,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
                 break;
             m_x = event->x() - m_mouseDownPosition.x();
             m_y = event->y() - m_mouseDownPosition.y();
-
-            if (m_x > width() / 2) {
-                m_x = width() / 2;
-            } else if (m_x + m_frame.width() * m_zoom < width() / 2.0) {
-                m_x = width() / 2 - m_frame.width() * m_zoom;
-            }
-            if (m_y > height() / 2) {
-                m_y = height() / 2;
-            } else if (m_y + m_frame.height() * m_zoom < height() / 2.0) {
-                m_y = height() / 2 - m_frame.height() * m_zoom;
-            }
+            clampPanPosition();
             break;
         case Measuring:
             if (event->buttons() & Qt::LeftButton)
@@ -681,12 +685,18 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
         case ViewInteraction:
         case ElementPicking:
         case Measuring:
-            // TODO pan if Ctrl isn't pressed
             if (event->modifiers() & Qt::ControlModifier && event->orientation() == Qt::Vertical) {
                 if (event->delta() > 0)
                     zoomIn();
                 else
                     zoomOut();
+            } else {
+                if (event->orientation() == Qt::Vertical)
+                    m_y += event->delta();
+                else
+                    m_x += event->delta();
+                clampPanPosition();
+                update();
             }
             break;
         case InputRedirection:
