@@ -137,6 +137,14 @@ void RemoteViewWidget::setupActions()
     action->setData(InputRedirection);
     action->setActionGroup(m_interactionModeActions);
     addAction(action);
+
+    updateActions();
+}
+
+void RemoteViewWidget::updateActions()
+{
+    foreach (auto action, m_interactionModeActions->actions())
+        action->setEnabled(m_frame.isValid());
 }
 
 const RemoteViewFrame& RemoteViewWidget::frame() const
@@ -154,6 +162,7 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame& frame)
         update();
     }
 
+    updateActions();
     QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
 }
 

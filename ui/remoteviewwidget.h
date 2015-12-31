@@ -128,6 +128,7 @@ protected:
 
 private:
     void setupActions();
+    void updateActions();
     void drawRuler(QPainter *p);
     int sourceTickLabelDistance(int viewDistance);
     int viewTickLabelDistance() const;
