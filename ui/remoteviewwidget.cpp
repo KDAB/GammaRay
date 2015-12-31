@@ -422,8 +422,11 @@ void RemoteViewWidget::drawRuler(QPainter* p)
         const int tickSize = tickLength(sourcePos, sourceLabelDist);
         p->drawLine(i, 0, i, tickSize);
 
-        if (sourcePos >= 0 && sourcePos <= m_frame.width() && sourcePos % sourceLabelDist == 0) {
-            p->setPen(activePen);
+        if (sourcePos % sourceLabelDist == 0) {
+            if (sourcePos < 0 || sourcePos > m_frame.width())
+                p->setPen(inactivePen);
+            else
+                p->setPen(activePen);
             p->drawText(i - viewLabelDist / 2, tickSize, viewLabelDist, hRulerHeight - tickSize, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(sourcePos));
         }
     }
@@ -444,8 +447,11 @@ void RemoteViewWidget::drawRuler(QPainter* p)
         const int tickSize = tickLength(sourcePos, sourceLabelDist);
         p->drawLine(0, i, tickSize, i);
 
-        if (sourcePos >= 0 && sourcePos <= m_frame.height() && sourcePos % sourceLabelDist == 0) {
-            p->setPen(activePen);
+        if (sourcePos % sourceLabelDist == 0) {
+            if (sourcePos < 0 || sourcePos > m_frame.height())
+                p->setPen(inactivePen);
+            else
+                p->setPen(activePen);
             p->drawText(tickSize, i - viewLabelDist / 2, vRulerWidth - tickSize, viewLabelDist, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(sourcePos));
         }
     }
