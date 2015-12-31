@@ -125,10 +125,12 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void setupActions();
     void updateActions();
+
     void drawRuler(QPainter *p);
     int sourceTickLabelDistance(int viewDistance);
     int viewTickLabelDistance() const;

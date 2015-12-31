@@ -36,6 +36,7 @@
 #include <QActionGroup>
 #include <QApplication>
 #include <QDebug>
+#include <QMenu>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QStandardItemModel>
@@ -277,7 +278,6 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
     if (m_interactionMode == mode || !(mode & m_supportedInteractionModes))
         return;
 
-    setContextMenuPolicy(Qt::ActionsContextMenu);
     switch (mode) {
         case Measuring:
         case ElementPicking:
@@ -286,9 +286,8 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
         case ViewInteraction:
             setCursor(Qt::OpenHandCursor);
             break;
+        case NoInteraction:
         case InputRedirection:
-            setContextMenuPolicy(Qt::PreventContextMenu);
-        default:
             setCursor(QCursor());
             break;
     }
@@ -640,7 +639,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
             break;
     }
 
-  update();
+    update();
 }
 
 void RemoteViewWidget::wheelEvent(QWheelEvent *event)
@@ -710,6 +709,24 @@ void RemoteViewWidget::hideEvent(QHideEvent* event)
     if (Endpoint::isConnected())
         m_interface->setViewActive(false);
     QWidget::hideEvent(event);
+}
+
+void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
+{
+    switch (m_interactionMode) {
+        case ViewInteraction:
+        case ElementPicking:
+        case Measuring:
+        {
+            QMenu menu;
+            menu.addActions(m_interactionModeActions->actions());
+            menu.exec(event->globalPos());
+        }
+        case NoInteraction:
+        case InputRedirection:
+            break;
+    }
+    QWidget::contextMenuEvent(event);
 }
 
 int RemoteViewWidget::contentWidth() const
