@@ -85,6 +85,8 @@ public:
 
     /// Action group containing all interaction mode switch actions
     QActionGroup* interactionModeActions() const;
+    QAction* zoomOutAction() const;
+    QAction* zoomInAction() const;
 
 public slots:
     /// Clears the current view content.
@@ -161,6 +163,8 @@ private:
     QString m_unavailableText;
     QVector<int> m_tickLabelDists;
     QActionGroup *m_interactionModeActions;
+    QAction *m_zoomInAction;
+    QAction *m_zoomOutAction;
     RemoteViewInterface *m_interface;
     double m_zoom;
     int m_x; // view translation before zoom

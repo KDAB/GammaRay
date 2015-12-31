@@ -111,6 +111,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
     m_toolBar.toolbarWidget->addAction(action);
   m_toolBar.toolbarWidget->addSeparator();
 
+  m_toolBar.toolbarWidget->addAction(zoomOutAction());
   m_toolBar.zoomCombobox = new QComboBox(this);
   m_toolBar.zoomCombobox->setModel(zoomLevelModel());
   connect(m_toolBar.zoomCombobox, SIGNAL(currentIndexChanged(int)), this, SLOT(setZoomLevel(int)));
@@ -118,8 +119,11 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
   m_toolBar.zoomCombobox->setCurrentIndex(zoomLevelIndex());
 
   m_toolBar.toolbarWidget->addWidget(m_toolBar.zoomCombobox);
+  m_toolBar.toolbarWidget->addAction(zoomInAction());
 
   setUnavailableText(tr("No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
+
+  setMinimumWidth(std::max(minimumWidth(), m_toolBar.toolbarWidget->sizeHint().width()));
 }
 
 QuickScenePreviewWidget::~QuickScenePreviewWidget()

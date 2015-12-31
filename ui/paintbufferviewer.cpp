@@ -62,10 +62,11 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
     toolbar->addAction(action);
   toolbar->addSeparator();
 
-  toolbar->addWidget(new QLabel(tr("Zoom:")));
+  toolbar->addAction(ui->replayWidget->zoomOutAction());
   auto zoom = new QComboBox;
   zoom->setModel(ui->replayWidget->zoomLevelModel());
   toolbar->addWidget(zoom);
+  toolbar->addAction(ui->replayWidget->zoomInAction());
 
   ui->replayWidget->setName(name + QStringLiteral(".remoteView"));
   ui->replayWidget->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);

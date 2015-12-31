@@ -108,7 +108,6 @@ void RemoteViewWidget::setupActions()
         "Default mode. Click and drag to move the preview. Won't impact the original application in any way."));
     action->setData(ViewInteraction);
     action->setActionGroup(m_interactionModeActions);
-    addAction(action);
 
     action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/measure-pixels.png")), tr("Measure Pixel Sizes"), this);
     action->setCheckable(true);
@@ -118,7 +117,6 @@ void RemoteViewWidget::setupActions()
         "coordinates)."));
     action->setData(Measuring);
     action->setActionGroup(m_interactionModeActions);
-    addAction(action);
 
     action = new QAction(tr("Pick Element"), this);
     action->setIconText(tr("Pick"));
@@ -128,7 +126,6 @@ void RemoteViewWidget::setupActions()
         "Select an element for inspection by clicking on it."));
     action->setData(ElementPicking);
     action->setActionGroup(m_interactionModeActions);
-    addAction(action);
 
     action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/redirect-input.png")), tr("Redirect Input"), this);
     action->setCheckable(true);
@@ -137,7 +134,18 @@ void RemoteViewWidget::setupActions()
         "so you can control the application directly from within GammaRay."));
     action->setData(InputRedirection);
     action->setActionGroup(m_interactionModeActions);
-    addAction(action);
+
+    m_zoomOutAction = new QAction(QIcon(QStringLiteral(":/gammaray/ui/zoom-out.png")), tr("Zoom Out"), this);
+    m_zoomOutAction->setShortcutContext(Qt::WidgetShortcut);
+    m_zoomOutAction->setShortcuts(QKeySequence::ZoomOut);
+    connect(m_zoomOutAction, SIGNAL(triggered(bool)), this, SLOT(zoomOut()));
+    addAction(m_zoomOutAction); // needed to make the WidgetShortcut context work
+
+    m_zoomInAction = new QAction(QIcon(QStringLiteral(":/gammaray/ui/zoom-in.png")), tr("Zoom In"), this);
+    m_zoomInAction->setShortcutContext(Qt::WidgetShortcut);
+    m_zoomInAction->setShortcuts(QKeySequence::ZoomIn);
+    connect(m_zoomInAction, SIGNAL(triggered(bool)), this, SLOT(zoomIn()));
+    addAction(m_zoomInAction);
 
     updateActions();
 }
@@ -146,6 +154,11 @@ void RemoteViewWidget::updateActions()
 {
     foreach (auto action, m_interactionModeActions->actions())
         action->setEnabled(m_frame.isValid());
+
+    Q_ASSERT(!m_zoomLevels.isEmpty());
+    const auto zoomLevel = zoomLevelIndex();
+    m_zoomOutAction->setEnabled(zoomLevel != 0);
+    m_zoomInAction->setEnabled(zoomLevel != m_zoomLevels.size() - 1);
 }
 
 const RemoteViewFrame& RemoteViewWidget::frame() const
@@ -183,6 +196,16 @@ void RemoteViewWidget::setUnavailableText(const QString& msg)
 QActionGroup* RemoteViewWidget::interactionModeActions() const
 {
     return m_interactionModeActions;
+}
+
+QAction* RemoteViewWidget::zoomOutAction() const
+{
+    return m_zoomOutAction;
+}
+
+QAction* RemoteViewWidget::zoomInAction() const
+{
+    return m_zoomInAction;
 }
 
 double RemoteViewWidget::zoom() const
@@ -223,6 +246,8 @@ void RemoteViewWidget::setZoom(double zoom)
 
     m_x = contentWidth() / 2 - (contentWidth() / 2 - m_x) * m_zoom / oldZoom;
     m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * m_zoom / oldZoom;
+
+    updateActions();
     update();
 }
 
@@ -670,14 +695,9 @@ void RemoteViewWidget::keyPressEvent(QKeyEvent* event)
 {
     switch (m_interactionMode) {
         case NoInteraction:
-            break;
         case ViewInteraction:
         case ElementPicking:
         case Measuring:
-            if (event->key() == Qt::Key_Plus && event->modifiers() & Qt::ControlModifier)
-                zoomIn();
-            if (event->key() == Qt::Key_Minus && event->modifiers() & Qt::ControlModifier)
-                zoomOut();
             break;
         case InputRedirection:
             sendKeyEvent(event);
@@ -720,6 +740,9 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
         {
             QMenu menu;
             menu.addActions(m_interactionModeActions->actions());
+            menu.addSeparator();
+            menu.addAction(m_zoomOutAction);
+            menu.addAction(m_zoomInAction);
             menu.exec(event->globalPos());
         }
         case NoInteraction:

@@ -90,13 +90,14 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     toolbar->addAction(action);
   toolbar->addSeparator();
 
-  toolbar->addWidget(new QLabel(tr("Zoom:")));
+  toolbar->addAction(m_remoteView->zoomOutAction());
   auto zoom = new QComboBox;
   zoom->setModel(m_remoteView->zoomLevelModel());
   toolbar->addWidget(zoom);
   connect(zoom, SIGNAL(currentIndexChanged(int)), m_remoteView, SLOT(setZoomLevel(int)));
   connect(m_remoteView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
   zoom->setCurrentIndex(m_remoteView->zoomLevelIndex());
+  toolbar->addAction(m_remoteView->zoomInAction());
 
   connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
   connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
