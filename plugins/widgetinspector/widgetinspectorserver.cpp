@@ -56,7 +56,6 @@
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 #include <QAbstractItemView>
-#include <QActionGroup>
 #include <QApplication>
 #include <QComboBox>
 #include <QDesktopWidget>
@@ -409,9 +408,6 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
   MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_METAOBJECT1(QActionGroup, QObject);
-  MO_ADD_PROPERTY_RO(QActionGroup, QList<QAction*>, actions);
-
   MO_ADD_METAOBJECT1(QApplication, QGuiApplication);
   MO_ADD_PROPERTY_ST(QApplication, QWidget*, activeModalWidget);
   MO_ADD_PROPERTY_ST(QApplication, QWidget*, activePopupWidget);

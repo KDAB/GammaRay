@@ -35,6 +35,7 @@
 #include <core/remote/serverproxymodel.h>
 
 #include <QtPlugin>
+#include <QGraphicsWidget>
 #include <QMenu>
 
 #include <iostream>
@@ -91,6 +92,15 @@ void ActionInspector::registerMetaTypes()
   MO_ADD_PROPERTY   (QAction, bool, isSeparator, setSeparator);
   MO_ADD_PROPERTY_RO(QAction, QMenu*, menu);
   MO_ADD_PROPERTY_RO(QAction, QWidget*, parentWidget);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+  MO_ADD_PROPERTY_RO(QAction, QList<QGraphicsWidget*>, associatedGraphicsWidgets);
+  MO_ADD_PROPERTY_RO(QAction, QList<QWidget*>, associatedWidgets);
+#endif
+
+  MO_ADD_METAOBJECT1(QActionGroup, QObject);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+  MO_ADD_PROPERTY_RO(QActionGroup, QList<QAction*>, actions);
+#endif
 }
 
 QString ActionInspectorFactory::name() const
