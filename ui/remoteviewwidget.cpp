@@ -526,27 +526,33 @@ void RemoteViewWidget::drawMeasureOverlay(QPainter* p)
     const QPoint startLabelDir(startPos.x() < endPos.x() ? -1 : 1, startPos.y() < endPos.y() ? -1 : 1);
     const QPoint endLabelDir(-startLabelDir.x(), -startLabelDir.y());
     drawMeasurementLabel(p, startPos, startLabelDir, QStringLiteral("x: %1 y: %2").arg(m_measurementStartPosition.x()).arg(m_measurementStartPosition.y()));
-    drawMeasurementLabel(p, endPos, endLabelDir, QStringLiteral("x: %1 y: %2").arg(m_measurementEndPosition.x()).arg(m_measurementEndPosition.y()));
+    if (endPos != startPos)
+        drawMeasurementLabel(p, endPos, endLabelDir, QStringLiteral("x: %1 y: %2").arg(m_measurementEndPosition.x()).arg(m_measurementEndPosition.y()));
 
     // distance label
     const auto dPos = QPoint(startPos + endPos) / 2;
-    const QPoint dDir(startLabelDir.x(), endLabelDir.y());
     const auto d = QLineF(m_measurementStartPosition, m_measurementEndPosition).length();
-    drawMeasurementLabel(p, dPos, dDir, QStringLiteral("%1px").arg(d, 0, 'f', 2));
+    if (d > 0) {
+        const QPoint dDir(startLabelDir.x(), endLabelDir.y());
+        drawMeasurementLabel(p, dPos, dDir, QStringLiteral("%1px").arg(d, 0, 'f', 2));
+    }
 
     // x/y length labels, if there is enough space
+    const auto xLength = std::abs(m_measurementStartPosition.x() - m_measurementEndPosition.x());
+    const auto yLength = std::abs(m_measurementStartPosition.y() - m_measurementEndPosition.y());
+
     const auto xDiff = std::abs(endPos.x() - startPos.x());
-    if (xDiff > fontMetrics().height() * 2) {
+    if (xDiff > fontMetrics().height() * 2 && xLength > 0 && yLength > 0) {
         const auto xPos = QPoint(dPos.x(), startPos.y());
         const QPoint xDir = QPoint(-startLabelDir.x(), startLabelDir.y());
-        drawMeasurementLabel(p, xPos, xDir, QStringLiteral("x: %1px").arg(std::abs(m_measurementStartPosition.x() - m_measurementEndPosition.x())));
+        drawMeasurementLabel(p, xPos, xDir, QStringLiteral("x: %1px").arg(xLength));
     }
 
     const auto yDiff = std::abs(endPos.y() - startPos.y());
-    if (yDiff > fontMetrics().height() * 2) {
+    if (yDiff > fontMetrics().height() * 2 && xLength > 0 && yLength > 0) {
         const auto yPos = QPoint(endPos.x(), dPos.y());
         const QPoint yDir = QPoint(endLabelDir.x(), -endLabelDir.y());
-        drawMeasurementLabel(p, yPos, yDir, QStringLiteral("y: %1px").arg(std::abs(m_measurementStartPosition.y() - m_measurementEndPosition.y())));
+        drawMeasurementLabel(p, yPos, yDir, QStringLiteral("y: %1px").arg(yLength));
     }
 }
 
