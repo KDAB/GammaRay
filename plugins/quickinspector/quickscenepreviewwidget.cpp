@@ -306,9 +306,9 @@ void QuickScenePreviewWidget::drawAnchor(QPainter *p, Qt::Orientation orientatio
   pen.setStyle(Qt::DotLine);
   p->setPen(pen);
   if (orientation == Qt::Horizontal) {
-    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, frame().height() * zoom());
+    p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, frame().viewRect().height() * zoom());
   } else {
-    p->drawLine(0, foreignAnchorLine, frame().width() * zoom(), foreignAnchorLine);
+    p->drawLine(0, foreignAnchorLine, frame().viewRect().width() * zoom(), foreignAnchorLine);
   }
 }
 

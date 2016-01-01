@@ -53,9 +53,12 @@ public:
 
     bool isValid() const;
 
-    QSize size() const;
-    int width() const;
-    int height() const;
+    /// the visible area on screen
+    QRectF viewRect() const;
+    void setViewRect(const QRectF &viewRect);
+    /// the interal scene might expand beyond the visible view area
+    QRectF sceneRect() const;
+    void setSceneRect(const QRectF &sceneRect);
 
     QImage image() const;
     void setImage(const QImage &image);
@@ -69,6 +72,8 @@ private:
     friend QDataStream& ::operator>>(QDataStream &stream, RemoteViewFrame &frame);
     TransferImage m_image;
     QVariant m_data;
+    QRectF m_viewRect;
+    QRectF m_sceneRect;
 };
 
 }

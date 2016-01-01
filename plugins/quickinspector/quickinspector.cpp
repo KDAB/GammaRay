@@ -424,6 +424,7 @@ void QuickInspector::sendRenderedScene()
       itemGeometry.parentTransform =  parentPriv->itemToWindowTransform();
     }
   }
+  frame.setSceneRect(QRectF(m_currentFrame.rect()) | itemGeometry.itemRect | itemGeometry.childrenRect | itemGeometry.boundingRect);
   frame.setData(QVariant::fromValue(itemGeometry));
   m_remoteView->sendFrame(frame);
 }

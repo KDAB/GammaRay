@@ -45,19 +45,28 @@ bool RemoteViewFrame::isValid() const
     return !m_image.image().isNull();
 }
 
-QSize RemoteViewFrame::size() const
+QRectF RemoteViewFrame::viewRect() const
 {
-    return m_image.image().size();
+    if (m_viewRect.isValid())
+        return m_viewRect;
+    return m_image.image().rect();
 }
 
-int RemoteViewFrame::width() const
+void RemoteViewFrame::setViewRect(const QRectF& viewRect)
 {
-    return m_image.image().width();
+    m_viewRect = viewRect;
 }
 
-int RemoteViewFrame::height() const
+QRectF RemoteViewFrame::sceneRect() const
 {
-    return m_image.image().height();
+    if (m_sceneRect.isValid())
+        return m_sceneRect;
+    return viewRect();
+}
+
+void RemoteViewFrame::setSceneRect(const QRectF& sceneRect)
+{
+    m_sceneRect = sceneRect;
 }
 
 QImage RemoteViewFrame::image() const
@@ -82,7 +91,7 @@ void RemoteViewFrame::setData(const QVariant& data)
 
 QDataStream& operator<<(QDataStream& stream, const RemoteViewFrame& frame)
 {
-    stream << frame.m_image << frame.m_data;
+    stream << frame.m_image << frame.m_data << frame.m_viewRect << frame.m_sceneRect;
     return stream;
 }
 
@@ -90,5 +99,7 @@ QDataStream& operator>>(QDataStream& stream, RemoteViewFrame& frame)
 {
     stream >> frame.m_image;
     stream >> frame.m_data;
+    stream >> frame.m_viewRect;
+    stream >> frame.m_sceneRect;
     return stream;
 }
