@@ -129,6 +129,8 @@ protected:
     void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
+    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+
 private:
     void setupActions();
     void updateActions();

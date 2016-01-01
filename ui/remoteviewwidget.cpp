@@ -40,6 +40,9 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QStandardItemModel>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QWindow>
+#endif
 
 #include <cstdlib>
 
@@ -84,6 +87,10 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     connect(m_interactionModeActions, SIGNAL(triggered(QAction*)), this, SLOT(interactionActionTriggered(QAction*)));
 
     setInteractionMode(ViewInteraction);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    window()->windowHandle()->installEventFilter(this);
+#endif
 }
 
 RemoteViewWidget::~RemoteViewWidget()
@@ -766,6 +773,17 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
             break;
     }
     QWidget::contextMenuEvent(event);
+}
+
+bool RemoteViewWidget::eventFilter(QObject *receiver, QEvent *event)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    if (receiver == window()->windowHandle() && event->type() == QEvent::Expose) {
+        auto expose = static_cast<QExposeEvent*>(event);
+        m_interface->setViewActive(expose->region().intersects(QRect(mapTo(window(), QPoint(0, 0)), size())));
+    }
+#endif
+    return QWidget::eventFilter(receiver, event);
 }
 
 int RemoteViewWidget::contentWidth() const
