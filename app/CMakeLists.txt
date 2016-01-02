@@ -23,7 +23,7 @@ set_target_properties(gammaray-app PROPERTIES
   MACOSX_BUNDLE_BUNDLE_NAME "GammaRay"
   MACOSX_BUNDLE_SHORT_VERSION_STRING "${GAMMARAY_VERSION}"
   MACOSX_BUNDLE_BUNDLE_VERSION "${GAMMARAY_VERSION}"
-  MACOSX_BUNDLE_COPYRIGHT "Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com"
+  MACOSX_BUNDLE_COPYRIGHT "Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com"
 )
 
 install(TARGETS gammaray-app ${INSTALL_TARGETS_DEFAULT_ARGS})
