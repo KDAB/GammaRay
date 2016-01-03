@@ -1,7 +1,7 @@
 # Determine probe ABI identifier
 #
 
-#  Copyright (c) 2011-2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#  Copyright (c) 2011-2016 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 
 # Author: Volker Krause <volker.krause@kdab.com>
 # Author: Filipe Azevedo <filipe.azevedo@kdab.com>

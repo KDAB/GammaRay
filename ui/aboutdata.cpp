@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2014-2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2014-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -72,7 +72,7 @@ QString AboutData::aboutBody()
     return QObject::trUtf8(
         "<p>The Qt application inspection and manipulation tool."
         "Learn more at <a href=\"http://www.kdab.com/gammaray\">http://www.kdab.com/gammaray/</a>.</p>"
-        "<p>Copyright (C) 2010-2015 Klarälvdalens Datakonsult AB, "
+        "<p>Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, "
         "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
         "<p><u>Authors:</u><br>%1</p>"
         "<p>StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved</p>"
