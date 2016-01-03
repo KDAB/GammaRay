@@ -142,7 +142,7 @@ QString VariantHandler::displayString(const QVariant &value)
     const auto sizes = icon.availableSizes();
     QStringList l;
     l.reserve(sizes.size());
-    foreach (const QSize &size, sizes) {
+    foreach (QSize size, sizes) {
       l.push_back(displayString(size));
     }
     return l.join(QStringLiteral(", "));
@@ -437,7 +437,7 @@ QString VariantHandler::displayString(const QVariant &value)
   // generic converters
   QVector<VariantHandler::GenericStringConverter> genStrConverters =
     s_variantHandlerRepository()->genericStringConverters;
-  foreach (const GenericStringConverter &converter, genStrConverters) {
+  foreach (auto converter, genStrConverters) {
     bool ok = false;
     const QString s = converter(value, &ok);
     if (ok) {
