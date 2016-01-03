@@ -282,7 +282,7 @@ void MainWindow::toolSelected()
   ui->actionsMenu->clear();
   QModelIndexList list = ui->toolSelector->selectionModel()->selectedRows();
   int row = -1;
-  if (list.count()) {
+  if (!list.isEmpty()) {
     row = list[0].row();
   }
   if (row == -1) {
