@@ -46,6 +46,7 @@ QuickItemDelegate::QuickItemDelegate(QTreeView *view)
 void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                               const QModelIndex &index) const
 {
+  painter->save();
   int flags = index.data(QuickItemModelRole::ItemFlags).value<int>();
 
   QStyleOptionViewItem opt = option;
@@ -58,6 +59,8 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
   QApplication::style()->drawControl(QStyle::CE_ItemViewItem, &opt, painter);
 
   QRect drawRect = option.rect;
+  painter->setClipRect(option.rect);
+  painter->setClipping(true); // avoid the icons leaking into the next column
 
   QColor base = option.state & QStyle::State_Selected ?
                   option.palette.highlightedText().color() :
@@ -94,13 +97,14 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
       icons << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/focus.png")).pixmap(16, 16);
     }
 
-    for (int i = 0; i < icons.size(); i++) {
+    for (int i = 0; i < icons.size() && drawRect.left() < opt.rect.right(); i++) {
       painter->drawPixmap(drawRect.topLeft(), icons.at(i));
       drawRect.setTopLeft(drawRect.topLeft() + QPoint(20, 0));
     }
   }
 
   painter->drawText(drawRect, Qt::AlignVCenter, index.data(Qt::DisplayRole).toString());
+  painter->restore();
 }
 
 QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option,
