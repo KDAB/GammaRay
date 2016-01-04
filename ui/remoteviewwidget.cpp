@@ -40,9 +40,6 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QStandardItemModel>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#include <QWindow>
-#endif
 
 #include <cstdlib>
 
@@ -88,9 +85,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
 
     setInteractionMode(ViewInteraction);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    window()->windowHandle()->installEventFilter(this);
-#endif
+    window()->installEventFilter(this);
 }
 
 RemoteViewWidget::~RemoteViewWidget()
@@ -783,12 +778,14 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
 
 bool RemoteViewWidget::eventFilter(QObject *receiver, QEvent *event)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    if (receiver == window()->windowHandle() && event->type() == QEvent::Expose) {
-        auto expose = static_cast<QExposeEvent*>(event);
-        m_interface->setViewActive(expose->region().intersects(QRect(mapTo(window(), QPoint(0, 0)), size())));
+    if (receiver == window()) {
+        if (event->type() == QEvent::Show) {
+            m_interface->setViewActive(isVisible());
+        } else if (event->type() == QEvent::Hide) {
+            m_interface->setViewActive(false);
+        }
     }
-#endif
+
     return QWidget::eventFilter(receiver, event);
 }
 
