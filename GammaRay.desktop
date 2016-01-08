@@ -9,4 +9,5 @@ Exec=gammaray
 Icon=GammaRay
 Type=Application
 Categories=Qt;Development;
+Keywords=Qt;development;runtime;
 X-KDE-StartupNotify=true
