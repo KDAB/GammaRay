@@ -150,7 +150,7 @@ StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved.
  Mathias Hasselmann <mathias.hasselmann@kdab.com>
  Milian Wolff <milian.wolff@kdab.com>
  Patrick Spendrin <patrick.spendrin@kdab.com>
- Peter Kümmel <syntheticpp@gmx.net>
+ Peter Kuemmel <syntheticpp@gmx.net>
  Rafael Roquetto <rafael.roquetto@kdab.com>
  Stephen Kelly <stephen.kelly@kdab.com>
  Thomas McGuire <thomas.mcguire@kdab.com>
