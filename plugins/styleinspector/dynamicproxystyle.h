@@ -31,6 +31,7 @@
 
 #include <QHash>
 #include <QProxyStyle>
+#include <QPointer>
 
 namespace GammaRay {
 
@@ -54,7 +55,7 @@ class DynamicProxyStyle : public QProxyStyle
 
   private:
     QHash<QStyle::PixelMetric, int> m_pixelMetrics;
-    static QWeakPointer<DynamicProxyStyle> s_instance;
+    static QPointer<DynamicProxyStyle> s_instance;
 };
 
 }

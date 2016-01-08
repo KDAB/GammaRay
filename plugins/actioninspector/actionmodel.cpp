@@ -43,12 +43,12 @@ Q_DECLARE_METATYPE(QAction::Priority)
 
 using namespace GammaRay;
 
-template<class T>
-static QString toString(QList<T> list)
+static QString toString(const QList<QKeySequence> &list)
 {
   QStringList items;
-  Q_FOREACH (const T &item, list) {
-    items << item;
+  items.reserve(list.size());
+  Q_FOREACH (const auto &item, list) {
+    items << item.toString();
   }
   return items.join(QStringLiteral(", "));
 }

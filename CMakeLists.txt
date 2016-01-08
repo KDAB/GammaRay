@@ -275,8 +275,8 @@ if(Qt5Core_FOUND)
   # also see https://codereview.qt-project.org/#change,30483
   include_directories(SYSTEM ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 
-  # TODO warnings rather than build errors for the deprecated methods would be nice...
-  add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+  add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x040800)
+  #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
   find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${Qt5Core_PRIVATE_INCLUDE_DIRS})
   if(QT_PRIVATE_INCLUDE_DIR)

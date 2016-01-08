@@ -35,6 +35,8 @@
 #include <QStateMachine>
 #include <QStringList>
 
+#include <algorithm>
+
 // #include <modeltest.h>
 
 using namespace GammaRay;
@@ -99,7 +101,7 @@ QList<QObject*> StateModelPrivate::children(QObject *parent) const
     }
   }
 
-  qSort(result);
+  std::sort(result.begin(), result.end());
   return result;
 }
 

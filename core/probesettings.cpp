@@ -173,8 +173,8 @@ void ProbeSettings::sendServerAddress(const QUrl& addr)
 
   {
     SharedMemoryLocker locker(&shm);
-    qMemCopy(shm.data(), ba.constData(), ba.size());
-    qMemSet(static_cast<char*>(shm.data()) + ba.size(), 0xff, shm.size() - ba.size());
+    memcpy(shm.data(), ba.constData(), ba.size());
+    memset(static_cast<char*>(shm.data()) + ba.size(), 0xff, shm.size() - ba.size());
   }
 
   QSystemSemaphore sem("gammaray-semaphore-" + QString::number(launcherIdentifier()), QSystemSemaphore::Open);

@@ -32,12 +32,12 @@
 
 using namespace GammaRay;
 
-QWeakPointer<DynamicProxyStyle> DynamicProxyStyle::s_instance;
+QPointer<DynamicProxyStyle> DynamicProxyStyle::s_instance;
 
 DynamicProxyStyle::DynamicProxyStyle(QStyle *baseStyle)
   : QProxyStyle(baseStyle)
 {
-  s_instance = QWeakPointer<DynamicProxyStyle>(this);
+  s_instance = QPointer<DynamicProxyStyle>(this);
 }
 
 DynamicProxyStyle *DynamicProxyStyle::instance()

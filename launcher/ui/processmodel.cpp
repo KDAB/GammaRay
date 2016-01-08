@@ -33,6 +33,8 @@
 
 #include <QDebug>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 bool operator<(const ProcData &l, const ProcData &r)
@@ -66,7 +68,7 @@ void ProcessModel::setProcesses(const ProcDataList &processes)
   beginResetModel();
   m_data = processes;
   // sort for merging to work properly
-  qStableSort(m_data);
+  std::stable_sort(m_data.begin(), m_data.end());
   endResetModel();
 }
 
@@ -74,7 +76,7 @@ void ProcessModel::mergeProcesses(const ProcDataList &processes)
 {
   // sort like m_data
   ProcDataList sortedProcesses = processes;
-  qStableSort(sortedProcesses);
+  std::stable_sort(sortedProcesses.begin(), sortedProcesses.end());
 
   // iterator over m_data
   int i = 0;

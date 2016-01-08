@@ -36,6 +36,7 @@ MethodArgumentModel::MethodArgumentModel(QObject *parent) : QAbstractTableModel(
 
 void MethodArgumentModel::setMethod(const QMetaMethod &method)
 {
+  beginResetModel();
   m_method = method;
   m_arguments.clear();
   m_arguments.resize(method.parameterTypes().size());
@@ -44,7 +45,7 @@ void MethodArgumentModel::setMethod(const QMetaMethod &method)
     const QVariant::Type variantType = QVariant::nameToType(typeName);
     m_arguments[i] = QVariant(variantType);
   }
-  reset();
+  endResetModel();
 }
 
 QVariant MethodArgumentModel::data(const QModelIndex &index, int role) const

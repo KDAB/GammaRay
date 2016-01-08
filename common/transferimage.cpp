@@ -95,7 +95,7 @@ QDataStream& operator>>(QDataStream& stream, TransferImage& image)
             QImage img(w, h, static_cast<QImage::Format>(f));
             for (int i = 0; i < img.height(); ++i) {
               const QByteArray buffer = stream.device()->read(img.bytesPerLine());
-              qMemCopy(img.scanLine(i), buffer.constData(), img.bytesPerLine());
+              memcpy(img.scanLine(i), buffer.constData(), img.bytesPerLine());
             }
             image.setImage(img);
             break;

@@ -273,6 +273,7 @@ void TimerModel::setProbe(ProbeInterface *probe)
 void TimerModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
   Q_ASSERT(!m_sourceModel);
+  beginResetModel();
   m_sourceModel = sourceModel;
   qApp->installEventFilter(this);
 
@@ -293,7 +294,7 @@ void TimerModel::setSourceModel(QAbstractItemModel *sourceModel)
   connect(m_sourceModel, SIGNAL(layoutChanged()),
           this, SLOT(slotEndReset()));
 
-  reset();
+  endResetModel();
 }
 
 int TimerModel::columnCount(const QModelIndex &parent) const
