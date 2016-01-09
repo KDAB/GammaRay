@@ -36,7 +36,7 @@ Print version information and exit.
 
 Attach to running Qt application with the specified pid.
 
-=item B<-i, --injector <injector>> 
+=item B<-i, --injector <injector>>
 
 Set the specified injection type.
 
@@ -140,6 +140,7 @@ StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved.
  Allen Winter <allen.winter@kdab.com>
  Andreas Holzammer <andreas.holzammer@kdab.com>
  Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
+ BogDan Vatra <bogdan.vatra@kdab.com>
  David Faure <david.faure@kdab.com>
  Frank Osterfeld <frank.osterfeld@kdab.com>
  James Turner <james.turner@kdab.com>
@@ -153,7 +154,7 @@ StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved.
  Rafael Roquetto <rafael.roquetto@kdab.com>
  Stephen Kelly <stephen.kelly@kdab.com>
  Thomas McGuire <thomas.mcguire@kdab.com>
- Till Adam <till@kdab.com>
+ Till Adam <till.adam@kdab.com>
  Tobias Koenig <tobias.koenig@kdab.com>
  Volker Krause <volker.krause@kdab.com>
 
