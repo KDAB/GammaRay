@@ -89,7 +89,7 @@ private slots:
       QCOMPARE(model->rowCount(), 2);
 
       const auto index = model->index(0, 5);
-      QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::NativeText));
+      QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
     }
 
 };
