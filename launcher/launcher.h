@@ -60,6 +60,8 @@ public:
   /** Error message from attaching/launching the target, if any. */
   QString errorMessage() const;
 
+  /** Address for the client to connect to, valid once received from the target. */
+  QUrl serverAddress() const;
 signals:
   void started();
   void finished();

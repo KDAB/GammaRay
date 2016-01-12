@@ -86,6 +86,7 @@ struct LauncherPrivate
   ClientLauncher client;
   QTimer safetyTimer;
   AbstractInjector::Ptr injector;
+  QUrl serverAddress;
   QString errorMessage;
   int state;
   int exitCode;
@@ -191,6 +192,11 @@ QString Launcher::errorMessage() const
   return d->errorMessage;
 }
 
+QUrl Launcher::serverAddress() const
+{
+  return d->serverAddress;
+}
+
 void Launcher::sendLauncherId()
 {
   // if we are launching a new process, make sure it knows how to talk to us
@@ -256,7 +262,7 @@ void Launcher::timeout()
 
 void Launcher::checkDone()
 {
-  if (d->state == Complete || (d->options.uiMode() != LaunchOptions::OutOfProcessUi && d->state == InjectorFinished)) {
+  if (d->state == Complete || (d->options.uiMode() == LaunchOptions::InProcessUi && d->state == InjectorFinished)) {
     emit finished();
   }
   else if ((d->state & InjectorFailed) != 0) {
@@ -289,13 +295,12 @@ void Launcher::newConnection()
 
 void Launcher::readyRead()
 {
-    QUrl serverAddress;
     while (Message::canReadMessage(d->socket)) {
         const auto msg = Message::readMessage(d->socket);
         switch (msg.type()) {
             case Protocol::ServerAddress:
             {
-                msg.payload() >> serverAddress;
+                msg.payload() >> d->serverAddress;
                 break;
             }
             default:
@@ -303,22 +308,20 @@ void Launcher::readyRead()
         }
     }
 
-    if (serverAddress.isEmpty())
+    if (d->serverAddress.isEmpty())
         return;
 
     d->safetyTimer.stop();
-    std::cout << "GammaRay server listening on: " << qPrintable(serverAddress.toString()) << std::endl;
+    std::cout << "GammaRay server listening on: " << qPrintable(d->serverAddress.toString()) << std::endl;
 
-    if (d->options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
-        return;
+    if (d->options.uiMode() == LaunchOptions::OutOfProcessUi) {
+        // safer, since we will always be running locally, and the server might give us an external address
+        if (d->serverAddress.scheme() == QStringLiteral("tcp"))
+            d->serverAddress.setHost(QStringLiteral("127.0.0.1"));
 
-    // safer, since we will always be running locally, and the server might give us an external address
-    if (serverAddress.scheme() == QStringLiteral("tcp"))
-        serverAddress.setHost(QStringLiteral("127.0.0.1"));
+        startClient(d->serverAddress);
+    }
 
-    startClient(serverAddress);
     d->state |= ClientStarted;
     checkDone();
 }
-
-#include "launcher.moc"
