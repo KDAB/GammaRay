@@ -35,7 +35,6 @@
 #include <QTimer>
 
 class QProcessEnvironment;
-class QSharedMemory;
 class QUrl;
 
 namespace GammaRay {
@@ -73,14 +72,16 @@ protected:
   virtual void startClient(const QUrl &serverAddress);
 
 private slots:
-  void semaphoreReleased();
   void injectorError(int exitCode, const QString &errorMessage);
   void injectorFinished();
   void timeout();
 
+  void newConnection();
+  void readyRead();
+
 private:
   void sendLauncherId();
-  void sendProbeSettings();
+  void setupProbeSettingsServer();
   void checkDone();
 
 private:

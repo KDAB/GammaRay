@@ -36,18 +36,15 @@
 #include "injector/injectorfactory.h"
 
 #include <common/endpoint.h>
-#include <common/sharedmemorylocker.h>
 #include <common/message.h>
 
 #include <QByteArray>
-#include <QBuffer>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFileInfo>
+#include <QLocalServer>
+#include <QLocalSocket>
 #include <QUrl>
-#include <QSharedMemory>
-#include <QSystemSemaphore>
-#include <QThread>
 
 #include <iostream>
 
@@ -65,9 +62,8 @@ struct LauncherPrivate
 {
   LauncherPrivate(const LaunchOptions& options) :
     options(options),
-#ifdef HAVE_SHM
-    shm(0),
-#endif
+    server(Q_NULLPTR),
+    socket(Q_NULLPTR),
     state(Initial),
     exitCode(0)
   {}
@@ -85,9 +81,8 @@ struct LauncherPrivate
   }
 
   LaunchOptions options;
-#ifdef HAVE_SHM
-  QSharedMemory *shm;
-#endif
+  QLocalServer *server;
+  QLocalSocket *socket;
   ClientLauncher client;
   QTimer safetyTimer;
   AbstractInjector::Ptr injector;
@@ -99,28 +94,6 @@ struct LauncherPrivate
 }
 
 using namespace GammaRay;
-
-class SemaphoreWaiter : public QThread
-{
-  Q_OBJECT
-public:
-  explicit SemaphoreWaiter(qint64 id, QObject *parent = 0) : QThread(parent), m_id(id) {}
-  ~SemaphoreWaiter() {}
-  void run() Q_DECL_OVERRIDE
-  {
-#ifdef HAVE_SHM
-    QSystemSemaphore sem("gammaray-semaphore-" + QString::number(m_id), 0, QSystemSemaphore::Create);
-    sem.acquire();
-    emit semaphoreReleased();
-#endif
-  }
-
-signals:
-  void semaphoreReleased();
-
-private:
-  qint64 m_id;
-};
 
 Launcher::Launcher(const LaunchOptions& options, QObject* parent):
   QObject(parent),
@@ -162,13 +135,9 @@ bool Launcher::start()
   }
 
   sendLauncherId();
-  sendProbeSettings();
+  setupProbeSettingsServer();
 
   if (d->options.uiMode() != LaunchOptions::InProcessUi) {
-    SemaphoreWaiter *semWaiter = new SemaphoreWaiter(instanceIdentifier(), this);
-    connect(semWaiter, SIGNAL(semaphoreReleased()), this, SLOT(semaphoreReleased()), Qt::QueuedConnection);
-    semWaiter->start();
-
     d->safetyTimer.start();
   }
   d->injector = d->createInjector();
@@ -230,94 +199,15 @@ void Launcher::sendLauncherId()
   }
 }
 
-void Launcher::sendProbeSettings()
+void Launcher::setupProbeSettingsServer()
 {
-#ifdef HAVE_SHM
-  QByteArray ba; // need a full copy of this first, since there's no QIODevice to directly work on void*...
-  QBuffer buffer(&ba);
-  buffer.open(QIODevice::WriteOnly);
-
-  {
-    Message msg(Protocol::LauncherAddress, Protocol::ServerVersion);
-    msg.payload() << Protocol::version();
-    msg.write(&buffer);
-  }
-
-  {
-    Message msg(Protocol::LauncherAddress, Protocol::ProbeSettings);
-    msg.payload() << d->options.probeSettings();
-    msg.write(&buffer);
-  }
-
-  buffer.close();
-
-  d->shm = new QSharedMemory(QStringLiteral("gammaray-") + QString::number(instanceIdentifier()), this);
-  if (!d->shm->create(qMax(ba.size(), 1024))) { // make sure we have enough space for the answer
-    qWarning() << Q_FUNC_INFO << "Failed to obtain shared memory for probe settings:" << d->shm->errorString()
-      << "- error code (QSharedMemory::SharedMemoryError):" << d->shm->error();
-    delete d->shm;
-    d->shm = 0;
-    return;
-  }
-
-  SharedMemoryLocker locker(d->shm);
-  memcpy(d->shm->data(), ba.constData(), ba.size());
-  if (d->shm->size() > ba.size()) // Windows...
-    memset(static_cast<char*>(d->shm->data()) + ba.size(), 0xff, d->shm->size() - ba.size());
-#endif
-}
-
-void Launcher::semaphoreReleased()
-{
-  d->safetyTimer.stop();
-
-  QUrl serverAddress;
-#ifdef HAVE_SHM
-  {
-    SharedMemoryLocker locker(d->shm);
-    QByteArray ba = QByteArray::fromRawData(static_cast<const char*>(d->shm->data()), d->shm->size());
-    QBuffer buffer(&ba);
-    buffer.open(QIODevice::ReadOnly);
-
-    while (Message::canReadMessage(&buffer)) {
-      const Message msg = Message::readMessage(&buffer);
-      switch (msg.type()) {
-        case Protocol::ServerAddress:
-        {
-          msg.payload() >> serverAddress;
-          break;
-        }
-        default:
-          continue;
-      }
-    }
-  }
-  delete d->shm;
-  d->shm = 0;
-
-  if (serverAddress.isEmpty()) {
-    qWarning() << "Unable to receive server address.";
-    QCoreApplication::exit(1);
-    return;
-  }
-#else
-  serverAddress.setScheme("tcp");
-  serverAddress.setHost("127.0.0.1");
-  serverAddress.setPort(Endpoint::defaultPort());
-#endif
-
-  std::cout << "GammaRay server listening on: " << qPrintable(serverAddress.toString()) << std::endl;
-
-  if (d->options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
-    return;
-
-  // safer, since we will always be running locally, and the server might give us an external address
-  if (serverAddress.scheme() == QStringLiteral("tcp"))
-    serverAddress.setHost(QStringLiteral("127.0.0.1"));
-
-  startClient(serverAddress);
-  d->state |= ClientStarted;
-  checkDone();
+    d->server = new QLocalServer(this);
+    d->server->setMaxPendingConnections(1);
+    connect(d->server, SIGNAL(newConnection()), this, SLOT(newConnection()));
+    const QString serverName = QStringLiteral("gammaray-") + QString::number(instanceIdentifier());
+    d->server->removeServer(serverName);
+    if (!d->server->listen(serverName))
+        qWarning() << "Unable to send probe settings:" << d->server->errorString();
 }
 
 void Launcher::startClient(const QUrl& serverAddress)
@@ -375,6 +265,60 @@ void Launcher::checkDone()
       d->exitCode = 1;
     emit finished();
   }
+}
+
+void Launcher::newConnection()
+{
+    if (d->socket)
+        return;
+    d->socket = d->server->nextPendingConnection();
+    connect(d->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+
+    {
+        Message msg(Protocol::LauncherAddress, Protocol::ServerVersion);
+        msg.payload() << Protocol::version();
+        msg.write(d->socket);
+    }
+
+    {
+        Message msg(Protocol::LauncherAddress, Protocol::ProbeSettings);
+        msg.payload() << d->options.probeSettings();
+        msg.write(d->socket);
+    }
+}
+
+void Launcher::readyRead()
+{
+    QUrl serverAddress;
+    while (Message::canReadMessage(d->socket)) {
+        const auto msg = Message::readMessage(d->socket);
+        switch (msg.type()) {
+            case Protocol::ServerAddress:
+            {
+                msg.payload() >> serverAddress;
+                break;
+            }
+            default:
+                continue;
+        }
+    }
+
+    if (serverAddress.isEmpty())
+        return;
+
+    d->safetyTimer.stop();
+    std::cout << "GammaRay server listening on: " << qPrintable(serverAddress.toString()) << std::endl;
+
+    if (d->options.uiMode() != LaunchOptions::OutOfProcessUi) // inject only, so we are done here
+        return;
+
+    // safer, since we will always be running locally, and the server might give us an external address
+    if (serverAddress.scheme() == QStringLiteral("tcp"))
+        serverAddress.setHost(QStringLiteral("127.0.0.1"));
+
+    startClient(serverAddress);
+    d->state |= ClientStarted;
+    checkDone();
 }
 
 #include "launcher.moc"

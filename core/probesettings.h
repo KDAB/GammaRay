@@ -42,7 +42,9 @@ namespace ProbeSettings
 {
   GAMMARAY_CORE_EXPORT QVariant value(const QString &key, const QVariant &defaultValue = QString());
 
-  /** Call if using runtime attaching to obtain settings provided via shared memory. */
+  /** Call if using runtime attaching to obtain settings provided via shared memory.
+   *  This method blocks until communication with the launcher is complete.
+   */
   void receiveSettings();
 
   /** Identifier used for finding the communication channels to the launcher. */

@@ -48,7 +48,7 @@ set_target_properties(gammaray_launcher PROPERTIES
   DEFINE_SYMBOL MAKE_GAMMARAY_LAUNCHER_LIB
 )
 
-target_link_libraries(gammaray_launcher LINK_PUBLIC ${QT_QTCORE_LIBRARIES} LINK_PRIVATE gammaray_common)
+target_link_libraries(gammaray_launcher LINK_PUBLIC ${QT_QTCORE_LIBRARIES} LINK_PRIVATE gammaray_common ${QT_QTNETWORK_LIBRARIES})
 if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray_launcher LINK_PRIVATE ${QT_QTGUI_LIBRARIES})
 endif()
