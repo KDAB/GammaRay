@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>
-    <widget class="QSplitter" name="splitter">
+    <widget class="QSplitter" name="mainSplitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -25,6 +25,12 @@
         <widget class="QTreeView" name="objectTreeView">
          <property name="indentation">
           <number>10</number>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="uniformRowHeights">
           <bool>true</bool>
@@ -39,7 +45,14 @@
        </item>
       </layout>
      </widget>
-     <widget class="GammaRay::PropertyWidget" name="objectPropertyWidget" native="true"/>
+     <widget class="GammaRay::PropertyWidget" name="objectPropertyWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>

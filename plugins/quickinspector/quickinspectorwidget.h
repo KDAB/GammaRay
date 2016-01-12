@@ -36,6 +36,7 @@
 
 #include <QWidget>
 #include <QVariant>
+#include <QSettings>
 
 class QLabel;
 class QImage;
@@ -58,14 +59,16 @@ class QuickInspectorWidget : public QWidget
   private slots:
     void itemSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
-    void setSplitterSizes();
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);
+    void loadUiState();
+    void saveUiState();
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
     QuickScenePreviewWidget *m_previewWidget;
     QuickInspectorInterface *m_interface;
+    QSettings m_uiStateSettings;
 };
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>
