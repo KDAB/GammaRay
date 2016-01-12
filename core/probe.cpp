@@ -410,7 +410,7 @@ void Probe::showInProcessUi()
   IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
   ProbeGuard guard;
 
-  QString path = Paths::currentProbePath();
+  QString path = Paths::currentPluginsPath();
   if (!path.isEmpty()) {
     path += QDir::separator();
   }

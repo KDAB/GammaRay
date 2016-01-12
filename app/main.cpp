@@ -116,7 +116,13 @@ int main(int argc, char** argv)
     QApplication::setQuitOnLastWindowClosed(false);
 
     QApplication app(argc, argv);
-    Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
+    Paths::setRelativeRootPath(
+#if defined(Q_OS_MACX) && defined(GAMMARAY_INSTALL_QT_LAYOUT)
+        GAMMARAY_INVERSE_BUNDLE_DIR
+#else
+        GAMMARAY_INVERSE_BIN_DIR
+#endif
+    );
     ClientConnectionManager::init();
 
     Orchestrator o;
