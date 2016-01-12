@@ -107,6 +107,14 @@ add_test(probeabitest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabitest)
 add_executable(probeabidetectortest probeabidetectortest.cpp)
 target_link_libraries(probeabidetectortest gammaray_launcher ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
+
+### probe settings test
+add_executable(probesettingsclient probesettingsclient.cpp ${CMAKE_SOURCE_DIR}/core/probesettings.cpp)
+target_link_libraries(probesettingsclient gammaray_common ${QT_QTNETWORK_LIBRARIES})
+add_executable(probesettingstest probesettingstest.cpp)
+target_link_libraries(probesettingstest gammaray_launcher gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+add_test(NAME probesettingstest COMMAND probesettingstest)
+
 endif()
 
 ### Remote model tests
