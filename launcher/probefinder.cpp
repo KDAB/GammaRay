@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "probefinder.h"
 #include "probeabi.h"
 
@@ -36,6 +37,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
+#include <QLibrary>
 #include <QString>
 #include <QStringBuilder>
 
@@ -88,11 +90,30 @@ QVector<ProbeABI> listProbeABIs()
 {
   QVector<ProbeABI> abis;
   const QDir dir(Paths::probePath(QString()));
+#if defined(GAMMARAY_INSTALL_QT_LAYOUT)
+  const QString filter = QString::fromLatin1("%1*").arg(GAMMARAY_PROBE_NAME);
+  foreach (const QFileInfo &abiId, dir.entryInfoList(QStringList(filter), QDir::Files)) {
+    if (abiId.isSymLink() || !QLibrary::isLibrary(abiId.fileName()))
+      continue;
+    const QString baseNameSection = abiId.completeBaseName().section('-', 1);
+    QString baseName = GAMMARAY_PROBE_ABI;
+
+    if (!baseNameSection.isEmpty()) {
+        baseName.append("-");
+        baseName.append(baseNameSection);
+    }
+
+    const ProbeABI abi = ProbeABI::fromString(baseName);
+    if (abi.isValid())
+      abis.push_back(abi);
+  }
+#else
   foreach (const QString &abiId, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
     const ProbeABI abi = ProbeABI::fromString(abiId);
     if (abi.isValid())
       abis.push_back(abi);
   }
+#endif
   return abis;
 }
 
