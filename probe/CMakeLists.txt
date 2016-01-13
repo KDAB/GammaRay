@@ -52,9 +52,10 @@ if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
   set_target_properties(gammaray_probe PROPERTIES PREFIX "")
   install(TARGETS gammaray_probe DESTINATION ${PROBE_INSTALL_DIR})
 else()
+  set_target_properties(gammaray_probe PROPERTIES OUTPUT_NAME gammaray_probe-${GAMMARAY_PROBE_ABI})
   install(TARGETS gammaray_probe EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
   ecm_generate_pri_file(BASE_NAME GammaRayProbe
-                      LIB_NAME gammaray_probe
+                      LIB_NAME gammaray_probe-${GAMMARAY_PROBE_ABI}
                       DEPS "core gui network GammaRayCommon GammaRayCore"
                       FILENAME_VAR PRI_FILENAME
                       INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}/..)

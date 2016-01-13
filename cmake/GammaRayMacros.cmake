@@ -20,6 +20,10 @@ macro(gammaray_add_plugin _target_name _desktop_file)
     LIBRARY_OUTPUT_DIRECTORY ${_build_target_dir}
   )
 
+  if(GAMMARAY_INSTALL_QT_LAYOUT)
+    set_target_properties(${_target_name} PROPERTIES OUTPUT_NAME ${_target_name}-${GAMMARAY_PROBE_ABI})
+  endif()
+
   if(APPLE)
     if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
       set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "@loader_path/../../../Frameworks")

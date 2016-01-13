@@ -29,6 +29,7 @@
 #include "config-gammaray.h"
 #include "probefinder.h"
 #include "probeabi.h"
+#include "probeabidetector.h"
 
 #include <common/paths.h>
 
@@ -40,6 +41,7 @@
 #include <QLibrary>
 #include <QString>
 #include <QStringBuilder>
+#include <QStringList>
 
 #include <algorithm>
 
@@ -91,19 +93,15 @@ QVector<ProbeABI> listProbeABIs()
   QVector<ProbeABI> abis;
   const QDir dir(Paths::probePath(QString()));
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-  const QString filter = QString::fromLatin1("%1*").arg(GAMMARAY_PROBE_NAME);
+  const QString filter = QStringLiteral("*gammaray_probe*");
+  ProbeABIDetector detector;
   foreach (const QFileInfo &abiId, dir.entryInfoList(QStringList(filter), QDir::Files)) {
-    if (abiId.isSymLink() || !QLibrary::isLibrary(abiId.fileName()))
+    // OSX has broken QLibrary::isLibrary() - QTBUG-50446
+    if (abiId.isSymLink() || (!QLibrary::isLibrary(abiId.fileName()) &&
+                              !abiId.fileName().endsWith(Paths::libraryExtension(), Qt::CaseInsensitive))) {
       continue;
-    const QString baseNameSection = abiId.completeBaseName().section('-', 1);
-    QString baseName = GAMMARAY_PROBE_ABI;
-
-    if (!baseNameSection.isEmpty()) {
-        baseName.append("-");
-        baseName.append(baseNameSection);
     }
-
-    const ProbeABI abi = ProbeABI::fromString(baseName);
+    const ProbeABI abi = detector.abiForExecutable(abiId.absoluteFilePath());
     if (abi.isValid())
       abis.push_back(abi);
   }
