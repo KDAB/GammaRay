@@ -482,7 +482,7 @@ int RemoteViewWidget::sourceTickLabelDistance(int viewDistance)
         m_tickLabelDists << 5 << 10 << 20 << 25 << 50 << 100 << 200 << 250 << 500 << 1000 << 2000;
     }
     const int sourceDist = viewDistance / m_zoom;
-    while (sourceDist > *m_tickLabelDists.constEnd()) {
+    while (sourceDist > m_tickLabelDists.last()) {
         m_tickLabelDists.push_back(m_tickLabelDists.at(m_tickLabelDists.size() - 4) * 10);
     }
 
