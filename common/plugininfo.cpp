@@ -27,6 +27,7 @@
 */
 
 #include "plugininfo.h"
+#include "paths.h"
 
 #include <QDebug>
 #include <QDir>
@@ -53,10 +54,13 @@ PluginInfo::PluginInfo(const QString& path) :
     m_remoteSupport(true),
     m_hidden(false)
 {
-    if (QLibrary::isLibrary(path)) {
+    // OSX has broken QLibrary::isLibrary() - QTBUG-50446
+    if (QLibrary::isLibrary(path) || path.endsWith(Paths::pluginExtension(), Qt::CaseInsensitive)) {
         initFromJSON(path);
     } else if (path.endsWith(QLatin1String(".desktop"))) {
         initFromDesktopFile(path);
+    } else {
+        qDebug("%s: %s not a library, nor a .desktop file.", Q_FUNC_INFO, qPrintable(path));
     }
 }
 

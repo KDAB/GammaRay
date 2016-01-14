@@ -30,6 +30,10 @@ set_target_properties(gammaray_widget_export_actions PROPERTIES
   DEBUG_POSTFIX ""
 )
 
+if(GAMMARAY_INSTALL_QT_LAYOUT)
+  set_target_properties(gammaray_widget_export_actions PROPERTIES OUTPUT_NAME gammaray_widget_export_actions-${GAMMARAY_PROBE_ABI})
+endif()
+
 set(EXTRA_LIBS)
 if(HAVE_QT_DESIGNER)
   list(APPEND EXTRA_LIBS ${QT_QTDESIGNER_LIBRARIES})
