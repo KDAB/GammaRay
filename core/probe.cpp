@@ -915,7 +915,11 @@ void Probe::installGlobalEventFilter(QObject *filter)
 
 bool Probe::hasReliableObjectTracking() const
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+  return true; // qHooks available, which works independent of the injector used
+#else
   return !s_listener()->trackDestroyed;
+#endif
 }
 
 void Probe::selectObject(QObject *object, const QPoint &pos)
