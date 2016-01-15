@@ -52,3 +52,10 @@ endif()
 
 add_executable(objectreparenttest objectreparenttest.cpp)
 target_link_libraries(objectreparenttest ${QT_QTCORE_LIBRARIES})
+
+if(Qt5QuickWidgets_FOUND)
+  set(quickwidgettest_srcs quickwidgettest.cpp)
+  qt4_add_resources(quickwidgettest_srcs quickwidgettest.qrc)
+  add_executable(quickwidgettest ${quickwidgettest_srcs})
+  target_link_libraries(quickwidgettest Qt5::QuickWidgets)
+endif()
