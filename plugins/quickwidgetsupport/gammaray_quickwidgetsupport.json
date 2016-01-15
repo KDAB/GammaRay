@@ -1,0 +1,6 @@
+{
+    "id": "gammaray_quickwidgetsupport",
+    "name": "Quick Widgets Support",
+    "types": [ "QQuickWidget" ],
+    "hidden": true
+}

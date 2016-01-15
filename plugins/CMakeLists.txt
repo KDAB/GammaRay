@@ -29,6 +29,10 @@ if(Qt5Qml_FOUND)
   add_subdirectory(qmlsupport)
 endif()
 
+if(Qt5QuickWidgets_FOUND)
+  add_subdirectory(quickwidgetsupport)
+endif()
+
 if(Qt5Bluetooth_FOUND)
   add_subdirectory(bluetooth)
 endif()

@@ -229,6 +229,7 @@ if(Qt5Core_FOUND)
     PrintSupport
     Qml
     Quick
+    QuickWidgets
     Svg
     Script
     ScriptTools
