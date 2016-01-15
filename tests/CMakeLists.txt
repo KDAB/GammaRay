@@ -109,7 +109,8 @@ target_link_libraries(probeabidetectortest gammaray_launcher ${QT_QTTEST_LIBRARI
 add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
 
 ### probe settings test
-add_executable(probesettingsclient probesettingsclient.cpp)
+add_executable(probesettingsclient probesettingsclient.cpp ${CMAKE_SOURCE_DIR}/core/probesettings.cpp)
+target_compile_definitions(probesettingsclient PRIVATE "-DGAMMARAY_CORE_STATICLIB")
 target_link_libraries(probesettingsclient gammaray_common ${QT_QTNETWORK_LIBRARIES})
 add_executable(probesettingstest probesettingstest.cpp)
 target_link_libraries(probesettingstest gammaray_launcher gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})

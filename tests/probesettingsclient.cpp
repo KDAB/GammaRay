@@ -26,8 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define GAMMARAY_CORE_STATICLIB
-#include "../core/probesettings.cpp"
+#include <core/probesettings.h>
 
 #include <QCoreApplication>
 #include <QDebug>
