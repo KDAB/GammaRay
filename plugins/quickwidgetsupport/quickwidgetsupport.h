@@ -32,6 +32,7 @@
 #include <core/toolfactory.h>
 
 #include <QQuickWidget>
+#include <QHash>
 
 namespace GammaRay {
 
@@ -40,6 +41,18 @@ class QuickWidgetSupport : public QObject
     Q_OBJECT
 public:
     explicit QuickWidgetSupport(ProbeInterface *probe, QObject *parent = 0);
+    ~QuickWidgetSupport();
+
+    typedef bool (*GrabWindowCallback)(QQuickWindow*);
+    bool grabWindow(QQuickWindow* window) const;
+
+private slots:
+    void objectAdded(QObject* obj);
+    void registerWindowGrabber();
+
+private:
+    QHash<QQuickWindow*, QQuickWidget*> m_windowMap;
+    QObject *m_quickInspector;
 };
 
 class QuickWidgetSupportFactory : public QObject, public StandardToolFactory<QQuickWidget, QuickWidgetSupport>

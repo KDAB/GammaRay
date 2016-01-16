@@ -65,6 +65,8 @@ class QuickInspector : public QuickInspectorInterface
     explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
     ~QuickInspector();
 
+    typedef bool (*GrabWindowCallback)(QQuickWindow*);
+
   public slots:
     void selectWindow(int index) Q_DECL_OVERRIDE;
 
@@ -76,12 +78,18 @@ class QuickInspector : public QuickInspectorInterface
 
     void pickItemAt(const QPoint& pos);
 
+    /** Allow other plugins to provide specific window grabbing callbacks.
+     *  Needed for QQuickWidget.
+     */
+    void registerGrabWindowCallback(GrabWindowCallback callback);
+
+    void sendRenderedScene(const QImage &currentFrame);
+
   protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
   private slots:
-    void slotSceneChanged();
-    void sendRenderedScene();
+    void slotGrabWindow();
     void itemSelectionChanged(const QItemSelection &selection);
     void sgSelectionChanged(const QItemSelection &selection);
     void sgNodeDeleted(QSGNode *node);
@@ -113,6 +121,7 @@ class QuickInspector : public QuickInspectorInterface
     PaintAnalyzer *m_paintAnalyzer;
     RemoteViewServer *m_remoteView;
     QImage m_currentFrame;
+    QVector<GrabWindowCallback> m_grabWindowCallbacks;
     bool m_isGrabbingWindow;
 };
 

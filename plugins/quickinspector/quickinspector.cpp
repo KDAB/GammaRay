@@ -280,7 +280,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
   connect(m_sgModel, &QuickSceneGraphModel::nodeDeleted, this, &QuickInspector::sgNodeDeleted);
 
   connect(m_remoteView, &RemoteViewServer::doPickElement, this, &QuickInspector::pickItemAt);
-  connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &QuickInspector::slotSceneChanged);
+  connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &QuickInspector::slotGrabWindow);
 }
 
 QuickInspector::~QuickInspector()
@@ -310,6 +310,8 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     // make sure we have selected something for the property editor to not be entirely empty
     selectItem(m_window->contentItem());
 
+    // frame swapped isn't enough, we don't get that for FBO render targets such as in QQuickWidget
+    connect(window, &QQuickWindow::afterRendering, m_remoteView, &RemoteViewServer::sourceChanged);
     connect(window, &QQuickWindow::frameSwapped, m_remoteView, &RemoteViewServer::sourceChanged);
 
     m_window->update();
@@ -372,10 +374,12 @@ void QuickInspector::objectSelected(void *object, const QString &typeName)
   }
 }
 
-void QuickInspector::sendRenderedScene()
+void QuickInspector::sendRenderedScene(const QImage &currentFrame)
 {
+  m_isGrabbingWindow = false;
+
   RemoteViewFrame frame;
-  frame.setImage(m_currentFrame);
+  frame.setImage(currentFrame);
   QuickItemGeometry itemGeometry;
   if (m_currentItem) {
     QQuickItem *parent = m_currentItem->parentItem();
@@ -424,12 +428,12 @@ void QuickInspector::sendRenderedScene()
       itemGeometry.parentTransform =  parentPriv->itemToWindowTransform();
     }
   }
-  frame.setSceneRect(QRectF(m_currentFrame.rect()) | itemGeometry.itemRect | itemGeometry.childrenRect | itemGeometry.boundingRect);
+  frame.setSceneRect(QRectF(currentFrame.rect()) | itemGeometry.itemRect | itemGeometry.childrenRect | itemGeometry.boundingRect);
   frame.setData(QVariant::fromValue(itemGeometry));
   m_remoteView->sendFrame(frame);
 }
 
-void QuickInspector::slotSceneChanged()
+void QuickInspector::slotGrabWindow()
 {
   if (!m_remoteView->isActive() || !m_window || m_isGrabbingWindow) {
     return;
@@ -437,10 +441,12 @@ void QuickInspector::slotSceneChanged()
 
   Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
   m_isGrabbingWindow = true;
-  m_currentFrame = m_window->grabWindow();
-  m_isGrabbingWindow = false;
+  foreach (const auto callback, m_grabWindowCallbacks) {
+      if (callback(m_window))
+          return;
+  }
 
-  QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::AutoConnection); // we are in the render thread here
+  sendRenderedScene(m_window->grabWindow());
 }
 
 void QuickInspector::setCustomRenderMode(
@@ -577,6 +583,12 @@ QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &
   }
   return parent;
 }
+
+void GammaRay::QuickInspector::registerGrabWindowCallback(GrabWindowCallback callback)
+{
+    m_grabWindowCallbacks.push_back(callback);
+}
+
 
 bool QuickInspector::eventFilter(QObject *receiver, QEvent *event)
 {

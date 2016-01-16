@@ -32,17 +32,33 @@
 #include <core/metaobjectrepository.h>
 
 #include <common/metatypedeclarations.h>
+#include <common/objectbroker.h>
 
+#include <QDebug>
+#include <QMetaObject>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
 
 using namespace GammaRay;
 
-QuickWidgetSupport::QuickWidgetSupport(ProbeInterface* probe, QObject* parent) :
-    QObject(parent)
+static QuickWidgetSupport* s_quickWidgetSupportInstance = Q_NULLPTR;
+
+static bool quickWidgetGrabWindowCallback(QQuickWindow* window)
 {
-    Q_UNUSED(probe);
+    if (!s_quickWidgetSupportInstance)
+        return false;
+    return s_quickWidgetSupportInstance->grabWindow(window);
+}
+
+QuickWidgetSupport::QuickWidgetSupport(ProbeInterface* probe, QObject* parent) :
+    QObject(parent),
+    m_quickInspector(Q_NULLPTR)
+{
+    Q_ASSERT(s_quickWidgetSupportInstance == Q_NULLPTR);
+    s_quickWidgetSupportInstance = this;
+
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
 
     MetaObject *mo = 0;
     MO_ADD_METAOBJECT1(QQuickWidget, QWidget);
@@ -55,6 +71,48 @@ QuickWidgetSupport::QuickWidgetSupport(ProbeInterface* probe, QObject* parent) :
     MO_ADD_PROPERTY_RO(QQuickWidget, QQmlContext*, rootContext);
     MO_ADD_PROPERTY_RO(QQuickWidget, QQuickItem*, rootObject);
 }
+
+GammaRay::QuickWidgetSupport::~QuickWidgetSupport()
+{
+    s_quickWidgetSupportInstance = Q_NULLPTR;
+}
+
+void GammaRay::QuickWidgetSupport::objectAdded(QObject* obj)
+{
+    auto qqw = qobject_cast<QQuickWidget*>(obj);
+    if (!qqw)
+        return;
+    m_windowMap.insert(qqw->quickWindow(), qqw);
+    registerWindowGrabber();
+}
+
+void GammaRay::QuickWidgetSupport::registerWindowGrabber()
+{
+    if (m_quickInspector)
+        return;
+
+    if (!ObjectBroker::hasObject(QStringLiteral("com.kdab.GammaRay.QuickInspectorInterface/1.0"))) {
+        // the QQ2 inspector can be activated after ourselves, so try again
+        QMetaObject::invokeMethod(this, "registerWindowGrabber", Qt::QueuedConnection);
+        return;
+    }
+
+    m_quickInspector = ObjectBroker::objectInternal(QStringLiteral("com.kdab.GammaRay.QuickInspectorInterface/1.0"));
+    Q_ASSERT(m_quickInspector);
+    QMetaObject::invokeMethod(m_quickInspector, "registerGrabWindowCallback", Q_ARG(GrabWindowCallback, quickWidgetGrabWindowCallback));
+}
+
+bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow* window) const
+{
+    const auto it = m_windowMap.constFind(window);
+    if (it == m_windowMap.constEnd())
+        return false;
+
+    auto image = it.value()->grabFramebuffer();
+    QMetaObject::invokeMethod(m_quickInspector, "sendRenderedScene", Q_ARG(QImage, image));
+    return true;
+}
+
 
 QString QuickWidgetSupportFactory::name() const
 {
