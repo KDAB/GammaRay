@@ -68,6 +68,11 @@ void ObjectBroker::registerObject(const QString &name, QObject *object)
   Endpoint::instance()->registerObject(name, object);
 }
 
+bool ObjectBroker::hasObject(const QString& name)
+{
+  return s_objectBroker()->objects.contains(name);
+}
+
 QObject* ObjectBroker::objectInternal(const QString& name, const QByteArray &type)
 {
   const QHash<QString, QObject*>::const_iterator it = s_objectBroker()->objects.constFind(name);

@@ -50,6 +50,9 @@ namespace ObjectBroker {
     registerObject(interfaceName, object);
   }
 
+  /** Checks whether an object with the given name is registered already. */
+  GAMMARAY_COMMON_EXPORT bool hasObject(const QString &name);
+
   /** Retrieve object by name. */
   GAMMARAY_COMMON_EXPORT QObject* objectInternal(const QString &name, const QByteArray &type = QByteArray());
 
