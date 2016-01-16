@@ -110,9 +110,13 @@ bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow* window) const
     if (it == m_windowMap.constEnd())
         return false;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto image = it.value()->grabFramebuffer();
     QMetaObject::invokeMethod(m_quickInspector, "sendRenderedScene", Q_ARG(QImage, image));
     return true;
+#else
+    return false;
+#endif
 }
 
 
