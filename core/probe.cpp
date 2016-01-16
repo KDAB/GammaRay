@@ -416,7 +416,7 @@ void Probe::showInProcessUi()
   }
   path += QStringLiteral("gammaray_inprocessui");
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-  path += "-";
+  path += '-';
   path += GAMMARAY_PROBE_ABI;
 #endif
   QLibrary lib;
