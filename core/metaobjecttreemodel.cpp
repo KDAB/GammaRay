@@ -32,6 +32,7 @@
 
 #include <QDebug>
 #include <QThread>
+#include <QTimer>
 
 #include <assert.h>
 
@@ -78,6 +79,7 @@ static inline bool hasDynamicMetaObject(const QObject* object)
 
 MetaObjectTreeModel::MetaObjectTreeModel(Probe *probe)
   : QAbstractItemModel(probe)
+  , m_pendingDataChangedTimer(new QTimer(this))
 {
   qRegisterMetaType<const QMetaObject *>();
 
@@ -86,6 +88,10 @@ MetaObjectTreeModel::MetaObjectTreeModel(Probe *probe)
   //connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(objectRemoved(QObject*)));
 
   scanMetaTypes();
+
+  m_pendingDataChangedTimer->setInterval(100);
+  m_pendingDataChangedTimer->setSingleShot(true);
+  connect(m_pendingDataChangedTimer, SIGNAL(timeout()), this, SLOT(emitPendingDataChanged()));
 }
 
 MetaObjectTreeModel::~MetaObjectTreeModel()
@@ -198,10 +204,6 @@ void MetaObjectTreeModel::objectAdded(QObject *obj)
   const QMetaObject *metaObject = obj->metaObject();
   addMetaObject(metaObject);
 
-  // increase counter
-  const QModelIndex metaModelIndex = indexForMetaObject(metaObject);
-  assert(metaModelIndex.isValid());
-
   /*
    * This will increase these values:
    * - selfCount for that particular @p metaObject
@@ -220,10 +222,9 @@ void MetaObjectTreeModel::objectAdded(QObject *obj)
   const QMetaObject* current = metaObject;
   while (current) {
     ++m_metaObjectInfoMap[current].inclusiveCount;
+    scheduleDataChange(current);
     current = current->superClass();
   }
-
-  emit dataChanged(metaModelIndex, metaModelIndex);
 }
 
 void MetaObjectTreeModel::scanMetaTypes()
@@ -300,6 +301,7 @@ void MetaObjectTreeModel::objectRemoved(QObject *obj)
   while (current) {
     --m_metaObjectInfoMap[current].inclusiveCount;
     assert(m_metaObjectInfoMap[current].inclusiveCount >= 0);
+    scheduleDataChange(current);
     current = current->superClass();
   }
 
@@ -341,4 +343,22 @@ const QMetaObject *MetaObjectTreeModel::metaObjectForIndex(const QModelIndex &in
   void *internalPointer = index.internalPointer();
   const QMetaObject* metaObject = reinterpret_cast<QMetaObject*>(internalPointer);
   return metaObject;
+}
+
+void GammaRay::MetaObjectTreeModel::scheduleDataChange(const QMetaObject* mo)
+{
+    m_pendingDataChanged.insert(mo);
+    if (!m_pendingDataChangedTimer->isActive())
+        m_pendingDataChangedTimer->start();
+}
+
+void GammaRay::MetaObjectTreeModel::emitPendingDataChanged()
+{
+    foreach (auto mo, m_pendingDataChanged) {
+        auto index = indexForMetaObject(mo);
+        if (!index.isValid())
+            continue;
+        emit dataChanged(index.sibling(index.row(), ObjectSelfCountColumn), index.sibling(index.row(), ObjectInclusiveCountColumn));
+    }
+    m_pendingDataChanged.clear();
 }

@@ -32,7 +32,10 @@
 #include <common/modelroles.h>
 
 #include <QModelIndex>
+#include <QSet>
 #include <QVector>
+
+class QTimer;
 
 namespace GammaRay {
 
@@ -80,9 +83,13 @@ class MetaObjectTreeModel : public QAbstractItemModel
     QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
     const QMetaObject *metaObjectForIndex(const QModelIndex &index) const;
 
+    void scheduleDataChange(const QMetaObject* mo);
+
   private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
+
+    void emitPendingDataChanged();
 
   private:
     QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
@@ -101,6 +108,9 @@ class MetaObjectTreeModel : public QAbstractItemModel
       int inclusiveCount;
     };
     QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
+
+    QSet<const QMetaObject*> m_pendingDataChanged;
+    QTimer *m_pendingDataChangedTimer;
 };
 
 }
