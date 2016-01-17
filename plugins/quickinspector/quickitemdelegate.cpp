@@ -62,9 +62,9 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
   painter->setClipRect(option.rect);
   painter->setClipping(true); // avoid the icons leaking into the next column
 
-  QColor base = option.state & QStyle::State_Selected ?
-                  option.palette.highlightedText().color() :
-                  index.data(Qt::ForegroundRole).value<QColor>();
+  const auto foregroundData = index.data(Qt::ForegroundRole);
+  const auto inactiveColor = foregroundData.isNull() ? option.palette.text().color() : foregroundData.value<QColor>();
+  const auto base = option.state & QStyle::State_Selected ? option.palette.highlightedText().color() : inactiveColor;
 
   if (m_colors.contains(index.sibling(index.row(), 0))) {
     QColor blend = m_colors.value(index.sibling(index.row(), 0));
