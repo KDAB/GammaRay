@@ -35,8 +35,6 @@
 
 using namespace GammaRay;
 
-#define IF_DEBUG(x)
-
 namespace GammaRay {
 /**
  * Open QObject for access to protected data members
@@ -75,9 +73,13 @@ static inline bool hasDynamicMetaObject(const QObject* object)
   return reinterpret_cast<const UnprotectedQObject*>(object)->data()->metaObject != 0;
 }
 
-MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
-  : QAbstractItemModel(parent)
+MetaObjectTreeModel::MetaObjectTreeModel(Probe *probe)
+  : QAbstractItemModel(probe)
 {
+  connect(probe, SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
+  // TODO see below
+  //connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(objectRemoved(QObject*)));
+
   scanMetaTypes();
 }
 
@@ -217,6 +219,7 @@ void MetaObjectTreeModel::removeMetaObject(const QMetaObject *metaObject)
 
 void MetaObjectTreeModel::objectRemoved(QObject *obj)
 {
+  Q_ASSERT(thread() == QThread::currentThread());
   Q_UNUSED(obj);
   // TODO
 }

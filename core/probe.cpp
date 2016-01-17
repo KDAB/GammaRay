@@ -675,8 +675,6 @@ void Probe::objectFullyConstructed(QObject *obj)
     connect(obj, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(objectParentChanged()));
   }
 
-  m_metaObjectTreeModel->objectAdded(obj);
-
   m_toolModel->objectAdded(obj);
 
   emit objectCreated(obj);

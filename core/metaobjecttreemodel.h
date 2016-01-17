@@ -29,12 +29,14 @@
 #ifndef GAMMARAY_METAOBJECTTREEMODEL_H
 #define GAMMARAY_METAOBJECTTREEMODEL_H
 
-#include <QModelIndex>
-#include <QReadWriteLock>
-#include <QVector>
 #include <common/modelroles.h>
 
+#include <QModelIndex>
+#include <QVector>
+
 namespace GammaRay {
+
+class Probe;
 
 class MetaObjectTreeModel : public QAbstractItemModel
 {
@@ -49,9 +51,8 @@ class MetaObjectTreeModel : public QAbstractItemModel
       ObjectColumn
     };
 
-    explicit MetaObjectTreeModel(QObject *parent = 0);
+    explicit MetaObjectTreeModel(Probe *probe);
 
-    // reimplemented methods
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
@@ -62,13 +63,8 @@ class MetaObjectTreeModel : public QAbstractItemModel
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    // headers
     QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-
-    // Probe callbacks
-    void objectAdded(QObject *obj);
-    void objectRemoved(QObject *obj);
 
   private:
     void scanMetaTypes();
@@ -79,9 +75,11 @@ class MetaObjectTreeModel : public QAbstractItemModel
     QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
     const QMetaObject *metaObjectForIndex(const QModelIndex &index) const;
 
-    mutable QReadWriteLock m_lock;
+  private slots:
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
 
-    // data
+  private:
     QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
     QHash<const QMetaObject*, QVector<const QMetaObject*> > m_parentChildMap;
 };
