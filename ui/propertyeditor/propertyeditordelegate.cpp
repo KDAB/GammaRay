@@ -47,6 +47,26 @@ template <> struct matrix_trait<QMatrix4x4> {
     static qreal value(const QMatrix4x4 &matrix, int r, int c) { return matrix(r, c); }
 };
 
+template <> struct matrix_trait<QTransform> {
+    static const int rows = 3;
+    static const int columns = 3;
+    static qreal value(const QTransform &matrix, int r, int c) {
+        switch (r << 4 | c) {
+            case 0x00: return matrix.m11();
+            case 0x01: return matrix.m12();
+            case 0x02: return matrix.m13();
+            case 0x10: return matrix.m21();
+            case 0x11: return matrix.m22();
+            case 0x12: return matrix.m23();
+            case 0x20: return matrix.m31();
+            case 0x21: return matrix.m32();
+            case 0x22: return matrix.m33();
+        }
+        Q_ASSERT(false);
+        return 0.0;
+    }
+};
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 template <> struct matrix_trait<QVector2D> {
     static const int rows = 2;
@@ -89,6 +109,8 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         paint(painter, option, index, value.value<QMatrix4x4>());
+    } else if (value.type() == QVariant::Transform) {
+        paint(painter, option, index, value.value<QTransform>());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     } else if (value.canConvert<QVector2D>()) {
         paint(painter, option, index, value.value<QVector2D>());
@@ -107,6 +129,8 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         return sizeHint(option, index, value.value<QMatrix4x4>());
+    } else if (value.type() == QVariant::Transform) {
+        return sizeHint(option, index, value.value<QTransform>());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     } else if (value.canConvert<QVector2D>()) {
         return sizeHint(option, index, value.value<QVector2D>());
