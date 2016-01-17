@@ -79,6 +79,7 @@ private slots:
 private:
     PropertyAdaptor *m_rootAdaptor;
     mutable QHash<PropertyAdaptor*, QVector<PropertyAdaptor*> > m_parentChildrenMap;
+    bool m_inhibitAdaptorCreation;
 };
 
 }
