@@ -153,6 +153,7 @@ public:
 
 void KRecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right, const QVector<int> &roles)
 {
+    Q_Q(KRecursiveFilterProxyModel);
     QModelIndex source_parent = source_top_left.parent();
     Q_ASSERT(source_bottom_right.parent() == source_parent); // don't know how to handle different parents in this code...
 
@@ -161,6 +162,13 @@ void KRecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &sou
 
     // We can't find out if the change really matters to us or not, for a lack of a dataAboutToBeChanged signal (or a cache).
     // TODO: add a set of roles that we care for, so we can at least ignore the rest.
+
+    // If we are not actually filtering, we don't need to propagate this upwards,
+    // which avoids QSFPM emitting layoutChanged unnecessarily.
+    // However, this only works if filterAcceptsRow isn't overridden, otherwise
+    // we don't know if we are filtering or not.
+    if (q->filterRegExp().isEmpty() && q->metaObject() == &KRecursiveFilterProxyModel::staticMetaObject)
+        return;
 
     // Even if we knew the visibility was just toggled, we also can't find out what
     // was the last filtered out ascendant (on show, like sourceRowsAboutToBeInserted does)
