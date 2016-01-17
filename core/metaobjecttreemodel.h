@@ -88,7 +88,19 @@ class MetaObjectTreeModel : public QAbstractItemModel
     QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
     QHash<const QMetaObject*, QVector<const QMetaObject*> > m_parentChildMap;
 
-    MetaObjectInfoTracker* m_infoTracker;
+    struct MetaObjectInfo
+    {
+      MetaObjectInfo() : selfCount(0), inclusiveCount(0) {}
+
+      /// Number of objects of a particular meta object type
+      int selfCount;
+      /**
+       * Number of objects of the exact meta object type
+       * + number of objects of type that inherit from this meta type
+       */
+      int inclusiveCount;
+    };
+    QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
 };
 
 }

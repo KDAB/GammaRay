@@ -75,96 +75,9 @@ static inline bool hasDynamicMetaObject(const QObject* object)
   return reinterpret_cast<const UnprotectedQObject*>(object)->data()->metaObject != 0;
 }
 
-namespace GammaRay {
-
-/**
- * Tracks information about meta objects
- *
- * @sa objectAdded for explanation
- */
-class MetaObjectInfoTracker
-{
-public:
-  struct MetaObjectInfo
-  {
-    MetaObjectInfo() : selfCount(0), inclusiveCount(0) {}
-
-    /// Number of objects of a particular meta object type
-    int selfCount;
-    /**
-     * Number of objects of the exact meta object type
-     * + number of objects of type that inherit from this meta type
-     */
-    int inclusiveCount;
-  };
-
-  /**
-   * Use this whenever a new object of type @p metaObject was seen
-   *
-   * This will increase these values:
-   * - selfCount for that particular @p metaObject
-   * - inclusiveCount for @p metaObject and *all* ancestors
-   *
-   * Complexity-wise the inclusive count calculation should be okay,
-   * since the number of ancestors should be rather small
-   * (QMetaObject class hierarchy is rather a broad than a deep tree structure)
-   *
-   * If this yields some performance issues, we might need to remove the inclusive
-   * costs calculation altogether (a calculate-on-request pattern should be even slower)
-   */
-  void objectAdded(const QMetaObject* metaObject)
-  {
-    // note: use plain C asserts here, infinite loops otherwise in case of assert
-
-    ++m_metaObjectInfoMap[metaObject].selfCount;
-
-    // increase inclusive counts
-    const QMetaObject* current = metaObject;
-    while (current) {
-      ++m_metaObjectInfoMap[current].inclusiveCount;
-      current = current->superClass();
-    }
-  }
-
-  /**
-   * @sa objectAdded for explanation
-   */
-  void objectRemoved(const QMetaObject* metaObject)
-  {
-    // note: use plain C asserts here, infinite loops otherwise
-
-    assert(m_metaObjectInfoMap.contains(metaObject));
-    if (m_metaObjectInfoMap[metaObject].selfCount == 0) {
-      // something went wrong, but let's just ignore this event in case of assert
-      return;
-    }
-
-    --m_metaObjectInfoMap[metaObject].selfCount;
-    assert(m_metaObjectInfoMap[metaObject].selfCount >= 0);
-
-    // decrease inclusive counts
-    const QMetaObject* current = metaObject;
-    while (current) {
-      --m_metaObjectInfoMap[current].inclusiveCount;
-      assert(m_metaObjectInfoMap[current].inclusiveCount >= 0);
-      current = current->superClass();
-    }
-  }
-
-  inline const MetaObjectInfo& info(const QMetaObject* metaObject)
-  {
-    return m_metaObjectInfoMap[metaObject];
-  }
-
-private:
-  QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
-};
-
-}
 
 MetaObjectTreeModel::MetaObjectTreeModel(Probe *probe)
   : QAbstractItemModel(probe)
-  , m_infoTracker(new MetaObjectInfoTracker)
 {
   qRegisterMetaType<const QMetaObject *>();
 
@@ -177,7 +90,6 @@ MetaObjectTreeModel::MetaObjectTreeModel(Probe *probe)
 
 MetaObjectTreeModel::~MetaObjectTreeModel()
 {
-  delete m_infoTracker;
 }
 
 QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -222,9 +134,9 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
       case ObjectColumn:
         return object->className();
       case ObjectSelfCountColumn:
-        return m_infoTracker->info(object).selfCount;
+        return m_metaObjectInfoMap.value(object).selfCount;
       case ObjectInclusiveCountColumn:
-        return m_infoTracker->info(object).inclusiveCount;
+        return m_metaObjectInfoMap.value(object).inclusiveCount;
       default:
         break;
     }
@@ -289,7 +201,28 @@ void MetaObjectTreeModel::objectAdded(QObject *obj)
   // increase counter
   const QModelIndex metaModelIndex = indexForMetaObject(metaObject);
   assert(metaModelIndex.isValid());
-  m_infoTracker->objectAdded(metaObject);
+
+  /*
+   * This will increase these values:
+   * - selfCount for that particular @p metaObject
+   * - inclusiveCount for @p metaObject and *all* ancestors
+   *
+   * Complexity-wise the inclusive count calculation should be okay,
+   * since the number of ancestors should be rather small
+   * (QMetaObject class hierarchy is rather a broad than a deep tree structure)
+   *
+   * If this yields some performance issues, we might need to remove the inclusive
+   * costs calculation altogether (a calculate-on-request pattern should be even slower)
+   */
+  ++m_metaObjectInfoMap[metaObject].selfCount;
+
+  // increase inclusive counts
+  const QMetaObject* current = metaObject;
+  while (current) {
+    ++m_metaObjectInfoMap[current].inclusiveCount;
+    current = current->superClass();
+  }
+
   emit dataChanged(metaModelIndex, metaModelIndex);
 }
 
@@ -353,7 +286,23 @@ void MetaObjectTreeModel::objectRemoved(QObject *obj)
     return;
   }
 
-  m_infoTracker->objectRemoved(metaObject);
+  assert(m_metaObjectInfoMap.contains(metaObject));
+  if (m_metaObjectInfoMap[metaObject].selfCount == 0) {
+    // something went wrong, but let's just ignore this event in case of assert
+    return;
+  }
+
+  --m_metaObjectInfoMap[metaObject].selfCount;
+  assert(m_metaObjectInfoMap[metaObject].selfCount >= 0);
+
+  // decrease inclusive counts
+  const QMetaObject* current = metaObject;
+  while (current) {
+    --m_metaObjectInfoMap[current].inclusiveCount;
+    assert(m_metaObjectInfoMap[current].inclusiveCount >= 0);
+    current = current->superClass();
+  }
+
   emit dataChanged(metaModelIndex, metaModelIndex);
 }
 
