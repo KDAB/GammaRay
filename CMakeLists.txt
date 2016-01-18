@@ -61,6 +61,7 @@ include(GammaRayMacros)
 include(GammaRayMacrosInternal)
 include(FeatureSummary)
 include(ECMGeneratePriFile)
+include(ECMEnableSanitizers)
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
 #  MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
@@ -200,7 +201,7 @@ if(QNXNTO)
 endif()
 
 # linker flags
-if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+if(NOT ECM_ENABLE_SANITIZERS AND (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU))
   if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
     set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
