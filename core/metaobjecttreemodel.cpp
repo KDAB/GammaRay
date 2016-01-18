@@ -127,6 +127,17 @@ QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientatio
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
+static bool inheritsQObject(const QMetaObject *mo)
+{
+    while (mo) {
+        if (mo == &QObject::staticMetaObject)
+            return true;
+        mo = mo->superClass();
+    }
+
+    return false;
+}
+
 QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid()) {
@@ -140,9 +151,13 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
       case ObjectColumn:
         return object->className();
       case ObjectSelfCountColumn:
-        return m_metaObjectInfoMap.value(object).selfCount;
+        if (inheritsQObject(object))
+          return m_metaObjectInfoMap.value(object).selfCount;
+        return QStringLiteral("-");
       case ObjectInclusiveCountColumn:
-        return m_metaObjectInfoMap.value(object).inclusiveCount;
+        if (inheritsQObject(object))
+          return m_metaObjectInfoMap.value(object).inclusiveCount;
+        return QStringLiteral("-");
       default:
         break;
     }
