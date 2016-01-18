@@ -105,20 +105,20 @@ QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientatio
       case ObjectColumn:
         return tr("Meta Object Class");
       case ObjectSelfCountColumn:
-        return tr("Self (#Objects)");
+        return tr("Self");
       case ObjectInclusiveCountColumn:
-        return tr("Incl. (#Objects)");
+        return tr("Incl.");
       default:
         return QVariant();
     }
   } else if (role == Qt::ToolTipRole) {
     switch (section) {
     case ObjectColumn:
-      return tr("This column shows the QMetaObject class hierarchy");
+      return tr("This column shows the QMetaObject class hierarchy.");
     case ObjectSelfCountColumn:
-      return tr("This column shows the number of objects of particular type");
+      return tr("This column shows the number of objects created of a particular type.");
     case ObjectInclusiveCountColumn:
-      return tr("This column shows the number of objects that inherit from a particular type");
+      return tr("This column shows the number of objects created that inherit from a particular type.");
     default:
       return QVariant();
     }

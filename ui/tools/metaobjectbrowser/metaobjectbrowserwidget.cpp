@@ -51,7 +51,10 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   treeView->setIndentation(10);
   treeView->setUniformRowHeights(true);
   treeView->setModel(model);
+  treeView->header()->setStretchLastSection(false);
   new DeferredResizeModeSetter(treeView->header(), 0, QHeaderView::Stretch);
+  new DeferredResizeModeSetter(treeView->header(), 1, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(treeView->header(), 2, QHeaderView::ResizeToContents);
   treeView->setSortingEnabled(true);
   treeView->setSelectionModel(ObjectBroker::selectionModel(model));
 
