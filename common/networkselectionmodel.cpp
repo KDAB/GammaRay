@@ -75,17 +75,17 @@ Protocol::ItemSelection GammaRay::NetworkSelectionModel::readSelection(const Gam
     return selection;
 }
 
-QItemSelection GammaRay::NetworkSelectionModel::translateSelection(const Protocol::ItemSelection& selection) const
+bool GammaRay::NetworkSelectionModel::translateSelection(const Protocol::ItemSelection& selection, QItemSelection &qselection) const
 {
-    QItemSelection qselection;
+    qselection.clear();
     foreach (const auto &range, selection) {
         const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), range.topLeft);
         const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), range.bottomRight);
         if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
-            continue;
+            return false;
         qselection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
     }
-    return qselection;
+    return true;
 }
 
 void NetworkSelectionModel::newMessage(const Message& msg)
@@ -94,14 +94,20 @@ void NetworkSelectionModel::newMessage(const Message& msg)
   switch (msg.type()) {
     case Protocol::SelectionModelSelect:
     {
-      QItemSelection selected = translateSelection(readSelection(msg));
-      QItemSelection deselected = translateSelection(readSelection(msg));
       Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
-      if (!deselected.isEmpty()) {
-        select(deselected, Deselect);
+      const auto selected = readSelection(msg);
+      const auto deselected = readSelection(msg);
+
+      QItemSelection qmiSelection;
+      if (translateSelection(deselected, qmiSelection) && !qmiSelection.isEmpty()) {
+          select(qmiSelection, Deselect);
       }
-      if (!selected.isEmpty()) {
-        select(selected, Select);
+
+      if (translateSelection(selected, qmiSelection)) {
+          if (!qmiSelection.isEmpty())
+              select(qmiSelection, Select);
+      } else {
+          qDebug() << "cannot select, branch not yet loaded locally - TODO";
       }
       break;
     }

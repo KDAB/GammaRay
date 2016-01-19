@@ -50,7 +50,7 @@ protected:
 
 private:
   static Protocol::ItemSelection readSelection(const Message &msg);
-  QItemSelection translateSelection(const Protocol::ItemSelection &selection) const;
+  bool translateSelection(const Protocol::ItemSelection &selection, QItemSelection &qselection) const;
 
 private slots:
   void newMessage(const GammaRay::Message &msg);
