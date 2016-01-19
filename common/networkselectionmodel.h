@@ -48,6 +48,9 @@ protected:
   QString m_objectName;
   Protocol::ObjectAddress m_myAddress;
 
+private:
+  QItemSelection readSelection(const Message &msg) const;
+
 private slots:
   void newMessage(const GammaRay::Message &msg);
 

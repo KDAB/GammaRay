@@ -35,23 +35,6 @@
 
 using namespace GammaRay;
 
-static QItemSelection readSelection(const Message &msg, const QAbstractItemModel *model)
-{
-  QItemSelection selection;
-  qint32 size = 0;
-  msg.payload() >> size;
-  for (int i = 0; i < size; ++i) {
-    Protocol::ModelIndex topLeft, bottomRight;
-    msg.payload() >> topLeft >> bottomRight;
-    const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model, topLeft);
-    const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model, bottomRight);
-    if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
-      continue;
-    selection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
-  }
-  return selection;
-}
-
 static void writeSelection(Message *msg, const QItemSelection &selection)
 {
   msg->payload() << qint32(selection.size());
@@ -76,14 +59,31 @@ NetworkSelectionModel::~NetworkSelectionModel()
 {
 }
 
+QItemSelection GammaRay::NetworkSelectionModel::readSelection(const GammaRay::Message& msg) const
+{
+    QItemSelection selection;
+    qint32 size = 0;
+    msg.payload() >> size;
+    for (int i = 0; i < size; ++i) {
+        Protocol::ModelIndex topLeft, bottomRight;
+        msg.payload() >> topLeft >> bottomRight;
+        const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), topLeft);
+        const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), bottomRight);
+        if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
+            continue;
+        selection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
+    }
+    return selection;
+}
+
 void NetworkSelectionModel::newMessage(const Message& msg)
 {
   Q_ASSERT(msg.address() == m_myAddress);
   switch (msg.type()) {
     case Protocol::SelectionModelSelect:
     {
-      QItemSelection selected = readSelection(msg, model());
-      QItemSelection deselected = readSelection(msg, model());
+      QItemSelection selected = readSelection(msg);
+      QItemSelection deselected = readSelection(msg);
       Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
       if (!deselected.isEmpty()) {
         select(deselected, Deselect);
