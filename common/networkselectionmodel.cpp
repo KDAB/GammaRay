@@ -59,21 +59,33 @@ NetworkSelectionModel::~NetworkSelectionModel()
 {
 }
 
-QItemSelection GammaRay::NetworkSelectionModel::readSelection(const GammaRay::Message& msg) const
+Protocol::ItemSelection GammaRay::NetworkSelectionModel::readSelection(const GammaRay::Message& msg)
 {
-    QItemSelection selection;
+    Protocol::ItemSelection selection;
     qint32 size = 0;
     msg.payload() >> size;
+    selection.reserve(size);
+
     for (int i = 0; i < size; ++i) {
-        Protocol::ModelIndex topLeft, bottomRight;
-        msg.payload() >> topLeft >> bottomRight;
-        const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), topLeft);
-        const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), bottomRight);
+        Protocol::ItemSelectionRange range;
+        msg.payload() >> range.topLeft >> range.bottomRight;
+        selection.push_back(range);
+    }
+
+    return selection;
+}
+
+QItemSelection GammaRay::NetworkSelectionModel::translateSelection(const Protocol::ItemSelection& selection) const
+{
+    QItemSelection qselection;
+    foreach (const auto &range, selection) {
+        const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), range.topLeft);
+        const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), range.bottomRight);
         if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
             continue;
-        selection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
+        qselection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
     }
-    return selection;
+    return qselection;
 }
 
 void NetworkSelectionModel::newMessage(const Message& msg)
@@ -82,8 +94,8 @@ void NetworkSelectionModel::newMessage(const Message& msg)
   switch (msg.type()) {
     case Protocol::SelectionModelSelect:
     {
-      QItemSelection selected = readSelection(msg);
-      QItemSelection deselected = readSelection(msg);
+      QItemSelection selected = translateSelection(readSelection(msg));
+      QItemSelection deselected = translateSelection(readSelection(msg));
       Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
       if (!deselected.isEmpty()) {
         select(deselected, Deselect);

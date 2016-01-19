@@ -49,7 +49,8 @@ protected:
   Protocol::ObjectAddress m_myAddress;
 
 private:
-  QItemSelection readSelection(const Message &msg) const;
+  static Protocol::ItemSelection readSelection(const Message &msg);
+  QItemSelection translateSelection(const Protocol::ItemSelection &selection) const;
 
 private slots:
   void newMessage(const GammaRay::Message &msg);

@@ -102,6 +102,12 @@ enum BuildInMessageType {
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
 
+struct ItemSelectionRange {
+    ModelIndex topLeft;
+    ModelIndex bottomRight;
+};
+typedef QVector<ItemSelectionRange> ItemSelection;
+
 /** Serializes a QModelIndex. */
 GAMMARAY_COMMON_EXPORT ModelIndex fromQModelIndex(const QModelIndex &index);
 
@@ -117,5 +123,7 @@ GAMMARAY_COMMON_EXPORT qint32 broadcastFormatVersion();
 }
 
 }
+
+Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);
 
 #endif
