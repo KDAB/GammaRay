@@ -53,6 +53,10 @@ NetworkSelectionModel::NetworkSelectionModel(const QString &objectName, QAbstrac
   connect(this, SIGNAL(currentColumnChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentColumnChanged(QModelIndex,QModelIndex)));
   connect(this, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentRowChanged(QModelIndex,QModelIndex)));
   connect(this, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+
+  Q_ASSERT(model);
+  connect(model, SIGNAL(modelAboutToBeReset()), this, SLOT(clearPendingSelection()));
+  connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(applyPendingSelection()));
 }
 
 NetworkSelectionModel::~NetworkSelectionModel()
@@ -95,7 +99,7 @@ void NetworkSelectionModel::newMessage(const Message& msg)
     case Protocol::SelectionModelSelect:
     {
       Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
-      const auto selected = readSelection(msg);
+      m_pendingSelection = readSelection(msg);
       const auto deselected = readSelection(msg);
 
       QItemSelection qmiSelection;
@@ -103,12 +107,7 @@ void NetworkSelectionModel::newMessage(const Message& msg)
           select(qmiSelection, Deselect);
       }
 
-      if (translateSelection(selected, qmiSelection)) {
-          if (!qmiSelection.isEmpty())
-              select(qmiSelection, Select);
-      } else {
-          qDebug() << "cannot select, branch not yet loaded locally - TODO";
-      }
+      applyPendingSelection();
       break;
     }
     case Protocol::SelectionModelCurrent:
@@ -133,6 +132,8 @@ void NetworkSelectionModel::slotCurrentChanged(const QModelIndex& current, const
   Q_UNUSED(previous);
   if (m_handlingRemoteMessage || !Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
+  clearPendingSelection();
+
   Message msg(m_myAddress, Protocol::SelectionModelCurrent);
   msg.payload() << qint32(QItemSelectionModel::Current) << Protocol::fromQModelIndex(current);
   Endpoint::send(msg);
@@ -143,6 +144,8 @@ void NetworkSelectionModel::slotCurrentColumnChanged(const QModelIndex& current,
   Q_UNUSED(previous);
   if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
+  clearPendingSelection();
+
   Message msg(m_myAddress, Protocol::SelectionModelCurrent);
   msg.payload() << qint32(QItemSelectionModel::Current|QItemSelectionModel::Columns) << Protocol::fromQModelIndex(current);
   Endpoint::send(msg);
@@ -153,6 +156,8 @@ void NetworkSelectionModel::slotCurrentRowChanged(const QModelIndex& current, co
   Q_UNUSED(previous);
   if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
+  clearPendingSelection();
+
   Message msg(m_myAddress, Protocol::SelectionModelCurrent);
   msg.payload() << qint32(QItemSelectionModel::Current|QItemSelectionModel::Rows) << Protocol::fromQModelIndex(current);
   Endpoint::send(msg);
@@ -162,6 +167,7 @@ void NetworkSelectionModel::slotSelectionChanged(const QItemSelection& selected,
 {
   if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
     return;
+  clearPendingSelection();
 
   Message msg(m_myAddress, Protocol::SelectionModelSelect);
   writeSelection(&msg, selected);
@@ -169,3 +175,20 @@ void NetworkSelectionModel::slotSelectionChanged(const QItemSelection& selected,
   Endpoint::send(msg);
 }
 
+void GammaRay::NetworkSelectionModel::applyPendingSelection()
+{
+    if (m_pendingSelection.isEmpty())
+        return;
+
+    QItemSelection qmiSelection;
+    if (translateSelection(m_pendingSelection, qmiSelection)) {
+        if (!qmiSelection.isEmpty())
+            select(qmiSelection, Select);
+        clearPendingSelection();
+    }
+}
+
+void GammaRay::NetworkSelectionModel::clearPendingSelection()
+{
+    m_pendingSelection.clear();
+}

@@ -60,7 +60,11 @@ private slots:
   void slotCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
   void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
+  void applyPendingSelection();
+  void clearPendingSelection();
+
 private:
+  Protocol::ItemSelection m_pendingSelection;
   bool m_handlingRemoteMessage;
 };
 
