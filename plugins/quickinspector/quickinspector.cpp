@@ -575,8 +575,22 @@ void QuickInspector::pickItemAt(const QPoint& pos)
 QQuickItem *QuickInspector::recursiveChiltAt(QQuickItem *parent, const QPointF &pos) const
 {
   Q_ASSERT(parent);
+  QQuickItem *child = Q_NULLPTR;
 
-  QQuickItem *child = parent->childAt(pos.x(), pos.y());
+  // almost like QQItem::childAt, but with some extra filtering for better matching what you can see on screen
+  const auto childItems = parent->childItems();
+  for (int i = childItems.size() - 1; i >= 0; --i) { // backwards to match z order
+      auto c = childItems.at(i);
+      const QPointF p = parent->mapToItem(c, pos);
+      if (c->isVisible() && p.x() >= 0 && c->width() >= p.x() && p.y() >= 0 && c->height() >= p.y()) {
+          child = c;
+          // empty QQItems are less interesting, so continue looking for something better, very common first hits in ListViews for example
+          if (c->metaObject() == &QQuickItem::staticMetaObject && c->childItems().isEmpty()) {
+              continue;
+          }
+          break;
+      }
+  }
 
   if (child) {
     return recursiveChiltAt(child, parent->mapToItem(child, pos));

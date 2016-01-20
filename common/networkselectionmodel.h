@@ -48,6 +48,10 @@ protected:
   QString m_objectName;
   Protocol::ObjectAddress m_myAddress;
 
+private:
+  static Protocol::ItemSelection readSelection(const Message &msg);
+  bool translateSelection(const Protocol::ItemSelection &selection, QItemSelection &qselection) const;
+
 private slots:
   void newMessage(const GammaRay::Message &msg);
 
@@ -56,7 +60,11 @@ private slots:
   void slotCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
   void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
+  void applyPendingSelection();
+  void clearPendingSelection();
+
 private:
+  Protocol::ItemSelection m_pendingSelection;
   bool m_handlingRemoteMessage;
 };
 
