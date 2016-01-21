@@ -37,7 +37,9 @@ macro(gammaray_join_list _var _sep)
 endmacro()
 
 macro(gammaray_inverse_dir _var _prefix)
-  file(RELATIVE_PATH ${_var} "${CMAKE_INSTALL_PREFIX}/${_prefix}" "${CMAKE_INSTALL_PREFIX}")
+  # strip out relative components, those break the following on OSX
+  get_filename_component(_clean_prefix "${CMAKE_INSTALL_PREFIX}/${_prefix}" ABSOLUTE)
+  file(RELATIVE_PATH ${_var} ${_clean_prefix} "${CMAKE_INSTALL_PREFIX}")
 endmacro()
 
 # embed an Info.plist file into a non-bundled Mac executable
