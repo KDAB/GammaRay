@@ -79,7 +79,7 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
           m_modelTester, SLOT(objectAdded(QObject*)));
 
-  if (!m_probe->hasReliableObjectTracking()) {
+  if (m_probe->needsObjectDiscovery()) {
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
   }
 }

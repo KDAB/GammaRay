@@ -106,9 +106,9 @@ class ProbeInterface
     virtual void installGlobalEventFilter(QObject *filter) = 0;
 
     /**
-     * Returns @c true if we have working hooks in QtCore, that is we are notified reliably
-     * about every QObject creation/destruction.
-     * If this is not the case, we try to discover QObjects by walking the hierarchy, starting
+     * Returns @c true if we haven't been able to track all objects from startup, ie. usually
+     * when attaching at runtime.
+     * If this is the case, we try to discover QObjects by walking the hierarchy, starting
      * from known singletons, and by watching out for unknown receivers of events.
      * This is far from complete obviously, and plug-ins can help finding more objects, using
      * specific knowledge about the types they are responsible for.
@@ -116,16 +116,16 @@ class ProbeInterface
      * Connect to the objectAdded(QObject*) signal on probe(), and call discoverObject(QObject*)
      * for "your" objects.
      *
-     * @since 2.0
+     * @since 2.5
      */
-    virtual bool hasReliableObjectTracking() const = 0;
+    virtual bool needsObjectDiscovery() const = 0;
 
     /**
      * Notify the probe about QObjects your plug-in can discover by using information about
      * the types it can handle.
-     * Only use this if hasReliableObjectTracking() returns @c false.
+     * Only use this if needsObjectDiscovery() returns @c true to maximise performance.
      *
-     * @see hasReliableObjectTracking()
+     * @see needsObjectDiscovery()
      * @since 2.0
      */
     virtual void discoverObject(QObject *object) = 0;

@@ -79,7 +79,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     ToolModel *toolModel() const;
     void registerModel(const QString& objectName, QAbstractItemModel* model) Q_DECL_OVERRIDE;
     void installGlobalEventFilter(QObject* filter) Q_DECL_OVERRIDE;
-    bool hasReliableObjectTracking() const Q_DECL_OVERRIDE;
+    bool needsObjectDiscovery() const Q_DECL_OVERRIDE;
     void discoverObject(QObject* object) Q_DECL_OVERRIDE;
     void selectObject(QObject* object, const QPoint& pos = QPoint()) Q_DECL_OVERRIDE;
     void selectObject(void* object, const QString& typeName) Q_DECL_OVERRIDE;
@@ -162,6 +162,12 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
   private:
     friend class ProbeCreator;
     friend class BenchSuite;
+
+    /* Returns @c true if we have working hooks in QtCore, that is we are notified reliably
+     * about every QObject creation/destruction.
+     * @since 2.0
+     */
+    bool hasReliableObjectTracking() const;
 
     void objectFullyConstructed(QObject *obj);
 
