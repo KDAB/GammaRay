@@ -56,8 +56,10 @@
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
+#else
+#include <QGuiApplication>
+#include <QWindow>
 #endif
-#include <QCoreApplication>
 #include <QDir>
 #include <QLibrary>
 #include <QMouseEvent>
@@ -884,6 +886,13 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 void Probe::findExistingObjects()
 {
   discoverObject(QCoreApplication::instance());
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
+      foreach (auto window, QGuiApplication::allWindows())
+          discoverObject(window);
+  }
+#endif
 }
 
 void Probe::discoverObject(QObject *obj)
