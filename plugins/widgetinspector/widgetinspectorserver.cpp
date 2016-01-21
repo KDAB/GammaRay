@@ -124,7 +124,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   // TODO this needs to be delayed until there actually is something to select
   selectDefaultItem();
 
-  if (!m_probe->hasReliableObjectTracking()) {
+  if (m_probe->needsObjectDiscovery()) {
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
     discoverObjects();
   }

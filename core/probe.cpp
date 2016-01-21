@@ -858,7 +858,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
   }
 
   // we have no preloading hooks, so recover all objects we see
-  if (!hasReliableObjectTracking() && event->type() != QEvent::ChildAdded &&
+  if (needsObjectDiscovery() && event->type() != QEvent::ChildAdded &&
       event->type() != QEvent::ChildRemoved &&
       event->type() != QEvent::ParentChange && // already handled above
       event->type() != QEvent::Destroy &&
@@ -907,6 +907,11 @@ void Probe::installGlobalEventFilter(QObject *filter)
 {
   Q_ASSERT(!m_globalEventFilters.contains(filter));
   m_globalEventFilters.push_back(filter);
+}
+
+bool Probe::needsObjectDiscovery() const
+{
+  return s_listener()->trackDestroyed;
 }
 
 bool Probe::hasReliableObjectTracking() const
