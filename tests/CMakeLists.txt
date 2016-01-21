@@ -1,3 +1,7 @@
+# keep test output locally, in the multibuild case
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
+
 add_subdirectory(shared)
 
 ### BENCH SUITE

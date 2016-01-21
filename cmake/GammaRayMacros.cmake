@@ -43,7 +43,7 @@ macro(gammaray_add_plugin _target_name)
   if(NOT PROBE_PLUGIN_INSTALL_DIR) # HACK for external plugins that don't set PLUGIN_INSTALL_DIR
     set(PROBE_PLUGIN_INSTALL_DIR ${GAMMARAY_PROBE_PLUGIN_INSTALL_DIR})
   endif()
-  set(_build_target_dir "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}")
+  set(_build_target_dir "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_PLUGIN_INSTALL_DIR}")
 
   # Work-around for KDEND-44 (also see https://cmake.org/Bug/bug_relationship_graph.php?bug_id=15419)
   # Re-generates moc file in case the JSON file changes
