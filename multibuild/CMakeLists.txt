@@ -17,8 +17,6 @@ else()
   set(_build_type "Release")
 endif()
 
-# TODO: pass all relevant CMake args (esp. PREFIX_PATH)
-# TODO: handle Qt install layout
 ExternalProject_Add(
   GammaRay-${_build_type}
   SOURCE_DIR ${CMAKE_SOURCE_DIR}
@@ -30,6 +28,8 @@ ExternalProject_Add(
   CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=${_build_type}
     -DGAMMARAY_PROBE_ONLY_BUILD=ON
+    -DGAMMARAY_INSTALL_QT_LAYOUT=${GAMMARAY_INSTALL_QT_LAYOUT}
+    -DGAMMARAY_BUILD_UI=${GAMMARAY_BUILD_UI}
     -DGAMMARAY_OUTPUT_PREFIX=${CMAKE_BINARY_DIR}
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
     -DLIB_SUFFIX=${LIB_SUFFIX}
