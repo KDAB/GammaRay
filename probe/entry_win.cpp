@@ -37,6 +37,7 @@ using namespace GammaRay;
 extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
 {
   switch(dwReason) {
+    case DLL_PROCESS_ATTACH:
     case DLL_THREAD_ATTACH:
     {
       Hooks::installHooks();
