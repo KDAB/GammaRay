@@ -53,7 +53,8 @@ static bool quickWidgetGrabWindowCallback(QQuickWindow* window)
 
 QuickWidgetSupport::QuickWidgetSupport(ProbeInterface* probe, QObject* parent) :
     QObject(parent),
-    m_quickInspector(Q_NULLPTR)
+    m_quickInspector(Q_NULLPTR),
+    m_probe(probe)
 {
     Q_ASSERT(s_quickWidgetSupportInstance == Q_NULLPTR);
     s_quickWidgetSupportInstance = this;
@@ -84,6 +85,8 @@ void GammaRay::QuickWidgetSupport::objectAdded(QObject* obj)
         return;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     m_windowMap.insert(qqw->quickWindow(), qqw);
+    if (m_probe->needsObjectDiscovery())
+        m_probe->discoverObject(qqw->quickWindow());
 #endif
     registerWindowGrabber();
 }

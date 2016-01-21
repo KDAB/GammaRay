@@ -53,6 +53,7 @@ private slots:
 private:
     QHash<QQuickWindow*, QQuickWidget*> m_windowMap;
     QObject *m_quickInspector;
+    ProbeInterface *m_probe;
 };
 
 class QuickWidgetSupportFactory : public QObject, public StandardToolFactory<QQuickWidget, QuickWidgetSupport>
