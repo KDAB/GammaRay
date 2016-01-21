@@ -1,24 +1,43 @@
 include(ExternalProject)
 
 # on MSVC we need to build the debug/release counter-part as well
-if(MSVC)
-  if(CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
-    set(_build_type "Debug")
-  else()
-    set(_build_type "Release")
-  endif()
-
-  ExternalProject_Add(
-    GammaRay-${_build_type}
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}
-    BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/GammaRay-${_build_type}
-    INSTALL_DIR ${CMAKE_BINARY_DIR}
-
-    CMAKE_ARGS
-      -DCMAKE_BUILD_TYPE=${_build_type}
-      -DGAMMARAY_PROBE_ONLY_BUILD=ON
-      -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
-      -DLIB_SUFFIX=${LIB_SUFFIX}
-  )
-
+if(NOT MSVC)
+  return()
 endif()
+
+# STEP_TARGETS and EXCLUDE_FROM_ALL only work with CMake >= 3.1
+if(CMAKE_VERSION VERSION_LESS 3.1)
+  message("You need at least CMake 3.1 for multi-probe builds!")
+  return()
+endif()
+
+if(CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
+  set(_build_type "Debug")
+else()
+  set(_build_type "Release")
+endif()
+
+# TODO: pass all relevant CMake args (esp. PREFIX_PATH)
+# TODO: handle Qt install layout
+ExternalProject_Add(
+  GammaRay-${_build_type}
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}
+  BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/GammaRay-${_build_type}
+  INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+  EXCLUDE_FROM_ALL 1
+  STEP_TARGETS build install
+
+  CMAKE_ARGS
+    -DCMAKE_BUILD_TYPE=${_build_type}
+    -DGAMMARAY_PROBE_ONLY_BUILD=ON
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    -DLIB_SUFFIX=${LIB_SUFFIX}
+)
+
+# hacky way to add a dependency from the default target to the build step
+add_custom_target(multibuild_build ALL DEPENDS GammaRay-${_build_type}-build)
+
+# even hackier way to postpone external project installation to install time
+add_custom_target(multibuild_install)
+add_dependencies(multibuild_install GammaRay-${_build_type}-install)
+install(CODE "execute_process(COMMAND \"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target multibuild_install)")
