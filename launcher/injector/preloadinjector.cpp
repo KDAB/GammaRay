@@ -64,6 +64,11 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
   env.insert(QStringLiteral("DYLD_FORCE_FLAT_NAMESPACE"), QStringLiteral("1"));
   env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), probeDll);
   env.insert(QStringLiteral("GAMMARAY_UNSET_DYLD"), QStringLiteral("1"));
+
+  // Make sure Qt do load it's correct libs/plugins.
+  if (probeDll.contains(QStringLiteral("_debug"), Qt::CaseInsensitive)) {
+    env.insert(QStringLiteral("DYLD_IMAGE_SUFFIX"), QStringLiteral("_debug"));
+  }
 #else
   env.insert(QStringLiteral("LD_PRELOAD"), probeDll);
   env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));

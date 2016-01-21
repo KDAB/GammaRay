@@ -418,6 +418,12 @@ void Probe::showInProcessUi()
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
   path += '-';
   path += GAMMARAY_PROBE_ABI;
+#else
+#if !defined(Q_OS_MAC)
+#if defined(QT_DEBUG)
+  path += QStringLiteral(GAMMARAY_DEBUG_POSTFIX);
+#endif
+#endif
 #endif
   QLibrary lib;
   lib.setFileName(path);

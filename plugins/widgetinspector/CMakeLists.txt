@@ -27,7 +27,6 @@ add_library(gammaray_widget_export_actions SHARED
 
 set_target_properties(gammaray_widget_export_actions PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}"
-  DEBUG_POSTFIX ""
 )
 
 if(GAMMARAY_INSTALL_QT_LAYOUT)
