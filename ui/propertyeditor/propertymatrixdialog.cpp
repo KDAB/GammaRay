@@ -58,6 +58,7 @@ void PropertyMatrixDialog::setMatrix(const QVariant &matrix)
     case QVariant::Vector2D: windowTitle = tr("Edit 2D Vector"); break;
     case QVariant::Vector3D: windowTitle = tr("Edit 3D Vector"); break;
     case QVariant::Vector4D: windowTitle = tr("Edit 4D Vector"); break;
+    case QVariant::Quaternion: windowTitle = tr("Edit Quaternion"); break;
   }
 
   setWindowTitle(windowTitle);
