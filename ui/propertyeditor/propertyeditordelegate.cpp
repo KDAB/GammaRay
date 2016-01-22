@@ -34,6 +34,7 @@
 #include <QMatrix>
 #include <QMatrix4x4>
 #include <QPainter>
+#include <QQuaternion>
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
@@ -105,6 +106,25 @@ template <> struct matrix_trait<QVector4D> {
 };
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+template <> struct matrix_trait<QQuaternion> {
+  static const int rows = 3;
+  static const int columns = 1;
+  static qreal value(const QQuaternion &quaternion, int r, int) {
+    float pitch, yaw, roll;
+    quaternion.getEulerAngles(&pitch, &yaw, &roll);
+
+    switch (r) {
+      case 0: return pitch;
+      case 1: return yaw;
+      case 2: return roll;
+    }
+    Q_ASSERT(false);
+    return 0.0;
+  }
+};
+#endif
+
 }
 
 PropertyEditorDelegate::PropertyEditorDelegate(QObject* parent): QStyledItemDelegate(parent)
@@ -139,6 +159,10 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     } else if (value.canConvert<QVector4D>()) {
       paint(painter, option, index, value.value<QVector4D>());
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    } else if (value.type() == QVariant::Quaternion) {
+        paint(painter, option, index, value.value<QQuaternion>());
+#endif
     } else {
         QStyledItemDelegate::paint(painter, option, index);
     }
@@ -160,6 +184,10 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
       return sizeHint(option, index, value.value<QVector3D>());
     } else if (value.canConvert<QVector4D>()) {
       return sizeHint(option, index, value.value<QVector4D>());
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    } else if (value.type() == QVariant::Quaternion) {
+        return sizeHint(option, index, value.value<QQuaternion>());
 #endif
     }
     return QStyledItemDelegate::sizeHint(option, index);
