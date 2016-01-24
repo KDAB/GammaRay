@@ -1,0 +1,6 @@
+{
+    "id": "gammaray_3dinspector",
+    "name": "Qt3D Inspector",
+    "types": [ "Qt3DCore::QNode" ],
+    "hidden": true
+}
