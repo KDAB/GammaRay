@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "pluginmanager.h"
 #include "paths.h"
 
@@ -65,7 +66,11 @@ QStringList PluginManagerBase::pluginFilter() const
 #elif defined(Q_OS_ANDROID)
   filter.push_back(QLatin1String("libplugins_gammaray_gammaray_*") + Paths::pluginExtension());
 #else
+#if defined(GAMMARAY_INSTALL_QT_LAYOUT)
+  filter.push_back(QLatin1String("*") + QStringLiteral(GAMMARAY_PROBE_ABI) + Paths::pluginExtension());
+#else
   filter.push_back(QLatin1String("*") + Paths::pluginExtension());
+#endif
 #endif
   return filter;
 }

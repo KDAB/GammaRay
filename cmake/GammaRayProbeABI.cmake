@@ -12,23 +12,14 @@
 
 # Qt version
 if(Qt5Core_FOUND)
-  set(GAMMARAY_PROBE_ABI "qt${Qt5Core_VERSION_MAJOR}.${Qt5Core_VERSION_MINOR}")
+  set(GAMMARAY_PROBE_ABI "qt${Qt5Core_VERSION_MAJOR}_${Qt5Core_VERSION_MINOR}")
 else()
-  set(GAMMARAY_PROBE_ABI "qt${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}")
+  set(GAMMARAY_PROBE_ABI "qt${QT_VERSION_MAJOR}_${QT_VERSION_MINOR}")
 endif()
 
 # on Windows, the compiler also matters
 if(WIN32)
   set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_CXX_COMPILER_ID}")
-endif()
-
-# debug vs. release (MSVC only)
-if(MSVC)
-  if(CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
-    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-release")
-  else()
-    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-debug")
-  endif()
 endif()
 
 # processor architecture
@@ -65,4 +56,4 @@ else()
   endif()
 endif()
 
-message(STATUS "Building probe for ABI: ${GAMMARAY_PROBE_ABI}")
+message(STATUS "Building probe for ABI: ${GAMMARAY_PROBE_ABI} (${CMAKE_BUILD_TYPE})")

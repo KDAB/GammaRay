@@ -27,7 +27,6 @@ if(APPLE OR NOT Qt5Core_VERSION VERSION_LESS 5.4.0)
 endif()
 
 # probe lib
-set(CMAKE_DEBUG_POSTFIX "")
 if(APPLE) # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
   add_library(gammaray_probe SHARED ${gammaray_probe_srcs})
   if(NOT GAMMARAY_INSTALL_QT_LAYOUT)

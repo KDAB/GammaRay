@@ -178,7 +178,7 @@ static QString readMachOHeader(const uchar* data, quint64 size, quint32 &offset,
   return QString();
 }
 
-static ProbeABI abiFromMachO(const uchar* data, qint64 size)
+static ProbeABI abiFromMachO(const QString &path, const uchar* data, qint64 size)
 {
   ProbeABI abi;
   const quint32 magic = *reinterpret_cast<const quint32*>(data);
@@ -211,6 +211,12 @@ static ProbeABI abiFromMachO(const uchar* data, qint64 size)
     offset += cmd->cmdsize;
   }
 
+  if (QFileInfo(path).baseName().endsWith(QStringLiteral("_debug"), Qt::CaseInsensitive)) {
+      // We can probably also look for a S_ATTR_DEBUG segment, in the data, but that might not proove it's a debug
+      // build as we can add debug symbols to release builds.
+      abi.setIsDebug(true);
+  }
+
   return abi;
 }
 
@@ -226,5 +232,5 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
   const uchar* data = f.map(0, f.size());
   if (!data || (uint)f.size() <= sizeof(quint32))
     return ProbeABI();
-  return abiFromMachO(data, f.size());
+  return abiFromMachO(path, data, f.size());
 }

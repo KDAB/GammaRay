@@ -55,9 +55,16 @@ QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
     Paths::probePath(probeAbi.id()) %
     QDir::separator() %
     baseName %
+#if defined(GAMMARAY_INSTALL_QT_LAYOUT)
+    QChar('-') %
+    probeAbi.id() %
+#else
+    QChar('*') %
+#endif
     Paths::libraryExtension();
 
-  const QFileInfo fi(probePath);
+  const QFileInfo wildcarded(probePath);
+  const QFileInfo fi = QDir(wildcarded.absolutePath()).entryInfoList(QStringList(wildcarded.fileName())).value(0);
   const QString canonicalPath = fi.canonicalFilePath();
   if (!fi.isFile() || !fi.isReadable() || canonicalPath.isEmpty()) {
     qWarning() << "Cannot locate probe" << probePath;
@@ -94,14 +101,13 @@ QVector<ProbeABI> listProbeABIs()
   const QDir dir(Paths::probePath(QString()));
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
   const QString filter = QStringLiteral("*gammaray_probe*");
-  ProbeABIDetector detector;
   foreach (const QFileInfo &abiId, dir.entryInfoList(QStringList(filter), QDir::Files)) {
     // OSX has broken QLibrary::isLibrary() - QTBUG-50446
     if (abiId.isSymLink() || (!QLibrary::isLibrary(abiId.fileName()) &&
                               !abiId.fileName().endsWith(Paths::libraryExtension(), Qt::CaseInsensitive))) {
       continue;
     }
-    const ProbeABI abi = detector.abiForExecutable(abiId.absoluteFilePath());
+    const ProbeABI abi = ProbeABI::fromString(abiId.baseName().section(QStringLiteral("-"), 1));
     if (abi.isValid())
       abis.push_back(abi);
   }

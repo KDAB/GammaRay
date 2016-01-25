@@ -131,7 +131,7 @@ bool Launcher::start()
 {
   auto probeDll = d->options.probePath();
   if (probeDll.isEmpty()) {
-    probeDll = ProbeFinder::findProbe(QStringLiteral(GAMMARAY_PROBE_NAME), d->options.probeABI());
+    probeDll = ProbeFinder::findProbe(QStringLiteral(GAMMARAY_PROBE_BASENAME), d->options.probeABI());
     d->options.setProbePath(QFileInfo(probeDll).absolutePath());
   }
 
