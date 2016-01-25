@@ -46,12 +46,6 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*l
       }
       break;
     }
-    case DLL_PROCESS_DETACH:
-    {
-      //Unloading does not work, because we overwrite existing code
-      exit(-1);
-      break;
-    }
   };
   return TRUE; //krazy:exclude=captruefalse
 }
