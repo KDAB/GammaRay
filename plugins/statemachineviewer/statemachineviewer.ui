@@ -10,13 +10,13 @@
     <height>594</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
-    <widget class="QSplitter" name="verticalSplitter">
+    <widget class="QSplitter" name="horizontalSplitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QSplitter" name="splitter">
+     <widget class="QSplitter" name="verticalSplitter">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -27,7 +27,7 @@
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>State machine:</string>
+             <string>S&amp;tate machine:</string>
             </property>
             <property name="buddy">
              <cstring>stateMachinesView</cstring>
@@ -53,18 +53,53 @@
           </attribute>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="showLogPushButton">
+          <property name="text">
+           <string>Show Log</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
-      <widget class="QPlainTextEdit" name="plainTextEdit">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="maximumBlockCount">
-        <number>100</number>
-       </property>
-       <property name="centerOnScroll">
-        <bool>false</bool>
-       </property>
+      <widget class="QWidget" name="logExpandingWidget" native="true">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="hideLogPushButton">
+          <property name="text">
+           <string>Hide Log</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPlainTextEdit" name="logTextEdit">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="maximumBlockCount">
+           <number>100</number>
+          </property>
+          <property name="centerOnScroll">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </widget>

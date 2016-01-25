@@ -83,6 +83,11 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
 
   m_ui->setupUi(this);
 
+  // set up log expanding widget
+  connect(m_ui->hideLogPushButton, &QPushButton::clicked, this, [this]() { setShowLog(false); });
+  connect(m_ui->showLogPushButton, &QPushButton::clicked, this, [this]() { setShowLog(true); });
+  setShowLog(false);
+
   QAbstractItemModel *stateMachineModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateMachineModel"));
   m_ui->stateMachinesView->setModel(stateMachineModel);
   connect(m_ui->stateMachinesView, SIGNAL(currentIndexChanged(int)), m_interface, SLOT(selectStateMachine(int)));
@@ -101,9 +106,9 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   addAction(m_ui->actionStartStopStateMachine);
 
   m_stateMachineView = new KDSME::StateMachineView;
-  m_ui->verticalSplitter->setChildrenCollapsible(false);
-  m_ui->verticalSplitter->addWidget(m_stateMachineView);
-  m_ui->verticalSplitter->setStretchFactor(m_ui->verticalSplitter->indexOf(m_stateMachineView), 3);
+  m_ui->horizontalSplitter->setChildrenCollapsible(false);
+  m_ui->horizontalSplitter->addWidget(m_stateMachineView);
+  m_ui->horizontalSplitter->setStretchFactor(m_ui->horizontalSplitter->indexOf(m_stateMachineView), 3);
 
   connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
   connect(m_interface, SIGNAL(stateConfigurationChanged(GammaRay::StateMachineConfiguration)),
@@ -134,11 +139,11 @@ StateMachineViewerWidgetNG::~StateMachineViewerWidgetNG()
 void StateMachineViewerWidgetNG::showMessage(const QString& message)
 {
     // update log
-  QPlainTextEdit *plainTextEdit = m_ui->plainTextEdit;
-  plainTextEdit->appendPlainText(message);
+  auto logTextEdit = m_ui->logTextEdit;
+  logTextEdit->appendPlainText(message);
 
   // auto-scroll hack
-  QScrollBar *sb = plainTextEdit->verticalScrollBar();
+  QScrollBar *sb = logTextEdit->verticalScrollBar();
   sb->setValue(sb->maximum());
 }
 
@@ -265,3 +270,10 @@ void StateMachineViewerWidgetNG::stateModelReset()
   }
 }
 
+void StateMachineViewerWidgetNG::setShowLog(bool show)
+{
+  m_ui->logExpandingWidget->setVisible(show);
+  m_ui->showLogPushButton->setVisible(!show);
+  m_ui->verticalSplitter->handle(0)->setEnabled(show);
+  m_ui->verticalSplitter->setSizes(QList<int>() << 1 << (show ? 1 : 0));
+}

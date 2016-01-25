@@ -72,6 +72,8 @@ private slots:
   void repopulateView();
   void clearGraph();
 
+  void setShowLog(bool show);
+
 private:
   QScopedPointer<Ui::StateMachineViewer> m_ui;
 
