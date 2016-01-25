@@ -41,33 +41,39 @@ if(QNXNTO)
 endif()
 
 if(UNIX)
-  add_test(connectiontest-preload
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i preload
+  set(PRELOAD_TYPE preload)
+elseif(WIN32)
+  set(PRELOAD_TYPE windll)
+endif()
+
+add_test(connectiontest-preload
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${PRELOAD_TYPE}
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+)
+add_test(connectiontest-style
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i style
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+)
+
+set(RUN_FILTER_TESTS OFF
+  CACHE BOOL "Run filter tests which fail due to a bug in QSortFilterProxyModel"
+)
+if(RUN_FILTER_TESTS)
+  add_test(connectiontest-preload-filter
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i ${PRELOAD_TYPE}
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
-  add_test(connectiontest-style
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i style
+  add_test(connectiontest-preload-filter-modeltest
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -modeltest -filtertest -i ${PRELOAD_TYPE}
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
-
-  set(RUN_FILTER_TESTS OFF
-    CACHE BOOL "Run filter tests which fail due to a bug in QSortFilterProxyModel"
+  add_test(connectiontest-style-filter
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i style
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
-  if(RUN_FILTER_TESTS)
-    add_test(connectiontest-preload-filter
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i preload
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-    add_test(connectiontest-preload-filter-modeltest
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -modeltest -filtertest -i preload
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-    add_test(connectiontest-style-filter
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i style
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-  endif()
+endif()
 
+if(UNIX)
   find_program(GDB_EXECUTABLE gdb)
   if(GDB_EXECUTABLE)
     add_test(connectiontest-gdb
