@@ -36,7 +36,6 @@ if(GAMMARAY_BUILD_UI AND KDSME_FOUND)
 
 set(gammaray_statemachineviewer_ui_plugin_srcs
   statemachineviewerclient.cpp
-  statemachineview.cpp
   statemachineviewerwidgetng.cpp
   statemodeldelegate.cpp
 )
