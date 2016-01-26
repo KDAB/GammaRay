@@ -48,10 +48,10 @@ class StateModelPrivate
       m_stateMachineWatcher(new StateMachineWatcher(qq)),
       m_stateMachine(0)
   {
-    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
-                         qq, SLOT(stateConfigurationChanged())));
-    Q_ASSERT(qq->connect(m_stateMachineWatcher, SIGNAL(stateExited(QAbstractState*)),
-                         qq, SLOT(stateConfigurationChanged())));
+    qq->connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
+                         qq, SLOT(stateConfigurationChanged()));
+    qq->connect(m_stateMachineWatcher, SIGNAL(stateExited(QAbstractState*)),
+                         qq, SLOT(stateConfigurationChanged()));
   }
 
   void emitDataChangedForState(QAbstractState *state)
