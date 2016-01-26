@@ -52,6 +52,7 @@ class GAMMARAY_UI_EXPORT ClientToolModel : public QSortFilterProxyModel
 public:
   explicit ClientToolModel(QObject* parent = 0);
   ~ClientToolModel();
+  void clear();
 
   QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
