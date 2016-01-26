@@ -59,7 +59,9 @@
 #include <QProcess>
 #include <QSettings>
 #include <QStyleFactory>
+#include <QToolButton>
 #include <QUrl>
+#include <QWidgetAction>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QStandardPaths>
@@ -313,7 +315,18 @@ void MainWindow::toolSelected()
   ui->toolStack->setCurrentIndex(ui->toolStack->indexOf(toolWidget));
 
   foreach (QAction *action, toolWidget->actions()) {
-    ui->actionsMenu->addAction(action);
+    if (auto widgetAction = qobject_cast<QWidgetAction*>(action)) {
+      if (auto toolButton = qobject_cast<QToolButton*>(widgetAction->defaultWidget())) {
+        auto subMenu = ui->actionsMenu->addMenu(toolButton->text());
+        if (auto defaultAction = toolButton->defaultAction()) {
+          subMenu->addAction(defaultAction);
+          subMenu->addSeparator();
+        }
+        subMenu->addActions(toolButton->menu()->actions());
+      }
+    } else {
+      ui->actionsMenu->addAction(action);
+    }
   }
   ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
   ui->actionsMenu->setTitle(mi.data().toString());
