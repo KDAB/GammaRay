@@ -105,6 +105,10 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   connect(m_ui->actionStartStopStateMachine, SIGNAL(triggered()), m_interface, SLOT(toggleRunning()));
   addAction(m_ui->actionStartStopStateMachine);
 
+  auto separatorAction = new QAction(this);
+  separatorAction->setSeparator(true);
+  addAction(separatorAction);
+
   m_stateMachineView = new KDSME::StateMachineView;
   m_ui->horizontalSplitter->setChildrenCollapsible(false);
   m_ui->horizontalSplitter->addWidget(m_stateMachineView);
