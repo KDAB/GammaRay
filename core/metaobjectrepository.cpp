@@ -159,6 +159,10 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionId);
   MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionKey);
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+  MO_ADD_PROPERTY_ST(QGuiApplication, QWindowList, allWindows);
+  MO_ADD_PROPERTY_ST(QGuiApplication, QWindowList, topLevelWindows);
+#endif
 #endif
 
   MO_ADD_METAOBJECT1(QAbstractItemModel, QObject);
