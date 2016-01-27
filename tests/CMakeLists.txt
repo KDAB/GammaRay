@@ -46,14 +46,19 @@ elseif(WIN32)
   set(PRELOAD_TYPE windll)
 endif()
 
-add_test(connectiontest-preload
-  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${PRELOAD_TYPE}
-  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-)
-add_test(connectiontest-style
-  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i style
-  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-)
+# Backlist these tests when we build with ASAN enabled, as we trigger a bug in Qt4 (only happens with OSX+ASAN+Qt4)
+# see http://stackoverflow.com/questions/22696071/how-to-make-addresssanitizer-not-stop-after-one-error-and-other-issues
+string(REGEX MATCH -fsanitize=address ASAN_ENABLED ${CMAKE_CXX_FLAGS})
+if (NOT (APPLE AND ASAN_ENABLED AND NOT Qt5Core_FOUND))
+  add_test(connectiontest-preload
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${PRELOAD_TYPE}
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+  )
+  add_test(connectiontest-style
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i style
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+  )
+endif()
 
 set(RUN_FILTER_TESTS OFF
   CACHE BOOL "Run filter tests which fail due to a bug in QSortFilterProxyModel"
