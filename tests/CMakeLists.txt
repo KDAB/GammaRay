@@ -40,64 +40,50 @@ if(QNXNTO)
   target_link_libraries(attachhelper cpp)
 endif()
 
-if(UNIX)
-  set(PRELOAD_TYPE preload)
-elseif(WIN32)
-  set(PRELOAD_TYPE windll)
-endif()
-
-# Backlist these tests in the following configurations:
-# * OSX+ASAN+Qt4 (triggers a bug in Qt4, see http://stackoverflow.com/questions/22696071/how-to-make-addresssanitizer-not-stop-after-one-error-and-other-issues)
-# * MSVC+<Qt5.4: hooks and release builds don't work before 5.4
-string(REGEX MATCH -fsanitize=address ASAN_ENABLED ${CMAKE_CXX_FLAGS})
-if (NOT ((APPLE AND ASAN_ENABLED AND NOT Qt5Core_FOUND) OR
-         MSVC AND Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.4.0))
-  add_test(connectiontest-preload
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${PRELOAD_TYPE}
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-  )
-  add_test(connectiontest-style
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i style
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-  )
-endif()
-
 set(RUN_FILTER_TESTS OFF
   CACHE BOOL "Run filter tests which fail due to a bug in QSortFilterProxyModel"
 )
-if(RUN_FILTER_TESTS)
-  add_test(connectiontest-preload-filter
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i ${PRELOAD_TYPE}
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-  )
-  add_test(connectiontest-preload-filter-modeltest
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -modeltest -filtertest -i ${PRELOAD_TYPE}
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-  )
-  add_test(connectiontest-style-filter
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i style
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-  )
-endif()
 
 if(UNIX)
   find_program(GDB_EXECUTABLE gdb)
-  if(GDB_EXECUTABLE)
-    add_test(connectiontest-gdb
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i gdb
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-    add_test(attachtest-gdb
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray gdb
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-    if(RUN_FILTER_TESTS)
-      add_test(connectiontest-gdb-filter
-        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -filtertest -i gdb
-        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-      )
-    endif()
+endif()
+
+set(INJECTOR_TYPES)
+if(UNIX)
+  # OSX+ASAN+Qt4 (triggers a bug in Qt4, see http://stackoverflow.com/questions/22696071/how-to-make-addresssanitizer-not-stop-after-one-error-and-other-issues)
+  string(REGEX MATCH -fsanitize=address ASAN_ENABLED ${CMAKE_CXX_FLAGS})
+  if(NOT (APPLE AND ASAN_ENABLED AND NOT Qt5Core_FOUND))
+    list(APPEND INJECTOR_TYPES preload style)
   endif()
+
+  if(GDB_EXECUTABLE)
+    list(APPEND INJECTOR_TYPES gdb)
+  endif()
+elseif(WIN32)
+  # MSVC+<Qt5.4: hooks and release builds don't work before 5.4
+  if(NOT (MSVC AND (NOT Qt5Core_FOUND OR Qt5Core_VERSION VERSION_LESS 5.4.0) AND CMAKE_BUILD_TYPE MATCHES "Release"))
+    list(APPEND INJECTOR_TYPES windll style)
+  endif()
+endif()
+
+foreach (injectorType ${INJECTOR_TYPES})
+  add_test(connectiontest-${injectorType}
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${injectorType}
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+  )
+  if(RUN_FILTER_TESTS)
+    add_test(connectiontest-${injectorType}-filter
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i ${injectorType}
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+    )
+  endif()
+endforeach()
+
+if(GDB_EXECUTABLE)
+  add_test(attachtest-gdb
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray gdb
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+  )
 endif()
 
 ### MultiSignalMapper test
