@@ -50,7 +50,7 @@ endif()
 # * OSX+ASAN+Qt4 (triggers a bug in Qt4, see http://stackoverflow.com/questions/22696071/how-to-make-addresssanitizer-not-stop-after-one-error-and-other-issues)
 # * MSVC+<Qt5.4: hooks and release builds don't work before 5.4
 string(REGEX MATCH -fsanitize=address ASAN_ENABLED ${CMAKE_CXX_FLAGS})
-if (NOT ((APPLE AND ASAN_ENABLED AND NOT Qt5Core_FOUND) AND
+if (NOT ((APPLE AND ASAN_ENABLED AND NOT Qt5Core_FOUND) OR
          MSVC AND Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.4.0))
   add_test(connectiontest-preload
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${PRELOAD_TYPE}
