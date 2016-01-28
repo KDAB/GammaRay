@@ -91,9 +91,6 @@ target_link_libraries(gammaray gammaray_launcher gammaray_common)
 if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray ${QT_QTGUI_LIBRARIES})
 endif()
-if(QNXNTO)
-  target_link_libraries(gammaray cpp)
-endif()
 
 gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 

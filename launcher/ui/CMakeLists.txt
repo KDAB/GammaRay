@@ -51,10 +51,6 @@ target_link_libraries(gammaray-launcher
   gammaray_launcher_ui_internal
 )
 
-if(QNXNTO)
-  target_link_libraries(gammaray-launcher cpp)
-endif()
-
 gammaray_embed_info_plist(gammaray-launcher ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 set_target_properties(gammaray-launcher PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"

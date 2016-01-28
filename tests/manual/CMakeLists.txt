@@ -46,10 +46,6 @@ target_link_libraries(signalmonitortest
   ${QT_QTGUI_LIBRARIES}
 )
 
-if(QNXNTO)
-  target_link_libraries(messagemodeltest cpp)
-endif()
-
 add_executable(objectreparenttest objectreparenttest.cpp)
 target_link_libraries(objectreparenttest ${QT_QTCORE_LIBRARIES})
 

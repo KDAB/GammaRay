@@ -25,10 +25,6 @@ target_link_libraries(gammaray_styleinspector_plugin
   gammaray_core
 )
 
-if(QNXNTO)
-  target_link_libraries(gammaray_styleinspector_plugin cpp)
-endif()
-
 
 # ui part
 if(GAMMARAY_BUILD_UI)

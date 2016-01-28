@@ -13,10 +13,6 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
     gammaray_core
   )
 
-  if(QNXNTO)
-    target_link_libraries(benchsuite cpp)
-  endif()
-
 ### CONNECTIONTEST
 
   add_executable(connectiontest test_connections.cpp)
@@ -27,18 +23,11 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
     ${QT_QTTEST_LIBRARIES}
   )
 
-  if(QNXNTO)
-    target_link_libraries(connectiontest cpp)
-  endif()
 endif()
 
 add_executable(attachhelper attachhelper.cpp)
 
 target_link_libraries(attachhelper ${QT_QTCORE_LIBRARIES})
-
-if(QNXNTO)
-  target_link_libraries(attachhelper cpp)
-endif()
 
 set(RUN_FILTER_TESTS OFF
   CACHE BOOL "Run filter tests which fail due to a bug in QSortFilterProxyModel"
