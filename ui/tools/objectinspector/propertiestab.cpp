@@ -148,7 +148,7 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
   }
   if (actions & PropertyModel::NavigateTo) {
     QAction *action =
-      contextMenu.addAction(tr("Show in %1").
+      contextMenu.addAction(tr("Show in \"%1\" tool").
         arg(index.data(PropertyModel::AppropriateToolRole).toString()));
     action->setData(PropertyModel::NavigateTo);
   }
