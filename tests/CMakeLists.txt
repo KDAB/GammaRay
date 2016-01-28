@@ -35,6 +35,7 @@ set(RUN_FILTER_TESTS OFF
 
 if(UNIX)
   find_program(GDB_EXECUTABLE gdb)
+  find_program(LLDB_EXECUTABLE lldb)
 endif()
 
 set(INJECTOR_TYPES)
@@ -47,6 +48,9 @@ if(UNIX)
 
   if(GDB_EXECUTABLE)
     list(APPEND INJECTOR_TYPES gdb)
+  endif()
+  if(LLDB_EXECUTABLE)
+    list(APPEND INJECTOR_TYPES lldb)
   endif()
 elseif(WIN32)
   # MSVC+<Qt5.4: hooks and release builds don't work before 5.4

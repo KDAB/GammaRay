@@ -29,15 +29,10 @@
 #include <config-gammaray.h>
 #include "gdbinjector.h"
 
-#include <QDebug>
 #include <QProcess>
 #include <QStringList>
-#include <QCoreApplication>
 
 using namespace GammaRay;
-
-static QTextStream cout(stdout);
-static QTextStream cerr(stderr);
 
 GdbInjector::GdbInjector()
 {
@@ -53,9 +48,7 @@ QString GdbInjector::debuggerExecutable() const
   return QStringLiteral("gdb");
 }
 
-bool GdbInjector::launch(const QStringList &programAndArgs,
-                         const QString &probeDll, const QString &probeFunc,
-                         const QProcessEnvironment &env)
+bool GdbInjector::launch(const QStringList &programAndArgs, const QString &probeDll, const QString &probeFunc, const QProcessEnvironment &env)
 {
   QStringList gdbArgs;
   gdbArgs.push_back(QStringLiteral("--args"));
@@ -65,7 +58,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs,
     return -1;
   }
 
-  execCmd("set confirm off");
+  disableConfirmations();
   waitForMain();
   return injectAndDetach(probeDll, probeFunc);
 }
@@ -76,22 +69,19 @@ bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeF
   if (!startDebugger(QStringList() << QStringLiteral("-pid") << QString::number(pid))) {
     return false;
   }
+  disableConfirmations();
   return injectAndDetach(probeDll, probeFunc);
 }
 
-void GdbInjector::execCmd(const QByteArray &cmd, bool waitForWritten)
+void GdbInjector::disableConfirmations()
 {
-  m_process->write(cmd + '\n');
-
-  if (waitForWritten) {
-    m_process->waitForBytesWritten(-1);
-  }
+  execCmd("set confirm off");
 }
 
 void GdbInjector::readyReadStandardError()
 {
-  const QString error = m_process->readAllStandardError();
-  cerr << error << flush;
+  const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
+  processLog(DebuggerInjector::In, true, error);
   emit stderrMessage(error);
 
   if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
@@ -117,19 +107,17 @@ void GdbInjector::readyReadStandardError()
 
 void GdbInjector::readyReadStandardOutput()
 {
-  QString message = m_process->readAllStandardOutput();
-  if (qgetenv("GAMMARAY_UNITTEST") == "1") {
-    cout << message << flush;
-  }
-  emit stderrMessage(message);
+  QString message = QString::fromLocal8Bit(m_process->readAllStandardOutput());
+  processLog(DebuggerInjector::In, false, message);
+  emit stderrMessage(message); // Is this signal emit correct ?? stderr vs stdout
 }
 
-void GdbInjector::addFunctionBreakpoint(const QByteArray& function)
+void GdbInjector::addFunctionBreakpoint(const QByteArray &function)
 {
   execCmd("break " + function);
 }
 
-void GdbInjector::addMethodBreakpoint(const QByteArray& method)
+void GdbInjector::addMethodBreakpoint(const QByteArray &method)
 {
 #ifdef Q_OS_MAC
   execCmd("break " + method + "()");
@@ -138,7 +126,17 @@ void GdbInjector::addMethodBreakpoint(const QByteArray& method)
 #endif
 }
 
-void GdbInjector::loadSymbols(const QByteArray& library)
+void GdbInjector::clearBreakpoints()
+{
+  execCmd("delete");
+}
+
+void GdbInjector::printBacktrace()
+{
+  execCmd("backtrace", false);
+}
+
+void GdbInjector::loadSymbols(const QByteArray &library)
 {
 #ifndef Q_OS_MAC
   execCmd("sha " + library);
