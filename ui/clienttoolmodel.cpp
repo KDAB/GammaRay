@@ -119,6 +119,8 @@ ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent
 
 ClientToolModel::~ClientToolModel()
 {
+  for(auto it = m_widgets.constBegin(); it != m_widgets.constEnd(); ++it)
+    delete it.value().data();
 }
 
 QVariant ClientToolModel::data(const QModelIndex& index, int role) const
