@@ -55,11 +55,17 @@ class DebuggerInjector : public AbstractInjector
   protected:
     virtual QString debuggerExecutable() const = 0;
     /** Execute a raw command on the debugger. */
-    virtual void execCmd(const QByteArray &cmd, bool waitForWritten = true) = 0;
+    virtual void execCmd(const QByteArray &cmd, bool waitForWritten = true);
+    /** Turn off confirmations */
+    virtual void disableConfirmations() = 0;
     /** Break in the function @p function, specify name without parenthesis. */
     virtual void addFunctionBreakpoint(const QByteArray &function) = 0;
     /** Break in the method @p method, specify name without parenthesis. */
     virtual void addMethodBreakpoint(const QByteArray &method) = 0;
+    /** Clear all breakpoints */
+    virtual void clearBreakpoints() = 0;
+    /** Print current thread backtrace */
+    virtual void printBacktrace() = 0;
     /** Load symbols for the given shared library. */
     virtual void loadSymbols(const QByteArray &library);
 
@@ -84,6 +90,14 @@ class DebuggerInjector : public AbstractInjector
     QProcess::ExitStatus mExitStatus;
     QString mErrorString;
     bool mManualError;
+
+  protected:
+    enum Orientation {
+      In,
+      Out
+    };
+
+    void processLog(DebuggerInjector::Orientation orientation, bool isError, const QString &text);
 };
 
 }
