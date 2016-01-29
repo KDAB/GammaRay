@@ -889,7 +889,7 @@ void Probe::findExistingObjects()
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
-      foreach (auto window, QGuiApplication::allWindows())
+      foreach (auto window, guiApp->allWindows())
           discoverObject(window);
   }
 #endif
