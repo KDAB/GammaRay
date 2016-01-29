@@ -1,11 +1,9 @@
 /*
-  probecontrollerclient.h
-
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Kevin Funk <kevin.funk@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,27 +24,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PROBECONTROLLERCLIENT_H
-#define GAMMARAY_PROBECONTROLLERCLIENT_H
+#ifndef GAMMARAY_CONTEXTMENUEXTENSION_H
+#define GAMMARAY_CONTEXTMENUEXTENSION_H
 
 #include <common/probecontrollerinterface.h>
 
+#include <QObject>
+#include <QVariant>
+
+class QMenu;
+
 namespace GammaRay {
 
-class ProbeControllerClient : public ProbeControllerInterface
+class ContextMenuExtension : public QObject
 {
   Q_OBJECT
-  Q_INTERFACES(GammaRay::ProbeControllerInterface)
+
 public:
-  explicit ProbeControllerClient(QObject *parent = 0);
+  explicit ContextMenuExtension(ObjectId id);
 
-  void selectObject(ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
-  void requestSupportedTools(ObjectId id) Q_DECL_OVERRIDE;
+  void populateMenu(QMenu *menu);
 
-  void detachProbe() Q_DECL_OVERRIDE;
-  void quitHost() Q_DECL_OVERRIDE;
+private:
+  ObjectId m_id;
 };
 
 }
 
-#endif // GAMMARAY_PROBECONTROLLERCLIENT_H
+#endif // GAMMARAY_CONTEXTMENUEXTENSION_H

@@ -944,28 +944,38 @@ void Probe::selectObject(QObject *object, const QPoint &pos)
 {
   emit objectSelected(object, pos);
 
-  const auto srcIdx = m_toolModel->toolForObject(object);
-  const auto proxy = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model());
-  if (!proxy->sourceModel()) // still detached, ie. no client connected
-    return;
-  const auto idx = proxy->mapFromSource(srcIdx);
+  const auto srcIdxs = m_toolModel->toolsForObject(object);
+  selectTool(srcIdxs.value(0));
+}
 
-  m_toolSelectionModel->select(idx, QItemSelectionModel::Select |
-                               QItemSelectionModel::Clear |
-                               QItemSelectionModel::Rows |
-                               QItemSelectionModel::Current);
+void Probe::selectObject(QObject* object, const QString toolId, const QPoint &pos)
+{
+  emit objectSelected(object, pos);
+
+  const auto matches = m_toolModel->match(m_toolModel->index(0, 0), ToolModelRole::ToolId, toolId, 1, Qt::MatchExactly);
+  if (matches.isEmpty()) {
+    std::cerr << "Invalid tool id: " << qPrintable(toolId) << std::endl;
+    return;
+  }
+
+  selectTool(matches.first());
 }
 
 void Probe::selectObject(void *object, const QString &typeName)
 {
   emit nonQObjectSelected(object, typeName);
 
-  const auto srcIdx = m_toolModel->toolForObject(object, typeName);
+  const auto srcIdxs = m_toolModel->toolsForObject(object, typeName);
+  selectTool(srcIdxs.value(0));
+}
+
+void Probe::selectTool(const QModelIndex& toolModelSourceIndex)
+{
   const auto proxy = qobject_cast<const QAbstractProxyModel*>(m_toolSelectionModel->model());
   if (!proxy->sourceModel()) // still detached, ie. no client connected
     return;
-  const auto idx = proxy->mapFromSource(srcIdx);
 
+  const auto idx = proxy->mapFromSource(toolModelSourceIndex);
   m_toolSelectionModel->select(idx, QItemSelectionModel::Select |
                                QItemSelectionModel::Clear |
                                QItemSelectionModel::Rows |

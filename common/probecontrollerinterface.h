@@ -30,15 +30,80 @@
 #define GAMMARAY_PROBECONTROLLERINTERFACE_H
 
 #include <QObject>
+#include <QDataStream>
+#include <QVector>
 
 namespace GammaRay {
 
-/** Probe and host process remote control functions. */
-class ProbeControllerInterface
+class ObjectId
 {
 public:
-  ProbeControllerInterface();
+  enum Type
+  {
+    Invalid,
+    QObjectType,
+    VoidStarType
+  };
+
+  explicit ObjectId(void *obj, const QByteArray &typeName)
+    : m_type(VoidStarType)
+    , m_id(reinterpret_cast<quint64>(obj))
+    , m_typeName(typeName)
+  {}
+  explicit ObjectId(QObject *obj)
+    : m_type(QObjectType)
+    , m_id(reinterpret_cast<quint64>(obj))
+  {}
+  explicit ObjectId()
+    : m_type(Invalid)
+    , m_id(0)
+  {}
+  inline bool isNull() const { return m_id == 0; }
+  inline quint64 id() const { return m_id; }
+  inline Type type() const { return m_type; }
+  inline QByteArray typeName() const { return m_typeName; }
+
+  inline QObject *asQObject()
+  {
+    Q_ASSERT(m_type == QObjectType);
+    return reinterpret_cast<QObject *>(m_id);
+  }
+  inline void *asVoidStar()
+  {
+    Q_ASSERT(m_type == VoidStarType);
+    return reinterpret_cast<void *>(m_id);
+  }
+
+  inline operator quint64() const { return m_id; }
+
+private:
+  friend QDataStream &operator<<(QDataStream &out, ObjectId id);
+  friend QDataStream &operator>>(QDataStream &out, ObjectId &id);
+
+  Type m_type;
+  quint64 m_id;
+  QByteArray m_typeName;
+};
+
+struct ToolInfo
+{
+  QString id;
+  QString name;
+};
+typedef QVector<ToolInfo> ToolInfos;
+
+/** Probe and host process remote control functions. */
+class ProbeControllerInterface : public QObject
+{
+  Q_OBJECT
+
+public:
+  explicit ProbeControllerInterface(QObject *parent = nullptr);
   virtual ~ProbeControllerInterface();
+
+  virtual void selectObject(ObjectId id, const QString &toolId) = 0;
+
+  virtual void requestSupportedTools(ObjectId id) = 0;
 
   /** Terminate host application. */
   virtual void quitHost() = 0;
@@ -46,12 +111,51 @@ public:
   /** Detach GammaRay but keep host application running. */
   virtual void detachProbe() = 0;
 
+Q_SIGNALS:
+  void supportedToolsResponse(GammaRay::ObjectId id, const GammaRay::ToolInfos& toolInfos);
+
 private:
   Q_DISABLE_COPY(ProbeControllerInterface)
 };
 
+inline QDataStream &operator<<(QDataStream &out, ObjectId id)
+{
+  out << static_cast<quint8>(id.m_type);
+  out << id.m_id;
+  out << id.m_typeName;
+  return out;
+}
+
+inline QDataStream &operator>>(QDataStream &in, ObjectId &id)
+{
+  quint8 u;
+  in >> u;
+  id.m_type = static_cast<ObjectId::Type>(u);
+  in >> id.m_id;
+  in >> id.m_typeName;
+  return in;
+}
+
+inline QDataStream &operator<<(QDataStream &out, const ToolInfo &toolInfo)
+{
+  out << toolInfo.id;
+  out << toolInfo.name;
+  return out;
+}
+
+inline QDataStream &operator>>(QDataStream &in, ToolInfo &toolInfo)
+{
+  in >> toolInfo.id;
+  in >> toolInfo.name;
+  return in;
+}
+
 }
 
 Q_DECLARE_INTERFACE(GammaRay::ProbeControllerInterface, "com.kdab.GammaRay.ProbeControllerInterface")
+Q_DECLARE_METATYPE(GammaRay::ObjectId)
+Q_DECLARE_TYPEINFO(GammaRay::ObjectId, Q_PRIMITIVE_TYPE);
+Q_DECLARE_METATYPE(GammaRay::ToolInfo)
+Q_DECLARE_METATYPE(GammaRay::ToolInfos)
 
 #endif // GAMMARAY_PROBECONTROLLERINTERFACE_H

@@ -37,6 +37,7 @@
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
+#include <remote/serverproxymodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -52,7 +53,7 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QObject *parent)
 
   m_propertyController = new PropertyController(QStringLiteral("com.kdab.GammaRay.ObjectInspector"), this);
 
-  auto proxy = new KRecursiveFilterProxyModel(this);
+  auto proxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   proxy->setSourceModel(probe->objectTreeModel());
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"), proxy);
 

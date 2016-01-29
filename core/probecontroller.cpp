@@ -27,14 +27,66 @@
 */
 
 #include "probecontroller.h"
+
+#include "toolmodel.h"
 #include "probe.h"
 
+#include <QDebug>
 #include <QCoreApplication>
+#include <QMutexLocker>
 
 using namespace GammaRay;
 
-ProbeController::ProbeController(QObject* parent): QObject(parent)
+ProbeController::ProbeController(QObject* parent)
+  : ProbeControllerInterface(parent)
 {
+}
+
+void ProbeController::selectObject(ObjectId id, const QString &toolId)
+{
+  switch (id.type()) {
+  case ObjectId::Invalid:
+    return;
+  case ObjectId::QObjectType: {
+    QMutexLocker lock(Probe::objectLock());
+    if (!Probe::instance()->isValidObject(id.asQObject()))
+      return;
+
+    Probe::instance()->selectObject(id.asQObject(), toolId);
+    break;
+  }
+  case ObjectId::VoidStarType:
+    Probe::instance()->selectObject(id.asVoidStar(), id.typeName());
+    break;
+  }
+}
+
+void ProbeController::requestSupportedTools(ObjectId id)
+{
+  QModelIndexList indexes;
+  switch (id.type()) {
+  case ObjectId::Invalid:
+    return;
+  case ObjectId::QObjectType: {
+    QMutexLocker lock(Probe::objectLock());
+    if (!Probe::instance()->isValidObject(id.asQObject()))
+      return;
+
+    indexes = Probe::instance()->toolModel()->toolsForObject(id.asQObject());
+    break;
+  }
+  case ObjectId::VoidStarType:
+    const auto asVoidStar = reinterpret_cast<void *>(id.id());
+    indexes = Probe::instance()->toolModel()->toolsForObject(asVoidStar, id.typeName());
+    break;
+  }
+
+  ToolInfos toolInfos;
+  toolInfos.reserve(indexes.size());
+  foreach (const auto &index, indexes) {
+    toolInfos << ToolInfo{index.data(ToolModelRole::ToolId).toString(), index.data(Qt::DisplayRole).toString()};
+  }
+  emit supportedToolsResponse(id, toolInfos);
 }
 
 void ProbeController::detachProbe()

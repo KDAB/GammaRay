@@ -39,6 +39,7 @@
 #define GAMMARAY_OBJECTMODELBASE_H
 
 #include "util.h"
+#include <common/probecontrollerinterface.h>
 #include <common/objectmodel.h>
 
 #include <QModelIndex>
@@ -59,6 +60,8 @@ class ObjectModelBase : public Base
      */
     explicit ObjectModelBase<Base>(QObject *parent) : Base(parent)
     {
+      qRegisterMetaType<ObjectId>();
+      qRegisterMetaTypeStreamOperators<ObjectId>();
     }
 
     /**
@@ -92,6 +95,8 @@ class ObjectModelBase : public Base
         }
       } else if (role == ObjectModel::ObjectRole) {
         return QVariant::fromValue(object);
+      } else if (role == ObjectModel::ObjectIdRole) {
+        return QVariant::fromValue(ObjectId(object));
       } else if (role == Qt::ToolTipRole) {
           return Util::tooltipForObject(object);
       } else if (role == Qt::DecorationRole && index.column() == 0) {
@@ -99,6 +104,13 @@ class ObjectModelBase : public Base
       }
 
       return QVariant();
+    }
+
+    QMap<int, QVariant> itemData(const QModelIndex& index) const
+    {
+      QMap<int, QVariant> map = Base::itemData(index);
+      map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
+      return map;
     }
 
     /**

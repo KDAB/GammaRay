@@ -66,6 +66,7 @@ class ObjectInspectorWidget : public QWidget
 
   private slots:
     void objectSelectionChanged(const QItemSelection &selection);
+    void objectContextMenuRequested(const QPoint &pos);
 
   private:
     QScopedPointer<Ui::ObjectInspectorWidget> ui;
