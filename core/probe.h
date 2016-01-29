@@ -82,6 +82,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     bool needsObjectDiscovery() const Q_DECL_OVERRIDE;
     void discoverObject(QObject* object) Q_DECL_OVERRIDE;
     void selectObject(QObject* object, const QPoint& pos = QPoint()) Q_DECL_OVERRIDE;
+    void selectObject(QObject* object, const QString toolId, const QPoint& pos = QPoint()) Q_DECL_OVERRIDE;
     void selectObject(void* object, const QString& typeName) Q_DECL_OVERRIDE;
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet& callbacks) Q_DECL_OVERRIDE;
 
@@ -162,6 +163,8 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
   private:
     friend class ProbeCreator;
     friend class BenchSuite;
+
+    void selectTool(const QModelIndex &toolModelSourceIndex);
 
     /* Returns @c true if we have working hooks in QtCore, that is we are notified reliably
      * about every QObject creation/destruction.

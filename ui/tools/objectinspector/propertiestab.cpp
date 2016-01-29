@@ -31,6 +31,7 @@
 #include "propertywidget.h"
 #include "editabletypesmodel.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/propertyeditor/propertyeditorfactory.h>
 #include <ui/deferredresizemodesetter.h>
@@ -147,10 +148,9 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
     action->setData(PropertyModel::Reset);
   }
   if (actions & PropertyModel::NavigateTo) {
-    QAction *action =
-      contextMenu.addAction(tr("Show in \"%1\" tool").
-        arg(index.data(PropertyModel::AppropriateToolRole).toString()));
-    action->setData(PropertyModel::NavigateTo);
+    const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&contextMenu);
   }
 
   if (QAction *action = contextMenu.exec(m_ui->propertyView->viewport()->mapToGlobal(pos))) {

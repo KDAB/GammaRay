@@ -104,6 +104,7 @@ void ObjectTreeModel::objectAdded(QObject *obj)
   endInsertRows();
 }
 
+
 void ObjectTreeModel::objectRemoved(QObject *obj)
 {
   // slot, hence should always land in main thread due to auto connection

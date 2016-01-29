@@ -38,6 +38,7 @@
 #include "varianthandler.h"
 #include "util.h"
 
+#include <common/probecontrollerinterface.h>
 #include <common/propertymodel.h>
 
 #include <QDebug>
@@ -125,7 +126,8 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) 
     res.insert(Qt::DisplayRole, data(adaptor, d, index.column(), Qt::DisplayRole));
     res.insert(Qt::ToolTipRole, data(adaptor, d, index.column(), Qt::ToolTipRole));
     res.insert(PropertyModel::ActionRole, data(adaptor, d, index.column(), PropertyModel::ActionRole));
-    res.insert(PropertyModel::AppropriateToolRole, data(adaptor, d, index.column(), PropertyModel::AppropriateToolRole));
+    res.insert(PropertyModel::ValueRole, data(adaptor, d, index.column(), PropertyModel::ValueRole));
+    res.insert(PropertyModel::ObjectIdRole, data(adaptor, d, index.column(), PropertyModel::ObjectIdRole));
     if (index.column() == 1) {
         res.insert(Qt::EditRole, data(adaptor, d, index.column(), Qt::EditRole));
         res.insert(Qt::DecorationRole, data(adaptor, d, index.column(), Qt::DecorationRole));
@@ -178,21 +180,14 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
         }
         case PropertyModel::ValueRole:
             return d.value();
-        case PropertyModel::AppropriateToolRole:
-        {
-            ToolModel *toolModel = Probe::instance()->toolModel();
-            ToolFactory *factory = 0;
+        case PropertyModel::ObjectIdRole:
             if (d.value().canConvert<QObject*>()) {
-                factory = toolModel->data(toolModel->toolForObject(d.value().value<QObject*>()), ToolModelRole::ToolFactory).value<ToolFactory*>();
+                return QVariant::fromValue(ObjectId(d.value().value<QObject*>()));
             } else if (d.value().isValid()) {
-                const auto v = d.value();
-                factory = toolModel->data(toolModel->toolForObject(*reinterpret_cast<void* const*>(v.data()), v.typeName()), ToolModelRole::ToolFactory).value<ToolFactory*>();
-            }
-            if (factory) {
-                return factory->name();
+                const auto &v = d.value();
+                return QVariant::fromValue(ObjectId(*reinterpret_cast<void* const*>(v.data()), v.typeName()));
             }
             return QVariant();
-        }
     }
 
     return QVariant();

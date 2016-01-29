@@ -4,6 +4,7 @@
 set(gammaray_ui_srcs
   aboutdata.cpp
   clienttoolmodel.cpp
+  contextmenuextension.cpp
   deferredresizemodesetter.cpp
   deferredtreeviewconfiguration.cpp
   editabletypesmodel.cpp

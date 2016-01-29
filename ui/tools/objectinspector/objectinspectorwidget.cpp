@@ -30,11 +30,14 @@
 #include "ui_objectinspectorwidget.h"
 
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
 
+#include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 
 #include <QLineEdit>
+#include <QMenu>
 #include <QItemSelectionModel>
 #include <QTimer>
 
@@ -44,11 +47,15 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
   : QWidget(parent),
     ui(new Ui::ObjectInspectorWidget)
 {
+  qRegisterMetaType<ObjectId>();
+  qRegisterMetaTypeStreamOperators<ObjectId>();
+
   ui->setupUi(this);
   ui->objectPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.ObjectInspector"));
 
   auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
   ui->objectTreeView->setModel(model);
+  ui->objectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
   new DeferredResizeModeSetter(ui->objectTreeView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(ui->objectTreeView->header(), 1, QHeaderView::Interactive);
   new SearchLineController(ui->objectSearchLine, model);
@@ -63,6 +70,9 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
                               Qt::QueuedConnection,
                               Q_ARG(QString, QStringLiteral("Object")));
   }
+
+  connect(ui->objectTreeView, &QTreeView::customContextMenuRequested,
+          this, &ObjectInspectorWidget::objectContextMenuRequested);
 }
 
 ObjectInspectorWidget::~ObjectInspectorWidget()
@@ -75,4 +85,18 @@ void ObjectInspectorWidget::objectSelectionChanged(const QItemSelection& selecti
     return;
   const QModelIndex index = selection.first().topLeft();
   ui->objectTreeView->scrollTo(index);
+}
+
+void ObjectInspectorWidget::objectContextMenuRequested(const QPoint& pos)
+{
+  const auto index = ui->objectTreeView->indexAt(pos);
+  if (!index.isValid())
+    return;
+
+  const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+  QMenu menu(tr("Object @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+  ContextMenuExtension ext(objectId);
+  ext.populateMenu(&menu);
+
+  menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
 }

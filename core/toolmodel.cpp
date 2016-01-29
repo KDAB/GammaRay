@@ -184,38 +184,42 @@ PluginLoadErrors ToolModel::pluginErrors() const
   return m_pluginManager->errors();
 }
 
-QModelIndex ToolModel::toolForObject(QObject* object) const
+QModelIndexList ToolModel::toolsForObject(QObject* object) const
 {
   if (!object)
-    return QModelIndex();
+    return QModelIndexList();
+
+  QModelIndexList ret;
   const QMetaObject *metaObject = object->metaObject();
   while (metaObject) {
     for (int i = 0; i < m_tools.size(); i++) {
       const ToolFactory *factory = m_tools.at(i);
       if (factory && factory->supportedTypes().contains(metaObject->className())) {
-        return index(i, 0);
+        ret += index(i, 0);
       }
     }
     metaObject = metaObject->superClass();
   }
-  return QModelIndex();
+  return ret;
 }
 
-QModelIndex ToolModel::toolForObject(const void* object, const QString& typeName) const
+QModelIndexList ToolModel::toolsForObject(const void* object, const QString& typeName) const
 {
   if (!object)
-    return QModelIndex();
+    return QModelIndexList();
+
+  QModelIndexList ret;
   const MetaObject *metaObject = MetaObjectRepository::instance()->metaObject(typeName);
   while (metaObject) {
     for (int i = 0; i < m_tools.size(); i++) {
       const ToolFactory *factory = m_tools.at(i);
       if (factory && factory->supportedTypes().contains(metaObject->className())) {
-        return index(i, 0);
+        ret += index(i, 0);
       }
     }
     metaObject = metaObject->superClass();
   }
-  return QModelIndex();
+  return ret;
 }
 
 void ToolModel::addToolFactory(ToolFactory* tool)
