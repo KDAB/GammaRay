@@ -28,10 +28,55 @@
 
 #include "lldbinjector.h"
 
+#include <QRegExp>
+
 using namespace GammaRay;
 
 LldbInjector::LldbInjector()
 {
+}
+
+bool LldbInjector::selfTest()
+{
+#if defined(Q_OS_MAC)
+  return DebuggerInjector::selfTest();
+#else
+  QProcess process;
+
+  process.setProcessChannelMode(QProcess::MergedChannels);
+  process.start(debuggerExecutable(), QStringList(QStringLiteral("--version")));
+
+  if (process.waitForStarted(-1)) {
+    if (process.waitForFinished(-1)) {
+      const QString output = QString::fromLocal8Bit(process.readAll()).trimmed();
+      const int major = 3;
+      const int minor = 6;
+      QRegExp rx(QStringLiteral("\\b([\\d]\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
+
+      if (rx.indexIn(output) == -1) {
+        mErrorString = tr("The debugger version can't be read (%1)").arg(output);
+        return false;
+      }
+
+      const QString version = rx.cap(1);
+      const QStringList parts = version.split(QLatin1Char('.'));
+
+      if (parts.count() >= 2) {
+        if (parts[0].toInt() >= major) {
+          if (parts[1].toInt() >= minor) {
+            return true;
+          }
+        }
+      }
+
+      mErrorString = tr("The debugger version is not compatible: %1 (%2.%3 min. required)").arg(version).arg(major).arg(minor);
+      return false;
+    }
+  }
+
+  mErrorString = process.errorString();
+  return false;
+#endif
 }
 
 QString LldbInjector::name() const
