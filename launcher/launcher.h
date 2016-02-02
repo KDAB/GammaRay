@@ -77,6 +77,7 @@ private slots:
   void injectorError(int exitCode, const QString &errorMessage);
   void injectorFinished();
   void timeout();
+  void restartTimer();
 
   void newConnection();
   void readyRead();

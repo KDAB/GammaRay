@@ -155,7 +155,7 @@ bool Launcher::start()
     return false;
   }
 
-  connect(d->injector.data(), SIGNAL(started()), this, SIGNAL(started()));
+  connect(d->injector.data(), SIGNAL(started()), this, SLOT(restartTimer()));
   connect(d->injector.data(), SIGNAL(finished()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
   connect(d->injector.data(), SIGNAL(attached()), this, SIGNAL(attached()), Qt::QueuedConnection);
   connect(d->injector.data(), SIGNAL(stderrMessage(QString)), this, SIGNAL(stderrMessage(QString)));
@@ -260,6 +260,13 @@ void Launcher::timeout()
   checkDone();
 }
 
+void Launcher::restartTimer()
+{
+    d->safetyTimer.stop();
+    d->safetyTimer.start();
+}
+
+
 void Launcher::checkDone()
 {
   if (d->state == Complete || (d->options.uiMode() == LaunchOptions::InProcessUi && d->state == InjectorFinished)) {
@@ -320,4 +327,5 @@ void Launcher::readyRead()
 
     d->state |= ClientStarted;
     checkDone();
+    emit started();
 }
