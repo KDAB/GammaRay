@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     serverUrl = QUrl::fromUserInput(app.arguments().at(1));
   } else {
     serverUrl.setScheme(QStringLiteral("tcp"));
-    serverUrl.setHost(QStringLiteral("127.0.0.1"));
+    serverUrl.setHost(QStringLiteral(GAMMARAY_DEFAULT_LOCAL_ADDRESS));
     serverUrl.setPort(Client::defaultPort());
   }
 

@@ -23,6 +23,12 @@
 #define GAMMARAY_PROBE_BASENAME "${PROBE_BASENAME}"
 #define GAMMARAY_PROBE_NAME "${PROBE_NAME}"
 
+// default network properties
+#define GAMMARAY_DEFAULT_LOCAL_ADDRESS "127.0.0.1"
+#define GAMMARAY_DEFAULT_LOCAL_TCP_URL "tcp://127.0.0.1"
+#define GAMMARAY_DEFAULT_ANY_ADDRESS "0.0.0.0"
+#define GAMMARAY_DEFAULT_ANY_TCP_URL "tcp://0.0.0.0"
+
 // build options
 #cmakedefine BUILD_TIMER_PLUGIN
 

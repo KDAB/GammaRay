@@ -60,9 +60,10 @@ on embedded devices.
 =item B<--listen <address>>
 
 Specify on which network address the GammaRay server should listen,
-default is 0.0.0.0 (ie. all of them). This can be used for example
-on Windows to avoid firewall warnings by setting the address to
-127.0.0.1 if you don't need remote access.
+default is GAMMARAY_DEFAULT_ANY_TCP_URL (ie. tcp://0.0.0.0, all of ipv4,
+use tcp://[::] for all ipv6). This can be used for example on Windows to
+avoid firewall warnings by setting the address to 127.0.0.1 if you don't
+need remote access.
 
 =item B<--no-listen>
 

@@ -107,7 +107,7 @@ static void usage(const char *argv0)
   out << " -p, --pid <pid>            \tattach to running Qt application" << endl;
   out << "     --inprocess            \tuse in-process UI" << endl;
   out << "     --inject-only          \tonly inject the probe, don't show the UI" << endl;
-  out << "     --listen <address>     \tspecify the address the server should listen on [default: 0.0.0.0]" << endl;
+  out << "     --listen <address>     \tspecify the address the server should listen on [default: " << GAMMARAY_DEFAULT_ANY_TCP_URL << "]" << endl;
   out << "     --no-listen            \tdisables remote access entirely (implies --inprocess)" << endl;
   out << "     --list-probes          \tlist all installed probes" << endl;
   out << "     --probe <abi>          \tspecify which probe to use" << endl;

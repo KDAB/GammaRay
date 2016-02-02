@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
 #include "attachdialog.h"
 
 #include "launchoptions.h"
@@ -116,11 +117,13 @@ LaunchOptions AttachDialog::launchOptions() const
 
   switch (ui.accessMode->currentIndex()) {
     case 0: // local, out-of-process
-      opt.setProbeSetting(QStringLiteral("ServerAddress"), "tcp://127.0.0.1/");
+      opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), true);
+      opt.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
       opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 1: // remote, out-of-process
-      opt.setProbeSetting(QStringLiteral("ServerAddress"), "tcp://0.0.0.0/");
+      opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), true);
+      opt.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_ANY_TCP_URL);
       opt.setUiMode(LaunchOptions::OutOfProcessUi);
       break;
     case 2: // in-process
