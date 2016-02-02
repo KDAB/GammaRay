@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
 #include "server.h"
 #include "serverdevice.h"
 #include "probe.h"
@@ -106,7 +107,7 @@ QUrl Server::serverAddress() const
 #ifdef Q_OS_ANDROID
     QUrl url(QString(QLatin1String("local://%1/+gammaray_socket")).arg(QDir::homePath()));
 #else
-    QUrl url(ProbeSettings::value(QStringLiteral("ServerAddress"), QStringLiteral("tcp://0.0.0.0/")).toString());
+    QUrl url(ProbeSettings::value(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_ANY_TCP_URL).toString());
     if (url.scheme().isEmpty())
         url.setScheme(QStringLiteral("tcp"));
     if (url.port() <= 0)

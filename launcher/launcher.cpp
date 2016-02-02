@@ -315,10 +315,6 @@ void Launcher::readyRead()
     std::cout << "GammaRay server listening on: " << qPrintable(d->serverAddress.toString()) << std::endl;
 
     if (d->options.uiMode() == LaunchOptions::OutOfProcessUi) {
-        // safer, since we will always be running locally, and the server might give us an external address
-        if (d->serverAddress.scheme() == QStringLiteral("tcp"))
-            d->serverAddress.setHost(QStringLiteral("127.0.0.1"));
-
         startClient(d->serverAddress);
     }
 

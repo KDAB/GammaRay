@@ -58,12 +58,28 @@ bool TcpServerDevice::listen()
 
 QUrl TcpServerDevice::externalAddress() const
 {
+    const QHostAddress address(m_server->serverAddress());
     QString myHost;
-    foreach (const QHostAddress &addr, QNetworkInterface::allAddresses()) {
-        if (addr == QHostAddress::LocalHost || addr == QHostAddress::LocalHostIPv6 || !addr.scopeId().isEmpty())
-            continue;
-        myHost = addr.toString();
-        break;
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    if (address == QHostAddress::LocalHost || address == QHostAddress::LocalHostIPv6) {
+#else
+    if (address.isLoopback()) {
+#endif
+        myHost = address.toString();
+    } else {
+        foreach (const QHostAddress &addr, QNetworkInterface::allAddresses()) {
+            if (addr == QHostAddress::LocalHost || addr == QHostAddress::LocalHostIPv6 || !addr.scopeId().isEmpty())
+                continue;
+
+            // Return the ip according to the listening server protocol.
+            if (addr.protocol() != m_server->serverAddress().protocol()) {
+                continue;
+            }
+
+            myHost = addr.toString();
+            break;
+        }
     }
 
     QUrl url;
@@ -80,7 +96,7 @@ void TcpServerDevice::broadcast(const QByteArray &data)
 
     // broadcast announcement only if we are actually listinging to remote connections
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    if (address.toString() == "127.0.0.1" || address.toString() == "::1")
+    if (address == QHostAddress::LocalHost || address == QHostAddress::LocalHostIPv6)
 #else
     if (address.isLoopback())
 #endif

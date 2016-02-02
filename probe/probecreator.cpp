@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
 #include "probecreator.h"
 
 #include <common/endpoint.h>
@@ -63,7 +64,7 @@ ProbeCreator::ProbeCreator(Type type)
 
   // HACK the webinspector plugin does this as well, but if the web view is created
   // too early the env var from there isn't going to reach the web process
-  qputenv("QTWEBKIT_INSPECTOR_SERVER", "0.0.0.0:" + QByteArray::number(Endpoint::defaultPort() + 1));
+  qputenv("QTWEBKIT_INSPECTOR_SERVER", QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS) + ":" + QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
 void ProbeCreator::createProbe()

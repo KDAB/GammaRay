@@ -254,7 +254,7 @@ bool LaunchOptions::execute(const QString& launcherPath) const
     args.push_back(QStringLiteral("--listen"));
     args.push_back(d->probeSettings.value("ServerAddress"));
   }
-  if (d->probeSettings.value("RemoteAccessEnabled") == "false")
+  if (d->probeSettings.value("RemoteAccessEnabled", "true") == "false")
     args.push_back(QStringLiteral("--no-listen"));
 
   if (isAttach()) {

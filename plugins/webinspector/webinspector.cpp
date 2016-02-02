@@ -56,7 +56,7 @@ WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
 
   const QUrl serverUrl = Endpoint::instance()->serverAddress();
-  QString serverAddress(QStringLiteral("0.0.0.0"));
+  QString serverAddress(GAMMARAY_DEFAULT_ANY_ADDRESS);
   if (serverUrl.scheme() == QLatin1String("tcp"))
     serverAddress = serverUrl.host();
   qputenv("QTWEBKIT_INSPECTOR_SERVER", serverAddress.toLocal8Bit() + ':' + QByteArray::number(Endpoint::defaultPort() + 1));
