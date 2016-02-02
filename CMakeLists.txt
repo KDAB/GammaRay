@@ -130,11 +130,11 @@ option(
   OFF
 )
 
-option(
-  GAMMARAY_BUILD_UI
-  "Build the GammaRay client and in-process UI."
-  ON
-)
+set(GAMMARAY_BUILD_UI_DEFAULT ON)
+if(QNXNTO OR ANDROID)
+  set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+endif()
+option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
 option(
   GAMMARAY_PROBE_ONLY_BUILD
