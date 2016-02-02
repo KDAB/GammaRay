@@ -33,7 +33,7 @@
 
 namespace GammaRay {
 
-class ProbeController : public QObject, public ProbeControllerInterface
+class ProbeController : public ProbeControllerInterface
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ProbeControllerInterface)
@@ -41,6 +41,9 @@ public:
     explicit ProbeController(QObject *parent = 0);
 
 public slots:
+    void selectObject(GammaRay::ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
+    void requestSupportedTools(GammaRay::ObjectId id) Q_DECL_OVERRIDE;
+
     void detachProbe() Q_DECL_OVERRIDE;
     void quitHost() Q_DECL_OVERRIDE;
 };
