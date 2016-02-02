@@ -326,6 +326,9 @@ QModelIndexList KRecursiveFilterProxyModel::match(const QModelIndex &start, int 
     }
 
     QModelIndexList list;
+    if (!sourceModel())
+      return list;
+
     QModelIndex proxyIndex;
     Q_FOREACH (const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags)) {
         proxyIndex = mapFromSource(idx);

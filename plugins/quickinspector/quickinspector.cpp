@@ -369,7 +369,8 @@ void QuickInspector::objectSelected(QObject *object)
 
 void QuickInspector::objectSelected(void *object, const QString &typeName)
 {
-  if (MetaObjectRepository::instance()->metaObject(typeName)->inherits(QStringLiteral("QSGNode"))) {
+  auto metaObject = MetaObjectRepository::instance()->metaObject(typeName);
+  if (metaObject && metaObject->inherits(QStringLiteral("QSGNode"))) {
     selectSGNode(reinterpret_cast<QSGNode*>(object));
   }
 }
