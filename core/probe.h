@@ -39,6 +39,7 @@
 #include <QVector>
 
 class QItemSelectionModel;
+class QModelIndex;
 class QThread;
 class QPoint;
 class QTimer;

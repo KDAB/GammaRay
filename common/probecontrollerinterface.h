@@ -31,6 +31,7 @@
 
 #include <QObject>
 #include <QDataStream>
+#include <QMetaType>
 #include <QVector>
 
 namespace GammaRay {

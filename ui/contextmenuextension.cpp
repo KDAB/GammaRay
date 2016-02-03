@@ -41,6 +41,7 @@ ContextMenuExtension::ContextMenuExtension(ObjectId id)
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (m_id.isNull())
     return;
 
@@ -58,4 +59,7 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
       });
     }
   });
+#else
+  Q_UNUSED(menu);
+#endif
 }

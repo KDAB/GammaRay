@@ -43,6 +43,7 @@ class ContextMenuExtension : public QObject
 public:
   explicit ContextMenuExtension(ObjectId id);
 
+  /// Populate @p menu with entries related to the captured object id. Only supported on Qt5
   void populateMenu(QMenu *menu);
 
 private:

@@ -71,8 +71,8 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
                               Q_ARG(QString, QStringLiteral("Object")));
   }
 
-  connect(ui->objectTreeView, &QTreeView::customContextMenuRequested,
-          this, &ObjectInspectorWidget::objectContextMenuRequested);
+  connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SIGNAL(objectContextMenuRequested(QPoint)));
 }
 
 ObjectInspectorWidget::~ObjectInspectorWidget()
