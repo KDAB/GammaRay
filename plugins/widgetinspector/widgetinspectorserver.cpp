@@ -72,6 +72,11 @@
 #include <iostream>
 
 Q_DECLARE_METATYPE(const QStyle *)
+Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+Q_DECLARE_METATYPE(Qt::Orientations)
+Q_DECLARE_METATYPE(Qt::Alignment)
+#endif
 
 using namespace GammaRay;
 using namespace std;
@@ -418,8 +423,34 @@ void WidgetInspectorServer::checkFeatures()
 void WidgetInspectorServer::registerWidgetMetaTypes()
 {
   MetaObject *mo = 0;
+  MO_ADD_METAOBJECT0(QLayoutItem)
+  MO_ADD_PROPERTY   (QLayoutItem, Qt::Alignment, alignment, setAlignment);
+  MO_ADD_PROPERTY_RO(QLayoutItem, QSizePolicy::ControlTypes, controlTypes);
+  MO_ADD_PROPERTY_RO(QLayoutItem, Qt::Orientations, expandingDirections);
+  MO_ADD_PROPERTY_CR(QLayoutItem, QRect, geometry, setGeometry);
+  MO_ADD_PROPERTY_RO(QLayoutItem, bool, hasHeightForWidth);
+  MO_ADD_PROPERTY_RO(QLayoutItem, bool, isEmpty);
+  MO_ADD_PROPERTY_RO(QLayoutItem, QSize, maximumSize);
+  MO_ADD_PROPERTY_RO(QLayoutItem, QSize, minimumSize);
+  MO_ADD_PROPERTY_RO(QLayoutItem, QSize, sizeHint);
+
+  MO_ADD_METAOBJECT2(QLayout, QObject, QLayoutItem);
+  MO_ADD_PROPERTY_CR(QLayout, QMargins, contentsMargins, setContentsMargins);
+  MO_ADD_PROPERTY_RO(QLayout, QRect, contentsRect);
+  MO_ADD_PROPERTY_RO(QLayout, int, count);
+  MO_ADD_PROPERTY   (QLayout, bool, isEnabled, setEnabled);
+  MO_ADD_PROPERTY_RO(QLayout, QWidget*, menuBar);
+  MO_ADD_PROPERTY_RO(QLayout, QWidget*, parentWidget);
+
+  MO_ADD_METAOBJECT1(QGridLayout, QLayout);
+  MO_ADD_PROPERTY_RO(QGridLayout, int, columnCount);
+  MO_ADD_PROPERTY_RO(QGridLayout, int, rowCount);
+
   MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
   MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_PROPERTY_RO(QWidget, QLayout*, layout);
+#endif
 
   MO_ADD_METAOBJECT1(QStyle, QObject);
   MO_ADD_PROPERTY_RO(QStyle, const QStyle*, proxy);
