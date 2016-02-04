@@ -47,16 +47,17 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
 {
   QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
 
-  QTreeView *treeView = new QTreeView(this);
-  treeView->setIndentation(10);
-  treeView->setUniformRowHeights(true);
-  treeView->setModel(model);
-  treeView->header()->setStretchLastSection(false);
-  new DeferredResizeModeSetter(treeView->header(), 0, QHeaderView::Stretch);
-  new DeferredResizeModeSetter(treeView->header(), 1, QHeaderView::ResizeToContents);
-  new DeferredResizeModeSetter(treeView->header(), 2, QHeaderView::ResizeToContents);
-  treeView->setSortingEnabled(true);
-  treeView->setSelectionModel(ObjectBroker::selectionModel(model));
+  m_treeView = new QTreeView(this);
+  m_treeView->setIndentation(10);
+  m_treeView->setUniformRowHeights(true);
+  m_treeView->setModel(model);
+  m_treeView->header()->setStretchLastSection(false);
+  new DeferredResizeModeSetter(m_treeView->header(), 0, QHeaderView::Stretch);
+  new DeferredResizeModeSetter(m_treeView->header(), 1, QHeaderView::ResizeToContents);
+  new DeferredResizeModeSetter(m_treeView->header(), 2, QHeaderView::ResizeToContents);
+  m_treeView->setSortingEnabled(true);
+  m_treeView->setSelectionModel(ObjectBroker::selectionModel(model));
+  connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
   auto objectSearchLine = new QLineEdit(this);
   new SearchLineController(objectSearchLine, model);
@@ -67,14 +68,21 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
 
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(objectSearchLine);
-  vbox->addWidget(treeView);
+  vbox->addWidget(m_treeView);
 
   QHBoxLayout *hbox = new QHBoxLayout(this);
   hbox->addLayout(vbox);
   hbox->addWidget(propertyWidget);
 
   // init widget
-  new DeferredTreeViewConfiguration(treeView);
-  treeView->sortByColumn(0, Qt::AscendingOrder);
+  new DeferredTreeViewConfiguration(m_treeView);
+  m_treeView->sortByColumn(0, Qt::AscendingOrder);
 }
 
+void MetaObjectBrowserWidget::selectionChanged(const QItemSelection& selection)
+{
+    if (selection.isEmpty())
+        return;
+
+    m_treeView->scrollTo(selection.first().topLeft()); // in case of remote changes
+}

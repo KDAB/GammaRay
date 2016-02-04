@@ -203,6 +203,15 @@ QModelIndex MetaObjectTreeModel::index(int row, int column, const QModelIndex &p
   return createIndex(row, column, const_cast<QMetaObject*>(object));
 }
 
+QModelIndexList MetaObjectTreeModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
+{
+    if (role == MetaObjectRole) {
+        const auto mo = value.value<const QMetaObject*>();
+        return QModelIndexList() << indexForMetaObject(mo);
+    }
+    return QAbstractItemModel::match(start, role, value, hits, flags);
+}
+
 void MetaObjectTreeModel::objectAdded(QObject *obj)
 {
   // Probe::objectFullyConstructed calls us and ensures this already

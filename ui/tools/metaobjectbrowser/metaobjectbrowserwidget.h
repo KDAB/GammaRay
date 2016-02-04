@@ -31,6 +31,9 @@
 
 #include <QWidget>
 
+class QItemSelection;
+class QTreeView;
+
 namespace GammaRay {
 
 class PropertyWidget;
@@ -42,8 +45,12 @@ class MetaObjectBrowserWidget : public QWidget
   public:
     explicit MetaObjectBrowserWidget(QWidget *parent = 0);
 
+  private slots:
+    void selectionChanged(const QItemSelection &selection);
+
   private:
      PropertyWidget *m_propertyWidget;
+     QTreeView *m_treeView;
 };
 
 }

@@ -87,6 +87,12 @@ public:
         }
     }
 
+    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits, Qt::MatchFlags flags) const Q_DECL_OVERRIDE
+    {
+        Model::used(this);
+        return BaseProxy::match(start, role, value, hits, flags);
+    }
+
 protected:
     void customEvent(QEvent* event) Q_DECL_OVERRIDE
     {

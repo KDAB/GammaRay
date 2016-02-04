@@ -31,6 +31,7 @@
 
 #include "toolfactory.h"
 
+class QAbstractProxyModel;
 class QItemSelection;
 
 namespace GammaRay {
@@ -46,9 +47,11 @@ class MetaObjectBrowser : public QObject
 
   private Q_SLOTS:
     void objectSelected(const QItemSelection &selection);
+    void objectSelected(QObject *obj);
 
   private:
      PropertyController *m_propertyController;
+     QAbstractProxyModel *m_model;
 };
 
 class MetaObjectBrowserFactory : public QObject,
@@ -63,6 +66,7 @@ class MetaObjectBrowserFactory : public QObject,
     }
 
     QString name() const Q_DECL_OVERRIDE;
+    QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 };
 
 }

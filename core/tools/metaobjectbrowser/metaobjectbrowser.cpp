@@ -42,18 +42,21 @@
 using namespace GammaRay;
 
 MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
-  : QObject(parent), m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this))
+    : QObject(parent)
+    , m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this))
 {
-  auto model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
-  model->setSourceModel(Probe::instance()->metaObjectModel());
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"), model);
+  m_model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+  m_model->setSourceModel(Probe::instance()->metaObjectModel());
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"), m_model);
 
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(model);
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_model);
 
   connect(selectionModel,SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(objectSelected(QItemSelection)));
 
   m_propertyController->setMetaObject(0); // init
+
+  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
 
 void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
@@ -71,7 +74,22 @@ void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
   }
 }
 
+void MetaObjectBrowser::objectSelected(QObject *obj)
+{
+    if (!obj)
+        return;
+    const auto indexes = m_model->match(QModelIndex(), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(obj->metaObject()));
+    if (indexes.isEmpty())
+        return;
+    ObjectBroker::selectionModel(m_model)->select(indexes.first(), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
+}
+
 QString MetaObjectBrowserFactory::name() const
 {
   return tr("Meta Objects");
+}
+
+QVector<QByteArray> MetaObjectBrowserFactory::selectableTypes() const
+{
+    return QVector<QByteArray>() << QObject::staticMetaObject.className();
 }

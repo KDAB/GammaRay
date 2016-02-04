@@ -74,6 +74,8 @@ class MetaObjectTreeModel : public QAbstractItemModel
     QVariant headerData(int section, Qt::Orientation orientation,
                                 int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
+    QModelIndexList match(const QModelIndex & start, int role, const QVariant & value, int hits, Qt::MatchFlags flags) const Q_DECL_OVERRIDE;
+
   private:
     void scanMetaTypes();
     void addMetaObject(const QMetaObject *metaObject);
