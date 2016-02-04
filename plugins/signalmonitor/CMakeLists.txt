@@ -15,8 +15,9 @@ set(gammaray_signalmonitor_srcs
 )
 
 gammaray_add_plugin(gammaray_signalmonitor
-  gammaray_signalmonitor.desktop
-  ${gammaray_signalmonitor_srcs}
+  DESKTOP gammaray_signalmonitor.desktop
+  JSON gammaray_signalmonitor.desktop
+  SOURCES ${gammaray_signalmonitor_srcs}
 )
 
 target_link_libraries(gammaray_signalmonitor
@@ -41,8 +42,9 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_signalmonitor_ui
-    gammaray_signalmonitor_ui.desktop
-    ${gammaray_signalmonitor_ui_srcs}
+    DESKTOP gammaray_signalmonitor_ui.desktop
+    JSON gammaray_signalmonitor.json
+    SOURCES ${gammaray_signalmonitor_ui_srcs}
   )
 
   target_link_libraries(gammaray_signalmonitor_ui

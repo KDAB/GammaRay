@@ -8,8 +8,9 @@ set(gammaray_fontbrowser_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_fontbrowser_plugin
-  gammaray_fontbrowser.desktop
-  ${gammaray_fontbrowser_plugin_srcs}
+  DESKTOP gammaray_fontbrowser.desktop
+  JSON gammaray_fontbrowser.json
+  SOURCES ${gammaray_fontbrowser_plugin_srcs}
 )
 
 target_link_libraries(gammaray_fontbrowser_plugin gammaray_core)
@@ -33,8 +34,9 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_fontbrowser_ui_plugin
-    gammaray_fontbrowser_ui.desktop
-    ${gammaray_fontbrowser_plugin_ui_srcs}
+    DESKTOP gammaray_fontbrowser_ui.desktop
+    JSON gammaray_fontbrowser.json
+    SOURCES ${gammaray_fontbrowser_plugin_ui_srcs}
   )
 
   target_link_libraries(gammaray_fontbrowser_ui_plugin

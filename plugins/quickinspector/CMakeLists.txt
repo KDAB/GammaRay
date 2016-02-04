@@ -30,8 +30,8 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
   )
 
   gammaray_add_plugin(gammaray_quickinspector
-    gammaray_quickinspector.desktop
-    ${gammaray_quickinspector_srcs}
+    JSON gammaray_quickinspector.json
+    SOURCES ${gammaray_quickinspector_srcs}
   )
 
   target_link_libraries(gammaray_quickinspector
@@ -68,8 +68,8 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
     )
 
     gammaray_add_plugin(gammaray_quickinspector_ui
-      gammaray_quickinspector_ui.desktop
-      ${gammaray_quickinspector_ui_srcs}
+      JSON gammaray_quickinspector.json
+      SOURCES ${gammaray_quickinspector_ui_srcs}
     )
 
     target_link_libraries(gammaray_quickinspector_ui

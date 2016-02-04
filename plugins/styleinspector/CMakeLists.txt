@@ -16,8 +16,9 @@ set(gammaray_styleinspector_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_styleinspector_plugin
-  gammaray_styleinspector.desktop
-  ${gammaray_styleinspector_plugin_srcs}
+  DESKTOP gammaray_styleinspector.desktop
+  JSON gammaray_styleinspector.json
+  SOURCES ${gammaray_styleinspector_plugin_srcs}
 )
 
 target_link_libraries(gammaray_styleinspector_plugin
@@ -41,8 +42,9 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_styleinspector_ui_plugin
-    gammaray_styleinspector_ui.desktop
-    ${gammaray_styleinspector_ui_plugin_srcs}
+    DESKTOP gammaray_styleinspector_ui.desktop
+    JSON gammaray_styleinspector.json
+    SOURCES ${gammaray_styleinspector_ui_plugin_srcs}
   )
 
   target_link_libraries(gammaray_styleinspector_ui_plugin

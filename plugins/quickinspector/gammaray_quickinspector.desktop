@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Quick Scenes
-X-GammaRay-Types="QQuickWindow;QQuickItem;QSGNode"
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=gammaray_quickinspector

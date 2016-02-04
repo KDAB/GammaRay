@@ -9,8 +9,9 @@ set(gammaray_widgetinspector_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_widgetinspector_plugin
-  gammaray_widgetinspector.desktop
-  ${gammaray_widgetinspector_plugin_srcs}
+  DESKTOP gammaray_widgetinspector.desktop
+  JSON gammaray_widgetinspector.json
+  SOURCES ${gammaray_widgetinspector_plugin_srcs}
 )
 
 target_link_libraries(gammaray_widgetinspector_plugin
@@ -62,8 +63,9 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_widgetinspector_ui_plugin
-    gammaray_widgetinspector_ui.desktop
-    ${gammaray_widgetinspector_ui_plugin_srcs}
+    DESKTOP gammaray_widgetinspector_ui.desktop
+    JSON gammaray_widgetinspector.json
+    SOURCES ${gammaray_widgetinspector_ui_plugin_srcs}
   )
 
   target_link_libraries(gammaray_widgetinspector_ui_plugin

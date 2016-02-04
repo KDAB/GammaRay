@@ -6,8 +6,9 @@ set(gammaray_actioninspector_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_actioninspector_plugin
-  gammaray_actioninspector.desktop
-  ${gammaray_actioninspector_plugin_srcs}
+  DESKTOP gammaray_actioninspector.desktop
+  JSON gammaray_actioninspector.json
+  SOURCES ${gammaray_actioninspector_plugin_srcs}
 )
 
 target_link_libraries(gammaray_actioninspector_plugin
@@ -23,8 +24,9 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_actioninspector_ui_plugin
-    gammaray_actioninspector_ui.desktop
-    ${gammaray_actioninspector_ui_plugin_srcs}
+    DESKTOP gammaray_actioninspector_ui.desktop
+    JSON gammaray_actioninspector.json
+    SOURCES ${gammaray_actioninspector_ui_plugin_srcs}
   )
 
   target_link_libraries(gammaray_actioninspector_ui_plugin

@@ -5,8 +5,8 @@ set(gammaray_objectvisualizer_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_objectvisualizer_plugin
-  gammaray_objectvisualizer.desktop
-  ${gammaray_objectvisualizer_plugin_srcs}
+  DESKTOP gammaray_objectvisualizer.desktop
+  SOURCES ${gammaray_objectvisualizer_plugin_srcs}
 )
 
 target_link_libraries(gammaray_objectvisualizer_plugin
@@ -70,8 +70,8 @@ elseif(${VTK_MAJOR_VERSION} EQUAL 6)
 endif()
 
 gammaray_add_plugin(gammaray_objectvisualizer_ui_plugin
-  gammaray_objectvisualizer_ui.desktop
-  ${gammaray_objectvisualizer_ui_plugin_srcs}
+  DESKTOP gammaray_objectvisualizer_ui.desktop
+  SOURCES ${gammaray_objectvisualizer_ui_plugin_srcs}
 )
 
 target_link_libraries(gammaray_objectvisualizer_ui_plugin

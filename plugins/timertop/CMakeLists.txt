@@ -9,8 +9,9 @@ set(gammaray_timertop_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_timertop_plugin
-  gammaray_timertop.desktop
-  ${gammaray_timertop_plugin_srcs}
+  DESKTOP gammaray_timertop.desktop
+  JSON gammaray_timertop.json
+  SOURCES ${gammaray_timertop_plugin_srcs}
 )
 
 target_link_libraries(gammaray_timertop_plugin
@@ -40,8 +41,9 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_timertop_ui_plugin
-    gammaray_timertop_ui.desktop
-    ${gammaray_timertop_plugin_ui_srcs}
+    DESKTOP gammaray_timertop_ui.desktop
+    JSON gammaray_timertop.json
+    SOURCES ${gammaray_timertop_plugin_ui_srcs}
   )
 
   target_link_libraries(gammaray_timertop_ui_plugin

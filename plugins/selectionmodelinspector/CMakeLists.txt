@@ -4,8 +4,9 @@ set(gammaray_selectionmodelinspector_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_selectionmodelinspector_plugin
-  gammaray_selectionmodelinspector.desktop
-  ${gammaray_selectionmodelinspector_plugin_srcs}
+  DESKTOP gammaray_selectionmodelinspector.desktop
+  JSON gammaray_selectionmodelinspector.json
+  SOURCES ${gammaray_selectionmodelinspector_plugin_srcs}
 )
 
 target_link_libraries(gammaray_selectionmodelinspector_plugin
@@ -25,8 +26,9 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_selectionmodelinspector_ui_plugin
-    gammaray_selectionmodelinspector_ui.desktop
-    ${gammaray_selectionmodelinspector_plugin_ui_srcs}
+    DESKTOP gammaray_selectionmodelinspector_ui.desktop
+    JSON gammaray_selectionmodelinspector.json
+    SOURCES ${gammaray_selectionmodelinspector_plugin_ui_srcs}
   )
 
   target_link_libraries(gammaray_selectionmodelinspector_ui_plugin

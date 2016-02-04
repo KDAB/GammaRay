@@ -5,8 +5,9 @@ set(gammaray_webinspector_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_webinspector_plugin
-  gammaray_webinspector.desktop
-  ${gammaray_webinspector_plugin_srcs}
+  DESKTOP gammaray_webinspector.desktop
+  JSON gammaray_webinspector.json
+  SOURCES ${gammaray_webinspector_plugin_srcs}
 )
 
 target_link_libraries(gammaray_webinspector_plugin
@@ -29,8 +30,9 @@ if(HAVE_QT_WEBKIT1)
     qt4_wrap_ui(gammaray_webinspector_ui_plugin_srcs webinspectorwidget.ui)
 
     gammaray_add_plugin(gammaray_webinspector_ui_plugin
-      gammaray_webinspector_ui.desktop
-      ${gammaray_webinspector_ui_plugin_srcs}
+      DESKTOP gammaray_webinspector_ui.desktop
+      JSON gammaray_webinspector.json
+      SOURCES ${gammaray_webinspector_ui_plugin_srcs}
     )
 
     target_link_libraries(gammaray_webinspector_ui_plugin
