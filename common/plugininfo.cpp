@@ -99,6 +99,11 @@ bool PluginInfo::isHidden() const
     return m_hidden;
 }
 
+QVector<QByteArray> PluginInfo::selectableTypes() const
+{
+    return m_selectableTypes;
+}
+
 bool PluginInfo::isValid() const
 {
     return !m_path.isEmpty() && !m_interface.isEmpty();
@@ -123,6 +128,11 @@ void PluginInfo::initFromJSON(const QString& path)
     for (auto it = types.constBegin(); it != types.constEnd(); ++it)
       m_supportedTypes.push_back((*it).toString());
 
+    const auto selectable = customData.value(QStringLiteral("selectableTypes")).toArray();
+    m_selectableTypes.reserve(selectable.size());
+    for (auto it = selectable.begin(); it != selectable.end(); ++it)
+        m_selectableTypes.push_back((*it).toString().toUtf8());
+
     m_path = path;
 #else
     Q_UNUSED(path);
@@ -141,6 +151,11 @@ void PluginInfo::initFromDesktopFile(const QString& path)
     m_name = desktopFile.value(QStringLiteral("Name")).toString();
     m_remoteSupport = desktopFile.value(QStringLiteral("X-GammaRay-Remote"), true).toBool();
     m_hidden = desktopFile.value(QStringLiteral("Hidden"), false).toBool();
+
+    const auto selectable = desktopFile.value(QStringLiteral("X-GammaRay-SelectableTypes")).toString().split(QLatin1Char(';'), QString::SkipEmptyParts);
+    m_selectableTypes.reserve(selectable.size());
+    foreach (const auto &t, selectable)
+        m_selectableTypes.push_back(t.toUtf8());
 
     const QString dllBaseName = desktopFile.value(QStringLiteral("Exec")).toString();
     if (dllBaseName.isEmpty())

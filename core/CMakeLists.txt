@@ -20,6 +20,7 @@ set(gammaray_srcs
   multisignalmapper.cpp
   signalspycallbackset.cpp
   singlecolumnobjectproxymodel.cpp
+  toolfactory.cpp
   toolmodel.cpp
   toolpluginmodel.cpp
   toolpluginerrormodel.cpp

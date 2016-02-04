@@ -82,6 +82,7 @@ class ModelInspectorFactory : public QObject, public StandardToolFactory<QAbstra
     }
 
     QString name() const Q_DECL_OVERRIDE;
+    QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 };
 
 }

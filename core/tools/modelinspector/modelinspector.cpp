@@ -84,11 +84,6 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
   }
 }
 
-QString ModelInspectorFactory::name() const
-{
- return tr("Models");
-}
-
 void ModelInspector::modelSelected(const QItemSelection& selected)
 {
   if (m_modelContentSelectionModel && m_modelContentSelectionModel->model())
@@ -162,4 +157,14 @@ void ModelInspector::objectCreated(QObject* object)
 
   if (auto proxy = qobject_cast<QAbstractProxyModel*>(object))
     m_probe->discoverObject(proxy->sourceModel());
+}
+
+QString ModelInspectorFactory::name() const
+{
+    return tr("Models");
+}
+
+QVector<QByteArray> ModelInspectorFactory::selectableTypes() const
+{
+    return QVector<QByteArray>() << QAbstractItemModel::staticMetaObject.className();
 }

@@ -38,11 +38,13 @@
 #ifndef GAMMARAY_TOOLFACTORY_H
 #define GAMMARAY_TOOLFACTORY_H
 
+#include "gammaray_core_export.h"
 #include "probeinterface.h"
 
 #include <QMetaType>
 #include <QStringList>
 #include <QtPlugin>
+#include <QVector>
 
 namespace GammaRay {
 
@@ -54,13 +56,11 @@ class ProbeInterface;
  * The ToolFactory class is an abstract base class for creating probe tools
  * for GammaRay.  Each tool must have a unique identifier.
  */
-class ToolFactory
+class GAMMARAY_CORE_EXPORT ToolFactory
 {
   public:
-    ToolFactory() {}
-    virtual inline ~ToolFactory()
-    {
-    }
+    ToolFactory();
+    virtual ~ToolFactory();
 
     /**
      * Unique id of this tool
@@ -97,6 +97,14 @@ class ToolFactory
      * @since 2.1
      */
     virtual bool isHidden() const = 0;
+
+    /**
+     * Class names of types this tool can select.
+     * This must be a subset of supportedTypes(), and is used to check if this
+     * tool is a viable candidate for object navigation.
+     * When returning an non-empty result here, you must the Probe::objectSelected signal.
+     */
+    virtual QVector<QByteArray> selectableTypes() const;
 
   private:
     Q_DISABLE_COPY(ToolFactory)

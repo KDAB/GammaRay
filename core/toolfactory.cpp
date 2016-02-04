@@ -1,10 +1,10 @@
 /*
-  proxytoolfactory.cpp
+  toolfactory.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2011-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,51 +26,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "proxytoolfactory.h"
+#include "toolfactory.h"
 
 using namespace GammaRay;
-using namespace std;
 
-ProxyToolFactory::ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent)
-  : ProxyFactory<ToolFactory>(pluginInfo, parent)
+ToolFactory::ToolFactory()
 {
 }
 
-bool ProxyToolFactory::isValid() const
+ToolFactory::~ToolFactory()
 {
-  return
-    pluginInfo().isValid() &&
-    !name().isEmpty() &&
-    !supportedTypes().isEmpty();
 }
 
-QString ProxyToolFactory::name() const
+QVector<QByteArray> ToolFactory::selectableTypes() const
 {
-  return pluginInfo().name();
-}
-
-QStringList ProxyToolFactory::supportedTypes() const
-{
-  return pluginInfo().supportedTypes();
-}
-
-void ProxyToolFactory::init(ProbeInterface *probe)
-{
-  loadPlugin();
-  ToolFactory *fac = factory();
-  if (!fac) {
-    return;
-  }
-  Q_ASSERT(fac);
-  fac->init(probe);
-}
-
-bool ProxyToolFactory::isHidden() const
-{
-  return pluginInfo().isHidden();
-}
-
-QVector<QByteArray> ProxyToolFactory::selectableTypes() const
-{
-    return pluginInfo().selectableTypes();
+  return QVector<QByteArray>();
 }

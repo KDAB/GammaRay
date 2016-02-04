@@ -194,7 +194,7 @@ QModelIndexList ToolModel::toolsForObject(QObject* object) const
   while (metaObject) {
     for (int i = 0; i < m_tools.size(); i++) {
       const ToolFactory *factory = m_tools.at(i);
-      if (factory && factory->supportedTypes().contains(metaObject->className())) {
+      if (factory && factory->selectableTypes().contains(metaObject->className())) {
         ret += index(i, 0);
       }
     }
@@ -213,7 +213,7 @@ QModelIndexList ToolModel::toolsForObject(const void* object, const QString& typ
   while (metaObject) {
     for (int i = 0; i < m_tools.size(); i++) {
       const ToolFactory *factory = m_tools.at(i);
-      if (factory && factory->supportedTypes().contains(metaObject->className())) {
+      if (factory && factory->selectableTypes().contains(metaObject->className().toUtf8())) {
         ret += index(i, 0);
       }
     }

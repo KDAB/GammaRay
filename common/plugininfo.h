@@ -31,6 +31,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QVector>
 
 namespace GammaRay {
 
@@ -50,6 +51,7 @@ public:
     QString name() const;
     bool remoteSupport() const;
     bool isHidden() const;
+    QVector<QByteArray> selectableTypes() const;
 
     bool isValid() const;
 
@@ -62,6 +64,7 @@ private:
     QString m_interface;
     QStringList m_supportedTypes;
     QString m_name;
+    QVector<QByteArray> m_selectableTypes;
     bool m_remoteSupport;
     bool m_hidden;
 };

@@ -135,3 +135,8 @@ QString ObjectInspectorFactory::name() const
 {
   return tr("Objects");
 }
+
+QVector<QByteArray> GammaRay::ObjectInspectorFactory::selectableTypes() const
+{
+    return QVector<QByteArray>() << QObject::staticMetaObject.className();
+}
