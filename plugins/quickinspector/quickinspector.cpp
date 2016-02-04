@@ -311,8 +311,8 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     selectItem(m_window->contentItem());
 
     // frame swapped isn't enough, we don't get that for FBO render targets such as in QQuickWidget
-    connect(window, &QQuickWindow::afterRendering, m_remoteView, &RemoteViewServer::sourceChanged);
-    connect(window, &QQuickWindow::frameSwapped, m_remoteView, &RemoteViewServer::sourceChanged);
+    connect(window, &QQuickWindow::afterRendering, this, &QuickInspector::slotSceneChanged);
+    connect(window, &QQuickWindow::frameSwapped,  this, &QuickInspector::slotSceneChanged);
 
     m_window->update();
   }
@@ -434,6 +434,12 @@ void QuickInspector::sendRenderedScene(const QImage &currentFrame)
   m_remoteView->sendFrame(frame);
 }
 
+void QuickInspector::slotSceneChanged()
+{
+    if (!m_isGrabbingWindow)
+        m_remoteView->sourceChanged();
+}
+
 void QuickInspector::slotGrabWindow()
 {
   if (!m_remoteView->isActive() || !m_window || m_isGrabbingWindow) {
@@ -447,7 +453,10 @@ void QuickInspector::slotGrabWindow()
           return;
   }
 
-  sendRenderedScene(m_window->grabWindow());
+  // delay this so we can process the signals to slotSceneChanged first, while we are in the m_isGrabbingWindow state
+  // otherwise we end up with an infinite update loop even on static scenes
+  const auto img = m_window->grabWindow();
+  QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::QueuedConnection, Q_ARG(QImage, img));
 }
 
 void QuickInspector::setCustomRenderMode(

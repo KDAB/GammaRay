@@ -89,6 +89,7 @@ class QuickInspector : public QuickInspectorInterface
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
   private slots:
+    void slotSceneChanged();
     void slotGrabWindow();
     void itemSelectionChanged(const QItemSelection &selection);
     void sgSelectionChanged(const QItemSelection &selection);
