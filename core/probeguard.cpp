@@ -40,6 +40,12 @@ ProbeGuard::ProbeGuard() :
     setInsideProbe(true);
 }
 
+ProbeGuard::ProbeGuard(bool newState) :
+    m_previousState(insideProbe())
+{
+    setInsideProbe(newState);
+}
+
 ProbeGuard::~ProbeGuard()
 {
     setInsideProbe(m_previousState);
@@ -56,3 +62,6 @@ void ProbeGuard::setInsideProbe(bool inside)
 {
     s_probeGuards.localData() = inside;
 }
+
+ProbeGuardSuspender::ProbeGuardSuspender() : ProbeGuard(false) {}
+ProbeGuardSuspender::~ProbeGuardSuspender() {}

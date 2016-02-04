@@ -50,11 +50,25 @@ public:
      *  In that case you might want to skip some operations,
      */
     static bool insideProbe();
+protected:
+    ProbeGuard(bool newState);
+    void setInsideProbe(bool inside);
 private:
     Q_DISABLE_COPY(ProbeGuard)
-    void setInsideProbe(bool inside);
     bool m_previousState;
 };
+
+/** This is the inverse of ProbeGuard, use this to temporarily disable the guard when doing
+ *  individual calls to target code that might create objects, while being in a code block
+ *  protected by ProbeGuard.
+ */
+class ProbeGuardSuspender : public ProbeGuard
+{
+public:
+    ProbeGuardSuspender();
+    ~ProbeGuardSuspender();
+};
+
 }
 
 #endif // GAMMARAY_PROBEGUARD_H

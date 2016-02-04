@@ -30,6 +30,7 @@
 #include "objectinstance.h"
 #include "propertydata.h"
 #include "util.h"
+#include "probeguard.h"
 
 #include <QMetaProperty>
 #include <QStringList>
@@ -130,19 +131,23 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
         pmo = pmo->superClass();
     data.setClassName(pmo->className());
 
-    switch (object().type()) {
-        case ObjectInstance::QtObject:
-            if (object().qtObject())
-                data.setValue(prop.read(object().qtObject()));
-            break;
+    // we call out to the target here, so suspend the probe guard, otherwise we'll miss on-demand created object (e.g. in QQ2)
+    {
+        ProbeGuardSuspender g;
+        switch (object().type()) {
+            case ObjectInstance::QtObject:
+                if (object().qtObject())
+                    data.setValue(prop.read(object().qtObject()));
+                break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        case ObjectInstance::QtGadget:
-            if (object().object())
-                data.setValue(prop.readOnGadget(object().object()));
-            break;
+            case ObjectInstance::QtGadget:
+                if (object().object())
+                    data.setValue(prop.readOnGadget(object().object()));
+                break;
 #endif
-        default:
-            break;
+            default:
+                break;
+        }
     }
 
     data.setDetails(detailString(prop));
