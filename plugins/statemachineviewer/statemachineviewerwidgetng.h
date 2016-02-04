@@ -75,6 +75,9 @@ private slots:
   void setShowLog(bool show);
 
 private:
+  void loadSettings();
+  void saveSettings();
+
   QScopedPointer<Ui::StateMachineViewer> m_ui;
 
   KDSME::StateMachineView* m_stateMachineView;

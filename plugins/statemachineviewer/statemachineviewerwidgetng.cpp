@@ -134,10 +134,31 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   addActions(toolBar->actions());
 
   m_interface->repopulateGraph();
+
+  loadSettings();
 }
 
 StateMachineViewerWidgetNG::~StateMachineViewerWidgetNG()
 {
+  saveSettings();
+}
+
+void StateMachineViewerWidgetNG::loadSettings()
+{
+  QSettings settings;
+  settings.beginGroup("Plugin_StateMachineViewer");
+  m_stateMachineView->setThemeName(settings.value("ThemeName").toString());
+  settings.endGroup();
+  settings.sync();
+}
+
+void StateMachineViewerWidgetNG::saveSettings()
+{
+  QSettings settings;
+  settings.beginGroup("Plugin_StateMachineViewer");
+  settings.setValue("ThemeName", m_stateMachineView->themeName());
+  settings.endGroup();
+  settings.sync();
 }
 
 void StateMachineViewerWidgetNG::showMessage(const QString& message)
