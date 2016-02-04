@@ -322,6 +322,7 @@ void QuickInspector::selectItem(QQuickItem *item)
 {
   const QAbstractItemModel *model = m_itemSelectionModel->model();
   Model::used(model);
+  Model::used(m_sgSelectionModel->model());
 
   const QModelIndexList indexList =
     model->match(model->index(0, 0),
@@ -361,9 +362,10 @@ void QuickInspector::selectSGNode(QSGNode *node)
 
 void QuickInspector::objectSelected(QObject *object)
 {
-  QQuickItem *item = qobject_cast<QQuickItem*>(object);
-  if (item) {
+  if (auto item = qobject_cast<QQuickItem*>(object)) {
     selectItem(item);
+  } else if (auto window = qobject_cast<QQuickWindow*>(object)) {
+    selectWindow(window);
   }
 }
 
