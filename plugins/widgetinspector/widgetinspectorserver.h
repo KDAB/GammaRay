@@ -72,6 +72,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
   private slots:
     void widgetSelected(const QItemSelection &selection);
     void widgetSelected(QWidget *widget);
+    void objectSelected(QObject *obj);
     void objectCreated(QObject *object);
 
     void recreateOverlayWidget();

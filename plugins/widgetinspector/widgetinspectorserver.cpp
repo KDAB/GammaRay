@@ -112,6 +112,8 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
     discoverObjects();
   }
 
+  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+
   connect(m_remoteView, SIGNAL(doPickElement(QPoint)), this, SLOT(pickElement(QPoint)));
 
   checkFeatures();
@@ -285,6 +287,18 @@ void WidgetInspectorServer::widgetSelected(QWidget *widget)
     QItemSelectionModel::Select | QItemSelectionModel::Clear |
     QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
+
+void WidgetInspectorServer::objectSelected(QObject* obj)
+{
+    if (auto wdg = qobject_cast<QWidget*>(obj)) {
+        widgetSelected(wdg);
+    } else if (auto layout = qobject_cast<QLayout*>(obj)) {
+        // TODO select the layout directly here
+        if (layout->parentWidget())
+            widgetSelected(layout->parentWidget());
+    }
+}
+
 
 // TODO the following actions should actually store the file on the client!
 

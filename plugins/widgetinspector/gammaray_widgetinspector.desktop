@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Widgets
 X-GammaRay-Types="QWidget;QApplication"
+X-GammaRay-SelectableTypes="QWidget;QLayout"
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
 Exec=gammaray_widgetinspector_plugin
