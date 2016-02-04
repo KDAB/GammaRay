@@ -72,7 +72,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
   }
 
   connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)),
-          this, SIGNAL(objectContextMenuRequested(QPoint)));
+          this, SLOT(objectContextMenuRequested(QPoint)));
 }
 
 ObjectInspectorWidget::~ObjectInspectorWidget()
