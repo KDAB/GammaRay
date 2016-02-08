@@ -220,12 +220,17 @@ void MetaObjectTreeModel::objectAdded(QObject *obj)
 
   Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
+  const QMetaObject *metaObject = obj->metaObject();
+
   if (hasDynamicMetaObject(obj)) {
-    // Encountered dynamic meta object, ignoring for now
-    return;
+    // ideally we would clone the meta object here
+    // for now we just move up to the first known static parent meta object, and work with that
+    while (metaObject && !isKnownMetaObject(metaObject))
+      metaObject = metaObject->superClass();
+    if (!metaObject) // the QML engines actually manages to hit this case, with QObject-ified gadgets...
+      return;
   }
 
-  const QMetaObject *metaObject = obj->metaObject();
   addMetaObject(metaObject);
 
   /*
