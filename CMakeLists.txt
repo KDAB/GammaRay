@@ -226,7 +226,6 @@ if(Qt5Core_FOUND)
     3DRender
     Bluetooth
     Concurrent
-    Designer
     Positioning
     PrintSupport
     Qml
@@ -239,6 +238,10 @@ if(Qt5Core_FOUND)
     WebKitWidgets
     Widgets
   )
+  # starting with 5.6, the Designer module needs CMake 3.0 or higher
+  if (Qt5Core_VERSION VERSION_LESS 5.6 OR NOT CMAKE_VERSION VERSION_LESS 3.0)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Designer)
+  endif()
   if(GAMMARAY_BUILD_UI) # widgets are required for the UI
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
   endif()
