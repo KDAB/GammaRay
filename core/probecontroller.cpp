@@ -84,7 +84,10 @@ void ProbeController::requestSupportedTools(ObjectId id)
   ToolInfos toolInfos;
   toolInfos.reserve(indexes.size());
   foreach (const auto &index, indexes) {
-    toolInfos << ToolInfo{index.data(ToolModelRole::ToolId).toString(), index.data(Qt::DisplayRole).toString()};
+    ToolInfo info;
+    info.id = index.data(ToolModelRole::ToolId).toString();
+    info.name =  index.data(Qt::DisplayRole).toString();
+    toolInfos.push_back(info);
   }
   emit supportedToolsResponse(id, toolInfos);
 }
