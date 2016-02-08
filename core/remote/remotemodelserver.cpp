@@ -274,6 +274,12 @@ bool RemoteModelServer::canSerialize(const QVariant& value) const
       if (!canSerialize(v))
         return false;
     }
+  } else if (value.canConvert<QVariantMap>()) {
+    auto iterable = value.value<QAssociativeIterable>();
+    for (auto it = iterable.begin(); it != iterable.end(); ++it) {
+      if (!canSerialize(it.value()))
+        return false;
+    }
   }
 #endif
 
