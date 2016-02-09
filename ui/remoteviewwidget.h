@@ -35,6 +35,7 @@
 #include <common/remoteviewframe.h>
 
 #include <QWidget>
+#include <QPointer>
 
 class QAbstractItemModel;
 class QActionGroup;
@@ -169,7 +170,7 @@ private:
     QActionGroup *m_interactionModeActions;
     QAction *m_zoomInAction;
     QAction *m_zoomOutAction;
-    RemoteViewInterface *m_interface;
+    QPointer<RemoteViewInterface> m_interface;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;

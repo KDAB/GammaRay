@@ -50,7 +50,6 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
     m_zoomLevelModel(new QStandardItemModel(this)),
     m_unavailableText(tr("No remote view available.")),
     m_interactionModeActions(new QActionGroup(this)),
-    m_interface(Q_NULLPTR),
     m_zoom(1.0),
     m_x(0),
     m_y(0),
@@ -90,6 +89,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget* parent):
 
 RemoteViewWidget::~RemoteViewWidget()
 {
+    window()->removeEventFilter(this);
 }
 
 void RemoteViewWidget::setName(const QString& name)
@@ -744,14 +744,18 @@ void RemoteViewWidget::keyReleaseEvent(QKeyEvent* event)
 
 void RemoteViewWidget::showEvent(QShowEvent* event)
 {
-    m_interface->setViewActive(true);
+    if (m_interface) {
+        m_interface->setViewActive(true);
+    }
     QWidget::showEvent(event);
 }
 
 void RemoteViewWidget::hideEvent(QHideEvent* event)
 {
-    if (Endpoint::isConnected())
-        m_interface->setViewActive(false);
+    if (Endpoint::isConnected()) {
+        if (m_interface)
+            m_interface->setViewActive(false);
+    }
     QWidget::hideEvent(event);
 }
 
@@ -779,10 +783,12 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
 bool RemoteViewWidget::eventFilter(QObject *receiver, QEvent *event)
 {
     if (receiver == window()) {
-        if (event->type() == QEvent::Show) {
-            m_interface->setViewActive(isVisible());
-        } else if (event->type() == QEvent::Hide) {
-            m_interface->setViewActive(false);
+        if (m_interface) {
+            if (event->type() == QEvent::Show) {
+                m_interface->setViewActive(isVisible());
+            } else if (event->type() == QEvent::Hide) {
+                m_interface->setViewActive(false);
+            }
         }
     }
 
