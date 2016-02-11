@@ -33,9 +33,12 @@
 #include "statemodeldelegate.h"
 
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
+#include <common/probecontrollerinterface.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/deferredtreeviewconfiguration.h>
 
+#include <kdstatemachineeditor/core/elementmodel.h>
 #include <kdstatemachineeditor/core/state.h>
 #include <kdstatemachineeditor/core/transition.h>
 #include <kdstatemachineeditor/core/runtimecontroller.h>
@@ -45,6 +48,7 @@
 
 #include <QDebug>
 #include <QLayout>
+#include <QScopedValueRollback>
 #include <QScrollBar>
 #include <QSettings>
 
@@ -53,6 +57,68 @@
 using namespace GammaRay;
 
 namespace {
+
+class SelectionModelSyncer : public QObject
+{
+public:
+  SelectionModelSyncer(StateMachineViewerWidgetNG *widget);
+
+private Q_SLOTS:
+  void handle_objectInspector_currentChanged(const QModelIndex &index);
+  void handle_stateMachineView_currentChanged(const QModelIndex &index);
+
+  StateMachineViewerWidgetNG *m_widget;
+  bool m_updatesEnabled;
+};
+
+SelectionModelSyncer::SelectionModelSyncer(StateMachineViewerWidgetNG *widget)
+  : QObject(widget)
+  , m_widget(widget)
+  , m_updatesEnabled(true)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  QMetaType::registerComparators<ObjectId>(); // for proper QAIM::match support for ObjectId
+#endif
+
+  connect(widget->objectInspector()->selectionModel(), &QItemSelectionModel::currentChanged,
+          this, &SelectionModelSyncer::handle_objectInspector_currentChanged);
+  connect(widget->stateMachineView()->scene()->selectionModel(), &QItemSelectionModel::currentChanged,
+          this, &SelectionModelSyncer::handle_stateMachineView_currentChanged);
+}
+
+void SelectionModelSyncer::handle_objectInspector_currentChanged(const QModelIndex &index)
+{
+  if (!m_updatesEnabled)
+    return;
+
+  QScopedValueRollback<bool> block(m_updatesEnabled, false);
+
+  const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+  const auto model = m_widget->stateMachineView()->scene()->model();
+  const auto matches = model->match(model->index(0, 0), KDSME::StateModel::InternalIdRole,
+                                    static_cast<quintptr>(objectId.id()), 1,
+                                    Qt::MatchExactly | Qt::MatchRecursive);
+  auto selectionModel = m_widget->stateMachineView()->scene()->selectionModel();
+  selectionModel->setCurrentIndex(matches.value(0), QItemSelectionModel::SelectCurrent);
+}
+
+void SelectionModelSyncer::handle_stateMachineView_currentChanged(const QModelIndex &index)
+{
+  if (!m_updatesEnabled)
+    return;
+
+  QScopedValueRollback<bool> block(m_updatesEnabled, false);
+
+  const auto internalId = index.data(KDSME::StateModel::InternalIdRole).value<quintptr>();
+  const auto objectId = ObjectId(reinterpret_cast<QObject *>(internalId));
+  qWarning() << objectId;
+  const auto model = m_widget->objectInspector()->model();
+  const auto matches = model->match(model->index(0, 0), ObjectModel::ObjectIdRole,
+                                    QVariant::fromValue(objectId), 1,
+                                    Qt::MatchExactly | Qt::MatchRecursive);
+  auto selectionModel = m_widget->objectInspector()->selectionModel();
+  selectionModel->setCurrentIndex(matches.value(0), QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
+}
 
 QObject* createStateMachineViewerClient(const QString &/*name*/, QObject *parent)
 {
@@ -135,6 +201,9 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
 
   m_interface->repopulateGraph();
 
+  // share selection model
+  new SelectionModelSyncer(this);
+
   loadSettings();
 }
 
@@ -142,6 +211,17 @@ StateMachineViewerWidgetNG::~StateMachineViewerWidgetNG()
 {
   saveSettings();
 }
+
+KDSME::StateMachineView *StateMachineViewerWidgetNG::stateMachineView() const
+{
+  return m_stateMachineView;
+}
+
+QTreeView *StateMachineViewerWidgetNG::objectInspector() const
+{
+  return m_ui->singleStateMachineView;
+}
+
 
 void StateMachineViewerWidgetNG::loadSettings()
 {

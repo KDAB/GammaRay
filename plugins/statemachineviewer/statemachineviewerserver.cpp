@@ -34,6 +34,7 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
+#include <core/remote/serverproxymodel.h>
 #include <common/objectbroker.h>
 
 #include <QAbstractTransition>
@@ -106,7 +107,7 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
 
   auto stateMachineFilter = new ObjectTypeFilterProxyModel<QStateMachine>(this);
   stateMachineFilter->setSourceModel(probe->objectListModel());
-  m_stateMachinesModel = new SingleColumnObjectProxyModel(this);
+  m_stateMachinesModel = new ServerProxyModel<SingleColumnObjectProxyModel>(this);
   m_stateMachinesModel->setSourceModel(stateMachineFilter);
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateMachineModel"), m_stateMachinesModel);
 

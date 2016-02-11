@@ -34,6 +34,8 @@
 
 #include <QWidget>
 
+class QTreeView;
+
 namespace KDSME {
 class State;
 class StateMachine;
@@ -53,6 +55,9 @@ class StateMachineViewerWidgetNG : public QWidget
 public:
   explicit StateMachineViewerWidgetNG(QWidget* parent = 0, Qt::WindowFlags f = 0);
   virtual ~StateMachineViewerWidgetNG();
+
+  KDSME::StateMachineView* stateMachineView() const;
+  QTreeView* objectInspector() const;
 
 private slots:
   void showMessage(const QString &message);
