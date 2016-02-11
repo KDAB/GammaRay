@@ -111,7 +111,6 @@ void SelectionModelSyncer::handle_stateMachineView_currentChanged(const QModelIn
 
   const auto internalId = index.data(KDSME::StateModel::InternalIdRole).value<quintptr>();
   const auto objectId = ObjectId(reinterpret_cast<QObject *>(internalId));
-  qWarning() << objectId;
   const auto model = m_widget->objectInspector()->model();
   const auto matches = model->match(model->index(0, 0), ObjectModel::ObjectIdRole,
                                     QVariant::fromValue(objectId), 1,
