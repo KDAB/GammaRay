@@ -91,7 +91,8 @@ void SelectionModelSyncer::handle_objectInspector_currentChanged(const QModelInd
   if (!m_updatesEnabled)
     return;
 
-  QScopedValueRollback<bool> block(m_updatesEnabled, false);
+  QScopedValueRollback<bool> block(m_updatesEnabled);
+  m_updatesEnabled = false;
 
   const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
   const auto model = m_widget->stateMachineView()->scene()->model();
@@ -107,7 +108,8 @@ void SelectionModelSyncer::handle_stateMachineView_currentChanged(const QModelIn
   if (!m_updatesEnabled)
     return;
 
-  QScopedValueRollback<bool> block(m_updatesEnabled, false);
+  QScopedValueRollback<bool> block(m_updatesEnabled);
+  m_updatesEnabled = false;
 
   const auto internalId = index.data(KDSME::StateModel::InternalIdRole).value<quintptr>();
   const auto objectId = ObjectId(reinterpret_cast<QObject *>(internalId));
