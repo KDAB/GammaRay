@@ -57,7 +57,7 @@ else()
                       LIB_NAME gammaray_probe-${GAMMARAY_PROBE_ABI}
                       DEPS "core gui network GammaRayCommon GammaRayCore"
                       FILENAME_VAR PRI_FILENAME
-                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}/..)
+                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR})
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
   install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gammaray_probe-android-dependencies.xml DESTINATION ${LIB_INSTALL_DIR})
 endif()
