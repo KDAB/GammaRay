@@ -31,6 +31,7 @@
 
 #include <QObject>
 #include <QDataStream>
+#include <QDebug>
 #include <QMetaType>
 #include <QVector>
 
@@ -118,6 +119,12 @@ Q_SIGNALS:
 private:
   Q_DISABLE_COPY(ProbeControllerInterface)
 };
+
+inline QDebug &operator<<(QDebug dbg, ObjectId id)
+{
+  dbg.nospace() << "ObjectId(" << id.type() << ", " << id.id() << ", " << id.typeName() << ")";
+  return dbg.space();
+}
 
 inline QDataStream &operator<<(QDataStream &out, ObjectId id)
 {
