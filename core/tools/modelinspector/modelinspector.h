@@ -36,6 +36,7 @@
 class QAbstractItemModel;
 class QItemSelection;
 class QItemSelectionModel;
+class QModelIndex;
 
 namespace GammaRay {
 
