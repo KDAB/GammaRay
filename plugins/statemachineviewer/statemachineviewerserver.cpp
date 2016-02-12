@@ -65,7 +65,12 @@ QString StateMachineViewerServer::labelForTransition(QAbstractTransition* transi
 
   // try to find descriptive labels for built-in transitions
   if (auto signalTransition = qobject_cast<QSignalTransition*>(transition)) {
-    return Util::displayString(signalTransition->senderObject()) + "::" + signalTransition->signal().mid(1);
+    QString str;
+    if (signalTransition->senderObject() != transition->sourceState()) {
+      str += Util::displayString(signalTransition->senderObject()) + "\n / ";
+    }
+    str += signalTransition->signal().mid(1);
+    return str;
   }
   // QKeyEventTransition is in QtWidgets, so this is a bit dirty to avoid a hard dependency
   else if (transition->inherits("QKeyEventTransition")) {
