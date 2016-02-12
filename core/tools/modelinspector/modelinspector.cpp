@@ -73,7 +73,7 @@ ModelInspector::ModelInspector(ProbeInterface* probe, QObject *parent) :
 
   m_cellModel = new ModelCellModel(this);
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelCellModel"), m_cellModel);
-  selectionChanged(QItemSelection());
+  selectionChanged(QModelIndex());
 
   m_modelTester = new ModelTester(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
@@ -111,14 +111,14 @@ void ModelInspector::modelSelected(const QItemSelection& selected)
     m_modelContentSelectionModel = new SelectionModelServer(QStringLiteral("com.kdab.GammaRay.ModelContent.selection"), m_modelContentServer->model(), this);
     ObjectBroker::registerSelectionModel(m_modelContentSelectionModel);
     connect(m_modelContentSelectionModel,
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(selectionChanged(QItemSelection)));
+            SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            SLOT(selectionChanged(QModelIndex)));
   } else {
     m_modelContentServer->setModel(0);
   }
 
   // clear the cell info box
-  selectionChanged(QItemSelection());
+  selectionChanged(QModelIndex());
 }
 
 void ModelInspector::objectSelected(QObject* object)
@@ -139,12 +139,8 @@ void ModelInspector::objectSelected(QObject* object)
   }
 }
 
-void ModelInspector::selectionChanged(const QItemSelection& selected)
+void ModelInspector::selectionChanged(const QModelIndex& index)
 {
-  QModelIndex index;
-  if (selected.size() >= 1)
-    index = selected.first().topLeft();
-
   m_cellModel->setModelIndex(index);
 
   emit cellSelected(index.row(), index.column(), QString::number(index.internalId()), Util::addressToString(index.internalPointer()));

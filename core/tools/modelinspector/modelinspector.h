@@ -53,7 +53,7 @@ class ModelInspector : public ModelInspectorInterface
 
   private slots:
     void modelSelected(const QItemSelection &selected);
-    void selectionChanged(const QItemSelection &selected);
+    void selectionChanged(const QModelIndex &selected);
 
     void objectSelected(QObject* object);
     void objectCreated(QObject *object);
