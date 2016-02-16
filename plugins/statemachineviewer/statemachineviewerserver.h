@@ -76,7 +76,6 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     void stateSelectionChanged();
 
     void setFilteredStates(const QVector<QAbstractState*> &states);
-    void setMaximumDepth(int depth) Q_DECL_OVERRIDE;
     void selectStateMachine(int row) Q_DECL_OVERRIDE;
     void setSelectedStateMachine(QStateMachine* machine);
 
@@ -98,7 +97,6 @@ class StateMachineViewerServer : public StateMachineViewerInterface
 
     // filters
     QVector<QAbstractState*> m_filteredStates;
-    int m_maximumDepth;
 
     StateMachineWatcher *m_stateMachineWatcher;
     QSet<QAbstractState*> m_recursionGuard;

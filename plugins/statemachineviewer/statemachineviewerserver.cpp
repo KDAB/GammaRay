@@ -100,7 +100,6 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
   : StateMachineViewerInterface(parent),
     m_stateModel(new StateModel(this)),
     m_transitionModel(new TransitionModel(this)),
-    m_maximumDepth(0),
     m_stateMachineWatcher(new StateMachineWatcher(this))
 {
   registerTypes();
@@ -123,7 +122,6 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
   connect(m_stateMachineWatcher, SIGNAL(transitionTriggered(QAbstractTransition*)),
           SLOT(handleTransitionTriggered(QAbstractTransition*)));
 
-  setMaximumDepth(3);
   updateStartStop();
 }
 
@@ -132,7 +130,6 @@ void StateMachineViewerServer::repopulateGraph()
   emit aboutToRepopulateGraph();
 
   // just to be sure the client has the same setting than we do
-  emit maximumDepthChanged(m_maximumDepth);
   updateStartStop();
 
   if (m_filteredStates.isEmpty()) {
@@ -150,21 +147,6 @@ void StateMachineViewerServer::repopulateGraph()
 QStateMachine *StateMachineViewerServer::selectedStateMachine() const
 {
   return m_stateModel->stateMachine();
-}
-
-static int treeDepth(QAbstractState *ascendant, QAbstractState *obj)
-{
-  if (!Util::descendantOf(ascendant, obj)) {
-    return -1;
-  }
-
-  int depth = 0;
-  QAbstractState *parent = obj->parentState();
-  while (parent) {
-    ++depth;
-    parent = parent->parentState();
-  }
-  return depth;
 }
 
 bool StateMachineViewerServer::mayAddState(QAbstractState *state)
@@ -190,23 +172,6 @@ bool StateMachineViewerServer::mayAddState(QAbstractState *state)
     }
   }
 
-  if (m_maximumDepth > 0) {
-    int depth = -1;
-    if (!m_filteredStates.isEmpty()) {
-      foreach(QAbstractState* filter, m_filteredStates) {
-        depth = ::treeDepth(filter, state);
-        if (depth != -1) {
-          break;
-        }
-      }
-    } else {
-      depth = ::treeDepth(m_stateModel->stateMachine(), state);
-    }
-    if (depth > m_maximumDepth) {
-      return false;
-    }
-  }
-
   return true;
 }
 
@@ -228,19 +193,6 @@ void StateMachineViewerServer::setFilteredStates(const QVector<QAbstractState*>&
   }
 
   m_filteredStates = states;
-}
-
-void StateMachineViewerServer::setMaximumDepth(int depth)
-{
-  if (m_maximumDepth == depth) {
-    return;
-  }
-
-  emit message(tr("Showing states until a depth of %1").arg(depth));
-  m_maximumDepth = depth;
-  repopulateGraph();
-
-  emit maximumDepthChanged(depth);
 }
 
 void StateMachineViewerServer::setSelectedStateMachine(QStateMachine* machine)

@@ -40,11 +40,6 @@ void StateMachineViewerClient::selectStateMachine(int index)
   Endpoint::instance()->invokeObject(objectName(), "selectStateMachine", QVariantList() << index);
 }
 
-void StateMachineViewerClient::setMaximumDepth(int depth)
-{
-  Endpoint::instance()->invokeObject(objectName(), "setMaximumDepth", QVariantList() << depth);
-}
-
 void StateMachineViewerClient::toggleRunning()
 {
   Endpoint::instance()->invokeObject(objectName(), "toggleRunning");
