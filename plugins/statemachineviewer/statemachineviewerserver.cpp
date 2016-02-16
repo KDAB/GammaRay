@@ -304,6 +304,9 @@ void StateMachineViewerServer::stateConfigurationChanged()
 
 void StateMachineViewerServer::addState(QAbstractState *state)
 {
+  if (!state)
+    return;
+
   if (!mayAddState(state)) {
     return;
   }
@@ -333,13 +336,13 @@ void StateMachineViewerServer::addState(QAbstractState *state)
   emit stateAdded(StateId(state), StateId(parentState),
                   hasChildren, label, type, connectToInitial);
 
-  // add transitions
-  Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition*>()) {
+  // add outgoing transitions
+  Q_FOREACH (auto transition, state->findChildren<QAbstractTransition*>(QString(), Qt::FindDirectChildrenOnly)) {
     addTransition(transition);
   }
 
-  // recursive call to add children
-  Q_FOREACH (QAbstractState* child, state->findChildren<QAbstractState*>()) {
+  // add sub-states
+  Q_FOREACH (auto child, state->findChildren<QAbstractState*>(QString(), Qt::FindDirectChildrenOnly)) {
     addState(child);
   }
 }
