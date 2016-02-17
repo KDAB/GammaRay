@@ -337,13 +337,17 @@ void StateMachineViewerServer::addState(QAbstractState *state)
                   hasChildren, label, type, connectToInitial);
 
   // add outgoing transitions
-  Q_FOREACH (auto transition, state->findChildren<QAbstractTransition*>(QString(), Qt::FindDirectChildrenOnly)) {
-    addTransition(transition);
+  Q_FOREACH (auto object, state->children()) {
+    if (auto transition = qobject_cast<QAbstractTransition *>(object)) {
+      addTransition(transition);
+    }
   }
 
   // add sub-states
-  Q_FOREACH (auto child, state->findChildren<QAbstractState*>(QString(), Qt::FindDirectChildrenOnly)) {
-    addState(child);
+  Q_FOREACH (auto object, state->children()) {
+    if (auto state = qobject_cast<QAbstractState *>(object)) {
+      addState(state);
+    }
   }
 }
 
