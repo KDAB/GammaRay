@@ -55,7 +55,11 @@ void Qt3DInspector::registerCoreMetaTypes()
     MetaObject *mo = 0;
     MO_ADD_METAOBJECT1(Qt3DCore::QNode, QObject);
     MO_ADD_PROPERTY_RO(Qt3DCore::QNode, bool, notificationsBlocked);
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
     MO_ADD_PROPERTY_RO(Qt3DCore::QNode, Qt3DCore::QNodeList, childrenNodes);
+#else
+    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, Qt3DCore::QNodeList, childNodes);
+#endif
 
     MO_ADD_METAOBJECT1(Qt3DCore::QComponent, Qt3DCore::QNode);
     MO_ADD_PROPERTY_RO(Qt3DCore::QComponent, QVector<Qt3DCore::QEntity*>, entities);
