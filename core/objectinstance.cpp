@@ -94,6 +94,27 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
     }
 }
 
+bool ObjectInstance::operator==(const ObjectInstance &rhs) const
+{
+    if (type() != rhs.type())
+        return false;
+    switch (type()) {
+        case Invalid:
+            return false;
+        case QtObject:
+        case QtGadget:
+        case Object:
+            return object() == rhs.object();
+        case QtMetaObject:
+            return metaObject() == rhs.metaObject();
+        case QtVariant:
+            return variant() == rhs.variant();
+    }
+
+    Q_ASSERT(false);
+    return false;
+}
+
 ObjectInstance::Type ObjectInstance::type() const
 {
     return m_type;

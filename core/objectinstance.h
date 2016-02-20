@@ -60,6 +60,8 @@ public:
     ObjectInstance(void *obj, const char* typeName);
     ObjectInstance(const QVariant &value); //krazy:exclude=explicit
 
+    bool operator==(const ObjectInstance &rhs) const;
+
     Type type() const;
 
     /// only valid for QtObject

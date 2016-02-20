@@ -383,12 +383,14 @@ void AggregatedPropertyModel::objectInvalidated(PropertyAdaptor* adaptor)
 
 bool AggregatedPropertyModel::hasLoop(PropertyAdaptor* adaptor, const QVariant& v) const
 {
-    auto newObj = v.value<QObject*>();
-    if (!newObj)
+    const auto newOi = ObjectInstance(v);
+    if (newOi.type() != ObjectInstance::QtObject && newOi.type() != ObjectInstance::Object)
+        return false;
+    if (!newOi.object())
         return false;
 
     while (adaptor) {
-        if (adaptor->object().qtObject() == newObj)
+        if (adaptor->object() == newOi)
             return true;
         adaptor = qobject_cast<PropertyAdaptor*>(adaptor->parent());
     }
