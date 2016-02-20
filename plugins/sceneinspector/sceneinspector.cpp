@@ -49,6 +49,7 @@
 
 #include <QGraphicsEffect>
 #include <QGraphicsItem>
+#include <QGraphicsLayout>
 #include <QGraphicsLayoutItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsWidget>
@@ -62,6 +63,8 @@ using namespace std;
 
 Q_DECLARE_METATYPE(QGraphicsEffect *)
 Q_DECLARE_METATYPE(QGraphicsItemGroup *)
+Q_DECLARE_METATYPE(QGraphicsLayoutItem*)
+Q_DECLARE_METATYPE(QGraphicsLayout*)
 Q_DECLARE_METATYPE(QGraphicsObject *)
 Q_DECLARE_METATYPE(QGraphicsWidget *)
 Q_DECLARE_METATYPE(QGraphicsItem::CacheMode)
@@ -275,6 +278,9 @@ QString SceneInspector::findBestType(QGraphicsItem *item)
 
 void SceneInspector::registerGraphicsViewMetaTypes()
 {
+  qRegisterMetaType<QGraphicsEffect*>();
+  qRegisterMetaType<QGraphicsLayout*>();
+
   MetaObject *mo = 0;
   MO_ADD_METAOBJECT0(QGraphicsItem);
   MO_ADD_PROPERTY   (QGraphicsItem, bool,                             acceptDrops,               setAcceptDrops);
@@ -372,8 +378,25 @@ void SceneInspector::registerGraphicsViewMetaTypes()
 
   MO_ADD_METAOBJECT0(QGraphicsLayoutItem);
   MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, QRectF, contentsRect);
+  MO_ADD_PROPERTY_CR(QGraphicsLayoutItem, QRectF, geometry, setGeometry);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, QGraphicsItem*, graphicsItem);
   MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, bool, isLayout);
+  MO_ADD_PROPERTY   (QGraphicsLayoutItem, qreal, maximumHeight, setMaximumHeight);
+  MO_ADD_PROPERTY_CR(QGraphicsLayoutItem, QSizeF, maximumSize, setMaximumSize);
+  MO_ADD_PROPERTY   (QGraphicsLayoutItem, qreal, maximumWidth, setMaximumWidth);
   MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, bool, ownedByLayout);
+  MO_ADD_PROPERTY   (QGraphicsLayoutItem, qreal, minimumHeight, setMinimumHeight);
+  MO_ADD_PROPERTY_CR(QGraphicsLayoutItem, QSizeF, minimumSize, setMinimumSize);
+  MO_ADD_PROPERTY   (QGraphicsLayoutItem, qreal, minimumWidth, setMinimumWidth);
+  MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, QGraphicsLayoutItem*, parentLayoutItem);
+  MO_ADD_PROPERTY   (QGraphicsLayoutItem, qreal, preferredHeight, setPreferredHeight);
+  MO_ADD_PROPERTY_CR(QGraphicsLayoutItem, QSizeF, preferredSize, setPreferredSize);
+  MO_ADD_PROPERTY   (QGraphicsLayoutItem, qreal, preferredWidth, setPreferredWidth);
+  MO_ADD_PROPERTY_CR(QGraphicsLayoutItem, QSizePolicy, sizePolicy, setSizePolicy);
+
+  MO_ADD_METAOBJECT1(QGraphicsLayout, QGraphicsLayoutItem);
+  MO_ADD_PROPERTY_RO(QGraphicsLayout, int, count);
+  MO_ADD_PROPERTY_RO(QGraphicsLayout, bool, isActivated);
 
   MO_ADD_METAOBJECT2(QGraphicsWidget, QGraphicsObject, QGraphicsLayoutItem);
   MO_ADD_PROPERTY_RO(QGraphicsWidget, QRectF, windowFrameGeometry);
@@ -387,6 +410,8 @@ void SceneInspector::registerVariantHandlers()
 {
   VariantHandler::registerStringConverter<QGraphicsItem*>(Util::addressToString);
   VariantHandler::registerStringConverter<QGraphicsItemGroup*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QGraphicsLayoutItem*>(Util::addressToString);
+  VariantHandler::registerStringConverter<QGraphicsLayout*>(Util::addressToString);
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   VariantHandler::registerStringConverter<QGraphicsEffect*>(Util::displayString);
