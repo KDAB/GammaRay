@@ -374,7 +374,7 @@ void SceneInspector::registerGraphicsViewMetaTypes()
   MO_ADD_PROPERTY   (QGraphicsPixmapItem, Qt::TransformationMode, transformationMode, setTransformationMode);
 
   // no extra properties, but we need the inheritance connection for anything above to work
-  MO_ADD_METAOBJECT2(QGraphicsObject, QGraphicsItem, QObject);
+  MO_ADD_METAOBJECT2(QGraphicsObject, QObject, QGraphicsItem);
 
   MO_ADD_METAOBJECT0(QGraphicsLayoutItem);
   MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, QRectF, contentsRect);
