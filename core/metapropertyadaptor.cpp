@@ -110,6 +110,6 @@ void MetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
 
     Q_ASSERT(m_metaObj && m_obj);
     const auto prop = m_metaObj->propertyAt(index);
-    prop->setValue(m_obj, value);
+    prop->setValue(m_metaObj->castForPropertyAt(m_obj, index), value);
     emit propertyChanged(index, index);
 }
