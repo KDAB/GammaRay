@@ -231,6 +231,10 @@ void SceneInspector::objectSelected(QObject *object, const QPoint &pos)
       sceneItemSelected(item);
     }
   }
+
+  if (auto item = qobject_cast<QGraphicsObject*>(object)) {
+      sceneItemSelected(item);
+  }
 }
 
 void SceneInspector::sceneItemSelected(QGraphicsItem *item)
