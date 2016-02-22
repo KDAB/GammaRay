@@ -27,6 +27,8 @@
 #ifndef GAMMARAY_CONTEXTMENUEXTENSION_H
 #define GAMMARAY_CONTEXTMENUEXTENSION_H
 
+#include "gammaray_ui_export.h"
+
 #include <common/probecontrollerinterface.h>
 
 #include <QObject>
@@ -36,7 +38,7 @@ class QMenu;
 
 namespace GammaRay {
 
-class ContextMenuExtension : public QObject
+class GAMMARAY_UI_EXPORT ContextMenuExtension : public QObject
 {
   Q_OBJECT
 

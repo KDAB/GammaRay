@@ -45,6 +45,7 @@
 #include "core/probeguard.h"
 #include <core/paintanalyzer.h>
 #include <core/remoteviewserver.h>
+#include <core/remote/serverproxymodel.h>
 
 #include "common/objectbroker.h"
 #include "common/settempvalue.h"
@@ -99,8 +100,9 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
   widgetFilterProxy->setSourceModel(probe->objectTreeModel());
 
-  auto widgetSearchProxy = new KRecursiveFilterProxyModel(this);
+  auto widgetSearchProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   widgetSearchProxy->setSourceModel(widgetFilterProxy);
+  widgetSearchProxy->addRole(ObjectModel::ObjectIdRole);
 
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.WidgetTree"), widgetSearchProxy);
 

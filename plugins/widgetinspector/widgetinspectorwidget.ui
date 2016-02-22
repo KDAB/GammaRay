@@ -26,7 +26,11 @@
          <widget class="QLineEdit" name="widgetSearchLine"/>
         </item>
         <item>
-         <widget class="QTreeView" name="widgetTreeView"/>
+         <widget class="QTreeView" name="widgetTreeView">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

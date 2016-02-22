@@ -53,6 +53,7 @@ class WidgetInspectorWidget : public QWidget
 
   private slots:
     void widgetSelected(const QItemSelection &selection);
+    void widgetTreeContextMenu(QPoint pos);
 
     void saveAsImage();
     void saveAsSvg();

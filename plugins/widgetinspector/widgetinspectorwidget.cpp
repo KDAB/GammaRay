@@ -35,6 +35,7 @@
 #include "common/objectbroker.h"
 #include "common/objectmodel.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/paintbufferviewer.h>
 #include <ui/remoteviewwidget.h>
@@ -44,6 +45,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QLabel>
+#include <QMenu>
 #include <QtPlugin>
 #include <QToolBar>
 
@@ -75,6 +77,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   connect(ui->widgetTreeView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
+  connect(ui->widgetTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(widgetTreeContextMenu(QPoint)));
 
   m_remoteView->setName(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"));
 
@@ -148,6 +151,20 @@ void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
   }
 
   updateActions();
+}
+
+void WidgetInspectorWidget::widgetTreeContextMenu(QPoint pos)
+{
+    const auto index = ui->widgetTreeView->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    QMenu menu(tr("Widget @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+
+    menu.exec(ui->widgetTreeView->viewport()->mapToGlobal(pos));
 }
 
 void WidgetInspectorWidget::saveAsImage()
