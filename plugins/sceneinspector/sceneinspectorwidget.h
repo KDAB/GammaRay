@@ -61,6 +61,7 @@ class SceneInspectorWidget : public QWidget
     void sceneRendered(const QPixmap &view);
     void visibleSceneRectChanged();
     void itemSelected(const QRectF &boundingRect);
+    void sceneContextMenu(QPoint pos);
 
   private:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;

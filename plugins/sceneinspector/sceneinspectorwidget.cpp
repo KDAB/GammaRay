@@ -34,8 +34,10 @@
 #include "graphicsview.h"
 #include "ui_sceneinspectorwidget.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 
+#include <common/objectmodel.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
 #include <common/objectmodel.h>
@@ -43,6 +45,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsView>
 #include <QScrollBar>
+#include <QMenu>
 #include <QMouseEvent>
 #include <QDebug>
 #include <QTimer>
@@ -82,6 +85,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   ui->sceneTreeView->setSelectionModel(itemSelection);
   connect(itemSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(sceneItemSelected(QItemSelection)));
+
+  connect(ui->sceneTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(sceneContextMenu(QPoint)));
 
   ui->graphicsSceneView->setGraphicsScene(m_scene);
   connect(m_interface, SIGNAL(sceneRectChanged(QRectF)),
@@ -220,6 +225,20 @@ void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
         QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
         ui->graphicsSceneView->showGraphicsItem(item);
     }
+}
+
+void SceneInspectorWidget::sceneContextMenu(QPoint pos)
+{
+    const auto index = ui->sceneTreeView->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    QMenu menu(tr("QGraphicsItem @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+
+    menu.exec(ui->sceneTreeView->viewport()->mapToGlobal(pos));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

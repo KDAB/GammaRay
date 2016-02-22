@@ -39,6 +39,7 @@
 #include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/server.h>
+#include <core/remote/serverproxymodel.h>
 
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
@@ -99,8 +100,9 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
           this, SLOT(sceneSelected(QItemSelection)));
 
   m_sceneModel = new SceneModel(this);
-  auto sceneProxy = new KRecursiveFilterProxyModel(this);
+  auto sceneProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   sceneProxy->setSourceModel(m_sceneModel);
+  sceneProxy->addRole(ObjectModel::ObjectIdRole);
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"), sceneProxy);
   m_itemSelectionModel = ObjectBroker::selectionModel(sceneProxy);
   connect(m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
