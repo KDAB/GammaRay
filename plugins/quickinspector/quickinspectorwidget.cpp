@@ -41,6 +41,9 @@
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
+#include <common/probecontrollerinterface.h> // for ObjectId
+#include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 #include <ui/uiintegration.h>
@@ -218,8 +221,9 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
     action->setData(QuickItemAction::AnalyzePainting);
   }
 
-  if (contextMenu.isEmpty())
-    return;
+  const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+  ContextMenuExtension ext(objectId);
+  ext.populateMenu(&contextMenu);
 
   if (QAction *action = contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos))) {
     UiIntegration *integ = 0;

@@ -124,6 +124,9 @@ QVariant QuickItemModel::data(const QModelIndex &index, int role) const
     if (qobject_cast<QQuickPaintedItem*>(item) && PaintAnalyzer::isAvailable())
       return QVariant::fromValue<QuickItemActions>(QuickItemAction::AnalyzePainting);
   }
+  if (role == ObjectModel::ObjectIdRole) {
+    return QVariant::fromValue(ObjectId(item));
+  }
 
   return dataForObject(item, index, role);
 }

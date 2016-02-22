@@ -255,6 +255,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
 
   auto filterProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
   filterProxy->setSourceModel(m_itemModel);
+  filterProxy->addRole(ObjectModel::ObjectIdRole);
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickItemModel"), filterProxy);
 
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
