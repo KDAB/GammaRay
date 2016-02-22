@@ -84,6 +84,8 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
 
   connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
           SLOT(objectSelected(QObject*,QPoint)));
+  connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)),
+          this, SLOT(objectSelected(void*,QString)));
 
   ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy =
     new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
@@ -235,6 +237,13 @@ void SceneInspector::objectSelected(QObject *object, const QPoint &pos)
   if (auto item = qobject_cast<QGraphicsObject*>(object)) {
       sceneItemSelected(item);
   }
+}
+
+void SceneInspector::objectSelected(void* obj, const QString& typeName)
+{
+    if (typeName == QLatin1String("QGraphicsItem*")) { // TODO: can we get sub-classes here?
+        sceneItemSelected(reinterpret_cast<QGraphicsItem*>(obj));
+    }
 }
 
 void SceneInspector::sceneItemSelected(QGraphicsItem *item)

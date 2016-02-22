@@ -59,6 +59,7 @@ class SceneInspector : public SceneInspectorInterface
     void sceneItemSelected(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
     void objectSelected(QObject *object, const QPoint &pos);
+    void objectSelected(void *obj, const QString &typeName);
     void sceneClicked(const QPointF &pos) Q_DECL_OVERRIDE;
 
     void clientConnectedChanged(bool clientConnected);
