@@ -82,6 +82,21 @@ QUrl TcpServerDevice::externalAddress() const
         }
     }
 
+    // if localhost is all we got, use that rather than nothing
+    if (myHost.isEmpty()) {
+        switch (m_server->serverAddress().protocol()) {
+            case QAbstractSocket::IPv4Protocol:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+            case QAbstractSocket::AnyIPProtocol:
+#endif
+                myHost = QHostAddress(QHostAddress::LocalHost).toString();
+                break;
+            case QAbstractSocket::IPv6Protocol:
+                myHost = QHostAddress(QHostAddress::LocalHostIPv6).toString();
+                break;
+        }
+    }
+
     QUrl url;
     url.setScheme(QStringLiteral("tcp"));
     url.setHost(myHost);
