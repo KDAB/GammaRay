@@ -208,19 +208,18 @@ void SceneInspectorWidget::sceneSelected(int index)
 
 void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
 {
-  if (Endpoint::instance()->isRemoteClient()) {
-    return;
-  }
+    if (selection.isEmpty())
+        return;
+    const auto index = selection.first().topLeft();
+    if (!index.isValid())
+        return;
 
-  QModelIndex index;
-  if (!selection.isEmpty())
-    index = selection.first().topLeft();
-
-  if (index.isValid()) {
-    QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
-    ui->graphicsSceneView->showGraphicsItem(item);
     ui->sceneTreeView->scrollTo(index); // in case selection does not come from us
-  }
+
+    if (!Endpoint::instance()->isRemoteClient()) {
+        QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
+        ui->graphicsSceneView->showGraphicsItem(item);
+    }
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
