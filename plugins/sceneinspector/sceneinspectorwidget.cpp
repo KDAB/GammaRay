@@ -40,7 +40,6 @@
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
-#include <common/objectmodel.h>
 
 #include <QGraphicsItem>
 #include <QGraphicsView>
