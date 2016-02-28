@@ -3,6 +3,7 @@ set(gammaray_sceneinspector_plugin_srcs
   scenemodel.cpp
   sceneinspectorinterface.cpp
   sceneinspector.cpp
+  paintanalyzerextension.cpp
 )
 
 gammaray_add_plugin(gammaray_sceneinspector_plugin
@@ -25,6 +26,7 @@ if(GAMMARAY_BUILD_UI)
     sceneinspectorinterface.cpp
     sceneinspectorclient.cpp
     sceneinspectorwidget.cpp
+    paintanalyzertab.cpp
   )
 
   qt4_wrap_ui(gammaray_sceneinspector_ui_plugin_srcs

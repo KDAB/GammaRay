@@ -30,6 +30,7 @@
 #include "sceneinspector.h"
 
 #include "scenemodel.h"
+#include "paintanalyzerextension.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -40,6 +41,7 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/server.h>
 #include <core/remote/serverproxymodel.h>
+#include <core/propertycontrollerextension.h>
 
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
@@ -79,6 +81,8 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
     m_clientConnected(false)
 {
   Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(objectName()), this, "clientConnectedChanged");
+
+  PropertyController::registerExtension<PaintAnalyzerExtension>();
 
   registerGraphicsViewMetaTypes();
   registerVariantHandlers();
