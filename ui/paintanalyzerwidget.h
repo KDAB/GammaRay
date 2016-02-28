@@ -1,6 +1,4 @@
 /*
-  paintbufferviewer.cpp
-
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
@@ -26,32 +24,35 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "paintbufferviewer.h"
+#ifndef GAMMARAY_WIDGETINSPECTOR_PAINTANALYZERWIDGET_H
+#define GAMMARAY_WIDGETINSPECTOR_PAINTANALYZERWIDGET_H
 
-#include "ui_paintbufferviewer.h"
+#include "gammaray_ui_export.h"
 
-#include <common/paintanalyzerinterface.h>
-#include <common/objectbroker.h>
+#include <QWidget>
 
-#include <QComboBox>
-#include <QDebug>
-#include <QLabel>
-#include <QToolBar>
+namespace GammaRay {
 
-using namespace GammaRay;
-
-PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
-  : QDialog(parent)
-  , ui(new Ui::PaintBufferViewer)
-{
-  ui->setupUi(this);
-
-  setAttribute(Qt::WA_DeleteOnClose);
-  setModal(true);
-
-  ui->paintAnalyzerWidget->setBaseName(name);
+namespace Ui {
+  class PaintAnalyzerWidget;
 }
 
-PaintBufferViewer::~PaintBufferViewer()
+/**
+ * A widget to look at the command list in a QPaintBuffer.
+ */
+class GAMMARAY_UI_EXPORT PaintAnalyzerWidget : public QWidget
 {
+  Q_OBJECT
+  public:
+    explicit PaintAnalyzerWidget(QWidget *parent = Q_NULLPTR);
+    ~PaintAnalyzerWidget();
+
+    void setBaseName(const QString &name);
+
+  private:
+    QScopedPointer<Ui::PaintAnalyzerWidget> ui;
+};
+
 }
+
+#endif

@@ -18,6 +18,7 @@ set(gammaray_ui_srcs
   uiintegration.cpp
   remoteviewwidget.cpp
 
+  paintanalyzerwidget.cpp
   paintbufferviewer.cpp
 
   propertyeditor/propertycoloreditor.cpp
@@ -64,6 +65,7 @@ set(gammaray_ui_srcs
 qt4_wrap_ui(gammaray_ui_srcs
   methodinvocationdialog.ui
 
+  paintanalyzerwidget.ui
   paintbufferviewer.ui
 
   propertyeditor/propertydoublepaireditor.ui

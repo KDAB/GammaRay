@@ -1,47 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>GammaRay::PaintBufferViewer</class>
- <widget class="QWidget" name="GammaRay::PaintBufferViewer">
+ <widget class="QDialog" name="GammaRay::PaintBufferViewer">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>591</width>
-    <height>378</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2">
-   <property name="margin">
-    <number>0</number>
-   </property>
+  <property name="windowTitle">
+   <string>Analyze Painting</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QSplitter" name="splitter">
+    <widget class="GammaRay::PaintAnalyzerWidget" name="paintAnalyzerWidget" native="true"/>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QTreeView" name="commandView">
-      <property name="rootIsDecorated">
-       <bool>false</bool>
-      </property>
-     </widget>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="replayContainer">
-       <item>
-        <widget class="GammaRay::RemoteViewWidget" name="replayWidget" native="true"/>
-       </item>
-      </layout>
-     </widget>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GammaRay::RemoteViewWidget</class>
+   <class>GammaRay::PaintAnalyzerWidget</class>
    <extends>QWidget</extends>
-   <header>remoteviewwidget.h</header>
+   <header>paintanalyzerwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>GammaRay::PaintBufferViewer</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>GammaRay::PaintBufferViewer</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
