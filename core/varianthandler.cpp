@@ -162,6 +162,20 @@ QString VariantHandler::displayString(const QVariant &value)
   case QVariant::Locale:
     return value.toLocale().name();
 
+  case QVariant::Pen:
+  {
+    const auto pen = value.value<QPen>();
+    switch (pen.style()) {
+      case Qt::NoPen: return QStringLiteral("NoPen");
+      case Qt::SolidLine: return QStringLiteral("SolidLine");
+      case Qt::DashLine: return QStringLiteral("DashLine");
+      case Qt::DotLine: return QStringLiteral("DotLine");
+      case Qt::DashDotLine: return QStringLiteral("DashDotLine");
+      case Qt::DashDotDotLine: return QStringLiteral("DashDotDotLine");
+      case Qt::CustomDashLine: return QStringLiteral("CustomDashLine");
+    }
+  }
+
   case QVariant::Point:
     return
       QStringLiteral("%1, %2").
@@ -496,11 +510,14 @@ QVariant VariantHandler::decoration(const QVariant &value)
     const QPen pen = value.value<QPen>();
     if (pen.style() != Qt::NoPen) {
       QPixmap p(16, 16);
-      p.fill(QColor(0, 0, 0, 0));
       QPainter painter(&p);
+      Util::drawTransparencyPattern(&painter, p.rect(), 4);
+      painter.save();
       painter.setPen(pen);
       painter.translate(0, 8 - pen.width() / 2);
       painter.drawLine(0, 0, p.width(), 0);
+      painter.restore();
+      painter.drawRect(0, 0, p.width() - 1, p.height() - 1);
       return p;
     }
     break;
