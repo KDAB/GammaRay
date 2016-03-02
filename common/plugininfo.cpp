@@ -106,7 +106,7 @@ QVector<QByteArray> PluginInfo::selectableTypes() const
 
 bool PluginInfo::isValid() const
 {
-    return !m_path.isEmpty() && !m_interface.isEmpty();
+    return !m_id.isEmpty() && !m_path.isEmpty() && !m_interface.isEmpty();
 }
 
 void PluginInfo::initFromJSON(const QString& path)
@@ -145,7 +145,7 @@ void PluginInfo::initFromDesktopFile(const QString& path)
     QSettings desktopFile(path, QSettings::IniFormat);
     desktopFile.beginGroup(QStringLiteral("Desktop Entry"));
 
-    m_id = desktopFile.value(QStringLiteral("X-GammaRay-Id"), fi.baseName()).toString();
+    m_id = desktopFile.value(QStringLiteral("X-GammaRay-Id")).toString();
     m_interface = desktopFile.value(QStringLiteral("X-GammaRay-ServiceTypes"), QString()).toString();
     m_supportedTypes = desktopFile.value(QStringLiteral("X-GammaRay-Types")).toString().split(QLatin1Char(';'), QString::SkipEmptyParts);
     m_name = desktopFile.value(QStringLiteral("Name")).toString();

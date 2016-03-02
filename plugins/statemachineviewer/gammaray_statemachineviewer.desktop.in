@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=State Machines
+X-GammaRay-Id=${plugin_id}
 X-GammaRay-Types=QAbstractState;
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=gammaray_statemachineviewer_plugin
+Exec=${plugin_exec}

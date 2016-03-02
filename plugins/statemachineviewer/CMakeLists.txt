@@ -13,7 +13,7 @@ set(gammaray_statemachineviewer_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_statemachineviewer_plugin
-  DESKTOP gammaray_statemachineviewer.desktop
+  DESKTOP gammaray_statemachineviewer.desktop.in
   JSON gammaray_statemachineviewer.json
   SOURCES ${gammaray_statemachineviewer_shared_srcs} ${gammaray_statemachineviewer_plugin_srcs}
 )

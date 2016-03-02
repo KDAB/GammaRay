@@ -15,7 +15,7 @@ set(gammaray_signalmonitor_srcs
 )
 
 gammaray_add_plugin(gammaray_signalmonitor
-  DESKTOP gammaray_signalmonitor.desktop
+  DESKTOP gammaray_signalmonitor.desktop.in
   JSON gammaray_signalmonitor.json
   SOURCES ${gammaray_signalmonitor_srcs}
 )
@@ -42,7 +42,7 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_signalmonitor_ui
-    DESKTOP gammaray_signalmonitor_ui.desktop
+    DESKTOP gammaray_signalmonitor_ui.desktop.in
     JSON gammaray_signalmonitor.json
     SOURCES ${gammaray_signalmonitor_ui_srcs}
   )

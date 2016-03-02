@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Web Inspector
+X-GammaRay-Id=${plugin_id}
 X-GammaRay-Types="QWebPage;QQuickWebView"
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=gammaray_webinspector_plugin
+Exec=${plugin_exec}
