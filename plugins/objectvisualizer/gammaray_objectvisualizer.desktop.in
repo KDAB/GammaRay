@@ -1,5 +1,6 @@
 [Desktop Entry]
-Name=Text Codecs
+Name=Object Visualization
+X-GammaRay-Id=${plugin_id}
 X-GammaRay-Types=QObject;
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=gammaray_codecbrowser_plugin
+Exec=${plugin_exec}

@@ -5,7 +5,7 @@ set(gammaray_codecbrowser_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_codecbrowser_plugin
-  DESKTOP gammaray_codecbrowser.desktop
+  DESKTOP gammaray_codecbrowser.desktop.in
   JSON gammaray_codecbrowser.json
   SOURCES ${gammaray_codecbrowser_plugin_srcs}
 )
@@ -27,7 +27,7 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_codecbrowser_ui_plugin
-    DESKTOP gammaray_codecbrowser_ui.desktop
+    DESKTOP gammaray_codecbrowser_ui.desktop.in
     JSON gammaray_codecbrowser.json
     SOURCES ${gammaray_codecbrowser_plugin_ui_srcs}
   )

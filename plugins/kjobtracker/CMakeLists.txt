@@ -31,7 +31,7 @@ if(KDE4_FOUND OR KF5CoreAddons_FOUND)
   )
 
   gammaray_add_plugin(gammaray_kjobtracker_plugin
-    DESKTOP gammaray_kjobtracker.desktop
+    DESKTOP gammaray_kjobtracker.desktop.in
     JSON gammaray_kjobtracker.json
     SOURCES ${gammaray_kjob_plugin_srcs}
   )
@@ -61,7 +61,7 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_kjobtracker_ui_plugin
-    DESKTOP gammaray_kjobtracker_ui.desktop
+    DESKTOP gammaray_kjobtracker_ui.desktop.in
     JSON gammaray_kjobtracker.json
     SOURCES ${gammaray_kjob_ui_plugin_srcs}
   )

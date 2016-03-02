@@ -4,7 +4,7 @@ set(gammaray_scriptenginedebugger_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_scriptenginedebugger_plugin
-  DESKTOP gammaray_scriptenginedebugger.desktop
+  DESKTOP gammaray_scriptenginedebugger.desktop.in
   JSON gammaray_scriptenginedebugger.json
   SOURCES ${gammaray_scriptenginedebugger_plugin_srcs}
 )
@@ -24,7 +24,7 @@ if(GAMMARAY_BUILD_UI)
   qt4_wrap_ui(gammaray_scriptenginedebugger_ui_plugin_srcs scriptenginedebuggerwidget.ui)
 
   gammaray_add_plugin(gammaray_scriptenginedebugger_ui_plugin
-    DESKTOP gammaray_scriptenginedebugger_ui.desktop
+    DESKTOP gammaray_scriptenginedebugger_ui.desktop.in
     JSON gammaray_scriptenginedebugger.json
     SOURCES ${gammaray_scriptenginedebugger_ui_plugin_srcs}
   )

@@ -300,18 +300,6 @@ if(Qt5Core_FOUND)
   set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
   set_package_properties(Qt5PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
   add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS "Requires private Qt headers to be available.")
-
-  # debug suffixes for qmake compatibility (Qt5 only, otherwise we break .desktop-based plugin loading)
-  if(WIN32)
-    set(CMAKE_DEBUG_POSTFIX "d")
-  elseif(APPLE)
-    set(CMAKE_DEBUG_POSTFIX "_debug")
-  endif()
-
-  if(NOT CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
-    set(GAMMARAY_PROBE_ABI_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
-  endif()
-
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
@@ -358,6 +346,17 @@ else()
 
   # Qt4 moc limitation workaround (Qt4 moc cannot evaluate QT_VERSION preprocessor conditionals
   add_definitions(-DQT4_MOC_WORKAROUND)
+endif()
+
+# debug suffixes for qmake compatibility
+if(WIN32)
+  set(CMAKE_DEBUG_POSTFIX "d")
+elseif(APPLE)
+  set(CMAKE_DEBUG_POSTFIX "_debug")
+endif()
+
+if(NOT CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
+  set(GAMMARAY_PROBE_ABI_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
 endif()
 
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS -DQT_NO_CAST_TO_ASCII -DQT_NO_URL_CAST_FROM_STRING)
