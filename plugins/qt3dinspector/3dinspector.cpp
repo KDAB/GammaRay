@@ -58,14 +58,18 @@ void Qt3DInspector::registerCoreMetaTypes()
 #if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
     MO_ADD_PROPERTY_RO(Qt3DCore::QNode, Qt3DCore::QNodeList, childrenNodes);
 #else
-    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, Qt3DCore::QNodeList, childNodes);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, Qt3DCore::QNodeVector, childNodes);
 #endif
 
     MO_ADD_METAOBJECT1(Qt3DCore::QComponent, Qt3DCore::QNode);
     MO_ADD_PROPERTY_RO(Qt3DCore::QComponent, QVector<Qt3DCore::QEntity*>, entities);
 
     MO_ADD_METAOBJECT1(Qt3DCore::QEntity, Qt3DCore::QNode);
+#if QT_VERSION < QT_VERSION_CHECK(5, 7 , 0)
     MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QComponentList, components);
+#else
+    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QComponentVector, components);
+#endif
     MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QEntity*, parentEntity);
 }
 
