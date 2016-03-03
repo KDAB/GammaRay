@@ -34,7 +34,7 @@ if(GAMMARAY_BUILD_UI)
   target_link_libraries(gammaray_selectionmodelinspector_ui_plugin
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
-    gammaray_common
+    gammaray_ui
   )
 
 endif()

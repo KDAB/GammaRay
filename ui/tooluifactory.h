@@ -27,6 +27,8 @@
 #ifndef GAMMARAY_TOOLUIFACTORY_H
 #define GAMMARAY_TOOLUIFACTORY_H
 
+#include "gammaray_ui_export.h"
+
 #include <QMetaType>
 #include <QStringList>
 #include <QtPlugin>
@@ -40,13 +42,11 @@ namespace GammaRay {
  * for GammaRay. The unique identifier used for the UI must match the one of the corresponding
  * probe tool.
  */
-class ToolUiFactory
+class GAMMARAY_UI_EXPORT ToolUiFactory
 {
   public:
-    ToolUiFactory() {}
-    virtual inline ~ToolUiFactory()
-    {
-    }
+    ToolUiFactory();
+    virtual ~ToolUiFactory();
 
     /**
      * Unique id of this tool, must match the id of a the corresponding probe tool.
@@ -55,9 +55,10 @@ class ToolUiFactory
     virtual QString id() const = 0;
 
     /**
-     * Return true if this tool supports remoting, false otherwise.
+     * Return @c true if this tool supports remoting, @c false otherwise.
+     * The default implementation returns @c true.
      */
-    virtual bool remotingSupported() const = 0;
+    virtual bool remotingSupported() const;
 
     /**
      * Create the UI part of this tool.
@@ -71,7 +72,7 @@ class ToolUiFactory
      * the plugin, before the widget itself is needed. Use createWidget to create
      * the actual widget.
      */
-    virtual void initUi() {}
+    virtual void initUi();
 
   private:
     Q_DISABLE_COPY(ToolUiFactory)
@@ -92,11 +93,6 @@ public:
   QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE
   {
     return new ToolUi(parentWidget);
-  }
-
-  bool remotingSupported() const Q_DECL_OVERRIDE
-  {
-    return true;
   }
 };
 

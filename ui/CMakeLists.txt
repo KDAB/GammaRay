@@ -15,6 +15,7 @@ set(gammaray_ui_srcs
   proxytooluifactory.cpp
   splashscreen.cpp
   searchlinecontroller.cpp
+  tooluifactory.cpp
   uiintegration.cpp
   remoteviewwidget.cpp
 

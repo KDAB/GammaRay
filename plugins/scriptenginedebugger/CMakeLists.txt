@@ -33,6 +33,6 @@ if(GAMMARAY_BUILD_UI)
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTSCRIPT_LIBRARIES}
     ${QT_QTSCRIPTTOOLS_LIBRARIES}
-    gammaray_core
+    gammaray_ui
   )
 endif()

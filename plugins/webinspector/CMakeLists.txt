@@ -40,7 +40,7 @@ if(HAVE_QT_WEBKIT1)
       ${QT_QTGUI_LIBRARIES}
       ${QT_QTWEBKIT_LIBRARIES}
       ${Qt5WebKitWidgets_LIBRARIES}
-      gammaray_common
+      gammaray_ui
     )
   endif()
 
