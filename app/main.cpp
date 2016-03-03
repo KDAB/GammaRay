@@ -65,6 +65,8 @@ public:
         QObject(parent)
     {
         m_launcherWindow = new LauncherWindow;
+        // For some reason, Qt4 on OSX does not respect setQuitOnLastWindowClosed(false)
+        m_launcherWindow->setAttribute(Qt::WA_QuitOnClose, false);
         connect(m_launcherWindow, SIGNAL(accepted()), this, SLOT(launcherWindowAccepted()));
         connect(m_launcherWindow, SIGNAL(rejected()), QCoreApplication::instance(), SLOT(quit()));
         m_launcherWindow->show();
