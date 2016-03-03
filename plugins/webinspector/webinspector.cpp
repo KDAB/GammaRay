@@ -87,6 +87,12 @@ void WebInspector::objectAdded(QObject* obj)
 
 WebInspectorFactory::WebInspectorFactory(QObject* parent): QObject(parent)
 {
+  QVector<QByteArray> types;
+#ifdef HAVE_QT_WEBKIT1
+  types << QWebPage::staticMetaObject.className();
+#endif
+  types << QByteArrayLiteral("QQuickWebView");
+  setSupportedTypes(types);
 }
 
 QString WebInspectorFactory::id() const
@@ -97,16 +103,6 @@ QString WebInspectorFactory::id() const
 void WebInspectorFactory::init(ProbeInterface* probe)
 {
   new WebInspector(probe, probe->probe());
-}
-
-QStringList WebInspectorFactory::supportedTypes() const
-{
-  QStringList types;
-#ifdef HAVE_QT_WEBKIT1
-  types.push_back(QWebPage::staticMetaObject.className());
-#endif
-  types.push_back(QStringLiteral("QQuickWebView"));
-  return types;
 }
 
 QString WebInspectorFactory::name() const

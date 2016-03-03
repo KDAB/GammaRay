@@ -78,9 +78,16 @@ class GAMMARAY_CORE_EXPORT ToolFactory
      * Class names of types this tool can handle.
      * The tool will only be activated if an object of one of these types
      * is seen in the probed application.
-     * @return a QStringList of class names of types this tool supports.
+     * @return a QVector<QByteArray> of class names of types this tool supports.
      */
-    virtual QStringList supportedTypes() const = 0;
+    const QVector<QByteArray> &supportedTypes() const;
+    void setSupportedTypes(const QVector<QByteArray> &types);
+
+    /**
+     * Class names of types this tool can handle as a string.
+     * @return a comma separated QString of class names of types this tool supports.
+     */
+    QString supportedTypesString() const;
 
     /**
      * Initialize the tool.
@@ -108,6 +115,7 @@ class GAMMARAY_CORE_EXPORT ToolFactory
 
   private:
     Q_DISABLE_COPY(ToolFactory)
+    QVector<QByteArray> m_types;
 };
 
 /**
@@ -117,9 +125,9 @@ template <typename Type, typename Tool>
 class StandardToolFactory : public ToolFactory
 {
 public:
-  QStringList supportedTypes() const Q_DECL_OVERRIDE
+  StandardToolFactory()
   {
-    return QStringList(Type::staticMetaObject.className());
+    setSupportedTypes(QVector<QByteArray>() << Type::staticMetaObject.className());
   }
 
   QString id() const Q_DECL_OVERRIDE

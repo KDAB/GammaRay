@@ -56,13 +56,9 @@ class TimerTopFactory : public QObject,
   Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_timertop.json")
 
   public:
-    explicit TimerTopFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
+    explicit TimerTopFactory(QObject *parent = 0);
 
     QString name() const Q_DECL_OVERRIDE;
-
-    QStringList supportedTypes() const Q_DECL_OVERRIDE;
 };
 
 }
