@@ -54,7 +54,6 @@ class ProxyToolFactory : public ProxyFactory<ToolFactory>
     bool isValid() const;
 
     QString name() const Q_DECL_OVERRIDE;
-    QStringList supportedTypes() const Q_DECL_OVERRIDE;
     bool isHidden() const Q_DECL_OVERRIDE;
     QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 

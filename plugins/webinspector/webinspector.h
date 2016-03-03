@@ -54,7 +54,6 @@ class WebInspectorFactory : public QObject, public ToolFactory
     QString id() const Q_DECL_OVERRIDE;
     QString name() const Q_DECL_OVERRIDE;
     void init(ProbeInterface* probe) Q_DECL_OVERRIDE;
-    QStringList supportedTypes() const Q_DECL_OVERRIDE;
     bool isHidden() const Q_DECL_OVERRIDE;
 };
 

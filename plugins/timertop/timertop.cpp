@@ -93,14 +93,14 @@ TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
 }
 
+TimerTopFactory::TimerTopFactory(QObject *parent) : QObject(parent)
+{
+  setSupportedTypes(QVector<QByteArray>() << QByteArrayLiteral("QObject") << QByteArrayLiteral("QTimer"));
+}
+
 QString TimerTopFactory::name() const
 {
   return tr("Timers");
-}
-
-QStringList TimerTopFactory::supportedTypes() const
-{
-  return QStringList() << QStringLiteral("QObject") << QStringLiteral("QTimer");
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

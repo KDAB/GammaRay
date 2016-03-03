@@ -34,6 +34,13 @@ using namespace std;
 ProxyToolFactory::ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent)
   : ProxyFactory<ToolFactory>(pluginInfo, parent)
 {
+  const QStringList typesList = pluginInfo.supportedTypes();
+  QVector<QByteArray> typesVector;
+  typesVector.reserve(typesList.count());
+  for (auto it = typesList.constBegin(), end = typesList.constEnd(); it != end; ++it) {
+    typesVector << (*it).toLatin1();
+  }
+  setSupportedTypes(typesVector);
 }
 
 bool ProxyToolFactory::isValid() const
@@ -47,11 +54,6 @@ bool ProxyToolFactory::isValid() const
 QString ProxyToolFactory::name() const
 {
   return pluginInfo().name();
-}
-
-QStringList ProxyToolFactory::supportedTypes() const
-{
-  return pluginInfo().supportedTypes();
 }
 
 void ProxyToolFactory::init(ProbeInterface *probe)
