@@ -30,12 +30,14 @@
 #include "qmllistpropertyadaptor.h"
 #include "qmlattachedpropertyadaptor.h"
 #include "qjsvaluepropertyadaptor.h"
+#include "qmltypeextension.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/varianthandler.h>
 #include <core/util.h>
 #include <core/propertyadaptorfactory.h>
+#include <core/propertycontroller.h>
 
 #include <QDateTime>
 #include <QDebug>
@@ -44,6 +46,8 @@
 #include <QQmlContext>
 #include <QQmlError>
 #include <QQmlListProperty>
+
+#include <private/qqmlmetatype_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -130,6 +134,29 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   MO_ADD_PROPERTY_CR(QQmlEngine, QStringList, pluginPathList, setPluginPathList);
   MO_ADD_PROPERTY_RO(QQmlEngine, QQmlContext*, rootContext);
 
+  MO_ADD_METAOBJECT0(QQmlType);
+  MO_ADD_PROPERTY_RO(QQmlType, QByteArray, typeName);
+  MO_ADD_PROPERTY_RO(QQmlType, const QString&, qmlTypeName);
+  MO_ADD_PROPERTY_RO(QQmlType, const QString&, elementName);
+  MO_ADD_PROPERTY_RO(QQmlType, int, majorVersion);
+  MO_ADD_PROPERTY_RO(QQmlType, int, minorVersion);
+  MO_ADD_PROPERTY_RO(QQmlType, int, createSize);
+  MO_ADD_PROPERTY_RO(QQmlType, bool, isCreatable);
+  MO_ADD_PROPERTY_RO(QQmlType, bool, isExtendedType);
+  MO_ADD_PROPERTY_RO(QQmlType, bool, isSingleton);
+  MO_ADD_PROPERTY_RO(QQmlType, bool, isInterface);
+  MO_ADD_PROPERTY_RO(QQmlType, bool, isComposite);
+  MO_ADD_PROPERTY_RO(QQmlType, bool, isCompositeSingleton);
+  MO_ADD_PROPERTY_RO(QQmlType, QString, noCreationReason);
+  MO_ADD_PROPERTY_RO(QQmlType, int, typeId);
+  MO_ADD_PROPERTY_RO(QQmlType, int, qListTypeId);
+  MO_ADD_PROPERTY_RO(QQmlType, int, metaObjectRevision);
+  MO_ADD_PROPERTY_RO(QQmlType, bool, containsRevisionedAttributes);
+//   MO_ADD_PROPERTY_RO(QQmlType, const char*, interfaceIId);
+  MO_ADD_PROPERTY_RO(QQmlType, int, index);
+//   MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, metaObject);
+//   MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, baseMetaObject);
+
   VariantHandler::registerStringConverter<QJSValue>(qjsValueToString);
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
   VariantHandler::registerGenericStringConverter(qmlListPropertyToString);
@@ -137,6 +164,8 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
   PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
   PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
+
+  PropertyController::registerExtension<QmlTypeExtension>();
 }
 
 QString QmlSupportFactory::name() const
