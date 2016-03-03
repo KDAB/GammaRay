@@ -1,6 +1,9 @@
 # Integrated launcher/client for Mac app bundles
 if(APPLE)
 
+# The top level defined CMAKE_RUNTIME_OUTPUT_DIRECTORY is only valid for non bundle binaries, so let tweak
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BUNDLE_INSTALL_DIR})
+
 set(gammaray_app_srcs main.cpp)
 
 add_executable(gammaray-app MACOSX_BUNDLE ${gammaray_app_srcs})
