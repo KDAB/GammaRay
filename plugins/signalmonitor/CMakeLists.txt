@@ -16,7 +16,7 @@ set(gammaray_signalmonitor_srcs
 
 gammaray_add_plugin(gammaray_signalmonitor
   DESKTOP gammaray_signalmonitor.desktop
-  JSON gammaray_signalmonitor.desktop
+  JSON gammaray_signalmonitor.json
   SOURCES ${gammaray_signalmonitor_srcs}
 )
 
