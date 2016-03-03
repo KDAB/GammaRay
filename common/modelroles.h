@@ -51,7 +51,8 @@ namespace ToolModelRole {
     ToolWidget,
     ToolId,
     ToolWidgetParent,
-    ToolEnabled
+    ToolEnabled,
+    ToolHasUi
   };
 }
 

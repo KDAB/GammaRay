@@ -113,8 +113,8 @@ static void initPluginRepository()
 
 ClientToolModel::ClientToolModel(QObject* parent) : QSortFilterProxyModel(parent)
 {
+  setDynamicSortFilter(true);
   initPluginRepository();
-  connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(updateToolInitialization(QModelIndex,QModelIndex)));
 }
 
 ClientToolModel::~ClientToolModel()
@@ -184,13 +184,28 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
   return ret;
 }
 
+void ClientToolModel::setSourceModel(QAbstractItemModel *sourceModel)
+{
+    QSortFilterProxyModel::setSourceModel(sourceModel);
+    connect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(updateToolInitialization(QModelIndex,QModelIndex)));
+}
+
+bool ClientToolModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
+{
+    if (!sourceModel() || source_parent.isValid())
+        return false;
+
+    const auto srcIdx = sourceModel()->index(source_row, 0);
+    return srcIdx.data(ToolModelRole::ToolHasUi).toBool();
+}
+
 void ClientToolModel::updateToolInitialization(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
   for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
-    QModelIndex index = QSortFilterProxyModel::index(i, 0);
+    const auto index = sourceModel()->index(i, 0);
 
-    if (QSortFilterProxyModel::data(index, ToolModelRole::ToolEnabled).toBool()) {
-      const QString toolId = QSortFilterProxyModel::data(index, ToolModelRole::ToolId).toString();
+    if (sourceModel()->data(index, ToolModelRole::ToolEnabled).toBool()) {
+      const QString toolId = sourceModel()->data(index, ToolModelRole::ToolId).toString();
       ToolUiFactory *factory = s_pluginRepository()->factories.value(toolId);
 
       if (factory && (factory->remotingSupported() || !Endpoint::instance()->isRemoteClient()) && s_pluginRepository()->inactiveTools.contains(factory)) {

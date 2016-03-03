@@ -57,6 +57,11 @@ public:
   bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
   Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
+  void setSourceModel(QAbstractItemModel * sourceModel) Q_DECL_OVERRIDE;
+
+protected:
+  bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+
 private slots:
   void updateToolInitialization(const QModelIndex & topLeft, const QModelIndex & bottomRight);
 
