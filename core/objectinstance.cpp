@@ -28,6 +28,7 @@
 
 #include "objectinstance.h"
 #include "metaobjectrepository.h"
+#include "metaobject.h"
 
 using namespace GammaRay;
 
@@ -81,12 +82,12 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
                 m_type = QtGadget;
             }
         } else {
-            const auto typeName = QString::fromLatin1(value.typeName()).remove('*');
-            if (MetaObjectRepository::instance()->hasMetaObject(typeName)) {
+            const auto mo = MetaObjectRepository::instance()->metaObject(value.typeName());
+            if (mo && strstr(value.typeName(), "*") != Q_NULLPTR) {
                 QMetaType::construct(value.userType(), &m_obj, value.constData());
                 if (m_obj) {
                     m_type = Object;
-                    m_typeName = typeName.toLatin1();
+                    m_typeName = value.typeName();
                 }
             }
         }
