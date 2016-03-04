@@ -29,6 +29,7 @@
 #include "qmltypetab.h"
 #include "ui_qmltypetab.h"
 
+#include <ui/deferredresizemodesetter.h>
 #include <ui/propertywidget.h>
 
 #include <common/objectbroker.h>
@@ -42,6 +43,7 @@ QmlTypeTab::QmlTypeTab(PropertyWidget *parent) :
     ui->setupUi(this);
 
     ui->typeView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlTypeModel")));
+    new DeferredResizeModeSetter(ui->typeView->header(), 0, QHeaderView::ResizeToContents);
 }
 
 QmlTypeTab::~QmlTypeTab()
