@@ -69,7 +69,7 @@ class GAMMARAY_CORE_EXPORT MetaObject
      */
     void *castForPropertyAt(void *object, int index) const;
 
-    /** Casts to a void pointer for an instance of this type to one refering
+    /** Casts to a void pointer for an instance of this type to one referring
      *  to the given base class type. If @p baseClass is not a base class
      *  of this type, @c nullptr is returned.
      */
