@@ -158,6 +158,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   MO_ADD_PROPERTY_RO(QQmlType, int, index);
   MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, metaObject);
   MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, baseMetaObject);
+  MO_ADD_PROPERTY_RO(QQmlType, QUrl, sourceUrl);
 
   VariantHandler::registerStringConverter<QJSValue>(qjsValueToString);
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
