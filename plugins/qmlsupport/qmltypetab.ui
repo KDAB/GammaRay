@@ -13,6 +13,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTreeView" name="typeView">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
      </property>

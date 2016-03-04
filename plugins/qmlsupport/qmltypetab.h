@@ -49,6 +49,8 @@ public:
     ~QmlTypeTab();
 
 private:
+    void contextMenu(QPoint pos);
+
     QScopedPointer<Ui::QmlTypeTab> ui;
 };
 }

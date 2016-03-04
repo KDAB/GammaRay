@@ -29,10 +29,14 @@
 #include "qmltypetab.h"
 #include "ui_qmltypetab.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/propertywidget.h>
 
 #include <common/objectbroker.h>
+#include <common/propertymodel.h>
+
+#include <QMenu>
 
 using namespace GammaRay;
 
@@ -44,8 +48,32 @@ QmlTypeTab::QmlTypeTab(PropertyWidget *parent) :
 
     ui->typeView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlTypeModel")));
     new DeferredResizeModeSetter(ui->typeView->header(), 0, QHeaderView::ResizeToContents);
+
+  connect(ui->typeView, &QWidget::customContextMenuRequested, this, &QmlTypeTab::contextMenu);
+
 }
 
 QmlTypeTab::~QmlTypeTab()
 {
+}
+
+void QmlTypeTab::contextMenu(QPoint pos)
+{
+    // TODO share this with PropertiesTab
+    const auto index = ui->typeView->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto actions = index.data(PropertyModel::ActionRole).toInt();
+    if (actions == PropertyModel::NoAction)
+        return;
+
+    QMenu contextMenu;
+    if (actions & PropertyModel::NavigateTo) {
+        const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+        ContextMenuExtension ext(objectId);
+        ext.populateMenu(&contextMenu);
+    }
+
+    contextMenu.exec(ui->typeView->viewport()->mapToGlobal(pos));
 }
