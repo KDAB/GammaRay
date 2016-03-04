@@ -102,6 +102,17 @@ void MetaObjectRepository::initQObjectTypes()
 {
   MetaObject *mo = 0;
   MO_ADD_METAOBJECT0(QMetaObject);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoCount);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoOffset);
+//   MO_ADD_PROPERTY_RO(QMetaObject, const char*, className);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, constructorCount);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, enumeratorCount);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, enumeratorOffset);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, methodCount);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, methodOffset);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, propertyCount);
+  MO_ADD_PROPERTY_RO(QMetaObject, int, propertyOffset);
+  MO_ADD_PROPERTY_RO(QMetaObject, const QMetaObject*, superClass);
 
   MO_ADD_METAOBJECT0(QObject);
   MO_ADD_PROPERTY_RO(QObject, const QMetaObject*, metaObject);
