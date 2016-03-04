@@ -48,8 +48,11 @@ class MetaObjectBrowser : public QObject
   private Q_SLOTS:
     void objectSelected(const QItemSelection &selection);
     void objectSelected(QObject *obj);
+    void objectSelected(void *obj, const QString &typeName);
 
   private:
+    void metaObjectSelected(const QMetaObject* mo);
+
      PropertyController *m_propertyController;
      QAbstractProxyModel *m_model;
 };

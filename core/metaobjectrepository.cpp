@@ -101,6 +101,8 @@ Q_DECLARE_METATYPE(QThread::Priority)
 void MetaObjectRepository::initQObjectTypes()
 {
   MetaObject *mo = 0;
+  MO_ADD_METAOBJECT0(QMetaObject);
+
   MO_ADD_METAOBJECT0(QObject);
   MO_ADD_PROPERTY_RO(QObject, const QMetaObject*, metaObject);
   MO_ADD_PROPERTY_RO(QObject, QObject*, parent);

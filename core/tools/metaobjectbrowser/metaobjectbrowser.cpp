@@ -58,6 +58,7 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
   m_propertyController->setMetaObject(0); // init
 
   connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+  connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)), this, SLOT(objectSelected(void*,QString)));
 }
 
 void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
@@ -79,7 +80,19 @@ void MetaObjectBrowser::objectSelected(QObject *obj)
 {
     if (!obj)
         return;
-    const auto indexes = m_model->match(QModelIndex(), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(obj->metaObject()));
+    metaObjectSelected(obj->metaObject());
+}
+
+void MetaObjectBrowser::objectSelected(void *obj, const QString &typeName)
+{
+    if (typeName != QLatin1String("const QMetaObject*"))
+        return;
+    metaObjectSelected(static_cast<QMetaObject*>(obj));
+}
+
+void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
+{
+    const auto indexes = m_model->match(QModelIndex(), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(mo));
     if (indexes.isEmpty())
         return;
     ObjectBroker::selectionModel(m_model)->select(indexes.first(), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
@@ -92,5 +105,5 @@ QString MetaObjectBrowserFactory::name() const
 
 QVector<QByteArray> MetaObjectBrowserFactory::selectableTypes() const
 {
-    return QVector<QByteArray>() << QObject::staticMetaObject.className();
+    return QVector<QByteArray>() << QObject::staticMetaObject.className() << "QMetaObject";
 }
