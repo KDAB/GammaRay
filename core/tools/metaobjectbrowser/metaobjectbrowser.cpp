@@ -32,6 +32,7 @@
 #include "propertycontroller.h"
 
 #include <common/objectbroker.h>
+#include <common/metatypedeclarations.h>
 #include <core/remote/serverproxymodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>

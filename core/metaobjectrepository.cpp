@@ -102,6 +102,7 @@ void MetaObjectRepository::initQObjectTypes()
 {
   MetaObject *mo = 0;
   MO_ADD_METAOBJECT0(QObject);
+  MO_ADD_PROPERTY_RO(QObject, const QMetaObject*, metaObject);
   MO_ADD_PROPERTY_RO(QObject, QObject*, parent);
   MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
   MO_ADD_PROPERTY_RO(QObject, QThread*, thread);

@@ -302,6 +302,13 @@ QString VariantHandler::displayString(const QVariant &value)
     return Util::displayString(value.value<QObject*>());
   }
 
+  if (value.userType() == qMetaTypeId<const QMetaObject*>()) {
+      const auto mo = value.value<const QMetaObject*>();
+      if (!mo)
+          return QStringLiteral("0x0");
+      return mo->className();
+  }
+
   if (value.userType() == qMetaTypeId<QMatrix4x4>()) {
     return displayMatrix4x4(value.value<QMatrix4x4>());
   }

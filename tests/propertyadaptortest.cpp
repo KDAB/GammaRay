@@ -121,7 +121,7 @@ private slots:
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(&obj, "QObject"), this);
         QVERIFY(adaptor);
 
-        QCOMPARE(adaptor->count(), 3);
+        QCOMPARE(adaptor->count(), 4);
         verifyPropertyData(adaptor);
         testProperty(adaptor, "parent", "QObject*", "QObject", PropertyData::Readable);
         testProperty(adaptor, "thread", "QThread*", "QObject", PropertyData::Readable);

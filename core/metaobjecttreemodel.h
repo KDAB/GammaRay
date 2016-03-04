@@ -117,6 +117,4 @@ class MetaObjectTreeModel : public QAbstractItemModel
 
 }
 
-Q_DECLARE_METATYPE(const QMetaObject *)
-
 #endif // GAMMARAY_METAOBJECTTREEMODEL_H

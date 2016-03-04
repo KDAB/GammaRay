@@ -39,6 +39,8 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/propertycontroller.h>
 
+#include <common/metatypedeclarations.h>
+
 #include <QDateTime>
 #include <QDebug>
 #include <QJSValue>
@@ -154,8 +156,8 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   MO_ADD_PROPERTY_RO(QQmlType, bool, containsRevisionedAttributes);
 //   MO_ADD_PROPERTY_RO(QQmlType, const char*, interfaceIId);
   MO_ADD_PROPERTY_RO(QQmlType, int, index);
-//   MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, metaObject);
-//   MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, baseMetaObject);
+  MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, metaObject);
+  MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject*, baseMetaObject);
 
   VariantHandler::registerStringConverter<QJSValue>(qjsValueToString);
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);

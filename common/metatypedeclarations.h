@@ -39,6 +39,9 @@
 #define GAMMARAY_METATYPEDECLARATIONS_H
 
 #include <QMetaMethod>
+#include <QMetaObject>
+
+#ifdef QT_GUI_LIB
 #include <QMargins>
 #include <QPainterPath>
 #include <QMatrix4x4>
@@ -49,15 +52,19 @@
 #include <QSurface>
 #include <QSurfaceFormat>
 #endif
+#endif
 
 Q_DECLARE_METATYPE(Qt::ConnectionType)
+Q_DECLARE_METATYPE(QMetaMethod::MethodType)
+Q_DECLARE_METATYPE(const QMetaObject*)
+
+#ifdef QT_GUI_LIB
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
 Q_DECLARE_METATYPE(Qt::TransformationMode)
 Q_DECLARE_METATYPE(QPainterPath)
 Q_DECLARE_METATYPE(QPolygonF)
-Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 Q_DECLARE_METATYPE(QMargins)
 Q_DECLARE_METATYPE(Qt::WindowType)
 Q_DECLARE_METATYPE(Qt::WindowState)
@@ -68,6 +75,7 @@ Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)
 Q_DECLARE_METATYPE(QSurfaceFormat)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
+#endif
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0) && QT_VERSION < QT_VERSION_CHECK(5, 5, 0)

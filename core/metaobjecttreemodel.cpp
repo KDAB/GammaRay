@@ -30,6 +30,8 @@
 
 #include "probe.h"
 
+#include <common/metatypedeclarations.h>
+
 #include <QDebug>
 #include <QThread>
 #include <QTimer>
