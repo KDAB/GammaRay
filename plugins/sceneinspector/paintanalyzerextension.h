@@ -48,7 +48,7 @@ public:
     bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
 
 private:
-    void analyzePainting(QGraphicsItem *item);
+    bool analyzePainting(QGraphicsItem *item);
     PaintAnalyzer *m_paintAnalyzer;
 };
 

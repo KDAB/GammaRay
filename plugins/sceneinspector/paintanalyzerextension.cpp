@@ -56,10 +56,8 @@ bool PaintAnalyzerExtension::setQObject(QObject *object)
     if (!PaintAnalyzer::isAvailable())
         return false;
 
-    if (auto qgvObj = qobject_cast<QGraphicsObject*>(object)) {
-        analyzePainting(qgvObj);
-        return true;
-    }
+    if (auto qgvObj = qobject_cast<QGraphicsObject*>(object))
+        return analyzePainting(qgvObj);
 
     return false;
 }
@@ -72,15 +70,16 @@ bool PaintAnalyzerExtension::setObject(void *object, const QString &typeName)
     const auto mo = MetaObjectRepository::instance()->metaObject(typeName);
     if (!mo)
         return false;
-    if (const auto item = mo->castTo(object, QStringLiteral("QGraphicsItem"))) {
-        analyzePainting(static_cast<QGraphicsItem*>(item));
-        return true;
-    }
+    if (const auto item = mo->castTo(object, QStringLiteral("QGraphicsItem")))
+        return analyzePainting(static_cast<QGraphicsItem*>(item));
     return false;
 }
 
-void PaintAnalyzerExtension::analyzePainting(QGraphicsItem* item)
+bool PaintAnalyzerExtension::analyzePainting(QGraphicsItem* item)
 {
+    if (item->flags() & QGraphicsItem::ItemHasNoContents)
+        return false;
+
     m_paintAnalyzer->beginAnalyzePainting();
     m_paintAnalyzer->setBoundingRect(item->boundingRect());
 
@@ -108,4 +107,5 @@ void PaintAnalyzerExtension::analyzePainting(QGraphicsItem* item)
         item->paint(&p, &option);
     }
     m_paintAnalyzer->endAnalyzePainting();
+    return true;
 }
