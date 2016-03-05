@@ -32,6 +32,7 @@
 #include "scenemodel.h"
 #include "paintanalyzerextension.h"
 
+#include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/propertycontroller.h>
@@ -425,6 +426,60 @@ void SceneInspector::registerGraphicsViewMetaTypes()
   MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, QWidget*, widget);
 }
 
+#define E(x) { QGraphicsItem:: x, #x }
+static const MetaEnum::Value<QGraphicsItem::GraphicsItemFlag> graphics_item_flags_table[] {
+    E(ItemIsMovable),
+    E(ItemIsSelectable),
+    E(ItemIsFocusable),
+    E(ItemClipsToShape),
+    E(ItemClipsChildrenToShape),
+    E(ItemIgnoresTransformations),
+    E(ItemIgnoresParentOpacity),
+    E(ItemDoesntPropagateOpacityToChildren),
+    E(ItemStacksBehindParent),
+    E(ItemUsesExtendedStyleOption),
+    E(ItemHasNoContents),
+    E(ItemSendsGeometryChanges),
+    E(ItemAcceptsInputMethod),
+    E(ItemNegativeZStacksBehindParent),
+    E(ItemIsPanel),
+    E(ItemIsFocusScope),
+    E(ItemSendsScenePositionChanges),
+    E(ItemStopsClickFocusPropagation),
+    E(ItemStopsFocusHandling),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    E(ItemContainsChildrenInShape)
+#endif
+};
+
+static QString graphicsItemFlagsToString(QGraphicsItem::GraphicsItemFlags flags)
+{
+    return MetaEnum::flagsToString(flags, graphics_item_flags_table);
+}
+
+static const MetaEnum::Value<QGraphicsItem::CacheMode> graphics_item_cache_mode_table[] {
+    E(NoCache),
+    E(ItemCoordinateCache),
+    E(DeviceCoordinateCache)
+};
+
+static QString graphicsItemCacheModeToString(QGraphicsItem::CacheMode mode)
+{
+    return MetaEnum::enumToString(mode, graphics_item_cache_mode_table);
+}
+
+static const MetaEnum::Value<QGraphicsItem::PanelModality> graphics_item_panel_modality_table[] {
+    E(NonModal),
+    E(PanelModal),
+    E(SceneModal)
+};
+
+static QString graphicsItemPanelModalityToString(QGraphicsItem::PanelModality modality)
+{
+    return MetaEnum::enumToString(modality, graphics_item_panel_modality_table);
+}
+#undef E
+
 void SceneInspector::registerVariantHandlers()
 {
   VariantHandler::registerStringConverter<QGraphicsItem*>(Util::addressToString);
@@ -437,6 +492,10 @@ void SceneInspector::registerVariantHandlers()
   VariantHandler::registerStringConverter<QGraphicsObject*>(Util::displayString);
   VariantHandler::registerStringConverter<QGraphicsWidget*>(Util::displayString);
 #endif
+
+  VariantHandler::registerStringConverter<QGraphicsItem::GraphicsItemFlags>(graphicsItemFlagsToString);
+  VariantHandler::registerStringConverter<QGraphicsItem::CacheMode>(graphicsItemCacheModeToString);
+  VariantHandler::registerStringConverter<QGraphicsItem::PanelModality>(graphicsItemPanelModalityToString);
 }
 
 QString SceneInspectorFactory::name() const
