@@ -57,6 +57,9 @@ public:
 private:
     struct Info {
         Info();
+        int totalCount() const;
+        int totalSize() const;
+
         QString name;
         QVector<int> messageCount;
         QVector<int> messageSize;

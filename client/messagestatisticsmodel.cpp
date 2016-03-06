@@ -30,6 +30,8 @@
 
 #include <core/metaenum.h>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 #define M(x) { Protocol:: x, #x }
@@ -74,6 +76,16 @@ MessageStatisticsModel::Info::Info()
 {
     messageCount.resize(Protocol::MESSAGE_TYPE_COUNT);
     messageSize.resize(Protocol::MESSAGE_TYPE_COUNT);
+}
+
+int MessageStatisticsModel::Info::totalCount() const
+{
+    return std::accumulate(messageCount.begin(), messageCount.end(), 0);
+}
+
+int GammaRay::MessageStatisticsModel::Info::totalSize() const
+{
+    return std::accumulate(messageSize.begin(), messageSize.end(), 0);
 }
 
 MessageStatisticsModel::MessageStatisticsModel(QObject* parent) :
@@ -147,6 +159,13 @@ int MessageStatisticsModel::rowCount(const QModelIndex& parent) const
 // 1 / GRADIENT_SCALE_FACTOR is yellow, 2 / GRADIENT_SCALE_FACTOR and beyond is red
 static const int GRADIENT_SCALE_FACTOR = 4;
 
+static QColor colorForRatio(double ratio)
+{
+    const auto red = qBound(0.0, ratio * GRADIENT_SCALE_FACTOR, 0.5);
+    const auto green = qBound(0.0, 1 - ratio * GRADIENT_SCALE_FACTOR, 0.5);
+    return QColor(255 * red, 255 * green, 0);
+}
+
 QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() || m_data.isEmpty())
@@ -157,6 +176,24 @@ QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
     if (index.column() == 0) {
         if (role == Qt::DisplayRole)
             return info.name;
+        if (role == Qt::BackgroundRole) {
+            const auto countRatio = (double)info.totalCount() / (double)m_totalCount;
+            const auto sizeRatio = (double)info.totalSize() / (double)m_totalSize;
+            const auto ratio = std::max(countRatio, sizeRatio);
+            if (ratio > 0.0)
+                return colorForRatio(ratio);
+        }
+        if (role == Qt::ToolTipRole) {
+            const auto count = info.totalCount();
+            const auto size = info.totalSize();
+            return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)")
+                .arg(count)
+                .arg(m_totalCount)
+                .arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2)
+                .arg(size)
+                .arg(m_totalSize)
+                .arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2);
+        }
         return QVariant();
     }
 
@@ -174,9 +211,7 @@ QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
         const auto countRatio = (double)info.messageCount[msgType] / (double)m_totalCount;
         const auto sizeRatio = (double)info.messageSize[msgType] / (double)m_totalSize;
         const auto ratio = std::max(countRatio, sizeRatio);
-        const auto red = qBound(0.0, ratio * GRADIENT_SCALE_FACTOR, 0.5);
-        const auto green = qBound(0.0, 1 - ratio * GRADIENT_SCALE_FACTOR, 0.5);
-        return QColor(255 * red, 255 * green, 0);
+        return colorForRatio(ratio);
     }
 
     if (role == Qt::ToolTipRole) {
