@@ -31,6 +31,7 @@
 #include <core/metaenum.h>
 
 #include <algorithm>
+#include <numeric>
 
 using namespace GammaRay;
 
