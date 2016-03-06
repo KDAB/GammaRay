@@ -231,11 +231,49 @@ QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
 
 QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        if (section == 0)
-            return tr("Object Name");
-        return MetaEnum::enumToString(static_cast<Protocol::MessageType>(section), message_type_table);
+    if (orientation == Qt::Horizontal) {
+        if (role == Qt::DisplayRole) {
+            if (section == 0)
+                return tr("Object Name");
+            return MetaEnum::enumToString(static_cast<Protocol::MessageType>(section), message_type_table);
+        }
+
+        if (role == Qt::BackgroundRole && section > 0) {
+            const auto countRatio = (double)countPerType(section - 1) / (double)m_totalCount;
+            const auto sizeRatio = (double)sizePerType(section - 1) / (double)m_totalSize;
+            const auto ratio = std::max(countRatio, sizeRatio);
+            if (ratio > 0.0)
+                return colorForRatio(ratio);
+        }
+
+        if (role == Qt::ToolTipRole && section > 0) {
+            const auto count = countPerType(section - 1);
+            const auto size = sizePerType(section - 1);
+            return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)")
+                .arg(count)
+                .arg(m_totalCount)
+                .arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2)
+                .arg(size)
+                .arg(m_totalSize)
+                .arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2);
+        }
     }
 
     return QAbstractTableModel::headerData(section, orientation, role);
+}
+
+int MessageStatisticsModel::countPerType(int msgType) const
+{
+    int c = 0;
+    foreach (const auto &info, m_data)
+        c += info.messageCount.at(msgType);
+    return c;
+}
+
+int MessageStatisticsModel::sizePerType(int msgType) const
+{
+    int c = 0;
+    foreach (const auto &info, m_data)
+        c += info.messageSize.at(msgType);
+    return c;
 }

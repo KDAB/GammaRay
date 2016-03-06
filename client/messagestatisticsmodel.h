@@ -55,6 +55,9 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
 private:
+    int countPerType(int msgType) const;
+    int sizePerType(int msgType) const;
+
     struct Info {
         Info();
         int totalCount() const;
