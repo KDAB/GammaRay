@@ -28,6 +28,7 @@
 
 #include "client.h"
 #include "clientdevice.h"
+#include "messagestatisticsmodel.h"
 
 #include <common/message.h>
 #include <common/objectbroker.h>
@@ -43,11 +44,14 @@ using namespace GammaRay;
 Client::Client(QObject* parent)
   : Endpoint(parent)
   , m_clientDevice(0)
+  , m_statModel(new MessageStatisticsModel)
   , m_initState(0)
 {
   connect(this, SIGNAL(disconnected()), SLOT(socketDisconnected()));
 
   m_propertySyncer->setRequestInitialSync(true);
+
+  ObjectBroker::registerModelInternal(QStringLiteral("com.kdab.GammaRay.MessageStatisticsModel"), m_statModel);
 }
 
 Client::~Client()
@@ -74,6 +78,7 @@ void Client::connectToHost(const QUrl &url, int tryAgain)
   m_serverAddress = url;
   m_initState = 0;
 
+  m_statModel->clear();
   m_clientDevice = ClientDevice::create(m_serverAddress, this);
   if (!m_clientDevice) {
     emit persisitentConnectionError(tr("Unsupported transport protocol."));
@@ -117,6 +122,7 @@ void Client::socketDisconnected()
 
 void Client::messageReceived(const Message& msg)
 {
+  m_statModel->addMessage(msg.address(), msg.type(), msg.size());
   // server version must be the very first message we get
   if (!(m_initState & VersionChecked)) {
     if (msg.address() != endpointAddress() || msg.type() != Protocol::ServerVersion) {
@@ -141,6 +147,7 @@ void Client::messageReceived(const Message& msg)
         Protocol::ObjectAddress addr;
         msg.payload() >> name >> addr;
         addObjectNameAddressMapping(name, addr);
+        m_statModel->addObject(addr, name);
         break;
       }
       case Protocol::ObjectRemoved:
@@ -157,6 +164,7 @@ void Client::messageReceived(const Message& msg)
         for (QVector<QPair<Protocol::ObjectAddress, QString> >::const_iterator it = objects.constBegin(); it != objects.constEnd(); ++it) {
           if (it->first != endpointAddress())
             addObjectNameAddressMapping(it->second, it->first);
+            m_statModel->addObject(it->first, it->second);
         }
 
         m_propertySyncer->setAddress(objectAddress(QStringLiteral("com.kdab.GammaRay.PropertySyncer")));
@@ -239,3 +247,8 @@ void Client::unmonitorObject(Protocol::ObjectAddress objectAddress)
   send(msg);
 }
 
+void Client::doSendMessage(const GammaRay::Message& msg)
+{
+    m_statModel->addMessage(msg.address(), msg.type(), msg.size());
+    Endpoint::doSendMessage(msg);
+}

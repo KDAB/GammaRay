@@ -122,7 +122,14 @@ background-position:bottom right;
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionPlugins"/>
+    <widget class="QMenu" name="menu_Diagnostics">
+     <property name="title">
+      <string>&amp;Diagnostics</string>
+     </property>
+     <addaction name="actionPlugins"/>
+     <addaction name="actionMessageStatistics"/>
+    </widget>
+    <addaction name="menu_Diagnostics"/>
     <addaction name="separator"/>
     <addaction name="actionAboutGammaRay"/>
     <addaction name="actionAboutKDAB"/>
@@ -216,6 +223,14 @@ background-position:bottom right;
   <action name="actionPlugins">
    <property name="text">
     <string>&amp;Plugins...</string>
+   </property>
+  </action>
+  <action name="actionMessageStatistics">
+   <property name="text">
+    <string>&amp;Message Statistics...</string>
+   </property>
+   <property name="toolTip">
+    <string>Show GammaRay communication statistics.</string>
    </property>
   </action>
  </widget>

@@ -8,6 +8,7 @@ set(gammaray_clientlib_srcs
   clientdevice.cpp
   tcpclientdevice.cpp
   localclientdevice.cpp
+  messagestatisticsmodel.cpp
   paintanalyzerclient.cpp
   remoteviewclient.cpp
 )

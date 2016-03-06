@@ -77,6 +77,9 @@ class GAMMARAY_COMMON_EXPORT Message
     /** Write this message to @p device. */
     void write(QIODevice *device) const;
 
+    /** Size of the uncompressed message payload. */
+    int size() const;
+
   private:
     Message();
 

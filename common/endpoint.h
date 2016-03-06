@@ -162,6 +162,9 @@ protected:
   /** Calls the message handler registered for the receiver of @p msg. */
   void dispatchMessage(const GammaRay::Message& msg);
 
+  /** Sends a given message. */
+  virtual void doSendMessage(const Message &msg);
+
   /** All current object name/address pairs. */
   QVector<QPair<Protocol::ObjectAddress, QString> > objectAddresses() const;
 

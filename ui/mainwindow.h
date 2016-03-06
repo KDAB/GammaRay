@@ -52,6 +52,8 @@ class MainWindow : public QMainWindow
     void aboutPlugins();
     void aboutKDAB();
 
+    void showMessageStatistics();
+
     void toolSelected();
     void selectInitialTool();
 

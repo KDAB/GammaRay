@@ -74,13 +74,18 @@ Endpoint* Endpoint::instance()
 void Endpoint::send(const Message& msg)
 {
   Q_ASSERT(s_instance);
-  Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
-  msg.write(s_instance->m_socket);
+  s_instance->doSendMessage(msg);
 }
 
 void Endpoint::sendMessage(const Message& msg)
 {
-  send(msg);
+  doSendMessage(msg);
+}
+
+void Endpoint::doSendMessage(const GammaRay::Message& msg)
+{
+  Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
+  msg.write(m_socket);
 }
 
 void Endpoint::waitForMessagesWritten()

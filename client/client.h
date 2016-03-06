@@ -37,6 +37,7 @@
 namespace GammaRay {
 
 class ClientDevice;
+class MessageStatisticsModel;
 
 /** Client-side connection endpoint. */
 class Client : public Endpoint
@@ -80,6 +81,7 @@ protected:
   void messageReceived(const Message& msg) Q_DECL_OVERRIDE;
   void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object) Q_DECL_OVERRIDE;
   void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName) Q_DECL_OVERRIDE;
+  void doSendMessage(const GammaRay::Message & msg) Q_DECL_OVERRIDE;
 
 private:
   void monitorObject(Protocol::ObjectAddress objectAddress);
@@ -101,6 +103,7 @@ private:
   };
   QUrl m_serverAddress;
   ClientDevice *m_clientDevice;
+  MessageStatisticsModel *m_statModel;
   int m_initState;
 };
 

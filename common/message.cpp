@@ -217,3 +217,8 @@ void Message::write(QIODevice* device) const
   }
 #endif
 }
+
+int Message::size() const
+{
+    return m_buffer.size();
+}

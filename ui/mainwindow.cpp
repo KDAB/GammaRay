@@ -59,6 +59,7 @@
 #include <QProcess>
 #include <QSettings>
 #include <QStyleFactory>
+#include <QTableView>
 #include <QToolButton>
 #include <QUrl>
 #include <QWidgetAction>
@@ -131,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
   connect(ui->actionPlugins, SIGNAL(triggered(bool)),
           this, SLOT(aboutPlugins()));
+  connect(ui->actionMessageStatistics, SIGNAL(triggered(bool)), this, SLOT(showMessageStatistics()));
   connect(ui->actionAboutQt, SIGNAL(triggered(bool)),
           QApplication::instance(), SLOT(aboutQt()));
   connect(ui->actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
@@ -263,6 +265,16 @@ void MainWindow::aboutKDAB()
   dialog.setLogo(QStringLiteral(":gammaray/kdablogo160.png"));
   dialog.setWindowIcon(QPixmap(QStringLiteral(":gammaray/kdablogo160.png")));
   dialog.exec();
+}
+
+void MainWindow::showMessageStatistics()
+{
+    auto view = new QTableView;
+    view->setWindowTitle(tr("Communication Message Statistics"));
+    view->setAttribute(Qt::WA_DeleteOnClose);
+    view->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageStatisticsModel")));
+    view->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
+    view->showMaximized();
 }
 
 void MainWindow::selectInitialTool()

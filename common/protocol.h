@@ -97,7 +97,9 @@ enum BuildInMessageType {
 
   // probe settings provided by the launcher
   ProbeSettings,
-  ServerAddress
+  ServerAddress,
+
+  MESSAGE_TYPE_COUNT // NOTE when changing this enum, also update MessageStatisticsModel!
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
