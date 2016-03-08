@@ -87,10 +87,10 @@ public:
         }
     }
 
-    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits, Qt::MatchFlags flags) const Q_DECL_OVERRIDE
+    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
         Model::used(this);
-        return BaseProxy::match(start, role, value, hits, flags);
+        return BaseProxy::index(row, column, parent);
     }
 
 protected:

@@ -942,16 +942,13 @@ bool Probe::hasReliableObjectTracking() const
 
 void Probe::selectObject(QObject *object, const QPoint &pos)
 {
-  emit objectSelected(object, pos);
-
   const auto srcIdxs = m_toolModel->toolsForObject(object);
   selectTool(srcIdxs.value(0));
+  emit objectSelected(object, pos);
 }
 
 void Probe::selectObject(QObject* object, const QString toolId, const QPoint &pos)
 {
-  emit objectSelected(object, pos);
-
   const auto matches = m_toolModel->match(m_toolModel->index(0, 0), ToolModelRole::ToolId, toolId, 1, Qt::MatchExactly);
   if (matches.isEmpty()) {
     std::cerr << "Invalid tool id: " << qPrintable(toolId) << std::endl;
@@ -959,14 +956,14 @@ void Probe::selectObject(QObject* object, const QString toolId, const QPoint &po
   }
 
   selectTool(matches.first());
+  emit objectSelected(object, pos);
 }
 
 void Probe::selectObject(void *object, const QString &typeName)
 {
-  emit nonQObjectSelected(object, typeName);
-
   const auto srcIdxs = m_toolModel->toolsForObject(object, typeName);
   selectTool(srcIdxs.value(0));
+  emit nonQObjectSelected(object, typeName);
 }
 
 void Probe::selectTool(const QModelIndex& toolModelSourceIndex)
