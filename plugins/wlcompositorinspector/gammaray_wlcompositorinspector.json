@@ -1,0 +1,5 @@
+{
+    "id": "gammaray_wlcompositorinspector",
+    "name": "Wayland Compositor",
+    "types": [ "QWaylandCompositor" ]
+}
