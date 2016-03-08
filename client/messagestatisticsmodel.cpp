@@ -36,7 +36,7 @@
 using namespace GammaRay;
 
 #define M(x) { Protocol:: x, #x }
-static const MetaEnum::Value<Protocol::MessageType> message_type_table[] {
+static const MetaEnum::Value<Protocol::MessageType> message_type_table[] = {
     M(ObjectMonitored),
     M(ObjectUnmonitored),
     M(ServerVersion),

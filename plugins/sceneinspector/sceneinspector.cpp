@@ -427,7 +427,7 @@ void SceneInspector::registerGraphicsViewMetaTypes()
 }
 
 #define E(x) { QGraphicsItem:: x, #x }
-static const MetaEnum::Value<QGraphicsItem::GraphicsItemFlag> graphics_item_flags_table[] {
+static const MetaEnum::Value<QGraphicsItem::GraphicsItemFlag> graphics_item_flags_table[] = {
     E(ItemIsMovable),
     E(ItemIsSelectable),
     E(ItemIsFocusable),
@@ -457,7 +457,7 @@ static QString graphicsItemFlagsToString(QGraphicsItem::GraphicsItemFlags flags)
     return MetaEnum::flagsToString(flags, graphics_item_flags_table);
 }
 
-static const MetaEnum::Value<QGraphicsItem::CacheMode> graphics_item_cache_mode_table[] {
+static const MetaEnum::Value<QGraphicsItem::CacheMode> graphics_item_cache_mode_table[] = {
     E(NoCache),
     E(ItemCoordinateCache),
     E(DeviceCoordinateCache)
@@ -468,7 +468,7 @@ static QString graphicsItemCacheModeToString(QGraphicsItem::CacheMode mode)
     return MetaEnum::enumToString(mode, graphics_item_cache_mode_table);
 }
 
-static const MetaEnum::Value<QGraphicsItem::PanelModality> graphics_item_panel_modality_table[] {
+static const MetaEnum::Value<QGraphicsItem::PanelModality> graphics_item_panel_modality_table[] = {
     E(NonModal),
     E(PanelModal),
     E(SceneModal)
