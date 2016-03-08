@@ -45,6 +45,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="singleStateMachineView">
+          <property name="indentation">
+           <number>10</number>
+          </property>
           <property name="uniformRowHeights">
            <bool>true</bool>
           </property>
