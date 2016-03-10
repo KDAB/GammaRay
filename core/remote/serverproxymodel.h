@@ -32,6 +32,7 @@
 #include <common/modelevent.h>
 
 #include <QCoreApplication>
+#include <QPointer>
 #include <QSortFilterProxyModel>
 #include <QVector>
 
@@ -114,7 +115,7 @@ protected:
 private:
     QVector<int> m_extraRoles;
     QVector<int> m_extraProxyRoles;
-    QAbstractItemModel *m_sourceModel;
+    QPointer<QAbstractItemModel> m_sourceModel;
     bool m_active;
 };
 
