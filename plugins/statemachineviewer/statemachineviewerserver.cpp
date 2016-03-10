@@ -69,7 +69,10 @@ QString StateMachineViewerServer::labelForTransition(QAbstractTransition* transi
     if (signalTransition->senderObject() != transition->sourceState()) {
       str += Util::displayString(signalTransition->senderObject()) + "\n / ";
     }
-    str += signalTransition->signal().mid(1);
+    auto signal = signalTransition->signal();
+    if (signal.startsWith('0' + QSIGNAL_CODE)) // from QStateMachinePrivate::registerSignalTransition
+      signal.remove(0, 1);
+    str += signal;
     return str;
   }
   // QKeyEventTransition is in QtWidgets, so this is a bit dirty to avoid a hard dependency
