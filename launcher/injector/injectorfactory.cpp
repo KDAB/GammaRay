@@ -28,12 +28,13 @@
 
 #include "injectorfactory.h"
 
-#include "gdbinjector.h"
-#include "lldbinjector.h"
-#include "preloadinjector.h"
 #include "styleinjector.h"
 #ifdef Q_OS_WIN
 #include "windllinjector.h"
+#else
+#include "gdbinjector.h"
+#include "lldbinjector.h"
+#include "preloadinjector.h"
 #endif
 
 #include <launcher/probeabi.h>

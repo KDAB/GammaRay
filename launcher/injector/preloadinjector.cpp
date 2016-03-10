@@ -31,8 +31,6 @@
 
 #include <probeabidetector.h>
 
-#ifndef Q_OS_WIN
-
 #include <QProcess>
 #include <QDebug>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -96,5 +94,3 @@ bool PreloadInjector::launch(const QStringList &programAndArgs,
 
   return launchProcess(programAndArgs, env);
 }
-
-#endif

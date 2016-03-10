@@ -32,8 +32,6 @@
 #include "processinjector.h"
 #include <qglobal.h>
 
-#ifndef Q_OS_WIN
-
 namespace GammaRay {
 
 class PreloadInjector : public ProcessInjector
@@ -48,7 +46,5 @@ class PreloadInjector : public ProcessInjector
 };
 
 }
-
-#endif
 
 #endif // GAMMARAY_PRELOADINJECTOR_H
