@@ -211,11 +211,12 @@ void StateMachineViewerServer::setSelectedStateMachine(QStateMachine* machine)
   }
 
   m_stateModel->setStateMachine(machine);
-  stateConfigurationChanged();
 
   setFilteredStates(QVector<QAbstractState*>());
   m_stateMachineWatcher->setWatchedStateMachine(machine);
+
   repopulateGraph();
+  stateConfigurationChanged();
 
   if (machine) {
     connect(machine, SIGNAL(started()), this, SLOT(updateStartStop()));
