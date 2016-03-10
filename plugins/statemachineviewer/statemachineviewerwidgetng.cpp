@@ -228,7 +228,7 @@ void StateMachineViewerWidgetNG::loadSettings()
 {
   QSettings settings;
   settings.beginGroup("Plugin_StateMachineViewer");
-  m_stateMachineView->setThemeName(settings.value("ThemeName").toString());
+  m_stateMachineView->setThemeName(settings.value("ThemeName", "SystemTheme").toString());
   settings.endGroup();
   settings.sync();
 }
