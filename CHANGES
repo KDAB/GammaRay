@@ -1,6 +1,21 @@
 Release Highlights
 ==================
 
+Version 2.4.1:
+--------------
+ * Fix exponential resource leak in recursive property editor.
+ * Fix QtQuick item tree view readability with dark color schemes.
+ * Fix rendering glitch in QtQuick item tree view.
+ * Fix selection not working on item picking if the corresponding tree model branch
+   wasn't loaded yet.
+ * Improve QtQuick element picking on item views.
+ * Improve runtime attaching on Windows.
+ * Fix current state configuration not being updated in state machine debugger.
+ * Workaround QtDesigner >= 5.6 incompatibility with CMake 2.8.12.
+ * Fix crash when encountering non-serializable types inside a associative
+   iterable variant.
+ * Fix setting properties on multi-inheriting types.
+
 Version 2.4.0:
 --------------
  * Recursive property editor for accessing composite property types.
