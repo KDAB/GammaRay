@@ -11,7 +11,6 @@ set(gammaray_launcher_shared_srcs
   injector/processinjector.cpp
   injector/injectorfactory.cpp
   injector/styleinjector.cpp
-  injector/windllinjector.cpp
 
   probeabi.cpp
   probeabidetector.cpp
@@ -23,7 +22,11 @@ set(gammaray_launcher_shared_srcs
 )
 
 if(WIN32)
-  list(APPEND gammaray_launcher_shared_srcs probeabidetector_win.cpp pefile.cpp)
+  list(APPEND gammaray_launcher_shared_srcs
+    probeabidetector_win.cpp
+    pefile.cpp
+    injector/windllinjector.cpp
+  )
 else()
   list(APPEND gammaray_launcher_shared_srcs
     injector/debuggerinjector.cpp

@@ -32,7 +32,9 @@
 #include "lldbinjector.h"
 #include "preloadinjector.h"
 #include "styleinjector.h"
+#ifdef QT_OS_WIN
 #include "windllinjector.h"
+#endif
 
 #include <launcher/probeabi.h>
 

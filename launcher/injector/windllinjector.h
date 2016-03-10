@@ -32,9 +32,6 @@
 #include "abstractinjector.h"
 
 #include <qglobal.h>
-
-#ifdef Q_OS_WIN
-
 #include <QStringList>
 #include <windows.h>
 
@@ -71,7 +68,5 @@ class WinDllInjector : public AbstractInjector
 };
 
 }
-
-#endif
 
 #endif // GAMMARAY_WINDLLINJECTOR_H

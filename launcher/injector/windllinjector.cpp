@@ -32,7 +32,6 @@
 #include <QDebug>
 #include <QThread>
 
-#ifdef Q_OS_WIN
 #include <windows.h>
 #include <cstdlib>
 
@@ -203,4 +202,3 @@ void WinDllInjector::stop()
 }
 
 }// namespace GammaRay
-#endif
