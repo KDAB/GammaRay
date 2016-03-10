@@ -80,6 +80,7 @@ gammaray_install_headers(
     launchoptions.h
     probeabi.h
     probeabidetector.h
+    probefinder.h
 )
 
 

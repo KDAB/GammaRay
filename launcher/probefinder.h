@@ -40,6 +40,7 @@ namespace GammaRay {
 
 class ProbeABI;
 
+/** @brief Functions to locate a suitable probe. */
 namespace ProbeFinder {
 
   /**
