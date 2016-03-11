@@ -70,6 +70,7 @@ private slots:
 
 private:
     Q_INVOKABLE void run();
+    void setRootPathFromProbePath(const QString &probePath);
     QLocalSocket *m_socket;
     QWaitCondition m_waitCondition;
     QMutex m_mutex;
@@ -132,7 +133,7 @@ void ProbeSettingsReceiver::readyRead()
                 else {
                     const QString probePath = ProbeSettings::value(QStringLiteral("ProbePath")).toString();
                     if (!probePath.isEmpty())
-                        Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+                        setRootPathFromProbePath(probePath);
                 }
 
                 m_waitCondition.wakeAll();
@@ -170,10 +171,16 @@ void ProbeSettingsReceiver::settingsReceivedFallback()
     else {
         const QString probePath = ProbeSettings::value(QStringLiteral("ProbePath")).toString();
         if (!probePath.isEmpty())
-            Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+            setRootPathFromProbePath(probePath);
     }
 
     m_waitCondition.wakeAll();
+}
+
+void ProbeSettingsReceiver::setRootPathFromProbePath(const QString &probePath)
+{
+    QFileInfo fi(probePath);
+    Paths::setRootPath(fi.absolutePath() + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
 }
 
 }
