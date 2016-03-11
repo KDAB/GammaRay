@@ -180,7 +180,10 @@ void ProbeSettingsReceiver::settingsReceivedFallback()
 void ProbeSettingsReceiver::setRootPathFromProbePath(const QString &probePath)
 {
     QFileInfo fi(probePath);
-    Paths::setRootPath(fi.absolutePath() + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+    if (fi.isFile())
+        Paths::setRootPath(fi.absolutePath() + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
+    else
+        Paths::setRootPath(probePath + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
 }
 
 }
