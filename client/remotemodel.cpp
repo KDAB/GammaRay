@@ -248,7 +248,7 @@ Qt::ItemFlags RemoteModel::flags(const QModelIndex& index) const
 
 QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (!isConnected())
+  if (!isConnected() || section < 0)
     return QVariant();
 
   auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
