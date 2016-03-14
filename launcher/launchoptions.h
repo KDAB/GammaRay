@@ -107,6 +107,10 @@ public:
   void setRootPath(const QString &path);
   QString rootPath() const;
 
+  /** Working directory for launching the target. */
+  void setWorkingDirectory(const QString &path);
+  QString workingDirectory() const;
+
   /** Process environment for the launched target. By default the environment of the launcher process is used. */
   void setProcessEnvironment(const QProcessEnvironment &env);
   QProcessEnvironment processEnvironment() const;

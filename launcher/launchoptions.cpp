@@ -54,6 +54,7 @@ public:
     LaunchOptions::UiMode uiMode;
     QHash<QByteArray, QByteArray> probeSettings;
     QProcessEnvironment env;
+    QString workingDir;
 };
 
 }
@@ -197,6 +198,16 @@ void LaunchOptions::setProbePath(const QString& path)
 QString LaunchOptions::probePath() const
 {
     return d->probeSettings.value("ProbePath");
+}
+
+void LaunchOptions::setWorkingDirectory(const QString &path)
+{
+    d->workingDir = path;
+}
+
+QString LaunchOptions::workingDirectory() const
+{
+    return d->workingDir;
 }
 
 void LaunchOptions::setProbeSetting(const QString& key, const QVariant& value)

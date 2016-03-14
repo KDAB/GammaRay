@@ -29,6 +29,7 @@
 #include "abstractinjector.h"
 
 #include <QDebug>
+#include <QDir>
 #include <QStringList>
 
 using namespace GammaRay;
@@ -67,4 +68,16 @@ bool AbstractInjector::selfTest()
 
 void AbstractInjector::stop()
 {
+}
+
+QString AbstractInjector::workingDirectory() const
+{
+    if (m_workingDir.isEmpty())
+        return QDir::currentPath();
+    return m_workingDir;
+}
+
+void AbstractInjector::setWorkingDirectory(const QString& path)
+{
+    m_workingDir = path;
 }

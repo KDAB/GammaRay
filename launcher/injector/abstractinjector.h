@@ -100,6 +100,11 @@ class AbstractInjector : public QObject
 
     virtual void stop();
 
+    /** Returns the working directory supposed to be used for launching. */
+    QString workingDirectory() const;
+    /** Set working directory for launching. */
+    void setWorkingDirectory(const QString &path);
+
 signals:
     void started();
     void finished();
@@ -107,6 +112,9 @@ signals:
 
     void stdoutMessage(const QString &message);
     void stderrMessage(const QString &message);
+
+private:
+    QString m_workingDir;
 };
 
 }

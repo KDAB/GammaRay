@@ -163,6 +163,7 @@ bool Launcher::start()
 
   bool success = false;
   if (d->options.isLaunch()) {
+    d->injector->setWorkingDirectory(d->options.workingDirectory());
     success = d->injector->launch(d->options.launchArguments(), probeDll, QStringLiteral("gammaray_probe_inject"), d->options.processEnvironment());
   } else if (d->options.isAttach()) {
     success = d->injector->attach(d->options.pid(), probeDll, QStringLiteral("gammaray_probe_inject"));

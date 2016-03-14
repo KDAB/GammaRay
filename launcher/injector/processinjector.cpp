@@ -62,6 +62,7 @@ void ProcessInjector::stop()
 
 bool ProcessInjector::launchProcess(const QStringList& programAndArgs, const QProcessEnvironment& env)
 {
+  m_proc.setWorkingDirectory(workingDirectory());
   m_proc.setProcessEnvironment(env);
 
   QStringList args = programAndArgs;
