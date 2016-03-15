@@ -29,7 +29,6 @@
 #include "objectvisualizermodel.h"
 
 #include "common/objectmodel.h"
-#include "core/util.h"
 
 #include <QAbstractItemModel>
 #include <QDebug>

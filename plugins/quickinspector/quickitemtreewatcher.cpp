@@ -28,7 +28,6 @@
 
 #include "quickitemtreewatcher.h"
 #include "quickitemmodelroles.h"
-#include <client/remotemodel.h>
 
 #include <QAbstractItemModel>
 #include <QTreeView>
