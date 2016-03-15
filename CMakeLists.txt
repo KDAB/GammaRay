@@ -62,6 +62,7 @@ include(GammaRayMacrosInternal)
 include(FeatureSummary)
 include(ECMGeneratePriFile)
 include(ECMEnableSanitizers)
+include(GenerateExportHeader)
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
 #  MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
@@ -148,6 +149,7 @@ option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under G
 #
 # Compiler & linker settings
 #
+add_compiler_export_flags()
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
   check_cxx_compiler_flag(-Wunused-but-set-variable HAVE_GXX_UNUSED_BUT_SET)
   check_cxx_compiler_flag(-Wlogical-op HAVE_GXX_LOGICAL_OP)
@@ -180,10 +182,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
   if(MINGW)
     # mingw will error out on the crazy casts in probe.cpp without this
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-  else()
-    # visibility attributes not supported on mingw, don't use -fvisibility option
-    # see: http://stackoverflow.com/questions/7994415/mingw-fvisibility-hidden-does-not-seem-to-work
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
   endif()
 endif()
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")

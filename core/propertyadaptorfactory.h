@@ -31,6 +31,8 @@
 
 #include "gammaray_core_export.h"
 
+#include <qglobal.h>
+
 class QObject;
 
 namespace GammaRay {

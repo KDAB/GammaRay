@@ -20,12 +20,13 @@ set(gammaray_common_srcs
 )
 
 add_library(gammaray_common SHARED ${gammaray_common_srcs})
+generate_export_header(gammaray_common)
 set_target_properties(gammaray_common PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
-  DEFINE_SYMBOL MAKE_GAMMARAY_COMMON_LIB
   OUTPUT_NAME gammaray_common-${GAMMARAY_PROBE_ABI}
 )
 
+target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 if(Qt5Core_FOUND)
   target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui gammaray_kitemmodels)
 else()
@@ -73,7 +74,7 @@ if (ANDROID)
 endif()
 
 gammaray_install_headers(
-  gammaray_common_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/gammaray_common_export.h
   endpoint.h
   enums.h
   metatypedeclarations.h

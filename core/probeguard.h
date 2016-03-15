@@ -31,6 +31,8 @@
 
 #include "gammaray_core_export.h"
 
+#include <qglobal.h>
+
 namespace GammaRay {
 
 /** Use this inside probe code that might trigger expensive or otherwise problematic side-effects in

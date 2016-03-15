@@ -95,12 +95,13 @@ qt4_wrap_ui(gammaray_ui_srcs
 qt4_add_resources(gammaray_ui_srcs resources/ui.qrc)
 
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
+generate_export_header(gammaray_ui)
 set_target_properties(gammaray_ui PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
-  DEFINE_SYMBOL MAKE_GAMMARAY_UI_LIB
   OUTPUT_NAME gammaray_ui-${GAMMARAY_PROBE_ABI}
 )
 
+target_include_directories(gammaray_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 target_link_libraries(gammaray_ui
   LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
@@ -131,7 +132,7 @@ target_link_libraries(gammaray_ui_internal
 )
 
 gammaray_install_headers(
-  gammaray_ui_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
   clienttoolmodel.h
   deferredresizemodesetter.h
   deferredtreeviewconfiguration.h

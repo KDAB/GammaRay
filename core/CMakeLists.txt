@@ -112,13 +112,11 @@ endif()
 qt4_wrap_cpp(gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.h)
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
-add_definitions(-DMAKE_GAMMARAY_CORE_LIB)
-
 # core lib
-add_library(gammaray_core SHARED
-  ${gammaray_srcs}
-)
+add_library(gammaray_core SHARED ${gammaray_srcs})
+generate_export_header(gammaray_core)
 
+target_include_directories(gammaray_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
@@ -140,7 +138,7 @@ endif()
 install(TARGETS gammaray_core EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 gammaray_install_headers(
-  gammaray_core_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/gammaray_core_export.h
   metaobject.h
   metaobjectrepository.h
   metaproperty.h

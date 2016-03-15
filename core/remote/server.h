@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_SERVER_H
 #define GAMMARAY_SERVER_H
 
-#include "../gammaray_core_export.h"
+#include "gammaray_core_export.h"
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>

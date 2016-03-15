@@ -45,12 +45,12 @@ else()
 endif()
 
 add_library(gammaray_launcher SHARED ${gammaray_launcher_shared_srcs})
-
+generate_export_header(gammaray_launcher)
 set_target_properties(gammaray_launcher PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
-  DEFINE_SYMBOL MAKE_GAMMARAY_LAUNCHER_LIB
 )
 
+target_include_directories(gammaray_launcher PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 target_link_libraries(gammaray_launcher LINK_PUBLIC ${QT_QTCORE_LIBRARIES} LINK_PRIVATE gammaray_common ${QT_QTNETWORK_LIBRARIES})
 if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray_launcher LINK_PRIVATE ${QT_QTGUI_LIBRARIES})
@@ -75,7 +75,7 @@ ecm_generate_pri_file(BASE_NAME GammaRayLauncher
 
 install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 gammaray_install_headers(
-    gammaray_launcher_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_export.h
     launcher.h
     launchoptions.h
     probeabi.h

@@ -15,11 +15,12 @@ set(gammaray_clientlib_srcs
 
 qt4_add_resources(gammaray_clientlib_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 add_library(gammaray_client SHARED ${gammaray_clientlib_srcs})
+generate_export_header(gammaray_client)
 set_target_properties(gammaray_client PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
-  DEFINE_SYMBOL MAKE_GAMMARAY_CLIENT_LIB
 )
 
+target_include_directories(gammaray_client PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 target_link_libraries(gammaray_client
   LINK_PUBLIC
   ${QT_QTCORE_LIBRARIES}
@@ -53,7 +54,7 @@ install(TARGETS gammaray-client DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 
 gammaray_install_headers(
-  gammaray_client_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/gammaray_client_export.h
   clientconnectionmanager.h
 )
 
