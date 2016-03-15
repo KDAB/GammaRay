@@ -27,8 +27,8 @@
 */
 
 #include "webinspectorwidget.h"
-#include "webviewmodel.h"
 #include "ui_webinspectorwidget.h"
+#include "webviewmodelroles.h"
 
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
@@ -63,7 +63,7 @@ void WebInspectorWidget::webPageSelected(int index)
     ui->stack->setCurrentWidget(ui->wk1LocalPage);
   }
 
-  else if (ui->webPageComboBox->itemData(index, WebViewModel::WebKitVersionRole).toInt() == 2) {
+  else if (ui->webPageComboBox->itemData(index, WebViewModelRoles::WebKitVersionRole).toInt() == 2) {
     const QUrl serverUrl = Endpoint::instance()->serverAddress();
     if (serverUrl.scheme() == QLatin1String("tcp")) {
       QUrl inspectorUrl;

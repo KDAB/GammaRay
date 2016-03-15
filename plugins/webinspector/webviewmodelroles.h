@@ -1,10 +1,10 @@
 /*
-  webviewmodel.h
+  webviewmodelroles.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,25 +26,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WEBINSPECTOR_WEBVIEWMODEL_H
-#define GAMMARAY_WEBINSPECTOR_WEBVIEWMODEL_H
-
-#include <core/objecttypefilterproxymodel.h>
+#include <common/objectmodel.h>
 
 namespace GammaRay {
 
-class WebViewModel : public ObjectFilterProxyModelBase
-{
-    Q_OBJECT
-public:
-    explicit WebViewModel(QObject *parent = 0);
-    ~WebViewModel();
-
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QMap< int, QVariant > itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
-    bool filterAcceptsObject(QObject* object) const Q_DECL_OVERRIDE;
-};
-
+namespace WebViewModelRoles {
+    enum Role {
+        WebKitVersionRole = ObjectModel::UserRole
+    };
 }
 
-#endif // GAMMARAY_WEBVIEWMODEL_H
+}
