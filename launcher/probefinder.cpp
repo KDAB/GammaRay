@@ -103,8 +103,8 @@ QVector<ProbeABI> listProbeABIs()
   const QString filter = QStringLiteral("*gammaray_probe*");
   foreach (const QFileInfo &abiId, dir.entryInfoList(QStringList(filter), QDir::Files)) {
     // OSX has broken QLibrary::isLibrary() - QTBUG-50446
-    if (abiId.isSymLink() || (!QLibrary::isLibrary(abiId.fileName()) &&
-                              !abiId.fileName().endsWith(Paths::libraryExtension(), Qt::CaseInsensitive))) {
+    if (!QLibrary::isLibrary(abiId.fileName()) &&
+                              !abiId.fileName().endsWith(Paths::libraryExtension(), Qt::CaseInsensitive)) {
       continue;
     }
     const ProbeABI abi = ProbeABI::fromString(abiId.baseName().section(QStringLiteral("-"), 1));
