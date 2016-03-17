@@ -1,6 +1,7 @@
 # probe plugin
 set(gammaray_wlcompositorinspector_srcs
   wlcompositorinspector.cpp
+  wlcompositorinterface.cpp
 )
 gammaray_add_plugin(gammaray_wlcompositorinspector
   JSON gammaray_wlcompositorinspector.json SOURCES
@@ -14,6 +15,8 @@ if(GAMMARAY_BUILD_UI)
 
   set(gammaray_wlcompositorinspector_ui_srcs
     inspectorwidget.cpp
+    wlcompositorinterface.cpp
+    wlcompositorclient.cpp
   )
 
   qt5_wrap_ui(gammaray_wlcompositorinspector_ui_srcs

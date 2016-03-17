@@ -26,61 +26,25 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WLCOMPOSITORINSPECTOR_WLCOMPOSITORINSPECTOR_H
-#define GAMMARAY_WLCOMPOSITORINSPECTOR_WLCOMPOSITORINSPECTOR_H
-
-#include <core/toolfactory.h>
-
-#include <QWaylandCompositor>
-#include <QStringList>
+#ifndef WLCOMPOSITORCLIENT_H
+#define WLCOMPOSITORCLIENT_H
 
 #include "wlcompositorinterface.h"
 
-class QStringListModel;
-
-struct wl_client;
-
 namespace GammaRay {
 
-class ClientsModel;
-class ResourcesModel;
-
-class WlCompositorInspector: public WlCompositorInterface
+class WlCompositorClient : public WlCompositorInterface
 {
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::WlCompositorInterface)
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::WlCompositorInterface)
 public:
-    explicit WlCompositorInspector(ProbeInterface *probe, QObject *parent = 0);
-    ~WlCompositorInspector();
+  WlCompositorClient(QObject *p);
 
 public slots:
-    void setSelectedClient(int index) override;
+  void setSelectedClient(int index) override;
 
-private slots:
-    void objectAdded(QObject *obj);
-
-private:
-    void init(QWaylandCompositor *compositor);
-    void addClient(wl_client *c);
-
-    QWaylandCompositor *m_compositor;
-    ClientsModel *m_clientsModel;
-    ResourcesModel *m_resourcesModel;
-};
-
-class WlCompositorInspectorFactory: public QObject, public StandardToolFactory<QWaylandCompositor, WlCompositorInspector>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_wlcompositorinspector.json")
-
-public:
-    explicit WlCompositorInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
 };
 
 }
 
 #endif
-

@@ -1,5 +1,5 @@
 /*
-  inspectorwidget.cpp
+  wlcompositorinspector.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,51 +26,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_WLCOMPOSITORINSPECTOR_WIDGET_H
-#define GAMMARAY_WLCOMPOSITORINSPECTOR_WIDGET_H
+#include "wlcompositorclient.h"
 
-#include <ui/tooluifactory.h>
-
-#include <QWidget>
-
-class QAbstractItemModel;
-class QItemSelection;
-
-namespace Ui {
-  class Widget;
-}
+#include <common/endpoint.h>
 
 namespace GammaRay {
 
-class WlCompositorInterface;
-
-class InspectorWidget : public QWidget
+WlCompositorClient::WlCompositorClient(QObject *p)
+                  : WlCompositorInterface(p)
 {
-Q_OBJECT
-public:
-    explicit InspectorWidget(QWidget *parent = 0);
-    ~InspectorWidget();
-
-private slots:
-    void delayedInit();
-
-private:
-    void clientActivated(const QModelIndex &index);
-    void resourceActivated(const QModelIndex &index);
-
-    Ui::Widget *m_ui;
-    QAbstractItemModel *m_model;
-    WlCompositorInterface *m_client;
-};
-
-class InspectorWidgetFactory : public QObject, public StandardToolUiFactory<InspectorWidget>
-{
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_wlcompositorinspector.json")
-};
-
-
 }
 
-#endif // GAMMARAY_FONTBROWSERWIDGET_H
+void WlCompositorClient::setSelectedClient(int index)
+{
+  Endpoint::instance()->invokeObject(objectName(), "setSelectedClient", QVariantList() << index);
+}
+
+}
