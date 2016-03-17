@@ -34,15 +34,27 @@
 #include <QDebug>
 
 #include "ui_inspectorwidget.h"
+#include "wlcompositorclient.h"
 
 using namespace GammaRay;
+
+static QObject *wlCompositorClientFactory(const QString &/*name*/, QObject *parent)
+{
+  return new WlCompositorClient(parent);
+}
 
 InspectorWidget::InspectorWidget(QWidget *parent)
                : QWidget(parent)
                , m_ui(new Ui::Widget)
 {
+    ObjectBroker::registerClientObjectFactoryCallback<WlCompositorInterface *>(wlCompositorClientFactory);
+    m_client = ObjectBroker::object<WlCompositorInterface *>();
+
     m_model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"));
     m_ui->setupUi(this);
+
+    auto resourcesModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorResourcesModel"));
+    m_ui->resourcesView->setModel(resourcesModel);
 
     m_ui->clientsView->setModel(m_model);
     connect(m_ui->clientsView, &QAbstractItemView::clicked, this, &InspectorWidget::clientActivated);
@@ -59,8 +71,7 @@ void InspectorWidget::delayedInit()
 
 void InspectorWidget::clientActivated(const QModelIndex &index)
 {
-    QString model = index.data(Qt::UserRole + 1).toString();
-    m_ui->resourcesView->setModel(ObjectBroker::model(model));
+    m_client->setSelectedClient(index.row());
 }
 
 void InspectorWidget::resourceActivated(const QModelIndex &index)

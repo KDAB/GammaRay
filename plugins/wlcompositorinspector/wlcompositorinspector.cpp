@@ -42,15 +42,16 @@
 
 #include <wayland-server.h>
 
-enum {
-    ResourcesRole = Qt::UserRole + 1,
-};
-
 namespace GammaRay
 {
 
 class ResourcesModel : public QAbstractItemModel
 {
+    struct ClientListener {
+        wl_listener l;
+        ResourcesModel *m;
+    };
+
 public:
     struct Resource {
         wl_listener destroyListener;
@@ -72,19 +73,25 @@ public:
         }
     };
 
-    ResourcesModel(QWaylandClient *client)
+    ResourcesModel()
     {
-        struct Listener {
-            wl_listener l;
-            ResourcesModel *m;
-        };
+        wl_list_init(&m_listener.l.link);
+    }
 
-        auto *listener = new Listener;
-        wl_client_add_resource_created_listener(client->client(), &listener->l);
-        listener->m = this;
-        listener->l.notify = [](wl_listener *listener, void *data) {
+    void setClient(QWaylandClient *client)
+    {
+        beginResetModel();
+        clear();
+        endResetModel();
+
+        wl_list_remove(&m_listener.l.link);
+        wl_list_init(&m_listener.l.link);
+
+        wl_client_add_resource_created_listener(client->client(), &m_listener.l);
+        m_listener.m = this;
+        m_listener.l.notify = [](wl_listener *listener, void *data) {
             wl_resource *resource = static_cast<wl_resource *>(data);
-            ResourcesModel *model = reinterpret_cast<Listener *>(listener)->m;
+            ResourcesModel *model = reinterpret_cast<ClientListener *>(listener)->m;
             model->addResource(resource);
         };
 
@@ -97,9 +104,15 @@ public:
 
     ~ResourcesModel()
     {
+        clear();
+    }
+
+    void clear()
+    {
         foreach (Resource *res, m_resources) {
             destroy(res);
         }
+        m_resources.clear();
     }
 
     void destroy(Resource *res)
@@ -122,7 +135,7 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const override
     {
-        Resource *parentres = static_cast<Resource *>(parent.internalPointer());
+        Resource *parentres = exists(parent) ? static_cast<Resource *>(parent.internalPointer()) : nullptr;
         Resource *res = parentres ? parentres->children.at(row) : m_resources.at(row);
         return createIndex(row, column, res);
     }
@@ -130,7 +143,7 @@ public:
     QModelIndex parent(const QModelIndex &idx) const override
     {
         Resource *res = static_cast<Resource *>(idx.internalPointer());
-        if (res->parent) {
+        if (exists(idx) && res->parent) {
             return index(res->parent);
         }
         return QModelIndex();
@@ -164,6 +177,7 @@ public:
         } else {
             m_resources << r;
         }
+        m_allResources << r;
 
         endInsertRows();
     }
@@ -179,12 +193,22 @@ public:
         } else {
             m_resources.removeAt(idx);
         }
+        m_allResources.remove(r);
+        wl_list_remove(&r->destroyListener.link);
         delete r;
         endRemoveRows();
     }
 
+    bool exists(const QModelIndex &index) const
+    {
+        auto *p = static_cast<Resource *>(index.internalPointer());
+        return !p || m_allResources.contains(p);
+    }
+
     int rowCount(const QModelIndex &index) const override
     {
+        if (!exists(index))
+            return 0;
         Resource *res = static_cast<Resource *>(index.internalPointer());
         return res ? res->children.count() : m_resources.count();
     }
@@ -196,6 +220,9 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const override
     {
+        if (!exists(index))
+          return QVariant();
+
         const Resource *resource = static_cast<Resource *>(index.internalPointer());
         wl_resource *res = resource->resource;
 
@@ -209,6 +236,8 @@ public:
     }
 
     QVector<Resource *> m_resources;
+    QSet<Resource *> m_allResources;
+    ClientListener m_listener;
 };
 
 class ClientsModel : public QAbstractTableModel
@@ -220,39 +249,30 @@ public:
         EndColumn
     };
 
-    struct Client {
-        QWaylandClient *client;
-        QString modelName;
-        ResourcesModel *model;
-
-        inline bool operator==(QWaylandClient *c) const { return client == c; }
-    };
-
     explicit ClientsModel(ProbeInterface *probe, QObject *parent)
         : QAbstractTableModel(parent)
         , m_probe(probe)
     {
     }
 
+    QWaylandClient *client(int index) const
+    {
+        return m_clients.at(index);
+    }
+
     void addClient(QWaylandClient *client)
     {
-        QString modelName = QString("com.kdab.GammaRay.WaylandCompositorClient%1ResourcesModel").arg(client->processId());
-        auto *model = new ResourcesModel(client);
-        m_probe->registerModel(modelName, model);
-
         beginInsertRows(QModelIndex(), m_clients.count(), m_clients.count());
-        m_clients.append({ client, modelName, model });
+        m_clients.append(client);
         endInsertRows();
     }
 
     void removeClient(QWaylandClient *client)
     {
-        const Client *modelClient;
         int index = -1;
         for (int i = 0; i < m_clients.count(); ++i) {
             if (m_clients.at(i) == client) {
                 index = i;
-                modelClient = &m_clients.at(i);
                 break;
             }
         }
@@ -261,7 +281,6 @@ public:
             return;
         }
 
-        delete modelClient->model;
         beginRemoveRows(QModelIndex(), index, index);
         m_clients.removeAt(index);
         endRemoveRows();
@@ -279,21 +298,14 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const override
     {
-        if (role != Qt::DisplayRole && role != ResourcesRole) {
-            return QVariant();
-        }
-
-        const Client &client = m_clients.at(index.row());
-
-        if (role == ResourcesRole) {
-            return client.modelName;
-        }
+        Q_UNUSED(role)
+        auto client = m_clients.at(index.row());
 
         switch (index.column()) {
             case PidColumn:
-                return client.client->processId();
+                return client->processId();
             case CommandColumn: {
-                auto pid = client.client->processId();
+                auto pid = client->processId();
                 QByteArray path;
                 QTextStream(&path) << "/proc/" << pid << "/cmdline";
                 QFile file(path);
@@ -316,7 +328,6 @@ public:
             map[role] = data(index, role);
         };
         insertRole(Qt::DisplayRole);
-        insertRole(ResourcesRole);
         return map;
     }
 
@@ -333,12 +344,12 @@ public:
         return QString::number(section + 1);
     }
 
-    QVector<Client> m_clients;
+    QVector<QWaylandClient *> m_clients;
     ProbeInterface *m_probe;
 };
 
 WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* parent)
-                     : QObject(parent)
+                     : WlCompositorInterface(parent)
 {
     qWarning()<<"init probe"<<probe->objectTreeModel()<<probe->probe();
 
@@ -347,6 +358,9 @@ WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* par
 
     m_clientsModel = new ClientsModel(probe, this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"), m_clientsModel);
+
+    m_resourcesModel = new ResourcesModel;
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.WaylandCompositorResourcesModel"), m_resourcesModel);
 
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
 }
@@ -395,13 +409,17 @@ void WlCompositorInspector::addClient(wl_client *c)
 
     QString pid = QString::number(client->processId());
     qWarning()<<"client"<<client<<pid;
-    m_clients << pid;
     connect(client, &QObject::destroyed, [this, pid, client](QObject *) {
-        m_clients.removeOne(pid);
         m_clientsModel->removeClient(client);
     });
 
     m_clientsModel->addClient(client);
+}
+
+void WlCompositorInspector::setSelectedClient(int index)
+{
+    auto client = m_clientsModel->client(index);
+    m_resourcesModel->setClient(client);
 }
 
 }
