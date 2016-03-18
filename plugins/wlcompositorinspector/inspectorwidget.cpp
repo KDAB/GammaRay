@@ -32,6 +32,7 @@
 
 #include <QAbstractItemModel>
 #include <QDebug>
+#include <QMouseEvent>
 
 #include "ui_inspectorwidget.h"
 #include "wlcompositorclient.h"
@@ -57,7 +58,7 @@ InspectorWidget::InspectorWidget(QWidget *parent)
     m_ui->resourcesView->setModel(resourcesModel);
 
     m_ui->clientsView->setModel(m_model);
-    connect(m_ui->clientsView, &QAbstractItemView::clicked, this, &InspectorWidget::clientActivated);
+    m_ui->clientsView->viewport()->installEventFilter(this);
     connect(m_ui->resourcesView, &QAbstractItemView::clicked, this, &InspectorWidget::resourceActivated);
 }
 
@@ -77,4 +78,19 @@ void InspectorWidget::clientActivated(const QModelIndex &index)
 void InspectorWidget::resourceActivated(const QModelIndex &index)
 {
     QString model = index.data(Qt::DisplayRole).toString();
+}
+
+bool InspectorWidget::eventFilter(QObject *o, QEvent *e)
+{
+    switch (e->type()) {
+        case QEvent::MouseButtonRelease: {
+            auto *me = static_cast<QMouseEvent *>(e);
+            auto index = m_ui->clientsView->indexAt(me->pos());
+            clientActivated(index);
+            return false;
+        }
+        default:
+            break;
+    }
+    return QWidget::eventFilter(o, e);
 }

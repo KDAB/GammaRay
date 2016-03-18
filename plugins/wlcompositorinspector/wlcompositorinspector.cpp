@@ -74,6 +74,7 @@ public:
     };
 
     ResourcesModel()
+        : m_client(nullptr)
     {
         wl_list_init(&m_listener.l.link);
     }
@@ -87,20 +88,25 @@ public:
         wl_list_remove(&m_listener.l.link);
         wl_list_init(&m_listener.l.link);
 
-        wl_client_add_resource_created_listener(client->client(), &m_listener.l);
-        m_listener.m = this;
-        m_listener.l.notify = [](wl_listener *listener, void *data) {
-            wl_resource *resource = static_cast<wl_resource *>(data);
-            ResourcesModel *model = reinterpret_cast<ClientListener *>(listener)->m;
-            model->addResource(resource);
-        };
+        m_client = client;
+        if (client) {
+            wl_client_add_resource_created_listener(client->client(), &m_listener.l);
+            m_listener.m = this;
+            m_listener.l.notify = [](wl_listener *listener, void *data) {
+                wl_resource *resource = static_cast<wl_resource *>(data);
+                ResourcesModel *model = reinterpret_cast<ClientListener *>(listener)->m;
+                model->addResource(resource);
+            };
 
-        wl_client_for_each_resource(client->client(), [](wl_resource *res, void *ud) {
-            ResourcesModel *model = static_cast<ResourcesModel *>(ud);
-            model->addResource(res);
-            return WL_ITERATOR_CONTINUE;
-        }, this);
+            wl_client_for_each_resource(client->client(), [](wl_resource *res, void *ud) {
+                ResourcesModel *model = static_cast<ResourcesModel *>(ud);
+                model->addResource(res);
+                return WL_ITERATOR_CONTINUE;
+            }, this);
+        }
     }
+
+    QWaylandClient *client() const { return m_client; }
 
     ~ResourcesModel()
     {
@@ -238,6 +244,7 @@ public:
     QVector<Resource *> m_resources;
     QSet<Resource *> m_allResources;
     ClientListener m_listener;
+    QWaylandClient *m_client;
 };
 
 class ClientsModel : public QAbstractTableModel
@@ -418,8 +425,10 @@ void WlCompositorInspector::addClient(wl_client *c)
 
 void WlCompositorInspector::setSelectedClient(int index)
 {
-    auto client = m_clientsModel->client(index);
-    m_resourcesModel->setClient(client);
+    auto client = index >= 0 ?  m_clientsModel->client(index) : nullptr;
+    if (client != m_resourcesModel->client()) {
+        m_resourcesModel->setClient(client);
+    }
 }
 
 }

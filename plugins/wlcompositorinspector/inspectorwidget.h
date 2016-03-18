@@ -51,6 +51,9 @@ public:
     explicit InspectorWidget(QWidget *parent = 0);
     ~InspectorWidget();
 
+protected:
+    bool eventFilter(QObject *o, QEvent *e) override;
+
 private slots:
     void delayedInit();
 
