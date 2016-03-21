@@ -21,7 +21,6 @@
 
 // probe name
 #define GAMMARAY_PROBE_BASENAME "${PROBE_BASENAME}"
-#define GAMMARAY_PROBE_NAME "${PROBE_NAME}"
 
 // default network properties
 #define GAMMARAY_DEFAULT_LOCAL_ADDRESS "127.0.0.1"
