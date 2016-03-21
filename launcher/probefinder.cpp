@@ -41,7 +41,6 @@
 #include <QLibrary>
 #include <QString>
 #include <QStringBuilder>
-#include <QStringList>
 
 #include <algorithm>
 
@@ -49,12 +48,11 @@ namespace GammaRay {
 
 namespace ProbeFinder {
 
-QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
+static QString findProbeInternal(const ProbeABI &probeAbi, const QString &rootPath)
 {
-  const QString probePath =
-    Paths::probePath(probeAbi.id()) %
+  const QString probePath = Paths::probePath(probeAbi.id(), rootPath) %
     QDir::separator() %
-    baseName %
+    GAMMARAY_PROBE_BASENAME %
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
     QChar('-') %
     probeAbi.id() %
@@ -66,13 +64,31 @@ QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
   const QFileInfo wildcarded(probePath);
   const QFileInfo fi = QDir(wildcarded.absolutePath()).entryInfoList(QStringList(wildcarded.fileName())).value(0);
   const QString canonicalPath = fi.canonicalFilePath();
-  if (!fi.isFile() || !fi.isReadable() || canonicalPath.isEmpty()) {
-    qWarning() << "Cannot locate probe" << probePath;
+  if (!fi.isFile() || !fi.isReadable())
+    return QString();
+  return canonicalPath;
+}
+
+QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
+{
+    Q_UNUSED(baseName);
+    return findProbe(probeAbi);
+}
+
+QString findProbe(const ProbeABI &probeAbi, const QStringList &searchRoots)
+{
+    foreach (const auto &searchRoot, searchRoots) {
+        const auto path = findProbeInternal(probeAbi, searchRoot);
+        if (!path.isEmpty())
+            return path;
+    }
+    const auto path = findProbeInternal(probeAbi, Paths::rootPath());
+    if (!path.isEmpty())
+        return path;
+
+    qWarning() << "Cannot locate probe for ABI" << probeAbi.displayString() << " in " << searchRoots << Paths::rootPath();
     qWarning() << "This is likely a setup problem, due to an incomplete or partially moved installation.";
     return QString();
-  }
-
-  return canonicalPath;
 }
 
 ProbeABI findBestMatchingABI(const ProbeABI& targetABI)

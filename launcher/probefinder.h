@@ -31,10 +31,10 @@
 
 #include "gammaray_launcher_export.h"
 
+#include <QStringList>
 #include <QVector>
 
 class QString;
-class QStringList;
 
 namespace GammaRay {
 
@@ -46,7 +46,13 @@ namespace ProbeFinder {
   /**
    * Attempts to find the full path of the probe DLL.
    */
-  GAMMARAY_LAUNCHER_EXPORT QString findProbe(const QString& baseName, const ProbeABI& probeAbi);
+  GAMMARAY_LAUNCHER_DEPRECATED_EXPORT QString findProbe(const QString& baseName, const ProbeABI& probeAbi);
+
+  /**
+   * Attempts to find the full path of the probe DLL with ABI @p probeAbi, considering
+   * the additional search paths @p searchRoots.
+   */
+  GAMMARAY_LAUNCHER_EXPORT QString findProbe(const ProbeABI &probeAbi, const QStringList &searchRoots = QStringList());
 
   /**
    * Find the best matching probe for the given @p targetABI.

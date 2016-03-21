@@ -67,7 +67,7 @@ void SelfTestPage::testProbe()
   int validProbeCount = 0;
   const QVector<ProbeABI> probeABIs = ProbeFinder::listProbeABIs();
   foreach (const ProbeABI &abi, probeABIs) {
-    const QString probePath = ProbeFinder::findProbe(QStringLiteral(GAMMARAY_PROBE_BASENAME), abi);
+    const QString probePath = ProbeFinder::findProbe(abi);
     if (probePath.isEmpty()) {
       error(tr("No probe found for ABI %1.").arg(abi.id()));
       continue;

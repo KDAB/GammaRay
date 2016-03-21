@@ -32,7 +32,6 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
-#include <QString>
 
 namespace GammaRay {
 namespace Paths {
@@ -60,16 +59,16 @@ void setRelativeRootPath(const char* relativeRootPath)
   setRootPath(QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String(relativeRootPath));
 }
 
-QString probePath(const QString& probeABI)
+QString probePath(const QString& probeABI, const QString &rootPath)
 {
 #ifndef GAMMARAY_INSTALL_QT_LAYOUT
-  return rootPath() + QDir::separator()
+  return rootPath + QDir::separator()
     + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR) + QDir::separator()
     + QLatin1String(GAMMARAY_PLUGIN_VERSION) + QDir::separator()
     + probeABI;
 #else
   Q_UNUSED(probeABI);
-  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_PROBE_INSTALL_DIR);
+  return rootPath + QDir::separator() + QLatin1String(GAMMARAY_PROBE_INSTALL_DIR);
 #endif
 }
 

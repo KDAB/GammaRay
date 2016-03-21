@@ -224,7 +224,7 @@ int main(int argc, char **argv)
         out << "Invalid probe ABI specified, see --list-probes for valid ones." << endl;
         return 1;
       }
-      if (ProbeFinder::findProbe(QStringLiteral(GAMMARAY_PROBE_BASENAME), abi).isEmpty()) {
+      if (ProbeFinder::findProbe(abi).isEmpty()) {
         out << abi.id() << "is not a known probe, see --list-probes." << endl;
         return 1;
       }
