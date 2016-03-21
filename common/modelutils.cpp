@@ -32,12 +32,13 @@
 
 using namespace GammaRay;
 
-QModelIndexList ModelUtils::match(const QAbstractItemModel* model, const QModelIndex& start,
-    int role, bool (*accept)(const QVariant&), int hits, Qt::MatchFlags flags)
+QModelIndexList ModelUtils::match(const QModelIndex& start,
+    int role, MatchAcceptor accept, int hits, Qt::MatchFlags flags)
 {
-  if (!model || !start.isValid() || role < 0)
+  if (!start.isValid() || role < 0)
     return QModelIndexList();
 
+  const QAbstractItemModel *model = start.model();
   const QModelIndex parentIndex = model->parent(start);
   bool recurse = flags & Qt::MatchRecursive;
   bool wrap = flags & Qt::MatchWrap;
@@ -60,7 +61,7 @@ QModelIndexList ModelUtils::match(const QAbstractItemModel* model, const QModelI
 
       // search the hierarchy
       if (recurse && model->hasChildren(idx)) {
-        result += match(model, model->index(0, idx.column(), idx), role,
+        result += match(model->index(0, idx.column(), idx), role,
                         accept, (allHits ? -1 : hits - result.count()), flags);
       }
     }

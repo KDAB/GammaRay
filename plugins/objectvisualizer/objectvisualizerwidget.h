@@ -46,9 +46,6 @@ class GraphViewerWidget : public QWidget
     explicit GraphViewerWidget(QWidget *parent = 0);
     virtual ~GraphViewerWidget();
 
-  private Q_SLOTS:
-    void delayedInit();
-
   private:
     QAbstractItemModel* mModel;
     QTreeView *mObjectTreeView;

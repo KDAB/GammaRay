@@ -31,6 +31,7 @@
 #include "probe.h"
 
 #include <QThread>
+#include <QCoreApplication>
 
 #include <algorithm>
 #include <iostream>
@@ -45,6 +46,12 @@ ObjectListModel::ObjectListModel(Probe *probe)
           this, SLOT(objectAdded(QObject*)));
   connect(probe, SIGNAL(objectDestroyed(QObject*)),
           this, SLOT(objectRemoved(QObject*)));
+}
+
+QPair<int, QVariant> ObjectListModel::defaultSelectedItem() const
+{
+  // select the qApp object (if any) in the object model
+  return QPair<int, QVariant>(ObjectModel::ObjectRole, QVariant::fromValue<QObject*>(qApp));
 }
 
 QVariant ObjectListModel::data(const QModelIndex &index, int role) const

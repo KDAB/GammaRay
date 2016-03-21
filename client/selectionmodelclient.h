@@ -31,6 +31,8 @@
 
 #include <common/networkselectionmodel.h>
 
+class QTimer;
+
 namespace GammaRay {
 
 /** Client side of the network transparent QItemSelectionModel. */
@@ -42,11 +44,14 @@ public:
   ~SelectionModelClient();
 
 private slots:
+  void timeout();
   void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
   void serverUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
 private:
   void connectToServer();
+
+  QTimer *m_timer;
 };
 
 }

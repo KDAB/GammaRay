@@ -29,16 +29,35 @@
 #include "selectionmodelserver.h"
 #include "server.h"
 
+#include <QTimer>
+
 using namespace GammaRay;
 
 SelectionModelServer::SelectionModelServer(const QString& objectName, QAbstractItemModel* model, QObject* parent):
-  NetworkSelectionModel(objectName, model, parent)
+  NetworkSelectionModel(objectName, model, parent), m_timer(new QTimer(this))
 {
+  m_timer->setSingleShot(true);
+  m_timer->setInterval(125);
+  Q_ASSERT(model);
+  // We do use a timer to group requests to avoid network overhead
+  connect(model, SIGNAL(modelReset()), m_timer, SLOT(start()));
+  connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
+  connect(model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
+  connect(model, SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
+  connect(model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
+  connect(model, SIGNAL(layoutChanged()), m_timer, SLOT(start()));
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+
   m_myAddress = Server::instance()->registerObject(objectName, this, Server::ExportNothing);
   Server::instance()->registerMessageHandler(m_myAddress, this, "newMessage");
 }
 
 SelectionModelServer::~SelectionModelServer()
 {
+  m_timer->stop();
 }
 
+void SelectionModelServer::timeout()
+{
+  sendSelection();
+}

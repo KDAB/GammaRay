@@ -29,33 +29,40 @@
 #include "deferredtreeviewconfiguration.h"
 
 #include <QTreeView>
+#include <QTimer>
 #include <iostream>
 
 using namespace GammaRay;
 using namespace std;
 
-DeferredTreeViewConfiguration::DeferredTreeViewConfiguration(QTreeView *view, bool expandNewContent, bool selectNewContent, QObject *parent)
+DeferredTreeViewConfiguration::DeferredTreeViewConfiguration(QTreeView *view, bool expandNewContent, QObject *parent)
   : QObject(parent ? parent : view)
   , m_view(view)
   , m_expand(expandNewContent)
-  , m_select(selectNewContent)
+  , m_allExpanded(false)
+  , m_timer(new QTimer(this))
 {
   Q_ASSERT(view);
   Q_ASSERT(view->model());
-  Q_ASSERT(view->selectionModel());
+
+  m_timer->setSingleShot(true);
+  m_timer->setInterval(125);
 
   connect(view->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
           SLOT(rowsInserted(QModelIndex)));
   connect(view->model(), SIGNAL(columnsInserted(QModelIndex,int,int)),
           SLOT(columnsInserted(QModelIndex)));
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 
   if (view->model()->rowCount() > 0) {
     rowsInserted(QModelIndex());
-    if (m_expand) {
-      view->expandAll();
-    }
+    columnsInserted(QModelIndex());
   }
-  columnsInserted(QModelIndex());
+}
+
+DeferredTreeViewConfiguration::~DeferredTreeViewConfiguration()
+{
+  m_timer->stop();
 }
 
 void DeferredTreeViewConfiguration::hideColumn(int column)
@@ -68,16 +75,14 @@ void DeferredTreeViewConfiguration::hideColumn(int column)
 void DeferredTreeViewConfiguration::rowsInserted(const QModelIndex &parent)
 {
   if (m_expand) {
-    m_view->expand(parent);
-  }
-  if (m_select && !m_view->currentIndex().isValid()) {
-    m_view->selectionModel()->setCurrentIndex(m_view->model()->index(0, 0), QItemSelectionModel::ClearAndSelect);
+    m_insertedRows << QPersistentModelIndex(parent);
+    m_timer->start();
   }
 }
 
 void DeferredTreeViewConfiguration::columnsInserted(const QModelIndex &parent)
 {
-  if (m_hiddenColumns.isEmpty() || parent.isValid()) {
+  if (m_hiddenColumns.isEmpty()) {
     return;
   }
 
@@ -86,6 +91,28 @@ void DeferredTreeViewConfiguration::columnsInserted(const QModelIndex &parent)
     if (column < columns) {
       m_view->hideColumn(column);
     }
+  }
+}
+
+void DeferredTreeViewConfiguration::timeout()
+{
+  const QModelIndex selectedRow = m_view->selectionModel()->selectedRows().value(0);
+
+  if (m_allExpanded) {
+    for (auto it = m_insertedRows.constBegin(), end = m_insertedRows.constEnd(); it != end; ++it) {
+      if (it->isValid()) {
+        m_view->expand(*it);
+      }
+    }
+  } else {
+    m_allExpanded = true;
+    m_view->expandAll();
+  }
+
+  m_insertedRows.clear();
+
+  if (selectedRow.isValid()) {
+    m_view->scrollTo(selectedRow);
   }
 }
 

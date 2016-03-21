@@ -166,7 +166,7 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   m_ui->singleStateMachineView->setSelectionMode(QAbstractItemView::ExtendedSelection);
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 1, QHeaderView::ResizeToContents);
-  new DeferredTreeViewConfiguration(m_ui->singleStateMachineView, true, false);
+  new DeferredTreeViewConfiguration(m_ui->singleStateMachineView, true);
   m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
 
   connect(m_ui->actionStartStopStateMachine, SIGNAL(triggered()), m_interface, SLOT(toggleRunning()));

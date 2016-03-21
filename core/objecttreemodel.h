@@ -48,6 +48,9 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
+  public slots:
+    QPair<int, QVariant> defaultSelectedItem() const;
+
   private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);

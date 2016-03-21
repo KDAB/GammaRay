@@ -55,7 +55,6 @@ class MainWindow : public QMainWindow
     void showMessageStatistics();
 
     void toolSelected();
-    void selectInitialTool();
 
     void quitHost();
     void detachProbe();

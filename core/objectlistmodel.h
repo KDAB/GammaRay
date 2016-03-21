@@ -59,6 +59,9 @@ class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
+  public slots:
+    QPair<int, QVariant> defaultSelectedItem() const;
+
   private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);

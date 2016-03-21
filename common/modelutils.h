@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_MODELUTILS_H
 #define GAMMARAY_MODELUTILS_H
 
+#include "gammaray_common_export.h"
+
 #include <QModelIndex>
 
 namespace GammaRay {
@@ -46,12 +48,15 @@ namespace ModelUtils {
   *
   * @see QAbstractItemModel::match(...)
   */
-  QModelIndexList match(const QAbstractItemModel* model, const QModelIndex& start,
-                              int role, bool (*accept)(const QVariant&),
+  typedef bool (*MatchAcceptor)(const QVariant&);
+  GAMMARAY_COMMON_EXPORT QModelIndexList match(const QModelIndex& start,
+                              int role, MatchAcceptor accept,
                               int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchWrap));
 
 }
 
 }
+
+Q_DECLARE_METATYPE(GammaRay::ModelUtils::MatchAcceptor)
 
 #endif // GAMMARAY_MODELUTILS_H

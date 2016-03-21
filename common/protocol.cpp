@@ -45,8 +45,8 @@ QModelIndex toQModelIndex(const QAbstractItemModel* model, const Protocol::Model
 {
   QModelIndex qmi;
 
-  for (int i = 0; i < index.size(); ++i) {
-    qmi = model->index(index.at(i).first, index.at(i).second, qmi);
+  for (Protocol::ModelIndex::ConstIterator it = index.constBegin(), end = index.constEnd(); it != end; ++it) {
+    qmi = model->index(it->first, it->second, qmi);
     if (!qmi.isValid()) {
       return QModelIndex(); // model isn't loaded to the full depth, so don't restart from the top
     }
@@ -57,7 +57,7 @@ QModelIndex toQModelIndex(const QAbstractItemModel* model, const Protocol::Model
 
 qint32 version()
 {
-  return 21;
+  return 22;
 }
 
 qint32 broadcastFormatVersion()

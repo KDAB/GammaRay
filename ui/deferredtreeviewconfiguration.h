@@ -33,9 +33,11 @@
 
 #include <QObject>
 #include <QVector>
+#include <QPersistentModelIndex>
 
 class QModelIndex;
 class QTreeView;
+class QTimer;
 
 namespace GammaRay {
 
@@ -56,20 +58,23 @@ class GAMMARAY_UI_EXPORT DeferredTreeViewConfiguration : public QObject
   Q_OBJECT
   public:
     explicit DeferredTreeViewConfiguration(QTreeView *view,
-                                           bool expandNewContent = true, bool selectNewContent = true,
-                                           QObject *parent = 0);
+                                           bool expandNewContent = true, QObject *parent = 0);
+    ~DeferredTreeViewConfiguration();
 
     void hideColumn(int column);
 
   private slots:
     void rowsInserted(const QModelIndex &parent);
     void columnsInserted(const QModelIndex &parent);
+    void timeout();
 
   private:
     QTreeView *m_view;
     bool m_expand;
-    bool m_select;
+    bool m_allExpanded;
+    QVector<QPersistentModelIndex> m_insertedRows;
     QVector<int> m_hiddenColumns;
+    QTimer *m_timer;
 };
 
 }
