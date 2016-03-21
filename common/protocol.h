@@ -104,6 +104,7 @@ enum BuildInMessageType {
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
 
+/** @brief Protocol representation of an QItemSelectionRange. */
 struct ItemSelectionRange {
     ModelIndex topLeft;
     ModelIndex bottomRight;

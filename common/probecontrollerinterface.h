@@ -37,6 +37,7 @@
 
 namespace GammaRay {
 
+/** @brief Type-safe and cross-process object identifier. */
 class ObjectId
 {
 public:
@@ -87,6 +88,7 @@ private:
   QByteArray m_typeName;
 };
 
+/** @brief GammaRay tool identifier. */
 struct ToolInfo
 {
   QString id;
@@ -94,7 +96,7 @@ struct ToolInfo
 };
 typedef QVector<ToolInfo> ToolInfos;
 
-/** Probe and host process remote control functions. */
+/** @brief Probe and host process remote control functions. */
 class ProbeControllerInterface : public QObject
 {
   Q_OBJECT

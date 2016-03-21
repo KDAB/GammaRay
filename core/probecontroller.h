@@ -33,6 +33,9 @@
 
 namespace GammaRay {
 
+/** @brief Server-side part for the object property inspector.
+ *  Use this to integrate a property inspector like in the QObject view into your tool.
+ */
 class ProbeController : public ProbeControllerInterface
 {
   Q_OBJECT

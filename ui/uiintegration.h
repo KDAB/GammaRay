@@ -34,7 +34,7 @@
 
 namespace GammaRay {
 
-/** Interface for UI plugins to integrate with the client UI.
+/** @brief Interface for UI plugins to integrate with the client UI.
  *  This is especially relevant when the client is embedded inside another application
  *  such as an IDE.
  */
