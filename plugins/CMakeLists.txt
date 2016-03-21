@@ -42,5 +42,5 @@ if(Qt5Positioning_FOUND)
 endif()
 
 if(Qt53DRender_FOUND)
-    add_subdirectory(qt3dinspector)
+  add_subdirectory(qt3dinspector)
 endif()
