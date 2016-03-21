@@ -50,8 +50,7 @@ private slots:
         options.setLaunchArguments(QStringList(QCoreApplication::applicationDirPath() + QStringLiteral("/probesettingsclient")));
 
         // this will effectively disable injection, so we will just launch the process
-        options.setRootPath(QCoreApplication::applicationDirPath());
-        options.setProbePath(QStringLiteral("dummy"));
+        options.setProbePath(QCoreApplication::applicationDirPath());
         options.setInjectorType(QStringLiteral("style"));
 
         Launcher launcher(options);

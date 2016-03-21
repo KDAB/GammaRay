@@ -167,16 +167,6 @@ void LaunchOptions::setProbeABI(const ProbeABI& abi)
   d->probeABI = abi;
 }
 
-void LaunchOptions::setRootPath(const QString &path)
-{
-    setProbeSetting(QStringLiteral("RootPath"), path);
-}
-
-QString LaunchOptions::rootPath() const
-{
-    return d->probeSettings.value("RootPath");
-}
-
 void LaunchOptions::setProcessEnvironment(const QProcessEnvironment &env)
 {
     d->env = env;

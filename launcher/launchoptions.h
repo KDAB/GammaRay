@@ -101,12 +101,6 @@ public:
   void setProbePath(const QString &path);
   QString probePath() const;
 
-  /** Full path to root gammarary path. This overrides specifying a probe ABI and
-   *  can be useful on non-standard installation layouts of the probes.
-   */
-  void setRootPath(const QString &path);
-  QString rootPath() const;
-
   /** Working directory for launching the target. */
   void setWorkingDirectory(const QString &path);
   QString workingDirectory() const;

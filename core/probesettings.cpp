@@ -127,14 +127,8 @@ void ProbeSettingsReceiver::readyRead()
             {
                 msg.payload() >> s_probeSettings()->settings;
                 //qDebug() << Q_FUNC_INFO << s_probeSettings()->settings;
-                const QString rootPath = ProbeSettings::value(QStringLiteral("RootPath")).toString();
-                if (!rootPath.isEmpty())
-                    Paths::setRootPath(rootPath);
-                else {
-                    const QString probePath = ProbeSettings::value(QStringLiteral("ProbePath")).toString();
-                    if (!probePath.isEmpty())
-                        setRootPathFromProbePath(probePath);
-                }
+                const QString probePath = ProbeSettings::value(QStringLiteral("ProbePath")).toString();
+                setRootPathFromProbePath(probePath);
 
                 m_waitCondition.wakeAll();
                 return;
@@ -165,20 +159,17 @@ void ProbeSettingsReceiver::sendServerAddress(const QUrl& address)
 void ProbeSettingsReceiver::settingsReceivedFallback()
 {
     // see if we got fallback data via environment variables
-    const QString rootPath = ProbeSettings::value(QStringLiteral("RootPath")).toString();
-    if (!rootPath.isEmpty())
-        Paths::setRootPath(rootPath);
-    else {
-        const QString probePath = ProbeSettings::value(QStringLiteral("ProbePath")).toString();
-        if (!probePath.isEmpty())
-            setRootPathFromProbePath(probePath);
-    }
+    const QString probePath = ProbeSettings::value(QStringLiteral("ProbePath")).toString();
+    setRootPathFromProbePath(probePath);
 
     m_waitCondition.wakeAll();
 }
 
 void ProbeSettingsReceiver::setRootPathFromProbePath(const QString &probePath)
 {
+    if (probePath.isEmpty())
+        return;
+
     QFileInfo fi(probePath);
     if (fi.isFile())
         Paths::setRootPath(fi.absolutePath() + QDir::separator() + GAMMARAY_INVERSE_PROBE_DIR);
