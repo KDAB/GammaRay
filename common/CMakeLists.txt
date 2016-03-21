@@ -12,6 +12,7 @@ set(gammaray_common_srcs
   paths.cpp
   propertysyncer.cpp
   modelevent.cpp
+  modelutils.cpp
   paintanalyzerinterface.cpp
   sourcelocation.cpp
 

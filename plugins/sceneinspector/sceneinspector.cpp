@@ -112,10 +112,6 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
   m_itemSelectionModel = ObjectBroker::selectionModel(sceneProxy);
   connect(m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(sceneItemSelected(QItemSelection)));
-
-  if (singleColumnProxy->rowCount()) {
-    sceneSelection->setCurrentIndex(singleColumnProxy->index(0, 0), QItemSelectionModel::ClearAndSelect);
-  }
 }
 
 void SceneInspector::sceneSelected(const QItemSelection& selection)

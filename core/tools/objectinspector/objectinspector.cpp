@@ -64,24 +64,6 @@ ObjectInspector::ObjectInspector(ProbeInterface *probe, QObject *parent)
           SLOT(objectSelectionChanged(QItemSelection)));
 
   connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
-
-  // when we end up here the object model isn't populated yet
-  // TODO defer this call until a client connects
-  QMetaObject::invokeMethod(this, "selectDefaultItem", Qt::QueuedConnection);
-}
-
-void ObjectInspector::selectDefaultItem()
-{
-  // select the qApp object (if any) in the object treeView
-  const QAbstractItemModel *viewModel = m_selectionModel->model();
-  Model::used(viewModel);
-  const QModelIndexList matches = viewModel->match(viewModel->index(0, 0),
-      ObjectModel::ObjectRole, QVariant::fromValue<QObject*>(qApp), 1,
-      Qt::MatchFlags(Qt::MatchExactly|Qt::MatchRecursive));
-
-  if (!matches.isEmpty()) {
-    m_selectionModel->setCurrentIndex(matches.first(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-  }
 }
 
 void ObjectInspector::objectSelectionChanged(const QItemSelection& selection)

@@ -70,6 +70,7 @@ class ToolModel : public QAbstractListModel
     QModelIndexList toolsForObject(const void *object, const QString &typeName) const;
 
   public slots:
+    QPair<int, QVariant> defaultSelectedItem() const;
     /** Check if we have to activate tools for this type */
     void objectAdded(QObject *obj);
 

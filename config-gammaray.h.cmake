@@ -1,5 +1,8 @@
 #include <qglobal.h>
 
+#if !defined(CONFIG_GAMMARAY_H)
+#define CONFIG_GAMMARAY_H
+
 #cmakedefine GAMMARAY_INSTALL_QT_LAYOUT
 #define GAMMARAY_DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
 
@@ -50,3 +53,5 @@
 #cmakedefine HAVE_ELF
 
 #cmakedefine GAMMARAY_ENABLE_GPL_ONLY_FEATURES
+
+#endif // CONFIG_GAMMARAY_H

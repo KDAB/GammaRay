@@ -27,6 +27,7 @@
 */
 
 #include "widgettreemodel.h"
+#include "common/modelutils.h"
 
 #include <QApplication>
 #include <QLayout>
@@ -35,9 +36,21 @@
 
 using namespace GammaRay;
 
+static bool isMainWindowSubclassAcceptor(const QVariant &v)
+{
+  const QObject *object = v.value<QObject*>();
+  return object && object->inherits("QMainWindow");
+}
+
 WidgetTreeModel::WidgetTreeModel(QObject *parent)
   : ObjectFilterProxyModelBase(parent)
 {
+}
+
+QPair<int, QVariant> WidgetTreeModel::defaultSelectedItem() const
+{
+  // select the first QMainwindow window (if any) in the widget model
+  return QPair<int, QVariant>(ObjectModel::ObjectRole, QVariant::fromValue(&isMainWindowSubclassAcceptor));
 }
 
 QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const

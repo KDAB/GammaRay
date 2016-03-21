@@ -68,30 +68,12 @@ GraphViewerWidget::GraphViewerWidget(QWidget *parent)
   QHBoxLayout *hbox = new QHBoxLayout(this);
   hbox->addWidget(splitter);
 
-  QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
+  mWidget->vtkWidget()->setModel(mModel);
+  mWidget->vtkWidget()->setSelectionModel(mObjectTreeView->selectionModel());
 }
 
 GraphViewerWidget::~GraphViewerWidget()
 {
-}
-
-void GraphViewerWidget::delayedInit()
-{
-  // make all existing objects known to the vtk widget
-  mWidget->vtkWidget()->setModel(mModel);
-  mWidget->vtkWidget()->setSelectionModel(mObjectTreeView->selectionModel());
-
-  /// FIXME: This won't work for remote clients!
-  // select the qApp object (if any) in the object treeView
-  const QAbstractItemModel *viewModel = mObjectTreeView->model();
-  const QModelIndexList matches = viewModel->match(viewModel->index(0, 0),
-      ObjectModel::ObjectRole, QVariant::fromValue<QObject*>(qApp), 1,
-      Qt::MatchFlags(Qt::MatchExactly|Qt::MatchRecursive));
-
-  if (!matches.isEmpty()) {
-    Q_ASSERT(matches.first().data(ObjectModel::ObjectRole).value<QObject*>() == qApp);
-    mObjectTreeView->setCurrentIndex(matches.first());
-  }
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

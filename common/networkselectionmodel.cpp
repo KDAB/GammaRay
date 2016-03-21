@@ -27,10 +27,13 @@
 */
 
 #include "networkselectionmodel.h"
-#include "message.h"
+#include "common/modelutils.h"
 #include "endpoint.h"
+#include "message.h"
 #include "settempvalue.h"
 
+#include <QRegExp>
+#include <QAbstractProxyModel>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -43,87 +46,170 @@ static void writeSelection(Message *msg, const QItemSelection &selection)
   }
 }
 
+// find a model having a defaultSelectedItem method
+static QAbstractItemModel *findSourceModel(QAbstractItemModel *model)
+{
+  if (model) {
+    if (model->metaObject()->indexOfMethod(QMetaObject::normalizedSignature("defaultSelectedItem()")) != -1) {
+      return model;
+    }
+    else if (model->inherits("QAbstractProxyModel")) {
+      return findSourceModel(qobject_cast<QAbstractProxyModel*>(model)->sourceModel());
+    }
+  }
+
+  return 0;
+}
+
 NetworkSelectionModel::NetworkSelectionModel(const QString &objectName, QAbstractItemModel* model, QObject* parent):
   QItemSelectionModel(model, parent),
   m_objectName(objectName),
   m_myAddress(Protocol::InvalidObjectAddress),
   m_handlingRemoteMessage(false)
 {
+  setObjectName(m_objectName + QLatin1String("Network"));
   connect(this, SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
   connect(this, SIGNAL(currentColumnChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentColumnChanged(QModelIndex,QModelIndex)));
   connect(this, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentRowChanged(QModelIndex,QModelIndex)));
   connect(this, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
-
-  Q_ASSERT(model);
-  connect(model, SIGNAL(modelAboutToBeReset()), this, SLOT(clearPendingSelection()));
-  connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(applyPendingSelection()));
 }
 
 NetworkSelectionModel::~NetworkSelectionModel()
 {
 }
 
+void NetworkSelectionModel::requestSelection()
+{
+  if (m_handlingRemoteMessage || !Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress) {
+    return;
+  }
+  Message msg(m_myAddress, Protocol::SelectionModelStateRequest);
+  Endpoint::send(msg);
+}
+
+void NetworkSelectionModel::sendSelection()
+{
+  if (!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress) {
+    return;
+  }
+
+  clearPendingSelection();
+
+  if (!hasSelection()) {
+    if (model()->rowCount() > 0) {
+      const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
+          QItemSelectionModel::Rows | QItemSelectionModel::Current;
+      const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+      QAbstractItemModel *sourceModel = findSourceModel(model());
+#else
+      QAbstractItemModel *sourceModel = findSourceModel(const_cast<QAbstractItemModel*>(model()));
+#endif
+      QModelIndex index = model()->index(0, 0);
+
+      // Query the model to get its default selected index
+      if (sourceModel) {
+        QPair<int, QVariant> result;
+        QModelIndex defaultIndex;
+
+        QMetaObject::invokeMethod(sourceModel, "defaultSelectedItem", Qt::DirectConnection,
+                                  QReturnArgument<QPair<int, QVariant> >("QPair<int, QVariant>", result));
+
+        if (result.second.userType() == qMetaTypeId<ModelUtils::MatchAcceptor>()) {
+          defaultIndex = ModelUtils::match(index, result.first, result.second.value<ModelUtils::MatchAcceptor>(),
+                                           1, matchFlags).value(0);
+        } else {
+          defaultIndex = model()->match(index, result.first, result.second, 1, matchFlags).value(0);
+        }
+
+        if (defaultIndex.isValid()) {
+          index = defaultIndex;
+        }
+      }
+
+      select(QItemSelection(index, index), selectionFlags);
+    }
+  } else {
+    Message msg(m_myAddress, Protocol::SelectionModelClearSelect);
+    writeSelection(&msg, selection());
+    Endpoint::send(msg);
+  }
+}
+
 Protocol::ItemSelection GammaRay::NetworkSelectionModel::readSelection(const GammaRay::Message& msg)
 {
-    Protocol::ItemSelection selection;
-    qint32 size = 0;
-    msg.payload() >> size;
-    selection.reserve(size);
+  Protocol::ItemSelection selection;
+  qint32 size = 0;
+  msg.payload() >> size;
+  selection.reserve(size);
 
-    for (int i = 0; i < size; ++i) {
-        Protocol::ItemSelectionRange range;
-        msg.payload() >> range.topLeft >> range.bottomRight;
-        selection.push_back(range);
-    }
+  for (int i = 0; i < size; ++i) {
+    Protocol::ItemSelectionRange range;
+    msg.payload() >> range.topLeft >> range.bottomRight;
+    selection.push_back(range);
+  }
 
-    return selection;
+  return selection;
 }
 
 bool GammaRay::NetworkSelectionModel::translateSelection(const Protocol::ItemSelection& selection, QItemSelection &qselection) const
 {
-    qselection.clear();
-    foreach (const auto &range, selection) {
-        const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), range.topLeft);
-        const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), range.bottomRight);
-        if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
-            return false;
-        qselection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
-    }
-    return true;
+  qselection.clear();
+  foreach (const auto &range, selection) {
+    const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), range.topLeft);
+    const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), range.bottomRight);
+    if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())
+      return false;
+    qselection.push_back(QItemSelectionRange(qmiTopLeft, qmiBottomRight));
+  }
+  return true;
 }
 
 void NetworkSelectionModel::newMessage(const Message& msg)
 {
   Q_ASSERT(msg.address() == m_myAddress);
   switch (msg.type()) {
-    case Protocol::SelectionModelSelect:
-    {
-      Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
-      m_pendingSelection = readSelection(msg);
-      const auto deselected = readSelection(msg);
+  case Protocol::SelectionModelSelect:
+  {
+    Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
+    m_pendingSelection = readSelection(msg);
+    const auto deselected = readSelection(msg);
 
-      QItemSelection qmiSelection;
-      if (translateSelection(deselected, qmiSelection) && !qmiSelection.isEmpty()) {
-          select(qmiSelection, Deselect);
-      }
+    QItemSelection qmiSelection;
+    if (translateSelection(deselected, qmiSelection) && !qmiSelection.isEmpty()) {
+      select(qmiSelection, Deselect);
+    }
 
-      applyPendingSelection();
+    applyPendingSelection();
+    break;
+  }
+  case Protocol::SelectionModelClearSelect:
+  {
+    Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
+    m_pendingSelection = readSelection(msg);
+    reset();
+    applyPendingSelection();
+    break;
+  }
+  case Protocol::SelectionModelCurrent:
+  {
+    qint32 flags;
+    Protocol::ModelIndex index;
+    msg.payload() >> flags >> index;
+    const QModelIndex qmi = Protocol::toQModelIndex(model(), index);
+    if (!qmi.isValid())
       break;
-    }
-    case Protocol::SelectionModelCurrent:
-    {
-      qint32 flags;
-      Protocol::ModelIndex index;
-      msg.payload() >> flags >> index;
-      const QModelIndex qmi = Protocol::toQModelIndex(model(), index);
-      if (!qmi.isValid())
-        break;
-      Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
-      setCurrentIndex(qmi, QItemSelectionModel::SelectionFlags(flags));
-      break;
-    }
-    default:
-      Q_ASSERT(false);
+    Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
+    setCurrentIndex(qmi, QItemSelectionModel::SelectionFlags(flags));
+    break;
+  }
+  case Protocol::SelectionModelStateRequest:
+  {
+    sendSelection();
+    break;
+  }
+  default:
+    Q_ASSERT(false);
   }
 }
 
@@ -177,18 +263,18 @@ void NetworkSelectionModel::slotSelectionChanged(const QItemSelection& selected,
 
 void GammaRay::NetworkSelectionModel::applyPendingSelection()
 {
-    if (m_pendingSelection.isEmpty())
-        return;
+  if (m_pendingSelection.isEmpty())
+    return;
 
-    QItemSelection qmiSelection;
-    if (translateSelection(m_pendingSelection, qmiSelection)) {
-        if (!qmiSelection.isEmpty())
-            select(qmiSelection, Select);
-        clearPendingSelection();
-    }
+  QItemSelection qmiSelection;
+  if (translateSelection(m_pendingSelection, qmiSelection)) {
+    if (!qmiSelection.isEmpty())
+      select(qmiSelection, Select);
+    clearPendingSelection();
+  }
 }
 
 void GammaRay::NetworkSelectionModel::clearPendingSelection()
 {
-    m_pendingSelection.clear();
+  m_pendingSelection.clear();
 }

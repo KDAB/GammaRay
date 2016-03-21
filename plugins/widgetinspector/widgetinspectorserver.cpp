@@ -33,7 +33,6 @@
 
 #include "overlaywidget.h"
 #include "widgettreemodel.h"
-#include "modelutils.h"
 
 #include "core/propertycontroller.h"
 #include "core/metaobject.h"
@@ -50,6 +49,7 @@
 #include "common/objectbroker.h"
 #include "common/settempvalue.h"
 #include "common/metatypedeclarations.h"
+#include "common/modelutils.h"
 #include "common/objectmodel.h"
 #include "common/paths.h"
 #include <common/remoteviewframe.h>
@@ -111,9 +111,6 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(widgetSelected(QItemSelection)));
 
-  // TODO this needs to be delayed until there actually is something to select
-  selectDefaultItem();
-
   if (m_probe->needsObjectDiscovery()) {
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
     discoverObjects();
@@ -131,24 +128,6 @@ WidgetInspectorServer::~WidgetInspectorServer()
   disconnect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
              this, SLOT(recreateOverlayWidget()));
   delete m_overlayWidget.data();
-}
-
-static bool isMainWindowSubclassAcceptor(const QVariant &v)
-{
-  return qobject_cast<QMainWindow*>(v.value<QObject*>());
-}
-
-void WidgetInspectorServer::selectDefaultItem()
-{
-  const QAbstractItemModel *viewModel = m_widgetSelectionModel->model();
-  const QModelIndexList matches =
-    ModelUtils::match(
-      viewModel, viewModel->index(0, 0),
-      ObjectModel::ObjectRole, isMainWindowSubclassAcceptor);
-
-  if (!matches.isEmpty()) {
-    m_widgetSelectionModel->select(matches.first(), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-  }
 }
 
 void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)

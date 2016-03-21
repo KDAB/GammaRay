@@ -156,10 +156,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
   setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
-  selectInitialTool();
-  connect(ui->toolSelector->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectInitialTool()));
-  connect(ui->toolSelector->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(selectInitialTool()));
-
 #ifdef Q_OS_MAC
   ui->groupBox->setFlat(true);
   ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -275,20 +271,6 @@ void MainWindow::showMessageStatistics()
     view->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageStatisticsModel")));
     view->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
     view->showMaximized();
-}
-
-void MainWindow::selectInitialTool()
-{
-  QAbstractItemModel *model = ui->toolSelector->model();
-  QModelIndexList matches =
-  model->match(model->index(0, 0), ToolModelRole::ToolId, QStringLiteral("GammaRay::ObjectInspector"));
-  if (matches.isEmpty()) {
-    return;
-  }
-
-  disconnect(ui->toolSelector->model(), 0, this, SLOT(selectInitialTool()));
-  ui->toolSelector->setCurrentIndex(matches.first());
-  toolSelected();
 }
 
 void MainWindow::toolSelected()

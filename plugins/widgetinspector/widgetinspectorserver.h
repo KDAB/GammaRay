@@ -56,8 +56,6 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     explicit WidgetInspectorServer(ProbeInterface *probe, QObject *parent = 0);
     ~WidgetInspectorServer();
 
-    void selectDefaultItem();
-
   protected:
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 

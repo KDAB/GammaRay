@@ -43,6 +43,9 @@ class WidgetTreeModel : public ObjectFilterProxyModelBase
     explicit WidgetTreeModel(QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
+  public slots:
+    QPair<int, QVariant> defaultSelectedItem() const;
+
   protected:
     bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE;
 };

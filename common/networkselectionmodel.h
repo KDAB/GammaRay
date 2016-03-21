@@ -48,6 +48,11 @@ protected:
   QString m_objectName;
   Protocol::ObjectAddress m_myAddress;
 
+protected slots:
+  void requestSelection();
+  void sendSelection();
+  void applyPendingSelection();
+
 private:
   static Protocol::ItemSelection readSelection(const Message &msg);
   bool translateSelection(const Protocol::ItemSelection &selection, QItemSelection &qselection) const;
@@ -60,7 +65,6 @@ private slots:
   void slotCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
   void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
-  void applyPendingSelection();
   void clearPendingSelection();
 
 private:

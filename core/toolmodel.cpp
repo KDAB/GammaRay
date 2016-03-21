@@ -225,6 +225,12 @@ QModelIndexList ToolModel::toolsForObject(const void* object, const QString& typ
   return ret;
 }
 
+QPair<int, QVariant> ToolModel::defaultSelectedItem() const
+{
+  // Select the Objects tool by default
+  return QPair<int, QVariant>(ToolModelRole::ToolId, QStringLiteral("GammaRay::ObjectInspector"));
+}
+
 void ToolModel::addToolFactory(ToolFactory* tool)
 {
     m_tools.push_back(tool);

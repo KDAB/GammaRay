@@ -33,6 +33,7 @@
 #include <QEvent>
 #include <QMutex>
 #include <QThread>
+#include <QCoreApplication>
 
 #include <algorithm>
 #include <iostream>
@@ -53,6 +54,12 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
           this, SLOT(objectRemoved(QObject*)));
   connect(probe, SIGNAL(objectReparented(QObject*)),
           this, SLOT(objectReparented(QObject*)));
+}
+
+QPair<int, QVariant> ObjectTreeModel::defaultSelectedItem() const
+{
+  // select the qApp object (if any) in the object model
+  return QPair<int, QVariant>(ObjectModel::ObjectRole, QVariant::fromValue<QObject*>(qApp));
 }
 
 static inline QObject *parentObject(QObject *obj)
