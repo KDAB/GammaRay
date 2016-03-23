@@ -43,6 +43,7 @@ struct wl_client;
 namespace GammaRay {
 
 class ClientsModel;
+class Logger;
 class ResourcesModel;
 
 class WlCompositorInspector: public WlCompositorInterface
@@ -54,6 +55,8 @@ public:
     ~WlCompositorInspector();
 
 public slots:
+    void connected() override;
+    void disconnected() override;
     void setSelectedClient(int index) override;
 
 private slots:
@@ -65,6 +68,7 @@ private:
 
     QWaylandCompositor *m_compositor;
     ClientsModel *m_clientsModel;
+    Logger *m_logger;
     ResourcesModel *m_resourcesModel;
 };
 

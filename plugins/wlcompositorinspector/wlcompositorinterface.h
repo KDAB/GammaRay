@@ -1,5 +1,5 @@
 /*
-  wlcompositorinspector.h
+  wlcompositorinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -41,7 +41,13 @@ public:
   ~WlCompositorInterface();
 
 public slots:
+  virtual void connected() = 0;
+  virtual void disconnected() = 0;
   virtual void setSelectedClient(int index) = 0;
+
+signals:
+  void logMessage(const QByteArray &msg);
+  void resetLog();
 
 };
 

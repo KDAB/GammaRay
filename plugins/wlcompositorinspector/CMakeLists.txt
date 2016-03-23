@@ -17,6 +17,7 @@ if(GAMMARAY_BUILD_UI)
     inspectorwidget.cpp
     wlcompositorinterface.cpp
     wlcompositorclient.cpp
+    logview.cpp
   )
 
   qt5_wrap_ui(gammaray_wlcompositorinspector_ui_srcs

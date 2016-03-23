@@ -1,5 +1,5 @@
 /*
-  wlcompositorclient.h
+  ringbuffer.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,30 +26,58 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "wlcompositorclient.h"
+#ifndef GAMMARAY_RINGBUFFER_H
+#define GAMMARAY_RINGBUFFER_H
 
-#include <common/endpoint.h>
+#include <QVector>
 
 namespace GammaRay {
 
-WlCompositorClient::WlCompositorClient(QObject *p)
-                  : WlCompositorInterface(p)
+template<class T>
+struct RingBuffer
 {
+  RingBuffer(int capacity)
+    : m_head(0)
+    , m_capacity(capacity)
+  {
+    Q_ASSERT(capacity > 0);
+  }
+
+  int count() const { return qMin(m_capacity, m_vector.count()); }
+  int capacity() const { return m_capacity; }
+
+  const T &last() const { return m_vector.at(count() - 1); }
+
+  void append(const T &t)
+  {
+    if (m_vector.count() == m_capacity) {
+      m_vector[m_head++] = t;
+      if (m_head >= m_capacity)
+        m_head = 0;
+    } else {
+      m_vector.append(t);
+    }
+  }
+
+  const T &at(int i) const
+  {
+    int index = (i + m_head - m_capacity) % m_capacity;
+    if (index < 0)
+      index += m_capacity;
+    return m_vector.at(index);
+  }
+
+  void clear()
+  {
+    m_vector.clear();
+    m_head = 0;
+  }
+
+  QVector<T> m_vector;
+  int m_head;
+  int m_capacity;
+};
+
 }
 
-void WlCompositorClient::connected()
-{
-  Endpoint::instance()->invokeObject(objectName(), "connected");
-}
-
-void WlCompositorClient::disconnected()
-{
-  Endpoint::instance()->invokeObject(objectName(), "disconnected");
-}
-
-void WlCompositorClient::setSelectedClient(int index)
-{
-  Endpoint::instance()->invokeObject(objectName(), "setSelectedClient", QVariantList() << index);
-}
-
-}
+#endif

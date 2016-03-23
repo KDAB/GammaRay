@@ -43,6 +43,7 @@ namespace Ui {
 namespace GammaRay {
 
 class WlCompositorInterface;
+class LogView;
 
 class InspectorWidget : public QWidget
 {
@@ -60,10 +61,12 @@ private slots:
 private:
     void clientActivated(const QModelIndex &index);
     void resourceActivated(const QModelIndex &index);
+    void logMessage(const QByteArray &msg);
 
     Ui::Widget *m_ui;
     QAbstractItemModel *m_model;
     WlCompositorInterface *m_client;
+    LogView *m_logView;
 };
 
 class InspectorWidgetFactory : public QObject, public StandardToolUiFactory<InspectorWidget>
