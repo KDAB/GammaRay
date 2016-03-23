@@ -36,6 +36,10 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 
+#include <QStyledItemDelegate>
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QStyleOptionViewItemV4>
+#endif
 #include <QDebug>
 
 using namespace GammaRay;
@@ -45,12 +49,42 @@ static QObject* createModelInspectorClient(const QString & /*name*/, QObject *pa
   return new ModelInspectorClient(parent);
 }
 
+class ModelContentDelegate : public QStyledItemDelegate
+{
+private:
+  QString defaultDisplayText(const QModelIndex &index) const
+  {
+    const QString display = index.data().toString();
+    return display.isEmpty() ? tr("(Item %1)").arg(index.row()) : display;
+  }
+
+public:
+  ModelContentDelegate(QObject *parent = 0):
+    QStyledItemDelegate(parent) { }
+
+  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
+  {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    QStyleOptionViewItem opt = option;
+#else
+    QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4*>(&option);
+#endif
+    opt.text = defaultDisplayText(index);
+    initStyleOption(&opt, index);
+
+    const QWidget *widget = option.widget;
+    QStyle *style = widget ? widget->style() : QApplication::style();
+    style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
+  }
+};
+
 ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::ModelInspectorWidget)
   , m_interface(0)
 {
   ui->setupUi(this);
+  ui->modelContentView->setItemDelegate(new ModelContentDelegate(this));
 
   ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface*>(createModelInspectorClient);
   m_interface = ObjectBroker::object<ModelInspectorInterface*>();

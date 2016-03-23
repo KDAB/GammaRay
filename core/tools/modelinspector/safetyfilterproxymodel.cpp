@@ -43,8 +43,6 @@ QVariant SafetyFilterProxyModel::data(const QModelIndex& proxyIndex, int role) c
     if (sourceModel() && sourceModel()->inherits("QQmlListModel")) {
         // data on anything not in roleNames() crashes
         if (!sourceModel()->roleNames().contains(role)) {
-            if (role == Qt::DisplayRole)
-              return QLatin1String("CRASH GUARD");
             return QVariant();
         }
     }
