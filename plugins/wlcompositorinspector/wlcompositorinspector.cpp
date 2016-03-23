@@ -142,7 +142,11 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent) const override
     {
         Resource *parentres = exists(parent) ? static_cast<Resource *>(parent.internalPointer()) : nullptr;
-        Resource *res = parentres ? parentres->children.at(row) : m_resources.at(row);
+        const auto &resources = parentres ? parentres->children : m_resources;
+        if (resources.count() <= row) {
+            return QModelIndex();
+        }
+        Resource *res = resources.at(row);
         return createIndex(row, column, res);
     }
 
