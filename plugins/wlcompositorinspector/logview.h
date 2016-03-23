@@ -1,5 +1,5 @@
 /*
-  wlcompositorclient.h
+  logview.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,30 +26,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "wlcompositorclient.h"
+#ifndef GAMMARAY_LOGVIEW_H
+#define GAMMARAY_LOGVIEW_H
 
-#include <common/endpoint.h>
+#include <QScrollArea>
 
 namespace GammaRay {
 
-WlCompositorClient::WlCompositorClient(QObject *p)
-                  : WlCompositorInterface(p)
+class LogView : public QScrollArea
 {
-}
+  Q_OBJECT
+public:
+  LogView(QWidget *p);
 
-void WlCompositorClient::connected()
-{
-  Endpoint::instance()->invokeObject(objectName(), "connected");
-}
+  QSize sizeHint() const override;
+  void logMessage(const QByteArray &msg);
+  void reset();
 
-void WlCompositorClient::disconnected()
-{
-  Endpoint::instance()->invokeObject(objectName(), "disconnected");
-}
+private:
+  void add(const QByteArray &m);
 
-void WlCompositorClient::setSelectedClient(int index)
-{
-  Endpoint::instance()->invokeObject(objectName(), "setSelectedClient", QVariantList() << index);
-}
+  class View;
+  View *m_view;
+};
 
 }
+
+#endif

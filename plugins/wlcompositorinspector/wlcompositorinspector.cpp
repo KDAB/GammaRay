@@ -42,8 +42,76 @@
 
 #include <wayland-server.h>
 
+#include "ringbuffer.h"
+
 namespace GammaRay
 {
+
+static QString resourceName(wl_resource *res)
+{
+    return QStringLiteral("%1@%2").arg(wl_resource_get_class(res), QString::number(wl_resource_get_id(res)));
+}
+
+class Logger : public QObject
+{
+public:
+    enum class MessageType {
+        Request = WL_PROTOCOL_LOGGER_REQUEST,
+        Event = WL_PROTOCOL_LOGGER_EVENT,
+    };
+
+    Logger(WlCompositorInspector *inspector, QObject *parent)
+        : QObject(parent)
+        , m_lines(500)
+        , m_currentClient(0)
+        , m_connected(false)
+        , m_inspector(inspector)
+    {
+    }
+
+    void add(wl_resource *res, MessageType dir, const QString &line)
+    {
+        if (m_currentClient && m_currentClient != wl_resource_get_client(res))
+          return;
+
+        pid_t pid;
+        wl_client_get_credentials(wl_resource_get_client(res), &pid, 0, 0);
+        QString l = QStringLiteral("%1 %2 %3").arg(QString::number(pid),
+                                                   dir == MessageType::Request ? QLatin1String("->") : QLatin1String("<-"),
+                                                   line);
+        // we use QByteArray rather than QString because the log has mostly (only) latin characters
+        // so we save some space using utf8 rather than the utf16 QString uses
+        QByteArray utf8 = l.toUtf8();
+        m_lines.append(utf8);
+        if (m_connected) {
+            emit m_inspector->logMessage(utf8);
+        }
+    }
+
+    void setCurrentClient(QWaylandClient *client)
+    {
+        m_currentClient = client ? client->client() : nullptr;
+
+        m_lines.clear();
+        if (m_connected) {
+            emit m_inspector->resetLog();
+        }
+    }
+
+    void setConnected(bool c)
+    {
+        m_connected = c;
+        for (int i = 0; i < m_lines.count(); ++i) {
+            emit m_inspector->logMessage(m_lines.at(i));
+        }
+    }
+
+    RingBuffer<QByteArray> m_lines;
+    int m_timerId;
+    wl_client *m_currentClient;
+    bool m_connected;
+    WlCompositorInspector *m_inspector;
+};
 
 class ResourcesModel : public QAbstractItemModel
 {
@@ -238,7 +306,7 @@ public:
 
         switch (role) {
             case Qt::DisplayRole:
-                return QString("%1@%2").arg(wl_resource_get_class(res), QString::number(wl_resource_get_id(res)));
+                return resourceName(res);
             case Qt::ToolTipRole:
                 return tr("Version: %1").arg(QString::number(wl_resource_get_version(res)));
         }
@@ -374,6 +442,8 @@ WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* par
     m_resourcesModel = new ResourcesModel;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WaylandCompositorResourcesModel"), m_resourcesModel);
 
+    m_logger = new Logger(this, this);
+
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
 }
 
@@ -393,12 +463,91 @@ void WlCompositorInspector::objectAdded(QObject *obj)
     }
 }
 
+/* this comes from wayland */
+struct argument_details {
+       char type;
+       int nullable;
+};
+
+static const char *
+get_next_argument(const char *signature, struct argument_details *details)
+{
+       details->nullable = 0;
+       for(; *signature; ++signature) {
+               switch(*signature) {
+               case 'i':
+               case 'u':
+               case 'f':
+               case 's':
+               case 'o':
+               case 'n':
+               case 'a':
+               case 'h':
+                       details->type = *signature;
+                       return signature + 1;
+               case '?':
+                       details->nullable = 1;
+               }
+       }
+       details->type = '\0';
+       return signature;
+}
+/* --- */
+
 void WlCompositorInspector::init(QWaylandCompositor *compositor)
 {
     qWarning()<<"found compositor"<<compositor;
     m_compositor = compositor;
 
     wl_display *dpy = compositor->display();
+    wl_display_add_protocol_logger(dpy, [](void *ud, wl_protocol_logger_type type, const wl_protocol_logger_message *message) {
+        auto *resource = message->resource;
+        QString line = QString("%1.%2(").arg(resourceName(resource), message->message->name);
+        const char *signature = message->message->signature;
+        for (int i = 0; i < message->arguments_count; ++i) {
+            const auto &arg = message->arguments[i];
+            argument_details details;
+            signature = get_next_argument(signature, &details);
+            if (i > 0) {
+                line += QLatin1String(", ");
+            }
+
+            switch (details.type) {
+              case 'u':
+                  line += QString::number(arg.u);
+                  break;
+              case 'i':
+                  line += QString::number(arg.i);
+                  break;
+              case 'f':
+                  line += QString::number(wl_fixed_to_double(arg.f));
+                  break;
+              case 's':
+                  line += QString("\"%1\"").arg(arg.s);
+                  break;
+              case 'o': {
+                  wl_resource *r = (wl_resource *)arg.o;
+                  line += resourceName(r);
+                  break;
+              }
+              case 'n': {
+                  const auto *type = message->message->types[i];
+                  line += QString("new id %1@%2").arg(type ? type->name : "[unknown]", arg.n ? QString::number(arg.n) : QStringLiteral("nil"));
+                  break;
+              }
+              case 'a':
+                  line += QStringLiteral("array");
+                  break;
+              case 'h':
+                  line += QString::number(arg.h);
+                  break;
+            }
+        }
+        line += QLatin1Char(')');
+
+        static_cast<WlCompositorInspector *>(ud)->m_logger->add(resource, (Logger::MessageType)type, line);
+    }, this);
+
     wl_list *clients = wl_display_get_client_list(dpy);
     wl_client *client;
     wl_client_for_each(client, clients) {
@@ -428,11 +577,22 @@ void WlCompositorInspector::addClient(wl_client *c)
     m_clientsModel->addClient(client);
 }
 
+void WlCompositorInspector::connected()
+{
+    m_logger->setConnected(true);
+}
+
+void WlCompositorInspector::disconnected()
+{
+    m_logger->setConnected(false);
+}
+
 void WlCompositorInspector::setSelectedClient(int index)
 {
     auto client = index >= 0 ?  m_clientsModel->client(index) : nullptr;
     if (client != m_resourcesModel->client()) {
         m_resourcesModel->setClient(client);
+        m_logger->setCurrentClient(client);
     }
 }
 

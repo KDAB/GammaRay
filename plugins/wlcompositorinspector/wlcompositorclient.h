@@ -1,5 +1,5 @@
 /*
-  wlcompositorinspector.h
+  wlcompositorclient.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -41,6 +41,8 @@ public:
   WlCompositorClient(QObject *p);
 
 public slots:
+  void connected() override;
+  void disconnected() override;
   void setSelectedClient(int index) override;
 
 };

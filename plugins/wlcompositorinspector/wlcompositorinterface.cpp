@@ -1,5 +1,5 @@
 /*
-  wlcompositorinspector.h
+  wlcompositorinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -35,7 +35,7 @@ namespace GammaRay {
 WlCompositorInterface::WlCompositorInterface(QObject *p)
                      : QObject(p)
 {
-  ObjectBroker::registerObject<WlCompositorInterface*>(this);
+  ObjectBroker::registerObject<WlCompositorInterface *>(this);
 }
 
 WlCompositorInterface::~WlCompositorInterface()

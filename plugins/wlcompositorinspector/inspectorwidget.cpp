@@ -33,9 +33,15 @@
 #include <QAbstractItemModel>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QScrollBar>
+#include <QStaticText>
+#include <QPainter>
+#include <QScrollArea>
+#include <QClipboard>
 
 #include "ui_inspectorwidget.h"
 #include "wlcompositorclient.h"
+#include "logview.h"
 
 using namespace GammaRay;
 
@@ -50,12 +56,19 @@ InspectorWidget::InspectorWidget(QWidget *parent)
 {
     ObjectBroker::registerClientObjectFactoryCallback<WlCompositorInterface *>(wlCompositorClientFactory);
     m_client = ObjectBroker::object<WlCompositorInterface *>();
+    m_client->connected();
 
     m_model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"));
     m_ui->setupUi(this);
 
     auto resourcesModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorResourcesModel"));
     m_ui->resourcesView->setModel(resourcesModel);
+
+    m_logView = new LogView(this);
+    m_logView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    m_ui->gridLayout->addWidget(m_logView, 1, 0, 1, 2);
+    connect(m_client, &WlCompositorInterface::logMessage, m_logView, &LogView::logMessage);
+    connect(m_client, &WlCompositorInterface::resetLog, m_logView, &LogView::reset);
 
     m_ui->clientsView->setModel(m_model);
     m_ui->clientsView->viewport()->installEventFilter(this);
@@ -64,6 +77,7 @@ InspectorWidget::InspectorWidget(QWidget *parent)
 
 InspectorWidget::~InspectorWidget()
 {
+  m_client->disconnected();
 }
 
 void InspectorWidget::delayedInit()
