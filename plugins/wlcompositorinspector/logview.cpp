@@ -51,6 +51,7 @@ public:
   {
     resize(0, 0);
     setFocusPolicy(Qt::ClickFocus);
+    setCursor(Qt::IBeamCursor);
   }
 
   QSize sizeHint() const override
