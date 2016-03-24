@@ -30,24 +30,60 @@
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/objecttypefilterproxymodel.h>
+#include <core/singlecolumnobjectproxymodel.h>
 
 #include <Qt3DRender/QFrameGraphNode>
+
+#include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QComponent>
 #include <Qt3DCore/QEntity>
+
+#include <QDebug>
 
 using namespace GammaRay;
 
 Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
-    QObject(parent)
+    Qt3DInspectorInterface(parent),
+    m_engine(nullptr)
 {
-    Q_UNUSED(probe);
-
     registerCoreMetaTypes();
     registerRenderMetaTypes();
+
+    auto engineFilterModel = new ObjectTypeFilterProxyModel<Qt3DCore::QAspectEngine>(this);
+    engineFilterModel->setSourceModel(probe->objectListModel());
+    auto proxy = new SingleColumnObjectProxyModel(this);
+    proxy->setSourceModel(engineFilterModel);
+    m_engineModel = proxy;
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
+
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
 
 Qt3DInspector::~Qt3DInspector()
 {
+}
+
+void Qt3DInspector::selectEngine(int row)
+{
+    Qt3DCore::QAspectEngine* engine = nullptr;
+    const auto idx = m_engineModel->index(row, 0);
+    if (idx.isValid())
+        engine = qobject_cast<Qt3DCore::QAspectEngine*>(idx.data(ObjectModel::ObjectRole).value<QObject*>());
+    selectEngine(engine);
+}
+
+void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine* engine)
+{
+    if (m_engine == engine)
+        return;
+    m_engine = engine;
+}
+
+void Qt3DInspector::objectSelected(QObject* obj)
+{
+    if (auto engine = qobject_cast<Qt3DCore::QAspectEngine*>(obj))
+        selectEngine(engine);
 }
 
 void Qt3DInspector::registerCoreMetaTypes()

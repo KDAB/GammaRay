@@ -1,5 +1,5 @@
 /*
-  3dinspector.h
+  qt3dinspectorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,61 +26,42 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_3DINSPECTOR_3DINSPECTOR_H
-#define GAMMARAY_3DINSPECTOR_3DINSPECTOR_H
+#ifndef GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
+#define GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
 
-#include "qt3dinspectorinterface.h"
+#include <ui/tooluifactory.h>
 
-#include <core/toolfactory.h>
+#include <QWidget>
 
-#include <Qt3DCore/QNode>
-
-namespace Qt3DCore {
-class QAspectEngine;
-}
+#include <memory>
 
 namespace GammaRay {
 
-class Qt3DInspector: public Qt3DInspectorInterface
+class Qt3DInspectorInterface;
+
+namespace Ui {
+    class Qt3DInspectorWidget;
+}
+
+class Qt3DInspectorWidget : public QWidget
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::Qt3DInspectorInterface)
 public:
-    explicit Qt3DInspector(ProbeInterface *probe, QObject *parent = 0);
-    ~Qt3DInspector();
-
-public slots:
-    void selectEngine(int index) override;
-
-private slots:
-    void objectSelected(QObject *obj);
+    explicit Qt3DInspectorWidget(QWidget *parent = nullptr);
+    ~Qt3DInspectorWidget();
 
 private:
-    void selectEngine(Qt3DCore::QAspectEngine *engine);
-
-    void registerCoreMetaTypes();
-    void registerRenderMetaTypes();
-
-private:
-    QAbstractItemModel *m_engineModel;
-    Qt3DCore::QAspectEngine *m_engine;
+    std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
+    Qt3DInspectorInterface *m_interface;
 };
 
-class Qt3DInspectorFactory: public QObject, public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
+class Qt3DInspectorUiFactory: public QObject, public StandardToolUiFactory<Qt3DInspectorWidget>
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_3dinspector.json")
-
-public:
-    explicit Qt3DInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    QString name() const Q_DECL_OVERRIDE;
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_3dinspector.json")
 };
 
 }
 
 #endif
-

@@ -1,5 +1,5 @@
 /*
-  3dinspector.h
+  qt3dinspectorinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,61 +26,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_3DINSPECTOR_3DINSPECTOR_H
-#define GAMMARAY_3DINSPECTOR_3DINSPECTOR_H
+#ifndef GAMMARAY_QT3DINSPECTORINTERFACE_H
+#define GAMMARAY_QT3DINSPECTORINTERFACE_H
 
-#include "qt3dinspectorinterface.h"
-
-#include <core/toolfactory.h>
-
-#include <Qt3DCore/QNode>
-
-namespace Qt3DCore {
-class QAspectEngine;
-}
+#include <QObject>
 
 namespace GammaRay {
 
-class Qt3DInspector: public Qt3DInspectorInterface
+class Qt3DInspectorInterface : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::Qt3DInspectorInterface)
 public:
-    explicit Qt3DInspector(ProbeInterface *probe, QObject *parent = 0);
-    ~Qt3DInspector();
+    explicit Qt3DInspectorInterface(QObject *parent = nullptr);
+    ~Qt3DInspectorInterface();
 
 public slots:
-    void selectEngine(int index) override;
-
-private slots:
-    void objectSelected(QObject *obj);
-
-private:
-    void selectEngine(Qt3DCore::QAspectEngine *engine);
-
-    void registerCoreMetaTypes();
-    void registerRenderMetaTypes();
-
-private:
-    QAbstractItemModel *m_engineModel;
-    Qt3DCore::QAspectEngine *m_engine;
+      virtual void selectEngine(int index) = 0;
 };
-
-class Qt3DInspectorFactory: public QObject, public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_3dinspector.json")
-
-public:
-    explicit Qt3DInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    QString name() const Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif
 
+Q_DECLARE_INTERFACE(GammaRay::Qt3DInspectorInterface, "com.kdab.GammaRay.Qt3DInspectorInterface/1.0")
+
+#endif // GAMMARAY_QT3DINSPECTORINTERFACE_H
