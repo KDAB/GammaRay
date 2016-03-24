@@ -2,6 +2,7 @@
 set(gammaray_wlcompositorinspector_srcs
   wlcompositorinspector.cpp
   wlcompositorinterface.cpp
+  resourceinfo.cpp
 )
 gammaray_add_plugin(gammaray_wlcompositorinspector
   JSON gammaray_wlcompositorinspector.json SOURCES
