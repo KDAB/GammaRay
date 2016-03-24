@@ -43,14 +43,10 @@
 #include <wayland-server.h>
 
 #include "ringbuffer.h"
+#include "resourceinfo.h"
 
 namespace GammaRay
 {
-
-static QString resourceName(wl_resource *res)
-{
-    return QStringLiteral("%1@%2").arg(wl_resource_get_class(res), QString::number(wl_resource_get_id(res)));
-}
 
 class Logger : public QObject
 {
@@ -304,11 +300,12 @@ public:
         const Resource *resource = static_cast<Resource *>(index.internalPointer());
         wl_resource *res = resource->resource;
 
+        ResourceInfo info(res);
         switch (role) {
             case Qt::DisplayRole:
-                return resourceName(res);
+                return info.name();
             case Qt::ToolTipRole:
-                return tr("Version: %1").arg(QString::number(wl_resource_get_version(res)));
+                return info.info();
         }
         return QVariant();
     }
@@ -502,7 +499,7 @@ void WlCompositorInspector::init(QWaylandCompositor *compositor)
     wl_display *dpy = compositor->display();
     wl_display_add_protocol_logger(dpy, [](void *ud, wl_protocol_logger_type type, const wl_protocol_logger_message *message) {
         auto *resource = message->resource;
-        QString line = QString("%1.%2(").arg(resourceName(resource), message->message->name);
+        QString line = QString("%1.%2(").arg(ResourceInfo(resource).name(), message->message->name);
         const char *signature = message->message->signature;
         for (int i = 0; i < message->arguments_count; ++i) {
             const auto &arg = message->arguments[i];
@@ -527,7 +524,7 @@ void WlCompositorInspector::init(QWaylandCompositor *compositor)
                   break;
               case 'o': {
                   wl_resource *r = (wl_resource *)arg.o;
-                  line += resourceName(r);
+                  line += ResourceInfo(r).name();
                   break;
               }
               case 'n': {

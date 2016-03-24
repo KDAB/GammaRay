@@ -61,18 +61,21 @@ InspectorWidget::InspectorWidget(QWidget *parent)
     m_model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"));
     m_ui->setupUi(this);
 
+    m_ui->resourceInfo->setVisible(false);
+
     auto resourcesModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorResourcesModel"));
     m_ui->resourcesView->setModel(resourcesModel);
 
     m_logView = new LogView(this);
     m_logView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_ui->gridLayout->addWidget(m_logView, 1, 0, 1, 2);
+    m_ui->gridLayout->addWidget(m_logView, 2, 0, 1, 2);
     connect(m_client, &WlCompositorInterface::logMessage, m_logView, &LogView::logMessage);
     connect(m_client, &WlCompositorInterface::resetLog, m_logView, &LogView::reset);
 
     m_ui->clientsView->setModel(m_model);
     m_ui->clientsView->viewport()->installEventFilter(this);
-    connect(m_ui->resourcesView, &QAbstractItemView::clicked, this, &InspectorWidget::resourceActivated);
+    connect(m_ui->resourcesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &InspectorWidget::resourceActivated);
+    m_ui->resourcesView->viewport()->installEventFilter(this);
 }
 
 InspectorWidget::~InspectorWidget()
@@ -91,7 +94,9 @@ void InspectorWidget::clientActivated(const QModelIndex &index)
 
 void InspectorWidget::resourceActivated(const QModelIndex &index)
 {
-    QString model = index.data(Qt::DisplayRole).toString();
+    QString text = index.data(Qt::ToolTipRole).toString();
+    m_ui->resourceInfo->setText(text);
+    m_ui->resourceInfo->setVisible(!text.isEmpty());
 }
 
 bool InspectorWidget::eventFilter(QObject *o, QEvent *e)
@@ -99,8 +104,14 @@ bool InspectorWidget::eventFilter(QObject *o, QEvent *e)
     switch (e->type()) {
         case QEvent::MouseButtonRelease: {
             auto *me = static_cast<QMouseEvent *>(e);
-            auto index = m_ui->clientsView->indexAt(me->pos());
-            clientActivated(index);
+            if (o == m_ui->clientsView->viewport()) {
+                clientActivated(m_ui->clientsView->indexAt(me->pos()));
+            } else {
+                QModelIndex index = m_ui->resourcesView->indexAt(me->pos());
+                if (!index.isValid()) {
+                  m_ui->resourcesView->setCurrentIndex(index);
+                }
+            }
             return false;
         }
         default:
