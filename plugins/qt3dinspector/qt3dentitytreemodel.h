@@ -1,5 +1,5 @@
 /*
-  3dinspector.h
+  qt3dentitytreemodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,64 +26,47 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_3DINSPECTOR_3DINSPECTOR_H
-#define GAMMARAY_3DINSPECTOR_3DINSPECTOR_H
+#ifndef GAMMARAY_QT3DENTITYTREEMODEL_H
+#define GAMMARAY_QT3DENTITYTREEMODEL_H
 
-#include "qt3dinspectorinterface.h"
+#include <core/objectmodelbase.h>
 
-#include <core/toolfactory.h>
-
-#include <Qt3DCore/QNode>
+#include <QHash>
+#include <QVector>
 
 namespace Qt3DCore {
 class QAspectEngine;
+class QEntity;
 }
 
 namespace GammaRay {
 
-class Qt3DEntityTreeModel;
-
-class Qt3DInspector: public Qt3DInspectorInterface
+/** Model for the entity tree of an QAspectEngine. */
+class Qt3DEntityTreeModel : public ObjectModelBase<QAbstractItemModel>
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::Qt3DInspectorInterface)
 public:
-    explicit Qt3DInspector(ProbeInterface *probe, QObject *parent = 0);
-    ~Qt3DInspector();
+    explicit Qt3DEntityTreeModel(QObject *parent = nullptr);
+    ~Qt3DEntityTreeModel();
 
-public slots:
-    void selectEngine(int index) override;
+    void setEngine(Qt3DCore::QAspectEngine *engine);
 
-private slots:
-    void objectSelected(QObject *obj);
-
-private:
-    void selectEngine(Qt3DCore::QAspectEngine *engine);
-
-    void registerCoreMetaTypes();
-    void registerRenderMetaTypes();
+    QVariant data(const QModelIndex& index, int role) const override;
+    int rowCount(const QModelIndex& parent) const override;
+    QModelIndex parent(const QModelIndex& child) const override;
+    QModelIndex index(int row, int column, const QModelIndex& parent) const override;
 
 private:
-    QAbstractItemModel *m_engineModel;
+    void clear();
+    void populateFromEntity(Qt3DCore::QEntity* entity);
+    QModelIndex indexForEntity(Qt3DCore::QEntity* entity) const;
+
+private:
     Qt3DCore::QAspectEngine *m_engine;
-    Qt3DEntityTreeModel *m_entityModel;
+
+    QHash<Qt3DCore::QEntity*, Qt3DCore::QEntity*> m_childParentMap;
+    QHash<Qt3DCore::QEntity*, QVector<Qt3DCore::QEntity*> > m_parentChildMap;
 };
-
-class Qt3DInspectorFactory: public QObject, public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_3dinspector.json")
-
-public:
-    explicit Qt3DInspectorFactory(QObject *parent = 0) : QObject(parent)
-    {
-    }
-
-    QString name() const Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif
-
+#endif // GAMMARAY_QT3DENTITYTREEMODEL_H

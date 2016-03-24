@@ -27,6 +27,7 @@
 */
 
 #include "3dinspector.h"
+#include "qt3dentitytreemodel.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -45,7 +46,8 @@ using namespace GammaRay;
 
 Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     Qt3DInspectorInterface(parent),
-    m_engine(nullptr)
+    m_engine(nullptr),
+    m_entityModel(new Qt3DEntityTreeModel(this))
 {
     registerCoreMetaTypes();
     registerRenderMetaTypes();
@@ -56,6 +58,8 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     proxy->setSourceModel(engineFilterModel);
     m_engineModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
+
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), m_entityModel);
 
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
@@ -78,6 +82,7 @@ void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine* engine)
     if (m_engine == engine)
         return;
     m_engine = engine;
+    m_entityModel->setEngine(engine);
 }
 
 void Qt3DInspector::objectSelected(QObject* obj)
