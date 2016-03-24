@@ -35,12 +35,16 @@
 
 #include <Qt3DCore/QNode>
 
+class QItemSelection;
+class QItemSelectionModel;
 namespace Qt3DCore {
 class QAspectEngine;
+class QEntity;
 }
 
 namespace GammaRay {
 
+class PropertyController;
 class Qt3DEntityTreeModel;
 
 class Qt3DInspector: public Qt3DInspectorInterface
@@ -58,7 +62,9 @@ private slots:
     void objectSelected(QObject *obj);
 
 private:
+    void entitySelectionChanged(const QItemSelection &selected);
     void selectEngine(Qt3DCore::QAspectEngine *engine);
+    void selectEntity(Qt3DCore::QEntity *entity);
 
     void registerCoreMetaTypes();
     void registerRenderMetaTypes();
@@ -67,6 +73,9 @@ private:
     QAbstractItemModel *m_engineModel;
     Qt3DCore::QAspectEngine *m_engine;
     Qt3DEntityTreeModel *m_entityModel;
+    QItemSelectionModel *m_entitySelectionModel;
+    Qt3DCore::QEntity *m_currentEntity;
+    PropertyController *m_entitryPropertyController;
 };
 
 class Qt3DInspectorFactory: public QObject, public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>

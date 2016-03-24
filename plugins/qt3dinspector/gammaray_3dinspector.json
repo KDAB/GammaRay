@@ -2,6 +2,6 @@
     "id": "gammaray_3dinspector",
     "name": "Qt3D Inspector",
     "types": [ "Qt3DCore::QNode" ],
-    "selectableTypes": [ "Qt3DCore::QAspectEngine" ],
+    "selectableTypes": [ "Qt3DCore::QAspectEngine", "Qt3DCore::QEntity" ],
     "hidden": true
 }

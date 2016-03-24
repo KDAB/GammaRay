@@ -33,7 +33,12 @@
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/singlecolumnobjectproxymodel.h>
+#include <core/propertycontroller.h>
 
+#include <common/modelevent.h>
+#include <common/objectbroker.h>
+
+#include <Qt3DRender/QCamera>
 #include <Qt3DRender/QFrameGraphNode>
 
 #include <Qt3DCore/QAspectEngine>
@@ -41,13 +46,16 @@
 #include <Qt3DCore/QEntity>
 
 #include <QDebug>
+#include <QItemSelection>
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
 Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     Qt3DInspectorInterface(parent),
     m_engine(nullptr),
-    m_entityModel(new Qt3DEntityTreeModel(this))
+    m_entityModel(new Qt3DEntityTreeModel(this)),
+    m_entitryPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"), this))
 {
     registerCoreMetaTypes();
     registerRenderMetaTypes();
@@ -60,6 +68,8 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), m_entityModel);
+    m_entitySelectionModel = ObjectBroker::selectionModel(m_entityModel);
+    connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::entitySelectionChanged);
 
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
@@ -85,10 +95,40 @@ void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine* engine)
     m_entityModel->setEngine(engine);
 }
 
+void Qt3DInspector::entitySelectionChanged(const QItemSelection& selection)
+{
+    if (selection.isEmpty())
+        return;
+
+    const auto index = selection.first().topLeft();
+    auto entity = index.data(ObjectModel::ObjectRole).value<Qt3DCore::QEntity*>();
+    selectEntity(entity);
+}
+
+void Qt3DInspector::selectEntity(Qt3DCore::QEntity* entity)
+{
+    if (m_currentEntity == entity)
+        return;
+    m_currentEntity = entity;
+    m_entitryPropertyController->setObject(entity);
+
+    // update selelction if we got here via object navigation
+    const auto model = m_entitySelectionModel->model();
+    Model::used(model);
+
+    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue<Qt3DCore::QEntity*>(entity), 1, Qt::MatchExactly | Qt::MatchRecursive);
+    if (indexList.isEmpty())
+        return;
+    const auto index = indexList.first();
+    m_entitySelectionModel->select(index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
 void Qt3DInspector::objectSelected(QObject* obj)
 {
     if (auto engine = qobject_cast<Qt3DCore::QAspectEngine*>(obj))
         selectEngine(engine);
+    else if (auto entity = qobject_cast<Qt3DCore::QEntity*>(obj))
+        selectEntity(entity);
 }
 
 void Qt3DInspector::registerCoreMetaTypes()
@@ -116,6 +156,7 @@ void Qt3DInspector::registerCoreMetaTypes()
 
 void GammaRay::Qt3DInspector::registerRenderMetaTypes()
 {
+    qRegisterMetaType<Qt3DRender::QCamera*>();
     qRegisterMetaType<Qt3DRender::QFrameGraphNode*>();
 }
 

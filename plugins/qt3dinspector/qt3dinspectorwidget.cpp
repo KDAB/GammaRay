@@ -50,7 +50,11 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
     ui->engineComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel")));
     connect(ui->engineComboBox, SIGNAL(currentIndexChanged(int)), m_interface, SLOT(selectEngine(int)));
 
-    ui->sceneTreeView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel")));
+    auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
+    ui->sceneTreeView->setModel(sceneModel);
+    ui->sceneTreeView->setSelectionModel(ObjectBroker::selectionModel(sceneModel));
+
+    ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 }
 
 Qt3DInspectorWidget::~Qt3DInspectorWidget()
