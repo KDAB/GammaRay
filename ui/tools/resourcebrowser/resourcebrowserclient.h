@@ -43,6 +43,7 @@ class ResourceBrowserClient : public ResourceBrowserInterface
     virtual ~ResourceBrowserClient();
 
     void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) Q_DECL_OVERRIDE;
+    void selectResource(const QString &sourceFilePath, int line = -1, int column = -1) Q_DECL_OVERRIDE;
 };
 
 }

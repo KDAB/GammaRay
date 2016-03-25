@@ -49,12 +49,15 @@ class ResourceBrowserWidget : public QWidget
     explicit ResourceBrowserWidget(QWidget *parent = 0);
     ~ResourceBrowserWidget();
 
+  public slots:
+    void selectResource(const QString &sourceFilePath, int line = -1, int column = -1);
+
   private slots:
     void rowsInserted();
     void setupLayout();
     void resourceDeselected();
     void resourceSelected(const QPixmap &pixmap);
-    void resourceSelected(const QByteArray &contents);
+    void resourceSelected(const QByteArray &contents, int line, int column);
     void resourceDownloaded(const QString &fileName, const QPixmap &pixmap);
     void resourceDownloaded(const QString &fileName, const QByteArray &contents);
 

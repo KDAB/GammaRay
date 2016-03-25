@@ -44,11 +44,12 @@ class ResourceBrowserInterface : public QObject
 
   public slots:
     virtual void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) = 0;
+    virtual void selectResource(const QString &sourceFilePath, int line = -1, int column = -1) = 0;
 
   signals:
     void resourceDeselected();
     void resourceSelected(const QPixmap &pixmap);
-    void resourceSelected(const QByteArray &contents);
+    void resourceSelected(const QByteArray &contents, int line, int column);
 
     void resourceDownloaded(const QString &targetFilePath, const QPixmap &pixmap);
     void resourceDownloaded(const QString &targetFilePath, const QByteArray &contents);
