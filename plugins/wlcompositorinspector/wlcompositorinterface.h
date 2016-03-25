@@ -44,6 +44,7 @@ public slots:
   virtual void connected() = 0;
   virtual void disconnected() = 0;
   virtual void setSelectedClient(int index) = 0;
+  virtual void setSelectedResource(uint32_t id) = 0;
 
 signals:
   void logMessage(const QByteArray &msg);

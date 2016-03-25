@@ -52,4 +52,9 @@ void WlCompositorClient::setSelectedClient(int index)
   Endpoint::instance()->invokeObject(objectName(), "setSelectedClient", QVariantList() << index);
 }
 
+void WlCompositorClient::setSelectedResource(uint32_t id)
+{
+  Endpoint::instance()->invokeObject(objectName(), "setSelectedResource", QVariantList() << id);
+}
+
 }

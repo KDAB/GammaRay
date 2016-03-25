@@ -105,9 +105,24 @@ ResourceInfo::ResourceInfo(wl_resource *resource)
 {
 }
 
+uint32_t ResourceInfo::id() const
+{
+  return wl_resource_get_id(m_resource);
+}
+
+const char *ResourceInfo::interfaceName() const
+{
+  return wl_resource_get_class(m_resource);
+}
+
+bool ResourceInfo::isInterface(const wl_interface *iface) const
+{
+  return strcmp(interfaceName(), iface->name) == 0;
+}
+
 QString ResourceInfo::name() const
 {
-  return QString("%1@%2").arg(wl_resource_get_class(m_resource), QString::number(wl_resource_get_id(m_resource)));
+  return QString("%1@%2").arg(interfaceName(), QString::number(id()));
 }
 
 QString ResourceInfo::info() const

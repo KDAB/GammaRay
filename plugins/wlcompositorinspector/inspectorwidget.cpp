@@ -29,6 +29,7 @@
 #include "inspectorwidget.h"
 
 #include <common/objectbroker.h>
+#include <ui/remoteviewwidget.h>
 
 #include <QAbstractItemModel>
 #include <QDebug>
@@ -44,6 +45,16 @@
 #include "logview.h"
 
 using namespace GammaRay;
+
+class RemoteSurfaceView : public RemoteViewWidget
+{
+public:
+  RemoteSurfaceView(QWidget *parent)
+    : RemoteViewWidget(parent)
+  {
+    setName(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"));
+  }
+};
 
 static QObject *wlCompositorClientFactory(const QString &/*name*/, QObject *parent)
 {
@@ -76,6 +87,10 @@ InspectorWidget::InspectorWidget(QWidget *parent)
     m_ui->clientsView->viewport()->installEventFilter(this);
     connect(m_ui->resourcesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &InspectorWidget::resourceActivated);
     m_ui->resourcesView->viewport()->installEventFilter(this);
+
+    auto *surfaceView = new RemoteSurfaceView(this);
+    m_ui->gridLayout->addWidget(surfaceView, 1, 0, 1, 1);
+
 }
 
 InspectorWidget::~InspectorWidget()
@@ -95,6 +110,7 @@ void InspectorWidget::clientActivated(const QModelIndex &index)
 void InspectorWidget::resourceActivated(const QModelIndex &index)
 {
     QString text = index.data(Qt::ToolTipRole).toString();
+    m_client->setSelectedResource(index.data(Qt::UserRole + 2).toUInt());
     m_ui->resourceInfo->setText(text);
     m_ui->resourceInfo->setVisible(!text.isEmpty());
 }

@@ -44,6 +44,7 @@ public slots:
   void connected() override;
   void disconnected() override;
   void setSelectedClient(int index) override;
+  void setSelectedResource(uint32_t id) override;
 
 };
 
