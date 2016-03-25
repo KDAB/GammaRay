@@ -32,6 +32,7 @@
 #include <QStringList>
 
 struct wl_resource;
+struct wl_interface;
 
 namespace GammaRay
 {
@@ -41,6 +42,9 @@ class ResourceInfo
 public:
   ResourceInfo(wl_resource *resource);
 
+  uint32_t id() const;
+  const char *interfaceName() const;
+  bool isInterface(const wl_interface *iface) const;
   QString name() const;
   QString info() const;
   QStringList infoLines() const;

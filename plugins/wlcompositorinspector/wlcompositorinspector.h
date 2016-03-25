@@ -45,6 +45,7 @@ namespace GammaRay {
 class ClientsModel;
 class Logger;
 class ResourcesModel;
+class SurfaceView;
 
 class WlCompositorInspector: public WlCompositorInterface
 {
@@ -58,6 +59,7 @@ public slots:
     void connected() override;
     void disconnected() override;
     void setSelectedClient(int index) override;
+    void setSelectedResource(uint32_t id) override;
 
 private slots:
     void objectAdded(QObject *obj);
@@ -70,6 +72,7 @@ private:
     ClientsModel *m_clientsModel;
     Logger *m_logger;
     ResourcesModel *m_resourcesModel;
+    SurfaceView *m_surfaceView;
 };
 
 class WlCompositorInspectorFactory: public QObject, public StandardToolFactory<QWaylandCompositor, WlCompositorInspector>

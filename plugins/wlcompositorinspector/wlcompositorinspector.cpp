@@ -31,6 +31,8 @@
 #include <QAbstractTableModel>
 #include <QFile>
 #include <QWaylandClient>
+#include <QWaylandSurface>
+#include <QWaylandView>
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -39,6 +41,8 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/serverproxymodel.h>
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
+#include <core/remoteviewserver.h>
+#include <common/remoteviewframe.h>
 
 #include <wayland-server.h>
 
@@ -47,6 +51,69 @@
 
 namespace GammaRay
 {
+
+class SurfaceView : public RemoteViewServer
+{
+public:
+  SurfaceView(QObject *parent)
+    : RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"), parent)
+    , m_view()
+  {
+    m_view.setDiscardFrontBuffers(true);
+    connect(this, &RemoteViewServer::requestUpdate, this, &SurfaceView::sendSurfaceFrame);
+  }
+
+  void setSurface(QWaylandSurface *surface)
+  {
+    QWaylandSurface *old = m_view.surface();
+    if (old == surface) {
+      return;
+    }
+
+    if (old) {
+      disconnect(old, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
+    }
+    m_view.setSurface(surface);
+    if (surface) {
+      connect(surface, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
+    }
+
+    redraw();
+  }
+
+  void redraw()
+  {
+    if (m_view.advance()) {
+      if (m_view.currentBuffer().hasBuffer()) {
+        QWaylandBufferRef buffer = m_view.currentBuffer();
+
+        if (buffer.isShm()) {
+          m_frame = buffer.image();
+        } else {
+          //TODO FIXME support gl surfaces too
+        }
+      } else {
+        m_frame = QImage();
+      }
+    } else {
+      m_frame = QImage();
+    }
+
+    sourceChanged();
+  }
+
+  void sendSurfaceFrame()
+  {
+    RemoteViewFrame frame;
+    frame.setImage(m_frame);
+    frame.setSceneRect(QRect(0, 0, m_frame.width(), m_frame.height()));
+    frame.setViewRect(QRect(0, 0, m_frame.width(), m_frame.height()));
+    sendFrame(frame);
+  }
+
+  QWaylandView m_view;
+  QImage m_frame;
+};
 
 class Logger : public QObject
 {
@@ -195,6 +262,11 @@ public:
         delete res;
     }
 
+    wl_resource *resource(uint32_t id)
+    {
+      return wl_client_get_object(m_client->client(), id);
+    }
+
     QModelIndex index(Resource *res) const
     {
         if (res->parent) {
@@ -306,8 +378,22 @@ public:
                 return info.name();
             case Qt::ToolTipRole:
                 return info.info();
+            case Qt::UserRole + 2:
+                return info.id();
         }
         return QVariant();
+    }
+
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override
+    {
+        QMap<int, QVariant> map;
+        auto insertRole = [&](int role) {
+            map[role] = data(index, role);
+        };
+        insertRole(Qt::DisplayRole);
+        insertRole(Qt::ToolTipRole);
+        insertRole(Qt::UserRole + 2);
+        return map;
     }
 
     QVector<Resource *> m_resources;
@@ -426,6 +512,7 @@ public:
 
 WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* parent)
                      : WlCompositorInterface(parent)
+                     , m_surfaceView(new SurfaceView(this))
 {
     qWarning()<<"init probe"<<probe->objectTreeModel()<<probe->probe();
 
@@ -568,7 +655,10 @@ void WlCompositorInspector::addClient(wl_client *c)
     QString pid = QString::number(client->processId());
     qWarning()<<"client"<<client<<pid;
     connect(client, &QObject::destroyed, [this, pid, client](QObject *) {
-        m_clientsModel->removeClient(client);
+        if (m_resourcesModel->client() == client) {
+          m_resourcesModel->setClient(nullptr);
+          m_clientsModel->removeClient(client);
+        }
     });
 
     m_clientsModel->addClient(client);
@@ -591,6 +681,16 @@ void WlCompositorInspector::setSelectedClient(int index)
         m_resourcesModel->setClient(client);
         m_logger->setCurrentClient(client);
     }
+}
+
+void WlCompositorInspector::setSelectedResource(uint32_t id)
+{
+    wl_resource *res = m_resourcesModel->resource(id);
+    QWaylandSurface *surface = nullptr;
+    if (res && ResourceInfo(res).isInterface(&wl_surface_interface)) {
+        surface = QWaylandSurface::fromResource(res);
+    }
+    m_surfaceView->setSurface(surface);
 }
 
 }
