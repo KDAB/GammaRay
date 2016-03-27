@@ -46,6 +46,7 @@ namespace GammaRay {
 
 class PropertyController;
 class Qt3DEntityTreeModel;
+class FrameGraphModel;
 
 class Qt3DInspector: public Qt3DInspectorInterface
 {
@@ -72,10 +73,13 @@ private:
 private:
     QAbstractItemModel *m_engineModel;
     Qt3DCore::QAspectEngine *m_engine;
+
     Qt3DEntityTreeModel *m_entityModel;
     QItemSelectionModel *m_entitySelectionModel;
     Qt3DCore::QEntity *m_currentEntity;
     PropertyController *m_entitryPropertyController;
+
+    FrameGraphModel *m_frameGraphModel;
 };
 
 class Qt3DInspectorFactory: public QObject, public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>

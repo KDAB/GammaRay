@@ -55,6 +55,9 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
     ui->sceneTreeView->setSelectionModel(ObjectBroker::selectionModel(sceneModel));
 
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
+
+    auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
+    ui->frameGraphView->setModel(frameGraphModel);
 }
 
 Qt3DInspectorWidget::~Qt3DInspectorWidget()

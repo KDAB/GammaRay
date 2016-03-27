@@ -28,6 +28,7 @@
 
 #include "3dinspector.h"
 #include "qt3dentitytreemodel.h"
+#include "framegraphmodel.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -40,6 +41,7 @@
 
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QFrameGraphNode>
+#include <Qt3DRender/QRenderSettings>
 
 #include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QComponent>
@@ -55,7 +57,8 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     Qt3DInspectorInterface(parent),
     m_engine(nullptr),
     m_entityModel(new Qt3DEntityTreeModel(this)),
-    m_entitryPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"), this))
+    m_entitryPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"), this)),
+    m_frameGraphModel(new FrameGraphModel(this))
 {
     registerCoreMetaTypes();
     registerRenderMetaTypes();
@@ -70,6 +73,8 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), m_entityModel);
     m_entitySelectionModel = ObjectBroker::selectionModel(m_entityModel);
     connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::entitySelectionChanged);
+
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"), m_frameGraphModel);
 
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
@@ -93,6 +98,19 @@ void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine* engine)
         return;
     m_engine = engine;
     m_entityModel->setEngine(engine);
+    if (!engine)
+        return;
+
+    // TODO watch for changes
+    auto rootEntity = engine->rootEntity();
+    if (!rootEntity)
+        return;
+    foreach (auto component, rootEntity->components()) {
+        if (auto renderSettings = qobject_cast<Qt3DRender::QRenderSettings*>(component)) {
+            m_frameGraphModel->setFrameGraph(renderSettings->activeFrameGraph());
+            break;
+        }
+    }
 }
 
 void Qt3DInspector::entitySelectionChanged(const QItemSelection& selection)
