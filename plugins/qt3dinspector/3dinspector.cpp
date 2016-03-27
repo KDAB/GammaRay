@@ -57,8 +57,11 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     Qt3DInspectorInterface(parent),
     m_engine(nullptr),
     m_entityModel(new Qt3DEntityTreeModel(this)),
+    m_currentEntity(nullptr),
     m_entitryPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"), this)),
-    m_frameGraphModel(new FrameGraphModel(this))
+    m_frameGraphModel(new FrameGraphModel(this)),
+    m_currentFrameGraphNode(nullptr),
+    m_frameGraphPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"), this))
 {
     registerCoreMetaTypes();
     registerRenderMetaTypes();
@@ -75,6 +78,8 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::entitySelectionChanged);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"), m_frameGraphModel);
+    m_frameGraphSelectionModel = ObjectBroker::selectionModel(m_frameGraphModel);
+    connect(m_frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::frameGraphSelectionChanged);
 
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
@@ -139,6 +144,24 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity* entity)
         return;
     const auto index = indexList.first();
     m_entitySelectionModel->select(index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
+void Qt3DInspector::frameGraphSelectionChanged(const QItemSelection& selection)
+{
+    if (selection.isEmpty())
+        return;
+
+    const auto index = selection.first().topLeft();
+    auto node = index.data(ObjectModel::ObjectRole).value<Qt3DRender::QFrameGraphNode*>();
+    selectFrameGraphNode(node);
+}
+
+void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode* node)
+{
+    if (m_currentFrameGraphNode == node)
+        return;
+    m_currentFrameGraphNode = node;
+    m_frameGraphPropertyController->setObject(node);
 }
 
 void Qt3DInspector::objectSelected(QObject* obj)

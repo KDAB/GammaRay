@@ -58,6 +58,11 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
 
     auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
     ui->frameGraphView->setModel(frameGraphModel);
+    ui->frameGraphView->setSelectionModel(ObjectBroker::selectionModel(frameGraphModel));
+
+    ui->frameGraphNodePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"));
+
+    connect(ui->tabWidget, &QTabWidget::currentChanged, ui->stack, &QStackedWidget::setCurrentIndex);
 }
 
 Qt3DInspectorWidget::~Qt3DInspectorWidget()

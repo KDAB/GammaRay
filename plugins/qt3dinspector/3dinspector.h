@@ -41,6 +41,9 @@ namespace Qt3DCore {
 class QAspectEngine;
 class QEntity;
 }
+namespace Qt3DRender {
+class QFrameGraphNode;
+}
 
 namespace GammaRay {
 
@@ -66,6 +69,8 @@ private:
     void entitySelectionChanged(const QItemSelection &selected);
     void selectEngine(Qt3DCore::QAspectEngine *engine);
     void selectEntity(Qt3DCore::QEntity *entity);
+    void frameGraphSelectionChanged(const QItemSelection &selected);
+    void selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node);
 
     void registerCoreMetaTypes();
     void registerRenderMetaTypes();
@@ -80,6 +85,9 @@ private:
     PropertyController *m_entitryPropertyController;
 
     FrameGraphModel *m_frameGraphModel;
+    QItemSelectionModel *m_frameGraphSelectionModel;
+    Qt3DRender::QFrameGraphNode *m_currentFrameGraphNode;
+    PropertyController *m_frameGraphPropertyController;
 };
 
 class Qt3DInspectorFactory: public QObject, public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
