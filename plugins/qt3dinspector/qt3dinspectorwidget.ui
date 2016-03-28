@@ -67,6 +67,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="sceneTreeView">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="indentation">
            <number>10</number>
           </property>
@@ -94,6 +97,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="frameGraphView">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="indentation">
            <number>10</number>
           </property>

@@ -30,8 +30,14 @@
 #include "ui_qt3dinspectorwidget.h"
 #include "qt3dinspectorclient.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
+
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
+#include <common/sourcelocation.h>
+
+#include <QMenu>
 
 using namespace GammaRay;
 
@@ -55,6 +61,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
     ui->sceneTreeView->setModel(sceneModel);
     ui->sceneTreeView->setSelectionModel(ObjectBroker::selectionModel(sceneModel));
     new SearchLineController(ui->sceneSearchLine, sceneModel);
+    connect(ui->sceneTreeView, &QWidget::customContextMenuRequested, this, &Qt3DInspectorWidget::entityContextMenu);
 
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 
@@ -62,6 +69,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
     ui->frameGraphView->setModel(frameGraphModel);
     ui->frameGraphView->setSelectionModel(ObjectBroker::selectionModel(frameGraphModel));
     new SearchLineController(ui->frameGraphSearchLine, frameGraphModel);
+    connect(ui->frameGraphView, &QWidget::customContextMenuRequested, this, &Qt3DInspectorWidget::frameGraphContextMenu);
 
     ui->frameGraphNodePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"));
 
@@ -70,4 +78,34 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
 
 Qt3DInspectorWidget::~Qt3DInspectorWidget()
 {
+}
+
+void Qt3DInspectorWidget::entityContextMenu(QPoint pos)
+{
+    const auto index = ui->sceneTreeView->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+    ContextMenuExtension ext(objectId);
+    ext.setSourceLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.populateMenu(&menu);
+
+    menu.exec(ui->sceneTreeView->viewport()->mapToGlobal(pos));
+}
+
+void Qt3DInspectorWidget::frameGraphContextMenu(QPoint pos)
+{
+    const auto index = ui->frameGraphView->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    QMenu menu(tr("Frame Graph Node @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+    ContextMenuExtension ext(objectId);
+    ext.setSourceLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.populateMenu(&menu);
+
+    menu.exec(ui->frameGraphView->viewport()->mapToGlobal(pos));
 }

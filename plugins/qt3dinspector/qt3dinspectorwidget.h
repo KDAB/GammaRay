@@ -51,6 +51,9 @@ public:
     ~Qt3DInspectorWidget();
 
 private:
+    void entityContextMenu(QPoint pos);
+    void frameGraphContextMenu(QPoint pos);
+
     std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
     Qt3DInspectorInterface *m_interface;
 };
