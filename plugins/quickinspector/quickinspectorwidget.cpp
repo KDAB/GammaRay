@@ -48,7 +48,6 @@
 #include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
-#include <ui/uiintegration.h>
 #include <ui/paintbufferviewer.h>
 
 #include <client/remotemodel.h>
@@ -209,13 +208,6 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
 
   QMenu contextMenu;
 
-  const auto sourceLoc = index.data(ObjectModel::CreationLocationRole).value<SourceLocation>();
-  if (sourceLoc.isValid() && UiIntegration::instance()) {
-    QAction *action = contextMenu.addAction(tr("Show Code: %1:%2:%3").
-      arg(sourceLoc.fileName(), QString::number(sourceLoc.line()), QString::number(sourceLoc.column())));
-    action->setData(QuickItemAction::NavigateToCode);
-  }
-
   if (index.sibling(index.row(), 0).data(QuickItemModelRole::ItemActions).value<QuickItemActions>() & QuickItemAction::AnalyzePainting) {
     auto action = contextMenu.addAction(tr("Analyze Painting..."));
     action->setData(QuickItemAction::AnalyzePainting);
@@ -223,15 +215,12 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
 
   const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
   ContextMenuExtension ext(objectId);
+  const auto sourceLoc = index.data(ObjectModel::CreationLocationRole).value<SourceLocation>();
+  ext.setSourceLocation(sourceLoc);
   ext.populateMenu(&contextMenu);
 
   if (QAction *action = contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos))) {
-    UiIntegration *integ = 0;
     switch (action->data().toInt()) {
-      case QuickItemAction::NavigateToCode:
-        integ = UiIntegration::instance();
-        emit integ->navigateToCode(sourceLoc.fileName(), sourceLoc.line(), sourceLoc.column());
-        break;
       case QuickItemAction::AnalyzePainting:
         m_interface->analyzePainting();
         PaintBufferViewer *viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this);

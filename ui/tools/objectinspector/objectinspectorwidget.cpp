@@ -31,6 +31,7 @@
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
+#include <common/sourcelocation.h>
 
 #include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
@@ -96,6 +97,7 @@ void ObjectInspectorWidget::objectContextMenuRequested(const QPoint& pos)
   const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
   QMenu menu(tr("Object @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
   ContextMenuExtension ext(objectId);
+  ext.setSourceLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
   ext.populateMenu(&menu);
 
   menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));

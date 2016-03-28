@@ -26,6 +26,7 @@
 
 #include "contextmenuextension.h"
 #include "clienttoolmodel.h"
+#include "uiintegration.h"
 
 #include <common/objectbroker.h>
 #include <common/probecontrollerinterface.h>
@@ -39,9 +40,21 @@ ContextMenuExtension::ContextMenuExtension(ObjectId id)
 {
 }
 
+void ContextMenuExtension::setSourceLocation(const SourceLocation& location)
+{
+    m_loc = location;
+}
+
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  if (m_loc.isValid() && UiIntegration::instance()) {
+    auto action = menu->addAction(tr("Show Code: %1:%2:%3"). arg(m_loc.fileName(), QString::number(m_loc.line()), QString::number(m_loc.column())));
+    connect(action, &QAction::triggered, [this]() {
+        emit UiIntegration::instance()->navigateToCode(m_loc.fileName(), m_loc.line(), m_loc.column());
+    });
+  }
+
   if (m_id.isNull())
     return;
 
