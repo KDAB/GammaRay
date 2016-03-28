@@ -33,6 +33,7 @@
 #include <QWaylandClient>
 #include <QWaylandSurface>
 #include <QWaylandView>
+#include <QWaylandSurfaceGrabber>
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -57,23 +58,21 @@ class SurfaceView : public RemoteViewServer
 public:
   SurfaceView(QObject *parent)
     : RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"), parent)
-    , m_view()
+    , m_surface(nullptr)
   {
-    m_view.setDiscardFrontBuffers(true);
     connect(this, &RemoteViewServer::requestUpdate, this, &SurfaceView::sendSurfaceFrame);
   }
 
   void setSurface(QWaylandSurface *surface)
   {
-    QWaylandSurface *old = m_view.surface();
-    if (old == surface) {
+    if (m_surface == surface) {
       return;
     }
 
-    if (old) {
-      disconnect(old, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
+    if (m_surface) {
+      disconnect(m_surface, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
     }
-    m_view.setSurface(surface);
+    m_surface = surface;
     if (surface) {
       connect(surface, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
     }
@@ -83,22 +82,27 @@ public:
 
   void redraw()
   {
-    if (m_view.advance()) {
-      if (m_view.currentBuffer().hasBuffer()) {
-        QWaylandBufferRef buffer = m_view.currentBuffer();
-
-        if (buffer.isShm()) {
-          m_frame = buffer.image();
-        } else {
-          //TODO FIXME support gl surfaces too
-        }
-      } else {
-        m_frame = QImage();
-      }
-    } else {
-      m_frame = QImage();
+    if (!m_surface) {
+      setNewFrame(QImage());
+      return;
     }
 
+    QWaylandSurfaceGrabber *grabber = new QWaylandSurfaceGrabber(m_surface);
+    connect(grabber, &QWaylandSurfaceGrabber::success, this, [grabber, this](const QImage &img) {
+      setNewFrame(img);
+      grabber->deleteLater();
+    });
+    connect(grabber, &QWaylandSurfaceGrabber::failed, this, [grabber, this](QWaylandSurfaceGrabber::Error error) {
+      qWarning()<<"Failed to grab surface."<<error;
+      grabber->deleteLater();
+      setNewFrame(QImage());
+    });
+    grabber->grab();
+  }
+
+  void setNewFrame(const QImage &img)
+  {
+    m_frame = img;
     sourceChanged();
   }
 
@@ -111,7 +115,7 @@ public:
     sendFrame(frame);
   }
 
-  QWaylandView m_view;
+  QWaylandSurface *m_surface;
   QImage m_frame;
 };
 
