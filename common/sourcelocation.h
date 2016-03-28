@@ -56,7 +56,7 @@ public:
     void setColumn(int column);
 
 private:
-    friend QDataStream &operator>>(QDataStream &in, SourceLocation &location);
+    friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, SourceLocation &location);
 
     QString m_fileName; // ### QUrl?
     int m_line;
