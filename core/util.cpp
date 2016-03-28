@@ -31,6 +31,7 @@
 #include "util.h"
 #include "common/metatypedeclarations.h"
 #include "varianthandler.h"
+#include "objectdataprovider.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -66,19 +67,21 @@ QString Util::displayString(const QObject *object)
   if (!object) {
     return QStringLiteral("QObject(0x0)");
   }
-  if (object->objectName().isEmpty()) {
+  const auto name = ObjectDataProvider::name(object);
+  if (name.isEmpty()) {
     return QStringLiteral("%1[this=%2]").arg(object->metaObject()->className(), addressToString(object));
   }
-  return object->objectName();
+  return name;
 }
 
 QString Util::shortDisplayString(const QObject* object)
 {
   if (!object)
     return QStringLiteral("0x0");
-  if (object->objectName().isEmpty())
+  const auto name = ObjectDataProvider::name(object);
+  if (name.isEmpty())
     return addressToString(object);
-  return object->objectName();
+  return name;
 }
 
 QString Util::addressToString(const void *p)

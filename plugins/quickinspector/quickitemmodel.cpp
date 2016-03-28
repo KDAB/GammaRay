@@ -113,13 +113,6 @@ QVariant QuickItemModel::data(const QModelIndex &index, int role) const
 
     return objectData->columnNumber;
   }
-  if (role == Qt::DisplayRole && index.column() == 0) {
-    QQmlContext *ctx = QQmlEngine::contextForObject(item);
-    QString id = ctx ? ctx->nameForObject(item) : QString();
-    if (!id.isEmpty()) {
-      return id;
-    }
-  }
   if (role == QuickItemModelRole::ItemActions && index.column() == 0) {
     if (qobject_cast<QQuickPaintedItem*>(item) && PaintAnalyzer::isAvailable())
       return QVariant::fromValue<QuickItemActions>(QuickItemAction::AnalyzePainting);

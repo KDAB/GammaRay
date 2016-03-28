@@ -29,6 +29,7 @@ set(gammaray_srcs
   proxytoolfactory.cpp
   util.cpp
   varianthandler.cpp
+  objectdataprovider.cpp
 
   propertyadaptor.cpp
   propertyaggregator.cpp

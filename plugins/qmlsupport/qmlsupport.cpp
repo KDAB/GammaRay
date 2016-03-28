@@ -38,6 +38,7 @@
 #include <core/util.h>
 #include <core/propertyadaptorfactory.h>
 #include <core/propertycontroller.h>
+#include <core/objectdataprovider.h>
 
 #include <common/metatypedeclarations.h>
 
@@ -109,6 +110,19 @@ static QString qjsValueToString(const QJSValue &v)
   return QStringLiteral("<unknown QJSValue>");
 }
 
+class QmlObjectDataProvider : public AbstractObjectDataProvider
+{
+public:
+    QString name(const QObject* obj) Q_DECL_OVERRIDE;
+};
+
+QString QmlObjectDataProvider::name(const QObject *obj)
+{
+    QQmlContext *ctx = QQmlEngine::contextForObject(obj);
+    const auto id = ctx ? ctx->nameForObject(const_cast<QObject*>(obj)) : QString();
+    return id;
+}
+
 QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   QObject(parent)
 {
@@ -169,6 +183,9 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
 
   PropertyController::registerExtension<QmlTypeExtension>();
+
+  static auto dataProvider = new QmlObjectDataProvider;
+  ObjectDataProvider::registerProvider(dataProvider);
 }
 
 QString QmlSupportFactory::name() const
