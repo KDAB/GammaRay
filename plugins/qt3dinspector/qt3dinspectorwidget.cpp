@@ -30,6 +30,7 @@
 #include "ui_qt3dinspectorwidget.h"
 #include "qt3dinspectorclient.h"
 
+#include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 
 using namespace GammaRay;
@@ -53,12 +54,14 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
     auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
     ui->sceneTreeView->setModel(sceneModel);
     ui->sceneTreeView->setSelectionModel(ObjectBroker::selectionModel(sceneModel));
+    new SearchLineController(ui->sceneSearchLine, sceneModel);
 
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 
     auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
     ui->frameGraphView->setModel(frameGraphModel);
     ui->frameGraphView->setSelectionModel(ObjectBroker::selectionModel(frameGraphModel));
+    new SearchLineController(ui->frameGraphSearchLine, frameGraphModel);
 
     ui->frameGraphNodePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"));
 

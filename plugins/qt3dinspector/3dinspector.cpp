@@ -35,9 +35,12 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/propertycontroller.h>
+#include <core/remote/serverproxymodel.h>
 
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
+
+#include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QFrameGraphNode>
@@ -73,12 +76,16 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     m_engineModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
 
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), m_entityModel);
-    m_entitySelectionModel = ObjectBroker::selectionModel(m_entityModel);
+    auto entityProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    entityProxy->setSourceModel(m_entityModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), entityProxy);
+    m_entitySelectionModel = ObjectBroker::selectionModel(entityProxy);
     connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::entitySelectionChanged);
 
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"), m_frameGraphModel);
-    m_frameGraphSelectionModel = ObjectBroker::selectionModel(m_frameGraphModel);
+    auto frameGraphProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    frameGraphProxy->setSourceModel(m_frameGraphModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"), frameGraphProxy);
+    m_frameGraphSelectionModel = ObjectBroker::selectionModel(frameGraphProxy);
     connect(m_frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::frameGraphSelectionChanged);
 
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
