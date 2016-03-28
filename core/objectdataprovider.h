@@ -36,6 +36,8 @@ class QString;
 
 namespace GammaRay {
 
+class SourceLocation;
+
 /** @brief Base class for custom object data providers.
  * Inherit from this and register at ObjectDataProvider, to support basic QObject information
  * retrieval from dynamic language bindings, such as QML.
@@ -44,8 +46,8 @@ class GAMMARAY_CORE_EXPORT AbstractObjectDataProvider
 {
 public:
     virtual ~AbstractObjectDataProvider();
-    virtual QString name(const QObject *obj) = 0;
-    // TODO source location
+    virtual QString name(const QObject *obj) const = 0;
+    virtual SourceLocation creationLocation(QObject *obj) const = 0;
 };
 
 /** @brief Retrieve basic information about QObject instances. */
@@ -57,6 +59,9 @@ namespace ObjectDataProvider
      * dynamic language runtimes, such as QML ids.
      */
     GAMMARAY_CORE_EXPORT QString name(const QObject *obj);
+
+    /** Returns the source location where this object was created, if known. */
+    GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);
 }
 
 }

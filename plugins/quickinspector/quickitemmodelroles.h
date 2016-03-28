@@ -37,9 +37,6 @@ namespace GammaRay {
 namespace QuickItemModelRole {
   enum Roles {
     ItemFlags = ObjectModel::UserRole,
-    SourceFileRole,
-    SourceLineRole,
-    SourceColumnRole,
     ItemEvent,
     ItemActions
   };

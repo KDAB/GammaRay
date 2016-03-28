@@ -1,5 +1,5 @@
 /*
-  objectdataprovider.cpp
+  sourcelocation.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,53 +26,67 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "objectdataprovider.h"
-
-#include <common/sourcelocation.h>
-
-#include <QObject>
-#include <QVector>
+#include "sourcelocation.h"
 
 using namespace GammaRay;
 
-AbstractObjectDataProvider::~AbstractObjectDataProvider()
+SourceLocation::SourceLocation() :
+    m_line(-1),
+    m_column(-1)
 {
 }
 
-Q_GLOBAL_STATIC(QVector<AbstractObjectDataProvider*>, s_providers)
-
-void ObjectDataProvider::registerProvider(AbstractObjectDataProvider* provider)
+SourceLocation::~SourceLocation()
 {
-    if (!s_providers()->contains(provider))
-        s_providers()->push_back(provider);
 }
 
-QString ObjectDataProvider::name(const QObject* obj)
+bool SourceLocation::isValid() const
 {
-    if (!obj)
-        return QStringLiteral("0x0");
-    auto name = obj->objectName();
-    if (!name.isEmpty())
-        return name;
-    foreach (auto provider, *s_providers()) {
-        name = provider->name(obj);
-        if (!name.isEmpty())
-            return name;
-    }
-    return name;
+    return !m_fileName.isEmpty();
 }
 
-SourceLocation ObjectDataProvider::creationLocation(QObject* obj)
+QString SourceLocation::fileName() const
 {
-    SourceLocation loc;
-    if (!obj)
-        return loc;
+    return m_fileName;
+}
 
-    foreach (auto provider, *s_providers()) {
-        loc = provider->creationLocation(obj);
-        if (loc.isValid())
-            return loc;
-    }
+void SourceLocation::setFileName(const QString& fileName)
+{
+    m_fileName = fileName;
+}
 
-    return loc;
+int SourceLocation::line() const
+{
+    return m_line;
+}
+
+void SourceLocation::setLine(int line)
+{
+    m_line = line;
+}
+
+int SourceLocation::column() const
+{
+    return m_column;
+}
+
+void SourceLocation::setColumn(int column)
+{
+    m_column = column;
+}
+
+QDataStream& GammaRay::operator<<(QDataStream& out, const SourceLocation& location)
+{
+    out << location.fileName();
+    out << location.line();
+    out << location.column();
+    return out;
+}
+
+QDataStream& GammaRay::operator>>(QDataStream& in, SourceLocation& location)
+{
+    in >> location.m_fileName;
+    in >> location.m_line;
+    in >> location.m_column;
+    return in;
 }

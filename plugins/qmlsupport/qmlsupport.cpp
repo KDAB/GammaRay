@@ -41,6 +41,7 @@
 #include <core/objectdataprovider.h>
 
 #include <common/metatypedeclarations.h>
+#include <common/sourcelocation.h>
 
 #include <QDateTime>
 #include <QDebug>
@@ -51,6 +52,8 @@
 #include <QQmlListProperty>
 
 #include <private/qqmlmetatype_p.h>
+#include <private/qqmldata_p.h>
+#include <private/qqmlcontext_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -110,17 +113,51 @@ static QString qjsValueToString(const QJSValue &v)
   return QStringLiteral("<unknown QJSValue>");
 }
 
+namespace GammaRay {
 class QmlObjectDataProvider : public AbstractObjectDataProvider
 {
 public:
-    QString name(const QObject* obj) Q_DECL_OVERRIDE;
+    QString name(const QObject* obj) const Q_DECL_OVERRIDE;
+    SourceLocation creationLocation(QObject* obj) const Q_DECL_OVERRIDE;
 };
+}
 
-QString QmlObjectDataProvider::name(const QObject *obj)
+QString QmlObjectDataProvider::name(const QObject *obj) const
 {
     QQmlContext *ctx = QQmlEngine::contextForObject(obj);
     const auto id = ctx ? ctx->nameForObject(const_cast<QObject*>(obj)) : QString();
     return id;
+}
+
+SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
+{
+    SourceLocation loc;
+
+    auto objectData = QQmlData::get(obj);
+    if (!objectData)
+        return loc;
+
+    auto context = objectData->outerContext;
+    if (!context)
+        return loc;
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    loc.setFileName(context->url().scheme() == QStringLiteral("file")
+            ? context->url().path()
+            : context->url().toString() // Most editors don't understand paths with the file://
+                                         // scheme, still we need the scheme for anything else
+                                         // but file (e.g. qrc:/)
+        );
+#else
+    loc.setFileName(context->url.scheme() == QStringLiteral("file")
+            ? context->url.path()
+            : context->url.toString() // same as above
+        );
+#endif
+
+    loc.setLine(objectData->lineNumber);
+    loc.setColumn(objectData->columnNumber);
+    return loc;
 }
 
 QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :

@@ -43,6 +43,8 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <common/probecontrollerinterface.h> // for ObjectId
+#include <common/sourcelocation.h>
+
 #include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
@@ -207,12 +209,10 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
 
   QMenu contextMenu;
 
-  const auto sourceFile = index.data(QuickItemModelRole::SourceFileRole).toString();
-  if (!sourceFile.isEmpty() && UiIntegration::instance()) {
+  const auto sourceLoc = index.data(ObjectModel::CreationLocationRole).value<SourceLocation>();
+  if (sourceLoc.isValid() && UiIntegration::instance()) {
     QAction *action = contextMenu.addAction(tr("Show Code: %1:%2:%3").
-      arg(sourceFile,
-          index.data(QuickItemModelRole::SourceLineRole).toString(),
-          index.data(QuickItemModelRole::SourceColumnRole).toString()));
+      arg(sourceLoc.fileName(), QString::number(sourceLoc.line()), QString::number(sourceLoc.column())));
     action->setData(QuickItemAction::NavigateToCode);
   }
 
@@ -230,9 +230,7 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
     switch (action->data().toInt()) {
       case QuickItemAction::NavigateToCode:
         integ = UiIntegration::instance();
-        emit integ->navigateToCode(sourceFile,
-                                   index.data(QuickItemModelRole::SourceLineRole).toInt(),
-                                   index.data(QuickItemModelRole::SourceColumnRole).toInt());
+        emit integ->navigateToCode(sourceLoc.fileName(), sourceLoc.line(), sourceLoc.column());
         break;
       case QuickItemAction::AnalyzePainting:
         m_interface->analyzePainting();

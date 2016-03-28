@@ -30,6 +30,7 @@
 #include "enums.h"
 #include "metatypedeclarations.h"
 #include "variantwrapper.h"
+#include "sourcelocation.h"
 
 #include <QDataStream>
 #include <QMetaMethod>
@@ -62,4 +63,5 @@ void StreamOperators::registerOperators()
   qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
 
   qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
+  qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();
 }

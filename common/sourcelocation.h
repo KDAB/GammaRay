@@ -1,5 +1,5 @@
 /*
-  objectdataprovider.cpp
+  sourcelocation.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,53 +26,48 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "objectdataprovider.h"
+#ifndef GAMMARAY_SOURCELOCATION_H
+#define GAMMARAY_SOURCELOCATION_H
 
-#include <common/sourcelocation.h>
+#include "gammaray_common_export.h"
 
-#include <QObject>
-#include <QVector>
+#include <QMetaType>
+#include <QDataStream>
+#include <QString>
 
-using namespace GammaRay;
+namespace GammaRay {
 
-AbstractObjectDataProvider::~AbstractObjectDataProvider()
+/** @brief Specifies a source code location. */
+class GAMMARAY_COMMON_EXPORT SourceLocation
 {
+public:
+    SourceLocation();
+    ~SourceLocation();
+
+    bool isValid() const;
+
+    QString fileName() const;
+    void setFileName(const QString &fileName);
+
+    int line() const;
+    void setLine(int line);
+
+    int column() const;
+    void setColumn(int column);
+
+private:
+    friend QDataStream &operator>>(QDataStream &in, SourceLocation &location);
+
+    QString m_fileName; // ### QUrl?
+    int m_line;
+    int m_column;
+};
+
+GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const SourceLocation &location);
+GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, SourceLocation &location);
+
 }
 
-Q_GLOBAL_STATIC(QVector<AbstractObjectDataProvider*>, s_providers)
+Q_DECLARE_METATYPE(GammaRay::SourceLocation)
 
-void ObjectDataProvider::registerProvider(AbstractObjectDataProvider* provider)
-{
-    if (!s_providers()->contains(provider))
-        s_providers()->push_back(provider);
-}
-
-QString ObjectDataProvider::name(const QObject* obj)
-{
-    if (!obj)
-        return QStringLiteral("0x0");
-    auto name = obj->objectName();
-    if (!name.isEmpty())
-        return name;
-    foreach (auto provider, *s_providers()) {
-        name = provider->name(obj);
-        if (!name.isEmpty())
-            return name;
-    }
-    return name;
-}
-
-SourceLocation ObjectDataProvider::creationLocation(QObject* obj)
-{
-    SourceLocation loc;
-    if (!obj)
-        return loc;
-
-    foreach (auto provider, *s_providers()) {
-        loc = provider->creationLocation(obj);
-        if (loc.isValid())
-            return loc;
-    }
-
-    return loc;
-}
+#endif // GAMMARAY_SOURCELOCATION_H

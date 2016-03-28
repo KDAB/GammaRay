@@ -39,8 +39,11 @@
 #define GAMMARAY_OBJECTMODELBASE_H
 
 #include "util.h"
+#include "objectdataprovider.h"
+
 #include <common/probecontrollerinterface.h>
 #include <common/objectmodel.h>
+#include <common/sourcelocation.h>
 
 #include <QModelIndex>
 #include <QObject>
@@ -101,6 +104,10 @@ class ObjectModelBase : public Base
           return Util::tooltipForObject(object);
       } else if (role == Qt::DecorationRole && index.column() == 0) {
         return Util::iconForObject(object);
+      } else if (role == ObjectModel::CreationLocationRole) {
+          const auto loc = ObjectDataProvider::creationLocation(object);
+          if (loc.isValid())
+              return QVariant::fromValue(loc);
       }
 
       return QVariant();
@@ -110,6 +117,9 @@ class ObjectModelBase : public Base
     {
       QMap<int, QVariant> map = Base::itemData(index);
       map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
+      const auto loc = this->data(index, ObjectModel::CreationLocationRole);
+      if (loc.isValid())
+          map.insert(ObjectModel::CreationLocationRole, loc);
       return map;
     }
 
