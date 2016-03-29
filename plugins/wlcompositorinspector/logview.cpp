@@ -248,12 +248,12 @@ QSize LogView::sizeHint() const
   return QSize(200, 200);
 }
 
-void LogView::logMessage(const QByteArray &msg)
+void LogView::logMessage(qint64 time, const QByteArray &msg)
 {
   auto scrollbar = verticalScrollBar();
   bool scroll = scrollbar->value() >= scrollbar->maximum();
 
-  add(msg);
+  add(time, msg);
 
   if (scroll)
     scrollbar->setValue(scrollbar->maximum());
@@ -265,10 +265,10 @@ void LogView::reset()
   m_view->resize(0, 0);
 }
 
-void LogView::add(const QByteArray &m)
+void LogView::add(qint64 time, const QByteArray &m)
 {
   int count = m_view->m_lines.count();
-  m_view->m_lines.append(QStaticText(m));
+  m_view->m_lines.append(QStaticText(QString("[%1ms] %2").arg(QString::number(time), QString(m))));
 
   QSizeF lineSize = m_view->m_lines.last().size();
 

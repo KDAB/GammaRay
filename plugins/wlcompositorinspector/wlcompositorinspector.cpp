@@ -34,6 +34,7 @@
 #include <QWaylandSurface>
 #include <QWaylandView>
 #include <QWaylandSurfaceGrabber>
+#include <QElapsedTimer>
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -134,6 +135,7 @@ public:
         , m_connected(false)
         , m_inspector(inspector)
     {
+      m_timer.start();
     }
 
     void add(wl_resource *res, MessageType dir, const QString &line)
@@ -149,9 +151,10 @@ public:
         // we use QByteArray rather than QString because the log has mostly (only) latin characters
         // so we save some space using utf8 rather than the utf16 QString uses
         QByteArray utf8 = l.toUtf8();
-        m_lines.append(utf8);
+        qint64 time = m_timer.elapsed();
+        m_lines.append({ time, utf8 });
         if (m_connected) {
-            emit m_inspector->logMessage(utf8);
+            emit m_inspector->logMessage(time, utf8);
         }
     }
 
@@ -169,15 +172,21 @@ public:
     {
         m_connected = c;
         for (int i = 0; i < m_lines.count(); ++i) {
-            emit m_inspector->logMessage(m_lines.at(i));
+            const Message &m = m_lines.at(i);
+            emit m_inspector->logMessage(m.time, m.line);
         }
     }
 
-    RingBuffer<QByteArray> m_lines;
+    struct Message {
+      qint64 time;
+      QByteArray line;
+    };
+    RingBuffer<Message> m_lines;
     int m_timerId;
     wl_client *m_currentClient;
     bool m_connected;
     WlCompositorInspector *m_inspector;
+    QElapsedTimer m_timer;
 };
 
 class ResourcesModel : public QAbstractItemModel

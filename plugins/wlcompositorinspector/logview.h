@@ -40,11 +40,11 @@ public:
   LogView(QWidget *p);
 
   QSize sizeHint() const override;
-  void logMessage(const QByteArray &msg);
+  void logMessage(qint64 time, const QByteArray &msg);
   void reset();
 
 private:
-  void add(const QByteArray &m);
+  void add(qint64 time, const QByteArray &m);
 
   class View;
   View *m_view;
