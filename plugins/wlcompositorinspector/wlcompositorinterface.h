@@ -47,7 +47,7 @@ public slots:
   virtual void setSelectedResource(uint32_t id) = 0;
 
 signals:
-  void logMessage(const QByteArray &msg);
+  void logMessage(qint64 time, const QByteArray &msg);
   void resetLog();
 
 };
