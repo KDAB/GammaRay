@@ -72,7 +72,7 @@ public:
     opt.text = defaultDisplayText(index);
     initStyleOption(&opt, index);
 
-    const QWidget *widget = option.widget;
+    const QWidget *widget = opt.widget;
     QStyle *style = widget ? widget->style() : QApplication::style();
     style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
   }
