@@ -120,9 +120,9 @@ void PaintAnalyzer::endAnalyzePainting()
     Q_ASSERT(m_paintBuffer);
     Q_ASSERT(m_paintBufferModel);
     m_paintBufferModel->setPaintBuffer(*m_paintBuffer);
-#endif
     delete m_paintBuffer;
     m_paintBuffer = 0;
+#endif
     m_remoteView->resetView();
     m_remoteView->sourceChanged();
 }
