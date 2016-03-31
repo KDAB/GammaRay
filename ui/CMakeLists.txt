@@ -19,6 +19,7 @@ set(gammaray_ui_srcs
   searchlinecontroller.cpp
   tooluifactory.cpp
   uiintegration.cpp
+  uistatemanager.cpp
   remoteviewwidget.cpp
 
   paintanalyzerwidget.cpp
@@ -156,6 +157,7 @@ gammaray_install_headers(
   propertywidgettab.h
   tooluifactory.h
   uiintegration.h
+  uistatemanager.h
 )
 
 ecm_generate_pri_file(BASE_NAME GammaRayUi
