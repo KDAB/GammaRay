@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGERWIDGET_H
 #define GAMMARAY_SCRIPTENGINEDEBUGGER_SCRIPTENGINEDEBUGGERWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 #include <QWidget>
 #include <QScriptEngine>
@@ -52,6 +53,7 @@ class ScriptEngineDebuggerWidget : public QWidget
 
   private:
     QScopedPointer<Ui::ScriptEngineDebuggerWidget> ui;
+    UIStateManager m_stateManager;
     QScriptEngineDebugger *debugger;
 };
 

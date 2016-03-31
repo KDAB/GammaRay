@@ -41,7 +41,9 @@ using namespace GammaRay;
 
 ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
   : QWidget(parent)
+  , m_stateManager(this)
 {
+  setObjectName("ActionInspectorWidget");
   QAbstractItemModel *actionModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
 
   QVBoxLayout *vbox = new QVBoxLayout(this);

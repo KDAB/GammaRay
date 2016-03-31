@@ -12,7 +12,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QSplitter" name="splitter">
+    <widget class="QSplitter" name="mainSplitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -40,7 +40,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QSplitter" name="splitter_12">
+     <widget class="QSplitter" name="structureSplitter">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>

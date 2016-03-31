@@ -45,9 +45,9 @@
 using namespace GammaRay;
 
 ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::ObjectInspectorWidget),
-    m_uiStateSettings("KDAB", "GammaRay")
+  : QWidget(parent)
+  , ui(new Ui::ObjectInspectorWidget)
+  , m_stateManager(this)
 {
   qRegisterMetaType<ObjectId>();
   qRegisterMetaTypeStreamOperators<ObjectId>();
@@ -75,10 +75,9 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
 
   connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)),
           this, SLOT(objectContextMenuRequested(QPoint)));
+  connect(ui->objectPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 
-  m_uiStateSettings.beginGroup("UiState/ObjectInspector");
-  connect(ui->mainSplitter, SIGNAL(splitterMoved(int, int)), this, SLOT(saveUiState()));
-  loadUiState();
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%" << "40%");
 }
 
 ObjectInspectorWidget::~ObjectInspectorWidget()
@@ -107,14 +106,4 @@ void ObjectInspectorWidget::objectContextMenuRequested(const QPoint& pos)
   ext.populateMenu(&menu);
 
   menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
-}
-
-void ObjectInspectorWidget::loadUiState()
-{
-  ui->mainSplitter->restoreState(m_uiStateSettings.value("mainSplitterState", "").toByteArray());
-}
-
-void ObjectInspectorWidget::saveUiState()
-{
-  m_uiStateSettings.setValue("mainSplitterState", ui->mainSplitter->saveState());
 }

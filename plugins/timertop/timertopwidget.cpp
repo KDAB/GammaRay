@@ -39,9 +39,10 @@
 using namespace GammaRay;
 
 TimerTopWidget::TimerTopWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::TimerTopWidget),
-    m_updateTimer(new QTimer(this))
+  : QWidget(parent)
+  , ui(new Ui::TimerTopWidget)
+  , m_stateManager(this)
+  , m_updateTimer(new QTimer(this))
 {
   ui->setupUi(this);
   QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);

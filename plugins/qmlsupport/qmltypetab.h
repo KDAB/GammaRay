@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_QMLTYPETAB_H
 #define GAMMARAY_QMLTYPETAB_H
 
+#include <ui/uistatemanager.h>
+
 #include <QScopedPointer>
 #include <QWidget>
 
@@ -52,6 +54,7 @@ private:
     void contextMenu(QPoint pos);
 
     QScopedPointer<Ui::QmlTypeTab> ui;
+    UIStateManager m_stateManager;
 };
 }
 

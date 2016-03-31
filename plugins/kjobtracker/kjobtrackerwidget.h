@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_KJOBTRACKER_KJOBTRACKERWIDGET_H
 #define GAMMARAY_KJOBTRACKER_KJOBTRACKERWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 #include <QWidget>
@@ -48,6 +49,7 @@ class KJobTrackerWidget : public QWidget
 
   private:
     QScopedPointer<Ui::KJobTrackerWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 class KJobTrackerUiFactory : public QObject, public StandardToolUiFactory<KJobTrackerWidget>

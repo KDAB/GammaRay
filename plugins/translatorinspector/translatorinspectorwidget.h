@@ -29,6 +29,7 @@
 #ifndef TRANSLATORINSPECTORWIDGET_H
 #define TRANSLATORINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 #include <QWidget>
 
@@ -64,6 +65,7 @@ class TranslatorInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::TranslatorInspectorWidget> ui;
+    UIStateManager m_stateManager;
     TranslatorInspectorInterface *m_inspector;
 };
 

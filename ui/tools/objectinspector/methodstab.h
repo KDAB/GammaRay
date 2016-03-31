@@ -29,6 +29,8 @@
 #ifndef METHODSTAB_H
 #define METHODSTAB_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 class QModelIndex;
@@ -56,6 +58,7 @@ class MethodsTab : public QWidget
 
   private:
     Ui_MethodsTab *m_ui;
+    UIStateManager m_stateManager;
     MethodsExtensionInterface *m_interface;
 
     QString m_objectBaseName;

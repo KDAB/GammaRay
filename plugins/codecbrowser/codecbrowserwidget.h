@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_CODECBROWSERWIDGET_CODECBROWSERWIDGET_H
 #define GAMMARAY_CODECBROWSERWIDGET_CODECBROWSERWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 #include <QWidget>
@@ -51,6 +52,7 @@ class CodecBrowserWidget : public QWidget
 
   private:
     QScopedPointer<Ui::CodecBrowserWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 class CodecBrowserUiFactory : public QObject, public StandardToolUiFactory<CodecBrowserWidget>

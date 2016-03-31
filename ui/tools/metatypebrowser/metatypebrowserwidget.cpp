@@ -36,8 +36,9 @@
 using namespace GammaRay;
 
 MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::MetaTypeBrowserWidget)
+  : QWidget(parent)
+  , ui(new Ui::MetaTypeBrowserWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
 

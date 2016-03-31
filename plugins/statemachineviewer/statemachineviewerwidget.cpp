@@ -143,6 +143,7 @@ KDSME::RuntimeController::Configuration toSmeConfiguration(const StateMachineCon
 StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)
   , m_ui(new Ui::StateMachineViewerWidget)
+  , m_stateManager(this)
   , m_machine(0)
 {
   ObjectBroker::registerClientObjectFactoryCallback<StateMachineViewerInterface*>(createStateMachineViewerClient);
@@ -205,6 +206,8 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFl
 
   // share selection model
   new SelectionModelSyncer(this);
+
+  m_stateManager.setDefaultSizes(m_ui->verticalSplitter, UISizeVector() << "50%" << "50%");
 
   loadSettings();
 }
@@ -398,5 +401,4 @@ void StateMachineViewerWidget::setShowLog(bool show)
   m_ui->logExpandingWidget->setVisible(show);
   m_ui->showLogPushButton->setVisible(!show);
   m_ui->verticalSplitter->handle(0)->setEnabled(show);
-  m_ui->verticalSplitter->setSizes(QList<int>() << 1 << (show ? 1 : 0));
 }

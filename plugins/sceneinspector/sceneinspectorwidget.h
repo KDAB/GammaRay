@@ -30,6 +30,7 @@
 #ifndef GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
 #define GAMMARAY_SCENEINSPECTOR_SCENEINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 #include <QWidget>
 
@@ -67,6 +68,7 @@ class SceneInspectorWidget : public QWidget
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
     QScopedPointer<Ui::SceneInspectorWidget> ui;
+    UIStateManager m_stateManager;
     SceneInspectorInterface *m_interface;
     QGraphicsScene *m_scene;
     QGraphicsPixmapItem *m_pixmap;

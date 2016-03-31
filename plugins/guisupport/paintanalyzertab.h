@@ -30,6 +30,7 @@
 #define GAMMARAY_PAINTANALYZERTAB_H
 
 #include <ui/paintanalyzerwidget.h>
+#include <ui/uistatemanager.h>
 
 namespace GammaRay {
 
@@ -41,6 +42,9 @@ class PaintAnalyzerTab : public PaintAnalyzerWidget
 public:
   explicit PaintAnalyzerTab(PropertyWidget *parent);
   ~PaintAnalyzerTab();
+
+private:
+  UIStateManager m_stateManager;
 };
 
 }

@@ -43,8 +43,7 @@
 
 #include <common/objectbroker.h>
 
-#include <QSettings>
-
+#include <ui/uistatemanager.h>
 
 class QItemSelection;
 
@@ -70,12 +69,10 @@ class ObjectInspectorWidget : public QWidget
   private slots:
     void objectSelectionChanged(const QItemSelection &selection);
     void objectContextMenuRequested(const QPoint &pos);
-    void loadUiState();
-    void saveUiState();
 
   private:
     QScopedPointer<Ui::ObjectInspectorWidget> ui;
-    QSettings m_uiStateSettings;
+    UIStateManager m_stateManager;
 };
 
 class ObjectInspectorFactory : public ToolUiFactory {

@@ -93,8 +93,25 @@ static const IdeSettings ideSettings[] = {
     static const int ideSettingsSize = sizeof(ideSettings) / sizeof(IdeSettings);
 #endif
 
+MainWindowUIStateManager::MainWindowUIStateManager(QWidget *widget)
+  : UIStateManager(widget)
+{
+}
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
+QList<QSplitter *> MainWindowUIStateManager::splitters() const
+{
+  return QList<QSplitter *>();
+}
+
+QList<QHeaderView *> MainWindowUIStateManager::headers() const
+{
+  return QList<QHeaderView *>();
+}
+
+MainWindow::MainWindow(QWidget *parent)
+  : QMainWindow(parent)
+  , ui(new Ui::MainWindow)
+  , m_stateManager(this)
 {
   if (!Endpoint::instance()->isRemoteClient()) {
     // we don't want application styles to propagate to the GammaRay window,
@@ -160,9 +177,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
   ui->groupBox->setFlat(true);
   ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
 #endif
-
-  // get some sane size on startup
-  resize(1024, 768);
 
   // Code Navigation
   QAction *configAction = new QAction(QIcon::fromTheme(QStringLiteral("applications-development")), tr("Code Navigation"), this);

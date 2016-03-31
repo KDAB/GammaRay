@@ -48,9 +48,10 @@ static QObject *create3DInsepctorClient(const QString &/*name*/, QObject *parent
     return new Qt3DInspectorClient(parent);
 }
 
-Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent):
-    QWidget(parent),
-    ui(new Ui::Qt3DInspectorWidget)
+Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent)
+    : QWidget(parent)
+    , ui(new Ui::Qt3DInspectorWidget)
+    , m_stateManager(this)
 {
     ObjectBroker::registerClientObjectFactoryCallback<Qt3DInspectorInterface*>(create3DInsepctorClient);
     m_interface = ObjectBroker::object<Qt3DInspectorInterface*>();

@@ -34,7 +34,9 @@
 using namespace GammaRay;
 
 StandardPathsWidget::StandardPathsWidget(QWidget *parent)
-  : QWidget(parent), ui(new Ui::StandardPathsWidget)
+  : QWidget(parent)
+  , ui(new Ui::StandardPathsWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
 

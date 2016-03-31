@@ -28,6 +28,8 @@
 #ifndef GAMMARAY_MESSAGEHANDLERWIDGET_H
 #define GAMMARAY_MESSAGEHANDLERWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 class QItemSelection;
@@ -56,6 +58,7 @@ class MessageHandlerWidget : public QWidget
 
   private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
+    UIStateManager m_stateManager;
     QStringListModel *m_backtraceModel;
 };
 

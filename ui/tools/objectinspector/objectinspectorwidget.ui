@@ -23,14 +23,14 @@
        </item>
        <item>
         <widget class="QTreeView" name="objectTreeView">
-         <property name="indentation">
-          <number>10</number>
-         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="indentation">
+          <number>10</number>
          </property>
          <property name="uniformRowHeights">
           <bool>true</bool>

@@ -37,7 +37,9 @@
 using namespace GammaRay;
 
 SelectionModelInspectorWidget::SelectionModelInspectorWidget(QWidget *widget)
-  : QWidget(widget), ui(new Ui::SelectionModelInspectorWidget)
+  : QWidget(widget)
+  , ui(new Ui::SelectionModelInspectorWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
 
@@ -47,6 +49,8 @@ SelectionModelInspectorWidget::SelectionModelInspectorWidget(QWidget *widget)
   ui->selectionModelVisualizer->setRootIsDecorated(false);
   ui->selectionModelVisualizer->setItemDelegate(new ItemDelegate(this));
   ui->selectionModelVisualizer->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel")));
+
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
 }
 
 SelectionModelInspectorWidget::~SelectionModelInspectorWidget()

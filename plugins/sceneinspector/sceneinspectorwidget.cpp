@@ -62,6 +62,7 @@ static QObject* createClientSceneInspector(const QString &/*name*/, QObject *par
 SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::SceneInspectorWidget)
+  , m_stateManager(this)
   , m_interface(0)
   , m_scene(new QGraphicsScene(this))
   , m_pixmap(new QGraphicsPixmapItem)
@@ -118,6 +119,9 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   } else if (ui->sceneComboBox->currentIndex() >= 0) { // no server-side selection yet, but there's data available
     sceneSelected(ui->sceneComboBox->currentIndex());
   }
+
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+  m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
   // limit fps to prevent bad performance, and to group update requests which is esp. required
   // for scrolling and similar high-frequency update requests

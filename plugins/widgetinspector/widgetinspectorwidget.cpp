@@ -59,6 +59,7 @@ static QObject* createWidgetInspectorClient(const QString &/*name*/, QObject *pa
 WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::WidgetInspectorWidget)
+  , m_stateManager(this)
   , m_inspector(0)
   , m_remoteView(new RemoteViewWidget(this))
 {
@@ -117,6 +118,9 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   addAction(ui->actionAnalyzePainting);
 
   updateActions();
+
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+  m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 }
 
 WidgetInspectorWidget::~WidgetInspectorWidget()

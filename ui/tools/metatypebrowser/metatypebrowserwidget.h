@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_METATYPEBROWSERWIDGET_H
 #define GAMMARAY_METATYPEBROWSERWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -46,6 +48,7 @@ class MetaTypeBrowserWidget : public QWidget
 
   private:
     QScopedPointer<Ui::MetaTypeBrowserWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 }

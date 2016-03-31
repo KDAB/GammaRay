@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_METAOBJECTBROWSERWIDGET_H
 #define GAMMARAY_METAOBJECTBROWSERWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 class QItemSelection;
@@ -49,8 +51,9 @@ class MetaObjectBrowserWidget : public QWidget
     void selectionChanged(const QItemSelection &selection);
 
   private:
-     PropertyWidget *m_propertyWidget;
-     QTreeView *m_treeView;
+    UIStateManager m_stateManager;
+    PropertyWidget *m_propertyWidget;
+    QTreeView *m_treeView;
 };
 
 }

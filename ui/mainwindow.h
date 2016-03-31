@@ -31,11 +31,26 @@
 
 #include <QMainWindow>
 
+#include <ui/uistatemanager.h>
+
 class QModelIndex;
+class QSplitter;
+class QHeaderView;
 
 namespace GammaRay {
 
 namespace Ui { class MainWindow; }
+
+class MainWindowUIStateManager : public UIStateManager
+{
+  Q_OBJECT
+
+public:
+  MainWindowUIStateManager(QWidget *widget);
+
+  QList<QSplitter *> splitters() const Q_DECL_OVERRIDE;
+  QList<QHeaderView *> headers() const Q_DECL_OVERRIDE;
+};
 
 class MainWindow : public QMainWindow
 {
@@ -66,6 +81,7 @@ class MainWindow : public QMainWindow
     QWidget* createErrorPage(const QModelIndex &index);
 
     QScopedPointer<Ui::MainWindow> ui;
+    MainWindowUIStateManager m_stateManager;
 };
 
 }

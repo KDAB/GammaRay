@@ -37,7 +37,9 @@
 using namespace GammaRay;
 
 MimeTypesWidget::MimeTypesWidget(QWidget *parent)
-  : QWidget(parent), ui(new Ui::MimeTypesWidget)
+  : QWidget(parent)
+  , ui(new Ui::MimeTypesWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
 

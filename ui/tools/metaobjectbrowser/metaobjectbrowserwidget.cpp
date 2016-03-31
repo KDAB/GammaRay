@@ -46,7 +46,10 @@ using namespace GammaRay;
 
 MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   : QWidget(parent)
+  , m_stateManager(this)
 {
+  setObjectName("MetaObjectBrowserWidget");
+
   auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
   auto proxy = new MetaObjectTreeClientProxyModel(this);
   proxy->setSourceModel(model);

@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_SIGNALMONITORWIDGET_H
 #define GAMMARAY_SIGNALMONITORWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include "ui/tooluifactory.h"
 
 #include <QWidget>
@@ -55,6 +56,7 @@ class SignalMonitorWidget : public QWidget
   private:
     static const QString ITEM_TYPE_NAME_OBJECT;
     QScopedPointer<Ui::SignalMonitorWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 class SignalMonitorUiFactory : public QObject, public StandardToolUiFactory<SignalMonitorWidget>

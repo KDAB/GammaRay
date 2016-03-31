@@ -41,7 +41,9 @@ using namespace GammaRay;
 using namespace GammaRay;
 
 KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
-  : QWidget(parent), ui(new Ui::KJobTrackerWidget)
+  : QWidget(parent)
+  , ui(new Ui::KJobTrackerWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
 

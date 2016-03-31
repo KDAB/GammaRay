@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSERWIDGET_H
 #define GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSERWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 class QTimer;
@@ -63,6 +65,7 @@ class ResourceBrowserWidget : public QWidget
 
   private:
     QScopedPointer<Ui::ResourceBrowserWidget> ui;
+    UIStateManager m_stateManager;
     QTimer *m_timer;
     ResourceBrowserInterface *m_interface;
 };

@@ -50,6 +50,7 @@ static QObject* createModelInspectorClient(const QString & /*name*/, QObject *pa
 ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::ModelInspectorWidget)
+  , m_stateManager(this)
   , m_interface(0)
 {
   ui->setupUi(this);
@@ -70,6 +71,8 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   new DeferredResizeModeSetter(ui->modelView->header(), 0, QHeaderView::ResizeToContents);
 
   ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelCellModel")));
+
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%" << "33%" << "33%");
 
   cellSelected(-1, -1, QString(), QString());
 }

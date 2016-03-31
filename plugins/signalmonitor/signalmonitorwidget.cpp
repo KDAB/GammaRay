@@ -49,6 +49,7 @@ static QObject* signalMonitorClientFactory(const QString&, QObject *parent)
 SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::SignalMonitorWidget)
+  , m_stateManager(this)
 {
   StreamOperators::registerSignalMonitorStreamOperators();
 

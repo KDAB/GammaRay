@@ -46,7 +46,10 @@ using namespace GammaRay;
 ///      was triggered and we close the mainwindow.
 
 ScriptEngineDebuggerWidget::ScriptEngineDebuggerWidget(QWidget *parent)
-  : QWidget(parent), ui(new Ui::ScriptEngineDebuggerWidget), debugger(new QScriptEngineDebugger(this))
+  : QWidget(parent)
+  , ui(new Ui::ScriptEngineDebuggerWidget)
+  , m_stateManager(this)
+  , debugger(new QScriptEngineDebugger(this))
 {
   ui->setupUi(this);
   ui->scriptEngineComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ScriptEngines")));

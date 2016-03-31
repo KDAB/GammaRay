@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_MIMETYPESWIDGET_H
 #define GAMMARAY_MIMETYPESWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -46,6 +48,7 @@ class MimeTypesWidget : public QWidget
 
   private:
     QScopedPointer<Ui::MimeTypesWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 }

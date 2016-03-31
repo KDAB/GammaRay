@@ -36,8 +36,9 @@
 using namespace GammaRay;
 
 CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::CodecBrowserWidget)
+  : QWidget(parent)
+  , ui(new Ui::CodecBrowserWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
 
@@ -52,6 +53,8 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
   new DeferredResizeModeSetter(ui->selectedCodecs->header(), 0, QHeaderView::ResizeToContents);
 
   connect(ui->codecText, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)));
+
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
 }
 
 CodecBrowserWidget::~CodecBrowserWidget()

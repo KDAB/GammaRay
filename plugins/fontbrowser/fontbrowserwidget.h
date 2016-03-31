@@ -30,6 +30,7 @@
 #ifndef GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
 #define GAMMARAY_FONTBROWSER_FONTBROWSERWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 #include <QWidget>
@@ -57,6 +58,7 @@ class FontBrowserWidget : public QWidget
 
   private:
     QScopedPointer<Ui::FontBrowserWidget> ui;
+    UIStateManager m_stateManager;
     QAbstractItemModel *m_selectedFontModel;
     FontBrowserInterface *m_fontBrowser;
 };

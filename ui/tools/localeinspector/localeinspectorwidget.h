@@ -27,6 +27,8 @@
 #ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
 #define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -47,6 +49,7 @@ class LocaleInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::LocaleInspectorWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 }

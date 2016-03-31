@@ -40,9 +40,10 @@
 
 using namespace GammaRay;
 
-TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent):
-  QWidget(parent),
-  ui(new Ui::TextDocumentInspectorWidget)
+TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::TextDocumentInspectorWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
 

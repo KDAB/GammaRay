@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_CONNECTIONSTAB_H
 #define GAMMARAY_CONNECTIONSTAB_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -52,6 +54,7 @@ class ConnectionsTab : public QWidget
 
   private:
     QScopedPointer<Ui::ConnectionsTab> ui;
+    UIStateManager m_stateManager;
     ConnectionsExtensionInterface *m_interface;
 };
 }

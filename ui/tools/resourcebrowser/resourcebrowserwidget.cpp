@@ -57,6 +57,7 @@ static QObject* createResourceBrowserClient(const QString & /*name*/, QObject *p
 ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::ResourceBrowserWidget)
+  , m_stateManager(this)
   , m_timer(new QTimer(this))
   , m_interface(0)
 {
@@ -87,6 +88,8 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
   ui->textBrowser->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 #endif
+
+  ui->mainSplitter->setStretchFactor(1, 3);
 
   m_timer->setInterval(100);
   m_timer->setSingleShot(true);
@@ -123,12 +126,13 @@ void ResourceBrowserWidget::setupLayout()
                   ui->treeView->columnWidth(2) +
                   ui->treeView->contentsMargins().left() +
                   ui->treeView->contentsMargins().right() + 25;
-  const int totalWidth = ui->splitter->width();
+  const int totalWidth = ui->mainSplitter->width();
   const int minPreviewWidth = 150;
   if (totalWidth > viewWidth + minPreviewWidth) {
-    ui->splitter->setSizes(QList<int>() << viewWidth << (totalWidth - viewWidth));
-    ui->splitter->setStretchFactor(1, 3);
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << viewWidth << (totalWidth - viewWidth));
   }
+
+  m_stateManager.restoreState();
 }
 
 void ResourceBrowserWidget::resourceDeselected()

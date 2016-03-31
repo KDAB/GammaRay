@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
 #define GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 class QItemSelection;
@@ -57,6 +59,7 @@ class ModelInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::ModelInspectorWidget> ui;
+    UIStateManager m_stateManager;
     ModelInspectorInterface *m_interface;
 };
 

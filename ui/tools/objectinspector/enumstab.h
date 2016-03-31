@@ -29,6 +29,8 @@
 #ifndef ENUMSTAB_H
 #define ENUMSTAB_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -48,6 +50,7 @@ private:
 
 private:
   Ui_EnumsTab *m_ui;
+  UIStateManager m_stateManager;
 };
 
 }

@@ -30,6 +30,7 @@
 #include <QAction>
 #include <QWidget>
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 class QModelIndex;
@@ -46,6 +47,9 @@ class ActionInspectorWidget : public QWidget
 
   private Q_SLOTS:
     void triggerAction(const QModelIndex &index);
+
+  private:
+    UIStateManager m_stateManager;
 };
 
 class ActionInspectorUiFactory : public QObject, public StandardToolUiFactory<ActionInspectorWidget>

@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTORWIDGET_H
 #define GAMMARAY_SELECTIONMODELINSPECTOR_SELECTIONMODELINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 #include <QWidget>
@@ -50,6 +51,7 @@ class SelectionModelInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::SelectionModelInspectorWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 class SelectionModelInspectorUiFactory : public QObject, public StandardToolUiFactory<SelectionModelInspectorWidget>

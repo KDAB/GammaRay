@@ -28,6 +28,7 @@
 #ifndef GAMMARAY_TIMERTOP_TIMERTOPWIDGET_H
 #define GAMMARAY_TIMERTOP_TIMERTOPWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 #include <QWidget>
@@ -49,6 +50,7 @@ class TimerTopWidget : public QWidget
 
   private:
     QScopedPointer<Ui::TimerTopWidget> ui;
+    UIStateManager m_stateManager;
     QTimer *m_updateTimer;
 };
 

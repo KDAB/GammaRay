@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_STANDARDPATHSWIDGET_H
 #define GAMMARAY_STANDARDPATHSWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -46,6 +48,7 @@ class StandardPathsWidget : public QWidget
 
   private:
     QScopedPointer<Ui::StandardPathsWidget> ui;
+    UIStateManager m_stateManager;
 };
 
 }

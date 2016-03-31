@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_MATERIALTAB_H
 #define GAMMARAY_QUICKINSPECTOR_MATERIALTAB_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 class QItemSelection;
@@ -56,6 +58,7 @@ class MaterialTab : public QWidget
 
   private:
     QScopedPointer<Ui_MaterialTab> m_ui;
+    UIStateManager m_stateManager;
     MaterialExtensionInterface *m_interface;
 };
 

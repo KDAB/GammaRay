@@ -27,6 +27,7 @@
 #ifndef STATEMACHINEVIEWERWIDGETNG_H
 #define STATEMACHINEVIEWERWIDGETNG_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 #include "statemachineviewerinterface.h"
 
@@ -84,6 +85,7 @@ private:
   void saveSettings();
 
   QScopedPointer<Ui::StateMachineViewerWidget> m_ui;
+  UIStateManager m_stateManager;
 
   KDSME::StateMachineView* m_stateMachineView;
   StateMachineViewerInterface *m_interface;

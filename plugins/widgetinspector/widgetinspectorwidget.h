@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORWIDGET_H
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 #include <QWidget>
 
@@ -64,6 +65,7 @@ class WidgetInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;
+    UIStateManager m_stateManager;
     WidgetInspectorInterface *m_inspector;
     RemoteViewWidget *m_remoteView;
 };

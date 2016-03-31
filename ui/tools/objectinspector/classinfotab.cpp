@@ -37,8 +37,10 @@
 
 using namespace GammaRay;
 
-ClassInfoTab::ClassInfoTab(PropertyWidget *parent) : QWidget(parent),
-  m_ui(new Ui_ClassInfoTab)
+ClassInfoTab::ClassInfoTab(PropertyWidget *parent)
+  : QWidget(parent)
+  , m_ui(new Ui_ClassInfoTab)
+  , m_stateManager(this)
 {
   m_ui->setupUi(this);
   setObjectBaseName(parent->objectBaseName());

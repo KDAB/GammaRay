@@ -50,8 +50,10 @@ void TranslatorInspectorClient::resetTranslations()
   Endpoint::instance()->invokeObject(name(), "resetTranslations");
 }
 
-TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent) :
-  QWidget(parent), ui(new Ui::TranslatorInspectorWidget)
+TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::TranslatorInspectorWidget)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
   QAbstractItemModel *translators = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"));
@@ -70,6 +72,8 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent) :
     new SearchLineController(ui->translationsSearchLine, translationsModel);
     ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(translationsModel));
   }
+
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
 }
 TranslatorInspectorWidget::~TranslatorInspectorWidget()
 {

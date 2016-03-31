@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
 #define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
+
 #include <QPointer>
 #include <QTextDocument>
 #include <QWidget>
@@ -58,6 +60,7 @@ class TextDocumentInspectorWidget : public QWidget
 
   private:
     QScopedPointer<Ui::TextDocumentInspectorWidget> ui;
+    UIStateManager m_stateManager;
     QPointer<QTextDocument> m_currentDocument;
 };
 

@@ -10,18 +10,18 @@
     <height>300</height>
    </rect>
   </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
-        <item>
-         <widget class="QSplitter" name="splitter_9">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QTreeView" name="selectionModelView"/>
-          <widget class="QTreeView" name="selectionModelVisualizer"/>
-         </widget>
-        </item>
-       </layout>
-  </widget>
+  <layout class="QHBoxLayout" name="horizontalLayout_7">
+   <item>
+    <widget class="QSplitter" name="mainSplitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QTreeView" name="selectionModelView"/>
+     <widget class="QTreeView" name="selectionModelVisualizer"/>
+    </widget>
+   </item>
+  </layout>
+ </widget>
  <resources/>
  <connections/>
 </ui>

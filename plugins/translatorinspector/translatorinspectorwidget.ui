@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QSplitter" name="splitter">
+    <widget class="QSplitter" name="mainSplitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

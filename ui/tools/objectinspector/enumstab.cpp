@@ -39,8 +39,10 @@
 
 using namespace GammaRay;
 
-EnumsTab::EnumsTab(PropertyWidget *parent) : QWidget(parent),
-  m_ui(new Ui_EnumsTab)
+EnumsTab::EnumsTab(PropertyWidget *parent)
+  : QWidget(parent)
+  , m_ui(new Ui_EnumsTab)
+  , m_stateManager(this)
 {
   m_ui->setupUi(this);
   setObjectBaseName(parent->objectBaseName());

@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKINSPECTORWIDGET_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 #include <ui/propertywidget.h>
 #include <common/objectbroker.h>
@@ -36,7 +37,6 @@
 
 #include <QWidget>
 #include <QVariant>
-#include <QSettings>
 
 class QLabel;
 class QImage;
@@ -61,14 +61,12 @@ class QuickInspectorWidget : public QWidget
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);
-    void loadUiState();
-    void saveUiState();
 
   private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
+    UIStateManager m_stateManager;
     QuickScenePreviewWidget *m_previewWidget;
     QuickInspectorInterface *m_interface;
-    QSettings m_uiStateSettings;
 };
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>

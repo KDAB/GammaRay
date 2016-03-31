@@ -29,6 +29,8 @@
 #ifndef PROPERTIESTAB_H
 #define PROPERTIESTAB_H
 
+#include <ui/uistatemanager.h>
+
 #include <QWidget>
 
 class QModelIndex;
@@ -59,6 +61,7 @@ class PropertiesTab : public QWidget
 
   private:
     Ui_PropertiesTab *m_ui;
+    UIStateManager m_stateManager;
     PropertiesExtensionInterface *m_interface;
 
     QWidget *m_newPropertyValue;

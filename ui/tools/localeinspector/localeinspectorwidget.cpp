@@ -33,8 +33,9 @@
 using namespace GammaRay;
 
 LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::LocaleInspectorWidget)
+  : QWidget(parent)
+  , ui(new Ui::LocaleInspectorWidget)
+  , m_stateManager(this)
 {
   QAbstractItemModel *localeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleModel"));
   QAbstractItemModel *accessorModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"));
@@ -62,6 +63,7 @@ void LocaleInspectorWidget::initSplitterPosition()
 {
   const int accessorHeight = ui->accessorTable->model()->rowCount() * (ui->accessorTable->rowHeight(0) + 1) // + grid line
                            + 2 * ui->accessorTable->frameWidth();
-  ui->splitter->setSizes(QList<int>() << accessorHeight << height() - accessorHeight);
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << accessorHeight << height() - accessorHeight);
+  m_stateManager.restoreState();
 }
 

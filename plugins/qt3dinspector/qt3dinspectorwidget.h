@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
 #define GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 #include <QWidget>
@@ -55,6 +56,7 @@ private:
     void frameGraphContextMenu(QPoint pos);
 
     std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
+    UIStateManager m_stateManager;
     Qt3DInspectorInterface *m_interface;
 };
 
