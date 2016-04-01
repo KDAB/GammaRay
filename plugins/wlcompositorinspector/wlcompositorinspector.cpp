@@ -409,6 +409,14 @@ public:
         return map;
     }
 
+    QVariant headerData(int section, Qt::Orientation orientation, int) const override
+    {
+        if (orientation == Qt::Horizontal) {
+            return QStringLiteral("Resources");
+        }
+        return QString::number(section + 1);
+    }
+
     QVector<Resource *> m_resources;
     QSet<Resource *> m_allResources;
     ClientListener m_listener;
