@@ -30,6 +30,9 @@
 
 #include <core/metaenum.h>
 
+#include <QApplication>
+#include <QPalette>
+
 #include <algorithm>
 #include <numeric>
 
@@ -166,7 +169,10 @@ static QColor colorForRatio(double ratio)
 {
     const auto red = qBound(0.0, ratio * GRADIENT_SCALE_FACTOR, 0.5);
     const auto green = qBound(0.0, 1 - ratio * GRADIENT_SCALE_FACTOR, 0.5);
-    return QColor(255 * red, 255 * green, 0);
+    auto color = QColor(255 * red, 255 * green, 0);
+    if (QApplication::palette().color(QPalette::Base).lightness() > 128)
+        return color.lighter(300);
+    return color;
 }
 
 QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
