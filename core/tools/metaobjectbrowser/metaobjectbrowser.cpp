@@ -92,9 +92,13 @@ void MetaObjectBrowser::objectSelected(void *obj, const QString &typeName)
 
 void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
 {
-    const auto indexes = m_model->match(m_model->index(0,0), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(mo));
-    if (indexes.isEmpty())
+    if (!mo)
         return;
+    const auto indexes = m_model->match(m_model->index(0,0), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(mo));
+    if (indexes.isEmpty()) {
+        metaObjectSelected(mo->superClass());
+        return;
+    }
     ObjectBroker::selectionModel(m_model)->select(indexes.first(), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
 }
 
