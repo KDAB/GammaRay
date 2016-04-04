@@ -35,18 +35,12 @@
         <widget class="QLineEdit" name="inboundSearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="inboundView">
+        <widget class="GammaRay::DeferredTreeView" name="inboundView">
          <property name="contextMenuPolicy">
           <enum>Qt::CustomContextMenu</enum>
          </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
-         </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -68,18 +62,12 @@
         <widget class="QLineEdit" name="outboundSearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="outboundView">
+        <widget class="GammaRay::DeferredTreeView" name="outboundView">
          <property name="contextMenuPolicy">
           <enum>Qt::CustomContextMenu</enum>
          </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
-         </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -89,6 +77,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

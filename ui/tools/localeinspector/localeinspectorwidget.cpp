@@ -41,6 +41,10 @@ LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
   QAbstractItemModel *accessorModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"));
 
   ui->setupUi(this);
+  ui->accessorTable->horizontalHeader()->setObjectName("accessorTableHHeader");
+  ui->accessorTable->verticalHeader()->setObjectName("accessorTableVHeader");
+  ui->localeTable->horizontalHeader()->setObjectName("localeTableHHeader");
+  ui->localeTable->verticalHeader()->setObjectName("localeTableVHeader");
 
   ui->localeTable->setModel(localeModel);
   ui->accessorTable->setModel(accessorModel);

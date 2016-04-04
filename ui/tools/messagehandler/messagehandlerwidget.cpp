@@ -72,6 +72,20 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
   ui->setupUi(this);
 
+  ui->messageView->header()->setObjectName("messageViewHeader");
+  ui->messageView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  ui->messageView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+
+  ui->backtraceView->header()->setObjectName("backtraceViewHeader");
+
+  ui->categoriesView->header()->setObjectName("categoriesViewHeader");
+  ui->categoriesView->setStretchLastSection(false);
+  ui->categoriesView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  ui->categoriesView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+  ui->categoriesView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+  ui->categoriesView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+  ui->categoriesView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
+
   auto messageModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageModel"));
   auto displayModel = new MessageDisplayModel(this);
   displayModel->setSourceModel(messageModel);
@@ -87,6 +101,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
 
   m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+  m_stateManager.setDefaultSizes(ui->messageView->header(), UISizeVector() << -1 << 300 << -1 << -1 << -1);
 }
 
 MessageHandlerWidget::~MessageHandlerWidget()

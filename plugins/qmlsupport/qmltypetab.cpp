@@ -30,7 +30,6 @@
 #include "ui_qmltypetab.h"
 
 #include <ui/contextmenuextension.h>
-#include <ui/deferredresizemodesetter.h>
 #include <ui/propertywidget.h>
 
 #include <common/objectbroker.h>
@@ -47,8 +46,9 @@ QmlTypeTab::QmlTypeTab(PropertyWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->typeView->header()->setObjectName("qmlTypeViewHeader");
+    ui->typeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->typeView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlTypeModel")));
-    new DeferredResizeModeSetter(ui->typeView->header(), 0, QHeaderView::ResizeToContents);
 
   connect(ui->typeView, &QWidget::customContextMenuRequested, this, &QmlTypeTab::contextMenu);
 

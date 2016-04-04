@@ -52,6 +52,8 @@ MethodsTab::MethodsTab(PropertyWidget *parent)
   , m_interface(0)
 {
   m_ui->setupUi(this);
+  m_ui->methodView->header()->setObjectName("methodViewHeader");
+  m_ui->methodLog->header()->setObjectName("methodLogHeader");
   setObjectBaseName(parent->objectBaseName());
 }
 

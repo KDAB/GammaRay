@@ -43,14 +43,16 @@ SelectionModelInspectorWidget::SelectionModelInspectorWidget(QWidget *widget)
 {
   ui->setupUi(this);
 
+  ui->selectionModelView->header()->setObjectName("selectionModelViewHeader");
+  ui->selectionModelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
   ui->selectionModelView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectionModelsModel")));
-  ui->selectionModelView->setRootIsDecorated(false);
   ui->selectionModelView->setSelectionModel(ObjectBroker::selectionModel(ui->selectionModelView->model()));
-  ui->selectionModelVisualizer->setRootIsDecorated(false);
+
+  ui->selectionModelVisualizer->header()->setObjectName("selectionModelVisualizerHeader");
   ui->selectionModelVisualizer->setItemDelegate(new ItemDelegate(this));
   ui->selectionModelVisualizer->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel")));
 
-  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "65%" << "35%");
 }
 
 SelectionModelInspectorWidget::~SelectionModelInspectorWidget()

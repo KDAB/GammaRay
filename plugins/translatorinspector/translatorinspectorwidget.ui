@@ -19,12 +19,9 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QTreeView" name="translatorList">
+     <widget class="GammaRay::DeferredTreeView" name="translatorList">
       <property name="rootIsDecorated">
        <bool>false</bool>
-      </property>
-      <property name="uniformRowHeights">
-       <bool>true</bool>
       </property>
      </widget>
      <widget class="QWidget" name="layoutWidget">
@@ -33,7 +30,7 @@
         <widget class="QLineEdit" name="translationsSearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="translationsView">
+        <widget class="GammaRay::DeferredTreeView" name="translationsView">
          <property name="selectionMode">
           <enum>QAbstractItemView::ContiguousSelection</enum>
          </property>
@@ -62,6 +59,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

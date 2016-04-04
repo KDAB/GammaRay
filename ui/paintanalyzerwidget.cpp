@@ -43,6 +43,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget* parent)
     , ui(new Ui::PaintAnalyzerWidget)
 {
     ui->setupUi(this);
+    ui->commandView->header()->setObjectName("commandViewHeader");
 
     auto toolbar = new QToolBar;
     toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);

@@ -29,8 +29,8 @@
 #ifndef GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
 #define GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
 
-#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
+#include <ui/uistatemanager.h>
 
 #include <QWidget>
 

@@ -33,7 +33,6 @@
 
 #include <QWidget>
 
-class QTimer;
 class QItemSelection;
 
 namespace GammaRay {
@@ -55,7 +54,6 @@ class ResourceBrowserWidget : public QWidget
     void selectResource(const QString &sourceFilePath, int line = -1, int column = -1);
 
   private slots:
-    void rowsInserted();
     void setupLayout();
     void resourceDeselected();
     void resourceSelected(const QByteArray &contents, int line, int column);
@@ -66,7 +64,6 @@ class ResourceBrowserWidget : public QWidget
   private:
     QScopedPointer<Ui::ResourceBrowserWidget> ui;
     UIStateManager m_stateManager;
-    QTimer *m_timer;
     ResourceBrowserInterface *m_interface;
 };
 

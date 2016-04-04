@@ -30,8 +30,6 @@
 #include "signalhistorydelegate.h"
 #include "signalhistorymodel.h"
 
-#include <ui/deferredresizemodesetter.h>
-
 #include <QHelpEvent>
 #include <QScrollBar>
 #include <QToolTip>
@@ -39,13 +37,13 @@
 using namespace GammaRay;
 
 SignalHistoryView::SignalHistoryView(QWidget *parent)
-  : QTreeView(parent)
+  : DeferredTreeView(parent)
   , m_eventDelegate(new SignalHistoryDelegate(this))
   , m_eventScrollBar(0)
 {
-  new DeferredResizeModeSetter(header(), 0, QHeaderView::Interactive);
-  new DeferredResizeModeSetter(header(), 1, QHeaderView::Interactive);
-  new DeferredResizeModeSetter(header(), 2, QHeaderView::Stretch);
+  setDeferredResizeMode(0, QHeaderView::Interactive);
+  setDeferredResizeMode(1, QHeaderView::Interactive);
+  setDeferredResizeMode(2, QHeaderView::Stretch);
 
   setItemDelegateForColumn(SignalHistoryModel::EventColumn, m_eventDelegate);
 
@@ -131,5 +129,5 @@ bool SignalHistoryView::viewportEvent(QEvent *event)
     }
   }
 
-  return QTreeView::viewportEvent(event);
+  return DeferredTreeView::viewportEvent(event);
 }

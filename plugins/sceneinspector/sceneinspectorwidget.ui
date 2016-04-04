@@ -29,16 +29,10 @@
          <widget class="QLineEdit" name="sceneTreeSearchLine"/>
         </item>
         <item>
-         <widget class="QTreeView" name="sceneTreeView">
+         <widget class="GammaRay::DeferredTreeView" name="sceneTreeView">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>
-          <property name="indentation">
-           <number>10</number>
-          </property>
-          <attribute name="headerShowSortIndicator" stdset="0">
-           <bool>true</bool>
-          </attribute>
          </widget>
         </item>
        </layout>
@@ -51,6 +45,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>

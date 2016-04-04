@@ -31,6 +31,8 @@
 
 #include <QDialog>
 
+#include <ui/uistatemanager.h>
+
 class QAbstractItemModel;
 
 namespace GammaRay {
@@ -49,6 +51,7 @@ class MethodInvocationDialog : public QDialog
 
   private:
     QScopedPointer<Ui::MethodInvocationDialog> ui;
+    UIStateManager m_stateManager;
 };
 
 }

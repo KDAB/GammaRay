@@ -29,13 +29,13 @@
 #ifndef GAMMARAY_SIGNALHISTORYVIEW_H
 #define GAMMARAY_SIGNALHISTORYVIEW_H
 
-#include <QTreeView>
+#include "ui/deferredtreeview.h"
 
 namespace GammaRay {
 
 class SignalHistoryDelegate;
 
-class SignalHistoryView : public QTreeView
+class SignalHistoryView : public DeferredTreeView
 {
   Q_OBJECT
     Q_PROPERTY(QScrollBar *eventScrollBar READ eventScrollBar WRITE setEventScrollBar NOTIFY eventScrollBarChanged)

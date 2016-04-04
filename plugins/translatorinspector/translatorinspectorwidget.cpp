@@ -56,21 +56,27 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
   , m_stateManager(this)
 {
   ui->setupUi(this);
-  QAbstractItemModel *translators = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"));
-  ui->translatorList->setModel(translators);
-  ui->translatorList->setSelectionModel(ObjectBroker::selectionModel(translators));
 
   m_inspector = ObjectBroker::object<TranslatorInspectorInterface *>(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"));
+
+  ui->translatorList->header()->setObjectName("translatorListHeader");
+  ui->translatorList->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  ui->translatorList->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+  ui->translatorList->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+  ui->translatorList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel")));
+  ui->translatorList->setSelectionModel(ObjectBroker::selectionModel(ui->translatorList->model()));
 
   connect(ui->languageChangeButton, SIGNAL(clicked()), m_inspector, SLOT(sendLanguageChangeEvent()));
   connect(ui->resetTranslationsButton, SIGNAL(clicked()), m_inspector, SLOT(resetTranslations()));
 
   // searching for translations
   {
-    auto translationsModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel"));
-    ui->translationsView->setModel(translationsModel);
-    new SearchLineController(ui->translationsSearchLine, translationsModel);
-    ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(translationsModel));
+    ui->translationsView->header()->setObjectName("translationsViewHeader");
+    ui->translationsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->translationsView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel")));
+    ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(ui->translationsView->model()));
+
+    new SearchLineController(ui->translationsSearchLine, ui->translationsView->model());
   }
 
   m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");

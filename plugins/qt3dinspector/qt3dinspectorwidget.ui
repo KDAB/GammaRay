@@ -66,15 +66,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QTreeView" name="sceneTreeView">
+         <widget class="GammaRay::DeferredTreeView" name="sceneTreeView">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <property name="indentation">
-           <number>10</number>
-          </property>
-          <property name="uniformRowHeights">
-           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -96,15 +90,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QTreeView" name="frameGraphView">
+         <widget class="GammaRay::DeferredTreeView" name="frameGraphView">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <property name="indentation">
-           <number>10</number>
-          </property>
-          <property name="uniformRowHeights">
-           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -159,6 +147,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>

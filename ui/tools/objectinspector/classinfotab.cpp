@@ -43,6 +43,7 @@ ClassInfoTab::ClassInfoTab(PropertyWidget *parent)
   , m_stateManager(this)
 {
   m_ui->setupUi(this);
+  m_ui->classInfoView->header()->setObjectName("classInfoViewHeader");
   setObjectBaseName(parent->objectBaseName());
 }
 

@@ -46,7 +46,6 @@
 #include <common/sourcelocation.h>
 
 #include <ui/contextmenuextension.h>
-#include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 
 #include <client/remotemodel.h>
@@ -99,17 +98,21 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
   auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
   auto proxy = new QuickClientItemModel(this);
   proxy->setSourceModel(model);
+  ui->itemTreeView->header()->setObjectName("quickItemTreeViewHeader");
+  ui->itemTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
   ui->itemTreeView->setModel(proxy);
+  ui->itemTreeView->setItemDelegate(new QuickItemDelegate(ui->itemTreeView));
   new SearchLineController(ui->itemTreeSearchLine, model);
   QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
   ui->itemTreeView->setSelectionModel(selectionModel);
-  ui->itemTreeView->setItemDelegate(new QuickItemDelegate(ui->itemTreeView));
   connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(itemSelectionChanged(QItemSelection)));
   connect(proxy, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
           this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex,QVector<int>)));
 
   model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
+  ui->sgTreeView->header()->setObjectName("sceneGraphTreeViewHeader");
+  ui->sgTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
   ui->sgTreeView->setModel(model);
   new SearchLineController(ui->sgTreeSearchLine, model);
   QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(model);

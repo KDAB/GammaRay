@@ -46,14 +46,23 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
   ui->controlPage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.ControlModel")));
   ui->complexControlPage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.ComplexControlModel")));
 
+  ui->pixelMetricView->header()->setObjectName("pixelMetricViewHeader");
+  ui->pixelMetricView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  ui->pixelMetricView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
   ui->pixelMetricView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PixelMetricModel")));
-  ui->pixelMetricView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
+  ui->standardIconView->header()->setObjectName("standardIconViewHeader");
+  ui->standardIconView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  ui->standardIconView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
   ui->standardIconView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.StandardIconModel")));
-  ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
 
+  ui->standardPaletteView->header()->setObjectName("standardPaletteViewHeader");
+  ui->standardPaletteView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  ui->standardPaletteView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+  ui->standardPaletteView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+  ui->standardPaletteView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
   ui->standardPaletteView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PaletteModel")));
-  ui->standardIconView->header()->setResizeMode(QHeaderView::ResizeToContents);
+
 
   // TODO this will fail due to lazy model population
   if (ui->styleSelector->count()) {

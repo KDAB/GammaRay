@@ -34,11 +34,11 @@
 #include <QWidget>
 
 class QItemSelection;
-class QTreeView;
 
 namespace GammaRay {
 
 class PropertyWidget;
+class DeferredTreeView;
 
 class MetaObjectBrowserWidget : public QWidget
 {
@@ -53,7 +53,7 @@ class MetaObjectBrowserWidget : public QWidget
   private:
     UIStateManager m_stateManager;
     PropertyWidget *m_propertyWidget;
-    QTreeView *m_treeView;
+    DeferredTreeView *m_treeView;
 };
 
 }

@@ -26,12 +26,9 @@
          <widget class="QLineEdit" name="widgetSearchLine"/>
         </item>
         <item>
-         <widget class="QTreeView" name="widgetTreeView">
+         <widget class="GammaRay::DeferredTreeView" name="widgetTreeView">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <property name="indentation">
-           <number>10</number>
           </property>
          </widget>
         </item>
@@ -82,6 +79,11 @@
   </action>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>

@@ -42,6 +42,8 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
   , m_interface(0)
 {
   m_ui->setupUi(this);
+  m_ui->materialPropertyView->header()->setObjectName("materialPropertyViewHeader");
+  m_ui->shaderList->header()->setObjectName("shaderListHeader");
   setObjectBaseName(parent->objectBaseName());
   connect(m_ui->shaderList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           this, SLOT(shaderSelectionChanged(QItemSelection)));

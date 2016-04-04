@@ -26,16 +26,13 @@
         </widget>
        </item>
        <item>
-        <widget class="QTreeView" name="documentList">
+        <widget class="GammaRay::DeferredTreeView" name="documentList">
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
-         </property>
+         <attribute name="headerStretchLastSection">
+          <bool>false</bool>
+         </attribute>
         </widget>
        </item>
       </layout>
@@ -54,16 +51,10 @@
          </widget>
         </item>
         <item>
-         <widget class="QTreeView" name="documentTree">
-          <property name="indentation">
-           <number>10</number>
-          </property>
-          <property name="uniformRowHeights">
-           <bool>true</bool>
-          </property>
-          <property name="allColumnsShowFocus">
-           <bool>true</bool>
-          </property>
+         <widget class="GammaRay::DeferredTreeView" name="documentTree">
+          <attribute name="headerStretchLastSection">
+           <bool>false</bool>
+          </attribute>
          </widget>
         </item>
        </layout>
@@ -78,16 +69,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QTreeView" name="documentFormatView">
+         <widget class="GammaRay::DeferredTreeView" name="documentFormatView">
           <property name="rootIsDecorated">
            <bool>false</bool>
           </property>
-          <property name="uniformRowHeights">
-           <bool>true</bool>
-          </property>
-          <property name="allColumnsShowFocus">
-           <bool>true</bool>
-          </property>
+          <attribute name="headerStretchLastSection">
+           <bool>false</bool>
+          </attribute>
          </widget>
         </item>
        </layout>
@@ -103,7 +91,11 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="GammaRay::TextDocumentContentView" name="documentView"/>
+         <widget class="GammaRay::TextDocumentContentView" name="documentView">
+          <property name="tabStopWidth">
+           <number>40</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -113,7 +105,11 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTextBrowser" name="htmlView"/>
+         <widget class="QTextBrowser" name="htmlView">
+          <property name="tabStopWidth">
+           <number>40</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -123,6 +119,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
   <customwidget>
    <class>GammaRay::TextDocumentContentView</class>
    <extends>QTextEdit</extends>

@@ -22,14 +22,7 @@
         <widget class="QLineEdit" name="modelSearchLine"/>
        </item>
        <item>
-        <widget class="QTreeView" name="modelView">
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
-         </property>
-        </widget>
+        <widget class="GammaRay::DeferredTreeView" name="modelView"/>
        </item>
       </layout>
      </widget>
@@ -39,11 +32,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="QTreeView" name="modelContentView">
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
-        </widget>
+        <widget class="GammaRay::DeferredTreeView" name="modelContentView"/>
        </item>
       </layout>
      </widget>
@@ -99,15 +88,9 @@
         </layout>
        </item>
        <item>
-        <widget class="QTreeView" name="modelCellView">
+        <widget class="GammaRay::DeferredTreeView" name="modelCellView">
          <property name="rootIsDecorated">
           <bool>false</bool>
-         </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
-         <property name="allColumnsShowFocus">
-          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -117,6 +100,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -45,6 +45,7 @@ EnumsTab::EnumsTab(PropertyWidget *parent)
   , m_stateManager(this)
 {
   m_ui->setupUi(this);
+  m_ui->enumView->header()->setObjectName("enumViewHeader");
   setObjectBaseName(parent->objectBaseName());
 }
 

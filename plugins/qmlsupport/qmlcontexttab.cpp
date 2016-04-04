@@ -30,7 +30,6 @@
 #include "ui_qmlcontexttab.h"
 
 #include <ui/contextmenuextension.h>
-#include <ui/deferredresizemodesetter.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/uiintegration.h>
 
@@ -51,18 +50,20 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent)
     ui->setupUi(this);
 
     auto contextModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextModel"));
+    ui->contextView->header()->setObjectName("contextViewHeader");
     ui->contextView->setModel(contextModel);
     ui->contextView->setSelectionModel(ObjectBroker::selectionModel(contextModel));
-    new DeferredResizeModeSetter(ui->contextView->header(), 0, QHeaderView::ResizeToContents);
+    ui->contextView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     connect(ui->contextView, &QWidget::customContextMenuRequested, this, &QmlContextTab::contextContextMenu);
 
     auto propertyModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextPropertyModel"));
     auto propertyProxy = new QSortFilterProxyModel(this);
     propertyProxy->setSourceModel(propertyModel);
     propertyProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    ui->contextPropertyView->header()->setObjectName("contextPropertyViewHeader");
     ui->contextPropertyView->setModel(propertyProxy);
     ui->contextPropertyView->sortByColumn(0, Qt::AscendingOrder);
-    new DeferredResizeModeSetter(ui->contextPropertyView->header(), 0, QHeaderView::ResizeToContents);
+    ui->contextPropertyView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->contextPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
     connect(ui->contextPropertyView, &QWidget::customContextMenuRequested, this, &QmlContextTab::propertiesContextMenu);
 }

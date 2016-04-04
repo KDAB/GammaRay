@@ -27,6 +27,7 @@
 #include "actioninspectorwidget.h"
 #include "actionmodel.h" // for column enum only
 
+#include <ui/deferredtreeview.h>
 #include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
@@ -35,7 +36,6 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLineEdit>
-#include <QTreeView>
 
 using namespace GammaRay;
 
@@ -51,12 +51,17 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
   new SearchLineController(actionSearchLine, actionModel);
   vbox->addWidget(actionSearchLine);
 
-  QTreeView *objectTreeView = new QTreeView(this);
+  DeferredTreeView *objectTreeView = new DeferredTreeView(this);
+  objectTreeView->header()->setObjectName("objectTreeViewHeader");
+  objectTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  objectTreeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+  objectTreeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+  objectTreeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
   objectTreeView->setModel(actionModel);
-  objectTreeView->setSortingEnabled(true);
   objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
-  objectTreeView->setRootIsDecorated(false);
   vbox->addWidget(objectTreeView);
+
+  m_stateManager.setDefaultSizes(objectTreeView->header(), UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
   connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
 }
 

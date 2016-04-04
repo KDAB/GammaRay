@@ -15,28 +15,19 @@
     <widget class="QLineEdit" name="methodSearchLine"/>
    </item>
    <item>
-    <widget class="QTreeView" name="methodView">
+    <widget class="GammaRay::DeferredTreeView" name="methodView">
      <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
      </property>
-     <property name="sortingEnabled">
-      <bool>true</bool>
-     </property>
-     <property name="allColumnsShowFocus">
-      <bool>true</bool>
-     </property>
     </widget>
    </item>
    <item>
-    <widget class="QTreeView" name="methodLog">
+    <widget class="GammaRay::DeferredTreeView" name="methodLog">
      <property name="rootIsDecorated">
       <bool>false</bool>
-     </property>
-     <property name="uniformRowHeights">
-      <bool>true</bool>
      </property>
      <attribute name="headerVisible">
       <bool>false</bool>
@@ -45,6 +36,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

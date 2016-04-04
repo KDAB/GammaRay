@@ -31,6 +31,8 @@
 
 #include <QDialog>
 
+#include <ui/uistatemanager.h>
+
 namespace GammaRay {
 
 class PropertyEditorFactory;
@@ -52,6 +54,7 @@ class PaletteDialog : public QDialog
 
   private:
     Ui::PaletteDialog *ui;
+    UIStateManager m_stateManager;
     PaletteModel *m_model;
 };
 

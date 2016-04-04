@@ -18,20 +18,21 @@
     <widget class="QLineEdit" name="metaTypeSearchLine"/>
    </item>
    <item>
-    <widget class="QTreeView" name="metaTypeView">
+    <widget class="GammaRay::DeferredTreeView" name="metaTypeView">
      <property name="rootIsDecorated">
       <bool>false</bool>
-     </property>
-     <property name="uniformRowHeights">
-      <bool>true</bool>
-     </property>
-     <property name="sortingEnabled">
-      <bool>true</bool>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

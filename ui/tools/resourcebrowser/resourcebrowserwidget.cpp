@@ -32,7 +32,6 @@
 #include "resourcebrowserclient.h"
 #include "clientresourcemodel.h"
 
-#include <ui/deferredtreeviewconfiguration.h>
 #include <ui/searchlinecontroller.h>
 #include <3rdparty/qt/resourcemodel.h>
 #include <common/objectbroker.h>
@@ -44,6 +43,7 @@
 #include <QFontDatabase>
 #include <QImageReader>
 #include <QMenu>
+#include <QScrollBar>
 #include <QTimer>
 #include <QTextBlock>
 
@@ -58,7 +58,6 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::ResourceBrowserWidget)
   , m_stateManager(this)
-  , m_timer(new QTimer(this))
   , m_interface(0)
 {
   ObjectBroker::registerClientObjectFactoryCallback<ResourceBrowserInterface*>(createResourceBrowserClient);
@@ -71,14 +70,17 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   auto resModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel"));
   ClientResourceModel* model = new ClientResourceModel(this);
   model->setSourceModel(resModel);
+  ui->treeView->header()->setObjectName("resourceTreeViewHeader");
+  ui->treeView->setExpandNewContent(true);
+  ui->treeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  ui->treeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+  ui->treeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+  ui->treeView->setDeferredHidden(3, true);
   ui->treeView->setModel(model);
   ui->treeView->setSelectionModel(ObjectBroker::selectionModel(ui->treeView->model()));
   new SearchLineController(ui->searchLine, resModel);
 
-  DeferredTreeViewConfiguration *config = new DeferredTreeViewConfiguration(ui->treeView);
-  config->hideColumn(3);
-  connect(ui->treeView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-          SLOT(rowsInserted()));
+  connect(ui->treeView, SIGNAL(newContentExpanded()), SLOT(setupLayout()));
 
   ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(ui->treeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(handleCustomContextMenu(QPoint)));
@@ -88,13 +90,6 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
   ui->textBrowser->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 #endif
-
-  ui->mainSplitter->setStretchFactor(1, 3);
-
-  m_timer->setInterval(100);
-  m_timer->setSingleShot(true);
-  connect(m_timer, SIGNAL(timeout()), SLOT(setupLayout()));
-  m_timer->start();
 }
 
 ResourceBrowserWidget::~ResourceBrowserWidget()
@@ -106,18 +101,8 @@ void ResourceBrowserWidget::selectResource(const QString &sourceFilePath, int li
   m_interface->selectResource(sourceFilePath, line, column);
 }
 
-void ResourceBrowserWidget::rowsInserted()
-{
-  m_timer->start();
-}
-
 void ResourceBrowserWidget::setupLayout()
 {
-  // now we can assume the model is filled properly and can adjust the tree view column sizes
-  for(int i = 0; i < 3; ++i) {
-    ui->treeView->resizeColumnToContents(i);
-  }
-
   // now the view was setup properly and we can mess with the splitter to resize
   // the widgets for nicer display
 
@@ -125,14 +110,13 @@ void ResourceBrowserWidget::setupLayout()
                   ui->treeView->columnWidth(1) +
                   ui->treeView->columnWidth(2) +
                   ui->treeView->contentsMargins().left() +
-                  ui->treeView->contentsMargins().right() + 25;
+                  ui->treeView->contentsMargins().right() + ui->treeView->verticalScrollBar()->width();
   const int totalWidth = ui->mainSplitter->width();
   const int minPreviewWidth = 150;
   if (totalWidth > viewWidth + minPreviewWidth) {
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << viewWidth << (totalWidth - viewWidth));
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << viewWidth << (totalWidth - viewWidth - ui->mainSplitter->handleWidth()));
+    m_stateManager.restoreState();
   }
-
-  m_stateManager.restoreState();
 }
 
 void ResourceBrowserWidget::resourceDeselected()

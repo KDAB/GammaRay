@@ -32,7 +32,7 @@
 #include <QModelIndex>
 #include <QStyledItemDelegate>
 
-class QTreeView;
+class QAbstractItemView;
 
 namespace GammaRay {
 
@@ -41,7 +41,7 @@ class QuickItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
   public:
-    explicit QuickItemDelegate(QTreeView *view);
+    explicit QuickItemDelegate(QAbstractItemView *view);
 
   public Q_SLOTS:
     void setTextColor(const QVariant &textColor, const QPersistentModelIndex &index);
@@ -54,7 +54,7 @@ class QuickItemDelegate : public QStyledItemDelegate
 
   private:
     QHash<QModelIndex, QColor> m_colors;
-    QTreeView *m_view;
+    QAbstractItemView *m_view;
 };
 
 }

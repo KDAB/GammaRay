@@ -61,6 +61,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent)
     connect(ui->engineComboBox, SIGNAL(currentIndexChanged(int)), m_interface, SLOT(selectEngine(int)));
 
     auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
+    ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
     ui->sceneTreeView->setModel(sceneModel);
     ui->sceneTreeView->setSelectionModel(ObjectBroker::selectionModel(sceneModel));
     new SearchLineController(ui->sceneSearchLine, sceneModel);
@@ -69,6 +70,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent)
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 
     auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
+    ui->frameGraphView->header()->setObjectName("frameGraphViewHeader");
     ui->frameGraphView->setModel(frameGraphModel);
     ui->frameGraphView->setSelectionModel(ObjectBroker::selectionModel(frameGraphModel));
     new SearchLineController(ui->frameGraphSearchLine, frameGraphModel);

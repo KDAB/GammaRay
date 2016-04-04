@@ -36,7 +36,6 @@
 #include "common/objectmodel.h"
 
 #include <ui/contextmenuextension.h>
-#include <ui/deferredresizemodesetter.h>
 #include <ui/paintbufferviewer.h>
 #include <ui/remoteviewwidget.h>
 #include <ui/searchlinecontroller.h>
@@ -70,10 +69,11 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
   ui->widgetPropertyWidget->setObjectBaseName(m_inspector->objectName());
 
   auto widgetModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
+  ui->widgetTreeView->header()->setObjectName("widgetTreeViewHeader");
+  ui->widgetTreeView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  ui->widgetTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
   ui->widgetTreeView->setModel(widgetModel);
   ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetModel));
-  new DeferredResizeModeSetter(ui->widgetTreeView->header(), 0, QHeaderView::Stretch);
-  new DeferredResizeModeSetter(ui->widgetTreeView->header(), 1, QHeaderView::Interactive);
   new SearchLineController(ui->widgetSearchLine, widgetModel);
   connect(ui->widgetTreeView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

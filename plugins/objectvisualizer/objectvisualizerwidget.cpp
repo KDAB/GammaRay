@@ -29,6 +29,7 @@
 #include "vtkpanel.h"
 #include "vtkwidget.h"
 
+#include <ui/deferredtreeview.h>
 #include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -38,13 +39,13 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QSplitter>
-#include <QTreeView>
 
 using namespace GammaRay;
 
 GraphViewerWidget::GraphViewerWidget(QWidget *parent)
-  : QWidget(parent),
-    mWidget(new GraphWidget(this))
+  : QWidget(parent)
+  , m_stateManager(this)
+  , mWidget(new GraphWidget(this))
 {
   mModel = ObjectBroker::model("com.kdab.GammaRay.ObjectVisualizerModel");
 
@@ -52,7 +53,8 @@ GraphViewerWidget::GraphViewerWidget(QWidget *parent)
   auto objectSearchLine = new QLineEdit(this);
   new SearchLineController(objectSearchLine, mModel);
   vbox->addWidget(objectSearchLine);
-  QTreeView *objectTreeView = new QTreeView(this);
+  DeferredTreeView *objectTreeView = new DeferredTreeView(this);
+  objectTreeView->header()->setObjectName("objectTreeViewHeader");
   objectTreeView->setModel(mModel);
   objectTreeView->setSortingEnabled(true);
   vbox->addWidget(objectTreeView);

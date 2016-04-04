@@ -38,13 +38,19 @@
 using namespace GammaRay;
 
 PaletteDialog::PaletteDialog(const QPalette &palette, QWidget *parent)
-  : QDialog(parent),
-    ui(new Ui::PaletteDialog),
-    m_model(new PaletteModel(this))
+  : QDialog(parent)
+  , ui(new Ui::PaletteDialog)
+  , m_stateManager(this)
+  , m_model(new PaletteModel(this))
 {
   ui->setupUi(this);
   m_model->setPalette(palette);
   m_model->setEditable(true);
+  ui->paletteView->header()->setObjectName("paletteViewHeader");
+  ui->paletteView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  ui->paletteView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+  ui->paletteView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+  ui->paletteView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
   ui->paletteView->setModel(m_model);
   ui->paletteView->setItemDelegate(new PropertyEditorDelegate(this));
 }

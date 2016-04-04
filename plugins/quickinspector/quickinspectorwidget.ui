@@ -45,19 +45,10 @@
           <widget class="QLineEdit" name="itemTreeSearchLine"/>
          </item>
          <item>
-          <widget class="QTreeView" name="itemTreeView">
+          <widget class="GammaRay::DeferredTreeView" name="itemTreeView">
            <property name="contextMenuPolicy">
             <enum>Qt::CustomContextMenu</enum>
            </property>
-           <property name="indentation">
-            <number>10</number>
-           </property>
-           <property name="uniformRowHeights">
-            <bool>true</bool>
-           </property>
-           <attribute name="headerShowSortIndicator" stdset="0">
-            <bool>true</bool>
-           </attribute>
           </widget>
          </item>
         </layout>
@@ -71,17 +62,7 @@
           <widget class="QLineEdit" name="sgTreeSearchLine"/>
          </item>
          <item>
-          <widget class="QTreeView" name="sgTreeView">
-           <property name="indentation">
-            <number>10</number>
-           </property>
-           <property name="uniformRowHeights">
-            <bool>true</bool>
-           </property>
-           <attribute name="headerShowSortIndicator" stdset="0">
-            <bool>true</bool>
-           </attribute>
-          </widget>
+          <widget class="GammaRay::DeferredTreeView" name="sgTreeView"/>
          </item>
         </layout>
        </widget>
@@ -146,6 +127,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
   <customwidget>
    <class>GammaRay::PropertyWidget</class>
    <extends>QWidget</extends>

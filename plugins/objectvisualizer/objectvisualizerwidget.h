@@ -28,15 +28,16 @@
 #define GAMMARAY_OBJECTVISUALIZER_OBJECTVISUALIZERWIDGET_H
 
 #include <ui/tooluifactory.h>
+#include <ui/uistatemanager.h>
 
 #include <QWidget>
 
 class QAbstractItemModel;
-class QTreeView;
 class QModelIndex;
 
 namespace GammaRay {
 
+class DeferredTreeView;
 class GraphWidget;
 
 class GraphViewerWidget : public QWidget
@@ -47,8 +48,9 @@ class GraphViewerWidget : public QWidget
     virtual ~GraphViewerWidget();
 
   private:
+    UIStateManager m_stateManager;
     QAbstractItemModel* mModel;
-    QTreeView *mObjectTreeView;
+    DeferredTreeView *mObjectTreeView;
     GraphWidget *mWidget;
 };
 

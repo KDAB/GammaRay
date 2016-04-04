@@ -29,7 +29,6 @@
 #include "codecbrowserwidget.h"
 #include "ui_codecbrowserwidget.h"
 
-#include <ui/deferredresizemodesetter.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
 
@@ -42,15 +41,14 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
 {
   ui->setupUi(this);
 
-  ui->codecList->setRootIsDecorated(false);
+  ui->codecList->header()->setObjectName("codecListHeader");
+  ui->codecList->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
   ui->codecList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.AllCodecsModel")));
   ui->codecList->setSelectionModel(ObjectBroker::selectionModel(ui->codecList->model()));
-  ui->codecList->setSelectionMode(QAbstractItemView::ExtendedSelection);
-  ui->selectedCodecs->setRootIsDecorated(false);
-  ui->selectedCodecs->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectedCodecsModel")));
 
-  new DeferredResizeModeSetter(ui->codecList->header(), 0, QHeaderView::ResizeToContents);
-  new DeferredResizeModeSetter(ui->selectedCodecs->header(), 0, QHeaderView::ResizeToContents);
+  ui->selectedCodecs->header()->setObjectName("selectedCodecsHeader");
+  ui->selectedCodecs->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  ui->selectedCodecs->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectedCodecsModel")));
 
   connect(ui->codecText, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)));
 

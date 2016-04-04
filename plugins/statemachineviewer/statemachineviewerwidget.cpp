@@ -34,8 +34,6 @@
 #include <common/objectmodel.h>
 #include <common/probecontrollerinterface.h>
 #include <ui/contextmenuextension.h>
-#include <ui/deferredresizemodesetter.h>
-#include <ui/deferredtreeviewconfiguration.h>
 
 #include <kdstatemachineeditor/core/elementmodel.h>
 #include <kdstatemachineeditor/core/state.h>
@@ -163,12 +161,13 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFl
   QAbstractItemModel *stateModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateModel"));
   connect(stateModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
 
-  m_ui->singleStateMachineView->setModel(stateModel);
+  m_ui->singleStateMachineView->header()->setObjectName("singleStateMachineViewHeader");
+  m_ui->singleStateMachineView->setExpandNewContent(true);
+  m_ui->singleStateMachineView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  m_ui->singleStateMachineView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
   m_ui->singleStateMachineView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-  new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 0, QHeaderView::Stretch);
-  new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 1, QHeaderView::ResizeToContents);
-  new DeferredTreeViewConfiguration(m_ui->singleStateMachineView, true);
   m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
+  m_ui->singleStateMachineView->setModel(stateModel);
   connect(m_ui->singleStateMachineView, &QWidget::customContextMenuRequested, this, &StateMachineViewerWidget::objectInspectorContextMenu);
 
   connect(m_ui->actionStartStopStateMachine, SIGNAL(triggered()), m_interface, SLOT(toggleRunning()));
@@ -179,9 +178,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFl
   addAction(separatorAction);
 
   m_stateMachineView = new KDSME::StateMachineView;
-  m_ui->horizontalSplitter->setChildrenCollapsible(false);
   m_ui->horizontalSplitter->addWidget(m_stateMachineView);
-  m_ui->horizontalSplitter->setStretchFactor(m_ui->horizontalSplitter->indexOf(m_stateMachineView), 3);
 
   connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
   connect(m_interface, SIGNAL(stateConfigurationChanged(GammaRay::StateMachineConfiguration)),
@@ -208,6 +205,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFl
   new SelectionModelSyncer(this);
 
   m_stateManager.setDefaultSizes(m_ui->verticalSplitter, UISizeVector() << "50%" << "50%");
+  m_stateManager.setDefaultSizes(m_ui->horizontalSplitter, UISizeVector() << "30%" << "70%");
 
   loadSettings();
 }
@@ -222,7 +220,7 @@ KDSME::StateMachineView *StateMachineViewerWidget::stateMachineView() const
   return m_stateMachineView;
 }
 
-QTreeView *StateMachineViewerWidget::objectInspector() const
+DeferredTreeView *StateMachineViewerWidget::objectInspector() const
 {
   return m_ui->singleStateMachineView;
 }

@@ -16,6 +16,9 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
+     <property name="childrenCollapsible">
+      <bool>false</bool>
+     </property>
      <widget class="QSplitter" name="verticalSplitter">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -44,15 +47,9 @@
          </layout>
         </item>
         <item>
-         <widget class="QTreeView" name="singleStateMachineView">
+         <widget class="GammaRay::DeferredTreeView" name="singleStateMachineView">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <property name="indentation">
-           <number>10</number>
-          </property>
-          <property name="uniformRowHeights">
-           <bool>true</bool>
           </property>
           <attribute name="headerStretchLastSection">
            <bool>false</bool>
@@ -117,6 +114,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

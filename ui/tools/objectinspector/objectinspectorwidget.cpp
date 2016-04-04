@@ -34,7 +34,6 @@
 #include <common/sourcelocation.h>
 
 #include <ui/contextmenuextension.h>
-#include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 
 #include <QLineEdit>
@@ -56,10 +55,11 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
   ui->objectPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.ObjectInspector"));
 
   auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
+  ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
   ui->objectTreeView->setModel(model);
   ui->objectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
-  new DeferredResizeModeSetter(ui->objectTreeView->header(), 0, QHeaderView::Stretch);
-  new DeferredResizeModeSetter(ui->objectTreeView->header(), 1, QHeaderView::Interactive);
+  ui->objectTreeView->setDeferredResizeMode(0, QHeaderView::Stretch);
+  ui->objectTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
   new SearchLineController(ui->objectSearchLine, model);
 
   QItemSelectionModel* selectionModel = ObjectBroker::selectionModel(ui->objectTreeView->model());

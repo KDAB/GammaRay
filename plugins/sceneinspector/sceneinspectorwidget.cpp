@@ -72,12 +72,14 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   m_interface = ObjectBroker::object<SceneInspectorInterface*>();
 
   ui->setupUi(this);
+  ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
   ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.SceneInspector"));
 
   ui->sceneComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneList")));
   connect(ui->sceneComboBox, SIGNAL(currentIndexChanged(int)), SLOT(sceneSelected(int)));
 
   auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"));
+  ui->sceneTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
   ui->sceneTreeView->setModel(sceneModel);
   new SearchLineController(ui->sceneTreeSearchLine, sceneModel);
 

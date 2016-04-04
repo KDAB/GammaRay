@@ -50,6 +50,8 @@ ConnectionsTab::ConnectionsTab(PropertyWidget* parent)
   m_interface = ObjectBroker::object<ConnectionsExtensionInterface*>(parent->objectBaseName() + ".connectionsExtension");
 
   ui->setupUi(this);
+  ui->inboundView->header()->setObjectName("inboundViewHeader");
+  ui->outboundView->header()->setObjectName("outboundViewHeader");
 
   QSortFilterProxyModel *proxy = new ConnectionsClientProxyModel(this);
   proxy->setDynamicSortFilter(true);

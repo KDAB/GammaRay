@@ -15,14 +15,17 @@
     <widget class="QLineEdit" name="enumSearchLine"/>
    </item>
    <item>
-    <widget class="QTreeView" name="enumView">
-     <property name="sortingEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
+    <widget class="GammaRay::DeferredTreeView" name="enumView"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

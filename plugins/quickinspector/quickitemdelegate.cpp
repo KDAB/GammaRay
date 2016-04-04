@@ -32,12 +32,12 @@
 #include <QPainter>
 #include <QIcon>
 #include <QVariant>
-#include <QTreeView>
+#include <QAbstractItemView>
 #include <QApplication>
 
 using namespace GammaRay;
 
-QuickItemDelegate::QuickItemDelegate(QTreeView *view)
+QuickItemDelegate::QuickItemDelegate(QAbstractItemView *view)
   : QStyledItemDelegate(view),
     m_view(view)
 {

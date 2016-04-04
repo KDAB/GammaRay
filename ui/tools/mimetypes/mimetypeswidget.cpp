@@ -29,7 +29,6 @@
 #include "mimetypeswidget.h"
 #include "ui_mimetypeswidget.h"
 
-#include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 
 #include <common/objectbroker.h>
@@ -44,9 +43,10 @@ MimeTypesWidget::MimeTypesWidget(QWidget *parent)
   ui->setupUi(this);
 
   auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"));
+  ui->mimeTypeView->header()->setObjectName("mimeTypeViewHeader");
+  ui->mimeTypeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  ui->mimeTypeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
   ui->mimeTypeView->setModel(model);
-  new DeferredResizeModeSetter(ui->mimeTypeView->header(), 0, QHeaderView::ResizeToContents);
-  new DeferredResizeModeSetter(ui->mimeTypeView->header(), 1, QHeaderView::ResizeToContents);
   ui->mimeTypeView->sortByColumn(0, Qt::AscendingOrder);
   new SearchLineController(ui->searchLine, model);
 }

@@ -75,13 +75,13 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QTreeView" name="pixelMetricView">
+        <widget class="GammaRay::DeferredTreeView" name="pixelMetricView">
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
+         <attribute name="headerStretchLastSection">
+          <bool>false</bool>
+         </attribute>
         </widget>
        </item>
       </layout>
@@ -92,13 +92,13 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QTreeView" name="standardIconView">
+        <widget class="GammaRay::DeferredTreeView" name="standardIconView">
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
+         <attribute name="headerStretchLastSection">
+          <bool>false</bool>
+         </attribute>
         </widget>
        </item>
       </layout>
@@ -109,13 +109,13 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QTreeView" name="standardPaletteView">
+        <widget class="GammaRay::DeferredTreeView" name="standardPaletteView">
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
+         <attribute name="headerStretchLastSection">
+          <bool>false</bool>
+         </attribute>
         </widget>
        </item>
       </layout>
@@ -125,6 +125,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
   <customwidget>
    <class>GammaRay::StyleElementStateTablePage</class>
    <extends>QWidget</extends>

@@ -16,11 +16,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QTreeView" name="fontTree">
-      <property name="uniformRowHeights">
-       <bool>true</bool>
-      </property>
-     </widget>
+     <widget class="GammaRay::DeferredTreeView" name="fontTree"/>
      <widget class="QWidget" name="layoutWidget_7">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -87,7 +83,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QTreeView" name="selectedFontsView"/>
+        <widget class="GammaRay::DeferredTreeView" name="selectedFontsView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -95,6 +95,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

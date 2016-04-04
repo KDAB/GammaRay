@@ -61,6 +61,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   QAbstractItemModel *const signalHistory = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"));
   new SearchLineController(ui->objectSearchLine, signalHistory);
 
+  ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
   ui->objectTreeView->setModel(signalHistory);
   ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
 
@@ -68,6 +69,8 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
   connect(ui->intervalScale, SIGNAL(valueChanged(int)), this, SLOT(intervalScaleValueChanged(int)));
   connect(ui->objectTreeView->eventDelegate(), SIGNAL(isActiveChanged(bool)),  this, SLOT(eventDelegateIsActiveChanged(bool)));
   connect(ui->objectTreeView->header(), SIGNAL(sectionResized(int,int,int)), this, SLOT(adjustEventScrollBarSize()));
+
+  m_stateManager.setDefaultSizes(ui->objectTreeView->header(), UISizeVector() << 200 << 200 << -1);
 }
 
 SignalMonitorWidget::~SignalMonitorWidget()

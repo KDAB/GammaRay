@@ -36,10 +36,16 @@
 using namespace GammaRay;
 
 MethodInvocationDialog::MethodInvocationDialog(QWidget *parent)
-  : QDialog(parent),
-    ui(new Ui::MethodInvocationDialog)
+  : QDialog(parent)
+  , ui(new Ui::MethodInvocationDialog)
+  , m_stateManager(this)
 {
   ui->setupUi(this);
+
+  ui->argumentView->header()->setObjectName("argumentViewHeader");
+  ui->argumentView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  ui->argumentView->setDeferredResizeMode(1, QHeaderView::Stretch);
+  ui->argumentView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
 
   ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Invoke"));
   connect(ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));

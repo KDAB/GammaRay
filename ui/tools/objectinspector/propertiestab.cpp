@@ -34,7 +34,6 @@
 #include <ui/contextmenuextension.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/propertyeditor/propertyeditorfactory.h>
-#include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 #include <propertybinder.h>
 
@@ -56,6 +55,7 @@ PropertiesTab::PropertiesTab(PropertyWidget *parent)
  , m_newPropertyValue(0)
 {
   m_ui->setupUi(this);
+  m_ui->propertyView->header()->setObjectName("propertyViewHeader");
 
   m_ui->newPropertyButton->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
 
@@ -75,8 +75,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
   proxy->setSourceModel(model);
   m_ui->propertyView->setModel(proxy);
   m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
-  new DeferredResizeModeSetter(
-    m_ui->propertyView->header(), 0, QHeaderView::ResizeToContents);
+  m_ui->propertyView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
   new SearchLineController(m_ui->propertySearchLine, proxy);
   m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
   connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
@@ -99,7 +98,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
 
   m_interface = ObjectBroker::object<PropertiesExtensionInterface*>(baseName + ".propertiesExtension");
   new PropertyBinder(m_interface, "canAddProperty", m_ui->newPropertyBar, "visible");
-  m_ui->propertyView->header()->setSectionHidden(1, !m_interface->hasPropertyValues());
+  m_ui->propertyView->setDeferredHidden(1, !m_interface->hasPropertyValues());
   m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
   connect(m_interface, SIGNAL(hasPropertyValuesChanged()), this, SLOT(hasValuesChanged()));
 }
@@ -181,6 +180,6 @@ void PropertiesTab::addNewProperty()
 
 void PropertiesTab::hasValuesChanged()
 {
-  m_ui->propertyView->header()->setSectionHidden(1, !m_interface->hasPropertyValues());
+  m_ui->propertyView->setDeferredHidden(1, !m_interface->hasPropertyValues());
   m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
 }

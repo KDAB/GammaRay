@@ -29,7 +29,6 @@
 #include "metatypebrowserwidget.h"
 #include "ui_metatypebrowserwidget.h"
 
-#include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
 
@@ -45,10 +44,14 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
   QAbstractItemModel *mtm = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"));
   Q_ASSERT(mtm);
 
+  ui->metaTypeView->header()->setObjectName("metaTypeViewHeader");
+  ui->metaTypeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+  ui->metaTypeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+  ui->metaTypeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+  ui->metaTypeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
   ui->metaTypeView->setModel(mtm);
-  new DeferredResizeModeSetter(ui->metaTypeView->header(), 0, QHeaderView::ResizeToContents);
+  ui->metaTypeView->sortByColumn(1, Qt::AscendingOrder); // sort by type id
   new SearchLineController(ui->metaTypeSearchLine, mtm);
-  ui->metaTypeView->header()->setSortIndicator(1, Qt::AscendingOrder); // sort by type id
 }
 
 MetaTypeBrowserWidget::~MetaTypeBrowserWidget()

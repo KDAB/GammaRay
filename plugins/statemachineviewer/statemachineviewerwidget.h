@@ -33,8 +33,6 @@
 
 #include <QWidget>
 
-class QTreeView;
-
 namespace KDSME {
 class State;
 class StateMachine;
@@ -43,6 +41,8 @@ class Transition;
 }
 
 namespace GammaRay {
+class DeferredTreeView;
+
 namespace Ui {
 class StateMachineViewerWidget;
 }
@@ -56,7 +56,7 @@ public:
   virtual ~StateMachineViewerWidget();
 
   KDSME::StateMachineView* stateMachineView() const;
-  QTreeView* objectInspector() const;
+  DeferredTreeView *objectInspector() const;
 
 private slots:
   void showMessage(const QString &message);

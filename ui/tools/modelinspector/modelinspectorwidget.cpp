@@ -30,7 +30,6 @@
 #include "ui_modelinspectorwidget.h"
 #include "modelinspectorclient.h"
 
-#include <ui/deferredresizemodesetter.h>
 #include <ui/itemdelegate.h>
 #include <ui/searchlinecontroller.h>
 
@@ -54,7 +53,14 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   , m_interface(0)
 {
   ui->setupUi(this);
+
+  ui->modelView->header()->setObjectName("modelViewHeader");
+  ui->modelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+
+  ui->modelContentView->header()->setObjectName("modelContentViewHeader");
   ui->modelContentView->setItemDelegate(new ItemDelegate(this));
+
+  ui->modelCellView->header()->setObjectName("modelCellViewHeader");
 
   ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface*>(createModelInspectorClient);
   m_interface = ObjectBroker::object<ModelInspectorInterface*>();
@@ -68,7 +74,6 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   connect(ui->modelView->selectionModel(),
           SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
           SLOT(modelSelected(QItemSelection)));
-  new DeferredResizeModeSetter(ui->modelView->header(), 0, QHeaderView::ResizeToContents);
 
   ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelCellModel")));
 

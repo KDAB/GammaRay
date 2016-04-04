@@ -49,6 +49,7 @@ KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
 
   auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.KJobModel"));
   new SearchLineController(ui->searchLine, model);
+  ui->jobView->header()->setObjectName("jobViewHeader");
   ui->jobView->setModel(model);
 }
 
