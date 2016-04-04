@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/qml/main.qml</file>
+        <file>assets/qml/WidgetMaterial.qml</file>
+        <file>assets/qml/WidgetDelegate.qml</file>
+        <file>assets/qml/CameraController.qml</file>
+        <file>assets/shaders/widget.vert</file>
+        <file>assets/shaders/widget.frag</file>
+        <file>assets/shaders/widget.geom</file>
+    </qresource>
+</RCC>
