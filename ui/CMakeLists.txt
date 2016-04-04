@@ -6,6 +6,7 @@ set(gammaray_ui_srcs
   clienttoolmodel.cpp
   contextmenuextension.cpp
   deferredresizemodesetter.cpp
+  deferredtreeview.cpp
   deferredtreeviewconfiguration.cpp
   editabletypesmodel.cpp
   methodinvocationdialog.cpp
@@ -104,6 +105,18 @@ set_target_properties(gammaray_ui PROPERTIES
 )
 
 target_include_directories(gammaray_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+if(HAVE_PRIVATE_QT_HEADERS)
+  if(Qt5Widgets_FOUND)
+    include_directories(SYSTEM ${Qt5Widgets_PRIVATE_INCLUDE_DIRS})
+  elseif(QtGui_FOUND)
+    include_directories(SYSTEM ${QtGui_PRIVATE_INCLUDE_DIRS})
+  endif()
+else(HAVE_PRIVATE_QT_HEADERS)
+  add_feature_info("QHeaderView geometry/state restoration" HAVE_PRIVATE_QT_HEADERS
+    "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
+  )
+endif(HAVE_PRIVATE_QT_HEADERS)
+
 target_link_libraries(gammaray_ui
   LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
@@ -137,6 +150,7 @@ gammaray_install_headers(
   ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
   clienttoolmodel.h
   deferredresizemodesetter.h
+  deferredtreeview.h
   deferredtreeviewconfiguration.h
   propertywidget.h
   propertywidgettab.h
