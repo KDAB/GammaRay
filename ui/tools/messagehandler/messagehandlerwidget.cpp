@@ -82,6 +82,8 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
   ui->backtraceView->hide();
   ui->backtraceView->setModel(m_backtraceModel);
+
+  ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
 }
 
 MessageHandlerWidget::~MessageHandlerWidget()

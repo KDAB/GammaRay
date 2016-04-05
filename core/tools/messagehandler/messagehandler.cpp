@@ -28,6 +28,9 @@
 
 #include "messagehandler.h"
 #include "messagemodel.h"
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+#include "loggingcategorymodel.h"
+#endif
 
 #include "backtrace.h"
 
@@ -154,7 +157,6 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   : MessageHandlerInterface(parent),
   m_messageModel(new MessageModel(this))
 {
-
   Q_ASSERT(s_model == 0);
   s_model = m_messageModel;
 
@@ -173,6 +175,11 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
   // recheck when eventloop is entered, if the user
   // installs a handler after QApp but before .exec()
   QMetaObject::invokeMethod(this, "ensureHandlerInstalled", Qt::QueuedConnection);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  auto catModel = new LoggingCategoryModel(this);
+  probe->registerModel(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel"), catModel);
+#endif
 }
 
 MessageHandler::~MessageHandler()
