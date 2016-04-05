@@ -27,7 +27,9 @@
 */
 
 #include "metaobjectbrowserwidget.h"
-#include "propertywidget.h"
+#include "metaobjecttreeclientproxymodel.h"
+
+#include <ui/propertywidget.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/deferredtreeviewconfiguration.h>
 #include <ui/searchlinecontroller.h>
@@ -45,22 +47,24 @@ using namespace GammaRay;
 MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   : QWidget(parent)
 {
-  QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
+  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
+  auto proxy = new MetaObjectTreeClientProxyModel(this);
+  proxy->setSourceModel(model);
 
   m_treeView = new QTreeView(this);
   m_treeView->setIndentation(10);
   m_treeView->setUniformRowHeights(true);
-  m_treeView->setModel(model);
+  m_treeView->setModel(proxy);
   m_treeView->header()->setStretchLastSection(false);
   new DeferredResizeModeSetter(m_treeView->header(), 0, QHeaderView::Stretch);
   new DeferredResizeModeSetter(m_treeView->header(), 1, QHeaderView::ResizeToContents);
   new DeferredResizeModeSetter(m_treeView->header(), 2, QHeaderView::ResizeToContents);
   m_treeView->setSortingEnabled(true);
-  m_treeView->setSelectionModel(ObjectBroker::selectionModel(model));
+  m_treeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
   connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
   auto objectSearchLine = new QLineEdit(this);
-  new SearchLineController(objectSearchLine, model);
+  new SearchLineController(objectSearchLine, proxy);
 
   PropertyWidget *propertyWidget = new PropertyWidget(this);
   m_propertyWidget = propertyWidget;
