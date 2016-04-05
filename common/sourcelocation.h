@@ -35,6 +35,8 @@
 #include <QDataStream>
 #include <QString>
 
+class QUrl;
+
 namespace GammaRay {
 
 /** @brief Specifies a source code location. */
@@ -42,18 +44,23 @@ class GAMMARAY_COMMON_EXPORT SourceLocation
 {
 public:
     SourceLocation();
+    SourceLocation(const QString &fileName, int line = -1, int column = -1);
+    SourceLocation(const QUrl &fileUrl, int line = -1, int column = -1);
     ~SourceLocation();
 
     bool isValid() const;
 
     QString fileName() const;
     void setFileName(const QString &fileName);
+    void setFileName(const QUrl &fileUrl);
 
     int line() const;
     void setLine(int line);
 
     int column() const;
     void setColumn(int column);
+
+    QString displayString() const;
 
 private:
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, SourceLocation &location);

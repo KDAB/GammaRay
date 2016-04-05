@@ -28,12 +28,28 @@
 
 #include "sourcelocation.h"
 
+#include <QUrl>
+
 using namespace GammaRay;
 
 SourceLocation::SourceLocation() :
     m_line(-1),
     m_column(-1)
 {
+}
+
+SourceLocation::SourceLocation(const QString &fileName, int line, int column) :
+    m_fileName(fileName),
+    m_line(line),
+    m_column(column)
+{
+}
+
+SourceLocation::SourceLocation(const QUrl &fileUrl, int line, int column) :
+    m_line(line),
+    m_column(column)
+{
+    setFileName(fileUrl);
 }
 
 SourceLocation::~SourceLocation()
@@ -55,6 +71,19 @@ void SourceLocation::setFileName(const QString& fileName)
     m_fileName = fileName;
 }
 
+void SourceLocation::setFileName(const QUrl &fileUrl)
+{
+    // Most editors don't understand paths with the file://
+    // scheme, still we need the scheme for anything else
+    // but file (e.g. qrc:/)
+
+    // ### shouldn't this move to just before opening the source editor?
+    if (fileUrl.scheme() == QLatin1String("file"))
+        m_fileName = fileUrl.path();
+    else
+        m_fileName = fileUrl.toString();
+}
+
 int SourceLocation::line() const
 {
     return m_line;
@@ -73,6 +102,20 @@ int SourceLocation::column() const
 void SourceLocation::setColumn(int column)
 {
     m_column = column;
+}
+
+QString SourceLocation::displayString() const
+{
+    if (m_fileName.isEmpty())
+        return QString();
+
+    if (m_line < 0)
+        return m_fileName;
+
+    QString result = m_fileName + ':' + QString::number(m_line);
+    if (m_column <= 1)
+        return result;
+    return result + ':' + QString::number(m_column);
 }
 
 QDataStream& GammaRay::operator<<(QDataStream& out, const SourceLocation& location)
