@@ -69,6 +69,9 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
         registerTab(new PropertyWidgetTabFactory<T>(name, label, priority));
     }
 
+  signals:
+    void tabsUpdated();
+
   private:
     static void registerTab(PropertyWidgetTabFactoryBase *factory);
     void createWidgets();
