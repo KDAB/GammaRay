@@ -46,14 +46,16 @@ class GAMMARAY_UI_EXPORT ContextMenuExtension : public QObject
 public:
   explicit ContextMenuExtension(ObjectId id);
 
-  void setSourceLocation(const SourceLocation &location);
+  void setCreationLocation(const SourceLocation &location);
+  void setDeclarationLocation(const SourceLocation &location);
 
   /// Populate @p menu with entries related to the captured object id. Only supported on Qt5
   void populateMenu(QMenu *menu);
 
 private:
   ObjectId m_id;
-  SourceLocation m_loc;
+  SourceLocation m_creationLoc;
+  SourceLocation m_declarationLoc;
 };
 
 }

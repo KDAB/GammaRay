@@ -40,18 +40,29 @@ ContextMenuExtension::ContextMenuExtension(ObjectId id)
 {
 }
 
-void ContextMenuExtension::setSourceLocation(const SourceLocation& location)
+void ContextMenuExtension::setCreationLocation(const SourceLocation& location)
 {
-    m_loc = location;
+    m_creationLoc = location;
+}
+
+void ContextMenuExtension::setDeclarationLocation(const SourceLocation& location)
+{
+    m_declarationLoc = location;
 }
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  if (m_loc.isValid() && UiIntegration::instance()) {
-    auto action = menu->addAction(tr("Show Code: %1:%2:%3"). arg(m_loc.fileName(), QString::number(m_loc.line()), QString::number(m_loc.column())));
+  if (m_creationLoc.isValid() && UiIntegration::instance()) {
+    auto action = menu->addAction(tr("Go to creation: %1").arg(m_creationLoc.displayString()));
     connect(action, &QAction::triggered, [this]() {
-        emit UiIntegration::instance()->navigateToCode(m_loc.fileName(), m_loc.line(), m_loc.column());
+        emit UiIntegration::instance()->navigateToCode(m_creationLoc.fileName(), m_creationLoc.line(), m_creationLoc.column());
+    });
+  }
+  if (m_declarationLoc.isValid() && UiIntegration::instance()) {
+    auto action = menu->addAction(tr("Go to declaration: %1").arg(m_declarationLoc.displayString()));
+    connect(action, &QAction::triggered, [this]() {
+        emit UiIntegration::instance()->navigateToCode(m_declarationLoc.fileName(), m_declarationLoc.line(), m_declarationLoc.column());
     });
   }
 
