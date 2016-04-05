@@ -94,7 +94,7 @@ class ObjectModelBase : public Base
         if (index.column() == 0) {
           return Util::shortDisplayString(object);
         } else if (index.column() == 1) {
-          return object->metaObject()->className();
+          return ObjectDataProvider::typeName(object);
         }
       } else if (role == ObjectModel::ObjectRole) {
         return QVariant::fromValue(object);

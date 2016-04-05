@@ -47,6 +47,7 @@ class GAMMARAY_CORE_EXPORT AbstractObjectDataProvider
 public:
     virtual ~AbstractObjectDataProvider();
     virtual QString name(const QObject *obj) const = 0;
+    virtual QString typeName(QObject *obj) const = 0;
     virtual SourceLocation creationLocation(QObject *obj) const = 0;
     virtual SourceLocation declarationLocation(QObject *obj) const = 0;
 };
@@ -60,6 +61,9 @@ namespace ObjectDataProvider
      * dynamic language runtimes, such as QML ids.
      */
     GAMMARAY_CORE_EXPORT QString name(const QObject *obj);
+
+    /** Returns the type name of @p obj. */
+    GAMMARAY_CORE_EXPORT QString typeName(QObject *obj);
 
     /** Returns the source location where this object was created, if known. */
     GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);

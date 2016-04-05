@@ -119,6 +119,7 @@ class QmlObjectDataProvider : public AbstractObjectDataProvider
 {
 public:
     QString name(const QObject* obj) const Q_DECL_OVERRIDE;
+    QString typeName(QObject *obj) const Q_DECL_OVERRIDE;
     SourceLocation creationLocation(QObject* obj) const Q_DECL_OVERRIDE;
     SourceLocation declarationLocation(QObject *obj) const Q_DECL_OVERRIDE;
 };
@@ -129,6 +130,31 @@ QString QmlObjectDataProvider::name(const QObject *obj) const
     QQmlContext *ctx = QQmlEngine::contextForObject(obj);
     const auto id = ctx ? ctx->nameForObject(const_cast<QObject*>(obj)) : QString();
     return id;
+}
+
+QString QmlObjectDataProvider::typeName(QObject* obj) const
+{
+    Q_ASSERT(obj);
+
+    // C++ QML type
+    auto qmlType = QQmlMetaType::qmlType(obj->metaObject());
+    if (qmlType)
+        return qmlType->qmlTypeName();
+
+    // QML defined type
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    auto data = QQmlData::get(obj);
+    if (!data || !data->compiledData)
+        return QString();
+
+    qmlType = QQmlMetaType::qmlType(data->compiledData->url());
+    if (qmlType) {
+        // we get the same type for top-level types and inline types, with no known way to tell those apart...
+        if (QString::fromLatin1(obj->metaObject()->className()).startsWith(qmlType->qmlTypeName() + QStringLiteral("_QMLTYPE_")))
+            return qmlType->qmlTypeName();
+    }
+#endif
+    return QString();
 }
 
 SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
