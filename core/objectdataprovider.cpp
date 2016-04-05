@@ -76,3 +76,18 @@ SourceLocation ObjectDataProvider::creationLocation(QObject* obj)
 
     return loc;
 }
+
+SourceLocation ObjectDataProvider::declarationLocation(QObject* obj)
+{
+    SourceLocation loc;
+    if (!obj)
+        return loc;
+
+    foreach (auto provider, *s_providers()) {
+        loc = provider->declarationLocation(obj);
+        if (loc.isValid())
+            return loc;
+    }
+
+    return loc;
+}

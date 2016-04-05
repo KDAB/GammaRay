@@ -48,6 +48,7 @@ public:
     virtual ~AbstractObjectDataProvider();
     virtual QString name(const QObject *obj) const = 0;
     virtual SourceLocation creationLocation(QObject *obj) const = 0;
+    virtual SourceLocation declarationLocation(QObject *obj) const = 0;
 };
 
 /** @brief Retrieve basic information about QObject instances. */
@@ -62,6 +63,9 @@ namespace ObjectDataProvider
 
     /** Returns the source location where this object was created, if known. */
     GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);
+
+    /** Returns the source location where the type of this object was declared, if known. */
+    GAMMARAY_CORE_EXPORT SourceLocation declarationLocation(QObject *obj);
 }
 
 }

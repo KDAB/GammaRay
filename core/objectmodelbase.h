@@ -108,6 +108,10 @@ class ObjectModelBase : public Base
           const auto loc = ObjectDataProvider::creationLocation(object);
           if (loc.isValid())
               return QVariant::fromValue(loc);
+      } else if (role == ObjectModel::DeclarationLocationRole) {
+          const auto loc = ObjectDataProvider::declarationLocation(object);
+          if (loc.isValid())
+              return QVariant::fromValue(loc);
       }
 
       return QVariant();
@@ -117,9 +121,12 @@ class ObjectModelBase : public Base
     {
       QMap<int, QVariant> map = Base::itemData(index);
       map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
-      const auto loc = this->data(index, ObjectModel::CreationLocationRole);
+      auto loc = this->data(index, ObjectModel::CreationLocationRole);
       if (loc.isValid())
           map.insert(ObjectModel::CreationLocationRole, loc);
+      loc = this->data(index, ObjectModel::DeclarationLocationRole);
+      if (loc.isValid())
+          map.insert(ObjectModel::DeclarationLocationRole, loc);
       return map;
     }
 

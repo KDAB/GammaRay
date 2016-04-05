@@ -53,6 +53,7 @@
 
 #include <private/qqmlmetatype_p.h>
 #include <private/qqmldata_p.h>
+#include <private/qqmlcompiler_p.h>
 #include <private/qqmlcontext_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
@@ -119,6 +120,7 @@ class QmlObjectDataProvider : public AbstractObjectDataProvider
 public:
     QString name(const QObject* obj) const Q_DECL_OVERRIDE;
     SourceLocation creationLocation(QObject* obj) const Q_DECL_OVERRIDE;
+    SourceLocation declarationLocation(QObject *obj) const Q_DECL_OVERRIDE;
 };
 }
 
@@ -151,6 +153,29 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     loc.setColumn(objectData->columnNumber);
     return loc;
 }
+
+SourceLocation QmlObjectDataProvider::declarationLocation(QObject* obj) const
+{
+    Q_ASSERT(obj);
+
+    // C++ QML type
+    auto qmlType = QQmlMetaType::qmlType(obj->metaObject());
+    if (qmlType)
+        return SourceLocation(qmlType->sourceUrl());
+
+    // QML-defined type
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    auto data = QQmlData::get(obj);
+    if (!data || !data->compiledData)
+        return SourceLocation();
+
+    qmlType = QQmlMetaType::qmlType(data->compiledData->url());
+    if (qmlType)
+        return SourceLocation(qmlType->sourceUrl());
+#endif
+    return SourceLocation();
+}
+
 
 QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   QObject(parent)
