@@ -96,7 +96,7 @@ add_test(multisignalmappertest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/multisignalmapp
 ### source location test
 
 add_executable(sourcelocationtest sourcelocationtest.cpp)
-target_link_libraries(sourcelocationtest ${QT_QTTEST_LIBRARIES} gammaray_common)
+target_link_libraries(sourcelocationtest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common)
 add_test(NAME sourcelocationtest COMMAND sourcelocationtest)
 
 ### Probe ABI test
