@@ -142,17 +142,9 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
         return loc;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    loc.setFileName(context->url().scheme() == QStringLiteral("file")
-            ? context->url().path()
-            : context->url().toString() // Most editors don't understand paths with the file://
-                                         // scheme, still we need the scheme for anything else
-                                         // but file (e.g. qrc:/)
-        );
+    loc.setFileName(context->url());
 #else
-    loc.setFileName(context->url.scheme() == QStringLiteral("file")
-            ? context->url.path()
-            : context->url.toString() // same as above
-        );
+    loc.setFileName(context->url);
 #endif
 
     loc.setLine(objectData->lineNumber);
