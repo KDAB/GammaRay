@@ -32,6 +32,8 @@
 #include <core/objectinstance.h>
 #include <core/propertycontroller.h>
 
+#include <private/qqmlcompiler_p.h>
+#include <private/qqmldata_p.h>
 #include <private/qqmlmetatype_p.h>
 
 using namespace GammaRay;
@@ -51,7 +53,21 @@ bool QmlTypeExtension::setQObject(QObject* object)
 {
     if (!object)
         return false;
-    return setMetaObject(object->metaObject());
+    // C++ QML type
+    if (setMetaObject(object->metaObject()))
+        return true;
+
+    // QML-defined type
+    auto data = QQmlData::get(object);
+    if (!data || !data->compiledData)
+        return false;
+
+    const auto qmlType = QQmlMetaType::qmlType(data->compiledData->url());
+    if (!qmlType)
+        return false;
+
+    m_typePropertyModel->setObject(ObjectInstance(qmlType, "QQmlType"));
+    return true;
 }
 
 bool QmlTypeExtension::setMetaObject(const QMetaObject* metaObject)
