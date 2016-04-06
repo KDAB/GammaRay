@@ -24,7 +24,11 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QTreeView" name="contextPropertyView"/>
+     <widget class="QTreeView" name="contextPropertyView">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>

@@ -29,7 +29,15 @@
 #include "qmlcontexttab.h"
 #include "ui_qmlcontexttab.h"
 
+#include <ui/contextmenuextension.h>
+#include <ui/deferredresizemodesetter.h>
+#include <ui/propertyeditor/propertyeditordelegate.h>
+
 #include <common/objectbroker.h>
+#include <common/propertymodel.h>
+#include <common/probecontrollerinterface.h>
+
+#include <QMenu>
 
 using namespace GammaRay;
 
@@ -44,8 +52,31 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent) :
     ui->contextView->setSelectionModel(ObjectBroker::selectionModel(contextModel));
 
     ui->contextPropertyView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextPropertyModel")));
+    new DeferredResizeModeSetter(ui->contextPropertyView->header(), 0, QHeaderView::ResizeToContents);
+    ui->contextPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
+    connect(ui->contextPropertyView, &QWidget::customContextMenuRequested, this, &QmlContextTab::propertiesContextMenu);
 }
 
 QmlContextTab::~QmlContextTab()
 {
+}
+
+void QmlContextTab::propertiesContextMenu(QPoint pos)
+{
+    const auto idx = ui->contextPropertyView->indexAt(pos);
+    if (!idx.isValid())
+        return;
+
+    const auto actions = idx.data(PropertyModel::ActionRole).toInt();
+    if (actions != PropertyModel::NavigateTo)
+        return;
+
+    const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu contextMenu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&contextMenu);
+    contextMenu.exec(ui->contextPropertyView->viewport()->mapToGlobal(pos));
 }

@@ -48,6 +48,7 @@ public:
     ~QmlContextTab();
 
 private:
+    void propertiesContextMenu(QPoint pos);
     QScopedPointer<Ui::QmlContextTab> ui;
 };
 }
