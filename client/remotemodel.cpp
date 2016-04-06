@@ -37,6 +37,9 @@
 #include <QStyle>
 #include <QStyleOptionViewItem>
 
+#include <algorithm>
+#include <limits>
+
 using namespace GammaRay;
 
 void (*RemoteModel::s_registerClientCallback)() = 0;
@@ -341,6 +344,8 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
       quint32 size;
       msg.payload() >> size;
       Q_ASSERT(size > 0);
+
+      QHash<QModelIndex, QVector<QModelIndex> > dataChangedIndexes;
       for (quint32 i = 0; i < size; ++i) {
         Protocol::ModelIndex index;
         msg.payload() >> index;
@@ -359,9 +364,25 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         node->data[column] = itemData;
         node->flags[column] = static_cast<Qt::ItemFlags>(flags);
         node->state[column] = state & ~(Loading | Empty | Outdated);
-        // TODO we could do some range compression here
+
+        // group by parent, and emit dataChange for the bounding rect per hierarchy level
+        // as an approximiation of perfect range batching
         const QModelIndex qmi = modelIndexForNode(node, column);
-        emit dataChanged(qmi, qmi);
+        dataChangedIndexes[qmi.parent()].push_back(qmi);
+      }
+
+      for (auto it = dataChangedIndexes.constBegin(); it != dataChangedIndexes.constEnd(); ++it) {
+          const auto &indexes = it.value();
+          Q_ASSERT(!indexes.isEmpty());
+          int r1 = std::numeric_limits<int>::max(), r2 = 0, c1 = std::numeric_limits<int>::max(), c2 = 0;
+          foreach (const auto &index, indexes) {
+              r1 = std::min(r1, index.row());
+              r2 = std::max(r2, index.row());
+              c1 = std::min(c1, index.column());
+              c2 = std::max(c2, index.column());
+          }
+          const auto qmi = indexes.at(0);
+          emit dataChanged(qmi.sibling(r1, c1), qmi.sibling(r2, c2));
       }
       break;
     }
