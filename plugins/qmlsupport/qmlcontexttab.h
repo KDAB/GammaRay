@@ -1,5 +1,5 @@
 /*
-  qmlsupportuifactory.cpp
+  qmlcontexttab.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,26 +26,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlsupportuifactory.h"
-#include "qmlcontexttab.h"
-#include "qmltypetab.h"
+#ifndef GAMMARAY_QMLCONTEXTTAB_H
+#define GAMMARAY_QMLCONTEXTTAB_H
 
 #include <ui/propertywidget.h>
 
-using namespace GammaRay;
+#include <QScopedPointer>
 
-QString QmlSupportUiFactory::id() const
+namespace GammaRay {
+
+namespace Ui
 {
-    return QString();
+class QmlContextTab;
 }
 
-void QmlSupportUiFactory::initUi()
+class QmlContextTab : public QWidget
 {
-    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr("QML Context"));
-    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr("QML Type"));
+    Q_OBJECT
+public:
+    explicit QmlContextTab(PropertyWidget *parent = Q_NULLPTR);
+    ~QmlContextTab();
+
+private:
+    QScopedPointer<Ui::QmlContextTab> ui;
+};
 }
 
-QWidget* GammaRay::QmlSupportUiFactory::createWidget(QWidget*)
-{
-    return Q_NULLPTR;
-}
+#endif // GAMMARAY_QMLCONTEXTTAB_H

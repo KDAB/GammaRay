@@ -31,6 +31,7 @@
 #include "qmlattachedpropertyadaptor.h"
 #include "qjsvaluepropertyadaptor.h"
 #include "qmlcontextpropertyadaptor.h"
+#include "qmlcontextextension.h"
 #include "qmltypeextension.h"
 
 #include <core/metaobject.h>
@@ -267,6 +268,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
   PropertyAdaptorFactory::registerFactory(QmlContextPropertyAdaptorFactory::instance());
 
+  PropertyController::registerExtension<QmlContextExtension>();
   PropertyController::registerExtension<QmlTypeExtension>();
 
   static auto dataProvider = new QmlObjectDataProvider;

@@ -1,5 +1,5 @@
 /*
-  qmlsupportuifactory.cpp
+  qmlcontextextension.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,26 +26,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlsupportuifactory.h"
-#include "qmlcontexttab.h"
-#include "qmltypetab.h"
+#ifndef GAMMARAY_QMLCONTEXTEXTENSION_H
+#define GAMMARAY_QMLCONTEXTEXTENSION_H
 
-#include <ui/propertywidget.h>
+#include <core/propertycontrollerextension.h>
 
-using namespace GammaRay;
+class QItemSelection;
 
-QString QmlSupportUiFactory::id() const
+namespace GammaRay {
+
+class AggregatedPropertyModel;
+class QmlContextModel;
+
+class QmlContextExtension : public PropertyControllerExtension
 {
-    return QString();
+public:
+    explicit QmlContextExtension(PropertyController *controller);
+    ~QmlContextExtension();
+
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+
+private:
+    void contextSelected(const QItemSelection &selection);
+
+    QmlContextModel *m_contextModel;
+    AggregatedPropertyModel *m_propertyModel;
+};
 }
 
-void QmlSupportUiFactory::initUi()
-{
-    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr("QML Context"));
-    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr("QML Type"));
-}
-
-QWidget* GammaRay::QmlSupportUiFactory::createWidget(QWidget*)
-{
-    return Q_NULLPTR;
-}
+#endif // GAMMARAY_QMLCONTEXTEXTENSION_H

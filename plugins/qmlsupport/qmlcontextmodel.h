@@ -1,5 +1,5 @@
 /*
-  qmlsupportuifactory.cpp
+  qmlcontextmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,26 +26,35 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlsupportuifactory.h"
-#include "qmlcontexttab.h"
-#include "qmltypetab.h"
+#ifndef GAMMARAY_QMLCONTEXTMODEL_H
+#define GAMMARAY_QMLCONTEXTMODEL_H
 
-#include <ui/propertywidget.h>
+#include <QAbstractTableModel>
 
-using namespace GammaRay;
+#include <QVector>
 
-QString QmlSupportUiFactory::id() const
+class QQmlContext;
+
+namespace GammaRay {
+
+class QmlContextModel : public QAbstractTableModel
 {
-    return QString();
+    Q_OBJECT
+public:
+    explicit QmlContextModel(QObject *parent = Q_NULLPTR);
+    ~QmlContextModel();
+
+    void clear();
+    void setContext(QQmlContext *leafContext);
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+
+private:
+    QVector<QQmlContext*> m_contexts;
+};
 }
 
-void QmlSupportUiFactory::initUi()
-{
-    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr("QML Context"));
-    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr("QML Type"));
-}
-
-QWidget* GammaRay::QmlSupportUiFactory::createWidget(QWidget*)
-{
-    return Q_NULLPTR;
-}
+#endif // GAMMARAY_QMLCONTEXTMODEL_H
