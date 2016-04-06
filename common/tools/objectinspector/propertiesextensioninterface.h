@@ -52,7 +52,6 @@ class PropertiesExtensionInterface : public QObject
     void setHasPropertyValues(bool hasValues);
 
   public slots:
-    virtual void navigateToValue(int modelRow) = 0;
     virtual void setProperty(const QString &name, const QVariant &value) = 0;
 
   signals:

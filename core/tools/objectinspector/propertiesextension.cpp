@@ -78,18 +78,6 @@ bool PropertiesExtension::setMetaObject(const QMetaObject* metaObject)
   return true;
 }
 
-void PropertiesExtension::navigateToValue(int modelRow)
-{
-  QModelIndex index = m_aggregatedPropertyModel->index(modelRow, 2);
-  QVariant propertyValue = index.data(PropertyModel::ValueRole);
-  if (propertyValue.canConvert<QObject*>()) {
-    Probe::instance()->selectObject(propertyValue.value<QObject*>());
-  } else {
-    Probe::instance()->selectObject(*reinterpret_cast<void**>(propertyValue.data()),
-                                    index.data(Qt::DisplayRole).toString());
-  }
-}
-
 void PropertiesExtension::setProperty(const QString &name, const QVariant &value)
 {
   if (!m_object) {

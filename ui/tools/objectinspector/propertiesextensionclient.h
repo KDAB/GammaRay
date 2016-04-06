@@ -42,7 +42,6 @@ class PropertiesExtensionClient : public PropertiesExtensionInterface
     ~PropertiesExtensionClient();
 
   public slots:
-    void navigateToValue(int modelRow) Q_DECL_OVERRIDE;
     void setProperty(const QString& name, const QVariant& value) Q_DECL_OVERRIDE;
 };
 

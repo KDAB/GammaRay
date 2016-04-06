@@ -162,16 +162,6 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
       case PropertyModel::Reset:
         m_ui->propertyView->model()->setData(index, QVariant(), PropertyModel::ResetActionRole);
         break;
-      case PropertyModel::NavigateTo:
-        QSortFilterProxyModel *proxy =
-          qobject_cast<QSortFilterProxyModel*>(m_ui->propertyView->model());
-        QModelIndex sourceIndex = index;
-        while (proxy) {
-          sourceIndex = proxy->mapToSource(sourceIndex);
-          proxy = qobject_cast<QSortFilterProxyModel*>(proxy->sourceModel());
-        }
-        m_interface->navigateToValue(sourceIndex.row());
-        break;
     }
   }
 }
