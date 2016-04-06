@@ -162,8 +162,11 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     SourceLocation loc;
 
     auto objectData = QQmlData::get(obj);
-    if (!objectData)
+    if (!objectData) {
+        if (auto context = qobject_cast<QQmlContext*>(obj))
+            loc.setFileName(context->baseUrl());
         return loc;
+    }
 
     auto context = objectData->outerContext;
     if (!context)
