@@ -4,6 +4,7 @@ set(gammaray_qmlsupport_srcs
   qmllistpropertyadaptor.cpp
   qmlattachedpropertyadaptor.cpp
   qjsvaluepropertyadaptor.cpp
+  qmlcontextpropertyadaptor.cpp
   qmltypeextension.cpp
 )
 include_directories(SYSTEM ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
