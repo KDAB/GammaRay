@@ -38,6 +38,7 @@
 #include <common/probecontrollerinterface.h>
 
 #include <QMenu>
+#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
@@ -50,8 +51,14 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent) :
     auto contextModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextModel"));
     ui->contextView->setModel(contextModel);
     ui->contextView->setSelectionModel(ObjectBroker::selectionModel(contextModel));
+    new DeferredResizeModeSetter(ui->contextView->header(), 0, QHeaderView::ResizeToContents);
 
-    ui->contextPropertyView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextPropertyModel")));
+    auto propertyModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextPropertyModel"));
+    auto propertyProxy = new QSortFilterProxyModel(this);
+    propertyProxy->setSourceModel(propertyModel);
+    propertyProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    ui->contextPropertyView->setModel(propertyProxy);
+    ui->contextPropertyView->sortByColumn(0, Qt::AscendingOrder);
     new DeferredResizeModeSetter(ui->contextPropertyView->header(), 0, QHeaderView::ResizeToContents);
     ui->contextPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
     connect(ui->contextPropertyView, &QWidget::customContextMenuRequested, this, &QmlContextTab::propertiesContextMenu);

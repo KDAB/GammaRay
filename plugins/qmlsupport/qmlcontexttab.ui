@@ -17,6 +17,9 @@
       <enum>Qt::Vertical</enum>
      </property>
      <widget class="QTreeView" name="contextView">
+      <property name="textElideMode">
+       <enum>Qt::ElideMiddle</enum>
+      </property>
       <property name="rootIsDecorated">
        <bool>false</bool>
       </property>
@@ -28,6 +31,12 @@
       <property name="contextMenuPolicy">
        <enum>Qt::CustomContextMenu</enum>
       </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <attribute name="headerShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
      </widget>
     </widget>
    </item>
