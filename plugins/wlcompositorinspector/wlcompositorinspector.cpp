@@ -151,7 +151,7 @@ public:
         // we use QByteArray rather than QString because the log has mostly (only) latin characters
         // so we save some space using utf8 rather than the utf16 QString uses
         QByteArray utf8 = l.toUtf8();
-        qint64 time = m_timer.elapsed();
+        qint64 time = m_timer.nsecsElapsed();
         m_lines.append({ time, utf8 });
         if (m_connected) {
             emit m_inspector->logMessage(time, utf8);

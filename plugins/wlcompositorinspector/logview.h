@@ -30,10 +30,14 @@
 #define GAMMARAY_LOGVIEW_H
 
 #include <QScrollArea>
+#include <QTabWidget>
 
 namespace GammaRay {
 
-class LogView : public QScrollArea
+class Messages;
+class Timeline;
+
+class LogView : public QTabWidget
 {
   Q_OBJECT
 public:
@@ -44,10 +48,8 @@ public:
   void reset();
 
 private:
-  void add(qint64 time, const QByteArray &m);
-
-  class View;
-  View *m_view;
+  Messages *m_messages;
+  Timeline *m_timeline;
 };
 
 }
