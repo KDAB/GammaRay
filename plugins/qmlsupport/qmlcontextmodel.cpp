@@ -101,7 +101,10 @@ QVariant QmlContextModel::data(const QModelIndex& index, int role) const
         auto context = m_contexts.at(index.row());
         switch (index.column()) {
             case 0: return Util::shortDisplayString(context);
-            case 1: return context->baseUrl().toString();
+            case 1:
+                if (context->baseUrl().scheme() == QLatin1String("file")) // ### use SourceLocation for this!
+                    return context->baseUrl().path();
+                return context->baseUrl().toString();
         }
     } else if (role == ObjectModel::ObjectRole) {
         return QVariant::fromValue(m_contexts.at(index.row()));

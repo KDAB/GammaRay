@@ -32,6 +32,7 @@
 #include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
+#include <ui/uiintegration.h>
 
 #include <common/objectbroker.h>
 #include <common/propertymodel.h>
@@ -52,6 +53,7 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent) :
     ui->contextView->setModel(contextModel);
     ui->contextView->setSelectionModel(ObjectBroker::selectionModel(contextModel));
     new DeferredResizeModeSetter(ui->contextView->header(), 0, QHeaderView::ResizeToContents);
+    connect(ui->contextView, &QWidget::customContextMenuRequested, this, &QmlContextTab::contextContextMenu);
 
     auto propertyModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextPropertyModel"));
     auto propertyProxy = new QSortFilterProxyModel(this);
@@ -66,6 +68,26 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent) :
 
 QmlContextTab::~QmlContextTab()
 {
+}
+
+void QmlContextTab::contextContextMenu(QPoint pos)
+{
+    auto idx = ui->contextView->indexAt(pos);
+    if (!idx.isValid() || !UiIntegration::instance())
+        return;
+
+    idx = idx.sibling(idx.row(), 1);
+    const auto url = idx.data().toString();
+    if (url.isEmpty())
+        return;
+
+    QMenu contextMenu;
+    auto action = contextMenu.addAction(tr("Go to: %1").arg(url));
+    connect(action, &QAction::triggered, [this, url]() {
+        emit UiIntegration::requestNavigateToCode(url, 0);
+    });
+
+    contextMenu.exec(ui->contextView->viewport()->mapToGlobal(pos));
 }
 
 void QmlContextTab::propertiesContextMenu(QPoint pos)

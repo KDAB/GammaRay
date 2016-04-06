@@ -17,6 +17,9 @@
       <enum>Qt::Vertical</enum>
      </property>
      <widget class="QTreeView" name="contextView">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="textElideMode">
        <enum>Qt::ElideMiddle</enum>
       </property>
