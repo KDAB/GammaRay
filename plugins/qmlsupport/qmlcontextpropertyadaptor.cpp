@@ -68,7 +68,20 @@ PropertyData QmlContextPropertyAdaptor::propertyData(int index) const
     pd.setName(m_contextPropertyNames.at(index));
     pd.setValue(context->contextProperty(m_contextPropertyNames.at(index)));
     pd.setClassName(tr("QML Context Property"));
+    pd.setFlags(PropertyData::Writable);
     return pd;
+}
+
+void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant  &value)
+{
+    Q_ASSERT(index >= 0);
+    Q_ASSERT(index < m_contextPropertyNames.size());
+
+    const auto name = m_contextPropertyNames.at(index);
+    auto context = qobject_cast<QQmlContext*>(object().qtObject());
+    if (name.isEmpty() || !context)
+        return;
+    context->setContextProperty(name, value);
 }
 
 void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)

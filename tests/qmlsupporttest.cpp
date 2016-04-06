@@ -29,6 +29,7 @@
 #include <plugins/qmlsupport/qmllistpropertyadaptor.h>
 #include <plugins/qmlsupport/qmlattachedpropertyadaptor.h>
 #include <plugins/qmlsupport/qjsvaluepropertyadaptor.h>
+#include <plugins/qmlsupport/qmlcontextpropertyadaptor.h>
 
 #include <core/propertyadaptor.h>
 #include <core/propertyadaptorfactory.h>
@@ -36,6 +37,7 @@
 #include <core/propertydata.h>
 
 #include <QQmlComponent>
+#include <QQmlContext>
 #include <QQmlEngine>
 
 #include <QDebug>
@@ -66,6 +68,7 @@ private slots:
         PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
+        PropertyAdaptorFactory::registerFactory(QmlContextPropertyAdaptorFactory::instance());
     }
 
     void testQmlListProperty()
@@ -150,6 +153,27 @@ private slots:
         data = jsValueAdaptor->propertyData(1);
         QCOMPARE(data.name(), QStringLiteral("1"));
         QCOMPARE(data.value(), QVariant("world"));
+#endif
+    }
+
+    void testContextProperty()
+    {
+        QQmlEngine engine;
+        engine.rootContext()->setContextProperty("myContextProp", 42);
+
+        auto adaptor = PropertyAdaptorFactory::create(engine.rootContext(), this);
+        QVERIFY(adaptor);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        auto idx = indexOfProperty(adaptor, "myContextProp");
+        QVERIFY(idx >= 0);
+
+        auto data = adaptor->propertyData(idx);
+        QCOMPARE(data.name(), QStringLiteral("myContextProp"));
+        QCOMPARE(data.value().toInt(), 42);
+
+        adaptor->writeProperty(idx, 23);
+        QCOMPARE(engine.rootContext()->contextProperty("myContextProp").toInt(), 23);
 #endif
     }
 };

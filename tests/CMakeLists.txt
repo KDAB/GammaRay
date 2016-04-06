@@ -245,6 +245,7 @@ if(Qt5Quick_FOUND)
     ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmllistpropertyadaptor.cpp
     ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlattachedpropertyadaptor.cpp
     ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qjsvaluepropertyadaptor.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlcontextpropertyadaptor.cpp
   )
   include_directories(SYSTEM ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(qmlsupporttest gammaray_core Qt5::Quick Qt5::Test)
