@@ -46,7 +46,7 @@ struct RingBuffer
   int count() const { return qMin(m_capacity, m_vector.count()); }
   int capacity() const { return m_capacity; }
 
-  const T &last() const { return m_vector.at(count() - 1); }
+  const T &last() const { return at(count() - 1); }
 
   void append(const T &t)
   {
@@ -61,9 +61,7 @@ struct RingBuffer
 
   const T &at(int i) const
   {
-    int index = (i + m_head - m_capacity) % m_capacity;
-    if (index < 0)
-      index += m_capacity;
+    int index = (i + m_head) % m_capacity;
     return m_vector.at(index);
   }
 

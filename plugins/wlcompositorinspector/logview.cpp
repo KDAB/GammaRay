@@ -35,12 +35,13 @@
 #include <QScrollArea>
 #include <QClipboard>
 #include <QApplication>
+#include <QtMath>
 
 #include "ringbuffer.h"
 
 namespace GammaRay {
 
-class LogView::View : public QWidget
+class View : public QWidget
 {
 public:
   View(QWidget *p)
@@ -234,13 +235,229 @@ public:
   QPoint m_selectionEnd;
 };
 
-LogView::LogView(QWidget *p)
-       : QScrollArea(p)
-       , m_view(new View(this))
+
+class Messages : public QScrollArea
 {
-  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  setWidget(m_view);
-  setWidgetResizable(true);
+public:
+  Messages(QWidget *parent)
+    : QScrollArea(parent)
+    , m_view(new View(this))
+  {
+    m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    setWidget(m_view);
+    setWidgetResizable(true);
+  }
+
+  void logMessage(qint64 time, const QByteArray &msg)
+  {
+    auto scrollbar = verticalScrollBar();
+    bool scroll = scrollbar->value() >= scrollbar->maximum();
+
+    add(time, msg);
+
+    if (scroll)
+      scrollbar->setValue(scrollbar->maximum());
+  }
+
+  void reset()
+  {
+    m_view->m_lines.clear();
+    m_view->resize(0, 0);
+  }
+
+  void add(qint64 time, const QByteArray &m)
+  {
+    int count = m_view->m_lines.count();
+    m_view->m_lines.append(QStaticText(QString("[%1ms] %2").arg(QString::number(time / 1e6), QString(m))));
+
+    QSizeF lineSize = m_view->m_lines.last().size();
+
+    int w = m_view->width();
+    int h = m_view->height();
+    if (m_view->m_lines.count() > count) {
+      h += m_view->m_lineHeight;
+    }
+    if (lineSize.width() > w) {
+      w = lineSize.width();
+    }
+    m_view->resize(w, h);
+    m_view->update();
+  }
+
+  View *m_view;
+};
+
+
+class Timeline : public QScrollArea
+{
+public:
+  class View : public QWidget
+  {
+  public:
+    struct DataPoint {
+      qint64 time;
+      QByteArray msg;
+    };
+
+    View()
+      : m_data(500)
+      , m_zoom(100000)
+    {
+      resize(100, 100);
+      setAttribute(Qt::WA_OpaquePaintEvent);
+      setMouseTracking(true);
+    }
+
+    QSize sizeHint() const override
+    {
+      return size();
+    }
+
+    void paintEvent(QPaintEvent *event) override
+    {
+      QPainter painter(this);
+      QRectF drawRect = event->rect();
+      const auto palette = this->palette();
+
+      painter.fillRect(drawRect, palette.base());
+
+      qreal l = 1;
+      qreal step = l / m_zoom;
+      while (step < 60) {
+          l *= 10;
+          step = l / m_zoom;
+      }
+
+      int substeps = 5;
+      int mul = 2;
+      while (step / substeps > 60) {
+        substeps *= mul;
+        mul = mul == 2 ? 5 : 2;
+      }
+
+      //draw the grid lines
+      qreal linesSpacing = step / substeps;
+      int startLine = drawRect.left() / linesSpacing;
+      int s = startLine;
+      for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += linesSpacing, s++) {
+        bool isStep = s % substeps == 0;
+        painter.setPen(isStep ? palette.color(QPalette::Highlight) : palette.color(QPalette::Midlight));
+        painter.drawLine(i, isStep * 15, i, drawRect.bottom());
+      }
+
+      //draw the text after having drawn all the lines, so we're sure they don't go over it
+      s = startLine;
+      painter.setPen(palette.color(QPalette::Highlight));
+      for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += step / substeps, s++) {
+        bool isStep = s % substeps == 0;
+        if (isStep) {
+          painter.drawText(i-100, 0, 200, 200, Qt::AlignHCenter, QString("%1ms").arg(QString::number(qreal(i * m_zoom) / 1e6, 'g', 4)));
+        }
+      }
+
+      //finally draw the event lines
+      painter.setPen(palette.color(QPalette::Text));
+      bool hasDrawn = false;
+      for (int i = 0; i < m_data.count(); ++i) {
+        const auto &point = m_data.at(i);
+        qreal offset = point.time - m_start;
+        qreal x = offset / m_zoom;
+        qreal y = qMax(20., drawRect.y());
+        if (!drawRect.contains(QPoint(x, y))) {
+          if (hasDrawn)
+            break;
+          else
+            continue;
+        }
+        hasDrawn = true;
+
+        painter.drawLine(x, y, x, drawRect.bottom());
+      }
+    }
+
+    void mouseMoveEvent(QMouseEvent *e) override
+    {
+      const QPointF &pos = e->posF();
+      for (int i = 0; i < m_data.count(); ++i) {
+        qreal timex = (m_data.at(i).time - m_start) / m_zoom;
+        if (fabs(pos.x() - timex) < 2) {
+          setToolTip(m_data.at(i).msg);
+          return;
+        }
+      }
+    }
+
+    qint64 round(qint64 time, int direction)
+    {
+      qint64 v = time % 200;
+      return time + direction * v;
+    }
+
+    void updateSize()
+    {
+      if (m_data.count() == 0)
+        return;
+
+      m_start = round(m_data.at(0).time, -1);
+      m_timespan = round(m_data.last().time, 1) - m_start;
+      resize(m_timespan / m_zoom, height());
+    }
+
+    RingBuffer<DataPoint> m_data;
+    qreal m_zoom;
+    qint64 m_start;
+    qint64 m_timespan;
+  };
+
+  Timeline(QWidget *parent)
+    : QScrollArea(parent)
+  {
+    m_view.setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+    setWidget(&m_view);
+    setWidgetResizable(true);
+    m_view.installEventFilter(this);
+  }
+
+  void logMessage(qint64 time, const QByteArray &msg)
+  {
+    m_view.m_data.append({ time, msg });
+    m_view.updateSize();
+  }
+
+  bool eventFilter(QObject *o, QEvent *e) override
+  {
+    if (o == &m_view && e->type() == QEvent::Wheel) {
+      QWheelEvent *we = static_cast<QWheelEvent *>(e);
+
+      qreal pos = we->posF().x() * m_view.m_zoom;
+      auto sb = horizontalScrollBar();
+      int sbvalue = horizontalScrollBar()->value();
+
+      m_view.m_zoom += (1. - qPow( 5. / 4., qreal(we->angleDelta().y()) / 150.)) * m_view.m_zoom;
+      if (m_view.m_zoom < 10) {
+        m_view.m_zoom = 10;
+      }
+
+      m_view.updateSize();
+
+      //keep the point under the mouse still, if possible
+      pos = pos / m_view.m_zoom;
+      sb->setValue(sbvalue + (0.5 + pos - we->posF().x()));
+    }
+    return QScrollArea::eventFilter(o, e);
+  }
+
+  View m_view;
+};
+
+LogView::LogView(QWidget *p)
+       : QTabWidget(p)
+       , m_messages(new Messages(this))
+       , m_timeline(new Timeline(this))
+{
+  setTabPosition(QTabWidget::West);
+  addTab(m_messages, tr("Messages"));
+  addTab(m_timeline, tr("Timeline"));
 }
 
 QSize LogView::sizeHint() const
@@ -250,38 +467,13 @@ QSize LogView::sizeHint() const
 
 void LogView::logMessage(qint64 time, const QByteArray &msg)
 {
-  auto scrollbar = verticalScrollBar();
-  bool scroll = scrollbar->value() >= scrollbar->maximum();
-
-  add(time, msg);
-
-  if (scroll)
-    scrollbar->setValue(scrollbar->maximum());
+  m_messages->logMessage(time, msg);
+  m_timeline->logMessage(time, msg);
 }
 
 void LogView::reset()
 {
-  m_view->m_lines.clear();
-  m_view->resize(0, 0);
-}
-
-void LogView::add(qint64 time, const QByteArray &m)
-{
-  int count = m_view->m_lines.count();
-  m_view->m_lines.append(QStaticText(QString("[%1ms] %2").arg(QString::number(time), QString(m))));
-
-  QSizeF lineSize = m_view->m_lines.last().size();
-
-  int w = m_view->width();
-  int h = m_view->height();
-  if (m_view->m_lines.count() > count) {
-    h += m_view->m_lineHeight;
-  }
-  if (lineSize.width() > w) {
-    w = lineSize.width();
-  }
-  m_view->resize(w, h);
-  m_view->update();
+  m_messages->reset();
 }
 
 }
