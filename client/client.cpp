@@ -96,8 +96,11 @@ void Client::connectToHost(const QUrl &url, int tryAgain)
 
 void Client::disconnectFromHost()
 {
-    if (m_clientDevice)
+    if (m_clientDevice) {
         m_clientDevice->disconnectFromHost();
+        m_clientDevice->deleteLater();
+        m_clientDevice = 0;
+    }
 }
 
 void Client::socketConnected()
@@ -108,8 +111,10 @@ void Client::socketConnected()
 
 void Client::socketError()
 {
-  m_clientDevice->deleteLater();
-  m_clientDevice = 0;
+    if (m_clientDevice) {
+        m_clientDevice->deleteLater();
+        m_clientDevice = 0;
+    }
 }
 
 void Client::socketDisconnected()
