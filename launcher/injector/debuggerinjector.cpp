@@ -103,7 +103,8 @@ void DebuggerInjector::processFinished()
   mExitStatus = m_process->exitStatus();
   if (!mManualError) {
     mProcessError = m_process->error();
-    mErrorString = m_process->errorString();
+    if (mProcessError != QProcess::UnknownError)
+      mErrorString = m_process->errorString();
   }
   emit attached();
 }
