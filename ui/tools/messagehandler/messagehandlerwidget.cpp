@@ -31,6 +31,7 @@
 #include "messagehandlerclient.h"
 #include "messagedisplaymodel.h"
 
+#include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
 #include <ui/uiintegration.h>
 
@@ -84,6 +85,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
   ui->backtraceView->setModel(m_backtraceModel);
 
   ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
+  new DeferredResizeModeSetter(ui->categoriesView->header(), 0, QHeaderView::ResizeToContents);
 }
 
 MessageHandlerWidget::~MessageHandlerWidget()
