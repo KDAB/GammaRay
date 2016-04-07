@@ -130,8 +130,9 @@ public:
 QString QmlObjectDataProvider::name(const QObject *obj) const
 {
     QQmlContext *ctx = QQmlEngine::contextForObject(obj);
-    const auto id = ctx ? ctx->nameForObject(const_cast<QObject*>(obj)) : QString();
-    return id;
+    if (!ctx || !ctx->engine())
+        return QString(); // nameForObject crashes for contexts that have no engine (yet)
+    return ctx->nameForObject(const_cast<QObject*>(obj));
 }
 
 QString QmlObjectDataProvider::typeName(QObject* obj) const
