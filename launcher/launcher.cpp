@@ -156,7 +156,8 @@ bool Launcher::start()
 
   connect(d->injector.data(), SIGNAL(started()), this, SLOT(restartTimer()));
   connect(d->injector.data(), SIGNAL(finished()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
-  connect(d->injector.data(), SIGNAL(attached()), this, SIGNAL(attached()), Qt::QueuedConnection);
+  if (d->options.isLaunch())
+      connect(d->injector.data(), SIGNAL(attached()), this, SLOT(injectorFinished()), Qt::QueuedConnection);
   connect(d->injector.data(), SIGNAL(stderrMessage(QString)), this, SIGNAL(stderrMessage(QString)));
   connect(d->injector.data(), SIGNAL(stdoutMessage(QString)), this, SIGNAL(stdoutMessage(QString)));
 
@@ -324,6 +325,9 @@ void Launcher::readyRead()
     if (d->options.uiMode() == LaunchOptions::OutOfProcessUi) {
         startClient(d->serverAddress);
     }
+
+    if (d->options.isAttach())
+        emit attached();
 
     d->state |= ClientStarted;
     checkDone();
