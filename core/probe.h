@@ -54,6 +54,7 @@ class ObjectTreeModel;
 class ToolModel;
 class MainWindow;
 class BenchSuite;
+class Server;
 
 class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
@@ -188,6 +189,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     void showInProcessUi();
 
     static void createProbe(bool findExisting);
+    void resendServerAddress();
 
     explicit Probe(QObject *parent = 0);
     static QAtomicPointer<Probe> s_instance;
@@ -218,6 +220,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QVector<QObject*> m_globalEventFilters;
     QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
     SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
+    Server *m_server;
 };
 
 }

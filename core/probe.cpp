@@ -216,7 +216,8 @@ Probe::Probe(QObject *parent):
   m_metaObjectTreeModel(new MetaObjectTreeModel(this)),
   m_toolModel(0),
   m_window(0),
-  m_queueTimer(new QTimer(this))
+  m_queueTimer(new QTimer(this)),
+  m_server(Q_NULLPTR)
 {
   Q_ASSERT(thread() == qApp->thread());
   IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
@@ -228,8 +229,8 @@ Probe::Probe(QObject *parent):
   sortedToolModel->setDynamicSortFilter(true);
   sortedToolModel->sort(0);
 
-  Server *server = new Server(this);
-  ProbeSettings::sendServerAddress(server->externalAddress());
+  m_server = new Server(this);
+  ProbeSettings::sendServerAddress(m_server->externalAddress());
 
   StreamOperators::registerOperators();
   ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
@@ -366,6 +367,14 @@ void Probe::createProbe(bool findExisting)
 
   // eventually initialize the rest
   QMetaObject::invokeMethod(probe, "delayedInit", Qt::QueuedConnection);
+}
+
+void Probe::resendServerAddress()
+{
+    Q_ASSERT(isInitialized());
+    Q_ASSERT(m_server);
+    ProbeSettings::receiveSettings();
+    ProbeSettings::sendServerAddress(m_server->externalAddress());
 }
 
 void Probe::startupHookReceived()

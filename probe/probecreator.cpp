@@ -70,11 +70,17 @@ ProbeCreator::ProbeCreator(Type type)
 
 void ProbeCreator::createProbe()
 {
+  if (!qApp) {
+      deleteLater();
+      return;
+  }
+
   // make sure we are in the ui thread
   Q_ASSERT(QThread::currentThread() == qApp->thread());
 
-  if (!qApp || Probe::isInitialized()) {
-    // never create it twice
+  if (Probe::isInitialized()) {
+    // already exists, so we are trying to re-attach to an already injected process
+    Probe::instance()->resendServerAddress();
     deleteLater();
     return;
   }
