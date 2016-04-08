@@ -30,7 +30,6 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, int level, Widget3DWidget *pare
     , mGeomDirty(true)
     , mTextureDirty(true)
 {
-
     mUpdateTimer = new QTimer(this);
     mUpdateTimer->setSingleShot(true);
     mUpdateTimer->setInterval(200);
@@ -218,20 +217,20 @@ namespace {
     }
 }
 
-Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj) const
+Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, bool createWhenMissing) const
 {
     Widget3DWidget *widget = mDataCache.value(obj, Q_NULLPTR);
-    if (!widget) {
+    if (!widget && createWhenMissing) {
         Widget3DWidget *parent = Q_NULLPTR;
         if (obj->parent()) {
-             parent = widgetForObject(obj->parent());
+             parent = widgetForObject(obj->parent(), createWhenMissing);
              Q_ASSERT(parent);
         }
         widget = new Widget3DWidget(qobject_cast<QWidget*>(obj), parentDepth(obj), parent);
         connect(widget, &Widget3DWidget::geometryChanged,
-                this, &Widget3DModel::widgetGeometryChanged);
+                this, &Widget3DModel::onWidgetGeometryChanged);
         connect(widget, &Widget3DWidget::textureChanged,
-                this, &Widget3DModel::widgetTextureChanged);
+                this, &Widget3DModel::onWidgetTextureChanged);
         connect(widget, &Widget3DWidget::visibleChanged,
                 this, &Widget3DModel::invalidate);
         mDataCache.insert(obj, widget);
@@ -239,14 +238,14 @@ Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj) const
     return widget;
 }
 
-Widget3DWidget *Widget3DModel::widgetForIndex(const QModelIndex &idx) const
+Widget3DWidget *Widget3DModel::widgetForIndex(const QModelIndex &idx, bool createWhenMissing) const
 {
    QObject *obj = this->QSortFilterProxyModel::data(idx, ObjectModel::ObjectRole).value<QObject*>();
    if (!obj || !obj->isWidgetType()) {
        return Q_NULLPTR;
    }
 
-   return widgetForObject(obj);
+   return widgetForObject(obj, createWhenMissing);
 }
 
 bool Widget3DModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
@@ -265,7 +264,7 @@ bool Widget3DModel::lessThan(const QModelIndex &source_left, const QModelIndex &
     return parentDepth(objLeft) < parentDepth(objRight);
 }
 
-void Widget3DModel::widgetGeometryChanged()
+void Widget3DModel::onWidgetGeometryChanged()
 {
     Widget3DWidget *widget = qobject_cast<Widget3DWidget*>(sender());
     Q_ASSERT(widget);
@@ -280,7 +279,7 @@ void Widget3DModel::widgetGeometryChanged()
     }
 }
 
-void Widget3DModel::widgetTextureChanged()
+void Widget3DModel::onWidgetTextureChanged()
 {
     Widget3DWidget *widget = qobject_cast<Widget3DWidget*>(sender());
     Q_ASSERT(widget);
@@ -291,6 +290,18 @@ void Widget3DModel::widgetTextureChanged()
         if (widgetForIndex(idx) == widget) {
             Q_EMIT dataChanged(idx, idx, { TextureRole });
             break;
+        }
+    }
+}
+
+void Widget3DModel::onRowsRemoved(const QModelIndex &parent, int first, int last)
+{
+    for (int i = last; i >= first; --i) {
+        const QModelIndex idx = index(i, 0, parent);
+        Widget3DWidget *widget = widgetForIndex(idx, false);
+        if (widget) {
+            mDataCache.remove(widget->qWidget());
+            widget->deleteLater();
         }
     }
 }

@@ -80,12 +80,13 @@ protected:
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void widgetGeometryChanged();
-    void widgetTextureChanged();
+    void onWidgetGeometryChanged();
+    void onWidgetTextureChanged();
+    void onRowsRemoved(const QModelIndex &parent, int first, int last);
 
 private:
-    Widget3DWidget *widgetForObject(QObject *object) const;
-    Widget3DWidget *widgetForIndex(const QModelIndex &idx) const;
+    Widget3DWidget *widgetForObject(QObject *object, bool createWhenMissing = true) const;
+    Widget3DWidget *widgetForIndex(const QModelIndex &idx, bool createWhenMissing = true) const;
 
     // mutable becasue we populate it lazily from data() const
     mutable QHash<QObject *, Widget3DWidget*> mDataCache;
