@@ -42,7 +42,7 @@ Entity {
                              -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
                              root.level / (_scaleFactor * 2.0) + root.level * explosionFactor
                          )
-        },
+        }
 
         /*
         ObjectPicker {

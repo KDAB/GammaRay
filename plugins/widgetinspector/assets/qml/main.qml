@@ -17,8 +17,6 @@ Entity {
                 camera: mainCamera
                 clearColor: "black"
             }
-
-            pickingSettings.pickMethod: PickMethod.TrianglePicking
         }
     ]
 
