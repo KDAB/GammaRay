@@ -37,13 +37,6 @@ Entity {
 
     property real explosionFactor: 0
 
-    QQ2.Behavior on explosionFactor {
-        QQ2.NumberAnimation {
-            duration: 200
-            easing.type: Easing.InOutQuad
-        }
-    }
-
     // Render from the mainCamera
     components: [
         RenderSettings {
@@ -83,10 +76,8 @@ Entity {
     QQ2.Connections {
         target: _window
         onWheel: {
-            root.explosionFactor += delta / 100.0;
-            if (root.explosionFactor < 0) {
-                root.explosionFactor = 0.0;
-            }
+            var newFactor = root.explosionFactor + delta / 80.0;
+            root.explosionFactor = newFactor < 0 ? 0 : newFactor;
         }
     }
 

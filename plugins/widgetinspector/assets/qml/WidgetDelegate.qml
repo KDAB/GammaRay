@@ -49,6 +49,15 @@ Entity {
     readonly property real _geomHeight: root.geometry.height / _scaleFactor
     readonly property real _geomX: root.geometry.x / _scaleFactor
     readonly property real _geomY: root.geometry.y / _scaleFactor
+    property real _geomZ: root.level / (_scaleFactor * 2.0) + root.level * root.explosionFactor
+
+    QQ2.Behavior on _geomZ {
+        QQ2.NumberAnimation {
+            duration: 200
+            easing.type: Easing.OutQuart
+        }
+    }
+
 
     components: [
         CuboidMesh {
@@ -75,7 +84,7 @@ Entity {
             translation: Qt.vector3d(
                              _geomWidth / 2.0 + _geomX - topLevelGeometry.width / 2.0 / _scaleFactor,
                              -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
-                             root.level / (_scaleFactor * 2.0) + root.level * explosionFactor
+                             _geomZ
                          )
         },
 
