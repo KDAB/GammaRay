@@ -112,6 +112,7 @@ void Widget3DWidget::updateGeometry()
     mGeometry = QRect(mappedPos, QSize(mQWidget->width(), mQWidget->height()));
     QRect parentGeom;
     if (parent()) {
+        // Artificial clipping - don't shrink texture coordinates
         parentGeom = parentWidget()->geometry();
         if (mGeometry.x() < parentGeom.x()) {
             mTextureGeometry.setRight(parentGeom.x() - mGeometry.x());
@@ -198,10 +199,15 @@ QVariant Widget3DModel::data(const QModelIndex &index, int role) const
 QMap<int, QVariant> Widget3DModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> data;
-    data[TextureRole] = index.data(TextureRole);
-    data[BackTextureRole] = index.data(BackTextureRole);
-    data[GeometryRole] = index.data(GeometryRole);
-    data[LevelRole] = index.data(LevelRole);
+    auto w = widgetForIndex(index);
+    if (!w) {
+        return data;
+    }
+
+    data[TextureRole] = w->texture();
+    data[BackTextureRole] = w->backTexture();
+    data[GeometryRole] = w->geometry();
+    data[LevelRole] = w->level();
     return data;
 }
 
@@ -241,9 +247,8 @@ Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, bool createWhenMiss
 Widget3DWidget *Widget3DModel::widgetForIndex(const QModelIndex &idx, bool createWhenMissing) const
 {
    QObject *obj = this->QSortFilterProxyModel::data(idx, ObjectModel::ObjectRole).value<QObject*>();
-   if (!obj || !obj->isWidgetType()) {
-       return Q_NULLPTR;
-   }
+   Q_ASSERT(obj); // bug in model?
+   Q_ASSERT(obj->isWidgetType()); // this should be already filtered out by filterAcceptsRow()
 
    return widgetForObject(obj, createWhenMissing);
 }
@@ -259,7 +264,9 @@ bool Widget3DModel::filterAcceptsRow(int source_row, const QModelIndex &source_p
 bool Widget3DModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
     QObject *objLeft = sourceModel()->data(source_left, ObjectModel::ObjectRole).value<QObject*>();
+    Q_ASSERT(objLeft);
     QObject *objRight = sourceModel()->data(source_right, ObjectModel::ObjectRole).value<QObject*>();
+    Q_ASSERT(objRight);
 
     return parentDepth(objLeft) < parentDepth(objRight);
 }
@@ -269,10 +276,10 @@ void Widget3DModel::onWidgetGeometryChanged()
     Widget3DWidget *widget = qobject_cast<Widget3DWidget*>(sender());
     Q_ASSERT(widget);
 
-    // FIXME: Can this be even more inefficient?
+    // TODO: Use a reverse-lookup map?
     for (int i = 0; i < rowCount(); ++i) {
         const QModelIndex idx = index(i, 0, QModelIndex());
-        if (widgetForIndex(idx) == widget) {
+        if (widgetForIndex(idx, false) == widget) {
             Q_EMIT dataChanged(idx, idx, { GeometryRole });
             break;
         }
@@ -284,10 +291,10 @@ void Widget3DModel::onWidgetTextureChanged()
     Widget3DWidget *widget = qobject_cast<Widget3DWidget*>(sender());
     Q_ASSERT(widget);
 
-    // FIXME: Can this be even more inefficient?
+    // TODO: Use a reverse-lookup map?
     for (int i = 0; i < rowCount(); ++i) {
         const QModelIndex idx = index(i, 0, QModelIndex());
-        if (widgetForIndex(idx) == widget) {
+        if (widgetForIndex(idx, false) == widget) {
             Q_EMIT dataChanged(idx, idx, { TextureRole });
             break;
         }
