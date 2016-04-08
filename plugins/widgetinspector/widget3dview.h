@@ -31,9 +31,6 @@
 
 #include <QWidget>
 
-class QAbstractItemModel;
-class QProgressBar;
-
 namespace Qt3DCore {
 namespace Quick {
 class QQmlAspectEngine;

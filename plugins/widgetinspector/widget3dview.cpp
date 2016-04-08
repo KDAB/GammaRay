@@ -40,7 +40,6 @@
 #include <QVariant>
 #include <QUrl>
 #include <QWheelEvent>
-#include <QProgressBar>
 
 #include <Qt3DQuick/QQmlAspectEngine>
 #include <Qt3DCore/QAspectEngine>
