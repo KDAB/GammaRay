@@ -7,10 +7,11 @@ import com.kdab.GammaRay 1.0
 Material {
     id: root
 
-    property real explosionFactor : 0
+    property real explosionFactor: 0
+    property real highlightFactor: 0
+
     property var frontTextureImage
     property var backTextureImage
-    property bool highlighted : false
 
     Texture2D {
         id: frontTexture;
@@ -46,8 +47,8 @@ Material {
             value: root.backTextureImage ? backTexture : frontTexture
         },
         Parameter {
-            name: "highlighted"
-            value: root.highlighted
+            name: "highlightFactor"
+            value: root.highlightFactor
         }
     ]
 

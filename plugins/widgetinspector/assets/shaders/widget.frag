@@ -10,7 +10,7 @@ out vec4 fragColor;
 
 uniform sampler2D frontTexture;
 uniform sampler2D backTexture;
-uniform bool highlighted;
+uniform float highlightFactor;
 
 void main(void)
 {
@@ -26,7 +26,5 @@ void main(void)
         fragColor = vec4(1.0, 0.0, 0.0, 1.0);
     }
 
-    if (highlighted) {
-        fragColor = mix(fragColor, vec4(0.5, 0.5, 0.5, 1.0), 0.5);
-    }
+    fragColor = mix(fragColor, vec4(0.5, 0.5, 0.5, 1.0), highlightFactor);
 }

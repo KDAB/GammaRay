@@ -32,7 +32,13 @@ Entity {
             id: material
             frontTextureImage: root.frontTextureImage
             backTextureImage: root.backTextureImage
-            //highlighted: objectPicker.containsMouse
+            highlightFactor: objectPicker.containsMouse ? 0.5 : 0.0
+
+            QQ2.Behavior on highlightFactor {
+                QQ2.NumberAnimation {
+                    duration: 100;
+                }
+            }
         },
 
         Transform {
@@ -42,14 +48,12 @@ Entity {
                              -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
                              root.level / (_scaleFactor * 2.0) + root.level * explosionFactor
                          )
-        }
+        },
 
-        /*
         ObjectPicker {
             id: objectPicker
             hoverEnabled: true
             onClicked: console.log("Click!")
         }
-        */
     ]
 }
