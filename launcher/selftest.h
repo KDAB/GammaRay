@@ -1,10 +1,10 @@
 /*
-  selftestpage.h
+  selftest.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2011-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,38 +26,39 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SELFTESTPAGE_H
-#define GAMMARAY_SELFTESTPAGE_H
+#ifndef GAMMARAY_SELFTEST_H
+#define GAMMARAY_SELFTEST_H
 
-#include <QWidget>
+#include "gammaray_launcher_export.h"
 
-class QStandardItemModel;
+#include <QObject>
 
 namespace GammaRay {
 
-namespace Ui {
-  class SelfTestPage;
-}
-
-class SelfTestPage : public QWidget
+/** @brief Self-test functions for probes and injectors. */
+class GAMMARAY_LAUNCHER_EXPORT SelfTest : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit SelfTestPage(QWidget *parent = 0);
-    ~SelfTestPage();
+    Q_OBJECT
+public:
+    explicit SelfTest(QObject *parent = Q_NULLPTR);
+    ~SelfTest();
 
-  public slots:
-    void run();
+    /** Run all available tests. */
+    bool checkEverything();
 
-  private slots:
-    void error(const QString &msg);
+    /** Run tests for one specific injector only. */
+    bool checkInjector(const QString &injectorName);
+
+signals:
+    /** Emitted for informational messages, ie. passing tests. */
     void information(const QString &msg);
+    /** Emitted for failed tests. */
+    void error(const QString &msg);
 
-  private:
-    Ui::SelfTestPage *ui;
-    QStandardItemModel *m_resultModel;
+private:
+    bool checkProbes();
+    bool checkInjectors();
 };
-
 }
 
-#endif // GAMMARAY_SELFTESTPAGE_H
+#endif // GAMMARAY_SELFTEST_H

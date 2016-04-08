@@ -19,6 +19,7 @@ set(gammaray_launcher_shared_srcs
   clientlauncher.cpp
   launcherfinder.cpp
   launcher.cpp
+  selftest.cpp
 )
 
 if(WIN32)

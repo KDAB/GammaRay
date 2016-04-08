@@ -32,11 +32,8 @@
 #include "probefinder.h"
 #include "ui_selftestpage.h"
 
-#include "injector/injectorfactory.h"
+#include <launcher/selftest.h>
 
-#include <launcher/probeabi.h>
-
-#include <QFileInfo>
 #include <QStandardItemModel>
 
 using namespace GammaRay;
@@ -57,65 +54,10 @@ SelfTestPage::~SelfTestPage()
 void SelfTestPage::run()
 {
   m_resultModel->clear();
-  testProbe();
-  testAvailableInjectors();
-  testInjectors();
-}
-
-void SelfTestPage::testProbe()
-{
-  int validProbeCount = 0;
-  const QVector<ProbeABI> probeABIs = ProbeFinder::listProbeABIs();
-  foreach (const ProbeABI &abi, probeABIs) {
-    const QString probePath = ProbeFinder::findProbe(abi);
-    if (probePath.isEmpty()) {
-      error(tr("No probe found for ABI %1.").arg(abi.id()));
-      continue;
-    }
-
-    QFileInfo fi(probePath);
-    if (!fi.exists() || !fi.isFile() || !fi.isReadable()) {
-      error(tr("Probe at %1 is invalid."));
-      continue;
-    }
-
-    information(tr("Found valid probe for ABI %1 at %2.").arg(abi.id(), probePath));
-    ++validProbeCount;
-  }
-
-  if (validProbeCount == 0) {
-    error(tr("No probes found - GammaRay not functional."));
-  }
-}
-
-void SelfTestPage::testAvailableInjectors()
-{
-  const QStringList injectors = InjectorFactory::availableInjectors();
-  if (injectors.isEmpty()) {
-    error(tr("No injectors available - GammaRay not functional."));
-    return;
-  }
-
-  information(tr("The following injectors are available: %1").
-              arg(injectors.join(QStringLiteral(", "))));
-}
-
-void SelfTestPage::testInjectors()
-{
-  foreach (const QString &injectorType, InjectorFactory::availableInjectors()) {
-    AbstractInjector::Ptr injector = InjectorFactory::createInjector(injectorType);
-    if (!injector) {
-      error(tr("Unable to create instance of injector %1.").arg(injectorType));
-      continue;
-    }
-    if (injector->selfTest()) {
-      information(tr("Injector %1 successfully passed its self-test.").
-                  arg(injectorType));
-    } else {
-      error(tr("Injector %1 failed to pass its self-test: %2.").
-            arg(injectorType, injector->errorString()));
-    }
-  }
+  SelfTest selfTest;
+  connect(&selfTest, SIGNAL(information(QString)), this, SLOT(information(QString)));
+  connect(&selfTest, SIGNAL(error(QString)), this, SLOT(error(QString)));
+  selfTest.checkEverything();
 }
 
 void SelfTestPage::error(const QString &msg)
