@@ -116,6 +116,13 @@ int main(int argc, char **argv) {
   // app to run
   const QString debuggee = args.takeFirst();
 
+  // run the self-test first, and skip the test if that fails
+  // this prevents failures with Yama ptrace_scope activated for example
+  if (QProcess::execute(gammaray, QStringList() << QStringLiteral("--self-test") << injector) == 1) {
+    qWarning() << "Skipping test due to injector self-test failure!";
+    return 0;
+  }
+
   AttachHelper helper(gammaray, injector, debuggee, args);
 
   return app.exec();

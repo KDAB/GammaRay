@@ -76,12 +76,14 @@ foreach (injectorType ${INJECTOR_TYPES})
   endif()
 endforeach()
 
-if(GDB_EXECUTABLE)
-  add_test(attachtest-gdb
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray gdb
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-  )
-endif()
+add_test(NAME attachtest-gdb
+  COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray gdb
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+)
+add_test(NAME attachtest-lldb
+  COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray lldb
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+)
 
 ### MultiSignalMapper test
 
