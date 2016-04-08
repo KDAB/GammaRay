@@ -175,6 +175,7 @@ void Widget3DWidget::updateTexture()
     mIsPainting = true;
 
     mTextureImage = QImage(mTextureGeometry.size(), QImage::Format_RGBA8888);
+    mTextureImage.fill(mQWidget->palette().button().color());
     mQWidget->render(&mTextureImage, QPoint(0, 0), QRegion(mTextureGeometry), QWidget::DrawWindowBackground);
 
     if (!parent()) { // tlw
