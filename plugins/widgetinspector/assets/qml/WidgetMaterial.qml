@@ -10,6 +10,7 @@ Material {
     property real explosionFactor : 0
     property var frontTextureImage
     property var backTextureImage
+    property bool highlighted : false
 
     Texture2D {
         id: frontTexture;
@@ -54,33 +55,28 @@ Material {
     effect: Effect {
         id: effect;
 
+        parameters: root.parameters
+
         techniques: [
             Technique {
-                graphicsApiFilter.api: GraphicsApiFilter.OpenGL
-                graphicsApiFilter.profile: GraphicsApiFilter.CoreProfile
-                graphicsApiFilter.majorVersion: 3
-                graphicsApiFilter.minorVersion: 3
+                graphicsApiFilter {
+                    api: GraphicsApiFilter.OpenGL
+                    profile: GraphicsApiFilter.CoreProfile
+                    majorVersion: 3
+                    minorVersion: 3
+                }
+
+                filterKeys: [
+                    FilterKey {
+                          name: "renderingStyle"
+                          value: "forward"
+                    }
+                ]
+
+                parameters: root.parameters
 
                 renderPasses: [
                     RenderPass {
-                        bindings: [
-                            ParameterMapping {
-                                parameterName: "frontTexture"
-                                shaderVariableName: "frontTexture"
-                                bindingType: ParameterMapping.Uniform
-                            },
-                            ParameterMapping {
-                                parameterName: "backTexture"
-                                shaderVariableName: "backTexture"
-                                bindingType: ParameterMapping.Uniform
-                            },
-                            ParameterMapping {
-                                parameterName: "highlighted"
-                                shaderVariableName: "highlighted"
-                                bindingType: ParameterMapping.Uniform
-                            }
-                        ]
-
                         shaderProgram: ShaderProgram {
                             vertexShaderCode: loadSource("qrc:/assets/shaders/widget.vert")
                             //geometryShaderCode: loadSource("qrc:/shaders/widget.geom")

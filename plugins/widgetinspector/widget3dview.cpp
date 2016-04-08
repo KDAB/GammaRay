@@ -117,11 +117,8 @@ Widget3DView::Widget3DView(QWidget* parent)
     mEngine->aspectEngine()->registerAspect(new Qt3DInput::QInputAspect);
     mEngine->aspectEngine()->registerAspect(new Qt3DLogic::QLogicAspect);
 
-    QVariantMap data;
-    data[QStringLiteral("surface")] = QVariant::fromValue(static_cast<QSurface*>(mWindow));
-    data[QStringLiteral("eventSource")] = QVariant::fromValue(mWindow);
-    mEngine->aspectEngine()->setData(data);
-
+    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_surface"), mWindow);
+    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_eventSource"), mWindow);
     mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
     mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), model);
     mEngine->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));

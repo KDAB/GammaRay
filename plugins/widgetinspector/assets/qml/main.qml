@@ -1,5 +1,4 @@
 import QtQuick 2.5 as QQ2
-import QtQml 2.2 as QQml2
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
@@ -11,14 +10,22 @@ Entity {
 
     // Render from the mainCamera
     components: [
-        FrameGraph {
+        RenderSettings {
             activeFrameGraph: ForwardRenderer {
                 id: renderer
                 camera: mainCamera
                 clearColor: "black"
+                window: _surface
             }
+
+            pickingSettings.pickMethod: PickingSettings.TrianglePicking
+        },
+
+        InputSettings {
+            eventSource: _eventSource
         }
     ]
+
 
     Camera {
         id: mainCamera

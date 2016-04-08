@@ -2,7 +2,7 @@
 #define WIDGET3DTEXTURE_H
 
 #include <Qt3DRender/QAbstractTextureImage>
-#include <Qt3DRender/QTextureDataFunctor>
+#include <Qt3DRender/QTextureImageDataGenerator>
 
 #include <QImage>
 
@@ -21,7 +21,7 @@ public:
 
     QImage image() const;
 
-    Qt3DRender::QTextureDataFunctorPtr dataFunctor() const Q_DECL_OVERRIDE;
+    Qt3DRender::QTextureImageDataGeneratorPtr dataGenerator() const Q_DECL_OVERRIDE;
 public Q_SLOTS:
     void setImage(const QImage &image);
 

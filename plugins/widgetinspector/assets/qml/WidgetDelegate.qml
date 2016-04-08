@@ -48,7 +48,7 @@ Entity {
         ObjectPicker {
             id: objectPicker
             hoverEnabled: true
-            onClicked: console.log(widget.qWidget.objectName + ": Clicked!");
+            onClicked: console.log("Click!")
         }
         */
     ]

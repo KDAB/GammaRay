@@ -5,16 +5,16 @@
 namespace GammaRay
 {
 
-class Widget3DImageTextureImageFunctor : public Qt3DRender::QTextureDataFunctor
+class Widget3DImageTextureDataGenerator : public Qt3DRender::QTextureImageDataGenerator
 {
 public:
-    Widget3DImageTextureImageFunctor(const QImage &image)
-        : Qt3DRender::QTextureDataFunctor()
+    Widget3DImageTextureDataGenerator(const QImage &image)
+        : Qt3DRender::QTextureImageDataGenerator()
         , mImage(image)
     {
     }
 
-    ~Widget3DImageTextureImageFunctor()
+    ~Widget3DImageTextureDataGenerator()
     {
     }
 
@@ -25,13 +25,13 @@ public:
         return dataPtr;
     }
 
-    bool operator==(const Qt3DRender::QTextureDataFunctor &other) const Q_DECL_OVERRIDE
+    bool operator==(const Qt3DRender::QTextureImageDataGenerator &other) const Q_DECL_OVERRIDE
     {
-        const auto otherFtor = functor_cast<Widget3DImageTextureImageFunctor>(&other);
+        const auto otherFtor = functor_cast<Widget3DImageTextureDataGenerator>(&other);
         return (otherFtor != Q_NULLPTR && otherFtor->mImage == mImage);
     }
 
-    QT3D_FUNCTOR(Widget3DImageTextureImageFunctor)
+    QT3D_FUNCTOR(Widget3DImageTextureDataGenerator)
 
 private:
     QImage mImage;
@@ -48,6 +48,7 @@ Widget3DImageTextureImage::Widget3DImageTextureImage(Qt3DCore::QNode *parent)
 
 Widget3DImageTextureImage::~Widget3DImageTextureImage()
 {
+    cleanup();
 }
 
 QImage Widget3DImageTextureImage::image() const
@@ -64,9 +65,9 @@ void Widget3DImageTextureImage::setImage(const QImage &image)
     }
 }
 
-Qt3DRender::QTextureDataFunctorPtr Widget3DImageTextureImage::dataFunctor() const
+Qt3DRender::QTextureImageDataGeneratorPtr Widget3DImageTextureImage::dataGenerator() const
 {
-    return Qt3DRender::QTextureDataFunctorPtr(new Widget3DImageTextureImageFunctor(mImage));
+    return Qt3DRender::QTextureImageDataGeneratorPtr(new Widget3DImageTextureDataGenerator(mImage));
 }
 
 void Widget3DImageTextureImage::copy(const Qt3DCore::QNode *ref)
