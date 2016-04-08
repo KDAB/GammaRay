@@ -64,7 +64,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
   auto objectSearchLine = new QLineEdit(this);
-  new SearchLineController(objectSearchLine, proxy);
+  new SearchLineController(objectSearchLine, model);
 
   PropertyWidget *propertyWidget = new PropertyWidget(this);
   m_propertyWidget = propertyWidget;
