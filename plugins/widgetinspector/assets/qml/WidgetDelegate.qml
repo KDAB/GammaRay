@@ -37,7 +37,6 @@ Entity {
 
     property rect topLevelGeometry
     property real explosionFactor: 0
-    property int modelIndex: -1
 
     property int level
     property var frontTextureImage

@@ -88,7 +88,7 @@ Entity {
         delegate: WidgetDelegate {
             id: widgetDelegate
             // HACK: get top-level window geometry so we can transform children center accordingly
-            topLevelGeometry: objectAt(0).geometry
+            topLevelGeometry: instantiator.objectAt(0) ? instantiator.objectAt(0).geometry : model.geometry
             geometry: model.geometry
             level: model.level
             frontTextureImage: model.frontTexture
