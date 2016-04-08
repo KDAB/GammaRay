@@ -28,8 +28,12 @@
 
 #include "debuggerinjector.h"
 
+#include <QFile>
 #include <QProcess>
 #include <QTime>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QStandardPaths>
+#endif
 
 #include <iostream>
 #include <dlfcn.h>
@@ -148,10 +152,26 @@ bool DebuggerInjector::startDebugger(const QStringList& args, const QProcessEnvi
 
 bool DebuggerInjector::selfTest()
 {
-  if (startDebugger(QStringList() << QStringLiteral("--version"))) {
-    return m_process->waitForFinished(-1);
-  }
-  return false;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    if (QStandardPaths::findExecutable(debuggerExecutable()).isEmpty()) {
+        mErrorString = tr("The debugger executable '%1' could not be found").arg(debuggerExecutable());
+        return false;
+    }
+#endif
+
+    // check for the Yama prtrace_scope setting, which can prevent attaching to work
+    QFile file(QStringLiteral("/proc/sys/kernel/yama/ptrace_scope"));
+    if (file.open(QFile::ReadOnly)) {
+        if (file.readAll().trimmed() != "0") {
+            mErrorString = tr("Yama security extension is blocking runtime attaching, see /proc/sys/kernel/yama/ptrace_scope");
+            return false;
+        }
+    }
+
+    if (startDebugger(QStringList() << QStringLiteral("--version"))) {
+        return m_process->waitForFinished(-1);
+    }
+    return false;
 }
 
 void DebuggerInjector::waitForMain()

@@ -38,9 +38,9 @@ LldbInjector::LldbInjector()
 
 bool LldbInjector::selfTest()
 {
-#if defined(Q_OS_MAC)
-  return DebuggerInjector::selfTest();
-#else
+  if (!DebuggerInjector::selfTest())
+    return false;
+#ifndef Q_OS_MAC
   QProcess process;
 
   process.setProcessChannelMode(QProcess::MergedChannels);
