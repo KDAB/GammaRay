@@ -35,7 +35,9 @@
 
 #include "overlaywidget.h"
 #include "widgettreemodel.h"
+#ifdef WITH_WIDGET3D
 #include "widget3dmodel.h"
+#endif
 
 #include "core/propertycontroller.h"
 #include "core/metaobject.h"
@@ -134,9 +136,11 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WidgetTree"), widgetSearchProxy);
 
+#ifdef WITH_WIDGET3D
     auto widget3dmodel = new Widget3DModel(this);
     widget3dmodel->setSourceModel(m_probe->objectListModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Widget3DModel"), widget3dmodel);
+#endif
 
     m_widgetSelectionModel = ObjectBroker::selectionModel(widgetSearchProxy);
     connect(m_widgetSelectionModel,

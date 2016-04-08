@@ -278,9 +278,21 @@ if(Qt5Core_FOUND)
     Widgets
     WaylandCompositor
   )
+
   # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
   if(NOT CMAKE_CROSSCOMPILING)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
+  endif()
+
+  # 3D Widget inspector requires Qt3D 5.7
+  if (QtCore_VERSION VERSION_EQUAL 5.7 OR QtCore_VERSION VERSION_GREATER 5.7)
+    find_package(Qt5 5.7 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        3DCore
+        3DRender
+        3DInput
+        3DQuick
+        3DLogic
+    )
   endif()
 
   # starting with 5.6, the Designer module needs CMake 3.0 or higher

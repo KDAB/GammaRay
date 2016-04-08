@@ -33,7 +33,10 @@
 #include "widgetclientmodel.h"
 #include "ui_widgetinspectorwidget.h"
 #include "waextension/widgetattributetab.h"
+
+#ifdef WITH_WIDGET3D
 #include "widget3dview.h"
+#endif
 
 #include "common/objectbroker.h"
 #include "common/objectmodel.h"
@@ -153,10 +156,14 @@ void WidgetInspectorWidget::restoreTargetState(QSettings *settings)
 
 void WidgetInspectorWidget::onTabChanged(int index)
 {
+#ifdef WITH_WIDGET3D
     if (index == 1 && m_3dView == Q_NULLPTR) {
         m_3dView = new Widget3DView(this);
         ui->widgetExplosionTab->layout()->addWidget(m_3dView);
     }
+#else
+    Q_UNUSED(index)
+#endif
 }
 
 void WidgetInspectorWidget::updateActions()

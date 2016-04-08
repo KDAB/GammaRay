@@ -12,6 +12,14 @@ set(gammaray_widgetinspector_plugin_srcs
   widget3dmodel.cpp
 )
 
+if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+  add_definitions(-DWITH_WIDGET3D)
+  set(gammaray_widgetinspector_plugin_srcs
+      ${gammaray_widgetinspector_plugin_srcs}
+      widget3dmodel.cpp
+  )
+endif()
+
 gammaray_add_plugin(gammaray_widgetinspector_plugin
   DESKTOP gammaray_widgetinspector.desktop.in
   JSON gammaray_widgetinspector.json
@@ -22,9 +30,14 @@ target_link_libraries(gammaray_widgetinspector_plugin
   ${QT_QTGUI_LIBRARIES}
   gammaray_kitemmodels
   gammaray_core
-  Qt5::3DCore
-  Qt5::3DRender
 )
+
+if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+  target_link_libraries(gammaray_widgetinspector_plugin
+    Qt5::3DCore
+    Qt5::3DRender
+  )
+endif()
 
 # probe export actions
 add_library(gammaray_widget_export_actions SHARED
@@ -71,9 +84,15 @@ if(GAMMARAY_BUILD_UI)
     waextension/widgetattributetab.cpp
 
     widgetinspectorwidget.cpp
-    widget3dimagetextureimage.cpp
-    widget3dview.cpp
   )
+
+  if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+    set(gammaray_widgetinspector_ui_plugin_srcs
+      ${gammaray_widgetinspector_ui_plugin_srcs}
+      widget3dview.cpp
+      widget3dimagetextureimage.cpp
+    )
+  endif()
 
   qt4_wrap_ui(gammaray_widgetinspector_ui_plugin_srcs
     widgetinspectorwidget.ui
@@ -92,12 +111,17 @@ if(GAMMARAY_BUILD_UI)
 
   target_link_libraries(gammaray_widgetinspector_ui_plugin
     ${QT_QTGUI_LIBRARIES}
-    Qt5::Qml
-    Qt5::3DRender
-    Qt5::3DLogic
-    Qt5::3DInput
-    Qt5::3DQuick
     gammaray_ui
     gammaray_client
   )
+
+  if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+    target_link_libraries(gammaray_widgetinspector_ui_plugin
+        Qt5::Qml
+        Qt5::3DRender
+        Qt5::3DLogic
+        Qt5::3DInput
+        Qt5::3DQuick
+    )
+  endif()
 endif()
