@@ -27,7 +27,6 @@
 */
 
 #include "propertysyncer.h"
-#include "endpoint.h"
 #include "message.h"
 
 #include <QDebug>
@@ -183,9 +182,6 @@ void PropertySyncer::handleMessage(const GammaRay::Message& msg)
 
 void PropertySyncer::propertyChanged()
 {
-    if (!Endpoint::instance()->isConnected())
-        return;
-
     const auto *obj = sender();
     Q_ASSERT(obj);
     const auto it = std::find_if(m_objects.constBegin(), m_objects.constEnd(), [obj](const ObjectInfo &info) {

@@ -79,6 +79,8 @@ void Endpoint::send(const Message& msg)
 
 void Endpoint::sendMessage(const Message& msg)
 {
+  if (!isConnected())
+    return;
   doSendMessage(msg);
 }
 
