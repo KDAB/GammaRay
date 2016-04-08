@@ -31,16 +31,9 @@
 
 #include <QWidget>
 
-namespace Qt3DCore {
-namespace Quick {
-class QQmlAspectEngine;
-}
-}
-
 namespace GammaRay
 {
 class Widget3DWindow;
-class Widget3DModel;
 
 class Widget3DView : public QWidget
 {
@@ -51,7 +44,6 @@ public:
 
 private:
     Widget3DWindow *mWindow;
-    Qt3DCore::Quick::QQmlAspectEngine *mEngine;
 };
 
 }

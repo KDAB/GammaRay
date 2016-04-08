@@ -140,16 +140,16 @@ Widget3DView::Widget3DView(QWidget* parent)
 
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
 
-    mEngine = new Qt3DCore::Quick::QQmlAspectEngine(this);
-    mEngine->aspectEngine()->registerAspect(new Qt3DRender::QRenderAspect);
-    mEngine->aspectEngine()->registerAspect(new Qt3DInput::QInputAspect);
-    mEngine->aspectEngine()->registerAspect(new Qt3DLogic::QLogicAspect);
+    auto engine = new Qt3DCore::Quick::QQmlAspectEngine(this);
+    engine->aspectEngine()->registerAspect(new Qt3DRender::QRenderAspect);
+    engine->aspectEngine()->registerAspect(new Qt3DInput::QInputAspect);
+    engine->aspectEngine()->registerAspect(new Qt3DLogic::QLogicAspect);
 
-    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_surface"), mWindow);
-    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_eventSource"), mWindow);
-    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
-    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), model);
-    mEngine->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
+    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_surface"), mWindow);
+    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_eventSource"), mWindow);
+    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
+    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), model);
+    engine->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
 }
 
 Widget3DView::~Widget3DView()
