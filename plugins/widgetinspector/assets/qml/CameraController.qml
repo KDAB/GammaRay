@@ -179,7 +179,7 @@ Entity {
         },
 
         LogicComponent {
-            property real translationSpeed : 40.0
+            property real translationSpeed : 80.0
             property real rotationSpeed : 180.0
             property real zoomFactor : 0.1
 

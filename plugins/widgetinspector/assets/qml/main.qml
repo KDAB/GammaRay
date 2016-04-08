@@ -17,6 +17,8 @@ Entity {
                 camera: mainCamera
                 clearColor: "black"
             }
+
+            pickingSettings.pickMethod: PickMethod.TrianglePicking
         }
     ]
 
@@ -53,7 +55,8 @@ Entity {
         asynchronous: true
         delegate: WidgetDelegate {
             id: widgetDelegate
-            modelIndex: index
+            // HACK: get top-level window geometry so we can transform children center accordingly
+            topLevelGeometry: objectAt(0).geometry
             geometry: model.geometry
             level: model.level
             frontTextureImage: model.frontTexture

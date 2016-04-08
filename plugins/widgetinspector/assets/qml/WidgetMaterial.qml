@@ -7,11 +7,9 @@ import com.kdab.GammaRay 1.0
 Material {
     id: root
 
-    property int level : 0
     property real explosionFactor : 0
     property var frontTextureImage
     property var backTextureImage
-    property bool highlighted
 
     Texture2D {
         id: frontTexture;
@@ -38,11 +36,18 @@ Material {
     }
 
     parameters: [
-        Parameter { name: "explode"; value: root.explosionFactor },
-        Parameter { name: "level"; value: root.level },
-        Parameter { name: "frontTexture"; value: frontTexture },
-        Parameter { name: "backTexture"; value: root.backTextureImage ? backTexture : frontTexture },
-        Parameter { name: "highlighted"; value: root.highlighted }
+        Parameter {
+            name: "frontTexture"
+            value: frontTexture
+        },
+        Parameter {
+            name: "backTexture"
+            value: root.backTextureImage ? backTexture : frontTexture
+        },
+        Parameter {
+            name: "highlighted"
+            value: root.highlighted
+        }
     ]
 
 
@@ -58,28 +63,7 @@ Material {
 
                 renderPasses: [
                     RenderPass {
-                        /*
-                        renderStates: [
-                            DepthMask {
-                                mask: true
-                            },
-                            DepthTest {
-                                func: DepthTest.Less
-                            }
-                        ]
-                        */
-
                         bindings: [
-                            ParameterMapping {
-                                parameterName: "explode"
-                                shaderVariableName: "explode"
-                                bindingType: ParameterMapping.Uniform
-                            },
-                            ParameterMapping {
-                                parameterName: "level"
-                                shaderVariableName: "level"
-                                bindingType: ParameterMapping.Uniform
-                            },
                             ParameterMapping {
                                 parameterName: "frontTexture"
                                 shaderVariableName: "frontTexture"
@@ -102,9 +86,7 @@ Material {
                             //geometryShaderCode: loadSource("qrc:/shaders/widget.geom")
                             fragmentShaderCode: loadSource("qrc:/assets/shaders/widget.frag")
                         }
-
                     }
-
                 ]
             }
         ]

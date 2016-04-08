@@ -15,8 +15,6 @@ Entity {
     property var backTextureImage
     property rect geometry
 
-    enabled: modelIndex != -1
-
     readonly property real _scaleFactor : 10.0
     readonly property real _geomWidth: root.geometry.width / _scaleFactor
     readonly property real _geomHeight: root.geometry.height / _scaleFactor
@@ -32,15 +30,9 @@ Entity {
 
         WidgetMaterial {
             id: material
-            level: root.level
             frontTextureImage: root.frontTextureImage
             backTextureImage: root.backTextureImage
-            explosionFactor: root.explosionFactor
             //highlighted: objectPicker.containsMouse
-
-            QQ2.Component.onCompleted: console.log("WidgetDelegate for index " + root.modelIndex + " created");
-            QQ2.Component.onDestruction: console.log("WidgetDelegate for index " + root.modelIndex + " destroyed");
-
         },
 
         Transform {
@@ -50,10 +42,9 @@ Entity {
                              -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
                              root.level / (_scaleFactor * 2.0) + root.level * explosionFactor
                          )
-        }
+        },
 
-        /* FIXME: ObjectPicker on Cuboids is broken, reporting events even
-           when there's no hit
+        /*
         ObjectPicker {
             id: objectPicker
             hoverEnabled: true

@@ -14,15 +14,18 @@ uniform bool highlighted;
 
 void main(void)
 {
-    // front face
     vec2 coords = vec2(fs_in.texCoord.x, 1 - fs_in.texCoord.y);
+    // front face
     if (fs_in.normal.z > 0) {
         fragColor = texture(frontTexture, coords);
+    // back face
     } else if (fs_in.normal.z < 0) {
         fragColor = texture(backTexture, coords);
+    // side face
     } else {
         fragColor = vec4(1.0, 0.0, 0.0, 1.0);
     }
+
     if (highlighted) {
         fragColor = mix(fragColor, vec4(0.5, 0.5, 0.5, 1.0), 0.5);
     }
