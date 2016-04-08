@@ -144,8 +144,8 @@ Entity {
           },
 
         FrameAction {
-            property real translationSpeed : 80.0
-            property real rotationSpeed : 180.0
+            property real translationSpeed : 150.0
+            property real rotationSpeed : 260.0
             property real zoomFactor : 0.1
 
             onTriggered: {
