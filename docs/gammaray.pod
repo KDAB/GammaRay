@@ -43,6 +43,7 @@ Set the specified injection type.
 Supported injectors are:
      preload (Linux, Mac OS)
      gdb (Linux. requires gdb to be installed)
+     lldb (Linux. Mac OS, requires lldb to be installed)
      style
      windll (Windows)
 
@@ -84,6 +85,13 @@ probe ABI auto-detection is implemented.
 
 Connect to a target with an already injected GammaRay probe. Useful for
 example for remote debugging.
+
+=item B<--self-test [injector]>
+
+Run GammaRay self-tests, if an injector is specified only that specific
+one will be tested.
+
+The exit code is 0 on success, and 1 otherwise.
 
 =back
 

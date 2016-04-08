@@ -34,6 +34,7 @@
 #include "launcherfinder.h"
 #include "launcher.h"
 #include "probefinder.h"
+#include "selftest.h"
 
 #include <common/paths.h>
 #include <launcher/probeabi.h>
@@ -112,6 +113,7 @@ static void usage(const char *argv0)
   out << "     --list-probes          \tlist all installed probes" << endl;
   out << "     --probe <abi>          \tspecify which probe to use" << endl;
   out << "     --connect <host>[:port]\tconnect to an already injected target" << endl;
+  out << "     --self-test [injector] \trun self tests, of everything or the specified injector" << endl;
   out << " -h, --help                 \tprint program help and exit" << endl;
   out << " -v, --version              \tprint program version and exit" << endl;
 #ifdef HAVE_QT_WIDGETS
@@ -236,6 +238,21 @@ int main(int argc, char **argv)
       client.launch(url);
       client.waitForFinished();
       return 0;
+    }
+    if (arg == QLatin1String("--self-test")) {
+        SelfTest selfTest;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        QObject::connect(&selfTest, &SelfTest::information, [](const QString &msg) {
+            out << msg << endl;
+        });
+        QObject::connect(&selfTest, &SelfTest::error, [](const QString &msg) {
+            err << "Error: " << msg << endl;
+        });
+#endif
+        if (args.isEmpty() || args.first().startsWith('-'))
+            return selfTest.checkEverything() ? 0 : 1;
+        const auto injectorType = args.takeFirst();
+        return selfTest.checkInjector(injectorType) ? 0 : 1;
     }
 
     // debug/test options
