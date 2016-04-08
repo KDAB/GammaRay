@@ -29,6 +29,8 @@
 #include "selectionmodelinspectorwidget.h"
 #include "ui_selectionmodelinspectorwidget.h"
 
+#include <ui/itemdelegate.h>
+
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
 
@@ -43,6 +45,7 @@ SelectionModelInspectorWidget::SelectionModelInspectorWidget(QWidget *widget)
   ui->selectionModelView->setRootIsDecorated(false);
   ui->selectionModelView->setSelectionModel(ObjectBroker::selectionModel(ui->selectionModelView->model()));
   ui->selectionModelVisualizer->setRootIsDecorated(false);
+  ui->selectionModelVisualizer->setItemDelegate(new ItemDelegate(this));
   ui->selectionModelVisualizer->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel")));
 }
 
