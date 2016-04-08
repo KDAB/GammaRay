@@ -295,7 +295,7 @@ void Widget3DModel::onWidgetTextureChanged()
     for (int i = 0; i < rowCount(); ++i) {
         const QModelIndex idx = index(i, 0, QModelIndex());
         if (widgetForIndex(idx, false) == widget) {
-            Q_EMIT dataChanged(idx, idx, { TextureRole });
+            Q_EMIT dataChanged(idx, idx, { TextureRole, BackTextureRole });
             break;
         }
     }

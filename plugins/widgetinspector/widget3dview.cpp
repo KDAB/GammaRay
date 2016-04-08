@@ -4,6 +4,7 @@
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
+#include <client/remotemodel.h>
 
 #include <QWindow>
 #include <QVBoxLayout>
@@ -59,12 +60,12 @@ protected:
 };
 
 
-class Widget3DModelClient : public QIdentityProxyModel
+class Widget3DModelClient : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
     explicit Widget3DModelClient(QObject *parent = Q_NULLPTR)
-      : QIdentityProxyModel(parent)
+      : QSortFilterProxyModel(parent)
     {
     }
 
@@ -72,9 +73,18 @@ public:
     {
     }
 
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE
+    {
+        // Looks like Qt3D does not like null QImages for textures, so let's
+        // filter out the rows until a texture is received
+        const QModelIndex source_idx = sourceModel()->index(source_row, 0, source_parent);
+        return !source_idx.data(Widget3DModel::TextureRole).value<QImage>().isNull();
+    }
+
+    // Map the server-side role names for easy use from QML
     QHash<int, QByteArray> roleNames() const override
     {
-        auto roles = QIdentityProxyModel::roleNames();
+        auto roles = QSortFilterProxyModel::roleNames();
         roles[Widget3DModel::GeometryRole] = "geometry";
         roles[Widget3DModel::TextureRole] = "frontTexture";
         roles[Widget3DModel::BackTextureRole] = "backTexture";
@@ -93,64 +103,12 @@ using namespace GammaRay;
 Widget3DView::Widget3DView(QWidget* parent)
     : QWidget(parent)
 {
-    mProgressWidget = new QWidget();
-    QVBoxLayout *l = new QVBoxLayout(mProgressWidget);
-    l->addStretch(1);
-    mProgress = new QProgressBar;
-    l->addWidget(mProgress);
-    l->addStretch(1);
+    new QVBoxLayout(this);
+    mWindow = new Widget3DWindow();
+    layout()->addWidget(QWidget::createWindowContainer(mWindow, this));
 
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(mProgressWidget);
-
-    // Get the model, if it is empty, it has probably not been initialized yet
     auto model = new Widget3DModelClient(this);
     model->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Widget3DModel")));
-    mModel = model;
-    if (mModel->rowCount() > 0) {
-        rowCountChanged();
-    } else {
-        // Wait for some rows
-        connect(mModel, &QAbstractItemModel::rowsInserted,
-                this, &Widget3DView::rowCountChanged);
-    }
-}
-
-Widget3DView::~Widget3DView()
-{
-}
-
-void Widget3DView::rowCountChanged()
-{
-    disconnect(mModel, &QAbstractItemModel::rowsInserted,
-               this, &Widget3DView::rowCountChanged);
-
-    qDebug() << mModel->rowCount() << "objects";
-    mProgress->setMaximum(mModel->rowCount() - 1);
-    // datachanged = Loading -> actual data
-    connect(mModel, &QAbstractItemModel::dataChanged,
-            mProgressWidget, [this](const QModelIndex &, const QModelIndex &, const QVector<int> &) {
-                mProgress->setValue(mProgress->value() + 1);
-                if (mProgress->value() == mProgress->maximum()) {
-                    QTimer::singleShot(0, this, &Widget3DView::delayedInit);
-                }
-            });
-    // Force-populate the model
-    for (int i = 0; i < mModel->rowCount(); ++i) {
-        mModel->itemData(mModel->index(i, 0));
-    }
-}
-
-void Widget3DView::delayedInit()
-{
-    layout()->removeWidget(mProgressWidget);
-    mProgressWidget->deleteLater();
-    mProgressWidget = Q_NULLPTR;
-
-    mWindow = new Widget3DWindow();
-    QWidget *w = QWidget::createWindowContainer(mWindow, this);
-    layout()->addWidget(w);
 
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
 
@@ -165,8 +123,13 @@ void Widget3DView::delayedInit()
     mEngine->aspectEngine()->setData(data);
 
     mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
-    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), mModel);
+    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), model);
     mEngine->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
+}
+
+Widget3DView::~Widget3DView()
+{
+    delete mWindow;
 }
 
 #include "widget3dview.moc"

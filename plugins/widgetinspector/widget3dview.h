@@ -24,16 +24,9 @@ public:
     explicit Widget3DView(QWidget *parent = Q_NULLPTR);
     ~Widget3DView();
 
-private Q_SLOTS:
-    void rowCountChanged();
-    void delayedInit();
-
 private:
-    QWidget *mProgressWidget;
-    QProgressBar *mProgress;
     Widget3DWindow *mWindow;
     Qt3DCore::Quick::QQmlAspectEngine *mEngine;
-    QAbstractItemModel *mModel;
 };
 
 }
