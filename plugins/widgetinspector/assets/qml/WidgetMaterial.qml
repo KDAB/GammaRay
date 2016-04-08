@@ -66,26 +66,8 @@ Material {
         }
     }
 
-    parameters: [
-        Parameter {
-            name: "frontTexture"
-            value: frontTexture
-        },
-        Parameter {
-            name: "backTexture"
-            value: root.backTextureImage ? backTexture : frontTexture
-        },
-        Parameter {
-            name: "highlightFactor"
-            value: root.highlightFactor
-        }
-    ]
-
-
     effect: Effect {
         id: effect;
-
-        parameters: root.parameters
 
         techniques: [
             Technique {
@@ -103,7 +85,20 @@ Material {
                     }
                 ]
 
-                parameters: root.parameters
+                parameters: [
+                    Parameter {
+                        name: "frontTexture"
+                        value: frontTexture
+                    },
+                    Parameter {
+                        name: "backTexture"
+                        value: root.backTextureImage ? backTexture : frontTexture
+                    },
+                    Parameter {
+                        name: "highlightFactor"
+                        value: root.highlightFactor
+                    }
+                ]
 
                 renderPasses: [
                     RenderPass {
