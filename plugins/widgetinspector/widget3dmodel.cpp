@@ -37,7 +37,8 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, int level, Widget3DWidget *pare
     connect(mUpdateTimer, &QTimer::timeout,
             this, &Widget3DWidget::updateTimeout);
 
-    mUpdateTimer->start();
+    //mUpdateTimer->start();
+    updateTimeout();
 
     mQWidget->installEventFilter(this);
 }
@@ -66,7 +67,7 @@ bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
             return false;
         case QEvent::Show:
         case QEvent::Hide:
-            //Q_EMIT visibleChanged();
+            Q_EMIT visibleChanged();
             return false;
         default:
             return false;
@@ -96,7 +97,7 @@ void GammaRay::Widget3DWidget::updateTimeout()
 
 void Widget3DWidget::updateGeometry()
 {
-    if (!mGeomDirty) {
+    if (!mGeomDirty || !mQWidget) {
         return;
     }
 
@@ -138,7 +139,7 @@ void Widget3DWidget::updateGeometry()
 
 void Widget3DWidget::updateTexture()
 {
-    if (!mTextureDirty) {
+    if (!mTextureDirty || !mQWidget) {
         return;
     }
 

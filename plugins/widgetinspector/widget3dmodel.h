@@ -5,6 +5,7 @@
 #include <QRect>
 #include <QWidget>
 #include <QMap>
+#include <QPointer>
 
 namespace GammaRay {
 
@@ -44,7 +45,7 @@ private:
     void startUpdateTimer();
 
 private:
-    QWidget *mQWidget;
+    QPointer<QWidget> mQWidget;
     QImage mTextureImage;
     QImage mBackTextureImage;
     QRect mTextureGeometry;
