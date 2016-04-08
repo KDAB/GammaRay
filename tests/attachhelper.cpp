@@ -81,6 +81,7 @@ void AttachHelper::attach()
   }
   qDebug() << "attaching gammaray";
   QProcess gammaray;
+  gammaray.setProcessChannelMode(QProcess::ForwardedChannels);
   QStringList args;
   args << QStringLiteral("--inprocess") << QStringLiteral("-i") << m_injector;
 #ifdef Q_OS_WIN32
