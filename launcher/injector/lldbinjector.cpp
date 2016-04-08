@@ -76,6 +76,8 @@ bool LldbInjector::selfTest()
 
   mErrorString = process.errorString();
   return false;
+#else
+  return true;
 #endif
 }
 
