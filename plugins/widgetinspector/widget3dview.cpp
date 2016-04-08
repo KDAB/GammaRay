@@ -58,61 +58,31 @@ protected:
     }
 };
 
-class Widget3DModelData : public QObject
+
+class Widget3DModelClient : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit Widget3DModelData(QAbstractItemModel *model, QObject *parent = Q_NULLPTR)
-        : QObject(parent)
-        , mModel(model)
-    {
-        connect(mModel, &QAbstractItemModel::dataChanged,
-                this, &Widget3DModelData::onDataChanged);
-    }
-
-    ~Widget3DModelData()
+    explicit Widget3DModelClient(QObject *parent = Q_NULLPTR)
+      : QIdentityProxyModel(parent)
     {
     }
 
-    Q_INVOKABLE QVariant get(int row, const QString &role) const
+    ~Widget3DModelClient()
     {
-        const QModelIndex idx = mModel->index(row, 0);
-        if (!idx.isValid()) {
-            return QVariant();
-        }
-        QVariant data;
-        if (role == QLatin1String("level")) {
-            data = mModel->data(idx, Widget3DModel::LevelRole);
-        } else if (role == QLatin1String("geometry")) {
-            data = mModel->data(idx, Widget3DModel::GeometryRole);
-        } else if (role == QLatin1String("frontTexture")) {
-            data = mModel->data(idx, Widget3DModel::TextureRole);
-        } else if (role == QLatin1String("backTexture")) {
-            data = mModel->data(idx, Widget3DModel::BackTextureRole);
-        }
-        return data;
     }
 
-Q_SIGNALS:
-    void dataChanged(int row, const QString &role);
-
-private Q_SLOTS:
-    void onDataChanged(const QModelIndex &tl, const QModelIndex &br, const QVector<int> &roles)
+    QHash<int, QByteArray> roleNames() const override
     {
-        if (roles.contains(Widget3DModel::GeometryRole)) {
-            Q_EMIT dataChanged(tl.row(), QStringLiteral("geometry"));
-        }
-        if (roles.contains(Widget3DModel::TextureRole)) {
-            Q_EMIT dataChanged(tl.row(), QStringLiteral("frontTexture"));
-        }
-        if (roles.contains(Widget3DModel::BackTextureRole)) {
-            Q_EMIT dataChanged(tl.row(), QStringLiteral("backTexture"));
-        }
+        auto roles = QIdentityProxyModel::roleNames();
+        roles[Widget3DModel::GeometryRole] = "geometry";
+        roles[Widget3DModel::TextureRole] = "frontTexture";
+        roles[Widget3DModel::BackTextureRole] = "backTexture";
+        roles[Widget3DModel::LevelRole] = "level";
+        return roles;
     }
-
-private:
-    QAbstractItemModel *mModel;
 };
+
 
 }
 
@@ -135,7 +105,9 @@ Widget3DView::Widget3DView(QWidget* parent)
     layout->addWidget(mProgressWidget);
 
     // Get the model, if it is empty, it has probably not been initialized yet
-    mModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Widget3DModel"));
+    auto model = new Widget3DModelClient(this);
+    model->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Widget3DModel")));
+    mModel = model;
     if (mModel->rowCount() > 0) {
         rowCountChanged();
     } else {
@@ -194,8 +166,6 @@ void Widget3DView::delayedInit()
 
     mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
     mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), mModel);
-    auto modelData = new Widget3DModelData(mModel, this);
-    mEngine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_modelData"), modelData);
     mEngine->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
 }
 

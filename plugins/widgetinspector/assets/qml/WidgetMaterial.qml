@@ -21,7 +21,7 @@ Material {
         generateMipMaps: true
 
         Widget3DImageTextureImage {
-            image: frontTextureImage
+            image: root.frontTextureImage
         }
     }
 
@@ -33,7 +33,7 @@ Material {
         generateMipMaps: true
 
         Widget3DImageTextureImage {
-            image: backTextureImage
+            image: root.backTextureImage
         }
     }
 
@@ -41,8 +41,8 @@ Material {
         Parameter { name: "explode"; value: root.explosionFactor },
         Parameter { name: "level"; value: root.level },
         Parameter { name: "frontTexture"; value: frontTexture },
-        Parameter { name: "backTexture"; value: backTextureImage ? backTexture : frontTexture },
-        Parameter { name: "highlighted"; value: highlighted }
+        Parameter { name: "backTexture"; value: root.backTextureImage ? backTexture : frontTexture },
+        Parameter { name: "highlighted"; value: root.highlighted }
     ]
 
 

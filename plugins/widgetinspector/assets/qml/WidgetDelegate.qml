@@ -10,32 +10,12 @@ Entity {
     property real explosionFactor: 0
     property int modelIndex: -1
 
-    property int level: _modelData.get(modelIndex, "level")
-    property var frontTextureImage: _modelData.get(modelIndex, "frontTexture")
-    property var backTextureImage: _modelData.get(modelIndex, "backTexture")
-    property rect geometry: _modelData.get(modelIndex, "geometry")
+    property int level
+    property var frontTextureImage
+    property var backTextureImage
+    property rect geometry
 
     enabled: modelIndex != -1
-
-    QQ2.Connections {
-        target: _modelData;
-        onDataChanged: {
-            if (index != root.modelIndex) {
-                return;
-            }
-
-            if (role == "frontTexture") {
-                console.log("FRONTEXTURE CHANGE " + root.modelIndex)
-                root.frontTextureImage = _modelData.get(root.modelIndex, "frontTexture");
-            } else if (role == "backTexture") {
-                console.log("BACKTEXTURE CHANGE " + root.modelIndex)
-                root.backTextureImage = _modelData.get(root.modelIndex, "backTexture");
-            } else if (role == "geometry") {
-                console.log("GEOMETRY CHANGE " + root.modelIndex)
-                root.geometry = _modelData.get(root.modelIndex, "geometry");
-            }
-        }
-    }
 
     readonly property real _scaleFactor : 10.0
     readonly property real _geomWidth: root.geometry.width / _scaleFactor

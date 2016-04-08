@@ -49,10 +49,15 @@ Entity {
 
     NodeInstantiator {
         id: instantiator;
-        model: _widgetModel;
+        model: _widgetModel
+        asynchronous: true
         delegate: WidgetDelegate {
             id: widgetDelegate
             modelIndex: index
+            geometry: model.geometry
+            level: model.level
+            frontTextureImage: model.frontTexture
+            backTextureImage: model.backTexture
             explosionFactor: root.explosionFactor;
         }
     }

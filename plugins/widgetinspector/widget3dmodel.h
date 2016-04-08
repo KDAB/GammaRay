@@ -36,8 +36,12 @@ Q_SIGNALS:
     void visibleChanged();
 
 private Q_SLOTS:
+    void updateTimeout();
     void updateTexture();
     void updateGeometry();
+
+private:
+    void startUpdateTimer();
 
 private:
     QWidget *mQWidget;
@@ -47,7 +51,10 @@ private:
     QRect mGeometry;
     int mLevel;
     bool mIsPainting;
-    QTimer *mPaintTimer;
+
+    QTimer *mUpdateTimer;
+    bool mGeomDirty;
+    bool mTextureDirty;
 };
 
 class Widget3DModel : public QSortFilterProxyModel

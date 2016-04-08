@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QEvent>
 #include <QTimer>
+#include <QResizeEvent>
 
 #include <common/objectmodel.h>
 #include <core/objectlistmodel.h>
@@ -14,7 +15,9 @@ Widget3DWidget::Widget3DWidget(QObject *parent)
     , mQWidget(Q_NULLPTR)
     , mLevel(0)
     , mIsPainting(false)
-    , mPaintTimer(Q_NULLPTR)
+    , mUpdateTimer(Q_NULLPTR)
+    , mGeomDirty(false)
+    , mTextureDirty(false)
 {
 }
 
@@ -23,15 +26,18 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, int level, Widget3DWidget *pare
     , mQWidget(qWidget)
     , mLevel(level)
     , mIsPainting(false)
-    , mPaintTimer(Q_NULLPTR)
+    , mUpdateTimer(Q_NULLPTR)
+    , mGeomDirty(true)
+    , mTextureDirty(true)
 {
-    mPaintTimer = new QTimer(this);
-    mPaintTimer->setSingleShot(true);
-    mPaintTimer->setInterval(200);
-    connect(mPaintTimer, &QTimer::timeout,
-            this, &Widget3DWidget::updateTexture);
 
-    updateGeometry();
+    mUpdateTimer = new QTimer(this);
+    mUpdateTimer->setSingleShot(true);
+    mUpdateTimer->setInterval(200);
+    connect(mUpdateTimer, &QTimer::timeout,
+            this, &Widget3DWidget::updateTimeout);
+
+    mUpdateTimer->start();
 
     mQWidget->installEventFilter(this);
 }
@@ -44,12 +50,18 @@ bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == mQWidget) {
         switch (ev->type()) {
-        case QEvent::Resize:
-            QMetaObject::invokeMethod(this, "updateGeometry", Qt::QueuedConnection);
+        case QEvent::Resize: {
+            QResizeEvent *re = static_cast<QResizeEvent*>(ev);
+            if (re->oldSize() != re->size()) {
+                mGeomDirty = true;
+                startUpdateTimer();
+            }
             return false;
+        }
         case QEvent::Paint:
-            if (!mIsPainting && !mPaintTimer->isActive()) {
-                mPaintTimer->start();
+            if (!mIsPainting) {
+                mTextureDirty = true;
+                startUpdateTimer();
             }
             return false;
         case QEvent::Show:
@@ -64,8 +76,30 @@ bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
     return false;
 }
 
+void Widget3DWidget::startUpdateTimer()
+{
+    if (!mUpdateTimer->isActive()) {
+        mUpdateTimer->start();
+    }
+}
+
+void GammaRay::Widget3DWidget::updateTimeout()
+{
+    if (mGeomDirty) {
+        updateGeometry();
+    }
+    if (mTextureDirty) {
+        updateTexture();
+    }
+}
+
+
 void Widget3DWidget::updateGeometry()
 {
+    if (!mGeomDirty) {
+        return;
+    }
+
     QWidget *w = mQWidget;
     QPoint mappedPos(0, 0);
     // TODO: Use mapTo(), but it behaved somewhat weird...
@@ -97,13 +131,17 @@ void Widget3DWidget::updateGeometry()
         }
     }
 
+    mTextureDirty = true;
+    mGeomDirty = false;
     Q_EMIT geometryChanged();
-
-    updateTexture();
 }
 
 void Widget3DWidget::updateTexture()
 {
+    if (!mTextureDirty) {
+        return;
+    }
+
     mIsPainting = true;
 
     mTextureImage = QImage(mTextureGeometry.size(), QImage::Format_RGBA8888);
@@ -118,6 +156,7 @@ void Widget3DWidget::updateTexture()
 
     mIsPainting = false;
 
+    mTextureDirty = false;
     Q_EMIT textureChanged();
 }
 
@@ -137,19 +176,19 @@ QVariant Widget3DModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case TextureRole: {
         auto w = widgetForIndex(index);
-        return w ? QVariant::fromValue(w->texture()) : QVariant();
+        return w ? w->texture() : QImage();
     }
     case BackTextureRole: {
         auto w = widgetForIndex(index);
-        return w ? QVariant::fromValue(w->backTexture()) : QVariant();
+        return w ? w->backTexture() : QImage();
     }
     case GeometryRole: {
         auto w = widgetForIndex(index);
-        return w ? w->geometry() : QVariant();
+        return w ? w->geometry() : QRect();
     }
     case LevelRole: {
         auto w = widgetForIndex(index);
-        return w ? w->level() : QVariant();
+        return w ? w->level() : -1;
     }
     default:
         return QSortFilterProxyModel::data(index, role);
