@@ -9,6 +9,7 @@ set(gammaray_ui_srcs
   deferredtreeview.cpp
   deferredtreeviewconfiguration.cpp
   editabletypesmodel.cpp
+  itemdelegate.cpp
   methodinvocationdialog.cpp
   palettemodel.cpp
   propertybinder.cpp
@@ -152,6 +153,7 @@ gammaray_install_headers(
   clienttoolmodel.h
   deferredresizemodesetter.h
   deferredtreeview.h
+  itemdelegate.h
   deferredtreeviewconfiguration.h
   propertywidget.h
   propertywidgettab.h
