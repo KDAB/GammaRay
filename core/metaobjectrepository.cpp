@@ -36,6 +36,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QFont>
+#include <QLocalSocket>
 #include <QNetworkProxy>
 #include <QObject>
 #include <QPalette>
@@ -192,9 +193,10 @@ void MetaObjectRepository::initQObjectTypes()
 
 
 Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
-Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QIODevice::OpenMode)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
+Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
+Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
@@ -272,6 +274,16 @@ void MetaObjectRepository::initNetworkTypes()
 #ifndef QT_NO_NETWORKPROXY
   MO_ADD_PROPERTY_RO(QAbstractSocket, QNetworkProxy, proxy);
 #endif
+
+  MO_ADD_METAOBJECT1(QLocalSocket, QIODevice);
+  MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketError, error);
+  MO_ADD_PROPERTY_RO(QLocalSocket, QString, fullServerName);
+  MO_ADD_PROPERTY_RO(QLocalSocket, bool, isValid);
+  MO_ADD_PROPERTY_RO(QLocalSocket, QString, serverName);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  MO_ADD_PROPERTY_RO(QLocalSocket, qintptr, socketDescriptor);
+#endif
+  MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketState, state);
 
   // FIXME: QAbstractSocket::setSocketOption() would be nice to have
   // FIXME: QQAbstractSocket::socketOption() would be nice to have
