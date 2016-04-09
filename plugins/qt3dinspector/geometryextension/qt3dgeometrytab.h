@@ -39,6 +39,7 @@ class QComponent;
 class QNode;
 }
 namespace Qt3DRender {
+class QCamera;
 class QGeometryRenderer;
 }
 
@@ -61,6 +62,7 @@ public:
 
 protected:
     void showEvent(QShowEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent) const;
@@ -69,7 +71,9 @@ private:
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     Qt3DGeometryExtensionInterface *m_interface;
 
+    QWindow* m_surface;
     Qt3DCore::QAspectEngine *m_aspectEngine;
+    Qt3DRender::QCamera *m_camera;
     Qt3DRender::QGeometryRenderer *m_geometryRenderer;
 };
 }

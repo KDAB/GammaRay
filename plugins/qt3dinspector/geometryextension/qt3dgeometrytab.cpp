@@ -60,7 +60,9 @@ using namespace GammaRay;
 Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     QWidget(parent),
     ui(new Ui::Qt3DGeometryTab),
+    m_surface(nullptr),
     m_aspectEngine(nullptr),
+    m_camera(nullptr),
     m_geometryRenderer(nullptr)
 {
     ui->setupUi(this);
@@ -80,14 +82,14 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     if (m_aspectEngine)
         return;
 
-    auto window = new QWindow;
-    window->setSurfaceType(QSurface::OpenGLSurface);
+    m_surface = new QWindow;
+    m_surface->setSurfaceType(QSurface::OpenGLSurface);
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setSamples(4); // ???
     format.setStencilBufferSize(8); // ???
-    window->setFormat(format);
-    window->create();
+    m_surface->setFormat(format);
+    m_surface->create();
 
     m_aspectEngine = new Qt3DCore::QAspectEngine(this);
     m_aspectEngine->registerAspect(new Qt3DRender::QRenderAspect);
@@ -95,14 +97,14 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     // Root entity
     auto rootEntity = new Qt3DCore::QEntity;
 
-    auto camera = new Qt3DRender::QCamera; // TODO automatic aspect ratio, or different projection?
-    camera->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
-    camera->setPosition(QVector3D(0, 0, 4.0f));
+    m_camera = new Qt3DRender::QCamera;
+    m_camera->lens()->setPerspectiveProjection(45.0f, float(m_surface->width())/float(m_surface->height()), 0.1f, 1000.0f);
+    m_camera->setPosition(QVector3D(0, 0, 4.0f));
 
     auto forwardRenderer = new Qt3DRender::QForwardRenderer;
     forwardRenderer->setClearColor(Qt::black);
-    forwardRenderer->setCamera(camera);
-    forwardRenderer->setSurface(window);
+    forwardRenderer->setCamera(m_camera);
+    forwardRenderer->setSurface(m_surface);
 
     auto renderSettings = new Qt3DRender::QRenderSettings;
     renderSettings->setActiveFrameGraph(forwardRenderer);
@@ -118,7 +120,7 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
 
     m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(rootEntity));
 
-    layout()->addWidget(QWidget::createWindowContainer(window, this));
+    layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
 }
 
 Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) const
@@ -210,4 +212,11 @@ void Qt3DGeometryTab::updateGeometry()
     m_geometryRenderer->setFirstInstance(0);
     m_geometryRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
     m_geometryRenderer->setGeometry(geometry);
+}
+
+void Qt3DGeometryTab::resizeEvent(QResizeEvent* event)
+{
+    QWidget::resizeEvent(event);
+    if (m_surface && m_camera)
+        m_camera->lens()->setAspectRatio(float(m_surface->width())/float(m_surface->height()));
 }
