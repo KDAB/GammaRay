@@ -29,6 +29,8 @@
 #include "qt3dinspectorwidget.h"
 #include "ui_qt3dinspectorwidget.h"
 #include "qt3dinspectorclient.h"
+#include "geometryextension/qt3dgeometrytab.h"
+#include "geometryextension/qt3dgeometryextensionclient.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
@@ -110,4 +112,16 @@ void Qt3DInspectorWidget::frameGraphContextMenu(QPoint pos)
     ext.populateMenu(&menu);
 
     menu.exec(ui->frameGraphView->viewport()->mapToGlobal(pos));
+}
+
+
+static QObject *createGeometryExtension(const QString &name, QObject *parent)
+{
+  return new Qt3DGeometryExtensionClient(name, parent);
+}
+
+void Qt3DInspectorUiFactory::initUi()
+{
+    ObjectBroker::registerClientObjectFactoryCallback<Qt3DGeometryExtensionInterface*>(createGeometryExtension);
+//     PropertyWidget::registerTab<Qt3DGeometryTab>(QStringLiteral("qt3dGeometry"), tr("Geometry"));
 }

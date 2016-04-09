@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="gammaray/qt3dinspector">
+    <file>geometryextension/wireframe.vert</file>
+    <file>geometryextension/wireframe.geom</file>
+    <file>geometryextension/wireframe.frag</file>
+  </qresource>
+</RCC>

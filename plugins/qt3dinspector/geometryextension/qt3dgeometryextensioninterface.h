@@ -1,5 +1,5 @@
 /*
-  qt3dinspectorwidget.h
+  qt3dgeometryextensioninterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,48 +26,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
-#define GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
+#ifndef GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
+#define GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
 
-#include <ui/tooluifactory.h>
-
-#include <QWidget>
-
-#include <memory>
+#include <QObject>
 
 namespace GammaRay {
 
-class Qt3DInspectorInterface;
-
-namespace Ui {
-    class Qt3DInspectorWidget;
-}
-
-class Qt3DInspectorWidget : public QWidget
+class Qt3DGeometryExtensionInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit Qt3DInspectorWidget(QWidget *parent = nullptr);
-    ~Qt3DInspectorWidget();
-
-private:
-    void entityContextMenu(QPoint pos);
-    void frameGraphContextMenu(QPoint pos);
-
-    std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
-    Qt3DInspectorInterface *m_interface;
+    explicit Qt3DGeometryExtensionInterface(const QString &name, QObject *parent = nullptr);
+    ~Qt3DGeometryExtensionInterface();
 };
-
-class Qt3DInspectorUiFactory: public QObject, public StandardToolUiFactory<Qt3DInspectorWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_3dinspector.json")
-
-public:
-    void initUi() override;
-};
-
 }
 
-#endif
+Q_DECLARE_INTERFACE(GammaRay::Qt3DGeometryExtensionInterface, "com.kdab.GammaRay.Qt3DGeometryExtensionInterface/1.0")
+
+#endif // GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H

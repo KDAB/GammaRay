@@ -29,6 +29,7 @@
 #include "3dinspector.h"
 #include "qt3dentitytreemodel.h"
 #include "framegraphmodel.h"
+#include "geometryextension/qt3dgeometryextension.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -42,6 +43,8 @@
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
+#include <Qt3DRender/QAttribute>
+#include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QFrameGraphNode>
 #include <Qt3DRender/QRenderSettings>
@@ -68,6 +71,7 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
 {
     registerCoreMetaTypes();
     registerRenderMetaTypes();
+    registerExtensions();
 
     auto engineFilterModel = new ObjectTypeFilterProxyModel<Qt3DCore::QAspectEngine>(this);
     engineFilterModel->setSourceModel(probe->objectListModel());
@@ -215,10 +219,17 @@ void Qt3DInspector::registerCoreMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QEntity*, parentEntity);
 }
 
-void GammaRay::Qt3DInspector::registerRenderMetaTypes()
+void Qt3DInspector::registerRenderMetaTypes()
 {
+    qRegisterMetaType<Qt3DRender::QAttribute*>();
+    qRegisterMetaType<Qt3DRender::QBuffer*>();
     qRegisterMetaType<Qt3DRender::QCamera*>();
     qRegisterMetaType<Qt3DRender::QFrameGraphNode*>();
+}
+
+void Qt3DInspector::registerExtensions()
+{
+    PropertyController::registerExtension<Qt3DGeometryExtension>();
 }
 
 QString Qt3DInspectorFactory::name() const

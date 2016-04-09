@@ -1,6 +1,7 @@
 # shared stuff
 set(gammaray_3dinspector_shared_srcs
   qt3dinspectorinterface.cpp
+  geometryextension/qt3dgeometryextensioninterface.cpp
 )
 
 # probe plugin
@@ -9,6 +10,8 @@ set(gammaray_3dinspector_srcs
   3dinspector.cpp
   qt3dentitytreemodel.cpp
   framegraphmodel.cpp
+
+  geometryextension/qt3dgeometryextension.cpp
 )
 gammaray_add_plugin(gammaray_3dinspector JSON gammaray_3dinspector.json SOURCES ${gammaray_3dinspector_srcs})
 target_link_libraries(gammaray_3dinspector gammaray_core gammaray_kitemmodels Qt5::3DRender)
@@ -20,10 +23,16 @@ if(GAMMARAY_BUILD_UI)
     ${gammaray_3dinspector_shared_srcs}
     qt3dinspectorwidget.cpp
     qt3dinspectorclient.cpp
+
+    geometryextension/qt3dgeometryextensionclient.cpp
+    geometryextension/qt3dgeometrytab.cpp
   )
   qt4_wrap_ui(gammaray_3dinspector_ui_srcs
     qt3dinspectorwidget.ui
+    geometryextension/qt3dgeometrytab.ui
   )
+  qt4_add_resources(gammaray_3dinspector_ui_srcs qt3dinspector.qrc)
+
   gammaray_add_plugin(gammaray_3dinspector_ui JSON gammaray_3dinspector.json SOURCES ${gammaray_3dinspector_ui_srcs})
-  target_link_libraries(gammaray_3dinspector_ui gammaray_ui)
+  target_link_libraries(gammaray_3dinspector_ui gammaray_ui Qt5::3DRender)
 endif()

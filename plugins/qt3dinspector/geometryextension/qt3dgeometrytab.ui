@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GammaRay::Qt3DGeometryTab</class>
+ <widget class="QWidget" name="GammaRay::Qt3DGeometryTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

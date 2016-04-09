@@ -74,6 +74,7 @@ private:
 
     void registerCoreMetaTypes();
     void registerRenderMetaTypes();
+    void registerExtensions();
 
 private:
     QAbstractItemModel *m_engineModel;

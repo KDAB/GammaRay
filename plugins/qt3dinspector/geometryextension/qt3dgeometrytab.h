@@ -1,5 +1,5 @@
 /*
-  qt3dinspectorwidget.h
+  qt3dgeometrytab.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,48 +26,47 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
-#define GAMMARAY_QT3DINSPECTOR_QT3DINSPECTORWIDGET_H
-
-#include <ui/tooluifactory.h>
+#ifndef GAMMARAY_QT3DGEOMETRYTAB_H
+#define GAMMARAY_QT3DGEOMETRYTAB_H
 
 #include <QWidget>
 
 #include <memory>
 
+namespace Qt3DCore {
+class QAspectEngine;
+class QComponent;
+class QNode;
+}
+
 namespace GammaRay {
 
-class Qt3DInspectorInterface;
+class PropertyWidget;
+class Qt3DGeometryExtensionInterface;
 
-namespace Ui {
-    class Qt3DInspectorWidget;
+namespace Ui
+{
+class Qt3DGeometryTab;
 }
 
-class Qt3DInspectorWidget : public QWidget
+class Qt3DGeometryTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Qt3DInspectorWidget(QWidget *parent = nullptr);
-    ~Qt3DInspectorWidget();
+    explicit Qt3DGeometryTab(PropertyWidget *parent);
+    ~Qt3DGeometryTab();
+
+protected:
+    void showEvent(QShowEvent *event) override;
 
 private:
-    void entityContextMenu(QPoint pos);
-    void frameGraphContextMenu(QPoint pos);
+    Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent) const;
 
-    std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
-    Qt3DInspectorInterface *m_interface;
+    std::unique_ptr<Ui::Qt3DGeometryTab> ui;
+    Qt3DGeometryExtensionInterface *m_interface;
+
+    Qt3DCore::QAspectEngine *m_aspectEngine;
 };
-
-class Qt3DInspectorUiFactory: public QObject, public StandardToolUiFactory<Qt3DInspectorWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_3dinspector.json")
-
-public:
-    void initUi() override;
-};
-
 }
 
-#endif
+#endif // GAMMARAY_QT3DGEOMETRYTAB_H
