@@ -50,6 +50,8 @@ public:
     bool setQObject(QObject *object) override;
 
 private:
+    void updateGeometryData();
+
     Qt3DRender::QGeometryRenderer *m_geometry;
 };
 }

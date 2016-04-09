@@ -38,6 +38,9 @@ class QAspectEngine;
 class QComponent;
 class QNode;
 }
+namespace Qt3DRender {
+class QGeometryRenderer;
+}
 
 namespace GammaRay {
 
@@ -61,11 +64,13 @@ protected:
 
 private:
     Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent) const;
+    void updateGeometry();
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     Qt3DGeometryExtensionInterface *m_interface;
 
     Qt3DCore::QAspectEngine *m_aspectEngine;
+    Qt3DRender::QGeometryRenderer *m_geometryRenderer;
 };
 }
 

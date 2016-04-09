@@ -33,15 +33,49 @@
 
 namespace GammaRay {
 
+struct Qt3DGeometryAttributeData
+{
+    Qt3DGeometryAttributeData();
+    bool operator==(const Qt3DGeometryAttributeData &rhs) const;
+
+    uint byteOffset;
+    uint byteStride;
+    uint count;
+    // TODO divisor?
+    // TODO vertexBaseType
+    uint vertexSize;
+    QByteArray data;
+};
+
+struct Qt3DGeometryData
+{
+    bool operator==(const Qt3DGeometryData &rhs) const;
+
+    Qt3DGeometryAttributeData vertexPositions;
+    Qt3DGeometryAttributeData vertexNormals;
+    Qt3DGeometryAttributeData index;
+};
+
 class Qt3DGeometryExtensionInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(GammaRay::Qt3DGeometryData geometryData READ geometryData WRITE setGeometryData NOTIFY geometryDataChanged)
 public:
     explicit Qt3DGeometryExtensionInterface(const QString &name, QObject *parent = nullptr);
     ~Qt3DGeometryExtensionInterface();
+
+    Qt3DGeometryData geometryData() const;
+    void setGeometryData(const Qt3DGeometryData &data);
+
+signals:
+    void geometryDataChanged();
+
+private:
+    Qt3DGeometryData m_data;
 };
 }
 
+Q_DECLARE_METATYPE(GammaRay::Qt3DGeometryData)
 Q_DECLARE_INTERFACE(GammaRay::Qt3DGeometryExtensionInterface, "com.kdab.GammaRay.Qt3DGeometryExtensionInterface/1.0")
 
 #endif // GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H

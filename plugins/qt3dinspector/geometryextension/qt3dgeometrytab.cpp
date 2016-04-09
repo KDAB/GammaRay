@@ -33,22 +33,25 @@
 #include <ui/propertywidget.h>
 #include <common/objectbroker.h>
 
+#include <Qt3DRender/QAttribute>
+#include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QFilterKey>
 #include <Qt3DRender/QForwardRenderer>
+#include <Qt3DRender/QGeometryRenderer>
 #include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QMaterial>
 #include <Qt3DRender/QRenderAspect>
 #include <Qt3DRender/QRenderPass>
 #include <Qt3DRender/QRenderSettings>
 #include <Qt3DRender/QShaderProgram>
-#include <Qt3DRender/QSphereMesh>
 #include <Qt3DRender/QTechnique>
 
 #include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QEntity>
 
+#include <QDebug>
 #include <QUrl>
 #include <QWindow>
 
@@ -57,11 +60,13 @@ using namespace GammaRay;
 Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     QWidget(parent),
     ui(new Ui::Qt3DGeometryTab),
-    m_aspectEngine(nullptr)
+    m_aspectEngine(nullptr),
+    m_geometryRenderer(nullptr)
 {
     ui->setupUi(this);
 
     m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface*>(parent->objectBaseName() + ".qt3dGeometry");
+    connect(m_interface, &Qt3DGeometryExtensionInterface::geometryDataChanged, this, &Qt3DGeometryTab::updateGeometry);
 }
 
 Qt3DGeometryTab::~Qt3DGeometryTab()
@@ -103,14 +108,11 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     renderSettings->setActiveFrameGraph(forwardRenderer);
     rootEntity->addComponent(renderSettings);
 
-    // Geometry
-    // TODO use the actual geometry
-    auto sphereEntity = new Qt3DCore::QEntity(rootEntity);
-    auto sphereMesh = new Qt3DRender::QSphereMesh;
-    sphereMesh->setRadius(1);
-
-    sphereEntity->addComponent(sphereMesh);
-    sphereEntity->addComponent(createMaterial(rootEntity));
+    auto geometryEntity = new Qt3DCore::QEntity(rootEntity);
+    m_geometryRenderer = new Qt3DRender::QGeometryRenderer;
+    geometryEntity->addComponent(m_geometryRenderer);
+    geometryEntity->addComponent(createMaterial(rootEntity));
+    updateGeometry();
 
     // TODO input handling
 
@@ -150,3 +152,62 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) c
     return material;
 }
 
+void Qt3DGeometryTab::updateGeometry()
+{
+    if (!m_geometryRenderer)
+        return;
+
+    const auto geo = m_interface->geometryData();
+
+    auto geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
+
+    if (!geo.vertexPositions.data.isEmpty()) {
+        auto posBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, geometry);
+        posBuffer->setData(geo.vertexPositions.data);
+        auto posAttr = new Qt3DRender::QAttribute();
+        posAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+        posAttr->setBuffer(posBuffer);
+        posAttr->setDataType(Qt3DRender::QAttribute::Float);
+        posAttr->setDataSize(geo.vertexPositions.vertexSize);
+        posAttr->setByteOffset(geo.vertexPositions.byteOffset);
+        posAttr->setByteStride(geo.vertexPositions.byteStride);
+        posAttr->setCount(geo.vertexPositions.count);
+        posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
+        geometry->addAttribute(posAttr);
+    }
+
+    if (!geo.vertexNormals.data.isEmpty()) {
+        auto normalBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, geometry);
+        normalBuffer->setData(geo.vertexNormals.data);
+        auto normalAttr = new Qt3DRender::QAttribute();
+        normalAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+        normalAttr->setBuffer(normalBuffer);
+        normalAttr->setDataType(Qt3DRender::QAttribute::Float);
+        normalAttr->setDataSize(geo.vertexNormals.vertexSize);
+        normalAttr->setByteOffset(geo.vertexNormals.byteOffset);
+        normalAttr->setByteStride(geo.vertexNormals.byteStride);
+        normalAttr->setCount(geo.vertexNormals.count);
+        normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
+        geometry->addAttribute(normalAttr);
+    }
+
+    if (!geo.index.data.isEmpty()) {
+        auto indexBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, geometry);
+        indexBuffer->setData(geo.index.data);
+        auto indexAttr = new Qt3DRender::QAttribute();
+        indexAttr->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
+        indexAttr->setBuffer(indexBuffer);
+        indexAttr->setDataType(Qt3DRender::QAttribute::UnsignedShort);
+        indexAttr->setDataSize(geo.index.vertexSize);
+        indexAttr->setByteOffset(geo.index.byteOffset);
+        indexAttr->setByteStride(geo.index.byteStride);
+        indexAttr->setCount(geo.index.count);
+        geometry->addAttribute(indexAttr);
+    }
+
+    m_geometryRenderer->setInstanceCount(1);
+    m_geometryRenderer->setIndexOffset(0);
+    m_geometryRenderer->setFirstInstance(0);
+    m_geometryRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
+    m_geometryRenderer->setGeometry(geometry);
+}

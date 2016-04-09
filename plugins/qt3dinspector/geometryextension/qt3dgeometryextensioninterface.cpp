@@ -30,14 +30,77 @@
 
 #include <common/objectbroker.h>
 
+#include <QDataStream>
+#include <QDebug>
+
 using namespace GammaRay;
+
+static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
+{
+    out << data.byteOffset << data.byteStride << data.count << data.vertexSize << data.data;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
+{
+    in >> data.byteOffset >> data.byteStride >> data.count >> data.vertexSize >> data.data;
+    return in;
+}
+
+Qt3DGeometryAttributeData::Qt3DGeometryAttributeData() :
+    byteOffset(0),
+    byteStride(0),
+    count(0),
+    vertexSize(0)
+{
+}
+
+bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs) const
+{
+    return data == rhs.data;
+}
+
+
+static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryData &data)
+{
+    out << data.vertexPositions << data.vertexNormals << data.index;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, Qt3DGeometryData &data)
+{
+    in >> data.vertexPositions >> data.vertexNormals >> data.index;
+    return in;
+}
+
+bool Qt3DGeometryData::operator==(const Qt3DGeometryData &rhs) const
+{
+    return vertexPositions == rhs.vertexPositions && vertexNormals == rhs.vertexNormals;
+}
+
 
 Qt3DGeometryExtensionInterface::Qt3DGeometryExtensionInterface(const QString& name, QObject* parent) :
     QObject(parent)
 {
+    qRegisterMetaType<Qt3DGeometryData>();
+    qRegisterMetaTypeStreamOperators<Qt3DGeometryData>();
     ObjectBroker::registerObject(name, this);
 }
 
 Qt3DGeometryExtensionInterface::~Qt3DGeometryExtensionInterface()
 {
+}
+
+Qt3DGeometryData Qt3DGeometryExtensionInterface::geometryData() const
+{
+    return m_data;
+}
+
+void Qt3DGeometryExtensionInterface::setGeometryData(const Qt3DGeometryData& data)
+{
+    if (m_data == data)
+        return;
+    m_data = data;
+    qDebug();
+    emit geometryDataChanged();
 }

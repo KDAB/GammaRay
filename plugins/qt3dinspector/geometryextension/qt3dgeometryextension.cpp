@@ -32,6 +32,7 @@
 
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
+#include <Qt3DRender/QBufferDataGenerator>
 #include <Qt3DRender/QGeometry>
 #include <Qt3DRender/QGeometryRenderer>
 
@@ -78,8 +79,43 @@ bool Qt3DGeometryExtension::setQObject(QObject* object)
     if (!geometry)
         return false;
 
-    // TODO
-    qDebug() << geometry;
-
+    updateGeometryData();
     return true;
+}
+
+void Qt3DGeometryExtension::updateGeometryData()
+{
+    Qt3DGeometryData data;
+    if (!m_geometry || !m_geometry->geometry()) {
+        setGeometryData(data);
+        return;
+    }
+
+    foreach (auto attr, m_geometry->geometry()->attributes()) {
+        Qt3DGeometryAttributeData *attrData = nullptr;
+        if (attr->name() == Qt3DRender::QAttribute::defaultPositionAttributeName()) {
+            attrData = &data.vertexPositions;
+        } else if (attr->name() == Qt3DRender::QAttribute::defaultNormalAttributeName()) {
+            attrData = &data.vertexNormals;
+        } else if (attr->attributeType() == Qt3DRender::QAttribute::IndexAttribute) {
+            attrData = &data.index;
+        }
+
+        if (!attrData)
+            continue;
+
+        attrData->byteOffset = attr->byteOffset();
+        attrData->byteStride = attr->byteStride();
+        attrData->count = attr->count();
+        attrData->vertexSize = attr->vertexSize();
+
+        // TODO don't copy the buffer for every attribute!
+        auto generator = attr->buffer()->dataGenerator();
+        if (generator)
+            attrData->data = (*generator.data())();
+        else
+            attrData->data = attr->buffer()->data();
+    }
+
+    setGeometryData(data);
 }
