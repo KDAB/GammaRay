@@ -68,6 +68,7 @@ protected:
 private:
     Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
+    void resetCamera();
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     Qt3DGeometryExtensionInterface *m_interface;

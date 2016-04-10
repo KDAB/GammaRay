@@ -73,6 +73,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     m_normalsRenderPass(nullptr)
 {
     ui->setupUi(this);
+    connect(ui->resetCam, &QPushButton::clicked, this, &Qt3DGeometryTab::resetCamera);
     connect(ui->showNormals, &QCheckBox::toggled, this, [this]() {
         if (m_normalsRenderPass)
             m_normalsRenderPass->setEnabled(ui->showNormals->isChecked());
@@ -108,8 +109,7 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     auto rootEntity = new Qt3DCore::QEntity;
 
     m_camera = new Qt3DRender::QCamera;
-    m_camera->lens()->setPerspectiveProjection(45.0f, float(m_surface->width())/float(m_surface->height()), 0.1f, 1000.0f);
-    m_camera->setPosition(QVector3D(0, 0, 4.0f));
+    resetCamera();
 
     // rendering
     auto forwardRenderer = new Qt3DRender::QForwardRenderer;
@@ -246,4 +246,12 @@ void Qt3DGeometryTab::resizeEvent(QResizeEvent* event)
     QWidget::resizeEvent(event);
     if (m_surface && m_camera)
         m_camera->lens()->setAspectRatio(float(m_surface->width())/float(m_surface->height()));
+}
+
+void Qt3DGeometryTab::resetCamera()
+{
+    // TODO set this based on geometry bounding box
+    m_camera->lens()->setPerspectiveProjection(45.0f, float(m_surface->width())/float(m_surface->height()), 0.1f, 1000.0f);
+    m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
+    m_camera->setPosition(QVector3D(0, 0, 4.0f));
 }
