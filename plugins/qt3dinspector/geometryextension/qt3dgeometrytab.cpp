@@ -29,6 +29,7 @@
 #include "qt3dgeometrytab.h"
 #include "ui_qt3dgeometrytab.h"
 #include "qt3dgeometryextensioninterface.h"
+#include "cameracontroller.h"
 
 #include <ui/propertywidget.h>
 #include <common/objectbroker.h>
@@ -47,6 +48,11 @@
 #include <Qt3DRender/QRenderSettings>
 #include <Qt3DRender/QShaderProgram>
 #include <Qt3DRender/QTechnique>
+
+#include <Qt3DInput/QInputAspect>
+#include <Qt3DInput/QInputSettings>
+
+#include <Qt3DLogic/QLogicAspect>
 
 #include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QEntity>
@@ -94,13 +100,13 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     m_aspectEngine = new Qt3DCore::QAspectEngine(this);
     m_aspectEngine->registerAspect(new Qt3DRender::QRenderAspect);
 
-    // Root entity
     auto rootEntity = new Qt3DCore::QEntity;
 
     m_camera = new Qt3DRender::QCamera;
     m_camera->lens()->setPerspectiveProjection(45.0f, float(m_surface->width())/float(m_surface->height()), 0.1f, 1000.0f);
     m_camera->setPosition(QVector3D(0, 0, 4.0f));
 
+    // rendering
     auto forwardRenderer = new Qt3DRender::QForwardRenderer;
     forwardRenderer->setClearColor(Qt::black);
     forwardRenderer->setCamera(m_camera);
@@ -116,7 +122,15 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     geometryEntity->addComponent(createMaterial(rootEntity));
     updateGeometry();
 
-    // TODO input handling
+    // input handling
+    m_aspectEngine->registerAspect(new Qt3DLogic::QLogicAspect);
+    m_aspectEngine->registerAspect(new Qt3DInput::QInputAspect);
+    auto inputSettings = new Qt3DInput::QInputSettings;
+    inputSettings->setEventSource(m_surface);
+    rootEntity->addComponent(inputSettings);
+
+    auto camController = new CameraController(rootEntity);
+    camController->setCamera(m_camera);
 
     m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(rootEntity));
 
