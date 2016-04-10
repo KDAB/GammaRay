@@ -41,6 +41,7 @@ class QNode;
 namespace Qt3DRender {
 class QCamera;
 class QGeometryRenderer;
+class QRenderPass;
 }
 
 namespace GammaRay {
@@ -65,7 +66,7 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent) const;
+    Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
@@ -75,6 +76,7 @@ private:
     Qt3DCore::QAspectEngine *m_aspectEngine;
     Qt3DRender::QCamera *m_camera;
     Qt3DRender::QGeometryRenderer *m_geometryRenderer;
+    Qt3DRender::QRenderPass *m_normalsRenderPass;
 };
 }
 

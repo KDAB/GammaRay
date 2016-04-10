@@ -69,9 +69,14 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     m_surface(nullptr),
     m_aspectEngine(nullptr),
     m_camera(nullptr),
-    m_geometryRenderer(nullptr)
+    m_geometryRenderer(nullptr),
+    m_normalsRenderPass(nullptr)
 {
     ui->setupUi(this);
+    connect(ui->showNormals, &QCheckBox::toggled, this, [this]() {
+        if (m_normalsRenderPass)
+            m_normalsRenderPass->setEnabled(ui->showNormals->isChecked());
+    });
 
     m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface*>(parent->objectBaseName() + ".qt3dGeometry");
     connect(m_interface, &Qt3DGeometryExtensionInterface::geometryDataChanged, this, &Qt3DGeometryTab::updateGeometry);
@@ -137,7 +142,7 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
 }
 
-Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) const
+Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
 {
     auto material = new Qt3DRender::QMaterial(parent);
 
@@ -154,8 +159,9 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) c
     normalsShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/normals.geom"))));
     normalsShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/normals.frag"))));
 
-    auto normalsRenderPass = new Qt3DRender::QRenderPass;
-    normalsRenderPass->setShaderProgram(normalsShader);
+    m_normalsRenderPass = new Qt3DRender::QRenderPass;
+    m_normalsRenderPass->setShaderProgram(normalsShader);
+    m_normalsRenderPass->setEnabled(ui->showNormals->isChecked());
 
     auto filterKey = new Qt3DRender::QFilterKey(material);
     filterKey->setName(QStringLiteral("renderingStyle"));
@@ -167,7 +173,7 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) c
     technique->graphicsApiFilter()->setMinorVersion(3);
     technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::CoreProfile);
     technique->addRenderPass(wireframeRenderPass);
-    technique->addRenderPass(normalsRenderPass);
+    technique->addRenderPass(m_normalsRenderPass);
     technique->addFilterKey(filterKey);
 
     auto effect = new Qt3DRender::QEffect;
