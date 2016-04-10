@@ -107,6 +107,8 @@ void Qt3DGeometryExtension::updateGeometryData()
         attrData->byteOffset = attr->byteOffset();
         attrData->byteStride = attr->byteStride();
         attrData->count = attr->count();
+        attrData->divisor = attr->divisor();
+        attrData->vertexBaseType = attr->vertexBaseType();
         attrData->vertexSize = attr->vertexSize();
 
         // TODO don't copy the buffer for every attribute!

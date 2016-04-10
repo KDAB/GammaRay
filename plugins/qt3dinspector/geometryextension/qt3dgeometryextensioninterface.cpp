@@ -35,15 +35,29 @@
 
 using namespace GammaRay;
 
+static QDataStream &operator<<(QDataStream &out, Qt3DRender::QAttribute::VertexBaseType type)
+{
+    out << (quint32)type;
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, Qt3DRender::QAttribute::VertexBaseType &type)
+{
+    quint32 v;
+    in >> v;
+    type = static_cast<Qt3DRender::QAttribute::VertexBaseType>(v);
+    return in;
+}
+
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
-    out << data.byteOffset << data.byteStride << data.count << data.vertexSize << data.data;
+    out << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.data;
     return out;
 }
 
 QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 {
-    in >> data.byteOffset >> data.byteStride >> data.count >> data.vertexSize >> data.data;
+    in >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.data;
     return in;
 }
 
@@ -51,13 +65,22 @@ Qt3DGeometryAttributeData::Qt3DGeometryAttributeData() :
     byteOffset(0),
     byteStride(0),
     count(0),
+    divisor(0),
+    vertexBaseType(Qt3DRender::QAttribute::UnsignedShort),
     vertexSize(0)
 {
 }
 
 bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs) const
 {
-    return data == rhs.data;
+    return
+        byteOffset == rhs.byteOffset &&
+        byteStride == rhs.byteStride &&
+        count == rhs.count &&
+        divisor == rhs.divisor &&
+        vertexBaseType == rhs.vertexBaseType &&
+        vertexSize == rhs.vertexSize &&
+        data == rhs.data;
 }
 
 

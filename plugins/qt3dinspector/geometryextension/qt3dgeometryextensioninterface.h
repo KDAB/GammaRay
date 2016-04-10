@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
 #define GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
 
-#include <QObject>
+#include <Qt3DRender/QAttribute>
 
 namespace GammaRay {
 
@@ -41,8 +41,8 @@ struct Qt3DGeometryAttributeData
     uint byteOffset;
     uint byteStride;
     uint count;
-    // TODO divisor?
-    // TODO vertexBaseType
+    uint divisor;
+    Qt3DRender::QAttribute::VertexBaseType vertexBaseType;
     uint vertexSize;
     QByteArray data;
 };

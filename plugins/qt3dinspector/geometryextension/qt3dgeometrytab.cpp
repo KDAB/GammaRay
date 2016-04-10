@@ -168,6 +168,16 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) c
     return material;
 }
 
+static void setupAttribute(Qt3DRender::QAttribute *attr, const Qt3DGeometryAttributeData &attrData)
+{
+    attr->setByteOffset(attrData.byteOffset);
+    attr->setByteStride(attrData.byteStride);
+    attr->setCount(attrData.count);
+    attr->setDivisor(attrData.divisor);
+    attr->setDataType(attrData.vertexBaseType);
+    attr->setDataSize(attrData.vertexSize);
+}
+
 void Qt3DGeometryTab::updateGeometry()
 {
     if (!m_geometryRenderer)
@@ -183,11 +193,7 @@ void Qt3DGeometryTab::updateGeometry()
         auto posAttr = new Qt3DRender::QAttribute();
         posAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
         posAttr->setBuffer(posBuffer);
-        posAttr->setDataType(Qt3DRender::QAttribute::Float);
-        posAttr->setDataSize(geo.vertexPositions.vertexSize);
-        posAttr->setByteOffset(geo.vertexPositions.byteOffset);
-        posAttr->setByteStride(geo.vertexPositions.byteStride);
-        posAttr->setCount(geo.vertexPositions.count);
+        setupAttribute(posAttr, geo.vertexPositions);
         posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
         geometry->addAttribute(posAttr);
     }
@@ -198,11 +204,7 @@ void Qt3DGeometryTab::updateGeometry()
         auto normalAttr = new Qt3DRender::QAttribute();
         normalAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
         normalAttr->setBuffer(normalBuffer);
-        normalAttr->setDataType(Qt3DRender::QAttribute::Float);
-        normalAttr->setDataSize(geo.vertexNormals.vertexSize);
-        normalAttr->setByteOffset(geo.vertexNormals.byteOffset);
-        normalAttr->setByteStride(geo.vertexNormals.byteStride);
-        normalAttr->setCount(geo.vertexNormals.count);
+        setupAttribute(normalAttr, geo.vertexNormals);
         normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
         geometry->addAttribute(normalAttr);
     }
@@ -213,11 +215,7 @@ void Qt3DGeometryTab::updateGeometry()
         auto indexAttr = new Qt3DRender::QAttribute();
         indexAttr->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
         indexAttr->setBuffer(indexBuffer);
-        indexAttr->setDataType(Qt3DRender::QAttribute::UnsignedShort);
-        indexAttr->setDataSize(geo.index.vertexSize);
-        indexAttr->setByteOffset(geo.index.byteOffset);
-        indexAttr->setByteStride(geo.index.byteStride);
-        indexAttr->setCount(geo.index.count);
+        setupAttribute(indexAttr, geo.index);
         geometry->addAttribute(indexAttr);
     }
 
