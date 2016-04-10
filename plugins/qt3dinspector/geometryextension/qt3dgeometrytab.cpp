@@ -141,13 +141,21 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) c
 {
     auto material = new Qt3DRender::QMaterial(parent);
 
-    auto shader = new Qt3DRender::QShaderProgram;
-    shader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/wireframe.vert"))));
-    shader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/wireframe.geom"))));
-    shader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/wireframe.frag"))));
+    auto wireframeShader = new Qt3DRender::QShaderProgram;
+    wireframeShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
+    wireframeShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/wireframe.geom"))));
+    wireframeShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/wireframe.frag"))));
 
-    auto renderPass = new Qt3DRender::QRenderPass;
-    renderPass->setShaderProgram(shader);
+    auto wireframeRenderPass = new Qt3DRender::QRenderPass;
+    wireframeRenderPass->setShaderProgram(wireframeShader);
+
+    auto normalsShader = new Qt3DRender::QShaderProgram;
+    normalsShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
+    normalsShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/normals.geom"))));
+    normalsShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/normals.frag"))));
+
+    auto normalsRenderPass = new Qt3DRender::QRenderPass;
+    normalsRenderPass->setShaderProgram(normalsShader);
 
     auto filterKey = new Qt3DRender::QFilterKey(material);
     filterKey->setName(QStringLiteral("renderingStyle"));
@@ -158,7 +166,8 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent) c
     technique->graphicsApiFilter()->setMajorVersion(3);
     technique->graphicsApiFilter()->setMinorVersion(3);
     technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::CoreProfile);
-    technique->addRenderPass(renderPass);
+    technique->addRenderPass(wireframeRenderPass);
+    technique->addRenderPass(normalsRenderPass);
     technique->addFilterKey(filterKey);
 
     auto effect = new Qt3DRender::QEffect;
