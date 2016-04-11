@@ -26,6 +26,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef GAMMARAY_WEBVIEWMODELROLES_H
+#define GAMMARAY_WEBVIEWMODELROLES_H
+
 #include <common/objectmodel.h>
 
 namespace GammaRay {
@@ -37,3 +40,5 @@ namespace WebViewModelRoles {
 }
 
 }
+
+#endif
