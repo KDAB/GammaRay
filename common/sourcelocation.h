@@ -44,8 +44,8 @@ class GAMMARAY_COMMON_EXPORT SourceLocation
 {
 public:
     SourceLocation();
-    SourceLocation(const QString &fileName, int line = -1, int column = -1);
-    SourceLocation(const QUrl &fileUrl, int line = -1, int column = -1);
+    explicit SourceLocation(const QString &fileName, int line = -1, int column = -1);
+    explicit SourceLocation(const QUrl &fileUrl, int line = -1, int column = -1);
     ~SourceLocation();
 
     bool isValid() const;
