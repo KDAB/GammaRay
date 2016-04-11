@@ -92,7 +92,7 @@ void ProbeSettingsReceiver::run()
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), this, SLOT(settingsReceivedFallback()));
     connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
     m_socket->connectToServer(QStringLiteral("gammaray-") + QString::number(ProbeSettings::launcherIdentifier()));
-    if (!m_socket->waitForConnected()) {
+    if (!m_socket->waitForConnected(10000)) {
         qWarning() << "Failed to connect to launcher, can't receive probe settings!" << m_socket->errorString();
         settingsReceivedFallback();
     }
