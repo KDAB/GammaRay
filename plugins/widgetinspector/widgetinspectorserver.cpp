@@ -62,6 +62,7 @@
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QLayout>
+#include <QLibrary>
 #include <QItemSelectionModel>
 #include <QPainter>
 #include <QPixmap>
@@ -84,6 +85,7 @@ using namespace std;
 
 WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *parent)
   : WidgetInspectorInterface(parent)
+  , m_externalExportActions(new QLibrary(this))
   , m_propertyController(new PropertyController(objectName(), this))
   , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this))
   , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"), this))
@@ -335,22 +337,22 @@ void WidgetInspectorServer::callExternalExportAction(const char *name,
                                                QWidget *widget,
                                                const QString &fileName)
 {
-  if (!m_externalExportActions.isLoaded()) {
-    m_externalExportActions.setFileName(
+  if (!m_externalExportActions->isLoaded()) {
+    m_externalExportActions->setFileName(
       Paths::currentPluginsPath() + QLatin1String("/libgammaray_widget_export_actions")
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
         + QStringLiteral("-") + QStringLiteral(GAMMARAY_PROBE_ABI)
 #endif
     );
 
-    m_externalExportActions.load();
+    m_externalExportActions->load();
   }
 
   void(*function)(QWidget *, const QString &) =
-    reinterpret_cast<void(*)(QWidget *, const QString &)>(m_externalExportActions.resolve(name));
+    reinterpret_cast<void(*)(QWidget *, const QString &)>(m_externalExportActions->resolve(name));
 
   if (!function) {
-    cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions.errorString()) << endl;
+    cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions->errorString()) << endl;
     return;
   }
   function(widget, fileName);

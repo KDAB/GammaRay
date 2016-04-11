@@ -32,12 +32,12 @@
 
 #include <widgetinspectorinterface.h>
 
-#include <QLibrary>
 #include <QPointer>
 
 class QModelIndex;
 class QItemSelection;
 class QItemSelectionModel;
+class QLibrary;
 class QPoint;
 
 namespace GammaRay {
@@ -87,7 +87,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
 
   private:
     QPointer<OverlayWidget> m_overlayWidget;
-    QLibrary m_externalExportActions;
+    QLibrary *m_externalExportActions;
     PropertyController *m_propertyController;
     QItemSelectionModel *m_widgetSelectionModel;
     QPointer<QWidget> m_selectedWidget;
