@@ -6,7 +6,6 @@ set(gammaray_ui_srcs
   clienttoolmodel.cpp
   contextmenuextension.cpp
   deferredtreeview.cpp
-  deferredtreeviewconfiguration.cpp
   editabletypesmodel.cpp
   itemdelegate.cpp
   methodinvocationdialog.cpp
@@ -152,7 +151,6 @@ gammaray_install_headers(
   clienttoolmodel.h
   deferredtreeview.h
   itemdelegate.h
-  deferredtreeviewconfiguration.h
   propertywidget.h
   propertywidgettab.h
   tooluifactory.h
