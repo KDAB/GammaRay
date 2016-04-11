@@ -76,6 +76,7 @@ foreach (injectorType ${INJECTOR_TYPES})
   endif()
 endforeach()
 
+if(NOT OSX_ASAN_WORKAROUND)
 add_test(NAME attachtest-gdb
   COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray gdb
   ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
@@ -84,6 +85,7 @@ add_test(NAME attachtest-lldb
   COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray lldb
   ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
 )
+endif()
 
 ### MultiSignalMapper test
 
