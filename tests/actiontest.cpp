@@ -50,7 +50,7 @@ private:
         qputenv("GAMMARAY_ProbePath", Paths::currentProbePath().toUtf8());
         Hooks::installHooks();
         Probe::startupHookReceived();
-        new ProbeCreator(ProbeCreator::CreateOnly);
+        new ProbeCreator(ProbeCreator::Create);
         QTest::qWait(1); // event loop re-entry
     }
 

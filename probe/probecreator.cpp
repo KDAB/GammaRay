@@ -44,8 +44,8 @@
 using namespace GammaRay;
 using namespace std;
 
-ProbeCreator::ProbeCreator(Type type)
-  : m_type(type)
+ProbeCreator::ProbeCreator(CreateFlags flags) :
+    m_flags(flags)
 {
   //push object into the main thread, as windows creates a
   //different thread where this runs in
@@ -80,12 +80,15 @@ void ProbeCreator::createProbe()
 
   if (Probe::isInitialized()) {
     // already exists, so we are trying to re-attach to an already injected process
-    Probe::instance()->resendServerAddress();
+    if (m_flags & ResendServerAddress) {
+        printf("Resending server address...\n");
+        Probe::instance()->resendServerAddress();
+    }
     deleteLater();
     return;
   }
 
-  Probe::createProbe(m_type == GammaRay::ProbeCreator::CreateAndFindExisting);
+  Probe::createProbe(m_flags & FindExistingObjects);
   Q_ASSERT(Probe::isInitialized());
 
   deleteLater();

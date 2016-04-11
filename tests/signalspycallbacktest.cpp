@@ -57,7 +57,7 @@ private:
     void createProbe()
     {
         qputenv("GAMMARAY_ProbePath", QCoreApplication::applicationDirPath().toUtf8());
-        new ProbeCreator(ProbeCreator::CreateOnly);
+        new ProbeCreator(ProbeCreator::Create);
         QTest::qWait(1); // event loop re-entry
     }
 

@@ -63,7 +63,7 @@ static void(*gammaray_next_removeObject)(QObject*) = 0;
 extern "C" Q_DECL_EXPORT void gammaray_startup_hook()
 {
   Probe::startupHookReceived();
-  new ProbeCreator(ProbeCreator::CreateOnly);
+  new ProbeCreator(ProbeCreator::Create);
 
   if (gammaray_next_startup_hook)
     gammaray_next_startup_hook();
@@ -144,6 +144,13 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
     return;
   }
   printf("gammaray_probe_inject()\n");
-  // make it possible to re-attach
-  new ProbeCreator(ProbeCreator::CreateAndFindExisting);
+  new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
+}
+
+extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
+{
+  if (!qApp)
+    return;
+  printf("gammaray_probe_attach()\n");
+  new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects | ProbeCreator::ResendServerAddress);
 }

@@ -41,19 +41,23 @@ class ProbeCreator : public QObject
 {
   Q_OBJECT
   public:
-    enum Type {
-      CreateOnly,
-      CreateAndFindExisting
+    enum CreateFlag {
+      Create = 0,
+      FindExistingObjects = 1,
+      ResendServerAddress = 2
     };
-    explicit ProbeCreator(Type t);
+    Q_DECLARE_FLAGS(CreateFlags, CreateFlag)
+    explicit ProbeCreator(CreateFlags flags);
 
   private slots:
     void createProbe();
 
   private:
-    Type m_type;
+    CreateFlags m_flags;
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::ProbeCreator::CreateFlags)
 
 #endif // GAMMARAY_PROBECREATOR_H

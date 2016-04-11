@@ -47,9 +47,16 @@ extern Q_DECL_EXPORT void gammaray_startup_hook();
 extern Q_DECL_EXPORT void gammaray_addObject(QObject* obj);
 extern Q_DECL_EXPORT void gammaray_removeObject(QObject* obj);
 
-/** Entry point for runtime attaching. */
+/** Entry point for startup injection. */
 extern Q_DECL_EXPORT void gammaray_probe_inject();
 
+/** Entry point for runtime attaching.
+ *  This differs from the above by also attempting to re-send
+ *  the server address to the launcher. So only use this if you
+ *  are sure there is a launcher ready to receive this information
+ *  on the other side.
+ */
+extern Q_DECL_EXPORT void gammaray_probe_attach();
 }
 
 namespace GammaRay {
