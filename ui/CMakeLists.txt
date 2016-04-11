@@ -5,7 +5,6 @@ set(gammaray_ui_srcs
   aboutdata.cpp
   clienttoolmodel.cpp
   contextmenuextension.cpp
-  deferredresizemodesetter.cpp
   deferredtreeview.cpp
   deferredtreeviewconfiguration.cpp
   editabletypesmodel.cpp
@@ -151,7 +150,6 @@ target_link_libraries(gammaray_ui_internal
 gammaray_install_headers(
   ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
   clienttoolmodel.h
-  deferredresizemodesetter.h
   deferredtreeview.h
   itemdelegate.h
   deferredtreeviewconfiguration.h
