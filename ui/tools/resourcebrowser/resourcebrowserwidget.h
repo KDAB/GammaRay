@@ -58,7 +58,6 @@ class ResourceBrowserWidget : public QWidget
     void resourceDeselected();
     void resourceSelected(const QPixmap &pixmap);
     void resourceSelected(const QByteArray &contents, int line, int column);
-    void resourceDownloaded(const QString &fileName, const QPixmap &pixmap);
     void resourceDownloaded(const QString &fileName, const QByteArray &contents);
 
     void handleCustomContextMenu(const QPoint &pos);

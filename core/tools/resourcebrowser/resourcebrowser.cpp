@@ -55,21 +55,16 @@ ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
 
 void ResourceBrowser::downloadResource(const QString &sourceFilePath, const QString &targetFilePath)
 {
-  const QFileInfo fi(sourceFilePath);
+    const QFileInfo fi(sourceFilePath);
 
-  if (fi.isFile()) {
-    static const QStringList l = QStringList() << QStringLiteral("jpg") << QStringLiteral("png") << QStringLiteral("jpeg");
-    if (l.contains(fi.suffix())) {
-      emit resourceDownloaded(targetFilePath, QPixmap(fi.absoluteFilePath()));
-    } else {
-      QFile f(fi.absoluteFilePath());
-      if (f.open(QFile::ReadOnly | QFile::Text)) {
-        emit resourceDownloaded(targetFilePath, f.readAll());
-      } else {
-        qWarning() << "Failed to open" << fi.absoluteFilePath();
-      }
+    if (fi.isFile()) {
+        QFile f(fi.absoluteFilePath());
+        if (f.open(QFile::ReadOnly)) {
+            emit resourceDownloaded(targetFilePath, f.readAll());
+        } else {
+            qWarning() << "Failed to open" << fi.absoluteFilePath();
+        }
     }
-  }
 }
 
 void ResourceBrowser::selectResource(const QString &sourceFilePath, int line, int column)

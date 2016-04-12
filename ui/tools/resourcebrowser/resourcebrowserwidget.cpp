@@ -63,7 +63,6 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   connect(m_interface, SIGNAL(resourceDeselected()), this, SLOT(resourceDeselected()));
   connect(m_interface, SIGNAL(resourceSelected(QPixmap)), this, SLOT(resourceSelected(QPixmap)));
   connect(m_interface, SIGNAL(resourceSelected(QByteArray,int,int)), this, SLOT(resourceSelected(QByteArray,int,int)));
-  connect(m_interface, SIGNAL(resourceDownloaded(QString,QPixmap)), this, SLOT(resourceDownloaded(QString,QPixmap)));
   connect(m_interface, SIGNAL(resourceDownloaded(QString,QByteArray)), this, SLOT(resourceDownloaded(QString,QByteArray)));
 
   ui->setupUi(this);
@@ -158,14 +157,6 @@ void ResourceBrowserWidget::resourceSelected(const QByteArray &contents, int lin
   ui->textBrowser->setFocus();
 
   ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
-}
-
-void ResourceBrowserWidget::resourceDownloaded(const QString &targetFilePath, const QPixmap &pixmap)
-{
-  if (!pixmap.save(targetFilePath)) {
-    qWarning("Unable to write resource content to %s", qPrintable(targetFilePath));
-    return;
-  }
 }
 
 void ResourceBrowserWidget::resourceDownloaded(const QString &targetFilePath, const QByteArray &contents)

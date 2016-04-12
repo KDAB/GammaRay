@@ -51,7 +51,6 @@ class ResourceBrowserInterface : public QObject
     void resourceSelected(const QPixmap &pixmap);
     void resourceSelected(const QByteArray &contents, int line, int column);
 
-    void resourceDownloaded(const QString &targetFilePath, const QPixmap &pixmap);
     void resourceDownloaded(const QString &targetFilePath, const QByteArray &contents);
 };
 
