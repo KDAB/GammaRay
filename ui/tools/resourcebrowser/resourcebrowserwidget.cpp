@@ -37,10 +37,12 @@
 #include <3rdparty/qt/resourcemodel.h>
 #include <common/objectbroker.h>
 
+#include <QBuffer>
 #include <QDebug>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFontDatabase>
+#include <QImageReader>
 #include <QMenu>
 #include <QTimer>
 #include <QTextBlock>
@@ -61,7 +63,6 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   ObjectBroker::registerClientObjectFactoryCallback<ResourceBrowserInterface*>(createResourceBrowserClient);
   m_interface = ObjectBroker::object<ResourceBrowserInterface*>();
   connect(m_interface, SIGNAL(resourceDeselected()), this, SLOT(resourceDeselected()));
-  connect(m_interface, SIGNAL(resourceSelected(QPixmap)), this, SLOT(resourceSelected(QPixmap)));
   connect(m_interface, SIGNAL(resourceSelected(QByteArray,int,int)), this, SLOT(resourceSelected(QByteArray,int,int)));
   connect(m_interface, SIGNAL(resourceDownloaded(QString,QByteArray)), this, SLOT(resourceDownloaded(QString,QByteArray)));
 
@@ -136,14 +137,20 @@ void ResourceBrowserWidget::resourceDeselected()
   ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
 }
 
-void ResourceBrowserWidget::resourceSelected(const QPixmap &pixmap)
-{
-  ui->resourceLabel->setPixmap(pixmap);
-  ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-}
-
 void ResourceBrowserWidget::resourceSelected(const QByteArray &contents, int line, int column)
 {
+  // try to decode as an image first, fall back to text otherwise
+  auto rawData = contents;
+  QBuffer buffer(&rawData);
+  buffer.open(QBuffer::ReadOnly);
+  QImageReader reader(&buffer);
+  const auto img = reader.read();
+  if (!img.isNull()) {
+      ui->resourceLabel->setPixmap(QPixmap::fromImage(img));
+      ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
+      return;
+  }
+
   //TODO: make encoding configurable
   ui->textBrowser->setPlainText(contents);
 

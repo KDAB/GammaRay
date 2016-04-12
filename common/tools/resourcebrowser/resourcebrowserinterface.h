@@ -31,8 +31,6 @@
 
 #include <QObject>
 
-class QPixmap;
-
 namespace GammaRay {
 
 class ResourceBrowserInterface : public QObject
@@ -48,7 +46,6 @@ class ResourceBrowserInterface : public QObject
 
   signals:
     void resourceDeselected();
-    void resourceSelected(const QPixmap &pixmap);
     void resourceSelected(const QByteArray &contents, int line, int column);
 
     void resourceDownloaded(const QString &targetFilePath, const QByteArray &contents);

@@ -56,7 +56,6 @@ class ResourceBrowserWidget : public QWidget
     void rowsInserted();
     void setupLayout();
     void resourceDeselected();
-    void resourceSelected(const QPixmap &pixmap);
     void resourceSelected(const QByteArray &contents, int line, int column);
     void resourceDownloaded(const QString &fileName, const QByteArray &contents);
 

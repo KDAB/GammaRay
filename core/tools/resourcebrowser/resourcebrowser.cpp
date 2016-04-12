@@ -36,7 +36,6 @@
 
 #include <QDebug>
 #include <QItemSelectionModel>
-#include <QPixmap>
 #include <QUrl>
 
 using namespace GammaRay;
@@ -85,24 +84,19 @@ void ResourceBrowser::selectResource(const QString &sourceFilePath, int line, in
 
 void ResourceBrowser::currentChanged(const QModelIndex &current, int line, int column)
 {
-  const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());
+    const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());
+    if (!fi.isFile()) {
+        emit resourceDeselected();
+        return;
+    }
 
-  if (fi.isFile()) {
-    static const QStringList l = QStringList() << QStringLiteral("jpg") << QStringLiteral("png") << QStringLiteral("jpeg");
-    if (l.contains(fi.suffix())) {
-      emit resourceSelected(QPixmap(fi.absoluteFilePath()));
-    } else {
-      QFile f(fi.absoluteFilePath());
-      if (f.open(QFile::ReadOnly | QFile::Text)) {
+    QFile f(fi.absoluteFilePath());
+    if (f.open(QFile::ReadOnly)) {
         emit resourceSelected(f.readAll(), line, column);
-      } else {
+    } else {
         qWarning() << "Failed to open" << fi.absoluteFilePath();
         emit resourceDeselected();
-      }
     }
-  } else {
-    emit resourceDeselected();
-  }
 }
 
 QString ResourceBrowserFactory::name() const
