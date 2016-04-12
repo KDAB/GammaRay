@@ -46,3 +46,8 @@ void ResourceBrowserClient::downloadResource(const QString &sourceFilePath, cons
 {
   Endpoint::instance()->invokeObject(objectName(), "downloadResource", QVariantList() << sourceFilePath << targetFilePath);
 }
+
+void ResourceBrowserClient::selectResource(const QString &sourceFilePath, int line, int column)
+{
+  Endpoint::instance()->invokeObject(objectName(), "selectResource", QVariantList() << sourceFilePath << line << column);
+}
