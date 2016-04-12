@@ -235,6 +235,10 @@ void WidgetInspectorWidget::analyzePainting()
   viewer->show();
 }
 
+void WidgetInspectorUiFactory::initUi()
+{
+}
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(WidgetInspectorUiFactory)
 #endif

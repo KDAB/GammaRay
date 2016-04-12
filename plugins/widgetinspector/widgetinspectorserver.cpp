@@ -30,6 +30,7 @@
 #include <config-gammaray.h>
 
 #include "widgetinspectorserver.h"
+#include "widgetpaintanalyzerextension.h"
 
 #include "overlaywidget.h"
 #include "widgettreemodel.h"
@@ -94,6 +95,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   registerWidgetMetaTypes();
   registerVariantHandlers();
   probe->installGlobalEventFilter(this);
+  PropertyController::registerExtension<WidgetPaintAnalyzerExtension>();
 
   connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(updateWidgetPreview()));
 

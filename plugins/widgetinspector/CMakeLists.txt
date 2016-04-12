@@ -5,6 +5,7 @@ set(gammaray_widgetinspector_plugin_srcs
   widgetinspectorserver.cpp
   overlaywidget.cpp
   widgettreemodel.cpp
+  widgetpaintanalyzerextension.cpp
 )
 
 gammaray_add_plugin(gammaray_widgetinspector_plugin
