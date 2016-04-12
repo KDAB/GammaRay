@@ -1,5 +1,6 @@
 add_subdirectory(codecbrowser)
 add_subdirectory(fontbrowser)
+add_subdirectory(guisupport)
 add_subdirectory(kjobtracker)
 add_subdirectory(quickinspector)
 add_subdirectory(selectionmodelinspector)
