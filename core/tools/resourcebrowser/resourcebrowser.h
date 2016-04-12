@@ -30,7 +30,7 @@
 #define GAMMARAY_RESOURCEBROWSER_RESOURCEBROWSER_H
 
 #include "toolfactory.h"
-#include <common/resourcebrowserinterface.h>
+#include <common/tools/resourcebrowser/resourcebrowserinterface.h>
 
 class QModelIndex;
 

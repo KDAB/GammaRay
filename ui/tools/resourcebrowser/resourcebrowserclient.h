@@ -30,7 +30,7 @@
 #ifndef RESOURCEBROWSERCLIENT_H
 #define RESOURCEBROWSERCLIENT_H
 
-#include <common/resourcebrowserinterface.h>
+#include <common/tools/resourcebrowser/resourcebrowserinterface.h>
 
 namespace GammaRay {
 

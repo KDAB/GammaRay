@@ -47,7 +47,6 @@ set(gammaray_common_internal_srcs
   propertycontrollerinterface.cpp
   probecontrollerinterface.cpp
   modelinspectorinterface.cpp
-  resourcebrowserinterface.cpp
   networkselectionmodel.cpp
   streamoperators.cpp
 
@@ -55,6 +54,7 @@ set(gammaray_common_internal_srcs
   tools/objectinspector/methodsextensioninterface.cpp
   tools/objectinspector/connectionsextensioninterface.cpp
   tools/messagehandler/messagehandlerinterface.cpp
+  tools/resourcebrowser/resourcebrowserinterface.cpp
 )
 
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
