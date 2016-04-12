@@ -139,12 +139,14 @@ endif()
 
 ### QSignalSpyCallback tests
 
+if(NOT OSX_ASAN_WORKAROUND)
 add_executable(signalspycallbacktest
   signalspycallbacktest.cpp
   ../probe/probecreator.cpp
 )
 target_link_libraries(signalspycallbacktest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME signalspycallbacktest COMMAND signalspycallbacktest)
+endif()
 
 ### multi-threading test
 
