@@ -40,6 +40,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFontDatabase>
 #include <QMenu>
 #include <QTimer>
 #include <QTextBlock>
@@ -83,6 +84,9 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 
   ui->resourceLabel->setText(tr("Select a Resource to Preview"));
   ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  ui->textBrowser->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+#endif
 
   m_timer->setInterval(100);
   m_timer->setSingleShot(true);
@@ -142,7 +146,7 @@ void ResourceBrowserWidget::resourceSelected(const QPixmap &pixmap)
 void ResourceBrowserWidget::resourceSelected(const QByteArray &contents, int line, int column)
 {
   //TODO: make encoding configurable
-  ui->textBrowser->setText(contents);
+  ui->textBrowser->setPlainText(contents);
 
   QTextDocument *document = ui->textBrowser->document();
   QTextCursor cursor(document->findBlockByLineNumber(line - 1));
