@@ -53,7 +53,7 @@ If you want to contribute, please check out: https://github.com/KDAB/GammaRay/wi
 
 KDAB will happily accept external contributions, but substantial
 contributions will require a signed Copyright Assignment Agreement.
-Contact support@kdab.com for more information.
+Contact info@kdab.com for more information.
 
 License
 =======

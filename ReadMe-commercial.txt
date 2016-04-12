@@ -11,7 +11,7 @@ https://github.com/KDAB/GammaRay/wiki
 Contributing
 ============
 KDAB will happily accept external contributions, but will require a signed
-Copyright Assignment Agreement.  Contact support@kdab.com for more information.
+Copyright Assignment Agreement.  Contact info@kdab.com for more information.
 
 Licensing
 =========
