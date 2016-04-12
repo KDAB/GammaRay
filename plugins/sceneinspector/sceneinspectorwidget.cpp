@@ -33,7 +33,6 @@
 #include "sceneinspectorclient.h"
 #include "graphicsview.h"
 #include "ui_sceneinspectorwidget.h"
-#include "paintanalyzertab.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
@@ -243,7 +242,6 @@ void SceneInspectorWidget::sceneContextMenu(QPoint pos)
 
 void SceneInspectorUiFactory::initUi()
 {
-    PropertyWidget::registerTab<PaintAnalyzerTab>(QStringLiteral("qgvPainting"), tr("Paint Analyzer"));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

@@ -42,8 +42,8 @@
 using namespace GammaRay;
 
 PaintAnalyzerExtension::PaintAnalyzerExtension(PropertyController* controller):
-    PropertyControllerExtension(controller->objectBaseName() + ".qgvPainting"),
-    m_paintAnalyzer(new PaintAnalyzer(controller->objectBaseName() + ".qgvPainting.analyzer", controller))
+    PropertyControllerExtension(controller->objectBaseName() + ".painting"),
+    m_paintAnalyzer(new PaintAnalyzer(controller->objectBaseName() + ".painting.analyzer", controller))
 {
 }
 

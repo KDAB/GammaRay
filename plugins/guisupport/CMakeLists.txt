@@ -14,6 +14,7 @@ endif()
 if(GAMMARAY_BUILD_UI)
   set(gammaray_guisupport_ui_srcs
     guisupportuifactory.cpp
+    paintanalyzertab.cpp
   )
   gammaray_add_plugin(gammaray_guisupport_ui JSON gammaray_guisupport.json DESKTOP gammaray_guisupport_ui.desktop SOURCES ${gammaray_guisupport_ui_srcs})
   target_link_libraries(gammaray_guisupport_ui gammaray_ui)

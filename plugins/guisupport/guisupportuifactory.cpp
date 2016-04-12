@@ -27,6 +27,9 @@
 */
 
 #include "guisupportuifactory.h"
+#include "paintanalyzertab.h"
+
+#include <ui/propertywidget.h>
 
 using namespace GammaRay;
 
@@ -37,7 +40,7 @@ QString GuiSupportUiFactory::id() const
 
 void GuiSupportUiFactory::initUi()
 {
-    // TODO register paint analyzer tab
+    PropertyWidget::registerTab<PaintAnalyzerTab>(QStringLiteral("painting"), tr("Paint Analyzer"));
 }
 
 QWidget* GuiSupportUiFactory::createWidget(QWidget*)
