@@ -38,6 +38,9 @@ class GuiSupport : public QObject
     Q_OBJECT
 public:
     explicit GuiSupport(ProbeInterface *probe, QObject *parent = Q_NULLPTR);
+
+private:
+    void registerMetaTypes();
 };
 
 class GuiSupportFactory : public QObject, public StandardToolFactory<QObject, GuiSupport>
