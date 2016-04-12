@@ -33,6 +33,8 @@
 #include <core/metaobjectrepository.h>
 #include <core/metaobject.h>
 
+#include <common/objectbroker.h>
+
 #include <QDebug>
 #include <QGraphicsObject>
 #include <QGraphicsScene>
@@ -43,8 +45,14 @@ using namespace GammaRay;
 
 PaintAnalyzerExtension::PaintAnalyzerExtension(PropertyController* controller):
     PropertyControllerExtension(controller->objectBaseName() + ".painting"),
-    m_paintAnalyzer(new PaintAnalyzer(controller->objectBaseName() + ".painting.analyzer", controller))
+    m_paintAnalyzer(Q_NULLPTR)
 {
+    // check if the paint analyzer already exists before creating it, as we share the UI with other plugins
+    const auto analyzerName = controller->objectBaseName() + QStringLiteral(".painting.analyzer");
+    if (ObjectBroker::hasObject(analyzerName))
+        m_paintAnalyzer = qobject_cast<PaintAnalyzer*>(ObjectBroker::object<PaintAnalyzerInterface*>(analyzerName));
+    else
+        m_paintAnalyzer = new PaintAnalyzer(analyzerName, controller);
 }
 
 PaintAnalyzerExtension::~PaintAnalyzerExtension()
