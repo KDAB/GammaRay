@@ -37,6 +37,7 @@
 #include <QDebug>
 #include <QItemSelectionModel>
 #include <QPixmap>
+#include <QUrl>
 
 using namespace GammaRay;
 
@@ -71,7 +72,23 @@ void ResourceBrowser::downloadResource(const QString &sourceFilePath, const QStr
   }
 }
 
-void ResourceBrowser::currentChanged(const QModelIndex &current)
+void ResourceBrowser::selectResource(const QString &sourceFilePath, int line, int column)
+{
+  const bool locked = blockSignals(true);
+  const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
+      QItemSelectionModel::Rows | QItemSelectionModel::Current;
+  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive;
+  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel"));
+  auto selectionModel = ObjectBroker::selectionModel(model);
+  const QString filePath = QLatin1Char(':') + QUrl(sourceFilePath).path();
+  const QModelIndex index = model->match(model->index(0,0), ResourceModel::FilePathRole, filePath, 1,
+                                         matchFlags).value(0);
+  selectionModel->setCurrentIndex(index, selectionFlags);
+  blockSignals(locked);
+  currentChanged(index, line, column);
+}
+
+void ResourceBrowser::currentChanged(const QModelIndex &current, int line, int column)
 {
   const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());
 
@@ -82,7 +99,7 @@ void ResourceBrowser::currentChanged(const QModelIndex &current)
     } else {
       QFile f(fi.absoluteFilePath());
       if (f.open(QFile::ReadOnly | QFile::Text)) {
-        emit resourceSelected(f.readAll());
+        emit resourceSelected(f.readAll(), line, column);
       } else {
         qWarning() << "Failed to open" << fi.absoluteFilePath();
         emit resourceDeselected();

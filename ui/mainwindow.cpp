@@ -273,6 +273,22 @@ void MainWindow::showMessageStatistics()
     view->showMaximized();
 }
 
+bool MainWindow::selectTool(const QString &id)
+{
+  const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
+      QItemSelectionModel::Rows | QItemSelectionModel::Current;
+  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive;
+  const QAbstractItemModel *model = ui->toolSelector->model();
+  const QModelIndex toolIndex = model->match(model->index(0, 0), ToolModelRole::ToolId, id, 1, matchFlags).value(0);
+  if (!toolIndex.isValid()) {
+    return false;
+  }
+
+  QItemSelectionModel *selectionModel = ui->toolSelector->selectionModel();
+  selectionModel->setCurrentIndex(toolIndex, selectionFlags);
+  return true;
+}
+
 void MainWindow::toolSelected()
 {
   ui->actionsMenu->clear();
@@ -328,27 +344,37 @@ void MainWindow::toolSelected()
 
 void MainWindow::navigateToCode(const QString &filePath, int lineNumber, int columnNumber)
 {
-  QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
-  settings.beginGroup(QStringLiteral("CodeNavigation"));
-  const auto ideIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
+  const QUrl url(filePath);
 
-  QString command;
-  if (ideIdx >= 0 && ideIdx < ideSettingsSize) {
-      command += ideSettings[ideIdx].app;
-      command += ' ';
-      command += ideSettings[ideIdx].args;
-  } else if (ideIdx == -1) {
-      command = settings.value(QStringLiteral("CustomCommand")).toString();
+  // Show Qt resources in our qrc browser
+  if (url.scheme() == "qrc") {
+    if (selectTool(QStringLiteral("GammaRay::ResourceBrowser"))) {
+      QMetaObject::invokeMethod(ui->toolStack->currentWidget(), "selectResource", Q_ARG(QString, filePath),
+                              Q_ARG(int, lineNumber), Q_ARG(int, columnNumber));
+    }
   } else {
-      QDesktopServices::openUrl(QUrl(filePath));
+    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+    settings.beginGroup(QStringLiteral("CodeNavigation"));
+    const auto ideIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
+
+    QString command;
+    if (ideIdx >= 0 && ideIdx < ideSettingsSize) {
+        command += ideSettings[ideIdx].app;
+        command += ' ';
+        command += ideSettings[ideIdx].args;
+    } else if (ideIdx == -1) {
+        command = settings.value(QStringLiteral("CustomCommand")).toString();
+    } else {
+        QDesktopServices::openUrl(QUrl(filePath));
+    }
+
+    command.replace(QStringLiteral("%f"), filePath);
+    command.replace(QStringLiteral("%l"), QString::number(std::max(0, lineNumber)));
+    command.replace(QStringLiteral("%c"), QString::number(std::max(0, columnNumber)));
+
+    if (!command.isEmpty())
+        QProcess::startDetached(command);
   }
-
-  command.replace(QStringLiteral("%f"), filePath);
-  command.replace(QStringLiteral("%l"), QString::number(std::max(0, lineNumber)));
-  command.replace(QStringLiteral("%c"), QString::number(std::max(0, columnNumber)));
-
-  if (!command.isEmpty())
-      QProcess::startDetached(command);
 }
 
 void GammaRay::MainWindow::setCodeNavigationIDE(QAction* action)

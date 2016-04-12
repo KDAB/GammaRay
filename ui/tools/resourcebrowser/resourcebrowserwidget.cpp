@@ -42,6 +42,7 @@
 #include <QFileInfo>
 #include <QMenu>
 #include <QTimer>
+#include <QTextBlock>
 
 using namespace GammaRay;
 
@@ -60,7 +61,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
   m_interface = ObjectBroker::object<ResourceBrowserInterface*>();
   connect(m_interface, SIGNAL(resourceDeselected()), this, SLOT(resourceDeselected()));
   connect(m_interface, SIGNAL(resourceSelected(QPixmap)), this, SLOT(resourceSelected(QPixmap)));
-  connect(m_interface, SIGNAL(resourceSelected(QByteArray)), this, SLOT(resourceSelected(QByteArray)));
+  connect(m_interface, SIGNAL(resourceSelected(QByteArray,int,int)), this, SLOT(resourceSelected(QByteArray,int,int)));
   connect(m_interface, SIGNAL(resourceDownloaded(QString,QPixmap)), this, SLOT(resourceDownloaded(QString,QPixmap)));
   connect(m_interface, SIGNAL(resourceDownloaded(QString,QByteArray)), this, SLOT(resourceDownloaded(QString,QByteArray)));
 
@@ -91,6 +92,11 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 
 ResourceBrowserWidget::~ResourceBrowserWidget()
 {
+}
+
+void ResourceBrowserWidget::selectResource(const QString &sourceFilePath, int line, int column)
+{
+  m_interface->selectResource(sourceFilePath, line, column);
 }
 
 void ResourceBrowserWidget::rowsInserted()
@@ -133,10 +139,20 @@ void ResourceBrowserWidget::resourceSelected(const QPixmap &pixmap)
   ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
 }
 
-void ResourceBrowserWidget::resourceSelected(const QByteArray &contents)
+void ResourceBrowserWidget::resourceSelected(const QByteArray &contents, int line, int column)
 {
   //TODO: make encoding configurable
   ui->textBrowser->setText(contents);
+
+  QTextDocument *document = ui->textBrowser->document();
+  QTextCursor cursor(document->findBlockByLineNumber(line - 1));
+  if (!cursor.isNull()) {
+    if (column >= 1)
+      cursor.setPosition(cursor.position() + column - 1);
+    ui->textBrowser->setTextCursor(cursor);
+  }
+  ui->textBrowser->setFocus();
+
   ui->stackedWidget->setCurrentWidget(ui->contentTextPage);
 }
 
