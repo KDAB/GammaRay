@@ -125,7 +125,6 @@ void PaintAnalyzer::endAnalyzePainting()
     m_paintBufferModel->setPaintBuffer(*m_paintBuffer);
     delete m_paintBuffer;
     m_paintBuffer = 0;
-#endif
     m_remoteView->resetView();
     m_remoteView->sourceChanged();
 
@@ -133,6 +132,7 @@ void PaintAnalyzer::endAnalyzePainting()
         const auto idx = m_paintBufferModel->index(rowCount - 1, 0);
         m_selectionModel->select(idx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
     }
+#endif
 }
 
 bool PaintAnalyzer::isAvailable()
