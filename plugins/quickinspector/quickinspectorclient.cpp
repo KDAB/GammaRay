@@ -59,8 +59,3 @@ void QuickInspectorClient::checkFeatures()
 {
   Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
 }
-
-void QuickInspectorClient::analyzePainting()
-{
-  Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
-}

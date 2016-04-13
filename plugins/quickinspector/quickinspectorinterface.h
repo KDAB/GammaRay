@@ -77,8 +77,6 @@ class QuickInspectorInterface : public QObject
 
     virtual void checkFeatures() = 0;
 
-    virtual void analyzePainting() = 0;
-
   signals:
     void features(GammaRay::QuickInspectorInterface::Features features);
 };

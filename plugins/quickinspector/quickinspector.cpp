@@ -29,6 +29,7 @@
 #include "quickinspector.h"
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
+#include "quickpaintanalyzerextension.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
 
@@ -45,7 +46,6 @@
 #include <core/remote/serverproxymodel.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
-#include <core/paintanalyzer.h>
 #include <core/remoteviewserver.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
@@ -62,7 +62,6 @@
 #include <QItemSelectionModel>
 #include <QMouseEvent>
 #include <QOpenGLContext>
-#include <QPainter>
 #include <QSGNode>
 #include <QSGGeometry>
 #include <QSGMaterial>
@@ -237,7 +236,6 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     m_sgModel(new QuickSceneGraphModel(this)),
     m_itemPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickItem"), this)),
     m_sgPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"), this)),
-    m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this)),
     m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this)),
     m_isGrabbingWindow(false)
 {
@@ -563,19 +561,6 @@ void QuickInspector::sgNodeDeleted(QSGNode *node)
   }
 }
 
-void QuickInspector::analyzePainting()
-{
-  auto paintedItem = qobject_cast<QQuickPaintedItem*>(m_currentItem);
-  if (!paintedItem || !PaintAnalyzer::isAvailable())
-    return;
-
-  m_paintAnalyzer->beginAnalyzePainting();
-  m_paintAnalyzer->setBoundingRect(paintedItem->contentsBoundingRect());
-  QPainter painter(m_paintAnalyzer->paintDevice());
-  paintedItem->paint(&painter);
-  m_paintAnalyzer->endAnalyzePainting();
-}
-
 void QuickInspector::pickItemAt(const QPoint& pos)
 {
   if (!m_window)
@@ -763,6 +748,7 @@ void QuickInspector::registerPCExtensions()
 {
   PropertyController::registerExtension<MaterialExtension>();
   PropertyController::registerExtension<SGGeometryExtension>();
+  PropertyController::registerExtension<QuickPaintAnalyzerExtension>();
 }
 
 #define QSG_CHECK_TYPE(Class) \

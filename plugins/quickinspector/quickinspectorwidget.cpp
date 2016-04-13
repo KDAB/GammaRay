@@ -48,7 +48,6 @@
 #include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/searchlinecontroller.h>
-#include <ui/paintbufferviewer.h>
 
 #include <client/remotemodel.h>
 
@@ -208,24 +207,10 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
 
   QMenu contextMenu;
 
-  if (index.sibling(index.row(), 0).data(QuickItemModelRole::ItemActions).value<QuickItemActions>() & QuickItemAction::AnalyzePainting) {
-    auto action = contextMenu.addAction(tr("Analyze Painting..."));
-    action->setData(QuickItemAction::AnalyzePainting);
-  }
-
   const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
   ContextMenuExtension ext(objectId);
   ext.setCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
   ext.setDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
   ext.populateMenu(&contextMenu);
-
-  if (QAction *action = contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos))) {
-    switch (action->data().toInt()) {
-      case QuickItemAction::AnalyzePainting:
-        m_interface->analyzePainting();
-        PaintBufferViewer *viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this);
-        viewer->show();
-        break;
-    }
-  }
+  contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos));
 }

@@ -53,7 +53,6 @@ namespace GammaRay {
 class PropertyController;
 class QuickItemModel;
 class QuickSceneGraphModel;
-class PaintAnalyzer;
 class RemoteViewServer;
 
 class QuickInspector : public QuickInspectorInterface
@@ -73,8 +72,6 @@ class QuickInspector : public QuickInspectorInterface
     void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) Q_DECL_OVERRIDE;
 
     void checkFeatures() Q_DECL_OVERRIDE;
-
-    void analyzePainting() Q_DECL_OVERRIDE;
 
     void pickItemAt(const QPoint& pos);
 
@@ -119,7 +116,6 @@ class QuickInspector : public QuickInspectorInterface
     QItemSelectionModel *m_sgSelectionModel;
     PropertyController *m_itemPropertyController;
     PropertyController *m_sgPropertyController;
-    PaintAnalyzer *m_paintAnalyzer;
     RemoteViewServer *m_remoteView;
     QImage m_currentFrame;
     QVector<GrabWindowCallback> m_grabWindowCallbacks;

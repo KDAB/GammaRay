@@ -1,10 +1,10 @@
 /*
-  quickitemmodelroles.h
+  quickpaintanalyzerextension.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2014-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,34 +26,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKINSPECTOR_QUICKITEMMODELROLES_H
-#define GAMMARAY_QUICKINSPECTOR_QUICKITEMMODELROLES_H
+#ifndef GAMMARAY_QUICKPAINTANALYZEREXTENSION_H
+#define GAMMARAY_QUICKPAINTANALYZEREXTENSION_H
 
-#include <common/objectmodel.h>
+#include <core/propertycontrollerextension.h>
 
 namespace GammaRay {
 
-/** Model roles shared between client and server. */
-namespace QuickItemModelRole {
-  enum Roles {
-    ItemFlags = ObjectModel::UserRole,
-    ItemEvent,
-    ItemActions
-  };
+class PaintAnalyzer;
+class PropertyController;
 
-  enum ItemFlag {
-    None = 0,
-    Invisible = 1,
-    ZeroSize = 2,
-    OutOfView = 4,
-    HasFocus = 8,
-    HasActiveFocus = 16,
-    JustRecievedEvent = 32
-  };
+class QuickPaintAnalyzerExtension : public PropertyControllerExtension
+{
+public:
+    explicit QuickPaintAnalyzerExtension(PropertyController *controller);
+    ~QuickPaintAnalyzerExtension();
+
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+
+private:
+    PaintAnalyzer *m_paintAnalyzer;
+};
 }
 
-}
-
-Q_DECLARE_METATYPE(GammaRay::QuickItemModelRole::ItemFlag)
-
-#endif
+#endif // GAMMARAY_QUICKPAINTANALYZEREXTENSION_H
