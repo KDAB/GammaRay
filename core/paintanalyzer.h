@@ -33,6 +33,7 @@
 
 #include <common/paintanalyzerinterface.h>
 
+class QItemSelectionModel;
 class QPaintBuffer;
 class QPaintDevice;
 class QRectF;
@@ -65,6 +66,7 @@ private slots:
 
 private:
     PaintBufferModel *m_paintBufferModel;
+    QItemSelectionModel *m_selectionModel;
     QPaintBuffer* m_paintBuffer;
     RemoteViewServer *m_remoteView;
 };
