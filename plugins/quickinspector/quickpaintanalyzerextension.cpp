@@ -62,8 +62,10 @@ bool QuickPaintAnalyzerExtension::setQObject(QObject* object)
 
     m_paintAnalyzer->beginAnalyzePainting();
     m_paintAnalyzer->setBoundingRect(item->contentsBoundingRect());
-    QPainter painter(m_paintAnalyzer->paintDevice());
-    item->paint(&painter);
+    {
+        QPainter painter(m_paintAnalyzer->paintDevice());
+        item->paint(&painter);
+    }
     m_paintAnalyzer->endAnalyzePainting();
     return true;
 }
