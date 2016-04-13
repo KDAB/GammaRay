@@ -164,6 +164,10 @@ void ToolModel::objectAdded(QObject *obj)
 void ToolModel::objectAdded(const QMetaObject *mo)
 {
   Q_ASSERT(thread() == QThread::currentThread());
+  // as plugins can depend on each other, start from the base classes
+  if (mo->superClass()) {
+    objectAdded(mo->superClass());
+  }
   foreach (ToolFactory *factory, m_inactiveTools) {
     if (factory->supportedTypes().contains(mo->className())) {
       m_inactiveTools.remove(factory);
@@ -171,9 +175,6 @@ void ToolModel::objectAdded(const QMetaObject *mo)
       const int row = m_tools.indexOf(factory);
       emit dataChanged(index(row, 0), index(row, 0));
     }
-  }
-  if (mo->superClass()) {
-    objectAdded(mo->superClass());
   }
 }
 
