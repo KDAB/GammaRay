@@ -43,7 +43,7 @@ QuickPaintAnalyzerExtension::QuickPaintAnalyzerExtension(PropertyController* con
     m_paintAnalyzer(Q_NULLPTR)
 {
     // check if the paint analyzer already exists before creating it, as we share the UI with other plugins
-    const auto analyzerName = controller->objectBaseName() + QStringLiteral(".painting.analyzer");
+    const QString analyzerName = controller->objectBaseName() + QStringLiteral(".painting.analyzer");
     if (ObjectBroker::hasObject(analyzerName))
         m_paintAnalyzer = qobject_cast<PaintAnalyzer*>(ObjectBroker::object<PaintAnalyzerInterface*>(analyzerName));
     else
