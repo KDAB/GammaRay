@@ -32,7 +32,6 @@
 #include "message.h"
 #include "settempvalue.h"
 
-#include <QRegExp>
 #include <QAbstractProxyModel>
 #include <QDebug>
 
