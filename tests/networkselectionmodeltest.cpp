@@ -37,8 +37,9 @@
 #include <QStandardItemModel>
 #include <QtEndian>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 3, 0)
 Q_DECLARE_METATYPE(QItemSelection)
+Q_DECLARE_METATYPE(QModelIndex)
 #endif
 
 namespace QTest {
@@ -135,6 +136,7 @@ private slots:
     void initTestCase()
     {
         qRegisterMetaType<QItemSelection>();
+        qRegisterMetaType<QModelIndex>();
 
         new FakeEndpoint;
         QVERIFY(Endpoint::instance());
@@ -219,6 +221,37 @@ private slots:
         QCOMPARE(clientSelection.selection().size(), 1);
         QCOMPARE(clientSelection.selection().first().topLeft(), clientModel.index(3, 0));
         QCOMPARE(clientSpy.size(), 1);
+    }
+
+    void testCurrent()
+    {
+        QStandardItemModel serverModel;
+        FakeNetworkSelectionModel serverSelection(ServerAddress, &serverModel);
+        fillModel(&serverModel);
+        QSignalSpy serverSpy(&serverSelection, SIGNAL(currentChanged(QModelIndex,QModelIndex)));
+        QVERIFY(serverSpy.isValid());
+
+        QStandardItemModel clientModel;
+        fillModel(&clientModel);
+        FakeNetworkSelectionModel clientSelection(ClientAddress, &clientModel);
+        QSignalSpy clientSpy(&clientSelection, SIGNAL(currentChanged(QModelIndex,QModelIndex)));
+        QVERIFY(clientSpy.isValid());
+
+        serverSelection.setCurrentIndex(serverModel.index(2, 0), QItemSelectionModel::NoUpdate);
+        QVERIFY(!serverSelection.hasSelection());
+        QCOMPARE(serverSelection.currentIndex(), serverModel.index(2, 0));
+        QVERIFY(!clientSelection.hasSelection());
+        QCOMPARE(clientSelection.currentIndex(), clientModel.index(2, 0));
+        QCOMPARE(clientSpy.size(), 1);
+
+        serverSpy.clear();
+        clientSelection.setCurrentIndex(clientModel.index(4, 0), QItemSelectionModel::NoUpdate);
+        QVERIFY(!clientSelection.hasSelection());
+        QCOMPARE(clientSelection.currentIndex(), clientModel.index(4, 0));
+        QVERIFY(!serverSelection.hasSelection());
+        QCOMPARE(serverSelection.currentIndex(), serverModel.index(4, 0));
+        QCOMPARE(serverSpy.size(), 1);
+
     }
 };
 
