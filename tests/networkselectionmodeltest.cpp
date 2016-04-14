@@ -235,6 +235,8 @@ private slots:
         FakeNetworkSelectionModel clientSelection(ClientAddress, &clientModel);
         QSignalSpy clientSpy(&clientSelection, SIGNAL(currentChanged(QModelIndex,QModelIndex)));
         QVERIFY(clientSpy.isValid());
+        QSignalSpy clientRowSpy(&clientSelection, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)));
+        QVERIFY(clientRowSpy.isValid());
 
         serverSelection.setCurrentIndex(serverModel.index(2, 0), QItemSelectionModel::NoUpdate);
         QVERIFY(!serverSelection.hasSelection());
@@ -242,6 +244,7 @@ private slots:
         QVERIFY(!clientSelection.hasSelection());
         QCOMPARE(clientSelection.currentIndex(), clientModel.index(2, 0));
         QCOMPARE(clientSpy.size(), 1);
+        QCOMPARE(clientRowSpy.size(), 1);
 
         serverSpy.clear();
         clientSelection.setCurrentIndex(clientModel.index(4, 0), QItemSelectionModel::NoUpdate);
@@ -250,7 +253,6 @@ private slots:
         QVERIFY(!serverSelection.hasSelection());
         QCOMPARE(serverSelection.currentIndex(), serverModel.index(4, 0));
         QCOMPARE(serverSpy.size(), 1);
-
     }
 };
 

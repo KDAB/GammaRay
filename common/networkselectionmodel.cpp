@@ -84,8 +84,6 @@ NetworkSelectionModel::NetworkSelectionModel(const QString &objectName, QAbstrac
 {
   setObjectName(m_objectName + QLatin1String("Network"));
   connect(this, SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
-  connect(this, SIGNAL(currentColumnChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentColumnChanged(QModelIndex,QModelIndex)));
-  connect(this, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(slotCurrentRowChanged(QModelIndex,QModelIndex)));
 }
 
 NetworkSelectionModel::~NetworkSelectionModel()
@@ -194,14 +192,14 @@ void NetworkSelectionModel::newMessage(const Message& msg)
   }
   case Protocol::SelectionModelCurrent:
   {
-    qint32 flags;
+    SelectionFlags flags;
     Protocol::ModelIndex index;
     msg.payload() >> flags >> index;
     const QModelIndex qmi = Protocol::toQModelIndex(model(), index);
     if (!qmi.isValid())
       break;
     Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
-    setCurrentIndex(qmi, QItemSelectionModel::SelectionFlags(flags));
+    setCurrentIndex(qmi, flags);
     break;
   }
   case Protocol::SelectionModelStateRequest:
@@ -222,31 +220,7 @@ void NetworkSelectionModel::slotCurrentChanged(const QModelIndex& current, const
   clearPendingSelection();
 
   Message msg(m_myAddress, Protocol::SelectionModelCurrent);
-  msg.payload() << qint32(QItemSelectionModel::Current) << Protocol::fromQModelIndex(current);
-  Endpoint::send(msg);
-}
-
-void NetworkSelectionModel::slotCurrentColumnChanged(const QModelIndex& current, const QModelIndex& previous)
-{
-  Q_UNUSED(previous);
-  if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
-    return;
-  clearPendingSelection();
-
-  Message msg(m_myAddress, Protocol::SelectionModelCurrent);
-  msg.payload() << qint32(QItemSelectionModel::Current|QItemSelectionModel::Columns) << Protocol::fromQModelIndex(current);
-  Endpoint::send(msg);
-}
-
-void NetworkSelectionModel::slotCurrentRowChanged(const QModelIndex& current, const QModelIndex& previous)
-{
-  Q_UNUSED(previous);
-  if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
-    return;
-  clearPendingSelection();
-
-  Message msg(m_myAddress, Protocol::SelectionModelCurrent);
-  msg.payload() << qint32(QItemSelectionModel::Current|QItemSelectionModel::Rows) << Protocol::fromQModelIndex(current);
+  msg.payload() << QItemSelectionModel::Current << Protocol::fromQModelIndex(current);
   Endpoint::send(msg);
 }
 

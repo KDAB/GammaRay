@@ -64,8 +64,6 @@ private slots:
   void newMessage(const GammaRay::Message &msg);
 
   void slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
-  void slotCurrentColumnChanged(const QModelIndex &current, const QModelIndex &previous);
-  void slotCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
 
   void clearPendingSelection();
 
