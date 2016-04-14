@@ -66,7 +66,6 @@ static const MetaEnum::Value<Protocol::MessageType> message_type_table[] = {
     M(ModelColumnsRemoved),
     M(ModelReset),
     M(ModelLayoutChanged),
-    M(SelectionModelClearSelect),
     M(SelectionModelSelect),
     M(SelectionModelCurrent),
     M(MethodCall),

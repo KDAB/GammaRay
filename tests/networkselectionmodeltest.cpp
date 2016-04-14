@@ -175,7 +175,6 @@ private slots:
         QCOMPARE(clientSelection.selection().first().topLeft(), clientModel.index(4, 0));
         QCOMPARE(serverSelection.selection().size(), 1);
         QCOMPARE(serverSelection.selection().first().topLeft(), serverModel.index(4, 0));
-        QEXPECT_FAIL("", "selection handling is not atomic yet", Continue);
         QCOMPARE(serverSpy.size(), 1);
     }
 

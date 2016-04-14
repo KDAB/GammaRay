@@ -85,7 +85,6 @@ enum BuildInMessageType {
   ModelColumnsRemoved,
   ModelReset,
   ModelLayoutChanged,
-  SelectionModelClearSelect,
 
   // server <-> client
   SelectionModelSelect,

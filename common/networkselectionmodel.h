@@ -43,6 +43,9 @@ class NetworkSelectionModel : public QItemSelectionModel
 public:
   ~NetworkSelectionModel();
 
+  void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
+  using QItemSelectionModel::select;
+
 protected:
   explicit NetworkSelectionModel(const QString &objectName, QAbstractItemModel *model, QObject *parent = 0);
   QString m_objectName;
@@ -63,12 +66,12 @@ private slots:
   void slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
   void slotCurrentColumnChanged(const QModelIndex &current, const QModelIndex &previous);
   void slotCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
-  void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
   void clearPendingSelection();
 
 private:
   Protocol::ItemSelection m_pendingSelection;
+  SelectionFlags m_pendingCommand;
   bool m_handlingRemoteMessage;
 };
 
