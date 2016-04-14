@@ -37,7 +37,7 @@
 #include <QStandardItemModel>
 #include <QtEndian>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 3, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(QItemSelection)
 Q_DECLARE_METATYPE(QModelIndex)
 #endif
