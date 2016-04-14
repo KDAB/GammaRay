@@ -138,10 +138,11 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
 {
   ProbeGuard guard;
 
-  m_propertyController->setObject(0);
 
-  if (selection.isEmpty())
+  if (selection.isEmpty()) {
+    m_propertyController->setObject(0);
     return;
+  }
   const QModelIndex index = selection.first().topLeft();
 
   QWidget *widget = 0;
@@ -153,6 +154,8 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     if (!widget && layout) {
       widget = layout->parentWidget();
     }
+  } else {
+    m_propertyController->setObject(0);
   }
 
   if (m_selectedWidget == widget) {
