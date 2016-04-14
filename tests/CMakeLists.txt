@@ -135,6 +135,13 @@ if(GAMMARAY_BUILD_UI AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   )
   target_link_libraries(remotemodeltest gammaray_core gammaray_client ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
   add_test(NAME remotemodeltest COMMAND remotemodeltest)
+
+  add_executable(networkselectionmodeltest
+    networkselectionmodeltest.cpp
+    ${CMAKE_SOURCE_DIR}/common/networkselectionmodel.cpp
+  )
+  target_link_libraries(networkselectionmodeltest gammaray_common ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+  add_test(NAME networkselectionmodeltest COMMAND networkselectionmodeltest)
 endif()
 
 ### QSignalSpyCallback tests
