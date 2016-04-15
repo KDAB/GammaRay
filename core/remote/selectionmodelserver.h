@@ -45,9 +45,14 @@ public:
 
 private slots:
   void timeout();
+  void modelMonitored(bool monitored = false);
 
 private:
+  void connectModel();
+  void disconnectModel();
+
   QTimer *m_timer;
+  bool m_monitored;
 };
 
 }
