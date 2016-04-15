@@ -43,6 +43,9 @@ public:
   explicit SelectionModelServer(const QString& objectName, QAbstractItemModel* model, QObject* parent);
   ~SelectionModelServer();
 
+protected:
+  bool isConnected() const Q_DECL_OVERRIDE;
+
 private slots:
   void timeout();
   void modelMonitored(bool monitored = false);

@@ -48,6 +48,8 @@ public:
 
 protected:
   explicit NetworkSelectionModel(const QString &objectName, QAbstractItemModel *model, QObject *parent = 0);
+  virtual bool isConnected() const;
+
   QString m_objectName;
   Protocol::ObjectAddress m_myAddress;
 

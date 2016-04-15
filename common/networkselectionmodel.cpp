@@ -91,7 +91,7 @@ NetworkSelectionModel::~NetworkSelectionModel()
 
 void NetworkSelectionModel::requestSelection()
 {
-  if (m_handlingRemoteMessage || !Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress) {
+  if (m_handlingRemoteMessage || !isConnected()) {
     return;
   }
   Message msg(m_myAddress, Protocol::SelectionModelStateRequest);
@@ -100,9 +100,8 @@ void NetworkSelectionModel::requestSelection()
 
 void NetworkSelectionModel::sendSelection()
 {
-  if (!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress) {
+  if (!isConnected())
     return;
-  }
 
   clearPendingSelection();
 
@@ -214,7 +213,7 @@ void NetworkSelectionModel::newMessage(const Message& msg)
 void NetworkSelectionModel::slotCurrentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
   Q_UNUSED(previous);
-  if (m_handlingRemoteMessage || !Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
+  if (m_handlingRemoteMessage || !isConnected())
     return;
   clearPendingSelection();
 
@@ -227,7 +226,7 @@ void NetworkSelectionModel::select(const QItemSelection &selection, QItemSelecti
 {
   QItemSelectionModel::select(selection, command);
 
-  if (m_handlingRemoteMessage ||!Endpoint::isConnected() || m_myAddress == Protocol::InvalidObjectAddress)
+  if (m_handlingRemoteMessage ||!isConnected())
     return;
   clearPendingSelection();
 
@@ -254,4 +253,9 @@ void GammaRay::NetworkSelectionModel::clearPendingSelection()
 {
   m_pendingSelection.clear();
   m_pendingCommand = NoUpdate;
+}
+
+bool NetworkSelectionModel::isConnected() const
+{
+    return Endpoint::isConnected() && m_myAddress != Protocol::InvalidObjectAddress;
 }

@@ -53,6 +53,12 @@ SelectionModelServer::~SelectionModelServer()
 {
 }
 
+bool SelectionModelServer::isConnected() const
+{
+    return NetworkSelectionModel::isConnected() && m_monitored;
+}
+
+
 void SelectionModelServer::timeout()
 {
     sendSelection();
