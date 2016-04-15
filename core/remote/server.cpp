@@ -191,6 +191,18 @@ Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *obj
   return registerObject(name, object, ExportEverything);
 }
 
+static bool isNotifySignal(const QMetaObject *mo, const QMetaMethod &method)
+{
+    for (int i = 0; i < mo->propertyCount(); ++i) {
+        const auto prop = mo->property(i);
+        if (!prop.hasNotifySignal())
+            continue;
+        if (prop.notifySignal().methodIndex() == method.methodIndex())
+            return true;
+    }
+    return false;
+}
+
 Protocol::ObjectAddress Server::registerObject(const QString& name, QObject* object, Server::ObjectExportOptions exportOptions)
 {
   addObjectNameAddressMapping(name, ++m_nextAddress);
@@ -208,9 +220,11 @@ Protocol::ObjectAddress Server::registerObject(const QString& name, QObject* obj
     const QMetaObject *meta = object->metaObject();
     for(int i = 0; i < meta->methodCount(); ++i) {
       const QMetaMethod method = meta->method(i);
-      if (method.methodType() == QMetaMethod::Signal) {
-        m_signalMapper->connectToSignal(object, method);
-      }
+      if (method.methodType() != QMetaMethod::Signal)
+        continue;
+      if ((exportOptions & ExportProperties) && isNotifySignal(meta, method))
+        continue; // no need to forward property change signals if we forward the property already
+      m_signalMapper->connectToSignal(object, method);
     }
   }
 
