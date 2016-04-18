@@ -91,7 +91,6 @@ void PropertyWidget::createWidgets()
     if (!factoryInUse(factory) && extensionAvailable(factory)) {
       const PageInfo pi = { factory, factory->createWidget(this) };
       m_pages.push_back(pi);
-      addTab(pi.widget, factory->label());
     }
   }
 
