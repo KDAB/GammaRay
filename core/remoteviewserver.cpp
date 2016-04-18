@@ -68,7 +68,8 @@ void RemoteViewServer::pickElementAt(const QPoint& pos)
 
 void RemoteViewServer::resetView()
 {
-    emit reset();
+    if (isActive())
+        emit reset();
 }
 
 bool RemoteViewServer::isActive() const
