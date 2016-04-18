@@ -94,6 +94,10 @@ void PropertyWidget::createWidgets()
       addTab(pi.widget, factory->label());
     }
   }
+
+  std::stable_sort(m_pages.begin(), m_pages.end(), [](const PageInfo &lhs, const PageInfo &rhs) {
+      return lhs.factory->priority() < rhs.factory->priority();
+  });
 }
 
 void PropertyWidget::updateShownTabs()
@@ -101,11 +105,14 @@ void PropertyWidget::updateShownTabs()
   setUpdatesEnabled(false);
   createWidgets();
 
+  int tabIt = 0;
   foreach (const auto &page, m_pages) {
       const int index = indexOf(page.widget);
       if (extensionAvailable(page.factory)) {
-          if (index == -1)
-              addTab(page.widget, page.factory->label());
+          if (index != tabIt)
+              removeTab(index);
+          insertTab(tabIt, page.widget, page.factory->label());
+          ++tabIt;
       } else if (index != -1) {
           removeTab(index);
       }
