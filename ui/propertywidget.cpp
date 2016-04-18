@@ -104,6 +104,8 @@ void PropertyWidget::updateShownTabs()
   setUpdatesEnabled(false);
   createWidgets();
 
+  auto prevSelectedWidget = currentWidget();
+
   int tabIt = 0;
   foreach (const auto &page, m_pages) {
       const int index = indexOf(page.widget);
@@ -116,6 +118,12 @@ void PropertyWidget::updateShownTabs()
           removeTab(index);
       }
     }
+
+    // try to restore selection
+    if (!prevSelectedWidget) // first time
+        setCurrentIndex(0);
+    if (indexOf(prevSelectedWidget) >= 0)
+        setCurrentWidget(prevSelectedWidget);
 
     setUpdatesEnabled(true);
 }
