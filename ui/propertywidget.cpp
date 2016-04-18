@@ -94,7 +94,9 @@ void PropertyWidget::createWidgets()
     }
   }
 
-  std::stable_sort(m_pages.begin(), m_pages.end(), [](const PageInfo &lhs, const PageInfo &rhs) {
+  std::sort(m_pages.begin(), m_pages.end(), [](const PageInfo &lhs, const PageInfo &rhs) {
+      if (lhs.factory->priority() == rhs.factory->priority())
+          return s_tabFactories.indexOf(lhs.factory) < s_tabFactories.indexOf(rhs.factory);
       return lhs.factory->priority() < rhs.factory->priority();
   });
 }
