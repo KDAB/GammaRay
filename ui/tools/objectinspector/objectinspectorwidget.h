@@ -79,14 +79,14 @@ public:
   bool remotingSupported() const Q_DECL_OVERRIDE { return true; }
   void initUi() Q_DECL_OVERRIDE
   {
-    PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), QObject::tr("Properties"));
+    PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), QObject::tr("Properties"), PropertyWidgetTabPriority::First);
     ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createExtension<PropertiesExtensionClient>);
-    PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), QObject::tr("Methods"));
+    PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), QObject::tr("Methods"), PropertyWidgetTabPriority::Basic - 1);
     ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createExtension<MethodsExtensionClient>);
-    PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), QObject::tr("Connections"));
+    PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), QObject::tr("Connections"), PropertyWidgetTabPriority::Basic - 1);
     ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface*>(createExtension<ConnectionsExtensionClient>);
-    PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), QObject::tr("Enums"));
-    PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), QObject::tr("Class Info"));
+    PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), QObject::tr("Enums"), PropertyWidgetTabPriority::Exotic - 1);
+    PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), QObject::tr("Class Info"), PropertyWidgetTabPriority::Exotic - 1);
   }
 };
 
