@@ -48,11 +48,11 @@ ClassInfoExtension::~ClassInfoExtension()
 bool ClassInfoExtension::setQObject(QObject* object)
 {
   m_model->setMetaObject(object ? object->metaObject() : 0);
-  return true;
+  return m_model->rowCount() > 0;
 }
 
 bool ClassInfoExtension::setMetaObject(const QMetaObject* metaObject)
 {
   m_model->setMetaObject(metaObject);
-  return true;
+  return m_model->rowCount() > 0;
 }
