@@ -42,7 +42,6 @@ namespace PropertyModel {
       // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globally to allow combining Qt4/5 client/servers.
       ActionRole = 256 + 1, /**< the property action role */
       UserRole ,             /**< the UserRole, as defined by Qt */
-      ValueRole,
       ObjectIdRole,
       ResetActionRole
     };

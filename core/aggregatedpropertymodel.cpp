@@ -126,7 +126,6 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex& index) 
     res.insert(Qt::DisplayRole, data(adaptor, d, index.column(), Qt::DisplayRole));
     res.insert(Qt::ToolTipRole, data(adaptor, d, index.column(), Qt::ToolTipRole));
     res.insert(PropertyModel::ActionRole, data(adaptor, d, index.column(), PropertyModel::ActionRole));
-    res.insert(PropertyModel::ValueRole, data(adaptor, d, index.column(), PropertyModel::ValueRole));
     res.insert(PropertyModel::ObjectIdRole, data(adaptor, d, index.column(), PropertyModel::ObjectIdRole));
     if (index.column() == 1) {
         res.insert(Qt::EditRole, data(adaptor, d, index.column(), Qt::EditRole));
@@ -178,8 +177,6 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
                 actions |= PropertyModel::NavigateTo;
             return actions;
         }
-        case PropertyModel::ValueRole:
-            return d.value();
         case PropertyModel::ObjectIdRole:
             if (d.value().canConvert<QObject*>()) {
                 return QVariant::fromValue(ObjectId(d.value().value<QObject*>()));
