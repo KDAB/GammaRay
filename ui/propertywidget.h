@@ -59,12 +59,11 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 
     template<typename T> static void registerTab(const QString &name, const QString &label)
     {
-      s_tabFactories << new PropertyWidgetTabFactory<T>(name, label);
-      foreach (PropertyWidget *widget, s_propertyWidgets)
-        widget->createWidgets();
+        registerTab(new PropertyWidgetTabFactory<T>(name, label));
     }
 
   private:
+    static void registerTab(PropertyWidgetTabFactoryBase *factory);
     void createWidgets();
     bool extensionAvailable(PropertyWidgetTabFactoryBase *factory) const;
     bool factoryInUse(PropertyWidgetTabFactoryBase *factory) const;

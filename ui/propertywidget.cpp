@@ -76,6 +76,13 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
   updateShownTabs();
 }
 
+void PropertyWidget::registerTab(PropertyWidgetTabFactoryBase* factory)
+{
+    s_tabFactories.push_back(factory);
+    foreach (PropertyWidget *widget, s_propertyWidgets)
+        widget->updateShownTabs();
+}
+
 void PropertyWidget::createWidgets()
 {
   if (m_objectBaseName.isEmpty())
