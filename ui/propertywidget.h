@@ -67,18 +67,19 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
   private:
     void createWidgets();
     bool extensionAvailable(PropertyWidgetTabFactoryBase *factory) const;
+    bool factoryInUse(PropertyWidgetTabFactoryBase *factory) const;
 
   private slots:
     void updateShownTabs();
 
-
   private:
     QString m_objectBaseName;
 
-    // Contains all tab widgets we have instantiated and their corresponding factories
-    // order matters, therefore these are two vectors rather than a hash or map
-    QVector<PropertyWidgetTabFactoryBase*> m_usedFactories;
-    QVector<QWidget*> m_tabWidgets;
+    struct PageInfo {
+        PropertyWidgetTabFactoryBase *factory;
+        QWidget *widget;
+    };
+    QVector<PageInfo> m_pages;
 
     PropertyControllerInterface *m_controller;
 

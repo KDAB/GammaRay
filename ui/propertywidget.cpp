@@ -32,6 +32,8 @@
 #include "common/objectbroker.h"
 #include "common/propertycontrollerinterface.h"
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 QVector<PropertyWidgetTabFactoryBase*> PropertyWidget::s_tabFactories = QVector<PropertyWidgetTabFactoryBase*>();
@@ -79,11 +81,10 @@ void PropertyWidget::createWidgets()
   if (m_objectBaseName.isEmpty())
     return;
   foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
-    if (!m_usedFactories.contains(factory) && extensionAvailable(factory)) {
-      QWidget *widget = factory->createWidget(this);
-      m_usedFactories.push_back(factory);
-      m_tabWidgets.push_back(widget);
-      addTab(widget, factory->label());
+    if (!factoryInUse(factory) && extensionAvailable(factory)) {
+      const PageInfo pi = { factory, factory->createWidget(this) };
+      m_pages.push_back(pi);
+      addTab(pi.widget, factory->label());
     }
   }
 }
@@ -93,23 +94,27 @@ void PropertyWidget::updateShownTabs()
   setUpdatesEnabled(false);
   createWidgets();
 
-  Q_ASSERT(m_tabWidgets.size() == m_usedFactories.size());
-  for (int i = 0; i < m_tabWidgets.size(); ++i) {
-    QWidget *widget = m_tabWidgets.at(i);
-    const int index = indexOf(widget);
-    auto factory = m_usedFactories.at(i);
-    if (extensionAvailable(factory)) {
-      if (index == -1)
-        addTab(widget, factory->label());
-    } else if (index != -1) {
-      removeTab(index);
+  foreach (const auto &page, m_pages) {
+      const int index = indexOf(page.widget);
+      if (extensionAvailable(page.factory)) {
+          if (index == -1)
+              addTab(page.widget, page.factory->label());
+      } else if (index != -1) {
+          removeTab(index);
+      }
     }
-  }
 
-  setUpdatesEnabled(true);
+    setUpdatesEnabled(true);
 }
 
 bool PropertyWidget::extensionAvailable(PropertyWidgetTabFactoryBase* factory) const
 {
   return m_controller->availableExtensions().contains(m_objectBaseName + '.' + factory->name());
+}
+
+bool PropertyWidget::factoryInUse(PropertyWidgetTabFactoryBase* factory) const
+{
+    return std::find_if(m_pages.begin(), m_pages.end(), [factory](const PageInfo &pi) {
+        return pi.factory == factory;
+    }) != m_pages.end();
 }
