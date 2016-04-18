@@ -12,6 +12,7 @@ set(gammaray_ui_srcs
   palettemodel.cpp
   propertybinder.cpp
   propertywidget.cpp
+  propertywidgettab.cpp
   proxytooluifactory.cpp
   splashscreen.cpp
   searchlinecontroller.cpp

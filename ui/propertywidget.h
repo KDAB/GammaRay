@@ -57,9 +57,16 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
     QString objectBaseName() const;
     void setObjectBaseName(const QString &baseName);
 
-    template<typename T> static void registerTab(const QString &name, const QString &label)
+    /** Register a new tab widget factory.
+     * @tparam T A widget type providing the tab UI
+     * @param name The internal object name of this extension.
+     * @param label The user-visible tab label of this extension.
+     * @param priority This is used to keep tabs in a stable order, tabs are ordered
+     *   left to right with increasing priority.
+     */
+    template<typename T> static void registerTab(const QString &name, const QString &label, int priority = 1000)
     {
-        registerTab(new PropertyWidgetTabFactory<T>(name, label));
+        registerTab(new PropertyWidgetTabFactory<T>(name, label, priority));
     }
 
   private:

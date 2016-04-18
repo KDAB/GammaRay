@@ -29,6 +29,8 @@
 #ifndef PROPERTYWIDGETTAB_H
 #define PROPERTYWIDGETTAB_H
 
+#include "gammaray_ui_export.h"
+
 #include <QWidget>
 #include <QString>
 
@@ -37,16 +39,24 @@ namespace GammaRay {
 class PropertyWidget;
 
 /** @brief Interface for tabs in the property widget. */
-class PropertyWidgetTabFactoryBase
+class GAMMARAY_UI_EXPORT PropertyWidgetTabFactoryBase
 {
   public:
-    explicit PropertyWidgetTabFactoryBase() {}
+    explicit PropertyWidgetTabFactoryBase(const QString &name, const QString &label, int priority);
+    virtual ~PropertyWidgetTabFactoryBase();
+
     virtual QWidget *createWidget(PropertyWidget *parent) = 0;
-    virtual const QString &name() const = 0;
-    virtual const QString &label() const = 0;
+
+    QString name() const;
+    QString label() const;
+    int priority() const;
 
   private:
     Q_DISABLE_COPY(PropertyWidgetTabFactoryBase)
+
+    QString m_name;
+    QString m_label;
+    int m_priority;
 };
 
 /** @brief Template implementation of PropertyWidgetTabFactoryBase. */
@@ -54,26 +64,13 @@ template <typename T>
 class PropertyWidgetTabFactory : public PropertyWidgetTabFactoryBase
 {
   public:
-    explicit PropertyWidgetTabFactory(const QString &name, const QString &label)
-      : m_name(name),
-      m_label(label)
-    {
-    }
+    explicit PropertyWidgetTabFactory(const QString &name, const QString &label, int priority) :
+        GammaRay::PropertyWidgetTabFactoryBase(name, label, priority) {}
+
     QWidget *createWidget(PropertyWidget *parent) Q_DECL_OVERRIDE
     {
       return new T(parent);
     }
-    const QString &name() const Q_DECL_OVERRIDE
-    {
-      return m_name;
-    }
-    const QString &label() const Q_DECL_OVERRIDE
-    {
-      return m_label;
-    }
-  private:
-    QString m_name;
-    QString m_label;
 };
 
 }
