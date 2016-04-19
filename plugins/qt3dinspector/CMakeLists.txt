@@ -35,5 +35,5 @@ if(GAMMARAY_BUILD_UI)
   qt4_add_resources(gammaray_3dinspector_ui_srcs qt3dinspector.qrc)
 
   gammaray_add_plugin(gammaray_3dinspector_ui JSON gammaray_3dinspector.json SOURCES ${gammaray_3dinspector_ui_srcs})
-  target_link_libraries(gammaray_3dinspector_ui gammaray_ui Qt5::3DRender Qt5::3DInput)
+  target_link_libraries(gammaray_3dinspector_ui gammaray_ui Qt5::3DRender Qt5::3DInput Qt5::3DLogic)
 endif()

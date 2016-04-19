@@ -222,6 +222,7 @@ if(Qt5Core_FOUND)
   find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
   find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     3DInput
+    3DLogic
     3DRender
     Bluetooth
     Concurrent
