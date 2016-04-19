@@ -94,7 +94,7 @@ void PropertyWidget::createWidgets()
     }
   }
 
-  std::sort(m_pages.begin(), m_pages.end(), [](const PageInfo &lhs, const PageInfo &rhs) {
+  std::sort(m_pages.begin(), m_pages.end(), [](const PageInfo &lhs, const PageInfo &rhs) -> bool {
       if (lhs.factory->priority() == rhs.factory->priority())
           return s_tabFactories.indexOf(lhs.factory) < s_tabFactories.indexOf(rhs.factory);
       return lhs.factory->priority() < rhs.factory->priority();
