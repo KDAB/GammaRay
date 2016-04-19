@@ -1,3 +1,5 @@
+add_subdirectory(geometryextension)
+
 # shared stuff
 set(gammaray_3dinspector_shared_srcs
   qt3dinspectorinterface.cpp
