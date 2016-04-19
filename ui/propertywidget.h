@@ -77,9 +77,12 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 
   private slots:
     void updateShownTabs();
+    void slotCurrentTabChanged();
 
   private:
     QString m_objectBaseName;
+
+    QWidget *m_lastManuallySelectedWidget;
 
     struct PageInfo {
         PropertyWidgetTabFactoryBase *factory;

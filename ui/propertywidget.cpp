@@ -39,11 +39,13 @@ using namespace GammaRay;
 QVector<PropertyWidgetTabFactoryBase*> PropertyWidget::s_tabFactories = QVector<PropertyWidgetTabFactoryBase*>();
 QVector<PropertyWidget*> PropertyWidget::s_propertyWidgets;
 
-PropertyWidget::PropertyWidget(QWidget *parent)
-  : QTabWidget(parent),
+PropertyWidget::PropertyWidget(QWidget *parent) :
+    QTabWidget(parent),
+    m_lastManuallySelectedWidget(Q_NULLPTR),
     m_controller(0)
 {
-  s_propertyWidgets.push_back(this);
+    s_propertyWidgets.push_back(this);
+    connect(this, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged()));
 }
 
 PropertyWidget::~PropertyWidget()
@@ -106,6 +108,10 @@ void PropertyWidget::updateShownTabs()
   setUpdatesEnabled(false);
   createWidgets();
 
+  // we distinguish between the last selected tab, and the last one that
+  // was explicitly selected. The latter might be temporarily hidden, but
+  // we will try to restore it when it becomes available again.
+  auto prevManuallySelected = m_lastManuallySelectedWidget;
   auto prevSelectedWidget = currentWidget();
 
   int tabIt = 0;
@@ -124,9 +130,14 @@ void PropertyWidget::updateShownTabs()
     // try to restore selection
     if (!prevSelectedWidget) // first time
         setCurrentIndex(0);
-    if (indexOf(prevSelectedWidget) >= 0)
+    else if (indexOf(prevManuallySelected) >= 0)
+        setCurrentWidget(prevManuallySelected);
+    else if (indexOf(prevSelectedWidget) >= 0)
         setCurrentWidget(prevSelectedWidget);
 
+    // reset to last user selection as this possibly
+    // changed as a result of the reording above
+    m_lastManuallySelectedWidget = prevManuallySelected;
     setUpdatesEnabled(true);
 }
 
@@ -140,4 +151,9 @@ bool PropertyWidget::factoryInUse(PropertyWidgetTabFactoryBase* factory) const
     return std::find_if(m_pages.begin(), m_pages.end(), [factory](const PageInfo &pi) {
         return pi.factory == factory;
     }) != m_pages.end();
+}
+
+void PropertyWidget::slotCurrentTabChanged()
+{
+    m_lastManuallySelectedWidget = currentWidget();
 }
