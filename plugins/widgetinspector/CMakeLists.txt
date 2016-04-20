@@ -76,7 +76,8 @@ if(GAMMARAY_BUILD_UI)
     widgetinspectorwidget.cpp
   )
 
-  if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+  if (Qt53DCore_FOUND AND NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+    add_definitions(-DWITH_WIDGET3D)
     set(gammaray_widgetinspector_ui_plugin_srcs
       ${gammaray_widgetinspector_ui_plugin_srcs}
       widget3dview.cpp
@@ -104,7 +105,7 @@ if(GAMMARAY_BUILD_UI)
     gammaray_ui
   )
 
-  if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+  if (Qt53DCore_FOUND AND NOT Qt53DCore_VERSION VERSION_LESS 5.7)
     target_link_libraries(gammaray_widgetinspector_ui_plugin
         gammaray_client
         Qt5::Qml
