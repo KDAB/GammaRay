@@ -8,12 +8,9 @@ set(gammaray_widgetinspector_plugin_srcs
   widgetpaintanalyzerextension.cpp
 
   waextension/widgetattributeextension.cpp
-
-  widget3dmodel.cpp
 )
 
-if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
-  add_definitions(-DWITH_WIDGET3D)
+if (Qt5Core_FOUND)
   set(gammaray_widgetinspector_plugin_srcs
       ${gammaray_widgetinspector_plugin_srcs}
       widget3dmodel.cpp
@@ -31,13 +28,6 @@ target_link_libraries(gammaray_widgetinspector_plugin
   gammaray_kitemmodels
   gammaray_core
 )
-
-if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
-  target_link_libraries(gammaray_widgetinspector_plugin
-    Qt5::3DCore
-    Qt5::3DRender
-  )
-endif()
 
 # probe export actions
 add_library(gammaray_widget_export_actions SHARED
@@ -112,11 +102,11 @@ if(GAMMARAY_BUILD_UI)
   target_link_libraries(gammaray_widgetinspector_ui_plugin
     ${QT_QTGUI_LIBRARIES}
     gammaray_ui
-    gammaray_client
   )
 
   if (NOT Qt53DCore_VERSION VERSION_LESS 5.7)
     target_link_libraries(gammaray_widgetinspector_ui_plugin
+        gammaray_client
         Qt5::Qml
         Qt5::3DRender
         Qt5::3DLogic
