@@ -1,3 +1,6 @@
+find_package(Wayland COMPONENTS Server)
+set_package_properties(Wayland PROPERTIES PURPOSE "Needed for the QtWayland compositor inspector plug-in." TYPE OPTIONAL)
+
 # probe plugin
 set(gammaray_wlcompositorinspector_srcs
   wlcompositorinspector.cpp
@@ -9,7 +12,7 @@ gammaray_add_plugin(gammaray_wlcompositorinspector
   ${gammaray_wlcompositorinspector_srcs}
 )
 target_link_libraries(gammaray_wlcompositorinspector
-  gammaray_core gammaray_kitemmodels Qt5::WaylandCompositor wayland-server)
+  gammaray_core gammaray_kitemmodels Qt5::WaylandCompositor Wayland::Server)
 
 # ui part
 if(GAMMARAY_BUILD_UI)
