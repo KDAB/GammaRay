@@ -29,7 +29,13 @@
 #ifndef WLCOMPOSITORINTERFACE_H
 #define WLCOMPOSITORINTERFACE_H
 
+#include "config-gammaray.h"
+
 #include <QObject>
+
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
 
 namespace GammaRay {
 
