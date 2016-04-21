@@ -65,12 +65,12 @@ include(ECMEnableSanitizers)
 include(GenerateExportHeader)
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
-#  MSVC++ 8.0  _MSC_VER == 1400 (Visual Studio 2005)
+#  MSVC++ < 2010 aka 10.0 aka 1600
 #  Clang 3.0
 set(BAD_CXX_MESSAGE "")
 if(MSVC)
-  if(MSVC_VERSION LESS 1500)
-    set(BAD_CXX_MESSAGE "MSVC 2008 or higher")
+  if(MSVC_VERSION LESS 1600)
+    set(BAD_CXX_MESSAGE "MSVC 2010 or higher")
   endif()
 endif()
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
