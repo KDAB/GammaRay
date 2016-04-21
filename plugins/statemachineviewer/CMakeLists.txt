@@ -36,11 +36,11 @@ if(GAMMARAY_BUILD_UI AND KDSME_FOUND)
 
 set(gammaray_statemachineviewer_ui_plugin_srcs
   statemachineviewerclient.cpp
-  statemachineviewerwidgetng.cpp
+  statemachineviewerwidget.cpp
   statemodeldelegate.cpp
 )
 
-qt4_wrap_ui(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewer.ui)
+qt4_wrap_ui(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewerwidget.ui)
 
 gammaray_add_plugin(gammaray_statemachineviewer_ui_plugin
   JSON gammaray_statemachineviewer.json

@@ -1,6 +1,4 @@
 /*
-  statemachineviewerwidgetng.h
-
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
@@ -45,16 +43,16 @@ class Transition;
 
 namespace GammaRay {
 namespace Ui {
-class StateMachineViewer;
+class StateMachineViewerWidget;
 }
 
-class StateMachineViewerWidgetNG : public QWidget
+class StateMachineViewerWidget : public QWidget
 {
   Q_OBJECT
 
 public:
-  explicit StateMachineViewerWidgetNG(QWidget* parent = 0, Qt::WindowFlags f = 0);
-  virtual ~StateMachineViewerWidgetNG();
+  explicit StateMachineViewerWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+  virtual ~StateMachineViewerWidget();
 
   KDSME::StateMachineView* stateMachineView() const;
   QTreeView* objectInspector() const;
@@ -83,7 +81,7 @@ private:
   void loadSettings();
   void saveSettings();
 
-  QScopedPointer<Ui::StateMachineViewer> m_ui;
+  QScopedPointer<Ui::StateMachineViewerWidget> m_ui;
 
   KDSME::StateMachineView* m_stateMachineView;
   StateMachineViewerInterface *m_interface;
@@ -93,7 +91,7 @@ private:
   KDSME::StateMachine* m_machine;
 };
 
-class StateMachineViewerUiFactory : public QObject, public StandardToolUiFactory<StateMachineViewerWidgetNG>
+class StateMachineViewerUiFactory : public QObject, public StandardToolUiFactory<StateMachineViewerWidget>
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolUiFactory)

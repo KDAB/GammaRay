@@ -1,6 +1,4 @@
 /*
-  statemachineviewerwidgetng.cpp
-
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
@@ -26,8 +24,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "statemachineviewerwidgetng.h"
-#include "ui_statemachineviewer.h"
+#include "statemachineviewerwidget.h"
+#include "ui_statemachineviewerwidget.h"
 
 #include "statemachineviewerclient.h"
 #include "statemodeldelegate.h"
@@ -61,17 +59,17 @@ namespace {
 class SelectionModelSyncer : public QObject
 {
 public:
-  SelectionModelSyncer(StateMachineViewerWidgetNG *widget);
+  SelectionModelSyncer(StateMachineViewerWidget *widget);
 
 private Q_SLOTS:
   void handle_objectInspector_currentChanged(const QModelIndex &index);
   void handle_stateMachineView_currentChanged(const QModelIndex &index);
 
-  StateMachineViewerWidgetNG *m_widget;
+  StateMachineViewerWidget *m_widget;
   bool m_updatesEnabled;
 };
 
-SelectionModelSyncer::SelectionModelSyncer(StateMachineViewerWidgetNG *widget)
+SelectionModelSyncer::SelectionModelSyncer(StateMachineViewerWidget *widget)
   : QObject(widget)
   , m_widget(widget)
   , m_updatesEnabled(true)
@@ -140,9 +138,9 @@ KDSME::RuntimeController::Configuration toSmeConfiguration(const StateMachineCon
 
 }
 
-StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::WindowFlags f)
+StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)
-  , m_ui(new Ui::StateMachineViewer)
+  , m_ui(new Ui::StateMachineViewerWidget)
   , m_machine(0)
 {
   ObjectBroker::registerClientObjectFactoryCallback<StateMachineViewerInterface*>(createStateMachineViewerClient);
@@ -208,23 +206,23 @@ StateMachineViewerWidgetNG::StateMachineViewerWidgetNG(QWidget* parent, Qt::Wind
   loadSettings();
 }
 
-StateMachineViewerWidgetNG::~StateMachineViewerWidgetNG()
+StateMachineViewerWidget::~StateMachineViewerWidget()
 {
   saveSettings();
 }
 
-KDSME::StateMachineView *StateMachineViewerWidgetNG::stateMachineView() const
+KDSME::StateMachineView *StateMachineViewerWidget::stateMachineView() const
 {
   return m_stateMachineView;
 }
 
-QTreeView *StateMachineViewerWidgetNG::objectInspector() const
+QTreeView *StateMachineViewerWidget::objectInspector() const
 {
   return m_ui->singleStateMachineView;
 }
 
 
-void StateMachineViewerWidgetNG::loadSettings()
+void StateMachineViewerWidget::loadSettings()
 {
   QSettings settings;
   settings.beginGroup("Plugin_StateMachineViewer");
@@ -233,7 +231,7 @@ void StateMachineViewerWidgetNG::loadSettings()
   settings.sync();
 }
 
-void StateMachineViewerWidgetNG::saveSettings()
+void StateMachineViewerWidget::saveSettings()
 {
   QSettings settings;
   settings.beginGroup("Plugin_StateMachineViewer");
@@ -242,7 +240,7 @@ void StateMachineViewerWidgetNG::saveSettings()
   settings.sync();
 }
 
-void StateMachineViewerWidgetNG::showMessage(const QString& message)
+void StateMachineViewerWidget::showMessage(const QString& message)
 {
     // update log
   auto logTextEdit = m_ui->logTextEdit;
@@ -253,14 +251,14 @@ void StateMachineViewerWidgetNG::showMessage(const QString& message)
   sb->setValue(sb->maximum());
 }
 
-void StateMachineViewerWidgetNG::stateConfigurationChanged(const StateMachineConfiguration& config)
+void StateMachineViewerWidget::stateConfigurationChanged(const StateMachineConfiguration& config)
 {
   if (m_machine) {
     m_machine->runtimeController()->setActiveConfiguration(toSmeConfiguration(config, m_idToStateMap));
   }
 }
 
-void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId parentId, const bool hasChildren,
+void StateMachineViewerWidget::stateAdded(const StateId stateId, const StateId parentId, const bool hasChildren,
                                             const QString& label, const StateType type, const bool connectToInitial)
 {
   Q_UNUSED(hasChildren);
@@ -299,7 +297,7 @@ void StateMachineViewerWidgetNG::stateAdded(const StateId stateId, const StateId
   m_idToStateMap[stateId] = state;
 }
 
-void StateMachineViewerWidgetNG::transitionAdded(const TransitionId transitionId, const StateId sourceId, const StateId targetId, const QString& label)
+void StateMachineViewerWidget::transitionAdded(const TransitionId transitionId, const StateId sourceId, const StateId targetId, const QString& label)
 {
   if (m_idToTransitionMap.contains(transitionId))
     return;
@@ -320,7 +318,7 @@ void StateMachineViewerWidgetNG::transitionAdded(const TransitionId transitionId
   m_idToTransitionMap[transitionId] = transition;
 }
 
-void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, const bool running)
+void StateMachineViewerWidget::statusChanged(const bool haveStateMachine, const bool running)
 {
   if (m_machine) {
     m_machine->runtimeController()->setIsRunning(running);
@@ -336,7 +334,7 @@ void StateMachineViewerWidgetNG::statusChanged(const bool haveStateMachine, cons
   }
 }
 
-void StateMachineViewerWidgetNG::transitionTriggered(TransitionId transitionId, const QString& label)
+void StateMachineViewerWidget::transitionTriggered(TransitionId transitionId, const QString& label)
 {
   Q_UNUSED(label);
   if (m_machine) {
@@ -344,7 +342,7 @@ void StateMachineViewerWidgetNG::transitionTriggered(TransitionId transitionId, 
   }
 }
 
-void StateMachineViewerWidgetNG::clearGraph()
+void StateMachineViewerWidget::clearGraph()
 {
   IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
@@ -354,7 +352,7 @@ void StateMachineViewerWidgetNG::clearGraph()
   m_idToTransitionMap.clear();
 }
 
-void StateMachineViewerWidgetNG::repopulateView()
+void StateMachineViewerWidget::repopulateView()
 {
   IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
@@ -368,7 +366,7 @@ void StateMachineViewerWidgetNG::repopulateView()
   m_stateMachineView->fitInView();
 }
 
-void StateMachineViewerWidgetNG::stateModelReset()
+void StateMachineViewerWidget::stateModelReset()
 {
   m_ui->singleStateMachineView->expandAll();
   if (m_machine) {
@@ -376,7 +374,7 @@ void StateMachineViewerWidgetNG::stateModelReset()
   }
 }
 
-void StateMachineViewerWidgetNG::setShowLog(bool show)
+void StateMachineViewerWidget::setShowLog(bool show)
 {
   m_ui->logExpandingWidget->setVisible(show);
   m_ui->showLogPushButton->setVisible(!show);
