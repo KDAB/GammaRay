@@ -33,6 +33,7 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <common/probecontrollerinterface.h>
+#include <ui/contextmenuextension.h>
 #include <ui/deferredresizemodesetter.h>
 #include <ui/deferredtreeviewconfiguration.h>
 
@@ -45,6 +46,7 @@
 #include <kdstatemachineeditor/view/statemachineview.h>
 
 #include <QDebug>
+#include <QMenu>
 #include <QLayout>
 #include <QScopedValueRollback>
 #include <QScrollBar>
@@ -166,6 +168,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFl
   new DeferredResizeModeSetter(m_ui->singleStateMachineView->header(), 1, QHeaderView::ResizeToContents);
   new DeferredTreeViewConfiguration(m_ui->singleStateMachineView, true);
   m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
+  connect(m_ui->singleStateMachineView, &QWidget::customContextMenuRequested, this, &StateMachineViewerWidget::objectInspectorContextMenu);
 
   connect(m_ui->actionStartStopStateMachine, SIGNAL(triggered()), m_interface, SLOT(toggleRunning()));
   addAction(m_ui->actionStartStopStateMachine);
@@ -372,6 +375,22 @@ void StateMachineViewerWidget::stateModelReset()
   if (m_machine) {
     m_machine->runtimeController()->clear();
   }
+}
+
+void StateMachineViewerWidget::objectInspectorContextMenu(QPoint pos)
+{
+  const auto index = m_ui->singleStateMachineView->indexAt(pos);
+  if (!index.isValid())
+      return;
+
+  const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+  QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+  ContextMenuExtension ext(objectId);
+  ext.setCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+  ext.setDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+  ext.populateMenu(&menu);
+
+  menu.exec(m_ui->singleStateMachineView->viewport()->mapToGlobal(pos));
 }
 
 void StateMachineViewerWidget::setShowLog(bool show)

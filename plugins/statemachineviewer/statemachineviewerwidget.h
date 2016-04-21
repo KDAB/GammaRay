@@ -77,6 +77,8 @@ private slots:
 
   void setShowLog(bool show);
 
+  void objectInspectorContextMenu(QPoint pos);
+
 private:
   void loadSettings();
   void saveSettings();
