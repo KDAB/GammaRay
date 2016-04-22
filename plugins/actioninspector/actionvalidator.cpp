@@ -120,7 +120,7 @@ bool ActionValidator::hasAmbiguousShortcut(const QAction *action) const
   }
 
   Q_FOREACH (const QKeySequence &sequence, action->shortcuts()) {
-    if (m_shortcutActionMap.values(sequence).size() > 1) {
+    if (m_shortcutActionMap.count(sequence) > 1) {
       return true;
     }
   }
