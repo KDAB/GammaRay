@@ -79,16 +79,14 @@ void QmlContextTab::contextContextMenu(QPoint pos)
         return;
 
     idx = idx.sibling(idx.row(), 1);
-    const auto url = idx.data().toString();
+    const auto url = idx.data().toUrl();
     if (url.isEmpty())
         return;
 
     QMenu contextMenu;
-    auto action = contextMenu.addAction(tr("Go to: %1").arg(url));
-    connect(action, &QAction::triggered, [this, url]() {
-        emit UiIntegration::requestNavigateToCode(url, 0);
-    });
-
+    ContextMenuExtension cme;
+    cme.setGoToLocation(SourceLocation(url, 0));
+    cme.populateMenu(&contextMenu);
     contextMenu.exec(ui->contextView->viewport()->mapToGlobal(pos));
 }
 

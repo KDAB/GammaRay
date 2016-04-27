@@ -36,6 +36,7 @@
 class QModelIndex;
 class QSplitter;
 class QHeaderView;
+class QUrl;
 
 namespace GammaRay {
 
@@ -74,7 +75,7 @@ class MainWindow : public QMainWindow
 
     void quitHost();
     void detachProbe();
-    void navigateToCode(const QString &filePath, int lineNumber, int columnNumber);
+    void navigateToCode(const QUrl &url, int lineNumber, int columnNumber);
     void setCodeNavigationIDE(QAction *action);
 
   private:

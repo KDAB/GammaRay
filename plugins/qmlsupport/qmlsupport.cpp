@@ -167,7 +167,7 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     auto objectData = QQmlData::get(obj);
     if (!objectData) {
         if (auto context = qobject_cast<QQmlContext*>(obj))
-            loc.setFileName(context->baseUrl());
+            loc.setUrl(context->baseUrl());
         return loc;
     }
 
@@ -176,9 +176,9 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
         return loc;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    loc.setFileName(context->url());
+    loc.setUrl(context->url());
 #else
-    loc.setFileName(context->url);
+    loc.setUrl(context->url);
 #endif
 
     loc.setLine(objectData->lineNumber);

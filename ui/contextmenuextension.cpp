@@ -40,29 +40,51 @@ ContextMenuExtension::ContextMenuExtension(ObjectId id)
 {
 }
 
-void ContextMenuExtension::setCreationLocation(const SourceLocation& location)
+void ContextMenuExtension::setGoToLocation(const SourceLocation &location)
 {
-    m_creationLoc = location;
+  m_goToLoc = location;
 }
 
-void ContextMenuExtension::setDeclarationLocation(const SourceLocation& location)
+void ContextMenuExtension::setShowSourceLocation(const SourceLocation &location)
 {
-    m_declarationLoc = location;
+  m_sourceLoc = location;
+}
+
+void ContextMenuExtension::setGoToCreationLocation(const SourceLocation& location)
+{
+  m_creationLoc = location;
+}
+
+void ContextMenuExtension::setGoToDeclarationLocation(const SourceLocation& location)
+{
+  m_declarationLoc = location;
 }
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  if (m_goToLoc.isValid() && UiIntegration::instance()) {
+    auto action = menu->addAction(tr("Go to: %1").arg(m_goToLoc.displayString()));
+    connect(action, &QAction::triggered, [this]() {
+      UiIntegration::requestNavigateToCode(m_goToLoc.url(), m_goToLoc.line(), m_goToLoc.column());
+    });
+  }
+  if (m_sourceLoc.isValid() && UiIntegration::instance()) {
+    auto action = menu->addAction(tr("Show source: %1").arg(m_sourceLoc.displayString()));
+    connect(action, &QAction::triggered, [this]() {
+      UiIntegration::requestNavigateToCode(m_sourceLoc.url(), m_sourceLoc.line(), m_sourceLoc.column());
+    });
+  }
   if (m_creationLoc.isValid() && UiIntegration::instance()) {
     auto action = menu->addAction(tr("Go to creation: %1").arg(m_creationLoc.displayString()));
     connect(action, &QAction::triggered, [this]() {
-        emit UiIntegration::instance()->navigateToCode(m_creationLoc.fileName(), m_creationLoc.line(), m_creationLoc.column());
+      UiIntegration::requestNavigateToCode(m_creationLoc.url(), m_creationLoc.line(), m_creationLoc.column());
     });
   }
   if (m_declarationLoc.isValid() && UiIntegration::instance()) {
     auto action = menu->addAction(tr("Go to declaration: %1").arg(m_declarationLoc.displayString()));
     connect(action, &QAction::triggered, [this]() {
-        emit UiIntegration::instance()->navigateToCode(m_declarationLoc.fileName(), m_declarationLoc.line(), m_declarationLoc.column());
+      UiIntegration::requestNavigateToCode(m_declarationLoc.url(), m_declarationLoc.line(), m_declarationLoc.column());
     });
   }
 

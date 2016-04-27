@@ -39,49 +39,35 @@ class SourceLocationTest : public QObject
 private slots:
     void testDisplayString_data()
     {
-        QTest::addColumn<QString>("file");
+        QTest::addColumn<QUrl>("url");
         QTest::addColumn<int>("line");
         QTest::addColumn<int>("column");
         QTest::addColumn<QString>("displayString");
+        QTest::addColumn<bool>("valid");
 
-        QTest::newRow("invalid") << QString() << -1 << -1 << QString();
-        QTest::newRow("invalid 2") << QString() << 42 << 23 << QString();
-        QTest::newRow("file only") << QStringLiteral("/some/file") << -1 << -1 << QStringLiteral("/some/file");
-        QTest::newRow("file and line") << QStringLiteral("/some/file") << 23 << -1 << QStringLiteral("/some/file:23");
-        QTest::newRow("complete") << QStringLiteral("/some/file") << 23 << 42 << QStringLiteral("/some/file:23:42");
-        QTest::newRow("file and column") << QStringLiteral("/some/file") << -1 << 42 << QStringLiteral("/some/file");
-        QTest::newRow("complete but 0 column") << QStringLiteral("/some/file") << 23 << 0 << QStringLiteral("/some/file:23");
-        QTest::newRow("complete but 1 column") << QStringLiteral("/some/file") << 23 << 1 << QStringLiteral("/some/file:23");
+        QTest::newRow("invalid") << QUrl() << -1 << -1 << QString() << false;
+        QTest::newRow("invalid 2") << QUrl() << 42 << 23 << QString() << false;
+        QTest::newRow("url only") << QUrl(QStringLiteral("file:///some/file")) << -1 << -1 << QStringLiteral("/some/file") << true;
+        QTest::newRow("url and line") << QUrl(QStringLiteral("file:///some/file")) << 23 << -1 << QStringLiteral("/some/file:23") << true;
+        QTest::newRow("complete") << QUrl(QStringLiteral("file:///some/file")) << 23 << 42 << QStringLiteral("/some/file:23:42") << true;
+        QTest::newRow("url and column") << QUrl(QStringLiteral("file:///some/file")) << -1 << 42 << QStringLiteral("/some/file") << true;
+        QTest::newRow("complete but 0 column") << QUrl(QStringLiteral("file:///some/file")) << 23 << 0 << QStringLiteral("/some/file:23") << true;
+        QTest::newRow("complete but 1 column") << QUrl(QStringLiteral("file:///some/file")) << 23 << 1 << QStringLiteral("/some/file:23:1") << true;
+        QTest::newRow("url") << QUrl::fromLocalFile(QStringLiteral("/some/file")) << 1 << 1 << QStringLiteral("/some/file:1:1") << true;
+        QTest::newRow("qrc") << QUrl(QStringLiteral("qrc:///main.qml")) << 1 << 1 << QStringLiteral("qrc:///main.qml:1:1") << true;
     }
 
     void testDisplayString()
     {
-        QFETCH(QString, file);
+        QFETCH(QUrl, url);
         QFETCH(int, line);
         QFETCH(int, column);
         QFETCH(QString, displayString);
+        QFETCH(bool, valid);
 
-        SourceLocation loc(file, line, column);
+        SourceLocation loc(url, line, column);
         QCOMPARE(loc.displayString(), displayString);
-    }
-
-    void testDisplayStringForUrl_data()
-    {
-        QTest::addColumn<QUrl>("url");
-        QTest::addColumn<QString>("displayString");
-
-        QTest::newRow("invalid") << QUrl() << QString();
-        QTest::newRow("file") << QUrl::fromLocalFile(QStringLiteral("/some/file")) << QStringLiteral("/some/file");
-        QTest::newRow("qrc") << QUrl(QStringLiteral("qrc:/main.qml")) << QStringLiteral("qrc:/main.qml");
-    }
-
-    void testDisplayStringForUrl()
-    {
-        QFETCH(QUrl, url);
-        QFETCH(QString, displayString);
-
-        SourceLocation loc(url);
-        QCOMPARE(loc.displayString(), displayString);
+        QVERIFY(loc.isValid() == valid);
     }
 };
 
