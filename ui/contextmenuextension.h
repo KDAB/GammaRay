@@ -36,6 +36,7 @@
 #include <QVariant>
 
 class QMenu;
+class QModelIndex;
 
 namespace GammaRay {
 
@@ -44,22 +45,29 @@ class GAMMARAY_UI_EXPORT ContextMenuExtension : public QObject
   Q_OBJECT
 
 public:
+  // UI presentation depend the order of this enum
+  enum Location {
+    GoTo,
+    ShowSource,
+    Creation,
+    Declaration
+  };
+
   explicit ContextMenuExtension(ObjectId id = ObjectId());
 
-  void setGoToLocation(const SourceLocation &location);
-  void setShowSourceLocation(const SourceLocation &location);
-  void setGoToCreationLocation(const SourceLocation &location);
-  void setGoToDeclarationLocation(const SourceLocation &location);
+  void setLocation(Location location, const SourceLocation &sourceLocation);
+
+  bool discoverSourceLocation(Location location, const QUrl &url);
+  // Given a model index from a PropertyModel, try to found a valid url and call
+  // setLocation() with the given location.
+  bool discoverPropertySourceLocation(Location location, const QModelIndex &index);
 
   /// Populate @p menu with entries related to the captured object id. Only supported on Qt5
   void populateMenu(QMenu *menu);
 
 private:
   ObjectId m_id;
-  SourceLocation m_goToLoc;
-  SourceLocation m_sourceLoc;
-  SourceLocation m_creationLoc;
-  SourceLocation m_declarationLoc;
+  QMap<Location, SourceLocation> m_locations;
 };
 
 }
