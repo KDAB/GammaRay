@@ -75,17 +75,12 @@ QmlContextTab::~QmlContextTab()
 void QmlContextTab::contextContextMenu(QPoint pos)
 {
     auto idx = ui->contextView->indexAt(pos);
-    if (!idx.isValid() || !UiIntegration::instance())
-        return;
+    ContextMenuExtension cme;
 
-    idx = idx.sibling(idx.row(), 1);
-    const auto url = idx.data().toUrl();
-    if (url.isEmpty())
+    if (!cme.discoverSourceLocation(ContextMenuExtension::GoTo, idx.sibling(idx.row(), 1).data().toUrl()))
         return;
 
     QMenu contextMenu;
-    ContextMenuExtension cme;
-    cme.setGoToLocation(SourceLocation(url, 0));
     cme.populateMenu(&contextMenu);
     contextMenu.exec(ui->contextView->viewport()->mapToGlobal(pos));
 }
@@ -97,15 +92,15 @@ void QmlContextTab::propertiesContextMenu(QPoint pos)
         return;
 
     const auto actions = idx.data(PropertyModel::ActionRole).toInt();
-    if (actions != PropertyModel::NavigateTo)
-        return;
-
     const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
-    if (objectId.isNull())
+    ContextMenuExtension ext(objectId);
+    const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull()) ||
+        ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+
+    if (!canShow)
         return;
 
     QMenu contextMenu;
-    ContextMenuExtension ext(objectId);
     ext.populateMenu(&contextMenu);
     contextMenu.exec(ui->contextPropertyView->viewport()->mapToGlobal(pos));
 }

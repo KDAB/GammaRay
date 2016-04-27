@@ -134,11 +134,17 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
   }
 
   const int actions = index.data(PropertyModel::ActionRole).toInt();
-  if (actions == PropertyModel::NoAction) {
+  const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+  ContextMenuExtension ext(objectId);
+  const bool canShow = actions != PropertyModel::NoAction ||
+      ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, index);
+
+  if (!canShow) {
     return;
   }
 
   QMenu contextMenu;
+
   if (actions & PropertyModel::Delete) {
     QAction *action = contextMenu.addAction(tr("Remove"));
     action->setData(PropertyModel::Delete);
@@ -147,11 +153,8 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
     QAction *action = contextMenu.addAction(tr("Reset"));
     action->setData(PropertyModel::Reset);
   }
-  if (actions & PropertyModel::NavigateTo) {
-    const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
-    ContextMenuExtension ext(objectId);
-    ext.populateMenu(&contextMenu);
-  }
+
+  ext.populateMenu(&contextMenu);
 
   if (QAction *action = contextMenu.exec(m_ui->propertyView->viewport()->mapToGlobal(pos))) {
     switch (action->data().toInt()) {

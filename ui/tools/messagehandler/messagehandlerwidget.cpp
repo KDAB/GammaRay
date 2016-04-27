@@ -189,7 +189,7 @@ void MessageHandlerWidget::messageContextMenu(const QPoint &pos)
 
   QMenu contextMenu;
   ContextMenuExtension cme;
-  cme.setShowSourceLocation(SourceLocation(QUrl(fileName), line, 0));
+  cme.setLocation(ContextMenuExtension::ShowSource, SourceLocation(QUrl(fileName), line, 0));
   cme.populateMenu(&contextMenu);
   contextMenu.exec(ui->messageView->viewport()->mapToGlobal(pos));
 }

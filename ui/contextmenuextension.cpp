@@ -30,62 +30,78 @@
 
 #include <common/objectbroker.h>
 #include <common/probecontrollerinterface.h>
+#include <common/propertymodel.h>
 
 #include <QMenu>
 
 using namespace GammaRay;
+
+namespace {
+QString sourceLocationLabel(ContextMenuExtension::Location location, const SourceLocation &sourceLocation) {
+  switch (location) {
+  case ContextMenuExtension::GoTo:
+    return ContextMenuExtension::tr("Go to: %1").arg(sourceLocation.displayString());
+  case ContextMenuExtension::ShowSource:
+    return ContextMenuExtension::tr("Show source: %1").arg(sourceLocation.displayString());
+  case ContextMenuExtension::Creation:
+    return ContextMenuExtension::tr("Go to creation: %1").arg(sourceLocation.displayString());
+  case ContextMenuExtension::Declaration:
+    return ContextMenuExtension::tr("Go to declaration: %1").arg(sourceLocation.displayString());
+  }
+  Q_ASSERT(false);
+  return QString();
+}
+}
 
 ContextMenuExtension::ContextMenuExtension(ObjectId id)
   : m_id(id)
 {
 }
 
-void ContextMenuExtension::setGoToLocation(const SourceLocation &location)
+void ContextMenuExtension::setLocation(ContextMenuExtension::Location location, const SourceLocation &sourceLocation)
 {
-  m_goToLoc = location;
+  m_locations[location] = sourceLocation;
 }
 
-void ContextMenuExtension::setShowSourceLocation(const SourceLocation &location)
+bool ContextMenuExtension::discoverSourceLocation(ContextMenuExtension::Location location, const QUrl &url)
 {
-  m_sourceLoc = location;
+  if (!UiIntegration::instance())
+    return false;
+
+  if (url.isEmpty())
+    return false;
+
+  setLocation(location, SourceLocation(url, 0));
+  return true;
 }
 
-void ContextMenuExtension::setGoToCreationLocation(const SourceLocation& location)
+bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::Location location, const QModelIndex &index)
 {
-  m_creationLoc = location;
-}
+  if (!UiIntegration::instance())
+    return false;
 
-void ContextMenuExtension::setGoToDeclarationLocation(const SourceLocation& location)
-{
-  m_declarationLoc = location;
+  if (!index.isValid())
+    return false;
+
+  const bool isUrl = index.sibling(index.row(), PropertyModel::TypeColumn).data().toString() == QStringLiteral("QUrl");
+  if (!isUrl)
+    return false;
+
+  return discoverSourceLocation(location, index.sibling(index.row(), PropertyModel::ValueColumn).data().toUrl());
 }
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  if (m_goToLoc.isValid() && UiIntegration::instance()) {
-    auto action = menu->addAction(tr("Go to: %1").arg(m_goToLoc.displayString()));
-    connect(action, &QAction::triggered, [this]() {
-      UiIntegration::requestNavigateToCode(m_goToLoc.url(), m_goToLoc.line(), m_goToLoc.column());
-    });
-  }
-  if (m_sourceLoc.isValid() && UiIntegration::instance()) {
-    auto action = menu->addAction(tr("Show source: %1").arg(m_sourceLoc.displayString()));
-    connect(action, &QAction::triggered, [this]() {
-      UiIntegration::requestNavigateToCode(m_sourceLoc.url(), m_sourceLoc.line(), m_sourceLoc.column());
-    });
-  }
-  if (m_creationLoc.isValid() && UiIntegration::instance()) {
-    auto action = menu->addAction(tr("Go to creation: %1").arg(m_creationLoc.displayString()));
-    connect(action, &QAction::triggered, [this]() {
-      UiIntegration::requestNavigateToCode(m_creationLoc.url(), m_creationLoc.line(), m_creationLoc.column());
-    });
-  }
-  if (m_declarationLoc.isValid() && UiIntegration::instance()) {
-    auto action = menu->addAction(tr("Go to declaration: %1").arg(m_declarationLoc.displayString()));
-    connect(action, &QAction::triggered, [this]() {
-      UiIntegration::requestNavigateToCode(m_declarationLoc.url(), m_declarationLoc.line(), m_declarationLoc.column());
-    });
+  if (UiIntegration::instance()) {
+    for (auto it = m_locations.constBegin(), end = m_locations.constEnd(); it != end; ++it) {
+      if (it.value().isValid()) {
+        auto action = menu->addAction(sourceLocationLabel(it.key(), it.value()));
+        connect(action, &QAction::triggered, this, [it]() {
+          UiIntegration::requestNavigateToCode(it.value().url(), it.value().line(), it.value().column());
+        });
+      }
+    }
   }
 
   if (m_id.isNull())

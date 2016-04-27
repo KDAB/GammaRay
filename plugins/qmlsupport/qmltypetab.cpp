@@ -50,7 +50,7 @@ QmlTypeTab::QmlTypeTab(PropertyWidget *parent)
     ui->typeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->typeView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlTypeModel")));
 
-  connect(ui->typeView, &QWidget::customContextMenuRequested, this, &QmlTypeTab::contextMenu);
+    connect(ui->typeView, &QWidget::customContextMenuRequested, this, &QmlTypeTab::contextMenu);
 
 }
 
@@ -61,20 +61,20 @@ QmlTypeTab::~QmlTypeTab()
 void QmlTypeTab::contextMenu(QPoint pos)
 {
     // TODO share this with PropertiesTab
-    const auto index = ui->typeView->indexAt(pos);
-    if (!index.isValid())
+    const auto idx = ui->typeView->indexAt(pos);
+    if (!idx.isValid())
         return;
 
-    const auto actions = index.data(PropertyModel::ActionRole).toInt();
-    if (actions == PropertyModel::NoAction)
+    const auto actions = idx.data(PropertyModel::ActionRole).toInt();
+    const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+    ContextMenuExtension ext(objectId);
+    const bool canShow = actions != PropertyModel::NoAction ||
+        ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+
+    if (!canShow)
         return;
 
     QMenu contextMenu;
-    if (actions & PropertyModel::NavigateTo) {
-        const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
-        ContextMenuExtension ext(objectId);
-        ext.populateMenu(&contextMenu);
-    }
-
+    ext.populateMenu(&contextMenu);
     contextMenu.exec(ui->typeView->viewport()->mapToGlobal(pos));
 }

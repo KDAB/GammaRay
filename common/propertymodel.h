@@ -53,6 +53,14 @@ namespace PropertyModel {
       Reset = 2,
       NavigateTo = 4
     };
+
+    /** Available columns. */
+    enum Column {
+        PropertyColumn = 0,
+        ValueColumn,
+        TypeColumn,
+        ClassColumn
+    };
 }
 
 }
