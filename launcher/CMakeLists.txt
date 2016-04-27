@@ -16,6 +16,7 @@ set(gammaray_launcher_shared_srcs
   probeabidetector.cpp
   probefinder.cpp
   launchoptions.cpp
+  networkdiscoverymodel.cpp
   clientlauncher.cpp
   launcherfinder.cpp
   launcher.cpp
@@ -82,6 +83,7 @@ gammaray_install_headers(
     probeabi.h
     probeabidetector.h
     probefinder.h
+    networkdiscoverymodel.h
 )
 
 

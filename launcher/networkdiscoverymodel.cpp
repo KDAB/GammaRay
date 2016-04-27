@@ -122,6 +122,10 @@ QVariant NetworkDiscoveryModel::data(const QModelIndex& index, int role) const
     return info.url.host();
   } else if (role == PortRole) {
     return info.url.port();
+  } else if (role == CompatibleRole) {
+    return info.version == Protocol::version();
+  } else if (role == UrlStringRole) {
+    return info.url.toString();
   }
 
   return QVariant();

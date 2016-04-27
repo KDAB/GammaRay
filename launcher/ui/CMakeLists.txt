@@ -5,7 +5,6 @@ set(gammaray_launcher_ui_internal_srcs
   launchpage.cpp
   selftestpage.cpp
   connectpage.cpp
-  networkdiscoverymodel.cpp
   attachdialog.cpp
   processmodel.cpp
   processfiltermodel.cpp

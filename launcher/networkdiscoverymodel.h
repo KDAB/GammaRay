@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_NETWORKDISCOVERYMODEL_H
 #define GAMMARAY_NETWORKDISCOVERYMODEL_H
 
+#include "gammaray_launcher_export.h"
+
 #include <QAbstractItemModel>
 #include <QVector>
 #include <QDateTime>
@@ -39,13 +41,15 @@ class QUdpSocket;
 namespace GammaRay {
 
 /** Lists all active server instances found via network autodiscovery. */
-class NetworkDiscoveryModel : public QAbstractTableModel
+class GAMMARAY_LAUNCHER_EXPORT NetworkDiscoveryModel : public QAbstractTableModel
 {
   Q_OBJECT
 public:
   enum Role {
     HostNameRole = Qt::UserRole + 1,
-    PortRole
+    PortRole,
+    CompatibleRole,
+    UrlStringRole
   };
 
   explicit NetworkDiscoveryModel(QObject* parent);
