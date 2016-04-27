@@ -31,6 +31,7 @@
 #include "messagehandlerclient.h"
 #include "messagedisplaymodel.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 #include <ui/uiintegration.h>
 
@@ -50,6 +51,7 @@
 #include <QApplication>
 #include <QSignalMapper>
 #include <QStringListModel>
+#include <QUrl>
 
 using namespace GammaRay;
 
@@ -186,9 +188,10 @@ void MessageHandlerWidget::messageContextMenu(const QPoint &pos)
   const auto line = index.data(MessageModelRole::Line).toInt();
 
   QMenu contextMenu;
-  contextMenu.addAction(tr("Show source: %1:%2").arg(fileName).arg(line));
-  if (contextMenu.exec(ui->messageView->viewport()->mapToGlobal(pos)))
-    UiIntegration::requestNavigateToCode(fileName, line, 0);
+  ContextMenuExtension cme;
+  cme.setShowSourceLocation(SourceLocation(QUrl(fileName), line, 0));
+  cme.populateMenu(&contextMenu);
+  contextMenu.exec(ui->messageView->viewport()->mapToGlobal(pos));
 }
 
 void MessageHandlerWidget::messageSelected(const QItemSelection& selection)

@@ -32,6 +32,8 @@
 
 #include <QObject>
 
+class QUrl;
+
 namespace GammaRay {
 
 /** @brief Interface for UI plugins to integrate with the client UI.
@@ -52,10 +54,10 @@ public:
      *  The stand-alone client will launch a text editor for this,
      *  if the client is embedded in an IDE it can chose to navigate directly.
      */
-    static void requestNavigateToCode(const QString &filePath, int lineNumber, int columnNumber = 0);
+    static void requestNavigateToCode(const QUrl &url, int lineNumber, int columnNumber = 0);
 
 Q_SIGNALS:
-    void navigateToCode(const QString &filePath, int lineNumber, int columnNumber);
+    void navigateToCode(const QUrl &url, int lineNumber, int columnNumber);
 
 private:
     /** Singleton instance. */

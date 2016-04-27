@@ -232,7 +232,7 @@ MainWindow::MainWindow(QWidget *parent)
   // Initialize UiIntegration singleton
   new UiIntegration(this);
 
-  connect(UiIntegration::instance(), SIGNAL(navigateToCode(QString,int,int)), this, SLOT(navigateToCode(QString,int,int)));
+  connect(UiIntegration::instance(), SIGNAL(navigateToCode(QUrl,int,int)), this, SLOT(navigateToCode(QUrl,int,int)));
 }
 
 MainWindow::~MainWindow()
@@ -356,14 +356,12 @@ void MainWindow::toolSelected()
   ui->actionsMenu->setTitle(mi.data().toString());
 }
 
-void MainWindow::navigateToCode(const QString &filePath, int lineNumber, int columnNumber)
+void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumber)
 {
-  const QUrl url(filePath);
-
   // Show Qt resources in our qrc browser
   if (url.scheme() == "qrc") {
     if (selectTool(QStringLiteral("GammaRay::ResourceBrowser"))) {
-      QMetaObject::invokeMethod(ui->toolStack->currentWidget(), "selectResource", Q_ARG(QString, filePath),
+      QMetaObject::invokeMethod(ui->toolStack->currentWidget(), "selectResource", Q_ARG(QString, url.toString()),
                               Q_ARG(int, lineNumber), Q_ARG(int, columnNumber));
     }
   } else {
@@ -379,9 +377,10 @@ void MainWindow::navigateToCode(const QString &filePath, int lineNumber, int col
     } else if (ideIdx == -1) {
         command = settings.value(QStringLiteral("CustomCommand")).toString();
     } else {
-        QDesktopServices::openUrl(QUrl(filePath));
+        QDesktopServices::openUrl(QUrl(url));
     }
 
+    const QString filePath = url.isLocalFile() || url.isRelative() ? url.toLocalFile() : url.toString();
     command.replace(QStringLiteral("%f"), filePath);
     command.replace(QStringLiteral("%l"), QString::number(std::max(0, lineNumber)));
     command.replace(QStringLiteral("%c"), QString::number(std::max(0, columnNumber)));

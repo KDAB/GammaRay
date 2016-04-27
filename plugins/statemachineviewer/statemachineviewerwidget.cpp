@@ -387,8 +387,8 @@ void StateMachineViewerWidget::objectInspectorContextMenu(QPoint pos)
   const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
   QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
   ContextMenuExtension ext(objectId);
-  ext.setCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
-  ext.setDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+  ext.setGoToCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+  ext.setGoToDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
   ext.populateMenu(&menu);
 
   menu.exec(m_ui->singleStateMachineView->viewport()->mapToGlobal(pos));

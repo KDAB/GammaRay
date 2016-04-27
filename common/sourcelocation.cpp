@@ -28,8 +28,6 @@
 
 #include "sourcelocation.h"
 
-#include <QUrl>
-
 using namespace GammaRay;
 
 SourceLocation::SourceLocation() :
@@ -38,18 +36,11 @@ SourceLocation::SourceLocation() :
 {
 }
 
-SourceLocation::SourceLocation(const QString &fileName, int line, int column) :
-    m_fileName(fileName),
+SourceLocation::SourceLocation(const QUrl &url, int line, int column) :
+    m_url(url),
     m_line(line),
     m_column(column)
 {
-}
-
-SourceLocation::SourceLocation(const QUrl &fileUrl, int line, int column) :
-    m_line(line),
-    m_column(column)
-{
-    setFileName(fileUrl);
 }
 
 SourceLocation::~SourceLocation()
@@ -58,30 +49,17 @@ SourceLocation::~SourceLocation()
 
 bool SourceLocation::isValid() const
 {
-    return !m_fileName.isEmpty();
+    return m_url.isValid();
 }
 
-QString SourceLocation::fileName() const
+QUrl SourceLocation::url() const
 {
-    return m_fileName;
+    return m_url;
 }
 
-void SourceLocation::setFileName(const QString& fileName)
+void SourceLocation::setUrl(const QUrl &url)
 {
-    m_fileName = fileName;
-}
-
-void SourceLocation::setFileName(const QUrl &fileUrl)
-{
-    // Most editors don't understand paths with the file://
-    // scheme, still we need the scheme for anything else
-    // but file (e.g. qrc:/)
-
-    // ### shouldn't this move to just before opening the source editor?
-    if (fileUrl.scheme() == QLatin1String("file"))
-        m_fileName = fileUrl.path();
-    else
-        m_fileName = fileUrl.toString();
+    m_url = url;
 }
 
 int SourceLocation::line() const
@@ -106,29 +84,38 @@ void SourceLocation::setColumn(int column)
 
 QString SourceLocation::displayString() const
 {
-    if (m_fileName.isEmpty())
+    if (m_url.isEmpty())
         return QString();
 
-    if (m_line < 0)
-        return m_fileName;
+    QString result;
 
-    QString result = m_fileName + ':' + QString::number(m_line);
-    if (m_column <= 1)
+    if (m_url.isLocalFile())
+        result = m_url.toLocalFile();
+    else
+        result = m_url.toString();
+
+    if (m_line < 1)
         return result;
-    return result + ':' + QString::number(m_column);
+
+    result += QString::fromLatin1(":%1").arg(m_line);
+
+    if (m_column >= 1)
+        result += QString::fromLatin1(":%1").arg(m_column);
+
+    return result;
 }
 
 QDataStream& GammaRay::operator<<(QDataStream& out, const SourceLocation& location)
 {
-    out << location.fileName();
-    out << location.line();
-    out << location.column();
+    out << location.m_url;
+    out << location.m_line;
+    out << location.m_column;
     return out;
 }
 
 QDataStream& GammaRay::operator>>(QDataStream& in, SourceLocation& location)
 {
-    in >> location.m_fileName;
+    in >> location.m_url;
     in >> location.m_line;
     in >> location.m_column;
     return in;

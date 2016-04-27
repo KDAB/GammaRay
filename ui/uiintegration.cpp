@@ -27,6 +27,8 @@
 
 #include "uiintegration.h"
 
+#include <QUrl>
+
 using namespace GammaRay;
 
 UiIntegration* UiIntegration::s_uiIntegrationInstance = 0;
@@ -48,7 +50,7 @@ UiIntegration * UiIntegration::instance()
     return s_uiIntegrationInstance;
 }
 
-void UiIntegration::requestNavigateToCode(const QString& filePath, int lineNumber, int columnNumber)
+void UiIntegration::requestNavigateToCode(const QUrl& url, int lineNumber, int columnNumber)
 {
-    emit UiIntegration::instance()->navigateToCode(filePath, lineNumber, columnNumber);
+    emit UiIntegration::instance()->navigateToCode(url, lineNumber, columnNumber);
 }

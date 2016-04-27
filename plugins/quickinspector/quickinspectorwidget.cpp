@@ -209,8 +209,8 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint& pos)
 
   const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
   ContextMenuExtension ext(objectId);
-  ext.setCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
-  ext.setDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+  ext.setGoToCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+  ext.setGoToDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
   ext.populateMenu(&contextMenu);
   contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos));
 }
