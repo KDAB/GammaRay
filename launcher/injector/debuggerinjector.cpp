@@ -53,6 +53,16 @@ DebuggerInjector::~DebuggerInjector()
 {
 }
 
+QString DebuggerInjector::filePath() const
+{
+  return m_filePath;
+}
+
+void DebuggerInjector::setFilePath(const QString &debuggerFilePath)
+{
+  m_filePath = debuggerFilePath;
+}
+
 void DebuggerInjector::stop()
 {
   if (m_process) {
@@ -134,7 +144,7 @@ bool DebuggerInjector::startDebugger(const QStringList& args, const QProcessEnvi
   connect(m_process.data(), SIGNAL(finished(int)),
           this, SLOT(processFinished()));
   m_process->setProcessChannelMode(QProcess::SeparateChannels);
-  m_process->start(debuggerExecutable(), args);
+  m_process->start(filePath(), args);
   bool status = m_process->waitForStarted(-1);
 
   if (!status) {
@@ -153,8 +163,8 @@ bool DebuggerInjector::startDebugger(const QStringList& args, const QProcessEnvi
 bool DebuggerInjector::selfTest()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    if (QStandardPaths::findExecutable(debuggerExecutable()).isEmpty()) {
-        mErrorString = tr("The debugger executable '%1' could not be found").arg(debuggerExecutable());
+    if (QStandardPaths::findExecutable(filePath()).isEmpty()) {
+        mErrorString = tr("The debugger executable '%1' could not be found").arg(filePath());
         return false;
     }
 #endif

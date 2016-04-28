@@ -43,17 +43,20 @@ class DebuggerInjector : public AbstractInjector
   public:
     DebuggerInjector();
     ~DebuggerInjector();
+
+    // The debugger executable location
+    QString filePath() const;
+    void setFilePath(const QString &filePath);
+
     void stop() Q_DECL_OVERRIDE;
 
-    bool selfTest() Q_DECL_OVERRIDE;
-
-    QString errorString() Q_DECL_OVERRIDE;
-    int exitCode() Q_DECL_OVERRIDE;
     QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
     QProcess::ProcessError processError() Q_DECL_OVERRIDE;
+    int exitCode() Q_DECL_OVERRIDE;
+    QString errorString() Q_DECL_OVERRIDE;
+    bool selfTest() Q_DECL_OVERRIDE;
 
   protected:
-    virtual QString debuggerExecutable() const = 0;
     /** Execute a raw command on the debugger. */
     virtual void execCmd(const QByteArray &cmd, bool waitForWritten = true);
     /** Turn off confirmations */
@@ -88,6 +91,7 @@ class DebuggerInjector : public AbstractInjector
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
+    QString m_filePath;
     QString mErrorString;
     bool mManualError;
 

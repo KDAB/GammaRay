@@ -45,15 +45,17 @@ namespace GammaRay {
 
 namespace InjectorFactory {
 
-AbstractInjector::Ptr createInjector(const QString &name)
+AbstractInjector::Ptr createInjector(const QString &name, const QString &executableOverride)
 {
 #ifndef Q_OS_WIN
   if (name == QLatin1String("gdb")) {
-    return AbstractInjector::Ptr(new GdbInjector);
+    return AbstractInjector::Ptr(new GdbInjector(executableOverride));
   }
   if (name == QLatin1String("lldb")) {
-    return AbstractInjector::Ptr(new LldbInjector);
+    return AbstractInjector::Ptr(new LldbInjector(executableOverride));
   }
+#else
+  Q_UNUSED(executableOverride);
 #endif
   if (name == QLatin1String("style")) {
     return AbstractInjector::Ptr(new StyleInjector);

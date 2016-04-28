@@ -34,16 +34,13 @@
 
 using namespace GammaRay;
 
-GdbInjector::GdbInjector()
+GdbInjector::GdbInjector(const QString &executableOverride)
+  : DebuggerInjector()
 {
+  setFilePath(executableOverride.isEmpty() ? QStringLiteral("gdb") : executableOverride);
 }
 
 QString GdbInjector::name() const
-{
-  return QStringLiteral("gdb");
-}
-
-QString GdbInjector::debuggerExecutable() const
 {
   return QStringLiteral("gdb");
 }
