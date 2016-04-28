@@ -180,6 +180,18 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFl
   m_stateMachineView = new KDSME::StateMachineView;
   m_ui->horizontalSplitter->addWidget(m_stateMachineView);
 
+  m_stateMachineView->scene()->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(m_stateMachineView->scene(), &KDSME::StateMachineScene::customContextMenuEvent,
+          this, [this](KDSME::AbstractSceneContextMenuEvent* event) {
+    const auto objectId = ObjectId(reinterpret_cast<QObject*>(event->elementUnderCursor()->internalId()));
+    const auto model = objectInspector()->model();
+    const auto matches = model->match(
+      model->index(0, 0), ObjectModel::ObjectIdRole,
+      QVariant::fromValue(objectId), 1,
+      Qt::MatchExactly | Qt::MatchRecursive);
+    showContextMenuForObject(matches.value(0), event->globalPos());
+  });
+
   connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
   connect(m_interface, SIGNAL(stateConfigurationChanged(GammaRay::StateMachineConfiguration)),
           this, SLOT(stateConfigurationChanged(GammaRay::StateMachineConfiguration)));
@@ -214,6 +226,25 @@ StateMachineViewerWidget::~StateMachineViewerWidget()
 {
   saveSettings();
 }
+
+void StateMachineViewerWidget::showContextMenuForObject(const QModelIndex &index, const QPoint& globalPos)
+{
+  if (!index.isValid())
+    return;
+
+  Q_ASSERT(index.model() == objectInspector()->model());
+
+  const auto objectId = index .data(ObjectModel::ObjectIdRole).value<ObjectId>();
+
+  QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+  ContextMenuExtension ext(objectId);
+  ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+  ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+  ext.populateMenu(&menu);
+
+  menu.exec(globalPos);
+}
+
 
 KDSME::StateMachineView *StateMachineViewerWidget::stateMachineView() const
 {
@@ -384,14 +415,8 @@ void StateMachineViewerWidget::objectInspectorContextMenu(QPoint pos)
   if (!index.isValid())
       return;
 
-  const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
-  QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
-  ContextMenuExtension ext(objectId);
-  ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
-  ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
-  ext.populateMenu(&menu);
-
-  menu.exec(m_ui->singleStateMachineView->viewport()->mapToGlobal(pos));
+  const auto globalPos = m_ui->singleStateMachineView->viewport()->mapToGlobal(pos);
+  showContextMenuForObject(index, globalPos);
 }
 
 void StateMachineViewerWidget::setShowLog(bool show)

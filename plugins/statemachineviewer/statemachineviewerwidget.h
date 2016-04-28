@@ -81,6 +81,9 @@ private slots:
   void objectInspectorContextMenu(QPoint pos);
 
 private:
+  /// Show context menu for index @p index (a object inspector model index) at pos @p pos
+  void showContextMenuForObject(const QModelIndex& index, const QPoint& pos);
+
   void loadSettings();
   void saveSettings();
 
