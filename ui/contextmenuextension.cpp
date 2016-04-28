@@ -115,7 +115,7 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
           menu, [menu](ObjectId id, const ToolInfos &toolInfos) {
     foreach (const auto &toolInfo, toolInfos) {
       auto action = menu->addAction(QObject::tr("Show in \"%1\" tool").arg(toolInfo.name));
-      QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
+      connect(action, &QAction::triggered, [id, toolInfo]() {
         auto probeController = ObjectBroker::object<ProbeControllerInterface*>();
         probeController->selectObject(id, toolInfo.id);
       });
