@@ -102,20 +102,21 @@ static void usage(const char *argv0)
   out << "  state machines, meta types, fonts, codecs, text documents" << endl;
   out << "" << endl;
   out << "Options:" << endl;
-  out << " -i, --injector <injector>  \tset injection type, possible values:" << endl;
-  out << "                            \t" << InjectorFactory::availableInjectors().join(QStringLiteral(", "))
+  out << " -i, --injector <injector>           \tset injection type, possible values:" << endl;
+  out << "                                     \t" << InjectorFactory::availableInjectors().join(QStringLiteral(", "))
       << endl;
-  out << " -p, --pid <pid>            \tattach to running Qt application" << endl;
-  out << "     --inprocess            \tuse in-process UI" << endl;
-  out << "     --inject-only          \tonly inject the probe, don't show the UI" << endl;
-  out << "     --listen <address>     \tspecify the address the server should listen on [default: " << GAMMARAY_DEFAULT_ANY_TCP_URL << "]" << endl;
-  out << "     --no-listen            \tdisables remote access entirely (implies --inprocess)" << endl;
-  out << "     --list-probes          \tlist all installed probes" << endl;
-  out << "     --probe <abi>          \tspecify which probe to use" << endl;
-  out << "     --connect <host>[:port]\tconnect to an already injected target" << endl;
-  out << "     --self-test [injector] \trun self tests, of everything or the specified injector" << endl;
-  out << " -h, --help                 \tprint program help and exit" << endl;
-  out << " -v, --version              \tprint program version and exit" << endl;
+  out << " -o, --injector-override <executable>\tOverride the injector executable if handled (requires -i/--injector)" << endl;
+  out << " -p, --pid <pid>                     \tattach to running Qt application" << endl;
+  out << "     --inprocess                     \tuse in-process UI" << endl;
+  out << "     --inject-only                   \tonly inject the probe, don't show the UI" << endl;
+  out << "     --listen <address>              \tspecify the address the server should listen on [default: " << GAMMARAY_DEFAULT_ANY_TCP_URL << "]" << endl;
+  out << "     --no-listen                     \tdisables remote access entirely (implies --inprocess)" << endl;
+  out << "     --list-probes                   \tlist all installed probes" << endl;
+  out << "     --probe <abi>                   \tspecify which probe to use" << endl;
+  out << "     --connect <host>[:port]         \tconnect to an already injected target" << endl;
+  out << "     --self-test [injector]          \trun self tests, of everything or the specified injector" << endl;
+  out << " -h, --help                          \tprint program help and exit" << endl;
+  out << " -v, --version                       \tprint program version and exit" << endl;
 #ifdef HAVE_QT_WIDGETS
   out << endl
       << "When run without any options, " << argv0 << " will present a list of running\n"
@@ -187,6 +188,10 @@ int main(int argc, char **argv)
     if ((arg == QLatin1String("-i") || arg == QLatin1String("--injector")) && !args.isEmpty()) {
       options.setInjectorType(args.takeFirst());
       continue;
+    }
+    if ((arg == QLatin1String("-o") || arg == QLatin1String("--injector-override")) && !args.isEmpty()) {
+        options.setInjectorTypeExecutableOverride(args.takeFirst());
+        continue;
     }
     if ((arg == QLatin1String("-p") || arg == QLatin1String("--pid")) && !args.isEmpty()) {
       options.setPid( args.takeFirst().toInt() );

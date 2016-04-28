@@ -49,6 +49,7 @@ public:
 
     QStringList launchArguments;
     QString injectorType;
+    QString injectorTypeExecutableOverride;
     ProbeABI probeABI;
     int pid;
     LaunchOptions::UiMode uiMode;
@@ -155,6 +156,16 @@ QString LaunchOptions::injectorType() const
 void LaunchOptions::setInjectorType(const QString& injectorType)
 {
   d->injectorType = injectorType;
+}
+
+QString LaunchOptions::injectorTypeExecutableOverride() const
+{
+  return d->injectorTypeExecutableOverride;
+}
+
+void LaunchOptions::setInjectorTypeExecutableOverride(const QString &filePath)
+{
+  d->injectorTypeExecutableOverride = filePath;
 }
 
 ProbeABI LaunchOptions::probeABI() const

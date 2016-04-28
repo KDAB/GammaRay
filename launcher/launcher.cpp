@@ -76,7 +76,7 @@ struct LauncherPrivate
         return InjectorFactory::defaultInjectorForLaunch(options.probeABI());
       }
     }
-    return InjectorFactory::createInjector(options.injectorType());
+    return InjectorFactory::createInjector(options.injectorType(), options.injectorTypeExecutableOverride());
   }
 
   LaunchOptions options;

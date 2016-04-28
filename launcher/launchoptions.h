@@ -91,6 +91,10 @@ public:
   QString injectorType() const;
   void setInjectorType(const QString &injectorType);
 
+  /** Injector executable override. */
+  QString injectorTypeExecutableOverride() const;
+  void setInjectorTypeExecutableOverride(const QString &filePath);
+
   /** Probe ABI. */
   ProbeABI probeABI() const;
   void setProbeABI(const ProbeABI &abi);

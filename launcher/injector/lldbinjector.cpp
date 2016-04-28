@@ -32,8 +32,10 @@
 
 using namespace GammaRay;
 
-LldbInjector::LldbInjector()
+LldbInjector::LldbInjector(const QString &executableOverride)
+  : DebuggerInjector()
 {
+  setFilePath(executableOverride.isEmpty() ? QStringLiteral("lldb") : executableOverride);
 }
 
 bool LldbInjector::selfTest()
@@ -44,7 +46,7 @@ bool LldbInjector::selfTest()
   QProcess process;
 
   process.setProcessChannelMode(QProcess::MergedChannels);
-  process.start(debuggerExecutable(), QStringList(QStringLiteral("--version")));
+  process.start(filePath(), QStringList(QStringLiteral("--version")));
 
   if (process.waitForStarted(-1)) {
     if (process.waitForFinished(-1)) {
@@ -82,11 +84,6 @@ bool LldbInjector::selfTest()
 }
 
 QString LldbInjector::name() const
-{
-  return QStringLiteral("lldb");
-}
-
-QString LldbInjector::debuggerExecutable() const
 {
   return QStringLiteral("lldb");
 }
