@@ -79,6 +79,8 @@ public slots:
 protected:
   bool eventFilter(QObject *object, QEvent *event);
 
+  QString widgetName(QWidget *widget) const;
+  QString widgetPath(QWidget *widget) const;
   QString widgetGeometryKey(QWidget *widget) const;
   QString widgetStateKey(QWidget *widget) const;
   bool checkWidget(QWidget *widget) const;

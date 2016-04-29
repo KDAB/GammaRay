@@ -61,8 +61,8 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget* parent)
 
     ui->replayWidget->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
 
-    ui->splitter->setStretchFactor(0, 0);
-    ui->splitter->setStretchFactor(1, 1);
+    ui->paintAnalyzerSplitter->setStretchFactor(0, 0);
+    ui->paintAnalyzerSplitter->setStretchFactor(1, 1);
 
     connect(zoom, SIGNAL(currentIndexChanged(int)), ui->replayWidget, SLOT(setZoomLevel(int)));
     connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));

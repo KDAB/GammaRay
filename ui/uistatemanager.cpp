@@ -111,21 +111,21 @@ void UIStateManager::setup()
   }
 
   m_initialized = true;
-  m_stateSettings->beginGroup(QString::fromLatin1("UiState/%1").arg(m_widget->objectName()));
+  m_stateSettings->beginGroup(QString::fromLatin1("UiState/%1").arg(widgetName(m_widget)));
 
   // Make sure objects names are unique.
   // Also make the comparison lower case as some QSettings implementations
   // are case sensitive.
   QSet<QString> knownNames;
 
-  knownNames << m_widget->objectName().toLower();
+  knownNames << widgetPath(m_widget);
 
   foreach (QSplitter *splitter, splitters()) {
     if (!checkWidget(splitter)) {
       continue;
     }
 
-    const QString name = splitter->objectName().toLower();
+    const QString name = widgetPath(splitter);
 
     if (knownNames.contains(name)) {
       qWarning() << Q_FUNC_INFO << "Duplicate widget name" << name << "in widget" << m_widget;
@@ -142,7 +142,7 @@ void UIStateManager::setup()
       continue;
     }
 
-    const QString name = header->objectName().toLower();
+    const QString name = widgetPath(header);
 
     if (knownNames.contains(name)) {
       qWarning() << Q_FUNC_INFO << "Duplicate widget name" << name << "in widget" << m_widget;
@@ -205,27 +205,47 @@ bool UIStateManager::eventFilter(QObject *object, QEvent *event)
   return result;
 }
 
+QString UIStateManager::widgetName(QWidget *widget) const
+{
+    return (widget->objectName().isEmpty()
+            ? QString::fromLatin1(widget->metaObject()->className())
+            : widget->objectName()).toLower();
+}
+
+QString UIStateManager::widgetPath(QWidget *widget) const
+{
+    QStringList path(widgetName(widget));
+    if (widget != m_widget) {
+        QWidget *parent = widget->parentWidget();
+        while (parent && parent != m_widget) {
+            path.prepend(widgetName(parent));
+            parent = parent->parentWidget();
+        }
+    }
+    return path.join(QLatin1Char('-'));
+}
+
 UISizeVector UIStateManager::defaultSizes(QSplitter *splitter) const
 {
-  return checkWidget(splitter) ? m_defaultSplitterSizes.value(splitter->objectName()) : UISizeVector();
+  return checkWidget(splitter) ? m_defaultSplitterSizes.value(widgetPath(splitter)) : UISizeVector();
 }
 
 void UIStateManager::setDefaultSizes(QSplitter *splitter, const UISizeVector &defaultSizes)
 {
   if (checkWidget(splitter)) {
-    m_defaultSplitterSizes[splitter->objectName()] = defaultSizes;
+    m_defaultSplitterSizes[widgetPath(splitter)] = defaultSizes;
   }
 }
 
 UISizeVector UIStateManager::defaultSizes(QHeaderView *header) const
 {
-  return checkWidget(header) ? m_defaultHeaderSizes.value(header->objectName()) : UISizeVector();
+  return checkWidget(header) ? m_defaultHeaderSizes.value(widgetPath(header)) : UISizeVector();
 }
 
 void UIStateManager::setDefaultSizes(QHeaderView *header, const UISizeVector &defaultSizes)
 {
   if (checkWidget(header)) {
-    m_defaultHeaderSizes[header->objectName()] = defaultSizes;
+    m_defaultHeaderSizes[widgetPath(header)] = defaultSizes;
   }
 }
 
@@ -238,18 +258,18 @@ void UIStateManager::reset()
 
 QString UIStateManager::widgetGeometryKey(QWidget *widget) const
 {
-  return QString::fromLatin1("%1Geometry").arg(widget->objectName());
+  return QString::fromLatin1("%1Geometry").arg(widgetPath(widget));
 }
 
 QString UIStateManager::widgetStateKey(QWidget *widget) const
 {
-  return QString::fromLatin1("%1State").arg(widget->objectName());
+  return QString::fromLatin1("%1State").arg(widgetPath(widget));
 }
 
 bool UIStateManager::checkWidget(QWidget *widget) const
 {
   if (widget->objectName().isEmpty()) {
-    qWarning() << Q_FUNC_INFO << "Widget with no name" << widget << "in widget" << m_widget;
+    qWarning() << Q_FUNC_INFO << "Widget with no name" << widget << widgetPath(widget) << "in widget" << m_widget;
     return false;
   }
 
