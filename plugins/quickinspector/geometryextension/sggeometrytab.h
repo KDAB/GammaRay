@@ -29,8 +29,6 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_SGGEOMETRYTAB_H
 #define GAMMARAY_QUICKINSPECTOR_SGGEOMETRYTAB_H
 
-#include <ui/uistatemanager.h>
-
 #include <QWidget>
 #include <QModelIndex>
 
@@ -56,7 +54,6 @@ class SGGeometryTab : public QWidget
 
   private:
     Ui_SGGeometryTab *m_ui;
-    UIStateManager m_stateManager;
     SGGeometryExtensionInterface *m_interface;
     QAbstractItemModel *m_model;
 };

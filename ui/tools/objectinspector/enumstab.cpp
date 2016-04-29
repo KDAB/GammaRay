@@ -42,7 +42,6 @@ using namespace GammaRay;
 EnumsTab::EnumsTab(PropertyWidget *parent)
   : QWidget(parent)
   , m_ui(new Ui_EnumsTab)
-  , m_stateManager(this)
 {
   m_ui->setupUi(this);
   m_ui->enumView->header()->setObjectName("enumViewHeader");
