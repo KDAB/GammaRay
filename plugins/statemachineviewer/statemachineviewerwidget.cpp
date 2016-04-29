@@ -262,6 +262,10 @@ void StateMachineViewerWidget::loadSettings()
   QSettings settings;
   settings.beginGroup("Plugin_StateMachineViewer");
   m_stateMachineView->setThemeName(settings.value("ThemeName", "SystemTheme").toString());
+
+  // session-specific settings, we should probably save them on a per-target basis
+  m_stateMachineView->scene()->setMaximumDepth(settings.value("MaximumDepth", 3).toInt());
+
   settings.endGroup();
   settings.sync();
 }
@@ -271,6 +275,9 @@ void StateMachineViewerWidget::saveSettings()
   QSettings settings;
   settings.beginGroup("Plugin_StateMachineViewer");
   settings.setValue("ThemeName", m_stateMachineView->themeName());
+
+  settings.setValue("MaximumDepth", m_stateMachineView->scene()->maximumDepth());
+
   settings.endGroup();
   settings.sync();
 }
