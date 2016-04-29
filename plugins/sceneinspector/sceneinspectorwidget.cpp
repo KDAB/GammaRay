@@ -125,6 +125,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
   m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
   m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
+  connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+
   // limit fps to prevent bad performance, and to group update requests which is esp. required
   // for scrolling and similar high-frequency update requests
   m_updateTimer->setSingleShot(true);

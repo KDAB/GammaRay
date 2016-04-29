@@ -32,6 +32,8 @@
 #include "common/objectbroker.h"
 #include "common/propertycontrollerinterface.h"
 
+#include <QTimer>
+
 #include <algorithm>
 
 using namespace GammaRay;
@@ -41,11 +43,15 @@ QVector<PropertyWidget*> PropertyWidget::s_propertyWidgets;
 
 PropertyWidget::PropertyWidget(QWidget *parent) :
     QTabWidget(parent),
+    m_tabsUpdatedTimer(new QTimer(this)),
     m_lastManuallySelectedWidget(Q_NULLPTR),
     m_controller(0)
 {
+    m_tabsUpdatedTimer->setInterval(100);
+    m_tabsUpdatedTimer->setSingleShot(true);
     s_propertyWidgets.push_back(this);
     connect(this, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged()));
+    connect(m_tabsUpdatedTimer, SIGNAL(timeout()), this, SIGNAL(tabsUpdated()));
 }
 
 PropertyWidget::~PropertyWidget()
@@ -139,6 +145,7 @@ void PropertyWidget::updateShownTabs()
     // changed as a result of the reording above
     m_lastManuallySelectedWidget = prevManuallySelected;
     setUpdatesEnabled(true);
+    m_tabsUpdatedTimer->start(); // use a timer to group chained registrations.
 }
 
 bool PropertyWidget::extensionAvailable(PropertyWidgetTabFactoryBase* factory) const

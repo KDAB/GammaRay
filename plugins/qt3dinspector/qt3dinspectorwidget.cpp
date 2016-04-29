@@ -79,6 +79,8 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent)
     ui->frameGraphNodePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"));
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, ui->stack, &QStackedWidget::setCurrentIndex);
+    connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(ui->frameGraphNodePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 }
 
 Qt3DInspectorWidget::~Qt3DInspectorWidget()
