@@ -96,8 +96,8 @@ void Qt3DInspectorWidget::entityContextMenu(QPoint pos)
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
-    ext.setCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
-    ext.setDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);
 
     menu.exec(ui->sceneTreeView->viewport()->mapToGlobal(pos));
@@ -112,8 +112,8 @@ void Qt3DInspectorWidget::frameGraphContextMenu(QPoint pos)
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     QMenu menu(tr("Frame Graph Node @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
-    ext.setCreationLocation(index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
-    ext.setDeclarationLocation(index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);
 
     menu.exec(ui->frameGraphView->viewport()->mapToGlobal(pos));
