@@ -48,7 +48,6 @@ using namespace GammaRay;
 MethodsTab::MethodsTab(PropertyWidget *parent)
   : QWidget(parent)
   , m_ui(new Ui_MethodsTab)
-  , m_stateManager(this)
   , m_interface(0)
 {
   m_ui->setupUi(this);

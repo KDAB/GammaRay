@@ -38,7 +38,6 @@ using namespace GammaRay;
 MaterialTab::MaterialTab(PropertyWidget *parent)
   : QWidget(parent)
   , m_ui(new Ui_MaterialTab)
-  , m_stateManager(this)
   , m_interface(0)
 {
   m_ui->setupUi(this);

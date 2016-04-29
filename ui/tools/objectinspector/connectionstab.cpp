@@ -45,7 +45,6 @@ using namespace GammaRay;
 ConnectionsTab::ConnectionsTab(PropertyWidget* parent)
   : QWidget(parent)
   , ui(new Ui::ConnectionsTab)
-  , m_stateManager(this)
 {
   m_interface = ObjectBroker::object<ConnectionsExtensionInterface*>(parent->objectBaseName() + ".connectionsExtension");
 

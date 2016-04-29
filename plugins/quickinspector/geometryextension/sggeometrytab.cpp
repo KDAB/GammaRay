@@ -39,7 +39,6 @@ using namespace GammaRay;
 SGGeometryTab::SGGeometryTab(PropertyWidget *parent)
   : QWidget(parent)
   , m_ui(new Ui_SGGeometryTab)
-  , m_stateManager(this)
   , m_interface(0)
   , m_model(0)
 {

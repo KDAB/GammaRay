@@ -29,8 +29,6 @@
 #ifndef CLASSINFOTAB_H
 #define CLASSINFOTAB_H
 
-#include <ui/uistatemanager.h>
-
 #include <QWidget>
 
 namespace GammaRay {
@@ -50,7 +48,6 @@ private:
 
 private:
   Ui_ClassInfoTab *m_ui;
-  UIStateManager m_stateManager;
 };
 
 }

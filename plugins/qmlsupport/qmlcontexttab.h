@@ -30,7 +30,6 @@
 #define GAMMARAY_QMLCONTEXTTAB_H
 
 #include <ui/propertywidget.h>
-#include <ui/uistatemanager.h>
 
 #include <QScopedPointer>
 
@@ -52,7 +51,6 @@ private:
     void contextContextMenu(QPoint pos);
     void propertiesContextMenu(QPoint pos);
     QScopedPointer<Ui::QmlContextTab> ui;
-    UIStateManager m_stateManager;
 };
 }
 

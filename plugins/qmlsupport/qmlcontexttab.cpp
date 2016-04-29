@@ -45,7 +45,6 @@ using namespace GammaRay;
 QmlContextTab::QmlContextTab(PropertyWidget *parent)
   : QWidget(parent)
   , ui(new Ui::QmlContextTab)
-  , m_stateManager(this)
 {
     ui->setupUi(this);
 
