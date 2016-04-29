@@ -28,7 +28,7 @@
 #include "functioncalltimer.h"
 
 #ifdef Q_OS_WIN
-#include <Windows.h>
+#include <qt_windows.h>
 #endif
 
 #if defined(Q_OS_MAC) && defined(__MACH__)

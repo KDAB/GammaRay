@@ -33,7 +33,7 @@
 
 #include <qglobal.h>
 #include <QStringList>
-#include <windows.h>
+#include <qt_windows.h>
 
 namespace GammaRay {
 class FinishWaiter;

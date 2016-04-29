@@ -32,7 +32,6 @@
 #include <QDebug>
 #include <QThread>
 
-#include <windows.h>
 #include <cstdlib>
 
 namespace GammaRay {

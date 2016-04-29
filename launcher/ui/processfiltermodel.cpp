@@ -32,7 +32,7 @@
 #include <QCoreApplication>
 
 #if defined(Q_OS_WIN)
-#include <windows.h>
+#include <qt_windows.h>
 #include <lmcons.h>
 static QString qGetLogin() {
   char winUserName[UNLEN + 1]; // UNLEN is defined in LMCONS.H

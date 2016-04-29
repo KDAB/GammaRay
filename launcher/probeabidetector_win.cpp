@@ -39,7 +39,7 @@
 #include <QString>
 #include <QStringList>
 
-#include <windows.h>
+#include <qt_windows.h>
 #include <tlhelp32.h>
 
 using namespace GammaRay;

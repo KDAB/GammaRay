@@ -34,7 +34,7 @@
 #define NOMINMAX
 #endif
 
-#include <Windows.h>
+#include <qt_windows.h>
 #endif
 
 #include <QCoreApplication>

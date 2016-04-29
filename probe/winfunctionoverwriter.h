@@ -30,7 +30,7 @@
 #include <QtGlobal>
 
 #include "abstractfunctionoverwriter.h"
-#include <Windows.h>
+#include <qt_windows.h>
 
 namespace GammaRay {
 

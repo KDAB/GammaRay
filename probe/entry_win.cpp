@@ -30,7 +30,7 @@
 
 #include <core/probe.h>
 
-#include <windows.h>
+#include <qt_windows.h>
 
 using namespace GammaRay;
 
