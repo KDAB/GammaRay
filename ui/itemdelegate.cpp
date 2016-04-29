@@ -36,7 +36,28 @@ using namespace GammaRay;
 
 ItemDelegate::ItemDelegate(QObject *parent)
   : QStyledItemDelegate(parent)
+  , m_placeholderText(tr("(Item %r)"))
 {
+}
+
+QString ItemDelegate::placeholderText() const
+{
+    return m_placeholderText;
+}
+
+void ItemDelegate::setPlaceholderText(const QString &placeholderText)
+{
+    m_placeholderText = placeholderText;
+}
+
+QSet<int> ItemDelegate::placeholderColumns() const
+{
+    return m_placeholderColumns;
+}
+
+void ItemDelegate::setPlaceholderColumns(const QSet<int> &placeholderColumns)
+{
+    m_placeholderColumns = placeholderColumns;
 }
 
 void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -56,6 +77,10 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 
 QString ItemDelegate::defaultDisplayText(const QModelIndex &index) const
 {
-    const QString display = index.data().toString();
-    return display.isEmpty() ? tr("(Item %1)").arg(index.row()) : display;
+    QString display = index.data().toString();
+    if (display.isEmpty() && (m_placeholderColumns.isEmpty() || m_placeholderColumns.contains(index.column())))
+        display = QString(m_placeholderText)
+                .replace(QStringLiteral("%r"), QString::number(index.row()))
+                .replace(QStringLiteral("%c"), QString::number(index.column()));
+    return display;
 }

@@ -31,6 +31,7 @@
 #include "gammaray_ui_export.h"
 
 #include <QStyledItemDelegate>
+#include <QSet>
 
 namespace GammaRay {
 
@@ -44,10 +45,22 @@ class GAMMARAY_UI_EXPORT ItemDelegate : public QStyledItemDelegate
 public:
   ItemDelegate(QObject *parent = 0);
 
+  // You can put 2 placeholders for row/column using %r and %c
+  QString placeholderText() const;
+  void setPlaceholderText(const QString &placeholderText);
+
+  // which columns do show place holders, default all (empty)
+  QSet<int> placeholderColumns() const;
+  void setPlaceholderColumns(const QSet<int> &placeholderColumns);
+
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
   QString defaultDisplayText(const QModelIndex &index) const;
+
+private:
+  QString m_placeholderText;
+  QSet<int> m_placeholderColumns;
 };
 
 } // Namespace GammaRay
