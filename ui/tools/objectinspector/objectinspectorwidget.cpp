@@ -75,9 +75,10 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
 
   connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)),
           this, SLOT(objectContextMenuRequested(QPoint)));
-  connect(ui->objectPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 
   m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%" << "40%");
+
+  connect(ui->objectPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 }
 
 ObjectInspectorWidget::~ObjectInspectorWidget()

@@ -40,6 +40,7 @@
 class QAbstractItemModel;
 class QAbstractItemView;
 class QModelIndex;
+class QTimer;
 
 namespace GammaRay {
 
@@ -85,6 +86,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
   private:
     QString m_objectBaseName;
 
+    QTimer *m_tabsUpdatedTimer;
     QWidget *m_lastManuallySelectedWidget;
 
     struct PageInfo {

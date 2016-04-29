@@ -78,6 +78,8 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
   QHBoxLayout *hbox = new QHBoxLayout(this);
   hbox->addLayout(vbox);
   hbox->addWidget(propertyWidget);
+
+  connect(m_propertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 }
 
 void MetaObjectBrowserWidget::selectionChanged(const QItemSelection& selection)
