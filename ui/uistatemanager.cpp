@@ -222,7 +222,7 @@ QString UIStateManager::widgetPath(QWidget *widget) const
             parent = parent->parentWidget();
         }
     }
-    return path.join(QLatin1Char('-'));
+    return path.join(QLatin1String("-"));
 }
 
 UISizeVector UIStateManager::defaultSizes(QSplitter *splitter) const
