@@ -91,7 +91,8 @@ void ModelCellModel::setModelIndex(const QModelIndex &index)
         }
       }
       if (!roleFound) {
-        m_roles.push_back(qMakePair(it.key(), QString::fromLatin1(it.value())));
+        const QString name = it.value().isEmpty() ? tr("Role #%1").arg(it.key()) : QString::fromLatin1(it.value());
+        m_roles.push_back(qMakePair(it.key(), name));
       }
     }
 
