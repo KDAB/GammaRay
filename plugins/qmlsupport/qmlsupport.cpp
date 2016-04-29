@@ -53,15 +53,44 @@
 #include <QQmlError>
 #include <QQmlListProperty>
 
+#include <private/qjsvalue_p.h>
 #include <private/qqmlmetatype_p.h>
 #include <private/qqmldata_p.h>
 #include <private/qqmlcompiler_p.h>
 #include <private/qqmlcontext_p.h>
 #include <private/qqmlscriptstring_p.h>
+#include <private/qv8engine_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
 using namespace GammaRay;
+
+static QString metaMethodToString(const QObject *object, const QMetaMethod &method)
+{
+  return QStringLiteral("%1 bound on %2").arg(method.methodSignature(), Util::displayString(object));
+}
+
+static QString callableQjsValueToString(const QJSValue &v)
+{
+#ifndef QT_DEPRECATED
+  Q_UNUSED(v);
+  return QStringLiteral("<callable>");
+#else
+  // note: QJSValue::engine() is deprecated
+  QV4::ExecutionEngine *jsEngine = QV8Engine::getV4(v.engine());
+  QV4::Scope scope(jsEngine);
+
+  QV4::Scoped<QV4::QObjectMethod> qobjectMethod(scope, QJSValuePrivate::convertedToValue(jsEngine, v));
+  if (!qobjectMethod) {
+    return QStringLiteral("<callable>");
+  }
+
+  QObject *sender = qobjectMethod->object();
+  Q_ASSERT(sender);
+  QMetaMethod metaMethod = sender->metaObject()->method(qobjectMethod->methodIndex());
+  return metaMethodToString(sender, metaMethod);
+#endif
+}
 
 static QString qmlErrorToString(const QQmlError &error)
 {
@@ -92,7 +121,7 @@ static QString qjsValueToString(const QJSValue &v)
   } else if (v.isBool()) {
     return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
   } else if (v.isCallable()) {
-    return QStringLiteral("<callable>");
+    return callableQjsValueToString(v);
   } else if (v.isDate()) {
     return v.toDateTime().toString();
   } else if (v.isError()) {
