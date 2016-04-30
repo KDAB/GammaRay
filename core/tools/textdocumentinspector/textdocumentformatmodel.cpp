@@ -69,7 +69,10 @@ int TextDocumentFormatModel::columnCount(const QModelIndex &parent) const
 
 QVariant TextDocumentFormatModel::data(const QModelIndex &index, int role) const
 {
-  if (role == Qt::DisplayRole && index.isValid()) {
+  if (!index.isValid())
+    return QVariant();
+
+  if (role == Qt::DisplayRole) {
     const int enumValue = propertyEnum().value(index.row());
     switch (index.column()) {
     case 0:
@@ -80,6 +83,11 @@ QVariant TextDocumentFormatModel::data(const QModelIndex &index, int role) const
       return QString::fromLatin1(m_format.property(enumValue).typeName());
     }
   }
+  else if (role == Qt::DecorationRole && index.column() == 1) {
+    const int enumValue = propertyEnum().value(index.row());
+    return VariantHandler::decoration(m_format.property(enumValue));
+  }
+
   return QVariant();
 }
 
