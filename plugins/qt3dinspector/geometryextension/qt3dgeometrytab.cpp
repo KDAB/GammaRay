@@ -34,12 +34,13 @@
 #include <ui/propertywidget.h>
 #include <common/objectbroker.h>
 
+#include <Qt3DExtras/QForwardRenderer>
+
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QFilterKey>
-#include <Qt3DRender/QForwardRenderer>
 #include <Qt3DRender/QGeometryRenderer>
 #include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QMaterial>
@@ -112,7 +113,7 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     resetCamera();
 
     // rendering
-    auto forwardRenderer = new Qt3DRender::QForwardRenderer;
+    auto forwardRenderer = new Qt3DExtras::QForwardRenderer;
     forwardRenderer->setClearColor(Qt::black);
     forwardRenderer->setCamera(m_camera);
     forwardRenderer->setSurface(m_surface);

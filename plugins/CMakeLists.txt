@@ -42,9 +42,6 @@ if(Qt5Positioning_FOUND)
   add_subdirectory(positioning)
 endif()
 
-if(Qt53DRender_FOUND)
-  # The qt3d inspector is broken before 5.7
-  if (NOT Qt5Core_VERSION VERSION_LESS 5.7)
-    add_subdirectory(qt3dinspector)
-  endif()
+if(Qt53DRender_FOUND AND Qt53DExtras_FOUND)
+  add_subdirectory(qt3dinspector)
 endif()
