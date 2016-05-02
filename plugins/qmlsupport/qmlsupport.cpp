@@ -119,7 +119,8 @@ static QString qjsValueToString(const QJSValue &v)
 
 static QString qqmlScriptStringToString(const QQmlScriptString &v)
 {
-    auto scriptStringPriv = QQmlScriptStringPrivate::get(v);
+    // QQmlScriptStringPrivate::get is not guaranteed to be exported, inline
+    auto scriptStringPriv = reinterpret_cast<const QSharedDataPointer<QQmlScriptStringPrivate> *>(&v)->constData();
     return scriptStringPriv->script;
 }
 
