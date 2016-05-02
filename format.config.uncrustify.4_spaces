@@ -107,8 +107,10 @@ indent_class                             = true    # false/true
 # Whether to indent the stuff after a leading class colon
 indent_class_colon                       = false    # false/true
 
+indent_constr_colon = true
+
 # Virtual indent from the ':' for member initializers. Default is 2
-indent_ctor_init_leading                 = 2        # number
+indent_ctor_init_leading                 = 0        # number
 
 # Additional indenting for constructor initializer list
 indent_ctor_init                         = 0        # number
@@ -911,7 +913,7 @@ nl_enum_leave_one_liners                 = false    # false/true
 nl_getset_leave_one_liners               = false    # false/true
 
 # Don't split one-line function definitions - 'int foo() { return 0; }'
-nl_func_leave_one_liners                 = false    # false/true
+nl_func_leave_one_liners                 = true    # false/true
 
 # Don't split one-line C++11 lambdas - '[]() { return 0; }'
 nl_cpp_lambda_leave_one_liners           = false    # false/true
@@ -1271,8 +1273,8 @@ pos_class_comma                          = trail   # ignore/join/lead/lead_break
 # The position of colons between constructor and member initialization
 pos_class_colon                          = lead   # ignore/join/lead/lead_break/lead_force/trail/trail_break/trail_force
 
-pos_constr_comma = trail
-pos_constr_colon = trail
+pos_constr_comma = lead
+pos_constr_colon = lead
 
 #
 # Line Splitting options
@@ -1385,6 +1387,8 @@ nl_after_annotation                      = ignore   # ignore/add/remove/force
 
 # Controls the newline between two annotations.
 nl_between_annotation                    = ignore   # ignore/add/remove/force
+
+nl_constr_colon = add
 
 #
 # Code modifying options (non-whitespace)
