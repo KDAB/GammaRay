@@ -63,7 +63,7 @@ elseif(WIN32)
   endif()
 endif()
 
-foreach (injectorType ${INJECTOR_TYPES})
+foreach(injectorType ${INJECTOR_TYPES})
   add_test(connectiontest-${injectorType}
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${injectorType}
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
@@ -167,14 +167,21 @@ target_link_libraries(multithreadingtest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME multithreadingtest COMMAND multithreadingtest)
 
 ### QTranslator test
-add_executable(translatortest
-  translatortest.cpp
-  ../probe/probecreator.cpp
-  ../probe/hooks.cpp
+#does not work unless the translations are installed in QT_INSTALL_TRANSLATIONS
+get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+exec_program(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_INSTALL_TRANSLATIONS" OUTPUT_VARIABLE QIT)
+if(EXISTS "${QIT}/qtbase_de.qm")
+  add_executable(translatortest
+    translatortest.cpp
+    ../probe/probecreator.cpp
+    ../probe/hooks.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
-)
-target_link_libraries(translatortest gammaray_core ${QT_QTTEST_LIBRARIES})
-add_test(NAME translatortest COMMAND translatortest)
+  )
+  target_link_libraries(translatortest gammaray_core ${QT_QTTEST_LIBRARIES})
+  add_test(NAME translatortest COMMAND translatortest)
+else()
+  message(STATUS "WARNING: Skipping the translatortest since the translations are not installed.")
+endif()
 
 endif()
 
@@ -281,6 +288,5 @@ add_executable(quickinspectortest ${quickinspectortest_srcs})
 target_link_libraries(quickinspectortest gammaray_core Qt5::Test Qt5::Quick)
 add_test(NAME quickinspectortest COMMAND quickinspectortest)
 endif()
-
 
 add_subdirectory(manual)
