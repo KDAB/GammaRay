@@ -1,0 +1,5 @@
+# Ignore copied-in code, by matching it with an empty formatting command
+3rdparty/* :
+
+# Default: 4-space indentation
+* : uncrustify -l CPP -f $TMPFILE -c format.config.uncrustify.4_spaces -o $TMPFILE
