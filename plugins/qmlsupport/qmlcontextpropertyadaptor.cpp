@@ -104,6 +104,8 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
             m_contextPropertyNames.push_back(e->identifier->string);
         ++e;
     }
+#else
+    Q_UNUSED(oi);
 #endif
 }
 
@@ -118,6 +120,9 @@ PropertyAdaptor* QmlContextPropertyAdaptorFactory::create(const ObjectInstance& 
 
     if (qobject_cast<QQmlContext*>(oi.qtObject()))
         return new QmlContextPropertyAdaptor(parent);
+#else
+    Q_UNUSED(oi);
+    Q_UNUSED(parent);
 #endif
 
     return Q_NULLPTR;
