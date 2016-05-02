@@ -57,6 +57,7 @@
 #include <private/qqmldata_p.h>
 #include <private/qqmlcompiler_p.h>
 #include <private/qqmlcontext_p.h>
+#include <private/qqmlscriptstring_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -114,6 +115,12 @@ static QString qjsValueToString(const QJSValue &v)
     return VariantHandler::displayString(v.toVariant());
   }
   return QStringLiteral("<unknown QJSValue>");
+}
+
+static QString qqmlScriptStringToString(const QQmlScriptString &v)
+{
+    auto scriptStringPriv = QQmlScriptStringPrivate::get(v);
+    return scriptStringPriv->script;
 }
 
 namespace GammaRay {
@@ -261,6 +268,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
   MO_ADD_PROPERTY_RO(QQmlType, QUrl, sourceUrl);
 
   VariantHandler::registerStringConverter<QJSValue>(qjsValueToString);
+  VariantHandler::registerStringConverter<QQmlScriptString>(qqmlScriptStringToString);
   VariantHandler::registerStringConverter<QQmlError>(qmlErrorToString);
   VariantHandler::registerGenericStringConverter(qmlListPropertyToString);
 
