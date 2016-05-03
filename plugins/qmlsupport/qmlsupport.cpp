@@ -72,7 +72,8 @@ static QString metaMethodToString(const QObject *object, const QMetaMethod &meth
 
 static QString callableQjsValueToString(const QJSValue &v)
 {
-#ifndef QT_DEPRECATED
+  // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
+#if !defined(QT_DEPRECATED) || QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
   Q_UNUSED(v);
   return QStringLiteral("<callable>");
 #else
