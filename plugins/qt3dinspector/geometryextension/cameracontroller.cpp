@@ -31,7 +31,8 @@
 #include <Qt3DRender/QCamera>
 
 #include <Qt3DInput/QAxis>
-#include <Qt3DInput/QAxisInput>
+#include <Qt3DInput/QAnalogAxisInput>
+#include <Qt3DInput/QButtonAxisInput>
 #include <Qt3DInput/QAction>
 #include <Qt3DInput/QActionInput>
 #include <Qt3DInput/QLogicalDevice>
@@ -56,7 +57,7 @@ CameraController::CameraController(Qt3DCore::QNode* parent) :
     // LMB
     auto m_mouseDevice = new Qt3DInput::QMouseDevice;
     auto m_leftMouseButtonInput = new Qt3DInput::QActionInput;
-    m_leftMouseButtonInput->setButtons(QVariantList() << Qt3DInput::QMouseEvent::LeftButton);
+    m_leftMouseButtonInput->setButtons(QList<int>() << Qt3DInput::QMouseEvent::LeftButton);
     m_leftMouseButtonInput->setSourceDevice(m_mouseDevice);
     m_leftMouseButtonAction->addInput(m_leftMouseButtonInput);
 
@@ -65,13 +66,13 @@ CameraController::CameraController(Qt3DCore::QNode* parent) :
     // TODO: shift for slow motion, ctrl for fast motion
 
     // X rotation
-    auto mouseRxInput = new Qt3DInput::QAxisInput;
+    auto mouseRxInput = new Qt3DInput::QAnalogAxisInput;
     mouseRxInput->setAxis(Qt3DInput::QMouseDevice::X);
     mouseRxInput->setSourceDevice(m_mouseDevice);
     m_axis[RX]->addInput(mouseRxInput);
 
     // Y rotation
-    auto mouseRyInput = new Qt3DInput::QAxisInput;
+    auto mouseRyInput = new Qt3DInput::QAnalogAxisInput;
     mouseRyInput->setAxis(Qt3DInput::QMouseDevice::Y);
     mouseRyInput->setSourceDevice(m_mouseDevice);
     m_axis[RY]->addInput(mouseRyInput);
@@ -130,8 +131,8 @@ void CameraController::frameActionTriggered(float dt)
 
 void CameraController::addKeyboardInput(Axis axis, Qt::Key key, float scale)
 {
-    auto keyboardInput = new Qt3DInput::QAxisInput;
-    keyboardInput->setButtons(QVariantList() << key);
+    auto keyboardInput = new Qt3DInput::QButtonAxisInput;
+    keyboardInput->setButtons(QList<int>() << key);
     keyboardInput->setScale(scale);
     keyboardInput->setSourceDevice(m_keyboardDevice);
     m_axis[axis]->addInput(keyboardInput);
