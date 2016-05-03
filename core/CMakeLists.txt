@@ -146,6 +146,7 @@ gammaray_install_headers(
   metaproperty.h
   objectmodelbase.h
   objecttypefilterproxymodel.h
+  probe.h
   probeinterface.h
   probecontroller.h
   propertycontroller.h
