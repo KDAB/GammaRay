@@ -162,7 +162,7 @@ static QString compilerFromLibraries(const QStringList &libraries)
 static bool isDebugRuntime(const QStringList &libraries)
 {
   foreach (const QString &lib, libraries) {
-    if (lib.toLower().startsWith(QLatin1String("msvcr")))
+    if (lib.toLower().startsWith(QLatin1String("msvcr")) || lib.toLower().startsWith(QLatin1String("vcruntime")))
       return lib.toLower().endsWith(QLatin1String("d.dll"));
   }
   return false;
