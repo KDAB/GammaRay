@@ -35,17 +35,19 @@
 #include <QModelIndex>
 #include <QPair>
 
+#include <limits>
+
 namespace GammaRay {
 
 /** @brief Helper functions and constants defining the communication protocol between client and server. */
 namespace Protocol {
 
 typedef qint32 PayloadSize;
-typedef quint8 ObjectAddress;
+typedef quint16 ObjectAddress;
 typedef quint8 MessageType;
 
 static const ObjectAddress InvalidObjectAddress = 0;
-static const ObjectAddress LauncherAddress = 255;
+static const ObjectAddress LauncherAddress = std::numeric_limits<ObjectAddress>::max();
 static const MessageType InvalidMessageType = 0;
 
 enum BuildInMessageType {
