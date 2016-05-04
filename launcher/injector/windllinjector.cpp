@@ -151,7 +151,7 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString &/*p
   inject();
   m_injectThread->stop();
   emit started();
-  m_injectThread->start();
+  m_destProcess = 0;
   return m_injectThread->isRunning();
 }
 
@@ -197,7 +197,9 @@ QString WinDllInjector::errorString()
 
 void WinDllInjector::stop()
 {
-    TerminateProcess(m_destProcess, 0xff);
+    if (m_destProcess) {
+        TerminateProcess(m_destProcess, 0xff);
+    }
 }
 
 }// namespace GammaRay
