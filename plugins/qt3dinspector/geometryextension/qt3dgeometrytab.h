@@ -67,6 +67,7 @@ protected:
 
 private:
     Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent);
+    Qt3DCore::QComponent* createSkyboxMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
     void resetCamera();
 

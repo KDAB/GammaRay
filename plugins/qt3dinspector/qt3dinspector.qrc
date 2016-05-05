@@ -5,5 +5,7 @@
     <file>geometryextension/wireframe.frag</file>
     <file>geometryextension/normals.geom</file>
     <file>geometryextension/normals.frag</file>
+    <file>geometryextension/skybox.vert</file>
+    <file>geometryextension/skybox.frag</file>
   </qresource>
 </RCC>

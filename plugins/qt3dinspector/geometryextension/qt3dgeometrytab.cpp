@@ -34,11 +34,14 @@
 #include <ui/propertywidget.h>
 #include <common/objectbroker.h>
 
+#include <Qt3DExtras/QCuboidMesh>
 #include <Qt3DExtras/QForwardRenderer>
 
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QCamera>
+#include <Qt3DRender/QCullFace>
+#include <Qt3DRender/QDepthTest>
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QFilterKey>
 #include <Qt3DRender/QGeometryRenderer>
@@ -57,6 +60,7 @@
 
 #include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QEntity>
+#include <Qt3DCore/QTransform>
 
 #include <QDebug>
 #include <QUrl>
@@ -128,6 +132,17 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     geometryEntity->addComponent(createMaterial(rootEntity));
     updateGeometry();
 
+    auto skyboxEntity = new Qt3DCore::QEntity(rootEntity);
+    auto skyBoxGeometry = new Qt3DExtras::QCuboidMesh;
+    skyBoxGeometry->setXYMeshResolution(QSize(2, 2));
+    skyBoxGeometry->setXZMeshResolution(QSize(2, 2));
+    skyBoxGeometry->setYZMeshResolution(QSize(2, 2));
+    auto skyboxTransform = new Qt3DCore::QTransform;
+    connect(m_camera, &Qt3DRender::QCamera::positionChanged, skyboxTransform, &Qt3DCore::QTransform::setTranslation);
+    skyboxEntity->addComponent(skyBoxGeometry);
+    skyboxEntity->addComponent(createSkyboxMaterial(rootEntity));
+    skyboxEntity->addComponent(skyboxTransform);
+
     // input handling
     m_aspectEngine->registerAspect(new Qt3DLogic::QLogicAspect);
     m_aspectEngine->registerAspect(new Qt3DInput::QInputAspect);
@@ -175,6 +190,43 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::CoreProfile);
     technique->addRenderPass(wireframeRenderPass);
     technique->addRenderPass(m_normalsRenderPass);
+    technique->addFilterKey(filterKey);
+
+    auto effect = new Qt3DRender::QEffect;
+    effect->addTechnique(technique);
+
+    material->setEffect(effect);
+    return material;
+}
+
+Qt3DCore::QComponent* Qt3DGeometryTab::createSkyboxMaterial(Qt3DCore::QNode* parent)
+{
+    auto material = new Qt3DRender::QMaterial(parent);
+
+    auto shader = new Qt3DRender::QShaderProgram;
+    shader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/skybox.vert"))));
+    shader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/skybox.frag"))));
+
+    auto cullFront = new Qt3DRender::QCullFace;
+    cullFront->setMode(Qt3DRender::QCullFace::Front);
+    auto depthTest = new Qt3DRender::QDepthTest;
+    depthTest->setDepthFunction(Qt3DRender::QDepthTest::LessOrEqual);
+
+    auto renderPass = new Qt3DRender::QRenderPass;
+    renderPass->setShaderProgram(shader);
+    renderPass->addRenderState(cullFront);
+    renderPass->addRenderState(depthTest);
+
+    auto filterKey = new Qt3DRender::QFilterKey(material);
+    filterKey->setName(QStringLiteral("renderingStyle"));
+    filterKey->setValue(QStringLiteral("forward"));
+
+    auto technique = new Qt3DRender::QTechnique;
+    technique->graphicsApiFilter()->setApi(Qt3DRender::QGraphicsApiFilter::OpenGL);
+    technique->graphicsApiFilter()->setMajorVersion(3);
+    technique->graphicsApiFilter()->setMinorVersion(3);
+    technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::CoreProfile);
+    technique->addRenderPass(renderPass);
     technique->addFilterKey(filterKey);
 
     auto effect = new Qt3DRender::QEffect;
