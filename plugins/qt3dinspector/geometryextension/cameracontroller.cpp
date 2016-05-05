@@ -57,7 +57,7 @@ CameraController::CameraController(Qt3DCore::QNode* parent) :
     // LMB
     auto m_mouseDevice = new Qt3DInput::QMouseDevice;
     auto m_leftMouseButtonInput = new Qt3DInput::QActionInput;
-    m_leftMouseButtonInput->setButtons(QList<int>() << Qt3DInput::QMouseEvent::LeftButton);
+    m_leftMouseButtonInput->setButtons({Qt3DInput::QMouseEvent::LeftButton});
     m_leftMouseButtonInput->setSourceDevice(m_mouseDevice);
     m_leftMouseButtonAction->addInput(m_leftMouseButtonInput);
 
@@ -132,7 +132,7 @@ void CameraController::frameActionTriggered(float dt)
 void CameraController::addKeyboardInput(Axis axis, Qt::Key key, float scale)
 {
     auto keyboardInput = new Qt3DInput::QButtonAxisInput;
-    keyboardInput->setButtons(QList<int>() << key);
+    keyboardInput->setButtons({key});
     keyboardInput->setScale(scale);
     keyboardInput->setSourceDevice(m_keyboardDevice);
     m_axis[axis]->addInput(keyboardInput);
