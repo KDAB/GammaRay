@@ -33,10 +33,13 @@
 #include "probeinterface.h"
 #include "signalspycallbackset.h"
 
+#include <common/sourcelocation.h>
+
 #include <QObject>
 #include <QList>
 #include <QSet>
 #include <QVector>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
@@ -46,6 +49,10 @@ class QPoint;
 class QTimer;
 class QMutex;
 QT_END_NAMESPACE
+
+namespace backward {
+    class TraceResolver;
+}
 
 namespace GammaRay {
 class ProbeCreator;
@@ -86,6 +93,8 @@ public:
                       const QPoint &pos = QPoint()) Q_DECL_OVERRIDE;
     void selectObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) Q_DECL_OVERRIDE;
+
+    SourceLocation objectCreationSourceLocation(QObject *object);
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -216,6 +225,7 @@ private:
     QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
     SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
     Server *m_server;
+    std::unique_ptr<backward::TraceResolver> m_traceResolver;
 };
 }
 

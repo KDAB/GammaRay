@@ -71,6 +71,7 @@ include(FeatureSummary)
 include(ECMGeneratePriFile)
 include(ECMEnableSanitizers)
 include(GenerateExportHeader)
+include("3rdparty/backward-cpp/BackwardMacros.cmake")
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
 #  MSVC++ < 2010 aka 10.0 aka 1600

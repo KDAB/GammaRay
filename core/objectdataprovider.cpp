@@ -27,6 +27,7 @@
 */
 
 #include "objectdataprovider.h"
+#include "probe.h"
 
 #include <common/sourcelocation.h>
 
@@ -86,6 +87,7 @@ SourceLocation ObjectDataProvider::creationLocation(QObject *obj)
             return loc;
     }
 
+    loc = Probe::instance()->objectCreationSourceLocation(obj);
     return loc;
 }
 

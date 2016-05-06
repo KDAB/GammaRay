@@ -134,6 +134,8 @@ else()
   )
 endif()
 
+add_backward(gammaray_core)
+
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(TARGETS gammaray_core EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
