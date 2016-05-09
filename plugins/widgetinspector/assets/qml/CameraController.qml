@@ -105,7 +105,7 @@ Entity {
                   Axis {
                       id: rotateXAxis
                       inputs: [
-                          AxisInput {
+                          AnalogAxisInput {
                               sourceDevice: mouse
                               axis: MouseDevice.X
                           }
@@ -114,7 +114,7 @@ Entity {
                   Axis {
                       id: rotateYAxis
                       inputs: [
-                          AxisInput {
+                          AnalogAxisInput {
                               sourceDevice: mouse
                               axis: MouseDevice.Y
                           }
@@ -125,7 +125,7 @@ Entity {
                   Axis {
                       id: translateXAxis
                       inputs: [
-                          AxisInput {
+                          AnalogAxisInput {
                               sourceDevice: mouse
                               axis: MouseDevice.X
                           }
@@ -134,7 +134,7 @@ Entity {
                   Axis {
                       id: translateYAxis
                       inputs: [
-                          AxisInput {
+                          AnalogAxisInput {
                               sourceDevice: mouse
                               axis: MouseDevice.Y
                           }

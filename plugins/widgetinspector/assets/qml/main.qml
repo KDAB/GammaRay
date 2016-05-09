@@ -31,6 +31,8 @@ import QtQuick 2.5 as QQ2
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
+import Qt3D.Extras 2.0
+import com.kdab.GammaRay 1.0
 
 Entity {
     id: root
@@ -48,6 +50,7 @@ Entity {
             }
 
             pickingSettings.pickMethod: PickingSettings.TrianglePicking
+            renderPolicy: RenderSettings.OnDemand
         },
 
         InputSettings {
@@ -68,10 +71,16 @@ Entity {
         position: Qt.vector3d(0.0, 0.0, 80.0)
     }
 
+    Widget3DCameraController {
+        id: cameraController
+        camera: mainCamera
+    }
+    /*
     CameraController {
         id: cameraController
         camera: mainCamera
     }
+    */
 
     QQ2.Connections {
         target: _window

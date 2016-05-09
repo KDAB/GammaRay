@@ -82,6 +82,7 @@ if(GAMMARAY_BUILD_UI)
       ${gammaray_widgetinspector_ui_plugin_srcs}
       widget3dview.cpp
       widget3dimagetextureimage.cpp
+      widget3dcameracontroller.cpp
     )
   endif()
 

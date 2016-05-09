@@ -57,14 +57,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void imageChanged();
 
-protected:
-    void copy(const Qt3DCore::QNode *ref) Q_DECL_OVERRIDE;
-
 private:
     QImage mImage;
-
-    QT3D_CLONEABLE(Widget3DImageTextureImage)
-
 };
 
 }

@@ -30,12 +30,14 @@
 #include "widget3dview.h"
 #include "widget3dmodel.h"
 #include "widget3dimagetextureimage.h"
+#include "widget3dcameracontroller.h"
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <client/remotemodel.h>
 
 #include <QWindow>
+#include <QQuickWindow>
 #include <QVBoxLayout>
 #include <QVariant>
 #include <QUrl>
@@ -54,12 +56,12 @@
 namespace GammaRay
 {
 
-class Widget3DWindow : public QWindow
+class Widget3DWindow : public QQuickWindow
 {
    Q_OBJECT
 public:
-    explicit Widget3DWindow(QScreen *parent = Q_NULLPTR)
-        : QWindow(parent)
+    explicit Widget3DWindow(QWindow *parent = Q_NULLPTR)
+        : QQuickWindow(parent)
     {
         setSurfaceType(QSurface::OpenGLSurface);
         resize(800, 600);
@@ -138,6 +140,7 @@ Widget3DView::Widget3DView(QWidget* parent)
     auto model = new Widget3DModelClient(this);
     model->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Widget3DModel")));
 
+    qmlRegisterType<Widget3DCameraController>("com.kdab.GammaRay", 1, 0, "Widget3DCameraController");
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
 
     auto engine = new Qt3DCore::Quick::QQmlAspectEngine(this);

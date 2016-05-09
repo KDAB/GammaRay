@@ -29,6 +29,7 @@
 
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
+import Qt3D.Extras 2.0
 import QtQuick 2.5 as QQ2
 
 
@@ -57,40 +58,49 @@ Entity {
         }
     }
 
-
-    components: [
-        CuboidMesh {
-            xExtent: _geomWidth
-            yExtent: _geomHeight
-            zExtent: 1
-        },
-
-        WidgetMaterial {
-            id: material
-            frontTextureImage: root.frontTextureImage
-            backTextureImage: root.backTextureImage
-            highlightFactor: objectPicker.containsMouse ? 0.5 : 0.0
-
-            QQ2.Behavior on highlightFactor {
-                QQ2.NumberAnimation {
-                    duration: 100;
-                }
-            }
-        },
-
-        Transform {
-            id: transform
-            translation: Qt.vector3d(
-                             _geomWidth / 2.0 + _geomX - topLevelGeometry.width / 2.0 / _scaleFactor,
-                             -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
-                             _geomZ
-                         )
-        },
-
-        ObjectPicker {
-            id: objectPicker
-            hoverEnabled: true
-            onClicked: console.log("Click!")
+    property real _highlightFactor : 0;// objectPicker.containsMouse ? 0.5 : 0.0;
+    QQ2.Behavior on _highlightFactor {
+        QQ2.NumberAnimation {
+            duration: 100;
         }
-    ]
+    }
+
+    Entity {
+        id: widgetCube
+
+        components: [
+            CuboidMesh {
+                xExtent: root._geomWidth
+                yExtent: root._geomHeight
+                zExtent: 1
+            },
+
+            WidgetMaterial {
+                id: material
+                frontTextureImage: root.frontTextureImage
+                backTextureImage: root.backTextureImage
+                explosionFactor: root.explosionFactor
+                highlightFactor: root._highlightFactor
+                level: root.level
+
+            },
+
+            Transform {
+                id: transform
+                translation: Qt.vector3d(
+                                _geomWidth / 2.0 + _geomX - topLevelGeometry.width / 2.0 / _scaleFactor,
+                                -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
+                                _geomZ
+                            )
+            }/*,
+
+
+            ObjectPicker {
+                id: objectPicker
+                hoverEnabled: true
+                onClicked: console.log("Click!")
+            }
+            */
+        ]
+    }
 }

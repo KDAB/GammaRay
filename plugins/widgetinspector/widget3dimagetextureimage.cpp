@@ -47,9 +47,9 @@ public:
     {
     }
 
-    Qt3DRender::QTexImageDataPtr operator()() Q_DECL_OVERRIDE
+    Qt3DRender::QTextureImageDataPtr operator()() Q_DECL_OVERRIDE
     {
-        Qt3DRender::QTexImageDataPtr dataPtr(new Qt3DRender::QTexImageData);
+        Qt3DRender::QTextureImageDataPtr dataPtr(new Qt3DRender::QTextureImageData);
         dataPtr->setImage(mImage);
         return dataPtr;
     }
@@ -77,7 +77,6 @@ Widget3DImageTextureImage::Widget3DImageTextureImage(Qt3DCore::QNode *parent)
 
 Widget3DImageTextureImage::~Widget3DImageTextureImage()
 {
-    cleanup();
 }
 
 QImage Widget3DImageTextureImage::image() const
@@ -90,18 +89,11 @@ void Widget3DImageTextureImage::setImage(const QImage &image)
     if (mImage != image) {
         mImage = image;
         Q_EMIT imageChanged();
-        update();
+        notifyDataGeneratorChanged();
     }
 }
 
 Qt3DRender::QTextureImageDataGeneratorPtr Widget3DImageTextureImage::dataGenerator() const
 {
     return Qt3DRender::QTextureImageDataGeneratorPtr(new Widget3DImageTextureDataGenerator(mImage));
-}
-
-void Widget3DImageTextureImage::copy(const Qt3DCore::QNode *ref)
-{
-    QAbstractTextureImage::copy(ref);
-    const auto img = static_cast<const Widget3DImageTextureImage *>(ref);
-    mImage = img->mImage;
 }
