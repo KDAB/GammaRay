@@ -68,7 +68,7 @@ public:
         QSurfaceFormat format;
         format.setVersion(3, 3);
         format.setProfile(QSurfaceFormat::CoreProfile);
-        format.setDepthBufferSize(32);
+        format.setDepthBufferSize(24);
         format.setSamples(4);
         format.setStencilBufferSize(8);
         setFormat(format);
