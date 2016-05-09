@@ -304,7 +304,12 @@ if(Qt5Core_FOUND)
 # Qt4
 else()
   set(QT_USE_IMPORTED_TARGETS true)
-  find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork)
+  find_package(Qt4 4.8.0)
+  set_package_properties(Qt4 PROPERTIES TYPE OPTIONAL)
+  if (Qt4_FOUND)
+    # minimum set
+    find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork)
+  endif()
   find_package(Qt4 4.8.0 QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
 
   include(${QT_USE_FILE})
@@ -549,6 +554,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}
 )
 
+if (Qt5Core_FOUND OR Qt4_FOUND)
 add_subdirectory(cmake)
 add_subdirectory(3rdparty/kde)
 add_subdirectory(common)
@@ -569,6 +575,7 @@ endif()
 add_subdirectory(plugins)
 add_subdirectory(resources)
 add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
+endif()
 
 set(LICENSE_FILE "LICENSE.GPL.txt")
 set(README_FILE "ReadMe.txt")
@@ -689,3 +696,7 @@ endif()
 include(CPack)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
+if (NOT Qt5Core_FOUND AND NOT Qt4_FOUND)
+  message(FATAL_ERROR "GammaRay needs either Qt5 or Qt4!")
+endif()
