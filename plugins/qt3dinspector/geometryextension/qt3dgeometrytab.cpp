@@ -105,7 +105,11 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     format.setDepthBufferSize(24);
     format.setSamples(4); // ???
     format.setStencilBufferSize(8); // ???
+    format.setMajorVersion(3);
+    format.setMinorVersion(3);
+    format.setProfile(QSurfaceFormat::CoreProfile);
     m_surface->setFormat(format);
+    QSurfaceFormat::setDefaultFormat(format);
     m_surface->create();
 
     m_aspectEngine = new Qt3DCore::QAspectEngine(this);
