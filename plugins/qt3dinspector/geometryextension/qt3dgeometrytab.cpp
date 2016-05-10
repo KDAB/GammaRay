@@ -142,6 +142,7 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     skyBoxGeometry->setXZMeshResolution(QSize(2, 2));
     skyBoxGeometry->setYZMeshResolution(QSize(2, 2));
     auto skyboxTransform = new Qt3DCore::QTransform;
+    skyboxTransform->setTranslation(m_camera->position());
     connect(m_camera, &Qt3DRender::QCamera::positionChanged, skyboxTransform, &Qt3DCore::QTransform::setTranslation);
     skyboxEntity->addComponent(skyBoxGeometry);
     skyboxEntity->addComponent(createSkyboxMaterial(rootEntity));
