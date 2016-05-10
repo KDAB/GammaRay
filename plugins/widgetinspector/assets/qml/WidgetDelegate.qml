@@ -58,7 +58,7 @@ Entity {
         }
     }
 
-    property real _highlightFactor : 0; //objectPicker.containsMouse ? 0.5 : 0.0;
+    property real _highlightFactor : objectPicker.containsMouse ? 0.5 : 0.0;
     QQ2.Behavior on _highlightFactor {
         QQ2.NumberAnimation {
             duration: 100;
@@ -92,16 +92,13 @@ Entity {
                                 -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
                                 _geomZ
                             )
-            }
+            },
 
-            /*
-             * TODO: Re-enable once crash in Qt3D is fixed
             ObjectPicker {
                 id: objectPicker
                 hoverEnabled: true
                 onClicked: console.log("Click!")
             }
-            */
         ]
     }
 }
