@@ -84,21 +84,6 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
             m_normalsRenderPass->setEnabled(ui->showNormals->isChecked());
     });
 
-    m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface*>(parent->objectBaseName() + ".qt3dGeometry");
-    connect(m_interface, &Qt3DGeometryExtensionInterface::geometryDataChanged, this, &Qt3DGeometryTab::updateGeometry);
-}
-
-Qt3DGeometryTab::~Qt3DGeometryTab()
-{
-}
-
-void Qt3DGeometryTab::showEvent(QShowEvent* event)
-{
-    QWidget::showEvent(event);
-
-    if (m_aspectEngine)
-        return;
-
     m_surface = new QWindow;
     m_surface->setSurfaceType(QSurface::OpenGLSurface);
     QSurfaceFormat format;
@@ -111,6 +96,21 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     m_surface->setFormat(format);
     QSurfaceFormat::setDefaultFormat(format);
     m_surface->create();
+    layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
+    m_surface->installEventFilter(this);
+
+    m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface*>(parent->objectBaseName() + ".qt3dGeometry");
+    connect(m_interface, &Qt3DGeometryExtensionInterface::geometryDataChanged, this, &Qt3DGeometryTab::updateGeometry);
+}
+
+Qt3DGeometryTab::~Qt3DGeometryTab()
+{
+}
+
+bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
+{
+    if (receiver != m_surface || event->type() != QEvent::Expose || m_aspectEngine)
+        return QWidget::eventFilter(receiver, event);
 
     m_aspectEngine = new Qt3DCore::QAspectEngine(this);
     m_aspectEngine->registerAspect(new Qt3DRender::QRenderAspect);
@@ -158,9 +158,8 @@ void Qt3DGeometryTab::showEvent(QShowEvent* event)
     camController->setCamera(m_camera);
 
     m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(rootEntity));
-
-    layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
-}
+    return QWidget::eventFilter(receiver, event);
+ }
 
 Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
 {

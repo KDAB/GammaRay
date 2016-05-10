@@ -62,8 +62,8 @@ public:
     ~Qt3DGeometryTab();
 
 protected:
-    void showEvent(QShowEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    bool eventFilter(QObject *receiver, QEvent *event) override;
 
 private:
     Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent);
