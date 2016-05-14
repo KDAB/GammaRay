@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_QT3DGEOMETRYTAB_H
 #define GAMMARAY_QT3DGEOMETRYTAB_H
 
+#include "boundingvolume.h"
+
 #include <QWidget>
 
 #include <memory>
@@ -37,6 +39,7 @@ namespace Qt3DCore {
 class QAspectEngine;
 class QComponent;
 class QNode;
+class QTransform;
 }
 namespace Qt3DRender {
 class QCamera;
@@ -48,6 +51,7 @@ namespace GammaRay {
 
 class PropertyWidget;
 class Qt3DGeometryExtensionInterface;
+class Qt3DGeometryAttributeData;
 
 namespace Ui
 {
@@ -70,6 +74,7 @@ private:
     Qt3DCore::QComponent* createSkyboxMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
     void resetCamera();
+    void computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr);
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     Qt3DGeometryExtensionInterface *m_interface;
@@ -78,7 +83,9 @@ private:
     Qt3DCore::QAspectEngine *m_aspectEngine;
     Qt3DRender::QCamera *m_camera;
     Qt3DRender::QGeometryRenderer *m_geometryRenderer;
+    Qt3DCore::QTransform *m_geometryTransform;
     Qt3DRender::QRenderPass *m_normalsRenderPass;
+    BoundingVolume m_boundingVolume;
 };
 }
 

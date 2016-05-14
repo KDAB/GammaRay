@@ -75,6 +75,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     m_aspectEngine(nullptr),
     m_camera(nullptr),
     m_geometryRenderer(nullptr),
+    m_geometryTransform(nullptr),
     m_normalsRenderPass(nullptr)
 {
     ui->setupUi(this);
@@ -134,6 +135,8 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     m_geometryRenderer = new Qt3DRender::QGeometryRenderer;
     geometryEntity->addComponent(m_geometryRenderer);
     geometryEntity->addComponent(createMaterial(rootEntity));
+    m_geometryTransform = new Qt3DCore::QTransform;
+    geometryEntity->addComponent(m_geometryTransform);
     updateGeometry();
 
     auto skyboxEntity = new Qt3DCore::QEntity(rootEntity);
@@ -268,6 +271,8 @@ void Qt3DGeometryTab::updateGeometry()
         setupAttribute(posAttr, geo.vertexPositions);
         posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
         geometry->addAttribute(posAttr);
+        computeBoundingVolume(geo.vertexPositions);
+        m_geometryTransform->setTranslation(-m_boundingVolume.center());
     }
 
     if (!geo.vertexNormals.data.isEmpty()) {
@@ -296,6 +301,8 @@ void Qt3DGeometryTab::updateGeometry()
     m_geometryRenderer->setFirstInstance(0);
     m_geometryRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
     m_geometryRenderer->setGeometry(geometry);
+
+    resetCamera();
 }
 
 void Qt3DGeometryTab::resizeEvent(QResizeEvent* event)
@@ -307,8 +314,32 @@ void Qt3DGeometryTab::resizeEvent(QResizeEvent* event)
 
 void Qt3DGeometryTab::resetCamera()
 {
-    // TODO set this based on geometry bounding box
     m_camera->lens()->setPerspectiveProjection(45.0f, float(m_surface->width())/float(m_surface->height()), 0.1f, 1000.0f);
     m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
-    m_camera->setPosition(QVector3D(0, 0, 4.0f));
+    m_camera->setPosition(QVector3D(0, 0, m_boundingVolume.radius() * 2.5f));
+}
+
+void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData& vertexAttr)
+{
+    m_boundingVolume = BoundingVolume();
+    QVector3D v;
+    const char* const end = vertexAttr.data.constData() + vertexAttr.data.size();
+    for (const char *c = vertexAttr.data.constData(); c < end; c += vertexAttr.byteStride) {
+        switch (vertexAttr.vertexBaseType) {
+            case Qt3DRender::QAttribute::Float:
+            {
+                auto f = reinterpret_cast<const float*>(c + vertexAttr.byteOffset);
+                v.setX(*f);
+                ++f;
+                v.setY(*f);
+                ++f;
+                v.setZ(*f);
+                break;
+            }
+            default:
+                qWarning() << "Vertex type" << vertexAttr.vertexBaseType << "not implemented yet";
+                return;
+        }
+        m_boundingVolume.addPoint(v);
+    }
 }

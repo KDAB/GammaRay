@@ -15,7 +15,7 @@ uniform mat4 modelViewProjection;
 void main()
 {
     vs_out.normal = normalize( modelNormalMatrix * vertexNormal );
-    vs_out.position = vec3( modelMatrix * vec4( vertexPosition, 1.0 ) );
+    vs_out.position = vertexPosition;
 
     gl_Position = modelViewProjection * vec4( vertexPosition, 1.0 );
 }
