@@ -30,6 +30,9 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
          <attribute name="headerStretchLastSection">
           <bool>false</bool>
          </attribute>
@@ -55,6 +58,9 @@
           <attribute name="headerStretchLastSection">
            <bool>false</bool>
           </attribute>
+          <property name="uniformRowHeights">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -72,6 +78,9 @@
          <widget class="GammaRay::DeferredTreeView" name="documentFormatView">
           <property name="rootIsDecorated">
            <bool>false</bool>
+          </property>
+          <property name="uniformRowHeights">
+           <bool>true</bool>
           </property>
           <attribute name="headerStretchLastSection">
            <bool>false</bool>

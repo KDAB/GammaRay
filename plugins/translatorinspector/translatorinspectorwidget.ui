@@ -23,6 +23,9 @@
       <property name="rootIsDecorated">
        <bool>false</bool>
       </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">

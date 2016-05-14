@@ -49,6 +49,9 @@
            <property name="contextMenuPolicy">
             <enum>Qt::CustomContextMenu</enum>
            </property>
+           <property name="uniformRowHeights">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>
@@ -62,7 +65,11 @@
           <widget class="QLineEdit" name="sgTreeSearchLine"/>
          </item>
          <item>
-          <widget class="GammaRay::DeferredTreeView" name="sgTreeView"/>
+          <widget class="GammaRay::DeferredTreeView" name="sgTreeView">
+           <property name="uniformRowHeights">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

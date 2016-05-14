@@ -16,7 +16,11 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="GammaRay::DeferredTreeView" name="fontTree"/>
+     <widget class="GammaRay::DeferredTreeView" name="fontTree">
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+     </widget>
      <widget class="QWidget" name="layoutWidget_7">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>

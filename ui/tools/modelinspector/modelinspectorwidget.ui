@@ -22,7 +22,11 @@
         <widget class="QLineEdit" name="modelSearchLine"/>
        </item>
        <item>
-        <widget class="GammaRay::DeferredTreeView" name="modelView"/>
+        <widget class="GammaRay::DeferredTreeView" name="modelView">
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -32,7 +36,11 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="GammaRay::DeferredTreeView" name="modelContentView"/>
+        <widget class="GammaRay::DeferredTreeView" name="modelContentView">
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -91,6 +99,9 @@
         <widget class="GammaRay::DeferredTreeView" name="modelCellView">
          <property name="rootIsDecorated">
           <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

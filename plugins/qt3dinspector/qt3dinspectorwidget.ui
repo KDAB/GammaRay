@@ -70,6 +70,9 @@
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
           </property>
+          <property name="uniformRowHeights">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -93,6 +96,9 @@
          <widget class="GammaRay::DeferredTreeView" name="frameGraphView">
           <property name="contextMenuPolicy">
            <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="uniformRowHeights">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

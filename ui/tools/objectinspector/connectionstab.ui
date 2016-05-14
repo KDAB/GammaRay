@@ -42,6 +42,9 @@
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -68,6 +71,9 @@
          </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
