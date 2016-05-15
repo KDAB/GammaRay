@@ -319,6 +319,7 @@ void Qt3DGeometryTab::resetCamera()
 {
     m_camera->lens()->setPerspectiveProjection(45.0f, float(m_surface->width())/float(m_surface->height()), 0.1f, 1000.0f);
     m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
+    m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
     m_camera->setPosition(QVector3D(0, 0, m_boundingVolume.radius() * 2.5f));
 }
 
