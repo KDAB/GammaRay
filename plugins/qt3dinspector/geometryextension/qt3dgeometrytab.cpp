@@ -64,6 +64,7 @@
 
 #include <QDebug>
 #include <QUrl>
+#include <QToolBar>
 #include <QWindow>
 
 using namespace GammaRay;
@@ -79,10 +80,41 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     m_normalsRenderPass(nullptr)
 {
     ui->setupUi(this);
-    connect(ui->resetCam, &QPushButton::clicked, this, &Qt3DGeometryTab::resetCamera);
-    connect(ui->showNormals, &QCheckBox::toggled, this, [this]() {
+    auto toolbar = new QToolBar(this);
+    ui->topLayout->insertWidget(0, toolbar);
+
+    toolbar->addAction(ui->actionViewGeometry);
+    toolbar->addAction(ui->actionViewBuffers);
+    toolbar->addSeparator();
+    toolbar->addAction(ui->actionResetCam);
+    toolbar->addAction(ui->actionFirstPersonCam);
+    toolbar->addAction(ui->actionOrbitCam);
+    toolbar->addSeparator();
+    toolbar->addAction(ui->actionShowNormals);
+    toolbar->addAction(ui->actionShowTangents);
+
+    connect(ui->actionResetCam, &QAction::triggered, this, &Qt3DGeometryTab::resetCamera);
+    auto camGroup = new QActionGroup(this);
+    camGroup->setExclusive(true);
+    camGroup->addAction(ui->actionFirstPersonCam);
+    camGroup->addAction(ui->actionOrbitCam);
+
+    connect(ui->actionShowNormals, &QAction::toggled, this, [this]() {
         if (m_normalsRenderPass)
-            m_normalsRenderPass->setEnabled(ui->showNormals->isChecked());
+            m_normalsRenderPass->setEnabled(ui->actionShowNormals->isChecked());
+    });
+
+    auto viewGroup = new QActionGroup(this);
+    viewGroup->setExclusive(true);
+    viewGroup->addAction(ui->actionViewGeometry);
+    viewGroup->addAction(ui->actionViewBuffers);
+    connect(viewGroup, &QActionGroup::triggered, this, [this, camGroup]() {
+        const auto geoView = ui->actionViewGeometry->isChecked();
+        ui->stackedWidget->setCurrentWidget(geoView ? ui->geometryPage : ui->bufferPage);
+        ui->actionResetCam->setVisible(geoView);
+        camGroup->setVisible(geoView);
+        ui->actionShowNormals->setVisible(geoView);
+        ui->actionShowTangents->setVisible(geoView);
     });
 
     m_surface = new QWindow;
@@ -97,7 +129,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     m_surface->setFormat(format);
     QSurfaceFormat::setDefaultFormat(format);
     m_surface->create();
-    layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
+    ui->geometryPage->layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
     m_surface->installEventFilter(this);
 
     m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface*>(parent->objectBaseName() + ".qt3dGeometry");
@@ -184,7 +216,7 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
 
     m_normalsRenderPass = new Qt3DRender::QRenderPass;
     m_normalsRenderPass->setShaderProgram(normalsShader);
-    m_normalsRenderPass->setEnabled(ui->showNormals->isChecked());
+    m_normalsRenderPass->setEnabled(ui->actionShowNormals->isChecked());
 
     auto filterKey = new Qt3DRender::QFilterKey(material);
     filterKey->setName(QStringLiteral("renderingStyle"));
@@ -255,6 +287,9 @@ static void setupAttribute(Qt3DRender::QAttribute *attr, const Qt3DGeometryAttri
 
 void Qt3DGeometryTab::updateGeometry()
 {
+    ui->actionShowNormals->setEnabled(false);
+    ui->actionShowTangents->setEnabled(false);
+
     if (!m_geometryRenderer)
         return;
 
@@ -287,6 +322,7 @@ void Qt3DGeometryTab::updateGeometry()
         setupAttribute(normalAttr, geo.vertexNormals);
         normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
         geometry->addAttribute(normalAttr);
+        ui->actionShowNormals->setEnabled(true);
     }
 
     if (geo.index.count) {

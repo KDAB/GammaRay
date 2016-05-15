@@ -10,39 +10,150 @@
     <height>300</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="topLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="resetCam">
-       <property name="text">
-        <string>&amp;Reset Camera</string>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="geometryPage">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="leftMargin">
+        <number>0</number>
        </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+       <property name="topMargin">
+        <number>0</number>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="rightMargin">
+        <number>0</number>
        </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="showNormals">
-       <property name="text">
-        <string>Show &amp;Normals</string>
+       <property name="bottomMargin">
+        <number>0</number>
        </property>
-      </widget>
-     </item>
-    </layout>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="bufferPage">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>B&amp;uffer:</string>
+           </property>
+           <property name="buddy">
+            <cstring>comboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableView" name="bufferView"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </item>
   </layout>
+  <action name="actionResetCam">
+   <property name="icon">
+    <iconset theme="view-restore"/>
+   </property>
+   <property name="text">
+    <string>Reset Camera</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset camera.</string>
+   </property>
+  </action>
+  <action name="actionFirstPersonCam">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>First Person</string>
+   </property>
+   <property name="toolTip">
+    <string>First person camera control.</string>
+   </property>
+  </action>
+  <action name="actionOrbitCam">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Orbit</string>
+   </property>
+   <property name="toolTip">
+    <string>Orbit camera control.</string>
+   </property>
+  </action>
+  <action name="actionShowNormals">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Normals</string>
+   </property>
+   <property name="toolTip">
+    <string>Visualize normal vectors.</string>
+   </property>
+  </action>
+  <action name="actionShowTangents">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Tangents</string>
+   </property>
+   <property name="toolTip">
+    <string>Visualize tangent vectors.</string>
+   </property>
+  </action>
+  <action name="actionViewGeometry">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>View Geometry</string>
+   </property>
+   <property name="toolTip">
+    <string>Visualize geometry.</string>
+   </property>
+  </action>
+  <action name="actionViewBuffers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>View Buffers</string>
+   </property>
+   <property name="toolTip">
+    <string>View raw buffer data.</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
