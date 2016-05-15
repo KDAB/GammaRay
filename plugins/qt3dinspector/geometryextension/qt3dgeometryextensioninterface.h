@@ -44,6 +44,14 @@ struct Qt3DGeometryAttributeData
     uint divisor;
     Qt3DRender::QAttribute::VertexBaseType vertexBaseType;
     uint vertexSize;
+    uint bufferIndex;
+};
+
+struct Qt3DGeometryBufferData
+{
+    bool operator==(const Qt3DGeometryBufferData &rhs) const;
+
+    QString name;
     QByteArray data;
 };
 
@@ -54,6 +62,8 @@ struct Qt3DGeometryData
     Qt3DGeometryAttributeData vertexPositions;
     Qt3DGeometryAttributeData vertexNormals;
     Qt3DGeometryAttributeData index;
+
+    QVector<Qt3DGeometryBufferData> buffers;
 };
 
 class Qt3DGeometryExtensionInterface : public QObject

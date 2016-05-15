@@ -41,7 +41,7 @@ static QDataStream &operator<<(QDataStream &out, Qt3DRender::QAttribute::VertexB
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, Qt3DRender::QAttribute::VertexBaseType &type)
+static QDataStream &operator>>(QDataStream &in, Qt3DRender::QAttribute::VertexBaseType &type)
 {
     quint32 v;
     in >> v;
@@ -51,13 +51,13 @@ QDataStream &operator>>(QDataStream &in, Qt3DRender::QAttribute::VertexBaseType 
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
-    out << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.data;
+    out << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
+static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 {
-    in >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.data;
+    in >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
     return in;
 }
 
@@ -80,25 +80,43 @@ bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs)
         divisor == rhs.divisor &&
         vertexBaseType == rhs.vertexBaseType &&
         vertexSize == rhs.vertexSize &&
-        data == rhs.data;
+        bufferIndex == rhs.bufferIndex;
+}
+
+
+static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
+{
+    out << data.name << data.data;
+    return out;
+}
+
+static QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
+{
+    in >> data.name >> data.data;
+    return in;
+}
+
+bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData& rhs) const
+{
+    return name == rhs.name && data == rhs.data;
 }
 
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryData &data)
 {
-    out << data.vertexPositions << data.vertexNormals << data.index;
+    out << data.vertexPositions << data.vertexNormals << data.index << data.buffers;
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, Qt3DGeometryData &data)
+static QDataStream &operator>>(QDataStream &in, Qt3DGeometryData &data)
 {
-    in >> data.vertexPositions >> data.vertexNormals >> data.index;
+    in >> data.vertexPositions >> data.vertexNormals >> data.index >> data.buffers;
     return in;
 }
 
 bool Qt3DGeometryData::operator==(const Qt3DGeometryData &rhs) const
 {
-    return vertexPositions == rhs.vertexPositions && vertexNormals == rhs.vertexNormals;
+    return vertexPositions == rhs.vertexPositions && vertexNormals == rhs.vertexNormals && index == rhs.index && buffers == rhs.buffers;
 }
 
 
@@ -124,6 +142,5 @@ void Qt3DGeometryExtensionInterface::setGeometryData(const Qt3DGeometryData& dat
     if (m_data == data)
         return;
     m_data = data;
-    qDebug();
     emit geometryDataChanged();
 }

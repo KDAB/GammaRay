@@ -74,7 +74,7 @@ private:
     Qt3DCore::QComponent* createSkyboxMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
     void resetCamera();
-    void computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr);
+    void computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr, const QByteArray &bufferData);
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     Qt3DGeometryExtensionInterface *m_interface;

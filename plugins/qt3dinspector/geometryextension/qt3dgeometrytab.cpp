@@ -262,22 +262,22 @@ void Qt3DGeometryTab::updateGeometry()
 
     auto geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
 
-    if (!geo.vertexPositions.data.isEmpty()) {
+    if (geo.vertexPositions.count) {
         auto posBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, geometry);
-        posBuffer->setData(geo.vertexPositions.data);
+        posBuffer->setData(geo.buffers.at(geo.vertexPositions.bufferIndex).data);
         auto posAttr = new Qt3DRender::QAttribute();
         posAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
         posAttr->setBuffer(posBuffer);
         setupAttribute(posAttr, geo.vertexPositions);
         posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
         geometry->addAttribute(posAttr);
-        computeBoundingVolume(geo.vertexPositions);
+        computeBoundingVolume(geo.vertexPositions, posBuffer->data());
         m_geometryTransform->setTranslation(-m_boundingVolume.center());
     }
 
-    if (!geo.vertexNormals.data.isEmpty()) {
+    if (geo.vertexNormals.count) {
         auto normalBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, geometry);
-        normalBuffer->setData(geo.vertexNormals.data);
+        normalBuffer->setData(geo.buffers.at(geo.vertexNormals.bufferIndex).data);
         auto normalAttr = new Qt3DRender::QAttribute();
         normalAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
         normalAttr->setBuffer(normalBuffer);
@@ -286,9 +286,9 @@ void Qt3DGeometryTab::updateGeometry()
         geometry->addAttribute(normalAttr);
     }
 
-    if (!geo.index.data.isEmpty()) {
+    if (geo.index.count) {
         auto indexBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, geometry);
-        indexBuffer->setData(geo.index.data);
+        indexBuffer->setData(geo.buffers.at(geo.index.bufferIndex).data);
         auto indexAttr = new Qt3DRender::QAttribute();
         indexAttr->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
         indexAttr->setBuffer(indexBuffer);
@@ -319,12 +319,12 @@ void Qt3DGeometryTab::resetCamera()
     m_camera->setPosition(QVector3D(0, 0, m_boundingVolume.radius() * 2.5f));
 }
 
-void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData& vertexAttr)
+void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData& vertexAttr, const QByteArray &bufferData)
 {
     m_boundingVolume = BoundingVolume();
     QVector3D v;
-    const char* const end = vertexAttr.data.constData() + vertexAttr.data.size();
-    for (const char *c = vertexAttr.data.constData(); c < end; c += vertexAttr.byteStride) {
+    const char* const end = bufferData.constData() + bufferData.size();
+    for (const char *c = bufferData.constData(); c < end; c += vertexAttr.byteStride) {
         switch (vertexAttr.vertexBaseType) {
             case Qt3DRender::QAttribute::Float:
             {

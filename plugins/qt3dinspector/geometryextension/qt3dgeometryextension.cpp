@@ -29,6 +29,7 @@
 #include "qt3dgeometryextension.h"
 
 #include <core/propertycontroller.h>
+#include <core/util.h>
 
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
@@ -91,6 +92,7 @@ void Qt3DGeometryExtension::updateGeometryData()
         return;
     }
 
+    QHash<Qt3DRender::QBuffer*, uint> bufferMap;
     foreach (auto attr, m_geometry->geometry()->attributes()) {
         Qt3DGeometryAttributeData *attrData = nullptr;
         if (attr->name() == Qt3DRender::QAttribute::defaultPositionAttributeName()) {
@@ -111,12 +113,23 @@ void Qt3DGeometryExtension::updateGeometryData()
         attrData->vertexBaseType = attr->vertexBaseType();
         attrData->vertexSize = attr->vertexSize();
 
-        // TODO don't copy the buffer for every attribute!
+        const auto bufferIt = bufferMap.constFind(attr->buffer());
+        if (bufferIt != bufferMap.constEnd()) {
+            attrData->bufferIndex = bufferIt.value();
+            continue;
+        }
+
+        Qt3DGeometryBufferData buffer;
+        buffer.name = Util::displayString(attr->buffer());
         auto generator = attr->buffer()->dataGenerator();
         if (generator)
-            attrData->data = (*generator.data())();
+            buffer.data = (*generator.data())();
         else
-            attrData->data = attr->buffer()->data();
+            buffer.data = attr->buffer()->data();
+
+        attrData->bufferIndex = data.buffers.size();
+        bufferMap.insert(attr->buffer(), attrData->bufferIndex);
+        data.buffers.push_back(buffer);
     }
 
     setGeometryData(data);
