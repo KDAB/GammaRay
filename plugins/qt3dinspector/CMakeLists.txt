@@ -29,6 +29,7 @@ if(GAMMARAY_BUILD_UI)
     geometryextension/qt3dgeometryextensionclient.cpp
     geometryextension/qt3dgeometrytab.cpp
     geometryextension/boundingvolume.cpp
+    geometryextension/buffermodel.cpp
     geometryextension/cameracontroller.cpp
   )
   qt4_wrap_ui(gammaray_3dinspector_ui_srcs

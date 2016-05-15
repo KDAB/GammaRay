@@ -39,6 +39,7 @@ struct Qt3DGeometryAttributeData
     Qt3DGeometryAttributeData();
     bool operator==(const Qt3DGeometryAttributeData &rhs) const;
 
+    QString name;
     uint byteOffset;
     uint byteStride;
     uint count;

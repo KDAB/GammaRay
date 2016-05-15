@@ -30,6 +30,7 @@
 #include "ui_qt3dgeometrytab.h"
 #include "qt3dgeometryextensioninterface.h"
 #include "cameracontroller.h"
+#include "buffermodel.h"
 
 #include <ui/propertywidget.h>
 #include <common/objectbroker.h>
@@ -77,7 +78,8 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     m_camera(nullptr),
     m_geometryRenderer(nullptr),
     m_geometryTransform(nullptr),
-    m_normalsRenderPass(nullptr)
+    m_normalsRenderPass(nullptr),
+    m_bufferModel(new BufferModel(this))
 {
     ui->setupUi(this);
     auto toolbar = new QToolBar(this);
@@ -116,6 +118,9 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
         ui->actionShowNormals->setVisible(geoView);
         ui->actionShowTangents->setVisible(geoView);
     });
+
+    ui->bufferView->setModel(m_bufferModel);
+    connect(ui->bufferBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_bufferModel, &BufferModel::setBufferIndex);
 
     m_surface = new QWindow;
     m_surface->setSurfaceType(QSurface::OpenGLSurface);
@@ -289,11 +294,13 @@ void Qt3DGeometryTab::updateGeometry()
 {
     ui->actionShowNormals->setEnabled(false);
     ui->actionShowTangents->setEnabled(false);
+    ui->bufferBox->clear();
 
     if (!m_geometryRenderer)
         return;
 
     const auto geo = m_interface->geometryData();
+    m_bufferModel->setGeometryData(geo);
 
     auto geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
     QVector<Qt3DRender::QBuffer*> buffers;
@@ -302,6 +309,7 @@ void Qt3DGeometryTab::updateGeometry()
         auto buffer = new Qt3DRender::QBuffer(bufferData.type, geometry);
         buffer->setData(bufferData.data);
         buffers.push_back(buffer);
+        ui->bufferBox->addItem(bufferData.name, QVariant::fromValue(buffer));
     }
 
     if (geo.vertexPositions.count) {

@@ -49,6 +49,7 @@ class QRenderPass;
 
 namespace GammaRay {
 
+class BufferModel;
 class PropertyWidget;
 class Qt3DGeometryExtensionInterface;
 class Qt3DGeometryAttributeData;
@@ -86,6 +87,8 @@ private:
     Qt3DCore::QTransform *m_geometryTransform;
     Qt3DRender::QRenderPass *m_normalsRenderPass;
     BoundingVolume m_boundingVolume;
+
+    BufferModel *m_bufferModel;
 };
 }
 

@@ -51,13 +51,13 @@ static QDataStream &operator>>(QDataStream &in, Qt3DRender::QAttribute::VertexBa
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
-    out << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
+    out << data.name << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
     return out;
 }
 
 static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 {
-    in >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
+    in >> data.name >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
     return in;
 }
 
@@ -74,6 +74,7 @@ Qt3DGeometryAttributeData::Qt3DGeometryAttributeData() :
 bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs) const
 {
     return
+        name == rhs.name &&
         byteOffset == rhs.byteOffset &&
         byteStride == rhs.byteStride &&
         count == rhs.count &&
