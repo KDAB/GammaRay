@@ -121,6 +121,7 @@ void Qt3DGeometryExtension::updateGeometryData()
 
         Qt3DGeometryBufferData buffer;
         buffer.name = Util::displayString(attr->buffer());
+        buffer.type = attr->buffer()->type();
         auto generator = attr->buffer()->dataGenerator();
         if (generator)
             buffer.data = (*generator.data())();

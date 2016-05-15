@@ -261,37 +261,38 @@ void Qt3DGeometryTab::updateGeometry()
     const auto geo = m_interface->geometryData();
 
     auto geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
+    QVector<Qt3DRender::QBuffer*> buffers;
+    buffers.reserve(geo.buffers.size());
+    for (const auto &bufferData : geo.buffers) {
+        auto buffer = new Qt3DRender::QBuffer(bufferData.type, geometry);
+        buffer->setData(bufferData.data);
+        buffers.push_back(buffer);
+    }
 
     if (geo.vertexPositions.count) {
-        auto posBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, geometry);
-        posBuffer->setData(geo.buffers.at(geo.vertexPositions.bufferIndex).data);
         auto posAttr = new Qt3DRender::QAttribute();
         posAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
-        posAttr->setBuffer(posBuffer);
+        posAttr->setBuffer(buffers.at(geo.vertexPositions.bufferIndex));
         setupAttribute(posAttr, geo.vertexPositions);
         posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
         geometry->addAttribute(posAttr);
-        computeBoundingVolume(geo.vertexPositions, posBuffer->data());
+        computeBoundingVolume(geo.vertexPositions, posAttr->buffer()->data());
         m_geometryTransform->setTranslation(-m_boundingVolume.center());
     }
 
     if (geo.vertexNormals.count) {
-        auto normalBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, geometry);
-        normalBuffer->setData(geo.buffers.at(geo.vertexNormals.bufferIndex).data);
         auto normalAttr = new Qt3DRender::QAttribute();
         normalAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
-        normalAttr->setBuffer(normalBuffer);
+        normalAttr->setBuffer(buffers.at(geo.vertexNormals.bufferIndex));
         setupAttribute(normalAttr, geo.vertexNormals);
         normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
         geometry->addAttribute(normalAttr);
     }
 
     if (geo.index.count) {
-        auto indexBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, geometry);
-        indexBuffer->setData(geo.buffers.at(geo.index.bufferIndex).data);
         auto indexAttr = new Qt3DRender::QAttribute();
         indexAttr->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
-        indexAttr->setBuffer(indexBuffer);
+        indexAttr->setBuffer(buffers.at(geo.index.bufferIndex));
         setupAttribute(indexAttr, geo.index);
         geometry->addAttribute(indexAttr);
     }

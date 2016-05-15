@@ -84,16 +84,35 @@ bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs)
 }
 
 
+static QDataStream &operator<<(QDataStream &out, Qt3DRender::QBuffer::BufferType type)
+{
+    out << (quint32)type;
+    return out;
+}
+
+static QDataStream &operator>>(QDataStream &in, Qt3DRender::QBuffer::BufferType &type)
+{
+    quint32 v;
+    in >> v;
+    type = static_cast<Qt3DRender::QBuffer::BufferType>(v);
+    return in;
+}
+
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
 {
-    out << data.name << data.data;
+    out << data.name << data.data << data.type;
     return out;
 }
 
 static QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
 {
-    in >> data.name >> data.data;
+    in >> data.name >> data.data >> data.type;
     return in;
+}
+
+Qt3DGeometryBufferData::Qt3DGeometryBufferData() :
+    type(Qt3DRender::QBuffer::VertexBuffer)
+{
 }
 
 bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData& rhs) const

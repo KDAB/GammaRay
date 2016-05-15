@@ -30,6 +30,7 @@
 #define GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
 
 #include <Qt3DRender/QAttribute>
+#include <Qt3DRender/QBuffer>
 
 namespace GammaRay {
 
@@ -49,10 +50,12 @@ struct Qt3DGeometryAttributeData
 
 struct Qt3DGeometryBufferData
 {
+    Qt3DGeometryBufferData();
     bool operator==(const Qt3DGeometryBufferData &rhs) const;
 
     QString name;
     QByteArray data;
+    Qt3DRender::QBuffer::BufferType type;
 };
 
 struct Qt3DGeometryData
