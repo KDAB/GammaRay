@@ -300,7 +300,10 @@ void Qt3DGeometryTab::updateGeometry()
     m_geometryRenderer->setIndexOffset(0);
     m_geometryRenderer->setFirstInstance(0);
     m_geometryRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
+
+    auto oldGeometry = m_geometryRenderer->geometry();
     m_geometryRenderer->setGeometry(geometry);
+    delete oldGeometry;
 
     resetCamera();
 }
