@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "attribute.h"
 #include "buffermodel.h"
 
 #include <QDebug>
@@ -91,7 +92,7 @@ void BufferModel::updateAttribute(const GammaRay::Qt3DGeometryAttributeData& att
         col.name = attrData.name;
         if (attrData.vertexSize > 1)
             col.name += QLatin1Char('[') + QString::number(i) + QLatin1Char(']');
-        col.offset = attrData.byteOffset + i * sizeof(float); // TODO
+        col.offset = attrData.byteOffset + i * Attribute::size(attrData.vertexBaseType);
         col.type = attrData.vertexBaseType;
         m_attrs.push_back(col);
     }
@@ -117,7 +118,7 @@ QVariant BufferModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole) {
         const char *c = m_buffer.constData() + (m_rowSize * index.row()) + m_attrs.at(index.column()).offset;
-        return *reinterpret_cast<const float*>(c); // TODO
+        return Attribute::variant(m_attrs.at(index.column()).type, c);
     }
 
     return QVariant();
