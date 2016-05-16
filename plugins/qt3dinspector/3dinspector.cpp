@@ -46,7 +46,9 @@
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QCamera>
+#include <Qt3DRender/QEffect>
 #include <Qt3DRender/QFrameGraphNode>
+#include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QRenderSettings>
 
 #include <Qt3DCore/QAspectEngine>
@@ -224,7 +226,9 @@ void Qt3DInspector::registerRenderMetaTypes()
     qRegisterMetaType<Qt3DRender::QAttribute*>();
     qRegisterMetaType<Qt3DRender::QBuffer*>();
     qRegisterMetaType<Qt3DRender::QCamera*>();
+    qRegisterMetaType<Qt3DRender::QEffect*>();
     qRegisterMetaType<Qt3DRender::QFrameGraphNode*>();
+    qRegisterMetaType<Qt3DRender::QGraphicsApiFilter*>();
 }
 
 void Qt3DInspector::registerExtensions()
