@@ -65,19 +65,18 @@ Q_DECLARE_METATYPE(QQmlError)
 
 using namespace GammaRay;
 
+#if defined(QT_DEPRECATED) && QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
 static QString metaMethodToString(const QObject *object, const QMetaMethod &method)
 {
   return QStringLiteral("%1 bound on %2").arg(method.methodSignature(), Util::displayString(object));
 }
+#endif
 
 static QString callableQjsValueToString(const QJSValue &v)
 {
-  // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
-#if !defined(QT_DEPRECATED) || QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-  Q_UNUSED(v);
-  return QStringLiteral("<callable>");
-#else
+#if defined(QT_DEPRECATED) && QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
   // note: QJSValue::engine() is deprecated
+  // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
   QV4::ExecutionEngine *jsEngine = QV8Engine::getV4(v.engine());
   QV4::Scope scope(jsEngine);
 
@@ -90,6 +89,9 @@ static QString callableQjsValueToString(const QJSValue &v)
   Q_ASSERT(sender);
   QMetaMethod metaMethod = sender->metaObject()->method(qobjectMethod->methodIndex());
   return metaMethodToString(sender, metaMethod);
+#else
+  Q_UNUSED(v);
+  return QStringLiteral("<callable>");
 #endif
 }
 
