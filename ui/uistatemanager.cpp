@@ -134,7 +134,7 @@ void UIStateManager::setup()
 
     knownNames << name;
 
-    connect(splitter, SIGNAL(splitterMoved(int, int)), this, SLOT(widgetCustomized()), Qt::UniqueConnection);
+    connect(splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(widgetCustomized()), Qt::UniqueConnection);
   }
 
   foreach (QHeaderView *header, headers()) {
