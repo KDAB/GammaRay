@@ -58,7 +58,7 @@ class GAMMARAY_UI_EXPORT UIStateManager : public QObject
   Q_OBJECT
 
 public:
-  UIStateManager(QWidget *widget);
+  explicit UIStateManager(QWidget *widget);
   virtual ~UIStateManager();
 
   virtual QList<QSplitter *> splitters() const;

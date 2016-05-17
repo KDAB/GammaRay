@@ -45,7 +45,7 @@ class GAMMARAY_UI_EXPORT HeaderView : public QHeaderView
 public:
   enum State { NoState, ResizeSection, MoveSection, SelectSections, NoClear }; // Copied from QHVPrivate
 
-  HeaderView(Qt::Orientation orientation, QWidget *parent = 0);
+  explicit HeaderView(Qt::Orientation orientation, QWidget *parent = 0);
 
   bool isState(State state) const;
 };
@@ -53,7 +53,7 @@ public:
 /** @brief Base tree view which allow deferred configurations.
  *
  * If you starts using some deferred members - stick to them to avoid
- * synchronisation states issues.
+ * synchronization states issues.
  */
 
 class GAMMARAY_UI_EXPORT DeferredTreeView : public QTreeView
@@ -61,7 +61,7 @@ class GAMMARAY_UI_EXPORT DeferredTreeView : public QTreeView
   Q_OBJECT
 
 public:
-  DeferredTreeView(QWidget *parent = 0);
+  explicit DeferredTreeView(QWidget *parent = 0);
 
   void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 

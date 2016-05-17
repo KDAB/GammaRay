@@ -47,7 +47,7 @@ class MainWindowUIStateManager : public UIStateManager
   Q_OBJECT
 
 public:
-  MainWindowUIStateManager(QWidget *widget);
+  explicit MainWindowUIStateManager(QWidget *widget);
 
   QList<QSplitter *> splitters() const Q_DECL_OVERRIDE;
   QList<QHeaderView *> headers() const Q_DECL_OVERRIDE;

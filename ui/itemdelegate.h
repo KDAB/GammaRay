@@ -43,7 +43,7 @@ class GAMMARAY_UI_EXPORT ItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  ItemDelegate(QObject *parent = 0);
+  explicit ItemDelegate(QObject *parent = 0);
 
   // You can put 2 placeholders for row/column using %r and %c
   QString placeholderText() const;
