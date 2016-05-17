@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "attribute.h"
 #include "buffermodel.h"
+#include "attribute.h"
 
 #include <QDebug>
 
