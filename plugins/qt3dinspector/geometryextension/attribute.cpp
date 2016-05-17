@@ -26,6 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+//krazy:excludeall=typedefs since we need int8_t and friends in here
+
 #include "attribute.h"
 
 #include <cstdint>
