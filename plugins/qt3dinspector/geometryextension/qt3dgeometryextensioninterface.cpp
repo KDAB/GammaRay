@@ -67,7 +67,8 @@ Qt3DGeometryAttributeData::Qt3DGeometryAttributeData() :
     count(0),
     divisor(0),
     vertexBaseType(Qt3DRender::QAttribute::UnsignedShort),
-    vertexSize(0)
+    vertexSize(0),
+    bufferIndex(0)
 {
 }
 
