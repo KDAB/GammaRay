@@ -118,7 +118,7 @@ public:
 // in older compilers in order to use it... starting with VC7 we can declare it as "protected"
 protected:
 #endif
-	enum { STACKWALK_MAX_NAMELEN = 1024 }; // max name length for found symbols
+        enum { STACKWALK_MAX_NAMELEN = 1024 }; // max name length for found symbols
 
 protected:
   // Entry for each Callstack-Entry
@@ -139,7 +139,7 @@ protected:
     CHAR loadedImageName[STACKWALK_MAX_NAMELEN];
   } CallstackEntry;
 
-  typedef enum CallstackEntryType {firstEntry, nextEntry, lastEntry};
+  enum CallstackEntryType {firstEntry, nextEntry, lastEntry};
 
   virtual void OnSymInit(LPCSTR szSearchPath, DWORD symOptions, LPCSTR szUserName);
   virtual void OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr, DWORD size, DWORD result, LPCSTR symType, LPCSTR pdbName, ULONGLONG fileVersion);
