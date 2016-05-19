@@ -174,6 +174,10 @@ QString VariantHandler::displayString(const QVariant &value)
       case Qt::DashDotLine: return QStringLiteral("DashDotLine");
       case Qt::DashDotDotLine: return QStringLiteral("DashDotDotLine");
       case Qt::CustomDashLine: return QStringLiteral("CustomDashLine");
+#if !defined(Q_MOC_RUN)
+    case Qt::MPenStyle:
+        return QString();
+#endif
     }
   }
 
