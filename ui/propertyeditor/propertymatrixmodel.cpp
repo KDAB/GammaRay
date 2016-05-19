@@ -321,6 +321,10 @@ bool PropertyMatrixModel::setData(const QModelIndex &index, const QVariant &data
       m_matrix = value;
       break;
     }
+
+    default:
+      //TODO: should we assert here?
+      break;
   }
 
   emit dataChanged(index, index);
@@ -363,6 +367,8 @@ QVariant PropertyMatrixModel::headerData(int section, Qt::Orientation orientatio
       case QVariant::Vector3D:
       case QVariant::Vector4D:
         return QString();
+      default:
+        break;
     }
   } else {
     switch (m_matrix.type()) {
@@ -424,6 +430,8 @@ QVariant PropertyMatrixModel::headerData(int section, Qt::Orientation orientatio
         }
         break;
 #endif
+      default:
+        break;
     }
   }
 
