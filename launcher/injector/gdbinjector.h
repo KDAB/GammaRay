@@ -37,7 +37,7 @@ class GdbInjector : public DebuggerInjector
 {
   Q_OBJECT
   public:
-    GdbInjector(const QString &executableOverride = QString());
+    explicit GdbInjector(const QString &executableOverride = QString());
     QString name() const Q_DECL_OVERRIDE;
     bool launch(const QStringList &programAndArgs, const QString &probeDll, const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
     bool attach(int pid, const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
