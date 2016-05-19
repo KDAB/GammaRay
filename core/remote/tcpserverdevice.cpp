@@ -94,6 +94,9 @@ QUrl TcpServerDevice::externalAddress() const
             case QAbstractSocket::IPv6Protocol:
                 myHost = QHostAddress(QHostAddress::LocalHostIPv6).toString();
                 break;
+            case QAbstractSocket::UnknownNetworkLayerProtocol:
+                Q_ASSERT_X(false, "TcpServerDevice::externalAddress", "unknown TCP protocol");
+                break;
         }
     }
 
@@ -101,7 +104,6 @@ QUrl TcpServerDevice::externalAddress() const
     url.setScheme(QStringLiteral("tcp"));
     url.setHost(myHost);
     url.setPort(m_server->serverPort());
-
     return url;
 }
 
