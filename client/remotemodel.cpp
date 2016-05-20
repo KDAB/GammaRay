@@ -359,16 +359,18 @@ void RemoteModel::newMessage(const GammaRay::Message& msg)
         if ((state & Loading) == 0)
           continue; // we didn't ask for this, probably outdated response for a moved cell
 
-        node->allocateColumns();
-        Q_ASSERT(node->data.size() > column);
-        node->data[column] = itemData;
-        node->flags[column] = static_cast<Qt::ItemFlags>(flags);
-        node->state[column] = state & ~(Loading | Empty | Outdated);
+        if (node) {
+          node->allocateColumns();
+          Q_ASSERT(node->data.size() > column);
+          node->data[column] = itemData;
+          node->flags[column] = static_cast<Qt::ItemFlags>(flags);
+          node->state[column] = state & ~(Loading | Empty | Outdated);
 
-        // group by parent, and emit dataChange for the bounding rect per hierarchy level
-        // as an approximiation of perfect range batching
-        const QModelIndex qmi = modelIndexForNode(node, column);
-        dataChangedIndexes[qmi.parent()].push_back(qmi);
+          // group by parent, and emit dataChange for the bounding rect per hierarchy level
+          // as an approximiation of perfect range batching
+          const QModelIndex qmi = modelIndexForNode(node, column);
+          dataChangedIndexes[qmi.parent()].push_back(qmi);
+        }
       }
 
       for (auto it = dataChangedIndexes.constBegin(); it != dataChangedIndexes.constEnd(); ++it) {
