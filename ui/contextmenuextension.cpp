@@ -36,6 +36,7 @@
 
 using namespace GammaRay;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 namespace {
 QString sourceLocationLabel(ContextMenuExtension::Location location, const SourceLocation &sourceLocation) {
   switch (location) {
@@ -52,6 +53,7 @@ QString sourceLocationLabel(ContextMenuExtension::Location location, const Sourc
   return QString();
 }
 }
+#endif
 
 ContextMenuExtension::ContextMenuExtension(ObjectId id)
   : m_id(id)
