@@ -167,9 +167,10 @@ void Client::messageReceived(const Message& msg)
         QVector<QPair<Protocol::ObjectAddress, QString> > objects;
         msg.payload() >> objects;
         for (QVector<QPair<Protocol::ObjectAddress, QString> >::const_iterator it = objects.constBegin(); it != objects.constEnd(); ++it) {
-          if (it->first != endpointAddress())
+          if (it->first != endpointAddress()) {
             addObjectNameAddressMapping(it->second, it->first);
-            m_statModel->addObject(it->first, it->second);
+          }
+          m_statModel->addObject(it->first, it->second);
         }
 
         m_propertySyncer->setAddress(objectAddress(QStringLiteral("com.kdab.GammaRay.PropertySyncer")));
