@@ -83,12 +83,14 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex& index, int role
     const auto totalCount = m_qobjIndex.sibling(m_qobjIndex.row(), 2).data().toInt();
     const auto ratio = (double)count / (double)totalCount;
 
-    if (role == Qt::BackgroundRole)
-        return colorForRatio(ratio);
-    if (role == Qt::ToolTipRole)
-        return tr("%1%").arg(ratio * 100.0, 0, 'f', 2);
+    // at this point, role can only be background or tooltip
 
-    return QIdentityProxyModel::data(index, role);
+    if (role == Qt::BackgroundRole) {
+        return colorForRatio(ratio);
+    }
+
+    Q_ASSERT(role == Qt::ToolTipRole);
+    return tr("%1%").arg(ratio * 100.0, 0, 'f', 2);
 }
 
 void MetaObjectTreeClientProxyModel::findQObjectIndex()
