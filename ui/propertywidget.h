@@ -34,7 +34,6 @@
 #include <QHash>
 
 #include "gammaray_ui_export.h"
-#include <common/enums.h>
 #include "propertywidgettab.h"
 
 class QAbstractItemModel;

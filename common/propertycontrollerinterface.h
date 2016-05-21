@@ -32,8 +32,6 @@
 #include <QObject>
 #include <QStringList>
 
-#include "enums.h"
-
 namespace GammaRay {
 
 /** @brief Client/Server interface of the property editor. */

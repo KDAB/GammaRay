@@ -78,7 +78,6 @@ endif()
 gammaray_install_headers(
   ${CMAKE_CURRENT_BINARY_DIR}/gammaray_common_export.h
   endpoint.h
-  enums.h
   metatypedeclarations.h
   modelroles.h
   objectbroker.h

@@ -27,7 +27,6 @@
 */
 
 #include "streamoperators.h"
-#include "enums.h"
 #include "metatypedeclarations.h"
 #include "variantwrapper.h"
 #include "sourcelocation.h"
@@ -37,13 +36,11 @@
 using namespace GammaRay;
 
 GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::MethodType)
-GAMMARAY_ENUM_STREAM_OPERATORS(PropertyWidgetDisplayState::State)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ConnectionType)
 
 void StreamOperators::registerOperators()
 {
   qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
-  qRegisterMetaTypeStreamOperators<PropertyWidgetDisplayState::State>();
   qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
 
   qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
