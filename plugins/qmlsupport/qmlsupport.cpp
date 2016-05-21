@@ -60,6 +60,7 @@
 #include <private/qqmlcontext_p.h>
 #include <private/qqmlscriptstring_p.h>
 #include <private/qv8engine_p.h>
+#include <private/qv4qobjectwrapper_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
