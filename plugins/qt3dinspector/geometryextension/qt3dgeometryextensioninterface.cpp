@@ -35,22 +35,24 @@
 
 using namespace GammaRay;
 
+GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::AttributeType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::VertexBaseType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QBuffer::BufferType)
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
-    out << data.name << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
+    out << data.name << data.attributeType << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
     return out;
 }
 
 static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 {
-    in >> data.name >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
+    in >> data.name >> data.attributeType >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
     return in;
 }
 
 Qt3DGeometryAttributeData::Qt3DGeometryAttributeData() :
+    attributeType(Qt3DRender::QAttribute::VertexAttribute),
     byteOffset(0),
     byteStride(0),
     count(0),
@@ -65,6 +67,7 @@ bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs)
 {
     return
         name == rhs.name &&
+        attributeType == rhs.attributeType &&
         byteOffset == rhs.byteOffset &&
         byteStride == rhs.byteStride &&
         count == rhs.count &&

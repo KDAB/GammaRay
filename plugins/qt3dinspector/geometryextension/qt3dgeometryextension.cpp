@@ -107,6 +107,7 @@ void Qt3DGeometryExtension::updateGeometryData()
             continue;
 
         attrData->name = attr->name();
+        attrData->attributeType = attr->attributeType();
         attrData->byteOffset = attr->byteOffset();
         attrData->byteStride = attr->byteStride();
         attrData->count = attr->count();
