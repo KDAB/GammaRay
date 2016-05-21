@@ -71,13 +71,10 @@ void BufferModel::updateAttributes()
 
     Q_ASSERT(m_data.buffers.size() >= m_bufferIndex);
     m_buffer = m_data.buffers.at(m_bufferIndex).data;
-
-    if (m_data.vertexPositions.bufferIndex == (uint)m_bufferIndex)
-        updateAttribute(m_data.vertexPositions);
-    if (m_data.vertexNormals.bufferIndex == (uint)m_bufferIndex)
-        updateAttribute(m_data.vertexNormals);
-    if (m_data.index.bufferIndex == (uint)m_bufferIndex)
-        updateAttribute(m_data.index);
+    foreach (const auto &attr, m_data.attributes) {
+        if (attr.bufferIndex == (uint)m_bufferIndex)
+            updateAttribute(attr);
+    }
 
     std::sort(m_attrs.begin(), m_attrs.end(), [](const ColumnData &lhs, const ColumnData &rhs) {
         return lhs.offset < rhs.offset;

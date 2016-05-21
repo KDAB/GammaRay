@@ -64,10 +64,7 @@ struct Qt3DGeometryData
 {
     bool operator==(const Qt3DGeometryData &rhs) const;
 
-    Qt3DGeometryAttributeData vertexPositions;
-    Qt3DGeometryAttributeData vertexNormals;
-    Qt3DGeometryAttributeData index;
-
+    QVector<Qt3DGeometryAttributeData> attributes;
     QVector<Qt3DGeometryBufferData> buffers;
 };
 

@@ -93,46 +93,36 @@ void Qt3DGeometryExtension::updateGeometryData()
     }
 
     QHash<Qt3DRender::QBuffer*, uint> bufferMap;
+    data.attributes.reserve(m_geometry->geometry()->attributes().size());
     foreach (auto attr, m_geometry->geometry()->attributes()) {
-        Qt3DGeometryAttributeData *attrData = nullptr;
-        if (attr->name() == Qt3DRender::QAttribute::defaultPositionAttributeName()) {
-            attrData = &data.vertexPositions;
-        } else if (attr->name() == Qt3DRender::QAttribute::defaultNormalAttributeName()) {
-            attrData = &data.vertexNormals;
-        } else if (attr->attributeType() == Qt3DRender::QAttribute::IndexAttribute) {
-            attrData = &data.index;
-        }
-
-        if (!attrData)
-            continue;
-
-        attrData->name = attr->name();
-        attrData->attributeType = attr->attributeType();
-        attrData->byteOffset = attr->byteOffset();
-        attrData->byteStride = attr->byteStride();
-        attrData->count = attr->count();
-        attrData->divisor = attr->divisor();
-        attrData->vertexBaseType = attr->vertexBaseType();
-        attrData->vertexSize = attr->vertexSize();
+        Qt3DGeometryAttributeData attrData;
+        attrData.name = attr->name();
+        attrData.attributeType = attr->attributeType();
+        attrData.byteOffset = attr->byteOffset();
+        attrData.byteStride = attr->byteStride();
+        attrData.count = attr->count();
+        attrData.divisor = attr->divisor();
+        attrData.vertexBaseType = attr->vertexBaseType();
+        attrData.vertexSize = attr->vertexSize();
 
         const auto bufferIt = bufferMap.constFind(attr->buffer());
         if (bufferIt != bufferMap.constEnd()) {
-            attrData->bufferIndex = bufferIt.value();
-            continue;
+            attrData.bufferIndex = bufferIt.value();
+        } else {
+            Qt3DGeometryBufferData buffer;
+            buffer.name = Util::displayString(attr->buffer());
+            buffer.type = attr->buffer()->type();
+            auto generator = attr->buffer()->dataGenerator();
+            if (generator)
+                buffer.data = (*generator.data())();
+            else
+                buffer.data = attr->buffer()->data();
+
+            attrData.bufferIndex = data.buffers.size();
+            bufferMap.insert(attr->buffer(), attrData.bufferIndex);
+            data.buffers.push_back(buffer);
         }
-
-        Qt3DGeometryBufferData buffer;
-        buffer.name = Util::displayString(attr->buffer());
-        buffer.type = attr->buffer()->type();
-        auto generator = attr->buffer()->dataGenerator();
-        if (generator)
-            buffer.data = (*generator.data())();
-        else
-            buffer.data = attr->buffer()->data();
-
-        attrData->bufferIndex = data.buffers.size();
-        bufferMap.insert(attr->buffer(), attrData->bufferIndex);
-        data.buffers.push_back(buffer);
+        data.attributes.push_back(attrData);
     }
 
     setGeometryData(data);

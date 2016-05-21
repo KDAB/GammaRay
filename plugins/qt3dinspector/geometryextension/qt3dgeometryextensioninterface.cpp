@@ -103,19 +103,19 @@ bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData& rhs) const
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryData &data)
 {
-    out << data.vertexPositions << data.vertexNormals << data.index << data.buffers;
+    out << data.attributes << data.buffers;
     return out;
 }
 
 static QDataStream &operator>>(QDataStream &in, Qt3DGeometryData &data)
 {
-    in >> data.vertexPositions >> data.vertexNormals >> data.index >> data.buffers;
+    in >> data.attributes >> data.buffers;
     return in;
 }
 
 bool Qt3DGeometryData::operator==(const Qt3DGeometryData &rhs) const
 {
-    return vertexPositions == rhs.vertexPositions && vertexNormals == rhs.vertexNormals && index == rhs.index && buffers == rhs.buffers;
+    return attributes == rhs.attributes && buffers == rhs.buffers;
 }
 
 

@@ -312,33 +312,31 @@ void Qt3DGeometryTab::updateGeometry()
         ui->bufferBox->addItem(bufferData.name, QVariant::fromValue(buffer));
     }
 
-    if (geo.vertexPositions.count) {
-        auto posAttr = new Qt3DRender::QAttribute();
-        posAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
-        posAttr->setBuffer(buffers.at(geo.vertexPositions.bufferIndex));
-        setupAttribute(posAttr, geo.vertexPositions);
-        posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
-        geometry->addAttribute(posAttr);
-        computeBoundingVolume(geo.vertexPositions, posAttr->buffer()->data());
-        m_geometryTransform->setTranslation(-m_boundingVolume.center());
-    }
-
-    if (geo.vertexNormals.count) {
-        auto normalAttr = new Qt3DRender::QAttribute();
-        normalAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
-        normalAttr->setBuffer(buffers.at(geo.vertexNormals.bufferIndex));
-        setupAttribute(normalAttr, geo.vertexNormals);
-        normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
-        geometry->addAttribute(normalAttr);
-        ui->actionShowNormals->setEnabled(true);
-    }
-
-    if (geo.index.count) {
-        auto indexAttr = new Qt3DRender::QAttribute();
-        indexAttr->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
-        indexAttr->setBuffer(buffers.at(geo.index.bufferIndex));
-        setupAttribute(indexAttr, geo.index);
-        geometry->addAttribute(indexAttr);
+    for (const auto &attrData : geo.attributes) {
+        if (attrData.name == Qt3DRender::QAttribute::defaultPositionAttributeName()) {
+            auto posAttr = new Qt3DRender::QAttribute();
+            posAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+            posAttr->setBuffer(buffers.at(attrData.bufferIndex));
+            setupAttribute(posAttr, attrData);
+            posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
+            geometry->addAttribute(posAttr);
+            computeBoundingVolume(attrData, posAttr->buffer()->data());
+            m_geometryTransform->setTranslation(-m_boundingVolume.center());
+        } else if (attrData.name == Qt3DRender::QAttribute::defaultNormalAttributeName()) {
+            auto normalAttr = new Qt3DRender::QAttribute();
+            normalAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+            normalAttr->setBuffer(buffers.at(attrData.bufferIndex));
+            setupAttribute(normalAttr, attrData);
+            normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
+            geometry->addAttribute(normalAttr);
+            ui->actionShowNormals->setEnabled(true);
+        } else if (attrData.attributeType == Qt3DRender::QAttribute::IndexAttribute) {
+            auto indexAttr = new Qt3DRender::QAttribute();
+            indexAttr->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
+            indexAttr->setBuffer(buffers.at(attrData.bufferIndex));
+            setupAttribute(indexAttr, attrData);
+            geometry->addAttribute(indexAttr);
+        }
     }
 
     m_geometryRenderer->setInstanceCount(1);
