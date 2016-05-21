@@ -29,15 +29,38 @@
 #ifndef GAMMARAY_STREAMOPERATORS_H
 #define GAMMARAY_STREAMOPERATORS_H
 
+#include <QDataStream>
+
 namespace GammaRay {
 
 /** Custom QDataStream streaming operators. */
 namespace StreamOperators
 {
-  /** Call once early during startup. */
-  void registerOperators();
+    /** Call once early during startup. */
+    void registerOperators();
+
+    namespace Internal {
+    template <typename T> QDataStream& writeEnum(QDataStream &out, T value)
+    {
+        out << static_cast<qint32>(value);
+        return out;
+    }
+
+    template <typename T> QDataStream& readEnum(QDataStream &in, T &value)
+    {
+        qint32 v;
+        in >> v;
+        value = static_cast<T>(v);
+        return in;
+    }
+    }
 }
 
+#define GAMMARAY_ENUM_STREAM_OPERATORS(enumType) \
+    QDataStream &operator<<(QDataStream &out, enumType value) \
+        { return GammaRay::StreamOperators::Internal::writeEnum(out, value); } \
+    QDataStream &operator>>(QDataStream &in, enumType &value) \
+        { return GammaRay::StreamOperators::Internal::readEnum(in, value); }
 }
 
 #endif // GAMMARAY_STREAMOPERATORS_H

@@ -29,25 +29,14 @@
 #include "qt3dgeometryextensioninterface.h"
 
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
-#include <QDataStream>
 #include <QDebug>
 
 using namespace GammaRay;
 
-static QDataStream &operator<<(QDataStream &out, Qt3DRender::QAttribute::VertexBaseType type)
-{
-    out << (quint32)type;
-    return out;
-}
-
-static QDataStream &operator>>(QDataStream &in, Qt3DRender::QAttribute::VertexBaseType &type)
-{
-    quint32 v;
-    in >> v;
-    type = static_cast<Qt3DRender::QAttribute::VertexBaseType>(v);
-    return in;
-}
+GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::VertexBaseType)
+GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QBuffer::BufferType)
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
@@ -85,20 +74,6 @@ bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs)
         bufferIndex == rhs.bufferIndex;
 }
 
-
-static QDataStream &operator<<(QDataStream &out, Qt3DRender::QBuffer::BufferType type)
-{
-    out << (quint32)type;
-    return out;
-}
-
-static QDataStream &operator>>(QDataStream &in, Qt3DRender::QBuffer::BufferType &type)
-{
-    quint32 v;
-    in >> v;
-    type = static_cast<Qt3DRender::QBuffer::BufferType>(v);
-    return in;
-}
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
 {
