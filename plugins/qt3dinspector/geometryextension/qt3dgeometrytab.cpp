@@ -78,6 +78,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     m_camera(nullptr),
     m_geometryRenderer(nullptr),
     m_geometryTransform(nullptr),
+    m_cullMode(nullptr),
     m_normalsRenderPass(nullptr),
     m_bufferModel(new BufferModel(this))
 {
@@ -94,6 +95,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     toolbar->addSeparator();
     toolbar->addAction(ui->actionShowNormals);
     toolbar->addAction(ui->actionShowTangents);
+    toolbar->addAction(ui->actionCullBack);
 
     connect(ui->actionResetCam, &QAction::triggered, this, &Qt3DGeometryTab::resetCamera);
     auto camGroup = new QActionGroup(this);
@@ -104,6 +106,10 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     connect(ui->actionShowNormals, &QAction::toggled, this, [this]() {
         if (m_normalsRenderPass)
             m_normalsRenderPass->setEnabled(ui->actionShowNormals->isChecked());
+    });
+    connect(ui->actionCullBack, &QAction::toggled, this, [this]() {
+        if (m_cullMode)
+            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
     });
 
     auto viewGroup = new QActionGroup(this);
@@ -117,6 +123,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
         camGroup->setVisible(geoView);
         ui->actionShowNormals->setVisible(geoView);
         ui->actionShowTangents->setVisible(geoView);
+        ui->actionCullBack->setVisible(geoView);
     });
 
     ui->bufferView->setModel(m_bufferModel);
@@ -213,6 +220,9 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
 
     auto wireframeRenderPass = new Qt3DRender::QRenderPass;
     wireframeRenderPass->setShaderProgram(wireframeShader);
+    m_cullMode = new Qt3DRender::QCullFace(wireframeRenderPass);
+    m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
+    wireframeRenderPass->addRenderState(m_cullMode);
 
     auto normalsShader = new Qt3DRender::QShaderProgram;
     normalsShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));

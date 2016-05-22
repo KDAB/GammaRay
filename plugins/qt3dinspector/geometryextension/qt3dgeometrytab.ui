@@ -154,6 +154,20 @@
     <string>View raw buffer data.</string>
    </property>
   </action>
+  <action name="actionCullBack">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Cull Back</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable back face culling.</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

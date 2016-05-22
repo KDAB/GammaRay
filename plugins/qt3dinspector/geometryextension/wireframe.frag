@@ -53,7 +53,11 @@ vec3 adsModel( const in vec3 pos, const in vec3 normal )
 void main()
 {
     // Calculate the color from the phong model
-    vec4 color = vec4( adsModel( fs_in.position, normalize( fs_in.normal ) ), 1.0 );
+    vec4 color;
+    if (gl_FrontFacing)
+        color = vec4( adsModel( fs_in.position, normalize( fs_in.normal ) ), 1.0 );
+    else
+        color = vec4(1.0, 0.0, 0.0, 1.0);
 
     // Find the smallest distance between the fragment and a triangle edge
     float d = min( fs_in.edgeDistance.x, fs_in.edgeDistance.y );

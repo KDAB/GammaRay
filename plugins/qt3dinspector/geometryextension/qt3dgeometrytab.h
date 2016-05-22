@@ -43,6 +43,7 @@ class QTransform;
 }
 namespace Qt3DRender {
 class QCamera;
+class QCullFace;
 class QGeometryRenderer;
 class QRenderPass;
 }
@@ -85,6 +86,7 @@ private:
     Qt3DRender::QCamera *m_camera;
     Qt3DRender::QGeometryRenderer *m_geometryRenderer;
     Qt3DCore::QTransform *m_geometryTransform;
+    Qt3DRender::QCullFace *m_cullMode;
     Qt3DRender::QRenderPass *m_normalsRenderPass;
     BoundingVolume m_boundingVolume;
 
