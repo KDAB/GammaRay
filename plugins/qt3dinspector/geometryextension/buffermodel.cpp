@@ -125,6 +125,8 @@ QVariant BufferModel::headerData(int section, Qt::Orientation orientation, int r
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return m_attrs.at(section).name;
+    } else if (orientation == Qt::Vertical && role == Qt::DisplayRole) {
+        return QString::number(section); // 0-based rather than 1-based
     }
     return QAbstractTableModel::headerData(section, orientation, role);
 }
