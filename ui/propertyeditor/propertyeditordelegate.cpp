@@ -213,6 +213,25 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem& option, const
         return sizeHint(option, index, value.value<QQuaternion>());
 #endif
     }
+
+    // We don't want multiline texts for String values
+    if (value.type() == QVariant::String) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+        QStyleOptionViewItem opt = option;
+#else
+        QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4*>(&option);
+#endif
+
+        if (opt.text.isEmpty() && !placeholderText().isEmpty()) {
+            opt.text = defaultDisplayText(index);
+        }
+
+        QSize sh = QStyledItemDelegate::sizeHint(opt, index);
+
+        initStyleOption(&opt, index);
+        return sh.boundedTo(QSize(sh.width(), opt.fontMetrics.height()));
+    }
+
     return QStyledItemDelegate::sizeHint(option, index);
 }
 

@@ -33,6 +33,7 @@
 #include "propertydoublepaireditor.h"
 #include "propertypaletteeditor.h"
 #include "propertymatrixeditor.h"
+#include "propertytexteditor.h"
 
 #include <QItemEditorFactory>
 
@@ -49,6 +50,7 @@ PropertyEditorFactory::PropertyEditorFactory()
   addEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
   addEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
   addEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
+  addEditor(QVariant::String, new QStandardItemEditorCreator<PropertyTextEditor>());
   addEditor(QVariant::Transform, new QStandardItemEditorCreator<PropertyMatrixEditor>());
   addEditor(QVariant::Matrix, new QStandardItemEditorCreator<PropertyMatrixEditor>());
   addEditor(QVariant::Matrix4x4, new QStandardItemEditorCreator<PropertyMatrixEditor>());
@@ -98,7 +100,6 @@ void PropertyEditorFactory::initBuiltInTypes()
     << QVariant::UInt
     << QVariant::Date
     << QVariant::DateTime
-    << QVariant::String
     << QVariant::Time;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)

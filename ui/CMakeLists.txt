@@ -36,6 +36,7 @@ set(gammaray_ui_srcs
   propertyeditor/propertymatrixdialog.cpp
   propertyeditor/propertymatrixeditor.cpp
   propertyeditor/propertymatrixmodel.cpp
+  propertyeditor/propertytexteditor.cpp
 
   tools/localeinspector/localeinspectorwidget.cpp
   tools/messagehandler/messagedisplaymodel.cpp
@@ -76,6 +77,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/propertyextendededitor.ui
   propertyeditor/propertyintpaireditor.ui
   propertyeditor/propertymatrixdialog.ui
+  propertyeditor/propertytexteditor.ui
   propertyeditor/palettedialog.ui
 
   tools/localeinspector/localeinspectorwidget.ui
