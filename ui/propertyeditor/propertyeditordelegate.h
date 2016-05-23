@@ -30,17 +30,19 @@
 #define GAMMARAY_PROPERTYEDITORDELEGATE_H
 
 #include "gammaray_ui_export.h"
+#include "ui/itemdelegate.h"
 #include <QStyledItemDelegate>
 
 class QMatrix4x4;
 
 namespace GammaRay {
 
-class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate
+class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate, public ItemDelegateInterface
 {
     Q_OBJECT
 public:
     explicit PropertyEditorDelegate(QObject *parent);
+    explicit PropertyEditorDelegate(const QString &placeholderText, QObject *parent);
     ~PropertyEditorDelegate();
 
     void setEditorData(QWidget* editor, const QModelIndex& index) const Q_DECL_OVERRIDE;

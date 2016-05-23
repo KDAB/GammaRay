@@ -32,6 +32,7 @@
 
 #include <ui/itemdelegate.h>
 #include <ui/searchlinecontroller.h>
+#include <ui/propertyeditor/propertyeditordelegate.h>
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
@@ -58,9 +59,10 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   ui->modelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
 
   ui->modelContentView->header()->setObjectName("modelContentViewHeader");
-  ui->modelContentView->setItemDelegate(new ItemDelegate(this));
+  ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(ItemDelegate::tr("(Item %r)"), this));
 
   ui->modelCellView->header()->setObjectName("modelCellViewHeader");
+  ui->modelCellView->setItemDelegate(new PropertyEditorDelegate(this));
 
   ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface*>(createModelInspectorClient);
   m_interface = ObjectBroker::object<ModelInspectorInterface*>();

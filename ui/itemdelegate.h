@@ -35,15 +35,13 @@
 
 namespace GammaRay {
 
-/** @brief A simple delegate that avoid empty display role texts.
+/** @brief A simple interface that avoid empty display role texts.
  */
-
-class GAMMARAY_UI_EXPORT ItemDelegate : public QStyledItemDelegate
+class GAMMARAY_UI_EXPORT ItemDelegateInterface
 {
-  Q_OBJECT
-
 public:
-  explicit ItemDelegate(QObject *parent = 0);
+  ItemDelegateInterface();
+  explicit ItemDelegateInterface(const QString &placeholderText);
 
   // You can put 2 placeholders for row/column using %r and %c
   QString placeholderText() const;
@@ -53,14 +51,27 @@ public:
   QSet<int> placeholderColumns() const;
   void setPlaceholderColumns(const QSet<int> &placeholderColumns);
 
-  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
-
-private:
+protected:
   QString defaultDisplayText(const QModelIndex &index) const;
+
+  const QWidget *widget(const QStyleOptionViewItem &option) const;
+  QStyle *style(const QStyleOptionViewItem &option) const;
 
 private:
   QString m_placeholderText;
   QSet<int> m_placeholderColumns;
+};
+
+/** @brief A simple delegate that avoid empty display role texts.
+ */
+class GAMMARAY_UI_EXPORT ItemDelegate : public QStyledItemDelegate, public ItemDelegateInterface
+{
+  Q_OBJECT
+
+public:
+  explicit ItemDelegate(QObject *parent = 0);
+
+  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 } // Namespace GammaRay

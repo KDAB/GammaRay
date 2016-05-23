@@ -127,7 +127,14 @@ template <> struct matrix_trait<QQuaternion> {
 
 }
 
-PropertyEditorDelegate::PropertyEditorDelegate(QObject* parent): QStyledItemDelegate(parent)
+PropertyEditorDelegate::PropertyEditorDelegate(QObject* parent)
+    : QStyledItemDelegate(parent), ItemDelegateInterface(QString())
+{
+    setItemEditorFactory(PropertyEditorFactory::instance());
+}
+
+PropertyEditorDelegate::PropertyEditorDelegate(const QString &placeholderText, QObject *parent)
+    : QStyledItemDelegate(parent), ItemDelegateInterface(placeholderText)
 {
     setItemEditorFactory(PropertyEditorFactory::instance());
 }
@@ -164,7 +171,23 @@ void PropertyEditorDelegate::paint(QPainter* painter, const QStyleOptionViewItem
         paint(painter, option, index, value.value<QQuaternion>());
 #endif
     } else {
-        QStyledItemDelegate::paint(painter, option, index);
+        if (placeholderText().isEmpty()) {
+            QStyledItemDelegate::paint(painter, option, index);
+        }
+        else {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+            QStyleOptionViewItem opt = option;
+#else
+            QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4*>(&option);
+#endif
+
+            opt.text = defaultDisplayText(index);
+            initStyleOption(&opt, index);
+
+            const QWidget *widget = this->widget(option);
+            QStyle *style = this->style(option);
+            style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
+        }
     }
 }
 

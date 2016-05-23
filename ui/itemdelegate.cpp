@@ -34,30 +34,65 @@
 
 using namespace GammaRay;
 
-ItemDelegate::ItemDelegate(QObject *parent)
-  : QStyledItemDelegate(parent)
-  , m_placeholderText(tr("(Item %r)"))
+ItemDelegateInterface::ItemDelegateInterface()
+    : m_placeholderText(ItemDelegate::tr("(Item %r)"))
 {
 }
 
-QString ItemDelegate::placeholderText() const
+ItemDelegateInterface::ItemDelegateInterface(const QString &placeholderText)
+    : m_placeholderText(placeholderText)
+{
+}
+
+QString ItemDelegateInterface::placeholderText() const
 {
     return m_placeholderText;
 }
 
-void ItemDelegate::setPlaceholderText(const QString &placeholderText)
+void ItemDelegateInterface::setPlaceholderText(const QString &placeholderText)
 {
     m_placeholderText = placeholderText;
 }
 
-QSet<int> ItemDelegate::placeholderColumns() const
+QSet<int> ItemDelegateInterface::placeholderColumns() const
 {
     return m_placeholderColumns;
 }
 
-void ItemDelegate::setPlaceholderColumns(const QSet<int> &placeholderColumns)
+void ItemDelegateInterface::setPlaceholderColumns(const QSet<int> &placeholderColumns)
 {
     m_placeholderColumns = placeholderColumns;
+}
+
+QString ItemDelegateInterface::defaultDisplayText(const QModelIndex &index) const
+{
+    QString display = index.data().toString();
+    if (display.isEmpty() && (m_placeholderColumns.isEmpty() || m_placeholderColumns.contains(index.column())))
+        display = QString(m_placeholderText)
+                .replace(QStringLiteral("%r"), QString::number(index.row()))
+                .replace(QStringLiteral("%c"), QString::number(index.column()));
+    return display;
+}
+
+const QWidget *ItemDelegateInterface::widget(const QStyleOptionViewItem &option) const
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
+    const QStyleOptionViewItem &opt(option);
+#else
+    const QStyleOptionViewItemV4 &opt(*qstyleoption_cast<const QStyleOptionViewItemV4*>(&option));
+#endif
+    return opt.widget;
+}
+
+QStyle *ItemDelegateInterface::style(const QStyleOptionViewItem &option) const
+{
+    const QWidget *widget = this->widget(option);;
+    return widget ? widget->style() : QApplication::style();
+}
+
+ItemDelegate::ItemDelegate(QObject *parent)
+  : QStyledItemDelegate(parent), ItemDelegateInterface()
+{
 }
 
 void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -70,17 +105,7 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     opt.text = defaultDisplayText(index);
     initStyleOption(&opt, index);
 
-    const QWidget *widget = opt.widget;
-    QStyle *style = widget ? widget->style() : QApplication::style();
+    const QWidget *widget = this->widget(option);
+    QStyle *style = this->style(option);
     style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
-}
-
-QString ItemDelegate::defaultDisplayText(const QModelIndex &index) const
-{
-    QString display = index.data().toString();
-    if (display.isEmpty() && (m_placeholderColumns.isEmpty() || m_placeholderColumns.contains(index.column())))
-        display = QString(m_placeholderText)
-                .replace(QStringLiteral("%r"), QString::number(index.row()))
-                .replace(QStringLiteral("%c"), QString::number(index.column()));
-    return display;
 }
