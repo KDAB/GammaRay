@@ -30,6 +30,7 @@
 #include "quickitemmodelroles.h"
 
 #include <core/paintanalyzer.h>
+#include <core/probe.h>
 
 #include <QQuickItem>
 #include <QQuickWindow>
@@ -140,6 +141,10 @@ void QuickItemModel::populateFromItem(QQuickItem *item)
 
   QVector<QQuickItem*> &children  = m_parentChildMap[item->parentItem()];
   std::sort(children.begin(), children.end());
+
+  // Make sure every items are known to the objects model as this is not always
+  // the case when attaching to running process (OSX)
+  Probe::instance()->discoverObject(item);
 }
 
 void QuickItemModel::connectItem(QQuickItem *item)
