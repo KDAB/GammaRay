@@ -31,8 +31,10 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QModelIndex;
 class QTreeView;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

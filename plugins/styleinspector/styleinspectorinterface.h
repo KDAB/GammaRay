@@ -31,7 +31,9 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QSize;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -63,6 +65,8 @@ class StyleInspectorInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::StyleInspectorInterface, "com.kdab.GammaRay.StyleInspectorInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_STYLEINSPECTORINTERFACE_H

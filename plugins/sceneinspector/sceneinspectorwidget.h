@@ -34,9 +34,11 @@
 #include <ui/tooluifactory.h>
 #include <QWidget>
 
+QT_BEGIN_NAMESPACE
 class QGraphicsPixmapItem;
 class QGraphicsScene;
 class QItemSelection;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

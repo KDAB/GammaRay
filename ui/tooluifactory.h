@@ -98,7 +98,9 @@ public:
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::ToolUiFactory, "com.kdab.GammaRay.ToolUiFactory/1.0")
+QT_END_NAMESPACE
 Q_DECLARE_METATYPE(GammaRay::ToolUiFactory *)
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

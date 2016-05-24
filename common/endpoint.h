@@ -36,8 +36,10 @@
 #include <QObject>
 #include <QPointer>
 
+QT_BEGIN_NAMESPACE
 class QIODevice;
 class QUrl;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

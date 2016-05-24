@@ -38,12 +38,14 @@
 #include <QSet>
 #include <QVector>
 
+QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
 class QModelIndex;
 class QThread;
 class QPoint;
 class QTimer;
 class QMutex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

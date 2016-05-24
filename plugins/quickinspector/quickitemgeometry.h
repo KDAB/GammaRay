@@ -72,10 +72,10 @@ struct QuickItemGeometry {
     qreal baselineOffset;
 };
 
-}
-
 QDataStream& operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry);
 QDataStream& operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry);
+
+}
 
 Q_DECLARE_METATYPE(GammaRay::QuickItemGeometry)
 

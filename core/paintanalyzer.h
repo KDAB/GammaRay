@@ -33,10 +33,12 @@
 
 #include <common/paintanalyzerinterface.h>
 
+QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
 class QPaintBuffer;
 class QPaintDevice;
 class QRectF;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

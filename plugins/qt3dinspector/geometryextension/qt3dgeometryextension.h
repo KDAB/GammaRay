@@ -33,9 +33,11 @@
 
 #include <core/propertycontrollerextension.h>
 
+QT_BEGIN_NAMESPACE
 namespace Qt3DRender {
 class QGeometryRenderer;
 }
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

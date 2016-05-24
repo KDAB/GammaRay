@@ -34,9 +34,11 @@
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
 
+QT_BEGIN_NAMESPACE
 class QTcpServer;
 class QUdpSocket;
 class QTimer;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

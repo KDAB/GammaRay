@@ -33,7 +33,9 @@
 #include <QObject>
 #include <QPointer>
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
+QT_END_NAMESPACE
 class ModelTest;
 
 namespace GammaRay {

@@ -32,7 +32,9 @@
 #include <QAbstractTableModel>
 #include <QPointer>
 
+QT_BEGIN_NAMESPACE
 class QStyle;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

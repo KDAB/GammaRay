@@ -32,8 +32,10 @@
 #include <QObject>
 #include <QThread>
 
+QT_BEGIN_NAMESPACE
 class QTimer;
 class QEventLoop;
+QT_END_NAMESPACE
 
 class TestObject : public QObject
 {

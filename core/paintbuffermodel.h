@@ -36,7 +36,9 @@
 
 #include <private/qpaintbuffer_p.h>
 
+QT_BEGIN_NAMESPACE
 class QPaintBuffer;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -32,9 +32,11 @@
 
 #include <QWidget>
 
+QT_BEGIN_NAMESPACE
 class QItemSelection;
 class QStringListModel;
 class QTime;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

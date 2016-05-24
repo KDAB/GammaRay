@@ -31,7 +31,9 @@
 
 #include "quickinspectorinterface.h"
 
+QT_BEGIN_NAMESPACE
 class QEvent;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

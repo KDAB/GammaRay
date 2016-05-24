@@ -30,8 +30,10 @@
 
 #include <core/objectmodelbase.h>
 
+QT_BEGIN_NAMESPACE
 class QAbstractTransition;
 class QStateMachine;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -58,6 +58,8 @@ class PropertyControllerInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::PropertyControllerInterface, "com.kdab.GammaRay.PropertyControllerInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_PROPERTYCONTROLLERINTERFACE_H

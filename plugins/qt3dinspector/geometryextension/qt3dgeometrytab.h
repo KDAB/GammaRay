@@ -35,6 +35,7 @@
 
 #include <memory>
 
+QT_BEGIN_NAMESPACE
 namespace Qt3DCore {
 class QAspectEngine;
 class QComponent;
@@ -47,6 +48,7 @@ class QCullFace;
 class QGeometryRenderer;
 class QRenderPass;
 }
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

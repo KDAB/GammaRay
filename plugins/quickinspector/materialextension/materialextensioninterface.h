@@ -55,7 +55,9 @@ class MaterialExtensionInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::MaterialExtensionInterface,
                     "com.kdab.GammaRay.MaterialExtensionInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_MATERIALEXTENSIONINTERFACE_H

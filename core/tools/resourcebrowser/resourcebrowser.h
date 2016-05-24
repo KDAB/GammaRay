@@ -32,7 +32,9 @@
 #include "toolfactory.h"
 #include <common/tools/resourcebrowser/resourcebrowserinterface.h>
 
+QT_BEGIN_NAMESPACE
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -34,11 +34,13 @@
 
 #include <QPointer>
 
+QT_BEGIN_NAMESPACE
 class QModelIndex;
 class QItemSelection;
 class QItemSelectionModel;
 class QLibrary;
 class QPoint;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

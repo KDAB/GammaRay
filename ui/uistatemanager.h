@@ -36,10 +36,12 @@
 #include <QVector>
 #include <QHash>
 
+QT_BEGIN_NAMESPACE
 class QWidget;
 class QSplitter;
 class QSettings;
 class QHeaderView;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

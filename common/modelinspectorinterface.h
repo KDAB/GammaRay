@@ -46,6 +46,8 @@ class ModelInspectorInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::ModelInspectorInterface, "com.kdab.GammaRay.ModelInspectorInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_MODELINSPECTORINTERFACE_H

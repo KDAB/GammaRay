@@ -88,6 +88,8 @@ private:
 }
 
 Q_DECLARE_METATYPE(GammaRay::Qt3DGeometryData)
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::Qt3DGeometryExtensionInterface, "com.kdab.GammaRay.Qt3DGeometryExtensionInterface/1.0")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H

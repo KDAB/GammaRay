@@ -32,7 +32,9 @@
 #include <core/propertycontrollerextension.h>
 #include "sggeometryextensioninterface.h"
 
+QT_BEGIN_NAMESPACE
 class QSGGeometryNode;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

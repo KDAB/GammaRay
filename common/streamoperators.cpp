@@ -35,8 +35,10 @@
 
 using namespace GammaRay;
 
+QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::MethodType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ConnectionType)
+QT_END_NAMESPACE
 
 void StreamOperators::registerOperators()
 {

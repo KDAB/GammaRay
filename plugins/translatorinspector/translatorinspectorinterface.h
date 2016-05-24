@@ -54,7 +54,9 @@ class TranslatorInspectorInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::TranslatorInspectorInterface,
                     "com.kdab.GammaRay.TranslatorInspectorInterface")
+QT_END_NAMESPACE
 
 #endif

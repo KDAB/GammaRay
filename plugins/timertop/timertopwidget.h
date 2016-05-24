@@ -33,7 +33,9 @@
 
 #include <QWidget>
 
+QT_BEGIN_NAMESPACE
 class QTimer;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

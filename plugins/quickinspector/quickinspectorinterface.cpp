@@ -33,7 +33,7 @@
 
 #include <QDataStream>
 
-using namespace GammaRay;
+namespace GammaRay {
 
 QDataStream &operator<<(QDataStream &out, QuickInspectorInterface::Features value)
 {
@@ -73,4 +73,6 @@ QuickInspectorInterface::QuickInspectorInterface(QObject * parent) : QObject(par
 
 QuickInspectorInterface::~QuickInspectorInterface()
 {
+}
+
 }

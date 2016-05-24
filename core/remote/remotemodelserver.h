@@ -35,8 +35,10 @@
 #include <QPointer>
 #include <QRegExp>
 
+QT_BEGIN_NAMESPACE
 class QBuffer;
 class QAbstractItemModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

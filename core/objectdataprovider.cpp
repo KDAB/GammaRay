@@ -33,7 +33,7 @@
 #include <QObject>
 #include <QVector>
 
-using namespace GammaRay;
+namespace GammaRay {
 
 AbstractObjectDataProvider::~AbstractObjectDataProvider()
 {
@@ -103,4 +103,6 @@ SourceLocation ObjectDataProvider::declarationLocation(QObject* obj)
     }
 
     return loc;
+}
+
 }

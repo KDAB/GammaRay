@@ -31,8 +31,10 @@
 
 #include <QStyle>
 
+QT_BEGIN_NAMESPACE
 class QStyleOption;
 class QString;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

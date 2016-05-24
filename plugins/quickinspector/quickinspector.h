@@ -36,6 +36,7 @@
 #include <QQuickWindow>
 #include <QImage>
 
+QT_BEGIN_NAMESPACE
 class QQuickShaderEffectSource;
 class QAbstractItemModel;
 class QItemSelection;
@@ -47,6 +48,7 @@ class QSGNode;
 //class QSGTransformNode;
 //class QSGRootNode;
 //class QSGOpacityNode;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

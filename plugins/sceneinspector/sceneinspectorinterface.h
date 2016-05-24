@@ -31,6 +31,7 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QPainter;
 class QGraphicsItem;
 class QSize;
@@ -38,6 +39,7 @@ class QTransform;
 class QRectF;
 class QPixmap;
 class QPointF;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -65,6 +67,8 @@ class SceneInspectorInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::SceneInspectorInterface, "com.kdab.GammaRay.SceneInspector")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_SCENEINSPECTORINTERFACE_H

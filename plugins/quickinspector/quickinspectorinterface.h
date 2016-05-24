@@ -38,7 +38,9 @@
 #include <QVariantMap>
 #include <QEvent>
 
+QT_BEGIN_NAMESPACE
 class QImage;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -85,7 +87,9 @@ class QuickInspectorInterface : public QObject
 
 Q_DECLARE_METATYPE(GammaRay::QuickInspectorInterface::Features)
 Q_DECLARE_METATYPE(GammaRay::QuickInspectorInterface::RenderMode)
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::QuickInspectorInterface,
                     "com.kdab.GammaRay.QuickInspectorInterface/1.0")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_QUICKINSPECTORINTERFACE_H

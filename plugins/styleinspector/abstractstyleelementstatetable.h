@@ -32,9 +32,11 @@
 #include "abstractstyleelementmodel.h"
 #include <common/modelroles.h>
 
+QT_BEGIN_NAMESPACE
 class QStyleOption;
 class QRect;
 class QPainter;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

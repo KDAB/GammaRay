@@ -38,9 +38,11 @@
 #include <QWidget>
 #include <QVariant>
 
+QT_BEGIN_NAMESPACE
 class QLabel;
 class QImage;
 class QItemSelection;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 class QuickScenePreviewWidget;

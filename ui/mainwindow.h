@@ -33,10 +33,12 @@
 
 #include <ui/uistatemanager.h>
 
+QT_BEGIN_NAMESPACE
 class QModelIndex;
 class QSplitter;
 class QHeaderView;
 class QUrl;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

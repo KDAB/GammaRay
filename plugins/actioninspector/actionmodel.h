@@ -32,7 +32,9 @@
 #include <QAbstractTableModel>
 #include <QVector>
 
+QT_BEGIN_NAMESPACE
 class QAction;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

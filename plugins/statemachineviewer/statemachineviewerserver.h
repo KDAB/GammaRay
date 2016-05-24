@@ -41,12 +41,14 @@
 
 #include <config-gammaray.h>
 
+QT_BEGIN_NAMESPACE
 class QAbstractTransition;
 class QStateMachine;
 class QAbstractState;
 class QAbstractItemModel;
 class QAbstractProxyModel;
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -52,7 +52,9 @@ class SGGeometryExtensionInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::SGGeometryExtensionInterface,
                     "com.kdab.GammaRay.SGGeometryExtensionInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_SGGEOMETRYEXTENSIONINTERFACE_H

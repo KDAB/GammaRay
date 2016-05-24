@@ -31,6 +31,7 @@
 
 #include <Qt3DCore/QEntity>
 
+QT_BEGIN_NAMESPACE
 namespace Qt3DRender {
 class QCamera;
 }
@@ -39,6 +40,7 @@ class QAction;
 class QAxis;
 class QKeyboardDevice;
 }
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

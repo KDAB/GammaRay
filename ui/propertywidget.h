@@ -36,10 +36,12 @@
 #include "gammaray_ui_export.h"
 #include "propertywidgettab.h"
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 class QAbstractItemView;
 class QModelIndex;
 class QTimer;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

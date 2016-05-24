@@ -40,9 +40,11 @@
 
 #include <QPoint>
 
+QT_BEGIN_NAMESPACE
 class QObject;
 class QAbstractItemModel;
 class QString;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

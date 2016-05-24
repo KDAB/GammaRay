@@ -66,6 +66,8 @@ class PropertiesExtensionInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::PropertiesExtensionInterface, "com.kdab.GammaRay.PropertiesExtensionInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_PROPERTIESEXTENSIONINTERFACE_H

@@ -32,8 +32,10 @@
 #include <core/propertycontrollerextension.h>
 #include "materialextensioninterface.h"
 
+QT_BEGIN_NAMESPACE
 class QSGGeometryNode;
 class QStandardItemModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

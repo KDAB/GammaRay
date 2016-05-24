@@ -32,8 +32,10 @@
 #include <QAbstractTableModel>
 #include <QStringList>
 
+QT_BEGIN_NAMESPACE
 class QSGGeometryNode;
 class QSGGeometry;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

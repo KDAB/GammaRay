@@ -46,6 +46,8 @@ public slots:
 }
 
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::Qt3DInspectorInterface, "com.kdab.GammaRay.Qt3DInspectorInterface/1.0")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_QT3DINSPECTORINTERFACE_H
