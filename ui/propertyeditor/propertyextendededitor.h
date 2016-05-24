@@ -47,6 +47,9 @@ class PropertyExtendedEditor : public QWidget
     explicit PropertyExtendedEditor(QWidget *parent = 0);
     virtual ~PropertyExtendedEditor();
 
+    Qt::Alignment alignment() const;
+    void setAlignment(const Qt::Alignment &alignment);
+
     QVariant value() const;
     void setValue(const QVariant &value);
 

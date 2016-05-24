@@ -46,6 +46,16 @@ PropertyExtendedEditor::~PropertyExtendedEditor()
   delete ui;
 }
 
+Qt::Alignment PropertyExtendedEditor::alignment() const
+{
+    return ui->valueLabel->alignment();
+}
+
+void PropertyExtendedEditor::setAlignment(const Qt::Alignment &alignment)
+{
+    ui->valueLabel->setAlignment(alignment);
+}
+
 QVariant PropertyExtendedEditor::value() const
 {
   return m_value;
