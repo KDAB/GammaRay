@@ -31,7 +31,9 @@
 
 #include <core/propertycontrollerextension.h>
 
+QT_BEGIN_NAMESPACE
 class QItemSelection;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

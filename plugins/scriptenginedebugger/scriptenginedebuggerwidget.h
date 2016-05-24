@@ -34,7 +34,9 @@
 #include <QWidget>
 #include <QScriptEngine>
 
+QT_BEGIN_NAMESPACE
 class QScriptEngineDebugger;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

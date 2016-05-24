@@ -33,7 +33,9 @@
 #include "ui/itemdelegate.h"
 #include <QStyledItemDelegate>
 
+QT_BEGIN_NAMESPACE
 class QMatrix4x4;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

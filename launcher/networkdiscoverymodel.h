@@ -36,7 +36,9 @@
 #include <QDateTime>
 #include <QUrl>
 
+QT_BEGIN_NAMESPACE
 class QUdpSocket;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -34,10 +34,12 @@
 #include <QStandardItemModel>
 #include <QTextObject>
 
+QT_BEGIN_NAMESPACE
 class QTextTable;
 class QTextBlock;
 class QTextFrame;
 class QTextDocument;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

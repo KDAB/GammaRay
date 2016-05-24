@@ -35,9 +35,11 @@
 
 #include <QGraphicsScene>
 
+QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
 class QItemSelection;
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

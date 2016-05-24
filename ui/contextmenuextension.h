@@ -35,8 +35,10 @@
 #include <QObject>
 #include <QVariant>
 
+QT_BEGIN_NAMESPACE
 class QMenu;
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

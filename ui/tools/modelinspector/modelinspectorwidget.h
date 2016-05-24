@@ -33,8 +33,10 @@
 
 #include <QWidget>
 
+QT_BEGIN_NAMESPACE
 class QItemSelection;
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

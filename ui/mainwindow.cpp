@@ -68,7 +68,6 @@
 #include <QStandardPaths>
 #endif
 
-class QDesktopServices;
 using namespace GammaRay;
 struct IdeSettings {
     const char* const app;

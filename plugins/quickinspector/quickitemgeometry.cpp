@@ -28,6 +28,8 @@
 
 #include "quickitemgeometry.h"
 
+namespace GammaRay {
+
 QDataStream& operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
 {
   stream << geometry.itemRect
@@ -92,4 +94,6 @@ QDataStream& operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geomet
          >> geometry.baselineOffset;
 
   return stream;
+}
+
 }

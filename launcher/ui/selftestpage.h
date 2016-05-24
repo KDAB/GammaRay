@@ -31,7 +31,9 @@
 
 #include <QWidget>
 
+QT_BEGIN_NAMESPACE
 class QStandardItemModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

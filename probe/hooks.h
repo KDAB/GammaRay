@@ -31,7 +31,9 @@
 
 #include <qglobal.h>
 
+QT_BEGIN_NAMESPACE
 class QObject;
+QT_END_NAMESPACE
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 #define GAMMARAY_USE_QHOOKS

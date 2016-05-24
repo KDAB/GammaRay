@@ -44,9 +44,11 @@
 #include <QString>
 #include <QVariant>
 
+QT_BEGIN_NAMESPACE
 class QRect;
 class QPainter;
 class QObject;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

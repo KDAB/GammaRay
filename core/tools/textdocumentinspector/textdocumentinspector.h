@@ -34,7 +34,9 @@
 #include <QPointer>
 #include <QTextDocument>
 
+QT_BEGIN_NAMESPACE
 class QItemSelection;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -30,7 +30,7 @@
 
 #include <QDebug>
 
-using namespace GammaRay;
+namespace GammaRay {
 
 TransferImage::TransferImage()
 {
@@ -103,4 +103,6 @@ QDataStream& operator>>(QDataStream& stream, TransferImage& image)
     }
 
     return stream;
+}
+
 }

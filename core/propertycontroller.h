@@ -37,7 +37,9 @@
 #include <QPointer>
 #include <QVector>
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

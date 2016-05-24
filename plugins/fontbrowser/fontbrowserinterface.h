@@ -31,7 +31,9 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QColor;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -53,6 +55,8 @@ class FontBrowserInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::FontBrowserInterface, "com.kdab.GammaRay.FontBrowser")
+QT_END_NAMESPACE
 
 #endif // FONTBROWSERINTERFACE_H

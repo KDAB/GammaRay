@@ -33,7 +33,9 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QImage;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -51,6 +53,8 @@ private:
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::PaintAnalyzerInterface, "com.kdab.GammaRay.PaintAnalyzer/1.0")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_PAINTANALYZERINTERFACE_H

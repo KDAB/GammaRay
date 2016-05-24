@@ -32,8 +32,10 @@
 #include <QDataStream>
 #include <QVector>
 
+QT_BEGIN_NAMESPACE
 class QAbstractState;
 class QAbstractTransition;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -144,10 +146,14 @@ class StateMachineViewerInterface : public QObject
 }
 
 Q_DECLARE_METATYPE(GammaRay::StateId)
+QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(GammaRay::StateId, Q_PRIMITIVE_TYPE);
+QT_END_NAMESPACE
 Q_DECLARE_METATYPE(GammaRay::TransitionId)
 Q_DECLARE_METATYPE(GammaRay::StateMachineConfiguration)
 Q_DECLARE_METATYPE(GammaRay::StateType)
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::StateMachineViewerInterface, "com.kdab.GammaRay.StateMachineViewer")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_STATEMACHINEVIEWERINTERFACE_H

@@ -33,7 +33,9 @@
 #include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
+QT_BEGIN_NAMESPACE
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

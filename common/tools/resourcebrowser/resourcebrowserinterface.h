@@ -53,6 +53,8 @@ class ResourceBrowserInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::ResourceBrowserInterface, "com.kdab.GammaRay.ResourceBrowserInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_RESOURCEBROWSERINTERFACE_H

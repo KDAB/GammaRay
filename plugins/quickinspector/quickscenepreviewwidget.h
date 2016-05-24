@@ -34,11 +34,13 @@
 
 #include <ui/remoteviewwidget.h>
 
+QT_BEGIN_NAMESPACE
 class QAction;
 class QActionGroup;
 class QComboBox;
 class QLabel;
 class QToolBar;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

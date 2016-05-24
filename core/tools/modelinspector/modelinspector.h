@@ -33,10 +33,12 @@
 
 #include "common/modelinspectorinterface.h"
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 class QItemSelection;
 class QItemSelectionModel;
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

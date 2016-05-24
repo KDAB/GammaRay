@@ -33,8 +33,10 @@
 
 #include <common/remoteviewinterface.h>
 
+QT_BEGIN_NAMESPACE
 class QTimer;
 class QWindow;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

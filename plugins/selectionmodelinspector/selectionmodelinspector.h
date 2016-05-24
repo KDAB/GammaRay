@@ -33,7 +33,9 @@
 
 #include <QItemSelectionModel>
 
+QT_BEGIN_NAMESPACE
 class QAbstractProxyModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

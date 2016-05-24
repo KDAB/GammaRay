@@ -53,6 +53,8 @@ class ConnectionsExtensionInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::ConnectionsExtensionInterface, "com.kdab.GammaRay.ConnectionsExtensionInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_CONNECTIONSEXTENSIONINTERFACE_H

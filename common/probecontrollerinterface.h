@@ -162,9 +162,13 @@ inline QDataStream &operator>>(QDataStream &in, ToolInfo &toolInfo)
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::ProbeControllerInterface, "com.kdab.GammaRay.ProbeControllerInterface")
+QT_END_NAMESPACE
 Q_DECLARE_METATYPE(GammaRay::ObjectId)
+QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(GammaRay::ObjectId, Q_MOVABLE_TYPE);
+QT_END_NAMESPACE
 Q_DECLARE_METATYPE(GammaRay::ToolInfo)
 Q_DECLARE_METATYPE(GammaRay::ToolInfos)
 

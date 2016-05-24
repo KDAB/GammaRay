@@ -32,7 +32,9 @@
 #include <QObject>
 #include <QMetaType>
 
+QT_BEGIN_NAMESPACE
 class QImage;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -76,6 +78,8 @@ class WidgetInspectorInterface : public QObject
 
 Q_DECLARE_METATYPE(GammaRay::WidgetInspectorInterface::Features)
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::WidgetInspectorInterface::Features)
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::WidgetInspectorInterface, "com.kdab.GammaRay.WidgetInspector")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_WIDGETINSPECTORINTERFACE_H

@@ -34,8 +34,10 @@
 #include <QObject>
 #include <QTimer>
 
+QT_BEGIN_NAMESPACE
 class QProcessEnvironment;
 class QUrl;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

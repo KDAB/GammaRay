@@ -36,7 +36,9 @@
 #include "gammaray_core_export.h"
 #include <QHash>
 
+QT_BEGIN_NAMESPACE
 class QString;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -34,9 +34,11 @@
 #include <QHash>
 #include <QSharedDataPointer>
 
+QT_BEGIN_NAMESPACE
 class QStringList;
 class QVariant;
 class QProcessEnvironment;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

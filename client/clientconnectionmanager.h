@@ -36,8 +36,10 @@
 #include <QUrl>
 #include <QPointer>
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 class QMainWindow;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

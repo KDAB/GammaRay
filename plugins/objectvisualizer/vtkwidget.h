@@ -35,16 +35,18 @@
 #include <QMap>
 #include <QSet>
 
+QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
 class QModelIndex;
 class QAbstractItemModel;
+class QMouseEvent;
+class QTimer;
+QT_END_NAMESPACE
+
 class vtkGraphLayoutStrategy;
 class vtkVariantArray;
 class vtkGraphLayoutView;
 class vtkMutableDirectedGraph;
-
-class QMouseEvent;
-class QTimer;
 
 namespace GammaRay {
 

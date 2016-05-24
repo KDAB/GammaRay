@@ -33,7 +33,9 @@
 
 #include <qglobal.h>
 
+QT_BEGIN_NAMESPACE
 class QObject;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

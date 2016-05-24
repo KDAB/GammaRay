@@ -31,7 +31,9 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QTime;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -49,6 +51,8 @@ class MessageHandlerInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::MessageHandlerInterface, "com.kdab.GammaRay.MessageHandler")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_MESSAGEHANDLERINTERFACE_H

@@ -31,8 +31,10 @@
 
 #include "toolfactory.h"
 
+QT_BEGIN_NAMESPACE
 class QAbstractProxyModel;
 class QItemSelection;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

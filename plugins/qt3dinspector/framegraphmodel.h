@@ -35,9 +35,11 @@
 #include <QHash>
 #include <QVector>
 
+QT_BEGIN_NAMESPACE
 namespace Qt3DRender {
 class QFrameGraphNode;
 }
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -31,7 +31,9 @@
 
 #include <core/objectmodelbase.h>
 
+QT_BEGIN_NAMESPACE
 class QAbstractState;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

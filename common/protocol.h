@@ -130,6 +130,8 @@ GAMMARAY_COMMON_EXPORT qint32 broadcastFormatVersion();
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);
+QT_END_NAMESPACE
 
 #endif

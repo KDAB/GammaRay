@@ -54,10 +54,10 @@ private:
     QImage m_image;
 };
 
-}
-
 QDataStream& operator<<(QDataStream &stream, const GammaRay::TransferImage &image);
 QDataStream& operator>>(QDataStream &stream, GammaRay::TransferImage &image);
+
+}
 
 Q_DECLARE_METATYPE(GammaRay::TransferImage)
 

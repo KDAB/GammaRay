@@ -34,10 +34,12 @@
 #include <QHash>
 #include <QVector>
 
+QT_BEGIN_NAMESPACE
 namespace Qt3DCore {
 class QAspectEngine;
 class QEntity;
 }
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

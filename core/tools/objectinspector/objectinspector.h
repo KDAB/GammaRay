@@ -33,9 +33,11 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QItemSelection;
 class QItemSelectionModel;
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

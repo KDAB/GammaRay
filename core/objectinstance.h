@@ -35,8 +35,10 @@
 #include <QPointer>
 #include <QVariant>
 
+QT_BEGIN_NAMESPACE
 class QObject;
 struct QMetaObject;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -42,6 +42,7 @@ Q_DECLARE_METATYPE(QItemSelection)
 Q_DECLARE_METATYPE(QModelIndex)
 #endif
 
+QT_BEGIN_NAMESPACE
 namespace QTest {
 
 template <> bool qCompare(const QPersistentModelIndex &lhs, const QModelIndex &rhs, char const *actual, char const *expected, char const *file, int line)
@@ -50,6 +51,7 @@ template <> bool qCompare(const QPersistentModelIndex &lhs, const QModelIndex &r
 }
 
 }
+QT_END_NAMESPACE
 
 using namespace GammaRay;
 

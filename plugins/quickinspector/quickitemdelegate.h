@@ -32,7 +32,9 @@
 #include <QModelIndex>
 #include <QStyledItemDelegate>
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemView;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

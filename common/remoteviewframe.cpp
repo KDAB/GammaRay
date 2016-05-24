@@ -30,7 +30,7 @@
 
 #include <QDataStream>
 
-using namespace GammaRay;
+namespace GammaRay {
 
 RemoteViewFrame::RemoteViewFrame()
 {
@@ -102,4 +102,6 @@ QDataStream& operator>>(QDataStream& stream, RemoteViewFrame& frame)
     stream >> frame.m_viewRect;
     stream >> frame.m_sceneRect;
     return stream;
+}
+
 }

@@ -33,7 +33,7 @@
 #include <QDataStream>
 #include <QMetaType>
 
-using namespace GammaRay;
+namespace GammaRay {
 
 QDataStream &operator<<(QDataStream &out, WidgetInspectorInterface::Features value)
 {
@@ -71,4 +71,6 @@ void WidgetInspectorInterface::setFeatures(WidgetInspectorInterface::Features fe
         return;
     m_features = features;
     emit featuresChanged();
+}
+
 }

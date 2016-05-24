@@ -36,7 +36,9 @@
 #include <QSortFilterProxyModel>
 #include <QSet>
 
+QT_BEGIN_NAMESPACE
 class QWidget;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

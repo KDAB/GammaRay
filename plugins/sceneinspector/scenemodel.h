@@ -32,8 +32,10 @@
 #include <QAbstractItemModel>
 #include <common/modelroles.h>
 
+QT_BEGIN_NAMESPACE
 class QGraphicsScene;
 class QGraphicsItem;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

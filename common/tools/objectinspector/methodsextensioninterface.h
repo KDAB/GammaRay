@@ -62,6 +62,8 @@ class MethodsExtensionInterface : public QObject
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::MethodsExtensionInterface, "com.kdab.GammaRay.MethodsExtensionInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_METHODSEXTENSIONINTERFACE_H

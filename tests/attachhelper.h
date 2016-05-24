@@ -31,8 +31,10 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
 class QTimer;
 class QProcess;
+QT_END_NAMESPACE
 
 class AttachHelper : public QObject
 {

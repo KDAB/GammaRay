@@ -35,6 +35,7 @@
 
 #include <Qt3DCore/QNode>
 
+QT_BEGIN_NAMESPACE
 class QItemSelection;
 class QItemSelectionModel;
 namespace Qt3DCore {
@@ -44,6 +45,7 @@ class QEntity;
 namespace Qt3DRender {
 class QFrameGraphNode;
 }
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

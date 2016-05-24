@@ -32,11 +32,13 @@
 #include <QWidget>
 #include <qopengl.h>
 
+QT_BEGIN_NAMESPACE
 class QItemSelection;
 class QPainter;
 class QItemSelectionModel;
 class QAbstractItemModel;
 class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
