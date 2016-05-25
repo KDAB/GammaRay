@@ -556,6 +556,11 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     return;
   }
 
+  // ignore objects created when global statics are already getting destroyed (on exit)
+  if (s_listener.isDestroyed()) {
+      return;
+  }
+
   if (!isInitialized()) {
     IF_DEBUG(cout
              << "objectAdded Before: "
