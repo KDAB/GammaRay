@@ -104,7 +104,7 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
       case MessageModelColumn::Category: return msg.category;
       case MessageModelColumn::Function: return msg.function;
-      case MessageModelColumn::File: return static_cast<QString>(QString::fromUtf8(msg.file) + ':' + QString::number(msg.line));
+      case MessageModelColumn::File: return QString::fromLatin1("%1:%2").arg(msg.file).arg(msg.line);
 #endif
     }
   } else if (role == MessageModelRole::Type && index.column() == 0) {

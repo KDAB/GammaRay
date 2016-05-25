@@ -44,9 +44,9 @@ struct DebugMessage {
   QTime time;
   Backtrace backtrace;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  const char *category;
-  const char *file;
-  const char *function;
+  QString category;
+  QString file;
+  QString function;
   int line;
 #endif
 };

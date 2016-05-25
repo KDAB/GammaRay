@@ -81,9 +81,9 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
   message.message = msg;
   message.time = QTime::currentTime();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  message.category = context.category;
-  message.file = context.file;
-  message.function = context.function;
+  message.category = QString::fromUtf8(context.category);
+  message.file = QString::fromUtf8(context.file);
+  message.function = QString::fromUtf8(context.function);
   message.line = context.line;
 #endif
 
