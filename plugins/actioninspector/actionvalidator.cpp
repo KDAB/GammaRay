@@ -32,10 +32,12 @@
 
 using namespace GammaRay;
 
+QT_BEGIN_NAMESPACE
 uint qHash(const QKeySequence &sequence)
 {
   return qHash(sequence.toString(QKeySequence::PortableText));
 }
+QT_END_NAMESPACE
 
 ActionValidator::ActionValidator(QObject *parent)
   : QObject(parent)
