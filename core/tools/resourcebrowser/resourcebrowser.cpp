@@ -71,7 +71,7 @@ void ResourceBrowser::selectResource(const QString &sourceFilePath, int line, in
   const bool locked = blockSignals(true);
   const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
       QItemSelectionModel::Rows | QItemSelectionModel::Current;
-  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive;
+  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
   auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel"));
   auto selectionModel = ObjectBroker::selectionModel(model);
   const QString filePath = QLatin1Char(':') + QUrl(sourceFilePath).path();

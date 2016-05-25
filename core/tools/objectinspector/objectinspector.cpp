@@ -91,7 +91,7 @@ void ObjectInspector::objectSelected(QObject *object)
   model->match(model->index(0, 0),
                ObjectModel::ObjectRole,
                QVariant::fromValue<QObject*>(object), 1,
-               Qt::MatchExactly | Qt::MatchRecursive);
+               Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
   if (indexList.isEmpty()) {
     return;
   }

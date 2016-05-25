@@ -327,7 +327,7 @@ void QuickInspector::selectItem(QQuickItem *item)
     model->match(model->index(0, 0),
                  ObjectModel::ObjectRole,
                  QVariant::fromValue<QQuickItem*>(item), 1,
-                 Qt::MatchExactly | Qt::MatchRecursive);
+                 Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
   if (indexList.isEmpty()) {
     return;
   }
@@ -346,7 +346,7 @@ void QuickInspector::selectSGNode(QSGNode *node)
   Model::used(model);
 
   const QModelIndexList indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole,
-    QVariant::fromValue(node), 1, Qt::MatchExactly | Qt::MatchRecursive);
+    QVariant::fromValue(node), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
   if (indexList.isEmpty()) {
     return;
   }

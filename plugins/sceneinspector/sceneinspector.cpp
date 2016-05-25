@@ -255,7 +255,7 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
         m_itemSelectionModel->model()->index(0, 0),
         SceneModel::SceneItemRole,
         QVariant::fromValue<QGraphicsItem*>(item), 1,
-        Qt::MatchExactly | Qt::MatchRecursive);
+        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
   if (indexList.isEmpty()) {
     return;
   }

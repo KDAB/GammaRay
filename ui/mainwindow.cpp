@@ -290,7 +290,7 @@ bool MainWindow::selectTool(const QString &id)
 {
   const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
       QItemSelectionModel::Rows | QItemSelectionModel::Current;
-  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive;
+  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
   const QAbstractItemModel *model = ui->toolSelector->model();
   const QModelIndex toolIndex = model->match(model->index(0, 0), ToolModelRole::ToolId, id, 1, matchFlags).value(0);
   if (!toolIndex.isValid()) {

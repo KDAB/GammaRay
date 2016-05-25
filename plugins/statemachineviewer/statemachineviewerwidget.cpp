@@ -96,7 +96,7 @@ void SelectionModelSyncer::handle_objectInspector_currentChanged(const QModelInd
   const auto model = m_widget->stateMachineView()->scene()->model();
   const auto matches = model->match(model->index(0, 0), KDSME::StateModel::InternalIdRole,
                                     static_cast<quintptr>(objectId.id()), 1,
-                                    Qt::MatchExactly | Qt::MatchRecursive);
+                                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
   auto selectionModel = m_widget->stateMachineView()->scene()->selectionModel();
   selectionModel->setCurrentIndex(matches.value(0), QItemSelectionModel::SelectCurrent);
 }
@@ -114,7 +114,7 @@ void SelectionModelSyncer::handle_stateMachineView_currentChanged(const QModelIn
   const auto model = m_widget->objectInspector()->model();
   const auto matches = model->match(model->index(0, 0), ObjectModel::ObjectIdRole,
                                     QVariant::fromValue(objectId), 1,
-                                    Qt::MatchExactly | Qt::MatchRecursive);
+                                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
   auto selectionModel = m_widget->objectInspector()->selectionModel();
   selectionModel->setCurrentIndex(matches.value(0), QItemSelectionModel::SelectCurrent | QItemSelectionModel::Rows);
 }
@@ -188,7 +188,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget* parent, Qt::WindowFl
     const auto matches = model->match(
       model->index(0, 0), ObjectModel::ObjectIdRole,
       QVariant::fromValue(objectId), 1,
-      Qt::MatchExactly | Qt::MatchRecursive);
+      Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     showContextMenuForObject(matches.value(0), event->globalPos());
   });
 

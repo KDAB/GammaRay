@@ -958,7 +958,7 @@ void Probe::selectObject(QObject *object, const QPoint &pos)
 
 void Probe::selectObject(QObject* object, const QString toolId, const QPoint &pos)
 {
-  const auto matches = m_toolModel->match(m_toolModel->index(0, 0), ToolModelRole::ToolId, toolId, 1, Qt::MatchExactly);
+  const auto matches = m_toolModel->match(m_toolModel->index(0, 0), ToolModelRole::ToolId, toolId, 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
   if (matches.isEmpty()) {
     std::cerr << "Invalid tool id: " << qPrintable(toolId) << std::endl;
     return;

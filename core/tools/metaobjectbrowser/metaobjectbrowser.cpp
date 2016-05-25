@@ -94,7 +94,7 @@ void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
 {
     if (!mo)
         return;
-    const auto indexes = m_model->match(m_model->index(0,0), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(mo));
+    const auto indexes = m_model->match(m_model->index(0,0), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(mo), Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexes.isEmpty()) {
         metaObjectSelected(mo->superClass());
         return;

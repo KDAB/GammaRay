@@ -109,7 +109,7 @@ void NetworkSelectionModel::sendSelection()
     if (model()->rowCount() > 0) {
       const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
           QItemSelectionModel::Rows | QItemSelectionModel::Current;
-      const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive;
+      const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
       QAbstractItemModel *sourceModel = findSourceModel(model());
 #else

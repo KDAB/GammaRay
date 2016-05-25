@@ -152,7 +152,7 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity* entity)
     const auto model = m_entitySelectionModel->model();
     Model::used(model);
 
-    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue<Qt3DCore::QEntity*>(entity), 1, Qt::MatchExactly | Qt::MatchRecursive);
+    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue<Qt3DCore::QEntity*>(entity), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
     const auto index = indexList.first();
@@ -180,7 +180,7 @@ void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode* node)
     const auto model = m_frameGraphSelectionModel->model();
     Model::used(model);
 
-    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue<Qt3DRender::QFrameGraphNode*>(node), 1, Qt::MatchExactly | Qt::MatchRecursive);
+    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue<Qt3DRender::QFrameGraphNode*>(node), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
     const auto index = indexList.first();
