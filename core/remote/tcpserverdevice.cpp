@@ -68,17 +68,24 @@ QUrl TcpServerDevice::externalAddress() const
 #endif
         myHost = address.toString();
     } else {
-        foreach (const QHostAddress &addr, QNetworkInterface::allAddresses()) {
-            if (addr == QHostAddress::LocalHost || addr == QHostAddress::LocalHostIPv6 || !addr.scopeId().isEmpty())
+        foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
+            if (!(inter.flags() & QNetworkInterface::IsUp) || !(inter.flags() & QNetworkInterface::IsRunning) || (inter.flags() & QNetworkInterface::IsLoopBack))
                 continue;
 
-            // Return the ip according to the listening server protocol.
-            if (addr.protocol() != m_server->serverAddress().protocol()) {
-                continue;
+            foreach (const QNetworkAddressEntry &addrEntry, inter.addressEntries()) {
+                const QHostAddress addr = addrEntry.ip();
+
+                // Return the ip according to the listening server protocol.
+                if (addr.protocol() != m_server->serverAddress().protocol() || !addr.scopeId().isEmpty()) {
+                    continue;
+                }
+
+                myHost = addr.toString();
+                break;
             }
-
-            myHost = addr.toString();
-            break;
+            if (!myHost.isEmpty()) {
+                break;
+            }
         }
     }
 
