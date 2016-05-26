@@ -149,23 +149,25 @@ target_link_libraries(gammaray_ui_internal
   gammaray_ui
 )
 
-gammaray_install_headers(
-  ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
-  clienttoolmodel.h
-  deferredtreeview.h
-  itemdelegate.h
-  propertywidget.h
-  propertywidgettab.h
-  tooluifactory.h
-  uiintegration.h
-  uistatemanager.h
-)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  gammaray_install_headers(
+    ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
+    clienttoolmodel.h
+    deferredtreeview.h
+    itemdelegate.h
+    propertywidget.h
+    propertywidgettab.h
+    tooluifactory.h
+    uiintegration.h
+    uistatemanager.h
+  )
 
-ecm_generate_pri_file(BASE_NAME GammaRayUi
-                      LIB_NAME gammaray_ui-${GAMMARAY_PROBE_ABI}
-                      DEPS "core gui widgets GammaRayCommon"
-                      FILENAME_VAR PRI_FILENAME
-                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
-)
+  ecm_generate_pri_file(BASE_NAME GammaRayUi
+                        LIB_NAME gammaray_ui-${GAMMARAY_PROBE_ABI}
+                        DEPS "core gui widgets GammaRayCommon"
+                        FILENAME_VAR PRI_FILENAME
+                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
+  )
 
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+endif()

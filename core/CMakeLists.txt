@@ -140,30 +140,32 @@ endif()
 
 install(TARGETS gammaray_core EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-gammaray_install_headers(
-  ${CMAKE_CURRENT_BINARY_DIR}/gammaray_core_export.h
-  metaobject.h
-  metaobjectrepository.h
-  metaproperty.h
-  objectmodelbase.h
-  objecttypefilterproxymodel.h
-  probe.h
-  probeinterface.h
-  probecontroller.h
-  propertycontroller.h
-  propertycontrollerextension.h
-  signalspycallbackset.h
-  singlecolumnobjectproxymodel.h
-  toolfactory.h
-  util.h
-  varianthandler.h
-)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  gammaray_install_headers(
+    ${CMAKE_CURRENT_BINARY_DIR}/gammaray_core_export.h
+    metaobject.h
+    metaobjectrepository.h
+    metaproperty.h
+    objectmodelbase.h
+    objecttypefilterproxymodel.h
+    probe.h
+    probeinterface.h
+    probecontroller.h
+    propertycontroller.h
+    propertycontrollerextension.h
+    signalspycallbackset.h
+    singlecolumnobjectproxymodel.h
+    toolfactory.h
+    util.h
+    varianthandler.h
+  )
 
-ecm_generate_pri_file(BASE_NAME GammaRayCore
-                      LIB_NAME gammaray_core-${GAMMARAY_PROBE_ABI}
-                      DEPS "core gui GammaRayCommon"
-                      FILENAME_VAR PRI_FILENAME
-                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
-)
+  ecm_generate_pri_file(BASE_NAME GammaRayCore
+                        LIB_NAME gammaray_core-${GAMMARAY_PROBE_ABI}
+                        DEPS "core gui GammaRayCommon"
+                        FILENAME_VAR PRI_FILENAME
+                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
+  )
 
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+endif()

@@ -69,23 +69,26 @@ endif()
 
 install(TARGETS gammaray_launcher EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-ecm_generate_pri_file(BASE_NAME GammaRayLauncher
-                      LIB_NAME gammaray_launcher
-                      DEPS "core gui GammaRayCommon"
-                      FILENAME_VAR PRI_FILENAME
-                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
-)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  gammaray_install_headers(
+      ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_export.h
+      launcher.h
+      launchoptions.h
+      probeabi.h
+      probeabidetector.h
+      probefinder.h
+      networkdiscoverymodel.h
+  )
 
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-gammaray_install_headers(
-    ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_export.h
-    launcher.h
-    launchoptions.h
-    probeabi.h
-    probeabidetector.h
-    probefinder.h
-    networkdiscoverymodel.h
-)
+  ecm_generate_pri_file(BASE_NAME GammaRayLauncher
+                        LIB_NAME gammaray_launcher
+                        DEPS "core gui GammaRayCommon"
+                        FILENAME_VAR PRI_FILENAME
+                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
+  )
+
+  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+endif()
 
 
 # command line launcher
