@@ -20,7 +20,8 @@ set_target_properties(gammaray_client PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
 )
 
-target_include_directories(gammaray_client PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+gammaray_target_relocatable_interfaces(gammaray_client_ipaths)
+target_include_directories(gammaray_client PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_client_ipaths}>)
 target_link_libraries(gammaray_client
   LINK_PUBLIC
   ${QT_QTCORE_LIBRARIES}

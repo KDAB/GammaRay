@@ -6,6 +6,20 @@
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 
+macro(gammaray_target_relocatable_interfaces _paths)
+  # See https://cmake.org/cmake/help/v3.3/manual/cmake-packages.7.html#creating-relocatable-packages
+  get_filename_component(_dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+  # Allow include like:
+  # #include <file.h>
+  # #include <module/file.h>
+  # #include <gammaray/module/file.h>
+  set(${_paths}
+      "$<INSTALL_PREFIX>/${INCLUDE_INSTALL_DIR}/${_dir}"
+      "$<INSTALL_PREFIX>/${INCLUDE_INSTALL_DIR}"
+      "$<INSTALL_PREFIX>/${INCLUDE_INSTALL_DIR}/.."
+    )
+endmacro()
+
 macro(gammaray_install_headers)
   get_filename_component(_dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)
   if(NOT GAMMARAY_PROBE_ONLY_BUILD)

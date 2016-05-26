@@ -106,7 +106,8 @@ set_target_properties(gammaray_ui PROPERTIES
   OUTPUT_NAME gammaray_ui-${GAMMARAY_PROBE_ABI}
 )
 
-target_include_directories(gammaray_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+gammaray_target_relocatable_interfaces(gammaray_ui_ipaths)
+target_include_directories(gammaray_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_ui_ipaths}>)
 if(HAVE_PRIVATE_QT_HEADERS)
   if(Qt5Widgets_FOUND)
     include_directories(SYSTEM ${Qt5Widgets_PRIVATE_INCLUDE_DIRS})

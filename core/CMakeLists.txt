@@ -118,7 +118,8 @@ qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 add_library(gammaray_core SHARED ${gammaray_srcs})
 generate_export_header(gammaray_core)
 
-target_include_directories(gammaray_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+gammaray_target_relocatable_interfaces(gammaray_core_ipaths)
+target_include_directories(gammaray_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_core_ipaths}>)
 target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
