@@ -67,9 +67,9 @@ if(UNIX AND NOT APPLE AND NOT QNXNTO)
   target_link_libraries(gammaray_launcher LINK_PRIVATE dl) # for preload check
 endif()
 
-install(TARGETS gammaray_launcher EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  install(TARGETS gammaray_launcher EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
   gammaray_install_headers(
       ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_export.h
       launcher.h
@@ -88,6 +88,8 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   )
 
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+else()
+  install(TARGETS gammaray_launcher ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
 
 

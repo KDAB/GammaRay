@@ -52,12 +52,19 @@ if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
   install(TARGETS gammaray_probe DESTINATION ${PROBE_INSTALL_DIR})
 else()
   set_target_properties(gammaray_probe PROPERTIES OUTPUT_NAME gammaray_probe-${GAMMARAY_PROBE_ABI})
-  install(TARGETS gammaray_probe EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-  ecm_generate_pri_file(BASE_NAME GammaRayProbe
-                      LIB_NAME gammaray_probe-${GAMMARAY_PROBE_ABI}
-                      DEPS "core gui network GammaRayCommon GammaRayCore"
-                      FILENAME_VAR PRI_FILENAME
-                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR})
-  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gammaray_probe-android-dependencies.xml DESTINATION ${LIB_INSTALL_DIR})
+
+  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+    install(TARGETS gammaray_probe EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+    ecm_generate_pri_file(BASE_NAME GammaRayProbe
+                        LIB_NAME gammaray_probe-${GAMMARAY_PROBE_ABI}
+                        DEPS "core gui network GammaRayCommon GammaRayCore"
+                        FILENAME_VAR PRI_FILENAME
+                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR})
+
+    install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gammaray_probe-android-dependencies.xml DESTINATION ${LIB_INSTALL_DIR})
+  else()
+    install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
+  endif()
 endif()

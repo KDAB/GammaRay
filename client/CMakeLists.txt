@@ -50,10 +50,9 @@ set_target_properties(gammaray-client PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"
 )
 
-install(TARGETS gammaray_client EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(TARGETS gammaray-client DESTINATION ${LIBEXEC_INSTALL_DIR})
-
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  install(TARGETS gammaray_client EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_client_export.h
     clientconnectionmanager.h
@@ -67,4 +66,8 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   )
 
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+else()
+  install(TARGETS gammaray_client ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
+
+install(TARGETS gammaray-client DESTINATION ${LIBEXEC_INSTALL_DIR})

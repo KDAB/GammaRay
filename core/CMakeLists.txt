@@ -138,9 +138,9 @@ else()
   )
 endif()
 
-install(TARGETS gammaray_core EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  install(TARGETS gammaray_core EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_core_export.h
     metaobject.h
@@ -168,4 +168,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   )
 
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+else()
+  install(TARGETS gammaray_core ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()

@@ -39,8 +39,6 @@ else()
   )
 endif()
 
-install(TARGETS gammaray_common EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 set(gammaray_common_internal_srcs
   plugininfo.cpp
   pluginmanager.cpp
@@ -77,6 +75,8 @@ if (ANDROID)
 endif()
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  install(TARGETS gammaray_common EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_common_export.h
     endpoint.h
@@ -98,4 +98,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   )
 
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+else()
+  install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()

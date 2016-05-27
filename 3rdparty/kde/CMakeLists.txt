@@ -18,13 +18,17 @@ set_target_properties(gammaray_kitemmodels PROPERTIES
   DEFINE_SYMBOL MAKE_KITEMMODELS_LIB
 )
 
-install(TARGETS gammaray_kitemmodels EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  install(TARGETS gammaray_kitemmodels EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-ecm_generate_pri_file(BASE_NAME GammaRayKItemModels
-                      LIB_NAME gammaray_kitemmodels-${GAMMARAY_PROBE_ABI}
-                      DEPS "core"
-                      FILENAME_VAR PRI_FILENAME
-                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
-)
+  ecm_generate_pri_file(BASE_NAME GammaRayKItemModels
+                        LIB_NAME gammaray_kitemmodels-${GAMMARAY_PROBE_ABI}
+                        DEPS "core"
+                        FILENAME_VAR PRI_FILENAME
+                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
+  )
 
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+else()
+  install(TARGETS gammaray_kitemmodels ${INSTALL_TARGETS_DEFAULT_ARGS})
+endif()

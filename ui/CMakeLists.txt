@@ -125,8 +125,6 @@ target_link_libraries(gammaray_ui
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
 )
 
-install(TARGETS gammaray_ui EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 set(gammaray_ui_internal_srcs
   sidepane.cpp
   aboutpluginsdialog.cpp
@@ -150,6 +148,8 @@ target_link_libraries(gammaray_ui_internal
 )
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+  install(TARGETS gammaray_ui EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
     clienttoolmodel.h
@@ -170,4 +170,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   )
 
   install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+else()
+  install(TARGETS gammaray_ui ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
