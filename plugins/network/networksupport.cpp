@@ -29,8 +29,10 @@
 #include "networksupport.h"
 #include "networkinterfacemodel.h"
 
+#include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/varianthandler.h>
 
 #include <common/metatypedeclarations.h> // FIXME move QHostAddress from there to here
 
@@ -56,6 +58,7 @@ NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent) :
     QObject(parent)
 {
     registerMetaTypes();
+    registerVariantHandler();
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel"), new NetworkInterfaceModel(this));
 }
@@ -117,6 +120,23 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
     MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
     MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
+}
+
+#define E(x) { QNetworkAccessManager:: x, #x }
+static const MetaEnum::Value<QNetworkAccessManager::NetworkAccessibility> network_accessibility_table[] = {
+    E(UnknownAccessibility),
+    E(NotAccessible),
+    E(Accessible)
+};
+
+static QString networkAccessibilityToString(QNetworkAccessManager::NetworkAccessibility value)
+{
+    return MetaEnum::enumToString(value, network_accessibility_table);
+}
+
+void NetworkSupport::registerVariantHandler()
+{
+    VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(networkAccessibilityToString);
 }
 
 

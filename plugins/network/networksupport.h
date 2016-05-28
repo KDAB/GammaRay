@@ -42,6 +42,7 @@ public:
 
 private:
     void registerMetaTypes();
+    void registerVariantHandler();
 };
 
 class NetworkSupportFactory : public QObject, public StandardToolFactory<QObject, NetworkSupport>
