@@ -10,6 +10,7 @@ add_subdirectory(timertop)
 add_subdirectory(webinspector)
 
 if(Qt5Core_FOUND)
+  add_subdirectory(network)
   add_subdirectory(translatorinspector)
 else()
   add_subdirectory(objectvisualizer)
