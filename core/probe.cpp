@@ -558,9 +558,11 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
   }
 
   // ignore objects created when global statics are already getting destroyed (on exit)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   if (s_listener.isDestroyed()) {
       return;
   }
+#endif
 
   if (!isInitialized()) {
     IF_DEBUG(cout
