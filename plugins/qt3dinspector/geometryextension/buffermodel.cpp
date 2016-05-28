@@ -91,6 +91,7 @@ void BufferModel::updateAttribute(const GammaRay::Qt3DGeometryAttributeData& att
             col.name += QLatin1Char('[') + QString::number(i) + QLatin1Char(']');
         col.offset = attrData.byteOffset + i * Attribute::size(attrData.vertexBaseType);
         col.type = attrData.vertexBaseType;
+        col.stride = std::max(attrData.byteStride, (uint)Attribute::size(attrData.vertexBaseType));
         m_attrs.push_back(col);
     }
 }
@@ -114,7 +115,8 @@ QVariant BufferModel::data(const QModelIndex& index, int role) const
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        const char *c = m_buffer.constData() + (m_rowSize * index.row()) + m_attrs.at(index.column()).offset;
+        const auto &attr = m_attrs.at(index.column());
+        const char *c = m_buffer.constData() + (attr.stride * index.row()) + attr.offset;
         return Attribute::variant(m_attrs.at(index.column()).type, c);
     }
 

@@ -59,6 +59,7 @@ private:
         QString name;
         Qt3DRender::QAttribute::VertexBaseType type;
         uint offset;
+        uint stride;
     };
     QVector<ColumnData> m_attrs;
 

@@ -380,12 +380,12 @@ void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData& ver
 {
     m_boundingVolume = BoundingVolume();
     QVector3D v;
-    const char* const end = bufferData.constData() + bufferData.size();
-    for (const char *c = bufferData.constData(); c < end; c += vertexAttr.byteStride) {
+    for (unsigned int i = 0; i < vertexAttr.count; ++i) {
+        const char *c = bufferData.constData() + vertexAttr.byteOffset + i * vertexAttr.byteStride;
         switch (vertexAttr.vertexBaseType) {
             case Qt3DRender::QAttribute::Float:
             {
-                auto f = reinterpret_cast<const float*>(c + vertexAttr.byteOffset);
+                auto f = reinterpret_cast<const float*>(c);
                 v.setX(*f);
                 ++f;
                 v.setY(*f);
