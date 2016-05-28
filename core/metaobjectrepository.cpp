@@ -32,17 +32,12 @@
 #include <common/metatypedeclarations.h>
 
 #include <QAbstractItemModel>
-#include <QAbstractSocket>
 #include <QCoreApplication>
 #include <QFile>
 #include <QFont>
-#include <QLocalSocket>
-#include <QNetworkProxy>
 #include <QObject>
-#include <QSocketNotifier>
 #include <QSortFilterProxyModel>
 #include <QStringList>
-#include <QTcpServer>
 #include <QThread>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
@@ -79,7 +74,6 @@ void MetaObjectRepository::initBuiltInTypes()
   m_initialized = true;
   initQObjectTypes();
   initIOTypes();
-  initNetworkTypes();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -146,22 +140,10 @@ void MetaObjectRepository::initQObjectTypes()
 }
 
 
-Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
 Q_DECLARE_METATYPE(QIODevice::OpenMode)
-Q_DECLARE_METATYPE(QSocketNotifier::Type)
-Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
-Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
-
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
 Q_DECLARE_METATYPE(QFileDevice::FileError)
 Q_DECLARE_METATYPE(QFileDevice::Permissions)
-#else // !Qt5
-Q_DECLARE_METATYPE(QAbstractSocket::SocketError)
-Q_DECLARE_METATYPE(QAbstractSocket::SocketState)
-#ifndef QT_NO_NETWORKPROXY
-Q_DECLARE_METATYPE(QNetworkProxy)
-#endif
 #endif
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::SortOrder)
@@ -202,71 +184,6 @@ void MetaObjectRepository::initIOTypes()
   MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
 #endif
 #endif
-}
-
-
-void MetaObjectRepository::initNetworkTypes()
-{
-  MetaObject *mo = 0;
-  MO_ADD_METAOBJECT1(QAbstractSocket, QIODevice);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, bool, isValid);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, localPort);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, localAddress);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, peerPort);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, peerAddress);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, QString, peerName);
-  MO_ADD_PROPERTY   (QAbstractSocket, qint64, readBufferSize, setReadBufferSize);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_PROPERTY   (QAbstractSocket, QAbstractSocket::PauseModes, pauseMode, setPauseMode);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, qintptr, socketDescriptor);
-#else // !Qt5
-  MO_ADD_PROPERTY_RO(QAbstractSocket, int, socketDescriptor);
-#endif
-  MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketType, socketType);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketState, state);
-  MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketError, error);
-#ifndef QT_NO_NETWORKPROXY
-  MO_ADD_PROPERTY_RO(QAbstractSocket, QNetworkProxy, proxy);
-#endif
-
-  MO_ADD_METAOBJECT1(QLocalSocket, QIODevice);
-  MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketError, error);
-  MO_ADD_PROPERTY_RO(QLocalSocket, QString, fullServerName);
-  MO_ADD_PROPERTY_RO(QLocalSocket, bool, isValid);
-  MO_ADD_PROPERTY_RO(QLocalSocket, QString, serverName);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_PROPERTY_RO(QLocalSocket, qintptr, socketDescriptor);
-#endif
-  MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketState, state);
-
-  // FIXME: QAbstractSocket::setSocketOption() would be nice to have
-  // FIXME: QQAbstractSocket::socketOption() would be nice to have
-
-  MO_ADD_METAOBJECT1(QTcpServer, QObject);
-  MO_ADD_PROPERTY_RO(QTcpServer, bool, isListening);
-  MO_ADD_PROPERTY   (QTcpServer, int, maxPendingConnections, setMaxPendingConnections);
-  MO_ADD_PROPERTY_RO(QTcpServer, quint16, serverPort);
-  MO_ADD_PROPERTY_RO(QTcpServer, QHostAddress, serverAddress);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_PROPERTY_RO(QTcpServer, qintptr, socketDescriptor);
-#else // !QT5
-  MO_ADD_PROPERTY_RO(QTcpServer, int, socketDescriptor);
-#endif
-  MO_ADD_PROPERTY_RO(QTcpServer, bool, hasPendingConnections);
-  MO_ADD_PROPERTY_RO(QTcpServer, QAbstractSocket::SocketError, serverError);
-  MO_ADD_PROPERTY_RO(QTcpServer, QString, errorString);
-#ifndef QT_NO_NETWORKPROXY
-  MO_ADD_PROPERTY_RO(QTcpServer, QNetworkProxy, proxy);
-#endif
-
-  MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
-#else // !Qt5
-  MO_ADD_PROPERTY_RO(QSocketNotifier, int, socket);
-#endif
-  MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
-  MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
 }
 
 MetaObjectRepository *MetaObjectRepository::instance()

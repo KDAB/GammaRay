@@ -39,6 +39,9 @@ class NetworkSupport : public QObject
 public:
     explicit NetworkSupport(ProbeInterface *probe, QObject *parent = Q_NULLPTR);
     ~NetworkSupport();
+
+private:
+    void registerMetaTypes();
 };
 
 class NetworkSupportFactory : public QObject, public StandardToolFactory<QObject, NetworkSupport>
