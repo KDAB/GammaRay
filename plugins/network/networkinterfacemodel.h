@@ -1,5 +1,5 @@
 /*
-  networksupport.cpp
+  networkinterfacemodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,27 +26,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "networksupport.h"
-#include "networkinterfacemodel.h"
+#ifndef GAMMARAY_NETWORKINTERFACEMODEL_H
+#define GAMMARAY_NETWORKINTERFACEMODEL_H
 
-using namespace GammaRay;
+#include <QAbstractItemModel>
 
-NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent) :
-    QObject(parent)
+namespace GammaRay {
+
+class NetworkInterfaceModel : public QAbstractTableModel
 {
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel"), new NetworkInterfaceModel(this));
+    Q_OBJECT
+public:
+    explicit NetworkInterfaceModel(QObject *parent = Q_NULLPTR);
+    ~NetworkInterfaceModel();
+
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+};
+
 }
 
-NetworkSupport::~NetworkSupport()
-{
-}
-
-NetworkSupportFactory::NetworkSupportFactory(QObject *parent) :
-    QObject(parent)
-{
-}
-
-QString NetworkSupportFactory::name() const
-{
-    return tr("Network");
-}
+#endif // GAMMARAY_NETWORKINTERFACEMODEL_H

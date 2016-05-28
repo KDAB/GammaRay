@@ -1,5 +1,5 @@
 /*
-  networksupport.cpp
+  networkinterfacewidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,27 +26,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "networksupport.h"
-#include "networkinterfacemodel.h"
+#include "networkinterfacewidget.h"
+#include "ui_networkinterfacewidget.h"
+
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 
-NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent) :
-    QObject(parent)
+NetworkInterfaceWidget::NetworkInterfaceWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::NetworkInterfaceWidget)
 {
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel"), new NetworkInterfaceModel(this));
+    ui->setupUi(this);
+
+    ui->interfaceView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel")));
 }
 
-NetworkSupport::~NetworkSupport()
-{
-}
-
-NetworkSupportFactory::NetworkSupportFactory(QObject *parent) :
-    QObject(parent)
+NetworkInterfaceWidget::~NetworkInterfaceWidget()
 {
 }
 
-QString NetworkSupportFactory::name() const
-{
-    return tr("Network");
-}

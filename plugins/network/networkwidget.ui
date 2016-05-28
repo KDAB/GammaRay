@@ -16,20 +16,28 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="interfaceTab">
       <attribute name="title">
-       <string>Devices</string>
+       <string>Interfaces</string>
       </attribute>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Cookies</string>
-      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="GammaRay::NetworkInterfaceWidget" name="widget" native="true"/>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::NetworkInterfaceWidget</class>
+   <extends>QWidget</extends>
+   <header>networkinterfacewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
