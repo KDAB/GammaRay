@@ -34,7 +34,10 @@
 
 #include <common/metatypedeclarations.h> // FIXME move QHostAddress from there to here
 
+#include <QAbstractNetworkCache>
 #include <QLocalSocket>
+#include <QNetworkAccessManager>
+#include <QNetworkCookieJar>
 #include <QNetworkProxy>
 #include <QSocketNotifier>
 #include <QTcpServer>
@@ -45,6 +48,7 @@ Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
 Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
+Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
 
 
@@ -87,6 +91,11 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QLocalSocket, QString, serverName);
     MO_ADD_PROPERTY_RO(QLocalSocket, qintptr, socketDescriptor);
     MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketState, state);
+
+    MO_ADD_METAOBJECT1(QNetworkAccessManager, QObject);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QAbstractNetworkCache*, cache);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QNetworkCookieJar*, cookieJar);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QStringList, supportedSchemes);
 
     // FIXME: QAbstractSocket::setSocketOption() would be nice to have
     // FIXME: QQAbstractSocket::socketOption() would be nice to have
