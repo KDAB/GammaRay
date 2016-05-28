@@ -40,6 +40,7 @@ NetworkInterfaceWidget::NetworkInterfaceWidget(QWidget *parent) :
     ui->setupUi(this);
 
     ui->interfaceView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel")));
+    ui->interfaceView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 NetworkInterfaceWidget::~NetworkInterfaceWidget()
