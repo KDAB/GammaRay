@@ -1,5 +1,5 @@
 /*
-  networkwidget.h
+  cookiejarmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,41 +26,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_NETWORKWIDGET_H
-#define GAMMARAY_NETWORKWIDGET_H
+#ifndef GAMMARAY_COOKIEJARMODEL_H
+#define GAMMARAY_COOKIEJARMODEL_H
 
-#include <ui/tooluifactory.h>
+#include <QAbstractTableModel>
+#include <QList>
+#include <QNetworkCookie>
 
-#include <QScopedPointer>
-#include <QWidget>
+QT_BEGIN_NAMESPACE
+class QNetworkCookieJar;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
-namespace Ui
-{
-class NetworkWidget;
-}
-
-class NetworkWidget : public QWidget
+class CookieJarModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit NetworkWidget(QWidget *parent = Q_NULLPTR);
-    ~NetworkWidget();
+    explicit CookieJarModel(QObject *parent = Q_NULLPTR);
+    ~CookieJarModel();
+
+    void setCookieJar(QNetworkCookieJar *cookieJar);
+
+    int columnCount(const QModelIndex & parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex & parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex & index, int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
 private:
-    QScopedPointer<Ui::NetworkWidget> ui;
+    QNetworkCookieJar *m_cookieJar;
+    QList<QNetworkCookie> m_cookies;
 };
-
-class NetworkWidgetFactory : public QObject, public StandardToolUiFactory<NetworkWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_network.json")
-public:
-    void initUi() Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif // GAMMARAY_NETWORKWIDGET_H
+#endif // GAMMARAY_COOKIEJARMODEL_H

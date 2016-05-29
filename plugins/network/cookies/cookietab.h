@@ -1,5 +1,5 @@
 /*
-  networkwidget.h
+  cookietab.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,41 +26,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_NETWORKWIDGET_H
-#define GAMMARAY_NETWORKWIDGET_H
-
-#include <ui/tooluifactory.h>
+#ifndef GAMMARAY_COOKIETAB_H
+#define GAMMARAY_COOKIETAB_H
 
 #include <QScopedPointer>
 #include <QWidget>
 
 namespace GammaRay {
 
+class PropertyWidget;
+
 namespace Ui
 {
-class NetworkWidget;
+class CookieTab;
 }
 
-class NetworkWidget : public QWidget
+class CookieTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NetworkWidget(QWidget *parent = Q_NULLPTR);
-    ~NetworkWidget();
+    explicit CookieTab(PropertyWidget *parent = Q_NULLPTR);
+    ~CookieTab();
 
 private:
-    QScopedPointer<Ui::NetworkWidget> ui;
+    QScopedPointer<Ui::CookieTab> ui;
 };
-
-class NetworkWidgetFactory : public QObject, public StandardToolUiFactory<NetworkWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_network.json")
-public:
-    void initUi() Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif // GAMMARAY_NETWORKWIDGET_H
+#endif // GAMMARAY_COOKIETAB_H

@@ -1,5 +1,5 @@
 /*
-  networkwidget.h
+  cookieextension.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,41 +26,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_NETWORKWIDGET_H
-#define GAMMARAY_NETWORKWIDGET_H
+#ifndef GAMMARAY_COOKIEEXTENSION_H
+#define GAMMARAY_COOKIEEXTENSION_H
 
-#include <ui/tooluifactory.h>
-
-#include <QScopedPointer>
-#include <QWidget>
+#include <core/propertycontrollerextension.h>
 
 namespace GammaRay {
 
-namespace Ui
-{
-class NetworkWidget;
-}
+class CookieJarModel;
 
-class NetworkWidget : public QWidget
+class CookieExtension : public PropertyControllerExtension
 {
-    Q_OBJECT
 public:
-    explicit NetworkWidget(QWidget *parent = Q_NULLPTR);
-    ~NetworkWidget();
+    explicit CookieExtension(PropertyController *controller);
+    ~CookieExtension();
+
+    bool setQObject(QObject * object) Q_DECL_OVERRIDE;
 
 private:
-    QScopedPointer<Ui::NetworkWidget> ui;
+    CookieJarModel *m_cookieJarModel;
 };
-
-class NetworkWidgetFactory : public QObject, public StandardToolUiFactory<NetworkWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_network.json")
-public:
-    void initUi() Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif // GAMMARAY_NETWORKWIDGET_H
+#endif // GAMMARAY_COOKIEEXTENSION_H

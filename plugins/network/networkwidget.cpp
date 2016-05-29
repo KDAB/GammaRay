@@ -28,6 +28,9 @@
 
 #include "networkwidget.h"
 #include "ui_networkwidget.h"
+#include "cookies/cookietab.h"
+
+#include <ui/propertywidget.h>
 
 using namespace GammaRay;
 
@@ -40,4 +43,10 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
 
 NetworkWidget::~NetworkWidget()
 {
+}
+
+
+void NetworkWidgetFactory::initUi()
+{
+    PropertyWidget::registerTab<CookieTab>(QStringLiteral("cookieJar"), tr("Cookies"), PropertyWidgetTabPriority::Basic);
 }

@@ -28,10 +28,12 @@
 
 #include "networksupport.h"
 #include "networkinterfacemodel.h"
+#include "cookies/cookieextension.h"
 
 #include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/propertycontroller.h>
 #include <core/varianthandler.h>
 
 #include <common/metatypedeclarations.h> // FIXME move QHostAddress from there to here
@@ -61,6 +63,8 @@ NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent) :
     registerVariantHandler();
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel"), new NetworkInterfaceModel(this));
+
+    PropertyController::registerExtension<CookieExtension>();
 }
 
 NetworkSupport::~NetworkSupport()

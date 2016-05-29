@@ -1,5 +1,5 @@
 /*
-  networkwidget.h
+  cookieextension.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,41 +26,36 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_NETWORKWIDGET_H
-#define GAMMARAY_NETWORKWIDGET_H
+#include "cookieextension.h"
+#include "cookiejarmodel.h"
 
-#include <ui/tooluifactory.h>
+#include <core/propertycontroller.h>
 
-#include <QScopedPointer>
-#include <QWidget>
+#include <QNetworkAccessManager>
+#include <QNetworkCookieJar>
 
-namespace GammaRay {
+using namespace GammaRay;
 
-namespace Ui
+CookieExtension::CookieExtension(PropertyController* controller) :
+    PropertyControllerExtension(controller->objectBaseName() + ".cookieJar"),
+    m_cookieJarModel(new CookieJarModel(controller))
 {
-class NetworkWidget;
+    controller->registerModel(m_cookieJarModel, QStringLiteral("cookieJarModel"));
 }
 
-class NetworkWidget : public QWidget
+CookieExtension::~CookieExtension()
 {
-    Q_OBJECT
-public:
-    explicit NetworkWidget(QWidget *parent = Q_NULLPTR);
-    ~NetworkWidget();
-
-private:
-    QScopedPointer<Ui::NetworkWidget> ui;
-};
-
-class NetworkWidgetFactory : public QObject, public StandardToolUiFactory<NetworkWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_network.json")
-public:
-    void initUi() Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif // GAMMARAY_NETWORKWIDGET_H
+bool CookieExtension::setQObject(QObject* object)
+{
+    if (auto cookieJar = qobject_cast<QNetworkCookieJar*>(object)) {
+        m_cookieJarModel->setCookieJar(cookieJar);
+        return true;
+    } else if (auto nam = qobject_cast<QNetworkAccessManager*>(object)) {
+        return setQObject(nam->cookieJar());
+    }
+
+    m_cookieJarModel->setCookieJar(Q_NULLPTR);
+    return false;
+}
