@@ -67,8 +67,14 @@ QString flagsToString(T flags, const Value<F> (&lookupTable)[N])
     if (flags & ~handledFlags)
         l.push_back(QStringLiteral("flag 0x") + QString::number(qulonglong(flags & ~handledFlags), 16));
 
-    if (l.isEmpty())
+    if (l.isEmpty()) {
+        // check if we have a special 0-value
+        for (std::size_t i = 0; i < N; ++i) {
+            if (lookupTable[i].value == 0)
+                return QString::fromUtf8(lookupTable[i].name);
+        }
         return QStringLiteral("<none>");
+    }
     return l.join(QStringLiteral("|"));
 }
 
