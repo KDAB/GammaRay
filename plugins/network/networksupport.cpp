@@ -143,6 +143,18 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
 }
 
+#define E(x) { QAbstractSocket:: x, #x }
+static const MetaEnum::Value<QAbstractSocket::PauseMode> socket_pause_mode_table[] = {
+    E(PauseNever),
+    E(PauseOnSslErrors),
+};
+#undef E
+
+static QString socketPauseModeToString(QAbstractSocket::PauseModes flags)
+{
+    return MetaEnum::flagsToString(flags, socket_pause_mode_table);
+}
+
 #define E(x) { QNetworkAccessManager:: x, #x }
 static const MetaEnum::Value<QNetworkAccessManager::NetworkAccessibility> network_accessibility_table[] = {
     E(UnknownAccessibility),
@@ -209,6 +221,7 @@ static QString sslProtocolToString(QSsl::SslProtocol value)
 
 void NetworkSupport::registerVariantHandler()
 {
+    VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(socketPauseModeToString);
     VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(networkAccessibilityToString);
     VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
     VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
