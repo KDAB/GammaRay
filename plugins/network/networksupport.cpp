@@ -44,6 +44,7 @@
 #include <QNetworkCookieJar>
 #include <QNetworkProxy>
 #include <QSocketNotifier>
+#include <QSslSocket>
 #include <QTcpServer>
 
 using namespace GammaRay;
@@ -54,6 +55,9 @@ Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
+Q_DECLARE_METATYPE(QSsl::SslProtocol)
+Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
+Q_DECLARE_METATYPE(QSslSocket::SslMode)
 
 
 NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent) :
@@ -120,6 +124,19 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QTcpServer, QNetworkProxy, proxy);
 #endif
 
+    MO_ADD_METAOBJECT1(QTcpSocket, QAbstractSocket);
+
+    MO_ADD_METAOBJECT1(QSslSocket, QTcpSocket);
+    MO_ADD_PROPERTY_RO(QSslSocket, bool, isEncrypted);
+    MO_ADD_PROPERTY_RO(QSslSocket, QSslSocket::SslMode, mode);
+    MO_ADD_PROPERTY   (QSslSocket, int, peerVerifyDepth, setPeerVerifyDepth);
+    MO_ADD_PROPERTY   (QSslSocket, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
+    MO_ADD_PROPERTY_CR(QSslSocket, QString, peerVerifyName, setPeerVerifyName);
+    MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, protocol);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, sessionProtocol);
+#endif
+
     MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
     MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
     MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
@@ -132,15 +149,70 @@ static const MetaEnum::Value<QNetworkAccessManager::NetworkAccessibility> networ
     E(NotAccessible),
     E(Accessible)
 };
+#undef E
 
 static QString networkAccessibilityToString(QNetworkAccessManager::NetworkAccessibility value)
 {
     return MetaEnum::enumToString(value, network_accessibility_table);
 }
 
+#define E(x) { QSslSocket:: x, #x }
+static const MetaEnum::Value<QSslSocket::SslMode> ssl_mode_table[] = {
+    E(UnencryptedMode),
+    E(SslClientMode),
+    E(SslServerMode)
+};
+#undef E
+
+static QString sslModeToString(QSslSocket::SslMode value)
+{
+    return MetaEnum::enumToString(value, ssl_mode_table);
+}
+
+#define E(x) { QSslSocket:: x, #x }
+static const MetaEnum::Value<QSslSocket::PeerVerifyMode> ssl_peer_verify_mode_table[] = {
+    E(VerifyNone),
+    E(QueryPeer),
+    E(VerifyPeer),
+    E(AutoVerifyPeer)
+};
+#undef E
+
+static QString sslPeerVerifyModeToString(QSslSocket::PeerVerifyMode value)
+{
+    return MetaEnum::enumToString(value, ssl_peer_verify_mode_table);
+}
+
+#define E(x) { QSsl:: x, #x }
+static const MetaEnum::Value<QSsl::SslProtocol> ssl_protocol_table[] = {
+    E(SslV3),
+    E(SslV2),
+    E(TlsV1_0),
+    E(TlsV1_1),
+    E(TlsV1_2),
+    E(AnyProtocol),
+    E(TlsV1SslV3),
+    E(SecureProtocols),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    E(TlsV1_0OrLater),
+    E(TlsV1_1OrLater),
+    E(TlsV1_2OrLater),
+#endif
+    E(UnknownProtocol)
+};
+#undef E
+
+static QString sslProtocolToString(QSsl::SslProtocol value)
+{
+    return MetaEnum::enumToString(value, ssl_protocol_table);
+}
+
 void NetworkSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(networkAccessibilityToString);
+    VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
+    VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
+    VariantHandler::registerStringConverter<QSsl::SslProtocol>(sslProtocolToString);
 }
 
 
