@@ -56,6 +56,7 @@ Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
+Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
 Q_DECLARE_METATYPE(QSslSocket::SslMode)
 
@@ -136,6 +137,7 @@ void NetworkSupport::registerMetaTypes()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, sessionProtocol);
 #endif
+    MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslError>, sslErrors);
 
     MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
     MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
@@ -219,6 +221,11 @@ static QString sslProtocolToString(QSsl::SslProtocol value)
     return MetaEnum::enumToString(value, ssl_protocol_table);
 }
 
+static QString sslErrorToString(const QSslError &error)
+{
+    return error.errorString();
+}
+
 void NetworkSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(socketPauseModeToString);
@@ -226,6 +233,7 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
     VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
     VariantHandler::registerStringConverter<QSsl::SslProtocol>(sslProtocolToString);
+    VariantHandler::registerStringConverter<QSslError>(sslErrorToString);
 }
 
 
