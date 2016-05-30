@@ -83,9 +83,8 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::RequestMode)
-
 QT_BEGIN_NAMESPACE
+Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::RequestMode)
 Q_DECLARE_INTERFACE(GammaRay::RemoteViewInterface, "com.kdab.GammaRay.RemoteViewInterface/1.0")
 QT_END_NAMESPACE
 
