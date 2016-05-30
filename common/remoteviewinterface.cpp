@@ -27,18 +27,40 @@
 */
 
 #include "remoteviewinterface.h"
+#include "streamoperators.h"
 
 #include <common/objectbroker.h>
 #include <common/remoteviewframe.h>
 
 using namespace GammaRay;
+QT_BEGIN_NAMESPACE
+GAMMARAY_ENUM_STREAM_OPERATORS(RemoteViewInterface::RequestMode)
+QT_END_NAMESPACE
 
 RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
     : QObject(parent)
     , m_name(name)
 {
     ObjectBroker::registerObject(name, this);
-    qRegisterMetaTypeStreamOperators<RemoteViewFrame>();
+
+    qRegisterMetaType<RequestMode>();
+    qRegisterMetaTypeStreamOperators<RequestMode>();
+
+    qRegisterMetaType<ObjectId>();
+    qRegisterMetaTypeStreamOperators<ObjectId>();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    // This is needed so QVariant based comparison works (ie: QAIM::match)
+    QMetaType::registerComparators<ObjectId>();
+#endif
+
+    qRegisterMetaType<ObjectIds>();
+    qRegisterMetaTypeStreamOperators<ObjectIds>();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    // This is needed so QVariant based comparison works (ie: QAIM::match)
+    QMetaType::registerComparators<ObjectIds>();
+#endif
+
+    qRegisterMetaTypeStreamOperators<GammaRay::RemoteViewFrame>();
 }
 
 QString RemoteViewInterface::name() const

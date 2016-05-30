@@ -37,9 +37,14 @@ RemoteViewClient::RemoteViewClient(const QString &name, QObject *parent)
 {
 }
 
-void RemoteViewClient::pickElementAt(const QPoint &pos)
+void RemoteViewClient::requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode)
 {
-    Endpoint::instance()->invokeObject(name(), "pickElementAt", QVariantList() << pos);
+    Endpoint::instance()->invokeObject(name(), "requestElementsAt", QVariantList() << pos << QVariant::fromValue(mode));
+}
+
+void RemoteViewClient::pickElementId(const GammaRay::ObjectId &id)
+{
+    Endpoint::instance()->invokeObject(name(), "pickElementId", QVariantList() << QVariant::fromValue(id));
 }
 
 void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QString &text,

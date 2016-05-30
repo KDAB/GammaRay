@@ -35,6 +35,13 @@ ToolManagerInterface::ToolManagerInterface(QObject *parent)
 {
     qRegisterMetaType<ObjectId>();
     qRegisterMetaTypeStreamOperators<ObjectId>();
+    qRegisterMetaType<ObjectIds>();
+    qRegisterMetaTypeStreamOperators<ObjectIds>();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+   // This is needed so QVariant based comparison works (ie: QAIM::match)
+   QMetaType::registerComparators<ObjectId>();
+   QMetaType::registerComparators<ObjectIds>();
+#endif
     qRegisterMetaType<ToolData>();
     qRegisterMetaTypeStreamOperators<ToolData>();
     qRegisterMetaType<QVector<ToolData> >();
