@@ -10,6 +10,7 @@ set(gammaray_ui_srcs
   editabletypesmodel.cpp
   itemdelegate.cpp
   methodinvocationdialog.cpp
+  modelpickerdialog.cpp
   palettemodel.cpp
   propertybinder.cpp
   propertywidget.cpp

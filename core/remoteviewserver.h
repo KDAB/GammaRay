@@ -65,16 +65,18 @@ public:
     void sendFrame(const RemoteViewFrame &frame);
 
 public slots:
-    /// call this to indicate the source has changed and the client reuqires an update
+    /// call this to indicate the source has changed and the client requires an update
     void sourceChanged();
 
 signals:
-    void doPickElement(const QPoint &pos);
+    void elementsAtRequested(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
+    void doPickElementId(const GammaRay::ObjectId &id);
     /// when receiving this signal, obtain a new frame and send it to the client
     void requestUpdate();
 
 private:
-    void pickElementAt(const QPoint &pos) Q_DECL_OVERRIDE;
+    void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode) Q_DECL_OVERRIDE;
+    void pickElementId(const GammaRay::ObjectId &id) Q_DECL_OVERRIDE;
     void sendKeyEvent(int type, int key, int modifiers, const QString &text, bool autorep,
                       ushort count) Q_DECL_OVERRIDE;
     void sendMouseEvent(int type, const QPoint &localPos, int button, int buttons,

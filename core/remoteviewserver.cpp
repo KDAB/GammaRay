@@ -62,9 +62,14 @@ void RemoteViewServer::setEventReceiver(EventReceiver *receiver)
     m_eventReceiver = receiver;
 }
 
-void RemoteViewServer::pickElementAt(const QPoint &pos)
+void RemoteViewServer::requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode)
 {
-    emit doPickElement(pos);
+    emit elementsAtRequested(pos, mode);
+}
+
+void RemoteViewServer::pickElementId(const GammaRay::ObjectId &id)
+{
+    emit doPickElementId(id);
 }
 
 void RemoteViewServer::resetView()

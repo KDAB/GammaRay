@@ -35,7 +35,14 @@
 #include <QMetaType>
 #include <QVector>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+#include <algorithm>
+#endif
+
 namespace GammaRay {
+/** @brief Type-safe and cross-process object identifier vector. */
+typedef QVector<class ObjectId> ObjectIds;
+
 /** @brief Type-safe and cross-process object identifier. */
 class ObjectId
 {
@@ -71,6 +78,12 @@ public:
         return reinterpret_cast<QObject *>(m_id);
     }
 
+    template <typename T>
+    inline T asQObjectType() const
+    {
+        return qobject_cast<T>(asQObject());
+    }
+
     inline void *asVoidStar() const
     {
         Q_ASSERT(m_type == VoidStarType);
@@ -80,7 +93,7 @@ public:
     inline operator quint64() const { return m_id; }
 
 private:
-    friend QDataStream &operator<<(QDataStream &out, ObjectId id);
+    friend QDataStream &operator<<(QDataStream &out, const ObjectId &id);
     friend QDataStream &operator>>(QDataStream &out, ObjectId &id);
 
     Type m_type;
@@ -88,13 +101,20 @@ private:
     QByteArray m_typeName;
 };
 
-inline QDebug &operator<<(QDebug dbg, ObjectId id)
+inline QDebug &operator<<(QDebug dbg, const ObjectId &id)
 {
     dbg.nospace() << "ObjectId(" << id.type() << ", " << id.id() << ", " << id.typeName() << ")";
     return dbg.space();
 }
 
-inline QDataStream &operator<<(QDataStream &out, ObjectId id)
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+inline bool operator<(const ObjectIds &lhs, const ObjectIds &rhs)
+{
+    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+#endif
+
+inline QDataStream &operator<<(QDataStream &out, const ObjectId &id)
 {
     out << static_cast<quint8>(id.m_type);
     out << id.m_id;
@@ -114,8 +134,10 @@ inline QDataStream &operator>>(QDataStream &in, ObjectId &id)
 }
 
 Q_DECLARE_METATYPE(GammaRay::ObjectId)
+Q_DECLARE_METATYPE(GammaRay::ObjectIds)
 QT_BEGIN_NAMESPACE
     Q_DECLARE_TYPEINFO(GammaRay::ObjectId, Q_MOVABLE_TYPE);
+    Q_DECLARE_TYPEINFO(GammaRay::ObjectIds, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_OBJECTID_H

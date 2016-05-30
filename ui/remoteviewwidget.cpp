@@ -27,10 +27,13 @@
 */
 
 #include "remoteviewwidget.h"
+#include "modelpickerdialog.h"
 
 #include <common/remoteviewinterface.h>
 #include <common/objectbroker.h>
 #include <common/endpoint.h>
+#include <common/objectidfilterproxymodel.h>
+#include <common/objectmodel.h>
 
 #include <QAction>
 #include <QActionGroup>
@@ -56,6 +59,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     , m_interactionMode(NoInteraction)
     , m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection)
     , m_hasMeasurement(false)
+    , m_pickProxyModel(new ObjectIdsFilterProxyModel(this))
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setMouseTracking(true);
@@ -97,6 +101,7 @@ void RemoteViewWidget::setName(const QString &name)
 {
     m_interface = ObjectBroker::object<RemoteViewInterface *>(name);
     connect(m_interface, SIGNAL(reset()), this, SLOT(reset()));
+    connect(m_interface, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)), this, SLOT(elementsAtReceived(GammaRay::ObjectIds, int)));
     connect(m_interface, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)), this,
             SLOT(frameUpdated(GammaRay::RemoteViewFrame)));
     m_interface->clientViewUpdated();
@@ -177,6 +182,31 @@ const RemoteViewFrame &RemoteViewWidget::frame() const
     return m_frame;
 }
 
+void RemoteViewWidget::pickElementId(const QModelIndex &index)
+{
+    const GammaRay::ObjectId id = index.data(ObjectModel::ObjectIdRole).value<GammaRay::ObjectId>();
+    m_interface->pickElementId(id);
+}
+
+void RemoteViewWidget::elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate)
+{
+    Q_ASSERT(!ids.isEmpty());
+
+    m_pickProxyModel->setIds(ids);
+
+    if (ids.count() == 1) {
+        m_interface->pickElementId(ids.first());
+    }
+    else {
+        const int candidate = bestCandidate == -1 ? 0 : bestCandidate;
+        ModelPickerDialog *dlg = new ModelPickerDialog(window());
+        dlg->setModel(m_pickProxyModel);
+        dlg->setCurrentIndex(ObjectModel::ObjectIdRole, QVariant::fromValue(ids[candidate]));
+        connect(dlg, SIGNAL(activated(QModelIndex)), this, SLOT(pickElementId(QModelIndex)));
+        dlg->open();
+    }
+}
+
 void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
 {
     if (!m_frame.isValid()) {
@@ -189,6 +219,19 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
 
     updateActions();
     QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
+}
+
+QAbstractItemModel *RemoteViewWidget::pickSourceModel() const
+{
+    return m_pickProxyModel->sourceModel();
+}
+
+void RemoteViewWidget::setPickSourceModel(QAbstractItemModel *sourceModel)
+{
+    if (sourceModel == m_pickProxyModel->sourceModel())
+        return;
+
+    m_pickProxyModel->setSourceModel(sourceModel);
 }
 
 void RemoteViewWidget::reset()
@@ -630,9 +673,14 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
         break;
     case ViewInteraction:
         m_mouseDownPosition = event->pos() - QPoint(m_x, m_y);
-        if ((event->modifiers() & Qt::ControlModifier)
-            && (m_supportedInteractionModes & ElementPicking))
-            m_interface->pickElementAt(mapToSource(event->pos()));
+        if ((m_supportedInteractionModes & ElementPicking)) {
+            if ((event->modifiers() & Qt::ShiftModifier) && (event->modifiers() & Qt::ControlModifier)) {
+                m_interface->requestElementsAt(mapToSource(event->pos()), RemoteViewInterface::RequestAll);
+            }
+            else if ((event->modifiers() & Qt::ControlModifier)) {
+                m_interface->requestElementsAt(mapToSource(event->pos()), RemoteViewInterface::RequestBest);
+            }
+        }
         if (event->buttons() & Qt::LeftButton)
             setCursor(Qt::ClosedHandCursor);
         break;
@@ -645,8 +693,14 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
         }
         break;
     case ElementPicking:
-        if (event->buttons() & Qt::LeftButton)
-            m_interface->pickElementAt(mapToSource(event->pos()));
+        if (event->buttons() & Qt::LeftButton) {
+            if ((event->modifiers() & Qt::ShiftModifier) && (event->modifiers() & Qt::ControlModifier)) {
+                m_interface->requestElementsAt(mapToSource(event->pos()), RemoteViewInterface::RequestAll);
+            }
+            else {
+                m_interface->requestElementsAt(mapToSource(event->pos()), RemoteViewInterface::RequestBest);
+            }
+        }
         break;
     case InputRedirection:
         sendMouseEvent(event);

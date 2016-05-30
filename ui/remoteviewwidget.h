@@ -32,6 +32,7 @@
 
 #include "gammaray_ui_export.h"
 
+#include <common/objectid.h>
 #include <common/remoteviewframe.h>
 
 #include <QWidget>
@@ -41,10 +42,12 @@ QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 class QActionGroup;
 class QStandardItemModel;
+class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
 class RemoteViewInterface;
+class ObjectIdsFilterProxyModel;
 
 /** Widget showing remote screen content and providing both visual inspection
  *  capabilities as well as input redirection.
@@ -89,6 +92,9 @@ public:
     QActionGroup *interactionModeActions() const;
     QAction *zoomOutAction() const;
     QAction *zoomInAction() const;
+
+    QAbstractItemModel *pickSourceModel() const;
+    void setPickSourceModel(QAbstractItemModel *pickSourceModel);
 
 public slots:
     /// Clears the current view content.
@@ -159,6 +165,8 @@ private:
 
 private slots:
     void interactionActionTriggered(QAction *action);
+    void pickElementId(const QModelIndex &index);
+    void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
     void frameUpdated(const GammaRay::RemoteViewFrame &frame);
 
 private:
@@ -182,6 +190,7 @@ private:
     QPoint m_measurementStartPosition; // in source coordinates
     QPoint m_measurementEndPosition; // in source coordinates
     bool m_hasMeasurement;
+    ObjectIdsFilterProxyModel *m_pickProxyModel;
 };
 }
 
