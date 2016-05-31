@@ -54,6 +54,7 @@
 #include "common/modelutils.h"
 #include "common/objectmodel.h"
 #include "common/paths.h"
+#include <common/probecontrollerinterface.h>
 #include <common/remoteviewframe.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
@@ -93,6 +94,16 @@ Q_DECLARE_METATYPE(QSizePolicy::Policy)
 
 using namespace GammaRay;
 using namespace std;
+
+static bool isGoodCandidateWidget(QWidget *widget)
+{
+    if (!widget->isVisible() || widget->testAttribute(Qt::WA_NoSystemBackground) ||
+            widget->metaObject() == &QWidget::staticMetaObject) {
+        return false;
+    }
+
+    return true;
+}
 
 WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *parent)
     : WidgetInspectorInterface(parent)
@@ -135,7 +146,9 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
             SLOT(objectSelected(QObject*)));
 
-    connect(m_remoteView, SIGNAL(doPickElement(QPoint)), this, SLOT(pickElement(QPoint)));
+    connect(m_remoteView, SIGNAL(elementsAtRequested(QPoint,GammaRay::RemoteViewInterface::RequestMode)), this, SLOT(requestElementsAt(QPoint,GammaRay::RemoteViewInterface::RequestMode)));
+    connect(this, SIGNAL(elementsAtReceived(const GammaRay::ObjectIds,int)), m_remoteView, SIGNAL(elementsAtReceived(const GammaRay::ObjectIds,int)));
+    connect(m_remoteView, SIGNAL(doPickElementId(GammaRay::ObjectId)), this, SLOT(pickElementId(GammaRay::ObjectId)));
 
     checkFeatures();
 }
@@ -246,6 +259,27 @@ void WidgetInspectorServer::updateWidgetPreview()
     m_remoteView->sendFrame(frame);
 }
 
+void WidgetInspectorServer::requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode)
+{
+    if (!m_selectedWidget)
+        return;
+    auto window = m_selectedWidget->window();
+
+    int bestCandidate;
+    const ObjectIds objects = recursiveWidgetsAt(window, pos, mode, bestCandidate);
+
+    if (!objects.isEmpty()) {
+        emit elementsAtReceived(objects, bestCandidate);
+    }
+}
+
+void WidgetInspectorServer::pickElementId(const GammaRay::ObjectId &id)
+{
+    QWidget *widget = id.asQObjectType<QWidget *>();
+    if (widget)
+        widgetSelected(widget);
+}
+
 QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
 {
     // prevent "recursion", i.e. infinite update loop, in our eventFilter
@@ -347,6 +381,62 @@ void WidgetInspectorServer::saveAsUiFile(const QString &fileName)
     callExternalExportAction("gammaray_save_widget_to_ui", m_selectedWidget, fileName);
 }
 
+GammaRay::ObjectIds WidgetInspectorServer::recursiveWidgetsAt(QWidget *parent, const QPoint &pos,
+                                                              GammaRay::RemoteViewInterface::RequestMode mode, int &bestCandidate) const
+{
+    Q_ASSERT(parent);
+    ObjectIds objects;
+
+    bestCandidate = -1;
+
+    const auto childItems = parent->children();
+    for (int i = childItems.size() - 1; i >= 0; --i) { // backwards to match z order
+        auto c = childItems.at(i);
+        if (!c->isWidgetType() || c->metaObject()->className() == QLatin1String("GammaRay::OverlayWidget"))
+            continue;
+        auto w = qobject_cast<QWidget *>(c);
+        const QPoint p = w->mapFromParent(pos);
+
+        if (w->rect().contains(p, true)) {
+            const bool hasSubChildren = !w->children().isEmpty();
+
+            if (hasSubChildren) {
+                const int count = objects.count();
+                int bc;
+                objects << recursiveWidgetsAt(w, p, mode, bc);
+
+                if (bestCandidate == -1 && bc != -1) {
+                    bestCandidate = count + bc;
+                }
+            }
+            else {
+                if (bestCandidate == -1 && isGoodCandidateWidget(w)) {
+                    bestCandidate = objects.count();
+                }
+
+                objects << ObjectId(w);
+            }
+        }
+
+        if (bestCandidate != -1 && mode == RemoteViewInterface::RequestBest) {
+            break;
+        }
+    }
+
+    if (bestCandidate == -1 && isGoodCandidateWidget(parent)) {
+        bestCandidate = objects.count();
+    }
+
+    objects << ObjectId(parent);
+
+    if (bestCandidate != -1 && mode == RemoteViewInterface::RequestBest) {
+        objects = ObjectIds() << objects[bestCandidate];
+        bestCandidate = 0;
+    }
+
+    return objects;
+}
+
 void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *widget,
                                                      const QString &fileName)
 {
@@ -384,17 +474,6 @@ void WidgetInspectorServer::analyzePainting()
     m_selectedWidget->render(m_paintAnalyzer->paintDevice());
     m_paintAnalyzer->endAnalyzePainting();
     m_overlayWidget->show();
-}
-
-void WidgetInspectorServer::pickElement(const QPoint &pos)
-{
-    if (!m_selectedWidget)
-        return;
-    auto child = m_selectedWidget->window()->childAt(pos);
-    if (!child && m_selectedWidget->window()->rect().contains(pos))
-        widgetSelected(m_selectedWidget->window());
-    else
-        widgetSelected(child);
 }
 
 void WidgetInspectorServer::checkFeatures()

@@ -123,6 +123,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     new QuickItemTreeWatcher(ui->itemTreeView, ui->sgTreeView, this);
 
     m_previewWidget = new QuickScenePreviewWidget(m_interface, this);
+    m_previewWidget->setPickSourceModel(proxy);
 
     ui->itemPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickItem"));
     ui->sgPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"));
