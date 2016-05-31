@@ -147,6 +147,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     metaobjectrepository.h
     metaproperty.h
     objectmodelbase.h
+    objectdataprovider.h
     objecttypefilterproxymodel.h
     probe.h
     probeinterface.h
