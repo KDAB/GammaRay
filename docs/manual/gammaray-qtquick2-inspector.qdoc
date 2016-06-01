@@ -16,7 +16,7 @@
         \li Inspecting the scene graph used for rendering the user interface on the GPU.
     \endlist
 
-    If your target has multiple QQuickViews, the combo box at the top can be used to switch between them.
+    If your target has multiple QQuickView instances, the combo box at the top can be used to switch between them.
 
     \section1 Item Tree
 
@@ -63,7 +63,7 @@
     For nodes in the scene graph you have access to:
 
     \list
-        \li Node properties, in particularly node flags and transformation matrices.
+        \li QSGNode properties, in particularly node flags and transformation matrices.
         \li Shader code, if the node has a material associated with it.
         \li Geometry and other per-vertex data, when looking at a geometry node.
     \endlist
