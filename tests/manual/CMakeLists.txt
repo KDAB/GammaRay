@@ -11,6 +11,9 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
   )
+
+  add_executable(modelstest modelstest.cpp)
+  target_link_libraries(modelstest ${QT_QTGUI_LIBRARIES} gammaray_shared_test_data)
 endif()
 
 add_executable(minimalcoreapplication minimalcoreapplication.cpp)
