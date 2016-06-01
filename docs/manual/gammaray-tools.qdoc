@@ -1,0 +1,14 @@
+/*!
+    \contentspage {Tools}
+    \nextpage {Object Inspector}
+    \previouspage {Getting Started}
+    \page gammaray-tools.html
+
+    \title Tools
+
+    \list
+        \li \l{Object Inspector}
+        \li \l{Qt Quick 2 Inspector}
+        \li \l{State Machine Debugger}
+    \endlist
+*/

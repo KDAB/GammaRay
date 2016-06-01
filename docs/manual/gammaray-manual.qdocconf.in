@@ -1,0 +1,46 @@
+project = "GammaRay"
+description = "GammaRay User Manual"
+url = http://www.kdab.com/gammaray
+
+sourcedirs = @CMAKE_CURRENT_SOURCE_DIR@
+sources.fileextensions = "*.qdoc"
+
+imagedirs = @CMAKE_CURRENT_SOURCE_DIR@/images
+
+depends += qtcore qtquick
+
+qhp.projects = GammaRay
+qhp.GammaRay.file = gammaray-manual.qhp
+qhp.GammaRay.namespace = com.kdab.GammaRay.@GAMMARAY_PLUGIN_VERSION@
+qhp.GammaRay.virtualFolder = doc
+qhp.GammaRay.indexTitle = GammaRay @GAMMARAY_VERSION@
+qhp.GammaRay.filterAttributes = gammaray @GAMMARAY_VERSION@
+qhp.GammaRay.customFilters.GammaRay.name = GammaRay @GAMMARAY_VERSION@
+qhp.GammaRay.customFilters.GammaRay.filterAttributes = gammaray @GAMMARAY_VERSION@
+qhp.GammaRay.indexRoot =
+
+qhp.GammaRay.subprojects = manual
+qhp.GammaRay.subprojects.manual.title = GammaRay User Manual
+qhp.GammaRay.subprojects.manual.indexTitle = GammaRay User Manual
+qhp.GammaRay.subprojects.manual.type = manual
+
+navigation.landingpage = "GammaRay"
+buildversion = "GammaRay User Manual @GAMMARAY_VERSION_STRING@"
+
+include(@QDOC_TEMPLATE_DIR@/qt-html-templates-offline.qdocconf)
+
+# adapted from qtbase template
+# TODO: add logo like in the doxygen case?
+# TODO: fix the copyright/license part
+HTML.footer = \
+    "        </div>\n" \
+    "       </div>\n" \
+    "   </div>\n" \
+    "   </div>\n" \
+    "</div>\n" \
+    "<div class=\"footer\">\n" \
+    "   <p>\n" \
+    "   <acronym title=\"Copyright\">&copy;</acronym> 2016 Klar&auml;lvdalens Datakonsult AB (KDAB).\n" \
+    "   Documentation contributions included herein are the copyrights of\n" \
+    "   their respective owners.</p>" \
+    "</div>\n" \

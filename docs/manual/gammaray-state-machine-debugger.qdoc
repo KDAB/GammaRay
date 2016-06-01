@@ -1,0 +1,24 @@
+/*!
+    \contentspage {State Machine Debugger}
+    \previouspage {Qt Quick 2 Inspector}
+    \page gammaray-state-machine-debugger.html
+
+    \title State Machine Debugger
+
+    \section1 Overview
+
+    The state machine debugger allows you to observe the configuration of state machines live, in a graphical way.
+
+    \image gammaray-qsm-debugger.png
+
+    The following state machine frameworks are supported:
+
+    \list
+        \li QStateMachine
+        \li Declarative State Machine
+        \li QtSCXML (depending on Qt version)
+    \endlist
+
+    If your target contains multiple state machine instances, the currently displayed one can be selected in the
+    combo box on the top left.
+*/
