@@ -7,7 +7,7 @@ sources.fileextensions = "*.qdoc"
 
 imagedirs = @CMAKE_CURRENT_SOURCE_DIR@/images
 
-depends += qtcore qtquick
+depends += qtcore qtgui qtwidgets qtquick
 
 qhp.projects = GammaRay
 qhp.GammaRay.file = gammaray-manual.qhp

@@ -6,9 +6,18 @@
 
     \title Tools
 
+    \section1 Overview
+
+    GammaRay consists of a number of specialized tools for various aspects of Qt. Those can be selected via the tool selector on the very left of the GammaRay window.
+
     \list
         \li \l{Object Inspector}
         \li \l{Qt Quick 2 Inspector}
         \li \l{State Machine Debugger}
+        \li \l{Widget Inspector}
+        \li \l{Styles}
+        \li \l{Messages}
+        \li \l{Signal Plotter}
+        \li \l{Meta Object Browser}
     \endlist
 */

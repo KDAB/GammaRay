@@ -1,0 +1,32 @@
+/*!
+    \contentspage {Widget Inspector}
+    \nextpage {Styles}
+    \previouspage {State Machine Debugger}
+    \page gammaray-widget-Inspector.html
+
+    \title Widget Inspector
+
+    \section1 Overview
+
+    The widget inspector allows you browse the QWidget and QLayout hierarchy of your target application.
+
+    \image gammaray-widget-inspector.png
+
+    \section1 Remote View
+
+    Similar to the \l{Qt Quick 2 Inspector}, the widget inspector has a zoomable remote view of the selected window on the lower left.
+    This offers:
+
+    \list
+        \li Widget picking.
+        \li A diagnostic overlay with the layout information.
+        \li Input event forwarding, for working with embedded targets.
+        \li A measurement tool.
+    \endlist
+
+    \section1 Paint Analyzer
+
+    When selecting a QWidget sub-class in the widget tree, the paint analyzer tab is activated in the property view on the right side.
+
+    The paint analyzer allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
+*/

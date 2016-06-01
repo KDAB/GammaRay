@@ -1,0 +1,25 @@
+/*!
+    \contentspage {Styles}
+    \nextpage {Messages}
+    \previouspage {Widget Inspector}
+    \page gammaray-styles.html
+
+    \title Styles
+
+    \section1 Overview
+
+    The Styles tool is used for working on and debugging custom QStyle sub-classes.
+
+    \image gammaray-style-controls.png
+
+    This tool allows you to:
+
+    \list
+        \li Look at all style primitives in all states.
+        \li Look at all controls in all states.
+        \li Look at all complex controls and their sub-element areas.
+        \li Look at built-in standard pixmaps.
+        \li View and edit style pixel metrics.
+        \li Look at the style-defined QPalette.
+    \endlist
+*/

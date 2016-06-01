@@ -45,6 +45,11 @@
             \li \l{Object Inspector}
             \li \l{Qt Quick 2 Inspector}
             \li \l{State Machine Debugger}
+            \li \l{Widget Inspector}
+            \li \l{Styles}
+            \li \l{Messages}
+            \li \l{Signal Plotter}
+            \li \l{Meta Object Browser}
         \endlist
     \endlist
 */
