@@ -223,7 +223,7 @@ static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
 
 static bool isGoodCandidateItem(QQuickItem *item)
 {
-    if (!item->isVisible() || qFuzzyCompare(item->opacity() + 1.0, qreal(1.0)) ||
+    if (!item->isVisible() || item->z() < 0 || qFuzzyCompare(item->opacity() + 1.0, qreal(1.0)) ||
             !item->flags().testFlag(QQuickItem::ItemHasContents) ||
             item->metaObject() == &QQuickItem::staticMetaObject) {
         return false;
@@ -616,7 +616,7 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
                 int bc;
                 objects << recursiveItemsAt(c, p, mode, bc);
 
-                if (bestCandidate == -1 && bc != -1) {
+                if (bestCandidate == -1 && bc != -1 && c->z() >= 0) {
                     bestCandidate = count + bc;
                 }
             }
