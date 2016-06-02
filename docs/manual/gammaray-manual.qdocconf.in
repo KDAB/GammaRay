@@ -31,7 +31,6 @@ include(@QDOC_TEMPLATE_DIR@/qt-html-templates-offline.qdocconf)
 
 # adapted from qtbase template
 # TODO: add logo like in the doxygen case?
-# TODO: fix the copyright/license part
 HTML.footer = \
     "        </div>\n" \
     "       </div>\n" \
