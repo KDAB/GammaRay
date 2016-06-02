@@ -241,7 +241,11 @@ QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
 {
   // prevent "recursion", i.e. infinite update loop, in our eventFilter
   Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, 0);
-  QImage img(widget->size(), QImage::Format_ARGB32);
+  // We should use hidpi rendering but it's buggy so let stay with
+  // low dpi rendering. See QTBUG-53801
+  const qreal ratio = 1; //widget->window()->devicePixelRatio();
+  QImage img(widget->size() * ratio, QImage::Format_ARGB32);
+  img.setDevicePixelRatio(ratio);
   img.fill(Qt::transparent);
   widget->render(&img);
   return img;

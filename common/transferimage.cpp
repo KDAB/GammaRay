@@ -63,7 +63,7 @@ QDataStream& operator<<(QDataStream& stream, const GammaRay::TransferImage& imag
             break;
         case TransferImage::RawFormat:
         {
-            stream << (quint32)img.format() << (quint32)img.width() << (quint32)img.height();
+            stream << img.devicePixelRatio() << (quint32)img.format() << (quint32)img.width() << (quint32)img.height();
             for (int i = 0; i < img.height(); ++i) {
               stream.device()->write((const char*)img.scanLine(i), img.bytesPerLine());
             }
@@ -90,9 +90,11 @@ QDataStream& operator>>(QDataStream& stream, TransferImage& image)
         }
         case TransferImage::RawFormat:
         {
+            qreal r;
             quint32 f, w, h;
-            stream >> f >> w >> h;
+            stream >> r >> f >> w >> h;
             QImage img(w, h, static_cast<QImage::Format>(f));
+            img.setDevicePixelRatio(r);
             for (int i = 0; i < img.height(); ++i) {
               const QByteArray buffer = stream.device()->read(img.bytesPerLine());
               memcpy(img.scanLine(i), buffer.constData(), img.bytesPerLine());

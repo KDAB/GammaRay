@@ -49,7 +49,7 @@ QRectF RemoteViewFrame::viewRect() const
 {
     if (m_viewRect.isValid())
         return m_viewRect;
-    return m_image.image().rect();
+    return QRect(QPoint(), m_image.image().size() / m_image.image().devicePixelRatio());
 }
 
 void RemoteViewFrame::setViewRect(const QRectF& viewRect)

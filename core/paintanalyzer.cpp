@@ -70,7 +70,9 @@ void PaintAnalyzer::repaint()
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
     const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
-    QImage image(sourceSize, QImage::Format_ARGB32);
+    const qreal ratio = m_paintBufferModel->buffer().devicePixelRatioF();
+    QImage image(sourceSize * ratio, QImage::Format_ARGB32);
+    image.setDevicePixelRatio(ratio);
     image.fill(Qt::transparent);
     QPainter painter(&image);
     const auto start = m_paintBufferModel->buffer().frameStartIndex(0);

@@ -456,7 +456,9 @@ void QuickInspector::slotGrabWindow()
 
   // delay this so we can process the signals to slotSceneChanged first, while we are in the m_isGrabbingWindow state
   // otherwise we end up with an infinite update loop even on static scenes
-  const auto img = m_window->grabWindow();
+  auto img = m_window->grabWindow();
+  // See QTBUG-53795
+  img.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
   QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::QueuedConnection, Q_ARG(QImage, img));
 }
 
