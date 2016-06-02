@@ -3,7 +3,7 @@
 #---------------------------------------------------------------------------
 PROJECT_NAME           = GammaRay
 PROJECT_NUMBER         = @GAMMARAY_VERSION@
-OUTPUT_DIRECTORY       = apidocs
+OUTPUT_DIRECTORY       = @DOXYGEN_OUTPUT_DIR@
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
