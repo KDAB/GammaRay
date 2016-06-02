@@ -85,6 +85,7 @@ protected:
   QString widgetPath(QWidget *widget) const;
   QString widgetGeometryKey(QWidget *widget) const;
   QString widgetStateKey(QWidget *widget) const;
+  QString widgetStateSectionsKey(QWidget *widget) const;
   bool checkWidget(QWidget *widget) const;
   int percentToInt(const QString &size) const;
 

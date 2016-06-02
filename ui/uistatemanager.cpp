@@ -266,6 +266,11 @@ QString UIStateManager::widgetStateKey(QWidget *widget) const
   return QString::fromLatin1("%1State").arg(widgetPath(widget));
 }
 
+QString UIStateManager::widgetStateSectionsKey(QWidget *widget) const
+{
+  return QString::fromLatin1("%1StateSections").arg(widgetPath(widget));
+}
+
 bool UIStateManager::checkWidget(QWidget *widget) const
 {
   if (widget->objectName().isEmpty()) {
@@ -445,8 +450,17 @@ void UIStateManager::restoreHeaderState(QHeaderView *header)
       }
     } else {
       if (!m_resizing) {
-        header->restoreState(state);
-        header->setProperty(WIDGET_CUSTOMIZED, true);
+        const int count = m_stateSettings->value(widgetStateSectionsKey(header), -1).toInt();
+        if (count == header->count()) {
+          header->restoreState(state);
+          header->setProperty(WIDGET_CUSTOMIZED, true);
+        }
+        else {
+          // QHeaderView is not able to restore state correctly when the column count changed
+          // and lead to crash... let clear the settings.
+          m_stateSettings->remove(widgetStateSectionsKey(header));
+          m_stateSettings->remove(widgetStateKey(header));
+        }
       }
     }
   }
@@ -460,6 +474,7 @@ void UIStateManager::saveHeaderState(QHeaderView *header)
       continue;
     }
 
+    m_stateSettings->setValue(widgetStateSectionsKey(header), header->count());
     m_stateSettings->setValue(widgetStateKey(header), header->saveState());
   }
 }
