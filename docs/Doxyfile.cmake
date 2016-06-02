@@ -197,6 +197,7 @@ SERVER_BASED_SEARCH    = NO
 # configuration options related to the qhp output
 #---------------------------------------------------------------------------
 GENERATE_QHP           = YES
-QHP_NAMESPACE          = com.kdab.GammaRay-@GAMMARAY_VERSION@
+QCH_FILE               = @DOXYGEN_OUTPUT_DIR@/qch/gammaray-api.qch
+QHP_NAMESPACE          = com.kdab.GammaRay.api.@GAMMARAY_PLUGIN_VERSION@
 QHP_VIRTUAL_FOLDER     = GammaRay-@GAMMARAY_VERSION@
 QHG_LOCATION           = @QHELPGEN_EXECUTABLE@
