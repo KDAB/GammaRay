@@ -191,7 +191,7 @@ DOT_CLEANUP            = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to the search engine
 #---------------------------------------------------------------------------
-SEARCHENGINE           = YES
+SEARCHENGINE           = NO
 SERVER_BASED_SEARCH    = NO
 #---------------------------------------------------------------------------
 # configuration options related to the qhp output
