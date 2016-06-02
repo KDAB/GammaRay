@@ -1,11 +1,12 @@
 #!/bin/bash
 
+authorName=`git config user.name`
+authorEmail=`git config user.email`
+thisYear=`date +%Y`
+
 find "$@" -name '*.h' -o -name '*.cpp' -o -name '*.qml' | grep -v /3rdparty/ | grep -v /qmldebugcontrol/ | grep -v /StackWalker | grep -v /modeltest | grep -v /processlist | grep -v /interactiveprocess | grep -v /build | while read FILE; do
     if grep -qiE "Copyright \(C\) [0-9, -]{4,} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
     thisfile=`basename $FILE`
-    authorName=`git config user.name`
-    authorEmail=`git config user.email`
-    thisYear=`date +%Y`
     cat <<EOF > "$FILE".tmp
 /*
   $thisfile
@@ -39,6 +40,33 @@ EOF
     cat "$FILE" >> "$FILE".tmp
     mv "$FILE".tmp "$FILE"
 done
+
+find "$@" -name '*.qdoc' | while read FILE; do
+    if grep -qiE "Copyright \(C\) [0-9, -]{4,} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
+    thisfile=`basename $FILE`
+    cat <<EOF > "$FILE".tmp
+/*
+    $thisfile
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) $thisYear Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: $authorName <$authorEmail>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+EOF
+    cat "$FILE" >> "$FILE".tmp
+    mv "$FILE".tmp "$FILE"
+done
+
 
 #remove the following exit if you want to add a header to CMakeLists.txt files
 exit
