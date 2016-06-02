@@ -6,6 +6,9 @@ find_file(QDOC_TEMPLATE doc/global/qt-html-templates-offline.qdocconf)
 
 if (NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE)
     message(STATUS "Unable to build documentation.")
+    message(STATUS "qdoc exectuable: ${QDOC_EXECUTABLE}")
+    message(STATUS "qhelpgenerator exectuable: ${QHELPGEN_EXECUTABLE}")
+    message(STATUS "qdoc template: ${QDOC_TEMPLATE}")
     return()
 endif()
 
