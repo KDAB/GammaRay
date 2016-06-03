@@ -87,6 +87,12 @@ void GuiSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT0(QPaintDevice);
     MO_ADD_PROPERTY_RO(QPaintDevice, int, colorCount);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    MO_ADD_PROPERTY_RO(QPaintDevice, int, devicePixelRatio);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+    MO_ADD_PROPERTY_RO(QPaintDevice, qreal, devicePixelRatioF);
+#endif
     MO_ADD_PROPERTY_RO(QPaintDevice, int, heightMM);
     MO_ADD_PROPERTY_RO(QPaintDevice, int, logicalDpiX);
     MO_ADD_PROPERTY_RO(QPaintDevice, int, logicalDpiY);

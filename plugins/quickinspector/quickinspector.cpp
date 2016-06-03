@@ -630,6 +630,7 @@ void QuickInspector::registerMetaTypes()
   MetaObject *mo = 0;
   MO_ADD_METAOBJECT1(QQuickWindow, QWindow);
   MO_ADD_PROPERTY   (QQuickWindow, bool, clearBeforeRendering, setClearBeforeRendering);
+  MO_ADD_PROPERTY_RO(QQuickWindow, qreal, effectiveDevicePixelRatio);
   MO_ADD_PROPERTY   (QQuickWindow, bool, isPersistentOpenGLContext, setPersistentOpenGLContext);
   MO_ADD_PROPERTY   (QQuickWindow, bool, isPersistentSceneGraph, setPersistentSceneGraph);
   MO_ADD_PROPERTY_RO(QQuickWindow, QQuickItem *, mouseGrabberItem);
