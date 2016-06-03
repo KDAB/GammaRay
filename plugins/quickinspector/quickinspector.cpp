@@ -458,7 +458,11 @@ void QuickInspector::slotGrabWindow()
   // otherwise we end up with an infinite update loop even on static scenes
   auto img = m_window->grabWindow();
   // See QTBUG-53795
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
   img.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+  img.setDevicePixelRatio(m_window->devicePixelRatio());
+#endif
   QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::QueuedConnection, Q_ARG(QImage, img));
 }
 
