@@ -17,7 +17,7 @@
 
 /*!
     \contentspage {Tools}
-    \nextpage {Object Inspector}
+    \nextpage {Qt Quick 2 Inspector}
     \previouspage {Getting Started}
     \page gammaray-tools.html
 
@@ -27,14 +27,56 @@
 
     GammaRay consists of a number of specialized tools for various aspects of Qt. Those can be selected via the tool selector on the very left of the GammaRay window.
 
+    \section2 User Interface Inspection
+
+    The following tools can be used for insepcting graphical user interface issues, such as layouting, rendering or event handling.
+
+    \list
+        \li \l{Qt Quick 2 Inspector}
+        \li \l{Widget Inspector}
+        \li Graphic View Inspector
+        \li \l{Styles}
+        \li Web Inspector
+    \endlist
+
+    \section2 Application Behavior Inspection
+
+    The following tools can be used to obeserve application behavior live at runtime.
+
+    \list
+        \li \l{State Machine Debugger}
+        \li \l{Messages}
+        \li Resources
+        \li \l{Signal Plotter}
+        \li Timers
+        \li Wayland Compositors
+        \li Script Enginge Debugger
+    \endlist
+
+    \section2 Model and Data Structure Inspection
+
+    The following tools allow you to inspect and manipulate models and data structures of your application at runtime.
+
     \list
         \li \l{Object Inspector}
-        \li \l{Qt Quick 2 Inspector}
-        \li \l{State Machine Debugger}
-        \li \l{Widget Inspector}
-        \li \l{Styles}
-        \li \l{Messages}
-        \li \l{Signal Plotter}
+        \li Actions
+        \li Models
+        \li Selection Models
+        \li Text Documents
+        \li Translations
         \li \l{Meta Object Browser}
+        \li Meta Type Browser
+    \endlist
+
+    \section2 Sytem Information
+
+    The following tools allow you to inspect information of the Qt installation and the system it's deplyoed on.
+
+    \list
+        \li Fonts
+        \li Locales
+        \li Mime Types
+        \li Network
+        \li Standard Paths
     \endlist
 */

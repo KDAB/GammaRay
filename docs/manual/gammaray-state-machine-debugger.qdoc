@@ -17,8 +17,8 @@
 
 /*!
     \contentspage {State Machine Debugger}
-    \nextpage {Widget Inspector}
-    \previouspage {Qt Quick 2 Inspector}
+    \nextpage {Messages}
+    \previouspage {Styles}
     \page gammaray-state-machine-debugger.html
 
     \title State Machine Debugger

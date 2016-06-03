@@ -17,8 +17,8 @@
 
 /*!
     \contentspage {Object Inspector}
-    \nextpage {Qt Quick 2 Inspector}
-    \previouspage {Tools}
+    \nextpage {Meta Object Browser}
+    \previouspage {Signal Plotter}
     \page gammaray-object-inspector.html
 
     \title Object Inspector
