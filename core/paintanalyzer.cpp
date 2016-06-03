@@ -70,8 +70,10 @@ void PaintAnalyzer::repaint()
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
     const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     const qreal ratio = m_paintBufferModel->buffer().devicePixelRatioF();
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+    const qreal ratio = m_paintBufferModel->buffer().devicePixelRatio();
 #else
     const qreal ratio = 1.0;
 #endif
