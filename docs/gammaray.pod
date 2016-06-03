@@ -152,7 +152,7 @@ lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet.
  Andreas Holzammer <andreas.holzammer@kdab.com>
  Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
  BogDan Vatra <bogdan.vatra@kdab.com>
- Dan Vrátil <dvratil@redhat.com>
+ Dan Vratil <dvratil@redhat.com>
  David Faure <david.faure@kdab.com>
  Filipe Azevedo <filipe.azevedo@kdab.com>
  Frank Osterfeld <frank.osterfeld@kdab.com>
