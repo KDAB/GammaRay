@@ -4,6 +4,7 @@ find_program(QDOC_EXECUTABLE qdoc)
 
 find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf
   HINTS ${QT_INSTALL_DOCS}
+  HINTS ${QT_INSTALL_DATA}/doc
 )
 
 if (NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE)
