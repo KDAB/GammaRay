@@ -14,13 +14,17 @@ find_file(QDOC_QTCORE_INDEX qtcore.index
 )
 
 if(NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE OR NOT QDOC_QTCORE_INDEX)
-  message(STATUS "Unable to build documentation.")
+  message(STATUS "Unable to build user manual in qch format.")
   message(STATUS "qdoc exectuable: ${QDOC_EXECUTABLE}")
   message(STATUS "qhelpgenerator exectuable: ${QHELPGEN_EXECUTABLE}")
   message(STATUS "qdoc template: ${QDOC_TEMPLATE}")
-  message(STATUS "qdoc qtcore index: ${QDOC_QTCORE_INDEX)}")
-  return()
+  message(STATUS "qdoc qtcore index: ${QDOC_QTCORE_INDEX}")
+  set(HAVE_USER_MANUAL_BUILD False)
+else()
+  set(HAVE_USER_MANUAL_BUILD True)
 endif()
+
+add_feature_info("User Manual creation in qch format" HAVE_USER_MANUAL_BUILD "Requires qdoc, qhelpgenerator, the qdoc templates and index files")
 
 macro(qt5_build_doc _qdocconf_in_file)
   #compute the qdoc template dir from where the qt-html-templates-offline.qdocconf was found
@@ -61,4 +65,6 @@ macro(qt5_build_doc _qdocconf_in_file)
   install(FILES ${_qdoc_output_dir}/${_qdocconf_name}.qch DESTINATION ${QCH_INSTALL_DIR})
 endmacro()
 
-qt5_build_doc(gammaray-manual.qdocconf.in)
+if(HAVE_USER_MANUAL_BUILD)
+  qt5_build_doc(gammaray-manual.qdocconf.in)
+endif()
