@@ -150,7 +150,9 @@ StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved.
  Andreas Holzammer <andreas.holzammer@kdab.com>
  Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
  BogDan Vatra <bogdan.vatra@kdab.com>
+ Dan Vrátil <dvratil@redhat.com>
  David Faure <david.faure@kdab.com>
+ Filipe Azevedo <filipe.azevedo@kdab.com>
  Frank Osterfeld <frank.osterfeld@kdab.com>
  James Turner <james.turner@kdab.com>
  Jan Dalheimer <jan.dalheimer@kdab.com>
@@ -158,9 +160,11 @@ StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved.
  Laurent Montel <laurent.montel@kdab.com>
  Mathias Hasselmann <mathias.hasselmann@kdab.com>
  Milian Wolff <milian.wolff@kdab.com>
+ Nicolas Arnaud-Cormos <nicolas.arnaud-cormos@kdab.com>
  Patrick Spendrin <patrick.spendrin@kdab.com>
  Peter Kuemmel <syntheticpp@gmx.net>
  Rafael Roquetto <rafael.roquetto@kdab.com>
+ Sergio Martins <sergio.martins@kdab.com>
  Stephen Kelly <stephen.kelly@kdab.com>
  Thomas McGuire <thomas.mcguire@kdab.com>
  Till Adam <till.adam@kdab.com>
