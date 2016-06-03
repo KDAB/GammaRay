@@ -98,7 +98,7 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
     if (!item->isVisible()) {
       return qApp->palette().color(QPalette::Disabled, QPalette::Text);
     }
-  } else if (role == ObjectModel::ObjectIdRole) {
+  } else if (item && role == ObjectModel::ObjectIdRole) {
     // TODO also handle the non-QObject case
     return QVariant::fromValue(ObjectId(item->toGraphicsObject()));
   }
