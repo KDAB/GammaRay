@@ -36,6 +36,7 @@
 #include <common/remoteviewframe.h>
 
 #include <QWidget>
+#include <QTouchEvent>
 #include <QPointer>
 
 QT_BEGIN_NAMESPACE
@@ -43,6 +44,8 @@ class QAbstractItemModel;
 class QActionGroup;
 class QStandardItemModel;
 class QModelIndex;
+class QEvent;
+class QTouchEvent;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -133,8 +136,13 @@ protected:
 
     // translate from view coordinates to source coordinates
     QPoint mapToSource(QPoint pos) const;
+    QPointF mapToSource(QPointF pos) const;
+    QRectF mapToSource(const QRectF &r) const;
     // translates from source coordinates to view coordinates
     QPoint mapFromSource(QPoint pos) const;
+    QPointF mapFromSource(QPointF pos) const;
+    // translate from view to source coordinates
+    QTouchEvent::TouchPoint mapToSource(const QTouchEvent::TouchPoint &point);
 
     void restoreState(QDataStream &stream);
     void saveState(QDataStream &stream) const;
@@ -152,6 +160,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+    bool event(QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void setupActions();
@@ -168,6 +177,7 @@ private:
     void sendMouseEvent(QMouseEvent *event);
     void sendKeyEvent(QKeyEvent *event);
     void sendWheelEvent(QWheelEvent *event);
+    void sendTouchEvent(QTouchEvent *event);
 
     // size of the content area, ie. excluding the rulers
     int contentWidth() const;

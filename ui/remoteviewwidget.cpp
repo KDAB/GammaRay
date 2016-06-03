@@ -74,6 +74,10 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     setMouseTracking(true);
     setMinimumSize(QSize(400, 300));
     setFocusPolicy(Qt::StrongFocus);
+    window()->setAttribute(Qt::WA_AcceptTouchEvents);
+    window()->setAttribute(Qt::WA_TouchPadAcceptSingleTouchEvents);
+    setAttribute(Qt::WA_AcceptTouchEvents);
+    setAttribute(Qt::WA_TouchPadAcceptSingleTouchEvents);
 
     // Background
     QPixmap bgPattern(20, 20);
@@ -703,9 +707,57 @@ QPoint RemoteViewWidget::mapToSource(QPoint pos) const
     return (pos - QPoint(m_x, m_y)) / m_zoom;
 }
 
+QPointF RemoteViewWidget::mapToSource(QPointF pos) const
+{
+    return (pos - QPointF(m_x, m_y)) / m_zoom;
+}
+
+QRectF RemoteViewWidget::mapToSource(const QRectF &r) const
+{
+    return QRectF(mapToSource(r.topLeft()), mapToSource(r.bottomRight()));
+}
+
 QPoint RemoteViewWidget::mapFromSource(QPoint pos) const
 {
     return pos * m_zoom + QPoint(m_x, m_y);
+}
+
+QPointF RemoteViewWidget::mapFromSource(QPointF pos) const
+{
+    return pos * m_zoom + QPointF(m_x, m_y);
+}
+
+QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPoint &point)
+{
+    QTouchEvent::TouchPoint p;
+
+    p.setFlags(point.flags());
+    p.setId(point.id());
+    p.setPressure(point.pressure());
+    p.setState(point.state());
+
+    p.setStartPos(mapToSource(point.startPos()));
+    p.setLastPos(mapToSource(point.lastPos()));
+    p.setPos(mapToSource(point.pos())); // relative
+    p.setRect(mapToSource(point.rect()));
+
+    p.setStartNormalizedPos(mapToSource(point.startNormalizedPos()));
+    p.setLastNormalizedPos(mapToSource(point.lastNormalizedPos()));
+    p.setNormalizedPos(mapToSource(point.normalizedPos()));
+
+    p.setStartScenePos(mapToSource(point.startScenePos()));
+    p.setLastScenePos(mapToSource(point.lastScenePos()));
+    p.setScenePos(mapToSource(point.scenePos()));
+    p.setSceneRect(mapToSource(point.sceneRect()));
+
+    // These may not have the right x,y but i don't think there is a way to get the right value.
+    // On the other hand, it's not a problem, probably
+    p.setStartScreenPos(mapToSource(point.startScreenPos()));
+    p.setLastScreenPos(mapToSource(point.lastScreenPos()));
+    p.setScreenPos(mapToSource(point.screenPos()));
+    p.setScreenRect(mapToSource(point.screenRect()));
+
+    return p;
 }
 
 void RemoteViewWidget::restoreState(QDataStream &stream)
@@ -969,6 +1021,25 @@ bool RemoteViewWidget::eventFilter(QObject *receiver, QEvent *event)
     return QWidget::eventFilter(receiver, event);
 }
 
+bool RemoteViewWidget::event(QEvent *event)
+{
+    if (m_interactionMode == InputRedirection) {
+        switch (event->type()) {
+        case QEvent::TouchBegin:
+        case QEvent::TouchCancel:
+        case QEvent::TouchEnd:
+        case QEvent::TouchUpdate:
+            sendTouchEvent(static_cast<QTouchEvent *>(event));
+            return true;
+
+        default:
+            break;
+        }
+    }
+
+    return QWidget::event(event);
+}
+
 int RemoteViewWidget::contentWidth() const
 {
     return width() - verticalRulerWidth();
@@ -1022,4 +1093,28 @@ void RemoteViewWidget::sendWheelEvent(QWheelEvent *event)
 #endif
     m_interface->sendWheelEvent(mapToSource(event->pos()), pixelDelta, angleDelta,
                                 event->buttons(), event->modifiers());
+}
+
+void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
+{
+    event->accept();
+
+    QList<QTouchEvent::TouchPoint> touchPoints;
+    foreach (const QTouchEvent::TouchPoint &point, event->touchPoints()) {
+        touchPoints << mapToSource(point);
+    }
+
+    QTouchDevice::Capabilities caps = event->device()->capabilities();
+    caps &= ~QTouchDevice::RawPositions; //we don't have a way to meaningfully map the raw positions to the source
+    caps &= ~QTouchDevice::Velocity; //neither for velocity
+
+    m_interface->sendTouchEvent(event->type(),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                                event->device()->type(),
+                                caps,
+                                event->device()->maximumTouchPoints(),
+#else
+                                event->deviceType(),
+#endif
+                                event->modifiers(), event->touchPointStates(), touchPoints);
 }
