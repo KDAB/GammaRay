@@ -245,7 +245,9 @@ QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
   // low dpi rendering. See QTBUG-53801
   const qreal ratio = 1; //widget->window()->devicePixelRatio();
   QImage img(widget->size() * ratio, QImage::Format_ARGB32);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
   img.setDevicePixelRatio(ratio);
+#endif
   img.fill(Qt::transparent);
   widget->render(&img);
   return img;
