@@ -59,7 +59,7 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
 
 void GuiSupport::registerMetaTypes()
 {
-    MetaObject *mo = Q_NULLPTR;
+    MetaObject *mo;
 
  #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_METAOBJECT1(QGuiApplication, QCoreApplication);
