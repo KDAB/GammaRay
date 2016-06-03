@@ -151,6 +151,31 @@ void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
 
+void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints,
+                                      int modifiers, Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
+{
+    if (!m_eventReceiver)
+        return;
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    if (!m_touchDevice) {
+        //create our own touch device, the system may not have one already, or it may not have
+        //the properties we want
+        m_touchDevice.reset(new QTouchDevice);
+    }
+    m_touchDevice->setType(QTouchDevice::DeviceType(touchDeviceType));
+    m_touchDevice->setCapabilities(QTouchDevice::CapabilityFlag(deviceCaps));
+    m_touchDevice->setMaximumTouchPoints(touchDeviceMaxTouchPoints);
+
+    auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
+    event->setWindow(m_eventReceiver);
+
+#else
+    auto event = new QTouchEvent(QEvent::Type(type), touchDeviceType, Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
+#endif
+    QCoreApplication::sendEvent(m_eventReceiver, event);
+}
+
 void RemoteViewServer::setViewActive(bool active)
 {
     m_clientActive = active;

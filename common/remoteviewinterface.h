@@ -35,6 +35,7 @@
 
 #include <QObject>
 #include <QPoint>
+#include <QTouchEvent>
 
 namespace GammaRay {
 class RemoteViewFrame;
@@ -67,6 +68,10 @@ public slots:
     virtual void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta,
                                 int buttons, int modifiers) = 0;
 
+    virtual void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
+                                Qt::TouchPointStates touchPointStates,
+                                const QList<QTouchEvent::TouchPoint> &touchPoints) = 0;
+
     virtual void setViewActive(bool active) = 0;
 
     /// Tell the server we are ready for the next frame.
@@ -84,6 +89,10 @@ private:
 }
 
 QT_BEGIN_NAMESPACE
+Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
+Q_DECLARE_METATYPE(Qt::TouchPointStates)
+Q_DECLARE_METATYPE(QTouchEvent::TouchPoint::InfoFlags)
+Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
 Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::RequestMode)
 Q_DECLARE_INTERFACE(GammaRay::RemoteViewInterface, "com.kdab.GammaRay.RemoteViewInterface/1.0")
 QT_END_NAMESPACE

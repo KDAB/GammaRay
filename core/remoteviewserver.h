@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_REMOTEVIEWSERVER_H
 #define GAMMARAY_REMOTEVIEWSERVER_H
 
+#include <memory>
+
 #include "gammaray_core_export.h"
 
 #include <common/remoteviewinterface.h>
@@ -36,6 +38,7 @@
 QT_BEGIN_NAMESPACE
 class QTimer;
 class QWindow;
+class QTouchDevice;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -83,6 +86,9 @@ private:
                         int modifiers) Q_DECL_OVERRIDE;
     void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta, int buttons,
                         int modifiers) Q_DECL_OVERRIDE;
+    void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
+                        Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints) 
+                        Q_DECL_OVERRIDE;
     void setViewActive(bool active) Q_DECL_OVERRIDE;
     void clientViewUpdated() Q_DECL_OVERRIDE;
 
@@ -98,6 +104,7 @@ private:
     bool m_clientActive;
     bool m_sourceChanged;
     bool m_clientReady;
+    std::unique_ptr<QTouchDevice> m_touchDevice;
 };
 }
 
