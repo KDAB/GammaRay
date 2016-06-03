@@ -168,9 +168,7 @@ add_test(NAME multithreadingtest COMMAND multithreadingtest)
 
 ### QTranslator test
 #does not work unless the translations are installed in QT_INSTALL_TRANSLATIONS
-get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-exec_program(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_INSTALL_TRANSLATIONS" OUTPUT_VARIABLE QIT)
-if(EXISTS "${QIT}/qtbase_de.qm")
+if(EXISTS "${QT_INSTALL_TRANSLATIONS}/qtbase_de.qm")
   add_executable(translatortest
     translatortest.cpp
     ../probe/probecreator.cpp

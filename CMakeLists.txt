@@ -558,6 +558,7 @@ include_directories(
 )
 
 if (Qt5Core_FOUND OR Qt4_FOUND)
+include(QtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
 add_subdirectory(3rdparty/kde)
 add_subdirectory(common)

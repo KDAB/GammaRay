@@ -1,7 +1,10 @@
 # TODO: some of this probably should be upstreamed to Qt's cmake files...
 
 find_program(QDOC_EXECUTABLE qdoc)
-find_file(QDOC_TEMPLATE doc/global/qt-html-templates-offline.qdocconf)
+
+find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf
+  HINTS ${QT_INSTALL_DOCS}
+)
 
 if (NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE)
     message(STATUS "Unable to build documentation.")
