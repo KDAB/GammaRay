@@ -385,6 +385,7 @@ void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData& ver
         switch (vertexAttr.vertexBaseType) {
             case Qt3DRender::QAttribute::Float:
             {
+                //cppcheck-suppress invalidPointerCast
                 auto f = reinterpret_cast<const float*>(c);
                 v.setX(*f);
                 ++f;

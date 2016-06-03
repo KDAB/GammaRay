@@ -54,6 +54,7 @@ int Attribute::size(Qt3DRender::QAttribute::VertexBaseType type)
 
 template <typename T> static QVariant toVariant(const char *data)
 {
+    //cppcheck-suppress invalidPointerCast
     return QVariant::fromValue<T>(*reinterpret_cast<const T*>(data));
 }
 
