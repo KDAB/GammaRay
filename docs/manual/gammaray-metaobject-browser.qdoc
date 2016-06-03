@@ -41,5 +41,5 @@
     \image gammaray-metaobject-browser.png
 
     Tooltips on these columns as well as colorization show the ratio of this type on the overall amount of QObject instances. This is particularly useful for identifying
-    unecessarily often created instances, as QObject construction is not exactly cheap.
+    unnecessarily often created instances, as QObject construction is not exactly cheap.
 */
