@@ -25,5 +25,8 @@ if(UNIX)
   endif()
 endif()
 
-add_subdirectory(manual)
+# Don't attempt create the user manual for Qt versions < 5.4
+if(Qt5Core_FOUND AND Qt5Core_VERSION VERSION_GREATER 5.3)
+  add_subdirectory(manual)
+endif()
 add_subdirectory(api)

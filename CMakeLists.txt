@@ -23,11 +23,13 @@
 #  Default=false
 #  Only use for Android or when you know what you are doing.
 #
+# -DGAMMARAY_BUILD_DOCS=[true|false]
+#  Build the API documentation and User Manual.
+#  Default=true (except when building the probe only)
+#
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
-# Not available on Windows.
-#
-# To build the apidox, run 'make docs' after CMake (assumes doxygen is available)
+# The man page is not available on Windows.
 #
 
 project(GammaRay CXX C)
@@ -146,11 +148,10 @@ option(
 option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
 
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
-if (${GAMMARAY_PROBE_ONLY_BUILD})
+if(${GAMMARAY_PROBE_ONLY_BUILD})
   set(GAMMARAY_BUILD_DOCS_DEFAULT OFF)
 endif()
 option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
-
 
 #
 # Compiler & linker settings
@@ -246,7 +247,7 @@ if(Qt5Core_FOUND)
     Widgets
   )
   # starting with 5.6, the Designer module needs CMake 3.0 or higher
-  if (Qt5Core_VERSION VERSION_LESS 5.6 OR NOT CMAKE_VERSION VERSION_LESS 3.0)
+  if(Qt5Core_VERSION VERSION_LESS 5.6 OR NOT CMAKE_VERSION VERSION_LESS 3.0)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Designer)
   endif()
   if(GAMMARAY_BUILD_UI) # widgets are required for the UI
@@ -307,12 +308,12 @@ if(Qt5Core_FOUND)
   set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
   set_package_properties(Qt5PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
   add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS "Requires private Qt headers to be available.")
-# Qt4
 else()
+  # Qt4
   set(QT_USE_IMPORTED_TARGETS true)
   find_package(Qt4 4.8.0)
   set_package_properties(Qt4 PROPERTIES TYPE OPTIONAL)
-  if (Qt4_FOUND)
+  if(Qt4_FOUND)
     # minimum set
     find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork)
   endif()
@@ -439,18 +440,18 @@ if(APPLE)
   set(BUNDLE_APP_NAME "GammaRay.app")
 
   if(GAMMARAY_INSTALL_QT_LAYOUT)
-      set(BUNDLE_INSTALL_DIR "bin")
-      set(RESOURCES_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Resources")
-      set(BIN_INSTALL_DIR "bin")
-      set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
-      set(INCLUDE_INSTALL_DIR "include/gammaray")
-      set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
-      set(LIBEXEC_INSTALL_DIR "libexec")
-      set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/GammaRay")
-      set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
-      set(MAN_INSTALL_DIR "man/man1")
-      set(DOC_INSTALL_DIR "doc/gammaray")
-      set(QCH_INSTALL_DIR "doc")
+    set(BUNDLE_INSTALL_DIR "bin")
+    set(RESOURCES_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Resources")
+    set(BIN_INSTALL_DIR "bin")
+    set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
+    set(INCLUDE_INSTALL_DIR "include/gammaray")
+    set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}")
+    set(LIBEXEC_INSTALL_DIR "libexec")
+    set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/GammaRay")
+    set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
+    set(MAN_INSTALL_DIR "man/man1")
+    set(DOC_INSTALL_DIR "doc/gammaray")
+    set(QCH_INSTALL_DIR "doc")
   else()
     # Make sure default prefix on mac is /Applications, dunnow why but it does not default to it
     # probably because we do not enabled built in bundle support in the main project
@@ -508,7 +509,7 @@ endif()
 if(GAMMARAY_INSTALL_QT_LAYOUT)
   set(PROBE_INSTALL_DIR ${LIB_INSTALL_DIR})
   # Android doesn't support sub-directories in lib/
-  if (ANDROID)
+  if(ANDROID)
     set(PROBE_PLUGIN_INSTALL_DIR "lib")
   else()
     set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
@@ -542,13 +543,12 @@ set(
 
 # "inverse" install dirs, to find the base location again
 if(APPLE)
-    set(BUNDLE_INSTALL_DIR_PRIVATE "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/MacOS")
-    gammaray_inverse_dir(GAMMARAY_INVERSE_BUNDLE_DIR "${BUNDLE_INSTALL_DIR_PRIVATE}")
+  set(BUNDLE_INSTALL_DIR_PRIVATE "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/MacOS")
+  gammaray_inverse_dir(GAMMARAY_INVERSE_BUNDLE_DIR "${BUNDLE_INSTALL_DIR_PRIVATE}")
 endif()
 gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_PROBE_DIR "${PROBE_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
-
 
 #
 # actually build the stuff
@@ -563,7 +563,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}
 )
 
-if (Qt5Core_FOUND OR Qt4_FOUND)
+if(Qt5Core_FOUND OR Qt4_FOUND)
 include(QtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
 add_subdirectory(3rdparty/kde)
@@ -711,6 +711,6 @@ include(CPack)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-if (NOT Qt5Core_FOUND AND NOT Qt4_FOUND)
+if(NOT Qt5Core_FOUND AND NOT Qt4_FOUND)
   message(FATAL_ERROR "GammaRay needs either Qt5 or Qt4!")
 endif()
