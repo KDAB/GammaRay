@@ -145,6 +145,12 @@ option(
 
 option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
 
+set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
+if (${GAMMARAY_PROBE_ONLY_BUILD})
+  set(GAMMARAY_BUILD_DOCS_DEFAULT OFF)
+endif()
+option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
+
 
 #
 # Compiler & linker settings
@@ -578,7 +584,9 @@ if((Qt5Test_FOUND OR QT_QTTEST_FOUND) AND NOT CMAKE_CROSSCOMPILING)
 endif()
 add_subdirectory(plugins)
 add_subdirectory(resources)
-add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
+if(GAMMARAY_BUILD_DOCS)
+  add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
+endif()
 endif()
 
 set(LICENSE_FILE "LICENSE.GPL.txt")

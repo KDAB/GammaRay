@@ -1,7 +1,3 @@
-if(GAMMARAY_PROBE_ONLY_BUILD)
-  return()
-endif()
-
 # TODO replace with Qt5::qhelpgenerator for Qt >= 5.7.1
 find_program(QHELPGEN_EXECUTABLE qhelpgenerator)
 
