@@ -37,4 +37,6 @@ standard trainings anywhere around the globe.
 
 Please visit http://www.kdab.com to meet the people who write code like this.
 
-GammaRay and the GammaRay logo are trademarks of Klarälvdalens Datakonsult AB.
+GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB
+in the European Union, the United States and/or other countries.  Other product and
+company names and logos may be trademarks or registered trademarks of their respective companies.
