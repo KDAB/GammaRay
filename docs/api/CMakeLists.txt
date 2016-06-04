@@ -5,6 +5,16 @@ set_package_properties(Doxygen PROPERTIES
   URL "http://www.doxygen.org"
   PURPOSE "Needed to build the API documention."
 )
+
+find_file(QDOC_QTCORE_TAG qtcore.tags
+  HINTS ${QT_INSTALL_DOCS}/qtcore
+  HINTS ${QT_INSTALL_DATA}/doc/qtcore
+)
+if(QDOC_QTCORE_TAG)
+  get_filename_component(QDOC_TAG_DIR ${QDOC_QTCORE_TAG} DIRECTORY)
+  get_filename_component(QDOC_TAG_DIR ${QDOC_TAG_DIR} DIRECTORY)
+endif()
+
 if(DOXYGEN_FOUND AND QHELPGEN_EXECUTABLE)
   file(GLOB _dox_deps *.dox *.html)
   gammaray_all_installed_headers(_all_hdrs)

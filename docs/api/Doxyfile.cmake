@@ -202,3 +202,8 @@ QCH_FILE               = @DOXYGEN_OUTPUT_DIR@/qch/gammaray-api.qch
 QHP_NAMESPACE          = com.kdab.GammaRay.api.@GAMMARAY_PLUGIN_VERSION@
 QHP_VIRTUAL_FOLDER     = GammaRay-@GAMMARAY_VERSION@
 QHG_LOCATION           = @QHELPGEN_EXECUTABLE@
+
+# Cross-references to Qt documentation
+TAGFILES = @QDOC_TAG_DIR@/qtcore/qtcore.tags=qthelp://org.qt-project.qtcore/qtcore/ \
+           @QDOC_TAG_DIR@/qtgui/qtgui.tags=qthelp://org.qt-project.qtgui/qtgui/ \
+           @QDOC_TAG_DIR@/qtwidgets/qtwidgets.tags=qthelp://org.qt-project.qtwidgets/qtwidgets/
