@@ -164,6 +164,30 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContextGroup*, shareGroup);
 //     MO_ADD_PROPERTY_RO(QOpenGLContext, QSurface*, surface);
 #endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_METAOBJECT0(QBrush);
+    MO_ADD_PROPERTY   (QBrush, const QColor&, color, setColor);
+    MO_ADD_PROPERTY_RO(QBrush, bool, isOpaque);
+    MO_ADD_PROPERTY   (QBrush, const QMatrix&, matrix, setMatrix);
+    MO_ADD_PROPERTY   (QBrush, Qt::BrushStyle, style, setStyle);
+    MO_ADD_PROPERTY_CR(QBrush, QPixmap, texture, setTexture);
+    MO_ADD_PROPERTY_CR(QBrush, QTransform, transform, setTransform);
+
+    MO_ADD_METAOBJECT0(QPen);
+    MO_ADD_PROPERTY_CR(QPen, QBrush, brush, setBrush);
+    MO_ADD_PROPERTY   (QPen, Qt::PenCapStyle, capStyle, setCapStyle);
+    MO_ADD_PROPERTY_CR(QPen, QColor, color, setColor);
+    MO_ADD_PROPERTY   (QPen, qreal, dashOffset, setDashOffset);
+    MO_ADD_PROPERTY_CR(QPen, QVector<qreal>, dashPattern, setDashPattern);
+    MO_ADD_PROPERTY   (QPen, bool, isCosmetic, setCosmetic);
+    MO_ADD_PROPERTY_RO(QPen, bool, isSolid);
+    MO_ADD_PROPERTY   (QPen, Qt::PenJoinStyle, joinStyle, setJoinStyle);
+    MO_ADD_PROPERTY   (QPen, qreal, miterLimit, setMiterLimit);
+    MO_ADD_PROPERTY   (QPen, Qt::PenStyle, style, setStyle);
+    MO_ADD_PROPERTY   (QPen, int, width, setWidth);
+    MO_ADD_PROPERTY   (QPen, qreal, widthF, setWidthF);
+#endif
 }
 
 GuiSupportFactory::GuiSupportFactory(QObject* parent) :
