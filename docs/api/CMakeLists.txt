@@ -19,14 +19,13 @@ if(DOXYGEN_FOUND AND QHELPGEN_EXECUTABLE)
   )
 
   add_custom_command(
-    OUTPUT ${DOXYGEN_OUTPUT_DIR}/html/index.html
+    OUTPUT ${DOXYGEN_OUTPUT_DIR}/qch/gammaray-api.qch
     COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     DEPENDS ${_all_hdrs} ${_dox_deps} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   )
-  add_custom_target(docs
-    DEPENDS ${DOXYGEN_OUTPUT_DIR}/html/index.html
-  )
+  add_custom_target(gammaray-api.qch ALL DEPENDS ${DOXYGEN_OUTPUT_DIR}/qch/gammaray-api.qch)
 
+  install(FILES ${DOXYGEN_OUTPUT_DIR}/qch/gammaray-api.qch DESTINATION ${QCH_INSTALL_DIR})
 endif()
 
