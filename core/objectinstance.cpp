@@ -82,17 +82,21 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
                 m_type = QtGadget;
             }
         } else {
-            const auto mo = MetaObjectRepository::instance()->metaObject(value.typeName());
-            if (mo && strstr(value.typeName(), "*") != Q_NULLPTR) {
-                QMetaType::construct(value.userType(), &m_obj, value.constData());
-                if (m_obj) {
-                    m_type = Object;
-                    m_typeName = value.typeName();
-                }
-            }
+            unpackVariant();
         }
 #endif
     }
+}
+
+ObjectInstance::ObjectInstance(const ObjectInstance &other)
+{
+    copy(other);
+}
+
+ObjectInstance& ObjectInstance::operator=(const ObjectInstance& other)
+{
+    copy(other);
+    return *this;
 }
 
 bool ObjectInstance::operator==(const ObjectInstance &rhs) const
@@ -138,7 +142,7 @@ void* ObjectInstance::object() const
     return Q_NULLPTR;
 }
 
-QVariant ObjectInstance::variant() const
+const QVariant& ObjectInstance::variant() const
 {
     Q_ASSERT(m_type == QtVariant);
     return m_variant;
@@ -171,4 +175,35 @@ bool ObjectInstance::isValid() const
             break;
     }
     return true;
+}
+
+void ObjectInstance::copy(const ObjectInstance& other)
+{
+    m_obj = other.m_obj;
+    m_qtObj = other.m_qtObj.data();
+    m_variant = other.m_variant;
+    m_metaObj = other.m_metaObj;
+    m_typeName = other.m_typeName;
+    m_type = other.m_type;
+
+    if (!m_variant.isNull() && m_obj && m_type == Object)
+        unpackVariant(); // pointer changes when copying the variant
+}
+
+void ObjectInstance::unpackVariant()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    const auto mo = MetaObjectRepository::instance()->metaObject(m_variant.typeName());
+    if (mo && strstr(m_variant.typeName(), "*") != Q_NULLPTR) { // pointer types
+        QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
+        if (m_obj) {
+            m_type = Object;
+            m_typeName = m_variant.typeName();
+        }
+    } else if (mo) { // value types
+        m_obj = const_cast<void*>(m_variant.constData());
+        m_type = Object;
+        m_typeName = m_variant.typeName();
+    }
+#endif
 }

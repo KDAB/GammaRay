@@ -233,7 +233,7 @@ endif()
 ### Property Adaptor test
 
 add_executable(propertyadaptortest propertyadaptortest.cpp)
-target_link_libraries(propertyadaptortest gammaray_core ${QT_QTTEST_LIBRARIES} gammaray_shared_test_data)
+target_link_libraries(propertyadaptortest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_shared_test_data)
 add_test(NAME propertyadaptortest COMMAND propertyadaptortest)
 
 ### Property model test

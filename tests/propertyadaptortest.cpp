@@ -30,6 +30,8 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/objectinstance.h>
 #include <core/propertydata.h>
+#include <core/metaobject.h>
+#include <core/metaobjectrepository.h>
 
 #include <shared/propertytestobject.h>
 
@@ -38,8 +40,10 @@
 #include <QObject>
 #include <QThread>
 #include <QSignalSpy>
+#include <QPen>
 
 Q_DECLARE_METATYPE(QVector<int>)
+Q_DECLARE_METATYPE(QPen*)
 #if QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
 typedef QHash<QString, int> StringIntHash;
 Q_DECLARE_METATYPE(StringIntHash)
@@ -87,6 +91,14 @@ private:
     }
 
 private slots:
+    void initTestCases()
+    {
+        MetaObject *mo;
+        MO_ADD_METAOBJECT0(QPen);
+        MO_ADD_PROPERTY_CR(QPen, QColor, color, setColor);
+        MO_ADD_PROPERTY   (QPen, int, width, setWidth);
+    }
+
     void testQtGadget()
     {
         Gadget gadget;
@@ -269,6 +281,26 @@ private slots:
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(0, &PropertyTestObject::staticMetaObject), this);
         QVERIFY(adaptor);
         QVERIFY(adaptor->count() >= 5);
+        verifyPropertyData(adaptor);
+    }
+
+    void testVariant()
+    {
+        QPen pen(Qt::red);
+        auto valuePen = QVariant::fromValue(pen);
+        auto pointerPen = QVariant::fromValue(&pen);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(valuePen), this);
+        QVERIFY(adaptor);
+        QVERIFY(adaptor->count() >= 2);
+        verifyPropertyData(adaptor);
+
+        adaptor = PropertyAdaptorFactory::create(ObjectInstance(pointerPen), this);
+        QVERIFY(adaptor);
+        QVERIFY(adaptor->count() >= 2);
+        verifyPropertyData(adaptor);
+#endif
     }
 };
 

@@ -47,7 +47,7 @@ PropertyAggregator::~PropertyAggregator()
 
 void PropertyAggregator::doSetObject(const ObjectInstance& oi)
 {
-    std::for_each(m_propertyAdaptors.begin(), m_propertyAdaptors.end(), [oi](PropertyAdaptor *pa) {
+    std::for_each(m_propertyAdaptors.begin(), m_propertyAdaptors.end(), [&oi](PropertyAdaptor *pa) {
         pa->setObject(oi);
     });
 }

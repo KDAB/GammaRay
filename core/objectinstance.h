@@ -61,7 +61,9 @@ public:
     /// use for things that only exist as GammaRay meta objects
     ObjectInstance(void *obj, const char* typeName);
     ObjectInstance(const QVariant &value); //krazy:exclude=explicit
+    ObjectInstance(const ObjectInstance &other);
 
+    ObjectInstance& operator=(const ObjectInstance& other);
     bool operator==(const ObjectInstance &rhs) const;
 
     Type type() const;
@@ -71,7 +73,7 @@ public:
     /// only valid for QtObject, QtGadget and Object
     void* object() const;
     /// only valid for QtVariant
-    QVariant variant() const;
+    const QVariant& variant() const;
 
     /// only valid for QtObject and QtGadget
     const QMetaObject* metaObject() const;
@@ -82,6 +84,9 @@ public:
     bool isValid() const;
 
 private:
+    void copy(const ObjectInstance &other);
+    void unpackVariant();
+
     void *m_obj;
     QPointer<QObject> m_qtObj;
     QVariant m_variant;

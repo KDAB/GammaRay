@@ -47,7 +47,7 @@ const ObjectInstance& PropertyAdaptor::object() const
 void PropertyAdaptor::setObject(const ObjectInstance& oi)
 {
     m_oi = oi;
-    doSetObject(oi);
+    doSetObject(m_oi);
 }
 
 void PropertyAdaptor::writeProperty(int index, const QVariant& value)
