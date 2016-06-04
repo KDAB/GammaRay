@@ -141,7 +141,9 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslCertificate, QList<QSslCertificateExtension>, extensions);
     MO_ADD_PROPERTY_RO(QSslCertificate, bool, isBlacklisted);
     MO_ADD_PROPERTY_RO(QSslCertificate, bool, isNull);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslCertificate, bool, isSelfSigned);
+#endif
     MO_ADD_PROPERTY_RO(QSslCertificate, QList<QByteArray>, issuerInfoAttributes);
     MO_ADD_PROPERTY_RO(QSslCertificate, QSslKey, publicKey);
     MO_ADD_PROPERTY_RO(QSslCertificate, QByteArray, serialNumber);
@@ -252,7 +254,9 @@ static const MetaEnum::Value<QSsl::KeyAlgorithm> ssl_key_algorithm_table[] = {
     E(Opaque),
     E(Rsa),
     E(Dsa),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(Ec)
+#endif
 };
 #undef E
 
