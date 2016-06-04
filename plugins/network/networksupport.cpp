@@ -129,10 +129,35 @@ void NetworkSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QTcpSocket, QAbstractSocket);
 
+    MO_ADD_METAOBJECT0(QSslCertificate);
+    MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, effectiveDate);
+    MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, expiryDate);
+    MO_ADD_PROPERTY_RO(QSslCertificate, bool, isBlacklisted);
+    MO_ADD_PROPERTY_RO(QSslCertificate, bool, isNull);
+    MO_ADD_PROPERTY_RO(QSslCertificate, bool, isSelfSigned);
+    MO_ADD_PROPERTY_RO(QSslCertificate, QList<QByteArray>, issuerInfoAttributes);
+    MO_ADD_PROPERTY_RO(QSslCertificate, QByteArray, serialNumber);
+    MO_ADD_PROPERTY_RO(QSslCertificate, QList<QByteArray>, subjectInfoAttributes);
+    MO_ADD_PROPERTY_RO(QSslCertificate, QByteArray, version);
+
+    MO_ADD_METAOBJECT0(QSslCipher);
+    MO_ADD_PROPERTY_RO(QSslCipher, QString, authenticationMethod);
+    MO_ADD_PROPERTY_RO(QSslCipher, QString, encryptionMethod);
+    MO_ADD_PROPERTY_RO(QSslCipher, bool, isNull);
+    MO_ADD_PROPERTY_RO(QSslCipher, QString, keyExchangeMethod);
+    MO_ADD_PROPERTY_RO(QSslCipher, QString, name);
+    MO_ADD_PROPERTY_RO(QSslCipher, QSsl::SslProtocol, protocol);
+    MO_ADD_PROPERTY_RO(QSslCipher, QString, protocolString);
+    MO_ADD_PROPERTY_RO(QSslCipher, int, usedBits);
+
     MO_ADD_METAOBJECT1(QSslSocket, QTcpSocket);
     MO_ADD_PROPERTY_RO(QSslSocket, bool, isEncrypted);
+    MO_ADD_PROPERTY_RO(QSslSocket, QSslCertificate, localCertificate);
+    MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslCertificate>, localCertificateChain);
     MO_ADD_PROPERTY_RO(QSslSocket, QSslSocket::SslMode, mode);
     MO_ADD_PROPERTY   (QSslSocket, int, peerVerifyDepth, setPeerVerifyDepth);
+    MO_ADD_PROPERTY_RO(QSslSocket, QSslCertificate, peerCertificate);
+    MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslCertificate>, peerCertificateChain);
     MO_ADD_PROPERTY   (QSslSocket, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
     MO_ADD_PROPERTY_CR(QSslSocket, QString, peerVerifyName, setPeerVerifyName);
     MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, protocol);
@@ -224,6 +249,13 @@ static QString sslProtocolToString(QSsl::SslProtocol value)
     return MetaEnum::enumToString(value, ssl_protocol_table);
 }
 
+static QString sslCertificateToString(const QSslCertificate &cert)
+{
+    if (cert.isNull())
+        return QStringLiteral("<null>");
+    return cert.digest().toHex();
+}
+
 static QString sslCipherToString(const QSslCipher &cipher)
 {
     return cipher.name();
@@ -241,6 +273,7 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
     VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
     VariantHandler::registerStringConverter<QSsl::SslProtocol>(sslProtocolToString);
+    VariantHandler::registerStringConverter<QSslCertificate>(sslCertificateToString);
     VariantHandler::registerStringConverter<QSslCipher>(sslCipherToString);
     VariantHandler::registerStringConverter<QSslError>(sslErrorToString);
 }
