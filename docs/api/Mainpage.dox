@@ -23,25 +23,25 @@ GammaRay can:
 - View other QObject elements such as signals, enums and class information
   introspectively.
 - List all QObject inbound and outbound signal/slot connections.
-- Provide live widget preview. Useful for finding layout issues).
-- View the content of any QAbstractItemModel (QAIM). Very useful when
+- Provide live QWidget preview. Useful for finding layout issues).
+- View the content of any QAbstractItemModel. Very useful when
   debugging a proxy model chain for example.
-- Browse the QAbstractProxyModel (QAPM) hierarchy.
-- Browse the QGraphicsView (QGV) item tree of any QGV scene.
-- Show a live preview of QGV items, including showing their coordinate system,
+- Browse the QAbstractProxyModel hierarchy.
+- Browse the QGraphicsItem tree of any QGraphicsScene.
+- Show a live preview of QGraphicsItem instances, including showing their coordinate system,
   transformation origin, rotate/zoom/pan, etc.
 - Act as a complete java script debugger, attachable to any QScriptEngine
  (including the usually not accessible one used by QML internally).
 - Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage,
   thanks to QWebInspector.
 - Browse the QResource tree and its content.
-- Browse QStateMachines, along with their states and transitions.
+- Browse QStateMachine instances, along with their states and transitions.
 - Show all registered meta types.
 - Show all installed fonts.
 - Show all available codecs.
-- Browse all QTextDocuments, along with the ability to edit them and view
+- Browse all QTextDocument instances, along with the ability to edit them and view
   their internal structures.
-- Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
+- Show all QTimer instances and their statistics (number of wakeups, wakeup time, ...)
 
 @section license License
 
