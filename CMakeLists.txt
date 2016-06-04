@@ -30,7 +30,7 @@
 # To build the apidox, run 'make docs' after CMake (assumes doxygen is available)
 #
 
-project(GammaRay)
+project(GammaRay CXX C)
 
 cmake_minimum_required(VERSION 2.8.12) # b/c of ECMGeneratePriFile.cmake
 cmake_policy(SET CMP0020 NEW)
