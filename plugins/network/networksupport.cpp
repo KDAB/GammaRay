@@ -44,6 +44,7 @@
 #include <QNetworkCookieJar>
 #include <QNetworkProxy>
 #include <QSocketNotifier>
+#include <QSslCertificateExtension>
 #include <QSslCipher>
 #include <QSslKey>
 #include <QSslSocket>
@@ -60,6 +61,7 @@ Q_DECLARE_METATYPE(QSocketNotifier::Type)
 Q_DECLARE_METATYPE(QSsl::KeyAlgorithm)
 Q_DECLARE_METATYPE(QSsl::KeyType)
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
+Q_DECLARE_METATYPE(QSslCertificateExtension)
 Q_DECLARE_METATYPE(QSslCipher)
 Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslKey)
@@ -136,6 +138,7 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_METAOBJECT0(QSslCertificate);
     MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, effectiveDate);
     MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, expiryDate);
+    MO_ADD_PROPERTY_RO(QSslCertificate, QList<QSslCertificateExtension>, extensions);
     MO_ADD_PROPERTY_RO(QSslCertificate, bool, isBlacklisted);
     MO_ADD_PROPERTY_RO(QSslCertificate, bool, isNull);
     MO_ADD_PROPERTY_RO(QSslCertificate, bool, isSelfSigned);
@@ -144,6 +147,13 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslCertificate, QByteArray, serialNumber);
     MO_ADD_PROPERTY_RO(QSslCertificate, QList<QByteArray>, subjectInfoAttributes);
     MO_ADD_PROPERTY_RO(QSslCertificate, QByteArray, version);
+
+    MO_ADD_METAOBJECT0(QSslCertificateExtension);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, bool, isCritical);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, bool, isSupported);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, QString, name);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, QString, oid);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, QVariant, value);
 
     MO_ADD_METAOBJECT0(QSslCipher);
     MO_ADD_PROPERTY_RO(QSslCipher, QString, authenticationMethod);
@@ -294,6 +304,11 @@ static QString sslCertificateToString(const QSslCertificate &cert)
     return cert.digest().toHex();
 }
 
+static QString sslCertificateExtensionToString(const QSslCertificateExtension &ext)
+{
+    return ext.name();
+}
+
 static QString sslCipherToString(const QSslCipher &cipher)
 {
     return cipher.name();
@@ -314,6 +329,7 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSsl::KeyType>(sslKeyTypeToString);
     VariantHandler::registerStringConverter<QSsl::SslProtocol>(sslProtocolToString);
     VariantHandler::registerStringConverter<QSslCertificate>(sslCertificateToString);
+    VariantHandler::registerStringConverter<QSslCertificateExtension>(sslCertificateExtensionToString);
     VariantHandler::registerStringConverter<QSslCipher>(sslCipherToString);
     VariantHandler::registerStringConverter<QSslError>(sslErrorToString);
 }
