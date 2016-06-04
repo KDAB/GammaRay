@@ -31,6 +31,7 @@
 #include "widgetinspectorinterface.h"
 #include "widgetinspectorclient.h"
 #include "ui_widgetinspectorwidget.h"
+#include "waextension/widgetattributetab.h"
 
 #include "common/objectbroker.h"
 #include "common/objectmodel.h"
@@ -243,6 +244,7 @@ void WidgetInspectorWidget::analyzePainting()
 
 void WidgetInspectorUiFactory::initUi()
 {
+    PropertyWidget::registerTab<WidgetAttributeTab>(QStringLiteral("widgetAttributes"), tr("Attributes"), PropertyWidgetTabPriority::Advanced);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

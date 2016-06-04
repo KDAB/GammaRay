@@ -59,6 +59,7 @@ set(gammaray_ui_srcs
   tools/objectinspector/enumstab.cpp
   tools/objectinspector/classinfotab.cpp
   tools/objectinspector/methodstab.cpp
+  tools/objectinspector/applicationattributetab.cpp
   tools/resourcebrowser/clientresourcemodel.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp
@@ -92,6 +93,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/objectinspector/enumstab.ui
   tools/objectinspector/classinfotab.ui
   tools/objectinspector/methodstab.ui
+  tools/objectinspector/applicationattributetab.ui
   tools/resourcebrowser/resourcebrowserwidget.ui
   tools/standardpaths/standardpathswidget.ui
   tools/textdocumentinspector/textdocumentinspectorwidget.ui

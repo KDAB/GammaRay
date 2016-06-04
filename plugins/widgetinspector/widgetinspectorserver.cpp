@@ -31,6 +31,7 @@
 
 #include "widgetinspectorserver.h"
 #include "widgetpaintanalyzerextension.h"
+#include "waextension/widgetattributeextension.h"
 
 #include "overlaywidget.h"
 #include "widgettreemodel.h"
@@ -96,6 +97,8 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
   registerVariantHandlers();
   probe->installGlobalEventFilter(this);
   PropertyController::registerExtension<WidgetPaintAnalyzerExtension>();
+PropertyController::registerExtension<WidgetAttributeExtension>();
+
 
   connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(updateWidgetPreview()));
 

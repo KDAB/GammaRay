@@ -40,6 +40,7 @@
 #include "propertiesextensionclient.h"
 #include "methodsextensionclient.h"
 #include "connectionsextensionclient.h"
+#include "applicationattributetab.h"
 
 #include <common/objectbroker.h>
 
@@ -92,6 +93,7 @@ public:
     ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface*>(createExtension<ConnectionsExtensionClient>);
     PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), QObject::tr("Enums"), PropertyWidgetTabPriority::Exotic - 1);
     PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), QObject::tr("Class Info"), PropertyWidgetTabPriority::Exotic - 1);
+    PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral("applicationAttributes"), QObject::tr("Attributes"), PropertyWidgetTabPriority::Advanced);
   }
 };
 

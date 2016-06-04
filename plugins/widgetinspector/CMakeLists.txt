@@ -6,6 +6,8 @@ set(gammaray_widgetinspector_plugin_srcs
   overlaywidget.cpp
   widgettreemodel.cpp
   widgetpaintanalyzerextension.cpp
+
+  waextension/widgetattributeextension.cpp
 )
 
 gammaray_add_plugin(gammaray_widgetinspector_plugin
@@ -56,10 +58,13 @@ if(GAMMARAY_BUILD_UI)
     widgetinspectorinterface.cpp
     widgetinspectorclient.cpp
     widgetinspectorwidget.cpp
+
+    waextension/widgetattributetab.cpp
   )
 
   qt4_wrap_ui(gammaray_widgetinspector_ui_plugin_srcs
     widgetinspectorwidget.ui
+    waextension/widgetattributetab.ui
   )
 
   gammaray_add_plugin(gammaray_widgetinspector_ui_plugin

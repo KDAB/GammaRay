@@ -34,6 +34,7 @@
 #include "enumsextension.h"
 #include "propertiesextension.h"
 #include "connectionsextension.h"
+#include "applicationattributeextension.h"
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -113,6 +114,7 @@ void ObjectInspector::registerPCExtensions()
   PropertyController::registerExtension<EnumsExtension>();
   PropertyController::registerExtension<PropertiesExtension>();
   PropertyController::registerExtension<ConnectionsExtension>();
+  PropertyController::registerExtension<ApplicationAttributeExtension>();
 }
 
 QString ObjectInspectorFactory::name() const

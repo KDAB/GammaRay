@@ -30,6 +30,7 @@ set(gammaray_srcs
   util.cpp
   varianthandler.cpp
   objectdataprovider.cpp
+  attributemodel.cpp
 
   propertyadaptor.cpp
   propertyaggregator.cpp
@@ -72,6 +73,7 @@ set(gammaray_srcs
   tools/objectinspector/outboundconnectionsmodel.cpp
   tools/objectinspector/enumsextension.cpp
   tools/objectinspector/classinfoextension.cpp
+  tools/objectinspector/applicationattributeextension.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
   tools/textdocumentinspector/textdocumentinspector.cpp
