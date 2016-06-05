@@ -73,6 +73,10 @@ private slots:
         auto oi2 = oi;
         QCOMPARE(oi2.type(), ObjectInstance::Object);
         QCOMPARE(oi.object(), oi2.object());
+
+        QDateTime dt2;
+        oi2 = ObjectInstance(QVariant::fromValue(&dt2));
+        QVERIFY(!(oi == oi2));
 #endif
     }
 
@@ -82,13 +86,20 @@ private slots:
         QDateTime dt;
 
         ObjectInstance oi(QVariant::fromValue(dt));
-        QCOMPARE(oi.type(), ObjectInstance::Object);
+        QCOMPARE(oi.type(), ObjectInstance::Value);
         QCOMPARE(oi.typeName(), QByteArray("QDateTime"));
         QVERIFY(oi.object());
 
         auto oi2 = oi;
-        QCOMPARE(oi2.type(), ObjectInstance::Object);
+        QCOMPARE(oi2.type(), ObjectInstance::Value);
         QVERIFY(oi2.object());
+
+        QDateTime dt2;
+        oi2 = ObjectInstance(QVariant::fromValue(dt2));
+        QCOMPARE(oi2.type(), ObjectInstance::Value);
+        QVERIFY(dt == dt2);
+        QVERIFY(oi.variant() == oi2.variant());
+        QVERIFY(oi == oi2);
 #endif
     }
 

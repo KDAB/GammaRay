@@ -53,6 +53,7 @@ public:
         QtGadget,
         QtVariant,
         Object,
+        Value
     };
     ObjectInstance();
     ObjectInstance(QObject *obj); //krazy:exclude=explicit

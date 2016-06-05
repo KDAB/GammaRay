@@ -60,7 +60,7 @@ PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObjec
         adaptors.push_back(new QMetaPropertyAdaptor(parent));
     if (oi.type() == ObjectInstance::QtObject)
         adaptors.push_back(new DynamicPropertyAdaptor(parent));
-    if (oi.type() == ObjectInstance::QtObject || oi.type() == ObjectInstance::Object || oi.type() == ObjectInstance::QtGadget)
+    if (oi.type() == ObjectInstance::QtObject || oi.type() == ObjectInstance::Object || oi.type() == ObjectInstance::Value || oi.type() == ObjectInstance::QtGadget)
         adaptors.push_back(new MetaPropertyAdaptor(parent));
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)

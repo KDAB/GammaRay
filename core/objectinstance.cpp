@@ -112,6 +112,7 @@ bool ObjectInstance::operator==(const ObjectInstance &rhs) const
             return object() == rhs.object();
         case QtMetaObject:
             return metaObject() == rhs.metaObject();
+        case Value:
         case QtVariant:
             return variant() == rhs.variant();
     }
@@ -132,7 +133,7 @@ QObject* ObjectInstance::qtObject() const
 
 void* ObjectInstance::object() const
 {
-    Q_ASSERT(m_type == QtObject || m_type == QtGadget || m_type == Object);
+    Q_ASSERT(m_type == QtObject || m_type == QtGadget || m_type == Object || m_type == Value);
     switch (m_type) {
         case QtObject: return m_qtObj;
         case QtGadget: return m_obj ? m_obj : const_cast<void*>(m_variant.constData());
@@ -144,7 +145,7 @@ void* ObjectInstance::object() const
 
 const QVariant& ObjectInstance::variant() const
 {
-    Q_ASSERT(m_type == QtVariant);
+    Q_ASSERT(m_type == QtVariant || m_type == Value);
     return m_variant;
 }
 
@@ -186,7 +187,7 @@ void ObjectInstance::copy(const ObjectInstance& other)
     m_typeName = other.m_typeName;
     m_type = other.m_type;
 
-    if (!m_variant.isNull() && m_obj && m_type == Object)
+    if (m_type == Value)
         unpackVariant(); // pointer changes when copying the variant
 }
 
@@ -202,7 +203,7 @@ void ObjectInstance::unpackVariant()
         }
     } else if (mo) { // value types
         m_obj = const_cast<void*>(m_variant.constData());
-        m_type = Object;
+        m_type = Value;
         m_typeName = m_variant.typeName();
     }
 #endif
