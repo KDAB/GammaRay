@@ -51,8 +51,7 @@ namespace VariantHandler
     {
     }
 
-    /*override*/
-    inline RetT operator() (const QVariant &v)
+    inline RetT operator() (const QVariant &v) Q_DECL_OVERRIDE
     {
       return f(v.value<InputT>());
     }
