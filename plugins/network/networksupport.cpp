@@ -63,6 +63,7 @@ Q_DECLARE_METATYPE(QSsl::KeyType)
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
 Q_DECLARE_METATYPE(QSslCertificateExtension)
 Q_DECLARE_METATYPE(QSslCipher)
+Q_DECLARE_METATYPE(QSslConfiguration::NextProtocolNegotiationStatus)
 Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslKey)
 Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
@@ -174,6 +175,36 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslCipher, QString, protocolString);
     MO_ADD_PROPERTY_RO(QSslCipher, int, usedBits);
 
+    MO_ADD_METAOBJECT0(QSslConfiguration);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+    MO_ADD_PROPERTY   (QSslConfiguration, QList<QByteArray>, allowedNextProtocols, setAllowedNextProtocols);
+#endif
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, caCertificates, setCaCertificates);
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCipher>, ciphers, setCiphers);
+    // TODO 5.5 ellipticCurves
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslKey, ephemeralServerKey);
+#endif
+    MO_ADD_PROPERTY_RO(QSslConfiguration, bool, isNull);
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QSslCertificate, localCertificate, setLocalCertificate);
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, localCertificateChain, setLocalCertificateChain);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QByteArray, nextNegotiatedProtocol);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslConfiguration::NextProtocolNegotiationStatus, nextProtocolNegotiationStatus); // TODO enum lookup table
+#endif
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCertificate, peerCertificate);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QList<QSslCertificate>, peerCertificateChain);
+    MO_ADD_PROPERTY   (QSslConfiguration, int, peerVerifyDepth, setPeerVerifyDepth);
+    MO_ADD_PROPERTY   (QSslConfiguration, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QSslKey, privateKey, setPrivateKey);
+    MO_ADD_PROPERTY   (QSslConfiguration, QSsl::SslProtocol, protocol, setProtocol);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCipher, sessionCipher);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QSsl::SslProtocol, sessionProtocol);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QByteArray, sessionTicket, setSessionTicket);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, int, sessionTicketLifeTimeHint);
+#endif
+
     MO_ADD_METAOBJECT0(QSslKey);
     MO_ADD_PROPERTY_RO(QSslKey, QSsl::KeyAlgorithm, algorithm);
     MO_ADD_PROPERTY_RO(QSslKey, bool, isNull);
@@ -185,9 +216,9 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslSocket, QSslCertificate, localCertificate);
     MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslCertificate>, localCertificateChain);
     MO_ADD_PROPERTY_RO(QSslSocket, QSslSocket::SslMode, mode);
-    MO_ADD_PROPERTY   (QSslSocket, int, peerVerifyDepth, setPeerVerifyDepth);
     MO_ADD_PROPERTY_RO(QSslSocket, QSslCertificate, peerCertificate);
     MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslCertificate>, peerCertificateChain);
+    MO_ADD_PROPERTY   (QSslSocket, int, peerVerifyDepth, setPeerVerifyDepth);
     MO_ADD_PROPERTY   (QSslSocket, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
     MO_ADD_PROPERTY_CR(QSslSocket, QString, peerVerifyName, setPeerVerifyName);
     MO_ADD_PROPERTY_CR(QSslSocket, QSslKey, privateKey, setPrivateKey);
@@ -196,6 +227,7 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, sessionProtocol);
 #endif
     MO_ADD_PROPERTY_RO(QSslSocket, QSslCipher, sessionCipher);
+    MO_ADD_PROPERTY_CR(QSslSocket, QSslConfiguration, sslConfiguration, setSslConfiguration);
     MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslError>, sslErrors);
 
     MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
