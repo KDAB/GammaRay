@@ -30,6 +30,7 @@
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/varianthandler.h>
 
 #include <common/metatypedeclarations.h>
 
@@ -49,12 +50,18 @@
 
 using namespace GammaRay;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QSurface::SurfaceClass)
+Q_DECLARE_METATYPE(QSurface::SurfaceType)
+#endif
+
 GuiSupport::GuiSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
     QObject(parent)
 {
     Q_UNUSED(probe);
 
     registerMetaTypes();
+    registerVariantHandler();
 }
 
 void GuiSupport::registerMetaTypes()
@@ -187,6 +194,121 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY   (QPen, Qt::PenStyle, style, setStyle);
     MO_ADD_PROPERTY   (QPen, int, width, setWidth);
     MO_ADD_PROPERTY   (QPen, qreal, widthF, setWidthF);
+#endif
+}
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+static QString surfaceFormatToString(const QSurfaceFormat &format)
+{
+    QString s;
+    switch (format.renderableType()) {
+        case QSurfaceFormat::DefaultRenderableType:
+            s += QStringLiteral("Default");
+            break;
+        case QSurfaceFormat::OpenGL:
+            s += QStringLiteral("OpenGL");
+            break;
+        case QSurfaceFormat::OpenGLES:
+            s += QStringLiteral("OpenGL ES");
+            break;
+        case QSurfaceFormat::OpenVG:
+            s += QStringLiteral("OpenVG");
+            break;
+    }
+
+    s += " (" + QString::number(format.majorVersion()) +
+         '.' + QString::number(format.minorVersion());
+    switch (format.profile()) {
+        case QSurfaceFormat::CoreProfile:
+            s += QStringLiteral(" core");
+            break;
+        case QSurfaceFormat::CompatibilityProfile:
+            s += QStringLiteral(" compat");
+            break;
+        case QSurfaceFormat::NoProfile:
+            break;
+    }
+    s += ')';
+
+    s += " RGBA: " + QString::number(format.redBufferSize()) +
+         '/' + QString::number(format.greenBufferSize()) +
+         '/' + QString::number(format.blueBufferSize()) +
+         '/' + QString::number(format.alphaBufferSize());
+
+    s += " Depth: " + QString::number(format.depthBufferSize());
+    s += " Stencil: " + QString::number(format.stencilBufferSize());
+
+    s += QStringLiteral(" Buffer: ");
+    switch (format.swapBehavior()) {
+        case QSurfaceFormat::DefaultSwapBehavior:
+            s += QStringLiteral("default");
+            break;
+        case QSurfaceFormat::SingleBuffer:
+            s += QStringLiteral("single");
+            break;
+        case QSurfaceFormat::DoubleBuffer:
+            s += QStringLiteral("double");
+            break;
+        case QSurfaceFormat::TripleBuffer:
+            s += QStringLiteral("triple");
+            break;
+        default:
+            s += QStringLiteral("unknown");
+    }
+
+    return s;
+}
+
+static QString surfaceClassToString(QSurface::SurfaceClass sc)
+{
+    switch (sc) {
+        case QSurface::Window: return QStringLiteral("Window");
+#if QT_VERSION > QT_VERSION_CHECK(5, 1, 0)
+        case QSurface::Offscreen: return QStringLiteral("Offscreen");
+#endif
+    }
+    return QStringLiteral("Unknown Surface Class");
+}
+
+static QString surfaceTypeToString(QSurface::SurfaceType type)
+{
+    switch (type) {
+        case QSurface::RasterSurface: return QStringLiteral("Raster");
+        case QSurface::OpenGLSurface: return QStringLiteral("OpenGL");
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+        case QSurface::RasterGLSurface: return QStringLiteral("RasterGLSurface");
+#endif
+    }
+    return QStringLiteral("Unknown Surface Type");
+}
+
+static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
+{
+    QStringList types;
+#define ST(t) if (type & QOpenGLShader::t) types.push_back(QStringLiteral(#t));
+    ST(Vertex)
+    ST(Fragment)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+    ST(Geometry)
+    ST(TessellationControl)
+    ST(TessellationEvaluation)
+    ST(Compute)
+#endif
+#undef ST
+
+    if (types.isEmpty())
+        return QStringLiteral("<none>");
+    return types.join(QStringLiteral(" | "));
+}
+#endif
+
+void GuiSupport::registerVariantHandler()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
+    VariantHandler::registerStringConverter<QSurface::SurfaceClass>(surfaceClassToString);
+    VariantHandler::registerStringConverter<QSurface::SurfaceType>(surfaceTypeToString);
+    VariantHandler::registerStringConverter<QOpenGLShader::ShaderType>(shaderTypeToString);
 #endif
 }
 

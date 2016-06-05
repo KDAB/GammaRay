@@ -49,7 +49,6 @@
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QGuiApplication>
 #include <QOpenGLShader>
-#include <QSurface>
 #include <QSurfaceFormat>
 #endif
 #endif
@@ -58,7 +57,7 @@ Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 Q_DECLARE_METATYPE(const QMetaObject*)
 
-#ifdef QT_GUI_LIB
+#ifdef QT_GUI_LIB // TODO move all this to the GUI support plug-in
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
@@ -73,8 +72,6 @@ Q_DECLARE_METATYPE(const QMatrix4x4*)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)
 Q_DECLARE_METATYPE(QSurfaceFormat)
-Q_DECLARE_METATYPE(QSurface::SurfaceClass)
-Q_DECLARE_METATYPE(QSurface::SurfaceType)
 #endif
 #endif
 

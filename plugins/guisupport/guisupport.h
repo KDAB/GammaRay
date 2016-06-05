@@ -41,6 +41,7 @@ public:
 
 private:
     void registerMetaTypes();
+    void registerVariantHandler();
 };
 
 class GuiSupportFactory : public QObject, public StandardToolFactory<QObject, GuiSupport>
