@@ -39,7 +39,6 @@
 #include <QCursor>
 #include <QDebug>
 #include <QDir>
-#include <QHostAddress>
 #include <QIcon>
 #include <QMatrix4x4>
 #include <QMetaEnum>
@@ -302,9 +301,6 @@ QString VariantHandler::displayString(const QVariant &value)
        .arg(margins.left()).arg(margins.top())
        .arg(margins.right()).arg(margins.bottom());
   }
-
-  if (value.userType() == qMetaTypeId<QHostAddress>())
-      return value.value<QHostAddress>().toString();
 
   if (value.canConvert<QObject*>()) {
     return Util::displayString(value.value<QObject*>());

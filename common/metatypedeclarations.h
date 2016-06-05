@@ -41,10 +41,6 @@
 #include <QMetaMethod>
 #include <QMetaObject>
 
-#ifdef QT_NETWORK_LIB
-#include <QHostAddress>
-#endif
-
 #ifdef QT_GUI_LIB
 #include <QMargins>
 #include <QPainterPath>
@@ -61,10 +57,6 @@
 Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 Q_DECLARE_METATYPE(const QMetaObject*)
-
-#ifdef QT_NETWORK_LIB
-Q_DECLARE_METATYPE(QHostAddress)
-#endif
 
 #ifdef QT_GUI_LIB
 Q_DECLARE_METATYPE(Qt::FillRule)

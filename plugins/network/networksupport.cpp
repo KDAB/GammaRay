@@ -36,9 +36,8 @@
 #include <core/propertycontroller.h>
 #include <core/varianthandler.h>
 
-#include <common/metatypedeclarations.h> // FIXME move QHostAddress from there to here
-
 #include <QAbstractNetworkCache>
+#include <QHostAddress>
 #include <QLocalSocket>
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
@@ -54,6 +53,7 @@ using namespace GammaRay;
 
 Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
 Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
+Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
@@ -326,6 +326,7 @@ static QString sslErrorToString(const QSslError &error)
 void NetworkSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(socketPauseModeToString);
+    VariantHandler::registerStringConverter<QHostAddress>([](const QHostAddress &addr) { return addr.toString(); });
     VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(networkAccessibilityToString);
     VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
     VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
