@@ -104,6 +104,13 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QAbstractSocket, QNetworkProxy, proxy);
 #endif
 
+    MO_ADD_METAOBJECT0(QHostAddress);
+    MO_ADD_PROPERTY_RO(QHostAddress, bool, isLoopback);
+    MO_ADD_PROPERTY_RO(QHostAddress, bool, isMulticast);
+    MO_ADD_PROPERTY_RO(QHostAddress, bool, isNull);
+    MO_ADD_PROPERTY_RO(QHostAddress, QAbstractSocket::NetworkLayerProtocol, protocol);
+    MO_ADD_PROPERTY_CR(QHostAddress, QString, scopeId, setScopeId);
+
     MO_ADD_METAOBJECT1(QLocalSocket, QIODevice);
     MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketError, error);
     MO_ADD_PROPERTY_RO(QLocalSocket, QString, fullServerName);
