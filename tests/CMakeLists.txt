@@ -216,6 +216,12 @@ add_executable(metaobjecttest metaobjecttest.cpp)
 target_link_libraries(metaobjecttest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME metaobjecttest COMMAND metaobjecttest)
 
+### ObjectInstance test
+
+add_executable(objectinstancetest objectinstancetest.cpp)
+target_link_libraries(objectinstancetest gammaray_core ${QT_QTTEST_LIBRARIES})
+add_test(NAME objectinstancetest COMMAND objectinstancetest)
+
 ### PropertySyncer test
 
 add_executable(propertysyncertest propertysyncertest.cpp)
