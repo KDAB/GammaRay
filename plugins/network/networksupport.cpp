@@ -52,7 +52,10 @@
 using namespace GammaRay;
 
 Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+Q_DECLARE_METATYPE(QAbstractSocket::NetworkLayerProtocol)
 Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
+#endif
 Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
@@ -63,7 +66,9 @@ Q_DECLARE_METATYPE(QSsl::KeyType)
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
 Q_DECLARE_METATYPE(QSslCertificateExtension)
 Q_DECLARE_METATYPE(QSslCipher)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
 Q_DECLARE_METATYPE(QSslConfiguration::NextProtocolNegotiationStatus)
+#endif
 Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslKey)
 Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
@@ -107,7 +112,9 @@ void NetworkSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT0(QHostAddress);
     MO_ADD_PROPERTY_RO(QHostAddress, bool, isLoopback);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     MO_ADD_PROPERTY_RO(QHostAddress, bool, isMulticast);
+#endif
     MO_ADD_PROPERTY_RO(QHostAddress, bool, isNull);
     MO_ADD_PROPERTY_RO(QHostAddress, QAbstractSocket::NetworkLayerProtocol, protocol);
     MO_ADD_PROPERTY_CR(QHostAddress, QString, scopeId, setScopeId);
@@ -199,10 +206,15 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_CR(QSslConfiguration, QSslKey, privateKey, setPrivateKey);
     MO_ADD_PROPERTY   (QSslConfiguration, QSsl::SslProtocol, protocol, setProtocol);
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCipher, sessionCipher);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSsl::SslProtocol, sessionProtocol);
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     MO_ADD_PROPERTY_CR(QSslConfiguration, QByteArray, sessionTicket, setSessionTicket);
     MO_ADD_PROPERTY_RO(QSslConfiguration, int, sessionTicketLifeTimeHint);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY_ST(QSslConfiguration, QList<QSslCertificate>, systemCaCertificates);
 #endif
 
     MO_ADD_METAOBJECT0(QSslKey);
