@@ -33,6 +33,7 @@
 
 #include <QAbstractItemModel>
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QFile>
 #include <QFont>
 #include <QObject>
@@ -137,6 +138,17 @@ void MetaObjectRepository::initQObjectTypes()
   MO_ADD_METAOBJECT1(QAbstractProxyModel, QAbstractItemModel);
   MO_ADD_METAOBJECT1(QSortFilterProxyModel, QAbstractProxyModel);
   MO_ADD_PROPERTY_RO(QSortFilterProxyModel, Qt::SortOrder, sortOrder);
+
+  MO_ADD_METAOBJECT0(QDateTime);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  MO_ADD_PROPERTY_RO(QDateTime, bool, isDaylightTime);
+#endif
+  MO_ADD_PROPERTY_RO(QDateTime, bool, isNull);
+  MO_ADD_PROPERTY_RO(QDateTime, bool, isValid);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+  MO_ADD_PROPERTY_RO(QDateTime, int, offsetFromUtc);
+  MO_ADD_PROPERTY_CR(QDateTime, QTimeZone, timeZone, setTimeZone);
+#endif
 }
 
 

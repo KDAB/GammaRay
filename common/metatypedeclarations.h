@@ -57,6 +57,11 @@ Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 Q_DECLARE_METATYPE(const QMetaObject*)
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+#include <QTimeZone>
+Q_DECLARE_METATYPE(QTimeZone)
+#endif
+
 #ifdef QT_GUI_LIB // TODO move all this to the GUI support plug-in
 Q_DECLARE_METATYPE(Qt::FillRule)
 Q_DECLARE_METATYPE(Qt::InputMethodHints)

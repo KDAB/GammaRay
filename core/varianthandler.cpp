@@ -307,6 +307,9 @@ QString VariantHandler::displayString(const QVariant &value)
     return displayVector<3>(value.value<QVector3D>());
   if (value.userType() == qMetaTypeId<QVector4D>())
     return displayVector<4>(value.value<QVector4D>());
+
+  if (value.userType() == qMetaTypeId<QTimeZone>())
+      return value.value<QTimeZone>().id();
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -319,7 +322,6 @@ QString VariantHandler::displayString(const QVariant &value)
     }
     return l.join(QStringLiteral(", "));
   }
-
 #endif // Qt5
 
   // enums
