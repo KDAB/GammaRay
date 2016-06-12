@@ -31,13 +31,11 @@
 
 #include <QDialog>
 
-QT_BEGIN_NAMESPACE
+namespace GammaRay {
+
 namespace Ui {
 class PropertyMatrixDialog;
 }
-QT_END_NAMESPACE
-
-namespace GammaRay {
 
 class PropertyMatrixModel;
 
@@ -52,7 +50,7 @@ class PropertyMatrixDialog : public QDialog
     QVariant matrix() const;
 
   private:
-    QT_PREPEND_NAMESPACE(Ui::PropertyMatrixDialog) *ui;
+    Ui::PropertyMatrixDialog *ui;
 
     PropertyMatrixModel *m_model;
 };

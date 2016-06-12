@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PropertyMatrixDialog</class>
- <widget class="QDialog" name="PropertyMatrixDialog">
+ <class>GammaRay::PropertyMatrixDialog</class>
+ <widget class="QDialog" name="GammaRay::PropertyMatrixDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -34,7 +34,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>PropertyMatrixDialog</receiver>
+   <receiver>GammaRay::PropertyMatrixDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -50,7 +50,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>PropertyMatrixDialog</receiver>
+   <receiver>GammaRay::PropertyMatrixDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
