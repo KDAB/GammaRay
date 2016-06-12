@@ -42,9 +42,10 @@
 
 using namespace GammaRay;
 
-namespace {
+namespace GammaRay {
 class StandardPathsProxy : public QIdentityProxyModel
 {
+    Q_OBJECT
 public:
   StandardPathsProxy(QObject *parent = 0)
     : QIdentityProxyModel(parent) { }
@@ -61,6 +62,7 @@ public:
 
 class StandardPathsDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
 public:
   StandardPathsDelegate(QObject *parent = 0)
     : QStyledItemDelegate(parent) { }
@@ -125,3 +127,4 @@ StandardPathsWidget::~StandardPathsWidget()
 {
 }
 
+#include "standardpathswidget.moc"
