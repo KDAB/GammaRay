@@ -234,6 +234,7 @@ if(Qt5Core_FOUND)
     3DRender
     Bluetooth
     Concurrent
+    LinguistTools
     Positioning
     PrintSupport
     Qml
@@ -452,6 +453,7 @@ if(APPLE)
     set(MAN_INSTALL_DIR "man/man1")
     set(DOC_INSTALL_DIR "doc/gammaray")
     set(QCH_INSTALL_DIR "doc")
+    set(TRANSLATION_INSTALL_DIR "translations")
   else()
     # Make sure default prefix on mac is /Applications, dunnow why but it does not default to it
     # probably because we do not enabled built in bundle support in the main project
@@ -469,6 +471,7 @@ if(APPLE)
     set(MAN_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/man/man1")
     set(DOC_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/docs")
     set(QCH_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/docs")
+    set(TRANSLATION_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/translations")
     set(INCLUDE_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/include/gammaray")
     set(CMAKECONFIG_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/cmake/GammaRay")
     set(ECM_MKSPECS_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/${ECM_MKSPECS_INSTALL_DIR}")
@@ -489,10 +492,12 @@ else()
     set(PLUGIN_INSTALL_DIR "plugins")
     set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
     set(DOC_INSTALL_DIR .)
+    set(TRANSLATION_INSTALL_DIR "translations")
   else()
     set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
     set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
     set(DOC_INSTALL_DIR "${DATAROOTDIR}/doc/gammaray/")
+    set(TRANSLATION_INSTALL_DIR "${DATAROOTDIR}/gammaray/translations")
   endif()
 endif()
 
@@ -584,6 +589,9 @@ if((Qt5Test_FOUND OR QT_QTTEST_FOUND) AND NOT CMAKE_CROSSCOMPILING)
 endif()
 add_subdirectory(plugins)
 add_subdirectory(resources)
+if(Qt5LinguistTools_FOUND)
+  add_subdirectory(translations)
+endif()
 if(GAMMARAY_BUILD_DOCS)
   add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
 endif()
