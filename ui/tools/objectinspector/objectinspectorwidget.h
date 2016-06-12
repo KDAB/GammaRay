@@ -78,21 +78,23 @@ class ObjectInspectorWidget : public QWidget
     UIStateManager m_stateManager;
 };
 
-class ObjectInspectorFactory : public ToolUiFactory {
+class ObjectInspectorFactory : public QObject, public ToolUiFactory
+{
+    Q_OBJECT
 public:
   QString id() const Q_DECL_OVERRIDE { return QStringLiteral("GammaRay::ObjectInspector"); }
   QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE { return new ObjectInspectorWidget(parentWidget); }
   void initUi() Q_DECL_OVERRIDE
   {
-    PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), QObject::tr("Properties"), PropertyWidgetTabPriority::First);
+    PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), tr("Properties"), PropertyWidgetTabPriority::First);
     ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createExtension<PropertiesExtensionClient>);
-    PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), QObject::tr("Methods"), PropertyWidgetTabPriority::Basic - 1);
+    PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), tr("Methods"), PropertyWidgetTabPriority::Basic - 1);
     ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createExtension<MethodsExtensionClient>);
-    PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), QObject::tr("Connections"), PropertyWidgetTabPriority::Basic - 1);
+    PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), tr("Connections"), PropertyWidgetTabPriority::Basic - 1);
     ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface*>(createExtension<ConnectionsExtensionClient>);
-    PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), QObject::tr("Enums"), PropertyWidgetTabPriority::Exotic - 1);
-    PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), QObject::tr("Class Info"), PropertyWidgetTabPriority::Exotic - 1);
-    PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral("applicationAttributes"), QObject::tr("Attributes"), PropertyWidgetTabPriority::Advanced);
+    PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), tr("Enums"), PropertyWidgetTabPriority::Exotic - 1);
+    PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), tr("Class Info"), PropertyWidgetTabPriority::Exotic - 1);
+    PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral("applicationAttributes"), tr("Attributes"), PropertyWidgetTabPriority::Advanced);
   }
 };
 

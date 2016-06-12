@@ -25,7 +25,9 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "timerinfo.h"
+#include "timermodel.h"
 
 #include <core/util.h>
 
@@ -170,24 +172,24 @@ QString TimerInfo::state() const
     {
       const QTimer *t = timer();
       if (!t)
-        return QObject::tr("None");
+        return TimerModel::tr("None");
       if (!t->isActive())
-        return QObject::tr("Inactive");
+        return TimerModel::tr("Inactive");
       if (t->isSingleShot())
-        return QObject::tr("Singleshot (%1 ms)").arg(t->interval());
-      return QObject::tr("Repeating (%1 ms)").arg(t->interval());
+        return TimerModel::tr("Singleshot (%1 ms)").arg(t->interval());
+      return TimerModel::tr("Repeating (%1 ms)").arg(t->interval());
     }
     case QQmlTimerType:
     {
       const QObject *obj = timerObject();
       if (!obj)
-        return QObject::tr("None");
+        return TimerModel::tr("None");
       const int interval = obj->property("interval").toInt();
       if (!obj->property("running").toBool())
-        return QObject::tr("Inactive (%1 ms)").arg(interval);
+        return TimerModel::tr("Inactive (%1 ms)").arg(interval);
       if (obj->property("repeat").toBool())
-        return QObject::tr("Repeating (%1 ms)").arg(interval);
-      return QObject::tr("Singleshot (%1 ms)").arg(interval);
+        return TimerModel::tr("Repeating (%1 ms)").arg(interval);
+      return TimerModel::tr("Singleshot (%1 ms)").arg(interval);
     }
     case QObjectType:
       return QStringLiteral("N/A");
@@ -219,7 +221,7 @@ QString TimerInfo::displayName() const
       if (m_lastReceiver) {
         return Util::displayString(m_lastReceiver);
       } else {
-        return QObject::tr("Unknown QObject");
+        return TimerModel::tr("Unknown QObject");
       }
   }
 

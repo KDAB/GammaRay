@@ -1286,14 +1286,14 @@ QString ResourceModelPrivate::size(const QModelIndex &index) const
     const quint64 tb = 1024 * gb;
     quint64 bytes = n->info.size();
     if (bytes >= tb)
-        return QObject::tr("%1 TB").arg(QLocale().toString(qreal(bytes) / tb, 'f', 3));
+        return ResourceModel::tr("%1 TB").arg(QLocale().toString(qreal(bytes) / tb, 'f', 3));
     if (bytes >= gb)
-        return QObject::tr("%1 GB").arg(QLocale().toString(qreal(bytes) / gb, 'f', 2));
+        return ResourceModel::tr("%1 GB").arg(QLocale().toString(qreal(bytes) / gb, 'f', 2));
     if (bytes >= mb)
-        return QObject::tr("%1 MB").arg(QLocale().toString(qreal(bytes) / mb, 'f', 1));
+        return ResourceModel::tr("%1 MB").arg(QLocale().toString(qreal(bytes) / mb, 'f', 1));
     if (bytes >= kb)
-        return QObject::tr("%1 KB").arg(QLocale().toString(bytes / kb));
-    return QObject::tr("%1 byte(s)").arg(QLocale().toString(bytes));
+        return ResourceModel::tr("%1 KB").arg(QLocale().toString(bytes / kb));
+    return ResourceModel::tr("%1 byte(s)").arg(QLocale().toString(bytes));
 }
 
 QString ResourceModelPrivate::type(const QModelIndex &index) const
@@ -1301,10 +1301,10 @@ QString ResourceModelPrivate::type(const QModelIndex &index) const
   // poor interpolation of what QFileIconProvider::type() did
   // TODO: for Qt5 QMimeType might actually be a better choice here
   if (!index.parent().isValid())
-    return QObject::tr("Root");
+    return ResourceModel::tr("Root");
   if (node(index)->info.isDir())
-    return QObject::tr("Folder");
-  return QObject::tr("%1 File").arg(node(index)->info.suffix());
+    return ResourceModel::tr("Folder");
+  return ResourceModel::tr("%1 File").arg(node(index)->info.suffix());
 }
 
 QString ResourceModelPrivate::time(const QModelIndex &index) const
