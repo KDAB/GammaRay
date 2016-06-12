@@ -246,7 +246,9 @@ Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex& index) const
 
     auto adaptor = adaptorForIndex(index);
     auto data = adaptor->propertyData(index.row());
-    return (data.flags() & PropertyData::Writable) ? (baseFlags | Qt::ItemIsEditable) : baseFlags;
+    // we can't edit value types (yet)
+    const auto editable = (data.flags() & PropertyData::Writable) && adaptor->object().type() != ObjectInstance::Value && isParentEditable(adaptor);
+    return editable ? (baseFlags | Qt::ItemIsEditable) : baseFlags;
 }
 
 QVariant AggregatedPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -440,4 +442,16 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor* parentAdaptor, int 
         endInsertRows();
 
     m_inhibitAdaptorCreation = false;
+}
+
+bool AggregatedPropertyModel::isParentEditable(PropertyAdaptor *adaptor) const
+{
+    auto parentAdaptor = adaptor->parentAdaptor();
+    if (!parentAdaptor)
+        return true;
+
+    if (parentAdaptor->object().type() == ObjectInstance::Value)
+        return false; // we can't edit value types (yet)
+
+    return isParentEditable(parentAdaptor);
 }

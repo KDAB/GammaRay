@@ -68,6 +68,7 @@ private:
     QVariant data(PropertyAdaptor *adaptor, const PropertyData &d, int column, int role) const;
     bool hasLoop(PropertyAdaptor* adaptor, const QVariant &v) const;
     void reloadSubTree(PropertyAdaptor *parentAdaptor, int index);
+    bool isParentEditable(PropertyAdaptor *adaptor) const;
 
 private slots:
     void propertyChanged(int first, int last);
