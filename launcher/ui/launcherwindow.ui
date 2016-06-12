@@ -10,9 +10,6 @@
     <height>482</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
-  </property>
   <property name="windowIcon">
    <iconset resource="../resources/gammaray.qrc">
     <normaloff>:/gammaray/GammaRay-128x128.png</normaloff>:/gammaray/GammaRay-128x128.png</iconset>
