@@ -77,3 +77,8 @@ void PropertyAdaptor::doSetObject(const ObjectInstance& oi)
 {
     Q_UNUSED(oi);
 }
+
+PropertyAdaptor* GammaRay::PropertyAdaptor::parentAdaptor() const
+{
+    return qobject_cast<PropertyAdaptor*>(parent());
+}

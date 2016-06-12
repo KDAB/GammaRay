@@ -272,7 +272,7 @@ QModelIndex AggregatedPropertyModel::parent(const QModelIndex& child) const
     if (childAdaptor == m_rootAdaptor)
         return QModelIndex();
 
-    auto parentAdaptor = qobject_cast<PropertyAdaptor*>(childAdaptor->parent());
+    auto parentAdaptor = childAdaptor->parentAdaptor();
     return createIndex(m_parentChildrenMap.value(parentAdaptor).indexOf(childAdaptor), 0, parentAdaptor);
 }
 
@@ -372,7 +372,7 @@ void AggregatedPropertyModel::objectInvalidated(PropertyAdaptor* adaptor)
         return;
     }
 
-    auto parentAdaptor = qobject_cast<PropertyAdaptor*>(adaptor->parent());
+    auto parentAdaptor = adaptor->parentAdaptor();
     Q_ASSERT(parentAdaptor);
     Q_ASSERT(m_parentChildrenMap.contains(parentAdaptor));
     reloadSubTree(parentAdaptor, m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor));
@@ -389,7 +389,7 @@ bool AggregatedPropertyModel::hasLoop(PropertyAdaptor* adaptor, const QVariant& 
     while (adaptor) {
         if (adaptor->object() == newOi)
             return true;
-        adaptor = qobject_cast<PropertyAdaptor*>(adaptor->parent());
+        adaptor = adaptor->parentAdaptor();
     }
 
     return false;

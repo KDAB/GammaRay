@@ -70,6 +70,9 @@ public:
     /** Resets the specified property. */
     virtual void resetProperty(int index);
 
+    /** Property adaptor of parent object instance, if any. */
+    PropertyAdaptor* parentAdaptor() const;
+
 signals:
     void propertyAdded(int first, int last);
     void propertyRemoved(int first, int last);
