@@ -82,7 +82,6 @@ class ObjectInspectorFactory : public ToolUiFactory {
 public:
   QString id() const Q_DECL_OVERRIDE { return QStringLiteral("GammaRay::ObjectInspector"); }
   QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE { return new ObjectInspectorWidget(parentWidget); }
-  bool remotingSupported() const Q_DECL_OVERRIDE { return true; }
   void initUi() Q_DECL_OVERRIDE
   {
     PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), QObject::tr("Properties"), PropertyWidgetTabPriority::First);
