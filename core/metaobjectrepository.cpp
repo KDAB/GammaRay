@@ -45,6 +45,10 @@
 #include <QSaveFile>
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+#include <QTimeZone>
+#endif
+
 using namespace GammaRay;
 
 namespace GammaRay {
@@ -148,6 +152,16 @@ void MetaObjectRepository::initQObjectTypes()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
   MO_ADD_PROPERTY_RO(QDateTime, int, offsetFromUtc);
   MO_ADD_PROPERTY_CR(QDateTime, QTimeZone, timeZone, setTimeZone);
+
+  MO_ADD_METAOBJECT0(QTimeZone);
+  MO_ADD_PROPERTY_RO(QTimeZone, QString, comment);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+  MO_ADD_PROPERTY_RO(QTimeZone, QLocale::Country, country);
+#endif
+  MO_ADD_PROPERTY_RO(QTimeZone, bool, hasDaylightTime);
+  MO_ADD_PROPERTY_RO(QTimeZone, bool, hasTransitions);
+  MO_ADD_PROPERTY_RO(QTimeZone, QByteArray, id);
+  MO_ADD_PROPERTY_RO(QTimeZone, bool, isValid);
 #endif
 }
 
