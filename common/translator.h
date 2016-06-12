@@ -1,10 +1,10 @@
 /*
-  main.cpp
+  translator.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,38 +26,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
-#include "launcherwindow.h"
-#include "launchoptions.h"
-#include "launcherfinder.h"
+#ifndef GAMMARAY_TRANSLATOR_H
+#define GAMMARAY_TRANSLATOR_H
 
-#include <common/paths.h>
-#include <common/translator.h>
+#include "gammaray_common_export.h"
 
-#include <QApplication>
+namespace GammaRay {
 
-using namespace GammaRay;
-
-int main(int argc, char **argv)
+namespace Translator
 {
-  QCoreApplication::setOrganizationName(QStringLiteral("KDAB"));
-  QCoreApplication::setOrganizationDomain(QStringLiteral("kdab.com"));
-  QCoreApplication::setApplicationName(QStringLiteral("GammaRay"));
-
-  QApplication app(argc, argv);
-  Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
-  Translator::load();
-
-  LauncherWindow launcher;
-  launcher.show();
-  const int result = app.exec();
-
-  if (launcher.result() == QDialog::Accepted) {
-    const LaunchOptions opts = launcher.launchOptions();
-    if (opts.isValid()) {
-      opts.execute(LauncherFinder::findLauncher(LauncherFinder::Injector));
-    }
-  }
-
-  return result;
+    /** Load translation catalogs for current locale. */
+    void GAMMARAY_COMMON_EXPORT load();
 }
+
+}
+
+#endif // GAMMARAY_TRANSLATOR_H

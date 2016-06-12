@@ -33,6 +33,7 @@
 
 #include <common/objectbroker.h>
 #include <common/paths.h>
+#include <common/translator.h>
 
 #include <QApplication>
 #include <QStringList>
@@ -43,6 +44,7 @@ int main(int argc, char** argv)
 {
   QApplication app(argc, argv);
   Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
+  Translator::load();
   ClientConnectionManager::init();
 
   QUrl serverUrl;

@@ -1,10 +1,10 @@
 /*
-  main.cpp
+  translator.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,38 +26,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
-#include "launcherwindow.h"
-#include "launchoptions.h"
-#include "launcherfinder.h"
+#include "config-gammaray.h"
 
-#include <common/paths.h>
-#include <common/translator.h>
+#include "translator.h"
+#include "paths.h"
 
-#include <QApplication>
+#include <QCoreApplication>
+#include <QDebug>
+#include <QLibraryInfo>
+#include <QLocale>
+#include <QTranslator>
 
 using namespace GammaRay;
 
-int main(int argc, char **argv)
+static void loadCatalog(const QString &catalog, const QString &path)
 {
-  QCoreApplication::setOrganizationName(QStringLiteral("KDAB"));
-  QCoreApplication::setOrganizationDomain(QStringLiteral("kdab.com"));
-  QCoreApplication::setApplicationName(QStringLiteral("GammaRay"));
-
-  QApplication app(argc, argv);
-  Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
-  Translator::load();
-
-  LauncherWindow launcher;
-  launcher.show();
-  const int result = app.exec();
-
-  if (launcher.result() == QDialog::Accepted) {
-    const LaunchOptions opts = launcher.launchOptions();
-    if (opts.isValid()) {
-      opts.execute(LauncherFinder::findLauncher(LauncherFinder::Injector));
+    auto translator = new QTranslator(QCoreApplication::instance());
+    if (translator->load(QLocale(), catalog, QStringLiteral("_"), path)) {
+        QCoreApplication::instance()->installTranslator(translator);
+    } else {
+        qDebug() << "did not find a translation for" << catalog << "in" << path << "for language" << QLocale().name();
+        delete translator;
     }
-  }
+}
 
-  return result;
+void Translator::load()
+{
+    loadCatalog(QStringLiteral("gammaray"), Paths::rootPath() + QLatin1Char('/') + GAMMARAY_TRANSLATION_INSTALL_DIR);
+    loadCatalog(QStringLiteral("qt"), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 }

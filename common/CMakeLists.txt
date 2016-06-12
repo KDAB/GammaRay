@@ -15,6 +15,7 @@ set(gammaray_common_srcs
   modelutils.cpp
   paintanalyzerinterface.cpp
   sourcelocation.cpp
+  translator.cpp
 
   remoteviewinterface.cpp
   remoteviewframe.cpp
