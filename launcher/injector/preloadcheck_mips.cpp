@@ -34,13 +34,13 @@ bool PreloadCheck::testMips(const QString &symbol, const QString &fileName)
   proc.start("readelf", QStringList() << "--dyn-syms" << "-d" << fileName, QIODevice::ReadOnly);
 
   if (!proc.waitForFinished()) {
-    setErrorString(QObject::tr("Failed to run 'readelf' (binutils) binary: %1").
+    setErrorString(tr("Failed to run 'readelf' (binutils) binary: %1").
                    arg(QString(proc.errorString())));
     return false;
   }
 
   if (proc.exitCode() != 0) {
-    setErrorString(QObject::tr("Cannot read shared object: %1").arg(QString(proc.readAll())));
+    setErrorString(tr("Cannot read shared object: %1").arg(QString(proc.readAll())));
     return false;
   }
 

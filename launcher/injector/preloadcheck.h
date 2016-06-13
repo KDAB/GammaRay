@@ -29,6 +29,7 @@
 
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
 
+#include <QCoreApplication>
 #include <QString>
 
 namespace GammaRay {
@@ -39,6 +40,7 @@ namespace GammaRay {
  */
 class PreloadCheck
 {
+    Q_DECLARE_TR_FUNCTIONS(GammaRay::PreloadCheck)
   public:
     PreloadCheck();
 

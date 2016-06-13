@@ -1671,6 +1671,36 @@ Tag: %1
     </message>
 </context>
 <context>
+    <name>GammaRay::PreloadCheck</name>
+    <message>
+        <location filename="../launcher/injector/preloadcheck.cpp" line="+48"/>
+        <source>Cannot find file containing symbol: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Invalid shared object: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <location filename="../launcher/injector/preloadcheck_mips.cpp" line="+37"/>
+        <source>Failed to run &apos;readelf&apos; (binutils) binary: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <location filename="../launcher/injector/preloadcheck_mips.cpp" line="+6"/>
+        <source>Cannot read shared object: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+35"/>
+        <source>Symbol is not marked as relocatable: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GammaRay::Probe</name>
     <message>
         <location filename="../core/probe.cpp" line="+405"/>
@@ -3374,33 +3404,6 @@ Number of children: %5&lt;/p&gt;</source>
     <message>
         <location line="+135"/>
         <source>left: %1, top: %2, right: %3, bottom: %4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../launcher/injector/preloadcheck.cpp" line="+46"/>
-        <source>Cannot find file containing symbol: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Invalid shared object: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <location filename="../launcher/injector/preloadcheck_mips.cpp" line="+37"/>
-        <source>Failed to run &apos;readelf&apos; (binutils) binary: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <location filename="../launcher/injector/preloadcheck_mips.cpp" line="+6"/>
-        <source>Cannot read shared object: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+35"/>
-        <source>Symbol is not marked as relocatable: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -45,12 +45,12 @@ PreloadCheck::PreloadCheck()
 bool PreloadCheck::test(const QString &fileName, const QString &symbol)
 {
   if (fileName.isEmpty()) {
-    setErrorString(QObject::tr("Cannot find file containing symbol: %1").arg(symbol));
+    setErrorString(tr("Cannot find file containing symbol: %1").arg(symbol));
     return false;
   }
 
   if (!QFile(fileName).exists()) {
-    setErrorString(QObject::tr("Invalid shared object: %1").arg(fileName));
+    setErrorString(tr("Invalid shared object: %1").arg(fileName));
     return false;
   }
 
@@ -63,13 +63,13 @@ bool PreloadCheck::test(const QString &fileName, const QString &symbol)
     // TODO: Find out if we want to error out if 'readelf' is missing
     // The question is: Do all (major) distributions ship binutils by default?
     // Major distros do, but not custom embedded ones...
-    setErrorString(QObject::tr("Failed to run 'readelf' (binutils) binary: %1").
+    setErrorString(tr("Failed to run 'readelf' (binutils) binary: %1").
                    arg(QString(proc.errorString())));
     return true;
   }
 
   if (proc.exitCode() != 0) {
-    setErrorString(QObject::tr("Cannot read shared object: %1").arg(QString(proc.readAll())));
+    setErrorString(tr("Cannot read shared object: %1").arg(QString(proc.readAll())));
     return false;
   }
 
@@ -104,7 +104,7 @@ bool PreloadCheck::test(const QString &fileName, const QString &symbol)
   }
 #endif
 
-  setErrorString(QObject::tr("Symbol is not marked as relocatable: %1").arg(symbol));
+  setErrorString(tr("Symbol is not marked as relocatable: %1").arg(symbol));
   return false;
 }
 
