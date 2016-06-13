@@ -36,6 +36,8 @@
 #include <QString>
 #include <QProcess>
 
+using namespace GammaRay;
+
 PreloadCheck::PreloadCheck()
 {
 }

@@ -31,6 +31,8 @@
 
 #include <QString>
 
+namespace GammaRay {
+
 /**
  * This class checks if it's possible to overwrite symbols
  * by setting the LD_PRELOAD environment variable
@@ -68,6 +70,8 @@ class PreloadCheck
 
     QString m_errorString;
 };
+
+}
 
 #endif
 
