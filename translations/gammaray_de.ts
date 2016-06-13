@@ -2790,6 +2790,19 @@ Probe available: %5</source>
     </message>
 </context>
 <context>
+    <name>GammaRay::StyleInjector</name>
+    <message>
+        <location filename="../launcher/injector/styleinjector.cpp" line="+83"/>
+        <source>Injector style plugin is not found in the Qt style plug-in search path or cannot be loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>GammaRay was compiled without QtWidget support, style injector is not available.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GammaRay::StyleInspectorFactory</name>
     <message>
         <location filename="../plugins/styleinspector/styleinspector.cpp" line="+96"/>
@@ -3404,16 +3417,6 @@ Number of children: %5&lt;/p&gt;</source>
     <message>
         <location line="+135"/>
         <source>left: %1, top: %2, right: %3, bottom: %4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../launcher/injector/styleinjector.cpp" line="+83"/>
-        <source>Injector style plugin is not found in the Qt style plug-in search path or cannot be loaded</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>GammaRay was compiled without QtWidget support, style injector is not available.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

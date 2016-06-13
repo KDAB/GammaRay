@@ -80,14 +80,14 @@ bool StyleInjector::selfTest()
 #ifdef HAVE_QT_WIDGETS
   QCoreApplication::addLibraryPath(Paths::currentPluginsPath());
   if (!QStyleFactory::keys().contains(QStringLiteral("gammaray-injector"))) {
-    mErrorString = QObject::tr("Injector style plugin is not found in the Qt style "
+    mErrorString = tr("Injector style plugin is not found in the Qt style "
                                "plug-in search path or cannot be loaded");
     return false;
   }
 
   return true;
 #else
-  mErrorString = QObject::tr("GammaRay was compiled without QtWidget support, style injector is not available.");
+  mErrorString = tr("GammaRay was compiled without QtWidget support, style injector is not available.");
   return false;
 #endif
 }
