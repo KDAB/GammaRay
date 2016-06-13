@@ -7,7 +7,7 @@ target_link_libraries(gammaray_guisupport gammaray_core)
 if(Qt5Core_FOUND)
   target_link_libraries(gammaray_guisupport Qt5::Gui)
 else()
-  target_link_libraries(gammaray_guisupport ${QT_QT_GUI_LIBRARIES})
+  target_link_libraries(gammaray_guisupport ${QT_GUI_LIBRARIES})
 endif()
 
 # ui plugin

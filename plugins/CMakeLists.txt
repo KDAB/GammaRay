@@ -1,6 +1,5 @@
 add_subdirectory(codecbrowser)
 add_subdirectory(fontbrowser)
-add_subdirectory(guisupport)
 add_subdirectory(kjobtracker)
 add_subdirectory(quickinspector)
 add_subdirectory(selectionmodelinspector)
@@ -14,6 +13,10 @@ if(Qt5Core_FOUND)
   add_subdirectory(translatorinspector)
 else()
   add_subdirectory(objectvisualizer)
+endif()
+
+if(Qt5Gui_FOUND OR QT_QTGUI_FOUND)
+  add_subdirectory(guisupport)
 endif()
 
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
