@@ -511,6 +511,34 @@ GDB error was: %1</source>
     </message>
 </context>
 <context>
+    <name>GammaRay::GuiSupport</name>
+    <message>
+        <location filename="../plugins/guisupport/guisupport.cpp" line="+312"/>
+        <source>variable</source>
+        <translation>variabel</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>fixed</source>
+        <translation>fest</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>percentage</source>
+        <translation>prozentual</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>&lt;empty&gt;</source>
+        <translation>&lt;leer&gt;</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&lt;%1 elements&gt;</source>
+        <translation>&lt;%1 Elemente&gt;</translation>
+    </message>
+</context>
+<context>
     <name>GammaRay::GuiSupportUiFactory</name>
     <message>
         <location filename="../plugins/guisupport/guisupportuifactory.cpp" line="+43"/>
@@ -3339,37 +3367,12 @@ Number of children: %5&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/varianthandler.cpp" line="+119"/>
+        <location filename="../core/varianthandler.cpp" line="+118"/>
         <source>&lt;no icon&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+138"/>
-        <source>variable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>fixed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>percentage</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>&lt;empty&gt;</source>
-        <translation type="unfinished">&lt;leer&gt;</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>&lt;%1 elements&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
+        <location line="+135"/>
         <source>left: %1, top: %2, right: %3, bottom: %4</source>
         <translation type="unfinished"></translation>
     </message>

@@ -50,7 +50,6 @@
 #include <QRect>
 #include <QSize>
 #include <QStringList>
-#include <QTextFormat>
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
@@ -249,31 +248,6 @@ QString VariantHandler::displayString(const QVariant &value)
   }
 
   // types with dynamic type ids
-  if (value.type() == (QVariant::Type)qMetaTypeId<QTextLength>()) {
-    const QTextLength l = value.value<QTextLength>();
-    QString typeStr;
-    switch (l.type()) {
-    case QTextLength::VariableLength:
-      typeStr = QObject::tr("variable");
-      break;
-    case QTextLength::FixedLength:
-      typeStr = QObject::tr("fixed");
-      break;
-    case QTextLength::PercentageLength:
-      typeStr = QObject::tr("percentage");
-      break;
-    }
-    return QStringLiteral("%1 (%2)").arg(l.rawValue()).arg(typeStr);
-  }
-
-  if (value.userType() == qMetaTypeId<QPainterPath>()) {
-    const QPainterPath path = value.value<QPainterPath>();
-    if (path.isEmpty()) {
-      return QObject::tr("<empty>");
-    }
-    return QObject::tr("<%1 elements>").arg(path.elementCount());
-  }
-
   if (value.userType() == qMetaTypeId<QMargins>()) {
     const QMargins margins = value.value<QMargins>();
     return QObject::tr("left: %1, top: %2, right: %3, bottom: %4")

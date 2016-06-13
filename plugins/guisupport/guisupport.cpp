@@ -45,8 +45,10 @@
 
 #include <QFont>
 #include <QPaintDevice>
+#include <QPainterPath>
 #include <QPalette>
 #include <QPen>
+#include <QTextFormat>
 
 using namespace GammaRay;
 
@@ -302,6 +304,30 @@ static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
 }
 #endif
 
+static QString textLengthToString(const QTextLength &l)
+{
+    QString typeStr;
+    switch (l.type()) {
+    case QTextLength::VariableLength:
+        typeStr = GuiSupport::tr("variable");
+        break;
+    case QTextLength::FixedLength:
+        typeStr = GuiSupport::tr("fixed");
+        break;
+    case QTextLength::PercentageLength:
+        typeStr = GuiSupport::tr("percentage");
+        break;
+    }
+    return QStringLiteral("%1 (%2)").arg(l.rawValue()).arg(typeStr);
+}
+
+static QString painterPathToString(const QPainterPath &path)
+{
+    if (path.isEmpty())
+        return GuiSupport::tr("<empty>");
+    return GuiSupport::tr("<%1 elements>").arg(path.elementCount());
+}
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -310,6 +336,9 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSurface::SurfaceType>(surfaceTypeToString);
     VariantHandler::registerStringConverter<QOpenGLShader::ShaderType>(shaderTypeToString);
 #endif
+
+    VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
+    VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 }
 
 GuiSupportFactory::GuiSupportFactory(QObject* parent) :
