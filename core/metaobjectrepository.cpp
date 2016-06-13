@@ -35,7 +35,6 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
-#include <QFont>
 #include <QObject>
 #include <QSortFilterProxyModel>
 #include <QStringList>
