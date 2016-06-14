@@ -846,7 +846,7 @@ Fehler: %1</translation>
     <message>
         <location/>
         <source>Quit probed application.</source>
-        <translation type="unfinished"></translation>
+        <translation>Beendet die untersuchte Anwendung.</translation>
     </message>
     <message>
         <location/>
@@ -879,7 +879,27 @@ Fehler: %1</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.cpp" line="+173"/>
+        <location filename="../ui/mainwindow.cpp" line="+83"/>
+        <source>KDevelop</source>
+        <translation>KDevelop</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Kate</source>
+        <translation>Kate</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>KWrite</source>
+        <translation>KWrite</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt Creator</source>
+        <translation>Qt Creator</translation>
+    </message>
+    <message>
+        <location line="+87"/>
         <source>GammaRay (%1)</source>
         <translation>GammaRay (%1)</translation>
     </message>

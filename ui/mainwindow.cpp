@@ -80,10 +80,10 @@ static const IdeSettings ideSettings[] = {
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX)
     {"",            "",                         "",                       ""          } // Dummy content, because we can't have empty arrays.
 #else
-    { "kdevelop",   "%f:%l:%c",                 QT_TR_NOOP("KDevelop"),   "kdevelop"  },
-    { "kate",       "%f --line %l --column %c", QT_TR_NOOP("Kate"),       "kate"      },
-    { "kwrite",     "%f --line %l --column %c", QT_TR_NOOP("KWrite"),     nullptr     },
-    { "qtcreator",  "%f",                       QT_TR_NOOP("Qt Creator"), nullptr     }
+    { "kdevelop",   "%f:%l:%c",                 QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KDevelop"),   "kdevelop"  },
+    { "kate",       "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Kate"),       "kate"      },
+    { "kwrite",     "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KWrite"),     nullptr     },
+    { "qtcreator",  "%f",                       QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr     }
 #endif
 };
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
