@@ -229,7 +229,7 @@ void DebuggerInjector::loadSymbols(const QByteArray& library)
 
 void DebuggerInjector::processLog(DebuggerInjector::Orientation orientation, bool isError, const QString &text)
 {
-  if (qgetenv("GAMMARAY_UNITTEST") == "1") {
+  if (qgetenv("GAMMARAY_UNITTEST") == "1") {  //clazy:exclude=qgetenv due to Qt4 support
     const QString output = QString::fromLatin1("%1 [%2] %3: %4")
             .arg(orientation == DebuggerInjector::In ? "<<<" : ">>>")
             .arg(QString::fromLatin1(isError ? "ERROR" : "OUTPUT"))

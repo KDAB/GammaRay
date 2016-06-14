@@ -283,7 +283,7 @@ bool UIStateManager::checkWidget(QWidget *widget) const
 
 int UIStateManager::percentToInt(const QString &size) const
 {
-  return size.left(size.length() -1).toInt();
+  return size.left(size.length() -1).toInt(); //clazy:exclude=qstring-ref due to Qt4 support
 }
 
 void UIStateManager::restoreWindowState()

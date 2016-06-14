@@ -147,7 +147,7 @@ static QUrl urlFromUserInput(const QString &s)
     int port = -1;
     const int pos = host.lastIndexOf(':');
     if (pos > 0) {
-      port = host.mid(pos + 1).toUShort();
+        port = host.mid(pos + 1).toUShort();  //clazy:exclude=qstring-ref due to Qt4 support
       host = host.left(pos);
     }
     url.setHost(host);
