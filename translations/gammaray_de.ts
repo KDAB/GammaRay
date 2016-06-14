@@ -2,6 +2,24 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de_DE">
 <context>
+    <name>GammaRay::AboutDataContext</name>
+    <message>
+        <location filename="../ui/aboutdata.cpp" line="+53"/>
+        <source>Unable to read the Authors list</source>
+        <translation>Autorenliste konnte nicht geladen werden</translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <source>&lt;b&gt;GammaRay %1&lt;/b&gt;</source>
+        <translation>&lt;b&gt;GammaRay %1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>&lt;p&gt;The Qt application inspection and manipulation tool.Learn more at &lt;a href=&quot;http://www.kdab.com/gammaray&quot;&gt;http://www.kdab.com/gammaray/&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, &lt;a href=&quot;mailto:info@kdab.com&quot;&gt;info@kdab.com&lt;/a&gt;&lt;/p&gt;&lt;p&gt;StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved&lt;br&gt;lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved&lt;/p&gt;&lt;p&gt;&lt;u&gt;Authors:&lt;/u&gt;&lt;br&gt;%1&lt;/p&gt;&lt;p&gt;GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB in the European Union, the United States and/or other countries.  Other product and company names and logos may be trademarks or registered trademarks of their respective companies.&lt;/p&gt;&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GammaRay::AboutPluginsDialog</name>
     <message>
         <location filename="../ui/aboutpluginsdialog.cpp" line="+55"/>
@@ -1729,6 +1747,24 @@ Tag: %1
     </message>
 </context>
 <context>
+    <name>GammaRay::ProbeABIContext</name>
+    <message>
+        <location filename="../launcher/probeabi.cpp" line="+240"/>
+        <source>debug</source>
+        <translation>Debug</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>release</source>
+        <translation>Release</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Qt %1.%2 (%3)</source>
+        <translation>Qt %1.%2 (%3)</translation>
+    </message>
+</context>
+<context>
     <name>GammaRay::ProcessModel</name>
     <message>
         <location filename="../launcher/ui/processmodel.cpp" line="+151"/>
@@ -3437,36 +3473,6 @@ Number of children: %5&lt;/p&gt;</source>
     <message>
         <location line="+135"/>
         <source>left: %1, top: %2, right: %3, bottom: %4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../launcher/probeabi.cpp" line="+235"/>
-        <source>debug</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>release</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Qt %1.%2 (%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/aboutdata.cpp" line="+46"/>
-        <source>Unable to read the Authors list</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+21"/>
-        <source>&lt;b&gt;GammaRay %1&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>&lt;p&gt;The Qt application inspection and manipulation tool.Learn more at &lt;a href=&quot;http://www.kdab.com/gammaray&quot;&gt;http://www.kdab.com/gammaray/&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, &lt;a href=&quot;mailto:info@kdab.com&quot;&gt;info@kdab.com&lt;/a&gt;&lt;/p&gt;&lt;p&gt;StackWalker code Copyright (c) 2005-2009, Jochen Kalmbach, All rights reserved&lt;br&gt;lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved&lt;/p&gt;&lt;p&gt;&lt;u&gt;Authors:&lt;/u&gt;&lt;br&gt;%1&lt;/p&gt;&lt;p&gt;GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB in the European Union, the United States and/or other countries.  Other product and company names and logos may be trademarks or registered trademarks of their respective companies.&lt;/p&gt;&lt;br&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -29,11 +29,18 @@
 #include "aboutdata.h"
 #include <config-gammaray-version.h>
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
 #include <QTextDocument>
 
 using namespace GammaRay;
+
+namespace GammaRay {
+class AboutDataContext {
+    Q_DECLARE_TR_FUNCTIONS(GammaRay::AboutDataContext)
+};
+}
 
 QStringList AboutData::authors()
 {
@@ -43,7 +50,7 @@ QStringList AboutData::authors()
     } else {
       Q_ASSERT_X(0, "AboutData::authors()", "cannot open the authors resource file");
       qWarning() << "Failed to open the authors resource file";
-      return QStringList(QObject::tr("Unable to read the Authors list"));
+      return QStringList(AboutDataContext::tr("Unable to read the Authors list"));
     }
 }
 
@@ -64,12 +71,12 @@ QStringList AboutData::authorsAsHtml()
 
 QString AboutData::aboutTitle()
 {
-    return QObject::tr("<b>GammaRay %1</b>").arg(QStringLiteral(GAMMARAY_VERSION_STRING));
+    return AboutDataContext::tr("<b>GammaRay %1</b>").arg(QStringLiteral(GAMMARAY_VERSION_STRING));
 }
 
 QString AboutData::aboutBody()
 {
-    return QObject::trUtf8(
+    return AboutDataContext::trUtf8(
         "<p>The Qt application inspection and manipulation tool."
         "Learn more at <a href=\"http://www.kdab.com/gammaray\">http://www.kdab.com/gammaray/</a>.</p>"
         "<p>Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, "

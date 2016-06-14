@@ -29,6 +29,7 @@
 #include <config-gammaray.h>
 #include "probeabi.h"
 
+#include <QCoreApplication>
 #include <QObject>
 #include <QRegExp>
 #include <QSharedData>
@@ -36,6 +37,10 @@
 #include <QStringList>
 
 namespace GammaRay {
+
+class ProbeABIContext {
+    Q_DECLARE_TR_FUNCTIONS(GammaRay::ProbeABIContext)
+};
 
 class ProbeABIPrivate : public QSharedData
 {
@@ -232,10 +237,10 @@ QString ProbeABI::displayString() const
   details.push_back(compiler());
 #endif
   if (isDebugRelevant())
-    details.push_back(isDebug() ? QObject::tr("debug") : QObject::tr("release"));
+    details.push_back(isDebug() ? ProbeABIContext::tr("debug") : ProbeABIContext::tr("release"));
   details.push_back(architecture());
 
-  return QObject::tr("Qt %1.%2 (%3)")
+  return ProbeABIContext::tr("Qt %1.%2 (%3)")
     .arg(majorQtVersion())
     .arg(minorQtVersion())
     .arg(details.join(QStringLiteral(", ")));
