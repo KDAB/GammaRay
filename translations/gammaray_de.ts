@@ -591,6 +591,7 @@ GDB error was: %1</source>
     <name>GammaRay::ItemDelegate</name>
     <message>
         <location filename="../ui/itemdelegate.cpp" line="+38"/>
+        <location filename="../ui/tools/modelinspector/modelinspectorwidget.cpp" line="+62"/>
         <source>(Item %r)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1391,7 +1392,7 @@ Message Size: %6 of %7 (%8%)</source>
     </message>
     <message>
         <location/>
-        <location filename="../ui/tools/modelinspector/modelinspectorwidget.cpp" line="+128"/>
+        <location filename="../ui/tools/modelinspector/modelinspectorwidget.cpp" line="+66"/>
         <source>Invalid</source>
         <translation>Ungültig</translation>
     </message>
@@ -3416,14 +3417,6 @@ Probe available: %5</source>
     <message>
         <location line="+2"/>
         <source>Qt Designer UI File (*.ui)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ItemDelegate</name>
-    <message>
-        <location filename="../ui/tools/modelinspector/modelinspectorwidget.cpp" line="-65"/>
-        <source>(Item %r)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

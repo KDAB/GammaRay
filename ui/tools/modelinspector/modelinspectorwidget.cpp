@@ -59,7 +59,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
   ui->modelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
 
   ui->modelContentView->header()->setObjectName("modelContentViewHeader");
-  ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(ItemDelegate::tr("(Item %r)"), this));
+  ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(GammaRay::ItemDelegate::tr("(Item %r)"), this));
 
   ui->modelCellView->header()->setObjectName("modelCellViewHeader");
   ui->modelCellView->setItemDelegate(new PropertyEditorDelegate(this));
