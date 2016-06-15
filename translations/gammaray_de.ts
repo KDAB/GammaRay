@@ -3097,19 +3097,6 @@ Probe available: %5</source>
     </message>
 </context>
 <context>
-    <name>GammaRay::ToolModel</name>
-    <message>
-        <location filename="../core/toolmodel.cpp" line="+93"/>
-        <source>Probe</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>N/A</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>GammaRay::ToolPluginErrorModel</name>
     <message>
         <location filename="../core/toolpluginerrormodel.cpp" line="+78"/>
