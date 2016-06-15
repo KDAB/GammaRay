@@ -48,6 +48,7 @@
 #include <QSslKey>
 #include <QSslSocket>
 #include <QTcpServer>
+#include <QTcpSocket>
 
 using namespace GammaRay;
 
@@ -61,6 +62,7 @@ Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
+#ifndef QT_NO_SSL
 Q_DECLARE_METATYPE(QSsl::KeyAlgorithm)
 Q_DECLARE_METATYPE(QSsl::KeyType)
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
@@ -73,6 +75,7 @@ Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslKey)
 Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
 Q_DECLARE_METATYPE(QSslSocket::SslMode)
+#endif // QT_NO_SSL
 
 
 NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent) :
@@ -150,6 +153,7 @@ void NetworkSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QTcpSocket, QAbstractSocket);
 
+#ifndef QT_NO_SSL
     MO_ADD_METAOBJECT0(QSslCertificate);
     MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, effectiveDate);
     MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, expiryDate);
@@ -241,6 +245,7 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslSocket, QSslCipher, sessionCipher);
     MO_ADD_PROPERTY_CR(QSslSocket, QSslConfiguration, sslConfiguration, setSslConfiguration);
     MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslError>, sslErrors);
+#endif // QT_NO_SSL
 
     MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
     MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
@@ -273,6 +278,7 @@ static QString networkAccessibilityToString(QNetworkAccessManager::NetworkAccess
     return MetaEnum::enumToString(value, network_accessibility_table);
 }
 
+#ifndef QT_NO_SSL
 #define E(x) { QSslSocket:: x, #x }
 static const MetaEnum::Value<QSslSocket::SslMode> ssl_mode_table[] = {
     E(UnencryptedMode),
@@ -373,12 +379,14 @@ static QString sslErrorToString(const QSslError &error)
 {
     return error.errorString();
 }
+#endif // QT_NO_SSL
 
 void NetworkSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(socketPauseModeToString);
     VariantHandler::registerStringConverter<QHostAddress>([](const QHostAddress &addr) { return addr.toString(); });
     VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(networkAccessibilityToString);
+#ifndef QT_NO_SSL
     VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
     VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
     VariantHandler::registerStringConverter<QSsl::KeyAlgorithm>(sslKeyAlgorithmToString);
@@ -388,6 +396,7 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSslCertificateExtension>(sslCertificateExtensionToString);
     VariantHandler::registerStringConverter<QSslCipher>(sslCipherToString);
     VariantHandler::registerStringConverter<QSslError>(sslErrorToString);
+#endif
 }
 
 
