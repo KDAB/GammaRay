@@ -74,8 +74,8 @@
 
     \list
         \li Fonts
-        \li Locales
-        \li Mime Types
+        \li \l{Locales}
+        \li \l{Mime Types}
         \li Network
         \li Standard Paths
     \endlist

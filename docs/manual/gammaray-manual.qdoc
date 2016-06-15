@@ -68,6 +68,8 @@
             \li \l{Messages}
             \li \l{Signal Plotter}
             \li \l{Meta Object Browser}
+            \li \l{Locales}
+            \li \l{Mime Types}
         \endlist
     \endlist
 */
