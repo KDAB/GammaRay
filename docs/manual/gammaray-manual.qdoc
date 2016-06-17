@@ -57,6 +57,9 @@
     \section1 Table Of Contents
     \list
         \li \l{Getting Started}
+        \list
+            \li \l{Graphical Launcher}
+        \endlist
         \li \l{Tools}
         \list
             \li \l{Object Inspector}
