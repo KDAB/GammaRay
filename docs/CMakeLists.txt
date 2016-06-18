@@ -1,11 +1,42 @@
+#
+# find doc generation tools needed by multiple sub-directories
+#
+
+# TODO: some of this probably should be upstreamed to Qt's cmake files...
 # TODO replace with Qt5::qhelpgenerator for Qt >= 5.7.1
 find_program(QHELPGEN_EXECUTABLE qhelpgenerator)
+find_program(QDOC_EXECUTABLE qdoc)
 
-# Don't attempt create the user manual for Qt versions < 5.4
-if(Qt5Core_FOUND AND NOT Qt5Core_VERSION VERSION_LESS 5.4.0)
-  add_subdirectory(manual)
+find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf
+  HINTS ${QT_INSTALL_DOCS}
+  HINTS ${QT_INSTALL_DATA}
+  HINTS ${QT_INSTALL_DATA}/doc
+)
+find_file(QDOC_QTCORE_INDEX qtcore.index
+  HINTS ${QT_INSTALL_DOCS}/qtcore
+  HINTS ${QT_INSTALL_DATA}/doc/qtcore
+)
+
+if(NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE OR NOT QDOC_QTCORE_INDEX OR NOT Qt5Core_FOUND OR Qt5Core_VERSION VERSION_LESS 5.4.0)
+  message(STATUS "Unable to build user manual in qch format.")
+  message(STATUS "qdoc exectuable: ${QDOC_EXECUTABLE}")
+  message(STATUS "qhelpgenerator exectuable: ${QHELPGEN_EXECUTABLE}")
+  message(STATUS "qdoc template: ${QDOC_TEMPLATE}")
+  message(STATUS "qdoc qtcore index: ${QDOC_QTCORE_INDEX}")
+  set(GAMMARAY_USER_MANUAL_BUILD False)
 else()
-  add_feature_info("User Manual creation in qch format" False "Requires Qt5.4 or higher")
+  set(GAMMARAY_USER_MANUAL_BUILD True)
+endif()
+
+add_feature_info("User Manual creation in qch format" GAMMARAY_USER_MANUAL_BUILD "Requires qdoc, qhelpgenerator, the qdoc templates and index files, and Qt 5.4 or higher")
+
+
+#
+# generate docs
+#
+
+if(GAMMARAY_USER_MANUAL_BUILD)
+  add_subdirectory(manual)
 endif()
 add_subdirectory(api)
 add_subdirectory(man)
