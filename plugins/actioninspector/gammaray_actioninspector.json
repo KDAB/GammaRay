@@ -1,5 +1,8 @@
 {
     "id": "gammaray_actioninspector",
     "name": "Actions",
-    "types": [ "QAction" ]
+    "name[de]": "Aktionen",
+    "types": [
+        "QAction"
+    ]
 }

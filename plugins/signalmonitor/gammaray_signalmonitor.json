@@ -1,5 +1,8 @@
 {
     "id": "gammaray_signalmonitor",
     "name": "Signals",
-    "types": [ "QObject" ]
+    "name[de]": "Signale",
+    "types": [
+        "QObject"
+    ]
 }

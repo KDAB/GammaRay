@@ -734,7 +734,7 @@ Fehler: %1</translation>
     <name>GammaRay::LauncherWindow</name>
     <message>
         <location filename="../launcher/ui/launcherwindow.ui"/>
-        <location filename="../launcher/ui/launcherwindow.cpp" line="+79"/>
+        <location filename="../launcher/ui/launcherwindow.cpp" line="+81"/>
         <source>Attach</source>
         <translation type="unfinished"></translation>
     </message>
@@ -898,7 +898,7 @@ Fehler: %1</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.cpp" line="+83"/>
+        <location filename="../ui/mainwindow.cpp" line="+84"/>
         <source>KDevelop</source>
         <translation>KDevelop</translation>
     </message>
@@ -918,7 +918,7 @@ Fehler: %1</translation>
         <translation>Qt Creator</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+91"/>
         <source>GammaRay (%1)</source>
         <translation>GammaRay (%1)</translation>
     </message>
@@ -938,7 +938,7 @@ Fehler: %1</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+31"/>
         <source>About GammaRay</source>
         <translation>Über GammaRay</translation>
     </message>
@@ -976,6 +976,16 @@ Fehler: %1</translation>
         <location line="+20"/>
         <source>Tool %1 failed to load.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/mainwindow.ui"/>
+        <source>&amp;Help...</source>
+        <translation>&amp;Hilfe...</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Show help browser.</source>
+        <translation>Hilfe anzeigen.</translation>
     </message>
 </context>
 <context>
@@ -1451,7 +1461,7 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::NetworkSupportFactory</name>
     <message>
-        <location filename="../plugins/network/networksupport.cpp" line="+401"/>
+        <location filename="../plugins/network/networksupport.cpp" line="+410"/>
         <source>Network</source>
         <translation>Netzwerk</translation>
     </message>
@@ -1699,6 +1709,124 @@ Tag: %1
         <location line="+2"/>
         <source>Default Value</source>
         <translation>Standardwert</translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::PluginMetaData</name>
+    <message>
+        <location filename="plugin_meta_data.cpp" line="+1"/>
+        <source>Actions</source>
+        <translation>Aktionen</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bluetooth</source>
+        <translation>Bluetooth</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Text Codecs</source>
+        <translation type="unfinished">Text Codecs</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Font Browser</source>
+        <translation>Schriftarten</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>GUI Support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>KJobs</source>
+        <translation>KJobs</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Network</source>
+        <translation>Netzwerk</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Object Visualization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Positioning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>QML Support</source>
+        <translation>QML Unterstützung</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt3D Inspector</source>
+        <translation>Qt3D Inspektor</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Quick Scenes</source>
+        <translation>Quick Szenen</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Quick Widgets Support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Graphics Scenes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Script Engines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Selection Models</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Signals</source>
+        <translation>Signale</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>State Machines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Styles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Timers</source>
+        <translation>Timer</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Translations</source>
+        <translation>Übersetzungen</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Web Inspector</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Widgets</source>
+        <translation>Widgets</translation>
     </message>
 </context>
 <context>

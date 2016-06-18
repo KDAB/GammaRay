@@ -1,7 +1,14 @@
 {
     "id": "gammaray_3dinspector",
     "name": "Qt3D Inspector",
-    "types": [ "Qt3DCore::QNode" ],
-    "selectableTypes": [ "Qt3DCore::QAspectEngine", "Qt3DCore::QEntity", "Qt3DRender::QFrameGraphNode" ],
+    "name[de]": "Qt3D Inspektor",
+    "selectableTypes": [
+        "Qt3DCore::QAspectEngine",
+        "Qt3DCore::QEntity",
+        "Qt3DRender::QFrameGraphNode"
+    ],
+    "types": [
+        "Qt3DCore::QNode"
+    ]
     "hidden": true
 }

@@ -1,7 +1,9 @@
 {
+    "hidden": false,
     "id": "gammaray_network",
     "name": "Network",
-    "types": [ "QObject" ],
-    "hidden": false
+    "name[de]": "Netzwerk",
+    "types": [
+        "QObject"
+    ]
 }
-

@@ -1,5 +1,8 @@
 {
     "id": "gammaray_translationinspector",
     "name": "Translations",
-    "types": [ "QTranslator" ]
+    "name[de]": "Übersetzungen",
+    "types": [
+        "QTranslator"
+    ]
 }

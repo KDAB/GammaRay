@@ -34,6 +34,7 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTranslator>
 
 static int extractMessages(const QStringList &jsons, const QString &outFileName)
 {
@@ -62,6 +63,44 @@ static int extractMessages(const QStringList &jsons, const QString &outFileName)
     return 0;
 }
 
+static int mergeMessages(const QStringList &jsons, const QString &qmFile, const QString &lang)
+{
+    QTranslator t;
+    if (!t.load(qmFile)) {
+        qWarning() << "Can't open translation catalog" << qmFile;
+        return 1;
+    }
+
+    foreach (const auto &jsonFile, jsons) {
+        QFile inFile(jsonFile);
+        if (!inFile.open(QFile::ReadOnly)) {
+            qWarning() << "Can't open input file" << jsonFile;
+            return 1;
+        }
+
+        const auto doc = QJsonDocument::fromJson(inFile.readAll());
+        auto obj = doc.object();
+        const auto sourceString = obj.value("name").toString(); // TODO make the keys configurable too
+        if (sourceString.isEmpty())
+            continue;
+
+        const auto trString = t.translate("GammaRay::PluginMetaData", sourceString.toUtf8());
+        if (trString.isEmpty() || trString == sourceString)
+            continue;
+
+        obj.insert(QLatin1String("name[") + lang + ']', trString);
+        inFile.close();
+        QFile outFile(jsonFile);
+        if (!outFile.open(QFile::WriteOnly)) {
+            qWarning() << "Can't write to JSON file" << jsonFile;
+            return 1;
+        }
+        outFile.write(QJsonDocument(obj).toJson());
+    }
+
+    return 0;
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
@@ -77,16 +116,29 @@ int main(int argc, char **argv)
     parser.addOption(extractCommand);
     QCommandLineOption outputFile("out", "Output of the extraction.", "output-file");
     parser.addOption(outputFile);
+
+    QCommandLineOption mergeCommand("merge", "Merge messages in the given JSON files.");
+    parser.addOption(mergeCommand);
+    QCommandLineOption qmFile("qm", ".qm file with translated messages.", "qm-file");
+    parser.addOption(qmFile);
+    QCommandLineOption language("lang", "Language identifier for translated JSON keys.", "lang");
+    parser.addOption(language);
+
     parser.addPositionalArgument("json", "JSON files to process.");
 
     parser.process(app);
 
+    auto jsons = parser.positionalArguments();
+    if (jsons.isEmpty()) {
+        qWarning() << "No input JSON files specified.";
+        return 1;
+    }
+
     if (parser.isSet(extractCommand)) {
-        if (parser.positionalArguments().isEmpty()) {
-            qWarning() << "No input JSON files specified.";
-            return 1;
-        }
-        return extractMessages(parser.positionalArguments(), parser.value(outputFile));
+        std::sort(jsons.begin(), jsons.end()); // stabilize the output between different runs
+        return extractMessages(jsons, parser.value(outputFile));
+    } else if (parser.isSet(mergeCommand)) {
+        return mergeMessages(jsons, parser.value(qmFile), parser.value(language));
     }
 
     parser.showHelp(1);

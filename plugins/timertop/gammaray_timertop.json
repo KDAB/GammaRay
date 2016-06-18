@@ -1,5 +1,10 @@
 {
     "id": "gammaray_timertop",
     "name": "Timers",
-    "types": [ "QTimer", "QQmlTimer", "QUnifiedTimer" ]
+    "name[de]": "Timer",
+    "types": [
+        "QTimer",
+        "QQmlTimer",
+        "QUnifiedTimer"
+    ]
 }

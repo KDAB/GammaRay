@@ -36,3 +36,16 @@ foreach(LANG ${LANGUAGES})
     add_custom_target(gammaray_${LANG}.qm ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm DESTINATION ${TRANSLATION_INSTALL_DIR})
 endforeach()
+
+# message merging (manual target, affects source dir)
+add_custom_target(tsmerge)
+foreach(LANG ${LANGUAGES})
+    add_custom_target(
+        tsmerge_${LANG}
+        COMMAND ljsonupdate --merge
+            --qm ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm
+            --lang ${LANG} ${jsons}
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm
+    )
+    add_dependencies(tsmerge tsmerge_${LANG})
+endforeach()
