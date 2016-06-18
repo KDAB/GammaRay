@@ -37,6 +37,7 @@ add_feature_info("User Manual creation in qch format" GAMMARAY_USER_MANUAL_BUILD
 
 if(GAMMARAY_USER_MANUAL_BUILD)
   add_subdirectory(manual)
+  add_subdirectory(collection)
 endif()
 add_subdirectory(api)
 add_subdirectory(man)

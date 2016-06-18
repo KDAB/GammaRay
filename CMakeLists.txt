@@ -234,6 +234,7 @@ if(Qt5Core_FOUND)
     3DRender
     Bluetooth
     Concurrent
+    Help
     LinguistTools
     Positioning
     PrintSupport
