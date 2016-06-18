@@ -33,6 +33,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QLibrary>
+#include <QLocale>
 #include <QSettings>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -109,6 +110,32 @@ bool PluginInfo::isValid() const
     return !m_id.isEmpty() && !m_path.isEmpty() && !m_interface.isEmpty();
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+static QString readLocalized(const QJsonObject &obj, const QString &baseKey)
+{
+    foreach (const auto &lang, QLocale().uiLanguages()) {
+        const QString key = baseKey + '[' + lang + ']';
+        const auto it = obj.find(key);
+        if (it != obj.end())
+            return it.value().toString();
+    }
+
+    foreach (auto lang, QLocale().uiLanguages()) {
+        lang.replace('-', '_');
+        const auto idx = lang.lastIndexOf('_');
+        if (idx <= 0)
+            continue;
+        lang.truncate(idx);
+        const QString key = baseKey + '[' + lang + ']';
+        const auto it = obj.find(key);
+        if (it != obj.end())
+            return it.value().toString();
+    }
+
+    return obj.value(baseKey).toString();
+}
+#endif
+
 void PluginInfo::initFromJSON(const QString& path)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -119,7 +146,7 @@ void PluginInfo::initFromJSON(const QString& path)
     const QJsonObject customData = metaData.value(QStringLiteral("MetaData")).toObject();
 
     m_id = customData.value(QStringLiteral("id")).toString();
-    m_name = customData.value(QStringLiteral("name")).toString();
+    m_name = readLocalized(customData, QStringLiteral("name"));
     m_remoteSupport = customData.value(QStringLiteral("remoteSupport")).toBool(true);
     m_hidden = customData.value(QStringLiteral("hidden")).toBool(false);
 
