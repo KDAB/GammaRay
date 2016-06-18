@@ -253,6 +253,8 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
 {
   if (!isConnected() || section < 0)
     return QVariant();
+  if (section >= (orientation == Qt::Horizontal ? m_root->columnCount : m_root->rowCount))
+    return QVariant();
 
   auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
   if (headers.isEmpty()) { // allocate on demand
