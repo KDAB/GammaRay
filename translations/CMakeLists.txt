@@ -1,14 +1,26 @@
 set(LANGUAGES de)
 
+# translation tools
+add_executable(ljsonupdate ljsonupdate.cpp)
+target_link_libraries(ljsonupdate Qt5::Core)
+
 # ts file update (manual target, affects source dir)
+file(GLOB_RECURSE jsons "${CMAKE_SOURCE_DIR}/plugins/*.json")
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/plugin_meta_data.cpp
+    COMMAND ljsonupdate --extract --out ${CMAKE_CURRENT_SOURCE_DIR}/plugin_meta_data.cpp ${jsons}
+    DEPENDS ${jsons}
+)
+
 add_custom_target(ts)
 foreach(LANG ${LANGUAGES})
     add_custom_target(
         ts_${LANG}
         COMMAND Qt5::lupdate
-            3rdparty app client common core inprocessui launcher plugins ui
+            3rdparty app client common core inprocessui launcher plugins ui ${CMAKE_CURRENT_SOURCE_DIR}/plugin_meta_data.cpp
             -locations relative -no-ui-lines -no-obsolete -ts ${CMAKE_CURRENT_SOURCE_DIR}/gammaray_${LANG}.ts
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/plugin_meta_data.cpp
     )
     add_dependencies(ts ts_${LANG})
 endforeach()

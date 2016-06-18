@@ -12,3 +12,6 @@ CMakeLists.txt.user
 *.BASE.*
 *.LOCAL.*
 *.REMOTE.*
+
+# ts generation
+translations/plugin_meta_data.cpp

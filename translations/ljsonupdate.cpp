@@ -1,0 +1,93 @@
+/*
+  ljsonupdate.cpp
+
+  This file is part of GammaRay, the Qt application inspection and
+  manipulation tool.
+
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
+
+  Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+  accordance with GammaRay Commercial License Agreement provided with the Software.
+
+  Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "config-gammaray-version.h"
+
+#include <QCommandLineParser>
+#include <QCoreApplication>
+#include <QDebug>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+
+static int extractMessages(const QStringList &jsons, const QString &outFileName)
+{
+    QFile out(outFileName);
+    if (!out.open(QFile::WriteOnly)) {
+        qWarning() << "Can't open output file" << outFileName;
+        return 1;
+    }
+
+    foreach (const auto &jsonFile, jsons) {
+        QFile inFile(jsonFile);
+        if (!inFile.open(QFile::ReadOnly)) {
+            qWarning() << "Can't open input file" << jsonFile;
+            return 1;
+        }
+        const auto doc = QJsonDocument::fromJson(inFile.readAll());
+        const auto obj = doc.object();
+        const auto str = obj.value("name").toString(); // TODO make the keys configurable too
+        if (str.isEmpty())
+            continue;
+        out.write("QT_TRANSLATE_NOOP(\"GammaRay::PluginMetaData\", \"");
+        out.write(str.toUtf8());
+        out.write("\");\n");
+    }
+
+    return 0;
+}
+
+int main(int argc, char **argv)
+{
+    QCoreApplication app(argc, argv);
+    QCoreApplication::setApplicationName("ljsonupdate");
+    QCoreApplication::setApplicationVersion(GAMMARAY_VERSION_STRING);
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Translation update tool for JSON plug-in meta data.");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    QCommandLineOption extractCommand("extract", "Extract messages from the given JSON files.");
+    parser.addOption(extractCommand);
+    QCommandLineOption outputFile("out", "Output of the extraction.", "output-file");
+    parser.addOption(outputFile);
+    parser.addPositionalArgument("json", "JSON files to process.");
+
+    parser.process(app);
+
+    if (parser.isSet(extractCommand)) {
+        if (parser.positionalArguments().isEmpty()) {
+            qWarning() << "No input JSON files specified.";
+            return 1;
+        }
+        return extractMessages(parser.positionalArguments(), parser.value(outputFile));
+    }
+
+    parser.showHelp(1);
+}
