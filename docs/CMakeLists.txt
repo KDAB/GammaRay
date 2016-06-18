@@ -2,6 +2,7 @@
 # find doc generation tools needed by multiple sub-directories
 #
 
+# qdoc toolchain
 # TODO: some of this probably should be upstreamed to Qt's cmake files...
 # TODO replace with Qt5::qhelpgenerator for Qt >= 5.7.1
 find_program(QHELPGEN_EXECUTABLE qhelpgenerator)
@@ -30,14 +31,30 @@ endif()
 
 add_feature_info("User Manual creation in qch format" GAMMARAY_USER_MANUAL_BUILD "Requires qdoc, qhelpgenerator, the qdoc templates and index files, and Qt 5.4 or higher")
 
+# Doxygen
+find_package(Doxygen)
+set_package_properties(Doxygen PROPERTIES
+  TYPE OPTIONAL
+  DESCRIPTION "API Documentation system"
+  URL "http://www.doxygen.org"
+  PURPOSE "Needed to build the API documention."
+)
+if(DOXYGEN_FOUND AND QHELPGEN_EXECUTABLE)
+  set(GAMMARAY_API_DOCS_BUILD True)
+else()
+  set(GAMMARAY_API_DOCS_BUILD False)
+endif()
+
 
 #
 # generate docs
 #
 
+if(GAMMARAY_API_DOCS_BUILD)
+  add_subdirectory(api)
+endif()
 if(GAMMARAY_USER_MANUAL_BUILD)
   add_subdirectory(manual)
   add_subdirectory(collection)
 endif()
-add_subdirectory(api)
 add_subdirectory(man)
