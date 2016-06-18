@@ -20,6 +20,7 @@ set(gammaray_ui_srcs
   uiintegration.cpp
   uistatemanager.cpp
   remoteviewwidget.cpp
+  helpcontroller.cpp
 
   paintanalyzerwidget.cpp
   paintbufferviewer.cpp

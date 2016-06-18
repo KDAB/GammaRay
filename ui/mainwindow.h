@@ -66,6 +66,7 @@ class MainWindow : public QMainWindow
     void targetQuitRequested();
 
   private slots:
+    void help();
     void about();
     void aboutPlugins();
     void aboutKDAB();

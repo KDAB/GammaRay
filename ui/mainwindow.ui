@@ -129,6 +129,8 @@ background-position:bottom right;
      <addaction name="actionPlugins"/>
      <addaction name="actionMessageStatistics"/>
     </widget>
+    <addaction name="actionHelp"/>
+    <addaction name="separator"/>
     <addaction name="menu_Diagnostics"/>
     <addaction name="separator"/>
     <addaction name="actionAboutGammaRay"/>
@@ -231,6 +233,17 @@ background-position:bottom right;
    </property>
    <property name="toolTip">
     <string>Show GammaRay communication statistics.</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="icon">
+    <iconset theme="help-contents"/>
+   </property>
+   <property name="text">
+    <string>&amp;Help...</string>
+   </property>
+   <property name="toolTip">
+    <string>Show help browser.</string>
    </property>
   </action>
  </widget>

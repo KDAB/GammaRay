@@ -1,10 +1,10 @@
 /*
-  launcherwindow.h
+  helpcontroller.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2011-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,38 +26,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LAUNCHERWINDOW_H
-#define GAMMARAY_LAUNCHERWINDOW_H
+#ifndef GAMMARAY_HELPCONTROLLER_H
+#define GAMMARAY_HELPCONTROLLER_H
 
-#include <QDialog>
+#include "gammaray_ui_export.h"
+
+#include <qglobal.h>
+
+QT_BEGIN_NAMESPACE
+class QString;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
-class LaunchOptions;
-namespace Ui {
-  class LauncherWindow;
-}
-
-class LauncherWindow : public QDialog
+/*! Controls the Assistant-based help browser. */
+namespace HelpController
 {
-  Q_OBJECT
-  public:
-    explicit LauncherWindow(QWidget *parent = 0);
-    ~LauncherWindow();
+    /*! Returns @c true if Assistant and our help collection are found. */
+    GAMMARAY_UI_EXPORT bool isAvailable();
 
-    /// returns all information required to perform the launch/attach
-    LaunchOptions launchOptions() const;
+    /*! Open start page of the help collection. */
+    GAMMARAY_UI_EXPORT void openContents();
 
-    void accept() Q_DECL_OVERRIDE;
-
-  private slots:
-    void tabChanged();
-    void help();
-
-  private:
-    Ui::LauncherWindow *ui;
-};
+    /*! Opens the specified page of the help collection. */
+    GAMMARAY_UI_EXPORT void openPage(const QString &page);
+}
 
 }
 
-#endif // GAMMARAY_LAUNCHERWINDOW_H
+#endif // GAMMARAY_HELPCONTROLLER_H

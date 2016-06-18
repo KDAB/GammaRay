@@ -31,6 +31,7 @@
 #include "launchoptions.h"
 
 #include <ui/aboutdata.h>
+#include <ui/helpcontroller.h>
 
 #include <QPushButton>
 #include <QSettings>
@@ -50,6 +51,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
           ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
   connect(ui->connectPage, SIGNAL(activate()),
           ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
+  connect(ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(help()));
 
   setWindowTitle(tr("GammaRay Launcher"));
 
@@ -103,5 +105,10 @@ void LauncherWindow::accept()
   }
 
   QDialog::accept();
+}
+
+void LauncherWindow::help()
+{
+    HelpController::openPage("doc/gammaray-launcher-gui.html");
 }
 

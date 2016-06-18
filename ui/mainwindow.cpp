@@ -34,6 +34,7 @@
 #include "clienttoolmodel.h"
 #include "aboutdata.h"
 #include "uiintegration.h"
+#include "helpcontroller.h"
 
 #include "common/objectbroker.h"
 #include "common/modelroles.h"
@@ -146,6 +147,10 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(quitHost()));
   ui->actionQuit->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
 
+  ui->actionHelp->setShortcut(QKeySequence::HelpContents);
+  ui->actionHelp->setEnabled(HelpController::isAvailable());
+
+  connect(ui->actionHelp, SIGNAL(triggered(bool)), this, SLOT(help()));
   connect(ui->actionPlugins, SIGNAL(triggered(bool)),
           this, SLOT(aboutPlugins()));
   connect(ui->actionMessageStatistics, SIGNAL(triggered(bool)), this, SLOT(showMessageStatistics()));
@@ -236,6 +241,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::help()
+{
+    HelpController::openContents();
 }
 
 void MainWindow::about()
