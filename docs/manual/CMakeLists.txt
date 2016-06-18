@@ -31,7 +31,7 @@ macro(qt5_build_doc _qdocconf_in_file)
     COMMAND ${QHELPGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}/${_qdocconf_name}.qhp
     DEPENDS ${_qdoc_output_dir}/${_qdocconf_name}.qhp
   )
-  add_custom_target(${_qdocconf_name} ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}/${_qdocconf_name}.qch)
+  add_custom_target(${_qdocconf_name}.qch ALL DEPENDS ${_qdoc_output_dir}/${_qdocconf_name}.qch)
 
   # install qch
   install(FILES ${_qdoc_output_dir}/${_qdocconf_name}.qch DESTINATION ${QCH_INSTALL_DIR})

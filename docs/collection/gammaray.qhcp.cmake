@@ -23,8 +23,7 @@
     <docFiles>
         <register>
             <file>gammaray-manual.qch</file>
-            <!-- TODO enable this conditionally if API docs have been built -->
-            <!--<file>gammaray-api.qch</file>-->
+            @API_DOCS_QCH_FILE_TAG@
         </register>
     </docFiles>
 </QHelpCollectionProject>
