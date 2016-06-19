@@ -28,6 +28,7 @@
 #include <config-gammaray.h>
 
 #include "deferredtreeview.h"
+#include "deferredtreeview_p.h"
 
 #include <QTimer>
 

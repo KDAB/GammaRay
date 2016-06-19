@@ -27,6 +27,7 @@
 
 #include "uistatemanager.h"
 #include "deferredtreeview.h"
+#include "deferredtreeview_p.h"
 #include "common/settempvalue.h"
 
 #include <QApplication>

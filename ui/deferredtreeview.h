@@ -40,18 +40,6 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 
-class GAMMARAY_UI_EXPORT HeaderView : public QHeaderView
-{
-  Q_OBJECT
-
-public:
-  enum State { NoState, ResizeSection, MoveSection, SelectSections, NoClear }; // Copied from QHVPrivate
-
-  explicit HeaderView(Qt::Orientation orientation, QWidget *parent = 0);
-
-  bool isState(State state) const;
-};
-
 /** @brief Base tree view which allow deferred configurations.
  *
  * If you starts using some deferred members - stick to them to avoid
