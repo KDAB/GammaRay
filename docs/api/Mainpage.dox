@@ -63,6 +63,6 @@ standard trainings anywhere around the globe.
 
 Please visit http://www.kdab.com to meet the people who write code like this.
 
-@namespace GammaRay All GammaRay classes.
+@namespace GammaRay \brief All GammaRay classes.
 
 */

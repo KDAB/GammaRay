@@ -42,7 +42,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 
-/** Lists all active server instances found via network autodiscovery. */
+/** \brief Lists all active server instances found via network autodiscovery. */
 class GAMMARAY_LAUNCHER_EXPORT NetworkDiscoveryModel : public QAbstractTableModel
 {
   Q_OBJECT
