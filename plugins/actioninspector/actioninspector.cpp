@@ -36,6 +36,7 @@
 
 #include <QtPlugin>
 #include <QGraphicsWidget>
+#include <QItemSelectionModel>
 #include <QMenu>
 
 #include <iostream>
@@ -57,10 +58,13 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
   ActionModel *actionModel = new ActionModel(this);
   connect(probe->probe(), SIGNAL(objectCreated(QObject*)), actionModel, SLOT(objectAdded(QObject*)));
   connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), actionModel, SLOT(objectRemoved(QObject*)));
+  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
 
   auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
   proxy->setSourceModel(actionModel);
   probe->registerModel(QStringLiteral("com.kdab.GammaRay.ActionModel"), proxy);
+
+  m_selectionModel = ObjectBroker::selectionModel(proxy);
 }
 
 ActionInspector::~ActionInspector()
@@ -81,6 +85,32 @@ void ActionInspector::triggerAction(int row)
   if (action) {
     action->trigger();
   }
+}
+
+void GammaRay::ActionInspector::objectSelected(QObject* obj)
+{
+  QAction *action = qobject_cast<QAction*>(obj);
+  if (!action) {
+    return;
+  }
+
+  const QAbstractItemModel *model = m_selectionModel->model();
+
+  const QModelIndexList indexList =
+    model->match(model->index(0, 0),
+                 ObjectModel::ObjectRole,
+                 QVariant::fromValue<QAction*>(action), 1,
+                 Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+  if (indexList.isEmpty()) {
+    return;
+  }
+
+  const QModelIndex index = indexList.first();
+  m_selectionModel->select(index,
+                               QItemSelectionModel::Select |
+                               QItemSelectionModel::Clear |
+                               QItemSelectionModel::Rows |
+                               QItemSelectionModel::Current);
 }
 
 void ActionInspector::registerMetaTypes()

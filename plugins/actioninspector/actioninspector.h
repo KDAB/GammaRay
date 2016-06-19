@@ -31,6 +31,8 @@
 
 #include <QAction>
 
+class QItemSelectionModel;
+
 namespace GammaRay {
 
 class ActionInspector : public QObject
@@ -44,8 +46,12 @@ class ActionInspector : public QObject
   public Q_SLOTS:
     void triggerAction(int row);
 
+private Q_SLOTS:
+    void objectSelected(QObject *obj);
+
   private:
     void registerMetaTypes();
+    QItemSelectionModel *m_selectionModel;
 };
 
 class ActionInspectorFactory : public QObject, public StandardToolFactory<QAction, ActionInspector>

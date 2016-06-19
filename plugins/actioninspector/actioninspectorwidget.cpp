@@ -61,6 +61,9 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
   objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
   vbox->addWidget(objectTreeView);
 
+  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(actionModel);
+  objectTreeView->setSelectionModel(selectionModel);
+
   m_stateManager.setDefaultSizes(objectTreeView->header(), UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
   connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
 }

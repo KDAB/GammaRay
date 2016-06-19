@@ -4,5 +4,6 @@
     "name[de]": "Aktionen",
     "types": [
         "QAction"
-    ]
+    ],
+    "selectableTypes": [ "QAction" ]
 }
