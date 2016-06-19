@@ -153,8 +153,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
     clienttoolmodel.h
-    deferredtreeview.h
-    itemdelegate.h
     propertywidget.h
     propertywidgettab.h
     tooluifactory.h
