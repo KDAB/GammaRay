@@ -69,7 +69,6 @@ macro(gammaray_add_plugin _target_name)
 
   install(TARGETS ${_target_name} DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
   if(NOT ${Qt5Core_FOUND} AND _gammaray_add_plugin_DESKTOP)
-    get_filename_component(plugin_id ${_gammaray_add_plugin_DESKTOP} NAME_WE)
     set(plugin_exec ${_target_name}${GAMMARAY_PROBE_ABI_POSTFIX})
     if(GAMMARAY_INSTALL_QT_LAYOUT)
       set(plugin_exec ${_target_name}-${GAMMARAY_PROBE_ABI}${GAMMARAY_PROBE_ABI_POSTFIX})

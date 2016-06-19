@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Selection Models
-X-GammaRay-Id=${plugin_id}
+X-GammaRay-Id=gammaray_selectionmodelinspector
 X-GammaRay-Types=QItemSelectionModel;
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
 Exec=${plugin_exec}
