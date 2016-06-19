@@ -9,6 +9,6 @@
     ],
     "types": [
         "Qt3DCore::QNode"
-    ]
+    ],
     "hidden": true
 }
