@@ -10,7 +10,7 @@ if(UNIX)
   if(POD2MAN_EXECUTABLE)
     add_custom_command(
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gammaray.1
-      COMMAND ${POD2MAN_EXECUTABLE} -c "KDAB Products" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_CURRENT_SOURCE_DIR}/gammaray.pod ${CMAKE_CURRENT_BINARY_DIR}/gammaray.1
+      COMMAND ${POD2MAN_EXECUTABLE} -c "KDAB" -r "\"${GAMMARAY_VERSION}\"" -s 1 ${CMAKE_CURRENT_SOURCE_DIR}/gammaray.pod ${CMAKE_CURRENT_BINARY_DIR}/gammaray.1
       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gammaray.pod
     )
     add_custom_target(man ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray.1)
