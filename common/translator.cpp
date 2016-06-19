@@ -45,7 +45,8 @@ static void loadCatalog(const QString &catalog, const QString &path)
     if (translator->load(QLocale(), catalog, QStringLiteral("_"), path)) {
         QCoreApplication::instance()->installTranslator(translator);
     } else {
-        qDebug() << "did not find a translation for" << catalog << "in" << path << "for language" << QLocale().name();
+        if (QLocale().name() != QLatin1String("C") && !QLocale().name().startsWith(QLatin1String("en")))
+            qDebug() << "did not find a translation for" << catalog << "in" << path << "for language" << QLocale().name();
         delete translator;
     }
 }
