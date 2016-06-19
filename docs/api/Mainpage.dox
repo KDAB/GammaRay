@@ -1,47 +1,84 @@
 /*!
 @mainpage GammaRay - Qt-application inspection and manipulation tool.
 
-@section about About
+@section about Overview
 
 GammaRay is a tool to poke around in a Qt-application and also
 to manipulate the application to some extent. GammaRay uses various DLL
 injection techniques to hook into an application at runtime and provide
 access to a lot of interesting information.
 
+GammaRay provides API for two use-cases, plugins to extend GammaRay in order
+to support additional frameworks, and integration of the GammaRay client and/or
+launcher in an IDE. Both use-cases are described below.
+
 @section plugins Plugins
 
-Starting with version 1.2, GammaRay provides the ability to write your
-own plugins. This documentation describes the API for doing just that.
+Plugins enable you to extend GammaRay to support inspection of additional frameworks.
+Typically there are two plugins per framework, one for the probe containing the
+logic to extract the relevant information from the target application, and one for
+the client containing the graphical user interface.
 
-@section features Features
+GammaRay ships with a large set of plugins for various Qt frameworks that
+can serve as examples for all the features described below.
 
-GammaRay can:
+@subsection plugins-entry Entry Points
 
-- Browse the QObject tree with live updates.
-- View, and to some extent, edit QObject static and dynamic properties.
-- View and call slots of a QObject (similar to qdbusviewer).
-- View other QObject elements such as signals, enums and class information
-  introspectively.
-- List all QObject inbound and outbound signal/slot connections.
-- Provide live QWidget preview. Useful for finding layout issues).
-- View the content of any QAbstractItemModel. Very useful when
-  debugging a proxy model chain for example.
-- Browse the QAbstractProxyModel hierarchy.
-- Browse the QGraphicsItem tree of any QGraphicsScene.
-- Show a live preview of QGraphicsItem instances, including showing their coordinate system,
-  transformation origin, rotate/zoom/pan, etc.
-- Act as a complete java script debugger, attachable to any QScriptEngine
- (including the usually not accessible one used by QML internally).
-- Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage,
-  thanks to QWebInspector.
-- Browse the QResource tree and its content.
-- Browse QStateMachine instances, along with their states and transitions.
-- Show all registered meta types.
-- Show all installed fonts.
-- Show all available codecs.
-- Browse all QTextDocument instances, along with the ability to edit them and view
-  their internal structures.
-- Show all QTimer instances and their statistics (number of wakeups, wakeup time, ...)
+Probe plugins inherit GammaRay::ToolFactory, client plugins inherit GammaRay::ToolUiFactory.
+
+@subsection plugins-type-support Type Support
+
+Probe plugins have a number of options to make their specific data types known
+to the existing GammaRay infrastructure (like the object browser or the property
+editor):
+
+- GammaRay::MetaObject / GammaRay::MetaObjectRepository - property access to non-QObject properties.
+- GammaRay::VariantHandler - string conversion of custom data types.
+- GammaRay::ObjectDataProvider - object identification and code location information from
+  custom runtime systems (such as scripting systems, like QML).
+
+@subsection plugins-property-extensions Property Editor
+
+A pair of probe and client plugins can also extend the property view that many
+existing tools use by additional tabs. Similarly, it is possible to use the
+unified property editor in own tools. This is done by GammaRay::PropertyController
+on the probe side and GammaRay::PropertyWidget on the client side.
+
+@subsection plugins-data-access Data Access
+
+On the probe side, plugins have various ways of accessing target information.
+
+- GammaRay::ProbeInterface and GammaRay::Probe provide access to object models
+  and notifications about created/destroyed objects.
+- GammaRay::SignalSpyCallbackSet allows to monitor all QObject signal/slot
+  communication.
+
+@section ide-integration IDE Integration
+
+GammaRay ships with a stand-alone launcher and client, but you can also integrate
+those two components into an IDE.
+
+@subsection ide-integration-launcher Launcher
+
+The launcher is the component of GammaRay that takes care of starting a target
+application or attaching to a running one, and injecting a suitable GammaRay probe
+into it. The following classes provide essential functionality for this:
+
+- GammaRay::ProbeFinder and GammaRay::ProbeABIDetector - used for identifying a
+  suitable probe for a given target.
+- GammaRay::NetworkDiscoveryModel - finds existing running GammaRay probes on the network.
+- GammaRay::Launcher - the actual launcher.
+
+@subsection ide-integration-client Client
+
+The client is the main user interface of GammaRay when connected to a target application.
+The key elements for embedding the client UI are:
+
+- GammaRay::ClientConnectionManager - establish a connection to a GammaRay probe.
+- GammaRay::ClientToolModel - access to the active tools and their UI.
+- GammaRay::ProbeController - control interface for the probe running in the target
+  application.
+- GammaRay::ObjectBroker - low-level access to remote objects from the target.
 
 @section license License
 

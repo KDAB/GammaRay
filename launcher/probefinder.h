@@ -47,6 +47,8 @@ namespace ProbeFinder {
 
   /**
    * Attempts to find the full path of the probe DLL.
+   *
+   * @deprecated Use the findProbe() overload below.
    */
   GAMMARAY_LAUNCHER_DEPRECATED_EXPORT QString findProbe(const QString& baseName, const ProbeABI& probeAbi);
 
