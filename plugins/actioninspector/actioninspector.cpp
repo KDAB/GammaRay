@@ -45,6 +45,7 @@ using namespace GammaRay;
 using namespace std;
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QAction*)
 Q_DECLARE_METATYPE(QActionGroup*)
 Q_DECLARE_METATYPE(QMenu*)
 #endif
