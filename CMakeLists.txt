@@ -234,8 +234,6 @@ if(Qt5Core_FOUND)
     3DRender
     Bluetooth
     Concurrent
-    Help
-    LinguistTools
     Positioning
     PrintSupport
     Qml
@@ -248,6 +246,11 @@ if(Qt5Core_FOUND)
     WebKitWidgets
     Widgets
   )
+  # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
+  if(NOT CMAKE_CROSSCOMPILING)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
+  endif()
+
   # starting with 5.6, the Designer module needs CMake 3.0 or higher
   if(Qt5Core_VERSION VERSION_LESS 5.6 OR NOT CMAKE_VERSION VERSION_LESS 3.0)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Designer)
