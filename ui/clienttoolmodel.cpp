@@ -37,7 +37,6 @@
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
-#include <ui/tools/textdocumentinspector/textdocumentinspectorwidget.h>
 
 #include <common/modelroles.h>
 #include <common/pluginmanager.h>
@@ -66,7 +65,6 @@ MAKE_FACTORY(MimeTypes, true);
 MAKE_FACTORY(ModelInspector, true);
 MAKE_FACTORY(ResourceBrowser, true);
 MAKE_FACTORY(StandardPaths, true);
-MAKE_FACTORY(TextDocumentInspector, true);
 
 struct PluginRepository {
     PluginRepository() {}
@@ -103,7 +101,6 @@ static void initPluginRepository()
     insertFactory(new ObjectInspectorFactory);
     insertFactory(new ResourceBrowserFactory);
     insertFactory(new StandardPathsFactory);
-    insertFactory(new TextDocumentInspectorFactory);
 
     PluginManager<ToolUiFactory, ProxyToolUiFactory> pm;
     foreach(ToolUiFactory* factory, pm.plugins())

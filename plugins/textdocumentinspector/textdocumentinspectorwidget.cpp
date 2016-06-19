@@ -28,7 +28,7 @@
 
 #include "textdocumentinspectorwidget.h"
 #include "ui_textdocumentinspectorwidget.h"
-#include "core/tools/textdocumentinspector/textdocumentmodel.h"
+#include "textdocumentmodel.h"
 
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
@@ -114,3 +114,6 @@ void TextDocumentInspectorWidget::documentContentChanged()
   ui->htmlView->setPlainText(m_currentDocument->toHtml());
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(TextDocumentInspectorWidgetFactory)
+#endif

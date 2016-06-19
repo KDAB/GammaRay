@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTOR_H
 #define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTOR_H
 
-#include "toolfactory.h"
+#include <core/toolfactory.h>
 
 #include <QPointer>
 #include <QTextDocument>
@@ -63,8 +63,9 @@ class TextDocumentInspectorFactory
 {
   Q_OBJECT
   Q_INTERFACES(GammaRay::ToolFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_textdocumentinspector.json")
   public:
-    explicit TextDocumentInspectorFactory(QObject *parent) : QObject(parent)
+    explicit TextDocumentInspectorFactory(QObject *parent = Q_NULLPTR) : QObject(parent)
     {
     }
 

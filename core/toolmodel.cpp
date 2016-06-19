@@ -38,7 +38,6 @@
 #include "tools/modelinspector/modelinspector.h"
 #include "tools/objectinspector/objectinspector.h"
 #include "tools/resourcebrowser/resourcebrowser.h"
-#include "tools/textdocumentinspector/textdocumentinspector.h"
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
 #include "metaobjectrepository.h"
@@ -67,7 +66,6 @@ ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
   addToolFactory(new ResourceBrowserFactory(this));
   addToolFactory(new MetaObjectBrowserFactory(this));
   addToolFactory(new MetaTypeBrowserFactory(this));
-  addToolFactory(new TextDocumentInspectorFactory(this));
   addToolFactory(new MessageHandlerFactory(this));
   addToolFactory(new LocaleInspectorFactory(this));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)

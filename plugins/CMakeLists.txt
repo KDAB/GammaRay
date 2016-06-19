@@ -17,6 +17,7 @@ endif()
 
 if(Qt5Gui_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(guisupport)
+  add_subdirectory(textdocumentinspector)
 endif()
 
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)

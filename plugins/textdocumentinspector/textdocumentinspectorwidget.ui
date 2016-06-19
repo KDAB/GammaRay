@@ -136,7 +136,7 @@
   <customwidget>
    <class>GammaRay::TextDocumentContentView</class>
    <extends>QTextEdit</extends>
-   <header>tools/textdocumentinspector/textdocumentcontentview.h</header>
+   <header>textdocumentcontentview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

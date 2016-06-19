@@ -55,8 +55,6 @@ set(gammaray_srcs
   tools/localeinspector/localemodel.cpp
   tools/localeinspector/localedataaccessor.cpp
   tools/localeinspector/localeaccessormodel.cpp
-  tools/textdocumentinspector/textdocumentmodel.cpp
-  tools/textdocumentinspector/textdocumentformatmodel.cpp
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp
   tools/localeinspector/localeinspector.cpp
@@ -76,7 +74,6 @@ set(gammaray_srcs
   tools/objectinspector/applicationattributeextension.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
-  tools/textdocumentinspector/textdocumentinspector.cpp
 
   remote/server.cpp
   remote/remotemodelserver.cpp

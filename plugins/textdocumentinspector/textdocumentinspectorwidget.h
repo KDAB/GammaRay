@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
 #define GAMMARAY_TEXTDOCUMENTINSPECTOR_TEXTDOCUMENTINSPECTORWIDGET_H
 
+#include <ui/tooluifactory.h>
 #include <ui/uistatemanager.h>
 
 #include <QPointer>
@@ -65,6 +66,14 @@ class TextDocumentInspectorWidget : public QWidget
     UIStateManager m_stateManager;
     QPointer<QTextDocument> m_currentDocument;
 };
+
+class TextDocumentInspectorWidgetFactory: public QObject, public StandardToolUiFactory<TextDocumentInspectorWidget>
+{
+  Q_OBJECT
+  Q_INTERFACES(GammaRay::ToolUiFactory)
+  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_textdocumentinspector.json")
+};
+
 
 }
 

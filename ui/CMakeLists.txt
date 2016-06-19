@@ -65,8 +65,6 @@ set(gammaray_ui_srcs
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp
   tools/standardpaths/standardpathswidget.cpp
-  tools/textdocumentinspector/textdocumentinspectorwidget.cpp
-  tools/textdocumentinspector/textdocumentcontentview.cpp
 )
 
 qt4_wrap_ui(gammaray_ui_srcs
@@ -97,7 +95,6 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/objectinspector/applicationattributetab.ui
   tools/resourcebrowser/resourcebrowserwidget.ui
   tools/standardpaths/standardpathswidget.ui
-  tools/textdocumentinspector/textdocumentinspectorwidget.ui
 )
 
 qt4_add_resources(gammaray_ui_srcs resources/ui.qrc)

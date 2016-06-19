@@ -31,10 +31,10 @@
 #include "textdocumentformatmodel.h"
 #include "textdocumentmodel.h"
 
-#include "objecttypefilterproxymodel.h"
-#include "probeinterface.h"
+#include <core/objecttypefilterproxymodel.h>
+#include <core/probeinterface.h>
 
-#include "common/objectbroker.h"
+#include <common/objectbroker.h>
 
 #include <QItemSelection>
 #include <QTextDocument>
@@ -96,3 +96,7 @@ QString TextDocumentInspectorFactory::name() const
 {
   return tr("Text Documents");
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(TextDocumentInspectorFactory)
+#endif
