@@ -96,7 +96,7 @@ void PluginManagerBase::scan(const QString &serviceType)
       }
 
       if (pluginInfo.interfaceId() != serviceType) {
-        IF_DEBUG(qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << pluginInfo.interface();)
+        IF_DEBUG(qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << pluginInfo.interfaceId();)
         continue;
       }
 
