@@ -58,6 +58,11 @@ public:
     QModelIndex parent(const QModelIndex& child) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent) const override;
 
+public slots:
+    void objectCreated(QObject *obj);
+    void objectDestroyed(QObject *obj);
+    void objectReparented(QObject *obj);
+
 private:
     void clear();
     void populateFromEntity(Qt3DCore::QEntity* entity);

@@ -131,3 +131,76 @@ QModelIndex Qt3DEntityTreeModel::indexForEntity(Qt3DCore::QEntity* entity) const
     const int row = std::distance(siblings.constBegin(), it);
     return index(row, 0, parentIndex);
 }
+
+static bool isEngineForEntity(Qt3DCore::QAspectEngine* engine, Qt3DCore::QEntity *entity)
+{
+    Q_ASSERT(engine);
+    Q_ASSERT(entity);
+    if (!entity->parentEntity())
+        return false;
+    if (entity == engine->rootEntity())
+        return true;
+    return isEngineForEntity(engine, entity->parentEntity());
+}
+
+void Qt3DEntityTreeModel::objectCreated(QObject* obj)
+{
+    if (!m_engine)
+        return;
+
+    auto entity = qobject_cast<Qt3DCore::QEntity*>(obj);
+    if (!entity)
+        return;
+
+    if (!isEngineForEntity(m_engine, entity))
+        return;
+
+    if (m_childParentMap.contains(entity))
+        return;
+
+    auto parentEntity = entity->parentEntity();
+    if (parentEntity) {
+        // add parent first, if we don't know that yet
+        if (!m_childParentMap.contains(parentEntity)) {
+            objectCreated(parentEntity);
+            return;
+        }
+    }
+
+    const auto index = indexForEntity(parentEntity);
+    Q_ASSERT(index.isValid() || !parentEntity);
+
+    QVector<Qt3DCore::QEntity*> &children = m_parentChildMap[parentEntity];
+    QVector<Qt3DCore::QEntity*>::iterator it = std::lower_bound(children.begin(), children.end(), entity);
+    const int row = std::distance(children.begin(), it);
+
+    beginInsertRows(index, row, row);
+    children.insert(it, entity);
+    m_childParentMap.insert(entity, parentEntity);
+    foreach (auto child,  entity->childNodes()) {
+        if (auto childEntity = qobject_cast<Qt3DCore::QEntity*>(child))
+            populateFromEntity(childEntity);
+    }
+    endInsertRows();
+
+}
+
+void Qt3DEntityTreeModel::objectDestroyed(QObject* obj)
+{
+    // TODO
+}
+
+void Qt3DEntityTreeModel::objectReparented(QObject* obj)
+{
+    auto entity = qobject_cast<Qt3DCore::QEntity*>(obj);
+    if (!entity)
+        return;
+
+    if (m_childParentMap.contains(entity)) {
+        // TODO reparented within our tree, or out of it
+    } else {
+        // possibly reparented into our tree
+        objectCreated(obj);
+    }
+
+}

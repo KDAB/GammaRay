@@ -82,6 +82,9 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     m_engineModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
 
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_entityModel, SLOT(objectCreated(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_entityModel, SLOT(objectDestroyed(QObject*)));
+    connect(probe->probe(), SIGNAL(objectReparented(QObject*)), m_entityModel, SLOT(objectReparented(QObject*)));
     auto entityProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     entityProxy->setSourceModel(m_entityModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), entityProxy);
