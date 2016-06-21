@@ -80,6 +80,9 @@ namespace Paths
 
   /** Returns the file extension used on the current platform for plugins. */
   GAMMARAY_COMMON_EXPORT QString pluginExtension();
+
+  /** Path to the installed .qch/.qhc documentation files. */
+  GAMMARAY_COMMON_EXPORT QString documentationPath();
 }
 
 }

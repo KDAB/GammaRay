@@ -99,13 +99,17 @@ bool HelpController::isAvailable()
         return true;
 
     d->assistantPath = QStandardPaths::findExecutable(QStringLiteral("assistant"));
-    if (d->assistantPath.isEmpty())
+    if (d->assistantPath.isEmpty()) {
+        qDebug() << "Qt Assistant not found, help not available.";
         return false;
+    }
 
-    const auto qhcPath = Paths::rootPath() + QLatin1String("/" GAMMARAY_QCH_INSTALL_DIR "/gammaray.qhc");
+    const QString qhcPath = Paths::documentationPath() + QLatin1String("/gammaray.qhc");
     if (QFileInfo::exists(qhcPath)) {
         d->qhcPath = qhcPath;
         return true;
+    } else {
+        qDebug() << "gammaray.qhc not found in" << Paths::documentationPath() << " - help not available";
     }
 #endif
     return false;

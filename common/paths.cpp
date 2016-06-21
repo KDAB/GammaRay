@@ -117,6 +117,11 @@ QString pluginExtension()
 #endif
 }
 
+QString documentationPath()
+{
+    return rootPath() + QLatin1Char('/') + QLatin1String(GAMMARAY_QCH_INSTALL_DIR);
+}
+
 }
 
 }
