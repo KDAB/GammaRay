@@ -32,35 +32,35 @@
 #include <QTimer>
 
 SignalMonitorTest::SignalMonitorTest(QObject *parent)
-  : QObject(parent)
-  , m_timerCount(0)
+    : QObject(parent)
+    , m_timerCount(0)
 {
-  QTimer *t1 = new QTimer(this);
-  t1->setObjectName(nextTimerName());
-  t1->start(250);
+    QTimer *t1 = new QTimer(this);
+    t1->setObjectName(nextTimerName());
+    t1->start(250);
 
-  QTimer *t2 = new QTimer(this);
-  t2->setObjectName(nextTimerName());
-  connect(t2, SIGNAL(timeout()), this, SLOT(onTimeout()));
-  t2->start(1500);
+    QTimer *t2 = new QTimer(this);
+    t2->setObjectName(nextTimerName());
+    connect(t2, SIGNAL(timeout()), this, SLOT(onTimeout()));
+    t2->start(1500);
 }
 
 QString SignalMonitorTest::nextTimerName()
 {
-  return QStringLiteral("SignalMonitorTest_t%1").arg(++m_timerCount);
+    return QStringLiteral("SignalMonitorTest_t%1").arg(++m_timerCount);
 }
 
 void SignalMonitorTest::onTimeout()
 {
-  QTimer *tx = new QTimer(this);
-  tx->setObjectName(nextTimerName());
-  connect(tx, SIGNAL(timeout()), tx, SLOT(deleteLater()));
-  tx->start(2500);
+    QTimer *tx = new QTimer(this);
+    tx->setObjectName(nextTimerName());
+    connect(tx, SIGNAL(timeout()), tx, SLOT(deleteLater()));
+    tx->start(2500);
 }
 
 int main(int argc, char **argv)
 {
-  QCoreApplication app(argc, argv);
-  new SignalMonitorTest(&app);
-  return app.exec();
+    QCoreApplication app(argc, argv);
+    new SignalMonitorTest(&app);
+    return app.exec();
 }

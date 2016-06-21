@@ -47,7 +47,6 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class ProbeInterface;
 
 /**
@@ -58,7 +57,7 @@ class ProbeInterface;
  */
 class GAMMARAY_CORE_EXPORT ToolFactory
 {
-  public:
+public:
     ToolFactory();
     virtual ~ToolFactory();
 
@@ -113,7 +112,7 @@ class GAMMARAY_CORE_EXPORT ToolFactory
      */
     virtual QVector<QByteArray> selectableTypes() const;
 
-  private:
+private:
     Q_DISABLE_COPY(ToolFactory)
     QVector<QByteArray> m_types;
 };
@@ -121,31 +120,30 @@ class GAMMARAY_CORE_EXPORT ToolFactory
 /**
  * @brief A templated generic ToolFactory for some data type and tool.
  */
-template <typename Type, typename Tool>
+template<typename Type, typename Tool>
 class StandardToolFactory : public ToolFactory
 {
 public:
-  StandardToolFactory()
-  {
-    setSupportedTypes(QVector<QByteArray>() << Type::staticMetaObject.className());
-  }
+    StandardToolFactory()
+    {
+        setSupportedTypes(QVector<QByteArray>() << Type::staticMetaObject.className());
+    }
 
-  QString id() const Q_DECL_OVERRIDE
-  {
-    return Tool::staticMetaObject.className();
-  }
+    QString id() const Q_DECL_OVERRIDE
+    {
+        return Tool::staticMetaObject.className();
+    }
 
-  void init(ProbeInterface *probe) Q_DECL_OVERRIDE
-  {
-    new Tool(probe, probe->probe());
-  }
+    void init(ProbeInterface *probe) Q_DECL_OVERRIDE
+    {
+        new Tool(probe, probe->probe());
+    }
 
-  bool isHidden() const Q_DECL_OVERRIDE
-  {
-    return false;
-  }
+    bool isHidden() const Q_DECL_OVERRIDE
+    {
+        return false;
+    }
 };
-
 }
 
 QT_BEGIN_NAMESPACE

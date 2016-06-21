@@ -45,49 +45,49 @@
 
 using namespace GammaRay;
 
-StyleInjector::StyleInjector() : ProcessInjector()
+StyleInjector::StyleInjector()
+    : ProcessInjector()
 {
 }
 
 QString StyleInjector::name() const
 {
-  return QStringLiteral("style");
+    return QStringLiteral("style");
 }
 
-bool StyleInjector::launch(const QStringList &programAndArgs,
-                           const QString &probeDll, const QString &probeFunc,
-                           const QProcessEnvironment &e)
+bool StyleInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
+                           const QString &probeFunc, const QProcessEnvironment &e)
 {
-  auto env = e.isEmpty()? QProcessEnvironment::systemEnvironment() : e;
-  env.insert(QStringLiteral("GAMMARAY_STYLEINJECTOR_PROBEDLL"), probeDll);
-  env.insert(QStringLiteral("GAMMARAY_STYLEINJECTOR_PROBEFUNC"), probeFunc);
+    auto env = e.isEmpty() ? QProcessEnvironment::systemEnvironment() : e;
+    env.insert(QStringLiteral("GAMMARAY_STYLEINJECTOR_PROBEDLL"), probeDll);
+    env.insert(QStringLiteral("GAMMARAY_STYLEINJECTOR_PROBEFUNC"), probeFunc);
 
-  QString qtPluginPath = env.value(QStringLiteral("QT_PLUGIN_PATH"));
-  if (!qtPluginPath.isEmpty()) {
-    qtPluginPath.append(":");
-  }
-  qtPluginPath.append(Paths::currentPluginsPath());
-  env.insert(QStringLiteral("QT_PLUGIN_PATH"), qtPluginPath);
+    QString qtPluginPath = env.value(QStringLiteral("QT_PLUGIN_PATH"));
+    if (!qtPluginPath.isEmpty())
+        qtPluginPath.append(":");
+    qtPluginPath.append(Paths::currentPluginsPath());
+    env.insert(QStringLiteral("QT_PLUGIN_PATH"), qtPluginPath);
 
-  QStringList args = programAndArgs;
-  args << QStringLiteral("-style") << QStringLiteral("gammaray-injector");
+    QStringList args = programAndArgs;
+    args << QStringLiteral("-style") << QStringLiteral("gammaray-injector");
 
-  return launchProcess(args, env);
+    return launchProcess(args, env);
 }
 
 bool StyleInjector::selfTest()
 {
 #ifdef HAVE_QT_WIDGETS
-  QCoreApplication::addLibraryPath(Paths::currentPluginsPath());
-  if (!QStyleFactory::keys().contains(QStringLiteral("gammaray-injector"))) {
-    mErrorString = tr("Injector style plugin is not found in the Qt style "
-                               "plug-in search path or cannot be loaded");
-    return false;
-  }
+    QCoreApplication::addLibraryPath(Paths::currentPluginsPath());
+    if (!QStyleFactory::keys().contains(QStringLiteral("gammaray-injector"))) {
+        mErrorString = tr("Injector style plugin is not found in the Qt style "
+                          "plug-in search path or cannot be loaded");
+        return false;
+    }
 
-  return true;
+    return true;
 #else
-  mErrorString = tr("GammaRay was compiled without QtWidget support, style injector is not available.");
-  return false;
+    mErrorString = tr(
+        "GammaRay was compiled without QtWidget support, style injector is not available.");
+    return false;
 #endif
 }

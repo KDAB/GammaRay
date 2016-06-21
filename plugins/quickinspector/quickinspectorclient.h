@@ -36,22 +36,22 @@ class QEvent;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class QuickInspectorClient : public QuickInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::QuickInspectorInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::QuickInspectorInterface)
 
 public:
-  explicit QuickInspectorClient(QObject *parent = 0);
-  ~QuickInspectorClient();
+    explicit QuickInspectorClient(QObject *parent = 0);
+    ~QuickInspectorClient();
 
 public slots:
-  void selectWindow(int index) Q_DECL_OVERRIDE;
+    void selectWindow(int index) Q_DECL_OVERRIDE;
 
-  void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) Q_DECL_OVERRIDE;
+    void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
+    Q_DECL_OVERRIDE;
 
-  void checkFeatures() Q_DECL_OVERRIDE;
+    void checkFeatures() Q_DECL_OVERRIDE;
 };
 }
 

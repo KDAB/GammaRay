@@ -35,7 +35,6 @@
 #include <QPointer>
 
 namespace GammaRay {
-
 class PropertyController;
 
 class ObjectDynamicPropertyModel;
@@ -44,10 +43,10 @@ class AggregatedPropertyModel;
 
 class PropertiesExtension : public PropertiesExtensionInterface, public PropertyControllerExtension
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::PropertiesExtensionInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::PropertiesExtensionInterface)
 
-  public:
+public:
     explicit PropertiesExtension(PropertyController *controller);
     ~PropertiesExtension();
 
@@ -55,13 +54,12 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
 
     bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
     bool setQObject(QObject *object) Q_DECL_OVERRIDE;
-    bool setMetaObject(const QMetaObject* metaObject) Q_DECL_OVERRIDE;
+    bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
 
-  private:
+private:
     AggregatedPropertyModel *m_aggregatedPropertyModel;
     QPointer<QObject> m_object;
 };
-
 }
 
 #endif // PROPERTIESEXTENSION_H

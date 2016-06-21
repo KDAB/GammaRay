@@ -41,24 +41,23 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class FontBrowserInterface;
 
 namespace Ui {
-  class FontBrowserWidget;
+class FontBrowserWidget;
 }
 
 class FontBrowserWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FontBrowserWidget(QWidget *parent = 0);
     ~FontBrowserWidget();
 
-  private slots:
+private slots:
     void delayedInit();
 
-  private:
+private:
     QScopedPointer<Ui::FontBrowserWidget> ui;
     UIStateManager m_stateManager;
     QAbstractItemModel *m_selectedFontModel;
@@ -67,12 +66,10 @@ class FontBrowserWidget : public QWidget
 
 class FontBrowserUiFactory : public QObject, public StandardToolUiFactory<FontBrowserWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_fontbrowser.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_fontbrowser.json")
 };
-
-
 }
 
 #endif // GAMMARAY_FONTBROWSERWIDGET_H

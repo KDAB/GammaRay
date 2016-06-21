@@ -35,27 +35,26 @@
 using namespace GammaRay;
 
 MethodsExtensionClient::MethodsExtensionClient(const QString &name, QObject *parent)
-  : MethodsExtensionInterface(name, parent)
+    : MethodsExtensionInterface(name, parent)
 {
-
 }
 
 MethodsExtensionClient::~MethodsExtensionClient()
 {
-
 }
 
 void MethodsExtensionClient::activateMethod()
 {
-  Endpoint::instance()->invokeObject(name(), "activateMethod");
+    Endpoint::instance()->invokeObject(name(), "activateMethod");
 }
 
 void MethodsExtensionClient::invokeMethod(Qt::ConnectionType type)
 {
-  Endpoint::instance()->invokeObject(name(), "invokeMethod", QVariantList() << QVariant::fromValue(type));
+    Endpoint::instance()->invokeObject(name(), "invokeMethod",
+                                       QVariantList() << QVariant::fromValue(type));
 }
 
 void MethodsExtensionClient::connectToSignal()
 {
-  Endpoint::instance()->invokeObject(name(), "connectToSignal");
+    Endpoint::instance()->invokeObject(name(), "connectToSignal");
 }

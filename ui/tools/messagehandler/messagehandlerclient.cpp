@@ -31,8 +31,6 @@
 using namespace GammaRay;
 
 MessageHandlerClient::MessageHandlerClient(QObject *parent)
-  : MessageHandlerInterface(parent)
+    : MessageHandlerInterface(parent)
 {
-
 }
-

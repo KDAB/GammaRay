@@ -33,12 +33,11 @@
 #include <core/propertyadaptorfactory.h>
 
 namespace GammaRay {
-
 class QJSValuePropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QJSValuePropertyAdaptor(QObject* parent = 0);
+    explicit QJSValuePropertyAdaptor(QObject *parent = 0);
     ~QJSValuePropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
@@ -48,13 +47,12 @@ public:
 class QJSValuePropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
-    PropertyAdaptor* create(const ObjectInstance& oi, QObject* parent = 0) const Q_DECL_OVERRIDE;
-    static QJSValuePropertyAdaptorFactory* instance();
+    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0) const Q_DECL_OVERRIDE;
+    static QJSValuePropertyAdaptorFactory *instance();
 
 private:
-    static QJSValuePropertyAdaptorFactory* s_instance;
+    static QJSValuePropertyAdaptorFactory *s_instance;
 };
-
 }
 
 #endif // QJSVALUEPROPERTYADAPTOR_H

@@ -41,7 +41,6 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ModelCellModel;
 class ModelTester;
 class RemoteModelServer;
@@ -49,19 +48,19 @@ class SafetyFilterProxyModel;
 
 class ModelInspector : public ModelInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ModelInspectorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ModelInspectorInterface)
+public:
     explicit ModelInspector(ProbeInterface *probe, QObject *parent = 0);
 
-  private slots:
+private slots:
     void modelSelected(const QItemSelection &selected);
     void selectionChanged(const QModelIndex &selected);
 
-    void objectSelected(QObject* object);
+    void objectSelected(QObject *object);
     void objectCreated(QObject *object);
 
-  private:
+private:
     ProbeInterface *m_probe;
     QAbstractItemModel *m_modelModel;
     QItemSelectionModel *m_modelSelectionModel;
@@ -75,19 +74,20 @@ class ModelInspector : public ModelInspectorInterface
     ModelTester *m_modelTester;
 };
 
-class ModelInspectorFactory : public QObject, public StandardToolFactory<QAbstractItemModel, ModelInspector>
+class ModelInspectorFactory : public QObject,
+    public StandardToolFactory<QAbstractItemModel, ModelInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit ModelInspectorFactory(QObject *parent) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
+    explicit ModelInspectorFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
     QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_MODELINSPECTOR_H

@@ -33,29 +33,27 @@
 #include <QGraphicsView>
 
 namespace GammaRay {
-
 class GraphicsView : public QGraphicsView
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit GraphicsView(QWidget *parent = 0);
 
     void showItem(QGraphicsItem *item);
 
-  signals:
+signals:
     void sceneCoordinatesChanged(const QPointF &sceneCoord);
     void itemCoordinatesChanged(const QPointF &itemCoord);
     void transformChanged();
 
-  protected:
+protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void drawForeground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
 
-  private:
+private:
     QGraphicsItem *m_currentItem;
 };
-
 }
 
 #endif // GAMMARAY_GRAPHICSVIEW_H

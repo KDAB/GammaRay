@@ -38,53 +38,53 @@
 class Widget : public QWidget
 {
     Q_OBJECT
-  public:
-    Widget(QWidget *parent = 0) : QWidget(parent)
+public:
+    Widget(QWidget *parent = 0)
+        : QWidget(parent)
     {
-      m_label1 = new QLabel(this);
-      m_label2 = new QLabel(this);
-      m_label3 = new QLabel(this);
-      m_button = new QPushButton(this);
+        m_label1 = new QLabel(this);
+        m_label2 = new QLabel(this);
+        m_label3 = new QLabel(this);
+        m_button = new QPushButton(this);
 
-      m_layout = new QVBoxLayout;
-      m_layout->addWidget(m_label1);
-      m_layout->addWidget(m_label2);
-      m_layout->addWidget(m_label3);
-      m_layout->addWidget(m_button);
-      setLayout(m_layout);
+        m_layout = new QVBoxLayout;
+        m_layout->addWidget(m_label1);
+        m_layout->addWidget(m_label2);
+        m_layout->addWidget(m_label3);
+        m_layout->addWidget(m_button);
+        setLayout(m_layout);
 
-      connect(m_button, SIGNAL(clicked()), SLOT(openFonts()));
+        connect(m_button, SIGNAL(clicked()), SLOT(openFonts()));
 
-      retranslate();
+        retranslate();
 
-      qApp->installEventFilter(this);
+        qApp->installEventFilter(this);
     }
 
     void retranslate()
     {
-      m_label1->setText(tr("One"));
-      m_label2->setText(tr("Two"));
-      m_label3->setText(tr("Three"));
-      m_button->setText(tr("&Fonts"));
+        m_label1->setText(tr("One"));
+        m_label2->setText(tr("Two"));
+        m_label3->setText(tr("Three"));
+        m_button->setText(tr("&Fonts"));
     }
 
-  private slots:
+private slots:
     void openFonts()
     {
-      QFontDialog dialog(this);
-      dialog.exec();
+        QFontDialog dialog(this);
+        dialog.exec();
     }
 
-  protected:
+protected:
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE
     {
-      if (event->type() == QEvent::LanguageChange) {
-        retranslate();
-      }
-      return QWidget::eventFilter(object, event);
+        if (event->type() == QEvent::LanguageChange)
+            retranslate();
+        return QWidget::eventFilter(object, event);
     }
 
-  private:
+private:
     QLabel *m_label1;
     QLabel *m_label2;
     QLabel *m_label3;
@@ -94,27 +94,27 @@ class Widget : public QWidget
 
 void loadTranslation(const QString &filename, const QString &name)
 {
-  Q_ASSERT(QDir().exists(filename));
-  QTranslator *translator = new QTranslator;
-  translator->setObjectName(name);
-  translator->load(filename);
-  qApp->installTranslator(translator);
+    Q_ASSERT(QDir().exists(filename));
+    QTranslator *translator = new QTranslator;
+    translator->setObjectName(name);
+    translator->load(filename);
+    qApp->installTranslator(translator);
 }
 
 int main(int argc, char *argv[])
 {
-  QApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-  loadTranslation(app.applicationDirPath() + "/translation.qm",
-                  QStringLiteral("App translator"));
-  loadTranslation(QLibraryInfo::location(QLibraryInfo::TranslationsPath) +
-                  QStringLiteral("/qt_sv.qm"),
-                  QStringLiteral("Qt translator"));
+    loadTranslation(app.applicationDirPath() + "/translation.qm",
+                    QStringLiteral("App translator"));
+    loadTranslation(QLibraryInfo::location(QLibraryInfo::TranslationsPath)
+                    +QStringLiteral("/qt_sv.qm"),
+                    QStringLiteral("Qt translator"));
 
-  Widget widget;
-  widget.show();
+    Widget widget;
+    widget.show();
 
-  return app.exec();
+    return app.exec();
 }
 
 #include "translator_test.moc"

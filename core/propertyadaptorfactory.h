@@ -38,7 +38,6 @@ class QObject;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ObjectInstance;
 class PropertyAdaptor;
 
@@ -50,24 +49,22 @@ public:
     virtual ~AbstractPropertyAdaptorFactory();
 
     /** Create a custom property adaptor if it can handle @p oi, return @c nullptr otherwise. */
-    virtual PropertyAdaptor* create(const ObjectInstance &oi, QObject *parent = 0) const = 0;
+    virtual PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0) const = 0;
 
 private:
     Q_DISABLE_COPY(AbstractPropertyAdaptorFactory)
 };
 
 /** Factory for property adaptors. */
-namespace PropertyAdaptorFactory
-{
-    /** Create a property adaptor for @p oi, if necessary wrapped in an aggregator.
-     *  Can return @c nullptr.
-     */
-    GAMMARAY_CORE_EXPORT PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0);
+namespace PropertyAdaptorFactory {
+/** Create a property adaptor for @p oi, if necessary wrapped in an aggregator.
+ *  Can return @c nullptr.
+ */
+GAMMARAY_CORE_EXPORT PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0);
 
-    /** Register a custom property adaptor factory. */
-    GAMMARAY_CORE_EXPORT void registerFactory(AbstractPropertyAdaptorFactory *factory);
+/** Register a custom property adaptor factory. */
+GAMMARAY_CORE_EXPORT void registerFactory(AbstractPropertyAdaptorFactory *factory);
 }
-
 }
 
 #endif // GAMMARAY_PROPERTYADAPTORFACTORY_H

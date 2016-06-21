@@ -32,10 +32,10 @@
 
 using namespace GammaRay;
 
-ProxyFactoryBase::ProxyFactoryBase(const PluginInfo& pluginInfo, QObject* parent):
-  QObject(parent),
-  m_factory(0),
-  m_pluginInfo(pluginInfo)
+ProxyFactoryBase::ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent)
+    : QObject(parent)
+    , m_factory(0)
+    , m_pluginInfo(pluginInfo)
 {
 }
 
@@ -50,20 +50,20 @@ PluginInfo ProxyFactoryBase::pluginInfo() const
 
 QString ProxyFactoryBase::errorString() const
 {
-  return m_errorString;
+    return m_errorString;
 }
 
 void ProxyFactoryBase::loadPlugin()
 {
-  if (m_factory)
-    return;
-  QPluginLoader loader(pluginInfo().path(), this);
-  m_factory = loader.instance();
-  if (m_factory) {
-    m_factory->setParent(this);
-  } else {
-    m_errorString = loader.errorString();
-    std::cerr << "error loading plugin " << qPrintable(pluginInfo().path())
-              << ": " << qPrintable(loader.errorString()) << std::endl;
-  }
+    if (m_factory)
+        return;
+    QPluginLoader loader(pluginInfo().path(), this);
+    m_factory = loader.instance();
+    if (m_factory) {
+        m_factory->setParent(this);
+    } else {
+        m_errorString = loader.errorString();
+        std::cerr << "error loading plugin " << qPrintable(pluginInfo().path())
+                  << ": " << qPrintable(loader.errorString()) << std::endl;
+    }
 }

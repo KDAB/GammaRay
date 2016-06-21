@@ -32,16 +32,15 @@
 #include <QDialog>
 
 namespace GammaRay {
-
 class LaunchOptions;
 namespace Ui {
-  class LauncherWindow;
+class LauncherWindow;
 }
 
 class LauncherWindow : public QDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit LauncherWindow(QWidget *parent = 0);
     ~LauncherWindow();
 
@@ -50,14 +49,13 @@ class LauncherWindow : public QDialog
 
     void accept() Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void tabChanged();
     void help();
 
-  private:
+private:
     Ui::LauncherWindow *ui;
 };
-
 }
 
 #endif // GAMMARAY_LAUNCHERWINDOW_H

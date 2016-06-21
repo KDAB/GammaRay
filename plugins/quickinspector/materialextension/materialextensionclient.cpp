@@ -33,7 +33,7 @@
 using namespace GammaRay;
 
 MaterialExtensionClient::MaterialExtensionClient(const QString &name, QObject *parent)
-  : MaterialExtensionInterface(name, parent)
+    : MaterialExtensionInterface(name, parent)
 {
 }
 
@@ -43,6 +43,6 @@ MaterialExtensionClient::~MaterialExtensionClient()
 
 void MaterialExtensionClient::getShader(const QString &fileName)
 {
-  Endpoint::instance()->invokeObject(
-    name(), "getShader", QVariantList() << QVariant::fromValue(fileName));
+    Endpoint::instance()->invokeObject(
+        name(), "getShader", QVariantList() << QVariant::fromValue(fileName));
 }

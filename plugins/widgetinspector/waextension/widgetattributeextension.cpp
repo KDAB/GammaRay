@@ -35,9 +35,9 @@
 
 using namespace GammaRay;
 
-WidgetAttributeExtension::WidgetAttributeExtension(PropertyController* controller) :
-    PropertyControllerExtension(controller->objectBaseName() + ".widgetAttributes"),
-    m_attributeModel(new AttributeModel<QWidget, Qt::WidgetAttribute>(controller))
+WidgetAttributeExtension::WidgetAttributeExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".widgetAttributes")
+    , m_attributeModel(new AttributeModel<QWidget, Qt::WidgetAttribute>(controller))
 {
     m_attributeModel->setAttributeType("WidgetAttribute");
     controller->registerModel(m_attributeModel, QStringLiteral("widgetAttributeModel"));
@@ -47,9 +47,9 @@ WidgetAttributeExtension::~WidgetAttributeExtension()
 {
 }
 
-bool WidgetAttributeExtension::setQObject(QObject* object)
+bool WidgetAttributeExtension::setQObject(QObject *object)
 {
-    if (auto widget = qobject_cast<QWidget*>(object)) {
+    if (auto widget = qobject_cast<QWidget *>(object)) {
         m_attributeModel->setObject(widget);
         return true;
     }

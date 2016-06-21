@@ -33,108 +33,104 @@
 #include <QMetaObject>
 
 namespace GammaRay {
-
-template <typename MetaThing,
-          MetaThing (QMetaObject::*MetaAccessor)(int) const,
-          int (QMetaObject::*MetaCount)() const,
-          int (QMetaObject::*MetaOffset)() const>
+template<typename MetaThing,
+         MetaThing(QMetaObject::*MetaAccessor)(int)const,
+         int(QMetaObject::*MetaCount)() const,
+         int(QMetaObject::*MetaOffset)() const>
 class MetaObjectModel : public QAbstractItemModel
 {
-  public:
+public:
     explicit MetaObjectModel(QObject *parent = 0)
-      : QAbstractItemModel(parent), m_metaObject(0)
+        : QAbstractItemModel(parent)
+        , m_metaObject(0)
     {
     }
 
     virtual void setMetaObject(const QMetaObject *metaObject)
     {
-      const auto oldRowCount = rowCount();
-      if (oldRowCount) {
-        beginRemoveRows(QModelIndex(), 0, oldRowCount - 1);
-        m_metaObject = 0;
-        endRemoveRows();
-      } else {
-        m_metaObject = 0;
-      }
+        const auto oldRowCount = rowCount();
+        if (oldRowCount) {
+            beginRemoveRows(QModelIndex(), 0, oldRowCount - 1);
+            m_metaObject = 0;
+            endRemoveRows();
+        } else {
+            m_metaObject = 0;
+        }
 
-      if (!metaObject)
-        return;
+        if (!metaObject)
+            return;
 
-     const auto newRowCount = (metaObject->*MetaCount)();
-     if (newRowCount) {
-        beginInsertRows(QModelIndex(), 0,  newRowCount - 1);
-        m_metaObject = metaObject;
-        endInsertRows();
-      } else {
-        m_metaObject = metaObject;
-      }
+        const auto newRowCount = (metaObject->*MetaCount)();
+        if (newRowCount) {
+            beginInsertRows(QModelIndex(), 0, newRowCount - 1);
+            m_metaObject = metaObject;
+            endInsertRows();
+        } else {
+            m_metaObject = metaObject;
+        }
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
-      if (!index.isValid() || !m_metaObject ||
-          index.row() < 0 || index.row() >= rowCount(index.parent())) {
-        return QVariant();
-      }
+        if (!index.isValid() || !m_metaObject
+            || index.row() < 0 || index.row() >= rowCount(index.parent()))
+            return QVariant();
 
-      const MetaThing metaThing = (m_metaObject->*MetaAccessor)(index.row());
-      if (index.column() == columnCount(index) - 1 && role == Qt::DisplayRole) {
-        const QMetaObject *mo = m_metaObject;
-        while ((mo->*MetaOffset)() > index.row()) {
-          mo = mo->superClass();
+        const MetaThing metaThing = (m_metaObject->*MetaAccessor)(index.row());
+        if (index.column() == columnCount(index) - 1 && role == Qt::DisplayRole) {
+            const QMetaObject *mo = m_metaObject;
+            while ((mo->*MetaOffset)() > index.row())
+                mo = mo->superClass();
+            return mo->className();
         }
-        return mo->className();
-      }
-      return metaData(index, metaThing, role);
+        return metaData(index, metaThing, role);
     }
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
     {
-      if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        if (section == columnCount() - 1) {
-          return tr("Class");
+        if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+            if (section == columnCount() - 1)
+                return tr("Class");
+            return columnHeader(section);
         }
-        return columnHeader(section);
-      }
-      return QAbstractItemModel::headerData(section, orientation, role);
+        return QAbstractItemModel::headerData(section, orientation, role);
     }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
-      if (!m_metaObject || parent.isValid()) {
-        return 0;
-      }
-      return (m_metaObject->*MetaCount)();
+        if (!m_metaObject || parent.isValid())
+            return 0;
+        return (m_metaObject->*MetaCount)();
     }
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
     {
-      if (row >= 0 && row < rowCount(parent) && column >= 0 &&
-          column < columnCount(parent) && !parent.isValid()) {
-        return createIndex(row, column, -1);
-      }
-      return QModelIndex();
+        if (row >= 0 && row < rowCount(parent) && column >= 0
+            && column < columnCount(parent) && !parent.isValid())
+            return createIndex(row, column, -1);
+        return QModelIndex();
     }
 
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE
     {
-      Q_UNUSED(child);
-      return QModelIndex();
+        Q_UNUSED(child);
+        return QModelIndex();
     }
 
-  protected:
-    virtual QVariant metaData(const QModelIndex &index,
-                              const MetaThing &metaThing, int role) const = 0;
+protected:
+    virtual QVariant metaData(const QModelIndex &index, const MetaThing &metaThing,
+                              int role) const = 0;
 
     virtual QString columnHeader(int index) const = 0;
 
     typedef MetaObjectModel<MetaThing, MetaAccessor, MetaCount, MetaOffset> super;
 
-  protected:
+protected:
     // let's assume that meta objects never get destroyed
     const QMetaObject *m_metaObject;
 };
-
 }
 
 #endif // GAMMARAY_METAOBJECTMODEL_H

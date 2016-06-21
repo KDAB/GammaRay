@@ -38,27 +38,26 @@ class QUrl;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Launching/monitoring of the GammaRay client for out-of-process use. */
 class GAMMARAY_LAUNCHER_EXPORT ClientLauncher
 {
 public:
-  ClientLauncher();
-  ~ClientLauncher();
+    ClientLauncher();
+    ~ClientLauncher();
 
-  bool launch(const QUrl &url);
-  void terminate();
-  void waitForFinished();
+    bool launch(const QUrl &url);
+    void terminate();
+    void waitForFinished();
 
-  static void launchDetached(const QUrl &url);
-
-private:
-  Q_DISABLE_COPY(ClientLauncher)
-  static QString clientPath();
-  static QStringList makeArgs(const QUrl &url);
+    static void launchDetached(const QUrl &url);
 
 private:
-  QProcess m_process;
+    Q_DISABLE_COPY(ClientLauncher)
+    static QString clientPath();
+    static QStringList makeArgs(const QUrl &url);
+
+private:
+    QProcess m_process;
 };
 }
 

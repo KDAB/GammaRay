@@ -25,7 +25,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//krazy:excludeall=null,captruefalse
+// krazy:excludeall=null,captruefalse
 
 #include "windllinjector.h"
 
@@ -35,8 +35,8 @@
 #include <cstdlib>
 
 namespace GammaRay {
-
-class FinishWaiter : public QThread {
+class FinishWaiter : public QThread
+{
 public:
     FinishWaiter(WinDllInjector *injector)
         : m_injector(injector) {}
@@ -68,13 +68,13 @@ private:
     WinDllInjector *m_injector;
 };
 
-WinDllInjector::WinDllInjector() :
-  mExitCode(-1),
-  mProcessError(QProcess::UnknownError),
-  mExitStatus(QProcess::NormalExit),
-  m_destProcess(NULL),
-  m_destThread(NULL),
-  m_injectThread(new FinishWaiter(this))
+WinDllInjector::WinDllInjector()
+    : mExitCode(-1)
+    , mProcessError(QProcess::UnknownError)
+    , mExitStatus(QProcess::NormalExit)
+    , m_destProcess(NULL)
+    , m_destThread(NULL)
+    , m_injectThread(new FinishWaiter(this))
 {
 }
 
@@ -85,121 +85,118 @@ WinDllInjector::~WinDllInjector()
 
 QString WinDllInjector::name() const
 {
-  return QString("windll");
+    return QString("windll");
 }
 
-bool WinDllInjector::launch(const QStringList &programAndArgs,
-                            const QString &probeDll, const QString &/*probeFunc*/,
-                            const QProcessEnvironment &env)
+bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
+                            const QString & /*probeFunc*/, const QProcessEnvironment &env)
 {
-  // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx
-  QByteArray buffer;
-  char null[2]= {0,0};
-  foreach(const QString &kv, env.toStringList()) {
-    buffer.append((const char*)kv.utf16(), kv.size() * sizeof(ushort));
-    buffer.append(null, 2);
-  }
-  if (!buffer.isEmpty())
-    buffer.append(null, 2); // windows needs double \0 at the end of env vars
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx
+    QByteArray buffer;
+    char null[2] = {0, 0};
+    foreach (const QString &kv, env.toStringList()) {
+        buffer.append((const char *)kv.utf16(), kv.size() * sizeof(ushort));
+        buffer.append(null, 2);
+    }
+    if (!buffer.isEmpty())
+        buffer.append(null, 2); // windows needs double \0 at the end of env vars
 
-  DWORD dwCreationFlags = CREATE_NO_WINDOW;
-  dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
-  dwCreationFlags |= CREATE_SUSPENDED;
-  STARTUPINFOW startupInfo = { sizeof(STARTUPINFO), 0, 0, 0,
-                               (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
-                               (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
-                               0, 0, 0, STARTF_USESTDHANDLES, 0, 0, 0,
-                               GetStdHandle(STD_INPUT_HANDLE),
-                               GetStdHandle(STD_OUTPUT_HANDLE),
-                               GetStdHandle(STD_ERROR_HANDLE)
-  };
-  PROCESS_INFORMATION pid;
-  memset(&pid, 0, sizeof(PROCESS_INFORMATION));
+    DWORD dwCreationFlags = CREATE_NO_WINDOW;
+    dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
+    dwCreationFlags |= CREATE_SUSPENDED;
+    STARTUPINFOW startupInfo = {
+        sizeof(STARTUPINFO), 0, 0, 0,
+        (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
+        (ulong)CW_USEDEFAULT, (ulong)CW_USEDEFAULT,
+        0, 0, 0, STARTF_USESTDHANDLES, 0, 0, 0,
+        GetStdHandle(STD_INPUT_HANDLE),
+        GetStdHandle(STD_OUTPUT_HANDLE),
+        GetStdHandle(STD_ERROR_HANDLE)
+    };
+    PROCESS_INFORMATION pid;
+    memset(&pid, 0, sizeof(PROCESS_INFORMATION));
 
-  const QString applicationName = programAndArgs.join(" ");
-  BOOL success = CreateProcess(0, (wchar_t *)applicationName.utf16(),
-                               0, 0, TRUE, dwCreationFlags,
-                               buffer.isEmpty() ? 0 : buffer.data(), (wchar_t*)workingDirectory().utf16(),
-                               &startupInfo, &pid);
-  if (!success) {
-    return false;
-  }
+    const QString applicationName = programAndArgs.join(" ");
+    BOOL success = CreateProcess(0, (wchar_t *)applicationName.utf16(),
+                                 0, 0, TRUE, dwCreationFlags,
+                                 buffer.isEmpty() ? 0 : buffer.data(),
+                                 (wchar_t *)workingDirectory().utf16(),
+                                 &startupInfo, &pid);
+    if (!success)
+        return false;
 
-  m_destProcess = pid.hProcess;
-  m_destThread = pid.hThread;
-  m_dllPath = probeDll;
-  m_dllPath.replace('/', '\\');
-  inject();
-  m_injectThread->stop();
-  emit started();
-  ResumeThread(pid.hThread);
-  m_injectThread->start();
-  return m_injectThread->isRunning();
+    m_destProcess = pid.hProcess;
+    m_destThread = pid.hThread;
+    m_dllPath = probeDll;
+    m_dllPath.replace('/', '\\');
+    inject();
+    m_injectThread->stop();
+    emit started();
+    ResumeThread(pid.hThread);
+    m_injectThread->start();
+    return m_injectThread->isRunning();
 }
 
-bool WinDllInjector::attach(int pid, const QString &probeDll, const QString &/*probeFunc*/)
+bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*probeFunc*/)
 {
-  m_dllPath = probeDll;
-  m_dllPath.replace('/', '\\');
+    m_dllPath = probeDll;
+    m_dllPath.replace('/', '\\');
 
-  m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+    m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
 
-  if (!m_destProcess) {
-    return false;
-  }
+    if (!m_destProcess)
+        return false;
 
-  inject();
-  m_injectThread->stop();
-  emit started();
-  m_destProcess = 0;
-  return m_injectThread->isRunning();
+    inject();
+    m_injectThread->stop();
+    emit started();
+    m_destProcess = 0;
+    return m_injectThread->isRunning();
 }
 
 int WinDllInjector::exitCode()
 {
-  return mExitCode;
+    return mExitCode;
 }
 
 QProcess::ProcessError WinDllInjector::processError()
 {
-  return mProcessError;
+    return mProcessError;
 }
 
 QProcess::ExitStatus WinDllInjector::exitStatus()
 {
-  return mExitStatus;
+    return mExitStatus;
 }
 
 void WinDllInjector::inject()
 {
-  int strsize = (m_dllPath.size() * 2) + 2;
-  void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
-  WriteProcessMemory(m_destProcess, mem, (void*)m_dllPath.utf16(), strsize, NULL);
-  HMODULE kernel32handle = GetModuleHandleW(L"Kernel32");
-  FARPROC loadLib = GetProcAddress(kernel32handle, "LoadLibraryW");
-  m_destThread = CreateRemoteThread(m_destProcess, NULL, 0,
-                                    (LPTHREAD_START_ROUTINE)loadLib,
-                                    mem, 0, NULL);
+    int strsize = (m_dllPath.size() * 2) + 2;
+    void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
+    WriteProcessMemory(m_destProcess, mem, (void *)m_dllPath.utf16(), strsize, NULL);
+    HMODULE kernel32handle = GetModuleHandleW(L"Kernel32");
+    FARPROC loadLib = GetProcAddress(kernel32handle, "LoadLibraryW");
+    m_destThread = CreateRemoteThread(m_destProcess, NULL, 0,
+                                      (LPTHREAD_START_ROUTINE)loadLib,
+                                      mem, 0, NULL);
 
-  WaitForSingleObject(m_destThread, INFINITE);
+    WaitForSingleObject(m_destThread, INFINITE);
 
-  DWORD result;
-  GetExitCodeThread(m_destThread, &result);
+    DWORD result;
+    GetExitCodeThread(m_destThread, &result);
 
-  CloseHandle(m_destThread);
-  VirtualFreeEx(m_destProcess, mem, strsize, MEM_RELEASE);
+    CloseHandle(m_destThread);
+    VirtualFreeEx(m_destProcess, mem, strsize, MEM_RELEASE);
 }
 
 QString WinDllInjector::errorString()
 {
-  return mErrorString;
+    return mErrorString;
 }
 
 void WinDllInjector::stop()
 {
-    if (m_destProcess) {
+    if (m_destProcess)
         TerminateProcess(m_destProcess, 0xff);
-    }
 }
-
 }// namespace GammaRay

@@ -36,22 +36,21 @@
 using namespace GammaRay;
 
 MimeTypesWidget::MimeTypesWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::MimeTypesWidget)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , ui(new Ui::MimeTypesWidget)
+    , m_stateManager(this)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"));
-  ui->mimeTypeView->header()->setObjectName("mimeTypeViewHeader");
-  ui->mimeTypeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  ui->mimeTypeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->mimeTypeView->setModel(model);
-  ui->mimeTypeView->sortByColumn(0, Qt::AscendingOrder);
-  new SearchLineController(ui->searchLine, model);
+    auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"));
+    ui->mimeTypeView->header()->setObjectName("mimeTypeViewHeader");
+    ui->mimeTypeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->mimeTypeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->mimeTypeView->setModel(model);
+    ui->mimeTypeView->sortByColumn(0, Qt::AscendingOrder);
+    new SearchLineController(ui->searchLine, model);
 }
 
 MimeTypesWidget::~MimeTypesWidget()
 {
 }
-

@@ -45,13 +45,14 @@ class InternalLauncher : public Launcher
 {
     Q_OBJECT
 public:
-    explicit InternalLauncher(const LaunchOptions& options, QObject* parent = 0) : Launcher(options, parent) {}
+    explicit InternalLauncher(const LaunchOptions &options, QObject *parent = 0)
+        : Launcher(options, parent) {}
 
 signals:
     void launchClient(const QUrl &serverAddress);
 
 protected:
-    void startClient(const QUrl& serverAddress) Q_DECL_OVERRIDE
+    void startClient(const QUrl &serverAddress) Q_DECL_OVERRIDE
     {
         emit launchClient(serverAddress);
     }
@@ -61,8 +62,8 @@ class Orchestrator : public QObject
 {
     Q_OBJECT
 public:
-    explicit Orchestrator(QObject *parent = 0) :
-        QObject(parent)
+    explicit Orchestrator(QObject *parent = 0)
+        : QObject(parent)
     {
         m_launcherWindow = new LauncherWindow;
         // For some reason, Qt4 on OSX does not respect setQuitOnLastWindowClosed(false)
@@ -95,7 +96,8 @@ public slots:
         auto *conMan = new ClientConnectionManager(this);
         connect(conMan, SIGNAL(ready()), conMan, SLOT(createMainWindow()));
         connect(conMan, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
-        connect(conMan, SIGNAL(persistentConnectionError(QString)), conMan, SLOT(handlePersistentConnectionError(QString)));
+        connect(conMan, SIGNAL(persistentConnectionError(QString)), conMan,
+                SLOT(handlePersistentConnectionError(QString)));
         conMan->connectToHost(serverAddress);
     }
 
@@ -109,8 +111,7 @@ private:
     QPointer<Launcher> m_launcher;
 };
 
-
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     QCoreApplication::setOrganizationName("KDAB");
     QCoreApplication::setOrganizationDomain("kdab.com");
@@ -124,7 +125,7 @@ int main(int argc, char** argv)
 #else
         GAMMARAY_INVERSE_BIN_DIR
 #endif
-    );
+        );
     ClientConnectionManager::init();
 
     Orchestrator o;

@@ -34,18 +34,17 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 class MetaObject;
 
 /** @brief Introspectable adaptor to non-QObject properties. */
 class GAMMARAY_CORE_EXPORT MetaProperty
 {
-  public:
+public:
     explicit MetaProperty(const char *name);
     virtual ~MetaProperty();
 
     /// User-readable name of that property
-    const char* name() const;
+    const char *name() const;
 
     /// Current value of the property for object @p object.
     virtual QVariant value(void *object) const = 0;
@@ -57,12 +56,12 @@ class GAMMARAY_CORE_EXPORT MetaProperty
     virtual void setValue(void *object, const QVariant &value);
 
     /// Returns the name of the data type of this property.
-    virtual const char* typeName() const = 0;
+    virtual const char *typeName() const = 0;
 
     /// Returns the class this property belongs to.
     MetaObject *metaObject() const;
 
-  private:
+private:
     Q_DISABLE_COPY(MetaProperty)
     friend class MetaObject;
     void setMetaObject(MetaObject *om);
@@ -73,99 +72,102 @@ class GAMMARAY_CORE_EXPORT MetaProperty
 
 ///@cond internal
 namespace detail {
+template<typename T>
+struct strip_const_ref {
+    typedef T type;
+};
 
-template <typename T>
-struct strip_const_ref { typedef T type; };
-
-template <typename T>
-struct strip_const_ref<const T&> { typedef T type; };
-
+template<typename T>
+struct strip_const_ref<const T &> {
+    typedef T type;
+};
 }
 ///@endcond
 
 /** @brief Template-ed implementation of MetaProperty for member properties. */
-template <typename Class, typename GetterReturnType, typename SetterArgType = GetterReturnType>
+template<typename Class, typename GetterReturnType, typename SetterArgType = GetterReturnType>
 class MetaPropertyImpl : public MetaProperty
 {
-  private:
+private:
     typedef typename detail::strip_const_ref<GetterReturnType>::type ValueType;
 
-  public:
+public:
     inline MetaPropertyImpl(
-      const char *name,
-      GetterReturnType (Class::*getter)() const, void (Class::*setter)(SetterArgType) = 0)
-      : MetaProperty(name), m_getter(getter), m_setter(setter)
+        const char *name, GetterReturnType(Class::*getter)() const,
+        void(Class::*setter)(SetterArgType) = 0)
+        : MetaProperty(name)
+        , m_getter(getter)
+        , m_setter(setter)
     {
     }
 
     bool isReadOnly() const Q_DECL_OVERRIDE
     {
-      return m_setter == 0 ;
+        return m_setter == 0;
     }
 
     QVariant value(void *object) const Q_DECL_OVERRIDE
     {
-      Q_ASSERT(object);
-      Q_ASSERT(m_getter);
-      const ValueType v = (static_cast<Class*>(object)->*(m_getter))();
-      return QVariant::fromValue(v);
+        Q_ASSERT(object);
+        Q_ASSERT(m_getter);
+        const ValueType v = (static_cast<Class *>(object)->*(m_getter))();
+        return QVariant::fromValue(v);
     }
 
     void setValue(void *object, const QVariant &value) Q_DECL_OVERRIDE
     {
-      if (isReadOnly())
-        return;
-      Q_ASSERT(object);
-      Q_ASSERT(m_setter);
-      (static_cast<Class*>(object)->*(m_setter))(value.value<ValueType>());
+        if (isReadOnly())
+            return;
+        Q_ASSERT(object);
+        Q_ASSERT(m_setter);
+        (static_cast<Class *>(object)->*(m_setter))(value.value<ValueType>());
     }
 
-    const char* typeName() const Q_DECL_OVERRIDE
+    const char *typeName() const Q_DECL_OVERRIDE
     {
-      return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
+        return QMetaType::typeName(qMetaTypeId<ValueType>());
     }
 
-  private:
+private:
     GetterReturnType (Class::*m_getter)() const;
     void (Class::*m_setter)(SetterArgType);
 };
 
-
 /** @brief Template-ed implementation of MetaProperty for static properties. */
-template <typename Class, typename GetterReturnType>
+template<typename Class, typename GetterReturnType>
 class MetaStaticPropertyImpl : public MetaProperty
 {
-  private:
+private:
     typedef typename detail::strip_const_ref<GetterReturnType>::type ValueType;
 
-  public:
-    inline MetaStaticPropertyImpl(const char *name, GetterReturnType (*getter)())
-      : MetaProperty(name), m_getter(getter)
+public:
+    inline MetaStaticPropertyImpl(const char *name, GetterReturnType(*getter)())
+        : MetaProperty(name)
+        , m_getter(getter)
     {
     }
 
     bool isReadOnly() const Q_DECL_OVERRIDE
     {
-      return true;
+        return true;
     }
 
     QVariant value(void *object) const Q_DECL_OVERRIDE
     {
-      Q_UNUSED(object);
-      Q_ASSERT(m_getter);
-      const ValueType v = m_getter();
-      return QVariant::fromValue(v);
+        Q_UNUSED(object);
+        Q_ASSERT(m_getter);
+        const ValueType v = m_getter();
+        return QVariant::fromValue(v);
     }
 
-    const char* typeName() const Q_DECL_OVERRIDE
+    const char *typeName() const Q_DECL_OVERRIDE
     {
-      return QMetaType::typeName(qMetaTypeId<ValueType>()) ;
+        return QMetaType::typeName(qMetaTypeId<ValueType>());
     }
 
-  private:
+private:
     GetterReturnType (*m_getter)();
 };
-
 }
 
 #endif

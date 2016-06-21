@@ -30,7 +30,8 @@
 
 using namespace GammaRay;
 
-SafetyFilterProxyModel::SafetyFilterProxyModel(QObject* parent): QIdentityProxyModel(parent)
+SafetyFilterProxyModel::SafetyFilterProxyModel(QObject *parent)
+    : QIdentityProxyModel(parent)
 {
 }
 
@@ -38,13 +39,12 @@ SafetyFilterProxyModel::~SafetyFilterProxyModel()
 {
 }
 
-QVariant SafetyFilterProxyModel::data(const QModelIndex& proxyIndex, int role) const
+QVariant SafetyFilterProxyModel::data(const QModelIndex &proxyIndex, int role) const
 {
     if (sourceModel() && sourceModel()->inherits("QQmlListModel")) {
         // data on anything not in roleNames() crashes
-        if (!sourceModel()->roleNames().contains(role)) {
+        if (!sourceModel()->roleNames().contains(role))
             return QVariant();
-        }
     }
 
     return QAbstractProxyModel::data(proxyIndex, role);

@@ -32,7 +32,6 @@
 #include <core/toolfactory.h>
 
 namespace GammaRay {
-
 class NetworkSupport : public QObject
 {
     Q_OBJECT
@@ -55,7 +54,6 @@ public:
     explicit NetworkSupportFactory(QObject *parent = Q_NULLPTR);
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_NETWORKSUPPORT_H

@@ -38,95 +38,93 @@ TranslatorsModel::TranslatorsModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
 }
+
 int TranslatorsModel::columnCount(const QModelIndex &) const
 {
-  return 3;
+    return 3;
 }
+
 int TranslatorsModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return 0;
-  }
-  return m_translators.size();
+    if (parent.isValid())
+        return 0;
+    return m_translators.size();
 }
+
 QVariant TranslatorsModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
-    return QVariant();
+    if (!index.isValid())
+        return QVariant();
 
-  if (role == TranslatorRole) {
-    return QVariant::fromValue(m_translators.at(index.row()));
-  }
-  TranslatorWrapper *trans = m_translators.at(index.row());
-  Q_ASSERT(trans);
-  if (role == Qt::DisplayRole) {
-    if (index.column() == 0) {
-      return Util::shortDisplayString(trans->translator());
-    } else if (index.column() == 1) {
-      return QString(trans->translator()->metaObject()->className());
-    } else if (index.column() == 2) {
-      return trans->model()->rowCount(QModelIndex());
+    if (role == TranslatorRole)
+        return QVariant::fromValue(m_translators.at(index.row()));
+    TranslatorWrapper *trans = m_translators.at(index.row());
+    Q_ASSERT(trans);
+    if (role == Qt::DisplayRole) {
+        if (index.column() == 0)
+            return Util::shortDisplayString(trans->translator());
+        else if (index.column() == 1)
+            return QString(trans->translator()->metaObject()->className());
+        else if (index.column() == 2)
+            return trans->model()->rowCount(QModelIndex());
+    } else if (role == Qt::ToolTipRole) {
+        return Util::tooltipForObject(trans->translator());
     }
-  } else if (role == Qt::ToolTipRole) {
-    return Util::tooltipForObject(trans->translator());
-  }
-  return QVariant();
+    return QVariant();
 }
-QVariant TranslatorsModel::headerData(int section,
-                                           Qt::Orientation orientation,
-                                           int role) const
+
+QVariant TranslatorsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0) {
-      return tr("Object");
-    } else if (section == 1) {
-      return tr("Type");
-    } else if (section == 2) {
-      return tr("Translations");
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        if (section == 0)
+            return tr("Object");
+        else if (section == 1)
+            return tr("Type");
+        else if (section == 2)
+            return tr("Translations");
     }
-  }
-  return QVariant();
+    return QVariant();
 }
 
 TranslatorWrapper *TranslatorsModel::translator(const QModelIndex &index)
-    const
+const
 {
-  return m_translators.at(index.row());
+    return m_translators.at(index.row());
 }
+
 void TranslatorsModel::sourceDataChanged()
 {
-  const int row = m_translators.indexOf(qobject_cast<TranslationsModel *>(sender())->translator());
-  if (row == -1) {
-    return;
-  }
-  const QModelIndex index = this->index(row, 2, QModelIndex());
-  if (!index.isValid()) {
-    return;
-  }
-  // needed to make sure these things also update
-  emit dataChanged(index, index,
-                   QVector<int>() << Qt::DisplayRole << Qt::EditRole);
+    const int row
+        = m_translators.indexOf(qobject_cast<TranslationsModel *>(sender())->translator());
+    if (row == -1)
+        return;
+    const QModelIndex index = this->index(row, 2, QModelIndex());
+    if (!index.isValid())
+        return;
+    // needed to make sure these things also update
+    emit dataChanged(index, index,
+                     QVector<int>() << Qt::DisplayRole << Qt::EditRole);
 }
 
 void TranslatorsModel::registerTranslator(TranslatorWrapper *translator)
 {
-  beginInsertRows(QModelIndex(), 0, 0);
-  m_translators.prepend(translator);
-  endInsertRows();
-  connect(translator->model(), SIGNAL(rowCountChanged()),
-          SLOT(sourceDataChanged()));
+    beginInsertRows(QModelIndex(), 0, 0);
+    m_translators.prepend(translator);
+    endInsertRows();
+    connect(translator->model(), SIGNAL(rowCountChanged()),
+            SLOT(sourceDataChanged()));
 }
 
 void TranslatorsModel::unregisterTranslator(TranslatorWrapper *translator)
 {
-  const int index = m_translators.indexOf(translator);
-  if (index == -1) {
-    qWarning("TranslatorsModel::unregisterTranslator: translator %s is not registered",
-             qPrintable(Util::addressToString(translator)));
-    return;
-  }
-  disconnect(translator->model(), 0, this, 0);
-  beginRemoveRows(QModelIndex(), index, index);
-  m_translators.removeAt(index);
-  endRemoveRows();
+    const int index = m_translators.indexOf(translator);
+    if (index == -1) {
+        qWarning("TranslatorsModel::unregisterTranslator: translator %s is not registered",
+                 qPrintable(Util::addressToString(translator)));
+        return;
+    }
+    disconnect(translator->model(), 0, this, 0);
+    beginRemoveRows(QModelIndex(), index, index);
+    m_translators.removeAt(index);
+    endRemoveRows();
 }

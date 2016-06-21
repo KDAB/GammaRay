@@ -38,17 +38,18 @@
 using namespace GammaRay;
 
 KJobTracker::KJobTracker(ProbeInterface *probe, QObject *parent)
-  : QObject(parent), m_jobModel(new KJobModel(this))
+    : QObject(parent)
+    , m_jobModel(new KJobModel(this))
 {
-  connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
-          m_jobModel, SLOT(objectAdded(QObject*)));
-  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
-          m_jobModel, SLOT(objectRemoved(QObject*)));
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
+            m_jobModel, SLOT(objectAdded(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
+            m_jobModel, SLOT(objectRemoved(QObject*)));
 
-  auto proxy = new QSortFilterProxyModel(this);
-  proxy->setSourceModel(m_jobModel);
+    auto proxy = new QSortFilterProxyModel(this);
+    proxy->setSourceModel(m_jobModel);
 
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.KJobModel"), proxy);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.KJobModel"), proxy);
 }
 
 KJobTracker::~KJobTracker()
@@ -57,7 +58,7 @@ KJobTracker::~KJobTracker()
 
 QString KJobTrackerFactory::name() const
 {
-  return tr("KJobs");
+    return tr("KJobs");
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

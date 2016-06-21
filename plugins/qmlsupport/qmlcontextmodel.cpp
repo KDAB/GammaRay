@@ -37,8 +37,8 @@
 
 using namespace GammaRay;
 
-QmlContextModel::QmlContextModel(QObject *parent) :
-    QAbstractTableModel(parent)
+QmlContextModel::QmlContextModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -53,7 +53,7 @@ void QmlContextModel::clear()
     endRemoveRows();
 }
 
-void QmlContextModel::setContext(QQmlContext* leafContext)
+void QmlContextModel::setContext(QQmlContext *leafContext)
 {
     if (!m_contexts.isEmpty()) {
         if (m_contexts.last() != leafContext)
@@ -66,7 +66,7 @@ void QmlContextModel::setContext(QQmlContext* leafContext)
         return;
 
     Q_ASSERT(m_contexts.isEmpty());
-    QVector<QQmlContext*> tmp;
+    QVector<QQmlContext *> tmp;
     auto context = leafContext;
     do {
         tmp.push_back(context);
@@ -79,20 +79,20 @@ void QmlContextModel::setContext(QQmlContext* leafContext)
     endInsertRows();
 }
 
-int QmlContextModel::columnCount(const QModelIndex& parent) const
+int QmlContextModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 2;
 }
 
-int QmlContextModel::rowCount(const QModelIndex& parent) const
+int QmlContextModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
     return m_contexts.size();
 }
 
-QVariant QmlContextModel::data(const QModelIndex& index, int role) const
+QVariant QmlContextModel::data(const QModelIndex &index, int role) const
 {
     if (m_contexts.isEmpty() || !index.isValid())
         return QVariant();
@@ -100,11 +100,12 @@ QVariant QmlContextModel::data(const QModelIndex& index, int role) const
     if (role == Qt::DisplayRole) {
         auto context = m_contexts.at(index.row());
         switch (index.column()) {
-            case 0: return Util::shortDisplayString(context);
-            case 1:
-                if (context->baseUrl().scheme() == QLatin1String("file")) // ### use SourceLocation for this!
-                    return context->baseUrl().path();
-                return context->baseUrl().toString();
+        case 0:
+            return Util::shortDisplayString(context);
+        case 1:
+            if (context->baseUrl().scheme() == QLatin1String("file"))     // ### use SourceLocation for this!
+                return context->baseUrl().path();
+            return context->baseUrl().toString();
         }
     } else if (role == ObjectModel::ObjectRole) {
         return QVariant::fromValue(m_contexts.at(index.row()));
@@ -117,10 +118,11 @@ QVariant QmlContextModel::headerData(int section, Qt::Orientation orientation, i
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Context");
-            case 1: return tr("Location");
+        case 0:
+            return tr("Context");
+        case 1:
+            return tr("Location");
         }
     }
     return QAbstractTableModel::headerData(section, orientation, role);
 }
-

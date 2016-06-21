@@ -32,33 +32,32 @@
 using namespace GammaRay;
 
 StyleInspectorClient::StyleInspectorClient(QObject *parent)
-  : StyleInspectorInterface(parent)
+    : StyleInspectorInterface(parent)
 {
-  // make sure the remote server side uses our initial values
-  setCellHeight(cellHeight());
-  setCellWidth(cellWidth());
-  setCellZoom(cellZoom());
+    // make sure the remote server side uses our initial values
+    setCellHeight(cellHeight());
+    setCellWidth(cellWidth());
+    setCellZoom(cellZoom());
 }
 
 StyleInspectorClient::~StyleInspectorClient()
 {
-
 }
 
 void StyleInspectorClient::setCellHeight(int height)
 {
-  StyleInspectorInterface::setCellHeight(height);
-  Endpoint::instance()->invokeObject(objectName(), "setCellHeight", QVariantList() << height);
+    StyleInspectorInterface::setCellHeight(height);
+    Endpoint::instance()->invokeObject(objectName(), "setCellHeight", QVariantList() << height);
 }
 
 void StyleInspectorClient::setCellWidth(int width)
 {
-  StyleInspectorInterface::setCellWidth(width);
-  Endpoint::instance()->invokeObject(objectName(), "setCellWidth", QVariantList() << width);
+    StyleInspectorInterface::setCellWidth(width);
+    Endpoint::instance()->invokeObject(objectName(), "setCellWidth", QVariantList() << width);
 }
 
 void StyleInspectorClient::setCellZoom(int zoom)
 {
-  StyleInspectorInterface::setCellZoom(zoom);
-  Endpoint::instance()->invokeObject(objectName(), "setCellZoom", QVariantList() << zoom);
+    StyleInspectorInterface::setCellZoom(zoom);
+    Endpoint::instance()->invokeObject(objectName(), "setCellZoom", QVariantList() << zoom);
 }

@@ -34,10 +34,10 @@
 
 using namespace GammaRay;
 
-SearchLineController::SearchLineController(QLineEdit* lineEdit, QAbstractItemModel* proxyModel):
-    QObject(lineEdit),
-    m_lineEdit(lineEdit),
-    m_model(proxyModel)
+SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel)
+    : QObject(lineEdit)
+    , m_lineEdit(lineEdit)
+    , m_model(proxyModel)
 {
     Q_ASSERT(lineEdit);
     Q_ASSERT(proxyModel);
@@ -50,7 +50,7 @@ SearchLineController::SearchLineController(QLineEdit* lineEdit, QAbstractItemMod
     m_lineEdit->setClearButtonEnabled(true);
 #endif
     if (m_lineEdit->placeholderText().isEmpty())
-      m_lineEdit->setPlaceholderText(tr("Search"));
+        m_lineEdit->setPlaceholderText(tr("Search"));
 
     auto timer = new QTimer(this);
     timer->setSingleShot(true);
@@ -70,5 +70,6 @@ void SearchLineController::activateSearch()
         return;
     }
 
-    m_model->setProperty("filterRegExp", QRegExp(m_lineEdit->text(), Qt::CaseInsensitive, QRegExp::FixedString));
+    m_model->setProperty("filterRegExp",
+                         QRegExp(m_lineEdit->text(), Qt::CaseInsensitive, QRegExp::FixedString));
 }

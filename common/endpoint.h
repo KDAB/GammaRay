@@ -42,7 +42,6 @@ class QUrl;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class Message;
 class PropertySyncer;
 
@@ -54,175 +53,180 @@ class PropertySyncer;
  */
 class GAMMARAY_COMMON_EXPORT Endpoint : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ~Endpoint();
+    ~Endpoint();
 
-  /** Send @p msg to the connected endpoint. */
-  static void send(const Message &msg);
+    /** Send @p msg to the connected endpoint. */
+    static void send(const Message &msg);
 
-  /** Returns @c true if we are currently connected to another endpoint. */
-  static bool isConnected();
+    /** Returns @c true if we are currently connected to another endpoint. */
+    static bool isConnected();
 
-  static quint16 defaultPort();
-  static quint16 broadcastPort();
+    static quint16 defaultPort();
+    static quint16 broadcastPort();
 
-  /** Returns the object address for @p objectName, or @c Protocol::InvalidObjectAddress if not known. */
-  Protocol::ObjectAddress objectAddress(const QString &objectName) const;
+    /** Returns the object address for @p objectName, or @c Protocol::InvalidObjectAddress if not known. */
+    Protocol::ObjectAddress objectAddress(const QString &objectName) const;
 
-  /** Singleton accessor. */
-  static Endpoint* instance();
+    /** Singleton accessor. */
+    static Endpoint *instance();
 
-  /**
-   * Register an object of the given name for transparent server/client communication.
-   */
-  virtual Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
+    /**
+     * Register an object of the given name for transparent server/client communication.
+     */
+    virtual Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
 
-  /**
-   * Invoke @p method on the object called @p objectName with the given @p args.
-   *
-   * This also works with signals.
-   *
-   * The default implementation forwards the object calls to remote side when the
-   * endpoint is connected. The Server implementation is furthermore expected to
-   * call the method directly on the local object to support the in-process mode.
-   */
-  virtual void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const;
+    /**
+     * Invoke @p method on the object called @p objectName with the given @p args.
+     *
+     * This also works with signals.
+     *
+     * The default implementation forwards the object calls to remote side when the
+     * endpoint is connected. The Server implementation is furthermore expected to
+     * call the method directly on the local object to support the in-process mode.
+     */
+    virtual void invokeObject(const QString &objectName, const char *method,
+                              const QVariantList &args = QVariantList()) const;
 
-  /**
-   * Write all pending data and block until this is done.
-   *
-   * This should only be used in very rare situations.
-   */
-  void waitForMessagesWritten();
+    /**
+     * Write all pending data and block until this is done.
+     *
+     * This should only be used in very rare situations.
+     */
+    void waitForMessagesWritten();
 
-  /**
-   * Returns a human-readable string describing the host program.
-   */
-  QString label() const;
+    /**
+     * Returns a human-readable string describing the host program.
+     */
+    QString label() const;
 
-  /**
-   * Sets the human-readable label of this instance used e.g. when advertising on the network.
-   */
-  void setLabel(const QString &label);
+    /**
+     * Sets the human-readable label of this instance used e.g. when advertising on the network.
+     */
+    void setLabel(const QString &label);
 
-  /**
-   * Returns true for remote clients and false for the in-probe server endpoint.
-   */
-  virtual bool isRemoteClient() const = 0;
+    /**
+     * Returns true for remote clients and false for the in-probe server endpoint.
+     */
+    virtual bool isRemoteClient() const = 0;
 
-  /**
-   * Returns the listening address of the server, in case you need to connect to a different service there
-   * (such as the web inspector server).
-   */
-  virtual QUrl serverAddress() const = 0;
+    /**
+     * Returns the listening address of the server, in case you need to connect to a different service there
+     * (such as the web inspector server).
+     */
+    virtual QUrl serverAddress() const = 0;
 
-  /** Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
-   *  @see dispatchMessage()
-   */
-  virtual void registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject *receiver, const char* messageHandlerName);
+    /** Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
+     *  @see dispatchMessage()
+     */
+    virtual void registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject *receiver,
+                                        const char *messageHandlerName);
 
-  /** Unregister the message handler for @p objectAddress. */
-  virtual void unregisterMessageHandler(Protocol::ObjectAddress objectAddress);
+    /** Unregister the message handler for @p objectAddress. */
+    virtual void unregisterMessageHandler(Protocol::ObjectAddress objectAddress);
 
 public slots:
-  /** Convenience overload of send(), to directly send message delivered via signals. */
-  void sendMessage(const GammaRay::Message &msg);
+    /** Convenience overload of send(), to directly send message delivered via signals. */
+    void sendMessage(const GammaRay::Message &msg);
 
 signals:
-  /** Emitted when we lost the connection to the other endpoint. */
-  void disconnected();
+    /** Emitted when we lost the connection to the other endpoint. */
+    void disconnected();
 
-  /** Emitted when a new object with name @p objectName has been registered at address @p objectAddress. */
-  void objectRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
-  void objectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
+    /** Emitted when a new object with name @p objectName has been registered at address @p objectAddress. */
+    void objectRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
+    void objectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
 protected:
-  Endpoint(QObject* parent = 0);
-  /** Call with the socket once you have established a connection to another endpoint, takes ownership of @p device. */
-  void setDevice(QIODevice* device);
+    Endpoint(QObject *parent = 0);
+    /** Call with the socket once you have established a connection to another endpoint, takes ownership of @p device. */
+    void setDevice(QIODevice *device);
 
-  /** The object address of the other endpoint. */
-  Protocol::ObjectAddress endpointAddress() const;
+    /** The object address of the other endpoint. */
+    Protocol::ObjectAddress endpointAddress() const;
 
-  /** Called for every incoming message.
-   *  @see dispatchMessage().
-   */
-  virtual void messageReceived(const Message &msg) = 0;
+    /** Called for every incoming message.
+     *  @see dispatchMessage().
+     */
+    virtual void messageReceived(const Message &msg) = 0;
 
-  /** Call this when learning about a new object <-> address mapping. */
-  void addObjectNameAddressMapping(const QString &objectName, Protocol::ObjectAddress objectAddress);
-  /** Call this when learning about a dissolved object <-> address mapping. */
-  void removeObjectNameAddressMapping(const QString& objectName);
+    /** Call this when learning about a new object <-> address mapping. */
+    void addObjectNameAddressMapping(const QString &objectName,
+                                     Protocol::ObjectAddress objectAddress);
+    /** Call this when learning about a dissolved object <-> address mapping. */
+    void removeObjectNameAddressMapping(const QString &objectName);
 
-  /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
-  virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName) = 0;
+    /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
+    virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress,
+                                  const QString &objectName) = 0;
 
-  /** Called when a registered object identified by @p objectAddress has been destroyed. */
-  virtual void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object) = 0;
+    /** Called when a registered object identified by @p objectAddress has been destroyed. */
+    virtual void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName,
+                                 QObject *object) = 0;
 
-  /** Calls the message handler registered for the receiver of @p msg. */
-  void dispatchMessage(const GammaRay::Message& msg);
+    /** Calls the message handler registered for the receiver of @p msg. */
+    void dispatchMessage(const GammaRay::Message &msg);
 
-  /** Sends a given message. */
-  virtual void doSendMessage(const Message &msg);
+    /** Sends a given message. */
+    virtual void doSendMessage(const Message &msg);
 
-  /** All current object name/address pairs. */
-  QVector<QPair<Protocol::ObjectAddress, QString> > objectAddresses() const;
+    /** All current object name/address pairs. */
+    QVector<QPair<Protocol::ObjectAddress, QString> > objectAddresses() const;
 
-  /** Singleton instance. */
-  static Endpoint *s_instance;
+    /** Singleton instance. */
+    static Endpoint *s_instance;
 
-  /**
-   * Invoke @p method on @p object with the given @p args.
-   *
-   * This is invokes the method directly on the local object.
-   */
-  void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const;
+    /**
+     * Invoke @p method on @p object with the given @p args.
+     *
+     * This is invokes the method directly on the local object.
+     */
+    void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const;
 
-  PropertySyncer *m_propertySyncer;
+    PropertySyncer *m_propertySyncer;
 
 private slots:
-  void readyRead();
-  void connectionClosed();
-  void handlerDestroyed(QObject* obj);
-  void objectDestroyed(QObject* obj);
+    void readyRead();
+    void connectionClosed();
+    void handlerDestroyed(QObject *obj);
+    void objectDestroyed(QObject *obj);
 
 private:
-  struct ObjectInfo
-  {
-    ObjectInfo()
-      : address(Protocol::InvalidObjectAddress)
-      , object(0)
-      , receiver(0)
+    struct ObjectInfo
     {
-    }
-    QString name;
-    Protocol::ObjectAddress address;
-    // the locally registered object
-    QObject *object;
+        ObjectInfo()
+            : address(Protocol::InvalidObjectAddress)
+            , object(0)
+            , receiver(0)
+        {
+        }
 
-    // custom message handling support
-    QObject *receiver;
-    QMetaMethod messageHandler;
-  };
+        QString name;
+        Protocol::ObjectAddress address;
+        // the locally registered object
+        QObject *object;
 
-  /** Inserts @p oi into all maps. */
-  void insertObjectInfo(ObjectInfo *oi);
-  /** Removes @p oi from all maps and destroys it. */
-  void removeObjectInfo(ObjectInfo *oi);
+        // custom message handling support
+        QObject *receiver;
+        QMetaMethod messageHandler;
+    };
 
-  QHash<QString, ObjectInfo*> m_nameMap;
-  QHash<Protocol::ObjectAddress, ObjectInfo*> m_addressMap;
-  QHash<QObject*, ObjectInfo*> m_objectMap;
-  QMultiHash<QObject*, ObjectInfo*> m_handlerMap;
+    /** Inserts @p oi into all maps. */
+    void insertObjectInfo(ObjectInfo *oi);
+    /** Removes @p oi from all maps and destroys it. */
+    void removeObjectInfo(ObjectInfo *oi);
 
-  QPointer<QIODevice> m_socket;
-  Protocol::ObjectAddress m_myAddress;
+    QHash<QString, ObjectInfo *> m_nameMap;
+    QHash<Protocol::ObjectAddress, ObjectInfo *> m_addressMap;
+    QHash<QObject *, ObjectInfo *> m_objectMap;
+    QMultiHash<QObject *, ObjectInfo *> m_handlerMap;
 
-  QString m_label;
+    QPointer<QIODevice> m_socket;
+    Protocol::ObjectAddress m_myAddress;
+
+    QString m_label;
 };
-
 }
 
 #endif // GAMMARAY_ENDPOINT_H

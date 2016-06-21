@@ -36,11 +36,10 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** @brief Compile-time introspection adaptor for non-QObject classes. */
 class GAMMARAY_CORE_EXPORT MetaObject
 {
-  public:
+public:
     MetaObject();
     virtual ~MetaObject();
 
@@ -73,49 +72,48 @@ class GAMMARAY_CORE_EXPORT MetaObject
      *  to the given base class type. If @p baseClass is not a base class
      *  of this type, @c nullptr is returned.
      */
-    void* castTo(void *object, const QString &baseClass) const;
+    void *castTo(void *object, const QString &baseClass) const;
 
     void setClassName(const QString &className);
 
     MetaObject *superClass(int index = 0) const;
     bool inherits(const QString &className) const;
 
-  protected:
+protected:
     /** Casts down to base class @p baseClassIndex.
      * This is important when traversing multi-inheritance trees.
      */
     virtual void *castToBaseClass(void *object, int baseClassIndex) const = 0;
 
-  protected:
-    QVector<MetaObject*> m_baseClasses;
+protected:
+    QVector<MetaObject *> m_baseClasses;
 
-  private:
+private:
     Q_DISABLE_COPY(MetaObject)
-    QVector<MetaProperty*> m_properties;
+    QVector<MetaProperty *> m_properties;
     QString m_className;
 };
 
 /** @brief Template implementation of MetaObject. */
-template <typename T, typename Base1 = void, typename Base2 = void, typename Base3 = void>
+template<typename T, typename Base1 = void, typename Base2 = void, typename Base3 = void>
 class MetaObjectImpl : public MetaObject
 {
-  public:
+public:
     void *castToBaseClass(void *object, int baseClassIndex) const Q_DECL_OVERRIDE
     {
-      Q_ASSERT(baseClassIndex >= 0 && baseClassIndex < m_baseClasses.size());
-      switch (baseClassIndex) {
-      case 0:
-        return static_cast<Base1*>(static_cast<T*>(object));
-      case 1:
-        return static_cast<Base2*>(static_cast<T*>(object));
-      case 2:
-        return static_cast<Base3*>(static_cast<T*>(object));
-      }
-      Q_ASSERT(!"WTF!?");
-      return 0;
+        Q_ASSERT(baseClassIndex >= 0 && baseClassIndex < m_baseClasses.size());
+        switch (baseClassIndex) {
+        case 0:
+            return static_cast<Base1 *>(static_cast<T *>(object));
+        case 1:
+            return static_cast<Base2 *>(static_cast<T *>(object));
+        case 2:
+            return static_cast<Base3 *>(static_cast<T *>(object));
+        }
+        Q_ASSERT(!"WTF!?");
+        return 0;
     }
 };
-
 }
 
 #endif // GAMMARAY_METAOBJECT_H

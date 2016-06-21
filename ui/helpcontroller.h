@@ -38,20 +38,17 @@ class QString;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /*! Controls the Assistant-based help browser. */
-namespace HelpController
-{
-    /*! Returns @c true if Assistant and our help collection are found. */
-    GAMMARAY_UI_EXPORT bool isAvailable();
+namespace HelpController {
+/*! Returns @c true if Assistant and our help collection are found. */
+GAMMARAY_UI_EXPORT bool isAvailable();
 
-    /*! Open start page of the help collection. */
-    GAMMARAY_UI_EXPORT void openContents();
+/*! Open start page of the help collection. */
+GAMMARAY_UI_EXPORT void openContents();
 
-    /*! Opens the specified page of the help collection. */
-    GAMMARAY_UI_EXPORT void openPage(const QString &page);
+/*! Opens the specified page of the help collection. */
+GAMMARAY_UI_EXPORT void openPage(const QString &page);
 }
-
 }
 
 #endif // GAMMARAY_HELPCONTROLLER_H

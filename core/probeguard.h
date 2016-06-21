@@ -34,7 +34,6 @@
 #include <qglobal.h>
 
 namespace GammaRay {
-
 /** Use this inside probe code that might trigger expensive or otherwise problematic side-effects in
  * GammaRay itself, so the triggered probe part can skip reacting to that action.
  *
@@ -70,7 +69,6 @@ public:
     ProbeGuardSuspender();
     ~ProbeGuardSuspender();
 };
-
 }
 
 #endif // GAMMARAY_PROBEGUARD_H

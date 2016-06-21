@@ -43,42 +43,43 @@ QT_END_NAMESPACE
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
-    out << data.name << data.attributeType << data.byteOffset << data.byteStride << data.count << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
+    out << data.name << data.attributeType << data.byteOffset << data.byteStride << data.count
+        << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
     return out;
 }
 
 static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 {
-    in >> data.name >> data.attributeType >> data.byteOffset >> data.byteStride >> data.count >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
+    in >> data.name >> data.attributeType >> data.byteOffset >> data.byteStride >> data.count
+       >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
     return in;
 }
 
-Qt3DGeometryAttributeData::Qt3DGeometryAttributeData() :
-    attributeType(Qt3DRender::QAttribute::VertexAttribute),
-    byteOffset(0),
-    byteStride(0),
-    count(0),
-    divisor(0),
-    vertexBaseType(Qt3DRender::QAttribute::UnsignedShort),
-    vertexSize(0),
-    bufferIndex(0)
+Qt3DGeometryAttributeData::Qt3DGeometryAttributeData()
+    : attributeType(Qt3DRender::QAttribute::VertexAttribute)
+    , byteOffset(0)
+    , byteStride(0)
+    , count(0)
+    , divisor(0)
+    , vertexBaseType(Qt3DRender::QAttribute::UnsignedShort)
+    , vertexSize(0)
+    , bufferIndex(0)
 {
 }
 
-bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData& rhs) const
+bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData &rhs) const
 {
     return
-        name == rhs.name &&
-        attributeType == rhs.attributeType &&
-        byteOffset == rhs.byteOffset &&
-        byteStride == rhs.byteStride &&
-        count == rhs.count &&
-        divisor == rhs.divisor &&
-        vertexBaseType == rhs.vertexBaseType &&
-        vertexSize == rhs.vertexSize &&
-        bufferIndex == rhs.bufferIndex;
+        name == rhs.name
+        && attributeType == rhs.attributeType
+        && byteOffset == rhs.byteOffset
+        && byteStride == rhs.byteStride
+        && count == rhs.count
+        && divisor == rhs.divisor
+        && vertexBaseType == rhs.vertexBaseType
+        && vertexSize == rhs.vertexSize
+        && bufferIndex == rhs.bufferIndex;
 }
-
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
 {
@@ -92,16 +93,15 @@ static QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
     return in;
 }
 
-Qt3DGeometryBufferData::Qt3DGeometryBufferData() :
-    type(Qt3DRender::QBuffer::VertexBuffer)
+Qt3DGeometryBufferData::Qt3DGeometryBufferData()
+    : type(Qt3DRender::QBuffer::VertexBuffer)
 {
 }
 
-bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData& rhs) const
+bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData &rhs) const
 {
     return name == rhs.name && data == rhs.data;
 }
-
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryData &data)
 {
@@ -120,9 +120,8 @@ bool Qt3DGeometryData::operator==(const Qt3DGeometryData &rhs) const
     return attributes == rhs.attributes && buffers == rhs.buffers;
 }
 
-
-Qt3DGeometryExtensionInterface::Qt3DGeometryExtensionInterface(const QString& name, QObject* parent) :
-    QObject(parent)
+Qt3DGeometryExtensionInterface::Qt3DGeometryExtensionInterface(const QString &name, QObject *parent)
+    : QObject(parent)
 {
     qRegisterMetaType<Qt3DGeometryData>();
     qRegisterMetaTypeStreamOperators<Qt3DGeometryData>();
@@ -138,7 +137,7 @@ Qt3DGeometryData Qt3DGeometryExtensionInterface::geometryData() const
     return m_data;
 }
 
-void Qt3DGeometryExtensionInterface::setGeometryData(const Qt3DGeometryData& data)
+void Qt3DGeometryExtensionInterface::setGeometryData(const Qt3DGeometryData &data)
 {
     if (m_data == data)
         return;

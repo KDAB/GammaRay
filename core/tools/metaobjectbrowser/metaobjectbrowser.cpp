@@ -44,36 +44,39 @@ using namespace GammaRay;
 
 MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
-    , m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this))
+    , m_propertyController(new PropertyController(QStringLiteral(
+                                                      "com.kdab.GammaRay.MetaObjectBrowser"), this))
 {
-  m_model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
-  m_model->setSourceModel(Probe::instance()->metaObjectModel());
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"), m_model);
+    m_model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    m_model->setSourceModel(Probe::instance()->metaObjectModel());
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"), m_model);
 
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_model);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_model);
 
-  connect(selectionModel,SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(objectSelected(QItemSelection)));
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(objectSelected(QItemSelection)));
 
-  m_propertyController->setMetaObject(0); // init
+    m_propertyController->setMetaObject(0); // init
 
-  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
-  connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)), this, SLOT(objectSelected(void*,QString)));
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
+            SLOT(objectSelected(QObject*)));
+    connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)), this,
+            SLOT(objectSelected(void*,QString)));
 }
 
 void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
 {
-  QModelIndex index;
-  if (selection.size() == 1)
-    index = selection.first().topLeft();
+    QModelIndex index;
+    if (selection.size() == 1)
+        index = selection.first().topLeft();
 
-  if (index.isValid()) {
-    const QMetaObject *metaObject =
-      index.data(MetaObjectTreeModel::MetaObjectRole).value<const QMetaObject*>();
-    m_propertyController->setMetaObject(metaObject);
-  } else {
-    m_propertyController->setMetaObject(0);
-  }
+    if (index.isValid()) {
+        const QMetaObject *metaObject
+            = index.data(MetaObjectTreeModel::MetaObjectRole).value<const QMetaObject *>();
+        m_propertyController->setMetaObject(metaObject);
+    } else {
+        m_propertyController->setMetaObject(0);
+    }
 }
 
 void MetaObjectBrowser::objectSelected(QObject *obj)
@@ -87,24 +90,29 @@ void MetaObjectBrowser::objectSelected(void *obj, const QString &typeName)
 {
     if (typeName != QLatin1String("const QMetaObject*"))
         return;
-    metaObjectSelected(static_cast<QMetaObject*>(obj));
+    metaObjectSelected(static_cast<QMetaObject *>(obj));
 }
 
 void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
 {
     if (!mo)
         return;
-    const auto indexes = m_model->match(m_model->index(0,0), MetaObjectTreeModel::MetaObjectRole, QVariant::fromValue(mo), Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    const auto indexes = m_model->match(m_model->index(0,
+                                                       0), MetaObjectTreeModel::MetaObjectRole,
+                                        QVariant::fromValue(
+                                            mo),
+                                        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexes.isEmpty()) {
         metaObjectSelected(mo->superClass());
         return;
     }
-    ObjectBroker::selectionModel(m_model)->select(indexes.first(), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
+    ObjectBroker::selectionModel(m_model)->select(
+        indexes.first(), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
 }
 
 QString MetaObjectBrowserFactory::name() const
 {
-  return tr("Meta Objects");
+    return tr("Meta Objects");
 }
 
 QVector<QByteArray> MetaObjectBrowserFactory::selectableTypes() const

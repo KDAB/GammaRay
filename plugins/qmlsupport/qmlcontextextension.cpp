@@ -44,14 +44,17 @@
 
 using namespace GammaRay;
 
-QmlContextExtension::QmlContextExtension(PropertyController *controller) :
-    PropertyControllerExtension(controller->objectBaseName() + ".qmlContext"),
-    m_contextModel(new QmlContextModel(controller)),
-    m_propertyModel(new AggregatedPropertyModel(controller))
+QmlContextExtension::QmlContextExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".qmlContext")
+    , m_contextModel(new QmlContextModel(controller))
+    , m_propertyModel(new AggregatedPropertyModel(controller))
 {
     controller->registerModel(m_contextModel, QStringLiteral("qmlContextModel"));
     auto contextSelectionModel = ObjectBroker::selectionModel(m_contextModel);
-    QObject::connect(contextSelectionModel, &QItemSelectionModel::selectionChanged, [this](const QItemSelection& selection) { contextSelected(selection); });
+    QObject::connect(contextSelectionModel, &QItemSelectionModel::selectionChanged,
+                     [this](const QItemSelection &selection) {
+        contextSelected(selection);
+    });
 
     controller->registerModel(m_propertyModel, QStringLiteral("qmlContextPropertyModel"));
 }
@@ -60,12 +63,12 @@ QmlContextExtension::~QmlContextExtension()
 {
 }
 
-bool QmlContextExtension::setQObject(QObject* object)
+bool QmlContextExtension::setQObject(QObject *object)
 {
     if (!object)
         return false;
 
-    auto context = qobject_cast<QQmlContext*>(object);
+    auto context = qobject_cast<QQmlContext *>(object);
     if (!context) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         auto data = QQmlData::get(object);
@@ -78,7 +81,7 @@ bool QmlContextExtension::setQObject(QObject* object)
     return context;
 }
 
-void QmlContextExtension::contextSelected(const QItemSelection& selection)
+void QmlContextExtension::contextSelected(const QItemSelection &selection)
 {
     if (selection.isEmpty()) {
         m_propertyModel->setObject(Q_NULLPTR);
@@ -86,6 +89,6 @@ void QmlContextExtension::contextSelected(const QItemSelection& selection)
     }
 
     const auto idx = selection.first().topLeft();
-    const auto context = idx.data(ObjectModel::ObjectRole).value<QQmlContext*>();
+    const auto context = idx.data(ObjectModel::ObjectRole).value<QQmlContext *>();
     m_propertyModel->setObject(context);
 }

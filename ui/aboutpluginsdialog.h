@@ -32,15 +32,13 @@
 #include <QDialog>
 
 namespace GammaRay {
-
 class AboutPluginsDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit AboutPluginsDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
 };
-
 }
 
 #endif // GAMMARAY_ABOUTPLUGINSDIALOG_H

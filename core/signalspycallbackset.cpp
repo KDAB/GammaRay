@@ -30,15 +30,16 @@
 
 using namespace GammaRay;
 
-SignalSpyCallbackSet::SignalSpyCallbackSet() :
-    signalBeginCallback(0),
-    signalEndCallback(0),
-    slotBeginCallback(0),
-    slotEndCallback(0)
+SignalSpyCallbackSet::SignalSpyCallbackSet()
+    : signalBeginCallback(0)
+    , signalEndCallback(0)
+    , slotBeginCallback(0)
+    , slotEndCallback(0)
 {
 }
 
 bool SignalSpyCallbackSet::isNull() const
 {
-    return signalBeginCallback == 0 && signalEndCallback == 0 && slotBeginCallback == 0 && slotEndCallback == 0;
+    return signalBeginCallback == 0 && signalEndCallback == 0 && slotBeginCallback == 0
+           && slotEndCallback == 0;
 }

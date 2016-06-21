@@ -32,19 +32,17 @@
 #include "signalmonitorinterface.h"
 
 namespace GammaRay {
-
 class SignalMonitorClient : public SignalMonitorInterface
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::SignalMonitorInterface)
 public:
-    explicit SignalMonitorClient(QObject* parent = 0);
+    explicit SignalMonitorClient(QObject *parent = 0);
     ~SignalMonitorClient();
 
 public slots:
     void sendClockUpdates(bool enabled) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_SIGNALMONITORCLIENT_H

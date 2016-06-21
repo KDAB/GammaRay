@@ -42,7 +42,6 @@ class QMainWindow;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class Client;
 class MainWindow;
 
@@ -54,9 +53,9 @@ class MainWindow;
  */
 class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit ClientConnectionManager(QObject* parent = 0, bool showSplashScreenOnStartUp = true);
+    Q_OBJECT
+public:
+    explicit ClientConnectionManager(QObject *parent = 0, bool showSplashScreenOnStartUp = true);
     ~ClientConnectionManager();
 
     QMainWindow *mainWindow() const;
@@ -67,7 +66,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     /** One-time initialization of stream operators and factory callbacks. */
     static void init();
 
-  signals:
+signals:
     /** Emitted when the connection is established and the tool model is populated.
      *  If you want to bring up the standard main window, connect this to createMainWindow(),
      *  otherwise use this to show your own UI at this point.
@@ -85,7 +84,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
      */
     void disconnected();
 
-  public slots:
+public slots:
     /** Disconnect GammaRay. */
     void disconnectFromHost();
 
@@ -99,7 +98,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
      */
     void handlePersistentConnectionError(const QString &msg);
 
-  private slots:
+private slots:
     void connectToHost();
     void connectionEstablished();
     void transientConnectionError();
@@ -108,7 +107,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     void delayedHideSplashScreen();
     void targetQuitRequested();
 
-  private:
+private:
     QUrl m_serverUrl;
     Client *m_client;
     QPointer<MainWindow> m_mainWindow;
@@ -117,7 +116,6 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
     bool m_ignorePersistentError;
     int m_tries;
 };
-
 }
 
 #endif // GAMMARAY_CLIENTCONNECTIONMANAGER_H

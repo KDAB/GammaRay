@@ -32,7 +32,6 @@
 #include <ui/tooluifactory.h>
 
 namespace GammaRay {
-
 class GuiSupportUiFactory : public QObject, public ToolUiFactory
 {
     Q_OBJECT
@@ -41,7 +40,7 @@ class GuiSupportUiFactory : public QObject, public ToolUiFactory
 public:
     QString id() const Q_DECL_OVERRIDE;
     void initUi() Q_DECL_OVERRIDE;
-    QWidget* createWidget(QWidget*) Q_DECL_OVERRIDE;
+    QWidget *createWidget(QWidget *) Q_DECL_OVERRIDE;
 };
 }
 

@@ -39,76 +39,74 @@
 using namespace GammaRay;
 
 LauncherWindow::LauncherWindow(QWidget *parent)
-  : QDialog(parent), ui(new Ui::LauncherWindow)
+    : QDialog(parent)
+    , ui(new Ui::LauncherWindow)
 {
-  ui->setupUi(this);
-  ui->aboutLabel->setText(AboutData::aboutText());
-  connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
-  connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
-  connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
-  connect(ui->connectPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
-  connect(ui->attachPage, SIGNAL(activate()),
-          ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
-  connect(ui->connectPage, SIGNAL(activate()),
-          ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
-  connect(ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(help()));
+    ui->setupUi(this);
+    ui->aboutLabel->setText(AboutData::aboutText());
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
+    connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
+    connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
+    connect(ui->connectPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
+    connect(ui->attachPage, SIGNAL(activate()),
+            ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
+    connect(ui->connectPage, SIGNAL(activate()),
+            ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
+    connect(ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(help()));
 
-  setWindowTitle(tr("GammaRay Launcher"));
+    setWindowTitle(tr("GammaRay Launcher"));
 
-  QSettings settings;
-  ui->tabWidget->setCurrentIndex(settings.value(QStringLiteral("Launcher/TabIndex")).toInt());
+    QSettings settings;
+    ui->tabWidget->setCurrentIndex(settings.value(QStringLiteral("Launcher/TabIndex")).toInt());
 }
 
 LauncherWindow::~LauncherWindow()
 {
-  delete ui;
+    delete ui;
 }
 
 LaunchOptions LauncherWindow::launchOptions() const
 {
-  QWidget *current = ui->tabWidget->currentWidget();
-  if (current == ui->launchPage) {
-    return ui->launchPage->launchOptions();
-  } else if (current == ui->attachPage) {
-    return ui->attachPage->launchOptions();
-  }
-  return LaunchOptions();
+    QWidget *current = ui->tabWidget->currentWidget();
+    if (current == ui->launchPage)
+        return ui->launchPage->launchOptions();
+    else if (current == ui->attachPage)
+        return ui->attachPage->launchOptions();
+    return LaunchOptions();
 }
 
 void LauncherWindow::tabChanged()
 {
-  if (ui->tabWidget->currentWidget() == ui->attachPage) {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Attach"));
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->attachPage->isValid());
-  } else if (ui->tabWidget->currentWidget() == ui->launchPage) {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Launch"));
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->launchPage->isValid());
-  } else if (ui->tabWidget->currentWidget() == ui->connectPage) {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Connect"));
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->connectPage->isValid());
-  } else {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-  }
+    if (ui->tabWidget->currentWidget() == ui->attachPage) {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Attach"));
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->attachPage->isValid());
+    } else if (ui->tabWidget->currentWidget() == ui->launchPage) {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Launch"));
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->launchPage->isValid());
+    } else if (ui->tabWidget->currentWidget() == ui->connectPage) {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Connect"));
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(ui->connectPage->isValid());
+    } else {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    }
 }
 
 void LauncherWindow::accept()
 {
-  QSettings settings;
-  settings.setValue(QStringLiteral("Launcher/TabIndex"), ui->tabWidget->currentIndex());
+    QSettings settings;
+    settings.setValue(QStringLiteral("Launcher/TabIndex"), ui->tabWidget->currentIndex());
 
-  ui->launchPage->writeSettings();
-  ui->attachPage->writeSettings();
-  ui->connectPage->writeSettings();
+    ui->launchPage->writeSettings();
+    ui->attachPage->writeSettings();
+    ui->connectPage->writeSettings();
 
-  if (ui->tabWidget->currentWidget() == ui->connectPage) {
-    ui->connectPage->launchClient();
-  }
+    if (ui->tabWidget->currentWidget() == ui->connectPage)
+        ui->connectPage->launchClient();
 
-  QDialog::accept();
+    QDialog::accept();
 }
 
 void LauncherWindow::help()
 {
     HelpController::openPage("doc/gammaray-launcher-gui.html");
 }
-

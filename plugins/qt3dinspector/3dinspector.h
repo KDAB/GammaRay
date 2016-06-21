@@ -48,12 +48,11 @@ class QFrameGraphNode;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyController;
 class Qt3DEntityTreeModel;
 class FrameGraphModel;
 
-class Qt3DInspector: public Qt3DInspectorInterface
+class Qt3DInspector : public Qt3DInspectorInterface
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::Qt3DInspectorInterface)
@@ -93,21 +92,21 @@ private:
     PropertyController *m_frameGraphPropertyController;
 };
 
-class Qt3DInspectorFactory: public QObject, public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
+class Qt3DInspectorFactory : public QObject,
+    public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_3dinspector.json")
 
 public:
-    explicit Qt3DInspectorFactory(QObject *parent = 0) : QObject(parent)
+    explicit Qt3DInspectorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif
-

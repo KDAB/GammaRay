@@ -37,11 +37,10 @@
 #include "processlist.h"
 
 namespace GammaRay {
-
 class ProcessModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ProcessModel(QObject *parent = 0);
     virtual ~ProcessModel();
 
@@ -56,35 +55,34 @@ class ProcessModel : public QAbstractTableModel
     void clear();
 
     enum Columns {
-      PIDColumn,
-      NameColumn,
-      StateColumn,
-      UserColumn,
-      COLUMN_COUNT
+        PIDColumn,
+        NameColumn,
+        StateColumn,
+        UserColumn,
+        COLUMN_COUNT
     };
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     enum CustomRoles {
-      PIDRole = Qt::UserRole,
-      NameRole,
-      StateRole,
-      UserRole,
-      ABIRole
+        PIDRole = Qt::UserRole,
+        NameRole,
+        StateRole,
+        UserRole,
+        ABIRole
     };
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     ProcDataList m_data;
     QVector<ProbeABI> m_availableABIs;
 };
-
 }
 
 #endif // GAMMARAY_PROCESSMODEL_H

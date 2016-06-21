@@ -38,7 +38,6 @@ class QNetworkCookieJar;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class CookieJarModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -48,9 +47,9 @@ public:
 
     void setCookieJar(QNetworkCookieJar *cookieJar);
 
-    int columnCount(const QModelIndex & parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex & parent) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex & index, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
 private:

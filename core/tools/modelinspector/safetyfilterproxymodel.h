@@ -32,7 +32,6 @@
 #include <QIdentityProxyModel>
 
 namespace GammaRay {
-
 /** This model prevents data() calls known to crash specific source models,
  *  such as QQmlListModel.
  */
@@ -43,9 +42,8 @@ public:
     explicit SafetyFilterProxyModel(QObject *parent = 0);
     ~SafetyFilterProxyModel();
 
-    QVariant data(const QModelIndex& proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // SAFETYFILTERPROXYMODEL_H

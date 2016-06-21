@@ -34,7 +34,7 @@
 using namespace GammaRay;
 
 ResourceBrowserClient::ResourceBrowserClient(QObject *parent)
-  : ResourceBrowserInterface(parent)
+    : ResourceBrowserInterface(parent)
 {
 }
 
@@ -42,12 +42,15 @@ ResourceBrowserClient::~ResourceBrowserClient()
 {
 }
 
-void ResourceBrowserClient::downloadResource(const QString &sourceFilePath, const QString &targetFilePath)
+void ResourceBrowserClient::downloadResource(const QString &sourceFilePath,
+                                             const QString &targetFilePath)
 {
-  Endpoint::instance()->invokeObject(objectName(), "downloadResource", QVariantList() << sourceFilePath << targetFilePath);
+    Endpoint::instance()->invokeObject(objectName(), "downloadResource",
+                                       QVariantList() << sourceFilePath << targetFilePath);
 }
 
 void ResourceBrowserClient::selectResource(const QString &sourceFilePath, int line, int column)
 {
-  Endpoint::instance()->invokeObject(objectName(), "selectResource", QVariantList() << sourceFilePath << line << column);
+    Endpoint::instance()->invokeObject(objectName(), "selectResource",
+                                       QVariantList() << sourceFilePath << line << column);
 }

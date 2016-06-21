@@ -39,31 +39,30 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 namespace Ui {
-  class SelectionModelInspectorWidget;
+class SelectionModelInspectorWidget;
 }
 
 class SelectionModelInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SelectionModelInspectorWidget(QWidget *widget = 0);
     ~SelectionModelInspectorWidget();
 
-  private:
+private:
     QScopedPointer<Ui::SelectionModelInspectorWidget> ui;
     UIStateManager m_stateManager;
 };
 
-class SelectionModelInspectorUiFactory : public QObject, public StandardToolUiFactory<SelectionModelInspectorWidget>
+class SelectionModelInspectorUiFactory : public QObject,
+    public StandardToolUiFactory<SelectionModelInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_selectionmodelinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(
+        IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_selectionmodelinspector.json")
 };
-
-
 }
 
 #endif // GAMMARAY_SELECTIONMODELINSPECTOR_H

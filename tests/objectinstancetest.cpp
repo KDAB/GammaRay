@@ -26,17 +26,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include <core/objectinstance.h>
 
 #include <QDebug>
 #include <QtTest/qtest.h>
 
-Q_DECLARE_METATYPE(QDateTime*)
+Q_DECLARE_METATYPE(QDateTime *)
 
 struct CustomType {};
 Q_DECLARE_METATYPE(CustomType)
-Q_DECLARE_METATYPE(CustomType*)
+Q_DECLARE_METATYPE(CustomType *)
 
 using namespace GammaRay;
 
@@ -120,7 +119,6 @@ private slots:
         QCOMPARE(oi.type(), ObjectInstance::QtVariant);
         QCOMPARE(oi.typeName(), QByteArray("CustomType*"));
     }
-
 };
 
 QTEST_MAIN(ObjectInstanceTest)

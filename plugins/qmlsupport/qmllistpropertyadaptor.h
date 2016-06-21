@@ -33,12 +33,11 @@
 #include <core/propertyadaptorfactory.h>
 
 namespace GammaRay {
-
 class QmlListPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QmlListPropertyAdaptor(QObject* parent = 0);
+    explicit QmlListPropertyAdaptor(QObject *parent = 0);
     ~QmlListPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
@@ -48,13 +47,12 @@ public:
 class QmlListPropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
-    PropertyAdaptor* create(const ObjectInstance& oi, QObject* parent = 0) const Q_DECL_OVERRIDE;
-    static QmlListPropertyAdaptorFactory* instance();
+    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0) const Q_DECL_OVERRIDE;
+    static QmlListPropertyAdaptorFactory *instance();
 
 private:
-    static QmlListPropertyAdaptorFactory* s_instance;
+    static QmlListPropertyAdaptorFactory *s_instance;
 };
-
 }
 
 #endif // GAMMARAY_QMLLISTPROPERTYADAPTOR_H

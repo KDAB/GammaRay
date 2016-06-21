@@ -46,30 +46,40 @@
 using namespace GammaRay;
 
 StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
-  : StyleInspectorInterface(parent),
-    m_primitiveModel(new PrimitiveModel(this)),
-    m_controlModel(new ControlModel(this)),
-    m_complexControlModel(new ComplexControlModel(this)),
-    m_pixelMetricModel(new PixelMetricModel(this)),
-    m_standardIconModel(new StandardIconModel(this)),
-    m_standardPaletteModel(new PaletteModel(this))
+    : StyleInspectorInterface(parent)
+    , m_primitiveModel(new PrimitiveModel(this))
+    , m_controlModel(new ControlModel(this))
+    , m_complexControlModel(new ComplexControlModel(this))
+    , m_pixelMetricModel(new PixelMetricModel(this))
+    , m_standardIconModel(new StandardIconModel(this))
+    , m_standardPaletteModel(new PaletteModel(this))
 {
-  ObjectTypeFilterProxyModel<QStyle> *styleFilter = new ObjectTypeFilterProxyModel<QStyle>(this);
-  styleFilter->setSourceModel(probe->objectListModel());
-  SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
-  singleColumnProxy->setSourceModel(styleFilter);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleList"), singleColumnProxy);
+    ObjectTypeFilterProxyModel<QStyle> *styleFilter = new ObjectTypeFilterProxyModel<QStyle>(this);
+    styleFilter->setSourceModel(probe->objectListModel());
+    SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
+    singleColumnProxy->setSourceModel(styleFilter);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleList"), singleColumnProxy);
 
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(singleColumnProxy);
-  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          this, SLOT(styleSelected(QItemSelection)));
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(singleColumnProxy);
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(styleSelected(QItemSelection)));
 
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.PrimitiveModel"), m_primitiveModel);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.ControlModel"), m_controlModel);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.ComplexControlModel"), m_complexControlModel);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.PixelMetricModel"), m_pixelMetricModel);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.StandardIconModel"), m_standardIconModel);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.PaletteModel"), m_standardPaletteModel);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.StyleInspector.PrimitiveModel"), m_primitiveModel);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.StyleInspector.ControlModel"), m_controlModel);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.StyleInspector.ComplexControlModel"),
+                         m_complexControlModel);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.StyleInspector.PixelMetricModel"),
+                         m_pixelMetricModel);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.StyleInspector.StandardIconModel"),
+                         m_standardIconModel);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.StyleInspector.PaletteModel"),
+                         m_standardPaletteModel);
 }
 
 StyleInspector::~StyleInspector()
@@ -78,22 +88,22 @@ StyleInspector::~StyleInspector()
 
 void StyleInspector::styleSelected(const QItemSelection &selection)
 {
-  if (selection.isEmpty())
-    return;
-  const QModelIndex index = selection.first().topLeft();
-  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  QStyle *style = qobject_cast<QStyle*>(obj);
-  m_primitiveModel->setStyle(style);
-  m_controlModel->setStyle(style);
-  m_complexControlModel->setStyle(style);
-  m_pixelMetricModel->setStyle(style);
-  m_standardIconModel->setStyle(style);
-  m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
+    if (selection.isEmpty())
+        return;
+    const QModelIndex index = selection.first().topLeft();
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
+    QStyle *style = qobject_cast<QStyle *>(obj);
+    m_primitiveModel->setStyle(style);
+    m_controlModel->setStyle(style);
+    m_complexControlModel->setStyle(style);
+    m_pixelMetricModel->setStyle(style);
+    m_standardIconModel->setStyle(style);
+    m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
 }
 
 QString StyleInspectorFactory::name() const
 {
-  return tr("Style");
+    return tr("Style");
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

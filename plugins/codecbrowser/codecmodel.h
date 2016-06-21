@@ -34,18 +34,16 @@
 #include <QTextCodec>
 
 namespace GammaRay {
-
 class AllCodecsModel : public QAbstractItemModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit AllCodecsModel(QObject *parent);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    QVariant data(const QModelIndex &index,
-                  int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
@@ -58,8 +56,8 @@ class AllCodecsModel : public QAbstractItemModel
 
 class SelectedCodecsModel : public QAbstractItemModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SelectedCodecsModel(QObject *parent);
 
     void setCodecs(const QStringList &codecs);
@@ -68,8 +66,7 @@ class SelectedCodecsModel : public QAbstractItemModel
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    QVariant data(const QModelIndex &index,
-                  int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
@@ -79,14 +76,13 @@ class SelectedCodecsModel : public QAbstractItemModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void updateText(const QString &text);
 
-  private:
+private:
     QStringList m_codecs;
     QString m_text;
 };
-
 }
 
 #endif

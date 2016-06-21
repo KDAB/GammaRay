@@ -70,17 +70,17 @@
 
 using namespace GammaRay;
 
-Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
-    QWidget(parent),
-    ui(new Ui::Qt3DGeometryTab),
-    m_surface(nullptr),
-    m_aspectEngine(nullptr),
-    m_camera(nullptr),
-    m_geometryRenderer(nullptr),
-    m_geometryTransform(nullptr),
-    m_cullMode(nullptr),
-    m_normalsRenderPass(nullptr),
-    m_bufferModel(new BufferModel(this))
+Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Qt3DGeometryTab)
+    , m_surface(nullptr)
+    , m_aspectEngine(nullptr)
+    , m_camera(nullptr)
+    , m_geometryRenderer(nullptr)
+    , m_geometryTransform(nullptr)
+    , m_cullMode(nullptr)
+    , m_normalsRenderPass(nullptr)
+    , m_bufferModel(new BufferModel(this))
 {
     ui->setupUi(this);
     auto toolbar = new QToolBar(this);
@@ -109,7 +109,8 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     });
     connect(ui->actionCullBack, &QAction::toggled, this, [this]() {
         if (m_cullMode)
-            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
+            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back :
+                                Qt3DRender::QCullFace::NoCulling);
     });
 
     auto viewGroup = new QActionGroup(this);
@@ -127,7 +128,8 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     });
 
     ui->bufferView->setModel(m_bufferModel);
-    connect(ui->bufferBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_bufferModel, &BufferModel::setBufferIndex);
+    connect(ui->bufferBox, QOverload<int>::of(
+                &QComboBox::currentIndexChanged), m_bufferModel, &BufferModel::setBufferIndex);
 
     m_surface = new QWindow;
     m_surface->setSurfaceType(QSurface::OpenGLSurface);
@@ -144,8 +146,10 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget* parent) :
     ui->geometryPage->layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
     m_surface->installEventFilter(this);
 
-    m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface*>(parent->objectBaseName() + ".qt3dGeometry");
-    connect(m_interface, &Qt3DGeometryExtensionInterface::geometryDataChanged, this, &Qt3DGeometryTab::updateGeometry);
+    m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface *>(
+        parent->objectBaseName() + ".qt3dGeometry");
+    connect(m_interface, &Qt3DGeometryExtensionInterface::geometryDataChanged, this,
+            &Qt3DGeometryTab::updateGeometry);
 }
 
 Qt3DGeometryTab::~Qt3DGeometryTab()
@@ -190,7 +194,8 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     skyBoxGeometry->setYZMeshResolution(QSize(2, 2));
     auto skyboxTransform = new Qt3DCore::QTransform;
     skyboxTransform->setTranslation(m_camera->position());
-    connect(m_camera, &Qt3DRender::QCamera::positionChanged, skyboxTransform, &Qt3DCore::QTransform::setTranslation);
+    connect(m_camera, &Qt3DRender::QCamera::positionChanged, skyboxTransform,
+            &Qt3DCore::QTransform::setTranslation);
     skyboxEntity->addComponent(skyBoxGeometry);
     skyboxEntity->addComponent(createSkyboxMaterial(rootEntity));
     skyboxEntity->addComponent(skyboxTransform);
@@ -207,27 +212,36 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
 
     m_aspectEngine->setRootEntity(Qt3DCore::QEntityPtr(rootEntity));
     return QWidget::eventFilter(receiver, event);
- }
+}
 
-Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
+Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
 {
     auto material = new Qt3DRender::QMaterial(parent);
 
     auto wireframeShader = new Qt3DRender::QShaderProgram;
-    wireframeShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
-    wireframeShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/wireframe.geom"))));
-    wireframeShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/wireframe.frag"))));
+    wireframeShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
+                                                                                         "qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
+    wireframeShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(
+                                                                                      QStringLiteral(
+                                                                                          "qrc:/gammaray/qt3dinspector/geometryextension/wireframe.geom"))));
+    wireframeShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(
+                                                                                      QStringLiteral(
+                                                                                          "qrc:/gammaray/qt3dinspector/geometryextension/wireframe.frag"))));
 
     auto wireframeRenderPass = new Qt3DRender::QRenderPass;
     wireframeRenderPass->setShaderProgram(wireframeShader);
     m_cullMode = new Qt3DRender::QCullFace(wireframeRenderPass);
-    m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
+    m_cullMode->setMode(
+        ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
     wireframeRenderPass->addRenderState(m_cullMode);
 
     auto normalsShader = new Qt3DRender::QShaderProgram;
-    normalsShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
-    normalsShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/normals.geom"))));
-    normalsShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/normals.frag"))));
+    normalsShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
+                                                                                       "qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
+    normalsShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
+                                                                                         "qrc:/gammaray/qt3dinspector/geometryextension/normals.geom"))));
+    normalsShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
+                                                                                         "qrc:/gammaray/qt3dinspector/geometryextension/normals.frag"))));
 
     m_normalsRenderPass = new Qt3DRender::QRenderPass;
     m_normalsRenderPass->setShaderProgram(normalsShader);
@@ -253,13 +267,15 @@ Qt3DCore::QComponent* Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     return material;
 }
 
-Qt3DCore::QComponent* Qt3DGeometryTab::createSkyboxMaterial(Qt3DCore::QNode* parent)
+Qt3DCore::QComponent *Qt3DGeometryTab::createSkyboxMaterial(Qt3DCore::QNode *parent)
 {
     auto material = new Qt3DRender::QMaterial(parent);
 
     auto shader = new Qt3DRender::QShaderProgram;
-    shader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/skybox.vert"))));
-    shader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/skybox.frag"))));
+    shader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
+                                                                                "qrc:/gammaray/qt3dinspector/geometryextension/skybox.vert"))));
+    shader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
+                                                                                  "qrc:/gammaray/qt3dinspector/geometryextension/skybox.frag"))));
 
     auto cullFront = new Qt3DRender::QCullFace;
     cullFront->setMode(Qt3DRender::QCullFace::Front);
@@ -313,7 +329,7 @@ void Qt3DGeometryTab::updateGeometry()
     m_bufferModel->setGeometryData(geo);
 
     auto geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
-    QVector<Qt3DRender::QBuffer*> buffers;
+    QVector<Qt3DRender::QBuffer *> buffers;
     buffers.reserve(geo.buffers.size());
     for (const auto &bufferData : geo.buffers) {
         auto buffer = new Qt3DRender::QBuffer(bufferData.type, geometry);
@@ -361,7 +377,7 @@ void Qt3DGeometryTab::updateGeometry()
     resetCamera();
 }
 
-void Qt3DGeometryTab::resizeEvent(QResizeEvent* event)
+void Qt3DGeometryTab::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     if (m_surface && m_camera)
@@ -370,33 +386,36 @@ void Qt3DGeometryTab::resizeEvent(QResizeEvent* event)
 
 void Qt3DGeometryTab::resetCamera()
 {
-    m_camera->lens()->setPerspectiveProjection(45.0f, float(m_surface->width())/float(m_surface->height()), 0.1f, 1000.0f);
+    m_camera->lens()->setPerspectiveProjection(45.0f,
+                                               float(m_surface->width())/float(m_surface->height()), 0.1f,
+                                               1000.0f);
     m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
     m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
     m_camera->setPosition(QVector3D(0, 0, m_boundingVolume.radius() * 2.5f));
 }
 
-void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData& vertexAttr, const QByteArray &bufferData)
+void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr,
+                                            const QByteArray &bufferData)
 {
     m_boundingVolume = BoundingVolume();
     QVector3D v;
     for (unsigned int i = 0; i < vertexAttr.count; ++i) {
         const char *c = bufferData.constData() + vertexAttr.byteOffset + i * vertexAttr.byteStride;
         switch (vertexAttr.vertexBaseType) {
-            case Qt3DRender::QAttribute::Float:
-            {
-                //cppcheck-suppress invalidPointerCast
-                auto f = reinterpret_cast<const float*>(c);
-                v.setX(*f);
-                ++f;
-                v.setY(*f);
-                ++f;
-                v.setZ(*f);
-                break;
-            }
-            default:
-                qWarning() << "Vertex type" << vertexAttr.vertexBaseType << "not implemented yet";
-                return;
+        case Qt3DRender::QAttribute::Float:
+        {
+            // cppcheck-suppress invalidPointerCast
+            auto f = reinterpret_cast<const float *>(c);
+            v.setX(*f);
+            ++f;
+            v.setY(*f);
+            ++f;
+            v.setZ(*f);
+            break;
+        }
+        default:
+            qWarning() << "Vertex type" << vertexAttr.vertexBaseType << "not implemented yet";
+            return;
         }
         m_boundingVolume.addPoint(v);
     }

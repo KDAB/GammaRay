@@ -32,9 +32,7 @@
 #include <QDialog>
 
 namespace GammaRay {
-
-namespace Ui
-{
+namespace Ui {
 class AboutDialog;
 }
 
@@ -42,7 +40,7 @@ class AboutDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AboutDialog(QWidget* parent = 0);
+    explicit AboutDialog(QWidget *parent = 0);
     ~AboutDialog();
 
     void setTitle(const QString &title);

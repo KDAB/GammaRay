@@ -34,7 +34,6 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 /** Wrapper class for a QImage to allow raw data transfer over a QDataStream, bypassing the usuale PNG encoding. */
 class TransferImage
 {
@@ -46,17 +45,16 @@ public:
     void setImage(const QImage &image);
 
     enum Format {
-      QImageFormat,
-      RawFormat
+        QImageFormat,
+        RawFormat
     };
 
 private:
     QImage m_image;
 };
 
-QDataStream& operator<<(QDataStream &stream, const GammaRay::TransferImage &image);
-QDataStream& operator>>(QDataStream &stream, GammaRay::TransferImage &image);
-
+QDataStream &operator<<(QDataStream &stream, const GammaRay::TransferImage &image);
+QDataStream &operator>>(QDataStream &stream, GammaRay::TransferImage &image);
 }
 
 Q_DECLARE_METATYPE(GammaRay::TransferImage)

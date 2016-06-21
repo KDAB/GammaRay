@@ -93,10 +93,10 @@ int GammaRay::MessageStatisticsModel::Info::totalSize() const
     return std::accumulate(messageSize.begin(), messageSize.end(), 0);
 }
 
-MessageStatisticsModel::MessageStatisticsModel(QObject* parent) :
-    QAbstractTableModel(parent),
-    m_totalCount(0),
-    m_totalSize(0)
+MessageStatisticsModel::MessageStatisticsModel(QObject *parent)
+    : QAbstractTableModel(parent)
+    , m_totalCount(0)
+    , m_totalSize(0)
 {
 }
 
@@ -113,7 +113,7 @@ void MessageStatisticsModel::clear()
     endResetModel();
 }
 
-void MessageStatisticsModel::addObject(Protocol::ObjectAddress addr, const QString& name)
+void MessageStatisticsModel::addObject(Protocol::ObjectAddress addr, const QString &name)
 {
     addr -= 1;
     if (addr < m_data.size()) {
@@ -127,7 +127,8 @@ void MessageStatisticsModel::addObject(Protocol::ObjectAddress addr, const QStri
     }
 }
 
-void MessageStatisticsModel::addMessage(Protocol::ObjectAddress addr, Protocol::MessageType msgType, int size)
+void MessageStatisticsModel::addMessage(Protocol::ObjectAddress addr, Protocol::MessageType msgType,
+                                        int size)
 {
     addr -= 1;
     msgType -= 1;
@@ -148,13 +149,13 @@ void MessageStatisticsModel::addMessage(Protocol::ObjectAddress addr, Protocol::
     }
 }
 
-int MessageStatisticsModel::columnCount(const QModelIndex& parent) const
+int MessageStatisticsModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return Protocol::MESSAGE_TYPE_COUNT;
 }
 
-int MessageStatisticsModel::rowCount(const QModelIndex& parent) const
+int MessageStatisticsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -174,7 +175,7 @@ static QColor colorForRatio(double ratio)
     return color;
 }
 
-QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
+QVariant MessageStatisticsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || m_data.isEmpty())
         return QVariant();
@@ -195,12 +196,12 @@ QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
             const auto count = info.totalCount();
             const auto size = info.totalSize();
             return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)")
-                .arg(count)
-                .arg(m_totalCount)
-                .arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2)
-                .arg(size)
-                .arg(m_totalSize)
-                .arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2);
+                   .arg(count)
+                   .arg(m_totalCount)
+                   .arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2)
+                   .arg(size)
+                   .arg(m_totalSize)
+                   .arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2);
         }
         return QVariant();
     }
@@ -209,8 +210,8 @@ QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole) {
         return QString(QString::number(info.messageCount[msgType])
-            + QStringLiteral(" / ")
-            + QString::number(info.messageSize[msgType]));
+                       + QStringLiteral(" / ")
+                       + QString::number(info.messageSize[msgType]));
     }
 
     if (role == Qt::BackgroundRole && m_totalCount > 0 && m_totalSize > 0) {
@@ -223,27 +224,31 @@ QVariant MessageStatisticsModel::data(const QModelIndex& index, int role) const
     }
 
     if (role == Qt::ToolTipRole) {
-        return tr("Object: %1\nMessage Type: %2\nMessage Count: %3 of %4 (%5%)\nMessage Size: %6 of %7 (%8%)")
-            .arg(info.name)
-            .arg(MetaEnum::enumToString(static_cast<Protocol::MessageType>(index.column()), message_type_table))
-            .arg(info.messageCount[msgType])
-            .arg(m_totalCount)
-            .arg(100.0 * (double)info.messageCount[msgType] / (double)m_totalCount, 0, 'f', 2)
-            .arg(info.messageSize[msgType])
-            .arg(m_totalSize)
-            .arg(100.0 * (double)info.messageSize[msgType] / (double)m_totalSize, 0, 'f', 2);
+        return tr(
+            "Object: %1\nMessage Type: %2\nMessage Count: %3 of %4 (%5%)\nMessage Size: %6 of %7 (%8%)")
+               .arg(info.name)
+               .arg(MetaEnum::enumToString(static_cast<Protocol::MessageType>(index.column()),
+                                           message_type_table))
+               .arg(info.messageCount[msgType])
+               .arg(m_totalCount)
+               .arg(100.0 * (double)info.messageCount[msgType] / (double)m_totalCount, 0, 'f', 2)
+               .arg(info.messageSize[msgType])
+               .arg(m_totalSize)
+               .arg(100.0 * (double)info.messageSize[msgType] / (double)m_totalSize, 0, 'f', 2);
     }
 
     return QVariant();
 }
 
-QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orientation,
+                                            int role) const
 {
     if (orientation == Qt::Horizontal) {
         if (role == Qt::DisplayRole) {
             if (section == 0)
                 return tr("Object Name");
-            return MetaEnum::enumToString(static_cast<Protocol::MessageType>(section), message_type_table);
+            return MetaEnum::enumToString(static_cast<Protocol::MessageType>(section),
+                                          message_type_table);
         }
 
         if (role == Qt::BackgroundRole && section > 0) {
@@ -258,12 +263,12 @@ QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orienta
             const auto count = countPerType(section - 1);
             const auto size = sizePerType(section - 1);
             return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)")
-                .arg(count)
-                .arg(m_totalCount)
-                .arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2)
-                .arg(size)
-                .arg(m_totalSize)
-                .arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2);
+                   .arg(count)
+                   .arg(m_totalCount)
+                   .arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2)
+                   .arg(size)
+                   .arg(m_totalSize)
+                   .arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2);
         }
     }
 

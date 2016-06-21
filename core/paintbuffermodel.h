@@ -41,14 +41,13 @@ class QPaintBuffer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /**
  * Model that shows commands stored in a QPaintBuffer.
  */
 class PaintBufferModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PaintBufferModel(QObject *parent = 0);
 
     void setPaintBuffer(const QPaintBuffer &buffer);
@@ -63,11 +62,10 @@ class PaintBufferModel : public QAbstractTableModel
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     QPaintBuffer m_buffer;
     QPaintBufferPrivate *m_privateBuffer;
 };
-
 }
 
 #endif

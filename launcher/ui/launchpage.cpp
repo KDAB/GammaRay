@@ -42,159 +42,157 @@
 using namespace GammaRay;
 
 LaunchPage::LaunchPage(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::LaunchPage),
-    m_argsModel(new QStringListModel(this)),
-    m_abiModel(new ProbeABIModel(this)),
-    m_abiIsValid(true)
+    : QWidget(parent)
+    , ui(new Ui::LaunchPage)
+    , m_argsModel(new QStringListModel(this))
+    , m_abiModel(new ProbeABIModel(this))
+    , m_abiIsValid(true)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 #if defined(Q_OS_MAC)
-  QMargins margins = ui->formLayout->contentsMargins();
-  margins.setRight(margins.right() +2);
-  margins.setBottom(margins.bottom() +2);
-  ui->formLayout->setContentsMargins(margins);
+    QMargins margins = ui->formLayout->contentsMargins();
+    margins.setRight(margins.right() +2);
+    margins.setBottom(margins.bottom() +2);
+    ui->formLayout->setContentsMargins(margins);
 #endif
-  connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
-  connect(ui->addArgButton, SIGNAL(clicked()), SLOT(addArgument()));
-  connect(ui->removeArgButton, SIGNAL(clicked()), SLOT(removeArgument()));
-  connect(ui->progEdit, SIGNAL(textChanged(QString)), SLOT(detectABI(QString)));
-  connect(ui->progEdit, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
+    connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
+    connect(ui->addArgButton, SIGNAL(clicked()), SLOT(addArgument()));
+    connect(ui->removeArgButton, SIGNAL(clicked()), SLOT(removeArgument()));
+    connect(ui->progEdit, SIGNAL(textChanged(QString)), SLOT(detectABI(QString)));
+    connect(ui->progEdit, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
 
-  ui->argsBox->setModel(m_argsModel);
+    ui->argsBox->setModel(m_argsModel);
 
-  QCompleter *pathCompleter = new QCompleter(this);
-  QFileSystemModel *fsModel = new QFileSystemModel(this);
-  fsModel->setRootPath(QDir::rootPath());
-  pathCompleter->setModel(fsModel);
-  ui->progEdit->setCompleter(pathCompleter);
+    QCompleter *pathCompleter = new QCompleter(this);
+    QFileSystemModel *fsModel = new QFileSystemModel(this);
+    fsModel->setRootPath(QDir::rootPath());
+    pathCompleter->setModel(fsModel);
+    ui->progEdit->setCompleter(pathCompleter);
 
-  ui->probeBox->setModel(m_abiModel);
+    ui->probeBox->setModel(m_abiModel);
 
-  QSettings settings;
-  ui->progEdit->setText(settings.value(QStringLiteral("Launcher/Program")).toString());
-  m_argsModel->setStringList(settings.value(QStringLiteral("Launcher/Arguments")).toStringList());
-  ui->accessMode->setCurrentIndex(settings.value(QStringLiteral("Launcher/AccessMode")).toInt());
-  updateArgumentButtons();
+    QSettings settings;
+    ui->progEdit->setText(settings.value(QStringLiteral("Launcher/Program")).toString());
+    m_argsModel->setStringList(settings.value(QStringLiteral("Launcher/Arguments")).toStringList());
+    ui->accessMode->setCurrentIndex(settings.value(QStringLiteral("Launcher/AccessMode")).toInt());
+    updateArgumentButtons();
 }
 
 LaunchPage::~LaunchPage()
 {
-  delete ui;
+    delete ui;
 }
 
 void LaunchPage::writeSettings()
 {
-  QSettings settings;
-  settings.setValue(QStringLiteral("Launcher/Program"), ui->progEdit->text());
-  settings.setValue(QStringLiteral("Launcher/Arguments"), notEmptyString(m_argsModel->stringList()));
-  settings.setValue(QStringLiteral("Launcher/AccessMode"), ui->accessMode->currentIndex());
+    QSettings settings;
+    settings.setValue(QStringLiteral("Launcher/Program"), ui->progEdit->text());
+    settings.setValue(QStringLiteral("Launcher/Arguments"), notEmptyString(
+                          m_argsModel->stringList()));
+    settings.setValue(QStringLiteral("Launcher/AccessMode"), ui->accessMode->currentIndex());
 }
 
 QStringList LaunchPage::notEmptyString(const QStringList &list) const
 {
-  QStringList notEmptyStringList;
-  const int numberOfArguments = list.count();
-  for (int i = 0; i < numberOfArguments; ++i) {
-    if(!list.at(i).trimmed().isEmpty()) {
-      notEmptyStringList << list.at(i);
+    QStringList notEmptyStringList;
+    const int numberOfArguments = list.count();
+    for (int i = 0; i < numberOfArguments; ++i) {
+        if (!list.at(i).trimmed().isEmpty())
+            notEmptyStringList << list.at(i);
     }
-  }
-  return notEmptyStringList;
+    return notEmptyStringList;
 }
 
 LaunchOptions LaunchPage::launchOptions() const
 {
-  LaunchOptions opt;
+    LaunchOptions opt;
 
-  QStringList l;
-  l.push_back(ui->progEdit->text());
-  l.append(notEmptyString(m_argsModel->stringList()));
-  opt.setLaunchArguments(l);
-  opt.setProbeABI(ui->probeBox->itemData(ui->probeBox->currentIndex()).value<ProbeABI>());
+    QStringList l;
+    l.push_back(ui->progEdit->text());
+    l.append(notEmptyString(m_argsModel->stringList()));
+    opt.setLaunchArguments(l);
+    opt.setProbeABI(ui->probeBox->itemData(ui->probeBox->currentIndex()).value<ProbeABI>());
 
-  switch (ui->accessMode->currentIndex()) {
+    switch (ui->accessMode->currentIndex()) {
     case 0: // local, out-of-process
-      opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), true);
-      opt.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-      opt.setUiMode(LaunchOptions::OutOfProcessUi);
-      break;
+        opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), true);
+        opt.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
+        opt.setUiMode(LaunchOptions::OutOfProcessUi);
+        break;
     case 1: // remote, out-of-process
-      opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), true);
-      opt.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_ANY_TCP_URL);
-      opt.setUiMode(LaunchOptions::OutOfProcessUi);
-      break;
+        opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), true);
+        opt.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_ANY_TCP_URL);
+        opt.setUiMode(LaunchOptions::OutOfProcessUi);
+        break;
     case 2: // in-process
-      opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), false);
-      opt.setUiMode(LaunchOptions::InProcessUi);
-      break;
-  }
+        opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), false);
+        opt.setUiMode(LaunchOptions::InProcessUi);
+        break;
+    }
 
-  return opt;
+    return opt;
 }
 
 void LaunchPage::showFileDialog()
 {
-  const QString exeFilePath =
-    QFileDialog::getOpenFileName(
-      this,
-      tr("Executable to Launch"),
-      ui->progEdit->text()
+    const QString exeFilePath
+        = QFileDialog::getOpenFileName(
+        this,
+        tr("Executable to Launch"),
+        ui->progEdit->text()
 #ifdef Q_OS_WIN
-      ,tr("Executable (*.exe)")
+        , tr("Executable (*.exe)")
 #endif
-    );
+        );
 
-  if (exeFilePath.isEmpty()) {
-    return;
-  }
+    if (exeFilePath.isEmpty())
+        return;
 
-  ui->progEdit->setText(exeFilePath);
+    ui->progEdit->setText(exeFilePath);
 }
 
 void LaunchPage::addArgument()
 {
-  m_argsModel->insertRows(m_argsModel->rowCount(), 1);
-  const QModelIndex newIndex = m_argsModel->index(m_argsModel->rowCount() - 1, 0);
-  ui->argsBox->edit(newIndex);
-  updateArgumentButtons();
+    m_argsModel->insertRows(m_argsModel->rowCount(), 1);
+    const QModelIndex newIndex = m_argsModel->index(m_argsModel->rowCount() - 1, 0);
+    ui->argsBox->edit(newIndex);
+    updateArgumentButtons();
 }
 
 void LaunchPage::removeArgument()
 {
-  // TODO check if there's a selection at all and update button state accordingly
-  m_argsModel->removeRows(ui->argsBox->currentIndex().row(), 1);
-  updateArgumentButtons();
+    // TODO check if there's a selection at all and update button state accordingly
+    m_argsModel->removeRows(ui->argsBox->currentIndex().row(), 1);
+    updateArgumentButtons();
 }
 
 bool LaunchPage::isValid()
 {
-  if (ui->progEdit->text().isEmpty() || !m_abiIsValid) {
-    return false;
-  }
+    if (ui->progEdit->text().isEmpty() || !m_abiIsValid)
+        return false;
 
-  const QFileInfo fi(ui->progEdit->text());
+    const QFileInfo fi(ui->progEdit->text());
 
 #ifdef Q_OS_MAC
-  if (fi.isBundle() && (fi.suffix() == "app")) {
-    return true;
-  }
+    if (fi.isBundle() && (fi.suffix() == "app"))
+        return true;
+
 #endif
 
-  return fi.exists() && fi.isFile() && fi.isExecutable();
+    return fi.exists() && fi.isFile() && fi.isExecutable();
 }
 
 void LaunchPage::updateArgumentButtons()
 {
-  ui->removeArgButton->setEnabled(m_argsModel->rowCount() > 0);
+    ui->removeArgButton->setEnabled(m_argsModel->rowCount() > 0);
 }
 
 void LaunchPage::detectABI(const QString &path)
 {
-  const ProbeABI abi = m_abiDetector.abiForExecutable(path);
-  const int index = m_abiModel->indexOfBestMatchingABI(abi);
-  if (index >= 0)
-    ui->probeBox->setCurrentIndex(index);
-  m_abiIsValid = index >= 0;
-  emit updateButtonState();
+    const ProbeABI abi = m_abiDetector.abiForExecutable(path);
+    const int index = m_abiModel->indexOfBestMatchingABI(abi);
+    if (index >= 0)
+        ui->probeBox->setCurrentIndex(index);
+    m_abiIsValid = index >= 0;
+    emit updateButtonState();
 }

@@ -31,7 +31,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
@@ -53,7 +53,6 @@ int main(int argc, char** argv)
     subLayout->addWidget(subLabel);
 
     top.show();
-
 
     QQuickWidget top2;
     top2.setWindowTitle(QStringLiteral("Top Quick Widget"));

@@ -34,29 +34,27 @@ class QComboBox;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class VtkWidget;
 
 class VtkPanel : public QToolBar
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit VtkPanel(VtkWidget *vtkWidget, QWidget *parent = 0);
     virtual ~VtkPanel();
 
-  public slots:
-     void layoutChanged(int);
-     void stereoModeChanged(int);
+public slots:
+    void layoutChanged(int);
+    void stereoModeChanged(int);
 
-  private:
+private:
     VtkWidget *m_vtkWidget;
 
     QComboBox *m_layoutBox;
     QComboBox *m_stereoBox;
     QString m_currentLayout;
 };
-
 }
 
 #endif // GAMMARAY_VTKPANEL_H

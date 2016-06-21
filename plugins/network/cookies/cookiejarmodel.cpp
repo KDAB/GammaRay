@@ -38,18 +38,18 @@ using namespace GammaRay;
 class CookieMonster : public QNetworkCookieJar
 {
 public:
-    static QList<QNetworkCookie> pillageJar(QNetworkCookieJar* jar);
+    static QList<QNetworkCookie> pillageJar(QNetworkCookieJar *jar);
 };
 
-QList<QNetworkCookie> CookieMonster::pillageJar(QNetworkCookieJar* jar)
+QList<QNetworkCookie> CookieMonster::pillageJar(QNetworkCookieJar *jar)
 {
-    auto openJar = reinterpret_cast<CookieMonster*>(jar);
+    auto openJar = reinterpret_cast<CookieMonster *>(jar);
     return openJar->allCookies();
 }
 
-CookieJarModel::CookieJarModel(QObject* parent) :
-    QAbstractTableModel(parent),
-    m_cookieJar(Q_NULLPTR)
+CookieJarModel::CookieJarModel(QObject *parent)
+    : QAbstractTableModel(parent)
+    , m_cookieJar(Q_NULLPTR)
 {
 }
 
@@ -57,7 +57,7 @@ CookieJarModel::~CookieJarModel()
 {
 }
 
-void CookieJarModel::setCookieJar(QNetworkCookieJar* cookieJar)
+void CookieJarModel::setCookieJar(QNetworkCookieJar *cookieJar)
 {
     if (m_cookieJar == cookieJar)
         return;
@@ -71,20 +71,20 @@ void CookieJarModel::setCookieJar(QNetworkCookieJar* cookieJar)
     endResetModel();
 }
 
-int CookieJarModel::columnCount(const QModelIndex& parent) const
+int CookieJarModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 8;
 }
 
-int CookieJarModel::rowCount(const QModelIndex& parent) const
+int CookieJarModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid() || !m_cookieJar)
         return 0;
     return m_cookies.size();
 }
 
-QVariant CookieJarModel::data(const QModelIndex& index, int role) const
+QVariant CookieJarModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || !m_cookieJar)
         return QVariant();
@@ -92,18 +92,26 @@ QVariant CookieJarModel::data(const QModelIndex& index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &cookie = m_cookies.at(index.row());
         switch (index.column()) {
-            case 0: return cookie.name();
-            case 1: return cookie.domain();
-            case 2: return cookie.path();
-            case 3: return cookie.value();
-            case 4: return cookie.expirationDate();
+        case 0:
+            return cookie.name();
+        case 1:
+            return cookie.domain();
+        case 2:
+            return cookie.path();
+        case 3:
+            return cookie.value();
+        case 4:
+            return cookie.expirationDate();
         }
     } else if (role == Qt::CheckStateRole) {
         const auto &cookie = m_cookies.at(index.row());
         switch (index.column()) {
-            case 5: return cookie.isHttpOnly() ? Qt::Checked : Qt::Unchecked;
-            case 6: return cookie.isSecure() ? Qt::Checked : Qt::Unchecked;
-            case 7: return cookie.isSessionCookie() ? Qt::Checked : Qt::Unchecked;
+        case 5:
+            return cookie.isHttpOnly() ? Qt::Checked : Qt::Unchecked;
+        case 6:
+            return cookie.isSecure() ? Qt::Checked : Qt::Unchecked;
+        case 7:
+            return cookie.isSessionCookie() ? Qt::Checked : Qt::Unchecked;
         }
     }
     return QVariant();
@@ -113,14 +121,22 @@ QVariant CookieJarModel::headerData(int section, Qt::Orientation orientation, in
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Name");
-            case 1: return tr("Domain");
-            case 2: return tr("Path");
-            case 3: return tr("Value");
-            case 4: return tr("Expiration Date");
-            case 5: return tr("Http Only");
-            case 6: return tr("Secure");
-            case 7: return tr("Session Cookie");
+        case 0:
+            return tr("Name");
+        case 1:
+            return tr("Domain");
+        case 2:
+            return tr("Path");
+        case 3:
+            return tr("Value");
+        case 4:
+            return tr("Expiration Date");
+        case 5:
+            return tr("Http Only");
+        case 6:
+            return tr("Secure");
+        case 7:
+            return tr("Session Cookie");
         }
     }
 

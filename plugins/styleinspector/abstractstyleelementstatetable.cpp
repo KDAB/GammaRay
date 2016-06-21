@@ -38,46 +38,42 @@
 using namespace GammaRay;
 
 AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject *parent)
-  : AbstractStyleElementModel(parent),
-    m_interface(ObjectBroker::object<StyleInspectorInterface*>())
+    : AbstractStyleElementModel(parent)
+    , m_interface(ObjectBroker::object<StyleInspectorInterface *>())
 {
-  connect(m_interface, SIGNAL(cellSizeChanged()), SLOT(cellSizeChanged()));
+    connect(m_interface, SIGNAL(cellSizeChanged()), SLOT(cellSizeChanged()));
 }
 
 void AbstractStyleElementStateTable::cellSizeChanged()
 {
-  emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
+    emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 
 int AbstractStyleElementStateTable::doColumnCount() const
 {
-  return StyleOption::stateCount();
+    return StyleOption::stateCount();
 }
 
 QVariant AbstractStyleElementStateTable::doData(int row, int column, int role) const
 {
-  Q_UNUSED(column);
-  Q_UNUSED(row);
-  if (role == Qt::SizeHintRole) {
-    return m_interface->cellSizeHint();
-  }
-  return QVariant();
+    Q_UNUSED(column);
+    Q_UNUSED(row);
+    if (role == Qt::SizeHintRole)
+        return m_interface->cellSizeHint();
+    return QVariant();
 }
 
-QVariant AbstractStyleElementStateTable::headerData(int section,
-                                                    Qt::Orientation orientation,
+QVariant AbstractStyleElementStateTable::headerData(int section, Qt::Orientation orientation,
                                                     int role) const
 {
-  if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-    return StyleOption::stateDisplayName(section);
-  }
-  return QAbstractItemModel::headerData(section, orientation, role);
+    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole))
+        return StyleOption::stateDisplayName(section);
+    return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 void AbstractStyleElementStateTable::fillStyleOption(QStyleOption *option, int column) const
 {
-  option->rect = QRect(0, 0, m_interface->cellWidth(), m_interface->cellHeight());
-  option->palette = m_style->standardPalette();
-  option->state = StyleOption::prettyState(column);
+    option->rect = QRect(0, 0, m_interface->cellWidth(), m_interface->cellHeight());
+    option->palette = m_style->standardPalette();
+    option->state = StyleOption::prettyState(column);
 }
-

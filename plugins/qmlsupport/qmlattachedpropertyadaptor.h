@@ -33,19 +33,18 @@
 #include <core/propertyadaptorfactory.h>
 
 namespace GammaRay {
-
 class QmlAttachedPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QmlAttachedPropertyAdaptor(QObject* parent = 0);
+    explicit QmlAttachedPropertyAdaptor(QObject *parent = 0);
     ~QmlAttachedPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
 
 protected:
-    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
 
 private:
     QVector<int> m_attachedTypes;
@@ -55,12 +54,11 @@ private:
 class QmlAttachedPropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
-    PropertyAdaptor* create(const ObjectInstance& oi, QObject* parent = 0) const Q_DECL_OVERRIDE;
-    static QmlAttachedPropertyAdaptorFactory* instance();
+    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0) const Q_DECL_OVERRIDE;
+    static QmlAttachedPropertyAdaptorFactory *instance();
 private:
-    static QmlAttachedPropertyAdaptorFactory* s_instance;
+    static QmlAttachedPropertyAdaptorFactory *s_instance;
 };
-
 }
 
 #endif // GAMMARAY_QMLATTACHEDPROPERTYADAPTOR_H

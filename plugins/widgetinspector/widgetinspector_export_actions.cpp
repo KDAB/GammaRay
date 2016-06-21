@@ -47,42 +47,43 @@
 #include <QFile>
 
 extern "C" {
-
 #ifdef HAVE_QT_SVG
 Q_DECL_EXPORT void gammaray_save_widget_to_svg(QWidget *widget, const QString &fileName)
 {
-  QSvgGenerator svg;
-  svg.setFileName(fileName);
-  svg.setSize(widget->size());
-  svg.setViewBox(QRect(QPoint(0, 0), widget->size()));
-  QPainter painter(&svg);
-  widget->render(&painter);
-  painter.end();
+    QSvgGenerator svg;
+    svg.setFileName(fileName);
+    svg.setSize(widget->size());
+    svg.setViewBox(QRect(QPoint(0, 0), widget->size()));
+    QPainter painter(&svg);
+    widget->render(&painter);
+    painter.end();
 }
+
 #endif
 
 #ifdef HAVE_QT_DESIGNER
 Q_DECL_EXPORT void gammaray_save_widget_to_ui(QWidget *widget, const QString &fileName)
 {
-  QFile file(fileName);
-  if (file.open(QFile::WriteOnly)) {
-    GammaRay::UiExtractor formBuilder;
-    formBuilder.save(&file, widget);
-  }
+    QFile file(fileName);
+    if (file.open(QFile::WriteOnly)) {
+        GammaRay::UiExtractor formBuilder;
+        formBuilder.save(&file, widget);
+    }
 }
+
 #endif
 
 #ifdef HAVE_QT_PRINTSUPPORT
 Q_DECL_EXPORT void gammaray_save_widget_to_pdf(QWidget *widget, const QString &fileName)
 {
-  QPrinter printer(QPrinter::ScreenResolution);
-  printer.setOutputFileName(fileName);
-  printer.setOutputFormat(QPrinter::PdfFormat);
-  printer.setPageMargins(0, 0, 0, 0, QPrinter::DevicePixel);
-  printer.setPaperSize(widget->size(), QPrinter::DevicePixel);
+    QPrinter printer(QPrinter::ScreenResolution);
+    printer.setOutputFileName(fileName);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setPageMargins(0, 0, 0, 0, QPrinter::DevicePixel);
+    printer.setPaperSize(widget->size(), QPrinter::DevicePixel);
 
-  widget->render(&printer);
+    widget->render(&printer);
 }
-#endif
 
+#endif
 }

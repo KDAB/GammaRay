@@ -26,7 +26,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-//krazy:excludeall=cpp since lots of low-level stuff in here
+// krazy:excludeall=cpp since lots of low-level stuff in here
 
 #include <config-gammaray.h>
 #include "backtrace.h"
@@ -44,54 +44,52 @@
 static QString maybeDemangleName(char *name)
 {
 #ifdef HAVE_CXA_DEMANGLE
-  auto mangledNameStart = strstr(name, "(_Z");
-  if (mangledNameStart) {
-    ++mangledNameStart;
-    const auto mangledNameEnd = strstr(mangledNameStart, "+");
-    if (mangledNameEnd) {
-      int status;
-      *mangledNameEnd = 0;
-      auto demangled = abi::__cxa_demangle(mangledNameStart, 0, 0, &status);
-      *mangledNameEnd = '+';
-      if (status == 0 && demangled) {
-        QString ret = QString::fromLatin1(name, mangledNameStart - name) +
-                      QString::fromLatin1(demangled) +
-                      QString::fromLatin1(mangledNameEnd);
-        free(demangled);
-        return ret;
-      }
+    auto mangledNameStart = strstr(name, "(_Z");
+    if (mangledNameStart) {
+        ++mangledNameStart;
+        const auto mangledNameEnd = strstr(mangledNameStart, "+");
+        if (mangledNameEnd) {
+            int status;
+            *mangledNameEnd = 0;
+            auto demangled = abi::__cxa_demangle(mangledNameStart, 0, 0, &status);
+            *mangledNameEnd = '+';
+            if (status == 0 && demangled) {
+                QString ret = QString::fromLatin1(name, mangledNameStart - name)
+                              +QString::fromLatin1(demangled)
+                              +QString::fromLatin1(mangledNameEnd);
+                free(demangled);
+                return ret;
+            }
+        }
     }
-  }
 #endif
-  return QString::fromLatin1(name);
+    return QString::fromLatin1(name);
 }
+
 #endif
 
 Backtrace getBacktrace(int levels)
 {
-  QStringList s;
+    QStringList s;
 #ifdef HAVE_BACKTRACE
-  void *trace[256];
-  int n = backtrace(trace, 256);
-  if (!n) {
-    return s;
-  }
-  char **strings = backtrace_symbols(trace, n);
+    void *trace[256];
+    int n = backtrace(trace, 256);
+    if (!n)
+        return s;
+    char **strings = backtrace_symbols(trace, n);
 
-  if (levels != -1) {
-    n = qMin(n, levels);
-  }
+    if (levels != -1)
+        n = qMin(n, levels);
 
-  s.reserve(n);
-  for (int i = 0; i < n; ++i) {
-    s << maybeDemangleName(strings[i]);
-  }
+    s.reserve(n);
+    for (int i = 0; i < n; ++i)
+        s << maybeDemangleName(strings[i]);
 
-  if (strings) {
-    free(strings);
-  }
+    if (strings)
+        free(strings);
+
 #else
-  Q_UNUSED(levels);
+    Q_UNUSED(levels);
 #endif
-  return s;
+    return s;
 }

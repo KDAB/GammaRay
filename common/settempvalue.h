@@ -30,35 +30,34 @@
 #include <qglobal.h>
 
 namespace GammaRay {
-
 /**
  * @brief GammaRay utilities.
  */
 namespace Util {
-
-  /**
-   * Temporarily overwrite a given object with a new value and reset the value
-   * when the scope is exited.
-   */
-  template<class T>
-  struct SetTempValue
-  {
-    SetTempValue(T& obj, T newValue)
-    : obj(obj)
-    , oldValue(obj)
+/**
+ * Temporarily overwrite a given object with a new value and reset the value
+ * when the scope is exited.
+ */
+template<class T>
+struct SetTempValue
+{
+    SetTempValue(T &obj, T newValue)
+        : obj(obj)
+        , oldValue(obj)
     {
-      obj = newValue;
+        obj = newValue;
     }
+
     ~SetTempValue()
     {
-      obj = oldValue;
+        obj = oldValue;
     }
+
     Q_DISABLE_COPY(SetTempValue)
     T& obj;
     T oldValue;
-  };
+};
 }
-
 }
 
 #endif // GAMMARAY_SETTEMPVALUE_H

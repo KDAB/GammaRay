@@ -32,15 +32,13 @@
 using namespace GammaRay;
 
 PropertyPaletteEditor::PropertyPaletteEditor(QWidget *parent)
-  : PropertyExtendedEditor(parent)
+    : PropertyExtendedEditor(parent)
 {
 }
 
 void PropertyPaletteEditor::edit()
 {
-  PaletteDialog dlg(value().value<QPalette>(), this);
-  if (dlg.exec() == QDialog::Accepted) {
-    save(dlg.editedPalette());
-  }
+    PaletteDialog dlg(value().value<QPalette>(), this);
+    if (dlg.exec() == QDialog::Accepted)
+        save(dlg.editedPalette());
 }
-

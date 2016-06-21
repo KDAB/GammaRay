@@ -33,17 +33,16 @@
 #include <widgetinspectorinterface.h>
 
 namespace GammaRay {
-
 class WidgetInspectorClient : public WidgetInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::WidgetInspectorInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::WidgetInspectorInterface)
 
-  public:
+public:
     explicit WidgetInspectorClient(QObject *parent);
     ~WidgetInspectorClient();
 
-  private:
+private:
     void saveAsImage(const QString &fileName) Q_DECL_OVERRIDE;
     void saveAsSvg(const QString &fileName) Q_DECL_OVERRIDE;
     void saveAsPdf(const QString &fileName) Q_DECL_OVERRIDE;

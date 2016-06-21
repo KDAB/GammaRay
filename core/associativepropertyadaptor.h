@@ -34,13 +34,12 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 /** Adaptor for recursing into associative container property values. */
 class AssociativePropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit AssociativePropertyAdaptor(QObject* parent = 0);
+    explicit AssociativePropertyAdaptor(QObject *parent = 0);
     ~AssociativePropertyAdaptor();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
@@ -49,12 +48,11 @@ public:
 #endif
 
 protected:
-    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
 
 private:
     QVariant m_value;
 };
-
 }
 
 #endif // GAMMARAY_ASSOCIATIVEPROPERTYADAPTOR_H

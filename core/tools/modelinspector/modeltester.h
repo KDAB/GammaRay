@@ -39,26 +39,24 @@ QT_END_NAMESPACE
 class ModelTest;
 
 namespace GammaRay {
-
 class ModelTester : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ModelTester(QObject *parent = 0);
 
     void failure(QAbstractItemModel *model, const char *file, int line, const char *message);
 
-  public slots:
+public slots:
     void objectAdded(QObject *obj);
 
-  private slots:
+private slots:
     void modelDestroyed(QObject *model);
 
-  private:
+private:
     struct ModelTestResult;
-    QHash<QAbstractItemModel*, ModelTestResult*> m_modelTestMap;
+    QHash<QAbstractItemModel *, ModelTestResult *> m_modelTestMap;
 };
-
 }
 
 #endif // GAMMARAY_MODELTESTER_H

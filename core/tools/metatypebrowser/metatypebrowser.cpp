@@ -37,15 +37,15 @@
 using namespace GammaRay;
 
 MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  MetaTypesModel *mtm = new MetaTypesModel(this);
-  auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-  proxy->setSourceModel(mtm);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"), proxy);
+    MetaTypesModel *mtm = new MetaTypesModel(this);
+    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    proxy->setSourceModel(mtm);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"), proxy);
 }
 
 QString MetaTypeBrowserFactory::name() const
 {
-  return tr("Meta Types");
+    return tr("Meta Types");
 }

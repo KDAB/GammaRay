@@ -40,14 +40,13 @@ class QLineEdit;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Couples a line edit to a QSortFilterProxyModel for as-you-type filtering. */
 class GAMMARAY_UI_EXPORT SearchLineController : public QObject
 {
     Q_OBJECT
 public:
     /** Establish a connection between @p lineEdit and @p proxyModel. */
-    explicit SearchLineController(QLineEdit *lineEdit, QAbstractItemModel* proxyModel);
+    explicit SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel);
     ~SearchLineController();
 
 private slots:
@@ -57,7 +56,6 @@ private:
     QLineEdit *m_lineEdit;
     QPointer<QAbstractItemModel> m_model;
 };
-
 }
 
 #endif // GAMMARAY_SEARCHLINECONTROLLER_H

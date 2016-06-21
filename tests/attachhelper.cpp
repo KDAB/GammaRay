@@ -44,87 +44,86 @@
 #include <QDateTime>
 
 AttachHelper::AttachHelper(const QString &gammaray, const QString &injector,
-                           const QString &debuggee, const QStringList &arguments,
-                           QObject *parent)
-  : QObject(parent),
-    m_timer(new QTimer(this)),
-    m_proc(new QProcess(this)),
-    m_gammaray(gammaray),
-    m_injector(injector)
+                           const QString &debuggee, const QStringList &arguments, QObject *parent)
+    : QObject(parent)
+    , m_timer(new QTimer(this))
+    , m_proc(new QProcess(this))
+    , m_gammaray(gammaray)
+    , m_injector(injector)
 {
-  m_proc->setProcessChannelMode(QProcess::ForwardedChannels);
-  connect(m_proc, SIGNAL(started()), this, SLOT(processStarted()));
-  connect(m_proc, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
-  m_proc->start(debuggee, arguments);
+    m_proc->setProcessChannelMode(QProcess::ForwardedChannels);
+    connect(m_proc, SIGNAL(started()), this, SLOT(processStarted()));
+    connect(m_proc, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
+    m_proc->start(debuggee, arguments);
 }
 
 void AttachHelper::processStarted()
 {
-  // attach randomly after 1-1500 ms
-  qsrand(QDateTime::currentMSecsSinceEpoch());
-  const int timeout = qrand() % 1500 + 1;
-  qDebug() << "attaching gammaray in" << timeout << "ms";
-  m_timer->setSingleShot(true);
-  connect(m_timer, SIGNAL(timeout()), this, SLOT(attach()));
-  m_timer->start(timeout);
+    // attach randomly after 1-1500 ms
+    qsrand(QDateTime::currentMSecsSinceEpoch());
+    const int timeout = qrand() % 1500 + 1;
+    qDebug() << "attaching gammaray in" << timeout << "ms";
+    m_timer->setSingleShot(true);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(attach()));
+    m_timer->start(timeout);
 }
 
 void AttachHelper::processFinished(int exitCode)
 {
-  qApp->exit(exitCode);
+    qApp->exit(exitCode);
 }
 
 void AttachHelper::attach()
 {
-  if (m_proc->state() != QProcess::Running) {
-    return;
-  }
-  qDebug() << "attaching gammaray";
-  QProcess gammaray;
-  gammaray.setProcessChannelMode(QProcess::ForwardedChannels);
-  QStringList args;
-  args << QStringLiteral("--inprocess") << QStringLiteral("-i") << m_injector;
+    if (m_proc->state() != QProcess::Running)
+        return;
+    qDebug() << "attaching gammaray";
+    QProcess gammaray;
+    gammaray.setProcessChannelMode(QProcess::ForwardedChannels);
+    QStringList args;
+    args << QStringLiteral("--inprocess") << QStringLiteral("-i") << m_injector;
 #ifdef Q_OS_WIN32
-  args << QStringLiteral("-p") << QString::number(m_proc->pid()->dwProcessId);
+    args << QStringLiteral("-p") << QString::number(m_proc->pid()->dwProcessId);
 #else
-  args << QStringLiteral("-p") << QString::number(m_proc->pid());
+    args << QStringLiteral("-p") << QString::number(m_proc->pid());
 #endif
-  args << QStringLiteral("-nodialogs");
-  const int ret = gammaray.execute(m_gammaray, args);
-  if (ret != 0) {
-    m_proc->kill();
-    qFatal("could not attach to debuggee");
-  }
+    args << QStringLiteral("-nodialogs");
+    const int ret = gammaray.execute(m_gammaray, args);
+    if (ret != 0) {
+        m_proc->kill();
+        qFatal("could not attach to debuggee");
+    }
 }
 
-int main(int argc, char **argv) {
-  QCoreApplication app(argc, argv);
+int main(int argc, char **argv)
+{
+    QCoreApplication app(argc, argv);
 
-  if (app.arguments().size() < 4) {
-    qWarning() << "usage: " << app.applicationName()
-               << " GAMMARAY INJECTOR DEBUGGEE [DEBUGGEE_ARGS]";
-    return 1;
-  }
+    if (app.arguments().size() < 4) {
+        qWarning() << "usage: " << app.applicationName()
+                   << " GAMMARAY INJECTOR DEBUGGEE [DEBUGGEE_ARGS]";
+        return 1;
+    }
 
-  QStringList args = app.arguments();
-  // remove path to this bin
-  args.removeFirst();
-  // gammaray
-  const QString gammaray = args.takeFirst();
-  // injector
-  const QString injector = args.takeFirst();
-  // app to run
-  const QString debuggee = args.takeFirst();
+    QStringList args = app.arguments();
+    // remove path to this bin
+    args.removeFirst();
+    // gammaray
+    const QString gammaray = args.takeFirst();
+    // injector
+    const QString injector = args.takeFirst();
+    // app to run
+    const QString debuggee = args.takeFirst();
 
-  // run the self-test first, and skip the test if that fails
-  // this prevents failures with Yama ptrace_scope activated for example
-  if (QProcess::execute(gammaray, QStringList() << QStringLiteral("--self-test") << injector) == 1) {
-    qWarning() << "Skipping test due to injector self-test failure!";
-    return 0;
-  }
+    // run the self-test first, and skip the test if that fails
+    // this prevents failures with Yama ptrace_scope activated for example
+    if (QProcess::execute(gammaray,
+                          QStringList() << QStringLiteral("--self-test") << injector) == 1) {
+        qWarning() << "Skipping test due to injector self-test failure!";
+        return 0;
+    }
 
-  AttachHelper helper(gammaray, injector, debuggee, args);
+    AttachHelper helper(gammaray, injector, debuggee, args);
 
-  return app.exec();
+    return app.exec();
 }
-

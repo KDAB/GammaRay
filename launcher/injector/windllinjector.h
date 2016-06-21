@@ -39,21 +39,20 @@ namespace GammaRay {
 class FinishWaiter;
 class WinDllInjector : public AbstractInjector
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     WinDllInjector();
     ~WinDllInjector();
     QString name() const Q_DECL_OVERRIDE;
-    bool launch(const QStringList &programAndArgs,
-                const QString &probeDll, const QString &probeFunc,
-                const QProcessEnvironment &env) Q_DECL_OVERRIDE;
+    bool launch(const QStringList &programAndArgs, const QString &probeDll,
+                const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
     bool attach(int pid, const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
     int exitCode() Q_DECL_OVERRIDE;
     QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
     QProcess::ProcessError processError() Q_DECL_OVERRIDE;
     QString errorString() Q_DECL_OVERRIDE;
     void stop();
-  private:
+private:
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
@@ -66,7 +65,6 @@ class WinDllInjector : public AbstractInjector
     FinishWaiter *m_injectThread;
     friend class FinishWaiter;
 };
-
 }
 
 #endif // GAMMARAY_WINDLLINJECTOR_H

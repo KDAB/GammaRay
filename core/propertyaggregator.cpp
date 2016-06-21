@@ -37,7 +37,8 @@
 
 using namespace GammaRay;
 
-PropertyAggregator::PropertyAggregator(QObject* parent): PropertyAdaptor(parent)
+PropertyAggregator::PropertyAggregator(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -45,7 +46,7 @@ PropertyAggregator::~PropertyAggregator()
 {
 }
 
-void PropertyAggregator::doSetObject(const ObjectInstance& oi)
+void PropertyAggregator::doSetObject(const ObjectInstance &oi)
 {
     std::for_each(m_propertyAdaptors.begin(), m_propertyAdaptors.end(), [&oi](PropertyAdaptor *pa) {
         pa->setObject(oi);
@@ -56,7 +57,8 @@ int PropertyAggregator::count() const
 {
     if (!object().isValid())
         return 0;
-    return std::accumulate(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(), 0, [](int lhs, PropertyAdaptor *rhs) {
+    return std::accumulate(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(), 0,
+                           [](int lhs, PropertyAdaptor *rhs) {
         return lhs + rhs->count();
     });
 }
@@ -77,7 +79,7 @@ PropertyData PropertyAggregator::propertyData(int index) const
     return PropertyData();
 }
 
-void PropertyAggregator::writeProperty(int index, const QVariant& value)
+void PropertyAggregator::writeProperty(int index, const QVariant &value)
 {
     if (!object().isValid())
         return;
@@ -94,13 +96,15 @@ void PropertyAggregator::writeProperty(int index, const QVariant& value)
 
 bool PropertyAggregator::canAddProperty() const
 {
-    auto count = std::count_if(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(), [](PropertyAdaptor *pa) {
+    auto count
+        = std::count_if(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(),
+                        [](PropertyAdaptor *pa) {
         return pa->canAddProperty();
     });
     return count == 1;
 }
 
-void PropertyAggregator::addProperty(const PropertyData& data)
+void PropertyAggregator::addProperty(const PropertyData &data)
 {
     if (!object().isValid())
         return;
@@ -134,7 +138,7 @@ void PropertyAggregator::resetProperty(int index)
     Q_ASSERT(false);
 }
 
-void PropertyAggregator::addPropertyAdaptor(PropertyAdaptor* adaptor)
+void PropertyAggregator::addPropertyAdaptor(PropertyAdaptor *adaptor)
 {
     m_propertyAdaptors.push_back(adaptor);
     connect(adaptor, SIGNAL(propertyChanged(int,int)), this, SLOT(slotPropertyChanged(int,int)));

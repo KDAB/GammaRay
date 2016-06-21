@@ -32,22 +32,21 @@
 #include "abstractconnectionsmodel.h"
 
 namespace GammaRay {
-
 /** Lists outgoing connections from a given QObject. */
 class OutboundConnectionsModel : public AbstractConnectionsModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit OutboundConnectionsModel(QObject *parent = 0);
     ~OutboundConnectionsModel();
 
     void setObject(QObject *object) Q_DECL_OVERRIDE;
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_OUTBOUNDCONNECTIONMODEL_H

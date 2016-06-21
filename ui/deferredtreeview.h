@@ -39,7 +39,6 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** @brief Base tree view which allow deferred configurations.
  *
  * If you starts using some deferred members - stick to them to avoid
@@ -48,64 +47,63 @@ namespace GammaRay {
 
 class GAMMARAY_UI_EXPORT DeferredTreeView : public QTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit DeferredTreeView(QWidget *parent = 0);
+    explicit DeferredTreeView(QWidget *parent = 0);
 
-  void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
-  // TODO: Move sections members into HeaderView so it can be reused by QTableView.
-  QHeaderView::ResizeMode deferredResizeMode(int logicalIndex) const;
-  void setDeferredResizeMode(int logicalIndex, QHeaderView::ResizeMode mode);
+    // TODO: Move sections members into HeaderView so it can be reused by QTableView.
+    QHeaderView::ResizeMode deferredResizeMode(int logicalIndex) const;
+    void setDeferredResizeMode(int logicalIndex, QHeaderView::ResizeMode mode);
 
-  bool deferredHidden(int logicalIndex) const;
-  void setDeferredHidden(int logicalIndex, bool hidden);
+    bool deferredHidden(int logicalIndex) const;
+    void setDeferredHidden(int logicalIndex, bool hidden);
 
-  bool expandNewContent() const;
-  void setExpandNewContent(bool expand);
+    bool expandNewContent() const;
+    void setExpandNewContent(bool expand);
 
-  bool stretchLastSection() const;
-  void setStretchLastSection(bool stretch);
+    bool stretchLastSection() const;
+    void setStretchLastSection(bool stretch);
 
 signals:
-  void newContentExpanded();
+    void newContentExpanded();
 
 protected:
-  void resetDeferredInitialized();
+    void resetDeferredInitialized();
 
 protected slots:
-  void rowsInserted(const QModelIndex &parent, int start, int end) Q_DECL_OVERRIDE;
+    void rowsInserted(const QModelIndex &parent, int start, int end) Q_DECL_OVERRIDE;
 
 private:
-  struct DeferredHeaderProperties
-  {
-    DeferredHeaderProperties();
+    struct DeferredHeaderProperties
+    {
+        DeferredHeaderProperties();
 
-    bool initialized;
-    // When trying to only play with hidden, we guess the resizeMode using header->resizeMode().
-    // Though hidden/unexisting columns always return resize mode Fixed, which is bad.
-    // Also when trying to only play with resizeMode, we guess the hidden property, can be wrong too.
-    // Let use int with -1 meaning don't apply the property.
-    int resizeMode;
-    int hidden;
-  };
+        bool initialized;
+        // When trying to only play with hidden, we guess the resizeMode using header->resizeMode().
+        // Though hidden/unexisting columns always return resize mode Fixed, which is bad.
+        // Also when trying to only play with resizeMode, we guess the hidden property, can be wrong too.
+        // Let use int with -1 meaning don't apply the property.
+        int resizeMode;
+        int hidden;
+    };
 
-  typedef QMap<int, DeferredHeaderProperties> SectionsProperties;
+    typedef QMap<int, DeferredHeaderProperties> SectionsProperties;
 
-  // This use logical indexes
-  SectionsProperties m_sectionsProperties;
-  bool m_expandNewContent;
-  bool m_allExpanded;
-  QVector<QPersistentModelIndex> m_insertedRows;
-  QTimer *m_timer;
+    // This use logical indexes
+    SectionsProperties m_sectionsProperties;
+    bool m_expandNewContent;
+    bool m_allExpanded;
+    QVector<QPersistentModelIndex> m_insertedRows;
+    QTimer *m_timer;
 
 private slots:
-  void sectionCountChanged();
-  void triggerExpansion(const QModelIndex &parent);
-  void timeout();
+    void sectionCountChanged();
+    void triggerExpansion(const QModelIndex &parent);
+    void timeout();
 };
-
 } // namespace GammaRay
 
 #endif // DEFERREDTREEVIEW_H

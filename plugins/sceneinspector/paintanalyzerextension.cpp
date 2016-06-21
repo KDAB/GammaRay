@@ -43,14 +43,18 @@
 
 using namespace GammaRay;
 
-PaintAnalyzerExtension::PaintAnalyzerExtension(PropertyController* controller):
-    PropertyControllerExtension(controller->objectBaseName() + ".painting"),
-    m_paintAnalyzer(Q_NULLPTR)
+PaintAnalyzerExtension::PaintAnalyzerExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".painting")
+    , m_paintAnalyzer(Q_NULLPTR)
 {
     // check if the paint analyzer already exists before creating it, as we share the UI with other plugins
-    const QString analyzerName = controller->objectBaseName() + QStringLiteral(".painting.analyzer");
+    const QString analyzerName = controller->objectBaseName()
+                                 + QStringLiteral(".painting.analyzer");
     if (ObjectBroker::hasObject(analyzerName))
-        m_paintAnalyzer = qobject_cast<PaintAnalyzer*>(ObjectBroker::object<PaintAnalyzerInterface*>(analyzerName));
+        m_paintAnalyzer
+            = qobject_cast<PaintAnalyzer *>(ObjectBroker::object<PaintAnalyzerInterface *>(
+                                                analyzerName));
+
     else
         m_paintAnalyzer = new PaintAnalyzer(analyzerName, controller);
 }
@@ -64,7 +68,7 @@ bool PaintAnalyzerExtension::setQObject(QObject *object)
     if (!PaintAnalyzer::isAvailable())
         return false;
 
-    if (auto qgvObj = qobject_cast<QGraphicsObject*>(object))
+    if (auto qgvObj = qobject_cast<QGraphicsObject *>(object))
         return analyzePainting(qgvObj);
 
     return false;
@@ -79,11 +83,11 @@ bool PaintAnalyzerExtension::setObject(void *object, const QString &typeName)
     if (!mo)
         return false;
     if (const auto item = mo->castTo(object, QStringLiteral("QGraphicsItem")))
-        return analyzePainting(static_cast<QGraphicsItem*>(item));
+        return analyzePainting(static_cast<QGraphicsItem *>(item));
     return false;
 }
 
-bool PaintAnalyzerExtension::analyzePainting(QGraphicsItem* item)
+bool PaintAnalyzerExtension::analyzePainting(QGraphicsItem *item)
 {
     if (item->flags() & QGraphicsItem::ItemHasNoContents)
         return false;

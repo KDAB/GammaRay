@@ -35,96 +35,93 @@ using namespace GammaRay;
 QT_BEGIN_NAMESPACE
 uint qHash(const QKeySequence &sequence)
 {
-  return qHash(sequence.toString(QKeySequence::PortableText));
+    return qHash(sequence.toString(QKeySequence::PortableText));
 }
+
 QT_END_NAMESPACE
 
 ActionValidator::ActionValidator(QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
 }
 
-QList<QAction*> ActionValidator::actions() const
+QList<QAction *> ActionValidator::actions() const
 {
-  return m_shortcutActionMap.values();
+    return m_shortcutActionMap.values();
 }
 
-QList<QAction*> ActionValidator::actions(const QKeySequence& sequence) const
+QList<QAction *> ActionValidator::actions(const QKeySequence &sequence) const
 {
-  return m_shortcutActionMap.values(sequence);
+    return m_shortcutActionMap.values(sequence);
 }
 
-void ActionValidator::setActions(const QList<QAction*>& actions)
+void ActionValidator::setActions(const QList<QAction *> &actions)
 {
-  clearActions();
+    clearActions();
 
-  m_shortcutActionMap.reserve(actions.size());
-  Q_FOREACH (QAction *action, actions) {
-    insert(action);
-  }
+    m_shortcutActionMap.reserve(actions.size());
+    Q_FOREACH(QAction *action, actions) {
+        insert(action);
+    }
 }
 
 void ActionValidator::clearActions()
 {
-  m_shortcutActionMap.clear();
+    m_shortcutActionMap.clear();
 }
 
 void ActionValidator::insert(QAction *action)
 {
-  Q_ASSERT(action);
+    Q_ASSERT(action);
 
-  Q_FOREACH (const QKeySequence &sequence, action->shortcuts()) {
-    if (m_shortcutActionMap.values(sequence).contains(action)) {
-      continue;
+    Q_FOREACH(const QKeySequence &sequence, action->shortcuts()) {
+        if (m_shortcutActionMap.values(sequence).contains(action))
+            continue;
+
+        m_shortcutActionMap.insertMulti(sequence, action);
     }
 
-    m_shortcutActionMap.insertMulti(sequence, action);
-  }
-
-  // also track object destruction
-  connect(action, SIGNAL(destroyed(QObject*)),
-          SLOT(handleActionDestroyed(QObject*)));
+    // also track object destruction
+    connect(action, SIGNAL(destroyed(QObject*)),
+            SLOT(handleActionDestroyed(QObject*)));
 }
 
 void ActionValidator::remove(QAction *action)
 {
-  Q_ASSERT(action);
+    Q_ASSERT(action);
 
-  safeRemove(action);
+    safeRemove(action);
 }
 
 void ActionValidator::safeRemove(QAction *action)
 {
-  Q_FOREACH (const QKeySequence &sequence, m_shortcutActionMap.keys()) {
-    if (!m_shortcutActionMap.values(sequence).contains(action)) {
-      continue;
-    }
+    Q_FOREACH(const QKeySequence &sequence, m_shortcutActionMap.keys()) {
+        if (!m_shortcutActionMap.values(sequence).contains(action))
+            continue;
 
-    QList<QAction*> oldValues = m_shortcutActionMap.values(sequence);
-    const bool success = oldValues.removeOne(action);
-    Q_UNUSED(success);
-    Q_ASSERT(success);
-    m_shortcutActionMap[sequence] = action;
-  }
+        QList<QAction *> oldValues = m_shortcutActionMap.values(sequence);
+        const bool success = oldValues.removeOne(action);
+        Q_UNUSED(success);
+        Q_ASSERT(success);
+        m_shortcutActionMap[sequence] = action;
+    }
 }
 
 void ActionValidator::handleActionDestroyed(QObject *object)
 {
-  QAction *action = static_cast<QAction*>(object);
+    QAction *action = static_cast<QAction *>(object);
 
-  safeRemove(action);
+    safeRemove(action);
 }
 
 bool ActionValidator::hasAmbiguousShortcut(const QAction *action) const
 {
-  if (!action) {
-    return false;
-  }
+    if (!action)
+        return false;
 
-  Q_FOREACH (const QKeySequence &sequence, action->shortcuts()) {
-    if (m_shortcutActionMap.count(sequence) > 1) {
-      return true;
+    Q_FOREACH(const QKeySequence &sequence, action->shortcuts()) {
+        if (m_shortcutActionMap.count(sequence) > 1)
+            return true;
     }
-  }
-  return false;
+    return false;
 }

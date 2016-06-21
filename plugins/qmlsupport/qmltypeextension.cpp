@@ -38,9 +38,9 @@
 
 using namespace GammaRay;
 
-QmlTypeExtension::QmlTypeExtension(PropertyController* controller) :
-    PropertyControllerExtension(controller->objectBaseName() + ".qmlType"),
-    m_typePropertyModel(new AggregatedPropertyModel(controller))
+QmlTypeExtension::QmlTypeExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".qmlType")
+    , m_typePropertyModel(new AggregatedPropertyModel(controller))
 {
     controller->registerModel(m_typePropertyModel, QStringLiteral("qmlTypeModel"));
 }
@@ -49,7 +49,7 @@ QmlTypeExtension::~QmlTypeExtension()
 {
 }
 
-bool QmlTypeExtension::setQObject(QObject* object)
+bool QmlTypeExtension::setQObject(QObject *object)
 {
     if (!object)
         return false;
@@ -74,7 +74,7 @@ bool QmlTypeExtension::setQObject(QObject* object)
 #endif
 }
 
-bool QmlTypeExtension::setMetaObject(const QMetaObject* metaObject)
+bool QmlTypeExtension::setMetaObject(const QMetaObject *metaObject)
 {
     if (!metaObject)
         return false;

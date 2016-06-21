@@ -41,12 +41,11 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SGWireframeWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SGWireframeWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
     ~SGWireframeWidget();
 
@@ -54,22 +53,22 @@ class SGWireframeWidget : public QWidget
     void setModel(QAbstractItemModel *m_model);
     void setHighlightModel(QItemSelectionModel *selectionModel);
 
-  public slots:
+public slots:
     void onGeometryChanged(uint drawingMode, const QByteArray &indexData, int indexType);
 
-  protected:
-    void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent*) Q_DECL_OVERRIDE;
+protected:
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void onHighlightDataChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
-  private:
+private:
     void drawWire(QPainter *painter, int vertexIndex1, int vertexIndex2);
     void drawHighlightedFace(QPainter *painter, const QVector<int> &vertexIndices);
 
-  private:
+private:
     QAbstractItemModel *m_model;
     int m_positionColumn;
     GLenum m_drawingMode;
@@ -83,7 +82,6 @@ class SGWireframeWidget : public QWidget
     qreal m_zoom;
     const QPointF m_offset;
 };
-
 }
 
 #endif // SGWIREFRAMEWIDGET_H

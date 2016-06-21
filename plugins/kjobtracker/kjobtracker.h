@@ -35,34 +35,33 @@
 
 class KJob;
 namespace GammaRay {
-
 class KJobModel;
 
 class KJobTracker : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit KJobTracker(ProbeInterface *probe, QObject *parent = 0);
     virtual ~KJobTracker();
 
-  private:
+private:
     KJobModel *m_jobModel;
 };
 
 class KJobTrackerFactory : public QObject, public StandardToolFactory<KJob, KJobTracker>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_kjobtracker.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_kjobtracker.json")
 
-  public:
-    explicit KJobTrackerFactory(QObject *parent = 0) : QObject(parent)
+public:
+    explicit KJobTrackerFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_KJOBTRACKER_H

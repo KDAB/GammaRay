@@ -34,23 +34,20 @@
 QSplashScreen *splash = 0;
 
 namespace GammaRay {
-
 void showSplashScreen()
 {
-  if (!splash) {
-    QPixmap pixmap(QStringLiteral(":gammaray/splashscreen.png"));
-    splash = new QSplashScreen(pixmap);
-    splash->setMask(pixmap.mask());
-  }
+    if (!splash) {
+        QPixmap pixmap(QStringLiteral(":gammaray/splashscreen.png"));
+        splash = new QSplashScreen(pixmap);
+        splash->setMask(pixmap.mask());
+    }
 
-  splash->show();
+    splash->show();
 }
 
 void hideSplashScreen()
 {
-  if (splash) {
-    splash->hide();
-  }
+    if (splash)
+        splash->hide();
 }
-
 }

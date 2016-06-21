@@ -42,29 +42,28 @@ class QPointF;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SceneInspectorInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SceneInspectorInterface(QObject *parent = 0);
     virtual ~SceneInspectorInterface();
 
     virtual void initializeGui() = 0;
 
-    static void paintItemDecoration(QGraphicsItem *item, const QTransform &transform, QPainter *painter);
+    static void paintItemDecoration(QGraphicsItem *item, const QTransform &transform,
+                                    QPainter *painter);
 
-  public slots:
+public slots:
     virtual void renderScene(const QTransform &transform, const QSize &size) = 0;
     virtual void sceneClicked(const QPointF &pos) = 0;
 
-  signals:
+signals:
     void sceneRectChanged(const QRectF &rect);
     void sceneChanged();
     void sceneRendered(const QPixmap &view);
     void itemSelected(const QRectF &boundingRect);
 };
-
 }
 
 QT_BEGIN_NAMESPACE

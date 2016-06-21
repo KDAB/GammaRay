@@ -25,7 +25,7 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//krazy:excludeall=null since used by Darwin internals
+// krazy:excludeall=null since used by Darwin internals
 
 #include <config-gammaray.h>
 
@@ -43,194 +43,203 @@
 
 using namespace GammaRay;
 
-template <typename T>
-static QString readMachOHeader(const uchar* data, quint64 size, quint32 &offset, qint32 &ncmds, qint32 &cmdsize);
+template<typename T>
+static QString readMachOHeader(const uchar *data, quint64 size, quint32 &offset, qint32 &ncmds,
+                               qint32 &cmdsize);
 
 static QString resolveBundlePath(const QString &bundlePath)
 {
-  const QFileInfo fi(bundlePath);
-  if (!fi.isBundle())
-    return bundlePath;
+    const QFileInfo fi(bundlePath);
+    if (!fi.isBundle())
+        return bundlePath;
 
-  const QByteArray utf8Bundle = fi.absoluteFilePath().toUtf8();
-  CFURLRef bundleUrl = CFURLCreateFromFileSystemRepresentation(NULL, reinterpret_cast<const UInt8*>(utf8Bundle.data()), utf8Bundle.length(), true);
-  CFBundleRef bundle = CFBundleCreate(NULL, bundleUrl);
-  if (bundle) {
-    CFURLRef url = CFBundleCopyExecutableURL(bundle);
-    char executableFile[FILENAME_MAX];
-    CFURLGetFileSystemRepresentation(url, true, reinterpret_cast<UInt8*>(executableFile), FILENAME_MAX);
-    CFRelease(url);
+    const QByteArray utf8Bundle = fi.absoluteFilePath().toUtf8();
+    CFURLRef bundleUrl
+        = CFURLCreateFromFileSystemRepresentation(NULL,
+                                                  reinterpret_cast<const UInt8 *>(utf8Bundle.data()),
+                                                  utf8Bundle.length(), true);
+    CFBundleRef bundle = CFBundleCreate(NULL, bundleUrl);
+    if (bundle) {
+        CFURLRef url = CFBundleCopyExecutableURL(bundle);
+        char executableFile[FILENAME_MAX];
+        CFURLGetFileSystemRepresentation(url, true, reinterpret_cast<UInt8 *>(executableFile),
+                                         FILENAME_MAX);
+        CFRelease(url);
+        CFRelease(bundle);
+        CFRelease(bundleUrl);
+        return QString::fromUtf8(executableFile);
+    }
     CFRelease(bundle);
     CFRelease(bundleUrl);
-    return QString::fromUtf8(executableFile);
-  }
-  CFRelease(bundle);
-  CFRelease(bundleUrl);
 
-  return bundlePath;
+    return bundlePath;
 }
 
 static QString qtCoreFromOtool(const QString &path)
 {
-  QProcess proc;
-  proc.setProcessChannelMode(QProcess::SeparateChannels);
-  proc.setReadChannel(QProcess::StandardOutput);
-  proc.start("otool", QStringList() << "-L" << path);
-  proc.waitForFinished();
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::SeparateChannels);
+    proc.setReadChannel(QProcess::StandardOutput);
+    proc.start("otool", QStringList() << "-L" << path);
+    proc.waitForFinished();
 
-  forever {
-    const QByteArray line = proc.readLine();
-    if (line.isEmpty())
-      break;
+    forever {
+        const QByteArray line = proc.readLine();
+        if (line.isEmpty())
+            break;
 
-    if (ProbeABIDetector::containsQtCore(line)) {
-      const int pos = line.lastIndexOf(" (");
-      if (pos <= 0)
-        continue;
-      return QString::fromLocal8Bit(line.left(pos).trimmed());
+        if (ProbeABIDetector::containsQtCore(line)) {
+            const int pos = line.lastIndexOf(" (");
+            if (pos <= 0)
+                continue;
+            return QString::fromLocal8Bit(line.left(pos).trimmed());
+        }
     }
-  }
 
-  return QString();
+    return QString();
 }
 
 static QStringList readRPaths(const QString &path)
 {
-  QStringList rpaths;
-  QFile f(path);
-  if (!f.open(QFile::ReadOnly))
-    return rpaths;
+    QStringList rpaths;
+    QFile f(path);
+    if (!f.open(QFile::ReadOnly))
+        return rpaths;
 
-  auto size = f.size();
-  const uchar* data = f.map(0, size);
-  if (!data || (uint)size <= sizeof(quint32))
-    return rpaths;
+    auto size = f.size();
+    const uchar *data = f.map(0, size);
+    if (!data || (uint)size <= sizeof(quint32))
+        return rpaths;
 
-  quint32 offset = 0;
-  qint32 ncmds = 0;
-  qint32 cmdsize = 0;
+    quint32 offset = 0;
+    qint32 ncmds = 0;
+    qint32 cmdsize = 0;
 
-  const quint32 magic = *reinterpret_cast<const quint32*>(data);
-  switch (magic) {
+    const quint32 magic = *reinterpret_cast<const quint32 *>(data);
+    switch (magic) {
     case MH_MAGIC:
-      readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize);
-      break;
+        readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize);
+        break;
     case MH_MAGIC_64:
-      readMachOHeader<mach_header_64>(data, size, offset, ncmds, cmdsize);
-      break;
-  }
-
-  if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
-    return rpaths;
-
-  // read load commands
-  for (int i = 0; i < ncmds; ++i) {
-    const load_command* cmd = reinterpret_cast<const load_command*>(data + offset);
-    if (cmd->cmd == LC_RPATH) {
-        const rpath_command *rpcmd = reinterpret_cast<const rpath_command*>(data + offset);
-        rpaths.push_back(QString::fromUtf8(reinterpret_cast<const char*>(rpcmd) + rpcmd->path.offset));
+        readMachOHeader<mach_header_64>(data, size, offset, ncmds, cmdsize);
+        break;
     }
-    offset += cmd->cmdsize;
-  }
 
-  return rpaths;
+    if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
+        return rpaths;
+
+    // read load commands
+    for (int i = 0; i < ncmds; ++i) {
+        const load_command *cmd = reinterpret_cast<const load_command *>(data + offset);
+        if (cmd->cmd == LC_RPATH) {
+            const rpath_command *rpcmd = reinterpret_cast<const rpath_command *>(data + offset);
+            rpaths.push_back(QString::fromUtf8(reinterpret_cast<const char *>(rpcmd)
+                                               + rpcmd->path.offset));
+        }
+        offset += cmd->cmdsize;
+    }
+
+    return rpaths;
 }
 
 static QString resolveRPath(const QString &path, const QStringList &rpaths)
 {
-  foreach (const auto& rpath, rpaths) {
-    auto resolvedPath = path;
-    resolvedPath.replace("@rpath", rpath);
-    if (QFile::exists(resolvedPath))
-      return resolvedPath;
-  }
-  return path;
+    foreach (const auto &rpath, rpaths) {
+        auto resolvedPath = path;
+        resolvedPath.replace("@rpath", rpath);
+        if (QFile::exists(resolvedPath))
+            return resolvedPath;
+    }
+    return path;
 }
 
-QString ProbeABIDetector::qtCoreForExecutable(const QString& path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
 {
-  auto qtCorePath = qtCoreFromOtool(resolveBundlePath(path));
-  qtCorePath = resolveRPath(qtCorePath, readRPaths(path));
-  return qtCorePath;
+    auto qtCorePath = qtCoreFromOtool(resolveBundlePath(path));
+    qtCorePath = resolveRPath(qtCorePath, readRPaths(path));
+    return qtCorePath;
 }
 
 QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 {
-  return qtCoreFromLsof(pid);
+    return qtCoreFromLsof(pid);
 }
 
-template <typename T>
-static QString readMachOHeader(const uchar* data, quint64 size, quint32 &offset, qint32 &ncmds, qint32 &cmdsize)
+template<typename T>
+static QString readMachOHeader(const uchar *data, quint64 size, quint32 &offset, qint32 &ncmds,
+                               qint32 &cmdsize)
 {
-  if (size <= sizeof(T))
-    return QString();
-  const T* header = reinterpret_cast<const T*>(data);
+    if (size <= sizeof(T))
+        return QString();
+    const T *header = reinterpret_cast<const T *>(data);
 
-  offset = sizeof(T);
-  ncmds = header->ncmds;
-  cmdsize = header->sizeofcmds;
+    offset = sizeof(T);
+    ncmds = header->ncmds;
+    cmdsize = header->sizeofcmds;
 
-  switch (header->cputype) {
-    case CPU_TYPE_I386: return "i686";
-    case CPU_TYPE_X86_64: return "x86_64";
-  }
-
-  return QString();
-}
-
-static ProbeABI abiFromMachO(const QString &path, const uchar* data, qint64 size)
-{
-  ProbeABI abi;
-  const quint32 magic = *reinterpret_cast<const quint32*>(data);
-
-  quint32 offset = 0;
-  qint32 ncmds = 0;
-  qint32 cmdsize = 0;
-
-  switch (magic) {
-    case MH_MAGIC:
-      abi.setArchitecture(readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize));
-      break;
-    case MH_MAGIC_64:
-      abi.setArchitecture(readMachOHeader<mach_header_64>(data, size, offset, ncmds, cmdsize));
-      break;
-  }
-
-  if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
-    return ProbeABI();
-
-  // read load commands
-  for (int i = 0; i < ncmds; ++i) {
-    const load_command* cmd = reinterpret_cast<const load_command*>(data + offset);
-    if (cmd->cmd == LC_ID_DYLIB) {
-      const dylib_command* dlcmd = reinterpret_cast<const dylib_command*>(data + offset);
-      const int majorVersion = (dlcmd->dylib.current_version & 0x00ff0000) >> 16;
-      const int minorVersion = (dlcmd->dylib.current_version & 0x0000ff00) >> 8;
-      abi.setQtVersion(majorVersion, minorVersion);
+    switch (header->cputype) {
+    case CPU_TYPE_I386:
+        return "i686";
+    case CPU_TYPE_X86_64:
+        return "x86_64";
     }
-    offset += cmd->cmdsize;
-  }
 
-  if (QFileInfo(path).baseName().endsWith(QStringLiteral("_debug"), Qt::CaseInsensitive)) {
-      // We can probably also look for a S_ATTR_DEBUG segment, in the data, but that might not proove it's a debug
-      // build as we can add debug symbols to release builds.
-      abi.setIsDebug(true);
-  }
-
-  return abi;
+    return QString();
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
+static ProbeABI abiFromMachO(const QString &path, const uchar *data, qint64 size)
 {
-  if (path.isEmpty())
-    return ProbeABI();
+    ProbeABI abi;
+    const quint32 magic = *reinterpret_cast<const quint32 *>(data);
 
-  QFile f(path);
-  if (!f.open(QFile::ReadOnly))
-    return ProbeABI();
+    quint32 offset = 0;
+    qint32 ncmds = 0;
+    qint32 cmdsize = 0;
 
-  const uchar* data = f.map(0, f.size());
-  if (!data || (uint)f.size() <= sizeof(quint32))
-    return ProbeABI();
-  return abiFromMachO(path, data, f.size());
+    switch (magic) {
+    case MH_MAGIC:
+        abi.setArchitecture(readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize));
+        break;
+    case MH_MAGIC_64:
+        abi.setArchitecture(readMachOHeader<mach_header_64>(data, size, offset, ncmds, cmdsize));
+        break;
+    }
+
+    if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
+        return ProbeABI();
+
+    // read load commands
+    for (int i = 0; i < ncmds; ++i) {
+        const load_command *cmd = reinterpret_cast<const load_command *>(data + offset);
+        if (cmd->cmd == LC_ID_DYLIB) {
+            const dylib_command *dlcmd = reinterpret_cast<const dylib_command *>(data + offset);
+            const int majorVersion = (dlcmd->dylib.current_version & 0x00ff0000) >> 16;
+            const int minorVersion = (dlcmd->dylib.current_version & 0x0000ff00) >> 8;
+            abi.setQtVersion(majorVersion, minorVersion);
+        }
+        offset += cmd->cmdsize;
+    }
+
+    if (QFileInfo(path).baseName().endsWith(QStringLiteral("_debug"), Qt::CaseInsensitive)) {
+        // We can probably also look for a S_ATTR_DEBUG segment, in the data, but that might not proove it's a debug
+        // build as we can add debug symbols to release builds.
+        abi.setIsDebug(true);
+    }
+
+    return abi;
+}
+
+ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
+{
+    if (path.isEmpty())
+        return ProbeABI();
+
+    QFile f(path);
+    if (!f.open(QFile::ReadOnly))
+        return ProbeABI();
+
+    const uchar *data = f.map(0, f.size());
+    if (!data || (uint)f.size() <= sizeof(quint32))
+        return ProbeABI();
+    return abiFromMachO(path, data, f.size());
 }

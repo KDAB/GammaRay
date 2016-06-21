@@ -31,7 +31,6 @@
 #include <QDataStream>
 
 namespace GammaRay {
-
 RemoteViewFrame::RemoteViewFrame()
 {
 }
@@ -56,7 +55,7 @@ QRectF RemoteViewFrame::viewRect() const
     return QRect(QPoint(), m_image.image().size() / pxRatio);
 }
 
-void RemoteViewFrame::setViewRect(const QRectF& viewRect)
+void RemoteViewFrame::setViewRect(const QRectF &viewRect)
 {
     m_viewRect = viewRect;
 }
@@ -68,7 +67,7 @@ QRectF RemoteViewFrame::sceneRect() const
     return viewRect();
 }
 
-void RemoteViewFrame::setSceneRect(const QRectF& sceneRect)
+void RemoteViewFrame::setSceneRect(const QRectF &sceneRect)
 {
     m_sceneRect = sceneRect;
 }
@@ -78,7 +77,7 @@ QImage RemoteViewFrame::image() const
     return m_image.image();
 }
 
-void RemoteViewFrame::setImage(const QImage& image)
+void RemoteViewFrame::setImage(const QImage &image)
 {
     m_image.setImage(image);
 }
@@ -88,18 +87,18 @@ QVariant RemoteViewFrame::data() const
     return m_data;
 }
 
-void RemoteViewFrame::setData(const QVariant& data)
+void RemoteViewFrame::setData(const QVariant &data)
 {
     m_data = data;
 }
 
-QDataStream& operator<<(QDataStream& stream, const RemoteViewFrame& frame)
+QDataStream &operator<<(QDataStream &stream, const RemoteViewFrame &frame)
 {
     stream << frame.m_image << frame.m_data << frame.m_viewRect << frame.m_sceneRect;
     return stream;
 }
 
-QDataStream& operator>>(QDataStream& stream, RemoteViewFrame& frame)
+QDataStream &operator>>(QDataStream &stream, RemoteViewFrame &frame)
 {
     stream >> frame.m_image;
     stream >> frame.m_data;
@@ -107,5 +106,4 @@ QDataStream& operator>>(QDataStream& stream, RemoteViewFrame& frame)
     stream >> frame.m_sceneRect;
     return stream;
 }
-
 }

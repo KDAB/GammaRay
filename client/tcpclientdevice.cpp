@@ -32,8 +32,8 @@
 
 using namespace GammaRay;
 
-TcpClientDevice::TcpClientDevice(QObject* parent) :
-    ClientDeviceImpl<QTcpSocket>(parent)
+TcpClientDevice::TcpClientDevice(QObject *parent)
+    : ClientDeviceImpl<QTcpSocket>(parent)
 {
     m_socket = new QTcpSocket(this);
     connect(m_socket, SIGNAL(connected()), this, SIGNAL(connected()));

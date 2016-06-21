@@ -43,7 +43,7 @@ using namespace GammaRay;
 // BUG: Some QTimers appear as free timers
 // BUG: QTimeLine class name not shown
 // BUG: No thread safety yet
-//          Related: Protect against timer deletion
+// Related: Protect against timer deletion
 // BUG: Sorting in the view doesn't work well
 // BUG: Only top-level timers are shown (bug in probe)
 
@@ -57,50 +57,52 @@ using namespace GammaRay;
 // Add clear button that removes all free timers and resets statistics for normal timers
 // Add big fat "total wakeups / sec" label to the status bar
 // Retrieve receiver name from connection model
-//     Add to view as column: receivers: slotXYZ and 3 others (shown in tooltip)
+// Add to view as column: receivers: slotXYZ and 3 others (shown in tooltip)
 // Move signal hook to probe interface
-//     Then maybe add general signal profiler plugin, or even visualization
+// Then maybe add general signal profiler plugin, or even visualization
 // Flash delegate when timer triggered
 // Color cell in view redish, depending on how active the timer is
 
 class TimerFilterModel : public ObjectTypeFilterProxyModel<QTimer>
 {
-  public:
-    explicit TimerFilterModel(QObject *parent) : ObjectTypeFilterProxyModel<QTimer>(parent) {}
+public:
+    explicit TimerFilterModel(QObject *parent)
+        : ObjectTypeFilterProxyModel<QTimer>(parent) {}
 
     bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE
     {
-      if (object && object->inherits("QQmlTimer"))
-        return true;
-      return ObjectTypeFilterProxyModel<QTimer>::filterAcceptsObject(object);
+        if (object && object->inherits("QQmlTimer"))
+            return true;
+        return ObjectTypeFilterProxyModel<QTimer>::filterAcceptsObject(object);
     }
 };
 
-
 TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
-  : QObject(parent),
-    m_updateTimer(new QTimer(this))
+    : QObject(parent)
+    , m_updateTimer(new QTimer(this))
 {
-  Q_ASSERT(probe);
+    Q_ASSERT(probe);
 
-  QSortFilterProxyModel* const filterModel = new TimerFilterModel(this);
-  filterModel->setDynamicSortFilter(true);
-  filterModel->setSourceModel(probe->objectListModel());
-  TimerModel::instance()->setParent(this); // otherwise it's not filtered out
-  TimerModel::instance()->setProbe(probe);
-  TimerModel::instance()->setSourceModel(filterModel);
+    QSortFilterProxyModel * const filterModel = new TimerFilterModel(this);
+    filterModel->setDynamicSortFilter(true);
+    filterModel->setSourceModel(probe->objectListModel());
+    TimerModel::instance()->setParent(this); // otherwise it's not filtered out
+    TimerModel::instance()->setProbe(probe);
+    TimerModel::instance()->setSourceModel(filterModel);
 
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
 }
 
-TimerTopFactory::TimerTopFactory(QObject *parent) : QObject(parent)
+TimerTopFactory::TimerTopFactory(QObject *parent)
+    : QObject(parent)
 {
-  setSupportedTypes(QVector<QByteArray>() << QByteArrayLiteral("QObject") << QByteArrayLiteral("QTimer"));
+    setSupportedTypes(QVector<QByteArray>() << QByteArrayLiteral("QObject")
+                                            << QByteArrayLiteral("QTimer"));
 }
 
 QString TimerTopFactory::name() const
 {
-  return tr("Timers");
+    return tr("Timers");
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

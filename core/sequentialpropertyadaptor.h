@@ -34,13 +34,12 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 /** Adaptor for recursing into QSequentialIterable properties. */
 class SequentialPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit SequentialPropertyAdaptor(QObject* parent = 0);
+    explicit SequentialPropertyAdaptor(QObject *parent = 0);
     ~SequentialPropertyAdaptor();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
@@ -49,12 +48,11 @@ public:
 #endif
 
 protected:
-    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
 
 private:
     QVariant m_value;
 };
-
 }
 
 #endif // GAMMARAY_SEQUENTIALPROPERTYADAPTOR_H

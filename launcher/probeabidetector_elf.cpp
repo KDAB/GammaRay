@@ -49,162 +49,166 @@ using namespace GammaRay;
 
 static QString qtCoreFromLdd(const QString &path)
 {
-  QProcess proc;
-  proc.setProcessChannelMode(QProcess::SeparateChannels);
-  proc.setReadChannel(QProcess::StandardOutput);
-  proc.start(QStringLiteral("ldd"), QStringList() << path);
-  proc.waitForFinished();
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::SeparateChannels);
+    proc.setReadChannel(QProcess::StandardOutput);
+    proc.start(QStringLiteral("ldd"), QStringList() << path);
+    proc.waitForFinished();
 
-  forever {
-    const QByteArray line = proc.readLine();
-    if (line.isEmpty())
-      break;
+    forever {
+        const QByteArray line = proc.readLine();
+        if (line.isEmpty())
+            break;
 
-    if (ProbeABIDetector::containsQtCore(line)) {
-      const int begin = line.indexOf("=> ");
-      const int end = line.lastIndexOf(" (");
-      if (begin <= 0 || end <= 0 || end <= begin)
-        continue;
-      return QString::fromLocal8Bit(line.mid(begin + 3, end - begin - 3).trimmed());
+        if (ProbeABIDetector::containsQtCore(line)) {
+            const int begin = line.indexOf("=> ");
+            const int end = line.lastIndexOf(" (");
+            if (begin <= 0 || end <= 0 || end <= begin)
+                continue;
+            return QString::fromLocal8Bit(line.mid(begin + 3, end - begin - 3).trimmed());
+        }
     }
-  }
 
-  return QString();
+    return QString();
 }
 
-QString ProbeABIDetector::qtCoreForExecutable(const QString& path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
 {
-  // TODO: add fast version reading the ELF file directly?
-  return qtCoreFromLdd(path);
+    // TODO: add fast version reading the ELF file directly?
+    return qtCoreFromLdd(path);
 }
 
 static bool qtCoreFromProc(qint64 pid, QString &path)
 {
-  const QString mapsPath = QStringLiteral("/proc/%1/maps").arg(pid);
-  QFile f(mapsPath);
-  if (!f.open(QFile::ReadOnly)) {
-    path.clear();
-    return false;
-  }
-
-  forever {
-    const QByteArray line = f.readLine();
-    if (line.isEmpty())
-      break;
-    if (ProbeABIDetector::containsQtCore(line)) {
-      const int pos = line.indexOf('/');
-      if (pos <= 0)
-        continue;
-      path = QString::fromLocal8Bit(line.mid(pos).trimmed());
-      return true;
+    const QString mapsPath = QStringLiteral("/proc/%1/maps").arg(pid);
+    QFile f(mapsPath);
+    if (!f.open(QFile::ReadOnly)) {
+        path.clear();
+        return false;
     }
-  }
 
-  path.clear();
-  return true;
+    forever {
+        const QByteArray line = f.readLine();
+        if (line.isEmpty())
+            break;
+        if (ProbeABIDetector::containsQtCore(line)) {
+            const int pos = line.indexOf('/');
+            if (pos <= 0)
+                continue;
+            path = QString::fromLocal8Bit(line.mid(pos).trimmed());
+            return true;
+        }
+    }
+
+    path.clear();
+    return true;
 }
 
 QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 {
-  QString qtCorePath;
-  if (!qtCoreFromProc(pid, qtCorePath))
-    qtCorePath = qtCoreFromLsof(pid);
-  return qtCorePath;
+    QString qtCorePath;
+    if (!qtCoreFromProc(pid, qtCorePath))
+        qtCorePath = qtCoreFromLsof(pid);
+    return qtCorePath;
 }
 
 static ProbeABI qtVersionFromFileName(const QString &path)
 {
-  ProbeABI abi;
+    ProbeABI abi;
 
-  const QStringList parts = path.split('.');
-  if (parts.size() < 4 || parts.at(parts.size() - 4) != QLatin1String("so"))
+    const QStringList parts = path.split('.');
+    if (parts.size() < 4 || parts.at(parts.size() - 4) != QLatin1String("so"))
+        return abi;
+
+    abi.setQtVersion(parts.at(parts.size() - 3).toInt(), parts.at(parts.size() - 2).toInt());
     return abi;
-
-  abi.setQtVersion(parts.at(parts.size() - 3).toInt(), parts.at(parts.size() - 2).toInt());
-  return abi;
 }
 
 static ProbeABI qtVersionFromExec(const QString &path)
 {
-  ProbeABI abi;
+    ProbeABI abi;
 
-  // yep, you can actually execute QtCore.so...
-  QProcess proc;
-  proc.setReadChannelMode(QProcess::SeparateChannels);
-  proc.setReadChannel(QProcess::StandardOutput);
-  proc.start(path);
-  proc.waitForFinished();
-  const QByteArray line = proc.readLine();
-  const int pos = line.lastIndexOf(' ');
-  const QList<QByteArray> version = line.mid(pos).split('.');
-  if (version.size() < 3)
+    // yep, you can actually execute QtCore.so...
+    QProcess proc;
+    proc.setReadChannelMode(QProcess::SeparateChannels);
+    proc.setReadChannel(QProcess::StandardOutput);
+    proc.start(path);
+    proc.waitForFinished();
+    const QByteArray line = proc.readLine();
+    const int pos = line.lastIndexOf(' ');
+    const QList<QByteArray> version = line.mid(pos).split('.');
+    if (version.size() < 3)
+        return abi;
+
+    abi.setQtVersion(version.at(0).toInt(), version.at(1).toInt());
+
     return abi;
-
-  abi.setQtVersion(version.at(0).toInt(), version.at(1).toInt());
-
-  return abi;
 }
 
 #ifdef HAVE_ELF
-template <typename ElfEHdr>
+template<typename ElfEHdr>
 static QString archFromELFHeader(const uchar *data, quint64 size)
 {
-  if (size <= sizeof(ElfEHdr))
-    return QString();
-  const ElfEHdr *hdr = reinterpret_cast<const ElfEHdr*>(data);
+    if (size <= sizeof(ElfEHdr))
+        return QString();
+    const ElfEHdr *hdr = reinterpret_cast<const ElfEHdr *>(data);
 
-  switch (hdr->e_machine) {
-    case EM_386: return QStringLiteral("i686");
+    switch (hdr->e_machine) {
+    case EM_386:
+        return QStringLiteral("i686");
 #ifdef EM_X86_64
-    case EM_X86_64: return QStringLiteral("x86_64");
+    case EM_X86_64:
+        return QStringLiteral("x86_64");
 #endif
-    case EM_ARM: return QStringLiteral("arm");
-  }
+    case EM_ARM:
+        return QStringLiteral("arm");
+    }
 
-  qWarning() << "Unsupported ELF machine type:" << hdr->e_machine;
-  return QString();
+    qWarning() << "Unsupported ELF machine type:" << hdr->e_machine;
+    return QString();
 }
+
 #endif
 
 static QString archFromELF(const QString &path)
 {
 #ifdef HAVE_ELF
-  QFile f(path);
-  if (!f.open(QFile::ReadOnly))
-    return QString();
+    QFile f(path);
+    if (!f.open(QFile::ReadOnly))
+        return QString();
 
-  const uchar* data = f.map(0, f.size());
-  if (!data || f.size() < EI_NIDENT)
-    return QString();
+    const uchar *data = f.map(0, f.size());
+    if (!data || f.size() < EI_NIDENT)
+        return QString();
 
-  if (qstrncmp(reinterpret_cast<const char*>(data), ELFMAG, SELFMAG) != 0) // no ELF signature
-    return QString();
+    if (qstrncmp(reinterpret_cast<const char *>(data), ELFMAG, SELFMAG) != 0) // no ELF signature
+        return QString();
 
-  switch (data[EI_CLASS]) {
+    switch (data[EI_CLASS]) {
     case ELFCLASS32:
-      return archFromELFHeader<Elf32_Ehdr>(data, f.size());
+        return archFromELFHeader<Elf32_Ehdr>(data, f.size());
     case ELFCLASS64:
-      return archFromELFHeader<Elf64_Ehdr>(data, f.size());
-  }
+        return archFromELFHeader<Elf64_Ehdr>(data, f.size());
+    }
 #else
-  Q_UNUSED(path);
+    Q_UNUSED(path);
 #endif
-  return QString();
+    return QString();
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString& path) const
+ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
 {
-  if (path.isEmpty())
-    return ProbeABI();
+    if (path.isEmpty())
+        return ProbeABI();
 
-  // try to find the version
-  ProbeABI abi = qtVersionFromFileName(path);
-  if (!abi.hasQtVersion())
-    abi = qtVersionFromExec(path);
+    // try to find the version
+    ProbeABI abi = qtVersionFromFileName(path);
+    if (!abi.hasQtVersion())
+        abi = qtVersionFromExec(path);
 
-  // TODO: architecture detection fallback without elf.h?
-  const QString arch = archFromELF(path);
-  abi.setArchitecture(arch);
+    // TODO: architecture detection fallback without elf.h?
+    const QString arch = archFromELF(path);
+    abi.setArchitecture(arch);
 
-  return abi;
+    return abi;
 }

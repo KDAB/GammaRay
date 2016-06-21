@@ -33,9 +33,9 @@
 
 using namespace GammaRay;
 
-RemoteViewInterface::RemoteViewInterface(const QString& name, QObject* parent):
-    QObject(parent),
-    m_name(name)
+RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
+    : QObject(parent)
+    , m_name(name)
 {
     ObjectBroker::registerObject(name, this);
     qRegisterMetaTypeStreamOperators<RemoteViewFrame>();

@@ -37,7 +37,6 @@ class QIODevice;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Abstract base class for the actual transport implementation. */
 class ServerDevice : public QObject
 {
@@ -50,14 +49,14 @@ public:
 
     virtual bool listen() = 0;
     virtual QString errorString() const = 0;
-    virtual QIODevice* nextPendingConnection() = 0;
+    virtual QIODevice *nextPendingConnection() = 0;
 
     /** An externally useable address of this server.
      *  This might be different from @p serverAddress as passed in the constructor.
      */
     virtual QUrl externalAddress() const = 0;
 
-    static ServerDevice* create(const QUrl &serverAddress, QObject *parent = 0);
+    static ServerDevice *create(const QUrl &serverAddress, QObject *parent = 0);
 
     /** Broadcast the given message on an appropriate channel, if backend supports broadcasting. */
     virtual void broadcast(const QByteArray &data);
@@ -69,11 +68,13 @@ protected:
     QUrl m_address;
 };
 
-template <typename ServerT>
+template<typename ServerT>
 class ServerDeviceImpl : public ServerDevice
 {
 public:
-    explicit inline ServerDeviceImpl(QObject *parent = 0) : ServerDevice(parent), m_server(0)
+    explicit inline ServerDeviceImpl(QObject *parent = 0)
+        : ServerDevice(parent)
+        , m_server(0)
     {
     }
 
@@ -86,16 +87,15 @@ public:
         return m_server->errorString();
     }
 
-    QIODevice* nextPendingConnection() Q_DECL_OVERRIDE
+    QIODevice *nextPendingConnection() Q_DECL_OVERRIDE
     {
         Q_ASSERT(m_server->hasPendingConnections());
         return m_server->nextPendingConnection();
     }
 
 protected:
-    ServerT* m_server;
+    ServerT *m_server;
 };
-
 }
 
 #endif // GAMMARAY_SERVERDEVICE_H

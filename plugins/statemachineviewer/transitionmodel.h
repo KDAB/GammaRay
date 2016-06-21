@@ -36,28 +36,28 @@ class QAbstractState;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class TransitionModelPrivate;
 
 class TransitionModel : public ObjectModelBase<QAbstractItemModel>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TransitionModel(QObject *parent = 0);
     ~TransitionModel();
     void setState(QAbstractState *state);
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int rowCount (const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QVariant data (const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     Q_DECLARE_PRIVATE(TransitionModel)
     TransitionModelPrivate *const d_ptr;
 };
-
 }
 
 #endif

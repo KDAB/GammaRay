@@ -32,13 +32,12 @@
 #include <QObject>
 
 namespace GammaRay {
-
 /** @brief Client/Server interface of the methods viewer. */
 class MethodsExtensionInterface : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(bool hasObject READ hasObject WRITE setHasObject NOTIFY hasObjectChanged)
-  public:
+    Q_OBJECT
+    Q_PROPERTY(bool hasObject READ hasObject WRITE setHasObject NOTIFY hasObjectChanged)
+public:
     explicit MethodsExtensionInterface(const QString &name, QObject *parent = 0);
     virtual ~MethodsExtensionInterface();
 
@@ -47,23 +46,23 @@ class MethodsExtensionInterface : public QObject
     bool hasObject() const;
     void setHasObject(bool hasObject);
 
-  signals:
+signals:
     void hasObjectChanged();
 
-  public slots:
+public slots:
     virtual void activateMethod() = 0;
     virtual void invokeMethod(Qt::ConnectionType type) = 0;
     virtual void connectToSignal() = 0;
 
-  private:
+private:
     QString m_name;
     bool m_hasObject;
 };
-
 }
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(GammaRay::MethodsExtensionInterface, "com.kdab.GammaRay.MethodsExtensionInterface")
+Q_DECLARE_INTERFACE(GammaRay::MethodsExtensionInterface,
+                    "com.kdab.GammaRay.MethodsExtensionInterface")
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_METHODSEXTENSIONINTERFACE_H

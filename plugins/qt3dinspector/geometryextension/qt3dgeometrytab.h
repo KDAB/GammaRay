@@ -51,14 +51,12 @@ class QRenderPass;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class BufferModel;
 class PropertyWidget;
 class Qt3DGeometryExtensionInterface;
 class Qt3DGeometryAttributeData;
 
-namespace Ui
-{
+namespace Ui {
 class Qt3DGeometryTab;
 }
 
@@ -74,16 +72,17 @@ protected:
     bool eventFilter(QObject *receiver, QEvent *event) override;
 
 private:
-    Qt3DCore::QComponent* createMaterial(Qt3DCore::QNode *parent);
-    Qt3DCore::QComponent* createSkyboxMaterial(Qt3DCore::QNode *parent);
+    Qt3DCore::QComponent *createMaterial(Qt3DCore::QNode *parent);
+    Qt3DCore::QComponent *createSkyboxMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
     void resetCamera();
-    void computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr, const QByteArray &bufferData);
+    void computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr,
+                               const QByteArray &bufferData);
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     Qt3DGeometryExtensionInterface *m_interface;
 
-    QWindow* m_surface;
+    QWindow *m_surface;
     Qt3DCore::QAspectEngine *m_aspectEngine;
     Qt3DRender::QCamera *m_camera;
     Qt3DRender::QGeometryRenderer *m_geometryRenderer;

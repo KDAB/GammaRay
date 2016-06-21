@@ -30,8 +30,8 @@
 
 using namespace GammaRay;
 
-LocalClientDevice::LocalClientDevice(QObject* parent):
-    ClientDeviceImpl<QLocalSocket>(parent)
+LocalClientDevice::LocalClientDevice(QObject *parent)
+    : ClientDeviceImpl<QLocalSocket>(parent)
 {
     m_socket = new QLocalSocket(this);
     connect(m_socket, SIGNAL(connected()), this, SIGNAL(connected()));

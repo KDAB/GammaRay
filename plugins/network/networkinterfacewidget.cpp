@@ -33,17 +33,17 @@
 
 using namespace GammaRay;
 
-NetworkInterfaceWidget::NetworkInterfaceWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::NetworkInterfaceWidget)
+NetworkInterfaceWidget::NetworkInterfaceWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::NetworkInterfaceWidget)
 {
     ui->setupUi(this);
 
-    ui->interfaceView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel")));
+    ui->interfaceView->setModel(ObjectBroker::model(QStringLiteral(
+                                                        "com.kdab.GammaRay.NetworkInterfaceModel")));
     ui->interfaceView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 NetworkInterfaceWidget::~NetworkInterfaceWidget()
 {
 }
-

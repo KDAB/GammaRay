@@ -31,33 +31,33 @@
 
 using namespace GammaRay;
 
-EditableTypesModel::EditableTypesModel(QObject* parent): QAbstractListModel(parent)
+EditableTypesModel::EditableTypesModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
-  m_types = PropertyEditorFactory::supportedTypes();
+    m_types = PropertyEditorFactory::supportedTypes();
 }
 
 EditableTypesModel::~EditableTypesModel()
 {
 }
 
-int EditableTypesModel::rowCount(const QModelIndex& parent) const
+int EditableTypesModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
-    return 0;
-  return m_types.size();
+    if (parent.isValid())
+        return 0;
+    return m_types.size();
 }
 
-QVariant EditableTypesModel::data(const QModelIndex& index, int role) const
+QVariant EditableTypesModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
+    if (!index.isValid())
+        return QVariant();
+
+    const int type = m_types.at(index.row());
+    if (role == Qt::DisplayRole)
+        return QMetaType::typeName(type);
+    else if (role == Qt::UserRole)
+        return type;
+
     return QVariant();
-
-  const int type = m_types.at(index.row());
-  if (role == Qt::DisplayRole) {
-    return QMetaType::typeName(type);
-  } else if (role == Qt::UserRole) {
-    return type;
-  }
-
-  return QVariant();
 }

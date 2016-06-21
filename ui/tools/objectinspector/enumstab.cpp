@@ -40,12 +40,12 @@
 using namespace GammaRay;
 
 EnumsTab::EnumsTab(PropertyWidget *parent)
-  : QWidget(parent)
-  , m_ui(new Ui_EnumsTab)
+    : QWidget(parent)
+    , m_ui(new Ui_EnumsTab)
 {
-  m_ui->setupUi(this);
-  m_ui->enumView->header()->setObjectName("enumViewHeader");
-  setObjectBaseName(parent->objectBaseName());
+    m_ui->setupUi(this);
+    m_ui->enumView->header()->setObjectName("enumViewHeader");
+    setObjectBaseName(parent->objectBaseName());
 }
 
 EnumsTab::~EnumsTab()
@@ -54,11 +54,11 @@ EnumsTab::~EnumsTab()
 
 void EnumsTab::setObjectBaseName(const QString &baseName)
 {
-  QSortFilterProxyModel *proxy = new KRecursiveFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "enums"));
-  m_ui->enumView->setModel(proxy);
-  m_ui->enumView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  new SearchLineController(m_ui->enumSearchLine, proxy);
+    QSortFilterProxyModel *proxy = new KRecursiveFilterProxyModel(this);
+    proxy->setDynamicSortFilter(true);
+    proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "enums"));
+    m_ui->enumView->setModel(proxy);
+    m_ui->enumView->sortByColumn(0, Qt::AscendingOrder);
+    m_ui->enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    new SearchLineController(m_ui->enumSearchLine, proxy);
 }

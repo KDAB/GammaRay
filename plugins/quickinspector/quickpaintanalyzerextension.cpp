@@ -38,14 +38,18 @@
 
 using namespace GammaRay;
 
-QuickPaintAnalyzerExtension::QuickPaintAnalyzerExtension(PropertyController* controller) :
-    PropertyControllerExtension(controller->objectBaseName() + ".painting"),
-    m_paintAnalyzer(Q_NULLPTR)
+QuickPaintAnalyzerExtension::QuickPaintAnalyzerExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".painting")
+    , m_paintAnalyzer(Q_NULLPTR)
 {
     // check if the paint analyzer already exists before creating it, as we share the UI with other plugins
-    const QString analyzerName = controller->objectBaseName() + QStringLiteral(".painting.analyzer");
+    const QString analyzerName = controller->objectBaseName()
+                                 + QStringLiteral(".painting.analyzer");
     if (ObjectBroker::hasObject(analyzerName))
-        m_paintAnalyzer = qobject_cast<PaintAnalyzer*>(ObjectBroker::object<PaintAnalyzerInterface*>(analyzerName));
+        m_paintAnalyzer
+            = qobject_cast<PaintAnalyzer *>(ObjectBroker::object<PaintAnalyzerInterface *>(
+                                                analyzerName));
+
     else
         m_paintAnalyzer = new PaintAnalyzer(analyzerName, controller);
 }
@@ -54,9 +58,9 @@ QuickPaintAnalyzerExtension::~QuickPaintAnalyzerExtension()
 {
 }
 
-bool QuickPaintAnalyzerExtension::setQObject(QObject* object)
+bool QuickPaintAnalyzerExtension::setQObject(QObject *object)
 {
-    auto item = qobject_cast<QQuickPaintedItem*>(object);
+    auto item = qobject_cast<QQuickPaintedItem *>(object);
     if (!PaintAnalyzer::isAvailable() || !item)
         return false;
 

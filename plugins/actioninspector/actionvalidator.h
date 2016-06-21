@@ -39,18 +39,17 @@ class QAction;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ActionValidator : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit ActionValidator(QObject *parent = 0);
 
-    QList<QAction*> actions() const;
-    QList<QAction*> actions(const QKeySequence &sequence) const;
+    QList<QAction *> actions() const;
+    QList<QAction *> actions(const QKeySequence &sequence) const;
 
-    void setActions(const QList<QAction*> &actions);
+    void setActions(const QList<QAction *> &actions);
     void clearActions();
 
     void insert(QAction *action);
@@ -59,17 +58,16 @@ class ActionValidator : public QObject
     /// helper method to find out if action has an ambiguous shortcut
     bool hasAmbiguousShortcut(const QAction *action) const;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void handleActionDestroyed(QObject *object);
 
-  private:
+private:
     /// Does not deref the action pointer
     void safeRemove(QAction *action);
 
     // Multi-Map
-    QHash<QKeySequence, QAction*> m_shortcutActionMap;
+    QHash<QKeySequence, QAction *> m_shortcutActionMap;
 };
-
 }
 
 #endif // GAMMARAY_ACTIONVALIDATOR_H

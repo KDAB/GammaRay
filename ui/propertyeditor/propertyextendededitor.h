@@ -33,17 +33,16 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class PropertyExtendedEditor;
+class PropertyExtendedEditor;
 }
 
 /** Base class for property editors that open a separate dialog. */
 class PropertyExtendedEditor : public QWidget
 {
-  Q_OBJECT
-  Q_PROPERTY(QVariant value READ value WRITE setValue USER true)
-  public:
+    Q_OBJECT
+    Q_PROPERTY(QVariant value READ value WRITE setValue USER true)
+public:
     explicit PropertyExtendedEditor(QWidget *parent = 0);
     virtual ~PropertyExtendedEditor();
 
@@ -55,14 +54,13 @@ class PropertyExtendedEditor : public QWidget
 
     void save(const QVariant &value);
 
-  protected slots:
+protected slots:
     virtual void edit() = 0;
 
-  private:
+private:
     Ui::PropertyExtendedEditor *ui;
     QVariant m_value;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYEXTENDEDEDITOR_H

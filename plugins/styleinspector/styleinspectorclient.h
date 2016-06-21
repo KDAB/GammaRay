@@ -32,12 +32,11 @@
 #include "styleinspectorinterface.h"
 
 namespace GammaRay {
-
 class StyleInspectorClient : public StyleInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::StyleInspectorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::StyleInspectorInterface)
+public:
     explicit StyleInspectorClient(QObject *parent = 0);
     ~StyleInspectorClient();
 
@@ -45,7 +44,6 @@ class StyleInspectorClient : public StyleInspectorInterface
     void setCellWidth(int width) Q_DECL_OVERRIDE;
     void setCellZoom(int zoom) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_STYLEINSPECTORCLIENT_H

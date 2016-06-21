@@ -34,9 +34,7 @@
 #include <QScopedPointer>
 
 namespace GammaRay {
-
-namespace Ui
-{
+namespace Ui {
 class QmlContextTab;
 }
 

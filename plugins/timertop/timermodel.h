@@ -40,13 +40,12 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ProbeInterface;
 
 class TimerModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     virtual ~TimerModel();
 
     /// @return True in case instance() would return a valid pointer, else false
@@ -59,15 +58,15 @@ class TimerModel : public QAbstractTableModel
     void postSignalActivate(QObject *caller, int methodIndex);
 
     enum Roles {
-      FirstRole = UserRole + 1,
-      ObjectNameRole,
-      StateRole,
-      TotalWakeupsRole,
-      WakeupsPerSecRole,
-      TimePerWakeupRole,
-      MaxTimePerWakeupRole,
-      TimerIdRole,
-      LastRole
+        FirstRole = UserRole + 1,
+        ObjectNameRole,
+        StateRole,
+        TotalWakeupsRole,
+        WakeupsPerSecRole,
+        TimePerWakeupRole,
+        MaxTimePerWakeupRole,
+        TimerIdRole,
+        LastRole
     };
 
     /// if set, filters out object owned by the probe
@@ -81,11 +80,12 @@ class TimerModel : public QAbstractTableModel
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    bool eventFilter(QObject * watched, QEvent * event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void slotBeginRemoveRows(const QModelIndex &parent, int start, int end);
     void slotEndRemoveRows();
     void slotBeginInsertRows(const QModelIndex &parent, int start, int end);
@@ -94,7 +94,7 @@ class TimerModel : public QAbstractTableModel
     void slotEndReset();
     void flushEmitPendingChangedRows();
 
-  private:
+private:
     explicit TimerModel(QObject *parent = 0);
 
     // Finds only QTimers based on the timer ID, not free timers.
@@ -104,12 +104,12 @@ class TimerModel : public QAbstractTableModel
     TimerInfoPtr findOrCreateTimerInfo(const QModelIndex &index);
 
     // Finds QTimer timers
-    TimerInfoPtr findOrCreateQTimerTimerInfo(QObject* timer);
+    TimerInfoPtr findOrCreateQTimerTimerInfo(QObject *timer);
 
     // Finds QObject timers
     TimerInfoPtr findOrCreateFreeTimerInfo(int timerId);
 
-    int rowFor(QObject *timer) ;
+    int rowFor(QObject *timer);
     void emitTimerObjectChanged(int row);
     void emitFreeTimerChanged(int row);
 
@@ -117,7 +117,7 @@ class TimerModel : public QAbstractTableModel
     QList<TimerInfoPtr> m_freeTimers;
     ProbeInterface *m_probe;
     // current timer signals that are being processed
-    QHash<QObject*, TimerInfoPtr> m_currentSignals;
+    QHash<QObject *, TimerInfoPtr> m_currentSignals;
     // pending dataChanged() signals
     QSet<int> m_pendingChangedTimerObjects;
     QSet<int> m_pendingChangedFreeTimers;
@@ -126,7 +126,6 @@ class TimerModel : public QAbstractTableModel
     const int m_timeoutIndex;
     int m_qmlTimerTriggeredIndex;
 };
-
 }
 
 #endif

@@ -37,22 +37,25 @@
 using namespace GammaRay;
 
 SelectionModelInspectorWidget::SelectionModelInspectorWidget(QWidget *widget)
-  : QWidget(widget)
-  , ui(new Ui::SelectionModelInspectorWidget)
-  , m_stateManager(this)
+    : QWidget(widget)
+    , ui(new Ui::SelectionModelInspectorWidget)
+    , m_stateManager(this)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  ui->selectionModelView->header()->setObjectName("selectionModelViewHeader");
-  ui->selectionModelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  ui->selectionModelView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectionModelsModel")));
-  ui->selectionModelView->setSelectionModel(ObjectBroker::selectionModel(ui->selectionModelView->model()));
+    ui->selectionModelView->header()->setObjectName("selectionModelViewHeader");
+    ui->selectionModelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->selectionModelView->setModel(ObjectBroker::model(QStringLiteral(
+                                                             "com.kdab.GammaRay.SelectionModelsModel")));
+    ui->selectionModelView->setSelectionModel(ObjectBroker::selectionModel(ui->selectionModelView->
+                                                                           model()));
 
-  ui->selectionModelVisualizer->header()->setObjectName("selectionModelVisualizerHeader");
-  ui->selectionModelVisualizer->setItemDelegate(new ItemDelegate(this));
-  ui->selectionModelVisualizer->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel")));
+    ui->selectionModelVisualizer->header()->setObjectName("selectionModelVisualizerHeader");
+    ui->selectionModelVisualizer->setItemDelegate(new ItemDelegate(this));
+    ui->selectionModelVisualizer->setModel(ObjectBroker::model(QStringLiteral(
+                                                                   "com.kdab.GammaRay.CurrentSelectionModel")));
 
-  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "65%" << "35%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "65%" << "35%");
 }
 
 SelectionModelInspectorWidget::~SelectionModelInspectorWidget()

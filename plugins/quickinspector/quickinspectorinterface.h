@@ -43,26 +43,26 @@ class QImage;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class QuickInspectorInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum Feature {
-      NoFeatures = 0,
-      CustomRenderModeClipping = 1,
-      CustomRenderModeOverdraw = 2,
-      CustomRenderModeBatches = 4,
-      CustomRenderModeChanges = 8,
-      AllCustomRenderModes = CustomRenderModeClipping | CustomRenderModeOverdraw | CustomRenderModeBatches | CustomRenderModeChanges
+        NoFeatures = 0,
+        CustomRenderModeClipping = 1,
+        CustomRenderModeOverdraw = 2,
+        CustomRenderModeBatches = 4,
+        CustomRenderModeChanges = 8,
+        AllCustomRenderModes = CustomRenderModeClipping | CustomRenderModeOverdraw
+                               | CustomRenderModeBatches | CustomRenderModeChanges
     };
 
     enum RenderMode {
-      NormalRendering,
-      VisualizeClipping,
-      VisualizeOverdraw,
-      VisualizeBatches,
-      VisualizeChanges
+        NormalRendering,
+        VisualizeClipping,
+        VisualizeOverdraw,
+        VisualizeBatches,
+        VisualizeChanges
     };
 
     Q_ENUMS(RenderMode)
@@ -71,18 +71,17 @@ class QuickInspectorInterface : public QObject
     explicit QuickInspectorInterface(QObject *parent = 0);
     ~QuickInspectorInterface();
 
-  public slots:
+public slots:
     virtual void selectWindow(int index) = 0;
 
     virtual void setCustomRenderMode(
-      GammaRay::QuickInspectorInterface::RenderMode customRenderMode) = 0;
+        GammaRay::QuickInspectorInterface::RenderMode customRenderMode) = 0;
 
     virtual void checkFeatures() = 0;
 
-  signals:
+signals:
     void features(GammaRay::QuickInspectorInterface::Features features);
 };
-
 }
 
 Q_DECLARE_METATYPE(GammaRay::QuickInspectorInterface::Features)

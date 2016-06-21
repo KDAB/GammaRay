@@ -35,9 +35,9 @@
 
 using namespace GammaRay;
 
-TcpServerDevice::TcpServerDevice(QObject* parent):
-    ServerDeviceImpl<QTcpServer>(parent),
-    m_broadcastSocket(new QUdpSocket(this))
+TcpServerDevice::TcpServerDevice(QObject *parent)
+    : ServerDeviceImpl<QTcpServer>(parent)
+    , m_broadcastSocket(new QUdpSocket(this))
 {
     m_server = new QTcpServer(this);
     connect(m_server, SIGNAL(newConnection()), this, SIGNAL(newConnection()));
@@ -69,41 +69,42 @@ QUrl TcpServerDevice::externalAddress() const
         myHost = address.toString();
     } else {
         foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
-            if (!(inter.flags() & QNetworkInterface::IsUp) || !(inter.flags() & QNetworkInterface::IsRunning) || (inter.flags() & QNetworkInterface::IsLoopBack))
+            if (!(inter.flags() & QNetworkInterface::IsUp)
+                || !(inter.flags() & QNetworkInterface::IsRunning)
+                || (inter.flags() & QNetworkInterface::IsLoopBack))
                 continue;
 
             foreach (const QNetworkAddressEntry &addrEntry, inter.addressEntries()) {
                 const QHostAddress addr = addrEntry.ip();
 
                 // Return the ip according to the listening server protocol.
-                if (addr.protocol() != m_server->serverAddress().protocol() || !addr.scopeId().isEmpty()) {
+                if (addr.protocol() != m_server->serverAddress().protocol()
+                    || !addr.scopeId().isEmpty())
                     continue;
-                }
 
                 myHost = addr.toString();
                 break;
             }
-            if (!myHost.isEmpty()) {
+            if (!myHost.isEmpty())
                 break;
-            }
         }
     }
 
     // if localhost is all we got, use that rather than nothing
     if (myHost.isEmpty()) {
         switch (m_server->serverAddress().protocol()) {
-            case QAbstractSocket::IPv4Protocol:
+        case QAbstractSocket::IPv4Protocol:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-            case QAbstractSocket::AnyIPProtocol:
+        case QAbstractSocket::AnyIPProtocol:
 #endif
-                myHost = QHostAddress(QHostAddress::LocalHost).toString();
-                break;
-            case QAbstractSocket::IPv6Protocol:
-                myHost = QHostAddress(QHostAddress::LocalHostIPv6).toString();
-                break;
-            case QAbstractSocket::UnknownNetworkLayerProtocol:
-                Q_ASSERT_X(false, "TcpServerDevice::externalAddress", "unknown TCP protocol");
-                break;
+            myHost = QHostAddress(QHostAddress::LocalHost).toString();
+            break;
+        case QAbstractSocket::IPv6Protocol:
+            myHost = QHostAddress(QHostAddress::LocalHostIPv6).toString();
+            break;
+        case QAbstractSocket::UnknownNetworkLayerProtocol:
+            Q_ASSERT_X(false, "TcpServerDevice::externalAddress", "unknown TCP protocol");
+            break;
         }
     }
 
@@ -126,5 +127,6 @@ void TcpServerDevice::broadcast(const QByteArray &data)
 #endif
         return;
 
-    m_broadcastSocket->writeDatagram(data.data(), data.size(), QHostAddress::Broadcast, Server::broadcastPort());
+    m_broadcastSocket->writeDatagram(data.data(),
+                                     data.size(), QHostAddress::Broadcast, Server::broadcastPort());
 }

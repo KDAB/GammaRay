@@ -36,7 +36,6 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class AggregatedPropertyModel;
 class QmlContextModel;
 

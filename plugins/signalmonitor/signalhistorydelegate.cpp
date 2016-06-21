@@ -42,147 +42,150 @@
 using namespace GammaRay;
 
 SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
-  : QStyledItemDelegate(parent)
-  , m_updateTimer(new QTimer(this))
-  , m_visibleOffset(0)
-  , m_visibleInterval(15000)
-  , m_totalInterval(0)
+    : QStyledItemDelegate(parent)
+    , m_updateTimer(new QTimer(this))
+    , m_visibleOffset(0)
+    , m_visibleInterval(15000)
+    , m_totalInterval(0)
 {
-  connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
-  m_updateTimer->start(1000 / 25);
-  onUpdateTimeout();
+    connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
+    m_updateTimer->start(1000 / 25);
+    onUpdateTimeout();
 
-  SignalMonitorInterface *iface = ObjectBroker::object<SignalMonitorInterface*>();
-  connect(iface, SIGNAL(clock(qlonglong)), this, SLOT(onServerClockChanged(qlonglong)));
-  iface->sendClockUpdates(true);
+    SignalMonitorInterface *iface = ObjectBroker::object<SignalMonitorInterface *>();
+    connect(iface, SIGNAL(clock(qlonglong)), this, SLOT(onServerClockChanged(qlonglong)));
+    iface->sendClockUpdates(true);
 }
 
-void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+                                  const QModelIndex &index) const
 {
-  QStyledItemDelegate::paint(painter, option, index);
+    QStyledItemDelegate::paint(painter, option, index);
 
-  const qint64 interval = m_visibleInterval;
-  const qint64 startTime = m_visibleOffset;
-  const qint64 endTime = startTime + interval;
+    const qint64 interval = m_visibleInterval;
+    const qint64 startTime = m_visibleOffset;
+    const qint64 endTime = startTime + interval;
 
-  const QAbstractItemModel *const model = index.model();
-  const QVector<qint64> &events = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
-  const qint64 t0 = qMax(0LL, model->data(index, SignalHistoryModel::StartTimeRole).value<qint64>() - startTime);
-  qint64 t1 = model->data(index, SignalHistoryModel::EndTimeRole).value<qint64>();
-  if (t1 < 0) // still alive
-    t1 = m_totalInterval;
-  t1 -= startTime;
-  const qint64 dt = qMax(0LL, t1) - t0;
+    const QAbstractItemModel * const model = index.model();
+    const QVector<qint64> &events
+        = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
+    const qint64 t0 = qMax(0LL, model->data(index,
+                                            SignalHistoryModel::StartTimeRole).value<qint64>()
+                           - startTime);
+    qint64 t1 = model->data(index, SignalHistoryModel::EndTimeRole).value<qint64>();
+    if (t1 < 0) // still alive
+        t1 = m_totalInterval;
+    t1 -= startTime;
+    const qint64 dt = qMax(0LL, t1) - t0;
 
-  const int x0 = option.rect.x() + 1;
-  const int y0 = option.rect.y();
-  const int dx = option.rect.width() - 2;
-  const int dy = option.rect.height();
-  const int x1 = x0 + dx * t0 / interval;
-  const int x2 = dx * dt / interval + 1;
+    const int x0 = option.rect.x() + 1;
+    const int y0 = option.rect.y();
+    const int dx = option.rect.width() - 2;
+    const int dy = option.rect.height();
+    const int x1 = x0 + dx * t0 / interval;
+    const int x2 = dx * dt / interval + 1;
 
-  if (t1 >= 0) {
-    painter->fillRect(x1, y0 + 1, x2, dy - 2, option.palette.window());
-  }
+    if (t1 >= 0)
+        painter->fillRect(x1, y0 + 1, x2, dy - 2, option.palette.window());
 
-  painter->setPen(option.palette.color(QPalette::WindowText));
+    painter->setPen(option.palette.color(QPalette::WindowText));
 
-  foreach (qint64 ev, events) {
-    const qint64 ts = SignalHistoryModel::timestamp(ev);
-    if (ts >= startTime && ts < endTime) {
-      const int x = x0 + dx * (ts - startTime) / interval;
-      painter->drawLine(x, y0 + 1, x, y0 + dy - 2);
+    foreach (qint64 ev, events) {
+        const qint64 ts = SignalHistoryModel::timestamp(ev);
+        if (ts >= startTime && ts < endTime) {
+            const int x = x0 + dx * (ts - startTime) / interval;
+            painter->drawLine(x, y0 + 1, x, y0 + dy - 2);
+        }
     }
-  }
 }
 
 QSize SignalHistoryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const
 {
-  return QSize(0, option.fontMetrics.lineSpacing()); // FIXME: minimum height
+    return QSize(0, option.fontMetrics.lineSpacing()); // FIXME: minimum height
 }
 
 void SignalHistoryDelegate::setVisibleInterval(qint64 interval)
 {
-  if (m_visibleInterval != interval) {
-    m_visibleInterval = interval;
-    emit visibleIntervalChanged(m_visibleInterval);
-  }
+    if (m_visibleInterval != interval) {
+        m_visibleInterval = interval;
+        emit visibleIntervalChanged(m_visibleInterval);
+    }
 }
 
 void SignalHistoryDelegate::setVisibleOffset(qint64 offset)
 {
-  setActive(false);
+    setActive(false);
 
-  if (m_visibleOffset != offset) {
-    m_visibleOffset = offset;
-    emit visibleOffsetChanged(m_visibleOffset);
-  }
+    if (m_visibleOffset != offset) {
+        m_visibleOffset = offset;
+        emit visibleOffsetChanged(m_visibleOffset);
+    }
 }
 
 void SignalHistoryDelegate::onUpdateTimeout()
 {
-  // move the visible region to show the most recent samples
-  m_visibleOffset = m_totalInterval - m_visibleInterval;
-  emit visibleOffsetChanged(m_visibleOffset);
+    // move the visible region to show the most recent samples
+    m_visibleOffset = m_totalInterval - m_visibleInterval;
+    emit visibleOffsetChanged(m_visibleOffset);
 }
 
 void SignalHistoryDelegate::onServerClockChanged(qint64 msecs)
 {
-  m_totalInterval = msecs;
-  emit totalIntervalChanged();
+    m_totalInterval = msecs;
+    emit totalIntervalChanged();
 }
 
 void SignalHistoryDelegate::setActive(bool active)
 {
-  if (m_updateTimer->isActive() != active) {
-    if (active) {
-      m_updateTimer->start();
-    } else {
-      m_updateTimer->stop();
-    }
+    if (m_updateTimer->isActive() != active) {
+        if (active)
+            m_updateTimer->start();
+        else
+            m_updateTimer->stop();
 
-    emit isActiveChanged(isActive());
-  }
+        emit isActiveChanged(isActive());
+    }
 }
 
 bool SignalHistoryDelegate::isActive() const
 {
-  return m_updateTimer->isActive();
+    return m_updateTimer->isActive();
 }
 
 QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position, int width)
 {
-  const QAbstractItemModel *const model = index.model();
-  const QVector<qint64> &events = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
+    const QAbstractItemModel * const model = index.model();
+    const QVector<qint64> &events
+        = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
 
-  const qint64 t = m_visibleInterval * position / width + m_visibleOffset;
-  qint64 dtMin = std::numeric_limits<qint64>::max();
-  int signalIndex = -1;
-  qint64 signalTimestamp = -1;
+    const qint64 t = m_visibleInterval * position / width + m_visibleOffset;
+    qint64 dtMin = std::numeric_limits<qint64>::max();
+    int signalIndex = -1;
+    qint64 signalTimestamp = -1;
 
-  for (int i = 0; i < events.size(); ++i) {
-    signalTimestamp = SignalHistoryModel::timestamp(events.at(i));
-    const qint64 dt = qAbs(signalTimestamp - t);
+    for (int i = 0; i < events.size(); ++i) {
+        signalTimestamp = SignalHistoryModel::timestamp(events.at(i));
+        const qint64 dt = qAbs(signalTimestamp - t);
 
-    if (dt < dtMin) {
-      signalIndex = SignalHistoryModel::signalIndex(events.at(i));
-      dtMin = dt;
+        if (dt < dtMin) {
+            signalIndex = SignalHistoryModel::signalIndex(events.at(i));
+            dtMin = dt;
+        }
     }
-  }
 
-  if (signalIndex < 0)
-    return QString();
+    if (signalIndex < 0)
+        return QString();
 
-  const auto signalNames = index.data(SignalHistoryModel::SignalMapRole).value<QHash<int, QByteArray> >();
-  const auto it = signalNames.constFind(signalIndex);
-  QString signalName;
-  // see SignalHistoryModel, we store this with offset 1 to fit unknown ones into an unsigned value
-  if (signalIndex == 0 || it == signalNames.constEnd() || it.value().isEmpty())
-    signalName = tr("<unknown>");
-  else
-    signalName = it.value();
+    const auto signalNames
+        = index.data(SignalHistoryModel::SignalMapRole).value<QHash<int, QByteArray> >();
+    const auto it = signalNames.constFind(signalIndex);
+    QString signalName;
+    // see SignalHistoryModel, we store this with offset 1 to fit unknown ones into an unsigned value
+    if (signalIndex == 0 || it == signalNames.constEnd() || it.value().isEmpty())
+        signalName = tr("<unknown>");
+    else
+        signalName = it.value();
 
-  const QString &ts = QLocale().toString(signalTimestamp);
-  return tr("%1 at %2 ms").arg(signalName, ts);
+    const QString &ts = QLocale().toString(signalTimestamp);
+    return tr("%1 at %2 ms").arg(signalName, ts);
 }
-

@@ -34,51 +34,57 @@
 using namespace GammaRay;
 
 StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::StyleInspectorWidget)
+    : QWidget(parent)
+    , ui(new Ui::StyleInspectorWidget)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  ui->styleSelector->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleList")));
-  connect(ui->styleSelector, SIGNAL(currentIndexChanged(int)), SLOT(styleSelected(int)));
+    ui->styleSelector->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleList")));
+    connect(ui->styleSelector, SIGNAL(currentIndexChanged(int)), SLOT(styleSelected(int)));
 
-  ui->primitivePage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PrimitiveModel")));
-  ui->controlPage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.ControlModel")));
-  ui->complexControlPage->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.ComplexControlModel")));
+    ui->primitivePage->setModel(ObjectBroker::model(QStringLiteral(
+                                                        "com.kdab.GammaRay.StyleInspector.PrimitiveModel")));
+    ui->controlPage->setModel(ObjectBroker::model(QStringLiteral(
+                                                      "com.kdab.GammaRay.StyleInspector.ControlModel")));
+    ui->complexControlPage->setModel(ObjectBroker::model(QStringLiteral(
+                                                             "com.kdab.GammaRay.StyleInspector.ComplexControlModel")));
 
-  ui->pixelMetricView->header()->setObjectName("pixelMetricViewHeader");
-  ui->pixelMetricView->setDeferredResizeMode(0, QHeaderView::Stretch);
-  ui->pixelMetricView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->pixelMetricView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PixelMetricModel")));
+    ui->pixelMetricView->header()->setObjectName("pixelMetricViewHeader");
+    ui->pixelMetricView->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->pixelMetricView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->pixelMetricView->setModel(ObjectBroker::model(QStringLiteral(
+                                                          "com.kdab.GammaRay.StyleInspector.PixelMetricModel")));
 
-  ui->standardIconView->header()->setObjectName("standardIconViewHeader");
-  ui->standardIconView->setDeferredResizeMode(0, QHeaderView::Stretch);
-  ui->standardIconView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->standardIconView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.StandardIconModel")));
+    ui->standardIconView->header()->setObjectName("standardIconViewHeader");
+    ui->standardIconView->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->standardIconView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->standardIconView->setModel(ObjectBroker::model(QStringLiteral(
+                                                           "com.kdab.GammaRay.StyleInspector.StandardIconModel")));
 
-  ui->standardPaletteView->header()->setObjectName("standardPaletteViewHeader");
-  ui->standardPaletteView->setDeferredResizeMode(0, QHeaderView::Stretch);
-  ui->standardPaletteView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->standardPaletteView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-  ui->standardPaletteView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
-  ui->standardPaletteView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.PaletteModel")));
+    ui->standardPaletteView->header()->setObjectName("standardPaletteViewHeader");
+    ui->standardPaletteView->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->standardPaletteView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->standardPaletteView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    ui->standardPaletteView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    ui->standardPaletteView->setModel(ObjectBroker::model(QStringLiteral(
+                                                              "com.kdab.GammaRay.StyleInspector.PaletteModel")));
 
-
-  // TODO this will fail due to lazy model population
-  if (ui->styleSelector->count()) {
-    styleSelected(0);
-  }
+    // TODO this will fail due to lazy model population
+    if (ui->styleSelector->count())
+        styleSelected(0);
 }
 
 StyleInspectorWidget::~StyleInspectorWidget()
 {
-  delete ui;
+    delete ui;
 }
 
 void StyleInspectorWidget::styleSelected(int index)
 {
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->styleSelector->model());
-  selectionModel->select(ui->styleSelector->model()->index(index, 0), QItemSelectionModel::ClearAndSelect);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->styleSelector->model());
+    selectionModel->select(ui->styleSelector->model()->index(index,
+                                                             0),
+                           QItemSelectionModel::ClearAndSelect);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

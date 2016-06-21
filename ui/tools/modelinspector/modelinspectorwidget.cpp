@@ -42,106 +42,111 @@
 
 using namespace GammaRay;
 
-static QObject* createModelInspectorClient(const QString & /*name*/, QObject *parent)
+static QObject *createModelInspectorClient(const QString & /*name*/, QObject *parent)
 {
-  return new ModelInspectorClient(parent);
+    return new ModelInspectorClient(parent);
 }
 
 ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::ModelInspectorWidget)
-  , m_stateManager(this)
-  , m_interface(0)
+    : QWidget(parent)
+    , ui(new Ui::ModelInspectorWidget)
+    , m_stateManager(this)
+    , m_interface(0)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  ui->modelView->header()->setObjectName("modelViewHeader");
-  ui->modelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->modelView->header()->setObjectName("modelViewHeader");
+    ui->modelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
 
-  ui->modelContentView->header()->setObjectName("modelContentViewHeader");
-  ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(GammaRay::ItemDelegate::tr("(Item %r)"), this));
+    ui->modelContentView->header()->setObjectName("modelContentViewHeader");
+    ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(GammaRay::ItemDelegate::tr(
+                                                                         "(Item %r)"), this));
 
-  ui->modelCellView->header()->setObjectName("modelCellViewHeader");
-  ui->modelCellView->setItemDelegate(new PropertyEditorDelegate(this));
+    ui->modelCellView->header()->setObjectName("modelCellViewHeader");
+    ui->modelCellView->setItemDelegate(new PropertyEditorDelegate(this));
 
-  ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface*>(createModelInspectorClient);
-  m_interface = ObjectBroker::object<ModelInspectorInterface*>();
-  connect(m_interface, SIGNAL(cellSelected(int,int,QString,QString)),
-          SLOT(cellSelected(int,int,QString,QString)));
+    ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface *>(
+        createModelInspectorClient);
+    m_interface = ObjectBroker::object<ModelInspectorInterface *>();
+    connect(m_interface, SIGNAL(cellSelected(int,int,QString,QString)),
+            SLOT(cellSelected(int,int,QString,QString)));
 
-  auto modelModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelModel"));
-  ui->modelView->setModel(modelModel);
-  ui->modelView->setSelectionModel(ObjectBroker::selectionModel(modelModel));
-  new SearchLineController(ui->modelSearchLine, modelModel);
-  connect(ui->modelView->selectionModel(),
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(modelSelected(QItemSelection)));
+    auto modelModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelModel"));
+    ui->modelView->setModel(modelModel);
+    ui->modelView->setSelectionModel(ObjectBroker::selectionModel(modelModel));
+    new SearchLineController(ui->modelSearchLine, modelModel);
+    connect(ui->modelView->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(modelSelected(QItemSelection)));
 
-  ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelCellModel")));
+    ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral(
+                                                        "com.kdab.GammaRay.ModelCellModel")));
 
-  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%" << "33%" << "33%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%" << "33%" << "33%");
 
-  cellSelected(-1, -1, QString(), QString());
+    cellSelected(-1, -1, QString(), QString());
 }
 
 ModelInspectorWidget::~ModelInspectorWidget()
 {
 }
 
-void ModelInspectorWidget::modelSelected(const QItemSelection& selected)
+void ModelInspectorWidget::modelSelected(const QItemSelection &selected)
 {
-  QModelIndex index;
-  if (selected.size() >= 1)
-    index = selected.first().topLeft();
+    QModelIndex index;
+    if (selected.size() >= 1)
+        index = selected.first().topLeft();
 
-  if (index.isValid()) {
-    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(obj);
-    if (model) {
-      // we are on the server side
-      ui->modelContentView->setModel(model);
-      if (ObjectBroker::hasSelectionModel(ui->modelContentView->model()))
-        setupModelContentSelectionModel();
-      connect(Endpoint::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
-              this, SLOT(objectRegistered(QString)), Qt::UniqueConnection);
+    if (index.isValid()) {
+        QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
+        QAbstractItemModel *model = qobject_cast<QAbstractItemModel *>(obj);
+        if (model) {
+            // we are on the server side
+            ui->modelContentView->setModel(model);
+            if (ObjectBroker::hasSelectionModel(ui->modelContentView->model()))
+                setupModelContentSelectionModel();
+            connect(Endpoint::instance(), SIGNAL(objectRegistered(QString,
+                                                                  Protocol::ObjectAddress)),
+                    this, SLOT(objectRegistered(QString)), Qt::UniqueConnection);
+        } else {
+            // we are on the client side
+            model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelContent"));
+            ui->modelContentView->setModel(model);
+            setupModelContentSelectionModel();
+        }
+
+        // in case selection is not directly triggered by the user
+        ui->modelView->scrollTo(index, QAbstractItemView::EnsureVisible);
     } else {
-      // we are on the client side
-      model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelContent"));
-      ui->modelContentView->setModel(model);
-      setupModelContentSelectionModel();
+        ui->modelContentView->setModel(0);
     }
 
-    // in case selection is not directly triggered by the user
-    ui->modelView->scrollTo(index, QAbstractItemView::EnsureVisible);
-  } else {
-    ui->modelContentView->setModel(0);
-  }
-
-  // clear the cell info box
-  cellSelected(-1, -1, QString(), QString());
+    // clear the cell info box
+    cellSelected(-1, -1, QString(), QString());
 }
 
-void ModelInspectorWidget::cellSelected(int row, int column, const QString &internalId, const QString &internalPtr)
+void ModelInspectorWidget::cellSelected(int row, int column, const QString &internalId,
+                                        const QString &internalPtr)
 {
-  ui->indexLabel->setText(row != -1 ?
-    tr("Row: %1 Column: %2").arg(row).arg(column) :
-    tr("Invalid"));
-  ui->internalIdLabel->setText(internalId);
-  ui->internalPtrLabel->setText(internalPtr);
+    ui->indexLabel->setText(row != -1
+                            ? tr("Row: %1 Column: %2").arg(row).arg(column)
+                            : tr("Invalid"));
+    ui->internalIdLabel->setText(internalId);
+    ui->internalPtrLabel->setText(internalPtr);
 }
 
-void ModelInspectorWidget::objectRegistered(const QString& objectName)
+void ModelInspectorWidget::objectRegistered(const QString &objectName)
 {
-  if (objectName == QLatin1String("com.kdab.GammaRay.ModelContent.selection"))
-    // delay, since it's not registered yet when the signal is emitted
-    QMetaObject::invokeMethod(this, "setupModelContentSelectionModel", Qt::QueuedConnection);
+    if (objectName == QLatin1String("com.kdab.GammaRay.ModelContent.selection"))
+        // delay, since it's not registered yet when the signal is emitted
+        QMetaObject::invokeMethod(this, "setupModelContentSelectionModel", Qt::QueuedConnection);
 }
 
 void ModelInspectorWidget::setupModelContentSelectionModel()
 {
-  if (!ui->modelContentView->model())
-    return;
+    if (!ui->modelContentView->model())
+        return;
 
-  ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(ui->modelContentView->model()));
+    ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(
+                                                ui->modelContentView->model()));
 }
-

@@ -34,7 +34,8 @@
 
 using namespace GammaRay;
 
-QmlListPropertyAdaptor::QmlListPropertyAdaptor(QObject* parent): PropertyAdaptor(parent)
+QmlListPropertyAdaptor::QmlListPropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -45,7 +46,8 @@ QmlListPropertyAdaptor::~QmlListPropertyAdaptor()
 int QmlListPropertyAdaptor::count() const
 {
     auto var = object().variant(); // we need to keep that alive for the runtime of this method
-    QQmlListProperty<QObject> *prop = reinterpret_cast<QQmlListProperty<QObject>*>(const_cast<void*>(var.data()));
+    QQmlListProperty<QObject> *prop
+        = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(var.data()));
     if (!prop)
         return 0;
     return prop->count(prop);
@@ -56,7 +58,8 @@ PropertyData QmlListPropertyAdaptor::propertyData(int index) const
     PropertyData pd;
 
     auto var = object().variant(); // we need to keep that alive for the runtime of this method
-    QQmlListProperty<QObject> *prop = reinterpret_cast<QQmlListProperty<QObject>*>(const_cast<void*>(var.data()));
+    QQmlListProperty<QObject> *prop
+        = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(var.data()));
     if (!prop || index >= prop->count(prop))
         return pd;
 
@@ -64,14 +67,15 @@ PropertyData QmlListPropertyAdaptor::propertyData(int index) const
     pd.setName(QString::number(index));
     pd.setValue(QVariant::fromValue(obj));
     if (obj)
-      pd.setTypeName(obj->metaObject()->className());
+        pd.setTypeName(obj->metaObject()->className());
     pd.setClassName(var.typeName());
     return pd;
 }
 
-QmlListPropertyAdaptorFactory* QmlListPropertyAdaptorFactory::s_instance = 0;
+QmlListPropertyAdaptorFactory *QmlListPropertyAdaptorFactory::s_instance = 0;
 
-PropertyAdaptor* QmlListPropertyAdaptorFactory::create(const ObjectInstance& oi, QObject* parent) const
+PropertyAdaptor *QmlListPropertyAdaptorFactory::create(const ObjectInstance &oi,
+                                                       QObject *parent) const
 {
     if (oi.type() != ObjectInstance::QtVariant)
         return Q_NULLPTR;
@@ -82,7 +86,7 @@ PropertyAdaptor* QmlListPropertyAdaptorFactory::create(const ObjectInstance& oi,
     return new QmlListPropertyAdaptor(parent);
 }
 
-QmlListPropertyAdaptorFactory* QmlListPropertyAdaptorFactory::instance()
+QmlListPropertyAdaptorFactory *QmlListPropertyAdaptorFactory::instance()
 {
     if (!s_instance)
         s_instance = new QmlListPropertyAdaptorFactory;

@@ -39,39 +39,39 @@
 using namespace GammaRay;
 
 AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
-  : QDialog(parent, f)
+    : QDialog(parent, f)
 {
-  QLayout *layout = 0;
-  QVBoxLayout *vbox = new QVBoxLayout(this);
+    QLayout *layout = 0;
+    QVBoxLayout *vbox = new QVBoxLayout(this);
 
-  {
-    QTableView *toolView = new QTableView(this);
-    toolView->setShowGrid(false);
-    toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    toolView->verticalHeader()->hide();
-    toolView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolPluginModel")));
+    {
+        QTableView *toolView = new QTableView(this);
+        toolView->setShowGrid(false);
+        toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        toolView->verticalHeader()->hide();
+        toolView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolPluginModel")));
 
-    QGroupBox *toolBox = new QGroupBox(tr("Loaded Plugins"), this);
-    layout = new QHBoxLayout(toolBox);
-    layout->addWidget(toolView);
-    vbox->addWidget(toolBox);
-  }
+        QGroupBox *toolBox = new QGroupBox(tr("Loaded Plugins"), this);
+        layout = new QHBoxLayout(toolBox);
+        layout->addWidget(toolView);
+        vbox->addWidget(toolBox);
+    }
 
-  {
-    QTableView *errorView = new QTableView(this);
-    errorView->setShowGrid(false);
-    errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    errorView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolPluginErrorModel")));
-    errorView->verticalHeader()->hide();
-    errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    {
+        QTableView *errorView = new QTableView(this);
+        errorView->setShowGrid(false);
+        errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        errorView->setModel(ObjectBroker::model(QStringLiteral(
+                                                    "com.kdab.GammaRay.ToolPluginErrorModel")));
+        errorView->verticalHeader()->hide();
+        errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
-    QGroupBox *errorBox = new QGroupBox(tr("Failed Plugins"), this);
-    layout = new QHBoxLayout(errorBox);
-    layout->addWidget(errorView);
-    vbox->addWidget(errorBox);
-  }
+        QGroupBox *errorBox = new QGroupBox(tr("Failed Plugins"), this);
+        layout = new QHBoxLayout(errorBox);
+        layout->addWidget(errorView);
+        vbox->addWidget(errorBox);
+    }
 
-  setWindowTitle(tr("GammaRay: Plugin Info"));
+    setWindowTitle(tr("GammaRay: Plugin Info"));
 }
-

@@ -32,10 +32,10 @@
 using namespace GammaRay;
 
 StandardPaths::StandardPaths(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  StandardPathsModel *model = new StandardPathsModel(this);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.StandardPathsModel"), model);
+    StandardPathsModel *model = new StandardPathsModel(this);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.StandardPathsModel"), model);
 }
 
 StandardPaths::~StandardPaths()
@@ -44,5 +44,5 @@ StandardPaths::~StandardPaths()
 
 QString StandardPathsFactory::name() const
 {
-  return tr("Standard Paths");
+    return tr("Standard Paths");
 }

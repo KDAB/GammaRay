@@ -36,51 +36,47 @@
 #include "translatorinspectorinterface.h"
 
 namespace GammaRay {
-
-namespace Ui
-{
+namespace Ui {
 class TranslatorInspectorWidget;
 }
 
 class TranslatorInspectorClient : public TranslatorInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::TranslatorInspectorInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::TranslatorInspectorInterface)
 
-  public:
+public:
     explicit TranslatorInspectorClient(const QString &name, QObject *parent = 0);
 
-  public slots:
+public slots:
     void sendLanguageChangeEvent() Q_DECL_OVERRIDE;
     void resetTranslations() Q_DECL_OVERRIDE;
 };
 
 class TranslatorInspectorWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit TranslatorInspectorWidget(QWidget *parent);
     ~TranslatorInspectorWidget();
 
-  private:
+private:
     QScopedPointer<Ui::TranslatorInspectorWidget> ui;
     UIStateManager m_stateManager;
     TranslatorInspectorInterface *m_inspector;
 };
 
-class TranslatorInspectorWidgetFactory
-    : public QObject,
-      public StandardToolUiFactory<TranslatorInspectorWidget>
+class TranslatorInspectorWidgetFactory : public QObject,
+    public StandardToolUiFactory<TranslatorInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_translatorinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_translatorinspector.json")
 
-  public:
+public:
     void initUi() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif

@@ -37,43 +37,42 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyController;
 
 class MetaObjectBrowser : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MetaObjectBrowser(ProbeInterface *probe, QObject *parent = 0);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void objectSelected(const QItemSelection &selection);
     void objectSelected(QObject *obj);
     void objectSelected(void *obj, const QString &typeName);
 
-  private:
-    void metaObjectSelected(const QMetaObject* mo);
+private:
+    void metaObjectSelected(const QMetaObject *mo);
 
-     PropertyController *m_propertyController;
-     QAbstractProxyModel *m_model;
+    PropertyController *m_propertyController;
+    QAbstractProxyModel *m_model;
 };
 
 class MetaObjectBrowserFactory : public QObject,
     public StandardToolFactory<QObject, MetaObjectBrowser>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
 
-  public:
-    explicit MetaObjectBrowserFactory(QObject *parent) : QObject(parent)
+public:
+    explicit MetaObjectBrowserFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
     QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_METAOBJECTBROWSER_METATYPEBROWSER_H

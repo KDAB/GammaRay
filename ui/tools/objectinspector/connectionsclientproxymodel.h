@@ -32,18 +32,16 @@
 #include <QSortFilterProxyModel>
 
 namespace GammaRay {
-
 /** Client-side part of the connections model. */
 class ConnectionsClientProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit ConnectionsClientProxyModel(QObject* parent = 0);
+    explicit ConnectionsClientProxyModel(QObject *parent = 0);
     virtual ~ConnectionsClientProxyModel();
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_CONNECTIONSCLIENTPROXYMODEL_H

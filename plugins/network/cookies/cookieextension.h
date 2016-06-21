@@ -32,7 +32,6 @@
 #include <core/propertycontrollerextension.h>
 
 namespace GammaRay {
-
 class CookieJarModel;
 
 class CookieExtension : public PropertyControllerExtension
@@ -41,7 +40,7 @@ public:
     explicit CookieExtension(PropertyController *controller);
     ~CookieExtension();
 
-    bool setQObject(QObject * object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
 
 private:
     CookieJarModel *m_cookieJarModel;

@@ -46,7 +46,8 @@ class FakeRemoteModelServer : public RemoteModelServer
 {
     Q_OBJECT
 public:
-    explicit FakeRemoteModelServer(const QString& objectName, QObject* parent = 0) : RemoteModelServer(objectName, parent)
+    explicit FakeRemoteModelServer(const QString &objectName, QObject *parent = 0)
+        : RemoteModelServer(objectName, parent)
     {
         m_myAddress = 42;
     }
@@ -61,14 +62,14 @@ signals:
 
 private:
     bool isConnected() const Q_DECL_OVERRIDE { return true; }
-    void sendMessage(const Message& msg) const Q_DECL_OVERRIDE
+    void sendMessage(const Message &msg) const Q_DECL_OVERRIDE
     {
         QByteArray ba;
         QBuffer buffer(&ba);
         buffer.open(QIODevice::ReadWrite);
         msg.write(&buffer);
         buffer.seek(0);
-        emit const_cast<FakeRemoteModelServer*>(this)->message(Message::readMessage(&buffer));
+        emit const_cast<FakeRemoteModelServer *>(this)->message(Message::readMessage(&buffer));
     }
 };
 
@@ -76,7 +77,8 @@ class FakeRemoteModel : public RemoteModel
 {
     Q_OBJECT
 public:
-    explicit FakeRemoteModel(const QString& serverObject, QObject* parent = 0) : RemoteModel(serverObject, parent)
+    explicit FakeRemoteModel(const QString &serverObject, QObject *parent = 0)
+        : RemoteModel(serverObject, parent)
     {
         m_myAddress = 42;
     }
@@ -90,14 +92,14 @@ signals:
     void message(const GammaRay::Message &msg);
 
 private:
-    void sendMessage(const Message& msg) const Q_DECL_OVERRIDE
+    void sendMessage(const Message &msg) const Q_DECL_OVERRIDE
     {
         QByteArray ba;
         QBuffer buffer(&ba);
         buffer.open(QIODevice::ReadWrite);
         msg.write(&buffer);
         buffer.seek(0);
-        emit const_cast<FakeRemoteModel*>(this)->message(Message::readMessage(&buffer));
+        emit const_cast<FakeRemoteModel *>(this)->message(Message::readMessage(&buffer));
     }
 };
 }
@@ -121,8 +123,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.EmptyModel"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
+                SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
+                SLOT(newRequest(GammaRay::Message)));
 
         ModelTest modelTest(&client);
 
@@ -145,8 +149,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
+                SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
+                SLOT(newRequest(GammaRay::Message)));
 
         ModelTest modelTest(&client);
         QTest::qWait(10); // ModelTest is going to fetch stuff for us already
@@ -188,8 +194,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
+                SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
+                SLOT(newRequest(GammaRay::Message)));
 
         ModelTest modelTest(&client);
         QTest::qWait(10); // ModelTest is going to fetch stuff for us already
@@ -243,8 +251,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel2"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client, SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server, SLOT(newRequest(GammaRay::Message)));
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
+                SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
+                SLOT(newRequest(GammaRay::Message)));
 
         QSortFilterProxyModel proxy;
         proxy.setDynamicSortFilter(true);
@@ -271,7 +281,7 @@ private slots:
         auto pi1 = proxy.index(1, 0);
         QCOMPARE(pi1.data().toString(), QStringLiteral("entry1"));
         // this fails with data() call batching sizes close to 1
-//         QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
+// QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);
     }
 };

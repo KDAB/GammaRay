@@ -36,8 +36,7 @@ class QWidget;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
-template <typename, typename> class AttributeModel;
+template<typename, typename> class AttributeModel;
 
 class WidgetAttributeExtension : public PropertyControllerExtension
 {
@@ -45,7 +44,7 @@ public:
     explicit WidgetAttributeExtension(PropertyController *controller);
     ~WidgetAttributeExtension();
 
-    bool setQObject(QObject * object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
 
 private:
     AttributeModel<QWidget, Qt::WidgetAttribute> *m_attributeModel;

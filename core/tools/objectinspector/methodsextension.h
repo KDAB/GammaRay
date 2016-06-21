@@ -39,7 +39,6 @@ class QStandardItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyController;
 class ObjectMethodModel;
 class MethodArgumentModel;
@@ -47,32 +46,31 @@ class MultiSignalMapper;
 
 class MethodsExtension : public MethodsExtensionInterface, public PropertyControllerExtension
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::MethodsExtensionInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::MethodsExtensionInterface)
 
-  public:
+public:
     explicit MethodsExtension(PropertyController *controller);
     ~MethodsExtension();
 
     bool setQObject(QObject *object) Q_DECL_OVERRIDE;
     bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void activateMethod() Q_DECL_OVERRIDE;
     void invokeMethod(Qt::ConnectionType type) Q_DECL_OVERRIDE;
     void connectToSignal() Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);
 
-  private:
+private:
     ObjectMethodModel *m_model;
     QStandardItemModel *m_methodLogModel;
     MethodArgumentModel *m_methodArgumentModel;
     MultiSignalMapper *m_signalMapper;
     QPointer<QObject> m_object;
 };
-
 }
 
 #endif // METHODSEXTENSION_H

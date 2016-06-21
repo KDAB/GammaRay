@@ -35,32 +35,30 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class WebInspectorWidget;
+class WebInspectorWidget;
 }
 
 class WebInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit WebInspectorWidget(QWidget *parent = 0);
     ~WebInspectorWidget();
 
-  private slots:
+private slots:
     void webPageSelected(int index);
 
-  private:
+private:
     QScopedPointer<Ui::WebInspectorWidget> ui;
 };
 
 class WebInspectorUiFactory : public QObject, public StandardToolUiFactory<WebInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_webinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_webinspector.json")
 };
-
 }
 
 #endif

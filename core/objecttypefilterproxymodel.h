@@ -45,21 +45,20 @@
 #include <QSortFilterProxyModel>
 
 namespace GammaRay {
-
 /**
  * @brief A QSortFilterProxyModel for generic Objects.
  */
 class GAMMARAY_CORE_EXPORT ObjectFilterProxyModelBase : public QSortFilterProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Constructor.
      * @param parent is the parent object for this instance.
      */
     explicit ObjectFilterProxyModelBase(QObject *parent = Q_NULLPTR);
 
-  protected:
+protected:
     /**
      * Determines if the item in the specified row can be included in the model.
      * @param source_row is a non-zero integer representing the row of the item.
@@ -80,26 +79,25 @@ class GAMMARAY_CORE_EXPORT ObjectFilterProxyModelBase : public QSortFilterProxyM
 /**
  * @brief A templated generic ObjectFilterProxyModelBase for some data type.
  */
-template <typename T>
+template<typename T>
 class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
 {
-  public:
+public:
     /**
      * Constructor.
      * @param parent is the parent object for this instance.
      */
     explicit ObjectTypeFilterProxyModel(QObject *parent = 0)
-      : ObjectFilterProxyModelBase(parent)
+        : ObjectFilterProxyModelBase(parent)
     {
     }
 
-  protected:
+protected:
     bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE
     {
-      return qobject_cast<T*>(object);
+        return qobject_cast<T *>(object);
     }
 };
-
 }
 
 #endif // GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H

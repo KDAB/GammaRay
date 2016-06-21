@@ -45,27 +45,30 @@ using namespace GammaRay;
 using namespace std;
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QAction*)
-Q_DECLARE_METATYPE(QActionGroup*)
-Q_DECLARE_METATYPE(QMenu*)
+Q_DECLARE_METATYPE(QAction *)
+Q_DECLARE_METATYPE(QActionGroup *)
+Q_DECLARE_METATYPE(QMenu *)
 #endif
 
 ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  registerMetaTypes();
-  ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.ActionInspector"), this);
+    registerMetaTypes();
+    ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.ActionInspector"), this);
 
-  ActionModel *actionModel = new ActionModel(this);
-  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), actionModel, SLOT(objectAdded(QObject*)));
-  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), actionModel, SLOT(objectRemoved(QObject*)));
-  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    ActionModel *actionModel = new ActionModel(this);
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), actionModel,
+            SLOT(objectAdded(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), actionModel,
+            SLOT(objectRemoved(QObject*)));
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
+            SLOT(objectSelected(QObject*)));
 
-  auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-  proxy->setSourceModel(actionModel);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ActionModel"), proxy);
+    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    proxy->setSourceModel(actionModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.ActionModel"), proxy);
 
-  m_selectionModel = ObjectBroker::selectionModel(proxy);
+    m_selectionModel = ObjectBroker::selectionModel(proxy);
 }
 
 ActionInspector::~ActionInspector()
@@ -74,69 +77,66 @@ ActionInspector::~ActionInspector()
 
 void ActionInspector::triggerAction(int row)
 {
-  QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
-  const QModelIndex index = model->index(row, 0);
-  if (!index.isValid()) {
-    return;
-  }
+    QAbstractItemModel *model
+        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+    const QModelIndex index = model->index(row, 0);
+    if (!index.isValid())
+        return;
 
-  QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-  QAction *action = qobject_cast<QAction*>(obj);
+    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
+    QAction *action = qobject_cast<QAction *>(obj);
 
-  if (action) {
-    action->trigger();
-  }
+    if (action)
+        action->trigger();
 }
 
-void GammaRay::ActionInspector::objectSelected(QObject* obj)
+void GammaRay::ActionInspector::objectSelected(QObject *obj)
 {
-  QAction *action = qobject_cast<QAction*>(obj);
-  if (!action) {
-    return;
-  }
+    QAction *action = qobject_cast<QAction *>(obj);
+    if (!action)
+        return;
 
-  const QAbstractItemModel *model = m_selectionModel->model();
+    const QAbstractItemModel *model = m_selectionModel->model();
 
-  const QModelIndexList indexList =
-    model->match(model->index(0, 0),
-                 ObjectModel::ObjectRole,
-                 QVariant::fromValue<QAction*>(action), 1,
-                 Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
-  if (indexList.isEmpty()) {
-    return;
-  }
+    const QModelIndexList indexList
+        = model->match(model->index(0, 0),
+                       ObjectModel::ObjectRole,
+                       QVariant::fromValue<QAction *>(action), 1,
+                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    if (indexList.isEmpty())
+        return;
 
-  const QModelIndex index = indexList.first();
-  m_selectionModel->select(index,
-                               QItemSelectionModel::Select |
-                               QItemSelectionModel::Clear |
-                               QItemSelectionModel::Rows |
-                               QItemSelectionModel::Current);
+    const QModelIndex index = indexList.first();
+    m_selectionModel->select(index,
+                             QItemSelectionModel::Select
+                             |QItemSelectionModel::Clear
+                             |QItemSelectionModel::Rows
+                             |QItemSelectionModel::Current);
 }
 
 void ActionInspector::registerMetaTypes()
 {
-  MetaObject *mo = 0;
-  MO_ADD_METAOBJECT1(QAction, QObject);
-  MO_ADD_PROPERTY_RO(QAction, QActionGroup*, actionGroup);
-  MO_ADD_PROPERTY_CR(QAction, QVariant, data, setData);
-  MO_ADD_PROPERTY   (QAction, bool, isSeparator, setSeparator);
-  MO_ADD_PROPERTY_RO(QAction, QMenu*, menu);
-  MO_ADD_PROPERTY_RO(QAction, QWidget*, parentWidget);
+    MetaObject *mo = 0;
+    MO_ADD_METAOBJECT1(QAction, QObject);
+    MO_ADD_PROPERTY_RO(QAction, QActionGroup *, actionGroup);
+    MO_ADD_PROPERTY_CR(QAction, QVariant, data, setData);
+    MO_ADD_PROPERTY(QAction, bool, isSeparator, setSeparator);
+    MO_ADD_PROPERTY_RO(QAction, QMenu *, menu);
+    MO_ADD_PROPERTY_RO(QAction, QWidget *, parentWidget);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-  MO_ADD_PROPERTY_RO(QAction, QList<QGraphicsWidget*>, associatedGraphicsWidgets);
-  MO_ADD_PROPERTY_RO(QAction, QList<QWidget*>, associatedWidgets);
+    MO_ADD_PROPERTY_RO(QAction, QList<QGraphicsWidget *>, associatedGraphicsWidgets);
+    MO_ADD_PROPERTY_RO(QAction, QList<QWidget *>, associatedWidgets);
 #endif
 
-  MO_ADD_METAOBJECT1(QActionGroup, QObject);
+    MO_ADD_METAOBJECT1(QActionGroup, QObject);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-  MO_ADD_PROPERTY_RO(QActionGroup, QList<QAction*>, actions);
+    MO_ADD_PROPERTY_RO(QActionGroup, QList<QAction *>, actions);
 #endif
 }
 
 QString ActionInspectorFactory::name() const
 {
-  return tr("Action Inspector");
+    return tr("Action Inspector");
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

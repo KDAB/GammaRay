@@ -36,10 +36,10 @@
 
 using namespace GammaRay;
 
-MetaPropertyAdaptor::MetaPropertyAdaptor(QObject* parent):
-    PropertyAdaptor(parent),
-    m_metaObj(0),
-    m_obj(0)
+MetaPropertyAdaptor::MetaPropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
+    , m_metaObj(0)
+    , m_obj(0)
 {
 }
 
@@ -47,31 +47,31 @@ MetaPropertyAdaptor::~MetaPropertyAdaptor()
 {
 }
 
-void MetaPropertyAdaptor::doSetObject(const ObjectInstance& oi)
+void MetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     Q_ASSERT(m_metaObj == 0);
     Q_ASSERT(m_obj == 0);
 
     switch (oi.type()) {
-        case ObjectInstance::Object:
-        case ObjectInstance::Value:
-            m_metaObj = MetaObjectRepository::instance()->metaObject(oi.typeName());
-            m_obj = oi.object();
-            break;
-        case ObjectInstance::QtObject:
-        case ObjectInstance::QtGadget:
-        {
-            const QMetaObject *mo = oi.metaObject();
-            while (mo && !m_metaObj) {
-                m_metaObj = MetaObjectRepository::instance()->metaObject(mo->className());
-                mo = mo->superClass();
-            }
-            if (m_metaObj)
-                m_obj = oi.object();
-            break;
+    case ObjectInstance::Object:
+    case ObjectInstance::Value:
+        m_metaObj = MetaObjectRepository::instance()->metaObject(oi.typeName());
+        m_obj = oi.object();
+        break;
+    case ObjectInstance::QtObject:
+    case ObjectInstance::QtGadget:
+    {
+        const QMetaObject *mo = oi.metaObject();
+        while (mo && !m_metaObj) {
+            m_metaObj = MetaObjectRepository::instance()->metaObject(mo->className());
+            mo = mo->superClass();
         }
-        default:
-            break;
+        if (m_metaObj)
+            m_obj = oi.object();
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -104,7 +104,7 @@ PropertyData MetaPropertyAdaptor::propertyData(int index) const
     return data;
 }
 
-void MetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
+void MetaPropertyAdaptor::writeProperty(int index, const QVariant &value)
 {
     if (!object().isValid())
         return;

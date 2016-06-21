@@ -42,64 +42,63 @@ class MetaObjectTest : public QObject
 private slots:
     void testMetaObject()
     {
-      QVERIFY(MetaObjectRepository::instance()->hasMetaObject(QStringLiteral("QThread")));
-      auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
+        QVERIFY(MetaObjectRepository::instance()->hasMetaObject(QStringLiteral("QThread")));
+        auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
 
-      QVERIFY(mo);
-      QCOMPARE(mo->className(), QStringLiteral("QThread"));
-      QVERIFY(mo->inherits(QStringLiteral("QObject")));
+        QVERIFY(mo);
+        QCOMPARE(mo->className(), QStringLiteral("QThread"));
+        QVERIFY(mo->inherits(QStringLiteral("QObject")));
 
-      auto *superMo = mo->superClass(0);
-      QVERIFY(superMo);
-      QCOMPARE(superMo->className(), QStringLiteral("QObject"));
+        auto *superMo = mo->superClass(0);
+        QVERIFY(superMo);
+        QCOMPARE(superMo->className(), QStringLiteral("QObject"));
 
-      QVERIFY(!mo->superClass(1));
-      QVERIFY(!superMo->superClass(0));
+        QVERIFY(!mo->superClass(1));
+        QVERIFY(!superMo->superClass(0));
     }
 
     void testMemberProperty()
     {
-      auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
-      QVERIFY(mo->propertyCount() >= 7); // depends on Qt version
+        auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
+        QVERIFY(mo->propertyCount() >= 7); // depends on Qt version
 
-      MetaProperty *prop = 0;
-      for (int i = 0; i < mo->propertyCount(); ++i) {
-        prop = mo->propertyAt(i);
+        MetaProperty *prop = 0;
+        for (int i = 0; i < mo->propertyCount(); ++i) {
+            prop = mo->propertyAt(i);
+            QVERIFY(prop);
+            if (strcmp(prop->name(), "priority") == 0)
+                break;
+        }
+
         QVERIFY(prop);
-        if (strcmp(prop->name(), "priority") == 0)
-          break;
-      }
+        QCOMPARE(prop->name(), "priority");
+        QCOMPARE(prop->typeName(), "QThread::Priority");
 
-      QVERIFY(prop);
-      QCOMPARE(prop->name(), "priority");
-      QCOMPARE(prop->typeName(), "QThread::Priority");
-
-      QThread t;
-      QCOMPARE(prop->value(&t).value<QThread::Priority>(), t.priority());
-      QCOMPARE(prop->isReadOnly(), false);
+        QThread t;
+        QCOMPARE(prop->value(&t).value<QThread::Priority>(), t.priority());
+        QCOMPARE(prop->isReadOnly(), false);
     }
 
     void testStaticProperty()
     {
-      auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QCoreApplication"));
-      QVERIFY(mo);
-      QVERIFY(mo->propertyCount() >= 8); // depends on Qt version
+        auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QCoreApplication"));
+        QVERIFY(mo);
+        QVERIFY(mo->propertyCount() >= 8); // depends on Qt version
 
-      MetaProperty *prop = 0;
-      for (int i = 0; i < mo->propertyCount(); ++i) {
-        prop = mo->propertyAt(i);
+        MetaProperty *prop = 0;
+        for (int i = 0; i < mo->propertyCount(); ++i) {
+            prop = mo->propertyAt(i);
+            QVERIFY(prop);
+            if (strcmp(prop->name(), "libraryPaths") == 0)
+                break;
+        }
+
         QVERIFY(prop);
-        if (strcmp(prop->name(), "libraryPaths") == 0)
-          break;
-      }
-
-      QVERIFY(prop);
-      QCOMPARE(prop->name(), "libraryPaths");
-      QCOMPARE(prop->typeName(), "QStringList");
-      QCOMPARE(prop->isReadOnly(), true);
-      QCOMPARE(prop->value(0).toStringList(), QCoreApplication::libraryPaths());
+        QCOMPARE(prop->name(), "libraryPaths");
+        QCOMPARE(prop->typeName(), "QStringList");
+        QCOMPARE(prop->isReadOnly(), true);
+        QCOMPARE(prop->value(0).toStringList(), QCoreApplication::libraryPaths());
     }
-
 };
 
 QTEST_MAIN(MetaObjectTest)

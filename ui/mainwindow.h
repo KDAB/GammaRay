@@ -41,31 +41,32 @@ class QUrl;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindowUIStateManager : public UIStateManager
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit MainWindowUIStateManager(QWidget *widget);
+    explicit MainWindowUIStateManager(QWidget *widget);
 
-  QList<QSplitter *> splitters() const Q_DECL_OVERRIDE;
-  QList<QHeaderView *> headers() const Q_DECL_OVERRIDE;
+    QList<QSplitter *> splitters() const Q_DECL_OVERRIDE;
+    QList<QHeaderView *> headers() const Q_DECL_OVERRIDE;
 };
 
 class MainWindow : public QMainWindow
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-  signals:
+signals:
     void targetQuitRequested();
 
-  private slots:
+private slots:
     void help();
     void about();
     void aboutPlugins();
@@ -81,13 +82,12 @@ class MainWindow : public QMainWindow
     void navigateToCode(const QUrl &url, int lineNumber, int columnNumber);
     void setCodeNavigationIDE(QAction *action);
 
-  private:
-    QWidget* createErrorPage(const QModelIndex &index);
+private:
+    QWidget *createErrorPage(const QModelIndex &index);
 
     QScopedPointer<Ui::MainWindow> ui;
     MainWindowUIStateManager m_stateManager;
 };
-
 }
 
 #endif // MAINWINDOW_H

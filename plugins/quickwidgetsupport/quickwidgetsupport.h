@@ -35,7 +35,6 @@
 #include <QHash>
 
 namespace GammaRay {
-
 class QuickWidgetSupport : public QObject
 {
     Q_OBJECT
@@ -43,34 +42,34 @@ public:
     explicit QuickWidgetSupport(ProbeInterface *probe, QObject *parent = 0);
     ~QuickWidgetSupport();
 
-    typedef bool (*GrabWindowCallback)(QQuickWindow*);
-    bool grabWindow(QQuickWindow* window) const;
+    typedef bool (*GrabWindowCallback)(QQuickWindow *);
+    bool grabWindow(QQuickWindow *window) const;
 
 private slots:
-    void objectAdded(QObject* obj);
+    void objectAdded(QObject *obj);
     void registerWindowGrabber();
 
 private:
-    QHash<QQuickWindow*, QQuickWidget*> m_windowMap;
+    QHash<QQuickWindow *, QQuickWidget *> m_windowMap;
     QObject *m_quickInspector;
     ProbeInterface *m_probe;
 };
 
-class QuickWidgetSupportFactory : public QObject, public StandardToolFactory<QQuickWidget, QuickWidgetSupport>
+class QuickWidgetSupportFactory : public QObject,
+    public StandardToolFactory<QQuickWidget, QuickWidgetSupport>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_quickwidgetsupport.json")
 
 public:
-    explicit QuickWidgetSupportFactory(QObject *parent = 0) : QObject(parent)
+    explicit QuickWidgetSupportFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif
-

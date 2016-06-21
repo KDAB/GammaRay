@@ -41,16 +41,16 @@ using namespace GammaRay;
 using namespace GammaRay;
 
 KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::KJobTrackerWidget)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , ui(new Ui::KJobTrackerWidget)
+    , m_stateManager(this)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.KJobModel"));
-  new SearchLineController(ui->searchLine, model);
-  ui->jobView->header()->setObjectName("jobViewHeader");
-  ui->jobView->setModel(model);
+    auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.KJobModel"));
+    new SearchLineController(ui->searchLine, model);
+    ui->jobView->header()->setObjectName("jobViewHeader");
+    ui->jobView->setModel(model);
 }
 
 KJobTrackerWidget::~KJobTrackerWidget()

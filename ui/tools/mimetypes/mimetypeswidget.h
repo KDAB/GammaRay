@@ -34,23 +34,21 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class MimeTypesWidget;
+class MimeTypesWidget;
 }
 
 class MimeTypesWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MimeTypesWidget(QWidget *parent = 0);
     ~MimeTypesWidget();
 
-  private:
+private:
     QScopedPointer<Ui::MimeTypesWidget> ui;
     UIStateManager m_stateManager;
 };
-
 }
 
 #endif // GAMMARAY_MIMETYPESWIDGET_H

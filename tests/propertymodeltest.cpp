@@ -43,7 +43,7 @@ class PropertyModelTest : public QObject
 {
     Q_OBJECT
 private:
-    QModelIndex findRowByName(QAbstractItemModel* model, const char* name)
+    QModelIndex findRowByName(QAbstractItemModel *model, const char *name)
     {
         for (int i = 0; i < model->rowCount(); ++i) {
             auto index = model->index(i, 0);
@@ -52,6 +52,7 @@ private:
         }
         return QModelIndex();
     }
+
 private slots:
     void testPropertyModel()
     {
@@ -67,7 +68,8 @@ private slots:
         QVERIFY(dynRow.isValid());
         QCOMPARE(dynRow.data(Qt::DisplayRole).toString(), QStringLiteral("dynamicProperty"));
         QVERIFY(dynRow.sibling(dynRow.row(), 1).flags() & Qt::ItemIsEditable);
-        QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::DisplayRole).toString(), QStringLiteral("5"));
+        QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::DisplayRole).toString(),
+                 QStringLiteral("5"));
         QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::EditRole), QVariant(5));
 
         auto qmoRow = findRowByName(&model, "intProp");
@@ -104,7 +106,7 @@ private slots:
     {
         ChangingPropertyObject obj;
         AggregatedPropertyModel model;
-//         ModelTest modelTest(&model);
+// ModelTest modelTest(&model);
         model.setObject(&obj);
         QVERIFY(model.rowCount() >= 4);
 
@@ -128,7 +130,6 @@ private slots:
         QCOMPARE(addSpy.size(), 1);
         QCOMPARE(removeSpy.size(), 1);
     }
-
 };
 
 QTEST_MAIN(PropertyModelTest)

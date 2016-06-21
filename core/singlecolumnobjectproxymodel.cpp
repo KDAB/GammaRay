@@ -33,12 +33,12 @@
 
 using namespace GammaRay;
 
-SingleColumnObjectProxyModel::SingleColumnObjectProxyModel(QObject *parent) :
-    QIdentityProxyModel(parent)
+SingleColumnObjectProxyModel::SingleColumnObjectProxyModel(QObject *parent)
+    : QIdentityProxyModel(parent)
 {
 }
 
-int SingleColumnObjectProxyModel::columnCount(const QModelIndex& parent) const
+int SingleColumnObjectProxyModel::columnCount(const QModelIndex &parent) const
 {
     return std::min(QIdentityProxyModel::columnCount(parent), 1);
 }
@@ -46,10 +46,9 @@ int SingleColumnObjectProxyModel::columnCount(const QModelIndex& parent) const
 QVariant SingleColumnObjectProxyModel::data(const QModelIndex &proxyIndex, int role) const
 {
     if (proxyIndex.isValid() && role == Qt::DisplayRole && proxyIndex.column() == 0) {
-        const QObject *obj = proxyIndex.data(ObjectModel::ObjectRole).value<QObject*>();
-        if (obj) {
+        const QObject *obj = proxyIndex.data(ObjectModel::ObjectRole).value<QObject *>();
+        if (obj)
             return Util::displayString(obj);
-        }
     }
 
     return QIdentityProxyModel::data(proxyIndex, role);

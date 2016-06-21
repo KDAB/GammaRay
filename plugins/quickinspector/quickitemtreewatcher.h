@@ -37,25 +37,23 @@ class QTreeView;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Auto-expand the visible item sub-tree. */
 class QuickItemTreeWatcher : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit QuickItemTreeWatcher(QTreeView *view, QTreeView *sgView, QObject *parent = 0);
     ~QuickItemTreeWatcher();
 
-  private slots:
+private slots:
     void itemModelRowsInserted(const QModelIndex &parent, int start, int end);
     void sgModelRowsInserted(const QModelIndex &parent, int start, int end);
 
-  private:
+private:
     QTreeView *m_itemView;
     QTreeView *m_sgView;
 };
-
 }
 
 #endif // GAMMARAY_QUICKITEMTREEWATCHER_H

@@ -38,8 +38,8 @@ using namespace GammaRay;
 
 static const int TopLevelId = std::numeric_limits<int>::max();
 
-FontDatabaseModel::FontDatabaseModel(QObject* parent) :
-    QAbstractItemModel(parent)
+FontDatabaseModel::FontDatabaseModel(QObject *parent)
+    : QAbstractItemModel(parent)
 {
 }
 
@@ -47,7 +47,7 @@ FontDatabaseModel::~FontDatabaseModel()
 {
 }
 
-int FontDatabaseModel::rowCount(const QModelIndex& parent) const
+int FontDatabaseModel::rowCount(const QModelIndex &parent) const
 {
     ensureModelPopulated();
     if (!parent.isValid())
@@ -59,13 +59,13 @@ int FontDatabaseModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-int FontDatabaseModel::columnCount(const QModelIndex& parent) const
+int FontDatabaseModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 2;
 }
 
-QVariant FontDatabaseModel::data(const QModelIndex& index, int role) const
+QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -83,16 +83,15 @@ QVariant FontDatabaseModel::data(const QModelIndex& index, int role) const
                 return m_families.at(family);
         } else {
             switch (index.column()) {
-                case 0:
-                    return m_styles.at(family).at(index.row());
-                case 1:
-                    return smoothSizeString(m_families.at(family), m_styles.at(family).at(index.row()));
+            case 0:
+                return m_styles.at(family).at(index.row());
+            case 1:
+                return smoothSizeString(m_families.at(family), m_styles.at(family).at(index.row()));
             }
         }
     } else if (role == Qt::ToolTipRole) {
-        if (index.internalId() != TopLevelId && index.column() == 1) {
+        if (index.internalId() != TopLevelId && index.column() == 1)
             return smoothSizeString(m_families.at(family), m_styles.at(family).at(index.row()));
-        }
     } else if (role == Qt::UserRole + 1) {
         if (index.internalId() == TopLevelId) {
             return QFont(m_families.at(family));
@@ -109,14 +108,16 @@ QVariant FontDatabaseModel::headerData(int section, Qt::Orientation orientation,
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Fonts");
-            case 1: return tr("Smooth Sizes");
+        case 0:
+            return tr("Fonts");
+        case 1:
+            return tr("Smooth Sizes");
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-QModelIndex FontDatabaseModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex FontDatabaseModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row < 0 || column < 0 || column >= columnCount())
         return QModelIndex();
@@ -129,22 +130,21 @@ QModelIndex FontDatabaseModel::index(int row, int column, const QModelIndex& par
     return createIndex(row, column, TopLevelId);
 }
 
-QModelIndex FontDatabaseModel::parent(const QModelIndex& child) const
+QModelIndex FontDatabaseModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid() || child.internalId() == TopLevelId)
         return QModelIndex();
     return createIndex(child.internalId(), 0, TopLevelId);
 }
 
-QString FontDatabaseModel::smoothSizeString(const QString& family, const QString& style) const
+QString FontDatabaseModel::smoothSizeString(const QString &family, const QString &style) const
 {
     QFontDatabase database;
     const auto smoothSizes = database.smoothSizes(family, style);
     QStringList sizes;
     sizes.reserve(smoothSizes.size());
-    foreach (auto points, smoothSizes) {
+    foreach (auto points, smoothSizes)
         sizes.push_back(QString::number(points));
-    }
     return sizes.join(QStringLiteral(" "));
 }
 
@@ -153,7 +153,7 @@ void FontDatabaseModel::ensureModelPopulated() const
     if (!m_families.isEmpty())
         return;
 
-    const_cast<FontDatabaseModel*>(this)->populateModel();
+    const_cast<FontDatabaseModel *>(this)->populateModel();
 }
 
 void FontDatabaseModel::populateModel()
@@ -168,8 +168,7 @@ void FontDatabaseModel::populateModel()
 
         const auto styles = database.styles(family);
         m_styles[i].reserve(styles.size());
-        foreach (const auto &style, database.styles(family)) {
+        foreach (const auto &style, database.styles(family))
             m_styles[i].push_back(style);
-        }
     }
 }

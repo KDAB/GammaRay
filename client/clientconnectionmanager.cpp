@@ -48,84 +48,88 @@
 
 using namespace GammaRay;
 
-static QAbstractItemModel* modelFactory(const QString &name)
+static QAbstractItemModel *modelFactory(const QString &name)
 {
-  return new RemoteModel(name, qApp);
+    return new RemoteModel(name, qApp);
 }
 
-static QItemSelectionModel* selectionModelFactory(QAbstractItemModel* model)
+static QItemSelectionModel *selectionModelFactory(QAbstractItemModel *model)
 {
-  return new SelectionModelClient(model->objectName() + ".selection", model, qApp);
+    return new SelectionModelClient(model->objectName() + ".selection", model, qApp);
 }
 
-static QObject* createPropertyController(const QString &name, QObject *parent)
+static QObject *createPropertyController(const QString &name, QObject *parent)
 {
-  return new PropertyControllerClient(name, parent);
+    return new PropertyControllerClient(name, parent);
 }
 
-static QObject* createProbeController(const QString &name, QObject *parent)
+static QObject *createProbeController(const QString &name, QObject *parent)
 {
-  QObject *o = new ProbeControllerClient(parent);
-  ObjectBroker::registerObject(name, o);
-  return o;
+    QObject *o = new ProbeControllerClient(parent);
+    ObjectBroker::registerObject(name, o);
+    return o;
 }
 
-static QObject* createPaintAnalyzerClient(const QString &name, QObject *parent)
+static QObject *createPaintAnalyzerClient(const QString &name, QObject *parent)
 {
-  return new PaintAnalyzerClient(name, parent);
+    return new PaintAnalyzerClient(name, parent);
 }
 
-static QObject* createRemoteViewClient(const QString &name, QObject *parent)
+static QObject *createRemoteViewClient(const QString &name, QObject *parent)
 {
-  return new RemoteViewClient(name, parent);
+    return new RemoteViewClient(name, parent);
 }
 
 void ClientConnectionManager::init()
 {
-  StreamOperators::registerOperators();
+    StreamOperators::registerOperators();
 
-  ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface*>(createPropertyController);
-  ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface*>(createProbeController);
-  ObjectBroker::registerClientObjectFactoryCallback<PaintAnalyzerInterface*>(createPaintAnalyzerClient);
-  ObjectBroker::registerClientObjectFactoryCallback<RemoteViewInterface*>(createRemoteViewClient);
+    ObjectBroker::registerClientObjectFactoryCallback<PropertyControllerInterface *>(
+        createPropertyController);
+    ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface *>(
+        createProbeController);
+    ObjectBroker::registerClientObjectFactoryCallback<PaintAnalyzerInterface *>(
+        createPaintAnalyzerClient);
+    ObjectBroker::registerClientObjectFactoryCallback<RemoteViewInterface *>(createRemoteViewClient);
 
-  ObjectBroker::setModelFactoryCallback(modelFactory);
-  ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
+    ObjectBroker::setModelFactoryCallback(modelFactory);
+    ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
 }
 
-ClientConnectionManager::ClientConnectionManager(QObject* parent, bool showSplashScreenOnStartUp) :
-  QObject(parent),
-  m_client(new Client(this)),
-  m_mainWindow(0),
-  m_toolModel(0),
-  m_ignorePersistentError(false),
-  m_tries(0)
+ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplashScreenOnStartUp)
+    : QObject(parent)
+    , m_client(new Client(this))
+    , m_mainWindow(0)
+    , m_toolModel(0)
+    , m_ignorePersistentError(false)
+    , m_tries(0)
 {
-  if (showSplashScreenOnStartUp)
-     showSplashScreen();
-  connect(m_client, SIGNAL(disconnected()), SIGNAL(disconnected()));
-  connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
-  connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
-  connect(m_client, SIGNAL(persisitentConnectionError(QString)), SIGNAL(persistentConnectionError(QString)));
-  connect(this, SIGNAL(persistentConnectionError(QString)), SLOT(delayedHideSplashScreen()));
+    if (showSplashScreenOnStartUp)
+        showSplashScreen();
+    connect(m_client, SIGNAL(disconnected()), SIGNAL(disconnected()));
+    connect(m_client, SIGNAL(connectionEstablished()), SLOT(connectionEstablished()));
+    connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
+    connect(m_client, SIGNAL(persisitentConnectionError(QString)),
+            SIGNAL(persistentConnectionError(QString)));
+    connect(this, SIGNAL(persistentConnectionError(QString)), SLOT(delayedHideSplashScreen()));
 }
 
 ClientConnectionManager::~ClientConnectionManager()
 {
-  delete m_mainWindow;
+    delete m_mainWindow;
 }
 
 QMainWindow *ClientConnectionManager::mainWindow() const
 {
-  return m_mainWindow;
+    return m_mainWindow;
 }
 
 void ClientConnectionManager::connectToHost(const QUrl &url, int tryAgain)
 {
-  m_serverUrl = url;
-  m_connectionTimeout.start();
-  m_tries = tryAgain;
-  connectToHost();
+    m_serverUrl = url;
+    m_connectionTimeout.start();
+    m_tries = tryAgain;
+    connectToHost();
 }
 
 void ClientConnectionManager::disconnectFromHost()
@@ -135,73 +139,74 @@ void ClientConnectionManager::disconnectFromHost()
 
 void ClientConnectionManager::connectToHost()
 {
-  m_client->connectToHost(m_serverUrl, m_tries ? m_tries-- : 0);
+    m_client->connectToHost(m_serverUrl, m_tries ? m_tries-- : 0);
 }
 
 void ClientConnectionManager::connectionEstablished()
 {
-  m_toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
+    m_toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
 
-  if (m_toolModel->rowCount() <= 0) {
-    connect(m_toolModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(toolModelPopulated()));
-    connect(m_toolModel, SIGNAL(layoutChanged()), SLOT(toolModelPopulated()));
-    connect(m_toolModel, SIGNAL(modelReset()), SLOT(toolModelPopulated()));
-  } else {
-    toolModelPopulated();
-  }
+    if (m_toolModel->rowCount() <= 0) {
+        connect(m_toolModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                SLOT(toolModelPopulated()));
+        connect(m_toolModel, SIGNAL(layoutChanged()), SLOT(toolModelPopulated()));
+        connect(m_toolModel, SIGNAL(modelReset()), SLOT(toolModelPopulated()));
+    } else {
+        toolModelPopulated();
+    }
 }
 
 void ClientConnectionManager::toolModelPopulated()
 {
-  if (m_toolModel->rowCount() <= 0)
-    return;
+    if (m_toolModel->rowCount() <= 0)
+        return;
 
-  disconnect(m_toolModel, 0, this, 0);
-  QTimer::singleShot(0, this, SLOT(delayedHideSplashScreen()));
-  emit ready();
+    disconnect(m_toolModel, 0, this, 0);
+    QTimer::singleShot(0, this, SLOT(delayedHideSplashScreen()));
+    emit ready();
 }
 
 QMainWindow *ClientConnectionManager::createMainWindow()
 {
-  delete m_mainWindow;
-  m_mainWindow = new MainWindow;
-  connect(m_mainWindow, SIGNAL(targetQuitRequested()), this, SLOT(targetQuitRequested()));
-  m_ignorePersistentError = false;
-  m_mainWindow->show();
-  return m_mainWindow;
+    delete m_mainWindow;
+    m_mainWindow = new MainWindow;
+    connect(m_mainWindow, SIGNAL(targetQuitRequested()), this, SLOT(targetQuitRequested()));
+    m_ignorePersistentError = false;
+    m_mainWindow->show();
+    return m_mainWindow;
 }
 
 void ClientConnectionManager::transientConnectionError()
 {
-  if (m_connectionTimeout.elapsed() < 60 * 1000) {
-    // client wasn't up yet, keep trying
-    QTimer::singleShot(1000, this, SLOT(connectToHost()));
-  } else {
-    emit persistentConnectionError(tr("Connection refused."));
-  }
+    if (m_connectionTimeout.elapsed() < 60 * 1000) {
+        // client wasn't up yet, keep trying
+        QTimer::singleShot(1000, this, SLOT(connectToHost()));
+    } else {
+        emit persistentConnectionError(tr("Connection refused."));
+    }
 }
 
-void ClientConnectionManager::handlePersistentConnectionError(const QString& msg)
+void ClientConnectionManager::handlePersistentConnectionError(const QString &msg)
 {
-  if (m_ignorePersistentError)
-    return;
+    if (m_ignorePersistentError)
+        return;
 
-  QString errorMsg;
-  if (m_mainWindow)
-    errorMsg = tr("Lost connection to remote host: %1").arg(msg);
-  else
-    errorMsg = tr("Could not establish connection to remote host: %1").arg(msg);
+    QString errorMsg;
+    if (m_mainWindow)
+        errorMsg = tr("Lost connection to remote host: %1").arg(msg);
+    else
+        errorMsg = tr("Could not establish connection to remote host: %1").arg(msg);
 
-  QMessageBox::critical(m_mainWindow, tr("GammaRay - Connection Error"), errorMsg);
-  QApplication::exit(1);
+    QMessageBox::critical(m_mainWindow, tr("GammaRay - Connection Error"), errorMsg);
+    QApplication::exit(1);
 }
 
 void ClientConnectionManager::delayedHideSplashScreen()
 {
-  hideSplashScreen();
+    hideSplashScreen();
 }
 
 void ClientConnectionManager::targetQuitRequested()
 {
-  m_ignorePersistentError = true;
+    m_ignorePersistentError = true;
 }

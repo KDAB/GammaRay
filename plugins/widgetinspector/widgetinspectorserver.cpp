@@ -86,307 +86,293 @@ using namespace GammaRay;
 using namespace std;
 
 WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *parent)
-  : WidgetInspectorInterface(parent)
-  , m_externalExportActions(new QLibrary(this))
-  , m_propertyController(new PropertyController(objectName(), this))
-  , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this))
-  , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"), this))
-  , m_probe(probe)
+    : WidgetInspectorInterface(parent)
+    , m_externalExportActions(new QLibrary(this))
+    , m_propertyController(new PropertyController(objectName(), this))
+    , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"),
+                                        this))
+    , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"), this))
+    , m_probe(probe)
 {
-  registerWidgetMetaTypes();
-  registerVariantHandlers();
-  probe->installGlobalEventFilter(this);
-  PropertyController::registerExtension<WidgetPaintAnalyzerExtension>();
-PropertyController::registerExtension<WidgetAttributeExtension>();
+    registerWidgetMetaTypes();
+    registerVariantHandlers();
+    probe->installGlobalEventFilter(this);
+    PropertyController::registerExtension<WidgetPaintAnalyzerExtension>();
+    PropertyController::registerExtension<WidgetAttributeExtension>();
 
+    connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(updateWidgetPreview()));
 
-  connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(updateWidgetPreview()));
+    recreateOverlayWidget();
 
-  recreateOverlayWidget();
+    WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
+    widgetFilterProxy->setSourceModel(probe->objectTreeModel());
 
-  WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
-  widgetFilterProxy->setSourceModel(probe->objectTreeModel());
+    auto widgetSearchProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    widgetSearchProxy->setSourceModel(widgetFilterProxy);
+    widgetSearchProxy->addRole(ObjectModel::ObjectIdRole);
 
-  auto widgetSearchProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
-  widgetSearchProxy->setSourceModel(widgetFilterProxy);
-  widgetSearchProxy->addRole(ObjectModel::ObjectIdRole);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.WidgetTree"), widgetSearchProxy);
 
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.WidgetTree"), widgetSearchProxy);
+    m_widgetSelectionModel = ObjectBroker::selectionModel(widgetSearchProxy);
+    connect(m_widgetSelectionModel,
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(widgetSelected(QItemSelection)));
 
-  m_widgetSelectionModel = ObjectBroker::selectionModel(widgetSearchProxy);
-  connect(m_widgetSelectionModel,
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(widgetSelected(QItemSelection)));
+    if (m_probe->needsObjectDiscovery()) {
+        connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+        discoverObjects();
+    }
 
-  if (m_probe->needsObjectDiscovery()) {
-    connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
-    discoverObjects();
-  }
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
+            SLOT(objectSelected(QObject*)));
 
-  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+    connect(m_remoteView, SIGNAL(doPickElement(QPoint)), this, SLOT(pickElement(QPoint)));
 
-  connect(m_remoteView, SIGNAL(doPickElement(QPoint)), this, SLOT(pickElement(QPoint)));
-
-  checkFeatures();
+    checkFeatures();
 }
 
 WidgetInspectorServer::~WidgetInspectorServer()
 {
-  disconnect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
-             this, SLOT(recreateOverlayWidget()));
-  delete m_overlayWidget.data();
+    disconnect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
+               this, SLOT(recreateOverlayWidget()));
+    delete m_overlayWidget.data();
 }
 
 void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
 {
-  ProbeGuard guard;
+    ProbeGuard guard;
 
-
-  if (selection.isEmpty()) {
-    m_propertyController->setObject(0);
-    return;
-  }
-  const QModelIndex index = selection.first().topLeft();
-
-  QWidget *widget = 0;
-  if (index.isValid()) {
-    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    m_propertyController->setObject(obj);
-    widget = qobject_cast<QWidget*>(obj);
-    QLayout *layout = qobject_cast<QLayout*>(obj);
-    if (!widget && layout) {
-      widget = layout->parentWidget();
+    if (selection.isEmpty()) {
+        m_propertyController->setObject(0);
+        return;
     }
-  } else {
-    m_propertyController->setObject(0);
-  }
+    const QModelIndex index = selection.first().topLeft();
 
-  if (m_selectedWidget == widget) {
-    return;
-  }
+    QWidget *widget = 0;
+    if (index.isValid()) {
+        QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
+        m_propertyController->setObject(obj);
+        widget = qobject_cast<QWidget *>(obj);
+        QLayout *layout = qobject_cast<QLayout *>(obj);
+        if (!widget && layout)
+            widget = layout->parentWidget();
+    } else {
+        m_propertyController->setObject(0);
+    }
 
-  if (!m_selectedWidget || !widget || m_selectedWidget->window() != widget->window())
-      m_remoteView->resetView();
-  m_selectedWidget = widget;
+    if (m_selectedWidget == widget)
+        return;
+
+    if (!m_selectedWidget || !widget || m_selectedWidget->window() != widget->window())
+        m_remoteView->resetView();
+    m_selectedWidget = widget;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  m_remoteView->setEventReceiver(m_selectedWidget->window()->windowHandle());
+    m_remoteView->setEventReceiver(m_selectedWidget->window()->windowHandle());
 #endif
 
-  if (m_selectedWidget &&
-      (qobject_cast<QDesktopWidget*>(m_selectedWidget) ||
-      m_selectedWidget->inherits("QDesktopScreenWidget"))) {
-    m_overlayWidget->placeOn(0);
-    return;
-  }
-  if (m_selectedWidget == m_overlayWidget) {
-    // this should not happen, but apparently our object recovery is slightly too good sometimes ;)
-    return;
-  }
+    if (m_selectedWidget
+        && (qobject_cast<QDesktopWidget *>(m_selectedWidget)
+            || m_selectedWidget->inherits("QDesktopScreenWidget"))) {
+        m_overlayWidget->placeOn(0);
+        return;
+    }
+    if (m_selectedWidget == m_overlayWidget) {
+        // this should not happen, but apparently our object recovery is slightly too good sometimes ;)
+        return;
+    }
 
-  m_overlayWidget->placeOn(m_selectedWidget);
+    m_overlayWidget->placeOn(m_selectedWidget);
 
-  if (!m_selectedWidget) {
-    return;
-  }
+    if (!m_selectedWidget)
+        return;
 
-  updateWidgetPreview();
+    updateWidgetPreview();
 }
 
 bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
 {
-  if (object == m_selectedWidget && event->type() == QEvent::Paint) {
-    m_remoteView->sourceChanged();
-  }
+    if (object == m_selectedWidget && event->type() == QEvent::Paint)
+        m_remoteView->sourceChanged();
 
-  // make modal dialogs non-modal so that the gammaray window is still reachable
-  // TODO: should only be done in in-process mode
-  if (event->type() == QEvent::Show) {
-    QDialog *dlg = qobject_cast<QDialog*>(object);
-    if (dlg) {
-      dlg->setWindowModality(Qt::NonModal);
+    // make modal dialogs non-modal so that the gammaray window is still reachable
+    // TODO: should only be done in in-process mode
+    if (event->type() == QEvent::Show) {
+        QDialog *dlg = qobject_cast<QDialog *>(object);
+        if (dlg)
+            dlg->setWindowModality(Qt::NonModal);
     }
-  }
 
-  if (event->type() == QEvent::MouseButtonRelease) {
-    QMouseEvent *mouseEv = static_cast<QMouseEvent*>(event);
-    if (mouseEv->button() == Qt::LeftButton &&
-      mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
-      QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
-      if (widget) {
-        // also select the corresponding model if a view was selected
-        if (QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(object)) {
-          m_probe->selectObject(view->model());
-        } else if (QComboBox *box = Util::findParentOfType<QComboBox>(object)) {
-          m_probe->selectObject(box->model());
+    if (event->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent *mouseEv = static_cast<QMouseEvent *>(event);
+        if (mouseEv->button() == Qt::LeftButton
+            && mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
+            QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
+            if (widget) {
+                // also select the corresponding model if a view was selected
+                if (QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(object))
+                    m_probe->selectObject(view->model());
+                else if (QComboBox *box = Util::findParentOfType<QComboBox>(object))
+                    m_probe->selectObject(box->model());
+
+                m_probe->selectObject(widget, widget->mapFromGlobal(mouseEv->globalPos()));
+                widgetSelected(widget);
+            }
         }
-
-        m_probe->selectObject(widget, widget->mapFromGlobal(mouseEv->globalPos()));
-        widgetSelected(widget);
-      }
     }
-  }
 
-  return QObject::eventFilter(object, event);
+    return QObject::eventFilter(object, event);
 }
 
 void WidgetInspectorServer::updateWidgetPreview()
 {
-  if (!m_remoteView->isActive() || !m_selectedWidget) {
-    return;
-  }
+    if (!m_remoteView->isActive() || !m_selectedWidget)
+        return;
 
-  RemoteViewFrame frame;
-  frame.setImage(imageForWidget(m_selectedWidget->window()));
-  m_remoteView->sendFrame(frame);
+    RemoteViewFrame frame;
+    frame.setImage(imageForWidget(m_selectedWidget->window()));
+    m_remoteView->sendFrame(frame);
 }
 
 QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
 {
-  // prevent "recursion", i.e. infinite update loop, in our eventFilter
-  Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, 0);
-  // We should use hidpi rendering but it's buggy so let stay with
-  // low dpi rendering. See QTBUG-53801
-  const qreal ratio = 1; //widget->window()->devicePixelRatio();
-  QImage img(widget->size() * ratio, QImage::Format_ARGB32);
+    // prevent "recursion", i.e. infinite update loop, in our eventFilter
+    Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, 0);
+    // We should use hidpi rendering but it's buggy so let stay with
+    // low dpi rendering. See QTBUG-53801
+    const qreal ratio = 1; // widget->window()->devicePixelRatio();
+    QImage img(widget->size() * ratio, QImage::Format_ARGB32);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  img.setDevicePixelRatio(ratio);
+    img.setDevicePixelRatio(ratio);
 #endif
-  img.fill(Qt::transparent);
-  widget->render(&img);
-  return img;
+    img.fill(Qt::transparent);
+    widget->render(&img);
+    return img;
 }
 
 void WidgetInspectorServer::recreateOverlayWidget()
 {
-  ProbeGuard guard;
-  m_overlayWidget = new OverlayWidget;
-  m_overlayWidget->hide();
+    ProbeGuard guard;
+    m_overlayWidget = new OverlayWidget;
+    m_overlayWidget->hide();
 
-  // the target application might have destroyed the overlay widget
-  // (e.g. because the parent of the overlay got destroyed).
-  // just recreate a new one in this case
-  connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
-          this, SLOT(recreateOverlayWidget()));
+    // the target application might have destroyed the overlay widget
+    // (e.g. because the parent of the overlay got destroyed).
+    // just recreate a new one in this case
+    connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
+            this, SLOT(recreateOverlayWidget()));
 }
 
 void WidgetInspectorServer::widgetSelected(QWidget *widget)
 {
-  if (m_selectedWidget == widget)
-    return;
+    if (m_selectedWidget == widget)
+        return;
 
-  const QAbstractItemModel *model = m_widgetSelectionModel->model();
-  const QModelIndexList indexList =
-    model->match(model->index(0, 0),
-                 ObjectModel::ObjectRole,
-                 QVariant::fromValue<QObject*>(widget), 1,
-                 Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
-  if (indexList.isEmpty()) {
-    return;
-  }
-  const QModelIndex index = indexList.first();
-  m_widgetSelectionModel->select(
-    index,
-    QItemSelectionModel::Select | QItemSelectionModel::Clear |
-    QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    const QAbstractItemModel *model = m_widgetSelectionModel->model();
+    const QModelIndexList indexList
+        = model->match(model->index(0, 0),
+                       ObjectModel::ObjectRole,
+                       QVariant::fromValue<QObject *>(widget), 1,
+                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    if (indexList.isEmpty())
+        return;
+    const QModelIndex index = indexList.first();
+    m_widgetSelectionModel->select(
+        index,
+        QItemSelectionModel::Select | QItemSelectionModel::Clear
+        |QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
-void WidgetInspectorServer::objectSelected(QObject* obj)
+void WidgetInspectorServer::objectSelected(QObject *obj)
 {
-    if (auto wdg = qobject_cast<QWidget*>(obj)) {
+    if (auto wdg = qobject_cast<QWidget *>(obj)) {
         widgetSelected(wdg);
-    } else if (auto layout = qobject_cast<QLayout*>(obj)) {
+    } else if (auto layout = qobject_cast<QLayout *>(obj)) {
         // TODO select the layout directly here
         if (layout->parentWidget())
             widgetSelected(layout->parentWidget());
     }
 }
 
-
 // TODO the following actions should actually store the file on the client!
 
-void WidgetInspectorServer::saveAsImage(const QString& fileName)
+void WidgetInspectorServer::saveAsImage(const QString &fileName)
 {
-  if (fileName.isEmpty() || !m_selectedWidget) {
-    return;
-  }
+    if (fileName.isEmpty() || !m_selectedWidget)
+        return;
 
-  m_overlayWidget->hide();
-  QImage img = imageForWidget(m_selectedWidget);
-  m_overlayWidget->show();
+    m_overlayWidget->hide();
+    QImage img = imageForWidget(m_selectedWidget);
+    m_overlayWidget->show();
     img.save(fileName);
 }
 
 void WidgetInspectorServer::saveAsSvg(const QString &fileName)
 {
-  if (fileName.isEmpty() || !m_selectedWidget) {
-    return;
-  }
+    if (fileName.isEmpty() || !m_selectedWidget)
+        return;
 
-  m_overlayWidget->hide();
-  callExternalExportAction("gammaray_save_widget_to_svg", m_selectedWidget, fileName);
-  m_overlayWidget->show();
+    m_overlayWidget->hide();
+    callExternalExportAction("gammaray_save_widget_to_svg", m_selectedWidget, fileName);
+    m_overlayWidget->show();
 }
 
 void WidgetInspectorServer::saveAsPdf(const QString &fileName)
 {
-  if (fileName.isEmpty() || !m_selectedWidget) {
-    return;
-  }
+    if (fileName.isEmpty() || !m_selectedWidget)
+        return;
 
-  m_overlayWidget->hide();
-  callExternalExportAction("gammaray_save_widget_to_pdf", m_selectedWidget, fileName);
-  m_overlayWidget->show();
+    m_overlayWidget->hide();
+    callExternalExportAction("gammaray_save_widget_to_pdf", m_selectedWidget, fileName);
+    m_overlayWidget->show();
 }
 
 void WidgetInspectorServer::saveAsUiFile(const QString &fileName)
 {
-  if (fileName.isEmpty() || !m_selectedWidget) {
-    return;
-  }
+    if (fileName.isEmpty() || !m_selectedWidget)
+        return;
 
-  callExternalExportAction("gammaray_save_widget_to_ui", m_selectedWidget, fileName);
+    callExternalExportAction("gammaray_save_widget_to_ui", m_selectedWidget, fileName);
 }
 
-void WidgetInspectorServer::callExternalExportAction(const char *name,
-                                               QWidget *widget,
-                                               const QString &fileName)
+void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *widget,
+                                                     const QString &fileName)
 {
-  if (!m_externalExportActions->isLoaded()) {
-    m_externalExportActions->setFileName(
-      Paths::currentPluginsPath() + QLatin1String("/libgammaray_widget_export_actions")
+    if (!m_externalExportActions->isLoaded()) {
+        m_externalExportActions->setFileName(
+            Paths::currentPluginsPath() + QLatin1String("/libgammaray_widget_export_actions")
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-        + QStringLiteral("-") + QStringLiteral(GAMMARAY_PROBE_ABI)
+            + QStringLiteral("-") + QStringLiteral(GAMMARAY_PROBE_ABI)
 #endif
-    );
+            );
 
-    m_externalExportActions->load();
-  }
+        m_externalExportActions->load();
+    }
 
-  void(*function)(QWidget *, const QString &) =
-    reinterpret_cast<void(*)(QWidget *, const QString &)>(m_externalExportActions->resolve(name));
+    void (*function)(QWidget *, const QString &)
+        = reinterpret_cast<void (*)(QWidget *,
+                                    const QString &)>(m_externalExportActions->resolve(name));
 
-  if (!function) {
-    cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions->errorString()) << endl;
-    return;
-  }
-  function(widget, fileName);
+    if (!function) {
+        cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions->errorString()) << endl;
+        return;
+    }
+    function(widget, fileName);
 }
 
 void WidgetInspectorServer::analyzePainting()
 {
-  if (!m_selectedWidget || !PaintAnalyzer::isAvailable()) {
-    return;
-  }
+    if (!m_selectedWidget || !PaintAnalyzer::isAvailable())
+        return;
 
-  m_overlayWidget->hide();
-  m_paintAnalyzer->beginAnalyzePainting();
-  m_paintAnalyzer->setBoundingRect(m_selectedWidget->rect());
-  m_selectedWidget->render(m_paintAnalyzer->paintDevice());
-  m_paintAnalyzer->endAnalyzePainting();
-  m_overlayWidget->show();
+    m_overlayWidget->hide();
+    m_paintAnalyzer->beginAnalyzePainting();
+    m_paintAnalyzer->setBoundingRect(m_selectedWidget->rect());
+    m_selectedWidget->render(m_paintAnalyzer->paintDevice());
+    m_paintAnalyzer->endAnalyzePainting();
+    m_overlayWidget->show();
 }
 
-void WidgetInspectorServer::pickElement(const QPoint& pos)
+void WidgetInspectorServer::pickElement(const QPoint &pos)
 {
     if (!m_selectedWidget)
         return;
@@ -419,101 +405,101 @@ void WidgetInspectorServer::checkFeatures()
 
 void WidgetInspectorServer::registerWidgetMetaTypes()
 {
-  MetaObject *mo = 0;
-  MO_ADD_METAOBJECT0(QLayoutItem)
-  MO_ADD_PROPERTY   (QLayoutItem, Qt::Alignment, alignment, setAlignment);
-  MO_ADD_PROPERTY_RO(QLayoutItem, QSizePolicy::ControlTypes, controlTypes);
-  MO_ADD_PROPERTY_RO(QLayoutItem, Qt::Orientations, expandingDirections);
-  MO_ADD_PROPERTY_CR(QLayoutItem, QRect, geometry, setGeometry);
-  MO_ADD_PROPERTY_RO(QLayoutItem, bool, hasHeightForWidth);
-  MO_ADD_PROPERTY_RO(QLayoutItem, bool, isEmpty);
-  MO_ADD_PROPERTY_RO(QLayoutItem, QSize, maximumSize);
-  MO_ADD_PROPERTY_RO(QLayoutItem, QSize, minimumSize);
-  MO_ADD_PROPERTY_RO(QLayoutItem, QSize, sizeHint);
+    MetaObject *mo = 0;
+    MO_ADD_METAOBJECT0(QLayoutItem)
+    MO_ADD_PROPERTY(QLayoutItem, Qt::Alignment, alignment, setAlignment);
+    MO_ADD_PROPERTY_RO(QLayoutItem, QSizePolicy::ControlTypes, controlTypes);
+    MO_ADD_PROPERTY_RO(QLayoutItem, Qt::Orientations, expandingDirections);
+    MO_ADD_PROPERTY_CR(QLayoutItem, QRect, geometry, setGeometry);
+    MO_ADD_PROPERTY_RO(QLayoutItem, bool, hasHeightForWidth);
+    MO_ADD_PROPERTY_RO(QLayoutItem, bool, isEmpty);
+    MO_ADD_PROPERTY_RO(QLayoutItem, QSize, maximumSize);
+    MO_ADD_PROPERTY_RO(QLayoutItem, QSize, minimumSize);
+    MO_ADD_PROPERTY_RO(QLayoutItem, QSize, sizeHint);
 
-  MO_ADD_METAOBJECT2(QLayout, QObject, QLayoutItem);
-  MO_ADD_PROPERTY_CR(QLayout, QMargins, contentsMargins, setContentsMargins);
-  MO_ADD_PROPERTY_RO(QLayout, QRect, contentsRect);
-  MO_ADD_PROPERTY_RO(QLayout, int, count);
-  MO_ADD_PROPERTY   (QLayout, bool, isEnabled, setEnabled);
-  MO_ADD_PROPERTY_RO(QLayout, QWidget*, menuBar);
-  MO_ADD_PROPERTY_RO(QLayout, QWidget*, parentWidget);
+    MO_ADD_METAOBJECT2(QLayout, QObject, QLayoutItem);
+    MO_ADD_PROPERTY_CR(QLayout, QMargins, contentsMargins, setContentsMargins);
+    MO_ADD_PROPERTY_RO(QLayout, QRect, contentsRect);
+    MO_ADD_PROPERTY_RO(QLayout, int, count);
+    MO_ADD_PROPERTY(QLayout, bool, isEnabled, setEnabled);
+    MO_ADD_PROPERTY_RO(QLayout, QWidget *, menuBar);
+    MO_ADD_PROPERTY_RO(QLayout, QWidget *, parentWidget);
 
-  MO_ADD_METAOBJECT1(QGridLayout, QLayout);
-  MO_ADD_PROPERTY_RO(QGridLayout, int, columnCount);
-  MO_ADD_PROPERTY_RO(QGridLayout, int, rowCount);
+    MO_ADD_METAOBJECT1(QGridLayout, QLayout);
+    MO_ADD_PROPERTY_RO(QGridLayout, int, columnCount);
+    MO_ADD_PROPERTY_RO(QGridLayout, int, rowCount);
 
-  MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
-  MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
+    MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
+    MO_ADD_PROPERTY_RO(QWidget, QWidget *, focusProxy);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_PROPERTY_RO(QWidget, QLayout*, layout);
+    MO_ADD_PROPERTY_RO(QWidget, QLayout *, layout);
 #endif
 
-  MO_ADD_METAOBJECT1(QStyle, QObject);
-  MO_ADD_PROPERTY_RO(QStyle, const QStyle*, proxy);
-  MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
+    MO_ADD_METAOBJECT1(QStyle, QObject);
+    MO_ADD_PROPERTY_RO(QStyle, const QStyle *, proxy);
+    MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_METAOBJECT1(QApplication, QGuiApplication);
-  MO_ADD_PROPERTY_ST(QApplication, QWidget*, activeModalWidget);
-  MO_ADD_PROPERTY_ST(QApplication, QWidget*, activePopupWidget);
-  MO_ADD_PROPERTY_ST(QApplication, QWidget*, activeWindow);
-  MO_ADD_PROPERTY_ST(QApplication, int, colorSpec);
-  MO_ADD_PROPERTY_ST(QApplication, QDesktopWidget*, desktop);
-  MO_ADD_PROPERTY_ST(QApplication, QWidget*, focusWidget);
-  MO_ADD_PROPERTY_ST(QApplication, QStyle*, style);
+    MO_ADD_METAOBJECT1(QApplication, QGuiApplication);
+    MO_ADD_PROPERTY_ST(QApplication, QWidget *, activeModalWidget);
+    MO_ADD_PROPERTY_ST(QApplication, QWidget *, activePopupWidget);
+    MO_ADD_PROPERTY_ST(QApplication, QWidget *, activeWindow);
+    MO_ADD_PROPERTY_ST(QApplication, int, colorSpec);
+    MO_ADD_PROPERTY_ST(QApplication, QDesktopWidget *, desktop);
+    MO_ADD_PROPERTY_ST(QApplication, QWidget *, focusWidget);
+    MO_ADD_PROPERTY_ST(QApplication, QStyle *, style);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-  MO_ADD_PROPERTY_ST(QApplication, QWidgetList, topLevelWidgets);
+    MO_ADD_PROPERTY_ST(QApplication, QWidgetList, topLevelWidgets);
 #endif
 
-  MO_ADD_METAOBJECT1(QFrame, QWidget);
-  MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
-  MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
-  MO_ADD_PROPERTY_RO(QAbstractItemView, QAbstractItemModel*, model);
+    MO_ADD_METAOBJECT1(QFrame, QWidget);
+    MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
+    MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
+    MO_ADD_PROPERTY_RO(QAbstractItemView, QAbstractItemModel *, model);
 
-  MO_ADD_METAOBJECT1(QComboBox, QWidget);
-  MO_ADD_PROPERTY_RO(QComboBox, QAbstractItemModel*, model);
+    MO_ADD_METAOBJECT1(QComboBox, QWidget);
+    MO_ADD_PROPERTY_RO(QComboBox, QAbstractItemModel *, model);
 #endif
 }
 
 static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
 {
-  const int index = QSizePolicy::staticMetaObject.indexOfEnumerator("Policy");
-  const QMetaEnum metaEnum = QSizePolicy::staticMetaObject.enumerator(index);
-  return QString::fromLatin1(metaEnum.valueToKey(policy));
+    const int index = QSizePolicy::staticMetaObject.indexOfEnumerator("Policy");
+    const QMetaEnum metaEnum = QSizePolicy::staticMetaObject.enumerator(index);
+    return QString::fromLatin1(metaEnum.valueToKey(policy));
 }
 
 static QString sizePolicyToString(const QSizePolicy &policy)
 {
-  return sizePolicyPolicyToString(policy.horizontalPolicy()) + " x "
-       + sizePolicyPolicyToString(policy.verticalPolicy());
+    return sizePolicyPolicyToString(policy.horizontalPolicy()) + " x "
+           + sizePolicyPolicyToString(policy.verticalPolicy());
 }
 
 void WidgetInspectorServer::registerVariantHandlers()
 {
-  VariantHandler::registerStringConverter<QSizePolicy>(sizePolicyToString);
+    VariantHandler::registerStringConverter<QSizePolicy>(sizePolicyToString);
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-  VariantHandler::registerStringConverter<QWidget*>(Util::displayString);
-  VariantHandler::registerStringConverter<const QStyle*>(Util::displayString);
+    VariantHandler::registerStringConverter<QWidget *>(Util::displayString);
+    VariantHandler::registerStringConverter<const QStyle *>(Util::displayString);
 #endif
 }
 
 void WidgetInspectorServer::discoverObjects()
 {
-  if (qApp) {
-    foreach (QWidget *widget, qApp->topLevelWidgets())
-      m_probe->discoverObject(widget);
-  }
+    if (qApp) {
+        foreach (QWidget *widget, qApp->topLevelWidgets())
+            m_probe->discoverObject(widget);
+    }
 }
 
-void WidgetInspectorServer::objectCreated(QObject* object)
+void WidgetInspectorServer::objectCreated(QObject *object)
 {
-  if (!object)
-    return;
+    if (!object)
+        return;
 
-  if (qobject_cast<QApplication*>(object))
-    discoverObjects();
-  if (QAbstractItemView* view = qobject_cast<QAbstractItemView*>(object))
-    m_probe->discoverObject(view->model());
+    if (qobject_cast<QApplication *>(object))
+        discoverObjects();
+    if (QAbstractItemView *view = qobject_cast<QAbstractItemView *>(object))
+        m_probe->discoverObject(view->model());
 }

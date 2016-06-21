@@ -32,20 +32,18 @@
 #include <common/tools/objectinspector/connectionsextensioninterface.h>
 
 namespace GammaRay {
-
 class ConnectionsExtensionClient : public ConnectionsExtensionInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
+public:
     explicit ConnectionsExtensionClient(const QString &name, QObject *parent = 0);
     virtual ~ConnectionsExtensionClient();
 
-  public slots:
+public slots:
     void navigateToReceiver(int modelRow) Q_DECL_OVERRIDE;
     void navigateToSender(int modelRow) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_CONNECTIONSEXTENSIONCLIENT_H

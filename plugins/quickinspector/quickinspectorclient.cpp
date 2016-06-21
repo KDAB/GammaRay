@@ -33,7 +33,8 @@
 
 using namespace GammaRay;
 
-QuickInspectorClient::QuickInspectorClient(QObject *parent) : QuickInspectorInterface(parent)
+QuickInspectorClient::QuickInspectorClient(QObject *parent)
+    : QuickInspectorInterface(parent)
 {
 }
 
@@ -43,19 +44,19 @@ QuickInspectorClient::~QuickInspectorClient()
 
 void QuickInspectorClient::selectWindow(int index)
 {
-  Endpoint::instance()->invokeObject(objectName(), "selectWindow", QVariantList() << index);
+    Endpoint::instance()->invokeObject(objectName(), "selectWindow", QVariantList() << index);
 }
 
 void QuickInspectorClient::setCustomRenderMode(
-  GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
+    GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
-  Endpoint::instance()->invokeObject(objectName(),
-                                     "setCustomRenderMode",
-                                     QVariantList()
+    Endpoint::instance()->invokeObject(objectName(),
+                                       "setCustomRenderMode",
+                                       QVariantList()
                                        << QVariant::fromValue(customRenderMode));
 }
 
 void QuickInspectorClient::checkFeatures()
 {
-  Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
+    Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
 }

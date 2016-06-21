@@ -40,28 +40,30 @@ class Thread : public QThread
 {
     Q_OBJECT
 public:
-    Thread() : batchSize(1), delay(0), iterations(100) {}
+    Thread()
+        : batchSize(1)
+        , delay(0)
+        , iterations(100) {}
 
     void run() Q_DECL_OVERRIDE
     {
         objects.reserve(batchSize);
         for (int i = 0; i < iterations; ++i) {
-            for (int j = 0; j < batchSize; ++j) {
+            for (int j = 0; j < batchSize; ++j)
                 objects.push_back(new QObject);
-            }
             QTest::qWait(delay);
             qDeleteAll(objects);
             objects.clear();
         }
     }
 
-    QVector<QObject*> objects;
+    QVector<QObject *> objects;
     int batchSize;
     int delay;
     int iterations;
 };
 
-class MultiThreadingTest: public QObject
+class MultiThreadingTest : public QObject
 {
     Q_OBJECT
 private:

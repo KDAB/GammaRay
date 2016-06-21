@@ -33,113 +33,114 @@
 using namespace GammaRay;
 
 LldbInjector::LldbInjector(const QString &executableOverride)
-  : DebuggerInjector()
+    : DebuggerInjector()
 {
-  setFilePath(executableOverride.isEmpty() ? QStringLiteral("lldb") : executableOverride);
+    setFilePath(executableOverride.isEmpty() ? QStringLiteral("lldb") : executableOverride);
 }
 
 bool LldbInjector::selfTest()
 {
-  if (!DebuggerInjector::selfTest())
-    return false;
-#ifndef Q_OS_MAC
-  QProcess process;
-
-  process.setProcessChannelMode(QProcess::MergedChannels);
-  process.start(filePath(), QStringList(QStringLiteral("--version")));
-
-  if (process.waitForStarted(-1)) {
-    if (process.waitForFinished(-1)) {
-      const QString output = QString::fromLocal8Bit(process.readAll()).trimmed();
-      const int major = 3;
-      const int minor = 6;
-      QRegExp rx(QStringLiteral("\\b([\\d]\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
-
-      if (rx.indexIn(output) == -1) {
-        mErrorString = tr("The debugger version can't be read (%1)").arg(output);
+    if (!DebuggerInjector::selfTest())
         return false;
-      }
+#ifndef Q_OS_MAC
+    QProcess process;
 
-      const QString version = rx.cap(1);
-      const QStringList parts = version.split(QLatin1Char('.'));
+    process.setProcessChannelMode(QProcess::MergedChannels);
+    process.start(filePath(), QStringList(QStringLiteral("--version")));
 
-      if (parts.count() >= 2) {
-        if (parts[0].toInt() >= major) {
-          if (parts[1].toInt() >= minor) {
-            return true;
-          }
+    if (process.waitForStarted(-1)) {
+        if (process.waitForFinished(-1)) {
+            const QString output = QString::fromLocal8Bit(process.readAll()).trimmed();
+            const int major = 3;
+            const int minor = 6;
+            QRegExp rx(QStringLiteral("\\b([\\d]\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
+
+            if (rx.indexIn(output) == -1) {
+                mErrorString = tr("The debugger version can't be read (%1)").arg(output);
+                return false;
+            }
+
+            const QString version = rx.cap(1);
+            const QStringList parts = version.split(QLatin1Char('.'));
+
+            if (parts.count() >= 2) {
+                if (parts[0].toInt() >= major) {
+                    if (parts[1].toInt() >= minor)
+                        return true;
+                }
+            }
+
+            mErrorString
+                = tr("The debugger version is not compatible: %1 (%2.%3 min. required)").arg(version)
+                  .
+                  arg(major).arg(minor);
+            return false;
         }
-      }
-
-      mErrorString = tr("The debugger version is not compatible: %1 (%2.%3 min. required)").arg(version).arg(major).arg(minor);
-      return false;
     }
-  }
 
-  mErrorString = process.errorString();
-  return false;
+    mErrorString = process.errorString();
+    return false;
 #else
-  return true;
+    return true;
 #endif
 }
 
 QString LldbInjector::name() const
 {
-  return QStringLiteral("lldb");
+    return QStringLiteral("lldb");
 }
 
 void LldbInjector::disableConfirmations()
 {
-  // Make the debugger synchronous, important so commands are executed in blocking mode
-  // This avoid lldb to quit the app just after running it
-  execCmd("script lldb.debugger.SetAsync(False)");
-  // Enable auto confirmations on commands (like breakpoint delete)
-  execCmd("settings set auto-confirm true");
-  // Allow to quit without confirmation
-  execCmd("settings set interpreter.prompt-on-quit false");
+    // Make the debugger synchronous, important so commands are executed in blocking mode
+    // This avoid lldb to quit the app just after running it
+    execCmd("script lldb.debugger.SetAsync(False)");
+    // Enable auto confirmations on commands (like breakpoint delete)
+    execCmd("settings set auto-confirm true");
+    // Allow to quit without confirmation
+    execCmd("settings set interpreter.prompt-on-quit false");
 }
 
 void LldbInjector::addFunctionBreakpoint(const QByteArray &function)
 {
-  execCmd("breakpoint set -b " + function);
+    execCmd("breakpoint set -b " + function);
 }
 
 void LldbInjector::addMethodBreakpoint(const QByteArray &method)
 {
-  execCmd("breakpoint set -M " + method);
+    execCmd("breakpoint set -M " + method);
 }
 
 void LldbInjector::clearBreakpoints()
 {
-  execCmd("breakpoint delete");
+    execCmd("breakpoint delete");
 }
 
 void LldbInjector::printBacktrace()
 {
-  execCmd("thread backtrace");
+    execCmd("thread backtrace");
 }
 
-bool LldbInjector::launch(const QStringList &programAndArgs, const QString &probeDll, const QString &probeFunc, const QProcessEnvironment &env)
+bool LldbInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
+                          const QString &probeFunc, const QProcessEnvironment &env)
 {
-  QStringList args;
-  args.push_back(QStringLiteral("--"));
-  args.append(programAndArgs);
+    QStringList args;
+    args.push_back(QStringLiteral("--"));
+    args.append(programAndArgs);
 
-  if (!startDebugger(args, env)) {
-    return -1;
-  }
+    if (!startDebugger(args, env))
+        return -1;
 
-  disableConfirmations();
-  waitForMain();
-  return injectAndDetach(probeDll, probeFunc);
+    disableConfirmations();
+    waitForMain();
+    return injectAndDetach(probeDll, probeFunc);
 }
 
 bool LldbInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
-  Q_ASSERT(pid > 0);
-  if (!startDebugger(QStringList() << QStringLiteral("-p") << QString::number(pid))) {
-    return false;
-  }
-  disableConfirmations();
-  return injectAndDetach(probeDll, probeFunc);
+    Q_ASSERT(pid > 0);
+    if (!startDebugger(QStringList() << QStringLiteral("-p") << QString::number(pid)))
+        return false;
+    disableConfirmations();
+    return injectAndDetach(probeDll, probeFunc);
 }

@@ -37,7 +37,6 @@ class QSGGeometryNode;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SGGeometryModel;
 
 class PropertyController;
@@ -45,20 +44,19 @@ class SGGeometryModel;
 
 class SGGeometryExtension : public SGGeometryExtensionInterface, public PropertyControllerExtension
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::SGGeometryExtensionInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::SGGeometryExtensionInterface)
 
-  public:
+public:
     explicit SGGeometryExtension(PropertyController *controller);
     ~SGGeometryExtension();
 
     bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
 
-  private:
+private:
     QSGGeometryNode *m_node;
     SGGeometryModel *m_model;
 };
-
 }
 
 #endif // SGGEOMETRYEXTENSION_H

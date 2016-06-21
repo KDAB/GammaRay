@@ -36,7 +36,6 @@ class QGraphicsItem;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PaintAnalyzer;
 class PropertyController;
 
@@ -53,7 +52,6 @@ private:
     bool analyzePainting(QGraphicsItem *item);
     PaintAnalyzer *m_paintAnalyzer;
 };
-
 }
 
 #endif // GAMMARAY_PAINTANALYZEREXTENSION_H

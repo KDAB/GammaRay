@@ -37,7 +37,10 @@ class MyObject : public QObject
     Q_PROPERTY(int intProp2 READ intProp2 WRITE setIntProp2 NOTIFY intProp2Changed)
     Q_OBJECT
 public:
-    explicit MyObject(QObject *parent = 0) : QObject(parent), p1(0), p2(23) {}
+    explicit MyObject(QObject *parent = 0)
+        : QObject(parent)
+        , p1(0)
+        , p2(23) {}
     int intProp() { return p1; }
     int intProp2() { return p2; }
     void setIntProp(int i)
@@ -47,6 +50,7 @@ public:
         p1 = i;
         emit intPropChanged();
     }
+
     void setIntProp2(int i)
     {
         if (p2 == i)

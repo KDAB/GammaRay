@@ -43,35 +43,35 @@
 using namespace GammaRay;
 
 GraphViewerWidget::GraphViewerWidget(QWidget *parent)
-  : QWidget(parent)
-  , m_stateManager(this)
-  , mWidget(new GraphWidget(this))
+    : QWidget(parent)
+    , m_stateManager(this)
+    , mWidget(new GraphWidget(this))
 {
-  mModel = ObjectBroker::model("com.kdab.GammaRay.ObjectVisualizerModel");
+    mModel = ObjectBroker::model("com.kdab.GammaRay.ObjectVisualizerModel");
 
-  QVBoxLayout *vbox = new QVBoxLayout;
-  auto objectSearchLine = new QLineEdit(this);
-  new SearchLineController(objectSearchLine, mModel);
-  vbox->addWidget(objectSearchLine);
-  DeferredTreeView *objectTreeView = new DeferredTreeView(this);
-  objectTreeView->header()->setObjectName("objectTreeViewHeader");
-  objectTreeView->setModel(mModel);
-  objectTreeView->setSortingEnabled(true);
-  vbox->addWidget(objectTreeView);
+    QVBoxLayout *vbox = new QVBoxLayout;
+    auto objectSearchLine = new QLineEdit(this);
+    new SearchLineController(objectSearchLine, mModel);
+    vbox->addWidget(objectSearchLine);
+    DeferredTreeView *objectTreeView = new DeferredTreeView(this);
+    objectTreeView->header()->setObjectName("objectTreeViewHeader");
+    objectTreeView->setModel(mModel);
+    objectTreeView->setSortingEnabled(true);
+    vbox->addWidget(objectTreeView);
 
-  mObjectTreeView = objectTreeView;
+    mObjectTreeView = objectTreeView;
 
-  QWidget *treeViewWidget = new QWidget(this);
-  treeViewWidget->setLayout(vbox);
+    QWidget *treeViewWidget = new QWidget(this);
+    treeViewWidget->setLayout(vbox);
 
-  QSplitter *splitter = new QSplitter(this);
-  splitter->addWidget(treeViewWidget);
-  splitter->addWidget(mWidget);
-  QHBoxLayout *hbox = new QHBoxLayout(this);
-  hbox->addWidget(splitter);
+    QSplitter *splitter = new QSplitter(this);
+    splitter->addWidget(treeViewWidget);
+    splitter->addWidget(mWidget);
+    QHBoxLayout *hbox = new QHBoxLayout(this);
+    hbox->addWidget(splitter);
 
-  mWidget->vtkWidget()->setModel(mModel);
-  mWidget->vtkWidget()->setSelectionModel(mObjectTreeView->selectionModel());
+    mWidget->vtkWidget()->setModel(mModel);
+    mWidget->vtkWidget()->setSelectionModel(mObjectTreeView->selectionModel());
 }
 
 GraphViewerWidget::~GraphViewerWidget()

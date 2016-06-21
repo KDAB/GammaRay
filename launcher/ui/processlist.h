@@ -40,14 +40,14 @@
 
 struct ProcData
 {
-  QString ppid;
-  QString name;
-  QString image;
-  QString state;
-  QString user;
-  GammaRay::ProbeABI abi;
+    QString ppid;
+    QString name;
+    QString image;
+    QString state;
+    QString user;
+    GammaRay::ProbeABI abi;
 
-  ProcData() {}
+    ProcData() {}
 };
 
 typedef QList<ProcData> ProcDataList;

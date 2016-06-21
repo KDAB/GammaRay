@@ -32,7 +32,8 @@
 
 using namespace GammaRay;
 
-ObjectVisualizerModel::ObjectVisualizerModel(QObject* parent) : KRecursiveFilterProxyModel(parent)
+ObjectVisualizerModel::ObjectVisualizerModel(QObject *parent)
+    : KRecursiveFilterProxyModel(parent)
 {
 }
 
@@ -40,21 +41,19 @@ ObjectVisualizerModel::~ObjectVisualizerModel()
 {
 }
 
-QVariant ObjectVisualizerModel::data(const QModelIndex& proxyIndex, int role) const
+QVariant ObjectVisualizerModel::data(const QModelIndex &proxyIndex, int role) const
 {
-  if (role == ObjectDisplayName) {
-    QObject *obj = data(proxyIndex, ObjectModel::ObjectRole).value<QObject*>();
-    return Util::displayString(obj);
-  }
-  else if (role == ObjectId) {
-    QObject *obj = data(proxyIndex, ObjectModel::ObjectRole).value<QObject*>();
-    return static_cast<qulonglong>(reinterpret_cast<quintptr>(obj));
-  }
-  else if (role == ClassName) {
-    QObject *obj = data(proxyIndex, ObjectModel::ObjectRole).value<QObject*>();
-    Q_ASSERT(obj);
-    return obj->metaObject()->className();
-  }
+    if (role == ObjectDisplayName) {
+        QObject *obj = data(proxyIndex, ObjectModel::ObjectRole).value<QObject *>();
+        return Util::displayString(obj);
+    } else if (role == ObjectId) {
+        QObject *obj = data(proxyIndex, ObjectModel::ObjectRole).value<QObject *>();
+        return static_cast<qulonglong>(reinterpret_cast<quintptr>(obj));
+    } else if (role == ClassName) {
+        QObject *obj = data(proxyIndex, ObjectModel::ObjectRole).value<QObject *>();
+        Q_ASSERT(obj);
+        return obj->metaObject()->className();
+    }
 
-  return KRecursiveFilterProxyModel::data(proxyIndex, role);
+    return KRecursiveFilterProxyModel::data(proxyIndex, role);
 }

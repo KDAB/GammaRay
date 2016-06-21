@@ -32,44 +32,44 @@
 
 using namespace GammaRay;
 
-ObjectInstance::ObjectInstance() :
-    m_obj(0),
-    m_metaObj(0),
-    m_type(Invalid)
+ObjectInstance::ObjectInstance()
+    : m_obj(0)
+    , m_metaObj(0)
+    , m_type(Invalid)
 {
 }
 
-ObjectInstance::ObjectInstance(QObject* obj) :
-    m_obj(0),
-    m_qtObj(obj),
-    m_type(QtObject)
+ObjectInstance::ObjectInstance(QObject *obj)
+    : m_obj(0)
+    , m_qtObj(obj)
+    , m_type(QtObject)
 {
     m_metaObj = obj ? obj->metaObject() : 0;
 }
 
-ObjectInstance::ObjectInstance(void* obj, const QMetaObject* metaObj) :
-    m_obj(obj),
-    m_metaObj(metaObj)
+ObjectInstance::ObjectInstance(void *obj, const QMetaObject *metaObj)
+    : m_obj(obj)
+    , m_metaObj(metaObj)
 {
     m_type = obj ? QtGadget : QtMetaObject;
 }
 
-ObjectInstance::ObjectInstance(void* obj, const char* typeName) :
-    m_obj(obj),
-    m_metaObj(0),
-    m_typeName(typeName),
-    m_type(Object)
+ObjectInstance::ObjectInstance(void *obj, const char *typeName)
+    : m_obj(obj)
+    , m_metaObj(0)
+    , m_typeName(typeName)
+    , m_type(Object)
 {
 }
 
-ObjectInstance::ObjectInstance(const QVariant& value) :
-    m_obj(0),
-    m_metaObj(0),
-    m_type(QtVariant)
+ObjectInstance::ObjectInstance(const QVariant &value)
+    : m_obj(0)
+    , m_metaObj(0)
+    , m_type(QtVariant)
 {
     m_variant = value;
-    if (value.canConvert<QObject*>()) {
-        m_qtObj = value.value<QObject*>();
+    if (value.canConvert<QObject *>()) {
+        m_qtObj = value.value<QObject *>();
         if (m_qtObj) {
             m_metaObj = m_qtObj->metaObject();
             m_type = QtObject;
@@ -78,9 +78,8 @@ ObjectInstance::ObjectInstance(const QVariant& value) :
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         if (QMetaType::typeFlags(value.userType()) & QMetaType::IsGadget) {
             m_metaObj = QMetaType::metaObjectForType(value.userType());
-            if (m_metaObj) {
+            if (m_metaObj)
                 m_type = QtGadget;
-            }
         } else {
             unpackVariant();
         }
@@ -93,7 +92,7 @@ ObjectInstance::ObjectInstance(const ObjectInstance &other)
     copy(other);
 }
 
-ObjectInstance& ObjectInstance::operator=(const ObjectInstance& other)
+ObjectInstance &ObjectInstance::operator=(const ObjectInstance &other)
 {
     copy(other);
     return *this;
@@ -104,17 +103,17 @@ bool ObjectInstance::operator==(const ObjectInstance &rhs) const
     if (type() != rhs.type())
         return false;
     switch (type()) {
-        case Invalid:
-            return false;
-        case QtObject:
-        case QtGadget:
-        case Object:
-            return object() == rhs.object();
-        case QtMetaObject:
-            return metaObject() == rhs.metaObject();
-        case Value:
-        case QtVariant:
-            return variant() == rhs.variant();
+    case Invalid:
+        return false;
+    case QtObject:
+    case QtGadget:
+    case Object:
+        return object() == rhs.object();
+    case QtMetaObject:
+        return metaObject() == rhs.metaObject();
+    case Value:
+    case QtVariant:
+        return variant() == rhs.variant();
     }
 
     Q_ASSERT(false);
@@ -126,30 +125,33 @@ ObjectInstance::Type ObjectInstance::type() const
     return m_type;
 }
 
-QObject* ObjectInstance::qtObject() const
+QObject *ObjectInstance::qtObject() const
 {
     return m_qtObj;
 }
 
-void* ObjectInstance::object() const
+void *ObjectInstance::object() const
 {
     Q_ASSERT(m_type == QtObject || m_type == QtGadget || m_type == Object || m_type == Value);
     switch (m_type) {
-        case QtObject: return m_qtObj;
-        case QtGadget: return m_obj ? m_obj : const_cast<void*>(m_variant.constData());
-        default: return m_obj;
+    case QtObject:
+        return m_qtObj;
+    case QtGadget:
+        return m_obj ? m_obj : const_cast<void *>(m_variant.constData());
+    default:
+        return m_obj;
     }
     Q_ASSERT(false);
     return Q_NULLPTR;
 }
 
-const QVariant& ObjectInstance::variant() const
+const QVariant &ObjectInstance::variant() const
 {
     Q_ASSERT(m_type == QtVariant || m_type == Value);
     return m_variant;
 }
 
-const QMetaObject* ObjectInstance::metaObject() const
+const QMetaObject *ObjectInstance::metaObject() const
 {
     return m_metaObj;
 }
@@ -166,19 +168,19 @@ QByteArray ObjectInstance::typeName() const
 bool ObjectInstance::isValid() const
 {
     switch (m_type) {
-        case Invalid:
-            return false;
-        case QtObject:
-            return m_qtObj;
-        case QtMetaObject:
-            return m_metaObj;
-        default:
-            break;
+    case Invalid:
+        return false;
+    case QtObject:
+        return m_qtObj;
+    case QtMetaObject:
+        return m_metaObj;
+    default:
+        break;
     }
     return true;
 }
 
-void ObjectInstance::copy(const ObjectInstance& other)
+void ObjectInstance::copy(const ObjectInstance &other)
 {
     m_obj = other.m_obj;
     m_qtObj = other.m_qtObj.data();
@@ -202,7 +204,7 @@ void ObjectInstance::unpackVariant()
             m_typeName = m_variant.typeName();
         }
     } else if (mo) { // value types
-        m_obj = const_cast<void*>(m_variant.constData());
+        m_obj = const_cast<void *>(m_variant.constData());
         m_type = Value;
         m_typeName = m_variant.typeName();
     }

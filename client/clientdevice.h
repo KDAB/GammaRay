@@ -37,16 +37,15 @@ class QIODevice;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Adapter for the various different client socket classes (TCP, local, etc). */
 class ClientDevice : public QObject
 {
     Q_OBJECT
 public:
-    explicit ClientDevice(QObject* parent = 0);
+    explicit ClientDevice(QObject *parent = 0);
     ~ClientDevice();
 
-    static ClientDevice* create(const QUrl& url, QObject* parent);
+    static ClientDevice *create(const QUrl &url, QObject *parent);
 
     void setTryAgain(int tries);
     virtual void connectToHost() = 0;
@@ -65,23 +64,24 @@ protected:
     int m_tries;
 };
 
-template <typename ClientT>
+template<typename ClientT>
 class ClientDeviceImpl : public ClientDevice
 {
 public:
-    explicit ClientDeviceImpl(QObject *parent = 0) : ClientDevice(parent), m_socket(0)
+    explicit ClientDeviceImpl(QObject *parent = 0)
+        : ClientDevice(parent)
+        , m_socket(0)
     {
     }
 
-    QIODevice* device() const Q_DECL_OVERRIDE
+    QIODevice *device() const Q_DECL_OVERRIDE
     {
         return m_socket;
     }
 
 protected:
-    ClientT* m_socket;
+    ClientT *m_socket;
 };
-
 }
 
 #endif // GAMMARAY_CLIENTDEVICE_H

@@ -36,11 +36,10 @@ class QSize;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class StyleInspectorInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StyleInspectorInterface(QObject *parent = 0);
     virtual ~StyleInspectorInterface();
 
@@ -49,20 +48,19 @@ class StyleInspectorInterface : public QObject
     int cellZoom() const;
     QSize cellSizeHint() const;
 
-  signals:
+signals:
     void cellSizeChanged();
 
-  public slots:
+public slots:
     virtual void setCellHeight(int height);
     virtual void setCellWidth(int width);
     virtual void setCellZoom(int zoom);
 
-  private:
+private:
     int m_cellHeight;
     int m_cellWidth;
     int m_cellZoom;
 };
-
 }
 
 QT_BEGIN_NAMESPACE

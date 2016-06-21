@@ -33,34 +33,31 @@
 #include <QTimer>
 
 namespace GammaRay {
-
 namespace Ui {
-  class TimerTop;
+class TimerTop;
 }
 
 class TimerTop : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TimerTop(ProbeInterface *probe, QObject *parent = 0);
 
-  private:
+private:
     QTimer *m_updateTimer;
 };
 
-class TimerTopFactory : public QObject,
-                        public StandardToolFactory<QTimer, TimerTop>
+class TimerTopFactory : public QObject, public StandardToolFactory<QTimer, TimerTop>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_timertop.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_timertop.json")
 
-  public:
+public:
     explicit TimerTopFactory(QObject *parent = 0);
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_SCENEINSPECTOR_H

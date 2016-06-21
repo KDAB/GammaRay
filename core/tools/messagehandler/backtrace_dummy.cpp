@@ -30,6 +30,6 @@
 
 Backtrace getBacktrace(int levels)
 {
-  Q_UNUSED(levels);
-  return Backtrace();
+    Q_UNUSED(levels);
+    return Backtrace();
 }

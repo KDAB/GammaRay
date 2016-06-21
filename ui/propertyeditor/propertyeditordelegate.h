@@ -38,8 +38,8 @@ class QMatrix4x4;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
-class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate, public ItemDelegateInterface
+class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate,
+    public ItemDelegateInterface
 {
     Q_OBJECT
 public:
@@ -47,19 +47,22 @@ public:
     explicit PropertyEditorDelegate(const QString &placeholderText, QObject *parent);
     ~PropertyEditorDelegate();
 
-    void setEditorData(QWidget* editor, const QModelIndex& index) const Q_DECL_OVERRIDE;
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const Q_DECL_OVERRIDE;
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const Q_DECL_OVERRIDE;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
-    template <typename Matrix>
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex &index, const Matrix &matrix) const;
-    template <typename Matrix>
-    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex &index, const Matrix &matrix) const;
-    template <typename Matrix>
-    int columnWidth(const QStyleOptionViewItem& option, const Matrix& matrix, int column) const;
+    template<typename Matrix>
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index,
+               const Matrix &matrix) const;
+    template<typename Matrix>
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index,
+                   const Matrix &matrix) const;
+    template<typename Matrix>
+    int columnWidth(const QStyleOptionViewItem &option, const Matrix &matrix, int column) const;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYEDITORDELEGATE_H

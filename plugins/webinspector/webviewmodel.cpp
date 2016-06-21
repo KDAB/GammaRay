@@ -38,7 +38,8 @@
 
 using namespace GammaRay;
 
-WebViewModel::WebViewModel(QObject* parent): ObjectFilterProxyModelBase(parent)
+WebViewModel::WebViewModel(QObject *parent)
+    : ObjectFilterProxyModelBase(parent)
 {
 }
 
@@ -46,42 +47,44 @@ WebViewModel::~WebViewModel()
 {
 }
 
-QVariant WebViewModel::data(const QModelIndex& index, int role) const
+QVariant WebViewModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
-    return QVariant();
+    if (!index.isValid())
+        return QVariant();
 
-  if ((role != Qt::DisplayRole && role != WebViewModelRoles::WebKitVersionRole) || index.column() != 0)
-    return QSortFilterProxyModel::data(index, role);
+    if ((role != Qt::DisplayRole && role != WebViewModelRoles::WebKitVersionRole)
+        || index.column() != 0)
+        return QSortFilterProxyModel::data(index, role);
 
-  const QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
+    const QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
 #ifdef HAVE_QT_WEBKIT1
-  const bool isWk1 = qobject_cast<const QWebPage*>(obj);
+    const bool isWk1 = qobject_cast<const QWebPage *>(obj);
 #else
-  const bool isWk1 = false;
+    const bool isWk1 = false;
 #endif
 
-  if (role == Qt::DisplayRole)
-    return QString(Util::displayString(obj) + (isWk1 ? " [WebKit1]" : " [WebKit2]"));
-  if (role == WebViewModelRoles::WebKitVersionRole)
-    return isWk1 ? 1 : 2;
+    if (role == Qt::DisplayRole)
+        return QString(Util::displayString(obj) + (isWk1 ? " [WebKit1]" : " [WebKit2]"));
+    if (role == WebViewModelRoles::WebKitVersionRole)
+        return isWk1 ? 1 : 2;
 
-  Q_ASSERT(!"WTF?");
-  return QVariant();
+    Q_ASSERT(!"WTF?");
+    return QVariant();
 }
 
-QMap< int, QVariant > WebViewModel::itemData(const QModelIndex& index) const
+QMap< int, QVariant > WebViewModel::itemData(const QModelIndex &index) const
 {
-  QMap<int, QVariant> d = ObjectFilterProxyModelBase::itemData(index);
-  d.insert(WebViewModelRoles::WebKitVersionRole, data(index, WebViewModelRoles::WebKitVersionRole));
-  return d;
+    QMap<int, QVariant> d = ObjectFilterProxyModelBase::itemData(index);
+    d.insert(WebViewModelRoles::WebKitVersionRole,
+             data(index, WebViewModelRoles::WebKitVersionRole));
+    return d;
 }
 
-bool WebViewModel::filterAcceptsObject(QObject* object) const
+bool WebViewModel::filterAcceptsObject(QObject *object) const
 {
-  return
+    return
 #ifdef HAVE_QT_WEBKIT1
-    qobject_cast<QWebPage*>(object) ||
+        qobject_cast<QWebPage *>(object) ||
 #endif
-    object->inherits("QQuickWebView");
+        object->inherits("QQuickWebView");
 }

@@ -28,7 +28,6 @@
 #define GAMMARAY_PROPERTYMODEL_H
 
 namespace GammaRay {
-
 /**
  * @brief GammaRay property model roles.
  *
@@ -36,33 +35,31 @@ namespace GammaRay {
  * to the real property model classes.
  */
 namespace PropertyModel {
+/** Role enum, to be used with the property models. */
+enum Role {
+    // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globally to allow combining Qt4/5 client/servers.
+    ActionRole = 256 + 1,   /**< the property action role */
+    UserRole,                /**< the UserRole, as defined by Qt */
+    ObjectIdRole,
+    ResetActionRole
+};
 
-    /** Role enum, to be used with the property models. */
-    enum Role {
-      // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globally to allow combining Qt4/5 client/servers.
-      ActionRole = 256 + 1, /**< the property action role */
-      UserRole ,             /**< the UserRole, as defined by Qt */
-      ObjectIdRole,
-      ResetActionRole
-    };
+/** Available property actions. */
+enum Action {
+    NoAction = 0,
+    Delete = 1,
+    Reset = 2,
+    NavigateTo = 4
+};
 
-    /** Available property actions. */
-    enum Action {
-      NoAction = 0,
-      Delete = 1,
-      Reset = 2,
-      NavigateTo = 4
-    };
-
-    /** Available columns. */
-    enum Column {
-        PropertyColumn = 0,
-        ValueColumn,
-        TypeColumn,
-        ClassColumn
-    };
+/** Available columns. */
+enum Column {
+    PropertyColumn = 0,
+    ValueColumn,
+    TypeColumn,
+    ClassColumn
+};
 }
-
 }
 
 #endif

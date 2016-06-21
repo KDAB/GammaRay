@@ -44,12 +44,11 @@ class QQuickWindow;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** QQ2 scene graph model. */
 class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit QuickSceneGraphModel(QObject *parent = 0);
     ~QuickSceneGraphModel();
 
@@ -64,29 +63,28 @@ class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
     QQuickItem *itemForSgNode(QSGNode *node) const;
     bool verifyNodeValidity(QSGNode *node);
 
-  signals:
+signals:
     void nodeDeleted(QSGNode *node);
 
-  private slots:
+private slots:
     void updateSGTree(bool emitSignals = true);
 
-  private:
+private:
     void clear();
-    QSGNode* currentRootNode() const;
+    QSGNode *currentRootNode() const;
     void populateFromNode(QSGNode *node, bool emitSignals);
     void collectItemNodes(QQuickItem *item);
     bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
-    void pruneSubTree(QSGNode* node);
+    void pruneSubTree(QSGNode *node);
 
     QPointer<QQuickWindow> m_window;
 
     QSGNode *m_rootNode;
-    QHash<QSGNode*, QSGNode*> m_childParentMap;
-    QHash<QSGNode*, QVector<QSGNode*> > m_parentChildMap;
-    QHash<QQuickItem*, QSGNode*> m_itemItemNodeMap;
-    QHash<QSGNode*, QQuickItem*> m_itemNodeItemMap;
+    QHash<QSGNode *, QSGNode *> m_childParentMap;
+    QHash<QSGNode *, QVector<QSGNode *> > m_parentChildMap;
+    QHash<QQuickItem *, QSGNode *> m_itemItemNodeMap;
+    QHash<QSGNode *, QQuickItem *> m_itemNodeItemMap;
 };
-
 }
 
 #endif // GAMMARAY_QUICKSCENEGRAPHMODEL_H

@@ -32,9 +32,10 @@
 
 using namespace GammaRay;
 
-SignalMonitorInterface::SignalMonitorInterface(QObject* parent): QObject(parent)
+SignalMonitorInterface::SignalMonitorInterface(QObject *parent)
+    : QObject(parent)
 {
-    ObjectBroker::registerObject<SignalMonitorInterface*>(this);
+    ObjectBroker::registerObject<SignalMonitorInterface *>(this);
 }
 
 SignalMonitorInterface::~SignalMonitorInterface()

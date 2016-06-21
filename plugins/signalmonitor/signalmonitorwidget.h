@@ -35,25 +35,24 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class SignalMonitorWidget;
+class SignalMonitorWidget;
 }
 
 class SignalMonitorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SignalMonitorWidget(QWidget *parent = 0);
     ~SignalMonitorWidget();
 
-  private slots:
+private slots:
     void intervalScaleValueChanged(int value);
     void adjustEventScrollBarSize();
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
 
-  private:
+private:
     static const QString ITEM_TYPE_NAME_OBJECT;
     QScopedPointer<Ui::SignalMonitorWidget> ui;
     UIStateManager m_stateManager;
@@ -61,11 +60,10 @@ class SignalMonitorWidget : public QWidget
 
 class SignalMonitorUiFactory : public QObject, public StandardToolUiFactory<SignalMonitorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_signalmonitor.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_signalmonitor.json")
 };
-
 } // namespace GammaRay
 
 #endif // GAMMARAY_SIGNALMONITORWIDGET_H

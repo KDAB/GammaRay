@@ -32,24 +32,22 @@
 #include "abstractstyleelementstatetable.h"
 
 namespace GammaRay {
-
 /**
  * Model for listing all controls provided by a QStyle.
  */
 class ControlModel : public AbstractStyleElementStateTable
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ControlModel(QObject *parent = 0);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
     int doRowCount() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_CONTROLMODEL_H

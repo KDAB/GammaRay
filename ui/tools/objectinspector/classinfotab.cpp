@@ -38,12 +38,12 @@
 using namespace GammaRay;
 
 ClassInfoTab::ClassInfoTab(PropertyWidget *parent)
-  : QWidget(parent)
-  , m_ui(new Ui_ClassInfoTab)
+    : QWidget(parent)
+    , m_ui(new Ui_ClassInfoTab)
 {
-  m_ui->setupUi(this);
-  m_ui->classInfoView->header()->setObjectName("classInfoViewHeader");
-  setObjectBaseName(parent->objectBaseName());
+    m_ui->setupUi(this);
+    m_ui->classInfoView->header()->setObjectName("classInfoViewHeader");
+    setObjectBaseName(parent->objectBaseName());
 }
 
 ClassInfoTab::~ClassInfoTab()
@@ -52,11 +52,11 @@ ClassInfoTab::~ClassInfoTab()
 
 void ClassInfoTab::setObjectBaseName(const QString &baseName)
 {
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "classInfo"));
-  m_ui->classInfoView->setModel(proxy);
-  m_ui->classInfoView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  new SearchLineController(m_ui->classInfoSearchLine, proxy);
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    proxy->setDynamicSortFilter(true);
+    proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "classInfo"));
+    m_ui->classInfoView->setModel(proxy);
+    m_ui->classInfoView->sortByColumn(0, Qt::AscendingOrder);
+    m_ui->classInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    new SearchLineController(m_ui->classInfoSearchLine, proxy);
 }

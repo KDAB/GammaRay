@@ -35,7 +35,8 @@
 
 using namespace GammaRay;
 
-ConnectionsClientProxyModel::ConnectionsClientProxyModel(QObject* parent): QSortFilterProxyModel(parent)
+ConnectionsClientProxyModel::ConnectionsClientProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -43,12 +44,12 @@ ConnectionsClientProxyModel::~ConnectionsClientProxyModel()
 {
 }
 
-QVariant ConnectionsClientProxyModel::data(const QModelIndex& index, int role) const
+QVariant ConnectionsClientProxyModel::data(const QModelIndex &index, int role) const
 {
-  if (role == Qt::DecorationRole && index.column() == 0) {
-    const bool warning = data(index, ConnectionsModelRoles::WarningFlagRole).toBool();
-    if (warning)
-      return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
-  }
-  return QSortFilterProxyModel::data(index, role);
+    if (role == Qt::DecorationRole && index.column() == 0) {
+        const bool warning = data(index, ConnectionsModelRoles::WarningFlagRole).toBool();
+        if (warning)
+            return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
+    }
+    return QSortFilterProxyModel::data(index, role);
 }

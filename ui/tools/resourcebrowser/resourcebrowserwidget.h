@@ -38,24 +38,23 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ResourceBrowserInterface;
 
 namespace Ui {
-  class ResourceBrowserWidget;
+class ResourceBrowserWidget;
 }
 
 class ResourceBrowserWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ResourceBrowserWidget(QWidget *parent = 0);
     ~ResourceBrowserWidget();
 
-  public slots:
+public slots:
     void selectResource(const QString &sourceFilePath, int line = -1, int column = -1);
 
-  private slots:
+private slots:
     void setupLayout();
     void resourceDeselected();
     void resourceSelected(const QByteArray &contents, int line, int column);
@@ -63,12 +62,11 @@ class ResourceBrowserWidget : public QWidget
 
     void handleCustomContextMenu(const QPoint &pos);
 
-  private:
+private:
     QScopedPointer<Ui::ResourceBrowserWidget> ui;
     UIStateManager m_stateManager;
     ResourceBrowserInterface *m_interface;
 };
-
 }
 
 #endif // GAMMARAY_RESOURCEBROWSER_H

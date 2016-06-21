@@ -43,30 +43,29 @@ class QToolBar;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class QuickInspectorInterface;
 
 class QuickScenePreviewWidget : public RemoteViewWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = 0);
     ~QuickScenePreviewWidget();
 
-    void setSupportsCustomRenderModes(QuickInspectorInterface::Features  supportedCustomRenderModes);
+    void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void visualizeActionTriggered(bool checked);
     void updateEffectiveGeometry();
 
-  private:
+private:
     void drawArrow(QPainter *p, QPointF first, QPointF second);
-    void drawAnchor(QPainter *p, Qt::Orientation orientation,
-                    qreal ownAnchorLine, qreal offset, const QString &label);
+    void drawAnchor(QPainter *p, Qt::Orientation orientation, qreal ownAnchorLine, qreal offset,
+                    const QString &label);
 
-  private:
-    void drawDecoration(QPainter* p) Q_DECL_OVERRIDE;
+private:
+    void drawDecoration(QPainter *p) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
     struct {
@@ -82,7 +81,6 @@ class QuickScenePreviewWidget : public RemoteViewWidget
     QuickInspectorInterface *m_inspectorInterface;
     QuickItemGeometry m_effectiveGeometry; // scaled and translated
 };
-
 } // namespace GammaRay
 
 #endif

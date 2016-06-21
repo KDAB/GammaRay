@@ -36,19 +36,20 @@
 using namespace GammaRay;
 
 MaterialTab::MaterialTab(PropertyWidget *parent)
-  : QWidget(parent)
-  , m_ui(new Ui_MaterialTab)
-  , m_interface(0)
+    : QWidget(parent)
+    , m_ui(new Ui_MaterialTab)
+    , m_interface(0)
 {
-  m_ui->setupUi(this);
-  m_ui->materialPropertyView->header()->setObjectName("materialPropertyViewHeader");
-  m_ui->shaderList->header()->setObjectName("shaderListHeader");
-  setObjectBaseName(parent->objectBaseName());
-  connect(m_ui->shaderList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          this, SLOT(shaderSelectionChanged(QItemSelection)));
+    m_ui->setupUi(this);
+    m_ui->materialPropertyView->header()->setObjectName("materialPropertyViewHeader");
+    m_ui->shaderList->header()->setObjectName("shaderListHeader");
+    setObjectBaseName(parent->objectBaseName());
+    connect(m_ui->shaderList->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(shaderSelectionChanged(QItemSelection)));
 
-  m_ui->splitter->setStretchFactor(0, 1);
-  m_ui->splitter->setStretchFactor(1, 3);
+    m_ui->splitter->setStretchFactor(0, 1);
+    m_ui->splitter->setStretchFactor(1, 3);
 }
 
 MaterialTab::~MaterialTab()
@@ -57,30 +58,29 @@ MaterialTab::~MaterialTab()
 
 void MaterialTab::setObjectBaseName(const QString &baseName)
 {
-  if (m_interface) {
-    disconnect(m_interface, 0, this, 0);
-  }
+    if (m_interface)
+        disconnect(m_interface, 0, this, 0);
 
-  m_interface =
-    ObjectBroker::object<MaterialExtensionInterface*>(baseName + ".material");
-  connect(m_interface, SIGNAL(gotShader(QString)), this, SLOT(showShader(QString)));
+    m_interface
+        = ObjectBroker::object<MaterialExtensionInterface *>(baseName + ".material");
+    connect(m_interface, SIGNAL(gotShader(QString)), this, SLOT(showShader(QString)));
 
-  m_ui->materialPropertyView->setModel(ObjectBroker::model(baseName + ".materialPropertyModel"));
-  m_ui->shaderList->setModel(ObjectBroker::model(baseName + ".shaderModel"));
+    m_ui->materialPropertyView->setModel(ObjectBroker::model(baseName + ".materialPropertyModel"));
+    m_ui->shaderList->setModel(ObjectBroker::model(baseName + ".shaderModel"));
 }
 
-void MaterialTab::shaderSelectionChanged(const QItemSelection& selection)
+void MaterialTab::shaderSelectionChanged(const QItemSelection &selection)
 {
-  m_ui->shaderEdit->clear();
-  if (selection.isEmpty())
-    return;
-  const QModelIndex index = selection.first().topLeft();
-  if (!index.isValid())
-    return;
-  m_interface->getShader(index.data(Qt::DisplayRole).toString());
+    m_ui->shaderEdit->clear();
+    if (selection.isEmpty())
+        return;
+    const QModelIndex index = selection.first().topLeft();
+    if (!index.isValid())
+        return;
+    m_interface->getShader(index.data(Qt::DisplayRole).toString());
 }
 
 void MaterialTab::showShader(const QString &shaderSource)
 {
-  m_ui->shaderEdit->setText(shaderSource);
+    m_ui->shaderEdit->setText(shaderSource);
 }

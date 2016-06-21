@@ -36,15 +36,14 @@ class QColor;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class FontBrowserInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FontBrowserInterface(QObject *parent);
     virtual ~FontBrowserInterface();
 
-  public slots:
+public slots:
     virtual void updateText(const QString &text) = 0;
     virtual void toggleBoldFont(bool bold) = 0;
     virtual void toggleItalicFont(bool italic) = 0;
@@ -52,7 +51,6 @@ class FontBrowserInterface : public QObject
     virtual void setPointSize(int size) = 0;
     virtual void setColors(const QColor &foreground, const QColor &background) = 0;
 };
-
 }
 
 QT_BEGIN_NAMESPACE

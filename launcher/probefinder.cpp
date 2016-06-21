@@ -45,28 +45,28 @@
 #include <algorithm>
 
 namespace GammaRay {
-
 namespace ProbeFinder {
-
 static QString findProbeInternal(const ProbeABI &probeAbi, const QString &rootPath)
 {
-  const QString probePath = Paths::probePath(probeAbi.id(), rootPath) %
-    QDir::separator() %
-    GAMMARAY_PROBE_BASENAME %
+    const QString probePath = Paths::probePath(probeAbi.id(), rootPath)
+                              %QDir::separator()
+                              %GAMMARAY_PROBE_BASENAME %
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-    QChar('-') %
-    probeAbi.id() %
+                              QChar('-')
+                              %probeAbi.id() %
 #else
-    QChar('*') %
+                              QChar('*') %
 #endif
-    Paths::libraryExtension();
+                              Paths::libraryExtension();
 
-  const QFileInfo wildcarded(probePath);
-  const QFileInfo fi = QDir(wildcarded.absolutePath()).entryInfoList(QStringList(wildcarded.fileName())).value(0);
-  const QString canonicalPath = fi.canonicalFilePath();
-  if (!fi.isFile() || !fi.isReadable())
-    return QString();
-  return canonicalPath;
+    const QFileInfo wildcarded(probePath);
+    const QFileInfo fi
+        = QDir(wildcarded.absolutePath()).entryInfoList(QStringList(wildcarded.fileName())).
+          value(0);
+    const QString canonicalPath = fi.canonicalFilePath();
+    if (!fi.isFile() || !fi.isReadable())
+        return QString();
+    return canonicalPath;
 }
 
 QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
@@ -86,57 +86,57 @@ QString findProbe(const ProbeABI &probeAbi, const QStringList &searchRoots)
     if (!path.isEmpty())
         return path;
 
-    qWarning() << "Cannot locate probe for ABI" << probeAbi.displayString() << " in " << searchRoots << Paths::rootPath();
-    qWarning() << "This is likely a setup problem, due to an incomplete or partially moved installation.";
+    qWarning() << "Cannot locate probe for ABI" << probeAbi.displayString() << " in "
+               << searchRoots << Paths::rootPath();
+    qWarning()
+            <<
+            "This is likely a setup problem, due to an incomplete or partially moved installation.";
     return QString();
 }
 
-ProbeABI findBestMatchingABI(const ProbeABI& targetABI)
+ProbeABI findBestMatchingABI(const ProbeABI &targetABI)
 {
-  return findBestMatchingABI(targetABI, listProbeABIs());
+    return findBestMatchingABI(targetABI, listProbeABIs());
 }
 
 ProbeABI findBestMatchingABI(const ProbeABI &targetABI, const QVector<ProbeABI> &availableABIs)
 {
-  QVector<ProbeABI> compatABIs;
-  foreach (const ProbeABI &abi, availableABIs) {
-    if (targetABI.isCompatible(abi))
-      compatABIs.push_back(abi);
-  }
+    QVector<ProbeABI> compatABIs;
+    foreach (const ProbeABI &abi, availableABIs) {
+        if (targetABI.isCompatible(abi))
+            compatABIs.push_back(abi);
+    }
 
-  if (compatABIs.isEmpty())
-    return ProbeABI();
+    if (compatABIs.isEmpty())
+        return ProbeABI();
 
-  std::sort(compatABIs.begin(), compatABIs.end());
-  return compatABIs.last();
+    std::sort(compatABIs.begin(), compatABIs.end());
+    return compatABIs.last();
 }
 
 QVector<ProbeABI> listProbeABIs()
 {
-  QVector<ProbeABI> abis;
-  const QDir dir(Paths::probePath(QString()));
+    QVector<ProbeABI> abis;
+    const QDir dir(Paths::probePath(QString()));
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-  const QString filter = QStringLiteral("*gammaray_probe*");
-  foreach (const QFileInfo &abiId, dir.entryInfoList(QStringList(filter), QDir::Files)) {
-    // OSX has broken QLibrary::isLibrary() - QTBUG-50446
-    if (!QLibrary::isLibrary(abiId.fileName()) &&
-                              !abiId.fileName().endsWith(Paths::libraryExtension(), Qt::CaseInsensitive)) {
-      continue;
+    const QString filter = QStringLiteral("*gammaray_probe*");
+    foreach (const QFileInfo &abiId, dir.entryInfoList(QStringList(filter), QDir::Files)) {
+        // OSX has broken QLibrary::isLibrary() - QTBUG-50446
+        if (!QLibrary::isLibrary(abiId.fileName())
+            && !abiId.fileName().endsWith(Paths::libraryExtension(), Qt::CaseInsensitive))
+            continue;
+        const ProbeABI abi = ProbeABI::fromString(abiId.baseName().section(QStringLiteral("-"), 1));
+        if (abi.isValid())
+            abis.push_back(abi);
     }
-    const ProbeABI abi = ProbeABI::fromString(abiId.baseName().section(QStringLiteral("-"), 1));
-    if (abi.isValid())
-      abis.push_back(abi);
-  }
 #else
-  foreach (const QString &abiId, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-    const ProbeABI abi = ProbeABI::fromString(abiId);
-    if (abi.isValid())
-      abis.push_back(abi);
-  }
+    foreach (const QString &abiId, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        const ProbeABI abi = ProbeABI::fromString(abiId);
+        if (abi.isValid())
+            abis.push_back(abi);
+    }
 #endif
-  return abis;
+    return abis;
 }
-
 }
-
 }

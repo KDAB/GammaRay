@@ -32,22 +32,21 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 class OverlayWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     OverlayWidget();
 
     void placeOn(QWidget *widget);
 
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
-  private:
+private:
     void resizeOverlay();
     void updatePositions();
 
@@ -59,7 +58,6 @@ class OverlayWidget : public QWidget
     QPainterPath m_layoutPath;
     bool m_drawLayoutOutlineOnly;
 };
-
 }
 
 #endif

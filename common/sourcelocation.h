@@ -36,7 +36,6 @@
 #include <QUrl>
 
 namespace GammaRay {
-
 /** @brief Specifies a source code location. */
 class GAMMARAY_COMMON_EXPORT SourceLocation
 {
@@ -59,8 +58,10 @@ public:
     QString displayString() const;
 
 private:
-    friend GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const SourceLocation &location);
-    friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, SourceLocation &location);
+    friend GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out,
+                                                          const SourceLocation &location);
+    friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in,
+                                                          SourceLocation &location);
 
     QUrl m_url;
     int m_line;
@@ -69,7 +70,6 @@ private:
 
 GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const SourceLocation &location);
 GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, SourceLocation &location);
-
 }
 
 Q_DECLARE_METATYPE(GammaRay::SourceLocation)

@@ -35,7 +35,7 @@ using namespace GammaRay;
 
 ClientLauncher::ClientLauncher()
 {
-  m_process.setProcessChannelMode(QProcess::ForwardedChannels);
+    m_process.setProcessChannelMode(QProcess::ForwardedChannels);
 }
 
 ClientLauncher::~ClientLauncher()
@@ -44,35 +44,35 @@ ClientLauncher::~ClientLauncher()
 
 QString ClientLauncher::clientPath()
 {
-  return LauncherFinder::findLauncher(LauncherFinder::Client);
+    return LauncherFinder::findLauncher(LauncherFinder::Client);
 }
 
 QStringList ClientLauncher::makeArgs(const QUrl &url)
 {
-  QStringList args;
-  args.push_back(url.toString());
-  return args;
+    QStringList args;
+    args.push_back(url.toString());
+    return args;
 }
 
 bool ClientLauncher::launch(const QUrl &url)
 {
-  m_process.start(clientPath(), makeArgs(url));
-  return m_process.waitForStarted();
+    m_process.start(clientPath(), makeArgs(url));
+    return m_process.waitForStarted();
 }
 
 void ClientLauncher::launchDetached(const QUrl &url)
 {
-  QProcess::startDetached(clientPath(), makeArgs(url));
+    QProcess::startDetached(clientPath(), makeArgs(url));
 }
 
 void ClientLauncher::terminate()
 {
-  if (m_process.state() == QProcess::Running)
-    m_process.terminate();
+    if (m_process.state() == QProcess::Running)
+        m_process.terminate();
 }
 
 void ClientLauncher::waitForFinished()
 {
-  if (m_process.state() == QProcess::Running)
-    m_process.waitForFinished(-1);
+    if (m_process.state() == QProcess::Running)
+        m_process.waitForFinished(-1);
 }

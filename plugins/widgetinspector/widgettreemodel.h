@@ -32,24 +32,22 @@
 #include <core/objecttypefilterproxymodel.h>
 
 namespace GammaRay {
-
 /** Widget tree model.
  * @todo Show layout hierarchy instead of object hierarchy.
  */
 class WidgetTreeModel : public ObjectFilterProxyModelBase
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit WidgetTreeModel(QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     QPair<int, QVariant> defaultSelectedItem() const;
 
-  protected:
+protected:
     bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_WIDGETTREEMODEL_H

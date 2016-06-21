@@ -41,7 +41,6 @@ class QWidget;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ToolUiFactory;
 
 /** @brief Tool model for the client that implements the custom roles that return widget/factory pointers.
@@ -50,29 +49,29 @@ class ToolUiFactory;
  */
 class GAMMARAY_UI_EXPORT ClientToolModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ClientToolModel(QObject* parent = 0);
-  ~ClientToolModel();
+    explicit ClientToolModel(QObject *parent = 0);
+    ~ClientToolModel();
 
-  QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-  bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
-  Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-  void setSourceModel(QAbstractItemModel * sourceModel) Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
 protected:
-  bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 
 private slots:
-  void updateToolInitialization(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void updateToolInitialization(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-  typedef QHash<QString, QPointer<QWidget>> WidgetsHash;
-  mutable WidgetsHash m_widgets; // ToolId -> Widget
-  QPointer<QWidget> m_parentWidget;
+    typedef QHash<QString, QPointer<QWidget> > WidgetsHash;
+    mutable WidgetsHash m_widgets; // ToolId -> Widget
+    QPointer<QWidget> m_parentWidget;
 };
-
 }
 
 #endif // GAMMARAY_CLIENTTOOLMODEL_H

@@ -36,7 +36,6 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertiesExtensionInterface;
 
 class Ui_PropertiesTab;
@@ -44,28 +43,27 @@ class PropertyWidget;
 
 class PropertiesTab : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertiesTab(PropertyWidget *parent);
     virtual ~PropertiesTab();
 
-  private:
+private:
     void setObjectBaseName(const QString &baseName);
 
-  private slots:
+private slots:
     void updateNewPropertyValueEditor();
     void validateNewProperty();
     void propertyContextMenu(const QPoint &pos);
     void addNewProperty();
     void hasValuesChanged();
 
-  private:
+private:
     Ui_PropertiesTab *m_ui;
     PropertiesExtensionInterface *m_interface;
 
     QWidget *m_newPropertyValue;
 };
-
 }
 
 #endif // PROPERTIESTAB_H

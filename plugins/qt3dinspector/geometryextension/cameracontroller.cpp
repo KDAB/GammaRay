@@ -45,11 +45,11 @@
 
 using namespace GammaRay;
 
-CameraController::CameraController(Qt3DCore::QNode* parent) :
-    Qt3DCore::QEntity(parent),
-    m_camera(nullptr),
-    m_leftMouseButtonAction(new Qt3DInput::QAction),
-    m_keyboardDevice(new Qt3DInput::QKeyboardDevice)
+CameraController::CameraController(Qt3DCore::QNode *parent)
+    : Qt3DCore::QEntity(parent)
+    , m_camera(nullptr)
+    , m_leftMouseButtonAction(new Qt3DInput::QAction)
+    , m_keyboardDevice(new Qt3DInput::QKeyboardDevice)
 {
     for (int i = 0; i < AXISCOUNT; ++i)
         m_axis[i] = new Qt3DInput::QAxis(this);
@@ -103,7 +103,8 @@ CameraController::CameraController(Qt3DCore::QNode* parent) :
     addComponent(m_logicalDevice);
 
     auto m_frameAction = new Qt3DLogic::QFrameAction;
-    connect(m_frameAction, &Qt3DLogic::QFrameAction::triggered, this, &CameraController::frameActionTriggered);
+    connect(m_frameAction, &Qt3DLogic::QFrameAction::triggered, this,
+            &CameraController::frameActionTriggered);
     addComponent(m_frameAction);
 }
 
@@ -111,7 +112,7 @@ CameraController::~CameraController()
 {
 }
 
-void CameraController::setCamera(Qt3DRender::QCamera* camera)
+void CameraController::setCamera(Qt3DRender::QCamera *camera)
 {
     m_camera = camera;
 }

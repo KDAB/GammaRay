@@ -32,14 +32,13 @@
 #include <QLocale>
 
 namespace GammaRay {
-
 class LocaleDataAccessorRegistry;
 struct LocaleDataAccessor;
 
 class LocaleModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit LocaleModel(LocaleDataAccessorRegistry *registry, QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
@@ -49,19 +48,18 @@ class LocaleModel : public QAbstractTableModel
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     void init();
 
-  private slots:
+private slots:
     void accessorAdded();
     void accessorRemoved(int idx);
 
-  private:
+private:
     QVector<QLocale> m_locales;
-    QVector<LocaleDataAccessor*> m_localeData;
+    QVector<LocaleDataAccessor *> m_localeData;
     LocaleDataAccessorRegistry *m_registry;
 };
-
 }
 
 #endif

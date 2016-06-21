@@ -33,48 +33,49 @@
 #include "protocol.h"
 
 namespace GammaRay {
-
 class Message;
 
 /** Base class for network-transparent item selection models, do not use directly. */
 class NetworkSelectionModel : public QItemSelectionModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  ~NetworkSelectionModel();
+    ~NetworkSelectionModel();
 
-  void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
-  using QItemSelectionModel::select;
+    void select(const QItemSelection &selection,
+                QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
+    using QItemSelectionModel::select;
 
 protected:
-  explicit NetworkSelectionModel(const QString &objectName, QAbstractItemModel *model, QObject *parent = 0);
-  virtual bool isConnected() const;
+    explicit NetworkSelectionModel(const QString &objectName, QAbstractItemModel *model,
+                                   QObject *parent = 0);
+    virtual bool isConnected() const;
 
-  QString m_objectName;
-  Protocol::ObjectAddress m_myAddress;
+    QString m_objectName;
+    Protocol::ObjectAddress m_myAddress;
 
 protected slots:
-  void requestSelection();
-  void sendSelection();
-  void applyPendingSelection();
+    void requestSelection();
+    void sendSelection();
+    void applyPendingSelection();
 
 private:
-  static Protocol::ItemSelection readSelection(const Message &msg);
-  bool translateSelection(const Protocol::ItemSelection &selection, QItemSelection &qselection) const;
+    static Protocol::ItemSelection readSelection(const Message &msg);
+    bool translateSelection(const Protocol::ItemSelection &selection,
+                            QItemSelection &qselection) const;
 
 private slots:
-  void newMessage(const GammaRay::Message &msg);
+    void newMessage(const GammaRay::Message &msg);
 
-  void slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
 
-  void clearPendingSelection();
+    void clearPendingSelection();
 
 private:
-  Protocol::ItemSelection m_pendingSelection;
-  SelectionFlags m_pendingCommand;
-  bool m_handlingRemoteMessage;
+    Protocol::ItemSelection m_pendingSelection;
+    SelectionFlags m_pendingCommand;
+    bool m_handlingRemoteMessage;
 };
-
 }
 
 #endif // GAMMARAY_NETWORKSELECTIONMODEL_H

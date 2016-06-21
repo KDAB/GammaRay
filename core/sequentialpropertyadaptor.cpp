@@ -36,7 +36,8 @@
 
 using namespace GammaRay;
 
-SequentialPropertyAdaptor::SequentialPropertyAdaptor(QObject* parent): PropertyAdaptor(parent)
+SequentialPropertyAdaptor::SequentialPropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -44,7 +45,7 @@ SequentialPropertyAdaptor::~SequentialPropertyAdaptor()
 {
 }
 
-void SequentialPropertyAdaptor::doSetObject(const ObjectInstance& oi)
+void SequentialPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     if (oi.type() == ObjectInstance::QtVariant)
         m_value = oi.variant();
@@ -74,4 +75,5 @@ PropertyData SequentialPropertyAdaptor::propertyData(int index) const
 
     return data;
 }
+
 #endif

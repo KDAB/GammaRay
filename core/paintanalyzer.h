@@ -41,7 +41,6 @@ class QRectF;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PaintBufferModel;
 class RemoteViewServer;
 
@@ -57,7 +56,7 @@ public:
     // call the following 4 methods in this order to trigger a paint analysis
     void beginAnalyzePainting();
     void setBoundingRect(const QRectF &boundingBox);
-    QPaintDevice* paintDevice() const;
+    QPaintDevice *paintDevice() const;
     void endAnalyzePainting();
 
     /** Returns @c true if paint analysis is available (needs access to Qt private headers at compile time). */
@@ -69,10 +68,9 @@ private slots:
 private:
     PaintBufferModel *m_paintBufferModel;
     QItemSelectionModel *m_selectionModel;
-    QPaintBuffer* m_paintBuffer;
+    QPaintBuffer *m_paintBuffer;
     RemoteViewServer *m_remoteView;
 };
-
 }
 
 #endif // GAMMARAY_PAINTANALYZER_H

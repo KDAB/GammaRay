@@ -33,22 +33,20 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** All types we have edit widgets for. */
 class EditableTypesModel : public QAbstractListModel
 {
     Q_OBJECT
-  public:
+public:
     explicit EditableTypesModel(QObject *parent = 0);
     ~EditableTypesModel();
 
-    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     QVector<int> m_types;
 };
-
 }
 
 #endif // GAMMARAY_EDITABLETYPESMODEL_H

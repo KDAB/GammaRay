@@ -41,7 +41,6 @@
 #include <Qt>
 
 namespace GammaRay {
-
 /**
  * @brief GammaRay Object Models.
  *
@@ -49,18 +48,16 @@ namespace GammaRay {
  * to the real object model classes.
  */
 namespace ObjectModel {
-
-    /** Role enum, to be used with the object list and tree models. */
-    enum Role {
-      // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globally to allow combining Qt4/5 client/servers.
-      ObjectRole = 256 + 1, /**< the Object role */
-      ObjectIdRole,         /**< return ObjectId object */
-      CreationLocationRole, /**< source location where this object was created, if known. */
-      DeclarationLocationRole, /**< source location where the type for this object has been declared, if known. */
-      UserRole              /**< the UserRole, as defined by Qt */
-    };
+/** Role enum, to be used with the object list and tree models. */
+enum Role {
+    // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globally to allow combining Qt4/5 client/servers.
+    ObjectRole = 256 + 1,   /**< the Object role */
+    ObjectIdRole,           /**< return ObjectId object */
+    CreationLocationRole,   /**< source location where this object was created, if known. */
+    DeclarationLocationRole,   /**< source location where the type for this object has been declared, if known. */
+    UserRole                /**< the UserRole, as defined by Qt */
+};
 }
-
 }
 
 #endif

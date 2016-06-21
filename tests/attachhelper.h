@@ -38,18 +38,17 @@ QT_END_NAMESPACE
 
 class AttachHelper : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit AttachHelper(const QString &gammaray, const QString &injector,
-                          const QString &debuggee, const QStringList &arguments,
-                          QObject *parent = 0);
+    Q_OBJECT
+public:
+    explicit AttachHelper(const QString &gammaray, const QString &injector, const QString &debuggee,
+                          const QStringList &arguments, QObject *parent = 0);
 
-  public slots:
+public slots:
     void attach();
     void processStarted();
     void processFinished(int);
 
-  private:
+private:
     QTimer *m_timer;
     QProcess *m_proc;
     QString m_gammaray;

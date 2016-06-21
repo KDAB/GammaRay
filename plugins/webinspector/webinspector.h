@@ -32,31 +32,29 @@
 #include <core/toolfactory.h>
 
 namespace GammaRay {
-
 class WebInspector : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit WebInspector(GammaRay::ProbeInterface *probe, QObject *parent = 0);
 
-  private slots:
+private slots:
     void objectAdded(QObject *obj);
 };
 
 class WebInspectorFactory : public QObject, public ToolFactory
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_webinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_webinspector.json")
 
-  public:
+public:
     explicit WebInspectorFactory(QObject *parent = 0);
     QString id() const Q_DECL_OVERRIDE;
     QString name() const Q_DECL_OVERRIDE;
-    void init(ProbeInterface* probe) Q_DECL_OVERRIDE;
+    void init(ProbeInterface *probe) Q_DECL_OVERRIDE;
     bool isHidden() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_WEBINSPECTOR_H

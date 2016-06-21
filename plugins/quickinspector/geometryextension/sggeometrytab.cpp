@@ -37,14 +37,14 @@
 using namespace GammaRay;
 
 SGGeometryTab::SGGeometryTab(PropertyWidget *parent)
-  : QWidget(parent)
-  , m_ui(new Ui_SGGeometryTab)
-  , m_interface(0)
-  , m_model(0)
+    : QWidget(parent)
+    , m_ui(new Ui_SGGeometryTab)
+    , m_interface(0)
+    , m_model(0)
 {
-  m_ui->setupUi(this);
+    m_ui->setupUi(this);
 
-  setObjectBaseName(parent->objectBaseName());
+    setObjectBaseName(parent->objectBaseName());
 }
 
 SGGeometryTab::~SGGeometryTab()
@@ -53,23 +53,22 @@ SGGeometryTab::~SGGeometryTab()
 
 void SGGeometryTab::setObjectBaseName(const QString &baseName)
 {
-  if (m_interface) {
-    disconnect(m_interface, 0, m_ui->wireframeWidget, 0);
-  }
-  m_model = ObjectBroker::model(baseName + '.' + "sgGeometryModel");
+    if (m_interface)
+        disconnect(m_interface, 0, m_ui->wireframeWidget, 0);
+    m_model = ObjectBroker::model(baseName + '.' + "sgGeometryModel");
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(m_model);
-  m_ui->tableView->setModel(proxy);
-  QItemSelectionModel *selectionModel = new QItemSelectionModel(proxy);
-  m_ui->tableView->setSelectionModel(selectionModel);
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    proxy->setDynamicSortFilter(true);
+    proxy->setSourceModel(m_model);
+    m_ui->tableView->setModel(proxy);
+    QItemSelectionModel *selectionModel = new QItemSelectionModel(proxy);
+    m_ui->tableView->setSelectionModel(selectionModel);
 
-  m_interface =
-    ObjectBroker::object<SGGeometryExtensionInterface*>(baseName + ".sgGeometry");
+    m_interface
+        = ObjectBroker::object<SGGeometryExtensionInterface *>(baseName + ".sgGeometry");
 
-  m_ui->wireframeWidget->setModel(m_model);
-  m_ui->wireframeWidget->setHighlightModel(selectionModel);
-  connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)),
-          m_ui->wireframeWidget, SLOT(onGeometryChanged(uint,QByteArray,int)));
+    m_ui->wireframeWidget->setModel(m_model);
+    m_ui->wireframeWidget->setHighlightModel(selectionModel);
+    connect(m_interface, SIGNAL(geometryChanged(uint,QByteArray,int)),
+            m_ui->wireframeWidget, SLOT(onGeometryChanged(uint,QByteArray,int)));
 }

@@ -44,7 +44,6 @@ class QStandardItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class RemoteViewInterface;
 
 /** Widget showing remote screen content and providing both visual inspection
@@ -81,15 +80,15 @@ public:
     /// Returns the index of the current zoom level, useful for updating a combo box using the zoomLevelModel.
     int zoomLevelIndex() const;
     /// Model containing the supported zoom levels, for use with a combo box
-    QAbstractItemModel* zoomLevelModel() const;
+    QAbstractItemModel *zoomLevelModel() const;
 
     /// Set the message that is shown when remote view is unavailable.
     void setUnavailableText(const QString &msg);
 
     /// Action group containing all interaction mode switch actions
-    QActionGroup* interactionModeActions() const;
-    QAction* zoomOutAction() const;
-    QAction* zoomInAction() const;
+    QActionGroup *interactionModeActions() const;
+    QAction *zoomOutAction() const;
+    QAction *zoomInAction() const;
 
 public slots:
     /// Clears the current view content.
@@ -108,7 +107,7 @@ signals:
 
 protected:
     /** Current frame data. */
-    const RemoteViewFrame& frame() const;
+    const RemoteViewFrame &frame() const;
 
     /** Override this to draw element decorations.
      *  @P p is translated to that 0,0 is the top left corner of the source image, but not scaled
@@ -159,7 +158,7 @@ private:
     int verticalRulerWidth() const;
 
 private slots:
-    void interactionActionTriggered(QAction* action);
+    void interactionActionTriggered(QAction *action);
     void frameUpdated(const GammaRay::RemoteViewFrame &frame);
 
 private:
@@ -184,7 +183,6 @@ private:
     QPoint m_measurementEndPosition; // in source coordinates
     bool m_hasMeasurement;
 };
-
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::RemoteViewWidget::InteractionModes)

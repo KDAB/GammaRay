@@ -35,29 +35,30 @@ using namespace GammaRay;
 
 class Delegate : public QStyledItemDelegate
 {
-  public:
+public:
     explicit Delegate(QObject *parent = 0)
-      : QStyledItemDelegate(parent)
+        : QStyledItemDelegate(parent)
     {
     }
 
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const Q_DECL_OVERRIDE
     {
-      static const int heightMargin = 10;
+        static const int heightMargin = 10;
 
-      QSize size = QStyledItemDelegate::sizeHint(option, index);
-      size.setHeight(size.height() + heightMargin);
-      return size;
+        QSize size = QStyledItemDelegate::sizeHint(option, index);
+        size.setHeight(size.height() + heightMargin);
+        return size;
     }
 };
 
 SidePane::SidePane(QWidget *parent)
-  : QListView(parent)
+    : QListView(parent)
 {
-  viewport()->setAutoFillBackground(false);
-  setAttribute(Qt::WA_MacShowFocusRect, false);
+    viewport()->setAutoFillBackground(false);
+    setAttribute(Qt::WA_MacShowFocusRect, false);
 
-  setItemDelegate(new Delegate(this));
+    setItemDelegate(new Delegate(this));
 }
 
 SidePane::~SidePane()
@@ -66,36 +67,34 @@ SidePane::~SidePane()
 
 QSize SidePane::sizeHint() const
 {
-  static const int widthMargin = 10;
+    static const int widthMargin = 10;
 
-  if (!model()) {
-    return QSize(0, 0);
-  }
+    if (!model())
+        return QSize(0, 0);
 
-  const int width = sizeHintForColumn(0) + widthMargin;
-  const int height = QListView::sizeHint().height();
+    const int width = sizeHintForColumn(0) + widthMargin;
+    const int height = QListView::sizeHint().height();
 
-  return QSize(width, height);
+    return QSize(width, height);
 }
 
 void SidePane::setModel(QAbstractItemModel *model)
 {
-  if (model) {
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateSizeHint()));
-    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updateSizeHint()));
-  }
-  QAbstractItemView::setModel(model);
+    if (model) {
+        connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateSizeHint()));
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updateSizeHint()));
+    }
+    QAbstractItemView::setModel(model);
 }
 
 void SidePane::resizeEvent(QResizeEvent *e)
 {
-  updateSizeHint();
+    updateSizeHint();
 
-  QListView::resizeEvent(e);
+    QListView::resizeEvent(e);
 }
 
 void SidePane::updateSizeHint()
 {
-  setMinimumWidth(sizeHint().width());
+    setMinimumWidth(sizeHint().width());
 }
-

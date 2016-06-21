@@ -39,33 +39,33 @@ class QScriptEngineDebugger;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 namespace Ui {
-  class ScriptEngineDebuggerWidget;
+class ScriptEngineDebuggerWidget;
 }
 
 class ScriptEngineDebuggerWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ScriptEngineDebuggerWidget(QWidget *parent = 0);
     virtual ~ScriptEngineDebuggerWidget();
-  private slots:
+private slots:
     void scriptEngineSelected(int index);
 
-  private:
+private:
     QScopedPointer<Ui::ScriptEngineDebuggerWidget> ui;
     UIStateManager m_stateManager;
     QScriptEngineDebugger *debugger;
 };
 
-class ScriptEngineDebuggerUiFactory : public QObject, public StandardToolUiFactory<ScriptEngineDebuggerWidget>
+class ScriptEngineDebuggerUiFactory : public QObject,
+    public StandardToolUiFactory<ScriptEngineDebuggerWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_scriptenginedebugger.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(
+        IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_scriptenginedebugger.json")
 };
-
 }
 
 #endif // GAMMARAY_SCRIPTENGINEDEBUGGER_H

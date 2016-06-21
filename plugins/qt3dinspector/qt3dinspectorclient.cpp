@@ -32,7 +32,8 @@
 
 using namespace GammaRay;
 
-Qt3DInspectorClient::Qt3DInspectorClient(QObject* parent): Qt3DInspectorInterface(parent)
+Qt3DInspectorClient::Qt3DInspectorClient(QObject *parent)
+    : Qt3DInspectorInterface(parent)
 {
 }
 
@@ -42,5 +43,6 @@ Qt3DInspectorClient::~Qt3DInspectorClient()
 
 void Qt3DInspectorClient::selectEngine(int index)
 {
-    Endpoint::instance()->invokeObject(objectName(), "selectEngine", QVariantList() << QVariant::fromValue(index));
+    Endpoint::instance()->invokeObject(objectName(), "selectEngine",
+                                       QVariantList() << QVariant::fromValue(index));
 }

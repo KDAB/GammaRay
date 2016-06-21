@@ -39,24 +39,22 @@ typedef QSortFilterProxyModel QIdentityProxyModel;
 #include <QSize>
 
 namespace GammaRay {
-
 class StyleElementProxyModel : public QIdentityProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StyleModelProxy(QObject *parent = 0);
 
     virtual QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const;
 
-  public slots:
+public slots:
     void setWidth(int width);
     void setHeight(int height);
     void setZoomFactor(int zoom);
 
-  private:
+private:
     QSize m_sizeHint;
 };
-
 }
 
 #endif // GAMMARAY_STYLEELEMENTPROXYMODEL_H

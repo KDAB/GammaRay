@@ -35,12 +35,11 @@
 #include <QLocalSocket>
 
 namespace GammaRay {
-
 class LocalServerDevice : public ServerDeviceImpl<QLocalServer>
 {
     Q_OBJECT
 public:
-    explicit LocalServerDevice(QObject* parent = 0);
+    explicit LocalServerDevice(QObject *parent = 0);
 
     bool listen() Q_DECL_OVERRIDE;
     QUrl externalAddress() const Q_DECL_OVERRIDE;

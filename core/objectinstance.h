@@ -41,7 +41,6 @@ struct QMetaObject;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Represents some form of object the property adaptor/model code can handle. */
 class GAMMARAY_CORE_EXPORT ObjectInstance
 {
@@ -56,28 +55,28 @@ public:
         Value
     };
     ObjectInstance();
-    ObjectInstance(QObject *obj); //krazy:exclude=explicit
+    ObjectInstance(QObject *obj); // krazy:exclude=explicit
     /// use this for Q_GADGETs
     ObjectInstance(void *obj, const QMetaObject *metaObj);
     /// use for things that only exist as GammaRay meta objects
-    ObjectInstance(void *obj, const char* typeName);
-    ObjectInstance(const QVariant &value); //krazy:exclude=explicit
+    ObjectInstance(void *obj, const char *typeName);
+    ObjectInstance(const QVariant &value); // krazy:exclude=explicit
     ObjectInstance(const ObjectInstance &other);
 
-    ObjectInstance& operator=(const ObjectInstance& other);
+    ObjectInstance &operator=(const ObjectInstance &other);
     bool operator==(const ObjectInstance &rhs) const;
 
     Type type() const;
 
     /// only valid for QtObject
-    QObject* qtObject() const;
+    QObject *qtObject() const;
     /// only valid for QtObject, QtGadget and Object
-    void* object() const;
+    void *object() const;
     /// only valid for QtVariant
-    const QVariant& variant() const;
+    const QVariant &variant() const;
 
     /// only valid for QtObject and QtGadget
-    const QMetaObject* metaObject() const;
+    const QMetaObject *metaObject() const;
     /// only valid for [Qt]Object and QtGadget
     QByteArray typeName() const;
 
@@ -95,7 +94,6 @@ private:
     QByteArray m_typeName;
     Type m_type;
 };
-
 }
 
 #endif // GAMMARAY_OBJECTINSTANCE_H

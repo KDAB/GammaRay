@@ -58,25 +58,26 @@
 
 using namespace GammaRay;
 
-ToolModel::ToolModel(QObject *parent): QAbstractListModel(parent)
+ToolModel::ToolModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
-  // built-in tools
-  addToolFactory(new ObjectInspectorFactory(this));
-  addToolFactory(new ModelInspectorFactory(this));
-  addToolFactory(new ResourceBrowserFactory(this));
-  addToolFactory(new MetaObjectBrowserFactory(this));
-  addToolFactory(new MetaTypeBrowserFactory(this));
-  addToolFactory(new MessageHandlerFactory(this));
-  addToolFactory(new LocaleInspectorFactory(this));
+    // built-in tools
+    addToolFactory(new ObjectInspectorFactory(this));
+    addToolFactory(new ModelInspectorFactory(this));
+    addToolFactory(new ResourceBrowserFactory(this));
+    addToolFactory(new MetaObjectBrowserFactory(this));
+    addToolFactory(new MetaTypeBrowserFactory(this));
+    addToolFactory(new MessageHandlerFactory(this));
+    addToolFactory(new LocaleInspectorFactory(this));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  addToolFactory(new StandardPathsFactory(this));
-  addToolFactory(new MimeTypesFactory(this));
+    addToolFactory(new StandardPathsFactory(this));
+    addToolFactory(new MimeTypesFactory(this));
 #endif
 
-  m_pluginManager.reset(new ToolPluginManager(this));
-  Q_FOREACH (ToolFactory *factory, m_pluginManager->plugins()) {
-    addToolFactory(factory);
-  }
+    m_pluginManager.reset(new ToolPluginManager(this));
+    Q_FOREACH(ToolFactory *factory, m_pluginManager->plugins()) {
+        addToolFactory(factory);
+    }
 }
 
 ToolModel::~ToolModel()
@@ -85,139 +86,134 @@ ToolModel::~ToolModel()
 
 QVariant ToolModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid()) {
-    return QVariant();
-  }
+    if (!index.isValid())
+        return QVariant();
 
-  ToolFactory *toolIface = m_tools.at(index.row());
-  if (role == Qt::DisplayRole) {
-    return toolIface->name();
-  } else if (role == ToolModelRole::ToolFactory) {
-    return QVariant::fromValue(toolIface);
-  } else if (role == ToolModelRole::ToolId) {
-    return toolIface->id();
-  } else if (role == ToolModelRole::ToolEnabled) {
-    return !m_inactiveTools.contains(toolIface);
-  } else if (role == ToolModelRole::ToolHasUi) {
-    return !toolIface->isHidden();
-  }
-  return QVariant();
+    ToolFactory *toolIface = m_tools.at(index.row());
+    if (role == Qt::DisplayRole)
+        return toolIface->name();
+    else if (role == ToolModelRole::ToolFactory)
+        return QVariant::fromValue(toolIface);
+    else if (role == ToolModelRole::ToolId)
+        return toolIface->id();
+    else if (role == ToolModelRole::ToolEnabled)
+        return !m_inactiveTools.contains(toolIface);
+    else if (role == ToolModelRole::ToolHasUi)
+        return !toolIface->isHidden();
+    return QVariant();
 }
 
 int ToolModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return 0;
-  }
-  return m_tools.size();
+    if (parent.isValid())
+        return 0;
+    return m_tools.size();
 }
 
 Qt::ItemFlags ToolModel::flags(const QModelIndex &index) const
 {
-  Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-  if (index.isValid()) {
-    ToolFactory *toolIface = m_tools.at(index.row());
-    if (m_inactiveTools.contains(toolIface)) {
-      flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    if (index.isValid()) {
+        ToolFactory *toolIface = m_tools.at(index.row());
+        if (m_inactiveTools.contains(toolIface))
+            flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     }
-  }
-  return flags;
+    return flags;
 }
 
-QMap<int, QVariant> ToolModel::itemData(const QModelIndex& index) const
+QMap<int, QVariant> ToolModel::itemData(const QModelIndex &index) const
 {
-  QMap<int, QVariant> map = QAbstractListModel::itemData(index);
-  map.insert(ToolModelRole::ToolId, data(index, ToolModelRole::ToolId));
-  map.insert(ToolModelRole::ToolEnabled, data(index, ToolModelRole::ToolEnabled));
-  map.insert(ToolModelRole::ToolHasUi, data(index, ToolModelRole::ToolHasUi));
-  // the other custom roles are useless on the client anyway, since they contain raw pointers
-  return map;
+    QMap<int, QVariant> map = QAbstractListModel::itemData(index);
+    map.insert(ToolModelRole::ToolId, data(index, ToolModelRole::ToolId));
+    map.insert(ToolModelRole::ToolEnabled, data(index, ToolModelRole::ToolEnabled));
+    map.insert(ToolModelRole::ToolHasUi, data(index, ToolModelRole::ToolHasUi));
+    // the other custom roles are useless on the client anyway, since they contain raw pointers
+    return map;
 }
 
 void ToolModel::objectAdded(QObject *obj)
 {
-  Q_ASSERT(QThread::currentThread() == thread());
-  Q_ASSERT(Probe::instance()->isValidObject(obj));
+    Q_ASSERT(QThread::currentThread() == thread());
+    Q_ASSERT(Probe::instance()->isValidObject(obj));
 
-  // m_knownMetaObjects allows us to skip the expensive recursive search for matching tools
-  if (!m_knownMetaObjects.contains(obj->metaObject())) {
-    objectAdded(obj->metaObject());
-    m_knownMetaObjects.insert(obj->metaObject());
-  }
+    // m_knownMetaObjects allows us to skip the expensive recursive search for matching tools
+    if (!m_knownMetaObjects.contains(obj->metaObject())) {
+        objectAdded(obj->metaObject());
+        m_knownMetaObjects.insert(obj->metaObject());
+    }
 }
 
 void ToolModel::objectAdded(const QMetaObject *mo)
 {
-  Q_ASSERT(thread() == QThread::currentThread());
-  // as plugins can depend on each other, start from the base classes
-  if (mo->superClass()) {
-    objectAdded(mo->superClass());
-  }
-  foreach (ToolFactory *factory, m_inactiveTools) {
-    if (factory->supportedTypes().contains(mo->className())) {
-      m_inactiveTools.remove(factory);
-      factory->init(Probe::instance());
-      const int row = m_tools.indexOf(factory);
-      emit dataChanged(index(row, 0), index(row, 0));
+    Q_ASSERT(thread() == QThread::currentThread());
+    // as plugins can depend on each other, start from the base classes
+    if (mo->superClass())
+        objectAdded(mo->superClass());
+    foreach (ToolFactory *factory, m_inactiveTools) {
+        if (factory->supportedTypes().contains(mo->className())) {
+            m_inactiveTools.remove(factory);
+            factory->init(Probe::instance());
+            const int row = m_tools.indexOf(factory);
+            emit dataChanged(index(row, 0), index(row, 0));
+        }
     }
-  }
 }
 
-QVector< ToolFactory* > ToolModel::plugins() const
+QVector< ToolFactory * > ToolModel::plugins() const
 {
-  return m_pluginManager->plugins();
+    return m_pluginManager->plugins();
 }
 
 PluginLoadErrors ToolModel::pluginErrors() const
 {
-  return m_pluginManager->errors();
+    return m_pluginManager->errors();
 }
 
-QModelIndexList ToolModel::toolsForObject(QObject* object) const
+QModelIndexList ToolModel::toolsForObject(QObject *object) const
 {
-  if (!object)
-    return QModelIndexList();
+    if (!object)
+        return QModelIndexList();
 
-  QModelIndexList ret;
-  const QMetaObject *metaObject = object->metaObject();
-  while (metaObject) {
-    for (int i = 0; i < m_tools.size(); i++) {
-      const ToolFactory *factory = m_tools.at(i);
-      if (factory && !factory->isHidden() && factory->selectableTypes().contains(metaObject->className())) {
-        ret += index(i, 0);
-      }
+    QModelIndexList ret;
+    const QMetaObject *metaObject = object->metaObject();
+    while (metaObject) {
+        for (int i = 0; i < m_tools.size(); i++) {
+            const ToolFactory *factory = m_tools.at(i);
+            if (factory && !factory->isHidden()
+                && factory->selectableTypes().contains(metaObject->className()))
+                ret += index(i, 0);
+        }
+        metaObject = metaObject->superClass();
     }
-    metaObject = metaObject->superClass();
-  }
-  return ret;
+    return ret;
 }
 
-QModelIndexList ToolModel::toolsForObject(const void* object, const QString& typeName) const
+QModelIndexList ToolModel::toolsForObject(const void *object, const QString &typeName) const
 {
-  if (!object)
-    return QModelIndexList();
+    if (!object)
+        return QModelIndexList();
 
-  QModelIndexList ret;
-  const MetaObject *metaObject = MetaObjectRepository::instance()->metaObject(typeName);
-  while (metaObject) {
-    for (int i = 0; i < m_tools.size(); i++) {
-      const ToolFactory *factory = m_tools.at(i);
-      if (factory && !factory->isHidden() && factory->selectableTypes().contains(metaObject->className().toUtf8())) {
-        ret += index(i, 0);
-      }
+    QModelIndexList ret;
+    const MetaObject *metaObject = MetaObjectRepository::instance()->metaObject(typeName);
+    while (metaObject) {
+        for (int i = 0; i < m_tools.size(); i++) {
+            const ToolFactory *factory = m_tools.at(i);
+            if (factory && !factory->isHidden()
+                && factory->selectableTypes().contains(metaObject->className().toUtf8()))
+                ret += index(i, 0);
+        }
+        metaObject = metaObject->superClass();
     }
-    metaObject = metaObject->superClass();
-  }
-  return ret;
+    return ret;
 }
 
 QPair<int, QVariant> ToolModel::defaultSelectedItem() const
 {
-  // Select the Objects tool by default
-  return QPair<int, QVariant>(ToolModelRole::ToolId, QStringLiteral("GammaRay::ObjectInspector"));
+    // Select the Objects tool by default
+    return QPair<int, QVariant>(ToolModelRole::ToolId, QStringLiteral("GammaRay::ObjectInspector"));
 }
 
-void ToolModel::addToolFactory(ToolFactory* tool)
+void ToolModel::addToolFactory(ToolFactory *tool)
 {
     m_tools.push_back(tool);
     m_inactiveTools.insert(tool);

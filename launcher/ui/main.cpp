@@ -40,24 +40,23 @@ using namespace GammaRay;
 
 int main(int argc, char **argv)
 {
-  QCoreApplication::setOrganizationName(QStringLiteral("KDAB"));
-  QCoreApplication::setOrganizationDomain(QStringLiteral("kdab.com"));
-  QCoreApplication::setApplicationName(QStringLiteral("GammaRay"));
+    QCoreApplication::setOrganizationName(QStringLiteral("KDAB"));
+    QCoreApplication::setOrganizationDomain(QStringLiteral("kdab.com"));
+    QCoreApplication::setApplicationName(QStringLiteral("GammaRay"));
 
-  QApplication app(argc, argv);
-  Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
-  Translator::load();
+    QApplication app(argc, argv);
+    Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
+    Translator::load();
 
-  LauncherWindow launcher;
-  launcher.show();
-  const int result = app.exec();
+    LauncherWindow launcher;
+    launcher.show();
+    const int result = app.exec();
 
-  if (launcher.result() == QDialog::Accepted) {
-    const LaunchOptions opts = launcher.launchOptions();
-    if (opts.isValid()) {
-      opts.execute(LauncherFinder::findLauncher(LauncherFinder::Injector));
+    if (launcher.result() == QDialog::Accepted) {
+        const LaunchOptions opts = launcher.launchOptions();
+        if (opts.isValid())
+            opts.execute(LauncherFinder::findLauncher(LauncherFinder::Injector));
     }
-  }
 
-  return result;
+    return result;
 }

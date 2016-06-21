@@ -35,12 +35,11 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** Common base class for the inbound and outbound connections models. */
 class AbstractConnectionsModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit AbstractConnectionsModel(QObject *parent = 0);
     ~AbstractConnectionsModel();
 
@@ -49,15 +48,16 @@ class AbstractConnectionsModel : public QAbstractTableModel
     int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QMap< int, QVariant > itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     struct Connection {
-      QPointer<QObject> endpoint;
-      int signalIndex;
-      int slotIndex;
-      int type;
+        QPointer<QObject> endpoint;
+        int signalIndex;
+        int slotIndex;
+        int type;
     };
 
     static QString displayString(QObject *object, int methodIndex);
@@ -66,17 +66,16 @@ class AbstractConnectionsModel : public QAbstractTableModel
     static int signalIndexToMethodIndex(QObject *object, int signalIndex);
 
     void clear();
-    void setConnections(const QVector<Connection>& connections);
+    void setConnections(const QVector<Connection> &connections);
 
-  protected:
+protected:
     QPointer<QObject> m_object;
     QVector<Connection> m_connections;
 
-  private:
+private:
     bool isDuplicate(const Connection &conn) const;
     bool isDirectCrossThreadConnection(const Connection &conn) const;
 };
-
 }
 
 #endif // GAMMARAY_ABSTRACTCONNECTIONSMODEL_H

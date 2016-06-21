@@ -40,17 +40,17 @@
 using namespace GammaRay;
 
 QmlTypeTab::QmlTypeTab(PropertyWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::QmlTypeTab)
+    : QWidget(parent)
+    , ui(new Ui::QmlTypeTab)
 {
     ui->setupUi(this);
 
     ui->typeView->header()->setObjectName("qmlTypeViewHeader");
     ui->typeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-    ui->typeView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlTypeModel")));
+    ui->typeView->setModel(ObjectBroker::model(parent->objectBaseName()
+                                               + QStringLiteral(".qmlTypeModel")));
 
     connect(ui->typeView, &QWidget::customContextMenuRequested, this, &QmlTypeTab::contextMenu);
-
 }
 
 QmlTypeTab::~QmlTypeTab()
@@ -67,8 +67,8 @@ void QmlTypeTab::contextMenu(QPoint pos)
     const auto actions = idx.data(PropertyModel::ActionRole).toInt();
     const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
-    const bool canShow = actions != PropertyModel::NoAction ||
-        ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+    const bool canShow = actions != PropertyModel::NoAction
+                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
 
     if (!canShow)
         return;

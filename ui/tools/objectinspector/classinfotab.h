@@ -32,24 +32,22 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 class Ui_ClassInfoTab;
 class PropertyWidget;
 
 class ClassInfoTab : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ClassInfoTab(PropertyWidget *parent);
-  virtual ~ClassInfoTab();
+    explicit ClassInfoTab(PropertyWidget *parent);
+    virtual ~ClassInfoTab();
 
 private:
-  void setObjectBaseName(const QString &baseName);
+    void setObjectBaseName(const QString &baseName);
 
 private:
-  Ui_ClassInfoTab *m_ui;
+    Ui_ClassInfoTab *m_ui;
 };
-
 }
 
 #endif // CLASSINFOTAB_H

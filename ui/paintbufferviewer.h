@@ -38,11 +38,10 @@ class QAbstractItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class WidgetInspectorInterface;
 
 namespace Ui {
-  class PaintBufferViewer;
+class PaintBufferViewer;
 }
 
 /**
@@ -50,15 +49,14 @@ namespace Ui {
  */
 class GAMMARAY_UI_EXPORT PaintBufferViewer : public QDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PaintBufferViewer(const QString &name, QWidget *parent = 0);
     virtual ~PaintBufferViewer();
 
-  private:
+private:
     QScopedPointer<Ui::PaintBufferViewer> ui;
 };
-
 }
 
 #endif

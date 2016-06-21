@@ -32,27 +32,25 @@
 #include <QObject>
 
 namespace GammaRay {
-
 /** @brief Client/Server interface of the material viewer. */
 class MaterialExtensionInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MaterialExtensionInterface(const QString &name, QObject *parent = 0);
     virtual ~MaterialExtensionInterface();
 
     const QString &name() const;
 
-  signals:
+signals:
     void gotShader(const QString &shaderSource);
 
-  public slots:
+public slots:
     virtual void getShader(const QString &fileName) = 0;
 
-  private:
+private:
     QString m_name;
 };
-
 }
 
 QT_BEGIN_NAMESPACE

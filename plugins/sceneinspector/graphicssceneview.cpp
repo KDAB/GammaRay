@@ -32,51 +32,51 @@
 using namespace GammaRay;
 
 GraphicsSceneView::GraphicsSceneView(QWidget *parent)
-  : QWidget(parent),
-    ui(new Ui::GraphicsSceneView)
+    : QWidget(parent)
+    , ui(new Ui::GraphicsSceneView)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  QFontMetrics fm(ui->sceneCoordLabel->font());
-  ui->sceneCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
-  ui->itemCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
+    QFontMetrics fm(ui->sceneCoordLabel->font());
+    ui->sceneCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
+    ui->itemCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
 
-  connect(ui->graphicsView, SIGNAL(sceneCoordinatesChanged(QPointF)),
-          SLOT(sceneCoordinatesChanged(QPointF)));
-  connect(ui->graphicsView, SIGNAL(itemCoordinatesChanged(QPointF)),
-          SLOT(itemCoordinatesChanged(QPointF)));
+    connect(ui->graphicsView, SIGNAL(sceneCoordinatesChanged(QPointF)),
+            SLOT(sceneCoordinatesChanged(QPointF)));
+    connect(ui->graphicsView, SIGNAL(itemCoordinatesChanged(QPointF)),
+            SLOT(itemCoordinatesChanged(QPointF)));
 }
 
 GraphicsSceneView::~GraphicsSceneView()
 {
-  delete ui;
+    delete ui;
 }
 
-GraphicsView * GraphicsSceneView::view() const
+GraphicsView *GraphicsSceneView::view() const
 {
-  return ui->graphicsView;
+    return ui->graphicsView;
 }
 
 void GraphicsSceneView::showGraphicsItem(QGraphicsItem *item)
 {
-  ui->graphicsView->showItem(item);
+    ui->graphicsView->showItem(item);
 }
 
 void GraphicsSceneView::setGraphicsScene(QGraphicsScene *scene)
 {
-  ui->graphicsView->setScene(scene);
+    ui->graphicsView->setScene(scene);
 }
 
 void GraphicsSceneView::sceneCoordinatesChanged(const QPointF &coord)
 {
-  ui->sceneCoordLabel->setText(QStringLiteral("%1 x %2").
-                               arg(coord.x(), 0, 'f', 2).
-                               arg(coord.y(), 0, 'f', 2));
+    ui->sceneCoordLabel->setText(QStringLiteral("%1 x %2").
+                                 arg(coord.x(), 0, 'f', 2).
+                                 arg(coord.y(), 0, 'f', 2));
 }
 
 void GraphicsSceneView::itemCoordinatesChanged(const QPointF &coord)
 {
-  ui->itemCoordLabel->setText(QStringLiteral("%1 x %2").
-                              arg(coord.x(), 0, 'f', 2).
-                              arg(coord.y(), 0, 'f', 2));
+    ui->itemCoordLabel->setText(QStringLiteral("%1 x %2").
+                                arg(coord.x(), 0, 'f', 2).
+                                arg(coord.y(), 0, 'f', 2));
 }

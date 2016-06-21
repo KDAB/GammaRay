@@ -37,7 +37,6 @@ class QNetworkInterface;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class NetworkInterfaceModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -48,14 +47,15 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
 private:
     QList<QNetworkInterface> m_interfaces;
 };
-
 }
 
 #endif // GAMMARAY_NETWORKINTERFACEMODEL_H

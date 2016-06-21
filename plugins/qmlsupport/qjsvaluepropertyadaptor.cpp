@@ -35,7 +35,8 @@
 
 using namespace GammaRay;
 
-QJSValuePropertyAdaptor::QJSValuePropertyAdaptor(QObject* parent): PropertyAdaptor(parent)
+QJSValuePropertyAdaptor::QJSValuePropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -68,10 +69,10 @@ PropertyData QJSValuePropertyAdaptor::propertyData(int index) const
     return pd;
 }
 
+QJSValuePropertyAdaptorFactory *QJSValuePropertyAdaptorFactory::s_instance = Q_NULLPTR;
 
-QJSValuePropertyAdaptorFactory* QJSValuePropertyAdaptorFactory::s_instance = Q_NULLPTR;
-
-PropertyAdaptor* QJSValuePropertyAdaptorFactory::create(const ObjectInstance& oi, QObject* parent) const
+PropertyAdaptor *QJSValuePropertyAdaptorFactory::create(const ObjectInstance &oi,
+                                                        QObject *parent) const
 {
     if (oi.type() != ObjectInstance::QtVariant)
         return Q_NULLPTR;
@@ -82,7 +83,7 @@ PropertyAdaptor* QJSValuePropertyAdaptorFactory::create(const ObjectInstance& oi
     return new QJSValuePropertyAdaptor(parent);
 }
 
-QJSValuePropertyAdaptorFactory* QJSValuePropertyAdaptorFactory::instance()
+QJSValuePropertyAdaptorFactory *QJSValuePropertyAdaptorFactory::instance()
 {
     if (!s_instance)
         s_instance = new QJSValuePropertyAdaptorFactory;
